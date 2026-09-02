@@ -3,5 +3,13 @@
   "pack-status": "ready",
   "platform": "fabric",
   "minecraftVersion": "1.21.10",
-  "note": "versioned fabric-docs only; no wiki clone"
+  "note": "versioned fabric-docs only; no wiki clone",
+  "gaps": {
+    "code-patterns": "设计如此：本档为薄档，不落 code-patterns/（fabric 里只有部分档有该目录，如 1.21.11 / 1.20.1）",
+    "knowledge": "仅 knowledge/common/verified-api-1.21.10.md；本档语料无可核实主题页可支撑更多短文",
+    "loader-api": "无 1.21.10-fabric-api.json 摘要；类名只来自 search_fabric_docs version=1.21.10，FQCN 与模块 id 一律标未核实"
+  },
+  "coverage": {
+    "attachments": "已补（2026-09-01）：来源为本档语料 fabric-docs/1.21.10/processed/develop_data-attachments.md，只登记该页写出的简名 → 落在规则 01-registry「附加数据（Attachment）」节 + 本档核实表。该页自称 experimental，且未写 FQCN / 模块 id。"
+  }
 }

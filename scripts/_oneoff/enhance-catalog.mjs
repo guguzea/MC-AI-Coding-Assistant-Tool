@@ -5,7 +5,8 @@
  * + officialUrls 填充（从对应短文提取官方链接）。保留 verifiedApi 与全部现有字段。
  * 行级处理（状态机定位条目闭合行），无坐标漂移风险。
  */
-import { readFileSync, writeFileSync, existsSync } from "fs";
+import { readFileSync, existsSync } from "fs";
+import { emit } from "../_lib/write-guard.mjs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -111,5 +112,5 @@ for (const line of lines) {
   out.push(line);
 }
 
-writeFileSync(CATALOG, out.join("\n"), "utf8");
+emit(CATALOG, out.join("\n"));
 console.log(`enhance-catalog: 插入 supportedVersions ${inserted} 条目，填充 officialUrls ${urlsFilled} 条目`);

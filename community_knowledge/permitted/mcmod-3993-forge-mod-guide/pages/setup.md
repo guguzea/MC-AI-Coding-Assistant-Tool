@@ -3,6 +3,7 @@ id: mcmod-3993/setup
 title: Forge MDK 与工程搭建要点（仅指针）
 url: https://www.mcmod.cn/post/3993.html
 tags: [setup, mdk, gradle, idea, link-only]
+summary: 仅指针页：《如何制作并且维护你的mod？（Forge）》工程搭建 / MDK 篇入口（作者耿悠博，主体偏 1.18），本页不入库正文。工程与 API 细节用 `search_forge_docs` / 平台 rules。
 mcHint: 1.18.x+
 sourceKind: permitted-pointer
 ---

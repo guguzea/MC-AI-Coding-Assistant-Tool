@@ -11,7 +11,9 @@
 - 入口：`DataGeneratorEntrypoint.onInitializeDataGenerator`
 - `fabric.mod.json` 用 `"fabric-datagen"`，**不要** `init_data`
 - 用 `generator.createPack()` 再 `pack.addProvider(...)`
-- 官方主推 `FabricRecipeProvider#createRecipeProvider` + 内部 `buildRecipes()`（Mojmap `RecipeOutput`）
+- 配方是**两层**结构：`FabricRecipeProvider` 子类只实现构造 + 那个抽象工厂方法，配方写在**返回对象**的无参方法里
+  - Mojmap：`createRecipeProvider(HolderLookup.Provider, RecipeOutput)` → 内部 `buildRecipes()`
+  - Yarn：`getRecipeGenerator(RegistryWrapper.WrapperLookup, RecipeExporter)` → 内部 `generate()`
 - 语言：`generateTranslations(RegistryWrapper.WrapperLookup, TranslationBuilder)`
 - 不要把已过时的「不要抄 buildRecipes」当本档口径
 - 生成目录常见 `src/main/generated`；**禁止**手改
@@ -67,7 +69,7 @@ public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
         FabricDataGenerator.Pack pack = generator.createPack();
-        pack.addProvider(FabricRecipeProvider.createRecipeProvider(MyRecipeProvider::new));
+        pack.addProvider(MyRecipeProvider::new);   // 直接传构造引用；没有静态 createRecipeProvider 工厂
         pack.addProvider(MyModelProvider::new);
         pack.addProvider(MyEnLangProvider::new);
         pack.addProvider(MyBlockLootProvider::new);
@@ -75,7 +77,7 @@ public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
     }
 }
 ```
-> 官方主推 `FabricRecipeProvider.createRecipeProvider` + 内部 `buildRecipes`（Mojmap `RecipeOutput`）。Yarn 工程类名可能是 `RecipeExporter`，以本档 loader-api / 官方 wiki 为准，不要再把「不要抄 buildRecipes」当口径。
+> 实测出处（1.21.11）：`FabricRecipeProvider` 上**只有**构造 + 一个抽象工厂方法 + `withConditions` / `run` / `getRecipeIdentifier`；没有静态 `createRecipeProvider` 工厂。抽象工厂方法在 Mojmap 叫 `createRecipeProvider`、Yarn 叫 `getRecipeGenerator`（同一 intermediary 槽位），它返回的 vanilla 生成器里才有无参 `buildRecipes()`（Mojmap）/ `generate()`（Yarn）。**注意**：`query_loader_api` 摘要里 vanilla 类型仍显示 `class_7225.class_7874` / `method_62766` 这类中间名（fabric-api 自名 + vanilla 中间名的混合体），照摘要抄示例会写出编译不过的代码——以本档示例或反编译树为准。
 
 ## 注册 fabric-datagen
 
@@ -112,6 +114,16 @@ public class MyModelProvider extends FabricModelProvider {
 
 ## 生成配方
 
+1.21.11 的配方生成器是**两层**：`FabricRecipeProvider` 子类只负责造出一个 vanilla 生成器，配方写在**返回对象**的无参方法里。两层的名字按映射不同，同一段代码里**禁止混用**。
+
+| 位置 | Yarn（本档默认 `yarn_mappings=1.21.11+build.6`） | Mojmap（`loom.officialMojangMappings()`） |
+| --- | --- | --- |
+| 继承的父类 | `RecipeGenerator.RecipeProvider` | `RecipeProvider.Runner` |
+| 唯一要实现的抽象方法 | `getRecipeGenerator(RegistryWrapper.WrapperLookup, RecipeExporter)` → `RecipeGenerator` | `createRecipeProvider(HolderLookup.Provider, RecipeOutput)` → `RecipeProvider` |
+| 返回对象里的无参方法 | `protected void generate()` | `protected void buildRecipes()` |
+| 落地 | `offerTo(exporter, RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(ns, path)))` | `save(output, ResourceKey...)` |
+| 构造入参 | `FabricDataOutput` + `CompletableFuture<RegistryWrapper.WrapperLookup>` | `PackOutput` + `CompletableFuture<HolderLookup.Provider>` |
+
 ```java
 public class MyRecipeProvider extends FabricRecipeProvider {
     public MyRecipeProvider(FabricDataOutput output,
@@ -120,17 +132,31 @@ public class MyRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public void buildRecipes(RecipeOutput output) {
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM)
-            .pattern("AAA")
-            .pattern("A A")
-            .pattern(" A ")
-            .input('A', Items.DIAMOND)
-            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
-            .offerTo(output);
+    protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup registries,
+                                                 RecipeExporter exporter) {
+        return new RecipeGenerator(registries, exporter) {
+            @Override
+            protected void generate() {
+                RegistryEntryLookup<Item> items = registries.getOrThrow(RegistryKeys.ITEM);
+                ShapedRecipeJsonBuilder.create(items, RecipeCategory.MISC, MY_ITEM)  // 首参必需
+                    .pattern("AAA")
+                    .pattern("A A")
+                    .pattern(" A ")
+                    .input('A', Items.DIAMOND)
+                    .criterion(hasItem(Items.DIAMOND), conditionsFromItem(Items.DIAMOND))
+                    .offerTo(exporter, RegistryKey.of(RegistryKeys.RECIPE,
+                        Identifier.of("examplemod", "my_item")));
+            }
+        };
     }
 }
 ```
+
+以下写法在 1.21.11 **不存在**，编译器直接拒（都是本档旧示例踩过的坑）：
+
+- `@Override public void buildRecipes(RecipeOutput output)` 写在 `FabricRecipeProvider` 子类上 — 该方法在无参、且在返回的 vanilla 生成器上
+- `ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM)` 2 参 — 只有 `(RegistryEntryLookup<Item>, RecipeCategory, ItemConvertible[, int])`
+- `.offerTo(output)` 单参传 Mojmap `RecipeOutput` — Yarn 侧形参是 `RecipeExporter`
 
 ## 生成 Loot Table
 
@@ -225,7 +251,8 @@ public class MyItemTagProvider extends FabricTagProvider.ItemTagProvider {
 - ❌ 引用未注册的资源 — DataGen / 游戏找不到现有文件
 - ❌ 在 DataGen 中使用动态路径 — 必须使用确定的 `Identifier`
 - ❌ 抄 Forge 的 `ExistingFileHelper` / `ItemModelProvider` / `DatapackBuiltinEntriesProvider`
-- ❌ 调用不存在的 `offerShapedRecipe` — 用 `ShapedRecipeJsonBuilder` + `offerTo(exporter)`
+- ❌ 调用不存在的 `offerShapedRecipe` — 用 `ShapedRecipeJsonBuilder` + `offerTo(RecipeExporter, RegistryKey<Recipe<?>>)`。实测出处：1.21.11 fabric-api 源（解包 `-sources.jar`）里 `FabricRecipeProvider` 成员仅 ctor / 抽象 `getRecipeGenerator` / `withConditions` / `run` / `getRecipeIdentifier`，无 `offerShapedRecipe`、无 `buildRecipes`
+- ❌ 把带参 `buildRecipes(RecipeOutput)` 当 `FabricRecipeProvider` 的覆写 — 见上「生成配方」；1.21.11 该方法无参且在返回的 vanilla 生成器上
 
 ## 扩展点
 

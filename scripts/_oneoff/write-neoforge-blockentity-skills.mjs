@@ -3,9 +3,10 @@
  * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖已人工修订的 mc-blockentity）。
  * 只写六档 mc-blockentity，不覆盖 00–10。
  */
-import { mkdirSync, writeFileSync, readFileSync } from "fs";
+import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { emit } from "../_lib/write-guard.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const VERS = ["1.20.4", "1.21.1", "1.21.3", "1.21.8", "1.21.11", "26.1"];
@@ -30,7 +31,5 @@ ${r02}
 触发词：BlockEntity、BlockEntityType、getTicker、getUpdateTag。
 `;
   const dir = join(ROOT, "neoforge", ver, ".cursor", "skills", "mc-blockentity");
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, "SKILL.md"), body, "utf8");
-  console.log("wrote", ver);
+  emit(join(dir, "SKILL.md"), body);
 }

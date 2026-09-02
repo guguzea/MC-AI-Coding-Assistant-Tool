@@ -232,7 +232,14 @@ export function classifyJavaFmlToml(toml: string): "forge" | "neoforge" | "unkno
   return "skip";
 }
 
-/** loader 判定：Quilt → NeoForge → LiteLoader（相对残留 fabric JSON）→ Fabric → Rift（tweaker-client 先于 forge 子串）→ Forge → ModLoader → 基岩 */
+/**
+ * loader 判定优先级（与根 AGENTS.md 第一步顺序一致）：
+ * Quilt → NeoForge（显式 neoModsToml / Neo 插件）→ 残留 fabric.mod.json 不拍板（先读 javafml 元数据）
+ * → Fabric（fabric-loom 强信号）→ LiteLoader 混合（liteloader 专用插件 = 构建期硬证据）
+ * → Rift（riftmod.json / tweaker-client；必须先于 forge 子串，因为插件 id 本身含 `net.minecraftforge.gradle`）
+ * → LiteLoader 纯（无 FML 元数据）/ LiteLoader+Forge 元数据并存 → unknown
+ * → javafml mods.toml（明确命中才早退，unknown 继续看 Gradle）→ Forge → ModLoader → 基岩 → unknown
+ */
 export function detectLoader(
   buildGradle: string,
   modsToml?: string,
@@ -250,10 +257,10 @@ export function detectLoader(
 
   const litemod = extras?.litemodJson?.trim();
   const hasLlPlugin = /net\.minecraftforge\.gradle\.liteloader/.test(buildGradle);
-  const hasForgeMeta =
-    /modLoader\s*=\s*"javafml"/i.test(modsToml ?? "") ||
-    /@Mod\b/.test(buildGradle);
   const hasLiteMeta = Boolean(litemod) || /LiteMod|litemod\.json/i.test(buildGradle);
+  // FML 系元数据一律走 classifyJavaFmlToml 单一来源（forge / neoforge / unknown 都算在场），
+  // 不再另写一份 modLoader 正则——两套判定各写各的就会漂移。
+  const hasForgeMeta = classifyJavaFmlToml(modsToml ?? "") !== "skip" || /@Mod\b/.test(buildGradle);
   const leftoverFabricJson = Boolean(fabricModJson?.trim());
   const fabricLoom =
     /fabric-loom|fabric-api/i.test(buildGradle) && !/quilt-loom|org\.quiltmc\.loom/i.test(buildGradle);
@@ -279,13 +286,11 @@ export function detectLoader(
   if (hasLlPlugin) {
     return "liteloader_forge";
   }
-  if (hasLiteMeta && !hasForgeMeta) {
-    return "liteloader";
-  }
-  if (hasLiteMeta && hasForgeMeta && !hasLlPlugin) {
-    return "unknown";
-  }
 
+  // Rift 必须先于「纯 LiteLoader」判定：riftmod.json / tweaker-client 是 1.13.2 工程的在场证据，
+  // 而 litemod.json 属于已停更的 1.12.2 LiteLoader，常作为迁移残留留在同一工程里。
+  // 与残留 fabric.mod.json 同一条原则：失效加载器的残留不得压过在场加载器的元数据。
+  // 仍排在 hasLlPlugin 之后：显式 apply 的 liteloader 专用插件是构建期硬证据。
   const riftJson = extras?.riftmodJson?.trim();
   if (
     riftJson ||
@@ -293,6 +298,13 @@ export function detectLoader(
     /RiftLoaderClientTweaker|net\.minecraftforge\.gradle\.tweaker-client/i.test(buildGradle)
   ) {
     return "rift";
+  }
+
+  if (hasLiteMeta && !hasForgeMeta) {
+    return "liteloader";
+  }
+  if (hasLiteMeta && hasForgeMeta && !hasLlPlugin) {
+    return "unknown";
   }
 
   const toml = modsToml?.trim();
@@ -413,7 +425,9 @@ export function detectProjectLoaders(input: {
   const anyForgeMeta = [input.modsToml, ...(input.modsTomls ?? [])].some(
     (t) => t && /modLoader\s*=\s*"javafml"/i.test(t) && !/neoforge/i.test(t),
   );
-  const anyForgeGradle = /net\.minecraftforge\.gradle(?!\.liteloader)|id\s+['"]net\.minecraftforge\.gradle['"]/i.test(
+  // tweaker-client 是 Rift 的加载器插件，只是名字落在 net.minecraftforge.gradle 命名空间下，
+  // 不能当成 ForgeGradle 信号（与 .liteloader 同一处理）。
+  const anyForgeGradle = /net\.minecraftforge\.gradle(?!\.liteloader|\.tweaker-client)|id\s+['"]net\.minecraftforge\.gradle['"]/i.test(
     gradle,
   );
 
@@ -428,7 +442,9 @@ export function detectProjectLoaders(input: {
     Boolean(extras.litemodJson?.trim()) ||
     /net\.minecraftforge\.gradle\.liteloader/.test(gradle) ||
     /\bLiteMod\b|litemod\.json|com\.mumfrey\.liteloader/i.test(`${gradle}\n${javaBlob}`);
-  if (anyLite && primary !== "liteloader_forge") found.add("liteloader");
+  // primary 已决断成混合 LiteLoader 或 Rift 时，残留 litemod.json 不再单独计入 loaders[]：
+  // 否则 detect.ts 的 multiLoader 门会在用到 primary 之前返回 PICK_PLATFORM，判定链在工具面被架空。
+  if (anyLite && primary !== "liteloader_forge" && primary !== "rift") found.add("liteloader");
   if (primary !== "unknown") found.add(primary);
 
   const loaders = [...found];

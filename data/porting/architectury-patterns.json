@@ -1,7 +1,8 @@
 {
   "meta": {
-    "lastUpdated": "2026-05-27",
-    "note": "从 Architectury 官方文档 + 真实项目提取。使用 scripts/update-architectury-examples.js 辅助更新。"
+    "lastUpdated": "2026-09-01",
+    "note": "从 Architectury 官方文档 + 真实项目提取，人工维护。运行时唯一消费者是 mcp-server/src/porting/index.ts 的 loadArchitecturyPatterns()，且只读 settingsGradle；其余键是供 Agent 阅读的文稿。settingsGradle 必须是字符串行数组（曾是 {\"content\":[…]}，读取端 Array.isArray 恒 false → KB 从未生效），行内唯一占位符 ${modId} 由读取端替换。scripts/update-architectury-examples.js（位于 mcp-server/）只生成 architectury-patterns-draft.json 草稿、不写本文件；更新 = 跑该脚本 → 人工 review → 手改本文件 → 更新 lastUpdated。",
+    "consumedBy": "mcp-server/src/porting/index.ts:loadArchitecturyPatterns（仅 settingsGradle）"
   },
   "expectPlatform": {
     "rule": "Only static methods; no instance methods",
@@ -113,22 +114,21 @@
       ]
     }
   },
-  "settingsGradle": {
-    "content": [
-      "pluginManagement {",
-      "    repositories {",
-      "        maven { url 'https://maven.fabricmc.net/' }",
-      "        maven { url 'https://maven.neoforged.net/releases' }",
-      "        gradlePluginPortal()",
-      "    }",
-      "}",
-      "",
-      "rootProject.name = 'my-multiloader-mod'",
-      "include 'common'",
-      "include 'fabric'",
-      "include 'neoforge'"
-    ]
-  },
+  "settingsGradle": [
+    "// settings.gradle 模板：MC_skill 知识库 data/porting/architectury-patterns.json（改模板请改 KB）",
+    "pluginManagement {",
+    "    repositories {",
+    "        maven { url 'https://maven.fabricmc.net/' }",
+    "        maven { url 'https://maven.neoforged.net/releases' }",
+    "        gradlePluginPortal()",
+    "    }",
+    "}",
+    "",
+    "rootProject.name = '${modId}-multiloader'",
+    "include 'common'",
+    "include 'fabric'",
+    "include 'neoforge'"
+  ],
   "moduleStructure": {
     "common": [
       "src/main/java/<base>/<modid>/",

@@ -220,7 +220,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
 1. 元数据（按平台）：Java 版 mods.toml / neoforge.mods.toml / fabric.mod.json / quilt.mod.json；LiteLoader litemod.json；Rift riftmod.json；基岩 manifest.json——核对 id、version、license
 2. 产物：build/libs 正式 jar（排除 -sources、-javadoc、dev）
 3. changelog 与支持的 MC/loader 版本
-4. 可选 check_publish_ready（若已注册）做机器检查；默认不写盘、不调外网
+4. 可选 check_publish_ready（若已注册）做机器检查：license/version、build/libs 加本清单点名的元数据字段缺项（只 warning）；默认不写盘、不调外网
 5. 用户自行上传（人在环，Agent 不调 Curse/Modrinth 上传 API）。`,
   },
   "mc-networking": {
@@ -350,7 +350,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   "mc-ci-publish-extra": {
     title: "CI 发布额外清单",
     body: `清单（人在环：不代跑 CI、不代上传）。
-1. check_publish_ready：license/version、build/libs 像正式 jar。
+1. check_publish_ready：license/version、build/libs 像正式 jar，并给出 publishing.md 清单里可机器核的缺项（只 warning，不阻断）。
 2. 列出建议的 GitHub Actions 步骤名（setup-java、gradle build、upload 工件）——只出清单；可复制的 YAML 模板在 community_knowledge/patterns/examples/mod-ci-github-actions.md。
 3. 对照 community_knowledge/authored/publishing.md。不要调 Curse/Modrinth API。`,
   },

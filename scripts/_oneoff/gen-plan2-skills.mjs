@@ -7,6 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { emit, emitCopy } from "../_lib/write-guard.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -120,9 +121,7 @@ function stubBody(name, platform, ver, docsTool) {
 }
 
 function writeSkill(dir, name, fmExtra, body) {
-  const dest = path.join(dir, name, "SKILL.md");
-  fs.mkdirSync(path.dirname(dest), { recursive: true });
-  fs.writeFileSync(dest, `${fmExtra}\n${body}`.trimStart(), "utf8");
+  return emit(path.join(dir, name, "SKILL.md"), `${fmExtra}\n${body}`.trimStart());
 }
 
 function fabricFm(name, extraDesc) {
@@ -183,16 +182,15 @@ const NEO_TOPICS = [
 
 function copyIfMissing(src, dest) {
   if (fs.existsSync(dest)) return false;
-  fs.mkdirSync(path.dirname(dest), { recursive: true });
-  fs.copyFileSync(src, dest);
-  return true;
+  return emitCopy(dest, src);
 }
 
 function main() {
   const fabDir = path.join(ROOT, "fabric", "26.1.2", ".cursor", "skills");
+  let written = 0;
   for (const name of FABRIC_SKILLS) {
     const body = VERIFIED_FABRIC[name] || stubBody(name, "Fabric", "26.1.2", "search_fabric_docs");
-    writeSkill(fabDir, name, fabricFm(name), body);
+    if (writeSkill(fabDir, name, fabricFm(name), body)) written++;
   }
 
   for (const { ver, mappings, loc, java } of NEO_VERSIONS) {
@@ -202,7 +200,7 @@ function main() {
       for (const name of fs.readdirSync(agentsSkills)) {
         const src = path.join(agentsSkills, name, "SKILL.md");
         if (fs.existsSync(src)) {
-          copyIfMissing(src, path.join(cursorSkills, name, "SKILL.md"));
+          if (copyIfMissing(src, path.join(cursorSkills, name, "SKILL.md"))) written++;
         }
       }
     }
@@ -219,10 +217,10 @@ function main() {
         extra += `\n文档入口常见 id：worldgen/biomemodifier（以该版 l0 为准）。\n`;
       }
       extra += `\n网络不要用 SimpleChannel。payload 事件：${payloadEvent}。核不到则 search_neoforge_docs version=${ver}，禁止输出。\n`;
-      writeSkill(cursorSkills, name, neoFm(name, ver, mappings), `# ${name}（NeoForge ${ver}）\n\n${extra}`);
+      if (writeSkill(cursorSkills, name, neoFm(name, ver, mappings), `# ${name}（NeoForge ${ver}）\n\n${extra}`)) written++;
     }
   }
-  console.log("wrote fabric/26.1.2 and neoforge/<ver> .cursor/skills");
+  console.log(`fabric/26.1.2 + neoforge/<ver> .cursor/skills：实际写入 ${written} 个文件${written === 0 ? "（dry-run 未落盘；加 --write 才写）" : ""}`);
 }
 
 main();

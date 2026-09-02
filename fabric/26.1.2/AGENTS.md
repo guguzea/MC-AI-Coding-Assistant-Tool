@@ -26,7 +26,9 @@
 
 00–10 只引用 `data/fabric_26.1.2` 能核到的 id。核不到的编号是「未核实、禁止输出」stub，**不是缺文件**。
 
-本档知识在 **rules + `search_fabric_docs`(version=26.1.2)**。`knowledge/` **有意为空**，禁止克隆 `fabric/1.21.11/knowledge`。
+本档知识在 **rules + `search_fabric_docs`(version=26.1.2)**，外加一份逐名可核清单 **`knowledge/common/verified-api-26.1.2.md`**（表 A 名称可核来源 / 表 B 已核实签名 / 表 C 改名对照 / 表 D javap 核实 / 表 E 未核实清单）。除该文件外 `knowledge/` **有意为空**，禁止克隆 `fabric/1.21.11/knowledge`（其 antipatterns / porting / version-changes 均非本档证据）。
+
+**版本折叠：** 工程 `minecraftVersion` 写 `26.1` 或 `26.1.1` 时，按 `knowledgeVersion` 折到本档 `fabric/26.1.2`（规则树、verified-api、docs 语料同一档）。文档检索参数只许 `version=26.1.2`，不要把工程的 `26.1` 当工具参数名。折叠只到 26.1.2，**不**折到 `fabric/1.21.11`。
 
 ## 配置（不落盘树级 mc-config）
 

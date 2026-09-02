@@ -1,8 +1,113 @@
 {
   "meta": {
-    "lastUpdated": "2026-08-10",
-    "coverage": "Forge 1.7.10–1.20.4 (Javadoc 1.7–1.12, MkDocs 1.12.2–1.20.4), NeoForge 1.20.2–26.1 (+ primer 26.2), Fabric 0.76–26.1.2 (do not clone older trees as 26.2)",
-    "note": "Forge 1.20.4 为最后一个社区维护版本，后续转向 NeoForge。知识库由人工维护。scripts/generate-porting-breakdown.js 可自动生成版本间文档结构差异。26.1+ 仅 mojmap（无 Yarn）。"
+    "lastUpdated": "2026-09-01",
+    "coverage": "Forge 1.7.10–1.20.4 + 1.13.2（Javadoc 1.7–1.12 / MkDocs 1.12.2–1.20.4），NeoForge 1.20.1–26.2，Fabric loader 钉值 1.16.5–1.21.11（+ 26.1.2 档）；共 32 个版本键",
+    "note": "Forge 1.20.4 为最后一个社区维护版本，后续转向 NeoForge。知识库由人工维护。scripts/generate-porting-breakdown.js 可自动生成版本间文档结构差异。26.1+ 仅 mojmap（无 Yarn）。 2026-09-01 起新增条目一律带 sources{} 证据指针，loader 钉值只在 data/*-versions-manifest.json 或 data/fabric_<ver>/meta.json 有对应行时才填。",
+    "provenancePolicy": {
+      "rule": "provenance=verified 的条目必须逐字段可解析；老条目登记在 meta.legacyUntaggedKeys，只能缩小不能扩张。",
+      "loaderPins": "forge / neoforge / fabric / java / mappings 只在有本仓证据行时才填，null 表示「本仓无证据」，不表示该 loader 在该版本不存在。",
+      "pointerSyntax": "sources 中以 data/ 开头且含 # 的串按 JSON 指针解析，并与同名条目字段逐字比对（mappings 逐元素比，允许来源用 '+' 连接多个映射名）。"
+    },
+    "breakingChangesRule": {
+      "source": "data/neoforge_primers/*.md 的 '## ' 小节，剥离 U+200B 后逐字取标题；一条目 = 一小节。",
+      "excludedHeadings": ["Minor Migrations"],
+      "severityMeaning": "unrated = 未经人工评级（不代表无风险）；fixType 固定 manual-review，因为要读正文小节才能定改法。",
+      "legacy": "1.7.10…1.20.2 的 breakingChanges 为人工撰写，本 story 不改写、不重评级。",
+      "consumerNote": "queryBreakingChanges 按 parseMinecraftVersion 的 min/max 区间收所有键的条目，所以跨多档的路线会拿到每档的小节清单。"
+    },
+    "legacyUntaggedKeys": ["1.7.10", "1.8.9", "1.9.4", "1.10.2", "1.11.2", "1.12.2", "1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.2", "1.19.4", "1.20.1", "1.20.4", "1.20.2"],
+    "kbKeysWithoutRuleTree": {
+      "1.20.2": "老条目：该版本在本仓只有 Forge 文档档，无 <platform>/<ver> 规则树；跨加载器移植仍可用本条目的 loader 钉值。",
+      "1.20.5": "无独立 1.20.5 规则树 / 文档树：NeoForge 把 1.20.5 与 1.20.6 并成同一档（manifest 1.20.6 行 versionLabel \"Version: 1.20.5 - 1.20.6\"），故 loader / mappings 不填。java 另由 primer 1.20.5 小节 \"Java 21\" 佐证。",
+      "1.21": "1.20.6→1.21 断代点。无 <platform>/1.21 规则树（1.21.1 档代表 1.21 与 1.21.1），loader 钉值见键 1.21.1。",
+      "1.21.2": "无 1.21.2 规则树 / 文档树：NeoForge 把 1.21.2 与 1.21.3 并档（manifest 1.21.3 行 versionLabel \"Version: 1.21.2 - 1.21.3\"）。1.21.1→1.21.2 是本区间最大断代之一。",
+      "1.21.6": "无 1.21.6 规则树：NeoForge 把 1.21.6–1.21.8 并档（manifest 1.21.8 行 versionLabel \"Version: 1.21.6 - 1.21.8\"）。",
+      "1.21.7": "无 1.21.7 规则树，理由同 1.21.6（并档到 1.21.8）。",
+      "1.21.9": "无 1.21.9 规则树：NeoForge 把 1.21.9 与 1.21.10 并档（manifest 1.21.10 行 versionLabel \"Version: 1.21.9 - 1.21.10\"）。",
+      "26.2": "manifest available:false（官方主文档不按版本分线：/docs/26.2/ 与 /docs/26.1/ 同样 404；26.2 构建已发布，maven 最新 26.2.0.75，2026-09-02 实读）⇒ 只有 primer 26.2；禁止克隆 26.1 树冒充 26.2（AGENTS 红线）。本仓无 26.2 规则树。"
+    },
+    "knownRuleTreeGaps": {
+      "modloader/1.6.4": "ModLoader 1.x 三档只有规则树 + 文档，无跨加载器移植需求（该时代只有 MCP 映射），KB 不补条目；若真要移植再补。",
+      "modloader/1.5.2": "ModLoader 1.x 三档只有规则树 + 文档，无跨加载器移植需求（该时代只有 MCP 映射），KB 不补条目；若真要移植再补。",
+      "modloader/1.2.5": "ModLoader 1.x 三档只有规则树 + 文档，无跨加载器移植需求（该时代只有 MCP 映射），KB 不补条目；若真要移植再补。"
+    },
+    "knownDraftRuleTrees": {
+      "forge/1.21.1": "00–10 尚未撰写，session 返回 PACK_NOT_FOUND（根 AGENTS 已记），不得用 NeoForge 1.21.1 或 Forge 1.20.4 顶上。"
+    },
+    "fieldConflicts": [
+      {
+        "key": "1.12.2",
+        "field": "forge",
+        "kb": "14.23.5.2859",
+        "source": "14.23.5.2858",
+        "sourceFile": "data/forge-versions-manifest.json#versions['1.12.2'].forgeVersion",
+        "kind": "divergent",
+        "note": "2858 / 2859 都是已发布的 1.12.2 build；KB 取 2859（末版），manifest 探针取 2858。不改写，留人工定夺。"
+      },
+      {
+        "key": "1.19.4",
+        "field": "fabric",
+        "kb": "0.14.21",
+        "source": "0.14.9",
+        "sourceFile": "data/fabric_1.19.4/meta.json#loader.version",
+        "kind": "divergent",
+        "note": "KB 记该 MC 档可用的较新 loader，meta.json 记抓文档时实际用的 loader。两者语义不同，未统一。"
+      },
+      {
+        "key": "1.20.1",
+        "field": "fabric",
+        "kb": "0.15.0",
+        "source": "0.15.11",
+        "sourceFile": "data/fabric_1.20.1/meta.json#loader.version",
+        "kind": "divergent",
+        "note": "同上。"
+      },
+      {
+        "key": "1.20.4",
+        "field": "fabric",
+        "kb": "0.15.7",
+        "source": "0.15.9",
+        "sourceFile": "data/fabric_1.20.4/meta.json#loader.version",
+        "kind": "divergent",
+        "note": "同上。"
+      },
+      {
+        "key": "1.20.2",
+        "field": "neoforge",
+        "kb": "20.2.247",
+        "source": null,
+        "sourceFile": "data/neoforge-versions-manifest.json#versions['1.20.2'].neoforgeVersion",
+        "kind": "noInRepoSource",
+        "note": "neoforge-versions-manifest 无 1.20.2 行（探针未覆盖），本仓无从校验该钉值；保留人工值。"
+      },
+      {
+        "key": "1.20.2",
+        "field": "fabric",
+        "kb": "0.15.0",
+        "source": null,
+        "sourceFile": "data/fabric_1.20.2/meta.json#loader.version",
+        "kind": "noInRepoSource",
+        "note": "本仓没有 data/fabric_1.20.2/（Fabric 1.20.2 未抓文档），无从校验该 loader 钉值；保留人工值。"
+      },
+      {
+        "key": "1.21.1",
+        "field": "java",
+        "kb": 21,
+        "source": "JAVA_17",
+        "sourceFile": "data/fabric_1.21.1/meta.json#meta.compatibilityLevel",
+        "kind": "divergent",
+        "note": "compatibilityLevel 是 loom 编译目标，不是 MC 运行 Java；KB 与 manifest 都取 21。"
+      },
+      {
+        "key": "1.21.11",
+        "field": "java",
+        "kb": 21,
+        "source": 25,
+        "sourceFile": "src:javaForMcVersion",
+        "kind": "divergent",
+        "note": "代码 javaForMcVersion 对 1.21.11 返回 25，而 manifest + 两棵规则档都是 21。KB 有键后 target.java 走 KB=21；代码侧待单独修（连带 test-core 里 javaForMcVersion 的钉值）。"
+      }
+    ]
   },
   "versions": {
     "1.7.10": {
@@ -78,6 +183,24 @@
           "fixType": "manual-review"
         }
       ]
+    },
+    "1.13.2": {
+      "forge": "25.0.55",
+      "neoforge": null,
+      "fabric": null,
+      "java": 8,
+      "mappings": ["mcp"],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "forge": "data/forge-versions-manifest.json#versions['1.13.2'].forgeVersion",
+        "java": "data/forge-versions-manifest.json#versions['1.13.2'].javaVersion",
+        "mappings": "data/forge-versions-manifest.json#versions['1.13.2'].mappings",
+        "ruleTrees": "forge/1.13.2, rift/1.13.2",
+        "dataDirs": "data/forge_1.13.2, data/rift_1.13.2"
+      },
+      "breakingChanges": [],
+      "note": "本仓 primer 从 1.14 起，1.13.2 无 primer ⇒ breakingChanges 空不代表无风险；1.12.2→1.13.2 的结构差异见 data/forge-porting/breaking-changes/1.12.2-1.14.4.json，正文见 primer 1.14。Rift 唯一档也在 1.13.2。"
     },
     "1.14.4": {
       "forge": "26.0.21",
@@ -206,16 +329,6 @@
       "docSource": "mkdocs",
       "breakingChanges": []
     },
-    "1.20.4": {
-      "forge": null,
-      "neoforge": "20.4.237",
-      "fabric": "0.15.7",
-      "java": 17,
-      "mappings": ["mojmaps", "parchment"],
-      "docSource": "mkdocs",
-      "note": "Forge 1.20.4 为最后官方版，后续转为 NeoForge。breakingChanges 为空（小幅升级）。",
-      "breakingChanges": []
-    },
     "1.20.2": {
       "forge": null,
       "neoforge": "20.2.247",
@@ -251,6 +364,1344 @@
           "fixType": "manual-review"
         }
       ]
+    },
+    "1.20.4": {
+      "forge": null,
+      "neoforge": "20.4.237",
+      "fabric": "0.15.7",
+      "java": 17,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "note": "Forge 1.20.4 为最后官方版，后续转为 NeoForge。breakingChanges 为空（小幅升级）。",
+      "breakingChanges": []
+    },
+    "1.20.5": {
+      "forge": null,
+      "neoforge": null,
+      "fabric": null,
+      "java": 21,
+      "mappings": [],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.20.5.md",
+        "java": "src:javaForMcVersion"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.20.5",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "Java 21",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "Java 21",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "Data Components",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "Data Components",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "Stream Codecs",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "Stream Codecs",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "Sub Predicate Types",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "Sub Predicate Types",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "Don't you like Holders?",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "Don't you like Holders?",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "ExtraCodecs to DataFixerUpper",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "ExtraCodecs to DataFixerUpper",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "Codec Replacements",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "Codec Replacements",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "Removed Redundant PoseStacks",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "Removed Redundant PoseStacks",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "ItemInteractionResult",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "ItemInteractionResult",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "Enchantments, now with Definitions",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "Enchantments, now with Definitions",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "Blocks: From public to protected",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "Blocks: From public to protected",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "ItemStack Max Stack Size 99",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "ItemStack Max Stack Size 99",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "No more magicalSpecialHackyFocus",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "No more magicalSpecialHackyFocus",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.20.5",
+          "description": "Bootstap? No! It's Bootstrap!",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.5.md",
+          "evidenceHeading": "Bootstap? No! It's Bootstrap!",
+          "primerRange": "1.20.4 -> 1.20.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        }
+      ],
+      "note": "无独立 1.20.5 规则树 / 文档树：NeoForge 把 1.20.5 与 1.20.6 并成同一档（manifest 1.20.6 行 versionLabel \"Version: 1.20.5 - 1.20.6\"），故 loader / mappings 不填。java 另由 primer 1.20.5 小节 \"Java 21\" 佐证。"
+    },
+    "1.20.6": {
+      "forge": null,
+      "neoforge": "20.6.x",
+      "fabric": null,
+      "java": 21,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.20.6.md",
+        "neoforge": "data/neoforge-versions-manifest.json#versions['1.20.6'].neoforgeVersion",
+        "java": "data/neoforge-versions-manifest.json#versions['1.20.6'].javaVersion",
+        "mappings": "data/neoforge-versions-manifest.json#versions['1.20.6'].mappings",
+        "ruleTrees": "neoforge/1.20.6",
+        "dataDirs": "data/neoforge_1.20.6"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.20.6",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.6.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.20.5 -> 1.20.6",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.20.6",
+          "description": "Additions",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.20.6.md",
+          "evidenceHeading": "Additions",
+          "primerRange": "1.20.5 -> 1.20.6",
+          "license": "未声明（本仓抓取件）"
+        }
+      ]
+    },
+    "1.21": {
+      "forge": null,
+      "neoforge": null,
+      "fabric": null,
+      "java": 21,
+      "mappings": [],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.21.md",
+        "java": "src:javaForMcVersion"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.21",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.20.6 -> 1.21",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21",
+          "description": "Moving Experimental Features",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.md",
+          "evidenceHeading": "Moving Experimental Features",
+          "primerRange": "1.20.6 -> 1.21",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21",
+          "description": "ResourceLocation, now Private",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.md",
+          "evidenceHeading": "ResourceLocation, now Private",
+          "primerRange": "1.20.6 -> 1.21",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21",
+          "description": "Depluralizing Registry and Tag Folders",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.md",
+          "evidenceHeading": "Depluralizing Registry and Tag Folders",
+          "primerRange": "1.20.6 -> 1.21",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21",
+          "description": "Oh Rendering, why must you change so?",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.md",
+          "evidenceHeading": "Oh Rendering, why must you change so?",
+          "primerRange": "1.20.6 -> 1.21",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21",
+          "description": "The Enchantment Datapack Object",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.md",
+          "evidenceHeading": "The Enchantment Datapack Object",
+          "primerRange": "1.20.6 -> 1.21",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21",
+          "description": "The Painting Variant Datapack Object",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.md",
+          "evidenceHeading": "The Painting Variant Datapack Object",
+          "primerRange": "1.20.6 -> 1.21",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21",
+          "description": "Attribute Modifiers, now with ResourceLocations",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.md",
+          "evidenceHeading": "Attribute Modifiers, now with ResourceLocations",
+          "primerRange": "1.20.6 -> 1.21",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21",
+          "description": "RecipeInput",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.md",
+          "evidenceHeading": "RecipeInput",
+          "primerRange": "1.20.6 -> 1.21",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21",
+          "description": "Changing Dimensions",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.md",
+          "evidenceHeading": "Changing Dimensions",
+          "primerRange": "1.20.6 -> 1.21",
+          "license": "未声明（本仓抓取件）"
+        }
+      ],
+      "note": "1.20.6→1.21 断代点。无 <platform>/1.21 规则树（1.21.1 档代表 1.21 与 1.21.1），loader 钉值见键 1.21.1。"
+    },
+    "1.21.1": {
+      "forge": null,
+      "neoforge": "21.1.113",
+      "fabric": null,
+      "java": 21,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.21.1.md",
+        "neoforge": "data/neoforge-versions-manifest.json#versions['1.21.1'].neoforgeVersion",
+        "java": "data/neoforge-versions-manifest.json#versions['1.21.1'].javaVersion",
+        "mappings": "data/neoforge-versions-manifest.json#versions['1.21.1'].mappings",
+        "ruleTrees": "neoforge/1.21.1, fabric/1.21.1, quilt/1.21.1, forge/1.21.1",
+        "dataDirs": "data/neoforge_1.21.1, data/fabric_1.21.1, data/quilt_1.21.1"
+      },
+      "breakingChanges": [],
+      "note": "primer 1.21.1 只有 Minor Migrations 小节 ⇒ breakingChanges 为空不代表无风险（1.20.6→1.21 的断代记在键 1.21）。data/fabric_1.21.1/meta.json 只有 fabricLoaderVersionRange=0.15.x，无钉值；其 compatibilityLevel=JAVA_17 是 loom 编译目标，不是运行 Java（见 meta.fieldConflicts）。forge/1.21.1 是 0 规则 draft。"
+    },
+    "1.21.2": {
+      "forge": null,
+      "neoforge": null,
+      "fabric": null,
+      "java": 21,
+      "mappings": [],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.21.2.md",
+        "java": "src:javaForMcVersion"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.21.2",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "The Holder Set Transition",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "The Holder Set Transition",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Gui Render Types",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Gui Render Types",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Shader Rewrites",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Shader Rewrites",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Entity Render States",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Entity Render States",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Equipments and Items, Models and All",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Equipments and Items, Models and All",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Armor Materials, Equipment, and Model (Textures)",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Armor Materials, Equipment, and Model (Textures)",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Interaction Results",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Interaction Results",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Instruments, the Datapack Edition",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Instruments, the Datapack Edition",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Trial Spawner Configurations, now in Datapack Form",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Trial Spawner Configurations, now in Datapack Form",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Recipe Providers, the 'not actually' of Data Providers",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Recipe Providers, the 'not actually' of Data Providers",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "The Ingredient Shift",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "The Ingredient Shift",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "BlockEntityTypes Privatized!",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "BlockEntityTypes Privatized!",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Consumables",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Consumables",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Registry Objcet Id, in the Properties?",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Registry Objcet Id, in the Properties?",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Properties Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Properties Changes",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.2",
+          "description": "Recipes, now in Registry format",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.2.md",
+          "evidenceHeading": "Recipes, now in Registry format",
+          "primerRange": "1.21.1 -> 1.21.2",
+          "license": "未声明（本仓抓取件）"
+        }
+      ],
+      "note": "无 1.21.2 规则树 / 文档树：NeoForge 把 1.21.2 与 1.21.3 并档（manifest 1.21.3 行 versionLabel \"Version: 1.21.2 - 1.21.3\"）。1.21.1→1.21.2 是本区间最大断代之一。"
+    },
+    "1.21.3": {
+      "forge": null,
+      "neoforge": "21.3.x",
+      "fabric": "0.16.9",
+      "java": 21,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "neoforge": "data/neoforge-versions-manifest.json#versions['1.21.3'].neoforgeVersion",
+        "fabric": "data/fabric_1.21.3/meta.json#loader.version",
+        "java": "data/neoforge-versions-manifest.json#versions['1.21.3'].javaVersion",
+        "mappings": "data/neoforge-versions-manifest.json#versions['1.21.3'].mappings",
+        "ruleTrees": "neoforge/1.21.3, fabric/1.21.3, quilt/1.21.3",
+        "dataDirs": "data/neoforge_1.21.3, data/fabric_1.21.3"
+      },
+      "breakingChanges": [],
+      "note": "本仓无 primer 1.21.3（断代记在 1.21.2 与 1.21.4）⇒ breakingChanges 为空。"
+    },
+    "1.21.4": {
+      "forge": null,
+      "neoforge": null,
+      "fabric": null,
+      "java": 21,
+      "mappings": [],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.21.4.md",
+        "java": "src:javaForMcVersion",
+        "ruleTrees": "fabric/1.21.4, quilt/1.21.4",
+        "dataDirs": "data/fabric_1.21.4"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.21.4",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.4.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.21.3 -> 1.21.4",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.4",
+          "description": "Client Items",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.4.md",
+          "evidenceHeading": "Client Items",
+          "primerRange": "1.21.3 -> 1.21.4",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.4",
+          "description": "Mob Replacing Current Items",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.4.md",
+          "evidenceHeading": "Mob Replacing Current Items",
+          "primerRange": "1.21.3 -> 1.21.4",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.4",
+          "description": "Particles, rendered through Render Types",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.4.md",
+          "evidenceHeading": "Particles, rendered through Render Types",
+          "primerRange": "1.21.3 -> 1.21.4",
+          "license": "未声明（本仓抓取件）"
+        }
+      ],
+      "note": "neoforge-versions-manifest 无 1.21.4 行（NeoForge 未出该文档档），故 neoforge / mappings 不填。"
+    },
+    "1.21.5": {
+      "forge": null,
+      "neoforge": "21.5.x",
+      "fabric": null,
+      "java": 21,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.21.5.md",
+        "neoforge": "data/neoforge-versions-manifest.json#versions['1.21.5'].neoforgeVersion",
+        "java": "data/neoforge-versions-manifest.json#versions['1.21.5'].javaVersion",
+        "mappings": "data/neoforge-versions-manifest.json#versions['1.21.5'].mappings",
+        "ruleTrees": "neoforge/1.21.5",
+        "dataDirs": "data/neoforge_1.21.5"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.21.5",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.5",
+          "description": "Handling the Removal of Block Entities Properly",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "Handling the Removal of Block Entities Properly",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.5",
+          "description": "Voxel Shape Helpers",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "Voxel Shape Helpers",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.5",
+          "description": "Weapons, Tools, and Armor: Removing the Redundancies",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "Weapons, Tools, and Armor: Removing the Redundancies",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.5",
+          "description": "Weighted List Rework",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "Weighted List Rework",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.5",
+          "description": "Tickets",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "Tickets",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.5",
+          "description": "The Game Test Overhaul",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "The Game Test Overhaul",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.5",
+          "description": "Data Component Getters",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "Data Component Getters",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.5",
+          "description": "Tags and Parsing",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "Tags and Parsing",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.5",
+          "description": "Saved Data, now with Types",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "Saved Data, now with Types",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.5",
+          "description": "Render Pipeline Rework",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "Render Pipeline Rework",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.5",
+          "description": "Model Rework",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.5.md",
+          "evidenceHeading": "Model Rework",
+          "primerRange": "1.21.4 -> 1.21.5",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        }
+      ]
+    },
+    "1.21.6": {
+      "forge": null,
+      "neoforge": null,
+      "fabric": null,
+      "java": 21,
+      "mappings": [],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.21.6.md",
+        "java": "src:javaForMcVersion"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.21.6",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.6.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.21.5 -> 1.21.6",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.6",
+          "description": "GUI Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.6.md",
+          "evidenceHeading": "GUI Changes",
+          "primerRange": "1.21.5 -> 1.21.6",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.6",
+          "description": "Waypoints",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.6.md",
+          "evidenceHeading": "Waypoints",
+          "primerRange": "1.21.5 -> 1.21.6",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.6",
+          "description": "Blaze3d Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.6.md",
+          "evidenceHeading": "Blaze3d Changes",
+          "primerRange": "1.21.5 -> 1.21.6",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.6",
+          "description": "Tag Providers: Appender Rewrite",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.6.md",
+          "evidenceHeading": "Tag Providers: Appender Rewrite",
+          "primerRange": "1.21.5 -> 1.21.6",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.6",
+          "description": "Generic Encoding and Decoding: Replacing Direct NBT Access",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.6.md",
+          "evidenceHeading": "Generic Encoding and Decoding: Replacing Direct NBT Access",
+          "primerRange": "1.21.5 -> 1.21.6",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.6",
+          "description": "Server Player Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.6.md",
+          "evidenceHeading": "Server Player Changes",
+          "primerRange": "1.21.5 -> 1.21.6",
+          "license": "未声明（本仓抓取件）"
+        }
+      ],
+      "note": "无 1.21.6 规则树：NeoForge 把 1.21.6–1.21.8 并档（manifest 1.21.8 行 versionLabel \"Version: 1.21.6 - 1.21.8\"）。"
+    },
+    "1.21.7": {
+      "forge": null,
+      "neoforge": null,
+      "fabric": null,
+      "java": 21,
+      "mappings": [],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.21.7.md",
+        "java": "src:javaForMcVersion"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.21.7",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.7.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.21.6 -> 1.21.7",
+          "license": "未声明（本仓抓取件）"
+        }
+      ],
+      "note": "无 1.21.7 规则树，理由同 1.21.6（并档到 1.21.8）。"
+    },
+    "1.21.8": {
+      "forge": null,
+      "neoforge": "21.8.x",
+      "fabric": null,
+      "java": 21,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.21.8.md",
+        "neoforge": "data/neoforge-versions-manifest.json#versions['1.21.8'].neoforgeVersion",
+        "java": "data/neoforge-versions-manifest.json#versions['1.21.8'].javaVersion",
+        "mappings": "data/neoforge-versions-manifest.json#versions['1.21.8'].mappings",
+        "ruleTrees": "neoforge/1.21.8, fabric/1.21.8, quilt/1.21.8",
+        "dataDirs": "data/neoforge_1.21.8, data/fabric_1.21.8"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.21.8",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.8.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.21.7 -> 1.21.8",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        }
+      ]
+    },
+    "1.21.9": {
+      "forge": null,
+      "neoforge": null,
+      "fabric": null,
+      "java": 21,
+      "mappings": [],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.21.9.md",
+        "java": "src:javaForMcVersion"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.21.9",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.9.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.21.8 -> 1.21.9",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.9",
+          "description": "The Debugging Overhaul",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.9.md",
+          "evidenceHeading": "The Debugging Overhaul",
+          "primerRange": "1.21.8 -> 1.21.9",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.9",
+          "description": "Debug Screens",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.9.md",
+          "evidenceHeading": "Debug Screens",
+          "primerRange": "1.21.8 -> 1.21.9",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.9",
+          "description": "Feature Submissions: The Movie",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.9.md",
+          "evidenceHeading": "Feature Submissions: The Movie",
+          "primerRange": "1.21.8 -> 1.21.9",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.9",
+          "description": "The Font Glyph Pipeline",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.9.md",
+          "evidenceHeading": "The Font Glyph Pipeline",
+          "primerRange": "1.21.8 -> 1.21.9",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.9",
+          "description": "The JSON-RPC Management Servers",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.9.md",
+          "evidenceHeading": "The JSON-RPC Management Servers",
+          "primerRange": "1.21.8 -> 1.21.9",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.9",
+          "description": "Input Handling Consolidation",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.9.md",
+          "evidenceHeading": "Input Handling Consolidation",
+          "primerRange": "1.21.8 -> 1.21.9",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "1.21.9",
+          "description": "Level#isClientSide now private",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.9.md",
+          "evidenceHeading": "Level#isClientSide now private",
+          "primerRange": "1.21.8 -> 1.21.9",
+          "license": "未声明（本仓抓取件）"
+        }
+      ],
+      "note": "无 1.21.9 规则树：NeoForge 把 1.21.9 与 1.21.10 并档（manifest 1.21.10 行 versionLabel \"Version: 1.21.9 - 1.21.10\"）。"
+    },
+    "1.21.10": {
+      "forge": null,
+      "neoforge": "21.10.x",
+      "fabric": null,
+      "java": 21,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.21.10.md",
+        "neoforge": "data/neoforge-versions-manifest.json#versions['1.21.10'].neoforgeVersion",
+        "java": "data/neoforge-versions-manifest.json#versions['1.21.10'].javaVersion",
+        "mappings": "data/neoforge-versions-manifest.json#versions['1.21.10'].mappings",
+        "ruleTrees": "neoforge/1.21.10, fabric/1.21.10, quilt/1.21.10",
+        "dataDirs": "data/neoforge_1.21.10, data/fabric_1.21.10"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.21.10",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.10.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.21.9 -> 1.21.10",
+          "license": "未声明（本仓抓取件）"
+        }
+      ]
+    },
+    "1.21.11": {
+      "forge": null,
+      "neoforge": "21.11.x",
+      "fabric": "0.16.9",
+      "java": 21,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/1.21.11.md",
+        "neoforge": "data/neoforge-versions-manifest.json#versions['1.21.11'].neoforgeVersion",
+        "fabric": "data/fabric_1.21.11/meta.json#loader.version",
+        "java": "data/neoforge-versions-manifest.json#versions['1.21.11'].javaVersion",
+        "mappings": "data/neoforge-versions-manifest.json#versions['1.21.11'].mappings",
+        "ruleTrees": "neoforge/1.21.11, fabric/1.21.11, quilt/1.21.11",
+        "dataDirs": "data/neoforge_1.21.11, data/fabric_1.21.11, data/quilt_1.21.11",
+        "yarn": "data/fabric_1.21.11/meta.json#yarn.version"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "1.21.11",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.11.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.21.10 -> 1.21.11",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.11",
+          "description": "The Rename Shuffle",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.11.md",
+          "evidenceHeading": "The Rename Shuffle",
+          "primerRange": "1.21.10 -> 1.21.11",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.11",
+          "description": "Oh Hey, Another Rendering Rewrite",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.11.md",
+          "evidenceHeading": "Oh Hey, Another Rendering Rewrite",
+          "primerRange": "1.21.10 -> 1.21.11",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.11",
+          "description": "Gizmos",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.11.md",
+          "evidenceHeading": "Gizmos",
+          "primerRange": "1.21.10 -> 1.21.11",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.11",
+          "description": "Permission Overhaul",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.11.md",
+          "evidenceHeading": "Permission Overhaul",
+          "primerRange": "1.21.10 -> 1.21.11",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.11",
+          "description": "New Data Components",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.11.md",
+          "evidenceHeading": "New Data Components",
+          "primerRange": "1.21.10 -> 1.21.11",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.11",
+          "description": "The Timeline of Environment Attributes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.11.md",
+          "evidenceHeading": "The Timeline of Environment Attributes",
+          "primerRange": "1.21.10 -> 1.21.11",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        },
+        {
+          "mcVersion": "1.21.11",
+          "description": "The Game Rule Shuffle",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/1.21.11.md",
+          "evidenceHeading": "The Game Rule Shuffle",
+          "primerRange": "1.21.10 -> 1.21.11",
+          "license": "CC-BY-4.0 (ChampionAsh5357)"
+        }
+      ],
+      "note": "java=21 由 manifest + 两棵规则档（neoforge/1.21.11 核实表、fabric/1.21.11 00-project-setup）一致给出；而 javaForMcVersion(\"1.21.11\") 返回 25 —— 已登记 meta.fieldConflicts，代码侧本 story 不动。yarn 钉值为 1.21.11+build.6（stable），仅作对照：26.1+ 不再需要 Yarn。"
+    },
+    "26.1": {
+      "forge": null,
+      "neoforge": "26.1.0.x",
+      "fabric": null,
+      "java": 25,
+      "mappings": ["mojmap-only"],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/26.1.md",
+        "neoforge": "data/neoforge-versions-manifest.json#versions['26.1'].neoforgeVersion",
+        "java": "data/neoforge-versions-manifest.json#versions['26.1'].javaVersion",
+        "mappings": "data/neoforge-versions-manifest.json#versions['26.1'].mappings",
+        "ruleTrees": "neoforge/26.1, fabric/26.1.2",
+        "dataDirs": "data/neoforge_26.1, data/fabric_26.1.2"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "26.1",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "Java 25 and Deobfuscation",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Java 25 and Deobfuscation",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "Loot Type Unrolling",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Loot Type Unrolling",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "Validation Overhaul",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Validation Overhaul",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "Datapack Villager Trades",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Datapack Villager Trades",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "Level#random field now protected",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Level#random field now protected",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "Data Component Initializers",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Data Component Initializers",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "Item Instances and Stack Templates",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Item Instances and Stack Templates",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "Serializer Records and Recipe Info",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Serializer Records and Recipe Info",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "Dye Component",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Dye Component",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "World Clocks and Time Markers",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "World Clocks and Time Markers",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "Splitting the Primary Level Data into Saved Data",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Splitting the Primary Level Data into Saved Data",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.1",
+          "description": "Even More Rendering Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.1.md",
+          "evidenceHeading": "Even More Rendering Changes",
+          "primerRange": "1.21.11 -> 26.1",
+          "license": "未声明（本仓抓取件）"
+        }
+      ],
+      "note": "26.1 起游戏去混淆（primer 26.1 小节 \"Java 25 and Deobfuscation\"）：不再需要 Yarn / intermediary remap。Fabric 规则树档名是 26.1.2，不为 26.1.1 / 26.2 单造树。"
+    },
+    "26.2": {
+      "forge": null,
+      "neoforge": "26.2.0.x",
+      "fabric": null,
+      "java": 25,
+      "mappings": ["mojmap-only"],
+      "docSource": "mkdocs",
+      "provenance": "verified",
+      "sources": {
+        "primers": "data/neoforge_primers/26.2.md",
+        "neoforge": "data/neoforge-versions-manifest.json#versions['26.2'].neoforgeVersion",
+        "java": "data/neoforge-versions-manifest.json#versions['26.2'].javaVersion",
+        "mappings": "data/neoforge-versions-manifest.json#versions['26.2'].mappings"
+      },
+      "breakingChanges": [
+        {
+          "mcVersion": "26.2",
+          "description": "Pack Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.2.md",
+          "evidenceHeading": "Pack Changes",
+          "primerRange": "26.1 -> 26.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.2",
+          "description": "Too Many Rendering Changes",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.2.md",
+          "evidenceHeading": "Too Many Rendering Changes",
+          "primerRange": "26.1 -> 26.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.2",
+          "description": "Object Collections",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.2.md",
+          "evidenceHeading": "Object Collections",
+          "primerRange": "26.1 -> 26.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.2",
+          "description": "Advancements and Entity Sub Predicates",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.2.md",
+          "evidenceHeading": "Advancements and Entity Sub Predicates",
+          "primerRange": "26.1 -> 26.2",
+          "license": "未声明（本仓抓取件）"
+        },
+        {
+          "mcVersion": "26.2",
+          "description": "More Resource Keys and Separating Registry Objects",
+          "severity": "unrated",
+          "fixType": "manual-review",
+          "evidence": "data/neoforge_primers/26.2.md",
+          "evidenceHeading": "More Resource Keys and Separating Registry Objects",
+          "primerRange": "26.1 -> 26.2",
+          "license": "未声明（本仓抓取件）"
+        }
+      ],
+      "note": "manifest available:false（官方主文档不按版本分线：/docs/26.2/ 与 /docs/26.1/ 同样 404；26.2 构建已发布，maven 最新 26.2.0.75，2026-09-02 实读）⇒ 只有 primer 26.2；禁止克隆 26.1 树冒充 26.2（AGENTS 红线）。本仓无 26.2 规则树。"
     }
   }
 }

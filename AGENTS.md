@@ -258,7 +258,7 @@ Decision: 选择注册方式
 | --- | --- |
 | `query_api` | 按类名查询 Vanilla/Parchment API 签名（约 1.16.5–1.20.4；1.12.2 类名空壳；26.1+ 无索引）。精确 FQCN 或唯一简名才 `found:true`；`Handler` 等歧义子串 `found:false` + suggestions |
 | `get_method_params` | 查询方法参数名（可选 version） |
-| `convert_mapping` | mojang / mcp / yarn / parchment 互转（Yarn 走 SQLite；1.12.2 用 MCP SRG） |
+| `convert_mapping` | mojang / mcp / yarn / parchment 互转（Yarn 走预建 SQLite 惰性点查；1.12.2 用 MCP SRG；**26.1+ 已去混淆 → `UNOBFUSCATED_NO_YARN`，禁止转 yarn**） |
 | `get_server_status` | 预热/数据路径与 descriptor 自检（含 updateHint） |
 | `get_version_info` | 查询版本支持的 API 范围（**仅 Forge**） |
 | `mc_skill_update` | 检查/应用 tooling+data 更新（GitHub Release；确认后可写盘） |
@@ -266,14 +266,14 @@ Decision: 选择注册方式
 | `generate_datagen` | 生成数据生成器代码 |
 | `crash_analyze` | 分析崩溃日志 |
 | `validate_project` | 校验模组项目结构。Forge / Fabric / Quilt / NeoForge 真检查；LiteLoader/Rift/ModLoader/基岩 skipped。坏 recipe 只 warning。 |
-| `check_publish_ready` | 发布前清单（license/version/`build/libs`）。不上传、不调外网发布 API。 |
+| `check_publish_ready` | 发布前清单（license/version/`build/libs` + `community_knowledge` publishing.md 清单，缺项只 warning）。不上传、不调外网发布 API。 |
 | `inspect_runtime` | 日志型 inspector。优先 `logsDir`；否则有界探测 `run/logs`。禁止全盘 / JVM attach。 |
 | `detect_mod_project` / `activate_platform_pack` | 探测工程；`session` 加载规则/Skill 索引（默认 00/01/09），`write` 写入用户工程（见根 README「规则包加载」） |
 | `query_loader_api` / `search_loader_api` / `ingest_loader_api` | 加载器/模组 API 摘要（必填 platform+minecraftVersion）。**不是** `query_api`。ingest 把用户自备 jar 抽成摘要，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁止写仓库 `data/` |
-| `search_forge_docs` / `get_forge_doc_*` | Forge 文档。先 `list_forge_versions`；**1.12.2 用这套**，不要用 `query_api`。与 `search_docs({platform:"forge"})` 等价 |
-| `search_fabric_docs` / `get_fabric_doc_*` | Fabric 文档 |
-| `search_neoforge_docs` / `get_neoforge_doc_*` | NeoForge 文档（1.20.1 回退 Forge） |
-| `search_docs` / `get_doc_*` | 跨平台通用文档入口（`platform` 含 forge/fabric/neoforge/**quilt**/liteloader/rift/modloader）。Quilt 问 QSL 时禁止把 Fabric Registry 当命中 |
+| `search_forge_docs` / `get_forge_doc_*` / `list_forge_versions` | Forge 文档。先 `list_forge_versions`；**1.12.2 用这套**，不要用 `query_api`。与 `search_docs({platform:"forge"})` 等价 |
+| `search_fabric_docs` / `get_fabric_doc_*` / `list_fabric_versions` | Fabric 文档。先 `list_fabric_versions`；查询参数用入库档名（如 `26.1.2`），不要把工程 `minecraftVersion=26.1` 当参数名 |
+| `search_neoforge_docs` / `get_neoforge_doc_*` / `list_neoforge_versions` | NeoForge 文档（1.20.1 回退 Forge）。先 `list_neoforge_versions` |
+| `search_docs` / `get_doc_*` / `list_doc_versions` | 跨平台通用文档入口（`platform` 含 forge/fabric/neoforge/**quilt**/liteloader/rift/modloader）。Quilt 问 QSL 时禁止把 Fabric Registry 当命中。`list_doc_versions` 列的是**本仓库已入库**版本；不在清单 = 本档无语料树，不等于上游没有文档 |
 | `search_bedrock_docs` / `get_bedrock_doc_*` | 基岩版 Microsoft Learn；带滞后 `docsStatus`。不是 `search_forge_docs` |
 | `analyze_bedrock_log` | 基岩 content-log 分诊（`content_log.txt`）。**不是** `crash_analyze` |
 | `validate_addon_manifest` / `validate_bp_json` | 基岩 pack 校验；不是 `validate_project` / `validate_datapack_json` |
@@ -283,11 +283,11 @@ Decision: 选择注册方式
 | `diagnose_data_paths` | 诊断数据目录与 `community_knowledge` 配置 |
 | `query_registry` / `mixin_analyze` / `audit_resources` / `validate_datapack_json` | Registry ID、Mixin、资源与数据包校验 |
 | `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` | 工作流全文（仅完整流程才调，改已有代码不要调；**人在环清单，不是无人值守流水线**；不代跑用户 Gradle / 不拷 jar / 不上传）与知识 URI |
-| `generate_model` / `generate_lang` / `generate_network_packet` 等 | 代码/JSON 骨架生成（见根 `README.md`） |
+| `generate_model` / `generate_lang` / `generate_network_packet` / `generate_capability` / `generate_config` / `generate_entity_renderer` / `generate_worldgen` | 代码/JSON 骨架生成（见根 `README.md`）。**默认只吐文本 + `suggestedPath`**；真写需 `write=true` + `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + 绝对 `MC_SKILL_PROJECT_ROOT`，且路径相对工程根不含 `..`。`platform`/`loader` 与 `version` 必填，禁止默认 forge。 |
 | `localize_mod` | 模组汉化：diff/draft_zh / jar extract/pack_draft（无机器翻译） |
 | `analyze_log` / `analyze_build_log` / `get_migration_guide` / `check_dependencies` | 游戏日志、Gradle/javac 构建日志、迁移与依赖提示 |
 | `lookup_obfuscated` | 崩溃短名反查 |
-| `get_minecraft_source` / `decompile_mod_jar` / `search_mod_code` / `analyze_mod_jar` | 按需反编译与 jar 元数据 |
+| `get_minecraft_source` / `decompile_mod_jar` / `search_mod_code` / `analyze_mod_jar` / `download_official_mdk` | 按需反编译与 jar 元数据；`download_official_mdk` 拉官方 MDK 到 `$MC_SKILL_CACHE`（**默认 dryRun**，校验和钉在 `mcp-server/data/mdk-checksums.json`）。`search_mod_code` 源码未生成时 `NOT_FOUND`，先调反编译。 |
 | `validate_at` / `validate_aw` | AT / AW 字节码校验 |
 
 ### 工具边界（禁止误判）

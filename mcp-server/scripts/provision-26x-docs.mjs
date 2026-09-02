@@ -6,7 +6,8 @@
  * (that misleads Agents into thinking 26.2 main docs exist).
  *
  * Current official reality (as of crawl):
- * - NeoForge main docs: unversioned /docs/ labeled 26.1; /docs/26.2/ often 404
+ * - NeoForge main docs: unversioned /docs/ labeled 26.1 — the site is NOT version-split,
+ *   i.e. /docs/26.2/ 404s exactly like /docs/26.1/ — 26.2 builds DO exist on maven
  * - NeoForge primer 26.2: available → neoforge_primers/26.2.md
  * - Fabric: versions/26.1.2 on GitHub; no versions/26.2 yet
  *
@@ -69,7 +70,7 @@ async function main() {
 
   removeMisleadingClone(
     "neoforge_26.2",
-    "official /docs/26.2/ not published — do not present 26.1 as 26.2",
+    "official main docs are not version-split (/docs/26.2/ 404s like /docs/26.1/); 26.2 builds exist on maven but this repo has no 26.2 corpus — do not present 26.1 as 26.2",
   );
   removeMisleadingClone(
     "fabric_26.2",

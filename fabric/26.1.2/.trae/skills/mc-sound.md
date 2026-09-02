@@ -27,7 +27,7 @@ mappings: official
 
 - 原版全部音效实例见 `SoundEvents` 类。
 - **playSound 务必在逻辑服务端调用**（页面强调）；`LivingEntity` 上 playSound 只需 SoundEvent/音量/音高；**level 实例的 playSound 控力更高**（服务端播 → 跟踪范围内客户端自动收到网络包）。
-- `SoundEvent` 决定播哪个音；**`SoundCategory`**（本版枚举名；1.21.1 页写作 `SoundSource`）决定用哪个设置滑条。
+- `SoundEvent` 决定播哪个音；**`SoundSource`**（26.1 jar 实测枚举名，`SoundCategory` 在本版 jar 内 0 条）决定用哪个设置滑条；using-sounds 页正文仍写 `SoundCategory`，属页面滞后。
 - **音量**：`0.0f–1.0f` 真实音量；>1 按 1.0 播、只扩大可闻距离（约 `volume * 16` 格）。
 - **音高**：同时改音高与时长；`0.5f–1.0f` 降低，更大升高；<0.5 按 0.5。
 

@@ -1,0 +1,13 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "fabric",
+  "minecraftVersion": "1.14.4",
+  "note": "正文只来自 data/fabric_1.14.4/fabric-wiki/1.14.4/processed/；data/fabric_1.14.4/fabric-docs/1.14.4/ 只有索引，无 processed 正文",
+  "gaps": {
+    "code-patterns": "设计如此：本档不落 knowledge/code-patterns/，反模式统一放 knowledge/antipatterns/",
+    "verified-api": "无 knowledge/common/verified-api-1.14.4.md；本档类名靠 1.14.4-fabric-api.json 摘要 + 本档 fabric-wiki 短文。要补核实表须先入库更多本页语料，禁止抄 1.21.x",
+    "fabric-docs": "data/fabric_1.14.4/fabric-docs/1.14.4/ 只有 index/semantic，无 processed/ 正文 → search_fabric_docs 命中的正文实际来自 data/fabric_1.14.4/fabric-wiki/1.14.4/processed/",
+    "attachments": "1.14 原版无 Data Attachments API；规则 01-registry「IF 需要物品附加数据」已登记为负例（NBT 或第三方库），不是空洞"
+  }
+}

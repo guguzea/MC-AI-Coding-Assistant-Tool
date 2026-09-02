@@ -4,12 +4,16 @@
  * data/quilt_<ver>/quilt-docs/<ver>/processed + index-l0.json。
  * 不覆盖已有 qsl-qfapi / quilt-mod-json / qsl-readme。
  * 不重建语义向量（Quilt 已有 embeddings）。
+ * 默认 dry-run：目标经 write-guard 打印 DRYRUN，加 --write 才落仓库 data/。
  */
-import { copyFileSync, existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { emit, emitCopy, logDryRunBanner, wantWrite } from "./_lib/write-guard.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+if (!wantWrite()) logDryRunBanner("index-qsl-verified");
+
 const VERSIONS = [
   "1.18.2",
   "1.19.4",
@@ -32,7 +36,7 @@ for (const ver of VERSIONS) {
     console.warn(`skip ${ver}: missing src or index`);
     continue;
   }
-  copyFileSync(src, dest);
+  const copied = emitCopy(dest, src);
   let index;
   try {
     index = JSON.parse(readFileSync(indexPath, "utf8"));
@@ -46,7 +50,7 @@ for (const ver of VERSIONS) {
   }
   const id = `${ver}/qsl-verified`;
   if (index.some((e) => e.id === id)) {
-    console.log(`${ver}: processed copied, L0 already has ${id}`);
+    console.log(`${ver}: ${copied ? "processed 已写" : "processed 待写"}，L0 已有 ${id}`);
     continue;
   }
   index.push({
@@ -60,6 +64,6 @@ for (const ver of VERSIONS) {
     source: "quilt-docs",
     fetchedAt: new Date().toISOString(),
   });
-  writeFileSync(indexPath, JSON.stringify(index, null, 2) + "\n", "utf8");
-  console.log(`${ver}: added ${id} (${index.length} pages)`);
+  const written = emit(indexPath, JSON.stringify(index, null, 2) + "\n");
+  console.log(`${ver}: ${written ? "已写入" : "预览"} ${id}（${index.length} 页）`);
 }

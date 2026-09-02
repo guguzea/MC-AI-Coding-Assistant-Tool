@@ -1370,6 +1370,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.EventBusSubscriber;
+// TODO: 实体类实际包名由你的工程决定，改这一行即可
+import com.example.${mod.value}.entity.${pascal};
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ${pascal}Renderer extends EntityRenderer<${pascal}> {
@@ -1404,6 +1406,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+// TODO: 实体类实际包名由你的工程决定，改这一行即可
+import com.example.${mod.value}.entity.${pascal};
 
 @OnlyIn(Dist.CLIENT)
 public class ${pascal}Renderer extends EntityRenderer<${pascal}> {

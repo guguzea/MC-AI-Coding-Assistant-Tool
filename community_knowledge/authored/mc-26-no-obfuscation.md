@@ -26,7 +26,7 @@ Mojang 于 2025-10 宣布停止混淆；自 26.1 起官方不再提供混淆图�
 - `convert_mapping`：`version=26.x` 且涉及 yarn/mcp → 失败并提示改用文档工具。
 - `query_api`：无 26.x Parchment `api-index`；请改 `search_neoforge_docs` / `search_fabric_docs`。
 - **文档数据（仅真实官方树，禁止克隆冒充）**：
-  - NeoForge 主文档：`data/neoforge_26.1`（官方 `/docs/26.2/` 未发布前**不要**建 `neoforge_26.2`）
+  - NeoForge 主文档：`data/neoforge_26.1`（26.2 构建已发布，但官方主文档不按版本分线且本仓无 26.2 语料，**不要**建 `neoforge_26.2`）
   - Fabric：`data/fabric_26.1.2`（官方尚无 `versions/26.2` 时**不要**建 `fabric_26.2`）
   - NeoForge primer 26.2：`data/neoforge_primers/26.2.md`（迁移差异可单独存在，不等于主文档树）
 - 运行时若请求 `version=26.2`：NeoForge 可通过 `VERSION_FALLBACK` 落到 **26.1** 并标明 resolved；**禁止**用克隆目录假装已有 26.2 全文。

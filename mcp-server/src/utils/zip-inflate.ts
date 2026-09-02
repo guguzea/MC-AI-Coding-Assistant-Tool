@@ -42,13 +42,16 @@ export function inflateZipEntry(compressed: Buffer, opts: { name: string; declar
     );
   }
   let out: Buffer;
+  // zlib 拒绝 maxOutputLength=0（未类型化 RangeError）；0 字节条目用 1 字节上限进 zlib，
+  // 真非空仍被下方 SIZE_MISMATCH / 超限中止兜住，不放宽上限。
+  const cap = Math.min(opts.declaredSize > 0 ? opts.declaredSize : 1, max);
   try {
-    out = inflateRawSync(compressed, { maxOutputLength: Math.min(opts.declaredSize, max) });
+    out = inflateRawSync(compressed, { maxOutputLength: cap });
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === "ERR_BUFFER_TOO_LARGE") {
       throw new ZipEntryLimitError(
         "ZIP_ENTRY_BOMB_SUSPECTED",
-        `条目 ${opts.name} 实际解压超出声明/上限，疑似压缩炸弹，已中止`,
+        `条目 ${opts.name} 实际解压超出声明 ${opts.declaredSize} 字节 / 上限 ${max} 字节，疑似压缩炸弹，已中止`,
       );
     }
     throw err;

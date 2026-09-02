@@ -50,7 +50,7 @@ sourceKind: authored
 - **注册要点（伪代码，接口名以官方为准）**：客户端实现 `REIClientPlugin`（`registerRecipes` / `registerCategories`）；服务端需同步数据时用 `REIServerPlugin`。Rift 加载器（1.13 旧生态）也有对应版本，写前先确认目标加载器。
 - **坑**：**JEI 插件兼容层 + JEI 本体同装**时同一插件可能被两边注册，出现条目重复 / 冲突；同装场景用门闩分环境注册，行为以官方兼容说明为准。
 
-## 版本窗口（与规划中的 `authored/lib-traps-2026` 交叉引用）
+## 版本窗口（与 `authored/lib-traps-2026` 交叉引用）
 
 - **1.21.2+ / 26.x JEI**：服务端**也需装 JEI** 以同步配方；只装客户端会出现配方缺失。  
 - **EMI 活跃窗口**：1.21+ 才活跃，1.20.4 以下冻结；老版本选 EMI 前先确认该 MC 版本是否仍维护。  

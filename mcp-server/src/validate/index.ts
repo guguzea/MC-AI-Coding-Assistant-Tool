@@ -32,6 +32,7 @@ import {
   resolveProjectDir,
 } from "../utils/project-files.js";
 import { detectMinecraftVersion } from "../utils/minecraft-version.js";
+import { parseGradleProperties } from "../gradle/index.js";
 import {
   datapackRecipeWarnings,
   validateFabricOrQuilt,
@@ -874,10 +875,7 @@ export function validateProject(query: ValidateQuery): ValidationResult {
   // 2. gradle.properties modId 提取（优先级低于 mods.toml）
   let gradleModId: string | null = null;
   if (gradleProperties) {
-    const match = gradleProperties.match(/mod_id\s*=\s*(.+)/);
-    if (match) {
-      gradleModId = match[1].trim();
-    }
+    gradleModId = parseGradleProperties(gradleProperties).mod_id || null;
     if (gradleModId && modsTomlModId && gradleModId !== modsTomlModId) {
       warnings.push(
         `gradle.properties 中 mod_id='${gradleModId}' 与 mods.toml modId='${modsTomlModId}' 不一致，以 mods.toml 为准`,

@@ -12,7 +12,7 @@
     → 需要 eval → capabilities 写法**未核实**（Learn pack-manifest 无 `script_eval`）
     → 禁止 experimentalGameplay、禁止虚构 worldgen/experimental.json
 → min_engine_version < 约 1.19.80：对照该引擎归档，不要倒灌现行 capabilities
-→ ≥ 1.19.80：世界实验开关**未核实**（勿写死 `level.dat experiments.gametest`）；pack 不能替玩家打开
+→ ≥ 1.19.80：世界实验 = level.dat 里 `experiments` compound，每个功能一个 **byte = 1**（关 = 删掉该 byte tag）；「Beta APIs」对应键名 **`gametest`**。出处：wiki.bedrock.dev/nbt/enabling-experiments（2026-09-02 取）= **社区权威，非 Microsoft Learn 官方**，键名只用于手工改 level.dat 分诊，禁止当官方 API 写进 pack 文档。pack JSON 仍**打不开**该开关；Minecraft Education / BDS 无 GUI，只能手改 level.dat
 → UI → 只用 stable @minecraft/server-ui（stable/script-server-ui）
 ```
 

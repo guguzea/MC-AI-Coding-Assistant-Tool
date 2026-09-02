@@ -24,6 +24,19 @@ const LEARN_PACK =
 const LEARN_EXPERIMENTS =
   "https://learn.microsoft.com/en-us/minecraft/creator/documents/experimentalfeaturestoggle";
 
+/**
+ * 官方 pack-manifest capabilities 表（本仓缓存页 data/bedrock_stable/bedrock-docs/stable/processed/pack-manifest.md）。
+ * test-core 会重新解析该页并比对本常量，官方增删时先改页再改这里。
+ * 缓存页无 script_eval，故不收录；命中表外值只 warning，不判错。
+ */
+export const BEDROCK_CAPABILITIES = [
+  "chemistry",
+  "editorExtension",
+  "experimental_custom_ui",
+  "raytraced",
+  "pbr",
+];
+
 export interface BedrockDocsStatus {
   localRevision: string | null;
   remoteRevision: string | null;
@@ -270,15 +283,16 @@ export function validateAddonManifest(manifestJson: string): Record<string, unkn
   }
   if (Object.prototype.hasOwnProperty.call(parsed, "experimentalGameplay")) {
     errors.push(
-      "禁止写入 experimentalGameplay。世界 Beta APIs 须在游戏 UI 打开；level.dat 实验键名**未核实**（不要写死 experiments.gametest）。pack JSON 打不开该开关。",
+      "禁止写入 experimentalGameplay。世界 Beta APIs 须在游戏 UI 打开；level.dat 实验键名按社区权威 wiki.bedrock.dev/nbt/enabling-experiments 为 experiments compound + byte=1（「Beta APIs」= gametest），非 Microsoft Learn 官方，不得当 API 规范写进 pack。pack JSON 打不开该开关。",
     );
   }
   const caps = parsed.capabilities;
   if (Array.isArray(caps)) {
-    const allowed = new Set(["chemistry", "script_eval", "raytraced", "pbr"]);
     for (const c of caps) {
-      if (typeof c === "string" && !allowed.has(c)) {
-        warnings.push(`未知 capability「${c}」；现行 Learn packmanifest 列出 chemistry / script_eval / raytraced / pbr`);
+      if (typeof c === "string" && !BEDROCK_CAPABILITIES.includes(c)) {
+        warnings.push(
+          `未知 capability「${c}」；官方 pack-manifest capabilities 表只列 ${BEDROCK_CAPABILITIES.join(" / ")}`,
+        );
       }
     }
   }
@@ -353,7 +367,7 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
   const warnings: string[] = [];
   if (args.beta) {
     warnings.push(
-      "该功能依赖实验性玩法 / Beta APIs。必须在世界设置打开「Beta APIs」。禁止把 experimentalGameplay 写入 pack JSON。level.dat 实验键名**未核实**（不要写死 experiments.gametest）。Learn：" +
+      "该功能依赖实验性玩法 / Beta APIs。必须在世界设置打开「Beta APIs」。禁止把 experimentalGameplay 写入 pack JSON。Minecraft Education / BDS 无该 GUI，只能手改 level.dat：experiments compound 里加对应 byte=1（「Beta APIs」= gametest；键名出处 wiki.bedrock.dev = 社区权威，非 Learn 官方）。Learn：" +
         LEARN_EXPERIMENTS,
     );
   }
@@ -402,6 +416,10 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
     }
     if (args.scriptEval && type !== "resources") {
       manifest.capabilities = ["script_eval"];
+      warnings.push(
+        `script_eval 不在官方 pack-manifest capabilities 表（表内只有 ${BEDROCK_CAPABILITIES.join(" / ")}）；` +
+          `validate_addon_manifest 会把它报成未知 capability。引擎是否真接受未核实，请对照目标引擎版本。`,
+      );
     }
     return manifest;
   }

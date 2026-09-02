@@ -1,4 +1,5 @@
-import { existsSync, readdirSync, readFileSync, statSync } from "fs";
+import { existsSync, openSync, readSync, closeSync, readdirSync, readFileSync, statSync } from "fs";
+import { createHash } from "crypto";
 import { join } from "path";
 import { resolveCacheRoot } from "../decompile/cache.js";
 import {
@@ -14,6 +15,33 @@ type MergedCache = {
 };
 let _mergedCache: MergedCache | null = null;
 
+const PROBE_BYTES = 8192;
+const FULL_HASH_LIMIT = 1 << 20;
+
+/**
+ * ≤1 MiB 全文哈希；更大只取首尾各 8 KiB。
+ * 官方摘要树实测 65 MB / 35 个文件：全文哈希一趟 196–614 ms（热/冷文件缓存），
+ * 首尾探针 40 ms，纯 stat 1.4 ms。stamp 每次查询都要算，所以大文件退化为有界探针
+ * —— 再叠上 size/mtime/ino/birthtime 补住探针看不见的中段。
+ */
+function contentDigest(path: string, size: number): string {
+  const h = createHash("sha256");
+  if (size <= FULL_HASH_LIMIT) {
+    return h.update(readFileSync(path)).digest("hex").slice(0, 16);
+  }
+  const fd = openSync(path, "r");
+  try {
+    const head = Buffer.alloc(PROBE_BYTES);
+    const headLen = readSync(fd, head, 0, PROBE_BYTES, 0);
+    const tail = Buffer.alloc(PROBE_BYTES);
+    const tailLen = readSync(fd, tail, 0, PROBE_BYTES, size - PROBE_BYTES);
+    h.update(head.subarray(0, headLen)).update(tail.subarray(0, tailLen));
+  } finally {
+    closeSync(fd);
+  }
+  return h.digest("hex").slice(0, 16);
+}
+
 function dirStamp(dir: string): string {
   try {
     if (!existsSync(dir)) return "missing";
@@ -27,14 +55,18 @@ function dirStamp(dir: string): string {
       .filter((n) => isSummaryFile(n))
       .sort()
       .map((n) => {
+        const p = join(dir, n);
         try {
-          const st = statSync(join(dir, n));
-          return `${n}:${st.mtimeMs}:${st.size}`;
+          const st = statSync(p);
+          // ino + birthtimeMs 只对 >1 MiB 的探针段有意义：中段变更而 mtime/size 被复制工具原样
+          // 保留时，首尾摘要看不出差别，只有「删除后重建」换掉的 inode / 创建时间能抓住。
+          return `${n}:${st.mtimeMs}:${st.size}:${st.ino}:${st.birthtimeMs}:${contentDigest(p, st.size)}`;
         } catch {
           return `${n}:err`;
         }
       });
-    return parts.join(",") || `empty:${statSync(dir).mtimeMs}`;
+    const body = parts.join(",");
+    return body ? `${parts.length}|${body}` : `empty:${statSync(dir).mtimeMs}`;
   } catch {
     return "err";
   }

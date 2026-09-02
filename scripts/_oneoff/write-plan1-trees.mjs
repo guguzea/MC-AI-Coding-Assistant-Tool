@@ -2,15 +2,13 @@
 /**
  * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖计划 1 规则树）。
  */
-import { mkdirSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { emit } from "../_lib/write-guard.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 function w(rel, text) {
-  const p = join(ROOT, rel);
-  mkdirSync(dirname(p), { recursive: true });
-  writeFileSync(p, text.replace(/\n/g, "\n"), "utf8");
+  emit(join(ROOT, rel), text);
 }
 
 const FAB_IDS = {

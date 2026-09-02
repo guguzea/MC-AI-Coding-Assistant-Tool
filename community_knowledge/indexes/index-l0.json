@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-24T08:17:36.699Z",
+  "generatedAt": "2026-09-02T03:01:37.743Z",
   "entries": [
     {
       "id": "authored/addon-dev-workflow",
@@ -75,7 +75,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "三类日志、crash 文件名 KIND、加载期/运行期常见症状；配合 crash_analyze 与 search_community_docs。",
-      "mcHint": ""
+      "mcHint": "全版本通用（日志路径随 loader 略有差异）"
     },
     {
       "id": "authored/creative-tabs-1.20",
@@ -109,7 +109,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "三种引入他模方式；CurseMaven 坐标；compileOnly vs runtimeOnly vs implementation；fg.deobf；含 Mixin 的依赖注意。",
-      "mcHint": ""
+      "mcHint": "Forge 1.12.2–1.20.4（CurseMaven / fg.deobf）"
     },
     {
       "id": "authored/custom-commands-brigadier",
@@ -247,7 +247,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "Loom 1.17 / Gradle 9.5.1；Vulkan 实验后端；BlockIds DataGen；gui.setScreen。短文不是 API 规范。",
-      "mcHint": ""
+      "mcHint": "Fabric 26.2"
     },
     {
       "id": "authored/fabric-commands-and-oregen",
@@ -343,7 +343,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "Forge 事件系统实务：双总线分工（Mod 总线管初始化/Forge 总线管运行期）；订阅三式（实例手动注册、@Mod.EventBusSubscriber 自动、bus 参数选总线）；生命周期事件并行与 enqueueWork 回主线程；IMC 跨模组；泛型事件监听父类收全部子类；Event 基类 cancel/phase。",
-      "mcHint": "锚定 Forge 1.18–1.20.x 双总线形态（社区教程 2571 全文核实）；NeoForge 新版形态有差异，以当档文档为准"
+      "mcHint": "锚定 Forge 1.18–1.20.x 双总线形态（社区教程 2571 全文核实；该帖未声明协议，本文为自写综述、未复制原文表达）；NeoForge 新版形态有差异，以当档文档为准"
     },
     {
       "id": "authored/forge-simplechannel-networking",
@@ -361,7 +361,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "1.8–1.20.4 的 SimpleChannel 全套路：NetworkRegistry.newSimpleChannel 与协议版本握手（ABSENT/ACCEPTVANILLA）；registerMessage 五参数与自增 discriminator；handler 里 enqueueWork 回主线程、setPacketHandled；S2C 用 DistExecutor 隔离客户端类。",
+      "summary": "1.8–1.20.4 的 SimpleChannel 全套路（**非 26.x**）：NetworkRegistry.newSimpleChannel；enqueueWork；S2C 用 DistExecutor.runWhenOn 隔离客户端类。26.x 改 FMLLoader.getDist() / client 源集，不要把 DistExecutor 当 26.x 首选。",
       "mcHint": "Forge 1.13–1.20.4（官方文档 1.20.1 版原文核对）；1.12 及以前是 SimpleNetworkWrapper"
     },
     {
@@ -577,7 +577,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "老牌配置 GUI 库（1.53 亿下载，F/Forge/Neo 1.14-26.2，已冷冻）。新项目优先评估 YACL / Fzzy / owo-config；选用 Cloth 时 ConfigBuilder 建屏、Screen 仅客户端、Mod Menu 软依赖。",
+      "summary": "老牌配置 GUI 库（Modrinth API 实测 1.62 亿下载，F/Forge/Neo 1.14-26.2，158 条构建）。功能冻结但**没有停更**：实测仍按 MC/Neo 版本线发版（末次 2026-06-18，最新 v26.2.155）。新项目优先评估 YACL / Fzzy / owo-config；选用 Cloth 时 ConfigBuilder 建屏、Screen 仅客户端、Mod Menu 软依赖。",
       "mcHint": "1.14-26.2"
     },
     {
@@ -674,7 +674,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "Forge 系饰品槽标准（2850 万下载，Forge/Neo 1.13.2-26.2），tag 驱动扩展槽位、自带 GUI。Fabric 用户读 lib-trinkets，禁止把 Curios 代码拷到 Fabric。",
+      "summary": "Forge 系饰品槽标准（Modrinth API 实测 3009 万下载，Forge/Neo 稳定版 1.13.2-26.2），tag 驱动扩展槽位、自带 GUI。Fabric 用户读 lib-trinkets，禁止把 Curios 代码拷到 Fabric（实测仅 1 条 1.16.5 beta 标了 fabric，≥1.17 为 0）。",
       "mcHint": "1.13.2-26.2"
     },
     {
@@ -1361,7 +1361,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "选库依赖前必读的八条陷阱：ChocolateCore 不存在、owo-lib 无 Forge、Trinkets 停更、Bookshelf 重名、LibGui/Server Translations API/SpruceUI 下架、Botarium 停更、Cloth Config 冷冻、EMI 活跃窗口与 26.x 未跟进。数据来自《Minecraft 社区常用库模组全览（2026 版）》第五节。",
+      "summary": "选库依赖前必读的八条陷阱：ChocolateCore 不存在、owo-lib 无 Forge、Trinkets 上游止于 1.21.1（1.21.4+ 只剩分叉 beta/rc）、Bookshelf 重名、LibGui/Server Translations API/SpruceUI 下架、Botarium 停更、Cloth Config 功能冻结（≠停更）、EMI 活跃窗口与 26.x 未跟进。底稿来自《Minecraft 社区常用库模组全览（2026 版）》第五节（二手），Cloth/YACL/Curios/Trinkets 四项已按 2026-09-02 Modrinth API 实测复核。",
       "mcHint": "1.17–26.x；选库依赖前先过这 8 条"
     },
     {
@@ -1371,6 +1371,7 @@
       "url": "",
       "tags": [
         "trinkets",
+        "trinkets-polymer",
         "accessory",
         "slot",
         "fabric",
@@ -1380,8 +1381,8 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "Fabric/Quilt 系饰品槽标准（2260 万下载，F/Quilt 1.17-1.21.1，6 组槽位，数据驱动）。⚠️ 已停更于 1.21.1（2024-07 后无更新），1.21.4+ 新模组多自研槽位或用原版机制。Forge 用户读 lib-curios。",
-      "mcHint": "1.17-1.21.1"
+      "summary": "Fabric/Quilt 系饰品槽标准（Modrinth API 实测 2344 万下载，上游 F/Quilt 1.17-1.21.1，6 组槽位，数据驱动）。⚠️ 上游分发止于 1.21.1（末次发布 2024-07-15）；1.21.4+ 走分叉 trinkets-polymer（实测 1.19-26.2，全为 beta/rc）或自研。Forge 用户读 lib-curios。",
+      "mcHint": "1.17-1.21.1（上游 Modrinth）；分叉 trinkets-polymer 1.19-26.2"
     },
     {
       "id": "authored/lib-yacl",
@@ -1402,8 +1403,8 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "新一代配置库（下载量以 Modrinth 页面为准；F/Forge/Neo/Quilt，1.19-26.3）。Builder 式 API、GUI 契合原版风格，因 Cloth Config 停更而生，新项目配置库首选之一。",
-      "mcHint": "1.19-26.3"
+      "summary": "新一代配置库（Modrinth API 实测 1.18 亿下载；F/Forge/Neo/Quilt，1.19-26.2 有稳定版，26.3 仅 snapshot）。Builder 式 API、GUI 契合原版风格，因 Cloth Config 功能冻结而生，新项目配置库首选之一。",
+      "mcHint": "1.19-26.2 稳定；26.3 仅 snapshot 构建"
     },
     {
       "id": "authored/library-catalog-2026",
@@ -1433,8 +1434,8 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "社区常用库模组总目录与分类导航：Top 12、十大功能分类、作者全家桶共享库、平台推荐路线与八条陷阱，数据源自《Minecraft 社区常用库模组全览（2026 版）》。",
-      "mcHint": ""
+      "summary": "社区常用库模组总目录与分类导航：Top 12、十大功能分类、作者全家桶共享库、平台推荐路线与八条陷阱。排名与分类主体取自《Minecraft 社区常用库模组全览（2026 版）》二手快照；下载量与版本窗口已就地标注 Modrinth API 实测 2026-09-02 值，与四篇库短文（cloth/yacl/curios/trinkets）的实测表冲突时以实测表为准。",
+      "mcHint": "1.18+ / 26.x；按各库 mcHint 再收窄"
     },
     {
       "id": "authored/library-integration",
@@ -1494,7 +1495,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "禁止硬编码玩家可见文本；assets 下 lang；占位符与双语；MCP localize_mod / mc-localize-mod。",
-      "mcHint": ""
+      "mcHint": "全版本通用（lang JSON 路径随版本）"
     },
     {
       "id": "authored/machine-be-gui-working",
@@ -1514,7 +1515,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "机器全链路；进度必须用 ContainerData；WORKING 仅在 ticker 对比后 setBlock；对外物流需 ITEM_HANDLER Capability。",
-      "mcHint": "1.20.1+"
+      "mcHint": "1.20.1–1.21.x"
     },
     {
       "id": "authored/mapping-fields-v3",
@@ -1550,7 +1551,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "26.1+ 游戏已去混淆；勿再灌 Yarn；文档用真实树 neoforge_26.1 / fabric_26.1.2；禁止把旧版克隆成 26.2；convert_mapping 拒绝 yarn。",
-      "mcHint": ""
+      "mcHint": "26.x（去混淆 / 仅 mojmap）"
     },
     {
       "id": "authored/menu-screen-sync",
@@ -1568,7 +1569,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "Menu 与 Screen 职责；双构造器与 FriendlyByteBuf；ContainerData；槽位分区与 quickMoveStack；stillValid；ClientSetup 注册。",
-      "mcHint": "1.20.1+"
+      "mcHint": "1.20.1–1.21.x"
     },
     {
       "id": "authored/mixin-practices-crossplatform",
@@ -1659,7 +1660,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "Mojang 在 26.1 去掉混淆；NeoForm 版本号改为 `<mc>-<build>`；可删 Parchment 配置。短文不是 API 规范。",
-      "mcHint": ""
+      "mcHint": "NeoForge 26.1"
     },
     {
       "id": "authored/neoforge-payload-networking",
@@ -1732,7 +1733,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "模组性能排查实务：spark 集成与读数、/debug tick、内存诊断与常见泄漏面、「先测量后优化」清单。",
-      "mcHint": ""
+      "mcHint": "全版本通用；spark 命令以官方文档为准"
     },
     {
       "id": "authored/publishing",
@@ -1750,7 +1751,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "分发渠道对比、发布前检查、reobf jar、自建 Maven（mcmodsrepo）、README 徽章与附属说明。",
-      "mcHint": ""
+      "mcHint": "全版本通用；reobf 仅 FG≤1.20.4，MDG/NeoGradle/26.1+ 免 reobf"
     },
     {
       "id": "authored/register-helpers",
@@ -1804,7 +1805,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "硬/软依赖区分；ModList 探测；类加载隔离；mods.toml optional；与 compileOnly/Mixin 条件注册配合。",
-      "mcHint": ""
+      "mcHint": "Forge/NeoForge（ModList）；Fabric 用 FabricLoader.isModLoaded"
     },
     {
       "id": "authored/testing-automation",
@@ -1821,7 +1822,7 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "非 GameTest 的自动化测试实务：JUnit 单测何时可行、三 loader 的 test 配置要点、客户端渲染类的现实测试路径与可测性设计清单。",
-      "mcHint": ""
+      "mcHint": "1.15+ GameTest；JUnit 侧各 loader 通用思路"
     },
     {
       "id": "links/bedrock-script-api-official-samples",
@@ -2036,66 +2037,70 @@
     },
     {
       "id": "mcmod-3993/crash-publishing",
-      "label": "崩溃日志类型与发布渠道（社区）",
+      "label": "崩溃日志类型与发布渠道（仅指针）",
       "path": "permitted/mcmod-3993-forge-mod-guide/pages/crash-publishing.md",
       "url": "https://www.mcmod.cn/post/3993.html",
       "tags": [
         "crash",
         "publishing",
         "curseforge",
-        "modrinth"
+        "modrinth",
+        "link-only"
       ],
-      "sourceKind": "permitted",
-      "priority": "🟡",
-      "summary": "提炼自社区教程「游戏崩溃篇 / 发表模组篇」。更完整的自写说明见 `authored/crash-reports.md` 与 `authored/publishing.md`。（来源教程：如何制作并且维护你的mod？（Forge））",
+      "sourceKind": "permitted-pointer",
+      "priority": "🟢",
+      "summary": "仅指针页：《如何制作并且维护你的mod？（Forge）》游戏崩溃篇 / 发表模组篇入口（作者耿悠博），本页不入库正文。崩溃分类看 `authored/crash-reports.md`，发布看 `authored/publishing.md`。",
       "mcHint": "version-agnostic"
     },
     {
       "id": "mcmod-3993/items-registry",
-      "label": "物品注册：1.18/1.19 与 1.20 差异",
+      "label": "物品注册：1.18/1.19 与 1.20 差异（仅指针）",
       "path": "permitted/mcmod-3993-forge-mod-guide/pages/items-registry.md",
       "url": "https://www.mcmod.cn/post/3993.html",
       "tags": [
         "item",
         "registry",
         "deferredregister",
-        "creativetab"
+        "creativetab",
+        "link-only"
       ],
-      "sourceKind": "permitted",
-      "priority": "🟡",
-      "summary": "提炼自社区教程；实现以各版本官方 API 与本仓库 rules 为准。（来源教程：如何制作并且维护你的mod？（Forge））",
+      "sourceKind": "permitted-pointer",
+      "priority": "🟢",
+      "summary": "仅指针页：《如何制作并且维护你的mod？（Forge）》物品注册篇入口（作者耿悠博；1.18/1.19 与 1.20 差异），本页不入库正文。注册写法以各版本 rules `01-registry` 与 `search_forge_docs` 为准。",
       "mcHint": "1.18-1.20"
     },
     {
       "id": "mcmod-3993/mixin-basics",
-      "label": "Mixin 实务要点（社区）",
+      "label": "Mixin 实务要点（仅指针）",
       "path": "permitted/mcmod-3993-forge-mod-guide/pages/mixin-basics.md",
       "url": "https://www.mcmod.cn/post/3993.html",
       "tags": [
         "mixin",
         "inject",
         "redirect",
-        "bytecode"
+        "bytecode",
+        "link-only"
       ],
-      "sourceKind": "permitted",
-      "priority": "🟡",
-      "summary": "提炼自社区教程 Mixin 篇；生产环境请配合官方 Mixin 文档与本仓库 `mc-mixin` skill。（来源教程：如何制作并且维护你的mod？（Forge））",
+      "sourceKind": "permitted-pointer",
+      "priority": "🟢",
+      "summary": "仅指针页：《如何制作并且维护你的mod？（Forge）》Mixin 篇入口（作者耿悠博），本页不入库正文。生产环境配合官方 Mixin 文档与本仓库 `mc-mixin` skill，API 细节用 `search_forge_docs`。",
       "mcHint": "version-agnostic"
     },
     {
       "id": "mcmod-3993/setup",
-      "label": "Forge MDK 与工程搭建要点",
+      "label": "Forge MDK 与工程搭建要点（仅指针）",
       "path": "permitted/mcmod-3993-forge-mod-guide/pages/setup.md",
       "url": "https://www.mcmod.cn/post/3993.html",
       "tags": [
         "setup",
         "mdk",
         "gradle",
-        "idea"
+        "idea",
+        "link-only"
       ],
-      "sourceKind": "permitted",
-      "priority": "🟡",
-      "summary": "提炼自 MC百科教程（耿悠博），主体偏 1.18；细节以官方 Getting Started 为准。（来源教程：如何制作并且维护你的mod？（Forge））",
+      "sourceKind": "permitted-pointer",
+      "priority": "🟢",
+      "summary": "仅指针页：《如何制作并且维护你的mod？（Forge）》工程搭建 / MDK 篇入口（作者耿悠博，主体偏 1.18），本页不入库正文。工程与 API 细节用 `search_forge_docs` / 平台 rules。",
       "mcHint": "1.18.x+"
     }
   ]

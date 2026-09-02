@@ -955,24 +955,43 @@ function safeConfirmed(confirmed: unknown): boolean {
 
 // ── 2a. init_architectury ───────────────────────────────────────────────────
 
+/** KB 模板里唯一的占位符：rootProject.name 必须跟着工程名走。 */
+const SETTINGS_GRADLE_TOKEN = "${modId}";
+
+function renderSettingsGradle(lines: unknown[], modId: string): string {
+  return lines.map((l) => String(l).split(SETTINGS_GRADLE_TOKEN).join(modId)).join("\n");
+}
+
+/**
+ * settings.gradle 的单一来源 = KB data/porting/architectury-patterns.json 的 settingsGradle（行数组）。
+ * S5 修的形状不匹配：KB 当年写成 `{ content: [...] }`，读取端只认数组，
+ * `Array.isArray` 恒 false → KB 从未生效，代码里的 fallback 才是真正的输出。
+ * 定口径「数据形状向读取端收敛」：KB 直接是数组，行内唯一占位符 `${modId}` 在这里替换。
+ * fallback 只用于 KB 缺失 / MC_SKILL_DATA 指错，且刻意不含 KB 的标记行——
+ * test-core 靠那行标记判断文件来自哪一边（清空 KB 必须退回 fallback）。
+ */
 function generateSettingsGradleContent(modId: string): string {
   const patterns = loadArchitecturyPatterns() as { settingsGradle?: unknown };
-  const fallback = [
-    "pluginManagement {",
-    "    repositories {",
-    "        maven { url 'https://maven.fabricmc.net/' }",
-    "        maven { url 'https://maven.neoforged.net/releases' }",
-    "        gradlePluginPortal()",
-    "    }",
-    "}",
-    "",
-    `rootProject.name = '${modId}-multiloader'`,
-    "include 'common'",
-    "include 'fabric'",
-    "include 'neoforge'",
-  ];
-  const lines = Array.isArray(patterns.settingsGradle) ? patterns.settingsGradle.map(String) : fallback;
-  return lines.join("\n");
+  if (Array.isArray(patterns.settingsGradle)) {
+    return renderSettingsGradle(patterns.settingsGradle, modId);
+  }
+  return renderSettingsGradle(
+    [
+      "pluginManagement {",
+      "    repositories {",
+      "        maven { url 'https://maven.fabricmc.net/' }",
+      "        maven { url 'https://maven.neoforged.net/releases' }",
+      "        gradlePluginPortal()",
+      "    }",
+      "}",
+      "",
+      "rootProject.name = '${modId}-multiloader'",
+      "include 'common'",
+      "include 'fabric'",
+      "include 'neoforge'",
+    ],
+    modId,
+  );
 }
 
 function generateRootBuildGradleContent(mcVersion: string): string {

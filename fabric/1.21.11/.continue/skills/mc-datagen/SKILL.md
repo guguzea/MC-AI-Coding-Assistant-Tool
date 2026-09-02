@@ -61,7 +61,7 @@ IF 生成语言文件
   → FabricLanguageProvider
 ```
 
-官方主推 `FabricRecipeProvider.createRecipeProvider` + `buildRecipes`（Mojmap `RecipeOutput`）。不要再把「不要抄 buildRecipes」当本档口径。
+配方是两层：子类实现抽象工厂方法（Mojmap `createRecipeProvider` / Yarn `getRecipeGenerator`），配方写在返回的 vanilla 生成器的无参 `buildRecipes()`（Mojmap）/ `generate()`（Yarn）里。`FabricRecipeProvider` 上**没有**静态 `createRecipeProvider` 工厂，`addProvider` 直接传构造引用。示例见规则 `07-datagen`。
 
 ## 常见错误
 

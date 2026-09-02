@@ -4,6 +4,8 @@
 
 文档入口（若本机文档索引有 26.1.2）：`develop_data-generation_setup` / `recipes` / `loot-tables` / `tags`。
 本档方法名来自 `query_loader_api`（26.1.2 fabric-api），**不要**把 Yarn 1.21 的 `generate(Consumer)` 抄过来。
+逐名可核来源见 **`knowledge/common/verified-api-26.1.2.md`**（表 A 名称来源 / 表 B 已核实方法签名 / 表 C 改名对照 / 表 D javap 核实 / 表 E 未核实清单）。
+该摘要**只有 methods**，不含构造器参数表：下文 Provider 构造器签名以本档示例为准，改动前先 `query_loader_api` 复核，禁止按邻版默写。
 
 > ⚠️ 易错点：**`Identifier` 不是 Yarn 名**。Mojang 官方映射自 **1.21.11** 起把 `ResourceLocation`
 > 改名为 `Identifier`（mappings.dev 核实：1.21.10 及更早为 `ResourceLocation`，1.21.11 起为 `Identifier`）。
@@ -33,7 +35,7 @@ IF 入口 → DataGeneratorEntrypoint + fabric-datagen
 IF 配方 → FabricRecipeProvider.createRecipeProvider
 IF 方块掉落 → FabricBlockLootSubProvider
 IF 语言 → FabricLanguageProvider
-IF 标签 → FabricTagProvider 系（以本版 loader-api 为准）
+IF 标签 → FabricTagsProvider 系（以本版 loader-api 为准）
 ```
 
 ---
@@ -80,7 +82,7 @@ public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
 
 ```java
 public class MyRecipeProvider extends FabricRecipeProvider {
-    public MyRecipeProvider(FabricDataOutput output,
+    public MyRecipeProvider(FabricPackOutput output,
                             CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
@@ -90,7 +92,7 @@ public class MyRecipeProvider extends FabricRecipeProvider {
         return new RecipeProvider(registries, output) {
             @Override
             public void buildRecipes() {
-                ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MY_ITEM)
+                ShapedRecipeBuilder.shaped(registries.lookupOrThrow(Registries.ITEM), RecipeCategory.MISC, MY_ITEM)
                     .pattern("AAA")
                     .pattern("A A")
                     .pattern(" A ")
@@ -107,7 +109,7 @@ public class MyRecipeProvider extends FabricRecipeProvider {
 
 ```java
 public class MyBlockLootProvider extends FabricBlockLootSubProvider {
-    public MyBlockLootProvider(FabricDataOutput output,
+    public MyBlockLootProvider(FabricPackOutput output,
                                CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
@@ -123,7 +125,7 @@ public class MyBlockLootProvider extends FabricBlockLootSubProvider {
 
 ```java
 public class MyEnLangProvider extends FabricLanguageProvider {
-    public MyEnLangProvider(FabricDataOutput output,
+    public MyEnLangProvider(FabricPackOutput output,
                             CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, "en_us", registriesFuture);
     }
@@ -151,7 +153,7 @@ public class MyEnLangProvider extends FabricLanguageProvider {
 - ❌ 引用未注册的资源 — DataGen / 游戏找不到现有文件
 - ❌ 在 DataGen 中使用动态路径 — 必须使用确定的 `Identifier`
 - ❌ 抄 Forge 的 `ExistingFileHelper` / `ItemModelProvider` / `DatapackBuiltinEntriesProvider`
-- ❌ 调用不存在的 `offerShapedRecipe` — 用 `ShapedRecipeJsonBuilder` + `offerTo(exporter)`
+- ❌ 调用不存在的 `offerShapedRecipe` / `offerTo(exporter)` — 那是 Yarn 收集器写法。本档在 `RecipeProvider#buildRecipes()` 里用 `ShapedRecipeBuilder.shaped(...).save(output)`，`output` 是 `RecipeOutput`
 - ❌ 把 Yarn `CommandManager` / `Text.literal` / `addDrop` 抄进本档 — 本档是 Mojmap（`Commands` / `Component` / `dropSelf`）
 
 ## 扩展点

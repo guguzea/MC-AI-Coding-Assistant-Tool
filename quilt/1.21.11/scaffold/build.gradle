@@ -1,6 +1,7 @@
 plugins {
-    // 版本号对照 https://docs.quiltmc.org/ 官方模板，不要抄过期 snapshot
-    id 'org.quiltmc.loom' version '1.7.4'
+    // loom 版本取 maven.quiltmc.org/repository/release/org/quiltmc/loom/maven-metadata.xml
+    //   最新 release = 1.15.1（lastUpdated 20260123082830，核对日期 2026-09-02）
+    id 'org.quiltmc.loom' version '1.15.1'
     id 'maven-publish'
 }
 java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
@@ -11,6 +12,8 @@ repositories { maven { url = 'https://maven.quiltmc.org/repository/release' } }
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.minecraft_version}+build.1:v2"
-    modImplementation "org.quiltmc:quilt-loader:0.26.0"
+    // quilt-loader 取 maven.quiltmc.org/repository/release/org/quiltmc/quilt-loader/maven-metadata.xml
+    //   最新 = 0.31.0-beta.3（lastUpdated 20260830210050，核对日期 2026-09-02）
+    modImplementation "org.quiltmc:quilt-loader:0.31.0-beta.3"
     // QSL：按模块引入 org.quiltmc.qsl.*，不要把 fabric-api 整包当 QSL
 }

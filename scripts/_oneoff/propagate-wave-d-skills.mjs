@@ -10,6 +10,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { emit, wantWrite } from "../_lib/write-guard.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..", "..");
@@ -70,8 +71,7 @@ function readUtf8(p) {
 }
 
 function writeUtf8(p, text) {
-  fs.mkdirSync(path.dirname(p), { recursive: true });
-  fs.writeFileSync(p, text, "utf8");
+  return emit(p, text);
 }
 
 function splitFrontmatter(text) {
@@ -130,15 +130,14 @@ function buildSkill(srcText, { platform, version, mappings, knowledgeHint, docsT
   return `---\n${fm}\n---\n${body}`;
 }
 
-function ensureForgeSkillsDir(ver) {
-  const dir = path.join(ROOT, "forge", ver, ".cursor", "skills");
-  fs.mkdirSync(dir, { recursive: true });
-  return dir;
+function forgeSkillsDir(ver) {
+  return path.join(ROOT, "forge", ver, ".cursor", "skills");
 }
 
 function main() {
   const srcRoot = path.join(ROOT, "forge", "1.20.1", ".cursor", "skills");
   let written = 0;
+  let planned = 0;
 
   for (const name of WAVE_D) {
     const srcPath = path.join(srcRoot, name, "SKILL.md");
@@ -156,9 +155,9 @@ function main() {
         knowledgeHint: `forge/${ver}`,
         docsTool: "search_forge_docs",
       });
-      const dest = path.join(ensureForgeSkillsDir(ver), name, "SKILL.md");
-      writeUtf8(dest, out);
-      written++;
+      const dest = path.join(forgeSkillsDir(ver), name, "SKILL.md");
+      planned++;
+      if (writeUtf8(dest, out)) written++;
     }
 
     for (const ver of FABRIC_VERSIONS) {
@@ -170,8 +169,8 @@ function main() {
         docsTool: "search_fabric_docs",
       });
       const dest = path.join(ROOT, "fabric", ver, ".cursor", "skills", `${name}.md`);
-      writeUtf8(dest, out);
-      written++;
+      planned++;
+      if (writeUtf8(dest, out)) written++;
     }
   }
 
@@ -180,6 +179,8 @@ function main() {
       {
         ok: true,
         waveD: WAVE_D.length,
+        dryRun: !wantWrite(),
+        planned,
         written,
         forgeVersions: FORGE_VERSIONS.length,
         fabricVersions: FABRIC_VERSIONS.length,

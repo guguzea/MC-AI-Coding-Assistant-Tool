@@ -101,9 +101,9 @@ MC_skill/
 | 平台 | 规则树（`平台/<ver>/`） | 文档数据（`list_*_versions`） | 主推 | 备注 |
 |------|-------------------------|-------------------------------|------|------|
 | **Forge** | `1.7.10` · `1.12.2` · `1.13.2` · `1.14.4` · `1.15.2` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` | `1.7.10`–`1.20.4`（含 `1.8.9` / `1.9.4` / `1.10.2` / `1.11.2` 等 javadoc 档） | **1.20.1** | `1.12.2` 有 forge-docs 教程；`1.7.10` 为 javadoc 核实表 + 短规则（**ready**）。`forge/1.21.1` 为 **draft**（无完整规则树，`PACK_NOT_FOUND`；仅改口文档搜索） |
-| **Fabric** | `1.14.4` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.3` · `1.21.4` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1.2` | `list_fabric_versions` 含上述档（**无 1.21.5**） | **1.20.1** / **1.21.x** / **26.1.2** | `26.1.2` 仅 `fabric-docs`、无 wiki；**26.1+ 仅 mojmap**。`1.21.4`/`1.21.8`/`1.21.10` 有 versioned fabric-docs **和** 现行 `fabric-wiki`（wiki 不是该档历史快照）。**`1.21.5` 无 versions/ 源** → `PACK_NOT_FOUND`。禁止拷 `1.21.11` |
-| **NeoForge** | `1.20.1` · `1.20.4` · `1.20.6` · `1.21.1` · `1.21.3` · `1.21.5` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1` | `1.20.1`（回退 Forge）· `1.20.4` · `1.20.6` · `1.21.1`–`1.21.11` · `26.1` | **1.20.4+** / **26.1** | 主文档默认 **26.1**；primer 可有 26.2 旁路。`1.20.1` 本档核实表 + 短规则（Forge 兼容数据） |
-| **Quilt** | `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.3` · `1.21.4` · `1.21.8` · `1.21.10` · `1.21.11`（**10** 档） | `search_docs({platform:"quilt"})` | 随 Fabric 同版 | **本档 QSL Skill 3** + Fabric overlay；00/01/05/06 为 QSL 差异（有 `06-networking.mdc` 的档不要 overlay Fabric 网络），02–04/07–08/10 读 `fabric/<ver>` |
+| **Fabric** | `1.14.4` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.3` · `1.21.4` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1.2` | `list_fabric_versions` 含上述档（**无 1.21.5**） | **1.20.1** / **1.21.x** / **26.1.2** | `26.1.2` 仅 `fabric-docs`、无 wiki；**26.1+ 仅 mojmap**。`1.21.4`/`1.21.8`/`1.21.10` 有 versioned fabric-docs **和** 现行 `fabric-wiki`（wiki 不是该档历史快照）。**`1.21.5` 无 versions/ 源** → `PACK_NOT_FOUND`。禁止拷 `1.21.11`。附加数据（Data Attachments）逐档覆盖：`1.21.10` / `1.21.11` / `26.1.2` 已按**本档语料页**登记（只写该页出现的简名，FQCN / 模块 id 未核实者已注明）；`1.21.4` / `1.21.8` / `1.14.4` 本档无该主题来源 → 见各档 `pack.meta.json` 的 `gaps.attachments`（`1.14.4` 规则里是**负例**，不是空洞），禁止抄邻版 |
+| **NeoForge** | `1.20.1` · `1.20.4` · `1.20.6` · `1.21.1` · `1.21.3` · `1.21.5` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1` | `1.20.1`（回退 Forge）· `1.20.4` · `1.20.6` · `1.21.1`–`1.21.11` · `26.1` | **1.20.4+** / **26.1** | 主文档默认 **26.1**；primer 可有 26.2 旁路。`1.20.1` 本档核实表 + 短规则（Forge 兼容数据）。附加数据（Data Attachments）：`1.20.4` / `1.20.6` 已按本档 `datastorage/attachments` 页 + 本档 loader-api 摘要核实（`1.20.4` docs 页把静态方法写成 `AttachmentSerializer.serializable()`，摘要内无该类，真实为 `AttachmentType.serializable()`，已在核实表钉为禁止输出）；`26.1` 本档无独立 attachments 页，规则自带 fallback 标注 |
+| **Quilt** | `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.3` · `1.21.4` · `1.21.8` · `1.21.10` · `1.21.11`（**10** 档） | `search_docs({platform:"quilt"})` | 随 Fabric 同版 | **本档 QSL Skill 3** + Fabric overlay；00/01/05/06 为 QSL 差异（有 `06-networking.mdc` 的档不要 overlay Fabric 网络），02–04/07–08/10 读 `fabric/<ver>`。`1.21.11` 是 MC **1.21.11**，不是 `1.21.1` 笔误（两档并存、不得互顶）；该档 QSL / QFAPI 已停更且本版本无可用构件，口径见 `quilt/1.21.11/AGENTS.md` 顶部横幅与 `00-project-setup.mdc` |
 | **LiteLoader** | `1.8.9` · `1.10.2` · `1.12.2` | `search_docs({platform:"liteloader"})`（官方 wiki + hybrid 语义库；API 以核实表为准） | **1.12.2** | 纯客户端；与 Forge 混合见 `HYBRID.md` |
 | **Rift** | `1.13.2` | `search_docs({platform:"rift"})`（官方 wiki + hybrid；方法名以核实表为准） | **1.13.2** | 方法名只来自已抓 wiki/源码 |
 | **ModLoader** | `1.2.5` · `1.5.2` · `1.6.4` | 无 Java 文档树 | **1.6.4** | 只用 safe-api 表；禁止 Forge Javadoc |
@@ -311,7 +311,7 @@ MC_skill/
 | `get_migration_guide({route:"constructor"})` `found:true` | 自由字符串查 `MIGRATION_GUIDES[key]`，命中 Function | 已 `ownGet`，必须 `found:false` |
 | `get_workflow_template({name:"constructor"})` | MCP schema 是工作流名 **enum**（Zod 直接拒）；函数层仍要 `ownGet` | 不要把校验失败理解成「没有工作流系统」 |
 | `query_api` 1.12.2 `Block` `found:true` | 约 3313 个类名、几乎全是 `methods:[]` | 看 `warning` / `notes`；改 `search_forge_docs` / `query_loader_api` |
-| `generate_datagen` platform=forge version=1.12.2 吐出 Java | 1.12.2 **无 DataGen**；旧模板还曾发出 1.21 的 `ResourceLocation.fromNamespaceAndPath` | Forge **1.20.1**（`Consumer<FinishedRecipe>`）与 **1.20.4**（仅 recipe，`buildRecipes(RecipeOutput)`）；NeoForge 1.20.1 改口 `search_neoforge_docs`、1.20.4/1.20.6 仅 recipe、1.21.x 与 26.1；**Fabric** 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（**无 1.21.5**）；**Quilt 无** generate_datagen（改口 `search_docs platform=quilt` + Fabric overlay 手写）；其它 version 返回 error |
+| `generate_datagen` platform=forge version=1.12.2 吐出 Java | 1.12.2 **无 DataGen**；旧模板还曾发出 1.21 的 `ResourceLocation.fromNamespaceAndPath` | Forge **1.20.1**（`Consumer<FinishedRecipe>`）与 **1.20.4**（仅 recipe，`buildRecipes(RecipeOutput)`）；NeoForge 1.20.1 改口 `search_neoforge_docs`、1.20.4/1.20.6 仅 recipe、1.21.x 与 26.1；**Fabric** 1.21.1/**1.21.3**/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（**无 1.21.5**）；**Quilt 无** generate_datagen（改口 `search_docs platform=quilt` + Fabric overlay 手写）；其它 version 返回 error |
 | `get_version_info` 1.12.2 action=register 仍教 DeferredRegister | gotchas 写「不支持」，recommendation 被强行追加 1.20 流程 | 1.12.2 注册是 `RegistryEvent.Register<T>` |
 | `search_loader_api` 对 Fabric 1.14.4 等返回空 | 文档曾写 maven 404 / `LOADER_API_NOT_INDEXED` | 以 `mode=list` 为准；`skipped-ingest.json` 的 `mavenNotIndexed` 现为空数组 |
 | 文档 `semantic: false` 或 warning 含 `stale` | 故意 L0-only（**仅 ModLoader** 三档），或 sqlite 落后于 processed/ | 看该次 JSON，不要只看 `get_server_status.semanticIndex.modeHint` |
@@ -366,7 +366,7 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 | `port_project` 会改用户工程 | 默认 **dryRun**；真写需 `confirmed` + `MC_SKILL_ALLOW_WRITE` + 路径在 `MC_SKILL_PROJECT_ROOT` 内 |
 | 工作流 / MCP 不跑 Gradle、不拷 jar、不上传 = 漏做无人值守 | **人在环设计**。创意、兼容取舍、API、性能、调试由人决定；高风险操作须确认后再执行 |
 | `analyze_porting_path` 对任意文件夹都有移植路径 | 非模组目录 → `NOT_A_MOD_PROJECT`；LiteLoader / Rift / ModLoader / 基岩 → `UNSUPPORTED_PORT` |
-| `generate_*` / `generate_datagen` 会写文件 | **只返回文本骨架**。`platform`/`loader` 与（datagen/config/capability/renderer 的）`version` 必填，禁止默认 forge。datagen：**Forge 1.20.1 与 1.20.4**（1.20.4 仅 recipe）、NeoForge 1.20.4/1.20.6（仅 recipe）/1.21.x/26.1、**Fabric** 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（无 1.21.5）；Quilt 无 generate_datagen（改口 `search_docs platform=quilt`）；其它 Forge 版本（含 1.12.2）error。`generate_capability`：forge=Capability；neoforge 仅 1.20.4+ Attachment；fabric/quilt 改口 CCA |
+| `generate_*` / `generate_datagen` 会写文件 | **默认只返回文本骨架 + `suggestedPath`**。可选写盘须 `write=true` + `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + 绝对 `MC_SKILL_PROJECT_ROOT`，路径相对工程根且不含 `..`；缺任一条件只吐文本，不会静默落盘。`platform`/`loader` 与（datagen/config/capability/renderer 的）`version` 必填，禁止默认 forge。datagen：**Forge 1.20.1 与 1.20.4**（1.20.4 仅 recipe）、NeoForge 1.20.4/1.20.6（仅 recipe）/1.21.x/26.1、**Fabric** 1.21.1/**1.21.3**/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（无 1.21.5）；Quilt 无 generate_datagen（改口 `search_docs platform=quilt`）；其它 Forge 版本（含 1.12.2）error。`generate_capability`：forge=Capability；neoforge 仅 1.20.4+ Attachment；fabric/quilt 改口 CCA |
 | `localize_mod` 会自动译成中文 | **无机器翻译**，只标 `needsTranslation` |
 | `check_dependencies` = 完整 Gradle 解析 | 启发式 + library-catalog，会漏未收录库 |
 | `mixin_analyze deep:true` 会下载 MC jar | **不会**。未缓存 → `CACHE_MISS`，先 `get_minecraft_source` |
@@ -380,6 +380,16 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 | `DOC_NOT_FOUND` / 规则树空壳就抄邻版 API | **禁止**。保持未核实 stub，不是漏写 |
 
 写模组时的选用顺序：平台规则（`AGENTS.md`）→ `search_*_docs`（平台 API）→ `query_api`（仅有索引的 Vanilla）→ 反编译（确实要源码）。不要反过来用 `query_api` 猜 Forge 事件名。
+
+### 工具与网络边界（只写边界，不写结论）
+
+下列两条**本机无法核实**。这里登记的是「不许推出什么」，不是「已核实为否」。
+
+| 边界 | 已核实到的程度 | 禁止的推断 |
+|------|----------------|------------|
+| GitHub 域名在本机全程不可达 | `download_official_mdk` 的 pin commit、`mc_skill_update` 的 Release、以及规则/AGENTS 里钉的 example-mod commit 短哈希，都只能在可达网络下复验 | **本机拉不到 ≠ 上游不存在 / 校验和不对 / 那个 commit 是假的**。相关条目保持「未核实」标注，换网络或让用户在本机复验，不要改成另一套自猜的值 |
+| 基岩 `description.identifier` 等命名空间 ID 的长度上限与字符集 | Microsoft Learn 只规定要带命名空间，**未**给出长度上限与允许字符集；社区只给「小写、无空格/特殊字符」「路径长度受主机限制」这类**建议** | **不要把建议当硬限制**，也不要因 Learn 没写就断言「无限制」。`validate_addon_manifest` / `validate_bp_json` 不据长度/字符集报错；生成 ID 时按建议取保守形式并说明这是约定不是官方约束 |
+
 
 
 
@@ -545,7 +555,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 | `activate_platform_pack` | `list` / `session` / `write` / `deactivate`。session 不写盘、不依赖项目根：默认规则 **00/01/09** + Skill **索引**（`topics`/`task` 追加并集；`skillNames` 注入正文上限 8；见上文「规则包加载」）。write 默认 dryRun，`hosts` 必填。不要再用 `includeSkills`，改用 `writeSkillStubs`（默认 true，只写 stub）；`includeSkillBodies` 才写全文。目标只能是用户模组工程（拒绝知识库根）。**不能**开关 IDE 扫描器。 |
 
 
-### 2. 工程辅助
+### 2. 工程辅助（6）
 
 
 | 工具                 | 作用                                                                                                                                                                     |
@@ -554,7 +564,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 | `generate_datagen` | 生成 DataGen Provider 模板。**platform 与 version 必填**。**Forge 1.20.1 与 1.20.4**（1.20.4 仅 recipe，`buildRecipes(RecipeOutput)`）、NeoForge 1.20.4/1.20.6（仅 recipe）/1.21.x/26.1、**Fabric** 1.21.1/**1.21.3**/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（无 1.21.5）。Quilt 无 generate_datagen，改口 `search_docs platform=quilt`。其它 Forge 版本返回 error。需 `modId`、`targetName`。 |
 | `crash_analyze`    | 解析崩溃报告全文（或传 `crashReportPath` 直接读文件），推断 `crashKind`（含 `fml` / `client` / `server` / `fabric` / `quilt` / `liteloader` / `rift` / `modloader`）、可能成因、缺前置/版本不兼容与 `logHints`。优先于盲目网页搜索；实务分类可配合社区工具。                                                                                              |
 | `validate_project` | Forge：mods.toml / DeferredRegister。Fabric/Quilt：`fabric.mod.json` / `quilt.mod.json` + entrypoint。NeoForge：`neoforge.mods.toml`、`@Mod` + `IEventBus`。LiteLoader/Rift/ModLoader/基岩 `skipped`。坏 recipe 只 warning。Java 扫描上限默认 300（`MC_SKILL_JAVA_SCAN_MAX_FILES`）。 |
-| `check_publish_ready` | 发布前清单：license/version、`build/libs` 是否像正式 jar。**不上传**、不调 Curse/Modrinth API。 |
+| `check_publish_ready` | 发布前清单：license/version、`build/libs` 是否像正式 jar，并读 `community_knowledge/authored/publishing.md` 的清单（缺项只 warning）。**不上传**、不调 Curse/Modrinth API。 |
 | `inspect_runtime` | 日志型 inspector：优先 `logsDir`/`crashReportsDir`；否则有界探测 `run/logs` 等。禁止全盘 / JVM attach。默认读文件尾部。 |
 
 
@@ -593,7 +603,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 
 | 工具                         | 作用                                                                    |
 | -------------------------- | --------------------------------------------------------------------- |
-| `list_neoforge_versions`   | 列出本地 NeoForge 文档版本；主文档默认 **26.1**（官方 26.2 主树未发布前不克隆冒充）；**1.20.1** 可回退 Forge 数据。 |
+| `list_neoforge_versions`   | 列出本地 NeoForge 文档版本；主文档默认 **26.1**（26.2 构建已发布，但官方主文档不按版本分线且本仓无 26.2 语料 ⇒ 不克隆冒充）；**1.20.1** 可回退 Forge 数据。 |
 | `search_neoforge_docs`     | **hybrid** 搜索（DeferredRegister、Data Components、Payload 等）；无语义库则纯 L0。**须传 version**（先 `list_neoforge_versions`）。 |
 | `get_neoforge_doc_summary` | NeoForge 页 L1 摘要。                                                     |
 | `get_neoforge_doc_full`    | NeoForge 页全文 + 关键段高亮。                                                 |
@@ -728,14 +738,22 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 
 
 
-### 10. 代码生成模板（7）
+### 10. 代码生成模板（8）
 
-`generate_model`（`kind` 默认 `block`；`item` 只出物品模型）、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`（Fabric/Quilt 吐 Cloth Config 骨架并 warning，不是改口 mc-config）、`generate_entity_renderer`、`generate_worldgen`（骨架代码/JSON，非写盘）。
+本组 8 项工具**默认只吐文本 + `suggestedPath`，不写盘**。可选写盘须同时满足：`write=true` + `confirmed=true` + 环境变量 `MC_SKILL_ALLOW_WRITE=1` + 绝对路径 `MC_SKILL_PROJECT_ROOT`（缺失即 `PROJECT_ROOT_REQUIRED`）；写入路径必须相对工程根且不含 `..`，越界报 `PATH_OUTSIDE_ALLOWLIST`。缺任一条件只回文本，不会静默落盘。
 
-`localize_mod`：自有模组 `diff`/`draft_zh`，或第三方 jar `extract`/`pack_draft`；无机器翻译，标 `needsTranslation`；无 `en_us` 时可回退其它语言作源。
+| 工具 | 作用 |
+|------|------|
+| `generate_model` | 方块/物品 JSON 模型与 blockstate 模板。`version` 必填；`kind` 默认 `block`，`kind=item` 只出物品模型（无 blockstates）。 |
+| `generate_lang` | en_us + zh_cn lang JSON 骨架。`version` 必填；骨架不随 pack_format 变。 |
+| `generate_network_packet` | 网络包（C2S / S2C）骨架，按平台与版本给注册与收发样板。 |
+| `generate_capability` | Capability / DataAttachment 骨架。`platform` 与 `version` 必填。forge 1.20.1（及 1.18.2–1.20.4）Capability；neoforge 1.20.1 同 Capability 形态、1.20.4+ Data Attachment；fabric/quilt → error 改口 CCA。 |
+| `generate_config` | 配置骨架。`loader` 与 `version` 必填，禁止默认 forge。neoforge 1.21+/26.1/1.20.4/1.20.6 用 ModConfigSpec；1.20.1 用 ForgeConfigSpec（Forge 兼容）；fabric/quilt 吐 Cloth Config 最小骨架并 warning 声明依赖（不是改口 mc-config）。 |
+| `generate_entity_renderer` | 实体渲染器骨架。`platform` 与 `version` 必填；fabric/quilt 直接 error。 |
+| `generate_worldgen` | 世界生成 JSON 骨架。`platform` 与 `version` 必填。forge / neoforge 的 feature JSON；fabric / quilt 仅 `configured_feature` / `placed_feature`（禁止 forge `biome_modifier`）。无模板时 `errors` 列出支持档。 |
+| `localize_mod` | 汉化：自有模组 `diff` / `draft_zh`，或第三方 jar `extract` / `pack_draft`。无机器翻译，未填项标 `needsTranslation`；无 `en_us` 时可回退其它语言作源。 |
 
-### 11. 日志与依赖诊断（3）
-
+### 11. 日志与依赖诊断（4）
 
 | 工具                    | 作用                                      |
 | --------------------- | --------------------------------------- |
@@ -759,7 +777,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | 工具 | 作用 |
 |------|------|
 | `get_minecraft_source` | 按需下载+重映射+反编译真实 MC 源码，返回类源码片段（支持行区间 / `force` 重编译）。首次 3–10 分钟，同版本缓存命中 <1s。 |
-| `analyze_mod_jar` | 纯 Node 解析本地 mod jar：fabric.mod.json / mods.toml / neoforge.mods.toml、mixins.json 引用、entrypoints、依赖、AW/AT。无 Java、零下载。 |
+| `analyze_mod_jar` | 纯 Node 解析本地 mod jar：fabric.mod.json / mods.toml / neoforge.mods.toml、mixins.json 引用、entrypoints、依赖、AW/AT。传 `version` 则回显 `mcVersionConstraints` + `versionMatch`（match / mismatch / unknown，未核实形态不猜）。无 Java、零下载。 |
 | `decompile_mod_jar` | VineFlower 按需反编译本地 jar → `$MC_SKILL_CACHE/decompiled-mods/<modId>/<version>/`，返回源码树摘要；可选 remap（需匹配 MC 版本）。 |
 | `search_mod_code` | 对已反编译源码做行级 grep（子串/正则），返回 file:line 命中；入口：`decompiledDir` 或已反编译过的 `jarPath`。 |
 | `download_official_mdk` | 下载官方 MDK zip 到 `$MC_SKILL_CACHE`。GitHub pin commit（校验和在 `mcp-server/data/mdk-checksums.json`）；默认 `dryRun`。解压依赖 unzip / 7z / bsdtar。 |
@@ -771,7 +789,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | 1.14 – 1.21.11 | ✅ | ✅ | 两步 remap（official→intermediary→named） |
 | 26.1+ | ❌（已停更） | ✅ | 去混淆，免 remap |
 
-**与 `query_api` 的分工**：`query_api` / `get_method_params` 查 **1.16.5–1.20.4 Vanilla** 签名（快、离线）；**不含** Forge/Fabric API，**26.1+ 无索引**。以上 4 工具仅在确实需要完整源码/反编译时使用（下载量大）。各工具 description 均带 ⚠️ 提示。各工具 description 带边界说明。
+**与 `query_api` 的分工**：`query_api` / `get_method_params` 查 **1.16.5–1.20.4 Vanilla** 签名（快、离线）；**不含** Forge/Fabric API，**26.1+ 无索引**。本节取源码类工具（`get_minecraft_source` / `decompile_mod_jar` / `search_mod_code` / `download_official_mdk`）仅在确实需要完整源码/反编译时使用（下载量大），各工具 description 均带 ⚠️ 边界提示。
 
 ### 反编译数据产物
 

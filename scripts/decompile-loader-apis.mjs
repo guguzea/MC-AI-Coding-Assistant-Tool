@@ -39,8 +39,23 @@ MCP 运行时（resolveCacheRoot）与本脚本都读 \`MC_SKILL_CACHE\`。不�
 键形如 \`1.20.4-neoforge\`、\`26.1-neoforge\`、\`1.20.4-fabric-api\`。
 **不要**把摘要合并进 Parchment query_api。摘要必须含 mappingsVersion。
 `;
-if (WRITE) {
-  writeFileSync(join(OUT, "README.md"), NOTE, "utf8");
+const README_PATH = join(OUT, "README.md");
+// 只补空不覆盖：README 尾部有人工整理的覆盖台账，无条件重写会把它抹掉
+if (WRITE && !existsSync(README_PATH)) {
+  writeFileSync(README_PATH, NOTE, "utf8");
+}
+
+/**
+ * 写仓库内 JSON：保留原文件结尾换行约定，内容未变则一个字节都不写。
+ * 否则一次 --write 会顺带剥掉邻档 JSON 的结尾 \n，产生与本次任务无关的 collateral diff。
+ */
+function writeJsonPreservingEol(path, obj) {
+  const str = JSON.stringify(obj, null, 2);
+  const had = existsSync(path) ? readFileSync(path, "utf8") : null;
+  const out = had !== null && had.endsWith("\n") ? str + "\n" : str;
+  if (had === out) return false;
+  writeFileSync(path, out, "utf8");
+  return true;
 }
 
 function inferMappings(fileBase) {
@@ -324,7 +339,7 @@ function rebuildCatalogFromDisk() {
       j.classes = next;
       j.classCount = classCount;
       j.fqcnIndexCount = fqcnIndexCount;
-      if (changed) writeFileSync(jsonPath, JSON.stringify(j, null, 2), "utf8");
+      if (changed) writeJsonPreservingEol(jsonPath, j);
     }
     const file = j.file || key;
     present.add(String(file).replace(/\.jar$/i, ""));
@@ -345,31 +360,25 @@ function rebuildCatalogFromDisk() {
     if (j.invalid) invalid.push(file);
   }
   jars.sort((a, b) => String(a.file).localeCompare(String(b.file)));
+  // status.json 必须与 readdir 顺序无关：否则每次跑都产生无内容的重排 diff（实测 1.21.1-qsl 换位置）
+  decompiled.sort((a, b) => String(a).localeCompare(String(b)));
+  invalid.sort((a, b) => String(a).localeCompare(String(b)));
+  const mappingsOrdered = Object.fromEntries(
+    Object.entries(mappingsVersion).sort((a, b) => a[0].localeCompare(b[0])),
+  );
   const notIndexed = WANTED_FABRIC_API.filter((k) => !present.has(k)).map((key) => ({
     key,
     reason: "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar",
   }));
-  writeFileSync(
-    indexPath,
-    JSON.stringify({ cache: "$MC_SKILL_CACHE", jars, notIndexed }, null, 2),
-    "utf8",
-  );
-  writeFileSync(
-    join(OUT, "status.json"),
-    JSON.stringify(
-      {
-        ok: true,
-        decompiled,
-        mappingsVersion,
-        cache: "$MC_SKILL_CACHE",
-        invalid,
-        notIndexed,
-      },
-      null,
-      2,
-    ),
-    "utf8",
-  );
+  writeJsonPreservingEol(indexPath, { cache: "$MC_SKILL_CACHE", jars, notIndexed });
+  writeJsonPreservingEol(join(OUT, "status.json"), {
+    ok: true,
+    decompiled,
+    mappingsVersion: mappingsOrdered,
+    cache: "$MC_SKILL_CACHE",
+    invalid,
+    notIndexed,
+  });
   console.log(`catalog ${jars.length} summaries → ${OUT} (java stays in $MC_SKILL_CACHE)`);
 }
 
@@ -404,7 +413,7 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
       console.log("dry-run skip invalid write:", key);
       continue;
     }
-    writeFileSync(existingPath, JSON.stringify(invalid, null, 2), "utf8");
+    writeJsonPreservingEol(existingPath, invalid);
     continue;
   }
   const jarSha = sha256File(jarPath);
@@ -446,7 +455,7 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
           },
           key,
         );
-        writeFileSync(existingPath, JSON.stringify(kept, null, 2), "utf8");
+        writeJsonPreservingEol(existingPath, kept);
         summaries.push({ ...kept, file: name });
         console.log("idempotent keep", name, "classes", kept.classes.length);
         continue;
@@ -570,7 +579,7 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
   if (!WRITE) {
     console.log("dry-run skip summary write:", key);
   } else {
-    writeFileSync(join(OUT, basename(name, ".jar") + ".json"), JSON.stringify(summary, null, 2), "utf8");
+    writeJsonPreservingEol(join(OUT, basename(name, ".jar") + ".json"), summary);
     let prevSide = {};
     try {
       if (existsSync(`${jarPath}.sidecar`)) prevSide = JSON.parse(readFileSync(`${jarPath}.sidecar`, "utf8"));
@@ -606,7 +615,7 @@ async function thickenFromClassUrls(jsonPath, key) {
   const withUrl = classes.filter((c) => typeof c.url === "string" && /^https:\/\//.test(c.url));
   if (!withUrl.length) {
     const cleaned = sanitizeSummary(prev, key);
-    writeFileSync(jsonPath, JSON.stringify(cleaned, null, 2), "utf8");
+    writeJsonPreservingEol(jsonPath, cleaned);
     return cleaned;
   }
   const next = [];
@@ -642,7 +651,7 @@ async function thickenFromClassUrls(jsonPath, key) {
     }
   }
   const out = sanitizeSummary({ ...prev, classes: next }, key);
-  writeFileSync(jsonPath, JSON.stringify(out, null, 2), "utf8");
+  writeJsonPreservingEol(jsonPath, out);
   console.log("url-thicken", key, "classes", out.classes.length);
   return out;
 }
@@ -661,7 +670,11 @@ const SKIP_JSON = new Set([
 const processedKeys = new Set(
   summaries.map((s) => String(s.file || "").replace(/\.jar$/i, "")).filter(Boolean),
 );
-for (const name of readdirSync(OUT).filter((n) => n.endsWith(".json") && !SKIP_JSON.has(n) && !n.endsWith("-last.json"))) {
+// dry-run 必须一个字节都不改：本 pass 会原地重写仓库内已有摘要（实测曾剥掉 qsl 档的结尾换行）
+if (!WRITE) console.log("dry-run：跳过 sibling 摘要修复/加粗 pass（不改写仓库内已有 JSON）");
+for (const name of WRITE
+  ? readdirSync(OUT).filter((n) => n.endsWith(".json") && !SKIP_JSON.has(n) && !n.endsWith("-last.json"))
+  : []) {
   const key = name.replace(/\.json$/i, "");
   const jsonPath = join(OUT, name);
   if (processedKeys.has(key)) continue;
@@ -674,7 +687,7 @@ for (const name of readdirSync(OUT).filter((n) => n.endsWith(".json") && !SKIP_J
   const srcDir = join(CACHE, "loader-api-src", key);
   if (prev.source === "qsl-github-java") {
     const cleaned = sanitizeSummary(prev, key);
-    writeFileSync(jsonPath, JSON.stringify(cleaned, null, 2), "utf8");
+    writeJsonPreservingEol(jsonPath, cleaned);
     summaries.push({ ...cleaned, file: cleaned.file || key });
     processedKeys.add(key);
     continue;
@@ -687,7 +700,7 @@ for (const name of readdirSync(OUT).filter((n) => n.endsWith(".json") && !SKIP_J
     }
     if (classes.length) {
       const out = sanitizeSummary({ ...prev, classes, classCount: classes.length, source: prev.source || "official" }, key);
-      writeFileSync(jsonPath, JSON.stringify(out, null, 2), "utf8");
+      writeJsonPreservingEol(jsonPath, out);
       summaries.push({ ...out, file: prev.file || key });
       processedKeys.add(key);
       console.log("src-tree thicken", key, "classes", classes.length);

@@ -748,6 +748,26 @@ description: |
   }
   console.log("plan4 lint old-loader blacklist: ok");
 
+  // 可达性门禁：上面的自测用 tmpdir 绝对路径（含 \liteloader\），生产清单却是仓库相对路径。
+  // 从脚本源码里取出 OLD 正则本体，直接在真实清单上验证它对相对路径仍然命中，否则黑名单分支是死代码。
+  const lintSrc = readFileSync(join(repo, "mcp-server", "scripts", "lint-skill-verified-api.mjs"), "utf8");
+  const oldLit = lintSrc.match(/const OLD = \/(.*)\/i;/);
+  assert.ok(oldLit, "lint-skill-verified-api.mjs 里找不到 OLD 正则字面量");
+  const oldRe = new RegExp(oldLit[1], "i");
+  const lintList = readFileSync(join(repo, "mcp-server", "scripts", "lint-skill-verified-api.files.txt"), "utf8")
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter((l) => l && !l.startsWith("#"));
+  const shouldCover = lintList.filter((f) => /^(liteloader|rift|modloader)[/\\]/i.test(f));
+  assert.ok(shouldCover.length > 0, "清单里没有老加载器条目");
+  const reached = shouldCover.filter((f) => oldRe.test(f));
+  assert.equal(
+    reached.length,
+    shouldCover.length,
+    `OLD=${oldLit[1]} 对仓库相对路径不可达：${shouldCover.length - reached.length}/${shouldCover.length} 条老加载器 SKILL.md 不受黑名单约束`,
+  );
+  console.log(`plan4 lint OLD 可达性: ok (${reached.length}/${shouldCover.length} 条老加载器档受约束)`);
+
   function countTableRows(rel) {
     const t = readFileSync(join(repo, rel), "utf8");
     return t

@@ -92,8 +92,10 @@ IF 一个物品有 Fabric API Capability
   → Capability 注册应在 onInitialize() 中通过 Fabric API 处理
 
 IF 附加数据（Attachment）
-  → `fabric-attachment-api-v1`：`AttachmentRegistry.create`（见 AGENTS「1.21.x 网络与 Attachment」与 `mc-capability` Skill）
-  → 不要用 NeoForge `Registries.ATTACHMENT_TYPE` / `getData` / `setData`；不要用 Forge Capability
+  → `AttachmentRegistry.create` / `createPersistent` / `createDefaulted` / `builder` + `AttachmentSyncPredicate.all / targetOnly / allButTarget`（FQCN `net.fabricmc.fabric.api.attachment.v1.*`，见 `1.21.11-fabric-api.json`：6 类，**无** `GlobalAttachments`）
+  → 该页未写模块 id，`fabric-attachment-api-v1` 本档 **未核实**；依赖按 `fabric-api` 实测，不要照抄
+  → 摘要首参为 intermediary `class_2960`，Yarn 名以该版映射为准，禁止默写
+  → 不要用 NeoForge `NeoForgeRegistries.ATTACHMENT_TYPES` / `getData` / `setData`；不要用 Forge Capability
 ```
 
 ---

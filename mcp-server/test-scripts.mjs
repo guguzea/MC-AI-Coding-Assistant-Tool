@@ -320,7 +320,7 @@ if (psProbe.status !== 0) {
     return lines.join("\n");
   };
   const build = (callTail, mapArg = "tiny") => {
-    rmSync(FAKE_PKG, { recursive: true, force: true });
+    rmSync(FAKE_PKG, { recursive: true, force: true, maxRetries: 6, retryDelay: 120 });
     const wf = (rel, text) => {
       const abs = jpath(FAKE_PKG, ...rel.split("/"));
       mkdirSync(dirname(abs), { recursive: true });
@@ -383,7 +383,7 @@ if (psProbe.status !== 0) {
       `  assert-java-spawn-cwd 自检: 干净=0 / ${cases.length} 种投毒全部失败 / 真树 ${realCount} 个 runJava + ${realRemap} 个 remapperCli 调用点通过`,
     );
   } finally {
-    rmSync(FAKE_PKG, { recursive: true, force: true });
+    rmSync(FAKE_PKG, { recursive: true, force: true, maxRetries: 6, retryDelay: 120 });
     dropIfEmpty(GATE_SCRATCH);
   }
 }

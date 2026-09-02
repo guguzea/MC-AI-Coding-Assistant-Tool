@@ -16,7 +16,13 @@ import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { crc32, deflateRawSync } from "node:zlib";
-import { decompileDegradation } from "./dist/decompile/services/mod-decompile.js";
+import {
+  decompileDegradation,
+  requestedRemapKey,
+  judgeDecompiledCacheHit,
+  readDecompiledMeta,
+  writeDecompiledMeta,
+} from "./dist/decompile/services/mod-decompile.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -403,7 +409,7 @@ section("cache");
 // ── 3. mod-analyzer（fixture jar-like zip）────────────────────────────────────
 section("mod-analyzer");
 {
-  const { analyzeModJar } = await import("./dist/decompile/services/mod-analyzer.js");
+  const { analyzeModJar, analyzeModJarHandler } = await import("./dist/decompile/index.js");
 
   const tmpRoot = join(tmpdir(), `mc-skill-modtest-${Date.now()}`);
   mkdirSync(tmpRoot, { recursive: true });
@@ -454,6 +460,89 @@ section("mod-analyzer");
     assert.equal(r.modVersion, "2.0.0");
     const dep = (r.dependencies ?? []).find((d) => d.id === "forge");
     assert.ok(dep && dep.versionRange === "[47,)", `deps=${JSON.stringify(r.dependencies)}`);
+  });
+
+  test("D-21 version 参与判定：不传无字段、match/mismatch 回显、mismatch 追加 warning", () => {
+    const bare = analyzeModJar(fabricJar);
+    assert.equal(bare.requestedVersion, undefined);
+    assert.equal(bare.versionMatch, undefined);
+    assert.equal(bare.versionMatchNote, undefined);
+    assert.deepEqual(bare.mcVersionConstraints, [
+      { source: "fabric.mod.json:depends.minecraft", raw: "1.20.1" },
+    ]);
+
+    const hit = analyzeModJar(fabricJar, "1.20.1");
+    assert.equal(hit.requestedVersion, "1.20.1");
+    assert.equal(hit.versionMatch, "match");
+    assert.ok(hit.versionMatchNote.includes("落在声明范围内"), `note=${hit.versionMatchNote}`);
+
+    const miss = analyzeModJar(fabricJar, "1.21.1");
+    assert.equal(miss.versionMatch, "mismatch");
+    assert.ok(
+      miss.warnings.some((w) => w.startsWith("version 与 jar 声明不符")),
+      `warnings=${JSON.stringify(miss.warnings)}`,
+    );
+    // version 必须真的改变结果：只多出一条 mismatch warning
+    assert.equal(miss.warnings.length, bare.warnings.length + 1, "mismatch 必须新增一条 warning");
+
+    // 公开入口：handler 不得丢弃 version（D-21 要修的就是这条路径）
+    const viaHandler = analyzeModJarHandler({ jarPath: fabricJar, version: "1.21.1" });
+    assert.equal(viaHandler.requestedVersion, "1.21.1");
+    assert.equal(viaHandler.versionMatch, "mismatch");
+    assert.equal(analyzeModJarHandler({ jarPath: fabricJar }).versionMatch, undefined);
+  });
+
+  test("D-21 判定表边界：Maven 区间 / 未声明 / 未核实形态 / 快照 → 宁缺勿猜", () => {
+    const rangeJar = join(tmpRoot, "fixturerange-1.0.0.jar");
+    writeFileSync(
+      rangeJar,
+      makeZip([
+        {
+          name: "META-INF/mods.toml",
+          data:
+            'modLoader="javafml"\nloaderVersion="[47,)"\n\n[[mods]]\nmodId="fixturerange"\nversion="1.0.0"\n\n[[dependencies.fixturerange]]\nmodId="minecraft"\nversionRange="[1.20.1,)"\nmandatory=true\n',
+        },
+      ]),
+    );
+    assert.equal(analyzeModJar(rangeJar, "1.20.4").versionMatch, "match");
+    assert.equal(analyzeModJar(rangeJar, "1.19.4").versionMatch, "mismatch");
+
+    const noMcJar = join(tmpRoot, "nomc-1.0.0.jar");
+    writeFileSync(noMcJar, makeZip([{ name: "com/example/A.class", data: Buffer.from([0xca, 0xfe, 0xba, 0xbe]) }]));
+    const noMc = analyzeModJar(noMcJar, "1.20.1");
+    assert.equal(noMc.versionMatch, "unknown");
+    assert.ok(noMc.versionMatchNote.includes("未声明 MC 版本"), `note=${noMc.versionMatchNote}`);
+
+    // quilt 多值 versions 的 AND/OR 语义未核实 → 必须 unknown，禁止猜成 match
+    const quiltJar = join(tmpRoot, "fixturequilt-1.0.0.jar");
+    writeFileSync(
+      quiltJar,
+      makeZip([
+        {
+          name: "quilt.mod.json",
+          data: JSON.stringify({
+            schema_version: 1,
+            quilt_loader: {
+              id: "fixturequilt",
+              version: "1",
+              depends: [{ id: "minecraft", versions: [">=1.20", "<1.21"] }],
+            },
+          }),
+        },
+      ]),
+    );
+    const q = analyzeModJar(quiltJar, "1.21.1");
+    assert.equal(q.versionMatch, "unknown", `quilt 多值必须拒判，实际 ${q.versionMatch}`);
+    assert.ok(q.versionMatchNote.includes("不猜结论"), `note=${q.versionMatchNote}`);
+
+    const snap = analyzeModJar(fabricJar, "23w31a");
+    assert.equal(snap.versionMatch, "unknown");
+    assert.ok(snap.versionMatchNote.includes("快照版本不支持"), `note=${snap.versionMatchNote}`);
+    assert.equal(
+      snap.warnings.length,
+      analyzeModJar(fabricJar).warnings.length,
+      "非法版本不得新增 warning",
+    );
   });
 
   test("missing jar → found:false + actionable", () => {
@@ -774,6 +863,134 @@ test("正常重映射 → 无降级标记", () => {
   assert.equal(r.degraded, false);
   assert.deepEqual(r.warnings, []);
 });
+
+// ── S8 缓存命中判据：命中键必须含 version+mapping，且不得硬编码 remapped:false ────
+// 旧实现只比 jarPath，命中后写死 `remapped: false` 并回显本次 `args.version`：
+// 「1.20.1+yarn 生成的树」会被「1.21.1+mojmap 请求」当新鲜结果复用，还谎称没 remap。
+section("decompiled cache hit criteria (S8)");
+{
+  const dir = join(tmpdir(), `mc-skill-s8-${process.pid}`);
+  mkdirSync(dir, { recursive: true });
+  const jarA = join(dir, "a-mod.jar");
+  const jarB = join(dir, "b-mod.jar");
+  try {
+    test("requestedRemapKey：只有真正触发 remap 的版本/映射才非空", () => {
+      assert.deepEqual(requestedRemapKey("1.20.1", undefined), { version: "1.20.1", mapping: "yarn" });
+      assert.deepEqual(requestedRemapKey("1.20.1", "mojmap"), { version: "1.20.1", mapping: "mojmap" });
+      // 版本按 trim 后归一，避免 " 1.20.1" 与 "1.20.1" 互相判成不一致
+      assert.deepEqual(requestedRemapKey(" 1.21.1 ", undefined), { version: "1.21.1", mapping: "yarn" });
+      // 26.1+ 免 remap / 不支持的版本 / 未提供版本 → 一律「不 remap」，与 remap 步骤同一条门
+      assert.deepEqual(requestedRemapKey("26.1", "mojmap"), { version: null, mapping: null });
+      assert.deepEqual(requestedRemapKey("1.12.2", "yarn"), { version: null, mapping: null });
+      assert.deepEqual(requestedRemapKey(undefined, "yarn"), { version: null, mapping: null });
+      assert.deepEqual(requestedRemapKey("不存在的版本", undefined), { version: null, mapping: null });
+    });
+
+    test("命中键含 version + mapping：任一不同即 cacheStale", () => {
+      const stored = {
+        found: true,
+        jarPath: jarA,
+        version: "1.20.1",
+        mapping: "yarn",
+        remapped: true,
+        remapError: null,
+      };
+      assert.deepEqual(
+        judgeDecompiledCacheHit(stored, jarA, requestedRemapKey("1.20.1", "yarn")),
+        { usable: true, cacheStale: false },
+        "判据一致必须判成新鲜",
+      );
+      assert.equal(
+        judgeDecompiledCacheHit(stored, jarA, requestedRemapKey("1.21.1", "yarn")).cacheStale,
+        true,
+        "换 MC 版本必须标 stale（旧实现正是在这里冒领）",
+      );
+      assert.equal(
+        judgeDecompiledCacheHit(stored, jarA, requestedRemapKey("1.20.1", "mojmap")).cacheStale,
+        true,
+        "换映射层必须标 stale",
+      );
+      assert.equal(
+        judgeDecompiledCacheHit(stored, jarA, requestedRemapKey(undefined, undefined)).cacheStale,
+        true,
+        "本次不 remap 也不能把已 remap 的树当新鲜",
+      );
+    });
+
+    test("树属于别的 jar → 不可复用（不得返回旧 jar 的产物）", () => {
+      const v = judgeDecompiledCacheHit(
+        { found: true, jarPath: jarA, version: "1.20.1", mapping: "yarn", remapped: true, remapError: null },
+        jarB,
+        requestedRemapKey("1.20.1", "yarn"),
+      );
+      assert.deepEqual(v, { usable: false, cacheStale: false }, JSON.stringify(v));
+    });
+
+    test("meta round-trip 保真，且能区分「未记录」与「未 remap」", () => {
+      const treeDir = join(dir, "tree-new");
+      mkdirSync(treeDir, { recursive: true });
+      writeDecompiledMeta(treeDir, jarA, {
+        version: "1.20.1",
+        mapping: "yarn",
+        remapped: true,
+        remapError: null,
+      });
+      const back = readDecompiledMeta(treeDir);
+      assert.equal(back.found, true);
+      assert.equal(back.jarPath, jarA);
+      assert.deepEqual(requestedRemapKey("1.20.1", "yarn"), { version: back.version, mapping: back.mapping });
+      assert.equal(back.remapped, true, "remapped 真值必须落盘并可回读（缓存命中不得写死 false）");
+      assert.equal(back.remapError, null);
+      assert.equal(
+        judgeDecompiledCacheHit(back, jarA, requestedRemapKey("1.20.1", "yarn")).cacheStale,
+        false,
+        "新写的免 remap 之外判据必须判成新鲜",
+      );
+
+      // 未经 remap 的正常产物：version/mapping 记 null（不是「未记录」），不得永久判过期
+      const plainDir = join(dir, "tree-plain");
+      mkdirSync(plainDir, { recursive: true });
+      writeDecompiledMeta(plainDir, jarA, {
+        version: null,
+        mapping: null,
+        remapped: false,
+        remapError: null,
+      });
+      const plain = readDecompiledMeta(plainDir);
+      assert.equal(plain.version, null, "null = 记录了「未经 remap」，与 undefined（未记录）不同");
+      assert.deepEqual(
+        judgeDecompiledCacheHit(plain, jarA, requestedRemapKey("26.1", undefined)),
+        { usable: true, cacheStale: false },
+        "26.1 请求与免 remap 产物必须一致（同为不 remap）",
+      );
+      assert.deepEqual(
+        judgeDecompiledCacheHit(plain, jarA, requestedRemapKey(undefined, undefined)),
+        { usable: true, cacheStale: false },
+        "不传版本与免 remap 产物必须一致",
+      );
+
+      // 老缓存（S8 之前只写 jarPath/note）：判据无从证明 → 可用但必须标 stale
+      const legacyDir = join(dir, "tree-legacy");
+      mkdirSync(legacyDir, { recursive: true });
+      writeFileSync(
+        join(legacyDir, ".mc-skill-decompiled.json"),
+        JSON.stringify({ jarPath: jarA, note: "旧版标记", completedAt: "2026-01-01T00:00:00.000Z" }),
+        "utf8",
+      );
+      const legacy = readDecompiledMeta(legacyDir);
+      assert.equal(legacy.found, true, "老缓存仍是有效的完成标记");
+      assert.equal(legacy.version, undefined, "未记录必须留 undefined，不能压成 null");
+      assert.equal(legacy.remapped, false);
+      assert.deepEqual(
+        judgeDecompiledCacheHit(legacy, jarA, requestedRemapKey(undefined, undefined)),
+        { usable: true, cacheStale: true },
+        "老缓存判据未知：允许复用但必须提示 force 重建",
+      );
+    });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
 
 // ── #10 java 工具链 argv / 依赖 classpath / 空映射防护（R1·R2·R10 回归锁）──────
 // 实测依据（本机 VineFlower 1.10.1 + tiny-remapper 0.14.0）：

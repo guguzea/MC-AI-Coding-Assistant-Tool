@@ -16,5 +16,12 @@
 | DataGeneratorEntrypoint#onInitializeDataGenerator | 1.21.10/develop_data-generation_setup |
 | Item.Properties | 1.21.10/develop_items_first-item |
 | loom / fabric-loom | 1.21.10/develop_loom_index |
+| AttachmentRegistry.create / createPersistent / createDefaulted | 1.21.10/develop_data-attachments |
+| AttachmentSyncPredicate.all / targetOnly / allButTarget | 1.21.10/develop_data-attachments |
+| hasAttached / getAttached / getAttachedOrThrow / getAttachedOrSet / getAttachedOrElse | 1.21.10/develop_data-attachments |
+| setAttached / modifyAttached / removeAttached | 1.21.10/develop_data-attachments |
+| 注入目标 Entity / BlockEntity / ServerLevel / ChunkAccess | 1.21.10/develop_data-attachments |
+
+Attachment 只登记到简名：该页正文只写简名，示例代码是 `@[code](@/reference/1.21.10/…)` include，仓库内没有 `reference/` 目录。所以 `net.fabricmc.fabric.api.attachment.v1.*` FQCN 与 `fabric-attachment-api-v1` 模块 id 在本档 **未核实**（该版也没有 fabric-api 摘要可查），禁止当已核实依赖坐标输出。
 
 核不到的类名写成「以该版文档为准，禁止默写」。

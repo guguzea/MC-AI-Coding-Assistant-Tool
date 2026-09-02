@@ -14,6 +14,7 @@ import { isAbsolute } from "path";
 import { actionable, type ActionEnvelope } from "../../utils/actionable.js";
 import { parseJsonUtf8 } from "../../utils/json-utf8.js";
 import { readZip, listZipEntries } from "../zip-util.js";
+import { parseMinecraftVersion } from "../version-manager.js";
 import { parseModsToml } from "./toml-parse.js";
 
 export interface ModDependency {
@@ -30,6 +31,16 @@ export interface MixinRef {
   file: string;
   config: boolean;
 }
+
+/** jar 元数据里声明 MC 版本的一条原始约束（不猜语义，原样回显 + 判定分离） */
+export interface McVersionConstraint {
+  /** 声明来源，如 fabric.mod.json:depends.minecraft */
+  source: string;
+  /** jar 里写的原样值，如 "1.20.1"、"[1.20.1,)"、">=1.20"、"1.20.x || 1.21.x" */
+  raw: string;
+}
+
+export type VersionMatchVerdict = "match" | "mismatch" | "unknown";
 
 export interface ModMetadata {
   found: boolean;
@@ -48,6 +59,12 @@ export interface ModMetadata {
   accessTransformers: string[];
   warnings: string[];
   mods?: Array<{ modId: string; version?: string; displayName?: string; description?: string }>;
+  /** 各 loader 元数据里声明的 MC 版本约束（Fabric/Quilt/Forge/NeoForge/litemod/mcmod/基岩） */
+  mcVersionConstraints: McVersionConstraint[];
+  /** D-21：调用方传入的 version 原样回显（未传则整个 version* 字段族缺席） */
+  requestedVersion?: string;
+  versionMatch?: VersionMatchVerdict;
+  versionMatchNote?: string;
   error?: string;
   action?: ActionEnvelope;
 }
@@ -74,7 +91,155 @@ function emptyMeta(jarPath: string): ModMetadata {
     accessWideners: [],
     accessTransformers: [],
     warnings: [],
+    mcVersionConstraints: [],
   };
+}
+
+// ── D-21：MC 版本约束判定（纯函数，宁缺勿猜）───────────────────────────────
+
+/** Fabric / Quilt 依赖值：字符串、{ value }、字符串数组（数组按「或」拼接） */
+function rangeTextOf(value: unknown): string | undefined {
+  if (typeof value === "string") return value.trim() || undefined;
+  if (Array.isArray(value)) {
+    const parts = value.map(rangeTextOf).filter((x): x is string => !!x);
+    return parts.length > 0 ? parts.join(" || ") : undefined;
+  }
+  if (value && typeof value === "object") return rangeTextOf((value as { value?: unknown }).value);
+  return undefined;
+}
+
+/**
+ * quilt depends 的 versions：数组多值的语义（AND 还是 OR）未在官方实现核实，
+ * 猜成 OR 会把 1.21.1 判进 `[">=1.20","<1.21"]`。单元素取该值；多元素原样拼成
+ * `" && "`，由 testConstraint 拒判为 unknown。
+ */
+function quiltVersionsText(value: unknown): string | undefined {
+  if (Array.isArray(value)) {
+    const parts = value.map(rangeTextOf).filter((x): x is string => !!x);
+    if (parts.length === 1) return parts[0];
+    return parts.length > 1 ? parts.join(" && ") : undefined;
+  }
+  return rangeTextOf(value);
+}
+
+type VersionTuple = [number, number, number];
+const VER_RE = /^(\d+)\.(\d+)(?:\.(\d+))?$/;
+
+function toTuple(v: string): VersionTuple | null {
+  const m = VER_RE.exec(v.trim());
+  if (!m) return null;
+  return [Number(m[1]), Number(m[2]), m[3] !== undefined ? Number(m[3]) : 0];
+}
+
+function cmpTuple(a: VersionTuple, b: VersionTuple): number {
+  for (let i = 0; i < 3; i++) {
+    if (a[i] !== b[i]) return a[i] < b[i] ? -1 : 1;
+  }
+  return 0;
+}
+
+/**
+ * 单条约束是否包含 target。返回 null = 形态不认识（调用方必须落到 unknown，禁止猜成 match/mismatch）。
+ * 覆盖：* / any、精确 1.20.1、通配 1.20.x、>= > <= < =、^x.y、~x.y、
+ *      Maven 区间 [1.20.1,) (1.20,) [1.20,1.21]、`||` 或、逗号/空格 与。
+ *      `" && "`（quilt 多值 versions，语义未核实）→ null。
+ */
+function testConstraint(raw: string, target: VersionTuple): boolean | null {
+  const s = raw.trim();
+  if (!s || s === "*" || s === "any") return true;
+  if (s.includes("&&")) return null;
+
+  const bracket = /^([\[(])([^,]*),([^,]*)([\])])$/.exec(s);
+  if (bracket) {
+    const [, lb, lo, hi, ub] = bracket;
+    const incLo = lb === "[";
+    const incHi = ub === "]";
+    if (lo.trim()) {
+      const t = toTuple(lo);
+      if (!t) return null;
+      const c = cmpTuple(target, t);
+      if (c < 0 || (c === 0 && !incLo)) return false;
+    }
+    if (hi.trim()) {
+      const t = toTuple(hi);
+      if (!t) return null;
+      const c = cmpTuple(target, t);
+      if (c > 0 || (c === 0 && !incHi)) return false;
+    }
+    return true;
+  }
+
+  if (/\|\|/.test(s)) {
+    const results = s.split(/\|\|/).map((p) => testConstraint(p, target));
+    if (results.some((r) => r === true)) return true;
+    return results.some((r) => r === null) ? null : false;
+  }
+
+  const atoms = s.split(/[\s,]+/).filter(Boolean);
+  if (atoms.length > 1) {
+    const results = atoms.map((a) => testConstraint(a, target));
+    if (results.some((r) => r === false)) return false;
+    return results.some((r) => r === null) ? null : true;
+  }
+
+  const atom = atoms[0] ?? s;
+  const op = /^(>=|<=|>|<|=|\^|~)\s*(.+)$/.exec(atom);
+  if (op) {
+    const t = toTuple(op[2]);
+    if (!t) return null;
+    const c = cmpTuple(target, t);
+    switch (op[1]) {
+      case ">=": return c >= 0;
+      case ">": return c > 0;
+      case "<=": return c <= 0;
+      case "<": return c < 0;
+      case "=": return c === 0;
+      case "^": return c >= 0 && target[0] === t[0];
+      case "~": return c >= 0 && target[0] === t[0] && target[1] === t[1];
+    }
+    return null;
+  }
+
+  // 通配（1.20.x / 1.x）：只比对已写出的前导段
+  if (/(\.x|\.X|\.\*)$/.test(atom)) {
+    const segs = atom.replace(/(\.x|\.X|\.\*)$/, "").split(".").map(Number);
+    if (segs.some((n) => !Number.isFinite(n))) return null;
+    for (let i = 0; i < segs.length && i < 3; i++) if (target[i] !== segs[i]) return false;
+    return true;
+  }
+
+  const exact = toTuple(atom);
+  if (!exact) return null;
+  // 只写到 minor 的声明（"1.20"）按 major+minor 等值；三段式（"1.20.1"）精确相等
+  if (atom.split(".").length === 2) return target[0] === exact[0] && target[1] === exact[1];
+  return cmpTuple(target, exact) === 0;
+}
+
+/**
+ * 汇总判定：任一约束含目标 → match；否则有未识别形态 → unknown；全部不含才 mismatch。
+ * 只有 parseMinecraftVersion 认得的版本才判定（快照 / 乱码 → unknown + 原因）。
+ */
+function judgeVersionMatch(
+  requested: string,
+  constraints: McVersionConstraint[],
+): { verdict: VersionMatchVerdict; note: string } {
+  const vi = parseMinecraftVersion(requested);
+  if (!vi.valid) {
+    return { verdict: "unknown", note: `version「${requested}」未参与判定：${vi.error ?? "无法解析的 MC 版本"}` };
+  }
+  const target: VersionTuple = [vi.major, vi.minor, vi.patch ?? 0];
+  if (constraints.length === 0) {
+    return { verdict: "unknown", note: `jar 元数据未声明 MC 版本，${vi.version} 无法比对` };
+  }
+  const results = constraints.map((c) => ({ c, ok: testConstraint(c.raw, target) }));
+  const unknownCount = results.filter((r) => r.ok === null).length;
+  const verdict: VersionMatchVerdict =
+    results.some((r) => r.ok === true) ? "match" : unknownCount > 0 ? "unknown" : "mismatch";
+  const bits = results.map((r) => `${r.c.source}="${r.c.raw}"→${r.ok === true ? "含" : r.ok === false ? "不含" : "形态未识别"}`);
+  let note = `${vi.version} ${verdict === "match" ? "落在" : verdict === "mismatch" ? "不在" : "无法判定是否落在"}声明范围内：${bits.join("；")}`;
+  if (unknownCount > 0) note += "（存在未识别约束形态，不猜结论）";
+  if (vi.unobfuscated) note += "；26.1+ 已去混淆，remap 免（与 decompile_mod_jar 同口径）";
+  return { verdict, note };
 }
 
 /** Quilt / Fabric 入口：string、string[]、{ value }（adapter 包装）。 */
@@ -100,7 +265,7 @@ function parseEntrypointsMap(entrypoints: unknown): Record<string, string[]> | u
 
 export interface AnalyzeResult extends ModMetadata {}
 
-export function analyzeModJar(jarPath: string): AnalyzeResult {
+export function analyzeModJar(jarPath: string, requestedVersion?: string): AnalyzeResult {
   if (!jarPath) {
     return {
       ...emptyMeta(jarPath),
@@ -151,6 +316,13 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
   }
   meta.entryCount = entries.size;
 
+  const addMcConstraint = (source: string, raw: string | undefined) => {
+    const v = raw?.trim();
+    if (!v) return;
+    if (meta.mcVersionConstraints.some((c) => c.source === source && c.raw === v)) return;
+    meta.mcVersionConstraints.push({ source, raw: v });
+  };
+
   // ── quilt.mod.json（优先于 fabric：同时存在时标 quilt）────────────────────
   const quiltJson = entries.get("quilt.mod.json");
   if (quiltJson) {
@@ -168,6 +340,21 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
       const entrypoints = loader?.entrypoints ?? quilt.entrypoints;
       const eps = parseEntrypointsMap(entrypoints);
       if (eps) meta.entrypoints = { ...meta.entrypoints, ...eps };
+      // quilt depends 三种写法都可能出现："minecraft"、"minecraft@>=1.20"、{id,versions}、{minecraft:">=1.20"}
+      const qdeps = loader?.depends ?? quilt.depends;
+      if (Array.isArray(qdeps)) {
+        for (const dep of qdeps) {
+          if (typeof dep === "string") {
+            const [id, ...rest] = dep.split("@");
+            if (id.trim() === "minecraft") addMcConstraint("quilt.mod.json:quilt_loader.depends", rest.length > 0 ? rest.join("@") : "*");
+          } else if (dep && typeof dep === "object") {
+            const d = dep as Record<string, unknown>;
+            if (d.id === "minecraft") addMcConstraint("quilt.mod.json:quilt_loader.depends", quiltVersionsText(d.versions ?? d.version));
+          }
+        }
+      } else if (qdeps && typeof qdeps === "object") {
+        addMcConstraint("quilt.mod.json:quilt_loader.depends", rangeTextOf((qdeps as Record<string, unknown>).minecraft));
+      }
     } catch (err) {
       meta.warnings.push(`quilt.mod.json 解析失败: ${(err as Error).message}`);
     }
@@ -201,6 +388,7 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
               versionRange: typeof range === "string" ? range : undefined,
               optional: typeof range === "object" && range !== null && (range as { optional?: boolean }).optional === true,
             });
+            if (id === "minecraft") addMcConstraint("fabric.mod.json:depends.minecraft", rangeTextOf(range));
           }
         }
       }
@@ -245,7 +433,12 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
       if (!meta.modVersion && toml.mods[0]?.version) meta.modVersion = toml.mods[0].version;
       if (!meta.modName && toml.mods[0]?.displayName) meta.modName = toml.mods[0].displayName;
       if (!meta.description && toml.mods[0]?.description) meta.description = toml.mods[0].description;
-      for (const dep of toml.dependencies) meta.dependencies.push(dep);
+      for (const dep of toml.dependencies) {
+        meta.dependencies.push(dep);
+        if (dep.id === "minecraft" && dep.versionRange) {
+          addMcConstraint(`${label}:[[dependencies.${dep.owner ?? "?"}]] modId=minecraft`, dep.versionRange);
+        }
+      }
     } catch (err) {
       meta.warnings.push(`${label} 解析失败: ${(err as Error).message}`);
     }
@@ -265,6 +458,7 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
         if (!meta.modId && typeof rec.modid === "string") meta.modId = rec.modid;
         if (!meta.modVersion && typeof rec.version === "string") meta.modVersion = rec.version;
         if (!meta.modName && typeof rec.name === "string") meta.modName = rec.name;
+        if (typeof rec.mcversion === "string") addMcConstraint("mcmod.info:mcversion", rec.mcversion);
       }
     } catch (err) {
       meta.warnings.push(`mcmod.info 解析失败: ${(err as Error).message}`);
@@ -280,6 +474,11 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
       if (!meta.modId && typeof lite.name === "string") meta.modId = lite.name;
       if (!meta.modVersion && typeof lite.version === "string") meta.modVersion = lite.version;
       if (!meta.modName && typeof lite.displayName === "string") meta.modName = lite.displayName;
+      if (typeof lite.mcversion === "string") addMcConstraint("litemod.json:mcversion", lite.mcversion);
+      if (Array.isArray(lite.mcs)) {
+        const mcs = lite.mcs.filter((x): x is string => typeof x === "string" && x.trim() !== "");
+        if (mcs.length > 0) addMcConstraint("litemod.json:mcs", mcs.join(" || "));
+      }
     } catch (err) {
       meta.warnings.push(`litemod.json 解析失败: ${(err as Error).message}`);
     }
@@ -315,6 +514,12 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
         if (header && typeof header.name === "string") meta.modName = header.name;
         if (header && typeof header.uuid === "string") meta.modId = header.uuid;
         if (header && Array.isArray(header.version)) meta.modVersion = header.version.join(".");
+        const minEngine = Array.isArray(header?.min_engine_version)
+          ? (header!.min_engine_version as unknown[]).join(".")
+          : typeof header?.min_engine_version === "string"
+            ? header.min_engine_version
+            : undefined;
+        if (minEngine) addMcConstraint("manifest.json:header.min_engine_version", `>=${minEngine}`);
       }
     } catch (err) {
       meta.warnings.push(`manifest.json 解析失败: ${(err as Error).message}`);
@@ -346,6 +551,15 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
     meta.loaders.includes("fabric");
   if (meta.loaders.length > 1 && !quiltFabricOnly) {
     meta.warnings.push(`同时存在多个 loader 元数据: ${meta.loaders.join(", ")}`);
+  }
+
+  const req = requestedVersion?.trim();
+  if (req) {
+    meta.requestedVersion = req;
+    const judged = judgeVersionMatch(req, meta.mcVersionConstraints);
+    meta.versionMatch = judged.verdict;
+    meta.versionMatchNote = judged.note;
+    if (judged.verdict === "mismatch") meta.warnings.push(`version 与 jar 声明不符：${judged.note}`);
   }
 
   return meta;

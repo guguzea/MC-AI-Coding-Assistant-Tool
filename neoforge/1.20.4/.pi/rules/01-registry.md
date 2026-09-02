@@ -29,3 +29,11 @@ public static final DeferredItem<BlockItem> COPPERCOIL_BLOCK_ITEM =
 - 禁止 `NeoForgeAddonPlugin`。
 
 自定义 datapack registry：`ResourceKey.createRegistryKey(new ResourceLocation("yourmodid", "spells"))` 一类写法，以该版 registries 页为准。
+
+## 附加数据（Data Attachments）
+
+本档有官方页 `datastorage/attachments`。名字与口径只用 `knowledge/common/verified-api-1.20.4.md`「附加数据」段登记项：`AttachmentType.builder` / `AttachmentType.serializable` + `Builder.serialize / copyOnDeath / build`，注册走 `DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MOD_ID)` 再 `register(modEventBus)`，读写走 `getData` / `setData` / `hasData`。
+
+- docs 页里出现的 `AttachmentSerializer.serializable()` 是 **错误名**：本档摘要内没有 `AttachmentSerializer` 类，正确静态方法是 `AttachmentType.serializable(...)`。
+- 死亡复制（`copyOnDeath`）与玩家复制要自己处理 `PlayerEvent.Clone`（`#isWasDeath`）；块同步要自己处理 `ChunkWatchEvent.Sent`。该版不像 Fabric 有 `syncWith` 一等公民。
+- 禁止套用 Fabric `AttachmentRegistry` / `getAttached`，也不要写 Forge Capability 那套。

@@ -54,11 +54,15 @@ export interface CrashResult {
 }
 
 // 已知的常见崩溃原因模式（从 8 种扩展至 16 种 + 加载期）
+// 排序不变式（B-26）：specificity 决定跨特异性仲裁——宽松兜底模式（specificity: 0）
+// 永远让位给任何具名指纹；同 specificity 内仍按数组顺序优先（先列的更具体，见各条注释）。
 const KNOWN_PATTERNS: Array<{
   pattern: RegExp;
   cause: string;
   fix: string[];
   relatedMistakes: string[];
+  /** 归因权重，缺省 1；0 = 宽松兜底，仅在没有更具体的指纹命中时才生效 */
+  specificity?: number;
 }> = [
   {
     pattern: /CapabilityProvider|CapabilityNotPresent|capability.{0,80}null/i,
@@ -159,8 +163,10 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: [],
   },
   {
+    // 宽松兜底：报告里出现 mods.toml 字样就会命中，只能在全表没有更具体指纹时生效（B-26）
     pattern: /mods\.toml|ModFileLocator|mod.{0,40}loading.{0,40}failed/i,
     cause: "mods.toml 配置错误导致 mod 加载失败",
+    specificity: 0,
     fix: [
       "检查 modId 是否全小写",
       "检查 loaderVersion 是否匹配当前 Forge 版本",
@@ -249,7 +255,7 @@ const KNOWN_PATTERNS: Array<{
     ],
     relatedMistakes: ["mc-registry: 注册名重复导致覆盖"],
   },
-  // ── 加载期：版本不兼容须先于宽松 loading-failed / missing ────────────────
+  // ── 加载期具名指纹：specificity 默认 1，稳定压过上面那条宽松 loading-failed / mods.toml 兜底 ──
   {
     // A-4：`requires.*\[.*\].*but` 的顺序 .* 量化在 [ 密集输入下是多项式回溯，
     // 收紧为行内否定字符类 + 有界量词。
@@ -309,6 +315,9 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["quilt: 误用 FAPI Registry"],
   },
 ];
+
+/** 全表最高特异性：胜者达到该值即可提前返回（仲裁循环用）。 */
+const MAX_PATTERN_SPECIFICITY = KNOWN_PATTERNS.reduce((m, p) => Math.max(m, p.specificity ?? 1), 0);
 
 /** 从报告正文 / 路径推断 crashKind（头 64KB + 尾 64KB；过短则全文） */
 export function detectCrashKind(crashReport: string): CrashKind {
@@ -625,22 +634,34 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
     if (seenDeobf.size >= DEOBF_CAP) break;
   }
 
-  for (const { pattern, cause, fix, relatedMistakes } of KNOWN_PATTERNS) {
-    if (pattern.test(crashReport)) {
-      return finishCrash(
-        {
-          probableCause: cause,
-          fixSuggestions: rewriteFixesForLoader(fix, crashReport, crashKind, query.version),
-          deobfuscated,
-          relatedMistakes,
-          crashKind,
-          logHints: withTruncationHint(buildLogHints(crashKind, true), truncated),
-          truncated,
-        },
-        query.version,
-        crashReport,
-      );
-    }
+  // B-26：首命中即 return 会让排在前面但更宽松的兜底模式抢走精确归因（例如加载期版本冲突
+  // 被判成 mods.toml 配置错误）。改为按 specificity 仲裁：取命中里特异性最高的一条，
+  // 同分保持数组顺序；胜者已达全表最高特异性即停，低于胜者的条目不必再跑正则。
+  let winner: (typeof KNOWN_PATTERNS)[number] | undefined;
+  let winnerSpec = -1;
+  for (const candidate of KNOWN_PATTERNS) {
+    const spec = candidate.specificity ?? 1;
+    if (spec <= winnerSpec) continue;
+    if (!candidate.pattern.test(crashReport)) continue;
+    winner = candidate;
+    winnerSpec = spec;
+    if (winnerSpec >= MAX_PATTERN_SPECIFICITY) break;
+  }
+  if (winner) {
+    const { cause, fix, relatedMistakes } = winner;
+    return finishCrash(
+      {
+        probableCause: cause,
+        fixSuggestions: rewriteFixesForLoader(fix, crashReport, crashKind, query.version),
+        deobfuscated,
+        relatedMistakes,
+        crashKind,
+        logHints: withTruncationHint(buildLogHints(crashKind, true), truncated),
+        truncated,
+      },
+      query.version,
+      crashReport,
+    );
   }
 
   const hasModLoader = /Minecraft Forge|Forge Mod Loader|Fabric Loader|NeoForge|net\.neoforged|org\.quiltmc|com\.mumfrey\.liteloader|org\.dimdev\.riftloader/i.test(crashReport);

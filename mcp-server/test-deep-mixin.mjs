@@ -649,6 +649,10 @@ async function testMixinAnalyzeRegression() {
 
 async function main() {
   mkdirSync(TMP, { recursive: true });
+  // CACHE_MISS 断言（testDeepValidate 的 noJar、mixinAnalyze 的 r1）前提是「缓存里没有该版本 jar」。
+  // 用过反编译工具的机器上 $MC_SKILL_CACHE 必然有货，所以整份测试先钉在空缓存目录上。
+  process.env.MC_SKILL_CACHE = join(TMP, "empty-cache");
+  mkdirSync(process.env.MC_SKILL_CACHE, { recursive: true });
   writeFileSync(JAR_PATH, makeZip([
     { name: "com/example/Fixture.class", data: FIXTURE_BYTES },
     { name: "com/example/SubFixture.class", data: SUBFIXTURE_BYTES },

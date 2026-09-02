@@ -3,15 +3,14 @@
  * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖已人工修订的规则树/Skill）。
  * B1：在脚手架 draft 上填已用 search_neoforge_docs 核对的 00/01/09 与核心 Skill，然后标 ready。
  */
-import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { emit } from "../_lib/write-guard.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 
 function write(p, t) {
-  fs.mkdirSync(path.dirname(p), { recursive: true });
-  fs.writeFileSync(p, t, "utf8");
+  emit(p, t);
 }
 
 function fill(ver, { loc, registryDoc, java, payloadEvent }) {

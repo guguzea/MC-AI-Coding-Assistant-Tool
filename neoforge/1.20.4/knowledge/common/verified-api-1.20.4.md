@@ -38,6 +38,26 @@ ddfff1d83adca54ac44fe70a6f3b85d3033f0e3a）。
 
 网络类名来源：`1.20.4-neoforge.json`（mappingsVersion: `official-1.20.4` / `parchment-1.20.4-2024.04.14`）。本库无 `networking/payload` 文档页时仍以 jar 为准。
 
+## 附加数据（Data Attachments）
+
+来源：`datastorage/attachments`（该版文档页 id，与 1.20.6 档同）+ `1.20.4-neoforge.json`（`parchment-1.20.4-2024.04.14`，1174 类）。
+
+| 符号 | 口径 |
+|---|---|
+| `AttachmentType` | `net.neoforged.neoforge.attachment.AttachmentType`（摘要，`public,static` 工厂见下） |
+| `AttachmentType.builder` | `Builder<T> builder(Supplier<T>)` / `Builder<T> builder(Function<IAttachmentHolder,T>)` |
+| `AttachmentType.serializable` | `Builder<T> serializable(Supplier<T>)` / `Builder<T> serializable(Function<IAttachmentHolder,T>)` |
+| `AttachmentType.Builder.serialize` | `Builder<T> serialize(IAttachmentSerializer<?,T>)` / `serialize(Codec<T>)` / `serialize(Codec<T>, Predicate<?superT>)` |
+| `AttachmentType.Builder.copyOnDeath` | `Builder<T> copyOnDeath()` |
+| `AttachmentType.Builder.build` | `AttachmentType<T> build()` |
+| `NeoForgeRegistries.ATTACHMENT_TYPES` | 文档页写明；摘要 **无字段**，注册表字段本身 **未核实**，以该页为准 |
+| `DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MOD_ID)` + `register(modEventBus)` | 文档页写法 |
+| `getData` / `setData` / `hasData` / `hasAttachments` / `getExistingData` / `removeData` | `AttachmentHolder` / `IAttachmentHolder`（摘要） |
+| `IAttachmentSerializer` / `IAttachmentCopyHandler` / `IAttachmentComparator` | 摘要 `net.neoforged.neoforge.attachment.*` |
+| `AttachmentHolder` / `AttachmentInternals` / `AttachmentUtils` / `LevelAttachmentsSavedData` | 摘要（内部实现，教程不输出） |
+| `PlayerEvent.Clone`（`#isWasDeath`）/ `ChunkWatchEvent.Sent` | 文档页；事件同步与死亡复制要自己处理 |
+| `AttachmentSerializer.serializable()` | **docs 页写法，摘要内无 `AttachmentSerializer` 类**：真实静态方法是 `AttachmentType.serializable(...)`。禁止输出 `AttachmentSerializer.*` |
+
 ## 其它
 
 - DataGen：GatherDataEvent

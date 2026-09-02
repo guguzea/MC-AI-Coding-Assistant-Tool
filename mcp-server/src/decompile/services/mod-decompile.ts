@@ -51,7 +51,12 @@ export interface ModDecompileResult {
   modId?: string;
   modVersion?: string;
   loaders?: string[];
+  /** 该产物实际所用的 MC 版本（缓存命中时回填盘上记录，不等于本次请求；见 requestedVersion） */
   version?: string;
+  /** 该产物实际所用的 remap 映射层；null/缺省 = 未经 remap */
+  mapping?: string | null;
+  /** 本次调用请求的 MC 版本（与 version 不一致即说明结果来自缓存且判据已变） */
+  requestedVersion?: string;
   outputDir?: string;
   fileCount?: number;
   javaFileCount?: number;
@@ -59,6 +64,11 @@ export interface ModDecompileResult {
   sampleFiles?: string[];
   truncated?: boolean;
   remapped?: boolean;
+  /**
+   * 命中了盘上已有的反编译树，但其生成判据（version / mapping）与本次请求不一致。
+   * true 时输出名称可能仍属于旧版本 / 旧映射层，需要 `force: true` 才能按本次请求重建。
+   */
+  cacheStale?: boolean;
   /**
    * remap 抛错、已降级为「对原始 jar 反编译」。
    * 与 `remapped: false` 的区别：后者也可能是「26.1+ 免 remap」这种**正常**情况。
@@ -264,21 +274,41 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
     throw err;
   }
   try {
-  if (!args.force && existsSync(outDir) && readdirSync(outDir).length > 0 && readDecompiledMeta(outDir).found) {
+  // S8：本次请求的 remap 判据。命中判定、remap 步骤、meta 落盘共用这一份真值。
+  const requestedKey = requestedRemapKey(args.version, args.mapping);
+
+  if (!args.force && existsSync(outDir) && readdirSync(outDir).length > 0) {
     const metaHit = readDecompiledMeta(outDir);
-    const cachedJar = normalizeArtifactPath(metaHit.jarPath ?? "");
-    const wantJar = normalizeArtifactPath(args.jarPath);
-    if (!metaHit.jarPath || cachedJar === wantJar) {
+    const verdict = metaHit.found ? judgeDecompiledCacheHit(metaHit, args.jarPath, requestedKey) : null;
+    if (verdict?.usable) {
+      const storedRemapped = metaHit.remapped === true;
+      const storedRemapError = metaHit.remapError ?? null;
+      const degradation = decompileDegradation(storedRemapped, storedRemapError);
+      const diskDesc = `version=${metaHit.version === undefined ? "未记录" : (metaHit.version ?? "未 remap")} / mapping=${metaHit.mapping === undefined ? "未记录" : (metaHit.mapping ?? "未 remap")}`;
+      const reqDesc = `version=${requestedKey.version ?? "未 remap"} / mapping=${requestedKey.mapping ?? "未 remap"}`;
       return {
         found: true,
         modId,
         modVersion,
         loaders: meta.loaders,
-        version: args.version,
+        // 回填盘上真实判据；老缓存未记录时保持 undefined（字段缺席），不冒领。
+        version: metaHit.version ?? undefined,
+        mapping: metaHit.mapping,
+        requestedVersion: args.version,
         outputDir: outDir,
         ...summarizeTree(outDir),
-        remapped: false,
-        note: "缓存命中（decompiled-mods）。",
+        ...degradation,
+        remapped: storedRemapped,
+        cacheStale: verdict.cacheStale,
+        warnings: verdict.cacheStale
+          ? [
+              ...degradation.warnings,
+              `缓存判据与本次请求不一致（cacheStale）：盘上 ${diskDesc}，本次 ${reqDesc}。源码中的名称可能属于旧版本 / 旧映射层；要按本次请求重建请加 force: true。`,
+            ]
+          : degradation.warnings,
+        note: verdict.cacheStale
+          ? `缓存命中（decompiled-mods），但生成判据与本次请求不一致：上面回填的是盘上真实状态（${diskDesc}），本次请求为 ${reqDesc}。按本次请求重建请加 force: true。可用 search_mod_code 检索。`
+          : `缓存命中（decompiled-mods），判据与本次请求一致（${diskDesc}，remapped=${storedRemapped}）。可用 search_mod_code 检索。`,
       };
     }
   }
@@ -287,10 +317,11 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   let inputJar = args.jarPath;
   let remapped = false;
   let remapError: string | null = null;
-  if (args.version) {
-    const vi = parseMinecraftVersion(args.version);
-    if (vi.valid && vi.supported && !vi.unobfuscated) {
-      const mapping: MappingChoice = args.mapping === "mojmap" ? "mojmap" : "yarn";
+  const remapVersion = requestedKey.version;
+  const remapMapping = requestedKey.mapping;
+  if (remapVersion !== null && remapMapping !== null) {
+      const version = remapVersion;
+      const mapping: MappingChoice = remapMapping;
       try {
         const tinyJars = await ensureTinyRemapperJars({ cacheRoot: cache.root });
         // 缓存键：yarn 用 yarn-named（两步最终产物），避免命中旧单步 official→intermediary 的
@@ -309,9 +340,9 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
         if (!existsSync(remappedJar) || args.force) {
           let mappings: string;
           if (mapping === "yarn") {
-            const info = await resolveYarnMappings(args.version);
-            const yarnPath = join(cache.mappings, `yarn-${args.version}-mergedv2.jar`);
-            if (!mappingCacheViable(cache.root, yarnPath, `mc-mappings:${args.version}:yarn`)) {
+            const info = await resolveYarnMappings(version);
+            const yarnPath = join(cache.mappings, `yarn-${version}-mergedv2.jar`);
+            if (!mappingCacheViable(cache.root, yarnPath, `mc-mappings:${version}:yarn`)) {
               const dl = await downloadFile(info.jarUrl, yarnPath, {
                 label: `yarn mappings ${info.build}`,
                 expectedSha256: info.sha256 ?? null,
@@ -319,7 +350,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
               });
               const db = openCacheDb(cache.root);
               try {
-                setArtifact(db, `mc-mappings:${args.version}:yarn`, "mappings", yarnPath, {
+                setArtifact(db, `mc-mappings:${version}:yarn`, "mappings", yarnPath, {
                   version: info.build,
                   sha256: dl.sha256,
                 });
@@ -329,20 +360,20 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
             }
             mappings = ensureYarnTiny(yarnPath);
           } else {
-            const entry = await resolveMojangVersion(args.version);
+            const entry = await resolveMojangVersion(version);
             if (!entry.clientMappingsUrl) {
-              throw new DownloadError("MAPPINGS_NOT_FOUND", `版本 ${args.version} 无 client_mappings`);
+              throw new DownloadError("MAPPINGS_NOT_FOUND", `版本 ${version} 无 client_mappings`);
             }
-            const mojmapPath = join(cache.mappings, `mojmap-${args.version}.txt`);
-            if (!mappingCacheViable(cache.root, mojmapPath, `mc-mappings:${args.version}:mojmap`)) {
+            const mojmapPath = join(cache.mappings, `mojmap-${version}.txt`);
+            if (!mappingCacheViable(cache.root, mojmapPath, `mc-mappings:${version}:mojmap`)) {
               const dl = await downloadFile(entry.clientMappingsUrl, mojmapPath, {
-                label: `mojmap ${args.version}`,
+                label: `mojmap ${version}`,
                 expectedSha1: entry.clientMappingsSha1 ?? null,
               });
               const db = openCacheDb(cache.root);
               try {
-                setArtifact(db, `mc-mappings:${args.version}:mojmap`, "mappings", mojmapPath, {
-                  version: args.version,
+                setArtifact(db, `mc-mappings:${version}:mojmap`, "mappings", mojmapPath, {
+                  version,
                   sha256: dl.sha256,
                 });
               } finally {
@@ -393,7 +424,6 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
         remapError = (err as Error).message;
         inputJar = args.jarPath;
       }
-    }
   }
 
   // 5. VineFlower 反编译
@@ -437,7 +467,12 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   }
 
   recordDecompiledDir(args.jarPath, outDir, modId, cache.root);
-  writeDecompiledMeta(outDir, args.jarPath);
+  writeDecompiledMeta(outDir, args.jarPath, {
+    version: requestedKey.version,
+    mapping: requestedKey.mapping,
+    remapped,
+    remapError,
+  });
   // remap 失败降级后输出的是混淆/中间名，必须在**结构字段**上诚实暴露，
   // 不能只写进 note——调用方无法从字符串里可靠判定结果是否可用。
   return {
@@ -445,13 +480,16 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
     modId,
     modVersion,
     loaders: meta.loaders,
-    version: args.version,
+    version: requestedKey.version ?? undefined,
+    mapping: requestedKey.mapping,
+    requestedVersion: args.version,
     outputDir: outDir,
     ...summarizeTree(outDir),
-    remapped,
     ...decompileDegradation(remapped, remapError),
+    remapped,
+    cacheStale: false,
     note: remapped
-      ? `已按 ${args.version} 重映射后反编译（yarn 两步 / mojmap 单步）。`
+      ? `已按 ${requestedKey.version}（${requestedKey.mapping}）重映射后反编译（yarn 两步 / mojmap 单步）。`
       : remapError
         ? `重映射失败已跳过（${remapError}），按原始字节码反编译（名称可能为混淆/中间名）。可用 search_mod_code 检索。`
         : "未重映射（26.1+ 免 remap，或未提供匹配版本）。可用 search_mod_code 检索。",
@@ -461,24 +499,104 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   }
 }
 
-/** 记录本次反编译完成标记（search_mod_code / readDecompiledMeta 以此为缓存完成判据） */
-export function writeDecompiledMeta(dir: string, jarPath: string): void {
+/** 反编译产物随附的判据（缓存命中与如实回显都依赖它） */
+export interface DecompiledMeta {
+  found: boolean;
+  jarPath?: string;
+  /** 生成时请求的 MC 版本。null = 未经 remap；undefined = 老缓存未记录（判据未知，不得冒领一致） */
+  version?: string | null;
+  /** 生成时的 remap 映射层。null = 未经 remap；undefined = 老缓存未记录 */
+  mapping?: string | null;
+  /** 盘上这棵树到底有没有被 remap 过 */
+  remapped?: boolean;
+  /** 生成时 remap 失败的原始原因（命中时据此重现 degraded 标记） */
+  remapError?: string | null;
+  note?: string;
+}
+
+/**
+ * 记录本次反编译完成标记（search_mod_code / readDecompiledMeta 以此为缓存完成判据）。
+ * `cache` 必填：判据字段缺失会让后续命中把「未知」当成「一致」而冒领产物。
+ */
+export function writeDecompiledMeta(
+  dir: string,
+  jarPath: string,
+  cache: { version: string | null; mapping: string | null; remapped: boolean; remapError: string | null },
+): void {
   const metaFile = join(dir, ".mc-skill-decompiled.json");
   writeFileSync(
     metaFile,
-    JSON.stringify({ jarPath, completedAt: new Date().toISOString() }, null, 2) + "\n",
+    JSON.stringify({ jarPath, ...cache, completedAt: new Date().toISOString() }, null, 2) + "\n",
     "utf8",
   );
 }
 
 /** 读取反编译目录信息（search_mod_code / 缓存命中判据） */
-export function readDecompiledMeta(dir: string): { found: boolean; jarPath?: string; note?: string } {
+export function readDecompiledMeta(dir: string): DecompiledMeta {
   const metaFile = join(dir, ".mc-skill-decompiled.json");
   if (!existsSync(metaFile)) return { found: false };
   try {
-    const json = JSON.parse(readFileSync(metaFile, "utf8")) as { jarPath?: string };
-    return { found: true, jarPath: json.jarPath };
+    const json = JSON.parse(readFileSync(metaFile, "utf8")) as {
+      jarPath?: string;
+      version?: string | null;
+      mapping?: string | null;
+      remapped?: boolean;
+      remapError?: string | null;
+    };
+    return {
+      found: true,
+      jarPath: json.jarPath,
+      // 原样透传：undefined = 老缓存未记录（判据未知）；null = 新缓存记录了「未经 remap」。
+      // 这里不能 `?? null` 归一，否则免 remap 的正常产物会被永久判成 cacheStale。
+      version: json.version,
+      mapping: json.mapping,
+      remapped: json.remapped === true,
+      remapError: json.remapError ?? null,
+    };
   } catch {
     return { found: false };
   }
+}
+
+/**
+ * 请求侧的 remap 判据（纯函数）。
+ *
+ * 只有真正会触发 remap 的「版本 + 映射层」组合才非空：无效 / 不支持 / 已去混淆
+ * （26.1+ 免 remap）都归一为「不 remap」。否则 `version=26.1` 与不传 version 两次
+ * 调用会产出一模一样的树，却被判成判据不一致。
+ */
+export function requestedRemapKey(
+  version: string | undefined,
+  mapping: MappingChoice | undefined,
+): { version: string | null; mapping: MappingChoice | null } {
+  if (!version) return { version: null, mapping: null };
+  const vi = parseMinecraftVersion(version);
+  if (!vi.valid || !vi.supported || vi.unobfuscated) return { version: null, mapping: null };
+  return { version: vi.version, mapping: mapping === "mojmap" ? "mojmap" : "yarn" };
+}
+
+/**
+ * 缓存命中判定（纯函数，CI 无需 Java / 网络）。
+ *
+ * S8：旧实现只比 `jarPath`，命中后**硬编码** `remapped: false` 并回显本次 `args.version`。
+ * 于是「1.20.1 + yarn 生成的树」会被「1.21.1 + mojmap 请求」当新鲜结果复用，
+ * 既谎称未 remap，又把本次请求的版本当成产物所用版本。现在分三态：
+ * - `usable: false` —— 树属于别的 jar，不可复用
+ * - `usable: true, cacheStale: true` —— 可复用，但生成判据与本次请求不一致（含老缓存未知）
+ * - `usable: true, cacheStale: false` —— 判据一致，盘上树就是本次要的东西
+ */
+export function judgeDecompiledCacheHit(
+  meta: DecompiledMeta,
+  jarPath: string,
+  requested: { version: string | null; mapping: string | null },
+): { usable: boolean; cacheStale: boolean } {
+  if (meta.jarPath && normalizeArtifactPath(meta.jarPath) !== normalizeArtifactPath(jarPath)) {
+    return { usable: false, cacheStale: false };
+  }
+  // 老缓存（本改动之前写的 meta）未记录 version：无从证明一致 → 保守标 stale。
+  if (meta.version === undefined) return { usable: true, cacheStale: true };
+  return {
+    usable: true,
+    cacheStale: meta.version !== requested.version || (meta.mapping ?? null) !== requested.mapping,
+  };
 }

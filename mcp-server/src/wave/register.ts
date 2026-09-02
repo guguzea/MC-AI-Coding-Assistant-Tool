@@ -320,7 +320,10 @@ export const getMinecraftSourceSchema = z.object({
 });
 export const analyzeModJarSchema = z.object({
   jarPath: z.string().describe("本地 jar 绝对路径（v1 仅本地，不支持 URL）"),
-  version: z.string().optional().describe("MC 版本（保留字段，暂不影响解析）"),
+  version: z
+    .string()
+    .optional()
+    .describe("MC 版本；传入后与 jar 元数据声明的 MC 版本约束比对，回显 requestedVersion / mcVersionConstraints / versionMatch"),
 });
 export const decompileModJarSchema = z.object({
   jarPath: z.string().describe("本地 jar 绝对路径"),
@@ -853,7 +856,7 @@ export function registerWaveExtensions(server: McpServer): void {
     {
       title: "Check publish checklist (no upload)",
       description:
-        "发布前机器检查：只硬检查 license/version 字段与 build/libs 是否像正式 jar。默认不写盘、不读 publishing.md、不调 Curse/Modrinth 上传 API。",
+        "发布前机器检查：硬检查 license/version 字段与 build/libs 是否像正式 jar；并读 community_knowledge/authored/publishing.md 的发布前清单，缺项只给 warning。默认不写盘、不上传、不调 Curse/Modrinth 发布 API。",
       inputSchema: checkPublishReadySchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(checkPublishReady(args)),
@@ -945,6 +948,6 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "ingest_loader_api", description: "把用户自备的 LiteLoader/Rift/ModLoader（等官方不代下）jar 抽成摘要，只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止写仓库 data/。jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。", inputSchema: ingestLoaderApiSchema },
   { name: "detect_mod_project", description: DETECT_MOD_PROJECT_DESCRIPTION, inputSchema: detectModProjectSchema },
   { name: "activate_platform_pack", description: ACTIVATE_PLATFORM_PACK_DESCRIPTION, inputSchema: activatePlatformPackSchema },
-  { name: "check_publish_ready", description: "发布前机器检查：只硬检查 license/version 字段与 build/libs 是否像正式 jar。默认不写盘、不读 publishing.md、不调 Curse/Modrinth 上传 API。", inputSchema: checkPublishReadySchema },
+  { name: "check_publish_ready", description: "发布前机器检查：硬检查 license/version 字段与 build/libs 是否像正式 jar；并读 community_knowledge/authored/publishing.md 的发布前清单，缺项只给 warning。默认不写盘、不上传、不调 Curse/Modrinth 发布 API。", inputSchema: checkPublishReadySchema },
   { name: "inspect_runtime", description: "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。", inputSchema: inspectRuntimeSchema },
 ];

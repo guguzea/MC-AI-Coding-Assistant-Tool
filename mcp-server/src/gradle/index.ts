@@ -350,7 +350,10 @@ export function parseGradleProperties(content: string): Record<string, string> {
     const trimmed = line.trim();
     if (trimmed && !trimmed.startsWith("#") && trimmed.includes("=")) {
       const [k, ...rest] = trimmed.split("=");
-      result[k.trim()] = rest.join("=").trim();
+      // 只剥「空白 + #」之后的行内注释；值里不带前导空格的 #（如 https://x/#frag）原样保留。
+      // 比 java.util.Properties 窄：Properties 会把 " # c" 当值的一部分，这里按手写 gradle.properties 的注释意图取值。
+      const value = rest.join("=").replace(/\s+#.*$/, "").trim();
+      result[k.trim()] = value;
     }
   }
   return result;

@@ -21,7 +21,7 @@ skillId: mc-config
 
 用：仅在维护既有模组、需要读懂旧代码里的配置写法时，识别这些库（Auto Config / Fiber / Omega Config / Oro Config / Tweed / Simple Config）的 API 形态。它们多数已停更或生态萎缩。
 
-不用：新项目一律不选。配置需求请用活跃库：YACL（1.19-26.3）、Cloth（1.14-26.2，已冷冻但仍有构建）、Fzzy Config（1.20.1-26.2，自动 GUI/校验/同步）。
+不用：新项目一律不选。配置需求请用活跃库：YACL（实测稳定版 1.19-26.2，26.3 只有 snapshot 构建）、Cloth（实测 1.14-26.2，功能冻结但仍在按版本线发版）、Fzzy Config（1.20.1-26.2，自动 GUI/校验/同步；本次未实测）。窗口与逐端构建数见各库短文的「分发窗口」表。
 
 ## Decision Flow
 

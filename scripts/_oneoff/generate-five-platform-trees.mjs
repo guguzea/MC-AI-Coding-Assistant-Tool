@@ -1,21 +1,20 @@
 #!/usr/bin/env node
 /**
  * 一次性生成五平台规则树 + 最小 scaffold（禁止整包复制 fabric/forge）。
- * 运行：node scripts/generate-five-platform-trees.mjs
+ * 运行：node scripts/_oneoff/generate-five-platform-trees.mjs        # 默认 dry-run，只打印将写的路径
+ *       node scripts/_oneoff/generate-five-platform-trees.mjs --write  # 确认后才落盘
  *
  * 警告：会覆盖 quilt/rift/liteloader/modloader/bedrock 的 AGENTS 与 00–10。
  * 计划 1 加厚后不要无脑重跑；只需更新 indexKnowledge 列表并单独写 processed/L0。
  */
-import { mkdirSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { indexKnowledge } from "../_lib/index-knowledge.mjs";
+import { emit, wantWrite } from "../_lib/write-guard.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 function w(rel, text) {
-  const p = join(ROOT, rel);
-  mkdirSync(dirname(p), { recursive: true });
-  writeFileSync(p, text.replace(/\n/g, "\n"), "utf8");
+  emit(join(ROOT, rel), text);
 }
 
 const IDE = `### 本规则集的 IDE 加载优先级
@@ -170,8 +169,9 @@ minecraft_version=${ver}
   w(
     `quilt/${ver}/scaffold/build.gradle`,
     `plugins {
-    // 版本号对照 https://docs.quiltmc.org/ 官方模板，不要抄过期 snapshot
-    id 'org.quiltmc.loom' version '1.7.4'
+    // loom 版本取 maven.quiltmc.org/repository/release/org/quiltmc/loom/maven-metadata.xml
+    //   最新 release = 1.15.1（lastUpdated 20260123082830，核对日期 2026-09-02）
+    id 'org.quiltmc.loom' version '1.15.1'
     id 'maven-publish'
 }
 java { toolchain { languageVersion = JavaLanguageVersion.of(${java}) } }
@@ -182,7 +182,9 @@ repositories { maven { url = 'https://maven.quiltmc.org/repository/release' } }
 dependencies {
     minecraft "com.mojang:minecraft:\${project.minecraft_version}"
     mappings "net.fabricmc:yarn:\${project.minecraft_version}+build.1:v2"
-    modImplementation "org.quiltmc:quilt-loader:0.26.0"
+    // quilt-loader 取 maven.quiltmc.org/repository/release/org/quiltmc/quilt-loader/maven-metadata.xml
+    //   最新 = 0.31.0-beta.3（lastUpdated 20260830210050，核对日期 2026-09-02）
+    modImplementation "org.quiltmc:quilt-loader:0.31.0-beta.3"
     // QSL：按模块引入 org.quiltmc.qsl.*，不要把 fabric-api 整包当 QSL
 }
 `,
@@ -331,6 +333,8 @@ Learn: Experimental Features Toggle。wiki.bedrock.dev/nbt/enabling-experiments�
 `,
 );
 w(
+  // min_engine_version 取 bedrock/.cursor/rules/00-project-setup.mdc 规定的 scaffold 默认
+  //   [1, 21, 80]（Learn 教程稳定线；与已入库 bedrock/scaffold/RP/manifest.json 一致，核对日期 2026-09-02）
   "bedrock/scaffold/RP/manifest.json",
   JSON.stringify(
     {
@@ -340,7 +344,7 @@ w(
         description: "scaffold",
         uuid: "aaaaaaaa-bbbb-4ccc-addd-eeeeeeeeeee1",
         version: [1, 0, 0],
-        min_engine_version: [1, 21, 0],
+        min_engine_version: [1, 21, 80],
       },
       modules: [{ type: "resources", uuid: "aaaaaaaa-bbbb-4ccc-addd-eeeeeeeeeee2", version: [1, 0, 0] }],
     },
@@ -349,6 +353,8 @@ w(
   ) + "\n",
 );
 w(
+  // min_engine_version 同上取 bedrock/.cursor/rules/00-project-setup.mdc 的 [1, 21, 80]；
+  // @minecraft/server 与已入库 bedrock/scaffold/BP/manifest.json 对齐为 2.9.0（模块版本随游戏更新，核对日期 2026-09-02）
   "bedrock/scaffold/BP/manifest.json",
   JSON.stringify(
     {
@@ -358,12 +364,12 @@ w(
         description: "scaffold",
         uuid: "aaaaaaaa-bbbb-4ccc-addd-eeeeeeeeeee3",
         version: [1, 0, 0],
-        min_engine_version: [1, 21, 0],
+        min_engine_version: [1, 21, 80],
       },
       modules: [
         { type: "script", uuid: "aaaaaaaa-bbbb-4ccc-addd-eeeeeeeeeee4", version: [1, 0, 0], language: "javascript", entry: "scripts/main.js" },
       ],
-      dependencies: [{ module_name: "@minecraft/server", version: "1.11.0" }],
+      dependencies: [{ module_name: "@minecraft/server", version: "2.9.0" }],
     },
     null,
     2,
@@ -878,4 +884,4 @@ indexKnowledge(ROOT, "modloader", "1.2.5", "modloader-docs", [
   ["safe-api", "modloader/1.2.5/knowledge/common/safe-api.md"],
 ]);
 
-console.log("five-platform trees written");
+console.log(wantWrite() ? "five-platform trees written" : "five-platform trees dry-run：未落盘，加 --write 才写");

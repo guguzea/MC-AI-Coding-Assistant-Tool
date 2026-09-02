@@ -41,22 +41,31 @@ public class MyRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public void generate(RecipeExporter exporter) {
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM)
-            .input(Items.DIAMOND)
-            .input(Items.GOLD_INGOT)
-            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
-            .offerTo(exporter);
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_TOOL)
-            .pattern("AAA")
-            .pattern("A A")
-            .pattern(" A ")
-            .input('A', Items.DIAMOND)
-            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
-            .offerTo(exporter);
+    protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup registries,
+                                                 RecipeExporter exporter) {
+        return new RecipeGenerator(registries, exporter) {
+            @Override
+            protected void generate() {
+                RegistryEntryLookup<Item> items = registries.getOrThrow(RegistryKeys.ITEM);
+                ShapelessRecipeJsonBuilder.create(items, RecipeCategory.MISC, MY_ITEM)
+                    .input(Items.DIAMOND)
+                    .input(Items.GOLD_INGOT)
+                    .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+                    .offerTo(exporter, "my_item");
+                ShapedRecipeJsonBuilder.create(items, RecipeCategory.MISC, MY_TOOL)
+                    .pattern("AAA")
+                    .pattern("A A")
+                    .pattern(" A ")
+                    .input('A', Items.DIAMOND)
+                    .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+                    .offerTo(exporter, "my_tool");
+            }
+        };
     }
 }
 ```
+
+1.21.11 实测：`create` 首参是 `RegistryEntryLookup<Item>`；`offerTo` 只有 `(RecipeExporter, String)` 与 `(RecipeExporter, RegistryKey<Recipe<?>>)`；`FabricRecipeProvider` 上只有构造 + 抽象 `getRecipeGenerator`，配方体在返回的 `RecipeGenerator` 的无参 `generate()` 里。完整口径与 Yarn↔Mojmap 对照见规则 `07-datagen`。
 
 ## 模式 3：战利品表生成
 

@@ -134,7 +134,7 @@ export class IndexCorruptError extends Error {
 
 /**
  * 仅当请求版没有自己的 index-l0.json 时才使用。
- * 有独立树时必须从本表删除对应键（例如官方发布 /docs/26.2/ 后删掉 26.2）。
+ * 有独立树时必须从本表删除对应键。触发条件是「本仓已为 26.2 入库独立主文档语料」，不是「官方发布 26.2」——主文档站不按版本分线，/docs/26.2/ 与 /docs/26.1/ 同样 404。
  */
 export const VERSION_FALLBACK: Record<string, string | null> = {
   "26.2": "26.1",
@@ -201,7 +201,6 @@ export class NeoForgeDocStore {
 
   private ensureValidated(): void {
     if (this._validated) return;
-    this._validated = true;
     if (!existsSync(this.dataDir)) {
       throw new PlatformDataMissingError("neoforge");
     }
@@ -209,6 +208,7 @@ export class NeoForgeDocStore {
     if (this.getAvailableVersionsUnchecked().length === 0) {
       throw new PlatformDataMissingError("neoforge");
     }
+    this._validated = true;
   }
 
   /** 给定 version，返回 `<dataDir>/neoforge_<version>/${NEOFORGE_DIR_NAME}/<version>/` */

@@ -3,5 +3,11 @@
   "pack-status": "ready",
   "platform": "fabric",
   "minecraftVersion": "1.21.4",
-  "note": "versioned fabric-docs only; no wiki clone"
+  "note": "versioned fabric-docs only; no wiki clone",
+  "gaps": {
+    "code-patterns": "设计如此：本档为薄档，不落 code-patterns/（fabric 里只有部分档有该目录，如 1.21.11 / 1.20.1）",
+    "knowledge": "仅 knowledge/common/verified-api-1.21.4.md；本档语料无可核实主题页可支撑更多短文",
+    "attachments": "data/fabric_1.21.4 语料内无 data-attachments 页 → 本档规则树不写附加数据（不代表该版没有该 API，只是本档无来源）。要补须先入库该页或 1.21.4-fabric-api.json 摘要；当前禁止抄 1.21.10 / 1.21.11 / 26.1.2",
+    "loader-api": "无 1.21.4-fabric-api.json 摘要；类名只来自 search_fabric_docs version=1.21.4"
+  }
 }

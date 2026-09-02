@@ -3,7 +3,8 @@
  * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖 community_knowledge/authored 核对节）。
  * 补齐缺失的短文核对节（从 catalog.ts verifiedApi 生成）
  */
-import { readFileSync, writeFileSync, existsSync } from "fs";
+import { readFileSync, existsSync } from "fs";
+import { emit } from "../_lib/write-guard.mjs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -63,8 +64,7 @@ for (const name of missing) {
     });
     content += `\n## 核对（2026-08 反编译验证）\n\n- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：\n${lines.join("\n")}\n- 版本/包名详情见 \`mcp-server/src/diagnostics/library-catalog.ts\` 对应条目；细节仍以官方文档为准。\n`;
   }
-  writeFileSync(p, content, "utf8");
+  emit(p, content);
   done++;
-  console.log("已补:", name);
 }
 console.log("补齐完成:", done, "/", missing.length);

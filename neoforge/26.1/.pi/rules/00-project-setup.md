@@ -10,7 +10,7 @@ description: 00 — 项目结构（NeoForge 26.1）
 
 官方模组生成器对多个 MC 版本**同时**提供 ModDevGradle（`net.neoforged.moddev`）与 NeoGradle（`net.neoforged.gradle.userdev`）。**禁止按版本硬绑**。从零工程调用 `download_official_mdk` 时必须传 `buildPlugin`。
 
-版本锚点（26.1 线）：`neo_version` **以 maven 26.1 线最新为准**（示例曾见 `26.1.0.19-beta`，会过期）。官方 README 写 Gradle **8.8+**，wrapper 常见 **8.14.x**（不要把「≥9.1」当硬门）。ModDevGradle / NeoGradle 版本以 `download_official_mdk` 实际产物的 `gradle.properties` 为准。
+版本锚点（26.1 线）：`neo_version` **以 maven 26.1 线最新为准**。2026-09-02 实读 `maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml`（`lastUpdated 20260830205855`）：26.1 线 144 个构建，最新 **26.1.2.100**（旧示例 `26.1.0.19-beta` 已过期）。取数陷阱：该文件的 `<release>` 标签仍停在 `20.6.141`，**不要**拿它当最新版，必须按 `26.1` 前缀自行取最大。官方 README 写 Gradle **8.8+**，wrapper 常见 **8.14.x**（不要把「≥9.1」当硬门）。ModDevGradle / NeoGradle 版本以 `download_official_mdk` 实际产物的 `gradle.properties` 为准。
 
 入库官方页原文可能残留 `minecraft_version=1.20.6` / `neo_version=20.6.62`，**禁止照抄**。
 

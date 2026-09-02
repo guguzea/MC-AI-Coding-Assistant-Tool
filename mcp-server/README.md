@@ -156,7 +156,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | 基岩 Add-On | `search_bedrock_docs`、`get_bedrock_doc_*`、`validate_addon_manifest`、`validate_bp_json`、`generate_addon_manifest`、`generate_bp_entity`、`analyze_bedrock_log` |
 | 自我更新 | `mc_skill_update` |
 
-补充文档：`docs/vanilla-registries.md`、`docs/registry-data-source.md`、`docs/prompts-client-compat.md`、`docs/mc-skill-update.md`。
+补充文档：`docs/vanilla-registries.md`、`docs/registry-data-source.md`、`docs/prompts-client-compat.md`、`docs/mc-skill-update.md`、`docs/query-api-classname-case.md`（`query_api` suggestions 大小写还原的维护注意）。
 
 ### 社区知识与库模组（与官方文档分离）
 

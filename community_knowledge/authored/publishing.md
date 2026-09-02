@@ -24,6 +24,8 @@ sourceKind: authored
 
 ## 发布前检查清单
 
+> 本节被 `check_publish_ready` 机器读取：某一行同时用反引号点出**元数据文件名**和**字段名**，这些字段就成为该文件的检查要求；其余行会作为「需人工确认」列在结果 `publishing.manual` 里。改写成不含文件名或不含字段的说法，机器核会退化为一条「未取到发布清单字段要求」警告，不会假装通过。
+
 1. **元数据**  
    - Forge：`mods.toml` 的 `modId`（全小写）、`version`、`license`、`displayName`、`description`  
    - `[[dependencies.*]]`：`forge` / `minecraft`（及真实硬前置）的 `mandatory`、`versionRange`、`side`  

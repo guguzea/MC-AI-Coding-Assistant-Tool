@@ -49,22 +49,32 @@ export function updateStateLegacyPath(dataDir?: string): string {
   return join(dataDir ?? resolveDataDir(), STATE_FILE);
 }
 
-export function readUpdateState(dataDir?: string): UpdateState {
-  const cachePath = join(resolveCacheRoot(), STATE_FILE);
-  const primary = updateStatePath(dataDir);
-  const legacyPath = updateStateLegacyPath(dataDir);
-  const candidates = isRepoDataDir(dataDir)
-    ? [cachePath, legacyPath]
-    : [primary];
-  for (const p of candidates) {
-    if (!existsSync(p)) continue;
-    try {
-      return JSON.parse(readFileSync(p, "utf8")) as UpdateState;
-    } catch {
-      continue;
-    }
+function readStateFile(path: string): UpdateState | null {
+  try {
+    if (!existsSync(path)) return null;
+    return JSON.parse(readFileSync(path, "utf8")) as UpdateState;
+  } catch {
+    return null;
   }
-  return {};
+}
+
+/**
+ * 读与写必须走同一个解析函数：`updateStatePath()` 是唯一状态来源。
+ * 例外只有一处——cache 里还没有状态时，从旧部署（`data/` 下）一次性采纳 durable 字段。
+ * `lastCheck` / `pendingRestart` 属于「cache 可随意清理」的瞬态，绝不从 legacy 复活，
+ * 否则清一次 cache 就会把冻结快照（含多年前的 updateAvailable）当成当前状态再写回唯一路径。
+ */
+export function readUpdateState(dataDir?: string): UpdateState {
+  const current = readStateFile(updateStatePath(dataDir));
+  if (current) return current;
+  if (!isRepoDataDir(dataDir)) return {};
+  const legacy = readStateFile(updateStateLegacyPath(dataDir));
+  if (!legacy) return {};
+  const adopted: UpdateState = {};
+  if (legacy.dataReleaseTag !== undefined) adopted.dataReleaseTag = legacy.dataReleaseTag;
+  if (legacy.dataAssetName !== undefined) adopted.dataAssetName = legacy.dataAssetName;
+  if (legacy.updatedAt !== undefined) adopted.updatedAt = legacy.updatedAt;
+  return adopted;
 }
 
 export function writeUpdateState(patch: Partial<UpdateState>, dataDir?: string): WriteUpdateStateResult {

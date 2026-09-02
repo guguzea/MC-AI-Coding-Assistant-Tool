@@ -3,13 +3,16 @@
  * Probe + 入库 NeoForge Primer（404 不写）。
  * loader: to < 1.20 → forge；1.20/1.20.1 → fork；≥1.20.2 → neoforge。
  * Forge 口径的 md 另拷进对应 forge_<ver>/forge-docs/<ver>/raw/primer-<slug>.md（不进 javadoc 档）。
+ * 默认 dry-run：抓取照做，落盘经 write-guard 只打印 DRYRUN，加 --write 才写仓库 data/。
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { emit, logDryRunBanner, wantWrite } from "./_lib/write-guard.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "data", "neoforge_primers");
+if (!wantWrite()) logDryRunBanner("fetch-neoforge-primers");
 
 const PRIMER_CONFIG = [
   { version: "26.2", url: "https://docs.neoforged.net/primer/docs/26.2/", from: "26.1", to: "26.2" },
@@ -118,12 +121,11 @@ async function fetchUrl(url) {
   return { ok: false, status: 0, text: "", error: String(lastErr) };
 }
 
-mkdirSync(OUT, { recursive: true });
 const report = [];
 
 for (const cfg of PRIMER_CONFIG) {
   const dest = join(OUT, `${cfg.version}.md`);
-  if (existsSync(dest) && !process.argv.includes("--force")) {
+  if (wantWrite() && existsSync(dest) && !process.argv.includes("--force")) {
     report.push({ slug: cfg.version, skipped: "exists" });
     continue;
   }
@@ -169,9 +171,9 @@ fetchedAt: "${new Date().toISOString()}"
 source: "${src}"
 ---
 `;
-  writeFileSync(dest, fm + "\n" + body.replace(/^---[\s\S]*?---\s*/, ""), "utf8");
+  const wrote = emit(dest, fm + "\n" + body.replace(/^---[\s\S]*?---\s*/, ""));
   report.push({ slug: cfg.version, status: 200, loader, bytes: body.length });
-  console.log(`wrote ${cfg.version} loader=${loader} from ${src}`);
+  console.log(`${wrote ? "wrote" : "preview"} ${cfg.version} loader=${loader} from ${src}`);
 
   if (loader === "forge" || loader === "fork") {
     const tree = FORGE_TREE[cfg.version] || FORGE_TREE[cfg.to];
@@ -190,13 +192,13 @@ sourceType: primer
 ---
 ${body.replace(/^---[\s\S]*?---\s*/, "")}
 `;
-        writeFileSync(join(rawDir, `primer_${cfg.version.replace(/\./g, "_")}.md`), primerRaw, "utf8");
-        console.log(`  copied → ${tree.dir}/raw`);
+        const copiedRaw = emit(join(rawDir, `primer_${cfg.version.replace(/\./g, "_")}.md`), primerRaw);
+        console.log(`  ${copiedRaw ? "copied" : "preview"} → ${tree.dir}/raw`);
       }
     }
   }
   await new Promise((r) => setTimeout(r, 250));
 }
 
-writeFileSync(join(OUT, "_fetch-report.json"), JSON.stringify({ at: new Date().toISOString(), report }, null, 2), "utf8");
+emit(join(OUT, "_fetch-report.json"), JSON.stringify({ at: new Date().toISOString(), report }, null, 2));
 console.log("done", report.filter((r) => r.bytes).length, "new/updated");

@@ -37,9 +37,9 @@ export interface SearchModCodeArgs {
   maxResults?: number;
 }
 
-/** analyze_mod_jar handler（version 参数暂保留用于未来映射解析，不参与元数据） */
+/** analyze_mod_jar handler：version 与 jar 元数据声明的 MC 版本约束比对，回显 versionMatch */
 export function analyzeModJarHandler(args: AnalyzeModJarArgs) {
-  return analyzeModJar(args.jarPath);
+  return analyzeModJar(args.jarPath, args.version);
 }
 
 /** search_mod_code handler：decompiledDir 或 jarPath（经 cache.db 索引定位） */

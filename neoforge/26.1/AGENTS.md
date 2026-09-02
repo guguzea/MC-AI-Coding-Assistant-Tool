@@ -17,7 +17,7 @@
 | 文档 | https://docs.neoforged.net/docs/ |
 | MDK | 26.1.1/26.1.2 均同时提供 ModDevGradle 与 NeoGradle，必须传 buildPlugin。不为 26.1.1 单造规则树。 |
 
-26.1 是独立档：Java 25、去混淆、ModContainer 构造参数、GatherDataEvent 拆分。官方 /docs/26.2/ 仍 404，禁止克隆本档冒充 26.2。
+26.1 是独立档：Java 25、去混淆、ModContainer 构造参数、GatherDataEvent 拆分。26.2 不是「未发布」：maven 26.2 线已构建到 26.2.0.75（2026-09-02 实读 maven.neoforged.net），官方 Primer 也有 26.2 迁移页（/primer/docs/26.2/ 返回 200，本仓已入库 data/neoforge_primers/26.2.md）。但官方主文档站不按版本分线——/docs/26.2/ 与 /docs/26.1/ 同样 404，现行主文档是未版本化的 /docs/；本仓也没有 26.2 规则树与主文档语料，禁止把本档克隆成 26.2。
 
 **入库官方页原文可能残留旧版本号**（例如 `minecraft_version=1.20.6`、`neo_version=20.6.62`）。那是上游 gettingstarted 示例未改干净，**禁止照抄**进 26.1 工程；`neo_version` 以 maven 26.1 线最新为准。
 

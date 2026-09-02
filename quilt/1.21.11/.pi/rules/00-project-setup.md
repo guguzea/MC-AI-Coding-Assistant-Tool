@@ -6,6 +6,8 @@ description: 00 — Quilt 项目结构
 
 > 适用：Quilt 1.21.11。方块/物品细节读 `fabric/1.21.11/.cursor/rules/02-block.mdc` 等。
 
+> **版本号不是笔误**：本档目录 `quilt/1.21.11` = Minecraft **1.21.11**（`1.21.1` 是另一档，两者不得互顶）。`scaffold/` 以 `quilt/1.21.1` 口径起步，落进工程后 **必须**按工程真实 MC 版本改 `yarn` build 号与 loom 版本，禁止照抄。QSL / QFAPI 停更与「本版本不存在可用构件」的完整口径见本档 `AGENTS.md` 顶部横幅，本规则不重复另一套说法。
+
 ## 约束
 
 - Java **21**；`id 'org.quiltmc.loom'`（不要混用 `fabric-loom` 当主插件）

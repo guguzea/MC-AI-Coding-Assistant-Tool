@@ -4,9 +4,9 @@
  * 按官方文档 / MDK 核实表生成 NeoForge 六档规则树。
  * 禁止从 forge/1.20.4 或邻档复制。类名来自 docs.neoforged.net 与官方 MDK ExampleMod。
  */
-import { mkdirSync, writeFileSync, rmSync, existsSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { emit } from "../_lib/write-guard.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -139,14 +139,12 @@ const F = {
     mdk: "26.1.1/26.1.2 均同时提供 ModDevGradle 与 NeoGradle，必须传 buildPlugin。不为 26.1.1 单造规则树。",
     send: "PacketDistributor.sendTo*；HandlerThread.NETWORK + enqueueWork",
     guiOpen: "菜单 API 以 26.1 gui 文档为准。",
-    unique: "26.1 是独立档：Java 25、去混淆、ModContainer 构造参数、GatherDataEvent 拆分。官方 /docs/26.2/ 仍 404，禁止克隆本档冒充 26.2。",
+    unique: "26.1 是独立档：Java 25、去混淆、ModContainer 构造参数、GatherDataEvent 拆分。26.2 不是「未发布」：maven 26.2 线已构建到 26.2.0.75（2026-09-02 实读 maven.neoforged.net），官方 Primer 也有 26.2 迁移页（/primer/docs/26.2/ 返回 200，本仓已入库 data/neoforge_primers/26.2.md）。但官方主文档站不按版本分线——/docs/26.2/ 与 /docs/26.1/ 同样 404，现行主文档是未版本化的 /docs/；本仓也没有 26.2 规则树与主文档语料，禁止把本档克隆成 26.2。",
   },
 };
 
 function out(rel, text) {
-  const p = join(ROOT, rel);
-  mkdirSync(dirname(p), { recursive: true });
-  writeFileSync(p, text.replace(/\n/g, "\n"), "utf8");
+  emit(join(ROOT, rel), text);
 }
 
 function payloadJava(v, f) {
@@ -186,6 +184,10 @@ public void handleData(final MyData data, final ${f.handlerCtx} context) {
 \`\`\`
 来源：https://docs.neoforged.net/docs/1.20.4/networking/ 与 /networking/payload/ （2026-08-15 核对）。`;
   }
+  // F-31 定论（2026-09-02）：DirectionalPayloadHandler 只到 1.21.5 存在，NeoForge 21.6→21.8 之间移除
+  // （1.21.8+ 拆成 RegisterPayloadHandlersEvent + RegisterClientPayloadHandlersEvent，本类在 jar 中不存在）。
+  // 下方模板是该定论之前的遗留分支，对 F 里 stream:true 的 1.21.8 / 1.21.11 / 26.1 会误吐本类；
+  // 顶部「勿再跑」横幅是唯一的门。规则正文已按档标注「要 / 禁止」，此处不新增断言。
   return `\`\`\`java
 @SubscribeEvent // mod event bus
 public static void register(final ${f.payloadEvent} event) {
@@ -704,7 +706,7 @@ Decision:
 
 文档工具是 \`list_neoforge_versions\` / \`search_neoforge_docs\`，不是 \`list_forge_versions\`。
 
-26.1 与 1.21.1 是两档。官方 \`/docs/26.2/\` 未发布前不要建克隆树。
+26.1 与 1.21.1 是两档。26.2 构建已发布但官方主文档不按版本分线（\`/docs/26.2/\` 与 \`/docs/26.1/\` 同样 404），本仓无 26.2 树，不要建克隆树。
 
 工作流：完整流程才 \`get_workflow_template\`；改已有代码不要调。
 `,

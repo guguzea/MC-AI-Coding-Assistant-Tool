@@ -3,7 +3,7 @@ mcHint: 1.18+ / 26.x；按各库 mcHint 再收窄
 id: authored/library-catalog-2026
 title: 库模组总目录（2026 版）
 tags: [library-catalog, cloth-config, yacl, fabric-language-kotlin, architectury, geckolib, collective, puzzles-lib, text-placeholder-api, balm, owo-lib, bookshelf, terrablender, curios, trinkets, cardinal-components, kubejs, jei, emi]
-summary: 社区常用库模组总目录与分类导航：Top 12、十大功能分类、作者全家桶共享库、平台推荐路线与八条陷阱，数据源自《Minecraft 社区常用库模组全览（2026 版）》。
+summary: 社区常用库模组总目录与分类导航：Top 12、十大功能分类、作者全家桶共享库、平台推荐路线与八条陷阱。排名与分类主体取自《Minecraft 社区常用库模组全览（2026 版）》二手快照；下载量与版本窗口已就地标注 Modrinth API 实测 2026-09-02 值，与四篇库短文（cloth/yacl/curios/trinkets）的实测表冲突时以实测表为准。
 sourceKind: authored
 modIds: []
 loaders: [fabric, forge, neoforge]
@@ -23,6 +23,7 @@ skillId: mc-lib-catalog
 ## 收录范围
 
 - 数据口径：下载量为 **Modrinth 单平台累计下载**（CurseForge 数字通常更大，另行标注）；支持版本为该项目发布过的所有 MC 版本（含 2026 年 26.1/26.2 新版号）。加载器：Fabric / Forge / NeoForge / Quilt。
+- **优先级（2026-09-02 起）**：`lib-cloth-config` / `lib-yacl` / `lib-curios` / `lib-trinkets` 四篇已各自补了「分发窗口（Modrinth API 实测 2026-09-02）」表 —— 直连 `api.modrinth.com/v2` 翻页取**全部构建**后统计。本目录里的数字是《全览 2026》当时的**二手快照**；下载量与版本窗口若与那四张表冲突，**以实测表为准**（下方表格已就地标注实测值）。其余条目仍是二手口径，用到时先回官方页。
 - 内容：真正意义上的"通用库" Top 12（按 Modrinth 下载量排序，排除纯作者个人库）、按功能分类详解（配置 / 动画 / 跨加载器 / 饰品 / 世界生成 / GUI / 数据附加 / 服务端·网络·文本 / 配方 / 脚本）、作者"全家桶"式共享库、平台推荐路线、八条陷阱。
 - 下文中 `lib-xxx.md` 为相对路径链接：磁盘已有对应 `authored/lib-*` 短文，可直接读。
 
@@ -30,8 +31,8 @@ skillId: mc-lib-catalog
 
 | 排名 | 库（链接） | 下载量 | 核心用途 |
 |---|---|---|---|
-| 1 | Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.53 亿 | 配置界面 API |
-| 2 | YACL（[lib-yacl.md](lib-yacl.md)） | 以 Modrinth 页面为准 | 新一代配置库 |
+| 1 | Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.53 亿（实测 2026-09-02：1.62 亿） | 配置界面 API |
+| 2 | YACL（[lib-yacl.md](lib-yacl.md)） | 以 Modrinth 页面为准（实测 2026-09-02：1.18 亿，仍居第 2） | 新一代配置库 |
 | 3 | Fabric Language Kotlin（[lib-fabric-language-kotlin.md](lib-fabric-language-kotlin.md)） | 1.07 亿 | Kotlin 语言支持 |
 | 4 | Architectury API（[lib-architectury.md](lib-architectury.md)） | 9170 万 | 跨加载器抽象 |
 | 5 | GeckoLib（[lib-geckolib.md](lib-geckolib.md)） | 6270 万 | 3D 实体动画引擎 |
@@ -49,8 +50,8 @@ skillId: mc-lib-catalog
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.53 亿 | F/Forge/Neo，1.14–26.2 | 老牌配置 GUI，ConfigBuilder 生成界面 |
-| YACL（[lib-yacl.md](lib-yacl.md)） | 以 Modrinth 页面为准 | F/Forge/Neo/Quilt，1.19–26.3 | Builder 式、GUI 契合原版风格，因 Cloth 停更而生 |
+| Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.53 亿（实测 1.62 亿） | F/Forge/Neo，1.14–26.2（实测 158 条构建，quilt 0） | 老牌配置 GUI，ConfigBuilder 生成界面；功能冻结但仍在按版本发版 |
+| YACL（[lib-yacl.md](lib-yacl.md)） | 以 Modrinth 页面为准（实测 1.18 亿） | F/Forge/Neo/Quilt，1.19–26.2 稳定（26.3 仅 snapshot） | Builder 式、GUI 契合原版风格，因 Cloth 功能冻结而生 |
 | Fzzy Config（[lib-fzzy-config.md](lib-fzzy-config.md)） | 3420 万（2024-04 发布，增速极快） | F/Forge/Neo/Quilt，1.20.1–26.2 | 自动 GUI、强校验、服务端-客户端同步 |
 | owo-config（owo-lib 内）（[lib-owo.md](lib-owo.md)） | 见 owo-lib | F/Neo/Quilt，1.17–26.1.2 | 注解式配置 + 自动 GUI + 配置同步 |
 | MidnightLib（[lib-midnightlib.md](lib-midnightlib.md)） | 2510 万 | F/Forge/Neo/Quilt，1.17–26.2 | 轻量配置，鼓励 Jar-in-Jar 打包 |
@@ -79,8 +80,8 @@ skillId: mc-lib-catalog
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| Curios API（[lib-curios.md](lib-curios.md)） | 2850 万 | F/Forge/Neo，1.13.2–26.2 | Forge 系饰品槽标准，tag 驱动扩展槽位，自带 GUI |
-| Trinkets（[lib-trinkets.md](lib-trinkets.md)） | 2260 万 | F/Quilt，1.17–1.21.1（已停更） | Fabric 系饰品槽（6 组槽位），数据驱动 |
+| Curios API（[lib-curios.md](lib-curios.md)） | 2850 万（实测 3009 万） | Forge/Neo，1.13.2–26.2（实测 147 条；仅 1 条 1.16.5 beta 标 fabric） | Forge 系饰品槽标准，tag 驱动扩展槽位，自带 GUI |
+| Trinkets（[lib-trinkets.md](lib-trinkets.md)） | 2260 万（实测 2344 万） | F/Quilt，1.17–1.21.1（实测上游末次 2024-07-15；分叉 trinkets-polymer 到 26.2 仅 beta/rc） | Fabric 系饰品槽（6 组槽位），数据驱动 |
 | Caelus API（[lib-caelus.md](lib-caelus.md)） | 690 万 | F/Forge/Neo，1.13.2–1.21.5 | 将鞘翅飞行抽象为实体属性，自定义飞行能力 |
 
 ### 5. 世界生成
@@ -167,11 +168,11 @@ skillId: mc-lib-catalog
 
 1. **ChocolateCore 不存在**：经 Modrinth/CurseForge 检索确认，社区没有名为 ChocolateCore 的知名库模组（可能混淆了 ApexCore / RadixCore）。
 2. **owo-lib 不支持 Forge**：只支持 Fabric / NeoForge / Quilt，纯 Forge 开发者无法使用。
-3. **Trinkets 停在 1.21.1**（2024-07 后停更），1.21.4+ 新模组多自研槽位或用原版机制。
+3. **Trinkets 上游停在 1.21.1**（实测末次发布 2024-07-15），1.21.4+ 新模组多自研槽位或用原版机制；要现成饰品栏 API 只剩分叉 `trinkets-polymer`（实测 1.19–26.2，**全为 beta/rc**）。见 `lib-trinkets` 分发窗口表。
 4. **Bookshelf 重名**：Modrinth 的 bookshelf 是 Spigot 插件，Darkhax 的库是 bookshelf-lib。
 5. **LibGui / Server Translations API / SpruceUI 的 Modrinth 页面均已下架**：LibGui 走 maven + Jar-in-Jar，Server Translations 走 maven.nucleoid.xyz（替代品 Server I18n API），SpruceUI 用 ObsidianUI 延续。
 6. **Botarium 已停更**（1.20.4 后无更新），Terrarium 全家桶新模组已转向其他方案。
-7. **Cloth Config 已"冷冻"**（作者声明不再加新特性），新模组主流转向 YACL / owo-config / Fzzy Config。
+7. **Cloth Config 是「功能冻结」不是「停更」**：作者声明不再加新特性（二手，来自本报告），实测仍在按 MC 版本线发版（末次 2026-06-18 = `v26.2.155`）。所以坑是「别把新特性押在它身上」，不是「拿不到本版构建」；新模组主流转向 YACL / owo-config / Fzzy Config。
 8. **EMI 在 1.21+ 才活跃**；Mantle、Botarium、Caelus 等未跟进 2026 新版号（26.x），选依赖时注意版本匹配。
 
 完整陷阱逐条解析与排查见 [lib-traps-2026.md](lib-traps-2026.md)。
@@ -179,7 +180,7 @@ skillId: mc-lib-catalog
 ## 不清楚时
 
 - 单个库的接入细节 → 打开对应 `lib-*.md` 短文 + 该库官方文档。
-- 数据与原文有出入 → 回看仓库根《Minecraft 社区常用库模组全览（2026 版）》。
+- 数据与原文有出入 → 配置/饰品四篇先看各自「分发窗口」表（实测口径），必要时重跑一次 Modrinth API 翻页；其余条目回看仓库根《Minecraft 社区常用库模组全览（2026 版）》，并标注为二手。
 - API / 方法名 / 注册细节 → `search_*_docs` / `query_api`，社区短文不能替代 API 查询（见 `community_knowledge/AGENT_USAGE.md`）。
 
 ## 核对（2026-08 反编译验证）

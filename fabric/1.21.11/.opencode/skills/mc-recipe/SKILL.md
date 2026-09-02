@@ -22,18 +22,29 @@ public class MyRecipeProvider extends FabricRecipeProvider {
         super(output, registriesFuture);
     }
 
+    // 1.21.11：子类只造 vanilla 生成器，配方在返回对象的无参 generate() 里
     @Override
-    public void generate(RecipeExporter exporter) {
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM)
-            .pattern("AAA")
-            .pattern("A A")
-            .pattern(" A ")
-            .input('A', Items.DIAMOND)
-            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
-            .offerTo(exporter);
+    protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup registries,
+                                                 RecipeExporter exporter) {
+        return new RecipeGenerator(registries, exporter) {
+            @Override
+            protected void generate() {
+                RegistryEntryLookup<Item> items = registries.getOrThrow(RegistryKeys.ITEM);
+                ShapedRecipeJsonBuilder.create(items, RecipeCategory.MISC, MY_ITEM)
+                    .pattern("AAA")
+                    .pattern("A A")
+                    .pattern(" A ")
+                    .input('A', Items.DIAMOND)
+                    .criterion(hasItem(Items.DIAMOND), conditionsFromItem(Items.DIAMOND))
+                    .offerTo(exporter, RegistryKey.of(RegistryKeys.RECIPE,
+                        Identifier.of("examplemod", "my_item")));
+            }
+        };
     }
 }
 ```
+
+完整口径与 Yarn↔Mojmap 对照见规则 `07-datagen` 「生成配方」。
 
 在 `DataGeneratorEntrypoint` 里 `addProvider(MyRecipeProvider::new)`（1.18.2）或 `pack.addProvider(MyRecipeProvider::new)`（1.19.4+）。不要 `DataGeneratorInitializer`。
 

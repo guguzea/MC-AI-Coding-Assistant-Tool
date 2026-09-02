@@ -10,7 +10,8 @@
 
 - **必须使用 Java 17**（Forge 1.20.1 要求；Java 21 仅在 Minecraft 1.20.6+ 才需要）
 - `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_17` 或通过 toolchain `java.toolchain.languageVersion = JavaLanguageVersion.of(17)`
-- Gradle Wrapper 版本不低于 **Gradle 8.4**
+- Gradle Wrapper 以**官方 MDK 钉值为准**：本仓库 `mcp-server/data/mdk-checksums.json` 的 `forge-1.20.1-forgegradle` 钉 `1.20.1-47.4.10`（sha256 `73e0122b…b0451`），该 MDK 内 `gradle/wrapper/gradle-wrapper.properties` 实测为 **Gradle 8.8**（2026-09-02 本地缓存实测；对照 `1.20.4-49.2.0` MDK → 8.12.1）。禁止凭记忆写「不低于某版本」这类无出处下限。
+- 本仓库 `scaffold/` 的 wrapper 三件套**不是** MDK 原件（props 声明 8.5，jar 来源未核实，逐条登记在 `mcp-server/data/wrapper-jars.json` 的 `unverifiedWrapper`），只当目录结构参考；要真构建请用 `download_official_mdk` 取官方 MDK 的 wrapper。
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
 ### Gradle 约束

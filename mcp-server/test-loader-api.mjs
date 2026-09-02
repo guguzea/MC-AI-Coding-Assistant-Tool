@@ -1,8 +1,9 @@
 /**
- * loader-api：JavaParser 抽取、query/search、ingest dryRun、CACHE_STALE、PLATFORM_SKIPPED。
+ * loader-api：JavaParser 抽取、query/search、ingest dryRun、CACHE_STALE、PLATFORM_SKIPPED、
+ * merged 缓存 stamp 内容失效（A-20）。
  */
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, readFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, readFileSync, statSync, utimesSync, unlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -327,6 +328,89 @@ public class Other {
   delete process.env.MC_SKILL_CACHE;
   rmSync(tmp, { recursive: true, force: true });
   console.log("ingest CACHE_STALE: ok");
+}
+
+{
+  // A-20 回归门：merged 摘要缓存的 stamp 必须含内容指纹，overlay 同名文件被原地替换 / 重建后立刻失效。
+  const store = await import("./dist/loader-api/store.js");
+  const tmp = mkdtempSync(join(tmpdir(), "mc-loader-stamp-"));
+  process.env.MC_SKILL_CACHE = tmp;
+  const ovDir = store.overlaySummariesDir();
+  mkdirSync(ovDir, { recursive: true });
+
+  const small = join(ovDir, "9.9.9-probe.json");
+  const smallBody = (tag) =>
+    JSON.stringify({
+      platform: "probe",
+      minecraftVersion: "9.9.9",
+      classes: [{ fqcn: "a.b.C", methods: [tag] }],
+      pad: "xxxxxxxx",
+    });
+  const readSmall = () => store.findSummary("probe", "9.9.9")?.summary?.classes?.[0]?.methods?.[0];
+  writeFileSync(small, smallBody("AAA"), "utf8");
+  const s0 = statSync(small);
+  utimesSync(small, s0.atime, s0.mtime); // mtimeMs 归一到整毫秒，之后可精确复原
+  const pinned = statSync(small);
+  const restoreMtime = (p) => utimesSync(p, pinned.atime, pinned.mtime);
+
+  assert.equal(readSmall(), "AAA");
+  assert.equal(
+    store.loadMergedSummaries(),
+    store.loadMergedSummaries(),
+    "前置条件：连续两次读取必须命中同一 Map 实例（否则下面的「重建」断言无意义）",
+  );
+
+  // 1) 同 mtime + 同 size 原地覆盖（unzip / cp --preserve=all 的产物）：只有内容指纹能抓
+  const beforeMap = store.loadMergedSummaries();
+  const bbb = smallBody("BBB");
+  assert.equal(Buffer.byteLength(bbb), pinned.size, "夹具必须与 AAA 等长");
+  writeFileSync(small, bbb, "utf8");
+  restoreMtime(small);
+  const s1 = statSync(small);
+  assert.equal(s1.size, pinned.size, "夹具：size 未变");
+  assert.equal(s1.mtimeMs, pinned.mtimeMs, "夹具：mtime 已复原");
+  assert.equal(s1.ino, pinned.ino, "夹具：原地覆盖不换 inode");
+  assert.notEqual(store.loadMergedSummaries(), beforeMap, "A-20：原地覆盖后 merged 缓存必须重建");
+  assert.equal(readSmall(), "BBB", "A-20：同 mtime/size 原地覆盖后不得再返回旧内容");
+
+  // 2) 删除后重建同名等长文件，mtime 原样恢复
+  unlinkSync(small);
+  writeFileSync(small, smallBody("CCC"), "utf8");
+  restoreMtime(small);
+  assert.equal(readSmall(), "CCC", "A-20：同名重建后 merged 缓存必须反映新内容");
+
+  // 3) >1 MiB 只取首尾探针：中段变更 + mtime/size 复原 → 只剩 ino / birthtime 能抓
+  const big = join(ovDir, "9.9.8-probe.json");
+  const bigBody = (tag) =>
+    JSON.stringify({
+      platform: "probe",
+      minecraftVersion: "9.9.8",
+      pad: "a".repeat(1_000_000) + tag + "a".repeat(990_000),
+    });
+  const readBig = () => store.findSummary("probe", "9.9.8")?.summary?.pad?.slice(1_000_000, 1_000_002);
+  writeFileSync(big, bigBody("V1"), "utf8");
+  const g0 = statSync(big);
+  utimesSync(big, g0.atime, g0.mtime);
+  const gPinned = statSync(big);
+  assert.ok(gPinned.size > 1 << 20, `夹具必须走首尾探针分支，实际 ${gPinned.size} 字节`);
+  assert.equal(readBig(), "V1");
+  const restoreBig = () => utimesSync(big, gPinned.atime, gPinned.mtime);
+  unlinkSync(big);
+  writeFileSync(big, bigBody("V2"), "utf8");
+  restoreBig();
+  const g1 = statSync(big);
+  assert.equal(g1.size, gPinned.size, "夹具：size 未变");
+  assert.equal(g1.mtimeMs, gPinned.mtimeMs, "夹具：mtime 已复原");
+  assert.ok(
+    g1.ino !== gPinned.ino || g1.birthtimeMs !== gPinned.birthtimeMs,
+    "夹具：ino / birthtime 必须变化，否则本用例覆盖不到探针分支",
+  );
+  assert.equal(readBig(), "V2", "A-20：大文件中段变更（首尾一致）也必须让缓存失效");
+
+  store.invalidateMergedSummariesCache();
+  delete process.env.MC_SKILL_CACHE;
+  rmSync(tmp, { recursive: true, force: true });
+  console.log("merged 缓存 stamp 内容失效 (A-20): ok");
 }
 
 void sha256Buffer;

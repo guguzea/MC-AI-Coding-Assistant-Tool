@@ -31,7 +31,7 @@ url: https://neoforged.net/news/26.1release/
 
 - 规则树用 `neoforge/26.1/`，不要并进 `1.21.1`。
 - 不为 26.1.1 单造规则树。
-- `/docs/26.2/` 仍 404 时不要克隆 `neoforge_26.1` 冒充 26.2。
+- 26.2 构建已发布（maven 最新 26.2.0.75，2026-09-02 实读），但官方主文档不按版本分线（`/docs/26.2/` 与 `/docs/26.1/` 一样 404），本仓也没有 26.2 语料 ⇒ 不要克隆 `neoforge_26.1` 冒充 26.2。
 - 26.1.x / 26.2 MDK 同时提供 ModDevGradle 与 NeoGradle，`download_official_mdk` 必须传 `buildPlugin`。
 
 不清楚时打开原文 + Primer https://docs.neoforged.net/primer/docs/26.1/ + `search_neoforge_docs`。

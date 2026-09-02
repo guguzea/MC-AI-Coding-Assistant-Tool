@@ -192,6 +192,17 @@
       "invalid": false
     },
     {
+      "file": "1.20.1-neoforge.jar",
+      "mappingsVersion": "parchment-1.20.1-2023.09.03",
+      "mappingsSource": "parchment-maven-metadata",
+      "classCount": 1081,
+      "fqcnIndexCount": 655,
+      "sourceJarSha256": "937636f7dc8c6e9fdb561c29f1cba9963e06935b91ad87e9f01e61070a540207",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.20.4-fabric-api.jar",
       "mappingsVersion": "yarn-1.20.4",
       "mappingsSource": "fabric-api-sources-yarn",
@@ -225,6 +236,17 @@
       "invalid": false
     },
     {
+      "file": "1.20.6-neoforge.jar",
+      "mappingsVersion": "parchment-1.20.6-2024.06.16",
+      "mappingsSource": "parchment-maven-metadata",
+      "classCount": 1182,
+      "fqcnIndexCount": 867,
+      "sourceJarSha256": "05d4c04ce4604521b0e3ae35c4a853be9c805e0547d007b464f52eee868793a9",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.21.1-fabric-api.jar",
       "mappingsVersion": "yarn-1.21.1",
       "mappingsSource": "fabric-api-sources-yarn",
@@ -253,6 +275,17 @@
       "classCount": 627,
       "fqcnIndexCount": 627,
       "source": "qsl-github-java",
+      "invalid": false
+    },
+    {
+      "file": "1.21.10-neoforge.jar",
+      "mappingsVersion": "parchment-1.21.10-2025.10.12",
+      "mappingsSource": "parchment-maven-metadata",
+      "classCount": 1407,
+      "fqcnIndexCount": 1105,
+      "sourceJarSha256": "d52d822668b8cb1bfcf2e75c31eacc90b1935e1865d3aa0e720eed9c1b4e49b9",
+      "source": "official",
+      "fromSourcesJar": true,
       "invalid": false
     },
     {
@@ -295,6 +328,17 @@
       "classCount": 1286,
       "fqcnIndexCount": 947,
       "sourceJarSha256": "b239c4b17fbac389ca5a0e16ecd591999bd306e1067b2b5828fbf85d957f1131",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.21.5-neoforge.jar",
+      "mappingsVersion": "parchment-1.21.5-2025.06.15",
+      "mappingsSource": "parchment-maven-metadata",
+      "classCount": 1291,
+      "fqcnIndexCount": 1000,
+      "sourceJarSha256": "289aab72e501515e8b23b6db882736a6c7a0b04b5eb4136c2bee32661863cd58",
       "source": "official",
       "fromSourcesJar": true,
       "invalid": false

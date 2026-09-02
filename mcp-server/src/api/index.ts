@@ -167,6 +167,8 @@ interface VersionData {
   preloadTimer?: ReturnType<typeof setTimeout> | null;
   /** terminate / dispose 时结算 awaiters */
   settlePreload?: (() => void) | null;
+  /** trie 只存小写键；此表把小写类名还原成 class-names.json 里的原始大小写（惰性构建，绑定数组身份） */
+  caseMap?: { names: string[]; map: Map<string, string> } | null;
 }
 
 const _versionData = new Map<string, VersionData>();
@@ -541,14 +543,32 @@ function fuzzyClassSearch(query: string, vData: VersionData): FuzzyHit[] {
     : normalized;
 
   if (vData.trieIndex) {
+    // trie 只存小写段键，_collect 据此重建 ⇒ 原始大小写丢失。
+    // 用 class-names.json 的原始名还原；缓存绑定数组身份，数组被替换即自动重建。
+    // 不变量：classNames 只可整体替换，不可原地 push/splice，否则此缓存静默过期。
+    // 详见 docs/query-api-classname-case.md。
+    const names = vData.classNames ?? [];
+    let caseMap =
+      vData.caseMap && vData.caseMap.names === names ? vData.caseMap.map : undefined;
+    if (!caseMap) {
+      caseMap = new Map<string, string>();
+      for (const cn of names) caseMap.set(cn.toLowerCase(), cn);
+      vData.caseMap = { names, map: caseMap };
+    }
+    const restoreCase = (lowerName: string): string => caseMap!.get(lowerName) ?? lowerName;
+
     const prefixResults = vData.trieIndex.searchPrefix(normalized);
     if (prefixResults.length > 0) {
-      return prefixResults.slice(0, 5).map((name) => ({ name, score: 95, kind: "prefix" as const }));
+      return prefixResults
+        .slice(0, 5)
+        .map((name) => ({ name: restoreCase(name), score: 95, kind: "prefix" as const }));
     }
     if (simple.length >= 3) {
       const simplePrefix = vData.trieIndex.searchPrefix(simple);
       if (simplePrefix.length > 0) {
-        return simplePrefix.slice(0, 5).map((name) => ({ name, score: 90, kind: "prefix" as const }));
+        return simplePrefix
+          .slice(0, 5)
+          .map((name) => ({ name: restoreCase(name), score: 90, kind: "prefix" as const }));
       }
     }
   }

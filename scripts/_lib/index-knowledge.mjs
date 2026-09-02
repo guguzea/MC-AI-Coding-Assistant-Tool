@@ -2,8 +2,9 @@
  * 把已落盘知识文件编进 data/<platform>_<ver>/<source>/<ver>/index-l0.json（幂等按 id 合并）。
  * 从 generate-five-platform-trees 抽出，供一次性脚本与后续手工入库复用。
  */
-import { mkdirSync, writeFileSync, readFileSync, existsSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { emit } from "./write-guard.mjs";
 
 /**
  * @param {string} repoRoot
@@ -11,11 +12,12 @@ import { join } from "path";
  * @param {string} ver
  * @param {string} source
  * @param {Array<[string, string]>} files [id, repo-relative path]
+ * @returns {number} 实际落盘文件数（dry-run 为 0）
  */
 export function indexKnowledge(repoRoot, platform, ver, source, files) {
   const processed = join(repoRoot, "data", `${platform}_${ver}`, source, ver, "processed");
-  mkdirSync(processed, { recursive: true });
   const indexPath = join(repoRoot, "data", `${platform}_${ver}`, source, ver, "index-l0.json");
+  let written = 0;
   let existing = [];
   if (existsSync(indexPath)) {
     try {
@@ -30,8 +32,7 @@ export function indexKnowledge(repoRoot, platform, ver, source, files) {
     const src = join(repoRoot, rel);
     if (!existsSync(src)) continue;
     const body = readFileSync(src, "utf8");
-    const dest = join(processed, `${id}.md`);
-    writeFileSync(dest, body, "utf8");
+    if (emit(join(processed, `${id}.md`), body)) written++;
     const entry = {
       id: `${ver}/${id}`,
       version: ver,
@@ -45,5 +46,6 @@ export function indexKnowledge(repoRoot, platform, ver, source, files) {
     };
     byId.set(entry.id, entry);
   }
-  writeFileSync(indexPath, JSON.stringify([...byId.values()], null, 2), "utf8");
+  if (emit(indexPath, JSON.stringify([...byId.values()], null, 2))) written++;
+  return written;
 }

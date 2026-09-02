@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync, utimesSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync, utimesSync, readdirSync, statSync, cpSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -23,7 +24,7 @@ import { assertWritablePath, ProjectPathError, isInsideReal, nativeReal } from "
 import { searchNeoForgeDocs, getNeoForgeDocSummary, getNeoForgeDocFull, getNeoForgeDocRelated } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen, parseNeo21Patch } from "./dist/datagen/index.js";
 import { generateLang, generateCapability, generateConfig, generateEntityRenderer, generateNetworkPacket, NETWORK_PACKET_PLATFORMS, generateNetworkPacketDescription } from "./dist/generators/index.js";
-import { diagnoseGradle, detectMinecraftVersion } from "./dist/gradle/index.js";
+import { diagnoseGradle, detectMinecraftVersion, parseGradleProperties } from "./dist/gradle/index.js";
 import { isExactMcVersionToken, matchesExactMcVersion, isMcVersionFamily, VERSION_SEGMENT_RE, isSafeVersionSegment, classifyMinecraftVersion } from "./dist/utils/minecraft-version.js";
 import { withDocsFallbackFields, matchDocIndexId, pathBoost } from "./dist/docs-platform/search-utils.js";
 import { detectLoader, detectProjectLoaders, classifyJavaFmlToml, getMigrationGuide, checkDependencies, extractGradleDependenciesBlock, javaBlobFromFiles } from "./dist/diagnostics/index.js";
@@ -38,6 +39,7 @@ import {
   validateAddonManifest,
   getBedrockDocFull,
   analyzeBedrockContentLog,
+  BEDROCK_CAPABILITIES,
 } from "./dist/bedrock/index.js";
 import { listSemanticDbPresence, semanticStaleSearchWarning, getSemanticIndexStatus } from "./dist/docs-platform/semantic/status.js";
 import { isSemanticIndexStale } from "./dist/docs-platform/semantic/fingerprint.js";
@@ -51,6 +53,7 @@ import {
   getCommunityDocFull,
 } from "./dist/docs-platform/community/index.js";
 import { CommunityDocStore, stripLeadingFrontmatter } from "./dist/docs-platform/community/store.js";
+import { buildEntries as buildCommunityEntries } from "./scripts/_lib/community-index-core.mjs";
 import { analyzeCrash, CRASH_ANALYZE_MAX, CRASH_HARD_MAX } from "./dist/crash/index.js";
 import { validateProject } from "./dist/validate/index.js";
 import { validateDatapackJson } from "./dist/datapack/index.js";
@@ -60,11 +63,38 @@ import { inspectRuntime } from "./dist/runtime-inspect/index.js";
 import { exclusiveFabricFallbackRefusal } from "./dist/docs-platform/quilt-search.js";
 import { getWorkflowTemplate, WORKFLOW_TEMPLATES } from "./dist/prompts/index.js";
 import { KNOWN_VERSIONS } from "./dist/docs-platform/platforms.js";
+import { sessionPlatformPack } from "./dist/platform-pack/session.js";
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 function parseToolText(result) {
   return JSON.parse(result.content[0].text);
+}
+
+/**
+ * Learn 缓存页把表格拍平成一格一行：段名 → Name[/Type]/Description → 行名、描述……
+ * 取某段表格的行名（遇到「行名紧跟下一张表的 Name」即停）。
+ */
+function docTableRowNames(pageText, section) {
+  const lines = pageText.split(/\r?\n/).map((l) => l.trim());
+  let start = -1;
+  for (let k = 0; k < lines.length; k++) {
+    if (lines[k] === section && lines[k + 1] === "Name") {
+      start = k;
+      break;
+    }
+  }
+  if (start < 0) return [];
+  let i = start + 1;
+  while (i < lines.length && ["Name", "Type", "Description"].includes(lines[i])) i++;
+  const NAME_RE = /^[a-z][a-zA-Z0-9_]*$/;
+  const out = [];
+  for (; i < lines.length; i++) {
+    if (!NAME_RE.test(lines[i])) continue;
+    if (lines[i + 1] === "Name") break;
+    out.push(lines[i]);
+  }
+  return out;
 }
 
 async function testNeoForgeGenericRouting() {
@@ -349,6 +379,69 @@ async function testPortingTargetVersionRequired() {
   }
 }
 
+async function testArchitecturySettingsGradleFromKb() {
+  const kbPath = join(REPO_ROOT, "data", "porting", "architectury-patterns.json");
+  const kb = JSON.parse(readFileSync(kbPath, "utf8"));
+  // 形状契约：读取端只认字符串数组（历史 bug：写成 { content: [...] } → Array.isArray 恒 false → KB 从未生效）
+  assert.ok(Array.isArray(kb.settingsGradle), `KB settingsGradle 必须是数组，实际 ${JSON.stringify(kb.settingsGradle)?.slice(0, 60)}`);
+  assert.ok(kb.settingsGradle.length >= 10, `KB settingsGradle 行数异常：${kb.settingsGradle.length}`);
+  assert.ok(
+    kb.settingsGradle.every((l) => typeof l === "string"),
+    "KB settingsGradle 每行必须是字符串",
+  );
+  assert.equal(
+    kb.settingsGradle.filter((l) => l.includes("${modId}")).length,
+    1,
+    "KB settingsGradle 必须只有一个 ${modId} 占位符",
+  );
+  const marker = kb.settingsGradle[0];
+  assert.ok(marker.startsWith("//"), `KB 首行必须是指向来源的注释行（fallback 靠它区分）：${marker}`);
+
+  const root = mkdtempSync(join(tmpdir(), "mc-skill-arch-kb-"));
+  const prevData = process.env.MC_SKILL_DATA;
+  const render = (lines) => lines.map((l) => l.split("${modId}").join("kbtest"));
+  try {
+    const call = async () =>
+      JSON.parse(await portProject({
+        projectPath: root,
+        action: "init_architectury",
+        modId: "kbtest",
+        neoforgeVersion: "20.4.237",
+        targetVersion: "1.20.4",
+        dryRun: true,
+      }));
+
+    const fromKb = (await call()).diffPreview["settings.gradle"].split("\n");
+    assert.deepEqual(
+      fromKb,
+      render(kb.settingsGradle),
+      "settings.gradle 必须逐行等于 KB 模板（${modId} 已替换）——不等说明读取端又用回了 fallback",
+    );
+    assert.ok(fromKb.includes("rootProject.name = 'kbtest-multiloader'"), JSON.stringify(fromKb));
+    assert.ok(!fromKb.some((l) => l.includes("${modId}")), "占位符必须被替换干净");
+
+    const emptyData = mkdtempSync(join(tmpdir(), "mc-skill-arch-kb-miss-"));
+    process.env.MC_SKILL_DATA = emptyData;
+    try {
+      const fromFallback = (await call()).diffPreview["settings.gradle"].split("\n");
+      assert.ok(!fromFallback.includes(marker), `KB 缺失时必须退回 fallback（仍含 KB 标记行 = 断言在测空气）`);
+      assert.deepEqual(
+        fromFallback.filter((l) => l.trim() && !l.startsWith("//")),
+        render(kb.settingsGradle.filter((l) => l.trim() && !l.startsWith("//"))),
+        "fallback 正文必须与 KB 正文一致（只允许差 KB 的溯源注释行）",
+      );
+      rmSync(emptyData, { recursive: true, force: true });
+    } finally {
+      if (prevData === undefined) delete process.env.MC_SKILL_DATA;
+      else process.env.MC_SKILL_DATA = prevData;
+    }
+  } finally {
+    if (prevData === undefined) delete process.env.MC_SKILL_DATA;
+    else process.env.MC_SKILL_DATA = prevData;
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
 async function testYarnShortNameAndMojangHeuristic() {
   const dataRoot =
     process.env.MC_SKILL_DATA ??
@@ -518,10 +611,16 @@ async function testCommunityDocsSearchAndLinks() {
   assert.ok(search.results.some((r) => r.id.includes("publishing") || /发布/.test(r.label + r.summary)));
   const cap = await searchCommunityDocs({ query: "ITEM_HANDLER" });
   assert.ok(cap.total >= 1, "search ITEM_HANDLER should hit capability short doc");
-  const bodyHit = await searchCommunityDocs({ query: "发表模组篇" });
-  assert.ok(bodyHit.total >= 1, "body search should hit permitted crash-publishing page");
-  const titleHit = await searchCommunityDocs({ query: "如何制作并且维护" });
-  assert.ok(titleHit.total >= 1, "permitted pages should be findable by guide title via index summary");
+  const bodyHit = await searchCommunityDocs({ query: "发表模组篇", limit: 50 });
+  assert.ok(
+    bodyHit.results.some((r) => r.id === "mcmod-3993/crash-publishing"),
+    "permitted crash-publishing must be findable by chapter name via index summary",
+  );
+  const titleHit = await searchCommunityDocs({ query: "如何制作并且维护", limit: 50 });
+  assert.ok(
+    titleHit.results.filter((r) => r.id.startsWith("mcmod-3993/")).length >= 4,
+    "all four permitted pages should be findable by guide title via index summary",
+  );
   const cjk = await searchCommunityDocs({ query: "漏斗管道Capability" });
   assert.ok(cjk.total >= 1, "CJK tokenization should hit capability docs");
   const linkHits = await searchCommunityDocs({ query: "官方文档", sourceKind: "links" });
@@ -1120,6 +1219,32 @@ async function testDatagenAndMappingGates() {
   assert.equal(blck.found, false, "edit-distance Blck must not be a hit");
   const joined = (blck.suggestions ?? []).join(" ");
   assert.ok(!/\bPack\b/.test(joined), `Blck must not suggest Pack: ${joined}`);
+  {
+    // trie 只存小写段键，曾在返回层把 suggestions 大小写毁掉（Blaze3D → blaze3d）。
+    // 只断言「每条 suggestion 原样存在于 class-names.json」，不钉死返回了哪 5 个类。
+    // 别改成「把 suggestion 再查一遍断言 found:true」：毁掉的名字会经线性兜底自动纠正，那样是空门禁。
+    // 背景与维护注意见 docs/query-api-classname-case.md。
+    const moj = await queryApi({ className: "com.mojang", version: "1.20.4" });
+    assert.equal(moj.found, false, "broad prefix com.mojang must not exact-match");
+    const suggested = (moj.suggestions ?? [])
+      .map((s) => s.match(/^你指的是 (.+) 吗？$/)?.[1])
+      .filter(Boolean);
+    assert.ok(
+      suggested.length > 0,
+      `com.mojang must return suggestions, got ${JSON.stringify(moj.suggestions)}`,
+    );
+    const knownNames = new Set(
+      JSON.parse(
+        readFileSync(resolveDataDir("forge_1.20.4", "extracted", "class-names.json"), "utf8"),
+      ),
+    );
+    for (const fqcn of suggested) {
+      assert.ok(
+        knownNames.has(fqcn.replace(/\./g, "/")),
+        `suggestion must preserve class-names.json case verbatim, got: ${fqcn}`,
+      );
+    }
+  }
   const handler = await queryApi({ className: "Handler", version: "1.20.1" });
   assert.equal(handler.found, false, "ambiguous Handler must not hit MouseHandler");
   assert.ok(!handler.methods?.length, "ambiguous Handler must not return methods");
@@ -1321,6 +1446,46 @@ async function testPortingFabricYarnAndProps() {
   }
 }
 
+// S6：gradle.properties 值里的行内注释必须剥掉，但无前置空白的 #（URL 片段）不能当注释
+function testGradlePropertiesInlineComment() {
+  const props = parseGradleProperties(
+    [
+      "# 顶部注释",
+      "a=1 # 行内注释",
+      "url=https://example.com/#frag",
+      "mod_id = demo_mod   # 与 mods.toml 保持一致",
+      "empty=",
+    ].join("\n"),
+  );
+  assert.equal(props.a, "1");
+  assert.equal(props.mod_id, "demo_mod");
+  assert.equal(props.url, "https://example.com/#frag");
+  assert.equal(props.empty, "");
+
+  const modsToml = 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="demo_mod"\n';
+  const buildGradle = "plugins { id 'net.minecraftforge.gradle' version '[6.0,7.0)' }\n";
+  const same = validateProject({
+    modsToml,
+    buildGradle,
+    gradleProperties: "mod_id=demo_mod # 与 mods.toml 一致\n",
+  });
+  assert.ok(
+    !same.warnings.some((w) => /gradle\.properties 中 mod_id/.test(w)),
+    `行内注释被当成 mod_id 的一部分：${same.warnings.join(" | ")}`,
+  );
+
+  // 正控：真的不一致时仍必须报出来（防止这条检查被整段删掉也「通过」）
+  const diff = validateProject({
+    modsToml,
+    buildGradle,
+    gradleProperties: "mod_id=other_mod # 真不一致\n",
+  });
+  assert.ok(
+    diff.warnings.some((w) => /gradle\.properties 中 mod_id='other_mod'/.test(w)),
+    `真不一致未报警：${diff.warnings.join(" | ")}`,
+  );
+}
+
 async function testCrashAnalyzeKindAndMissingDep() {
   const { analyzeCrash, detectCrashKind } = await import("./dist/crash/index.js");
   const fmlName = "---- Minecraft Crash Report ----\nFile: crash-2024-01-01_12.00.00-fml.txt\nMissing or unsupported mandatory dependencies: examplelib\n";
@@ -1443,6 +1608,37 @@ async function testCrashAnalyzeKindAndMissingDep() {
   assert.equal(tooHuge.action?.code, "INVALID_INPUT");
 }
 
+/**
+ * B-26 回归：宽松兜底模式 `mods.toml|ModFileLocator|mod…loading…failed` 在 KNOWN_PATTERNS 里
+ * 排在具名版本范围模式之前，旧实现「首命中即 return」→ 加载期版本冲突被误报成
+ * 「mods.toml 配置错误导致 mod 加载失败」。现在按 specificity 仲裁。
+ * 两条腿缺一不可：只测第一条无法证明日志真的同时命中两条模式（空断言）。
+ */
+function testCrashPatternSpecificity() {
+  const VERSION_LINE = "Caused by: net.minecraftforge.fml.ModLoadingException: Incompatible mods found!\n";
+  const lines = [
+    "---- Minecraft Crash Report ----",
+    "Description: Mod loading error has occurred",
+    "",
+    "java.lang.Exception: Mod Loading has failed",
+    "\tat net.minecraftforge.fml.CrashReportExtender.dumpModLoadingCrashReport(CrashReportExtender.java:73)",
+    VERSION_LINE,
+    "\tMod file: /mods/some_mod-1.4.0.jar",
+    "\tDependency declared in mods.toml (some_mod)",
+    "",
+    "System Details:",
+    "\tMinecraft Version: 1.20.1",
+  ];
+  const report = lines.join("\n");
+
+  const both = analyzeCrash({ crashReport: report, version: "1.20.1" });
+  assert.equal(both.probableCause, "模组或 loader 版本范围不兼容", `精确版本指纹未胜出：${both.probableCause}`);
+
+  // 删掉唯一那条具名指纹：宽松兜底必须仍然接住，否则上面的日志根本没命中兜底模式（断言测空气）
+  const broadOnly = analyzeCrash({ crashReport: report.replace(VERSION_LINE, ""), version: "1.20.1" });
+  assert.equal(broadOnly.probableCause, "mods.toml 配置错误导致 mod 加载失败", `兜底模式未生效（用例日志没命中宽松模式？）：${broadOnly.probableCause}`);
+}
+
 async function testPlatformDataMissing() {
   const empty = mkdtempSync(join(tmpdir(), "mc-skill-plat-miss-"));
   try {
@@ -1461,6 +1657,22 @@ async function testPlatformDataMissing() {
       () => fabStore.searchIndex("Registry", "1.20.1"),
       (e) => e instanceof PlatformDataMissingError && e.platform === "fabric",
     );
+
+    // S3：校验失败不得记成「已验证」。同一实例反复调用必须仍抛 MISSING，
+    // 不能漏到 resolveVersionDir 变成 VERSION_NOT_FOUND / INTERNAL_ERROR
+    const neoStore = new NeoForgeDocStore(empty);
+    for (const [label, call] of [
+      ["getAvailableVersions 首次", () => neoStore.getAvailableVersions()],
+      ["searchIndex", () => neoStore.searchIndex("Registry", "1.21.1")],
+      ["getAvailableVersions 二次", () => neoStore.getAvailableVersions()],
+      ["loadSummary", () => neoStore.loadSummary("some-page", "1.21.1")],
+    ]) {
+      assert.throws(
+        call,
+        (e) => e instanceof PlatformDataMissingError && e.platform === "neoforge",
+        `neoforge ${label} 应抛 PlatformDataMissingError`,
+      );
+    }
 
     const prev = process.env.MC_SKILL_DATA;
     process.env.MC_SKILL_DATA = empty;
@@ -1875,6 +2087,81 @@ async function testFivePlatformRouting() {
     "fabric",
     "仅裸 javafml 的残留 mods.toml 不得压过 fabric-loom",
   );
+  // S9：判定链与根 AGENTS.md 顺序表逐条对齐（失效加载器的残留不得压过在场加载器；歧义不拍板）
+  const s9AmbiguousToml = 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n';
+  const s9LoaderVerOnlyToml = 'loaderVersion="[14,)"\n[[mods]]\nmodId="demo"\n';
+  const s9RiftGradle = "apply plugin: 'net.minecraftforge.gradle.tweaker-client'\n";
+  for (const [desc, gradle, modsToml, fabricJson, neoToml, extras, want] of [
+    [
+      "残留 fabric.mod.json + 歧义 loaderVersion [47,) → unknown（不得因为有个残留文件就拍板）",
+      "", s9AmbiguousToml, leftoverFab, undefined, undefined, "unknown",
+    ],
+    [
+      "riftmod.json + litemod.json 同时存在 → rift（LiteLoader 残留不得压过 Rift 在场证据）",
+      "", undefined, undefined, undefined,
+      { riftmodJson: '{"id":"example"}', litemodJson: '{"name":"legacy"}' }, "rift",
+    ],
+    [
+      "tweaker-client + javafml mods.toml + litemod.json → rift（Rift 先于纯 LiteLoader / 并存 unknown）",
+      s9RiftGradle, 'modLoader="javafml"\n[[mods]]\nmodId="demo"\n', undefined, undefined,
+      { litemodJson: '{"name":"legacy"}' }, "rift",
+    ],
+    [
+      "riftmod.json + liteloader 专用插件 → liteloader_forge（显式插件是构建期硬证据，优先于 rift json）",
+      "apply plugin: 'net.minecraftforge.gradle.liteloader'", 'modLoader="javafml"', undefined, undefined,
+      { riftmodJson: '{"id":"example"}', litemodJson: '{"name":"x"}' }, "liteloader_forge",
+    ],
+    [
+      "litemod.json + fabric-loom → fabric（无残留 fabric.mod.json 时 Loom 仍是强信号）",
+      "id 'fabric-loom'", undefined, undefined, undefined,
+      { litemodJson: '{"name":"legacy"}' }, "fabric",
+    ],
+    [
+      "仅 loaderVersion 的 mods.toml 也是 FML 元数据：hasForgeMeta 复用 classifyJavaFmlToml，不另写正则",
+      "", s9LoaderVerOnlyToml, undefined, undefined,
+      { litemodJson: '{"name":"legacy"}' }, "unknown",
+    ],
+  ]) {
+    assert.equal(detectLoader(gradle, modsToml, fabricJson, neoToml, extras), want, desc);
+  }
+  // S9 延伸（工具面取证驱动）：detect.ts 的 multiLoader 门排在 primary 之前，
+  // primary 已决断时残留元数据再进 loaders[] 就会把判定链架空成 PICK_PLATFORM。
+  // tweaker-client 只是名字带 net.minecraftforge.gradle，不是 ForgeGradle 证据（无 litemod 残留时单独验）
+  const riftNoLite = detectProjectLoaders({
+    buildGradle: "apply plugin: 'net.minecraftforge.gradle.tweaker-client'",
+    extras: { riftmodJson: '{"id":"example"}' },
+  });
+  assert.equal(
+    riftNoLite.loaders.includes("forge"),
+    false,
+    JSON.stringify(riftNoLite.loaders),
+  );
+  const riftResidual = detectProjectLoaders({
+    buildGradle: "apply plugin: 'net.minecraftforge.gradle.tweaker-client'",
+    extras: { riftmodJson: '{"id":"example"}', litemodJson: '{"name":"legacy"}' },
+  });
+  assert.equal(riftResidual.primary, "rift");
+  assert.deepEqual(riftResidual.loaders, ["rift"], JSON.stringify(riftResidual.loaders));
+  assert.equal(
+    riftResidual.multiLoader,
+    false,
+    "Rift 在场 + LiteLoader 残留不得判成多加载器（tweaker-client 也不是 ForgeGradle）",
+  );
+  // 真·冲突仍然问用户：riftmod.json + 明确 forge 依赖的 mods.toml
+  const riftVsForge = detectProjectLoaders({
+    buildGradle: "",
+    modsToml:
+      'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="demo"\n[[dependencies.demo]]\nmodId="forge"\n',
+    extras: { riftmodJson: '{"id":"example"}' },
+  });
+  assert.equal(riftVsForge.multiLoader, true, JSON.stringify(riftVsForge.loaders));
+  assert.ok(riftVsForge.loaders.includes("rift") && riftVsForge.loaders.includes("forge"));
+  // 纯 Forge 工程不受影响
+  const plainForge = detectProjectLoaders({
+    buildGradle: "plugins { id 'net.minecraftforge.gradle' }",
+    modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="demo"\n[[dependencies.demo]]\nmodId="forge"\n',
+  });
+  assert.equal(plainForge.multiLoader, false, JSON.stringify(plainForge.loaders));
   const llOnlyLoaders = detectProjectLoaders({
     buildGradle: "apply plugin: 'net.minecraftforge.gradle.liteloader'",
     modsToml: 'modLoader="javafml"\n[[mods]]\nmodId="demo"',
@@ -2001,6 +2288,51 @@ async function testFivePlatformRouting() {
   }));
   assert.equal(strVer.ok, false);
   assert.ok(strVer.errors.some((e) => /modules\[0\]\.version/.test(e)));
+
+  // S4：capabilities 白名单必须跟着本仓缓存的官方页走，不能各自漂移
+  {
+    const pagePath = join(
+      REPO_ROOT,
+      "data",
+      "bedrock_stable",
+      "bedrock-docs",
+      "stable",
+      "processed",
+      "pack-manifest.md",
+    );
+    const capsFromPage = docTableRowNames(readFileSync(pagePath, "utf8"), "capabilities");
+    assert.ok(capsFromPage.length >= 5, `官方页 capabilities 解析异常：${JSON.stringify(capsFromPage)}`);
+    assert.deepEqual(
+      [...BEDROCK_CAPABILITIES].sort(),
+      [...capsFromPage].sort(),
+      "BEDROCK_CAPABILITIES 与官方 pack-manifest capabilities 表不一致",
+    );
+    assert.ok(!capsFromPage.includes("script_eval"), "官方页已列出 script_eval → 需同步白名单与规则 01");
+
+    const manifest = (caps) => JSON.stringify({
+      format_version: 2,
+      header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
+      modules: [{ type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0] }],
+      capabilities: caps,
+    });
+    const known = validateAddonManifest(manifest(["editorExtension", "experimental_custom_ui"]));
+    assert.equal(known.ok, true, JSON.stringify(known.errors));
+    assert.ok(
+      !known.warnings.some((w) => /未知 capability/.test(w)),
+      JSON.stringify(known.warnings),
+    );
+    const unknown = validateAddonManifest(manifest(["script_eval"]));
+    assert.ok(
+      unknown.warnings.some((w) => /未知 capability「script_eval」/.test(w)),
+      JSON.stringify(unknown.warnings),
+    );
+    // 生成器吐 script_eval 时必须自带同一口径的「官方表未列」提示
+    const genEval = generateAddonManifest({ packName: "EvalPack", packType: "data", scriptEval: true });
+    assert.ok(
+      genEval.warnings.some((w) => /script_eval 不在官方/.test(w)),
+      JSON.stringify(genEval.warnings),
+    );
+  }
 
   assert.equal(detectLoader("apply plugin: 'net.minecraftforge.gradle.tweaker-client'"), "rift");
   assert.equal(
@@ -3454,6 +3786,22 @@ public class ExampleMod { }
   assert.ok(!/new \w+Model\(/.test(rendOk.code || ""), rendOk.code);
   assert.ok(!rendOk.code?.includes("fromNamespaceAndPath"), rendOk.code);
 
+  // S2：骨架引用的每个类型首段必须可解析（import 或本文件声明），否则吐出的代码编译不过
+  for (const [label, code] of [["neoforge 26.1", rend261.code], ["forge 1.20.1", rendOk.code]]) {
+    assert.ok(/^package\s+com\.example\.\w+\.client;/m.test(code || ""), `${label}: 缺 package 声明`);
+    const imported = [...(code || "").matchAll(/^import\s+([\w.]+);$/gm)].map((m) => m[1].split(".").pop());
+    const declared = [...(code || "").matchAll(/\bclass\s+(\w+)/g)].map((m) => m[1]);
+    const refs = new Set();
+    for (const m of (code || "").matchAll(/extends\s+([\w.]+)/g)) refs.add(m[1]);
+    for (const m of (code || "").matchAll(/<([\w.]+)>/g)) refs.add(m[1]);
+    for (const m of (code || "").matchAll(/\(\s*([\w.]+)\s+\w+\s*\)/g)) refs.add(m[1]);
+    for (const ref of refs) {
+      const head = ref.split(".")[0];
+      assert.ok(imported.includes(head) || declared.includes(head), `${label}: 引用类型 ${ref} 无 import 也无同文件声明`);
+    }
+    assert.ok((code || "").includes("import com.example.my_mod.entity.Slime;"), `${label}: 实体类未 import`);
+  }
+
   const pkt1204 = generateNetworkPacket("demo", "sync", "neoforge_1.20.4");
   assert.ok(pkt1204.code?.includes("@SubscribeEvent"), pkt1204.code);
   assert.ok(pkt1204.code?.includes("import net.neoforged.bus.api.SubscribeEvent"), pkt1204.code);
@@ -3873,6 +4221,2020 @@ async function testPortingHandoffArgsAreCallable() {
   assert.ok(actionableSteps >= 3, `可执行交接过少：${actionableSteps}`);
 }
 
+// ── S12：移植知识库 ↔ 本仓证据源（manifest / fabric meta / primer / 规则树）──
+const PORTING_KB_REL = "data/porting/knowledge-base/versions.json";
+const PRIMER_DIR_REL = "data/neoforge_primers";
+const ZERO_WIDTH = String.fromCharCode(0x200b);
+
+/** "data/x.json#versions['1.21.1'].field" → { ok, value?, why? } */
+function kbResolvePointer(pointer) {
+  const [file, frag] = String(pointer).split("#");
+  const abs = join(REPO_ROOT, file);
+  if (!existsSync(abs)) return { ok: false, why: `缺文件 ${file}` };
+  let cur;
+  try {
+    cur = JSON.parse(readFileSync(abs, "utf8"));
+  } catch (e) {
+    return { ok: false, why: `${file} 不是合法 JSON: ${e.message}` };
+  }
+  if (!frag) return { ok: true, value: cur };
+  const text = /^[.[]/.test(frag) ? frag : "." + frag;
+  const tokens = [];
+  const re = /\.([A-Za-z_$][\w$]*)|\['([^']+)'\]|\["([^"]+)"\]/g;
+  let m;
+  let last = 0;
+  while ((m = re.exec(text))) {
+    if (m.index !== last) return { ok: false, why: `指针写法非法 ${pointer}` };
+    tokens.push(m[1] ?? m[2] ?? m[3]);
+    last = m.index + m[0].length;
+  }
+  if (last !== text.length) return { ok: false, why: `指针尾部无法解析 ${pointer}` };
+  for (let i = 0; i < tokens.length; i++) {
+    if (cur === null || typeof cur !== "object" || !(tokens[i] in cur)) {
+      return { ok: false, why: `${file}#${tokens.slice(0, i + 1).join(".")} 不存在` };
+    }
+    cur = cur[tokens[i]];
+  }
+  return { ok: true, value: cur };
+}
+
+function kbVersionNumber(key) {
+  const m = /^(\d+)\.(\d+)(?:\.(\d+))?$/.exec(key);
+  return m ? Number(m[1]) * 1e6 + Number(m[2]) * 1e3 + Number(m[3] ?? 0) : null;
+}
+
+/** 本仓 <platform>/<ver> 规则树目录 + 该树规则文件数（0 = draft 树） */
+function kbRuleTreeDirs() {
+  const out = [];
+  for (const p of ["fabric", "forge", "neoforge", "quilt", "liteloader", "rift", "modloader"]) {
+    const base = join(REPO_ROOT, p);
+    if (!existsSync(base)) continue;
+    for (const d of readdirSync(base)) {
+      const abs = join(base, d);
+      if (!statSync(abs).isDirectory() || kbVersionNumber(d) === null) continue;
+      let rules = 0;
+      for (const host of readdirSync(abs)) {
+        const rulesDir = join(abs, host, "rules");
+        if (!existsSync(rulesDir) || !statSync(rulesDir).isDirectory()) continue;
+        rules += readdirSync(rulesDir).filter((f) => f.endsWith(".mdc") || f.endsWith(".md")).length;
+      }
+      out.push({ dir: `${p}/${d}`, version: d, rules });
+    }
+  }
+  return out;
+}
+
+/** primer 正文：剥 U+200B 后取 '## ' 小节标题 + frontmatter to/from */
+function kbPrimerInfo(relPath) {
+  const raw = readFileSync(join(REPO_ROOT, relPath), "utf8").split(ZERO_WIDTH).join("");
+  const strip = (s) => s.trim().replace(/^"|"$/g, "");
+  return {
+    headings: [...raw.matchAll(/^## (.+)$/gm)].map((x) => x[1].trim()),
+    to: /^to:\s*(.+)$/m.exec(raw)?.[1] ? strip(/^to:\s*(.+)$/m.exec(raw)[1]) : null,
+    from: /^from:\s*(.+)$/m.exec(raw)?.[1] ? strip(/^from:\s*(.+)$/m.exec(raw)[1]) : null,
+  };
+}
+
+const KB_PIN_SOURCES = {
+  forge: (k) => `data/forge-versions-manifest.json#versions['${k}'].forgeVersion`,
+  neoforge: (k) => `data/neoforge-versions-manifest.json#versions['${k}'].neoforgeVersion`,
+  fabric: (k) => `data/fabric_${k}/meta.json#loader.version`,
+  java: (k) =>
+    kbResolvePointer(`data/neoforge-versions-manifest.json#versions['${k}'].javaVersion`).ok
+      ? `data/neoforge-versions-manifest.json#versions['${k}'].javaVersion`
+      : `data/forge-versions-manifest.json#versions['${k}'].javaVersion`,
+  mappings: (k) =>
+    kbResolvePointer(`data/neoforge-versions-manifest.json#versions['${k}'].mappings`).ok
+      ? `data/neoforge-versions-manifest.json#versions['${k}'].mappings`
+      : `data/forge-versions-manifest.json#versions['${k}'].mappings`,
+};
+
+/** 证据指针：data/... 走 JSON 指针；src:javaForMcVersion 走代码值 */
+function kbResolveSource(key, pointer) {
+  if (pointer === "src:javaForMcVersion") return { ok: true, value: javaForMcVersion(key) ?? null };
+  return kbResolvePointer(pointer);
+}
+
+async function testPortingKbProvenance() {
+  const kb = JSON.parse(readFileSync(join(REPO_ROOT, PORTING_KB_REL), "utf8"));
+  const keys = Object.keys(kb.versions);
+  const meta = kb.meta ?? {};
+  const legacyKeys = new Set(meta.legacyUntaggedKeys ?? []);
+  const asSet = (arr) => new Set((arr ?? []).map(String));
+  const sameSet = (a, b, label) => {
+    const missing = [...a].filter((x) => !b.has(x));
+    const stale = [...b].filter((x) => !a.has(x));
+    assert.deepEqual(
+      { label, 未登记: missing, 过期登记: stale },
+      { label, 未登记: [], 过期登记: [] },
+      "登记必须双向：新增缺口要登记，缺口已补上要删登记",
+    );
+  };
+
+  // G1 形状：合法版本键、完整字段、按版本号升序、老键集合与登记一致
+  assert.ok(keys.length >= 30, `KB 版本键数量退化：${keys.length}`);
+  const sortedNums = keys.map(kbVersionNumber);
+  assert.ok(sortedNums.every((n) => n !== null), `非法版本键：${keys.filter((k) => kbVersionNumber(k) === null)}`);
+  assert.deepEqual(
+    sortedNums,
+    [...sortedNums].sort((a, b) => a - b),
+    "versions 键必须按版本号升序（人读时才能一眼看出漏档）",
+  );
+  for (const k of keys) {
+    const e = kb.versions[k];
+    for (const f of ["forge", "neoforge", "fabric", "java", "mappings", "docSource", "breakingChanges"]) {
+      assert.ok(f in e, `${k} 缺字段 ${f}`);
+    }
+    assert.ok(Array.isArray(e.mappings), `${k}.mappings 必须是数组`);
+    assert.ok(Array.isArray(e.breakingChanges), `${k}.breakingChanges 必须是数组`);
+  }
+  const untagged = keys.filter((k) => !legacyKeys.has(k));
+  assert.ok(
+    untagged.every((k) => kb.versions[k].provenance === "verified"),
+    `新条目必须 provenance=verified：${untagged.filter((k) => kb.versions[k].provenance !== "verified")}`,
+  );
+  assert.deepEqual(
+    keys.filter((k) => kb.versions[k].provenance === undefined).sort(),
+    [...legacyKeys].sort(),
+    "老键集合与 meta.legacyUntaggedKeys 不一致（该清单只能缩小，不能扩张）",
+  );
+  assert.ok(
+    [...legacyKeys].every((k) => kb.versions[k]),
+    `meta.legacyUntaggedKeys 里有不存在的键：${[...legacyKeys].filter((k) => !kb.versions[k])}`,
+  );
+
+  // G2 正向：每个 KB 键要么有同名规则树，要么登记为已知缺口
+  const trees = kbRuleTreeDirs();
+  const treeVersions = new Set(trees.map((t) => t.version));
+  sameSet(
+    asSet(keys.filter((k) => !treeVersions.has(k))),
+    asSet(Object.keys(meta.kbKeysWithoutRuleTree ?? {})),
+    "KB 键无同名规则树",
+  );
+  for (const [k, why] of Object.entries(meta.kbKeysWithoutRuleTree ?? {})) {
+    assert.ok(String(why).length > 10, `${k} 的缺口说明太短：${why}`);
+  }
+
+  // G3 反向：每棵规则树要么有 KB 键（26.x.y 折到 26.x），要么登记；0 规则树 == draft 登记
+  const familyKey = (ver) => {
+    if (kb.versions[ver]) return ver;
+    const m = /^26\.(\d+)\.\d+$/.exec(ver);
+    return m && kb.versions[`26.${m[1]}`] ? `26.${m[1]}` : null;
+  };
+  sameSet(
+    asSet(trees.map((t) => t.dir).filter((d) => !familyKey(d.split("/")[1]))),
+    asSet(Object.keys(meta.knownRuleTreeGaps ?? {})),
+    "规则树无 KB 键",
+  );
+  sameSet(
+    asSet(trees.filter((t) => t.rules === 0).map((t) => `${t.dir}=0`)),
+    asSet(Object.keys(meta.knownDraftRuleTrees ?? {}).map((d) => `${d}=0`)),
+    "0 规则 draft 树",
+  );
+
+  // G4 primer 派生的 breakingChanges：标题逐字可回查，且没有静默漏小节
+  const excluded = asSet(meta.breakingChangesRule?.excludedHeadings ?? ["Minor Migrations"]);
+  const primerFiles = readdirSync(join(REPO_ROOT, PRIMER_DIR_REL)).filter((f) => f.endsWith(".md"));
+  const primerByTarget = new Map();
+  for (const f of primerFiles) {
+    const info = kbPrimerInfo(`${PRIMER_DIR_REL}/${f}`);
+    if (info.to) primerByTarget.set(info.to, { file: `${PRIMER_DIR_REL}/${f}`, ...info });
+  }
+  for (const k of keys) {
+    for (const item of kb.versions[k].breakingChanges) {
+      if (!item.evidence) continue;
+      assert.ok(
+        item.evidence.startsWith(PRIMER_DIR_REL + "/"),
+        `${k}: breakingChanges.evidence 只能指向 ${PRIMER_DIR_REL}/（其余来源本门禁不认）→ ${item.evidence}`,
+      );
+      assert.ok(existsSync(join(REPO_ROOT, item.evidence)), `${k}: evidence 指向不存在的 ${item.evidence}`);
+      const headings = kbPrimerInfo(item.evidence).headings;
+      assert.ok(
+        headings.includes(item.evidenceHeading),
+        `${k}: 小节「${item.evidenceHeading}」在 ${item.evidence} 里找不到（凭记忆写的？）`,
+      );
+      assert.equal(item.description, item.evidenceHeading, `${k}: description 必须逐字等于 primer 小节标题`);
+      assert.ok(!excluded.has(item.evidenceHeading), `${k}: ${item.evidenceHeading} 属于排除小节`);
+    }
+    const p = primerByTarget.get(k);
+    if (!p || kb.versions[k].provenance !== "verified") continue;
+    const kept = p.headings.filter((h) => !excluded.has(h));
+    const mine = kb.versions[k].breakingChanges.filter((i) => i.evidence === p.file);
+    assert.equal(
+      mine.length,
+      kept.length,
+      `${k}: primer ${p.file} 有 ${kept.length} 个小节，KB 只收了 ${mine.length} 个 → ${kept.filter((h) => !mine.some((i) => i.evidenceHeading === h))}`,
+    );
+    for (const i of mine) assert.equal(i.primerRange, `${p.from} -> ${k}`, `${k}: primerRange 与 primer frontmatter 不符`);
+  }
+  for (const k of keys) {
+    const e = kb.versions[k];
+    if (e.provenance === "verified" && e.breakingChanges.length === 0 && !primerByTarget.get(k)) {
+      assert.ok(String(e.note ?? "").length > 10, `${k}: breakingChanges 为空且无 primer ⇒ 必须有 note 说明「不代表无风险」`);
+    }
+  }
+
+  // G5 可追溯性：verified 条目每个非空钉值都要有能解析且逐字相等的指针
+  const normMappings = (v) => (typeof v === "string" ? v.split("+").map((s) => s.trim()).filter(Boolean) : v);
+  const eqField = (field, kbVal, srcVal) => {
+    if (field === "java") return Number(kbVal) === Number(srcVal);
+    if (field === "mappings") return JSON.stringify(kbVal) === JSON.stringify(normMappings(srcVal));
+    return String(kbVal) === String(srcVal);
+  };
+  for (const k of untagged) {
+    const e = kb.versions[k];
+    const src = e.sources ?? {};
+    for (const field of ["forge", "neoforge", "fabric", "java", "mappings"]) {
+      const has = field === "mappings" ? (e[field]?.length ?? 0) > 0 : e[field] != null;
+      if (!has) continue;
+      assert.ok(src[field], `${k}: ${field}=${JSON.stringify(e[field])} 没有 sources.${field} 证据指针`);
+      const r = kbResolveSource(k, src[field]);
+      assert.ok(r.ok, `${k}: sources.${field} 无法解析 → ${src[field]}（${r.why}）`);
+      assert.ok(
+        eqField(field, e[field], r.value),
+        `${k}: ${field}=${JSON.stringify(e[field])} 与来源 ${src[field]}=${JSON.stringify(r.value)} 不符`,
+      );
+    }
+    for (const token of [...String(src.ruleTrees ?? "").split(", "), ...String(src.dataDirs ?? "").split(", ")]) {
+      if (!token) continue;
+      assert.ok(existsSync(join(REPO_ROOT, token)), `${k}: sources 指向不存在的路径 ${token}`);
+    }
+  }
+
+  // G6 java：KB 与 javaForMcVersion 不一致必须登记
+  const javaConflicts = asSet(
+    (meta.fieldConflicts ?? []).filter((c) => c.field === "java" && c.sourceFile === "src:javaForMcVersion").map((c) => c.key),
+  );
+  for (const k of keys) {
+    const e = kb.versions[k];
+    if (e.java == null) continue;
+    const code = javaForMcVersion(k);
+    if (code == null || Number(e.java) === code) {
+      assert.ok(!javaConflicts.has(k), `${k}: 已登记 java 冲突，但代码值 ${code} 与 KB ${e.java} 已一致（登记过期）`);
+      continue;
+    }
+    assert.ok(
+      javaConflicts.has(k),
+      `${k}: KB java=${e.java} 与 javaForMcVersion=${code} 不一致，必须登记进 meta.fieldConflicts`,
+    );
+  }
+
+  // G7 行为边界（本 story 的验收）：1.20.1 → 1.21.1 / 26.1 必须给 KB 驱动的步骤
+  const fabricGradle = "plugins { id 'fabric-loom' version '1.6-SNAPSHOT' }\n";
+  const fabricJson = JSON.stringify({ schemaVersion: 1, id: "fabmod", version: "1.0.0" });
+  for (const target of ["1.21.1", "26.1"]) {
+    const root = mkdtempSync(join(tmpdir(), "mc-skill-kb-"));
+    try {
+      for (const [p, content] of Object.entries({
+        "build.gradle": fabricGradle,
+        "gradle.properties": "minecraft_version=1.20.1\n",
+        "src/main/resources/fabric.mod.json": fabricJson,
+      })) {
+        mkdirSync(join(root, dirname(p)), { recursive: true });
+        writeFileSync(join(root, p), content, "utf8");
+      }
+      const out = JSON.parse(await analyzePortingPath({ projectPath: root, targetPlatform: "neoforge", targetVersion: target }));
+      assert.equal(out.ok, true, `1.20.1→${target}: ${JSON.stringify(out.error)}`);
+      const a = out.analysis;
+      assert.deepEqual(a.knowledgeGaps, [], `1.20.1→${target}: 仍有 KB 空洞 ${JSON.stringify(a.knowledgeGaps)}`);
+      const beyond1202 = a.breakingChanges.filter((c) => kbVersionNumber(c.mcVersion) > kbVersionNumber("1.20.2"));
+      assert.ok(
+        beyond1202.length > 0,
+        `1.20.1→${target}: breakingChanges 只来自 1.20.2 以下（${a.breakingChanges.length} 条），新键没进区间`,
+      );
+      assert.equal(a.target.java, kb.versions[target].java, `1.20.1→${target}: target.java 未走 KB`);
+      assert.equal(a.target.mappings, kb.versions[target].mappings[0], `1.20.1→${target}: target.mappings 未走 KB`);
+      const handoff = a.nextSteps.find((n) => n.tool === "port_project" && n.args?.action === "init_architectury");
+      assert.ok(
+        handoff,
+        `1.20.1→${target}: 缺 init_architectury 交接（KB neoforge 钉值没被消费）→ ${JSON.stringify(a.nextSteps.map((n) => n.args))}`,
+      );
+      assert.equal(
+        handoff.args.neoforgeVersion,
+        kb.versions[target].neoforge,
+        `1.20.1→${target}: 交接里的 neoforgeVersion 与 KB 钉值不符`,
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+
+  // G8 漂移扫描 ↔ meta.fieldConflicts 双向闭合
+  const drifts = [];
+  for (const k of keys) {
+    const e = kb.versions[k];
+    for (const field of ["forge", "neoforge", "fabric", "java", "mappings"]) {
+      const pointer = KB_PIN_SOURCES[field](k);
+      const r = kbResolvePointer(pointer);
+      const has = field === "mappings" ? (e[field]?.length ?? 0) > 0 : e[field] != null;
+      if (!r.ok || r.value == null || !has) {
+        if (has && field !== "java" && field !== "mappings") {
+          assert.ok(
+            (meta.fieldConflicts ?? []).some((c) => c.key === k && c.field === field),
+            `${k}: ${field}=${JSON.stringify(e[field])} 在本仓无钉值来源，必须登记 meta.fieldConflicts`,
+          );
+        }
+        continue;
+      }
+      if (!eqField(field, e[field], r.value)) drifts.push({ key: k, field, kb: e[field], src: r.value, sourceFile: pointer });
+    }
+  }
+  const registered = (meta.fieldConflicts ?? []).filter((c) => {
+    const pointer = KB_PIN_SOURCES[c.field]?.(c.key);
+    return pointer && pointer === c.sourceFile && kbResolvePointer(pointer).ok;
+  });
+  const tag = (d) => `${d.key}.${d.field}`;
+  sameSet(asSet(drifts.map(tag)), asSet(registered.map(tag)), "字段漂移");
+  for (const d of drifts) {
+    const c = registered.find((x) => x.key === d.key && x.field === d.field);
+    assert.ok(c, `${d.key}.${d.field}: 漂移未登记`);
+    assert.ok(eqField(d.field, c.kb, d.kb), `${d.key}.${d.field}: 登记的 kb 值 ${JSON.stringify(c.kb)} 与实际 ${JSON.stringify(d.kb)} 不符`);
+    assert.ok(eqField(d.field, d.src, c.source), `${d.key}.${d.field}: 登记的 source 值 ${JSON.stringify(c.source)} 与实际来源 ${JSON.stringify(d.src)} 不符`);
+  }
+  // 每条登记（含 code / 文档型）引用的证据必须仍然成立
+  for (const c of meta.fieldConflicts ?? []) {
+    if (c.sourceFile === "src:javaForMcVersion") {
+      assert.equal(javaForMcVersion(c.key), c.source, `${c.key}: 登记的代码值已变 → ${javaForMcVersion(c.key)}`);
+      continue;
+    }
+    const r = kbResolvePointer(c.sourceFile);
+    if (c.source === null) {
+      assert.ok(!r.ok, `${c.key}.${c.field}: 登记的 source=null（本仓无来源），但 ${c.sourceFile} 现在可解析了`);
+      continue;
+    }
+    assert.ok(r.ok, `${c.key}.${c.field}: 登记证据失效 → ${c.sourceFile}（${r.why}）`);
+    assert.equal(String(r.value), String(c.source), `${c.key}.${c.field}: 登记证据值已变 → ${JSON.stringify(r.value)}`);
+  }
+}
+
+// S13：Fabric scaffold Gradle wrapper 三件套完整性 + 官方字节一致性
+// jar 来源的仓内证据见 mcp-server/data/wrapper-jars.json（官方发行包 sha256 → 该版本自己的
+// wrapper 任务离线生成 → 逐字节比对 zip 内嵌条目）。本表与该文件由 diffWrapperPins 强制对齐。
+const WRAPPER_JARS = {
+  "6.9.4": { sha256: "e996d452d2645e70c01c11143ca2d3742734a28da2bf61f25c82bdc288c9e637", size: 59203 },
+  "7.4.2": { sha256: "575098db54a998ff1c6770b352c3b16766c09848bee7555dab09afc34e8cf590", size: 59821 },
+  "7.6.1": { sha256: "c5a643cf80162e665cc228f7b16f343fef868e47d3a4836f62e18b7e17ac018a", size: 61574 },
+  "8.4": { sha256: "0336f591bc0ec9aa0c9988929b93ecc916b3c1d52aed202c7381db144aa0ef15", size: 63721 },
+  "8.6": { sha256: "d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd", size: 43462 },
+  "8.8": { sha256: "cb0da6751c2b753a16ac168bb354870ebb1e162e9083f116729cec9c781156b8", size: 43453 },
+  "8.10": { sha256: "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046", size: 43583 },
+  "9.5.1": { sha256: "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7", size: 48462 },
+};
+// 钉值表本身必须先过格式校验：抄错一位 hex 会让该版本所有 scaffold 被误判为「被篡改」。
+function findMalformedPins(table) {
+  return Object.entries(table)
+    .filter(([, e]) => !/^[0-9a-f]{64}$/.test(String(e?.sha256)) || !Number.isInteger(e?.size) || e.size <= 0)
+    .map(([v, e]) => `钉值 ${v} 格式非法：sha256=${e?.sha256}（须 64 位小写 hex）size=${e?.size}`);
+}
+// 无 gradle-wrapper.properties 的档：写三件套必须先定 Gradle 版本，版本无仓内证据 → 登记空洞。
+// 补齐后必须从这里删掉（登记过期同样算失败）。
+const WRAPPER_VERSION_GAPS = ["1.21.4", "1.21.8", "1.21.10", "26.1.2"];
+
+function scanScaffoldWrappers(root) {
+  const fabricDir = join(root, "fabric");
+  const problems = [];
+  const seen = [];
+  const byVersion = {};
+  for (const ver of readdirSync(fabricDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)) {
+    const scaffold = join(fabricDir, ver, "scaffold");
+    if (!existsSync(scaffold)) continue;
+    seen.push(ver);
+    const propsPath = join(scaffold, "gradle", "wrapper", "gradle-wrapper.properties");
+    const files = {
+      gradlew: join(scaffold, "gradlew"),
+      gradlewBat: join(scaffold, "gradlew.bat"),
+      jar: join(scaffold, "gradle", "wrapper", "gradle-wrapper.jar"),
+    };
+    const hasProps = existsSync(propsPath);
+    const propsText = hasProps ? readFileSync(propsPath, "utf8") : "";
+    const declared = hasProps ? propsText.match(/^distributionUrl=.+?gradle-([0-9][0-9A-Za-z.]*)-bin\.zip$/m)?.[1] ?? null : null;
+    if (declared == null) {
+      if (hasProps) problems.push(`${ver}: distributionUrl 解析不出 gradle-x.y.z`);
+      for (const [name, p] of Object.entries(files)) {
+        if (existsSync(p)) problems.push(`${ver}: 没有已声明版本却存在 ${name}`);
+      }
+      continue;
+    }
+    const pin = WRAPPER_JARS[declared];
+    if (!pin) {
+      problems.push(`${ver}: 声明 Gradle ${declared} 不在 WRAPPER_JARS 钉值表内`);
+      continue;
+    }
+    (byVersion[declared] ??= []).push(`fabric/${ver}`);
+    for (const [name, p] of Object.entries(files)) {
+      if (!existsSync(p)) problems.push(`${ver}: 声明 ${declared} 但缺 ${name}`);
+    }
+    if (!existsSync(files.jar) || !existsSync(files.gradlew) || !existsSync(files.gradlewBat)) continue;
+    const buf = readFileSync(files.jar);
+    const sha = createHash("sha256").update(buf).digest("hex");
+    if (sha !== pin.sha256) problems.push(`${ver}: jar sha256=${sha} != 官方 ${pin.sha256}`);
+    if (buf.length !== pin.size) problems.push(`${ver}: jar ${buf.length}B != 官方 ${pin.size}B`);
+    const count = (b, byte) => b.reduce((n, x) => n + (x === byte ? 1 : 0), 0);
+    const gw = readFileSync(files.gradlew);
+    const bat = readFileSync(files.gradlewBat);
+    if (count(gw, 13) !== 0) problems.push(`${ver}: gradlew 含 CR（须 LF-only）`);
+    if (count(gw, 10) === 0) problems.push(`${ver}: gradlew 为空`);
+    if (count(bat, 13) === 0 || count(bat, 13) !== count(bat, 10)) problems.push(`${ver}: gradlew.bat 非纯 CRLF`);
+    if (/^distributionUrl=file:/m.test(propsText)) problems.push(`${ver}: distributionUrl 指向本地路径`);
+  }
+  // 登记双向：无声明版本的 scaffold 必须在 WRAPPER_VERSION_GAPS；登记了就要仍然成立
+  const gapSet = new Set(WRAPPER_VERSION_GAPS);
+  for (const ver of seen) {
+    const hasProps = existsSync(join(fabricDir, ver, "scaffold", "gradle", "wrapper", "gradle-wrapper.properties"));
+    if (hasProps && gapSet.has(ver)) problems.push(`${ver}: 已登记为「无 Gradle 版本」空洞，但现在有 gradle-wrapper.properties（登记过期）`);
+    if (!hasProps && !gapSet.has(ver)) problems.push(`${ver}: 无 gradle-wrapper.properties，必须登记进 WRAPPER_VERSION_GAPS`);
+  }
+  for (const ver of WRAPPER_VERSION_GAPS) {
+    if (!seen.includes(ver)) problems.push(`${ver}: 登记在 WRAPPER_VERSION_GAPS，但没有 scaffold（登记过期）`);
+  }
+  const declaredCount = seen.filter((v) => existsSync(join(fabricDir, v, "scaffold", "gradle", "wrapper", "gradle-wrapper.properties"))).length;
+  const sortedByVersion = {};
+  for (const ver of Object.keys(byVersion).sort()) sortedByVersion[ver] = byVersion[ver].sort();
+  return { seen: seen.sort(), problems, declaredCount, byVersion: sortedByVersion };
+}
+
+// 钉值表 ↔ mcp-server/data/wrapper-jars.json 双向对齐。纯函数、不碰盘，可内存投毒自证。
+function diffWrapperPins(table, prov, byVersion, gaps = WRAPPER_VERSION_GAPS) {
+  const problems = [];
+  const jars = prov?.jars ?? {};
+  const tableVers = Object.keys(table).sort().join(",");
+  const provVers = Object.keys(jars).sort().join(",");
+  if (tableVers !== provVers) problems.push(`版本集不一致：钉值表 [${tableVers}] != wrapper-jars.json [${provVers}]`);
+  for (const [ver, e] of Object.entries(jars)) {
+    if (!/^[0-9a-f]{64}$/.test(String(e?.jarSha256))) problems.push(`${ver}: JSON jarSha256 非 64 位小写 hex → ${e?.jarSha256}`);
+    if (e?.verified === "official-distribution" && !/^[0-9a-f]{64}$/.test(String(e?.zipSha256)))
+      problems.push(`${ver}: 宣称 official-distribution 却没有 64 位 hex zipSha256`);
+    const pin = table[ver];
+    if (!pin) continue;
+    if (String(e.jarSha256) !== String(pin.sha256)) problems.push(`${ver}: JSON jarSha256 != 钉值表 sha256（表里被改 or 证据过期）`);
+    if (Number(e.jarSize) !== Number(pin.size)) problems.push(`${ver}: JSON jarSize=${e.jarSize} != 钉值表 size=${pin.size}`);
+    const claimed = [...(Array.isArray(e.usedBy) ? e.usedBy : [])].sort().join(",");
+    const measured = [...(byVersion[ver] ?? [])].sort().join(",");
+    if (claimed !== measured) problems.push(`${ver}: JSON usedBy=[${claimed}] != 实测 scaffold [${measured}]`);
+  }
+  const jsonGaps = [...(prov?.gaps?.wrapperVersionUndeclared ?? [])].sort().join(",");
+  const codeGaps = [...gaps].sort().join(",");
+  if (jsonGaps !== codeGaps) problems.push(`JSON gaps=[${jsonGaps}] != WRAPPER_VERSION_GAPS=[${codeGaps}]`);
+  return problems;
+}
+
+async function testFabricScaffoldWrappers() {
+  assert.deepEqual(findMalformedPins(WRAPPER_JARS), [], "WRAPPER_JARS 钉值格式非法");
+  assert.equal(findMalformedPins({ "8.4": { sha256: "0336f591bc0ec9aa0c9988929b93ecc916b3c1d52aed202c7381db144aa0ef15".repeat(63), size: 63721 } }).length, 1, "钉值格式校验必须能报错");
+  const { seen, problems, declaredCount, byVersion } = scanScaffoldWrappers(REPO_ROOT);
+  assert.equal(seen.length, 14, `fabric/*/scaffold 应为 14 档，实际 ${seen.length} → ${seen.join(",")}`);
+  assert.equal(declaredCount, 10, `已声明 Gradle 版本且应完整的档数应为 10，实际 ${declaredCount}`);
+  assert.deepEqual(problems, [], `scaffold wrapper 门禁:\n  ${problems.join("\n  ")}`);
+
+  const provPath = join(REPO_ROOT, "mcp-server", "data", "wrapper-jars.json");
+  assert.ok(existsSync(provPath), `缺仓内出处记录 ${provPath}（钉值表失去可查证据）`);
+  const prov = JSON.parse(readFileSync(provPath, "utf8"));
+  assert.deepEqual(
+    diffWrapperPins(WRAPPER_JARS, prov, byVersion),
+    [],
+    "WRAPPER_JARS ↔ mcp-server/data/wrapper-jars.json ↔ 实测 scaffold 三者不一致");
+
+  // 自证：7 种注入必须各让门禁报出对应问题（门禁若永远绿 = 没在检查）
+  const poison = (name, needle, mutate) => {
+    const tmp = mkdtempSync(join(tmpdir(), "mc-skill-wrap-"));
+    try {
+      cpSync(join(REPO_ROOT, "fabric"), join(tmp, "fabric"), { recursive: true });
+      mutate(join(tmp, "fabric"));
+      const r = scanScaffoldWrappers(tmp);
+      assert.ok(r.problems.length > 0, `${name}: 注入后门禁仍然全绿`);
+      const hit = r.problems.filter((p) => p.includes(needle));
+      assert.ok(hit.length > 0, `${name}: 门禁报错但不含「${needle}」→ ${JSON.stringify(r.problems.slice(0, 3))}`);
+      return hit[0].split(":")[0];
+    } finally {
+      rmSync(tmp, { recursive: true, force: true });
+    }
+  };
+  const touched = new Set([
+    poison("缺 gradlew", "但缺 gradlew", (f) => rmSync(join(f, "1.20.1", "scaffold", "gradlew"))),
+    poison("jar 被篡改", "jar sha256", (f) =>
+      writeFileSync(join(f, "1.21.3", "scaffold", "gradle", "wrapper", "gradle-wrapper.jar"), Buffer.from([0x50, 0x4b, 0x03, 0x04]))),
+    poison("gradlew 行尾", "gradlew 含 CR", (f) => {
+      const p = join(f, "1.19.4", "scaffold", "gradlew");
+      writeFileSync(p, readFileSync(p).toString("utf8").replace(/\n/g, "\r\n"));
+    }),
+    poison("bat 行尾", "非纯 CRLF", (f) => {
+      const p = join(f, "1.18.2", "scaffold", "gradlew.bat");
+      writeFileSync(p, readFileSync(p).toString("utf8").replace(/\r\n/g, "\n"));
+    }),
+    poison("版本未钉", "不在 WRAPPER_JARS 钉值表内", (f) => {
+      const p = join(f, "1.17.1", "scaffold", "gradle", "wrapper", "gradle-wrapper.properties");
+      writeFileSync(p, readFileSync(p).toString("utf8").replace("gradle-7.4.2-bin.zip", "gradle-7.5-bin.zip"));
+    }),
+    poison("空洞档半套", "没有已声明版本却存在", (f) =>
+      writeFileSync(join(f, "26.1.2", "scaffold", "gradlew"), "#!/bin/sh\n")),
+    poison("登记过期", "登记过期", (f) => {
+      mkdirSync(join(f, "1.21.8", "scaffold", "gradle", "wrapper"), { recursive: true });
+      writeFileSync(
+        join(f, "1.21.8", "scaffold", "gradle", "wrapper", "gradle-wrapper.properties"),
+        "distributionUrl=https\\://services.gradle.org/distributions/gradle-8.10-bin.zip\n",
+      );
+    }),
+  ]);
+  assert.equal(touched.size, 7, `7 种注入应命中 7 个不同档，实际 ${touched.size} → ${JSON.stringify([...touched])}`);
+
+  // 自证：钉值表 ↔ 仓内出处记录 的三向对齐也能报错（纯内存投毒，不动盘）
+  const pinPoison = (name, needle, mutate) => {
+    const t = structuredClone(WRAPPER_JARS);
+    const p = structuredClone(prov);
+    const v = structuredClone(byVersion);
+    const g = [...WRAPPER_VERSION_GAPS];
+    mutate({ table: t, prov: p, byVersion: v, gaps: g });
+    const hits = diffWrapperPins(t, p, v, g).filter((s) => s.includes(needle));
+    assert.ok(hits.length > 0, `${name}: 对齐门禁没报出「${needle}」`);
+    return needle;
+  };
+  const pinChecked = new Set([
+    // 抄错一位 hex（本story 真的在 JSON 里犯过一次：8.4 sha 少了一位）
+    pinPoison("钉值被截位", "8.4: JSON jarSha256 != 钉值表", ({ table }) => {
+      table["8.4"].sha256 = table["8.4"].sha256.slice(0, 63);
+    }),
+    pinPoison("usedBy 漂移", "usedBy=", ({ prov: p }) => {
+      p.jars["8.4"].usedBy = ["fabric/1.18.2", "fabric/1.19.4"];
+    }),
+    pinPoison("空洞登记漂移", "JSON gaps=", ({ prov: p }) => {
+      p.gaps.wrapperVersionUndeclared = p.gaps.wrapperVersionUndeclared.filter((x) => x !== "1.21.4");
+    }),
+  ]);
+  assert.equal(pinChecked.size, 3, `3 种内存注入应各报一次，实际 ${pinChecked.size}`);
+  assert.deepEqual(diffWrapperPins(WRAPPER_JARS, prov, byVersion), [], "投毒后基线必须仍然干净");
+}
+
+// ---- S23：「断言须有出处」门禁 ----
+// 台账里每条 = 一个文件 + 一个敏感断言 needle + 可接受的出处 token。
+// 命中 needle 的行必须带至少一个 token；一条都不命中 = 断言消失（台账过期，同样算失败）。
+// 宿主镜像树（.agents/.claude/.continue/…）不在此扫描：scripts/assert-skill-mirrors.mjs
+// 已强制镜像与源树逐字节一致，扫源树即可覆盖。
+const PROVENANCE_ASSERTIONS = [
+  {
+    file: "forge/1.20.1/.cursor/rules/00-project-setup.mdc",
+    needle: "Gradle 8",
+    sources: ["mdk-checksums.json", "MDK"],
+    why: "Forge 档的 Gradle 下限只允许引用官方 MDK 的实测钉值，禁止凭记忆写「不低于某版本」",
+  },
+  {
+    file: "bedrock/.cursor/rules/07-script-api.mdc",
+    needle: "gametest",
+    sources: ["wiki.bedrock.dev"],
+    why: "「Beta APIs」键名属社区权威（非 Microsoft Learn 官方），必须写明出处等级",
+  },
+  {
+    file: "bedrock/knowledge/common/experiments.md",
+    needle: "gametest",
+    sources: ["wiki.bedrock.dev"],
+    why: "同上：键名结论的唯二出处都在这两档里",
+  },
+];
+const PROV_SKIP_DIRS = new Set(["node_modules", "dist", ".git", "temp", "_temp", "__oneoff"]);
+const PROV_SCAN_EXT = /\.(md|mdc|ts|js|mjs|json|ps1|txt)$/;
+const PROV_TEMP_CITE = /见\s*temp[\\/]/;
+
+function provenanceScanRoots(root) {
+  const roots = [
+    "mcp-server/src", "mcp-server/scripts", "mcp-server/test-core.mjs", "scripts",
+    "bedrock/.cursor/rules", "bedrock/knowledge", "knowledge", "community_knowledge",
+    "README.md", "AGENTS.md",
+  ];
+  for (const plat of ["forge", "fabric", "quilt", "neoforge", "liteloader", "rift", "modloader"]) {
+    const dir = join(root, plat);
+    if (!existsSync(dir)) continue;
+    for (const ver of readdirSync(dir)) {
+      if (existsSync(join(dir, ver, ".cursor", "rules"))) roots.push(`${plat}/${ver}/.cursor/rules`);
+      if (existsSync(join(dir, ver, "knowledge"))) roots.push(`${plat}/${ver}/knowledge`);
+      if (existsSync(join(dir, ver, "AGENTS.md"))) roots.push(`${plat}/${ver}/AGENTS.md`);
+    }
+  }
+  return roots;
+}
+
+function collectProvenanceFiles(root) {
+  const files = [];
+  const walk = (abs, rel) => {
+    if (statSync(abs).isDirectory()) {
+      for (const name of readdirSync(abs)) {
+        if (PROV_SKIP_DIRS.has(name)) continue;
+        walk(join(abs, name), `${rel}/${name}`);
+      }
+      return;
+    }
+    if (PROV_SCAN_EXT.test(abs)) files.push({ rel, text: readFileSync(abs, "utf8") });
+  };
+  const roots = provenanceScanRoots(root);
+  for (const rel of roots) {
+    const abs = join(root, rel);
+    if (existsSync(abs)) walk(abs, rel);
+  }
+  return { files, roots: roots.length };
+}
+
+// read(rel) → 文件正文；读不到返回 null。注入进来，便于内存投毒。
+function findUnsourcedAssertions(ledger, read) {
+  const problems = [];
+  for (const spec of ledger) {
+    const text = read(spec.file);
+    if (text == null) {
+      problems.push(`${spec.file}: 台账指向的文件读不到（${spec.why}）`);
+      continue;
+    }
+    const lines = text.split(/\r?\n/);
+    let hits = 0;
+    lines.forEach((ln, i) => {
+      if (!ln.includes(spec.needle)) return;
+      hits++;
+      if (spec.sources.some((s) => ln.includes(s))) return;
+      problems.push(
+        `${spec.file}:L${i + 1} 断言「${spec.needle}」缺出处 [${spec.sources.join(" / ")}] → ${ln.trim().slice(0, 90)}`);
+    });
+    if (hits === 0) problems.push(`${spec.file}: 断言「${spec.needle}」消失（台账过期：补回文案或删掉这条台账）`);
+  }
+  return problems;
+}
+
+function findTempCitations(files) {
+  const hits = [];
+  for (const f of files) {
+    f.text.split(/\r?\n/).forEach((ln, i) => {
+      if (PROV_TEMP_CITE.test(ln)) hits.push(`${f.rel}:${i + 1} ${ln.trim().slice(0, 120)}`);
+    });
+  }
+  return hits;
+}
+
+// wrapper-jars.json 的 MDK 实测记录 ↔ mcp-server/data/mdk-checksums.json ↔ 规则树数字，三向对齐。
+function diffMdkMeasured(entries, mdkEntries, ruleText) {
+  const problems = [];
+  for (const e of entries ?? []) {
+    const rec = (mdkEntries ?? []).find((r) => r.id === e.mdk);
+    if (!rec) {
+      problems.push(`mdkMeasured ${e.mdk}: mdk-checksums.json 里没有这个 id（证据链断）`);
+      continue;
+    }
+    if (String(rec.sha256) !== String(e.zipSha256)) problems.push(`mdkMeasured ${e.mdk}: zipSha256 != mdk-checksums.json sha256`);
+    if (!String(rec.archiveUrl ?? "").includes(String(e.artifact))) problems.push(`mdkMeasured ${e.mdk}: artifact ${e.artifact} 不在 archiveUrl 里`);
+    if (e.mdk === "forge-1.20.1-forgegradle") {
+      if (!ruleText.includes(String(e.artifact).replace("-mdk.zip", ""))) problems.push(`规则树没写 MDK 版本 ${e.artifact}`);
+      if (!ruleText.includes(`Gradle ${e.declaredGradle}`)) problems.push(`规则树没写实测 Gradle ${e.declaredGradle}（数字漂移）`);
+    }
+  }
+  return problems;
+}
+
+async function testAssertionProvenance() {
+  const read = (rel) => {
+    const p = join(REPO_ROOT, rel);
+    return existsSync(p) ? readFileSync(p, "utf8") : null;
+  };
+  const unsourced = findUnsourcedAssertions(PROVENANCE_ASSERTIONS, read);
+  assert.deepEqual(unsourced, [], `「断言须有出处」门禁:\n  ${unsourced.join("\n  ")}`);
+
+  const { files, roots } = collectProvenanceFiles(REPO_ROOT);
+  assert.ok(files.length >= roots, `出处扫描集塌陷：${roots} 个扫描根只读到 ${files.length} 个文件（门禁会假绿）`);
+  const dangling = findTempCitations(files);
+  assert.deepEqual(dangling, [], `持久文件里存在指向临时目录的失效引用（temp/ 不入库，读者拿不到）:\n  ${dangling.join("\n  ")}`);
+
+  const wrapJson = JSON.parse(readFileSync(join(REPO_ROOT, "mcp-server", "data", "wrapper-jars.json"), "utf8"));
+  const mdkJson = JSON.parse(readFileSync(join(REPO_ROOT, "mcp-server", "data", "mdk-checksums.json"), "utf8"));
+  const forgeRule = read("forge/1.20.1/.cursor/rules/00-project-setup.mdc") ?? "";
+  const mdkProblems = diffMdkMeasured(wrapJson.mdkMeasured?.entries, mdkJson.entries, forgeRule);
+  assert.deepEqual(mdkProblems, [], `MDK 实测记录 ↔ mdk-checksums.json ↔ 规则树数字不一致:\n  ${mdkProblems.join("\n  ")}`);
+  console.log(
+    `[assertion-provenance] 台账 ${PROVENANCE_ASSERTIONS.length} 条 · 扫描 ${roots} 根 / ${files.length} 档 · ` +
+    `失效引用 ${dangling.length} · MDK 实测 ${wrapJson.mdkMeasured.entries.length} 档`);
+
+  // 自证：每种注入都要报出对应问题，且报的是各自那条（不是同一处共享失败撑绿）
+  const poison = (name, needle, run) => {
+    const hits = run().filter((s) => s.includes(needle));
+    assert.ok(hits.length > 0, `${name}: 门禁没报出「${needle}」`);
+    return hits[0];
+  };
+  const fired = new Set([
+    // 还原审查报告点名的原始写法：保留「Gradle 8」，出处整段没了
+    poison("无出处下限", "缺出处", () => findUnsourcedAssertions(structuredClone(PROVENANCE_ASSERTIONS), (rel) => {
+      const t = read(rel);
+      return t == null ? t : t.replace(/^- Gradle Wrapper[^\n]*$/m, "- Gradle Wrapper 版本不低于 **Gradle 8.4**");
+    })),
+    // 出处 URL 改成无关域名（键名留着 = 凭空断言）
+    poison("出处被抹", "缺出处", () => findUnsourcedAssertions(structuredClone(PROVENANCE_ASSERTIONS), (rel) => {
+      const t = read(rel);
+      return t == null ? t : t.replace(/wiki\.bedrock\.dev/g, "wiki.example.com");
+    })),
+    poison("断言消失", "消失", () => findUnsourcedAssertions(structuredClone(PROVENANCE_ASSERTIONS), (rel) => {
+      const t = read(rel);
+      return t == null ? t : t.split(/\r?\n/).filter((ln) => !ln.includes("gametest")).join("\n");
+    })),
+    poison("台账文件不存在", "读不到", () =>
+      findUnsourcedAssertions([{ ...PROVENANCE_ASSERTIONS[0], file: "bedrock/knowledge/common/nope.md" }], read)),
+    poison("指向临时目录的引用", "temp", () => {
+      const target = files.find((f) => f.rel.split("/").length > 3);
+      assert.ok(target, "扫描集里没有嵌套文件可用于投毒");
+      // 「见」用转义写，否则本文件自己会被这条扫描命中
+      const injected = "\u8be6\u89c1 temp/whatever.md";
+      return findTempCitations(files.map((f) => (f === target ? { ...f, text: `${f.text}\n${injected}\n` } : f)));
+    }),
+    poison("MDK 版本漂移", "Gradle 8.9", () => {
+      const e = structuredClone(wrapJson.mdkMeasured.entries);
+      e.find((x) => x.mdk === "forge-1.20.1-forgegradle").declaredGradle = "8.9";
+      return diffMdkMeasured(e, mdkJson.entries, forgeRule);
+    }),
+    poison("MDK 校验和漂移", "zipSha256", () => {
+      const e = structuredClone(wrapJson.mdkMeasured.entries);
+      e[0].zipSha256 = "f".repeat(64);
+      return diffMdkMeasured(e, mdkJson.entries, forgeRule);
+    }),
+    poison("MDK id 失效", "没有这个 id", () => {
+      const e = structuredClone(wrapJson.mdkMeasured.entries);
+      e[0].mdk = "forge-1.99.9-forgegradle";
+      return diffMdkMeasured(e, mdkJson.entries, forgeRule);
+    }),
+  ]);
+  assert.equal(fired.size, 8, `8 种注入应各报一条独立问题，实际 ${fired.size} → ${JSON.stringify([...fired])}`);
+  assert.deepEqual(findUnsourcedAssertions(PROVENANCE_ASSERTIONS, read), [], "投毒后基线必须仍然干净");
+  assert.deepEqual(findTempCitations(files), [], "投毒后引用扫描必须仍然干净");
+  assert.deepEqual(diffMdkMeasured(wrapJson.mdkMeasured.entries, mdkJson.entries, forgeRule), [], "投毒后 MDK 对齐必须仍然干净");
+}
+
+const F2612_PACK_REL = "fabric/26.1.2";
+const F2612_SHEET_REL = "knowledge/common/verified-api-26.1.2.md";
+const F2612_DOCS_REL = "data/fabric_26.1.2/fabric-docs/26.1.2/processed";
+const F2612_SUMMARY_REL = "mcp-server/data/loader-api-summaries/26.1.2-fabric-api.json";
+const F2612_MARKER = /禁止|不要|不得|❌|未核实|以该版|以本版|取代|换成|改名/;
+const F2612_TIER2 = ["modImplementation", "modCompileOnly", "modApi", "remapJar", 'id "fabric-loom"',
+  "ShapedRecipeJsonBuilder", "ShapelessRecipeJsonBuilder", "offerTo", "offerShapedRecipe", "RecipeExporter",
+  "ResourceLocation", "DeferredRegister", "@SubscribeEvent", "IEventBus", "ExistingFileHelper",
+  "PlayerEntity", "ActionResult", "Text.literal", "MinecraftClient", "ItemGroup", "SoundCategory",
+  "CommandManager", "EntityArgumentType", "ServerCommandSource", "SpawnGroup", "GenerationStep.Feature",
+  "HandledScreens", "FabricItemApi", "PacketCodec", "LootTableLoadingCallback", "SimpleChannel"];
+
+/** 表 C 不手抄：从本档 docs 语料的 porting 页重新派生同一份 needle 清单。 */
+function deriveFabric2612Needles(docsDir, summary) {
+  const md = readFileSync(join(docsDir, "develop_porting_fabric-api.md"), "utf8");
+  const allSimple = new Set(summary.classes.map((c) => c.simpleName));
+  const last = (s) => s.split("/").pop().replace(/\$.*$/, "");
+  const nested = (s) => s.split("/").pop();
+  const targets = new Map();
+  const newTokens = new Set();
+  for (const line of md.split(/\r?\n/)) {
+    const m = line.match(/^- `([^`]+)` → `([^`]+)`/);
+    if (!m) continue;
+    const a = last(m[1]);
+    const b = last(m[2]);
+    if (/^[A-Z][A-Za-z0-9_]{5,}$/.test(b)) newTokens.add(b);
+    if (/^[A-Z][A-Za-z0-9_]{5,}$/.test(a)) {
+      if (!targets.has(a)) targets.set(a, []);
+      targets.get(a).push(nested(m[2]));
+    }
+  }
+  const needles = [...targets.keys()].filter((a) => !newTokens.has(a) && !allSimple.has(a)).sort();
+  return { needles, targets };
+}
+
+function walkText(dir, out = []) {
+  if (!existsSync(dir)) return out;
+  for (const e of readdirSync(dir)) {
+    const p = join(dir, e);
+    if (statSync(p).isDirectory()) walkText(p, out);
+    else if (/\.(md|mdc|java|json|groovy|properties)$/.test(e)) out.push(p);
+  }
+  return out;
+}
+
+function f2612Sections(sheetText) {
+  const secs = {};
+  let cur = null;
+  for (const line of sheetText.split(/\r?\n/)) {
+    const h = line.match(/^## (.+)$/);
+    if (h) {
+      const t = h[1].match(/^表\s*([A-E])\b/);
+      cur = t ? `表${t[1]}` : null;
+      if (cur && !secs[cur]) secs[cur] = [];
+      continue;
+    }
+    if (!cur || !line.startsWith("| ")) continue;
+    if (/^\|[-\s|:]+\|?$/.test(line)) continue;
+    const cells = line.split("|").slice(1, -1).map((s) => s.trim());
+    if (!/[A-Za-z]/.test(cells[0] ?? "")) continue;
+    secs[cur].push(cells);
+  }
+  return secs;
+}
+
+function scanFabric2612Knowledge(opts = {}) {
+  const root = opts.root ?? REPO_ROOT;
+  const packDir = opts.packDir ?? join(root, F2612_PACK_REL);
+  const docsDir = opts.docsDir ?? join(root, F2612_DOCS_REL);
+  const summaryPath = opts.summaryPath ?? join(root, F2612_SUMMARY_REL);
+  const cloneDir = opts.cloneDir ?? join(root, "fabric/1.21.11/knowledge");
+  const sheetPath = join(packDir, ...F2612_SHEET_REL.split("/"));
+  const problems = [];
+  const stats = { files: 0, needles: 0, tableA: 0, tableB: 0, tableC: 0, tier1: 0, tier2: 0, verifiedApi: 0, sessionStatus: "skip" };
+
+  // 表必须落在 session 会列出的目录里，否则「知识入库」对宿主等于不存在
+  const sheetCandidates = walkText(join(packDir, "knowledge")).filter((f) => /verified-api/i.test(f));
+  if (!existsSync(sheetPath)) {
+    problems.push(sheetCandidates.length
+      ? `知识表不在 knowledge/common/ 下，session 递不出去：${sheetCandidates[0].replace(/\\/g, "/")}`
+      : `缺少 ${F2612_SHEET_REL}`);
+  }
+  if (!existsSync(summaryPath)) problems.push("26.1.2 fabric-api loader 摘要缺失");
+  if (!existsSync(join(docsDir, "develop_porting_fabric-api.md"))) problems.push("26.1.2 docs 语料缺 porting 页");
+
+  let needles = [];
+  let targets = new Map();
+  if (problems.length === 0) {
+    const summary = JSON.parse(readFileSync(summaryPath, "utf8"));
+    ({ needles, targets } = deriveFabric2612Needles(docsDir, summary));
+    stats.needles = needles.length;
+    const sheet = readFileSync(sheetPath, "utf8");
+    const fqcnSet = new Set(summary.classes.map((c) => c.fqcn));
+    const secs = f2612Sections(sheet);
+    const pageText = new Map();
+
+    // R1 逐行复算：表 A 的 loader-api FQCN 与 docs 页 id 必须真的存在、正文里真的写了那个名字
+    for (const cells of secs.表A ?? []) {
+      stats.tableA++;
+      const name = (cells[0].match(/`([^`]+)`/) ?? [])[1];
+      const src = cells[1] ?? "";
+      const note = cells[2] ?? "";
+      if (!name) { problems.push(`表 A 行解析不出名称：${cells[0]}`); continue; }
+      if (src.startsWith("loader-api")) {
+        const fqcns = [...src.matchAll(/`([a-z][\w.]*(?:\.[A-Z]\w*)+)`/g)].map((m) => m[1]);
+        if (fqcns.length === 0) problems.push(`表 A ${name}: 声明 loader-api 却没给出 FQCN`);
+        for (const f of fqcns) {
+          if (!fqcnSet.has(f) && !fqcnSet.has(f.split("$")[0])) problems.push(`表 A ${name}: loader-api 摘要内没有 ${f}`);
+        }
+      }
+      for (const id of [...note.matchAll(/`26\.1\.2\/([\w-]+)`/g)].map((m) => m[1])) {
+        const p = join(docsDir, `${id}.md`);
+        if (!existsSync(p)) { problems.push(`表 A ${name}: docs 页 ${id} 不存在`); continue; }
+        let text = pageText.get(id);
+        if (text === undefined) { text = readFileSync(p, "utf8"); pageText.set(id, text); }
+        if (!new RegExp(`\\b${name.split(".")[0]}\\b`).test(text)) problems.push(`表 A ${name}: docs 页 ${id} 正文里没有 ${name.split(".")[0]}`);
+      }
+    }
+
+    // R1b 表 B 签名逐字回查摘要（签名只能来自摘要，改一个字都要报）
+    const allBySimple = new Map();
+    for (const c of summary.classes) {
+      if (!allBySimple.has(c.simpleName)) allBySimple.set(c.simpleName, []);
+      allBySimple.get(c.simpleName).push(c);
+    }
+    for (const cells of secs.表B ?? []) {
+      stats.tableB++;
+      const head = (cells[0].match(/`([^`]+)`/) ?? [])[1] ?? "";
+      const sig = (cells[1].match(/`([^`]+)`/) ?? [])[1];
+      const citedFile = (cells[2].match(/[\w$/.-]+\.java/) ?? [])[0];
+      const isClassRow = /类级/.test(cells[0]);
+      if (isClassRow) {
+        const cs = allBySimple.get(head) ?? [];
+        if (!cs.length) { problems.push(`表 B ${head}: loader-api 摘要内没有类 ${head}`); continue; }
+        if (!/空数组/.test(cells[1])) problems.push(`表 B ${head}: 类级行未声明「methods 空数组」，读者会以为有方法`);
+        else if (!cs.some((c) => c.methods.length === 0)) problems.push(`表 B ${head}: 摘要内该类 methods 非空，「空数组」说法与摘要不一致`);
+        continue;
+      }
+      if (!sig) { problems.push(`表 B ${head}: 方法行没有签名`); continue; }
+      const [cls, method] = head.split(".");
+      const c = (allBySimple.get(cls) ?? []).find((x) => citedFile ? x.file === citedFile : true)
+        ?? (allBySimple.get(cls) ?? []).find((x) => x.methods.some((m) => m.name === method));
+      if (!c) { problems.push(`表 B ${head}: loader-api 摘要内没有类 ${cls}${citedFile ? `（源文件 ${citedFile}）` : ""}`); continue; }
+      const m = c.methods.find((x) => x.name === method);
+      if (!m) problems.push(`表 B ${head}: 摘要内 ${cls}${citedFile ? `（${citedFile}）` : ""} 没有方法 ${method}`);
+      else if (m.signature !== sig) problems.push(`表 B ${head}: 签名与摘要不一致（档内「${sig}」/ 摘要「${m.signature}」）`);
+    }
+
+    // R2 表 C 必须等于重新派生的 needle 清单
+    const rowC = (secs.表C ?? []).map((c) => (c[0].match(/`([^`]+)`/) ?? [])[1]).filter(Boolean);
+    stats.tableC = rowC.length;
+    for (const n of needles) if (!rowC.includes(n)) problems.push(`表 C 缺 needle ${n}（porting 页派生）`);
+    for (const n of rowC) if (!needles.includes(n)) problems.push(`表 C 多出 ${n}：不在本档派生清单内`);
+    for (const cells of secs.表C ?? []) {
+      const n = (cells[0].match(/`([^`]+)`/) ?? [])[1];
+      if (n && !(cells[1] ?? "").trim()) problems.push(`表 C ${n}: 没有 26.1.2 现名`);
+    }
+
+    // R4 反克隆：26.1.2/knowledge 任一文件不得与 1.21.11/knowledge 同哈希
+    if (existsSync(cloneDir)) {
+      const cloneHash = new Map(
+        walkText(cloneDir).map((f) => [createHash("sha256").update(readFileSync(f)).digest("hex"), f.replace(/\\/g, "/")]));
+      for (const f of walkText(join(packDir, "knowledge"))) {
+        const h = createHash("sha256").update(readFileSync(f)).digest("hex");
+        if (cloneHash.has(h)) problems.push(`26.1.2 知识文件 ${f.replace(/\\/g, "/").split("/knowledge/")[1]} 与 1.21.11 档 ${cloneHash.get(h)} 同哈希（克隆嫌疑）`);
+      }
+    }
+  }
+
+  // R5 AGENTS.md 要让宿主找得到这张表，并写清 26.1/26.1.1 折叠到 26.1.2
+  const agentsPath = join(packDir, "AGENTS.md");
+  if (!existsSync(agentsPath)) problems.push("缺少 fabric/26.1.2/AGENTS.md");
+  else {
+    const a = readFileSync(agentsPath, "utf8");
+    if (!a.includes("verified-api-26.1.2.md")) problems.push("AGENTS.md 未指向 verified-api-26.1.2.md（知识表对 session 读者不可发现）");
+    if (!/26\.1\.1/.test(a) || !a.includes("knowledgeVersion")) problems.push("AGENTS.md 未写清 26.1/26.1.1 → knowledgeVersion 折叠到 26.1.2");
+    if (!a.includes("禁止克隆")) problems.push("AGENTS.md 丢了「禁止克隆 fabric/1.21.11/knowledge」约束");
+  }
+
+  // R3 两条容忍规则：Tier-1 已死类名代码块内零容忍；块内 Tier-2 名必须邻近禁止措辞
+  if (!opts.skipTolerance && needles.length) {
+    const files = walkText(packDir);
+    stats.files = files.length;
+    const prefix = packDir.replace(/\\/g, "/") + "/";
+    for (const f of files) {
+      const rel = f.replace(/\\/g, "/").slice(prefix.length);
+      const text = readFileSync(f, "utf8");
+      const lines = text.split(/\r?\n/);
+      const inFence = new Array(lines.length).fill(false);
+      let open = false;
+      for (let i = 0; i < lines.length; i++) {
+        if (/^\s*(```|~~~)/.test(lines[i])) { open = !open; continue; }
+        inFence[i] = open;
+      }
+      for (let i = 0; i < lines.length; i++) {
+        for (const n of needles) {
+          if (!new RegExp(`\\b${n}\\b`).test(lines[i])) continue;
+          stats.tier1++;
+          if (inFence[i]) { problems.push(`${rel}:${i + 1} 代码块内出现已死类名 ${n} :: ${lines[i].trim().slice(0, 90)}`); continue; }
+          if (!targets.get(n).some((t) => lines[i].includes(t)) && !F2612_MARKER.test(lines[i])) {
+            problems.push(`${rel}:${i + 1} 提到 ${n} 但整行无 26.1.2 现名也无禁止措辞 :: ${lines[i].trim().slice(0, 90)}`);
+          }
+        }
+        for (const n of F2612_TIER2) {
+          if (!lines[i].includes(n)) continue;
+          stats.tier2++;
+          if (!inFence[i]) continue;
+          const ctx = lines.slice(Math.max(0, i - 3), Math.min(lines.length, i + 4)).join("\n");
+          const at = text.indexOf(lines[i]);
+          const whole = text.slice(Math.max(0, at - 240), at + lines[i].length + 240);
+          if (F2612_MARKER.test(ctx) || F2612_MARKER.test(whole)) continue;
+          problems.push(`${rel}:${i + 1} 代码块内出现 Yarn/邻版名 ${n} :: ${lines[i].trim().slice(0, 90)}`);
+        }
+      }
+    }
+  }
+
+  // R6 session 真路径必须把这张表递出去（activate_platform_pack 唯一能证明「可读」的出口）
+  if (!opts.skipSession) {
+    const session = sessionPlatformPack({ platform: "fabric", minecraftVersion: "26.1.2", repoRoot: opts.sessionRoot ?? join(packDir, "..", "..") });
+    const api = session?.verifiedApi ?? [];
+    stats.sessionStatus = session?.ok ? "ok" : String(session?.action?.code ?? "fail");
+    stats.verifiedApi = api.length;
+    if (!session?.ok) problems.push(`session fabric 26.1.2 不 ok（${stats.sessionStatus}）：知识表对宿主不可达`);
+    if (!api.some((x) => String(x.path).endsWith("verified-api-26.1.2.md"))) {
+      problems.push("activate_platform_pack session 的 verifiedApi 里没有 verified-api-26.1.2.md（知识表未进入会话）");
+    }
+  }
+  return { problems, stats };
+}
+
+async function testFabric2612Knowledge() {
+  const { problems, stats } = scanFabric2612Knowledge();
+  assert.equal(stats.needles, 72, `needle 清单应 72 条，实际 ${stats.needles}`);
+  assert.equal(stats.tableC, stats.needles, `表 C 行数应等于派生 needle 数 ${stats.needles}，实际 ${stats.tableC}`);
+  assert.ok(stats.files >= 400, `本档应扫到 ≥400 个文本文件（含 7 个投影树），实际 ${stats.files}`);
+  assert.ok(stats.tableA >= 60 && stats.tableB >= 10, `表 A/表 B 行数异常 ${stats.tableA}/${stats.tableB}`);
+  assert.ok(stats.tier1 >= 80 && stats.tier2 >= 400, `needle 命中数异常 tier1=${stats.tier1} tier2=${stats.tier2}`);
+  assert.equal(stats.verifiedApi, 1, `session 应递出 1 份 verified-api，实际 ${stats.verifiedApi}`);
+  assert.deepEqual(problems, [], `26.1.2 知识门禁:\n  ${problems.join("\n  ")}`);
+
+  const SHEET = join(REPO_ROOT, F2612_PACK_REL, ...F2612_SHEET_REL.split("/"));
+  const sheetText = readFileSync(SHEET, "utf8");
+  const agentsText = readFileSync(join(REPO_ROOT, F2612_PACK_REL, "AGENTS.md"), "utf8");
+  const withPack = (name, needle, mutate, opt = {}) => {
+    const tmp = mkdtempSync(join(tmpdir(), "mc-skill-f2612-"));
+    try {
+      const pack = join(tmp, "fabric/26.1.2");
+      mkdirSync(join(pack, "knowledge/common"), { recursive: true });
+      writeFileSync(join(pack, "knowledge/common/verified-api-26.1.2.md"), sheetText);
+      writeFileSync(join(pack, "AGENTS.md"), agentsText);
+      mutate(pack);
+      const r = scanFabric2612Knowledge({ packDir: pack, ...opt });
+      assert.ok(r.problems.length > 0, `${name}: 注入后门禁仍然全绿`);
+      const hit = r.problems.filter((p) => p.includes(needle));
+      assert.ok(hit.length > 0, `${name}: 门禁报错但不含「${needle}」→ ${JSON.stringify(r.problems.slice(0, 2))}`);
+      return hit.length;
+    } finally {
+      rmSync(tmp, { recursive: true, force: true });
+    }
+  };
+  const SKIP = { skipTolerance: true, skipSession: true };
+  const sheetTo = (mutate) => (pack) => {
+    const p = join(pack, "knowledge/common/verified-api-26.1.2.md");
+    writeFileSync(p, mutate(readFileSync(p, "utf8")));
+  };
+  const agentsTo = (mutate) => (pack) => {
+    const p = join(pack, "AGENTS.md");
+    writeFileSync(p, mutate(readFileSync(p, "utf8")));
+  };
+  const touched = {
+    表A假FQCN: withPack("表A 假 FQCN", "loader-api 摘要内没有", sheetTo((s) =>
+      s.replace("net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint", "net.fabricmc.fabric.api.datagen.v1.NoSuchEntrypoint")), SKIP),
+    表A假docs页: withPack("表A 假 docs id", "docs 页", sheetTo((s) =>
+      s.replace("`26.1.2/develop_data-generation_recipes`", "`26.1.2/develop_no_such_page`")), SKIP),
+    表A名字不在页内: withPack("表A 名字与页面对不上", "正文里没有", sheetTo((s) =>
+      s.replace("| `AttackBlockCallback` | loader-api `net.fabricmc.fabric.api.event.player.AttackBlockCallback` | docs `26.1.2/develop_events` |",
+        "| `AttackBlockCallback` | loader-api `net.fabricmc.fabric.api.event.player.AttackBlockCallback` | docs `26.1.2/develop_networking` |")), SKIP),
+    表B假签名: withPack("表B 假签名", "签名与摘要不一致", sheetTo((s) =>
+      s.replace("`void register(T)`", "`void registerCallback(T)`")), SKIP),
+    表C漏needle: withPack("表C 漏一行", "表 C 缺 needle FabricDataOutput", sheetTo((s) =>
+      s.replace(/\| `FabricDataOutput` \|[^\n]*\n/, "")), SKIP),
+    表C多余名: withPack("表C 多余一行", "表 C 多出 FabricGhostProvider", sheetTo((s) =>
+      s.replace(/\| `FabricDataOutput` \|/, "| `FabricGhostProvider` | `FabricNothing` |\n| `FabricDataOutput` |")), SKIP),
+    "克隆1.21.11": withPack("整文件克隆 1.21.11", "同哈希", (pack) =>
+      writeFileSync(join(pack, "knowledge/common/glossary.md"),
+        readFileSync(join(REPO_ROOT, "fabric/1.21.11/knowledge/common/glossary.md"), "utf8")), SKIP),
+    AGENTS失焦: withPack("AGENTS 不再指向知识表", "未指向 verified-api-26.1.2.md", agentsTo((a) =>
+      a.replace(/verified-api-26\.1\.2\.md/g, "某张表")), SKIP),
+    AGENTS折叠缺失: withPack("AGENTS 折叠说明被删", "knowledgeVersion 折叠", agentsTo((a) =>
+      a.replace(/\*\*版本折叠：\*\*[^\n]*\n/, "")), SKIP),
+    缺知识表: withPack("知识表整个缺失", `缺少 ${F2612_SHEET_REL}`, (pack) =>
+      rmSync(join(pack, "knowledge/common/verified-api-26.1.2.md")), SKIP),
+    session不递表: withPack("表放错目录 → session 空", "verifiedApi 里没有", (pack) => {
+      rmSync(join(pack, "knowledge/common/verified-api-26.1.2.md"));
+      writeFileSync(join(pack, "knowledge/verified-api-26.1.2.md"), sheetText);
+    }, { skipTolerance: true }),
+  };
+  // R3 单独再测：needle 进代码块 / 进无措辞散文 / 块内 Tier-2 名，各必须被抓；合法措辞不得误报
+  const r3tmp = mkdtempSync(join(tmpdir(), "mc-skill-f2612t-"));
+  try {
+    const pack = join(r3tmp, "fabric/26.1.2");
+    mkdirSync(join(pack, "knowledge/common"), { recursive: true });
+    writeFileSync(join(pack, "knowledge/common/verified-api-26.1.2.md"), sheetText);
+    writeFileSync(join(pack, "AGENTS.md"), agentsText);
+    const gate = (file, text) => {
+      writeFileSync(join(pack, file), text);
+      const r = scanFabric2612Knowledge({ packDir: pack, skipSession: true });
+      rmSync(join(pack, file), { force: true });
+      return r;
+    };
+    mkdirSync(join(pack, ".cursor/rules"), { recursive: true });
+    mkdirSync(join(pack, ".claude/skills/mc-x"), { recursive: true });
+    const fence = gate(".cursor/rules/07-datagen.mdc", "# 07\n\n```\nIF 标签 → FabricTagProvider 系\n```\n");
+    assert.ok(fence.problems.some((p) => p.includes("代码块内出现已死类名 FabricTagProvider")), `块内 needle 未报 → ${JSON.stringify(fence.problems.slice(0, 3))}`);
+    const prose = gate(".claude/skills/mc-x/SKILL.md", "# x\n\n用 FabricTagProvider 注册标签。\n");
+    assert.ok(prose.problems.some((p) => p.includes("无 26.1.2 现名也无禁止措辞")), `无措辞散文未报 → ${JSON.stringify(prose.problems.slice(0, 3))}`);
+    const tier2 = gate(".claude/skills/mc-x/SKILL.md", "# x\n\n```java\nItemGroup group = ItemGroup.CREATE;\n```\n");
+    assert.ok(tier2.problems.some((p) => p.includes("代码块内出现 Yarn/邻版名 ItemGroup")), `块内 Tier-2 未报 → ${JSON.stringify(tier2.problems.slice(0, 3))}`);
+    const okProse = gate(".claude/skills/mc-x/SKILL.md", "# x\n\n`FabricTagProvider` 已改名；本档写 `FabricTagsProvider`。\n");
+    assert.deepEqual(okProse.problems, [], `合法措辞被误报 → ${JSON.stringify(okProse.problems.slice(0, 3))}`);
+  } finally {
+    rmSync(r3tmp, { recursive: true, force: true });
+  }
+  for (const [k, v] of Object.entries(touched)) assert.ok(v > 0, `注入 ${k} 未命中`);
+  console.log(`  [fabric2612] files=${stats.files} needles=${stats.needles} tableA=${stats.tableA} tableB=${stats.tableB} tableC=${stats.tableC} tier1=${stats.tier1} tier2=${stats.tier2} verifiedApi=${stats.verifiedApi} poisons=${Object.keys(touched).length + 4}`);
+}
+
+
+// ── S15 T4：仓库内 loader-api 摘要数据卫生门禁 ─────────────────────────────
+// store.ts scanDir() 把官方目录里任意非 skip 的 *.json 直接当成一个可命中的 key，
+// 所以生成器写出的空摘要 / 缺字段脏数据不会报错，只会被当成「已核实」答案返回。
+const LOADER_API_SKIP_FILES = new Set([
+  "index.json",
+  "status.json",
+  "extracted-classes.json",
+  "validate-rules-last.json",
+  "clone-audit-last.json",
+  "fetch-jars-last.json",
+  "pin-mdk-last.json",
+  "fetch-loader-api-sources-last.json",
+  "skipped-ingest.json",
+]);
+const LOADER_API_KEY_RE = /^(\d+\.\d+(?:\.\d+)?)-[a-z0-9][a-z0-9.-]*$/;
+const ABS_PATH_RE = /(?:^|["'\s(:])(?:[A-Za-z]:[\\/]|\/home\/|\/Users\/|\/tmp\/|\\\\)/;
+
+function isLoaderApiSummaryName(name) {
+  return name.endsWith(".json") && !LOADER_API_SKIP_FILES.has(name) && !name.endsWith("-last.json");
+}
+
+function findAbsPathStrings(value, pathIn, hits) {
+  if (typeof value === "string") {
+    if (ABS_PATH_RE.test(value)) hits.push(`${pathIn}="${value.slice(0, 60)}"`);
+  } else if (Array.isArray(value)) {
+    value.forEach((v, i) => findAbsPathStrings(v, `${pathIn}[${i}]`, hits));
+  } else if (value && typeof value === "object") {
+    for (const [k, v] of Object.entries(value)) findAbsPathStrings(v, `${pathIn}.${k}`, hits);
+  }
+}
+
+function scanLoaderApiData(dir) {
+  const problems = [];
+  const summaries = new Map();
+  for (const name of readdirSync(dir).filter((n) => !n.endsWith(".json"))) {
+    if (name === "README.md" || name === "sidecar-templates") continue;
+    problems.push(`${name}: 官方摘要目录只允许 README.md / sidecar-templates / *.json，出现 ${name}`);
+  }
+  if (existsSync(join(dir, "sidecar-templates"))) {
+    for (const n of readdirSync(join(dir, "sidecar-templates"))) {
+      if (/\.(java|class)$/.test(n)) problems.push(`sidecar-templates/${n}: 反编译产物不得入库（只许留 cache）`);
+    }
+  }
+  for (const name of readdirSync(dir).filter(isLoaderApiSummaryName)) {
+    const key = name.replace(/\.json$/, "");
+    let j;
+    try {
+      j = JSON.parse(readFileSync(join(dir, name), "utf8"));
+    } catch (e) {
+      problems.push(`${key}: JSON 解析失败 → ${String(e.message).slice(0, 60)}`);
+      continue;
+    }
+    summaries.set(key, j);
+    const km = key.match(LOADER_API_KEY_RE);
+    if (!km) {
+      problems.push(`${key}: 键名形状非法（须 <mcver>-<loader>），查询侧永远命中不到却仍占目录`);
+      continue;
+    }
+    const classes = Array.isArray(j.classes) ? j.classes : [];
+    if (classes.length === 0) problems.push(`${key}: 空摘要（classes=0），查询会返回 found:true 但零方法`);
+    if (!Number.isInteger(j.classCount) || j.classCount !== classes.length) {
+      problems.push(`${key}: classCount=${j.classCount} != classes.length=${classes.length}`);
+    }
+    if (!j.mappingsVersion) problems.push(`${key}: 缺 mappingsVersion，摘要失去可追溯的映射出处`);
+    if (!j.source) problems.push(`${key}: 缺 source，无法区分官方代下与用户自备 jar`);
+    else if (j.source === "user_jar") problems.push(`${key}: 仓库内摘要 source 不得为 user_jar（用户自备 jar 只允许写 cache overlay）`);
+    if (j.invalid === true) problems.push(`${key}: invalid=true 仍留在官方目录（store 会静默跳过，目录却显示已入库）`);
+    const hasIdx = Array.isArray(j.fqcnIndex);
+    const idxCount = j.fqcnIndexCount ?? 0;
+    if (hasIdx !== idxCount > 0) problems.push(`${key}: fqcnIndex 与 fqcnIndexCount=${idxCount} 不一致`);
+    if (hasIdx && j.fqcnIndex.length !== idxCount) problems.push(`${key}: fqcnIndex 实长 ${j.fqcnIndex.length} != fqcnIndexCount=${idxCount}`);
+    if (j.version !== undefined && j.version !== km[1]) problems.push(`${key}: version=${j.version} 与键名版本段 ${km[1]} 不一致`);
+    const leaks = [];
+    findAbsPathStrings(j, "$", leaks);
+    if (leaks.length) problems.push(`${key}: 疑似本机绝对路径泄漏 → ${leaks.slice(0, 2).join(" / ")}`);
+  }
+
+  const idx = JSON.parse(readFileSync(join(dir, "index.json"), "utf8"));
+  const st = JSON.parse(readFileSync(join(dir, "status.json"), "utf8"));
+  if (idx.cache !== "$MC_SKILL_CACHE") problems.push(`index.cache=${idx.cache}：必须写成 $MC_SKILL_CACHE，不得钉本机 cache 绝对路径`);
+  if (st.cache !== "$MC_SKILL_CACHE") problems.push(`status.cache=${st.cache}：必须写成 $MC_SKILL_CACHE`);
+  if (st.ok !== true) problems.push(`status.ok=${st.ok}：官方目录必须报告 ok:true`);
+  const seenRowFiles = new Set();
+  for (const row of idx.jars) {
+    const rowKey = String(row.file).replace(/\.jar$/, "");
+    if (seenRowFiles.has(rowKey)) problems.push(`index: ${rowKey} 重复登记`);
+    seenRowFiles.add(rowKey);
+    const j = summaries.get(rowKey);
+    if (!j) {
+      problems.push(`index 有行 ${rowKey} 但缺对应摘要文件`);
+      continue;
+    }
+    const bad = ["classCount", "fqcnIndexCount", "mappingsVersion", "source"].filter((f) => row[f] !== j[f]);
+    if (bad.length) problems.push(`index 行 ${rowKey} 与摘要不一致：${bad.map((f) => `${f}=${row[f]} vs ${j[f]}`).join(", ")}`);
+    if (row.invalid === true) problems.push(`index 行 ${rowKey} 标 invalid=true 却仍登记在目录`);
+  }
+  for (const key of summaries.keys()) {
+    if (!seenRowFiles.has(key)) problems.push(`摘要 ${key} 未登记进 index.json（list 模式看不到）`);
+  }
+  const stKeys = new Set((st.decompiled ?? []).map((f) => String(f).replace(/\.jar$/, "")));
+  for (const key of summaries.keys()) if (!stKeys.has(key)) problems.push(`摘要 ${key} 未登记进 status.decompiled（登记缺失）`);
+  for (const key of stKeys) if (!summaries.has(key)) problems.push(`status.decompiled 登记了 ${key} 但没有摘要文件（登记过期）`);
+  for (const [key, mv] of Object.entries(st.mappingsVersion ?? {})) {
+    if (!summaries.has(key)) problems.push(`status.mappingsVersion 有 ${key} 但无摘要文件（登记过期）`);
+    else if (summaries.get(key).mappingsVersion !== mv) problems.push(`status.mappingsVersion[${key}]=${mv} != 摘要 ${summaries.get(key).mappingsVersion}`);
+  }
+  for (const key of summaries.keys()) {
+    if (!(key in (st.mappingsVersion ?? {}))) problems.push(`status.mappingsVersion 缺 ${key}（生成器映射表未记全）`);
+  }
+  return { count: summaries.size, problems: problems.sort() };
+}
+
+async function testLoaderApiRepoDataHygiene() {
+  const dir = join(REPO_ROOT, "mcp-server", "data", "loader-api-summaries");
+  const clean = scanLoaderApiData(dir);
+  assert.equal(clean.count, 36, `官方摘要应为 36 份，实际 ${clean.count}`);
+  assert.deepEqual(clean.problems, [], `loader-api 数据卫生门禁:\n  ${clean.problems.join("\n  ")}`);
+
+  const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));
+  const writeJson = (p, v) => writeFileSync(p, JSON.stringify(v, null, 2), "utf8");
+  const mutations = [
+    ["空摘要", "空摘要", ["1.20.6-neoforge.json"], (t) => {
+      const p = join(t, "1.20.6-neoforge.json");
+      const j = readJson(p);
+      j.classes = [];
+      j.classCount = 0;
+      writeJson(p, j);
+    }],
+    ["缺 mappingsVersion", "缺 mappingsVersion", ["1.21.5-neoforge.json"], (t) => {
+      const p = join(t, "1.21.5-neoforge.json");
+      const j = readJson(p);
+      delete j.mappingsVersion;
+      writeJson(p, j);
+    }],
+    ["source 写成 user_jar", "source 不得为 user_jar", ["1.21.10-neoforge.json"], (t) => {
+      const p = join(t, "1.21.10-neoforge.json");
+      const j = readJson(p);
+      j.source = "user_jar";
+      writeJson(p, j);
+    }],
+    ["缺 fqcnIndex", "fqcnIndex 与 fqcnIndexCount", ["1.20.1-neoforge.json"], (t) => {
+      const p = join(t, "1.20.1-neoforge.json");
+      const j = readJson(p);
+      delete j.fqcnIndex;
+      writeJson(p, j);
+    }],
+    ["脏文件名", "键名形状非法", ["probe-leftover.json"], (t) =>
+      writeFileSync(join(t, "probe-leftover.json"), '{"classes":[],"classCount":0}', "utf8")],
+    ["摘要未登记 index", "未登记进 index.json", ["9.9.9-neoforge.json"], (t) => {
+      writeFileSync(
+        join(t, "9.9.9-neoforge.json"),
+        JSON.stringify(
+          {
+            classes: [{ name: "X" }],
+            classCount: 1,
+            fqcnIndexCount: 0,
+            mappingsVersion: "parchment-9.9.9-2026.01.01",
+            source: "official",
+            version: "9.9.9",
+          },
+          null,
+          2,
+        ),
+        "utf8",
+      );
+    }],
+    ["index 与摘要不一致", "与摘要不一致", ["index.json"], (t) => {
+      const p = join(t, "index.json");
+      const j = readJson(p);
+      j.jars.find((x) => x.file === "1.20.6-neoforge.jar").classCount = 1;
+      writeJson(p, j);
+    }],
+    ["本机路径泄漏", "绝对路径泄漏", ["1.21.5-neoforge.json"], (t) => {
+      const p = join(t, "1.21.5-neoforge.json");
+      const j = readJson(p);
+      j.note = "built on D:\\mc-skill-temp\\loader-jars";
+      writeJson(p, j);
+    }],
+    ["cache 钉死本机", "必须写成 $MC_SKILL_CACHE", ["index.json"], (t) => {
+      const p = join(t, "index.json");
+      const j = readJson(p);
+      j.cache = "D:\\mc-skill-temp";
+      writeJson(p, j);
+    }],
+    ["java 入库", "反编译产物不得入库", ["sidecar-templates/Leak.java"], (t) =>
+      writeFileSync(join(t, "sidecar-templates", "Leak.java"), "class Leak{}\n", "utf8")],
+  ];
+  // 目录 79MB：只拷一次，注入后按路径还原，避免 10 份全量拷贝
+  const tmp = mkdtempSync(join(tmpdir(), "mc-skill-loaderapi-"));
+  try {
+    cpSync(dir, tmp, { recursive: true });
+    for (const [name, needle, touched, mutate] of mutations) {
+      mutate(tmp);
+      const r = scanLoaderApiData(tmp);
+      assert.ok(r.problems.length > 0, `${name}: 注入后门禁仍然全绿`);
+      assert.ok(
+        r.problems.some((p) => p.includes(needle)),
+        `${name}: 门禁报错但不含「${needle}」→ ${JSON.stringify(r.problems.slice(0, 3))}`,
+      );
+      for (const rel of touched) {
+        const src = join(dir, rel);
+        if (existsSync(src)) cpSync(src, join(tmp, rel));
+        else rmSync(join(tmp, rel), { force: true });
+      }
+      assert.deepEqual(scanLoaderApiData(tmp).problems, [], `${name}: 还原后门禁应重新全绿`);
+    }
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
+  console.log(`  [loaderApiData] summaries=${clean.count} checks=${mutations.length} poisons=${mutations.length}`);
+}
+
+// ── S15 T3：0 字节 deflate 条目回归（zip-inflate A-1 上限）─────────────────
+async function testZipInflateZeroByteDeflate() {
+  const { inflateZipEntry, zipCrc32, ZipEntryLimitError } = await import("./dist/utils/zip-inflate.js");
+  const { readZip } = await import("./dist/decompile/zip-util.js");
+  const { deflateRawSync, inflateRawSync } = await import("node:zlib");
+
+  // 用例数由实际调用导出（写死数字的话，删掉一条门禁照样报绿）
+  let directCases = 0;
+  const probeInflate = (compressed, opts) => {
+    directCases++;
+    return inflateZipEntry(compressed, opts);
+  };
+
+  // 记录修复存在的前提：zlib 不接受 maxOutputLength=0，抛的是未类型化 RangeError。
+  const raw = (() => {
+    try {
+      inflateRawSync(deflateRawSync(Buffer.alloc(0)), { maxOutputLength: 0 });
+      return null;
+    } catch (e) {
+      return e;
+    }
+  })();
+  assert.ok(raw instanceof RangeError, `maxOutputLength=0 应抛 RangeError，实际 ${raw && raw.name}`);
+  assert.ok(!(raw instanceof ZipEntryLimitError), "RangeError 未被 ZipEntryLimitError 覆盖 → 旧实现会在 readZip 里炸穿");
+
+  const empty = probeInflate(deflateRawSync(Buffer.alloc(0)), { name: "META-INF/empty.txt", declaredSize: 0 });
+  assert.ok(Buffer.isBuffer(empty) && empty.length === 0, `0 字节 deflate 条目应解出空 buffer，实际 ${empty && empty.length}`);
+
+  // 谎报 0 但真有内容 → 必须 fail-closed 且是类型化错误（1 字节兜底上限没有放宽防线）
+  const lie = (() => {
+    try {
+      return probeInflate(deflateRawSync(Buffer.from("not-empty-at-all")), { name: "lie.txt", declaredSize: 0 });
+    } catch (e) {
+      return e;
+    }
+  })();
+  assert.ok(lie instanceof ZipEntryLimitError, `谎报 0 字节的条目必须被拒，实际 ${lie && lie.name}`);
+  assert.ok(String(lie.code).startsWith("ZIP_ENTRY_"), `错误必须带 ZIP_ENTRY_* 码，实际 ${lie.code}`);
+
+  const bomb = (() => {
+    try {
+      return probeInflate(deflateRawSync(Buffer.alloc(200000, 1)), { name: "bomb.bin", declaredSize: 10 });
+    } catch (e) {
+      return e;
+    }
+  })();
+  assert.ok(bomb instanceof ZipEntryLimitError && bomb.code === "ZIP_ENTRY_BOMB_SUSPECTED", `膨胀超限须 BOMB_SUSPECTED，实际 ${bomb && bomb.code}`);
+
+  const huge = (() => {
+    try {
+      return probeInflate(Buffer.from([0]), { name: "huge.bin", declaredSize: 300 * 1024 * 1024 });
+    } catch (e) {
+      return e;
+    }
+  })();
+  assert.ok(huge instanceof ZipEntryLimitError && huge.code === "ZIP_ENTRY_TOO_LARGE", `声明超上限须 TOO_LARGE，实际 ${huge && huge.code}`);
+
+  // 端到端：手搓 store + deflate + 0 字节 deflate 三条目 jar
+  const parts = [];
+  const central = [];
+  let offset = 0;
+  const push = (name, data, method) => {
+    const compressed = method === 8 ? deflateRawSync(data) : data;
+    const nameBuf = Buffer.from(name, "utf8");
+    const local = Buffer.alloc(30);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(20, 4);
+    local.writeUInt16LE(0x800, 6);
+    local.writeUInt16LE(method, 8);
+    local.writeUInt32LE(zipCrc32(data), 14);
+    local.writeUInt32LE(compressed.length, 18);
+    local.writeUInt32LE(data.length, 22);
+    local.writeUInt16LE(nameBuf.length, 26);
+    parts.push(local, nameBuf, compressed);
+    const cd = Buffer.alloc(46);
+    cd.writeUInt32LE(0x02014b50, 0);
+    cd.writeUInt16LE(20, 4);
+    cd.writeUInt16LE(20, 6);
+    cd.writeUInt16LE(0x800, 8);
+    cd.writeUInt16LE(method, 10);
+    cd.writeUInt32LE(zipCrc32(data), 16);
+    cd.writeUInt32LE(compressed.length, 20);
+    cd.writeUInt32LE(data.length, 24);
+    cd.writeUInt16LE(nameBuf.length, 28);
+    cd.writeUInt32LE(offset, 42);
+    central.push(cd, nameBuf);
+    offset += local.length + nameBuf.length + compressed.length;
+  };
+  push("empty-deflate.txt", Buffer.alloc(0), 8);
+  push("hello.txt", Buffer.from("hello world"), 8);
+  push("stored.txt", Buffer.from("stored"), 0);
+  const cdBuf = Buffer.concat(central);
+  const eocd = Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50, 0);
+  eocd.writeUInt16LE(3, 8);
+  eocd.writeUInt16LE(3, 10);
+  eocd.writeUInt32LE(cdBuf.length, 12);
+  eocd.writeUInt32LE(offset, 16);
+  const map = readZip(Buffer.concat([...parts, cdBuf, eocd]));
+  assert.equal(map.size, 3, `readZip 条目数应为 3，实际 ${map.size}`);
+  assert.equal(map.get("empty-deflate.txt").length, 0, "0 字节 deflate 条目应经 readZip 正常读出");
+  assert.equal(map.get("hello.txt").toString("utf8"), "hello world");
+  assert.equal(map.get("stored.txt").toString("utf8"), "stored");
+  assert.equal(directCases, 4, `直接过 inflateZipEntry 的用例应为 4 条，实际 ${directCases}`);
+  console.log(`  [zipInflate] directCases=${directCases} readZip-entries=${map.size} zeroByteEntryOk=${map.get("empty-deflate.txt").length === 0}`);
+}
+
+// ---- S18：README / AGENTS 工具表 ↔ 实际注册集合（双向 diff，计数全由执行导出）----
+const DOC_TOOL_GROUP_IDS = new Set(["1", "1b", "2", "3", "4", "5", "6", "6b", "7", "8", "9", "10", "11", "12", "13"]);
+
+function docMdSlice(lines, startRe, stopRe) {
+  const s = lines.findIndex((l) => startRe.test(l));
+  if (s < 0) return null;
+  const e = lines.findIndex((l, i) => i > s && stopRe.test(l));
+  return lines.slice(s, e < 0 ? lines.length : e);
+}
+
+function docToolNamesFromCells(cells, registered) {
+  const regSet = new Set(registered);
+  const names = new Set();
+  const unknown = [];
+  for (const cell of cells) {
+    for (const m of cell.matchAll(/`([^`]+)`/g)) {
+      const t = m[1].trim();
+      if (t.endsWith("*")) {
+        const prefix = t.slice(0, -1);
+        const hits = registered.filter((n) => n.startsWith(prefix));
+        if (!hits.length) unknown.push(t);
+        hits.forEach((h) => names.add(h));
+      } else if (regSet.has(t)) {
+        names.add(t);
+      } else {
+        unknown.push(t);
+      }
+    }
+  }
+  return { names, unknown };
+}
+
+function docToolNameColumnCells(lines) {
+  return lines
+    .filter((l) => l.trim().startsWith("|"))
+    .map((l) => (l.split("|")[1] ?? "").trim())
+    .filter((c) => c && !/^[-: ]*$/.test(c) && c !== "工具");
+}
+
+function docReadmeGroups(lines) {
+  const groups = [];
+  let cur = null;
+  for (const l of lines) {
+    if (/^### /.test(l)) {
+      const h = /^### (\d+[a-z]?)(?:\. | )/.exec(l);
+      cur = h && DOC_TOOL_GROUP_IDS.has(h[1]) ? { id: h[1], heading: l.trim(), declared: null, cells: [] } : null;
+      if (cur) {
+        const d = /（(\d+)）|\((\d+)\)/.exec(l);
+        cur.declared = d ? Number(d[1] ?? d[2]) : null;
+        groups.push(cur);
+      }
+      continue;
+    }
+    if (!cur || !l.trim().startsWith("|")) continue;
+    const c = (l.split("|")[1] ?? "").trim();
+    if (!c || /^[-: ]*$/.test(c) || c === "工具") continue;
+    cur.cells.push(c);
+  }
+  return groups;
+}
+
+function diffDocToolTables({ readme, agents, registered }) {
+  const problems = [];
+  const registeredList = [...registered];
+  if (new Set(registeredList).size !== registeredList.length) {
+    problems.push("实际注册集合里存在重复工具名");
+  }
+
+  const readmeSec = docMdSlice(readme.split(/\r?\n/), /^## MCP Server 工具/, /^## (?!MCP Server 工具)/);
+  if (!readmeSec) problems.push("README 找不到「## MCP Server 工具」节（锚点被改）");
+  const readmeGroups = readmeSec ? docReadmeGroups(readmeSec) : [];
+  if (readmeSec && readmeGroups.length !== DOC_TOOL_GROUP_IDS.size) {
+    problems.push(`README 工具分节数 ${readmeGroups.length}，与预期编号集 ${DOC_TOOL_GROUP_IDS.size} 不符`);
+  }
+  const totalDecl = readmeSec ? /^## MCP Server 工具（(\d+) 个）/.exec(readmeSec[0]) : null;
+  if (readmeSec && !totalDecl) {
+    problems.push(`README 工具节标题未按「（N 个）」声明总数：${(readmeSec[0] ?? "").trim()}`);
+  } else if (totalDecl && Number(totalDecl[1]) !== registeredList.length) {
+    problems.push(`README 标题声明 ${totalDecl[1]} 个工具，实际注册 ${registeredList.length} 个`);
+  }
+
+  const groupUnion = new Set();
+  const firstGroupOf = new Map();
+  for (const g of readmeGroups) {
+    const { names, unknown } = docToolNamesFromCells(g.cells, registeredList);
+    for (const u of unknown) problems.push(`README §${g.id} 出现未注册的工具名 \`${u}\``);
+    if (!g.cells.length) problems.push(`README §${g.id} 没有工具表行：${g.heading}`);
+    if (g.declared === null) problems.push(`README §${g.id} 标题未声明计数：${g.heading}`);
+    else if (g.declared !== names.size) problems.push(`README §${g.id} 声明 ${g.declared} 个，表内实际 ${names.size} 个`);
+    for (const n of names) {
+      if (firstGroupOf.has(n)) problems.push(`README 工具 \`${n}\` 同时出现在 §${firstGroupOf.get(n)} 与 §${g.id}`);
+      else firstGroupOf.set(n, g.id);
+      groupUnion.add(n);
+    }
+  }
+  for (const n of registeredList) if (!groupUnion.has(n)) problems.push(`README 工具表缺 \`${n}\``);
+
+  const agentsSec = docMdSlice(agents.split(/\r?\n/), /^#+ MCP Server 工具/, /^### 工具边界/);
+  if (!agentsSec) problems.push("AGENTS.md 找不到「MCP Server 工具」表节（锚点被改）");
+  const agentsCells = agentsSec ? docToolNameColumnCells(agentsSec) : [];
+  if (agentsSec && agentsCells.length === 0) problems.push("AGENTS.md 工具表解析出 0 行（表格结构变了？）");
+  const agentsNames = docToolNamesFromCells(agentsCells, registeredList);
+  for (const u of agentsNames.unknown) problems.push(`AGENTS.md 出现未注册的工具名 \`${u}\``);
+  for (const n of registeredList) if (!agentsNames.names.has(n)) problems.push(`AGENTS.md 工具表缺 \`${n}\``);
+
+  return {
+    problems,
+    stats: {
+      registered: registeredList.length,
+      readmeGroups: readmeGroups.length,
+      readmeRows: readmeGroups.reduce((a, g) => a + g.cells.length, 0),
+      readmeTools: groupUnion.size,
+      agentsRows: agentsCells.length,
+      agentsTools: agentsNames.names.size,
+    },
+  };
+}
+
+async function testDocsToolTablesMatchRegistry() {
+  const { listAllToolSchemas } = await import("./dist/tool-registry.js");
+  const registered = listAllToolSchemas().map((t) => t.name);
+  assert.ok(registered.length > 0, "listAllToolSchemas 返回空集合");
+  const readme = readFileSync(join(REPO_ROOT, "README.md"), "utf8");
+  const agents = readFileSync(join(REPO_ROOT, "AGENTS.md"), "utf8");
+  const base = { readme, agents, registered };
+
+  const clean = diffDocToolTables(base);
+  assert.deepEqual(clean.problems, [], `干净文档应零差异，实际：\n${clean.problems.join("\n")}`);
+  assert.equal(clean.stats.readmeTools, clean.stats.registered, "README 覆盖的工具数应等于实际注册数");
+  assert.equal(clean.stats.agentsTools, clean.stats.registered, "AGENTS 覆盖的工具数应等于实际注册数");
+
+  const poisoned = [
+    ["README 少一行工具", { ...base, readme: readme.replace(/^\|[ \t]*`check_dependencies`[ \t]*\|.*\n/m, "") }, /缺 `check_dependencies`/],
+    ["README 总数标错", { ...base, readme: readme.replace("## MCP Server 工具（80 个）", "## MCP Server 工具（79 个）") }, /标题声明 79/],
+    ["README 分节计数标错", { ...base, readme: readme.replace("### 10. 代码生成模板（8）", "### 10. 代码生成模板（7）") }, /§10 声明 7 个/],
+    ["README 出现未注册名", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（4）", "### 11. 日志与依赖诊断（4）\n\n| 工具 | 作用 |\n|------|------|\n| `not_a_real_tool` | x |") }, /未注册的工具名 `not_a_real_tool`/],
+    ["README 跨节重复", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（4）", "### 11. 日志与依赖诊断（4）\n\n| 工具 | 作用 |\n|------|------|\n| `validate_at` | x |") }, /同时出现在 §/],
+    ["AGENTS 漏一个工具", { ...base, agents: agents.replace(" / `download_official_mdk`", "") }, /AGENTS\.md 工具表缺 `download_official_mdk`/],
+    ["AGENTS 名字写错", { ...base, agents: agents.replace("`analyze_bedrock_log`", "`analyze_bedrock_logs`") }, /AGENTS\.md 出现未注册的工具名/],
+    ["AGENTS 表锚点被改", { ...base, agents: agents.replace("## MCP Server 工具（可选）", "## MCP 工具（可选）") }, /AGENTS\.md 找不到/],
+  ];
+  for (const [label, input, anchor] of poisoned) {
+    const got = diffDocToolTables(input);
+    assert.ok(got.problems.length > 0, `投毒「${label}」应至少报一条问题`);
+    assert.ok(
+      got.problems.some((p) => anchor.test(p)),
+      `投毒「${label}」应命中锚点 ${anchor}，实际：\n${got.problems.join("\n")}`,
+    );
+    const recheck = diffDocToolTables(base);
+    assert.deepEqual(recheck.problems, [], `投毒「${label}」后原文件应仍然零差异`);
+  }
+
+  const s = clean.stats;
+  console.log(
+    `  [docs-tool-tables] registered=${s.registered} README groups=${s.readmeGroups} rows=${s.readmeRows} tools=${s.readmeTools} ` +
+      `AGENTS rows=${s.agentsRows} tools=${s.agentsTools} 双向零差异 投毒=${poisoned.length} 次全命中`,
+  );
+}
+
+/**
+ * S19：check_publish_ready 的发布清单必须现场读 community_knowledge/authored/publishing.md。
+ * 断链（读不到清单）与改文档（换字段）都要体现在结果里；缺项永远只 warning，不动 ready。
+ */
+function testPublishChecklistFromCommunityDoc() {
+  const modsTomlWith = (modsBody) =>
+    `modLoader="javafml"\nloaderVersion="[47,)"\nversion="1.0.0"\nlicense="MIT"\n${modsBody}`;
+  const fieldWarnings = (r) => r.warnings.filter((w) => /「元数据」要求/.test(w));
+  const prevCommunity = process.env.MC_SKILL_COMMUNITY;
+  const docRoot = mkdtempSync(join(tmpdir(), "mc-pub-doc-"));
+  const emptyRoot = mkdtempSync(join(tmpdir(), "mc-pub-empty-"));
+  const projRoot = mkdtempSync(join(tmpdir(), "mc-pub-proj-"));
+  try {
+    delete process.env.MC_SKILL_COMMUNITY;
+
+    // 1) 同一工程：缺清单字段 → 每个缺项一条 warning；补齐后 warning 下降，errors/ready 不变
+    const thin = checkPublishReady({ modsToml: modsTomlWith(`[[mods]]\nmodId="examplemod"\n`) });
+    const full = checkPublishReady({
+      modsToml: modsTomlWith(`[[mods]]\nmodId="examplemod"\ndisplayName="Example"\ndescription="d"\n`),
+    });
+    assert.equal(thin.publishing?.available, true, JSON.stringify(thin.publishing));
+    assert.ok(fieldWarnings(thin).length > 0, "缺字段应有 publishing warning");
+    assert.ok(thin.publishing.missing.includes("mods.toml:displayName"), JSON.stringify(thin.publishing.missing));
+    assert.deepEqual(full.publishing.missing, [], JSON.stringify(full.publishing.missing));
+    assert.ok(
+      full.warnings.length < thin.warnings.length,
+      `补齐后 warning 应更少：${full.warnings.length} vs ${thin.warnings.length}`,
+    );
+    assert.equal(full.ready, thin.ready, JSON.stringify([full.errors, thin.errors]));
+    assert.deepEqual(full.errors, thin.errors, "清单检查不得改变 errors");
+    assert.ok(thin.checks.some((c) => /publishing\.md 清单/.test(c)), JSON.stringify(thin.checks));
+
+    // 2) 人在环边界：不上传声明仍在，且绝不出现「已代发布」
+    for (const r of [thin, full]) {
+      assert.ok(r.warnings.some((w) => /不上传/.test(w)), JSON.stringify(r.warnings));
+      assert.ok(!r.warnings.some((w) => /已上传|已发布|已代发布/.test(w)), JSON.stringify(r.warnings));
+    }
+
+    // 3) 纯 Fabric 工程不被要求 Forge 的 mods.toml 字段（要求按文件名绑定）
+    const fabric = checkPublishReady({
+      fabricModJson: JSON.stringify({ id: "examplemod", version: "1.0.0", license: "MIT" }),
+    });
+    assert.equal(fabric.ready, true, JSON.stringify(fabric));
+    assert.deepEqual(fabric.publishing.missing, [], JSON.stringify(fabric.publishing));
+    assert.equal(fieldWarnings(fabric).length, 0, JSON.stringify(fabric.warnings));
+
+    // 4) 投毒 A：换掉文档里的字段 → 要求随之改变，证明字段清单没写死
+    mkdirSync(join(docRoot, "authored"), { recursive: true });
+    writeFileSync(
+      join(docRoot, "authored", "publishing.md"),
+      [
+        "---",
+        "id: authored/publishing",
+        "sourceKind: authored",
+        "---",
+        "",
+        "# 测试用发布清单",
+        "",
+        "## 发布前检查清单",
+        "",
+        "1. **元数据**",
+        "   - Forge：`mods.toml` 的 `authorBio`",
+        "2. **自测**",
+        "   - 干净客户端能进世界",
+        "",
+      ].join("\n"),
+    );
+    process.env.MC_SKILL_COMMUNITY = docRoot;
+    const swapped = checkPublishReady({
+      modsToml: modsTomlWith(`[[mods]]\nmodId="examplemod"\ndisplayName="Example"\n`),
+    });
+    assert.deepEqual(swapped.publishing.missing, ["mods.toml:authorBio"], JSON.stringify(swapped.publishing));
+    assert.ok(!fieldWarnings(swapped).some((w) => /displayName/.test(w)), "文档没点 displayName 就不该要求它");
+
+    // 5) 投毒 B：断开读取（清单里没有可机器核的条目）→ 降级 warning，不是静默通过
+    process.env.MC_SKILL_COMMUNITY = emptyRoot;
+    const broken = checkPublishReady({ modsToml: modsTomlWith(`[[mods]]\nmodId="examplemod"\n`) });
+    assert.equal(broken.publishing.available, false, JSON.stringify(broken.publishing));
+    assert.equal(fieldWarnings(broken).length, 0, JSON.stringify(broken.warnings));
+    assert.ok(
+      broken.warnings.some((w) => /未取到发布清单字段要求/.test(w)),
+      JSON.stringify(broken.warnings),
+    );
+    assert.equal(broken.ready, thin.ready, "读不到清单同样不得影响 ready");
+
+    // 6) logoFile 真实存在性（清单第 4 条）：补上文件后该 warning 消失
+    delete process.env.MC_SKILL_COMMUNITY;
+    mkdirSync(join(projRoot, "src", "main", "resources"), { recursive: true });
+    const logoToml = modsTomlWith(
+      `[[mods]]\nmodId="examplemod"\ndisplayName="Example"\ndescription="d"\nlogoFile="logo.png"\n`,
+    );
+    const noLogo = checkPublishReady({ projectPath: projRoot, modsToml: logoToml });
+    assert.ok(
+      noLogo.publishing.missing.includes("mods.toml:logoFile=logo.png"),
+      JSON.stringify(noLogo.publishing.missing),
+    );
+    writeFileSync(join(projRoot, "src", "main", "resources", "logo.png"), "png");
+    const withLogo = checkPublishReady({ projectPath: projRoot, modsToml: logoToml });
+    assert.equal(withLogo.publishing.missing.length, 0, JSON.stringify(withLogo.publishing.missing));
+    assert.ok(
+      !withLogo.warnings.some((w) => /logoFile/.test(w)),
+      JSON.stringify(withLogo.warnings),
+    );
+
+    console.log(
+      `  [publish-checklist] 文档字段=${thin.publishing.fields.length} 人工项=${thin.publishing.manual.length} ` +
+        `缺项 warning ${fieldWarnings(thin).length}→${fieldWarnings(full).length}（总 ${thin.warnings.length}→${full.warnings.length}）` +
+        ` Fabric 误报=${fieldWarnings(fabric).length} 投毒=换字段/断链/真实存在性 3 类全命中 ready 不变=${thin.ready === full.ready}`,
+    );
+  } finally {
+    if (prevCommunity === undefined) delete process.env.MC_SKILL_COMMUNITY;
+    else process.env.MC_SKILL_COMMUNITY = prevCommunity;
+    rmSync(docRoot, { recursive: true, force: true });
+    rmSync(emptyRoot, { recursive: true, force: true });
+    rmSync(projRoot, { recursive: true, force: true });
+  }
+}
+
+/**
+ * S20：会改仓库文件的维护脚本，写盘必须全部经 scripts/_lib/write-guard.mjs（默认 dry-run，--write 才落盘）。
+ * 覆盖范围 = scripts/_oneoff/ + scripts/_lib/ 全部脚本 + 点名写仓库 data/ 的顶层脚本。
+ * 纯函数：输入 [{ rel, text }]，输出 { problems, stats }；不读不写磁盘。
+ */
+const SCRIPT_WRITE_GUARD_REL = "scripts/_lib/write-guard.mjs";
+const SCRIPT_WRITE_GUARD_DIRS = ["scripts/_oneoff", "scripts/_lib"];
+const SCRIPT_WRITE_GUARD_FILES = [
+  "scripts/index-qsl-verified.mjs",
+  "scripts/fetch-neoforge-primers.mjs",
+];
+function scriptRequiresGuard(rel) {
+  return rel.startsWith("scripts/_oneoff/") || SCRIPT_WRITE_GUARD_FILES.includes(rel);
+}
+const FS_MUTATION_PRIMITIVES = [
+  "writeFileSync",
+  "appendFileSync",
+  "copyFileSync",
+  "mkdirSync",
+  "rmSync",
+  "unlinkSync",
+  "renameSync",
+  "createWriteStream",
+  "openSync",
+  "truncateSync",
+];
+
+function diffScriptWriteGuard(files) {
+  const problems = [];
+  let guardAdopted = 0;
+  let primitiveHits = 0;
+  let outsideGuardHits = 0;
+  let emitCallSites = 0;
+  for (const file of files) {
+    const isGuard = file.rel === SCRIPT_WRITE_GUARD_REL;
+    const importsGuard = /(?:^|\n)\s*(?:import|export)[^;\n]*from\s+["'][^"']*write-guard\.mjs["']/.test(file.text);
+    if (importsGuard) guardAdopted++;
+    if (!isGuard && scriptRequiresGuard(file.rel) && !importsGuard) {
+      problems.push(`${file.rel}:1 未 import write-guard，会写仓库文件的脚本必须默认 dry-run`);
+    }
+    file.text.split(/\r?\n/).forEach((line, idx) => {
+      if (/\b(?:emit|emitCopy)\s*\(/.test(line) && !/\bimport\b/.test(line) && !/\bfunction\s+(?:emit|emitCopy)\b/.test(line)) {
+        emitCallSites++;
+      }
+      for (const fn of FS_MUTATION_PRIMITIVES) {
+        if (!new RegExp(`\\b(?:fs\\.)?${fn}\\s*\\(`).test(line)) continue;
+        primitiveHits++;
+        if (!isGuard) {
+          outsideGuardHits++;
+          problems.push(`${file.rel}:${idx + 1} 直接调用 ${fn}()，写盘必须走 write-guard 的 emit / emitCopy`);
+        }
+      }
+    });
+    if (isGuard) {
+      if (!file.text.includes('"--write"')) {
+        problems.push(`${SCRIPT_WRITE_GUARD_REL}:1 缺 "--write" 判定，emit 不再受 dryRun 保护`);
+      }
+      if (!file.text.includes("DRYRUN")) {
+        problems.push(`${SCRIPT_WRITE_GUARD_REL}:1 缺 DRYRUN 输出，dry-run 无从取证`);
+      }
+    }
+  }
+  return {
+    problems,
+    stats: {
+      scanned: files.length,
+      guardAdopted,
+      primitiveHits,
+      outsideGuardHits,
+      offenders: new Set(problems.map((p) => p.split(":")[0])).size,
+      emitCallSites,
+    },
+  };
+}
+
+function listWriteGuardScope() {
+  const fromDirs = SCRIPT_WRITE_GUARD_DIRS.flatMap((dir) => {
+    const abs = join(REPO_ROOT, dir);
+    return readdirSync(abs)
+      .filter((name) => name.endsWith(".mjs"))
+      .sort()
+      .map((name) => ({ rel: `${dir}/${name}`, text: readFileSync(join(abs, name), "utf8") }));
+  });
+  const namedFiles = SCRIPT_WRITE_GUARD_FILES.map((rel) => ({
+    rel,
+    text: readFileSync(join(REPO_ROOT, rel), "utf8"),
+  }));
+  return [...fromDirs, ...namedFiles];
+}
+
+function testScriptWriteGuardFunnel() {
+  const files = listWriteGuardScope();
+  const base = { files };
+  assert.ok(
+    files.some((f) => f.rel === SCRIPT_WRITE_GUARD_REL),
+    "门禁扫描范围必须含 write-guard.mjs 本身（否则唯一出口失控也查不出来）",
+  );
+  assert.ok(
+    files.some((f) => f.rel.startsWith("scripts/_oneoff/")),
+    "门禁扫描范围必须含 scripts/_oneoff/ 脚本",
+  );
+  for (const rel of SCRIPT_WRITE_GUARD_FILES) {
+    assert.ok(
+      files.some((f) => f.rel === rel),
+      `门禁扫描范围必须含点名的写仓库 data/ 脚本 ${rel}（改名或删文件要显式改本清单）`,
+    );
+  }
+
+  const clean = diffScriptWriteGuard(base.files);
+  assert.deepEqual(clean.problems, [], `脚本应零违规，实际：\n${clean.problems.join("\n")}`);
+
+  const oneoffRel = files.find((f) => f.rel.startsWith("scripts/_oneoff/")).rel;
+  const dataWriterRel = SCRIPT_WRITE_GUARD_FILES[0];
+  const guardText = files.find((f) => f.rel === SCRIPT_WRITE_GUARD_REL).text;
+  const withText = (rel, text) => files.map((f) => (f.rel === rel ? { rel, text } : f));
+  const poisoned = [
+    ["裸 writeFileSync", oneoffRel, (t) => t + '\nfs.writeFileSync("x.txt", "y");\n', /直接调用 writeFileSync\(\)/],
+    ["无 fs. 前缀 writeFileSync", oneoffRel, (t) => t + "\nwriteFileSync(join(ROOT, 'a.md'), body, 'utf8');\n", /直接调用 writeFileSync\(\)/],
+    ["裸 mkdirSync", oneoffRel, (t) => t + '\nfs.mkdirSync("d", { recursive: true });\n', /直接调用 mkdirSync\(\)/],
+    ["删除原语 rmSync", oneoffRel, (t) => t + '\nfs.rmSync(dir, { recursive: true, force: true });\n', /直接调用 rmSync\(\)/],
+    ["流式写 createWriteStream", oneoffRel, (t) => t + '\nconst s = fs.createWriteStream(out);\n', /直接调用 createWriteStream\(\)/],
+    ["绕过 guard（无 import）", oneoffRel, (t) => t.replace(/(?:^|\n)import[^;\n]*from\s+["'][^"']*write-guard\.mjs["'];?/, "\n"), /未 import write-guard/],
+    ["顶层 data/ 脚本无 import", dataWriterRel, (t) => t.replace(/(?:^|\n)import[^;\n]*from\s+["'][^"']*write-guard\.mjs["'];?/, "\n"), /未 import write-guard/],
+    ["顶层 data/ 脚本裸 copyFileSync", dataWriterRel, (t) => t + "\ncopyFileSync(src, dest);\n", /直接调用 copyFileSync\(\)/],
+    ["guard 失去 --write 判定", SCRIPT_WRITE_GUARD_REL, () => guardText.replace(/"--write"/g, '"--nope"'), /缺 "--write" 判定/],
+    ["guard 失去 DRYRUN 输出", SCRIPT_WRITE_GUARD_REL, () => guardText.replace(/DRYRUN/g, "SKIP"), /缺 DRYRUN 输出/],
+  ];
+  for (const [label, rel, mutate, anchor] of poisoned) {
+    const src = files.find((f) => f.rel === rel);
+    const got = diffScriptWriteGuard(withText(rel, mutate(src.text)));
+    assert.ok(got.problems.length > 0, `投毒「${label}」应至少报一条问题`);
+    assert.ok(
+      got.problems.some((p) => anchor.test(p)),
+      `投毒「${label}」应命中锚点 ${anchor}，实际：\n${got.problems.join("\n")}`,
+    );
+    const recheck = diffScriptWriteGuard(base.files);
+    assert.deepEqual(recheck.problems, [], `投毒「${label}」后原文件应仍然零违规`);
+  }
+
+  // 反向对照：只读脚本里的 readFileSync 不得被当成写盘（否则门禁会误伤读盘）
+  const readOnly = diffScriptWriteGuard([
+    { rel: "scripts/_oneoff/probe-readonly.mjs", text: 'import { emit } from "../_lib/write-guard.mjs";\nconst t = readFileSync(p, "utf8");\nif (want) emit(p, t);\n' },
+  ]);
+  assert.deepEqual(readOnly.problems, [], `只读脚本误报：\n${readOnly.problems.join("\n")}`);
+
+  const s = clean.stats;
+  const oneoffCount = files.filter((f) => f.rel.startsWith("scripts/_oneoff/")).length;
+  const libCount = files.filter((f) => f.rel.startsWith("scripts/_lib/")).length;
+  assert.equal(s.outsideGuardHits, 0, `guard 之外不得有写盘原语，实际 ${s.outsideGuardHits} 处`);
+  assert.ok(s.emitCallSites > 0, "未发现任何 emit 调用点，说明漏斗没被真正使用");
+  console.log(
+    `  [script-write-guard] 扫描=${s.scanned}（_oneoff ${oneoffCount} + _lib ${libCount} + 点名写 data/ ${SCRIPT_WRITE_GUARD_FILES.length}）` +
+      ` guard 引用=${s.guardAdopted} emit 调用点=${s.emitCallSites} ` +
+      `写盘原语命中=${s.primitiveHits}（write-guard 内 ${s.primitiveHits - s.outsideGuardHits}，范围外 ${s.outsideGuardHits}）` +
+      ` 投毒=${poisoned.length} 类全命中 + 只读误报对照通过`,
+  );
+}
+
+/**
+ * S21：`--only=` 形态残留目录 —— **只读报告**，不删、不阻断。
+ * 来源：`Gradle -Ponly=` 之类参数被误写成不带引号的 `--only=net/minecraft/...` 传给工具，
+ * 于是当前工作目录下出现一个以整个参数字符串命名的目录（实测落在 `mcp-server/--only=net`）。
+ * 删除与否是用户的决定，所以这里只把「有没有再现」变成每次 `npm test` 都会打印的一行。
+ */
+const RESIDUE_DIR_PREFIX = "--only=";
+const RESIDUE_SCAN_SCOPES = ["", "temp", "mcp-server", "data"];
+
+/** 递归数文件与字节（只 stat，不读内容）。坏链 / 竞态条目不计，不抛。 */
+function measureDir(dir) {
+  let files = 0;
+  let bytes = 0;
+  const stack = [dir];
+  while (stack.length) {
+    const cur = stack.pop();
+    let ents;
+    try {
+      ents = readdirSync(cur, { withFileTypes: true });
+    } catch {
+      continue;
+    }
+    for (const e of ents) {
+      const p = join(cur, e.name);
+      if (e.isDirectory()) {
+        stack.push(p);
+        continue;
+      }
+      try {
+        bytes += statSync(p).size;
+        files++;
+      } catch {
+        /* 不计 */
+      }
+    }
+  }
+  return { files, bytes };
+}
+
+/**
+ * 在每个作用域的**直接子项**里找 `--only=` 形态目录。
+ * 返回命中（带体积）与不可读作用域；纯函数，不写不删。
+ */
+function findResidueDirs(scopes, labelRoot, prefix = RESIDUE_DIR_PREFIX) {
+  const norm = (p) => p.replace(/[\\/]+/g, "/").replace(/\/$/, "");
+  const label = (p) => {
+    const rel = norm(p).startsWith(norm(labelRoot) + "/") ? norm(p).slice(norm(labelRoot).length + 1) : norm(p);
+    return rel === "" ? "." : rel;
+  };
+  const hits = [];
+  const unreadable = [];
+  for (const scope of scopes) {
+    let ents;
+    try {
+      ents = readdirSync(scope, { withFileTypes: true });
+    } catch {
+      unreadable.push(label(scope));
+      continue;
+    }
+    for (const e of ents) {
+      if (!e.name.startsWith(prefix) || !e.isDirectory()) continue;
+      const abs = join(scope, e.name);
+      const { files, bytes } = measureDir(abs);
+      hits.push({ scope: label(scope), rel: label(abs), files, mib: (bytes / 1024 / 1024).toFixed(1) });
+    }
+  }
+  return { hits, unreadable };
+}
+
+function testResidueDirsReport() {
+  // 自证：探测器既能抓到 1，也能在删干净后回到 0（否则「命中=0」可能是根本没在看）
+  const fixture = mkdtempSync(join(tmpdir(), "mc-skill-residue-"));
+  let detected = -1;
+  let afterClean = -1;
+  let wrongPrefixHits = -1;
+  let unreadableOk = false;
+  try {
+    mkdirSync(join(fixture, RESIDUE_DIR_PREFIX + "net", "minecraft"), { recursive: true });
+    writeFileSync(join(fixture, RESIDUE_DIR_PREFIX + "net", "minecraft", "client.jar"), "junk");
+    writeFileSync(join(fixture, RESIDUE_DIR_PREFIX + "file-not-dir"), "junk");
+    const one = findResidueDirs([fixture], fixture);
+    detected = one.hits.length;
+    assert.equal(detected, 1, `fixture 里有 1 个 ${RESIDUE_DIR_PREFIX} 目录，探测器却报了 ${detected}`);
+    assert.equal(one.hits[0].files, 1, "应递归数到目录内 1 个文件");
+    assert.ok(one.hits[0].rel.includes("net"), "命中名应是被当作目录名的那段参数残留");
+    // 投毒：前缀写歪 ⇒ 同一 fixture 必须报 0（否则「命中=0」是恒真）
+    wrongPrefixHits = findResidueDirs([fixture], fixture, "--nope=").hits.length;
+    assert.equal(wrongPrefixHits, 0, "前缀失效时仍报命中 ⇒ 探测根本没读前缀");
+    // 反向：普通文件形态（非目录）不得算命中
+    assert.ok(!one.hits.some((h) => h.rel.includes("file-not-dir")), "同名普通文件被误判为残留目录");
+    rmSync(join(fixture, RESIDUE_DIR_PREFIX + "net"), { recursive: true, force: true });
+    const clean = findResidueDirs([fixture], fixture);
+    afterClean = clean.hits.length;
+    assert.equal(afterClean, 0, "删掉残留后应报 0，实际 " + afterClean);
+    // 作用域不可读 ⇒ 记一条而不抛（报告型检查不得把套件搞红）
+    unreadableOk = findResidueDirs([join(fixture, "no-such-scope")], fixture).unreadable.length === 1;
+    assert.ok(unreadableOk, "不可读作用域应进 unreadable 清单");
+  } finally {
+    rmSync(fixture, { recursive: true, force: true }); // 只删本用例自己建的 fixture
+  }
+
+  // 真实报告：仓库根 + temp/ + mcp-server/ + data/
+  const scopes = RESIDUE_SCAN_SCOPES.map((s) => join(REPO_ROOT, s));
+  for (const must of ["", "temp", "mcp-server", "data"]) {
+    assert.ok(RESIDUE_SCAN_SCOPES.includes(must), `扫描作用域少了 ${must || "仓库根"}（清单被悄悄收窄 ⇒ 报告恒为 0）`);
+    assert.ok(existsSync(join(REPO_ROOT, must)), `扫描作用域 ${must || "仓库根"} 不存在`);
+  }
+  const { hits, unreadable } = findResidueDirs(scopes, REPO_ROOT);
+  console.log(`  [residue] 作用域=${scopes.length} ${RESIDUE_DIR_PREFIX} 形态目录命中=${hits.length}（报告型，不阻断）`);
+  for (const h of hits) console.log(`    ${h.rel}  文件=${h.files}  ${h.mib} MiB  (位于 ${h.scope}/)`);
+  for (const u of unreadable) console.log(`    作用域不可读: ${u}`);
+  console.log(
+    `    自证：建 1 个 fixture→命中=1，删掉→命中=${afterClean}，前缀投毒→命中=${wrongPrefixHits}，不可读作用域=${unreadable.length ? "已记录" : "无"}`,
+  );
+}
+
+/**
+ * S22：`community_knowledge/indexes/index-l0.json` 与短文正文必须一致。
+ * 索引是 `search_community_docs` 的元数据源（summary / tags / mcHint 都从索引来），
+ * 改了正文没重建索引 ⇒ Agent 检索到的是上一版结论，而正文里已是新数字。
+ * 纯函数比对器便于投毒自证；真实比对读运行时实际使用的那个根目录。
+ */
+function diffCommunityIndex(committed, rebuilt) {
+  const canon = (e) =>
+    JSON.stringify(Object.keys(e).sort().map((k) => [k, e[k]]));
+  const c = new Map(committed.map((e) => [e.id, e]));
+  const r = new Map(rebuilt.map((e) => [e.id, e]));
+  const stale = [];
+  const orphan = [];
+  const unindexed = [];
+  for (const [id, e] of c) {
+    if (!r.has(id)) orphan.push(id);
+    else if (canon(e) !== canon(r.get(id))) stale.push(id);
+  }
+  for (const id of r.keys()) if (!c.has(id)) unindexed.push(id);
+  return { stale, orphan, unindexed };
+}
+
+function testCommunityIndexSync() {
+  const zero = { stale: [], orphan: [], unindexed: [] };
+  const fixture = [
+    { id: "a/x", label: "X", path: "a/x.md", url: "", tags: ["t"], sourceKind: "authored", priority: 1, summary: "旧摘要", mcHint: "" },
+    { id: "a/y", label: "Y", path: "a/y.md", url: "", tags: ["u"], sourceKind: "authored", priority: 1, summary: "不动", mcHint: "" },
+  ];
+  assert.deepEqual(diffCommunityIndex(fixture, fixture.map((e) => ({ ...e }))), zero, "同一份索引与源不该报任何差异");
+  const flipped = fixture.map((e) => Object.fromEntries([...Object.entries(e)].reverse()));
+  assert.deepEqual(diffCommunityIndex(fixture, flipped), zero, "字段顺序不同就被判陈旧 ⇒ 比对器在误报");
+  const mutatedSummary = fixture.map((e) => (e.id === "a/x" ? { ...e, summary: "新摘要" } : e));
+  assert.deepEqual(diffCommunityIndex(fixture, mutatedSummary).stale, ["a/x"], "正文摘要变了、索引没跟上 ⇒ 必须报陈旧");
+  assert.deepEqual(diffCommunityIndex(fixture, mutatedSummary).orphan, [], "字段差异不得被误报成条目多余");
+  assert.deepEqual(diffCommunityIndex(fixture.filter((e) => e.id !== "a/y"), fixture).unindexed, ["a/y"], "源里有、索引里没有 ⇒ 必须报未入库");
+  assert.deepEqual(diffCommunityIndex([...fixture, { ...fixture[0], id: "a/z" }], fixture).orphan, ["a/z"], "索引里有、源里已删 ⇒ 必须报条目多余");
+  const noIndex = diffCommunityIndex([], fixture);
+  assert.deepEqual(noIndex.unindexed, ["a/x", "a/y"], "索引完全没建时两条都必须报未入库");
+  assert.equal(noIndex.stale.length + noIndex.orphan.length, 0);
+  const noSource = diffCommunityIndex(fixture, []);
+  assert.deepEqual(noSource.orphan, ["a/x", "a/y"], "源根扫空时必须逐条报条目多余（否则空扫描能蒙混过关）");
+  assert.equal(noSource.stale.length + noSource.unindexed.length, 0);
+
+  const root = new CommunityDocStore().getRoot();
+  const indexPath = join(root, "indexes", "index-l0.json");
+  assert.ok(existsSync(indexPath), `找不到社区索引 ${indexPath}；重建命令：cd mcp-server && npm run community:index`);
+  const committed = JSON.parse(readFileSync(indexPath, "utf8")).entries ?? [];
+  const rebuilt = buildCommunityEntries(root);
+  assert.ok(rebuilt.length > 0, `源根 ${root} 一个 .md 都没扫到 ⇒ 本门禁在空转`);
+  assert.ok(committed.length > 0, "已提交索引为空 ⇒ 检索等于没有社区库");
+
+  const { stale, orphan, unindexed } = diffCommunityIndex(committed, rebuilt);
+  // 探针字面同时命中「自己有实测分发表或」与「正文引用别处实测表」（如总目录）——
+  // 两类都必须在索引摘要里写清来源级别，否则检索侧看到的是旧口径。
+  let refDocs = 0;
+  const refHits = [];
+  for (const e of rebuilt) {
+    const file = join(root, e.path);
+    if (!existsSync(file)) continue;
+    const body = stripLeadingFrontmatter(readFileSync(file, "utf8"));
+    if (!body.includes("分发窗口（Modrinth API 实测")) continue;
+    refDocs++;
+    if (/实测/.test(e.summary)) refHits.push(e.id);
+  }
+  console.log(
+    `  [community-index] 根=${root} 索引=${committed.length} 源=${rebuilt.length} ` +
+      `陈旧=${stale.length} 索引多余=${orphan.length} 未入库=${unindexed.length} ` +
+      `正文引用Modrinth实测的短文=${refDocs}（索引摘要带实测= ${refHits.length}/${refDocs}）`,
+  );
+  for (const [kind, ids] of [["陈旧", stale], ["索引多余", orphan], ["未入库", unindexed]]) {
+    for (const id of ids.slice(0, 10)) console.log(`    ${kind}: ${id}`);
+  }
+  assert.deepEqual(stale, [], `索引摘要/标签与正文不一致，跑 npm run community:index 重建 ${indexPath}`);
+  assert.deepEqual(orphan, [], "索引里有已删除的短文，跑 npm run community:index 重建");
+  assert.deepEqual(unindexed, [], "新短文没进索引，跑 npm run community:index 重建");
+  assert.ok(refDocs > 0, "没有任何短文引用 Modrinth 实测分发数据 ⇒ 来源级别检查是空转");
+  assert.equal(refHits.length, refDocs, "正文引用了 Modrinth 实测数字，索引摘要却没标注实测");
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -3886,14 +6248,17 @@ await testMigrationRequiresConfirmationAndWritesWhenConfirmed();
 await testMigrationSamePlatformDoesNotRenameForgePackages();
 await testExtractCommonArchitecturyLayout();
 await testPortingTargetVersionRequired();
+await testArchitecturySettingsGradleFromKb();
 await testCommunityDocsSearchAndLinks();
 testAuditMinorFixes();
 await testCrashAnalyzeKindAndMissingDep();
+testCrashPatternSpecificity();
 await testPlatformDataMissing();
 await testNeoForgeResolveDirForgeCompat();
 await testSearchEnhancements();
 await testDatagenAndMappingGates();
 await testPortingFabricYarnAndProps();
+testGradlePropertiesInlineComment();
 await testObfuscatedLayerAndLookup();
 await testFivePlatformRouting();
 await testThinLoaderAndFabricWiki();
@@ -3905,7 +6270,18 @@ testPlan1Fixes();
 await testPrototypeOwnKeys();
 await testW2MappingDocsFixes();
 await testPortingHandoffArgsAreCallable();
+await testPortingKbProvenance();
+await testFabricScaffoldWrappers();
+await testAssertionProvenance();
+await testFabric2612Knowledge();
+await testLoaderApiRepoDataHygiene();
+await testZipInflateZeroByteDeflate();
+await testDocsToolTablesMatchRegistry();
+testPublishChecklistFromCommunityDoc();
 testBedrockMisdetectionFixed();
+testScriptWriteGuardFunnel();
+testResidueDirsReport();
+testCommunityIndexSync();
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

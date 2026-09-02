@@ -450,6 +450,69 @@ async function testWriteUpdateStateFailure() {
   rmSync(blocker, { recursive: true, force: true });
 }
 
+async function testUpdateStateSingleSource() {
+  const base = mkdtempSync(join(tmpdir(), "mc-upd-src-"));
+  const dataDir = join(base, "data");
+  const cacheDir = join(base, "cache");
+  mkdirSync(dataDir, { recursive: true });
+  mkdirSync(cacheDir, { recursive: true });
+  const prevData = process.env.MC_SKILL_DATA;
+  const prevCache = process.env.MC_SKILL_CACHE;
+  process.env.MC_SKILL_DATA = dataDir;
+  process.env.MC_SKILL_CACHE = cacheDir;
+  try {
+    const legacyPath = state.updateStateLegacyPath(dataDir);
+    const canonPath = state.updateStatePath(dataDir);
+    assert.equal(canonPath, join(cacheDir, "mc-skill-update-state.json"), "唯一读写来源必须是 cache 根");
+    assert.equal(legacyPath, join(dataDir, "mc-skill-update-state.json"), "legacy 只在 data/ 下");
+    assert.notEqual(canonPath, legacyPath, "夹具：两条路径必须不同，否则复现不了 A-22");
+
+    // 旧部署遗留快照：既有 durable 的已装数据标识，也有过期的缓存瞬态
+    writeFileSync(
+      legacyPath,
+      JSON.stringify({
+        dataReleaseTag: "vLEGACY",
+        lastCheck: { at: "2026-01-01T00:00:00.000Z", updateAvailable: true, remoteTag: "vOLD", scopes: ["data"] },
+        pendingRestart: true,
+      }),
+      "utf8",
+    );
+
+    const adopted = state.readUpdateState(dataDir);
+    assert.equal(adopted.dataReleaseTag, "vLEGACY", "durable 字段一次性采纳，别让老部署丢失已装数据标识");
+    assert.equal(adopted.lastCheck, undefined, "A-22：lastCheck 属缓存瞬态，禁止从 legacy 复活");
+    assert.equal(adopted.pendingRestart, undefined, "A-22：pendingRestart 禁止从 legacy 复活");
+    assert.equal(state.getUpdateHint(dataDir).stale, true, "没有 lastCheck 就必须提示重新 check");
+
+    const at = new Date().toISOString();
+    state.writeUpdateState(
+      { dataReleaseTag: "vNEW", lastCheck: { at, updateAvailable: false, remoteTag: "v9.9.9", scopes: [] } },
+      dataDir,
+    );
+    assert.equal(JSON.parse(readFileSync(canonPath, "utf8")).dataReleaseTag, "vNEW", "写入必须落在 updateStatePath()");
+    assert.equal(state.readUpdateState(dataDir).dataReleaseTag, "vNEW", "读回必须来自刚写入的同一文件");
+    assert.equal(state.getUpdateHint(dataDir).stale, false, "写完后 hint 必须反映新写入的 lastCheck");
+    assert.equal(JSON.parse(readFileSync(legacyPath, "utf8")).dataReleaseTag, "vLEGACY", "写路径永不碰 legacy 文件");
+
+    // cache 状态文件被清掉（文档承诺 cache 可随意清）：瞬态不得回流成「当前状态」
+    rmSync(canonPath);
+    const after = state.readUpdateState(dataDir);
+    assert.equal(after.lastCheck, undefined, "A-22：清 cache 后旧 lastCheck 不得复活");
+    assert.equal(state.getUpdateHint(dataDir).stale, true, "清 cache 后必须重新 check，而不是沿用冻结快照");
+    // 已记录的取舍：cache 清空后 durable 字段会重新采纳 legacy（数据树仍在原地）
+    assert.equal(after.dataReleaseTag, "vLEGACY");
+    const merged = state.writeUpdateState({ updatedAt: "2026-09-01T00:00:00.000Z" }, dataDir);
+    assert.equal(merged.state.lastCheck, undefined, "A-22：冻结快照不得被当成当前状态再写回唯一路径");
+  } finally {
+    if (prevData === undefined) delete process.env.MC_SKILL_DATA;
+    else process.env.MC_SKILL_DATA = prevData;
+    if (prevCache === undefined) delete process.env.MC_SKILL_CACHE;
+    else process.env.MC_SKILL_CACHE = prevCache;
+    rmSync(base, { recursive: true, force: true });
+  }
+  console.log("update state 读写同源 (A-22): ok");
+}
+
 async function testPendingRestartHint() {
   const dataDir = mkdtempSync(join(tmpdir(), "mc-upd-data-"));
   state.writeUpdateState(
@@ -553,6 +616,7 @@ async function main() {
   await testMdkUnpackPinGate();
   await testPendingRestartHint();
   await testWriteUpdateStateFailure();
+  await testUpdateStateSingleSource();
   await testInvalidActionSkipsNetwork();
   console.log("test-update: ok");
 }
