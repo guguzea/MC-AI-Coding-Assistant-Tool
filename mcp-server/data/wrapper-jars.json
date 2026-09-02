@@ -1,0 +1,143 @@
+{
+  "note": "Gradle Wrapper 三件套的出处记录（与 mcp-server/test-core.mjs 的 WRAPPER_JARS 钉值表由门禁强制对齐）。本文件是仓内可查证据；S13 当时的取证日志在临时目录，不入库，故其结论逐条落到这里。",
+  "method": {
+    "officialCheck": "先取 https://services.gradle.org/distributions/gradle-<v>-bin.zip.sha256 官方校验值（需 -L 跟随 307）。",
+    "download": "实体 zip 经 mirrors.cloud.tencent.com/gradle 或 mirrors.huaweicloud.com/gradle 取得（services.gradle.org 本体 307 → github.com/gradle/gradle-distributions，本机不可达）。",
+    "verify": "逐档实测 zip sha256 == 官方校验值：7/7 SHA-OK。",
+    "generate": "用该版本自己的 Gradle 离线执行 wrapper 任务生成三件套：gradle -g <gradle-home> wrapper --gradle-version <v> --no-validate-url（8.4+）；6.9.4 / 7.4.2 / 7.6.1 无 --no-validate-url，改用 --gradle-distribution-url file:<本地 zip>。6.9.4 在 JDK 17 下 startup failed，改由 JRE 1.8.0_431 运行。",
+    "jarIdentity": "生成的 jar 与同一 zip 内嵌 lib/plugins/gradle-wrapper-<v>.jar 里的 gradle-wrapper.jar 条目逐字节相同：7 档中 6 档 match=YES；8.10 因条目路径不同未参与该比对（其 sha256 仍来自官方 zip 内的 wrapper 任务产物）。",
+    "lineEndings": "gradlew 实测 CR=0（LF-only），gradlew.bat 实测 CR=LF=行数（CRLF），与 git ls-files --eol 基线一致，故原样复制不做行尾转换。git 模式 100644（gradlew 无执行位）。"
+  },
+  "jars": {
+    "6.9.4": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-6.9.4-bin.zip",
+      "zipSha256": "3e240228538de9f18772a574e99a0ba959e83d6ef351014381acd9631781389a",
+      "jarSha256": "e996d452d2645e70c01c11143ca2d3742734a28da2bf61f25c82bdc288c9e637",
+      "jarSize": 59203,
+      "gradlewSize": 8047,
+      "gradlewBatSize": 2763,
+      "usedBy": ["fabric/1.14.4"]
+    },
+    "7.4.2": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-7.4.2-bin.zip",
+      "zipSha256": "29e49b10984e585d8118b7d0bc452f944e386458df27371b49b4ac1dec4b7fda",
+      "jarSha256": "575098db54a998ff1c6770b352c3b16766c09848bee7555dab09afc34e8cf590",
+      "jarSize": 59821,
+      "gradlewSize": 8070,
+      "gradlewBatSize": 2763,
+      "usedBy": ["fabric/1.17.1"]
+    },
+    "7.6.1": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-7.6.1-bin.zip",
+      "zipSha256": "6147605a23b4eff6c334927a86ff3508cb5d6722cd624c97ded4c2e8640f1f87",
+      "jarSha256": "c5a643cf80162e665cc228f7b16f343fef868e47d3a4836f62e18b7e17ac018a",
+      "jarSize": 61574,
+      "gradlewSize": 8497,
+      "gradlewBatSize": 2868,
+      "usedBy": ["fabric/1.16.5"]
+    },
+    "8.4": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-8.4-bin.zip",
+      "zipSha256": "3e1af3ae886920c3ac87f7a91f816c0c7c436f276a6eefdb3da152100fef72ae",
+      "jarSha256": "0336f591bc0ec9aa0c9988929b93ecc916b3c1d52aed202c7381db144aa0ef15",
+      "jarSize": 63721,
+      "gradlewSize": 8692,
+      "gradlewBatSize": 2868,
+      "usedBy": ["fabric/1.18.2", "fabric/1.19.4", "fabric/1.20.1"]
+    },
+    "8.6": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-8.6-bin.zip",
+      "zipSha256": "9631d53cf3e74bfa726893aee1f8994fee4e060c401335946dba2156f440f24c",
+      "jarSha256": "d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd",
+      "jarSize": 43462,
+      "gradlewSize": 8692,
+      "gradlewBatSize": 2918,
+      "usedBy": ["fabric/1.21.3"]
+    },
+    "8.8": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-8.8-bin.zip",
+      "zipSha256": "a4b4158601f8636cdeeab09bd76afb640030bb5b144aafe261a5e8af027dc612",
+      "jarSha256": "cb0da6751c2b753a16ac168bb354870ebb1e162e9083f116729cec9c781156b8",
+      "jarSize": 43453,
+      "gradlewSize": 8706,
+      "gradlewBatSize": 2918,
+      "usedBy": ["fabric/1.20.4"]
+    },
+    "8.10": {
+      "verified": "official-distribution",
+      "jarByteCompareWithZipEntry": false,
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-8.10-bin.zip",
+      "zipSha256": "5b9c5eb3f9fc2c94abaea57d90bd78747ca117ddbbf96c859d3741181a12bf2a",
+      "jarSha256": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046",
+      "jarSize": 43583,
+      "gradlewSize": 8762,
+      "gradlewBatSize": 2966,
+      "usedBy": ["fabric/1.21.1"]
+    },
+    "9.5.1": {
+      "verified": "in-repo-baseline",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-9.5.1-bin.zip",
+      "jarSha256": "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7",
+      "jarSize": 48462,
+      "gradlewSize": 8654,
+      "gradlewBatSize": 2846,
+      "usedBy": ["fabric/1.21.11"],
+      "caveat": "该 sha256 是仓内既有文件的实测值，本轮未下载 9.5.1 发行包复核上游，只按已知值锁它防篡改；不宣称它是本轮验证产物。"
+    }
+  },
+  "gaps": {
+    "wrapperVersionUndeclared": ["1.21.4", "1.21.8", "1.21.10", "26.1.2"],
+    "why": "这 4 档 fabric scaffold 完全没有 gradle/ 目录与 gradle-wrapper.properties；全仓 grep 在它们的规则树、README_AI.md、build.gradle、data/fabric_<ver>/ 中都没有任何 Gradle 版本字符串，按「禁止无证据臆造」登记为空洞，待指定版本后补写并从这里删除。"
+  },
+  "mdkMeasured": {
+    "note": "官方 MDK 内 gradle/wrapper/gradle-wrapper.properties 的实测钉值（forge 平台 Gradle 下限断言的出处；MDK 的 URL 与 zip sha256 见 mcp-server/data/mdk-checksums.json）。",
+    "measuredOn": "2026-09-02",
+    "entries": [
+      {
+        "mdk": "forge-1.20.1-forgegradle",
+        "artifact": "1.20.1-47.4.10-mdk.zip",
+        "zipSha256": "73e0122becd05e39b47eced54e030380d66411850ed86786a2d58ecd886b0451",
+        "declaredGradle": "8.8",
+        "shippedWrapperJarSize": 62076,
+        "shippedWrapperJarSha256": "ed2c26eba7cfb93cc2b7785d05e534f07b5b48b5e7fc941921cd098628abca58",
+        "jarNote": "MDK 自带 jar 与 8.8 发行包内嵌 wrapper jar（43453 B）不是同一代产物：props 声明 8.8，jar 沿用 MDK 仓库里的旧生成物。wrapper jar 只负责按 distributionUrl 下载发行包，故仍可用；不把它当「8.8 官方 wrapper jar」。"
+      },
+      {
+        "mdk": "forge-1.20.4-forgegradle",
+        "artifact": "1.20.4-49.2.0-mdk.zip",
+        "zipSha256": "82db5950872220031f1f55f2392061759c7e52a907ff3bfe3439f513c1f524db",
+        "declaredGradle": "8.12.1",
+        "shippedWrapperJarSize": null,
+        "shippedWrapperJarSha256": null
+      },
+      {
+        "mdk": "forge-1.19.4-forgegradle",
+        "artifact": "1.19.4-45.4.0-mdk.zip",
+        "zipSha256": "a6a9009c61722fbe20c04d063fefc1c84fa7df4998e342b619b0877992a3f456",
+        "declaredGradle": "8.8"
+      },
+      {
+        "mdk": "forge-1.18.2-forgegradle",
+        "artifact": "1.18.2-40.3.0-mdk.zip",
+        "zipSha256": "b2691f2aa4a0e8de06c9bcf7c0cb167abedecf17ea90b0ec943b002d0a2f3e2b",
+        "declaredGradle": "8.8"
+      }
+    ]
+  },
+  "unverifiedWrapper": [
+    {
+      "path": "forge/1.20.1/scaffold/gradle/wrapper/gradle-wrapper.jar",
+      "declaredGradle": "8.5",
+      "jarSize": 42592,
+      "jarSha256": "2079de5ad4a5e5ea45beca4898dc9ae50f5d8d3b55bba3e114a54dcb571f57f6",
+      "problem": "props 声明 8.5，但该 jar 与官方 8.5 / 8.6 发行产物（43462 B）都不匹配，来源不明；forge scaffold 不在 fabric wrapper 门禁覆盖范围内。",
+      "action": "forge/*/scaffold 整体缺 wrapper 三件套（仅 4 档有 jar）+ 版本无出处，属独立工作量，未在本轮补写；规则树已改为指向官方 MDK 钉值。"
+    }
+  ]
+}
