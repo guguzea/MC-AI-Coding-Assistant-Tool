@@ -85,6 +85,20 @@ export async function downloadToFile(
           headers: { "User-Agent": "MC-AI-Coding-Assistant-Tool-updater" },
           redirect: "follow",
         });
+        // redirect:"follow" 已由 undici 跟完跳板，res.url 即终址；用同一谓词复检后才许落盘
+        const landedUrl = res.url || url;
+        if (!isAllowedDownloadUrl(landedUrl)) {
+          return {
+            ok: false,
+            attempts: attempt,
+            action: actionable(
+              "DOWNLOAD_HOST_DENIED",
+              `重定向后跳出白名单: ${landedUrl}`,
+              ["仅允许 GitHub release 资源 URL（含重定向终址）"],
+              ["mc_skill_update"],
+            ),
+          };
+        }
         if (res.status === 404 || res.status === 403) {
           return {
             ok: false,

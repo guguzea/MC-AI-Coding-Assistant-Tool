@@ -83,6 +83,22 @@ export function pickYarnBuild(xml: string, version: string): string | null {
   return best?.full ?? null;
 }
 
+/**
+ * maven 路径段形态门：首字符必须 alnum，其后只许 alnum 与 . _ + -。
+ * `/` `\` `%` `?` `#` 与首字符 `.` 全被排除 → 越界、换 authority、改 query 的形态都无法通过，
+ * 合法 build 串（`1.20.1+build.10`）原样保留。
+ */
+const YARN_SEGMENT_RE = /^[A-Za-z0-9][A-Za-z0-9._+-]*$/;
+export function yarnUrlSegment(build: string): string {
+  if (!YARN_SEGMENT_RE.test(build)) {
+    throw new DownloadError(
+      "MAPPINGS_NOT_FOUND",
+      `yarn build 串形态非法，拒绝拼进 maven URL：${JSON.stringify(build)}`,
+    );
+  }
+  return build;
+}
+
 export async function resolveYarnMappings(version: string): Promise<YarnMappingsInfo> {
   const metadataUrl = `${YARN_BASE}/maven-metadata.xml`;
   const res = await fetch(metadataUrl, { signal: AbortSignal.timeout(60_000) });
@@ -98,7 +114,12 @@ export async function resolveYarnMappings(version: string): Promise<YarnMappings
   }
   // mergedv2 = official+intermediary+named 三列合一；纯 -v2.jar 只有 intermediary→named，
   // 两步 remap 的第一条腿 official→intermediary 会没有列可读。
-  const jarUrl = `${YARN_BASE}/${full}/yarn-${full}-mergedv2.jar`;
+  // full 取自上游 maven-metadata 文本 = 不可信输入。百分号编码在这台宿主上不是防护：
+  // 实测 GET .../yarn/zzz%2F..%2Fmaven-metadata.xml 返回的就是顶层元数据正文（%2F 会被解码并归一化），
+  // 而 encodeURIComponent("..") === ".." 且会把合法 build 串里的 + 编成 %2B（与上游目录名不一致）。
+  // 因此改为拼 URL 前过形态白名单，非法直接拒。
+  const seg = yarnUrlSegment(full);
+  const jarUrl = `${YARN_BASE}/${seg}/yarn-${seg}-mergedv2.jar`;
   const sum = await fetchMavenChecksum(jarUrl);
   if (!sum.sha256 && !sum.sha1) {
     throw new DownloadError(

@@ -1,9 +1,15 @@
 /**
  * Fabric Datagen。Quilt 无足够 QSL 类名，不走本模板。
- * 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8：FabricRecipeProvider#generate；1.21.10 / 1.21.11：#buildRecipes。
+ * recipe 骨架只发 **Mojmap 单一映射**（`buildRecipes` / `RecipeOutput`）：`generate` / `RecipeExporter`
+ * 是同一方法的 Yarn 名（实测 Mojang 官方 client.txt：1.21.1–1.21.11 Mojmap 一律 `buildRecipes`，
+ * 且 `RecipeExporter` 类在 mojmap 中不存在），不是版本差异。Yarn 工程整段换名，禁止同文件混映射。
  * Mojmap 骨架：1.21.1–1.21.10 用 net.minecraft.resources.ResourceLocation；1.21.11 起改名为
  * net.minecraft.resources.Identifier（fromNamespaceAndPath）。禁止混入 Yarn 的 net.minecraft.util.Identifier/of。
  * 26.1.x：FabricPackOutput + FabricBlockLootSubProvider + Identifier（fabric-docs 26.1.2）。
+ * **层数轴（与映射轴正交，是真实版本差异）**：`recipeTwoLayer=true`（1.21.3+）时发两层形态——
+ * `FabricRecipeProvider` 只实现 `createRecipeProvider(HolderLookup.Provider, RecipeOutput)` 返回 vanilla
+ * `RecipeProvider`，配方写在返回对象的**无参** `buildRecipes()` 里；单层带参 `buildRecipes(RecipeOutput)`
+ * 仅 1.21.1 有效，1.21.3+ 编译不过（判据见 datagen/index.ts 的 FABRIC_RECIPE_TWO_LAYER_VERSIONS 注释）。
  */
 import { toPascalCase } from "./common.js";
 
@@ -49,12 +55,12 @@ export function generateFabric(
   targetName: string,
   classBase: string,
   version26: boolean,
-  recipeMethod: "generate" | "buildRecipes" = "buildRecipes",
   idStyle: FabricIdStyle = "ResourceLocation",
+  recipeTwoLayer = false,
 ): string {
   const pascalName = classBase || toPascalCase(modId);
   if (version26) return generateFabric261(providerType, modId, targetName, pascalName);
-  return generateFabric21(providerType, modId, targetName, pascalName, recipeMethod, idStyle);
+  return generateFabric21(providerType, modId, targetName, pascalName, idStyle, recipeTwoLayer);
 }
 
 function generateFabric21(
@@ -62,8 +68,8 @@ function generateFabric21(
   modId: string,
   targetName: string,
   pascalName: string,
-  recipeMethod: "generate" | "buildRecipes" = "buildRecipes",
   idStyle: FabricIdStyle = "ResourceLocation",
+  recipeTwoLayer = false,
 ): string {
   const header = `// Fabric Datagen 1.21.x — DataGeneratorEntrypoint + fabric-datagen（${modId}:${targetName}）
 package com.example.${modId}.datagen;
@@ -76,11 +82,12 @@ import net.minecraft.core.HolderLookup;
 
   switch (providerType) {
     case "recipe": {
-      const exporterType = recipeMethod === "generate" ? "RecipeExporter" : "RecipeOutput";
-      return `${header}import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+      if (recipeTwoLayer) {
+        return `${header}import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.${exporterType};
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.Items;
 
 public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
@@ -88,13 +95,47 @@ public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
         super(output, registriesFuture);
     }
 
-    // Yarn: generate(RecipeExporter)；Mojmap: buildRecipes(RecipeOutput)。禁止混映射。
+    // 两层：本类只负责造出 vanilla 生成器，配方写在返回对象的**无参** buildRecipes() 里。
+    // 1.21.1 才是带参的单层形态，不要跨版套用。
     @Override
-    public void ${recipeMethod}(${exporterType} exporter) {
+    protected RecipeProvider createRecipeProvider(HolderLookup.Provider registryLookup, RecipeOutput exporter) {
+        return new RecipeProvider(registryLookup, exporter) {
+            @Override
+            public void buildRecipes() {
+                shapeless(RecipeCategory.MISC, Items.DIAMOND)
+                    .requires(Items.EMERALD)
+                    .unlockedBy(getHasName(Items.EMERALD), has(Items.EMERALD))
+                    .save(output, "${modId}:${targetName}");
+            }
+        };
+    }
+
+    @Override
+    public String getName() {
+        return "${pascalName}RecipeProvider";
+    }
+}
+${entrypoint(modId, pascalName, `${pascalName}RecipeProvider`)}
+`;
+      }
+      return `${header}import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.world.item.Items;
+
+public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
+    public ${pascalName}RecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, registriesFuture);
+    }
+
+    // 单层（仅 1.21.1）：buildRecipes(RecipeOutput) 带参，配方直接写在本类。1.21.3 起改两层形态，勿跨版套用。
+    @Override
+    public void buildRecipes(RecipeOutput output) {
         shapeless(RecipeCategory.MISC, Items.DIAMOND)
             .requires(Items.EMERALD)
             .unlockedBy("has_emerald", has(Items.EMERALD))
-            .save(exporter, "${modId}:${targetName}");
+            .save(output, "${modId}:${targetName}");
     }
 
     @Override

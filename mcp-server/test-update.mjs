@@ -596,6 +596,48 @@ async function testDownload429RetriesThenOk() {
   assert.equal(readFileSync(dest, "utf8"), "abc");
 }
 
+async function testDownloadRedirectOffAllowlistFails() {
+  let calls = 0;
+  const fetchImpl = async () => {
+    calls += 1;
+    return {
+      ok: true,
+      status: 200,
+      url: "https://evil.example.com/payload.zip",
+      headers: { get: () => null },
+      body: Readable.toWeb(Readable.from([Buffer.from("EVIL")])),
+    };
+  };
+  const dest = join(mkdtempSync(join(tmpdir(), "mc-dl-redir-")), "x.bin");
+  const r = await download.downloadToFile(
+    "https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/releases/download/v0.2.0/a.zip",
+    dest,
+    { fetchImpl, maxAttempts: 3 },
+  );
+  assert.equal(r.ok, false, JSON.stringify(r));
+  assert.equal(calls, 1, "重定向跳出白名单不得重试");
+  assert.match(String(r.action?.message ?? ""), /重定向后跳出白名单/);
+  assert.equal(existsSync(dest), false, "终址不在白名单时不得落盘");
+}
+
+async function testDownloadRedirectWithinAllowlistOk() {
+  const fetchImpl = async () => ({
+    ok: true,
+    status: 200,
+    url: "https://release-assets.githubusercontent.com/github-production-release-asset/1/2/a.zip",
+    headers: { get: () => null },
+    body: Readable.toWeb(Readable.from([Buffer.from("abc")])),
+  });
+  const dest = join(mkdtempSync(join(tmpdir(), "mc-dl-redir-ok-")), "x.bin");
+  const r = await download.downloadToFile(
+    "https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/releases/download/v0.2.0/a.zip",
+    dest,
+    { fetchImpl, maxAttempts: 3 },
+  );
+  assert.equal(r.ok, true, JSON.stringify(r));
+  assert.equal(readFileSync(dest, "utf8"), "abc");
+}
+
 async function main() {
   testSemver();
   testZipLayout();
@@ -605,6 +647,8 @@ async function main() {
   await testStablePaginatesPastFirstPage();
   await testDownload404NoRetry();
   await testDownload429RetriesThenOk();
+  await testDownloadRedirectOffAllowlistFails();
+  await testDownloadRedirectWithinAllowlistOk();
   await testCheckUpdateAvailable();
   await testGitDescribeAheadNoUpdate();
   await testApplyRequiresConfirm();

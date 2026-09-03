@@ -435,7 +435,14 @@ export function detectProjectLoaders(input: {
   if (anyQuilt) found.add("quilt");
   if (anyFabric) found.add("fabric");
   if (anyNeo) found.add("neoforge");
-  if ((anyForgeMeta || anyForgeGradle || /net\.minecraftforge/.test(javaBlob)) && !anyNeo) {
+  // 混合 LiteLoader 工程必然带 javafml mods.toml / net.minecraftforge 导入；primary 已决断成
+  // liteloader_forge 时不再叠加 "forge"，否则下面的 multiLoader 门会让 detect.ts 在用到
+  // primary 之前返回 PICK_PLATFORM（与上方 anyLite 同一处理）。
+  if (
+    (anyForgeMeta || anyForgeGradle || /net\.minecraftforge/.test(javaBlob)) &&
+    !anyNeo &&
+    primary !== "liteloader_forge"
+  ) {
     found.add("forge");
   }
   const anyLite =

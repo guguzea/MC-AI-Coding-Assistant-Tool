@@ -1,4 +1,5 @@
-import { versionRequiredAction, missingMcVersion } from "../utils/actionable.js";
+import { versionRequiredAction, missingMcVersion, actionable, ActionCodes } from "../utils/actionable.js";
+import { isExactMcVersionToken } from "../utils/minecraft-version.js";
 import { parseJsonUtf8 } from "../utils/json-utf8.js";
 import { ownGet } from "../utils/own-record.js";
 
@@ -197,8 +198,34 @@ export function validateDatapackJson(input: ValidateDatapackInput): ValidateData
     };
   }
   const version = input.version!.trim();
+  // "unknown" = 内部调用者（validate/loaders.ts 扫描 recipe 目录时拿不到工程版本）的哨兵：
+  // 允许通过，但必须声明本次不做任何版本相关判定，禁止把它当成「已按此版本校验」。
+  const versionAgnostic = version === "unknown";
+  if (!versionAgnostic && !isExactMcVersionToken(version)) {
+    const action = actionable(
+      ActionCodes.INVALID_INPUT,
+      `version="${version}" 不是合法 MC 版本 token（如 1.20.4 / 1.21.11 / 26.1）`,
+      [
+        "传精确 MC 版本，例如 1.20.4、1.21.11、26.1",
+        "先 list_*_versions / list_doc_versions 查看已索引版本",
+        "快照名（23w31a）与 beta 后缀（1.21beta）本工具不接受",
+      ],
+      ["list_doc_versions"],
+    );
+    return {
+      valid: false,
+      version: "",
+      kind: input.kind,
+      errors: [action.message],
+      warnings: [],
+      action,
+    };
+  }
   const errors: string[] = [];
   const warnings: string[] = [];
+  if (versionAgnostic) {
+    warnings.push("version=unknown：本次未做版本相关判定（仅结构校验）");
+  }
 
   let data: Record<string, unknown>;
   try {
@@ -248,6 +275,7 @@ export function validateDatapackJson(input: ValidateDatapackInput): ValidateData
       break;
     case "advancement":
       requireKeys(data, ["criteria"], errors);
+      // 仅提示：入口已保证 version 是合法精确 token，此处不参与 valid 判定
       if (/^1\.21(\.|$)/.test(version) && !("rewards" in data)) {
         warnings.push("1.21+ advancement 建议包含 rewards 或显式空对象");
       }

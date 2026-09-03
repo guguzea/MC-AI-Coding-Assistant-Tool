@@ -64,6 +64,7 @@ import { exclusiveFabricFallbackRefusal } from "./dist/docs-platform/quilt-searc
 import { getWorkflowTemplate, WORKFLOW_TEMPLATES } from "./dist/prompts/index.js";
 import { KNOWN_VERSIONS } from "./dist/docs-platform/platforms.js";
 import { sessionPlatformPack } from "./dist/platform-pack/session.js";
+import { detectModProject } from "./dist/platform-pack/detect.js";
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -160,6 +161,120 @@ displayName="Example Mod"
     assert.equal(result.analysis.current.platformVersion, "47.2.0");
     assert.equal(result.analysis.current.mappings, "official");
     assert.equal(result.analysis.current.stats.javaFiles, 0);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+async function testLiteLoaderForgeHybridNotMultiLoader() {
+  // D-2 / N-4：混合工程（litemod.json + javafml mods.toml + liteloader 专用插件）此前在
+  // detect_mod_project 里被双加成 forge + liteloader → detect.ts 的 multiLoader 门抢在
+  // primary 之前返回 PICK_PLATFORM，AGENTS.md §4 的四分支决策在工具面根本走不到。
+  const writeProj = (root, { gradle, modsToml, litemod }) => {
+    mkdirSync(join(root, "src", "main", "resources", "META-INF"), { recursive: true });
+    if (gradle) writeFileSync(join(root, "build.gradle"), gradle, "utf8");
+    if (modsToml) {
+      writeFileSync(join(root, "src", "main", "resources", "META-INF", "mods.toml"), modsToml, "utf8");
+    }
+    if (litemod) writeFileSync(join(root, "litemod.json"), litemod, "utf8");
+  };
+  const javafml = 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n';
+  const cases = [
+    {
+      name: "hybrid",
+      files: {
+        gradle:
+          "apply plugin: 'net.minecraftforge.gradle.forge'\napply plugin: 'net.minecraftforge.gradle.liteloader'\n",
+        modsToml: javafml,
+        litemod: '{"name":"examplemod","author":"a","description":"d","pack_version":4,"version":"1.0"}',
+      },
+      wantLoader: "liteloader_forge",
+      wantPlatform: "liteloader",
+      wantNotMulti: true,
+    },
+    {
+      name: "pureLiteLoader",
+      // 「纯 LiteLoader」= MCP + Eclipse，无 Gradle：只有 litemod.json、没有 Forge 元数据。
+      // 带 net.minecraftforge.gradle.liteloader 插件的工程按 :286 的判据必然是混合工程
+      // （该插件是 ForgeGradle 命名空间下的构建期硬证据），不是本用例要覆盖的形态。
+      files: {
+        gradle: undefined,
+        modsToml: undefined,
+        litemod: '{"name":"examplemod","author":"a","description":"d","pack_version":4,"version":"1.0"}',
+      },
+      wantLoader: "liteloader",
+      wantPlatform: "liteloader",
+      wantNotMulti: true,
+    },
+    {
+      name: "pureForge",
+      files: {
+        gradle: "apply plugin: 'net.minecraftforge.gradle.forge'\n",
+        modsToml: javafml,
+        litemod: undefined,
+      },
+      wantLoader: "forge",
+      wantPlatform: "forge",
+      wantNotMulti: true,
+    },
+  ];
+  for (const c of cases) {
+    const root = mkdtempSync(join(tmpdir(), `mc-skill-hybrid-${c.name}-`));
+    try {
+      writeProj(root, c.files);
+      const r = detectModProject({ projectPath: root });
+      const blob = JSON.stringify(r);
+      assert.equal(r.loader, c.wantLoader, `${c.name}: ${blob.slice(0, 300)}`);
+      assert.equal(r.platform, c.wantPlatform, `${c.name}: ${blob.slice(0, 300)}`);
+      assert.notEqual(r.action?.code, "PICK_PLATFORM", `${c.name} 不得再问 platform: ${blob.slice(0, 300)}`);
+      if (c.wantNotMulti) {
+        assert.notEqual(r.multiLoader, true, `${c.name} 单加载器工程不得判多加载器: ${blob.slice(0, 300)}`);
+      }
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+}
+
+async function testPortProjectRejectsBadVersionToken() {
+  // P0-1 / B-15：targetVersion / neoforgeVersion 会被写进用户工程的 gradle.properties 与
+  // build.gradle。此前 portProject 只在个别 action 分支里看版本，注入串能走到写盘路径。
+  const root = mkdtempSync(join(tmpdir(), "mc-skill-badver-"));
+  const bad = [
+    { key: "targetVersion", value: "1.20.4 ${bad}" },
+    { key: "targetVersion", value: "1.20.4-beta" },
+    { key: "targetVersion", value: "1.21beta" },
+    { key: "targetVersion", value: "latest" },
+    { key: "neoforgeVersion", value: "21.1.x" },
+    { key: "neoforgeVersion", value: "21.1.113)" },
+  ];
+  try {
+    for (const b of bad) {
+      const r = JSON.parse(await portProject({
+        projectPath: root,
+        action: "init_architectury",
+        modId: "examplemod",
+        targetVersion: "1.20.4",
+        neoforgeVersion: "20.4.237",
+        dryRun: true,
+        [b.key]: b.value,
+      }));
+      const blob = JSON.stringify(r);
+      assert.equal(r.ok, false, `${b.key}="${b.value}" 必须早退: ${blob.slice(0, 240)}`);
+      assert.equal(r.error?.code, "INVALID_INPUT", blob.slice(0, 240));
+      assert.ok(String(r.error?.message).includes(b.key), `拒绝文案必须点名是哪个字段: ${blob.slice(0, 240)}`);
+      assert.ok(Array.isArray(r.error?.next), "必须带 next 步骤");
+    }
+    // 正向对照：合法 token 不得被这道门误杀（把守卫改成恒抛会在这里红）
+    const ok = JSON.parse(await portProject({
+      projectPath: root,
+      action: "init_architectury",
+      modId: "examplemod",
+      targetVersion: "1.20.4",
+      neoforgeVersion: "20.4.237",
+      dryRun: true,
+    }));
+    assert.equal(ok.ok, true, JSON.stringify(ok).slice(0, 240));
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -2170,6 +2285,10 @@ async function testFivePlatformRouting() {
   assert.equal(llOnlyLoaders.primary, "liteloader_forge");
   assert.ok(llOnlyLoaders.loaders.includes("liteloader_forge"));
   assert.equal(llOnlyLoaders.loaders.includes("liteloader"), false, JSON.stringify(llOnlyLoaders.loaders));
+  // D-2：hybrid 的 mods.toml / net.minecraftforge 导入不得再双加成 "forge"——
+  // 只断言 primary 会让「loaders=[forge,liteloader_forge] + multiLoader=true」蒙过这条测试。
+  assert.deepEqual(llOnlyLoaders.loaders, ["liteloader_forge"], JSON.stringify(llOnlyLoaders.loaders));
+  assert.equal(llOnlyLoaders.multiLoader, false, JSON.stringify(llOnlyLoaders.loaders));
   const llFabLoaders = detectProjectLoaders({
     buildGradle: "apply plugin: 'net.minecraftforge.gradle.liteloader'",
     modsToml: 'modLoader="javafml"\n[[mods]]\nmodId="demo"',
@@ -3560,39 +3679,64 @@ public class ExampleMod { }
   assert.ok(fabTag261.code?.includes("FabricTagsProvider.ItemTagsProvider"), "GH2 26.1 keeps plural");
   assert.ok(!fabTag261.code?.includes("FabricTagProvider.ItemTagProvider"), "GH2 26.1 must not use 1.21 singular");
 
-  const fabGen = generateDatagen({
+  // N-1 + N-11：Fabric recipe 骨架两条正交轴都必须对。
+  // ① 映射轴：只发 Mojmap 单一映射（`generate(RecipeExporter)` 是同一方法的 Yarn 名，非版本差异）。
+  // ② 层数轴（真版本差异）：1.21.1 单层带参 `buildRecipes(RecipeOutput)`；1.21.3+ 两层
+  //   `createRecipeProvider(HolderLookup.Provider, RecipeOutput)` → 匿名 vanilla RecipeProvider 的无参 `buildRecipes()`。
+  //   判据：Mojang 官方 client.txt（piston-meta client_mappings）逐版实测 + loader-api-summaries 抽象方法签名
+  //   + fabric/1.21.11/.cursor/rules/07-datagen.mdc:155-159。
+  const fabOneLayer = generateDatagen({
     providerType: "recipe",
     modId: "demo",
     targetName: "x",
     platform: "fabric",
-    version: "1.21.4",
+    version: "1.21.1",
   });
-  assert.ok(fabGen.code?.includes("void generate(RecipeExporter"), fabGen.code?.slice(0, 500));
-  assert.ok(!fabGen.code?.includes("void buildRecipes("), fabGen.code?.slice(0, 400));
+  assert.ok(fabOneLayer.code?.includes("void buildRecipes(RecipeOutput"), fabOneLayer.code?.slice(0, 500));
+  assert.ok(!/createRecipeProvider\(/.test(fabOneLayer.code || ""), "N-11 1.21.1 必须仍是单层，不得提前两层化");
+  assert.ok(!/RecipeExporter|RegistryWrapper|offerTo\(/.test(fabOneLayer.code || ""), "N-1 1.21.1 骨架禁止出现 Yarn 名");
   assert.ok(
-    fabGen.warnings?.some((w) => /RecipeExporter/.test(w)),
-    JSON.stringify(fabGen.warnings),
+    fabOneLayer.warnings?.some((w) => /RecipeExporter/.test(w) && /Yarn/.test(w)),
+    JSON.stringify(fabOneLayer.warnings),
   );
-  assert.ok(fabGen.code?.includes("generate(RecipeExporter)"), fabGen.code?.slice(0, 800));
+  assert.ok(
+    fabOneLayer.warnings?.some((w) => /单层/.test(w) && /1\.21\.3/.test(w)),
+    `1.21.1 必须说明本档单层、1.21.3 起两层：${JSON.stringify(fabOneLayer.warnings)}`,
+  );
 
-  const fab213 = generateDatagen({
+  for (const ver of ["1.21.3", "1.21.4", "1.21.8", "1.21.10", "1.21.11"]) {
+    const out = generateDatagen({
+      providerType: "recipe",
+      modId: "demo",
+      targetName: "x",
+      platform: "fabric",
+      version: ver,
+    });
+    const snippet = out.code?.slice(0, 700) ?? String(out.errors?.join(";"));
+    assert.ok(out.code?.includes("createRecipeProvider(HolderLookup.Provider registryLookup, RecipeOutput exporter)"), `${ver}: ${snippet}`);
+    assert.ok(out.code?.includes("new RecipeProvider(registryLookup, exporter)"), `${ver}: ${snippet}`);
+    assert.ok(out.code?.includes("public void buildRecipes() {"), `${ver}: ${snippet}`);
+    assert.ok(out.code?.includes('save(output, "demo:x")'), `${ver}: ${snippet}`);
+    assert.ok(out.code?.includes("import net.minecraft.data.recipes.RecipeProvider;"), `${ver}: ${snippet}`);
+    assert.ok(
+      !/buildRecipes\(\s*RecipeOutput/.test(out.code || ""),
+      `N-11 ${ver} 禁止单层带参 override（该方法 1.21.3 起不存在，编译器直接拒）`,
+    );
+    assert.ok(!/RecipeExporter|RegistryWrapper|offerTo\(/.test(out.code || ""), `${ver} 骨架禁止混映射`);
+  }
+
+  const fab261Recipe = generateDatagen({
     providerType: "recipe",
     modId: "demo",
     targetName: "x",
     platform: "fabric",
-    version: "1.21.3",
+    version: "26.1.2",
   });
-  assert.ok(fab213.code?.includes("void generate("), fab213.errors?.join(";") ?? fab213.code?.slice(0, 400));
-  assert.ok(!fab213.code?.includes("void buildRecipes("));
-
-  const fabBuild = generateDatagen({
-    providerType: "recipe",
-    modId: "demo",
-    targetName: "x",
-    platform: "fabric",
-    version: "1.21.10",
-  });
-  assert.ok(fabBuild.code?.includes("void buildRecipes("), fabBuild.code?.slice(0, 500));
+  assert.ok(
+    fab261Recipe.code?.includes("createRecipeProvider(") && fab261Recipe.code?.includes("void buildRecipes()"),
+    fab261Recipe.code?.slice(0, 600),
+  );
+  assert.ok(!/RecipeExporter|RegistryWrapper|offerTo\(/.test(fab261Recipe.code || ""), "26.1 两层 Mojmap 骨架禁止 Yarn 名");
 
   const fabNoNet = generateDatagen({
     providerType: "recipe",
@@ -3833,6 +3977,15 @@ public class ExampleMod { }
   });
   assert.equal(shaped.valid, false);
   assert.ok(shaped.errors.some((e) => /result/.test(e)));
+
+  // C-13：非法版本 token 必须在 switch(kind) 之前早退。旧行为是 valid:true +
+  // version:"1.21beta" 原样回显，调用方会以为真按该版本校验过。
+  const badToken = validateDatapackJson({ kind: "recipe", jsonContent: "{}", version: "1.21beta" });
+  assert.equal(badToken.valid, false, JSON.stringify(badToken));
+  assert.equal(badToken.version, "", `非法版本不得回显原串: ${JSON.stringify(badToken)}`);
+  assert.equal(badToken.action?.code, "INVALID_INPUT", JSON.stringify(badToken));
+  assert.ok(/1\.21beta/.test(String(badToken.errors?.[0])), "错误行必须点名被拒的版本串");
+  assert.equal(special.version, "1.20.1", "正向对照：合法 token 仍要原样回显并正常走完");
 
   const scanRoot = mkdtempSync(join(tmpdir(), "mc-java-scan-"));
   try {
@@ -6238,6 +6391,8 @@ function testCommunityIndexSync() {
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
+await testLiteLoaderForgeHybridNotMultiLoader();
+await testPortProjectRejectsBadVersionToken();
 await testYarnShortNameAndMojangHeuristic();
 await testFabricClassPrefixSearch();
 await testSandboxAssertWritablePath();

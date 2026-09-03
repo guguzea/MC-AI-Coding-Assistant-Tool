@@ -106,20 +106,26 @@ function isForge1204Datagen(platform: string, version: string): boolean {
   return platform === "forge" && /^1\.20\.4/.test(version.trim());
 }
 
-const FABRIC_DATAGEN_GENERATE = new Set(["1.21.1", "1.21.3", "1.21.4", "1.21.8"]);
-const FABRIC_DATAGEN_BUILD_RECIPES = new Set(["1.21.10", "1.21.11"]);
+// 有 recipe 骨架的 Fabric 档。注意：这里只表示「本档可发骨架」，不表示映射 ——
+// `generate(RecipeExporter)` / `buildRecipes(RecipeOutput)` 是 Yarn↔Mojmap 的差异，不是版本差异
+// （Mojang 官方 client.txt 1.21.1–1.21.11 均有 `buildRecipes`，`RecipeExporter` 类在 mojmap 不存在）。
+const FABRIC_DATAGEN_RECIPE_VERSIONS = new Set(["1.21.1", "1.21.3", "1.21.4", "1.21.8", "1.21.10", "1.21.11"]);
 
-function fabricDatagenRecipeMethod(version: string): "generate" | "buildRecipes" | null {
-  const v = version.trim();
-  if (FABRIC_DATAGEN_GENERATE.has(v)) return "generate";
-  if (FABRIC_DATAGEN_BUILD_RECIPES.has(v)) return "buildRecipes";
-  return null;
-}
+// 「层数」是**真的版本差异**（与上面的映射轴正交）：1.21.3 起 vanilla `RecipeProvider` 的
+// `buildRecipes()` 改为无参、`RecipeOutput` 存成字段，`FabricRecipeProvider` 唯一要实现的抽象方法
+// 变成 `createRecipeProvider(HolderLookup.Provider, RecipeOutput)` → 返回一个 vanilla 生成器。
+// 证据：① Mojang 官方 client.txt（piston-meta `client_mappings`）1.21.1 = `void buildRecipes(RecipeOutput)`，
+// 1.21.3 = `RecipeOutput output` 字段 + `void buildRecipes()`；
+// ② `mcp-server/data/loader-api-summaries/*-fabric-api.json` 里 FabricRecipeProvider 的抽象方法
+// 1.21.1 = `void method_10419(class_8790)`，1.21.3/1.21.11 = `class_2446 method_62766(class_7225.class_7874, class_8790)`
+// （= `RecipeProvider createRecipeProvider(HolderLookup.Provider, RecipeOutput)`，与 26.1.2 已具名条目同签名）；
+// ③ `fabric/1.21.11/.cursor/rules/07-datagen.mdc:155-159` 明确把单层带参写法列为「1.21.11 不存在，编译器直接拒」。
+const FABRIC_RECIPE_TWO_LAYER_VERSIONS = new Set(["1.21.3", "1.21.4", "1.21.8", "1.21.10", "1.21.11"]);
 
 function isFabricDatagenVersion(version: string): boolean {
   const v = version.trim();
   if (isMcVersionFamily(v, "26.1")) return true;
-  return fabricDatagenRecipeMethod(v) !== null;
+  return FABRIC_DATAGEN_RECIPE_VERSIONS.has(v);
 }
 
 function prependDocsReview(code: string, tool: string, version: string): string {
@@ -295,7 +301,6 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
   let code: string;
   try {
     if (platform === "fabric") {
-    const recipeMethod = fabricDatagenRecipeMethod(ver) ?? "buildRecipes";
     // Mojmap：1.21.10→1.21.11 之间 ResourceLocation 改名为 Identifier（net.minecraft.resources）
     const idStyle: FabricIdStyle = ver === "1.21.11" || isMcVersionFamily(ver, "26.1") ? "Identifier" : "ResourceLocation";
     code = generateFabric(
@@ -304,12 +309,12 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       targetName,
       classBase,
       isMcVersionFamily(ver, "26.1"),
-      recipeMethod,
       idStyle,
+      FABRIC_RECIPE_TWO_LAYER_VERSIONS.has(ver),
     );
     if (ver !== "1.21.11" && !isMcVersionFamily(ver, "26.1")) {
       code = prependDocsReview(code, "search_fabric_docs", ver);
-      warnings.push(`Fabric ${ver} Datagen：recipe 方法为 ${recipeMethod}（search_fabric_docs version=${ver}）。`);
+      warnings.push(`Fabric ${ver} Datagen：骨架为 Mojmap 名，请 search_fabric_docs version=${ver} 复核。`);
     }
     if (providerType === "particle" || providerType === "sound") {
       warnings.push(
@@ -322,13 +327,12 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       );
     }
     if (providerType === "recipe" && !isMcVersionFamily(ver, "26.1")) {
-      if (recipeMethod === "generate") {
+      warnings.push(
+        "Mojmap 骨架：buildRecipes。Yarn 工程整段换成 generate(RecipeExporter)（同类同名差异，非版本差异）；禁止同一文件混映射。对照表见 fabric/1.21.11/.cursor/rules/07-datagen.mdc。",
+      );
+      if (ver === "1.21.1") {
         warnings.push(
-          "Yarn 骨架：generate(RecipeExporter)。Mojmap 工程请改为 buildRecipes(RecipeOutput)。禁止混映射。",
-        );
-      } else {
-        warnings.push(
-          "Mojmap 骨架：buildRecipes(RecipeOutput)。Yarn 工程请改为 generate(RecipeExporter)。禁止混映射。",
+          `Fabric ${ver}：本档 recipe 为**单层**形态（RecipeProvider.buildRecipes(RecipeOutput) 带参，Mojang client.txt 实测）；1.21.3 起改为两层（createRecipeProvider + 无参 buildRecipes），不要跨版套用。`,
         );
       }
     }

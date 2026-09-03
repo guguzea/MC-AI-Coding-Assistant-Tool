@@ -1187,6 +1187,30 @@ section("java-pipeline argv / remapper classpath / mojmap tiny guard");
     }
   });
 
+  await atest("resolveYarnMappings：元数据被投毒成越界 build 必须拒（D-13 形态门）", async () => {
+    // 百分号编码在这台宿主上不是防护：实测 GET .../yarn/zzz%2F..%2Fmaven-metadata.xml
+    // 返回的就是顶层元数据正文（%2F 被解码并归一化），而 encodeURIComponent("..") === ".."。
+    const realFetch = globalThis.fetch;
+    const bad = ["..", "../../evil", "1.20.1+build.10/../../x", "evil?x=1", "evil#x", "evil%2F.."];
+    try {
+      for (const b of bad) {
+        const seen = [];
+        globalThis.fetch = async (url) => {
+          seen.push(String(url));
+          return {
+            ok: true,
+            status: 200,
+            text: async () => `<metadata><versioning><version>${b}</version></versioning></metadata>`,
+          };
+        };
+        await assert.rejects(() => resolveYarnMappings(b), /形态非法/, `越界 build 未被拒：${b}`);
+        assert.equal(seen.length, 1, `拒绝前不得再请求 jar/checksum：${JSON.stringify(seen)}`);
+      }
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  });
+
   await atest("resolveYarnMappings：本版无 build 时报 MAPPINGS_NOT_FOUND 而不是打下一个版本", async () => {
     const realFetch = globalThis.fetch;
     globalThis.fetch = async () => ({ ok: true, status: 200, text: async () => META });

@@ -132,7 +132,7 @@ function isAllowedGithubHost(hostname: string): boolean {
   return false;
 }
 
-function assertAllowedGithubUrl(url: string): void {
+export function assertAllowedGithubUrl(url: string): void {
   const parsed = new URL(url);
   if (parsed.protocol !== "https:") {
     throw new Error(`拒绝非 HTTPS 重定向: ${parsed.protocol}`);
@@ -222,7 +222,7 @@ export async function curlGetToFile(
 ): Promise<{ status: number }> {
   const timeoutSec = Math.max(5, Math.ceil((timeoutMs ?? githubTimeoutMs()) / 1000));
   assertAllowedGithubUrl(url);
-  const args = ["-sS", "-L", "--ssl-no-revoke", "--max-time", String(timeoutSec), "-o", destPath, "-w", "%{http_code}"];
+  const args = ["-sS", "-L", "--ssl-no-revoke", "--max-time", String(timeoutSec), "-o", destPath, "-w", "%{http_code} %{url_effective}"];
   const proxy = proxyUrl();
   if (proxy) args.push("-x", proxy);
   const configLines: string[] = [];
@@ -250,7 +250,15 @@ export async function curlGetToFile(
     }
     throw err;
   }
-  return { status: Number(stdout.trim()) || 0 };
+  const out = stdout.trim();
+  const sp = out.indexOf(" ");
+  const status = Number(sp === -1 ? out : out.slice(0, sp)) || 0;
+  const effective = sp === -1 ? "" : out.slice(sp + 1).trim();
+  if (!effective) {
+    throw new Error("curl 未回报终址（url_effective 为空），无法复核重定向目标，拒绝该下载");
+  }
+  assertAllowedGithubUrl(effective);
+  return { status };
 }
 
 async function fetchViaCurl(url: string, init?: RequestInit): Promise<Response> {

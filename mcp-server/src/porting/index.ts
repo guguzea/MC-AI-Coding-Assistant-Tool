@@ -10,6 +10,7 @@ import { walkDirBounded, javaSourceRoots } from "../utils/project-files.js";
 import { analyzePortingPathSchema, portProjectSchema } from "./types.js";
 import { parseMinecraftVersion } from "../decompile/version-manager.js";
 import { isExactMcVersionToken, isMcVersionFamily } from "../utils/minecraft-version.js";
+import { versionRequiredAction } from "../utils/actionable.js";
 import type {
   AnalyzePortingOutput,
   AnalyzePortingError,
@@ -1258,6 +1259,25 @@ export async function portProject(args: unknown) {
   }
 
   const { dryRun = true, confirmed, action, targetPlatform } = parsed.data;
+  // 版本串会写进用户工程的 gradle.properties / build.gradle，必须先过 token 门再看 action
+  const badVersionToken = (() => {
+    const tv = parsed.data.targetVersion?.trim();
+    if (tv && !isExactMcVersionToken(tv)) return `targetVersion="${tv}"`;
+    const nv = parsed.data.neoforgeVersion?.trim();
+    if (nv && !/^\d+\.\d+(\.\d+)?$/.test(nv)) return `neoforgeVersion="${nv}"`;
+    return null;
+  })();
+  if (badVersionToken) {
+    return JSON.stringify({
+      ok: false,
+      error: {
+        code: "INVALID_INPUT",
+        message: `${badVersionToken} 不是合法版本 token：targetVersion 必须是精确 MC 版本（如 1.20.4 / 1.21.1 / 26.1），neoforgeVersion 必须是点分数字版本（如 21.1.113）。`,
+        next: versionRequiredAction().nextSteps,
+      },
+    });
+  }
+
   if (
     targetPlatform === "liteloader" ||
     targetPlatform === "rift" ||
