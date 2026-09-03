@@ -328,7 +328,7 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
     }
     if (providerType === "recipe" && !isMcVersionFamily(ver, "26.1")) {
       warnings.push(
-        "Mojmap 骨架：buildRecipes。Yarn 工程整段换成 generate(RecipeExporter)（同类同名差异，非版本差异）；禁止同一文件混映射。对照表见 fabric/1.21.11/.cursor/rules/07-datagen.mdc。",
+        `Mojmap 骨架：buildRecipes。Yarn 工程整段换成 generate(RecipeExporter)（同类同名差异，非版本差异）；禁止同一文件混映射。本档名以 get_minecraft_source version=${ver} mapping=mojmap 为准，禁止读邻档规则。`,
       );
       if (ver === "1.21.1") {
         warnings.push(
