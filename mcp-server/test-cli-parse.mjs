@@ -11,11 +11,15 @@ import {
   coerceFlags,
   expandableFlags,
   extractGlobalFlags,
+  FIELD_OWNED_GLOBALS,
+  fieldOwnedGlobals,
   FLAG_ALIASES,
   flagHelpPointer,
   flagKeyCandidates,
+  GLOBAL_FLAG_KEYS,
   isToolFailure,
   kebabToCamel,
+  LEGAL_OUTPUT_FORMATS,
   mapShortCommand,
   nearFlagNames,
   parseFlags,
@@ -404,6 +408,83 @@ import {
   // 禁止再往 alias 表塞 S2 回退已覆盖的那一类（目标是 snake_case = 只差分隔符/大小写）
   const redundant = Object.entries(FLAG_ALIASES).filter(([, to]) => to.includes("_"));
   assert.deepEqual(redundant, [], `snake_case alias targets belong to canonical fallback: ${JSON.stringify(redundant)}`);
+}
+
+// ── S4: 同名 flag 归字段 —— 全局剥离让位 ────────────────────────────────────
+{
+  const owned = new Set(["json"]);
+  // 不声明冲突时 --json 是布尔全局，后面的载荷掉进 positional
+  const blind = parseFlags(["validate_bp_json", "--json", '{"a":1}', "--kind", "block"]);
+  assert.equal(blind.flags.json, true);
+  assert.deepEqual(blind.positional, ["validate_bp_json", '{"a":1}']);
+
+  // 声明后同一个 key 变成取值字段：等号与隔空两种写法都不留位置参数
+  const space = parseFlags(["validate_bp_json", "--json", '{"a":1}', "--kind", "block"], owned);
+  assert.deepEqual(space.flags, { json: '{"a":1}', kind: "block" });
+  assert.deepEqual(space.positional, ["validate_bp_json"]);
+  const eq = parseFlags(["--json={\"a\":1}", "--kind=block"], owned);
+  assert.deepEqual(eq.flags, { json: '{"a":1}', kind: "block" });
+  // 字段名恰是布尔全局时，值本身也可以是否开字样（不能被当成开关吃掉）
+  assert.deepEqual(parseFlags(["--json", "false"], owned).flags, { json: "false" });
+  // 真·无值时仍是 true，交给 schema 判「Expected string」
+  assert.equal(parseFlags(["validate_bp_json", "--json"], owned).flags.json, true);
+
+  const stripped = extractGlobalFlags(space.flags, owned);
+  assert.equal(stripped.globals.json, false, "让位后不得置全局输出开关");
+  assert.equal(stripped.rest.json, '{"a":1}');
+  assert.equal(stripped.rest.kind, "block");
+  // 未声明冲突的工具上，全局剥离一字不改（--json 仍是 no-op 兼容开关）
+  const other = extractGlobalFlags(parseFlags(["--json", "--compact=false", "--project", "."]).flags);
+  assert.equal(other.globals.json, true);
+  assert.equal(other.globals.compact, false);
+  assert.equal(other.globals.project, ".");
+  assert.deepEqual(other.rest, {});
+}
+
+{
+  assert.deepEqual([...LEGAL_OUTPUT_FORMATS], ["json"]);
+  assert.equal(extractGlobalFlags(parseFlags(["--output-format=json"]).flags).globals.outputFormat, "json");
+  assert.equal(extractGlobalFlags(parseFlags(["--outputFormat", "text"]).flags).globals.outputFormat, "text");
+  // 裸写法必须是「需要显式取值」的原料，而不是被当成 true 后静默按 json 走
+  assert.equal(extractGlobalFlags(parseFlags(["--output-format"]).flags).globals.outputFormat, true);
+  assert.equal(extractGlobalFlags(parseFlags([]).flags).globals.outputFormat, undefined);
+  assert.deepEqual(extractGlobalFlags(parseFlags(["--output-format=json"]).flags).rest, {});
+}
+
+{
+  // 白名单必须等于实测交集：schema 里新增一个与全局 flag 同名的字段而不改白名单 → CI 红
+  const { listAllToolSchemas } = await import("./dist/tool-registry.js");
+  const all = listAllToolSchemas();
+  const measured = [];
+  for (const t of all) {
+    for (const name of Object.keys(schemaObjectShape(t.inputSchema) ?? {})) {
+      if (GLOBAL_FLAG_KEYS.has(name) || GLOBAL_FLAG_KEYS.has(kebabToCamel(name))) {
+        measured.push(`${t.name}.${name}`);
+      }
+    }
+  }
+  const declared = Object.entries(FIELD_OWNED_GLOBALS).flatMap(([tool, names]) => names.map((n) => `${tool}.${n}`));
+  assert.deepEqual(measured.sort(), declared.sort(), "字段/全局同名清单已变，请同步 FIELD_OWNED_GLOBALS");
+  assert.deepEqual(declared, ["validate_bp_json.json"], "当前唯一冲突字段");
+  // 反向防腐：声明里的工具与字段必须真实存在，且冲突字段确实承载文本
+  const byName = new Map(all.map((t) => [t.name, t]));
+  for (const [tool, names] of Object.entries(FIELD_OWNED_GLOBALS)) {
+    const t = byName.get(tool);
+    assert.ok(t, `FIELD_OWNED_GLOBALS 里的 ${tool} 已不在 registry`);
+    for (const n of names) {
+      assert.ok(GLOBAL_FLAG_KEYS.has(n), `${tool}.${n} 不再是全局 flag 名，白名单条目应删`);
+      const type = schemaPropertyType(t.inputSchema, n);
+      assert.ok(type === "string" || type === "union", `${tool}.${n} type=${type}，非文本字段不会被误判成冲突`);
+    }
+  }
+  // version 是工具字段 / 子命令参数，绝不能进全局剥离名单（否则 40+ 工具丢参数）
+  assert.equal(GLOBAL_FLAG_KEYS.has("version"), false);
+  assert.equal(GLOBAL_FLAG_KEYS.has("limit"), false);
+  // 短名命令必须解析到同一份白名单
+  assert.equal(fieldOwnedGlobals("validate_bp_json")?.has("json"), true);
+  assert.equal(fieldOwnedGlobals("query_api"), undefined);
+  assert.equal(fieldOwnedGlobals("status")?.has("json"), undefined, "status 短名无同名字段");
+  assert.equal(fieldOwnedGlobals(undefined), undefined);
 }
 
 console.log("test-cli-parse: ok");

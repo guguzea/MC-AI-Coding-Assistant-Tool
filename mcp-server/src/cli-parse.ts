@@ -23,7 +23,28 @@ export const GLOBAL_FLAG_KEYS = new Set([
   "project",
   "file",
   "raw",
+  "output-format",
+  "outputFormat",
 ]);
+
+/** `--output-format` 当前唯一合法值；其它值必须 exit 2，不得静默按 json 处理 */
+export const LEGAL_OUTPUT_FORMATS = new Set(["json"]);
+
+/**
+ * 与全局 flag 同名的工具字段 —— 在该工具上这个名字归字段所有，全局剥离让位。
+ * 这是一份显式声明（解析阶段还没有 schema 可用），test-cli-parse 的枚举门断言它
+ * 等于 80 个 schema 字段名与 GLOBAL_FLAG_KEYS 的实际交集；新增同名字段必须同时改这里。
+ */
+export const FIELD_OWNED_GLOBALS: Record<string, string[]> = {
+  validate_bp_json: ["json"],
+};
+
+export function fieldOwnedGlobals(cmd: string | undefined): Set<string> | undefined {
+  if (!cmd) return undefined;
+  const { tool } = mapShortCommand(cmd);
+  const names = FIELD_OWNED_GLOBALS[tool] ?? FIELD_OWNED_GLOBALS[cmd];
+  return names ? new Set(names) : undefined;
+}
 
 /** 裸 flag 为 true，且不得吞掉下一个非 -- 参数（避免 `--compact convert` 把 convert 当值） */
 export const BOOLEAN_GLOBAL_KEYS = new Set([
@@ -96,7 +117,7 @@ export function isFlagLikeToken(token: string): boolean {
  * 但 -className 这类漏写连字符的 token 记入 suspectFlags：
  * 归入 positional 会被旧位置参数兼容当成查询值，静默给出错误结果。
  */
-export function parseFlags(argv: string[]): {
+export function parseFlags(argv: string[], fieldOwned?: Set<string>): {
   flags: RawFlags;
   positional: string[];
   suspectFlags: string[];
@@ -121,7 +142,7 @@ export function parseFlags(argv: string[]): {
       } else {
         const key = a.slice(2);
         const next = argv[i + 1];
-        if (BOOLEAN_GLOBAL_KEYS.has(key) || BOOLEAN_GLOBAL_KEYS.has(kebabToCamel(key))) {
+        if ((BOOLEAN_GLOBAL_KEYS.has(key) || BOOLEAN_GLOBAL_KEYS.has(kebabToCamel(key))) && !fieldOwned?.has(key)) {
           appendFlag(flags, key, true);
         } else if (next !== undefined && (!next.startsWith("-") || /^-?\d+(\.\d+)?$/.test(next))) {
           appendFlag(flags, key, next);
@@ -391,13 +412,14 @@ function flattenFlagValues(v: FlagValue): FlagScalar[] {
   return Array.isArray(v) ? v : [v];
 }
 
-export function extractGlobalFlags(raw: RawFlags): {
+export function extractGlobalFlags(raw: RawFlags, fieldOwned?: Set<string>): {
   globals: {
     help: boolean;
     json: boolean;
     compact: boolean;
     failOnError: boolean;
     project?: string;
+    outputFormat?: FlagScalar;
     file: string[];
     raw: FlagScalar[];
   };
@@ -411,8 +433,13 @@ export function extractGlobalFlags(raw: RawFlags): {
   let compact = false;
   let failOnError = false;
   let project: string | undefined;
+  let outputFormat: FlagScalar | undefined;
   for (const [k, v] of Object.entries(raw)) {
     const camel = kebabToCamel(k);
+    if (fieldOwned?.has(k)) {
+      rest[k] = v;
+      continue;
+    }
     if (k === "help" || k === "h") {
       help = parseFlagTruthy(v, k);
       continue;
@@ -434,6 +461,11 @@ export function extractGlobalFlags(raw: RawFlags): {
       if (typeof last === "string") project = last;
       continue;
     }
+    if (k === "output-format" || camel === "outputFormat") {
+      const last = flattenFlagValues(v).at(-1);
+      if (last !== undefined) outputFormat = last;
+      continue;
+    }
     if (k === "file") {
       for (const item of flattenFlagValues(v)) {
         if (typeof item === "string") file.push(item);
@@ -446,7 +478,10 @@ export function extractGlobalFlags(raw: RawFlags): {
     }
     rest[k] = v;
   }
-  return { globals: { help, json, compact, failOnError, project, file, raw: rawFields }, rest };
+  return {
+    globals: { help, json, compact, failOnError, project, outputFormat, file, raw: rawFields },
+    rest,
+  };
 }
 
 /**

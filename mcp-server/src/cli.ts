@@ -23,8 +23,10 @@ import {
   DATA_DIR_TOOLS,
   expandableFlags,
   extractGlobalFlags,
+  fieldOwnedGlobals,
   isToolFailure,
   InvalidBooleanFlagError,
+  LEGAL_OUTPUT_FORMATS,
   mapShortCommand,
   MIGRATION_NOTICE,
   parseFlags,
@@ -85,6 +87,8 @@ const USAGE_LINES = [
   "mc-skill crash_analyze --crashReport @./crash-reports/latest.txt",
   "值前缀: @path 读文件，@- 或 =- 读 stdin，@@ 是字面 @（--className=@@Override → \"@Override\"）",
   "字面量逃生: --raw <field> 让该字段完全按字面传（连 @- 也不读 stdin）；裸 --raw 或 --raw=true 关闭全部 @ 展开，--raw=false 恢复",
+  "字段优先: 工具 schema 里有同名 flag 时该 flag 归工具（validate_bp_json --json '<全文>' 的 json 是参数，不是输出开关）",
+  "输出格式: --output-format json 是表达格式意图的规范入口；当前唯一合法值是 json，其它值 exit 2 报「尚未实现」",
   "仅可承载文本的字段接受 @（string / string[] / object / string 参与的 union）；number / boolean / enum / tuple 原样传",
   "mc-skill list-tools",
   "mc-skill <任意MCP工具名> --key=value ...",
@@ -103,8 +107,9 @@ function printGlobalHelp(json: boolean, compact: boolean): void {
       "用法:",
       ...USAGE_LINES.map((l) => `  ${l}`),
       "",
-      "全局 flag: --help  --version  --json  --compact  --fail-on-error  --project <dir>  --file field=path  --raw <field>",
+      "全局 flag: --help  --version  --json  --output-format json  --compact  --fail-on-error  --project <dir>  --file field=path  --raw <field>",
       "布尔 flag 只接受 true/false/1/0/yes/no/on/off；裸 --flag 为 true；--flag=junk 拒绝（exit 2）",
+      "字段优先: 工具 schema 有同名 flag 时归工具（如 validate_bp_json --json '<全文>'）；--output-format 当前只认 json",
       "文件输入: --crashReport @./latest.txt   --crashReport=-   --file crashReport=./latest.txt   @@ 为字面 @   --raw <field> 关闭展开   文件与 stdin 同受 8MB 上限",
       "退出码: 0 成功 / 1 工具失败 / 2 用法错误",
       "",
@@ -372,6 +377,30 @@ async function runDescriptor(params: Record<string, unknown>, positional: string
   };
 }
 
+/**
+ * 命令名要先于 schema 才知道 `--json` 之类是不是工具字段，而解析阶段没有 schema 可查，
+ * 于是先用默认规则做一次纯词法扫描定位 positional[0]，再按声明集合重新解析。
+ * 只有该命令声明了字段优先名才会走第二遍，普通命令不付这个钱。
+ */
+function probeThenParse(argv: string[]): ReturnType<typeof parseFlags> {
+  const probe = parseFlags(argv);
+  const owned = fieldOwnedGlobals(probe.positional[0]);
+  if (!owned) return probe;
+  return parseFlags(argv, owned);
+}
+
+function outputFormatError(value: FlagScalar | undefined): string | null {
+  if (value === undefined) return null;
+  if (typeof value !== "string") {
+    return `--output-format 需要显式取值（当前唯一合法值：${[...LEGAL_OUTPUT_FORMATS].join(" / ")}）`;
+  }
+  const normalized = value.toLowerCase();
+  if (!LEGAL_OUTPUT_FORMATS.has(normalized)) {
+    return `--output-format ${value} 尚未实现；当前唯一合法值是 ${[...LEGAL_OUTPUT_FORMATS].join(" / ")}（CLI 输出只有 JSON）`;
+  }
+  return null;
+}
+
 async function main(): Promise<void> {
   try {
     clearPendingRestart();
@@ -384,11 +413,11 @@ async function main(): Promise<void> {
     return;
   }
 
-  const { flags: rawFlags, positional, suspectFlags } = parseFlags(argv);
+  const { flags: rawFlags, positional, suspectFlags } = probeThenParse(argv);
   let globals: ReturnType<typeof extractGlobalFlags>["globals"];
   let rest: ReturnType<typeof extractGlobalFlags>["rest"];
   try {
-    const extracted = extractGlobalFlags(rawFlags);
+    const extracted = extractGlobalFlags(rawFlags, fieldOwnedGlobals(positional[0]));
     globals = extracted.globals;
     rest = extracted.rest;
   } catch (err) {
@@ -400,6 +429,14 @@ async function main(): Promise<void> {
     throw err;
   }
 
+  const formatError = outputFormatError(globals.outputFormat);
+  if (formatError) {
+    printJson({ success: false, tool: positional[0] ?? "cli", error: formatError, errorKind: "usage" }, false);
+    process.exitCode = 2;
+    return;
+  }
+  const machineHelp = globals.json || globals.outputFormat === "json";
+
   if (positional.length === 0 && (rawFlags.version === true || rawFlags.version === "true")) {
     process.stdout.write(cliVersion() + "\n");
     return;
@@ -407,10 +444,10 @@ async function main(): Promise<void> {
 
   if (positional.length === 0) {
     if (globals.help || argv[0] === "help") {
-      printGlobalHelp(globals.json, globals.compact);
+      printGlobalHelp(machineHelp, globals.compact);
       return;
     }
-    printGlobalHelp(globals.json, globals.compact);
+    printGlobalHelp(machineHelp, globals.compact);
     process.exitCode = 2;
     return;
   }
@@ -421,15 +458,15 @@ async function main(): Promise<void> {
   if (userCmd === "help") {
     const helpTarget = cmdPositional[0];
     if (!helpTarget) {
-      printGlobalHelp(globals.json, globals.compact);
+      printGlobalHelp(machineHelp, globals.compact);
       return;
     }
-    await printNamedToolHelp(helpTarget, globals.json, globals.compact);
+    await printNamedToolHelp(helpTarget, machineHelp, globals.compact);
     return;
   }
 
   if (globals.help) {
-    await printNamedToolHelp(userCmd, globals.json, globals.compact);
+    await printNamedToolHelp(userCmd, machineHelp, globals.compact);
     return;
   }
 

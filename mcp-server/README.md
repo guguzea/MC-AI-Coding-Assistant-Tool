@@ -174,7 +174,9 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 一条执行路径：短名只做 alias（`query`→`query_api`、`convert`→`convert_mapping`、`update`→`mc_skill_update`、`status`/`warmup`→`get_server_status`；`warmup` 会注入 `warmup=true`，用户显式 `--warmup=false` 优先）。`descriptor` 是本地命令，不加载 MCP 工具注册表。
 
-全局 flag（不进工具 schema）：`--help`/`-h`、`--version`、`--json`、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`、`--raw [field]`。
+全局 flag（不进工具 schema）：`--help`/`-h`、`--version`（只在没写工具名的裸用法上打印 CLI 版本，其余场景它是工具字段）、`--json`（兼容保留的 no-op，不改变输出）、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`、`--raw [field]`、`--output-format json`。
+
+同名让位（字段优先）：目标工具 schema 里存在与全局 flag 同名的字段时，这个名字归**工具字段**所有，全局剥离让位。当前唯一一例是 `validate_bp_json` 的 `json`——`--json '<BP 全文>'`、`--json=<全文>`、`--json=@file`、`--file json=path` 都是传待校验内容，不是输出开关；该工具的 `--json` 缺值时按 schema 报校验错（exit 2 `validation`），而不是「未知/缺参」。这份冲突清单显式写在 `FIELD_OWNED_GLOBALS`，`test-cli-parse` 的枚举门断言它恒等于「80 工具 schema 字段名 ∩ 全局 flag 名」，将来新增同名字段而不改清单会让 CI 转红。
 
 kebab-case 会转到 camelCase（`--dry-run`→`dryRun`、`--highlight-key`→`highlight_key`）；另有 `--name`→`memberName`、`--confirm`→`confirmed`、`--class`→`className` 等语义别名（仅当目标字段存在于该工具 schema 时）。只有分隔符/大小写之差的名字（`--allow-fallback`、`--allowFallback`、`--ALLOW_FALLBACK`→`allow_fallback`）由通用归一化接管，不再逐个写进别名表；归一化只在候选唯一时接受，命中多个则报歧义并列出候选写法。未知 flag **exit 2**，报错里带近似名和 `node mcp-server/dist/cli.js <工具> --help` 指针。
 
@@ -188,7 +190,7 @@ kebab-case 会转到 camelCase（`--dry-run`→`dryRun`、`--highlight-key`→`h
 - 单文件上限约 8MB
 - `--project <dir>`：若工具有 `projectPath` 则注入；否则不传，stderr 警告「该工具不支持 --project」
 
-输出统一 JSON `{success, tool, result|error}`。`--compact` 时所有 stdout JSON 都不 pretty。TTY 且未加 `--json` 的 `--help` 用人读摘要。
+输出统一 JSON `{success, tool, result|error}`。`--compact` 时所有 stdout JSON 都不 pretty。TTY 且未加 `--json` 的 `--help` 用人读摘要。`--output-format` 是表达格式意图的规范入口，当前唯一合法值是 `json`（CLI 只有 JSON 输出）；其它值 exit 2 报「尚未实现」，漏取值的裸写法同样 exit 2。`--output-format=json` 与 `--json` 一样把 `--help` 推向机器可读 schema。
 
 退出码（`errorKind` 是失败信封上只增不改的分类键，与退出码一一对应，不引入第三种码）：
 

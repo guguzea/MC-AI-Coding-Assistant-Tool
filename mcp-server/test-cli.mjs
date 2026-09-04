@@ -757,4 +757,88 @@ function staleTotalClaims(docs, total) {
   }
 }
 
+// ── S4: 与全局 flag 同名的字段归工具；--output-format 是唯一格式开关 ─────────
+{
+  const dir = mkdtempSync(join(tmpdir(), "mc-skill-s4-"));
+  try {
+    const payload = JSON.stringify({
+      format_version: "1.16.0",
+      "minecraft:block": { description: { identifier: "demo:block/torch", register_to_creative_menu: true } },
+    });
+    const file = join(dir, "block.json");
+    writeFileSync(file, payload);
+    const brief = (r) => `${r.status} ${String(r.stdout).replace(/\s+/g, " ").slice(0, 160)}`;
+
+    for (const [how, args] of [
+      ["--json <全文>", ["validate_bp_json", "--kind=block", "--json", payload]],
+      ["--json=<全文>", ["validate_bp_json", "--kind=block", "--json=" + payload]],
+      ["--json=@file", ["validate_bp_json", "--kind=block", `--json=@${file}`]],
+      ["--file json=path", ["validate_bp_json", "--kind=block", "--file", `json=${file}`]],
+    ]) {
+      const r = run(args);
+      const j = parseJson(r, `s4-${how}`);
+      if (r.status !== 0 || j.success !== true || j.result?.ok !== true) {
+        throw new Error(`${how} 应由工具判定成功：${brief(r)}`);
+      }
+      if (j.errorKind !== undefined) throw new Error(`${how} 成功信封不该有 errorKind：${brief(r)}`);
+      if (!Array.isArray(j.result.errors)) throw new Error(`${how} 没跑到工具本体：${brief(r)}`);
+    }
+    console.log("validate_bp_json 的 --json 四种写法都归字段，rc 由工具结论决定");
+
+    const bad = run(["validate_bp_json", "--kind=block", "--json", "{not json"]);
+    const badj = parseJson(bad, "s4-bad-payload");
+    if (bad.status !== 1 || badj.errorKind !== "tool_failure" || badj.result?.ok !== false) {
+      throw new Error(`坏载荷必须由工具判 exit 1 tool_failure：${brief(bad)}`);
+    }
+    const bare = run(["validate_bp_json", "--kind=block", "--json"]);
+    const barej = parseJson(bare, "s4-bare-json");
+    if (bare.status !== 2 || barej.errorKind !== "validation" || !String(barej.error).includes("json")) {
+      throw new Error(`裸 --json 在该工具上应按字段校验失败：${brief(bare)}`);
+    }
+    console.log("坏载荷 → exit 1 tool_failure；裸 --json → 字段校验 exit 2");
+
+    for (const flag of ["--json", "--json=false"]) {
+      const r = run(["query_api", "--className=Item", "--version=1.20.1", flag]);
+      if (r.status !== 0) throw new Error(`${flag} 在无同名字段的工具上必须仍是兼容 no-op：${brief(r)}`);
+    }
+    const badBool = run(["query_api", "--className=Item", "--version=1.20.1", "--json=maybe"]);
+    const badBoolj = parseJson(badBool, "s4-bad-json-bool");
+    if (badBool.status !== 2 || badBoolj.errorKind !== "usage") {
+      throw new Error(`非冲突工具上坏布尔 --json=maybe 仍是 usage：${brief(badBool)}`);
+    }
+    console.log("--json 在其余工具上保持 no-op 兼容；坏布尔值仍 exit 2 usage");
+
+    for (const args of [["--output-format=json"], ["--output-format", "json"], ["--output-format=JSON"], ["--outputFormat=json"]]) {
+      const r = run(["get_server_status", ...args]);
+      if (r.status !== 0) throw new Error(`${args.join(" ")} 必须被接受：${brief(r)}`);
+    }
+    for (const [args, want] of [
+      [["--output-format=text"], "尚未实现"],
+      [["--outputFormat=text"], "尚未实现"],
+      [["--output-format"], "需要显式取值"],
+    ]) {
+      const r = run(["get_server_status", ...args]);
+      const j = parseJson(r, `s4-of-${args.join("")}`);
+      if (r.status !== 2 || j.errorKind !== "usage" || !String(j.error).includes(want)) {
+        throw new Error(`--output-format ${args.join(" ")} 应 exit 2 含「${want}」：${brief(r)}`);
+      }
+    }
+    const both = run(["query_api", "--className=Item", "--version=1.20.1", "--json", "--output-format=json"]);
+    if (both.status !== 0) throw new Error(`--json 与 --output-format 并存应可用：${brief(both)}`);
+    const help = run(["--help", "--output-format=json", "--compact"]);
+    const helpj = parseJson(help, "s4-help-machine");
+    if (help.status !== 0 || !String(helpj.usage).includes("--output-format")) {
+      throw new Error(`--output-format=json 的机器读 help 必须列出该开关：${brief(help)}`);
+    }
+    const helpBad = run(["--help", "--output-format=text"]);
+    const helpBadj = parseJson(helpBad, "s4-help-bad-format");
+    if (helpBad.status !== 2 || helpBadj.errorKind !== "usage") {
+      throw new Error(`help 路径上坏格式取值也必须 exit 2：${brief(helpBad)}`);
+    }
+    console.log("--output-format 只认 json（含 camel / 隔空写法），其它值与裸写法 exit 2");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 console.log("test-cli: ok");
