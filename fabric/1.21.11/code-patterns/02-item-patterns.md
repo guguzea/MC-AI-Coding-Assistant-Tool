@@ -23,23 +23,22 @@ private static final Item MY_ITEM = Registry.register(
 平台: Fabric
 分类: item
 依赖: []
-扩展点: [StatusEffect]
+扩展点: [FoodComponent]
 ---
 private static final Item MY_APPLE = Registry.register(
     Registries.ITEM,
     Identifier.of(MOD_ID, "my_golden_apple"),
     new Item(new Item.Settings()
         .food(new FoodComponent.Builder()
-            .hunger(4)
+            .nutrition(4)
             .saturationModifier(1.2f)
-            .statusEffect(
-                new StatusEffectInstance(StatusEffects.REGENERATION, 100, 1),
-                1.0f)
             .alwaysEdible()
             .build())
         .maxCount(64))
 );
 ```
+
+本档 Yarn 的 `FoodComponent.Builder` 只有 `nutrition` / `saturationModifier` / `alwaysEdible` / `build` 四个方法，**没有** `hunger` 与 `statusEffect`。
 
 ## 模式 3：工具（剑）
 
@@ -50,20 +49,21 @@ private static final Item MY_APPLE = Registry.register(
 依赖: []
 扩展点: [ToolMaterial]
 ---
-public enum MyToolMaterial implements ToolMaterial {
-    COPPER(2, 250, 6.0f, 2.0f, 15,
-        FabricToolTags.PICKAXES, () -> Items.COPPER_INGOT);
-
-    // ... getDurability, getMiningSpeed, getAttackDamage, etc.
-}
-
 private static final Item COPPER_SWORD = Registry.register(
     Registries.ITEM,
     Identifier.of(MOD_ID, "copper_sword"),
-    new SwordItem(MyToolMaterial.COPPER, 3, 1.6f,
-        new Item.Settings().maxDamage(250))
+    new Item(new Item.Settings().sword(ToolMaterial.IRON, 3.0f, -2.4f))
+);
+
+// 镐 / 斧 / 锄 / 铲同理：pickaxe / axe / hoe / shovel
+private static final Item COPPER_PICKAXE = Registry.register(
+    Registries.ITEM,
+    Identifier.of(MOD_ID, "copper_pickaxe"),
+    new Item(new Item.Settings().pickaxe(ToolMaterial.IRON, 1.0f, -2.8f))
 );
 ```
+
+`ToolMaterial` 在本档是 **record**（具名常量 `IRON` / `COPPER` / `DIAMOND` / `GOLD` / `NETHERITE` / `STONE` / `WOOD`）→ **不能 `implements`，也没有 `SwordItem` / `PickaxeItem` 可继承**。自定义材质用 `new ToolMaterial(incorrectBlocksForDrops, durability, speed, attackDamageBonus, enchantmentValue, repairItems)`，参数含义与顺序见官方 `develop_items_custom-tools`（`get_fabric_doc_full`，`version=1.21.11`）。
 
 ## 模式 4：耐久物品
 
@@ -79,14 +79,14 @@ private static final Item MY_HAMMER = Registry.register(
     Identifier.of(MOD_ID, "my_hammer"),
     new Item(new Item.Settings().maxDamage(100)) {
         @Override
-        public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-            stack.damage(1, attacker, (entity) ->
-                entity.sendToolBreakStatus(attacker.getActiveHand()));
-            return true;
+        public void postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+            stack.damage(1, attacker, attacker.getActiveHand());
         }
     }
 );
 ```
+
+本档 `Item.postHit(ItemStack, LivingEntity, LivingEntity)` 返回 **void**（不是 `boolean`）；`ItemStack.damage` 只有 `(int, LivingEntity, Hand)` / `(int, LivingEntity, EquipmentSlot)` / `(int, PlayerEntity)` 等形态，Yarn 命名里**没有** `sendToolBreakStatus`。
 
 ## 模式 5：自定义行为物品
 
@@ -103,15 +103,14 @@ public class MyWandItem extends Item {
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+    public ActionResult use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient) {
-            // 服务端逻辑：给予效果、生成实体等
-            player.addStatusEffect(
-                new StatusEffectInstance(StatusEffects.SPEED, 600, 0));
-            player.getStackInHand(hand).damage(1, player,
-                (p) -> p.sendToolBreakStatus(hand));
+            // 服务端逻辑：消耗耐久、生成实体等
+            user.getStackInHand(hand).damage(1, user, hand);
         }
-        return TypedActionResult.success(player.getStackInHand(hand));
+        return ActionResult.SUCCESS;
     }
 }
 ```
+
+本档 `Item#use` 返回 `ActionResult`（`net.minecraft.util`），具名常量只有 `CONSUME` / `FAIL` / `PASS` / `PASS_TO_DEFAULT_BLOCK_ACTION` / `SUCCESS` / `SUCCESS_SERVER`；Yarn 命名里**没有** `TypedActionResult`，`use` 也不带泛型。`StatusEffects` 的 41 个字段在本档只有 `DARKNESS_PADDING_DURATION` 是具名的，其余全是 `field_*` → **不要照抄 `StatusEffects.SPEED`**，要给状态效果就先按本档映射核具名（`convert_mapping` / `query_loader_api`）。

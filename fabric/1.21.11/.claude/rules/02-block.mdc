@@ -149,7 +149,7 @@ public static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
 - ❌ 把未注册的 Block 传给 BlockItem
 - ❌ 在服务端创建客户端渲染对象
 - ❌ `FabricBlockSettings`（本档已删除；用 `AbstractBlock.Settings` / Mojmap `BlockBehaviour.Properties`）
-- ❌ Yarn `DiggerItem`（镐斧铲父类是 `MiningToolItem`，1.21.11 起连 SwordItem 类也删了）
+- ❌ Yarn `SwordItem` / `PickaxeItem` / `MiningToolItem` / `DiggerItem` / `ToolItem`（1.21.11 Yarn 命名里**没有这些类**，也不存在「镐斧铲的父类是 X」这条叙述；工具改走 `ToolMaterial` 实例 + `Item.Settings` 工具组件，见 `03-item`）
 
 ## 扩展点
 

@@ -52,13 +52,16 @@ description: 00 — 项目结构与构建
 minecraft_version=1.21.11
 yarn_mappings=1.21.11+build.6
 loader_version=0.19.3
-fabric_api_version=0.141.3+1.21.11
+fabric_api_version=0.141.6+1.21.11
   ```
 - **禁止**在 `build.gradle` 中直接写版本号，必须引用 `${minecraft_version}` 等属性
+- `loader_version` 指 **Fabric Loader**（加载器本体，制品 `net.fabricmc:fabric-loader`）；`fabric_api_version` 指 **Fabric API**（制品 `net.fabricmc.fabric-api:fabric-api`）。两个版本号互不相关，别互相顶替，也别把 Loader 版本写进 `modApi` 依赖。
+- 数字口径（2026-09-04 实查 `maven.fabricmc.net`）：`0.19.3` 是本档 `scaffold/` 钉住的官方 example-mod（@ 8cd77ea）版本，maven 上 Loader 最新已是 `0.19.5`，想升就升；`fabric_api_version=0.141.6+1.21.11` 既是 scaffold 值也是 1.21.11 线最新构建（该制品全局 `<latest>` 已是 26.x 线的 `0.159.2+26.3`，**不要**抄进本档）；Yarn 的 1.21.11 最新 `build.6`。
 
 ### Mappings 约束
 
-- **默认可跟官方 Mojmap**（`loom.officialMojangMappings()`）。Yarn 仍可用：`net.fabricmc:yarn:${yarn_mappings}:v2`
+- **本档默认走官方 Mojmap**（`loom.officialMojangMappings()`）。Yarn 是 2025 年以前的默认选择，目前仍在退场 —— 官方移植页原话：「Note that Yarn is no longer officially supported by Fabric.」（`develop_porting_mappings_loom`）
+- 已有 Yarn 工程继续可用：`net.fabricmc:yarn:${yarn_mappings}:v2`；但**升 26.1 之前要先转 Mojmap**，该页开头的 warning 就是这个顺序（26.1 上 mappings 不受官方支持，先换映射再换 MC 依赖）。
 - **禁止**混用 Yarn 与 Mojmap 名。**26.1+ 必须 Mojmap**，不要把 Yarn 抄到去混淆档
 - Yarn 映射使用 `class_XXXXX` / `method_XXXXX` / `field_XXXXX` 表示未解析的成员
 

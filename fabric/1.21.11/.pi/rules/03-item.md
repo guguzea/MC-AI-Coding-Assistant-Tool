@@ -28,8 +28,8 @@ IF 只是手持物品（无特殊行为）
   → new Item(new Item.Settings())
 
 IF 是工具（剑/镐）
-  → new Item(ToolMaterial.IRON.applySwordSettings / applyToolSettings)
-  → 镐斧铲走 `MiningToolItem`；**`AxeItem` 仍在**。不要 DiggerItem、不要编造 DurableToolItem、不要抄已删除的 SwordItem 类
+  → new Item(new Item.Settings().sword / .pickaxe / .axe / .hoe / .shovel(ToolMaterial.IRON, 攻击加成, 攻击速度))
+  → 1.21.11 Yarn 没有 `SwordItem` / `PickaxeItem` / `MiningToolItem` / `DiggerItem` / `ToolItem` 这些类；`AxeItem` / `HoeItem` / `ShovelItem` 仍在原版，但不是你自己工具的父类。不要编造 DurableToolItem
 
 IF 是盔甲
   → 使用 ArmorItem + ArmorMaterial
@@ -76,24 +76,27 @@ private static final Item MY_APPLE = Registry.register(
 
 ## 工具
 
-Yarn 1.21.11 **没有** `SwordItem.mapping`。`ToolMaterial` 是 record（`ToolMaterial.IRON` / `COPPER` 等）。用 `applySwordSettings` / `applyToolSettings` 配 `new Item(...)`。
+1.21.11 没有 `SwordItem` / `PickaxeItem` 这类工具物品类可继承。工具 = **`ToolMaterial` 实例 + `Item.Settings` 工具组件**，直接 `new Item(...)`。
 
 ```java
-private static final Item IRON_SWORD = Registry.register(
+private static final Item EXAMPLE_SWORD = Registry.register(
     Registries.ITEM,
     Identifier.of(MOD_ID, "example_sword"),
-    new Item(ToolMaterial.IRON.applySwordSettings(new Item.Settings(), 3.0f, -2.4f))
+    new Item(new Item.Settings().sword(ToolMaterial.IRON, 3.0f, -2.4f))
 );
 
-private static final Item IRON_PICKAXE = Registry.register(
+private static final Item EXAMPLE_PICKAXE = Registry.register(
     Registries.ITEM,
     Identifier.of(MOD_ID, "example_pickaxe"),
-    new Item(ToolMaterial.IRON.applyToolSettings(
-        new Item.Settings(), BlockTags.PICKAXE_MINEABLE, 1.0f, -2.8f, 0.0f))
+    new Item(new Item.Settings().pickaxe(ToolMaterial.IRON, 1.0f, -2.8f))
 );
 ```
 
-自定义材质：`new ToolMaterial(incorrectBlocksForDrops, durability, speed, attackDamageBonus, enchantmentValue, repairItems)`，其中 `repairItems` 是 `TagKey<Item>`，不是 `Ingredient`。
+`Item.Settings` 上 `sword` / `pickaxe` / `axe` / `hoe` / `shovel` 五个方法签名都是 `(ToolMaterial, float, float)` → `Item.Settings`。`ToolMaterial` 是 record，具名常量有 `IRON` / `COPPER` / `DIAMOND` / `GOLD` / `NETHERITE` / `STONE` / `WOOD`。
+
+等价路线是 `ToolMaterial.applySwordSettings(Settings, F, F)` / `applyToolSettings(Settings, TagKey, F, F, F)` / `applyBaseSettings(Settings)`，但 `applyToolSettings` 要你自己传 `TagKey<Block>`，而本档 Yarn 命名下 `BlockTags` 的常量**全部还是混淆字段名**（`field_*`，没有 `PICKAXE_MINEABLE`；Mojmap 侧才叫 `MINEABLE_WITH_PICKAXE`）→ 拿不准就用上面的 `Settings.pickaxe(...)`，挖掘标签由原版内部给。
+
+自定义材质：`new ToolMaterial(incorrectBlocksForDrops, durability, speed, attackDamageBonus, enchantmentValue, repairItems)`，其中 `repairItems` 是 `TagKey<Item>`，不是 `Ingredient`。六个参数的含义与顺序以官方 `develop_items_custom-tools` 页为准（`get_fabric_doc_full`，`version=1.21.11`）；Yarn 映射里 record 组件只有 `comp_*`，给不出参数名。
 
 ## 自定义物品行为
 
@@ -111,6 +114,31 @@ public class MySpecialItem extends Item {
     }
 }
 ```
+
+## 加入创造栏（Fabric API `ItemGroupEvents`）
+
+注册 `Item` 之后物品**不会**自动出现在创造栏，要用 Fabric API 的条目事件挂进去。回调注册在物品的 `initialize()`（或 `onInitialize()`）里：
+
+```java
+public static final Item SUSPICIOUS_SUBSTANCE = Registry.register(
+    Registries.ITEM,
+    Identifier.of(MOD_ID, "suspicious_substance"),
+    new Item(new Item.Settings()));
+
+public static void initialize() {
+    ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS)
+        .register(entries -> entries.add(SUSPICIOUS_SUBSTANCE));
+}
+```
+
+`import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;` + `import net.minecraft.item.ItemGroups;`。本档实测边界：
+
+- `modifyEntriesEvent` 的入参是 `RegistryKey<ItemGroup>`，**不是** `ItemGroup` 实例。`query_loader_api` 给的签名：`Event<ModifyEntries> modifyEntriesEvent(class_5321<class_1761>)`，本档映射 `class_5321` = `RegistryKey`、`class_1761` = `ItemGroup`。
+- 创造栏常量在 `net.minecraft.item.ItemGroups`（**复数**），本档映射下 18 个常量全部具名（`INGREDIENTS` / `BUILDING_BLOCKS` / `COLORED_BLOCKS` / `COMBAT` / `FOOD_AND_DRINK` / `FUNCTIONAL` / `HOTBAR` 等），类型都是 `RegistryKey`。`ItemGroup`（单数）类里没有这些常量。
+- 回调参数类型是 `ItemGroup.Entries`（intermediary `class_7704`）；本档映射里**没有**顶层类 `ItemGroupEntries`。具名方法只有 `add(ItemConvertible)` / `add(ItemStack)` / `add(…, ItemGroup.StackVisibility)` / `addAll(Collection)` —— **没有** `remove` / `removeIf`，别照新版文档或 Forge 记忆写。`Item` 本身实现 `ItemConvertible`，直接传注册的 `Item` 字段即可。
+- Fabric API 侧另有 `FabricItemGroupEntries`，提供 `prepend` / `addAfter` / `addBefore`（入参 `ItemConvertible` 或 `ItemStack`）。
+- 自定义创造栏走 `FabricItemGroup.builder()`，返回 `ItemGroup.Builder`（intermediary `class_7913`）；builder 上逐个方法名本档未核实，写之前 `query_loader_api` 查 `net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup`。路线说明见官方 `develop_items_custom-creative-tabs`。
+- 移植提醒：26.1 起该事件改名 `modifyOutputEvent`（见 `fabric/26.1.2` 档 `develop_porting_fabric-api`），两版写法不要互抄。
 
 ## 常见错误
 

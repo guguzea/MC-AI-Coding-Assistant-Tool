@@ -6,7 +6,7 @@
 
 - **Minecraft**: 1.21.11
 - **Java**: 21
-- **Fabric Loader**: 0.19.3
+- **Fabric Loader**: 0.19.3 （maven 最新 0.19.5；与 Fabric API 是两个制品）
 - **Fabric API**: 0.141.6+1.21.11
 - **Loom**: 1.17-SNAPSHOT（`net.fabricmc.fabric-loom-remap`）
 - **Gradle**: 9.5.1
