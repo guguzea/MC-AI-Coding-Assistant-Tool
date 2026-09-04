@@ -9,6 +9,7 @@ import {
   canonicalFlagName,
   coerceFlagValue,
   coerceFlags,
+  expandableFlags,
   extractGlobalFlags,
   FLAG_ALIASES,
   flagHelpPointer,
@@ -175,6 +176,36 @@ import {
   assert.equal(globals.json, false);
   assert.equal(globals.compact, false);
   assert.equal(globals.failOnError, false);
+}
+
+{
+  const gateSchema = z.object({
+    text: z.string().optional(),
+    enumLike: z.enum(["a", "b"]).optional(),
+    num: z.number().optional(),
+    bool: z.boolean().optional(),
+    list: z.array(z.string()).optional(),
+    objs: z.array(z.object({ a: z.string() })).optional(),
+    payload: z.record(z.string()).optional(),
+    unionish: z.union([z.string(), z.object({ k: z.string() })]).optional(),
+    tuple: z.tuple([z.string(), z.string()]).optional(),
+  });
+  const expandable = expandableFlags(gateSchema);
+  assert.ok(expandable, "扁平 object schema 必须返回集合而不是 undefined");
+  assert.deepEqual([...expandable].sort(), ["list", "objs", "payload", "text", "unionish"]);
+  for (const dropped of ["bool", "enumLike", "num", "tuple"]) {
+    assert.equal(expandable.has(dropped), false, `${dropped} 不承载文本，不得进入展开名单`);
+  }
+  assert.equal(expandableFlags(z.string()), undefined);
+  assert.equal(expandableFlags(undefined), undefined);
+}
+
+{
+  assert.deepEqual(extractGlobalFlags(parseFlags(["--raw"]).flags).globals.raw, [true]);
+  assert.deepEqual(extractGlobalFlags(parseFlags(["--raw", "className"]).flags).globals.raw, ["className"]);
+  assert.deepEqual(extractGlobalFlags(parseFlags(["--raw=a", "--raw=b"]).flags).globals.raw, ["a", "b"]);
+  assert.deepEqual(extractGlobalFlags(parseFlags(["--raw=false"]).flags).globals.raw, ["false"]);
+  assert.deepEqual(extractGlobalFlags(parseFlags([]).flags).globals.raw, []);
 }
 
 {

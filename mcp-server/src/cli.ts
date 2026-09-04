@@ -11,7 +11,7 @@
  * 旧位置参数形式仍兼容（stderr 迁移提示）。descriptor 为本地子命令，不经 MCP registry。
  */
 import "./utils/node-sqlite-guard.js"; // 必须保持第一个 import：22.5–22.12 未带 --experimental-sqlite 时先给出指引再退出
-import { existsSync, readFileSync, realpathSync, statSync } from "fs";
+import { existsSync, readFileSync, readSync, realpathSync, statSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import * as z from "zod";
@@ -21,6 +21,7 @@ import {
   applyPositionalCompat,
   coerceFlags,
   DATA_DIR_TOOLS,
+  expandableFlags,
   extractGlobalFlags,
   isToolFailure,
   InvalidBooleanFlagError,
@@ -34,6 +35,7 @@ import {
   UnknownFlagError,
   zodToJsonSchema,
   type CliErrorKind,
+  type FlagScalar,
   type RawFlags,
 } from "./cli-parse.js";
 import { parameterTypes, readableSignature, returnType } from "./utils/descriptor.js";
@@ -73,7 +75,7 @@ function printJson(obj: unknown, compact: boolean): void {
 }
 
 const USAGE_LINES = [
-  "mc-skill <tool> [--key=value ...] [--project <dir>] [--file field=path]",
+  "mc-skill <tool> [--key=value ...] [--project <dir>] [--file field=path] [--raw <field>]",
   "mc-skill query --className <className> [--methodName <methodName>] [--version=1.20.1]",
   "mc-skill convert --from=mcp --to=mojang --name=getHealth [--owner=...] [--descriptor=()F]",
   "mc-skill convert_mapping --from obfuscated --to yarn --name er --version 1.20.1",
@@ -81,6 +83,9 @@ const USAGE_LINES = [
   "mc-skill update --action=check|apply [--dry-run=false --confirm]",
   "mc-skill validate_project --project .",
   "mc-skill crash_analyze --crashReport @./crash-reports/latest.txt",
+  "值前缀: @path 读文件，@- 或 =- 读 stdin，@@ 是字面 @（--className=@@Override → \"@Override\"）",
+  "字面量逃生: --raw <field> 让该字段完全按字面传（连 @- 也不读 stdin）；裸 --raw 或 --raw=true 关闭全部 @ 展开，--raw=false 恢复",
+  "仅可承载文本的字段接受 @（string / string[] / object / string 参与的 union）；number / boolean / enum / tuple 原样传",
   "mc-skill list-tools",
   "mc-skill <任意MCP工具名> --key=value ...",
   "遗留用法（仍兼容，未来移除）: query Item getName / warmup 1.20.1；单连字符 -className 视为漏写 --，报用法错误 exit 2",
@@ -98,9 +103,9 @@ function printGlobalHelp(json: boolean, compact: boolean): void {
       "用法:",
       ...USAGE_LINES.map((l) => `  ${l}`),
       "",
-      "全局 flag: --help  --version  --json  --compact  --fail-on-error  --project <dir>  --file field=path",
+      "全局 flag: --help  --version  --json  --compact  --fail-on-error  --project <dir>  --file field=path  --raw <field>",
       "布尔 flag 只接受 true/false/1/0/yes/no/on/off；裸 --flag 为 true；--flag=junk 拒绝（exit 2）",
-      "文件输入: --crashReport @./latest.txt   --crashReport=-   --file crashReport=./latest.txt",
+      "文件输入: --crashReport @./latest.txt   --crashReport=-   --file crashReport=./latest.txt   @@ 为字面 @   --raw <field> 关闭展开   文件与 stdin 同受 8MB 上限",
       "退出码: 0 成功 / 1 工具失败 / 2 用法错误",
       "",
     ].join("\n"),
@@ -140,23 +145,28 @@ async function loadRegistry() {
   return import("./tool-registry.js");
 }
 
-function readLimitedFile(path: string, tool: string): string {
+function literalHint(field: string): string {
+  return `若这是字面量而非文件引用，请改用 @@ 前缀或 --raw ${field}。`;
+}
+
+function readLimitedFile(path: string, ctx: ExpandCtx, field: string, rawValue: string): string {
+  const where = `字段 ${field} 的值 ${JSON.stringify(rawValue)} → 路径 ${path}`;
   try {
     if (!existsSync(path) || !statSync(path).isFile()) {
-      throw new CliUsageError(tool, `无法读取文件：${path}`);
+      throw new CliUsageError(ctx.tool, `无法读取文件：${where}（不存在或不是普通文件）。${literalHint(field)}`);
     }
     const size = statSync(path).size;
     if (size > FILE_MAX_BYTES) {
-      throw new CliUsageError(tool, `文件超过 8MB 上限：${path}`);
+      throw new CliUsageError(ctx.tool, `文件超过 8MB 上限：${where}（${size} 字节）。${literalHint(field)}`);
     }
     const content = readFileSync(path, "utf8");
     if (Buffer.byteLength(content, "utf8") > FILE_MAX_BYTES) {
-      throw new CliUsageError(tool, `文件超过 8MB 上限：${path}`);
+      throw new CliUsageError(ctx.tool, `文件超过 8MB 上限：${where}。${literalHint(field)}`);
     }
     return content;
   } catch (err) {
     if (err instanceof CliUsageError) throw err;
-    throw new CliUsageError(tool, `读取文件失败：${path}（${(err as Error).message}）`);
+    throw new CliUsageError(ctx.tool, `读取文件失败：${where}（${(err as Error).message}）。${literalHint(field)}`);
   }
 }
 
@@ -164,54 +174,128 @@ interface StdinState {
   used: boolean;
 }
 
-function expandStringValue(value: string, tool: string, stdin: StdinState): string {
+/** `@` / stdin 展开的作用范围：字段名解析、可承载文本的字段集合、--raw 逃生名单 */
+interface ExpandCtx {
+  tool: string;
+  stdin: StdinState;
+  schemaKeys: Set<string>;
+  expandable: Set<string> | undefined;
+  rawFields: Set<string>;
+  rawAll: boolean;
+}
+
+function makeExpandCtx(schema: z.ZodTypeAny, rawSpecs: FlagScalar[], tool: string): ExpandCtx {
+  const schemaKeys = new Set(Object.keys(schemaObjectShape(schema) ?? {}));
+  const expandable = expandableFlags(schema);
+  const rawFields = new Set<string>();
+  let rawAll = false;
+  for (const spec of rawSpecs) {
+    if (typeof spec !== "string") {
+      rawAll = true;
+      continue;
+    }
+    if (spec === "true" || spec === "false") {
+      rawAll = spec === "true";
+      continue;
+    }
+    const field = resolveFlagKey(spec, schemaKeys);
+    if (!field) {
+      throw new UnknownFlagError(spec, undefined, { tool, knownFlags: [...schemaKeys] });
+    }
+    rawFields.add(field);
+  }
+  return { tool, stdin: { used: false }, schemaKeys, expandable, rawFields, rawAll };
+}
+
+/**
+ * stdin 是唯一没有 stat 前置检查的输入通道，必须自己分块计字节。
+ * 与 readLimitedFile 共用 FILE_MAX_BYTES，超限当场报错而不是把内存读完。
+ */
+function readLimitedStdin(ctx: ExpandCtx, field: string): string {
+  const chunks: Buffer[] = [];
+  const buf = Buffer.alloc(64 * 1024);
+  let total = 0;
+  for (;;) {
+    let n: number;
+    try {
+      n = readSync(0, buf, 0, buf.length, null);
+    } catch (err) {
+      throw new CliUsageError(ctx.tool, `读取 stdin 失败：字段 ${field}（${(err as Error).message}）`);
+    }
+    if (n === 0) break;
+    total += n;
+    if (total > FILE_MAX_BYTES) {
+      throw new CliUsageError(ctx.tool, `stdin 超过 8MB 上限：字段 ${field}（已读 ${total} 字节）`);
+    }
+    chunks.push(Buffer.from(buf.subarray(0, n)));
+  }
+  return Buffer.concat(chunks, total).toString("utf8");
+}
+
+function expandStringValue(value: string, ctx: ExpandCtx, field: string): string {
   if (value === "-" || value === "@-") {
-    if (stdin.used) {
-      throw new CliUsageError(tool, "stdin 只能用一次（不要同时对多个字段使用 @- 或 =-）");
+    if (ctx.stdin.used) {
+      throw new CliUsageError(
+        ctx.tool,
+        `stdin 只能用一次（字段 ${field} 的值 ${JSON.stringify(value)} 再次要求读 stdin）`,
+      );
     }
     if (process.stdin.isTTY === true) {
       throw new CliUsageError(
-        tool,
-        "TTY 下不能用 @- / - 读 stdin（会挂起等待输入）。请改 --file field=path 或管道输入。",
+        ctx.tool,
+        `TTY 下不能用 @- / - 读 stdin（字段 ${field}，会挂起等待输入）。请改 --file ${field}=path 或管道输入。`,
       );
     }
-    stdin.used = true;
-    return readFileSync(0, "utf8");
+    ctx.stdin.used = true;
+    return readLimitedStdin(ctx, field);
   }
   if (value.startsWith("@@")) return value.slice(1);
-  if (value.startsWith("@")) return readLimitedFile(value.slice(1), tool);
+  if (value.startsWith("@")) return readLimitedFile(value.slice(1), ctx, field, value);
   return value;
 }
 
-function applyFileSpecs(
-  rest: RawFlags,
-  fileSpecs: string[],
-  tool: string,
-  schema: z.ZodTypeAny,
-): void {
-  const shape = schemaObjectShape(schema);
-  const keys = new Set(Object.keys(shape ?? {}));
+function applyFileSpecs(rest: RawFlags, fileSpecs: string[], ctx: ExpandCtx): void {
   for (const spec of fileSpecs) {
     const eq = spec.indexOf("=");
     if (eq <= 0) {
-      throw new CliUsageError(tool, "--file 需要 field=path 形式（如 --file crashReport=./latest.txt）");
+      throw new CliUsageError(ctx.tool, "--file 需要 field=path 形式（如 --file crashReport=./latest.txt）");
     }
     const rawField = spec.slice(0, eq);
-    const field = resolveFlagKey(rawField, keys);
+    const field = resolveFlagKey(rawField, ctx.schemaKeys);
     if (!field) {
-      throw new UnknownFlagError(rawField, undefined, { tool, knownFlags: [...keys] });
+      throw new UnknownFlagError(rawField, undefined, { tool: ctx.tool, knownFlags: [...ctx.schemaKeys] });
+    }
+    if (ctx.rawAll || ctx.rawFields.has(field)) {
+      throw new CliUsageError(ctx.tool, `--raw 与 --file ${field}= 冲突：--raw 下 ${field} 只会按字面量传入`);
+    }
+    if (ctx.expandable && !ctx.expandable.has(field)) {
+      throw new CliUsageError(
+        ctx.tool,
+        `--file ${field}：该字段不承载文件内容（number / boolean / enum / tuple 原样传），--file 无意义`,
+      );
     }
     const path = spec.slice(eq + 1);
     rest[field] = path === "-" || path.startsWith("@") ? path : `@${path}`;
   }
 }
 
-function expandFlagFiles(rest: RawFlags, tool: string, stdin: StdinState): void {
+/**
+ * 只对「能承载文本」的字段展开 `@` / stdin（expandableFlags 按 schema 类型判定）。
+ * 未知 flag 这里跳过：它会在 coerceFlags 那里得到未知参数报错，且展开会先碰文件系统。
+ * schema 不是扁平 object 时（expandableFlags 返回 undefined）保持旧行为，全量展开。
+ */
+function expandFlagFiles(rest: RawFlags, ctx: ExpandCtx): void {
+  const gated = ctx.expandable !== undefined;
   for (const [k, v] of Object.entries(rest)) {
+    const resolved = gated ? resolveFlagKey(k, ctx.schemaKeys) : k;
+    if (gated && !resolved) continue;
+    const field = resolved ?? k;
+    if (ctx.rawAll || ctx.rawFields.has(field)) continue;
+    if (ctx.expandable && !ctx.expandable.has(field)) continue;
     if (Array.isArray(v)) {
-      rest[k] = v.map((item) => (typeof item === "string" ? expandStringValue(item, tool, stdin) : item));
+      rest[k] = v.map((item) => (typeof item === "string" ? expandStringValue(item, ctx, field) : item));
     } else if (typeof v === "string") {
-      rest[k] = expandStringValue(v, tool, stdin);
+      rest[k] = expandStringValue(v, ctx, field);
     }
   }
 }
@@ -383,8 +467,9 @@ async function main(): Promise<void> {
     }
 
     if (userCmd === "descriptor") {
-      applyFileSpecs(rest, globals.file, userCmd, descriptorSchema);
-      expandFlagFiles(rest, userCmd, { used: false });
+      const ctx = makeExpandCtx(descriptorSchema, globals.raw, userCmd);
+      applyFileSpecs(rest, globals.file, ctx);
+      expandFlagFiles(rest, ctx);
       const params = coerceFlags(rest, descriptorSchema, {}, undefined, userCmd);
       const result = await runDescriptor(params, cmdPositional);
       printJson({ success: true, tool: userCmd, result }, globals.compact);
@@ -397,8 +482,9 @@ async function main(): Promise<void> {
       throw new CliUsageError(userCmd, `未知命令：${userCmd}`);
     }
     const schema = entry.inputSchema as z.ZodTypeAny;
-    applyFileSpecs(rest, globals.file, userCmd, schema);
-    expandFlagFiles(rest, userCmd, { used: false });
+    const ctx = makeExpandCtx(schema, globals.raw, userCmd);
+    applyFileSpecs(rest, globals.file, ctx);
+    expandFlagFiles(rest, ctx);
     const shape = schemaObjectShape(schema);
     if (globals.project) {
       if (shape && "projectPath" in shape) {

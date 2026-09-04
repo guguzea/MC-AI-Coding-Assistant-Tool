@@ -22,6 +22,7 @@ export const GLOBAL_FLAG_KEYS = new Set([
   "failOnError",
   "project",
   "file",
+  "raw",
 ]);
 
 /** 裸 flag 为 true，且不得吞掉下一个非 -- 参数（避免 `--compact convert` 把 convert 当值） */
@@ -174,6 +175,36 @@ export function schemaPropertyType(schema: z.ZodTypeAny | undefined, key: string
   if (prop instanceof z.ZodObject) return "object";
   if (prop instanceof z.ZodUnion) return "union";
   return "string";
+}
+
+/**
+ * JSON-schema 节点能否承载文本 / JSON 内容 —— 决定 `@文件` 与 stdin 展开是否适用。
+ * 接受：非 enum 的 string、object / record、以及以上元素组成的 array 或 union 分支。
+ * 排除：number、boolean、enum（值域是闭集，`@x` 只可能是字面量）、tuple（items 为数组形式）。
+ */
+function jsonSchemaTakesText(node: unknown): boolean {
+  if (!node || typeof node !== "object" || Array.isArray(node)) return false;
+  const n = node as Record<string, unknown>;
+  if (Array.isArray(n.anyOf)) return n.anyOf.some(jsonSchemaTakesText);
+  if (n.type === "object") return true;
+  if (n.type === "string") return n.enum === undefined;
+  if (n.type === "array") return jsonSchemaTakesText(n.items);
+  return false;
+}
+
+/**
+ * 该工具 schema 中允许 `@文件` / stdin 展开的字段名。
+ * 返回 undefined = 拿不到扁平 object shape，调用方按旧行为全量展开。
+ * 类型读取走 zodToJsonSchema，不另写一套 Zod 遍历。
+ */
+export function expandableFlags(schema: z.ZodTypeAny | undefined): Set<string> | undefined {
+  const shape = schemaObjectShape(schema);
+  if (!shape) return undefined;
+  const out = new Set<string>();
+  for (const [key, prop] of Object.entries(shape)) {
+    if (jsonSchemaTakesText(zodToJsonSchema(prop))) out.add(key);
+  }
+  return out;
 }
 
 function parseArrayish(value: string): unknown[] {
@@ -368,11 +399,13 @@ export function extractGlobalFlags(raw: RawFlags): {
     failOnError: boolean;
     project?: string;
     file: string[];
+    raw: FlagScalar[];
   };
   rest: RawFlags;
 } {
   const rest: RawFlags = {};
   const file: string[] = [];
+  const rawFields: FlagScalar[] = [];
   let help = false;
   let json = false;
   let compact = false;
@@ -407,9 +440,13 @@ export function extractGlobalFlags(raw: RawFlags): {
       }
       continue;
     }
+    if (k === "raw") {
+      rawFields.push(...flattenFlagValues(v));
+      continue;
+    }
     rest[k] = v;
   }
-  return { globals: { help, json, compact, failOnError, project, file }, rest };
+  return { globals: { help, json, compact, failOnError, project, file, raw: rawFields }, rest };
 }
 
 /**

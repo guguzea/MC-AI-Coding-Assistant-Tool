@@ -623,4 +623,138 @@ function staleTotalClaims(docs, total) {
   console.log("未知命令 / 坏布尔全局 flag → exit 2 + errorKind usage");
 }
 
+// ── S3: @ 展开按 schema 类型收窄 + --raw 逃生 + stdin 有界多块读 ──────────────
+{
+  const r = run(["search_community_docs", "--limit=@nope-s3.txt"]);
+  const j = parseJson(r, "s3-number-gate");
+  if (r.status !== 2 || j.errorKind !== "validation") {
+    throw new Error(`number 字段应判校验类 exit 2: ${r.status} ${JSON.stringify(j)}`);
+  }
+  if (String(j.error).includes("无法读取文件")) throw new Error("number 字段不得触碰文件系统");
+  console.log("number 字段 @ 不展开 → 校验错误而非文件错误");
+}
+
+{
+  const r = run(["convert_mapping", "--from=@nope-s3.txt", "--to=mojang", "--name=x", "--version=1.20.1"]);
+  const j = parseJson(r, "s3-enum-gate");
+  if (r.status !== 2 || j.errorKind !== "validation") {
+    throw new Error(`enum 字段应判校验类 exit 2: ${r.status} ${JSON.stringify(j)}`);
+  }
+  if (String(j.error).includes("无法读取文件")) throw new Error("enum 字段不得触碰文件系统");
+  if (!String(j.error).includes("@nope-s3.txt")) throw new Error(`enum 字段值必须原样保留: ${j.error}`);
+  console.log("enum 字段 @ 不展开（值域是闭集）");
+}
+
+{
+  const r = run(["query_api", "--className=@Override", "--version=1.20.1"]);
+  const j = parseJson(r, "s3-string-hint");
+  if (r.status !== 2 || j.errorKind !== "usage") {
+    throw new Error(`string 字段 @ 缺失文件应 exit 2: ${r.status} ${JSON.stringify(j)}`);
+  }
+  const e = String(j.error);
+  if (!e.includes("className") || !e.includes("@Override")) {
+    throw new Error(`错误必须点名字段与值: ${e}`);
+  }
+  if (!e.includes("--raw className") || !e.includes("@@")) {
+    throw new Error(`错误必须给出 @@ / --raw 逃生指引: ${e}`);
+  }
+  const esc = run(["query_api", "--className=@@Override", "--version=1.20.1"]);
+  const escj = parseJson(esc, "s3-at-escape-literal");
+  if (esc.status !== 0 || escj.result?.className !== "@Override") {
+    throw new Error(`@@ 应还原成字面 @Override: ${esc.status} ${JSON.stringify(escj).slice(0, 200)}`);
+  }
+  console.log("string 字段 @缺失文件 → 字段名 + @@/--raw 提示；@@ 还原字面量");
+}
+
+{
+  const r = run(["query_api", "--className=@Override", "--version=1.20.1", "--raw", "className"]);
+  const j = parseJson(r, "s3-raw-field");
+  if (r.status !== 0 || j.result?.className !== "@Override") {
+    throw new Error(`--raw className 应按字面传: ${r.status} ${JSON.stringify(j).slice(0, 200)}`);
+  }
+  const b = run(["crash_analyze", "--crashReport=@nope-s3.txt", "--raw"]);
+  const bj = parseJson(b, "s3-raw-bare");
+  if (b.status !== 0 || bj.success !== true) {
+    throw new Error(`裸 --raw 应关闭全部 @ 展开: ${b.status} ${JSON.stringify(bj).slice(0, 200)}`);
+  }
+  const bad = run(["query_api", "--className=Item", "--version=1.20.1", "--raw", "notAField"]);
+  const badj = parseJson(bad, "s3-raw-unknown-field");
+  if (bad.status !== 2 || !String(badj.error).includes("未知参数")) {
+    throw new Error(`--raw 未知字段必须报错而不是吞掉: ${bad.status} ${JSON.stringify(badj).slice(0, 200)}`);
+  }
+  const on = run(["query_api", "--className=@Override", "--version=1.20.1", "--raw=true"]);
+  const onj = parseJson(on, "s3-raw-eq-true");
+  if (on.status !== 0 || onj.result?.className !== "@Override") {
+    throw new Error(`--raw=true 应等同裸 --raw: ${on.status} ${JSON.stringify(onj).slice(0, 200)}`);
+  }
+  const off = run(["query_api", "--className=@Override", "--version=1.20.1", "--raw=false"]);
+  const offj = parseJson(off, "s3-raw-eq-false");
+  if (off.status !== 2 || !String(offj.error).includes("无法读取文件")) {
+    throw new Error(`--raw=false 应恢复 @ 展开语义: ${off.status} ${JSON.stringify(offj).slice(0, 200)}`);
+  }
+  console.log("--raw <field> / 裸 --raw / --raw=true → 字面量；--raw=false 恢复展开；未知字段 → exit 2");
+}
+
+{
+  const r = run(["search_community_docs", "--file", "limit=./nope-s3.txt"]);
+  const j = parseJson(r, "s3-file-on-number");
+  if (r.status !== 2 || j.errorKind !== "usage") {
+    throw new Error(`--file 打到 number 字段应 exit 2: ${r.status} ${JSON.stringify(j)}`);
+  }
+  if (!String(j.error).includes("--file limit")) throw new Error(`--file 拒绝信息需点名: ${j.error}`);
+  const c = run(["crash_analyze", "--raw", "crashReport", "--file", "crashReport=./nope-s3.txt"]);
+  const cj = parseJson(c, "s3-raw-file-conflict");
+  if (c.status !== 2 || !String(cj.error).includes("冲突")) {
+    throw new Error(`--raw 与 --file 同名必须报冲突: ${c.status} ${JSON.stringify(cj)}`);
+  }
+  const u = run(["query_api", "--bogus=@nope-s3.txt", "--version=1.20.1"]);
+  const uj = parseJson(u, "s3-unknown-at");
+  if (u.status !== 2 || !String(uj.error).includes("未知参数")) {
+    throw new Error(`未知 flag 应报未知参数: ${u.status} ${JSON.stringify(uj)}`);
+  }
+  if (String(uj.error).includes("无法读取文件")) throw new Error("未知 flag 的值不得进文件系统");
+  console.log("--file 打非文本字段 / --raw 与 --file 冲突 / 未知 flag 带 @ → exit 2 且不碰文件");
+}
+
+{
+  const dir = mkdtempSync(join(tmpdir(), "mc-skill-s3-"));
+  try {
+    const entries = { "demo.item.TAIL": "TAILKEY_ok" };
+    for (let i = 0; i < 4000; i++) entries[`demo.item.${i}`] = `Name ${i} padded padded padded`;
+    const payload = JSON.stringify(entries);
+    if (payload.length < 96 * 1024) throw new Error(`fixture 太小（${payload.length}），不足一次多块读`);
+    const entriesFile = join(dir, "entries.json");
+    writeFileSync(entriesFile, payload);
+
+    // object 字段仍参与展开（撤掉类型判定不会让这条转红，所以它是「无回归」断言）
+    const miss = run(["generate_lang", "--modId=demo", "--version=1.20.1", "--entries=@nope-s3.json"]);
+    const missj = parseJson(miss, "s3-object-expandable");
+    if (miss.status !== 2 || !String(missj.error).includes("无法读取文件")) {
+      throw new Error(`object 字段必须仍支持 @文件（JSON 载荷流程不能退化）: ${miss.status} ${JSON.stringify(missj).slice(0, 200)}`);
+    }
+
+    const viaFile = run(["generate_lang", "--modId=demo", "--version=1.20.1", `--entries=@${entriesFile}`]);
+    const viaSpec = run(["generate_lang", "--modId=demo", "--version=1.20.1", "--file", `entries=${entriesFile}`]);
+    const viaStdin = run(["generate_lang", "--modId=demo", "--version=1.20.1", "--entries=-"], { input: payload });
+    for (const [label, r] of [["@file", viaFile], ["--file", viaSpec], ["stdin", viaStdin]]) {
+      if (r.status !== 0) throw new Error(`${label} entries 失败: ${r.status}\n${r.stdout}\n${r.stderr}`);
+      if (!r.stdout.includes("TAILKEY_ok")) throw new Error(`${label} 结果缺尾部键（读断了？）`);
+    }
+    if (viaStdin.stdout !== viaFile.stdout) throw new Error("大载荷 stdin 与 @file 结果不一致（分块读丢失）");
+    if (viaSpec.stdout !== viaFile.stdout) throw new Error("--file 与 @file 结果不一致");
+    console.log(`object 字段 @file / --file / ${Math.round(payload.length / 1024)}KB stdin 三者同构`);
+
+    const tooBig = run(["generate_lang", "--modId=demo", "--version=1.20.1", "--entries=-"], {
+      input: "x".repeat(8 * 1024 * 1024 + 1),
+    });
+    const tbj = parseJson(tooBig, "s3-stdin-8mb");
+    if (tooBig.status !== 2 || !String(tbj.error).includes("8MB") || !String(tbj.error).includes("stdin")) {
+      throw new Error(`stdin 超过 8MB 必须 exit 2: ${tooBig.status} ${JSON.stringify(tbj).slice(0, 200)}`);
+    }
+    console.log("stdin 超过 8MB → exit 2");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 console.log("test-cli: ok");

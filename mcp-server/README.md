@@ -174,15 +174,17 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 一条执行路径：短名只做 alias（`query`→`query_api`、`convert`→`convert_mapping`、`update`→`mc_skill_update`、`status`/`warmup`→`get_server_status`；`warmup` 会注入 `warmup=true`，用户显式 `--warmup=false` 优先）。`descriptor` 是本地命令，不加载 MCP 工具注册表。
 
-全局 flag（不进工具 schema）：`--help`/`-h`、`--version`、`--json`、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`。
+全局 flag（不进工具 schema）：`--help`/`-h`、`--version`、`--json`、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`、`--raw [field]`。
 
 kebab-case 会转到 camelCase（`--dry-run`→`dryRun`、`--highlight-key`→`highlight_key`）；另有 `--name`→`memberName`、`--confirm`→`confirmed`、`--class`→`className` 等语义别名（仅当目标字段存在于该工具 schema 时）。只有分隔符/大小写之差的名字（`--allow-fallback`、`--allowFallback`、`--ALLOW_FALLBACK`→`allow_fallback`）由通用归一化接管，不再逐个写进别名表；归一化只在候选唯一时接受，命中多个则报歧义并列出候选写法。未知 flag **exit 2**，报错里带近似名和 `node mcp-server/dist/cli.js <工具> --help` 指针。
 
-文件输入（所有 string 字段）：
+文件输入（只作用于**可承载文本**的字段：非 enum 的 `string`、`object` / record、元素为前两者的 `array`、含前两者的 union；`number` / `boolean` / `enum` / `tuple` 一律原样传，不当路径读）：
 
 - `--crashReport @./latest.txt` 读文件（`@@` 转义成字面 `@`）
-- `--crashReport=-` 或 `@-` 读 stdin（全进程只能一次）
+- `--crashReport=-` 或 `@-` 读 stdin（全进程只能一次，与文件同受 8MB 上限）
 - `--file crashReport=./latest.txt` 或 `--file crash-report=./latest.txt` 等价（字段名走 kebab/别名）
+- `--raw <field>` 让该字段完全按字面传（连 `@-` 也不读 stdin）；裸 `--raw` 或 `--raw=true` 全局关闭展开，`--raw=false` 恢复；与同名字段的 `--file` 同时出现 → 报冲突 exit 2
+- 未知 flag 的值不做任何文件读取，直接按未知参数 exit 2
 - 单文件上限约 8MB
 - `--project <dir>`：若工具有 `projectPath` 则注入；否则不传，stderr 警告「该工具不支持 --project」
 
