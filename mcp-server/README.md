@@ -218,6 +218,8 @@ node dist/cli.js list-tools
 ```
 
 - 旧位置参数（`query <className> [methodName]`、`convert ... <memberName>`、`descriptor <jniDescriptor>`、`update check|apply`）仍兼容，stderr 提示改用 `--key value`。
+- `list-tools` 裁剪三档（与全量共用同一渲染，信封仍是 `{success, tool, result}`，`--compact` 照旧）：`--names-only` 只回名字清单（2 KB 量级，约为全量 schema 的 2%）；`--filter <kw>` 按工具名/描述做忽略大小写子串过滤，命中项回完整 schema，**无匹配 → exit 1 `tool_failure`** 并指向 `--names-only`（不静默给空数组）；`--tool <name>` 只吐单个工具的 schema，短名一样解析。多余位置参数、`--tool` 与 `--names-only`/`--filter` 并用、空 `--filter=`、漏取值的 `--filter` 一律 **exit 2**。
+- `help <工具>` 在 TTY 下逐参数列「名字 (类型) — 一行描述」（枚举标 `enum`、数组标 `T[]`、tuple 标 `tuple`、union 用 `|` 连接），不灌完整 schema；要 schema 用 `--help --json`。
 - PowerShell 括号：单引号包裹，如 `'--descriptor=()F'`。
 - 全局 `--help`/`--version` 不加载工具注册表。`MC_SKILL_DATA` 仅在真正调用依赖 data 的工具时提示。
 

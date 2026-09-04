@@ -19,6 +19,7 @@ import { toolHandlers } from "./tool-handlers.js";
 import {
   AmbiguousFlagError,
   applyPositionalCompat,
+  canonicalFlagName,
   coerceFlags,
   DATA_DIR_TOOLS,
   expandableFlags,
@@ -49,6 +50,13 @@ const FILE_MAX_BYTES = 8 * 1024 * 1024;
 const descriptorSchema = z.object({
   descriptor: z.string().optional(),
   name: z.string().optional(),
+});
+
+/** list-tools 是本命令的裁剪开关，不进任何工具 schema；只用于渲染 list-tools --help */
+const listToolsSchema = z.object({
+  "names-only": z.boolean().optional().describe("只回工具名清单，体积远小于全量 schema"),
+  filter: z.string().optional().describe("按工具名或描述做子串过滤（忽略大小写），命中项回完整 schema"),
+  tool: z.string().optional().describe("只吐这一个工具的完整 schema"),
 });
 
 class CliUsageError extends Error {
@@ -90,7 +98,7 @@ const USAGE_LINES = [
   "字段优先: 工具 schema 里有同名 flag 时该 flag 归工具（validate_bp_json --json '<全文>' 的 json 是参数，不是输出开关）",
   "输出格式: --output-format json 是表达格式意图的规范入口；当前唯一合法值是 json，其它值 exit 2 报「尚未实现」",
   "仅可承载文本的字段接受 @（string / string[] / object / string 参与的 union）；number / boolean / enum / tuple 原样传",
-  "mc-skill list-tools",
+  "mc-skill list-tools [--names-only | --filter <kw> | --tool <name>]",
   "mc-skill <任意MCP工具名> --key=value ...",
   "遗留用法（仍兼容，未来移除）: query Item getName / warmup 1.20.1；单连字符 -className 视为漏写 --，报用法错误 exit 2",
 ];
@@ -119,7 +127,7 @@ function printGlobalHelp(json: boolean, compact: boolean): void {
 
 async function printNamedToolHelp(userCmd: string, json: boolean, compact: boolean): Promise<void> {
   if (userCmd === "list-tools") {
-    printToolHelp("list-tools", "列出全部 MCP 工具及其 JSON Schema", z.object({}), json, compact);
+    printToolHelp("list-tools", "列出全部 MCP 工具及其 JSON Schema（可 --names-only / --filter / --tool 裁剪）", listToolsSchema, json, compact);
     return;
   }
   if (userCmd === "descriptor") {
@@ -336,6 +344,28 @@ async function maybeHintDataDir(mappedTool: string): Promise<void> {
   }
 }
 
+/** 人读摘要只要类型骨架：枚举标 enum，数组带 []，union 用 | 连接，不铺 enum/默认值全文 */
+function humanTypeLabel(node: Record<string, unknown>): string {
+  if (Array.isArray(node.enum)) return "enum";
+  if (typeof node.type === "string") {
+    if (node.type === "array") {
+      const items = node.items as Record<string, unknown> | unknown[] | undefined;
+      if (Array.isArray(items)) return "tuple";
+      return items ? `${humanTypeLabel(items)}[]` : "any[]";
+    }
+    return node.type;
+  }
+  if (Array.isArray(node.anyOf)) {
+    return node.anyOf.map((b) => humanTypeLabel(b as Record<string, unknown>)).join("|");
+  }
+  return "any";
+}
+
+function oneLine(text: unknown, max = 90): string {
+  const s = String(text ?? "").replace(/\s+/g, " ").trim();
+  return s.length > max ? s.slice(0, max - 1) + "…" : s;
+}
+
 function printToolHelp(
   name: string,
   description: string,
@@ -351,15 +381,20 @@ function printToolHelp(
   const required = Array.isArray((parameters as { required?: string[] }).required)
     ? (parameters as { required: string[] }).required
     : [];
-  process.stdout.write(
-    [
-      `${name}`,
-      description,
-      required.length ? `必填: ${required.join(", ")}` : "无必填字段",
-      "参数 schema 见：mc-skill " + name + " --help --json",
-      "",
-    ].join("\n"),
-  );
+  const props = (parameters as { properties?: Record<string, Record<string, unknown>> }).properties ?? {};
+  const order = Object.keys(props).sort((a, b) => Number(required.includes(b)) - Number(required.includes(a)));
+  const lines = [
+    `${name}`,
+    description,
+    required.length ? `必填: ${required.join(", ")}` : "无必填字段",
+    `参数 (${order.length}):`,
+  ];
+  for (const key of order) {
+    const note = oneLine(props[key].description);
+    lines.push(`  ${key} (${humanTypeLabel(props[key])})${note ? ` — ${note}` : ""}`);
+  }
+  lines.push("参数 schema 见：mc-skill " + name + " --help --json", "");
+  process.stdout.write(lines.join("\n"));
 }
 
 async function runDescriptor(params: Record<string, unknown>, positional: string[]): Promise<unknown> {
@@ -375,6 +410,114 @@ async function runDescriptor(params: Record<string, unknown>, positional: string
     parameterTypes: parameterTypes(desc),
     readableSignature: readableSignature(name, desc),
   };
+}
+
+/** 全量清单、--filter 命中、--tool 单查共用同一渲染，避免裁剪路径与清单漂移 */
+function toolEntryView(t: { name: string; description: string; inputSchema: z.ZodTypeAny }) {
+  return { name: t.name, description: t.description, parameters: zodToJsonSchema(t.inputSchema) };
+}
+
+const LIST_TOOLS_FLAGS = ["names-only", "filter", "tool"];
+
+function lastScalar(v: FlagScalar | FlagScalar[] | undefined): FlagScalar | undefined {
+  return Array.isArray(v) ? v.at(-1) : v;
+}
+
+/** 开关写法：裸 --flag / =true 为开，=false 为关；其它值必须报错，不得静默当成关键词 */
+function listToolsSwitch(value: FlagScalar | undefined, flag: string): boolean {
+  if (value === undefined || value === false || value === "false") return false;
+  if (value === true || value === "true") return true;
+  throw new CliUsageError(
+    "list-tools",
+    `--${flag} 是开关，只接受裸写法或 true/false（收到 ${JSON.stringify(value)}）。想按关键词筛请写 --filter=${String(value)}`,
+  );
+}
+
+async function runListTools(rest: RawFlags, positional: string[], compact: boolean): Promise<void> {
+  const known = LIST_TOOLS_FLAGS.map((f) => canonicalFlagName(f));
+  for (const k of Object.keys(rest)) {
+    if (!known.includes(canonicalFlagName(k))) {
+      throw new UnknownFlagError(k, undefined, { tool: "list-tools", knownFlags: LIST_TOOLS_FLAGS });
+    }
+  }
+  if (positional.length > 0) {
+    throw new CliUsageError(
+      "list-tools",
+      `list-tools 不收位置参数（多余：${positional.join(" ")}）。看单个工具用 --tool=${positional[0]}，按词筛用 --filter=${positional[0]}`,
+    );
+  }
+  const get = (flag: string): FlagScalar | undefined => {
+    const want = canonicalFlagName(flag);
+    const hit = Object.keys(rest).find((k) => canonicalFlagName(k) === want);
+    return hit === undefined ? undefined : lastScalar(rest[hit]);
+  };
+  const namesOnly = listToolsSwitch(get("names-only"), "names-only");
+  const toolArg = get("tool");
+  const filterArg = get("filter");
+
+  const reg = await loadRegistry();
+  const tools = reg.listAllToolSchemas();
+
+  if (toolArg !== undefined) {
+    if (namesOnly || filterArg !== undefined) {
+      throw new CliUsageError("list-tools", "list-tools --tool 与 --names-only / --filter 互斥（--tool 只吐单个工具）");
+    }
+    if (typeof toolArg !== "string") {
+      throw new CliUsageError("list-tools", "list-tools --tool 需要工具名（--tool=<name>）");
+    }
+    const want = mapShortCommand(toolArg).tool;
+    const found = tools.find((t) => t.name === want) ?? tools.find((t) => t.name === toolArg);
+    if (!found) {
+      throw new CliUsageError(
+        "list-tools",
+        `未知工具：${toolArg}（查看全部名字：node mcp-server/dist/cli.js list-tools --names-only）`,
+      );
+    }
+    printJson({ success: true, tool: "list-tools", result: toolEntryView(found) }, compact);
+    return;
+  }
+
+  if (filterArg !== undefined && typeof filterArg !== "string") {
+    throw new CliUsageError("list-tools", `--filter 需要关键词（--filter=<kw>），收到 ${JSON.stringify(filterArg)}`);
+  }
+  if (typeof filterArg === "string" && filterArg.trim() === "") {
+    throw new CliUsageError("list-tools", "--filter 关键词不能为空（空串会静默命中全部，那不是过滤）");
+  }
+
+  let list = tools;
+  if (filterArg !== undefined) {
+    const q = filterArg.toLowerCase();
+    list = tools.filter(
+      (t) => t.name.toLowerCase().includes(q) || oneLine(t.description, 100000).toLowerCase().includes(q),
+    );
+    if (list.length === 0) {
+      printJson(
+        {
+          success: false,
+          tool: "list-tools",
+          error:
+            `无匹配：--filter ${JSON.stringify(filterArg)} 在 ${tools.length} 个工具的名字与描述里都没命中` +
+            `（子串、忽略大小写）。查看全部名字：node mcp-server/dist/cli.js list-tools --names-only`,
+          errorKind: "tool_failure",
+        },
+        compact,
+      );
+      process.exitCode = 1;
+      return;
+    }
+  }
+
+  if (namesOnly) {
+    printJson({ success: true, tool: "list-tools", result: { names: list.map((t) => t.name), total: list.length } }, compact);
+    return;
+  }
+  const result: Record<string, unknown> = { tools: list.map(toolEntryView), total: list.length };
+  if (filterArg !== undefined) {
+    result.query = filterArg;
+    result.matched = list.length;
+    result.of = tools.length;
+  }
+  printJson({ success: true, tool: "list-tools", result }, compact);
 }
 
 /**
@@ -483,23 +626,7 @@ async function main(): Promise<void> {
     }
 
     if (userCmd === "list-tools") {
-      const reg = await loadRegistry();
-      const tools = reg.listAllToolSchemas();
-      printJson(
-        {
-          success: true,
-          tool: userCmd,
-          result: {
-            tools: tools.map((t) => ({
-              name: t.name,
-              description: t.description,
-              parameters: zodToJsonSchema(t.inputSchema),
-            })),
-            total: tools.length,
-          },
-        },
-        globals.compact,
-      );
+      await runListTools(rest, cmdPositional, globals.compact);
       return;
     }
 

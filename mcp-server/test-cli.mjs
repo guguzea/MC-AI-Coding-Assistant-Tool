@@ -841,4 +841,142 @@ function staleTotalClaims(docs, total) {
   }
 }
 
+// ── S5: list-tools 裁剪视图（--names-only / --filter / --tool）+ 人读 help ────
+function runTty(args) {
+  const boot = [
+    'import { pathToFileURL } from "url";',
+    'import { join } from "path";',
+    `const cli = join(${JSON.stringify(root)}, "dist", "cli.js");`,
+    "process.stdout.isTTY = true;",
+    "process.argv = [process.execPath, cli, ...process.argv.slice(1)];",
+    "await import(pathToFileURL(cli).href);",
+  ].join("\n");
+  const env = {
+    ...process.env,
+    MC_SKILL_DATA: process.env.MC_SKILL_DATA || join(root, "..", "data"),
+  };
+  const r = spawnSync(process.execPath, ["--input-type=module", "-e", boot, ...args], { encoding: "utf8", env });
+  return { status: r.status, stdout: r.stdout ?? "", stderr: r.stderr ?? "" };
+}
+
+{
+  const bytes = (s) => Buffer.byteLength(s, "utf8");
+  const full = run(["list-tools"]);
+  const fj = parseJson(full, "s5-full");
+  const total = fj.result.total;
+  const byName = new Map(fj.result.tools.map((t) => [t.name, t]));
+  const orderedNames = fj.result.tools.map((t) => t.name);
+
+  const names = run(["list-tools", "--names-only"]);
+  const nj = parseJson(names, "s5-names");
+  const nameBytes = bytes(names.stdout);
+  if (nameBytes >= bytes(full.stdout) * 0.1) {
+    throw new Error(`--names-only 体积 ${nameBytes} 未低于全量 ${bytes(full.stdout)} 的 10%`);
+  }
+  if (nameBytes > total * 60) throw new Error(`--names-only 单个名字摊到 ${Math.round(nameBytes / total)} B，超过 60 B 预算`);
+  if (nj.result.total !== total) throw new Error(`names total=${nj.result.total} != ${total}`);
+  if (JSON.stringify(nj.result.names) !== JSON.stringify(orderedNames)) {
+    throw new Error("names-only 的名字集合或顺序与全量不一致");
+  }
+  if (names.stdout.includes("parameters")) throw new Error("--names-only 仍在吐 schema");
+  const camel = run(["list-tools", "--namesOnly", "--compact"]);
+  if (camel.status !== 0 || camel.stdout.trim().includes("\n")) {
+    throw new Error(`--namesOnly（camel 写法）+ --compact 应单行输出：${camel.status}`);
+  }
+  console.log(`--names-only ${nameBytes} B（全量 ${bytes(full.stdout)} B 的 ${(nameBytes / bytes(full.stdout) * 100).toFixed(1)}%，${total} 个名字）`);
+
+  const hit = run(["list-tools", "--filter=doc"]);
+  const hj = parseJson(hit, "s5-filter");
+  if (hj.result.tools.length === 0 || hj.result.total >= total) {
+    throw new Error(`--filter doc 命中应为非空真子集，实得 ${hj.result.total}/${total}`);
+  }
+  for (const t of hj.result.tools) {
+    if (!`${t.name} ${t.description}`.toLowerCase().includes("doc")) {
+      throw new Error(`--filter 命中项与关键词无关：${t.name}`);
+    }
+    assert.deepEqual(t, byName.get(t.name), `--filter 命中项与全量该项不一致：${t.name}`);
+  }
+  if (hj.result.query !== "doc" || hj.result.of !== total) throw new Error(`filter 信封缺 query/of：${JSON.stringify(hj.result).slice(0, 120)}`);
+  const miss = run(["list-tools", "--filter=zzzz-nope"]);
+  const mj = parseJson(miss, "s5-filter-miss");
+  if (miss.status !== 1 || mj.success !== false || mj.errorKind !== "tool_failure") {
+    throw new Error(`无匹配必须 exit 1 + tool_failure：${miss.status} ${JSON.stringify(mj).slice(0, 160)}`);
+  }
+  if (!String(mj.error).includes("无匹配") || !String(mj.error).includes("--names-only")) {
+    throw new Error(`无匹配必须点名并建议 --names-only：${mj.error}`);
+  }
+  console.log(`--filter 命中 ${hj.result.total} 项且与全量逐字段相等；无匹配 → exit 1 tool_failure`);
+
+  const one = run(["list-tools", "--tool=get_minecraft_source"]);
+  const oj = parseJson(one, "s5-describe");
+  assert.deepEqual(oj.result, byName.get("get_minecraft_source"), "--tool 单查与全量该项不一致");
+  if (bytes(one.stdout) >= bytes(full.stdout) * 0.1) {
+    throw new Error(`--tool 单查体积 ${bytes(one.stdout)} 未低于全量 10%`);
+  }
+  const alias = run(["list-tools", "--tool=query"]);
+  const aj = parseJson(alias, "s5-describe-alias");
+  assert.deepEqual(aj.result, byName.get("query_api"), "--tool 短名应解析到 query_api");
+  const badTool = run(["list-tools", "--tool=nope_zz"]);
+  const btj = parseJson(badTool, "s5-describe-unknown");
+  if (badTool.status !== 2 || btj.errorKind !== "usage" || !String(btj.error).includes("未知工具")) {
+    throw new Error(`未知工具名应 exit 2 usage：${badTool.status} ${JSON.stringify(btj).slice(0, 160)}`);
+  }
+  console.log(`--tool 与全量该项逐字段相等（${bytes(one.stdout)} B），短名同源`);
+
+  for (const [label, args, want] of [
+    ["互斥", ["list-tools", "--names-only", "--tool=query"], "互斥"],
+    ["未知 flag", ["list-tools", "--bogus=1"], "未知参数"],
+    ["多余位置参数", ["list-tools", "query"], "不收位置参数"],
+    ["空关键词", ["list-tools", "--filter="], "不能为空"],
+    ["漏取值", ["list-tools", "--filter"], "需要关键词"],
+    ["开关给了值", ["list-tools", "--names-only=junk"], "是开关"],
+  ]) {
+    const r = run(args);
+    const j = parseJson(r, `s5-${label}`);
+    if (r.status !== 2 || j.errorKind !== "usage" || !String(j.error).includes(want)) {
+      throw new Error(`list-tools ${label} 应 exit 2 usage 含「${want}」：${r.status} ${JSON.stringify(j).slice(0, 180)}`);
+    }
+    if (j.error.includes("疑似漏写") && label === "未知 flag") {
+      throw new Error(`正确双连字符写法不该报「疑似漏写」：${j.error}`);
+    }
+  }
+
+  for (const [label, j] of [["全量", fj], ["names", nj], ["filter", hj], ["tool", oj]]) {
+    assert.deepEqual(Object.keys(j), ["success", "tool", "result"], `${label} 模式信封形状变了`);
+    assert.equal(j.tool, "list-tools", `${label} 模式 tool 字段变了`);
+  }
+  console.log("三种裁剪模式共用 success/tool/result 信封；六类误用一律 exit 2 usage");
+}
+
+{
+  const human = runTty(["help", "get_forge_doc_full"]);
+  if (human.status !== 0) throw new Error(`TTY help 失败：${human.status}\n${human.stderr}`);
+  const out = human.stdout;
+  if (!out.includes("参数 (3):")) throw new Error(`TTY help 没有逐参数清单：\n${out}`);
+  for (const want of ["  id (string) —", "  version (string) —", "  highlight_key (boolean)"]) {
+    if (!out.includes(want)) throw new Error(`TTY help 缺参数行「${want}」：\n${out}`);
+  }
+  if (!out.includes("参数 schema 见：mc-skill get_forge_doc_full --help --json")) {
+    throw new Error(`TTY help 的 --help --json 指针不能动：\n${out}`);
+  }
+  if (out.includes('"properties"') || out.includes('"type": "object"')) {
+    throw new Error("TTY 人读路径不许直接吐完整 schema");
+  }
+  const types = runTty(["help", "search_forge_docs"]);
+  if (!types.stdout.includes("tags (string[])")) throw new Error(`数组类型标签不对：\n${types.stdout}`);
+  const enums = runTty(["help", "convert_mapping"]);
+  if (!enums.stdout.includes("from (enum)")) throw new Error(`枚举应标 enum 而不铺值：\n${enums.stdout}`);
+  if (enums.stdout.includes('"mojang"')) throw new Error("TTY help 不得列出 enum 全文");
+  const unions = runTty(["help", "validate_datapack_json"]);
+  if (!unions.stdout.includes("packFormat (number|tuple)")) throw new Error(`union/tuple 类型标签不对：\n${unions.stdout}`);
+  const tuple = runTty(["help", "get_minecraft_source"]);
+  if (!tuple.stdout.includes("lines (tuple)")) throw new Error(`tuple 字段应标 tuple 而不铺嵌套全文：\n${tuple.stdout}`);
+  const asJson = run(["help", "get_forge_doc_full", "--json"]);
+  const aj = parseJson(asJson, "s5-help-json");
+  if (asJson.status !== 0 || aj.tool !== "get_forge_doc_full" || !aj.parameters?.properties?.id) {
+    throw new Error(`同一条命令加 --json 必须仍给可解析 schema：${asJson.status} ${String(asJson.stdout).slice(0, 120)}`);
+  }
+  console.log("TTY help 逐参数「名字 (类型) — 描述」，enum/array/union 标签正确，--json 路径不变");
+}
+
 console.log("test-cli: ok");
