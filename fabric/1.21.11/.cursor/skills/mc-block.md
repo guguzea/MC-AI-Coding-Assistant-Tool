@@ -9,7 +9,7 @@ mappings: yarn
 
 # 方块开发（Fabric 1.21.11）
 
-方块属性用 Yarn `AbstractBlock.Settings`（`copy` / `of` / `create`）。Mojmap 对应 `BlockBehaviour.Properties`。**不要**写已删除的 `FabricBlockSettings`。地图色用 `MapColor.STONE_GRAY`。
+方块属性用 Yarn `AbstractBlock.Settings`（`create()` / `copy()` / `copyShallow()`；**本档 Yarn 口径无具名 `of`**）。Mojmap 对应 `BlockBehaviour.Properties`（该轴有 `Properties.of()` / `ofFullCopy()`，无静态 `copy()`）。**不要**写已删除的 `FabricBlockSettings`。地图色用 `MapColor.STONE_GRAY`。
 
 ## 快速开始
 

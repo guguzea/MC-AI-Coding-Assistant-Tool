@@ -20,7 +20,7 @@ mappings: mojmap
 - **mod bus**：注册、lifecycle（`FMLCommonSetupEvent`、`FMLClientSetupEvent`、`RegisterPayloadHandlerEvent`、`GatherDataEvent`）
 - **游戏总线** `NeoForge.EVENT_BUS`：游玩中事件（如 `ServerStartingEvent`）
 
-`@SubscribeEvent`。类级 `@Mod.EventBusSubscriber` / `@EventBusSubscriber`。
+`@SubscribeEvent`。类级 `@Mod.EventBusSubscriber(modid = "yourmodid")`（≤1.20.4 带 `Mod.` 前缀，默认总线 `Bus.FORGE`；mod bus 事件显式 `bus = Bus.MOD`）。
 
 入口里 `modEventBus.addListener(this::commonSetup)` 与 MDK 一致。
 

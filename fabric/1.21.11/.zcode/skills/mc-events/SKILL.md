@@ -15,8 +15,9 @@ docsTool: search_fabric_docs
 ## 核心原则
 
 - Fabric 用**事件回调**（静态 `Event` 字段 + `.register(lambda)`），不是 Forge 的 `@SubscribeEvent` / `@EventHandler`；在 `onInitialize()` / `onInitializeClient()` 里注册（初始化时注册，逻辑放进 lambda，禁止「有时才 register」）。
-- 与 Forge 的映射：`MinecraftForge.EVENT_BUS` → 各事件类型的静态 `Event` 字段；`EventPriority` → Fabric **Phase**；`event.setCanceled(true)` → 返回 `ActionResult` / `TypedActionResult` / `boolean`。
-- 禁编名单（非本档 Fabric API）：`ItemEvents` / `BlockEvents` / `EntityEvents` / `PlayerTickEvents` / `EntityTickEvents` / `AttackEvents`，以及 `ActionResult.PISTON`、`CallbackEvaluator`、`DataPackRegistry`、`AttackEvents.AFTER_DAMAGE`。
+- 与 Forge 的映射：`MinecraftForge.EVENT_BUS` → 各事件类型的静态 `Event` 字段；`EventPriority` → Fabric **Phase**；`event.setCanceled(true)` → 返回 `ActionResult` / `boolean`（本档 Yarn 无 `TypedActionResult`，映射表 `classes` 0 行；口径同 05:208）。
+- 禁编名单（非本档 Fabric API）：`EntityEvents` / `PlayerTickEvents` / `EntityTickEvents` / `AttackEvents`，以及 `ActionResult.PISTON`、`CallbackEvaluator`、`DataPackRegistry`、`AttackEvents.AFTER_DAMAGE`。
+- `ItemEvents` / `BlockEvents` **不属于**禁编名单（旧名单把真类当编造名，是名单本身错）：`net.fabricmc.fabric.api.event.player.BlockEvents` / `.ItemEvents` 经 `query_loader_api` 命中。本档可写的具名成员只有嵌套回调 `BlockEvents$UseItemOnCallback.useItemOn` / `$UseWithoutItemCallback.useWithoutItem` / `ItemEvents$UseOnCallback.useOn` / `$UseCallback.use`（返回 `class_1269` = `ActionResult`）；两者的 `Event` 静态常量名在本仓库无 oracle 可枚举（摘要不存字段、映射表不含 `net/fabricmc/**`、docs/wiki 0 命中）→ 禁止写常量名示例，需要时留 `// TODO(未核实)`（口径同 05:25）。
 - 模块：事件在 `fabric-api` 聚合依赖内（`fabric-events-interaction-v0`、`fabric-lifecycle-events-v1` 等），不要写 `net.fabric.sdk` 或编造模块版本号。无钩子的位置：`EventFactory.createArrayBacked` + Mixin `EVENT.invoker()`（官方 develop/events「Custom Events」）。
 
 ## 本档版本特有事实（05-events.mdc 差异点）

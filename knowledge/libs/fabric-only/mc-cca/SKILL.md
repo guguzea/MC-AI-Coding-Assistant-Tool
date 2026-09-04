@@ -2,16 +2,16 @@
 name: mc-cca
 description: Cardinal Components API（CCA）数据附加。触发词：CCA、Cardinal Components、数据附加、data attachment、component、Ladysnake
 platforms: [fabric, quilt]
-mcVersions: ["1.18-26.1"]
+mcVersions: ["1.18-26.2"]
 communityDocId: authored/lib-cca
 mappings: hint
 ---
 
 # Cardinal Components API（Fabric/Quilt）
 
-给实体/方块/区块/世界挂自定义数据的标准方案（1.18-26.1）。模块化（entity/block/chunk/world），ASM 生成扩展，Ladysnake 生态基石（Impersonate 等依赖它；PAL 仅 modImplementation，CCA 非硬依赖，见 `mc-player-ability-lib`）。无 Forge 版。
+给实体/方块/区块/世界挂自定义数据的标准方案（1.18-26.2）。模块化（entity/block/chunk/world），ASM 生成扩展，Ladysnake 生态基石（Impersonate 等依赖它；PAL 仅 modImplementation，CCA 非硬依赖，见 `mc-player-ability-lib`）。无 Forge 版。
 
-> 版本区间口径：以 `library-catalog.ts` 的 `verifiedApi` 实测键为准（最低 1.18、最高 26.1）。
+> 版本区间口径：类名 / 签名以 `library-catalog.ts` 的 `verifiedApi` 实测键为准；区间上下界以 Modrinth 构建声明为准（截至 2026-09-04：最高 **26.2** = `8.0.0` / `8.0.1` release，`loaders=fabric,quilt`；26.3 无构建）。
 > CCA 在 **1.16.3 时代即已存在**，但那是旧版 CCA，Modrinth 现有发布只覆盖 **1.18+**，故下界取 1.18。
 
 ## Decision Flow

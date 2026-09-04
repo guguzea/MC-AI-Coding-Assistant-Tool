@@ -2,7 +2,7 @@
 name: mc-trinkets
 description: Fabric/Quilt 饰品槽（Trinkets）集成。触发词：Trinkets、饰品槽、accessory、slot、curios（Fabric 语境）
 platforms: [fabric, quilt]
-mcVersions: ["1.17-1.21.1"]
+mcVersions: ["1.17.1-1.21.1"]
 communityDocId: authored/lib-trinkets
 mappings: hint
 ---
@@ -17,8 +17,11 @@ Fabric 系饰品槽事实标准：6 组默认槽位（头/胸/腿/脚/手/副手
 Decision: 饰品槽方案选择
 → platform = forge / neoforge → 本 skill 不适用：读 mc-curios（Curios），禁止把 Trinkets 代码拷到 Forge
 → platform = fabric / quilt：
-   ├─ mcVersion 1.17-1.21.1 且有对应构建 → 可用 Trinkets（存量项目）
+   ├─ mcVersion 1.17.1-1.21.1 且有对应构建 → 可用 Trinkets（存量项目）
    ├─ mcVersion 1.21.4+ / 26.x → 停更窗口，不要用：自研槽位（组件/NBT）或原版机制
+   │    └─ 必须要现成饰品槽 → 社区移植 `trinkets-polymer`（Modrinth 项目 id `G8hlgtEk`，标题 *Polymer Patch for Trinkets Updated*）：
+   │         1.21.4 起有 `3.11.0-beta.1+polymerport.0`；26.1.2 = `4.0.0-beta.1.0+26.1` / `4.0.0-rc.1.0+26.1`，26.2 = `4.1.0-beta.1.0+26.2` / `4.1.0-rc.1.0+26.2`
+   │         （截至 2026-09-04 最新 `4.1.0-rc.1.0+26.2`，2026-08-18）——**26.x 线全为 beta/rc、无 release，且 loaders 只有 fabric（无 quilt）**；生产环境仍优先自研槽位
    └─ 已选 Trinkets：
         ├─ 槽位：数据驱动定义（槽组 JSON，6 组默认），以官方格式为准
         ├─ 物品：注册为饰品（接口/注册 API 以官方 README 为准），声明可放入的槽组

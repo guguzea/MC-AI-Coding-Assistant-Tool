@@ -62,14 +62,15 @@ tasks.named('jar').configure {
     }
 }
 
+// 1.16.5 游戏运行在 Java 8（Mojang version manifest: javaVersion.majorVersion = 8）
+// 用 JDK 8–16 编译都可以，但必须用 release 8 锁定 Java 8 字节码与 API
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 16
+    it.options.release = 8
 }
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(16)
-    }
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
     withSourcesJar()
     withJavadocJar()
 }

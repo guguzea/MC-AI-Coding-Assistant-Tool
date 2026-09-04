@@ -17,5 +17,5 @@
 - 发明 `worldgen/experimental.json` 当世界实验开关
 - 把 `assets/<modid>/models`、DeferredRegister、`EntityType`、`BlockBehaviour`、`generate_datagen` 写进基岩包
 - 未点名 Beta 就生成 Beta 事件或 `@minecraft/server-beta`
-- 以为 pack JSON 能替玩家打开世界「Beta APIs」（须游戏 UI；`level.dat` 实验开关**未核实**）
+- 以为 pack JSON 能替玩家打开世界「Beta APIs」（须游戏 UI：`stable/experimental-features-toggle` 只给新/旧世界的 Game Settings → Experiments 开关）。`level.dat` → `experiments` compound 与键名 `gametest` = **社区权威已核实**（wiki.bedrock.dev/nbt/enabling-experiments，2026-09-02 取），**非 Learn 官方**，键名仅供手工改 `level.dat` 分诊；见 07 与 `knowledge/common/experiments.md`
 - `diagnose_gradle` 修 Loom/Forge 来「修」Add-On

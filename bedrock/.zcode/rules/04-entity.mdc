@@ -13,7 +13,8 @@ client_entity（RP）与 `minecraft:entity`（BP）identifier 必须一致。不
 
 ## 已核实约束
 
-- identifier 形如 `namespace:name`，RP `client_entity` 与 BP `minecraft:entity` **同一字符串**。
+- identifier 形如 `namespace:name`，RP `client_entity` 与 BP `minecraft:entity` **同一字符串**。依据 `stable/entity-behavior-intro`：Add-On 自定义实体须用**自定义唯一 namespace**（该页 identifier 说明），`minecraft:` 只用于引用内置行为、自定义行为必须换另一个 namespace；示例值 `sample:example`。**允许字符集 / 是否强制小写 / 长度上限未核实**（本地基岩语料无此表述），禁止臆造字符表。
+- 实体 JSON 顶层**自带** `format_version`，与 manifest 的 `format_version`（01）**不是一回事**。Learn `stable/entity-behavior-intro` 同页两个示例给出 `"1.19.20"` 与 `"1.19.0"`，且该页没有任何一句规定该填什么；「`format_version` should be the latest」在 Learn 属 **custom-block（方块页）**，对实体只是类推。**本档具体取值 = 未核实**；社区 wiki 主张的 `1.26.10` 在本地语料与现存抓包中 0 命中，禁止写成事实。
 - 组件表：`search_bedrock_docs` id `stable/entity-components`。表里没有的名字禁止输出。
 - 生成骨架文本可用 `generate_bp_entity`（只吐 JSON，不写盘）。写盘前仍须对照该组件表。
 - 脚本里操控实体用 `@minecraft/server` 的 `Entity`（见 07），不是 Fabric `EntityType`。

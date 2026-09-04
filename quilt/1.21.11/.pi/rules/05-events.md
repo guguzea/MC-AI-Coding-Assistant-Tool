@@ -4,7 +4,7 @@ description: 05 — Quilt 事件差异
 
 # 05 — Quilt 事件差异
 
-> ⚠️ **QSL 停更（2025-12，官方 FAQ 实证）**：本版本无任何已发布 QSL/QFAPI 构件。下表 API 是**源码树考据，非可编译 API**——禁止生成。事件一律走同版 Fabric API。
+> ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本版本无任何已发布 QSL/QFAPI 构件。下表 API 是**源码树考据，非可编译 API**——禁止生成。事件一律走同版 Fabric API。
 
 > 默认读 `fabric/1.21.11/.cursor/rules/05-events.mdc`。仅当用户要 **QSL 事件** 或 QFAPI 弃用提示时用本文件。
 

@@ -4450,7 +4450,15 @@ function kbPrimerInfo(relPath) {
 
 const KB_PIN_SOURCES = {
   forge: (k) => `data/forge-versions-manifest.json#versions['${k}'].forgeVersion`,
-  neoforge: (k) => `data/neoforge-versions-manifest.json#versions['${k}'].neoforgeVersion`,
+  neoforge: (k) => {
+    // N-5：优先指向拆分后的显式字段（exactVersion = 精确钉值 / versionRange = .x 版本段），
+    // 两者都缺才退回历史两义别名 neoforgeVersion，让漂移扫描盯住新字段而不是旧别名。
+    const base = `data/neoforge-versions-manifest.json#versions['${k}']`;
+    for (const f of ["exactVersion", "versionRange", "neoforgeVersion"]) {
+      if (kbResolvePointer(`${base}.${f}`).ok) return `${base}.${f}`;
+    }
+    return `${base}.neoforgeVersion`;
+  },
   fabric: (k) => `data/fabric_${k}/meta.json#loader.version`,
   java: (k) =>
     kbResolvePointer(`data/neoforge-versions-manifest.json#versions['${k}'].javaVersion`).ok

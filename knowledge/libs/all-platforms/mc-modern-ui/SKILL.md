@@ -2,7 +2,7 @@
 name: mc-modern-ui
 description: Modern UI 现代文本排版与 GUI 库。中文/Unicode/emoji 渲染（SDF 抗锯齿、字体回退、HarfBuzz）+ GUI 控件 API。触发词：Modern UI、modernui、modern-ui、排版、Unicode、字体渲染、中文渲染
 platforms: [fabric, forge, neoforge]
-mcVersions: ["1.18.2+"]
+mcVersions: ["1.18.1-26.1.2"]
 communityDocId: authored/lib-modern-ui
 mappings: "库按各 loader 预重映射；GUI/渲染全部客户端侧，与项目 mappings 无直接交互"
 ---
@@ -26,7 +26,7 @@ Decision: 用不用 Modern UI
 → 要现成 GUI 控件 + 现代排版 → 用（GUI API + 文本引擎一体）
 → 已选：
    ├─ 平台分支：fabric / forge / neoforge 各按 README 声明依赖（Modrinth slug 为 modern-ui，勿与仓库名混淆）
-   ├─ 版本：以官方 Releases 为准（1.18.2+；26.x 是否跟进看 Releases，官方侧重 LTS）
+   ├─ 版本：以官方 Releases 为准（实测窗口 1.18.1–26.1.2，截至 2026-09-04；26.2 无构建；**1.18.1 / 1.18.2 命中的构建 loaders 只有 forge**）
    ├─ 客户端专用：渲染与 GUI 全部 client 侧
    └─ 兼容：与 Sodium / Iris / OptiFine 组合逐个版本验证（Releases 有对应兼容说明）
 ```

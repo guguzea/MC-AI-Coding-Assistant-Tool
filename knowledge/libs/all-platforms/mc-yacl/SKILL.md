@@ -2,25 +2,25 @@
 name: mc-yacl
 description: YACL 配置库集成。触发词：YACL、YetAnotherConfigLib、配置屏、Builder 配置、isxander
 platforms: [fabric, forge, neoforge]
-mcVersions: ["1.19+"]
+mcVersions: ["1.19-26.2"]
 communityDocId: authored/lib-yacl
 ---
 
 # YACL 配置库集成
 
-YACL（Yet Another Config Lib）是新项目配置库首选之一（下载量以 Modrinth 页面为准；F/Forge/Neo/Quilt，1.19-26.3）。Builder 式 API，界面贴近原版风格，因 Cloth Config 冷冻而生。版本与 API 以官方 README 为准。
+YACL（Yet Another Config Lib）是新项目配置库首选之一（截至 2026-09-04，Modrinth slug `yacl` 下载量 1.188 亿；F/Forge/Neo/Quilt，1.19-26.2；26.3 目前仅 snapshot 构建）。Builder 式 API，界面贴近原版风格，因 Cloth Config 冷冻而生。版本与 API 以官方 README 为准。
 
 ## Decision: 要不要用 YACL
 
 ```
 IF 单平台 Forge 且仅服务端配置 → ForgeConfigSpec，不引 YACL
 IF 单平台 NeoForge（≥1.20.4，含 26.x）且仅服务端配置 → ModConfigSpec，不引 YACL
-IF MC 版本不在 1.19-26.3 → 回退 Cloth（1.14-26.2）
+IF MC 版本不在 1.19-26.2 → 回退 Cloth（1.14-26.2）
 IF 新项目 / 长期维护需要 GUI 配置屏 → YACL 优先（或评估 Fzzy 的自动 GUI + 同步）
 → 已选 YACL：
    ├─ 四端都有构建，按目标加载器选 artifact（坐标以官方 README 为准）
    ├─ Fabric 用 Mod Menu 软依赖挂按钮；Forge/Neo 自建按钮
-   └─ 版本在 1.19-26.3 内与 MC 对齐（Modrinth 文件页）
+   └─ 版本在 1.19-26.2 内与 MC 对齐（Modrinth 文件页）
 ```
 
 ## 软 / 硬依赖与类加载隔离

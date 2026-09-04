@@ -127,6 +127,28 @@ public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
 Yarn 移位是 `quickMove`。客户端只用 `HandledScreens.register`。`ScreenHandlerType` 构造若访问未映射成员，须在 fabric-api 的 access widener 覆盖下编译（不要手写已删除的 `ScreenHandlerRegistry`）。不要把 26.1.2 Mojmap `MenuType` / `CustomPacketPayload` 抄进本档。
 额外数据：`getScreenOpeningData`（1.21.11 loader-api 已核）。
 
+## 本档 Yarn ↔ 官方语料 Mojmap 对照
+
+> 官方语料页写的是 **Mojmap 口径**；本档工程 mappings 为 Yarn 时必须按本表换算后再写，禁止直引左列。
+> `CORPUS:` `data/fabric_1.21.11/fabric-docs/1.21.11/raw/develop_blocks_container-menus.md:32,46,50,52,56,58,60,68,70,72,74,80,84,87,91,93,95`（L93 = `MenuScreens#register()`）。
+> **引用限制**：该页所有注册调用在 raw 里都是 `@[code transcludeWith=…]` 占位（40/42/48/54/62/72/76/89/95，未展开）→ 语料只给名字与流程，**不可当示例代码抄**。
+> **不可反证**：本档映射语料不完整——`data/fabric_1.21.11/mappings/yarn-1.21.11+build.6-tiny.gz` 105254 行里 METHOD 仅 32850/49730 行 `named≠intermediary`，且 `class_1270`（`dir`）成员行数 = 0 → 查 0 命中只说明索引没收录，**不说明 Yarn 没有这个名字**；此类改判须走官方 javadoc / 上游映射。
+
+| 语料 Mojmap 名（不可直引） | 本档 Yarn 具名（映射表已核） |
+|---|---|
+| `MenuScreens`（L93） | `HandledScreens`=`class_3929`，`register(ScreenHandlerType, HandledScreens$Provider)V`=method_17542 |
+| `AbstractContainerScreen`（L87）/ `CONTAINER_TEXTURE`（L91） | `HandledScreen`=`class_465` / 字段 `BACKGROUND_TEXTURE`=field_2801（`Identifier`） |
+| `Menu`（L32）/ `AbstractContainerMenu`（L60） | `ScreenHandler`=`class_1703`（`canUse(PlayerEntity)Z`=method_7597、`quickMove(PlayerEntity,I)ItemStack`=method_7601、`addSlot(Slot)Slot`=method_7621） |
+| `quickMoveStack`（L68） | `quickMove`=method_7601 |
+| `MenuType` | `ScreenHandlerType`=`class_3917`；`Registries.SCREEN_HANDLER`=field_41187 |
+| `MenuProvider`（L52） | `ScreenHandlerFactory`=`class_1270`；带标题版 `NamedScreenHandlerFactory`=`class_3908`（`getDisplayName()Text`=method_5476） |
+| `useWithoutItem`（L46）/ `useItemOn` | `AbstractBlock.onUse(…)`=method_55766 / `AbstractBlock.onUseWithItem(…)`=method_55765（映射表里**没有** `useWithoutItem` / `useItemOn` 这两个名字） |
+| `InteractionResult` | `ActionResult`=`class_1269` |
+| 打开菜单流程 | `PlayerEntity.openHandledScreen`=method_17355（返回 `OptionalInt`） |
+| `VANILLA_SET` | `FeatureFlags.VANILLA_FEATURES`=field_40182，类型 `FeatureSet` |
+| `createMenu`（L60/74/80） | `createMenu`（**Yarn 同名**）：`createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) → ScreenHandler`。`LIVE:` `https://maven.fabricmc.net/docs/yarn-1.21.11+build.6/net/minecraft/screen/ScreenHandlerFactory.html`（HTTP 200；named / intermediary / official 三列描述符同为 `createMenu`） |
+| `ScreenEvents.AFTER_INIT` / `BEFORE_INIT`（本档 Decision Flow「给原版 Screen 加控件」+「Fabric Screen API（fabric-screen-api-v1）」段） | 常量名**未核实**（`query_loader_api` 摘要 schema 不存字段；本档 fabric-docs / fabric-wiki 全库 `ScreenEvents` 0 命中）。可写的只有嵌套接口 `ScreenEvents$AfterInit`（`afterInit(MinecraftClient, Screen, int, int)`）与 `Screens.getButtons(Screen) → List<ClickableWidget>`；用常量名前需 `get_minecraft_source` 复核 |
+
 ## NamedScreenHandlerFactory（普通打开）
 
 ```java

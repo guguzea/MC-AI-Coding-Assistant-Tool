@@ -22,7 +22,7 @@
 | `EventPriority` | Fabric **Phase**（`Event.DEFAULT_PHASE`），不是 Forge 的优先级枚举 |
 | `event.setCanceled(true)` | 返回 `ActionResult` / `boolean`；不是 `CanceledEvent` |
 
-不要编造 `EntityEvents` / `PlayerTickEvents` / `EntityTickEvents` / `AttackEvents`。`BlockEvents` / `ItemEvents` 若出现在本档 Fabric API 文档中则按其签名使用，不要当「编造名」一笔抹掉。
+不要编造 `EntityEvents` / `PlayerTickEvents` / `EntityTickEvents` / `AttackEvents`。`BlockEvents` / `ItemEvents` **不是**编造名：`net.fabricmc.fabric.api.event.player.BlockEvents` / `.ItemEvents` 经 `query_loader_api` 命中（found:true）。本档可写的具名成员只有其嵌套回调 `BlockEvents$UseItemOnCallback.useItemOn` / `BlockEvents$UseWithoutItemCallback.useWithoutItem` / `ItemEvents$UseOnCallback.useOn` / `ItemEvents$UseCallback.use`（返回均为 `class_1269` = `ActionResult`）。两者的 `Event` 静态常量名在本仓库三条 oracle 下都不可枚举（`query_loader_api` 摘要 schema 不存字段；yarn 映射表不含 `net/fabricmc/**`，Fabric API 自身不混淆；本档 fabric-docs / fabric-wiki 0 命中）→ 禁止写 `BlockEvents.<常量>` 之类的示例，拿不到名字就留 `// TODO(未核实)`。
 
 ---
 
@@ -46,7 +46,7 @@ IF 处理方块破坏
 
 IF 处理方块右键（含尝试放置）
   → UseBlockCallback.EVENT
-  → 真正「方块已放置」后逻辑通常要 Mixin Block.place，没有 BlockEvents.BLOCK_PLACE
+  → 真正「方块已放置」后逻辑通常要 Mixin Block.place；BlockEvents 的 Event 常量名不可枚举 // TODO(未核实)：不要写 BlockEvents.<常量> 示例
 
 IF 处理物品使用（不对准方块）
   → UseItemCallback.EVENT
@@ -205,9 +205,9 @@ modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_versi
 - ❌ 在 `onInitialize()` 外、或条件分支里「有时才 register」— 容易漏注册；应在初始化时注册，逻辑放进 lambda
 - ❌ 混淆 `ClientTickEvents` 的 START/END，或 `ServerTickEvents` 的 START_SERVER_TICK / END_SERVER_TICK — 时序错误
 - ❌ 在客户端 lambda 里改服务端世界数据 — 用 `world.isClient` 区分，写世界只在服务端
-- ❌ 忘记处理返回值 — `ActionResult` / `TypedActionResult` / `boolean` 决定是否取消或消费
+- ❌ 忘记处理返回值 — `ActionResult` / `boolean` 决定是否取消或消费（本档 Yarn 无 `TypedActionResult`：映射表 `classes` 0 行；口径同 `03-item.mdc` 与 `verified-api-1.21.11.md`）
 - ❌ 把 `PlayerBlockBreakEvents.BEFORE` 当成 `ActionResult` — 它是 `boolean`
-- ❌ 用 `PlayerTickEvents` — 不是本档 Fabric API（`BlockEvents` / `ItemEvents` 以本档 FAPI 为准，不要当编造名）
+- ❌ 用 `PlayerTickEvents` — 不是本档 Fabric API（`BlockEvents` / `ItemEvents` 是真类，但本档可写的只有其嵌套回调 `BlockEvents$UseItemOnCallback` / `$UseWithoutItemCallback` / `ItemEvents$UseOnCallback` / `$UseCallback`；两者的 `Event` 常量名未核实，禁止给常量名示例）
 
 ## 扩展点
 

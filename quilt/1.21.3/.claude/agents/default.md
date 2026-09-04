@@ -5,7 +5,7 @@
 > 本目录只写 QSL / Quilt Loader **差异**（00 / 01 / 05 / 06）。禁止把整棵 Fabric 规则复制进来。禁止用邻版 Fabric overlay。
 > 从零建工程用本档 scaffold/（基于 quilt/1.21.1 口径：quilt-loader + yarn；yarn build 号与 loom 版本对照官方模板再改，禁止臆造）。
 
-> ⚠️ **QSL 停更警告（2026-08 一手核实）**：QSL 已于 **2025-12 停更**（quiltmc.org FAQ，页面版本 2026-02-03，原文 "Quilt Standard Libraries … was discontinued in December 2025"）。Modrinth 全部 143 个发布中终版为 **2024-12-02 的 QFAPI 7.7.0 + QSL 6.3.0，仅 MC 1.20.1**；1.21 线只有 4 个 QSL 11.0.0-alpha 构建（最新 11.0.0-alpha.3+0.102.0-1.21）（止于 2024-08-12，仅 qsl_base + crash_info 模块）。**本版本不存在任何可用 QSL/QFAPI 构件**——注册与事件一律用 Vanilla `Registry.register` 或同版 Fabric API；本目录出现的 QSL 相关表述仅为考据/stub，**禁止当可编译 API 生成代码**。
+> ⚠️ **QSL 构件核实（maven 一手核实，截至 2026-09-04）**：`org.quiltmc:qsl` 的 maven `<release>` 停在 **`10.0.0-alpha.5+1.21.1`**（`qsl/maven-metadata.xml` lastUpdated 2025-09-21）；1.21 线总共只有 **4 个 alpha 构件**（`10.0.0-alpha.1+1.21`、`10.0.0-alpha.2/3/5+1.21.1`），**1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 一律 0 命中**；maven 清单中最后一个不含 alpha 的构件是 **`6.3.0+1.20.1`**（1.20.1 制品）。旧横幅的 `11.0.0-alpha` / `11.0.0-alpha.3+0.102.0-1.21` 在 maven 上 0 命中（虚构，勿再写）；「Modrinth 全部 143 个发布」「QFAPI 7.7.0 终版 2024-12-02」「止于 2024-08-12」「仅 qsl_base + crash_info 模块」均未复核，已删。「QSL 2025-12 停更」原引 `https://quiltmc.org/en/faq/`（现返回 **404**，无法复核）→ `// TODO(未核实)`，不再作为依据。**本版本不存在任何可用 QSL/QFAPI 构件**——注册与事件一律用 Vanilla `Registry.register` 或同版 Fabric API；本目录出现的 QSL 相关表述仅为考据/stub，**禁止当可编译 API 生成代码**。
 
 ## 基本信息
 
@@ -17,7 +17,7 @@
 | Gradle | Quilt Loom（`id 'org.quiltmc.loom'`） |
 | Mappings | 对齐当前工程 mappings（多为 Yarn named）。禁止 `class_` 中间名。 |
 | 元数据 | `quilt.mod.json`（`quilt_loader.id`；Fabric/Quilt 允许连字符） |
-| 注册 | Vanilla `Registry.register` 或同版 Fabric API；**QSL 已停更且本版本无可用构件**（见顶部横幅），禁止生成 QSL API 当可用依赖 |
+| 注册 | Vanilla `Registry.register` 或同版 Fabric API；**本版本无可用 QSL/QFAPI 正式版构件（maven 实证，截至 2026-09-04）**（见顶部横幅），禁止生成 QSL API 当可用依赖 |
 
 库 Skill：仍按 `fabric-only` + `all-platforms` 读 `knowledge/libs/`。
 

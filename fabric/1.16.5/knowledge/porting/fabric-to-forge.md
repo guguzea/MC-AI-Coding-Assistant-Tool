@@ -13,7 +13,7 @@
 | Mixin | 需要显式 Mixin Plugin（1.16.x）| `org.spongepowered.mixin` 插件 |
 | 事件系统 | Fabric 事件回调 | `@SubscribeEvent` + Forge 事件总线 |
 | Mappings | Yarn（`method_XXXXX`）| MCP（`func_XXXXX`）|
-| Java 版本 | Fabric 1.16.5 需要 Java 16 | Forge 1.16.5 可用 Java 8/11 |
+| Java 版本 | Fabric 1.16.5 需要 Java 8 | Forge 1.16.5 可用 Java 8/11 |
 
 ---
 ## 步骤 1：项目结构迁移
@@ -136,7 +136,7 @@ mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 ---
 ## 常见陷阱
 
-1. **Java 版本**：Forge 1.16.5 可用 Java 8/11（Fabric 1.16.5 需要 Java 16）
+1. **Java 版本**：两边 1.16.5 都是 Java 8（Forge 可用 Java 8/11 编译；Java 16 从 MC 1.17 起）
 2. **Mixin 配置**：Forge 需要额外配置 mixin 插件
 3. **事件总线**：Forge 使用 `MinecraftForge.EVENT_BUS.register(this)`
 4. **Registry API**：Fabric 1.16.5 用 `Registry.ITEM`，Forge 用 `ForgeRegistries.ITEMS`

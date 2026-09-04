@@ -2,7 +2,7 @@
 name: mc-patchouli
 description: Patchouli 游戏内指南书。book 资源放 data/<modid>/patchouli_books/，JSON 驱动、自定义页面类型才写 Java。触发词：Patchouli、patchouli、指南书、guidebook、book.json、手册
 platforms: [fabric, forge, neoforge]
-mcVersions: ["1.14.4-26.1"]
+mcVersions: ["1.12.2-26.1.2"]
 communityDocId: authored/lib-patchouli
 mappings: "Forge ≤1.20.6 用 MCP、NeoForge 1.21+/26.x 用 mojmap；Java 代码只在自定义页面类型时出现"
 ---
@@ -14,7 +14,7 @@ mappings: "Forge ≤1.20.6 用 MCP、NeoForge 1.21+/26.x 用 mojmap；Java 代�
 ## 何时用 / 何时不用
 
 - 用：需要游戏内指南书，内容以 JSON 数据为主；Forge/NeoForge 模组标配
-- 不用：只要少量说明 → tooltip / 进度就够；需要完全自定义交互/搜索体验 → 自研 GUI（见 `authored/menu-screen-sync`）；目标 MC 无构建（26.1 目前为 beta `release-26.1-94-beta`）
+- 不用：只要少量说明 → tooltip / 进度就够；需要完全自定义交互/搜索体验 → 自研 GUI（见 `authored/menu-screen-sync`）；目标 MC 无构建（截至 2026-09-04：26.1 / 26.1.1 / 26.1.2 仅有 beta 通道 `26.1-94-beta`，26.2 无构建）
 
 ## 加载器事实（先核对再动手）
 

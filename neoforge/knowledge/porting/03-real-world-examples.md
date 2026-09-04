@@ -219,7 +219,7 @@ public class ModRecipeProvider extends DataProvider {
     }
 }
 
-@Mod.EventBusSubscriber(modid = MOD_ID, bus = Bus.MOD, dist = Dist.DEDICATED_SERVER)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.DEDICATED_SERVER)
 public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
@@ -250,7 +250,7 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 }
 
-@Mod.EventBusSubscriber(modid = MOD_ID, bus = Bus.MOD, dist = Dist.DEDICATED_SERVER)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Bus.MOD, value = Dist.DEDICATED_SERVER)
 public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {

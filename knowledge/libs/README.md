@@ -64,7 +64,6 @@
 
 **neo-only（2）**：mc-curios、mc-kotlin-for-forge（镜像，`platforms: [neoforge]`；不改 `neoforge → neo-only 
 + all-platforms` 映射）
-**all-platforms（20）**：见各稿（mc-owo 唯一一份，platforms 不含 forge）
 **bedrock-only（2）**：mc-script-ui、mc-script-server
 
 ## 关联数据（MCP 消费）

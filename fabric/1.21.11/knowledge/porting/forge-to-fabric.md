@@ -122,7 +122,7 @@ public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
 private static final Block MY_BLOCK = Registry.register(
     Registries.BLOCK,
     Identifier.of(MOD_ID, "my_block"),
-    new Block(FabricBlockSettings.copyOf(Blocks.STONE))
+    new Block(AbstractBlock.Settings.copy(Blocks.STONE))
 );
 ```
 
@@ -241,7 +241,7 @@ Integer n = entity.getAttached(CLICKS);
 | `PlayerEntity` | `PlayerEntity`（相同）|
 | `sendChatMessage()` | `sendMessage(Text)` |
 | `world.getBlockState(pos)` | `world.getBlockState(pos)`（相同）|
-| `BlockBehaviour.Properties` | `FabricBlockSettings` |
+| `BlockBehaviour.Properties`（`of()` / `ofFullCopy()`） | `AbstractBlock.Settings`（`create()` / `copy()`；本档 Fabric API 已无 `FabricBlockSettings`） |
 | `CreativeModeTab` | `ItemGroup` |
 | `Items.DIAMOND_SWORD` | `Items.DIAMOND_SWORD`（相同）|
 

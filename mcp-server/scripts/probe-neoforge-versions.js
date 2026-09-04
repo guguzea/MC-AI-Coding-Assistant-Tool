@@ -10,6 +10,8 @@
  *
  *   全量重跑按 VERSION_CONFIG 重写 manifest；--version=<v> 只替换该版本，其余条目
  *   从现有 manifest 原样带过（neoforgeVersion / mappings 是人工核实字段，probe 验证不了）。
+ *   写盘前每条版本项都会派生显式字段 `exactVersion` / `versionRange`（见下方 N-5 注释），
+ *   `neoforgeVersion` 作为后向兼容别名保留。
  */
 
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "fs";
@@ -81,6 +83,11 @@ async function fetchHtml(url, retries = 2) {
  *   MC 1.21.11 → 21.11.x（不是 21.1.113+）；MC 1.20.6 → 20.6.x（不存在 20.4.100+）；
  *   MC 26.1 → 26.1.0.x。probe 只验证文档 URL 可用性，**验证不了**加载器版本，
  *   所以 neoforgeVersion / mappings 属于人工核实字段，改它们要对着 manifest 与官方发布页。
+ *
+ * `neoforgeVersion` 的两种写法含义不同，别混：点分数字（`21.1.113` / `20.4.237`）是**精确钉值**，
+ * 可直接落 gradle.properties；带尾 `.x`（`21.11.x` / `26.1.0.x`）只是**版本段**，
+ * 必须先查官方发布页才能定具体号。产物 manifest 用 `exactVersion` / `versionRange`
+ * 两个显式字段把这层含义写死（`withNeoLoaderFields` 派生），本表仍只维护一个值。
  */
 const VERSION_CONFIG = [
   {
@@ -491,6 +498,55 @@ export function carryUnprobedVersions(prevVersions, probeConfigs, probed) {
   return out;
 }
 
+// ── N-5：加载器版本字段语义拆分 ─────────────────────────────────────────────
+/**
+ * `neoforgeVersion` 历史上是**两义**的：同一个字段既写精确钉值（`21.1.113`）
+ * 又写 `.x` 掩码（`21.11.x`），消费方和文档都判不出「能直接落 gradle.properties 的确切
+ * 版本号」与「只是一个版本段」。产物 manifest 因此按语义拆成两个显式字段：
+ *   `exactVersion` —— 精确版本号（可直接写进 gradle.properties）
+ *   `versionRange` —— `.x` 掩码（版本段；必须先查官方发布页才能定具体号）
+ * `neoforgeVersion` 保留为**后向兼容别名**：`data/porting/knowledge-base/versions.json`
+ * 的 9 条 `sources.neoforge` 证据指针逐字指向 `.neoforgeVersion`，删字段会当场崩掉
+ * test-core 的 G5 可追溯性断言；等那份 KB 改指显式字段后才能摘除别名。
+ * 别名必须与显式字段逐字相等 —— 由 test-scripts #13 钉住。
+ * 生成源（VERSION_CONFIG）仍只维护 `neoforgeVersion` 一个人工核实值，显式字段在写盘前派生。
+ */
+const NEO_EXACT_VERSION_RE = /^\d+\.\d+(\.\d+)?$/;
+const NEO_RANGE_VERSION_RE = /^\d+\.\d+(\.\d+)?\.x$/;
+
+/** NeoForge 加载器版本串语义：exact（精确号）| range（.x 掩码）| unknown（两者都不匹配）。 */
+export function classifyNeoLoaderVersion(value) {
+  const v = String(value ?? "").trim();
+  if (NEO_EXACT_VERSION_RE.test(v)) return "exact";
+  if (NEO_RANGE_VERSION_RE.test(v)) return "range";
+  return "unknown";
+}
+
+/** neoforgeVersion → `{ exactVersion }` 或 `{ versionRange }`；判不出语义 → `{}`（不猜）。 */
+export function neoLoaderVersionFields(value) {
+  const kind = classifyNeoLoaderVersion(value);
+  if (kind === "unknown") return {};
+  const v = String(value).trim();
+  return kind === "exact" ? { exactVersion: v } : { versionRange: v };
+}
+
+/**
+ * 写盘前归一化单个版本条目：把派生字段插在 `neoforgeVersion` 之后（键序稳定，
+ * 与逐字比对友好），并丢弃条目里已有的 `exactVersion` / `versionRange` 重新派生，
+ * 保证两字段互斥且与别名一致。无 `neoforgeVersion` 的条目原样返回。
+ */
+export function withNeoLoaderFields(entry) {
+  if (!entry || typeof entry !== "object" || !("neoforgeVersion" in entry)) return entry;
+  const fields = neoLoaderVersionFields(entry.neoforgeVersion);
+  const out = {};
+  for (const [k, v] of Object.entries(entry)) {
+    if (k === "exactVersion" || k === "versionRange") continue;
+    out[k] = v;
+    if (k === "neoforgeVersion") Object.assign(out, fields);
+  }
+  return out;
+}
+
 // ── Main ───────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -523,6 +579,9 @@ async function main() {
     }
   }
   const versions = carryUnprobedVersions(prevVersions, probeConfigs, probedVersions);
+  // N-5：产物按语义拆分 neoforgeVersion（探测条目与 --version 继承条目都要归一化，
+  // 否则单版本重跑会让未重探的那些版本退化成只有别名）。
+  for (const v of Object.keys(versions)) versions[v] = withNeoLoaderFields(versions[v]);
 
   // Probe primers
   console.log("\nProbing primers...");

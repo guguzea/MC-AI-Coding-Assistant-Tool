@@ -3,7 +3,7 @@ mcHint: 1.18+ / 26.x；按各库 mcHint 再收窄
 id: authored/library-catalog-2026
 title: 库模组总目录（2026 版）
 tags: [library-catalog, cloth-config, yacl, fabric-language-kotlin, architectury, geckolib, collective, puzzles-lib, text-placeholder-api, balm, owo-lib, bookshelf, terrablender, curios, trinkets, cardinal-components, kubejs, jei, emi]
-summary: 社区常用库模组总目录与分类导航：Top 12、十大功能分类、作者全家桶共享库、平台推荐路线与八条陷阱。排名与分类主体取自《Minecraft 社区常用库模组全览（2026 版）》二手快照；下载量与版本窗口已就地标注 Modrinth API 实测 2026-09-02 值，与四篇库短文（cloth/yacl/curios/trinkets）的实测表冲突时以实测表为准。
+summary: 社区常用库模组总目录与分类导航：Top 12、十大功能分类、作者全家桶共享库、平台推荐路线与八条陷阱。排名与分类主体取自《Minecraft 社区常用库模组全览（2026 版）》二手快照；下载量与版本窗口已就地标注 Modrinth API 实测 2026-09-02 / 2026-09-04 值，与四篇库短文（cloth/yacl/curios/trinkets）的实测表冲突时以实测表为准。
 sourceKind: authored
 modIds: []
 loaders: [fabric, forge, neoforge]
@@ -23,6 +23,7 @@ skillId: mc-lib-catalog
 ## 收录范围
 
 - 数据口径：下载量为 **Modrinth 单平台累计下载**（CurseForge 数字通常更大，另行标注）；支持版本为该项目发布过的所有 MC 版本（含 2026 年 26.1/26.2 新版号）。加载器：Fabric / Forge / NeoForge / Quilt。
+- **计数口径（普查于 2026-09-04）**：全文含数字下载量的行 **56 行 / 59 处数字**（按数字+单位计：「万」47 + 「亿」12；含「万」47 行、含「亿」12 行；本行与下方说明行不计入）。其中 **27 行已钉 2026-09-04 Modrinth API 实测值**（下载量单元格标「截至 2026-09-04」，Top 12 表与其分类表重复行成对同改），**29 行仍是《全览 2026》二手快照**；另有 **6 个「CF x.xx 亿」**为 CurseForge 口径，Modrinth API 给不出，本轮**不钉**。
 - **优先级（2026-09-02 起）**：`lib-cloth-config` / `lib-yacl` / `lib-curios` / `lib-trinkets` 四篇已各自补了「分发窗口（Modrinth API 实测 2026-09-02）」表 —— 直连 `api.modrinth.com/v2` 翻页取**全部构建**后统计。本目录里的数字是《全览 2026》当时的**二手快照**；下载量与版本窗口若与那四张表冲突，**以实测表为准**（下方表格已就地标注实测值）。其余条目仍是二手口径，用到时先回官方页。
 - 内容：真正意义上的"通用库" Top 12（按 Modrinth 下载量排序，排除纯作者个人库）、按功能分类详解（配置 / 动画 / 跨加载器 / 饰品 / 世界生成 / GUI / 数据附加 / 服务端·网络·文本 / 配方 / 脚本）、作者"全家桶"式共享库、平台推荐路线、八条陷阱。
 - 下文中 `lib-xxx.md` 为相对路径链接：磁盘已有对应 `authored/lib-*` 短文，可直接读。
@@ -31,27 +32,29 @@ skillId: mc-lib-catalog
 
 | 排名 | 库（链接） | 下载量 | 核心用途 |
 |---|---|---|---|
-| 1 | Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.53 亿（实测 2026-09-02：1.62 亿） | 配置界面 API |
-| 2 | YACL（[lib-yacl.md](lib-yacl.md)） | 以 Modrinth 页面为准（实测 2026-09-02：1.18 亿，仍居第 2） | 新一代配置库 |
-| 3 | Fabric Language Kotlin（[lib-fabric-language-kotlin.md](lib-fabric-language-kotlin.md)） | 1.07 亿 | Kotlin 语言支持 |
-| 4 | Architectury API（[lib-architectury.md](lib-architectury.md)） | 9170 万 | 跨加载器抽象 |
-| 5 | GeckoLib（[lib-geckolib.md](lib-geckolib.md)） | 6270 万 | 3D 实体动画引擎 |
-| 6 | Collective（[lib-collective.md](lib-collective.md)） | 5980 万 | Serilum 全家桶共享库 |
-| 7 | Puzzles Lib（[lib-puzzles-lib.md](lib-puzzles-lib.md)） | 5630 万 | Fuzs 全家桶共享库 |
-| 8 | Text Placeholder API（[lib-text-placeholder-api.md](lib-text-placeholder-api.md)） | 5670 万 | 占位符解析 |
-| 9 | Balm（[lib-balm.md](lib-balm.md)） | 5420 万 | Blay 跨平台抽象 |
-| 10 | owo-lib（[lib-owo.md](lib-owo.md)） | 4380 万 | GUI/配置/网络全能库 |
-| 11 | Bookshelf (Darkhax)（[lib-bookshelf.md](lib-bookshelf.md)） | 4230 万 | Darkhax 通用工具库 |
-| 12 | TerraBlender（[lib-terrablender.md](lib-terrablender.md)） | 3610 万 | 生物群系 API |
+| 1 | Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.631 亿（截至 2026-09-04） | 配置界面 API |
+| 2 | YACL（[lib-yacl.md](lib-yacl.md)） | 1.188 亿（截至 2026-09-04，仍居第 2） | 新一代配置库 |
+| 3 | Fabric Language Kotlin（[lib-fabric-language-kotlin.md](lib-fabric-language-kotlin.md)） | 1.143 亿（截至 2026-09-04） | Kotlin 语言支持 |
+| 4 | Architectury API（[lib-architectury.md](lib-architectury.md)） | 9691 万（截至 2026-09-04） | 跨加载器抽象 |
+| 5 | GeckoLib（[lib-geckolib.md](lib-geckolib.md)） | 6729 万（截至 2026-09-04） | 3D 实体动画引擎 |
+| 6 | Collective（[lib-collective.md](lib-collective.md)） | 6290 万（截至 2026-09-04） | Serilum 全家桶共享库 |
+| 7 | Text Placeholder API（[lib-text-placeholder-api.md](lib-text-placeholder-api.md)） | 6190 万（截至 2026-09-04） | 占位符解析 |
+| 8 | Puzzles Lib（[lib-puzzles-lib.md](lib-puzzles-lib.md)） | 5964 万（截至 2026-09-04） | Fuzs 全家桶共享库 |
+| 9 | Balm（[lib-balm.md](lib-balm.md)） | 5732 万（截至 2026-09-04） | Blay 跨平台抽象 |
+| 10 | owo-lib（[lib-owo.md](lib-owo.md)） | 4633 万（截至 2026-09-04） | GUI/配置/网络全能库 |
+| 11 | Bookshelf (Darkhax)（[lib-bookshelf.md](lib-bookshelf.md)） | 4450 万（截至 2026-09-04，Modrinth slug `bookshelf-lib`） | Darkhax 通用工具库 |
+| 12 | TerraBlender（[lib-terrablender.md](lib-terrablender.md)） | 3823 万（截至 2026-09-04） | 生物群系 API |
 
 ## 二、按功能分类导航
+
+> 以下数字为《全览 2026》二手快照，未逐条复核，以 Modrinth 页面为准；标「截至 2026-09-04」的行为本目录普查当日的 Modrinth API 实测值，须与 Top 12 表逐字一致。
 
 ### 1. 配置库（Config）
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.53 亿（实测 1.62 亿） | F/Forge/Neo，1.14–26.2（实测 158 条构建，quilt 0） | 老牌配置 GUI，ConfigBuilder 生成界面；功能冻结但仍在按版本发版 |
-| YACL（[lib-yacl.md](lib-yacl.md)） | 以 Modrinth 页面为准（实测 1.18 亿） | F/Forge/Neo/Quilt，1.19–26.2 稳定（26.3 仅 snapshot） | Builder 式、GUI 契合原版风格，因 Cloth 功能冻结而生 |
+| Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.631 亿（截至 2026-09-04） | F/Forge/Neo，1.14–26.2（实测 158 条构建，quilt 0） | 老牌配置 GUI，ConfigBuilder 生成界面；功能冻结但仍在按版本发版 |
+| YACL（[lib-yacl.md](lib-yacl.md)） | 1.188 亿（截至 2026-09-04） | F/Forge/Neo/Quilt，1.19–26.2 稳定（26.3 仅 snapshot） | Builder 式、GUI 契合原版风格，因 Cloth 功能冻结而生 |
 | Fzzy Config（[lib-fzzy-config.md](lib-fzzy-config.md)） | 3420 万（2024-04 发布，增速极快） | F/Forge/Neo/Quilt，1.20.1–26.2 | 自动 GUI、强校验、服务端-客户端同步 |
 | owo-config（owo-lib 内）（[lib-owo.md](lib-owo.md)） | 见 owo-lib | F/Neo/Quilt，1.17–26.1.2 | 注解式配置 + 自动 GUI + 配置同步 |
 | MidnightLib（[lib-midnightlib.md](lib-midnightlib.md)） | 2510 万 | F/Forge/Neo/Quilt，1.17–26.2 | 轻量配置，鼓励 Jar-in-Jar 打包 |
@@ -63,7 +66,7 @@ skillId: mc-lib-catalog
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| GeckoLib（[lib-geckolib.md](lib-geckolib.md)） | 6270 万（CF 3.87 亿） | F/Forge/Neo/Quilt，1.12.2–26.2 | 3D 骨骼动画引擎，30+ 缓动、并发动画、声音/粒子/事件关键帧，配合 Blockbench；客户端必需、服务端可选 |
+| GeckoLib（[lib-geckolib.md](lib-geckolib.md)） | 6729 万（截至 2026-09-04；CF 3.87 亿 = CurseForge 口径，未复核） | F/Forge/Neo/Quilt，1.12.2–26.2 | 3D 骨骼动画引擎，30+ 缓动、并发动画、声音/粒子/事件关键帧，配合 Blockbench；客户端必需、服务端可选 |
 | playerAnimator（[lib-playeranimator.md](lib-playeranimator.md)） | 2480 万 | F/Forge/Neo/Quilt，1.16.4–1.21.7 | 第一人称/第三人称玩家关键帧动画，配套 bendy-lib 弯曲增强 |
 | Satin API（[lib-satin.md](lib-satin.md)） | 170 万 | Fabric，1.18–1.21.4 | 后期处理着色器包装 |
 
@@ -71,30 +74,30 @@ skillId: mc-lib-catalog
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| Architectury API（[lib-architectury.md](lib-architectury.md)） | 9170 万 | F/Forge/Neo/Quilt，1.16.5–26.2 | 90+ 事件钩子、网络/注册抽象、@ExpectPlatform，配合 Architectury Loom/Plugin 一码多端 |
-| Balm（[lib-balm.md](lib-balm.md)） | 5420 万 | F/Forge/Neo，1.18–26.2 | Blay 的抽象层，零第三方依赖 |
+| Architectury API（[lib-architectury.md](lib-architectury.md)） | 9691 万（截至 2026-09-04） | F/Forge/Neo/Quilt，1.16.5–26.2 | 90+ 事件钩子、网络/注册抽象、@ExpectPlatform，配合 Architectury Loom/Plugin 一码多端 |
+| Balm（[lib-balm.md](lib-balm.md)） | 5732 万（截至 2026-09-04） | F/Forge/Neo，1.18–26.2 | Blay 的抽象层，零第三方依赖 |
 | Resourceful Lib（[lib-resourceful.md](lib-resourceful.md)） | 3220 万 | F/Forge/Neo，1.19.2–26.2 | 跨平台网络、codec 工具、内存资源包、Highlight API |
-| Moonlight Lib（原 Selene）（[lib-moonlight.md](lib-moonlight.md)） | 3690 万（CF 2.33 亿） | F/Forge/Neo，1.16.5–1.21.1 | 动态资源/注册、BlockSetAPI、村民 AI、流体系统 |
+| Moonlight Lib（原 Selene）（[lib-moonlight.md](lib-moonlight.md)） | 3690 万（未复核；CF 2.33 亿 = CurseForge 口径，未复核） | F/Forge/Neo，1.16.5–1.21.1 | 动态资源/注册、BlockSetAPI、村民 AI、流体系统 |
 
 ### 4. 饰品 / 装备槽
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| Curios API（[lib-curios.md](lib-curios.md)） | 2850 万（实测 3009 万） | Forge/Neo，1.13.2–26.2（实测 147 条；仅 1 条 1.16.5 beta 标 fabric） | Forge 系饰品槽标准，tag 驱动扩展槽位，自带 GUI |
-| Trinkets（[lib-trinkets.md](lib-trinkets.md)） | 2260 万（实测 2344 万） | F/Quilt，1.17–1.21.1（实测上游末次 2024-07-15；分叉 trinkets-polymer 到 26.2 仅 beta/rc） | Fabric 系饰品槽（6 组槽位），数据驱动 |
+| Curios API（[lib-curios.md](lib-curios.md)） | 3019 万（截至 2026-09-04） | Forge/Neo，1.13.2–26.2（实测 147 条；仅 1 条 1.16.5 beta 标 fabric） | Forge 系饰品槽标准，tag 驱动扩展槽位，自带 GUI |
+| Trinkets（[lib-trinkets.md](lib-trinkets.md)） | 2350 万（截至 2026-09-04） | F/Quilt，1.17.1–1.21.1（实测上游末次 2024-07-15；分叉 trinkets-polymer 到 26.2 仅 beta/rc） | Fabric 系饰品槽（6 组槽位），数据驱动 |
 | Caelus API（[lib-caelus.md](lib-caelus.md)） | 690 万 | F/Forge/Neo，1.13.2–1.21.5 | 将鞘翅飞行抽象为实体属性，自定义飞行能力 |
 
 ### 5. 世界生成
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| TerraBlender（[lib-terrablender.md](lib-terrablender.md)） | 3610 万 | F/Forge/Neo/Quilt，1.18.1–26.2 | region 机制兼容式添加生物群系，1.18+ 地形系统的标准方案 |
+| TerraBlender（[lib-terrablender.md](lib-terrablender.md)） | 3823 万（截至 2026-09-04） | F/Forge/Neo/Quilt，1.18.1–26.2 | region 机制兼容式添加生物群系，1.18+ 地形系统的标准方案 |
 
 ### 6. GUI / UI 库
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| owo-lib（[lib-owo.md](lib-owo.md)） | 4380 万 | F/Neo/Quilt，1.17–26.1.2 | owo-ui 声明式 GUI、owo-config、网络层、自动注册（⚠️ 不支持 Forge） |
+| owo-lib（[lib-owo.md](lib-owo.md)） | 4633 万（截至 2026-09-04） | F/Neo/Quilt，1.17–26.1.2 | owo-ui 声明式 GUI、owo-config、网络层、自动注册（⚠️ 不支持 Forge） |
 | LibGui（[lib-libgui.md](lib-libgui.md)） | — | Fabric（GitHub 活跃至 26.2） | 老牌声明式 GUI 库；Modrinth 已下架(404)，走 Cotton maven + Jar-in-Jar 分发 |
 | SpruceUI / ObsidianUI（[lib-spruceui-obsidianui.md](lib-spruceui-obsidianui.md)） | 245 万 | 1.16.4–1.21.5 | GUI 抽象库；原版已下架，ObsidianUI 是 Architectury 移植 |
 | Modern UI（[lib-modern-ui.md](lib-modern-ui.md)） | — | F/Forge/Neo | 现代文本排版引擎（中文/Unicode 渲染友好）+ GUI API，中文模组圈使用率高 |
@@ -103,7 +106,7 @@ skillId: mc-lib-catalog
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| Cardinal Components API (CCA)（[lib-cca.md](lib-cca.md)） | 1420 万 | F/Quilt，1.18–26.2 | 给实体/方块/区块/世界挂数据的标准方案，ASM 生成扩展 |
+| Cardinal Components API (CCA)（[lib-cca.md](lib-cca.md)） | 1481 万（截至 2026-09-04） | F/Quilt，1.18–26.2 | 给实体/方块/区块/世界挂数据的标准方案，ASM 生成扩展 |
 | PlayerAbilityLib (PAL)（[lib-player-ability-lib.md](lib-player-ability-lib.md)） | 42 万 | F/Quilt 服务端，1.20–26.1 | 玩家能力（飞行/缩放）兼容性修正 |
 
 生态位变化：1.20.5+ 原版自带 Data Component/Attachment 后，部分新模组直接用原版机制，不再依赖 CCA。
@@ -113,7 +116,7 @@ skillId: mc-lib-catalog
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
 | Polymer（[lib-polymer.md](lib-polymer.md)） | 356 万 | F/Quilt，1.18–26.2 | 纯服务端生成内容，原版客户端免装模组可见，含 AutoHost |
-| Text Placeholder API（[lib-text-placeholder-api.md](lib-text-placeholder-api.md)） | 5670 万 | F/Quilt，1.17–26.2 | 占位符解析 %modid:type% + Simplified Text Format |
+| Text Placeholder API（[lib-text-placeholder-api.md](lib-text-placeholder-api.md)） | 6190 万（截至 2026-09-04） | F/Quilt，1.17–26.2 | 占位符解析 %modid:type% + Simplified Text Format |
 | Server Translations API（[lib-server-translations.md](lib-server-translations.md)） | — | F/Forge/Neo | 服务端按玩家语言渲染可翻译文本；原 Modrinth 已下架，走 maven.nucleoid.xyz；替代品 Server I18n API |
 | Impersonate（[lib-impersonate.md](lib-impersonate.md)） | 5.1 万 | F/Quilt 服务端，1.16.3–1.21.11 | 玩家伪装 API（换皮肤/名牌/身份），基于 CCA |
 | Pehkui（[lib-pehkui.md](lib-pehkui.md)） | 920 万 | F/Forge/Neo/Quilt，1.14.4–1.21.1 | 实体缩放 API，20+ 缩放类型带平滑过渡 |
@@ -134,15 +137,15 @@ skillId: mc-lib-catalog
 |---|---|---|---|
 | KubeJS（[lib-kubejs.md](lib-kubejs.md)） | 1900 万 | F/Forge/Neo/Quilt，1.18.2–26.1.2 | JavaScript 脚本引擎：改配方、注册物品方块、改 tag、热重载；几乎所有大型整合包（ATM、E2E）依赖它 + ProbeJS |
 | Kotlin for Forge（[lib-kotlin-for-forge.md](lib-kotlin-for-forge.md)） | 4410 万 | Forge/Neo，1.14–26.2 | 让 Forge 模组用 Kotlin 编写（语言加载器 + 标准库/协程） |
-| Fabric Language Kotlin（[lib-fabric-language-kotlin.md](lib-fabric-language-kotlin.md)） | 1.07 亿 | Fabric，1.14–26.2 | 同上，Fabric 版 |
+| Fabric Language Kotlin（[lib-fabric-language-kotlin.md](lib-fabric-language-kotlin.md)） | 1.143 亿（截至 2026-09-04） | Fabric，1.14–26.2 | 同上，Fabric 版 |
 
 ## 三、作者"全家桶"式共享库（第三方采用有限，但被整合包大量依赖）
 
 | 库（链接） | 下载 | 服务于 | 代表模组 |
 |---|---|---|---|
-| Collective（[lib-collective.md](lib-collective.md)） | 5980 万 | Serilum 100+ 模组 | Villager Names、各类 QoL 小模组 |
-| Puzzles Lib（[lib-puzzles-lib.md](lib-puzzles-lib.md)） | 5630 万 | Fuzs 全部模组 | Bag of Holding、Tiny Skeletons、Pick Up Notifier、TrashSlot |
-| Bookshelf（[lib-bookshelf.md](lib-bookshelf.md)） | 4230 万（CF 3.94 亿） | Darkhax | Enchantment Descriptions、Botany Pots、Tips、Dark Utilities |
+| Collective（[lib-collective.md](lib-collective.md)） | 6290 万（截至 2026-09-04） | Serilum 100+ 模组 | Villager Names、各类 QoL 小模组 |
+| Puzzles Lib（[lib-puzzles-lib.md](lib-puzzles-lib.md)） | 5964 万（截至 2026-09-04） | Fuzs 全部模组 | Bag of Holding、Tiny Skeletons、Pick Up Notifier、TrashSlot |
+| Bookshelf（[lib-bookshelf.md](lib-bookshelf.md)） | 4450 万（截至 2026-09-04，slug `bookshelf-lib`；CF 3.94 亿 = CurseForge 口径，未复核） | Darkhax | Enchantment Descriptions、Botany Pots、Tips、Dark Utilities |
 | MaLiLib（[lib-malilib.md](lib-malilib.md)） | 3140 万 | masa 全家桶（客户端专用） | Litematica、MiniHUD、Tweakeroo、Item Scroller、TellMe |
 | Kiwi（[lib-kiwi.md](lib-kiwi.md)） | 1970 万 | Snownee | Sculk Horde、Smarter Farmers、Frozen Up |
 | Sophisticated Core（[lib-sophisticated-core.md](lib-sophisticated-core.md)） | 1630 万 | P3pp3rF1y | Sophisticated Backpacks、Sophisticated Storage |
@@ -152,9 +155,9 @@ skillId: mc-lib-catalog
 | Mantle（[lib-mantle.md](lib-mantle.md)） | 320 万 | SlimeKnights（Forge 系） | Tinkers' Construct、Natura、Ceramics；1.21+ 无版本 |
 | LibX（[lib-libx.md](lib-libx.md)） | 210 万 | noeppi_noeppi | 其全部模组 |
 | Placebo（[lib-placebo.md](lib-placebo.md)） | 57 万 | Shadows_of_Fire | Apotheosis（神化）、Zenith |
-| Iceberg（[lib-iceberg.md](lib-iceberg.md)） | CF 2.33 亿 | Grend | Visual Workbench 等 |
-| GlitchCore（[lib-glitchcore.md](lib-glitchcore.md)） | CF 4.04 亿 | Glitchfiend | Biomes O' Plenty、Serene Seasons、Tough As Nails |
-| CreativeCore（[lib-creativecore.md](lib-creativecore.md)） | CF 5.22 亿 | CreativeMD | LittleTiles、AmbientSounds |
+| Iceberg（[lib-iceberg.md](lib-iceberg.md)） | CF 2.33 亿（CurseForge 口径，日期未标，未复核） | Grend | Visual Workbench 等 |
+| GlitchCore（[lib-glitchcore.md](lib-glitchcore.md)） | CF 4.04 亿（CurseForge 口径，日期未标，未复核） | Glitchfiend | Biomes O' Plenty、Serene Seasons、Tough As Nails |
+| CreativeCore（[lib-creativecore.md](lib-creativecore.md)） | CF 5.22 亿（CurseForge 口径，日期未标，未复核） | CreativeMD | LittleTiles、AmbientSounds |
 
 ## 四、按平台的推荐路线
 

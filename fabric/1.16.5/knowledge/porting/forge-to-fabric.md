@@ -215,7 +215,7 @@ public class ExampleMixinPlugin {
 ---
 ## 常见陷阱
 
-1. **Java 版本**：Fabric 1.16.5 需要 Java 16（Forge 1.16.5 可用 Java 8）
+1. **Java 版本**：Fabric 1.16.5 需要 Java 8（Forge 1.16.5 可用 Java 8/11）
 2. **Mixin 包名**：确保 `fabric.mixins.json` 的 `package` 与实际包名一致
 3. **客户端/服务端分离**：GUI 和渲染相关必须在 `ClientModInitializer` 中处理
 4. **Registry API**：1.16.5 使用 `Registry.ITEM` 而非 `Registry.ITEM`

@@ -241,6 +241,8 @@ Decision: 选择注册方式
 4. 不确定该用哪个库 Skill → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`；完整清单见 `knowledge/libs/README.md`
 5. **禁止**把 Fabric 专属库（Trinkets / CCA / Polymer / Text Placeholder 等）当 Forge 教程；Forge/NeoForge 饰品用 `mc-curios`（`forge-only`），Fabric 用 `mc-trinkets`（`fabric-only`）
 6. **配置不要新写树级 `mc-config` Skill**：一律读 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+   - **选型建议与工具默认不同源不是矛盾**：`generate_config` 在 fabric / quilt 上**默认永远吐 Cloth Config 骨架**；YACL 只能作为**用户显式 opt-in** 的结果出现（opt-in 参数尚未实现——现在传 `--library=yacl` 会报 `未知参数`，禁止臆造调用，未实现前只能按 Cloth 现状走）。
+   - **第三方配置库不是 loader API（强制）**：Cloth / YACL / Fzzy / owo 等的方法名与注解，必须先由用户自备 jar 走 `ingest_loader_api` 入库（默认 dryRun，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁写仓库 `data/`）并逐签名核对后才能写进骨架。未入库 → `query_loader_api` 只回 `found:false`，此时**只能**留 `// TODO(未核实)`，禁止凭训练记忆补方法链。
 
 ## 不确定时
 
@@ -258,8 +260,8 @@ Decision: 选择注册方式
 | --- | --- |
 | `query_api` | 按类名查询 Vanilla/Parchment API 签名（约 1.16.5–1.20.4；1.12.2 类名空壳；26.1+ 无索引）。精确 FQCN 或唯一简名才 `found:true`；`Handler` 等歧义子串 `found:false` + suggestions |
 | `get_method_params` | 查询方法参数名（可选 version） |
-| `convert_mapping` | mojang / mcp / yarn / parchment 互转（Yarn 走预建 SQLite 惰性点查；1.12.2 用 MCP SRG；**26.1+ 已去混淆 → `UNOBFUSCATED_NO_YARN`，禁止转 yarn**） |
-| `get_server_status` | 预热/数据路径与 descriptor 自检（含 updateHint） |
+| `convert_mapping` | 在 **mojang / mcp / yarn / parchment / obfuscated / intermediary** 间互转类 / 方法 / 字段（Yarn 走预建 SQLite 惰性点查；1.12.2 用 MCP SRG；`to=mojang` 与 `obfuscated` 同为 Tiny official 短名；yarn-tiny 档 fabric **1.14.4–1.21.x** 无 MCP/Parchment 层，`to=mcp`/`to=parchment` → `YARN_TINY_NO_MCP_LAYER`；**26.1+ 已去混淆 → `UNOBFUSCATED_NO_YARN`，禁止转 yarn**） |
+| `get_server_status` | 预热/数据路径与 descriptor 自检（含 updateHint）；另返回 **`java`** 探测（`node` / `JAVA_HOME` / `version` / `ready` / `hint`，反编译与 remap 需 JDK 17+）。**只报本机 Java 现状，不做 Gradle ↔ JDK 匹配判定**（那走 `diagnose_gradle`） |
 | `get_version_info` | 查询版本支持的 API 范围（**仅 Forge**） |
 | `mc_skill_update` | 检查/应用 tooling+data 更新（GitHub Release；确认后可写盘） |
 | `diagnose_gradle` | 诊断 Gradle 构建问题。ForgeGradle + Loom + NeoGradle/MDG；liteloader 插件走轻量模式。Rift / BaseMod / 基岩仍早退。 |

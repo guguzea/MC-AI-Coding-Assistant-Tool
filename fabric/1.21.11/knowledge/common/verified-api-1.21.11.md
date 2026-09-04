@@ -26,10 +26,14 @@
 | `FoodComponent.Builder` | 具名方法只有 `nutrition(int)` / `saturationModifier(float)` / `alwaysEdible()` / `build()` | 映射表 `methods` |
 | `Item#use` | `ActionResult use(World, PlayerEntity, Hand)` | 映射表 + 源码树 |
 | `Item.postHit` | `void postHit(ItemStack, LivingEntity, LivingEntity)` | 映射表 `methods` |
-| `ItemStack.damage` | 具名形态 `(int, LivingEntity, Hand)` / `(int, LivingEntity, EquipmentSlot)` / `(int, PlayerEntity)` | 映射表 `methods` |
-| `PlayerEntity#getActiveHand` | `Hand getActiveHand()` | 映射表 `methods` |
+| `ItemStack.damage` | 具名 overload **共 5 个**（旧行只列 3 个，非全集）：`(int, LivingEntity, Hand)`=method_71012 / `(int, LivingEntity, EquipmentSlot)`=method_7970 / `(int, PlayerEntity)`=method_61653 / `(int, ServerWorld, ServerPlayerEntity, Consumer)V`=method_7956 / `(ItemConvertible, LivingEntity, EquipmentSlot)ItemStack`=method_60986 | 映射表 `methods`（owner `net/minecraft/item/ItemStack` 且 `name_named='damage'` 恰 5 行） |
+| `LivingEntity#getActiveHand` | `Hand getActiveHand()`=method_6058（`player.getActiveHand()` 能编译是**继承**；`PlayerEntity` 名下 0 行） | 映射表 `methods`（`name_named='getActiveHand'` 全表仅 1 行，owner `net/minecraft/entity/LivingEntity`） |
 | `ActionResult` 常量 | `CONSUME` / `FAIL` / `PASS` / `PASS_TO_DEFAULT_BLOCK_ACTION` / `SUCCESS` / `SUCCESS_SERVER` | 映射表 `fields` |
 | `Item` 实现 `ItemConvertible` | `public class Item implements ToggleableFeature, ItemConvertible` | 源码树（yarn）+ 映射表（`ItemConvertible#asItem() → Item`） |
+| `AbstractBlock.Settings.create` | `() → AbstractBlock.Settings` | 映射表 `methods`（owner `net/minecraft/block/AbstractBlock$Settings` = `class_4970$class_2251`）+ 源码树 yarn `AbstractBlock.java:1013` |
+| `AbstractBlock.Settings.copy` | `(AbstractBlock) → AbstractBlock.Settings` | 映射表 `methods`（同 owner）+ 源码树 yarn `AbstractBlock.java:1017` |
+| `AbstractBlock.Settings.copyShallow` | `(AbstractBlock) → AbstractBlock.Settings`（全库唯一具名宿主就是 Settings） | 映射表 `methods`（同 owner，`copyShallow` 全库 total=1）+ 源码树 yarn `AbstractBlock.java:1032` |
+| 备用 Mojmap 轴 `BlockBehaviour.Properties.of` / `ofFullCopy` / `ofLegacyCopy` | `of()`、`ofFullCopy(BlockBehaviour)`、`ofLegacyCopy(BlockBehaviour)` | 源码树 mojmap `BlockBehaviour.java:997/1001/1016` |
 
 ## 已核实为「本档口径下不可用」
 
@@ -43,12 +47,15 @@
 | `ItemGroup` 上的创造栏常量 | 常量在 `ItemGroups`（复数） | 映射表 `fields` |
 | `FoodComponent.Builder.hunger` | 只有 `nutrition` | 映射表 `methods` |
 | `Item.Settings.maxDamageIfAbsent` | 具名 `max*` 只有 `maxCount` / `maxDamage` | 映射表 `methods` |
-| `sendToolBreakStatus` | `PlayerEntity` 145 个具名方法里没有 | 映射表 `methods` |
+| `sendToolBreakStatus` | `PlayerEntity` 名下 145 个方法（具名 141 + 未映射 `method_*` 4）里没有；全表 `name_named LIKE '%ToolBreak%'` = 0 行 | 映射表 `methods` |
 | `damage(int, LivingEntity, Consumer)` | 无该形态 | 映射表 `methods` |
 | `StatusEffects.SPEED` 等具名常量 | `StatusEffects` 41 个字段里只有 `DARKNESS_PADDING_DURATION` 具名，其余 `field_*`；要给状态效果先核具名 | 映射表 `fields` |
 | `BlockTags.PICKAXE_MINEABLE` | `BlockTags` 常量全部 `field_*`（Mojmap 侧才叫 `MINEABLE_WITH_PICKAXE`） | 映射表 `fields` |
 | `EquipmentSlot.MAINHAND` | `EquipmentSlot` 常量仍是 `field_*` → 用 `player.getActiveHand()` | 映射表 `fields` |
 | `Item.postHit` 返回 `boolean` | 本档返回 `void` | 映射表 `methods` |
+| `AbstractBlock.Settings.of` | 该 owner 的 58 个具名方法内没有 `of`（有 `offset(OffsetType)`，勿混）；口径是「本档 Yarn 命名下没有」，不是「游戏里没有 of」 | 映射表 `methods`（owner `AbstractBlock$Settings` 具名全集 58 条；全库 `of` 275 条中 owner 命中 0）+ 源码树 yarn `AbstractBlock.java:965` 起 Settings 体内静态工厂只有 `create` / `copy` / `copyShallow` |
+| `FabricBlockSettings`（含 `.of()` / `.copyOf()`） | 1.21.3 起本档 Fabric API 已无该类；方块设置只用 `AbstractBlock.Settings` | CLI（`query_loader_api --platform=fabric --minecraftVersion=1.21.11 --className=FabricBlockSettings` = `found:false`；同版阳性对照 `FabricItemGroup` / `FabricEntityTypeBuilder` = `found:true`；同名类在 `--minecraftVersion=1.21.1` = `found:true`）+ 源码树（Fabric API 源 1.21.11 = NO_FILE；1.21.1 存在且已 `@Deprecated`） |
+| 备用 Mojmap 轴 `BlockBehaviour.Properties.copy`（静态） | 该轴只有 `of()` / `ofFullCopy(BlockBehaviour)` / `ofLegacyCopy(BlockBehaviour)`，**无**静态 `copy(` | 源码树 mojmap `BlockBehaviour.java:997/1001/1016` |
 
 ## 未核实（禁止默写）
 

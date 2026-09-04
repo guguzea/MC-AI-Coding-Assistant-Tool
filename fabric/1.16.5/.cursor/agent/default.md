@@ -12,7 +12,7 @@
 | 平台 | Fabric |
 | Minecraft 版本 | 1.16.5 |
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
-| Java 版本 | **Java 16**（Fabric 1.16.5 最低要求） |
+| Java 版本 | **Java 8**（Minecraft 1.16.5 要求；Java 16 从 1.17 起） |
 | Gradle | Gradle 7.x + Loom **0.10.x** |
 | Mappings | **Yarn**（`net.fabricmc:yarn:1.16.5+build.10:v2`）|
 | Build 工具 | Loom（`fabric-loom` 插件） |
@@ -204,7 +204,7 @@ fabric-mod/
 - Fabric 1.16.5 支持 Minecraft 1.16.5
 - Fabric Loader 0.11.x（推荐 0.11.2）
 - Fabric API 0.42.x（`fabric-api-0.42.0+1.16`）
-- Java 16+
+- Java 8
 
 ### 1.16.5 特有注意事项
 

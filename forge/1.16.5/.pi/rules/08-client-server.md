@@ -33,7 +33,7 @@ src/main/java/
 ├── registry/
 │   └── ModBlocks.java           # 两端都加载
 ├── client/
-│   ├── ClientSetup.java          # 仅客户端（@Mod.EventBusSubscriber(bus=MOD, value=Dist.CLIENT)）
+│   ├── ClientSetup.java          # 仅客户端（@Mod.EventBusSubscriber(modid=ExampleMod.MOD_ID, bus=Mod.EventBusSubscriber.Bus.MOD, value=Dist.CLIENT)）
 │   └── rendering/
 │       └── MyBlockRenderer.java # 仅客户端
 └── init/

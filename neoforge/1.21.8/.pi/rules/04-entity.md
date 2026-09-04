@@ -8,6 +8,6 @@ description: 04 — 实体（NeoForge 1.21.8）
 
 主入口：`DeferredRegister.createEntities` / `DeferredRegister.Entities`。存盘用 `ValueInput` / `ValueOutput`（本版 entities 页），不要抄更早档的 `CompoundTag`。`EntityType.Builder` 最后 `.build(...)` 的参数以该版文档为准。
 
-渲染只放客户端：`@EventBusSubscriber(value = Dist.CLIENT, bus = MOD)`。不要在服务端加载 Renderer。
+渲染只放客户端：`@EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD, modid = "yourmodid")`（`bus` 必须带 `Bus.` 限定；1.20.6+ 默认总线是 `Bus.GAME`，mod bus 事件必须显式 `bus = Bus.MOD`）。不要在服务端加载 Renderer。
 
 生成、属性、生成蛋：查该版 entities 页，不要抄 Forge 1.12 `EntityRegistry`。

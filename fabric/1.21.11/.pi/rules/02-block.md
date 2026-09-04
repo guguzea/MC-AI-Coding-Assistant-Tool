@@ -5,7 +5,7 @@ description: 02 — 方块开发
 # 02 — 方块开发
 
 > 适用版本：Fabric 1.21.11
-> 方块属性用 Yarn `AbstractBlock.Settings`（`copy` / `of`）。Mojmap 对应 `BlockBehaviour.Properties`。**不要**写已删除的 `FabricBlockSettings`。地图色：Yarn `MapColor.STONE_GRAY`，不要 `MapColor.STONE`。
+> 方块属性用 Yarn `AbstractBlock.Settings`（静态工厂只有 `create()` / `copy(AbstractBlock)` / `copyShallow(AbstractBlock)`；**本档 Yarn 口径无具名 `of`**，勿与 `offset(OffsetType)` 混）。Mojmap 对应 `BlockBehaviour.Properties`（该轴有 `Properties.of()` / `ofFullCopy()` / `ofLegacyCopy()`，无静态 `copy()`）。**不要**写已删除的 `FabricBlockSettings`。地图色：Yarn `MapColor.STONE_GRAY`，不要 `MapColor.STONE`。
 > Yarn 1.21.11：子类重写 `writeData(WriteView)` / `readData(ReadView)`（`net.minecraft.storage`）。不要写 Mojmap 的 `saveAdditional(ValueOutput)`，也不要抄 1.21.1 的 `writeNbt(NbtCompound, WrapperLookup)`。库存用 `Inventories.writeData` / `readData`。
 
 ---
@@ -29,7 +29,7 @@ description: 02 — 方块开发
 ```
 IF 简单静态方块
   → new Block(AbstractBlock.Settings.copy(Blocks.STONE))
-  → 或 AbstractBlock.Settings.create() / of()（以本档 Yarn 名为准）
+  → 或 AbstractBlock.Settings.create()（Yarn 轴无具名 of()；Mojmap 轴才是 BlockBehaviour.Properties.of()）
 
 IF 可配置方块（如可交互、可放置）
   → 自定义 Block 子类

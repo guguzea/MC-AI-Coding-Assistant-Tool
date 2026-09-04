@@ -8,8 +8,8 @@
 
 ### Java 版本
 
-- **必须使用 Java 16**（Fabric 1.16.5 要求）
-- `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_16`
+- **必须使用 Java 8**（Minecraft 1.16.5 运行在 Java 8；Java 16 从 Minecraft 1.17 起才要求）
+- `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_1_8`（或 `options.release = 8`）
 - Gradle Wrapper 版本不低于 **Gradle 7.x**
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
@@ -84,7 +84,7 @@ IF 报错包含 "Could not resolve net.fabricmc"
   → 检查网络连接
 
 IF 报错包含 "Incompatible Java version"
-  → 确认使用 Java 16，不兼容 Java 8 或 Java 17
+  → 确认使用 Java 8（1.16.5 游戏运行时是 Java 8；用 Java 16/17 编译的模组无法在 1.16.5 加载）
 
 IF 报错包含 "Could not find net.fabricmc:yarn"
   → 确认 gradle.properties 中 yarn_mappings 版本格式正确（如 1.16.5+build.10）

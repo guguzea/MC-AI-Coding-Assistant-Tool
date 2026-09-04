@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-02T03:01:37.743Z",
+  "generatedAt": "2026-09-04T05:10:21.466Z",
   "entries": [
     {
       "id": "authored/addon-dev-workflow",
@@ -1434,7 +1434,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "社区常用库模组总目录与分类导航：Top 12、十大功能分类、作者全家桶共享库、平台推荐路线与八条陷阱。排名与分类主体取自《Minecraft 社区常用库模组全览（2026 版）》二手快照；下载量与版本窗口已就地标注 Modrinth API 实测 2026-09-02 值，与四篇库短文（cloth/yacl/curios/trinkets）的实测表冲突时以实测表为准。",
+      "summary": "社区常用库模组总目录与分类导航：Top 12、十大功能分类、作者全家桶共享库、平台推荐路线与八条陷阱。排名与分类主体取自《Minecraft 社区常用库模组全览（2026 版）》二手快照；下载量与版本窗口已就地标注 Modrinth API 实测 2026-09-02 / 2026-09-04 值，与四篇库短文（cloth/yacl/curios/trinkets）的实测表冲突时以实测表为准。",
       "mcHint": "1.18+ / 26.x；按各库 mcHint 再收窄"
     },
     {

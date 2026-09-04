@@ -99,6 +99,8 @@ const {
   PRIMER_CONFIG: NEO_PRIMERS,
   readPreviousVersions,
   carryUnprobedVersions,
+  classifyNeoLoaderVersion,
+  withNeoLoaderFields,
 } = await import("./scripts/probe-neoforge-versions.js");
 const { readFileSync } = await import("node:fs");
 const NEO_MANIFEST = JSON.parse(
@@ -129,6 +131,39 @@ assert.ok(checkLoaderVersion("1.20.6", "20.4.100+").length, "规则失效：20.4
 assert.equal(checkLoaderVersion("1.21.1", "21.1.113").length, 0, "规则误杀：21.1.113 对 MC 1.21.1 合法");
 assert.equal(checkLoaderVersion("26.1", "26.1.0.x").length, 0, "规则误杀：26.1.0.x 对 MC 26.1 合法");
 
+/**
+ * N-5：`neoforgeVersion` 一个字段历史上既写精确号又写 `.x` 掩码，消费方判不出语义。
+ * 产物必须额外带**恰好一个**显式字段（`exactVersion` = 可直接落 gradle.properties 的精确钉值 /
+ * `versionRange` = 版本段），且与 `neoforgeVersion` 后向兼容别名逐字相等、语义与版本串一致。
+ * 别名暂不删除：`data/porting/knowledge-base/versions.json` 的 9 条 `sources.neoforge`
+ * 证据指针逐字指向 `.neoforgeVersion`（test-core G5 按逐字相等判定），改指显式字段是另一波次。
+ */
+function checkNeoSplit(entry) {
+  const bad = [];
+  const hasExact = Object.prototype.hasOwnProperty.call(entry, "exactVersion");
+  const hasRange = Object.prototype.hasOwnProperty.call(entry, "versionRange");
+  if (hasExact === hasRange) {
+    bad.push(`显式字段必须恰好一个（exactVersion=${hasExact} versionRange=${hasRange}）`);
+    return bad;
+  }
+  const explicit = hasExact ? entry.exactVersion : entry.versionRange;
+  if (String(explicit) !== String(entry.neoforgeVersion)) {
+    bad.push(`别名 neoforgeVersion=${entry.neoforgeVersion} ≠ 显式字段 ${explicit}`);
+  }
+  const wantKind = hasExact ? "exact" : "range";
+  const gotKind = classifyNeoLoaderVersion(entry.neoforgeVersion);
+  if (gotKind !== wantKind) bad.push(`${entry.neoforgeVersion} 语义是 ${gotKind}，产物却标成 ${wantKind}`);
+  return bad;
+}
+
+// 同 checkLoaderVersion：拆分规则本身必须先证明自己判得掉历史形态。
+assert.ok(checkNeoSplit({ neoforgeVersion: "21.11.x" }).length, "规则失效：裸两义字段（11 条的历史形态）必须判红");
+assert.ok(checkNeoSplit({ neoforgeVersion: "21.1.113", versionRange: "21.1.113" }).length, "规则失效：精确号被标成版本段必须判红");
+assert.ok(checkNeoSplit({ neoforgeVersion: "21.1.113", exactVersion: "21.1.113", versionRange: "21.1.113" }).length, "规则失效：两个显式字段并存必须判红");
+assert.ok(checkNeoSplit({ neoforgeVersion: "21.1.113", exactVersion: "21.1.114" }).length, "规则失效：别名与显式字段不同值必须判红");
+assert.equal(checkNeoSplit({ neoforgeVersion: "21.1.113", exactVersion: "21.1.113" }).length, 0, "规则误杀：精确号 + exactVersion 合法");
+assert.equal(checkNeoSplit({ neoforgeVersion: "26.1.0.x", versionRange: "26.1.0.x" }).length, 0, "规则误杀：.x 掩码 + versionRange 合法");
+
 const NEO_CURATED = ["mcVersion", "neoforgeVersion", "javaVersion", "mappings", "type", "priority", "fallbackVersion", "forgeVersion"];
 const neoDrift = [];
 for (const cfg of NEO_CFG) {
@@ -144,6 +179,10 @@ for (const cfg of NEO_CFG) {
   if (!entry) {
     neoDrift.push(`manifest 缺 ${cfg.version}：生成源新增后未重跑，产物与源不同步`);
     continue;
+  }
+  for (const msg of checkNeoSplit(entry)) neoDrift.push(`${cfg.version}: ${msg}`);
+  if (JSON.stringify(withNeoLoaderFields(entry)) !== JSON.stringify(entry)) {
+    neoDrift.push(`${cfg.version}: 产物显式字段与生成源派生结果不一致（缺字段 / 多余字段 / 键序漂移，重跑 probe 会改写）`);
   }
   // 26.1 走「pinned /docs/26.1/ 404 → 未版本化 /docs/」回退：route/docBase/testUrl 由探测期改写，不参与比对。
   const probeRewritten = entry.unversionedCurrent ? ["route", "docBase", "testUrl"] : [];

@@ -4,12 +4,12 @@ description: 05 — Quilt 事件差异
 
 # 05 — Quilt 事件差异
 
-> ⚠️ **QSL 停更（2025-12，官方 FAQ 实证）**：本版本无任何已发布 QSL/QFAPI 构件。下表 API 是**源码树考据，非可编译 API**——禁止生成。事件一律走同版 Fabric API（`fabric/1.21.1/.cursor/rules/05-events.mdc`）。
+> ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本版本无任何已发布 QSL/QFAPI 构件。下表 API 是**源码树考据，非可编译 API**——禁止生成。事件一律走同版 Fabric API（`fabric/1.21.1/.cursor/rules/05-events.mdc`）。
 >
 > 默认读 `fabric/1.21.1/.cursor/rules/05-events.mdc`。仅当用户要 **QSL 事件** 或 QFAPI 弃用提示时用本文件。
 > 方法名来自本档 `knowledge/common/qsl-verified.md`（QSL 1.21 源码 `871ca7abf109`，抓取日 2026-08-16）。**禁止**把这些名字抄进 Quilt 1.18.2 / 1.20.1。
 
-- **QSL 已停更且本版本无可用构件**；生命周期/注册事件用 `net.fabricmc.fabric.api.event.lifecycle`
+- **本版本无可用 QSL/QFAPI 正式版构件（maven 实证，截至 2026-09-04）**；生命周期/注册事件用 `net.fabricmc.fabric.api.event.lifecycle`
 - 不清楚方法名 → `search_docs({platform:"quilt"})`；无独立树时 QSL 查询会 `PLATFORM_DATA_MISSING`，**不会**回退 Fabric Registry 页
 - 通用 Mixin / 数据包问题可回退 Fabric 文档（已过滤 FAPI 专属类）
 - **禁止** `QuiltRegistry.register()`；不要把 `net.fabricmc.fabric.api.event.registry` / `FabricRegistryBuilder` 当 QSL
@@ -29,4 +29,4 @@ description: 05 — Quilt 事件差异
 
 以上符号在已发布构件中**不存在**（该分支从未随可用 QSL 发布）。替代：Fabric API 的 `ServerLifecycleEvents` / `ClientLifecycleEvents` / `RegistryEntryAddCallback`（见 fabric overlay）。
 
-QFAPI 历史背景：有 QSL 替代的 FAPI 曾被弃用（wiki `qsl-qfapi`）；该生态已随 QSL 停更终结。
+QFAPI 历史背景：有 QSL 替代的 FAPI 曾被弃用（wiki `qsl-qfapi`）；该生态在 maven 上已无 1.21.x 正式版构件（截至 2026-09-04）；「已终结」无官方来源可复核 → `// TODO(未核实)`。
