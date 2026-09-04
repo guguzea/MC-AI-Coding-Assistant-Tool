@@ -212,7 +212,7 @@ function recordComponents(decl: CstNode): MethodInfo["parameters"] {
       identifierImage(first(c, "Identifier")) ||
       identifierImage(first(arity, "Identifier")) ||
       `comp${i}`;
-    const dots = arity || first(c, "DotDotDot") ? "..." : "";
+    const dots = (arity || first(c, "DotDotDot")) ? "..." : "";
     return { type: ty + dots, name };
   });
 }
@@ -486,7 +486,10 @@ export function extractCompilationUnit(javaText: string, fileHint?: string): Loa
         methods: [],
         parseError: String(msg)
           .replace(/[A-Za-z]:[\\/][^\s"']+/g, "[redacted-path]")
-          .replace(/(?:\/home|\/Users|\/tmp|\/var|\/opt|\/usr)\/[^\s"']+/g, "[redacted-path]")
+          // 通用 Unix 绝对路径脱敏：旧写法只枚举 /home /Users /tmp /var /opt /usr 六个根，
+          // /etc、/mnt、/private、非 ASCII 家目录、TMPDIR 指到别处时一律漏网。
+          // 边界类（行首或空白/引号/括号/=,:<）保证只从「路径起点」开始吃，不误伤 a/b 这类相对片段。
+          .replace(/(^|[\s"'`(=,:<])\/[^\s"']+/g, "$1[redacted-path]")
           .replace(/mc-skill-temp[^\s"']*/gi, "[redacted-path]"),
         file: repoSafeSourcePath(fileHint),
       },

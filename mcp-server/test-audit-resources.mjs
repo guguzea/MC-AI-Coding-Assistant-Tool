@@ -1,11 +1,18 @@
 /**
  * audit_resources：纹理引用/孤儿路径归一化（禁止空壳 smoke）。
+ * + D-48：community store 的读失败降级（DOC_NOT_FOUND）与正文读取有界缓存。
  */
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { auditResources } from "./dist/audit-resources/index.js";
+import {
+  CommunityDocStore,
+  CommunityDocNotFoundError,
+  getCommunityReadStats,
+  resetCommunityReadStats,
+} from "./dist/docs-platform/community/store.js";
 
 function writePng(path) {
   writeFileSync(path, Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
@@ -175,10 +182,101 @@ function testWrongNamespaceReported() {
   }
 }
 
+// ── D-48：community store —— 读失败必须回落 DOC_NOT_FOUND，正文读取必须有界 ──
+
+function writeCommunityRoot(root, entries) {
+  mkdirSync(join(root, "indexes"), { recursive: true });
+  writeFileSync(
+    join(root, "indexes", "index-l0.json"),
+    JSON.stringify({
+      version: 1,
+      entries: entries.map((e, i) => ({
+        id: e.id ?? `c-${i}`,
+        label: e.label ?? `条目 ${i}`,
+        path: e.path,
+        url: e.url ?? "",
+        tags: e.tags ?? ["misc"],
+        sourceKind: e.sourceKind ?? "authored",
+        priority: e.priority ?? "🟢",
+        summary: e.summary ?? `摘要 ${i} uniquesummaryword`,
+      })),
+    }),
+    "utf8",
+  );
+}
+
+function testCommunityUnreadableBodyIsDocNotFound() {
+  const root = mkdtempSync(join(tmpdir(), "mc-community-d48-"));
+  try {
+    // path 指向一个**目录**：existsSync 通过、readFileSync 必 EISDIR ——
+    // 这就是「index 与磁盘之间有竞态 / 文件被删 / 盘抖动」的确定性替身。
+    writeCommunityRoot(root, [{ id: "dir-entry", path: "i-am-a-directory" }]);
+    mkdirSync(join(root, "i-am-a-directory"), { recursive: true });
+    const store = new CommunityDocStore(root);
+    let err;
+    try {
+      store.getFull("dir-entry");
+    } catch (e) {
+      err = e;
+    }
+    assert.ok(err, "读不出正文时不得静默返回空内容（必须报错）");
+    assert.ok(
+      err instanceof CommunityDocNotFoundError || err?.code === "DOC_NOT_FOUND",
+      `必须回落 DOC_NOT_FOUND，实际 ${err?.name}/${err?.code}: ${err?.message}`,
+    );
+    assert.equal(err.id, "dir-entry", "错误里要带条目 id");
+
+    // 正常条目仍可读
+    writeCommunityRoot(root, [{ id: "ok", path: "docs/ok.md" }]);
+    mkdirSync(join(root, "docs"), { recursive: true });
+    writeFileSync(join(root, "docs", "ok.md"), "---\ntitle: x\n---\n# 正文 uniqueword\n", "utf8");
+    const okStore = new CommunityDocStore(root);
+    assert.match(okStore.getFull("ok").content, /正文 uniqueword/);
+    assert.ok(!okStore.getFull("ok").content.includes("title: x"), "frontmatter 必须被剥掉");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+function testCommunityBodyHaystackIsCached() {
+  const root = mkdtempSync(join(tmpdir(), "mc-community-cache-"));
+  try {
+    const n = 6;
+    const entries = [];
+    mkdirSync(join(root, "docs"), { recursive: true });
+    for (let i = 0; i < n; i++) {
+      entries.push({ id: `e${i}`, label: `条目 ${i}`, path: `docs/e${i}.md`, summary: `摘要 ${i}` });
+      writeFileSync(join(root, "docs", `e${i}.md`), `# 标题${i}\n\n正文内容${i} 可搜索关键词\n`, "utf8");
+    }
+    writeCommunityRoot(root, entries);
+    const store = new CommunityDocStore(root);
+    resetCommunityReadStats();
+
+    store.search("可搜索关键词");
+    const first = getCommunityReadStats();
+    assert.equal(first.bodyReads, n, `首趟必须读满 ${n} 个正文，实际 ${first.bodyReads}`);
+
+    for (let i = 0; i < 3; i++) store.search("可搜索关键词");
+    const warm = getCommunityReadStats();
+    assert.equal(warm.bodyReads, first.bodyReads, `热趟不得再读正文：${first.bodyReads} → ${warm.bodyReads}`);
+    assert.ok(warm.bodyCacheHits >= n * 3, `热趟必须命中缓存：${warm.bodyCacheHits}`);
+    assert.ok(warm.bodyCacheSize <= warm.cap, `缓存必须有界：${warm.bodyCacheSize} <= ${warm.cap}`);
+
+    // 命中结果不能因为缓存而丢失
+    const hit = store.search("正文内容3");
+    assert.ok(hit.some((r) => r.id === "e3"), `缓存后正文命中仍须有效：${JSON.stringify(hit.map((r) => r.id))}`);
+    resetCommunityReadStats();
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
 testAssetsRootReferencedNotOrphan();
 testHashLayerNotPath();
 testPngMcmetaNotTextureSet();
 testShortRefDoesNotSwallowOrphan();
 testCrossNamespaceNotConfused();
 testWrongNamespaceReported();
+testCommunityUnreadableBodyIsDocNotFound();
+testCommunityBodyHaystackIsCached();
 console.log("test-audit-resources: ok");

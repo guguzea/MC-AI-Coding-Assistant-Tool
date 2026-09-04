@@ -9,7 +9,7 @@ import { isKnowledgeRepo } from "../platform-pack/write.js";
 import { walkDirBounded, javaSourceRoots } from "../utils/project-files.js";
 import { analyzePortingPathSchema, portProjectSchema } from "./types.js";
 import { parseMinecraftVersion } from "../decompile/version-manager.js";
-import { isExactMcVersionToken, isMcVersionFamily } from "../utils/minecraft-version.js";
+import { classifyMinecraftVersion, isExactMcVersionToken, isMcVersionFamily } from "../utils/minecraft-version.js";
 import { versionRequiredAction } from "../utils/actionable.js";
 import type {
   AnalyzePortingOutput,
@@ -457,6 +457,21 @@ function buildRoutePlan(ctx: RouteCtx): { routeSteps: string[]; nextSteps: NextS
 
 // ── query_api 建议 ─────────────────────────────────────────────────────────
 
+/**
+ * 「MC 26 及以上」单一判定（V-8/9/11 收口：原先在本文件被逐字写三遍）。
+ * 为什么不塌进 classifyMinecraftVersion / isMcVersionFamily：五档实测
+ * 1.20.4 / 1.21.11 / 26.1 / 26.1.1 / 27.1.1 上，`cls(v)==="26.x"` 与 `fam(v,"26.1")`
+ * 在 **27.1.1 上为 false，而旧式为 true**（classifyMinecraftVersion 无 27.x band，
+ * 27.x → "other"）。为不改行为，这里保留「token 门 + 主版本数值比较」，
+ * token 门交给既有 isExactMcVersionToken。
+ * 可证冗余：`fam(v,"26.1")` 成立 ⇒ `isExactMcVersionToken(v)` 成立且主版本 26，
+ * 已被 `major >= 26` 覆盖，故删掉该前置段对任何输入结果不变。
+ */
+function isMcVersion26OrAbove(version: string): boolean {
+  if (!isExactMcVersionToken(version)) return false;
+  return Number(version.trim().split(".")[0]) >= 26;
+}
+
 function buildQuerySuggestions(targetVersion: string, targetPlatform: string | undefined) {
   const suggestions: QueryApiSuggestion[] = [];
 
@@ -467,7 +482,7 @@ function buildQuerySuggestions(targetVersion: string, targetPlatform: string | u
       version: targetVersion,
       reason: "NeoForge 特有 API 请用 search_neoforge_docs；query_api 无 NeoForge 类索引",
     });
-    if (isMcVersionFamily(targetVersion, "26.1") || (isExactMcVersionToken(targetVersion) && Number(targetVersion.split(".")[0]) >= 26)) {
+    if (isMcVersion26OrAbove(targetVersion)) {
       suggestions.push({
         action: "search_neoforge_docs",
         query: "ItemStack",
@@ -478,7 +493,7 @@ function buildQuerySuggestions(targetVersion: string, targetPlatform: string | u
     return suggestions;
   }
 
-  if (isMcVersionFamily(targetVersion, "26.1") || (isExactMcVersionToken(targetVersion) && Number(targetVersion.split(".")[0]) >= 26)) {
+  if (isMcVersion26OrAbove(targetVersion)) {
     suggestions.push({
       action: "search_neoforge_docs",
       query: "ItemStack",
@@ -507,9 +522,9 @@ function buildReferenceLinks(platform: string, version: string): Array<{ title: 
   if (platform === "neoforge" || platform === "forge") {
     links.unshift({ title: "NeoForge 1.20.2 发布说明", url: "https://neoforged.net/news/20.2release/" });
   }
-  // 仅目标版本 26.x 时附带 26.1 链接
+  // 目标版本 26 及以上（含 27.x，实测旧式即如此）附带 26.1 链接
   const v = version.trim();
-  if (isExactMcVersionToken(v) && Number(v.split(".")[0]) >= 26) {
+  if (isMcVersion26OrAbove(v)) {
     links.push({ title: "Fabric 移植索引（线上当前多为 26.1→26.2）", url: "https://docs.fabricmc.net/develop/porting/index" });
     links.push({ title: "NeoForge Primer 26.1", url: "https://docs.neoforged.net/primer/docs/26.1/" });
     if (isMcVersionFamily(v, "26.2")) {
@@ -915,7 +930,21 @@ export async function analyzePortingPath(args: unknown) {
     mcVersion: targetVer,
     mappings:
       targetPlatform === "fabric" || targetPlatform === "quilt"
-        ? (/^26\./.test(targetVer) ? "mojmap" : "yarn")
+        ? // V-14：原裸 `/^26\./` → 塌进既有 classifyMinecraftVersion 的 26.x band。
+          // 五档实测同值：1.20.4/1.21.11/27.1.1 → false，26.1/26.1.1 → true。
+          // 定义域内可证恒等：targetVer 已过上游 isExactMcVersionToken 门，合法 token
+          // 只有 1.x[.y] / 26.x[.y] / 27.x[.y]，`^26\.` 命中集 == classify 落到 "26.x" 集。
+          // 反例记录：本波一度写成 isMcVersionFamily(targetVer, "26")，**错**——该 helper
+          // 要求 family 参数自身也是合法 token，裸 "26" 过不了，结果对任何输入都 false，
+          // 由 test-wave-bcd.mjs 的 V-14 五档锁定当场抓到。
+          // L-1（本轮改行为）：只认 "26.x" 时 27.x 掉进 else 拿到 "yarn"，而同一 CLI 的
+          // convert_mapping --version=27.1.1 实测已返回 UNOBFUSCATED_NO_YARN（判据是
+          // mappings/unobfuscated.ts 的 major > 26 ⇒ 27.x 为 true）—— 一处说别用 Yarn、
+          // 一处推荐 Yarn，属自相矛盾。取「既有 classify==="26.x" ∪ isMcVersion26OrAbove」
+          // 只扩大 mojmap 覆盖面（27.x/28.x 转 mojmap），1.x 与 26.x 结论逐档不变。
+          (isMcVersion26OrAbove(targetVer) || classifyMinecraftVersion(targetVer) === "26.x"
+            ? "mojmap"
+            : "yarn")
         : (targetVersionInfo?.mappings?.[0] ?? mappings ?? null),
     java: targetVersionInfo?.java ?? javaForMcVersion(targetVer) ?? null,
   };

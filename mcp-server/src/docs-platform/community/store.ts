@@ -7,7 +7,7 @@
  * - links: 仅外链，getFull 不返回网页正文
  */
 
-import { existsSync, readFileSync } from "fs";
+import { existsSync, readFileSync, statSync } from "fs";
 import { join, relative, resolve, isAbsolute } from "path";
 import { resolveCommunityDir } from "../../utils/path.js";
 
@@ -105,6 +105,38 @@ export function tokenizeCommunityQuery(q: string): string[] {
   return [...new Set(out.filter((t) => t.length > 0))];
 }
 
+// ── D-48：body haystack 缓存（有界；按绝对路径 + (mtime,size) 失效）──────────
+const _bodyCache = new Map<string, { mtimeMs: number; size: number; at: number; text: string }>();
+const BODY_CACHE_CAP = 256;
+const BODY_CACHE_TTL_MS = 5 * 60 * 1000;
+const _bodyCounters = { reads: 0, hits: 0 };
+
+export interface CommunityReadStats {
+  /** 真正 readFileSync 正文的次数（改前 = 每次 search × 条目数） */
+  bodyReads: number;
+  /** haystack 缓存命中次数 */
+  bodyCacheHits: number;
+  /** 当前缓存条目数（恒 <= 256，与社区条目总数无关） */
+  bodyCacheSize: number;
+  cap: number;
+}
+
+export function getCommunityReadStats(): CommunityReadStats {
+  return {
+    bodyReads: _bodyCounters.reads,
+    bodyCacheHits: _bodyCounters.hits,
+    bodyCacheSize: _bodyCache.size,
+    cap: BODY_CACHE_CAP,
+  };
+}
+
+/** 测试用：清空 haystack 缓存并归零计数 */
+export function resetCommunityReadStats(): void {
+  _bodyCache.clear();
+  _bodyCounters.reads = 0;
+  _bodyCounters.hits = 0;
+}
+
 export class CommunityDocStore {
   private static readonly INDEX_TTL_MS = 5 * 60 * 1000;
   private root: string;
@@ -187,12 +219,33 @@ export class CommunityDocStore {
   /** 读正文进检索（links 跳过；体积封顶，避免偶发超大文件拖慢） */
   private bodyHaystack(e: CommunityIndexEntry): string {
     if (e.sourceKind === "links") return "";
-    const filePath = join(this.root, e.path);
+    const filePath = resolve(this.root, e.path);
     if (!existsSync(filePath)) return "";
+    // D-48：每次 search 都对全部条目 readFileSync → O(条目数) 次磁盘读。
+    // 正文 haystack 只截 12k 且转小写，结果稳定，按 (mtimeMs,size) 缓存即可。
+    let st: ReturnType<typeof statSync> | null = null;
     try {
+      st = statSync(filePath);
+    } catch {
+      return "";
+    }
+    const now = Date.now();
+    const hit = _bodyCache.get(filePath);
+    if (hit && hit.mtimeMs === st.mtimeMs && hit.size === st.size && now - hit.at < BODY_CACHE_TTL_MS) {
+      _bodyCounters.hits++;
+      return hit.text;
+    }
+    try {
+      _bodyCounters.reads++;
       let content = readFileSync(filePath, "utf8");
       content = stripLeadingFrontmatter(content);
-      return content.slice(0, 12_000).toLowerCase();
+      const text = content.slice(0, 12_000).toLowerCase();
+      _bodyCache.set(filePath, { mtimeMs: st.mtimeMs, size: st.size, at: now, text });
+      if (_bodyCache.size > BODY_CACHE_CAP) {
+        const oldest = _bodyCache.keys().next().value;
+        if (oldest !== undefined) _bodyCache.delete(oldest);
+      }
+      return text;
     } catch {
       return "";
     }
@@ -280,7 +333,16 @@ export class CommunityDocStore {
     if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(filePath)) {
       throw new CommunityDocNotFoundError(id);
     }
-    let content = stripLeadingFrontmatter(readFileSync(filePath, "utf8"));
+    // D-48：这里原先是裸 readFileSync —— existsSync 与 read 之间存在 TOCTOU，
+    // 且 H: 抖动 / EBUSY / 权限都会把「该条目取不到正文」升级成未捕获内部错误。
+    // 读失败一律回落到 CommunityDocNotFoundError（对外即 DOC_NOT_FOUND envelope）。
+    let raw: string;
+    try {
+      raw = readFileSync(filePath, "utf8");
+    } catch {
+      throw new CommunityDocNotFoundError(id);
+    }
+    let content = stripLeadingFrontmatter(raw);
     let truncated = false;
     if (Buffer.byteLength(content, "utf8") > GET_FULL_MAX_BYTES) {
       truncated = true;

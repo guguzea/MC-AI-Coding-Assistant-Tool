@@ -180,6 +180,29 @@ export function downloadDisabledActionable(detail: string): ActionEnvelope {
   );
 }
 
+/** runJava 内置兜底超时（15min）；调用点可传更贴合自身场景的值，仍可被 env 顶掉 */
+export const DEFAULT_JAVA_TIMEOUT_MS = 15 * 60_000;
+
+/**
+ * 解析 Java 子进程超时（D-2b）。优先级：
+ * 1. `MC_SKILL_JAVA_TIMEOUT_MS` —— override 语义必须最高，否则调用点写死的值（如 VineFlower
+ *    的 15min）在无网/大 jar 场景依旧无从放宽，正是本条被记为 PARTIAL 的未修半边。
+ * 2. 调用点显式传入的 `fallbackMs`。
+ * 3. `DEFAULT_JAVA_TIMEOUT_MS`。
+ *
+ * 非法值（非数字 / NaN / <=0）**一律忽略并继续下沉**：一个拼错的 `MC_SKILL_JAVA_TIMEOUT_MS=abc`
+ * 或 `=0` 绝不能变成「超时 0ms」而把刚起的 java 立刻 kill 掉。
+ */
+export function resolveJavaTimeoutMs(fallbackMs?: number): number {
+  const raw = (process.env.MC_SKILL_JAVA_TIMEOUT_MS ?? "").trim();
+  if (raw) {
+    const n = Number(raw);
+    if (Number.isFinite(n) && n > 0) return n;
+  }
+  if (typeof fallbackMs === "number" && Number.isFinite(fallbackMs) && fallbackMs > 0) return fallbackMs;
+  return DEFAULT_JAVA_TIMEOUT_MS;
+}
+
 export interface JavaRunResult {
   code: number | null;
   stdout: string;
@@ -193,7 +216,7 @@ export async function runJava(
   opts: { javaPath?: string | null; timeoutMs?: number; cwd?: string; env?: NodeJS.ProcessEnv } = {},
 ): Promise<JavaRunResult> {
   const javaPath = opts.javaPath ?? (await probeJava()).javaPath ?? "java";
-  const timeoutMs = opts.timeoutMs ?? 15 * 60_000;
+  const timeoutMs = resolveJavaTimeoutMs(opts.timeoutMs);
   return new Promise((resolve) => {
     const child = spawn(javaPath, args, {
       windowsHide: true,

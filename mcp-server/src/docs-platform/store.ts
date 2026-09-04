@@ -158,23 +158,50 @@ export const UNSUPPORTED_PLATFORM_MSG =
 export const UNSUPPORTED_PLATFORM_HINT =
   "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift 或 modloader；基岩请用 search_bedrock_docs";
 
-class UnsupportedPlatformStore implements IDocStore {
+/**
+ * A-33：不支持平台的**唯一** store 实现（原先在 store.ts 与 forge/index.ts 各有一份拷贝）。
+ *
+ * 两个使用点：
+ *  - `createDocStore(platform)` 走到未知平台兜底（本文件末尾）
+ *  - `forge/index.ts` 的 `getGenericStore("bedrock")`
+ *
+ * 签名取两份拷贝的并集（version/tags 全部可选）：可选形参可赋给必需形参，
+ * 因此 `implements IDocStore` 仍然成立，call site 零改动。
+ * 所有方法返回 never（只抛 DocNotFoundError(code:"UNSUPPORTED_PLATFORM")），
+ * 唯一差异就是可选性 —— 合并不会引入新的类型面。
+ */
+export class UnsupportedPlatformStore implements IDocStore {
   private static readonly MSG = UNSUPPORTED_PLATFORM_MSG;
   private static readonly HINT = UNSUPPORTED_PLATFORM_HINT;
 
   getAvailableVersions(): never {
     throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
   }
-  searchIndex(_query: string, _version: string, _tags?: string[]): never {
+  searchIndex(_query: string, _version?: string, _tags?: string[]): never {
     throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
   }
-  loadSummary(_pageId: string, _version: string): never {
+  loadSummary(_pageId: string, _version?: string): never {
     throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
   }
-  loadFullDoc(_pageId: string, _version: string, _highlightKey?: boolean): never {
+  loadFullDoc(_pageId: string, _version?: string, _highlightKey?: boolean): never {
     throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
   }
-  getRelatedDocs(_pageId: string, _version: string, _limit?: number): never {
+  getRelatedDocs(_pageId: string, _version?: string, _limit?: number): never {
+    throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
+  }
+  /**
+   * A-33 风险封堵：forge/index.ts 在 catch 分支里用 `typeof` 守卫鸭子类型调
+   * `describeVersionResolution`，在 meta 分支里调 `getLastSearchMeta`。
+   * 守卫本身安全（undefined 就走 else），但为了「任何越界成员访问都拿到
+   * UNSUPPORTED_PLATFORM envelope 而不是 TypeError」，这里显式实现同名抛错方法。
+   */
+  describeVersionResolution(_version?: string): never {
+    throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
+  }
+  getLastSearchMeta(): never {
+    throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
+  }
+  searchIndexDetailed(_query: string, _version?: string, _tags?: string[]): never {
     throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
   }
 }

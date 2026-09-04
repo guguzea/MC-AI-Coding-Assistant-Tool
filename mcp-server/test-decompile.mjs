@@ -37,7 +37,9 @@ function makeZip(files) {
     const dataBuf = Buffer.isBuffer(f.data) ? f.data : Buffer.from(String(f.data), "utf8");
     const method = f.deflate ? 8 : 0;
     const payload = f.deflate ? deflateRawSync(dataBuf) : dataBuf;
-    const flags = 0x0800; // UTF-8 names
+    // 默认 UTF-8 名（bit 11）；D-31 的位标记门用 `flags: 0` 造「未声明 UTF-8」条目。
+    // 同一个值同时写进 local header(+6) 与 central header(+8)，与实际打包工具的行为一致。
+    const flags = f.flags ?? 0x0800;
 
     const local = Buffer.alloc(30);
     local.writeUInt32LE(0x04034b50, 0);
@@ -1317,6 +1319,315 @@ section("java-pipeline argv / remapper classpath / mojmap tiny guard");
         "/c/mappings/yarn-1.20.1.tiny",
       ),
     );
+  });
+}
+
+// ── Wave 4 · A4 门（D-2b / D-17 / D-19 / D-22 / D-23 / D-31 / D-53）────────────
+// 全部依赖 Wave-4 的 TS 重编。`dist` 未重建时**必须显式 SKIP 而不是假绿**：
+// 哨兵 = java-process 新增导出 `resolveJavaTimeoutMs`（同一批构建里落进 dist）。
+section("Wave4-A4 decompile-family gates");
+{
+  const javaProc = await import("./dist/decompile/java/java-process.js");
+  if (typeof javaProc.resolveJavaTimeoutMs !== "function") {
+    console.log(
+      "  SKIP Wave4-A4 全部 7 条门：dist 尚未包含本批改动（缺 resolveJavaTimeoutMs 导出）。\n" +
+        "       待 Wave-close `npm run build` 后自动转绿；本批改动的即时证明见 temp/w4-A4-report.md 的 node -e 复现。",
+    );
+  } else {
+    const { resolveJavaTimeoutMs, DEFAULT_JAVA_TIMEOUT_MS } = javaProc;
+
+    // D-2b：优先级 env > 调用点兜底 > 内置默认；非法 env 必须下沉而不是变成 0ms
+    const savedTimeoutEnv = process.env.MC_SKILL_JAVA_TIMEOUT_MS;
+    try {
+      delete process.env.MC_SKILL_JAVA_TIMEOUT_MS;
+      test("D-2b 无 env 无入参 → 内置默认 15min", () => {
+        assert.equal(resolveJavaTimeoutMs(), DEFAULT_JAVA_TIMEOUT_MS);
+        assert.equal(DEFAULT_JAVA_TIMEOUT_MS, 900_000);
+      });
+      test("D-2b 无 env + 调用点兜底 → 用调用点值", () => {
+        assert.equal(resolveJavaTimeoutMs(1234), 1234);
+      });
+      test("D-2b MC_SKILL_JAVA_TIMEOUT_MS 优先级最高（盖住调用点写死值）", () => {
+        process.env.MC_SKILL_JAVA_TIMEOUT_MS = "4242";
+        assert.equal(resolveJavaTimeoutMs(1234), 4242);
+      });
+      test("D-2b 非法 env（abc / 0 / -5 / 空）一律忽略并继续下沉", () => {
+        for (const bad of ["abc", "0", "-5", "", "   ", "NaN", "Infinity"]) {
+          if (bad === "") delete process.env.MC_SKILL_JAVA_TIMEOUT_MS;
+          else process.env.MC_SKILL_JAVA_TIMEOUT_MS = bad;
+          assert.equal(resolveJavaTimeoutMs(1234), 1234, `非法 env「${bad}」不得改变超时`);
+          assert.equal(resolveJavaTimeoutMs(), DEFAULT_JAVA_TIMEOUT_MS, `非法 env「${bad}」不得变成 0ms`);
+        }
+      });
+    } finally {
+      if (savedTimeoutEnv === undefined) delete process.env.MC_SKILL_JAVA_TIMEOUT_MS;
+      else process.env.MC_SKILL_JAVA_TIMEOUT_MS = savedTimeoutEnv;
+    }
+
+    // D-17：listJarEntries 不再裸抛，缺失/坏 zip 都给 actionable
+    {
+      const { listJarEntries, analyzeModJar } = await import("./dist/decompile/services/mod-analyzer.js");
+      const dir = join(tmpdir(), `mc-skill-w4a17-${process.pid}`);
+      mkdirSync(dir, { recursive: true });
+      try {
+        test("D-17 listJarEntries：路径不存在 → ok:false + NOT_FOUND（不再静默 []）", () => {
+          const r = listJarEntries(join(dir, "nope.jar"));
+          assert.equal(r.ok, false);
+          assert.deepEqual(r.entries, []);
+          assert.equal(r.action?.code, "NOT_FOUND");
+        });
+        test("D-17 listJarEntries：相对路径 → INVALID_INPUT，不碰文件系统", () => {
+          const r = listJarEntries("relative/nope.jar");
+          assert.equal(r.ok, false);
+          assert.equal(r.action?.code, "INVALID_INPUT");
+        });
+        test("D-17 listJarEntries：中央目录被截断 → actionable 而非 ZipParseError 裸堆栈", () => {
+          const p = join(dir, "trunc.jar");
+          const full = makeZip([{ name: "fabric.mod.json", data: "{}" }]);
+          writeFileSync(p, full.subarray(0, full.length - 8));
+          const r = listJarEntries(p);
+          assert.equal(r.ok, false, "截断 jar 必须失败，不能假装列出 0 条");
+          assert.equal(r.action?.code, "INVALID_INPUT");
+          assert.match(r.action.message, /zip\/jar/);
+        });
+        test("D-17 listJarEntries：正常 jar → ok:true 且列出条目", () => {
+          const p = join(dir, "ok.jar");
+          writeFileSync(p, makeZip([{ name: "fabric.mod.json", data: "{}" }]));
+          const r = listJarEntries(p);
+          assert.equal(r.ok, true);
+          assert.deepEqual(r.entries, ["fabric.mod.json"]);
+        });
+        test("D-17 analyze_mod_jar：fileSize 取已读 buffer，不再二次 statSync", () => {
+          const p = join(dir, "size.jar");
+          const bytes = makeZip([{ name: "fabric.mod.json", data: JSON.stringify(FABRIC_MOD_JSON) }]);
+          writeFileSync(p, bytes);
+          const r = analyzeModJar(p);
+          assert.equal(r.fileSize, bytes.length, "fileSize 必须等于真实字节数");
+        });
+      } finally {
+        rmSync(dir, { recursive: true, force: true });
+      }
+    }
+
+    // D-19：meta 写失败 → 返回原因字符串，不抛穿 handler
+    {
+      test("D-19 writeDecompiledMeta 正常写入 → 返回 null 且落盘可读", () => {
+        const dir = join(tmpdir(), `mc-skill-w4a19-${process.pid}`);
+        mkdirSync(dir, { recursive: true });
+        try {
+          const err = writeDecompiledMeta(dir, "/x/mod.jar", {
+            version: "1.20.1",
+            mapping: "yarn",
+            remapped: true,
+            remapError: null,
+          });
+          assert.equal(err, null);
+          assert.equal(readDecompiledMeta(dir).version, "1.20.1");
+        } finally {
+          rmSync(dir, { recursive: true, force: true });
+        }
+      });
+      test("D-19 目录不存在 → 返回失败原因字符串而不是 throw", () => {
+        const missing = join(tmpdir(), `mc-skill-w4a19-missing-${process.pid}`, "nope");
+        let threw = null;
+        let ret;
+        try {
+          ret = writeDecompiledMeta(missing, "/x/mod.jar", {
+            version: null,
+            mapping: null,
+            remapped: false,
+            remapError: null,
+          });
+        } catch (err) {
+          threw = err;
+        }
+        assert.equal(threw, null, `写失败必须被内部捕获，实际抛出：${threw?.message}`);
+        assert.equal(typeof ret, "string");
+        assert.ok(String(ret).length > 0, "必须带回可展示给调用方的原因");
+      });
+    }
+
+    // D-22：patch 上界（实测值，见 temp/w4-A4-report.md 的 LIVE/CORPUS 双测）
+    {
+      const { parseMinecraftVersion } = await import("./dist/decompile/version-manager.js");
+      test("D-22 1.21.999 → supported:false（语法合法但不存在的 patch 必须拒）", () => {
+        const v = parseMinecraftVersion("1.21.999");
+        assert.equal(v.valid, true);
+        assert.equal(v.supported, false, "1.21.999 不能判 supported");
+        assert.equal(v.hasYarn, false);
+        assert.ok(v.error && /1\.21\.11/.test(v.error), `错误信息要带实测上界，实际: ${v.error}`);
+      });
+      test("D-22 已发布的 1.21.11 / 裸 1.21 / 1.20.6 仍 supported:true", () => {
+        for (const okV of ["1.21.11", "1.21", "1.20.6", "1.14.4", "1.19.4"]) {
+          assert.equal(parseMinecraftVersion(okV).supported, true, `${okV} 应受支持`);
+        }
+      });
+      test("D-22 上界按 minor 逐项生效，不是「统一 +10」的整数猜测", () => {
+        assert.equal(parseMinecraftVersion("1.14.50").supported, false);
+        assert.equal(parseMinecraftVersion("1.14.4").supported, true);
+        assert.equal(parseMinecraftVersion("1.16.6").supported, false);
+        assert.equal(parseMinecraftVersion("1.16.5").supported, true);
+        assert.equal(parseMinecraftVersion("1.20.7").supported, false);
+        assert.equal(parseMinecraftVersion("1.21.12").supported, false);
+      });
+    }
+
+    // D-23：\n / \t / \u 解码 + 不再二次解码
+    {
+      const { parseTomlValue, parseModsToml } = await import("./dist/decompile/services/toml-parse.js");
+      test("D-23 \\n \\t \\r \\b \\f 都解码", () => {
+        assert.equal(parseTomlValue(String.raw`"a\nb"`), "a\nb");
+        assert.equal(parseTomlValue(String.raw`"a\tb"`), "a\tb");
+        assert.equal(parseTomlValue(String.raw`"a\rb"`), "a\rb");
+      });
+      test("D-23 \\uXXXX / \\UXXXXXXXX 解码", () => {
+        assert.equal(parseTomlValue(String.raw`"s\u00e9"`), "sé");
+        assert.equal(parseTomlValue(String.raw`"x\U0001F600"`), "x\u{1F600}");
+      });
+      test('D-23 旧两遍正则的二次解码 bug：源 "\\\\\\"" 必须还原成两字符 \\"', () => {
+        // TOML 源文本： "\\"\""  → 期望：反斜杠 + 双引号
+        assert.equal(parseTomlValue('"\\\\""'.slice(0, 6)), parseTomlValue('"\\\\\\""'));
+        assert.equal(parseTomlValue(String.raw`"\\\""`), String.raw`\"`);
+      });
+      test("D-23 未知转义原样保留；位数不足的 \\u 不猜", () => {
+        assert.equal(parseTomlValue(String.raw`"a\qb"`), String.raw`a\qb`);
+        assert.equal(parseTomlValue(String.raw`"a\uZZZZ"`), String.raw`a\uZZZZ`);
+      });
+      test("D-23 经 parseModsToml 的 description 落地真实换行", () => {
+        const t = parseModsToml('[[mods]]\nmodId="m"\ndescription="line1\\nline2"\n');
+        assert.equal(t.mods[0]?.description, "line1\nline2");
+      });
+      test("D-23 字面字符串（单引号）不解释转义（TOML 规范）", () => {
+        assert.equal(parseTomlValue(String.raw`'a\nb'`), String.raw`a\nb`);
+      });
+    }
+
+    // D-31：中央目录 bit 11 决定名称编码，且两处读取器共用同一实现
+    {
+      const { listZipEntries: listViaDecompile, decodeZipEntryName, ZIP_FLAG_NAME_UTF8 } =
+        await import("./dist/decompile/zip-util.js");
+      const { listZipEntries: listViaUpdate } = await import("./dist/update/zip.js");
+      test("D-31 共用 helper 存在且 bit11 语义正确", () => {
+        assert.equal(ZIP_FLAG_NAME_UTF8, 0x800);
+        const buf = Buffer.from("caf\u00e9.txt", "utf8"); // C3 A9
+        assert.equal(decodeZipEntryName(buf, 0x800), "café.txt");
+        assert.equal(decodeZipEntryName(buf, 0x000), "cafÃ©.txt", "bit11=0 必须按字节 latin1，不产 U+FFFD");
+        assert.ok(!decodeZipEntryName(buf, 0).includes("\uFFFD"), "不得出现替换符");
+      });
+      test("D-31 bit11=0 时 update/zip 与 decompile/zip-util 给出同一个名字", () => {
+        const dir = join(tmpdir(), `mc-skill-w4a31-${process.pid}`);
+        mkdirSync(dir, { recursive: true });
+        try {
+          const p = join(dir, "latin.zip");
+          writeFileSync(p, makeZip([{ name: "café/notes.txt", data: "hi", flags: 0 }]));
+          const viaDecompile = listViaDecompile(readFileSync(p));
+          const viaUpdate = listViaUpdate(p);
+          assert.equal(viaUpdate.ok, true);
+          assert.deepEqual(
+            viaUpdate.entries,
+            viaDecompile,
+            "两处中央目录读取器必须共享 bit 11 判定（D-31 的原始分歧点）",
+          );
+          assert.equal(viaDecompile[0], "cafÃ©/notes.txt");
+        } finally {
+          rmSync(dir, { recursive: true, force: true });
+        }
+      });
+      test("D-31 bit11=1 仍按 UTF-8 还原（未回归）", () => {
+        const dir = join(tmpdir(), `mc-skill-w4a31b-${process.pid}`);
+        mkdirSync(dir, { recursive: true });
+        try {
+          const p = join(dir, "utf8.zip");
+          writeFileSync(p, makeZip([{ name: "café/notes.txt", data: "hi", flags: 0x800 }]));
+          assert.deepEqual(listViaUpdate(p).entries, ["café/notes.txt"]);
+          assert.deepEqual(listViaDecompile(readFileSync(p)), ["café/notes.txt"]);
+        } finally {
+          rmSync(dir, { recursive: true, force: true });
+        }
+      });
+    }
+
+    // D-53：子进程真跑一遍 guard（模块是 import 期副作用，只能在子进程里观测 stderr）
+    {
+      const cp = await import("node:child_process");
+      const guardPath = new URL("./dist/utils/node-sqlite-guard.js", import.meta.url).href;
+      const script = [
+        `import ${JSON.stringify(guardPath)};`,
+        `process.emitWarning('SQLite is an experimental feature and might change at any time', 'ExperimentalWarning');`,
+        `const e = new Error('some unrelated failure');`,
+        `e.code = 'ExperimentalWarning'; e.detail = 'totally unrelated detail';`,
+        `process.emitWarning(e);`,
+        `process.emitWarning(new Error('ExperimentalWarning: sqlite driver is down'));`,
+        `process.emitWarning('plain warning about mysql');`,
+      ].join("\n");
+      const child = join(tmpdir(), `mc-skill-w4a53-${process.pid}.mjs`);
+      writeFileSync(child, script, "utf8");
+      try {
+        const res = cp.spawnSync(process.execPath, [child], { encoding: "utf8" });
+        const err = `${res.stderr ?? ""}${res.stdout ?? ""}`;
+        test("D-53 真正的 node:sqlite ExperimentalWarning 仍被抑制", () => {
+          assert.ok(!/SQLite is an experimental feature/.test(err), `应被抑制，实际 stderr:\n${err}`);
+        });
+        test("D-53 门：code=ExperimentalWarning 且 detail 不提 sqlite → 必须仍然打印", () => {
+          assert.ok(/some unrelated failure/.test(err), `不该被吞掉，实际 stderr:\n${err}`);
+        });
+        test("D-53 门：message 里带 ExperimentalWarning+sqlite 字样但类型不是 Experimental → 必须打印", () => {
+          assert.ok(/sqlite driver is down/.test(err), `旧条件会因文本匹配吞掉它，实际 stderr:\n${err}`);
+        });
+        test("D-53 无关警告不受影响", () => {
+          assert.ok(/plain warning about mysql/.test(err), `实际 stderr:\n${err}`);
+        });
+      } finally {
+        rmSync(child, { force: true });
+      }
+    }
+  }
+}
+
+// ── Wave 4 · A9 P3 收口门（D-9 / D-12 / D-24）───────────────────────────────
+// 这三条是「行为等价、纯冗余/可读性」类：守卫**必须保留**（TS 收窄需要），而 D-24 的空操作**必须删除**。
+// 因此本组门只读源文本，不依赖 dist（永不 SKIP），把两个方向的回归都钉住。
+section("Wave4-A9 P3 cleanup guards (D-9 / D-12 / D-24)");
+{
+  const srcOf = (rel) => readFileSync(join(__dirname, "src", rel), "utf8");
+  const countOf = (hay, needle) => hay.split(needle).length - 1;
+
+  // D-9：循环出口守卫运行时不可达，但删了 `res` 不收窄 → res.body 报 TS18047（scratch 复现见 temp/w4-A9-report.md）
+  const http = srcOf("decompile/downloaders/http.ts");
+  test("D-9 http.ts 循环出口 res 守卫仍在且只有一处（TS 收窄需要，不得当死代码删）", () => {
+    assert.equal(
+      countOf(http, 'if (!res) throw new DownloadError("DOWNLOAD_FAILED", lastErr);'),
+      1,
+      "守卫被删除或复制：见 http.ts downloadFile 循环出口",
+    );
+    assert.match(http, /let res: Response \| null = null;/, "res 声明形态变了，收窄结论需重判");
+  });
+  test("D-9 守卫必须带着「为何不能删」的注释（防止下次清理批再判一遍）", () => {
+    assert.match(http, /\/\/ D-9[^\n]*\n(?:[^\n]*\n)*?[^\n]*TS18047/, "D-9 注释缺失或未说明 TS18047");
+  });
+
+  // D-12：`?? version` 运行时不可达，但删了 id 变 string|undefined → manifestId: string 报 TS2322
+  const mojang = srcOf("decompile/downloaders/mojang.ts");
+  test("D-12 mojang.ts `?? version` 兜底仍在（manifestId: string 需要它收窄）", () => {
+    assert.equal(countOf(mojang, "const id = exact?.id ?? version;"), 1, "兜底被删或被复制");
+    assert.match(mojang, /manifestId: string/, "MojangVersionEntry.manifestId 不再是必填 string，结论需重判");
+    assert.match(mojang, /\/\/ D-12[^\n]*\n(?:[^\n]*\n)*?[^\n]*TS2322/, "D-12 注释缺失或未说明 TS2322");
+  });
+
+  // D-24：非 global/非 sticky 正则的 test() 完全不读不写 lastIndex ⇒ 原重置是纯空操作，已删。
+  // 同时钉住「为什么是空操作」的前置不变量，避免日后加 g flag 把这次删除变成真 bug。
+  const sms = srcOf("decompile/services/search-mod-source.ts");
+  test("D-24 search-mod-source.ts 空操作 re.lastIndex = 0 已删除", () => {
+    assert.equal(countOf(sms, "re.lastIndex = 0;"), 0, "死代码回归");
+    assert.match(sms, /const matched = re \? re\.test\(lineText\)/, "逐行匹配调用点形态变了");
+  });
+  test("D-24 前置不变量：re 只用无 g/y 的 \"i\" 构造（加 g 就必须补回 lastIndex 重置）", () => {
+    assert.match(sms, /re = new RegExp\(query, "i"\);/, "构造点 flags 变了，D-24 结论不再成立");
+    assert.ok(
+      !/new RegExp\(\s*query\s*,\s*"[^"]*[gy]/.test(sms),
+      "query 正则被加上 g/y flag：D-24 删掉的重置会变成真 bug，必须补回并改判",
+    );
+    assert.match(sms, /\/\/ D-24[^\n]*\n[^\n]*g[^\n]*lastIndex/, "D-24 注释缺失：未记录 flags 约束");
   });
 }
 

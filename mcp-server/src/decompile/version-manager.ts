@@ -27,6 +27,32 @@ export interface VersionInfo {
 
 const RELEASE_RE = /^(\d+)\.(\d+)(?:\.(\d+))?$/;
 
+/**
+ * 1.14–1.21 各 minor 的**已发布正式版最高 patch**（D-22 上界；`:108` 分支用它拒绝
+ * `1.21.999` / `1.14.50` 这类语法合法但根本不存在的版本）。
+ *
+ * 上界全部来自实测，不取整数猜测（两套不同机制，同日测量）：
+ * - **LIVE**：GET `https://meta.fabricmc.net/v2/versions/game`，过滤 `stable: true`
+ *   的正式版后按 minor 取最大 patch：
+ *   `14→4, 15→2, 16→5, 17→1, 18→2, 19→4, 20→6, 21→11`
+ *   （1.21.x 实测全集：1.21 / 1.21.1…1.21.11，无 1.21.12+）
+ * - **CORPUS**：`list_doc_versions --platform=fabric` 与本仓 `data/*_1.21*` 目录，
+ *   1.21 侧最高同为 `1.21.11`（`fabric_1.21.11` / `neoforge_1.21.11` / `quilt_1.21.11`）
+ *
+ * 本表键集合即 yarn 两步 remap 区间的**已发布** minor；缺键一律不放行，
+ * 新 minor 发布后必须重测再补，不允许靠 `minor <= 21` 的开区间默认通过。
+ */
+const MAX_RELEASED_PATCH_BY_MINOR: Readonly<Record<number, number>> = {
+  14: 4,
+  15: 2,
+  16: 5,
+  17: 1,
+  18: 2,
+  19: 4,
+  20: 6,
+  21: 11,
+};
+
 export function parseMinecraftVersion(input: string): VersionInfo {
   const version = (input ?? "").trim();
   if (!version) {
@@ -72,6 +98,8 @@ export function parseMinecraftVersion(input: string): VersionInfo {
     };
   }
 
+  // patch 只做数值化；**上界校验在下面的 1.14–1.21 分支用 MAX_RELEASED_PATCH_BY_MINOR 兜**
+  // （D-22：`1.21.999` / `1.14.50` 语法合法但根本不存在，必须 supported:false）
   const major = Number(m[1]);
   const minor = Number(m[2]);
   const patch = m[3] !== undefined ? Number(m[3]) : null;
@@ -104,8 +132,25 @@ export function parseMinecraftVersion(input: string): VersionInfo {
     };
   }
 
-  // 1.14 – 1.21.x：yarn 两步 remap
+  // 1.14 – 1.21.11：yarn 两步 remap（patch 必须落在实测的已发布上界内，D-22）
   if (minor >= 14 && minor <= 21) {
+    const maxPatch = MAX_RELEASED_PATCH_BY_MINOR[minor];
+    if (maxPatch === undefined || (patch !== null && patch > maxPatch)) {
+      return {
+        version,
+        valid: true,
+        error:
+          maxPatch === undefined
+            ? `1.${minor} 不在已发布且具备 yarn/mojmap 映射的 minor 列表内（支持区间：1.14–1.21.11 与 26.1+）`
+            : `1.${minor}.${patch} 不是已发布的正式版：实测 1.${minor} 最高只到 1.${minor}.${maxPatch}（支持区间：1.14–1.21.11 与 26.1+）`,
+        major,
+        minor,
+        patch,
+        hasYarn: false,
+        unobfuscated: false,
+        supported: false,
+      };
+    }
     return {
       version,
       valid: true,

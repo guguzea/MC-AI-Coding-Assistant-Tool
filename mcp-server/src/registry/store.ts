@@ -3,7 +3,7 @@ import { DatabaseSync } from "node:sqlite";
 import { vanillaRegistrySqlitePath } from "./builder.js";
 
 const _cache = new Map<string, DatabaseSync>();
-const REGISTRY_DB_CAP = 8;
+export const REGISTRY_DB_CAP = 8;
 
 function openRegistryDb(version: string): DatabaseSync | null {
   const path = vanillaRegistrySqlitePath(version);
@@ -125,6 +125,13 @@ export function registryDataAvailable(version: string): boolean {
 }
 
 export function closeRegistryDbs(): void {
-  for (const db of _cache.values()) db.close();
+  // 信号处理里调用：一条 close() 抛错不能影响其余句柄（A-19）
+  for (const db of _cache.values()) {
+    try {
+      db.close();
+    } catch {
+      /* 已关闭或句柄损坏 */
+    }
+  }
   _cache.clear();
 }

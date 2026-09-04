@@ -6,6 +6,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, statSync } from "fs";
 import { join } from "path";
 import { extractZip as mdkExtractZip, probeUnzipTool } from "../mdk/index.js";
 import { isUnsafeZipEntry, isWindowsReservedName } from "../utils/zip-path-guard.js";
+import { decodeZipEntryName } from "../decompile/zip-util.js";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
 
 export interface ZipListResult {
@@ -61,10 +62,14 @@ export function listZipEntries(zipPath: string): ZipListResult {
           ),
         };
       }
+      const flags = st.readUInt16LE(pos + 8);
       const nameLen = st.readUInt16LE(pos + 28);
       const extraLen = st.readUInt16LE(pos + 30);
       const commentLen = st.readUInt16LE(pos + 32);
-      const name = st.subarray(pos + 46, pos + 46 + nameLen).toString("utf8");
+      // D-31：名称编码必须按中央目录 general-purpose bit 11 判定，且与
+      // decompile/zip-util.ts 共用同一个 decodeZipEntryName（旧实现一律 utf8，
+      // 非 UTF-8 名会被折叠成 U+FFFD，与真实条目名不再相等）。
+      const name = decodeZipEntryName(st.subarray(pos + 46, pos + 46 + nameLen), flags);
       if (name && !name.endsWith("/")) entries.push(name.replace(/\\/g, "/"));
       pos += 46 + nameLen + extraLen + commentLen;
     }

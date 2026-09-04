@@ -11,7 +11,7 @@
  *  - semanticSearch：有 chunk 时 matches 非空
  */
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync, readFileSync, existsSync, copyFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
@@ -38,7 +38,7 @@ import {
 } from "./dist/docs-platform/search-utils.js";
 
 import { mergeSemanticResults } from "./dist/docs-platform/search-utils.js";
-import { getSemanticIndexStatus } from "./dist/docs-platform/semantic/status.js";
+import { getSemanticIndexStatus, closeSemanticStatusDbs } from "./dist/docs-platform/semantic/status.js";
 import { isSemanticIndexStale } from "./dist/docs-platform/semantic/fingerprint.js";
 
 let failures = 0;
@@ -532,6 +532,222 @@ test("#4b 源更新时仍须判 stale", () => {
       versionDir: dir,
     });
     assert.equal(stale.stale, true, `源更新时必须判 stale: ${JSON.stringify(stale)}`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+// ── A-38：语义库开库数与文档树数量解耦（LRU + meta memo）────────────────────
+
+function makeSemanticTree(root, version) {
+  const versionDir = join(root, `fabric_${version}`, "fabric-docs", version);
+  mkdirSync(join(versionDir, "semantic"), { recursive: true });
+  const db = new DatabaseSync(join(versionDir, "semantic", "db.sqlite"));
+  db.exec(SEMANTIC_DDL);
+  db.exec(
+    `INSERT INTO meta (key, value) VALUES ('docs','1'),('chunks','1'),('embedded','1'),('built_at','2020-01-01T00:00:00.000Z')`,
+  );
+  db.close();
+}
+
+function copySemanticTree(fromRoot, toRoot, fromVersion, toVersion) {
+  const src = join(fromRoot, `fabric_${fromVersion}`, "fabric-docs", fromVersion, "semantic", "db.sqlite");
+  const dstDir = join(toRoot, `fabric_${toVersion}`, "fabric-docs", toVersion, "semantic");
+  mkdirSync(dstDir, { recursive: true });
+  copyFileSync(src, join(dstDir, "db.sqlite"));
+}
+
+function timedStatus(root) {
+  const t0 = Date.now();
+  const st = getSemanticIndexStatus(root);
+  return { ms: Date.now() - t0, st };
+}
+
+function median3(fn) {
+  const a = [fn(), fn(), fn()].map((x) => x.ms);
+  return a.sort((x, y) => x - y)[1];
+}
+
+test("A-38 dbOpens <= 8 且与语义库个数无关（60 → 120 棵树）", () => {
+  const N = 60;
+  const root = mkdtempSync(join(tmpdir(), "mc-a38-"));
+  try {
+    for (let i = 1; i <= N; i++) makeSemanticTree(root, `2.0.${i}`);
+    const cap = getSemanticIndexStatus(root).readStats.cap;
+    assert.equal(cap, 8, "LRU 上限必须等于 registry/store.ts 的 REGISTRY_DB_CAP(8)");
+
+    timedStatus(root); // 冷趟（建 memo）
+    const warmN = timedStatus(root);
+    const statsN = warmN.st.readStats;
+    assert.ok(statsN.dbOpens <= cap, `${N} 库 dbOpens=${statsN.dbOpens} 必须 <= ${cap}`);
+    assert.equal(statsN.memoHits >= N, true, "热趟必须全部 memo 命中");
+    const medA = median3(() => timedStatus(root));
+
+    // 翻倍语料：只复制文件，不新增任何依赖
+    for (let i = 1; i <= N; i++) copySemanticTree(root, root, `2.0.${i}`, `3.0.${i}`);
+    const cold2N = timedStatus(root);
+    const warm2N = timedStatus(root);
+    const stats2N = warm2N.st.readStats;
+
+    assert.equal(stats2N.dbOpens, statsN.dbOpens, `N 翻倍后 dbOpens 必须不变：${statsN.dbOpens} → ${stats2N.dbOpens}`);
+    assert.ok(stats2N.dbOpens <= cap, `翻倍后 dbOpens 仍须 <= ${cap}`);
+    assert.equal(
+      stats2N.opensTotal,
+      cold2N.st.readStats.opensTotal,
+      `热趟不得再开新库（这才是「与 N 无关」的硬证据）：${JSON.stringify(cold2N.st.readStats)} → ${JSON.stringify(stats2N)}`,
+    );
+    assert.equal(stats2N.memoHits >= 2 * N, true, "翻倍后热趟仍须全命中");
+    assert.equal(typeof warm2N.st.presentCount, "number", "readStats 不得挤掉既有状态字段");
+    assert.equal(typeof warm2N.st.modeHint, "string", "readStats 不得挤掉既有状态字段");
+
+    const medB = median3(() => timedStatus(root));
+    console.log(`      A-38 实测：${N} 库热趟中位=${medA}ms，${2 * N} 库热趟中位=${medB}ms（改前每库一次 open）`);
+    // +25ms 项是目录遍历本身的 O(N) 地板；开库次数与 N 解耦由上面的 opensTotal==0 增量断言
+    assert.ok(
+      medB <= medA * 1.2 + 25,
+      `翻倍语料 wall-clock 必须远小于线性增长：${medA}ms → ${medB}ms（改前每多一个库多一次 open）`,
+    );
+  } finally {
+    // A-38 后句柄被长期持有：Windows 下不先 close 就删不掉（实测 EBUSY）。
+    // 这正是 update/data.ts swapInDataDir 的 rename 与进程退出必须先调
+    // closeSemanticStatusDbs() 的原因（见 temp/w4-A3-cross.patch P3/P4）。
+    closeSemanticStatusDbs();
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("A-38 真实语料：探测点 >> 8 时 dbOpens 仍 <= 8", () => {
+  const dataRoot = process.env.MC_SKILL_DATA || join(process.cwd(), "..", "data");
+  if (!existsSync(dataRoot)) {
+    console.log(`      A-38：${dataRoot} 不存在，跳过真实语料断言`);
+    return;
+  }
+  try {
+    timedStatus(dataRoot);
+    const st = timedStatus(dataRoot).st;
+    const probed = st.readStats.memoHits + st.readStats.memoMisses;
+    assert.ok(probed > st.readStats.cap, `真实语料探测点应远大于 8，实际 ${probed}`);
+    assert.ok(
+      st.readStats.dbOpens <= st.readStats.cap,
+      `真实语料 ${probed} 个探测点 → dbOpens=${st.readStats.dbOpens} 必须 <= ${st.readStats.cap}`,
+    );
+    console.log(
+      `      A-38 真实语料：探测点=${probed} present=${st.presentCount} dbOpens=${st.readStats.dbOpens} dbPrepares=${st.readStats.dbPrepares}`,
+    );
+  } finally {
+    closeSemanticStatusDbs();
+  }
+});
+
+// ── A-33：不支持平台的 store 只剩一份 ───────────────────────────────────────
+
+test("A-33 UnsupportedPlatformStore 单一实现（src / dist 文本面）", () => {
+  const srcForge = readFileSync(join(process.cwd(), "src", "docs-platform", "forge", "index.ts"), "utf8");
+  const srcStore = readFileSync(join(process.cwd(), "src", "docs-platform", "store.ts"), "utf8");
+  assert.ok(!/class UnsupportedPlatformStore/.test(srcForge), "forge/index.ts 不得再自带一份拷贝");
+  assert.ok(/export class UnsupportedPlatformStore/.test(srcStore), "store.ts 必须导出唯一实现");
+  const storeImport = /import\s*\{([^}]*)\}\s*from\s*"\.\.\/store\.js"/.exec(srcForge);
+  assert.ok(
+    storeImport && /\bUnsupportedPlatformStore\b/.test(storeImport[1]),
+    `forge/index.ts 必须从 ../store.js 导入共享类，实际语句：${JSON.stringify(storeImport && storeImport[0])}`,
+  );
+  const distForge = join(process.cwd(), "dist", "docs-platform", "forge", "index.js");
+  if (existsSync(distForge)) {
+    assert.ok(
+      !/class UnsupportedPlatformStore/.test(readFileSync(distForge, "utf8")),
+      "dist/forge/index.js 不应再编译出第二份拷贝（重建 dist 后生效）",
+    );
+  }
+});
+
+testAsync("A-33 两个使用面全部抛 UNSUPPORTED_PLATFORM（含 3 参 searchIndex）", async () => {
+  const { createDocStore, UnsupportedPlatformStore } = await import("./dist/docs-platform/store.js");
+  assert.equal(typeof UnsupportedPlatformStore, "function", "共享类必须被导出");
+  const faces = [
+    ["createDocStore(未知平台)", createDocStore("spongebob", "unused")],
+    ["getGenericStore('bedrock') 的同一实例", new UnsupportedPlatformStore()],
+  ];
+  for (const [label, store] of faces) {
+    const calls = [
+      ["getAvailableVersions", () => store.getAvailableVersions()],
+      ["searchIndex(3 参)", () => store.searchIndex("q", "1.20.1", ["tag"])],
+      ["searchIndex(1 参)", () => store.searchIndex("q")],
+      ["loadSummary", () => store.loadSummary("id", "1.20.1")],
+      ["loadFullDoc", () => store.loadFullDoc("id", "1.20.1", true)],
+      ["getRelatedDocs", () => store.getRelatedDocs("id", "1.20.1", 3)],
+      ["describeVersionResolution", () => store.describeVersionResolution("1.20.1")],
+      ["getLastSearchMeta", () => store.getLastSearchMeta()],
+      ["searchIndexDetailed", () => store.searchIndexDetailed("q", "1.20.1")],
+    ];
+    for (const [member, fn] of calls) {
+      let code;
+      try {
+        fn();
+      } catch (e) {
+        code = e?.code;
+      }
+      assert.equal(code, "UNSUPPORTED_PLATFORM", `${label}.${member} 实际 code=${String(code)}`);
+    }
+  }
+});
+
+testAsync("A-33 工具面未漂移：platform=bedrock 仍被 schema 挡在门外", async () => {
+  const { searchDocsSchema } = await import("./dist/docs-platform/forge/index.js");
+  assert.equal(
+    searchDocsSchema.inputSchema.safeParse({ query: "x", platform: "bedrock", version: "stable" }).success,
+    false,
+    "合并不得让 bedrock 从 schema 侧漏进 Java 文档工具",
+  );
+});
+
+// ── D-49：读不出来的源文件 → 不可判定，而不是崩 ────────────────────────────
+
+test("D-49 源文件读失败 → undecidable（投毒：index-l0.json 换成目录，必然 EISDIR）", () => {
+  const dir = mkdtempSync(join(tmpdir(), "mc-d49-"));
+  try {
+    mkdirSync(join(dir, "processed"), { recursive: true });
+    writeFileSync(join(dir, "processed", "a.md"), "# A\n");
+    const ok = isSemanticIndexStale({
+      builtAtIso: new Date(Date.now() + 60_000).toISOString(),
+      storedFingerprint: "x",
+      versionDir: dir,
+    });
+    assert.equal(ok.stale, false, JSON.stringify(ok));
+
+    rmSync(join(dir, "processed", "a.md"));
+    mkdirSync(join(dir, "index-l0.json")); // existsSync 通过、readFileSync 必 EISDIR
+    let r;
+    assert.doesNotThrow(() => {
+      r = isSemanticIndexStale({
+        builtAtIso: new Date(Date.now() + 60_000).toISOString(),
+        storedFingerprint: "x",
+        versionDir: dir,
+      });
+    }, "读失败不得把异常抛到 search / diagnose 外面");
+    assert.equal(r.stale, false, `不可判定不得冒充过期：${JSON.stringify(r)}`);
+    assert.equal(r.undecidable, true, `必须显式标 undecidable：${JSON.stringify(r)}`);
+    assert.match(r.reason ?? "", /undecidable/, `reason 要说明原因：${r.reason}`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("D-49 源文件被删（竞态窗口）后指纹路径不崩", () => {
+  const dir = mkdtempSync(join(tmpdir(), "mc-d49b-"));
+  try {
+    mkdirSync(join(dir, "processed"), { recursive: true });
+    writeFileSync(join(dir, "index-l0.json"), JSON.stringify({ docs: [] }), "utf8");
+    writeFileSync(join(dir, "processed", "a.md"), "# A\n");
+    rmSync(join(dir, "processed", "a.md"));
+    let r;
+    assert.doesNotThrow(() => {
+      r = isSemanticIndexStale({
+        builtAtIso: new Date(Date.now() - 120_000).toISOString(),
+        storedFingerprint: "different",
+        versionDir: dir,
+      });
+    });
+    assert.equal(typeof r.stale, "boolean");
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

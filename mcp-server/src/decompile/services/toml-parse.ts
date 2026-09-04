@@ -39,6 +39,68 @@ export function stripTomlCommentOutsideQuotes(raw: string): string {
   return raw;
 }
 
+/**
+ * TOML 基础字符串转义解码（D-23）。
+ *
+ * 旧实现是「两遍正则」：先折叠成对反斜杠，再把 \" 换成引号。与下面的单遍扫描
+ * 用 node 逐序列对拍过（只列发散项）：
+ * 1. \n / \t / \uXXXX 完全不解码——mods.toml 的 description 常写 \n，
+ *    旧实现把字面「反斜杠 n」直接送进工具输出；
+ * 2. 第二遍会吃掉第一遍刚产出的反斜杠：输入 a\\" 旧得 a"、新得 a\"；
+ *    输入 \\"b 旧得 "b、新得 \"b。
+ *    而 \\→\、\"→"、\\\"→\" 三类两遍与单遍结果一致（已对拍），
+ *    发散只发生在「成对反斜杠后紧跟未转义引号」这一形态。
+ * 故改成单趟扫描：一次读一个转义序列，未知转义原样保留，绝不回头重解。
+ */
+export function unescapeTomlBasicString(src: string): string {
+  let out = "";
+  for (let i = 0; i < src.length; i++) {
+    const c = src[i];
+    if (c !== "\\") {
+      out += c;
+      continue;
+    }
+    const n = src[i + 1];
+    if (n === undefined) {
+      out += "\\"; // 末尾孤立反斜杠：原样保留，不吞字符
+      break;
+    }
+    switch (n) {
+      case "b": out += "\b"; i++; continue;
+      case "t": out += "\t"; i++; continue;
+      case "n": out += "\n"; i++; continue;
+      case "f": out += "\f"; i++; continue;
+      case "r": out += "\r"; i++; continue;
+      case '"': out += '"'; i++; continue;
+      case "\\": out += "\\"; i++; continue;
+      case "u":
+      case "U": {
+        const width = n === "u" ? 4 : 8;
+        const hex = src.slice(i + 2, i + 2 + width);
+        if (hex.length !== width || !/^[0-9a-fA-F]+$/.test(hex)) {
+          out += "\\" + n; // 位数不足/非十六进制：不是合法转义，原样保留
+          i++;
+          continue;
+        }
+        const cp = parseInt(hex, 16);
+        const valid = n === "u" ? cp <= 0xffff : cp <= 0x10ffff;
+        if (!valid) {
+          out += "\\" + n + hex;
+          i += 1 + width;
+          continue;
+        }
+        out += String.fromCodePoint(cp);
+        i += 1 + width;
+        continue;
+      }
+      default:
+        out += "\\" + n; // 未知转义不猜语义，原样保留
+        i++;
+    }
+  }
+  return out;
+}
+
 export function parseTomlValue(raw: string): string {
   const v = raw.trim();
   if (v.startsWith("{") || v.startsWith("[")) {
@@ -48,7 +110,7 @@ export function parseTomlValue(raw: string): string {
     return v.slice(1, -1);
   }
   if (v.startsWith('"') && v.endsWith('"') && v.length >= 2) {
-    return v.slice(1, -1).replace(/\\\\/g, "\\").replace(/\\"/g, '"');
+    return unescapeTomlBasicString(v.slice(1, -1));
   }
   return v;
 }

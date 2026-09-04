@@ -76,6 +76,12 @@ export interface ModDecompileResult {
   remapFailed?: boolean;
   /** 输出中的类/方法名为混淆名或中间名，不可当正式 API 使用。 */
   degraded?: boolean;
+  /**
+   * D-19：产物已真实产出，但完成标记 `.mc-skill-decompiled.json` 写入失败。
+   * `found: true` 仍然成立（源码树可用），只是后续缓存命中判据缺失；原因写在 `warnings` 里。
+   * 字段缺席 = 本次标记写入正常。
+   */
+  partial?: boolean;
   warnings?: string[];
   note?: string;
   error?: string;
@@ -467,12 +473,23 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   }
 
   recordDecompiledDir(args.jarPath, outDir, modId, cache.root);
-  writeDecompiledMeta(outDir, args.jarPath, {
+  // D-19：标记写失败**不再是本次调用的失败**。源码树已经真实产出并已记进 cache 索引，
+  // 丢的只是后续命中判据；这里降级成 partial success + warnings，绝不把异常抛穿
+  // `wave/register.ts` 的 handler（旧行为：前五步全白做且返回非 actionable）。
+  const metaWriteError = writeDecompiledMeta(outDir, args.jarPath, {
     version: requestedKey.version,
     mapping: requestedKey.mapping,
     remapped,
     remapError,
   });
+  const degradation = decompileDegradation(remapped, remapError);
+  if (metaWriteError !== null) {
+    degradation.warnings.push(
+      `反编译产物已生成（partial success），但完成标记写入失败：${metaWriteError}。` +
+        `本次源码树可直接使用；search_mod_code 对该目录的缓存命中判据（version/mapping）会缺失，` +
+        `可重试 decompile_mod_jar { jarPath, force: true } 或在可写盘上重建缓存。`,
+    );
+  }
   // remap 失败降级后输出的是混淆/中间名，必须在**结构字段**上诚实暴露，
   // 不能只写进 note——调用方无法从字符串里可靠判定结果是否可用。
   return {
@@ -485,7 +502,8 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
     requestedVersion: args.version,
     outputDir: outDir,
     ...summarizeTree(outDir),
-    ...decompileDegradation(remapped, remapError),
+    ...degradation,
+    ...(metaWriteError !== null ? { partial: true } : {}),
     remapped,
     cacheStale: false,
     note: remapped
@@ -515,20 +533,30 @@ export interface DecompiledMeta {
 }
 
 /**
- * 记录本次反编译完成标记（search_mod_code / readDecompiledMeta 以此为缓存完成判据）。
+ * 记录本次反编译完成标记（search_mod_code / 缓存命中判据以此为完成判据）。
  * `cache` 必填：判据字段缺失会让后续命中把「未知」当成「一致」而冒领产物。
+ *
+ * D-19：**不再抛出**。产物已经真实存在于 `dir`，标记写失败（只读缓存盘 / 磁盘满 /
+ * 并发清理）只是丢了后续命中判据，不是本次调用失败。返回 `null` = 已写入，
+ * 返回字符串 = 失败原因，由调用方降级成 partial success + `warnings`。
+ * 旧实现在 try 之外裸抛，会一路穿出 `wave/register.ts` 的 handler，前五步全部白做。
  */
 export function writeDecompiledMeta(
   dir: string,
   jarPath: string,
   cache: { version: string | null; mapping: string | null; remapped: boolean; remapError: string | null },
-): void {
+): string | null {
   const metaFile = join(dir, ".mc-skill-decompiled.json");
-  writeFileSync(
-    metaFile,
-    JSON.stringify({ jarPath, ...cache, completedAt: new Date().toISOString() }, null, 2) + "\n",
-    "utf8",
-  );
+  try {
+    writeFileSync(
+      metaFile,
+      JSON.stringify({ jarPath, ...cache, completedAt: new Date().toISOString() }, null, 2) + "\n",
+      "utf8",
+    );
+    return null;
+  } catch (err) {
+    return `${(err as Error).message}（${metaFile}）`;
+  }
 }
 
 /** 读取反编译目录信息（search_mod_code / 缓存命中判据） */

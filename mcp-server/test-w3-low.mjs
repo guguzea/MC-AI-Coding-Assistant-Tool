@@ -183,4 +183,67 @@ function makeStoreZip(name, data, { lieCsize } = {}) {
   console.log("D12 query_api methods cap: ok");
 }
 
+// ── W4 组4（A6）：D-37 / D-40 / D-41 / D-50 / D-51 ──
+// dist 本波禁止重建，故这几条按「源文本 + 独立复算」双机制核，重建后再补运行时门。
+{
+  const { readFileSync } = await import("node:fs");
+  const src = (p) => readFileSync(join(repo, "mcp-server/src", p), "utf8");
+
+  // D-37：从源码里把通用绝对路径脱敏的正则字面量抠出来，再用它真跑一遍
+  const ex = src("loader-api/extract.ts");
+  assert.ok(
+    !ex.includes("\\/Users|") && !ex.includes("\\/opt|"),
+    "D-37 仍在枚举 Unix 根目录",
+  );
+  const scrubLine = ex.split(/\r?\n/).find((l) => l.includes(".replace(") && l.includes('"$1[redacted-path]"'));
+  assert.ok(scrubLine, "D-37 通用绝对路径脱敏缺失");
+  const lit = scrubLine.slice(scrubLine.indexOf(".replace(") + ".replace(".length, scrubLine.lastIndexOf(", "));
+  assert.ok(lit.startsWith("/") && lit.endsWith("/g"), `D-37 抠出的不是正则字面量: ${lit}`);
+  const scrubRe = new RegExp(lit.slice(1, lit.lastIndexOf("/")), lit.slice(lit.lastIndexOf("/") + 1));
+  const scrub = (s) => s.replace(scrubRe, "$1[redacted-path]");
+  for (const probe of [
+    "parse error in /etc/zzz/Secret.java",
+    "/mnt/data/X.java:3",
+    "src=path=/opt/secret/Y.java",
+    "/home/foo/Bar.java",
+  ]) {
+    assert.ok(!scrub(probe).match(/\/(?:etc|mnt|opt|home)\//), `D-37 未脱敏: ${probe} -> ${scrub(probe)}`);
+  }
+  assert.ok(scrub("relative/a/b.java").includes("relative/a/b.java"), "D-37 误伤相对片段");
+  console.log("D-37 extract.ts Unix 绝对路径通用脱敏: ok");
+
+  // D-40：奇数个 ``` 必须落在整数上
+  const pr = src("docs-platform/neoforge/primers.ts");
+  assert.match(pr, /codeBlockCount:\s*Math\.floor\(/, "D-40 未取整");
+  for (const fences of [1, 3, 5, 7]) {
+    const body = "```".repeat(fences);
+    const n = Math.floor((body.match(/```/g) ?? []).length / 2);
+    assert.ok(Number.isInteger(n), `D-40 ${fences} 个围栏得到非整数 ${n}`);
+  }
+  assert.equal(Math.floor(("```".repeat(5).match(/```/g) ?? []).length / 2), 2, "D-40 奇数围栏应向下取整");
+  console.log("D-40 primers codeBlockCount 取整: ok");
+
+  // D-41：4 个实现签名必须必填 version，schema 侧仍声明必填
+  const nf = src("docs-platform/neoforge/index.ts");
+  assert.ok(!/^\s*version\?:\s*string;$/m.test(nf), "D-41 仍有 version?: string 实现签名");
+  const required = nf.match(/^\s*version: string;$/gm) ?? [];
+  assert.equal(required.length, 4, `D-41 必填 version 实现签名应为 4 个，实为 ${required.length}`);
+  const schemaReq = nf.match(/version: z\.string\(\)/g) ?? [];
+  assert.ok(schemaReq.length >= 4, `D-41 zod schema 必填 version 应 >= 4，实为 ${schemaReq.length}`);
+  console.log("D-41 neoforge 4 个实现签名 version 必填: ok");
+
+  // D-50 / D-51
+  const ty = src("workers/types.ts");
+  assert.ok(!/interface\s+WorkerMessage\b/.test(ty), "D-51 死类型 WorkerMessage 仍在");
+  assert.match(ty, /type WorkerOutMessage\b[^;]*PreloadQueuedMessage/, "D-50 queued ack 未进共享出向类型");
+  const pl = src("workers/preloader.ts");
+  assert.match(pl, /async function buildTrieIndex\(classNames: string\[\], deadline: number\)/, "D-50 构建未分片限时");
+  assert.match(pl, /await buildTrieIndex\(classNames, deadline\)/, "D-50 调用点未 await");
+  assert.ok(!/if \(preloadRunning\) return;/.test(pl), "D-50 静默丢弃分支仍在");
+  assert.match(pl, /type: "queued"/, "D-50 无 ack");
+  assert.match(pl, /pendingStart = data/, "D-50 重复 start 未入队");
+  assert.ok(!/interface PreloadConfig\b/.test(pl), "D-51 入站契约仍分裂两份");
+  console.log("D-50/D-51 preloader+types 消息契约: ok");
+}
+
 console.log("test-w3-low: ok");

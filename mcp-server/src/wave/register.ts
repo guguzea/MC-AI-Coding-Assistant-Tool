@@ -152,7 +152,8 @@ export const readKnowledgeResourceSchema = z.object({ uri: z.string() });
 export const ANALYZE_LOG_DESCRIPTION = "Analyze game / crash log excerpt";
 export const READ_KNOWLEDGE_RESOURCE_DESCRIPTION = "Read knowledge resource by URI";
 export const GENERATE_CONFIG_DESCRIPTION =
-  "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。neoforge 1.21+/26.1/1.20.4/1.20.6 用 ModConfigSpec；1.20.1 用 ForgeConfigSpec（Forge 兼容）。fabric/quilt 生成 Cloth Config 最小骨架并 warning 声明依赖（非官方 loader API）。返回骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。";
+  "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。neoforge 1.21+/26.1/1.20.4/1.20.6 用 ModConfigSpec；1.20.1 用 ForgeConfigSpec（Forge 兼容）。fabric/quilt 生成 Cloth Config 最小骨架并 warning 声明依赖（非官方 loader API）。" +
+  "library 可选 cloth|yacl，默认 cloth：YACL 只是显式 opt-in，骨架仅结构壳（未核实处标 TODO），编译前必须先对用户自备 yacl jar 跑 ingest_loader_api 入库，再逐签名 query_loader_api 复核。返回骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。";
 export const GENERATE_NETWORK_PACKET_DESCRIPTION = generateNetworkPacketDescription();
 export const GENERATE_CAPABILITY_DESCRIPTION =
   "Generate Capability / DataAttachment skeleton。platform 与 version 必填。当前支持：forge 1.20.1（及 1.18.2–1.20.4）Capability；neoforge 1.20.1 同 Capability 形态，1.20.4+ Data Attachment。fabric/quilt → error 改口 CCA。返回骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。";
@@ -231,6 +232,8 @@ export const generateConfigSchema = z.object({
   modId: z.string(),
   loader: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填，禁止默认 forge"),
   version: z.string().describe("必填。neoforge 1.20.4+/1.21+/26.1 用 ModConfigSpec；1.20.1 用 ForgeConfigSpec；fabric/quilt 为 Cloth Config 骨架"),
+  library: z.enum(["cloth", "yacl"]).default("cloth")
+    .describe("仅 fabric/quilt 生效；默认 cloth（现状不变）。yacl 为显式 opt-in，骨架仅结构壳：YACL 不是 loader API，传 yacl 后必须先对用户自备 yacl jar 跑 ingest_loader_api 才能编译"),
   ...generateWriteFields,
 });
 export const generateEntityRendererSchema = z.object({
@@ -621,7 +624,7 @@ export function registerWaveExtensions(server: McpServer): void {
     inputSchema: generateConfigSchema,
   }, async (a) =>
     jsonResult(
-      maybeWriteGeneratorResult(generateConfig(a.modId, a.loader, a.version), {
+      maybeWriteGeneratorResult(generateConfig(a.modId, a.loader, a.version, a.library), {
         write: a.write,
         confirmed: a.confirmed,
         projectPath: a.projectPath,

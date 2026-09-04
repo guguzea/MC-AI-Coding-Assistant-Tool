@@ -202,7 +202,8 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
 2. 分支：
    - Forge：ForgeConfigSpec
    - NeoForge 1.20.1：ForgeConfigSpec（forgeCompatible）；1.20.4 / 1.20.6 / 1.21+ / 26.1：ModConfigSpec（禁止把 1.20.4 写成 ForgeConfigSpec）
-   - Fabric/Quilt：Cloth Config（mc-config Skill）；不要生成 ForgeConfigSpec
+   - Fabric/Quilt：默认 Cloth Config（mc-config Skill）；不要生成 ForgeConfigSpec。\`generate_config\` 的 \`library\` 参数为 opt-in 枚举 cloth|yacl（默认 cloth），只有用户显式要 YACL 才传 yacl。
+   - 传了 library=yacl：返回的是结构壳（除类声明与已核实成员名外全是 \`// TODO(未核实)\`），编译前必须由用户自备 yacl jar 跑一次 ingest_loader_api（默认 dryRun，只写 $MC_SKILL_CACHE overlay）再 query_loader_api 逐签名核对；禁止凭记忆补 YetAnotherConfigLib / @ConfigInstance / ModMenuApi 方法链。
    - LiteLoader / Rift / ModLoader / 基岩：不要生成 ForgeConfigSpec / Cloth / YACL
 3. 注册到 ModConfig / Cloth 屏幕按该档；缺依赖要在 fabric.mod.json / mods.toml 声明。`,
   },

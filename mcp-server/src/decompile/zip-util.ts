@@ -41,6 +41,25 @@ function findEocd(buf: Buffer): number {
   throw new ZipParseError("未找到 End of Central Directory 记录（不是有效的 zip/jar）");
 }
 
+/** ZIP general-purpose bit 11 = 条目名/注释以 UTF-8 编码（APPNOTE 4.4.4）。 */
+export const ZIP_FLAG_NAME_UTF8 = 0x800;
+
+/**
+ * 按中央目录 general-purpose **bit 11** 解码条目名（D-31）。
+ * `update/zip.ts` 与 `loader-api/ingest.ts` 等所有走中央目录的读取方必须复用本函数，
+ * 不能再各写一份 `toString("utf8")`。
+ *
+ * - bit11=1 → UTF-8。
+ * - bit11=0 → 名称是 CP437/OEM 家族的老式编码（Windows 自带压缩、Java 8 以前的
+ *   `ZipFile`、很多 CI 打包脚本都留 0）。Node 无 CP437 解码器，这里取 `latin1`：
+ *   它是**字节 1:1 映射**，不产生 U+FFFD 替换符、也不把不同非法字节折叠成同一字符，
+ *   因此路径比较与后续 `isUnsafeZipEntry` 判定仍按真实字节走，只是显示上是 mojibake。
+ *   对照旧 bug：一律 utf8 会把非法字节折叠成 U+FFFD，条目名与真实名不再相等。
+ */
+export function decodeZipEntryName(nameBuf: Buffer, flags: number): string {
+  return flags & ZIP_FLAG_NAME_UTF8 ? nameBuf.toString("utf8") : nameBuf.toString("latin1");
+}
+
 function parseCentralEntries(buf: Buffer, cdOffset: number, cdSize: number, count: number): CentralEntry[] {
   if (cdOffset + cdSize > buf.length) {
     throw new ZipParseError("中央目录越界（文件被截断）");
@@ -63,7 +82,7 @@ function parseCentralEntries(buf: Buffer, cdOffset: number, cdSize: number, coun
       throw new ZipParseError("中央目录条目名称区越界");
     }
     const nameBuf = buf.subarray(pos + 46, pos + 46 + nameLen);
-    const name = flags & 0x800 ? nameBuf.toString("utf8") : nameBuf.toString("latin1");
+    const name = decodeZipEntryName(nameBuf, flags);
     entries.push({ name, method, csize, usize, localOffset, flags, crc32: crc });
     pos += 46 + nameLen + extraLen + commentLen;
   }

@@ -15,7 +15,13 @@
 import * as z from "zod";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { ForgeDocStore, DocNotFoundError, VersionNotFoundError, IndexCorruptError } from "./store.js";
-import { createDocStore, resolvePlatformDataDir, type IDocStore, type Platform, UNSUPPORTED_PLATFORM_HINT, UNSUPPORTED_PLATFORM_MSG } from "../store.js";
+import {
+  createDocStore,
+  resolvePlatformDataDir,
+  UnsupportedPlatformStore,
+  type IDocStore,
+  type Platform,
+} from "../store.js";
 import { searchFabricDocs } from "../fabric/index.js";
 import { resolveDataDir } from "../../utils/path.js";
 import {
@@ -109,32 +115,12 @@ function platformRequiredResult(): CallToolResult {
 
 const _genericStoreCache = new Map<string, IDocStore>();
 
-// ── 不支持平台的 store 实现 ─────────────────────────────────────────────────────
-
-/**
- * 当平台不支持时返回此 store，所有方法都抛出 DocNotFoundError(code: UNSUPPORTED_PLATFORM)。
- * 这样行为统一，调用方收到一致的错误 envelope。
- */
-class UnsupportedPlatformStore implements IDocStore {
-  private static readonly MSG = UNSUPPORTED_PLATFORM_MSG;
-  private static readonly HINT = UNSUPPORTED_PLATFORM_HINT;
-
-  getAvailableVersions(): never {
-    throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
-  }
-  searchIndex(_query: string, _version?: string): never {
-    throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
-  }
-  loadSummary(_pageId: string, _version?: string): never {
-    throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
-  }
-  loadFullDoc(_pageId: string, _version?: string): never {
-    throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
-  }
-  getRelatedDocs(_pageId: string, _version?: string): never {
-    throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
-  }
-}
+// ── 不支持平台的 store：A-33 起统一用 docs-platform/store.ts 的唯一实现 ───────
+//
+// 原来这里还有一份逐字相同的 UnsupportedPlatformStore 拷贝（5 个方法全是抛
+// UNSUPPORTED_PLATFORM，只有形参可选性与 store.ts 那份不同）。两份拷贝各自
+// 只被 new 一次：store.ts 的 createDocStore 未知平台兜底 + 这里的
+// getGenericStore("bedrock")。现已合并为 docs-platform/store.ts 的导出类。
 
 function getGenericStore(platform: Platform): IDocStore {
   if (platform === "bedrock") {

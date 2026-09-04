@@ -139,6 +139,14 @@ export async function importTinyIntoDb(db, tinyPath, meta = {}, { strict = false
   }
   for (const m of parsed.methods) {
     if (!m.ownerNamed || !m.nameNamed) continue;
+    // `<init>` / `<clinit>` are deliberately NOT stored. Yarn tiny for 1.19.4 / 1.20.1 /
+    // 1.20.4 carries 3,784 / 3,919 / 4,070 METHOD lines whose named column is literally
+    // `<init>` (other versions carry none), so `methods` rows < meta.methodCount by exactly
+    // that amount — that is the designed shape, not data loss. The tolerance-0 gate models
+    // this same rule in build-yarn-mappings.mjs#isSkippedBySqliteBuilder; the two MUST move
+    // together (measured: storing the ctor rows makes verify go red on
+    // `census methods.inserted: json/tiny=36036 sqlite=39820`).
+    // meta.*Count = source line counts; meta.stored*Count below = actual table rows.
     if (m.nameNamed.startsWith("<")) continue;
     insertMethod.run(
       m.ownerNamed,
@@ -160,6 +168,10 @@ export async function importTinyIntoDb(db, tinyPath, meta = {}, { strict = false
       f.nameIntermediary || null,
     );
   }
+  // COUNT(*) — not the loop counter — so PK collapses can never hide behind meta again.
+  const storedClassCount = db.prepare("SELECT COUNT(*) AS c FROM classes").get().c;
+  const storedMethodCount = db.prepare("SELECT COUNT(*) AS c FROM methods").get().c;
+  const storedFieldCount = db.prepare("SELECT COUNT(*) AS c FROM fields").get().c;
   setMeta(db, {
     schemaVersion: SCHEMA_VERSION,
     version: meta.version ?? "",
@@ -168,9 +180,15 @@ export async function importTinyIntoDb(db, tinyPath, meta = {}, { strict = false
     source: meta.source ?? tinyPath,
     sourceFile: meta.source ?? tinyPath,
     builtAt: new Date().toISOString(),
+    // *Count = source line counts (what the tiny carried, including `<init>` lines).
+    // stored*Count = rows actually in the table. Kept separate on purpose; a gap
+    // between the two now only means malformed/empty-named lines were skipped.
     classCount: String(parsed.classes.length),
     methodCount: String(parsed.methods.length),
     fieldCount: String(parsed.fields.length),
+    storedClassCount: String(storedClassCount),
+    storedMethodCount: String(storedMethodCount),
+    storedFieldCount: String(storedFieldCount),
     buildWarnings: JSON.stringify(parsed.warnings ?? []),
   });
   db.exec("COMMIT");

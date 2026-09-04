@@ -131,6 +131,8 @@ export function searchModSource(args: SearchModSourceArgs): SearchModSourceResul
       );
     }
     try {
+      // D-24：flag 只能是不含 g / y 的 "i" —— 逐行匹配依赖 test() 完全不读不写 lastIndex。
+      // 若日后加上 g，命中会在同一行文本上从上次结束处续扫，必须同时在循环里补回 lastIndex = 0。
       re = new RegExp(query, "i");
     } catch (err) {
       return fail(
@@ -166,7 +168,6 @@ export function searchModSource(args: SearchModSourceArgs): SearchModSourceResul
     for (let i = 0; i < lines.length; i++) {
       const lineText = lines[i];
       if (lineText.length > MAX_LINE_LEN && re) continue;
-      if (re) re.lastIndex = 0;
       const matched = re ? re.test(lineText) : lineText.toLowerCase().includes(query.toLowerCase());
       if (matched) {
         hits.push({

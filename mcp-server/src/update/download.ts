@@ -2,7 +2,7 @@
  * Stream download with host allowlist, timeout, exponential backoff retry.
  */
 
-import { createWriteStream, existsSync, mkdirSync, unlinkSync, rmSync } from "fs";
+import { createWriteStream, existsSync, mkdirSync, statSync, unlinkSync, rmSync } from "fs";
 import { dirname } from "path";
 import { pipeline } from "stream/promises";
 import { Readable } from "stream";
@@ -138,7 +138,7 @@ export async function downloadToFile(
         }
         const nodeStream = Readable.fromWeb(res.body as import("stream/web").ReadableStream);
         await pipeline(nodeStream, createWriteStream(destPath));
-        const { size } = await import("fs").then((fs) => fs.statSync(destPath));
+        const { size } = statSync(destPath);
         return { ok: true, path: destPath, bytes: size, attempts: attempt };
       } finally {
         clearTimeout(timer);
@@ -156,7 +156,7 @@ export async function downloadToFile(
             headers: { "User-Agent": "MC-AI-Coding-Assistant-Tool-updater" },
           }, downloadTimeoutMs());
           if (viaCurl.status >= 200 && viaCurl.status < 300 && existsSync(destPath)) {
-            const { size } = await import("fs").then((fs) => fs.statSync(destPath));
+            const { size } = statSync(destPath);
             return { ok: true, path: destPath, bytes: size, attempts: attempt };
           }
           lastErr = `curl HTTP ${viaCurl.status}`;

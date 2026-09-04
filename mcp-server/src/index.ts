@@ -5,6 +5,8 @@ import { fileURLToPath } from "url";
 import { warmupApi, DEFAULT_VERSION } from "./api/index.js";
 import { diagnoseDataPaths, hasAnyPlatformData, assertDataUsable } from "./utils/path.js";
 import { clearPendingRestart } from "./update/index.js";
+import { closeRegistryDbs } from "./registry/index.js";
+import { closeSemanticStatusDbs } from "./docs-platform/semantic/status.js";
 import { server } from "./tool-registry.js";
 
 export * from "./tool-registry.js";
@@ -30,6 +32,27 @@ if (isMainModule()) {
   process.on("uncaughtException", (err) => {
     console.error("[mc-mcp-server] uncaughtException:", err);
   });
+
+  // A-19：注册表 sqlite 句柄缓存在模块级 Map 里；收到终止信号时必须先 closeRegistryDbs()
+  // 再退出，否则句柄留给进程拆除阶段（node:sqlite 会报未关闭句柄）。
+  let closingDbs = false;
+  const onShutdownSignal = (exitCode: number) => {
+    if (closingDbs) return;
+    closingDbs = true;
+    try {
+      closeRegistryDbs();
+    } catch (err) {
+      console.error("[mc-mcp-server] closeRegistryDbs failed:", err);
+    }
+    try {
+      closeSemanticStatusDbs();
+    } catch (err) {
+      console.error("[mc-mcp-server] closeSemanticStatusDbs failed:", err);
+    }
+    process.exit(exitCode);
+  };
+  process.on("SIGINT", () => onShutdownSignal(130));
+  process.on("SIGTERM", () => onShutdownSignal(143));
 
   if (process.env.MC_SKILL_DEBUG_PATHS === "1") {
     console.error("[mc-mcp-server] Data paths:", JSON.stringify(diagnoseDataPaths(), null, 2));

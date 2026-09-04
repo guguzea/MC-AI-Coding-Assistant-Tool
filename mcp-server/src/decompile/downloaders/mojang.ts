@@ -55,6 +55,9 @@ export async function fetchVersionManifest(force = false): Promise<{ versions: A
 export async function resolveMojangVersion(version: string, force = false): Promise<MojangVersionEntry> {
   const manifest = await fetchVersionManifest(force);
   const exact = manifest.versions.find((v) => v.id === version);
+  // D-12：`?? version` 运行时不可达 —— id 的消费点全在 exact 为真的分支里，或在其后的 else 抛之后；
+  // 且 find 谓词已保证 exact.id === version。但去掉它会把 id 推成 `string | undefined`，
+  // 下方 `manifestId: id`（MojangVersionEntry.manifestId: string）随即报 TS2322。保留兜底，勿删。
   const id = exact?.id ?? version;
 
   let versionJson: VersionJson;

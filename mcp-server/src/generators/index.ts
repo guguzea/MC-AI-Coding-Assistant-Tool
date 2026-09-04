@@ -1170,10 +1170,92 @@ function isForgeConfigSpecVersion(version: string): boolean {
   return minor >= 13 && minor <= 21;
 }
 
+/**
+ * YACL 骨架（generate_config library=yacl 专用；D-4=A，opt-in，默认仍是 Cloth）。
+ *
+ * 证据边界：本仓库对 YACL 只有类名与成员名，没有任何官方方法链语料
+ * （YetAnotherConfigLib 的 methods 是空数组、Option 只有 canResetToDefault()、
+ * ConfigInstance/GsonConfigInstance 只有 save()/load()/getPath()，
+ * @ConfigInstance / ModMenuApi / initialize 全仓零命中）。
+ * 因此这里只允许：类声明 + 已核实成员名 + 已核实依赖标识符 + 包名分歧说明；
+ * 其余调用点一律 `// TODO(未核实)`，禁止凭训练记忆补方法链。
+ */
+function yaclConfigSkeleton(
+  modValue: string,
+  pascal: string,
+  loader: "fabric" | "quilt",
+  version: string,
+): GeneratorResult {
+  const body = `package com.example.${modValue}.config;
+
+// ── YACL 骨架（结构壳，不是可编译 API 用法）────────────────────────────────
+// YACL 是显式 opt-in 的结果；不传 library 时 generate_config 在 ${loader} 上默认仍吐 Cloth Config。
+// 编译前置（强制）：先 ingest_loader_api(jarPath=<你自备的 yacl jar 绝对路径>, mappingsVersion=...)
+// 把 YACL 抽成摘要写入 $MC_SKILL_CACHE overlay（禁写仓库 data/），再 query_loader_api 逐签名复核，
+// 才能把下面的 TODO 换成真实调用。选型/版本窗口只认 knowledge/libs/all-platforms/mc-yacl/SKILL.md。
+//
+// 本仓库对 YACL 的全部已核实事实（只到成员名，无返回类型/无泛型形态/无静态性）：
+//   modId=yacl、slug=yacl、loaders=fabric|forge|neoforge|quilt、官方仓库 isXander/YetAnotherConfigLib
+//     —— mcp-server/src/diagnostics/library-catalog.ts:17549-17556
+//   dev.isxander.yacl.config.GsonConfigInstance：save() / load() / getPath()
+//   dev.isxander.yacl.config.ConfigInstance：save() / load() / getConfig() / setConfig(T) / getDefaults() / getConfigClass()
+//   dev.isxander.yacl.api.YetAnotherConfigLib：语料 methods 为空数组 ⇒ 签名完全未核实
+//   dev.isxander.yacl.api.Option：语料只有 canResetToDefault()
+//     —— mcp-server/data/lib-api-summaries/yacl.json:87-112
+//   包名前缀两说不一致：摘要里是 dev.isxander.yacl.*，catalog 的 1.20+ 条目记 dev.isxander.yacl3
+//     （library-catalog.ts:17586 / :17594 / :17607）⇒ import 行取哪一说未核实。
+// 故本骨架刻意不落任何 import：包名前缀定了再补。
+
+public final class ${pascal}Config {
+
+    // TODO(未核实): 见 mc-yacl SKILL.md —— 配置持有类（POJO + 序列化）的 YACL 注解形态零语料。
+    public static final class Data {
+        public boolean enableFeature = true;
+    }
+
+    public static final Data CONFIG = new Data();
+
+    // TODO(未核实): 见 mc-yacl SKILL.md —— 类上 @ConfigInstance 注解在本仓库零命中，不得臆造。
+    // TODO(未核实): 见 mc-yacl SKILL.md —— implements GsonConfigInstance 的泛型形态未记录，故此处不 implements。
+
+    // 已核实成员名只有 save() / load() / getPath()（yacl.json:100-112），返回类型与调用对象未记录。
+    public static void save() {
+        // TODO(未核实): 见 mc-yacl SKILL.md —— save() 的宿主对象与签名要先 ingest 你的 yacl jar。
+    }
+
+    public static void load() {
+        // TODO(未核实): 见 mc-yacl SKILL.md —— load() 同上，只有成员名有语料。
+    }
+
+    public static String configPath() {
+        // TODO(未核实): 见 mc-yacl SKILL.md —— getPath() 同上，返回类型是本地假设，不是语料。
+        return "config/${modValue}.json";
+    }
+
+    // TODO(未核实): 见 mc-yacl SKILL.md —— YetAnotherConfigLib Builder → OptionGroup → Option → Screen 整条链零签名语料。
+    // TODO(未核实): 见 mc-yacl SKILL.md —— ${loader} 侧 Mod Menu 入口（ModMenuApi）与模组 initialize 注册点全仓零命中。
+    // TODO(未核实): 见 mc-yacl SKILL.md —— Maven 坐标 / Gradle 仓库地址本仓库无语料（lib-yacl.md 明确「以官方 README 为准」）。
+}
+`;
+  const todoCount = (body.match(/TODO\(未核实\)/g) ?? []).length;
+  return {
+    code: withDocsReviewHeader(body, "query_loader_api", version),
+    warnings: [
+      `YACL 为 opt-in、默认仍 Cloth；本骨架 ${todoCount} 处签名未核实，先 \`ingest_loader_api\` 用户自备 yacl jar 再补。`,
+      "YACL 不是官方 loader API；未 ingest 前 query_loader_api 只会 found:false，禁止凭记忆补方法链（选型见 knowledge/libs/all-platforms/mc-yacl/SKILL.md）。",
+      "包名前缀两说（dev.isxander.yacl vs dev.isxander.yacl3），本骨架刻意不落 import；定了再补。",
+      "Screen 构建只在客户端；配置屏不要在服务端加载。",
+      "请在 build.gradle / " + (loader === "quilt" ? "quilt.mod.json" : "fabric.mod.json") + " 声明 yacl 依赖（硬 depends 或软 suggests）；未声明则无法编译。",
+      ...(loader === "quilt" ? ["Quilt 不要把 YACL 当成 QSL。"] : []),
+    ],
+  };
+}
+
 export function generateConfig(
   modId: string,
   loader?: "forge" | "neoforge" | "fabric" | "quilt",
   version?: string,
+  library?: "cloth" | "yacl",
 ): GeneratorResult {
   if (!loader) {
     return { code: null, errors: ["loader 必填（forge | neoforge | fabric | quilt），禁止默认 forge。" + noNativeGeneratorError("search_*_docs", "规则 00 / mc-config Skill")] };
@@ -1188,6 +1270,9 @@ export function generateConfig(
   if (!mod) return { code: null, errors: ["无效 modId"] };
 
   if (loader === "fabric" || loader === "quilt") {
+    if (library === "yacl") {
+      return yaclConfigSkeleton(mod.value, toPascalCase(mod.value), loader, version.trim());
+    }
     return {
       code: `package com.example.${mod.value}.config;
 

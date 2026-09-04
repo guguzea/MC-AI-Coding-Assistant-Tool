@@ -5,6 +5,7 @@
  */
 
 import { isExactMcVersionToken, isMcVersionFamily } from "../utils/minecraft-version.js";
+import { ownGet } from "../utils/own-record.js";
 import { normalizeModIdentifier, toJavaClassName } from "./common.js";
 import * as forge from "./forge-1.20.1.js";
 import { generateFabric, type FabricProviderType, type FabricIdStyle } from "./fabric.js";
@@ -122,6 +123,41 @@ const FABRIC_DATAGEN_RECIPE_VERSIONS = new Set(["1.21.1", "1.21.3", "1.21.4", "1
 // ③ `fabric/1.21.11/.cursor/rules/07-datagen.mdc:155-159` 明确把单层带参写法列为「1.21.11 不存在，编译器直接拒」。
 const FABRIC_RECIPE_TWO_LAYER_VERSIONS = new Set(["1.21.3", "1.21.4", "1.21.8", "1.21.10", "1.21.11"]);
 
+/**
+ * C-17：白名单外的 Fabric 1.21.x 档**逐个**给出拒因（不允许只回「尚无模板」）。
+ * 为什么不直接把这些档加进 FABRIC_DATAGEN_RECIPE_VERSIONS：三处独立测量一致表明
+ * 「本仓库对该档零语料」，骨架里的类名/方法名无处可核：
+ *  ① `ls data | grep fabric_1.21` → 只有 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11；
+ *     1.21.2 / 1.21.5 / 1.21.6 / 1.21.7 / 1.21.9 **无目录**。
+ *  ② `find data -name yarn-mappings.sqlite` → 同样只覆盖上面 6 档（`mcp-server/data/fabric_1.21.4/mappings/`
+ *     实有 yarn-1.21.4+build.8-tiny.gz + yarn-mappings.sqlite；1.21.2/6/7/9 连目录都没有）。
+ *  ③ `ls fabric`（技能语料）→ 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2 有
+ *     `.cursor/rules/07-datagen.mdc`；1.21.2 / 1.21.6 / 1.21.7 / 1.21.9 **无版本目录**。
+ * 另：本地 `data/<loader>_<ver>/mappings/client.txt` 只有 forge_1.16.5–1.20.4（实测 ls），1.21.x 无 Mojang 官方
+ * client.txt 可核 → 单层/两层归属只能按「1.21.3 起两层」外推，属推定而非核实。
+ * 结论：不白名单化（无据可核就发骨架=编造 API），改为把拒因逐档写清。
+ * // TODO(未核实)：1.20.1 / 1.20.4 虽在 ①②③ 都有语料，但仍不在 recipe 白名单，
+ *   其「不发骨架」的具体原因本波没核到，沿用中性兜底文案，不编造。
+ */
+const FABRIC_DATAGEN_UNVERIFIED_REASONS: Record<string, string> = {
+  "1.21.2":
+    "1.21.2：夹在 1.21.1（单层 buildRecipes(RecipeOutput)）与 1.21.3（两层 createRecipeProvider）之间，" +
+    "本仓库无 data/fabric_1.21.2 目录、无 fabric_1.21.2/mappings/yarn-mappings.sqlite、无 fabric/1.21.2 规则档，" +
+    "该档落在哪一层无从核实；签名不猜就不发骨架。",
+  "1.21.5":
+    "1.21.5：本仓库无 data/fabric_1.21.5 目录、无 yarn-mappings.sqlite、无 fabric/1.21.5 规则档，" +
+    "RecipeProvider 构造签名未核到（旧文案所谓「无官方页」即此意），不发骨架。",
+  "1.21.6":
+    "1.21.6：按「1.21.3 起两层」外推应为 createRecipeProvider + 无参 buildRecipes，" +
+    "但本仓库无 data/fabric_1.21.6、无 yarn-mappings.sqlite、无 fabric/1.21.6 规则档，属推定未核实。",
+  "1.21.7":
+    "1.21.7：同 1.21.6 —— 两层形态为外推，且本仓库无 data/fabric_1.21.7、无 yarn-mappings.sqlite、" +
+    "无 fabric/1.21.7 规则档，未逐档核实。",
+  "1.21.9":
+    "1.21.9：相邻的 1.21.8 与 1.21.10 都在白名单，但本仓库独缺 data/fabric_1.21.9（无目录、" +
+    "无 yarn-mappings.sqlite、无 fabric/1.21.9 规则档），两档之间的 1.21.9 不能默认同签名。",
+};
+
 function isFabricDatagenVersion(version: string): boolean {
   const v = version.trim();
   if (isMcVersionFamily(v, "26.1")) return true;
@@ -213,7 +249,12 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
         usedModId: query.modId,
         usedTargetName: query.targetName,
         errors: [
-          `尚无 Fabric Datagen 模板覆盖 version=${ver}（已核实：1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 为 generate()；1.21.10 / 1.21.11 为 buildRecipes；26.1*）。1.20.1 / 1.20.4 / 1.21.5 无官方页或核不到签名。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_fabric_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。不要生成 Forge DataGen。`,
+          `尚无 Fabric Datagen 模板覆盖 version=${ver}。` +
+            (ownGet(FABRIC_DATAGEN_UNVERIFIED_REASONS, ver) ??
+              `本仓库对该档没有已核实的 Fabric Datagen 骨架（RecipeProvider 签名未逐档核实）。`) +
+            ` 已核实可发骨架的档：${[...FABRIC_DATAGEN_RECIPE_VERSIONS].join(" / ")} 与 26.1*。` +
+            `该版本无原生生成器，不要理解为游戏里做不了。请改用 search_fabric_docs 手动编写，` +
+            `参考规则 07-datagen / mc-datagen Skill。不要生成 Forge DataGen。`,
         ],
       };
     }

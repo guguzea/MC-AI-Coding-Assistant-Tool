@@ -122,10 +122,11 @@ function openDbCached(dbPath: string): MappingDb | null {
 /** Resolve best sqlite path for version (fabric preferred when useful). */
 export function resolveMappingDbPath(version: string): string | null {
   const v = normalizeMcVersion(version);
-  if (_pathCache.has(v)) return _pathCache.get(v) ?? null;
 
-  // 版本段非法（含路径穿越）→ 直接无库可解析，走上层 NOT_FOUND 降级
+  // A-39：先校验再查缓存 —— 非法版本段（含路径穿越）不允许作为 key 触到 _pathCache，
+  // 直接无库可解析，走上层 NOT_FOUND 降级。
   if (!isSafeVersionSegment(v)) return null;
+  if (_pathCache.has(v)) return _pathCache.get(v) ?? null;
   const fabric = fabricSqlitePath(v);
   const forge = forgeSqlitePath(v);
   if (!fabric || !forge) return null;
@@ -162,6 +163,8 @@ export function resolveMappingDbPath(version: string): string | null {
 /** Forge sqlite with searge_methods for searge↔named (mcp-csv era, or SRG/TSRG + CSV layer). */
 export function resolveCsvMappingDbPath(version: string): string | null {
   const v = normalizeMcVersion(version);
+  // A-39 同口径：校验先于缓存读，非法版本段不得作为 _csvPathCache 的 key。
+  if (!isSafeVersionSegment(v)) return null;
   if (_csvPathCache.has(v)) return _csvPathCache.get(v) ?? null;
   const forge = forgeSqlitePath(v);
   let chosen: string | null = null;

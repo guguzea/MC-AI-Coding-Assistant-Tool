@@ -204,7 +204,6 @@ export function searchNeoForgePrimers(args: {
   for (const p of primers) {
     const verHit = primerMatchesVersion(p, args.version);
     const s = scorePrimer(args.query, p) + (verHit ? 20 : 0);
-    if (s < 8 && !verHit) continue;
     if (!verHit && s < 16) continue;
     hits.push({
       id: p.id,
@@ -267,7 +266,7 @@ export function primerFullPayload(primer: PrimerEntry, full: boolean): Record<st
       tags: ["primer", "migration"],
       sections: primer.headings.slice(0, 40).map((title) => ({ title, level: 2, summary: "" })),
       hasCodeBlocks: /```/.test(primer.body),
-      codeBlockCount: (primer.body.match(/```/g) ?? []).length / 2,
+      codeBlockCount: Math.floor((primer.body.match(/```/g) ?? []).length / 2),
       keySections: 0,
       processedFile: primer.filePath,
     },

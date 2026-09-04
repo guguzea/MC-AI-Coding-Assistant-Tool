@@ -26,6 +26,12 @@ IF MC 版本在 YACL 窗口外（< 1.19）
   → 回退 Cloth Config
 ```
 
+### `generate_config` 与本表不同源 ≠ 矛盾
+
+- 工具在 fabric / quilt 上**默认永远吐 Cloth Config 骨架**（`library` 默认 `cloth`，不传即现状）。
+- YACL 只在显式传 `library=yacl` 时才出骨架，且出的是**结构壳**：类声明 + 已核实成员名 + 依赖标识符，其余调用点全是 `// TODO(未核实)`。
+- **选了 `library=yacl` 必须再做一步才能编译**：先对**用户自备的 yacl jar** 跑 `ingest_loader_api`（默认 dryRun，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁写仓库 `data/`），再 `query_loader_api` 逐签名核对后，才能把 TODO 换成真实调用。本仓库无 YACL 官方方法链语料，跳过这步 = 骨架编译不过。
+
 ## 硬 / 软依赖与类加载隔离
 
 - GUI 库一律软依赖：主代码 `compileOnly`，开发自测加 `runtimeOnly`；`fabric.mod.json` 用 `suggests`，`mods.toml` 用 optional

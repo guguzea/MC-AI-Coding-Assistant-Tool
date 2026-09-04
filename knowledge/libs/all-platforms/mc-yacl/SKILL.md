@@ -23,6 +23,13 @@ IF 新项目 / 长期维护需要 GUI 配置屏 → YACL 优先（或评估 Fzzy
    └─ 版本在 1.19-26.2 内与 MC 对齐（Modrinth 文件页）
 ```
 
+### MCP：`generate_config` 的 YACL 骨架是 opt-in 的结构壳
+
+- `generate_config` 在 fabric / quilt 上**默认仍吐 Cloth Config**；要 YACL 必须显式传 `library=yacl`（枚举只有 `cloth` / `yacl`，默认 `cloth`）。
+- `library=yacl` 返回的骨架只含类声明、已核实成员名（`GsonConfigInstance` 的 `save()/load()/getPath()`、`ConfigInstance` 的 6 个成员）与依赖标识符；本仓库对 YACL **没有官方方法链语料**（`lib-api-summaries/yacl.json` 里 `YetAnotherConfigLib` 的 methods 是空数组），所以其余调用点一律是 `// TODO(未核实)`。
+- **强制前置步骤**：选 YACL 的用户必须另外拿自己的 yacl jar 跑一次 `ingest_loader_api`（默认 dryRun，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁写仓库 `data/`），再用 `query_loader_api` 逐签名核对，骨架才可能编译。跳过这步 → 只能停留在 TODO，禁止照本 skill 的伪代码补方法链。
+- 包名前缀在本仓库两说（摘要记 `dev.isxander.yacl.*`，`library-catalog.ts` 的 1.20+ 条目记 `dev.isxander.yacl3`），ingest 后按实际 jar 定，别照抄。
+
 ## 软 / 硬依赖与类加载隔离
 
 - 开发依赖：`compileOnly`，自测加 `runtimeOnly`（坐标以 README 为准）

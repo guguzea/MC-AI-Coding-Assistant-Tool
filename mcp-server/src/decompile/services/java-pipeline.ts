@@ -16,7 +16,7 @@ import {
   setArtifact,
   getArtifact,
 } from "../cache.js";
-import { runJava } from "../java/java-process.js";
+import { runJava, resolveJavaTimeoutMs } from "../java/java-process.js";
 import { resolveMojangVersion } from "../downloaders/mojang.js";
 import { resolveYarnMappings, mappingCacheViable } from "../downloaders/yarn.js";
 import {
@@ -431,6 +431,10 @@ export function assertVineflowerDiskSpace(outDir: string, jarPath: string): void
  * destination 之后 VineFlower 输出 0 个文件）；未命中目标文件再全量反编译兜底。
  * 子进程 cwd 固定在缓存根：工具若把参数误读成相对路径，也只会在缓存目录里建垃圾，
  * 不会落在 MCP 进程的工作目录（= 用户仓库）里。
+ *
+ * D-2b：两处 runJava 显式传 `timeoutMs`。取值仍走 `resolveJavaTimeoutMs()` 的
+ * 内置兜底（不改默认时长——无 VineFlower 实测数据可支撑更宽的值，禁止臆造），
+ * 但从此有了一条真实可用的覆盖入口：`MC_SKILL_JAVA_TIMEOUT_MS`。
  */
 export async function decompileJar(
   gate: DownloadGate,
@@ -450,12 +454,13 @@ export async function decompileJar(
 
   assertVineflowerDiskSpace(outDir, jar);
 
-  const r = await runJava(vineflowerCli(gate.vineflower, jar, outDir, relPath), { cwd: cache.root });
+  const timeoutMs = resolveJavaTimeoutMs();
+  const r = await runJava(vineflowerCli(gate.vineflower, jar, outDir, relPath), { cwd: cache.root, timeoutMs });
   if (r.code !== 0) {
     throw new Error(`VineFlower 反编译失败(code=${r.code}): ${tail(r.stderr)}`);
   }
   if (!existsSync(targetFile)) {
-    const full = await runJava(vineflowerCli(gate.vineflower, jar, outDir), { cwd: cache.root });
+    const full = await runJava(vineflowerCli(gate.vineflower, jar, outDir), { cwd: cache.root, timeoutMs });
     if (full.code !== 0) {
       throw new Error(`VineFlower 全量反编译失败(code=${full.code}): ${tail(full.stderr)}`);
     }

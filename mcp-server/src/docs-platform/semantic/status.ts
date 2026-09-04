@@ -4,11 +4,141 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "fs";
 import { join } from "path";
 import { DatabaseSync } from "node:sqlite";
+import type { StatementSync } from "node:sqlite";
 import { EMBEDDING_MODEL } from "./embeddings.js";
 import { semanticDbPath } from "./search.js";
 import { isSemanticIndexStale } from "./fingerprint.js";
+import { REGISTRY_DB_CAP } from "../../registry/store.js";
 
 export type SemanticModeHint = "hybrid" | "fts5-only" | "l0-only";
+
+// ── A-38：只读句柄 LRU + meta 结果 memo（诊断用计数，不改 inspectDb 返回形状）──────
+//
+// 旧实现每次 inspectDb 都 new DatabaseSync + prepare，diagnose_data_paths 一趟要对
+// 每棵文档树旁的 db.sqlite 各开一次（本仓库语义库实测 57 个 → 57 open / ~230 prepare）。
+// 这里改成与 registry/store.ts:5-25 同形态的有界 LRU（上限 = REGISTRY_DB_CAP 同值 8），
+// 并叠加「按 (mtimeMs,size) 失效的 meta memo」：句柄数与 N 彻底解耦。
+// 参照 mappings/yarn-sqlite.ts 的 withReadOnlyDb：所有读都在 try/finally 里，
+// 出错即丢弃该句柄（不缓存坏 handle），但坏结果本身会被 memo 住，避免每趟重试。
+
+/** 同时持有的只读语义库句柄上限（唯一来源：registry/store.ts 的 REGISTRY_DB_CAP） */
+export { REGISTRY_DB_CAP as SEMANTIC_DB_LRU_CAP };
+/** meta 结果缓存条目上限（只缓存极小的标量，不缓存行数据） */
+const META_MEMO_CAP = 512;
+/** meta 结果最长有效期；(mtimeMs,size) 一致时也只信这么久 */
+const META_MEMO_TTL_MS = 5 * 60 * 1000;
+
+const _dbLru = new Map<string, DatabaseSync>();
+const _stmtCache = new WeakMap<DatabaseSync, Map<string, StatementSync>>();
+
+type InspectedInfo = ReturnType<typeof inspectDb>;
+
+const _metaMemo = new Map<
+  string,
+  { mtimeMs: number; size: number; at: number; info: InspectedInfo }
+>();
+
+export interface SemanticReadStats {
+  /** 当前持有的只读 sqlite 句柄数（LRU size）——恒 <= cap，与文档树数量无关 */
+  dbOpens: number;
+  /** 当前句柄上缓存的 prepared 语句总数——同样与文档树数量无关 */
+  dbPrepares: number;
+  cap: number;
+  /** 进程累计：真正执行过多少次 new DatabaseSync（冷启动第一趟才会到 N） */
+  opensTotal: number;
+  /** 进程累计：真正执行过多少次 prepare() */
+  preparesTotal: number;
+  memoHits: number;
+  memoMisses: number;
+  evictions: number;
+}
+
+const _counters = { opensTotal: 0, preparesTotal: 0, memoHits: 0, memoMisses: 0, evictions: 0 };
+
+export function getSemanticReadStats(): SemanticReadStats {
+  let prepares = 0;
+  for (const db of _dbLru.values()) prepares += _stmtCache.get(db)?.size ?? 0;
+  return {
+    dbOpens: _dbLru.size,
+    dbPrepares: prepares,
+    cap: REGISTRY_DB_CAP,
+    ..._counters,
+  };
+}
+
+/** 测试/退出用：释放本模块持有的全部只读句柄与缓存 */
+export function closeSemanticStatusDbs(): void {
+  for (const db of _dbLru.values()) {
+    try {
+      db.close();
+    } catch {
+      /* already closed */
+    }
+  }
+  _dbLru.clear();
+  _metaMemo.clear();
+  _counters.opensTotal = 0;
+  _counters.preparesTotal = 0;
+  _counters.memoHits = 0;
+  _counters.memoMisses = 0;
+  _counters.evictions = 0;
+}
+
+function getCachedReadDb(dbPath: string): DatabaseSync | null {
+  const cached = _dbLru.get(dbPath);
+  if (cached) {
+    _dbLru.delete(dbPath);
+    _dbLru.set(dbPath, cached);
+    return cached;
+  }
+  let db: DatabaseSync;
+  try {
+    db = new DatabaseSync(dbPath, { readOnly: true });
+  } catch {
+    return null;
+  }
+  _counters.opensTotal++;
+  _dbLru.set(dbPath, db);
+  while (_dbLru.size > REGISTRY_DB_CAP) {
+    const oldest = _dbLru.keys().next().value;
+    if (oldest === undefined) break;
+    const old = _dbLru.get(oldest);
+    _dbLru.delete(oldest);
+    _counters.evictions++;
+    try {
+      old?.close();
+    } catch {
+      /* ignore */
+    }
+  }
+  return db;
+}
+
+/** 同一 handle 上同一条 SQL 只 prepare 一次（registry/store.ts 每条都重拍，这里更省） */
+function prep(db: DatabaseSync, sql: string): StatementSync {
+  let stmts = _stmtCache.get(db);
+  if (!stmts) {
+    stmts = new Map<string, StatementSync>();
+    _stmtCache.set(db, stmts);
+  }
+  const hit = stmts.get(sql);
+  if (hit) return hit;
+  const stmt = db.prepare(sql);
+  _counters.preparesTotal++;
+  stmts.set(sql, stmt);
+  return stmt;
+}
+
+function dropHandle(dbPath: string): void {
+  const db = _dbLru.get(dbPath);
+  if (!db) return;
+  _dbLru.delete(dbPath);
+  try {
+    db.close();
+  } catch {
+    /* ignore */
+  }
+}
 
 export interface SemanticSample {
   platform: string;
@@ -37,6 +167,11 @@ export interface SemanticIndexStatus {
   /** 缺库 / 缺模型 / 索引过期时非空 */
   warnings: string[];
   staleCount: number;
+  /**
+   * A-38：只读侧诊断计数（非契约字段，仅用于证明「开库数与文档树数量解耦」）。
+   * dbOpens 恒 <= SEMANTIC_DB_LRU_CAP，与 dataRoot 下有多少个 db.sqlite 无关。
+   */
+  readStats: SemanticReadStats;
 }
 
 const SAMPLE_TARGETS: Array<{ platform: string; version: string; source: string }> = [
@@ -119,11 +254,38 @@ function inspectDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "em
   fingerprint?: string;
 } {
   if (!existsSync(dbPath)) return { mode: "missing" };
-  let db: DatabaseSync | undefined;
+  // A-38：句柄 + meta 结果两级缓存。存在性判定语义不变——仍然必须是
+  // 「能开库且 meta/docs+chunks 非空」，空文件 / 垃圾文件 / 无 meta 表都算 missing
+  // （test-core.mjs:2717-2729 三条断言依赖这一点，不得退化成 statSync.size>0）。
+  let st: ReturnType<typeof statSync> | undefined;
   try {
-    db = new DatabaseSync(dbPath, { readOnly: true });
+    st = statSync(dbPath);
+  } catch {
+    return { mode: "missing" };
+  }
+  const now = Date.now();
+  const memo = _metaMemo.get(dbPath);
+  if (memo && memo.mtimeMs === st.mtimeMs && memo.size === st.size && now - memo.at < META_MEMO_TTL_MS) {
+    _counters.memoHits++;
+    return memo.info;
+  }
+  _counters.memoMisses++;
+  const info = readSemanticMeta(dbPath);
+  _metaMemo.set(dbPath, { mtimeMs: st.mtimeMs, size: st.size, at: now, info });
+  if (_metaMemo.size > META_MEMO_CAP) {
+    const oldest = _metaMemo.keys().next().value;
+    if (oldest !== undefined) _metaMemo.delete(oldest);
+  }
+  return info;
+}
+
+/** 真正读一次 meta；只在 memo 未命中时被调用。句柄由 LRU 持有，不在这里 close。 */
+function readSemanticMeta(dbPath: string): ReturnType<typeof inspectDb> {
+  const db = getCachedReadDb(dbPath);
+  if (!db) return { mode: "missing" };
+  try {
     const meta = (key: string) => {
-      const row = db!.prepare("SELECT value FROM meta WHERE key = ?").get(key) as
+      const row = prep(db, "SELECT value FROM meta WHERE key = ?").get(key) as
         | { value: string }
         | undefined;
       return row?.value;
@@ -133,7 +295,7 @@ function inspectDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "em
     let embedded = Number(meta("embedded") ?? 0);
     if (!embedded) {
       try {
-        const row = db.prepare("SELECT COUNT(*) AS n FROM chunk_embeddings").get() as { n: number };
+        const row = prep(db, "SELECT COUNT(*) AS n FROM chunk_embeddings").get() as { n: number };
         embedded = Number(row?.n ?? 0);
       } catch {
         embedded = 0;
@@ -150,13 +312,9 @@ function inspectDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "em
       mode: embedded > 0 ? "hybrid" : chunks > 0 || docs > 0 ? "fts5-only" : "missing",
     };
   } catch {
+    // 开成功但读失败（垃圾/半写）→ 丢弃该句柄，下次重新尝试；结果仍然 memo 成 missing
+    dropHandle(dbPath);
     return { mode: "missing" };
-  } finally {
-    try {
-      db?.close();
-    } catch {
-      /* already closed or never opened */
-    }
   }
 }
 
@@ -353,5 +511,7 @@ export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
     fts5OnlyCount,
     staleCount,
     warnings,
+    // 放在最后：本次扫描结束后取快照，才能代表「这一趟留下多少活句柄」
+    readStats: getSemanticReadStats(),
   };
 }

@@ -58,7 +58,7 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
   }
 
   const localVersion = readLocalToolingVersion(repoRoot);
-  const describe = gitDescribe(repoRoot);
+  const describe = await gitDescribe(repoRoot);
   const state = readUpdateState(dataDir);
   const repo = defaultUpdateRepo();
 
@@ -223,7 +223,7 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
       steps.push("tooling: already up to date, skip");
     } else {
       const tagRef = release.tag_name;
-      const tr = applyToolingUpdate({
+      const tr = await applyToolingUpdate({
         tag: tagRef,
         dryRun,
         allowDirty: query.allowDirty,

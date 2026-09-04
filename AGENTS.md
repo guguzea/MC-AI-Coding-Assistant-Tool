@@ -241,8 +241,8 @@ Decision: 选择注册方式
 4. 不确定该用哪个库 Skill → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`；完整清单见 `knowledge/libs/README.md`
 5. **禁止**把 Fabric 专属库（Trinkets / CCA / Polymer / Text Placeholder 等）当 Forge 教程；Forge/NeoForge 饰品用 `mc-curios`（`forge-only`），Fabric 用 `mc-trinkets`（`fabric-only`）
 6. **配置不要新写树级 `mc-config` Skill**：一律读 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
-   - **选型建议与工具默认不同源不是矛盾**：`generate_config` 在 fabric / quilt 上**默认永远吐 Cloth Config 骨架**；YACL 只能作为**用户显式 opt-in** 的结果出现（opt-in 参数尚未实现——现在传 `--library=yacl` 会报 `未知参数`，禁止臆造调用，未实现前只能按 Cloth 现状走）。
-   - **第三方配置库不是 loader API（强制）**：Cloth / YACL / Fzzy / owo 等的方法名与注解，必须先由用户自备 jar 走 `ingest_loader_api` 入库（默认 dryRun，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁写仓库 `data/`）并逐签名核对后才能写进骨架。未入库 → `query_loader_api` 只回 `found:false`，此时**只能**留 `// TODO(未核实)`，禁止凭训练记忆补方法链。
+   - **选型建议与工具默认不同源不是矛盾**：`generate_config` 在 fabric / quilt 上**默认永远吐 Cloth Config 骨架**；YACL 只能作为**用户显式 opt-in** 的结果出现（`library` 参数已实现：枚举 `cloth | yacl`，**默认 `cloth`**，不传即现状；只有显式 `--library=yacl` 才换 YACL 骨架，禁止把默认改成 yacl）。
+   - **第三方配置库不是 loader API（强制）**：Cloth / YACL / Fzzy / owo 等的方法名与注解，必须先由用户自备 jar 走 `ingest_loader_api` 入库（默认 dryRun，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁写仓库 `data/`）并逐签名核对后才能写进骨架。**`library=yacl` 尤其如此：该用户必须另外对自己的 yacl jar 跑一次 `ingest_loader_api`，否则返回的只是带 `// TODO(未核实)` 的结构壳、编译不过。**未入库 → `query_loader_api` 只回 `found:false`，此时**只能**留 `// TODO(未核实)`，禁止凭训练记忆补方法链。
 
 ## 不确定时
 

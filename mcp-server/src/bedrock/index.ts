@@ -350,14 +350,22 @@ export const generateAddonManifestSchema = z.object({
     .describe("必须长度为 3 的整数数组；默认 [1, 21, 80]"),
   beta: z.boolean().optional().describe("仅当用户明确要 pack 侧 @minecraft/server 的 version: \"beta\"（须在世界打开 Beta APIs）时为 true。不是 @minecraft/server-beta 包名。"),
   scriptEval: z.boolean().optional().describe("仅当需要 eval 时写入 capabilities: [script_eval]"),
-  headerUuid: z.string().optional(),
-  moduleUuid: z.string().optional(),
+  headerUuid: z.string().optional().describe("packType=resources/both 时写进 RP header；packType=data/script 时（只有 BP）直接写进 BP header。非法 UUID 会被忽略并随机生成。"),
+  moduleUuid: z.string().optional().describe("同 headerUuid，作用于 module 条目。"),
+  bpHeaderUuid: z.string().optional().describe("仅 packType=both：写进 BP/manifest.json 的 header uuid（不与 RP 共用，两包 header 同 uuid 会互相顶掉）。packType=data/script/resources 时被忽略并回 Warning。"),
+  bpModuleUuid: z.string().optional().describe("仅 packType=both：写进 BP/manifest.json 的 module uuid。packType=data/script/resources 时被忽略并回 Warning。"),
   write: z.boolean().optional().describe("默认 false。true 时写入 projectPath（须 confirmed + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT；projectPath 不能替代后者）"),
   confirmed: z.boolean().optional().describe("write=true 时必填 true"),
   projectPath: z.string().optional().describe("写入目标工程根（须在 MC_SKILL_PROJECT_ROOT 内）"),
 });
 
-function fakeUuid(_seed: string): string {
+/**
+ * C-29：**未钉住**的 uuid 一律现生成（crypto.randomUUID），不可复现；调用方传了合法 UUID 就原样采用。
+ * 旧名 `fakeUuid(seed)` 带一个从不使用的 seed 形参，读起来像「同 seed → 同 uuid」，
+ * 实测相反：`node dist/cli.js generate_addon_manifest --packName=demo --packType=both`
+ * 连跑两次，RP/BP 的 4 个 uuid **全部不同**。故改名 freshUuid 并去掉假 seed 参数。
+ */
+function freshUuid(): string {
   return randomUUID();
 }
 
@@ -384,8 +392,17 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
     `默认 @minecraft/server 版本取自 bedrock-docs-status.scriptApiStable（当前 ${stableVer}）。入库可能滞后，发布前对照 Learn。`,
   );
 
-  const headerUuid = args.headerUuid && UUID_RE.test(args.headerUuid) ? args.headerUuid : fakeUuid(`hdr-${args.packName}`);
-  const moduleUuid = args.moduleUuid && UUID_RE.test(args.moduleUuid) ? args.moduleUuid : fakeUuid(`mod-${args.packName}`);
+  /** C-29：哪个槽位是调用方钉住的、哪个是现生成的、哪个传值被拒 */
+  const generatedUuidSlots: string[] = [];
+  const rejectedUuidArgs: string[] = [];
+  function pickUuid(caller: string | undefined, slot: string): string {
+    if (caller && UUID_RE.test(caller)) return caller;
+    if (caller) rejectedUuidArgs.push(slot);
+    generatedUuidSlots.push(slot);
+    return freshUuid();
+  }
+  const headerUuid = pickUuid(args.headerUuid, "headerUuid");
+  const moduleUuid = pickUuid(args.moduleUuid, "moduleUuid");
 
   function one(type: "resources" | "data" | "script", hdr: string, mod: string): Record<string, unknown> {
     const modules: Record<string, unknown>[] = [
@@ -424,15 +441,52 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
     return manifest;
   }
 
+  const uuids: Record<"RP" | "BP", [string, string]> = { RP: [headerUuid, moduleUuid], BP: [headerUuid, moduleUuid] };
+  const ignoredUuidArgs: string[] = [];
+  if (args.packType === "both") {
+    uuids.BP = [pickUuid(args.bpHeaderUuid, "bpHeaderUuid"), pickUuid(args.bpModuleUuid, "bpModuleUuid")];
+  } else {
+    for (const [slot, val] of [
+      ["bpHeaderUuid", args.bpHeaderUuid],
+      ["bpModuleUuid", args.bpModuleUuid],
+    ] as const) {
+      if (val) ignoredUuidArgs.push(slot);
+    }
+  }
+
   const files: Record<string, unknown> = {};
-  if (args.packType === "resources") files["RP/manifest.json"] = one("resources", headerUuid, moduleUuid);
-  else if (args.packType === "data") files["BP/manifest.json"] = one("data", headerUuid, moduleUuid);
-  else if (args.packType === "script") files["BP/manifest.json"] = one("script", headerUuid, moduleUuid);
+  if (args.packType === "resources") files["RP/manifest.json"] = one("resources", ...uuids.RP);
+  else if (args.packType === "data") files["BP/manifest.json"] = one("data", ...uuids.BP);
+  else if (args.packType === "script") files["BP/manifest.json"] = one("script", ...uuids.BP);
   else {
-    const bpHeader = fakeUuid(`hdr-bp-${args.packName}`);
-    const bpModule = fakeUuid(`mod-bp-${args.packName}`);
-    files["RP/manifest.json"] = one("resources", headerUuid, moduleUuid);
-    files["BP/manifest.json"] = one("data", bpHeader, bpModule);
+    files["RP/manifest.json"] = one("resources", ...uuids.RP);
+    files["BP/manifest.json"] = one("data", ...uuids.BP);
+  }
+
+  if (generatedUuidSlots.length) {
+    const pinArgs =
+      args.packType === "data" || args.packType === "script"
+        ? "headerUuid / moduleUuid"
+        : args.packType === "both"
+          ? "headerUuid / moduleUuid（RP）与 bpHeaderUuid / bpModuleUuid（BP）"
+          : "headerUuid / moduleUuid";
+    warnings.push(
+      `uuid 槽位 ${generatedUuidSlots.join(" / ")} 由 crypto.randomUUID() 现生成，**不可复现**：` +
+        `同参数再调一次得到的是另一组 uuid（实测连跑两次 generate_addon_manifest，RP/BP 四个 uuid 全变）。` +
+        `pack 身份靠 uuid 识别，uuid 变了引擎会当成新 pack；要把同一包反复覆盖升级，请把本次返回值里的 uuid` +
+        `在下次调用时用 ${pinArgs} 显式钉回。`,
+    );
+  }
+  if (rejectedUuidArgs.length) {
+    warnings.push(
+      `${rejectedUuidArgs.join(" / ")} 传入值不是标准 UUID（需 8-4-4-4-12 十六进制），已忽略并改为现生成（同样不可复现）。`,
+    );
+  }
+  if (ignoredUuidArgs.length) {
+    warnings.push(
+      `${ignoredUuidArgs.join(" / ")} 只在 packType=both（同时出 RP+BP）时生效；本次 packType=${args.packType} 只有一个包，` +
+        `BP 的槽位是 headerUuid / moduleUuid，上述参数已完全忽略——若你以为已经钉住 BP uuid，请改用 headerUuid / moduleUuid 重调。`,
+    );
   }
 
   return {

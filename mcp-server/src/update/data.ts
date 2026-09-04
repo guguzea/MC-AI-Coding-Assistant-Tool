@@ -36,6 +36,7 @@ import { extractZip, listZipEntries, normalizeZipLayout, resolveStagingContentRo
 import { verifyExtractedTree } from "../utils/extract-verify.js";
 import { writeUpdateState } from "./state.js";
 import { closeSemanticDbs } from "../docs-platform/semantic/search.js";
+import { closeSemanticStatusDbs } from "../docs-platform/semantic/status.js";
 
 export interface DiskSpaceInfo {
   neededBytes: number;
@@ -213,6 +214,12 @@ function swapInDataDir(nextDir: string, dataDir: string): void {
   const prevDir = siblingName(dataDir, ".prev");
   try {
     closeSemanticDbs();
+  } catch {
+    /* 无打开句柄时忽略 */
+  }
+  // A-38：diagnose 侧的语义库 LRU 也持有只读句柄，换目录前一并释放
+  try {
+    closeSemanticStatusDbs();
   } catch {
     /* 无打开句柄时忽略 */
   }

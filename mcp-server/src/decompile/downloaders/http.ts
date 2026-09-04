@@ -64,6 +64,9 @@ export async function downloadFile(
     }
     break;
   }
+  // D-9：运行时不可达（attempt===2 且无响应已在上面抛；能出界只会是循环末尾的 break，此时 res 必非空）。
+  // 但 TS 控制流分析不会把「循环出口」收窄成非 null —— res 在循环体内赋值（见上方 let res: Response | null）。
+  // 删掉本行会让下面 pipeline 里的 res.body 报 TS18047。保留守卫，勿当死代码清除。
   if (!res) throw new DownloadError("DOWNLOAD_FAILED", lastErr);
 
   const sha256 = createHash("sha256");

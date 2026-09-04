@@ -2,13 +2,44 @@
  * Tooling (git + npm) update path.
  */
 
-import { execFileSync } from "child_process";
+import { execFile } from "child_process";
+import { promisify } from "util";
 import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
 import { resolveRepoRoot } from "../utils/path.js";
 import { assertWritablePath, getAllowRootReal, nativeReal, isInsideReal } from "../utils/project-sandbox.js";
 import { defaultUpdateRepo } from "./github.js";
+
+/**
+ * D-7：异步 execFile（promisify）替换 execFileSync。
+ * execFileSync 会同步阻塞整个 Node 事件循环：MCP 进程在 `git fetch/merge/stash` 与
+ * `npm ci && npm run build`（最长 600s）期间对所有其它请求停止响应，且无法取消。
+ * 超时值一律保持原样（30s / 120s / 600s）。
+ * 附注：promisify(execFile) 的重载不接受 stdio 选项（实测 TS2769），故原 stdio 配置被去掉；
+ * 但实测 async execFile 并不会自行关闭子进程 stdin，因此统一走下面的 execCapture，
+ * 由它显式 end 掉 stdin，才与旧 execFileSync 的 stdio[0]="ignore" 等价。
+ */
+const execFileAsync = promisify(execFile);
+
+/**
+ * 统一入口：异步执行并取回 stdout（utf8）。
+ * 关键点 pending.child.stdin.end()：实测 async execFile 会把子进程 stdin 留在打开状态
+ * （探针脚本 1.3s 后仍报 STDIN_STILL_OPEN，显式 end 后 0.1s 内即 STDIN_ENDED），
+ * 而旧 execFileSync 传的是 stdio[0]="ignore"（= 已关闭）。补上 end() 才等价，
+ * 否则需要交互输入的 git 命令（凭据提示 / editor）会把整个 timeout 烧光。
+ */
+async function execCapture(file: string, args: string[], cwd: string, timeoutMs: number): Promise<string> {
+  const pending = execFileAsync(file, args, {
+    cwd,
+    encoding: "utf8",
+    windowsHide: true,
+    timeout: timeoutMs,
+  });
+  pending.child?.stdin?.end();
+  const { stdout } = await pending;
+  return stdout;
+}
 
 export function readLocalToolingVersion(repoRoot?: string): string {
   const root = repoRoot ?? resolveRepoRoot();
@@ -21,28 +52,23 @@ export function readLocalToolingVersion(repoRoot?: string): string {
   }
 }
 
-export function gitDescribe(repoRoot?: string): string | undefined {
+export async function gitDescribe(repoRoot?: string): Promise<string | undefined> {
   try {
-    return execFileSync("git", ["describe", "--tags", "--always"], {
-      cwd: repoRoot ?? resolveRepoRoot(),
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-      windowsHide: true,
-      timeout: 30_000,
-    }).trim();
+    const stdout = await execCapture(
+      "git",
+      ["describe", "--tags", "--always"],
+      repoRoot ?? resolveRepoRoot(),
+      30_000,
+    );
+    return stdout.trim();
   } catch {
     return undefined;
   }
 }
 
-function git(repoRoot: string, args: string[]): string {
-  return execFileSync("git", args, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-    windowsHide: true,
-    timeout: 120_000,
-  }).trim();
+async function git(repoRoot: string, args: string[]): Promise<string> {
+  const stdout = await execCapture("git", args, repoRoot, 120_000);
+  return stdout.trim();
 }
 
 /** Normalize GitHub remote URL → owner/repo */
@@ -53,14 +79,14 @@ export function normalizeGithubRepoUrl(url: string): string | null {
   return null;
 }
 
-export function findMatchingRemote(
+export async function findMatchingRemote(
   repoRoot: string,
   expectedRepo = defaultUpdateRepo(),
-): { ok: true; remote: string } | { ok: false; action: ActionEnvelope } {
+): Promise<{ ok: true; remote: string } | { ok: false; action: ActionEnvelope }> {
   const forced = process.env.MC_SKILL_UPDATE_REMOTE?.trim();
   if (forced) {
     try {
-      git(repoRoot, ["remote", "get-url", forced]);
+      await git(repoRoot, ["remote", "get-url", forced]);
       return { ok: true, remote: forced };
     } catch {
       return {
@@ -77,7 +103,7 @@ export function findMatchingRemote(
 
   let remotes: string[] = [];
   try {
-    remotes = git(repoRoot, ["remote"]).split(/\r?\n/).filter(Boolean);
+    remotes = (await git(repoRoot, ["remote"])).split(/\r?\n/).filter(Boolean);
   } catch {
     return {
       ok: false,
@@ -90,7 +116,7 @@ export function findMatchingRemote(
   const matches: string[] = [];
   for (const name of remotes) {
     try {
-      const url = git(repoRoot, ["remote", "get-url", name]);
+      const url = await git(repoRoot, ["remote", "get-url", name]);
       const norm = normalizeGithubRepoUrl(url);
       if (norm && norm.toLowerCase() === expectedRepo.toLowerCase()) matches.push(name);
     } catch {
@@ -116,9 +142,9 @@ export function findMatchingRemote(
   return { ok: true, remote: matches[0] };
 }
 
-export function isGitDirty(repoRoot: string): boolean {
+export async function isGitDirty(repoRoot: string): Promise<boolean> {
   try {
-    const out = git(repoRoot, ["status", "--porcelain"]);
+    const out = await git(repoRoot, ["status", "--porcelain"]);
     return out.length > 0;
   } catch {
     return true;
@@ -145,7 +171,7 @@ export interface ToolingApplyResult {
   action?: ActionEnvelope;
 }
 
-export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
+export async function applyToolingUpdate(opts: ToolingApplyOpts): Promise<ToolingApplyResult> {
   const repoRoot = opts.repoRoot ?? resolveRepoRoot();
   const steps: string[] = [];
 
@@ -190,7 +216,7 @@ export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
     }
   }
 
-  const match = findMatchingRemote(repoRoot);
+  const match = await findMatchingRemote(repoRoot);
   if (!match.ok) return { ok: false, steps, action: match.action };
   const remote = match.remote;
   steps.push(`git fetch --tags ${remote}`);
@@ -211,7 +237,7 @@ export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
     };
   }
 
-  const dirty = isGitDirty(repoRoot);
+  const dirty = await isGitDirty(repoRoot);
   if (dirty && !opts.allowDirty) {
     return {
       ok: false,
@@ -235,18 +261,22 @@ export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
     return { ok: true, steps, remote, restartRequired: true };
   }
 
-  const run = opts.runGit ?? ((args: string[]) => git(repoRoot, args));
+  // opts.runGit 保持同步测试接缝（注入方仍返回 string），真实路径改用异步 git runner
+  const injected = opts.runGit;
+  const run: (args: string[]) => Promise<string> = injected
+    ? async (args: string[]) => injected(args)
+    : (args: string[]) => git(repoRoot, args);
   let stashed = false;
   let merged = false;
   try {
-    run(["fetch", "--tags", remote]);
+    await run(["fetch", "--tags", remote]);
     if (dirty && opts.allowDirty && opts.stashDirty) {
       steps.unshift(`git stash push -u -m mc-skill-update`);
-      run(["stash", "push", "-u", "-m", "mc-skill-update"]);
+      await run(["stash", "push", "-u", "-m", "mc-skill-update"]);
       stashed = true;
     }
     try {
-      run(["merge", "--ff-only", opts.tag]);
+      await run(["merge", "--ff-only", opts.tag]);
       merged = true;
     } catch (err) {
       return {
@@ -266,7 +296,7 @@ export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
     }
     if (stashed) {
       try {
-        run(["stash", "pop"]);
+        await run(["stash", "pop"]);
       } catch (err) {
         return {
           ok: false,
@@ -286,16 +316,10 @@ export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
     if (!opts.skipBuild) {
       steps.push(`cd mcp-server && npm ci && npm run build`);
       try {
-        execFileSync(
-          process.platform === "win32" ? "npm.cmd" : "npm",
-          ["ci"],
-          { cwd: join(repoRoot, "mcp-server"), stdio: "pipe", windowsHide: true, timeout: 600_000 },
-        );
-        execFileSync(
-          process.platform === "win32" ? "npm.cmd" : "npm",
-          ["run", "build"],
-          { cwd: join(repoRoot, "mcp-server"), stdio: "pipe", windowsHide: true, timeout: 600_000 },
-        );
+        const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+        const npmCwd = join(repoRoot, "mcp-server");
+        await execCapture(npm, ["ci"], npmCwd, 600_000);
+        await execCapture(npm, ["run", "build"], npmCwd, 600_000);
       } catch (err) {
         return {
           ok: false,

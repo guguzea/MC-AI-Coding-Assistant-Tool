@@ -8,7 +8,7 @@ import { DatabaseSync } from "node:sqlite";
 
 import { listVersions, searchForgeDocs, searchDocs, getDocFull, getDocSummary, getDocRelated, getForgeDocSummary, getForgeDocFull } from "./dist/docs-platform/forge/index.js";
 import { analyzePortingPath, portProject, javaForMcVersion } from "./dist/porting/index.js";
-import { convertYarnMember, closeAllYarnDbs } from "./dist/mappings/yarn-sqlite.js";
+import { convertYarnMember, closeAllYarnDbs, resolveMappingDbPath, resolveCsvMappingDbPath } from "./dist/mappings/yarn-sqlite.js";
 import { convertMapping, suggestSimilarMethods } from "./dist/mappings/index.js";
 import { createFabricDocStore } from "./dist/docs-platform/fabric/store.js";
 import { searchFabricDocs, listFabricVersions } from "./dist/docs-platform/fabric/index.js";
@@ -41,7 +41,7 @@ import {
   analyzeBedrockContentLog,
   BEDROCK_CAPABILITIES,
 } from "./dist/bedrock/index.js";
-import { listSemanticDbPresence, semanticStaleSearchWarning, getSemanticIndexStatus } from "./dist/docs-platform/semantic/status.js";
+import { listSemanticDbPresence, semanticStaleSearchWarning, getSemanticIndexStatus, closeSemanticStatusDbs } from "./dist/docs-platform/semantic/status.js";
 import { isSemanticIndexStale } from "./dist/docs-platform/semantic/fingerprint.js";
 import { SEMANTIC_DDL, semanticDbPath } from "./dist/docs-platform/semantic/search.js";
 import { resolveDataDir, diagnoseDataPaths } from "./dist/utils/path.js";
@@ -2703,6 +2703,7 @@ async function testFivePlatformRouting() {
     const warn = semanticStaleSearchWarning(tmpData, "quilt", "1.20.1", "quilt-docs");
     assert.match(warn ?? "", /语义索引过期/);
   } finally {
+    closeSemanticStatusDbs(); // A-38：LRU 会持有只读句柄，Windows 上不先释放就删不掉临时目录
     rmSync(tmpData, { recursive: true, force: true });
   }
 
@@ -3922,6 +3923,39 @@ public class ExampleMod { }
   assert.ok(cfgFab.warnings?.some((w) => /依赖/.test(w)), JSON.stringify(cfgFab.warnings));
   assert.ok(!/net\.minecraftforge/.test(cfgFab.code || ""));
 
+  // D-4=A：library 是 opt-in，默认 cloth（上面 cfgFab 未传 library 即现状证明）。
+  const cfgYacl = generateConfig("my_mod", "fabric", "1.21.11", "yacl");
+  assert.ok(cfgYacl.code?.includes("dev.isxander.yacl3"), cfgYacl.code?.slice(0, 300));
+  assert.ok(!/clothconfig2/.test(cfgYacl.code || ""), "library=yacl 不得再吐 Cloth 骨架");
+  assert.ok(!cfgFab.code?.includes("TODO(未核实)"), "默认 cloth 骨架不得被 yacl 未核实标记污染");
+  // 未核实计数由骨架自身 TODO 条数推导，禁止写死数字。
+  const yaclTodo = (cfgYacl.code.match(/TODO\(未核实\)/g) ?? []).length;
+  assert.ok(yaclTodo > 0, "yacl 骨架必须保留未核实 TODO");
+  assert.ok(
+    cfgYacl.warnings?.some(
+      (w) =>
+        /YACL 为 opt-in、默认仍 Cloth/.test(w) &&
+        w.includes(`本骨架 ${yaclTodo} 处签名未核实`) &&
+        /ingest_loader_api/.test(w),
+    ),
+    JSON.stringify(cfgYacl.warnings),
+  );
+  // 编译前置义务必须在骨架头部可见（withDocsReviewHeader + 正文 note）。
+  assert.match(cfgYacl.code || "", /^\/\/ 修改此骨架前必须用 query_loader_api\(version=1\.21\.11\) 复核/);
+  assert.match(cfgYacl.code || "", /ingest_loader_api/);
+  assert.ok(!/YetAnotherConfigLib\.create|ModMenuApi\s*\{|\.addCategory\(/.test(cfgYacl.code || ""), "禁止凭记忆补 YACL 方法链");
+
+  const cfgQuiltYacl = generateConfig("my_mod", "quilt", "1.21.1", "yacl");
+  assert.ok(cfgQuiltYacl.code?.includes("dev.isxander.yacl3"), cfgQuiltYacl.code?.slice(0, 200));
+  assert.ok(cfgQuiltYacl.warnings?.some((w) => /QSL/.test(w)), JSON.stringify(cfgQuiltYacl.warnings));
+  const cfgQuilt = generateConfig("my_mod", "quilt", "1.21.1");
+  assert.ok(cfgQuilt.code?.includes("clothconfig2"), cfgQuilt.code?.slice(0, 200));
+
+  // forge/neoforge 不受 library 影响（opt-in 仅 fabric/quilt 生效）
+  const cfgForgeYacl = generateConfig("my_mod", "forge", "1.20.1", "yacl");
+  assert.ok(cfgForgeYacl.code?.includes("ForgeConfigSpec"), cfgForgeYacl.code?.slice(0, 200));
+  assert.ok(!/dev\.isxander/.test(cfgForgeYacl.code || ""));
+
   const rendOk = generateEntityRenderer("my_mod", "slime", "forge", "1.20.1");
   assert.ok(rendOk.code?.includes("@OnlyIn"), rendOk.code);
   assert.ok(rendOk.code?.includes("package com.example"), rendOk.code);
@@ -4196,6 +4230,24 @@ async function testW2MappingDocsFixes() {
   assert.equal(isSafeVersionSegment("1.20.1"), true);
   assert.equal(isSafeVersionSegment("..\\..\\evil"), false);
   assert.equal(isSafeVersionSegment("../../evil"), false);
+  // A-39：非法版本段不得先撞上 _pathCache（先校验、后查缓存）
+  const ysPath = new URL("./dist/mappings/yarn-sqlite.js", import.meta.url);
+  const ysSrc = readFileSync(ysPath, "utf8");
+  const body = ysSrc.slice(ysSrc.indexOf("function resolveMappingDbPath"));
+  const guardAt = body.indexOf("isSafeVersionSegment(v)");
+  const cacheAt = body.indexOf("_pathCache.has(v)");
+  assert.ok(guardAt >= 0 && cacheAt >= 0, "resolveMappingDbPath 结构变了，A-39 门需同步更新");
+  assert.ok(guardAt < cacheAt, "A-39：_pathCache 查询不得先于 isSafeVersionSegment 校验");
+  // 同族第二处：_csvPathCache 也必须在校验之后才读（否则非法段可污染缓存 key）
+  const csvBody = ysSrc.slice(ysSrc.indexOf("function resolveCsvMappingDbPath"));
+  const csvGuardAt = csvBody.indexOf("isSafeVersionSegment(v)");
+  const csvCacheAt = csvBody.indexOf("_csvPathCache.has(v)");
+  assert.ok(csvGuardAt >= 0 && csvCacheAt >= 0, "resolveCsvMappingDbPath 结构变了，A-39 门需同步更新");
+  assert.ok(csvGuardAt < csvCacheAt, "A-39：_csvPathCache 查询不得先于 isSafeVersionSegment 校验");
+  assert.equal(resolveCsvMappingDbPath(".."), null, "`..` 版本不得解析出 CSV 库");
+  assert.equal(resolveMappingDbPath(".."), null, "`..` 版本必须无库可解析");
+  assert.equal(resolveMappingDbPath("../../evil"), null);
+  assert.equal(resolveMappingDbPath("fabric_../x"), null);
   assert.equal(isExactMcVersionToken("1.16.5"), true, "path gate must not be isExactMcVersionToken-only");
 
   const s1201 = parseToolText(await searchDocs({ query: "block", version: "1.20.1", platform: "forge" }));

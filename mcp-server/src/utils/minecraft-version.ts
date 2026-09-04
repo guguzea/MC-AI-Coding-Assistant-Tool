@@ -9,8 +9,18 @@ function stripQuotes(raw: string): string {
   return raw.replace(/^["']|["']$/g, "").trim();
 }
 
+/**
+ * 取第一个点分版本，**必须整段独立**（V-13）：前后不许再粘连数字或点。
+ * 旧式 `/(\\d+\\.\\d+(?:\\.\\d+)?)/` 会把污染串静默截成看似合法的 MC 版本
+ * （`1.20.1.2`→`1.20.1`、`26.1.2.3`→`26.1.2`）；锚定后这类串返回 null，
+ * 交回上层继续走下一级策略（最终可能 unknown），绝不猜版本。
+ * 实测（dist detectMinecraftVersion + 19 条真实形态串）：合法档
+ * 1.20.1 / 1.20.4 / 1.21.11 / 26.1 / 26.1.1 / 27.0.1 / 1.16.5 / 带引号 / 带空白 /
+ * `net.minecraftforge:forge:1.20.1-47.2.0` / `parchment-1.20.1:2023.09.10@zip` /
+ * `2024.01.20` / `21.1.113` / `v1.20.1` / `1.20.1-rc1` 全部同值。
+ */
 function extractDottedVersion(raw: string): string | null {
-  const m = stripQuotes(raw).match(/(\d+\.\d+(?:\.\d+)?)/);
+  const m = stripQuotes(raw).match(/(?<![\d.])(\d+\.\d+(?:\.\d+)?)(?![\d.])/);
   return m?.[1] ?? null;
 }
 
@@ -32,9 +42,12 @@ export function detectMinecraftVersion(opts: {
     props.match(/^\s*mcVersion\s*=\s*([^\s#]+)/m)?.[1] ??
     props.match(/^\s*modMinecraftVersion\s*=\s*([^\s#]+)/m)?.[1];
   const neoVerRaw = props.match(/^\s*neo_version\s*=\s*([^\s#]+)/m)?.[1];
-  // neo_version 在 MDK 里常是加载器版本（21.1.x），只有写成 1.x / 26.x 才当 MC 版本
-  const neoAsMc =
-    neoVerRaw && /^(1|26|27)\.\d/.test(stripQuotes(neoVerRaw)) ? neoVerRaw : undefined;
+  // neo_version 在 MDK 里常是加载器版本（21.1.x），只有本身是合法 MC token 才当 MC 版本。
+  // 旧式在这里另写一份 `/^(1|26|27)\.\d/` 字面量（V-8/9/11/14 收口）：先复用 extractDottedVersion
+  // 抽段，再交给既有 isExactMcVersionToken 判定，1.20.1 / 1.21.1 / 26.1 / 27.0.1 结论不变，
+  // 21.1.192（加载器版本）照旧拒绝。
+  const neoCandidate = neoVerRaw ? extractDottedVersion(neoVerRaw) : null;
+  const neoAsMc = neoCandidate && isExactMcVersionToken(neoCandidate) ? neoCandidate : undefined;
   const propsHit = fromProps ?? neoAsMc;
   if (propsHit) {
     const v = extractDottedVersion(propsHit);

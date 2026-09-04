@@ -245,7 +245,11 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
       errors.push("缺少 ForgeGradle 插件：id 'net.minecraftforge.gradle' version '[6.0,6.2)'");
     }
     if (props.minecraft_version && props.forge_version) {
-      if (!props.minecraft_version.includes("1.20")) {
+      if (!isMcVersionFamily(props.minecraft_version, "1.20")) {
+        // V-12：原式 `!props.minecraft_version.includes("1.20")` 是子串判定，
+        // "21.20.1" 这类也会被放过。塌进既有 isMcVersionFamily 后五档实测同值
+        // （1.20.4→不告警，1.21.11/26.1/26.1.1/27.1.1→告警）。
+        // 不用 classifyMinecraftVersion(v)!=="1.20.x"：1.20.4 有独立 band，会误报「未经测试」。
         warnings.push(`Minecraft 版本 ${props.minecraft_version} 未经测试，建议使用 1.20.x 系列`);
       }
       if (!props.forge_version.startsWith("47")) {

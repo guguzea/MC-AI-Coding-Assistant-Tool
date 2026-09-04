@@ -99,7 +99,20 @@ export interface VersionPreloadStatus {
  * 主线程用 flat 数组重建索引。
  */
 
-class TrieIndex {
+/**
+ * A-26 递归上限（常量风格对齐 utils/node-sqlite-guard.ts：模块级 const + 就地注释）。
+ * `_collect` 原先对 flat 数组的长度/深度零防御：flatArr 来自 Worker 消息或落盘缓存，
+ * 一旦被截断/伪造（child 指标回指祖先形成环、或链路过深），递归会
+ * `Maximum call stack size exceeded` 直接崩掉整个 tool 调用。
+ * 深度上限按类名段数取（net/minecraft/world/item/ItemStack 这类远小于该值），
+ * 节点上限约 5 万次访问 ≈ 单次前缀查询的实用上界。
+ */
+const TRIE_COLLECT_MAX_DEPTH = 64;
+const TRIE_COLLECT_MAX_NODES = 50_000;
+/** 超限时追加到结果里的显式标记（不静默返回半截结果）。 */
+const TRIE_TRUNCATION_MARKER = "<truncated:trie-result-capped>";
+
+export class TrieIndex {
   private flat: Array<{ children: [string, number][]; isEnd: boolean; score: number }> = [
     { children: [], isEnd: false, score: 0 },
   ];
@@ -116,28 +129,56 @@ class TrieIndex {
     return t;
   }
 
+  /** 节点号是否可用（越界/非整数视为索引损坏）。 */
+  private validNode(idx: number): boolean {
+    return Number.isInteger(idx) && idx >= 0 && idx < this.flat.length;
+  }
+
   /**
    * 前缀搜索：返回所有以 prefix 开头的类名（用于模糊匹配加速）
+   * 命中上限时末尾返回 TRIE_TRUNCATION_MARKER（调用方据此知道结果不完整）。
    */
   searchPrefix(prefix: string): string[] {
     const parts = prefix.toLowerCase().replace(/\./g, "/").split("/");
     let nodeIdx = 0;
     for (const part of parts) {
+      if (!this.validNode(nodeIdx)) return [TRIE_TRUNCATION_MARKER];
       const childEntry = this.flat[nodeIdx].children.find(([k]) => k === part);
       if (!childEntry) return [];
       nodeIdx = childEntry[1];
     }
+    if (!this.validNode(nodeIdx)) return [TRIE_TRUNCATION_MARKER];
     const results: string[] = [];
-    this._collect(nodeIdx, parts.join("/"), results);
+    this._collect(nodeIdx, parts.join("/"), results, { nodes: 0, depth: 0, truncated: false });
     return results;
   }
 
-  private _collect(nodeIdx: number, prefix: string, results: string[]): void {
+  private _collect(
+    nodeIdx: number,
+    prefix: string,
+    results: string[],
+    budget: { nodes: number; depth: number; truncated: boolean },
+  ): void {
+    if (budget.truncated) return;
+    if (budget.depth > TRIE_COLLECT_MAX_DEPTH || budget.nodes >= TRIE_COLLECT_MAX_NODES) {
+      budget.truncated = true;
+      results.push(TRIE_TRUNCATION_MARKER);
+      return;
+    }
+    if (!this.validNode(nodeIdx)) {
+      budget.truncated = true;
+      results.push(TRIE_TRUNCATION_MARKER);
+      return;
+    }
+    budget.nodes += 1;
     const node = this.flat[nodeIdx];
     if (node.isEnd) results.push(prefix);
+    budget.depth += 1;
     for (const [childName, childIdx] of node.children) {
-      this._collect(childIdx, prefix + "/" + childName, results);
+      this._collect(childIdx, prefix + "/" + childName, results, budget);
+      if (budget.truncated) break;
     }
+    budget.depth -= 1;
   }
 }
 
@@ -556,16 +597,20 @@ function fuzzyClassSearch(query: string, vData: VersionData): FuzzyHit[] {
       vData.caseMap = { names, map: caseMap };
     }
     const restoreCase = (lowerName: string): string => caseMap!.get(lowerName) ?? lowerName;
+    // A-26：TRIE_TRUNCATION_MARKER 不是类名。任一 trie 结果含该标记 ⇒ 该分支不完整，
+    // 整体作废并落到下面的全量线性扫描（慢但完整），绝不把标记经 restoreCase 当成
+    // 「你指的是 …」建议名回给模型。
+    const notTruncated = (arr: string[]): boolean => !arr.includes(TRIE_TRUNCATION_MARKER);
 
     const prefixResults = vData.trieIndex.searchPrefix(normalized);
-    if (prefixResults.length > 0) {
+    if (notTruncated(prefixResults) && prefixResults.length > 0) {
       return prefixResults
         .slice(0, 5)
         .map((name) => ({ name: restoreCase(name), score: 95, kind: "prefix" as const }));
     }
     if (simple.length >= 3) {
       const simplePrefix = vData.trieIndex.searchPrefix(simple);
-      if (simplePrefix.length > 0) {
+      if (notTruncated(simplePrefix) && simplePrefix.length > 0) {
         return simplePrefix
           .slice(0, 5)
           .map((name) => ({ name: restoreCase(name), score: 90, kind: "prefix" as const }));

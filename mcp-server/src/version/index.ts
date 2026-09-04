@@ -1,9 +1,19 @@
 /**
- * 版本适配信息模块
+ * 版本适配信息模块（仅 Forge；其它 platform 直接 WRONG_TOOL）
  *
- * TODO（上线前填充）：
- * - 接入 Forge 官方 Changelog 页面
- * - 建立版本→变更点 索引
+ * 实现现状（不是 TODO）：
+ * - 「版本→变更点」索引已存在：下方 VERSION_DB 的 keyChanges / gotchas，为**仓库内手工
+ *   维护表**（每档需人工核实后才写入），覆盖 1.7.10 / 1.12.2 / 1.13.2 / 1.14.4 / 1.15.2 /
+ *   1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 共 12 档。
+ * - links.forgeChangelog 指向该档的**构建目录列表页**
+ *   `https://files.minecraftforge.net/net/minecraftforge/forge/index_<version>.html`
+ *   （实测 maven.minecraftforge.net 同路径 404、files.minecraftforge.net 200，旧值已改），
+ *   不是官方 changelog 正文；1.7.10 与 1.12.2 该字段为空串。
+ * - 未收录版本（含 1.21.11 / 26.1 / 27.x）走 getVersionInfo 末尾分支：
+ *   ok=false + forgeVersion="unknown" + 引导到 search_forge_docs / list_forge_versions。
+ *
+ * 仍未做（故本表必须人工回补）：没有自动抓取官方发布页/PR 来增量填充 VERSION_DB，
+ * 新档位的 keyChanges 只能人工核实后写入；未核实前宁可返回 ok=false，不许猜。
  */
 
 import { ownGet } from "../utils/own-record.js";
@@ -60,7 +70,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
       "NeoForge 包名从 net.minecraftforge 迁移到 net.neoforged",
     ],
     links: {
-      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.20.4.html",
+      forgeChangelog: "https://files.minecraftforge.net/net/minecraftforge/forge/index_1.20.4.html",
       parchmentMappings: "https://mappings.xhyrom.dev/1.20.4/",
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.20.4",
     },
@@ -79,7 +89,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
       "属性注册使用 ForgeRegistries.Keys.ATTRIBUTES",
     ],
     links: {
-      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.20.1.html",
+      forgeChangelog: "https://files.minecraftforge.net/net/minecraftforge/forge/index_1.20.1.html",
       parchmentMappings: "https://mappings.xhyrom.dev/1.20.1/",
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.20.1",
     },
@@ -96,7 +106,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
       "RegisterEvent 仍可用，但不推荐（DeferredRegister 封装了它）",
     ],
     links: {
-      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.19.4.html",
+      forgeChangelog: "https://files.minecraftforge.net/net/minecraftforge/forge/index_1.19.4.html",
       parchmentMappings: "https://mappings.xhyrom.dev/1.19.4/",
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.19.4",
     },
@@ -115,7 +125,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
       "Capability API 基本稳定",
     ],
     links: {
-      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.18.2.html",
+      forgeChangelog: "https://files.minecraftforge.net/net/minecraftforge/forge/index_1.18.2.html",
       parchmentMappings: "https://mappings.xhyrom.dev/1.18.2/",
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.18.2",
     },
@@ -137,7 +147,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
       "推荐使用 Parchment mappings 获取参数名",
     ],
     links: {
-      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.17.1.html",
+      forgeChangelog: "https://files.minecraftforge.net/net/minecraftforge/forge/index_1.17.1.html",
       parchmentMappings: "https://mappings.xhyrom.dev/1.17.1/",
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.17.1",
     },
@@ -155,7 +165,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
       "切换为 MojMaps 后需重新理解混淆名",
     ],
     links: {
-      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.16.5.html",
+      forgeChangelog: "https://files.minecraftforge.net/net/minecraftforge/forge/index_1.16.5.html",
       parchmentMappings: "",
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.16.5",
     },
@@ -174,7 +184,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
       "需要从头创建项目",
     ],
     links: {
-      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.14.4.html",
+      forgeChangelog: "https://files.minecraftforge.net/net/minecraftforge/forge/index_1.14.4.html",
       parchmentMappings: "",
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.14.4",
     },
@@ -210,7 +220,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
       "请用 search_forge_docs，不要假设 1.20.1 DeferredRegister 文档 URL",
     ],
     links: {
-      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.21.1.html",
+      forgeChangelog: "https://files.minecraftforge.net/net/minecraftforge/forge/index_1.21.1.html",
       parchmentMappings: "",
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.21.1",
     },
@@ -226,7 +236,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
       "不要套用 1.20 DeferredRegister 记忆",
     ],
     links: {
-      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.15.2.html",
+      forgeChangelog: "https://files.minecraftforge.net/net/minecraftforge/forge/index_1.15.2.html",
       parchmentMappings: "",
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.15.2",
     },
@@ -242,7 +252,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
       "不支持 DeferredRegister",
     ],
     links: {
-      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.13.2.html",
+      forgeChangelog: "https://files.minecraftforge.net/net/minecraftforge/forge/index_1.13.2.html",
       parchmentMappings: "",
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.13.2",
     },

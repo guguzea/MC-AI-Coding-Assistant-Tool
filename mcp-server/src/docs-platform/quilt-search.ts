@@ -238,7 +238,7 @@ export async function searchQuiltDocs(args: {
       });
     }
     const filtered = filterFabricFallbackHits(results);
-    const versionMissingQuilt = hasPlatformDocData("quilt", dataRoot);
+    const quiltDocDataPresent = hasPlatformDocData("quilt", dataRoot);
     return jsonOk({
       ok: true,
       query: args.query,
@@ -249,7 +249,7 @@ export async function searchQuiltDocs(args: {
       fallback: "fabric",
       sourcePlatform: "fabric",
       warning: joinSearchWarnings(
-        versionMissingQuilt
+        quiltDocDataPresent
           ? QUILT_VERSION_FABRIC_FALLBACK_WARNING
           : "无独立 Quilt 文档树，已回退 Fabric（已过滤 FAPI 专属 Registry/ItemGroup 等）。QSL 专用页可能缺失。取全文可继续 platform=quilt（会自动回退 Fabric）或改 platform=fabric。",
         filtered.dropped > 0 ? `已丢弃 ${filtered.dropped} 条 Fabric 专属命中` : undefined,

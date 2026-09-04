@@ -166,6 +166,8 @@ export function diagnoseDataPaths(): {
   semantic: {
     modeHint: string;
     modelsReady: boolean;
+    /** A-38：只读侧诊断计数（开库/预编译是否仍与文档树数量解耦） */
+    stats: NonNullable<ReturnType<typeof getSemanticIndexStatus>["readStats"]>;
     present: number;
     totalChecked: number;
     samples: ReturnType<typeof listSemanticDbPresence>;
@@ -282,6 +284,7 @@ export function diagnoseDataPaths(): {
     semantic: {
       modeHint: semanticStatus.modeHint,
       modelsReady: semanticStatus.modelsReady,
+      stats: semanticStatus.readStats,
       present,
       totalChecked: semanticPresence.length,
       samples: semanticPresence.filter((s) => s.exists).slice(0, 40),

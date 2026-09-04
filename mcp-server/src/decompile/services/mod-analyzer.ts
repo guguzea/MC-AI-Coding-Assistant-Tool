@@ -9,7 +9,7 @@
  * 仅本地绝对路径；不下载、不写盘、不反编译。
  */
 
-import { existsSync, readFileSync, statSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { isAbsolute } from "path";
 import { actionable, type ActionEnvelope } from "../../utils/actionable.js";
 import { parseJsonUtf8 } from "../../utils/json-utf8.js";
@@ -301,7 +301,10 @@ export function analyzeModJar(jarPath: string, requestedVersion?: string): Analy
   const meta: AnalyzeResult = {
     ...emptyMeta(jarPath),
     found: true,
-    fileSize: statSync(jarPath).size,
+    // D-17：不再 statSync 第二遍。existsSync→readFileSync 之间文件被删/坏符号链接时，
+    // 重新 stat 会在 try 之外裸抛穿出 handler；已读到的 buffer.byteLength 就是同一大小，
+    // 且不再引入第二个 TOCTOU 窗口。
+    fileSize: buffer.byteLength,
   };
 
   let entries: Map<string, Buffer>;
@@ -565,8 +568,59 @@ export function analyzeModJar(jarPath: string, requestedVersion?: string): Analy
   return meta;
 }
 
-/** 仅条目名扫描版（快速判断 jar 类型，不展开数据） */
-export function listJarEntries(jarPath: string): string[] {
-  if (!existsSync(jarPath)) return [];
-  return listZipEntries(readFileSync(jarPath));
+/**
+ * 仅条目名扫描版（快速判断 jar 类型，不展开数据）。
+ *
+ * D-17：旧实现 `return listZipEntries(readFileSync(jarPath))` 两处都裸抛（截断/伪造的
+ * 中央目录会漏出 `ZipParseError` 原始堆栈），且路径不存在时静默回 `[]`（调用方无法区分
+ * 「空 jar」与「文件不存在」）。现统一走本仓 `utils/actionable` 约定：**永不抛出**，
+ * 失败以 `ok:false` + `action` 表达。
+ */
+export interface ListJarEntriesResult {
+  ok: boolean;
+  entries: string[];
+  action?: ActionEnvelope;
+}
+
+export function listJarEntries(jarPath: string): ListJarEntriesResult {
+  if (!jarPath) {
+    return {
+      ok: false,
+      entries: [],
+      action: invalidAction("jarPath 不能为空", ["传入本地 jar 的绝对路径"]),
+    };
+  }
+  if (!isAbsolute(jarPath)) {
+    return {
+      ok: false,
+      entries: [],
+      action: invalidAction(
+        `jarPath 必须是本地绝对路径（收到「${jarPath}」）`,
+        ["传绝对路径，例如 H:/mods/my-mod.jar"],
+      ),
+    };
+  }
+  let buffer: Buffer;
+  try {
+    buffer = readFileSync(jarPath);
+  } catch (err) {
+    return {
+      ok: false,
+      entries: [],
+      action: notFoundAction(`jar 读取失败: ${(err as Error).message}`, [
+        "核对路径后重试（不存在 / 是目录 / 被占用）",
+      ]),
+    };
+  }
+  try {
+    return { ok: true, entries: listZipEntries(buffer) };
+  } catch (err) {
+    return {
+      ok: false,
+      entries: [],
+      action: invalidAction(`不是有效的 zip/jar: ${(err as Error).message}`, [
+        "确认文件是完整未损坏的 mod jar",
+      ]),
+    };
+  }
 }

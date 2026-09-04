@@ -2,7 +2,7 @@
  * 发布前机器检查（不上传、不调 Curse/Modrinth API）。
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
-import { join } from "path";
+import { join, relative, sep } from "path";
 import { loadModProject, preferExplicit, resolveProjectDir } from "../utils/project-files.js";
 import { loadPublishingChecklist } from "./publishing-checklist.js";
 
@@ -40,20 +40,48 @@ function hasVersion(text: string): boolean {
   return /^\s*version\s*=/im.test(text) || /"version"\s*:/i.test(text);
 }
 
-function listReleaseJars(projectRoot: string): { jars: string[]; warnings: string[] } {
-  const dir = join(projectRoot, "build", "libs");
-  const warnings: string[] = [];
-  if (!existsSync(dir)) return { jars: [], warnings };
+/**
+ * C-32：产出 jar 目录的**唯一来源**。显示串一律由实际扫描的 dir 反推，
+ * 不再在 return / checks / warnings 里各写一遍字面量 "build/libs"。
+ */
+const RELEASE_JAR_SEGMENTS = ["build", "libs"];
+const RELEASE_JAR_DISPLAY_DEFAULT = RELEASE_JAR_SEGMENTS.join("/");
+
+function toPosix(p: string): string {
+  return p.split(sep).join("/");
+}
+
+/** 返回实际扫描目录与其相对工程根的 posix 显示串（相对化失败时退回段拼接）。 */
+function releaseJarDirOf(projectRoot: string): { dir: string; display: string } {
+  const dir = join(projectRoot, ...RELEASE_JAR_SEGMENTS);
+  let rel = "";
   try {
-    if (!statSync(dir).isDirectory()) return { jars: [], warnings };
+    rel = relative(projectRoot, dir);
   } catch {
-    return { jars: [], warnings };
+    rel = "";
+  }
+  const display = rel && !rel.startsWith("..") ? toPosix(rel) : RELEASE_JAR_DISPLAY_DEFAULT;
+  return { dir, display };
+}
+
+function listReleaseJars(projectRoot: string): {
+  jars: string[];
+  warnings: string[];
+  dirDisplay: string;
+} {
+  const { dir, display } = releaseJarDirOf(projectRoot);
+  const warnings: string[] = [];
+  if (!existsSync(dir)) return { jars: [], warnings, dirDisplay: display };
+  try {
+    if (!statSync(dir).isDirectory()) return { jars: [], warnings, dirDisplay: display };
+  } catch {
+    return { jars: [], warnings, dirDisplay: display };
   }
   let names: string[] = [];
   try {
     names = readdirSync(dir);
   } catch {
-    return { jars: [], warnings };
+    return { jars: [], warnings, dirDisplay: display };
   }
   const candidates = names
     .filter((n) => n.endsWith(".jar"))
@@ -72,7 +100,7 @@ function listReleaseJars(projectRoot: string): { jars: string[]; warnings: strin
   if (onlyAll) {
     warnings.push("仅找到 *-all.jar（可能是 shadow fat），发布前请确认不是把依赖打进包");
   }
-  return { jars: kept.map((n) => `build/libs/${n}`), warnings };
+  return { jars: kept.map((n) => `${display}/${n}`), warnings, dirDisplay: display };
 }
 
 interface ProvidedMetadata {
@@ -118,7 +146,8 @@ function checkLogoFile(projectRoot: string, all: ProvidedMetadata[]): Array<{ mi
 export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult {
   const errors: string[] = [];
   const warnings: string[] = [];
-  const checks = ["license", "version", "build/libs 正式 jar"];
+  let jarDirDisplay = RELEASE_JAR_DISPLAY_DEFAULT;
+  const checks = ["license", "version", `${jarDirDisplay} 正式 jar`];
   let modsToml = query.modsToml;
   let fabricModJson = query.fabricModJson;
   let quiltModJson = query.quiltModJson;
@@ -144,6 +173,8 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
     quiltModJson = preferExplicit(quiltModJson, loaded.quiltModJson);
     neoModsToml = preferExplicit(neoModsToml, loaded.neoModsToml);
     const listed = listReleaseJars(resolved.root);
+    jarDirDisplay = listed.dirDisplay;
+    checks[2] = `${jarDirDisplay} 正式 jar`;
     jars = listed.jars;
     warnings.push(...listed.warnings);
     const licenseFile = ["LICENSE", "LICENSE.txt", "LICENSE.md"].some((n) => existsSync(join(resolved.root, n)));
@@ -171,10 +202,10 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
 
   if (query.projectPath) {
     if (jars.length === 0) {
-      warnings.push("未在 build/libs 找到像正式包的 jar（排除 -sources/-javadoc/-dev）。请先 gradlew build，不要上传开发 jar");
+      warnings.push(`未在 ${jarDirDisplay} 找到像正式包的 jar（排除 -sources/-javadoc/-dev）。请先 gradlew build，不要上传开发 jar`);
     }
   } else {
-    warnings.push("未传 projectPath，跳过 build/libs 扫描");
+    warnings.push(`未传 projectPath，跳过 ${jarDirDisplay} 扫描`);
   }
 
   const checklist = loadPublishingChecklist();
@@ -205,7 +236,7 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
     checks.push(`community_knowledge publishing.md 清单（${fields.length} 项可机器核对）`);
   } else {
     warnings.push(
-      `未取到发布清单字段要求（${checklist.source}：${checklist.reason ?? "未知原因"}）；本次只做了 license/version/build/libs 检查`,
+      `未取到发布清单字段要求（${checklist.source}：${checklist.reason ?? "未知原因"}）；本次只做了 license/version/${jarDirDisplay} 检查`,
     );
   }
 

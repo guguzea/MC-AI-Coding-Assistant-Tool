@@ -182,7 +182,7 @@ export const searchNeoForgeDocsSchema = {
 
 export async function searchNeoForgeDocs(args: {
   query: string;
-  version?: string;
+  version: string;
   tags?: string[];
 }): Promise<CallToolResult> {
   try {
@@ -295,7 +295,7 @@ export const getNeoForgeDocSummarySchema = {
 
 export async function getNeoForgeDocSummary(args: {
   id: string;
-  version?: string;
+  version: string;
 }): Promise<CallToolResult> {
   try {
     if (missingMcVersion(args.version)) return versionRequiredDocResult();
@@ -351,7 +351,7 @@ export const getNeoForgeDocFullSchema = {
 
 export async function getNeoForgeDocFull(args: {
   id: string;
-  version?: string;
+  version: string;
   highlight_key?: boolean;
 }): Promise<CallToolResult> {
   try {
@@ -409,7 +409,7 @@ export const getNeoForgeDocRelatedSchema = {
 
 export async function getNeoForgeDocRelated(args: {
   id: string;
-  version?: string;
+  version: string;
   limit?: number;
 }): Promise<CallToolResult> {
   try {

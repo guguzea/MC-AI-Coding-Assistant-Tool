@@ -497,6 +497,16 @@ description: |
   assert.equal(cfg?.description, GENERATE_CONFIG_DESCRIPTION);
   assert.match(String(cfg?.description), /Cloth Config/);
   assert.doesNotMatch(String(cfg?.description), /改口 mc-config/);
+  // D-4=A：library 是 opt-in，默认必须是 cloth，且描述里要写清 yacl 的 ingest 前置义务。
+  const cfgArgs = (extra = {}) =>
+    cfg?.inputSchema.safeParse({ modId: "m", loader: "fabric", version: "1.21.1", ...extra });
+  assert.equal(cfgArgs()?.success, true);
+  assert.equal(cfgArgs()?.data?.library, "cloth", "默认必须仍是 cloth");
+  assert.equal(cfgArgs({ library: "yacl" })?.success, true);
+  assert.equal(cfgArgs({ library: "fzzy" })?.success, false, "library 只允许 cloth|yacl");
+  assert.match(String(cfg?.description), /ingest_loader_api/);
+  const cfgReg = waveToolSchemas.find((t) => t.name === "generate_config");
+  assert.equal(cfgReg?.description, cfg?.description);
   assert.equal(pkt?.description, GENERATE_NETWORK_PACKET_DESCRIPTION);
   const { NETWORK_PACKET_PLATFORMS } = await import("./dist/generators/index.js");
   for (const tok of NETWORK_PACKET_PLATFORMS) {
