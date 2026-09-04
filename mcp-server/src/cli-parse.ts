@@ -34,13 +34,13 @@ export const BOOLEAN_GLOBAL_KEYS = new Set([
   "failOnError",
 ]);
 
-/** 旧 CLI 短名 → schema 字段；仅当目标键在 schema 中且原键不在 schema 中时生效 */
+/** 旧 CLI 短名 → schema 字段；仅当目标键在 schema 中且原键不在 schema 中时生效。
+ *  纯分隔符/大小写差异（allow-fallback、allowFallback → allow_fallback）由
+ *  resolveFlagKey 的归一化回退接管，不要再往这里加。 */
 export const FLAG_ALIASES: Record<string, string> = {
   name: "memberName",
   owner: "ownerClass",
   kind: "memberKind",
-  "allow-fallback": "allow_fallback",
-  allowFallback: "allow_fallback",
   confirm: "confirmed",
   tag: "tagName",
   "dry-run": "dryRun",
@@ -252,13 +252,91 @@ export function tupleItemType(schema: z.ZodTypeAny | undefined, key: string): st
   return undefined;
 }
 
-export class UnknownFlagError extends Error {
-  constructor(readonly flag: string, readonly typedAs?: string) {
+/**
+ * 失败信封的错误分类（只增键，退出码契约 0/1/2 不变）。
+ * 可由退出码反推：2 → usage | validation，1 → tool_failure。
+ * timeout 分类由 S6 的 --timeout 落地时补。
+ */
+export type CliErrorKind = "usage" | "validation" | "tool_failure";
+
+/** flag 名归一化：忽略连字符、下划线与大小写（allow-fallback / allowFallback / allow_fallback 同形） */
+export function canonicalFlagName(key: string): string {
+  return key.replace(/[_-]/g, "").toLowerCase();
+}
+
+/** schema 中与 rawKey 归一化同形的字段名（升序，供唯一性判定与错误文案） */
+export function flagKeyCandidates(rawKey: string, schemaKeys: Set<string>): string[] {
+  const c = canonicalFlagName(rawKey);
+  return [...schemaKeys].filter((k) => canonicalFlagName(k) === c).sort();
+}
+
+/** 归一化后仍对应多个字段：宁可报错，也不静默改写到其中某一个 */
+export class AmbiguousFlagError extends Error {
+  constructor(
+    readonly flag: string,
+    readonly candidates: string[],
+  ) {
     super(
+      `参数 --${flag} 有歧义，可对应 ${candidates.map((c) => `--${c}`).join(" / ")}，请改用其中精确写法`,
+    );
+  }
+}
+
+function levenshtein(a: string, b: string): number {
+  if (a === b) return 0;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    }
+    prev = cur;
+  }
+  return prev[b.length];
+}
+
+/** 按编辑距离挑出的近似 flag 名（最多 3 个）；距离阈值随输入长度放宽 */
+export function nearFlagNames(input: string, known: string[], limit = 3): string[] {
+  const lower = input.toLowerCase();
+  const threshold = Math.max(1, Math.floor(input.length / 3));
+  return known
+    .map((k) => ({ k, d: levenshtein(lower, k.toLowerCase()) }))
+    .filter((x) => x.d <= threshold)
+    .sort((x, y) => x.d - y.d || x.k.localeCompare(y.k))
+    .slice(0, limit)
+    .map((x) => x.k);
+}
+
+/** 可复制执行的取参数清单入口（与文档同一形式：仓库根可解析） */
+export function flagHelpPointer(tool: string): string {
+  return `查看全部参数：node mcp-server/dist/cli.js ${tool} --help`;
+}
+
+export interface UnknownFlagDetails {
+  tool?: string;
+  knownFlags?: string[];
+}
+
+export class UnknownFlagError extends Error {
+  readonly nearFlags: string[];
+  readonly knownFlags: string[];
+  constructor(
+    readonly flag: string,
+    readonly typedAs?: string,
+    readonly details?: UnknownFlagDetails,
+  ) {
+    const known = details?.knownFlags ?? [];
+    const near = known.length > 0 ? nearFlagNames(flag, known) : [];
+    let message =
       typedAs === undefined
         ? `未知参数 --${flag}`
-        : `未知参数 ${typedAs}：疑似漏写一个连字符，请改用 --${flag}（全部参数见 --help）`,
-    );
+        : `未知参数 ${typedAs}：疑似漏写一个连字符，请改用 --${flag}`;
+    if (near.length > 0) message += `；近似：${near.map((n) => `--${n}`).join(" / ")}`;
+    if (details?.tool) message += `；${flagHelpPointer(details.tool)}`;
+    else if (typedAs !== undefined) message += `（全部参数见 --help）`;
+    super(message);
+    this.nearFlags = near;
+    this.knownFlags = known;
   }
 }
 
@@ -272,6 +350,9 @@ export function resolveFlagKey(
   if (schemaKeys.has(camel)) return camel;
   const aliased = ownGet(aliases, rawKey) ?? ownGet(aliases, camel);
   if (aliased && schemaKeys.has(aliased)) return aliased;
+  const candidates = flagKeyCandidates(rawKey, schemaKeys);
+  if (candidates.length === 1) return candidates[0];
+  if (candidates.length > 1) throw new AmbiguousFlagError(rawKey, candidates);
   return undefined;
 }
 
@@ -340,6 +421,7 @@ export function coerceFlags(
   schema: z.ZodTypeAny | undefined,
   extraInject: Record<string, unknown> = {},
   aliases: Record<string, string> = FLAG_ALIASES,
+  toolName?: string,
 ): Record<string, unknown> {
   const shape = schemaObjectShape(schema);
   const schemaKeys = new Set(shape ? Object.keys(shape) : []);
@@ -347,7 +429,7 @@ export function coerceFlags(
   for (const [k, v] of Object.entries(raw)) {
     const key = resolveFlagKey(k, schemaKeys, aliases);
     if (!key) {
-      throw new UnknownFlagError(k);
+      throw new UnknownFlagError(k, undefined, { tool: toolName, knownFlags: [...schemaKeys] });
     }
     collected[key] = [...(collected[key] ?? []), ...flattenFlagValues(v)];
   }

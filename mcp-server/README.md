@@ -176,7 +176,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 全局 flag（不进工具 schema）：`--help`/`-h`、`--version`、`--json`、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`。
 
-kebab-case 会转到 camelCase（`--dry-run`→`dryRun`）；另有 `--name`→`memberName`、`--confirm`→`confirmed`、`--class`→`className` 等别名（仅当目标字段存在于该工具 schema 时）。未知 flag **exit 2**。
+kebab-case 会转到 camelCase（`--dry-run`→`dryRun`、`--highlight-key`→`highlight_key`）；另有 `--name`→`memberName`、`--confirm`→`confirmed`、`--class`→`className` 等语义别名（仅当目标字段存在于该工具 schema 时）。只有分隔符/大小写之差的名字（`--allow-fallback`、`--allowFallback`、`--ALLOW_FALLBACK`→`allow_fallback`）由通用归一化接管，不再逐个写进别名表；归一化只在候选唯一时接受，命中多个则报歧义并列出候选写法。未知 flag **exit 2**，报错里带近似名和 `node mcp-server/dist/cli.js <工具> --help` 指针。
 
 文件输入（所有 string 字段）：
 
@@ -188,13 +188,15 @@ kebab-case 会转到 camelCase（`--dry-run`→`dryRun`）；另有 `--name`→`
 
 输出统一 JSON `{success, tool, result|error}`。`--compact` 时所有 stdout JSON 都不 pretty。TTY 且未加 `--json` 的 `--help` 用人读摘要。
 
-退出码：
+退出码（`errorKind` 是失败信封上只增不改的分类键，与退出码一一对应，不引入第三种码）：
 
-| 码 | 含义 |
-|----|------|
-| 0 | 工具跑完且非失败（`query_api` 的 `found:false` 默认仍为 0） |
-| 1 | 抛错、`isError`、`ok===false`、`passed===false`、`error.code` 存在 |
-| 2 | 用法 / 未知命令 / 未知 flag / 缺参 / 读文件失败 |
+| 码 | 含义 | errorKind |
+|----|------|-----------|
+| 0 | 工具跑完且非失败（`query_api` 的 `found:false` 默认仍为 0） | 无（成功信封不带该键） |
+| 1 | 抛错、`isError`、`ok===false`、`passed===false`、`error.code` 存在 | `tool_failure` |
+| 2 | 用法 / 未知命令 / 未知 flag / 缺参 / 读文件失败 | `usage`；schema 校验失败为 `validation` |
+
+`timeout` 类随 `--timeout` 落地时再加入。失败信封另有 `nearFlags` / `knownFlags`（仅未知 flag 且能给出建议时出现）。
 
 `--fail-on-error` 再把 `found===false` 以及 `errors[]` 非空升为 1。`--fail-on-error=false` **关闭**（旧：写出即开启）。
 

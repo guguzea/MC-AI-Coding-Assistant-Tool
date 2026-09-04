@@ -5,6 +5,8 @@
  * flags-only（--key value / --key=value / 裸 --key→true），参数类型按各工具的
  * zod inputSchema 驱动转换。输出 JSON 包装 {success, tool, result|error}。
  * 退出码 0=成功 / 1=工具失败 / 2=用法错误。
+ * 失败信封另有 errorKind 分类键：usage / validation ↔ exit 2，tool_failure ↔ exit 1；
+ * 成功时该键不出现。分类只加键，不新增第三种退出码。
  *
  * 旧位置参数形式仍兼容（stderr 迁移提示）。descriptor 为本地子命令，不经 MCP registry。
  */
@@ -15,6 +17,7 @@ import { fileURLToPath } from "url";
 import * as z from "zod";
 import { toolHandlers } from "./tool-handlers.js";
 import {
+  AmbiguousFlagError,
   applyPositionalCompat,
   coerceFlags,
   DATA_DIR_TOOLS,
@@ -30,6 +33,7 @@ import {
   unusedPositionals,
   UnknownFlagError,
   zodToJsonSchema,
+  type CliErrorKind,
   type RawFlags,
 } from "./cli-parse.js";
 import { parameterTypes, readableSignature, returnType } from "./utils/descriptor.js";
@@ -51,6 +55,9 @@ class CliUsageError extends Error {
     super(message);
   }
 }
+
+/** schema 校验失败：仍是 exit 2，但 errorKind 与「敲错 flag 名」区分开 */
+class ValidationCliError extends CliUsageError {}
 
 function cliVersion(): string {
   try {
@@ -120,7 +127,7 @@ async function printNamedToolHelp(userCmd: string, json: boolean, compact: boole
   const entry = toolHandlers.get(mapped) ?? toolHandlers.get(userCmd);
   const listed = reg.listAllToolSchemas().find((t) => t.name === mapped || t.name === userCmd);
   if (!entry && !listed) {
-    printJson({ success: false, tool: userCmd, error: `未知命令：${userCmd}` }, compact);
+    printJson({ success: false, tool: userCmd, error: `未知命令：${userCmd}`, errorKind: "usage" }, compact);
     process.exitCode = 2;
     return;
   }
@@ -192,7 +199,7 @@ function applyFileSpecs(
     const rawField = spec.slice(0, eq);
     const field = resolveFlagKey(rawField, keys);
     if (!field) {
-      throw new UnknownFlagError(rawField);
+      throw new UnknownFlagError(rawField, undefined, { tool, knownFlags: [...keys] });
     }
     const path = spec.slice(eq + 1);
     rest[field] = path === "-" || path.startsWith("@") ? path : `@${path}`;
@@ -302,7 +309,7 @@ async function main(): Promise<void> {
     rest = extracted.rest;
   } catch (err) {
     if (err instanceof InvalidBooleanFlagError) {
-      printJson({ success: false, tool: positional[0] ?? "cli", error: err.message }, false);
+      printJson({ success: false, tool: positional[0] ?? "cli", error: err.message, errorKind: "usage" }, false);
       process.exitCode = 2;
       return;
     }
@@ -351,7 +358,7 @@ async function main(): Promise<void> {
   try {
     if (suspectFlags.length > 0) {
       const typed = `-${suspectFlags[0]}`;
-      throw new UnknownFlagError(typed.slice(1), typed);
+      throw new UnknownFlagError(typed.slice(1), typed, { tool: userCmd });
     }
 
     if (userCmd === "list-tools") {
@@ -378,7 +385,7 @@ async function main(): Promise<void> {
     if (userCmd === "descriptor") {
       applyFileSpecs(rest, globals.file, userCmd, descriptorSchema);
       expandFlagFiles(rest, userCmd, { used: false });
-      const params = coerceFlags(rest, descriptorSchema, {});
+      const params = coerceFlags(rest, descriptorSchema, {}, undefined, userCmd);
       const result = await runDescriptor(params, cmdPositional);
       printJson({ success: true, tool: userCmd, result }, globals.compact);
       return;
@@ -403,7 +410,7 @@ async function main(): Promise<void> {
 
     const params = applyPositionalCompat(
       userCmd,
-      coerceFlags(rest, schema, inject),
+      coerceFlags(rest, schema, inject, undefined, userCmd),
       cmdPositional,
     );
     const leftover = unusedPositionals(userCmd, cmdPositional);
@@ -413,7 +420,7 @@ async function main(): Promise<void> {
     const parsed = schema.safeParse(params);
     if (!parsed.success) {
       const issues = parsed.error.issues.map((i) => `${i.path.join(".") || "(root)"}：${i.message}`).join("；");
-      throw new CliUsageError(userCmd, `参数校验失败：${issues}（可用 list-tools 或 ${userCmd} --help 查看 schema）`);
+      throw new ValidationCliError(userCmd, `参数校验失败：${issues}（可用 list-tools 或 ${userCmd} --help 查看 schema）`);
     }
 
     await maybeHintDataDir(mappedTool);
@@ -422,7 +429,10 @@ async function main(): Promise<void> {
       const raw = await entry.handler(parsed.data as Record<string, unknown>);
       const { result, isError } = unwrapHandlerResult(raw);
       const failed = isToolFailure(result, isError, globals.failOnError);
-      printJson({ success: !failed, tool: userCmd, result }, globals.compact);
+      printJson(
+        { success: !failed, tool: userCmd, result, ...(failed ? { errorKind: "tool_failure" } : {}) },
+        globals.compact,
+      );
       if (failed) process.exitCode = 1;
     } finally {
       try {
@@ -441,21 +451,28 @@ async function main(): Promise<void> {
   } catch (err) {
     const toolName = positional[0] ?? "cli";
     const compact = globals.compact;
-    if (err instanceof UnknownFlagError || err instanceof InvalidBooleanFlagError) {
-      printJson({ success: false, tool: toolName, error: err.message }, compact);
-      process.exitCode = 2;
-      return;
+    const isUsage =
+      err instanceof UnknownFlagError ||
+      err instanceof AmbiguousFlagError ||
+      err instanceof InvalidBooleanFlagError ||
+      err instanceof CliUsageError;
+    const errorKind: CliErrorKind = !isUsage
+      ? "tool_failure"
+      : err instanceof ValidationCliError
+        ? "validation"
+        : "usage";
+    const envelope: Record<string, unknown> = {
+      success: false,
+      tool: err instanceof CliUsageError ? err.tool : toolName,
+      error: err instanceof Error ? err.message : String(err),
+      errorKind,
+    };
+    if (err instanceof UnknownFlagError) {
+      if (err.nearFlags.length > 0) envelope.nearFlags = err.nearFlags;
+      if (err.knownFlags.length > 0) envelope.knownFlags = err.knownFlags;
     }
-    if (err instanceof CliUsageError) {
-      printJson({ success: false, tool: err.tool, error: err.message }, compact);
-      process.exitCode = 2;
-      return;
-    }
-    printJson(
-      { success: false, tool: toolName, error: err instanceof Error ? err.message : String(err) },
-      compact,
-    );
-    process.exitCode = 1;
+    printJson(envelope, compact);
+    process.exitCode = isUsage ? 2 : 1;
   }
 }
 

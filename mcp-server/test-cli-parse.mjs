@@ -4,15 +4,22 @@
 import assert from "node:assert/strict";
 import * as z from "zod";
 import {
+  AmbiguousFlagError,
   applyPositionalCompat,
+  canonicalFlagName,
   coerceFlagValue,
   coerceFlags,
   extractGlobalFlags,
+  FLAG_ALIASES,
+  flagHelpPointer,
+  flagKeyCandidates,
   isToolFailure,
   kebabToCamel,
   mapShortCommand,
+  nearFlagNames,
   parseFlags,
   resolveFlagKey,
+  schemaObjectShape,
   schemaPropertyType,
   UnknownFlagError,
   InvalidBooleanFlagError,
@@ -255,6 +262,117 @@ import {
   const mappingJson = zodToJsonSchema(convertMappingSchema);
   assert.ok((methodJson.required ?? []).includes("version"), JSON.stringify(methodJson.required));
   assert.ok((mappingJson.required ?? []).includes("version"), JSON.stringify(mappingJson.required));
+}
+
+// ── S2: 归一化 flag 匹配 + 未知参数纠错 ─────────────────────────────────────
+{
+  assert.equal(canonicalFlagName("allow-fallback"), "allowfallback");
+  assert.equal(canonicalFlagName("allowFallback"), "allowfallback");
+  assert.equal(canonicalFlagName("allow_fallback"), "allowfallback");
+  assert.equal(canonicalFlagName("ALLOW-Fallback"), "allowfallback");
+  assert.equal(canonicalFlagName("dryRun"), "dryrun");
+}
+
+{
+  const snake = new Set(["from", "to", "memberName", "allow_fallback"]);
+  // 纯分隔符/大小写差异由回退接管（这两条曾经靠 FLAG_ALIASES 里的 allow-fallback / allowFallback）
+  assert.equal(resolveFlagKey("allow-fallback", snake), "allow_fallback");
+  assert.equal(resolveFlagKey("allowFallback", snake), "allow_fallback");
+  assert.equal(resolveFlagKey("ALLOW_FALLBACK", snake), "allow_fallback");
+  assert.equal(resolveFlagKey("allow_fallback", snake), "allow_fallback");
+  assert.equal(resolveFlagKey("highlight-key", snake), undefined);
+  // exact 先于回退，双拼写并存的 schema 不会因归一化而自相歧义
+  assert.equal(resolveFlagKey("dryRun", new Set(["dryRun", "dry_run"])), "dryRun");
+  assert.equal(resolveFlagKey("dry_run", new Set(["dryRun", "dry_run"])), "dry_run");
+  // 语义改名 alias 优先于归一化回退（否则 class 会撞上 className/class_name 歧义）
+  assert.equal(resolveFlagKey("class", new Set(["className", "class_name"])), "className");
+  assert.equal(resolveFlagKey("name", new Set(["memberName", "crashReport"])), "memberName");
+  assert.equal(resolveFlagKey("dry-run", new Set(["dryRun"])), "dryRun");
+}
+
+{
+  const both = new Set(["foo_bar", "fooBar", "version"]);
+  assert.deepEqual(flagKeyCandidates("foo-bar", both), ["fooBar", "foo_bar"]);
+  // kebabToCamel 先命中，故双拼写并存时 --foo-bar 明确取 camel 写法，不进歧义分支
+  assert.equal(resolveFlagKey("foo-bar", both), "fooBar");
+  assert.throws(
+    () => resolveFlagKey("FOO-BAR", both),
+    (err) =>
+      err instanceof AmbiguousFlagError &&
+      err.candidates.length === 2 &&
+      /歧义/.test(err.message) &&
+      /--fooBar/.test(err.message) &&
+      /--foo_bar/.test(err.message),
+  );
+  assert.deepEqual(flagKeyCandidates("version", both), ["version"]);
+  assert.equal(resolveFlagKey("none-of-these", both), undefined);
+}
+
+{
+  const known = ["className", "memberName", "methodName", "version", "dryRun"];
+  assert.deepEqual(nearFlagNames("classNam", known), ["className"]);
+  assert.deepEqual(nearFlagNames("versoin", known), ["version"]);
+  assert.deepEqual(nearFlagNames("xyz", known), []);
+  assert.deepEqual(nearFlagNames("af", ["ae", "ab", "ac", "ad"]), ["ab", "ac", "ad"]);
+}
+
+{
+  assert.equal(flagHelpPointer("query_api"), "查看全部参数：node mcp-server/dist/cli.js query_api --help");
+  const plain = new UnknownFlagError("className");
+  assert.equal(plain.message, "未知参数 --className");
+  const withTool = new UnknownFlagError("xyzz", undefined, { tool: "search_docs", knownFlags: ["query", "version"] });
+  assert.match(withTool.message, /^未知参数 --xyzz；/);
+  assert.match(withTool.message, /node mcp-server\/dist\/cli\.js search_docs --help/);
+  assert.deepEqual(withTool.nearFlags, []);
+  assert.deepEqual(withTool.knownFlags, ["query", "version"]);
+  const withNear = new UnknownFlagError("classNam", undefined, { knownFlags: ["className", "version"] });
+  assert.deepEqual(withNear.nearFlags, ["className"]);
+  assert.match(withNear.message, /近似：--className/);
+  assert.equal("tool" in withNear, false);
+}
+
+{
+  const { listAllToolSchemas } = await import("./dist/tool-registry.js");
+  const all = listAllToolSchemas();
+  const convertMapping = all.find((t) => t.name === "convert_mapping");
+  const forgeDoc = all.find((t) => t.name === "get_forge_doc_full");
+  assert.deepEqual(coerceFlags({ "allow-fallback": "true" }, convertMapping.inputSchema), { allow_fallback: true });
+  assert.deepEqual(coerceFlags({ allowFallback: true }, convertMapping.inputSchema), { allow_fallback: true });
+  assert.deepEqual(coerceFlags({ "highlight-key": "true" }, forgeDoc.inputSchema), { highlight_key: true });
+  assert.deepEqual(coerceFlags({ highlightKey: true }, forgeDoc.inputSchema), { highlight_key: true });
+}
+
+{
+  // 新回退规则的安全性证明：全部 schema 内 canonical 形式必须两两不撞，
+  // 且每个既有 key 仍能原样解析回自己（回永不把已能用的写法变成歧义）。
+  const { listAllToolSchemas } = await import("./dist/tool-registry.js");
+  const all = listAllToolSchemas();
+  assert.ok(all.length >= 80, `registry shrank to ${all.length}`);
+  let keyTotal = 0;
+  const distinct = new Set();
+  for (const t of all) {
+    const names = Object.keys(schemaObjectShape(t.inputSchema) ?? {});
+    keyTotal += names.length;
+    for (const n of names) distinct.add(n);
+    const groups = new Map();
+    for (const n of names) groups.set(canonicalFlagName(n), [...(groups.get(canonicalFlagName(n)) ?? []), n]);
+    for (const [c, ns] of groups) {
+      assert.equal(ns.length, 1, `canonical collision in ${t.name}: ${c} <- ${ns.join(", ")}`);
+    }
+    const keys = new Set(names);
+    for (const n of names) {
+      assert.equal(n.includes("-"), false, `${t.name}.${n} contains a hyphen`);
+      assert.equal(resolveFlagKey(n, keys), n, `${t.name}.${n} no longer resolves to itself`);
+    }
+  }
+  assert.ok(keyTotal >= 300, `unexpectedly few schema keys: ${keyTotal}`);
+  assert.ok(distinct.size >= 100, `unexpectedly few distinct keys: ${distinct.size}`);
+}
+
+{
+  // 禁止再往 alias 表塞 S2 回退已覆盖的那一类（目标是 snake_case = 只差分隔符/大小写）
+  const redundant = Object.entries(FLAG_ALIASES).filter(([, to]) => to.includes("_"));
+  assert.deepEqual(redundant, [], `snake_case alias targets belong to canonical fallback: ${JSON.stringify(redundant)}`);
 }
 
 console.log("test-cli-parse: ok");

@@ -1,6 +1,7 @@
 /**
  * CLI test for mc-skill（flags-only + list-tools + JSON 包装 + 通用 dispatch）
  */
+import assert from "node:assert/strict";
 import { spawnSync } from "child_process";
 import { mkdtempSync, rmSync, writeFileSync, readFileSync } from "fs";
 import { tmpdir } from "os";
@@ -36,6 +37,26 @@ function parseJson(r, label) {
   } catch {
     throw new Error(`${label}: stdout is not JSON\n${r.stdout}\n${r.stderr}`);
   }
+}
+
+/**
+ * 文档里写死的工具总数声明必须等于 registry 实际数。
+ * 只认总数：紧跟「本组 / 该组 / 组内 …」限定语的是分组计数，不是总数声明。
+ */
+const GROUP_SCOPED = /(?:本组|该组|这组|组内|每组)\s*\**\s*$/;
+function staleTotalClaims(docs, total) {
+  const bad = [];
+  for (const m of docs.matchAll(/(\d+)\s*个工具/g)) {
+    if (GROUP_SCOPED.test(docs.slice(Math.max(0, m.index - 16), m.index))) continue;
+    if (Number(m[1]) !== total) bad.push(m[1]);
+  }
+  return bad;
+}
+
+{
+  assert.deepEqual(staleTotalClaims("服务共 79 个工具", 80), ["79"], "stale total must be caught");
+  assert.deepEqual(staleTotalClaims("计数口径：本组 **9 个工具 / 8 行**", 80), [], "group count must be ignored");
+  assert.deepEqual(staleTotalClaims("全部 80 个工具的 schema", 80), [], "matching total must pass");
 }
 
 // ── 1. flags-only convert（--key value / --key=value 混用）────────────────────
@@ -118,10 +139,9 @@ function parseJson(r, label) {
     readFileSync(join(repoRoot, "README.md"), "utf8"),
     readFileSync(join(repoRoot, "CONTRIBUTING.md"), "utf8"),
   ].join("\n");
-  for (const m of docs.matchAll(/(\d+)\s*个工具/g)) {
-    if (Number(m[1]) !== j.result.total) {
-      throw new Error(`文档写死「${m[1]} 个工具」但 list-tools 为 ${j.result.total}`);
-    }
+  const stale = staleTotalClaims(docs, j.result.total);
+  if (stale.length > 0) {
+    throw new Error(`文档写死「${stale.join(" / ")} 个工具」但 list-tools 为 ${j.result.total}`);
   }
 }
 
@@ -530,6 +550,77 @@ function parseJson(r, label) {
     throw new Error(`--fail-on-error should lift errors[] to exit 1, got ${r.status}: ${JSON.stringify(j.result.errors)}`);
   }
   console.log("diagnose_gradle --fail-on-error: ok");
+}
+
+// ── S2: 归一化 flag 回退 + 失败信封 errorKind 分类 ───────────────────────────
+{
+  const base = [
+    "convert", "--from", "mcp", "--to", "mojang", "--name", "getHealth",
+    "--owner", "net.minecraft.world.entity.LivingEntity", "--descriptor", "()F", "--version", "1.20.1",
+  ];
+  for (const spelling of ["--allow-fallback=true", "--allowFallback=true", "--allow_fallback=true"]) {
+    const r = run([...base, spelling]);
+    if (r.status !== 0) throw new Error(`${spelling} exit ${r.status}, canonical fallback broken?\n${r.stdout}\n${r.stderr}`);
+    const j = parseJson(r, `convert-${spelling}`);
+    if (j.success !== true || j.result?.found !== true) throw new Error(`${spelling} not applied: ${JSON.stringify(j)}`);
+    if ("errorKind" in j) throw new Error(`success envelope must not carry errorKind: ${JSON.stringify(j)}`);
+  }
+  console.log("convert allow_fallback 三种写法（kebab/camel/snake）: ok");
+}
+
+{
+  const r = run(["query_api", "--classNam", "Item", "--version", "1.20.1"]);
+  if (r.status !== 2) throw new Error(`expected exit 2 for near-miss flag, got ${r.status}:\n${r.stdout}`);
+  const j = parseJson(r, "near-miss-flag");
+  if (j.errorKind !== "usage") throw new Error(`near-miss errorKind: ${JSON.stringify(j)}`);
+  if (!Array.isArray(j.nearFlags) || !j.nearFlags.includes("className")) {
+    throw new Error(`near-miss nearFlags missing className: ${JSON.stringify(j)}`);
+  }
+  if (!String(j.error).includes("近似")) throw new Error(`near-miss message lacks 近似: ${j.error}`);
+  if (!String(j.error).includes("node mcp-server/dist/cli.js query_api --help")) {
+    throw new Error(`near-miss message lacks repo-root help pointer: ${j.error}`);
+  }
+  if ("result" in j) throw new Error(`usage error must not carry result: ${JSON.stringify(j)}`);
+  console.log("近似 flag 名 → exit 2 + nearFlags + help 指针");
+}
+
+{
+  const r = run(["search_docs", "--xyzzz", "anything"]);
+  if (r.status !== 2) throw new Error(`expected exit 2 for unknown flag, got ${r.status}:\n${r.stdout}`);
+  const j = parseJson(r, "unknown-flag-envelope");
+  if (j.errorKind !== "usage") throw new Error(`unknown flag errorKind: ${JSON.stringify(j)}`);
+  if (!Array.isArray(j.knownFlags) || !j.knownFlags.includes("query")) {
+    throw new Error(`unknown flag knownFlags missing query: ${JSON.stringify(j.knownFlags)}`);
+  }
+  console.log("未知 flag → exit 2 + knownFlags");
+}
+
+{
+  const r = run(["get_forge_doc_full"]);
+  if (r.status !== 2) throw new Error(`expected exit 2 for missing required, got ${r.status}:\n${r.stdout}`);
+  const j = parseJson(r, "missing-required");
+  if (j.errorKind !== "validation") throw new Error(`missing required errorKind: ${JSON.stringify(j)}`);
+  if (!String(j.error).includes("参数校验失败")) throw new Error(`missing required message: ${j.error}`);
+  console.log("缺必填参数 → exit 2 + errorKind validation");
+}
+
+{
+  const r = run(["get_forge_doc_full", "--id", "no-such-page-zz", "--version", "1.20.1"]);
+  if (r.status !== 1) throw new Error(`expected exit 1 for tool failure, got ${r.status}:\n${r.stdout}`);
+  const j = parseJson(r, "tool-failure");
+  if (j.errorKind !== "tool_failure") throw new Error(`tool failure errorKind: ${JSON.stringify(j)}`);
+  if (j.success !== false || !j.result) throw new Error(`tool failure envelope: ${JSON.stringify(j)}`);
+  console.log("工具内失败 → exit 1 + errorKind tool_failure");
+}
+
+{
+  const r = run(["definitely_not_a_tool_xyz"]);
+  const j = parseJson(r, "unknown-cmd-kind");
+  if (r.status !== 2 || j.errorKind !== "usage") throw new Error(`unknown command classification: ${r.status} ${JSON.stringify(j)}`);
+  const b = run(["--compact=maybe", "get_server_status"]);
+  const bj = parseJson(b, "bad-boolean-global");
+  if (b.status !== 2 || bj.errorKind !== "usage") throw new Error(`bad boolean global classification: ${b.status} ${JSON.stringify(bj)}`);
+  console.log("未知命令 / 坏布尔全局 flag → exit 2 + errorKind usage");
 }
 
 console.log("test-cli: ok");
