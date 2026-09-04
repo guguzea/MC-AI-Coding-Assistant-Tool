@@ -1,0 +1,8 @@
+> 版本：1.12.2
+> 来源：http://develop.liteloader.com/liteloader/LiteLoader 分支 1.12.2（2026-08-15 本地打开源码核实；许可证禁止把 loader 源码再分发进本仓库）
+
+本文件是 ../processed/verified-api.md 的源稿记录：该正文是本仓逐签名核实后的自写整理稿，
+不存在外部抓取原文，因此这里落盘的是源稿说明而非页面快照。表外名字禁止输出。
+
+覆盖接口：LiteMod / Listener / Tickable / ChatFilter / ChatListener /
+OutboundChatListener / HUDRenderListener 等，逐条见整理版。

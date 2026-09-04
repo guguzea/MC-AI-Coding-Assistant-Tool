@@ -1,0 +1,6 @@
+> 版本：1.12.2
+> 来源：本仓自写短文（无外部抓取源）；依据 forge/1.12.2 规则树 01–03 与 liteloader/1.12.2 05 / 08
+
+本文件是 ../processed/hybrid.md 的源稿记录：LiteLoader + Forge 混合工程的分工与
+唯一 Gradle 入口（apply plugin: 'net.minecraftforge.gradle.liteloader'）为本仓整理，
+不是任何上游页面的副本。禁止把这条插件与标准 forge 插件同时 apply。

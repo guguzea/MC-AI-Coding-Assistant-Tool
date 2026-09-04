@@ -2,12 +2,15 @@
  * Direct (in-process) audit of MCP tool handlers. No stdio framing.
  * Read-only product audit — writes _audit-findings.json
  */
-import { writeFileSync } from "fs";
+import { writeFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO = join(__dirname, "..");
+// 仓库根（本文件在 mcp-server/scripts/）：data/ 与 community_knowledge/ 都在根上。
+// 写成 join(__dirname,"..") 会指到 mcp-server/，于是 MC_SKILL_DATA 与 scaffold
+// fixture 双双指向不存在的目录，而断言只是「查不到就算过」——整段静默空转。
+const REPO = join(__dirname, "..", "..");
 process.env.MC_SKILL_DATA ??= join(REPO, "data");
 process.env.MC_SKILL_COMMUNITY ??= join(REPO, "community_knowledge");
 
@@ -125,12 +128,21 @@ async function main() {
   r = unwrap(await docs.listFabricVersions());
   r = unwrap(await docs.searchFabricDocs({ query: "item", version: "1.20.1" }));
   if (!(r.total > 0 || r.results?.length)) note("warn", "search_fabric_docs", "empty", safe(r));
-  const fabId = r.results?.[0]?.id;
-  if (fabId) {
-    unwrap(await docs.getFabricDocSummary({ id: fabId, version: "1.20.1" }));
-    const full = unwrap(await docs.getFabricDocFull({ id: fabId, version: "1.20.1" }));
-    if (!full.content && full.error) note("warn", "get_fabric_doc_full", "error", safe(full));
-    unwrap(await docs.getFabricDocRelated({ id: fabId, version: "1.20.1" }));
+  const fabHit = r.results?.[0];
+  if (fabHit?.id) {
+    // 1.20.1 等档的 fabric-docs 是空树，search 兜底到 fabric-wiki；取正文必须回填该 source
+    if (!fabHit.source) note("warn", "search_fabric_docs", "results[].source missing → get_* handoff unusable", safe(fabHit));
+    const fabSrc = fabHit.source ?? "fabric-docs";
+    const fabId = fabHit.id;
+    const sum = unwrap(await docs.getFabricDocSummary({ id: fabId, version: "1.20.1", source: fabSrc }));
+    if (!sum.firstParagraph && !sum.sections?.length) {
+      note("warn", "get_fabric_doc_summary", "search id not resolvable via summary", safe(sum));
+    }
+    const full = unwrap(await docs.getFabricDocFull({ id: fabId, version: "1.20.1", source: fabSrc }));
+    if (!full.content && full.error) {
+      note("warn", "get_fabric_doc_full", "search id not resolvable via full", safe(full));
+    }
+    unwrap(await docs.getFabricDocRelated({ id: fabId, version: "1.20.1", source: fabSrc }));
   }
 
   // NeoForge
@@ -220,19 +232,20 @@ async function main() {
     evidence: "yarn→mojang=cpn vs mojang→yarn accepts net.minecraft.world.level.block.Block",
   });
 
-  // version
+  // version（getVersionInfo 是 async 导出：漏 await 时 r 是 Promise，
+  // 「weak」恒报、「constructor」恒误报 ERROR，另两条检查则永远看不到值）
   step("get_version_info");
-  r = getVersionInfo({ version: "1.20.1", action: "注册方块", platform: "forge" });
+  r = await getVersionInfo({ version: "1.20.1", action: "注册方块", platform: "forge" });
   if (!r.recommendation) note("warn", "get_version_info", "weak", safe(r));
-  r = getVersionInfo({ version: "99.0", action: "注册方块", platform: "forge" });
+  r = await getVersionInfo({ version: "99.0", action: "注册方块", platform: "forge" });
   if (r.recommendation && !r.error && !r.unknown) {
     note("warn", "get_version_info", "unknown MC version still recommends without error flag", safe(r));
   }
-  r = getVersionInfo({ version: "constructor", action: "register", platform: "forge" });
+  r = await getVersionInfo({ version: "constructor", action: "register", platform: "forge" });
   if (r.forgeVersion !== "unknown" || typeof r.recommendation !== "string" || /undefined。注册流程/.test(r.recommendation)) {
     note("error", "get_version_info", "constructor must not hit Object.prototype", safe(r));
   }
-  r = getVersionInfo({ version: "1.12.2", action: "register", platform: "forge" });
+  r = await getVersionInfo({ version: "1.12.2", action: "register", platform: "forge" });
   if (/创建 DeferredRegister/.test(r.recommendation || "")) {
     note("error", "get_version_info", "1.12.2 register must not append DeferredRegister flow", safe(r));
   }
@@ -316,12 +329,21 @@ dependencies { minecraft 'net.minecraftforge:forge:1.20.1-47.2.0' }`,
 
   // porting
   step("analyze_porting_path");
+  // fixture 不存在 → 工具 ok:false → routeSteps 空 → 下面 4 条断言全部「查不到就算过」。
+  // 空转必须是 ERROR，不能继续算通过。
+  const scaffold = join(REPO, "forge", "1.20.1", "scaffold");
+  if (!existsSync(scaffold)) {
+    note("error", "audit-self", "porting fixture missing → porting checks are vacuous", { scaffold });
+  }
   const analysisRaw = await analyzePortingPath({
-    projectPath: join(REPO, "forge", "1.20.1", "scaffold"),
+    projectPath: scaffold,
     targetPlatform: "fabric",
     targetVersion: "1.20.1",
   });
   const analysis = typeof analysisRaw === "string" ? JSON.parse(analysisRaw) : unwrap(analysisRaw);
+  if (analysis.ok === false) {
+    note("error", "audit-self", "analyze_porting_path fixture failed → porting checks are vacuous", analysis.error);
+  }
   const a = analysis.analysis ?? analysis;
   if (a?.target?.mappings === "mojmaps") {
     note("warn", "analyze_porting_path", "fabric target mappings default mojmaps; KB versions.json omits yarn for 1.20.1", a.target);

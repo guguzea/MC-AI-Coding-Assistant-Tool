@@ -2,5 +2,17 @@
   "status": "ready",
   "pack-status": "ready",
   "platform": "forge",
-  "minecraftVersion": "1.19.4"
+  "minecraftVersion": "1.19.4",
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "8.8",
+    "provenance": {
+      "text": "house+official-mdk:forge-1.19.4-forgegradle(gradle-wrapper.properties)",
+      "wrapper": "gradle-wrapper-task"
+    },
+    "buildVerified": false,
+    "gaps": [
+      "gradlew build 未在本机跑通（W5-4 阶段③）"
+    ]
+  }
 }

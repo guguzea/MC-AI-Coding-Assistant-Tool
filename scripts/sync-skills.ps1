@@ -54,9 +54,11 @@ function Normalize-Content {
     # `platform/ver/.cursor/rules/XX.mdc` → `XX.mdc`
     $Text = [regex]::Replace($Text, '`' + $escaped + '/\.cursor/rules/(\d{2}-[a-z-]+\.mdc)`', '`$1`')
     $Text = [regex]::Replace($Text, $escaped + '/\.cursor/rules/(\d{2}-[a-z-]+\.mdc)', '$1')
-    $Text = [regex]::Replace($Text, '参考\s+' + $escaped + '/\.cursor/rules/(\d{2}-[a-z-]+\.mdc)', '参考 `$1`')
-    $Text = [regex]::Replace($Text, '参见\s*`?' + $escaped + '/\.cursor/rules/(\d{2}-[a-z-]+\.mdc)`?', '参见 `$1`')
-    $Text = [regex]::Replace($Text, '→\s+参考\s+' + $escaped + '/\.cursor/rules/(\d{2}-[a-z-]+\.mdc)', '→ 参考 `$1`')
+    # 此处原另有三条「参考/参见/→ 参考 + 路径 → 反引号包名」规则（2026-09-04 删）。两条独立理由让它们永远跑不到：
+    #   ① 上面那条裸路径规则已把同一段文本改光，前置词的匹配面为空（实测 1291 个 skills 源稿 0 处活输入）；
+    #   ② 本脚本无 BOM，PowerShell 5.1 按 ANSI(GBK) 解码，中文字面量匹配不到 UTF-8 正文（探针：加 BOM 才 REPL）。
+    # 条款集必须与 mcp-server/scripts/assert-skill-mirrors.mjs 的 normalizePathRefs 保持一致，
+    # 由 mcp-server/scripts/assert-sync-normalizers.mjs 逐 fixture 差分钉住（只在一侧加规则 = 立刻红）。
     return $Text
 }
 

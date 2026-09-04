@@ -5,6 +5,8 @@
  * 末尾另有 pack-tree 不变式（同一份「源稿 ↔ 派生树」契约）：
  *   - neoforge/ 根档 = legacy trap：只留 .cursor 源稿，7 套投影树必须为空。
  *   - 任何档不得有 `.cursor/agents/`（复数）——sync 只写 `.cursor/agent/`（单数）。
+ *   - 有 `.cursor/rules` 的档必须有薄包装 `sync-skills.ps1`（转发仓库脚本）。
+ *   - 投影树根（`.claude/` 等 7 套）里不得出现游离 `AGENTS.md`——sync 不写该路径。
  *   - AGENTS.md → .cursor/agent + .claude/agents + .trae/agents 三镜像：
  *     存量漂移记在 KNOWN_AGENTS_DRIFT 台账里，新增漂移直接失败；
  *     台账条目一旦不再漂移也必须删（跑过一次真 sync 就得缩短），否则它变成永久豁免名单。
@@ -245,6 +247,41 @@ for (const plat of PLATS) {
     if (existsSync(plural) && statSync(plural).isDirectory()) {
       failures.push(
         `orphan ${rel}/.cursor/agents/ (plural is never a sync target — keep .cursor/agent/default.md only)`,
+      );
+    }
+  }
+}
+
+// (2b) scripts/sync-skills.ps1 头部自陈约定：「各版本目录下的 sync-skills.ps1 应为
+//     对本脚本的薄包装」。缺一个 = 该档改了规则后没人能就地广播，只能记得去跑 -All。
+//     只查「存在 + 确实是转发到仓库脚本的薄包装」，不查逐字节（bedrock 深度不同）。
+for (const pack of listVersionDirs()) {
+  const wrapper = join(pack.base, "sync-skills.ps1");
+  const rel = relative(repoRoot, wrapper);
+  if (!existsSync(wrapper)) {
+    failures.push(`missing ${rel} (本档有 .cursor/rules 却没有薄包装 — 照 <repo>/fabric/1.21.11/sync-skills.ps1 补一个)`);
+    continue;
+  }
+  const text = readFileSync(wrapper, "utf8");
+  if (!/[\\/]scripts[\\/]sync-skills\.ps1/.test(text) || !/-TargetDir \$here/.test(text)) {
+    failures.push(
+      `${rel} is not a thin wrapper (必须转发到仓库 scripts/sync-skills.ps1 并传 -TargetDir $here；` +
+        "自己实现一份就会和权威脚本分叉)",
+    );
+  }
+}
+
+// (2c) 投影树根里的游离 AGENTS.md：sync 只写 AGENTS.md → `.cursor/agent/default.md`
+//     + `.claude/agents/` + `.trae/agents/` 三镜像，`<host>/AGENTS.md` 不在其列。
+//     留着它 = 下次有人改档内 AGENTS.md，这份副本不会被任何命令更新，且 mirror gate 的
+//     (3) 看不见它 → 陈旧副本静默存在。2026-09-04 实测全仓 2 份（forge/1.14.4 的
+//     `.continue/AGENTS.md` 与 `.trae/AGENTS.md`，逐字节同权威），已删并立此不变式。
+for (const pack of listVersionDirs()) {
+  for (const host of PROJECTION_DIRS) {
+    const orphan = join(pack.base, host, "AGENTS.md");
+    if (existsSync(orphan)) {
+      failures.push(
+        `orphan ${relative(repoRoot, orphan)} (sync 从不写这个路径；把内容并回 ${pack.rel}/AGENTS.md 后删掉它)`,
       );
     }
   }

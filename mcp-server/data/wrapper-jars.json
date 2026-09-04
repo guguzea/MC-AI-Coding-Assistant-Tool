@@ -1,14 +1,36 @@
 {
-  "note": "Gradle Wrapper 三件套的出处记录（与 mcp-server/test-core.mjs 的 WRAPPER_JARS 钉值表由门禁强制对齐）。本文件是仓内可查证据；S13 当时的取证日志在临时目录，不入库，故其结论逐条落到这里。",
+  "note": "Gradle Wrapper 三件套的出处记录（与 mcp-server/test-core.mjs 的 WRAPPER_JARS 钉值表由 S13 门禁强制对齐）。本文件是仓内可查证据；取证日志在临时目录、不入库，故其结论逐条落到这里。unverifiedWrapper 一节已因 forge/1.20.1 jar 换成正经 8.5 条目产物而作废，处置记录在 resolvedWrapper。",
   "method": {
     "officialCheck": "先取 https://services.gradle.org/distributions/gradle-<v>-bin.zip.sha256 官方校验值（需 -L 跟随 307）。",
     "download": "实体 zip 经 mirrors.cloud.tencent.com/gradle 或 mirrors.huaweicloud.com/gradle 取得（services.gradle.org 本体 307 → github.com/gradle/gradle-distributions，本机不可达）。",
-    "verify": "逐档实测 zip sha256 == 官方校验值：7/7 SHA-OK。",
-    "generate": "用该版本自己的 Gradle 离线执行 wrapper 任务生成三件套：gradle -g <gradle-home> wrapper --gradle-version <v> --no-validate-url（8.4+）；6.9.4 / 7.4.2 / 7.6.1 无 --no-validate-url，改用 --gradle-distribution-url file:<本地 zip>。6.9.4 在 JDK 17 下 startup failed，改由 JRE 1.8.0_431 运行。",
-    "jarIdentity": "生成的 jar 与同一 zip 内嵌 lib/plugins/gradle-wrapper-<v>.jar 里的 gradle-wrapper.jar 条目逐字节相同：7 档中 6 档 match=YES；8.10 因条目路径不同未参与该比对（其 sha256 仍来自官方 zip 内的 wrapper 任务产物）。",
-    "lineEndings": "gradlew 实测 CR=0（LF-only），gradlew.bat 实测 CR=LF=行数（CRLF），与 git ls-files --eol 基线一致，故原样复制不做行尾转换。git 模式 100644（gradlew 无执行位）。"
+    "verify": "逐档实测 zip sha256 == https://services.gradle.org/distributions/gradle-<v>-bin.zip.sha256：S13（2026-09-02）7/7 SHA-OK；2026-09-04 对本轮新增/复测档 4.9 / 7.2 / 7.3.3 / 7.6 / 8.5 / 8.8 / 9.2.1 再测 7/7 SHA-OK。",
+    "generate": "用该版本自己的 Gradle 离线执行 wrapper 任务生成三件套：gradle -g <gradle-home> wrapper --gradle-version <v>（8.4+ 加 --no-validate-url；6.9.4 / 7.4.2 / 7.6.1 无该参数，改用 --gradle-distribution-url file:<本地 zip>；7.x/8.x 对 file: URL 仍会做「Test of distribution url」联网校验并失败，故 8.x 一律改传 mirrors.cloud.tencent.com 的 https --gradle-distribution-url）。要点：①目标目录必须先有 settings.gradle，否则 7.x+ 报 does not contain a Gradle build；②必须 -Dfile.encoding=UTF-8，否则 Windows 默认字符集把 gradlew 里的版权符号落成 1 字节，产物比仓内文件少 23 B；③9.2.1 需 JAVA_HOME 指向 JDK 17（PATH 上的 java 是 1.8.0_431）；6.9.4 在 JDK 17 下 startup failed，改由 JRE 1.8.0_431 运行。",
+    "jarIdentity": "生成的 jar 与官方发行包内层条目逐字节相同（2026-09-04 重做）：7.2 / 7.3.3 = lib/gradle-wrapper-<v>.jar 内的 gradle-wrapper.jar；7.6 / 8.5 / 8.8 = lib/plugins/gradle-wrapper-<v>.jar；9.2.1 = lib/plugins/gradle-wrapper-main-9.2.1.jar；全部 MATCH。4.9 无同名内层条目（见该档 caveat）；8.10 条目路径不同未参与（其 sha256 仍来自官方 zip 内的 wrapper 任务产物）；9.5.1 为仓内基线，未复测上游。",
+    "lineEndings": "gradlew 实测 CR=0（LF-only），gradlew.bat 实测 CR=LF=行数（CRLF），与 git ls-files --eol 基线一致，故原样复制不做行尾转换。git 模式 100644（gradlew 无执行位）。",
+    "notVersionBound": "wrapper 产物不随版本唯一：实测 7.2 与 7.3.3 全等（jar 33ad4583 / gradlew f96a7575）、7.6 与 7.6.1 全等（jar c5a643cf / gradlew 638c2862 / bat 8e327fcb）、8.5 与 8.6 jar 全等（d3b261c2）、8.4 / 8.5 / 8.6 的 gradlew 同为 fc977a94。所以钉值语义是「props 声明版本 → 该版本发行包 wrapper 任务产物字节」，跨版本字节相等不是矛盾；判定按字节集合相等，不按 jar 内嵌版本字符串。",
+    "provenanceFields": "每档 gradlew / gradlew.bat / jar 都钉 sha256 + size（S13 门禁 scanScaffoldWrappers 逐档实测三者字节必须等于该声明版本的登记值）；measuredOn = 该档字节最后一次与官方发行包产物对证的日期。",
+    "recheck": "2026-09-04 复核：仓内 10 档 fabric 现存三件套字节与本轮按同一流程生成的产物逐档全等（1.14.4=6.9.4、1.17.1=7.4.2、1.16.5=7.6.1、1.18.2/1.19.4/1.20.1=8.4、1.21.3=8.6、1.20.4=8.8、1.21.1=8.10、1.21.11=9.5.1），故既有档只补写 sha256 字段、未改盘。"
   },
   "jars": {
+    "4.9": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-4.9-bin.zip",
+      "zipSha256": "e66e69dce8173dd2004b39ba93586a184628bc6c28461bc771d6835f7f9b0d28",
+      "jarByteCompareWithZipEntry": false,
+      "jarSha256": "e55e7e47a79e04c26363805b31e2f40b7a9cc89ea12113be7de750a3b2cede85",
+      "jarSize": 54413,
+      "gradlewSha256": "8c4c04dd98db1f00d49456dd162418a39312c5cb13d6865d783deb483bd1ed22",
+      "gradlewSize": 5296,
+      "gradlewBatSha256": "0008d785920c9ff5cab17403e0270ccc7ceee8e169b6d67a82d96a5475fec5c9",
+      "gradlewBatSize": 2260,
+      "usedBy": [
+        "forge/1.12.2",
+        "forge/1.13.2",
+        "forge/1.14.4"
+      ],
+      "measuredOn": "2026-09-04",
+      "caveat": "4.9 发行包只有 lib/gradle-wrapper-4.9.jar（27938 B，它本身就是 bootstrap jar，不含 gradle-wrapper.jar 条目），与 wrapper 任务产物（54413 B）不是同一份字节 → 不做逐字节比对；zip sha256 已对官方，jar 由该发行包自己的 wrapper 任务离线生成。"
+    },
     "6.9.4": {
       "verified": "official-distribution",
       "distributionUrl": "https://services.gradle.org/distributions/gradle-6.9.4-bin.zip",
@@ -17,7 +39,46 @@
       "jarSize": 59203,
       "gradlewSize": 8047,
       "gradlewBatSize": 2763,
-      "usedBy": ["fabric/1.14.4"]
+      "usedBy": [
+        "fabric/1.14.4"
+      ],
+      "gradlewSha256": "f9594eb5c08a148f23b9d7a5fd99551224db96dadb1b7cecd3985c4758c4f867",
+      "gradlewBatSha256": "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b",
+      "measuredOn": "2026-09-04"
+    },
+    "7.2": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-7.2-bin.zip",
+      "zipSha256": "f581709a9c35e9cb92e16f585d2c4bc99b2b1a5f85d2badbd3dc6bff59e1e6dd",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-7.2/lib/gradle-wrapper-7.2.jar!gradle-wrapper.jar",
+      "jarSha256": "33ad4583fd7ee156f533778736fa1b4940bd83b433934d1cc4e9f608e99a6a89",
+      "jarSize": 59536,
+      "gradlewSha256": "f96a757581fe5292465e3f3393380bd11fd8086d450b92e7c693da6513f583fe",
+      "gradlewSize": 8070,
+      "gradlewBatSha256": "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b",
+      "gradlewBatSize": 2763,
+      "usedBy": [
+        "forge/1.17.1"
+      ],
+      "measuredOn": "2026-09-04"
+    },
+    "7.3.3": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-7.3.3-bin.zip",
+      "zipSha256": "b586e04868a22fd817c8971330fec37e298f3242eb85c374181b12d637f80302",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-7.3.3/lib/gradle-wrapper-7.3.3.jar!gradle-wrapper.jar",
+      "jarSha256": "33ad4583fd7ee156f533778736fa1b4940bd83b433934d1cc4e9f608e99a6a89",
+      "jarSize": 59536,
+      "gradlewSha256": "f96a757581fe5292465e3f3393380bd11fd8086d450b92e7c693da6513f583fe",
+      "gradlewSize": 8070,
+      "gradlewBatSha256": "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b",
+      "gradlewBatSize": 2763,
+      "usedBy": [
+        "forge/1.15.2"
+      ],
+      "measuredOn": "2026-09-04"
     },
     "7.4.2": {
       "verified": "official-distribution",
@@ -27,7 +88,30 @@
       "jarSize": 59821,
       "gradlewSize": 8070,
       "gradlewBatSize": 2763,
-      "usedBy": ["fabric/1.17.1"]
+      "usedBy": [
+        "fabric/1.17.1"
+      ],
+      "gradlewSha256": "f96a757581fe5292465e3f3393380bd11fd8086d450b92e7c693da6513f583fe",
+      "gradlewBatSha256": "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b",
+      "measuredOn": "2026-09-04"
+    },
+    "7.6": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-7.6-bin.zip",
+      "zipSha256": "7ba68c54029790ab444b39d7e293d3236b2632631fb5f2e012bb28b4ff669e4b",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-7.6/lib/plugins/gradle-wrapper-7.6.jar!gradle-wrapper.jar",
+      "jarSha256": "c5a643cf80162e665cc228f7b16f343fef868e47d3a4836f62e18b7e17ac018a",
+      "jarSize": 61574,
+      "gradlewSha256": "638c2862d623c302f3029f5bd1441276be484c5b79909b706a614ebe8e7a409b",
+      "gradlewSize": 8497,
+      "gradlewBatSha256": "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955",
+      "gradlewBatSize": 2868,
+      "usedBy": [
+        "forge/1.16.5",
+        "forge/1.18.2"
+      ],
+      "measuredOn": "2026-09-04"
     },
     "7.6.1": {
       "verified": "official-distribution",
@@ -37,7 +121,12 @@
       "jarSize": 61574,
       "gradlewSize": 8497,
       "gradlewBatSize": 2868,
-      "usedBy": ["fabric/1.16.5"]
+      "usedBy": [
+        "fabric/1.16.5"
+      ],
+      "gradlewSha256": "638c2862d623c302f3029f5bd1441276be484c5b79909b706a614ebe8e7a409b",
+      "gradlewBatSha256": "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955",
+      "measuredOn": "2026-09-04"
     },
     "8.4": {
       "verified": "official-distribution",
@@ -47,7 +136,33 @@
       "jarSize": 63721,
       "gradlewSize": 8692,
       "gradlewBatSize": 2868,
-      "usedBy": ["fabric/1.18.2", "fabric/1.19.4", "fabric/1.20.1"]
+      "usedBy": [
+        "fabric/1.18.2",
+        "fabric/1.19.4",
+        "fabric/1.20.1"
+      ],
+      "gradlewSha256": "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d",
+      "gradlewBatSha256": "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955",
+      "measuredOn": "2026-09-04"
+    },
+    "8.5": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-8.5-bin.zip",
+      "zipSha256": "9d926787066a081739e8200858338b4a69e837c3a821a33aca9db09dd4a41026",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-8.5/lib/plugins/gradle-wrapper-8.5.jar!gradle-wrapper.jar",
+      "jarSha256": "d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd",
+      "jarSize": 43462,
+      "gradlewSha256": "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d",
+      "gradlewSize": 8692,
+      "gradlewBatSha256": "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955",
+      "gradlewBatSize": 2868,
+      "usedBy": [
+        "forge/1.20.1",
+        "forge/1.20.4",
+        "neoforge/scaffold"
+      ],
+      "measuredOn": "2026-09-04"
     },
     "8.6": {
       "verified": "official-distribution",
@@ -57,7 +172,12 @@
       "jarSize": 43462,
       "gradlewSize": 8692,
       "gradlewBatSize": 2918,
-      "usedBy": ["fabric/1.21.3"]
+      "usedBy": [
+        "fabric/1.21.3"
+      ],
+      "gradlewSha256": "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d",
+      "gradlewBatSha256": "bdecf875b6868cbcbd36a1f85eedf0832f358ff28092c5797ed645f7edce77d9",
+      "measuredOn": "2026-09-04"
     },
     "8.8": {
       "verified": "official-distribution",
@@ -67,7 +187,15 @@
       "jarSize": 43453,
       "gradlewSize": 8706,
       "gradlewBatSize": 2918,
-      "usedBy": ["fabric/1.20.4"]
+      "usedBy": [
+        "fabric/1.20.4",
+        "forge/1.19.4"
+      ],
+      "gradlewSha256": "d8231d345ab33433ab7b2c0720d5beb416c8d5c6789dbc01ad122b63bc2cae0d",
+      "gradlewBatSha256": "bdecf875b6868cbcbd36a1f85eedf0832f358ff28092c5797ed645f7edce77d9",
+      "measuredOn": "2026-09-04",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-8.8/lib/plugins/gradle-wrapper-8.8.jar!gradle-wrapper.jar"
     },
     "8.10": {
       "verified": "official-distribution",
@@ -78,7 +206,36 @@
       "jarSize": 43583,
       "gradlewSize": 8762,
       "gradlewBatSize": 2966,
-      "usedBy": ["fabric/1.21.1"]
+      "usedBy": [
+        "fabric/1.21.1"
+      ],
+      "gradlewSha256": "a3648413b47ef77af21d5ebc36c687c7d103aaef3e17f33de7d4f080a6f300a3",
+      "gradlewBatSha256": "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f",
+      "measuredOn": "2026-09-04"
+    },
+    "9.2.1": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-9.2.1-bin.zip",
+      "zipSha256": "72f44c9f8ebcb1af43838f45ee5c4aa9c5444898b3468ab3f4af7b6076c5bc3f",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-9.2.1/lib/plugins/gradle-wrapper-main-9.2.1.jar!gradle-wrapper.jar",
+      "jarSha256": "423cb469ccc0ecc31f0e4e1c309976198ccb734cdcbb7029d4bda0f18f57e8d9",
+      "jarSize": 45633,
+      "gradlewSha256": "fb68debc1b1acf8ec55dc0d5e5495e1dedd0bd6b61f304bee61613eeb2bd9b92",
+      "gradlewSize": 8618,
+      "gradlewBatSha256": "fedad02c18e266ec094995a5751b7fe1eb6e74f66bf75db64fae2e50eb22c234",
+      "gradlewBatSize": 2896,
+      "usedBy": [
+        "neoforge/1.20.4",
+        "neoforge/1.20.6",
+        "neoforge/1.21.1",
+        "neoforge/1.21.3",
+        "neoforge/1.21.5",
+        "neoforge/1.21.8",
+        "neoforge/1.21.10",
+        "neoforge/1.21.11"
+      ],
+      "measuredOn": "2026-09-04"
     },
     "9.5.1": {
       "verified": "in-repo-baseline",
@@ -87,14 +244,68 @@
       "jarSize": 48462,
       "gradlewSize": 8654,
       "gradlewBatSize": 2846,
-      "usedBy": ["fabric/1.21.11"],
-      "caveat": "该 sha256 是仓内既有文件的实测值，本轮未下载 9.5.1 发行包复核上游，只按已知值锁它防篡改；不宣称它是本轮验证产物。"
+      "usedBy": [
+        "fabric/1.21.11"
+      ],
+      "caveat": "该 sha256 是仓内既有文件的实测值，本轮未下载 9.5.1 发行包复核上游，只按已知值锁它防篡改；不宣称它是本轮验证产物。",
+      "gradlewSha256": "ab5c0cad16305af2e619c159c1f58dd68d07fab9c11e36701e109c0277407f7a",
+      "gradlewBatSha256": "475c4f08cd57cf2faa819e7f36d72aa93f0ad646ea23a8f7fa3ef54dee1cbc52",
+      "measuredOn": "2026-09-04",
+      "jarByteCompareWithZipEntry": false
     }
   },
   "gaps": {
-    "wrapperVersionUndeclared": ["1.21.4", "1.21.8", "1.21.10", "26.1.2"],
-    "why": "这 4 档 fabric scaffold 完全没有 gradle/ 目录与 gradle-wrapper.properties；全仓 grep 在它们的规则树、README_AI.md、build.gradle、data/fabric_<ver>/ 中都没有任何 Gradle 版本字符串，按「禁止无证据臆造」登记为空洞，待指定版本后补写并从这里删除。"
+    "wrapperVersionUndeclared": [
+      "fabric/1.21.4",
+      "fabric/1.21.8",
+      "fabric/1.21.10",
+      "fabric/26.1.2",
+      "liteloader/1.12.2",
+      "modloader/1.6.4",
+      "neoforge/1.20.1",
+      "neoforge/26.1",
+      "quilt/1.18.2",
+      "quilt/1.19.4",
+      "quilt/1.20.1",
+      "quilt/1.20.4",
+      "quilt/1.21.1",
+      "quilt/1.21.3",
+      "quilt/1.21.4",
+      "quilt/1.21.8",
+      "quilt/1.21.10",
+      "quilt/1.21.11",
+      "rift/1.13.2"
+    ],
+    "why": "这些 scaffold 没有 gradle/wrapper/gradle-wrapper.properties，按「禁止无证据臆造版本」登记为空洞，补齐后必须从这里删掉（S13 双向对账：登记了但盘上已有 props = 登记过期；盘上有 props 却没登记 = 漏登记）。分类：fabric/1.21.4·1.21.8·1.21.10·26.1.2 = 全仓 grep 在规则树 / README_AI.md / build.gradle / data/fabric_<ver> 里都没有任何 Gradle 版本字符串；quilt ×10 = 本档只有 build.gradle / gradle.properties / settings.gradle 文本，仓内没有该档 Gradle 版本证据（Quilt 规则树经同版 Fabric overlay，未随带 wrapper）；neoforge/1.20.1 · neoforge/26.1 · rift/1.13.2 = pack.meta.json 显式 scaffold.mode=reference 的对照骨架（CLI: download_official_mdk → MDK_NOT_PINNED，禁止邻版 MDK 冒充）；liteloader/1.12.2 · modloader/1.6.4 = 该加载器无 Gradle 工程形态（Eclipse / MCP），给它造 gradlew 属造假。",
+    "measuredOn": "2026-09-04"
   },
+  "resolvedWrapper": [
+    {
+      "path": "forge/1.20.4/scaffold",
+      "found": "有 gradlew + props(8.5) 但无 jar → wrapper 无法引导",
+      "fix": "补 8.5 三件套（gradlew fc977a94 / bat 8e327fcb / jar d3b261c2）",
+      "fixedOn": "2026-09-04"
+    },
+    {
+      "path": "forge/1.12.2/scaffold",
+      "found": "有 props(4.9) 无 gradlew / jar",
+      "fix": "补 4.9 三件套（gradlew 8c4c04dd / bat 0008d785 / jar e55e7e47）",
+      "fixedOn": "2026-09-04"
+    },
+    {
+      "path": "neoforge/scaffold",
+      "found": "有 props(8.5) 无 jar（§3.4-9 那棵根遗留树）",
+      "fix": "补 8.5 三件套，沿用该树 .gitignore 已有的负向规则（!gradle/wrapper/gradle-wrapper.jar）",
+      "fixedOn": "2026-09-04"
+    },
+    {
+      "path": "forge/1.20.1/scaffold",
+      "found": "props 声明 8.5，jar 却是 42592 B / sha256 2079de5a…；本轮定位为发行包 lib/plugins/gradle-wrapper-8.8.jar「整包」被误当 wrapper jar（其内层 gradle-wrapper.jar 条目应为 43453 B / cb0da675…）",
+      "fix": "换成 8.5 发行包内层条目 jar（d3b261c2 / 43462 B），并把 LF-only 的 gradlew.bat（CR=0）换成 8.5 的 CRLF 产物",
+      "fixedOn": "2026-09-04",
+      "supersedes": "unverifiedWrapper"
+    }
+  ],
   "mdkMeasured": {
     "note": "官方 MDK 内 gradle/wrapper/gradle-wrapper.properties 的实测钉值（forge 平台 Gradle 下限断言的出处；MDK 的 URL 与 zip sha256 见 mcp-server/data/mdk-checksums.json）。",
     "measuredOn": "2026-09-02",
@@ -130,14 +341,16 @@
       }
     ]
   },
-  "unverifiedWrapper": [
-    {
-      "path": "forge/1.20.1/scaffold/gradle/wrapper/gradle-wrapper.jar",
-      "declaredGradle": "8.5",
-      "jarSize": 42592,
-      "jarSha256": "2079de5ad4a5e5ea45beca4898dc9ae50f5d8d3b55bba3e114a54dcb571f57f6",
-      "problem": "props 声明 8.5，但该 jar 与官方 8.5 / 8.6 发行产物（43462 B）都不匹配，来源不明；forge scaffold 不在 fabric wrapper 门禁覆盖范围内。",
-      "action": "forge/*/scaffold 整体缺 wrapper 三件套（仅 4 档有 jar）+ 版本无出处，属独立工作量，未在本轮补写；规则树已改为指向官方 MDK 钉值。"
-    }
-  ]
+  "scaffoldMetaConvention": {
+    "file": "<platform>/<version>/pack.meta.json",
+    "key": "scaffold",
+    "fields": {
+      "mode": "gradle | reference | source-only（gradle = 该档是可引导的 Gradle 工程，必须有 props + 三件套；reference / source-only = 有意不带 wrapper，gaps 必须写明依据）",
+      "gradle": "必须与 gradle-wrapper.properties 的 distributionUrl 版本一致",
+      "provenance.text": "house | official-mdk:<MDK id>（可带 @<zip sha 前 8 位>）| house+official-mdk:<MDK id>(<文件>) —— 文本件出处",
+      "provenance.wrapper": "gradle-wrapper-task —— 三件套由该版本发行包的 wrapper 任务生成；官方 MDK 自带 jar 不采用（理由见 mdkMeasured.entries[].jarNote）",
+      "buildVerified": "true 只有 gradlew build 真跑通并留下 build/libs/*.jar 才允许，且必须同时给出 provenance.build；false 时 gaps 必须含未跑通声明"
+    },
+    "enforcedBy": "mcp-server/test-core.mjs S13 testScaffoldWrappers / scanScaffoldWrappers（逐档对账 props ↔ 盘 ↔ pack.meta.json ↔ 本文件）"
+  }
 }

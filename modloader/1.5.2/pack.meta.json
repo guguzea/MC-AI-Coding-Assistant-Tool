@@ -1,6 +1,18 @@
 {
-  "status": "ready",
-  "pack-status": "ready",
+  "status": "draft",
+  "pack-status": "draft",
   "platform": "modloader",
-  "minecraftVersion": "1.5.2"
+  "minecraftVersion": "1.5.2",
+  "scaffold": {
+    "mode": "source-only",
+    "provenance": {
+      "text": "house"
+    },
+    "buildVerified": false,
+    "gaps": [
+      "本档 11/11 规则文件为「未核实、禁止输出」占位，故 status 由 ready 降为 draft",
+      "该加载器无 Gradle 工程形态（MCP + Eclipse），给它造 gradlew 属造假；构建步骤见 AGENTS.md 与本档 00-project-setup 的待核实标记",
+      "CLI: download_official_mdk --platform=modloader → 参数校验失败（platform enum 无 modloader）：本工具链无 ModLoader MDK 通道"
+    ]
+  }
 }

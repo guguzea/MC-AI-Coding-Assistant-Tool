@@ -2,5 +2,17 @@
   "status": "ready",
   "pack-status": "ready",
   "platform": "forge",
-  "minecraftVersion": "1.13.2"
+  "minecraftVersion": "1.13.2",
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "4.9",
+    "provenance": {
+      "text": "house",
+      "wrapper": "gradle-wrapper-task"
+    },
+    "buildVerified": false,
+    "gaps": [
+      "gradlew build 未在本机跑通（W5-4 阶段③）"
+    ]
+  }
 }

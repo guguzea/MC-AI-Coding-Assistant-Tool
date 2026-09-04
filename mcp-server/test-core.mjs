@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync, utimesSync, readdirSync, statSync, cpSync } from "node:fs";
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 
@@ -616,6 +617,46 @@ async function testFabricClassPrefixSearch() {
     const full = await forgeStore.loadFullDoc(hitId, "1.16.8");
     assert.ok(full.content.length > 0);
   }
+}
+
+// fabric-docs 空树的版本（1.20.1 等 7/14 档）搜索会兜底到 fabric-wiki，返回的 id 只有带
+// 该 source 才解析得出来。断链时 get_fabric_doc_* 必然 DOC_NOT_FOUND，且 hint 反过来教人再搜一次。
+async function testFabricWikiSourceHandoff() {
+  const { getFabricDocFull, getFabricDocSummary, getFabricDocRelated } = await import(
+    "./dist/docs-platform/fabric/index.js"
+  );
+  for (const [ver, expectSource] of [["1.20.1", "fabric-wiki"], ["1.20.4", "fabric-docs"]]) {
+    const search = parseToolText(await searchFabricDocs({ query: "item", version: ver }));
+    const hit = search.results?.[0];
+    assert.ok(hit?.id, `${ver} search 应命中: ${JSON.stringify(search).slice(0, 300)}`);
+    assert.equal(hit.source, expectSource, `${ver} results[].source: ${JSON.stringify(hit).slice(0, 300)}`);
+
+    const full = parseToolText(await getFabricDocFull({ id: hit.id, version: ver, source: hit.source }));
+    assert.ok(
+      (full.content || "").length > 0,
+      `${ver} 按 results[].source 回填后应有正文: ${JSON.stringify(full.error ?? {}).slice(0, 200)}`,
+    );
+    const sum = parseToolText(await getFabricDocSummary({ id: hit.id, version: ver, source: hit.source }));
+    assert.ok(sum.firstParagraph || sum.sections?.length, `${ver} summary 应可解析: ${JSON.stringify(sum.error ?? {}).slice(0, 200)}`);
+    const rel = parseToolText(await getFabricDocRelated({ id: hit.id, version: ver, source: hit.source }));
+    assert.ok(Array.isArray(rel.results), `${ver} related 应可解析: ${JSON.stringify(rel.error ?? {}).slice(0, 200)}`);
+  }
+
+  const missed = parseToolText(
+    await getFabricDocFull({ id: "1.20.1/tutorial_items", version: "1.20.1" }),
+  );
+  assert.equal(missed.ok, false, JSON.stringify(missed).slice(0, 200));
+  assert.equal(missed.error?.code, "DOC_NOT_FOUND", JSON.stringify(missed.error));
+  assert.equal(missed.error?.requiredSource, "fabric-wiki", JSON.stringify(missed.error));
+  assert.match(String(missed.error.hint), /source:"fabric-wiki"/, JSON.stringify(missed.error));
+  assert.doesNotMatch(String(missed.error.hint), /查询正确的页面 ID/, "缺 source 不是 ID 错，不该再教人重搜");
+
+  const ghost = parseToolText(
+    await getFabricDocFull({ id: "1.20.1/definitely_not_a_page", version: "1.20.1" }),
+  );
+  assert.equal(ghost.error?.code, "DOC_NOT_FOUND", JSON.stringify(ghost.error));
+  assert.equal(ghost.error?.requiredSource, undefined, JSON.stringify(ghost.error));
+  assert.match(String(ghost.error.hint), /search_fabric_docs/, "真·假 id 必须保持原 hint");
 }
 
 async function testSandboxAssertWritablePath() {
@@ -4424,6 +4465,67 @@ async function testPortingHandoffArgsAreCallable() {
     }
   }
   assert.ok(actionableSteps >= 3, `可执行交接过少：${actionableSteps}`);
+
+  // #4：验证步骤只列 targetPlatform 那一端；骨架虽有 common/fabric/neoforge 三块，
+  // 让 fabric 目标去验证 neoforge/ 模块是把用户支到一条他没要的路线上。
+  const verifyStepsFor = async (files, target) => {
+    const root = mkdtempSync(join(tmpdir(), "mc-skill-verify-filter-"));
+    try {
+      for (const [p, content] of Object.entries(files)) {
+        mkdirSync(join(root, dirname(p)), { recursive: true });
+        writeFileSync(join(root, p), content, "utf8");
+      }
+      const out = JSON.parse(
+        await analyzePortingPath({ projectPath: root, targetPlatform: target, targetVersion: "1.20.1" }),
+      );
+      assert.equal(out.ok, true, `forge→${target}: ${JSON.stringify(out.error ?? out)}`);
+      assert.equal(
+        out.analysis.nextSteps.length,
+        out.analysis.routeSteps.length,
+        `forge→${target}: 过滤验证步骤后 nextSteps 不再平行`,
+      );
+      return out.analysis.routeSteps;
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  };
+  const forgeFiles = { "build.gradle": forgeGradle, "src/main/resources/mods.toml": forgeModsToml };
+  const fabricFiles = {
+    "build.gradle": fabricGradle,
+    "gradle.properties": "minecraft_version=1.20.1\n",
+    "src/main/resources/fabric.mod.json": fabricJson,
+  };
+
+  const toFabric = await verifyStepsFor(forgeFiles, "fabric");
+  assert.ok(
+    toFabric.some((s) => /^验证 fabric\/ 模块编译通过$/.test(s)),
+    `forge→fabric 缺本端验证步骤 → ${JSON.stringify(toFabric)}`,
+  );
+  assert.ok(
+    !toFabric.some((s) => /验证 neoforge\//.test(s)),
+    `fabric 目标仍被要求验证 neoforge 模块 → ${JSON.stringify(toFabric)}`,
+  );
+
+  const toNeo = await verifyStepsFor(forgeFiles, "neoforge");
+  assert.ok(
+    toNeo.some((s) => /^验证 neoforge\/ 模块编译通过$/.test(s)),
+    `forge→neoforge 缺本端验证步骤 → ${JSON.stringify(toNeo)}`,
+  );
+  assert.ok(
+    !toNeo.some((s) => /^验证 fabric\/ 模块编译通过$/.test(s)),
+    `neoforge 目标仍被要求验证 fabric 模块 → ${JSON.stringify(toNeo)}`,
+  );
+
+  // forge 目标：骨架不生成 forge/ 子工程，所以既不能点名任一端，也不能整步消失
+  const toForge = await verifyStepsFor(fabricFiles, "forge");
+  assert.ok(
+    !toForge.some((s) => /^验证 (fabric|neoforge)\/ 模块编译通过$/.test(s)),
+    `forge 目标被塞了骨架不会生成的模块名 → ${JSON.stringify(toForge)}`,
+  );
+  assert.ok(
+    toForge.some((s) => /验证目标端（forge）/.test(s)),
+    `forge 目标丢了验证步骤（兜底文案没生效）→ ${JSON.stringify(toForge)}`,
+  );
 }
 
 // ── S12：移植知识库 ↔ 本仓证据源（manifest / fabric meta / primer / 规则树）──
@@ -4780,38 +4882,134 @@ async function testPortingKbProvenance() {
   }
 }
 
-// S13：Fabric scaffold Gradle wrapper 三件套完整性 + 官方字节一致性
-// jar 来源的仓内证据见 mcp-server/data/wrapper-jars.json（官方发行包 sha256 → 该版本自己的
-// wrapper 任务离线生成 → 逐字节比对 zip 内嵌条目）。本表与该文件由 diffWrapperPins 强制对齐。
+// S13：全仓 scaffold Gradle wrapper 三件套完整性 + 官方字节一致性
+// jar / gradlew / gradlew.bat 的出处见 mcp-server/data/wrapper-jars.json（官方发行包 sha256 →
+// 用该版本自己的 Gradle 离线跑 wrapper 任务生成 → 与发行包内嵌条目逐字节比对）。本表与该文件由
+// diffWrapperPins 强制对齐。
+// 钉值语义（见 JSON method.notVersionBound）：钉的是「props 声明版本 → 该版本发行包 wrapper 任务
+// 产物字节」，不是 jar 内嵌版本字符串。wrapper 产物不随版本唯一——实测 7.2≡7.3.3、7.6≡7.6.1
+// 三件套全等、8.5≡8.6 jar 全等、8.4/8.5/8.6 的 gradlew 全等，故表内出现重复 sha 是对证结果而非抄错，
+// 判定一律按字节集合相等。
 const WRAPPER_JARS = {
-  "6.9.4": { sha256: "e996d452d2645e70c01c11143ca2d3742734a28da2bf61f25c82bdc288c9e637", size: 59203 },
-  "7.4.2": { sha256: "575098db54a998ff1c6770b352c3b16766c09848bee7555dab09afc34e8cf590", size: 59821 },
-  "7.6.1": { sha256: "c5a643cf80162e665cc228f7b16f343fef868e47d3a4836f62e18b7e17ac018a", size: 61574 },
-  "8.4": { sha256: "0336f591bc0ec9aa0c9988929b93ecc916b3c1d52aed202c7381db144aa0ef15", size: 63721 },
-  "8.6": { sha256: "d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd", size: 43462 },
-  "8.8": { sha256: "cb0da6751c2b753a16ac168bb354870ebb1e162e9083f116729cec9c781156b8", size: 43453 },
-  "8.10": { sha256: "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046", size: 43583 },
-  "9.5.1": { sha256: "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7", size: 48462 },
+  "4.9": { sha256: "e55e7e47a79e04c26363805b31e2f40b7a9cc89ea12113be7de750a3b2cede85", size: 54413, gradlewSha: "8c4c04dd98db1f00d49456dd162418a39312c5cb13d6865d783deb483bd1ed22", gradlewBatSha: "0008d785920c9ff5cab17403e0270ccc7ceee8e169b6d67a82d96a5475fec5c9" },
+  "6.9.4": { sha256: "e996d452d2645e70c01c11143ca2d3742734a28da2bf61f25c82bdc288c9e637", size: 59203, gradlewSha: "f9594eb5c08a148f23b9d7a5fd99551224db96dadb1b7cecd3985c4758c4f867", gradlewBatSha: "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b" },
+  "7.2": { sha256: "33ad4583fd7ee156f533778736fa1b4940bd83b433934d1cc4e9f608e99a6a89", size: 59536, gradlewSha: "f96a757581fe5292465e3f3393380bd11fd8086d450b92e7c693da6513f583fe", gradlewBatSha: "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b" },
+  "7.3.3": { sha256: "33ad4583fd7ee156f533778736fa1b4940bd83b433934d1cc4e9f608e99a6a89", size: 59536, gradlewSha: "f96a757581fe5292465e3f3393380bd11fd8086d450b92e7c693da6513f583fe", gradlewBatSha: "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b" },
+  "7.4.2": { sha256: "575098db54a998ff1c6770b352c3b16766c09848bee7555dab09afc34e8cf590", size: 59821, gradlewSha: "f96a757581fe5292465e3f3393380bd11fd8086d450b92e7c693da6513f583fe", gradlewBatSha: "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b" },
+  "7.6": { sha256: "c5a643cf80162e665cc228f7b16f343fef868e47d3a4836f62e18b7e17ac018a", size: 61574, gradlewSha: "638c2862d623c302f3029f5bd1441276be484c5b79909b706a614ebe8e7a409b", gradlewBatSha: "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955" },
+  "7.6.1": { sha256: "c5a643cf80162e665cc228f7b16f343fef868e47d3a4836f62e18b7e17ac018a", size: 61574, gradlewSha: "638c2862d623c302f3029f5bd1441276be484c5b79909b706a614ebe8e7a409b", gradlewBatSha: "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955" },
+  "8.4": { sha256: "0336f591bc0ec9aa0c9988929b93ecc916b3c1d52aed202c7381db144aa0ef15", size: 63721, gradlewSha: "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d", gradlewBatSha: "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955" },
+  "8.5": { sha256: "d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd", size: 43462, gradlewSha: "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d", gradlewBatSha: "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955" },
+  "8.6": { sha256: "d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd", size: 43462, gradlewSha: "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d", gradlewBatSha: "bdecf875b6868cbcbd36a1f85eedf0832f358ff28092c5797ed645f7edce77d9" },
+  "8.8": { sha256: "cb0da6751c2b753a16ac168bb354870ebb1e162e9083f116729cec9c781156b8", size: 43453, gradlewSha: "d8231d345ab33433ab7b2c0720d5beb416c8d5c6789dbc01ad122b63bc2cae0d", gradlewBatSha: "bdecf875b6868cbcbd36a1f85eedf0832f358ff28092c5797ed645f7edce77d9" },
+  "8.10": { sha256: "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046", size: 43583, gradlewSha: "a3648413b47ef77af21d5ebc36c687c7d103aaef3e17f33de7d4f080a6f300a3", gradlewBatSha: "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f" },
+  "9.2.1": { sha256: "423cb469ccc0ecc31f0e4e1c309976198ccb734cdcbb7029d4bda0f18f57e8d9", size: 45633, gradlewSha: "fb68debc1b1acf8ec55dc0d5e5495e1dedd0bd6b61f304bee61613eeb2bd9b92", gradlewBatSha: "fedad02c18e266ec094995a5751b7fe1eb6e74f66bf75db64fae2e50eb22c234" },
+  "9.5.1": { sha256: "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7", size: 48462, gradlewSha: "ab5c0cad16305af2e619c159c1f58dd68d07fab9c11e36701e109c0277407f7a", gradlewBatSha: "475c4f08cd57cf2faa819e7f36d72aa93f0ad646ea23a8f7fa3ef54dee1cbc52" },
 };
 // 钉值表本身必须先过格式校验：抄错一位 hex 会让该版本所有 scaffold 被误判为「被篡改」。
 function findMalformedPins(table) {
-  return Object.entries(table)
-    .filter(([, e]) => !/^[0-9a-f]{64}$/.test(String(e?.sha256)) || !Number.isInteger(e?.size) || e.size <= 0)
-    .map(([v, e]) => `钉值 ${v} 格式非法：sha256=${e?.sha256}（须 64 位小写 hex）size=${e?.size}`);
+  const isHex = (s) => /^[0-9a-f]{64}$/.test(String(s));
+  const bad = [];
+  for (const [v, e] of Object.entries(table)) {
+    if (!isHex(e?.sha256)) bad.push(`钉值 ${v} jar sha256 非法 → ${e?.sha256}（须 64 位小写 hex）`);
+    if (!isHex(e?.gradlewSha)) bad.push(`钉值 ${v} gradlewSha 非法 → ${e?.gradlewSha}`);
+    if (!isHex(e?.gradlewBatSha)) bad.push(`钉值 ${v} gradlewBatSha 非法 → ${e?.gradlewBatSha}`);
+    if (!Number.isInteger(e?.size) || e.size <= 0) bad.push(`钉值 ${v} size 非法 → ${e?.size}（须正整数）`);
+  }
+  return bad;
 }
-// 无 gradle-wrapper.properties 的档：写三件套必须先定 Gradle 版本，版本无仓内证据 → 登记空洞。
+// 无 gradle-wrapper.properties 的 scaffold：写三件套必须先定 Gradle 版本，版本无仓内证据 → 登记空洞。
 // 补齐后必须从这里删掉（登记过期同样算失败）。
-const WRAPPER_VERSION_GAPS = ["1.21.4", "1.21.8", "1.21.10", "26.1.2"];
+const WRAPPER_VERSION_GAPS = [
+  "fabric/1.21.4", "fabric/1.21.8", "fabric/1.21.10", "fabric/26.1.2",
+  "liteloader/1.12.2", "modloader/1.6.4",
+  "neoforge/1.20.1", "neoforge/26.1",
+  "quilt/1.18.2", "quilt/1.19.4", "quilt/1.20.1", "quilt/1.20.4", "quilt/1.21.1",
+  "quilt/1.21.3", "quilt/1.21.4", "quilt/1.21.8", "quilt/1.21.10", "quilt/1.21.11",
+  "rift/1.13.2",
+];
+// Java 平台档的 scaffold 一律是 <平台>/<版本>/scaffold；bedrock/scaffold 是 RP/BP 目录、不含 Gradle，
+// 故不在扫描平台内。neoforge/scaffold 是平台级共享模板（不是注册档，无 pack.meta.json）。
+const SCAFFOLD_PLATFORMS = ["fabric", "forge", "neoforge", "quilt", "liteloader", "rift", "modloader"];
+const EXTRA_SCAFFOLD_KEYS = ["neoforge/scaffold"];
+const isStandaloneScaffold = (key) => EXTRA_SCAFFOLD_KEYS.includes(key);
+const scaffoldDirFor = (root, key) => (isStandaloneScaffold(key) ? join(root, key) : join(root, key, "scaffold"));
+const packMetaFor = (root, key) => (isStandaloneScaffold(key) ? null : join(root, key, "pack.meta.json"));
 
-function scanScaffoldWrappers(root) {
-  const fabricDir = join(root, "fabric");
+function scaffoldKeys(root) {
+  const keys = [];
+  for (const plat of SCAFFOLD_PLATFORMS) {
+    const platDir = join(root, plat);
+    if (!existsSync(platDir)) continue;
+    for (const ver of readdirSync(platDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)) {
+      if (existsSync(join(platDir, ver, "scaffold"))) keys.push(`${plat}/${ver}`);
+    }
+  }
+  for (const k of EXTRA_SCAFFOLD_KEYS) if (!keys.includes(k) && existsSync(join(root, k))) keys.push(k);
+  return keys.sort();
+}
+
+function readScaffoldMeta(metaPath) {
+  try {
+    return { meta: JSON.parse(readFileSync(metaPath, "utf8")), parseError: null };
+  } catch (e) {
+    return { meta: null, parseError: e instanceof Error ? e.message : String(e) };
+  }
+}
+// git 判定：rc0=被忽略 / rc1=未忽略 / 其他=无从判定（镜像副本不在仓内），调用方按「跳过」处理。
+function gitIgnoredPath(root, relPosix) {
+  try {
+    execFileSync("git", ["-C", root, "check-ignore", "-q", "--", relPosix], { stdio: "ignore" });
+    return true;
+  } catch (e) {
+    return e?.status === 1 ? false : null;
+  }
+}
+
+// pack.meta.json 的 scaffold 块 = 该档对「脚手架是什么形态、能不能直接构建」的自我声明。
+// 声明存在就必须与 props 实测一致；不声明（fabric/quilt 薄档）则只受三件套 / 空洞规则约束。
+function checkScaffoldMeta(root, key, declared) {
+  const out = [];
+  const metaPath = packMetaFor(root, key);
+  if (!metaPath || !existsSync(metaPath)) return out;
+  const { meta, parseError } = readScaffoldMeta(metaPath);
+  if (parseError) return [`${key}: pack.meta.json 解析失败 → ${parseError}`];
+  const sc = meta.scaffold;
+  if (!sc) return out;
+  const gaps = Array.isArray(sc.gaps) ? sc.gaps : [];
+  if (sc.mode === "gradle") {
+    if (declared == null) out.push(`${key}: meta.scaffold.mode=gradle 但没有 gradle-wrapper.properties（自称可构建却无版本声明）`);
+    else if (sc.gradle !== declared) out.push(`${key}: meta.scaffold.gradle=${sc.gradle} != props 声明 ${declared}`);
+    if (sc.provenance?.wrapper !== "gradle-wrapper-task") out.push(`${key}: mode=gradle 却未登记 provenance.wrapper=gradle-wrapper-task（三件套出处不明）`);
+    if (sc.buildVerified === true) {
+      if (!String(sc.provenance?.build ?? "").trim()) out.push(`${key}: buildVerified=true 但 provenance.build 为空（结论无出处）`);
+      if (gaps.some((g) => String(g).includes("未在本机跑通"))) out.push(`${key}: buildVerified=true 与 gaps「未在本机跑通」自相矛盾`);
+    } else if (gaps.length === 0) {
+      out.push(`${key}: buildVerified 非 true 且 gaps 为空（未核实必须登记，见 wrapper-jars.json scaffoldMetaConvention）`);
+    }
+  } else if (sc.mode === "reference") {
+    if (declared != null) out.push(`${key}: meta.scaffold.mode=reference 但 props 已声明 ${declared}（形态声明过期）`);
+    if (gaps.length === 0) out.push(`${key}: mode=reference 且 gaps 为空（无模板必须说明原因）`);
+  } else {
+    out.push(`${key}: meta.scaffold.mode=${JSON.stringify(sc.mode)} 非法（只允许 gradle / reference）`);
+  }
+  const text = String(sc.provenance?.text ?? "");
+  if (text && !/^(?:house\+)?(?:house|official-mdk:\S+)$/.test(text))
+    out.push(`${key}: provenance.text=${JSON.stringify(text)} 非法（须 house / official-mdk:<模板> / house+official-mdk:<模板>）`);
+  return out;
+}
+
+function scanScaffoldWrappers(root, ignoredProbe) {
+  const isIgnored = ignoredProbe ?? ((rel) => gitIgnoredPath(root, rel));
+  const countByte = (buf, byte) => buf.reduce((n, x) => n + (x === byte ? 1 : 0), 0);
   const problems = [];
   const seen = [];
+  const noProps = [];
   const byVersion = {};
-  for (const ver of readdirSync(fabricDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)) {
-    const scaffold = join(fabricDir, ver, "scaffold");
-    if (!existsSync(scaffold)) continue;
-    seen.push(ver);
+  let declaredTotal = 0;
+  for (const key of scaffoldKeys(root)) {
+    seen.push(key);
+    const scaffold = scaffoldDirFor(root, key);
     const propsPath = join(scaffold, "gradle", "wrapper", "gradle-wrapper.properties");
     const files = {
       gradlew: join(scaffold, "gradlew"),
@@ -4821,69 +5019,92 @@ function scanScaffoldWrappers(root) {
     const hasProps = existsSync(propsPath);
     const propsText = hasProps ? readFileSync(propsPath, "utf8") : "";
     const declared = hasProps ? propsText.match(/^distributionUrl=.+?gradle-([0-9][0-9A-Za-z.]*)-bin\.zip$/m)?.[1] ?? null : null;
+    problems.push(...checkScaffoldMeta(root, key, declared));
     if (declared == null) {
-      if (hasProps) problems.push(`${ver}: distributionUrl 解析不出 gradle-x.y.z`);
+      noProps.push(key);
+      if (hasProps) problems.push(`${key}: distributionUrl 解析不出 gradle-x.y.z`);
       for (const [name, p] of Object.entries(files)) {
-        if (existsSync(p)) problems.push(`${ver}: 没有已声明版本却存在 ${name}`);
+        if (existsSync(p)) problems.push(`${key}: 没有已声明版本却存在 ${name}`);
       }
       continue;
     }
+    declaredTotal += 1;
     const pin = WRAPPER_JARS[declared];
     if (!pin) {
-      problems.push(`${ver}: 声明 Gradle ${declared} 不在 WRAPPER_JARS 钉值表内`);
+      problems.push(`${key}: 声明 Gradle ${declared} 不在 WRAPPER_JARS 钉值表内`);
       continue;
     }
-    (byVersion[declared] ??= []).push(`fabric/${ver}`);
+    (byVersion[declared] ??= []).push(key);
     for (const [name, p] of Object.entries(files)) {
-      if (!existsSync(p)) problems.push(`${ver}: 声明 ${declared} 但缺 ${name}`);
+      if (!existsSync(p)) problems.push(`${key}: 声明 ${declared} 但缺 ${name}`);
     }
     if (!existsSync(files.jar) || !existsSync(files.gradlew) || !existsSync(files.gradlewBat)) continue;
-    const buf = readFileSync(files.jar);
-    const sha = createHash("sha256").update(buf).digest("hex");
-    if (sha !== pin.sha256) problems.push(`${ver}: jar sha256=${sha} != 官方 ${pin.sha256}`);
-    if (buf.length !== pin.size) problems.push(`${ver}: jar ${buf.length}B != 官方 ${pin.size}B`);
-    const count = (b, byte) => b.reduce((n, x) => n + (x === byte ? 1 : 0), 0);
+    // 三件套逐文件钉字节：只校 jar 会让「gradlew 是别版本 / bat 被 LF 化」的半成品蒙混过关
+    for (const [name, p, field] of [
+      ["jar", files.jar, "sha256"],
+      ["gradlew", files.gradlew, "gradlewSha"],
+      ["gradlew.bat", files.gradlewBat, "gradlewBatSha"],
+    ]) {
+      const buf = readFileSync(p);
+      const sha = createHash("sha256").update(buf).digest("hex");
+      if (sha !== pin[field]) problems.push(`${key}: ${name} sha256=${sha} != ${declared} 官方产物 ${pin[field]}`);
+    }
+    const jarBuf = readFileSync(files.jar);
+    if (jarBuf.length !== pin.size) problems.push(`${key}: jar ${jarBuf.length}B != 官方 ${pin.size}B`);
     const gw = readFileSync(files.gradlew);
     const bat = readFileSync(files.gradlewBat);
-    if (count(gw, 13) !== 0) problems.push(`${ver}: gradlew 含 CR（须 LF-only）`);
-    if (count(gw, 10) === 0) problems.push(`${ver}: gradlew 为空`);
-    if (count(bat, 13) === 0 || count(bat, 13) !== count(bat, 10)) problems.push(`${ver}: gradlew.bat 非纯 CRLF`);
-    if (/^distributionUrl=file:/m.test(propsText)) problems.push(`${ver}: distributionUrl 指向本地路径`);
+    if (countByte(gw, 13) !== 0) problems.push(`${key}: gradlew 含 CR（须 LF-only）`);
+    if (countByte(gw, 10) === 0) problems.push(`${key}: gradlew 为空`);
+    if (countByte(bat, 13) === 0 || countByte(bat, 13) !== countByte(bat, 10)) problems.push(`${key}: gradlew.bat 非纯 CRLF`);
+    if (/^distributionUrl=file:/m.test(propsText)) problems.push(`${key}: distributionUrl 指向本地路径`);
+    // 分发用的脚手架，jar 被 .gitignore 吃掉 = clone 后必然缺（本仓曾真发生过一次）
+    if (isIgnored(relative(root, files.jar).split(sep).join("/")) === true)
+      problems.push(`${key}: jar 处于 gitignored 状态（clone 后必然缺失）`);
   }
   // 登记双向：无声明版本的 scaffold 必须在 WRAPPER_VERSION_GAPS；登记了就要仍然成立
   const gapSet = new Set(WRAPPER_VERSION_GAPS);
-  for (const ver of seen) {
-    const hasProps = existsSync(join(fabricDir, ver, "scaffold", "gradle", "wrapper", "gradle-wrapper.properties"));
-    if (hasProps && gapSet.has(ver)) problems.push(`${ver}: 已登记为「无 Gradle 版本」空洞，但现在有 gradle-wrapper.properties（登记过期）`);
-    if (!hasProps && !gapSet.has(ver)) problems.push(`${ver}: 无 gradle-wrapper.properties，必须登记进 WRAPPER_VERSION_GAPS`);
+  for (const key of seen) {
+    const hasProps = existsSync(join(scaffoldDirFor(root, key), "gradle", "wrapper", "gradle-wrapper.properties"));
+    if (hasProps && gapSet.has(key)) problems.push(`${key}: 已登记为「无 Gradle 版本」空洞，但现在有 gradle-wrapper.properties（登记过期）`);
+    if (!hasProps && !gapSet.has(key)) problems.push(`${key}: 无 gradle-wrapper.properties，必须登记进 WRAPPER_VERSION_GAPS`);
   }
-  for (const ver of WRAPPER_VERSION_GAPS) {
-    if (!seen.includes(ver)) problems.push(`${ver}: 登记在 WRAPPER_VERSION_GAPS，但没有 scaffold（登记过期）`);
+  for (const key of WRAPPER_VERSION_GAPS) {
+    if (!seen.includes(key)) problems.push(`${key}: 登记在 WRAPPER_VERSION_GAPS，但没有 scaffold（登记过期）`);
   }
-  const declaredCount = seen.filter((v) => existsSync(join(fabricDir, v, "scaffold", "gradle", "wrapper", "gradle-wrapper.properties"))).length;
   const sortedByVersion = {};
   for (const ver of Object.keys(byVersion).sort()) sortedByVersion[ver] = byVersion[ver].sort();
-  return { seen: seen.sort(), problems, declaredCount, byVersion: sortedByVersion };
+  return { seen: seen.sort(), problems, declaredCount: declaredTotal, byVersion: sortedByVersion, noProps: noProps.sort() };
 }
 
 // 钉值表 ↔ mcp-server/data/wrapper-jars.json 双向对齐。纯函数、不碰盘，可内存投毒自证。
 function diffWrapperPins(table, prov, byVersion, gaps = WRAPPER_VERSION_GAPS) {
   const problems = [];
+  const isHex = (s) => /^[0-9a-f]{64}$/.test(String(s));
   const jars = prov?.jars ?? {};
   const tableVers = Object.keys(table).sort().join(",");
   const provVers = Object.keys(jars).sort().join(",");
   if (tableVers !== provVers) problems.push(`版本集不一致：钉值表 [${tableVers}] != wrapper-jars.json [${provVers}]`);
   for (const [ver, e] of Object.entries(jars)) {
-    if (!/^[0-9a-f]{64}$/.test(String(e?.jarSha256))) problems.push(`${ver}: JSON jarSha256 非 64 位小写 hex → ${e?.jarSha256}`);
-    if (e?.verified === "official-distribution" && !/^[0-9a-f]{64}$/.test(String(e?.zipSha256)))
+    if (!isHex(e?.jarSha256)) problems.push(`${ver}: JSON jarSha256 非 64 位小写 hex → ${e?.jarSha256}`);
+    if (!isHex(e?.gradlewSha256)) problems.push(`${ver}: JSON gradlewSha256 非 64 位小写 hex → ${e?.gradlewSha256}`);
+    if (!isHex(e?.gradlewBatSha256)) problems.push(`${ver}: JSON gradlewBatSha256 非 64 位小写 hex → ${e?.gradlewBatSha256}`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(e?.measuredOn)))
+      problems.push(`${ver}: JSON measuredOn 不是 YYYY-MM-DD（字节与官方发行包对证的日期）→ ${e?.measuredOn}`);
+    if (e?.verified === "official-distribution" && !isHex(e?.zipSha256))
       problems.push(`${ver}: 宣称 official-distribution 却没有 64 位 hex zipSha256`);
     const pin = table[ver];
     if (!pin) continue;
     if (String(e.jarSha256) !== String(pin.sha256)) problems.push(`${ver}: JSON jarSha256 != 钉值表 sha256（表里被改 or 证据过期）`);
     if (Number(e.jarSize) !== Number(pin.size)) problems.push(`${ver}: JSON jarSize=${e.jarSize} != 钉值表 size=${pin.size}`);
+    if (String(e.gradlewSha256) !== String(pin.gradlewSha)) problems.push(`${ver}: JSON gradlewSha256 != 钉值表 gradlewSha`);
+    if (String(e.gradlewBatSha256) !== String(pin.gradlewBatSha)) problems.push(`${ver}: JSON gradlewBatSha256 != 钉值表 gradlewBatSha`);
     const claimed = [...(Array.isArray(e.usedBy) ? e.usedBy : [])].sort().join(",");
     const measured = [...(byVersion[ver] ?? [])].sort().join(",");
     if (claimed !== measured) problems.push(`${ver}: JSON usedBy=[${claimed}] != 实测 scaffold [${measured}]`);
+  }
+  // 孤儿钉值：表里钉了某版本却没有任何 scaffold 声明它 → 该钉值失去依据（要么真去补档，要么删表项）
+  for (const ver of Object.keys(table)) {
+    if (!(byVersion[ver] ?? []).length) problems.push(`${ver}: 钉值表有此档但实测无 scaffold 声明它（孤儿钉值）`);
   }
   const jsonGaps = [...(prov?.gaps?.wrapperVersionUndeclared ?? [])].sort().join(",");
   const codeGaps = [...gaps].sort().join(",");
@@ -4891,12 +5112,37 @@ function diffWrapperPins(table, prov, byVersion, gaps = WRAPPER_VERSION_GAPS) {
   return problems;
 }
 
-async function testFabricScaffoldWrappers() {
+// 镜像 <平台>/<版本>/scaffold 与同级 pack.meta.json（不拷规则树 / knowledge），供投毒自证用。
+function mirrorScaffolds(dest, srcRoot) {
+  for (const key of scaffoldKeys(srcRoot)) {
+    const dstScaffold = scaffoldDirFor(dest, key);
+    mkdirSync(dirname(dstScaffold), { recursive: true });
+    cpSync(scaffoldDirFor(srcRoot, key), dstScaffold, { recursive: true });
+    const metaPath = packMetaFor(srcRoot, key);
+    if (metaPath && existsSync(metaPath)) {
+      mkdirSync(join(dest, key), { recursive: true });
+      cpSync(metaPath, join(dest, key, "pack.meta.json"));
+    }
+  }
+  return dest;
+}
+
+async function testScaffoldWrappers() {
   assert.deepEqual(findMalformedPins(WRAPPER_JARS), [], "WRAPPER_JARS 钉值格式非法");
-  assert.equal(findMalformedPins({ "8.4": { sha256: "0336f591bc0ec9aa0c9988929b93ecc916b3c1d52aed202c7381db144aa0ef15".repeat(63), size: 63721 } }).length, 1, "钉值格式校验必须能报错");
-  const { seen, problems, declaredCount, byVersion } = scanScaffoldWrappers(REPO_ROOT);
-  assert.equal(seen.length, 14, `fabric/*/scaffold 应为 14 档，实际 ${seen.length} → ${seen.join(",")}`);
-  assert.equal(declaredCount, 10, `已声明 Gradle 版本且应完整的档数应为 10，实际 ${declaredCount}`);
+  // 逐字段校验自证：jar hex 少一位、gradlewSha 非法、size 非正整数各报一次
+  assert.equal(findMalformedPins({ "8.4": { ...WRAPPER_JARS["8.4"], sha256: WRAPPER_JARS["8.4"].sha256.slice(0, 63) } }).length, 1, "jar sha 截位必须报错");
+  assert.equal(findMalformedPins({ "8.4": { ...WRAPPER_JARS["8.4"], gradlewSha: "deadbeef" } }).length, 1, "gradlewSha 非法必须报错");
+  assert.equal(findMalformedPins({ "8.4": { ...WRAPPER_JARS["8.4"], gradlewBatSha: "", size: 0 } }).length, 2, "batSha / size 必须分别报错");
+
+  const { seen, problems, declaredCount, byVersion, noProps } = scanScaffoldWrappers(REPO_ROOT);
+  assert.equal(seen.length, 48, `全仓 Java scaffold 应为 48 档，实际 ${seen.length} → ${seen.join(",")}`);
+  assert.equal(declaredCount, 29, `已声明 Gradle 版本、三件套应完整的 scaffold 应为 29 档，实际 ${declaredCount}`);
+  const fabricSeen = seen.filter((k) => k.startsWith("fabric/"));
+  assert.equal(fabricSeen.length, 14, `fabric/*/scaffold 应为 14 档，实际 ${fabricSeen.length}`);
+  assert.equal(
+    fabricSeen.filter((k) => existsSync(join(REPO_ROOT, k, "scaffold", "gradle", "wrapper", "gradle-wrapper.properties"))).length,
+    10, "fabric 已声明 Gradle 版本的档数应为 10");
+  assert.deepEqual(noProps, [...WRAPPER_VERSION_GAPS].sort(), "无 gradle-wrapper.properties 的 scaffold 必须与空洞登记表逐档相等");
   assert.deepEqual(problems, [], `scaffold wrapper 门禁:\n  ${problems.join("\n  ")}`);
 
   const provPath = join(REPO_ROOT, "mcp-server", "data", "wrapper-jars.json");
@@ -4907,74 +5153,117 @@ async function testFabricScaffoldWrappers() {
     [],
     "WRAPPER_JARS ↔ mcp-server/data/wrapper-jars.json ↔ 实测 scaffold 三者不一致");
 
-  // 自证：7 种注入必须各让门禁报出对应问题（门禁若永远绿 = 没在检查）
-  const poison = (name, needle, mutate) => {
-    const tmp = mkdtempSync(join(tmpdir(), "mc-skill-wrap-"));
-    try {
-      cpSync(join(REPO_ROOT, "fabric"), join(tmp, "fabric"), { recursive: true });
-      mutate(join(tmp, "fabric"));
-      const r = scanScaffoldWrappers(tmp);
-      assert.ok(r.problems.length > 0, `${name}: 注入后门禁仍然全绿`);
-      const hit = r.problems.filter((p) => p.includes(needle));
-      assert.ok(hit.length > 0, `${name}: 门禁报错但不含「${needle}」→ ${JSON.stringify(r.problems.slice(0, 3))}`);
-      return hit[0].split(":")[0];
-    } finally {
-      rmSync(tmp, { recursive: true, force: true });
-    }
-  };
-  const touched = new Set([
-    poison("缺 gradlew", "但缺 gradlew", (f) => rmSync(join(f, "1.20.1", "scaffold", "gradlew"))),
-    poison("jar 被篡改", "jar sha256", (f) =>
-      writeFileSync(join(f, "1.21.3", "scaffold", "gradle", "wrapper", "gradle-wrapper.jar"), Buffer.from([0x50, 0x4b, 0x03, 0x04]))),
-    poison("gradlew 行尾", "gradlew 含 CR", (f) => {
-      const p = join(f, "1.19.4", "scaffold", "gradlew");
-      writeFileSync(p, readFileSync(p).toString("utf8").replace(/\n/g, "\r\n"));
-    }),
-    poison("bat 行尾", "非纯 CRLF", (f) => {
-      const p = join(f, "1.18.2", "scaffold", "gradlew.bat");
-      writeFileSync(p, readFileSync(p).toString("utf8").replace(/\r\n/g, "\n"));
-    }),
-    poison("版本未钉", "不在 WRAPPER_JARS 钉值表内", (f) => {
-      const p = join(f, "1.17.1", "scaffold", "gradle", "wrapper", "gradle-wrapper.properties");
-      writeFileSync(p, readFileSync(p).toString("utf8").replace("gradle-7.4.2-bin.zip", "gradle-7.5-bin.zip"));
-    }),
-    poison("空洞档半套", "没有已声明版本却存在", (f) =>
-      writeFileSync(join(f, "26.1.2", "scaffold", "gradlew"), "#!/bin/sh\n")),
-    poison("登记过期", "登记过期", (f) => {
-      mkdirSync(join(f, "1.21.8", "scaffold", "gradle", "wrapper"), { recursive: true });
-      writeFileSync(
-        join(f, "1.21.8", "scaffold", "gradle", "wrapper", "gradle-wrapper.properties"),
-        "distributionUrl=https\\://services.gradle.org/distributions/gradle-8.10-bin.zip\n",
-      );
-    }),
-  ]);
-  assert.equal(touched.size, 7, `7 种注入应命中 7 个不同档，实际 ${touched.size} → ${JSON.stringify([...touched])}`);
+  // 自证：注入必须让门禁报出对应问题（门禁若永远绿 = 没在检查）。镜像一次，逐条「改 → 扫 → 还原」，
+  // 还原后再扫必须回绿 —— 既证明报错来自注入，也证明注入没有污染后续用例。
+  const tmp = mkdtempSync(join(tmpdir(), "mc-skill-wrap-"));
+  try {
+    mirrorScaffolds(tmp, REPO_ROOT);
+    assert.deepEqual(scanScaffoldWrappers(tmp).seen, seen, "镜像必须覆盖仓内全部 scaffold");
+    assert.deepEqual(scanScaffoldWrappers(tmp).problems, [], "镜像基线必须与仓内同样干净");
 
-  // 自证：钉值表 ↔ 仓内出处记录 的三向对齐也能报错（纯内存投毒，不动盘）
-  const pinPoison = (name, needle, mutate) => {
-    const t = structuredClone(WRAPPER_JARS);
-    const p = structuredClone(prov);
-    const v = structuredClone(byVersion);
-    const g = [...WRAPPER_VERSION_GAPS];
-    mutate({ table: t, prov: p, byVersion: v, gaps: g });
-    const hits = diffWrapperPins(t, p, v, g).filter((s) => s.includes(needle));
-    assert.ok(hits.length > 0, `${name}: 对齐门禁没报出「${needle}」`);
-    return needle;
-  };
-  const pinChecked = new Set([
-    // 抄错一位 hex（本story 真的在 JSON 里犯过一次：8.4 sha 少了一位）
-    pinPoison("钉值被截位", "8.4: JSON jarSha256 != 钉值表", ({ table }) => {
-      table["8.4"].sha256 = table["8.4"].sha256.slice(0, 63);
-    }),
-    pinPoison("usedBy 漂移", "usedBy=", ({ prov: p }) => {
-      p.jars["8.4"].usedBy = ["fabric/1.18.2", "fabric/1.19.4"];
-    }),
-    pinPoison("空洞登记漂移", "JSON gaps=", ({ prov: p }) => {
-      p.gaps.wrapperVersionUndeclared = p.gaps.wrapperVersionUndeclared.filter((x) => x !== "1.21.4");
-    }),
-  ]);
-  assert.equal(pinChecked.size, 3, `3 种内存注入应各报一次，实际 ${pinChecked.size}`);
-  assert.deepEqual(diffWrapperPins(WRAPPER_JARS, prov, byVersion), [], "投毒后基线必须仍然干净");
+    const poison = (name, needle, mutate, probe) => {
+      const touched = [];
+      const wr = (rel, content) => {
+        const p = join(tmp, rel);
+        touched.push([p, existsSync(p) ? readFileSync(p) : null]);
+        mkdirSync(dirname(p), { recursive: true });
+        writeFileSync(p, content);
+      };
+      const rm = (rel) => {
+        const p = join(tmp, rel);
+        touched.push([p, readFileSync(p)]);
+        rmSync(p);
+      };
+      try {
+        mutate({ wr, rm, read: (rel) => readFileSync(join(tmp, rel), "utf8"), cp: (fromRel, toRel) => wr(toRel, readFileSync(join(tmp, fromRel))) });
+        const r = scanScaffoldWrappers(tmp, probe);
+        assert.ok(r.problems.length > 0, `${name}: 注入后门禁仍然全绿`);
+        const hit = r.problems.filter((p) => p.includes(needle));
+        assert.ok(hit.length > 0, `${name}: 门禁报错但不含「${needle}」→ ${JSON.stringify(r.problems.slice(0, 3))}`);
+        return hit[0].split(":")[0];
+      } finally {
+        for (const [p, before] of touched.reverse()) {
+          if (before === null) rmSync(p, { force: true });
+          else writeFileSync(p, before);
+        }
+        assert.deepEqual(scanScaffoldWrappers(tmp).problems, [], `${name}: 还原后镜像基线必须重新变干净`);
+      }
+    };
+    const setMeta = (rel, mutate) => ({ wr, read }) => {
+      const meta = JSON.parse(read(rel));
+      mutate(meta);
+      wr(rel, JSON.stringify(meta, null, 2) + "\n");
+    };
+    const cases = [
+      { name: "缺 gradlew", needle: "但缺 gradlew", key: "fabric/1.20.1",
+        mutate: ({ rm }) => rm("fabric/1.20.1/scaffold/gradlew") },
+      { name: "jar 被篡改", needle: "jar sha256", key: "fabric/1.21.3",
+        mutate: ({ wr }) => wr("fabric/1.21.3/scaffold/gradle/wrapper/gradle-wrapper.jar", Buffer.from([0x50, 0x4b, 0x03, 0x04])) },
+      { name: "gradlew 行尾", needle: "gradlew 含 CR", key: "fabric/1.19.4",
+        mutate: ({ wr, read }) => wr("fabric/1.19.4/scaffold/gradlew", read("fabric/1.19.4/scaffold/gradlew").replace(/\n/g, "\r\n")) },
+      { name: "bat 行尾", needle: "非纯 CRLF", key: "fabric/1.18.2",
+        mutate: ({ wr, read }) => wr("fabric/1.18.2/scaffold/gradlew.bat", read("fabric/1.18.2/scaffold/gradlew.bat").replace(/\r\n/g, "\n")) },
+      { name: "版本未钉", needle: "不在 WRAPPER_JARS 钉值表内", key: "fabric/1.17.1",
+        mutate: ({ wr, read }) => {
+          const rel = "fabric/1.17.1/scaffold/gradle/wrapper/gradle-wrapper.properties";
+          wr(rel, read(rel).replace("gradle-7.4.2-bin.zip", "gradle-7.5-bin.zip"));
+        } },
+      { name: "空洞档半套", needle: "没有已声明版本却存在", key: "fabric/26.1.2",
+        mutate: ({ wr }) => wr("fabric/26.1.2/scaffold/gradlew", "#!/bin/sh\n") },
+      { name: "登记过期", needle: "登记过期", key: "fabric/1.21.8",
+        mutate: ({ wr }) => wr(
+          "fabric/1.21.8/scaffold/gradle/wrapper/gradle-wrapper.properties",
+          "distributionUrl=https\\://services.gradle.org/distributions/gradle-8.10-bin.zip\n") },
+      // ↓ 本 story 新增：三件套另两件 + gitignore + pack.meta.json 自我声明
+      { name: "gradlew 拿错版本", needle: "gradlew sha256", key: "fabric/1.20.1",
+        mutate: ({ cp }) => cp("fabric/1.21.1/scaffold/gradlew", "fabric/1.20.1/scaffold/gradlew") },
+      { name: "bat 拿错版本", needle: "gradlew.bat sha256", key: "fabric/1.20.1",
+        mutate: ({ cp }) => cp("fabric/1.21.3/scaffold/gradlew.bat", "fabric/1.20.1/scaffold/gradlew.bat") },
+      { name: "jar 被 gitignore", needle: "gitignored", key: "fabric/1.14.4",
+        mutate: () => {}, probe: () => true },
+      { name: "meta 版本与 props 冲突", needle: "meta.scaffold.gradle=", key: "forge/1.20.1",
+        mutate: setMeta("forge/1.20.1/pack.meta.json", (m) => { m.scaffold.gradle = "8.4"; }) },
+      { name: "meta 形态声明过期", needle: "但 props 已声明", key: "forge/1.16.5",
+        mutate: setMeta("forge/1.16.5/pack.meta.json", (m) => { m.scaffold.mode = "reference"; }) },
+      { name: "自称已构建却无出处", needle: "provenance.build 为空", key: "neoforge/1.20.4",
+        mutate: setMeta("neoforge/1.20.4/pack.meta.json", (m) => { m.scaffold.buildVerified = true; }) },
+      { name: "meta mode 非法", needle: "非法（只允许 gradle / reference）", key: "rift/1.13.2",
+        mutate: setMeta("rift/1.13.2/pack.meta.json", (m) => { m.scaffold.mode = "maven"; }) },
+    ];
+    for (const c of cases) assert.equal(poison(c.name, c.needle, c.mutate, c.probe), c.key, `${c.name}: 命中档应为 ${c.key}`);
+
+    // 自证：钉值表 ↔ 仓内出处记录 的对齐也能报错（纯内存投毒，不动盘）
+    const pinPoison = (name, needle, mutate) => {
+      const t = structuredClone(WRAPPER_JARS);
+      const p = structuredClone(prov);
+      const v = structuredClone(byVersion);
+      const g = [...WRAPPER_VERSION_GAPS];
+      mutate({ table: t, prov: p, byVersion: v, gaps: g });
+      const hits = diffWrapperPins(t, p, v, g).filter((s) => s.includes(needle));
+      assert.ok(hits.length > 0, `${name}: 对齐门禁没报出「${needle}」`);
+      return needle;
+    };
+    const pinCases = [
+      // 抄错一位 hex（本story 真的在 JSON 里犯过一次：8.4 sha 少了一位）
+      { name: "钉值被截位", needle: "8.4: JSON jarSha256 != 钉值表", mutate: ({ table }) => { table["8.4"].sha256 = table["8.4"].sha256.slice(0, 63); } },
+      { name: "gradlew 钉值漂移", needle: "8.4: JSON gradlewSha256 != 钉值表", mutate: ({ prov: p }) => { p.jars["8.4"].gradlewSha256 = p.jars["8.8"].gradlewSha256; } },
+      { name: "usedBy 漂移", needle: "usedBy=", mutate: ({ prov: p }) => { p.jars["8.4"].usedBy = ["fabric/1.18.2", "fabric/1.19.4"]; } },
+      { name: "空洞登记漂移", needle: "JSON gaps=", mutate: ({ prov: p }) => { p.gaps.wrapperVersionUndeclared = p.gaps.wrapperVersionUndeclared.filter((x) => x !== "fabric/1.21.4"); } },
+      { name: "measuredOn 过期格式", needle: "measuredOn 不是", mutate: ({ prov: p }) => { p.jars["8.4"].measuredOn = "9-2"; } },
+      { name: "孤儿钉值", needle: "孤儿钉值", mutate: ({ table, byVersion: v }) => { table["9.9.9"] = { ...table["8.4"] }; delete v["9.2.1"]; } },
+    ];
+    for (const c of pinCases) pinPoison(c.name, c.needle, c.mutate);
+    assert.equal(new Set(pinCases.map((c) => c.needle)).size, 6, "6 种内存注入应各报一次");
+    assert.deepEqual(diffWrapperPins(WRAPPER_JARS, prov, byVersion), [], "投毒后基线必须仍然干净");
+
+    // gitignore 判定本身必须两向都成立（否则「jar 被忽略」这条断言不可证伪）
+    assert.equal(gitIgnoredPath(REPO_ROOT, "temp/.wrap-ignore-probe/gradle-wrapper.jar"), true, "temp/ 下的路径必须判为 gitignored");
+    assert.equal(
+      gitIgnoredPath(REPO_ROOT, "fabric/1.20.1/scaffold/gradle/wrapper/gradle-wrapper.jar"), false,
+      "仓内真实 wrapper jar 必须判为未忽略（否则门禁长期假阳）");
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
 }
 
 // ---- S23：「断言须有出处」门禁 ----
@@ -6455,6 +6744,7 @@ await testLiteLoaderForgeHybridNotMultiLoader();
 await testPortProjectRejectsBadVersionToken();
 await testYarnShortNameAndMojangHeuristic();
 await testFabricClassPrefixSearch();
+await testFabricWikiSourceHandoff();
 await testSandboxAssertWritablePath();
 await testNeoForge1201ForgeCompat();
 await testArchitecturyDryRunDoesNotWrite();
@@ -6486,7 +6776,7 @@ await testPrototypeOwnKeys();
 await testW2MappingDocsFixes();
 await testPortingHandoffArgsAreCallable();
 await testPortingKbProvenance();
-await testFabricScaffoldWrappers();
+await testScaffoldWrappers();
 await testAssertionProvenance();
 await testFabric2612Knowledge();
 await testLoaderApiRepoDataHygiene();

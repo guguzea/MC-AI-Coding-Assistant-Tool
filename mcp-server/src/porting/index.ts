@@ -444,8 +444,17 @@ function buildRoutePlan(ctx: RouteCtx): { routeSteps: string[]; nextSteps: NextS
     );
     add("通过 @ExpectPlatform 抽象 Registry 层（根据 extract_common 输出人工处理）");
     add("拆分 Mixin 配置到 fabric/ 和 neoforge/ 子工程（Agent 手动处理）");
-    add("验证 fabric/ 模块编译通过");
-    add("验证 neoforge/ 模块编译通过");
+    // 骨架固定生成 common/ + fabric/ + neoforge/，但本次移植真正要编译的是 targetPlatform
+    // 那一块；把两端都列出来等于让 fabric 目标去验一个他没要的 neoforge 模块。
+    // quilt 归 fabric/：骨架没有 quilt/ 子工程，QSL 跑在 Loom 的 fabric 模块上。
+    const verifyModule =
+      ctx.targetPlatform === "neoforge"
+        ? "neoforge"
+        : ctx.targetPlatform === "fabric" || ctx.targetPlatform === "quilt"
+          ? "fabric"
+          : null;
+    if (verifyModule) add(`验证 ${verifyModule}/ 模块编译通过`);
+    else add(`验证目标端（${ctx.targetPlatform}）子工程编译通过`);
     return { routeSteps, nextSteps };
   }
 

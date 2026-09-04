@@ -47,10 +47,67 @@ function fabricDocsVersion(requested: string): { requested: string; resolved: st
 const _stores = new Map<string, ReturnType<typeof createFabricDocStore>>();
 const STORE_CACHE_MAX = 8;
 
-function stripInternalSource<T extends Record<string, unknown>>(row: T): Omit<T, "_source"> {
-  const { _source: _drop, ...rest } = row as T & { _source?: unknown };
+function publishResultSource(
+  row: Record<string, unknown>,
+  sourceById: Map<string, FabricDocSource>,
+  fallback: FabricDocSource,
+): Record<string, unknown> {
+  const raw = row as Record<string, unknown> & { _source?: FabricDocSource };
+  const { _source: _drop, ...rest } = raw;
   void _drop;
-  return rest;
+  // porting-extra 等旁路自带 source，不覆盖
+  if (typeof rest.source === "string") return rest;
+  return { ...rest, source: raw._source ?? sourceById.get(String(rest.id ?? "")) ?? fallback };
+}
+
+type FabricDocSource = "fabric-docs" | "fabric-wiki";
+
+/**
+ * search 在 fabric-docs 空树上会兜底到 fabric-wiki，返回的 id 只有带
+ * source=fabric-wiki 才解析得出来。以前这条信息只在顶层 sourceUsed 里，
+ * 调用方照 DOC_NOT_FOUND 的 hint 去重搜一遍，只会拿回同一个坏 id。
+ */
+class FabricDocInOtherSourceError extends Error {
+  override name = "FabricDocInOtherSourceError";
+  constructor(
+    public id: string,
+    public version: string,
+    public requestedSource: FabricDocSource,
+    public requiredSource: FabricDocSource,
+  ) {
+    super(`${id} 不在 ${requestedSource} 树内；该版本可解析的同名页面在 ${requiredSource}`);
+  }
+}
+
+async function fabricDocExistsInSource(
+  version: string,
+  source: FabricDocSource,
+  load: (store: ReturnType<typeof createFabricDocStore>) => unknown,
+): Promise<boolean> {
+  try {
+    await load(getStore(version, source));
+    return true;
+  } catch {
+    // 探测只用来决定 hint 怎么说；缺树 / 坏索引都必须让原始 DOC_NOT_FOUND 照旧返回
+    return false;
+  }
+}
+
+async function loadFabricDocWithSourceHint<T>(
+  version: string,
+  source: FabricDocSource,
+  load: (store: ReturnType<typeof createFabricDocStore>) => T | Promise<T>,
+): Promise<T> {
+  try {
+    return await load(getStore(version, source));
+  } catch (e) {
+    if (!(e instanceof DocNotFoundError)) throw e;
+    const other: FabricDocSource = source === "fabric-docs" ? "fabric-wiki" : "fabric-docs";
+    if (await fabricDocExistsInSource(version, other, load)) {
+      throw new FabricDocInOtherSourceError(e.id, version, source, other);
+    }
+    throw e;
+  }
 }
 
 function getStore(version: string, source: string) {
@@ -205,6 +262,23 @@ function handleError(e: unknown): CallToolResult {
       }],
     };
   }
+  if (e instanceof FabricDocInOtherSourceError) {
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          ok: false,
+          error: {
+            code: "DOC_NOT_FOUND",
+            message: e.message,
+            hint: `id 不要改，重试时加 source:"${e.requiredSource}"（本档 ${e.requestedSource} 无可解析页，命中来自 ${e.requiredSource}）`,
+            requestedSource: e.requestedSource,
+            requiredSource: e.requiredSource,
+          },
+        }, null, 2),
+      }],
+    };
+  }
   if (e instanceof DocNotFoundError) {
     const code = e.code === "UNSUPPORTED_PLATFORM" ? "UNSUPPORTED_PLATFORM" : "DOC_NOT_FOUND";
     const hint = e.code === "UNSUPPORTED_PLATFORM"
@@ -296,6 +370,8 @@ export const searchFabricDocsSchema = {
   - tags: 可选标签过滤（小写无连字符，如 registry, event, networking, datagen, mixin, command）。
   - source: 数据源，fabric-docs（默认）、fabric-wiki 或 all（合并两个源）。
     fabric-wiki 包含入门级教程（tutorial_blocks / tutorial_items 等），适合新手。
+  - 每条 results[].source 标出该页属于哪棵 corpus：fabric-docs 空树的版本（如 1.20.1）会兜底到
+    fabric-wiki，此时取正文/摘要/相关页必须把该值回填给 get_fabric_doc_*，否则必然 DOC_NOT_FOUND。
 
 Fabric 使用 Identifier 作为资源定位符，Registry.register() 注册物品/方块等，
 与 Forge 的 DeferredRegister 完全不同。`,
@@ -364,10 +440,18 @@ export async function searchFabricDocs(
     const resolvedSource = source ?? "fabric-docs";
     const docsEmpty = fabricDocsIndexEmpty(version);
     let usedWikiFallback = false;
+    // mergeSemanticResults 重建行对象时会丢掉 _source，所以单独记 id → corpus
+    const sourceById = new Map<string, FabricDocSource>();
+    const registerSource = (rows: Array<{ id: string }>, src: FabricDocSource) => {
+      // 首次登记优先：L0 搜索腿已经确定的 corpus 不被后续语义腿覆盖
+      for (const r of rows) if (!sourceById.has(r.id)) sourceById.set(r.id, src);
+    };
 
     if (resolvedSource === "all") {
       const docs = searchSourceOrEmpty(version, "fabric-docs", query, tags);
       const wiki = searchSourceOrEmpty(version, "fabric-wiki", query, tags);
+      registerSource(docs.results, "fabric-docs");
+      registerSource(wiki.results, "fabric-wiki");
       const merged = [
         ...docs.results.map((r) => ({ ...r, _source: "fabric-docs" as const })),
         ...wiki.results.map((r) => ({ ...r, _source: "fabric-wiki" as const })),
@@ -377,10 +461,12 @@ export async function searchFabricDocs(
       results = merged.slice(0, 10) as typeof docs.results;
     } else if (resolvedSource === "fabric-docs" && docsEmpty) {
       const wiki = searchSourceOrEmpty(version, "fabric-wiki", query, tags);
+      registerSource(wiki.results, "fabric-wiki");
       results = wiki.results.map((r) => ({ ...r, _source: "fabric-wiki" as const })) as typeof wiki.results;
       usedWikiFallback = true;
     } else {
       const detailed = searchSourceOrEmpty(version, resolvedSource, query, tags);
+      registerSource(detailed.results, resolvedSource);
       results = detailed.results;
     }
 
@@ -398,7 +484,10 @@ export async function searchFabricDocs(
         if (resolvedSource !== "all" || src === "fabric-docs") semanticMissing = true;
       }
       else semanticRanked = true;
-      if (hits) semanticList.push(...hits);
+      if (hits) {
+        registerSource(hits.map((h) => ({ id: h.docId })), src as FabricDocSource);
+        semanticList.push(...hits);
+      }
     }
     if (semanticRanked) {
       results = mergeSemanticResults(results, semanticList, {
@@ -424,6 +513,7 @@ export async function searchFabricDocs(
         if (wikiOnTopic.length) {
           usedWikiFallback = true;
           wikiTopicFallback = true;
+          registerSource(wikiOnTopic, "fabric-wiki");
           results = wikiOnTopic.map((r) => ({ ...r, _source: "fabric-wiki" as const })) as typeof results;
         }
         // wiki 为空时保留原 fabric-docs 命中
@@ -482,7 +572,13 @@ export async function searchFabricDocs(
                   : undefined,
               ),
               total: (results as unknown as Array<unknown>).length,
-              results: (results as Array<Record<string, unknown>>).map((r) => stripInternalSource(r)),
+              results: (results as Array<Record<string, unknown>>).map((r) =>
+                publishResultSource(
+                  r,
+                  sourceById,
+                  usedWikiFallback ? "fabric-wiki" : resolvedSource === "all" ? "fabric-docs" : resolvedSource,
+                ),
+              ),
             }),
             null,
             2,
@@ -520,7 +616,7 @@ export const getFabricDocSummarySchema = {
       .enum(["fabric-docs", "fabric-wiki"])
       .optional()
       .default("fabric-docs")
-      .describe("数据源，默认 fabric-docs"),
+      .describe('数据源，默认 fabric-docs；请回填 search_fabric_docs 的 results[].source（wiki 兜底档不带它会 DOC_NOT_FOUND）'),
   }),
 } as const;
 
@@ -552,9 +648,8 @@ export async function getFabricDocSummary(
     }
     const resolvedSource = args.source ?? "fabric-docs";
     const version = fabricDocsVersion(args.version).resolved;
-    const result = getStore(version, resolvedSource).loadSummary(
-      args.id,
-      version,
+    const result = await loadFabricDocWithSourceHint(version, resolvedSource, (store) =>
+      store.loadSummary(args.id, version),
     );
     return {
       content: [
@@ -611,7 +706,7 @@ highlight_key=true 时，关键要点（🔴新手必读、🟠常见错误、�
       .enum(["fabric-docs", "fabric-wiki"])
       .optional()
       .default("fabric-docs")
-      .describe("数据源，默认 fabric-docs"),
+      .describe('数据源，默认 fabric-docs；请回填 search_fabric_docs 的 results[].source（wiki 兜底档不带它会 DOC_NOT_FOUND）'),
   }),
 } as const;
 
@@ -640,10 +735,8 @@ export async function getFabricDocFull(
     }
     const resolvedSource = args.source ?? "fabric-docs";
     const version = fabricDocsVersion(args.version).resolved;
-    const result = await getStore(version, resolvedSource).loadFullDoc(
-      args.id,
-      version,
-      args.highlight_key ?? true,
+    const result = await loadFabricDocWithSourceHint(version, resolvedSource, (store) =>
+      store.loadFullDoc(args.id, version, args.highlight_key ?? true),
     );
     return {
       content: [
@@ -688,7 +781,7 @@ export const getFabricDocRelatedSchema = {
       .enum(["fabric-docs", "fabric-wiki"])
       .optional()
       .default("fabric-docs")
-      .describe("数据源，默认 fabric-docs"),
+      .describe('数据源，默认 fabric-docs；请回填 search_fabric_docs 的 results[].source（wiki 兜底档不带它会 DOC_NOT_FOUND）'),
     limit: z
       .number()
       .optional()
@@ -724,10 +817,8 @@ export async function getFabricDocRelated(
     }
     const resolvedSource = args.source ?? "fabric-docs";
     const version = fabricDocsVersion(args.version).resolved;
-    const result = getStore(version, resolvedSource).getRelatedDocs(
-      args.id,
-      version,
-      args.limit ?? 5,
+    const result = await loadFabricDocWithSourceHint(version, resolvedSource, (store) =>
+      store.getRelatedDocs(args.id, version, args.limit ?? 5),
     );
     return {
       content: [{

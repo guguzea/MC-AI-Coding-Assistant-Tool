@@ -1,0 +1,18 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "neoforge",
+  "minecraftVersion": "26.1",
+  "scaffold": {
+    "mode": "reference",
+    "provenance": {
+      "text": "house"
+    },
+    "buildVerified": false,
+    "gaps": [
+      "build.gradle 的版本锚点仅为参考（见该文件内注释：2026-09-02 实读 neoforge maven-metadata，26.1 线最新 26.1.2.100），真实工程以 download_official_mdk 实际产物的 gradle.properties 为准",
+      "CLI: download_official_mdk --platform=neoforge --minecraftVersion=26.1 → MDK_NOT_PINNED（pin 表只有 26.1.1 / 26.1.2 / 26.2，禁止邻版冒充）",
+      "无 settings.gradle 与 wrapper 三件套"
+    ]
+  }
+}

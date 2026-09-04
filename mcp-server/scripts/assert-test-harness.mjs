@@ -71,10 +71,86 @@ for (const root of roots) {
   }
 }
 
+/* ── R-3：audit 脚本里 async 导出必须 await ────────────────────────────────
+ * audit-all-tools.mjs 曾把 async 的 getVersionInfo 当同步函数调 4 次：r 恒为
+ * Promise，于是「weak」恒报、「constructor」恒误报 ERROR、另两条永远看不到值。
+ * R-1/R-2 只看手搓 `function test(name, fn)` harness，这类线性 main() + note()
+ * 的脚本落在门外——所以它绿了很久。
+ * 判定面：解构导入 + 能在 dist 里解析到 async 声明的绑定。
+ * 不覆盖：namespace 导入（const docs = await import(...)）的成员调用；
+ *        解析不到声明时跳过（宁漏不误报）。
+ */
+const scriptsDir = path.dirname(fileURLToPath(import.meta.url));
+const auditScripts = fs
+  .existsSync(scriptsDir)
+  ? fs
+      .readdirSync(scriptsDir)
+      .filter((n) => /^audit-.*\.mjs$/.test(n))
+      .map((n) => path.join(scriptsDir, n))
+  : [];
+
+/** 在 dist 产物里解析 `<name>` 是否 async；null = 判不了 */
+function isAsyncExport(modAbs, name, depth = 0) {
+  if (depth > 4 || !fs.existsSync(modAbs)) return null;
+  const t = fs.readFileSync(modAbs, "utf8");
+  if (new RegExp(`async\\s+function\\s+${name}\\b`).test(t)) return true;
+  if (new RegExp(`\\b${name}\\s*=\\s*async\\b`).test(t)) return true;
+  if (new RegExp(`(?:export\\s+)?function\\s+${name}\\s*\\(`).test(t)) return false;
+  for (const m of t.matchAll(/export\s*\{([^}]*)\}\s*from\s*["'](\.[^"']+)["']/g)) {
+    for (const entry of m[1].split(",").map((s) => s.trim()).filter(Boolean)) {
+      const [src, local] = entry.split(/\s+as\s+/).map((x) => x.trim());
+      if ((local || src) === name) {
+        const next = isAsyncExport(path.resolve(path.dirname(modAbs), m[2]), src, depth + 1);
+        if (next !== null) return next;
+      }
+    }
+  }
+  return null;
+}
+
+let auditFiles = 0;
+let asyncBindings = 0;
+for (const file of auditScripts) {
+  const text = fs.readFileSync(file, "utf8");
+  const lines = text.split("\n");
+  const IMPORT_RE = /const\s*\{([^}]+)\}\s*=\s*(?:await\s+)?import\(\s*["'](\.[^"']+)["']\s*\)/g;
+  const bindings = new Map(); // name -> module file it was imported from
+  for (const m of text.matchAll(IMPORT_RE)) {
+    if (!m[2].includes("dist")) continue;
+    const modAbs = path.resolve(path.dirname(file), m[2]);
+    if (!fs.existsSync(modAbs)) continue; // 未 npm run build：不判，别让新克隆变红
+    for (const raw of m[1].split(",")) {
+      const name = raw.trim().split(/\s+as\s+/).pop().trim();
+      if (name && !bindings.has(name)) bindings.set(name, modAbs);
+    }
+  }
+  for (const [name, modAbs] of bindings) {
+    if (isAsyncExport(modAbs, name) !== true) continue;
+    asyncBindings += 1;
+    for (const c of text.matchAll(new RegExp(`(?<![\\w$.])${name}\\s*\\(`, "g"))) {
+      const lineNo = text.slice(0, c.index).split("\n").length;
+      const lineStart = text.lastIndexOf("\n", c.index - 1) + 1;
+      const lineEnd = text.indexOf("\n", c.index);
+      const line = text.slice(lineStart, lineEnd < 0 ? text.length : lineEnd);
+      const before = text.slice(lineStart, c.index);
+      if (/(?:^|[^\w$.])await\s+$/.test(before)) continue;
+      if (/^\s*$/.test(before) && /\bawait\s*$/.test(lines[lineNo - 2] ?? "")) continue;
+      if (/\.then\s*\(|Promise\.(?:all|allSettled)\s*\(|\breturn\s+$/.test(`${line}|${before}`)) continue;
+      problems.push({
+        file,
+        why: `第 ${lineNo} 行：${name}() 是 async 导出但未 await → 断言拿到的是 Promise（假绿/假红）`,
+        line: lineNo,
+      });
+    }
+  }
+  auditFiles += 1;
+}
+
 if (problems.length) {
-  console.error("assert-test-harness: 发现「async 用例被同步 harness 吞掉」风险：");
+  console.error("assert-test-harness: 发现「async 被同步吞掉」风险（R-1/R-2 harness 假绿 / R-3 audit 脚本未 await）：");
   for (const p of problems) console.error(`  ${path.relative(process.cwd(), p.file)} :: ${p.why}`);
-  console.error("\n这类用例会「绿着但从未执行」。见 test-decompile.mjs 的 test()/atest() 写法。");
+  console.error("\n这类代码会「绿着但从未执行」或「恒报一个拿不到值的结论」。harness 侧见 test-decompile.mjs 的 test()/atest() 写法。");
   process.exit(1);
 }
 console.log(`assert-test-harness: ok (${harnesses} 个手搓 harness 已锁死 thenable 处理)`);
+console.log(`assert-test-harness: ok R-3 (${auditFiles} 个 audit 脚本 / ${asyncBindings} 个 async 导出绑定已核 await)`);

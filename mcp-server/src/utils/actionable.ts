@@ -10,8 +10,8 @@
  * 1) **带内（in-band）失败：`ok:false` + `action`（本模块）** —— 默认且压倒性多数。
  *    实测口径（**一律排除本文件自身**：合同散文里就写着 `ok: false` 字面量，计入即自指；
  *    `test-wave-bcd.mjs` 的 A-27 门按同一口径当场复算，数字脱节就翻红）：
- *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **303** 行 / **45** 个文件（按行计）；
- *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **305** 处 / **46** 个文件。
+ *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **304** 行 / **45** 个文件（按行计）；
+ *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **306** 处 / **46** 个文件。
  *    语义 = “工具正常执行完了，但结论是否定/不完整/需要人决策”：
  *    NOT_FOUND、AMBIGUOUS、DATA_UNAVAILABLE、INVALID_INPUT、WRONG_TOOL、
  *    VERSION_REQUIRED、PACK_INCOMPLETE、VERSION_FALLBACK…（见下方 ActionCodes）。

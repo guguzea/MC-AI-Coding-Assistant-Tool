@@ -3,8 +3,22 @@
   "pack-status": "overlay",
   "layout": "thin",
   "overlayOf": "forge/1.20.1",
-  "localSkills": ["mc-registry"],
+  "localSkills": [
+    "mc-registry"
+  ],
   "note": "可 session（status=ready），但本档只含 overlay 短规则 00/01/09 + 本档 mc-registry。02–08/10 与其余 skill 走 Forge 1.20.1 overlay，禁止编造 Neo 独有 skill。status=ready 不等于技能齐全。",
   "platform": "neoforge",
-  "minecraftVersion": "1.20.1"
+  "minecraftVersion": "1.20.1",
+  "scaffold": {
+    "mode": "reference",
+    "provenance": {
+      "text": "house"
+    },
+    "buildVerified": false,
+    "gaps": [
+      "build.gradle 有意不含插件 id/版本（见该文件内注释：search_neoforge_docs version=1.20.1 gettingstarted 或 download_official_mdk）",
+      "CLI: download_official_mdk --platform=neoforge --minecraftVersion=1.20.1 → MDK_NOT_PINNED（禁止邻版 MDK 冒充）",
+      "overlay 档：可构建骨架以 forge/1.20.1 scaffold 为准"
+    ]
+  }
 }

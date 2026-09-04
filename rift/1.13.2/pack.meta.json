@@ -2,5 +2,17 @@
   "status": "ready",
   "pack-status": "ready",
   "platform": "rift",
-  "minecraftVersion": "1.13.2"
+  "minecraftVersion": "1.13.2",
+  "scaffold": {
+    "mode": "reference",
+    "provenance": {
+      "text": "house"
+    },
+    "buildVerified": false,
+    "gaps": [
+      "build.gradle 无 buildscript{} 块：tweaker-client 插件 classpath 与版本未核实，禁止默写",
+      "CLI: download_official_mdk --platform=rift --minecraftVersion=1.13.2 → MDK_NOT_PINNED（Rift 无官方维护模板仓库）",
+      "无 wrapper 三件套与 settings.gradle；libs/ 需用户自备 rift dev jar（见 scaffold/libs/README.md）"
+    ]
+  }
 }

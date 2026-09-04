@@ -2,5 +2,17 @@
   "status": "ready",
   "pack-status": "ready",
   "platform": "neoforge",
-  "minecraftVersion": "1.21.11"
+  "minecraftVersion": "1.21.11",
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "9.2.1",
+    "provenance": {
+      "text": "official-mdk:MDK-1.21.11-ModDevGradle@88207194",
+      "wrapper": "gradle-wrapper-task"
+    },
+    "buildVerified": false,
+    "gaps": [
+      "gradlew build 未在本机跑通（W5-4 阶段③）"
+    ]
+  }
 }
