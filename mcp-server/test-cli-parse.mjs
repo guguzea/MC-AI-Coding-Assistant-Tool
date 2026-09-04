@@ -38,6 +38,31 @@ import {
 }
 
 {
+  const t = parseFlags(["query", "-className", "Item", "--version", "1.20.1"]);
+  assert.deepEqual(t.positional, ["query", "Item"]);
+  assert.deepEqual(t.suspectFlags, ["className"]);
+  assert.equal(t.flags.version, "1.20.1");
+  assert.equal("className" in t.flags, false);
+
+  assert.deepEqual(parseFlags(["convert", "-", "--from", "mcp"]).positional, ["convert", "-"]);
+  assert.deepEqual(parseFlags(["convert", "-", "--from", "mcp"]).suspectFlags, []);
+  assert.deepEqual(parseFlags(["warmup", "-1"]).positional, ["warmup", "-1"]);
+  assert.deepEqual(parseFlags(["warmup", "-1"]).suspectFlags, []);
+  const escaped = parseFlags(["query", "--", "-className", "Item"]);
+  assert.deepEqual(escaped.positional, ["query", "-className", "Item"]);
+  assert.deepEqual(escaped.suspectFlags, []);
+
+  const noSwallow = parseFlags(["--className", "-Item"]);
+  assert.equal(noSwallow.flags.className, true);
+  assert.deepEqual(noSwallow.suspectFlags, ["Item"]);
+
+  assert.equal(new UnknownFlagError("className").message, "未知参数 --className");
+  const suggested = new UnknownFlagError("className", "-className");
+  assert.match(suggested.message, /未知参数 -className/);
+  assert.match(suggested.message, /请改用 --className/);
+}
+
+{
   const { flags, positional } = parseFlags(["--tag", "a", "--tag", "b"]);
   assert.deepEqual(flags.tag, ["a", "b"]);
 }

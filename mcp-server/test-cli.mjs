@@ -135,6 +135,33 @@ function parseJson(r, label) {
   console.log("query 位置参数兼容: ok（stderr 含迁移提示）");
 }
 
+// ── 3b. S1/D1：单连字符 -className → exit 2 + 建议 --className，且不再吐查询结果 ──
+{
+  const r = run(["query", "-className", "Item", "--version", "1.20.1"]);
+  if (r.status !== 2) throw new Error(`expected exit 2 for -className, got ${r.status}:\n${r.stdout}\n${r.stderr}`);
+  const j = parseJson(r, "suspect-flag");
+  if (j.success !== false || !j.error) throw new Error(`suspect flag envelope bad: ${JSON.stringify(j)}`);
+  if (!String(j.error).includes("未知")) throw new Error(`suspect flag missing 未知: ${j.error}`);
+  if (!String(j.error).includes("--className")) throw new Error(`suspect flag missing suggestion: ${j.error}`);
+  if ("result" in j) throw new Error(`suspect flag must not carry result: ${JSON.stringify(j.result)}`);
+  if (r.stdout.includes("matched") || r.stdout.includes("getName")) {
+    throw new Error(`suspect flag leaked query results:\n${r.stdout.slice(0, 300)}`);
+  }
+
+  const ok = run(["query", "--className", "net.minecraft.world.item.Item", "--version", "1.20.1"]);
+  if (ok.status !== 0) throw new Error(`--className form regressed (exit ${ok.status}):\n${ok.stderr}\n${ok.stdout}`);
+
+  const esc = run(["query", "--version=1.20.1", "--", "-className", "Item"]);
+  if (esc.status === 2 && String(esc.stdout).includes("未知参数")) {
+    throw new Error(`-- escape rejected: ${esc.stdout}\n${esc.stderr}`);
+  }
+
+  const help = parseJson(run(["--help"]), "help-legacy-notice");
+  const usage = Array.isArray(help.usage) ? help.usage.join("\n") : "";
+  if (!usage.includes("遗留用法")) throw new Error(`--help missing 遗留用法 notice:\n${usage}`);
+  console.log("query -className → exit 2 + --className 建议；-- 逃生口与正确写法不受影响");
+}
+
 // ── 4. convert 缺 name → exit 2 + {success:false, error} ─────────────────────
 {
   const r = run(["convert", "--from", "mcp", "--to", "mojang"]);

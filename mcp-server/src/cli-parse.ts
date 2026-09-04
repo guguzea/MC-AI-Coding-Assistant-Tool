@@ -82,13 +82,27 @@ function appendFlag(flags: RawFlags, key: string, value: FlagScalar): void {
   flags[key] = [prev, value];
 }
 
+/** 单连字符 flag 形 token（-className）：漏写一个 - 的 flag，不是值也不是位置参数 */
+const FLAG_LIKE_TOKEN = /^-[A-Za-z][A-Za-z0-9_.-]*$/;
+
+export function isFlagLikeToken(token: string): boolean {
+  return FLAG_LIKE_TOKEN.test(token);
+}
+
 /**
  * flags 解析：--key value / --key=value / 裸 --key→true；
- * 重复 key 追加为数组。非 -- 开头归入 positional。
+ * 重复 key 追加为数组。非 -- 开头归入 positional，
+ * 但 -className 这类漏写连字符的 token 记入 suspectFlags：
+ * 归入 positional 会被旧位置参数兼容当成查询值，静默给出错误结果。
  */
-export function parseFlags(argv: string[]): { flags: RawFlags; positional: string[] } {
+export function parseFlags(argv: string[]): {
+  flags: RawFlags;
+  positional: string[];
+  suspectFlags: string[];
+} {
   const flags: RawFlags = {};
   const positional: string[] = [];
+  const suspectFlags: string[] = [];
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--") {
@@ -115,11 +129,13 @@ export function parseFlags(argv: string[]): { flags: RawFlags; positional: strin
           appendFlag(flags, key, true);
         }
       }
+    } else if (isFlagLikeToken(a)) {
+      suspectFlags.push(a.slice(1));
     } else {
       positional.push(a);
     }
   }
-  return { flags, positional };
+  return { flags, positional, suspectFlags };
 }
 
 export function unwrapZod(schema: z.ZodTypeAny): z.ZodTypeAny {
@@ -237,8 +253,12 @@ export function tupleItemType(schema: z.ZodTypeAny | undefined, key: string): st
 }
 
 export class UnknownFlagError extends Error {
-  constructor(readonly flag: string) {
-    super(`未知参数 --${flag}`);
+  constructor(readonly flag: string, readonly typedAs?: string) {
+    super(
+      typedAs === undefined
+        ? `未知参数 --${flag}`
+        : `未知参数 ${typedAs}：疑似漏写一个连字符，请改用 --${flag}（全部参数见 --help）`,
+    );
   }
 }
 

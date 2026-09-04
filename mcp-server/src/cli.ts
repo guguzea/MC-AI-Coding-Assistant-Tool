@@ -76,6 +76,7 @@ const USAGE_LINES = [
   "mc-skill crash_analyze --crashReport @./crash-reports/latest.txt",
   "mc-skill list-tools",
   "mc-skill <任意MCP工具名> --key=value ...",
+  "遗留用法（仍兼容，未来移除）: query Item getName / warmup 1.20.1；单连字符 -className 视为漏写 --，报用法错误 exit 2",
 ];
 
 function printGlobalHelp(json: boolean, compact: boolean): void {
@@ -292,7 +293,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const { flags: rawFlags, positional } = parseFlags(argv);
+  const { flags: rawFlags, positional, suspectFlags } = parseFlags(argv);
   let globals: ReturnType<typeof extractGlobalFlags>["globals"];
   let rest: ReturnType<typeof extractGlobalFlags>["rest"];
   try {
@@ -348,6 +349,11 @@ async function main(): Promise<void> {
   }
 
   try {
+    if (suspectFlags.length > 0) {
+      const typed = `-${suspectFlags[0]}`;
+      throw new UnknownFlagError(typed.slice(1), typed);
+    }
+
     if (userCmd === "list-tools") {
       const reg = await loadRegistry();
       const tools = reg.listAllToolSchemas();
