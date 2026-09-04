@@ -5,7 +5,7 @@
  * flags-only（--key value / --key=value / 裸 --key→true），参数类型按各工具的
  * zod inputSchema 驱动转换。输出 JSON 包装 {success, tool, result|error}。
  * 退出码 0=成功 / 1=工具失败 / 2=用法错误。
- * 失败信封另有 errorKind 分类键：usage / validation ↔ exit 2，tool_failure ↔ exit 1；
+ * 失败信封另有 errorKind 分类键：usage / validation ↔ exit 2，tool_failure / timeout ↔ exit 1；
  * 成功时该键不出现。分类只加键，不新增第三种退出码。
  *
  * 旧位置参数形式仍兼容（stderr 迁移提示）。descriptor 为本地子命令，不经 MCP registry。
@@ -31,6 +31,7 @@ import {
   mapShortCommand,
   MIGRATION_NOTICE,
   parseFlags,
+  parseTimeoutMs,
   POSITIONAL_COMMANDS,
   resolveFlagKey,
   schemaObjectShape,
@@ -97,6 +98,8 @@ const USAGE_LINES = [
   "字面量逃生: --raw <field> 让该字段完全按字面传（连 @- 也不读 stdin）；裸 --raw 或 --raw=true 关闭全部 @ 展开，--raw=false 恢复",
   "字段优先: 工具 schema 里有同名 flag 时该 flag 归工具（validate_bp_json --json '<全文>' 的 json 是参数，不是输出开关）",
   "输出格式: --output-format json 是表达格式意图的规范入口；当前唯一合法值是 json，其它值 exit 2 报「尚未实现」",
+  "运行控制: --quiet 静音 stderr 上的进度行（running… 与 --timeout 心跳），错误与警告照旧；--timeout <ms> 给单次工具执行设上限，0 或不设 = 不限",
+  "超时: 到点 exit 1 + errorKind timeout（写明是超时不是工具失败）；退出码仍是 0/1/2 三档，只靠 errorKind 细分",
   "仅可承载文本的字段接受 @（string / string[] / object / string 参与的 union）；number / boolean / enum / tuple 原样传",
   "mc-skill list-tools [--names-only | --filter <kw> | --tool <name>]",
   "mc-skill <任意MCP工具名> --key=value ...",
@@ -115,11 +118,11 @@ function printGlobalHelp(json: boolean, compact: boolean): void {
       "用法:",
       ...USAGE_LINES.map((l) => `  ${l}`),
       "",
-      "全局 flag: --help  --version  --json  --output-format json  --compact  --fail-on-error  --project <dir>  --file field=path  --raw <field>",
+      "全局 flag: --help  --version  --json  --output-format json  --compact  --fail-on-error  --quiet  --timeout <ms>  --project <dir>  --file field=path  --raw <field>",
       "布尔 flag 只接受 true/false/1/0/yes/no/on/off；裸 --flag 为 true；--flag=junk 拒绝（exit 2）",
       "字段优先: 工具 schema 有同名 flag 时归工具（如 validate_bp_json --json '<全文>'）；--output-format 当前只认 json",
       "文件输入: --crashReport @./latest.txt   --crashReport=-   --file crashReport=./latest.txt   @@ 为字面 @   --raw <field> 关闭展开   文件与 stdin 同受 8MB 上限",
-      "退出码: 0 成功 / 1 工具失败 / 2 用法错误",
+      "退出码: 0 成功 / 1 工具失败或超时（errorKind tool_failure | timeout）/ 2 用法错误（errorKind usage | validation）",
       "",
     ].join("\n"),
   );
@@ -544,6 +547,61 @@ function outputFormatError(value: FlagScalar | undefined): string | null {
   return null;
 }
 
+/** 到点只放弃等待：绝不 process.exit，否则 run 路径 finally 的资源回收不会跑 */
+class TimeoutCliError extends Error {
+  constructor(
+    readonly ms: number,
+    readonly tool: string,
+  ) {
+    super(
+      `超时：${tool} 未在 --timeout ${ms}ms 内完成。这是超时，不是工具失败（工具没有产出结果）；` +
+        `放宽请调大 --timeout，或不带该 flag（默认不限时长）`,
+    );
+  }
+}
+
+/**
+ * 心跳节奏取预算的一半（夹在 50ms..5s）：这样「真的超时了」必然意味着至少吐过一行进度，
+ * 长任务则退化成每 5s 一行。上限的存在是防止小时级预算下心跳变成刷屏。
+ */
+function heartbeatMs(budgetMs: number): number {
+  return Math.min(5000, Math.max(50, Math.ceil(budgetMs / 2)));
+}
+
+/**
+ * 退出纪律（S6）：定时器 unref + 一次性 + finally 清；--timeout 关闭时一个定时器都不建。
+ * 心跳只在显式开启 --timeout 后才吐，且受 --quiet 管辖（默认零额外输出）。
+ */
+async function withRunBudget<T>(
+  task: Promise<T>,
+  budgetMs: number,
+  tool: string,
+  quiet: boolean,
+): Promise<T> {
+  if (budgetMs <= 0) return await task;
+  const started = Date.now();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let beat: ReturnType<typeof setInterval> | undefined;
+  // 超时后 handler 仍可能 reject；不挂这个 catch 就变成 unhandledRejection，退出码与信封都会失真
+  task.catch(() => undefined);
+  const guard = new Promise<never>((_resolve, reject) => {
+    timer = setTimeout(() => reject(new TimeoutCliError(budgetMs, tool)), budgetMs);
+    timer.unref?.();
+    if (!quiet) {
+      beat = setInterval(() => {
+        process.stderr.write(`  … ${tool} 仍在运行 ${Date.now() - started}ms（--timeout ${budgetMs}ms）\n`);
+      }, heartbeatMs(budgetMs));
+      beat.unref?.();
+    }
+  });
+  try {
+    return await Promise.race([task, guard]);
+  } finally {
+    if (timer) clearTimeout(timer);
+    if (beat) clearInterval(beat);
+  }
+}
+
 async function main(): Promise<void> {
   try {
     clearPendingRestart();
@@ -575,6 +633,12 @@ async function main(): Promise<void> {
   const formatError = outputFormatError(globals.outputFormat);
   if (formatError) {
     printJson({ success: false, tool: positional[0] ?? "cli", error: formatError, errorKind: "usage" }, false);
+    process.exitCode = 2;
+    return;
+  }
+  const budget = parseTimeoutMs(globals.timeout);
+  if (budget.error) {
+    printJson({ success: false, tool: positional[0] ?? "cli", error: budget.error, errorKind: "usage" }, false);
     process.exitCode = 2;
     return;
   }
@@ -674,9 +738,14 @@ async function main(): Promise<void> {
     }
 
     await maybeHintDataDir(mappedTool);
-    process.stderr.write(`running ${mappedTool}...\n`);
+    if (!globals.quiet) process.stderr.write(`running ${mappedTool}...\n`);
     try {
-      const raw = await entry.handler(parsed.data as Record<string, unknown>);
+      const raw = await withRunBudget(
+        Promise.resolve(entry.handler(parsed.data as Record<string, unknown>)),
+        budget.ms,
+        mappedTool,
+        globals.quiet,
+      );
       const { result, isError } = unwrapHandlerResult(raw);
       const failed = isToolFailure(result, isError, globals.failOnError);
       printJson(
@@ -706,11 +775,14 @@ async function main(): Promise<void> {
       err instanceof AmbiguousFlagError ||
       err instanceof InvalidBooleanFlagError ||
       err instanceof CliUsageError;
-    const errorKind: CliErrorKind = !isUsage
-      ? "tool_failure"
-      : err instanceof ValidationCliError
-        ? "validation"
-        : "usage";
+    const errorKind: CliErrorKind =
+      err instanceof TimeoutCliError
+        ? "timeout"
+        : !isUsage
+          ? "tool_failure"
+          : err instanceof ValidationCliError
+            ? "validation"
+            : "usage";
     const envelope: Record<string, unknown> = {
       success: false,
       tool: err instanceof CliUsageError ? err.tool : toolName,

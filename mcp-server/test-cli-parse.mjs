@@ -6,6 +6,7 @@ import * as z from "zod";
 import {
   AmbiguousFlagError,
   applyPositionalCompat,
+  BOOLEAN_GLOBAL_KEYS,
   canonicalFlagName,
   coerceFlagValue,
   coerceFlags,
@@ -23,6 +24,7 @@ import {
   mapShortCommand,
   nearFlagNames,
   parseFlags,
+  parseTimeoutMs,
   resolveFlagKey,
   schemaObjectShape,
   schemaPropertyType,
@@ -485,6 +487,59 @@ import {
   assert.equal(fieldOwnedGlobals("query_api"), undefined);
   assert.equal(fieldOwnedGlobals("status")?.has("json"), undefined, "status 短名无同名字段");
   assert.equal(fieldOwnedGlobals(undefined), undefined);
+}
+
+// ── S6: --quiet / --timeout（静音开关 + 有界退出预算）───────────────────────
+{
+  assert.ok(GLOBAL_FLAG_KEYS.has("quiet"), "--quiet 必须登记为全局 flag");
+  assert.ok(GLOBAL_FLAG_KEYS.has("timeout"), "--timeout 必须登记为全局 flag");
+  assert.ok(BOOLEAN_GLOBAL_KEYS.has("quiet"), "--quiet 是开关：裸写法不得吞掉后面的命令名");
+  assert.equal(BOOLEAN_GLOBAL_KEYS.has("timeout"), false, "--timeout 收值，进布尔表就会把预算当命令名");
+
+  const bare = parseFlags(["--quiet", "query_api"]);
+  assert.equal(bare.flags.quiet, true);
+  assert.deepEqual(bare.positional, ["query_api"], "裸 --quiet 不得吃掉命令名");
+
+  const off = extractGlobalFlags(parseFlags(["--quiet=false", "query_api"]).flags).globals;
+  assert.equal(off.quiet, false, "--quiet=false 必须显式取消静音");
+  assert.equal(extractGlobalFlags(parseFlags([]).flags).globals.quiet, false, "默认不静音（进度行照旧）");
+  assert.throws(
+    () => extractGlobalFlags(parseFlags(["--quiet=junk", "query_api"]).flags),
+    InvalidBooleanFlagError,
+    "--quiet 只认布尔 token",
+  );
+
+  const space = extractGlobalFlags(
+    parseFlags(["--timeout", "5000", "query_api", "--className", "X"]).flags,
+  );
+  assert.equal(space.globals.timeout, "5000");
+  assert.deepEqual(Object.keys(space.rest), ["className"], "--timeout/--quiet 不得漏进工具载荷");
+  assert.equal(extractGlobalFlags(parseFlags(["--timeout=1", "--timeout=900", "query_api"]).flags).globals.timeout, "900");
+  assert.equal(extractGlobalFlags(parseFlags(["query_api"]).flags).globals.timeout, undefined, "不设 = 不限");
+
+  assert.deepEqual(parseTimeoutMs(undefined), { ms: 0, error: null });
+  assert.deepEqual(parseTimeoutMs("0"), { ms: 0, error: null }, "0 = 显式不限");
+  assert.deepEqual(parseTimeoutMs("60000"), { ms: 60000, error: null });
+  assert.deepEqual(parseTimeoutMs("  250 "), { ms: 250, error: null }, "两侧空白不影响取值");
+  for (const bad of [true, "junk", "-5", "1.5", "0x10", "", "1e3", "9007199254740992"]) {
+    const got = parseTimeoutMs(bad);
+    assert.equal(got.ms, 0, `非法 --timeout ${JSON.stringify(bad)} 不得给出预算`);
+    assert.ok(got.error, `非法 --timeout ${JSON.stringify(bad)} 必须报错`);
+  }
+  assert.match(String(parseTimeoutMs(true).error), /毫秒/, "裸写法要点名『需要毫秒数』");
+  assert.match(String(parseTimeoutMs("junk").error), /非负整数|毫秒数/, "非法值必须说明合法形式");
+  assert.doesNotMatch(String(parseTimeoutMs("junk").error), /工具失败/, "用法错误不得谎称工具失败");
+
+  // 与全部工具字段零碰撞：连字符/下划线/大小写归一化后也不许撞（S4 枚举门只比原名）
+  const { listAllToolSchemas } = await import("./dist/tool-registry.js");
+  const S6_FLAGS = ["quiet", "timeout"].map((k) => canonicalFlagName(k));
+  const collided = [];
+  for (const t of listAllToolSchemas()) {
+    for (const name of Object.keys(schemaObjectShape(t.inputSchema) ?? {})) {
+      if (S6_FLAGS.includes(canonicalFlagName(name))) collided.push(`${t.name}.${name}`);
+    }
+  }
+  assert.deepEqual(collided, [], "新全局 flag 与工具字段同名 → 必须走 FIELD_OWNED_GLOBALS 声明并复检");
 }
 
 console.log("test-cli-parse: ok");

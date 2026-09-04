@@ -25,6 +25,8 @@ export const GLOBAL_FLAG_KEYS = new Set([
   "raw",
   "output-format",
   "outputFormat",
+  "quiet",
+  "timeout",
 ]);
 
 /** `--output-format` 当前唯一合法值；其它值必须 exit 2，不得静默按 json 处理 */
@@ -54,6 +56,7 @@ export const BOOLEAN_GLOBAL_KEYS = new Set([
   "compact",
   "fail-on-error",
   "failOnError",
+  "quiet",
 ]);
 
 /** 旧 CLI 短名 → schema 字段；仅当目标键在 schema 中且原键不在 schema 中时生效。
@@ -306,10 +309,30 @@ export function tupleItemType(schema: z.ZodTypeAny | undefined, key: string): st
 
 /**
  * 失败信封的错误分类（只增键，退出码契约 0/1/2 不变）。
- * 可由退出码反推：2 → usage | validation，1 → tool_failure。
- * timeout 分类由 S6 的 --timeout 落地时补。
+ * 可由退出码反推：2 → usage | validation，1 → tool_failure | timeout。
+ * timeout 走 1 而不是新造第三种码：`&&` / `$LASTEXITCODE -ne 0` 型消费者不能遇见预料外的码。
  */
-export type CliErrorKind = "usage" | "validation" | "tool_failure";
+export type CliErrorKind = "usage" | "validation" | "tool_failure" | "timeout";
+
+/**
+ * `--timeout` 取值语义：不设或 0 = 不限，其余必须是十进制非负整数毫秒。
+ * 返回 error 而不是抛异常：调用方要用统一的 usage 信封（exit 2）报出去。
+ */
+export function parseTimeoutMs(value: FlagScalar | undefined): { ms: number; error: string | null } {
+  if (value === undefined) return { ms: 0, error: null };
+  if (typeof value !== "string") {
+    return { ms: 0, error: "--timeout 需要毫秒数（如 --timeout=30000；0 表示不限）" };
+  }
+  const s = value.trim();
+  if (!/^\d+$/.test(s)) {
+    return { ms: 0, error: `--timeout ${JSON.stringify(value)} 不是毫秒数（要求十进制非负整数，0 表示不限）` };
+  }
+  const ms = Number(s);
+  if (!Number.isSafeInteger(ms)) {
+    return { ms: 0, error: `--timeout ${value} 超出可表示范围（上限 ${Number.MAX_SAFE_INTEGER} 毫秒）` };
+  }
+  return { ms, error: null };
+}
 
 /** flag 名归一化：忽略连字符、下划线与大小写（allow-fallback / allowFallback / allow_fallback 同形） */
 export function canonicalFlagName(key: string): string {
@@ -418,8 +441,10 @@ export function extractGlobalFlags(raw: RawFlags, fieldOwned?: Set<string>): {
     json: boolean;
     compact: boolean;
     failOnError: boolean;
+    quiet: boolean;
     project?: string;
     outputFormat?: FlagScalar;
+    timeout?: FlagScalar;
     file: string[];
     raw: FlagScalar[];
   };
@@ -432,8 +457,10 @@ export function extractGlobalFlags(raw: RawFlags, fieldOwned?: Set<string>): {
   let json = false;
   let compact = false;
   let failOnError = false;
+  let quiet = false;
   let project: string | undefined;
   let outputFormat: FlagScalar | undefined;
+  let timeout: FlagScalar | undefined;
   for (const [k, v] of Object.entries(raw)) {
     const camel = kebabToCamel(k);
     if (fieldOwned?.has(k)) {
@@ -454,6 +481,15 @@ export function extractGlobalFlags(raw: RawFlags, fieldOwned?: Set<string>): {
     }
     if (k === "fail-on-error" || camel === "failOnError") {
       failOnError = parseFlagTruthy(v, "fail-on-error");
+      continue;
+    }
+    if (k === "quiet") {
+      quiet = parseFlagTruthy(v, "quiet");
+      continue;
+    }
+    if (k === "timeout") {
+      const last = flattenFlagValues(v).at(-1);
+      if (last !== undefined) timeout = last;
       continue;
     }
     if (k === "project") {
@@ -479,7 +515,7 @@ export function extractGlobalFlags(raw: RawFlags, fieldOwned?: Set<string>): {
     rest[k] = v;
   }
   return {
-    globals: { help, json, compact, failOnError, project, outputFormat, file, raw: rawFields },
+    globals: { help, json, compact, failOnError, quiet, project, outputFormat, timeout, file, raw: rawFields },
     rest,
   };
 }

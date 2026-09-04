@@ -174,7 +174,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 一条执行路径：短名只做 alias（`query`→`query_api`、`convert`→`convert_mapping`、`update`→`mc_skill_update`、`status`/`warmup`→`get_server_status`；`warmup` 会注入 `warmup=true`，用户显式 `--warmup=false` 优先）。`descriptor` 是本地命令，不加载 MCP 工具注册表。
 
-全局 flag（不进工具 schema）：`--help`/`-h`、`--version`（只在没写工具名的裸用法上打印 CLI 版本，其余场景它是工具字段）、`--json`（兼容保留的 no-op，不改变输出）、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`、`--raw [field]`、`--output-format json`。
+全局 flag（不进工具 schema）：`--help`/`-h`、`--version`（只在没写工具名的裸用法上打印 CLI 版本，其余场景它是工具字段）、`--json`（兼容保留的 no-op，不改变输出）、`--compact`、`--fail-on-error`、`--quiet`、`--timeout <ms>`、`--project <dir>`、`--file field=path`、`--raw [field]`、`--output-format json`。`--quiet` 与 `--timeout` 与全部工具字段名零碰撞（连字符/大小写归一化后同样复检），所以它们不需要进 `FIELD_OWNED_GLOBALS`；将来任何工具新增 `timeout` / `quiet` 字段都会让该门转红。
 
 同名让位（字段优先）：目标工具 schema 里存在与全局 flag 同名的字段时，这个名字归**工具字段**所有，全局剥离让位。当前唯一一例是 `validate_bp_json` 的 `json`——`--json '<BP 全文>'`、`--json=<全文>`、`--json=@file`、`--file json=path` 都是传待校验内容，不是输出开关；该工具的 `--json` 缺值时按 schema 报校验错（exit 2 `validation`），而不是「未知/缺参」。这份冲突清单显式写在 `FIELD_OWNED_GLOBALS`，`test-cli-parse` 的枚举门断言它恒等于「80 工具 schema 字段名 ∩ 全局 flag 名」，将来新增同名字段而不改清单会让 CI 转红。
 
@@ -197,12 +197,16 @@ kebab-case 会转到 camelCase（`--dry-run`→`dryRun`、`--highlight-key`→`h
 | 码 | 含义 | errorKind |
 |----|------|-----------|
 | 0 | 工具跑完且非失败（`query_api` 的 `found:false` 默认仍为 0） | 无（成功信封不带该键） |
-| 1 | 抛错、`isError`、`ok===false`、`passed===false`、`error.code` 存在 | `tool_failure` |
+| 1 | 抛错、`isError`、`ok===false`、`passed===false`、`error.code` 存在；以及 `--timeout` 到点 | `tool_failure`；超时为 `timeout` |
 | 2 | 用法 / 未知命令 / 未知 flag / 缺参 / 读文件失败 | `usage`；schema 校验失败为 `validation` |
 
-`timeout` 类随 `--timeout` 落地时再加入。失败信封另有 `nearFlags` / `knownFlags`（仅未知 flag 且能给出建议时出现）。
+失败信封另有 `nearFlags` / `knownFlags`（仅未知 flag 且能给出建议时出现）。
+
+`--timeout <ms>` 到点后 CLI **放弃等待**而不是截断进程：信封先落（`success:false` + `errorKind:"timeout"`，文案明写「这是超时，不是工具失败」），`disposeApiData()` / `closeAllYarnDbs()` 照旧跑完，因此退出码仍是 1 而非新造第三种码，进程也仍要等被放弃的那次 IO 自己收尾后才结束。
 
 `--fail-on-error` 再把 `found===false` 以及 `errors[]` 非空升为 1。`--fail-on-error=false` **关闭**（旧：写出即开启）。
+
+进度与心跳：默认 stderr 只有一行 `running <工具>…`；`--timeout` 生效时按预算的一半（夹在 50ms–5s）追加心跳行，所以「真的超时」必然至少留过一行进度。`--quiet` 把这两种输出一起静音，但**不吞诊断**——迁移提示、`警告: …` 与错误信封一概照旧。超时/心跳定时器都 `unref()` 且在 `finally` 里 `clear`，`--timeout` 关闭时一个都不建；`test-cli.mjs` 的退出滞后门实测「末行 stdout → 进程退出」8 条路径：5 条普通命令与 2 条「定时器建了又用完」8–36ms（上限 500ms），`--timeout` 超时那档因被放弃的异步仍要落地实测 ~250ms（上限放宽到 1500ms，只用来抓常驻句柄泄漏）。给任一路径注入常驻句柄（不 `unref`、不 `clear`、超时分支遗留定时器）都会转红。
 
 ```bash
 node dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1

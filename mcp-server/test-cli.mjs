@@ -2,7 +2,7 @@
  * CLI test for mc-skill（flags-only + list-tools + JSON 包装 + 通用 dispatch）
  */
 import assert from "node:assert/strict";
-import { spawnSync } from "child_process";
+import { spawn, spawnSync } from "child_process";
 import { mkdtempSync, rmSync, writeFileSync, readFileSync } from "fs";
 import { tmpdir } from "os";
 import { dirname, join } from "path";
@@ -977,6 +977,154 @@ function runTty(args) {
     throw new Error(`同一条命令加 --json 必须仍给可解析 schema：${asJson.status} ${String(asJson.stdout).slice(0, 120)}`);
   }
   console.log("TTY help 逐参数「名字 (类型) — 描述」，enum/array/union 标签正确，--json 路径不变");
+}
+
+// ── S6: --quiet / --timeout / 退出滞后（lag）门 ─────────────────────────────
+const LAG_LIMIT_MS = 500;
+// 超时走「放弃等待」：信封吐完后被放弃的 handler 还有已排队的异步要落地（实测 236–256ms，
+// 共享句柄在抖动下可能更慢），所以这一档只用来抓真正的常驻句柄泄漏，放宽到 1500ms。
+const ABANDON_LAG_LIMIT_MS = 1500;
+const KILL_AFTER_MS = 4000;
+
+/** 末行 stdout → 进程真正的 end 之间的耗时；常驻句柄未清会拖长这段，超过上限即红 */
+function runTimed(args, opts = {}) {
+  return new Promise((resolve, reject) => {
+    const env = {
+      ...process.env,
+      MC_SKILL_DATA: process.env.MC_SKILL_DATA || join(root, "..", "data"),
+      ...(opts.env || {}),
+    };
+    const clock = () => Number(process.hrtime.bigint() / 1_000_000n);
+    const child = spawn(process.execPath, [cli, ...args], { env });
+    let out = "";
+    let errb = "";
+    let lastByte = 0;
+    let endAt = 0;
+    let status = null;
+    let killed = false;
+    child.stdout.setEncoding("utf8");
+    child.stderr.setEncoding("utf8");
+    child.stdout.on("data", (c) => {
+      out += c;
+      lastByte = clock();
+    });
+    child.stderr.on("data", (c) => {
+      errb += c;
+    });
+    child.on("exit", (code) => {
+      status = code;
+      endAt = clock();
+    });
+    const timer = setTimeout(() => {
+      killed = true;
+      child.kill("SIGKILL");
+    }, opts.killAfterMs ?? KILL_AFTER_MS);
+    child.on("close", (code) => {
+      clearTimeout(timer);
+      if (status === null) status = code;
+      if (!endAt) endAt = clock();
+      resolve({ status, stdout: out, stderr: errb, lagMs: endAt - lastByte, lastByte, killed });
+    });
+    child.on("error", reject);
+  });
+}
+
+const SLOW_ARGS = [
+  "query_api",
+  "--className",
+  "net.minecraft.world.entity.LivingEntity",
+  "--version",
+  "1.20.1",
+];
+
+{
+  /** [标签, argv, 该档上限 ms?] —— 省略即用 LAG_LIMIT_MS */
+  const matrix = [
+    ["query_api", SLOW_ARGS],
+    ["search_docs", ["search_docs", "--platform=fabric", "--version=1.21.1", "--query=block"]],
+    ["convert_mapping", ["convert_mapping", "--from", "obfuscated", "--to", "yarn", "--name", "er", "--version", "1.20.1"]],
+    ["list-tools", ["list-tools", "--names-only"]],
+    ["get_server_status", ["get_server_status"]],
+    ["--timeout 富余（定时器建了又用完）", ["get_server_status", "--timeout=30000"]],
+    ["--timeout 心跳（定时器在跑就被 clear）", ["get_server_status", "--timeout=250"]],
+    // 超时是「放弃等待」不是「掐死 handler」：被放弃的异步工作仍要落地，
+    // 实测 ~250ms，故这一档单独放宽到 ABANDON_LAG_LIMIT_MS，只用来抓常驻句柄泄漏。
+    ["--timeout 超时（放弃等待后仍要退出）", [...SLOW_ARGS, "--timeout=60"], ABANDON_LAG_LIMIT_MS],
+  ];
+  const lags = [];
+  for (const [label, args, limit = LAG_LIMIT_MS] of matrix) {
+    const r = await runTimed(args);
+    if (r.killed) throw new Error(`lag 门 ${label}：进程 ${KILL_AFTER_MS}ms 内没退出（有常驻句柄没清）`);
+    if (!r.lastByte) throw new Error(`lag 门 ${label}：没有 stdout 可定位末行`);
+    if (![0, 1, 2].includes(r.status)) throw new Error(`lag 门 ${label}：退出码 ${r.status} 越出 0/1/2 契约`);
+    if (r.lagMs > limit) {
+      throw new Error(`lag 门 ${label}：末行 stdout → 进程退出 ${r.lagMs}ms > ${limit}ms`);
+    }
+    lags.push(`${label}=${r.lagMs}ms/${limit}`);
+  }
+  console.log(`退出滞后门 8 条路径全部达标：${lags.join(" ")}`);
+}
+
+{
+  const plain = await runTimed(SLOW_ARGS);
+  const quiet = await runTimed([...SLOW_ARGS, "--quiet"]);
+  if (!plain.stderr.includes("running query_api")) throw new Error(`默认必须仍有进度行：${plain.stderr}`);
+  if (quiet.stderr.includes("running ")) throw new Error(`--quiet 没静音进度行：${quiet.stderr}`);
+  if (plain.status !== 0 || quiet.status !== 0) throw new Error(`--quiet 不该改变结果：${plain.status}/${quiet.status}`);
+  assert.deepEqual(JSON.parse(quiet.stdout), JSON.parse(plain.stdout), "--quiet 只许动 stderr，stdout 必须逐字段相同");
+  const legacy = run(["query", "net.minecraft.world.entity.LivingEntity", "--version", "1.20.1", "--quiet"]);
+  if (!legacy.stderr.includes("位置参数")) {
+    throw new Error(`--quiet 不得吞掉迁移提示/告警这类诊断：${legacy.stderr}`);
+  }
+  console.log("--quiet 静音进度行，stdout 与诊断（迁移提示/信封）一概不变");
+}
+
+{
+  const slow = run([...SLOW_ARGS, "--timeout=60"]);
+  const sj = parseJson(slow, "s6-timeout");
+  if (slow.status !== 1) throw new Error(`超时必须是 exit 1（0/1/2 契约内细分），实得 ${slow.status}`);
+  if (sj.errorKind !== "timeout") throw new Error(`超时信封 errorKind 必须是 timeout：${JSON.stringify(sj).slice(0, 200)}`);
+  assert.deepEqual(Object.keys(sj), ["success", "tool", "error", "errorKind"], "超时信封形状变了");
+  if (!/超时/.test(String(sj.error)) || !/--timeout/.test(String(sj.error))) {
+    throw new Error(`超时说明必须写明是超时并给出 --timeout：${sj.error}`);
+  }
+  if (!String(sj.error).includes("不是工具失败")) {
+    throw new Error(`超时文案必须明确否认这是工具失败（计划要求「写明是超时而非工具失败」）：${sj.error}`);
+  }
+  if (!slow.stderr.includes("running query_api")) throw new Error(`超时路径仍应有常规进度行：${slow.stderr}`);
+  const beats = slow.stderr.split("\n").filter((l) => l.includes("仍在运行"));
+  if (beats.length === 0) throw new Error(`--timeout 生效却没心跳（超时前至少该有一行）：${slow.stderr}`);
+  const slowQuiet = run([...SLOW_ARGS, "--timeout=60", "--quiet"]);
+  if (slowQuiet.stderr.includes("仍在运行") || slowQuiet.stderr.includes("running ")) {
+    throw new Error(`--quiet 必须连心跳一起静音：${slowQuiet.stderr}`);
+  }
+  if (slowQuiet.status !== 1 || parseJson(slowQuiet, "s6-timeout-quiet").errorKind !== "timeout") {
+    throw new Error(`--quiet 不该改变超时结论：${slowQuiet.status}`);
+  }
+  const roomy = run([...SLOW_ARGS, "--timeout=30000"]);
+  const rj = parseJson(roomy, "s6-timeout-roomy");
+  if (roomy.status !== 0 || rj.success !== true) throw new Error(`宽裕预算下不该误报超时：${roomy.status} ${roomy.stdout.slice(0, 160)}`);
+  if (roomy.stderr.includes("仍在运行")) throw new Error(`5s 内跑完的工具不得吐心跳：${roomy.stderr}`);
+  const zero = run([...SLOW_ARGS, "--timeout=0"]);
+  if (zero.status !== 0) throw new Error(`--timeout=0 表示不限：${zero.status} ${zero.stdout}`);
+  const spaced = run([...SLOW_ARGS, "--timeout", "30000"]);
+  if (spaced.status !== 0) throw new Error(`--timeout 30000（隔空写法）必须同样生效：${spaced.status} ${spaced.stdout}`);
+  console.log(`--timeout：60ms 超时 → exit 1 errorKind timeout（心跳 ${beats.length} 行）；30000/0/隔空均正常完成`);
+
+  for (const bad of ["--timeout", "--timeout=junk", "--timeout=-5", "--timeout=1.5", "--timeout=false"]) {
+    const r = run([...SLOW_ARGS, bad]);
+    const j = parseJson(r, `s6-bad-${bad}`);
+    if (r.status !== 2 || j.errorKind !== "usage") {
+      throw new Error(`非法 ${bad} 必须 exit 2 usage：${r.status} ${JSON.stringify(j).slice(0, 160)}`);
+    }
+    if (!String(j.error).includes("--timeout")) throw new Error(`报错必须点名 --timeout：${j.error}`);
+  }
+  const help = parseJson(run(["--help"]), "s6-help");
+  const usage = Array.isArray(help.usage) ? help.usage.join("\n") : "";
+  if (!usage.includes("--quiet") || !usage.includes("--timeout")) {
+    throw new Error(`--help 必须声明 --quiet / --timeout：\n${usage}`);
+  }
+  console.log("非法 --timeout 五写法一律 exit 2 usage；--help 已声明两 flag");
 }
 
 console.log("test-cli: ok");
