@@ -542,4 +542,46 @@ import {
   assert.deepEqual(collided, [], "新全局 flag 与工具字段同名 → 必须走 FIELD_OWNED_GLOBALS 声明并复检");
 }
 
+// ── S10: --stdin-json（第三条输入通道的解析层契约）─────────────────────────
+{
+  assert.ok(GLOBAL_FLAG_KEYS.has("stdin-json"), "--stdin-json 必须登记为全局 flag");
+  assert.ok(GLOBAL_FLAG_KEYS.has("stdinJson"), "camel 写法同样不得漏登记（否则 --stdinJson 会漏进工具载荷）");
+  assert.ok(BOOLEAN_GLOBAL_KEYS.has("stdin-json"), "--stdin-json 是开关：裸写法不得吞掉后面的命令名");
+
+  const bare = parseFlags(["--stdin-json", "query_api"]);
+  assert.equal(bare.flags["stdin-json"], true);
+  assert.deepEqual(bare.positional, ["query_api"], "裸 --stdin-json 不得吃掉命令名");
+
+  const g = extractGlobalFlags(bare.flags);
+  assert.equal(g.globals.stdinJson, true);
+  assert.deepEqual(Object.keys(g.rest), [], "--stdin-json 必须被剥走，不得漏进工具载荷");
+  assert.equal(extractGlobalFlags(parseFlags(["query_api"]).flags).globals.stdinJson, false, "默认不读载荷");
+  assert.equal(
+    extractGlobalFlags(parseFlags(["--stdin-json=false", "query_api"]).flags).globals.stdinJson,
+    false,
+    "--stdin-json=false 必须显式关闭",
+  );
+  assert.equal(
+    extractGlobalFlags(parseFlags(["--stdinJson", "query_api"]).flags).globals.stdinJson,
+    true,
+    "camel 写法必须等价",
+  );
+  assert.throws(
+    () => extractGlobalFlags(parseFlags(["--stdin-json=junk", "query_api"]).flags),
+    InvalidBooleanFlagError,
+    "--stdin-json 只认布尔 token",
+  );
+
+  // 与全部工具字段零碰撞（kebab 与 camel 两种写法都复检）
+  const { listAllToolSchemas } = await import("./dist/tool-registry.js");
+  const S10_CANON = [canonicalFlagName("stdin-json"), canonicalFlagName("stdinJson")];
+  const collided = [];
+  for (const t of listAllToolSchemas()) {
+    for (const name of Object.keys(schemaObjectShape(t.inputSchema) ?? {})) {
+      if (S10_CANON.includes(canonicalFlagName(name))) collided.push(`${t.name}.${name}`);
+    }
+  }
+  assert.deepEqual(collided, [], "--stdin-json 与某工具字段同名 → 必须走 FIELD_OWNED_GLOBALS 声明并复检");
+}
+
 console.log("test-cli-parse: ok");

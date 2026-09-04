@@ -102,6 +102,7 @@ const USAGE_LINES = [
   "运行控制: --quiet 静音 stderr 上的进度行（running… 与 --timeout 心跳），错误与警告照旧；--timeout <ms> 给单次工具执行设上限，0 或不设 = 不限",
   "超时: 到点 exit 1 + errorKind timeout（写明是超时不是工具失败）；退出码仍是 0/1/2 三档，只靠 errorKind 细分",
   "仅可承载文本的字段接受 @（string / string[] / object / string 参与的 union）；number / boolean / enum / tuple 原样传",
+  "结构化输入: --stdin-json 从 stdin 一次读入整个参数对象（键仍走同一套归一化与 schema 校验，值不做 @ 展开）；同名字段恒为命令行 > 载荷，与 @- / - / =- 同现 → exit 2（stdin 只能有一个所有者）",
   "node mcp-server/dist/cli.js list-tools [--names-only | --filter <kw> | --tool <name>]",
   "node mcp-server/dist/cli.js <任意MCP工具名> --key=value ...",
   "遗留用法（仍兼容，未来移除）: query Item getName / warmup 1.20.1；单连字符 -className 视为漏写 --，报用法错误 exit 2",
@@ -119,7 +120,7 @@ function printGlobalHelp(json: boolean, compact: boolean): void {
       "用法:",
       ...USAGE_LINES.map((l) => `  ${l}`),
       "",
-      "全局 flag: --help  --version  --json（不改变工具输出，仅兼容保留）  --output-format json  --compact  --fail-on-error  --quiet  --timeout <ms>  --project <dir>  --file field=path  --raw <field>",
+      "全局 flag: --help  --version  --json（不改变工具输出，仅兼容保留）  --output-format json  --compact  --fail-on-error  --quiet  --timeout <ms>  --project <dir>  --file field=path  --raw <field>  --stdin-json",
       "布尔 flag 只接受 true/false/1/0/yes/no/on/off；裸 --flag 为 true；--flag=junk 拒绝（exit 2）",
       "字段优先: 工具 schema 有同名 flag 时归工具（如 validate_bp_json --json '<全文>'）；--output-format 当前只认 json",
       "文件输入: --crashReport @./latest.txt   --crashReport=-   --file crashReport=./latest.txt   @@ 为字面 @   --raw <field> 关闭展开   文件与 stdin 同受 8MB 上限",
@@ -247,6 +248,58 @@ function readLimitedStdin(ctx: ExpandCtx, field: string): string {
     chunks.push(Buffer.from(buf.subarray(0, n)));
   }
   return Buffer.concat(chunks, total).toString("utf8");
+}
+
+/**
+ * `--stdin-json`：fd 0 一次读入整个参数对象，作为 flags 的基座（命令行同名恒胜）。
+ * 载荷已经是结构化 JSON，所以它的值不再做 @ 展开——否则等于把 D2 复活一遍。
+ */
+function readStdinJsonPayload(ctx: ExpandCtx, rest: RawFlags, fileSpecs: string[]): Record<string, unknown> {
+  const claimants: string[] = [];
+  for (const [k, v] of Object.entries(rest)) {
+    for (const item of Array.isArray(v) ? v : [v]) {
+      if (item === "-" || item === "@-") claimants.push(`--${k}=${item}`);
+    }
+  }
+  for (const spec of fileSpecs) {
+    const path = spec.slice(spec.indexOf("=") + 1);
+    if (path === "-" || path === "@-") claimants.push(`--file ${spec}`);
+  }
+  if (claimants.length > 0) {
+    throw new CliUsageError(
+      ctx.tool,
+      `stdin 只能有一个所有者：--stdin-json 与 ${claimants.join(" / ")} 同现。` +
+        `整个参数对象用 --stdin-json，单个字段用 @- / - / =-，不要同现。`,
+    );
+  }
+  if (process.stdin.isTTY === true) {
+    throw new CliUsageError(ctx.tool, "TTY 下 --stdin-json 会挂起等待输入：请管道喂 JSON，或逐条写 --key=value。");
+  }
+  const text = readLimitedStdin(ctx, "--stdin-json");
+  if (text.trim() === "") {
+    throw new CliUsageError(ctx.tool, "stdin 载荷为空（--stdin-json 需要一个 JSON 对象）");
+  }
+  let payload: unknown;
+  try {
+    payload = JSON.parse(text);
+  } catch (err) {
+    throw new CliUsageError(ctx.tool, `stdin 载荷不是合法 JSON（--stdin-json）：${(err as Error).message}`);
+  }
+  if (payload === null || typeof payload !== "object" || Array.isArray(payload)) {
+    throw new CliUsageError(
+      ctx.tool,
+      `stdin 载荷顶层必须是 JSON 对象（实得 ${Array.isArray(payload) ? "array" : String(payload)}）`,
+    );
+  }
+  const out: Record<string, unknown> = {};
+  for (const [rawKey, value] of Object.entries(payload as Record<string, unknown>)) {
+    const key = resolveFlagKey(rawKey, ctx.schemaKeys);
+    if (!key) {
+      throw new UnknownFlagError(rawKey, undefined, { tool: ctx.tool, knownFlags: [...ctx.schemaKeys] });
+    }
+    out[key] = value;
+  }
+  return out;
 }
 
 function expandStringValue(value: string, ctx: ExpandCtx, field: string): string {
@@ -697,15 +750,19 @@ async function main(): Promise<void> {
     }
 
     if (userCmd === "list-tools") {
+      if (globals.stdinJson) {
+        throw new CliUsageError(userCmd, "list-tools 没有参数对象，不接受 --stdin-json（要裁剪结果请用 --names-only / --filter / --tool）");
+      }
       await runListTools(rest, cmdPositional, globals.compact);
       return;
     }
 
     if (userCmd === "descriptor") {
       const ctx = makeExpandCtx(descriptorSchema, globals.raw, userCmd);
+      const payload = globals.stdinJson ? readStdinJsonPayload(ctx, rest, globals.file) : {};
       applyFileSpecs(rest, globals.file, ctx);
       expandFlagFiles(rest, ctx);
-      const params = coerceFlags(rest, descriptorSchema, {}, undefined, userCmd);
+      const params = coerceFlags(rest, descriptorSchema, payload, undefined, userCmd);
       const result = await runDescriptor(params, cmdPositional);
       printJson({ success: true, tool: userCmd, result }, globals.compact);
       return;
@@ -718,6 +775,7 @@ async function main(): Promise<void> {
     }
     const schema = entry.inputSchema as z.ZodTypeAny;
     const ctx = makeExpandCtx(schema, globals.raw, userCmd);
+    const payload = globals.stdinJson ? readStdinJsonPayload(ctx, rest, globals.file) : {};
     applyFileSpecs(rest, globals.file, ctx);
     expandFlagFiles(rest, ctx);
     const shape = schemaObjectShape(schema);
@@ -731,7 +789,7 @@ async function main(): Promise<void> {
 
     const params = applyPositionalCompat(
       userCmd,
-      coerceFlags(rest, schema, inject, undefined, userCmd),
+      coerceFlags(rest, schema, { ...inject, ...payload }, undefined, userCmd),
       cmdPositional,
     );
     const leftover = unusedPositionals(userCmd, cmdPositional);

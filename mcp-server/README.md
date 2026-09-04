@@ -176,7 +176,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 一条执行路径：短名只做 alias（`query`→`query_api`、`convert`→`convert_mapping`、`update`→`mc_skill_update`、`status`/`warmup`→`get_server_status`；`warmup` 会注入 `warmup=true`，用户显式 `--warmup=false` 优先）。`descriptor` 是本地命令，不加载 MCP 工具注册表。
 
-全局 flag（不进工具 schema）：`--help`/`-h`、`--version`（只在没写工具名的裸用法上打印 CLI 版本，其余场景它是工具字段）、`--json`（不改变工具输出，仅为兼容保留；只在交互式终端下影响 `--help` 的呈现）、`--compact`、`--fail-on-error`、`--quiet`、`--timeout <ms>`、`--project <dir>`、`--file field=path`、`--raw [field]`、`--output-format json`。`--quiet` 与 `--timeout` 与全部工具字段名零碰撞（连字符/大小写归一化后同样复检），所以它们不需要进 `FIELD_OWNED_GLOBALS`；将来任何工具新增 `timeout` / `quiet` 字段都会让该门转红。
+全局 flag（不进工具 schema）：`--help`/`-h`、`--version`（只在没写工具名的裸用法上打印 CLI 版本，其余场景它是工具字段）、`--json`（不改变工具输出，仅为兼容保留；只在交互式终端下影响 `--help` 的呈现）、`--compact`、`--fail-on-error`、`--quiet`、`--timeout <ms>`、`--project <dir>`、`--file field=path`、`--raw [field]`、`--output-format json`、`--stdin-json`。`--quiet`、`--timeout` 与 `--stdin-json` 与全部工具字段名零碰撞（连字符/大小写归一化后同样复检），所以它们不需要进 `FIELD_OWNED_GLOBALS`；将来任何工具新增 `timeout` / `quiet` / `stdinJson` 字段都会让该门转红。
 
 同名让位（字段优先）：目标工具 schema 里存在与全局 flag 同名的字段时，这个名字归**工具字段**所有，全局剥离让位。当前唯一一例是 `validate_bp_json` 的 `json`——`--json '<BP 全文>'`、`--json=<全文>`、`--json=@file`、`--file json=path` 都是传待校验内容，不是输出开关；该工具的 `--json` 缺值时按 schema 报校验错（exit 2 `validation`），而不是「未知/缺参」。这份冲突清单显式写在 `FIELD_OWNED_GLOBALS`，`test-cli-parse` 的枚举门断言它恒等于「80 工具 schema 字段名 ∩ 全局 flag 名」，将来新增同名字段而不改清单会让 CI 转红。
 
@@ -226,6 +226,7 @@ node dist/cli.js list-tools
 - 旧位置参数（`query <className> [methodName]`、`convert ... <memberName>`、`descriptor <jniDescriptor>`、`update check|apply`）仍兼容，stderr 提示改用 `--key value`。
 - `list-tools` 裁剪三档（与全量共用同一渲染，信封仍是 `{success, tool, result}`，`--compact` 照旧）：`--names-only` 只回名字清单（2 KB 量级，约为全量 schema 的 2%）；`--filter <kw>` 按工具名/描述做忽略大小写子串过滤，命中项回完整 schema，**无匹配 → exit 1 `tool_failure`** 并指向 `--names-only`（不静默给空数组）；`--tool <name>` 只吐单个工具的 schema，短名一样解析。多余位置参数、`--tool` 与 `--names-only`/`--filter` 并用、空 `--filter=`、漏取值的 `--filter` 一律 **exit 2**。
 - `help <工具>` 在 TTY 下逐参数列「名字 (类型) — 一行描述」（枚举标 `enum`、数组标 `T[]`、tuple 标 `tuple`、union 用 `|` 连接），不灌完整 schema；要 schema 用 `--help --json`。
+- `--stdin-json` 是第三条输入通道：从 stdin 一次读入**整个参数对象**当基座，命令行显式写的同名字段恒胜——`echo '{"className":"Item","version":"1.20.1"}' | node mcp-server/dist/cli.js query_api --stdin-json --className=Block` 查的是 Block。载荷的键与命令行同规格过归一化与 schema 校验（`class-name` 一样解析成 `className`；未知键 exit 2 点名该键），但**载荷的值不再做 `@` 展开**（已经是结构化 JSON，再展开等于把「值里恰好有 @」那个老问题复活）。与 `@-` / `=-` / `--file f=-` 同现 → **exit 2「stdin 只能有一个所有者」**，绝不静默二选一；坏 JSON、顶层非对象、空输入、超过 8MB（与文件同上限）一律 exit 2 且写明错误来自 stdin 载荷；TTY 下不挂起，直接 exit 2；`list-tools` 没有参数对象，带 `--stdin-json` 也 exit 2。这条与上面的「同名让位（字段优先）」是两层不同规则：那条管**全局 flag 与工具字段**争同一个名字，本条管**命令行值与 stdin 载荷**争同一个字段的值。
 - PowerShell 括号：单引号包裹，如 `'--descriptor=()F'`。
 - 全局 `--help`/`--version` 不加载工具注册表，也不加载 update 链（该链静态可达 `node:sqlite`，否则连 `--version` 都要吐一行 `ExperimentalWarning`）；这两条只读路径的 stderr 因此是干净的，`test-cli.mjs` 的只读启动门按「stderr 只允许 `[mc-mcp-server] WARN:` 行」判定。**随之而来的刻意变更**：`--version` / `--help` / `help <tool>` 不再清 `pendingRestart` marker（只有真跑命令的分发路径清）。`MC_SKILL_DATA` 仅在真正调用依赖 data 的工具时提示：提示语写出**本进程实际查阅的目录**（`resolveDataDir()`：`MC_SKILL_DATA` → 安装位置推导 → cwd 推导），不硬编码盘符；未设置该变量时会说明这一点。覆盖面即 `src/cli-parse.ts` 的 `DATA_DIR_TOOLS`，`activate_platform_pack` / `detect_mod_project` 不在其中（它们读仓库根规则树，与 data 目录无关）。
 

@@ -27,6 +27,8 @@ export const GLOBAL_FLAG_KEYS = new Set([
   "outputFormat",
   "quiet",
   "timeout",
+  "stdin-json",
+  "stdinJson",
 ]);
 
 /** `--output-format` 当前唯一合法值；其它值必须 exit 2，不得静默按 json 处理 */
@@ -57,6 +59,8 @@ export const BOOLEAN_GLOBAL_KEYS = new Set([
   "fail-on-error",
   "failOnError",
   "quiet",
+  "stdin-json",
+  "stdinJson",
 ]);
 
 /** 旧 CLI 短名 → schema 字段；仅当目标键在 schema 中且原键不在 schema 中时生效。
@@ -442,6 +446,7 @@ export function extractGlobalFlags(raw: RawFlags, fieldOwned?: Set<string>): {
     compact: boolean;
     failOnError: boolean;
     quiet: boolean;
+    stdinJson: boolean;
     project?: string;
     outputFormat?: FlagScalar;
     timeout?: FlagScalar;
@@ -458,6 +463,7 @@ export function extractGlobalFlags(raw: RawFlags, fieldOwned?: Set<string>): {
   let compact = false;
   let failOnError = false;
   let quiet = false;
+  let stdinJson = false;
   let project: string | undefined;
   let outputFormat: FlagScalar | undefined;
   let timeout: FlagScalar | undefined;
@@ -485,6 +491,10 @@ export function extractGlobalFlags(raw: RawFlags, fieldOwned?: Set<string>): {
     }
     if (k === "quiet") {
       quiet = parseFlagTruthy(v, "quiet");
+      continue;
+    }
+    if (k === "stdin-json" || camel === "stdinJson") {
+      stdinJson = parseFlagTruthy(v, "stdin-json");
       continue;
     }
     if (k === "timeout") {
@@ -515,7 +525,7 @@ export function extractGlobalFlags(raw: RawFlags, fieldOwned?: Set<string>): {
     rest[k] = v;
   }
   return {
-    globals: { help, json, compact, failOnError, quiet, project, outputFormat, timeout, file, raw: rawFields },
+    globals: { help, json, compact, failOnError, quiet, stdinJson, project, outputFormat, timeout, file, raw: rawFields },
     rest,
   };
 }

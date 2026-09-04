@@ -843,13 +843,14 @@ function staleTotalClaims(docs, total) {
 }
 
 // ── S5: list-tools 裁剪视图（--names-only / --filter / --tool）+ 人读 help ────
-function runTty(args) {
+function runTty(args, opts = {}) {
   const boot = [
     'import { pathToFileURL } from "url";',
     'import { join } from "path";',
     `const cli = join(${JSON.stringify(root)}, "dist", "cli.js");`,
     `const ARGS = ${JSON.stringify(args)};`,
     "process.stdout.isTTY = true;",
+    ...(opts.stdinTty ? ["process.stdin.isTTY = true;"] : []),
     "process.argv = [process.execPath, cli, ...ARGS];",
     "await import(pathToFileURL(cli).href);",
   ].join("\n");
@@ -990,6 +991,8 @@ const LAG_LIMIT_MS = 500;
 // 共享句柄在抖动下可能更慢），所以这一档只用来抓真正的常驻句柄泄漏，放宽到 1500ms。
 const ABANDON_LAG_LIMIT_MS = 1500;
 const KILL_AFTER_MS = 4000;
+// 「上限内一条 stdout 都没有」= 工具挂起（与句柄泄漏是两种故障），先有界重试躲抖动再报红
+const LAG_HANG_RETRIES = 2;
 
 /** 末行 stdout → 进程真正的 end 之间的耗时；常驻句柄未清会拖长这段，超过上限即红 */
 function runTimed(args, opts = {}) {
@@ -1058,9 +1061,18 @@ const SLOW_ARGS = [
   ];
   const lags = [];
   for (const [label, args, limit = LAG_LIMIT_MS] of matrix) {
-    const r = await runTimed(args);
-    if (r.killed) throw new Error(`lag 门 ${label}：进程 ${KILL_AFTER_MS}ms 内没退出（有常驻句柄没清）`);
-    if (!r.lastByte) throw new Error(`lag 门 ${label}：没有 stdout 可定位末行`);
+    // 常驻句柄只会拖长「末行 stdout → 退出」这一段；一条 stdout 都没有是工具本身挂起
+    // （实测 search_docs 偶发 4s 无输出），属另一种故障，故分开判并给有界重试。
+    let r = await runTimed(args);
+    for (let retry = 0; !r.lastByte && retry < LAG_HANG_RETRIES; retry++) r = await runTimed(args);
+    if (!r.lastByte) {
+      throw new Error(
+        `lag 门 ${label}：连续 ${LAG_HANG_RETRIES + 1} 次都在 ${KILL_AFTER_MS}ms 内没吐出任何 stdout（工具挂起，不是退出滞后）`,
+      );
+    }
+    if (r.killed) {
+      throw new Error(`lag 门 ${label}：末行 stdout 之后 ${KILL_AFTER_MS}ms 仍没退出（有常驻句柄没清）`);
+    }
     if (![0, 1, 2].includes(r.status)) throw new Error(`lag 门 ${label}：退出码 ${r.status} 越出 0/1/2 契约`);
     if (r.lagMs > limit) {
       throw new Error(`lag 门 ${label}：末行 stdout → 进程退出 ${r.lagMs}ms > ${limit}ms`);
@@ -1470,6 +1482,114 @@ function runExample(cmdline, cwd) {
     throw new Error("clearPendingRestart 必须在分发路径上动态 import（marker 功能不能顺手删）");
   }
   console.log("启动依赖门：guard 仍是第一条 import，update 链只在分发路径上动态加载");
+}
+
+// ── S10: --stdin-json 第三条输入通道（D12：载荷作基座，命令行恒胜）──────────
+{
+  const base = { className: "Item", methodName: "getName", version: "1.20.1" };
+  const payload = JSON.stringify(base);
+  const viaPayload = run(["query_api", "--stdin-json"], { input: payload });
+  const viaFlags = run(["query_api", "--className=Item", "--methodName=getName", "--version=1.20.1"]);
+  if (viaPayload.status !== 0 || viaFlags.status !== 0) {
+    throw new Error(
+      `载荷路径与逐条 flag 路径都必须 exit 0：${viaPayload.status}/${viaFlags.status}\n${viaPayload.stdout.slice(0, 200)}`,
+    );
+  }
+  if (viaPayload.stdout !== viaFlags.stdout) {
+    throw new Error("载荷路径必须与逐条 flag 产出同一结果（不同 = 载荷绕开了 coerce/校验这条正规管道）");
+  }
+
+  const over = run(["query_api", "--stdin-json", "--className=Block"], { input: payload });
+  const blockFlags = run(["query_api", "--className=Block", "--methodName=getName", "--version=1.20.1"]);
+  if (over.status !== 0 || over.stdout !== blockFlags.stdout) {
+    throw new Error(`命令行必须覆盖同名载荷字段：${over.status} ${over.stdout.slice(0, 200)}`);
+  }
+  if (over.stdout === viaPayload.stdout) {
+    throw new Error("覆盖用例失效：Block 与 Item 结果逐字节相同，说明 --className=Block 根本没进来（断言会空转）");
+  }
+
+  const CRASH = "---- Minecraft Crash Report ----\njava.lang.IllegalStateException: stdin\n";
+  const forms = [
+    ["@-（隔空）", ["crash_analyze", "--crashReport", "@-"]],
+    ["=-", ["crash_analyze", "--crashReport=-"]],
+    ["=@-", ["crash_analyze", "--crashReport=@-"]],
+    ["--file …=-", ["crash_analyze", "--file", "crashReport=-"]],
+  ];
+  for (const [label, args] of forms) {
+    const both = run([...args, "--stdin-json"], { input: CRASH });
+    const bj = parseJson(both, `s10-owner-${label}`);
+    if (both.status !== 2 || bj.errorKind !== "usage" || !String(bj.error).includes("stdin 只能有一个所有者")) {
+      throw new Error(
+        `${label} 与 --stdin-json 同现必须 exit 2 并点名「stdin 只能有一个所有者」：${both.status} ${JSON.stringify(bj).slice(0, 160)}`,
+      );
+    }
+    const alone = run(args, { input: CRASH });
+    const aj = parseJson(alone, `s10-alone-${label}`);
+    if (alone.status !== 0 || !aj.success) {
+      throw new Error(`${label} 不带 --stdin-json 时照旧读 stdin（既有语义是必保契约）：${alone.status} ${aj.error ?? ""}`);
+    }
+  }
+
+  const rejects = [
+    ["坏 JSON", "not json", /不是合法 JSON/],
+    ["顶层数组", '[{"className":"Item"}]', /顶层必须是 JSON 对象/],
+    ["空输入", "", /载荷为空/],
+    ["超过 8MB", "x".repeat(8 * 1024 * 1024 + 1), /超过 8MB 上限/],
+  ];
+  for (const [label, input, re] of rejects) {
+    const r = run(["query_api", "--stdin-json"], { input });
+    const j = parseJson(r, `s10-reject-${label}`);
+    if (r.status !== 2 || j.errorKind !== "usage" || !re.test(String(j.error))) {
+      throw new Error(`载荷 ${label} 必须 exit 2 usage 且报「${re}」：${r.status} ${JSON.stringify(j).slice(0, 160)}`);
+    }
+    if (!/stdin/i.test(String(j.error))) {
+      throw new Error(`${label} 的报错必须标明错误来自 stdin 载荷：${JSON.stringify(j).slice(0, 160)}`);
+    }
+  }
+
+  const unknown = run(["query_api", "--stdin-json"], {
+    input: JSON.stringify({ className: "Item", nopeNotAField: 1, version: "1.20.1" }),
+  });
+  const uj = parseJson(unknown, "s10-unknown");
+  if (unknown.status !== 2 || uj.errorKind !== "usage" || !String(uj.error).includes("nopeNotAField")) {
+    throw new Error(`载荷未知键必须与命令行同规格 exit 2 并点名该键：${unknown.status} ${JSON.stringify(uj).slice(0, 160)}`);
+  }
+
+  const kebab = run(["query_api", "--stdin-json"], {
+    input: JSON.stringify({ "class-name": "Item", "method-name": "getName", version: "1.20.1" }),
+  });
+  if (kebab.status !== 0 || kebab.stdout !== viaPayload.stdout) {
+    throw new Error(`载荷键必须与命令行同走归一化（class-name → className）：${kebab.status} ${kebab.stdout.slice(0, 160)}`);
+  }
+
+  const literal = run(["query_api", "--stdin-json"], { input: JSON.stringify({ className: "@-", version: "1.20.1" }) });
+  if (literal.status !== 0 || !literal.stdout.includes('"className": "@-"')) {
+    throw new Error(`载荷里的 @ 不得展开（@- 必须按字面当类名查）：${literal.status} ${literal.stdout.slice(0, 160)}`);
+  }
+
+  const off = run(["query_api", "--stdin-json=false"], { input: payload });
+  const oj = parseJson(off, "s10-off");
+  if (off.status !== 2 || oj.errorKind !== "validation") {
+    throw new Error(`--stdin-json=false 必须真的关闭该通道（缺参 → exit 2 validation）：${off.status} ${JSON.stringify(oj).slice(0, 160)}`);
+  }
+  const lt = run(["list-tools", "--stdin-json"], { input: "{}" });
+  if (lt.status !== 2 || !String(parseJson(lt, "s10-list-tools").error).includes("--stdin-json")) {
+    throw new Error(`list-tools 没有参数对象，--stdin-json 必须 exit 2 而不是静默忽略：${lt.status}`);
+  }
+
+  const tty = runTty(["query_api", "--stdin-json"], { stdinTty: true });
+  const tj = parseJson(tty, "s10-tty");
+  if (tty.status !== 2 || !String(tj.error).includes("TTY")) {
+    throw new Error(`TTY 下 --stdin-json 必须立刻 exit 2 而不是挂起等待输入：${tty.status} ${tty.stderr.slice(0, 160)}`);
+  }
+
+  const usage = parseJson(run(["--help"]), "s10-help");
+  if (!Array.isArray(usage.usage) || !usage.usage.join("\n").includes("--stdin-json")) {
+    throw new Error("--help 必须声明 --stdin-json（含互斥与优先级口径）");
+  }
+  console.log(
+    "载荷基座门：--stdin-json 与逐条 flag 逐字节同结果、命令行覆盖载荷（Block≠Item 自反对照）、四种 @- 写法同现一律 exit 2",
+  );
 }
 
 console.log("test-cli: ok");
