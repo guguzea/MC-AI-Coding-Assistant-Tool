@@ -1377,3 +1377,99 @@ function runExample(cmdline, cwd) {
   readFileSync(join(root, "docs", "mc-skill-update.md"), "utf8");
   console.log("反过度门：mc-skill-cache / mc-skill-data-full-* / docs/mc-skill-update.md / bin 键均未受影响");
 }
+
+// ── S9: 只读启动路径不付全价（D10：--version / --help 不再加载 update 链）────
+{
+  const readOnly = [
+    ["--version", ["--version"]],
+    ["-V", ["-V"]],
+    ["--help", ["--help"]],
+    ["--help --json", ["--help", "--json"]],
+    ["help <tool>", ["help", "query_api"]],
+  ];
+  for (const [label, args] of readOnly) {
+    const r = run(args);
+    if (r.status !== 0) throw new Error(`只读路径 ${label} 必须 exit 0：${r.status} ${r.stderr}`);
+    const stray = r.stderr
+      .split("\n")
+      .map((l) => l.trim())
+      .filter(Boolean)
+      .filter((l) => !l.startsWith("[mc-mcp-server] WARN:"));
+    if (stray.length) {
+      throw new Error(
+        `只读路径 ${label} 不该加载 update 链（node:sqlite 的 ExperimentalWarning 就是代理指标）：\n  ${stray.join("\n  ")}`,
+      );
+    }
+  }
+  const pkgVersion = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version;
+  const v = run(["--version"]);
+  if (v.stdout !== pkgVersion + "\n") {
+    throw new Error(`--version stdout 必须是「版本号 + 换行」（${pkgVersion.length + 1} B），实得 ${JSON.stringify(v.stdout)}`);
+  }
+  const hPlain = run(["--help"]);
+  const hJson = run(["--help", "--json"]);
+  if (hPlain.stdout !== hJson.stdout) {
+    throw new Error("非 TTY（spawn）下 --help 与 --help --json 必须逐字节相同，否则 --json 又变成了开关");
+  }
+  const hj = parseJson(hPlain, "s9-help");
+  if (!Array.isArray(hj.usage) || hj.usage.length < 10) {
+    throw new Error(`--help 机器输出必须是 usage 清单（≥10 行），实得 ${JSON.stringify(hj).slice(0, 120)}`);
+  }
+  const th = parseJson(run(["help", "query_api"]), "s9-tool-help");
+  if (th.tool !== "query_api" || !th.parameters) {
+    throw new Error(`help <tool> 非 TTY 下仍是 {tool,description,parameters}：${JSON.stringify(th).slice(0, 120)}`);
+  }
+  console.log(
+    `只读启动门：5 条只读路径 stderr 零杂项（无 ExperimentalWarning）；--version=${Buffer.byteLength(v.stdout)}B、` +
+      `--help=${Buffer.byteLength(hPlain.stdout)}B 且与 --help --json 全同；help <tool> 仍是机器可读信封`,
+  );
+}
+
+{
+  const cache = mkdtempSync(join(tmpdir(), "mc-skill-s9-marker-"));
+  const statePath = join(cache, "mc-skill-update-state.json");
+  const armMarker = () =>
+    writeFileSync(statePath, JSON.stringify({ pendingRestart: true, pendingRestartSince: "2026-09-04T00:00:00.000Z" }));
+  const readMarker = () => JSON.parse(readFileSync(statePath, "utf8")).pendingRestart;
+  try {
+    const cases = [
+      ["--version", ["--version"], true],
+      ["--help", ["--help"], true],
+      ["真实工具调用", ["get_server_status"], false],
+    ];
+    for (const [label, args, want] of cases) {
+      armMarker();
+      if (readMarker() !== true) throw new Error(`样本不成立：marker 没能写进 ${statePath}，断言会空转`);
+      const r = run(args, { env: { MC_SKILL_CACHE: cache } });
+      if (r.status !== 0) throw new Error(`${label} 必须 exit 0：${r.status} ${r.stderr}`);
+      const got = readMarker();
+      if (got !== want) {
+        throw new Error(
+          `${label} 之后 pendingRestart 应为 ${want}` +
+            (want ? "（S9 刻意变更：只读路径不再清 marker，见收口报告）" : "（真实分发必须继续清 marker）") +
+            `，实得 ${got}`,
+        );
+      }
+    }
+  } finally {
+    rmSync(cache, { recursive: true, force: true });
+  }
+  console.log("marker 语义门：--version / --help 不清 pendingRestart（刻意变更），真实工具调用照旧清");
+}
+
+{
+  const src = readFileSync(join(root, "src", "cli.ts"), "utf8");
+  const firstImport = src.split("\n").find((l) => /^import\b/.test(l)) || "";
+  if (!firstImport.includes("./utils/node-sqlite-guard.js")) {
+    throw new Error(`cli.ts 第一条 import 必须是 node-sqlite-guard（F-Z01 兜底不能被挤后），实得：${firstImport}`);
+  }
+  if (/^import\s+(?:[^\n]*\sfrom\s+)?"\.\/update\//m.test(src)) {
+    throw new Error("cli.ts 不能再静态 import ./update/*（含无 from 的裸副作用导入）：静态图可达 node:sqlite，会把警告带回 --version 路径");
+  }
+  if (!/await import\("\.\/update\/index\.js"\)/.test(src)) {
+    throw new Error("clearPendingRestart 必须在分发路径上动态 import（marker 功能不能顺手删）");
+  }
+  console.log("启动依赖门：guard 仍是第一条 import，update 链只在分发路径上动态加载");
+}
+
+console.log("test-cli: ok");

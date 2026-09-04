@@ -227,7 +227,7 @@ node dist/cli.js list-tools
 - `list-tools` 裁剪三档（与全量共用同一渲染，信封仍是 `{success, tool, result}`，`--compact` 照旧）：`--names-only` 只回名字清单（2 KB 量级，约为全量 schema 的 2%）；`--filter <kw>` 按工具名/描述做忽略大小写子串过滤，命中项回完整 schema，**无匹配 → exit 1 `tool_failure`** 并指向 `--names-only`（不静默给空数组）；`--tool <name>` 只吐单个工具的 schema，短名一样解析。多余位置参数、`--tool` 与 `--names-only`/`--filter` 并用、空 `--filter=`、漏取值的 `--filter` 一律 **exit 2**。
 - `help <工具>` 在 TTY 下逐参数列「名字 (类型) — 一行描述」（枚举标 `enum`、数组标 `T[]`、tuple 标 `tuple`、union 用 `|` 连接），不灌完整 schema；要 schema 用 `--help --json`。
 - PowerShell 括号：单引号包裹，如 `'--descriptor=()F'`。
-- 全局 `--help`/`--version` 不加载工具注册表。`MC_SKILL_DATA` 仅在真正调用依赖 data 的工具时提示：提示语写出**本进程实际查阅的目录**（`resolveDataDir()`：`MC_SKILL_DATA` → 安装位置推导 → cwd 推导），不硬编码盘符；未设置该变量时会说明这一点。覆盖面即 `src/cli-parse.ts` 的 `DATA_DIR_TOOLS`，`activate_platform_pack` / `detect_mod_project` 不在其中（它们读仓库根规则树，与 data 目录无关）。
+- 全局 `--help`/`--version` 不加载工具注册表，也不加载 update 链（该链静态可达 `node:sqlite`，否则连 `--version` 都要吐一行 `ExperimentalWarning`）；这两条只读路径的 stderr 因此是干净的，`test-cli.mjs` 的只读启动门按「stderr 只允许 `[mc-mcp-server] WARN:` 行」判定。**随之而来的刻意变更**：`--version` / `--help` / `help <tool>` 不再清 `pendingRestart` marker（只有真跑命令的分发路径清）。`MC_SKILL_DATA` 仅在真正调用依赖 data 的工具时提示：提示语写出**本进程实际查阅的目录**（`resolveDataDir()`：`MC_SKILL_DATA` → 安装位置推导 → cwd 推导），不硬编码盘符；未设置该变量时会说明这一点。覆盖面即 `src/cli-parse.ts` 的 `DATA_DIR_TOOLS`，`activate_platform_pack` / `detect_mod_project` 不在其中（它们读仓库根规则树，与 data 目录无关）。
 
 ### obfuscated / intermediary 层（T5）
 

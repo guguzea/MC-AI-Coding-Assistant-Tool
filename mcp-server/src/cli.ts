@@ -43,7 +43,6 @@ import {
   type RawFlags,
 } from "./cli-parse.js";
 import { parameterTypes, readableSignature, returnType } from "./utils/descriptor.js";
-import { clearPendingRestart } from "./update/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FILE_MAX_BYTES = 8 * 1024 * 1024;
@@ -606,11 +605,6 @@ async function withRunBudget<T>(
 }
 
 async function main(): Promise<void> {
-  try {
-    clearPendingRestart();
-  } catch {
-    /* 无待重启状态文件时忽略 */
-  }
   const argv = process.argv.slice(2);
   if (argv[0] === "--version" || argv[0] === "-V") {
     process.stdout.write(cliVersion() + "\n");
@@ -678,6 +672,16 @@ async function main(): Promise<void> {
   if (globals.help) {
     await printNamedToolHelp(userCmd, machineHelp, globals.compact);
     return;
+  }
+
+  // 过了这里才是要真跑命令的路径：pendingRestart marker 仍按旧行为清掉。
+  // update 链静态可达 node:sqlite，所以只读早退路径（--version / --help / help <tool>）
+  // 不能碰它——否则 `node dist/cli.js --version` 也要付一行 ExperimentalWarning。
+  try {
+    const { clearPendingRestart } = await import("./update/index.js");
+    clearPendingRestart();
+  } catch {
+    /* 无待重启状态文件时忽略 */
   }
 
   const { tool: mappedTool, inject } = mapShortCommand(userCmd);
