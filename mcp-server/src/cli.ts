@@ -86,23 +86,25 @@ function printJson(obj: unknown, compact: boolean): void {
 }
 
 const USAGE_LINES = [
-  "mc-skill <tool> [--key=value ...] [--project <dir>] [--file field=path] [--raw <field>]",
-  "mc-skill query --className <className> [--methodName <methodName>] [--version=1.20.1]",
-  "mc-skill convert --from=mcp --to=mojang --name=getHealth [--owner=...] [--descriptor=()F]",
-  "mc-skill convert_mapping --from obfuscated --to yarn --name er --version 1.20.1",
-  "mc-skill descriptor --descriptor=<jniDescriptor> [--name=method]",
-  "mc-skill update --action=check|apply [--dry-run=false --confirm]",
-  "mc-skill validate_project --project .",
-  "mc-skill crash_analyze --crashReport @./crash-reports/latest.txt",
+  "node mcp-server/dist/cli.js <tool> [--key=value ...] [--project <dir>] [--file field=path] [--raw <field>]",
+  "node mcp-server/dist/cli.js --version",
+  "node mcp-server/dist/cli.js query --className <className> [--methodName <methodName>] [--version=1.20.1]",
+  "node mcp-server/dist/cli.js convert --from=mcp --to=mojang --name=getHealth [--owner=...] [--descriptor=()F]",
+  "node mcp-server/dist/cli.js convert_mapping --from obfuscated --to yarn --name er --version 1.20.1",
+  "node mcp-server/dist/cli.js descriptor --descriptor=<jniDescriptor> [--name=method]",
+  "node mcp-server/dist/cli.js update --action=check|apply [--dry-run=false --confirm]",
+  "node mcp-server/dist/cli.js validate_project --project .",
+  "node mcp-server/dist/cli.js crash_analyze --crashReport @./crash-reports/latest.txt",
   "值前缀: @path 读文件，@- 或 =- 读 stdin，@@ 是字面 @（--className=@@Override → \"@Override\"）",
   "字面量逃生: --raw <field> 让该字段完全按字面传（连 @- 也不读 stdin）；裸 --raw 或 --raw=true 关闭全部 @ 展开，--raw=false 恢复",
   "字段优先: 工具 schema 里有同名 flag 时该 flag 归工具（validate_bp_json --json '<全文>' 的 json 是参数，不是输出开关）",
+  "JSON 恒定: 工具输出始终为 JSON；--json 不改变工具输出，仅为兼容保留，它只在交互式终端下影响 --help 的呈现（人读摘要 → 机器可读 schema）",
   "输出格式: --output-format json 是表达格式意图的规范入口；当前唯一合法值是 json，其它值 exit 2 报「尚未实现」",
   "运行控制: --quiet 静音 stderr 上的进度行（running… 与 --timeout 心跳），错误与警告照旧；--timeout <ms> 给单次工具执行设上限，0 或不设 = 不限",
   "超时: 到点 exit 1 + errorKind timeout（写明是超时不是工具失败）；退出码仍是 0/1/2 三档，只靠 errorKind 细分",
   "仅可承载文本的字段接受 @（string / string[] / object / string 参与的 union）；number / boolean / enum / tuple 原样传",
-  "mc-skill list-tools [--names-only | --filter <kw> | --tool <name>]",
-  "mc-skill <任意MCP工具名> --key=value ...",
+  "node mcp-server/dist/cli.js list-tools [--names-only | --filter <kw> | --tool <name>]",
+  "node mcp-server/dist/cli.js <任意MCP工具名> --key=value ...",
   "遗留用法（仍兼容，未来移除）: query Item getName / warmup 1.20.1；单连字符 -className 视为漏写 --，报用法错误 exit 2",
 ];
 
@@ -113,12 +115,12 @@ function printGlobalHelp(json: boolean, compact: boolean): void {
   }
   process.stdout.write(
     [
-      "mc-skill — 调用 MCP 工具的独立 CLI",
+      "独立 CLI — 调用全部 MCP 工具（仓库根可运行形式：node mcp-server/dist/cli.js …）",
       "",
       "用法:",
       ...USAGE_LINES.map((l) => `  ${l}`),
       "",
-      "全局 flag: --help  --version  --json  --output-format json  --compact  --fail-on-error  --quiet  --timeout <ms>  --project <dir>  --file field=path  --raw <field>",
+      "全局 flag: --help  --version  --json（不改变工具输出，仅兼容保留）  --output-format json  --compact  --fail-on-error  --quiet  --timeout <ms>  --project <dir>  --file field=path  --raw <field>",
       "布尔 flag 只接受 true/false/1/0/yes/no/on/off；裸 --flag 为 true；--flag=junk 拒绝（exit 2）",
       "字段优先: 工具 schema 有同名 flag 时归工具（如 validate_bp_json --json '<全文>'）；--output-format 当前只认 json",
       "文件输入: --crashReport @./latest.txt   --crashReport=-   --file crashReport=./latest.txt   @@ 为字面 @   --raw <field> 关闭展开   文件与 stdin 同受 8MB 上限",
@@ -336,10 +338,11 @@ function unwrapHandlerResult(raw: unknown): { result: unknown; isError: boolean 
 async function maybeHintDataDir(mappedTool: string): Promise<void> {
   if (!DATA_DIR_TOOLS.has(mappedTool)) return;
   try {
-    const { hasAnyPlatformData } = await import("./utils/path.js");
+    const { hasAnyPlatformData, resolveDataDir } = await import("./utils/path.js");
     if (!hasAnyPlatformData()) {
       process.stderr.write(
-        "提示: 未检测到平台数据目录。请设置 MC_SKILL_DATA 为 data 目录绝对路径，例如 MC_SKILL_DATA=H:/MC_skill/data\n",
+        `提示: 本进程实际查阅的数据目录 ${resolveDataDir()} 下没有任何平台数据目录（形如 forge_1.20.1 / fabric_1.21.11）。` +
+          `未设置 MC_SKILL_DATA 时该值按安装位置或 cwd 推导；数据仓库在别处请设置 MC_SKILL_DATA 指向其 data 目录。\n`,
       );
     }
   } catch {
@@ -396,7 +399,7 @@ function printToolHelp(
     const note = oneLine(props[key].description);
     lines.push(`  ${key} (${humanTypeLabel(props[key])})${note ? ` — ${note}` : ""}`);
   }
-  lines.push("参数 schema 见：mc-skill " + name + " --help --json", "");
+  lines.push("参数 schema 见：node mcp-server/dist/cli.js " + name + " --help --json", "");
   process.stdout.write(lines.join("\n"));
 }
 

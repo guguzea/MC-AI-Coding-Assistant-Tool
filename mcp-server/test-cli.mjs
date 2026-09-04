@@ -27,6 +27,7 @@ function run(args, opts = {}) {
     encoding: "utf8",
     env,
     input: opts.input,
+    ...(opts.cwd ? { cwd: opts.cwd } : {}),
   });
   return { status: r.status, stdout: r.stdout ?? "", stderr: r.stderr ?? "" };
 }
@@ -847,15 +848,16 @@ function runTty(args) {
     'import { pathToFileURL } from "url";',
     'import { join } from "path";',
     `const cli = join(${JSON.stringify(root)}, "dist", "cli.js");`,
+    `const ARGS = ${JSON.stringify(args)};`,
     "process.stdout.isTTY = true;",
-    "process.argv = [process.execPath, cli, ...process.argv.slice(1)];",
+    "process.argv = [process.execPath, cli, ...ARGS];",
     "await import(pathToFileURL(cli).href);",
   ].join("\n");
   const env = {
     ...process.env,
     MC_SKILL_DATA: process.env.MC_SKILL_DATA || join(root, "..", "data"),
   };
-  const r = spawnSync(process.execPath, ["--input-type=module", "-e", boot, ...args], { encoding: "utf8", env });
+  const r = spawnSync(process.execPath, ["--input-type=module", "-e", boot], { encoding: "utf8", env });
   return { status: r.status, stdout: r.stdout ?? "", stderr: r.stderr ?? "" };
 }
 
@@ -956,8 +958,11 @@ function runTty(args) {
   for (const want of ["  id (string) —", "  version (string) —", "  highlight_key (boolean)"]) {
     if (!out.includes(want)) throw new Error(`TTY help 缺参数行「${want}」：\n${out}`);
   }
-  if (!out.includes("参数 schema 见：mc-skill get_forge_doc_full --help --json")) {
-    throw new Error(`TTY help 的 --help --json 指针不能动：\n${out}`);
+  if (!out.includes("参数 schema 见：node mcp-server/dist/cli.js get_forge_doc_full --help --json")) {
+    throw new Error(`TTY help 的 --help --json 指针不能动（且必须是仓库根可运行形式）：\n${out}`);
+  }
+  if (out.includes("schema 见：mc-skill ") || out.includes("npx mc-skill")) {
+    throw new Error(`指针不能再指向 clone 上不可解析的 mc-skill：\n${out}`);
   }
   if (out.includes('"properties"') || out.includes('"type": "object"')) {
     throw new Error("TTY 人读路径不许直接吐完整 schema");
@@ -1127,4 +1132,248 @@ const SLOW_ARGS = [
   console.log("非法 --timeout 五写法一律 exit 2 usage；--help 已声明两 flag");
 }
 
-console.log("test-cli: ok");
+// ── S7: 声明与实现对齐（措辞限定 / 示例可解析 / 提示去盘符 / 覆盖面）──────────
+const repoRoot = join(root, "..");
+const DOC_SCAN = [
+  ["README.md", join(repoRoot, "README.md")],
+  ["mcp-server/README.md", join(repoRoot, "mcp-server", "README.md")],
+  ["AGENTS.md", join(repoRoot, "AGENTS.md")],
+  ["AUTO_SETUP.md", join(repoRoot, "AUTO_SETUP.md")],
+  ["CONTRIBUTING.md", join(repoRoot, "CONTRIBUTING.md")],
+];
+const docs = new Map(DOC_SCAN.map(([label, p]) => [label, readFileSync(p, "utf8")]));
+const CLI_DOCS = ["mcp-server/README.md", "AGENTS.md"];
+
+/**
+ * 不可解析调用形式：行首或行内 code span 里以 `mc-skill …` / `npx mc-skill …` 起头的命令。
+ * 只认「mc-skill 后面还跟着命令内容」，所以 `mc-skill`（名字）、mc-skill-cache、
+ * mc-skill-data-full-*.zip、docs/mc-skill-update.md 这类合法用词不会被误计。
+ */
+function badInvokeForms(text) {
+  const hits = [];
+  const isBad = (s) => /^\s*(?:npx\s+)?mc-skill\s+\S/.test(s);
+  for (const line of text.split("\n")) {
+    if (isBad(line)) hits.push(line.trim().slice(0, 70));
+    for (const m of line.matchAll(/`([^`\n]+)`/g)) {
+      if (isBad(m[1])) hits.push("`" + m[1].slice(0, 70) + "`");
+    }
+  }
+  return hits;
+}
+
+/** 在指定 cwd 里原样执行一条示例命令行（去掉 bash 行尾注释） */
+function runExample(cmdline, cwd) {
+  const argv = cmdline.replace(/\s+#.*$/, "").trim().split(/\s+/);
+  argv[0] = process.execPath;
+  const r = spawnSync(argv[0], argv.slice(1), {
+    cwd,
+    encoding: "utf8",
+    env: { ...process.env, MC_SKILL_DATA: process.env.MC_SKILL_DATA || join(root, "..", "data") },
+  });
+  return { status: r.status, stdout: r.stdout ?? "", stderr: r.stderr ?? "" };
+}
+
+{
+  const machineHelp = parseJson(run(["--help"]), "s7-machine-help");
+  const usage = Array.isArray(machineHelp.usage) ? machineHelp.usage : [];
+  const offenders = [
+    ...badInvokeForms(usage.join("\n")).map((h) => `--help(机器): ${h}`),
+    ...badInvokeForms(runTty(["--help"]).stdout).map((h) => `--help(TTY): ${h}`),
+    ...[...docs].flatMap(([label, text]) => badInvokeForms(text).map((h) => `${label}: ${h}`)),
+  ];
+  if (offenders.length) {
+    throw new Error(`可运行示例仍指向 clone 上不可解析的命令：\n  ${offenders.join("\n  ")}`);
+  }
+  console.log(`形式门：--help（机器+TTY）与 ${docs.size} 份文档 0 处 mc-skill / npx mc-skill 起头示例`);
+}
+
+{
+  const rootLines = docs.get("README.md").split("\n");
+  const stale = rootLines.filter((l) => /^\s*node dist\/cli\.js\b/.test(l));
+  if (stale.length) {
+    throw new Error(`根 README.md 行首短形式 node dist/cli.js 必须 0 行（仓库根 MODULE_NOT_FOUND），实得 ${stale.length}：\n  ${stale.join("\n  ")}`);
+  }
+  const frozen = docs.get("mcp-server/README.md").split("\n").filter((l) => l.includes("node dist/cli.js"));
+  if (frozen.length !== 15) {
+    throw new Error(`mcp-server/README.md 含 node dist/cli.js 的行数必须等于 S7 开工前快照 15（口径＝含字面量的行，不是行首），实得 ${frozen.length}`);
+  }
+  const lineStart = frozen.filter((l) => /^\s*node dist\/cli\.js\b/.test(l)).length;
+  console.log(`文本地面门：根 README 短形式 0 行；mcp-server/README 含字面量 15 行（其中行首 ${lineStart} 行，口径不混用）`);
+}
+
+{
+  const usage = parseJson(run(["--help"]), "s7-json-wording").usage.join("\n");
+  const texts = new Map([["--help", usage], ...CLI_DOCS.map((k) => [k, docs.get(k)])]);
+  const KEY = ["工具输出始终为 JSON", "不改变工具输出，仅为兼容保留", "只在交互式终端下影响"];
+  const FORBIDDEN = [/--json[^。\n]{0,12}(切换|决定|选择)[^。\n]{0,10}格式/, /--json[^\n]{0,10}(输出|改成)[^\n]{0,6}文本/];
+  for (const [label, text] of texts) {
+    for (const phrase of KEY) {
+      if (!text.includes(phrase)) throw new Error(`${label} 缺 --json 限定措辞关键句「${phrase}」`);
+    }
+    for (const bad of FORBIDDEN) {
+      const hit = text.match(bad);
+      if (hit) throw new Error(`${label} 仍写着被实测否证的措辞「${hit[0]}」`);
+    }
+  }
+  console.log(`--json 措辞门：--help 与 ${CLI_DOCS.join("、")} 三处关键句齐备，且无「切换输出格式」类反向声明`);
+}
+
+{
+  const cases = [
+    ["query_api", ["query_api", "--className", "net.minecraft.world.entity.LivingEntity", "--version", "1.20.1"], 0],
+    ["get_server_status", ["get_server_status"], 0],
+    ["list-tools", ["list-tools", "--names-only"], 0],
+    ["失败工具", ["query_api", "--className", "NoSuchClassAnywhere", "--version", "1.20.1", "--fail-on-error"], 1],
+  ];
+  for (const [label, args, wantStatus] of cases) {
+    const plain = run(args);
+    const withJson = run([...args, "--json"]);
+    if (plain.status !== wantStatus) {
+      throw new Error(`${label} 样本本身不对（期望 exit ${wantStatus}，实得 ${plain.status}）：逐字节比较会空转`);
+    }
+    if (plain.stdout !== withJson.stdout) {
+      throw new Error(`${label}：--json 改变了工具 stdout（声明说不改变工具输出）\n不带：${plain.stdout.slice(0, 120)}\n带：  ${withJson.stdout.slice(0, 120)}`);
+    }
+    if (withJson.stdout.length < 40) throw new Error(`${label}：stdout 过短，逐字节比较无意义`);
+  }
+  console.log("--json 逐字节门：4 条路径（含 exit 1 失败样本）带与不带 --json 的 stdout 与退出码全同");
+}
+
+{
+  const probe = runTty(["--version"]);
+  const pkgVersion = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version;
+  if (probe.status !== 0 || probe.stdout.trim() !== pkgVersion) {
+    throw new Error(`runTty 探针失效（没有真正进到 CLI）：--version exit ${probe.status} stdout=${JSON.stringify(probe.stdout.slice(0, 80))}`);
+  }
+  const human = runTty(["--help"]);
+  const machine = runTty(["--help", "--json"]);
+  if (human.status !== 0 || machine.status !== 0) throw new Error(`TTY --help 失败：${human.status}/${machine.status}`);
+  if (human.stdout.trimStart().startsWith("{")) {
+    throw new Error("TTY 未加 --json 的 --help 应是人读摘要；若这条变绿说明 --json 真的没作用，措辞该改写");
+  }
+  if (!human.stdout.includes("用法:")) throw new Error(`TTY --help 没有人读摘要结构：\n${human.stdout.slice(0, 200)}`);
+  const mj = JSON.parse(machine.stdout);
+  if (!Array.isArray(mj.usage) || mj.usage.length === 0) {
+    throw new Error(`TTY + --json 的 --help 必须是可 JSON.parse 的 usage：\n${machine.stdout.slice(0, 200)}`);
+  }
+  console.log(`TTY 判别门：同一 --help 在强制 TTY 下不带 --json 出 ${Buffer.byteLength(human.stdout)} B 人读摘要、带 --json 出 ${Buffer.byteLength(machine.stdout)} B 机器 schema 入口`);
+}
+
+{
+  const usage = parseJson(run(["--help"]), "s7-parse").usage;
+  const bare = usage.filter(
+    (l) => /^node mcp-server\/dist\/cli\.js --version$/.test(l) && !/[[<]/.test(l),
+  );
+  if (bare.length === 0) {
+    throw new Error("--help 必须至少给一条能原样执行的 --version 示例（不含 <占位符> 与 [可选]）");
+  }
+  const sample = bare.sort((a, b) => a.length - b.length)[0];
+  const r = runExample(sample, repoRoot);
+  const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
+  if (r.status !== 0) throw new Error(`--help 自吐示例「${sample}」在仓库根 exit ${r.status}\n${r.stderr}`);
+  if (r.stdout.trim() !== pkg.version) {
+    throw new Error(`示例「${sample}」的 stdout 必须是版本号 ${pkg.version}，实得 ${JSON.stringify(r.stdout.trim())}`);
+  }
+  const docLine = (docs.get("README.md").match(/^node mcp-server\/dist\/cli\.js status\b.*$/m) || [null])[0];
+  if (!docLine) throw new Error("根 README.md 里找不到本次改写过的 status 示例行");
+  const dr = runExample(docLine, repoRoot);
+  const dj = parseJson(dr, "s7-readme-sample");
+  if (dr.status !== 0 || dj.success !== true) {
+    throw new Error(`根 README 具名示例在仓库根必须 exit 0：${dr.status} ${dr.stdout.slice(0, 160)}${dr.stderr.slice(0, 160)}`);
+  }
+  console.log(`可解析门：--help 最短 --version 示例「${sample}」→ ${r.stdout.trim()}；根 README 示例行 exit 0 tool=${dj.tool}`);
+}
+
+{
+  const src = readFileSync(join(root, "src", "cli.ts"), "utf8");
+  if (/[A-Za-z]:[\\/]{1,2}(MC_skill|mc_skill)/.test(src) || src.includes("MC_SKILL_DATA=H")) {
+    throw new Error("cli.ts 里不能再有写死的盘符数据目录示例");
+  }
+  const probeDir = mkdtempSync(join(tmpdir(), "mc-skill-s7-nodata-"));
+  try {
+    const r = run(["get_server_status"], { env: { MC_SKILL_DATA: probeDir } });
+    const hint = (r.stderr.split("\n").find((l) => l.includes("提示:")) || "").trim();
+    if (!hint) throw new Error(`MC_SKILL_DATA 指向空目录时必须有数据目录提示：\n${r.stderr}`);
+    const norm = (s) => s.replace(/[\\/]/g, "");
+    if (!norm(hint).includes(norm(probeDir))) {
+      throw new Error(`提示必须写出本进程实际查阅的目录 ${probeDir}，实得：${hint}`);
+    }
+    for (const p of hint.match(/[A-Za-z]:[^\s，。；、)）]+/g) || []) {
+      if (!norm(p).includes(norm(probeDir))) {
+        throw new Error(`提示里出现与本次推导无关的绝对路径「${p}」（疑似写死示例）：${hint}`);
+      }
+    }
+    if (!hint.includes("MC_SKILL_DATA")) throw new Error(`提示必须点名 MC_SKILL_DATA：${hint}`);
+    for (const ghost of ["MC_SKILL_KB", "MC_SKILL_PACK"]) {
+      if (hint.includes(ghost)) throw new Error(`提示不能再提到不存在的开关 ${ghost}：${hint}`);
+    }
+    const ok = run(["get_server_status"]);
+    if (ok.stderr.includes("提示:")) throw new Error(`MC_SKILL_DATA 正确时不该再有提示：\n${ok.stderr}`);
+    console.log("数据目录提示门：提示写出运行时推导目录且只点名真实环境变量；数据目录正常时不出现");
+  } finally {
+    rmSync(probeDir, { recursive: true, force: true });
+  }
+}
+
+{
+  const { DATA_DIR_TOOLS } = await import("./dist/cli-parse.js");
+  const { listAllToolSchemas } = await import("./dist/tool-registry.js");
+  const names = listAllToolSchemas().map((t) => t.name);
+  const dead = [...DATA_DIR_TOOLS].filter((n) => !names.includes(n));
+  if (dead.length) throw new Error(`DATA_DIR_TOOLS 有注册表里不存在的名字（改名后提示永久失效）：${dead.join(", ")}`);
+  const FAMILIES = [
+    /^search_.*docs?$/,
+    /^list_.*_versions$/,
+    /^get_.*_doc_(summary|full|related)$/,
+    /_loader_api$/,
+    /^query_api$/,
+    /^get_method_params$/,
+    /^convert_mapping$/,
+    /^lookup_obfuscated$/,
+    /^query_registry$/,
+    /^get_workflow_template$/,
+    /^list_knowledge_resources$/,
+    /^read_knowledge_resource$/,
+    /^get_server_status$/,
+    /^diagnose_data_paths$/,
+    /^list_community_sources$/,
+    /^get_community_doc_(summary|full)$/,
+    /^get_minecraft_source$/,
+    /^search_mod_code$/,
+    /^decompile_mod_jar$/,
+    /^download_official_mdk$/,
+    /^get_version_info$/,
+    /^mc_skill_update$/,
+    /^get_migration_guide$/,
+  ];
+  // 只读用户自备 jar + 写 $MC_SKILL_CACHE，不查 data/（见 src/loader-api/ingest.ts 只用 resolveCacheRoot）
+  const NOT_DATA_BACKED = new Set(["ingest_loader_api"]);
+  const missing = names.filter((n) => !NOT_DATA_BACKED.has(n) && FAMILIES.some((re) => re.test(n)) && !DATA_DIR_TOOLS.has(n));
+  if (missing.length) {
+    throw new Error(`数据目录类工具没登记进 DATA_DIR_TOOLS，未配置 MC_SKILL_DATA 时不会给提示：${missing.join(", ")}`);
+  }
+  for (const local of ["descriptor", "help", "list-tools"]) {
+    if (DATA_DIR_TOOLS.has(local)) throw new Error(`本地命令 ${local} 不读 data/，不该进 DATA_DIR_TOOLS`);
+  }
+  for (const packTool of ["activate_platform_pack", "detect_mod_project"]) {
+    if (DATA_DIR_TOOLS.has(packTool)) {
+      throw new Error(
+        `${packTool} 读的是仓库根 <platform>/<ver> 规则树（resolveRepoRoot 推导，MC_SKILL_DATA 改不动），` +
+          `缺树时已各自返回 PACK_NOT_FOUND / packFound:false；要加提示请先改成能说清这一点文案`,
+      );
+    }
+  }
+  console.log(`DATA_DIR_TOOLS 枚举门：${DATA_DIR_TOOLS.size} 项全部在册、${FAMILIES.length} 组数据类工具无漏登记、本地命令与规则树工具各自排除`);
+}
+
+// ── 反过度门：修示例不许顺手消灭 mc-skill 这个词 ─────────────────────────────
+{
+  const cacheSrc = readFileSync(join(root, "src", "utils", "path.ts"), "utf8");
+  if (!cacheSrc.includes("mc-skill-cache")) throw new Error("resolveCacheRoot 的 mc-skill-cache 目录名不能被改掉");
+  const gh = readFileSync(join(root, "src", "update", "github.ts"), "utf8");
+  if (!gh.includes("mc-skill-data-full-")) throw new Error("Release 产物名 mc-skill-data-full-*.zip 不能被改掉");
+  const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
+  if (!pkg.bin || !("mc-skill" in pkg.bin)) throw new Error("package.json 的 bin.mc-skill 键必须原样保留（本故事不许改配置面）");
+  readFileSync(join(root, "docs", "mc-skill-update.md"), "utf8");
+  console.log("反过度门：mc-skill-cache / mc-skill-data-full-* / docs/mc-skill-update.md / bin 键均未受影响");
+}

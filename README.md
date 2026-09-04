@@ -409,7 +409,7 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 
 1. `mcp↔parchment` 为同名层（identity）；参数名用 `get_method_params`。
 2. **obfuscated / intermediary 层**（T5）：`obfuscated` = Tiny official 混淆短名（`er`），`intermediary` = `method_6032` 类；`yarn/mcp→obfuscated` 与 `to=mojang` 同值，`obfuscated/intermediary→yarn/mcp` 支持**无 ownerClass 全局反查**（崩溃日志单 token）。`to=mojang` 保持旧行为，notes 提示改用 `to=obfuscated`。**26.1+ 无混淆层**：obfuscated/intermediary 请求返回 `UNOBFUSCATED_NO_YARN`（仅 1.14–1.21.11 可用）。
-3. **字段查询**：传 `memberKind: "field"`（或 `"auto"` 时按名称风格推断），建议带 `ownerClass`；1.14–1.15 仅全局 `field_`*/`searge↔named`。schema 仍为 v2 时返回 `SCHEMA_FIELDS_UNAVAILABLE`（需重建 sqlite）。CLI：`mc-skill convert --kind field ...`。
+3. **字段查询**：传 `memberKind: "field"`（或 `"auto"` 时按名称风格推断），建议带 `ownerClass`；1.14–1.15 仅全局 `field_`*/`searge↔named`。schema 仍为 v2 时返回 `SCHEMA_FIELDS_UNAVAILABLE`（需重建 sqlite）。CLI：`node mcp-server/dist/cli.js convert --kind field ...`。
 4. 失败默认 `found:false`、`converted:null`；过渡参数 `allow_fallback` 可回传原名并设 `fallbackUsed`（禁止假成功）。
 5. 构建：`cd mcp-server && npm run build:yarn-sqlite`（本地 temp 写入后复制，避免盘符 I/O 问题）。
 
@@ -768,7 +768,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 
 | 工具 | 作用 |
 |------|------|
-| `mc_skill_update` | 检查 / 应用本仓库 **tooling + data** 更新（GitHub Release）。`action=check\|apply`；`scope=tooling\|data\|all`；默认 `channel=stable`（忽略预发布）。`apply` 默认 dryRun；真写需 `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + `MC_SKILL_PROJECT_ROOT`=**本仓库根**。返回 `filesToOverwrite` / `diskSpace` / `restartRequired`。CLI：`mc-skill update --action check\|apply`（旧位置参数 `check\|apply` 仍兼容，stderr 有迁移提示）。详见 [`mcp-server/docs/mc-skill-update.md`](./mcp-server/docs/mc-skill-update.md)。 |
+| `mc_skill_update` | 检查 / 应用本仓库 **tooling + data** 更新（GitHub Release）。`action=check\|apply`；`scope=tooling\|data\|all`；默认 `channel=stable`（忽略预发布）。`apply` 默认 dryRun；真写需 `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + `MC_SKILL_PROJECT_ROOT`=**本仓库根**。返回 `filesToOverwrite` / `diskSpace` / `restartRequired`。CLI：`node mcp-server/dist/cli.js update --action check\|apply`（旧位置参数 `check\|apply` 仍兼容，stderr 有迁移提示）。详见 [`mcp-server/docs/mc-skill-update.md`](./mcp-server/docs/mc-skill-update.md)。 |
 
 `get_server_status` 附带 `buildStatus`（src 比 dist 新时 `buildRequired=true`，提示重新 `npm run build`）、`updateHint`（上次 check 缓存，默认 TTL 1h）与 `pendingRestart`。
 
@@ -868,27 +868,27 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mcskill://workflow/mc-new-block` 等 | 与 Prompt 同名的工作流正文（以 `get_workflow_template` 列表为准） |
 
 
-### 独立 CLI（`mc-skill`，80 工具全可用）
+### 独立 CLI（`node mcp-server/dist/cli.js`，80 工具全可用）
 
 flags-only（`--key value` / `--key=value` / 裸 `--flag`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误。全局 flag（不进工具 schema）：`--help`/`-h`、`--version`、`--json`、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`；所有 string 字段支持文件输入——`--crashReport @./latest.txt` 读文件、`--crashReport=-` / `@-` 读 stdin（全进程一次）、`--file crashReport=./latest.txt` 等价写法，单文件上限约 8MB。**加 `--fail-on-error` 时，`found:false` 与 `errors[]` 非空也升为退出码 1**。`--fail-on-error=false` **关闭**该行为（不要把写出 `=false` 当成开启）。布尔 flag 只接受 `true/false/1/0/yes/no/on/off`；`--flag=junk` 拒绝。完整语义见 [mcp-server/README.md](./mcp-server/README.md) §独立 CLI：
 
 > ⚠️ **Windows PowerShell 5.1 控制台坑（E-7）**：PS 5.1 在 GBK 代码页下用管道捕获本 CLI 的 UTF-8 JSON 会引入坏控制字符导致 `JSON.parse` 失败；纯 Node `spawnSync` 管道解析同一输出完全正常。脚本化消费请用 Node 子进程，或先 `chcp 65001`。
 
 ```bash
-node dist/cli.js status --version 1.20.1            # 服务器状态（含 buildStatus）
-node dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1
-node dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F'
-node dist/cli.js update --action check
-node dist/cli.js list-tools                          # 全部 80 个工具的 schema
+node mcp-server/dist/cli.js status --version 1.20.1            # 服务器状态（含 buildStatus）
+node mcp-server/dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1
+node mcp-server/dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F'
+node mcp-server/dist/cli.js update --action check
+node mcp-server/dist/cli.js list-tools                          # 全部 80 个工具的 schema
 ```
 
 **通用 dispatch（v0.2+）**：除上述命令外，**任意 MCP 工具名可直接调用**（handler 自动收集，缺参时返回 zod 校验提示）：
 
 ```bash
-node dist/cli.js search_docs --platform forge --query DeferredRegister --version 1.20.1
-node dist/cli.js check_dependencies --buildGradle "..." --fabricModJson "{...}"
-node dist/cli.js analyze_mod_jar --jarPath <path>
-node dist/cli.js get_community_doc_summary --id authored/lib-curios
+node mcp-server/dist/cli.js search_docs --platform forge --query DeferredRegister --version 1.20.1
+node mcp-server/dist/cli.js check_dependencies --buildGradle "..." --fabricModJson "{...}"
+node mcp-server/dist/cli.js analyze_mod_jar --jarPath <path>
+node mcp-server/dist/cli.js get_community_doc_summary --id authored/lib-curios
 ```
 
 旧位置参数形式（`query <className>` / `convert ... <memberName>` 等）仍兼容；PowerShell 括号场景用单引号包裹（如 `'--descriptor=()F'`）。

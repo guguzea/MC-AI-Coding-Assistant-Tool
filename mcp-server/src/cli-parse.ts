@@ -710,7 +710,12 @@ export const POSITIONAL_COMMANDS = new Set([
   "get_server_status",
 ]);
 
-/** 调用前可能依赖 MC_SKILL_DATA 的工具（help/descriptor 不在此列） */
+/**
+ * 调用前可能依赖 MC_SKILL_DATA 的工具（help/descriptor 不在此列）。
+ * 刻意不含 activate_platform_pack / detect_mod_project：实测把 MC_SKILL_DATA 指向空目录后
+ * 两者仍按仓库根 <platform>/<ver> 规则树（resolveRepoRoot）工作并自报 PACK_NOT_FOUND /
+ * packFound:false，数据目录提示对它们是误导。枚举门（test-cli.mjs）钉住这条边界。
+ */
 export const DATA_DIR_TOOLS = new Set([
   "query_api",
   "get_method_params",

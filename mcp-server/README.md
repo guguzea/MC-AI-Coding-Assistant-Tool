@@ -168,13 +168,15 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 - SQLite **schema v3** 含 `fields` / `searge_fields`；查询时设 `memberKind: "field"`（建议 `ownerClass`）。
 - v2 库读字段 → `SCHEMA_FIELDS_UNAVAILABLE`（重建：`npm run build:yarn-sqlite`）。
-- CLI：`npx mc-skill convert --kind field ...`（见 `src/cli.ts`）。
+- CLI：`node mcp-server/dist/cli.js convert --kind field ...`（仓库根执行；见 `src/cli.ts`）。
 
-### 独立 CLI（`mc-skill`）
+### 独立 CLI（入口 `src/cli.ts` → `dist/cli.js`）
+
+`package.json` 的 `bin` 键叫 `mc-skill`，但本包没有发布到 registry，clone 后该命令不可解析；下面的示例一律按可运行形式书写。本文档代码块里的短形式以 `mcp-server/` 为 cwd，仓库根请在前面补上目录（`node mcp-server/dist/cli.js …`）。
 
 一条执行路径：短名只做 alias（`query`→`query_api`、`convert`→`convert_mapping`、`update`→`mc_skill_update`、`status`/`warmup`→`get_server_status`；`warmup` 会注入 `warmup=true`，用户显式 `--warmup=false` 优先）。`descriptor` 是本地命令，不加载 MCP 工具注册表。
 
-全局 flag（不进工具 schema）：`--help`/`-h`、`--version`（只在没写工具名的裸用法上打印 CLI 版本，其余场景它是工具字段）、`--json`（兼容保留的 no-op，不改变输出）、`--compact`、`--fail-on-error`、`--quiet`、`--timeout <ms>`、`--project <dir>`、`--file field=path`、`--raw [field]`、`--output-format json`。`--quiet` 与 `--timeout` 与全部工具字段名零碰撞（连字符/大小写归一化后同样复检），所以它们不需要进 `FIELD_OWNED_GLOBALS`；将来任何工具新增 `timeout` / `quiet` 字段都会让该门转红。
+全局 flag（不进工具 schema）：`--help`/`-h`、`--version`（只在没写工具名的裸用法上打印 CLI 版本，其余场景它是工具字段）、`--json`（不改变工具输出，仅为兼容保留；只在交互式终端下影响 `--help` 的呈现）、`--compact`、`--fail-on-error`、`--quiet`、`--timeout <ms>`、`--project <dir>`、`--file field=path`、`--raw [field]`、`--output-format json`。`--quiet` 与 `--timeout` 与全部工具字段名零碰撞（连字符/大小写归一化后同样复检），所以它们不需要进 `FIELD_OWNED_GLOBALS`；将来任何工具新增 `timeout` / `quiet` 字段都会让该门转红。
 
 同名让位（字段优先）：目标工具 schema 里存在与全局 flag 同名的字段时，这个名字归**工具字段**所有，全局剥离让位。当前唯一一例是 `validate_bp_json` 的 `json`——`--json '<BP 全文>'`、`--json=<全文>`、`--json=@file`、`--file json=path` 都是传待校验内容，不是输出开关；该工具的 `--json` 缺值时按 schema 报校验错（exit 2 `validation`），而不是「未知/缺参」。这份冲突清单显式写在 `FIELD_OWNED_GLOBALS`，`test-cli-parse` 的枚举门断言它恒等于「80 工具 schema 字段名 ∩ 全局 flag 名」，将来新增同名字段而不改清单会让 CI 转红。
 
@@ -190,7 +192,7 @@ kebab-case 会转到 camelCase（`--dry-run`→`dryRun`、`--highlight-key`→`h
 - 单文件上限约 8MB
 - `--project <dir>`：若工具有 `projectPath` 则注入；否则不传，stderr 警告「该工具不支持 --project」
 
-输出统一 JSON `{success, tool, result|error}`。`--compact` 时所有 stdout JSON 都不 pretty。TTY 且未加 `--json` 的 `--help` 用人读摘要。`--output-format` 是表达格式意图的规范入口，当前唯一合法值是 `json`（CLI 只有 JSON 输出）；其它值 exit 2 报「尚未实现」，漏取值的裸写法同样 exit 2。`--output-format=json` 与 `--json` 一样把 `--help` 推向机器可读 schema。
+输出统一 JSON `{success, tool, result|error}`。工具输出始终为 JSON；`--json` 不改变工具输出，仅为兼容保留；它只在交互式终端下影响 `--help` 的呈现（人读摘要 → 机器可读 schema），非 TTY（管道 / `spawnSync`）下带与不带 `--json` 的 stdout 逐字节相同。`--compact` 时所有 stdout JSON 都不 pretty。`--output-format` 是表达格式意图的规范入口，当前唯一合法值是 `json`（CLI 只有 JSON 输出）；其它值 exit 2 报「尚未实现」，漏取值的裸写法同样 exit 2。`--output-format=json` 与 `--json` 一样把 `--help` 推向机器可读 schema。Windows PowerShell 5.1 在 GBK 代码页下用管道捕获这份 UTF-8 JSON 会引入坏控制字符导致 `JSON.parse` 失败——先 `chcp 65001` 或设 `[Console]::OutputEncoding`，或改用 Node 子进程读；CLI 不做运行时代码页探测（探测要起子进程，正落在启动路径上，误报还会变成新的 stderr 噪声）。
 
 退出码（`errorKind` 是失败信封上只增不改的分类键，与退出码一一对应，不引入第三种码）：
 
@@ -225,7 +227,7 @@ node dist/cli.js list-tools
 - `list-tools` 裁剪三档（与全量共用同一渲染，信封仍是 `{success, tool, result}`，`--compact` 照旧）：`--names-only` 只回名字清单（2 KB 量级，约为全量 schema 的 2%）；`--filter <kw>` 按工具名/描述做忽略大小写子串过滤，命中项回完整 schema，**无匹配 → exit 1 `tool_failure`** 并指向 `--names-only`（不静默给空数组）；`--tool <name>` 只吐单个工具的 schema，短名一样解析。多余位置参数、`--tool` 与 `--names-only`/`--filter` 并用、空 `--filter=`、漏取值的 `--filter` 一律 **exit 2**。
 - `help <工具>` 在 TTY 下逐参数列「名字 (类型) — 一行描述」（枚举标 `enum`、数组标 `T[]`、tuple 标 `tuple`、union 用 `|` 连接），不灌完整 schema；要 schema 用 `--help --json`。
 - PowerShell 括号：单引号包裹，如 `'--descriptor=()F'`。
-- 全局 `--help`/`--version` 不加载工具注册表。`MC_SKILL_DATA` 仅在真正调用依赖 data 的工具时提示。
+- 全局 `--help`/`--version` 不加载工具注册表。`MC_SKILL_DATA` 仅在真正调用依赖 data 的工具时提示：提示语写出**本进程实际查阅的目录**（`resolveDataDir()`：`MC_SKILL_DATA` → 安装位置推导 → cwd 推导），不硬编码盘符；未设置该变量时会说明这一点。覆盖面即 `src/cli-parse.ts` 的 `DATA_DIR_TOOLS`，`activate_platform_pack` / `detect_mod_project` 不在其中（它们读仓库根规则树，与 data 目录无关）。
 
 ### obfuscated / intermediary 层（T5）
 
