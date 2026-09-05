@@ -166,11 +166,6 @@ function packagesPlausible(entry, packages) {
   if (id.includes("jei") || id.includes("emi")) {
     if (packages.some((p) => String(p).startsWith("net.darkhax.bookshelf"))) return false;
   }
-  if (id.includes("bookshelf")) {
-    if (packages.some((p) => !String(p).startsWith("net.darkhax.bookshelf") && !String(p).startsWith("net.darkhax"))) {
-      /* bookshelf 允许 darkhax；其它包不在此硬拒 */
-    }
-  }
   return true;
 }
 

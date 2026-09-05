@@ -46,7 +46,7 @@ export const FIELD_OWNED_GLOBALS: Record<string, string[]> = {
 export function fieldOwnedGlobals(cmd: string | undefined): Set<string> | undefined {
   if (!cmd) return undefined;
   const { tool } = mapShortCommand(cmd);
-  const names = FIELD_OWNED_GLOBALS[tool] ?? FIELD_OWNED_GLOBALS[cmd];
+  const names = ownGet(FIELD_OWNED_GLOBALS, tool) ?? ownGet(FIELD_OWNED_GLOBALS, cmd);
   return names ? new Set(names) : undefined;
 }
 

@@ -8,11 +8,13 @@
  * 用法：
  *   node scripts/validate-rules-against-cache.mjs
  *   node scripts/validate-rules-against-cache.mjs --platform=neoforge --version=1.20.4
+ *   node scripts/validate-rules-against-cache.mjs --write        # 才写仓库 data/（默认 DRYRUN）
  */
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { dirname, join, relative } from "path";
 import { fileURLToPath } from "url";
 import os from "os";
+import { emit } from "./_lib/write-guard.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CACHE = process.env.MC_SKILL_CACHE || join(os.tmpdir(), "mc-skill-cache");
@@ -122,14 +124,13 @@ for (const name of existsSync(OUT) ? readdirSync(OUT).filter((n) => n.endsWith("
 }
 
 if (classes.length === 0) {
-  mkdirSync(OUT, { recursive: true });
   const skipped = {
     ok: true,
     skipped: true,
     cache: CACHE,
     note: "无反编译 .java 且摘要 JSON 无 fqcnIndex。把官方 API jar 放到 loader-jars 后跑 decompile-loader-apis.mjs。",
   };
-  writeFileSync(join(OUT, "validate-rules-last.json"), JSON.stringify(skipped, null, 2), "utf8");
+  emit("mcp-server/data/loader-api-summaries/validate-rules-last.json", JSON.stringify(skipped, null, 2));
   console.log("validate-rules-against-cache: no classes; skipped");
   process.exit(0);
 }
@@ -262,7 +263,8 @@ function scanRulesDir(rel) {
       const section = sectionAround(lines, lineIdx);
       const hits = bySimple.get(name) ?? [];
       if (name === "NeoForgeAddonPlugin" || name === "SimpleChannel" || name === "IMessage") {
-        if (NEGATIVE_HINT.test(section) || hits.length === 0 && NEGATIVE_HINT.test(section)) {
+        // 原式 A || (B && A) ≡ A（吸收律）：`hits.length === 0 && NEGATIVE_HINT.test(section)` 永不新增覆盖，已删。
+        if (NEGATIVE_HINT.test(section)) {
           negativeMentions.push({ file: relFile, symbol: name, kind: "negative_mention" });
           continue;
         }
@@ -329,9 +331,15 @@ const summary = {
     : "摘要若写入核实表，必须另有 mappingsVersion（本脚本不臆造）。设置 MC_SKILL_MAPPINGS_VERSION 或由 decompile-loader-apis 写入。",
 };
 
-mkdirSync(OUT, { recursive: true });
-writeFileSync(join(OUT, "extracted-classes.json"), JSON.stringify({ mappingsVersion, classCount: classes.length, sample: classes.slice(0, 40).map((c) => ({ fqcn: c.fqcn, methods: (c.methods || []).slice(0, 8) })) }, null, 2), "utf8");
-writeFileSync(join(OUT, "validate-rules-last.json"), JSON.stringify(summary, null, 2), "utf8");
+// 仓库内写盘唯一出口：默认只打印 DRYRUN <rel>，--write 才落盘（emit 自建父目录）。
+emit(
+  "mcp-server/data/loader-api-summaries/extracted-classes.json",
+  JSON.stringify({ mappingsVersion, classCount: classes.length, sample: classes.slice(0, 40).map((c) => ({ fqcn: c.fqcn, methods: (c.methods || []).slice(0, 8) })) }, null, 2),
+);
+emit(
+  "mcp-server/data/loader-api-summaries/validate-rules-last.json",
+  JSON.stringify(summary, null, 2),
+);
 console.log(
   `validate-rules-against-cache: ${classes.length} classes, ${issues.length} issues, cache=${CACHE}`,
 );

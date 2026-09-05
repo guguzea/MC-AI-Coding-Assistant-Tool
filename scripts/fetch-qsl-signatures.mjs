@@ -12,6 +12,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 import { spawnSync } from "child_process";
 import os from "os";
 import { redactAbs } from "./_lib/redact-abs.mjs";
+import { downloadWithFallback, failureNote, fetchJsonWithUa, FETCH_FAILURE } from "./_lib/fetch-with-ua.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "mcp-server", "data", "loader-api-summaries");
@@ -60,49 +61,44 @@ function keepMainJava(posix) {
 
 async function downloadZip(url, dest) {
   const tmp = `${dest}.tmp`;
-  try {
-    if (process.platform === "win32") {
-      const r = spawnSync(
-        "curl.exe",
-        ["-fL", "--retry", "3", "--retry-delay", "2", "--connect-timeout", "30", "-A", "MC-AI-Coding-Assistant-Tool", "-o", tmp, url],
-        { windowsHide: true, encoding: "utf8" },
-      );
-      if (r.status === 0 && existsSync(tmp) && statSync(tmp).size > 1000) {
-        return { ok: true, path: tmp, bytes: statSync(tmp).size };
-      }
-    }
-    const res = await fetch(url, { headers: UA, redirect: "follow" });
-    if (!res.ok) {
-      rmSync(tmp, { force: true });
-      return { ok: false, status: res.status, url };
-    }
-    writeFileSync(tmp, Buffer.from(await res.arrayBuffer()));
-    return { ok: true, path: tmp, bytes: statSync(tmp).size, status: res.status };
-  } catch (e) {
+  const got = await downloadWithFallback({ url, dest: tmp, timeoutMs: 120_000, minBytes: 1000 });
+  if (!got.ok) {
     rmSync(tmp, { force: true });
-    return { ok: false, error: String(e), url };
+    return {
+      ok: false,
+      status: got.status || 0,
+      failureClass: got.failureClass,
+      tls: got.tls,
+      reason: got.reason || failureNote(got),
+      note: failureNote(got),
+      url,
+      via: got.via,
+    };
   }
+  return { ok: true, path: tmp, bytes: got.bytes, status: got.status, via: got.via };
 }
 
 async function resolveCommit(branch) {
   const url = `https://api.github.com/repos/QuiltMC/quilt-standard-libraries/commits/${encodeURIComponent(branch)}`;
-  let last = { ok: false, status: 0, url };
+  let last = { ok: false, status: 0, failureClass: "UNKNOWN", url };
   for (let attempt = 1; attempt <= 4; attempt++) {
-    try {
-      const res = await fetch(url, { headers: { ...UA, Accept: "application/vnd.github+json" } });
-      if (res.status === 404 || res.status === 422) return { ok: false, status: res.status, url };
-      if (!res.ok) {
-        last = { ok: false, status: res.status, url };
-        await new Promise((r) => setTimeout(r, 400 * attempt));
-        continue;
+    const res = await fetchJsonWithUa(url, {
+      headers: { Accept: "application/vnd.github+json", ...UA },
+      timeoutMs: 30_000,
+    });
+    if (res.ok) {
+      if (!res.json?.sha) {
+        return { ok: false, status: res.status, failureClass: FETCH_FAILURE.UNKNOWN, url, note: "no sha" };
       }
-      const json = await res.json();
-      if (!json?.sha) return { ok: false, status: res.status, url, note: "no sha" };
-      return { ok: true, sha: json.sha, url };
-    } catch (e) {
-      last = { ok: false, error: String(e), url };
-      await new Promise((r) => setTimeout(r, 400 * attempt));
+      return { ok: true, sha: res.json.sha, url };
     }
+    if (res.status === 404 || res.status === 422) {
+      return { ok: false, status: res.status, failureClass: FETCH_FAILURE.NOT_FOUND, url };
+    }
+    // TLS/证书失败重试无意义，且必须保持 TLS 归类（禁止落到「分支不存在」）
+    if (res.tls) return { ok: false, status: 0, failureClass: res.failureClass, tls: true, reason: res.reason, url };
+    last = { ok: false, status: res.status, failureClass: res.failureClass, reason: res.reason, url };
+    await new Promise((r) => setTimeout(r, 400 * attempt));
   }
   return last;
 }
@@ -110,7 +106,12 @@ async function resolveCommit(branch) {
 async function extractOne(target, extractCompilationUnit, repoSafeSourcePath, dedupeLoaderClasses) {
   const commit = await resolveCommit(target.branch);
   if (!commit.ok) {
-    return { key: target.key, skipped: `QSL branch ${target.branch} commit HTTP ${commit.status || commit.error}，禁止借邻版` };
+    const cls = commit.failureClass || "UNKNOWN";
+    return {
+      key: target.key,
+      failureClass: cls,
+      skipped: `QSL branch ${target.branch} commit ${failureNote(commit) || cls}（${cls === FETCH_FAILURE.NOT_FOUND ? `分支 ${target.branch} 不存在` : "非资源不存在，禁止记成缺档"}），禁止借邻版`,
+    };
   }
   const existingPath = join(OUT, `${target.key}.json`);
   if (existsSync(existingPath)) {
@@ -129,7 +130,7 @@ async function extractOne(target, extractCompilationUnit, repoSafeSourcePath, de
   const zipPath = join(work, "repo.zip");
   const got = await downloadZip(zipUrl, zipPath);
   if (!got.ok) {
-    return { key: target.key, skipped: "zipball 下载失败", detail: got };
+    return { key: target.key, failureClass: got.failureClass, skipped: `zipball 下载失败 ${got.note || ""}`.trim(), detail: got };
   }
   const unpack = join(work, "unpacked");
   rmSync(unpack, { recursive: true, force: true });

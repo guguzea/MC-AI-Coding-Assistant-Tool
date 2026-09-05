@@ -1,8 +1,13 @@
 /**
- * Stress test for queryApi — directly exercises the MCP server's query path
- * Run: node stress-test.mjs
+ * Benchmark for queryApi — 直接压测 MCP Server 的查询路径，输出耗时分布。
+ * Run: node bench-query-api.mjs
  *
- * Tests:
+ * 这是基准脚本（benchmark），不是测试：
+ * - 不含任何断言，不做 pass/fail 判定；阈值仅作参考，不进 npm test、不进 CI
+ *   （100ms 是本机经验值，CI 环境抖动大，作为回归门会误报）
+ * - 崩溃仍 exit 1（脚本自身出错），但正常完成恒 exit 0
+ *
+ * 测量项：
  * 1. Cold start: first call (Worker must initialize + JSON.parse)
  * 2. Warm sequential: 50 queries without restarting Worker
  * 3. Concurrent: 10 simultaneous queries (reuses same Worker)
@@ -152,7 +157,7 @@ async function testStress(count = 200) {
 // ── Main ───────────────────────────────────────────────────────────────────────
 async function main() {
   console.log("=".repeat(60));
-  console.log("MCP Server queryApi Stress Test");
+  console.log("MCP Server queryApi Benchmark");
   console.log("=".repeat(60));
 
   const t1 = await testColdStart();
@@ -172,11 +177,9 @@ async function main() {
 
   const warmAvg = t2.reduce((a, b) => a + b, 0) / t2.length;
   const stressAvg = t5.reduce((a, b) => a + b, 0) / t5.length;
-  if (warmAvg < 100 && stressAvg < 100) {
-    console.log("\n✓ All tests passed — queries are fast and reliable");
-  } else {
-    console.log("\n~ Some queries are slower than expected");
-  }
+  // 仅作参考输出，不是通过/失败判定（这是 benchmark，不做 pass/fail）
+  console.log(`\n参考阈值：warmAvg < 100ms 且 stressAvg < 100ms 视为良好（当前 ${warmAvg.toFixed(1)}ms / ${stressAvg.toFixed(1)}ms）`);
+  console.log("注：阈值随机器与负载变化，不进 CI；数值波动不等于回归。");
 
   disposeApiData();
   try {

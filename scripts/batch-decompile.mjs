@@ -275,12 +275,14 @@ function makeSemaphore(n) {
     async acquire() {
       if (active < n) { active++; return; }
       await new Promise((res) => waiters.push(res));
-      active++;
+      // 槽位已由 release() 同步交接并计数，这里不得再 active++
     },
     release() {
+      active--; // 先退掉自己的槽
       const w = waiters.shift();
-      if (w) w();
-      else active--;
+      // 交接：同步把槽转给 waiter（一次减 + 一次加，绝不双减/双加）；
+      // release 全程同步，中间不会有新 acquire() 插队抢槽。
+      if (w) { active++; w(); }
     },
   };
 }

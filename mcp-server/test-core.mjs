@@ -6485,18 +6485,41 @@ function testPublishChecklistFromCommunityDoc() {
 
 /**
  * S20：会改仓库文件的维护脚本，写盘必须全部经 scripts/_lib/write-guard.mjs（默认 dry-run，--write 才落盘）。
- * 覆盖范围 = scripts/_oneoff/ + scripts/_lib/ 全部脚本 + 点名写仓库 data/ 的顶层脚本。
+ * 覆盖范围 = scripts/**/*.mjs 递归全量（旧版只扫 _oneoff/_lib + 2 个点名文件，真写盘脚本全在门外）。
+ * 例外只有两张在册清单：已核实不写仓库正文的 NON_WRITERS，与本轮不可改的 DEBT；
+ * 每条都必须仍存在且其依据正则仍成立，依据一断即门禁失败 —— 例外不许静默扩张。
  * 纯函数：输入 [{ rel, text }]，输出 { problems, stats }；不读不写磁盘。
  */
 const SCRIPT_WRITE_GUARD_REL = "scripts/_lib/write-guard.mjs";
-const SCRIPT_WRITE_GUARD_DIRS = ["scripts/_oneoff", "scripts/_lib"];
+/** 递归扫描根：仓库 scripts/ 下全部 .mjs。 */
+const SCRIPT_WRITE_GUARD_SCAN_DIR = "scripts";
+/** 目录前缀即要求 guard：这些脚本的存在意义就是改仓库文件，哪怕此刻还没落笔。 */
+const SCRIPT_WRITE_GUARD_ALWAYS_DIRS = ["scripts/_oneoff"];
+/** 已改道 write-guard 的顶层仓库写盘脚本：改名/删除必须显式改本清单，否则静默脱离扫描。 */
 const SCRIPT_WRITE_GUARD_FILES = [
   "scripts/index-qsl-verified.mjs",
   "scripts/fetch-neoforge-primers.mjs",
 ];
-function scriptRequiresGuard(rel) {
-  return rel.startsWith("scripts/_oneoff/") || SCRIPT_WRITE_GUARD_FILES.includes(rel);
-}
+/** 已核实不写仓库正文：只写 $MC_SKILL_CACHE / .gitignore 的 temp/ / 由调用方给的 dest。值为依据正则。 */
+const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
+  ["scripts/fetch-loader-api-jars.mjs", /join\(CACHE/],
+  ["scripts/batch-decompile.mjs", /join\(REPO_ROOT, "temp"/],
+  ["scripts/_lib/fetch-with-ua.mjs", /export async function downloadWithFallback/],
+]);
+/**
+ * 会写仓库但本轮不收口的债务（并发代理 owns / 自带显式 --write 闸门未改道 / 新文件只靠 --force）。
+ * 值 = 依据正则：闸门或契约一消失门禁即失败，逼重新签字；脚本收口后删掉本条即回到默认要求。
+ */
+const SCRIPT_WRITE_GUARD_DEBT = new Map([
+  ["scripts/fetch-qsl-signatures.mjs", /loader-api-summaries/],
+  ["scripts/fetch-loader-api-sources.mjs", /write-guard\.mjs/],
+  ["scripts/decompile-loader-apis.mjs", /"--write"/],
+  ["scripts/build-api-summaries.mjs", /--write/],
+  ["scripts/merge-verified-api.mjs", /--write/],
+  ["scripts/pin-mdk-checksums.mjs", /--apply/],
+  ["scripts/build-lib-manifest.mjs", /wantWrite\(\)/],
+  ["scripts/scaffold-version.mjs", /--force/],
+]);
 const FS_MUTATION_PRIMITIVES = [
   "writeFileSync",
   "appendFileSync",

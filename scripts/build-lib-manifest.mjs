@@ -108,18 +108,30 @@ async function loadCatalogEntries() {
   const text = readFileSync(CATALOG_SRC, "utf8");
   const entries = [];
   let current = null;
+  let depth = 0;
   for (const line of text.split(/\r?\n/)) {
-    if (!current && /^\s*\{\s*$/.test(line)) {
-      current = { raw: [] };
+    if (!current) {
+      if (/^\s*\{\s*$/.test(line)) {
+        current = { raw: [] };
+        depth = 1;
+      }
       continue;
     }
-    if (current) {
-      if (/^\s*\},?\s*$/.test(line)) {
-        entries.push(parseCatalogEntry(current.raw.join("\n")));
-        current = null;
-      } else {
-        current.raw.push(line);
+    // 括号深度状态：内层 verifiedApi 对象的独占闭合行不是条目边界
+    // （本文件由脚本生成，字符串字面量内不含大括号，故按行计数即可）
+    let closed = false;
+    for (const ch of line) {
+      if (ch === "{") depth++;
+      else if (ch === "}") {
+        depth--;
+        if (depth === 0) closed = true;
       }
+    }
+    if (closed) {
+      entries.push(parseCatalogEntry(current.raw.join("\n")));
+      current = null;
+    } else {
+      current.raw.push(line);
     }
   }
   if (entries.length === 0) {

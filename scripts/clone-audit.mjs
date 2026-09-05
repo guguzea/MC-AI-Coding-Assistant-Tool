@@ -9,10 +9,12 @@
  * 用法：
  *   node scripts/clone-audit.mjs
  *   node scripts/clone-audit.mjs --json
+ *   node scripts/clone-audit.mjs --write      # 才把 clone-audit-last.json 落盘（默认 DRYRUN）
  */
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync, mkdirSync } from "fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { dirname, join, relative } from "path";
 import { fileURLToPath } from "url";
+import { emit } from "./_lib/write-guard.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const THRESHOLD = 0.7;
@@ -174,13 +176,11 @@ if (asJson) {
   }
 }
 
-const outDir = join(ROOT, "mcp-server", "data", "loader-api-summaries");
-try {
-  mkdirSync(outDir, { recursive: true });
-  writeFileSync(join(outDir, "clone-audit-last.json"), JSON.stringify(payload, null, 2), "utf8");
-} catch {
-  /* optional */
-}
+// 仓库内写盘唯一出口：默认只打印 DRYRUN <rel>，--write 才落盘（emit 自建父目录）。
+emit(
+  "mcp-server/data/loader-api-summaries/clone-audit-last.json",
+  JSON.stringify(payload, null, 2),
+);
 
 if (failOnSuspect && suspectedTotal > 0) process.exit(2);
 process.exit(0);

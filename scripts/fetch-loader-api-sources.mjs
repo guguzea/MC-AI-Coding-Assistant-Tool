@@ -11,6 +11,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import os from "os";
 import { redactAbs } from "./_lib/redact-abs.mjs";
+import { failureNote, fetchTextWithUa, FETCH_FAILURE } from "./_lib/fetch-with-ua.mjs";
 import { wantWrite, logDryRunBanner } from "./_lib/write-guard.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -25,6 +26,16 @@ const NOT_A_TYPE = new Set([
   "if", "for", "while", "switch", "to", "which", "new", "return", "throw", "catch",
   "class", "interface", "enum", "record", "void", "this", "super",
 ]);
+
+/**
+ * 只接受「注解/修饰符 + 返回类型 + 名字 + (」的声明行。
+ * 开头的否定预查看 = Java 语句关键字永远不可能是返回类型，因此
+ * `return foo(` / `else bar(x)` / `assert matches(x)` / `throw illegalState(x)` 这类
+ * **调用点**（旧正则把关键字吃成 type 位、小写方法名吃成 name 位）一律不进 methods。
+ * group1 = 声明前缀，group2 = 方法名。
+ */
+const METHOD_SIG_RE =
+  /^[ \t]*(?!(?:return|throw|else|if|for|while|do|switch|case|new|instanceof|assert|yield|try|catch|finally|break|continue|extends|implements|import|package|var|class|interface|enum|record|this|super)[ \t])(?:(?:@[\w.]+(?:\([^()]*\))?[ \t]+|(?:(?:public|protected|private|static|final|abstract|default|synchronized|native|strictfp)[ \t]+)*)(?:<[^<>]*(?:<[^<>]*>[^<>]*)*>[ \t]+)?[\w.$]+(?:\s*<[^<>]*>)?(?:\s*\[\s*\])*)[ \t]+([a-z_$][\w$]*)[ \t]*\(/gm;
 
 const FILES = [
   {
@@ -93,21 +104,26 @@ function looksLikeJava(text) {
 
 async function fetchText(url) {
   for (let i = 0; i < 3; i++) {
-    try {
-      const res = await fetch(url, { redirect: "follow" });
-      if (res.status === 404) return { ok: false, status: 404, text: "" };
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const text = await res.text();
-      if (!looksLikeJava(text)) {
+    const res = await fetchTextWithUa(url, { timeoutMs: 30_000 });
+    if (res.ok) {
+      if (!looksLikeJava(res.text)) {
         return { ok: false, status: res.status, text: "", note: "not java" };
       }
-      return { ok: true, status: res.status, text };
-    } catch (e) {
-      if (i === 2) return { ok: false, status: 0, text: "", note: String(e?.message ?? e) };
-      await new Promise((r) => setTimeout(r, 400 * (i + 1)));
+      return { ok: true, status: res.status, text: res.text };
     }
+    if (res.failureClass === FETCH_FAILURE.NOT_FOUND) {
+      return { ok: false, status: 404, text: "", failureClass: FETCH_FAILURE.NOT_FOUND, note: "NOT_FOUND(404)" };
+    }
+    // TLS/证书问题不重试、也绝不降级成「文件不存在」
+    if (res.tls) {
+      return { ok: false, status: 0, text: "", failureClass: res.failureClass, note: failureNote(res) };
+    }
+    if (i === 2) {
+      return { ok: false, status: res.status || 0, text: "", failureClass: res.failureClass, note: `${res.failureClass || "UNKNOWN"}: ${res.reason || ""}`.slice(0, 300) };
+    }
+    await new Promise((r) => setTimeout(r, 400 * (i + 1)));
   }
-  return { ok: false, status: 0, text: "" };
+  return { ok: false, status: 0, text: "", failureClass: FETCH_FAILURE.UNKNOWN };
 }
 
 function stripJavaComments(src) {
@@ -129,12 +145,12 @@ function extractClass(javaText, filePath) {
   const simpleName = classMatch?.[1];
   if (!simpleName || NOT_A_TYPE.has(simpleName)) return null;
   const methods = [];
-  const methodRe =
-    /^\s*(?:(?:public|protected|private)\s+)?(?:static\s+)?(?:default\s+)?(?:final\s+)?(?:[\w.<>,?\[\]]+)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/gm;
+  METHOD_SIG_RE.lastIndex = 0; // 模块级 /g 正则：必须每次从头开始，且下面 break 会留下 lastIndex
   let m;
-  while ((m = methodRe.exec(stripped))) {
-    if (m[1] !== simpleName && !NOT_A_TYPE.has(m[1]) && !/^[A-Z]/.test(m[1])) {
-      if (!methods.includes(m[1])) methods.push(m[1]);
+  while ((m = METHOD_SIG_RE.exec(stripped))) {
+    const name = m[1];
+    if (name !== simpleName && !NOT_A_TYPE.has(name) && !/^[A-Z]/.test(name)) {
+      if (!methods.includes(name)) methods.push(name);
     }
     if (methods.length >= 40) break;
   }
@@ -184,7 +200,7 @@ for (const group of FILES) {
       continue;
     }
     const got = await fetchText(url);
-    fetched.push({ url, status: got.status, ok: got.ok, note: got.note });
+    fetched.push({ url, status: got.status, ok: got.ok, failureClass: got.failureClass, note: got.note });
     if (!got.ok) continue;
     writeFileSync(dest, got.text, "utf8");
   }

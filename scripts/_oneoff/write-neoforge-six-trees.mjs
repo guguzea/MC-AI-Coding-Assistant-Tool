@@ -465,7 +465,11 @@ function r10(ver, f) {
 - ${f.guiOpen}
 - 额外数据同步：DataSlot / ContainerData，或 06 的 Payload。**禁止 SimpleChannel。**
 
-1.20.4 文档出现 \`IForgeMenuType.create\` 与 \`NetworkHooks.openScreen\`。更高版本名称可能变，先 \`search_neoforge_docs version=${ver} query=MenuType\`。
+${
+  ver === "1.20.4"
+    ? "1.20.4 文档出现 `IForgeMenuType.create` 与 `NetworkHooks.openScreen`。"
+    : `本档类名不要照抄邻档：先 \`search_neoforge_docs version=${ver} query=MenuType\`，以该页为准。`
+}
 `;
 }
 
@@ -521,7 +525,7 @@ description: NeoForge ${ver} ${name}。类名只来自本档核实表与 search_
 platform: neoforge
 version: "${ver}"
 dependencies: []
-mappings: mojmap
+mappings: ${f.mappings}
 ---
 
 # ${name}（NeoForge ${ver}）

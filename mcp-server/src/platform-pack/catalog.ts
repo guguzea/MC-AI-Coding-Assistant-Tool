@@ -4,6 +4,7 @@ import { basename, dirname, join, relative } from "path";
 import { resolveRepoRoot } from "../utils/path.js";
 import { isInsideReal, nativeReal } from "../utils/project-sandbox.js";
 import { nextRealYamlFence, stripUtf8Bom } from "../utils/text.js";
+import { ownGet } from "../utils/own-record.js";
 
 export const PACK_PLATFORMS = [
   "forge",
@@ -538,7 +539,7 @@ export function listLibSkillIndex(
 ): SkillIndexEntry[] {
   const p = platform.trim().toLowerCase();
   const ver = mcVersion.trim();
-  const groups = LIB_GROUPS[p];
+  const groups = ownGet(LIB_GROUPS, p);
   if (!groups || !ver) return [];
   const libsRoot = join(repoRoot, "knowledge", "libs");
   const out: SkillIndexEntry[] = [];

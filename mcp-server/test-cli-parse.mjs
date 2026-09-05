@@ -487,6 +487,10 @@ import {
   assert.equal(fieldOwnedGlobals("query_api"), undefined);
   assert.equal(fieldOwnedGlobals("status")?.has("json"), undefined, "status 短名无同名字段");
   assert.equal(fieldOwnedGlobals(undefined), undefined);
+  // 原型键不得命中 Object.prototype：否则 names 取到 Function，new Set(names) 抛 TypeError
+  assert.equal(fieldOwnedGlobals("constructor"), undefined, "constructor 是原型键，不是工具名");
+  assert.equal(fieldOwnedGlobals("toString"), undefined, "toString 是原型键，不是工具名");
+  assert.equal(fieldOwnedGlobals("__proto__"), undefined, "__proto__ 是原型键，不是工具名");
 }
 
 // ── S6: --quiet / --timeout（静音开关 + 有界退出预算）───────────────────────

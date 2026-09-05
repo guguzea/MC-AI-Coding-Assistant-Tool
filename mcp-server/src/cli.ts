@@ -11,7 +11,7 @@
  * 旧位置参数形式仍兼容（stderr 迁移提示）。descriptor 为本地子命令，不经 MCP registry。
  */
 import "./utils/node-sqlite-guard.js"; // 必须保持第一个 import：22.5–22.12 未带 --experimental-sqlite 时先给出指引再退出
-import { existsSync, readFileSync, readSync, realpathSync, statSync } from "fs";
+import { existsSync, readFileSync, realpathSync, statSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import * as z from "zod";
@@ -229,32 +229,92 @@ function makeExpandCtx(schema: z.ZodTypeAny, rawSpecs: FlagScalar[], tool: strin
  * stdin 是唯一没有 stat 前置检查的输入通道，必须自己分块计字节。
  * 与 readLimitedFile 共用 FILE_MAX_BYTES，超限当场报错而不是把内存读完。
  */
-function readLimitedStdin(ctx: ExpandCtx, field: string): string {
-  const chunks: Buffer[] = [];
-  const buf = Buffer.alloc(64 * 1024);
-  let total = 0;
-  for (;;) {
-    let n: number;
+/**
+ * 当前进行中的 stdin 读取句柄。
+ * 超时路径必须靠它摘掉 process.stdin 上的监听：否则事件循环被活跃监听维持着不退出，
+ * 表现为「错误已打印、exitCode 已设，但进程挂起不退出」——超时修复会变成假象。
+ */
+let activeStdinRead: { cancel: () => void } | null = null;
+
+/** 供 withRunBudget 超时回调：摘掉进行中的 stdin 监听，避免进程挂起不退出 */
+function cancelActiveStdinRead(): void {
+  activeStdinRead?.cancel();
+}
+
+/**
+ * 异步读 stdin（不能再用同步 readSync：它会阻塞事件循环，setTimeout 定时器永不触发，
+ * --timeout 对 stdin 就完全失效）。
+ */
+function readLimitedStdin(ctx: ExpandCtx, field: string): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    let total = 0;
+    let settled = false;
+
+    function detach(): void {
+      process.stdin.removeListener("data", onData);
+      process.stdin.removeListener("end", onEnd);
+      process.stdin.removeListener("error", onError);
+      if (activeStdinRead?.cancel === cancel) activeStdinRead = null;
+      try {
+        process.stdin.pause();
+      } catch {
+        /* stdin 可能已关闭，忽略 */
+      }
+    }
+
+    /** 结束读取；fn 为空表示被取消（promise 悬挂，由 race 的 guard 收尾） */
+    function finish(fn: () => void): void {
+      if (settled) return;
+      settled = true;
+      detach();
+      fn();
+    }
+
+    function cancel(): void {
+      finish(() => undefined);
+    }
+
+    function onData(chunk: Buffer): void {
+      total += chunk.length;
+      if (total > FILE_MAX_BYTES) {
+        finish(() =>
+          reject(new CliUsageError(ctx.tool, `stdin 超过 8MB 上限：字段 ${field}（已读 ${total} 字节）`)),
+        );
+        return;
+      }
+      chunks.push(chunk);
+    }
+
+    function onEnd(): void {
+      finish(() => resolve(Buffer.concat(chunks, total).toString("utf8")));
+    }
+
+    function onError(err: Error): void {
+      finish(() => reject(new CliUsageError(ctx.tool, `读取 stdin 失败：字段 ${field}（${err.message}）`)));
+    }
+
+    activeStdinRead = { cancel };
+    process.stdin.on("data", onData);
+    process.stdin.once("end", onEnd);
+    process.stdin.once("error", onError);
     try {
-      n = readSync(0, buf, 0, buf.length, null);
-    } catch (err) {
-      throw new CliUsageError(ctx.tool, `读取 stdin 失败：字段 ${field}（${(err as Error).message}）`);
+      process.stdin.resume();
+    } catch {
+      /* 已关闭时忽略 */
     }
-    if (n === 0) break;
-    total += n;
-    if (total > FILE_MAX_BYTES) {
-      throw new CliUsageError(ctx.tool, `stdin 超过 8MB 上限：字段 ${field}（已读 ${total} 字节）`);
-    }
-    chunks.push(Buffer.from(buf.subarray(0, n)));
-  }
-  return Buffer.concat(chunks, total).toString("utf8");
+  });
 }
 
 /**
  * `--stdin-json`：fd 0 一次读入整个参数对象，作为 flags 的基座（命令行同名恒胜）。
  * 载荷已经是结构化 JSON，所以它的值不再做 @ 展开——否则等于把 D2 复活一遍。
  */
-function readStdinJsonPayload(ctx: ExpandCtx, rest: RawFlags, fileSpecs: string[]): Record<string, unknown> {
+async function readStdinJsonPayload(
+  ctx: ExpandCtx,
+  rest: RawFlags,
+  fileSpecs: string[],
+): Promise<Record<string, unknown>> {
   const claimants: string[] = [];
   for (const [k, v] of Object.entries(rest)) {
     for (const item of Array.isArray(v) ? v : [v]) {
@@ -275,7 +335,7 @@ function readStdinJsonPayload(ctx: ExpandCtx, rest: RawFlags, fileSpecs: string[
   if (process.stdin.isTTY === true) {
     throw new CliUsageError(ctx.tool, "TTY 下 --stdin-json 会挂起等待输入：请管道喂 JSON，或逐条写 --key=value。");
   }
-  const text = readLimitedStdin(ctx, "--stdin-json");
+  const text = await readLimitedStdin(ctx, "--stdin-json");
   if (text.trim() === "") {
     throw new CliUsageError(ctx.tool, "stdin 载荷为空（--stdin-json 需要一个 JSON 对象）");
   }
@@ -302,7 +362,7 @@ function readStdinJsonPayload(ctx: ExpandCtx, rest: RawFlags, fileSpecs: string[
   return out;
 }
 
-function expandStringValue(value: string, ctx: ExpandCtx, field: string): string {
+async function expandStringValue(value: string, ctx: ExpandCtx, field: string): Promise<string> {
   if (value === "-" || value === "@-") {
     if (ctx.stdin.used) {
       throw new CliUsageError(
@@ -317,7 +377,7 @@ function expandStringValue(value: string, ctx: ExpandCtx, field: string): string
       );
     }
     ctx.stdin.used = true;
-    return readLimitedStdin(ctx, field);
+    return await readLimitedStdin(ctx, field);
   }
   if (value.startsWith("@@")) return value.slice(1);
   if (value.startsWith("@")) return readLimitedFile(value.slice(1), ctx, field, value);
@@ -354,7 +414,7 @@ function applyFileSpecs(rest: RawFlags, fileSpecs: string[], ctx: ExpandCtx): vo
  * 未知 flag 这里跳过：它会在 coerceFlags 那里得到未知参数报错，且展开会先碰文件系统。
  * schema 不是扁平 object 时（expandableFlags 返回 undefined）保持旧行为，全量展开。
  */
-function expandFlagFiles(rest: RawFlags, ctx: ExpandCtx): void {
+async function expandFlagFiles(rest: RawFlags, ctx: ExpandCtx): Promise<void> {
   const gated = ctx.expandable !== undefined;
   for (const [k, v] of Object.entries(rest)) {
     const resolved = gated ? resolveFlagKey(k, ctx.schemaKeys) : k;
@@ -363,9 +423,11 @@ function expandFlagFiles(rest: RawFlags, ctx: ExpandCtx): void {
     if (ctx.rawAll || ctx.rawFields.has(field)) continue;
     if (ctx.expandable && !ctx.expandable.has(field)) continue;
     if (Array.isArray(v)) {
-      rest[k] = v.map((item) => (typeof item === "string" ? expandStringValue(item, ctx, field) : item));
+      rest[k] = await Promise.all(
+        v.map(async (item) => (typeof item === "string" ? await expandStringValue(item, ctx, field) : item)),
+      );
     } else if (typeof v === "string") {
-      rest[k] = expandStringValue(v, ctx, field);
+      rest[k] = await expandStringValue(v, ctx, field);
     }
   }
 }
@@ -632,6 +694,8 @@ async function withRunBudget<T>(
   budgetMs: number,
   tool: string,
   quiet: boolean,
+  /** 超时当日：先让调用方摘掉 stdin 监听等资源，再抛超时错误 */
+  onTimeout?: () => void,
 ): Promise<T> {
   if (budgetMs <= 0) return await task;
   const started = Date.now();
@@ -640,7 +704,10 @@ async function withRunBudget<T>(
   // 超时后 handler 仍可能 reject；不挂这个 catch 就变成 unhandledRejection，退出码与信封都会失真
   task.catch(() => undefined);
   const guard = new Promise<never>((_resolve, reject) => {
-    timer = setTimeout(() => reject(new TimeoutCliError(budgetMs, tool)), budgetMs);
+    timer = setTimeout(() => {
+      onTimeout?.();
+      reject(new TimeoutCliError(budgetMs, tool));
+    }, budgetMs);
     timer.unref?.();
     if (!quiet) {
       beat = setInterval(() => {
@@ -712,18 +779,24 @@ async function main(): Promise<void> {
   const userCmd = positional[0];
   const cmdPositional = positional.slice(1);
 
-  if (userCmd === "help") {
-    const helpTarget = cmdPositional[0];
-    if (!helpTarget) {
+  // help 早退路径不进下方 try（那里 import update 链会引入 ExperimentalWarning），
+  // 但 printNamedToolHelp 内部 loadRegistry() 可能因 registry 不一致抛错，故单独兜住：
+  // 异常时输出 JSON 信封 + errorKind usage + exit 2，而不是裸 stack + exit 1。
+  if (userCmd === "help" || globals.help) {
+    const helpTarget = userCmd === "help" ? cmdPositional[0] : userCmd;
+    if (userCmd === "help" && !helpTarget) {
       printGlobalHelp(machineHelp, globals.compact);
       return;
     }
-    await printNamedToolHelp(helpTarget, machineHelp, globals.compact);
-    return;
-  }
-
-  if (globals.help) {
-    await printNamedToolHelp(userCmd, machineHelp, globals.compact);
+    try {
+      await printNamedToolHelp(helpTarget, machineHelp, globals.compact);
+    } catch (err) {
+      printJson(
+        { success: false, tool: helpTarget, error: (err as Error).message, errorKind: "usage" },
+        globals.compact,
+      );
+      process.exitCode = 2;
+    }
     return;
   }
 
@@ -759,9 +832,17 @@ async function main(): Promise<void> {
 
     if (userCmd === "descriptor") {
       const ctx = makeExpandCtx(descriptorSchema, globals.raw, userCmd);
-      const payload = globals.stdinJson ? readStdinJsonPayload(ctx, rest, globals.file) : {};
+      const payload = globals.stdinJson
+        ? await withRunBudget(
+            readStdinJsonPayload(ctx, rest, globals.file),
+            budget.ms,
+            userCmd,
+            globals.quiet,
+            cancelActiveStdinRead,
+          )
+        : {};
       applyFileSpecs(rest, globals.file, ctx);
-      expandFlagFiles(rest, ctx);
+      await withRunBudget(expandFlagFiles(rest, ctx), budget.ms, userCmd, globals.quiet, cancelActiveStdinRead);
       const params = coerceFlags(rest, descriptorSchema, payload, undefined, userCmd);
       const result = await runDescriptor(params, cmdPositional);
       printJson({ success: true, tool: userCmd, result }, globals.compact);
@@ -775,9 +856,17 @@ async function main(): Promise<void> {
     }
     const schema = entry.inputSchema as z.ZodTypeAny;
     const ctx = makeExpandCtx(schema, globals.raw, userCmd);
-    const payload = globals.stdinJson ? readStdinJsonPayload(ctx, rest, globals.file) : {};
+    const payload = globals.stdinJson
+      ? await withRunBudget(
+          readStdinJsonPayload(ctx, rest, globals.file),
+          budget.ms,
+          mappedTool,
+          globals.quiet,
+          cancelActiveStdinRead,
+        )
+      : {};
     applyFileSpecs(rest, globals.file, ctx);
-    expandFlagFiles(rest, ctx);
+    await withRunBudget(expandFlagFiles(rest, ctx), budget.ms, mappedTool, globals.quiet, cancelActiveStdinRead);
     const shape = schemaObjectShape(schema);
     if (globals.project) {
       if (shape && "projectPath" in shape) {

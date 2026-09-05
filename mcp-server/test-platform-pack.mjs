@@ -13,7 +13,7 @@ const { sessionPlatformPack } = await import("./dist/platform-pack/session.js");
 const { detectModProject } = await import("./dist/platform-pack/detect.js");
 const { activatePlatformPack } = await import("./dist/platform-pack/index.js");
 const { packWriteTestHooks } = await import("./dist/platform-pack/write.js");
-const { fabricRulesOverlay, inspectPack, coversMcVersion, FABRIC_SKILL_DONORS, wrapBanneredBody, parseFrontmatterMap, frontmatterDescription } = await import("./dist/platform-pack/catalog.js");
+const { fabricRulesOverlay, inspectPack, coversMcVersion, FABRIC_SKILL_DONORS, wrapBanneredBody, parseFrontmatterMap, frontmatterDescription, listLibSkillIndex } = await import("./dist/platform-pack/catalog.js");
 const { upsertHostMarker, beginMarker, entryBody, hostLayout } = await import("./dist/platform-pack/hosts.js");
 const { stripUtf8Bom } = await import("./dist/utils/text.js");
 
@@ -1282,6 +1282,17 @@ function assertHasRuleIds(s, want, label) {
   const w = (s.warnings ?? []).join(" | ");
   assert.ok(/与 Java 无关|Java 00–10 无关/.test(w), w);
   console.log("bedrock topics=08 is worldgen + Java-unrelated warning: ok");
+}
+
+{
+  // 原型键不得命中 Object.prototype：否则 groups 取到 Function，for...of 抛 TypeError
+  assert.deepEqual(listLibSkillIndex("constructor", "1.20.1", repo), [], "constructor 是原型键，不是平台名");
+  assert.deepEqual(listLibSkillIndex("toString", "1.20.1", repo), [], "toString 是原型键，不是平台名");
+  assert.deepEqual(listLibSkillIndex("__proto__", "1.20.1", repo), [], "__proto__ 是原型键，不是平台名");
+  // 正路不受影响
+  const forge = listLibSkillIndex("forge", "1.20.1", repo);
+  assert.ok(Array.isArray(forge), "forge 库 Skill 索引应为数组");
+  console.log(`listLibSkillIndex 原型键防护: ok（forge 命中 ${forge.length} 条）`);
 }
 
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;

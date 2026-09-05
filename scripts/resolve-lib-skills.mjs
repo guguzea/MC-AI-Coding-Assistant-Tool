@@ -114,7 +114,12 @@ function walkSkillDirs(groupDir) {
   if (!existsSync(groupDir)) return out;
   for (const name of readdirSync(groupDir)) {
     const dir = join(groupDir, name);
-    const st = statSync(dir);
+    let st;
+    try {
+      st = statSync(dir);
+    } catch {
+      continue;
+    }
     if (!st.isDirectory() || !/^mc-/.test(name)) continue;
     const skillFile = join(dir, "SKILL.md");
     if (existsSync(skillFile)) out.push(skillFile);

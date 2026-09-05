@@ -45,6 +45,7 @@ function writeUnlessExists(filePath, body) {
     console.log(`skip existing ${path.relative(ROOT, filePath)}（加 --force 才覆盖）`);
     return;
   }
+  fs.mkdirSync(path.dirname(filePath), { recursive: true }); // 只在真要写时建目录
   fs.writeFileSync(filePath, body, "utf8");
 }
 
@@ -124,7 +125,6 @@ function main() {
     process.exit(2);
   }
   const rulesDir = path.join(packDir, ".cursor", "rules");
-  fs.mkdirSync(rulesDir, { recursive: true });
   const docsTool =
     platform === "neoforge"
       ? "search_neoforge_docs"
@@ -146,9 +146,9 @@ function main() {
     );
   }
   const commonDir = path.join(packDir, "knowledge", "common");
-  fs.mkdirSync(commonDir, { recursive: true });
   const verified = path.join(commonDir, `verified-api-${ver}.md`);
   if (!fs.existsSync(verified)) {
+    fs.mkdirSync(commonDir, { recursive: true }); // 只在真要写时建目录
     fs.writeFileSync(
       verified,
       `# ${platform} ${ver} 已核实 API\n\n> draft。只记录已用 ${docsTool} / processed md 核对过的类名。\n`,

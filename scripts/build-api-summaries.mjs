@@ -82,8 +82,21 @@ function parseCatalog() {
   const entries = [];
   let depth = 0;
   let startIdx = -1;
+  // 层级扫描必须跳过字符串与注释（同 merge-verified-api 的 inStr 思路）：字面量里的 {} 与 URL 里的 // 不得改变层级
   for (let i = bracket; i < src.length; i++) {
     const c = src[i];
+    if (c === '"' || c === "'" || c === '`') {
+      i++;
+      while (i < src.length && !(src[i] === c && src[i - 1] !== '\\')) i++;
+      continue;
+    }
+    if (c === '/' && src[i + 1] === '/') { while (i < src.length && src[i] !== '\n') i++; continue; }
+    if (c === '/' && src[i + 1] === '*') {
+      i += 2;
+      while (i < src.length && !(src[i] === '*' && src[i + 1] === '/')) i++;
+      i++;
+      continue;
+    }
     if (c === '{') {
       if (depth === 0) startIdx = i;
       depth++;
@@ -99,6 +112,11 @@ function parseCatalog() {
             : [];
           const slug = /modrinthSlug:\s*"([^"]*)"/.exec(block)?.[1] ?? '';
           const role = /role:\s*"([^"]*)"/.exec(block)?.[1] ?? 'api';
+          // 目录别名只认 catalog 显式声明（无该字段 = 空，不再靠字符串前缀猜）
+          const aliasMatch = /dirAliases:\s*\[([^\]]*)\]/.exec(block);
+          const dirAliases = aliasMatch
+            ? [...aliasMatch[1].matchAll(/"([^"]+)"/g)].map((m) => m[1])
+            : [];
           // verifiedApi 下所有 packages 的并集
           const prefixes = [];
           const vaStart = block.indexOf('verifiedApi:');
@@ -107,7 +125,7 @@ function parseCatalog() {
               for (const pm of m[1].matchAll(/"([^"]+)"/g)) prefixes.push(pm[1]);
             }
           }
-          entries.push({ id, modIds, slug, role, prefixes: [...new Set(prefixes)] });
+          entries.push({ id, modIds, slug, role, prefixes: [...new Set(prefixes)], dirAliases });
         }
         startIdx = -1;
       }
@@ -183,26 +201,31 @@ function findModDir(entry, caches) {
       } catch { /* 不存在 */ }
     }
   }
-  // 前缀回退（如 modId=owo-lib 而缓存目录为 owo；仅精确匹配失败时使用）
+  // 前缀相似不等于同一库：只认 catalog 显式声明的 dirAliases（同前缀目录一律拒绝并说明）
+  const aliasNorm = new Set((entry.dirAliases ?? []).map(normalize));
+  const refused = new Set();
   for (const cacheRoot of caches) {
     const base = path.join(cacheRoot, 'decompiled-mods');
     let dirs = [];
     try { dirs = fs.readdirSync(base); } catch { continue; }
-    for (const cand of unique) {
-      if (cand.length < 3) continue;
-      const norm = normalize(cand);
-      for (const d of dirs) {
-        if (d.length < 3) continue;
-        const dn = normalize(d);
-        if (dn === norm) continue; // 精确匹配已处理
-        if (dn.startsWith(norm) || norm.startsWith(dn)) {
-          const p = path.join(base, d);
-          try {
-            if (fs.statSync(p).isDirectory()) return { dir: p, shard: path.basename(cacheRoot), name: d };
-          } catch { /* ignore */ }
-        }
+    for (const d of dirs) {
+      if (d.length < 3) continue;
+      const dn = normalize(d);
+      if (aliasNorm.has(dn)) {
+        const p = path.join(base, d);
+        try {
+          if (fs.statSync(p).isDirectory()) return { dir: p, shard: path.basename(cacheRoot), name: d };
+        } catch { /* ignore */ }
+      }
+      for (const cand of unique) {
+        if (cand.length < 3) continue;
+        const norm = normalize(cand);
+        if (dn !== norm && (dn.startsWith(norm) || norm.startsWith(dn))) { refused.add(d); break; }
       }
     }
+  }
+  if (refused.size > 0) {
+    console.log(`[前缀回退已拒] ${entry.id}: 同前缀目录 ${[...refused].join(', ')} 未声明为该条目的 dirAliases，不认领（防抢到别库目录）`);
   }
   return null;
 }
@@ -554,6 +577,12 @@ function cmpVersions(a, b) {
   return 0;
 }
 
+/** 条目 → 输出文件名主干（processLib 落盘与 main 统计必须同源） */
+function slugOf(entry) {
+  const raw = entry.slug || entry.id.replace(/^authored\/lib-/, '');
+  return raw.replace(/[^A-Za-z0-9._-]/g, '_');
+}
+
 function processLib(entry, opt) {
   const src = resolveSourceDirs(entry, opt);
   if (!src) {
@@ -573,8 +602,10 @@ function processLib(entry, opt) {
     } catch { /* ignore */ }
   }
   let versionDirs = [...verSet].sort((a, b) => cmpVersions(b, a));
+  const droppedVersions = [];
   if (versionDirs.length > opt.maxVersions) {
-    console.log(`[警告] ${entry.id}: 版本数 ${versionDirs.length} 超过上限 ${opt.maxVersions}，截断`);
+    droppedVersions.push(...versionDirs.slice(opt.maxVersions));
+    console.log(`[警告] ${entry.id}: 版本数 ${versionDirs.length} 超过上限 ${opt.maxVersions}，丢弃 ${droppedVersions.length} 个版本`);
     versionDirs = versionDirs.slice(0, opt.maxVersions);
   }
   const prefixes = entry.prefixes.length > 0 ? entry.prefixes : null;
@@ -583,6 +614,8 @@ function processLib(entry, opt) {
   let classCount = 0;
   let methodCount = 0;
   let truncated = false;
+  let truncatedVersions = 0;
+  let capsHit = false;
 
   for (const ver of versionDirs) {
     const fileSet = new Set();
@@ -637,7 +670,7 @@ function processLib(entry, opt) {
         methods[fqn] = m;
       }
     }
-    if (verTruncated) truncated = true;
+    if (verTruncated) { truncated = true; truncatedVersions++; }
     versions[ver] = {
       packages: entry.prefixes,
       classes,
@@ -651,14 +684,20 @@ function processLib(entry, opt) {
       break;
     }
   }
+  let skippedVersions = 0;
   if (capsHit && versionDirs.length > Object.keys(versions).length) {
     for (const ver of versionDirs.slice(Object.keys(versions).length)) {
       versions[ver] = { packages: entry.prefixes, classes: [], methods: {}, sampleCount: 0, skipped: true };
+      skippedVersions++;
     }
   }
+  for (const ver of droppedVersions) {
+    versions[ver] = { packages: entry.prefixes, classes: [], methods: {}, sampleCount: 0, skipped: true };
+    skippedVersions++;
+  }
+  if (skippedVersions > 0) truncated = true;
 
-  const slugRaw = entry.slug || entry.id.replace(/^authored\/lib-/, '');
-  const slug = slugRaw.replace(/[^A-Za-z0-9._-]/g, '_');
+  const slug = slugOf(entry);
   const result = {
     slug,
     modId: entry.modIds[0] || '',
@@ -670,9 +709,15 @@ function processLib(entry, opt) {
     classCount,
     methodCount,
     ...(truncated ? { truncated: true } : {}),
+    ...(truncatedVersions ? { truncatedVersions } : {}),
+    ...(skippedVersions ? { skippedVersions } : {}),
+    ...(droppedVersions.length ? { droppedVersions } : {}),
   };
+  const shortfall = truncated
+    ? ` | [截断] 版本内截断 ${truncatedVersions}，未提取 ${skippedVersions}（上限跳过 ${skippedVersions - droppedVersions.length} + maxVersions 丢弃 ${droppedVersions.length}）`
+    : '';
   if (!opt.write) {
-    console.log(`[dry-run] ${slug} | 版本 ${Object.keys(versions).length} | 类 ${classCount} | 方法 ${methodCount}（加 --write 才落盘）`);
+    console.log(`[dry-run] ${slug} | 版本 ${Object.keys(versions).length} | 类 ${classCount} | 方法 ${methodCount}${shortfall}（加 --write 才落盘）`);
     return result;
   }
   fs.writeFileSync(
@@ -683,10 +728,10 @@ function processLib(entry, opt) {
   const ms = Date.now() - libStarted;
   const verCount = Object.keys(versions).length;
   console.log(
-    `[完成] ${slug} | id=${entry.id} | modId=${result.modId} | source=${src.shard}/${src.dirs.join('+')}${src.merged ? ' [合并]' : ''} | 版本 ${verCount} | 类 ${classCount} | 方法 ${methodCount}${truncated ? ' | [截断]' : ''} | ${ms}ms`,
+    `[完成] ${slug} | id=${entry.id} | modId=${result.modId} | source=${src.shard}/${src.dirs.join('+')}${src.merged ? ' [合并]' : ''} | 版本 ${verCount} | 类 ${classCount} | 方法 ${methodCount}${shortfall} | ${ms}ms`,
   );
   for (const [ver, v] of Object.entries(versions)) {
-    console.log(`    ${ver}: 类 ${v.classes.length} 方法 ${Object.values(v.methods).reduce((a, m) => a + m.length, 0)} 样本 ${v.sampleCount}${v.fileTruncated ? ' (文件截断)' : ''}`);
+    console.log(`    ${ver}: 类 ${v.classes.length} 方法 ${Object.values(v.methods).reduce((a, m) => a + m.length, 0)} 样本 ${v.sampleCount}${v.skipped ? ' (上限跳过，未提取)' : ''}${v.truncated ? ' (类/方法上限截断)' : ''}${v.fileTruncated ? ' (文件截断)' : ''}`);
   }
   return result;
 }
@@ -719,22 +764,37 @@ function main() {
   let ok = 0;
   let totalClasses = 0;
   let totalMethods = 0;
+  let truncatedLibs = 0;
+  let skippedVersionTotal = 0;
+  let truncatedVersionTotal = 0;
   for (const entry of filtered) {
     const r = processLib(entry, opt);
-    if (r) { ok++; totalClasses += r.classCount; totalMethods += r.methodCount; }
+    if (r) {
+      ok++; totalClasses += r.classCount; totalMethods += r.methodCount;
+      if (r.truncated) truncatedLibs++;
+      skippedVersionTotal += r.skippedVersions ?? 0;
+      truncatedVersionTotal += r.truncatedVersions ?? 0;
+    }
   }
-  // 产物大小
+  // 产物大小：只统计本次库清单引用的文件，游离文件另报（否则改名/删条目后统计永远偏高）
+  const referenced = new Set(entries.map((e) => `${slugOf(e)}.json`));
   let totalBytes = 0;
   let fileCount = 0;
+  const orphans = [];
   if (opt.write && fs.existsSync(opt.out)) {
     for (const f of fs.readdirSync(opt.out)) {
       const p = path.join(opt.out, f);
-      try { totalBytes += fs.statSync(p).size; fileCount++; } catch { /* ignore */ }
+      let size = 0;
+      try { size = fs.statSync(p).size; } catch { continue; }
+      if (referenced.has(f)) { totalBytes += size; fileCount++; }
+      else orphans.push(f);
     }
   }
   console.log(`\n===== 汇总 =====`);
   console.log(`成功 ${ok} / 处理 ${filtered.length} (共 ${entries.length} 条)`);
   console.log(`总类 ${totalClasses} | 总方法 ${totalMethods}`);
+  console.log(`截断库 ${truncatedLibs} | 版本内截断 ${truncatedVersionTotal} | 未提取版本 ${skippedVersionTotal}（上限/条数截断，详见各 JSON 的 skipped 标记）`);
+  if (orphans.length > 0) console.log(`游离产物文件 ${orphans.length} 个（未被库清单引用，未计入统计）: ${orphans.join(', ')}`);
   console.log(`产物文件 ${fileCount} 个 | 合计 ${(totalBytes / 1024 / 1024).toFixed(2)} MB`);
 }
 
