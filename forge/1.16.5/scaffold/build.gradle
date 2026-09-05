@@ -12,8 +12,10 @@ base {
     archivesName = mod_id
 }
 
-// Forge 1.16.5 推荐使用 Java 11（原生支持），Java 16 也可兼容
-java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+// 官方 1.16.5-36.2.34 MDK 的 build.gradle:19 写的就是 JavaLanguageVersion.of(8)
+// （其注释："Mojang ships Java 8 to end users, so your mod should target Java 8."）；
+// 文档同调：gettingstarted.md:14、primer_1_16_5.md:614「You must only use Java 8 code」
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 // Parchment mappings — 带参数名和 javadoc
 // 官方源：https://maven.parchmentmc.org

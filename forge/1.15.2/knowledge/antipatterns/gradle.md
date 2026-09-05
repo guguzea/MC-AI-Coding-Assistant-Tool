@@ -91,12 +91,12 @@ modId="examplemod"   # 全部小写
 
 ```groovy
 // ❌ 遗漏
-// Minecraft 1.15.2 需要 Java 11
+// Minecraft 1.15.2 要求 Java 8（官方 gettingstarted.md:14「Minecraft and MinecraftForge both compile against Java 8」）
 
 // ✅ 必须配置
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
+        languageVersion = JavaLanguageVersion.of(8)
     }
 }
 ```

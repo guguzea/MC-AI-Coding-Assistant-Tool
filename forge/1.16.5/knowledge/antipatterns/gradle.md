@@ -112,10 +112,11 @@ modId="examplemod"   # 全部小写
 
 ```groovy
 // ❌ 遗漏
-// Minecraft 1.16.5 推荐使用 Java 11
+// Minecraft 1.16.5：官方口径是「按 Java 8 编译、只能用 Java 8 代码」
+// （gettingstarted.md:14 / primer_1_16_5.md:614）
 
-// ✅ 必须配置
-java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+// ✅ 必须配置：官方 1.16.5-36.2.34 MDK build.gradle:19 即 of(8)
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 ```
 
 ---
@@ -146,7 +147,7 @@ repositories {
 **症状：** Mixin 无法注入，编译或运行时出错
 
 ```groovy
-// ❌ 错误（Java 11/16 项目使用 JAVA_17）
+// ❌ 错误（Java 8 项目使用 JAVA_17）
 "compatibilityLevel": "JAVA_17"
 
 // ✅ 正确

@@ -659,6 +659,69 @@ async function testFabricWikiSourceHandoff() {
   assert.match(String(ghost.error.hint), /search_fabric_docs/, "真·假 id 必须保持原 hint");
 }
 
+/**
+ * 方案 B：generic get_doc_* 的 fabric 分支必须能解出 search 披露的每个 id。
+ * 判据一律取自 results[].source（不写死版本清单）：说 fabric-wiki 就要带兜底披露，
+ * 说 fabric-docs 就要逐字保持原样（docs 树命中恒胜，这是用户定的边界）。
+ *
+ * 「docs 恒胜」用正文 URL 的宿主来证，不用 flag：实测两树没有任何一个 id 重合
+ * （fabric-wiki 每档固定只有 7 条），所以构造不出「同 id 两树都在」的用例；
+ * docs 档能解出 github raw 的正文就说明回退分支根本没跑。
+ */
+async function testGenericFabricWikiFallback() {
+  const list = parseToolText(await listVersions({ platform: "fabric" }));
+  const versions = list.versions ?? [];
+  assert.ok(versions.length >= 14, `fabric 文档版本应 ≥14，实得 ${versions.length}`);
+  let wikiLegs = 0;
+  let docsLegs = 0;
+
+  for (const ver of versions) {
+    const search = parseToolText(await searchDocs({ query: "item", version: ver, platform: "fabric" }));
+    const hit = search.results?.[0];
+    assert.ok(hit?.id, `${ver} generic search 应命中: ${JSON.stringify(search).slice(0, 240)}`);
+    const full = parseToolText(await getDocFull({ id: hit.id, version: ver, platform: "fabric" }));
+    assert.ok(
+      (full.content || "").length > 0,
+      `${ver} generic get_doc_full 应解出 search 给的 id: ${JSON.stringify(full.error ?? {}).slice(0, 200)}`,
+    );
+    const sum = parseToolText(await getDocSummary({ id: hit.id, version: ver, platform: "fabric" }));
+    assert.ok(sum.firstParagraph || sum.sections?.length, `${ver} generic summary: ${JSON.stringify(sum.error ?? {}).slice(0, 200)}`);
+    const rel = parseToolText(await getDocRelated({ id: hit.id, version: ver, platform: "fabric", limit: 3 }));
+    assert.ok(Array.isArray(rel), `${ver} generic related 根必须是数组，实得 ${JSON.stringify(rel).slice(0, 160)}`);
+    const urls = `${full.meta?.url ?? ""} ${sum.url ?? ""}`;
+
+    if (hit.source === "fabric-wiki") {
+      wikiLegs++;
+      assert.match(urls, /fabricmc\.net\/wiki\//, `${ver} 应由 fabric-wiki 供正文: ${urls}`);
+      for (const [leg, payload] of [["full", full], ["summary", sum]]) {
+        assert.equal(payload.source, "fabric-wiki", `${ver} ${leg} 兜底要披露 source`);
+        assert.equal(payload.wikiIsCurrentSite, true, `${ver} ${leg} 兜底要披露 wikiIsCurrentSite`);
+        assert.match(String(payload.warning), /现行/, `${ver} ${leg} 兜底必须带现行站警告`);
+      }
+      assert.ok(rel.length > 0, `${ver} wiki related 应有条目`);
+      assert.equal(rel[0].source, "fabric-wiki", `${ver} wiki related 逐条披露 source`);
+    } else {
+      docsLegs++;
+      assert.match(urls, /raw\.githubusercontent\.com\/FabricMC\/fabric-docs/, `${ver} 应由 fabric-docs 供正文: ${urls}`);
+      assert.equal(full.source, undefined, `${ver} docs 命中不得出现兜底披露: ${JSON.stringify(full).slice(0, 200)}`);
+      assert.equal(full.wikiIsCurrentSite, undefined, `${ver} docs 命中不得带 wikiIsCurrentSite`);
+      assert.equal(sum.wikiIsCurrentSite, undefined, `${ver} docs summary 不得带 wikiIsCurrentSite`);
+      assert.doesNotMatch(String(sum.warning), /现行/, `${ver} docs summary 不得带现行站警告`);
+    }
+  }
+  assert.ok(wikiLegs >= 7 && docsLegs >= 7, `两态都要覆盖：wiki 兜底 ${wikiLegs} 档 / docs ${docsLegs} 档`);
+
+  // 两树都 miss → 保持旧 hint（1.20.1 有 wiki 树；26.1.2 连 wiki 树都没有）
+  for (const [ver, id] of [["1.20.1", "1.20.1/definitely_not_a_page"], ["26.1.2", "nope_xyz"]]) {
+    const ghost = parseToolText(await getDocFull({ id, version: ver, platform: "fabric" }));
+    assert.equal(ghost.error?.code, "DOC_NOT_FOUND", `${ver} ${JSON.stringify(ghost.error)}`);
+    assert.match(String(ghost.error.hint), /查询正确的页面 ID/, `${ver} 两树都 miss 必须保持旧 hint`);
+  }
+
+  const noTree = parseToolText(await getDocFull({ id: "tutorial_items", version: "1.21.5", platform: "fabric" }));
+  assert.equal(noTree.error?.code, "VERSION_NOT_FOUND", `本档无树不得回退: ${JSON.stringify(noTree).slice(0, 200)}`);
+}
+
 async function testSandboxAssertWritablePath() {
   const root = mkdtempSync(join(tmpdir(), "mc-skill-sandbox-"));
   const secret = mkdtempSync(join(tmpdir(), "mc-skill-secret-"));
@@ -5057,6 +5120,16 @@ function scanScaffoldWrappers(root, ignoredProbe) {
     if (countByte(gw, 10) === 0) problems.push(`${key}: gradlew 为空`);
     if (countByte(bat, 13) === 0 || countByte(bat, 13) !== countByte(bat, 10)) problems.push(`${key}: gradlew.bat 非纯 CRLF`);
     if (/^distributionUrl=file:/m.test(propsText)) problems.push(`${key}: distributionUrl 指向本地路径`);
+    // 缓存位置键：官方 wrapper 任务只会写 GRADLE_USER_HOME + wrapper/dists；出现别的值说明 props 被手改过
+    // （本仓 fabric/1.21.1 曾写 zipStorePath=gradle/wrapper，会把发行包缓存到非标准位置且不与其他工程共享）
+    for (const [k, want] of [
+      ["distributionBase", "GRADLE_USER_HOME"], ["zipStoreBase", "GRADLE_USER_HOME"],
+      ["distributionPath", "wrapper/dists"], ["zipStorePath", "wrapper/dists"],
+    ]) {
+      const got = propsText.match(new RegExp(`^${k}=(.*)$`, "m"))?.[1];
+      if (got !== undefined && got !== want)
+        problems.push(`${key}: props ${k}=${got} != 官方 wrapper 任务产物 ${want}`);
+    }
     // 分发用的脚手架，jar 被 .gitignore 吃掉 = clone 后必然缺（本仓曾真发生过一次）
     if (isIgnored(relative(root, files.jar).split(sep).join("/")) === true)
       problems.push(`${key}: jar 处于 gitignored 状态（clone 后必然缺失）`);
@@ -5105,6 +5178,22 @@ function diffWrapperPins(table, prov, byVersion, gaps = WRAPPER_VERSION_GAPS) {
   // 孤儿钉值：表里钉了某版本却没有任何 scaffold 声明它 → 该钉值失去依据（要么真去补档，要么删表项）
   for (const ver of Object.keys(table)) {
     if (!(byVersion[ver] ?? []).length) problems.push(`${ver}: 钉值表有此档但实测无 scaffold 声明它（孤儿钉值）`);
+  }
+  // 阶段③引导实测：每个钉值版本必须至少有一档真跑过 gradlew --version 且 rc=0；行里的档必须在该版本 usedBy 内
+  const boot = prov?.boot;
+  if (!boot || !Array.isArray(boot.rows) || boot.rows.length === 0) {
+    problems.push("boot: 缺少 boot.rows（gradlew --version 离线引导实测记录，见 method.boot）");
+  } else {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(boot.measuredOn)))
+      problems.push(`boot: measuredOn 不是 YYYY-MM-DD → ${boot.measuredOn}`);
+    const booted = new Set(boot.rows.filter((r) => r?.rc === 0).map((r) => r.gradle));
+    for (const ver of Object.keys(jars))
+      if (!booted.has(ver)) problems.push(`${ver}: 没有任何 scaffold 真跑通 gradlew --version rc=0（引导未实测）`);
+    for (const r of boot.rows) {
+      const used = Array.isArray(jars[r?.gradle]?.usedBy) ? jars[r.gradle].usedBy : [];
+      if (!used.includes(r?.pack))
+        problems.push(`boot ${r?.pack}: 登记了 gradle=${r?.gradle} 的引导行，但该版本 usedBy 不含这档`);
+    }
   }
   const jsonGaps = [...(prov?.gaps?.wrapperVersionUndeclared ?? [])].sort().join(",");
   const codeGaps = [...gaps].sort().join(",");
@@ -5208,6 +5297,11 @@ async function testScaffoldWrappers() {
           const rel = "fabric/1.17.1/scaffold/gradle/wrapper/gradle-wrapper.properties";
           wr(rel, read(rel).replace("gradle-7.4.2-bin.zip", "gradle-7.5-bin.zip"));
         } },
+      { name: "props 缓存路径被改", needle: "props zipStorePath", key: "fabric/1.20.1",
+        mutate: ({ wr, read }) => {
+          const rel = "fabric/1.20.1/scaffold/gradle/wrapper/gradle-wrapper.properties";
+          wr(rel, read(rel).replace("zipStorePath=wrapper/dists", "zipStorePath=gradle/wrapper"));
+        } },
       { name: "空洞档半套", needle: "没有已声明版本却存在", key: "fabric/26.1.2",
         mutate: ({ wr }) => wr("fabric/26.1.2/scaffold/gradlew", "#!/bin/sh\n") },
       { name: "登记过期", needle: "登记过期", key: "fabric/1.21.8",
@@ -5251,9 +5345,14 @@ async function testScaffoldWrappers() {
       { name: "空洞登记漂移", needle: "JSON gaps=", mutate: ({ prov: p }) => { p.gaps.wrapperVersionUndeclared = p.gaps.wrapperVersionUndeclared.filter((x) => x !== "fabric/1.21.4"); } },
       { name: "measuredOn 过期格式", needle: "measuredOn 不是", mutate: ({ prov: p }) => { p.jars["8.4"].measuredOn = "9-2"; } },
       { name: "孤儿钉值", needle: "孤儿钉值", mutate: ({ table, byVersion: v }) => { table["9.9.9"] = { ...table["8.4"] }; delete v["9.2.1"]; } },
+      // ↓ 阶段③引导实测记录本身必须可证伪（不是写在 note 里的散文）
+      { name: "引导记录被删", needle: "缺少 boot.rows", mutate: ({ prov: p }) => { delete p.boot; } },
+      { name: "引导漏整个版本", needle: "7.6: 没有任何 scaffold 真跑通", mutate: ({ prov: p }) => { p.boot.rows = p.boot.rows.filter((r) => r.gradle !== "7.6"); } },
+      { name: "引导行 rc 非 0", needle: "8.5: 没有任何 scaffold 真跑通", mutate: ({ prov: p }) => { for (const r of p.boot.rows) if (r.gradle === "8.5") r.rc = 1; } },
+      { name: "引导行档对不上", needle: "usedBy 不含这档", mutate: ({ prov: p }) => { p.boot.rows.push({ pack: "fabric/9.9.9", gradle: "8.5", rc: 0 }); } },
     ];
     for (const c of pinCases) pinPoison(c.name, c.needle, c.mutate);
-    assert.equal(new Set(pinCases.map((c) => c.needle)).size, 6, "6 种内存注入应各报一次");
+    assert.equal(new Set(pinCases.map((c) => c.needle)).size, 10, "10 种内存注入应各报一次");
     assert.deepEqual(diffWrapperPins(WRAPPER_JARS, prov, byVersion), [], "投毒后基线必须仍然干净");
 
     // gitignore 判定本身必须两向都成立（否则「jar 被忽略」这条断言不可证伪）
@@ -6745,6 +6844,7 @@ await testPortProjectRejectsBadVersionToken();
 await testYarnShortNameAndMojangHeuristic();
 await testFabricClassPrefixSearch();
 await testFabricWikiSourceHandoff();
+await testGenericFabricWikiFallback();
 await testSandboxAssertWritablePath();
 await testNeoForge1201ForgeCompat();
 await testArchitecturyDryRunDoesNotWrite();

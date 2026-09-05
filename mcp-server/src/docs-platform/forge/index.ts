@@ -22,7 +22,8 @@ import {
   type IDocStore,
   type Platform,
 } from "../store.js";
-import { searchFabricDocs } from "../fabric/index.js";
+import { searchFabricDocs, FABRIC_WIKI_CURRENT_SITE_WARNING } from "../fabric/index.js";
+import { createFabricDocStore } from "../fabric/store.js";
 import { resolveDataDir } from "../../utils/path.js";
 import {
   asPlatformDataMissingResult,
@@ -134,6 +135,38 @@ function getGenericStore(platform: Platform): IDocStore {
     _genericStoreCache.set(cacheKey, s);
   }
   return s;
+}
+
+/**
+ * generic get_doc_* 的 fabric 分支：fabric-docs 树里有该 ID 就返回 docs，
+ * 只有 miss（即 handleError 判成 DOC_NOT_FOUND 的那种）才改查现行 fabric-wiki。
+ *
+ * - 两树都没有 → 原样抛回 docs 的错误，坏 id 的 envelope 与加这段之前逐字相同。
+ * - 版本无树（VersionNotFoundError，带 availableVersions）不触发回退：按根
+ *   AGENTS.md「无树不 fallback」处理，不能拿现行站冒充该版本。
+ * - 调用方必须把 fromFabricWiki 披露进结果（source + 现行站警告），否则就是
+ *   search_fabric_docs 那条「兜底不告诉你是哪个源」的老毛病。
+ */
+async function loadGenericDoc<T>(
+  platform: Platform,
+  version: string,
+  load: (store: IDocStore) => T | Promise<T>,
+): Promise<{ value: T; fromFabricWiki: boolean }> {
+  const primary = getGenericStore(platform);
+  if (platform !== "fabric") return { value: await load(primary), fromFabricWiki: false };
+  try {
+    return { value: await load(primary), fromFabricWiki: false };
+  } catch (e) {
+    // 用 handleError 判定 DOC_NOT_FOUND 的同一个谓词：./store.js 那个 DocNotFoundError
+    // 是 Forge 的类，fabric store 抛的是它自己的同名类，instanceof 永远不匹配。
+    if (!isDocNotFoundLike(e)) throw e;
+    try {
+      const wiki = createFabricDocStore(version, "fabric-wiki", resolvePlatformDataDir("fabric"));
+      return { value: await load(wiki), fromFabricWiki: true };
+    } catch {
+      throw e;
+    }
+  }
 }
 
 // ── 工具 0：list_forge_versions（版本列表）──────────────────────────────────
@@ -987,7 +1020,11 @@ export async function getDocSummary(
       return { content: [{ type: "text", text: JSON.stringify(primerSummaryPayload(primer), null, 2) }] };
     }
     const store = getGenericStore(platform);
-    const result = store.loadSummary(args.id, args.version);
+    const { value: result, fromFabricWiki } = await loadGenericDoc(
+      platform,
+      args.version,
+      (s) => s.loadSummary(args.id, args.version),
+    );
     const extra =
       platform === "forge" || platform === "neoforge"
         ? (store as { describeVersionResolution?: (v: string) => VersionResolutionExtra }).describeVersionResolution?.(args.version)
@@ -995,8 +1032,13 @@ export async function getDocSummary(
     const wikiWarn = thinLoaderWikiWarning(platform, [result]);
     const payload = withGetDocFallback(args.version, extra, {
       ...result,
-      warning: joinSearchWarnings(extra?.warning, wikiWarn),
-      ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
+      warning: joinSearchWarnings(
+        extra?.warning,
+        wikiWarn,
+        fromFabricWiki ? FABRIC_WIKI_CURRENT_SITE_WARNING : undefined,
+      ),
+      ...(wikiWarn || fromFabricWiki ? { wikiIsCurrentSite: true } : {}),
+      ...(fromFabricWiki ? { source: "fabric-wiki" } : {}),
       ...(platform === "neoforge" && extra?.sourcePlatform === "forge"
         ? {
           forgeCompatible: true,
@@ -1058,10 +1100,10 @@ export async function getDocFull(
       return { content: [{ type: "text", text: JSON.stringify(primerFullPayload(primer, true), null, 2) }] };
     }
     const store = getGenericStore(platform);
-    const result = await store.loadFullDoc(
-      args.id,
+    const { value: result, fromFabricWiki } = await loadGenericDoc(
+      platform,
       args.version,
-      args.highlight_key ?? true,
+      (s) => s.loadFullDoc(args.id, args.version, args.highlight_key ?? true),
     );
     const extra =
       platform === "forge" || platform === "neoforge"
@@ -1072,8 +1114,13 @@ export async function getDocFull(
     ]);
     const payload = withGetDocFallback(args.version, extra, {
       ...result,
-      warning: joinSearchWarnings(extra?.warning, wikiWarn),
-      ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
+      warning: joinSearchWarnings(
+        extra?.warning,
+        wikiWarn,
+        fromFabricWiki ? FABRIC_WIKI_CURRENT_SITE_WARNING : undefined,
+      ),
+      ...(wikiWarn || fromFabricWiki ? { wikiIsCurrentSite: true } : {}),
+      ...(fromFabricWiki ? { source: "fabric-wiki" } : {}),
       ...(platform === "neoforge" && extra?.sourcePlatform === "forge"
         ? {
           forgeCompatible: true,
@@ -1122,18 +1169,22 @@ export async function getDocRelated(
       return getQuiltDocRelated({ id: args.id, version: args.version, limit: args.limit });
     }
     const store = getGenericStore(platform);
-    const result = store.getRelatedDocs(
-      args.id,
+    const { value: result, fromFabricWiki } = await loadGenericDoc(
+      platform,
       args.version,
-      args.limit ?? 5,
+      (s) => s.getRelatedDocs(args.id, args.version, args.limit ?? 5),
     );
     const extra =
       platform === "forge" || platform === "neoforge"
         ? (store as { describeVersionResolution?: (v: string) => { warning?: string } }).describeVersionResolution?.(args.version)
         : undefined;
-    const payload = extra?.warning
+    const base = extra?.warning
       ? (Array.isArray(result) ? result.map((h) => ({ ...h, warning: extra.warning })) : result)
       : result;
+    // 成功时 JSON 根仍是数组（description 里写死的合同），兜底来源逐条披露。
+    const payload = fromFabricWiki
+      ? base.map((h) => ({ ...h, source: "fabric-wiki", warning: FABRIC_WIKI_CURRENT_SITE_WARNING }))
+      : base;
     return { content: [{ type: "text", text: JSON.stringify(payload, null, 2) }] };
   } catch (e) {
     return handleError(e, platform);

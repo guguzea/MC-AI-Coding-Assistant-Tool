@@ -9,7 +9,430 @@
     "lineEndings": "gradlew 实测 CR=0（LF-only），gradlew.bat 实测 CR=LF=行数（CRLF），与 git ls-files --eol 基线一致，故原样复制不做行尾转换。git 模式 100644（gradlew 无执行位）。",
     "notVersionBound": "wrapper 产物不随版本唯一：实测 7.2 与 7.3.3 全等（jar 33ad4583 / gradlew f96a7575）、7.6 与 7.6.1 全等（jar c5a643cf / gradlew 638c2862 / bat 8e327fcb）、8.5 与 8.6 jar 全等（d3b261c2）、8.4 / 8.5 / 8.6 的 gradlew 同为 fc977a94。所以钉值语义是「props 声明版本 → 该版本发行包 wrapper 任务产物字节」，跨版本字节相等不是矛盾；判定按字节集合相等，不按 jar 内嵌版本字符串。",
     "provenanceFields": "每档 gradlew / gradlew.bat / jar 都钉 sha256 + size（S13 门禁 scanScaffoldWrappers 逐档实测三者字节必须等于该声明版本的登记值）；measuredOn = 该档字节最后一次与官方发行包产物对证的日期。",
-    "recheck": "2026-09-04 复核：仓内 10 档 fabric 现存三件套字节与本轮按同一流程生成的产物逐档全等（1.14.4=6.9.4、1.17.1=7.4.2、1.16.5=7.6.1、1.18.2/1.19.4/1.20.1=8.4、1.21.3=8.6、1.20.4=8.8、1.21.1=8.10、1.21.11=9.5.1），故既有档只补写 sha256 字段、未改盘。"
+    "recheck": "2026-09-04 复核：仓内 10 档 fabric 现存三件套字节与本轮按同一流程生成的产物逐档全等（1.14.4=6.9.4、1.17.1=7.4.2、1.16.5=7.6.1、1.18.2/1.19.4/1.20.1=8.4、1.21.3=8.6、1.20.4=8.8、1.21.1=8.10、1.21.11=9.5.1），故既有档只补写 sha256 字段、未改盘。",
+    "boot": "阶段③「引导」实测：把整个 scaffold 拷到仓外（D:\\mc-skill-temp\\tmp\\w56\\boot__<档>），按该档 props 自己的 distributionUrl / distributionBase / distributionPath / zipStorePath 把发行包缓存摆到 GRADLE_USER_HOME 对应目录（哈希目录名 = base36(MD5(distributionUrl))，2026-09-05 用 node 现算并与 12 个已解包目录名逐个对上），再 sh gradlew --version --offline 看退出码与横幅版本。要点：①未 seed 的版本会在 JVM 内报 PKIX path building failed —— curl 信 Windows 证书库、JDK 信任库不信 services.gradle.org 的证书链，与网络通断无关；②4.9–7.6.1 用 PATH 上的 JRE 1.8.0_431，8.4+ 必须 JAVA_HOME 指 JDK 17；③boot 记录是「三件套能引导发行包」的证明，不等于 gradlew build 跑通（buildVerified 仍按各自 pack.meta.json 的诚实声明）。",
+    "propsTemplate": "props 键集模板：用该版本自己的 Gradle 离线跑 wrapper 任务，取它写出的 gradle/wrapper/gradle-wrapper.properties 键集（2026-09-05，14/14 版本全测）。networkTimeout 从 7.6 起才有、validateDistributionUrl 从 8.4 起才有、retries/retryBackOffMs 到 9.5.1 才出现；键集与版本不匹配 = props 被更高版本 Gradle 重写过（多余键该版本 wrapper 类不读，属惰性噪声，不改变行为）。缓存位置键（distributionBase/distributionPath/zipStoreBase/zipStorePath）由 S13 scanScaffoldWrappers 强制等于官方产物值，因为它们真的会改引导落地路径。"
+  },
+  "boot": {
+    "measuredOn": "2026-09-05",
+    "note": "29 档全 rc=0：29 个有 props 的 scaffold 各自用自己的 props + 三件套离线引导成功。14 个钉值版本 → 11 个不同 jar 字节类（7.2≡7.3.3、7.6≡7.6.1、8.5≡8.6），11 类全部被至少一行覆盖，故无「钉了字节却没引导过」的版本。门禁 diffWrapperPins 校三件事：boot.rows 存在、每个钉值版本都有 rc=0 行、每行的档在该版本 usedBy 内。",
+    "rows": [
+      {
+        "pack": "fabric/1.14.4",
+        "gradle": "6.9.4",
+        "jvm": 8,
+        "rc": 0,
+        "jarSha8": "e996d452",
+        "gradleBanner": "6.9.4"
+      },
+      {
+        "pack": "fabric/1.16.5",
+        "gradle": "7.6.1",
+        "jvm": 8,
+        "rc": 0,
+        "jarSha8": "c5a643cf",
+        "gradleBanner": "7.6.1"
+      },
+      {
+        "pack": "fabric/1.17.1",
+        "gradle": "7.4.2",
+        "jvm": 8,
+        "rc": 0,
+        "jarSha8": "575098db",
+        "gradleBanner": "7.4.2"
+      },
+      {
+        "pack": "fabric/1.18.2",
+        "gradle": "8.4",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "0336f591",
+        "gradleBanner": "8.4"
+      },
+      {
+        "pack": "fabric/1.19.4",
+        "gradle": "8.4",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "0336f591",
+        "gradleBanner": "8.4"
+      },
+      {
+        "pack": "fabric/1.20.1",
+        "gradle": "8.4",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "0336f591",
+        "gradleBanner": "8.4"
+      },
+      {
+        "pack": "fabric/1.20.4",
+        "gradle": "8.8",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "cb0da675",
+        "gradleBanner": "8.8"
+      },
+      {
+        "pack": "fabric/1.21.1",
+        "gradle": "8.10",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "2db75c40",
+        "gradleBanner": "8.10"
+      },
+      {
+        "pack": "fabric/1.21.11",
+        "gradle": "9.5.1",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "497c8c2a",
+        "gradleBanner": "9.5.1"
+      },
+      {
+        "pack": "fabric/1.21.3",
+        "gradle": "8.6",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "d3b261c2",
+        "gradleBanner": "8.6"
+      },
+      {
+        "pack": "forge/1.12.2",
+        "gradle": "4.9",
+        "jvm": 8,
+        "rc": 0,
+        "jarSha8": "e55e7e47",
+        "gradleBanner": "4.9"
+      },
+      {
+        "pack": "forge/1.13.2",
+        "gradle": "4.9",
+        "jvm": 8,
+        "rc": 0,
+        "jarSha8": "e55e7e47",
+        "gradleBanner": "4.9"
+      },
+      {
+        "pack": "forge/1.14.4",
+        "gradle": "4.9",
+        "jvm": 8,
+        "rc": 0,
+        "jarSha8": "e55e7e47",
+        "gradleBanner": "4.9"
+      },
+      {
+        "pack": "forge/1.15.2",
+        "gradle": "7.3.3",
+        "jvm": 8,
+        "rc": 0,
+        "jarSha8": "33ad4583",
+        "gradleBanner": "7.3.3"
+      },
+      {
+        "pack": "forge/1.16.5",
+        "gradle": "7.6",
+        "jvm": 8,
+        "rc": 0,
+        "jarSha8": "c5a643cf",
+        "gradleBanner": "7.6"
+      },
+      {
+        "pack": "forge/1.17.1",
+        "gradle": "7.2",
+        "jvm": 8,
+        "rc": 0,
+        "jarSha8": "33ad4583",
+        "gradleBanner": "7.2"
+      },
+      {
+        "pack": "forge/1.18.2",
+        "gradle": "7.6",
+        "jvm": 8,
+        "rc": 0,
+        "jarSha8": "c5a643cf",
+        "gradleBanner": "7.6"
+      },
+      {
+        "pack": "forge/1.19.4",
+        "gradle": "8.8",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "cb0da675",
+        "gradleBanner": "8.8"
+      },
+      {
+        "pack": "forge/1.20.1",
+        "gradle": "8.5",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "d3b261c2",
+        "gradleBanner": "8.5"
+      },
+      {
+        "pack": "forge/1.20.4",
+        "gradle": "8.5",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "d3b261c2",
+        "gradleBanner": "8.5"
+      },
+      {
+        "pack": "neoforge/1.20.4",
+        "gradle": "9.2.1",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "423cb469",
+        "gradleBanner": "9.2.1"
+      },
+      {
+        "pack": "neoforge/1.20.6",
+        "gradle": "9.2.1",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "423cb469",
+        "gradleBanner": "9.2.1"
+      },
+      {
+        "pack": "neoforge/1.21.1",
+        "gradle": "9.2.1",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "423cb469",
+        "gradleBanner": "9.2.1"
+      },
+      {
+        "pack": "neoforge/1.21.10",
+        "gradle": "9.2.1",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "423cb469",
+        "gradleBanner": "9.2.1"
+      },
+      {
+        "pack": "neoforge/1.21.11",
+        "gradle": "9.2.1",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "423cb469",
+        "gradleBanner": "9.2.1"
+      },
+      {
+        "pack": "neoforge/1.21.3",
+        "gradle": "9.2.1",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "423cb469",
+        "gradleBanner": "9.2.1"
+      },
+      {
+        "pack": "neoforge/1.21.5",
+        "gradle": "9.2.1",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "423cb469",
+        "gradleBanner": "9.2.1"
+      },
+      {
+        "pack": "neoforge/1.21.8",
+        "gradle": "9.2.1",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "423cb469",
+        "gradleBanner": "9.2.1"
+      },
+      {
+        "pack": "neoforge/scaffold",
+        "gradle": "8.5",
+        "jvm": 17,
+        "rc": 0,
+        "jarSha8": "d3b261c2",
+        "gradleBanner": "8.5"
+      }
+    ]
+  },
+  "propsTemplate": {
+    "measuredOn": "2026-09-05",
+    "keySets": {
+      "4.9": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "6.9.4": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "7.2": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "7.3.3": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "7.4.2": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "7.6": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "networkTimeout",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "7.6.1": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "networkTimeout",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "8.4": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "networkTimeout",
+        "validateDistributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "8.5": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "networkTimeout",
+        "validateDistributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "8.6": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "networkTimeout",
+        "validateDistributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "8.8": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "networkTimeout",
+        "validateDistributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "8.10": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "networkTimeout",
+        "validateDistributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "9.2.1": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "networkTimeout",
+        "validateDistributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "9.5.1": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "networkTimeout",
+        "retries",
+        "retryBackOffMs",
+        "validateDistributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ]
+    },
+    "deviations": [
+      {
+        "pack": "fabric/1.14.4",
+        "gradle": "6.9.4",
+        "extraKeys": [
+          "networkTimeout",
+          "validateDistributionUrl"
+        ],
+        "missingKeys": []
+      },
+      {
+        "pack": "fabric/1.16.5",
+        "gradle": "7.6.1",
+        "extraKeys": [
+          "validateDistributionUrl"
+        ],
+        "missingKeys": []
+      },
+      {
+        "pack": "fabric/1.17.1",
+        "gradle": "7.4.2",
+        "extraKeys": [
+          "networkTimeout",
+          "validateDistributionUrl"
+        ],
+        "missingKeys": []
+      },
+      {
+        "pack": "forge/1.15.2",
+        "gradle": "7.3.3",
+        "extraKeys": [
+          "networkTimeout",
+          "validateDistributionUrl"
+        ],
+        "missingKeys": []
+      },
+      {
+        "pack": "forge/1.16.5",
+        "gradle": "7.6",
+        "extraKeys": [
+          "validateDistributionUrl"
+        ],
+        "missingKeys": []
+      },
+      {
+        "pack": "forge/1.18.2",
+        "gradle": "7.6",
+        "extraKeys": [
+          "validateDistributionUrl"
+        ],
+        "missingKeys": []
+      },
+      {
+        "pack": "forge/1.19.4",
+        "gradle": "8.8",
+        "extraKeys": [],
+        "missingKeys": [
+          "validateDistributionUrl"
+        ]
+      }
+    ],
+    "deviationNote": "deviations 只登记不修：多余/缺失的 networkTimeout、validateDistributionUrl 对该版本 wrapper 类是惰性的（不读就用默认），且 boot.rows 证明这 29 档全部引导成功，所以批量改 props 的净收益是负（会抹掉「props 被更高版本重写」的出处指纹并搅动 8 个文件）。唯一有功能后果的缓存位置键已修：fabric/1.21.1 的 zipStorePath=gradle/wrapper + 缺 distributionBase/distributionPath 已于 2026-09-05 换成 8.10 发行包 wrapper 任务的原生产物，并由门禁盯住。"
   },
   "jars": {
     "4.9": {
@@ -28,8 +451,8 @@
         "forge/1.13.2",
         "forge/1.14.4"
       ],
-      "measuredOn": "2026-09-04",
-      "caveat": "4.9 发行包只有 lib/gradle-wrapper-4.9.jar（27938 B，它本身就是 bootstrap jar，不含 gradle-wrapper.jar 条目），与 wrapper 任务产物（54413 B）不是同一份字节 → 不做逐字节比对；zip sha256 已对官方，jar 由该发行包自己的 wrapper 任务离线生成。"
+      "measuredOn": "2026-09-05",
+      "caveat": "4.9 发行包只有 lib/gradle-wrapper-4.9.jar（27938 B，实测 sha439c191e…，它本身就是 bootstrap jar，不含 gradle-wrapper.jar 条目），与 wrapper 任务产物（54413 B）不是同一份字节 → 不做逐字节比对；zip sha256 已对官方（e66e69dce…），jar/gradlew/gradlew.bat 由该发行包自己的 wrapper 任务离线生成（2026-09-05 第二次重做，字节与钉值全等）。"
     },
     "6.9.4": {
       "verified": "official-distribution",
@@ -44,7 +467,9 @@
       ],
       "gradlewSha256": "f9594eb5c08a148f23b9d7a5fd99551224db96dadb1b7cecd3985c4758c4f867",
       "gradlewBatSha256": "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b",
-      "measuredOn": "2026-09-04"
+      "measuredOn": "2026-09-05",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-6.9.4/lib/gradle-wrapper-6.9.4.jar!gradle-wrapper.jar"
     },
     "7.2": {
       "verified": "official-distribution",
@@ -61,7 +486,7 @@
       "usedBy": [
         "forge/1.17.1"
       ],
-      "measuredOn": "2026-09-04"
+      "measuredOn": "2026-09-05"
     },
     "7.3.3": {
       "verified": "official-distribution",
@@ -78,7 +503,7 @@
       "usedBy": [
         "forge/1.15.2"
       ],
-      "measuredOn": "2026-09-04"
+      "measuredOn": "2026-09-05"
     },
     "7.4.2": {
       "verified": "official-distribution",
@@ -93,7 +518,9 @@
       ],
       "gradlewSha256": "f96a757581fe5292465e3f3393380bd11fd8086d450b92e7c693da6513f583fe",
       "gradlewBatSha256": "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b",
-      "measuredOn": "2026-09-04"
+      "measuredOn": "2026-09-05",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-7.4.2/lib/gradle-wrapper-7.4.2.jar!gradle-wrapper.jar"
     },
     "7.6": {
       "verified": "official-distribution",
@@ -126,7 +553,9 @@
       ],
       "gradlewSha256": "638c2862d623c302f3029f5bd1441276be484c5b79909b706a614ebe8e7a409b",
       "gradlewBatSha256": "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955",
-      "measuredOn": "2026-09-04"
+      "measuredOn": "2026-09-05",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-7.6.1/lib/plugins/gradle-wrapper-7.6.1.jar!gradle-wrapper.jar"
     },
     "8.4": {
       "verified": "official-distribution",
@@ -143,7 +572,9 @@
       ],
       "gradlewSha256": "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d",
       "gradlewBatSha256": "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955",
-      "measuredOn": "2026-09-04"
+      "measuredOn": "2026-09-05",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-8.4/lib/plugins/gradle-wrapper-8.4.jar!gradle-wrapper.jar"
     },
     "8.5": {
       "verified": "official-distribution",
@@ -177,7 +608,9 @@
       ],
       "gradlewSha256": "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d",
       "gradlewBatSha256": "bdecf875b6868cbcbd36a1f85eedf0832f358ff28092c5797ed645f7edce77d9",
-      "measuredOn": "2026-09-04"
+      "measuredOn": "2026-09-05",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-8.6/lib/plugins/gradle-wrapper-8.6.jar!gradle-wrapper.jar"
     },
     "8.8": {
       "verified": "official-distribution",
@@ -199,7 +632,7 @@
     },
     "8.10": {
       "verified": "official-distribution",
-      "jarByteCompareWithZipEntry": false,
+      "jarByteCompareWithZipEntry": true,
       "distributionUrl": "https://services.gradle.org/distributions/gradle-8.10-bin.zip",
       "zipSha256": "5b9c5eb3f9fc2c94abaea57d90bd78747ca117ddbbf96c859d3741181a12bf2a",
       "jarSha256": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046",
@@ -211,7 +644,8 @@
       ],
       "gradlewSha256": "a3648413b47ef77af21d5ebc36c687c7d103aaef3e17f33de7d4f080a6f300a3",
       "gradlewBatSha256": "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f",
-      "measuredOn": "2026-09-04"
+      "measuredOn": "2026-09-05",
+      "jarEntry": "gradle-8.10/lib/plugins/gradle-wrapper-main-8.10.jar!gradle-wrapper.jar"
     },
     "9.2.1": {
       "verified": "official-distribution",
@@ -238,7 +672,7 @@
       "measuredOn": "2026-09-04"
     },
     "9.5.1": {
-      "verified": "in-repo-baseline",
+      "verified": "official-distribution",
       "distributionUrl": "https://services.gradle.org/distributions/gradle-9.5.1-bin.zip",
       "jarSha256": "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7",
       "jarSize": 48462,
@@ -247,11 +681,13 @@
       "usedBy": [
         "fabric/1.21.11"
       ],
-      "caveat": "该 sha256 是仓内既有文件的实测值，本轮未下载 9.5.1 发行包复核上游，只按已知值锁它防篡改；不宣称它是本轮验证产物。",
+      "caveat": "2026-09-05 补上游对证：gradle-9.5.1-bin.zip 经 mirrors.cloud.tencent.com 取得，sha256 == https://services.gradle.org/distributions/gradle-9.5.1-bin.zip.sha256（bafc141b…）；发行包内层 lib/plugins/gradle-wrapper-main-9.5.1.jar!gradle-wrapper.jar 与仓内 jar 逐字节相同（497c8c2a / 48462 B），且该发行包自己跑 wrapper 任务生成的三件套同样等于钉值。原「仓内基线未复测上游」登记作废。",
       "gradlewSha256": "ab5c0cad16305af2e619c159c1f58dd68d07fab9c11e36701e109c0277407f7a",
       "gradlewBatSha256": "475c4f08cd57cf2faa819e7f36d72aa93f0ad646ea23a8f7fa3ef54dee1cbc52",
-      "measuredOn": "2026-09-04",
-      "jarByteCompareWithZipEntry": false
+      "measuredOn": "2026-09-05",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-9.5.1/lib/plugins/gradle-wrapper-main-9.5.1.jar!gradle-wrapper.jar",
+      "zipSha256": "bafc141b619ad6350fd975fc903156dd5c151998cc8b058e8c1044ab5f7b031f"
     }
   },
   "gaps": {

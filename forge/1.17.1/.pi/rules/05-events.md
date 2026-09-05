@@ -219,25 +219,28 @@ KeyBinding 注册应使用 `RegisterKeyMappingsEvent` + `event.register()`，而
 ```java
 @SubscribeEvent
 public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
-    if (event.getObject() instanceof Player player) {
+    if (event.getObject() instanceof Player) {
         event.addCapability(
             new ResourceLocation(ExampleMod.MOD_ID, "my_capability"),
-            new ICapabilityProvider<>() {
-                private final MyCapability instance = new MyCapability();
+            // ICapabilityProvider 是非泛型接口；需要落盘时实现 ICapabilitySerializable<T extends Tag>
+            new ICapabilitySerializable<Tag>() {
+                private final MyCapability handler = new MyCapability();
+                private final LazyOptional<MyCapability> instance = LazyOptional.of(() -> this.handler);
 
                 @Override
-                public CompoundTag serializeNBT() {
-                    return instance.saveNBT();
+                public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+                    return ExampleMod.MY_CAPABILITY.orEmpty(cap, this.instance);
+                }
+
+                // MyCapability#save / #load 是本模组自己的类，签名用 Tag
+                @Override
+                public Tag serializeNBT() {
+                    return this.handler.save();
                 }
 
                 @Override
-                public void deserializeNBT(CompoundTag nbt) {
-                    instance.loadNBT(nbt);
-                }
-
-                @Override
-                public boolean invalid() {
-                    return false;
+                public void deserializeNBT(Tag nbt) {
+                    this.handler.load(nbt);
                 }
             }
         );
@@ -245,4 +248,4 @@ public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> ev
 }
 ```
 
-> 关键点：`AttachCapabilitiesEvent` 可以在 Entity / BlockEntity / ItemStack / Level / LevelChunk 上附加 Capability，每个只能附加一次（ID 唯一）。`deserializeNBT` 在 `invalid()` 返回 true 时不会被调用。
+> 关键点：`AttachCapabilitiesEvent` 可以在 Entity / BlockEntity / ItemStack / Level / LevelChunk 上附加 Capability，每个只能附加一次（ID 唯一）。provider 生命周期结束时必须 `LazyOptional#invalidate`；Entity / BlockEntity 自带 `invalidateCaps()` 钩子，非自身持有的 provider 用 `AttachCapabilitiesEvent#addListener(Runnable)` 传入失效逻辑。

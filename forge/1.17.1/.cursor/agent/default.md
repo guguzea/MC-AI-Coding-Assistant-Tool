@@ -149,10 +149,6 @@ src/main/java/
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。
 
-## 本档 Skill 缺口（诚实声明）
-
-本档**没有** `mc-capability` Skill（磁盘 34 个，相对 1.20.1 主档少这一项）。`activate_platform_pack session` 若 `skillNames=["mc-capability"]` 或 `task` 指向能力，会警告未注入正文——**不要编造** Capability 教程。能力/附件改口 `search_forge_docs` version=1.17.1 + 核实表。
-
 ## 配置（不落盘树级 mc-config）
 
 不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。
