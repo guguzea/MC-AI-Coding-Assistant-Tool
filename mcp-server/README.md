@@ -176,7 +176,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 一条执行路径：短名只做 alias（`query`→`query_api`、`convert`→`convert_mapping`、`update`→`mc_skill_update`、`status`/`warmup`→`get_server_status`；`warmup` 会注入 `warmup=true`，用户显式 `--warmup=false` 优先）。`descriptor` 是本地命令，不加载 MCP 工具注册表。
 
-全局 flag（不进工具 schema）：`--help`/`-h`、`--version`（只在没写工具名的裸用法上打印 CLI 版本，其余场景它是工具字段）、`--json`（不改变工具输出，仅为兼容保留；只在交互式终端下影响 `--help` 的呈现）、`--compact`、`--fail-on-error`、`--quiet`、`--timeout <ms>`、`--project <dir>`、`--file field=path`、`--raw [field]`、`--output-format json`、`--stdin-json`。`--quiet`、`--timeout` 与 `--stdin-json` 与全部工具字段名零碰撞（连字符/大小写归一化后同样复检），所以它们不需要进 `FIELD_OWNED_GLOBALS`；将来任何工具新增 `timeout` / `quiet` / `stdinJson` 字段都会让该门转红。
+全局 flag（不进工具 schema）：`--help`/`-h`、`--version`/`-V`（放在工具名之前、或整条命令没写工具名时打印 CLI 版本；`--version` 跟在工具名后面时是工具字段，而 `-V` 在那个位置会被当未知参数 exit 2）、`--json`（不改变工具输出，仅为兼容保留；只在交互式终端下影响 `--help` 的呈现）、`--compact`、`--fail-on-error`、`--quiet`、`--timeout <ms>`、`--project <dir>`、`--file field=path`、`--raw [field]`、`--output-format json`、`--stdin-json`。`--quiet`、`--timeout` 与 `--stdin-json` 与全部工具字段名零碰撞（连字符/大小写归一化后同样复检），所以它们不需要进 `FIELD_OWNED_GLOBALS`；将来任何工具新增 `timeout` / `quiet` / `stdinJson` 字段都会让该门转红。
 
 同名让位（字段优先）：目标工具 schema 里存在与全局 flag 同名的字段时，这个名字归**工具字段**所有，全局剥离让位。当前唯一一例是 `validate_bp_json` 的 `json`——`--json '<BP 全文>'`、`--json=<全文>`、`--json=@file`、`--file json=path` 都是传待校验内容，不是输出开关；该工具的 `--json` 缺值时按 schema 报校验错（exit 2 `validation`），而不是「未知/缺参」。这份冲突清单显式写在 `FIELD_OWNED_GLOBALS`，`test-cli-parse` 的枚举门断言它恒等于「80 工具 schema 字段名 ∩ 全局 flag 名」，将来新增同名字段而不改清单会让 CI 转红。
 
