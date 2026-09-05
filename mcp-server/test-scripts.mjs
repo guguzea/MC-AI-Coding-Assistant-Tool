@@ -478,4 +478,147 @@ if (psProbe.status !== 0) {
   }
 }
 
+/**
+ * §6.2-6：Java 方法签名提取正则。两个脚本各持一份同形字面量，而两者都是顶层执行的脚本
+ * （import 即跑 + 会落笔），所以只能按源码文本取回**真正生效的那一份**来测。
+ */
+{
+  const { readFileSync } = await import("node:fs");
+  const SOURCES = [
+    { rel: "../scripts/fetch-loader-api-sources.mjs", name: "METHOD_SIG_RE" },
+    { rel: "../scripts/validate-rules-against-cache.mjs", name: "methodRe" },
+  ];
+  const shipped = SOURCES.map(({ rel, name }) => {
+    const src = readFileSync(new URL(rel, import.meta.url), "utf8");
+    const m = new RegExp(`${name} =\\s*/([\\s\\S]*?)/([a-z]*);`).exec(src);
+    assert.ok(
+      m,
+      `未能从 ${rel} 取出 ${name} 字面量 —— 脚本改了写法，本测试与「只认声明行」的契约都要同步`,
+    );
+    return { rel, re: new RegExp(m[1], m[2]), literal: m[1] };
+  });
+  assert.equal(
+    shipped[0].literal,
+    shipped[1].literal,
+    "两份方法签名正则已分叉：一处收紧、另一处照旧 = 同一个缺陷只在半个链路上修掉",
+  );
+
+  // 正例 = 声明行必须命中；负例两类 = 语句关键字调用点、表达式里的普通调用与局部变量声明。
+  const POSITIVE = [
+    ["public void tick()", "tick"],
+    ["@Override public static void register() {", "register"],
+    ["public List<String> names(int i) {", "names"],
+    ["protected abstract <T> T cast(T in) {", "cast"],
+    ["public String[] splitLines(String s) {", "splitLines"],
+    ["public @Deprecated Map<String, Integer> counts() {", "counts"],
+    ["default ItemStack copy() {", "copy"],
+  ];
+  const NEGATIVE = [
+    "return foo(bar);",
+    "else bar(x);",
+    "assert matches(t);",
+    "throw illegalState(msg);",
+    "new FooBuilder().build(1);",
+    "if (cond.equals(other)) {",
+    "while (queue.poll() != null) {",
+    "var x = compute(y);",
+    "this.setValue(v);",
+    'LOGGER.info("msg {}", x);',
+    "int y = compute(x);",
+    "foo(bar);",
+  ];
+  for (const { rel, re } of shipped) {
+    for (const [line, want] of POSITIVE) {
+      re.lastIndex = 0;
+      const hit = re.exec(line);
+      assert.ok(hit, `${rel}: 声明行未命中 → ${line}`);
+      assert.equal(hit[1], want, `${rel}: ${line} 提取到 ${hit[1]}，应为 ${want}`);
+    }
+    for (const line of NEGATIVE) {
+      re.lastIndex = 0;
+      const hit = re.exec(line);
+      assert.ok(!hit, `${rel}: 负例被当成方法声明 → ${line}${hit ? `（抓到 ${hit[1]}）` : ""}`);
+    }
+  }
+  console.log(
+    `  Java 方法签名正则: 两份字面量一致 + 正例 ${POSITIVE.length} / 负例 ${NEGATIVE.length}（关键字调用点 + 表达式调用）全部分类正确`,
+  );
+}
+
+/**
+ * §6.3-13：计数信号量的 `active` 必须收敛。旧实现（`batch-decompile.mjs`）在被 waiter
+ * 唤醒后再 `active++`，而 `release()` 交接时已经加过一次 → 每交接一格算两格，`active`
+ * 单调上漂，最终所有 `acquire()` 永久挂住。语义正确性只有跑并发才测得出来，
+ * 所以信号量已抽成 `scripts/_lib/semaphore.mjs`（纯模块，可 import）。
+ */
+{
+  const { makeSemaphore, withSlot } = await import(
+    new URL("../scripts/_lib/semaphore.mjs", import.meta.url).href
+  );
+  const SLOT = 6;
+  const TASKS = 40;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  /** 跑一轮 workload，返回 { peak, done, activeAfter, hung }。 */
+  async function drive(makeSem) {
+    const sem = makeSem(SLOT);
+    let running = 0;
+    let peak = 0;
+    let done = 0;
+    const all = Promise.all(
+      Array.from({ length: TASKS }, () =>
+        withSlot(sem, async () => {
+          running++;
+          peak = Math.max(peak, running);
+          await sleep(1);
+          running--;
+          done++;
+        }),
+      ),
+    );
+    const hung = await Promise.race([all.then(() => false), sleep(1500).then(() => true)]);
+    return { peak, done, activeAfter: sem.activeCount(), hung };
+  }
+
+  const good = await drive(makeSemaphore);
+  assert.ok(!good.hung, `正确实现不得挂起（active 上漂会让 acquire 永久排队）：完成 ${good.done}/${TASKS}`);
+  assert.equal(good.done, TASKS, "40 个任务必须全部执行完");
+  assert.ok(good.peak <= SLOT, `并发峰值 ${good.peak} 不得超过槽位数 ${SLOT}`);
+  assert.ok(good.peak >= 2, `峰值只有 ${good.peak}，这批任务根本没并发，测不出信号量`);
+  assert.equal(good.activeAfter, 0, `全部完成后 active 必须收敛到 0，实际 ${good.activeAfter}`);
+
+  // 反向自证：旧写法（唤醒后再 active++）必须在同一负载下暴露，否则这条断言是摆设。
+  const drift = await drive((n) => {
+    let active = 0;
+    const waiters = [];
+    return {
+      async acquire() {
+        if (active < n) {
+          active++;
+          return;
+        }
+        await new Promise((res) => waiters.push(res));
+        active++; // ← 旧 bug：交接已加过一次，这里再加一格
+      },
+      release() {
+        active--;
+        const w = waiters.shift();
+        if (w) {
+          active++;
+          w();
+        }
+      },
+      activeCount: () => active,
+    };
+  });
+  assert.ok(
+    drift.hung || drift.activeAfter !== 0 || drift.done !== TASKS,
+    `旧写法必须被同一条负载暴露（挂起 / active 不收敛 / 任务没跑完），实际 ${JSON.stringify(drift)}`,
+  );
+  console.log(
+    `  计数信号量: ${TASKS} 任务 / ${SLOT} 槽 峰值=${good.peak} active 收敛=0 全完成=${good.done}` +
+      `；投毒（唤醒后再 active++）→ ${drift.hung ? "挂起" : `active=${drift.activeAfter}`}，断言可失败`,
+  );
+}
+
 console.log("script helper regression tests passed");

@@ -7,7 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { emit, emitCopy } from "../_lib/write-guard.mjs";
+import { emit } from "../_lib/write-guard.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -149,12 +149,12 @@ mappings: ${mappings}
 }
 
 const NEO_VERSIONS = [
-  { ver: "1.20.4", mappings: "mojmap", loc: "ResourceLocation", java: "21" },
+  { ver: "1.20.4", mappings: "mojmap / NeoForm 官方名（不是 Forge MCP）", loc: "ResourceLocation", java: "21" },
   { ver: "1.21.1", mappings: "mojmap", loc: "ResourceLocation", java: "21" },
   { ver: "1.21.3", mappings: "mojmap", loc: "ResourceLocation", java: "21" },
   { ver: "1.21.8", mappings: "mojmap", loc: "ResourceLocation", java: "21" },
-  { ver: "1.21.11", mappings: "mojmap", loc: "ResourceLocation", java: "21" },
-  { ver: "26.1", mappings: "mojmap", loc: "Identifier", java: "25" },
+  { ver: "1.21.11", mappings: "mojmap（游戏仍混淆；与 26.1 去混淆不是同一档）", loc: "ResourceLocation", java: "21" },
+  { ver: "26.1", mappings: "mojmap-unobfuscated（游戏 jar 已是 Mojang 名）", loc: "Identifier", java: "25" },
 ];
 
 const NEO_TOPICS = [
@@ -180,30 +180,22 @@ const NEO_TOPICS = [
   "mc-dimension",
 ];
 
-function copyIfMissing(src, dest) {
-  if (fs.existsSync(dest)) return false;
-  return emitCopy(dest, src);
-}
+// 方向不变式（§6.2-18）：本脚本只写 `.cursor/skills` 源稿，永不读回任何投影树
+// （`.agents/` `.claude/` `.continue/` `.opencode/` `.pi/` `.trae/` `.zcode/`）。
+// `.cursor` 是唯一权威，投影由 scripts/sync-skills.ps1 单向生成；反向复制会让权威倒流。
 
 function main() {
   const fabDir = path.join(ROOT, "fabric", "26.1.2", ".cursor", "skills");
   let written = 0;
   for (const name of FABRIC_SKILLS) {
+    const dest = path.join(fabDir, name, "SKILL.md");
+    if (fs.existsSync(dest)) continue;
     const body = VERIFIED_FABRIC[name] || stubBody(name, "Fabric", "26.1.2", "search_fabric_docs");
     if (writeSkill(fabDir, name, fabricFm(name), body)) written++;
   }
 
   for (const { ver, mappings, loc, java } of NEO_VERSIONS) {
     const cursorSkills = path.join(ROOT, "neoforge", ver, ".cursor", "skills");
-    const agentsSkills = path.join(ROOT, "neoforge", ver, ".agents", "skills");
-    if (fs.existsSync(agentsSkills)) {
-      for (const name of fs.readdirSync(agentsSkills)) {
-        const src = path.join(agentsSkills, name, "SKILL.md");
-        if (fs.existsSync(src)) {
-          if (copyIfMissing(src, path.join(cursorSkills, name, "SKILL.md"))) written++;
-        }
-      }
-    }
     const payloadEvent = ver === "1.20.4" ? "RegisterPayloadHandlerEvent（以该版 networking 页为准）" : "RegisterPayloadHandlersEvent";
     for (const name of NEO_TOPICS) {
       const dest = path.join(cursorSkills, name, "SKILL.md");

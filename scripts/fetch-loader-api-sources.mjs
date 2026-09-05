@@ -4,15 +4,17 @@
  * 再抽出带 mappingsVersion 的摘要 JSON（.java 不入库）。
  * 许可证：LiteLoader 禁止再分发源码进仓库；只写 cache。
  *
- * --from-cache  已有 .java 不重下，只按剥注释后的规则重抽摘要。
+ * dry-run（默认）  仓库 data/ 只打 DRYRUN <rel>，不落盘。
+ * --write        确认后才写 mcp-server/data/loader-api-summaries/。
+ * --from-cache   已有 .java 不重下，只按剥注释后的规则重抽摘要。
  */
-import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from "fs";
+import { existsSync, readFileSync, readdirSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import os from "os";
 import { redactAbs } from "./_lib/redact-abs.mjs";
 import { failureNote, fetchTextWithUa, FETCH_FAILURE } from "./_lib/fetch-with-ua.mjs";
-import { wantWrite, logDryRunBanner } from "./_lib/write-guard.mjs";
+import { wantWrite, logDryRunBanner, emit, scratchMkdirAll, scratchWriteText } from "./_lib/write-guard.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const WRITE = wantWrite();
@@ -32,10 +34,12 @@ const NOT_A_TYPE = new Set([
  * 开头的否定预查看 = Java 语句关键字永远不可能是返回类型，因此
  * `return foo(` / `else bar(x)` / `assert matches(x)` / `throw illegalState(x)` 这类
  * **调用点**（旧正则把关键字吃成 type 位、小写方法名吃成 name 位）一律不进 methods。
- * group1 = 声明前缀，group2 = 方法名。
+ * 前缀是一个 * 号包住的「注解 | 修饰符 + 空白」交替，可任意混排且可 0 次
+ * （`@Override public static void tick()`、`public @Deprecated List<String> names(` 都要能吃下）；
+ * 返回类型允许一层嵌套泛型与数组后缀。group1 = 方法名。
  */
 const METHOD_SIG_RE =
-  /^[ \t]*(?!(?:return|throw|else|if|for|while|do|switch|case|new|instanceof|assert|yield|try|catch|finally|break|continue|extends|implements|import|package|var|class|interface|enum|record|this|super)[ \t])(?:(?:@[\w.]+(?:\([^()]*\))?[ \t]+|(?:(?:public|protected|private|static|final|abstract|default|synchronized|native|strictfp)[ \t]+)*)(?:<[^<>]*(?:<[^<>]*>[^<>]*)*>[ \t]+)?[\w.$]+(?:\s*<[^<>]*>)?(?:\s*\[\s*\])*)[ \t]+([a-z_$][\w$]*)[ \t]*\(/gm;
+  /^[ \t]*(?!(?:return|throw|else|if|for|while|do|switch|case|new|instanceof|assert|yield|try|catch|finally|break|continue|extends|implements|import|package|var|class|interface|enum|record|this|super)[ \t])(?:(?:@[\w.]+(?:\([^()]*\))?|(?:public|protected|private|static|final|abstract|default|synchronized|native|strictfp))[ \t]+)*(?:<[^<>]*(?:<[^<>]*>[^<>]*)*>[ \t]+)?[\w.$]+(?:(?:<[^<>]*(?:<[^<>]*>[^<>]*)*>|\[\s*\])*)[ \t]+([a-z_$][\w$]*)[ \t]*\(/gm;
 
 const FILES = [
   {
@@ -180,13 +184,12 @@ function extractDir(dir) {
   return [...byFqcn.values()];
 }
 
-mkdirSync(SRC, { recursive: true });
-mkdirSync(OUT, { recursive: true });
+scratchMkdirAll(SRC);
 
 const report = [];
 for (const group of FILES) {
   const dir = join(SRC, group.key);
-  mkdirSync(dir, { recursive: true });
+  scratchMkdirAll(dir);
   const fetched = [];
   for (const url of group.urls) {
     const name = url.split("/").pop();
@@ -202,7 +205,7 @@ for (const group of FILES) {
     const got = await fetchText(url);
     fetched.push({ url, status: got.status, ok: got.ok, failureClass: got.failureClass, note: got.note });
     if (!got.ok) continue;
-    writeFileSync(dest, got.text, "utf8");
+    scratchWriteText(dest, got.text);
   }
   const classes = extractDir(dir);
   if (classes.length === 0) {
@@ -221,23 +224,21 @@ for (const group of FILES) {
     note: "源码只在 $MC_SKILL_CACHE，不入库。缺 mappingsVersion 视为无效。",
   };
   const outPath = join(OUT, `${group.key}.json`);
-  if (!WRITE) {
+  const wrote = emit(outPath, JSON.stringify(summary, null, 2));
+  if (!wrote) {
     report.push({ key: group.key, classes: classes.length, okUrls: fetched.filter((f) => f.ok).length, dryRun: true });
     console.log(`${group.key}: ${classes.length} classes (dry-run)`);
     continue;
   }
-  writeFileSync(outPath, JSON.stringify(summary, null, 2), "utf8");
   report.push({ key: group.key, classes: classes.length, okUrls: fetched.filter((f) => f.ok).length });
   console.log(`${group.key}: ${classes.length} classes, ${fetched.filter((f) => f.ok).length}/${fetched.length} files`);
 }
 
 if (WRITE) {
   const lastDir = join(CACHE, "loader-api-summaries");
-  mkdirSync(lastDir, { recursive: true });
-  writeFileSync(
+  scratchWriteText(
     join(lastDir, "fetch-loader-api-sources-last.json"),
     JSON.stringify({ cache: "$MC_SKILL_CACHE", report: redactAbs(report, { cache: CACHE, repo: ROOT }) }, null, 2),
-    "utf8",
   );
 }
 console.log("done", SRC);

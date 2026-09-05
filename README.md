@@ -383,12 +383,23 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 
 ### 工具与网络边界（只写边界，不写结论）
 
-下列两条**本机无法核实**。这里登记的是「不许推出什么」，不是「已核实为否」。
+下列两条**本机核不到上游本身**（能核的只有通道，见下表）。这里登记的是「不许推出什么」，不是「已核实为否」。
 
 | 边界 | 已核实到的程度 | 禁止的推断 |
 |------|----------------|------------|
-| GitHub 域名在本机全程不可达 | `download_official_mdk` 的 pin commit、`mc_skill_update` 的 Release、以及规则/AGENTS 里钉的 example-mod commit 短哈希，都只能在可达网络下复验 | **本机拉不到 ≠ 上游不存在 / 校验和不对 / 那个 commit 是假的**。相关条目保持「未核实」标注，换网络或让用户在本机复验，不要改成另一套自猜的值 |
+| 外网可达性只能核到**本机通道**层面，不是「通 / 不通」一个布尔 | `download_official_mdk` 的 pin commit、`mc_skill_update` 的 Release、以及规则/AGENTS 里钉的 example-mod commit 短哈希，都只能在可达网络下复验。2026-09-06 实测：**Node `fetch`** 对 `raw.githubusercontent.com` 与 `services.gradle.org` 一律 `TLS_VERIFY_FAILED`（同口径见 `$MC_SKILL_CACHE/loader-api-summaries/fetch-qsl-last.json` 台账）；**同一 URL** 换 `curl.exe --ssl-no-revoke` GET = `200`（719 B / 0.1s），`services.gradle.org/distributions/…` = `307`；`api.github.com` 的 `git/trees?recursive=1` 单次 12s 超时（未复测） | **本机拉不到 ≠ 上游不存在 / 校验和不对 / 那个 commit 是假的**；也**不得**把 TLS 类失败记成 `NOT_FOUND` 或「缺档」。相关条目保持「未核实」标注，换网络或让用户在本机复验，不要改成另一套自猜的值 |
 | 基岩 `description.identifier` 等命名空间 ID 的长度上限与字符集 | Microsoft Learn 只规定要带命名空间，**未**给出长度上限与允许字符集；社区只给「小写、无空格/特殊字符」「路径长度受主机限制」这类**建议** | **不要把建议当硬限制**，也不要因 Learn 没写就断言「无限制」。`validate_addon_manifest` / `validate_bp_json` 不据长度/字符集报错；生成 ID 时按建议取保守形式并说明这是约定不是官方约束 |
+
+fetch 通道矩阵（写维护脚本时按这张表选腿，别照搬「这台机器没网」）：
+
+| 腿 | 本机实测 | 用法 |
+|----|----------|------|
+| Node `fetch`（github / gradle / maven 域） | 一律 `TLS_VERIFY_FAILED` | 不得当主腿；失败必须归 TLS 类，与 404 / 限流分开 |
+| `curl.exe --ssl-no-revoke` GET | `200` / `307`（本机唯一稳定可用腿） | win32 主腿。**冷连接首试可能超时**（实测一次 15s 零字节），必须带退避重试 |
+| `curl.exe --head` | 同一 URL 跨轮实测 `502` 与 `200` 都出现过 | **禁止**用 HEAD 判可达性，探测一律 GET |
+| `api.github.com` | 本轮 `git/trees?recursive=1` 单次超时 | 需要它建表时先单独复验，不要假设与 `raw` 同命运 |
+
+`scripts/_lib/fetch-with-ua.mjs` 把这张表落成代码：`downloadWithFallback({ preferCurl: process.platform === "win32" })`，curl 腿恒带 `--ssl-no-revoke` + UA，fetch 腿恒带 `AbortSignal.timeout()` + UA，失败类别见 `FETCH_FAILURE`（`TLS_VERIFY_FAILED` / `TLS_REVOCATION_CHECK_FAILED` / `TLS_HANDSHAKE_FAILED` / `RATE_LIMITED` / `NOT_FOUND` 互不混用）。
 
 
 

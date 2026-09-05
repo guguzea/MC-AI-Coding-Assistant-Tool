@@ -6485,7 +6485,7 @@ function testPublishChecklistFromCommunityDoc() {
 
 /**
  * S20：会改仓库文件的维护脚本，写盘必须全部经 scripts/_lib/write-guard.mjs（默认 dry-run，--write 才落盘）。
- * 覆盖范围 = scripts/**/*.mjs 递归全量（旧版只扫 _oneoff/_lib + 2 个点名文件，真写盘脚本全在门外）。
+ * 覆盖范围 = scripts/ 下全部 .mjs（递归；旧版只扫 _oneoff/_lib + 2 个点名文件，真写盘脚本全在门外）。
  * 例外只有两张在册清单：已核实不写仓库正文的 NON_WRITERS，与本轮不可改的 DEBT；
  * 每条都必须仍存在且其依据正则仍成立，依据一断即门禁失败 —— 例外不许静默扩张。
  * 纯函数：输入 [{ rel, text }]，输出 { problems, stats }；不读不写磁盘。
@@ -6511,8 +6511,6 @@ const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
  * 值 = 依据正则：闸门或契约一消失门禁即失败，逼重新签字；脚本收口后删掉本条即回到默认要求。
  */
 const SCRIPT_WRITE_GUARD_DEBT = new Map([
-  ["scripts/fetch-qsl-signatures.mjs", /loader-api-summaries/],
-  ["scripts/fetch-loader-api-sources.mjs", /write-guard\.mjs/],
   ["scripts/decompile-loader-apis.mjs", /"--write"/],
   ["scripts/build-api-summaries.mjs", /--write/],
   ["scripts/merge-verified-api.mjs", /--write/],
@@ -6601,6 +6599,11 @@ function diffScriptWriteGuard(files) {
       if (!file.text.includes("DRYRUN")) {
         problems.push(`${SCRIPT_WRITE_GUARD_REL}:1 缺 DRYRUN 输出，dry-run 无从取证`);
       }
+      if (!/function assertScratch\(/.test(file.text) || !/不许落在仓库内/.test(file.text)) {
+        problems.push(
+          `${SCRIPT_WRITE_GUARD_REL}:1 缺 scratch 仓库路径检查（assertScratch 或其 throw），scratch* 就成了绕过 --write 写仓库的后门`,
+        );
+      }
     }
   }
   return {
@@ -6617,7 +6620,7 @@ function diffScriptWriteGuard(files) {
   };
 }
 
-/** 递归列 scripts/**/*.mjs；跳过 node_modules 与点开头目录。 */
+/** 递归列 scripts/ 下全部 .mjs；跳过 node_modules 与点开头目录。 */
 function listScriptModuleFiles(dir, acc = []) {
   const abs = join(REPO_ROOT, dir);
   for (const e of readdirSync(abs, { withFileTypes: true })) {
@@ -6635,7 +6638,7 @@ function listWriteGuardScope() {
     .map((rel) => ({ rel, text: readFileSync(join(REPO_ROOT, rel), "utf8") }));
 }
 
-function testScriptWriteGuardFunnel() {
+async function testScriptWriteGuardFunnel() {
   const files = listWriteGuardScope();
   const base = { files };
   assert.ok(
@@ -6662,8 +6665,15 @@ function testScriptWriteGuardFunnel() {
       `${rel} 不得同时挂在 NON_WRITERS 与 DEBT 两张清单`,
     );
   }
-  // R1/R2 回归：这两个脚本以前无条件写仓库 mcp-server/data/，现在必须已改道 write-guard。
-  for (const rel of ["scripts/clone-audit.mjs", "scripts/validate-rules-against-cache.mjs"]) {
+  // R1/R2/R3 回归：这四个脚本以前无条件写仓库 mcp-server/data/，现在必须已改道 write-guard。
+  // fetch-loader-api-sources 是 P0-6 第 4 处：以前挂在 DEBT 清单上，门禁从不逐行看它，
+  // 把 mkdirSync(OUT) 挪回无条件区照样绿（实测）。移出债务清单后这里才真的咬得住。
+  for (const rel of [
+    "scripts/clone-audit.mjs",
+    "scripts/validate-rules-against-cache.mjs",
+    "scripts/fetch-qsl-signatures.mjs",
+    "scripts/fetch-loader-api-sources.mjs",
+  ]) {
     const f = files.find((x) => x.rel === rel);
     assert.ok(f, `门禁扫描范围必须含 ${rel}`);
     assert.ok(
@@ -6692,8 +6702,11 @@ function testScriptWriteGuardFunnel() {
     ["绕过 guard（无 import）", oneoffRel, (t) => t.replace(/(?:^|\n)import[^;\n]*from\s+["'][^"']*write-guard\.mjs["'];?/, "\n"), /未 import write-guard/],
     ["顶层 data/ 脚本无 import", dataWriterRel, (t) => t.replace(/(?:^|\n)import[^;\n]*from\s+["'][^"']*write-guard\.mjs["'];?/, "\n"), /未 import write-guard/],
     ["顶层 data/ 脚本裸 copyFileSync", dataWriterRel, (t) => t + "\ncopyFileSync(src, dest);\n", /直接调用 copyFileSync\(\)/],
+    ["P5：已收口脚本把裸 mkdirSync(OUT) 挪回来", "scripts/fetch-loader-api-sources.mjs", (t) => t + '\nmkdirSync(OUT, { recursive: true });\n', /直接调用 mkdirSync\(\)/],
     ["guard 失去 --write 判定", SCRIPT_WRITE_GUARD_REL, () => guardText.replace(/"--write"/g, '"--nope"'), /缺 "--write" 判定/],
     ["guard 失去 DRYRUN 输出", SCRIPT_WRITE_GUARD_REL, () => guardText.replace(/DRYRUN/g, "SKIP"), /缺 DRYRUN 输出/],
+    ["guard 失去 scratch 检查函数", SCRIPT_WRITE_GUARD_REL, () => guardText.replace(/function assertScratch\(/, "function notChecking("), /缺 scratch 仓库路径检查/],
+    ["guard 失去 scratch throw", SCRIPT_WRITE_GUARD_REL, () => guardText.replace(/不许落在仓库内/, "随便写"), /缺 scratch 仓库路径检查/],
   ];
   for (const [label, rel, mutate, anchor] of poisoned) {
     const src = files.find((f) => f.rel === rel);
@@ -6721,20 +6734,42 @@ function testScriptWriteGuardFunnel() {
     added.problems.some((p) => p.startsWith(newWriter.rel) && /直接调用 writeFileSync\(\)/.test(p)),
     `新增未收口的仓库写盘脚本必须被报「直接调用 writeFileSync()」，实际：\n${added.problems.join("\n")}`,
   );
-  // 在册豁免不得靠清单续命：把依据闸门（--force）摘掉即失效。
-  const debtRel = "scripts/scaffold-version.mjs";
-  const lostBasis = diffScriptWriteGuard(
-    withText(debtRel, files.find((f) => f.rel === debtRel).text.replace(/--force/g, "--nope")),
-  );
-  assert.ok(
-    lostBasis.problems.some((p) => p.startsWith(debtRel) && /在册豁免依据/.test(p)),
-    `豁免依据闸门被摘掉后必须失效，实际：\n${lostBasis.problems.join("\n")}`,
-  );
+  // 在册豁免不得靠清单续命：把依据闸门摘掉即失效。
+  for (const [debtRel, neuter] of [["scripts/scaffold-version.mjs", (t) => t.replace(/--force/g, "--nope")]]) {
+    const lostBasis = diffScriptWriteGuard(
+      withText(debtRel, neuter(files.find((f) => f.rel === debtRel).text)),
+    );
+    assert.ok(
+      lostBasis.problems.some((p) => p.startsWith(debtRel) && /在册豁免依据/.test(p)),
+      `豁免依据闸门被摘掉后必须失效（${debtRel}），实际：\n${lostBasis.problems.join("\n")}`,
+    );
+  }
   // 反向对照：只读脚本里的 readFileSync 不得被当成写盘（否则门禁会误伤读盘）
   const readOnly = diffScriptWriteGuard([
     { rel: "scripts/_oneoff/probe-readonly.mjs", text: 'import { emit } from "../_lib/write-guard.mjs";\nconst t = readFileSync(p, "utf8");\nif (want) emit(p, t);\n' },
   ]);
   assert.deepEqual(readOnly.problems, [], `只读脚本误报：\n${readOnly.problems.join("\n")}`);
+
+  // 行为自证：scratch* 的仓库拒绝必须真 throw（`outsideRepo = true` 这种掏空，正则看不见）。
+  const guardMod = await import("../scripts/_lib/write-guard.mjs");
+  const probeDir = join(REPO_ROOT, "mcp-server", "data", "__s20_scratch_probe");
+  try {
+    assert.throws(
+      () => guardMod.scratchMkdirAll(probeDir),
+      /不许落在仓库内/,
+      "scratchMkdirAll 必须拒绝仓库内目标，否则 scratch 成了绕过 --write 写仓库的后门",
+    );
+    // 写盘探针故意嵌在同一个一次性目录里：闸门被掏空时最多脏这个目录，由 finally 收掉。
+    assert.throws(
+      () => guardMod.scratchWriteText(join(probeDir, "poison.txt"), "x"),
+      /不许落在仓库内/,
+      "scratchWriteText 必须在落笔前拒绝仓库内目标",
+    );
+    assert.ok(!existsSync(probeDir), "被拒绝的 scratch 目标不得留下目录");
+  } finally {
+    // 投毒跑（闸门失效）时上面真的会落盘，不清掉就会污染仓库 + 让之后每一轮干净跑假红。
+    rmSync(probeDir, { recursive: true, force: true });
+  }
 
   const s = clean.stats;
   const oneoffCount = files.filter((f) => f.rel.startsWith("scripts/_oneoff/")).length;
@@ -6749,7 +6784,8 @@ function testScriptWriteGuardFunnel() {
       ` 写盘原语=${s.primitiveHits}（write-guard 内 ${s.primitiveHits - s.exemptPrimitiveHits - s.outsideGuardHits}，` +
       `在册豁免 ${s.exemptPrimitiveHits}，范围外 ${s.outsideGuardHits}）` +
       ` 清单：非写盘 ${SCRIPT_WRITE_GUARD_NON_WRITERS.size} + 待收口债务 ${SCRIPT_WRITE_GUARD_DEBT.size}` +
-      ` 投毒=${poisoned.length + 2} 类全命中（含新增裸写仓库脚本 / 豁免依据失效）+ 只读误报对照通过`,
+      ` 投毒=${poisoned.length + 2} 类全命中（含新增裸写仓库脚本 / 已收口脚本复现裸写 / 豁免依据失效 ×1）` +
+      ` + 只读误报对照通过 + scratch 仓库拒绝实跑 throw`,
   );
 }
 
@@ -6996,7 +7032,7 @@ await testZipInflateZeroByteDeflate();
 await testDocsToolTablesMatchRegistry();
 testPublishChecklistFromCommunityDoc();
 testBedrockMisdetectionFixed();
-testScriptWriteGuardFunnel();
+await testScriptWriteGuardFunnel();
 testResidueDirsReport();
 testCommunityIndexSync();
 console.log("core regression tests passed");

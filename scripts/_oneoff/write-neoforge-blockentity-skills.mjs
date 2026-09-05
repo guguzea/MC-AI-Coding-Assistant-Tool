@@ -111,14 +111,14 @@ const VERS = [
     syncSrc: "BE:330, BE:342, BE:376",
     dirty: "`setChanged`",
     dirtySrc: "BE:199",
-    extra: "本档注册表 id 类型是 `Identifier`（不是 `ResourceLocation`），但 BlockEntity 方法签名与 1.21.8 同族。",
-    extraSrc: "BE:13",
+    extra: "本档与 1.21.8 同为 value I/O 存储，且示例已是 `new BlockEntityType<>(...)` 构造器形态；资源 id 类型 / 去混淆差异看本档 `00-project-setup.mdc`，不在本 Skill 复述。",
+    extraSrc: "BE:46, BE:171",
   },
   {
     ver: "26.1",
     mappings: "mojmap-unobfuscated（游戏 jar 已是 Mojang 名）",
     type: "`new BlockEntityType<>(MyBlockEntity::new, java.util.Set.of(...blocks))`，经 `DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MOD_ID)` 注册",
-    typeSrc: "BE:36, BE:40",
+    typeSrc: "BE:38, BE:46",
     mount: "`extends Block implements EntityBlock` + override `newBlockEntity(BlockPos, BlockState)`",
     mountSrc: "BE:102, BE:116",
     ticker: "`getTicker(Level, BlockState, BlockEntityType<T>)` + `createTickerHelper`",
@@ -129,8 +129,8 @@ const VERS = [
     syncSrc: "BE:330, BE:342, BE:376, BE:382",
     dirty: "`setChanged`",
     dirtySrc: "BE:199",
-    extra: "去混淆档：类名即 Mojang 名，`query_api` 无本版索引；核签名走 `search_neoforge_docs version=26.1`（语料路径无版本前缀）。",
-    extraSrc: "BE:13",
+    extra: "本档语料的文档链接无版本前缀（现行主文档未版本化），所以核签名只能 `search_neoforge_docs version=26.1`，不要拿邻版页顶替。",
+    extraSrc: "BE:32",
   },
 ];
 

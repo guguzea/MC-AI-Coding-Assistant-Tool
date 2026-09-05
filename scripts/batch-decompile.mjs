@@ -21,6 +21,7 @@ import { Readable, Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { execFileSync } from "node:child_process";
+import { makeSemaphore, withSlot } from "./_lib/semaphore.mjs";
 
 // ── 常量 ─────────────────────────────────────────────────────────────────────
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -266,30 +267,6 @@ async function applyXmx(javaProcess, xmx) {
     ? `${process.env.JAVA_TOOL_OPTIONS} ${opt}`
     : opt;
   console.log(`已设置 JAVA_TOOL_OPTIONS=${opt}`);
-}
-
-function makeSemaphore(n) {
-  let active = 0;
-  const waiters = [];
-  return {
-    async acquire() {
-      if (active < n) { active++; return; }
-      await new Promise((res) => waiters.push(res));
-      // 槽位已由 release() 同步交接并计数，这里不得再 active++
-    },
-    release() {
-      active--; // 先退掉自己的槽
-      const w = waiters.shift();
-      // 交接：同步把槽转给 waiter（一次减 + 一次加，绝不双减/双加）；
-      // release 全程同步，中间不会有新 acquire() 插队抢槽。
-      if (w) { active++; w(); }
-    },
-  };
-}
-
-async function withSlot(sem, fn) {
-  await sem.acquire();
-  try { return await fn(); } finally { sem.release(); }
 }
 
 /** 超时包装：超时后 reject，原 promise 继续在后台跑（结果丢弃，无未处理拒绝） */

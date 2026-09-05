@@ -28,6 +28,26 @@ const IDE = `### 本规则集的 IDE 加载优先级
 当上述路径不存在时，降级读取本文件和 \`.cursor/\`。
 `;
 
+/**
+ * Yarn 的 `+build.N` 必须来自 maven-metadata.xml 实查，禁止臆造（旧实现硬编码 `+build.1`，
+ * 五个版本里绝大多数都不是 build.1，写出来就是编译不过的假脚手架）。
+ * 空表 = 未知 → 不输出 mappings 行。
+ */
+const YARN_BUILD = {
+  // "1.21.1": "1",   // ← 只有 maven 实查过才允许填
+};
+
+function yarnMappingsLine(ver) {
+  const build = YARN_BUILD[ver];
+  if (!build) {
+    return `    // MAPPINGS_NOT_PINNED：yarn build 号未经 maven 核实，禁止臆造 +build.1。
+    // 补齐命令：curl -s https://maven.fabricmc.net/net/fabricmc/yarn/maven-metadata.xml
+    //   取该 MC 版本最新 release（形如 \`${ver}+build.N\`），填进 scripts/_oneoff/generate-five-platform-trees.mjs 的 YARN_BUILD。
+    // 例如：mappings "net.fabricmc:yarn:${ver}+build.N:v2"`;
+  }
+  return `    mappings "net.fabricmc:yarn:\${project.minecraft_version}+build.${build}:v2"`;
+}
+
 function quiltTree(ver, java) {
   const fab = `fabric/${ver}`;
   w(
@@ -181,7 +201,7 @@ base { archivesName = 'examplemod' }
 repositories { maven { url = 'https://maven.quiltmc.org/repository/release' } }
 dependencies {
     minecraft "com.mojang:minecraft:\${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:\${project.minecraft_version}+build.1:v2"
+${yarnMappingsLine(ver)}
     // quilt-loader 取 maven.quiltmc.org/repository/release/org/quiltmc/quilt-loader/maven-metadata.xml
     //   最新 = 0.31.0-beta.3（lastUpdated 20260830210050，核对日期 2026-09-02）
     modImplementation "org.quiltmc:quilt-loader:0.31.0-beta.3"

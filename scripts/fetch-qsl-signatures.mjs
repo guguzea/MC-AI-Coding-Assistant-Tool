@@ -4,13 +4,15 @@
  * 抽取 library 下 src/main/java（排除 mixin / testmod / gametest）签名，
  * 写入 loader-api-summaries。源码不入库。禁止编 QuiltRegistry.register()。
  *
- * 用法：node scripts/fetch-qsl-signatures.mjs
+ * 用法：node scripts/fetch-qsl-signatures.mjs            # dry-run：只打 DRYRUN <rel>
+ *       node scripts/fetch-qsl-signatures.mjs --write    # 确认后才写 mcp-server/data/
  */
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync, statSync } from "fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { spawnSync } from "child_process";
 import os from "os";
+import { emit, scratchMkdirAll, scratchRemove, scratchWriteText } from "./_lib/write-guard.mjs";
 import { redactAbs } from "./_lib/redact-abs.mjs";
 import { downloadWithFallback, failureNote, fetchJsonWithUa, FETCH_FAILURE } from "./_lib/fetch-with-ua.mjs";
 
@@ -63,7 +65,7 @@ async function downloadZip(url, dest) {
   const tmp = `${dest}.tmp`;
   const got = await downloadWithFallback({ url, dest: tmp, timeoutMs: 120_000, minBytes: 1000 });
   if (!got.ok) {
-    rmSync(tmp, { force: true });
+    scratchRemove(tmp);
     return {
       ok: false,
       status: got.status || 0,
@@ -126,18 +128,18 @@ async function extractOne(target, extractCompilationUnit, repoSafeSourcePath, de
   }
   const zipUrl = `https://github.com/QuiltMC/quilt-standard-libraries/archive/${commit.sha}.zip`;
   const work = join(CACHE, "qsl-src", target.key);
-  mkdirSync(work, { recursive: true });
+  scratchMkdirAll(work);
   const zipPath = join(work, "repo.zip");
   const got = await downloadZip(zipUrl, zipPath);
   if (!got.ok) {
     return { key: target.key, failureClass: got.failureClass, skipped: `zipball 下载失败 ${got.note || ""}`.trim(), detail: got };
   }
   const unpack = join(work, "unpacked");
-  rmSync(unpack, { recursive: true, force: true });
-  mkdirSync(unpack, { recursive: true });
+  scratchRemove(unpack);
+  scratchMkdirAll(unpack);
   const tar = spawnSync("tar", ["-xf", got.path, "-C", unpack], { windowsHide: true, encoding: "utf8" });
   try {
-    if (existsSync(got.path)) rmSync(got.path, { force: true });
+    scratchRemove(got.path);
   } catch {
     /* ignore */
   }
@@ -185,8 +187,7 @@ async function extractOne(target, extractCompilationUnit, repoSafeSourcePath, de
     classes: next,
     note: NOTE,
   };
-  mkdirSync(OUT, { recursive: true });
-  writeFileSync(join(OUT, `${target.key}.json`), JSON.stringify(summary, null, 2) + "\n", "utf8");
+  const wrote = emit(join(OUT, `${target.key}.json`), JSON.stringify(summary, null, 2) + "\n");
   return {
     key: target.key,
     ok: true,
@@ -194,6 +195,7 @@ async function extractOne(target, extractCompilationUnit, repoSafeSourcePath, de
     classCount: next.length,
     javaFileCount: javaFiles.length,
     parseErrorCount: parseErrors.length,
+    ...(wrote ? {} : { dryRun: true }),
   };
 }
 
@@ -206,8 +208,7 @@ async function main() {
   }
   const { extractCompilationUnit, repoSafeSourcePath } = await import(pathToFileURL(distExtract).href);
   const { dedupeLoaderClasses } = await import(pathToFileURL(distStore).href);
-  mkdirSync(OUT, { recursive: true });
-  mkdirSync(join(CACHE, "loader-api-summaries"), { recursive: true });
+  scratchMkdirAll(join(CACHE, "loader-api-summaries"));
   const log = [];
   for (const t of TARGETS) {
     try {
@@ -220,7 +221,7 @@ async function main() {
     }
     await new Promise((r) => setTimeout(r, 800));
   }
-  writeFileSync(
+  scratchWriteText(
     join(CACHE, "loader-api-summaries", "fetch-qsl-last.json"),
     JSON.stringify({ cache: "$MC_SKILL_CACHE", log: redactAbs(log, { cache: CACHE, repo: ROOT }) }, null, 2),
   );

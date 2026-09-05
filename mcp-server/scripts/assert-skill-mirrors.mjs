@@ -10,6 +10,9 @@
  *   - AGENTS.md → .cursor/agent + .claude/agents + .trae/agents 三镜像：
  *     存量漂移记在 KNOWN_AGENTS_DRIFT 台账里，新增漂移直接失败；
  *     台账条目一旦不再漂移也必须删（跑过一次真 sync 就得缩短），否则它变成永久豁免名单。
+ *   - (4) frontmatter「有就必须合法」（D-3 已裁 = A）：键集白名单 + description 非空
+ *     + alwaysApply 布尔 + globs 数组或空 + status ∈ {ready,draft}；
+ *     没有 frontmatter 的 450 篇规则 / 94 个技能按裁定不查、不补。
  */
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
@@ -324,6 +327,130 @@ if (staleLedger.length) {
   );
 }
 
+// ── (4) frontmatter 合法性（D-3 已裁 = A：只做「有就必须合法」的 gate）──────
+// 实测基线（2026-09-05，git ls-files 口径）：`.cursor/rules/*.mdc` 528 个源稿里
+// 78 有 frontmatter / 450 没有；`.cursor/skills/**` 1292 个里 1198 有 / 94 没有。
+// 缺失者按裁定**不动**（批量补 = 528 × 8 投影写盘面，且 description 无 CLI 证据；
+// 反向删那 78 个会改 alwaysApply / globs 的注入语义）。这里只守住「写了就必须合法」，
+// 因为宿主按这些键决定规则注不注入：`alwaysApply: "yes"` 会被当真值以外的东西丢掉，
+// 未知键静默忽略，空 `description` 让 .pi 侧又自动补一份 → 全都只在运行时才暴露。
+// 只查源稿：各投影与源稿逐字节哈希相等，已由上面的 hash 检查钉住。
+const RULE_FM_KEYS = new Set(["description", "globs", "alwaysApply", "status"]);
+// status 是本仓自用的档内标记（实测 9 个 .mdc 写 `status: ready`），不是宿主键。
+const SKILL_FM_KEYS = new Set([
+  "name",
+  "description",
+  "platform",
+  "version",
+  "dependencies",
+  "mappings",
+  "docsTool",
+  "platforms",
+  "mcVersions",
+  "communityDocId",
+]);
+
+function parseFrontmatter(text) {
+  if (!text.startsWith("---")) return { kind: "none" };
+  const m = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text);
+  if (!m) return { kind: "unclosed" };
+  const entries = [];
+  for (const line of m[1].split(/\r?\n/)) {
+    const kv = /^([A-Za-z0-9_-]+)\s*:\s*(.*)$/.exec(line);
+    if (kv) entries.push({ key: kv[1], raw: kv[2].trim(), inline: true });
+    else if (/^\s+-\s+\S/.test(line)) entries.push({ key: null, raw: line.trim(), inline: false });
+  }
+  return { kind: "ok", entries, block: m[1] };
+}
+
+/** 顶层键值：块式数组（`globs:` 后面跟 `  - xxx`）也算作该键的非内联值。 */
+function frontmatterMap(entries) {
+  const map = new Map();
+  let last = null;
+  for (const e of entries) {
+    if (e.inline) {
+      map.set(e.key, { raw: e.raw, blockItems: [] });
+      last = e.key;
+    } else if (last) {
+      map.get(last).blockItems.push(e.raw);
+    }
+  }
+  return map;
+}
+
+let fmRulesChecked = 0;
+let fmSkillsChecked = 0;
+
+function checkFrontmatter(relPath, text, keysAllowed, classLabel) {
+  const parsed = parseFrontmatter(text);
+  if (parsed.kind === "none") return;
+  if (parsed.kind === "unclosed") {
+    failures.push(`frontmatter ${classLabel}: ${relPath} 以 --- 开头但没有闭合的 ---（整块会被当正文）`);
+    return;
+  }
+  if (classLabel === "rule") fmRulesChecked++;
+  else fmSkillsChecked++;
+  const map = frontmatterMap(parsed.entries);
+  for (const [key, val] of map) {
+    if (!keysAllowed.has(key)) {
+      failures.push(
+        `frontmatter ${classLabel}: ${relPath} 未知键 \`${key}:\`（白名单 = ${[...keysAllowed].join("/")}；宿主忽略未知键，写了等于没写）`,
+      );
+    }
+    if (val.blockItems.length && !/^\[\]$/.test(val.raw) && val.raw !== "") {
+      failures.push(`frontmatter ${classLabel}: ${relPath} 键 \`${key}:\` 同时有内联值和块式列表项`);
+    }
+  }
+  const desc = map.get("description");
+  if (!desc || (desc.raw === "" && !desc.blockItems.length)) {
+    failures.push(
+      `frontmatter ${classLabel}: ${relPath} 有 frontmatter 但 \`description\` 为空（.pi 侧会自动补一份标题当描述，源稿该自己写清）`,
+    );
+  }
+  if (classLabel === "skill") {
+    const name = map.get("name");
+    if (!name || name.raw === "") {
+      failures.push(`frontmatter skill: ${relPath} \`name:\` 为空（技能名以目录为准时，frontmatter 别写空值）`);
+    }
+    return;
+  }
+  const apply = map.get("alwaysApply");
+  if (!apply) {
+    failures.push(`frontmatter rule: ${relPath} 有 frontmatter 但缺 \`alwaysApply:\`（缺省即「不总是注入」，与不写 frontmatter 行为不同）`);
+  } else if (apply.raw !== "true" && apply.raw !== "false") {
+    failures.push(
+      `frontmatter rule: ${relPath} \`alwaysApply: ${apply.raw}\` 不是布尔字面量 true/false（YAML 会把 yes/no/on/off 当字符串，宿主按布尔解析 → 静默失效）`,
+    );
+  }
+  const globs = map.get("globs");
+  if (globs && globs.raw !== "" && !/^\[.*\]$/.test(globs.raw) && !globs.blockItems.length) {
+    failures.push(`frontmatter rule: ${relPath} \`globs:\` 既不是数组也不是空值：${globs.raw}`);
+  }
+  const status = map.get("status");
+  if (status && status.raw !== "ready" && status.raw !== "draft") {
+    failures.push(`frontmatter rule: ${relPath} \`status: ${status.raw}\` 不在 ready/draft（该值与 pack.meta.json 的拒载开关同词，别造第三种）`);
+  }
+}
+
+for (const pack of listVersionDirs()) {
+  const rulesDir = join(pack.base, ".cursor", "rules");
+  for (const name of readdirSync(rulesDir).filter((x) => x.endsWith(".mdc"))) {
+    const abs = join(rulesDir, name);
+    checkFrontmatter(relative(repoRoot, abs), readFileSync(abs, "utf8"), RULE_FM_KEYS, "rule");
+  }
+  const skillsDir = join(pack.base, ".cursor", "skills");
+  if (!existsSync(skillsDir)) continue;
+  for (const entry of readdirSync(skillsDir)) {
+    const inDir = join(skillsDir, entry, "SKILL.md");
+    const flat = join(skillsDir, entry);
+    if (existsSync(inDir)) {
+      checkFrontmatter(relative(repoRoot, inDir), readFileSync(inDir, "utf8"), SKILL_FM_KEYS, "skill");
+    } else if (statSync(flat).isFile() && entry.endsWith(".md")) {
+      checkFrontmatter(relative(repoRoot, flat), readFileSync(flat, "utf8"), SKILL_FM_KEYS, "skill");
+    }
+  }
+}
+
 if (failures.length) {
   console.error(`assert-skill-mirrors: ${failures.length} mismatch(es)`);
   for (const f of failures.slice(0, 40)) console.error(`  ${f}`);
@@ -331,5 +458,5 @@ if (failures.length) {
   process.exit(1);
 }
 console.log(
-  `assert-skill-mirrors: ok (实测 AGENTS 漂移 ${agentsDrift.size} 档 / 台账 ${KNOWN_AGENTS_DRIFT.size} 档，只准缩短)`,
+  `assert-skill-mirrors: ok (实测 AGENTS 漂移 ${agentsDrift.size} 档 / 台账 ${KNOWN_AGENTS_DRIFT.size} 档，只准缩短 · frontmatter 合法性已查 ${fmRulesChecked} 篇规则 + ${fmSkillsChecked} 个技能正文)`,
 );

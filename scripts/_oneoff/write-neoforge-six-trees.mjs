@@ -674,16 +674,11 @@ ${f.unique}
     `${base}/.cursor/skills/mc-gui/SKILL.md`,
     skill("mc-gui", ver, f, r10(ver, f)),
   );
-  out(
-    `${base}/.cursor/skills/mc-blockentity/SKILL.md`,
-    skill(
-      "mc-blockentity",
-      ver,
-      f,
-      r02(ver, f) +
-        "\n\n触发词：BlockEntity、BlockEntityType、getTicker、getUpdateTag。自定义包走 Payload，禁止 SimpleChannel / RegistryObject。",
-    ),
-  );
+  // §6.1-D：本脚本不再写 `${base}/.cursor/skills/mc-blockentity/SKILL.md`。
+  // 原先这里把整份 r02()（即 02-block.mdc 正文）内联进 BE Skill，方块正文与 BE 正文
+  // 混写且随 02-block.mdc 修订而失真。该文件现由 scripts/_oneoff/write-neoforge-blockentity-skills.mjs
+  // 单写：只出 BlockEntity 自己的条目，逐条挂 data/neoforge_<ver>/ 的 file:line，方块侧引同档 02-block.mdc。
+
   out(`${base}/scaffold/src/main/java/com/example/examplemod/ExampleMod.java`, scaffoldJava(ver, f));
   out(
     `${base}/scaffold/README.md`,

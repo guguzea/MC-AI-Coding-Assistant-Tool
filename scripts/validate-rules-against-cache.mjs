@@ -50,13 +50,15 @@ function extractFromJava(src, filePath) {
   if (!simpleName) return null;
   const fqcn = pkg ? `${pkg}.${simpleName}` : simpleName;
   const methods = [];
+  // 只承认「注解/修饰符 + 返回类型 + 名字 + (」的声明行。开头的否定预查看挡住语句关键字：
+  // 旧式没有它，`return foo(` 里 `return` 被吃成返回类型位、`foo` 记成本类方法。
+  // 与 scripts/fetch-loader-api-sources.mjs 的 METHOD_SIG_RE 同形（改一处要同步另一处）。
   const methodRe =
-    /^\s*(?:(?:public|protected|private)\s+)?(?:static\s+)?(?:default\s+)?(?:final\s+)?(?:[\w.<>,?\[\]]+)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/gm;
+    /^[ \t]*(?!(?:return|throw|else|if|for|while|do|switch|case|new|instanceof|assert|yield|try|catch|finally|break|continue|extends|implements|import|package|var|class|interface|enum|record|this|super)[ \t])(?:(?:@[\w.]+(?:\([^()]*\))?|(?:public|protected|private|static|final|abstract|default|synchronized|native|strictfp))[ \t]+)*(?:<[^<>]*(?:<[^<>]*>[^<>]*)*>[ \t]+)?[\w.$]+(?:(?:<[^<>]*(?:<[^<>]*>[^<>]*)*>|\[\s*\])*)[ \t]+([a-z_$][\w$]*)[ \t]*\(/gm;
   let m;
   while ((m = methodRe.exec(stripped))) {
     const name = m[1];
-    if (name === simpleName || name === "if" || name === "for" || name === "while" || name === "switch") continue;
-    if (/^[A-Z]/.test(name)) continue;
+    if (name === simpleName) continue;
     if (!methods.includes(name)) methods.push(name);
     if (methods.length >= 40) break;
   }

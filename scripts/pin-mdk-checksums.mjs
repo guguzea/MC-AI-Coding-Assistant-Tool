@@ -15,13 +15,13 @@ import { dirname, join } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import os from "os";
 import { redactAbs } from "./_lib/redact-abs.mjs";
+import { failureNote, fetchJsonWithUa, fetchWithUa, FETCH_FAILURE } from "./_lib/fetch-with-ua.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CHECKSUMS = join(ROOT, "mcp-server", "data", "mdk-checksums.json");
 const apply = process.argv.includes("--apply");
 const downloadOnly = process.argv.includes("--download-only");
 const only = process.argv.find((a) => a.startsWith("--only="))?.split("=")[1];
-const UA = { "User-Agent": "MC-AI-Coding-Assistant-Tool" };
 
 const NEO_NEED = ["1.21.1", "1.21.3", "1.21.8", "1.21.11"];
 const FORGE_AGENTS = [
@@ -39,27 +39,59 @@ const FORGE_AGENTS = [
 ];
 
 async function ghJson(url) {
-  const headers = { ...UA, Accept: "application/vnd.github+json" };
+  const headers = { Accept: "application/vnd.github+json" };
   if (process.env.GITHUB_TOKEN || process.env.MC_SKILL_GITHUB_TOKEN) {
     headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN || process.env.MC_SKILL_GITHUB_TOKEN}`;
   }
-  const res = await fetch(url, { headers, redirect: "follow", signal: AbortSignal.timeout(30_000) });
-  return { status: res.status, json: res.ok ? await res.json() : null, url };
+  const res = await fetchWithUa(url, { headers, timeoutMs: 30_000, as: "json" });
+  if (res.ok && !res.json) {
+    return { ok: false, status: res.status, failureClass: FETCH_FAILURE.UNKNOWN, reason: "响应不是合法 JSON", url };
+  }
+  return { ok: res.ok, status: res.status, json: res.ok ? res.json : null, failureClass: res.failureClass, tls: res.tls, headers: res.headers, reason: res.reason, url };
+}
+
+/**
+ * 探测失败 → 机器可读分类。
+ * 只有真 404 才允许写 MDK_NOT_PINNED；403/429（含 x-ratelimit-remaining: 0）= RATE_LIMITED，
+ * 证书/吊销问题 = TLS_*，超时 = TIMEOUT —— 这些都必须与「MDK 不存在」区分开。
+ */
+function probeFailure(res, label) {
+  const cls = res?.failureClass || FETCH_FAILURE.UNKNOWN;
+  const note = failureNote(res) || res?.reason || "";
+  const row = {
+    ok: false,
+    skipped: true,
+    status: res?.status || 0,
+    failureClass: cls,
+    url: res?.url,
+    message: `${cls}：${label} ${note}`.trim(),
+  };
+  if (cls === FETCH_FAILURE.RATE_LIMITED) {
+    row.message = `RATE_LIMITED：${label} 被 GitHub/Maven 限流（${note}），稍后重跑；禁止记成 MDK 不存在/未 pin`;
+    row.retryAfter = res?.headers?.["retry-after"];
+  }
+  if (cls === FETCH_FAILURE.NOT_FOUND) {
+    row.message = `NOT_FOUND：${label} HTTP 404，MDK_NOT_PINNED`;
+  }
+  return row;
 }
 
 async function probeNeoRepo(ver, pluginLabel) {
   const repo = `NeoForgeMDKs/MDK-${ver}-${pluginLabel}`;
   const info = await ghJson(`https://api.github.com/repos/${repo}`);
   if (info.status === 404) {
-    return { ok: false, skipped: true, repo, status: 404, message: `MDK_NOT_PINNED：仓不存在 ${repo}` };
+    return { ...probeFailure({ ...info, failureClass: FETCH_FAILURE.NOT_FOUND }, repo), repo };
   }
   if (!info.ok && !info.json) {
-    return { ok: false, repo, status: info.status, message: `GitHub API ${info.status} ${info.url}` };
+    return { ...probeFailure(info, repo), repo };
   }
   const commits = await ghJson(`https://api.github.com/repos/${repo}/commits?per_page=1`);
+  if (!commits.ok) {
+    return { ...probeFailure(commits, `${repo} commits`), repo };
+  }
   const sha = commits.json?.[0]?.sha;
   if (!sha) {
-    return { ok: false, repo, status: commits.status, message: `无 default-branch commit：${repo}` };
+    return { ...probeFailure({ ...commits, failureClass: FETCH_FAILURE.UNKNOWN, reason: "无 default-branch commit" }, repo), repo };
   }
   const buildPlugin = pluginLabel === "ModDevGradle" ? "moddevgradle" : "neogradle";
   return {
@@ -84,18 +116,23 @@ async function probeNeoRepo(ver, pluginLabel) {
 async function probeForgeOfficial(mcVer, promotions) {
   const rec = promotions?.promos?.[`${mcVer}-recommended`] ?? promotions?.promos?.[`${mcVer}-latest`];
   if (!rec) {
-    return { ok: false, skipped: true, message: `promotions 无 ${mcVer}，MDK_NOT_PINNED` };
+    return {
+      ok: false,
+      skipped: true,
+      failureClass: FETCH_FAILURE.NOT_FOUND,
+      message: `NOT_FOUND：promotions 无 ${mcVer}，MDK_NOT_PINNED`,
+    };
   }
   const ver = `${mcVer}-${rec}`;
   const url = `https://maven.minecraftforge.net/net/minecraftforge/forge/${ver}/forge-${ver}-mdk.zip`;
-  const head = await fetch(url, { method: "HEAD", headers: UA, redirect: "follow" });
+  const head = await fetchWithUa(url, { method: "HEAD", timeoutMs: 30_000, as: "none" });
   if (head.status === 404) {
-    const get = await fetch(url, { method: "GET", headers: UA, redirect: "follow" });
+    const get = await fetchWithUa(url, { timeoutMs: 30_000, as: "none" });
     if (get.status === 404) {
-      return { ok: false, skipped: true, url, status: 404, message: `官方 MDK 404 ${url}，MDK_NOT_PINNED` };
+      return { ...probeFailure({ ...get, failureClass: FETCH_FAILURE.NOT_FOUND, url }, url), url };
     }
   } else if (!head.ok && head.status !== 405) {
-    return { ok: false, skipped: true, url, status: head.status, message: `官方 MDK HTTP ${head.status} ${url}` };
+    return { ...probeFailure(head, url), url };
   }
   return {
     ok: true,
@@ -157,19 +194,16 @@ async function main() {
   }
 
   let promotions = null;
-  try {
-    const res = await fetch("https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json", {
-      headers: UA,
-      redirect: "follow",
-    });
-    if (res.ok) promotions = await res.json();
-    else skipped.push({ skipped: true, status: res.status, message: `promotions_slim.json HTTP ${res.status}` });
-  } catch (e) {
-    skipped.push({ skipped: true, message: `promotions_slim.json ${String(e)}` });
-  }
+  const promo = await fetchJsonWithUa("https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json", {
+    timeoutMs: 30_000,
+  });
+  if (promo.ok) promotions = promo.json;
+  else skipped.push(probeFailure(promo, "promotions_slim.json"));
 
   let officialProbeDone = false;
-  for (const ver of FORGE_AGENTS) {
+  // promotions 拉不到时（TLS / 限流 / 超时）逐版报 MDK_NOT_PINNED 是假阴性，整轮跳过
+  const promotionsBlocked = !promo.ok && promo.failureClass !== FETCH_FAILURE.NOT_FOUND;
+  for (const ver of promotionsBlocked ? [] : FORGE_AGENTS) {
     const r = await probeForgeOfficial(ver, promotions);
     if (r.skipped || !r.ok) skipped.push({ minecraftVersion: ver, ...r });
     else {
