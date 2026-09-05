@@ -93,10 +93,10 @@ modId="examplemod"   # 全部小写
 
 ```groovy
 // ❌ 遗漏
-// Minecraft 1.14.4 需要 Java 11
+// Minecraft 1.14.4 是 Java 8：官方 1.14.4-28.2.26 MDK build.gradle:19 写 '1.8'
 
-// ✅ 必须配置
-java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+// ✅ 必须配置（1.14.4 的 MDK 用 Gradle 4.9，没有 java.toolchain DSL，只能这样钉）
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 ```
 
 ---

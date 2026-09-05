@@ -95,9 +95,9 @@
 
 | 冲突 | A（本包规则/知识） | B（本包实证工件/官方语料） | 采舍 |
 |------|--------------------|-----------------------------|------|
-| pack_format | `.pi/rules/00-project-setup.md:238,243` = 6 | `scaffold/.../pack.mcmeta:4` = 4、`knowledge/common/datapack-format.md:39` = 4 | **4**（B 有两处支撑，A 无） |
+| ~~pack_format~~（已消解） | `.cursor/rules/00-project-setup.mdc`（原 6；`.pi/rules/00-project-setup.md:238,243` 为其投影） | `scaffold/.../pack.mcmeta:4` = 4、`knowledge/common/datapack-format.md:39` = 4、官方 1.13.2-25.0.223 MDK `pack.mcmeta` = 4 | **4**（规则原稿已按 MDK 改正，两侧一致；投影待 `sync-skills` 重生成） |
 | mappings | `version-changes/1.13.x.md:105-107` = `mcp` / `1.13.2` | `scaffold/gradle.properties:12-13` = `snapshot` / `20180921-1.13` | 官方 MDK 为 snapshot（A 写法对应 `data/forge_1.13.2/mappings/mcp-1.13.2.zip`，二者皆存在，需按工程实际读 `build.gradle` 判定） |
-| Gradle | `AGENTS.md` 基本信息 = Gradle 6.x | `scaffold/build.gradle:2` + wrapper = 4.9 | 以工程文件为准；本表只声明 MDK 组合 |
+| ~~Gradle~~（已消解） | `AGENTS.md` 基本信息 = Gradle 4.9 + FG `3.+` | `scaffold/build.gradle:2` + wrapper = 4.9；官方 MDK `gradle-wrapper.properties:5` = `gradle-4.9-bin.zip` | 两侧一致，原「AGENTS.md 写 6.x」已按 MDK 改正 |
 | 方块属性 / 创造标签页 | `version-changes/1.13.x.md:38-48,91-98`（`Block.Properties.create(Material)`、`ItemGroup`） | 官方语料 `blocks_blocks.md:13-17`、`items_items.md:13` 仍写 1.12 setter（`setHardness`/`setCreativeTab`/`CreativeTabs`） | 两侧互斥 → **未核实**，写码时以 IDE 补全 / 反编译核实，禁止硬套 |
 
 ---

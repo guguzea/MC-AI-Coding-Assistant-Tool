@@ -24,4 +24,4 @@
 - **Forge 1.14.4**：DeferredRegister 已可用，是推荐方式
 - **Fabric**：在 `onInitialize()` 中直接调用 `Registry.register()`
 - **Mixin**：Mixins 在两平台都需要单独配置
-- **Java 版本**：1.14.4 支持 Java 8/11，Fabric 通常需要 Java 8
+- **Java 版本**：1.14.4 Forge = **Java 8**（官方 28.2.26 MDK `'1.8'`，语料与 MDK 均无 Java 11 依据）。TODO(未核实) Fabric 侧的 JDK 口径本仓 1.14.4 语料未覆盖，按 Fabric 工程自备文档核实后再写

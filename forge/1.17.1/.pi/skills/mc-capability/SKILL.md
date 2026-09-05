@@ -170,7 +170,9 @@ if (lazy.isPresent()) {
 }
 ```
 
-`getCapability` **从不返回 null**，缺席时返回空 `LazyOptional`。可用成员：`LazyOptional.of` / `empty` / `cast` / `map` / `lazyMap` / `filter` / `ifPresent` / `isPresent` / `orElse` / `orElseGet` / `orElseThrow` / `getValue` / `getValueUnsafe` / `invalidate` / `addListener`。
+`getCapability` **从不返回 null**，缺席时返回空 `LazyOptional`。可用成员：`LazyOptional.of` / `empty` / `cast` / `map` / `lazyMap` / `filter` / `resolve` / `ifPresent` / `isPresent` / `orElse` / `orElseGet` / `orElseThrow` / `getValue` / `getValueUnsafe` / `invalidate` / `addListener`。
+
+> 两个 `addListener` 不是一回事：`LazyOptional#addListener` 收 `NonNullConsumer<LazyOptional<T>>`，`AttachCapabilitiesEvent#addListener` 才收 `Runnable`（两者签名均由 `query_loader_api --platform=forge --minecraftVersion=1.17.1` 核实）。
 
 ## Decision: 附加还是查询
 
@@ -216,7 +218,7 @@ player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.NO
 
 ## 持久化（NBT）
 
-- 需要落盘的 provider 实现 `ICapabilitySerializable<T extends Tag>`（1.17.1 上是 `ICapabilitySerializable<CompoundTag>`），它 = `ICapabilityProvider` + `INBTSerializable<T>`；读写就是 `serializeNBT()` / `deserializeNBT(T)`。
+- 需要落盘的 provider 实现 `ICapabilitySerializable<T extends Tag>`（本档官方文档给出的上界），它 = `ICapabilityProvider` + `INBTSerializable<T>`；读写就是 `serializeNBT()` / `deserializeNBT(T)`。类型实参取 `CompoundTag` 合法：`query_api --class=net.minecraft.nbt.CompoundTag --version=1.17.1` 同时列出 `copy()Lnet/minecraft/nbt/CompoundTag;` 和桥方法 `copy()Lnet/minecraft/nbt/Tag;`，说明 `CompoundTag` 覆写了 `Tag#copy`，即 `CompoundTag` 是 `Tag` 的子类型。
 - **`LevelChunk` 和 `BlockEntity` 只有被标脏才写盘**。状态一变就要标脏：
 
 ```java
@@ -241,7 +243,7 @@ private final IItemHandler inventory = new ItemStackHandler(9) {
 
 ## 常见错误
 
-- ❌ `new ICapabilityProvider<>() { ... }` —— `ICapabilityProvider` 是**非泛型**接口（`addCapability` 第二参数就是裸类型）。带尖括号写会编译不过；仓库内 1.16.5 / 1.18.2 档和 `05-events.mdc` 的尖括号写法对本档不成立。
+- ❌ `new ICapabilityProvider<>() { ... }` —— `ICapabilityProvider` 是**非泛型**接口（`addCapability` 第二参数就是裸类型），带尖括号写编译不过。`query_loader_api` 在 forge 1.14.4 / 1.15.2 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 上都只给出两个成员：`getCapability(Capability<T>, Direction)`（抽象）与 `getCapability(Capability<T>)`（default），没有任何类型参数。
 - ❌ `serializeNBT(CompoundTag tag)` 这种带参序列化 —— `INBTSerializable` 的 `serializeNBT()` 无参并返回 `T`。
 - ❌ 覆写 `getCapability` 忘了 `return super.getCapability(cap, side)` —— 别人附加的 capability 会全部失效。
 - ❌ `getCapability()` 返回 null / 直接 `.get()` —— 它返回 `LazyOptional`，用 `ifPresent` / `orElse`。

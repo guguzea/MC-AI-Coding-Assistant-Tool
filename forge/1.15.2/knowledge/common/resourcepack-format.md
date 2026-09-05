@@ -5,13 +5,14 @@
 ```json
 {
   "pack": {
-    "pack_format": 6,
+    "pack_format": 5,
     "description": "My Resource Pack"
   }
 }
 ```
 
-> 1.15.2 的数据包 pack_format = **5**（资源包为 6）。
+> 1.15.2 的资源包与数据包**同为 5**：官方 1.15.2-31.2.57 MDK `src/main/resources/pack.mcmeta` = `"pack_format": 5`（sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`），本包 `scaffold/src/main/resources/pack.mcmeta` 同为 5；同目录 `knowledge/common/datapack-format.md` 也是 5。原写「资源包 6 / 数据包 5」两头都不对 —— 6 是 **1.16.2+** 的号。
+> 1.18 起两类包编号才分家（1.18.2 = 资源 8 / 数据 9），不要把「相同」外推到 1.18+。
 
 ## 目录结构
 

@@ -13,8 +13,8 @@
 | Minecraft 版本 | 1.16.5 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 8**（官方：Minecraft 与 MinecraftForge 均按 Java 8 编译，「must only use Java 8 code」；Java 15 只是后期 Forge 的运行期支持）。详见 `00-project-setup.mdc` |
-| Gradle | Gradle 7.x + ForgeGradle 4.x |
-| Mappings | **Parchment**（`2021.07.27-1.16.5`，maven.parchmentmc.org 首发） |
+| Gradle | **Gradle 7.6 + ForgeGradle `[4.1,4.2)`**（本包 `scaffold/build.gradle:5` + `scaffold/gradle/wrapper/gradle-wrapper.properties:3`）。⚠️ 官方 1.16.5-36.2.34 MDK 声明的是 **FG `5.1.+` + Gradle 7.3.3**（MDK `build.gradle:7`、`gradle-wrapper.properties:3`；sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）。scaffold 与 MDK 组合不一致（未裁定分歧），不要把一套当另一套的官方背书 |
+| Mappings | **Parchment**（`2021.07.27-1.16.5`，maven.parchmentmc.org 首发；本包 `scaffold/build.gradle:22` `mappings channel: 'parchment', version: mapping_version`）。⚠️ 官方 1.16.5-36.2.34 MDK 默认是 **`mappings channel: 'official', version: '1.16.5'`**（MDK `build.gradle:34`，Mojmap：方法/字段官方名、类名仍是 MCP 名），MCP 则走 `snapshot` 通道。三套映射不同源，按用户工程实际声明的那一套写名字，禁止混用（详见 `knowledge/version-changes/1.16.x.md`） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---

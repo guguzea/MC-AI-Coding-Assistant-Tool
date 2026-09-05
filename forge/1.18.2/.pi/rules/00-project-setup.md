@@ -133,7 +133,7 @@ IF 报错包含 "Incompatible Java version"
 
 IF 报错包含 "Could not find net.minecraftforge:forge"
   → 确认 build.gradle 中 minecraft_version 和 forge_version 版本匹配
-  → Forge 版本对应关系：1.18.2 → 40.1.x
+  → Forge 版本对应关系：1.18.2 → 40.x（本包 scaffold 钉 `40.1.80`；官方 1.18.2-40.3.0 MDK 为 40.3.x。只要 minecraft_version 与 forge_version 同属 1.18.2 即可）
 
 IF 报错包含 "No resource bundling found"
   → 这是正常的（非客户端打包时），可忽略

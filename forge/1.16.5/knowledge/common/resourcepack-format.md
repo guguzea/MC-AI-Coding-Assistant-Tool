@@ -11,7 +11,8 @@
 }
 ```
 
-> 1.16.x 的 pack_format = **6**，与数据包相同。
+> 1.16.x 的资源包 pack_format = **6**：官方 1.16.5-36.2.34 MDK `src/main/resources/pack.mcmeta` = `"pack_format": 6`（sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`），本包 `scaffold/src/main/resources/pack.mcmeta` 同为 6。
+> 1.16.x 的数据包与资源包**共用同一个号**（`pack.mcmeta` 只有一个 `pack_format` 字段）；**1.18 起分家**（1.18.2 = 资源 8 / 数据 9），不要把「相同」外推到 1.18+。1.16/1.16.1 是否为 5 只是 MDK `_comment`「from 1.16.2」的推论。
 
 ## 目录结构
 

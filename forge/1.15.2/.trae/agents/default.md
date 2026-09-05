@@ -16,8 +16,8 @@
 | Minecraft 版本 | 1.15.2 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 8**（Forge 1.15.2 最低要求） |
-| Gradle | Gradle 7.x + ForgeGradle 4.x |
-| Mappings | **MCP**（`minecraft "1.15.2"` 下默认） |
+| Gradle | **Gradle 7.3.3 + ForgeGradle `[4.1,4.2)`**（本包 `scaffold/build.gradle:5` + `scaffold/gradle/wrapper/gradle-wrapper.properties:3`）。⚠️ 官方 1.15.2-31.2.57 MDK 是 **Gradle 4.10.3 + FG `3.+`**（MDK `build.gradle:7`、`gradle-wrapper.properties:5`；sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）。scaffold 与 MDK 组合不一致（未裁定分歧），不要互相背书 |
+| Mappings | 本包 scaffold = **official**（`scaffold/gradle.properties:14` `mapping_channel=official`，`scaffold/build.gradle:17` 用该变量）。官方 1.15.2-31.2.57 MDK 用的是 **MCP `snapshot` 通道**（MDK `build.gradle:29` `mappings channel: 'snapshot', version: '20200514-1.15.1'`）。两侧不同源：按用户工程实际的那一套写方法名，禁止 MCP / official / Parchment 混用 |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---
@@ -145,8 +145,8 @@ src/main/java/
 |------|---------------|--------------|------|
 | 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
 | Java 版本 | Java 8 | Java 17+ | 1.15.2 使用 Java 8 |
-| Gradle | Gradle 7.x | Gradle 8.x | 1.15.2 使用 FG4 |
-| pack_format | 6 | 15 (1.20.1) | 资源包格式差异 |
+| Gradle | Gradle 7.3.3 + FG `[4.1,4.2)` | Gradle 8.x + FG `[6.0,6.2)` | 本包 `scaffold/build.gradle:5` + `gradle-wrapper.properties:3`。⚠️ 官方 1.15.2-31.2.57 MDK 是 **Gradle 4.10.3 + FG `3.+`**（MDK `build.gradle:7`、`gradle-wrapper.properties:5`；sha256 见 `mcp-server/data/mdk-checksums.json`）：scaffold 与 MDK 组合不一致（未裁定分歧），不要互相背书 |
+| pack_format | 5 | 15 (1.20.1) | 官方 1.15.2-31.2.57 MDK `pack.mcmeta` = `"pack_format": 5`（本包 scaffold 同为 5）；1.18 前数据包与资源包共用此号，1.18 起分家（资源 8 / 数据 9）。原写 6 是 1.16.2+ 的号 |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。
 

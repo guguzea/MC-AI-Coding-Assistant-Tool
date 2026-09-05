@@ -8,10 +8,11 @@
 
 ### Java 版本
 
-- **推荐使用 Java 11**（Forge 1.16.5 原生支持）
-- **可使用 Java 16**（Forge 1.16.5 的 ForgeGradle 4.x 支持）
-- `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_11` 或通过 toolchain `java.toolchain.languageVersion = JavaLanguageVersion.of(11)`
-- Gradle Wrapper 版本不低于 **Gradle 7.x**（推荐 Gradle 7.6）
+- **Java 8** 是本档唯一有官方出处的开发 JDK。1.16.5 文档 `gettingstarted`：「Obtain a Java 8 Development Kit (JDK) and a 64-bit Java Virtual Machine (JVM). Minecraft and MinecraftForge both compile against Java 8 and as such should be used for development.」；`primer_1_16_5` 进一步写明「You must only use Java 8 code as Minecraft is built on Java 8.」与「It is still recommended to compile against Java 8.」
+- 所以源码按 Java 8 写：`var`、`List.of`、switch 表达式、`instanceof X x` 模式变量都不可以用（1.17.1 档 `gettingstarted` 才换成「Obtain a Java 16 Development Kit (JDK)」）。
+- `build.gradle` 声明 `sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8`，或 toolchain `java.toolchain.languageVersion = JavaLanguageVersion.of(8)`。本仓 `scaffold/build.gradle` 已按官方 MDK 改为 `of(8)`（`forge-1.16.5-36.2.34-mdk.zip` 的 `build.gradle:19` 就是 `JavaLanguageVersion.of(8)`，注释「Mojang ships Java 8 to end users, so your mod should target Java 8.」）。**仍存的偏差（未核实，勿当已验证）**：该 MDK 用 ForgeGradle `5.1.+` + Gradle 7.3.3，本仓 scaffold 钉的是 FG `[4.1,4.2)` + Gradle 7.6，两者不同源，改哪一头都要真跑 `gradlew build` 佐证（本机无 JDK 11，且离线）。
+- 「Java 11 / Java 16 可用来开发 1.16.5」在 1.16.5 官方文档里没有任何依据，不要当成推荐配置抄给用户。
+- Gradle Wrapper 版本不低于 **Gradle 7.x**（推荐 Gradle 7.6 —— 这是本仓 scaffold 的实测可启动组合，官方 1.16.5 MDK 钉的是 7.3.3，文档语料未给 Gradle 版本口径）
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
 ### Gradle 约束
@@ -118,7 +119,7 @@ IF 报错包含 "Could not resolve net.minecraftforge"
   → 检查 gradle.properties 中 forge_version 是否有效
 
 IF 报错包含 "Incompatible Java version"
-  → 确认使用 Java 11 或 16，不兼容 Java 8 或 Java 17+（1.16.5 不支持）
+  → 确认 JDK 版本：本档上游只背书 Java 8（见 §Java 版本），先按 Java 8 核对；不要把 1.17.1 档文档里的 Java 16 要求抄进 1.16.5 工程
 
 IF 报错包含 "Could not find net.minecraftforge:forge"
   → 确认 build.gradle 中 minecraft_version 和 forge_version 版本匹配
@@ -150,7 +151,8 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+// 官方 1.16.5-36.2.34 MDK build.gradle:19 即 of(8)；上游文档只背书「按 Java 8 编译」
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 // Parchment mappings — 带参数名和 javadoc
 mappings channel: 'parchment', version: mapping_version

@@ -45,11 +45,13 @@
 
 ## 版本对照表
 
-| MC 版本 | Forge | Fabric Loader | pack_format |
+| MC 版本 | Forge | Fabric Loader | pack_format（数据包） |
 |--------|-------|--------------|-------------|
-| 1.18.2 | 40.1.x | — | 9 |
+| 1.18.2 | 40.x | — | 9 |
 | 1.19.4 | 45.x | — | 12 |
 | 1.20.1 | 47.x | — | 15 |
+
+> Forge / pack_format 列为官方 MDK 实测：1.18.2-40.3.0（本包 scaffold 钉 `40.1.80`）、1.19.4-45.4.0、1.20.1-47.4.10；sha256 见 `mcp-server/data/mdk-checksums.json`。pack_format 是**数据包**号，对应资源包号为 8 / 13 / 15（1.18 起两类包分家）。
 
 ---
 

@@ -12,8 +12,8 @@
 | 平台 | Forge |
 | Minecraft 版本 | 1.13.2 |
 | 注册模式 | `@EventBusSubscriber` + `RegistryEvent.Register<T>` |
-| Java 版本 | **Java 8**（Forge 1.13.2 最低要求） |
-| Gradle | Gradle 6.x + ForgeGradle 3.x |
+| Java 版本 | **Java 8**（官方 1.13.2-25.0.223 MDK `build.gradle:19` `sourceCompatibility`/`targetCompatibility = '1.8'`；本档 `gettingstarted.md` 语料不提 JDK，故以 MDK 为据） |
+| Gradle | **Gradle 4.9** + ForgeGradle `3.+`（官方 1.13.2-25.0.223 MDK 组合；见 `00-project-setup.mdc`，勿用系统 Gradle 8/9） |
 | Mappings | **MCP SRG**（`1.13.2` SRG 格式） |
 | Modules | **YES**（Forge 25.0+ 引入的模块系统） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
@@ -138,12 +138,12 @@ src/main/java/
 |------|---------------|--------------|------|
 | 注册方式 | `@EventBusSubscriber` + `RegistryEvent` | DeferredRegister（推荐）或 RegistryEvent | 1.14+ 推荐使用 DeferredRegister |
 | Modules | YES（25.0+） | YES | 模块系统引入 |
-| Java 版本 | Java 8 | Java 17（1.20+） | 旧版本需要 Java 8 |
-| Gradle | Gradle 6.x | Gradle 8.x（1.20+） | 旧版本 Gradle |
+| Java 版本 | Java 8 | Java 8（1.14.4–1.16.5）→ 16（1.17.1）→ 17（1.18.2+） | 官方 MDK `build.gradle` 实测：1.13.2-25.0.223 / 1.14.4-28.2.26 / 1.15.2-31.2.57 = `'1.8'`，1.16.5-36.2.34 = `JavaLanguageVersion.of(8)`，1.17.1-37.1.1 = `of(16)`，1.18.2-40.3.0 起 = `of(17)`；文档同调（1.17.1 `gettingstarted.md:14`、1.18.2 `:14`、1.20.1 `:15`） |
+| Gradle | Gradle 4.9 | 4.9（1.14.4）/ 4.10.3（1.15.2）/ 7.x（1.16.5–1.17.1）/ 8.8（1.18.2+） | 各代官方 MDK `gradle-wrapper.properties` 实测值；1.13.2 MDK = 4.9 + ForgeGradle `3.+`，勿用系统 Gradle 8/9 |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。
 
-本档 **无** `knowledge/porting/`。移植问题改口根目录 `get_migration_guide` / 邻档 porting，**不要**从 1.14.4+ 规则树抄 DeferredRegister 当 1.13.2 教程。
+本档 **有** `knowledge/porting/`：`00-porting-guide.md`（1.12.2→1.13.2 扁平化 / 1.13.2→1.14.4+ 双向决策入口）、`01-api-cross-loader.md`（同期 Loader 现状 + 1.12.2 ↔ 1.13.2 ↔ 1.14.4 对照）、`02-version-migration.md`（分段迁移笔记）、`03-real-world-examples.md`（本仓可核实的参考出处）。移植问题先读本档这四篇，再改口根目录 `get_migration_guide`；无论哪一条路，**不要**从 1.14.4+ 规则树抄 DeferredRegister 当 1.13.2 教程。
 
 ## 配置（不落盘树级 mc-config）
 

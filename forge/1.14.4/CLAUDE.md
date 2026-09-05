@@ -36,7 +36,7 @@ IF build.gradle contains "neoforge" OR "neogradle"
 - Always use **MCP names** (e.g., `LivingEntity#getHealth`, not `func_12345_a`)
 
 ### Java Version
-- Forge 1.14.4 requires **Java 11**
+- Forge 1.14.4 requires **Java 8** (official 1.14.4-28.2.26 MDK `build.gradle:19` = `'1.8'`)
 
 ---
 
@@ -44,7 +44,7 @@ IF build.gradle contains "neoforge" OR "neogradle"
 
 | File | Topic |
 |------|-------|
-| `00-project-setup.mdc` | Java 11, Gradle 7.6, build.gradle structure |
+| `00-project-setup.mdc` | Java 8, Gradle 4.9 + ForgeGradle 3.+（官方 28.2.26 MDK 组合）, build.gradle structure |
 | `01-registry.mdc` | DeferredRegister, RegistryObject (most important) |
 | `02-block.mdc` | Block, EntityBlock, TileEntity |
 | `03-item.mdc` | Item, SwordItem, ArmorItem, Food |

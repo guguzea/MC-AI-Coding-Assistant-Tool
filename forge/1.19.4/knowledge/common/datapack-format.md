@@ -11,11 +11,12 @@
 }
 ```
 
-| MC 版本 | pack_format |
-|---------|------------|
-| **1.19.4** | **9** |
-| 1.19.3 | 12 |
-| 1.20 - 1.20.1 | 15 |
+| MC 版本 | pack_format（本表 = 数据包） | 官方出处（MDK `pack.mcmeta`，sha256 见 `mcp-server/data/mdk-checksums.json`） |
+|---------|------------|----------|
+| **1.19.3–1.19.4** | **12** | 官方 1.19.4-45.4.0 MDK `src/main/resources/pack.mcmeta` 即 `forge:server_data_pack_format: 12`；同文件 `pack_format: 13` 是**资源包**号。1.19.3 的单独值本仓无一手证据（MDK 与语料均只覆盖 1.19.4） |
+| 1.20 - 1.20.1 | 15 | 官方 1.20.1-47.4.10 MDK `pack.mcmeta` = 15 |
+
+> 9 是 **1.18.x 的数据包号**（MDK `forge:data_pack_format: 9`），不是 1.19.4 的；本表原写 1.19.4 = 9 属错行。
 
 ## 目录结构
 

@@ -103,6 +103,8 @@ if (player.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
   player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 }
 
+// TODO(未核实) 下面两个字段名在仓内官方语料（forge_*_docs/raw）与 query_loader_api
+//   里都查不到（只有 ITEM_HANDLER_CAPABILITY 有出处），抄用前先按用户自备 jar 核实
 // 流体栏
 player.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 

@@ -164,25 +164,29 @@ public class ClientSetup {
 ```java
 @SubscribeEvent
 public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
-    if (event.getObject() instanceof Player player) {
+    if (event.getObject() instanceof Player) {
         event.addCapability(
             new ResourceLocation(MOD_ID, "my_capability"),
-            new ICapabilityProvider<>() {
+            // ICapabilityProvider 是非泛型接口（addCapability 的第二参数就是裸类型）；要落盘就实现
+            // ICapabilitySerializable<T extends Tag>，这里把类型实参取成 CompoundTag
+            new ICapabilitySerializable<CompoundTag>() {
                 private final MyCapability instance = new MyCapability();
+                private final LazyOptional<MyCapability> opt = LazyOptional.of(() -> this.instance);
+
+                // 双参 getCapability 是唯一的抽象方法；单参重载是 default，不用覆写
+                @Override
+                public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+                    return cap == ExampleMod.MY_CAPABILITY ? this.opt.cast() : LazyOptional.empty();
+                }
 
                 @Override
                 public CompoundTag serializeNBT() {
-                    return instance.saveNBT();
+                    return this.instance.saveNBT();
                 }
 
                 @Override
                 public void deserializeNBT(CompoundTag nbt) {
-                    instance.loadNBT(nbt);
-                }
-
-                @Override
-                public boolean invalid() {
-                    return false;
+                    this.instance.loadNBT(nbt);
                 }
             }
         );
@@ -190,7 +194,7 @@ public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> ev
 }
 ```
 
-> **关键点**：`AttachCapabilitiesEvent` 可以在 Entity、Block、Item、Chunk 上附加 Capability，每个只能附加一次（ID 唯一）。
+> **关键点**：`AttachCapabilitiesEvent` 的泛型只有 Entity / BlockEntity / ItemStack / Level / LevelChunk 五种，且不能更具体（要给 `Player` 附加也得订阅 `<Entity>` 再 `instanceof` 收窄）；每个只能附加一次（ID 唯一）。provider 生命周期结束时必须 `LazyOptional#invalidate`。
 
 ## 常见错误
 

@@ -144,8 +144,8 @@ src/main/java/
 | 功能 | 1.14.4 Forge | 1.20.1+ Forge | 备注 |
 |------|---------------|----------------|------|
 | 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
-| Java 版本 | Java 11 | Java 17+ | 1.14.4 要求 Java 11 |
-| pack_format | 5 | 15 | 1.20.x 用 15 |
+| Java 版本 | Java 8 | Java 17+ | 官方 1.14.4-28.2.26 MDK `build.gradle:19` = `sourceCompatibility = '1.8'`（1.14.4 文档语料不提 JDK） |
+| pack_format | 4 | 15 | 官方 1.14.4-28.2.26 MDK `src/main/resources/pack.mcmeta` = `"pack_format": 4`（本包 scaffold 同为 4；原写 5 是 1.15.x 的号）。1.18 前数据包与资源包共用此号，1.18 起分家（资源 8 / 数据 9）。1.20.1-47.4.10 MDK = 15 |
 | DataGen | 有 | 有 | API 有差异 |
 | BlockEntity | 旧版签名 | 相同 | - |
 

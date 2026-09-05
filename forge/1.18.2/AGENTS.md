@@ -13,8 +13,8 @@
 | Minecraft 版本 | 1.18.2 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 17**（Forge 1.18.2 要求） |
-| Gradle | Gradle 7.x + ForgeGradle 5.x |
-| Mappings | **Parchment**（1.18.2-2022.08.02） |
+| Gradle | **Gradle 7.6 + ForgeGradle `[5.1.2,5.2)`**（本包 `scaffold/build.gradle:5` + `scaffold/gradle/wrapper/gradle-wrapper.properties:3`）。⚠️ 官方 1.18.2-40.3.0 MDK 用的是 **Gradle 8.8 + FG `[6.0,6.2)`**（MDK `build.gradle:5`、`gradle-wrapper.properties:3`；sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）。scaffold 与 MDK 组合不一致（未裁定分歧）：写新工程跟 scaffold，用户拿官方 MDK 时跟 MDK，不要把一套当另一套的证据 |
+| Mappings | **Parchment**（`1.18.2-2022.08.02`，本包 `scaffold/build.gradle:20`）。⚠️ 官方 1.18.2-40.3.0 MDK 默认为 `official` 通道；Parchment 只多给参数名与 javadoc。禁止把 Parchment 名当 vanilla 官方名去查 `query_api` |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---
@@ -156,7 +156,7 @@ Forge 1.18.2 引入 Caves & Cliffs 大更新，世界高度发生变化：
 | 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致 |
 | 世界高度 | -64 ~ 320 | -64 ~ 320 | 1.18.2 首次引入 |
 | DataGen | `DataGenerators` | 相同 | - |
-| pack_format | 8 | 15 | 1.18.2 使用 pack_format 8 |
+| pack_format | 资源 **8** / 数据 **9** | **15** | 1.18.2 起两类包编号**分家**：官方 1.18.2-40.3.0 MDK `src/main/resources/pack.mcmeta` 同时给出 `forge:resource_pack_format: 8` 与 `forge:data_pack_format: 9`（外层 `pack_format: 9`）；1.20.1-47.4.10 MDK 只有一个 `pack_format: 15`。sha256 见 `mcp-server/data/mdk-checksums.json`；细节见 `knowledge/common/resourcepack-format.md` 与 `knowledge/common/datapack-format.md` |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。
 

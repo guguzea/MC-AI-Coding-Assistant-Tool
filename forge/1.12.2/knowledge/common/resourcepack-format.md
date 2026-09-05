@@ -11,7 +11,8 @@
 }
 ```
 
-> 1.12.2 的 pack_format = **3**（资源包；数据包同为 3，见 datapack-format.md）。
+> 1.12.2 的资源包 pack_format = **3**：官方 1.12.2-14.23.5.2860 MDK `src/main/resources/pack.mcmeta` = `"pack_format": 3`（sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）。本档语料 `data/forge_1.12.2/forge-docs/1.12.2/raw/conventions_locations.md:26` 另记「`pack.mcmeta` 声明 pack_format 3 时语言代码必须小写」。
+> ⚠️ 不存在「数据包同为 3」：1.12.2 **没有数据包系统**，`data/` 命名空间自 1.13 起才有（见 `datapack-format.md`）。
 
 ## 目录结构
 

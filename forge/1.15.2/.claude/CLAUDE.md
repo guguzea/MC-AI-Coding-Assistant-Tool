@@ -41,7 +41,7 @@ IF build.gradle contains "neoforge" OR "neogradle"
 
 | File | Topic |
 |------|-------|
-| `00-project-setup.mdc` | Java 11, Gradle 7.x, build.gradle structure |
+| `00-project-setup.mdc` | Java 8, Gradle 7.x, build.gradle structure |
 | `01-registry.mdc` | DeferredRegister, RegistryObject (most important) |
 | `02-block.mdc` | Block, ITileEntityProvider, TileEntity |
 | `03-item.mdc` | Item, SwordItem, ArmorItem, Food |

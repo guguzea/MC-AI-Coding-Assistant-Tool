@@ -89,10 +89,10 @@ src/main/java/com/example/mod/
 
 ### Forge 1.18.2 Key Specs
 - Minecraft: 1.18.2
-- Forge: 40.1.x
+- Forge: 40.x（本包 scaffold 钉 `40.1.80`；官方 1.18.2-40.3.0 MDK 为 40.3.x）
 - Java: 17
-- Mappings: Parchment (1.18.2-2022.08.02)
-- pack_format: 8
+- Mappings: Parchment (1.18.2-2022.08.02)（本包 scaffold 选择；官方 MDK 默认为 `official`）
+- pack_format: 资源包 **8** / 数据包 **9**（1.18 起两类包分家；出处为官方 1.18.2-40.3.0 MDK `pack.mcmeta` 的 `forge:resource_pack_format` / `forge:data_pack_format`）
 - World height: -64 to 320
 - Gradle: 7.x
 - ForgeGradle: 5.x

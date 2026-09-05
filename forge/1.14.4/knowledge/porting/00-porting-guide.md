@@ -26,7 +26,7 @@
 
 ### 1.14.x 特点
 
-- **Java 版本**：Java 11（1.14.x 是最后一个主要支持 Java 8 的版本）
+- **Java 版本**：**Java 8**（官方 1.14.4-28.2.26 MDK `build.gradle:19` = `'1.8'`；1.15.2 / 1.16.5 的 MDK 同调）。「Java 11」在本档语料与 MDK 里都没有依据，Java 16 从 1.17.1 起、Java 17 从 1.18.2 起
 - **ForgeGradle**：3.x（与 1.18+ 的 6.x 完全不同）
 - **Mappings**：MCP snapshot
 - **Registry**：DeferredRegister 已可用

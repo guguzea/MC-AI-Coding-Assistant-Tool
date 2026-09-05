@@ -13,10 +13,10 @@
 }
 ```
 
-> 1.13.2 用 `pack_format = 4`：本包 `scaffold/src/main/resources/pack.mcmeta:4` 与 `knowledge/common/datapack-format.md:34,39` 两处一致。
-> 序列旁证：1.12.2 = 3、1.14.4 = 5、1.15.2 = 6（各档 `knowledge/common/resourcepack-format.md`）。
-> ⚠️ 本包 `.pi/rules/00-project-setup.md:238,243` 写的 **6** 无 scaffold / 语料支撑，属该规则文件陈旧，勿跟。
-> ⚠️ 1.13 的**数据包** pack_format 与资源包是否同一编号：**未核实**（本仓两处都记 4，但都没有区分两类 pack）。
+> 1.13.2 用 `pack_format = 4`：官方 1.13.2-25.0.223 MDK `src/main/resources/pack.mcmeta` 即 `"pack_format": 4`（`_comment`「A pack_format of 4 requires json lang files. Note: we require v4 pack meta for all mods.」；sha256 钉在 `mcp-server/data/mdk-checksums.json`，`source=official`），本包 `scaffold/src/main/resources/pack.mcmeta:4` 与 `knowledge/common/datapack-format.md:34,39` 同为 4。
+> 序列（全部为官方 MDK `pack.mcmeta` 实测）：1.12.2 = 3、1.13.2 = 4、1.14.4 = 4、1.15.2 = 5、1.16.5 = 6、1.17.1 = 7。邻档知识文件若与这串不符，以 MDK 为准。
+> 本包规则 `.cursor/rules/00-project-setup.mdc` 原写 6，已按 MDK 改回 4；`.pi` / `.claude` 等投影由 `scripts/sync-skills.ps1` 重生成，不要手改。
+> 1.13 的**数据包与资源包同一编号 = 4**：1.18 之前 `pack.mcmeta` 只有一个 `pack_format` 字段，两类包共用它（分家证据见 1.18.2 MDK 同时写 `forge:resource_pack_format: 8` 与 `forge:data_pack_format: 9`）。
 
 ## 1.13 的第一件事：`assets/` 与 `data/` 分工
 

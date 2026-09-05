@@ -5,13 +5,13 @@
 ```json
 {
   "pack": {
-    "pack_format": 8,
+    "pack_format": 7,
     "description": "My Resource Pack"
   }
 }
 ```
 
-> 1.17.x 的 pack_format = **8**，与数据包相同。
+> 1.17.x 的 pack_format = **7**，与数据包相同（1.18 起两类包编号才分家）。官方 1.17.1-37.1.1 MDK `src/main/resources/pack.mcmeta` = `"pack_format": 7`（sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）；本包 `scaffold/src/main/resources/pack.mcmeta` 与 `knowledge/common/datapack-format.md` 同为 7。**资源包不是 8**（8 是 1.18.x 的资源包号）。
 
 ## 目录结构
 

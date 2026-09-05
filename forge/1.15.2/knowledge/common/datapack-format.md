@@ -11,11 +11,14 @@
 }
 ```
 
-| MC 版本 | pack_format |
-|---------|------------|
-| 1.16–1.16.5 | **6** |
-| 1.15.x | **6** |
-| 1.14.x | 5 |
+| MC 版本 | pack_format（本表 = 数据包） | 官方出处（MDK `src/main/resources/pack.mcmeta`，sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`） |
+|---------|------------|----------|
+| 1.16.2–1.16.5 | **6** | 官方 1.16.5-36.2.34 MDK = `"pack_format": 6`，其 `_comment` 明写「texture changes from 1.16.2」 |
+| 1.16–1.16.1 | 5（推论） | 由上条 `_comment`「from 1.16.2」**推论**，本仓无 1.16/1.16.1 的 MDK 实测 |
+| 1.15.x | **5** | 官方 1.15.2-31.2.57 MDK = 5；本包 `scaffold/src/main/resources/pack.mcmeta` 同为 5（原表写 6，错） |
+| 1.14.x | 4 | 官方 1.14.4-28.2.26 MDK = 4（原表写 5，错） |
+
+> 1.18 之前数据包与资源包共用同一个 `pack_format`；1.18 起分家（1.18.2 MDK = 资源 8 / 数据 9）。
 
 ## 目录结构
 
@@ -123,7 +126,7 @@ data/<namespace>/
 ## 常见错误
 
 - ❌ namespace 包含大写字母（`ExampleMod:stone` → 改为 `examplemod:stone`）
-- ❌ pack_format 版本错误（1.15.2 用 6，不是 15）
+- ❌ pack_format 版本错误（1.15.2 数据包用 **5**，不是 6 或 15；6 是 1.16.2+、15 是 1.20–1.20.1）
 - ❌ `functions/` 中 mcfunction 文件含有空行或多余空格
 - ❌ `tags/items/` 中的值使用了物品 ID 但格式错误（应为 `namespace:item_name`）
 - ❌ `loot_tables` 路径错误：应放在 `data/{namespace}/loot_tables/` 下，不是 `data/{namespace}/`

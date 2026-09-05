@@ -222,25 +222,26 @@ public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> ev
     if (event.getObject() instanceof Player) {
         event.addCapability(
             new ResourceLocation(ExampleMod.MOD_ID, "my_capability"),
-            // ICapabilityProvider 是非泛型接口；需要落盘时实现 ICapabilitySerializable<T extends Tag>
-            new ICapabilitySerializable<Tag>() {
-                private final MyCapability handler = new MyCapability();
-                private final LazyOptional<MyCapability> instance = LazyOptional.of(() -> this.handler);
+            // ICapabilityProvider 是非泛型接口（addCapability 的第二参数就是裸类型）；要落盘就实现
+            // ICapabilitySerializable<T extends Tag>，这里把类型实参取成 CompoundTag
+            new ICapabilitySerializable<CompoundTag>() {
+                private final MyCapability instance = new MyCapability();
+                private final LazyOptional<MyCapability> opt = LazyOptional.of(() -> this.instance);
 
+                // 双参 getCapability 是唯一的抽象方法；单参重载是 default，不用覆写
                 @Override
                 public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-                    return ExampleMod.MY_CAPABILITY.orEmpty(cap, this.instance);
-                }
-
-                // MyCapability#save / #load 是本模组自己的类，签名用 Tag
-                @Override
-                public Tag serializeNBT() {
-                    return this.handler.save();
+                    return cap == ExampleMod.MY_CAPABILITY ? this.opt.cast() : LazyOptional.empty();
                 }
 
                 @Override
-                public void deserializeNBT(Tag nbt) {
-                    this.handler.load(nbt);
+                public CompoundTag serializeNBT() {
+                    return this.instance.saveNBT();
+                }
+
+                @Override
+                public void deserializeNBT(CompoundTag nbt) {
+                    this.instance.loadNBT(nbt);
                 }
             }
         );
@@ -248,4 +249,4 @@ public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> ev
 }
 ```
 
-> 关键点：`AttachCapabilitiesEvent` 可以在 Entity / BlockEntity / ItemStack / Level / LevelChunk 上附加 Capability，每个只能附加一次（ID 唯一）。provider 生命周期结束时必须 `LazyOptional#invalidate`；Entity / BlockEntity 自带 `invalidateCaps()` 钩子，非自身持有的 provider 用 `AttachCapabilitiesEvent#addListener(Runnable)` 传入失效逻辑。
+> 关键点：`AttachCapabilitiesEvent` 的泛型只有 Entity / BlockEntity / ItemStack / Level / LevelChunk 五种，且不能更具体——要给 `Player` 附加也得订阅 `<Entity>` 再 `instanceof` 收窄。每个只能附加一次（ID 唯一）。`ExampleMod.MY_CAPABILITY` 是本模组持有的 `Capability` 句柄，`saveNBT()` / `loadNBT(...)` 是 `MyCapability` 自己的方法。provider 生命周期结束时必须 `LazyOptional#invalidate`：自有 Entity / BlockEntity 在 `invalidateCaps()` 里做，非自有 provider 用 `AttachCapabilitiesEvent#addListener(Runnable)` 传入失效逻辑。

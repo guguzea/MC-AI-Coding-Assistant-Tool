@@ -11,12 +11,14 @@
 }
 ```
 
-| MC 版本 | pack_format |
-|---------|------------|
-| 1.18.x | **8** |
-| 1.17.x | 7 |
-| 1.16.x | 6 |
-| 1.15.x | 5 |
+| MC 版本 | pack_format（本表 = 数据包） | 官方出处（MDK `pack.mcmeta`，sha256 见 `mcp-server/data/mdk-checksums.json`） |
+|---------|------------|----------|
+| 1.18.x | **9** | 官方 1.18.2-40.3.0 MDK `src/main/resources/pack.mcmeta` 同时给出 `forge:data_pack_format: 9` 与 `forge:resource_pack_format: 8`，外层 `pack_format: 9` |
+| 1.17.x | 7 | 官方 1.17.1-37.1.1 MDK = 7 |
+| 1.16.x | 6 | 官方 1.16.5-36.2.34 MDK = 6 |
+| 1.15.x | 5 | 官方 1.15.2-31.2.57 MDK = 5 |
+
+> ⚠️ 自 1.18 起数据包与资源包编号**分家**：1.18.x 数据包 = 9、资源包 = 8。本包 `scaffold/src/main/resources/pack.mcmeta` 写的是资源包侧的 8，不要拿它当数据包号。
 
 ## 目录结构
 

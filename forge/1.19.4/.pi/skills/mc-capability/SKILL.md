@@ -55,7 +55,7 @@ public class CapabilityEvents {
         if (!(event.getObject() instanceof Player)) return;
         event.addCapability(
             new ResourceLocation(MOD_ID, "example_data"),
-            new ICapabilityProvider<>() {
+            new ICapabilityProvider() {
                 private final IExampleData instance = new ExampleData();
                 private final LazyOptional<IExampleData> opt = LazyOptional.of(() -> instance);
 

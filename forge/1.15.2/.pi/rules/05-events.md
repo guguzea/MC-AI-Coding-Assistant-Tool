@@ -210,30 +210,21 @@ public class ClientSetup {
 ```java
 @SubscribeEvent
 public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
-    if (event.getObject() instanceof PlayerEntity player) {
-        event.addCapability(
-            new ResourceLocation(ExampleMod.MOD_ID, "my_capability"),
-            new ICapabilityProvider<>() {
-                private final MyCapability instance = new MyCapability();
+    if (!(event.getObject() instanceof PlayerEntity)) return;
+    event.addCapability(
+        new ResourceLocation(ExampleMod.MOD_ID, "my_capability"),
+        // ICapabilityProvider 是非泛型接口；双参 getCapability 是唯一的抽象方法（单参重载是 default）
+        new ICapabilityProvider() {
+            private final MyCapability instance = new MyCapability();
+            private final LazyOptional<MyCapability> opt = LazyOptional.of(() -> instance);
 
-                @Override
-                public CompoundNBT serializeNBT() {
-                    return instance.saveNBT();
-                }
-
-                @Override
-                public void deserializeNBT(CompoundNBT nbt) {
-                    instance.loadNBT(nbt);
-                }
-
-                @Override
-                public boolean isInvalid() {
-                    return false;
-                }
+            @Override
+            public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+                return cap == ExampleMod.MY_CAPABILITY ? opt.cast() : LazyOptional.empty();
             }
-        );
-    }
+        }
+    );
 }
 ```
 
-> 关键点：`AttachCapabilitiesEvent` 可以在 Entity、TileEntity、ItemStack、World、Chunk 上附加 Capability，每个只能附加一次（ID 唯一）。`deserializeNBT` 在 `isInvalid()` 返回 true 时不会被调用。
+> 关键点：`AttachCapabilitiesEvent` 可以在 Entity、TileEntity、ItemStack、World、Chunk 上附加 Capability，每个只能附加一次（ID 唯一）；泛型不能比这五个更具体（要针对玩家就用 `<Entity>` + `instanceof`）。要持久化就实现 `ICapabilitySerializable<T extends INBT>`，它比 `ICapabilityProvider` 多 `INBTSerializable` 的两个方法：`T serializeNBT()`（无参）和 `void deserializeNBT(T)`。provider 生命周期结束时必须 `LazyOptional#invalidate`，非自有 provider 用 `AttachCapabilitiesEvent#addListener(Runnable)` 传入失效逻辑。

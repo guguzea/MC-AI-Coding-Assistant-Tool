@@ -28,7 +28,8 @@ public class ExampleData implements IExampleData, ICapabilitySerializable<Compou
     public void setValue(int v) { this.value = v; }
 
     @Override
-    public CompoundTag serializeNBT(CompoundTag nbt) {
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
         nbt.putInt("value", value);
         return nbt;
     }
@@ -56,7 +57,7 @@ public class CapabilityEvents {
         if (!(event.getObject() instanceof Player)) return;
         event.addCapability(
             new ResourceLocation(MOD_ID, "example_data"),
-            new ICapabilityProvider<>() {
+            new ICapabilityProvider() {
                 private final ExampleData instance = new ExampleData();
                 private final LazyOptional<IExampleData> opt = LazyOptional.of(() -> instance);
 

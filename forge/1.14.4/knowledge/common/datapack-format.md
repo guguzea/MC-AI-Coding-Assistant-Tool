@@ -5,19 +5,21 @@
 ```json
 {
   "pack": {
-    "pack_format": 5,
+    "pack_format": 4,
     "description": "My Datapack"
   }
 }
 ```
 
-| MC 版本 | pack_format |
-|--------|------------|
-| 1.14.4 | **5** |
-| 1.15.x | 6 |
-| 1.16.x | 7 |
-| 1.17.x | 8 |
-| 1.18.x | 9 |
+| MC 版本 | pack_format（本表 = 数据包） | 官方出处（MDK `src/main/resources/pack.mcmeta`，sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`） |
+|--------|------------|----------|
+| **1.14.4** | **4** | 官方 1.14.4-28.2.26 MDK = `"pack_format": 4`；本包 `scaffold/src/main/resources/pack.mcmeta` 同为 4（原表写 5，错） |
+| 1.15.x | 5 | 官方 1.15.2-31.2.57 MDK = 5（原表写 6，错） |
+| 1.16.x | 6 | 官方 1.16.5-36.2.34 MDK = 6（原表写 7，错） |
+| 1.17.x | 7 | 官方 1.17.1-37.1.1 MDK = 7（原表写 8，错） |
+| 1.18.x | 9 | 官方 1.18.2-40.3.0 MDK `forge:data_pack_format: 9`（资源包为 8） |
+
+> 1.14.4 的数据包与资源包**共用同一个号 4**（`pack.mcmeta` 只有一个 `pack_format` 字段）；到 1.18 才分家，别把这条「相同」外推到 1.18+。
 
 ## 目录结构
 
@@ -120,7 +122,7 @@ data/<namespace>/
 ## 常见错误
 
 - ❌ namespace 包含大写字母（`ExampleMod:stone` → 改为 `examplemod:stone`）
-- ❌ pack_format 版本错误（1.14.4 用 5，不是 6）
+- ❌ pack_format 版本错误（1.14.4 数据包用 **4**，不是 5 或 6；5 是 1.15.x、6 是 1.16.x）
 - ❌ `functions/` 中 mcfunction 文件含有空行或多余空格
 - ❌ `tags/items/` 中的值使用了物品 ID 但格式错误（应为 `namespace:item_name`）
 

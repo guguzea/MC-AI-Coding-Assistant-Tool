@@ -11,7 +11,7 @@
 }
 ```
 
-> 1.18.x 的 pack_format = **8**，与数据包相同。
+> 1.18.x 的 pack_format = **8**（资源包）。**自 1.18 起不再与数据包相同**：官方 1.18.2-40.3.0 MDK `src/main/resources/pack.mcmeta` 同时给出 `forge:resource_pack_format: 8` 与 `forge:data_pack_format: 9`（外层 `pack_format: 9`），sha256 见 `mcp-server/data/mdk-checksums.json`。本包 `scaffold/src/main/resources/pack.mcmeta:4` = 8，与本行一致；数据包号见 `knowledge/common/datapack-format.md`。
 
 ## 目录结构
 
@@ -91,7 +91,7 @@ assets/<namespace>/
 - ❌ blockstates 引用不存在的模型路径
 - ❌ lang 文件中 namespace 和路径分隔符用 `.` 而非 `:`（应为 `item.examplemod.my_item`）
 - ❌ 模型 JSON 缺少必要的 `parent` 字段
-- ❌ pack_format 错误（1.18.2 用 **8**，不是 15）
+- ❌ pack_format 错误（1.18.2 资源包用 **8**、数据包用 **9**，都不是 15）
 
 ## 参考
 

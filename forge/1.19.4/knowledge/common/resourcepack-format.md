@@ -11,7 +11,7 @@
 }
 ```
 
-> 1.19.4 的数据包 pack_format = **12**（资源包为 13）。
+> 1.19.4 的资源包 pack_format = **13**，数据包 = **12**。两个号都在官方 1.19.4-45.4.0 MDK `src/main/resources/pack.mcmeta` 里：外层 `"pack_format": 13` + `"forge:server_data_pack_format": 12`（sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）。本包 `scaffold/src/main/resources/pack.mcmeta` = 13。
 
 ## 目录结构
 

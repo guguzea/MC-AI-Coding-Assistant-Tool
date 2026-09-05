@@ -12,8 +12,8 @@
 | 平台 | Forge |
 | Minecraft 版本 | 1.17.1 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
-| Java 版本 | **Java 16**（Forge 1.17.1 最低要求） |
-| Gradle | Gradle 7.x + ForgeGradle 4.x |
+| Java 版本 | **Java 16**（本档语料 `gettingstarted.md:14`；官方 1.17.1-37.1.1 MDK `build.gradle:21` = `JavaLanguageVersion.of(16)`） |
+| Gradle | **Gradle 7.2 + ForgeGradle `5.1.+`**（本包 `scaffold/build.gradle:10` 与官方 1.17.1-37.1.1 MDK 同值；MDK `gradle-wrapper.properties:3` = `gradle-7.2-bin.zip`。「ForgeGradle 4.x」是 1.16.5 档的 scaffold 口径，不是本档） |
 | Mappings | **official**（`20210624.103621`） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
@@ -145,7 +145,7 @@ src/main/java/
 | BlockEntity | 签名一致 | 签名一致 | - |
 | DataGen | 基础支持 | 完整支持 | 1.17.1 API 较基础 |
 | Java 版本 | Java 16 | Java 17+ | 关键差异 |
-| Mappings | Parchment | MCP 或 Parchment | 1.17.1 推荐 Parchment |
+| Mappings | **official** | official | 本档三处一致为 official：`AGENTS.md` 基本信息、`scaffold/gradle.properties:14` `mapping_channel=official`、`.cursor/rules/00-project-setup.mdc:159` `mappings channel: 'official', version: '1.17.1'`；官方 1.17.1-37.1.1 MDK `build.gradle:36` 同为 `'official'`。1.20.1 侧同样 official（MDK `gradle.properties:35`）。原写「Parchment / MCP」是邻档口径，不要按 Parchment 记忆补参数名 |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。
 

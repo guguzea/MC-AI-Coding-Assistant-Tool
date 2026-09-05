@@ -235,9 +235,9 @@ side = "BOTH"
 {
   "pack": {
     "description": "${mod_name}",
-    "pack_format": 6
+    "pack_format": 4
   }
 }
 ```
 
-> Forge 1.13.2 使用 `pack_format = 6`（不是 15）
+> Forge 1.13.2 使用 `pack_format = 4`：官方 1.13.2-25.0.223 MDK `src/main/resources/pack.mcmeta` 即写 `"pack_format": 4`，其 `_comment` 为「A pack_format of 4 requires json lang files. Note: we require v4 pack meta for all mods.」；本包 `scaffold/src/main/resources/pack.mcmeta:4` 与 `knowledge/common/datapack-format.md:34,39`、`knowledge/common/resourcepack-format.md:11` 同为 4。**不是 6**（6 是 1.16.2+ 的 MDK 值），也不是 15。

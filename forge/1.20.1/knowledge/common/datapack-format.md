@@ -11,12 +11,14 @@
 }
 ```
 
-| MC 版本 | pack_format |
-|---------|------------|
-| 1.20–1.20.1 | **15** |
-| 1.19.3–1.19.4 | 12 |
-| 1.18.x | 9 |
-| 1.17.x | 8 |
+| MC 版本 | pack_format（本表 = 数据包） | 官方出处（MDK `pack.mcmeta`，sha256 见 `mcp-server/data/mdk-checksums.json`） |
+|---------|------------|----------|
+| 1.20–1.20.1 | **15** | 官方 1.20.1-47.4.10 MDK `pack.mcmeta` = `"pack_format": 15`；本包 `scaffold/src/main/resources/pack.mcmeta` 同为 15 |
+| 1.19.3–1.19.4 | 12 | 官方 1.19.4-45.4.0 MDK `forge:server_data_pack_format: 12`（资源包 13） |
+| 1.18.x | 9 | 官方 1.18.2-40.3.0 MDK `forge:data_pack_format: 9`（资源包 8） |
+| 1.17.x | 7 | 官方 1.17.1-37.1.1 MDK = 7 |
+
+MDK sha256 钉在本仓 `mcp-server/data/mdk-checksums.json`（`source=official`）。
 
 ## 目录结构
 

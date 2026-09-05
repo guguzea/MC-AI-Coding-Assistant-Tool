@@ -11,12 +11,14 @@
 }
 ```
 
-| MC 版本 | pack_format |
-|---------|------------|
-| 1.16.2–1.16.5 | **6** |
-| 1.16–1.16.1 | 5 |
-| 1.15.x | 4 |
-| 1.14.x | 4 |
+| MC 版本 | pack_format（本表 = 数据包） | 官方出处（MDK `src/main/resources/pack.mcmeta`，sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`） |
+|---------|------------|----------|
+| 1.16.2–1.16.5 | **6** | 官方 1.16.5-36.2.34 MDK = `"pack_format": 6`，`_comment`「…texture changes from 1.16.2」；本包 `scaffold/src/main/resources/pack.mcmeta` 同为 6 |
+| 1.16–1.16.1 | 5（推论） | 由上条 `_comment`「from 1.16.2」**推论**，本仓无 1.16/1.16.1 的 MDK 实测 |
+| 1.15.x | 5 | 官方 1.15.2-31.2.57 MDK = 5（本表原写 4，错） |
+| 1.14.x | 4 | 官方 1.14.4-28.2.26 MDK = 4 |
+
+> 1.18 之前数据包与资源包共用同一个 `pack_format`；1.18 起分家（1.18.2 MDK = 资源 8 / 数据 9）。
 
 ## 目录结构
 

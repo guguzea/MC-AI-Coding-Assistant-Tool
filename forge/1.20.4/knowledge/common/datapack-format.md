@@ -11,12 +11,16 @@
 }
 ```
 
-| MC 版本 | pack_format |
-|---------|------------|
-| 1.20–1.20.4 | **15** |
-| 1.19.3–1.19.4 | 12 |
-| 1.18.x | 9 |
-| 1.17.x | 8 |
+| MC 版本 | pack_format（本表 = 数据包） | 官方出处（MDK `pack.mcmeta`，sha256 见 `mcp-server/data/mdk-checksums.json`） |
+|---------|------------|----------|
+| 1.20.3–1.20.4 | **26**（**未核实**） | 本仓无一手证据：官方 1.20.4-49.2.0 MDK `pack.mcmeta` 只给 `"pack_format": 22`（资源包侧），没有数据包键 |
+| 1.20.2 | 18 | 仓内官方语料 `data/neoforge_1.20.4/neoforge-docs/1.20.4/raw/gettingstarted_modfiles.md:36`：「As of Minecraft 1.20.2, the pack version is 18」 |
+| 1.20–1.20.1 | 15 | 官方 1.20.1-47.4.10 MDK `pack.mcmeta` = 15 |
+| 1.19.3–1.19.4 | 12 | 官方 1.19.4-45.4.0 MDK `forge:server_data_pack_format: 12`（资源包 13） |
+| 1.18.x | 9 | 官方 1.18.2-40.3.0 MDK `forge:data_pack_format: 9`（资源包 8） |
+| 1.17.x | 7 | 官方 1.17.1-37.1.1 MDK = 7 |
+
+> 本文件 JSON 示例的 26 与本表原写的 15 互相打脸，且 26 在本仓**无一手出处**；保留 26 只为与 `neoforge/knowledge/common/datapack-format.md` 同调，写工程时以你实测能加载的号为准。
 
 ## 目录结构
 

@@ -41,7 +41,7 @@ IF build.gradle contains "neoforge" OR "neogradle"
 
 | File | Topic |
 |------|-------|
-| `00-project-setup.mdc` | Java 11, Gradle 6.9, build.gradle structure |
+| `00-project-setup.mdc` | Java 8, Gradle 4.9 + ForgeGradle 3.+（官方 25.0.223 MDK 组合）, build.gradle structure |
 | `01-registry.mdc` | @EventBusSubscriber + RegistryEvent (most important) |
 | `02-block.mdc` | Block, Block.Properties, setRegistryName |
 | `03-item.mdc` | Item, Item.Properties, ItemGroup |
