@@ -15,6 +15,7 @@ import { join, dirname, basename } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { createHash } from "crypto";
 import os from "os";
+import { failureNote, fetchTextWithUa, FETCH_FAILURE } from "./_lib/fetch-with-ua.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CACHE = process.env.MC_SKILL_CACHE || join(os.tmpdir(), "mc-skill-cache");
@@ -162,6 +163,45 @@ function walkJava(dir, acc = [], limit = 8000) {
     else if (e.name.endsWith(".java")) acc.push(full);
   }
   return acc;
+}
+
+/**
+ * 唯一的「源树 → classes」实现。
+ * 原来 sources-jar 分支与反编译分支各内联了一份逐字相同的循环（walkJava + extractClasses
+ * + net/org/com/cpw 守卫 + repoSafeSourcePath 改写），这里合并；`posix` 只对同一个 jf 求值，
+ * 提到内层循环外不改变语义。
+ */
+function collectClassesFromTree(rootDir, acc) {
+  for (const jf of walkJava(rootDir)) {
+    const recs = extractClasses(readFileSync(jf, "utf8"), jf.replace(/\\/g, "/"));
+    const posix = jf.replace(/\\/g, "/");
+    for (const rec of recs) {
+      if (!/(?:^|\/)(?:net|org|com|cpw)\//i.test(posix) && !/(?:^|\/)(?:net|org|com|cpw)\//i.test(String(rec.file || ""))) {
+        continue;
+      }
+      acc.push({ ...rec, file: repoSafeSourcePath(jf) ?? rec.file });
+    }
+  }
+  return acc;
+}
+
+/** 源树真实 mtime：字段叫 sourceTreeMtime 就必须量源树，不能拿 jar 的 mtime 冒充。 */
+function sourceTreeMtimeOf(treeDir) {
+  let max;
+  for (const f of walkJava(treeDir)) {
+    try {
+      const ms = statSync(f).mtimeMs;
+      if (max === undefined || ms > max) max = ms;
+    } catch {
+      /* skip unreadable file */
+    }
+  }
+  if (max !== undefined) return max;
+  try {
+    return statSync(treeDir).mtimeMs;
+  } catch {
+    return undefined;
+  }
 }
 
 function fqcnFromClassPath(name) {
@@ -467,8 +507,21 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
       /* rewrite */
     }
   }
-  const meta = analyzeModJar(jarPath);
-  const buf = readFileSync(jarPath);
+  let meta;
+  let buf;
+  try {
+    meta = analyzeModJar(jarPath);
+    buf = readFileSync(jarPath);
+  } catch (e) {
+    summaries.push({
+      file: name,
+      invalid: true,
+      skipped: "CORRUPT_JAR",
+      note: `jar 读取失败，跳过继续：${String(e?.message ?? e).slice(0, 200)}`,
+    });
+    console.error("CORRUPT_JAR (read)", name, String(e?.message ?? e).slice(0, 200));
+    continue;
+  }
   let names = [];
   try {
     names = listZipEntries(buf);
@@ -479,7 +532,20 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
     .filter((n) => (n.endsWith(".class") || n.endsWith(".java")) && !/\$[0-9]/.test(n))
     .map((n) => fqcnFromClassPath(n.replace(/\.java$/i, ".class")))
     .filter((fq) => /^(net\.neoforged|net\.minecraftforge|net\.fabricmc|org\.quiltmc)/.test(fq));
-  const entries = readZip(buf);
+  let entries;
+  try {
+    entries = readZip(buf);
+  } catch (e) {
+    // 单个坏 jar 只记账，不中断整批
+    summaries.push({
+      file: name,
+      invalid: true,
+      skipped: "CORRUPT_JAR",
+      note: `readZip 失败，跳过继续：${String(e?.message ?? e).slice(0, 200)}`,
+    });
+    console.error("CORRUPT_JAR (readZip)", name, String(e?.message ?? e).slice(0, 200));
+    continue;
+  }
   const javaEntries = [...entries.entries()].filter(
     ([n]) =>
       n.endsWith(".java") &&
@@ -496,16 +562,7 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
       mkdirSync(dirname(dest), { recursive: true });
       writeFileSync(dest, data);
     }
-    for (const jf of walkJava(srcOut)) {
-      const recs = extractClasses(readFileSync(jf, "utf8"), jf.replace(/\\/g, "/"));
-      for (const rec of recs) {
-        const posix = jf.replace(/\\/g, "/");
-        if (!/(?:^|\/)(?:net|org|com|cpw)\//i.test(posix) && !/(?:^|\/)(?:net|org|com|cpw)\//i.test(String(rec.file || ""))) {
-          continue;
-        }
-        classes.push({ ...rec, file: repoSafeSourcePath(jf) ?? rec.file });
-      }
-    }
+    collectClassesFromTree(srcOut, classes);
     decompile = {
       found: true,
       fromSourcesJar: true,
@@ -530,16 +587,7 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
       } catch {
         /* ignore */
       }
-      for (const jf of walkJava(srcOut)) {
-        const recs = extractClasses(readFileSync(jf, "utf8"), jf.replace(/\\/g, "/"));
-        for (const rec of recs) {
-          const posix = jf.replace(/\\/g, "/");
-          if (!/(?:^|\/)(?:net|org|com|cpw)\//i.test(posix) && !/(?:^|\/)(?:net|org|com|cpw)\//i.test(String(rec.file || ""))) {
-            continue;
-          }
-          classes.push({ ...rec, file: repoSafeSourcePath(jf) ?? rec.file });
-        }
-      }
+      collectClassesFromTree(srcOut, classes);
     }
     decompile = {
       found: result.found,
@@ -552,7 +600,7 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
   }
   let sourceTreeMtime;
   try {
-    sourceTreeMtime = statSync(jarPath).mtimeMs;
+    sourceTreeMtime = sourceTreeMtimeOf(srcOut);
   } catch {
     sourceTreeMtime = undefined;
   }
@@ -625,12 +673,14 @@ async function thickenFromClassUrls(jsonPath, key) {
       continue;
     }
     try {
-      const r = await fetch(c.url);
+      const r = await fetchTextWithUa(c.url, { timeoutMs: 30_000 });
       if (!r.ok) {
+        // TLS/超时/限流与真 404 分开记，禁止把证书问题当成「源码不存在」后静默留薄壳
+        console.error("url-thicken skip", key, c.fqcn, r.failureClass || FETCH_FAILURE.UNKNOWN, failureNote(r) || r.reason || "");
         next.push(...upgradeStringMethods([c]));
         continue;
       }
-      const text = await r.text();
+      const text = r.text;
       const recs = extractCompilationUnit(text, c.sourcePath || c.file);
       const hit = recs.find((x) => x.fqcn === c.fqcn) || recs[0];
       if (hit) {

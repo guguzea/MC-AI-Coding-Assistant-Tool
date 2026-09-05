@@ -62,8 +62,6 @@ const FABRIC_VERSIONS = [
   "1.21.11",
 ];
 
-const NEOFORGE_VERSION = "1.20.4"; // 仅作历史对照。禁止无差别复制进 neoforge/<ver>。
-
 function readUtf8(p) {
   let s = fs.readFileSync(p, "utf8");
   if (s.charCodeAt(0) === 0xfeff) s = s.slice(1);
@@ -89,7 +87,6 @@ function setFmField(fm, key, value) {
 function adaptBody(body, { platform, version, knowledgeHint, docsTool }) {
   let out = body;
   out = out.replaceAll("forge/1.20.1/", `${knowledgeHint}/`);
-  out = out.replaceAll("`forge/1.20.1/", `\`${knowledgeHint}/`);
   out = out.replace(/search_forge_docs/g, docsTool);
   // Fabric curios note
   if (platform === "fabric") {

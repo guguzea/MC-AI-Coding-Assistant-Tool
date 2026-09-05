@@ -6533,30 +6533,65 @@ const FS_MUTATION_PRIMITIVES = [
   "truncateSync",
 ];
 
+function fsMutationPrimitiveRe(fn) {
+  return new RegExp(`\\b(?:fs\\.)?${fn}\\s*\\(`);
+}
+
+/** 文本里是否出现任何 fs 写盘原语（= 该脚本「能写文件」）。 */
+function scriptWritesFiles(text) {
+  return FS_MUTATION_PRIMITIVES.some((fn) => fsMutationPrimitiveRe(fn).test(text));
+}
+
+/** 在册豁免：NON_WRITERS / DEBT 两张清单之一（依据正则在 testScriptWriteGuardFunnel 里逐条复核）。 */
+function scriptGuardExempt(rel) {
+  return SCRIPT_WRITE_GUARD_NON_WRITERS.has(rel) || SCRIPT_WRITE_GUARD_DEBT.has(rel);
+}
+
+/**
+ * 是否要求 write-guard：_oneoff 目录无条件；其余看内容 —— 会写文件，或已经在用 guard 的 API
+ * （后者重要：把 import 摘掉但 emit() 调用点还在，必须当场被抓，否则闸门可以悄悄摘）。
+ */
+function scriptRequiresGuard(rel, text) {
+  if (rel === SCRIPT_WRITE_GUARD_REL || scriptGuardExempt(rel)) return false;
+  if (SCRIPT_WRITE_GUARD_ALWAYS_DIRS.some((dir) => rel.startsWith(`${dir}/`))) return true;
+  return scriptWritesFiles(text) || /\b(?:emit|emitCopy|wantWrite|logDryRunBanner)\s*\(/.test(text);
+}
+
 function diffScriptWriteGuard(files) {
   const problems = [];
   let guardAdopted = 0;
   let primitiveHits = 0;
   let outsideGuardHits = 0;
+  let exemptPrimitiveHits = 0;
   let emitCallSites = 0;
   for (const file of files) {
     const isGuard = file.rel === SCRIPT_WRITE_GUARD_REL;
+    const exempt = scriptGuardExempt(file.rel);
     const importsGuard = /(?:^|\n)\s*(?:import|export)[^;\n]*from\s+["'][^"']*write-guard\.mjs["']/.test(file.text);
     if (importsGuard) guardAdopted++;
-    if (!isGuard && scriptRequiresGuard(file.rel) && !importsGuard) {
+    if (!isGuard && scriptRequiresGuard(file.rel, file.text) && !importsGuard) {
       problems.push(`${file.rel}:1 未 import write-guard，会写仓库文件的脚本必须默认 dry-run`);
+    }
+    const exemptBasis = SCRIPT_WRITE_GUARD_NON_WRITERS.get(file.rel) ?? SCRIPT_WRITE_GUARD_DEBT.get(file.rel);
+    if (exemptBasis && !exemptBasis.test(file.text)) {
+      problems.push(
+        `${file.rel}:1 在册豁免依据 ${String(exemptBasis)} 已不成立（不再「只写 cache / 自带闸门」），要么改道 write-guard，要么重签清单`,
+      );
     }
     file.text.split(/\r?\n/).forEach((line, idx) => {
       if (/\b(?:emit|emitCopy)\s*\(/.test(line) && !/\bimport\b/.test(line) && !/\bfunction\s+(?:emit|emitCopy)\b/.test(line)) {
         emitCallSites++;
       }
       for (const fn of FS_MUTATION_PRIMITIVES) {
-        if (!new RegExp(`\\b(?:fs\\.)?${fn}\\s*\\(`).test(line)) continue;
+        if (!fsMutationPrimitiveRe(fn).test(line)) continue;
         primitiveHits++;
-        if (!isGuard) {
-          outsideGuardHits++;
-          problems.push(`${file.rel}:${idx + 1} 直接调用 ${fn}()，写盘必须走 write-guard 的 emit / emitCopy`);
+        if (isGuard) continue;
+        if (exempt) {
+          exemptPrimitiveHits++;
+          continue;
         }
+        outsideGuardHits++;
+        problems.push(`${file.rel}:${idx + 1} 直接调用 ${fn}()，写盘必须走 write-guard 的 emit / emitCopy`);
       }
     });
     if (isGuard) {
@@ -6575,25 +6610,29 @@ function diffScriptWriteGuard(files) {
       guardAdopted,
       primitiveHits,
       outsideGuardHits,
+      exemptPrimitiveHits,
       offenders: new Set(problems.map((p) => p.split(":")[0])).size,
       emitCallSites,
     },
   };
 }
 
+/** 递归列 scripts/**/*.mjs；跳过 node_modules 与点开头目录。 */
+function listScriptModuleFiles(dir, acc = []) {
+  const abs = join(REPO_ROOT, dir);
+  for (const e of readdirSync(abs, { withFileTypes: true })) {
+    if (e.name === "node_modules" || e.name.startsWith(".")) continue;
+    const childRel = `${dir}/${e.name}`;
+    if (e.isDirectory()) listScriptModuleFiles(childRel, acc);
+    else if (e.isFile() && e.name.endsWith(".mjs")) acc.push(childRel);
+  }
+  return acc;
+}
+
 function listWriteGuardScope() {
-  const fromDirs = SCRIPT_WRITE_GUARD_DIRS.flatMap((dir) => {
-    const abs = join(REPO_ROOT, dir);
-    return readdirSync(abs)
-      .filter((name) => name.endsWith(".mjs"))
-      .sort()
-      .map((name) => ({ rel: `${dir}/${name}`, text: readFileSync(join(abs, name), "utf8") }));
-  });
-  const namedFiles = SCRIPT_WRITE_GUARD_FILES.map((rel) => ({
-    rel,
-    text: readFileSync(join(REPO_ROOT, rel), "utf8"),
-  }));
-  return [...fromDirs, ...namedFiles];
+  return listScriptModuleFiles(SCRIPT_WRITE_GUARD_SCAN_DIR)
+    .sort()
+    .map((rel) => ({ rel, text: readFileSync(join(REPO_ROOT, rel), "utf8") }));
 }
 
 function testScriptWriteGuardFunnel() {
@@ -6611,6 +6650,29 @@ function testScriptWriteGuardFunnel() {
     assert.ok(
       files.some((f) => f.rel === rel),
       `门禁扫描范围必须含点名的写仓库 data/ 脚本 ${rel}（改名或删文件要显式改本清单）`,
+    );
+  }
+  for (const rel of [...SCRIPT_WRITE_GUARD_NON_WRITERS.keys(), ...SCRIPT_WRITE_GUARD_DEBT.keys()]) {
+    assert.ok(
+      files.some((f) => f.rel === rel),
+      `豁免清单条目 ${rel} 已不在 ${SCRIPT_WRITE_GUARD_SCAN_DIR}/**/*.mjs 扫描范围内（改名或删除要显式改清单）`,
+    );
+    assert.ok(
+      !(SCRIPT_WRITE_GUARD_NON_WRITERS.has(rel) && SCRIPT_WRITE_GUARD_DEBT.has(rel)),
+      `${rel} 不得同时挂在 NON_WRITERS 与 DEBT 两张清单`,
+    );
+  }
+  // R1/R2 回归：这两个脚本以前无条件写仓库 mcp-server/data/，现在必须已改道 write-guard。
+  for (const rel of ["scripts/clone-audit.mjs", "scripts/validate-rules-against-cache.mjs"]) {
+    const f = files.find((x) => x.rel === rel);
+    assert.ok(f, `门禁扫描范围必须含 ${rel}`);
+    assert.ok(
+      /(?:^|\n)\s*import[^;\n]*from\s+["'][^"']*write-guard\.mjs["']/.test(f.text),
+      `${rel} 未 import write-guard：仓库 data/ 写盘必须默认 DRYRUN`,
+    );
+    assert.ok(
+      !scriptWritesFiles(f.text),
+      `${rel} 仍在直接调用 fs 写盘原语，绕开了 emit / emitCopy`,
     );
   }
 
@@ -6645,6 +6707,29 @@ function testScriptWriteGuardFunnel() {
     assert.deepEqual(recheck.problems, [], `投毒「${label}」后原文件应仍然零违规`);
   }
 
+  // 扫描面扩到 scripts/**/*.mjs 后的自证：新增的裸写仓库脚本必须当场被抓（旧白名单永远放它过去）。
+  const newWriter = {
+    rel: "scripts/poison-new-repo-writer.mjs",
+    text: 'import { writeFileSync } from "fs";\nwriteFileSync("mcp-server/data/loader-api-summaries/poison.json", "{}");\n',
+  };
+  const added = diffScriptWriteGuard([...files, newWriter]);
+  assert.ok(
+    added.problems.some((p) => p.startsWith(newWriter.rel) && /未 import write-guard/.test(p)),
+    `新增未收口的仓库写盘脚本必须被报「未 import write-guard」，实际：\n${added.problems.join("\n")}`,
+  );
+  assert.ok(
+    added.problems.some((p) => p.startsWith(newWriter.rel) && /直接调用 writeFileSync\(\)/.test(p)),
+    `新增未收口的仓库写盘脚本必须被报「直接调用 writeFileSync()」，实际：\n${added.problems.join("\n")}`,
+  );
+  // 在册豁免不得靠清单续命：把依据闸门（--force）摘掉即失效。
+  const debtRel = "scripts/scaffold-version.mjs";
+  const lostBasis = diffScriptWriteGuard(
+    withText(debtRel, files.find((f) => f.rel === debtRel).text.replace(/--force/g, "--nope")),
+  );
+  assert.ok(
+    lostBasis.problems.some((p) => p.startsWith(debtRel) && /在册豁免依据/.test(p)),
+    `豁免依据闸门被摘掉后必须失效，实际：\n${lostBasis.problems.join("\n")}`,
+  );
   // 反向对照：只读脚本里的 readFileSync 不得被当成写盘（否则门禁会误伤读盘）
   const readOnly = diffScriptWriteGuard([
     { rel: "scripts/_oneoff/probe-readonly.mjs", text: 'import { emit } from "../_lib/write-guard.mjs";\nconst t = readFileSync(p, "utf8");\nif (want) emit(p, t);\n' },
@@ -6656,11 +6741,15 @@ function testScriptWriteGuardFunnel() {
   const libCount = files.filter((f) => f.rel.startsWith("scripts/_lib/")).length;
   assert.equal(s.outsideGuardHits, 0, `guard 之外不得有写盘原语，实际 ${s.outsideGuardHits} 处`);
   assert.ok(s.emitCallSites > 0, "未发现任何 emit 调用点，说明漏斗没被真正使用");
+  const requiredCount = files.filter((f) => scriptRequiresGuard(f.rel, f.text)).length;
   console.log(
-    `  [script-write-guard] 扫描=${s.scanned}（_oneoff ${oneoffCount} + _lib ${libCount} + 点名写 data/ ${SCRIPT_WRITE_GUARD_FILES.length}）` +
-      ` guard 引用=${s.guardAdopted} emit 调用点=${s.emitCallSites} ` +
-      `写盘原语命中=${s.primitiveHits}（write-guard 内 ${s.primitiveHits - s.outsideGuardHits}，范围外 ${s.outsideGuardHits}）` +
-      ` 投毒=${poisoned.length} 类全命中 + 只读误报对照通过`,
+    `  [script-write-guard] 扫描=${SCRIPT_WRITE_GUARD_SCAN_DIR}/**/*.mjs 共 ${s.scanned}` +
+      `（要求 guard ${requiredCount}：_oneoff ${oneoffCount} + _lib ${libCount} + 点名已改道 ${SCRIPT_WRITE_GUARD_FILES.length}）` +
+      ` guard 引用=${s.guardAdopted} emit 调用点=${s.emitCallSites}` +
+      ` 写盘原语=${s.primitiveHits}（write-guard 内 ${s.primitiveHits - s.exemptPrimitiveHits - s.outsideGuardHits}，` +
+      `在册豁免 ${s.exemptPrimitiveHits}，范围外 ${s.outsideGuardHits}）` +
+      ` 清单：非写盘 ${SCRIPT_WRITE_GUARD_NON_WRITERS.size} + 待收口债务 ${SCRIPT_WRITE_GUARD_DEBT.size}` +
+      ` 投毒=${poisoned.length + 2} 类全命中（含新增裸写仓库脚本 / 豁免依据失效）+ 只读误报对照通过`,
   );
 }
 

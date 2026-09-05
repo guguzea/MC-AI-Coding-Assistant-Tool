@@ -4,7 +4,11 @@
 
 ## Capability 系统
 
-### Forge / NeoForge
+### Forge
+
+CLI 核实范围：`query_loader_api --platform=forge` 在 1.17.1 与 1.20.1 两档都只给
+`ICapabilityProvider` 两个成员 —— `getCapability(Capability<T>, Direction)`（抽象）与
+`getCapability(Capability<T>)`（default），**没有任何类型参数**。
 
 ```java
 public interface IMyCapability {
@@ -18,7 +22,8 @@ public static void attachCapability(AttachCapabilitiesEvent<Entity> event) {
     if (event.getObject() instanceof Player player) {
         event.addCapability(
             new ResourceLocation(MOD_ID, "my_capability"),
-            new ICapabilityProvider<>() {
+            // ICapabilityProvider 是非泛型接口，写尖括号编译不过
+            new ICapabilityProvider() {
                 private final IMyCapability instance = new MyCapabilityImpl();
                 private final LazyOptional<IMyCapability> opt = LazyOptional.of(() -> instance);
 
@@ -36,6 +41,28 @@ player.getCapability(MY_CAPABILITY).ifPresent(cap -> {
     cap.setValue(42);
 });
 ```
+
+### NeoForge（20.4 / 1.20.4 起，含 1.21.1 与 26.1）
+
+上面那套「往事件里 `addCapability`」在 NeoForge **不成立**：`query_loader_api --platform=neoforge
+--minecraftVersion=1.20.4 / 1.21.1 --className=AttachCapabilitiesEvent` 都是 `found:false`，
+而 `ICapabilityProvider` 换成了带两个类型参数的 `T getCapability(O object, C context)`，
+注册改走 `RegisterCapabilitiesEvent`。
+
+```java
+// 以下两条签名逐字来自
+// query_loader_api --platform=neoforge --minecraftVersion=1.21.1 --className=RegisterCapabilitiesEvent
+//   void registerEntity(EntityCapability<T,C>, EntityType<E>, ICapabilityProvider<? super E,C,T>)
+//   void registerBlockEntity(BlockCapability<T,C>, BlockEntityType<BE>, ICapabilityProvider<? super BE,C,T>)
+@SubscribeEvent
+public static void registerCaps(RegisterCapabilitiesEvent event) {
+    event.registerEntity(MY_DATA_CAP, EntityType.PLAYER, (player, context) -> player.myData);
+}
+```
+
+读取侧的 `getCapability(...)` 调用形态本档未逐签名核实，写代码前先跑一次
+`query_loader_api --platform=neoforge`（`found:false` 时改用 `search_neoforge_docs` 该版页面）。
+
 
 ### Fabric（使用附加组件 API）
 
