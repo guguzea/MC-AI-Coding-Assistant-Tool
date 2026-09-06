@@ -9,16 +9,17 @@
  *    → 用 PowerShell 自己的 Parser::ParseFile 解析每个已跟踪 .ps1。
  *
  * 2) sync-skills.ps1 必须拒绝 neoforge/ 根档（neoforge/LEGACY-NOTICE.md）。
- *    根档是 legacy trap：只留 .cursor 源稿，7 套投影树已按预期删除。若 -All 再把
- *    根目录列进 targets，一次 sync 就按旧源稿重写整套 325 个已删文件。
- *    → 拿根档的一次性副本真跑 -TargetDir，断言 REFUSE 且不生成任何投影树。
+ *    根档是 legacy trap。若 -All 再把根目录列进 targets，一次 sync 就按旧源稿重写
+ *    整套已删投影。素材是自建 fixture（仓库根的 neoforge/.cursor 源稿已按 §3.4-9
+ *    删除，gate 不再依赖它在盘上存在）→ 拿该 fixture 真跑 -TargetDir，
+ *    断言 REFUSE 且不生成任何投影树。
  *
  * 没有 powershell.exe（非 Windows）时打印说明后跳过——不在别的机器上假装通过。
  */
 import { spawnSync } from "node:child_process";
 import {
-  cpSync,
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readdirSync,
   readFileSync,
@@ -162,8 +163,15 @@ try {
       failures.push('sync-skills.ps1 -All 又把 neoforge 根目录列进 targets（legacy trap 不能同步）');
     }
 
+    // 根档源稿本身也必须保持不存在。其余 gate 都按 /^\d+\.\d+/ 或 pack 形态枚举版本目录，
+    // 看不见 neoforge/.cursor —— 它一旦复活只有本 gate 会撞见，故在此钉死。
+    if (existsSync(join(repoRoot, "neoforge", ".cursor"))) {
+      failures.push("legacy neoforge/.cursor 源稿复活（§3.4-9 已删；REFUSE 只挡投影，挡不住源稿回潮）");
+    }
+
     const copy = join(workDir, "neoforge");
-    cpSync(join(repoRoot, "neoforge", ".cursor"), join(copy, ".cursor"), { recursive: true });
+    mkdirSync(join(copy, ".cursor", "rules"), { recursive: true });
+    writeFileSync(join(copy, ".cursor", "rules", "00-project-setup.mdc"), "# legacy 根档 fixture\n", "utf8");
     const run = spawnSync(
       "powershell.exe",
       ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", syncScript, "-TargetDir", copy],

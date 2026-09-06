@@ -617,15 +617,6 @@ ${ctor}
 `;
 }
 
-const stubRule = (n) => `# ${n}
-
-扁平 \`neoforge/.cursor/rules\` **不再是 1.20.4 教程**。
-
-1. \`list_neoforge_versions\` + 工程元数据锁定精确版本。
-2. 已建档：读 \`neoforge/<ver>/AGENTS.md\` 与 \`neoforge/<ver>/.cursor/rules/${n}\`。六档：${RULE_TREE.join("、")}。
-3. 未建档（${UNVERSIONED.join("、")}）：**禁止读邻档 00–10**，改口 \`search_neoforge_docs\`。
-`;
-
 for (const ver of RULE_TREE) {
   const f = F[ver];
   const base = `neoforge/${ver}`;
@@ -728,60 +719,7 @@ out("neoforge/CLONE_AUDIT_SIGNOFF.md", `# clone-audit 签字
 超 70% Dice = 疑似；本文件记为「同骨架换类名，对照官方文档签字」。误报不算验收失败。
 `);
 
-for (const n of [
-  "00-project-setup.mdc",
-  "01-registry.mdc",
-  "02-block.mdc",
-  "03-item.mdc",
-  "04-entity.mdc",
-  "05-events.mdc",
-  "06-networking.mdc",
-  "07-datagen.mdc",
-  "08-client-server.mdc",
-  "09-anti-patterns.mdc",
-  "10-gui.mdc",
-]) {
-  out(`neoforge/.cursor/rules/${n}`, stubRule(n));
-}
-
-out(
-  "neoforge/.cursor/skills/mc-registry/SKILL.md",
-  `---
-name: mc-registry
-description: 分发到 neoforge/<ver>。禁止 NeoForgeAddonPlugin / RegistryObject 冒充 NeoForge。
-platform: neoforge
-version: "unversioned"
----
-
-锁定 MC 版本后读 \`neoforge/<ver>/.cursor/skills/mc-registry/SKILL.md\`。未建档版本只 \`search_neoforge_docs\`。
-`,
-);
-out(
-  "neoforge/.cursor/skills/mc-networking/SKILL.md",
-  `---
-name: mc-networking
-description: 分发到版本目录。NeoForge 全档均是 Payload，不是 SimpleChannel。
-platform: neoforge
-version: "unversioned"
----
-
-1.20.4：RegisterPayloadHandlerEvent（单数）。1.21+：RegisterPayloadHandlersEvent（复数）。读对应 \`neoforge/<ver>\` skill。
-`,
-);
-out(
-  "neoforge/.cursor/skills/mc-blockentity/SKILL.md",
-  `---
-name: mc-blockentity
-description: 分发到 neoforge/<ver>。同步用 Payload，不是 SimpleChannel；禁止 RegistryObject。
-platform: neoforge
-version: "unversioned"
----
-
-锁定 MC 版本后读 \`neoforge/<ver>/.cursor/skills/mc-blockentity/SKILL.md\` 与该档 02-block。
-自定义包走 06 Payload。禁止 SimpleChannel / IMessage / NeoForgeAddonPlugin / RegistryObject。
-未建档版本只 \`search_neoforge_docs\`。
-`,
-);
+// 扁平 neoforge/.cursor 根档已于 §3.4-9 删除（见 neoforge/LEGACY-NOTICE.md）——不得在此重新生成。
 
 out(
   "neoforge/scaffold/README.md",

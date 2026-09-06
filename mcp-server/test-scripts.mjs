@@ -265,14 +265,16 @@ if (psProbe.status !== 0) {
   // 覆盖它，不需要为自检新增忽略规则。gate 从假根起算相对路径，所以 `_debug_` 那段不在
   // 它遍历到的相对路径里，不会被 gate 自己的 SCRATCH 跳过规则误伤。
   const FAKE_ROOT = jpath(GATE_SCRATCH, "powershell");
-  const buildFakeRoot = ({ poison, guarded }) => {
+  const buildFakeRoot = ({ poison, guarded, resurrect }) => {
     rmSync(FAKE_ROOT, { recursive: true, force: true });
     const wf = (rel, text) => {
       const abs = jpath(FAKE_ROOT, ...rel.split("/"));
       mkdirSync(dirname(abs), { recursive: true });
       writeFileSync(abs, text, "utf8");
     };
-    wf("neoforge/.cursor/rules/00-test.mdc", "# rule\n");
+    if (resurrect) {
+      wf("neoforge/.cursor/rules/00-test.mdc", "# rule\n");
+    }
     wf("evil.ps1", poison ? 'Write-Host "同"\n' : 'Write-Host "sync"\n');
     wf("scripts/sync-skills.ps1", guarded ? syncSrc : syncSrc.replace(GUARD, "$null"));
     return FAKE_ROOT;
@@ -288,6 +290,7 @@ if (psProbe.status !== 0) {
     { poison: false, guarded: true },
     { poison: true, guarded: true },
     { poison: false, guarded: false },
+    { poison: false, guarded: true, resurrect: true },
   ];
   const results = [];
   try {
@@ -304,7 +307,7 @@ if (psProbe.status !== 0) {
     rmSync(FAKE_ROOT, { recursive: true, force: true });
     dropIfEmpty(GATE_SCRATCH);
   }
-  const [clean, poisoned, unguarded] = results;
+  const [clean, poisoned, unguarded, resurrected] = results;
   assert.equal(
     clean.run.status,
     0,
@@ -315,8 +318,10 @@ if (psProbe.status !== 0) {
   assert.notEqual(unguarded.run.status, 0, "gate 漏掉了 sync-skills.ps1 根档守卫失效（一次 sync 复活 325 个已删投影）");
   assert.match(unguarded.run.stderr, /REFUSE/, `未报「没有 REFUSE」：\n${unguarded.run.stderr}`);
   assert.match(unguarded.run.stderr, /投影树/, `未报投影树泄漏：\n${unguarded.run.stderr}`);
+  assert.notEqual(resurrected.run.status, 0, "gate 漏掉了 neoforge/.cursor 源稿复活（§3.4-9 的删除没有守卫）");
+  assert.match(resurrected.run.stderr, /复活/, `复活未被点名：\n${resurrected.run.stderr}`);
   console.log(
-    `  assert-powershell 自检: 干净=0 / 投毒=${poisoned.run.status} / 去守卫=${unguarded.run.status}`,
+    `  assert-powershell 自检: 干净=0 / 投毒=${poisoned.run.status} / 去守卫=${unguarded.run.status} / 源稿复活=${resurrected.run.status}`,
   );
 }
 
