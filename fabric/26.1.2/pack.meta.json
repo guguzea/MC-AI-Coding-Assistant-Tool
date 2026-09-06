@@ -1,0 +1,12 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "fabric",
+  "minecraftVersion": "26.1.2",
+  "note": "本文件 2026-09-05 补建（§3.1-2 / §3.5.5c「缺 pack.meta.json」）。规则侧实测完好：.cursor/rules 11 篇 + 38 个 skill，与 7 套投影及 .cursor/agent/default.md 一致。status 取 ready：本档 00/01/09 是终态而非未核草稿——短是因为语料窄，本档 AGENTS.md 自陈「00–10 只引用 data/fabric_26.1.2 能核到的 id，核不到的编号是未核实禁止输出 stub，不是缺文件」，且根 AGENTS.md 把 26.1.2 定为唯一可读档（禁止邻版顶替），draft 会让该路径拒载（实测装本文件 → session ok:false / PACK_NOT_FOUND；移开 → ok:true + ruleIds + verifiedApi）。缺面按同平台薄档 fabric/1.21.4 先例记进 gaps，不降级 status。键集与取值风格抄自 fabric/1.21.4/pack.meta.json（status/pack-status/platform/minecraftVersion/note/gaps{}）；本仓 fabric 侧原有 11 份已跟踪 meta（git ls-files 'fabric/*/pack.meta.json' | wc -l 补建前 = 11）全部没有 scaffold 块，故不引入 rift/1.13.2 与 liteloader/1.8.9 的 scaffold.mode / buildVerified / provenance 字段。",
+  "gaps": {
+    "code-patterns": "无 code-patterns/ 目录（ls -d fabric/26.1.2/code-patterns → No such file）。本仓 fabric 14 档中 7 有 7 无，选择性存在；但本档 AGENTS.md 只对 knowledge/ 写了「有意为空」，未对 code-patterns 作同类声明，故此处记为缺口而非已裁定的设计决定。禁止克隆 fabric/1.21.11/code-patterns 顶数。",
+    "version-changes": "无 knowledge/version-changes/ 目录。本档 AGENTS.md:29 已明示为设计决定：「除该文件外 knowledge/ 有意为空，禁止克隆 fabric/1.21.11/knowledge（其 antipatterns / porting / version-changes 均非本档证据）」→ 不得用 1.21.x 档的同名文件为本档背书。",
+    "knowledge": "knowledge/ 实测仅 1 个文件（common/verified-api-26.1.2.md）；antipatterns/ 与 porting/ 目录均不存在（对照 fabric/1.21.11 = 13 文件）。"
+  }
+}

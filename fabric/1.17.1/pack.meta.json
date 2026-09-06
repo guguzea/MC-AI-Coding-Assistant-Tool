@@ -2,5 +2,10 @@
   "status": "ready",
   "pack-status": "ready",
   "platform": "fabric",
-  "minecraftVersion": "1.17.1"
+  "minecraftVersion": "1.17.1",
+  "note": "本文件 2026-09-05 回读实缺面（§3.2 附带 fabric 行 / W5.5 销账）。实测基线：.cursor/rules 11 篇 .mdc 共 1929 行（单篇最少 64 行，0 篇含「未核实」占位标记 → 终态规则而非 stub，故 status 保持 ready；draft 是拒载开关，会让 activate_platform_pack session 直接 PACK_NOT_FOUND，不是「内容薄」标记）；.cursor/skills 38 个平铺 .md；knowledge/ = README.md + antipatterns 6 + common 2（datapack-format.md / glossary.md）+ porting 2 + version-changes 1。键集抄自 fabric/1.20.1/pack.meta.json，note/gaps{} 形态抄自 fabric/1.21.4/pack.meta.json。一致性检查器：mcp-server/scripts/assert-skill-mirrors.mjs 与 mcp-server/scripts/assert-pack-meta-coverage.mjs。",
+  "gaps": {
+    "verified-api": "无 knowledge/common/verified-api-1.17.1.md。本仓 fabric 14 档只有 5 档带核实表（1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2），本档属其余 9 档；实测本档 .cursor/rules 与 AGENTS.md 引用 verified-api 的处数 = 0 → 不是断链，只是覆盖差异。本档签名依据只有工程 Yarn + query_api（1.17.1 在 Parchment 索引内）+ search_fabric_docs version=1.17.1，禁止拿 1.21.x 档的核实表为本档背书。",
+    "version-changes": "knowledge/version-changes/ 只有 1.17.x.md（本档同系列），无 1.18.x / 1.19.x / 1.20.x 后续纪要 → 「1.17.1 之后各版改了什么」本档不答；需要时按版本切到对应档或 search_fabric_docs，禁止克隆 fabric/1.21.11/knowledge/version-changes/1.21.x.md 顶数。"
+  }
 }

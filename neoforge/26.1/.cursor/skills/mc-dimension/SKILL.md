@@ -4,7 +4,7 @@ description: NeoForge 26.1 mc-dimension。类名只来自本档核实表与 sear
 platform: neoforge
 version: "26.1"
 dependencies: []
-mappings: mojmap
+mappings: mojmap-unobfuscated（游戏 jar 已是 Mojang 名）
 ---
 
 # mc-dimension（NeoForge 26.1）

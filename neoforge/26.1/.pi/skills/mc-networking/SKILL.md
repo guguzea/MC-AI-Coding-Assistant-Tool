@@ -4,7 +4,7 @@ description: NeoForge 26.1 mc-networking。类名只来自本档核实表与 sea
 platform: neoforge
 version: "26.1"
 dependencies: []
-mappings: mojmap
+mappings: mojmap-unobfuscated（游戏 jar 已是 Mojang 名）
 ---
 
 # mc-networking（NeoForge 26.1）

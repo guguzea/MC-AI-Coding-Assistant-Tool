@@ -466,6 +466,31 @@ description: |
     const body = readKnowledgeResource(linkish.uri);
     assert.equal(body.found, false);
   }
+  // §3.5.5：清单条目 ↔ 磁盘实文件名一致。裸 URI 必须真解析出正文，
+  // 且 description 里写的相对路径必须存在于磁盘（防止指向另一目录却不起名）。
+  for (const uri of [
+    "mcskill://version-changes/1.21",
+    "mcskill://antipatterns/registry",
+    "mcskill://patterns/README",
+  ]) {
+    const r = listed.find((x) => x.uri === uri);
+    assert.ok(r, `清单缺少 ${uri}`);
+    const body = readKnowledgeResource(uri);
+    assert.equal(body.found, true, `${uri} 解析失败：${body.text}`);
+    assert.ok(String(body.text).length > 40, `${uri} 正文过短`);
+    const paths = String(r.description).match(/[\w./-]+\.md/g) || [];
+    assert.ok(paths.length >= 1, `${uri} description 未写明实读磁盘文件`);
+    for (const rel of paths) {
+      assert.ok(existsSync(join(repo, rel)), `${uri} description 指向不存在的文件：${rel}`);
+    }
+  }
+  {
+    const r = listed.find((x) => x.uri === "mcskill://schema/sqlite");
+    const bare = readKnowledgeResource("mcskill://schema/sqlite");
+    assert.equal(bare.found, false, "裸 schema/sqlite 不应假装解析成功");
+    assert.match(String(bare.text), /version/, "裸 URI 的提示须点名缺的参数");
+    assert.match(String(r.description), /\?version=/, "清单必须写明 schema/sqlite 需要 ?version= 参数");
+  }
   console.log("list_knowledge_resources community: ok");
 }
 

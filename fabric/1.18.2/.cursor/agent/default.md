@@ -80,7 +80,7 @@ Decision: 本规则集是否适用？
 | `fabric.mod.json` | 有 `environment` 字段（schemaVersion 1 一直支持） | 有 `environment` 字段 |
 | Block class | `Block` + `AbstractBlock.Settings` | `Block` + `AbstractBlock.Settings`（类名未改成「只有 AbstractBlock」） |
 | BlockItem | `BlockItem` | `BlockItem` |
-| Pack format（数据包） | **8** | **15**（1.20.1） |
+| Pack format（数据包） | **9** | **15**（1.20.1） |
 | FoodComponent | `FoodComponent.Builder` | `FoodComponent.Builder` |
 | EntityType | `EntityType.Builder.create()` | `EntityType.Builder.create()` |
 | 实体分类 | `SpawnGroup`（Yarn 1.18） | `SpawnGroup` |

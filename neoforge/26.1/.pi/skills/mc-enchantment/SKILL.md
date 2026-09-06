@@ -4,7 +4,7 @@ description: NeoForge 26.1 mc-enchantment。类名只来自本档核实表与 se
 platform: neoforge
 version: "26.1"
 dependencies: []
-mappings: mojmap
+mappings: mojmap-unobfuscated（游戏 jar 已是 Mojang 名）
 ---
 
 # mc-enchantment（NeoForge 26.1）

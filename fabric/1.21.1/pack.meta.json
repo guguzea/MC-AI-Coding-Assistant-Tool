@@ -2,5 +2,13 @@
   "status": "ready",
   "pack-status": "ready",
   "platform": "fabric",
-  "minecraftVersion": "1.21.1"
+  "minecraftVersion": "1.21.1",
+  "note": "本文件 2026-09-05 回读实缺面（§3.2 附带 fabric 1.21.1 行 / W5.5 销账）。实测基线：.cursor/rules 11 篇 .mdc 共 1962 行（单篇最少 69 行 = 06-networking，0 篇含「未核实」占位标记 → 终态规则而非 stub，故 status 保持 ready；draft 是拒载开关，会让 activate_platform_pack session 直接 PACK_NOT_FOUND，不是「内容薄」标记）；.cursor/skills 38 个平铺 .md；knowledge/ = README.md + antipatterns 5 + common 2（datapack-format.md / glossary.md）+ porting 2 + version-changes 2 —— 其中 1.21.x.md 是 2026-09-05 为销本行而新增的本档 1.20.4 → 1.21.1 迁移纪要；原状只有 1.20.x.md（md5 f298626b89d968277feb63c5cf28e353，标题《1.19.x → 1.20.x 版本变化》= 上一区间迁移），而 knowledge/README.md 的「遇到版本兼容问题？」指向它 → 1.21.1 用户按图索骥会读到 1.19→1.20 的口径。新文件每条断言只取 data/fabric_1.21.1 与 data/fabric_1.20.4 两版语料对照（fabric-docs raw 行号 + yarn tiny 计数），未克隆 fabric/1.21.11 同名文件；code-patterns 7 件（01–06 编号 + README）；scaffold = README_AI.md + build.gradle + gradle.properties + gradlew(.bat) + wrapper 8.10 + src。键集抄自 fabric/1.20.1/pack.meta.json，note/gaps{} 形态抄自 fabric/1.21.4/pack.meta.json。一致性检查器：mcp-server/scripts/assert-skill-mirrors.mjs 与 mcp-server/scripts/assert-pack-meta-coverage.mjs。",
+  "gaps": {
+    "antipatterns": "knowledge/antipatterns/ 只有 5 篇（gradle / item / mixin / networking / yarn-mappings），缺同平台他档有的 registry.md（对比 fabric/1.20.4 与 fabric/1.20.1 各 6 篇）。实测本档 knowledge/README.md 的目录树正文同样只列这 5 篇 → 清单与磁盘一致，不是断链，只是本档少一篇注册类反模式；补它需先有本档可核实依据（01-registry.mdc + search_fabric_docs version=1.21.1），禁止从邻档拷。",
+    "verified-api": "无 knowledge/common/verified-api-1.21.1.md。本仓 fabric 14 档只有 5 档带核实表（1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2），本档属其余 9 档；实测本档引用 verified-api 的处数 = 0 → 覆盖差异非断链。本档替代依据：mcp-server/data 侧无 1.21.1 核实表，但 data/fabric_1.21.1/mappings/yarn-1.21.1+build.3-tiny.gz 可逐名核对（用法见 knowledge/version-changes/1.21.x.md §7），另有 query_api（1.21.1 不在其约 1.16.5–1.20.4 覆盖内 → 不要用）与 search_fabric_docs version=1.21.1。",
+    "data-components": "1.21 最大变化面（数据组件）在本档规则树未展开：.cursor/rules/*.mdc 中 ComponentType / DataComponentTypes 命中 0，唯一已落地的是 .cursor/skills/mc-item.md:44（FoodComponent 在 net.minecraft.component.type、Builder 用 .nutrition(int)，与 tiny 实测一致）。自定义组件注册、组件默认值与缺失 NPE 的口径在 knowledge/version-changes/1.21.x.md §3；该节只写 tiny 已证的名，未写的方法名一律先 search_fabric_docs。",
+    "enchantment": "1.21 附魔改成数据驱动效果：net/minecraft/enchantment/ 下具名 *Enchantment 父类 1.20.4 = 31 个 → 1.21.1 = 0 个（tiny 实测），本档 .cursor/skills/mc-enchantment.md 是无 API 名的骨架，未接新机制。依据 = knowledge/version-changes/1.21.x.md §4 + data/fabric_1.21.1/.../develop_items_custom-enchantment-effects.md（1.20.4 语料无此页）。",
+    "corpus-meta-java": "登记一条与工具无关的仓内矛盾（不改）：data/fabric_1.21.1/meta.json 写 \"compatibilityLevel\": \"JAVA_17\"，而该语料自己的 develop_getting-started_setting-up-a-development-environment.md:35,37 写 1.21.1 需要 JDK 21、本档 scaffold/README_AI.md:7 也写 Java 21。实测 mcp-server/src 与 mcp-server/scripts 对 compatibilityLevel 命中 0（该文件自称「工具不读取此文件」）→ 无行为影响；写 1.21.1 代码按 Java 21。"
+  }
 }

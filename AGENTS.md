@@ -37,6 +37,12 @@ id 'org.quiltmc.loom'
 
 库 Skill：Quilt 仍按 `fabric-only` + `all-platforms` 读 `knowledge/libs/` 源稿。
 
+Quilt 建档面（实测 `ls -d quilt/*/` 对 `ls -d data/quilt_*/`，2026-09-05）：
+
+- **有规则树**（10 档）：`1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.4` / `1.21.8` / `1.21.10` / `1.21.11`。
+- **有树但无 `data/quilt_<ver>` 语料**（4 档）：`1.21.3` / `1.21.4` / `1.21.8` / `1.21.10`。规则树可用；文档检索**不报错而是回 Fabric 正文**——实测 `search_docs platform=quilt version=1.21.4 query=registry` 返回 `ok:true` + `fallback:"fabric"` + `sourcePlatform:"fabric"` + `warning:"Quilt 官方文档无此版本，已回退到同版本 Fabric 文档…"` + `total:10`，`1.21.3` 同形但语义索引缺库 → `semantic:false` + `total:0`。⇒ **必须读 `fallback` / `sourcePlatform` 字段**：命中不是 QSL 证据，`total:0` 也不等于「本版没有该 API」。QSL 签名一律 `query_loader_api`（先 `ingest_loader_api`）或用户自备 jar。
+- **无树**：`1.20.6` / `1.21.2` / `1.21.5` / `1.21.6` / `1.21.7` / `1.21.9` / `26.x` 等 → session 直接 `PACK_NOT_FOUND`。**禁止**拿邻版 quilt 树或同版 Fabric 树顶替，也**禁止**为填一个版本号克隆一棵新树。
+
 ### 2. 检查 Fabric
 
 **须先排除 NeoForge**（`neoforge.mods.toml` / NeoGradle）；残留 `fabric.mod.json` 不得把 Neo 工程判成 Fabric。
@@ -61,6 +67,12 @@ id 'fabric-loom'
 - 磁盘没有对应 `fabric/<ver>/` 时：停，改口 `search_fabric_docs`，**不要**用邻版规则顶上。`1.21.4` / `1.21.8` / `1.21.10` 已有 versioned `data/fabric_<ver>` + 本档规则树；**`1.21.5` 无规则树** → session `PACK_NOT_FOUND`；无 fabric-docs `versions/` → 文档检索 `VERSION_NOT_FOUND` 且不 fallback。禁止拷 `1.21.11`。
 - **文档 fallback 仅限查询 API**，不代表规则树可用。
 
+**Fabric 建档面（实测 `ls -d fabric/*/` 对 `ls -d data/fabric_*/` 对 `list_fabric_versions`，2026-09-05）：**
+
+- 规则树 14 档（每档 11 条 `00–10`）= 语料 14 档 = `list_fabric_versions` 14 档，**三者完全一致**：`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.4` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1.2`。⇒ Fabric **不存在**「有树无语料」那类半档，问哪档就在这 14 档里选。
+- **空洞（既无树也无语料）**：`1.21.2` / `1.21.5` / `1.21.6` / `1.21.7` / `1.21.9` 等。实测 `activate_platform_pack action=session platform=fabric minecraftVersion=1.21.2` → `PACK_NOT_FOUND`（message 附带「同系列已建档：1.21.1, 1.21.3, 1.21.4, 1.21.8, 1.21.10, 1.21.11」，那是**候选提示不是自动折叠授权**）；`search_fabric_docs version=1.21.2` → `VERSION_NOT_FOUND` 且**不 fallback**。
+- 遇到空洞档：把工具的候选清单念给用户选，**禁止**自行拿邻版树顶上或为填版本号克隆一棵新树。`26.1` / `26.1.1` 是另一回事——走 `knowledgeVersion` 折到 `26.1.2`，不是空洞。
+
 
 ### 3. 检查 NeoForge
 
@@ -75,6 +87,12 @@ id 'net.neoforged.gradle.userdev'
 
 如果匹配 → 先 `list_neoforge_versions` + 工程元数据锁定**精确**版本，再调用 `activate_platform_pack action=session`（`platform=neoforge` + 精确版本；`1.20.1` / `1.20.4` / `1.20.6` / `1.21.1` / `1.21.3` / `1.21.5` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1`）。**禁止跨目录读邻档 00–10，禁止把 `neoforge/<ver>/.cursor` 当加载器 Read。** `1.20.1` 本档核实表 + 短规则（Forge 兼容数据），禁止用 1.20.4 00–10 顶上。不为 26.1.1 单造规则树；26.1 ≠ 1.21.1。
 > 注记（D9）：NeoForge 1.20.1（20.1.x，Forge 47 兼容层）使用 `mods.toml` + `net.minecraftforge.*` 包，根决策树与 `detect_mod_project` 会将其归为 Forge——功能等价；该版本规则树在 neoforge/1.20.1。
+
+**NeoForge 建档面（实测 `ls -d neoforge/*/` 对 `ls -d data/neoforge_*/`，2026-09-05）：**
+
+- 规则树 10 档、每档 **11 条** `00–10`：`1.20.1` / `1.20.4` / `1.20.6` / `1.21.1` / `1.21.3` / `1.21.5` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1`。语料 9 档（`data/neoforge_<ver>`）。
+- **唯一差额 `data/neoforge_1.20.1` 缺失 = 按设计，不是半档**：实测 `search_neoforge_docs version=1.20.1` → `ok:true` + `forgeCompatible:true` + `versionFallback:false` + `sourceNote:"NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）"`（走的是 `data/forge_1.20.1`，不是邻近 NeoForge 版冒充）。⇒ 该项**不计入**「有树无数据」缺陷，也**不要**为凑数建 `data/neoforge_1.20.1` 克隆树。
+- 对比：Forge 侧 `forge/1.21.1` 实测 `.cursor/rules` 内 `00–10` 数 = **0**（draft，见步骤 5）；`1.7.10` / `1.8.9` / `1.9.4` / `1.10.2` / `1.11.2` 是 **3 条短规则树**且各自有 `data/forge_<ver>` 语料——短不是漏，禁止用 1.12.2 的 00–10 顶替。
 
 工作流提醒（**不是硬门**）：仅当用户要走完整新方块 / 新物品 / 方块实体 / 新实体 / GUI / Mixin / 世界生成 / 配置 / GameTest / 崩溃分诊 / 移植 / 从零构建 / 环境搭建 / 真机循环 / 发布清单 / 汉化 / 反编译研究时才调用 `get_workflow_template`（`mc-new-item` / `mc-new-blockentity` / `mc-mixin` / `mc-worldgen` / `mc-config` / `mc-gametest` / `mc-publish` / `mc-setup-env` 等）。改已有代码、补方法、查文档走规则 + Skill + `search_*_docs`，不要先调工作流。从零工程才 `download_official_mdk`。
 

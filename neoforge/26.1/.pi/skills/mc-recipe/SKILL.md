@@ -4,7 +4,7 @@ description: NeoForge 26.1 mc-recipe。类名只来自本档核实表与 search_
 platform: neoforge
 version: "26.1"
 dependencies: []
-mappings: mojmap
+mappings: mojmap-unobfuscated（游戏 jar 已是 Mojang 名）
 ---
 
 # mc-recipe（NeoForge 26.1）

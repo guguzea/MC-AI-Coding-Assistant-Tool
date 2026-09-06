@@ -1,0 +1,7 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "fabric",
+  "minecraftVersion": "1.21.11",
+  "note": "本文件 2026-09-05 补建（§3.1-2 / §3.5.5c「缺 pack.meta.json」）。四候选面实测全部 present：code-patterns/ 6 篇 + README（README 目录与文件名逐一对得上）；.cursor/rules 11 篇 + 38 个 skill 与 7 套投影及 .cursor/agent/default.md 一致（一致性检查器：node mcp-server/scripts/assert-skill-mirrors.mjs；本文件不记录该门禁某次运行的瞬时结果）；38 个 skill 在本档 .cursor/skills 下是平铺 *.md（与 1.21.4 / 1.21.8 / 1.21.10 / 26.1.2 的 mc-*/SKILL.md 目录形态不同，条数同为 38）；knowledge/version-changes/1.21.x.md 文内即写「适用于 Fabric 1.21.11」；knowledge/ 共 13 文件，含 common/verified-api-1.21.11.md。档形态与已跟踪的 fabric/1.21.1 / fabric/1.20.1 同构（那两档 meta 均已是 ready 且无 scaffold 块），故 status 取 ready。键集抄自 fabric/1.20.1/pack.meta.json。"
+}

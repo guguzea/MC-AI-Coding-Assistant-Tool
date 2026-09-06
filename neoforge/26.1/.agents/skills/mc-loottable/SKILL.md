@@ -4,7 +4,7 @@ description: NeoForge 26.1 mc-loottable。类名只来自本档核实表与 sear
 platform: neoforge
 version: "26.1"
 dependencies: []
-mappings: mojmap
+mappings: mojmap-unobfuscated（游戏 jar 已是 Mojang 名）
 ---
 
 # mc-loottable（NeoForge 26.1）

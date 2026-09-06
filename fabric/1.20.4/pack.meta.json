@@ -2,5 +2,12 @@
   "status": "ready",
   "pack-status": "ready",
   "platform": "fabric",
-  "minecraftVersion": "1.20.4"
+  "minecraftVersion": "1.20.4",
+  "note": "本文件 2026-09-05 回读实缺面（§3.2 附带 fabric 行 / W5.5 销账）。实测基线：.cursor/rules 11 篇 .mdc 共 1981 行（单篇最少 64 行 = 06-networking，0 篇含「未核实」占位标记 → 终态规则而非 stub，故 status 保持 ready；draft 是拒载开关，会让 activate_platform_pack session 直接 PACK_NOT_FOUND，不是「内容薄」标记）；.cursor/skills 38 个平铺 .md；knowledge/ = README.md + antipatterns 6（gradle / item / mixin / networking / registry / yarn-mappings）+ common 2（datapack-format.md / glossary.md）+ porting 2 + version-changes 1；scaffold 三件套齐（build.gradle / gradle.properties / gradlew + wrapper 8.8）。键集抄自 fabric/1.20.1/pack.meta.json，note/gaps{} 形态抄自 fabric/1.21.4/pack.meta.json。一致性检查器：mcp-server/scripts/assert-skill-mirrors.mjs 与 mcp-server/scripts/assert-pack-meta-coverage.mjs。",
+  "gaps": {
+    "code-patterns": "无 code-patterns/ 目录（ls -1 fabric/1.20.4/code-patterns → No such file）。本仓 fabric 14 档 7 有 7 无，选择性存在（有的 7 档 = 1.16.5 / 1.17.1 / 1.18.2 / 1.20.1 / 1.21.1 / 1.21.3 / 1.21.11，各 7 件 = 01–06 编号 + README）；实测本档 .cursor/rules 与 AGENTS.md 引用 code-patterns 的处数 = 0 → 不是断链。本档 AGENTS.md 未对该目录作「有意为空」声明，故此处记为缺口而非已裁定的设计决定；禁止克隆 fabric/1.21.1/code-patterns 顶数。",
+    "scaffold-README_AI": "scaffold/ 无 README_AI.md（实测有该文件的 10 档 = 1.16.5 / 1.18.2 / 1.20.1 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2；无的 4 档 = 1.14.4 / 1.17.1 / 1.19.4 / 1.20.4）。三件套本身齐，缺的是那份 agent 面向的 scaffold 说明 → 属 W5.4 scaffold 补齐面，不影响本档 rules / knowledge 可用性。",
+    "verified-api": "无 knowledge/common/verified-api-1.20.4.md。本仓 fabric 14 档只有 5 档带核实表（1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2），本档属其余 9 档；实测本档引用 verified-api 的处数 = 0 → 覆盖差异非断链。本档签名依据只有工程 Yarn + query_api（1.20.4 在 Parchment 索引约 1.16.5–1.20.4 内）+ search_fabric_docs version=1.20.4。",
+    "version-changes": "knowledge/version-changes/ 只有本档同系列的 1.20.x.md（87 行，标题《Minecraft 1.20.x 版本变更》，md5 7dcf77549390496065620a1598054c96；注意它与 fabric/1.20.1、fabric/1.21.3 的 69 行同名文件 md5 b6e8b46a3d2edd98321e878ca829f452《1.19.x → 1.20.x 版本变化》是两个不同文件，别当同一份）。无 1.21.x 纪要 → 往 1.21 迁移的问题本档不答，按版本切到 fabric/1.21.1（该档 2026-09-05 已补 knowledge/version-changes/1.21.x.md）或 search_fabric_docs，禁止克隆邻档同名文件顶数。"
+  }
 }

@@ -4,7 +4,7 @@ description: NeoForge 26.1 mc-gametest。类名只来自本档核实表与 searc
 platform: neoforge
 version: "26.1"
 dependencies: []
-mappings: mojmap
+mappings: mojmap-unobfuscated（游戏 jar 已是 Mojang 名）
 ---
 
 # mc-gametest（NeoForge 26.1）
