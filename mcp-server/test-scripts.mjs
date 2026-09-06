@@ -626,4 +626,136 @@ if (psProbe.status !== 0) {
   );
 }
 
+// ── #16 assert-fabric-transcludes 自检：假根 + 三种投毒（不碰 data/）─────────
+// 背景（D-2=B）：上游 fabric-docs 的 `.md` 里代码是 `@[code …](@/reference/…)` 占位符，
+// 渲染期才展开。我们把 reference 镜像进 data/fabric_<ver>/ 并在读取侧展开，于是有三条
+// 可以悄悄坏掉的路：镜像文件被删、镜像字节漂移、processed 相对 raw 少了标记。
+// 只跑真树的话，「gate 绿」和「gate 没在干活」看不出区别 —— 所以这里建假根投毒。
+{
+  const { createHash } = await import("node:crypto");
+  const GATE = fileURLToPath(new URL("./scripts/assert-fabric-transcludes.mjs", import.meta.url));
+  const FAKE_ROOT = jpath(GATE_SCRATCH, "fabric-transcludes");
+  const JAVA_REL = "reference/1.20.4/src/main/java/com/example/docs/item/ModItems.java";
+  const JSON_REL = "reference/1.20.4/src/main/generated/data/example-mod/damage_type/tater.json";
+  const JAVA_TARGET = `@/${JAVA_REL}`;
+  const JSON_TARGET = `@/${JSON_REL}`;
+  const JAVA_TEXT = [
+    "package com.example.docs.item;",
+    "",
+    "// :::1",
+    "public class ModItems {",
+    "    static final Item RUBY = register(\"ruby\");",
+    "// :::1",
+    "// :::2",
+    "    private static Item register(String name) {",
+    "        return null;",
+    "    }",
+    "// :::2",
+    "",
+  ].join("\n");
+  // 故意不带尾换行：真实上游 generated JSON 就有这种，展开块必须逐字节等于文件本身。
+  const JSON_TEXT = '{\n  "id": "example-mod:tater"\n}';
+  const DOC = [
+    "# Transclude fixture",
+    "",
+    `Whole file:`,
+    "",
+    `@[code](${JSON_TARGET})`,
+    "",
+    "Region:",
+    "",
+    `@[code lang=java transcludeWith=:::1](${JAVA_TARGET})`,
+    "",
+    "Range:",
+    "",
+    `@[code lang=java transclude={2-3}](${JAVA_TARGET})`,
+    "",
+  ].join("\n");
+
+  const buildFakeRoot = ({ dropReference, tamperJson, dropProcessedMarker }) => {
+    rmSync(FAKE_ROOT, { recursive: true, force: true });
+    const packRoot = jpath(FAKE_ROOT, "fabric_1.20.4");
+    const wf = (abs, text) => {
+      mkdirSync(dirname(abs), { recursive: true });
+      writeFileSync(abs, text, "utf8");
+    };
+    const docDir = jpath(packRoot, "fabric-docs", "1.20.4");
+    const processedDoc = dropProcessedMarker
+      ? DOC.split("\n")
+          .filter((l) => !l.startsWith("@[code lang=java transclude={"))
+          .join("\n")
+      : DOC;
+    wf(jpath(docDir, "raw", "develop_fixture.md"), DOC);
+    wf(jpath(docDir, "processed", "develop_fixture.md"), processedDoc);
+    if (!dropReference) wf(jpath(packRoot, JAVA_REL), JAVA_TEXT);
+    wf(
+      jpath(packRoot, JSON_REL),
+      tamperJson ? JSON_TEXT.replace("tater", "tater ") : JSON_TEXT,
+    );
+    const sha = (s) => createHash("sha256").update(Buffer.from(s, "utf-8")).digest("hex");
+    wf(
+      jpath(packRoot, "reference.provenance.json"),
+      JSON.stringify(
+        {
+          sourceRepo: "FabricMC/fabric-docs",
+          commitSha: "0".repeat(40),
+          version: "1.20.4",
+          files: {
+            [JAVA_REL]: { blobSha: "0".repeat(40), sha256: sha(JAVA_TEXT), bytes: Buffer.byteLength(JAVA_TEXT) },
+            [JSON_REL]: { blobSha: "0".repeat(40), sha256: sha(JSON_TEXT), bytes: Buffer.byteLength(JSON_TEXT) },
+          },
+          aliases: {},
+        },
+        null,
+        2,
+      ),
+    );
+    return FAKE_ROOT;
+  };
+  const runGate = (root) => {
+    const env = { ...process.env, MC_SKILL_TRANSCLUDE_TEST_ROOT: root };
+    delete env.MC_SKILL_DATA;
+    return spawnSync(process.execPath, [GATE], { env, encoding: "utf8", windowsHide: true });
+  };
+
+  const cases = [
+    { name: "clean" },
+    { name: "dropReference", dropReference: true },
+    { name: "tamperJson", tamperJson: true },
+    { name: "dropProcessedMarker", dropProcessedMarker: true },
+  ];
+  const runs = [];
+  try {
+    for (const c of cases) {
+      const root = buildFakeRoot(c);
+      try {
+        runs.push({ ...c, run: runGate(root) });
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    }
+  } finally {
+    rmSync(FAKE_ROOT, { recursive: true, force: true });
+    dropIfEmpty(GATE_SCRATCH);
+  }
+
+  const byName = Object.fromEntries(runs.map((r) => [r.name, r.run]));
+  assert.equal(
+    byName.clean.status,
+    0,
+    `gate 在干净假根上也失败 = 自检无效（投毒永远「通过」）：\n${byName.clean.stdout}${byName.clean.stderr}`,
+  );
+  assert.match(byName.clean.stdout, /占位符 3 处/, `干净假根没跑到 3 处标记：\n${byName.clean.stdout}`);
+  assert.notEqual(byName.dropReference.status, 0, "gate 漏掉了 reference 镜像文件被删（get_fabric_doc_full 会退回 Not Found）");
+  assert.match(byName.dropReference.stderr, /ModItems\.java/, `删镜像件未被点名：\n${byName.dropReference.stderr}`);
+  assert.notEqual(byName.tamperJson.status, 0, "gate 漏掉了镜像文件字节漂移（provenance 形同虚设）");
+  assert.match(byName.tamperJson.stderr, /tater\.json/, `字节漂移未被点名：\n${byName.tamperJson.stderr}`);
+  assert.notEqual(byName.dropProcessedMarker.status, 0, "gate 漏掉了 processed 相对 raw 少一个占位符（加工吞了标记）");
+  assert.match(byName.dropProcessedMarker.stderr, /占位符数不等/, `吞标记未被点名：\n${byName.dropProcessedMarker.stderr}`);
+  console.log(
+    `  assert-fabric-transcludes 自检: 干净=0 / 删镜像=${byName.dropReference.status} / 字节漂移=${byName.tamperJson.status}` +
+      ` / 吞标记=${byName.dropProcessedMarker.status}`,
+  );
+}
+
 console.log("script helper regression tests passed");

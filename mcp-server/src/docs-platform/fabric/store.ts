@@ -34,6 +34,12 @@ import {
 } from "../search-utils.js";
 import { ownGet } from "../../utils/own-record.js";
 import { PlatformDataMissingError, type DocPlatform } from "../platform-data.js";
+import {
+  expandTranscludes,
+  loadReferenceProvenance,
+  referenceAvailable,
+  type ExpandTranscludesResult,
+} from "./transclude.js";
 
 // ── 类型定义 ─────────────────────────────────────────────────────────────
 
@@ -71,6 +77,11 @@ export interface FullDocResult {
     codeBlockCount: number;
     keySections: number;
     processedFile: string;
+    /**
+     * 该正文里仍未展开的上游 `@[code …](@/reference/…)` 占位符处数。
+     * 只在本档没有本地 `reference/` 镜像（未取件）时出现；0 时整个字段省略。
+     */
+    unexpandedTranscludes?: number;
   };
 }
 
@@ -344,8 +355,15 @@ export class FabricDocStore {
     const entry = this.findL0Entry(id, version);
     if (!entry) this.notFound(id, version);
     const processedFile = this.processedFileFor(entry.id);
-    const content = this.readProcessedFile(version, processedFile, id);
-    return this.buildResult(content, this.l0ToL2(entry, processedFile, content), highlightKey);
+    const raw = this.readProcessedFile(version, processedFile, id);
+    const expanded = this.expandTranscludesFor(raw, version);
+    const content = expanded ? expanded.content : raw;
+    return this.buildResult(
+      content,
+      this.l0ToL2(entry, processedFile, content),
+      highlightKey,
+      expanded?.stats ?? null,
+    );
   }
 
   private getRelatedDocsFromL0(id: string, version: string, limit: number): SearchResult[] {
@@ -383,6 +401,40 @@ export class FabricDocStore {
     if (existsSync(join(nested, "index-l0.json"))) return nested;
 
     return canonical;
+  }
+
+  /**
+   * 档根 = `data/fabric_<version>`，即上游仓库根的本地镜像：
+   * `reference/<上游相对路径>` 与 `reference.provenance.json` 都挂在这层（见 scripts/fetch-fabric-transcludes.mjs）。
+   * 上游解析公式是 `fullpath.replace(/^@/, process.cwd())`，所以运行时也必须是档根，不是 `<source>/<version>`。
+   */
+  private packRootFor(version: string): string | null {
+    const ver = String(version ?? "").trim();
+    if (!ver || /[\\/]/.test(ver) || ver.includes("..")) return null;
+    const candidates = [
+      join(this.dataDir, `${this.dirPrefix}_${ver}`),
+      resolve(this.versionDataDir(version), "..", ".."),
+    ];
+    for (const candidate of candidates) {
+      if (referenceAvailable(candidate)) return candidate;
+    }
+    return null;
+  }
+
+  /**
+   * 读取侧展开上游 transclude 占位符（D-2=B：真展开，不改语料字节）。
+   * 返回 null = 无需展开（正文没有标记）或本档没有 reference 镜像。
+   */
+  private expandTranscludesFor(
+    content: string,
+    version: string,
+  ): { content: string; stats: ExpandTranscludesResult } | null {
+    if (!content.includes("@[code")) return null;
+    const packRoot = this.packRootFor(version);
+    if (!packRoot) return null;
+    const stats = expandTranscludes(content, packRoot, loadReferenceProvenance(packRoot));
+    if (stats.sites === 0) return null;
+    return { content: stats.content, stats };
   }
 
   // ── 懒加载校验 ────────────────────────────────────────────────────────────
@@ -635,28 +687,9 @@ export class FabricDocStore {
       this.notFound(id, version);
     }
 
-    const cacheKey = `${version}/${meta.processedFile}`;
-    const cached = this.fileCache.get(cacheKey);
-
-    let content: string;
-    if (cached && cached.expiry > Date.now()) {
-      content = cached.data;
-    } else {
-      const versionRoot = resolve(this.versionDataDir(version));
-      const resolved = resolve(versionRoot, meta.processedFile);
-      const rel = relative(versionRoot, resolved);
-      if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(resolved)) {
-        this.notFound(id, version);
-      }
-      content = readFileSync(resolved, "utf-8");
-      this.fileCache.set(cacheKey, {
-        data: content,
-        expiry: Date.now() + FabricDocStore.CACHE_TTL,
-      });
-      trimOldest(this.fileCache, FabricDocStore.FILE_CACHE_MAX);
-    }
-
-    return this.buildResult(content, meta, highlightKey);
+    const raw = this.readProcessedFile(version, meta.processedFile, id);
+    const expanded = this.expandTranscludesFor(raw, version);
+    return this.buildResult(expanded ? expanded.content : raw, meta, highlightKey, expanded?.stats ?? null);
   }
 
   // ── 内部 ──────────────────────────────────────────────────────────────
@@ -711,12 +744,25 @@ export class FabricDocStore {
     content: string,
     meta: L2Entry,
     highlightKey?: boolean,
+    stats?: ExpandTranscludesResult | null,
   ): FullDocResult {
+    let outMeta: FullDocResult["meta"] = meta;
+    if (stats && stats.sites > 0) {
+      // index-l2.json 的 codeBlockCount 是按**未展开**正文统计的；展开后必须用同一把尺重算，
+      // 否则 meta 说 3 块、正文里 12 块。尺子与 l0ToL2 保持一致（数 ``` 出现次数 / 2）。
+      const ticks = content.match(/```/g)?.length ?? 0;
+      outMeta = {
+        ...meta,
+        hasCodeBlocks: ticks >= 2,
+        codeBlockCount: Math.floor(ticks / 2),
+        ...(stats.missing.length > 0 ? { unexpandedTranscludes: stats.missing.length } : {}),
+      };
+    }
     if (!highlightKey) {
-      return { content, meta };
+      return { content, meta: outMeta };
     }
     const keyBlocks = this.extractKeyBlocks(content);
-    return { keyBlocks, content, meta };
+    return { keyBlocks, content, meta: outMeta };
   }
 
   private extractPathKeywords(id: string): string[] {

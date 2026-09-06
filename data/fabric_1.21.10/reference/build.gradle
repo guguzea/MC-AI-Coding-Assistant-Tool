@@ -1,0 +1,77 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version '1.16-SNAPSHOT' apply false
+	id "com.diffplug.spotless" version "6.23.3" apply false
+	id 'checkstyle'
+}
+
+subprojects {
+	apply plugin: 'net.fabricmc.fabric-loom'
+	apply plugin: 'checkstyle'
+	apply plugin: 'com.diffplug.spotless'
+
+	base {
+		archivesName = "example-mod-${project.name}"
+	}
+
+	// #region split_sources
+	loom {
+		splitEnvironmentSourceSets()
+
+		mods {
+			"example-mod" {
+				sourceSet sourceSets.main
+				sourceSet sourceSets.client
+			}
+		}
+	}
+	// #endregion split_sources
+
+	loom {
+		runs.configureEach {
+			ideConfigGenerated = true
+		}
+	}
+
+	dependencies {
+		implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+		// #region automatic_testing_1
+		testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
+		// #endregion automatic_testing_1
+	}
+
+	// #region datagen_setup_configure
+	fabricApi {
+		configureDataGeneration() {
+			client = true
+		}
+	}
+	// #endregion datagen_setup_configure
+
+	tasks.withType(JavaCompile).configureEach {
+		it.options.release = 25
+	}
+
+	java {
+		withSourcesJar()
+
+		sourceCompatibility = JavaVersion.VERSION_25
+		targetCompatibility = JavaVersion.VERSION_25
+	}
+
+	spotless {
+		lineEndings = com.diffplug.spotless.LineEnding.UNIX
+
+		java {
+			removeUnusedImports()
+			importOrder('java', 'javax', '', 'net.minecraft', 'net.fabricmc', 'com.example.docs')
+			indentWithTabs()
+			trimTrailingWhitespace()
+		}
+	}
+
+	checkstyle {
+		configFile = rootProject.file('checkstyle.xml')
+		toolVersion = "10.12.1"
+	}
+}

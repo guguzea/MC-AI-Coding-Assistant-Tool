@@ -168,6 +168,46 @@ export function curlDownload({ url, dest, timeoutMs = DEFAULT_TIMEOUT_MS, minByt
   return { ok: false, via: "curl", curlExit: r.status, ...classified, reason: `${classified.reason} ${stderr}`.trim().slice(0, 400) };
 }
 
+/**
+ * 批量 curl（win32）腿：单进程 `-Z` 并行拉多个 (url, dest)。
+ * 实测（2026-09-07，FabricMC/fabric-docs raw 件）8 个文件一批 1.06 s，逐个 1.3–2 s。
+ * 批处理退出码是**聚合**的，无法据此判单个 URL —— 所以单项成败一律按
+ * 「目标文件存在且非空」判定，失败项交回调用方用 `curlDownload` 逐个通道重试。
+ */
+export function curlBatchDownload({
+  items = [],
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+  parallelMax = 8,
+  headers = {},
+} = {}) {
+  if (!items.length) return { ok: [], failed: [], curlExit: 0, stderr: "" };
+  const secs = Math.max(10, Math.floor(timeoutMs / 1000));
+  const args = [
+    "-fsSL",
+    "--ssl-no-revoke",
+    "--retry", "2",
+    "--retry-delay", "1",
+    "--connect-timeout", String(Math.max(5, Math.floor(timeoutMs / 1000))),
+    "--max-time", String(secs),
+    "-A", USER_AGENT,
+    "-Z", "--parallel-max", String(parallelMax), "--parallel-immediate",
+  ];
+  for (const [k, v] of Object.entries(headers)) args.push("-H", `${k}: ${v}`);
+  for (const it of items) args.push("-o", it.dest, it.url);
+  const r = spawnSync("curl.exe", args, { windowsHide: true, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
+  const ok = [];
+  const failed = [];
+  for (const it of items) {
+    const size = existsSync(it.dest) ? statSync(it.dest).size : 0;
+    if (size > 0) ok.push({ ...it, bytes: size });
+    else {
+      rmSync(it.dest, { force: true });
+      failed.push(it);
+    }
+  }
+  return { ok, failed, curlExit: r.status, stderr: `${r.stderr || ""}${r.stdout || ""}`.slice(0, 400) };
+}
+
 /** fetch 腿：始终 UA + AbortSignal.timeout。as = text | buffer | json | none */
 export async function fetchWithUa(url, { method = "GET", headers = {}, timeoutMs = DEFAULT_TIMEOUT_MS, as = "text" } = {}) {
   try {
