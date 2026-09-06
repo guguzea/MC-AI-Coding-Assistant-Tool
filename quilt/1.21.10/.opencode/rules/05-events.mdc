@@ -3,6 +3,7 @@
 > ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本版本无任何已发布 QSL/QFAPI 构件。下表 API 是**源码树考据，非可编译 API**——禁止生成。事件一律走同版 Fabric API。
 
 > 默认读 `fabric/1.21.10/.cursor/rules/05-events.mdc`。仅当用户要 **QSL 事件** 或 QFAPI 弃用提示时用本文件。
+> ⚠️ **离线数据**：`data/quilt_1.21.10/` 无 quilt-docs 树（本版本无已发布 QSL/QFAPI 构件，属上游真实状态）。`search_docs({platform:"quilt"})` 对本版 QSL 查询返回 `PLATFORM_DATA_MISSING`（**不**回退 Fabric）；需要同版 Fabric API 写法时改用 `search_docs({platform:"fabric", version:"1.21.10"})`。禁止补抓或从邻版克隆 quilt-docs。
 
 - QSL 生命周期/注册事件 ≠ `net.fabricmc.fabric.api.event.lifecycle`
 - **禁止** `QuiltRegistry.register()`；不要把 FAPI Registry 事件当 QSL

@@ -1,6 +1,7 @@
 # 05 — 事件（NeoForge 26.1）
 
 来源：本档 **无** 独立 `docs/.../concepts/events/` 页。事件以 `query_loader_api` / `search_neoforge_docs` 为准；1.20.6 事件页仅作 fallback 并必须标注 `fallback`，禁止当 26.1 签名。
+> ⚠️ 离线数据缺口：本档 data/neoforge_26.1/ 未入库 concepts/events 页，search_neoforge_docs 查不到；上述来源以线上版为准（禁止从邻版复制补索引）。
 
 两条总线：
 

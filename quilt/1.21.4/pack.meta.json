@@ -3,5 +3,8 @@
   "pack-status": "ready",
   "platform": "quilt",
   "minecraftVersion": "1.21.4",
-  "overlay": "fabric/1.21.4"
+  "overlay": "fabric/1.21.4",
+  "gaps": {
+    "quilt-docs": "本版无任何已发布 QSL/QFAPI 构件（见本档 01-registry / 05-events 顶部声明），data/quilt_1.21.4/ 无离线文档树；search_docs(platform=quilt) 对 QSL 查询返回 PLATFORM_DATA_MISSING（不回退 Fabric），非 QSL 查询回退同版 Fabric。属上游真实状态，非漏抓，禁止补抓或克隆邻版"
+  }
 }

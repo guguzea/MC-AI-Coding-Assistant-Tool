@@ -1,6 +1,7 @@
 # 08 — 物理端（NeoForge 1.20.4）
 
 来源：https://docs.neoforged.net/docs/1.20.4/concepts/sides/
+> ⚠️ 离线数据缺口：本档 data/neoforge_1.20.4/ 未入库 concepts/sides 页，search_neoforge_docs 查不到；上述来源以线上版为准（禁止从邻版复制补索引）。
 
 - 物理客户端 / 物理服务端 / 逻辑客户端 / 逻辑服务端 分开。
 - 客户端类：`Dist.CLIENT` + `@EventBusSubscriber`。MDK 1.20.4 用内部类 `ClientModEvents`。

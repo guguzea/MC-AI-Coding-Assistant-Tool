@@ -5,6 +5,7 @@ description: 10 — GUI（NeoForge 26.1）
 # 10 — GUI（NeoForge 26.1）
 
 官方 `https://docs.neoforged.net/docs/gui/menus/` **已 404**（2026-08-19 核）。本档 data **没有** `gui/menus` / `gui/screens` 入库页。已入库相关页：`inventories/container`（`MenuProvider` / `AbstractContainerMenu` / `BaseContainerBlockEntity#createMenu`）。**禁止**把 1.21.1 wiki 或邻档 gui 页当 26.1 全文。
+> ⚠️ 离线数据缺口：本档 data/neoforge_26.1/ 未入库 gui/screens、gui/menus 页，search_neoforge_docs 查不到；上述来源以线上版为准（禁止从邻版复制补索引）。
 
 以本档 loader-api 为准（已核）：
 

@@ -7,6 +7,7 @@ description: 01 — Quilt 注册（QSL ≠ FAPI Registry）
 > ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本版本无任何已发布 QSL/QFAPI 构件。本文件中的 QSL API 全部是**源码树考据，非可编译 API**——禁止生成。注册一律走 Vanilla `Registry.register` 或同版 Fabric API。
 
 > 适用：Quilt 1.21.8。**禁止编造 `QuiltRegistry.register()`。** 未核实的 QSL 方法名：停止生成，改 `search_docs({platform:"quilt"})`。
+> ⚠️ **离线数据**：`data/quilt_1.21.8/` 无 quilt-docs 树（本版本无已发布 QSL/QFAPI 构件，属上游真实状态）。`search_docs({platform:"quilt"})` 对本版 QSL 查询返回 `PLATFORM_DATA_MISSING`（**不**回退 Fabric）；需要同版 Fabric API 写法时改用 `search_docs({platform:"fabric", version:"1.21.8"})`。禁止补抓或从邻版克隆 quilt-docs。
 
 ## 核心事实
 

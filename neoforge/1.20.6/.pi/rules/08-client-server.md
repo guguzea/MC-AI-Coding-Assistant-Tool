@@ -5,6 +5,7 @@ description: 08 — 物理端（NeoForge 1.20.6）
 # 08 — 物理端（NeoForge 1.20.6）
 
 来源：https://docs.neoforged.net/docs/1.20.6/concepts/sides/
+> ⚠️ 离线数据缺口：本档 data/neoforge_1.20.6/ 未入库 concepts/sides 页，search_neoforge_docs 查不到；上述来源以线上版为准（禁止从邻版复制补索引）。
 
 - 物理客户端 / 物理服务端 / 逻辑客户端 / 逻辑服务端 分开。物理端枚举 `Dist`，逻辑端枚举 `LogicalSide`。
 - 逻辑端：有 `Level` 时用 `level.isClientSide()`。

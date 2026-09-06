@@ -201,7 +201,7 @@ ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, su
 modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 ```
 
-需要给原版没有钩子的位置加事件时：自己 `EventFactory.createArrayBacked`，再在 Mixin 里 `EVENT.invoker()`（见官方 `develop/events`「Custom Events」）。不要编造 `AttackEvents.AFTER_DAMAGE`。
+需要给原版没有钩子的位置加事件时：自己 `EventFactory.createArrayBacked`，再在 Mixin 里 `EVENT.invoker()`（见官方 `develop/events`「Custom Events」；⚠️ 本版 fabric-docs 离线索引为空：上游 fabric-docs versions/ 无本版 develop/* 快照，search_fabric_docs 查不到该页，以线上版为准）。不要编造 `AttackEvents.AFTER_DAMAGE`。
 
 ## 常见错误
 

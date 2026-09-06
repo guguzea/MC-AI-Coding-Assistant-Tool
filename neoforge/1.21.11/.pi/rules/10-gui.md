@@ -5,6 +5,7 @@ description: 10 — GUI（NeoForge 1.21.11）
 # 10 — GUI（NeoForge 1.21.11）
 
 官方 `https://docs.neoforged.net/docs/1.21.11/gui/menus/` 与 `.../gui/screens/` **已 404**（2026-08-19 核）。**禁止**把邻档 gui 页当本档全文，也禁止编造本档专页。
+> ⚠️ 离线数据缺口：本档 data/neoforge_1.21.11/ 未入库 gui/screens、gui/menus 页，search_neoforge_docs 查不到；上述来源以线上版为准（禁止从邻版复制补索引）。
 
 以本档 loader-api 为准（已核）：
 

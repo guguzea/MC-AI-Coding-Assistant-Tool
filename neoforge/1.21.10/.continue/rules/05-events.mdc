@@ -1,6 +1,7 @@
 # 05 — 事件（NeoForge 1.21.10）
 
 来源：https://docs.neoforged.net/docs/1.21.10/concepts/events/
+> ⚠️ 离线数据缺口：本档 data/neoforge_1.21.10/ 未入库 concepts/events 页，search_neoforge_docs 查不到；上述来源以线上版为准（禁止从邻版复制补索引）。
 
 与 1.21.5 同类：游戏总线 `NeoForge.EVENT_BUS`；示例 **`LivingEvent.LivingJumpEvent`**。`@EventBusSubscriber` 会同时订游戏总线和 mod 总线。
 

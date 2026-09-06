@@ -2,5 +2,8 @@
   "status": "ready",
   "pack-status": "ready",
   "platform": "fabric",
-  "minecraftVersion": "1.20.1"
+  "minecraftVersion": "1.20.1",
+  "gaps": {
+    "fabric-docs": "上游 fabric-docs versions/ 无本版 develop/* 快照；data/fabric_1.20.1/fabric-docs/1.20.1/index-l0.json 为空数组，正文实际来自 data/fabric_1.20.1/fabric-wiki/1.20.1/processed/。禁止从邻版复制补索引"
+  }
 }

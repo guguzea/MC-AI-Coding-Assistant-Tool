@@ -814,6 +814,9 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `lib-api-summaries/*.json` | `mcp-server/data/` | 44 库 / 12,225 个 public 类 / 49,040 方法签名摘要（轻量 javadoc，约 4MB） |
 | `lib-manifests/all.json` | `mcp-server/data/` | **45** slug / **2867** 版本条目（版本号/URL/hash/loader 矩阵，Modrinth API 生成） |
 
+> **已知缺口（已实测核实，不伪造）**：catalog 50 条中有 4 个条目**无 API 摘要** —— `lib-config-legacy`、`lib-libgui`、`lib-server-translations`、`lib-spruceui-obsidianui`。根因：这 4 条在 `library-catalog.ts` 中 `modrinthSlug` 为空，且实测 Modrinth `project/libgui`、`project/spruceui`、`project/server-translations-api`、`project/config-legacy` 均返回 **404**（无对应项目），因此 `build-lib-manifest` 拉不到版本清单、`batch-decompile` 无 jar 可反编译，`verifiedApi` 保持 `{}`。这些库的 API 请以各自 `officialUrls`（GitHub 仓库）为准，禁止从邻库或邻版克隆摘要。
+> 注：`lib-spruceui-obsidianui` 条目中的 `obsidianui` 在 Modrinth 确实存在（200）。若后续要为其补摘要，正确做法是在 `community_knowledge/authored/lib-spruceui-obsidianui.md` 的 frontmatter 补 `modrinthSlug` 后重跑数据链，**不要**直接手改生成物 `library-catalog.ts`。
+
 反编译源码本体（28 万 .java）**不入库**（按需生成至 `$MC_SKILL_CACHE`）；`search_mod_code` 在源码缺失时返回 `NOT_FOUND` + 指引先调 `decompile_mod_jar`。相关脚本：`scripts/build-lib-manifest.mjs`（manifest）、`scripts/build-api-summaries.mjs`（API 摘要）、`scripts/batch-decompile.mjs`（分批反编译）、`scripts/merge-verified-api.mjs`（回填 catalog）。
 
 另：`registerPrompt` / `registerResource`（工作流与知识 URI）供支持 prompts/resources 的客户端使用；详见 `mcp-server/docs/prompts-client-compat.md`。

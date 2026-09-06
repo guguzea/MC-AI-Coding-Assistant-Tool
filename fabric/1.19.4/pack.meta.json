@@ -7,6 +7,7 @@
   "gaps": {
     "code-patterns": "无 code-patterns/ 目录（ls -1 fabric/1.19.4/code-patterns → No such file）。本仓 fabric 14 档 7 有 7 无，选择性存在（有的 7 档 = 1.16.5 / 1.17.1 / 1.18.2 / 1.20.1 / 1.21.1 / 1.21.3 / 1.21.11，各 7 件 = 01–06 编号 + README）；实测本档 .cursor/rules 与 AGENTS.md 引用 code-patterns 的处数 = 0 → 不是断链。本档 AGENTS.md 未对该目录作「有意为空」声明，故此处记为缺口而非已裁定的设计决定；禁止克隆 fabric/1.21.11/code-patterns 顶数。",
     "verified-api": "无 knowledge/common/verified-api-1.19.4.md。本仓 fabric 14 档只有 5 档带核实表（1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2），本档属其余 9 档；实测本档引用 verified-api 的处数 = 0 → 覆盖差异非断链。本档签名依据只有工程 Yarn + query_api（1.19.4 在 Parchment 索引约 1.16.5–1.20.4 内）+ search_fabric_docs version=1.19.4。",
-    "version-changes": "knowledge/version-changes/ 只有 1.19.x.md（本档同系列），无 1.20.x / 1.21.x 后续纪要 → 跨到 1.20/1.21 的问题本档不答，按版本切到对应档或 search_fabric_docs，禁止克隆邻档同名文件顶数。"
+    "version-changes": "knowledge/version-changes/ 只有 1.19.x.md（本档同系列），无 1.20.x / 1.21.x 后续纪要 → 跨到 1.20/1.21 的问题本档不答，按版本切到对应档或 search_fabric_docs，禁止克隆邻档同名文件顶数。",
+    "fabric-docs": "上游 fabric-docs versions/ 无本版 develop/* 快照；data/fabric_1.19.4/fabric-docs/1.19.4/index-l0.json 为空数组，正文实际来自 data/fabric_1.19.4/fabric-wiki/1.19.4/processed/。禁止从邻版复制补索引"
   }
 }

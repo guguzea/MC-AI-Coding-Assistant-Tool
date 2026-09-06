@@ -14,5 +14,8 @@
     "gaps": [
       "gradlew build 未在本机跑通（W5-4 阶段③）"
     ]
+  },
+  "gaps": {
+    "forge-docs-temurin": "data/forge-versions-manifest.json 声明的 temurin/releases 章节，实测 docs.minecraftforge.net 该路径已 404（上游移除），离线无此页。属 manifest 过时，非漏抓，禁止伪造；该页为 JDK 下载落地页，对模组开发无实质影响"
   }
 }

@@ -7,6 +7,7 @@ description: 10 — GUI（NeoForge 1.21.3）
 来源（官方原文）：
 - https://docs.neoforged.net/docs/1.21.3/gui/menus/
 - https://docs.neoforged.net/docs/1.21.3/gui/screens/
+> ⚠️ 离线数据缺口：本档 data/neoforge_1.21.3/ 未入库 gui/screens、gui/menus 页，search_neoforge_docs 查不到；上述来源以线上版为准（禁止从邻版复制补索引）。
 
 - 注册 `MenuType`（`DeferredRegister`），菜单实例不是 registry object。
 - 无 extra data：官方示例 `new MenuType<>(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)`。

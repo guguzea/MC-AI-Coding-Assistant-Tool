@@ -5,6 +5,7 @@ description: 08 — 物理端（NeoForge 1.21.1）
 # 08 — 物理端（NeoForge 1.21.1）
 
 来源：https://docs.neoforged.net/docs/1.21.1/concepts/sides/
+> ⚠️ 离线数据缺口：本档 data/neoforge_1.21.1/ 未入库 concepts/sides 页，search_neoforge_docs 查不到；上述来源以线上版为准（禁止从邻版复制补索引）。
 
 - 物理客户端 / 物理服务端 / 逻辑客户端 / 逻辑服务端 分开。
 - 物理端：`FMLEnvironment.dist`（`Dist.CLIENT` / `Dist.DEDICATED_SERVER`）。文档推荐另写 `@Mod(value = MODID, dist = Dist.CLIENT)` 的客户端入口类，不要在服务端加载 `net.minecraft.client`。

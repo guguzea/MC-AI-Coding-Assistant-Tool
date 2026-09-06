@@ -3,6 +3,7 @@
 来源（官方原文）：
 - https://docs.neoforged.net/docs/1.21.10/inventories/container/
 - https://docs.neoforged.net/docs/1.21.10/rendering/screens/
+> ⚠️ 离线数据缺口：本档 data/neoforge_1.21.10/ 未入库 gui/screens、gui/menus 页，search_neoforge_docs 查不到；上述来源以线上版为准（禁止从邻版复制补索引）。
 
 本档文档树 **没有** `gui/menus` / `gui/screens`（`get_neoforge_doc_full` `DOC_NOT_FOUND`；线上 `/docs/1.21.10/gui/menus/` 404）。**禁止**把 1.21.5/1.21.8 的 `MenuType` 构造、`IMenuTypeExtension`、`openMenu` / `useWithoutItem` 返回值改版本号冒充。
 

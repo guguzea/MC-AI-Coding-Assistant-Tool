@@ -5,6 +5,7 @@ description: 05 — 事件（NeoForge 1.21.1）
 # 05 — 事件（NeoForge 1.21.1）
 
 来源：https://docs.neoforged.net/docs/1.21.1/concepts/events/
+> ⚠️ 离线数据缺口：本档 data/neoforge_1.21.1/ 未入库 concepts/events 页，search_neoforge_docs 查不到；上述来源以线上版为准（禁止从邻版复制补索引）。
 
 两条总线：
 
