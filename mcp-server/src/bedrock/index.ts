@@ -347,7 +347,7 @@ export const generateAddonManifestSchema = z.object({
   minEngineVersion: z
     .tuple([z.number().int(), z.number().int(), z.number().int()])
     .optional()
-    .describe("必须长度为 3 的整数数组；默认 [1, 21, 80]"),
+    .describe("必须长度为 3 的整数数组；默认 [1, 26, 44]"),
   beta: z.boolean().optional().describe("仅当用户明确要 pack 侧 @minecraft/server 的 version: \"beta\"（须在世界打开 Beta APIs）时为 true。不是 @minecraft/server-beta 包名。"),
   scriptEval: z.boolean().optional().describe("仅当需要 eval 时写入 capabilities: [script_eval]"),
   headerUuid: z.string().optional().describe("packType=resources/both 时写进 RP header；packType=data/script 时（只有 BP）直接写进 BP header。非法 UUID 会被忽略并随机生成。"),
@@ -370,7 +370,9 @@ function freshUuid(): string {
 }
 
 export function generateAddonManifest(args: z.infer<typeof generateAddonManifestSchema>): Record<string, unknown> {
-  const min = args.minEngineVersion ?? [1, 21, 80];
+  // 钉值依据（核对日期 2026-09-07）：npm `@minecraft/server` 最近一个 `-stable` 版本串
+  // `2.10.0-beta.1.26.44-stable` 内嵌的引擎版本 1.26.44；改号须同步 8 份 00-project-setup 与 bedrock/scaffold。
+  const min = args.minEngineVersion ?? [1, 26, 44];
   const status = loadBedrockDocsStatus();
   const warnings: string[] = [];
   if (args.beta) {
@@ -537,7 +539,7 @@ export function generateBpEntity(args: z.infer<typeof generateBpEntitySchema>): 
       packName: `${cleaned} scripts`,
       packType: "script",
       beta: true,
-      minEngineVersion: [1, 21, 80],
+      // 不重复写死引擎版本：取 generateAddonManifest 的钉值默认（同上）
     });
     const bpMan = (man.files as Record<string, unknown> | undefined)?.["BP/manifest.json"];
     if (bpMan) files["BP/manifest.json"] = bpMan;

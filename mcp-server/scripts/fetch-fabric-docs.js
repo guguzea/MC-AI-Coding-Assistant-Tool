@@ -8,7 +8,10 @@
  *   1. GitHub Raw 版本化树 versions/<ver>/<gitPath>（source=github_raw_versioned）
  *      官方 versions/ 有树：1.20.4 / 1.21.1 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2（无 1.21.5）；
  *      其它档以 --dry-run 的 probeSource= 为准，无命中保持空 L0
- *   2. 明确命中的归档分支（--branch≠main 或 ARCHIVE_BRANCHES；source=github_archive）
+ *   2. 明确指定的归档分支（--branch≠main；source=github_archive）。
+ *      实测 2026-09-07：`api.github.com/repos/FabricMC/fabric-docs/branches` 只返回 **1 条 = main**，
+ *      `versions/<v>` 是 main 上的**路径前缀**不是分支 —— 所以没有可猜的归档分支，
+ *      未显式 --branch 时只走通道 1（旧版 ARCHIVE_BRANCHES 四条猜测 32/32 全部 404，已删）。
  * 禁止成功页：github_raw（main 根路径）、未加版本前缀的 VitePress 现行站。
  * 无 versions/ 的旧档应失败并删除已有污染 raw；search 走 wiki（现行站警告）或 DOC_NOT_FOUND。
  *
@@ -19,19 +22,25 @@
  * 用法：
  *   node scripts/fetch-fabric-docs.js --version 1.21.4 [--force] [--dry-run]
  *   node scripts/fetch-fabric-docs.js --version=26.1.2
- *   node scripts/fetch-fabric-docs.js --version=1.20.1 --branch=archive/1.20
+ *   node scripts/fetch-fabric-docs.js --version=1.20.1 --branch=main   # --branch 仅在你确认该分支存在时才给
+ *   # （docs 仓上游只有 main 一个分支；`archive/*`、`*.x-archive`、`versions/*` 都不是分支，是 404）
  *
  * CLI 参数解析（统一方式，同时支持两种风格）：
  *   --version 1.21.1     等价于   --version=1.21.1
- *   --branch archive/1.20 等价于  --branch=archive/1.20
+ *   --branch main        等价于   --branch=main
  *   --force              强制重新抓取
- *   --dry-run            仅预览：打印 URL，并对最多 3 页探测 versions/ 或归档（不写盘）
+ *   --dry-run            仅预览：打印 URL，并对最多 3 页探测 versions/ 树（不写盘）
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync, unlinkSync } from "fs";
 import { join, dirname, resolve } from "path";
+import { tmpdir } from "os";
 import { createHash } from "crypto";
 import { fileURLToPath } from "url";
+
+// win32 上 Node fetch 对 raw.githubusercontent.com / api.github.com 必失败
+// （UNABLE_TO_VERIFY_LEAF_SIGNATURE）→ 取件一律走仓内 curl 优先漏斗。
+import { downloadWithFallback } from "../../scripts/_lib/fetch-with-ua.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // 从 mcp-server/scripts/ 向上 2 层到 MC_skill 根目录
@@ -99,13 +108,10 @@ const FABRIC_GH = {
   baseVitepressUrl: "https://docs.fabricmc.net",
 };
 
-// 已知归档分支（用于旧版本兼容：1.14–1.20 时代 fabric-docs 使用 versions/<version>/<gitPath> 路径）
-const ARCHIVE_BRANCHES = [
-  `${VERSION}.x-archive`,         // 旧版约定：archive/1.20.x 等
-  `versions/${VERSION}`,          // 较新版约定
-  `archive/${VERSION}`,
-  `archive/${VERSION}.x`,
-];
+// 归档分支：不留猜测清单。实测 2026-09-07 branches API 只有 main，
+// 旧的 `${VERSION}.x-archive` / `versions/${VERSION}` / `archive/${VERSION}` / `archive/${VERSION}.x`
+// 四条全是 404（8 档 meta.json 共 32 条，逐条对过分支列表 = 0 命中）。
+// 需要真正的归档时显式传 --branch=<已证存在的分支>。
 
 // ── 工具函数 ──────────────────────────────────────────────────────────────────
 
@@ -137,20 +143,31 @@ let _mainTreePaths = null;
 async function listMainTreePaths() {
   if (_mainTreePaths) return _mainTreePaths;
   const url = `https://api.github.com/repos/${FABRIC_GH.owner}/${FABRIC_GH.repo}/git/trees/${BRANCH}?recursive=1`;
+  const dest = join(tmpdir(), `mc-skill-fabric-tree-${process.pid}-${Date.now()}.json`);
   try {
-    const res = await fetch(url, {
-      headers: { "User-Agent": "mc-skill-fetch-fabric-docs", Accept: "application/vnd.github+json" },
+    const res = await downloadWithFallback({
+      url,
+      dest,
+      timeoutMs: 30000,
+      minBytes: 1,
+      headers: { Accept: "application/vnd.github+json" },
     });
     if (!res.ok) {
-      console.warn(`[fetch-fabric-docs] GitHub tree HTTP ${res.status}，仅用 toFetch`);
+      console.warn(`[fetch-fabric-docs] GitHub tree HTTP ${res.status ?? 0}，仅用 toFetch`);
       _mainTreePaths = [];
       return _mainTreePaths;
     }
-    const data = await res.json();
+    const data = JSON.parse(readFileSync(dest, "utf8"));
     _mainTreePaths = (data.tree ?? []).filter((t) => t.type === "blob").map((t) => t.path);
   } catch (e) {
     console.warn(`[fetch-fabric-docs] GitHub tree 失败：${e.message}，仅用 toFetch`);
     _mainTreePaths = [];
+  } finally {
+    try {
+      unlinkSync(dest);
+    } catch {
+      // 漏斗失败时已自行删掉 dest
+    }
   }
   return _mainTreePaths;
 }
@@ -218,23 +235,8 @@ async function fetchPage(entry, branch = FABRIC_GH.branch) {
     }
   }
 
-  // 2. 已知归档分支（不把 main 根路径当本档）
-  if (branch === "main") {
-    for (const archiveBranch of ARCHIVE_BRANCHES) {
-      const archiveUrl = `${FABRIC_GH.baseRawUrl}/${archiveBranch}/${gitPath}`;
-      tried.push(archiveUrl);
-      const ar = await tryRaw(archiveUrl);
-      if (ar) {
-        return {
-          ...ar,
-          source: "github_archive",
-          url: archiveUrl,
-          branch: archiveBranch,
-        };
-      }
-    }
-  }
-
+  // 2. 未加版本前缀的现行 VitePress 站不可采信，只记进 tried 备查
+  //    （原「已知归档分支」腿已删：docs 仓上游只有 main，见文件头实测记录）
   if (vitepressUrl) {
     tried.push(`vitepress-skipped-unversioned:${vitepressUrl}`);
   }
@@ -243,27 +245,27 @@ async function fetchPage(entry, branch = FABRIC_GH.branch) {
 }
 
 async function tryRaw(url) {
+  const dest = join(tmpdir(), `mc-skill-fabric-docs-${process.pid}-${Date.now()}.md`);
   try {
-    const res = await fetch(url, {
-      headers: {
-        "User-Agent": "MC_skill-fabric-docs-fetcher/1.0",
-        "Accept": "text/plain,text/markdown,*/*",
-      },
-      redirect: "follow",
-      signal: AbortSignal.timeout(20000),
-    });
-    if (res.status === 200) {
-      const text = await res.text();
-      // GitHub Raw 返回 Markdown（含 frontmatter 时以 --- 开头）
-      if (text.includes("# ") || text.startsWith("---")) {
-        const fetchedAt = new Date().toISOString();
-        return { content: text, sha256: sha256(text), fetchedAt };
-      }
+    const res = await downloadWithFallback({ url, dest, timeoutMs: 20000, minBytes: 1 });
+    if (!res.ok) return null;
+    const text = readFileSync(dest, "utf8");
+    // GitHub Raw 返回 Markdown（含 frontmatter 时以 --- 开头）
+    if (text.includes("# ") || text.startsWith("---")) {
+      const fetchedAt = new Date().toISOString();
+      return { content: text, sha256: sha256(text), fetchedAt };
     }
-  } catch (err) {
+    return null;
+  } catch {
     // 网络/超时错误：继续 fallback
+    return null;
+  } finally {
+    try {
+      unlinkSync(dest);
+    } catch {
+      // 漏斗失败时已自行删掉 dest
+    }
   }
-  return null;
 }
 
 async function tryVitepress(url) {
@@ -467,7 +469,6 @@ async function main() {
       console.log(`[DRY] ${entry.priority ?? "🟢"} ${id}${exists}`);
       console.log(`       → versions/${VERSION}/${gitPath}`);
       console.log(`       → ${githubRawUrl}`);
-      console.log(`       → archive: ${ARCHIVE_BRANCHES.map(b => `${FABRIC_GH.baseRawUrl}/${b}/${gitPath}`).join(", ")}`);
       continue;
     }
 
@@ -560,7 +561,6 @@ async function main() {
     meta.meta.docs = {
       sourceRepo: `${FABRIC_GH.owner}/${FABRIC_GH.repo}`,
       branch: BRANCH,
-      archiveBranches: ARCHIVE_BRANCHES,
       acceptedSources: ["github_raw_versioned", "github_archive"],
       pages: provenanceLog,
       failures,

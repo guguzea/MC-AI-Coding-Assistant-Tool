@@ -25,6 +25,11 @@ const OUT_DIR  = join(__dirname, "..", "data");
 const OUT_FILE = join(OUT_DIR, "forge-versions-manifest.json");
 
 // ── Version configuration ───────────────────────────────────────────────────
+// 下表 `forgeVersion` = 该 docs 路由上「确实存在的一个构建样本」，用于探测路由可用性；
+// 它**不是**「当前推荐版 / 最新版」，别和 AGENTS.md 的 MDK 钉值、mdk-checksums.json 互相对账。
+// 当前版号口径两条腿（2026-09-07 实测一致）：promotions_slim.json 的 `1.20.1-latest` = 47.4.23、
+// `1.20.1-recommended` = 47.4.10；maven-metadata.xml 的 1.20.1 线最大值同为 47.4.23。
+// 该 XML 的 <latest>/<release> = `1.19.4-45.4.5`（跨线最后上传项，5046 个版本）⇒ 禁止当「Forge 最新版」。
 
 const JAVADOC_VERSIONS = [
   { mcVersion: "1.7.10",  forgeVersion: "10.13.4.1614",  url: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/" },

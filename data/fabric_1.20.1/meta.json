@@ -30,12 +30,6 @@
     "docs": {
       "sourceRepo": "FabricMC/fabric-docs",
       "branch": "main",
-      "archiveBranches": [
-        "1.20.1.x-archive",
-        "versions/1.20.1",
-        "archive/1.20.1",
-        "archive/1.20.1.x"
-      ],
       "pages": [],
       "failures": [
         {

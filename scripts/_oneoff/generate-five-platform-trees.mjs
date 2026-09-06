@@ -354,7 +354,8 @@ Learn: Experimental Features Toggle。wiki.bedrock.dev/nbt/enabling-experiments�
 );
 w(
   // min_engine_version 取 bedrock/.cursor/rules/00-project-setup.mdc 规定的 scaffold 默认
-  //   [1, 21, 80]（Learn 教程稳定线；与已入库 bedrock/scaffold/RP/manifest.json 一致，核对日期 2026-09-02）
+  //   [1, 26, 44]（npm @minecraft/server 最近一个 -stable 串 2.10.0-beta.1.26.44-stable 所指引擎版本；
+  //   与已入库 bedrock/scaffold/RP/manifest.json 一致，核对日期 2026-09-07）
   "bedrock/scaffold/RP/manifest.json",
   JSON.stringify(
     {
@@ -364,7 +365,7 @@ w(
         description: "scaffold",
         uuid: "aaaaaaaa-bbbb-4ccc-addd-eeeeeeeeeee1",
         version: [1, 0, 0],
-        min_engine_version: [1, 21, 80],
+        min_engine_version: [1, 26, 44],
       },
       modules: [{ type: "resources", uuid: "aaaaaaaa-bbbb-4ccc-addd-eeeeeeeeeee2", version: [1, 0, 0] }],
     },
@@ -373,8 +374,9 @@ w(
   ) + "\n",
 );
 w(
-  // min_engine_version 同上取 bedrock/.cursor/rules/00-project-setup.mdc 的 [1, 21, 80]；
-  // @minecraft/server 与已入库 bedrock/scaffold/BP/manifest.json 对齐为 2.9.0（模块版本随游戏更新，核对日期 2026-09-02）
+  // min_engine_version 同上取 bedrock/.cursor/rules/00-project-setup.mdc 的 [1, 26, 44]
+  //   （npm @minecraft/server 最近一个 -stable 串 2.10.0-beta.1.26.44-stable，核对日期 2026-09-07）；
+  // @minecraft/server 与已入库 bedrock/scaffold/BP/manifest.json 对齐为 2.9.0（= npm dist-tag latest，同日复测）
   "bedrock/scaffold/BP/manifest.json",
   JSON.stringify(
     {
@@ -384,7 +386,7 @@ w(
         description: "scaffold",
         uuid: "aaaaaaaa-bbbb-4ccc-addd-eeeeeeeeeee3",
         version: [1, 0, 0],
-        min_engine_version: [1, 21, 80],
+        min_engine_version: [1, 26, 44],
       },
       modules: [
         { type: "script", uuid: "aaaaaaaa-bbbb-4ccc-addd-eeeeeeeeeee4", version: [1, 0, 0], language: "javascript", entry: "scripts/main.js" },

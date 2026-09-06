@@ -9,7 +9,7 @@ mappings: mojmap
 
 # mc-item（NeoForge 1.20.4）
 
-Java 21。资源 id 类型：`ResourceLocation`。禁止从扁平 neoforge/.agents/skills 或邻档复制旧 API。
+Java 17。资源 id 类型：`ResourceLocation`。禁止从扁平 neoforge/.agents/skills 或邻档复制旧 API。
 
 已核入口：`DeferredRegister.createItems/createBlocks`（search_neoforge_docs items/blocks，version=1.20.4）。
 

@@ -18,12 +18,6 @@
     "docs": {
       "sourceRepo": "FabricMC/fabric-docs",
       "branch": "main",
-      "archiveBranches": [
-        "1.21.1.x-archive",
-        "versions/1.21.1",
-        "archive/1.21.1",
-        "archive/1.21.1.x"
-      ],
       "acceptedSources": [
         "github_raw_versioned",
         "github_archive"

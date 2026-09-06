@@ -186,6 +186,11 @@ if (!sites.length) {
 const tree = existsSync(TREE_FILE) ? JSON.parse(readFileSync(TREE_FILE, "utf8")) : null;
 const commitSha = tree ? tree.sha : null;
 const blobs = tree ? new Map(tree.tree.filter((t) => t.type === "blob").map((t) => [t.path, t])) : new Map();
+// truncated 的树是**部分**清单，用它核对会把「树里没有」当成「上游不存在」→ 白名单必须完整。
+if (tree && tree.truncated !== false) {
+  console.error(`建表文件 ${relative(ROOT, TREE_FILE)} truncated=${tree.truncated}（不是完整清单）→ 拒绝据此判定目标不存在，重新建表。`);
+  process.exit(2);
+}
 
 const uniq = new Map();
 for (const s of sites) {
