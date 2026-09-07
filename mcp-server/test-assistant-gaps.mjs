@@ -4,7 +4,7 @@
  * generate_* 的 suggestedPath 由代码里的 package/类名推导 + 写盘双守卫。
  */
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -492,6 +492,69 @@ description: |
     assert.match(String(r.description), /\?version=/, "清单必须写明 schema/sqlite 需要 ?version= 参数");
   }
   console.log("list_knowledge_resources community: ok");
+}
+
+{
+  // §3.1-4：per-pack `code-patterns/` 必须整目录进清单，且清单 ↔ 磁盘实文件名双向一致。
+  // 这里刻意**不 import 实现里的扫描函数**，改用直接 readdir 独立数一遍 —— 否则实现扫漏了也自证通过。
+  const { listKnowledgeResources, readKnowledgeResource } = await import("./dist/prompts/index.js");
+  const disk = [];
+  for (const platform of ["forge", "fabric", "neoforge"]) {
+    const platDir = join(repo, platform);
+    if (!existsSync(platDir)) continue;
+    const harvest = (dir, relDir) => {
+      if (!existsSync(dir)) return;
+      for (const n of readdirSync(dir).sort()) if (n.endsWith(".md")) disk.push(`${relDir}/${n}`);
+    };
+    harvest(join(platDir, "code-patterns"), `${platform}/code-patterns`);
+    for (const v of readdirSync(platDir).filter((x) => /^\d+(\.\d+)*$/.test(x)).sort()) {
+      harvest(join(platDir, v, "code-patterns"), `${platform}/${v}/code-patterns`);
+    }
+  }
+  assert.ok(disk.length >= 100, `盘上只有 ${disk.length} 篇 code-patterns —— 枚举腿失效，不是「没有」`);
+  const cp = listKnowledgeResources().filter((r) => r.uri.startsWith("mcskill://code-patterns/"));
+  assert.equal(cp.length, disk.length, `清单 code-patterns ${cp.length} 条 ≠ 盘上 ${disk.length} 篇`);
+
+  const diskSet = new Set(disk);
+  const described = new Set();
+  const dirs = new Map();
+  for (const r of cp) {
+    const rel = String(r.description).match(/[\w./-]+\.md/)?.[0] ?? "";
+    assert.ok(diskSet.has(rel), `${r.uri} 的 description 指向盘上没有的文件：${rel}`);
+    described.add(rel);
+    // URI 尾巴（省掉 code-patterns 段后）必须与真实路径逐段一致，防止「文件名对了但档搞错」。
+    const tail = r.uri.slice("mcskill://code-patterns/".length).split("/");
+    const segs = rel.split("/");
+    assert.deepEqual(tail, segs.filter((s) => s !== "code-patterns"), `${r.uri} 与 ${rel} 不同形`);
+    const body = readKnowledgeResource(r.uri);
+    assert.equal(body.found, true, `${r.uri} 清单里有、读不出来：${body.text}`);
+    assert.ok(body.text.length > 40, `${r.uri} 正文过短`);
+    const dir = rel.slice(0, rel.lastIndexOf("/"));
+    if (!dirs.has(dir)) dirs.set(dir, new Set());
+    dirs.get(dir).add(segs[segs.length - 1]);
+  }
+  assert.equal(described.size, disk.length, `清单 description 去重后 ${described.size} ≠ 盘上 ${disk.length}`);
+  for (const [dir, files] of dirs) {
+    assert.ok(files.has("README.md"), `${dir}/ 没有 README.md 索引（§3.1-4 裁定不重命名，索引必须由每档 README 承担）`);
+  }
+
+  // 负面：路径穿越即便规范化后指向真实文件，也必须拒。
+  const traversal = readKnowledgeResource("mcskill://code-patterns/fabric/../fabric/1.21.11/01-block-patterns.md");
+  assert.equal(traversal.found, false, "含 .. 的 URI 被当成合法路径");
+  assert.ok(!String(traversal.text).includes("```"), `${traversal.text}`.slice(0, 80));
+  assert.equal(readKnowledgeResource("mcskill://code-patterns/fabric/1.21.11").found, false, "缺文件名的目录 URI 不该假装解析成功");
+  assert.equal(readKnowledgeResource("mcskill://code-patterns/quilt/1.21.4/01-block-patterns.md").found, false, "quilt 无 code-patterns，不该命中");
+  // 编号集合真实差异只在 fabric / forge 两家：拿 fabric 的 06- 去读 forge 档必须 404，且提示以清单为准。
+  const crossPack = readKnowledgeResource("mcskill://code-patterns/forge/1.20.4/06-datagen-patterns.md");
+  assert.equal(crossPack.found, false, "forge 档没有 06-datagen-patterns.md，不该命中");
+  assert.match(String(crossPack.text), /list_knowledge_resources/, "404 提示必须点名去清单里取实文件名");
+  // 该档目录真实存在 ⇒ 提示必须说「目录在、是文件名猜错」并指向本档 README 索引，不能笼统说「可能没有 code-patterns/」。
+  assert.match(String(crossPack.text), /README/, "目录存在时 404 提示必须指向本档 code-patterns/README.md");
+  assert.doesNotMatch(String(crossPack.text), /可能没有/, "目录存在时不许说「该档可能没有 code-patterns/」");
+  const noDir = readKnowledgeResource("mcskill://code-patterns/forge/99.99/01-block-patterns.md");
+  assert.equal(noDir.found, false, "未建档版本号不该命中");
+  assert.match(String(noDir.text), /可能没有/, "目录不存在时应说明该档可能没有 code-patterns/");
+  console.log(`list_knowledge_resources code-patterns: ok (${disk.length} 篇 / ${dirs.size} 个档目录双向零差集 · 穿越与跨档编号均判红)`);
 }
 
 {
