@@ -34,7 +34,7 @@ forge-1.20.1-mod/
 ```properties
 # ---- Minecraft / Forge 版本（必须与 Forge 版本匹配）----
 minecraft_version=1.20.1
-forge_version=47.2.0
+forge_version=47.4.10
 
 # ---- Mappings ----
 # official: MCP（默认，无参数名）
