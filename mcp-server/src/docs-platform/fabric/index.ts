@@ -23,6 +23,7 @@ import {
   asPlatformDataMissingResult,
   platformDataMissingResult,
   hasPlatformDocData,
+  buildListVersionsNotes,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
@@ -342,7 +343,19 @@ export async function listFabricVersions(): Promise<CallToolResult> {
   const allVersions = [...versionSet].sort();
   if (allVersions.length === 0) return platformDataMissingResult("fabric");
   return {
-    content: [{ type: "text", text: JSON.stringify({ ok: true, platform: "fabric", versions: allVersions }, null, 2) }],
+    content: [{
+      type: "text",
+      text: JSON.stringify(
+        {
+          ok: true,
+          platform: "fabric",
+          versions: allVersions,
+          notes: buildListVersionsNotes("fabric", allVersions, ROOT_DIR),
+        },
+        null,
+        2,
+      ),
+    }],
   };
 }
 
@@ -490,11 +503,21 @@ export async function searchFabricDocs(
       }
     }
     if (semanticRanked) {
+      // 成员校验口径：本次检索的每个 source 的 L0 全集并集（命中集会封死语义召回）
+      const membership = new Set<string>();
+      for (const src of sources) {
+        try {
+          for (const id of getStore(version, src).getAllDocIds(version)) membership.add(id);
+        } catch {
+          /* 该 source 无 L0 索引 */
+        }
+      }
+      if (membership.size === 0) for (const r of results) membership.add(r.id);
       results = mergeSemanticResults(results, semanticList, {
         tags,
         limit: 10,
         version,
-        allowedIds: new Set(results.map((r: { id: string }) => r.id)),
+        allowedIds: membership,
       }) as typeof results;
     }
     // 补齐 stale 警告（此前 fabric 独立路径未接入，仅 quilt 回退路径有）

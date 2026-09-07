@@ -561,6 +561,11 @@ export class FabricDocStore {
     return detailed;
   }
 
+  // 语义命中成员校验的口径：L0 全集，不是 L0 命中集
+  getAllDocIds(version: string): string[] {
+    return this.loadIndexL0(version).map((e) => e.id);
+  }
+
   private getOrBuildSymbolIndex(version: string): SymbolIndex | null {
     const key = `${this.source}|${version}`;
     const cached = this.symbolIndexCache.get(key);

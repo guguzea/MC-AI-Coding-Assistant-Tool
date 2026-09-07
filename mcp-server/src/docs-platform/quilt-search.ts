@@ -1,14 +1,14 @@
 /**
  * Quilt search_docs：有独立树用 quilt-docs；否则分类回退 Fabric。
  */
-import { existsSync, readFileSync } from "fs";
+import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { createFabricDocStore } from "./fabric/store.js";
 import { hasPlatformDocData, platformDataMissingPayload } from "./platform-data.js";
 import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "./semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, type SearchResultLike } from "./search-utils.js";
+import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, type SearchResultLike } from "./search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "./semantic/status.js";
 import { filterFabricFallbackHits, isFabricExclusiveContent, isFabricExclusiveHit, isQslSpecificQuery } from "./quilt-fallback-filter.js";
 
@@ -24,6 +24,10 @@ const QUILT_VERSION_FABRIC_FALLBACK_WARNING =
 const QUILT_CURRENT_SITE_WARNING =
   "Quilt wiki / quilt.mod.json RFC 是未版本化现行页，不是该 MC 版本的历史快照。QSL README 才按 QuiltMC/quilt-standard-libraries/<maj.min> 抓取。";
 
+function quiltLineWarning(from: string, to: string): string {
+  return `Quilt ${from} 无本档语料，正文取自同线 ${to}（QSL 按 quilt-standard-libraries/<maj.min> 分支抓取，同线同源）。这不是 ${from} 专属正文；QSL 签名仍须以 loader-api-summaries / 用户 jar 为准。`;
+}
+
 type DocHit = { id?: string; label?: string; url?: string; tags?: string[] };
 
 /** 只认本档 quilt-docs L0，禁止用「任意 quilt_* 存在」代替。 */
@@ -34,6 +38,34 @@ export function hasQuiltDocsIndex(version: string, dataRoot = resolveDataDir()):
 }
 
 const QUILT_INDEX_FALLBACK: Record<string, string> = { "1.21.11": "1.21.1" };
+
+/**
+ * QSL 文档按 QuiltMC/quilt-standard-libraries/<maj>.<min> 分支抓取 ⇒ 同线各档语料同源。
+ * 本档无语料时，返回同线最近的已建档版本（不是邻版顶替，是同线改口）。
+ */
+export function quiltLineCorpus(version: string, dataRoot = resolveDataDir()): string | null {
+  const m = /^(\d+\.\d+)\.(\d+)$/.exec(String(version ?? "").trim());
+  if (!m || !existsSync(dataRoot)) return null;
+  const line = m[1];
+  const lineRe = new RegExp(`^${line.replace(/\./g, "\\.")}\\.(\\d+)$`);
+  let best: { v: string; dist: number } | null = null;
+  let entries;
+  try {
+    entries = readdirSync(dataRoot, { withFileTypes: true });
+  } catch {
+    return null;
+  }
+  for (const e of entries) {
+    if (!e.isDirectory() || !e.name.startsWith("quilt_")) continue;
+    const v = e.name.slice("quilt_".length);
+    if (v === version) continue;
+    const mv = lineRe.exec(v);
+    if (!mv || !quiltIndexHasPages(v, dataRoot)) continue;
+    const dist = Math.abs(Number(mv[1]) - Number(m[2]));
+    if (!best || dist < best.dist || (dist === best.dist && v < best.v)) best = { v, dist };
+  }
+  return best?.v ?? null;
+}
 
 function quiltIndexHasPages(version: string, dataRoot = resolveDataDir()): boolean {
   const ver = String(version ?? "").trim();
@@ -120,7 +152,8 @@ export async function searchQuiltDocs(args: {
   const qsl = isQslSpecificQuery(args.query);
 
   if (!quiltIndexHasPages(args.version, dataRoot)) {
-    const fb = QUILT_INDEX_FALLBACK[args.version];
+    const registryFb = QUILT_INDEX_FALLBACK[args.version];
+    const fb = registryFb ?? (qsl ? quiltLineCorpus(args.version, dataRoot) : undefined);
     if (fb && fb !== args.version && quiltIndexHasPages(fb, dataRoot)) {
       const inner = await searchQuiltDocs({ ...args, version: fb });
       const text = inner.content?.[0] && inner.content[0].type === "text" ? inner.content[0].text : "{}";
@@ -138,6 +171,9 @@ export async function searchQuiltDocs(args: {
       rec.warning = joinSearchWarnings(
         typeof rec.warning === "string" ? rec.warning : undefined,
         `Quilt ${args.version} 无可用 quilt-docs 页，已改口 ${fb}（fallback=quilt, source_version=${fb}）。禁止把 Fabric Registry 当 QSL。`,
+        registryFb
+          ? undefined
+          : `改口依据：QSL 文档按 QuiltMC/quilt-standard-libraries/${fb.split(".").slice(0, 2).join(".")} 分支抓取，${fb} 与 ${args.version} 同线同源，不是邻版顶替；本页仍非 ${args.version} 专属正文。`,
       );
       return jsonOk(rec);
     }
@@ -175,7 +211,7 @@ export async function searchQuiltDocs(args: {
           tags: args.tags,
           limit: 20,
           version: detailedRes.resolvedVersion,
-          allowedIds: new Set(results.map((r) => r.id)),
+          allowedIds: semanticAllowedIds(store, detailedRes.resolvedVersion, results),
         });
       }
       return jsonOk({
@@ -219,8 +255,8 @@ export async function searchQuiltDocs(args: {
   }
 
   try {
-    const fabricDetailed = createFabricDocStore(args.version, "fabric-docs", dataRoot)
-      .searchIndexDetailed(args.query, args.version, args.tags);
+    const fabricStore = createFabricDocStore(args.version, "fabric-docs", dataRoot);
+    const fabricDetailed = fabricStore.searchIndexDetailed(args.query, args.version, args.tags);
     let results: SearchResultLike[] = fabricDetailed.results;
     const semanticHits = await semanticSearch(
       args.query,
@@ -234,7 +270,7 @@ export async function searchQuiltDocs(args: {
         tags: args.tags,
         limit: 20,
         version: fabricDetailed.resolvedVersion,
-        allowedIds: new Set(results.map((r) => r.id)),
+        allowedIds: semanticAllowedIds(fabricStore, fabricDetailed.resolvedVersion, results),
       });
     }
     const filtered = filterFabricFallbackHits(results);
@@ -281,6 +317,23 @@ export async function getQuiltDocSummary(args: { id: string; version: string }):
   }
   const exclusiveId = exclusiveRefusalResult({ id: args.id, label: args.id });
   if (exclusiveId) return exclusiveId;
+  const lineCorps = quiltLineCorpus(args.version, dataRoot);
+  if (lineCorps && hasQuiltDocsIndex(lineCorps, dataRoot)) {
+    try {
+      const lineResult = createFabricDocStore(lineCorps, "quilt-docs", dataRoot, "quilt").loadSummary(args.id, lineCorps);
+      return jsonOk({
+        ...lineResult,
+        platform: "quilt",
+        fallback: "quilt",
+        requestedVersion: args.version,
+        resolvedVersion: lineCorps,
+        source_version: lineCorps,
+        warning: quiltLineWarning(args.version, lineCorps),
+      });
+    } catch {
+      /* 同线也无此页 → 按既有规则继续 */
+    }
+  }
   if (!hasPlatformDocData("fabric", dataRoot)) {
     return jsonOk({
       ...platformDataMissingPayload("quilt"),
@@ -358,6 +411,24 @@ export async function getQuiltDocFull(args: {
   }
   const exclusiveId = exclusiveRefusalResult({ id: args.id, label: args.id });
   if (exclusiveId) return exclusiveId;
+  const lineCorps = quiltLineCorpus(args.version, dataRoot);
+  if (lineCorps && hasQuiltDocsIndex(lineCorps, dataRoot)) {
+    try {
+      const lineResult = await createFabricDocStore(lineCorps, "quilt-docs", dataRoot, "quilt")
+        .loadFullDoc(args.id, lineCorps, highlight);
+      return jsonOk({
+        ...lineResult,
+        platform: "quilt",
+        fallback: "quilt",
+        requestedVersion: args.version,
+        resolvedVersion: lineCorps,
+        source_version: lineCorps,
+        warning: quiltLineWarning(args.version, lineCorps),
+      });
+    } catch (e) {
+      if (!isDocNotFoundLike(e)) throw e;
+    }
+  }
   if (!hasPlatformDocData("fabric", dataRoot)) {
     return jsonOk({
       ...platformDataMissingPayload("quilt"),
@@ -453,6 +524,25 @@ export function getQuiltDocRelated(args: {
   }
   const exclusiveId = exclusiveRefusalResult({ id: args.id, label: args.id });
   if (exclusiveId) return exclusiveId;
+  const lineCorps = quiltLineCorpus(args.version, dataRoot);
+  if (lineCorps && hasQuiltDocsIndex(lineCorps, dataRoot)) {
+    try {
+      const hits = createFabricDocStore(lineCorps, "quilt-docs", dataRoot, "quilt")
+        .getRelatedDocs(args.id, lineCorps, limit);
+      return jsonOk(
+        hits.map((h) => ({
+          ...h,
+          platform: "quilt",
+          fallback: "quilt",
+          requestedVersion: args.version,
+          source_version: lineCorps,
+          warning: quiltLineWarning(args.version, lineCorps),
+        })),
+      );
+    } catch (e) {
+      if (!isDocNotFoundLike(e)) throw e;
+    }
+  }
   if (!hasPlatformDocData("fabric", dataRoot)) {
     return jsonOk({
       ...platformDataMissingPayload("quilt"),

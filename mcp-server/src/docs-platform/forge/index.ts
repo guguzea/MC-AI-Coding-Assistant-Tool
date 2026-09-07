@@ -29,10 +29,11 @@ import {
   asPlatformDataMissingResult,
   platformDataMissingResult,
   hasPlatformDocData,
+  buildListVersionsNotes,
   type DocPlatform,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, thinLoaderWikiWarning, type SearchResultLike } from "../search-utils.js";
+import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, thinLoaderWikiWarning, type SearchResultLike } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import { SEARCH_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR } from "../platforms.js";
 import { ownGet } from "../../utils/own-record.js";
@@ -194,6 +195,7 @@ export async function listForgeVersions(): Promise<CallToolResult> {
           notes: [
             "本列表是已入库的 Forge **文档**版本，不是规则树清单。",
             "forge/1.21.1 为 draft：无 00–10 规则树，也不在本清单；session 返回 PACK_NOT_FOUND。禁止用 NeoForge 1.21.1 或 Forge 1.20.4 顶上。",
+            ...buildListVersionsNotes("forge", versions).slice(1),
           ],
         }, null, 2),
       }],
@@ -267,7 +269,7 @@ export async function searchForgeDocs(
           tags: args.tags,
           limit: 10,
           version: detailed.resolvedVersion,
-          allowedIds: new Set(detailed.results.map((r) => r.id)),
+          allowedIds: semanticAllowedIds(getForgeStore(), detailed.resolvedVersion, detailed.results),
         });
     return {
       content: [
@@ -711,8 +713,9 @@ export const listVersionsSchema = {
   name: "list_doc_versions",
   description: `返回指定平台的可用文档版本列表。
 
-返回示例：{ "platform": "forge", "versions": ["1.20.1"] }
+返回示例：{ "platform": "forge", "versions": ["1.20.1"], "notes": [...] }
 ⚠️ 此工具只返回指定 platform 的版本，不会返回其他平台的版本。
+notes 说明清单口径：这里是**本仓库已入库**的文档版本，不等于上游有文档；并列出只有 wiki 语料、缺语义索引、有规则树但无语料的档位。
 如需同时查询多个平台，请分别调用 list_doc_versions({ platform: "forge" }) 和 list_doc_versions({ platform: "fabric" })。
 
 参数说明：
@@ -750,7 +753,14 @@ export async function listVersions(
     const versions = store.getAvailableVersions();
     if (versions.length === 0) return platformDataMissingResult(platform);
     return {
-      content: [{ type: "text", text: JSON.stringify({ ok: true, platform, versions }, null, 2) }],
+      content: [{
+        type: "text",
+        text: JSON.stringify(
+          { ok: true, platform, versions, notes: buildListVersionsNotes(platform, versions) },
+          null,
+          2,
+        ),
+      }],
     };
   } catch (e) {
     const miss = asPlatformDataMissingResult(e);
@@ -917,7 +927,7 @@ export async function searchDocs(
           tags: args.tags,
           limit: 20,
           version: resolvedVersion,
-          allowedIds: new Set(result.map((r) => r.id)),
+          allowedIds: semanticAllowedIds(store, semVersion, result),
         });
     let finalResults = finalResultsBase;
     let primerNote: string | undefined;

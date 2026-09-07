@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-07T08:51:26.025Z",
+  "built_at": "2026-09-07T16:19:32.085Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -493,6 +493,42 @@
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
       "sha256": "6704695ced21e59ebecec05c5c936a793f23ddfc6960a5f76bf1a2e3e216cc37"
+    },
+    {
+      "platform": "modloader",
+      "version": "1.2.5",
+      "source": "modloader-docs",
+      "path": "H:/MC_skill/data/modloader_1.2.5/modloader-docs/1.2.5/semantic/db.sqlite",
+      "chunks": 1,
+      "embedded": 1,
+      "built_at": "2026-09-07T16:19:30.671Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "0e43cf37b8be889d415d76ccbcd62540175ca2b976e0cf73fab2d1e34788d87e"
+    },
+    {
+      "platform": "modloader",
+      "version": "1.5.2",
+      "source": "modloader-docs",
+      "path": "H:/MC_skill/data/modloader_1.5.2/modloader-docs/1.5.2/semantic/db.sqlite",
+      "chunks": 1,
+      "embedded": 1,
+      "built_at": "2026-09-07T16:19:20.973Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "16c27ee07b5e26c3021835be78e1685fb7c611a3c04eb506d07e0b05eab8bb9d"
+    },
+    {
+      "platform": "modloader",
+      "version": "1.6.4",
+      "source": "modloader-docs",
+      "path": "H:/MC_skill/data/modloader_1.6.4/modloader-docs/1.6.4/semantic/db.sqlite",
+      "chunks": 2,
+      "embedded": 2,
+      "built_at": "2026-09-07T16:19:12.623Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "76d1706a619ec8257ef1aa2cf9bc86f613153ea6763b40be4c840b76a2d5eef5"
     },
     {
       "platform": "neoforge",

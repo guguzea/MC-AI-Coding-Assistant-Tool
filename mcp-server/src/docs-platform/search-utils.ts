@@ -772,6 +772,27 @@ export function withDocsFallbackFields<T extends Record<string, unknown>>(payloa
 }
 
 /**
+ * 语义命中的成员白名单：该版本 L0 **全集** id。
+ * 传 L0 命中集会让语义永远浮不出新文档（成员校验退化成「只重排已命中项」）。
+ * store 无法回答时退回保守口径（命中集），宁缺毋滥。
+ */
+export function semanticAllowedIds(
+  store: { getAllDocIds?(version: string): string[] } | null | undefined,
+  version: string,
+  l0Results: SearchResultLike[],
+): ReadonlySet<string> {
+  if (store && typeof store.getAllDocIds === "function") {
+    try {
+      const ids = store.getAllDocIds(version);
+      if (ids.length > 0) return new Set(ids);
+    } catch {
+      /* 退回保守口径 */
+    }
+  }
+  return new Set(l0Results.map((r) => r.id));
+}
+
+/**
  * 将语义检索命中与 L0 结果再融合（handler 层使用）。
  * - 有语义命中：对 L0 id 排行 ∪ 语义 id 排行做 **RRF 再融合**（非简单 append）
  * - 无语义命中：保持纯 L0（score 仍为 L0 加权分）
@@ -780,7 +801,7 @@ export function withDocsFallbackFields<T extends Record<string, unknown>>(payloa
  * - 语义侧的 matches 写入合并结果（L0 独有条目无 matches）
  * - 截断到 limit
  *
- * @param opts.allowedIds 可选。**新调用方必须传**（传 L0 结果的 id 集合）。
+ * @param opts.allowedIds 可选。**新调用方必须传**（用 `semanticAllowedIds` 取该版本 L0 全集 id）。
  *   不传 = 不做成员校验。语义 sqlite 与 processed/ 是两份数据源，
  *   文档删除后 sqlite 里必然残留；不做成员校验，已删除文档会经语义通道「浮出」，
  *   表现为搜得到但打不开。
@@ -795,7 +816,7 @@ export function mergeSemanticResults(
   const allowedIds = opts.allowedIds;
 
   const filteredHits = semanticHits.filter((h) => {
-    // 成员校验：不在 L0 结果集内的语义命中一律丢弃（防已删除文档浮出）
+    // 成员校验：不在 L0 全集内的语义命中一律丢弃（防已删除文档浮出）
     if (allowedIds && !allowedIds.has(h.docId)) return false;
     if (normalizedTags.length === 0) return true;
     return normalizedTags.every((wanted) =>

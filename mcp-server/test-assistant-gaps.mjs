@@ -1361,5 +1361,191 @@ description: |
   console.log("ttlCacheSet 上界 + 丢最旧 + 覆盖不重排 + 读侧回收过期: ok");
 }
 
+// ── A-40：语义命中成员白名单 = 该版本 L0 全集（正文词项才可能浮出新文档）──
+{
+  const { semanticAllowedIds } = await import("./dist/docs-platform/search-utils.js");
+  const { resolveDataDir } = await import("./dist/utils/path.js");
+  const rows = (...ids) => ids.map((id) => ({ id, score: 1 }));
+
+  assert.deepEqual(
+    [...semanticAllowedIds({ getAllDocIds: () => ["a", "b", "c"] }, "1.20.1", rows("a"))],
+    ["a", "b", "c"],
+    "语义白名单退回 L0 命中集 ⇒ 语义永远浮不出新文档",
+  );
+  assert.deepEqual([...semanticAllowedIds(null, "1.20.1", rows("a", "b"))], ["a", "b"], "store 缺失时应退回保守口径");
+  assert.deepEqual([...semanticAllowedIds({ getAllDocIds: () => [] }, "1.20.1", rows("a"))], ["a"], "空全集应退回保守口径");
+  assert.deepEqual(
+    [...semanticAllowedIds({ getAllDocIds: () => { throw new Error("no tree"); } }, "1.20.1", rows("a"))],
+    ["a"],
+    "store 抛错时应退回保守口径",
+  );
+
+  const MERGE_FILES = [
+    "mcp-server/src/docs-platform/forge/index.ts",
+    "mcp-server/src/docs-platform/fabric/index.ts",
+    "mcp-server/src/docs-platform/neoforge/index.ts",
+    "mcp-server/src/docs-platform/quilt-search.ts",
+    "mcp-server/src/bedrock/index.ts",
+  ];
+  let mergeSites = 0;
+  for (const rel of MERGE_FILES) {
+    const text = readFileSync(join(repo, rel), "utf8");
+    assert.equal(/allowedIds:\s*new Set\(/.test(text), false, `${rel} 又用命中集当白名单`);
+    for (const line of text.split(/\r?\n/)) {
+      if (!/allowedIds:/.test(line)) continue;
+      mergeSites += 1;
+      assert.ok(
+        /semanticAllowedIds\(/.test(line) || /allowedIds:\s*membership\b/.test(line),
+        `${rel} 的 mergeSemanticResults 白名单口径不是 L0 全集：${line.trim()}`,
+      );
+    }
+  }
+  assert.ok(mergeSites >= 7, `mergeSemanticResults 白名单点位只剩 ${mergeSites} 处（应有 ≥7 处）`);
+
+  const { ForgeDocStore } = await import("./dist/docs-platform/forge/store.js");
+  const { FabricDocStore } = await import("./dist/docs-platform/fabric/store.js");
+  const { NeoForgeDocStore } = await import("./dist/docs-platform/neoforge/store.js");
+  for (const [name, cls] of [
+    ["ForgeDocStore", ForgeDocStore],
+    ["FabricDocStore", FabricDocStore],
+    ["NeoForgeDocStore", NeoForgeDocStore],
+  ]) {
+    assert.equal(typeof cls.prototype.getAllDocIds, "function", `${name} 不再能回答 L0 全集`);
+  }
+
+  const dataDir = resolveDataDir();
+  const l0 = JSON.parse(readFileSync(join(dataDir, "modloader_1.6.4", "modloader-docs", "1.6.4", "index-l0.json"), "utf8"));
+  const owner = l0.find((e) => e.id === "1.6.4/safe-api");
+  assert.ok(owner, "modloader 1.6.4 L0 缺 safe-api 页");
+  assert.equal(/basemod/i.test(JSON.stringify([owner.id, owner.label, owner.url, owner.tags])), false, "测试前提失效：BaseMod 已进 L0 元数据");
+
+  const { searchDocs } = await import("./dist/docs-platform/forge/index.js");
+  const hit = JSON.parse((await searchDocs({ platform: "modloader", version: "1.6.4", query: "BaseMod" })).content[0].text);
+  assert.equal(hit.ok, true, JSON.stringify(hit.action ?? hit.error ?? null));
+  assert.equal(hit.semantic, true, "modloader 1.6.4 未走语义检索（缺库？）");
+  assert.ok(
+    (hit.results ?? []).some((r) => r.id === "1.6.4/safe-api"),
+    `正文词项 BaseMod 没浮出 safe-api（total=${hit.total}）：语义召回又被白名单封死`,
+  );
+  console.log(`A-40 语义白名单 = L0 全集（${mergeSites} 个 merge 点位 + BaseMod 实召回）: ok`);
+}
+
+// ── A-41：Quilt 无本档语料时改口同 <maj>.<min> 线（禁止跨线，禁止静默）──
+{
+  const { quiltLineCorpus, hasQuiltDocsIndex, getQuiltDocSummary } = await import("./dist/docs-platform/quilt-search.js");
+  const root = mkdtempSync(join(tmpdir(), "quiltline-"));
+  try {
+    const put = (version, entries) => {
+      const dir = join(root, `quilt_${version}`, "quilt-docs", version);
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(join(dir, "index-l0.json"), JSON.stringify(entries), "utf8");
+    };
+    const page = (version) => [{ id: `${version}/qsl-readme`, label: "qsl-readme", tags: ["qsl"] }];
+    for (const v of ["1.20.1", "1.20.4", "1.21.1", "1.21.11"]) put(v, page(v));
+    put("1.21.5", []); // 空树不算可用语料
+
+    assert.equal(quiltLineCorpus("1.21.3", root), "1.21.1", "1.21.3 应改口同线最近的 1.21.1");
+    assert.equal(quiltLineCorpus("1.21.10", root), "1.21.11", "1.21.10 应改口同线最近的 1.21.11");
+    assert.equal(quiltLineCorpus("1.20.6", root), "1.20.4", "1.20.6 应改口 1.20.4");
+    assert.equal(quiltLineCorpus("1.21.4", root), "1.21.1", "空 L0 树（1.21.5）不得当语料");
+    assert.equal(quiltLineCorpus("1.21.1", root), "1.21.11", "同线改口必须跳过自身版本");
+    assert.equal(quiltLineCorpus("1.22.0", root), null, "跨 <maj>.<min> 线禁止改口");
+    assert.equal(quiltLineCorpus("1.21", root), null, "两段号不是语料档名，不得改口");
+    assert.equal(quiltLineCorpus("26.1.2", root), null, "26.x 无同线语料时不得改口");
+    assert.equal(quiltLineCorpus("1.21.3", join(root, "nope")), null, "dataRoot 不存在时应返回 null");
+
+    const realSrc = quiltLineCorpus("1.21.4");
+    assert.ok(realSrc && /^1\.21\.\d+$/.test(realSrc), `实盘：1.21.4 改口语料应为 1.21.x（得到 ${realSrc}）`);
+    assert.equal(hasQuiltDocsIndex(realSrc), true, `实盘：改口语料 ${realSrc} 自己却没有可用 L0 树`);
+    const sum = JSON.parse((await getQuiltDocSummary({ id: `${realSrc}/qsl-readme`, version: "1.21.4" })).content[0].text);
+    assert.equal(sum.platform, "quilt", "同线正文不应被标成 Fabric");
+    assert.equal(sum.fallback, "quilt", `同线正文缺 fallback 标记：${JSON.stringify(sum).slice(0, 200)}`);
+    assert.equal(sum.requestedVersion, "1.21.4");
+    assert.equal(sum.source_version, realSrc, "同线正文没交代正文实际来自哪一档");
+    assert.match(sum.warning ?? "", /同线/, "同线正文缺「不是本版专属」告警");
+    assert.match(sum.warning ?? "", /loader-api-summaries|用户 jar/, "同线正文缺「QSL 签名仍须核实」指引");
+    const own = JSON.parse((await getQuiltDocSummary({ id: "1.21.1/qsl-readme", version: "1.21.1" })).content[0].text);
+    assert.notEqual(own.fallback, "quilt", "本档有语料时不应报同线改口");
+    console.log(`A-41 quilt 同线语料改口（实盘 1.21.4→${realSrc} + 读回带警示）: ok`);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+// ── A-42：list_*_versions.notes 必须跟磁盘实扫一致（口径写错 = 误导用户）──
+{
+  const { buildListVersionsNotes } = await import("./dist/docs-platform/platform-data.js");
+  const { resolveRepoRoot, resolveDataDir } = await import("./dist/utils/path.js");
+  const repoRoot = resolveRepoRoot();
+  const dataDir = resolveDataDir();
+  const notesFor = (platform, versions) => buildListVersionsNotes(platform, versions, dataDir, repoRoot);
+  const joined = (platform, versions) => notesFor(platform, versions).join("\n");
+  const versionListIn = (note) => {
+    const groups = [...String(note).matchAll(/[（(]([^（()）]*)[）)]/g)].map((m) => m[1]);
+    for (const g of groups) {
+      const parts = g.split(",").map((s) => s.trim()).filter(Boolean);
+      if (parts.length > 0 && parts.every((p) => /^\d+(\.\d+)*$/.test(p))) return parts;
+    }
+    return [];
+  };
+
+  for (const platform of ["forge", "fabric", "neoforge", "quilt", "liteloader", "rift", "modloader"]) {
+    const head = notesFor(platform, ["1.20.4"])[0];
+    assert.match(head, /已入库/, `${platform} 缺「本仓库已入库」口径首条`);
+    assert.match(head, /不等于上游/, `${platform} 首条没说清「不在清单 ≠ 上游没文档」`);
+    assert.match(head, /禁止拿邻版/, `${platform} 首条缺禁止邻版顶替约束`);
+  }
+
+  const FABRIC_ALL = ["1.14.4", "1.16.5", "1.17.1", "1.18.2", "1.19.4", "1.20.1", "1.20.4", "1.21.1", "1.21.10", "1.21.11", "1.21.3", "1.21.4", "1.21.8", "26.1.2"];
+  const fabricNotes = notesFor("fabric", FABRIC_ALL);
+  const wikiNote = fabricNotes.find((n) => /fabric-wiki/.test(n));
+  assert.ok(wikiNote, "fabric 缺「只有 wiki 语料」说明");
+  assert.deepEqual(
+    versionListIn(wikiNote).sort(),
+    ["1.14.4", "1.16.5", "1.17.1", "1.18.2", "1.19.4", "1.20.1", "1.21.3"],
+    "fabric wiki-only 档位清单与实盘不符",
+  );
+  for (const v of ["1.20.1", "1.21.3"]) {
+    const docs = JSON.parse(readFileSync(join(dataDir, `fabric_${v}`, "fabric-docs", v, "index-l0.json"), "utf8"));
+    const wiki = JSON.parse(readFileSync(join(dataDir, `fabric_${v}`, "fabric-wiki", v, "index-l0.json"), "utf8"));
+    assert.equal(docs.length, 0, `前提变了：fabric-docs@${v} 已有 ${docs.length} 页，wiki-only 说明该改`);
+    assert.ok(wiki.length > 0, `前提变了：fabric-wiki@${v} 也空了`);
+    assert.ok(
+      existsSync(join(dataDir, `fabric_${v}`, "fabric-wiki", v, "semantic", "db.sqlite")),
+      `前提变了：fabric-wiki@${v} 语义库不在了，notes 该露头`,
+    );
+  }
+  assert.equal(/缺语义索引/.test(joined("fabric", FABRIC_ALL)), false, "fabric 全档都有正文语义库，缺库说明是误报");
+
+  const neoNote = joined("neoforge", ["26.1", "1.21.11", "1.20.1"]);
+  assert.match(neoNote, /neoforge 1\.20\.1 无 data\/neoforge_1\.20\.1/, "neoforge 缺 1.20.1 Forge 兼容口径说明");
+  assert.equal(/缺语义索引[^）]*1\.20\.1/.test(neoNote), false, "neoforge 1.20.1 正文走 forge_1.20.1（有语义库），不得报缺库");
+  assert.equal(existsSync(join(dataDir, "neoforge_1.20.1")), false, "前提变了：data/neoforge_1.20.1 已建，兼容说明该改");
+  assert.ok(
+    existsSync(join(dataDir, "forge_1.20.1", "forge-docs", "1.20.1", "semantic", "db.sqlite")),
+    "前提变了：forge_1.20.1 语义库不在了",
+  );
+
+  const FORGE_ALL = ["1.20.4", "1.20.1", "1.19.4", "1.18.2", "1.17.1", "1.16.5", "1.15.2", "1.14.4", "1.13.2", "1.12.2", "1.11.2", "1.10.2", "1.9.4", "1.8.9", "1.7.10"];
+  const forgeNotes = notesFor("forge", FORGE_ALL);
+  const javadocNote = forgeNotes.find((n) => /forge_javadoc/.test(n));
+  assert.ok(javadocNote, "forge 缺 JavaDoc 布局说明");
+  assert.deepEqual(versionListIn(javadocNote).sort(), ["1.10.2", "1.11.2", "1.7.10", "1.8.9", "1.9.4"], "forge JavaDoc-only 档位清单与实盘不符");
+  assert.match(javadocNote, /不覆盖 forge_javadoc/, "forge JavaDoc 档不该被劝去跑 build:semantic-index（那条路走不通）");
+  const draftNote = forgeNotes.find((n) => /空壳/.test(n));
+  assert.ok(draftNote, "forge 缺 draft 空壳说明");
+  assert.deepEqual(versionListIn(draftNote), ["1.21.1"], "forge draft 档与实盘不符");
+  assert.match(draftNote, /PACK_NOT_FOUND/, "draft 空壳说明没交代 session 结果");
+  assert.equal(/1\.21\.1[^\n]*session 可激活该档规则树/.test(joined("forge", FORGE_ALL)), false, "draft 空壳被说成可激活 = 骗人");
+
+  const QUILT_ALL = ["1.18.2", "1.19.4", "1.20.1", "1.20.4", "1.21.1", "1.21.11"];
+  const quiltNote = joined("quilt", QUILT_ALL);
+  const treeNote = quiltNote.split("\n").find((n) => /规则树有/.test(n));
+  assert.ok(treeNote, "quilt 缺「有树无正文」说明");
+  assert.deepEqual(versionListIn(treeNote).sort(), ["1.21.10", "1.21.3", "1.21.4", "1.21.8"], "quilt 有树无语料档位清单与实盘不符");
+  assert.match(treeNote, /改口|同线/, "quilt 有树无语料说明没交代改口口径");
+  console.log("A-42 list_*_versions.notes ↔ 磁盘实扫一致（fabric 7 / forge 5+1 / neo 1.20.1 / quilt 4）: ok");
+}
+
 console.log("test-assistant-gaps: all passed");
 

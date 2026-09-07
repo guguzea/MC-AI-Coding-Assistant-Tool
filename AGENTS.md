@@ -40,7 +40,7 @@ id 'org.quiltmc.loom'
 Quilt 建档面（实测 `ls -d quilt/*/` 对 `ls -d data/quilt_*/`，2026-09-05）：
 
 - **有规则树**（10 档）：`1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.4` / `1.21.8` / `1.21.10` / `1.21.11`。
-- **有树但无 `data/quilt_<ver>` 语料**（4 档）：`1.21.3` / `1.21.4` / `1.21.8` / `1.21.10`。规则树可用；文档检索**不报错而是回 Fabric 正文**——实测 `search_docs platform=quilt version=1.21.4 query=registry` 返回 `ok:true` + `fallback:"fabric"` + `sourcePlatform:"fabric"` + `warning:"Quilt 官方文档无此版本，已回退到同版本 Fabric 文档…"` + `total:10`，`1.21.3` 同形但语义索引缺库 → `semantic:false` + `total:0`。⇒ **必须读 `fallback` / `sourcePlatform` 字段**：命中不是 QSL 证据，`total:0` 也不等于「本版没有该 API」。QSL 签名一律 `query_loader_api`（先 `ingest_loader_api`）或用户自备 jar。
+- **有树但无 `data/quilt_<ver>` 语料**（4 档）：`1.21.3` / `1.21.4` / `1.21.8` / `1.21.10`。规则树可用；文档检索**不报错而是回 Fabric 正文**——实测 `search_docs platform=quilt version=1.21.4 query=registry` 返回 `ok:true` + `fallback:"fabric"` + `sourcePlatform:"fabric"` + `warning:"Quilt 官方文档无此版本，已回退到同版本 Fabric 文档…"` + `total:14`，`1.21.3` 同形但语义索引缺库 → `semantic:false` + `total:0`。**QSL 专属查询不走 Fabric**：实测同版本 `query="QSL registry key"` → `fallback:"quilt"` + `requestedVersion:"1.21.4"` + `source_version:"1.21.1"`，命中一律 `1.21.1/qsl-*`（改口同 `<maj>.<min>` 线已建档语料，QSL 同线同源）；`get_doc_full platform=quilt version=1.21.4` 同线读回，警示含「仍非 1.21.4 专属正文」。⇒ **必须读 `fallback` / `sourcePlatform` / `source_version` 字段**：`fabric` 命中不是 QSL 证据，`quilt` 命中也不是本版专属正文，`total:0` 更不等于「本版没有该 API」。QSL 签名一律 `query_loader_api`（先 `ingest_loader_api`）或用户自备 jar。
 - **无树**：`1.20.6` / `1.21.2` / `1.21.5` / `1.21.6` / `1.21.7` / `1.21.9` / `26.x` 等 → session 直接 `PACK_NOT_FOUND`。**禁止**拿邻版 quilt 树或同版 Fabric 树顶替，也**禁止**为填一个版本号克隆一棵新树。
 
 ### 2. 检查 Fabric

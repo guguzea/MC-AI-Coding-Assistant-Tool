@@ -65,6 +65,8 @@ export interface IDocStore {
   loadFullDoc(pageId: string, version: string, highlightKey?: boolean): Promise<FullDocResult>;
   /** 获取相关文档 */
   getRelatedDocs(pageId: string, version: string, limit?: number): SearchResult[];
+  /** 该版本 L0 全集 id = 语义命中成员校验的白名单口径；未实现时调用方退回保守口径 */
+  getAllDocIds?(version: string): string[];
 }
 
 // ── 数据路径解析（兼容 import.meta.url = CWD 的环境）─────────────────────

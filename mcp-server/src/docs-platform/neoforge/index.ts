@@ -25,9 +25,10 @@ import {
   asPlatformDataMissingResult,
   platformDataMissingResult,
   hasPlatformDocData,
+  buildListVersionsNotes,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
+import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import {
   findPrimer,
@@ -154,7 +155,16 @@ export async function listNeoForgeVersions(): Promise<CallToolResult> {
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({ ok: true, platform: "neoforge", versions }, null, 2),
+        text: JSON.stringify(
+          {
+            ok: true,
+            platform: "neoforge",
+            versions,
+            notes: buildListVersionsNotes("neoforge", versions, neoDataRoot()),
+          },
+          null,
+          2,
+        ),
       }],
     };
   } catch (e) {
@@ -230,7 +240,7 @@ export async function searchNeoForgeDocs(args: {
           tags: args.tags,
           limit: 20,
           version: detailed.resolvedVersion,
-          allowedIds: new Set(detailed.results.map((r) => r.id)),
+          allowedIds: semanticAllowedIds(s, detailed.resolvedVersion, detailed.results),
         });
     const primerHits = searchNeoForgePrimers({ query: args.query, version, dataRoot: neoDataRoot() });
     if (primerHits.length) {

@@ -404,6 +404,16 @@ export class NeoForgeDocStore {
     return this.searchIndexDetailed(query, version, tags).results;
   }
 
+  // 语义命中成员校验的口径：L0 全集，不是 L0 命中集
+  getAllDocIds(version: string): string[] {
+    try {
+      const l0 = this.loadIndex(version, "index-l0") as SearchResult[];
+      return Array.isArray(l0) ? l0.map((e) => e.id) : [];
+    } catch {
+      return [];
+    }
+  }
+
   searchIndexDetailed(query: string, version: string, tags?: string[]): SearchIndexDetailed {
     const cacheKey = `${query}|${version}|${(tags ?? []).join(",")}`;
     const cached = ttlCacheGet(this.searchCache, cacheKey);

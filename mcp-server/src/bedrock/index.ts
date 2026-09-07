@@ -14,7 +14,7 @@ import {
 } from "../docs-platform/platform-data.js";
 import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "../docs-platform/semantic/search.js";
-import { joinSearchWarnings, mergeSemanticResults, type SearchResultLike } from "../docs-platform/search-utils.js";
+import { joinSearchWarnings, mergeSemanticResults, semanticAllowedIds, type SearchResultLike } from "../docs-platform/search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../docs-platform/semantic/status.js";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -141,7 +141,7 @@ export async function searchBedrockDocs(
       tags: args.tags,
       limit: 20,
       version: detailed.resolvedVersion,
-      allowedIds: new Set(results.map((r) => r.id)),
+      allowedIds: semanticAllowedIds(store, detailed.resolvedVersion, results),
     });
   }
   return jsonOk(

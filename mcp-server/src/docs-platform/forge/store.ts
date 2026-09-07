@@ -398,6 +398,12 @@ export class ForgeDocStore {
     }
   }
 
+  // 语义命中成员校验的口径：L0 全集，不是 L0 命中集
+  getAllDocIds(version: string): string[] {
+    this.ensureValidated();
+    return this.loadIndexL0(this.resolveVersion(version)).map((e) => e.id);
+  }
+
   /**
    * 导出搜索日志供外部分析。
    * 每次 searchIndex 调用都会追加一条记录。
