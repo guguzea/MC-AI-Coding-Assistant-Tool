@@ -8,6 +8,11 @@
  *   node scripts/fetch-neoforge-docs.js --version=26.1  # fetch specific version
  *   node scripts/fetch-neoforge-docs.js --dry-run       # show URLs without fetching
  *   node scripts/fetch-neoforge-docs.js --force         # re-fetch even if file exists
+ *   node scripts/fetch-neoforge-docs.js --no-sitemap    # 仅用 manifest chapters（回退旧行为）
+ *
+ * 页面发现：manifest chapters 受 Docusaurus SSR 限制恒为 3 条，故默认再用官方
+ * sitemap.xml 补全（docs.neoforged.net/sitemap.xml）。sitemap 不可达时降级为
+ * chapters-only 并打 [WARN]，不伪造、不静默。
  *
  * 26.1 的 route 为空时抓现行 /docs/。若 probe 到 /docs/26.1/ 则应把 manifest.route 钉成 26.1。
  * 空 route 且已有入库树时，--force 拒绝覆盖（防止 26.2 成为现行后把 26.1 树写成 26.2）。
@@ -28,6 +33,7 @@ const DOCS_BASE = "https://docs.neoforged.net";
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
 const force = args.includes("--force");
+const noSitemap = args.includes("--no-sitemap");
 const targetVer = args.find(a => a.startsWith("--version="))?.split("=")[1];
 
 // ── Manifest ─────────────────────────────────────────────────────────────────
@@ -376,9 +382,91 @@ function convertLists(text) {
   });
 }
 
+// ── Sitemap 页面发现（manifest chapters 恒为 3 的兜底）───────────────────────────
+
+/** 与落盘文件名保持一致的转换，禁止另写一套（否则「已存在」判断会失配）。 */
+function safeIdOf(href) {
+  return String(href ?? "").replace(/\//g, "_").replace(/-/g, "_");
+}
+
+/** 最近一次 sitemap 发现的统计，供 dry-run 与摘要打印。 */
+let sitemapStats = { enabled: false, total: 0, added: 0, degraded: false, mode: "chapters-only" };
+
+/**
+ * 从官方 sitemap.xml 发现该版本的全部文档页。
+ * - 解析：正则 /<loc>([\s\S]*?)<\/loc>/g 提取全部条目（必须 global），decodeURIComponent；
+ *   不引入任何 XML 解析库（与仓库既有脚本风格一致）。
+ * - 26.1（route 为空）：取反白名单 + 数字版本号正则双保险；收集后再做硬断言，
+ *   若仍混入 /docs/<数字版本>/ 视为过滤失效 → 立即 abort，绝不产出脏数据。
+ * - 返回前已去尾斜杠，交由 collectPages 的 upsert 去重（x 与 x/ 自然合并）。
+ * - level 固定为 0（最低），确保永不覆盖 chapters 的真实标题。
+ */
+async function fetchSitemapPages(version) {
+  const cfg = manifest.versions[version];
+  if (!cfg) return [];
+  const route = cfg.route ?? "";
+  const prefix = route ? `/docs/${route}/` : "/docs/";
+
+  let xml;
+  try {
+    const c = new AbortController();
+    const timer = setTimeout(() => c.abort(), 15000);
+    const res = await fetch(`${DOCS_BASE}/sitemap.xml`, { signal: c.signal });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    xml = await res.text();
+  } catch (e) {
+    console.log(`  [WARN] sitemap 不可达，已降级为 chapters-only（${e.message}）`);
+    sitemapStats.degraded = true;
+    sitemapStats.mode = "chapters-only(fallback)";
+    return [];
+  }
+
+  const locs = [...xml.matchAll(/<loc>([\s\S]*?)<\/loc>/g)].map((m) => {
+    try { return decodeURIComponent(m[1].trim()); } catch { return m[1].trim(); }
+  });
+
+  // 取反白名单：manifest 中全部非空 route（含 26.2），用于 26.1 排除其它版本
+  const otherRoutes = new Set(
+    Object.entries(manifest.versions || {})
+      .map(([, v]) => v?.route)
+      .filter((r) => typeof r === "string" && r.length > 0),
+  );
+  const versionLike = /^\d+(\.\d+)*$/;
+
+  const out = [];
+  for (const raw of locs) {
+    const u = raw.replace(/^https?:\/\/[^/]+/, "");
+    if (!u.startsWith(prefix)) continue;
+    const rel = u.slice(prefix.length).replace(/^\/+/, "").replace(/\/+$/, "");
+    if (!rel) continue;
+
+    if (!route) {
+      const first = rel.split("/")[0];
+      // 双保险：既不在已知 route 集合、也不是数字版本号形态
+      if (otherRoutes.has(first) || versionLike.test(first)) continue;
+    }
+
+    const last = rel.split("/").pop() || rel;
+    const text = last.replace(/[-_]/g, " ").replace(/\b\w/g, (ch) => ch.toUpperCase());
+    out.push({ href: rel, text, level: 0 });
+  }
+
+  // 硬断言（独立于过滤逻辑的第二道防线）：26.1 不得混入任何版本前缀页
+  if (!route) {
+    const bad = out.filter((p) => versionLike.test(p.href.split("/")[0]));
+    if (bad.length) {
+      console.error(`ABORT: 26.1 sitemap 过滤失效，混入版本页：${bad.slice(0, 5).map((p) => p.href).join(", ")}`);
+      process.exit(1);
+    }
+  }
+
+  return out;
+}
+
 // ── Collect all pages to fetch ───────────────────────────────────────────────
 
-function collectPages(version) {
+async function collectPages(version, opts = {}) {
   const cfg = manifest.versions[version];
   if (!cfg) return [];
 
@@ -406,6 +494,27 @@ function collectPages(version) {
         upsert(sub.href, sub.text, sub.level ?? 2);
       }
     }
+  }
+
+  const chapterCount = pages.length;
+  collectPages.lastChapterCount = chapterCount;
+
+  if (opts.useSitemap) {
+    sitemapStats = { enabled: true, total: 0, added: 0, degraded: false, mode: "sitemap" };
+    const found = await fetchSitemapPages(version);
+    sitemapStats.total = found.length;
+    let added = 0;
+    for (const sp of found) {
+      if (!seen.has(sp.href)) added++;
+      upsert(sp.href, sp.text, sp.level);
+    }
+    sitemapStats.added = added;
+    if (sitemapStats.degraded) sitemapStats.mode = "chapters-only(fallback)";
+  } else {
+    sitemapStats = {
+      enabled: false, total: 0, added: 0, degraded: false,
+      mode: "chapters-only(--no-sitemap)",
+    };
   }
 
   return pages;
@@ -440,16 +549,28 @@ async function main() {
       }
     }
 
-    const pages = collectPages(version);
+    const pages = await collectPages(version, { useSitemap: !noSitemap });
     console.log(`  Pages to fetch: ${pages.length}`);
+    console.log(`  数据源模式: ${sitemapStats.mode}（chapters ${collectPages.lastChapterCount} / sitemap ${sitemapStats.total} / 新增 ${sitemapStats.added}）`);
+    if (sitemapStats.degraded) console.log(`  [WARN] sitemap 不可达，已降级为 chapters-only`);
 
     const outVersionDir = join(OUT_DIR, `neoforge_${version}`, "neoforge-docs", version);
     const rawDir = join(outVersionDir, "raw");
     mkdirSync(rawDir, { recursive: true });
 
+    // 精确增量：以 raw/ 实际文件为准（与下方 SKIP 判断同口径）
+    if (dryRun) {
+      const toFetch = pages.filter((p) => !existsSync(join(rawDir, `${safeIdOf(p.href)}.md`)));
+      console.log(`  精确增量: 待抓 ${toFetch.length} / 已存在 ${pages.length - toFetch.length}`);
+      if (!cfg.route) {
+        console.log(`  26.1 URL 清单（待抓 ${toFetch.length} 条）:`);
+        for (const p of toFetch) console.log(`    - /docs/${p.href}`);
+      }
+    }
+
     for (const page of pages) {
       const url = buildUrl(version, page.href);
-      const safeId = page.href.replace(/\//g, "_").replace(/-/g, "_");
+      const safeId = safeIdOf(page.href);
       const outFile = join(rawDir, `${safeId}.md`);
 
       if (!force && existsSync(outFile)) {

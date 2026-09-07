@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-08-21T13:41:12.319Z",
+  "built_at": "2026-09-07T08:51:26.025Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -499,108 +499,108 @@
       "version": "1.20.4",
       "source": "neoforge-docs",
       "path": "H:/MC_skill/data/neoforge_1.20.4/neoforge-docs/1.20.4/semantic/db.sqlite",
-      "chunks": 312,
-      "embedded": 312,
-      "built_at": "2026-08-11T13:09:44.107Z",
+      "chunks": 909,
+      "embedded": 909,
+      "built_at": "2026-09-07T08:29:20.011Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "a3b391cf76431845689fb638c581c28d5aa8c4c1b4ea46e214f5254de803c332"
+      "sha256": "929565aa16e83c17ebe646fd659403c2b5e253c1ab7d0f85f814fa94f4adf753"
     },
     {
       "platform": "neoforge",
       "version": "1.20.6",
       "source": "neoforge-docs",
       "path": "H:/MC_skill/data/neoforge_1.20.6/neoforge-docs/1.20.6/semantic/db.sqlite",
-      "chunks": 286,
-      "embedded": 286,
-      "built_at": "2026-08-11T13:09:25.927Z",
+      "chunks": 1008,
+      "embedded": 1008,
+      "built_at": "2026-09-07T08:30:24.054Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "7ae70c2bc009297e7a2a56a49f3e87d1fd63a7748d327d5fbbe034146097a776"
+      "sha256": "868f28284cb62d4b5eac659e271291eb764711b1b04bcd6c739b778f44edb680"
     },
     {
       "platform": "neoforge",
       "version": "1.21.1",
       "source": "neoforge-docs",
       "path": "H:/MC_skill/data/neoforge_1.21.1/neoforge-docs/1.21.1/semantic/db.sqlite",
-      "chunks": 426,
-      "embedded": 426,
-      "built_at": "2026-08-11T13:09:07.415Z",
+      "chunks": 1364,
+      "embedded": 1364,
+      "built_at": "2026-09-07T08:28:00.246Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "bc054d7ee6199332be199b25f2bc389789275ebf007a46a05fa1b0f0d0088bc0"
+      "sha256": "1f5abda304493781c3ede615fcf614fbc7aaff6179d8a7c00a20f5d539e393e5"
     },
     {
       "platform": "neoforge",
       "version": "1.21.10",
       "source": "neoforge-docs",
       "path": "H:/MC_skill/data/neoforge_1.21.10/neoforge-docs/1.21.10/semantic/db.sqlite",
-      "chunks": 492,
-      "embedded": 492,
-      "built_at": "2026-08-11T13:07:09.459Z",
+      "chunks": 1881,
+      "embedded": 1881,
+      "built_at": "2026-09-07T08:38:39.863Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "03a244ae22c222b102138b06ad9ea5a2838b74b2375b6da8313b067e1950b4d5"
+      "sha256": "16b8984929dbff2849f108376f7e92b0c3ef4ada7f004786fcaed24a144ebc92"
     },
     {
       "platform": "neoforge",
       "version": "1.21.11",
       "source": "neoforge-docs",
       "path": "H:/MC_skill/data/neoforge_1.21.11/neoforge-docs/1.21.11/semantic/db.sqlite",
-      "chunks": 494,
-      "embedded": 494,
-      "built_at": "2026-08-11T13:06:36.665Z",
+      "chunks": 1890,
+      "embedded": 1890,
+      "built_at": "2026-09-07T08:50:48.129Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "ba9bd5be2e0b93a7d15b53a6e4c99d5995a8256938c8e985bd4740eae42c0aea"
+      "sha256": "b2e295f6c4eb8e60016567d84b205b34d917ecc50b5710f5160dd0103a836050"
     },
     {
       "platform": "neoforge",
       "version": "1.21.3",
       "source": "neoforge-docs",
       "path": "H:/MC_skill/data/neoforge_1.21.3/neoforge-docs/1.21.3/semantic/db.sqlite",
-      "chunks": 428,
-      "embedded": 428,
-      "built_at": "2026-08-11T13:08:43.983Z",
+      "chunks": 1480,
+      "embedded": 1480,
+      "built_at": "2026-09-07T08:31:57.617Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "1111ac9251891605bc966476c8f46a1b629f2dae93c47254a9e8a585aba00753"
+      "sha256": "6e0f7334594b929979247662fad576b42f6fab0208849d6bbf6b84f47d1f109e"
     },
     {
       "platform": "neoforge",
       "version": "1.21.5",
       "source": "neoforge-docs",
       "path": "H:/MC_skill/data/neoforge_1.21.5/neoforge-docs/1.21.5/semantic/db.sqlite",
-      "chunks": 481,
-      "embedded": 481,
-      "built_at": "2026-08-11T13:08:19.764Z",
+      "chunks": 1766,
+      "embedded": 1766,
+      "built_at": "2026-09-07T08:25:43.948Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "0cca3a59ea185846f17ad2fb42d45ba1593a74e6dc4fc8f3e5f7050c0eddf5ee"
+      "sha256": "db3cdba79d6d9a3e5e6c2e7e9a35969f4b81b11ce44a993a513abc96bd3ca12d"
     },
     {
       "platform": "neoforge",
       "version": "1.21.8",
       "source": "neoforge-docs",
       "path": "H:/MC_skill/data/neoforge_1.21.8/neoforge-docs/1.21.8/semantic/db.sqlite",
-      "chunks": 488,
-      "embedded": 488,
-      "built_at": "2026-08-11T13:07:46.047Z",
+      "chunks": 1853,
+      "embedded": 1853,
+      "built_at": "2026-09-07T08:35:04.379Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "2756cf958ac5848d89e81f29f348c22e32dd86f534933729f4efca67f0b3ea13"
+      "sha256": "e8f3fb437e5f67c91a587569f7527a6ebdde6f2598bfc720be1ea31ebb6be8bb"
     },
     {
       "platform": "neoforge",
       "version": "26.1",
       "source": "neoforge-docs",
       "path": "H:/MC_skill/data/neoforge_26.1/neoforge-docs/26.1/semantic/db.sqlite",
-      "chunks": 503,
-      "embedded": 503,
-      "built_at": "2026-08-11T13:06:10.566Z",
+      "chunks": 1984,
+      "embedded": 1984,
+      "built_at": "2026-09-07T08:44:21.828Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "1019fae0a8431f8c8666f5ffe4c4029591eb085ce9c5ff105d570189d60a2515"
+      "sha256": "210a9464dd4ea474ba1275e930b56291ce790d5e3d1ce6ee90232dcfa8fbd753"
     },
     {
       "platform": "quilt",

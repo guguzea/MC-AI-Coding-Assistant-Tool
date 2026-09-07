@@ -1,65 +1,5 @@
 [
   {
-    "id": "gettingstarted",
-    "version": "1.20.4",
-    "label": "Getting Started with NeoForge",
-    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/",
-    "tags": [
-      "getting-started",
-      "tutorial",
-      "setup",
-      "neoforge-core"
-    ],
-    "priority": "high",
-    "sectionCount": 5
-  },
-  {
-    "id": "gettingstarted/modfiles",
-    "version": "1.20.4",
-    "label": "Mod Files",
-    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/modfiles/",
-    "tags": [
-      "getting-started",
-      "tutorial",
-      "setup",
-      "neoforge-core",
-      "has-code",
-      "deferredregister",
-      "registry"
-    ],
-    "priority": "high",
-    "sectionCount": 9
-  },
-  {
-    "id": "gettingstarted/structuring",
-    "version": "1.20.4",
-    "label": "Structuring Your Mod",
-    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/structuring/",
-    "tags": [
-      "getting-started",
-      "tutorial",
-      "setup",
-      "neoforge-core",
-      "has-code"
-    ],
-    "priority": "high",
-    "sectionCount": 4
-  },
-  {
-    "id": "gettingstarted/versioning",
-    "version": "1.20.4",
-    "label": "Versioning",
-    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/versioning/",
-    "tags": [
-      "getting-started",
-      "tutorial",
-      "setup",
-      "neoforge-core"
-    ],
-    "priority": "high",
-    "sectionCount": 11
-  },
-  {
     "id": "advanced/accesstransformers",
     "version": "1.20.4",
     "label": "Access Transformers",
@@ -140,6 +80,24 @@
     "sectionCount": 14
   },
   {
+    "id": "concepts/registries",
+    "version": "1.20.4",
+    "label": "Registries",
+    "url": "https://docs.neoforged.net/docs/1.20.4/concepts/registries/",
+    "tags": [
+      "core",
+      "concepts",
+      "fundamentals",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registerevent",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 9
+  },
+  {
     "id": "datagen/advancements",
     "version": "1.20.4",
     "label": "Advancement Generation",
@@ -186,6 +144,66 @@
     ],
     "priority": "high",
     "sectionCount": 4
+  },
+  {
+    "id": "gettingstarted",
+    "version": "1.20.4",
+    "label": "Getting Started with NeoForge",
+    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/",
+    "tags": [
+      "getting-started",
+      "tutorial",
+      "setup",
+      "neoforge-core"
+    ],
+    "priority": "high",
+    "sectionCount": 5
+  },
+  {
+    "id": "gettingstarted/modfiles",
+    "version": "1.20.4",
+    "label": "Mod Files",
+    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/modfiles/",
+    "tags": [
+      "getting-started",
+      "tutorial",
+      "setup",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 9
+  },
+  {
+    "id": "gettingstarted/structuring",
+    "version": "1.20.4",
+    "label": "Structuring Your Mod",
+    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/structuring/",
+    "tags": [
+      "getting-started",
+      "tutorial",
+      "setup",
+      "neoforge-core",
+      "has-code"
+    ],
+    "priority": "high",
+    "sectionCount": 4
+  },
+  {
+    "id": "gettingstarted/versioning",
+    "version": "1.20.4",
+    "label": "Versioning",
+    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/versioning/",
+    "tags": [
+      "getting-started",
+      "tutorial",
+      "setup",
+      "neoforge-core"
+    ],
+    "priority": "high",
+    "sectionCount": 11
   },
   {
     "id": "gui/menus",
@@ -301,21 +319,646 @@
     "sectionCount": 1
   },
   {
-    "id": "concepts/registries",
+    "id": "blockentities/ber",
     "version": "1.20.4",
-    "label": "Registries",
-    "url": "https://docs.neoforged.net/docs/1.20.4/concepts/registries/",
+    "label": "BlockEntityRenderer",
+    "url": "https://docs.neoforged.net/docs/1.20.4/blockentities/ber/",
+    "tags": [
+      "block-entity",
+      "tile-entity",
+      "tickable"
+    ],
+    "priority": "normal",
+    "sectionCount": 3
+  },
+  {
+    "id": "concepts/sides",
+    "version": "1.20.4",
+    "label": "Sides",
+    "url": "https://docs.neoforged.net/docs/1.20.4/concepts/sides/",
     "tags": [
       "core",
       "concepts",
       "fundamentals",
       "neoforge-core",
+      "has-code"
+    ],
+    "priority": "high",
+    "sectionCount": 7
+  },
+  {
+    "id": "datagen/glm",
+    "version": "1.20.4",
+    "label": "Global Loot Modifier Generation",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datagen/glm/",
+    "tags": [
+      "datagen",
+      "data-generation",
+      "provider",
+      "has-code"
+    ],
+    "priority": "normal",
+    "sectionCount": 0
+  },
+  {
+    "id": "datagen/loottables",
+    "version": "1.20.4",
+    "label": "Loot Table Generation",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datagen/loottables/",
+    "tags": [
+      "datagen",
+      "data-generation",
+      "provider",
+      "neoforge-core",
       "has-code",
       "deferredregister",
-      "registerevent",
       "registry"
     ],
     "priority": "high",
     "sectionCount": 9
+  },
+  {
+    "id": "datagen/recipes",
+    "version": "1.20.4",
+    "label": "Recipe Generation",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datagen/recipes/",
+    "tags": [
+      "datagen",
+      "data-generation",
+      "provider",
+      "has-code"
+    ],
+    "priority": "normal",
+    "sectionCount": 12
+  },
+  {
+    "id": "datagen/tags",
+    "version": "1.20.4",
+    "label": "Tag Generation",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datagen/tags/",
+    "tags": [
+      "datagen",
+      "data-generation",
+      "provider",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 4
+  },
+  {
+    "id": "datamaps/neo/maps",
+    "version": "1.20.4",
+    "label": "Built-in Data Maps",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datamaps/neo/maps/",
+    "tags": [
+      "datamaps",
+      "data-components",
+      "neoforge-core",
+      "has-code"
+    ],
+    "priority": "high",
+    "sectionCount": 5
+  },
+  {
+    "id": "datamaps/structure",
+    "version": "1.20.4",
+    "label": "JSON Structure",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datamaps/structure/",
+    "tags": [
+      "datamaps",
+      "data-components",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 5
+  },
+  {
+    "id": "datastorage/capabilities",
+    "version": "1.20.4",
+    "label": "Capabilities",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datastorage/capabilities/",
+    "tags": [
+      "nbt",
+      "data-storage",
+      "saved-data",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 8
+  },
+  {
+    "id": "datastorage/codecs",
+    "version": "1.20.4",
+    "label": "Codecs",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datastorage/codecs/",
+    "tags": [
+      "nbt",
+      "data-storage",
+      "saved-data",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 16
+  },
+  {
+    "id": "datastorage/nbt",
+    "version": "1.20.4",
+    "label": "Named Binary Tag (NBT)",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datastorage/nbt/",
+    "tags": [
+      "nbt",
+      "data-storage",
+      "saved-data",
+      "has-code"
+    ],
+    "priority": "normal",
+    "sectionCount": 5
+  },
+  {
+    "id": "datastorage/saveddata",
+    "version": "1.20.4",
+    "label": "Saved Data",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datastorage/saveddata/",
+    "tags": [
+      "nbt",
+      "data-storage",
+      "saved-data",
+      "has-code"
+    ],
+    "priority": "normal",
+    "sectionCount": 2
+  },
+  {
+    "id": "gui/screens",
+    "version": "1.20.4",
+    "label": "Screens",
+    "url": "https://docs.neoforged.net/docs/1.20.4/gui/screens/",
+    "tags": [
+      "gui",
+      "screen",
+      "menu",
+      "widget",
+      "has-code"
+    ],
+    "priority": "normal",
+    "sectionCount": 20
+  },
+  {
+    "id": "items/bewlr",
+    "version": "1.20.4",
+    "label": "BlockEntityWithoutLevelRenderer",
+    "url": "https://docs.neoforged.net/docs/1.20.4/items/bewlr/",
+    "tags": [
+      "item",
+      "creative-tab",
+      "tooltip",
+      "has-code"
+    ],
+    "priority": "normal",
+    "sectionCount": 1
+  },
+  {
+    "id": "items/interactionpipeline",
+    "version": "1.20.4",
+    "label": "The Interaction Pipeline",
+    "url": "https://docs.neoforged.net/docs/1.20.4/items/interactionpipeline/",
+    "tags": [
+      "item",
+      "creative-tab",
+      "tooltip"
+    ],
+    "priority": "normal",
+    "sectionCount": 5
+  },
+  {
+    "id": "items/mobeffects",
+    "version": "1.20.4",
+    "label": "Mob Effects & Potions",
+    "url": "https://docs.neoforged.net/docs/1.20.4/items/mobeffects/",
+    "tags": [
+      "item",
+      "creative-tab",
+      "tooltip",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 8
+  },
+  {
+    "id": "items/tools",
+    "version": "1.20.4",
+    "label": "Tools & Armor",
+    "url": "https://docs.neoforged.net/docs/1.20.4/items/tools/",
+    "tags": [
+      "item",
+      "creative-tab",
+      "tooltip",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 6
+  },
+  {
+    "id": "misc/debugprofiler",
+    "version": "1.20.4",
+    "label": "Debug Profiler",
+    "url": "https://docs.neoforged.net/docs/1.20.4/misc/debugprofiler/",
+    "tags": [
+      "misc",
+      "config",
+      "logging",
+      "has-code"
+    ],
+    "priority": "normal",
+    "sectionCount": 3
+  },
+  {
+    "id": "misc/gametest",
+    "version": "1.20.4",
+    "label": "Game Tests",
+    "url": "https://docs.neoforged.net/docs/1.20.4/misc/gametest/",
+    "tags": [
+      "misc",
+      "config",
+      "logging",
+      "has-code"
+    ],
+    "priority": "normal",
+    "sectionCount": 13
+  },
+  {
+    "id": "misc/keymappings",
+    "version": "1.20.4",
+    "label": "Key Mappings",
+    "url": "https://docs.neoforged.net/docs/1.20.4/misc/keymappings/",
+    "tags": [
+      "misc",
+      "config",
+      "logging",
+      "neoforge-core",
+      "has-code"
+    ],
+    "priority": "high",
+    "sectionCount": 8
+  },
+  {
+    "id": "misc/resourcelocation",
+    "version": "1.20.4",
+    "label": "Resource Locations",
+    "url": "https://docs.neoforged.net/docs/1.20.4/misc/resourcelocation/",
+    "tags": [
+      "misc",
+      "config",
+      "logging",
+      "registry"
+    ],
+    "priority": "normal",
+    "sectionCount": 3
+  },
+  {
+    "id": "misc/updatechecker",
+    "version": "1.20.4",
+    "label": "NeoForge Update Checker",
+    "url": "https://docs.neoforged.net/docs/1.20.4/misc/updatechecker/",
+    "tags": [
+      "misc",
+      "config",
+      "logging",
+      "neoforge-core",
+      "has-code"
+    ],
+    "priority": "high",
+    "sectionCount": 3
+  },
+  {
+    "id": "networking/configuration/tasks",
+    "version": "1.20.4",
+    "label": "Using Configuration Tasks",
+    "url": "https://docs.neoforged.net/docs/1.20.4/networking/configuration/tasks/",
+    "tags": [
+      "networking",
+      "packet",
+      "payload",
+      "channel",
+      "neoforge-core",
+      "has-code"
+    ],
+    "priority": "high",
+    "sectionCount": 6
+  },
+  {
+    "id": "networking/entities",
+    "version": "1.20.4",
+    "label": "Entities",
+    "url": "https://docs.neoforged.net/docs/1.20.4/networking/entities/",
+    "tags": [
+      "networking",
+      "packet",
+      "payload",
+      "channel",
+      "neoforge-core"
+    ],
+    "priority": "high",
+    "sectionCount": 4
+  },
+  {
+    "id": "networking/payload",
+    "version": "1.20.4",
+    "label": "Registering Payloads",
+    "url": "https://docs.neoforged.net/docs/1.20.4/networking/payload/",
+    "tags": [
+      "networking",
+      "packet",
+      "payload",
+      "channel",
+      "neoforge-core",
+      "has-code"
+    ],
+    "priority": "high",
+    "sectionCount": 0
+  },
+  {
+    "id": "resources/client/models",
+    "version": "1.20.4",
+    "label": "Models",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/client/models/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 8
+  },
+  {
+    "id": "resources/client/models/bakedmodel",
+    "version": "1.20.4",
+    "label": "Baked Models",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/client/models/bakedmodel/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code"
+    ],
+    "priority": "high",
+    "sectionCount": 7
+  },
+  {
+    "id": "resources/client/models/datagen",
+    "version": "1.20.4",
+    "label": "Model Datagen",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/client/models/datagen/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 7
+  },
+  {
+    "id": "resources/client/models/modelloaders",
+    "version": "1.20.4",
+    "label": "Custom Model Loaders",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/client/models/modelloaders/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code"
+    ],
+    "priority": "high",
+    "sectionCount": 11
+  },
+  {
+    "id": "resources/client/particles",
+    "version": "1.20.4",
+    "label": "Particles",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/client/particles/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 8
+  },
+  {
+    "id": "resources/client/sounds",
+    "version": "1.20.4",
+    "label": "Sounds",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/client/sounds/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 10
+  },
+  {
+    "id": "resources/client/textures",
+    "version": "1.20.4",
+    "label": "Textures",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/client/textures/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "has-code"
+    ],
+    "priority": "normal",
+    "sectionCount": 2
+  },
+  {
+    "id": "resources/server/advancements",
+    "version": "1.20.4",
+    "label": "Advancements",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/server/advancements/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "has-code",
+      "registry"
+    ],
+    "priority": "normal",
+    "sectionCount": 7
+  },
+  {
+    "id": "resources/server/conditional",
+    "version": "1.20.4",
+    "label": "Conditionally-Loaded Data",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/server/conditional/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 9
+  },
+  {
+    "id": "resources/server/glm",
+    "version": "1.20.4",
+    "label": "Global Loot Modifiers",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/server/glm/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 6
+  },
+  {
+    "id": "resources/server/loottables",
+    "version": "1.20.4",
+    "label": "Loot Tables",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/server/loottables/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code"
+    ],
+    "priority": "high",
+    "sectionCount": 10
+  },
+  {
+    "id": "resources/server/recipes",
+    "version": "1.20.4",
+    "label": "Recipes",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/server/recipes/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 7
+  },
+  {
+    "id": "resources/server/recipes/custom",
+    "version": "1.20.4",
+    "label": "Custom Recipes",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/server/recipes/custom/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "has-code",
+      "registry"
+    ],
+    "priority": "normal",
+    "sectionCount": 6
+  },
+  {
+    "id": "resources/server/recipes/incode",
+    "version": "1.20.4",
+    "label": "Non-Datapack Recipes",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/server/recipes/incode/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 4
+  },
+  {
+    "id": "resources/server/recipes/ingredients",
+    "version": "1.20.4",
+    "label": "Ingredients",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/server/recipes/ingredients/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "registerevent"
+    ],
+    "priority": "high",
+    "sectionCount": 8
+  },
+  {
+    "id": "resources/server/tags",
+    "version": "1.20.4",
+    "label": "Tags",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/server/tags/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "priority": "high",
+    "sectionCount": 7
   }
 ]

@@ -1330,5 +1330,3398 @@
         "summary": "There may be times when a biome modifier needs to target a biome that is not always present in the game. If a biome modifier targets the unregistered biome directly, it will crash on world loading...."
       }
     ]
+  },
+  {
+    "id": "advanced/extensibleenums",
+    "version": "26.1",
+    "label": "Extensible Enums",
+    "url": "https://docs.neoforged.net/docs/advanced/extensibleenums/",
+    "tags": [
+      "advanced",
+      "mixin",
+      "access-transformer",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "firstParagraph": "Extensible Enums are an enhancement of specific Vanilla enums to allow new entries to be added. This is done by modifying the compiled bytecode of the enum at runtime to add the elements.",
+    "sections": [
+      {
+        "title": "IExtensibleEnum",
+        "level": 2,
+        "summary": "All enums that can have new entries implement the IExtensibleEnum interface. This interface acts as a marker to allow the RuntimeEnumExtender launch plugin service to know what enums should be tran..."
+      },
+      {
+        "title": "Creating an Enum Entry",
+        "level": 3,
+        "summary": "To create new enum entries, a JSON file needs to be created and referenced in the neoforge.mods.toml with the enumExtensions entry of a [[mods]] block. The specified path must be relative to the re..."
+      },
+      {
+        "title": "Contributing to NeoForge",
+        "level": 2,
+        "summary": "To add a new extensible enum to NeoForge, there are at least two required things to do:"
+      }
+    ]
+  },
+  {
+    "id": "advanced/featureflags",
+    "version": "26.1",
+    "label": "Feature Flags",
+    "url": "https://docs.neoforged.net/docs/advanced/featureflags/",
+    "tags": [
+      "advanced",
+      "mixin",
+      "access-transformer",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "firstParagraph": "Feature flags are a system that allows developers to gate a set of features behind some set of required flags, that being registered elements, gameplay mechanics, data pack entries or some other unique system to your mod.",
+    "sections": [
+      {
+        "title": "Creating a Feature Flag",
+        "level": 2,
+        "summary": "To create new Feature flags, a JSON file needs to be created and referenced in your neoforge.mods.toml file with the featureFlags entry inside of your [[mods]] block. The specified path must be rel..."
+      },
+      {
+        "title": "Retrieving the Feature Flag",
+        "level": 2,
+        "summary": "The registered Feature flag can be retrieved via FeatureFlagRegistry.getFlag(Identifier). This can be done at any time during your mod's initialization and is recommended to be stored somewhere for..."
+      },
+      {
+        "title": "Feature Elements",
+        "level": 2,
+        "summary": "FeatureElements are registry values which can be given a set of required flags. These values are only made available to players when the respective required flags match the flags enabled in the level."
+      },
+      {
+        "title": "Flagging Elements",
+        "level": 3,
+        "summary": "In order to flag a given FeatureElement as requiring your Feature flag, you simply pass it and any other desired flags into the respective registration method:"
+      },
+      {
+        "title": "Validating Enabled Status",
+        "level": 3,
+        "summary": "In order to validate if features should be enabled or not, you must first acquire the set of enabled features. This can be done in a variety of ways, but the common and recommended method is LevelR..."
+      },
+      {
+        "title": "Feature Packs",
+        "level": 2,
+        "summary": "*See also: Resource Packs, Data Packs and Pack.mcmeta*"
+      },
+      {
+        "title": "Built-In",
+        "level": 3,
+        "summary": "Built-in packs are bundled with your mod and are made available to the game using the AddPackFindersEvent event."
+      },
+      {
+        "title": "External",
+        "level": 3,
+        "summary": "External packs are provided to your users in datapack form."
+      },
+      {
+        "title": "Data Generation",
+        "level": 3,
+        "summary": "Feature packs can be generated during regular mod datagen. This is best used in combination with built-in packs, but it is also possible to zip up the generated result and share it as an external p..."
+      }
+    ]
+  },
+  {
+    "id": "blockentities/ber",
+    "version": "26.1",
+    "label": "BlockEntityRenderer",
+    "url": "https://docs.neoforged.net/docs/blockentities/ber/",
+    "tags": [
+      "block-entity",
+      "tile-entity",
+      "tickable",
+      "has-code"
+    ],
+    "firstParagraph": "A `BlockEntityRenderer`, often abbreviated as BER, is used to 'render' [blocks](/docs/blocks/) in a way that cannot be represented with a [static baked model](/docs/resources/client/models/) (JSON, OBJ, others). For example, this could be used to dynamically render container contents of a chest-like",
+    "sections": [
+      {
+        "title": "Block Entity Render States",
+        "level": 2,
+        "summary": "As mentioned in the above example, block entity render states are used to extract the values used for rendering from the actual block entity's values. They are functionally mutable data storage obj..."
+      },
+      {
+        "title": "Item Block Rendering",
+        "level": 2,
+        "summary": "As not all block entities with renderers can be represented by static item models, a special renderer can be created to more dynamically control the process. This is done using SpecialModelRenderer..."
+      }
+    ]
+  },
+  {
+    "id": "concepts/events",
+    "version": "26.1",
+    "label": "Events",
+    "url": "https://docs.neoforged.net/docs/concepts/events/",
+    "tags": [
+      "core",
+      "concepts",
+      "fundamentals",
+      "neoforge-core",
+      "has-code",
+      "registerevent",
+      "registry"
+    ],
+    "firstParagraph": "One of NeoForge's main features is the event system. Events are fired for various things that happen in the game. For example, there are events for when the player right clicks, when a player or another entity jumps, when blocks are rendered, when the game is loaded, etc. A modder can subscribe even",
+    "sections": [
+      {
+        "title": "Registering an Event Handler",
+        "level": 2,
+        "summary": "There are multiple ways to register event handlers. Common for all of those ways is that every event handler is a method with a single event parameter and no result (i.e. return type void)."
+      },
+      {
+        "title": "IEventBus#addListener",
+        "level": 3,
+        "summary": "The simplest way to register method handlers is by registering their method reference, like so:"
+      },
+      {
+        "title": "@SubscribeEvent",
+        "level": 3,
+        "summary": "Alternatively, event handlers can be annotation-driven by creating an event handler method and annotating it with @SubscribeEvent. Then, you can pass an instance of the encompassing class to the ev..."
+      },
+      {
+        "title": "@EventBusSubscriber",
+        "level": 3,
+        "summary": "We can go one step further and also annotate the event handler class with @EventBusSubscriber. This annotation is discovered automatically by NeoForge, allowing you to remove all event-related code..."
+      },
+      {
+        "title": "Event Options",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Fields and Methods",
+        "level": 3,
+        "summary": "Fields and methods are probably the most obvious part of an event. Most events contain context for the event handler to use, such as an entity causing the event or a level the event occurs in."
+      },
+      {
+        "title": "Hierarchy",
+        "level": 3,
+        "summary": "In order to use the advantages of inheritance, some events do not directly extend Event, but one of its subclasses, for example BlockEvent (which contains block context for block-related events) or..."
+      },
+      {
+        "title": "Cancellable Events",
+        "level": 3,
+        "summary": "Some events implement the ICancellableEvent interface. These events can be cancelled using #setCanceled(boolean canceled), and the cancellation status can be checked using #isCanceled(). If an even..."
+      },
+      {
+        "title": "TriStates and Results",
+        "level": 3,
+        "summary": "Some events have three potential return states represented by TriState, or a Result enum directly on the event class. The return states can typically either cancel the action the event is handling ..."
+      },
+      {
+        "title": "Priority",
+        "level": 3,
+        "summary": "Event handlers can optionally get assigned a priority. The EventPriority enum contains five values: HIGHEST, HIGH, NORMAL (default), LOW and LOWEST. Event handlers are executed from highest to lowe..."
+      },
+      {
+        "title": "Sided Events",
+        "level": 3,
+        "summary": "Some events are only fired on one side. Common examples include the various render events, which are only fired on the client. Since client-only events generally need to access other client-only pa..."
+      },
+      {
+        "title": "Event Buses",
+        "level": 2,
+        "summary": "While most events are posted on the NeoForge.EVENT_BUS, some events are posted on the mod event bus instead. These are generally called mod bus events. Mod bus events can be distinguished from regu..."
+      },
+      {
+        "title": "The Mod Lifecycle",
+        "level": 3,
+        "summary": "Most mod bus events are what is known as lifecycle events. Lifecycle events run once in every mod's lifecycle during startup. Many of them are fired in parallel by subclassing ParallelDispatchEvent..."
+      },
+      {
+        "title": "Other Mod Bus Events",
+        "level": 3,
+        "summary": "Next to the lifecycle events, there are a few miscellaneous events that are fired on the mod event bus, mostly for legacy reasons. These are generally events where you can register, set up, or init..."
+      }
+    ]
+  },
+  {
+    "id": "concepts/sides",
+    "version": "26.1",
+    "label": "Sides",
+    "url": "https://docs.neoforged.net/docs/concepts/sides/",
+    "tags": [
+      "core",
+      "concepts",
+      "fundamentals",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "Like many other programs, Minecraft follows a client-server concept, where the client is responsible for displaying the data, while the server is responsible for updating them. When using these terms, we have a fairly intuitive understanding of what we mean... right?",
+    "sections": [
+      {
+        "title": "Logical vs. Physical Side",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "The Physical Side",
+        "level": 3,
+        "summary": "When you open your Minecraft launcher, select a Minecraft installation and press play, you boot up a **physical client**. The word \"physical\" is used here in the sense of \"this is a client program\"..."
+      },
+      {
+        "title": "The Logical Side",
+        "level": 3,
+        "summary": "The logical side is mainly focused on the internal program structure of Minecraft. The **logical server** is where the game logic runs. Things like time and weather changing, entity ticking, entity..."
+      },
+      {
+        "title": "What's the Difference?",
+        "level": 3,
+        "summary": "The difference between physical and logical sides is best exemplified by two scenarios:"
+      },
+      {
+        "title": "Performing Side-Specific Operations",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Level#isClientSide()",
+        "level": 3,
+        "summary": "This boolean check will be your most used way to check sides. Querying this field on a Level object establishes the  **logical** side the level belongs to: If this field is true, the level is runni..."
+      },
+      {
+        "title": "FMLEnvironment#getDist()",
+        "level": 3,
+        "summary": "FMLEnvironment#getDist() is the **physical** counterpart to a Level#isClientSide() check. If this field is Dist.CLIENT, you are on a physical client. If the field is Dist.DEDICATED_SERVER, you are ..."
+      }
+    ]
+  },
+  {
+    "id": "datastorage/attachments",
+    "version": "26.1",
+    "label": "Data Attachments",
+    "url": "https://docs.neoforged.net/docs/datastorage/attachments/",
+    "tags": [
+      "nbt",
+      "data-storage",
+      "saved-data",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "The data attachment system allows mods to attach and store additional data on block entities, chunks, entities, and levels.",
+    "sections": [
+      {
+        "title": "Creating an attachment type",
+        "level": 2,
+        "summary": "To use the system, you need to register an AttachmentType. The attachment type contains the following configuration:"
+      },
+      {
+        "title": "Using the attachment type",
+        "level": 2,
+        "summary": "Once the attachment type is registered, it can be used on any holder object. Calling getData if no data is present will attach a new default instance."
+      },
+      {
+        "title": "Sharing data with the client",
+        "level": 2,
+        "summary": "To sync block entity, chunk, level, or entity attachments to a client, you can implement sync in the builder. Attachments are then sent to the client when the attachment is default-created through ..."
+      },
+      {
+        "title": "Copying data on player death",
+        "level": 2,
+        "summary": "By default, entity data attachments are not copied on player death. To automatically copy an attachment on player death, set copyOnDeath in the attachment builder."
+      }
+    ]
+  },
+  {
+    "id": "datastorage/codecs",
+    "version": "26.1",
+    "label": "Codecs",
+    "url": "https://docs.neoforged.net/docs/datastorage/codecs/",
+    "tags": [
+      "nbt",
+      "data-storage",
+      "saved-data",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "firstParagraph": "Codecs are a serialization tool from Mojang's [DataFixerUpper](https://github.com/Mojang/DataFixerUpper) used to describe how objects can be transformed between different formats, such as `JsonElement`s for JSON and `Tag`s for NBT.",
+    "sections": [
+      {
+        "title": "Using Codecs",
+        "level": 2,
+        "summary": "Codecs are primarily used to encode, or serialize, Java objects to some data format type and decode, or deserialize, formatted data objects back to its associated Java type. This is typically accom..."
+      },
+      {
+        "title": "DynamicOps",
+        "level": 3,
+        "summary": "To determine what intermediate file format to encode and decode to, both #encodeStart and #parse require a DynamicOps instance to define the data within that format."
+      },
+      {
+        "title": "DataResult",
+        "level": 3,
+        "summary": "Encoded or decoded data using codecs return a DataResult which holds the converted instance or some error data depending on whether the conversion was successful. When the conversion is successful,..."
+      },
+      {
+        "title": "Existing Codecs",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Primitives",
+        "level": 3,
+        "summary": "The Codec class contains static instances of codecs for certain defined primitives."
+      },
+      {
+        "title": "Vanilla and NeoForge",
+        "level": 3,
+        "summary": "Minecraft and NeoForge define many codecs for objects that are frequently encoded and decoded. Some examples include Identifier#CODEC for Identifiers, ExtraCodecs#INSTANT_ISO8601 for Instants in th..."
+      },
+      {
+        "title": "Creating Codecs",
+        "level": 2,
+        "summary": "Codecs can be created for encoding and decoding any object. For understanding purposes, the equivalent encoded JSON will be shown."
+      },
+      {
+        "title": "Records",
+        "level": 3,
+        "summary": "Codecs can define objects through the use of records. Each record codec defines any object with explicit named fields. There are many ways to create a record codec, but the simplest is via RecordCo..."
+      },
+      {
+        "title": "Transformers",
+        "level": 3,
+        "summary": "Codecs can be transformed into equivalent, or partially equivalent, representations through mapping methods. Each mapping method takes in two functions: one to transform the current type into the n..."
+      },
+      {
+        "title": "Defaults",
+        "level": 3,
+        "summary": "If the result of encoding or decoding fails, a default value can be supplied instead via Codec#orElse or Codec#orElseGet."
+      },
+      {
+        "title": "Unit",
+        "level": 3,
+        "summary": "A codec which supplies an in-code value and encodes to nothing can be represented using MapCodec#unitCodec. This is useful if a codec uses a non-encodable entry within the data object."
+      },
+      {
+        "title": "Lazy Initialized",
+        "level": 3,
+        "summary": "Sometimes, a codec may rely on data that is not present when it is constructed. In these situations Codec#lazyInitialized can be used to for a codec to construct itself on first encoding/decoding. ..."
+      },
+      {
+        "title": "List",
+        "level": 3,
+        "summary": "A codec for a list of objects can be generated from an object codec via Codec#listOf. listOf can also take in integers representing the minimum and maximum size of the list. sizeLimitedListOf does ..."
+      },
+      {
+        "title": "Map",
+        "level": 3,
+        "summary": "A codec for a map of keys and value objects can be generated from two codecs via Codec#unboundedMap. Unbounded maps can specify any string-based or string-transformed value to be a key."
+      },
+      {
+        "title": "Pair",
+        "level": 3,
+        "summary": "A codec for pairs of objects can be generated from two codecs via Codec#pair."
+      },
+      {
+        "title": "Either",
+        "level": 3,
+        "summary": "A codec for two different methods of encoding/decoding some object data can be generated from two codecs via Codec#either."
+      },
+      {
+        "title": "Recursive",
+        "level": 3,
+        "summary": "Sometimes, an object may reference an object of the same type as a field. For example, EntityPredicate takes in an EntityPredicate for the vehicle, passenger, and targeted entity. In this case, Cod..."
+      },
+      {
+        "title": "Dispatch",
+        "level": 3,
+        "summary": "Codecs can have subcodecs which can decode a particular object based upon some specified type via Codec#dispatch. This is typically used in registries which contain codecs, such as rule tests or bl..."
+      }
+    ]
+  },
+  {
+    "id": "datastorage/saveddata",
+    "version": "26.1",
+    "label": "Saved Data",
+    "url": "https://docs.neoforged.net/docs/datastorage/saveddata/",
+    "tags": [
+      "nbt",
+      "data-storage",
+      "saved-data",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "The Saved Data (SD) system can be used to save additional data on levels.",
+    "sections": [
+      {
+        "title": "SavedData",
+        "level": 2,
+        "summary": "Each SD implementation must subtype the SavedData class. This can be implemented like any other object, with your own fields and methods, but if you want to store the data or change to disk, then y..."
+      },
+      {
+        "title": "SavedDataType",
+        "level": 2,
+        "summary": "As the SavedData is simply an object, there needs to be some sort of associated identifier. Additionally, we also need to read and write the data to disk. This is where the SavedDataType comes in. ..."
+      },
+      {
+        "title": "Attaching to a Level",
+        "level": 2,
+        "summary": "Any SavedData is loaded and/or attached to a level or server dynamically. As such, if one is never created on a level or server, then it will not exist."
+      }
+    ]
+  },
+  {
+    "id": "datastorage/valueio",
+    "version": "26.1",
+    "label": "Value I/O",
+    "url": "https://docs.neoforged.net/docs/datastorage/valueio/",
+    "tags": [
+      "nbt",
+      "data-storage",
+      "saved-data",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "firstParagraph": "The Value I/O system is a standardized serialization method to manipulate data of some backing object, such as [CompoundTags for NBT](/docs/datastorage/nbt).",
+    "sections": [
+      {
+        "title": "Inputs and Outputs",
+        "level": 2,
+        "summary": "The Value I/O system is made up of two parts: a ValueOutput that writes to the object during serialization, and a ValueInput that reads from the object during deserialization. Implementing methods ..."
+      },
+      {
+        "title": "Primitives",
+        "level": 3,
+        "summary": "Value I/O contains methods for reading and writing certain primitives. ValueOutput methods are prefixed with put*, taking in the key and the primitive value. ValueInput methods are named as get*Or,..."
+      },
+      {
+        "title": "Codecs",
+        "level": 3,
+        "summary": "Codecs can also be used to store and read values from the value I/O. In vanilla, all Codecs are handled using a RegistryOps, allowing the storage of datapack entries. ValueOutput#store and storeNul..."
+      },
+      {
+        "title": "Lists",
+        "level": 3,
+        "summary": "Lists can be created and read from through one of two methods: child value I/Os or [Codecs]."
+      },
+      {
+        "title": "Objects",
+        "level": 3,
+        "summary": "Objects can be created and read from via children. ValueOutput#child creates a new ValueObject given a key. Then, the object can be read using ValueInput#child, or childOrEmpty if it should default..."
+      },
+      {
+        "title": "ValueIOSerializable",
+        "level": 2,
+        "summary": "ValueIOSerializable is a NeoForge-added interface for objects that can be serialized and deserialized using value I/Os. NeoForge uses this API to handle data attachments. The interface provides two..."
+      },
+      {
+        "title": "Implementations",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "NBT",
+        "level": 3,
+        "summary": "Value I/O for NBTs is handled via TagValueOutput and TagValueInput."
+      }
+    ]
+  },
+  {
+    "id": "entities/attributes",
+    "version": "26.1",
+    "label": "Attributes",
+    "url": "https://docs.neoforged.net/docs/entities/attributes/",
+    "tags": [
+      "entity",
+      "spawning",
+      "ai",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "firstParagraph": "Attributes are special fields of [living entities](/docs/entities/livingentity) that determine basic properties such as max health, speed or armor. All attributes are stored as double values and synced automatically. Vanilla offers a wide range of default attributes, and you can also add your own.",
+    "sections": [
+      {
+        "title": "Built-In Attributes",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Minecraft",
+        "level": 3,
+        "summary": "The following attributes are in the minecraft namespace, and their in-code values can be found in the Attributes class."
+      },
+      {
+        "title": "NeoForge",
+        "level": 3,
+        "summary": "The following attributes are in the neoforge namespace, and their in-code values can be found in the NeoForgeMod class."
+      },
+      {
+        "title": "Default Attributes",
+        "level": 2,
+        "summary": "When creating a LivingEntity, it is required to register a set of default attributes for them. When an entity is spawned in, its default attributes are set on it. Default attributes are registered ..."
+      },
+      {
+        "title": "Querying Attributes",
+        "level": 2,
+        "summary": "Attribute values are stored on entities in an AttributeMap, which is basically a Map. Attribute instances are basically what item stacks are to items, i.e. whereas an attribute is a registered sing..."
+      },
+      {
+        "title": "Attribute Modifiers",
+        "level": 2,
+        "summary": "In contrast to querying, changing the attribute values is not as easy. This is mainly because there may be multiple changes required to an attribute at the same time."
+      },
+      {
+        "title": "Custom Attributes",
+        "level": 2,
+        "summary": "If needed, you can also add your own attributes. Like many other systems, attributes are a registry, and you can register your own objects to it. To get started, create a DeferredRegister like so:"
+      }
+    ]
+  },
+  {
+    "id": "entities/data",
+    "version": "26.1",
+    "label": "Data and Networking",
+    "url": "https://docs.neoforged.net/docs/entities/data/",
+    "tags": [
+      "entity",
+      "spawning",
+      "ai",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "firstParagraph": "An entity without data is quite useless, as such, storing data on an entity is essential. All entities store some default data, such as their type and their position. This article will explain how to add your own data, as well as how to synchronize that data.",
+    "sections": [
+      {
+        "title": "SynchedEntityData",
+        "level": 2,
+        "summary": "SynchedEntityData is a system used for storing values at runtime and syncing them over the network. It is split into three classes:"
+      },
+      {
+        "title": "readAdditionalSaveData and addAdditionalSaveData",
+        "level": 2,
+        "summary": "These two methods are used to read and write data to disk. They work by loading/saving your values from/to a value I/O, like so:"
+      },
+      {
+        "title": "Custom Spawn Data",
+        "level": 2,
+        "summary": "In some cases, there is custom data needed for your entity on the client when it is spawned, but that same data doesn't change over time. When this is the case, you can implement the IEntityWithCom..."
+      },
+      {
+        "title": "Data Attachments",
+        "level": 2,
+        "summary": "Entities have been patched to extend AttachmentHolder and as such support data storage via data attachments. Its main use is to define custom data on entities that are not your own, i.e., entities ..."
+      },
+      {
+        "title": "Custom Network Messages",
+        "level": 2,
+        "summary": "For syncing, you can also always opt to use a custom packet to send additional information when needed. Please refer to the Networking articles for more information."
+      }
+    ]
+  },
+  {
+    "id": "entities/livingentity",
+    "version": "26.1",
+    "label": "Living Entities, Mobs & Players",
+    "url": "https://docs.neoforged.net/docs/entities/livingentity/",
+    "tags": [
+      "entity",
+      "spawning",
+      "ai",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "Living entities are a big subgroup of [entities](/docs/entities/) that all inherit from the common `LivingEntity` superclass. These include mobs (through the `Mob` subclass), players (through the `Player` subclass) and armor stands (through the `ArmorStand` subclass).",
+    "sections": [
+      {
+        "title": "Health, Damage and Healing",
+        "level": 2,
+        "summary": "*See also: Attributes.*"
+      },
+      {
+        "title": "Damage Events",
+        "level": 3,
+        "summary": "Due to the complexity of the damage pipeline, there are multiple events for you to hook into, which are fired in the order they are listed in. This is generally intended for damage modifications yo..."
+      },
+      {
+        "title": "Mob Effects",
+        "level": 2,
+        "summary": "*See Mob Effects & Potions.*"
+      },
+      {
+        "title": "Equipment",
+        "level": 2,
+        "summary": "*See Containers on Entities.*"
+      },
+      {
+        "title": "Hierarchy",
+        "level": 2,
+        "summary": "Living entities have a complex class hierarchy. As mentioned before, there are three direct subclasses (red classes are abstract, blue classes are not):"
+      },
+      {
+        "title": "Hierarchy of Mob",
+        "level": 3,
+        "summary": "The class hierarchy of Mob looks as follows (red classes are abstract, blue classes are not):"
+      },
+      {
+        "title": "Hierarchy of Avatar",
+        "level": 3,
+        "summary": "Avatars define not only the player, but also a player-like mannequin. Depending on which side the avatar is on, a different class is used. You should never need to construct avatars, except for Fak..."
+      },
+      {
+        "title": "Spawning",
+        "level": 2,
+        "summary": "In addition to the regular ways of spawning - that is, the /summon command and the in-code way via EntityType#spawn or Level#addFreshEntity -, Mobs can also be spawned through some other means. Arm..."
+      },
+      {
+        "title": "Spawn Eggs",
+        "level": 3,
+        "summary": "It is common (though not required) to register a spawn egg for mobs. This is done through the SpawnEggItem class and the DataComponents#ENTITY_DATA data component:"
+      },
+      {
+        "title": "Natural Spawning",
+        "level": 3,
+        "summary": "*See also Entities/MobCategory, Worldgen/Biome Modifers/Add Spawns, Worldgen/Biome Modifers/Add Spawn Costs; and Spawn Cycle on the Minecraft Wiki.*"
+      }
+    ]
+  },
+  {
+    "id": "entities/renderer",
+    "version": "26.1",
+    "label": "Entity Renderers",
+    "url": "https://docs.neoforged.net/docs/entities/renderer/",
+    "tags": [
+      "entity",
+      "spawning",
+      "ai",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "Entity renderers are used to define rendering behavior for an entity. They only exist on the [logical and physical client](/docs/concepts/sides).",
+    "sections": [
+      {
+        "title": "Creating an Entity Renderer",
+        "level": 2,
+        "summary": "The simplest entity renderer is one that directly extends EntityRenderer:"
+      },
+      {
+        "title": "Entity Render States",
+        "level": 2,
+        "summary": "As mentioned before, entity render states are used to separate values used for rendering from the actual entity's values. There's nothing more to them, they are really just mutable data storage obj..."
+      },
+      {
+        "title": "Render State Modifications",
+        "level": 3,
+        "summary": "In addition to being able to define new entity render states, NeoForge introduces a system that allows modifying existing render states."
+      },
+      {
+        "title": "Hierarchy",
+        "level": 2,
+        "summary": "Like entities themselves, entity renderers have a class hierarchy, though not as layered. The most important classes of the hierarchy are related like this (red classes are abstract, blue classes a..."
+      },
+      {
+        "title": "Entity Models, Layer Definitions and Render Layers",
+        "level": 2,
+        "summary": "More complex entity renderers, notably LivingEntityRenderer, use a layer system, where each layer is represented as a RenderLayer. A renderer can use multiple RenderLayers, and the renderer can dec..."
+      },
+      {
+        "title": "Creating an Entity Model Class and a Layer Definition",
+        "level": 3,
+        "summary": "Let's start by creating an entity model class:"
+      },
+      {
+        "title": "Registering a Layer Definition",
+        "level": 3,
+        "summary": "Once we have our entity layer definition, we need to register it in EntityRenderersEvent.RegisterLayerDefinitions. To do so, we need a ModelLayerLocation, which essentially acts as an identifier fo..."
+      },
+      {
+        "title": "Creating a Render Layer and Baking a Layer Definition",
+        "level": 3,
+        "summary": "The next step is to bake the layer definition, something for which we will first return to the entity model class:"
+      },
+      {
+        "title": "Adding a Render Layer to an Entity Renderer",
+        "level": 3,
+        "summary": "Finally, to tie it all together, we can add the layer to our renderer (which, if you remember, now needs to be a living renderer) like so:"
+      },
+      {
+        "title": "All At Once",
+        "level": 3,
+        "summary": "A bit much? Since this system is quite complex, here's all the components listed again with (almost) no fluff:"
+      },
+      {
+        "title": "Modifying Existing Entity Renderers",
+        "level": 2,
+        "summary": "In some scenarios, it is desirable to add to an existing entity renderer, e.g. for rendering additional effects on an existing entity. Most of the time, this will affect living entities, i.e., enti..."
+      },
+      {
+        "title": "Animations",
+        "level": 2,
+        "summary": "Minecraft includes an animation system for entity models through the AnimationDefinition class. NeoForge adds a system that allows these entity animations to be defined in JSON files, similar to th..."
+      },
+      {
+        "title": "Keyframe Targets",
+        "level": 3,
+        "summary": "NeoForge adds the following keyframe targets out of the box:"
+      },
+      {
+        "title": "Keyframe Interpolations",
+        "level": 3,
+        "summary": "NeoForge adds the following keyframe interpolations out of the box:"
+      }
+    ]
+  },
+  {
+    "id": "inventories/capabilities",
+    "version": "26.1",
+    "label": "Capabilities",
+    "url": "https://docs.neoforged.net/docs/inventories/capabilities/",
+    "tags": [
+      "inventory",
+      "item-handler",
+      "transfer",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "firstParagraph": "Capabilities allow exposing features in a dynamic and flexible way without having to resort to directly implementing many interfaces.",
+    "sections": [
+      {
+        "title": "Why Use Capabilities?",
+        "level": 2,
+        "summary": "Capabilities are designed to separate **what** a block, entity or item stack can do from **how** it does it. If you are wondering whether capabilities are the right tool for a job, ask yourself the..."
+      },
+      {
+        "title": "NeoForge-provided capabilities",
+        "level": 2,
+        "summary": "NeoForge provides capabilities for the following three resource handlers: ResourceHandler, ResourceHandler and EnergyHandler."
+      },
+      {
+        "title": "Creating a capability",
+        "level": 2,
+        "summary": "NeoForge supports capabilities for blocks, entities, and item stacks."
+      },
+      {
+        "title": "Querying capabilities",
+        "level": 2,
+        "summary": "Once we have our BlockCapability, EntityCapability, or ItemCapability object in a static field, we can query a capability."
+      },
+      {
+        "title": "Block capability caching",
+        "level": 2,
+        "summary": "When a capability is looked up, the system will perform the following steps under the hood:"
+      },
+      {
+        "title": "Block capability invalidation",
+        "level": 2,
+        "summary": "Invalidation is exclusive to block capabilities. Entity and item stack capabilities cannot be cached and do not need to be invalidated."
+      },
+      {
+        "title": "Registering capabilities",
+        "level": 2,
+        "summary": "A capability *provider* is what ultimately supplies a capability. A capability provider is a function that can either return a capability instance, or null if it cannot provide the capability. Prov..."
+      },
+      {
+        "title": "Registering capabilities for all objects",
+        "level": 2,
+        "summary": "If for some reason you need to register a provider for all blocks, entities, or items, you will need to iterate the corresponding registry and register the provider for each object."
+      }
+    ]
+  },
+  {
+    "id": "inventories/menus",
+    "version": "26.1",
+    "label": "Menus",
+    "url": "https://docs.neoforged.net/docs/inventories/menus/",
+    "tags": [
+      "inventory",
+      "item-handler",
+      "transfer",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "firstParagraph": "Menus are one type of backend for Graphical User Interfaces, or GUIs; they handle the logic involved in interacting with some represented data holder. Menus themselves are not data holders. They are views which allow to user to indirectly modify the internal data holder state. As such, a data holder",
+    "sections": [
+      {
+        "title": "MenuType",
+        "level": 2,
+        "summary": "Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the *type* of the menu. For a men..."
+      },
+      {
+        "title": "MenuSupplier",
+        "level": 3,
+        "summary": "A MenuType is created by passing in a MenuSupplier and a FeatureFlagSet to its constructor. A MenuSupplier represents a function which takes in the id of the container and the inventory of the play..."
+      },
+      {
+        "title": "IContainerFactory",
+        "level": 3,
+        "summary": "If additional information is needed on the client (e.g. the position of the data holder in the world), then the subclass IContainerFactory can be used instead. In addition to the container id and t..."
+      },
+      {
+        "title": "AbstractContainerMenu",
+        "level": 2,
+        "summary": "All menus are extended from AbstractContainerMenu. A menu takes in two parameters, the MenuType, which represents the type of the menu itself, and the container id, which represents the unique iden..."
+      },
+      {
+        "title": "#stillValid and ContainerLevelAccess",
+        "level": 3,
+        "summary": "#stillValid determines whether the menu should remain open for a given player. This is typically directed to the static #stillValid which takes in a ContainerLevelAccess, the player, and the Block ..."
+      },
+      {
+        "title": "Data Synchronization",
+        "level": 3,
+        "summary": "Some data needs to be present on both the server and the client to display to the player. To do this, the menu implements a basic layer of data synchronization such that whenever the current data d..."
+      },
+      {
+        "title": "Opening a Menu",
+        "level": 2,
+        "summary": "Once a menu type has been registered, the menu itself has been finished, and a screen has been attached, a menu can then be opened by the player. Menus can be opened by calling IPlayerExtension#ope..."
+      },
+      {
+        "title": "Common Implementations",
+        "level": 3,
+        "summary": "Menus are typically opened on a player interaction of some kind (e.g. when a block or entity is right-clicked)."
+      }
+    ]
+  },
+  {
+    "id": "inventories/transactions",
+    "version": "26.1",
+    "label": "Transactions",
+    "url": "https://docs.neoforged.net/docs/inventories/transactions/",
+    "tags": [
+      "inventory",
+      "item-handler",
+      "transfer",
+      "neoforge-core",
+      "has-code",
+      "data-components"
+    ],
+    "firstParagraph": "Transactions are a NeoForged-added system for managing the communication between different inventories transferring their contents. Each transfer is managed through three basic concepts: the `Resource`s being transferred, the `ResourceHandler`s representing the inventories, and the `Transaction` fac",
+    "sections": [
+      {
+        "title": "Resources",
+        "level": 2,
+        "summary": "Resources represent the backing object that is transacted upon. Each Resource is meant to be immutable, containing what kind of object is used, not the number of objects being transferred. For exam..."
+      },
+      {
+        "title": "Resource Handlers",
+        "level": 2,
+        "summary": "ResourceHandlers represent the backing inventories within a transaction, where T is the type of the Resource backing the object. Each handler maps to its associated contents using an index (e.g., i..."
+      },
+      {
+        "title": "Energy Handler",
+        "level": 3,
+        "summary": "EnergyHandler is a trimmed down version of ResourceHandler, only containing one index storing a long. As such, it only checks how many units can be stored (getCapacityAsLong / getCapacityAsInt) alo..."
+      },
+      {
+        "title": "Item Access",
+        "level": 3,
+        "summary": "ItemAccess is also a trimmed down version of ResourceHandler, providing access to a single item in a specific storage location. This is typically used within item capabilities to modify the item th..."
+      },
+      {
+        "title": "Transferring Between Handlers",
+        "level": 2,
+        "summary": "Transactions facilitate the transfer of Resources between ResourceHandlers. Here, resources are inserted and extracted from their ResourceHandlers. A transfer is considered valid or complete after ..."
+      },
+      {
+        "title": "Taking Snapshots",
+        "level": 3,
+        "summary": "On its own, Transaction#commit does nothing. As such, the insertions and extractions performed are permanent regardless of whether the transfer was successful or not. What we want is that for any T..."
+      }
+    ]
+  },
+  {
+    "id": "items/armor",
+    "version": "26.1",
+    "label": "Armor",
+    "url": "https://docs.neoforged.net/docs/items/armor/",
+    "tags": [
+      "item",
+      "creative-tab",
+      "tooltip",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "Armors are [items](/docs/items/) whose primary use is to protect a [LivingEntity](/docs/entities/livingentity) from damage using a variety of resistances and effects. Many mods add new armor sets (for example copper armor).",
+    "sections": [
+      {
+        "title": "Custom Armor Sets",
+        "level": 2,
+        "summary": "An armor set for a humanoid entity typically consists of four items: a helmet for the head, a chestplate for the chest, leggings for the legs, and boots for the feet. There is also armor for wolves..."
+      },
+      {
+        "title": "Equippable",
+        "level": 3,
+        "summary": "Equippable is a data component that contains how an entity can equip this item and what handles the rendering in game. This allows any item, regardless of whether it is considered 'armor', to be eq..."
+      },
+      {
+        "title": "Equipment Assets",
+        "level": 2,
+        "summary": "Now we have some armor in game, but if we try to wear it, nothing will render since we never specified how to render the equipment. To do so, we need to create an EquipmentClientInfo JSON at the lo..."
+      },
+      {
+        "title": "Equipment Rendering",
+        "level": 2,
+        "summary": "The equipment infos are rendered via the EquipmentLayerRenderer in the render function of an EntityRenderer or one of its RenderLayers. EquipmentLayerRenderer is obtained as part of the render cont..."
+      }
+    ]
+  },
+  {
+    "id": "items/consumables",
+    "version": "26.1",
+    "label": "Consumables",
+    "url": "https://docs.neoforged.net/docs/items/consumables/",
+    "tags": [
+      "item",
+      "creative-tab",
+      "tooltip",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "Consumables are [items](/docs/items/) which can be used over a period of time, 'consuming' them in the process. Anything that can be eaten or drunk in Minecraft is a consumable of some kind.",
+    "sections": [
+      {
+        "title": "The Consumable Data Component",
+        "level": 2,
+        "summary": "Any item that can be consumed has the DataComponents#CONSUMABLE component. The backing record Consumable defines how the item is consumed and what effects to apply after consumption."
+      },
+      {
+        "title": "ConsumeEffect",
+        "level": 3,
+        "summary": "When a consumable has finished being used, you may want to trigger some kind of logic to execute like adding a potion effect. These are handled by ConsumeEffects, which are added to the Consumable ..."
+      },
+      {
+        "title": "ItemUseAnimation",
+        "level": 3,
+        "summary": "ItemUseAnimation is functionally an enum which doesn't define anything besides its id and name. Its uses are hardcoded into ItemHandRenderer#renderArmWithItem for first person and AvatarRenderer#ge..."
+      },
+      {
+        "title": "Overriding Sounds on Entity",
+        "level": 3,
+        "summary": "Sometimes, an entity may want to play a different sound while consuming an item. In those instances, the LivingEntity instance can implement Consumable.OverrideConsumeSound and have getConsumeSound..."
+      },
+      {
+        "title": "ConsumableListener",
+        "level": 2,
+        "summary": "While consumables and effects that are applied after consumption are useful, sometimes the properties of an effect need to be externally available as other [data components][datacomponents]. For ex..."
+      },
+      {
+        "title": "Food",
+        "level": 3,
+        "summary": "Food is one type of ConsumableListener that is part of the hunger system. All of the functionality for food items is already handled within the Item class, so simply adding the FoodProperties to Da..."
+      },
+      {
+        "title": "Potion Contents",
+        "level": 3,
+        "summary": "The contents of a potion via PotionContents is another ConsumableListener whose effects are applied on consumption. They contain an optional potion to apply, an optional tint for the potion color, ..."
+      }
+    ]
+  },
+  {
+    "id": "items/datacomponents",
+    "version": "26.1",
+    "label": "Data Components",
+    "url": "https://docs.neoforged.net/docs/items/datacomponents/",
+    "tags": [
+      "item",
+      "creative-tab",
+      "tooltip",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "Data components are key-value pairs within a map used to store data on the `Holder` of a registry object. Each piece of data, such as firework explosions or tools, are stored as actual objects on the holder, making the values visible and operable without having to dynamically transform a general enc",
+    "sections": [
+      {
+        "title": "DataComponentType",
+        "level": 2,
+        "summary": "Each data component has an associated DataComponentType, where T is the component value type. The DataComponentType represents a key to reference the stored component value along with some codecs t..."
+      },
+      {
+        "title": "Creating Custom Data Components",
+        "level": 3,
+        "summary": "The component value associated with the DataComponentType must implement hashCode and equals and should be considered **immutable** when stored."
+      },
+      {
+        "title": "The Component Map",
+        "level": 2,
+        "summary": "All data components are stored within a DataComponentMap, using the DataComponentType as the key and the object as the value. DataComponentMap functions similarly to a read-only Map. As such, there..."
+      },
+      {
+        "title": "PatchedDataComponentMap",
+        "level": 3,
+        "summary": "As the default DataComponentMap only provides methods for read-based operations, write-based operations are supported using the subclass PatchedDataComponentMap. This includes #setting the value of..."
+      },
+      {
+        "title": "The Component Getter",
+        "level": 2,
+        "summary": "All instances that can provide data components usually implement DataComponentGetter. DataComponentGetter effectively gets the component values for a data type, either through a backing map or crea..."
+      },
+      {
+        "title": "The Component Holder",
+        "level": 2,
+        "summary": "All instances that reference the backing data component map implement DataComponentHolder, which extends DataComponentGetter. DataComponentHolder is effectively a delegate to the read-only methods ..."
+      },
+      {
+        "title": "MutableDataComponentHolder",
+        "level": 3,
+        "summary": "MutableDataComponentHolder is an interface provided by NeoForge to support write-based methods to the component map. All implementations within Vanilla and NeoForge store data components using a Pa..."
+      },
+      {
+        "title": "Adding Default Data Components to Items",
+        "level": 2,
+        "summary": "Although the mutable data components are stored on an ItemStack, a map of default components can be set through Item, to be stored on the Holder and finally passed to the ItemStack as a prototype w..."
+      },
+      {
+        "title": "Using Custom Component Holders",
+        "level": 2,
+        "summary": "To create a custom data component holder, the holder object simply needs to implement MutableDataComponentHolder and implement the missing methods. The holder object must contain a field representi..."
+      },
+      {
+        "title": "DataComponentPatch and Codecs",
+        "level": 3,
+        "summary": "To persist components to disk or send information across the network, the holder could send the entire DataComponentMap. However, this is generally a waste of information as any defaults will alrea..."
+      }
+    ]
+  },
+  {
+    "id": "items/interactions",
+    "version": "26.1",
+    "label": "Interactions",
+    "url": "https://docs.neoforged.net/docs/items/interactions/",
+    "tags": [
+      "item",
+      "creative-tab",
+      "tooltip",
+      "neoforge-core",
+      "has-code",
+      "data-components"
+    ],
+    "firstParagraph": "This page aims to make the fairly complex and confusing process of things being left-clicked, right-clicked or middle-clicked by the player more understandable, as well as clarifying what result to use where and why.",
+    "sections": [
+      {
+        "title": "HitResults",
+        "level": 2,
+        "summary": "For the purpose of determining what the player is currently looking at, Minecraft uses a HitResult. A HitResult is somewhat equivalent to a ray cast result in other game engines, and most notably c..."
+      },
+      {
+        "title": "Left-Clicking an Item",
+        "level": 2,
+        "summary": "- It is checked that all required feature flags for the ItemStack in your main hand are enabled. If this check fails, the pipeline ends. - If Player#cannotAttackWithItem, which checks the attack de..."
+      },
+      {
+        "title": "Right-Clicking an Item",
+        "level": 2,
+        "summary": "During the right-clicking pipeline, a number of methods returning one of two result types (see below) are called. Most of these methods cancel the pipeline if an explicit success or an explicit fai..."
+      },
+      {
+        "title": "InteractionResult",
+        "level": 3,
+        "summary": "InteractionResult is a sealed interface that represents the result of some interaction between an item or an empty hand and some object (e.g. entities, blocks, etc.). The interface is broken into f..."
+      },
+      {
+        "title": "Middle-Clicking",
+        "level": 2,
+        "summary": "- If the HitResult in Minecraft.getInstance().hitResult is null or of type MISS, the pipeline ends. - InputEvent.InteractionKeyMappingTriggered is fired with the left mouse button and the main hand..."
+      }
+    ]
+  },
+  {
+    "id": "items/mobeffects",
+    "version": "26.1",
+    "label": "Mob Effects & Potions",
+    "url": "https://docs.neoforged.net/docs/items/mobeffects/",
+    "tags": [
+      "item",
+      "creative-tab",
+      "tooltip",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "Status effects, sometimes known as potion effects and referred to in-code as `MobEffect`s, are effects that influence a [LivingEntity](/docs/entities/livingentity) every tick. This article explains how to use them, what the difference between an effect and a potion is, and how to add your own.",
+    "sections": [
+      {
+        "title": "Terminology",
+        "level": 2,
+        "summary": "- A MobEffect affects an entity every tick. Like blocks or items, MobEffects are registry objects, meaning they must be registered and are singletons."
+      },
+      {
+        "title": "MobEffects",
+        "level": 2,
+        "summary": "To create your own MobEffect, extend the MobEffect class:"
+      },
+      {
+        "title": "InstantenousMobEffect",
+        "level": 3,
+        "summary": "If you want to create an instant effect, you can use the helper class InstantenousMobEffect instead of the regular MobEffect class, like so:"
+      },
+      {
+        "title": "Events",
+        "level": 3,
+        "summary": "Many effects have their logic applied in other places. For example, the levitation effect is applied in the living entity movement handler. For modded MobEffects, it often makes sense to apply them..."
+      },
+      {
+        "title": "MobEffectInstances",
+        "level": 2,
+        "summary": "A MobEffectInstance is, simply put, an effect applied to an entity. Creating a MobEffectInstance is done by calling the constructor:"
+      },
+      {
+        "title": "Using MobEffectInstances",
+        "level": 3,
+        "summary": "A MobEffectInstance can be added to a LivingEntity like so:"
+      },
+      {
+        "title": "Potions",
+        "level": 2,
+        "summary": "Potions are created by calling the constructor of Potion with the MobEffectInstances you want the potion to have. For example:"
+      },
+      {
+        "title": "Brewing",
+        "level": 3,
+        "summary": "Now that your potion is added, potion items are available for your potion. However, there is no way to obtain your potion in survival, so let's change that!"
+      }
+    ]
+  },
+  {
+    "id": "items/tools",
+    "version": "26.1",
+    "label": "Tools",
+    "url": "https://docs.neoforged.net/docs/items/tools/",
+    "tags": [
+      "item",
+      "creative-tab",
+      "tooltip",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "Tools are [items](/docs/items/) whose primary use is to break [blocks](/docs/blocks/). Many mods add new tool sets (for example copper tools) or new tool types (for example hammers).",
+    "sections": [
+      {
+        "title": "Custom Tool Sets",
+        "level": 2,
+        "summary": "A tool set typically consists of six items: a pickaxe, an axe, a shovel, a hoe, a sword, and a spear (swords and spears aren't tools in the classical sense, but are included here for consistency as..."
+      },
+      {
+        "title": "Tags",
+        "level": 3,
+        "summary": "When creating a ToolMaterial, it is assigned a block tag containing blocks that will not drop anything if broken with this tool. For example, the minecraft:incorrect_for_stone_tool tag contains blo..."
+      },
+      {
+        "title": "Custom Tools",
+        "level": 2,
+        "summary": "Custom tools can be created by adding a Tool data component (via DataComponents#TOOL) to the list of default components on your item via Item.Properties#component."
+      },
+      {
+        "title": "ItemAbilitys",
+        "level": 2,
+        "summary": "ItemAbilitys are an abstraction over what an item can and cannot do. This includes both left-click and right-click behavior. NeoForge provides default ItemAbilitys in the ItemAbilities class:"
+      }
+    ]
+  },
+  {
+    "id": "misc/debugprofiler",
+    "version": "26.1",
+    "label": "Debug Profiler",
+    "url": "https://docs.neoforged.net/docs/misc/debugprofiler/",
+    "tags": [
+      "misc",
+      "config",
+      "logging",
+      "has-code"
+    ],
+    "firstParagraph": "Minecraft provides a Debug Profiler that provides system data, current game settings, JVM data, level data, and sided tick information to find time consuming code. Considering things like `TickEvent`s and ticking `BlockEntity`s, this can be very useful for modders and server owners that want to find",
+    "sections": [
+      {
+        "title": "Using the Debug Profiler",
+        "level": 2,
+        "summary": "The Debug Profiler is very simple to use. It requires the debug keybind F3 + L to start the profiler. After 10 seconds, it will automatically stop; however, it can be stopped earlier by pressing th..."
+      },
+      {
+        "title": "Reading a Profiling result",
+        "level": 2,
+        "summary": "Within each sided folder (client and server), you will find a profiling.txt file containing the result data. At the top, it first tells you how long in milliseconds it was running and how many tick..."
+      },
+      {
+        "title": "Profiling your own code",
+        "level": 2,
+        "summary": "The Debug Profiler has basic support for Entity and BlockEntity. If you would like to profile something else, you may need to manually create your sections like so:"
+      }
+    ]
+  },
+  {
+    "id": "misc/gametest",
+    "version": "26.1",
+    "label": "Game Tests",
+    "url": "https://docs.neoforged.net/docs/misc/gametest/",
+    "tags": [
+      "misc",
+      "config",
+      "logging",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "firstParagraph": "Game Tests are a way to run in-game unit tests. The system was designed to be scalable and in parallel to run large numbers of different tests efficiently. Testing object interactions and behaviors are simply a few of the many applications of this framework. As the system can either be implemented f",
+    "sections": [
+      {
+        "title": "Creating a Game Test",
+        "level": 2,
+        "summary": "A standard Game Test follows four basic steps:"
+      },
+      {
+        "title": "The Test Data",
+        "level": 2,
+        "summary": "All test instances hold some TestData which defines how a game test should be run, from its initial configurations to the environment and structure template to use. As the TestData is serialized as..."
+      },
+      {
+        "title": "Structure Templates",
+        "level": 2,
+        "summary": "Game Tests are performed within scenes loaded by structures, or templates. All templates define the dimensions of the scene and the initial data (blocks and entities) that will be loaded. The templ..."
+      },
+      {
+        "title": "Test Environments",
+        "level": 2,
+        "summary": "All game tests run in some TestEnvironmentDefinition, determining how the current ServerLevel should be set up. Then, once the test has finished, the environment is tore down, letting the next inst..."
+      },
+      {
+        "title": "Game Rules",
+        "level": 3,
+        "summary": "This environment type sets the game rules to use for the test. During teardown, the game rules are reset to their default value."
+      },
+      {
+        "title": "Clock Time",
+        "level": 3,
+        "summary": "This environment type sets the specified WorldClock time to some non-negative integer, like how the /time of  set  command is used."
+      },
+      {
+        "title": "Timeline Attributes",
+        "level": 3,
+        "summary": "This environment type sets the timelines to apply to the environment attributes in a level."
+      },
+      {
+        "title": "Weather",
+        "level": 3,
+        "summary": "This environment type sets the weather, like to how the /weather command is used."
+      },
+      {
+        "title": "Minecraft Functions",
+        "level": 3,
+        "summary": "This environment type provides two Identifiers to mcfunctions to setup and teardown the level, respectively."
+      },
+      {
+        "title": "Composites",
+        "level": 3,
+        "summary": "Multiple environments can be merged using the composite environment type. The list of definitions can take in either a reference to an existing definiton, or an inlined definition."
+      },
+      {
+        "title": "Custom Definition Types",
+        "level": 3,
+        "summary": "A custom TestEnvironmentDefinition type provides three methods: setup to modify the ServerLevel and return the previous SavedDataType generic state, teardown to reset what was modified using the Sa..."
+      },
+      {
+        "title": "The Test Function",
+        "level": 2,
+        "summary": "The basic concept of game tests are structured around running some method that takes in a GameTestHelper and returning nothing. Calling the methods within the GameTestHelper determines whether the ..."
+      },
+      {
+        "title": "Relative Positioning",
+        "level": 3,
+        "summary": "All test functions translate relative coordinates within the structure template scene to its absolute coordinates using the structure block's current location. To allow for easy conversion between ..."
+      },
+      {
+        "title": "Successful Completion",
+        "level": 3,
+        "summary": "A test function is responsible for one thing: marking the test was successful on a valid completion. If no success state was achieved before the timeout is reached (as defined by TestData#maxTicks)..."
+      },
+      {
+        "title": "Scheduling Actions",
+        "level": 3,
+        "summary": "Not all actions will occur when a test begins. Actions can be scheduled to occur at specific times or intervals:"
+      },
+      {
+        "title": "Assertions",
+        "level": 3,
+        "summary": "At any time during a Game Test, an assertion can be made to check if a given condition is true. There are numerous assertion methods within GameTestHelper; however, it simplifies to throwing a Game..."
+      },
+      {
+        "title": "Registering The Test Instance",
+        "level": 2,
+        "summary": "With the TestData, TestEnvironmentDefinition, and test function in hand, we can now link everything together through a GameTestInstance. Each test instance is what represents a single game test to ..."
+      },
+      {
+        "title": "Function-Based Tests",
+        "level": 3,
+        "summary": "FunctionGameTestInstance links a TestData to some registered test function. The test instance will run the test function when called."
+      },
+      {
+        "title": "Block-Based Tests",
+        "level": 3,
+        "summary": "BlockBasedTestInstance is a special kind of test instance that relies on redstone signals sent and received by Blocks#TEST_BLOCKs. For this test to work, the structure template must contain at leas..."
+      },
+      {
+        "title": "Custom Test Instances",
+        "level": 3,
+        "summary": "If you need to implement your own test-based logic for whatever reason, GameTestInstance can be extended. Two methods must be implemented: run, which represents the test function; and typeDescripti..."
+      },
+      {
+        "title": "Skipping the Datapack",
+        "level": 3,
+        "summary": "If you don't want to use a datapack to construct your game tests, you can instead listen to the RegisterGameTestsEvent on the mod event bus and register your environments and test instances via reg..."
+      },
+      {
+        "title": "Running Game Tests",
+        "level": 2,
+        "summary": "Game Tests can be run using the /test command. The test command is highly configurable; however, only a few are of importance to running tests:"
+      },
+      {
+        "title": "Buildscript Configurations",
+        "level": 2,
+        "summary": "Game Tests provide additional configuration settings within a buildscript (the build.gradle file) to run and integrate into different settings."
+      },
+      {
+        "title": "Game Test Server Run Configuration",
+        "level": 3,
+        "summary": "The Game Test Server is a special configuration which runs a build server. The build server returns an exit code of the number of required, failed Game Tests. All failed tests, whether required or ..."
+      },
+      {
+        "title": "Enabling Game Tests in Other Run Configurations",
+        "level": 3,
+        "summary": "By default, only the client and gameTestServer run configurations have Game Tests enabled. If another run configuration should run Game Tests, then the neoforge.enableGameTest property must be set ..."
+      }
+    ]
+  },
+  {
+    "id": "misc/identifier",
+    "version": "26.1",
+    "label": "Identifiers",
+    "url": "https://docs.neoforged.net/docs/misc/identifier/",
+    "tags": [
+      "misc",
+      "config",
+      "logging",
+      "neoforge-core",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "`Identifier`s are one of the most important things in Minecraft. They are used as keys in [registries](/docs/concepts/registries), as identifiers for data or resource files, as references to models in code, and in a lot of other places. An `Identifier` consists of two parts: a namespace and a path, ",
+    "sections": [
+      {
+        "title": "Resolving Identifiers",
+        "level": 2,
+        "summary": "Some places, for example registries, use Identifiers directly. Some other places, however, will resolve the Identifier as needed. For example:"
+      },
+      {
+        "title": "ResourceKeys",
+        "level": 2,
+        "summary": "ResourceKeys combine a registry id with a registry name. An example would be a registry key with the registry id minecraft:item and the registry name minecraft:diamond_sword. Unlike an Identifier, ..."
+      }
+    ]
+  },
+  {
+    "id": "misc/keymappings",
+    "version": "26.1",
+    "label": "Key Mappings",
+    "url": "https://docs.neoforged.net/docs/misc/keymappings/",
+    "tags": [
+      "misc",
+      "config",
+      "logging",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "A key mapping, or key binding, defines a particular action that should be tied to an input: mouse click, key press, etc. Each action defined by a key mapping can be checked whenever the client can take an input. Furthermore, each key mapping can be assigned to any input through the [Controls option ",
+    "sections": [
+      {
+        "title": "Registering a KeyMapping",
+        "level": 2,
+        "summary": "A KeyMapping can be registered by listening to the RegisterKeyMappingsEvent on the mod event bus only on the physical client and calling #register."
+      },
+      {
+        "title": "Creating a KeyMapping",
+        "level": 2,
+        "summary": "A KeyMapping can be created using it's constructor. The KeyMapping takes in a translation key defining the name of the mapping, the default input of the mapping, and a KeyMapping.Category defining ..."
+      },
+      {
+        "title": "Default Inputs",
+        "level": 3,
+        "summary": "Each key mapping has a default input associated with it. This is provided through InputConstants.Key. Each input consists of an InputConstants.Type, which defines what device is providing the input..."
+      },
+      {
+        "title": "IKeyConflictContext",
+        "level": 3,
+        "summary": "Not all mappings are used in every context. Some mappings are only used in a GUI, while others are only used purely in game. To avoid mappings of the same key used in different contexts conflicting..."
+      },
+      {
+        "title": "KeyModifier",
+        "level": 3,
+        "summary": "Modders may not want mappings to have the same behavior if a modifier key is held at the same (e.g. G vs CTRL + G). To remedy this, NeoForge adds an additional parameter to the constructor to take ..."
+      },
+      {
+        "title": "Checking a KeyMapping",
+        "level": 2,
+        "summary": "A KeyMapping can be checked to see whether it has been clicked. Depending on when, the mapping can be used in a conditional to apply the associated logic."
+      },
+      {
+        "title": "Within the Game",
+        "level": 3,
+        "summary": "Within the game, a mapping should be checked by listening to ClientTickEvent.Post on the event bus and checking KeyMapping#consumeClick within a while loop. #consumeClick will return true only the ..."
+      },
+      {
+        "title": "Inside a GUI",
+        "level": 3,
+        "summary": "Within a GUI, a mapping can be checked within one of the GuiEventListener methods using IKeyMappingExtension#isActiveAndMatches. The most common methods which can be checked are #keyPressed and #mo..."
+      }
+    ]
+  },
+  {
+    "id": "misc/updatechecker",
+    "version": "26.1",
+    "label": "NeoForge Update Checker",
+    "url": "https://docs.neoforged.net/docs/misc/updatechecker/",
+    "tags": [
+      "misc",
+      "config",
+      "logging",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "NeoForge provides a very lightweight, opt-in, update-checking framework. If any mods have an available update, it will show a flashing icon on the 'Mods' button of the main menu and mod list along with the respective changelogs. It *does not* download updates automatically.",
+    "sections": [
+      {
+        "title": "Getting Started",
+        "level": 2,
+        "summary": "The first thing you want to do is specify the updateJSONURL parameter in your mods.toml file. The value of this parameter should be a valid URL pointing to an update JSON file. This file can be hos..."
+      },
+      {
+        "title": "Update JSON format",
+        "level": 2,
+        "summary": "The JSON itself has a relatively simple format as follows:"
+      },
+      {
+        "title": "Retrieving Update Check Results",
+        "level": 2,
+        "summary": "You can retrieve the results of the NeoForge Update Checker using VersionChecker#getResult(IModInfo). You can obtain your IModInfo via ModContainer#getModInfo, where ModContainer can be added as a ..."
+      }
+    ]
+  },
+  {
+    "id": "rendering/particles",
+    "version": "26.1",
+    "label": "Client Particles",
+    "url": "https://docs.neoforged.net/docs/rendering/particles/",
+    "tags": [
+      "rendering",
+      "model",
+      "texture",
+      "shader",
+      "has-code"
+    ],
+    "firstParagraph": "Particles are visual effects that polish the game and add immersion. Being mostly visual in nature, critical parts exist only on the physical (and logical) client [side](/docs/concepts/sides).",
+    "sections": [
+      {
+        "title": "The Particle class",
+        "level": 2,
+        "summary": "A Particle defines the client representation of what is spawned in the world and displayed to the player. Most properties and basic physics are controlled by fields such as gravity, lifetime, hasPh..."
+      },
+      {
+        "title": "A Single Quad",
+        "level": 2,
+        "summary": "Particles that extend SingleQuadParticle draw a single quad with some atlas sprite to the screen. There are many helpers provided in the class, from setting the size of the particle (via the quadSi..."
+      },
+      {
+        "title": "Particle Groups and Render States",
+        "level": 2,
+        "summary": "If a particle requires something more complex than a quad, then it will need its own ParticleGroup, where P is the type of the Particle. ParticleGroups are responsible for ticking a defined subset ..."
+      },
+      {
+        "title": "ParticleProvider",
+        "level": 2,
+        "summary": "Once a particle for some particle type has been created, the particle type must be linked through a ParticleProvider. ParticleProvider is a client-only class responsible for actually creating our P..."
+      }
+    ]
+  },
+  {
+    "id": "rendering/screens",
+    "version": "26.1",
+    "label": "Screens",
+    "url": "https://docs.neoforged.net/docs/rendering/screens/",
+    "tags": [
+      "rendering",
+      "model",
+      "texture",
+      "shader",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "Screens are typically the base of all Graphical User Interfaces (GUIs) in Minecraft: taking in user input, verifying it on the server, and syncing the resulting action back to the client. They can be combined with [menus](/docs/inventories/menus) to create an communication network for inventory-like",
+    "sections": [
+      {
+        "title": "Rendering a GUI",
+        "level": 2,
+        "summary": "Rendering a GUI takes place in two steps: the submission phase and the render phase."
+      },
+      {
+        "title": "Relative Coordinates",
+        "level": 3,
+        "summary": "Whenever anything is submitted to the render state, there needs to be some coordinates which specifies where the element will be rendered. With numerous abstractions, most of Minecraft's rendering ..."
+      },
+      {
+        "title": "GuiGraphicsExtractor",
+        "level": 3,
+        "summary": "Any element submitted to the GuiRenderState is typically handled via GuiGraphicsExtractor. GuiGraphicsExtractor is the first parameter to almost every method during the submission phase, containing..."
+      },
+      {
+        "title": "Node Trees and Strata",
+        "level": 3,
+        "summary": "When submitting an element to the GuiRenderState, it isn't just added to some list. If that were the case, some elements may be completely covered by other elements depending on the order of submis..."
+      },
+      {
+        "title": "GuiElementRenderState",
+        "level": 3,
+        "summary": "A GuiElementRenderState holds the metadata on how a GUI element is rendered to the screen. The element render state extends ScreenArea to define the bounds on the screen. The bounds should always e..."
+      },
+      {
+        "title": "Element Ordering",
+        "level": 3,
+        "summary": "So far, the elements shown above have only been operating on XY coordinates. The Z coordinate is ignored in GUI rendering, as all of the elements drawn to the screen use a RenderPipeline that disab..."
+      },
+      {
+        "title": "Methods in GuiGraphicsExtractor",
+        "level": 2,
+        "summary": "GuiGraphicsExtractor contains methods used to submit commonly used objects for rendering. These fall into six categories: colored rectangles, strings, textures, items, tooltips, and picture-in-pict..."
+      },
+      {
+        "title": "Colored Rectangles",
+        "level": 3,
+        "summary": "Colored rectangles are submitted using a ColoredRectangleRenderState. All fill methods can take in an optional RenderPipeline and TextureSetup to specify how the rectangle should be rendered. There..."
+      },
+      {
+        "title": "Strings",
+        "level": 3,
+        "summary": "Strings, Components, and FormattedCharSequences are submitted using a GuiTextRenderState. Each string is drawn through the provided Font, which is used to create a BakedGlyph.GlyphInstance and opti..."
+      },
+      {
+        "title": "Textures",
+        "level": 3,
+        "summary": "Textures are submitted through a BlitRenderState, hence the method name blit. The BlitRenderState copies the bits of an image and renders them to the screen through the RenderPipeline parameter. Ea..."
+      },
+      {
+        "title": "Items",
+        "level": 3,
+        "summary": "Items are submitted using a GuiItemRenderState. The item render state is then transformed into a BlitRenderState or OversizedItemRenderState, depending on the item bounds and client item properties..."
+      },
+      {
+        "title": "Tooltips",
+        "level": 3,
+        "summary": "Tooltips are submitted through a variety of the above render states. The tooltip methods are broken into two categories: 'next frame' and 'immediate'. Both methods takes in the Font to render the t..."
+      },
+      {
+        "title": "Picture-in-Picture",
+        "level": 3,
+        "summary": "Picture-in-Picture (PiP) allows for arbitrary objects to be drawn to the screen. Instead of drawing directly to the output, PiP draws the object to an intermediary texture, or a 'picture', that is ..."
+      },
+      {
+        "title": "Renderable",
+        "level": 2,
+        "summary": "Renderables are essentially objects that are rendered. These include screens, buttons, chat boxes, lists, etc. Renderables only have one method: #extractRenderState. This takes in the GuiGraphicsEx..."
+      },
+      {
+        "title": "GuiEventListener",
+        "level": 2,
+        "summary": "Any screen in Minecraft implements GuiEventListener. GuiEventListeners are responsible for handling user interaction with the screen. These include inputs from the mouse (movement, clicked, release..."
+      },
+      {
+        "title": "ContainerEventHandler",
+        "level": 3,
+        "summary": "Almost synonymous with GuiEventListeners are their subtype: ContainerEventHandlers. These are responsible for handling user interaction on screens which contain widgets, managing which is currently..."
+      },
+      {
+        "title": "NarratableEntry",
+        "level": 2,
+        "summary": "NarratableEntrys are elements which can be spoken about through Minecraft's accessibility narration feature. Each element can provide different narration depending on what is hovered or selected, p..."
+      },
+      {
+        "title": "The Screen Subtype",
+        "level": 2,
+        "summary": "With all of the above knowledge, a basic screen can be constructed. To make it easier to understand, the components of a screen will be mentioned in the order they are typically encountered."
+      },
+      {
+        "title": "Initialization",
+        "level": 3,
+        "summary": "Once a screen has been initialized, the #init method is called. The init method sets the initial settings inside the screen from the Minecraft instance to the relative width and height as scaled by..."
+      },
+      {
+        "title": "Ticking Screens",
+        "level": 3,
+        "summary": "Screens also tick using the #tick method to perform some level of client side logic for rendering purposes."
+      },
+      {
+        "title": "Input Handling",
+        "level": 3,
+        "summary": "Since screens are subtypes of GuiEventListeners, the input handlers can also be overridden, such as for handling logic on a specific key press."
+      },
+      {
+        "title": "Rendering the Screen",
+        "level": 3,
+        "summary": "Screens submit their elements for rendering through #extractRenderStateWithTooltipAndSubtitles in three different strata: the background stratum, the element stratum, and the optional hoverable str..."
+      },
+      {
+        "title": "Closing the Screen",
+        "level": 3,
+        "summary": "When a screen is closed, two methods handle the teardown: #onClose and #removed."
+      },
+      {
+        "title": "AbstractContainerScreen",
+        "level": 2,
+        "summary": "If a screen is directly attached to a menu, then an AbstractContainerScreen should be subclassed instead. An AbstractContainerScreen acts as the screen and input handler of a menu and contains logi..."
+      },
+      {
+        "title": "Menu Access",
+        "level": 3,
+        "summary": "As the menu is passed into the screen, any values that were within the menu and synced (either through slots, data slots, or a custom system) can now be accessed through the menu field."
+      },
+      {
+        "title": "Container Tick",
+        "level": 3,
+        "summary": "Container screens tick within the #tick method when the player is alive and looking at the screen via #containerTick. This essentially takes the place of tick within container screens, with its mos..."
+      },
+      {
+        "title": "Rendering the Container Screen",
+        "level": 3,
+        "summary": "The container screen uses all three strata to submit its elements. First, the background stratum submits the background texture by overriding #extractBackground. Then, the element stratum submits t..."
+      },
+      {
+        "title": "Registering an AbstractContainerScreen",
+        "level": 2,
+        "summary": "To use an AbstractContainerScreen with a menu, it needs to be registered. This can be done by calling register within the RegisterMenuScreensEvent on the mod event bus."
+      }
+    ]
+  },
+  {
+    "id": "resources/client/models",
+    "version": "26.1",
+    "label": "Models",
+    "url": "https://docs.neoforged.net/docs/resources/client/models/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "Models are JSON files that determine the visual shape and texture(s) of a block or item. A model consists of cuboid elements, each with their own size, that then get assigned a texture to each face.",
+    "sections": [
+      {
+        "title": "Specification",
+        "level": 2,
+        "summary": "*See also: Model on the Minecraft Wiki*"
+      },
+      {
+        "title": "Elements",
+        "level": 3,
+        "summary": "An element is a JSON representation of a cuboid object. It has the following properties:"
+      },
+      {
+        "title": "Root Transforms",
+        "level": 3,
+        "summary": "Adding the transform property at the top level of a model tells the loader that a transformation to all geometry should be applied right before the rotations in a blockstate file (for block models)..."
+      },
+      {
+        "title": "Blockstate Files",
+        "level": 2,
+        "summary": "*See also: Blockstate files on the Minecraft Wiki*"
+      },
+      {
+        "title": "Client Items",
+        "level": 2,
+        "summary": "Client items are used by the game to assign a model or multiple models to the states of the ItemStack. While there are some item-specific fields in the model JSON, client items consume models to re..."
+      },
+      {
+        "title": "Tinting",
+        "level": 2,
+        "summary": "Some blocks, such as grass or leaves, change their texture color based on their location and/or properties. Model elements can specify a tint index on their faces, which will allow a color handler ..."
+      },
+      {
+        "title": "Registering Standalone Models",
+        "level": 2,
+        "summary": "Models that are not associated with a block or item in some way, but are still required in other contexts (e.g. block entity renderers), can be registered through ModelEvent.RegisterStandalone:"
+      }
+    ]
+  },
+  {
+    "id": "resources/client/models/datagen",
+    "version": "26.1",
+    "label": "Model Datagen",
+    "url": "https://docs.neoforged.net/docs/resources/client/models/datagen/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "firstParagraph": "Like most JSON data, block and item models, along with their necessary blockstate files and [client items](/docs/resources/client/models/items), can be [datagenned](/docs/resources/#data-generation). This is all handled through the vanilla `ModelProvider`, with extensions provided by NeoForge via th",
+    "sections": [
+      {
+        "title": "Model Templates",
+        "level": 2,
+        "summary": "Every model starts out as a ModelTemplate. For vanilla, the ModelTemplate acts as a parent to some pre-generated model file, defining the parent model, the required texture slots, and the file suff..."
+      },
+      {
+        "title": "Creating the Model Instance",
+        "level": 3,
+        "summary": "Now that we have a ModelTemplate, we can generate the model itself by calling one of the ModelTemplate#create* methods. Although each create method takes in different parameters, at their core, the..."
+      },
+      {
+        "title": "ModelProvider",
+        "level": 2,
+        "summary": "Both block and item model datagen utilize generators provided by registerModels, named BlockModelGenerators and ItemModelGenerators, respectively. Each generator generates both the model JSON along..."
+      },
+      {
+        "title": "Block Model Datagen",
+        "level": 3,
+        "summary": "Now, to actually generate blockstate and block model files, you can either call one of the many public methods in BlockModelGenerators within ModelProvider#registerModels, or pass in the generated ..."
+      },
+      {
+        "title": "Item Model Datagen",
+        "level": 2,
+        "summary": "Generating item models is considerably simpler, which is mainly due to all of the helper methods for within ItemModelGenerators and ItemModelUtils for property information. Similar to above, you ca..."
+      }
+    ]
+  },
+  {
+    "id": "resources/client/models/items",
+    "version": "26.1",
+    "label": "Client Items",
+    "url": "https://docs.neoforged.net/docs/resources/client/models/items/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "Client Items are the in-code representation of how an `ItemStack` should be submitted for rendering within the game, specifying what models to use given what state. The client items are located within the `items` subdirectory within the [assets folder](/docs/resources/#assets), specified by the rela",
+    "sections": [
+      {
+        "title": "Overview",
+        "level": 2,
+        "summary": "The JSON of a client item can be broken into two parts: the model, defined by model; and the properties, defined by properties. The model is responsible for defining what model JSONs to use when su..."
+      },
+      {
+        "title": "A Basic Model",
+        "level": 2,
+        "summary": "The type field within model determines how to choose the model being submitted to render for the item. The simplest type is handled by minecraft:model (or CuboidItemModelWrapper), which functionall..."
+      },
+      {
+        "title": "Local Transforms",
+        "level": 3,
+        "summary": "Most client item models can specify a Transformation for the item model, similar to model JSONs. These Transformations are applied after the model JSON transform for the associated display context...."
+      },
+      {
+        "title": "Tinting",
+        "level": 3,
+        "summary": "Like most models, client items can change the color of the specified texture based on the properties of the stack. As such, the minecraft:model type has the tints field to define the opaque colors ..."
+      },
+      {
+        "title": "Composite Models",
+        "level": 2,
+        "summary": "Sometimes, you may want to register multiple models for a single item. While this can be done directly with the composite model loader, for item models, there is a custom minecraft:composite type w..."
+      },
+      {
+        "title": "Property Models",
+        "level": 2,
+        "summary": "Some items change their state depending on the data stored in their stack (e.g., pulling a bow, breaking an elytra, a clock when in a given dimension, etc.). To allow models to change based on stat..."
+      },
+      {
+        "title": "Range Dispatch Models",
+        "level": 3,
+        "summary": "Range dispatch models have the type define some RangeSelectItemModelProperty to get some float to switch the model on. Each entry then has some threshold value which the float must be greater than ..."
+      },
+      {
+        "title": "Select Models",
+        "level": 3,
+        "summary": "Select models are similar to range dispatch models, but they change switch based on some value defined by a SelectItemModelProperty, like a switch statement for an enum. The model chosen is the pro..."
+      },
+      {
+        "title": "Conditional Models",
+        "level": 3,
+        "summary": "Conditional models are the simplest out of the three. The type defines some ConditionalItemModelProperty to get a boolean to switch the model on. The model chosen based on whether the returned bool..."
+      },
+      {
+        "title": "Special Models",
+        "level": 2,
+        "summary": "Not all models can be represented using the basic model JSON. Some models can have dynamic components, or use existing Models created for a BlockEntityRenderer. In these instances, there is a speci..."
+      },
+      {
+        "title": "Dynamic Fluid Container",
+        "level": 2,
+        "summary": "NeoForge adds an item model that constructs a dynamic fluid container, capable of re-texturing itself at runtime to match the contained fluid."
+      },
+      {
+        "title": "Manually Submitting an Item for Rendering",
+        "level": 2,
+        "summary": "If you need to submit an item feature, such as in some BlockEntityRenderer or EntityRenderer, it can be achieved through three steps. First, the renderer in question creates an ItemStackRenderState..."
+      },
+      {
+        "title": "Custom Item Model Definitions",
+        "level": 2,
+        "summary": "Creating your own ItemModel is broken into three parts: the ItemModel instance used to update the render state, the ItemModel.Unbaked instance used to read and write to JSON, and the registration t..."
+      }
+    ]
+  },
+  {
+    "id": "resources/client/models/modelloaders",
+    "version": "26.1",
+    "label": "Custom Model Loaders",
+    "url": "https://docs.neoforged.net/docs/resources/client/models/modelloaders/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "A model is simply a shape. It can be a cube, a collection of cubes, a collection of triangles, or any other geometrical shape (or collection of geometrical shape). For most contexts, it is not relevant how a model is defined, as everything will end up baked into a `QuadCollection` anyway. As such, N",
+    "sections": [
+      {
+        "title": "Model Loaders",
+        "level": 2,
+        "summary": "The entry point for a block model remains the model JSON file. However, you can specify a loader field in the root of the JSON that will swap out the default loader for your own loader. A custom mo..."
+      },
+      {
+        "title": "Composite Model",
+        "level": 3,
+        "summary": "A composite model can be used to specify different model parts in the parent and only apply some of them in a child. This is best illustrated by an example. Consider the following parent model at e..."
+      },
+      {
+        "title": "Empty Model",
+        "level": 3,
+        "summary": "An empty model just renders nothing at all."
+      },
+      {
+        "title": "OBJ Model",
+        "level": 3,
+        "summary": "The OBJ model loader allows you to use Wavefront .obj 3D models in the game, allowing for arbitrary shapes (including triangles, circles, etc.) to be included in a model. The .obj model must be pla..."
+      },
+      {
+        "title": "Creating Custom Model Loaders",
+        "level": 3,
+        "summary": "To create your own model loader, you need four classes, plus an event handler:"
+      },
+      {
+        "title": "Block State Model Loaders",
+        "level": 2,
+        "summary": "As block state models are considered separate from the model JSON file, there are also custom NeoForge loaders, handled by specifying a type in a variant or multipart. A custom block state model lo..."
+      },
+      {
+        "title": "Composite Block State Model",
+        "level": 3,
+        "summary": "A composite block state model can be used to render multiple BlockStateModels together."
+      },
+      {
+        "title": "Reusing the Default Model Loader",
+        "level": 3,
+        "summary": "In some contexts, it makes sense to reuse the vanilla model loader and just building your model logic on top of that instead of outright replacing it. We can do so using a neat trick: in the model ..."
+      },
+      {
+        "title": "Creating Custom Block State Model Loaders",
+        "level": 3,
+        "summary": "To create your own block state model loader, you need five classes, plus an event handler:"
+      },
+      {
+        "title": "Block State Definition Loaders",
+        "level": 2,
+        "summary": "While individual block state models handle the loading of a single block state, block state definition loaders handle the entire loading of a block state file, handled by specifying a neoforge:defi..."
+      },
+      {
+        "title": "Creating Custom Block State Definition Loaders",
+        "level": 3,
+        "summary": "To create your own block state definition loader, you need two classes, plus an event handler:"
+      }
+    ]
+  },
+  {
+    "id": "resources/client/models/modelsystem",
+    "version": "26.1",
+    "label": "Understanding the Model System",
+    "url": "https://docs.neoforged.net/docs/resources/client/models/modelsystem/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "firstParagraph": "Models within Minecraft are simply a list of quads with attached textures. Each part of the modeling process has their own separate implementation, with the underlying model JSON deserialized into an `UnbakedModel`. In the end, each part of the pipelines takes in some `List` and properties necessary",
+    "sections": [
+      {
+        "title": "Common Models and Geometry",
+        "level": 2,
+        "summary": "The basic model JSON (in assets//models) are deserialized into an UnbakedModel. The UnbakedModel is generally one step short of its baked output, containing some general form of the general propert..."
+      },
+      {
+        "title": "Block State Definitions",
+        "level": 2,
+        "summary": "The block state definition JSON (in assets//blockstates) is compiled and baked into a BlockStateModel for every BlockState. The process of creating the BlockStateModel goes like so:"
+      },
+      {
+        "title": "Model Data",
+        "level": 3,
+        "summary": "Sometimes, a BlockStateModel may rely on the BlockEntity to determine what BlockStateModelParts to choose in collectParts. NeoForge provides the ModelData system to sync and pass data from the Bloc..."
+      },
+      {
+        "title": "Item Models",
+        "level": 2,
+        "summary": "The client item JSON (in assets//items) is compiled and baked into an ItemModel for a given Item to be used by the ItemStack. The process of creating the ItemModel goes like so:"
+      },
+      {
+        "title": "Perspectives",
+        "level": 3,
+        "summary": "Minecraft's render engine recognizes a total of 8 perspective types (9 if you include the in-code fallback) for item rendering. These are used in a model JSON's display block, and represented in co..."
+      },
+      {
+        "title": "Modifying a Baking Result",
+        "level": 2,
+        "summary": "Modifying an existing block state model or item stack model in-code can typically be done by wrapping the model in some sort of delegate. Block state models have DelegateBlockStateModel, while item..."
+      }
+    ]
+  },
+  {
+    "id": "resources/client/particles",
+    "version": "26.1",
+    "label": "Particles",
+    "url": "https://docs.neoforged.net/docs/resources/client/particles/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "firstParagraph": "Particles are visual effects commonly spawned using their associated particle type. They can be spawned both client and server [side](/docs/concepts/sides), but being mostly visual in nature, critical parts exist only on the physical (and logical) client side.",
+    "sections": [
+      {
+        "title": "Registering ParticleTypes",
+        "level": 2,
+        "summary": "Particles are registered using ParticleTypes. These work similar to EntityTypes or BlockEntityTypes, in that there's a Particle class - every spawned particle is an instance of that class -, and th..."
+      },
+      {
+        "title": "Custom ParticleTypes",
+        "level": 2,
+        "summary": "While for most cases SimpleParticleType suffices, it is sometimes necessary to attach additional data to the particle on the server side. This is where a custom ParticleType and an associated custo..."
+      },
+      {
+        "title": "Particle Descriptions",
+        "level": 2,
+        "summary": "Particle descriptions are JSON files in the assets//particles directory. A particle description has the same name as its associated particle type, and consists of a list of textures relative to ass..."
+      },
+      {
+        "title": "Using the Description",
+        "level": 3,
+        "summary": "To allow a particle to make use of its description, the ParticleType must be associated with a ParticleProvider that takes in the SpriteSet using the client-side mod bus event RegisterParticleProvi..."
+      },
+      {
+        "title": "Datagen",
+        "level": 3,
+        "summary": "Particle definition files can also be datagenned by extending ParticleDescriptionProvider and overriding the #addDescriptions() method:"
+      },
+      {
+        "title": "Spawning Particles",
+        "level": 2,
+        "summary": "As a reminder from before, the server only knows ParticleTypes and ParticleOptions, while the client works directly with Particles provided by ParticleProviders that are associated with a ParticleT..."
+      }
+    ]
+  },
+  {
+    "id": "resources/client/sounds",
+    "version": "26.1",
+    "label": "Sounds",
+    "url": "https://docs.neoforged.net/docs/resources/client/sounds/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "firstParagraph": "Sounds, while not required for anything, can make a mod feel much more nuanced and alive. Minecraft offers you various ways to register and play sounds, which will be laid out in this article.",
+    "sections": [
+      {
+        "title": "Terminology",
+        "level": 2,
+        "summary": "The Minecraft sound engine uses a variety of terms to refer to different things:"
+      },
+      {
+        "title": "Creating SoundEvents",
+        "level": 2,
+        "summary": "SoundEvents are registered objects, meaning that they must be registered to the game through a DeferredRegister and be singletons:"
+      },
+      {
+        "title": "sounds.json",
+        "level": 2,
+        "summary": "*See also: sounds.json on the Minecraft Wiki*"
+      },
+      {
+        "title": "Merging",
+        "level": 3,
+        "summary": "Unlike most other resource files, sounds.json do not overwrite values in packs below them. Instead, they are merged together and then interpreted as one combined sounds.json file. Consider sounds s..."
+      },
+      {
+        "title": "Playing Sounds",
+        "level": 2,
+        "summary": "Minecraft offers various methods to play sounds, and it is sometimes unclear which one should be used. All methods accept a SoundEvent, which can either be your own or a vanilla one (vanilla sound ..."
+      },
+      {
+        "title": "Level",
+        "level": 3,
+        "summary": "- playSeededSound(Entity entity, double x, double y, double z, Holder soundEvent, SoundSource soundSource, float volume, float pitch, long seed)"
+      },
+      {
+        "title": "ClientLevel",
+        "level": 3,
+        "summary": "- playLocalSound(BlockPos pos, SoundEvent soundEvent, SoundSource soundSource, float volume, float pitch, boolean distanceDelay)"
+      },
+      {
+        "title": "Entity",
+        "level": 3,
+        "summary": "- playSound(SoundEvent soundEvent, float volume, float pitch)"
+      },
+      {
+        "title": "Player",
+        "level": 3,
+        "summary": "- playSound(SoundEvent soundEvent, float volume, float pitch) (overrides the method in Entity)"
+      },
+      {
+        "title": "Datagen",
+        "level": 2,
+        "summary": "Sound files themselves can of course not be datagenned, but sounds.json files can. To do so, we extend SoundDefinitionsProvider and override the registerSounds() method:"
+      }
+    ]
+  },
+  {
+    "id": "resources/client/textures",
+    "version": "26.1",
+    "label": "Textures",
+    "url": "https://docs.neoforged.net/docs/resources/client/textures/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "has-code"
+    ],
+    "firstParagraph": "All textures in Minecraft are PNG files located within a namespace's `textures` folder. JPG, GIF and other image formats are not supported. The path of [identifiers](/docs/misc/identifier) referring to textures is generally relative to the `textures` folder, so for example, the identifier `examplemo",
+    "sections": [
+      {
+        "title": "Texture Metadata",
+        "level": 2,
+        "summary": "Texture metadata can be specified in a file named exactly the same as the texture, with an additional .mcmeta suffix. For example, an animated texture at textures/block/example.png would need an ac..."
+      },
+      {
+        "title": "Animated Textures",
+        "level": 2,
+        "summary": "Minecraft natively supports animated textures for blocks and items. Animated textures consist of a texture file where the different animation stages are located below each other (for example, an an..."
+      }
+    ]
+  },
+  {
+    "id": "resources/metadata",
+    "version": "26.1",
+    "label": "Resource Metadata",
+    "url": "https://docs.neoforged.net/docs/resources/metadata/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "`.mcmeta` file extensions can hold JSON metadata for any asset or data object within the game. These are most commonly used to define information for a pack and how textures are applied; however, they can be used on any file by adding a `.mcmeta` to the end of the filename (e.g., `apple.png` has a r",
+    "sections": [
+      {
+        "title": "Metadata Sections",
+        "level": 2,
+        "summary": "The JSON metadata object is broken into sections, where the key represents the section type, and the value is the data for that section. In the codebase, this is known as the MetadataSectionType, t..."
+      },
+      {
+        "title": "Custom Sections",
+        "level": 3,
+        "summary": "A custom metadata section only requires creating the object, the Codec to serialize and deserialize the object, and the MetadataSectionType to read from the mcmeta."
+      },
+      {
+        "title": "Data Generation",
+        "level": 2,
+        "summary": "Vanilla provides data generation for pack.mcmeta through PackMetadataGenerator. Metadata for any other file needs a custom DataProvider."
+      },
+      {
+        "title": "PackMetadataGenerator",
+        "level": 3,
+        "summary": "PackMetadataGenerator is used to generate the pack.mcmeta for the mod or its bundled subpacks. Metadata sections are added through the add method, taking in the MetadataSectionType and its value. P..."
+      },
+      {
+        "title": "Other Resource Metadata",
+        "level": 3,
+        "summary": "Resource metadata on other files requires a custom DataProvider:"
+      }
+    ]
+  },
+  {
+    "id": "resources/server/conditions",
+    "version": "26.1",
+    "label": "Data Load Conditions",
+    "url": "https://docs.neoforged.net/docs/resources/server/conditions/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "firstParagraph": "Sometimes, it is desirable to disable or enable certain features if another mod is present, or if any mod adds another type of ore, etc. For these use cases, NeoForge adds data load conditions. These were originally called recipe conditions, since recipes were the original use case for this system, ",
+    "sections": [
+      {
+        "title": "Built-In Conditions",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "neoforge:always and neoforge:never",
+        "level": 3,
+        "summary": "These consist of no data and return the expected value."
+      },
+      {
+        "title": "neoforge:not",
+        "level": 3,
+        "summary": "This condition accepts another condition and inverts it."
+      },
+      {
+        "title": "neoforge:and and neoforge:or",
+        "level": 3,
+        "summary": "These conditions accept the condition(s) being operated upon and apply the expected logic. There is no limit to the amount of accepted conditions."
+      },
+      {
+        "title": "neoforge:mod_loaded",
+        "level": 3,
+        "summary": "This condition returns true if a mod with the given mod id is loaded, and false otherwise."
+      },
+      {
+        "title": "neoforge:registered",
+        "level": 3,
+        "summary": "This condition returns true if an object in a specific registry with the given registry name has been registered, and false otherwise."
+      },
+      {
+        "title": "neoforge:tag_empty",
+        "level": 3,
+        "summary": "This condition returns true if the given registry tag is empty, and false otherwise."
+      },
+      {
+        "title": "neoforge:feature_flags_enabled",
+        "level": 3,
+        "summary": "This condition returns true if the provided feature flags are enabled, and false otherwise."
+      },
+      {
+        "title": "Creating Custom Conditions",
+        "level": 2,
+        "summary": "Custom conditions can be created by implementing ICondition and its #test(IContext) method, as well as creating a map codec for it. The IContext parameter in #test has access to some parts of the g..."
+      },
+      {
+        "title": "Datagen",
+        "level": 2,
+        "summary": "While any datapack JSON file can use load conditions, only a few data providers have been modified to be able to generate them. These include:"
+      }
+    ]
+  },
+  {
+    "id": "resources/server/damagetypes",
+    "version": "26.1",
+    "label": "Damage Types & Damage Sources",
+    "url": "https://docs.neoforged.net/docs/resources/server/damagetypes/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "firstParagraph": "A damage type denotes what kind of damage is being applied to an [entity](/docs/entities/) - physical damage, fire damage, drowning damage, magic damage, void damage, etc. The distinction into damage types is used for various immunities (e.g. blazes won't take fire damage), enchantments (e.g. blast ",
+    "sections": [
+      {
+        "title": "Creating Damage Types",
+        "level": 2,
+        "summary": "To get started, you want to create your own DamageType. DamageTypes are a datapack registry, and as such, new DamageTypes are not registered in code, but are registered automatically when the corre..."
+      },
+      {
+        "title": "Creating and Using Damage Sources",
+        "level": 2,
+        "summary": "DamageSources are usually created on the fly when Entity#hurt is called. Be aware that since damage types are a datapack registry, you will need a RegistryAccess to query them, which can be obtaine..."
+      },
+      {
+        "title": "Datagen",
+        "level": 2,
+        "summary": "*For more info, see Data Generation for Datapack Registries.*"
+      }
+    ]
+  },
+  {
+    "id": "resources/server/datamaps",
+    "version": "26.1",
+    "label": "Data Maps",
+    "url": "https://docs.neoforged.net/docs/resources/server/datamaps/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "firstParagraph": "A data map contains data-driven, reloadable objects that can be attached to a registered object. This system allows for more easily data-driving game behavior, as they provide functionality such as syncing or conflict resolution, leading to a better and more configurable user experience. You can thi",
+    "sections": [
+      {
+        "title": "File Location",
+        "level": 2,
+        "summary": "Data maps are loaded from a JSON file located at /data_maps///.json, where:"
+      },
+      {
+        "title": "JSON Structure",
+        "level": 2,
+        "summary": "A data map file itself may contain the following fields:"
+      },
+      {
+        "title": "Adding Values",
+        "level": 3,
+        "summary": "For example, let's assume that we have a data map object with two float keys amount and chance for the registry minecraft:item. A corresponding data map file could look something like this:"
+      },
+      {
+        "title": "Removing Existing Values",
+        "level": 3,
+        "summary": "Removing elements can be done by specifying a list of item IDs or tag IDs to remove:"
+      },
+      {
+        "title": "Custom Data Maps",
+        "level": 2,
+        "summary": "To begin, we define the format of our data map entries. **Data map entries must be immutable**, making records ideal for this. Reiterating our example from above with two float values amount and ch..."
+      },
+      {
+        "title": "Syncing",
+        "level": 3,
+        "summary": "Synced data maps will have their values synced to clients. A data map can be marked as synced by calling #synced on the builder, like so:"
+      },
+      {
+        "title": "Usage",
+        "level": 3,
+        "summary": "As data maps can be used on any registry, they must be queried through Holders, not through actual registry objects. Moreover, it will only work for reference holders, not Direct holders. However, ..."
+      },
+      {
+        "title": "Advanced Data Maps",
+        "level": 2,
+        "summary": "Advanced data maps are data maps that use AdvancedDataMapType instead of the standard DataMapType (of which AdvancedDataMapType is a subclass). They have some extra functionality, namely the abilit..."
+      },
+      {
+        "title": "Mergers",
+        "level": 3,
+        "summary": "A merger can be used to handle conflicts between multiple data packs that attempt to add a value for the same object. The default merger (DataMapValueMerger#defaultMerger) will overwrite existing v..."
+      },
+      {
+        "title": "Removers",
+        "level": 3,
+        "summary": "Similar to mergers for more complex data, removers can be used for proper handling of remove clauses for an element. The default remover (DataMapValueRemover.Default.INSTANCE) will simply remove an..."
+      },
+      {
+        "title": "Data Generation",
+        "level": 2,
+        "summary": "Data maps can be datagenned by extending DataMapProvider and overriding #gather to create your entries. Reusing the ExampleData from before (with float values amount and chance), our datagen file c..."
+      }
+    ]
+  },
+  {
+    "id": "resources/server/datamaps/builtin",
+    "version": "26.1",
+    "label": "Built-In Data Maps",
+    "url": "https://docs.neoforged.net/docs/resources/server/datamaps/builtin/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "data-components"
+    ],
+    "firstParagraph": "NeoForge provides various built-in [data maps](/docs/resources/server/datamaps/) for common use cases, replacing hardcoded vanilla fields. Vanilla values are shipped by data map files in NeoForge, so there is no functional difference to the player.",
+    "sections": [
+      {
+        "title": "neoforge:acceptable_villager_distances",
+        "level": 2,
+        "summary": "Allows configuring the maximum block distance that villagers will notice an entity, as a replacement for VillagerHostilesSensor.ACCEPTABLE_DISTANCE_FROM_HOSTILES (which will be ignored in 26.2). Th..."
+      },
+      {
+        "title": "neoforge:compostables",
+        "level": 2,
+        "summary": "Allows configuring composter values, as a replacement for ComposterBlock.COMPOSTABLES (which is now ignored). This data map is located at neoforge/data_maps/item/compostables.json and its objects h..."
+      },
+      {
+        "title": "neoforge:furnace_fuels",
+        "level": 2,
+        "summary": "Allows configuring item burn times. This data map is located at neoforge/data_maps/item/furnace_fuels.json and its objects have the following structure:"
+      },
+      {
+        "title": "neoforge:monster_room_mobs",
+        "level": 2,
+        "summary": "Allows configuring the mobs that may appear in the mob spawner in a monster room, as a replacement for MonsterRoomFeature#MOBS (which is now ignored). This data map is located at neoforge/data_maps..."
+      },
+      {
+        "title": "neoforge:oxidizables",
+        "level": 2,
+        "summary": "Allows configuring oxidation stages, as a replacement for WeatheringCopper#NEXT_BY_BLOCK. This data map is also used to build a reverse deoxidation map (for scraping with an axe). It is located at ..."
+      },
+      {
+        "title": "neoforge:parrot_imitations",
+        "level": 2,
+        "summary": "Allows configuring the sounds produced by parrots when they want to imitate a mob, as a replacement for Parrot#MOB_SOUND_MAP (which is now ignored). This data map is located at neoforge/data_maps/e..."
+      },
+      {
+        "title": "neoforge:raid_hero_gifts",
+        "level": 2,
+        "summary": "Allows configuring the gift that a villager with a certain VillagerProfession may gift you if you stop the raid, as a replacement for GiveGiftToHero#GIFTS (which is now ignored). This data map is l..."
+      },
+      {
+        "title": "neoforge:strippables",
+        "level": 2,
+        "summary": "Allows configuring the block a block will turn into when stripped (right clicked with an axe, or an item with the item ability ItemAbilities#AXE_STRIP), as a replacement for AxeItem#STRIPPABLES (wh..."
+      },
+      {
+        "title": "neoforge:vibration_frequencies",
+        "level": 2,
+        "summary": "Allows configuring the sculk vibration frequencies emitted by game events, as a replacement for VibrationSystem#VIBRATION_FREQUENCY_FOR_EVENT (which is now ignored). This data map is located at neo..."
+      },
+      {
+        "title": "neoforge:villager_types",
+        "level": 2,
+        "summary": "Allows configuring the villager type that will spawn based on its biome, as a replacement for VillagerType#BY_BIOME (which will be ignored in 26.2). It is located at neoforge/data_maps/worldgen/bio..."
+      },
+      {
+        "title": "neoforge:waxables",
+        "level": 2,
+        "summary": "Allows configuring the block a block will turn into when waxed (right clicked with a honeycomb), as a replacement for HoneycombItem#WAXABLES. This data map is also used to build a reverse dewaxing ..."
+      }
+    ]
+  },
+  {
+    "id": "resources/server/enchantments",
+    "version": "26.1",
+    "label": "Enchantments",
+    "url": "https://docs.neoforged.net/docs/resources/server/enchantments/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "Enchantments are special effects that can be applied to tools and other items. As of 1.21, enchantments are stored on items as [Data Components](/docs/items/datacomponents), are defined in JSON, and are comprised of so-called enchantment effect components. During the game, the enchantments on a part",
+    "sections": [
+      {
+        "title": "Enchantment JSON Format",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Enchantment Costs and Levels",
+        "level": 3,
+        "summary": "The max_cost and min_cost fields specify boundaries for how much enchanting power is needed to create this enchantment. There is a somewhat convoluted procedure to actually make use of these values..."
+      },
+      {
+        "title": "Enchantment Effect Components",
+        "level": 2,
+        "summary": "Enchantment effect components are specially-registered Data Components that determine how an enchantment functions. The type of the component defines its effect, while the data it contains is used ..."
+      },
+      {
+        "title": "Custom Enchantment Effect Components",
+        "level": 3,
+        "summary": "The logic of applying a custom enchantment effect component must be entirely implemented by its creator. First, you should define a class or record to hold the information you need to implement a g..."
+      },
+      {
+        "title": "ConditionalEffect",
+        "level": 3,
+        "summary": "Wrapping the type in ConditionalEffect allows the enchantment effect component to optionally take effect based on a given LootContext."
+      },
+      {
+        "title": "Enchantment Data Generation",
+        "level": 2,
+        "summary": "Enchantment JSON files can be created automatically using the data generation system by passing a RegistrySetBuilder into DatapackBuiltInEntriesProvider via GatherDataEvent#createDatapackRegistryOb..."
+      }
+    ]
+  },
+  {
+    "id": "resources/server/enchantments/builtin",
+    "version": "26.1",
+    "label": "Built-In Enchantment Effect Components",
+    "url": "https://docs.neoforged.net/docs/resources/server/enchantments/builtin/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "data-components"
+    ],
+    "firstParagraph": "Vanilla Minecraft provides numerous different types of enchantment effect components for use in [enchantment](/docs/resources/server/enchantments/) definitions. This article will explain each, including their usage and in-code definition.",
+    "sections": [
+      {
+        "title": "Value Effect Components",
+        "level": 2,
+        "summary": "*See also Value Effect Components on the Minecraft Wiki*"
+      },
+      {
+        "title": "Vanilla Enchantment Value Effect Component Types",
+        "level": 3,
+        "summary": "- minecraft:crossbow_charge_time: Modifies the charge-up time of this crossbow in seconds. Used by Quick Charge. - minecraft:trident_spin_attack_strength: Modifies the 'strength' of the spin attack..."
+      },
+      {
+        "title": "Location Based Effect Components",
+        "level": 2,
+        "summary": "*See also: Location Based Effect Components on the Minecraft Wiki*"
+      },
+      {
+        "title": "Vanilla Location Based Effect Component Types",
+        "level": 3,
+        "summary": "- minecraft:location_changed: Runs a location based effect when the wielder's Block Position changes and when this item is equipped. Used by Frost Walker and Soul Speed."
+      },
+      {
+        "title": "Entity Effect Components",
+        "level": 2,
+        "summary": "*See also Entity Effect Components on the Minecraft Wiki.*"
+      },
+      {
+        "title": "Vanilla Enchantment Entity Effect Component Types",
+        "level": 3,
+        "summary": "- minecraft:post_piercing_attack: Runs an entity effect when a living entity lunges forward. Used by Lunge. - minecraft:hit_block: Runs an entity effect when an entity (for example, a projectile) h..."
+      },
+      {
+        "title": "Other Vanilla Enchantment Component Types",
+        "level": 2,
+        "summary": "- minecraft:damage_immunity: Applies immunity to a specified damage type. Used by Frost Walker."
+      }
+    ]
+  },
+  {
+    "id": "resources/server/loottables",
+    "version": "26.1",
+    "label": "Loot Tables",
+    "url": "https://docs.neoforged.net/docs/resources/server/loottables/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "firstParagraph": "Loot tables are data files that are used to define randomized loot drops. A loot table can be rolled, returning a (potentially empty) list of item stacks. The output of this process depends on (pseudo-)randomness. Loot tables are located at `data//loot_table/.json`. For example, the loot table `mine",
+    "sections": [
+      {
+        "title": "Loot Entry",
+        "level": 2,
+        "summary": "A loot entry (or loot pool entry), represented in code through the abstract LootPoolEntryContainer class, is a singular loot element. It can specify one or multiple items to be dropped."
+      },
+      {
+        "title": "Loot Pool",
+        "level": 2,
+        "summary": "A loot pool is, in essence, a list of loot entries. Loot tables can contain multiple loot pools, each loot pool will be rolled independently of the others."
+      },
+      {
+        "title": "Number Provider",
+        "level": 2,
+        "summary": "Number providers are a way to get (pseudo-)randomized numbers in a datapack context. Primarily used by loot tables, they are also used in other contexts, for example in worldgen. Vanilla provides t..."
+      },
+      {
+        "title": "Loot Parameters",
+        "level": 2,
+        "summary": "A loot parameter, known internally as a ContextKey, is a parameter provided to a loot table when rolled, where T is the type of the provided parameter, for example BlockPos or Entity. They can be u..."
+      },
+      {
+        "title": "Entity Targets",
+        "level": 3,
+        "summary": "Entity targets are a type used in loot conditions and functions, represented by the LootContext.EntityTarget enum in code. They are used to specify the entity loot parameter to query in a condition..."
+      },
+      {
+        "title": "Loot Parameter Sets",
+        "level": 3,
+        "summary": "Loot parameter sets, also known as loot table types and known as ContextKeySets in code, are a collection of required and optional loot parameters. Despite their name, they are not Sets (not even C..."
+      },
+      {
+        "title": "Loot Context",
+        "level": 3,
+        "summary": "The loot context is an object containing situational information for rolling loot tables. The information includes:"
+      },
+      {
+        "title": "Loot Table",
+        "level": 2,
+        "summary": "Combining all the previous elements, we finally get a loot table. Loot table JSONs can specify the following values:"
+      },
+      {
+        "title": "Rolling a Loot Table",
+        "level": 2,
+        "summary": "To roll a loot table, we need two things: the loot table itself, and a loot context."
+      },
+      {
+        "title": "Datagen",
+        "level": 2,
+        "summary": "Loot tables can be datagenned by registering a LootTableProvider and providing a list of LootTableSubProvider in the constructor:"
+      },
+      {
+        "title": "LootTableSubProviders",
+        "level": 3,
+        "summary": "LootTableSubProviders are where the actual generation happens. To get started, we implement LootTableSubProvider and override #generate:"
+      },
+      {
+        "title": "BlockLootSubProvider",
+        "level": 3,
+        "summary": "BlockLootSubProvider is an abstract helper class containing many helpers for creating common block loot tables, e.g. single item drops (#createSingleItemTable), dropping the block the table is crea..."
+      },
+      {
+        "title": "EntityLootSubProvider",
+        "level": 3,
+        "summary": "Similar to BlockLootSubProvider, EntityLootSubProvider provides many helpers for entity loot table generation. Also similar to BlockLootSubProvider, we must provide a Stream> of entities known to t..."
+      }
+    ]
+  },
+  {
+    "id": "resources/server/loottables/custom",
+    "version": "26.1",
+    "label": "Custom Loot Objects",
+    "url": "https://docs.neoforged.net/docs/resources/server/loottables/custom/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "firstParagraph": "Due to the complexity of the loot table system, there are several [registries](/docs/concepts/registries#methods-for-registering) at work, all of which can be used by a modder to add more behavior.",
+    "sections": [
+      {
+        "title": "Custom Loot Entries",
+        "level": 2,
+        "summary": "To create a custom loot entry, extend LootPoolEntryContainer or one of its two direct subclasses, LootPoolSingletonContainer or CompositeEntryBase. For the sake of example, we want to create a loot..."
+      },
+      {
+        "title": "Custom Number Providers",
+        "level": 2,
+        "summary": "To create a custom number provider, implement the NumberProvider interface. For the sake of example, let's assume we want to create a number provider that changes the sign of the provided number:"
+      },
+      {
+        "title": "Custom Level-Based Values",
+        "level": 2,
+        "summary": "Custom LevelBasedValues can be created by implementing the LevelBasedValue interface in a record. Again, for the sake of example, let's assume that we want to invert the output of another LevelBase..."
+      },
+      {
+        "title": "Custom Loot Conditions",
+        "level": 2,
+        "summary": "To get started, we create our loot item condition class that implements LootItemCondition. For the sake of example, let's assume we only want the condition to pass if the player killing the mob has..."
+      },
+      {
+        "title": "Custom Loot Functions",
+        "level": 2,
+        "summary": "To get started, we create our own class extending LootItemFunction. LootItemFunction extends BiFunction, so what we want is to use the existing item stack and the loot context to return a new, modi..."
+      }
+    ]
+  },
+  {
+    "id": "resources/server/loottables/glm",
+    "version": "26.1",
+    "label": "Global Loot Modifiers",
+    "url": "https://docs.neoforged.net/docs/resources/server/loottables/glm/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registry"
+    ],
+    "firstParagraph": "Global Loot Modifiers, or GLMs for short, are a data-driven way to modify drops without the need to overwrite dozens or hundreds of vanilla loot tables, or to handle effects that would require interactions with another mod's loot tables without knowing what mods are loaded.",
+    "sections": [
+      {
+        "title": "The Loot Modifier JSON",
+        "level": 2,
+        "summary": "This file contains all values related to your modifier, for example chances to apply, what items to add, etc. The JSON can be found at data//loot_modifiers/.json, where ` and ` are parts of the uni..."
+      },
+      {
+        "title": "IGlobalLootModifier and LootModifier",
+        "level": 2,
+        "summary": "To actually apply the loot modifier to the loot table, a IGlobalLootModifier implementation must be specified. In most cases, you will want to use the LootModifier subclass, which handles things li..."
+      },
+      {
+        "title": "The Loot Modifier Codec",
+        "level": 2,
+        "summary": "To tell the game about the existence of our loot modifier, we must define and register a codec for it. Reiterating on our previous example with the three fields, this would look something like this:"
+      },
+      {
+        "title": "Builtin Loot Modifiers",
+        "level": 2,
+        "summary": "NeoForge provides a loot modifier out of the box for you to use:"
+      },
+      {
+        "title": "neoforge:add_table",
+        "level": 3,
+        "summary": "This loot modifier rolls a second loot table and adds the results to the loot table the modifier is applied to."
+      },
+      {
+        "title": "Datagen",
+        "level": 2,
+        "summary": "GLMs can be datagenned. This is done by subclassing GlobalLootModifierProvider:"
+      }
+    ]
+  },
+  {
+    "id": "resources/server/loottables/lootconditions",
+    "version": "26.1",
+    "label": "Loot Conditions",
+    "url": "https://docs.neoforged.net/docs/resources/server/loottables/lootconditions/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "Loot conditions can be used to check whether a [loot entry](/docs/resources/server/loottables/#loot-entry) or [loot pool](/docs/resources/server/loottables/#loot-pool) should be used in the current context. In both cases, a list of conditions is defined; the entry or pool is only used if all conditi",
+    "sections": [
+      {
+        "title": "minecraft:inverted",
+        "level": 2,
+        "summary": "This condition accepts another condition and inverts its result. Requires whatever loot parameters the other condition requires."
+      },
+      {
+        "title": "minecraft:all_of",
+        "level": 2,
+        "summary": "This condition accepts any number of other conditions and returns true if all sub conditions return true. If the list is empty, it returns false. Requires whatever loot parameters the other conditi..."
+      },
+      {
+        "title": "minecraft:any_of",
+        "level": 2,
+        "summary": "This condition accepts any number of other conditions and returns true if at least one sub condition returns true. If the list is empty, it returns false. Requires whatever loot parameters the othe..."
+      },
+      {
+        "title": "minecraft:random_chance",
+        "level": 2,
+        "summary": "This condition accepts a number provider representing a chance between 0 and 1, and randomly returns true or false depending on that chance. The number provider should generally not return values o..."
+      },
+      {
+        "title": "minecraft:random_chance_with_enchanted_bonus",
+        "level": 2,
+        "summary": "This condition accepts an enchantment id, a LevelBasedValue and a constant fallback float value. If the specified enchantment is present, the LevelBasedValue is queried for a value. If the specifie..."
+      },
+      {
+        "title": "minecraft:value_check",
+        "level": 2,
+        "summary": "This condition accepts a number provider and an IntRange, returning true if the result of the number provided is within the range."
+      },
+      {
+        "title": "minecraft:time_check",
+        "level": 2,
+        "summary": "This condition checks if a given WorldClock is within an IntRange. Optionally, a period parameter can be provided to modulo the time with; this can be used to e.g. check the time of day for minecra..."
+      },
+      {
+        "title": "minecraft:weather_check",
+        "level": 2,
+        "summary": "This condition checks the current weather for raining and thundering."
+      },
+      {
+        "title": "minecraft:location_check",
+        "level": 2,
+        "summary": "This condition accepts a LocationPredicate and an optional offset value for each axis direction. LocationPredicates allow checking conditions such as the position itself, the block or fluid state a..."
+      },
+      {
+        "title": "minecraft:block_state_property",
+        "level": 2,
+        "summary": "This condition checks for the specified block state properties to have the specified value in the broken block state. Requires the minecraft:block_state loot parameter, always failing if that param..."
+      },
+      {
+        "title": "minecraft:survives_explosion",
+        "level": 2,
+        "summary": "This condition randomly destroys the drops. The chance for drops to survive is 1 / explosion_radius loot parameter. This function is used by all block drops, with very few exceptions such as the be..."
+      },
+      {
+        "title": "minecraft:match_tool",
+        "level": 2,
+        "summary": "This condition accepts an ItemPredicate that is checked against the tool loot parameter. An ItemPredicate can specify a list of valid item ids (items), a min/max range for the item count (count), a..."
+      },
+      {
+        "title": "minecraft:enchantment_active",
+        "level": 2,
+        "summary": "This condition returns whether an enchantment is active or not. Requires the minecraft:enchantment_active loot parameter, always failing if that parameter is absent."
+      },
+      {
+        "title": "minecraft:table_bonus",
+        "level": 2,
+        "summary": "This condition is similar to minecraft:random_chance_with_enchanted_bonus, but with fixed values instead of randomized values. Requires the minecraft:tool loot parameter, always failing if that par..."
+      },
+      {
+        "title": "minecraft:entity_properties",
+        "level": 2,
+        "summary": "This condition checks a given EntityPredicate against an entity target. The EntityPredicate can check the entity type, mob effects, nbt values, equipment, location, etc."
+      },
+      {
+        "title": "minecraft:damage_source_properties",
+        "level": 2,
+        "summary": "This condition checks a given DamageSourcePredicate against the damage source loot parameter. Requires the minecraft:origin and minecraft:damage_source loot parameters, always failing if those para..."
+      },
+      {
+        "title": "minecraft:killed_by_player",
+        "level": 2,
+        "summary": "This condition determines whether the kill was a player kill. Used by some entity drops, for example blaze rods dropped by blazes. Requires the minecraft:last_player_damage loot parameter, always f..."
+      },
+      {
+        "title": "minecraft:entity_scores",
+        "level": 2,
+        "summary": "This condition checks the entity target's scoreboard. Requires the loot parameter corresponding to the specified entity target, always failing if that parameter is absent."
+      },
+      {
+        "title": "minecraft:reference",
+        "level": 2,
+        "summary": "This condition references a predicate file and returns its result. See Item Predicates for more information."
+      },
+      {
+        "title": "minecraft:environment_attribute_check",
+        "level": 2,
+        "summary": "This condition checks whether an environment attribute in the context dimension matches the given value. If the environment attribute is positional (it can change depending on a player's position i..."
+      },
+      {
+        "title": "neoforge:loot_table_id",
+        "level": 2,
+        "summary": "This condition only returns true if the surrounding loot table id matches. This is typically used within global loot modifiers."
+      },
+      {
+        "title": "neoforge:can_item_perform_ability",
+        "level": 2,
+        "summary": "This condition only returns true if the item in the tool loot context parameter (LootContextParams.TOOL), usually the item used to break the block or kill the entity, can perform the specified Item..."
+      },
+      {
+        "title": "See Also",
+        "level": 2,
+        "summary": "- Item Predicates on the Minecraft Wiki"
+      }
+    ]
+  },
+  {
+    "id": "resources/server/loottables/lootfunctions",
+    "version": "26.1",
+    "label": "Loot Functions",
+    "url": "https://docs.neoforged.net/docs/resources/server/loottables/lootfunctions/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "data-components"
+    ],
+    "firstParagraph": "Loot functions can be used to modify the result of a [loot entry](/docs/resources/server/loottables/#loot-entry), or the multiple results of a [loot pool](/docs/resources/server/loottables/#loot-pool) or [loot table](/docs/resources/server/loottables/#loot-table). In both cases, a list of functions ",
+    "sections": [
+      {
+        "title": "minecraft:set_item",
+        "level": 2,
+        "summary": "Sets a different item to use in the result item stack."
+      },
+      {
+        "title": "minecraft:set_count",
+        "level": 2,
+        "summary": "Sets an item count to use in the result item stack. Uses a number provider."
+      },
+      {
+        "title": "minecraft:explosion_decay",
+        "level": 2,
+        "summary": "Applies an explosion decay. The item has a chance of 1 / explosion_radius to \"survive\". This is run multiple times depending on the count. Requires the minecraft:explosion_radius loot parameter, no..."
+      },
+      {
+        "title": "minecraft:limit_count",
+        "level": 2,
+        "summary": "Clamps the count of the item stack between a given IntRange."
+      },
+      {
+        "title": "minecraft:set_custom_data",
+        "level": 2,
+        "summary": "Sets custom NBT data on the item stack."
+      },
+      {
+        "title": "minecraft:copy_custom_data",
+        "level": 2,
+        "summary": "Copies custom NBT data from a block entity or entity source to the item stack. Use of this is discouraged for block entities, use minecraft:copy_components or minecraft:set_contents instead. For en..."
+      },
+      {
+        "title": "minecraft:set_components",
+        "level": 2,
+        "summary": "Sets data component values on the item stack. Most vanilla use cases have specialized functions that are explained below."
+      },
+      {
+        "title": "minecraft:copy_components",
+        "level": 2,
+        "summary": "Copies data component values from a block entity to the item stack. Requires one of the loot parameters from LootContext.BlockEntityTarget, LootContext.EntityTarget, or LootContext.ItemStackTarget."
+      },
+      {
+        "title": "minecraft:copy_state",
+        "level": 2,
+        "summary": "Copies block state properties into the item stack's block_state data component, used when trying to place a block. The block state properties to copy must be explicitly specified. Requires the mine..."
+      },
+      {
+        "title": "minecraft:set_contents",
+        "level": 2,
+        "summary": "Sets contents of the item stack."
+      },
+      {
+        "title": "minecraft:modify_contents",
+        "level": 2,
+        "summary": "Applies a function to the contents of the item stack."
+      },
+      {
+        "title": "minecraft:set_loot_table",
+        "level": 2,
+        "summary": "Sets a container loot table on the result item stack. Intended for chests and other loot containers that retain this property when placed down."
+      },
+      {
+        "title": "minecraft:set_name",
+        "level": 2,
+        "summary": "Sets a name for the result item stack. The name can be a Component instead of a literal string. It can also be resolved from an entity target. Requires the corresponding entity loot parameter if ap..."
+      },
+      {
+        "title": "minecraft:copy_name",
+        "level": 2,
+        "summary": "Copies an entity target's or block entity's name into the result item stack. Requires the loot parameter corresponding to the specified source (entity target or block entity), no modification is pe..."
+      },
+      {
+        "title": "minecraft:set_lore",
+        "level": 2,
+        "summary": "Sets lore (tooltip lines) for the result item stack. The lines can be Components instead of literal strings. It can also be resolved from an entity target. Requires the corresponding entity loot pa..."
+      },
+      {
+        "title": "minecraft:toggle_tooltips",
+        "level": 2,
+        "summary": "Enables or disables certain component tooltips."
+      },
+      {
+        "title": "minecraft:enchant_with_levels",
+        "level": 2,
+        "summary": "Randomly enchants the item stack with a given amount of levels. Uses a number provider."
+      },
+      {
+        "title": "minecraft:enchant_randomly",
+        "level": 2,
+        "summary": "Enchants the item with one random enchantment."
+      },
+      {
+        "title": "minecraft:set_enchantments",
+        "level": 2,
+        "summary": "Sets enchantments on the result item stack."
+      },
+      {
+        "title": "minecraft:enchanted_count_increase",
+        "level": 2,
+        "summary": "Increases the item stack count based on the enchantment value. Uses a number provider. Requires the minecraft:attacking_entity loot parameter, no modification is performed if that parameter is absent."
+      },
+      {
+        "title": "minecraft:apply_bonus",
+        "level": 2,
+        "summary": "Applies an increase to the item stack count based on the enchantment value and various formulas. Requires the minecraft:tool loot parameter, no modification is performed if that parameter is absent."
+      },
+      {
+        "title": "minecraft:furnace_smelt",
+        "level": 2,
+        "summary": "Attempts to smelt the item as if it were in a furnace, returning the unmodified item stack if it could not be smelted."
+      },
+      {
+        "title": "minecraft:set_damage",
+        "level": 2,
+        "summary": "Sets a durability damage value on the result item stack. Uses a number provider."
+      },
+      {
+        "title": "minecraft:set_attributes",
+        "level": 2,
+        "summary": "Adds a list of attribute modifiers to the result item stack."
+      },
+      {
+        "title": "minecraft:set_potion",
+        "level": 2,
+        "summary": "Sets a potion on the result item stack."
+      },
+      {
+        "title": "minecraft:set_random_dyes",
+        "level": 2,
+        "summary": "Applies a random number of dyes to the result item stack, storing the resulting color in DataComponents#DYED_COLOR."
+      },
+      {
+        "title": "minecraft:set_random_potion",
+        "level": 2,
+        "summary": "Sets a random potion from the options available on the result item stack. If no options are available, picks any registered potion."
+      },
+      {
+        "title": "minecraft:set_stew_effect",
+        "level": 2,
+        "summary": "Sets a list of stew effects on the result item stack."
+      },
+      {
+        "title": "minecraft:set_ominous_bottle_amplifier",
+        "level": 2,
+        "summary": "Sets an ominous bottle amplifier on the result item stack. Uses a number provider."
+      },
+      {
+        "title": "minecraft:exploration_map",
+        "level": 2,
+        "summary": "Transforms the result item stack into an exploration map if and only if it is a map. Requires the minecraft:origin loot parameter, no modification is performed if that parameter is absent."
+      },
+      {
+        "title": "minecraft:fill_player_head",
+        "level": 2,
+        "summary": "Sets the player head owner on the result item stack based on the given entity target. Requires the corresponding loot parameter, no modification is performed if that parameter is absent."
+      },
+      {
+        "title": "minecraft:set_banner_pattern",
+        "level": 2,
+        "summary": "Sets banner patterns on the result item stack. This is for banners, not banner pattern items."
+      },
+      {
+        "title": "minecraft:set_instrument",
+        "level": 2,
+        "summary": "Sets the instrument tag on the result item stack."
+      },
+      {
+        "title": "minecraft:set_fireworks",
+        "level": 2,
+        "summary": "It is currently not possible to create this function during datagen."
+      },
+      {
+        "title": "minecraft:set_firework_explosion",
+        "level": 2,
+        "summary": "Sets a firework explosion on the result item stack."
+      },
+      {
+        "title": "minecraft:set_book_cover",
+        "level": 2,
+        "summary": "Sets a written book's non-page-specific content."
+      },
+      {
+        "title": "minecraft:set_written_book_pages",
+        "level": 2,
+        "summary": "Sets the pages of a written book."
+      },
+      {
+        "title": "minecraft:set_writable_book_pages",
+        "level": 2,
+        "summary": "Sets the pages of a writable book (book and quill)."
+      },
+      {
+        "title": "minecraft:set_custom_model_data",
+        "level": 2,
+        "summary": "Sets the custom model data of the resulting item stack to use during rendering."
+      },
+      {
+        "title": "minecraft:filtered",
+        "level": 2,
+        "summary": "This function accepts an ItemPredicate that is checked against the generated stack. Depending on if the check succeeds (on_pass) or fails (on_fail), the defined function is run. An ItemPredicate ca..."
+      },
+      {
+        "title": "minecraft:reference",
+        "level": 2,
+        "summary": "This function references an item modifier and applies it to the result item stack. See Item Modifiers for more information."
+      },
+      {
+        "title": "minecraft:sequence",
+        "level": 2,
+        "summary": "This function runs other loot functions one after another."
+      },
+      {
+        "title": "minecraft:discard",
+        "level": 2,
+        "summary": "This function discards the original stack, returning an empty item."
+      },
+      {
+        "title": "See Also",
+        "level": 2,
+        "summary": "- Item Modifiers on the Minecraft Wiki"
+      }
+    ]
+  },
+  {
+    "id": "resources/server/recipes",
+    "version": "26.1",
+    "label": "Recipes",
+    "url": "https://docs.neoforged.net/docs/resources/server/recipes/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "registry"
+    ],
+    "firstParagraph": "Recipes are a way to transform a set of objects into other objects within a Minecraft world. Although Minecraft uses this system purely for item transformations, the system is built in a way that allows any kind of objects - blocks, entities, etc. - to be transformed. Almost all recipes use recipe d",
+    "sections": [
+      {
+        "title": "Terminology",
+        "level": 2,
+        "summary": "- A **recipe JSON**, or **recipe file**, is a JSON file that is loaded and stored by the RecipeManager. It contains info such as the recipe type, the inputs and outputs, as well as additional infor..."
+      },
+      {
+        "title": "JSON Specification",
+        "level": 2,
+        "summary": "The contents of recipe files vary greatly depending on the selected type. Common to all recipe files are the type and neoforge:conditions properties:"
+      },
+      {
+        "title": "Using Recipes",
+        "level": 2,
+        "summary": "Recipes are loaded, stored and obtained via the RecipeManager class, which is in turn obtained via ServerLevel#recipeAccess or - if you don't have a ServerLevel available - ServerLifecycleHooks.get..."
+      },
+      {
+        "title": "Recipe Priorities",
+        "level": 2,
+        "summary": "Sometimes, recipes can overlap with others, usually because one pattern uses a specific item while another same pattern uses a tag that has the item within. In these instances, vanilla uses the fir..."
+      },
+      {
+        "title": "Other Recipe Mechanisms",
+        "level": 2,
+        "summary": "Some mechanisms in vanilla are generally considered recipes, but are implemented differently in code. This is generally either due to legacy reasons, or because the \"recipes\" are constructed from o..."
+      },
+      {
+        "title": "Anvil Recipes",
+        "level": 3,
+        "summary": "Anvils have two input slots and one output slot. The only vanilla use cases are tool repairing, combining and renaming, and since each of these use cases needs special handling, no recipe files are..."
+      },
+      {
+        "title": "Brewing",
+        "level": 3,
+        "summary": "See the Brewing chapter in the Mob Effects & Potions article."
+      },
+      {
+        "title": "Extending the Crafting Grid Size",
+        "level": 3,
+        "summary": "The ShapedRecipePattern class, responsible for holding the in-memory representation of shaped crafting recipes, has a hardcoded limit of 3x3 slots, hindering mods that want to add larger crafting t..."
+      },
+      {
+        "title": "Client-Side Recipes",
+        "level": 3,
+        "summary": "By default, vanilla does not send any recipes to the logical client. Instead, the RecipePropertySet / SelectableRecipe.SingleInputSet is synced to handle proper client-side behavior during user int..."
+      },
+      {
+        "title": "Data Generation",
+        "level": 2,
+        "summary": "Like most other JSON files, recipes can be datagenned. For recipes, we want to extend the RecipeProvider class and override #buildRecipes, and extend the RecipeProvider.Runner class to pass to the ..."
+      }
+    ]
+  },
+  {
+    "id": "resources/server/recipes/builtin",
+    "version": "26.1",
+    "label": "Built-In Recipe Types",
+    "url": "https://docs.neoforged.net/docs/resources/server/recipes/builtin/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "Minecraft provides a variety of recipe types and serializers out of the box for you to use. This article will explain each recipe type, as well as how to generate them.",
+    "sections": [
+      {
+        "title": "Crafting",
+        "level": 2,
+        "summary": "Crafting recipes are typically made in crafting tables, crafters, or in modded crafting tables or machines. Their recipe type is minecraft:crafting."
+      },
+      {
+        "title": "Shaped Crafting",
+        "level": 3,
+        "summary": "Some of the most important recipes - such as the crafting table, sticks, or most tools - are created through shaped recipes. These recipes are defined by a crafting pattern or shape (hence \"shaped\"..."
+      },
+      {
+        "title": "Shapeless Crafting",
+        "level": 3,
+        "summary": "Unlike shaped crafting recipes, shapeless crafting recipes do not care about the order the ingredients are passed in. As such, there is no pattern and key, instead there is just a list of ingredients:"
+      },
+      {
+        "title": "Imbuing Items",
+        "level": 3,
+        "summary": "Imbue recipes are a special type of single item crafting recipes where the potion contents of the material stack are copied to the resulting stack. For example:"
+      },
+      {
+        "title": "Transmute Crafting",
+        "level": 3,
+        "summary": "Transmute recipes are a special type of single item crafting recipes where the input stack's data components are completely copied to the resulting stack. Transmutations usually occur between two d..."
+      },
+      {
+        "title": "Dying Items",
+        "level": 3,
+        "summary": "Dye recipes are a special type of single item crafting recipes where the dye stacks' DataComponents#DYE are combined into a single DataComponents#DYED_COLOR and applied to the target stack to const..."
+      },
+      {
+        "title": "Special Recipes",
+        "level": 3,
+        "summary": "There are many other crafting recipes that are specifically made for a single purpose (e.g. cloning books, creating fireworks) rather than be applied in a generic manner. Most of the time, this is ..."
+      },
+      {
+        "title": "Furnace-like Recipes",
+        "level": 2,
+        "summary": "The second most important group of recipes are the ones made through smelting or a similar process. All recipes made in furnaces (type minecraft:smelting), smokers (minecraft:smoking), blast furnac..."
+      },
+      {
+        "title": "Stonecutting",
+        "level": 2,
+        "summary": "Stonecutter recipes use the minecraft:stonecutting recipe type. They are about as simple as it gets, with only a type, an input and an output:"
+      },
+      {
+        "title": "Smithing",
+        "level": 2,
+        "summary": "The smithing table supports two different recipe serializers. One is for transforming inputs into outputs, copying over the components of the input (such as enchantments), and the other is for appl..."
+      },
+      {
+        "title": "Transform Smithing",
+        "level": 3,
+        "summary": "This recipe serializer is for transforming two input items into one, preserving the data components of the first input. Vanilla uses this mainly for netherite equipment, however any items can be us..."
+      },
+      {
+        "title": "Trim Smithing",
+        "level": 3,
+        "summary": "Trim smithing is the process of applying armor trims to armor:"
+      }
+    ]
+  },
+  {
+    "id": "resources/server/recipes/custom",
+    "version": "26.1",
+    "label": "Custom Recipes",
+    "url": "https://docs.neoforged.net/docs/resources/server/recipes/custom/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "To add custom recipes, we need at least three things: a `Recipe`, a `RecipeType`, and a `RecipeSerializer`. Depending on what you are implementing, you may also need a custom `RecipeInput`, `RecipeDisplay`, `SlotDisplay`, `RecipeBookCategory`, and `RecipePropertySet` if reusing an existing subclass ",
+    "sections": [
+      {
+        "title": "The Recipe Input",
+        "level": 2,
+        "summary": "Let's begin by defining what we want to put into the recipe. It's important to understand that the recipe input represents the actual inputs that the player is using right now. As such, we don't us..."
+      },
+      {
+        "title": "The Recipe Class",
+        "level": 2,
+        "summary": "Now that we have our inputs, let's get to the recipe itself. This is what holds our recipe data, and also handles matching and returning the recipe result. As such, it is usually the longest class ..."
+      },
+      {
+        "title": "Common Information",
+        "level": 3,
+        "summary": "All recipes have common information which, although it may not be implemented the same way, is parsed from the JSON. For all recipes, vanilla provides Recipe.CommonInfo. Currently, it allows the re..."
+      },
+      {
+        "title": "Recipe Book Information",
+        "level": 2,
+        "summary": "Like the common information, there is also fields parsed from the JSON relating to the recipe book: a GUI that displays recipes in some transformation menu (e.g., crafting table, furnace, etc.). Fo..."
+      },
+      {
+        "title": "Recipe Groups",
+        "level": 3,
+        "summary": "Groups act as a key to group recipes together into a single entry within the recipe book. If the group is set to an empty string, it will be treated as its own unique entry."
+      },
+      {
+        "title": "Book Categories",
+        "level": 3,
+        "summary": "A RecipeBookCategory simply defines a group to display this recipe within in a recipe book. For example, an iron pickaxe crafting recipe would show up in the RecipeBookCategories#CRAFTING_EQUIPMENT..."
+      },
+      {
+        "title": "Search Categories",
+        "level": 3,
+        "summary": "All RecipeBookCategorys are technically ExtendedRecipeBookCategorys. There is another type of ExtendedRecipeBookCategory called SearchRecipeBookCategory, which is used to aggregate RecipeBookCatego..."
+      },
+      {
+        "title": "Placement Info",
+        "level": 2,
+        "summary": "A PlacementInfo is meant to define the crafting requirements used by the recipe consumer and whether/how it can be placed into its associated crafting station (e.g., crafting table, furnace). Place..."
+      },
+      {
+        "title": "Slot Displays",
+        "level": 2,
+        "summary": "SlotDisplays represent the information on what should render in what slot when viewed by a recipe consumer, like a recipe book. A SlotDisplay has two methods. First there's resolve, which takes in ..."
+      },
+      {
+        "title": "Recipe Display",
+        "level": 2,
+        "summary": "A RecipeDisplay is the same as a SlotDisplay, except that it represents an entire recipe. The default interface only keeps track of the result of recipe and the craftingStation which represents the..."
+      },
+      {
+        "title": "The Recipe Type",
+        "level": 2,
+        "summary": "Next up, our recipe type. This is fairly straightforward because there's no data other than a name associated with a recipe type. They are one of two registered parts of the recipe system, so like ..."
+      },
+      {
+        "title": "The Recipe Serializer",
+        "level": 2,
+        "summary": "A recipe serializer provides two codecs, one map codec and one stream codec, for serialization from/to JSON and from/to network, respectively. This section will not go in depth about how the codecs..."
+      },
+      {
+        "title": "The Crafting Mechanic",
+        "level": 2,
+        "summary": "Now that all parts of your recipe are complete, you can make yourself some recipe JSONs (see the datagen section for that) and then query the recipe manager for your recipes, like above. What you t..."
+      },
+      {
+        "title": "Data Generation",
+        "level": 2,
+        "summary": "To create a recipe builder for your own recipe serializer(s), you need to implement RecipeBuilder and its methods. A common implementation, partially copied from vanilla, would look like this:"
+      }
+    ]
+  },
+  {
+    "id": "resources/server/recipes/ingredients",
+    "version": "26.1",
+    "label": "Ingredients",
+    "url": "https://docs.neoforged.net/docs/resources/server/recipes/ingredients/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "`Ingredient`s are used in [recipes](/docs/resources/server/recipes/) to check whether a given [ItemStack](/docs/items/#itemstacks) is a valid input for the recipe. For this purpose, `Ingredient` implements `Predicate`, and `#test` can be called to confirm if a given `ItemStack` matches the ingredien",
+    "sections": [
+      {
+        "title": "Built-In Ingredient Types",
+        "level": 2,
+        "summary": "The simplest way to get an ingredient is using the Ingredient#of helpers. Several variants exist:"
+      },
+      {
+        "title": "Custom Ingredient Types",
+        "level": 2,
+        "summary": "It is possible for modders to add their custom ingredient types through the ICustomIngredient system. For the sake of example, let's make an enchanted item ingredient that accepts an item tag and a..."
+      },
+      {
+        "title": "JSON Representation",
+        "level": 2,
+        "summary": "Due to vanilla ingredients being pretty limited and NeoForge introducing a whole new registry for them, it's also worth looking at what the built-in and our own ingredients look like in JSON."
+      }
+    ]
+  },
+  {
+    "id": "resources/server/tags",
+    "version": "26.1",
+    "label": "Tags",
+    "url": "https://docs.neoforged.net/docs/resources/server/tags/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code",
+      "data-components",
+      "registry"
+    ],
+    "firstParagraph": "A tag is, simply put, a list of registered objects of the same type. They are loaded from data files and can be used for membership checks. For example, crafting sticks will accept any combination of wooden planks (items tagged with `minecraft:planks`). Tags are often distinguished from \"regular\" ob",
+    "sections": [
+      {
+        "title": "Tag File Format",
+        "level": 2,
+        "summary": "Tag files have the following syntax:"
+      },
+      {
+        "title": "Finding and Naming Tags",
+        "level": 2,
+        "summary": "When you try to find an existing tag, it is generally recommended to follow these steps:"
+      },
+      {
+        "title": "Using Tags",
+        "level": 2,
+        "summary": "To reference tags in code, you must create a TagKey, where T is the type of tag (Block, Item, EntityType, etc.), using a registry key and an identifier:"
+      },
+      {
+        "title": "Tags for Static Registries During Bootstrap",
+        "level": 3,
+        "summary": "Sometimes, you need to get access to a HolderSet during the registry process. In data component contexts, a HolderLookup.Provider is provided as part of the initializer to resolve:"
+      },
+      {
+        "title": "Datagen",
+        "level": 2,
+        "summary": "Like many other JSON files, tags can be datagenned. Each kind of tag has its own datagen base class - one class for block tags, one for item tags, etc. -, and as such, we need one class for each ki..."
+      },
+      {
+        "title": "Custom Tag Providers",
+        "level": 3,
+        "summary": "A custom tag provider, whether for an existing or custom registry, can be created by simply extending TagsProvider, where T is the registry object you are generating a tag for."
+      }
+    ]
   }
 ]

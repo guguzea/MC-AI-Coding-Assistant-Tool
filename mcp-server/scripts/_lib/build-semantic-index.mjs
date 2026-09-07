@@ -227,7 +227,9 @@ function discoverDocs(dataRoot, target) {
     l0ById.set(id, e);
     l0ById.set(id.replace(/\//g, "_"), e); // neoforge: gettingstarted/modfiles ↔ gettingstarted_modfiles
     const stem = id.split("/").pop();
-    if (stem) l0ById.set(stem, e);
+    // 末段仅作兜底：已存在则不覆盖。否则深层同名页（resources/client/models/items）
+    // 会顶替顶层页（items），使多个 processed 文件映射到同一 l0 条目 → docs.doc_id UNIQUE 冲突。
+    if (stem && !l0ById.has(stem)) l0ById.set(stem, e);
   }
 
   const files = readdirSync(processedDir).filter((f) => f.endsWith(".md")).sort();
@@ -250,7 +252,21 @@ function discoverDocs(dataRoot, target) {
       sectionCount: Number(entry.sectionCount ?? 0),
     });
   }
-  return { processedDir, docs, skipped, l0Count: l0.length, versionDir };
+
+  // 按 doc_id 去重：同一 id 只保留首个，重复项计入 skipped（可见留痕）。
+  // 避免因 UNIQUE 冲突导致整版索引失败；宁可少索引一个文件并留痕，也不静默丢整版。
+  const seenIds = new Set();
+  const dedupedDocs = [];
+  for (const d of docs) {
+    if (seenIds.has(d.id)) {
+      skipped.push(`${d.stem}.md（doc_id 重复：${d.id}）`);
+      continue;
+    }
+    seenIds.add(d.id);
+    dedupedDocs.push(d);
+  }
+
+  return { processedDir, docs: dedupedDocs, skipped, l0Count: l0.length, versionDir };
 }
 
 function collectChunks(processedDir, docs) {
@@ -416,6 +432,12 @@ async function main() {
         continue;
       }
       console.log(`[build ${i}/${targets.length}] ${label}（${discovered.docs.length} docs）…`);
+      if (discovered.skipped.length) {
+        const shown = discovered.skipped.slice(0, 10);
+        console.log(
+          `  [skipped ${discovered.skipped.length}] ${shown.join(" | ")}${discovered.skipped.length > 10 ? " …" : ""}`,
+        );
+      }
       const chunks = collectChunks(discovered.processedDir, discovered.docs);
       const stats = await buildIndex(dbPath, discovered.docs, chunks, embedder, {
         source_fingerprint: computeSourceFingerprint(discovered.versionDir),
