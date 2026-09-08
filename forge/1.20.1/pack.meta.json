@@ -8,11 +8,12 @@
     "gradle": "8.5",
     "provenance": {
       "text": "house",
-      "wrapper": "gradle-wrapper-task"
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-09 零改动副本（cp forge/1.20.1/scaffold → w54_forge_v2，diff -r 与仓库一致）gradlew build → BUILD SUCCESSFUL in 28s；JDK 17.0.12 Temurin（G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12）+ Gradle 8.5 wrapper + ForgeGradle [6.0,6.2)；产物 build/libs/examplemod-1.0.0.jar（6134 B，:reobfJar 已跑，jar tf 校验含 META-INF/mods.toml）；日志 _gradle_forge1201_v2.log。跑通前修掉 3 处模板缺陷：librarian 插件不可解析、顶层 mappings（FG5 语法）、CreativeModeTab.TAB_*（1.19.2 期 API 残留）"
     },
-    "buildVerified": false,
+    "buildVerified": true,
     "gaps": [
-      "gradlew build 未在本机跑通（W5-4 阶段③）"
+      "parchment 映射通道未在本机走过：librarian 插件只发布于 maven.parchmentmc.org（实测 Plugin Portal 无该制品，重定向到 Maven Central 404），而该主机 443/80 均不可达；官方 MDK 亦不含 parchment 接线 → 本模板默认 official 通道已验证"
     ]
   },
   "gaps": {

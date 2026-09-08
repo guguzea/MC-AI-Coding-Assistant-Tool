@@ -19,10 +19,10 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 // Mappings channel and version — parchment is community-sourced with parameter names and javadocs
 // See: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
-mappings channel: mapping_channel, version: mapping_version
-
 minecraft {
     copyIdeResources = true
+
+    mappings channel: mapping_channel, version: mapping_version
 
     runs {
         configureEach {
