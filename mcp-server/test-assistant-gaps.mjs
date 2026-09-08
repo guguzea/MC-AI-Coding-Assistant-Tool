@@ -1547,5 +1547,124 @@ description: |
   console.log("A-42 list_*_versions.notes ↔ 磁盘实扫一致（fabric 7 / forge 5+1 / neo 1.20.1 / quilt 4）: ok");
 }
 
+// ── A-43：根 AGENTS.md 的 fabric/quilt 建档面（§3.3.2 登记面）必须与磁盘实扫一致 ──
+{
+  const { resolveDataDir } = await import("./dist/utils/path.js");
+  const dataDir = resolveDataDir();
+  const VER = /^\d+\.\d+(?:\.\d+)?$/;
+  const lines = readFileSync(join(repo, "AGENTS.md"), "utf8").split(/\r?\n/);
+  const dirCount = (dir) => (existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith(".mdc")).length : 0);
+  const treeVersions = (platform) => {
+    const base = join(repo, platform);
+    if (!existsSync(base)) return [];
+    return readdirSync(base, { withFileTypes: true })
+      .filter((e) => e.isDirectory() && VER.test(e.name) && dirCount(join(base, e.name, ".cursor", "rules")) > 0)
+      .map((e) => e.name)
+      .sort();
+  };
+  const corpusVersions = (platform) => {
+    if (!existsSync(dataDir)) return [];
+    const prefix = `${platform}_`;
+    return readdirSync(dataDir, { withFileTypes: true })
+      .filter((e) => e.isDirectory() && e.name.startsWith(prefix) && VER.test(e.name.slice(prefix.length)))
+      .map((e) => e.name.slice(prefix.length))
+      .sort();
+  };
+  const cited = (text) => [...new Set([...text.matchAll(/`(\d+\.\d+(?:\.\d+)?)`/g)].map((m) => m[1]).filter((v) => VER.test(v)))];
+  const lineMatching = (re) => lines.find((l) => re.test(l)) ?? "";
+
+  // fabric：规则树 N 档（每档 M 条）= 语料 N 档 = list_fabric_versions N 档
+  const fabLine = lineMatching(/规则树 \d+ 档.*list_fabric_versions/);
+  assert.ok(fabLine, "根 AGENTS.md 缺 fabric 建档面「规则树 N 档 = 语料 = list_fabric_versions」那条");
+  const [, fabRuleN, fabRuleFiles] = /规则树 (\d+) 档（每档 (\d+) 条/.exec(fabLine) ?? [];
+  assert.ok(fabRuleN && fabRuleFiles, "fabric 建档面没写出「每档 N 条」，无法对磁盘核");
+  const fabCited = cited(fabLine).sort();
+  const fabTrees = treeVersions("fabric");
+  const fabCorpus = corpusVersions("fabric");
+  assert.equal(Number(fabRuleN), fabTrees.length, `fabric 规则树档数自称 ${fabRuleN}，磁盘 ${fabTrees.length}`);
+  assert.deepEqual(fabCited, fabTrees, "fabric 建档面点名的版本集 ≠ 磁盘规则树集");
+  assert.deepEqual(fabCorpus, fabTrees, "fabric 建档面称「三者完全一致」，磁盘上语料集已不等于规则树集");
+  const { listFabricVersions, searchFabricDocs } = await import("./dist/docs-platform/fabric/index.js");
+  const fabTool = JSON.parse((await listFabricVersions()).content[0].text);
+  assert.deepEqual([...fabTool.versions].sort(), fabTrees, "list_fabric_versions 与磁盘规则树不同步（登记面写的「三者一致」是假话）");
+  for (const v of fabTrees) {
+    assert.equal(dirCount(join(repo, "fabric", v, ".cursor", "rules")), Number(fabRuleFiles), `fabric/${v} 规则条数不是建档面写的 ${fabRuleFiles}`);
+  }
+  const fabHollow = lineMatching(/空洞（既无树也无语料）/);
+  assert.ok(fabHollow, "根 AGENTS.md 缺 fabric 空洞登记");
+  for (const v of cited(fabHollow)) {
+    assert.equal(fabTrees.includes(v), false, `fabric 空洞清单里的 ${v} 其实有规则树`);
+    assert.equal(fabCorpus.includes(v), false, `fabric 空洞清单里的 ${v} 其实有语料`);
+  }
+  for (const v of ["1.21.2", "1.21.6", "1.21.7", "1.21.9"]) {
+    assert.ok(cited(fabHollow).includes(v), `§3.3.2 要求的 fabric 空洞 ${v} 未登记进根 AGENTS.md`);
+  }
+
+  // quilt：三档清单（有树 / 有树无语料 / 无树）+ 空洞档行为
+  const qTrees = treeVersions("quilt");
+  const qCorpus = corpusVersions("quilt");
+  const qTreeLine = lineMatching(/^- \*\*有规则树\*\*（\d+ 档）/m);
+  assert.ok(qTreeLine, "根 AGENTS.md 缺 quilt「有规则树」清单");
+  assert.equal(Number(/（(\d+) 档）/.exec(qTreeLine)[1]), qTrees.length, "quilt 规则树档数与磁盘不符");
+  assert.deepEqual(cited(qTreeLine).sort(), qTrees, "quilt 建档面点名的规则树集 ≠ 磁盘");
+  const qGapLine = lineMatching(/有树但无 `data\/quilt_/);
+  assert.ok(qGapLine, "根 AGENTS.md 缺 quilt「有树但无语料」清单");
+  const qGap = qTrees.filter((v) => !qCorpus.includes(v)).sort();
+  assert.deepEqual(cited(qGapLine).sort(), qGap, "quilt「有树但无语料」清单 ≠ 磁盘差额");
+  const qNoneLine = lineMatching(/^- \*\*无树\*\*/m);
+  assert.ok(qNoneLine, "根 AGENTS.md 缺 quilt「无树」清单");
+  for (const v of cited(qNoneLine)) {
+    assert.equal(qTrees.includes(v), false, `quilt「无树」清单里的 ${v} 其实有规则树`);
+  }
+  const qHollowLine = lineMatching(/空洞档实测行为/);
+  assert.ok(qHollowLine, "根 AGENTS.md 缺 quilt 空洞档行为登记（§3.3.2）");
+  for (const v of ["1.20.6", "1.21.2", "1.21.5", "1.21.6", "1.21.7", "1.21.9"]) {
+    assert.ok(cited(qHollowLine).includes(v), `quilt 空洞 ${v} 未逐档登记`);
+  }
+  assert.match(qHollowLine, /带 `candidates` 数组/, "quilt 空洞登记没说清同系列有档时会带候选清单");
+  assert.match(qHollowLine, /无 `candidates`/, "quilt 空洞登记没说清 26.x 侧没有候选清单");
+  assert.match(qHollowLine, /26\.1\.2[\s\S]{0,400}fallback:"fabric"/, "quilt 26.x 的检索不对称未登记");
+
+  // 行为腿：session PACK_NOT_FOUND（候选清单逐档钉死）+ 检索 VERSION_NOT_FOUND 不 fallback + 26.1.2 例外
+  const codeOf = (o) => o.action?.code ?? o.error?.code;
+  const SERIES_121 = ["1.21.1", "1.21.3", "1.21.4", "1.21.8", "1.21.10", "1.21.11"];
+  for (const [platform, version, expectCandidates] of [
+    ["fabric", "1.21.6", SERIES_121],
+    ["quilt", "1.20.6", ["1.20.1", "1.20.4"]],
+    ["quilt", "1.21.2", SERIES_121],
+    ["quilt", "1.21.5", SERIES_121],
+    ["quilt", "1.21.6", SERIES_121],
+    ["quilt", "1.21.7", SERIES_121],
+    ["quilt", "1.21.9", SERIES_121],
+    ["quilt", "26.1.2", null],
+    ["quilt", "26.2", null],
+  ]) {
+    const r = sessionPlatformPack({ platform, minecraftVersion: version });
+    assert.equal(r.ok, false, `${platform} ${version} 无树却 session 成功`);
+    assert.equal(codeOf(r), "PACK_NOT_FOUND", `${platform} ${version} 不是 PACK_NOT_FOUND`);
+    assert.deepEqual(r.candidates ?? null, expectCandidates, `${platform} ${version} 候选清单 ≠ 登记面写的 ${JSON.stringify(expectCandidates)}`);
+  }
+  const { searchDocs } = await import("./dist/docs-platform/forge/index.js");
+  const searched = async (platform, version) =>
+    JSON.parse((await searchDocs({ platform, version, query: "registry" })).content[0].text);
+  for (const version of ["1.20.6", "1.21.2", "1.21.5", "1.21.6", "1.21.7", "1.21.9"]) {
+    const s = await searched("quilt", version);
+    assert.equal(s.ok, false, `quilt ${version} 空洞档检索居然成功`);
+    assert.equal(codeOf(s), "VERSION_NOT_FOUND", `quilt ${version} 检索没按 VERSION_NOT_FOUND 报错`);
+    assert.equal(s.fallback ?? null, null, `quilt ${version} 空洞档不得 fallback 到邻版正文`);
+    assert.equal("total" in s, false, `quilt ${version} 错误载荷冒出 total，登记面「没有 total 字段」作废`);
+  }
+  const fabHollowSearch = JSON.parse((await searchFabricDocs({ query: "registry", version: "1.21.6" })).content[0].text);
+  assert.equal(fabHollowSearch.ok, false, "fabric 1.21.6 空洞档检索居然成功");
+  assert.equal(codeOf(fabHollowSearch), "VERSION_NOT_FOUND", "fabric 1.21.6 检索没按 VERSION_NOT_FOUND 报错");
+  assert.equal(fabHollowSearch.fallback ?? null, null, "fabric 空洞档不得 fallback 到邻版正文");
+  const q26 = await searched("quilt", "26.1.2");
+  assert.equal(q26.ok, true, "quilt 26.1.2 检索应回 Fabric 正文（登记面已点名这条不对称）");
+  assert.equal(q26.fallback, "fabric");
+  assert.equal(q26.sourcePlatform, "fabric");
+  assert.equal(q26.total, 17, "quilt 26.1.2 改口 Fabric 后命中数不是登记面写的「实测 17 条」");
+  console.log(`A-43 根 AGENTS.md 建档面 ↔ 磁盘实扫 + 空洞档行为一致（fabric ${fabTrees.length} / quilt ${qTrees.length}·缺语料 ${qGap.length}）: ok`);
+}
+
 console.log("test-assistant-gaps: all passed");
 
