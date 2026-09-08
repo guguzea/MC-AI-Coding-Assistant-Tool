@@ -77,3 +77,8 @@ java {
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = 'UTF-8'
 }
+
+// 中文注释在 Windows 默认码集（GBK）下会让 :javadoc 报「编码 GBK 的不可映射字符」
+tasks.withType(Javadoc).configureEach {
+    it.options.encoding = 'UTF-8'
+}
