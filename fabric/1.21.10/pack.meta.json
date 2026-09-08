@@ -5,7 +5,7 @@
   "minecraftVersion": "1.21.10",
   "note": "versioned fabric-docs only; no wiki clone",
   "gaps": {
-    "code-patterns": "设计如此：本档为薄档，不落 code-patterns/（fabric 里只有部分档有该目录，如 1.21.11 / 1.20.1）",
+    "code-patterns": "设计如此（2026-09-08 裁定「薄档即声明」）。薄档的判据取盘上实测、不取本句自称：本档 knowledge/ 全文实扫 = 1 篇（common/verified-api-1.21.10.md），而同平台有该族的 7 档 knowledge/ 均 12–13 篇 → 本档属薄档形态，不落 code-patterns/。如实登记：本档 AGENTS.md 里 code-patterns / 有意为空 / 薄档 三个词各 0 处，故声明效力来自上条裁定 + 本行实测，不来自 AGENTS 句子。fabric 14 档 = 7 有 7 无（有该族 = 1.16.5 / 1.17.1 / 1.18.2 / 1.20.1 / 1.21.1 / 1.21.3 / 1.21.11）。非薄档的 1.14.4 / 1.19.4 / 1.20.4 不适用本裁定，仍记缺口。禁止克隆邻档该族顶数。",
     "knowledge": "仅 knowledge/common/verified-api-1.21.10.md；本档语料无可核实主题页可支撑更多短文",
     "loader-api": "无 1.21.10-fabric-api.json 摘要；类名只来自 search_fabric_docs version=1.21.10，FQCN 与模块 id 一律标未核实"
   },
