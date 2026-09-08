@@ -449,7 +449,7 @@
       "license": "LGPL (Forge MDK template)",
       "gitPolicy": "submodule_ok",
       "mappings": "mcp",
-      "notes": "recommended/latest 47.4.10 from promotions_slim.json"
+      "notes": "钉值 = promotions_slim.json 的 1.20.1-recommended 47.4.10（本条 sha256 已对该 MDK 逐字节核）；1.20.1-latest = 47.4.23（2026-09-07 实查，其 MDK 未核 → 不上钉）。与 forge/1.20.1/AGENTS.md「Gradle」行同口径"
     },
     {
       "id": "forge-1.19.4-forgegradle",
