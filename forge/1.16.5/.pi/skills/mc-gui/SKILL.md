@@ -4,7 +4,7 @@ description: Minecraft Forge GUI/菜单开发。创建自定义 Container、Scre
 platform: forge
 version: "1.16.5"
 dependencies: []
-mappings: parchment
+mappings: official
 ---
 
 # GUI/菜单开发（Forge 1.16.5）

@@ -4,7 +4,7 @@ description: Minecraft Forge 流体开发。创建流体 Fluid、ForgeFlowingFlu
 platform: forge
 version: "1.16.5"
 dependencies: []
-mappings: parchment
+mappings: official
 ---
 
 # 流体开发（Forge 1.16.5）
@@ -78,7 +78,7 @@ public static final RegistryObject<Item> MY_BUCKET =
     );
 ```
 
-1.16.5 Parchment 里 `Item.Properties` 若没有 `stacksTo` / `tab`，改用 `stacksTo(1)` / `group(ItemGroup.TAB_MISC)`。
+本包 scaffold 默认 **official**：`stacksTo(1)` 配 `tab(ItemGroup.TAB_MISC)`。用户工程若是 MCP（`mappings channel: 'snapshot'`），两条都要换形：`maxStackSize(1)` 配 `group(ItemGroup.MISC)`——方法名与常量名必须同源，禁止一组 official 一组 MCP。
 
 ## DeferredRegister 汇总
 

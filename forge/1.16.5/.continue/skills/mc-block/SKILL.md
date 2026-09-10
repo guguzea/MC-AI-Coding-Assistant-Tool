@@ -4,7 +4,7 @@ description: Minecraft Forge 方块开发。创建方块、方块实体、方块
 platform: forge
 version: "1.16.5"
 dependencies: []
-mappings: parchment
+mappings: official
 ---
 
 # 方块开发（Forge 1.16.5）

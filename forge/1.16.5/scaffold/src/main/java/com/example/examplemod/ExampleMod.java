@@ -8,19 +8,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTables;
-import net.minecraft.world.storage.loot.TableLootEntry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -42,7 +39,7 @@ public class ExampleMod {
     // ---- 注册普通物品 ----
     public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item",
         () -> new Item(new Item.Properties()
-            .maxStackSize(64)
+            .stacksTo(64)
             .tab(net.minecraft.item.ItemGroup.TAB_MISC)
         )
     );
@@ -66,8 +63,8 @@ public class ExampleMod {
 
     // ---- 服务端事件 ----
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        LOGGER.info("Server starting: {}", event.getServer().getWorld(World.OVERWORLD).getWorldInfo().getWorldName());
+    public void onServerStarting(FMLServerStartingEvent event) {
+        LOGGER.info("Server starting: {}", event.getServer().getServerDirectory());
     }
 
     // ---- 客户端事件 ----

@@ -7,10 +7,10 @@
 | 特性 | Forge | NeoForge | Fabric |
 |------|-------|---------|--------|
 | 注册系统 | DeferredRegister / RegistryObject | DeferredRegister / DeferredHolder | Registry#register |
-| Mixin 支持 | via ForgeGradle | via NeoGradle | 内置 |
+| Mixin 支持 | 不由构建插件提供：老档（1.8–1.12.2）用 MixinBooter，1.16–1.20.x dev 期插件出 refmap + 运行时 loader 装载 config（见 `community_knowledge/authored/mixin-practices-crossplatform.md`） | 同属加载器能力，与 Gradle 插件无关。1.21.1+ 语料有 `[[mixins]]` + `config="examplemod.mixins.json"`（`data/neoforge_1.21.1/neoforge-docs/1.21.1/processed/gettingstarted_modfiles.md:209-216`）；1.20.4 / 1.20.6 语料 `grep -i mixin` 零命中 → 写前按精确版本核实 | Loader 原生：`fabric.mod.json` 的 `mixins` 数组 + `*.mixins.json`，无需额外依赖 |
 | 事件系统 | @SubscribeEvent + MinecraftForge.EVENT_BUS | @SubscribeEvent + NeoForge.EVENT_BUS | @Environment / Callback |
 | 网络通信 | SimpleChannel (`net.minecraftforge.network`) | **不要**抄 SimpleChannel。1.20.4 起走 Payload（官方 menus 页仍可能写 `NetworkHooks.openScreen`；1.21.1 网络页是 `RegisterPayloadHandlersEvent`）。按 `neoforge/<精确版本>/.cursor/rules/06-networking.mdc` | Fabric `PayloadTypeRegistry` / `CustomPayload` |
-| 元数据文件 | mods.toml | neoforge.mods.toml | fabric.mod.json |
+| 元数据文件 | mods.toml | `META-INF/mods.toml`（≤1.20.4）→ `META-INF/neoforge.mods.toml`（1.20.6 起） | fabric.mod.json |
 | Mod ID 依赖 | `modId="forge"` | `modId="neoforge"` | N/A |
 | 包名空间 | net.minecraftforge | net.neoforged | net.fabricmc.fabric.* |
 | 数据生成 | GatherDataEvent | GatherDataEvent | FabricDataGenerator |
@@ -25,6 +25,7 @@
 net.minecraftforge.fml        → net.neoforged.fml
 net.minecraftforge.network    → net.neoforged.neoforge.network
 net.minecraftforge.api.distmarker → net.neoforged.api.distmarker
+net.minecraftforge.eventbus   → net.neoforged.bus      # 例外：事件总线是独立制品，不在 net.neoforged.neoforge.* 下
 ```
 
 ### 导入语句变更
@@ -33,7 +34,7 @@ net.minecraftforge.api.distmarker → net.neoforged.api.distmarker
 // Forge 1.20.1
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.Bus;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -41,24 +42,45 @@ import net.minecraftforge.registries.ForgeRegistries;
 // NeoForge 1.20.4
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.eventbus.api.Bus;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.bus.api.IEventBus;                 // 事件总线换到 net.neoforged.bus
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 ```
 
+> 两边都**没有** `eventbus.api.Bus` 这个类。上表取自本仓 scaffold 实测 import：
+> `forge/1.20.4/scaffold` 用 `net.minecraftforge.eventbus.api.IEventBus`，
+> `neoforge/<ver>/scaffold` 用 `net.neoforged.bus.api.IEventBus` / `net.neoforged.bus.api.SubscribeEvent`。
+
 ### Gradle 配置变更
 
 ```groovy
-// build.gradle
+// build.gradle —— Forge（ForgeGradle）→ NeoForge（ModDevGradle）
 plugins {
-    id 'net.neoforged.gradle' version '[7.0.15,7.2)'  // Forge → NeoForge
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.144'   // 实测 plugins.gradle.org 最新 2.0.146
+    id 'idea'
 }
 
-dependencies {
-    minecraft "net.neoforged:neoforge:${neoform_version}"
+neoForge {
+    version = project.neo_version        // 取代 Forge 的 minecraft "net.minecraftforge:forge:..."
+    parchment {                          // 可选：参数名 + Javadoc 层
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+    runs {
+        client { client() }
+        server { server() }
+    }
 }
 ```
+
+> Forge 侧的 `minecraft { mappings channel: 'parchment', version: '...' }` 与
+> `minecraft "net.neoforged:neoforge:${neoform_version}"` 在 MDG 里都**没有**对应写法：
+> MDG 用 `neoForge { version = ... }`，不需要 `minecraft` 依赖行。
+> NeoForge 侧当前在用的插件 id 是 `net.neoforged.moddev`（MDG）与 `net.neoforged.gradle.userdev`（NeoGradle，最新 7.1.38）两套；
+> 裸 `net.neoforged.gradle` 是旧 Forge 时代的 NeoGradle，版本停在 6.0.21，写 `[7.0.15,7.2)` 解析不到。
+> 上面的骨架取自 `neoforge/1.21.1/scaffold/build.gradle:1-6,41-48`（1.20.6 起的 8 份 scaffold 同形，只有钉值不同；`1.20.4` 钉 `2.0.143`）。移植到具体档时以该档 `neoforge/<精确版本>/scaffold/build.gradle` 为准。
 
 ### mods.toml → neoforge.mods.toml
 
@@ -71,6 +93,10 @@ modId="forge"  # Forge 依赖使用 "forge"
 [[dependencies.examplemod]]
 modId="neoforge"  # NeoForge 依赖使用 "neoforge"
 ```
+
+> 文件名分叉：**只有 1.20.6 起**才叫 `neoforge.mods.toml`（`data/neoforge_1.20.6/.../gettingstarted_modfiles.md:71`）；
+> `1.20.4` 及更早仍是 `META-INF/mods.toml`（实测 `neoforge/1.20.4/scaffold/src/main/templates/META-INF/mods.toml`）。
+> 但 `modId="neoforge"` 从 1.20.4 起就已成立——别因为文件名没改就把工程判成 Forge。
 
 ### 入口类（Forge ≤1.20.1 与 NeoForge）
 

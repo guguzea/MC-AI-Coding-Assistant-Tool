@@ -50,24 +50,27 @@ forge_version_range=[37,)
 
 ---
 
-## 错误：copyIdeResources 未启用
+## 错误：照抄 1.19.4+ 模板的 copyIdeResources
 
-**症状：** IDE 中修改资源文件后游戏不加载新内容
+**症状：** `gradlew` 在配置阶段就失败 —— `A problem occurred evaluating root project …`，底层异常 `groovy.lang.MissingPropertyException: copyIdeResources`
+
+`copyIdeResources` 是 ForgeGradle 6 才加入的 `minecraft { }` 扩展属性；本档用 ForgeGradle `5.1.+`，没有这一项。从 1.19.4 / 1.20.x 模板复制 `build.gradle` 时会把它一起带进来，删掉即可。本档 `scaffold/build.gradle` 不含该行。
 
 ```groovy
-// ❌ 遗漏
-minecraft {
-    runs {
-        configureEach { ... }
-    }
-}
-
-// ✅ 必须启用
+// ❌ 本档 FG 无该属性，写了立刻破构建
 minecraft {
     copyIdeResources = true
     runs { ... }
 }
+
+// ✅ 本档写法：minecraft { } 内只保留 mappings + runs
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    runs { ... }
+}
 ```
+
+实测取证（同族，2026-09-10 本机）：`forge/1.18.2` scaffold 在 `minecraft { }` 内写 `copyIdeResources = true` + FG `[5.1.2,5.2)` + Gradle 7.6 + JDK 17.0.12 → `gradlew help --stacktrace` 报 `Caused by: groovy.lang.MissingPropertyException: copyIdeResources`，随后级联 `Missing 'minecraft' dependency.`。官方 1.17.1 MDK（FG `5.1.+`）亦不含该行；含该行的是 FG `[6.0,6.2)` 的官方 MDK（1.18.2-40.3.0 / 1.19.4 / 1.20.1 / 1.20.4）。「IDE 改资源不生效」是 FG 6 时代的症状；本档 FG 5.1 的替代做法未核实，不要臆造。
 
 ---
 

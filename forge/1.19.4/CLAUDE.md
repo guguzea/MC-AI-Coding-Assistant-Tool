@@ -14,7 +14,7 @@ IF src/main/resources/META-INF/mods.toml exists AND build.gradle contains "forge
 IF build.gradle contains "1.19.4"
   → Use Forge 1.19.4 rules
 
-IF build.gradle contains "neoforge" OR "neogradle"
+IF build.gradle contains "neoforge"  /* 真实标记：id 'net.neoforged.moddev' 或 id 'net.neoforged.gradle.userdev'；"neogradle" 这个字符串在 Gradle 里不存在 */
   → Use NeoForge rules instead
 ```
 
@@ -84,7 +84,7 @@ src/main/java/com/example/mod/
 ## Version-Specific Notes (1.19.4)
 
 - **MobCategory** is used for entity spawn groups (Yarn `SpawnGroup` is not a Forge 1.20.7 rename)
-- **Parchment mappings** recommended: `1.19.4-2023.06.26`
+- **Parchment mappings** recommended: `2023.06.26-1.19.4`
 - **pack_format**：数据包 **12**、资源包 **13**（1.19.4）
 - **Forge 45.4.x** for Minecraft 1.19.4
 <!-- MC_SKILL_WORKFLOW_NOTE -->

@@ -35,5 +35,5 @@ new Item.Properties()  // ❌ 没有 group，物品不会出现在创造模式
 
 ```java
 new Item.Properties()
-    .group(ItemGroup.TAB_MISC)
+    .group(ItemGroup.MISC)
 ```

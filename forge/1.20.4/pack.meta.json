@@ -8,11 +8,13 @@
     "gradle": "8.5",
     "provenance": {
       "text": "house",
-      "wrapper": "gradle-wrapper-task"
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-10 23:11 零改动副本（cp forge/1.20.4/scaffold → D:/mc-skill-temp/w54b_forge_v3_1.20.4，diff -r 与仓库一致 0 行）gradlew build → BUILD SUCCESSFUL in 35s，:compileJava 无警告；JDK 17.0.12（G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12）+ Gradle 8.5 wrapper + ForgeGradle [6.0,6.2) + mapping_channel=parchment / mapping_version=2024.02.25-1.20.4；产物 build/libs/examplemod-1.0.0.jar（6142 B，:reobfJar 已跑，unzip -l 校验含 META-INF/mods.toml + ExampleMod.class + ExampleMod$ClientModEvents.class + pack.mcmeta）；日志 _g_forge1.20.4_v3.log。跑通前修掉 2 处模板缺陷：mapping_version 反序（`1.20.4-2024.02.25` 触发 ParchmentMappingVersion … is invalid）、Item.Properties.tab(CreativeModeTab.TAB_*) 为 ≤1.19.2 期 API（本档 :compileJava 实测 4 条「找不到符号 tab/CreativeModeTab」错误）→ 改走 BuildCreativeModeTabContentsEvent + event.getTabKey() == CreativeModeTabs.*，改后与已跑通的 forge/1.20.1 模板逐字节一致"
     },
-    "buildVerified": false,
+    "buildVerified": true,
     "gaps": [
-      "gradlew build 未在本机跑通（W5-4 阶段③）"
+      "scaffold 不含 assets（模型/纹理/lang）→ 复制后方块与物品为 missingtexture、显示名为未翻译占位键；本模板只演示注册代码，Forge 全部 10 档 scaffold 同状（实测各档 src/main/resources 仅 mods.toml/mcmod.info + pack.mcmeta，assets 文件数 0）",
+      "buildVerified 只覆盖 :compileJava + :reobfJar（编译期与字节码产物）；@Mod 构造器、注册时机、进游戏后的行为均未在本机实跑验证（本仓库不代人跑游戏）"
     ]
   },
   "gaps": {

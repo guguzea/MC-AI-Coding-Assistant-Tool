@@ -14,7 +14,8 @@ archivesBaseName = mod_id
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
-    mappings channel: mapping_channel, version: mapping_version
+    // FG4 的 MinecraftExtension 也声明了这两个字段，裸写会被 DELEGATE_FIRST 命中其空值 → 显式 project.
+    mappings channel: project.mapping_channel, version: project.mapping_version
 
     runs {
         configureEach {

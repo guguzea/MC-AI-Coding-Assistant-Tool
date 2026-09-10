@@ -53,15 +53,13 @@ public class ExampleMod {
     // ---- 注册方块对应的 ItemBlock ----
     // ItemBlock 与方块使用相同 registry name，自动关联
     public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block",
-        () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()
-            .tab(CreativeModeTab.TAB_BUILDING_BLOCKS)
-        )
+        () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties())
     );
 
     // ---- 注册普通物品 ----
+    // 创造模式标签不放在这里：1.19.3+ 走 BuildCreativeModeTabContentsEvent，见下方 addCreative
     public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item",
         () -> new Item(new Item.Properties()
-            .tab(CreativeModeTab.TAB_MISC)
             .stacksTo(64)
         )
     );
@@ -69,7 +67,6 @@ public class ExampleMod {
     // ---- 注册食物（带药水效果） ----
     public static final RegistryObject<Item> EXAMPLE_FOOD = ITEMS.register("example_food",
         () -> new Item(new Item.Properties()
-            .tab(CreativeModeTab.TAB_FOOD)
             .food(new FoodProperties.Builder()
                 .nutrition(4)
                 .saturationMod(0.3f)
@@ -116,8 +113,12 @@ public class ExampleMod {
 
     // ---- 将物品添加到创造模式标签（通过事件订阅） ----
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTab.TAB_MISC) {
+        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            event.accept(EXAMPLE_BLOCK_ITEM);
+        } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(EXAMPLE_ITEM);
+        } else if (event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
+            event.accept(EXAMPLE_FOOD);
         }
     }
 

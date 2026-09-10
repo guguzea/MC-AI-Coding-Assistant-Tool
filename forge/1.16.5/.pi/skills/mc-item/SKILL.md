@@ -4,7 +4,7 @@ description: Minecraft Forge 物品开发。创建物品、工具（剑/镐/斧�
 platform: forge
 version: "1.16.5"
 dependencies: []
-mappings: parchment
+mappings: official
 ---
 
 # 物品开发（Forge 1.16.5）

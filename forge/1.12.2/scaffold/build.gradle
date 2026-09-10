@@ -9,7 +9,8 @@ buildscript {
     }
 }
 
-apply plugin: 'forge'
+// FG2.3 的 META-INF/gradle-plugins 只注册了 net.minecraftforge.gradle.forge（无裸 `forge` id）
+apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "1.0.0"
 group = "com.example.examplemod"

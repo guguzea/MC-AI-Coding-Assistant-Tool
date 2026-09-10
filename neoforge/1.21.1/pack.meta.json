@@ -8,11 +8,12 @@
     "gradle": "9.2.1",
     "provenance": {
       "text": "official-mdk:MDK-1.21.1-ModDevGradle@b893096c",
-      "wrapper": "gradle-wrapper-task"
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-10 零改动副本（cp -r neoforge/1.21.1/scaffold → D:/mc-skill-temp/w54b_neo_1.21.1，diff -r 输出 0 行）GradleWrapperMain build → BUILD SUCCESSFUL in 4m24s；串行队列 _queue_neo.sh，环境同 neoforge/1.20.4 条（脚手架自带 wrapper 三件套 + 预置 G:/gradle-9.2.1-all 解包发行版、JAVA_HOME=GraalVM 21.0.12、工具链表写在 scratch 的 gh921/gradle.properties）；JavaLanguageVersion.of(21) 与 JAVA_HOME 同版，ModDevGradle 2.0.144 + neo_version 21.1.248；产物 build/libs/examplemod-1.0.0.jar（5663 B，unzip -l 含 META-INF/neoforge.mods.toml + ExampleMod.class）；日志 D:/mc-skill-temp/_g_neo1.21.1_v1.log；模板一行未改"
     },
-    "buildVerified": false,
+    "buildVerified": true,
     "gaps": [
-      "gradlew build 未在本机跑通（W5-4 阶段③）"
+      "buildVerified 仅覆盖 :build 任务链（编译 + generateModMetadata + 打包）；runClient / runServer / runData 无真机启动证据，W5-4 未扩到运行循环"
     ]
   }
 }

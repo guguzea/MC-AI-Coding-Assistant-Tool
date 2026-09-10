@@ -13,8 +13,8 @@
 | Minecraft 版本 | 1.16.5 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 8**（官方：Minecraft 与 MinecraftForge 均按 Java 8 编译，「must only use Java 8 code」；Java 15 只是后期 Forge 的运行期支持）。详见 `00-project-setup.mdc` |
-| Gradle | **Gradle 7.6 + ForgeGradle `[4.1,4.2)`**（本包 `scaffold/build.gradle:5` + `scaffold/gradle/wrapper/gradle-wrapper.properties:3`）。⚠️ 官方 1.16.5-36.2.34 MDK 声明的是 **FG `5.1.+` + Gradle 7.3.3**（MDK `build.gradle:7`、`gradle-wrapper.properties:3`；sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）。scaffold 与 MDK 组合不一致（未裁定分歧），不要把一套当另一套的官方背书 |
-| Mappings | **Parchment**（`2021.07.27-1.16.5`，maven.parchmentmc.org 首发；本包 `scaffold/build.gradle:22` `mappings channel: 'parchment', version: mapping_version`）。⚠️ 官方 1.16.5-36.2.34 MDK 默认是 **`mappings channel: 'official', version: '1.16.5'`**（MDK `build.gradle:34`，Mojmap：方法/字段官方名、类名仍是 MCP 名），MCP 则走 `snapshot` 通道。三套映射不同源，按用户工程实际声明的那一套写名字，禁止混用（详见 `knowledge/version-changes/1.16.x.md`） |
+| Gradle | **Gradle 7.6 + ForgeGradle `[4.1,4.2)`**（本包 `scaffold/build.gradle:5` + `scaffold/gradle/wrapper/gradle-wrapper.properties:3`）。⚠️ 官方 1.16.5-36.2.34 MDK 声明的是 **FG `5.1.+` + Gradle 7.3.3**（MDK `build.gradle:7`、`gradle-wrapper.properties:3`；sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）。scaffold 与 MDK 组合不一致（未裁定分歧），不要把一套当另一套的官方背书。❌ 按声明钉值跑不起来（非风格分歧）：`./gradlew build`（Gradle 7.6）配置期即失败 —— `Found Gradle version Gradle 7.6. Versions Gradle 7.0 and newer are not supported yet. Note: Support for Gradle 7 will be added in ForgeGradle 5.`；钉值不追平（根 memory 裁定），但 scaffold 内两处 Gradle-7-only 构造已于 2026-09-11 改到 FG4 可用形态（`base { archivesName }` → 顶层 `archivesBaseName`；删 `foojay-resolver-convention 0.4.0`，改为要求用 JDK 8 跑 Gradle）。改后**原样 scaffold** 在 Gradle 6.9.4 + JDK 8 真机 `BUILD SUCCESSFUL`（前置：预建 FG4 漏 `mkdirs` 的 tsrg 缓存目录，见 `pack.meta.json` gaps）⇒ `buildVerified` 仍 false，卡点只剩 wrapper 钉值本身 |
+| Mappings | 本包 scaffold = **official**（`scaffold/gradle.properties:15-16` `mapping_channel=official` / `mapping_version=1.16.5`，`scaffold/build.gradle:24` 以 `project.` 显式引用）。与官方 1.16.5-36.2.34 MDK 默认同向（Mojmap：方法/字段官方名、类名仍是 MCP 名），也与本包全部示例命名同源（`.tab(ItemGroup.TAB_…)` / `stacksTo(...)`）。⚠️ 2026-09-11 前这里声明的是 **Parchment `2021.07.27-1.16.5`** —— 本档 FG4 无该 provider：`java.lang.IllegalArgumentException: Unknown mapping provider: parchment_2021.07.27-1.16.5`，补 librarian 插件又缺 FG5+ 才有的 `ChannelProvider` ⇒ 用 Parchment 必须先升 FG 5+。MCP 工程走 `snapshot` 通道，命名随之换形（`group(...)` / `maxStackSize(...)` / `ItemGroup.MISC`）。三套映射不同源，按用户工程实际声明的那一套写名字，禁止混用（详见 `knowledge/version-changes/1.16.x.md` + `00-project-setup.mdc`「Mappings 约束」） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---
@@ -142,7 +142,7 @@ src/main/java/
 |------|---------------|----------------|------|
 | 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
 | Java 版本 | **Java 8**（代码与编译目标） | Java 17+ | 1.16.5 语料只背书 Java 8（`gettingstarted.md:14`、`primer_1_16_5.md:614/616`）；「Java 17+」是 1.18.2 / 1.20.1 档 `gettingstarted.md` 的要求 |
-| Mappings | Parchment（推荐） | MCP / Parchment | 1.16.5 推荐 Parchment |
+| Mappings | **official**（scaffold 默认）| MCP / Parchment | FG4 无 parchment provider；Parchment 需先升 FG 5+ |
 | pack_format | **6** | 15+ | 资源包格式不同 |
 | DataGen | 存在但 API 简化 | 完整 DataGen | 1.16.5 DataGen 有限 |
 | Fluid 注册 | `FluidAttributes` | `FluidType`（1.19+） | 本档无 FluidType |

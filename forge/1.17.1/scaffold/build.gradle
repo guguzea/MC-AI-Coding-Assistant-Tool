@@ -117,3 +117,8 @@ publishing {
         }
     }
 }
+
+// 不设则 compileJava 的源码编码随 Gradle 版本默认值漂移，本模板的非 ASCII 字符可能编译失败
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

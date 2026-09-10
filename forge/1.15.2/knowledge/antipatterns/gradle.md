@@ -100,3 +100,50 @@ java {
     }
 }
 ```
+
+## 错误：FG4 档混用 Gradle 7+ 构造 / Parchment 通道
+
+**症状：** 配置期就失败，一行 Java 都没编译（2026-09-11 真机逐条复现）：
+
+```
+Failed to apply plugin 'net.minecraftforge.gradle'.
+   > Found Gradle version Gradle 7.3.3. Versions Gradle 7.0 and newer are not supported yet.
+     Note: Support for Gradle 7 will be added in ForgeGradle 5.
+Could not generate a decorated class for type FoojayToolchainsPlugin. > org/gradle/jvm/toolchain/JavaToolchainResolverRegistry
+java.lang.IllegalArgumentException: Unknown mapping provider: parchment_2021.07.27-1.16.5
+Could not find method base() for arguments [...] on project 'examplemod' of type DefaultProject
+```
+
+**根因：** ForgeGradle `[4.1,4.2)` 硬拒 Gradle ≥ 7，而下列构造只在 Gradle 7+ 存在／生效——两者不存在共同可用版本：
+
+```groovy
+// ❌ FG4 档不可用（本包 2026-09-11 前就是这样，pack.meta.buildVerified=false）
+// settings.gradle
+plugins { id 'org.gradle.toolchains.foojay-resolver-convention' version '0.4.0' }
+// build.gradle
+base { archivesName = mod_id }
+// gradle.properties
+mapping_channel=parchment        // FG4 无该 provider
+
+// ✅ FG4 档形态
+// settings.gradle：不加 foojay；改用 JDK 8 运行 Gradle（JAVA_HOME / org.gradle.java.home）
+archivesBaseName = mod_id
+mapping_channel=official         // 或 snapshot（MCP），见 AGENTS.md Mappings 行
+```
+
+**处置：** `gradle-wrapper.properties` 的钉值属于「与官方 MDK 的代差」，按仓库裁定不擅自改（只在 `pack.meta.json` / `AGENTS.md` 记警告）；上面四处是模板自身缺陷，必须落到 FG4 可用形态。要 Parchment 就得先把 FG 升到 5+，二者不能同时保留。
+
+## 错误：把 FG4 首建的 `NoSuchFileException(*.tsrg)` 当成下载失败
+
+**症状：**
+
+```
+java.nio.file.NoSuchFileException: C:\Users\<you>\.gradle\caches\forge_gradle\mcp_repo\de\oceanlabs\mcp\mcp_config\1.15.2\mcp_config-1.15.2-obf_to_srg.tsrg
+    at ...MCPRepo.findRenames(...)
+java.nio.file.NoSuchFileException: ...\minecraft_user_repo\de\oceanlabs\mcp\mcp_config\1.15.2-20200515.085601\srg_to_snapshot_20200514-1.15.1.tsrg
+    at ...MinecraftUserRepo.findSrgToMcp(...)
+```
+
+**根因：** FG4 写 tsrg 时用 `Files.newOutputStream` 而不先 `mkdirs`，父目录不存在即抛 `NoSuchFileException`。**不是**网络问题、**不是**「MCP 快照坐标不存在」、也不是模板代码缺陷——本仓库曾据此误判过 `official` 通道不可用。
+
+**处置：** 按报错给出的完整路径 `mkdir -p` 其父目录后重跑构建（第二次 FG4 会自己把上层目录建出来）；诊断 `diagnose_gradle` 报 tsrg 缺失时先核对这一条。

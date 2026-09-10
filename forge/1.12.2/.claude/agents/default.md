@@ -14,8 +14,8 @@
 | 注册模式 | `@EventBusSubscriber` + `RegistryEvent.Register<T>` |
 | Java 版本 | **Java 8**（Forge 1.12.2 要求） |
 | Gradle | Gradle 4.9 + ForgeGradle 2.3 |
-| Mappings | **MCP SRG**（1.12.2 SRG 格式） |
-| 构建工具 | ForgeGradle（`build.gradle`，使用 `forge` 插件） |
+| Mappings | **MCP `stable_39`**（本档 `scaffold/build.gradle:24` `mappings = "stable_39"`；FG 2.3 是单参数写法，不是 1.13+ 的 `mappings channel: …, version: …`）。详见 `00-project-setup.mdc` |
+| 构建工具 | ForgeGradle 2.3（`build.gradle` `apply plugin: 'net.minecraftforge.gradle.forge'`）。⚠️ 裸 `'forge'` id 不可用：FG 2.3-SNAPSHOT 的 `META-INF/gradle-plugins/` 只注册了 `net.minecraftforge.gradle.{forge,tweaker-client,tweaker-server,launch4j,patcher,liteloader}` 六个描述符；真机 2026-09-11 实测 `apply plugin: 'forge'` 解析失败，改全名后 `gradlew build` BUILD SUCCESSFUL in 2m 22s |
 
 ---
 

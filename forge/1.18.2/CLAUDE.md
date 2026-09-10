@@ -14,7 +14,7 @@ IF src/main/resources/META-INF/mods.toml exists AND build.gradle contains "forge
 IF build.gradle contains "1.18.2"
   → Use Forge 1.18.2 rules
 
-IF build.gradle contains "neoforge" OR "neogradle"
+IF build.gradle contains "neoforge"  /* 真实标记：id 'net.neoforged.moddev' 或 id 'net.neoforged.gradle.userdev'；"neogradle" 这个字符串在 Gradle 里不存在 */
   → Use NeoForge rules instead
 ```
 
@@ -91,7 +91,7 @@ src/main/java/com/example/mod/
 - Minecraft: 1.18.2
 - Forge: 40.x（本包 scaffold 钉 `40.1.80`；官方 1.18.2-40.3.0 MDK 为 40.3.x）
 - Java: 17
-- Mappings: Parchment (1.18.2-2022.08.02)（本包 scaffold 选择；官方 MDK 默认为 `official`）
+- Mappings: Parchment (2022.08.21-1.18.2)（本包 scaffold 选择；官方 MDK 默认为 `official`）
 - pack_format: 资源包 **8** / 数据包 **9**（1.18 起两类包分家；出处为官方 1.18.2-40.3.0 MDK `pack.mcmeta` 的 `forge:resource_pack_format` / `forge:data_pack_format`）
 - World height: -64 to 320
 - Gradle: 7.x

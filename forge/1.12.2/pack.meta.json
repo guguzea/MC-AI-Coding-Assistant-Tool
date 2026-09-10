@@ -8,11 +8,15 @@
     "gradle": "4.9",
     "provenance": {
       "text": "house",
-      "wrapper": "gradle-wrapper-task"
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-11 00:55 零改动副本（cp forge/1.12.2/scaffold → D:/mc-skill-temp/w54b_forge_v8_1.12.2，diff -r 与仓库一致 0 行）gradlew build → BUILD SUCCESSFUL in 2m 22s，24 actionable tasks 全 executed（含 :reobfJar / :extractAnnotationsJar / :retromapReplacedMain / :sourceJar）；JDK 8（G:/zulu8.96.0.205-ca-jdk8.0.504-win_x64/zulu8.96.0.205-ca-jdk8.0.504-win_x64）+ Gradle 4.9 wrapper + ForgeGradle 2.3.4-gfc67182（`2.3-SNAPSHOT`）+ forge 1.12.2-14.23.5.2847 + mappings=stable_39；产物 build/libs/Example Mod-1.0.0.jar（4286 B，unzip -l 校验含 mcmod.info + pack.mcmeta + ExampleMod.class + CommonProxy.class + ClientProxy.class + META-INF/fml_cache_annotation.json）；日志 _g_forge1.12.2_v8.log。跑通前修掉 1 处模板缺陷：apply plugin: 'forge' 在本档不可解析——ForgeGradle-2.3-SNAPSHOT.jar 的 META-INF/gradle-plugins/ 只注册了 net.minecraftforge.gradle.{forge,tweaker-client,tweaker-server,launch4j,patcher,liteloader} 六个描述符，没有裸 `forge` id（net.minecraftforge.gradle.forge.properties → implementation-class=net.minecraftforge.gradle.user.patcherUser.forge.ForgePlugin）→ 改 plugin id 后成功。本档源码编码块（options.encoding = 'UTF-8'，build.gradle:63）原本就在，不是本轮补的。Gradle 4.9 发行包因 services.gradle.org 不可达，由本机 G:/gradle-4.9-all 手工种入 ~/.gradle/wrapper/dists/gradle-4.9-bin/<hash>/ 并补空 .ok 标记，非 wrapper 自动下载"
     },
-    "buildVerified": false,
+    "buildVerified": true,
     "gaps": [
-      "gradlew build 未在本机跑通（W5-4 阶段③）"
+      "本档 scaffold 是官方 1.12.2 MDK 形态：只有 @Mod + CommonProxy/ClientProxy + 事件日志，不注册任何方块/物品 → 既无注册演示代码，也谈不上缺纹理；其余 9 档 scaffold 至少注册 example_item 或 example_block（1.16.5 只注册物品）",
+      "buildVerified 只覆盖 :compileJava + :reobfJar（编译期与字节码产物）；@Mod 构造器、注册时机、进游戏后的行为均未在本机实跑验证（本仓库不代人跑游戏）",
+      "构建期上游打印「WARNING: You are using an unsupported version of ForgeGradle. Please consider upgrading to ForgeGradle 5」——FG 2.3 上游已停止支持，本档能跑通是历史组合（FG2.3 + Gradle 4.9 + JDK 8）仍可用，不代表上游会继续修；buildscript 里保留的 jcenter() 上游已于 2021-04 关停，本次构建日志无一处从该主机取件（全部来自 files.minecraftforge.net / mavenCentral），故未改动",
+      "产物文件名含空格（archivesBaseName = \"Example Mod\"）→ 实际为 build/libs/Example Mod-1.0.0.jar，其余 9 档为 examplemod-1.0.0.jar；脚本引用该产物必须加引号"
     ]
   }
 }

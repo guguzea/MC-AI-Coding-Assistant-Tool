@@ -8,21 +8,20 @@ plugins {
 version = mod_version
 group = mod_group_id
 
-base {
-    archivesName = mod_id
-}
+// FG4 硬拒 Gradle ≥7，而 base.archivesName 是 Gradle 7+ DSL（6.9.4 实测无此属性）
+// ⇒ 用 Gradle 6 可用的顶层 archivesBaseName，与同 FG4 档 forge/1.15.2 一致
+archivesBaseName = mod_id
 
 // 官方 1.16.5-36.2.34 MDK 的 build.gradle:19 写的就是 JavaLanguageVersion.of(8)
 // （其注释："Mojang ships Java 8 to end users, so your mod should target Java 8."）；
 // 文档同调：gettingstarted.md:14、primer_1_16_5.md:614「You must only use Java 8 code」
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
-// Parchment mappings — 带参数名和 javadoc
-// 官方源：https://maven.parchmentmc.org
-mappings channel: 'parchment', version: mapping_version
-
 minecraft {
-    copyIdeResources = true
+    // official（mojmap）mappings —— 本包 FG4 实测唯一可用可读名通道
+    // 换 Parchment 需先升到 ForgeGradle 5+：FG4 报 Unknown mapping provider: parchment_*
+    // FG4 的 MinecraftExtension 也声明了这两个字段，裸写会被 DELEGATE_FIRST 命中其空值 → 显式 project.
+    mappings channel: project.mapping_channel, version: project.mapping_version
 
     runs {
         configureEach {

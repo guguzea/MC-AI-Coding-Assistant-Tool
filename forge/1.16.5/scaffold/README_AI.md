@@ -36,9 +36,10 @@ forge-1.16.5-mod/
 minecraft_version=1.16.5
 forge_version=36.2.34
 
-# ---- Mappings（Forge 1.16.5 推荐使用 Parchment）----
-mapping_channel=parchment
-mapping_version=2021.07.27-1.16.5
+# ---- Mappings（本包 ForgeGradle [4.1,4.2) 实测只认 official / snapshot 通道）----
+# channel=parchment 真机失败：Unknown mapping provider: parchment_2021.07.27-1.16.5
+mapping_channel=official
+mapping_version=1.16.5
 
 # ---- Mod 元数据 ----
 mod_id=examplemod          # 全部小写，禁止含 `-`

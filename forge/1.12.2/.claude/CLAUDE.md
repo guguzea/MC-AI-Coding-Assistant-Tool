@@ -14,7 +14,7 @@ IF build.gradle contains "net.minecraftforge.gradle"
 IF build.gradle contains "minecraft_version = '1.12.2'"
   → Use Forge 1.12.2 rules
 
-IF build.gradle contains "neoforge" OR "neogradle"
+IF build.gradle contains "neoforge"  /* 真实标记：id 'net.neoforged.moddev' 或 id 'net.neoforged.gradle.userdev'；"neogradle" 这个字符串在 Gradle 里不存在 */
   → Use NeoForge rules instead
 ```
 

@@ -17,10 +17,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,7 +80,8 @@ public class ExampleMod {
     // ---- 服务端事件 ----
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
-        LOGGER.info("Server starting: {}", event.getServer().getWorld().getWorldInfo().getWorldName());
+        // 本档 MinecraftServer 只有 getWorld(DimensionType)，无参版本与 ServerWorld.getWorldInfo() 均不存在（1.16.x 写法）
+        LOGGER.info("Server starting: {}", event.getServer().getWorldName());
     }
 
     // ---- 客户端事件 ----

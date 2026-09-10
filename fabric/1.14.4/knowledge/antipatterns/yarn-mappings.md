@@ -50,7 +50,7 @@ MyClass.class_12345 obj = new MyClass.class_12345();
 **正确理解：**
 - `class_XXXXX` 表示 Yarn 尚未解析的混淆类
 - 不应该主动使用这些未解析的类
-- 升级 Yarn 版本或使用 Parchment 可能获得更好的覆盖率
+- 升级 Yarn 版本才可能获得更好的覆盖率；Parchment 是另一套映射基底（叠加在 mojmap 上），补不了 Yarn 未解析的名字
 
 ### 4. mapping 版本不匹配
 

@@ -4,7 +4,7 @@ description: Minecraft Forge 方块实体开发。BlockEntity 注册、ITickable
 platform: forge
 version: "1.16.5"
 dependencies: []
-mappings: parchment
+mappings: official
 ---
 
 # 方块实体开发（Forge 1.16.5）

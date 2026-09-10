@@ -4,7 +4,7 @@ description: Minecraft Forge 注册系统。注册方块、物品、实体、方
 platform: forge
 version: "1.16.5"
 dependencies: []
-mappings: parchment
+mappings: official
 ---
 
 # Registry 注册系统（Forge 1.16.5）

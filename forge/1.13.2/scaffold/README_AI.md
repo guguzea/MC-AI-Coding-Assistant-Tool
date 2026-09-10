@@ -86,7 +86,7 @@ public void onBlocksRegistry(RegistryEvent.Register<Block> event) {
 // 定义物品（静态字段）
 public static final Item MY_ITEM = new Item(
     new Item.Properties()
-        .group(ItemGroup.TAB_MISC)
+        .group(ItemGroup.MISC)
         .maxStackSize(64)
 );
 

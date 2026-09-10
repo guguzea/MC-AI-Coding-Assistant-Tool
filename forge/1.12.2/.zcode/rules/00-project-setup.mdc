@@ -155,7 +155,8 @@ repositories {
 }
 
 dependencies {
-    // FG2：不要写 FG3 的 minecraft "net.minecraftforge:forge:..."；由 apply plugin: 'forge' 拉 Forge
+    // FG2：不要写 FG3 的 minecraft "net.minecraftforge:forge:..."；由 apply plugin: 'net.minecraftforge.gradle.forge' 拉 Forge
+    // （裸 'forge' 不可用：FG 2.3 只注册了 net.minecraftforge.gradle.* 描述符）
 }
 
 jar {

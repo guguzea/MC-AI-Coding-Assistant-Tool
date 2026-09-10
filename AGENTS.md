@@ -46,7 +46,7 @@ Quilt 建档面（实测 `ls -d quilt/*/` 对 `ls -d data/quilt_*/`，2026-09-05
 
 ### 2. 检查 Fabric
 
-**须先排除 NeoForge**（`neoforge.mods.toml` / NeoGradle）；残留 `fabric.mod.json` 不得把 Neo 工程判成 Fabric。
+**须先排除 NeoForge**（`build.gradle` 里有 `id 'net.neoforged.moddev'` / `id 'net.neoforged.gradle.userdev'` 或 `neoForge { }`，或元数据叫 `neoforge.mods.toml`；`1.20.4` 及更早的元数据仍叫 `mods.toml`，此时看包名 `net.neoforged.*`）；残留 `fabric.mod.json` 不得把 Neo 工程判成 Fabric。
 
 查找 `fabric.mod.json` 或 `fabric-loom`（且 **没有** `quilt.mod.json` / quilt-loom）：
 
@@ -77,14 +77,18 @@ id 'fabric-loom'
 
 ### 3. 检查 NeoForge
 
-查找 `neoforge.mods.toml` 或 NeoGradle：
+查找 NeoForge **构建插件 id**（主标记），或 NeoForge 元数据文件：
 
 ```
-# build.gradle
-neoform "20231220.153330"
-neoforge "20.4.237"
+# build.gradle —— ModDevGradle（本仓 9 份 neoforge/<ver>/scaffold 用它；另一套 DSL 见 neoforge/<ver>/scaffold）
+id 'net.neoforged.moddev'
+neoForge { version = project.neo_version }
+
+# build.gradle —— NeoGradle（官方生成器对同版另提供的选择）
 id 'net.neoforged.gradle.userdev'
 ```
+
+元数据名按版本分叉：`META-INF/neoforge.mods.toml` 从 **1.20.6** 起（`data/neoforge_1.20.6/.../gettingstarted_modfiles.md`）；`1.20.4` 仍是 `META-INF/mods.toml`——用 `modId="neoforge"` 依赖条目 + `net.neoforged.*` 包名区分于 Forge，别因文件名是 `mods.toml` 就判成 Forge。`1.20.1` 见下方 D9 注记（Forge 兼容层，两可，归 Forge 功能等价）。
 
 如果匹配 → 先 `list_neoforge_versions` + 工程元数据锁定**精确**版本，再调用 `activate_platform_pack action=session`（`platform=neoforge` + 精确版本；`1.20.1` / `1.20.4` / `1.20.6` / `1.21.1` / `1.21.3` / `1.21.5` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1`）。**禁止跨目录读邻档 00–10，禁止把 `neoforge/<ver>/.cursor` 当加载器 Read。** `1.20.1` 本档核实表 + 短规则（Forge 兼容数据），禁止用 1.20.4 00–10 顶上。不为 26.1.1 单造规则树；26.1 ≠ 1.21.1。
 > 注记（D9）：NeoForge 1.20.1（20.1.x，Forge 47 兼容层）使用 `mods.toml` + `net.minecraftforge.*` 包，根决策树与 `detect_mod_project` 会将其归为 Forge——功能等价；该版本规则树在 neoforge/1.20.1。
@@ -145,6 +149,7 @@ id 'net.minecraftforge.gradle'
 查找包根 `manifest.json` 且含 `format_version` + `modules`（`resources` / `data` / `script` / `world_template`）。
 
 如果匹配 → 调用 `activate_platform_pack action=session`（`platform=bedrock`）。不要用 Java `query_api` / Yarn / Mixin。禁止把 `bedrock/.cursor` 当加载器 Read。session 的 `topics` 数字在基岩**不是** Java 主题：写方块看 **05**（`05-blocks-items`）不是 02；02 是资源包。Java task（`mc-new-block`）在基岩不会灌 `02-resource-pack`。
+**基岩 session 调用必须同时带 `minecraftVersion`**（该参数对 `activate_platform_pack action=session` 恒为必填）：正确形态 `activate_platform_pack action=session`（`platform=bedrock` + `minecraftVersion=1.21.0`）→ 实测 `ok:true`、注入 rules=**3**（底座 `00/01/09`）+ skills=**10**。只照上文写 `platform=bedrock` 而漏 `minecraftVersion` → 实测 rc=1 + `ok:false` + `INVALID_INPUT`「session 需要 platform 与 minecraftVersion」，首步即失败。
 
 ### 9. 未知平台
 

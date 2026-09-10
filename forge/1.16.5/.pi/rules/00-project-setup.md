@@ -60,11 +60,11 @@ description: 00 — 项目结构与构建
 
 ### Mappings 约束
 
-- Forge 1.16.5 推荐使用 **Parchment**（社区映射，带参数名和 javadoc）
-- `gradle.properties` 中的 `mappings_version` 对应 Parchment 版本
-- Parchment 映射：`2021.07.27-1.16.5`（maven.parchmentmc.org 首发；无 `-NN` 后缀）
-- **禁止**在 `build.gradle` 中切换到 `yarn` 或 `official`（除非用户明确要求）
-- Parchment 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_225597_d_` → `getViewY`
+- 本包钉的 **ForgeGradle `[4.1,4.2)` 只认 `official` / `snapshot` 两条通道**；真机声明 `channel: 'parchment'` 配置期即失败：`java.lang.IllegalArgumentException: Unknown mapping provider: parchment_2021.07.27-1.16.5`
+- 默认 **`official`**（`mapping_channel=official` + `mapping_version=1.16.5`）—— 与官方 1.16.5-36.2.34 MDK 同调（Mojmap：方法/字段官方名，类名仍是 MCP 名），也是本包 rules / skills / code-patterns 全部示例所依据的那一套（`Item.Properties.tab(...)` / `stacksTo(...)` / `ItemGroup.TAB_MISC`）
+- 用户工程若走 MCP，则 `channel: 'snapshot'`（例 `version: '20210115-1.16.5'`），方法/字段名换成 MCP 形态（`group(...)` / `maxStackSize(...)` / `ItemGroup.MISC`）；**禁止**与 official 混用
+- **Parchment** 需要 ForgeGradle 5+ 与 `org.parchmentmc.parchment` 插件；留在 FG4 上写 `channel: 'parchment'` 只会配置期报错
+- **禁止**在 Forge 工程使用 `yarn`（Fabric 专用映射）
 
 ### 项目目录结构（强制规范）
 
@@ -158,11 +158,9 @@ base {
 // 官方 1.16.5-36.2.34 MDK build.gradle:19 即 of(8)；上游文档只背书「按 Java 8 编译」
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
-// Parchment mappings — 带参数名和 javadoc
-mappings channel: 'parchment', version: mapping_version
-
 minecraft {
-    copyIdeResources = true
+    // Parchment mappings — 带参数名和 javadoc
+    mappings channel: project.mapping_channel, version: project.mapping_version
 
     runs {
         configureEach {

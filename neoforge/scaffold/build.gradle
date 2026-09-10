@@ -1,3 +1,11 @@
+// ⚠️ 本目录是「已废弃的扁平 scaffold」（见同目录 README.md）。本文件不是可用模板，别拷进工程：
+//   1) 插件 id 与版本区间互相矛盾——`net.neoforged.gradle` 在插件门户上最新只到 6.0.21
+//      （实测 2026-09-11：plugins.gradle.org/m2/.../net.neoforged.gradle.gradle.plugin/maven-metadata.xml），
+//      而这里写的 [7.0.15,7.2) 只有 `net.neoforged.gradle.userdev`（NeoGradle，最新 7.1.38）才满足。
+//   2) 下面的 minecraft { mappings channel: ... } / minecraft "net.neoforged:..." 是 ForgeGradle 语法，
+//      NeoGradle 与 ModDevGradle 都不是这套写法。
+//   正确模板：neoforge/<精确版本>/scaffold/build.gradle（id 'net.neoforged.moddev' + neoForge { version = ... }），
+//   或从零工程走 download_official_mdk。
 plugins {
     id 'eclipse'
     id 'idea'
@@ -15,6 +23,8 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
+    // ForgeGradle 写法（mapping_channel / mapping_version 两个键也只存在于本废弃目录的 gradle.properties）
+    // MDG 用 parchment { mappingsVersion = ...; minecraftVersion = ... }，见 neoforge/<ver>/scaffold
     mappings channel: mapping_channel, version: mapping_version
     copyIdeResources = true
 

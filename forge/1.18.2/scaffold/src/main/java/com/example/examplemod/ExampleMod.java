@@ -8,7 +8,8 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -37,8 +38,7 @@ public class ExampleMod {
 
     // ---- 注册方块 ----
     public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block",
-        () -> new Block(BlockBehaviour.Properties.of()
-            .mapColor(MapColor.STONE)
+        () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE)
             .strength(1.5f, 6.0f)
             .requiresCorrectToolForDrops()
         )
@@ -72,8 +72,10 @@ public class ExampleMod {
         )
     );
 
-    public ExampleMod(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModEventBus();
+    public ExampleMod() {
+        // 1.18.2 的 FML 只按无参构造器实例化 mod（javafmllanguage-1.18.2-40.1.80：
+        // getDeclaredConstructor(new Class[0])）；构造器注入 FMLJavaModLoadingContext 从 1.19.4 起才有
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         // 将 DeferredRegister 注册到 modEventBus
         BLOCKS.register(modEventBus);

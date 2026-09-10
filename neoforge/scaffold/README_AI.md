@@ -1,7 +1,8 @@
 # NeoForge 1.20.4 模组项目骨架说明
 
-> 本文件供 AI 编程助手阅读，描述每个文件的职责、修改注意事项和扩展位置。
-> 当 AI 开始一个新的 NeoForge 1.20.4 项目时，先读本文件。
+> ⚠️ **本目录已废弃**（见同目录 `README.md`）。这里的 `build.gradle` 用的是解析不到的插件 id + ForgeGradle 语法，**跑不通，别当模板**。
+> 新建 NeoForge 项目请读 `neoforge/<精确版本>/scaffold/`（ModDevGradle，`id 'net.neoforged.moddev'`），从零工程走 `download_official_mdk`。
+> 本文件保留只为说明旧扁平骨架的文件职责。
 
 ---
 
@@ -159,16 +160,18 @@ public static final DeferredHolder<Item, BlockItem> MY_BLOCK_ITEM = ITEMS.regist
 
 ### 禁止硬编码版本号
 
-```properties
-# ❌ 错误：在 gradle.properties 中
-neoforge_version=20.4.237
+```groovy
+// ❌ 错误：版本写死在 build.gradle
+neoForge { version = '20.4.237' }
 
-# build.gradle 中
-minecraft "net.neoforged:neoforge:1.20.4-20.4.237"  # ❌ 硬编码
-
-# ✅ 正确：引用 gradle.properties 属性
-minecraft "net.neoforged:neoforge:${neoform_version}"
+// ✅ 正确：引用 gradle.properties 属性（官方 MDG scaffold 的键名是 neo_version）
+neoForge { version = project.neo_version }
 ```
+
+> 本废弃目录的 `build.gradle` 写的是 `minecraft "net.neoforged:neoforge:${neoform_version}"`——
+> 那是 ForgeGradle 的 `minecraft` 配置，本仓 9 份 MDG `neoforge/<ver>/scaffold/build.gradle` 里没有一行 `minecraft` 依赖；
+> `net.neoforged:neoforge:1.20.4-20.4.237` 这种「MC版本-Loader版本」坐标形态也不存在（NeoForge 制品只用 `20.4.237`）。
+> 本目录 `gradle.properties` 的 `neoforge_version` / `neoform_version` 同样是自造键名，官方模板用 `neo_version`。
 
 ### 禁止修改 settings.gradle
 

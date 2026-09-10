@@ -14,7 +14,7 @@
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 17**（Forge 1.18.2 要求） |
 | Gradle | **Gradle 7.6 + ForgeGradle `[5.1.2,5.2)`**（本包 `scaffold/build.gradle:5` + `scaffold/gradle/wrapper/gradle-wrapper.properties:3`）。⚠️ 官方 1.18.2-40.3.0 MDK 用的是 **Gradle 8.8 + FG `[6.0,6.2)`**（MDK `build.gradle:5`、`gradle-wrapper.properties:3`；sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）。scaffold 与 MDK 组合不一致（未裁定分歧）：写新工程跟 scaffold，用户拿官方 MDK 时跟 MDK，不要把一套当另一套的证据 |
-| Mappings | **Parchment**（`1.18.2-2022.08.02`，本包 `scaffold/build.gradle:20`）。⚠️ 官方 1.18.2-40.3.0 MDK 默认为 `official` 通道；Parchment 只多给参数名与 javadoc。禁止把 Parchment 名当 vanilla 官方名去查 `query_api` |
+| Mappings | **Parchment**（`2022.08.21-1.18.2`，本包 `scaffold/build.gradle:21`）。⚠️ 官方 1.18.2-40.3.0 MDK 默认为 `official` 通道；Parchment 只多给参数名与 javadoc。禁止把 Parchment 名当 vanilla 官方名去查 `query_api` |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---

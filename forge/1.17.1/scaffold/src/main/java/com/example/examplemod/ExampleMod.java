@@ -1,7 +1,7 @@
 package com.example.examplemod;
 
-import com.mojang.logging.LogUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -11,42 +11,83 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fmllegacy.RegistryObject;
+import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(ExampleMod.MOD_ID)
 public class ExampleMod {
     public static final String MOD_ID = "examplemod";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    // 1.17.1 编译类路径无 com.mojang.logging.LogUtils（1.18+ 才有），用 log4j
+    private static final Logger LOGGER = LogManager.getLogger();
 
     // ---- ObjectHolder 示例：引用其他 mod 的物品/方块 ----
     @ObjectHolder("minecraft:diamond")
     public static Item DIAMOND;
 
-    // ---- 注册方块 ----
-    public static Block EXAMPLE_BLOCK;
+    // DeferredRegister — 持有某类对象的延迟注册器
+    // 所有注册通过 modEventBus 延迟到正确的 RegistryEvent 时机执行
+    public static final DeferredRegister<Block> BLOCKS =
+        DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    public static final DeferredRegister<Item> ITEMS =
+        DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
-    // ---- 注册方块对应的 ItemBlock ----
-    public static BlockItem EXAMPLE_BLOCK_ITEM;
+    // ---- 注册方块 ----
+    public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block",
+        () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
+            .strength(1.5f, 6.0f)
+        )
+    );
+
+    // ---- 注册方块对应的 BlockItem ----
+    // BlockItem 与方块使用相同 registry name，自动关联
+    public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block",
+        () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()
+            .tab(CreativeModeTab.TAB_BUILDING_BLOCKS)
+        )
+    );
 
     // ---- 注册普通物品 ----
-    public static Item EXAMPLE_ITEM;
+    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item",
+        () -> new Item(new Item.Properties()
+            .tab(CreativeModeTab.TAB_MISC)
+            .stacksTo(64)
+        )
+    );
 
     // ---- 注册食物（带药水效果）----
-    public static Item EXAMPLE_FOOD;
+    public static final RegistryObject<Item> EXAMPLE_FOOD = ITEMS.register("example_food",
+        () -> new Item(new Item.Properties()
+            .tab(CreativeModeTab.TAB_FOOD)
+            .food(new FoodProperties.Builder()
+                .nutrition(4)
+                .saturationMod(0.3f)
+                .effect(() -> new MobEffectInstance(MobEffects.JUMP, 200, 1), 1.0f)
+                .build())
+        )
+    );
 
     public ExampleMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        // DeferredRegister 必须挂到 modEventBus，注册逻辑才会执行
+        BLOCKS.register(modEventBus);
+        ITEMS.register(modEventBus);
+
+        // FMLCommonSetupEvent 在所有 mod constructor 执行完毕后触发
         modEventBus.addListener(this::commonSetup);
 
-        // 注册服务端事件监听器
+        // 注册游戏事件（服务端等）监听器
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -54,48 +95,11 @@ public class ExampleMod {
         LOGGER.info("ExampleMod commonSetup — mod loaded");
     }
 
-    // ---- 方块注册 ----
-    @SubscribeEvent
-    public void registerBlocks(RegistryEvent.Register<Block> event) {
-        EXAMPLE_BLOCK = new Block(BlockBehaviour.Properties.of(Material.STONE)
-            .strength(1.5f, 6.0f);
-        EXAMPLE_BLOCK.setRegistryName(new ResourceLocation(MOD_ID, "example_block"));
-        event.getRegistry().register(EXAMPLE_BLOCK);
-    }
-
-    // ---- 物品注册 ----
-    @SubscribeEvent
-    public void registerItems(RegistryEvent.Register<Item> event) {
-        // 方块物品
-        EXAMPLE_BLOCK_ITEM = new BlockItem(EXAMPLE_BLOCK,
-            new Item.Properties().tab(CreativeModeTab.TAB_BUILDING_BLOCKS));
-        EXAMPLE_BLOCK_ITEM.setRegistryName(EXAMPLE_BLOCK.getRegistryName());
-        event.getRegistry().register(EXAMPLE_BLOCK_ITEM);
-
-        // 普通物品
-        EXAMPLE_ITEM = new Item(new Item.Properties()
-            .tab(CreativeModeTab.TAB_MISC)
-            .stacksTo(64));
-        EXAMPLE_ITEM.setRegistryName(new ResourceLocation(MOD_ID, "example_item"));
-        event.getRegistry().register(EXAMPLE_ITEM);
-
-        // 食物
-        EXAMPLE_FOOD = new Item(new Item.Properties()
-            .tab(CreativeModeTab.TAB_FOOD)
-            .food(new FoodProperties.Builder()
-                .nutrition(4)
-                .saturationMod(0.3f)
-                .effect(() -> new net.minecraft.world.effect.MobEffectInstance(
-                    net.minecraft.world.effect.MobEffects.JUMP, 200, 1), 1.0f)
-                .build())
-        );
-        EXAMPLE_FOOD.setRegistryName(new ResourceLocation(MOD_ID, "example_food"));
-        event.getRegistry().register(EXAMPLE_FOOD);
-    }
-
     // ---- 服务端事件 ----
+    // 1.17.1 的服务端生命周期事件在 net.minecraftforge.fmlserverevents；
+    // net.minecraftforge.event.server.ServerStartingEvent 是 1.18+ 的名字
     @SubscribeEvent
-    public void onServerStarting(net.minecraftforge.event.server.ServerStartingEvent event) {
+    public void onServerStarting(FMLServerStartingEvent event) {
         LOGGER.info("Server starting: {}", event.getServer().getWorldData().getLevelName());
     }
 

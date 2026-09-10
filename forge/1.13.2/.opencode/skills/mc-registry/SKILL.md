@@ -66,7 +66,7 @@ IF 需要在 mod constructor 执行前引用已注册对象
 
 ```java
 public static final Item MY_BLOCK_ITEM = new ItemBlock(MY_BLOCK,
-    new Item.Properties().group(ItemGroup.TAB_BUILDING_BLOCKS));
+    new Item.Properties().group(ItemGroup.BUILDING_BLOCKS));
 
 @SubscribeEvent
 public void onItemsRegistry(RegistryEvent.Register<Item> event) {

@@ -2,10 +2,10 @@ package com.example.examplemod;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,8 +39,6 @@ public class ExampleMod {
         DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
     public static final DeferredRegister<Item> ITEMS =
         DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
-        DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
 
     // ---- 注册方块 ----
     public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block",
@@ -53,15 +51,12 @@ public class ExampleMod {
     // ---- 注册方块对应的 ItemBlock ----
     // ItemBlock 与方块使用相同 registry name，自动关联
     public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block",
-        () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()
-            .tab(CreativeModeTab.TAB_BUILDING_BLOCKS)
-        )
+        () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties())
     );
 
     // ---- 注册普通物品 ----
     public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item",
         () -> new Item(new Item.Properties()
-            .tab(CreativeModeTab.TAB_MISC)
             .stacksTo(64)
         )
     );
@@ -69,7 +64,6 @@ public class ExampleMod {
     // ---- 注册食物（带药水效果） ----
     public static final RegistryObject<Item> EXAMPLE_FOOD = ITEMS.register("example_food",
         () -> new Item(new Item.Properties()
-            .tab(CreativeModeTab.TAB_FOOD)
             .food(new FoodProperties.Builder()
                 .nutrition(4)
                 .saturationMod(0.3f)
@@ -79,17 +73,9 @@ public class ExampleMod {
         )
     );
 
-    // ---- 注册创造模式标签 ----
-    public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab",
-        () -> CreativeModeTab.builder()
-            .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
-            .displayItems((parameters, output) -> {
-                output.accept(EXAMPLE_ITEM.get());
-                output.accept(EXAMPLE_FOOD.get());
-            })
-            .build()
-    );
+    // ---- 自定义创造模式标签 ----
+    // 1.19.4 期标签还不是 registry 对象（该版 Registries 里没有 CREATIVE_MODE_TAB），
+    // 不能在字段初始化处 new 出来，只能在 mod 总线的 CreativeModeTabEvent.Register 里注册，见下方 registerTabs。
 
     public ExampleMod(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
@@ -98,7 +84,6 @@ public class ExampleMod {
         // DeferredRegister 内部会在正确的 RegistryEvent 时机执行注册逻辑
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
-        CREATIVE_MODE_TABS.register(modEventBus);
 
         // FMLCommonSetupEvent 在所有 mod constructor 执行完毕后触发
         modEventBus.addListener(this::commonSetup);
@@ -106,7 +91,8 @@ public class ExampleMod {
         // 注册服务端事件监听器
         MinecraftForge.EVENT_BUS.register(this);
 
-        // 注册创造模式标签内容（推荐方式：modEventBus.addListener）
+        // 创造模式标签：注册与填内容都在 mod 总线（CreativeModeTabEvent 实现 IModBusEvent）
+        modEventBus.addListener(this::registerTabs);
         modEventBus.addListener(this::addCreative);
     }
 
@@ -114,9 +100,23 @@ public class ExampleMod {
         LOGGER.info("ExampleMod commonSetup — mod loaded");
     }
 
-    // ---- 将物品添加到创造模式标签（通过事件订阅） ----
-    private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTab.TAB_MISC) {
+    // ---- 注册自定义创造模式标签（1.19.4 走事件，不走 DeferredRegister） ----
+    private void registerTabs(CreativeModeTabEvent.Register event) {
+        event.registerCreativeModeTab(
+            new ResourceLocation(MOD_ID, "example_tab"),
+            builder -> builder
+                .title(Component.translatable("itemGroup." + MOD_ID))
+                .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
+                .displayItems((parameters, output) -> {
+                    output.accept(EXAMPLE_ITEM.get());
+                    output.accept(EXAMPLE_FOOD.get());
+                })
+        );
+    }
+
+    // ---- 将物品添加到原版创造模式标签（同一事件总线的 BuildContents） ----
+    private void addCreative(CreativeModeTabEvent.BuildContents event) {
+        if (event.getTab() == CreativeModeTabs.INGREDIENTS) {
             event.accept(EXAMPLE_ITEM);
         }
     }

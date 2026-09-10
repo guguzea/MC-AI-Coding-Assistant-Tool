@@ -42,14 +42,14 @@
 1. `gradle.properties`：
    ```properties
    minecraft_version=1.20.4
-   forge_version=49.0.0
+   forge_version=49.2.0
    forge_version_range=[49,)
    mapping_version=2024.02.25-1.20.4
    ```
 
 2. `build.gradle`（如使用 Parchment）：
    ```groovy
-   mappings channel: 'parchment', version: '1.20.4-2024.02.25'
+   mappings channel: 'parchment', version: '2024.02.25-1.20.4'
    ```
 
 3. `mods.toml`（如更新元数据）：

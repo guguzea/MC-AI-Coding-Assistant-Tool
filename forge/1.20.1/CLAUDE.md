@@ -14,7 +14,7 @@ IF src/main/resources/META-INF/mods.toml exists AND build.gradle contains "forge
 IF build.gradle contains "1.20.1"
   → Use Forge 1.20.1 rules
 
-IF build.gradle contains "neoforge" OR "neogradle"
+IF build.gradle contains "neoforge"  /* 真实标记：id 'net.neoforged.moddev' 或 id 'net.neoforged.gradle.userdev'；"neogradle" 这个字符串在 Gradle 里不存在 */
   → Use NeoForge rules instead
 ```
 

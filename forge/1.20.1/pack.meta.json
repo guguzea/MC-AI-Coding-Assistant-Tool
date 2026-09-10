@@ -9,11 +9,13 @@
     "provenance": {
       "text": "house",
       "wrapper": "gradle-wrapper-task",
-      "build": "2026-09-09 零改动副本（cp forge/1.20.1/scaffold → w54_forge_v2，diff -r 与仓库一致）gradlew build → BUILD SUCCESSFUL in 28s；JDK 17.0.12 Temurin（G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12）+ Gradle 8.5 wrapper + ForgeGradle [6.0,6.2)；产物 build/libs/examplemod-1.0.0.jar（6134 B，:reobfJar 已跑，jar tf 校验含 META-INF/mods.toml）；日志 _gradle_forge1201_v2.log。跑通前修掉 3 处模板缺陷：librarian 插件不可解析、顶层 mappings（FG5 语法）、CreativeModeTab.TAB_*（1.19.2 期 API 残留）"
+      "build": "2026-09-09 零改动副本（cp forge/1.20.1/scaffold → w54_forge_v2，diff -r 与仓库一致）gradlew build → BUILD SUCCESSFUL in 28s；JDK 17.0.12 Temurin（G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12）+ Gradle 8.5 wrapper + ForgeGradle [6.0,6.2)；产物 build/libs/examplemod-1.0.0.jar（6134 B，:reobfJar 已跑，jar tf 校验含 META-INF/mods.toml）；日志 _gradle_forge1201_v2.log。跑通前修掉 3 处模板缺陷：librarian 插件在本档 pluginManagement（未列 ParchmentMC 仓库）下不可解析、顶层 mappings（FG5 语法）、CreativeModeTab.TAB_*（1.19.2 期 API 残留）"
     },
     "buildVerified": true,
     "gaps": [
-      "parchment 映射通道未在本机走过：librarian 插件只发布于 maven.parchmentmc.org（实测 Plugin Portal 无该制品，重定向到 Maven Central 404），而该主机 443/80 均不可达；官方 MDK 亦不含 parchment 接线 → 本模板默认 official 通道已验证"
+      "scaffold 不含 assets（模型/纹理/lang）→ 复制后方块与物品为 missingtexture、显示名为未翻译占位键；本模板只演示注册代码，Forge 全部 10 档 scaffold 同状（实测各档 src/main/resources 仅 mods.toml/mcmod.info + pack.mcmeta，assets 文件数 0）",
+      "本档已验证的一腿走 official 通道（gradle.properties `mapping_channel=official` / `mapping_version=1.20.1`），scaffold 内不含 parchment 接线（无 `org.parchmentmc.librarian.forgegradle` 插件、settings.gradle pluginManagement 无 ParchmentMC 仓库）→ 本档 parchment 通道未实测。原判词「maven.parchmentmc.org 443/80 均不可达」为误判，2026-09-10 已更正：同代 ForgeGradle [6.0,6.2) 的 1.19.4（`2023.06.26-1.19.4`）与 1.20.4（`2024.02.25-1.20.4`）均从该主机解析 librarian 插件并拉取 parchment 数据，两档 BUILD SUCCESSFUL",
+      "buildVerified 只覆盖 :compileJava + :reobfJar（编译期与字节码产物）；@Mod 构造器、注册时机、进游戏后的行为均未在本机实跑验证（本仓库不代人跑游戏）"
     ]
   },
   "gaps": {

@@ -12,7 +12,7 @@
 ---
 public static final Item MY_ITEM = new Item(
     new Item.Properties()
-        .group(ItemGroup.TAB_MISC)
+        .group(ItemGroup.MISC)
         .maxStackSize(64)
 );
 
@@ -64,5 +64,5 @@ public enum MyTier implements IItemTier {
 
 # 定义工具
 public static final Item MY_SWORD = new SwordItem(MyTier.MY_MATERIAL, 3, 1.6f,
-    new Item.Properties().group(ItemGroup.TAB_COMBAT));
+    new Item.Properties().group(ItemGroup.COMBAT));
 ```

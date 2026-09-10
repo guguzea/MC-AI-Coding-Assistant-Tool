@@ -8,11 +8,13 @@
     "gradle": "4.9",
     "provenance": {
       "text": "house",
-      "wrapper": "gradle-wrapper-task"
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-11 00:51 零改动副本（cp forge/1.13.2/scaffold → D:/mc-skill-temp/w54b_forge_v8_1.13.2，diff -r 与仓库一致 0 行）gradlew build → BUILD SUCCESSFUL in 24s，7 actionable tasks 全 executed（含 :downloadMcpConfig / :extractSrg / :createMcpToSrg / :reobfJar），:compileJava 无 javac 警告（日志共 1018 B，仅 Gradle deprecation 提示）；JDK 8（G:/zulu8.96.0.205-ca-jdk8.0.504-win_x64/zulu8.96.0.205-ca-jdk8.0.504-win_x64，FG3 + Gradle 4.9 只跑在 8 上）+ Gradle 4.9 wrapper + ForgeGradle 3.0.197（`3.+`）+ forge 1.13.2-25.0.223 + mapping_channel=snapshot / mapping_version=20180921-1.13；产物 build/libs/examplemod-1.0.0.jar（3457 B，unzip -l 校验含 META-INF/mods.toml + pack.mcmeta + ExampleMod.class）；日志 _g_forge1.13.2_v8.log。跑通前修掉 3 处模板缺陷：① minecraft { } 内裸写 mappings channel=…/version=… 触发「Must specify both mappings channel and version」——javap -p 实测 FG 3.0.197 的 MinecraftExtension 声明了 protected mapping_channel/mapping_version 字段，闭包 DELEGATE_FIRST 先命中扩展的空字段，改显式 project.mapping_channel / project.mapping_version（FG 5.1.77/6.0.54 无此二字段，故 1.17.1+ 各档不发病）；② 缺 tasks.withType(JavaCompile){ options.encoding = 'UTF-8' }，Windows 中文平台按 GBK 解码源码 → :compileJava「编码GBK的不可映射字符」；③ 模板示例值 Material.STONE / ItemGroup.TAB_MISC / ItemGroup.TAB_BUILDING_BLOCKS 在本档不存在（javap 实测本档 MCP 名 jar，两份独立产物互核：项目 build/_renameJarInPlace_6/output.jar 与 minecraft_user_repo 的 forge-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar；Material 共 39 个常量，含 ROCK/GROUND/IRON/WOOD/… 而无 STONE；ItemGroup 常量无 TAB_ 前缀）→ 改 Material.ROCK / ItemGroup.MISC / ItemGroup.BUILDING_BLOCKS。Gradle 4.9 发行包因 services.gradle.org 不可达，由本机 G:/gradle-4.9-all 手工种入 ~/.gradle/wrapper/dists/gradle-4.9-bin/<hash>/ 并补空 .ok 标记，非 wrapper 自动下载"
     },
-    "buildVerified": false,
+    "buildVerified": true,
     "gaps": [
-      "gradlew build 未在本机跑通（W5-4 阶段③）"
+      "scaffold 不含 assets（模型/纹理/lang）→ 复制后方块与物品为 missingtexture、显示名为未翻译占位键；本模板只演示注册代码，Forge 全部 10 档 scaffold 同状（实测各档 src/main/resources 仅 mods.toml/mcmod.info + pack.mcmeta，assets 文件数 0）",
+      "buildVerified 只覆盖 :compileJava + :reobfJar（编译期与字节码产物）；@Mod 构造器、注册时机、进游戏后的行为均未在本机实跑验证（本仓库不代人跑游戏）"
     ]
   }
 }

@@ -22,7 +22,8 @@ archivesBaseName = mod_id
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: mapping_channel, version: mapping_version
+    // FG3 的 MinecraftExtension 也声明了这两个字段，裸写会被 DELEGATE_FIRST 命中其空值 → 显式 project.
+    mappings channel: project.mapping_channel, version: project.mapping_version
 
     runs {
         client {
@@ -115,4 +116,9 @@ publishing {
             url "file:///${project.projectDir}/mcmodsrepo"
         }
     }
+}
+
+// 不设则 compileJava 按平台编码（Windows 中文 = GBK）解码，本模板的非 ASCII 字符直接编译失败
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }

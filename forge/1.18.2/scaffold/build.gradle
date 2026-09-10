@@ -16,11 +16,9 @@ base {
 // Java 17 for Minecraft 1.18.2
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-// Mappings — Parchment for 1.18.2
-mappings channel: 'parchment', version: '1.18.2-2022.08.02'
-
 minecraft {
-    copyIdeResources = true
+    // Mappings — Parchment for 1.18.2
+    mappings channel: mapping_channel, version: mapping_version
 
     runs {
         configureEach {

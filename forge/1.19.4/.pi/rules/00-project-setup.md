@@ -48,7 +48,7 @@ description: 00 — 项目结构与构建
   ```properties
   minecraft_version=1.19.4
   forge_version=45.4.0
-  mapping_version=1.19.4-2023.06.26
+  mapping_version=2023.06.26-1.19.4
   loader_version=45.4.0
   ```
   > 注意：

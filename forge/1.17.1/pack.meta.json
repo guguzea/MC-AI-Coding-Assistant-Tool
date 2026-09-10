@@ -8,11 +8,13 @@
     "gradle": "7.2",
     "provenance": {
       "text": "house",
-      "wrapper": "gradle-wrapper-task"
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-11 00:53 零改动副本（cp forge/1.17.1/scaffold → D:/mc-skill-temp/w54b_forge_v8_1.17.1，diff -r 与仓库 0 行差异）gradlew build → BUILD SUCCESSFUL in 1m 25s；JDK 16.0.2（G:/openjdk-16.0.2_windows-x64_bin/jdk-16.0.2，须与 build.gradle:21 的 JavaLanguageVersion.of(16) 同版本，否则 Gradle 去 adoptium GitHub 下载 toolchain 超时）+ Gradle 7.2 wrapper + ForgeGradle 5.1.+（buildscript classpath 语法）+ forge 37.1.1 + mappings official/1.17.1；:compileJava 0 javac 警告（日志仅 FG 的 mojmap 许可提示与 2 条 Gradle deprecation 提示）；产物 build/libs/examplemod-1.0.0.jar（5216 B，:reobfJar 已跑，jar tf 校验含 META-INF/mods.toml + pack.mcmeta + ExampleMod.class / ExampleMod$ClientModEvents.class）；日志 _g_forge1.17.1_v8.log。本轮新增：文件末尾补 tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }——本模板源码含 em dash 字符串字面量，同族 1.13.2/1.14.4 在 Gradle 4.9 下已实测因平台默认编码（GBK）报「编码GBK的不可映射字符」，本档此前只是恰好随 Gradle 7.2 的默认值侥幸通过；补后 jar 字节数与 v4 一致（5216 B）。v4 取证时跑通的 4 处模板缺陷：build.gradle 未闭合括号（纯语法错，把后面的错误全掩盖了）、RegistryEvent.Register 挂在 MinecraftForge.EVENT_BUS 上永不触发（改 DeferredRegister.register(modEventBus)）、com.mojang.logging.LogUtils 在 1.17.1 不存在（改 org.apache.logging.log4j.LogManager）、net.minecraftforge.event.server.* 在 1.17.1 不存在（改 net.minecraftforge.fmlserverevents.FMLServerStartingEvent）；另 RegistryObject 在 1.17.1 位于 net.minecraftforge.fmllegacy"
     },
-    "buildVerified": false,
+    "buildVerified": true,
     "gaps": [
-      "gradlew build 未在本机跑通（W5-4 阶段③）"
+      "scaffold 不含 assets（模型/纹理/lang）→ 复制后方块与物品为 missingtexture、显示名为未翻译占位键；本模板只演示注册代码，Forge 全部 10 档 scaffold 同状（实测各档 src/main/resources 仅 mods.toml/mcmod.info + pack.mcmeta，assets 文件数 0）",
+      "buildVerified 只覆盖 :compileJava + :reobfJar（编译期与字节码产物）；@Mod 构造器、注册时机、进游戏后的行为均未在本机实跑验证（本仓库不代人跑游戏）"
     ]
   }
 }

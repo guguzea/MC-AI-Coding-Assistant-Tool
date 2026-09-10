@@ -154,7 +154,6 @@ sourceCompatibility = targetCompatibility = '1.8'
 
 minecraft {
     mappings channel: 'snapshot', version: '20190719-1.14.3'
-    copyIdeResources = true
 
     runs {
         configureEach {

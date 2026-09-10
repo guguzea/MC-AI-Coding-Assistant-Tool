@@ -4,7 +4,7 @@ description: Minecraft Forge Capability 系统。AttachCapabilitiesEvent、ICapa
 platform: forge
 version: "1.16.5"
 dependencies: []
-mappings: parchment
+mappings: official
 ---
 
 # Capability 系统（Forge 1.16.5）

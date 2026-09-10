@@ -5319,8 +5319,13 @@ async function testScaffoldWrappers() {
         mutate: setMeta("forge/1.20.1/pack.meta.json", (m) => { m.scaffold.gradle = "8.4"; }) },
       { name: "meta 形态声明过期", needle: "但 props 已声明", key: "forge/1.16.5",
         mutate: setMeta("forge/1.16.5/pack.meta.json", (m) => { m.scaffold.mode = "reference"; }) },
-      { name: "自称已构建却无出处", needle: "provenance.build 为空", key: "neoforge/1.20.4",
-        mutate: setMeta("neoforge/1.20.4/pack.meta.json", (m) => { m.scaffold.buildVerified = true; }) },
+      { name: "自称已构建却无出处", needle: "provenance.build 为空", key: "forge/1.15.2",
+        // 选档条件：mode=gradle + provenance 无 build + 本机翻不了绿。1.15.2 的「翻不了绿」与 JDK 无关：
+        // FG [4.1,4.2) 配置期硬拒 Gradle ≥7，而 wrapper 钉 7.3.3，钉值按裁定不改 ⇒ buildVerified 恒 false。
+        // 前两处靶都已失效：neoforge/1.20.4（2026-09-09 真机跑通）、forge/1.12.2（2026-09-11；本机现已有
+        // JDK 8 G:/zulu8.96.0.205-ca-jdk8.0.504-win_x64 与 Gradle 4.9 发行包）都写了 buildVerified:true，
+        // 再拿它们投毒就是 no-op ⇒ 每翻绿一档，必须把本靶挪到仍不可翻绿的档。
+        mutate: setMeta("forge/1.15.2/pack.meta.json", (m) => { m.scaffold.buildVerified = true; }) },
       { name: "meta mode 非法", needle: "非法（只允许 gradle / reference）", key: "rift/1.13.2",
         mutate: setMeta("rift/1.13.2/pack.meta.json", (m) => { m.scaffold.mode = "maven"; }) },
     ];

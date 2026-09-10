@@ -4,7 +4,7 @@ description: Minecraft Forge Mixin 注入。安全使用 @Mixin、@Inject、@At�
 platform: forge
 version: "1.16.5"
 dependencies: []
-mappings: parchment
+mappings: official
 ---
 
 # Mixin 注入（Forge 1.16.5）

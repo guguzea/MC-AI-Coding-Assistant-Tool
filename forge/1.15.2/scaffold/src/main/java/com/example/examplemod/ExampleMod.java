@@ -1,6 +1,8 @@
 package com.example.examplemod;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -9,15 +11,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.fml.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,8 +43,8 @@ public class ExampleMod {
 
     // ---- 注册方块 ----
     public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block",
-        () -> new Block(Block.Properties.create(net.minecraft.block.material.Material.STONE)
-            .hardnessAndResistance(1.5f, 6.0f)
+        () -> new Block(Block.Properties.of(net.minecraft.block.material.Material.STONE)
+            .strength(1.5f, 6.0f)
             .harvestTool(net.minecraftforge.common.ToolType.PICKAXE)
             .harvestLevel(0)
         )
@@ -49,27 +53,27 @@ public class ExampleMod {
     // ---- 注册方块对应的 ItemBlock ----
     public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block",
         () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()
-            .group(ItemGroup.BUILDING_BLOCKS)
+            .tab(ItemGroup.TAB_BUILDING_BLOCKS)
         )
     );
 
     // ---- 注册普通物品 ----
     public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item",
         () -> new Item(new Item.Properties()
-            .group(ItemGroup.MISC)
-            .maxStackSize(64)
+            .tab(ItemGroup.TAB_MISC)
+            .stacksTo(64)
         )
     );
 
     // ---- 注册食物（带药水效果）----
     public static final RegistryObject<Item> EXAMPLE_FOOD = ITEMS.register("example_food",
         () -> new Item(new Item.Properties()
-            .group(ItemGroup.FOOD)
+            .tab(ItemGroup.TAB_FOOD)
             .food(new Food.Builder()
-                .hunger(4)
-                .saturation(0.3f)
+                .nutrition(4)
+                .saturationMod(0.3f)
                 .effect(() -> new net.minecraft.potion.EffectInstance(
-                    net.minecraft.potion.Effects.JUMP_BOOST, 200, 1), 1.0f)
+                    net.minecraft.potion.Effects.JUMP, 200, 1), 1.0f)
                 .build())
         )
     );
@@ -94,12 +98,12 @@ public class ExampleMod {
 
     // ---- 服务端事件 ----
     @SubscribeEvent
-    public void onServerStarting(net.minecraftforge.event.server.ServerStartingEvent event) {
-        LOGGER.info("Server starting: {}", event.getServer().getFolderName());
+    public void onServerStarting(FMLServerStartingEvent event) {
+        LOGGER.info("Server starting: {}", event.getServer().getServerDirectory());
     }
 
     // ---- 客户端事件 ----
-    @Mod.EventBusSubscriber(modid = MOD_ID, bus = net.minecraftforge.eventbus.api.Bus.MOD, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {

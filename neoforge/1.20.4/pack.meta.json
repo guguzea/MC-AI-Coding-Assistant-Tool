@@ -8,11 +8,12 @@
     "gradle": "9.2.1",
     "provenance": {
       "text": "official-mdk:MDK-1.20.4-ModDevGradle@ddfff1d8",
-      "wrapper": "gradle-wrapper-task"
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-10 零改动副本（cp -r neoforge/1.20.4/scaffold → D:/mc-skill-temp/w54b_neo_1204，diff -r 输出 0 行）GradleWrapperMain build → BUILD SUCCESSFUL in 10m31s；Gradle 9.2.1 走脚手架自带 wrapper 三件套，发行包内容预置自用户本地 G:/gradle-9.2.1-all 解包目录（-all 塞进 -bin 的 hash 目录，hash 只由 distributionUrl 决定；未做官方 sha256 校验——偏差在此披露）；JAVA_HOME=G:/graalvm-jdk-21_windows-x64_bin/graalvm-jdk-21.0.12+7.1（Launcher JVM 21.0.12），本档 JavaLanguageVersion.of(17) 但 MDG :createMinecraftArtifacts 另需 JDK 21 ⇒ 工具链表（Temurin 17.0.12 + GraalVM 21，逗号分隔）写在 scratch 自己的 GRADLE_USER_HOME=D:/mc-skill-temp/gh921/gradle.properties；ModDevGradle 2.0.143 + neo_version 20.4.251，parchment 块由 Gradle 自行解析（org.parchmentmc.data/parchment-1.20.4/2024.04.14 已落缓存）；产物 build/libs/examplemod-1.0.0.jar（5520 B，unzip -l 含 META-INF/mods.toml 4210 B + ExampleMod.class）；日志 D:/mc-skill-temp/_g_neo1204_v3.log（v1/v2 失败都是本机 JDK 侧：缺 21 工具链、installations.paths 分隔符写错，非模板缺陷）；模板一行未改"
     },
-    "buildVerified": false,
+    "buildVerified": true,
     "gaps": [
-      "gradlew build 未在本机跑通（W5-4 阶段③）"
+      "buildVerified 仅覆盖 :build 任务链（编译 + generateModMetadata + 打包）；runClient / runServer / runData 无真机启动证据，W5-4 未扩到运行循环"
     ]
   }
 }

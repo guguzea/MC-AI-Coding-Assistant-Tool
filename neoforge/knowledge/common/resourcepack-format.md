@@ -11,7 +11,7 @@
 }
 ```
 
-> 1.20.4 的资源包 pack_format = **22**：官方 1.20.4-49.2.0 MDK `src/main/resources/pack.mcmeta` = `"pack_format": 22`（sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`），本仓 `neoforge/scaffold/src/main/resources/pack.mcmeta` 同为 22。数据包为 26 —— 但 **26 在本仓无一手出处**（仓内官方语料只到 `data/neoforge_1.20.4/neoforge-docs/1.20.4/raw/gettingstarted_modfiles.md:36` 的「As of Minecraft 1.20.2, the pack version is 18」）。
+> 1.20.4 的资源包 pack_format = **22**：官方 **Forge** 1.20.4-49.2.0 MDK `src/main/resources/pack.mcmeta` = `"pack_format": 22`（`mcp-server/data/mdk-checksums.json` 中 `id=forge-1.20.4-forgegradle`，`source=official`；pack_format 是 Minecraft 侧常量，NeoForge 档同值），本仓 `neoforge/scaffold/src/main/resources/pack.mcmeta` 同为 22。数据包为 26 —— 但 **26 在本仓无一手出处**（仓内官方语料只到 `data/neoforge_1.20.4/neoforge-docs/1.20.4/raw/gettingstarted_modfiles.md:36` 的「As of Minecraft 1.20.2, the pack version is 18」）。
 
 ## 目录结构
 

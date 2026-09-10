@@ -224,7 +224,7 @@ fabric-mod/
 - [Fabric Docs](https://github.com/FabricMC/fabric-docs) — GitHub 文档仓库
 - [Mixin](https://github.com/SpongePowered/Mixin) — 字节码注入框架
 - [Yarn](https://github.com/FabricMC/yarn) — 社区维护映射
-- [Parchment](https://parchmentmc.org/) — 带参数的 Yarn（兼容 Fabric）
+- [Parchment](https://parchmentmc.org/) — 叠加在 Mojmap 上的参数名 + Javadoc 数据；Fabric 侧要用 `loom.layered()`，不是 Yarn 的扩展
 
 ## 配置（不落盘树级 mc-config）
 

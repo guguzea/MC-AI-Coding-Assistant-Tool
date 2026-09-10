@@ -12,6 +12,6 @@ pluginManagement {
     }
 }
 
-plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.4.0'
-}
+// 不加载 foojay-resolver-convention：0.4.0 需要 Gradle 7.6+（7.3.3 实测
+// Could not generate a decorated class for type FoojayToolchainsPlugin），
+// 而本档 FG4 硬拒 Gradle ≥7 ⇒ 请用 JDK 8 运行 Gradle（JAVA_HOME 或 org.gradle.java.home）
