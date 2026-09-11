@@ -17,7 +17,7 @@
 | 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
 | Java 版本 | **Java 17**（Forge 1.20.1 最低要求） |
 | Gradle | Gradle 8.x + ForgeGradle `[6.0,6.2)`（官方 MDK 1.20.1-47.4.10 实证 = promotions `1.20.1-recommended`；`1.20.1-latest`=47.4.23 未逐字节核；不存在 FG 14.x） |
-| Mappings | **MCP**（`minecraft "1.20.1"` 下默认） |
+| Mappings | 本包 scaffold = **parchment**（`scaffold/gradle.properties` `mapping_channel=parchment` / `mapping_version=2023.09.03-1.20.1`；= mojmap 名 + 社区参数名与 javadoc，librarian 接线已在 scaffold 内）。备选 **official** = 官方 1.20.1-47.4.10 MDK 的默认值，切回只改那两行（`mapping_version` 随之变回 `1.20.1`）。旧文档此行写的「MCP（默认）」不是本包通道（MCP 走 `snapshot`，与 mojmap 不同源）；三套映射禁止混名，详见 `00-project-setup.mdc`「Mappings 约束」 |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---

@@ -3,5 +3,16 @@
   "pack-status": "ready",
   "platform": "quilt",
   "minecraftVersion": "1.18.2",
-  "overlay": "fabric/1.18.2"
+  "overlay": "fabric/1.18.2",
+  "scaffold": {
+    "mode": "reference",
+    "buildVerified": false,
+    "gaps": [
+      "无 wrapper 三件套：scaffold/gradle/wrapper/gradle-wrapper.jar、gradlew、gradlew.bat 实测均不在盘上 ⇒ 本档 scaffold 按参照件读，不能直接 ./gradlew build。要构建须自行按 build.gradle 的 loom 版本挑兼容的 Gradle 发行版跑一次 gradle wrapper（本仓不为该档钉 Gradle 版：gradle.properties 内无任何 Gradle 版本键，空洞登记见 mcp-server/data/wrapper-jars.json 的 gaps.wrapperVersionUndeclared）",
+      "gradle.properties 仅含 org.gradle.jvmargs / minecraft_version，没有 distributionUrl 可依据",
+      "plugins 钉 id 'org.quiltmc.loom' version '1.15.1'（钉值出处 = build.gradle :2-3 注释：maven.quiltmc.org 的 org/quiltmc/loom/maven-metadata 最新 release，核对日期 2026-09-02）",
+      "java toolchain = JavaLanguageVersion.of(17)（见 build.gradle）",
+      "本档 scaffold 无 README_AI.md（fabric 侧 4 档有）⇒ 构建步骤只在本声明里，未写进该档 AGENTS.md（实测 wrapper / gradlew 二词各 0 处）"
+    ]
+  }
 }

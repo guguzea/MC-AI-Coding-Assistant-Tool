@@ -9,12 +9,12 @@
     "provenance": {
       "text": "house",
       "wrapper": "gradle-wrapper-task",
-      "build": "2026-09-09 零改动副本（cp forge/1.20.1/scaffold → w54_forge_v2，diff -r 与仓库一致）gradlew build → BUILD SUCCESSFUL in 28s；JDK 17.0.12 Temurin（G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12）+ Gradle 8.5 wrapper + ForgeGradle [6.0,6.2)；产物 build/libs/examplemod-1.0.0.jar（6134 B，:reobfJar 已跑，jar tf 校验含 META-INF/mods.toml）；日志 _gradle_forge1201_v2.log。跑通前修掉 3 处模板缺陷：librarian 插件在本档 pluginManagement（未列 ParchmentMC 仓库）下不可解析、顶层 mappings（FG5 语法）、CreativeModeTab.TAB_*（1.19.2 期 API 残留）"
+      "build": "两腿各有真机记录。(1) 2026-09-11 默认通道 = parchment：零改动副本（cp forge/1.20.1/scaffold → w55_parch1201）gradlew build → BUILD SUCCESSFUL in 3m 15s、RC=0；JDK 17.0.12 Temurin（G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12）+ Gradle 8.5 wrapper + ForgeGradle [6.0,6.2) + org.parchmentmc.librarian.forgegradle 1.+；FG 中间产物名 forge-1.20.1-47.4.10_mapped_parchment_2023.09.03-1.20.1.jar 证明确实走的是 parchment；产物 build/libs/examplemod-1.0.0.jar（6135 B，:reobfJar 已跑）；日志 _gradle_forge1201_parch.log。副本与改后 scaffold 的非注释行逐行一致（差异仅整行注释）。(2) 2026-09-09 official 一腿：零改动副本（cp → w54_forge_v2，diff -r 与仓库一致）BUILD SUCCESSFUL in 28s，产物 examplemod-1.0.0.jar 6134 B，日志 _gradle_forge1201_v2.log；跑通前修掉 3 处模板缺陷：librarian 插件在本档 pluginManagement（未列 ParchmentMC 仓库）下不可解析、顶层 mappings（FG5 语法）、CreativeModeTab.TAB_*（1.19.2 期 API 残留）"
     },
     "buildVerified": true,
     "gaps": [
       "scaffold 不含 assets（模型/纹理/lang）→ 复制后方块与物品为 missingtexture、显示名为未翻译占位键；本模板只演示注册代码，Forge 全部 10 档 scaffold 同状（实测各档 src/main/resources 仅 mods.toml/mcmod.info + pack.mcmeta，assets 文件数 0）",
-      "本档已验证的一腿走 official 通道（gradle.properties `mapping_channel=official` / `mapping_version=1.20.1`），scaffold 内不含 parchment 接线（无 `org.parchmentmc.librarian.forgegradle` 插件、settings.gradle pluginManagement 无 ParchmentMC 仓库）→ 本档 parchment 通道未实测。原判词「maven.parchmentmc.org 443/80 均不可达」为误判，2026-09-10 已更正：同代 ForgeGradle [6.0,6.2) 的 1.19.4（`2023.06.26-1.19.4`）与 1.20.4（`2024.02.25-1.20.4`）均从该主机解析 librarian 插件并拉取 parchment 数据，两档 BUILD SUCCESSFUL",
+      "mappings 默认通道 2026-09-11 起为 **parchment**（`2023.09.03-1.20.1`，librarian 插件 + 两处 ParchmentMC 仓库已在本 scaffold 备好，同日真机 BUILD SUCCESSFUL，见 provenance.build）。⚠️ 有意偏差登记：官方 1.20.1-47.4.10 MDK 的默认是 `official`（MDK `gradle.properties:35`，其注释并写明「Parchment is an unofficial project ... Additional setup is needed」），本档选 parchment 是为了参数名 / javadoc 体验并与同代两档 forge/1.19.4（`2023.06.26-1.19.4`）、forge/1.20.4（`2024.02.25-1.20.4`）对齐 —— 想按 MDK 口径走 official 时改 `gradle.properties` 两行即可，该通道本档亦于 2026-09-09 真机跑通过。历史误判保留：原判「maven.parchmentmc.org 443/80 均不可达」不成立（2026-09-10 更正），同代 FG [6.0,6.2) 的 1.19.4 / 1.20.4 两档一直从该主机解析 librarian 并拉取 parchment 数据，均 BUILD SUCCESSFUL",
       "buildVerified 只覆盖 :compileJava + :reobfJar（编译期与字节码产物）；@Mod 构造器、注册时机、进游戏后的行为均未在本机实跑验证（本仓库不代人跑游戏）"
     ]
   },

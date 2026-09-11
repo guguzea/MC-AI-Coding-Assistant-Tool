@@ -45,8 +45,8 @@
   ```properties
   minecraft_version=1.20.1
   forge_version=47.4.10
-  mapping_channel=official
-  mapping_version=1.20.1
+  mapping_channel=parchment
+  mapping_version=2023.09.03-1.20.1
   loader_version=47.4.10
   ```
   > 注意：
@@ -56,10 +56,11 @@
 
 ### Mappings 约束
 
-- Forge 1.20.1 默认使用 **Mojang official（mojmap）**：`mappings channel: 'official', version: mapping_version`
-- `mapping_version` 在 official 通道下与 Minecraft 版本字符串一致（1.20.1），**不是** MCP snapshot 号；不要把 MCP 通道的日期戳填成另一个 MC 版本
+- 本档 scaffold 默认 **parchment**（= mojmap 名 + 社区参数名 / javadoc）：`mappings channel: mapping_channel, version: mapping_version`，parchment 通道由 `plugins` 里的 `org.parchmentmc.librarian.forgegradle` + `settings.gradle` 的 ParchmentMC 仓库注册
+- 备选 **official**（Mojang 官方映射名，无参数名）= 官方 1.20.1-47.4.10 MDK 的默认值；切回只需改 `gradle.properties` 两行 `mapping_channel=official` / `mapping_version=1.20.1`
+- 两条通道的 `mapping_version` 格式不同，都不许填成 MCP snapshot 号：parchment = `YYYY.MM.DD-<MCVersion>`（如 `2023.09.03-1.20.1`），official = MC 版本串（`1.20.1`）。⚠️ 本仓旧文档曾把 official 写成 `20231030.163645`（那是 MCP/snapshot 通道的戳），并把它标成「MCP 默认」——两者都是错的
 - **禁止**在 `build.gradle` 中切换到 `yarn`（除非用户明确要求且项目已适配）
-- official 映射将混淆名映射为 Mojang 可读名，如 `getHealth`
+- 同一工程内只认一套通道：parchment 与 official 的类/方法/字段名相同，参数名与 javadoc 只有 parchment 有；MCP（`snapshot` 通道）与 mojmap 不同源，禁止把三套名字混着写
 
 ### 项目目录结构（强制规范）
 
@@ -153,7 +154,7 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official', version: mapping_version
+    mappings channel: mapping_channel, version: mapping_version
     copyIdeResources = true
 
     runs {

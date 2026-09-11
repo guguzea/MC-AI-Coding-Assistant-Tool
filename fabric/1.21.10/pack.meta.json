@@ -6,10 +6,20 @@
   "note": "versioned fabric-docs only; no wiki clone",
   "gaps": {
     "code-patterns": "设计如此（2026-09-08 裁定「薄档即声明」）。薄档的判据取盘上实测、不取本句自称：本档 knowledge/ 全文实扫 = 1 篇（common/verified-api-1.21.10.md），而同平台有该族的 7 档 knowledge/ 均 12–13 篇 → 本档属薄档形态，不落 code-patterns/。如实登记：本档 AGENTS.md 里 code-patterns / 有意为空 / 薄档 三个词各 0 处，故声明效力来自上条裁定 + 本行实测，不来自 AGENTS 句子。fabric 14 档 = 7 有 7 无（有该族 = 1.16.5 / 1.17.1 / 1.18.2 / 1.20.1 / 1.21.1 / 1.21.3 / 1.21.11）。非薄档的 1.14.4 / 1.19.4 / 1.20.4 不适用本裁定，仍记缺口。禁止克隆邻档该族顶数。",
-    "knowledge": "仅 knowledge/common/verified-api-1.21.10.md；本档语料无可核实主题页可支撑更多短文",
+    "knowledge": "knowledge/ = common/verified-api-1.21.10.md + version-changes/1.21.x.md（1.21 线迁移纪要，2026-09-11 按用户裁定补写）。旧句「本档语料无可核实主题页可支撑更多短文」措辞过强、已作废：本档语料**有**主题页 develop_porting_index.md（processed 86 篇，实测），只是其正文 = 改构建脚本三步 + 一组站外链接（Fabric blog / Minecraft blog / Minecraft Wiki / slicedlime 视频 / NeoForge primer），据以写迁移细节须取外网 ⇒ 本仓未取，纪要里只写仓内可证的部分，站外那部分保持未核实。其余主题（antipatterns / code-patterns）仍无来源页支撑，禁止克隆邻档顶数。",
     "loader-api": "无 1.21.10-fabric-api.json 摘要；类名只来自 search_fabric_docs version=1.21.10，FQCN 与模块 id 一律标未核实"
   },
   "coverage": {
     "attachments": "已补（2026-09-01）：来源为本档语料 fabric-docs/1.21.10/processed/develop_data-attachments.md，只登记该页写出的简名 → 落在规则 01-registry「附加数据（Attachment）」节 + 本档核实表。该页自称 experimental，且未写 FQCN / 模块 id。"
+  },
+  "scaffold": {
+    "mode": "reference",
+    "buildVerified": false,
+    "gaps": [
+      "无 wrapper 三件套：scaffold/gradle/wrapper/gradle-wrapper.jar、gradlew、gradlew.bat 实测均不在盘上 ⇒ 本档 scaffold 按参照件读，不能直接 ./gradlew build。要构建须自行按 build.gradle 的 loom 版本挑兼容的 Gradle 发行版跑一次 gradle wrapper（本仓不为该档钉 Gradle 版：gradle.properties 内无任何 Gradle 版本键，空洞登记见 mcp-server/data/wrapper-jars.json 的 gaps.wrapperVersionUndeclared）",
+      "gradle.properties 仅含 mod_version / mod_id / maven_group / minecraft_version / org.gradle.jvmargs，没有 distributionUrl 可依据",
+      "plugins { id \"net.fabricmc.fabric-loom-remap\" } 刻意不含版本号（该文件 :2-3 注释：Loom 版本以 https://fabricmc.net/develop/ 与 search_fabric_docs version=1.21.10 为准，禁止默写）⇒ 不补版本连插件都解析不出，这是模板的有意形态",
+      "java toolchain = JavaLanguageVersion.of(21)（见 build.gradle）"
+    ]
   }
 }

@@ -68,7 +68,7 @@ export function listKnowledgeResources(): KnowledgeResource[] {
   const resources: KnowledgeResource[] = [
     { uri: "mcskill://matrix/mixin-support", name: "mixin-support-matrix", description: "mixin_analyze 支持矩阵摘要" },
     { uri: "mcskill://schema/sqlite", name: "mapping-sqlite-schema", description: "yarn-mappings.sqlite v2/v3 字段说明。必须带 ?version=<精确 MC 版本>；裸 URI 只返回参数缺失提示" },
-    { uri: "mcskill://version-changes/1.21", name: "version-1.21", description: "1.21 变更专章；实读 fabric/1.21.11/knowledge/version-changes/1.21.x.md，仅该档，不代表其他 1.21 档" },
+    { uri: "mcskill://version-changes/1.21", name: "version-1.21", description: "1.21 变更专章；实读 fabric/1.21.11/knowledge/version-changes/1.21.x.md，仅该档，不代表其他 1.21 档 —— 另有 fabric/1.21.1/knowledge/version-changes/1.21.x.md、fabric/1.21.4/knowledge/version-changes/1.21.x.md、fabric/1.21.8/knowledge/version-changes/1.21.x.md、fabric/1.21.10/knowledge/version-changes/1.21.x.md 各写自己的迁移区间，不在本 URI 面，按文件读" },
     { uri: "mcskill://antipatterns/registry", name: "antipattern-registry", description: "注册反模式短文；实读 forge/1.20.1/knowledge/antipatterns/registry.md，仅该档" },
     { uri: "mcskill://patterns/README", name: "patterns-index", description: "社区 patterns 索引；实读 community_knowledge/patterns/README.md，不是仓库根 knowledge/patterns/ 短片段库" },
   ];

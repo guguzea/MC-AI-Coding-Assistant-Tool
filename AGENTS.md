@@ -185,10 +185,10 @@ id 'net.minecraftforge.gradle'
 
 必须确认项目的 `mappings` 配置，禁止混用映射类型：
 
-- **MCP**（Forge 官方）— 1.20.x 默认
+- **MCP**（Forge legacy `snapshot` 通道）— 仅 ≤1.20.4 的旧 Forge 工程；**不是** ForgeGradle 6 时代 1.20.x 的默认：官方 1.20.1-47.4.10 MDK `gradle.properties:35` 钉的是 `mapping_channel=official`
 - **Yarn**（Fabric 社区维护）— **仅 ≤1.21.11**（仍混淆的版本）
-- **Parchment**（MCP 的带文档版本）— 主要用于 ≤1.20.4 Forge extracted / query_api
-- **Mojang / mojmap** — 官方可读名
+- **Parchment**（**叠加在 official / mojmap 之上**的社区参数名与 javadoc 层，成员名与 official 相同；非 MCP 的带文档版）— `query_api` 的 Parchment 层仅约 ≤1.20.4 extracted；本仓 forge 1.19.4 / 1.20.1 / 1.20.4 三档 scaffold 的默认通道（偏离 MDK 默认，档面已登记）
+- **Mojang / mojmap** — 官方可读名；FG6（1.20.x）MDK 默认通道 `official` 即此
 - **26.1+（去混淆）**：游戏 jar 已是 Mojang 名，**不再需要** Yarn / Intermediary remap；convert_mapping 拒绝 yarn；查文档用 search_neoforge_docs（默认 **26.1**）/ search_fabric_docs（先 `list_fabric_versions`，如 **26.1.2**）；**禁止**把 26.1 内容克隆成 26.2 冒充
 
 ### 物理端约束

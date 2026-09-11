@@ -8,5 +8,15 @@
     "code-patterns": "设计如此（2026-09-08 裁定「薄档即声明」）。本档属薄档，判据取盘上实测不取本句自称：knowledge/ 全文实扫 = 1 篇（common/verified-api-26.1.2.md，与本行 gaps.knowledge 同数），且 AGENTS.md「规则文件」节自陈本档知识 = rules + `search_fabric_docs`(26.1.2) + 那一份核实表，「除该文件外 knowledge/ 有意为空」。该句字面只覆盖 `knowledge/`，而 `code-patterns/` 在档根不在其下——按上条裁定，薄档形态本身即声明，无需 AGENTS 逐目录再写一遍。fabric 14 档 = 7 有 7 无（有该族 = 1.16.5 / 1.17.1 / 1.18.2 / 1.20.1 / 1.21.1 / 1.21.3 / 1.21.11，其 knowledge/ 均 12–13 篇）；非薄档的 1.14.4 / 1.19.4 / 1.20.4 不适用本裁定，仍记缺口。禁止克隆 fabric/1.21.11/code-patterns 顶数。",
     "version-changes": "无 knowledge/version-changes/ 目录。本档 AGENTS.md:29 已明示为设计决定：「除该文件外 knowledge/ 有意为空，禁止克隆 fabric/1.21.11/knowledge（其 antipatterns / porting / version-changes 均非本档证据）」→ 不得用 1.21.x 档的同名文件为本档背书。",
     "knowledge": "knowledge/ 实测仅 1 个文件（common/verified-api-26.1.2.md）；antipatterns/ 与 porting/ 目录均不存在（对照 fabric/1.21.11 = 13 文件）。"
+  },
+  "scaffold": {
+    "mode": "reference",
+    "buildVerified": false,
+    "gaps": [
+      "无 wrapper 三件套：scaffold/gradle/wrapper/gradle-wrapper.jar、gradlew、gradlew.bat 实测均不在盘上 ⇒ 本档 scaffold 按参照件读，不能直接 ./gradlew build。要构建须自行按 build.gradle 的 loom 版本挑兼容的 Gradle 发行版跑一次 gradle wrapper（本仓不为该档钉 Gradle 版：gradle.properties 内无任何 Gradle 版本键，空洞登记见 mcp-server/data/wrapper-jars.json 的 gaps.wrapperVersionUndeclared）",
+      "gradle.properties 仅含 mod_version / mod_id / maven_group / minecraft_version / org.gradle.jvmargs，没有 distributionUrl 可依据",
+      "plugins 钉 id \"net.fabricmc.fabric-loom\" version \"1.11-SNAPSHOT\" —— SNAPSHOT 不是稳定发布，须以 https://fabricmc.net/develop/ 实读替换",
+      "java toolchain = JavaLanguageVersion.of(25)（26.x 去混淆线，见 build.gradle）"
+    ]
   }
 }

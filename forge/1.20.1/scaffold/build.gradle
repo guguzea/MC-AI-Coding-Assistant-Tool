@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
 version = mod_version
@@ -16,9 +17,12 @@ base {
 // Target 17 for maximum compatibility; IDE can override for development
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-// Mappings channel and version — parchment is community-sourced with parameter names and javadocs
-// Use "official" for vanilla MCP names (no parameter names)
-// See: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+// Mappings channel/version come from gradle.properties. This pack defaults to parchment
+// (mojmap names + community parameter names & javadocs); the parchment channel is registered by
+// the org.parchmentmc.librarian.forgegradle plugin above — remove both the plugin and the
+// ParchmentMC repositories if you never switch to it.
+// Set mapping_channel=official for Mojang official names without parameter names
+// (that is what the official 1.20.1-47.4.10 MDK ships). See: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
 minecraft {
     copyIdeResources = true
 
@@ -65,6 +69,8 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     // ForgeGradle auto-adds the Forge maven and Maven Central
+    // parchment mappings (this pack's default channel)
+    maven { url = 'https://maven.parchmentmc.org' }
 }
 
 dependencies {

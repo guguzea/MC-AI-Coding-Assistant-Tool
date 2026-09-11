@@ -37,10 +37,10 @@ minecraft_version=1.20.1
 forge_version=47.4.10
 
 # ---- Mappings ----
-# official: MCP（默认，无参数名）
-# parchment: 社区映射（有参数名和 javadoc，推荐用于开发）
-mapping_channel=official
-mapping_version=20231030.163645
+# parchment: 本包默认 —— mojmap 名 + 社区参数名/javadoc（版本形如 YYYY.MM.DD-<MCVersion>）
+# official : Mojang 官方映射名（无参数名，版本 = MC 版本串 1.20.1）；官方 1.20.1-47.4.10 MDK 的默认值
+mapping_channel=parchment
+mapping_version=2023.09.03-1.20.1
 
 # ---- Mod 元数据 ----
 mod_id=examplemod          # 全部小写，禁止含 `-`
