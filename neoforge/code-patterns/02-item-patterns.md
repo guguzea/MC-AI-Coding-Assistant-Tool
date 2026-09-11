@@ -58,10 +58,11 @@ public static final DeferredHolder<Item, Item> COPPER_SWORD = ITEMS.register("co
 ## 镐
 
 ```java
-// PickaxeItem(float attackDamageBonus, float attackSpeed, Tier, TagKey<Block>, Properties)
-// attackDamageBonus：类型加成外额外增加的攻击伤害（镐通常为 1.0f）
+// 1.20.4 实测 PickaxeItem 构造：PickaxeItem(Tier, int attackDamageModifier, float attackSpeedModifier, Item.Properties)
+// ⚠️ 第二参是 int（旧文本写 1.0f 编译不过）；带 TagKey<Block> 的五参构造属于父类 DiggerItem：
+//    DiggerItem(float, float, Tier, TagKey<Block>, Item.Properties)
 public static final DeferredHolder<Item, Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
-    () -> new PickaxeItem(MyTier.COPPER, 1.0f, -2.8f,
+    () -> new PickaxeItem(MyTier.COPPER, 1, -2.8f,
         new Item.Properties().tab(CreativeModeTab.TAB_TOOLS))
 );
 ```
@@ -150,8 +151,9 @@ public class MySwordItem extends SwordItem {
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        // ✅ 正确：lambda 回调传入装备槽位
-        stack.hurtAndBreak(1, attacker, slot -> attacker.getItemBySlot(slot));
+        // 1.20.4 实测：ItemStack#hurtAndBreak(int, LivingEntity, Consumer<LivingEntity>) —— 回调参数是「装备者」，不是槽位
+        // （旧文本写成 slot -> attacker.getItemBySlot(slot)：拿 LivingEntity 当 EquipmentSlot 用，且取完物品什么都不做）
+        stack.hurtAndBreak(1, attacker, entity -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         return true;
     }
 

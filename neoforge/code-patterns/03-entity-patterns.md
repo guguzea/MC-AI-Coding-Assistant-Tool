@@ -85,13 +85,16 @@ public class ClientSetup {
     @SubscribeEvent
     public static void onRegisterLayerDefs(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(MY_MODEL_LAYER, () ->
-            LayerDefinition.create(ModelLayers.createHumanoidBody(), 64, 32)
+            // 1.20.4 实测：LayerDefinition.create(MeshDefinition, int, int)，mesh 由 HumanoidModel.createMesh(CubeDeformation, float) 产出
+            // ⚠️ ModelLayers 在 1.20.4 没有 createHumanoidBody()（该类只有 createLocation / register / registerInnerArmor / registerOuterArmor / create*ModelName 等）
+            LayerDefinition.create(HumanoidModel.createMesh(CubeDeformation.NONE, 0.0f), 64, 32)
         );
     }
 
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(MyEntity.TYPE.get(), MyEntityRenderer::new);
+        // 本文件顶部声明的是 DeferredHolder MY_ENTITY（没有 MyEntity.TYPE 这个字段）
+        event.registerEntityRenderer(MY_ENTITY.get(), MyEntityRenderer::new);
     }
 }
 
@@ -123,8 +126,17 @@ public static final DeferredHolder<Attribute, Attribute> EXTRA_HEALTH = ATTRIBUT
 // 在 mod 构造函数中
 ATTRIBUTES.register(modEventBus);
 
-// 实体中应用
-this.getAttribute(ATTRIBUTES.get("extra_health")).ifPresent(attr ->
-    this.getAttributeMap().registerAttribute(attr)
-);
+// 实体中应用（1.20.4 实测形状）：Entity#getAttribute(Attribute) 返回 AttributeInstance（不是 Optional）
+AttributeInstance extra = this.getAttribute(EXTRA_HEALTH.get());
+if (extra != null) {
+    // 1.20.4 实测：AttributeModifier(String name, double amount, AttributeModifier.Operation)
+    // 本档语料原文用的是 Operation.ADD；1.21.11 反编译源码里已改名 ADD_VALUE（另有 ADD_MULTIPLIED_BASE / _TOTAL）
+    extra.addPermanentModifier(new AttributeModifier("modid.extra_health", 4.0, AttributeModifier.Operation.ADD));
+}
+
+// TODO(未核实)：① NeoForgeRegistries.ATTRIBUTES 这个常量名在本档 1.20.4 语料（61 页）里查无出处
+//              （语料只出现过 NeoForgeRegistries.ATTACHMENT_TYPES）；
+//              ② 自定义属性要先进该实体类型的 AttributeSupplier，NeoForge 侧的注册事件名同样无语料出处
+//                 （1.20.4 语料没有任何 entities / attributes 专页）。
+//              两者都须用户自备 NeoForge jar 走 ingest_loader_api + query_loader_api 逐签名核实后再写，禁止凭记忆补。
 ```

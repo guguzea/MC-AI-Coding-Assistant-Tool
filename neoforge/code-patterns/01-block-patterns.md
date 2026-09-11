@@ -82,10 +82,14 @@ public class MachineBlock extends Block implements EntityBlock {
 // 方块实体
 public class MachineBlockEntity extends BlockEntity {
     private int progress = 0;
-    public static final BlockEntityType<MachineBlockEntity> TYPE = /* 注册 */;
+    // ⚠️ 旧文本把 TYPE 声明成 BlockEntityType<MachineBlockEntity> 本身，却在上面的 getTicker 里写 TYPE.get()
+    //    —— 字段类型与用法矛盾（且 `= /* 注册 */` 不是合法 Java）。本片其余注册一律走 DeferredRegister，
+    //    所以 TYPE 必须是 DeferredHolder，两处使用都 .get()：
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MachineBlockEntity>> TYPE =
+        /* 注册 */; // TODO(未核实)：须由本文件未声明的 BLOCK_ENTITY_TYPES.register(...) 得到；BlockEntityType.Builder 的 build(...) 形参在 1.20.4 与 1.21.x 不同，要用 query_loader_api（先 ingest_loader_api）或自备 jar 逐签名核实，禁止凭记忆补
 
     public MachineBlockEntity(BlockPos pos, BlockState state) {
-        super(TYPE, pos, state);
+        super(TYPE.get(), pos, state);
     }
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos pos,
@@ -129,12 +133,15 @@ public class MachineBlockEntity extends BlockEntity {
 ## 矿物方块（钻石级）
 
 ```java
+// 掉落经验 = DropExperienceBlock（不是 Properties 上的链式方法）
+// 1.20.4 实测构造：DropExperienceBlock(IntProvider xpRange, BlockBehaviour.Properties)；区间用 UniformInt.of(min, max)
+// ⚠️ 本文旧版这里的 `.insertXp(1, 3, 7)` 是编造的方法名：query_api --class=BlockBehaviour$Properties --version=1.20.4
+//    的 43 个方法中无任何 insertXp（有 mapColor / strength / requiresCorrectToolForDrops / noLootTable）
 public static final DeferredHolder<Block, Block> MY_ORE = BLOCKS.register("my_ore",
-    () -> new Block(BlockBehaviour.Properties.of()
+    () -> new DropExperienceBlock(UniformInt.of(1, 7), BlockBehaviour.Properties.of()
         .mapColor(MapColor.STONE)
         .strength(3.0f, 3.0f)
         .requiresCorrectToolForDrops()
-        .insertXp(1, 3, 7)  // 掉落经验 1~7
     )
 );
 ```
