@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "datastorage/saveddata"
 url: "https://docs.neoforged.net/docs/1.20.6/datastorage/saveddata/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:37.767Z"
+fetchedAt: "2026-09-12T12:01:15.968Z"
 ---
 # Saved Data
 
@@ -27,7 +27,7 @@ Any `SavedData` is loaded and/or attached to a level dynamically. As such, if on
 
 `DimensionDataStorage#computeIfAbsent` takes in two arguments. The first is an instance of `SavedData.Factory`, which consists of a supplier to construct a new instance of the SD and a function to load NBT data into a SD and return it. The second argument is the name of the `.dat` file stored within the `data` folder for the implemented level. The name must be a valid filename and can not contain `/` or `\`.
 
-For example, if a SD was named "example" within the Nether, then a file would be created at `.//DIM-1/data/example.dat` and would be implemented like so:
+For example, if a SD was named "example" within the Nether, then a file would be created at `./<level_folder>/DIM-1/data/example.dat` and would be implemented like so:
 
 ```java
 

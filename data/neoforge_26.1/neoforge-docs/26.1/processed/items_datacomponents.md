@@ -4,7 +4,7 @@ Data components are key-value pairs within a map used to store data on the `Hold
 
 ## DataComponentType
 
-Each data component has an associated `DataComponentType`, where `T` is the component value type. The `DataComponentType` represents a key to reference the stored component value along with some codecs to handle reading and writing to the disk and network, if desired.
+Each data component has an associated `DataComponentType<T>`, where `T` is the component value type. The `DataComponentType` represents a key to reference the stored component value along with some codecs to handle reading and writing to the disk and network, if desired.
 
 A list of existing components can be found within `DataComponents`.
 
@@ -301,7 +301,7 @@ stack.update(
 
 ## Adding Default Data Components to Items
 
-Although the mutable data components are stored on an `ItemStack`, a map of default components can be set through `Item`, to be stored on the `Holder` and finally passed to the `ItemStack` as a prototype when constructed. A component can be added to the `Item` via `Item.Properties#component`. For components that rely on dynamically generated data, such as [datapack registry objects](/docs/concepts/registries#datapack-registries), `Item.Properties#delayedComponent` should be used instead, constructing the value given the `HolderLookup.Provider` of registries.
+Although the mutable data components are stored on an `ItemStack`, a map of default components can be set through `Item`, to be stored on the `Holder<Item>` and finally passed to the `ItemStack` as a prototype when constructed. A component can be added to the `Item` via `Item.Properties#component`. For components that rely on dynamically generated data, such as [datapack registry objects](/docs/concepts/registries#datapack-registries), `Item.Properties#delayedComponent` should be used instead, constructing the value given the `HolderLookup.Provider` of registries.
 
 ```java
 

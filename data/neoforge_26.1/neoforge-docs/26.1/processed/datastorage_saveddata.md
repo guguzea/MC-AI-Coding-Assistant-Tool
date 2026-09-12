@@ -32,8 +32,8 @@ public class ExampleSavedData extends SavedData {
 
 As the `SavedData` is simply an object, there needs to be some sort of associated identifier. Additionally, we also need to read and write the data to disk. This is where the `SavedDataType` comes in. It takes in the identifier of the saved data, a default constructor for when no data is present, and a [codec](/docs/datastorage/codecs) used to encode and decode the data. The identifier is treated as the path location within the associated world folder and any level dimensions like so:
 
-- `.//data//.dat` for the server data
-- `.//dimensions///data//.dat` for individual level data
+- `./<world_folder>/data/<identifier_namespace>/<identifier_path>.dat` for the server data
+- `./<world_folder>/dimensions/<level_namespace>/<level_path>/data/<identifier_namespace>/<identifier_path>.dat` for individual level data
 
 Any missing directories will be created, including those used as part of the identifier.
 

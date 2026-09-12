@@ -121,7 +121,7 @@ Particles whose `SingleQuadParticle.Layer` uses `TextureAtlas#LOCATION_PARTICLES
 
 ## Particle Groups and Render States
 
-If a particle requires something more complex than a quad, then it will need its own `ParticleGroup`, where `P` is the type of the `Particle`. `ParticleGroup`s are responsible for ticking a defined subset of `Particle`s, removing them once `Particle#isAlive` returns false. Each group can queue up to 16,384 particles, evicting the oldest once full.
+If a particle requires something more complex than a quad, then it will need its own `ParticleGroup<P>`, where `P` is the type of the `Particle`. `ParticleGroup`s are responsible for ticking a defined subset of `Particle`s, removing them once `Particle#isAlive` returns false. Each group can queue up to 16,384 particles, evicting the oldest once full.
 
 ```java
 

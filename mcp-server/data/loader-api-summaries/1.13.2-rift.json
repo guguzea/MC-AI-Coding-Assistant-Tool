@@ -250,5 +250,8 @@
     }
   ],
   "note": "源码只在 $MC_SKILL_CACHE，不入库。缺 mappingsVersion 视为无效。",
-  "fqcnIndexCount": 0
+  "fqcnIndexCount": 0,
+  "loaders": [
+    "rift"
+  ]
 }

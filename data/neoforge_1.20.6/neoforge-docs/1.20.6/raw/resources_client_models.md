@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "resources/client/models"
 url: "https://docs.neoforged.net/docs/1.20.6/resources/client/models/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:54.481Z"
+fetchedAt: "2026-09-12T12:01:43.402Z"
 ---
 # Models
 

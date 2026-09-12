@@ -351,7 +351,7 @@ While any datapack JSON file can use load conditions, only a few [data providers
 - `JsonCodecProvider` and its subclass `SpriteSourceProvider`
 - [DataMapProvider](/docs/1.21.10/resources/server/datamaps/#data-generation)
 - [GlobalLootModifierProvider](/docs/1.21.10/resources/server/loottables/glm#datagen)
-- [DatapackBuiltinEntriesProvider](/docs/1.21.10/concepts/registries#data-generation-for-datapack-registries) (via `Map, List>` parameter)
+- [DatapackBuiltinEntriesProvider](/docs/1.21.10/concepts/registries#data-generation-for-datapack-registries) (via `Map<ResourceKey<?>, List<ICondition>>` parameter)
 
 For the conditions themselves, the `NeoForgeConditions` class provides static helpers for each of the built-in condition types that return the corresponding `ICondition`s.
 

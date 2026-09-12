@@ -8,7 +8,7 @@
   "sourceTreeMtime": 1786874622769.6328,
   "source": "official",
   "loaders": [
-    "forge"
+    "neoforge"
   ],
   "modId": "neoforge",
   "decompile": {

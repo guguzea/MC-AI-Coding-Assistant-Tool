@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "items/mobeffects"
 url: "https://docs.neoforged.net/docs/1.20.6/items/mobeffects/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:43.203Z"
+fetchedAt: "2026-09-12T12:01:26.907Z"
 ---
 # Mob Effects & Potions
 
@@ -246,8 +246,9 @@ entity.removeEffect(MobEffects.REGENERATION);
 
 ```java
 
-//POTIONS is a DeferredRegister
-public static final Supplier MY_POTION = POTIONS.register("my_potion", () -> new Potion(new MobEffectInstance(MY_MOB_EFFECT, 3600)));
+//POTIONS is a DeferredRegister<Potion>
+
+public static final Supplier<Potion> MY_POTION = POTIONS.register("my_potion", () -> new Potion(new MobEffectInstance(MY_MOB_EFFECT, 3600)));
 
 ```
 

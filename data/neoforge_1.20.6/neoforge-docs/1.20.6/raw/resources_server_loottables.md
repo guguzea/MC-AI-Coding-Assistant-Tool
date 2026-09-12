@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "resources/server/loottables"
 url: "https://docs.neoforged.net/docs/1.20.6/resources/server/loottables/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:03.329Z"
+fetchedAt: "2026-09-12T12:01:56.192Z"
 ---
 # Loot Tables
 
@@ -16,7 +16,7 @@ Most loot tables within vanilla are data driven via JSON. This means that a mod 
 
 ## Using a Loot Table
 
-A loot table is referenced by its `ResourceKey` which points to `data//loot_tables/.json`. The `LootTable` associated with the reference can be obtained using `ReloadableServerRegistries.Holder#getLootTable`, where `ReloadableServerRegistries.Holder` can be obtained via `MinecraftServer#reloadableRegistries`.
+A loot table is referenced by its `ResourceKey<LootTable>` which points to `data/<namespace>/loot_tables/<path>.json`. The `LootTable` associated with the reference can be obtained using `ReloadableServerRegistries.Holder#getLootTable`, where `ReloadableServerRegistries.Holder` can be obtained via `MinecraftServer#reloadableRegistries`.
 
 A loot table is always generated with given parameters. The `LootParams` contains the level the table is generated in, luck for better generation, the `LootContextParam`s which define scenario context, and any dynamic information that should occur on activation. The `LootParams` can be created using the constructor of the `LootParams.Builder` builder, and built via `LootParams$Builder#create` by passing in the `LootContextParamSet`.
 

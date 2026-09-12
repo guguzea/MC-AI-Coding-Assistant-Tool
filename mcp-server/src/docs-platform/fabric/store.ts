@@ -429,11 +429,12 @@ export class FabricDocStore {
     content: string,
     version: string,
   ): { content: string; stats: ExpandTranscludesResult } | null {
-    if (!content.includes("@[code")) return null;
+    // 两种占位符都要放行：1.21.4+ 与 26.x 的正文只用 `<<<`，只认 `@[code` 会让整页原样吐占位符
+    if (!content.includes("@[code") && !/^ *<<</m.test(content)) return null;
     const packRoot = this.packRootFor(version);
     if (!packRoot) return null;
     const stats = expandTranscludes(content, packRoot, loadReferenceProvenance(packRoot));
-    if (stats.sites === 0) return null;
+    if (stats.sites + stats.angleSites === 0) return null;
     return { content: stats.content, stats };
   }
 

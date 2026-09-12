@@ -8,10 +8,10 @@ Before we get started, it is important to understand that there is only ever one
 
 Due to this, a block should only ever be instantiated once, and that is during [registration](/docs/1.21.10/concepts/registries#methods-for-registering). Once the block is registered, you can then use the registered reference as needed.
 
-Unlike most other registries, blocks can use a specialized version of `DeferredRegister`, called `DeferredRegister.Blocks`. `DeferredRegister.Blocks` acts basically like a `DeferredRegister`, but with some minor differences:
+Unlike most other registries, blocks can use a specialized version of `DeferredRegister`, called `DeferredRegister.Blocks`. `DeferredRegister.Blocks` acts basically like a `DeferredRegister<Block>`, but with some minor differences:
 
 - They are created via `DeferredRegister.createBlocks("yourmodid")` instead of the regular `DeferredRegister.create(...)` method.
-- `#register` returns a `DeferredBlock`, which extends `DeferredHolder`. `T` is the type of the class of the block we are registering.
+- `#register` returns a `DeferredBlock<T extends Block>`, which extends `DeferredHolder<Block, T>`. `T` is the type of the class of the block we are registering.
 - There are a few helper methods for registering block. See [below](#deferredregisterblocks-helpers) for more details.
 
 So now, let's register our blocks:

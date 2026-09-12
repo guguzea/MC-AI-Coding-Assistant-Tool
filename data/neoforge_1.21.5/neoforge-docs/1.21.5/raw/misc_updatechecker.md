@@ -4,7 +4,7 @@ version: "1.21.5"
 pageId: "misc/updatechecker"
 url: "https://docs.neoforged.net/docs/1.21.5/misc/updatechecker/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:59:34.325Z"
+fetchedAt: "2026-09-12T12:05:11.337Z"
 ---
 # NeoForge Update Checker
 
@@ -62,7 +62,7 @@ This is fairly self-explanatory, but some notes:
 
 ## Retrieving Update Check Results
 
-You can retrieve the results of the NeoForge Update Checker using `VersionChecker#getResult(IModInfo)`. You can obtain your `IModInfo` via `ModContainer#getModInfo`, where `ModContainer` can be added as a parameter to your mod constructor. You can obtain any other mod's `ModContainer` using `ModList.get().getModContainerById()`. The returned object has a method `#status` which indicates the status of the version check.
+You can retrieve the results of the NeoForge Update Checker using `VersionChecker#getResult(IModInfo)`. You can obtain your `IModInfo` via `ModContainer#getModInfo`, where `ModContainer` can be added as a parameter to your mod constructor. You can obtain any other mod's `ModContainer` using `ModList.get().getModContainerById(<modId>)`. The returned object has a method `#status` which indicates the status of the version check.
 
 | Status | Description |
 | --- | --- |

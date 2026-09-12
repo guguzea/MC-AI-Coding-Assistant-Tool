@@ -1,10 +1,10 @@
 ---
-title: "Block Entities"
+title: "Blockentities"
 version: "1.20.6"
 pageId: "blockentities"
 url: "https://docs.neoforged.net/docs/1.20.6/blockentities/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:53:54.419Z"
+fetchedAt: "2026-09-12T12:00:50.258Z"
 ---
 # Block Entities
 

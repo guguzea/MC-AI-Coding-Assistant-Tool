@@ -4,7 +4,7 @@ version: "1.21.1"
 pageId: "resources/server/conditions"
 url: "https://docs.neoforged.net/docs/1.21.1/resources/server/conditions/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:53:28.873Z"
+fetchedAt: "2026-09-12T12:02:49.324Z"
 ---
 # Data Load Conditions
 

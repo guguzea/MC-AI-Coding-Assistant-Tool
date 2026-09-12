@@ -1,10 +1,10 @@
 ---
-title: "GUIs"
+title: "Menus"
 version: "1.20.4"
 pageId: "gui/menus"
 url: "https://docs.neoforged.net/docs/1.20.4/gui/menus/"
 platform: "neoforge"
-fetchedAt: "2026-08-06T04:46:24.889Z"
+fetchedAt: "2026-09-12T11:59:58.739Z"
 ---
 # Menus
 

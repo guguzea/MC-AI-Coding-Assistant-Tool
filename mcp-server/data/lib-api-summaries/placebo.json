@@ -6,676 +6,2296 @@
   "source": {
     "shard": "jsonl",
     "dirs": [
-      "unknown-mod"
+      "placebo"
     ],
     "merged": false
   },
-  "generatedAt": "2026-08-12T10:32:11.031Z",
+  "generatedAt": "2026-09-12T03:48:08.970Z",
   "versions": {
-    "unknown": {
-      "packages": [],
+    "10.0.2": {
+      "packages": [
+        "dev.shadowsoffire.placebo",
+        "dev.shadowsoffire.placebo.block_entity",
+        "dev.shadowsoffire.placebo.cap",
+        "dev.shadowsoffire.placebo.codec",
+        "dev.shadowsoffire.placebo.color",
+        "dev.shadowsoffire.placebo.commands",
+        "dev.shadowsoffire.placebo.config",
+        "dev.shadowsoffire.placebo.datagen",
+        "dev.shadowsoffire.placebo.dynreg",
+        "dev.shadowsoffire.placebo.dynreg.tag",
+        "dev.shadowsoffire.placebo.events",
+        "dev.shadowsoffire.placebo.json",
+        "dev.shadowsoffire.placebo.menu",
+        "dev.shadowsoffire.placebo.network",
+        "dev.shadowsoffire.placebo.patreon",
+        "dev.shadowsoffire.placebo.patreon.wings",
+        "dev.shadowsoffire.placebo.payloads",
+        "dev.shadowsoffire.placebo.registry",
+        "dev.shadowsoffire.placebo.screen",
+        "dev.shadowsoffire.placebo.systems.gear",
+        "dev.shadowsoffire.placebo.systems.mixes",
+        "dev.shadowsoffire.placebo.tabs",
+        "dev.shadowsoffire.placebo.util",
+        "dev.shadowsoffire.placebo.util.data"
+      ],
       "classes": [
-        "net.darkhax.bookshelf.block.BlockBasicChest",
-        "net.darkhax.bookshelf.block.BlockSubType",
-        "net.darkhax.bookshelf.block.BlockTileEntity",
-        "net.darkhax.bookshelf.block.property.PropertyObject",
-        "net.darkhax.bookshelf.block.property.PropertyString",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasic",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicChest",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicTickable",
-        "net.darkhax.bookshelf.Bookshelf",
-        "net.darkhax.bookshelf.BookshelfEvents",
-        "net.darkhax.bookshelf.BookshelfRegistry",
-        "net.darkhax.bookshelf.builder.ChestBuilder",
-        "net.darkhax.bookshelf.builder.LootBuilder",
-        "net.darkhax.bookshelf.client.gui.GuiGraphicButton",
-        "net.darkhax.bookshelf.client.gui.GuiSlider",
-        "net.darkhax.bookshelf.client.model.BakedModelRetexturable",
-        "net.darkhax.bookshelf.client.model.DefaultItemOverrideList",
-        "net.darkhax.bookshelf.client.model.ModelArmorExtended",
-        "net.darkhax.bookshelf.client.particle.OpenParticleDigging",
-        "net.darkhax.bookshelf.client.render.tileentity.TileEntityBasicChestRenderer",
-        "net.darkhax.bookshelf.command.Command",
-        "net.darkhax.bookshelf.command.CommandTree",
-        "net.darkhax.bookshelf.config.ConfigurationHandler",
-        "net.darkhax.bookshelf.crafting.AnvilRecipe",
-        "net.darkhax.bookshelf.crafting.IAnvilRecipe",
-        "net.darkhax.bookshelf.data.AttributeOperation",
-        "net.darkhax.bookshelf.data.Blockstates",
-        "net.darkhax.bookshelf.data.ColorHandlers",
-        "net.darkhax.bookshelf.data.FluidVolume",
-        "net.darkhax.bookshelf.data.VanillaColors",
-        "net.darkhax.bookshelf.entity.EntityArrowBase",
-        "net.darkhax.bookshelf.entity.EntityFake",
-        "net.darkhax.bookshelf.events.EnchantmentModifierEvent",
-        "net.darkhax.bookshelf.inventory.SlotArmor",
-        "net.darkhax.bookshelf.inventory.SlotFake",
-        "net.darkhax.bookshelf.item.ICustomMesh",
-        "net.darkhax.bookshelf.item.ItemBlockBasic",
-        "net.darkhax.bookshelf.item.ItemBlockChest",
-        "net.darkhax.bookshelf.item.ItemInventory",
-        "net.darkhax.bookshelf.item.ItemSubType",
-        "net.darkhax.bookshelf.lib.BookshelfException",
-        "net.darkhax.bookshelf.lib.Constants",
-        "net.darkhax.bookshelf.lib.MCColor",
-        "net.darkhax.bookshelf.lib.ModTrackingList",
-        "net.darkhax.bookshelf.lib.WeightedSelector",
-        "net.darkhax.bookshelf.network.NetworkHandler",
-        "net.darkhax.bookshelf.network.SerializableMessage",
-        "net.darkhax.bookshelf.network.TileEntityMessage",
-        "net.darkhax.bookshelf.registry.IVariant",
-        "net.darkhax.bookshelf.registry.RegistryHelper",
-        "net.darkhax.bookshelf.registry.RegistryListener",
-        "net.darkhax.bookshelf.util.AnnotationUtils",
-        "net.darkhax.bookshelf.util.BannerUtils",
-        "net.darkhax.bookshelf.util.baubles.BaubleUtils",
-        "net.darkhax.bookshelf.util.baubles.ItemBauble",
-        "net.darkhax.bookshelf.util.BlockUtils",
-        "net.darkhax.bookshelf.util.ClassUtils",
-        "net.darkhax.bookshelf.util.CollectionUtils",
-        "net.darkhax.bookshelf.util.CraftingUtils",
-        "net.darkhax.bookshelf.util.EnchantmentUtils",
-        "net.darkhax.bookshelf.util.EntityUtils",
-        "net.darkhax.bookshelf.util.GameUtils",
-        "net.darkhax.bookshelf.util.GuiUtils",
-        "net.darkhax.bookshelf.util.MathsUtils",
-        "net.darkhax.bookshelf.util.MathUtils",
-        "net.darkhax.bookshelf.util.ModUtils",
-        "net.darkhax.bookshelf.util.NBTUtils",
-        "net.darkhax.bookshelf.util.NumericUtils",
-        "net.darkhax.bookshelf.util.OreDictUtils",
-        "net.darkhax.bookshelf.util.ParticleUtils",
-        "net.darkhax.bookshelf.util.PlayerUtils",
-        "net.darkhax.bookshelf.util.RenderUtils",
-        "net.darkhax.bookshelf.util.SkullUtils",
-        "net.darkhax.bookshelf.util.StackUtils",
-        "net.darkhax.bookshelf.util.TextUtils",
-        "net.darkhax.bookshelf.world.loot.conditions.BiomeSpecific",
-        "net.darkhax.bookshelf.world.loot.functions.SetColor"
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntity",
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntityType",
+        "dev.shadowsoffire.placebo.block_entity.TickingEntityBlock",
+        "dev.shadowsoffire.placebo.cap.InternalItemHandler",
+        "dev.shadowsoffire.placebo.codec.CodecMap",
+        "dev.shadowsoffire.placebo.codec.CodecProvider",
+        "dev.shadowsoffire.placebo.codec.MapBackedCodec",
+        "dev.shadowsoffire.placebo.codec.PlaceboCodecs",
+        "dev.shadowsoffire.placebo.color.GradientColor",
+        "dev.shadowsoffire.placebo.commands.GetDimensionTypeCommand",
+        "dev.shadowsoffire.placebo.commands.HandToJsonCommand",
+        "dev.shadowsoffire.placebo.commands.PlaceboCommand",
+        "dev.shadowsoffire.placebo.commands.SerializeLootTableCommand",
+        "dev.shadowsoffire.placebo.config.ConfigCategory",
+        "dev.shadowsoffire.placebo.config.ConfigElement",
+        "dev.shadowsoffire.placebo.config.ConfigFlags",
+        "dev.shadowsoffire.placebo.config.ConfigGuiType",
+        "dev.shadowsoffire.placebo.config.Configuration",
+        "dev.shadowsoffire.placebo.config.IConfigElement",
+        "dev.shadowsoffire.placebo.config.Property",
+        "dev.shadowsoffire.placebo.datagen.DataGenBuilder",
+        "dev.shadowsoffire.placebo.datagen.FieldOrderingFactory",
+        "dev.shadowsoffire.placebo.datagen.FilteredOrderingFactory",
+        "dev.shadowsoffire.placebo.datagen.LegacyRecipeProvider",
+        "dev.shadowsoffire.placebo.datagen.RegisterFieldOrderingsEvent",
+        "dev.shadowsoffire.placebo.dynreg.DynamicHolder",
+        "dev.shadowsoffire.placebo.dynreg.DynamicRegistry",
+        "dev.shadowsoffire.placebo.dynreg.DynRegBiMap",
+        "dev.shadowsoffire.placebo.dynreg.DynRegPayloads",
+        "dev.shadowsoffire.placebo.dynreg.RegistryCallback",
+        "dev.shadowsoffire.placebo.dynreg.RegistrySerializer",
+        "dev.shadowsoffire.placebo.dynreg.SubtypedSerializer",
+        "dev.shadowsoffire.placebo.dynreg.tag.DynamicHolderSet",
+        "dev.shadowsoffire.placebo.dynreg.tag.DynamicTagKey",
+        "dev.shadowsoffire.placebo.dynreg.tag.DynamicTagManager",
+        "dev.shadowsoffire.placebo.dynreg.tag.TagLoader",
+        "dev.shadowsoffire.placebo.dynreg.TagSyncPayload",
+        "dev.shadowsoffire.placebo.dynreg.WeightedDynamicRegistry",
+        "dev.shadowsoffire.placebo.events.AnvilLandEvent",
+        "dev.shadowsoffire.placebo.events.ResourceReloadEvent",
+        "dev.shadowsoffire.placebo.json.ChancedEffectInstance",
+        "dev.shadowsoffire.placebo.json.JsonUtil",
+        "dev.shadowsoffire.placebo.json.NBTAdapter",
+        "dev.shadowsoffire.placebo.json.OptionalStackCodec",
+        "dev.shadowsoffire.placebo.json.OptionalTemplateCodec",
+        "dev.shadowsoffire.placebo.json.RandomAttributeModifier",
+        "dev.shadowsoffire.placebo.json.WeightedItemStack",
+        "dev.shadowsoffire.placebo.menu.BlockEntityMenu",
+        "dev.shadowsoffire.placebo.menu.FilteredSlot",
+        "dev.shadowsoffire.placebo.menu.IDataUpdateListener",
+        "dev.shadowsoffire.placebo.menu.LockedSlot",
+        "dev.shadowsoffire.placebo.menu.MenuUtil",
+        "dev.shadowsoffire.placebo.menu.PlaceboContainerMenu",
+        "dev.shadowsoffire.placebo.menu.QuickMoveHandler",
+        "dev.shadowsoffire.placebo.menu.SimpleDataSlots",
+        "dev.shadowsoffire.placebo.menu.SimplerMenuProvider",
+        "dev.shadowsoffire.placebo.menu.SlotUpdateListener",
+        "dev.shadowsoffire.placebo.network.PayloadHelper",
+        "dev.shadowsoffire.placebo.network.PayloadProvider",
+        "dev.shadowsoffire.placebo.network.VanillaPacketDispatcher",
+        "dev.shadowsoffire.placebo.patreon.PatreonPreview",
+        "dev.shadowsoffire.placebo.patreon.PatreonUtils",
+        "dev.shadowsoffire.placebo.patreon.TrailsManager",
+        "dev.shadowsoffire.placebo.patreon.wings.IWingModel",
+        "dev.shadowsoffire.placebo.patreon.wings.Wing",
+        "dev.shadowsoffire.placebo.patreon.wings.WingLayer",
+        "dev.shadowsoffire.placebo.patreon.WingsManager",
+        "dev.shadowsoffire.placebo.payloads.ButtonClickPayload",
+        "dev.shadowsoffire.placebo.payloads.PatreonDisablePayload",
+        "dev.shadowsoffire.placebo.Placebo",
+        "dev.shadowsoffire.placebo.PlaceboClient",
+        "dev.shadowsoffire.placebo.PlaceboConfig",
+        "dev.shadowsoffire.placebo.registry.DeferredHelper",
+        "dev.shadowsoffire.placebo.screen.PlaceboContainerScreen",
+        "dev.shadowsoffire.placebo.screen.ScreenUtil",
+        "dev.shadowsoffire.placebo.screen.TickableTextList",
+        "dev.shadowsoffire.placebo.systems.gear.GearSet",
+        "dev.shadowsoffire.placebo.systems.gear.GearSetRegistry",
+        "dev.shadowsoffire.placebo.systems.mixes.JsonMix",
+        "dev.shadowsoffire.placebo.systems.mixes.MixRegistry",
+        "dev.shadowsoffire.placebo.tabs.ITabFiller",
+        "dev.shadowsoffire.placebo.tabs.TabFillingRegistry",
+        "dev.shadowsoffire.placebo.util.AbstractBiMap",
+        "dev.shadowsoffire.placebo.util.CachedObject",
+        "dev.shadowsoffire.placebo.util.data.DynamicRegistryProvider",
+        "dev.shadowsoffire.placebo.util.data.DynamicTagProvider",
+        "dev.shadowsoffire.placebo.util.data.RuntimeDatagenHelpers",
+        "dev.shadowsoffire.placebo.util.DeferredSet",
+        "dev.shadowsoffire.placebo.util.DrawsOnLeft",
+        "dev.shadowsoffire.placebo.util.EnchantmentUtils",
+        "dev.shadowsoffire.placebo.util.LinearEquation",
+        "dev.shadowsoffire.placebo.util.Offset",
+        "dev.shadowsoffire.placebo.util.PlaceboTaskQueue",
+        "dev.shadowsoffire.placebo.util.PlaceboUtil",
+        "dev.shadowsoffire.placebo.util.RandomRange",
+        "dev.shadowsoffire.placebo.util.RunnableReloader",
+        "dev.shadowsoffire.placebo.util.SpecialTooltipItem",
+        "dev.shadowsoffire.placebo.util.StepFunction"
       ],
       "methods": {
-        "net.darkhax.bookshelf.block.BlockBasicChest": [
-          "func_185496_a(IBlockState, IBlockAccess, BlockPos)",
-          "func_176213_c(World, BlockPos, IBlockState)",
-          "func_180642_a(World, BlockPos, EnumFacing, float, float, float, int, EntityLivingBase)",
-          "func_180633_a(World, BlockPos, IBlockState, EntityLivingBase, ItemStack)",
-          "func_149744_f(IBlockState)",
-          "func_176455_e(World, BlockPos, IBlockState)",
-          "func_176458_f(World, BlockPos, IBlockState)",
-          "func_176196_c(World, BlockPos)",
-          "removedByPlayer(IBlockState, World, BlockPos, EntityPlayer, boolean)",
-          "func_180657_a(World, EntityPlayer, BlockPos, IBlockState, TileEntity, ItemStack)",
-          "func_149915_a(World, int)",
-          "getDrops(IBlockAccess, BlockPos, IBlockState, int)",
-          "getPickBlock(IBlockState, RayTraceResult, World, BlockPos, EntityPlayer)",
-          "func_189418_a(World, BlockPos, boolean)",
-          "isTrapChest()",
-          "setState(World, BlockPos, IBlockState, int)",
-          "correctFacing(World, BlockPos, IBlockState, ChestBuilder.IChestType)",
-          "isDoubleChest(World, BlockPos, ChestBuilder.IChestType)",
-          "getCustomType(IBlockAccess, BlockPos)",
-          "getCustomType(ItemStack)"
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntity": [
+          "serverTick(Level, BlockPos, BlockState)",
+          "clientTick(Level, BlockPos, BlockState)"
         ],
-        "net.darkhax.bookshelf.block.BlockSubType": [
-          "func_149666_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "func_176203_a(int)",
-          "func_176201_c(IBlockState)",
-          "func_180661_e()",
-          "func_180651_a(IBlockState)",
-          "getVariant()",
-          "getVariantProp()"
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntityType": [
+          "getTicker(boolean)"
         ],
-        "net.darkhax.bookshelf.block.BlockTileEntity": [
-          "func_180663_b(World, BlockPos, IBlockState)",
-          "func_189539_a(IBlockState, World, BlockPos, int, int)"
+        "dev.shadowsoffire.placebo.block_entity.TickingEntityBlock": [
+          "getTicker(Level, BlockState, BlockEntityType<T>)"
         ],
-        "net.darkhax.bookshelf.block.property.PropertyObject": [
+        "dev.shadowsoffire.placebo.cap.InternalItemHandler": [
+          "extractInternal(int, ItemResource, int, TransactionContext)",
+          "insertInternal(int, ItemResource, int, TransactionContext)"
+        ],
+        "dev.shadowsoffire.placebo.codec.CodecMap": [
+          "getDefaultCodec()",
+          "setDefaultCodec(Codec<? extends V>)",
+          "isEmpty()",
+          "containsKey(Identifier)",
+          "getValue(Identifier)",
+          "getKey(Codec<?>)",
+          "register(Identifier, Codec<? extends V>)",
+          "encode(V, DynamicOps<T>, T)",
+          "decode(DynamicOps<T>, T)"
+        ],
+        "dev.shadowsoffire.placebo.codec.CodecProvider": [],
+        "dev.shadowsoffire.placebo.codec.MapBackedCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(V, DynamicOps<T>, T)"
+        ],
+        "dev.shadowsoffire.placebo.codec.PlaceboCodecs": [
+          "mapBackedDefaulted(String, BiMap<Identifier, Codec<? extends T>>, Codec<? extends T>)",
+          "mapBacked(String, BiMap<Identifier, Codec<? extends T>>)",
+          "setOf(Codec<T>)",
+          "setFromList(Codec<List<T>>)",
+          "enumCodec(Class<E>)",
+          "stringResolverCodec(Function<E, String>, Function<String, E>)"
+        ],
+        "dev.shadowsoffire.placebo.color.GradientColor": [
+          "getValue()"
+        ],
+        "dev.shadowsoffire.placebo.commands.GetDimensionTypeCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "dev.shadowsoffire.placebo.commands.HandToJsonCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "toJsonStr(ItemStack, RegistryOps<JsonElement>)"
+        ],
+        "dev.shadowsoffire.placebo.commands.PlaceboCommand": [
+          "register(CommandDispatcher<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "dev.shadowsoffire.placebo.commands.SerializeLootTableCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "dev.shadowsoffire.placebo.config.ConfigCategory": [
+          "equals(Object)",
           "getName()",
-          "getType()",
-          "isValid(T)",
-          "valueToString(T)"
+          "getQualifiedName()",
+          "getQualifiedName(String, ConfigCategory)",
+          "getFirstParent()",
+          "isChild()",
+          "getValues()",
+          "getOrderedValues()",
+          "setLanguageKey(String)",
+          "getLanguagekey()",
+          "setComment(String)",
+          "getComment()",
+          "setRequiresWorldRestart(boolean)",
+          "requiresWorldRestart()",
+          "setShowInGui(boolean)",
+          "showInGui()",
+          "setRequiresMcRestart(boolean)",
+          "requiresMcRestart()",
+          "setPropertyOrder(List<String>)",
+          "getPropertyOrder()"
         ],
-        "net.darkhax.bookshelf.block.property.PropertyString": [
-          "func_177700_c()",
-          "func_185929_b(String)",
-          "getName(String)",
-          "getMetaData(String)"
-        ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasic": [
-          "func_145839_a(NBTTagCompound)",
-          "func_189515_b(NBTTagCompound)",
-          "func_189518_D_()",
-          "onDataPacket(NetworkManager, SPacketUpdateTileEntity)",
-          "func_189517_E_()",
-          "shouldRefresh(World, BlockPos, IBlockState, IBlockState)",
-          "writeNBT(NBTTagCompound)",
-          "readNBT(NBTTagCompound)"
-        ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicChest": [
-          "func_189515_b(NBTTagCompound)",
-          "func_189517_E_()",
-          "handleUpdateTag(NBTTagCompound)",
-          "shouldRefresh(World, BlockPos, IBlockState, IBlockState)",
-          "func_189518_D_()",
-          "onDataPacket(NetworkManager, SPacketUpdateTileEntity)",
-          "func_145839_a(NBTTagCompound)",
-          "func_174911_a(EnumFacing)",
-          "getRenderBoundingBox()",
-          "getType()",
-          "setType(ChestBuilder.IChestType)",
-          "getBuilder()"
-        ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicTickable": [
-          "func_73660_a()",
-          "onEntityUpdate()"
-        ],
-        "net.darkhax.bookshelf.Bookshelf": [
-          "onConstruction(FMLConstructionEvent)",
-          "postInit(FMLPostInitializationEvent)",
-          "preInitClient(FMLPreInitializationEvent)",
-          "init(FMLInitializationEvent)"
-        ],
-        "net.darkhax.bookshelf.BookshelfEvents": [
-          "onAnvilUpdate(AnvilUpdateEvent)",
-          "onClientTick(ClientTickEvent)"
-        ],
-        "net.darkhax.bookshelf.BookshelfRegistry": [
-          "addAnvilRecipe(String, ItemStack, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, String, int, int, ItemStack)",
-          "addAnvilRecipe(String, String, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, ItemStack, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, ItemStack, String, int, int, ItemStack)",
-          "addAnvilRecipe(AnvilRecipe)",
-          "getAnvilRecipes()"
-        ],
-        "net.darkhax.bookshelf.builder.ChestBuilder": [
-          "register(RegistryHelper)",
-          "getNormalChest()",
-          "getTrapChest()",
-          "addChestType(String...)",
-          "addChestType(String)",
-          "addChestType(ChestBuilder.IChestType)",
-          "getChestType(String)",
-          "getNormalType()",
-          "getTrapType()",
-          "getTypes()",
-          "getModid()",
-          "useTraps()"
-        ],
-        "net.darkhax.bookshelf.builder.LootBuilder": [
+        "dev.shadowsoffire.placebo.config.ConfigElement": [
+          "listCategoriesFirst(boolean)",
+          "getChildElements()",
           "getName()",
-          "getPool()",
-          "setPool(String)",
-          "getWeight()",
-          "setWeight(int)",
-          "getQuality()",
-          "setQuality(int)",
-          "getItem()",
-          "setItem(Item)",
-          "getConditions()",
-          "addCondition(LootCondition)",
-          "getFunctions()",
-          "addFunction(LootFunction)",
-          "build()",
+          "isProperty()",
+          "getQualifiedName()",
+          "getType()",
+          "getType(Property)",
+          "isList()",
+          "isListLengthFixed()",
+          "getMaxListLength()",
+          "getComment()",
+          "isDefault()",
+          "setToDefault()",
+          "requiresWorldRestart()",
+          "showInGui()",
+          "requiresMcRestart()",
+          "getValidValues()",
+          "getValidValuesDisplay()",
+          "getLanguageKey()",
+          "getDefault()"
+        ],
+        "dev.shadowsoffire.placebo.config.ConfigFlags": [],
+        "dev.shadowsoffire.placebo.config.ConfigGuiType": [],
+        "dev.shadowsoffire.placebo.config.Configuration": [
+          "setTitle(String)",
+          "setComment(String)",
+          "toString()",
+          "get(String, String, boolean)",
+          "get(String, String, boolean, String)",
+          "get(String, String, boolean[])",
+          "get(String, String, boolean[], String)",
+          "get(String, String, boolean[], String, boolean, int)",
+          "get(String, String, int)",
+          "get(String, String, int, String)",
+          "get(String, String, int, String, int, int)",
+          "get(String, String, int[])",
+          "get(String, String, int[], String)",
+          "get(String, String, int[], String, int, int)",
+          "get(String, String, int[], String, int, int, boolean, int)",
+          "get(String, String, double)",
+          "get(String, String, double, String)",
+          "get(String, String, double, String, double, double)",
+          "get(String, String, double[])",
+          "get(String, String, double[], String)"
+        ],
+        "dev.shadowsoffire.placebo.config.IConfigElement": [
+          "hasSlidingControl()"
+        ],
+        "dev.shadowsoffire.placebo.config.Property": [
+          "getComment()",
+          "setComment(String)",
+          "isDefault()",
+          "setToDefault()",
+          "getDefault()",
+          "getDefaults()",
+          "setRequiresWorldRestart(boolean)",
+          "requiresWorldRestart()",
+          "setShowInGui(boolean)",
+          "showInGui()",
+          "setRequiresMcRestart(boolean)",
+          "requiresMcRestart()",
+          "setMaxListLength(int)",
+          "getMaxListLength()",
+          "setIsListLengthFixed(boolean)",
+          "isListLengthFixed()",
+          "setValidationPattern(Pattern)",
+          "getValidationPattern()",
+          "setLanguageKey(String)",
+          "getLanguageKey()"
+        ],
+        "dev.shadowsoffire.placebo.datagen.DataGenBuilder": [
+          "create(String...)",
+          "registry(ResourceKey<? extends Registry<R>>, RegistryBootstrap<R>)",
+          "conditions(ResourceKey<?>, List<ICondition>)",
+          "conditions(ResourceKey<?>, ICondition...)",
+          "conditions(Map<ResourceKey<?>, List<ICondition>>)",
+          "provider(DataGenBuilder.DataProviderFactory<T>)",
+          "provider(Factory<T>)",
+          "build(GatherDataEvent)",
+          "registerDataProviders(GatherDataEvent)"
+        ],
+        "dev.shadowsoffire.placebo.datagen.FieldOrderingFactory": [],
+        "dev.shadowsoffire.placebo.datagen.FilteredOrderingFactory": [
+          "getKeyComparator(JsonElement, Path)",
+          "builder()",
+          "ParsedPath(PackType, String, String)"
+        ],
+        "dev.shadowsoffire.placebo.datagen.LegacyRecipeProvider": [
+          "genRecipes(RecipeOutput, Provider)",
+          "createRecipeProvider(Provider, RecipeOutput)",
+          "addShaped(Identifier, String, Object, int, int, Object...)",
+          "addShapeless(Identifier, String, Object, Object...)",
+          "addShaped(Identifier, Object, int, int, Object...)",
+          "addShapeless(Identifier, Object, Object...)",
+          "addShaped(Object, int, int, Object...)",
+          "addShapeless(Object, Object...)",
+          "potionIngredient(Holder<Potion>)",
+          "resolvePath(ItemStackTemplate)",
+          "makeTemplate(Object)",
+          "createInput(boolean, Object...)",
+          "toPattern(int, int, NonNullList<Ingredient>)",
+          "getFirstChar(Collection<Character>, Ingredient)"
+        ],
+        "dev.shadowsoffire.placebo.datagen.RegisterFieldOrderingsEvent": [
+          "register(FieldOrderingFactory)"
+        ],
+        "dev.shadowsoffire.placebo.dynreg.DynamicHolder": [
+          "isBound()",
+          "get()",
+          "getOptional()",
+          "getId()",
+          "getRegistry()",
+          "is(Identifier)",
+          "is(DynamicTagKey<R>)",
+          "equals(Object)",
+          "hashCode()",
           "toString()"
         ],
-        "net.darkhax.bookshelf.client.gui.GuiGraphicButton": [
-          "func_146112_a(Minecraft, int, int)"
+        "dev.shadowsoffire.placebo.dynreg.DynamicRegistry": [
+          "prepare(ResourceManager, ProfilerFiller)",
+          "apply(Map<Identifier, JsonElement>, ResourceManager, ProfilerFiller)",
+          "beginReload(DynamicRegistry.ReloadType)",
+          "onReload(DynamicRegistry.ReloadType)",
+          "getKeys()",
+          "getValues()",
+          "getValue(Identifier)",
+          "getKey(R)",
+          "getOrDefault(Identifier, R)",
+          "registerToBus()",
+          "holder(Identifier)",
+          "holder(R)",
+          "emptyHolder()",
+          "holderCodec()",
+          "holderStreamCodec()",
+          "addCallback(RegistryCallback<R>)",
+          "removeCallback(RegistryCallback<R>)",
+          "getId()",
+          "getLogger()",
+          "elementCodec()"
         ],
-        "net.darkhax.bookshelf.client.gui.GuiSlider": [
-          "func_146119_b(Minecraft, int, int)",
-          "func_146116_c(Minecraft, int, int)",
-          "func_146118_a(int, int)",
-          "func_146114_a(boolean)",
-          "setSliderValue(float)",
-          "getSliderValue()"
+        "dev.shadowsoffire.placebo.dynreg.DynRegBiMap": [],
+        "dev.shadowsoffire.placebo.dynreg.DynRegPayloads": [],
+        "dev.shadowsoffire.placebo.dynreg.RegistryCallback": [],
+        "dev.shadowsoffire.placebo.dynreg.RegistrySerializer": [
+          "codec()",
+          "streamCodec()",
+          "isSynced()",
+          "simple(Codec<R>)",
+          "synced(Codec<R>)",
+          "synced(Codec<R>, StreamCodec<RegistryFriendlyByteBuf, R>)",
+          "subtyped(String)",
+          "subtypedSynced(String)"
         ],
-        "net.darkhax.bookshelf.client.model.BakedModelRetexturable": [
-          "getRetexturedModel(String)",
-          "getDefaultModel()",
-          "func_188616_a(IBlockState, EnumFacing, long)",
-          "func_177555_b()",
-          "func_177556_c()",
-          "func_188618_c()",
-          "func_177554_e()",
-          "func_177552_f()",
-          "func_188617_f()",
-          "handlePerspective(TransformType)"
+        "dev.shadowsoffire.placebo.dynreg.SubtypedSerializer": [
+          "codec()",
+          "streamCodec()",
+          "register(Identifier, Codec<? extends R>, StreamCodec<RegistryFriendlyByteBuf, ? extends R>)",
+          "register(Identifier, Codec<? extends R>)",
+          "registerDefault(Identifier, Codec<? extends R>, StreamCodec<RegistryFriendlyByteBuf, ? extends R>)",
+          "registerDefault(Identifier, Codec<? extends R>)",
+          "isPopulated()"
         ],
-        "net.darkhax.bookshelf.client.model.DefaultItemOverrideList": [
-          "handleItemState(IBakedModel, ItemStack, World, EntityLivingBase)"
+        "dev.shadowsoffire.placebo.dynreg.tag.DynamicHolderSet": [],
+        "dev.shadowsoffire.placebo.dynreg.tag.DynamicTagKey": [
+          "create(DynamicRegistry<R>, Identifier)",
+          "codec(Identifier)",
+          "streamCodec(Identifier)",
+          "toString()"
         ],
-        "net.darkhax.bookshelf.client.model.ModelArmorExtended": [
-          "addModelParts()",
-          "setRotateAngle(ModelRenderer, float, float, float)",
-          "func_78088_a(Entity, float, float, float, float, float, float)"
+        "dev.shadowsoffire.placebo.dynreg.tag.DynamicTagManager": [
+          "prepare(ResourceManager, ProfilerFiller)",
+          "apply(Map<DynamicRegistry<?>, ScannedTags<?>>, ResourceManager, ProfilerFiller)"
         ],
-        "net.darkhax.bookshelf.client.particle.OpenParticleDigging": [],
-        "net.darkhax.bookshelf.client.render.tileentity.TileEntityBasicChestRenderer": [
-          "renderTileEntityAt(TileEntityBasicChest, double, double, double, float, int)",
-          "func_147499_a(ResourceLocation)"
+        "dev.shadowsoffire.placebo.dynreg.tag.TagLoader": [
+          "scan(ResourceManager, ConditionalOps<JsonElement>)",
+          "resolve(Map<Identifier, List<TagLoader.EntryWithSource>>)",
+          "EntryWithSource(TagEntry, String, boolean)"
         ],
-        "net.darkhax.bookshelf.command.Command": [
-          "func_184882_a(MinecraftServer, ICommandSender)"
+        "dev.shadowsoffire.placebo.dynreg.TagSyncPayload": [
+          "type()"
         ],
-        "net.darkhax.bookshelf.command.CommandTree": [
-          "func_184881_a(MinecraftServer, ICommandSender, String[])",
-          "func_184882_a(MinecraftServer, ICommandSender)"
+        "dev.shadowsoffire.placebo.dynreg.WeightedDynamicRegistry": [
+          "beginReload(DynamicRegistry.ReloadType)",
+          "validateItem(Identifier, V)",
+          "onReload(DynamicRegistry.ReloadType)",
+          "getRandomItem(RandomSource)",
+          "getRandomItem(RandomSource, float)",
+          "getRandomItem(RandomSource, float, Predicate<V>...)",
+          "getRandomFromTag(DynamicTagKey<V>, RandomSource, float)",
+          "getRandomFromSet(DynamicHolderSet<V>, RandomSource, float)"
         ],
-        "net.darkhax.bookshelf.config.ConfigurationHandler": [
-          "init(ASMDataTable)",
-          "sync()",
-          "onConfigChanged(ConfigChangedEvent)",
-          "hasChanged()",
-          "save()",
-          "getConfig()",
-          "addReader(Class<T>, ConfigurationHandler.Adapter<T>)"
+        "dev.shadowsoffire.placebo.events.AnvilLandEvent": [
+          "getLevel()",
+          "getPos()",
+          "getNewState()",
+          "getOldState()",
+          "getEntity()"
         ],
-        "net.darkhax.bookshelf.crafting.AnvilRecipe": [
-          "isValidRecipe(ItemStack, ItemStack, String)",
-          "getExperienceCost(ItemStack, ItemStack, String)",
-          "getMaterialCost(ItemStack, ItemStack, String)",
-          "getOutput(ItemStack, ItemStack, String)"
+        "dev.shadowsoffire.placebo.events.ResourceReloadEvent": [
+          "getResourceManager()",
+          "getSide()"
         ],
-        "net.darkhax.bookshelf.crafting.IAnvilRecipe": [],
-        "net.darkhax.bookshelf.data.AttributeOperation": [],
-        "net.darkhax.bookshelf.data.Blockstates": [],
-        "net.darkhax.bookshelf.data.ColorHandlers": [],
-        "net.darkhax.bookshelf.data.FluidVolume": [],
-        "net.darkhax.bookshelf.data.VanillaColors": [
-          "getColor()"
+        "dev.shadowsoffire.placebo.json.ChancedEffectInstance": [
+          "create(RandomSource, int)",
+          "createDeterministic(int)"
         ],
-        "net.darkhax.bookshelf.entity.EntityArrowBase": [
-          "func_184550_j()",
-          "func_189511_e(NBTTagCompound)",
-          "func_70020_e(NBTTagCompound)",
-          "equals(Object)",
-          "hashCode()"
+        "dev.shadowsoffire.placebo.json.JsonUtil": [
+          "checkAndLogEmpty(JsonElement, Identifier, Identifier, Logger)",
+          "checkConditions(JsonElement, Identifier, Identifier, Logger, ConditionalOps<JsonElement>)"
         ],
-        "net.darkhax.bookshelf.entity.EntityFake": [
-          "func_70088_a()",
-          "func_70037_a(NBTTagCompound)",
-          "func_70014_b(NBTTagCompound)"
+        "dev.shadowsoffire.placebo.json.NBTAdapter": [
+          "serialize(CompoundTag, Type, JsonSerializationContext)",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)"
         ],
-        "net.darkhax.bookshelf.events.EnchantmentModifierEvent": [
-          "getEnchantment()",
-          "getEntity()",
-          "getLevels()",
-          "setLevels(int)"
+        "dev.shadowsoffire.placebo.json.OptionalStackCodec": [],
+        "dev.shadowsoffire.placebo.json.OptionalTemplateCodec": [],
+        "dev.shadowsoffire.placebo.json.RandomAttributeModifier": [
+          "generated(Holder<Attribute>, Operation, StepFunction, Identifier)",
+          "generatedCodec(Identifier)",
+          "constantGeneratedCodec(Identifier)",
+          "create(Identifier, RandomSource)",
+          "create(RandomSource)",
+          "createDeterministic(Identifier)",
+          "createDeterministic()",
+          "apply(Identifier, RandomSource, LivingEntity)",
+          "apply(RandomSource, LivingEntity)"
         ],
-        "net.darkhax.bookshelf.inventory.SlotArmor": [
-          "func_75219_a()",
-          "func_75214_a(ItemStack)",
-          "func_178171_c()"
+        "dev.shadowsoffire.placebo.json.WeightedItemStack": [
+          "toString()",
+          "apply(LivingEntity, EquipmentSlot)"
         ],
-        "net.darkhax.bookshelf.inventory.SlotFake": [
-          "func_82869_a(EntityPlayer)",
-          "func_75214_a(ItemStack)",
-          "func_75209_a(int)",
-          "func_75215_d(ItemStack)"
+        "dev.shadowsoffire.placebo.menu.BlockEntityMenu": [
+          "stillValid(Player)"
         ],
-        "net.darkhax.bookshelf.item.ICustomMesh": [],
-        "net.darkhax.bookshelf.item.ItemBlockBasic": [
-          "func_77647_b(int)",
-          "func_77667_c(ItemStack)",
-          "func_179223_d()",
-          "getVariant()"
+        "dev.shadowsoffire.placebo.menu.FilteredSlot": [
+          "mayPlace(ItemStack)",
+          "mayPickup(Player)"
         ],
-        "net.darkhax.bookshelf.item.ItemBlockChest": [
-          "func_77667_c(ItemStack)",
-          "func_77647_b(int)",
-          "placeBlockAt(ItemStack, EntityPlayer, World, BlockPos, EnumFacing, float, float, float, IBlockState)",
-          "func_150895_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "getCustomMesh()",
-          "registerMeshModels()",
-          "getBuilder()"
+        "dev.shadowsoffire.placebo.menu.IDataUpdateListener": [],
+        "dev.shadowsoffire.placebo.menu.LockedSlot": [
+          "mayPickup(Player)",
+          "mayPlace(ItemStack)"
         ],
-        "net.darkhax.bookshelf.item.ItemInventory": [
-          "readFromNBT()",
-          "writeToNBT()",
-          "getContents(ItemStack)",
-          "func_70005_c_()",
-          "func_145818_k_()",
-          "func_145748_c_()",
-          "func_70302_i_()",
-          "func_70301_a(int)",
-          "func_70298_a(int, int)",
-          "func_70304_b(int)",
-          "func_70299_a(int, ItemStack)",
-          "func_70297_j_()",
-          "func_70296_d()",
-          "func_174889_b(EntityPlayer)",
-          "func_174886_c(EntityPlayer)",
-          "func_94041_b(int, ItemStack)",
-          "func_174887_a_(int)",
-          "func_174885_b(int, int)",
-          "func_174890_g()",
-          "func_174888_l()"
+        "dev.shadowsoffire.placebo.menu.MenuUtil": [
+          "type(MenuSupplier<T>)",
+          "bufType(IContainerFactory<T>)",
+          "posType(MenuUtil.PosFactory<T>)",
+          "openGui(Player, BlockPos, MenuUtil.PosFactory<M>)"
         ],
-        "net.darkhax.bookshelf.item.ItemSubType": [
-          "func_77647_b(int)",
-          "func_77667_c(ItemStack)",
-          "func_150895_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "getVariant()"
+        "dev.shadowsoffire.placebo.menu.PlaceboContainerMenu": [
+          "addPlayerSlots(Inventory, int, int)",
+          "registerInvShuffleRules()",
+          "quickMoveStack(Player, int)",
+          "moveItemStackTo(ItemStack, int, int, boolean)",
+          "setData(int, int)",
+          "addDataListener(final IDataUpdateListener)",
+          "clearContainer(Player, ResourceHandler<ItemResource>)"
         ],
-        "net.darkhax.bookshelf.lib.BookshelfException": [],
-        "net.darkhax.bookshelf.lib.Constants": [],
-        "net.darkhax.bookshelf.lib.MCColor": [
-          "writeToStack(ItemStack)",
-          "writeToNBT(NBTTagCompound)",
-          "getComponents()",
-          "getRedF()",
-          "getGreenF()",
-          "getBlueF()",
-          "setRenderColor()",
-          "getRandomColor(Random)",
-          "isAcceptable(ItemStack)",
-          "isAcceptable(IBlockAccess, BlockPos)",
-          "isAcceptable(TileEntity)",
-          "isAcceptable(NBTTagCompound)"
+        "dev.shadowsoffire.placebo.menu.QuickMoveHandler": [
+          "quickMoveStack(QuickMoveHandler.QuickMoveMenu, Player, int)",
+          "registerRule(BiPredicate<ItemStack, Integer>, int, int, boolean)",
+          "registerRule(BiPredicate<ItemStack, Integer>, int, int)",
+          "QuickMoveRule(BiPredicate<ItemStack, Integer>, int, int, boolean)"
         ],
-        "net.darkhax.bookshelf.lib.ModTrackingList": [
-          "getTrackedEntries()",
-          "getModContainer(T)",
-          "add(T)",
-          "get(int)",
-          "add(int, T)",
-          "addAll(int, Collection<? extends T>)",
-          "addAll(Collection<? extends T>)",
-          "remove(int)",
-          "remove(Object)",
-          "removeAll(Collection<?>)",
-          "set(int, T)",
-          "subList(int, int)",
-          "size()",
+        "dev.shadowsoffire.placebo.menu.SimpleDataSlots": [
+          "addSlot(DataSlot)",
+          "addData(IntSupplier, IntConsumer)",
+          "addData(BooleanSupplier, BooleanConsumer)",
+          "getSlots()",
+          "register(Consumer<DataSlot>)",
+          "addEnergy(SimpleEnergyHandler)"
+        ],
+        "dev.shadowsoffire.placebo.menu.SimplerMenuProvider": [
+          "getDisplayName()",
+          "createMenu(int, Inventory, Player)"
+        ],
+        "dev.shadowsoffire.placebo.menu.SlotUpdateListener": [],
+        "dev.shadowsoffire.placebo.network.PayloadHelper": [
+          "registerPayload(PayloadProvider<T>)",
+          "registerProviders(RegisterPayloadHandlersEvent)"
+        ],
+        "dev.shadowsoffire.placebo.network.PayloadProvider": [
+          "handleClient(T, IPayloadContext)",
+          "handleServer(T, IPayloadContext)",
+          "isOptional()",
+          "getHandlerThread()"
+        ],
+        "dev.shadowsoffire.placebo.network.VanillaPacketDispatcher": [
+          "dispatchTEToNearbyPlayers(BlockEntity)",
+          "dispatchTEToNearbyPlayers(Level, BlockPos)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.PatreonPreview": [
+          "tick(Post)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.PatreonUtils": [],
+        "dev.shadowsoffire.placebo.patreon.TrailsManager": [
+          "init()",
+          "clientTick(Post)",
+          "keys(Key)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.wings.IWingModel": [],
+        "dev.shadowsoffire.placebo.patreon.wings.Wing": [
+          "setupAnim(AvatarRenderState)",
+          "submit(PoseStack, SubmitNodeCollector, int, AvatarRenderState, Identifier)",
+          "setRotationAngle(ModelPart, float, float, float)",
+          "createLayer()",
+          "render(PoseStack, SubmitNodeCollector, int, AvatarRenderState, Identifier, PatreonUtils.WingType)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.wings.WingLayer": [
+          "registerModifier(RegisterRenderStateModifiersEvent)",
+          "submit(PoseStack, SubmitNodeCollector, int, AvatarRenderState, float, float)",
+          "WingRenderData(PatreonUtils.WingType, Identifier)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.WingsManager": [
+          "init()",
+          "keys(Key)",
+          "getType(UUID)"
+        ],
+        "dev.shadowsoffire.placebo.payloads.ButtonClickPayload": [
+          "type()"
+        ],
+        "dev.shadowsoffire.placebo.payloads.PatreonDisablePayload": [
+          "type()"
+        ],
+        "dev.shadowsoffire.placebo.Placebo": [
+          "setup(FMLCommonSetupEvent)",
+          "registerFieldOrderings(RegisterFieldOrderingsEvent)",
+          "registerCommands(RegisterCommandsEvent)",
+          "serverReload(AddServerReloadListenersEvent)",
+          "serverStart(ServerAboutToStartEvent)",
+          "loc(String)"
+        ],
+        "dev.shadowsoffire.placebo.PlaceboClient": [
+          "setup(FMLClientSetupEvent)",
+          "registerLayerDefinitions(RegisterLayerDefinitions)",
+          "keys(RegisterKeyMappingsEvent)",
+          "clientResource(AddClientReloadListenersEvent)",
+          "addLayers(AddLayers)",
+          "registerRenderStateModifiers(RegisterRenderStateModifiersEvent)",
+          "getColorTicks()",
+          "getBrewingRegistry()",
+          "getTooltipScrollIndex()",
+          "getTooltipScrollIndex(int)",
+          "tick(Post)",
+          "scroll(Pre)",
+          "scroll2(MouseScrollingEvent)",
+          "tooltip(ItemTooltipEvent)"
+        ],
+        "dev.shadowsoffire.placebo.PlaceboConfig": [
+          "load()"
+        ],
+        "dev.shadowsoffire.placebo.registry.DeferredHelper": [
+          "create(String)",
+          "registry(String, UnaryOperator<RegistryBuilder<T>>)",
+          "block(String, Supplier<T>)",
+          "block(String, Function<Properties, T>, UnaryOperator<Properties>)",
+          "fluid(String, Supplier<T>)",
+          "item(String, Supplier<T>)",
+          "item(String, Function<net.minecraft.world.item.Item.Properties, T>, UnaryOperator<net.minecraft.world.item.Item.Properties>)",
+          "item(String, Function<net.minecraft.world.item.Item.Properties, T>)",
+          "blockItem(String, Holder<Block>, BiFunction<Block, net.minecraft.world.item.Item.Properties, T>, UnaryOperator<net.minecraft.world.item.Item.Properties>)",
+          "blockItem(String, Holder<Block>, UnaryOperator<net.minecraft.world.item.Item.Properties>)",
+          "blockItem(String, Holder<Block>)",
+          "effect(String, Supplier<T>)",
+          "sound(String, Supplier<SoundEvent>)",
+          "sound(String)",
+          "potion(String, Supplier<T>)",
+          "singlePotion(String, Supplier<MobEffectInstance>)",
+          "multiPotion(String, Supplier<List<MobEffectInstance>>)",
+          "entity(String, Supplier<T>)",
+          "entity(String, EntityFactory<T>, MobCategory, UnaryOperator<Builder<T>>)",
+          "blockEntity(String, BlockEntitySupplier<T>, Supplier<Set<Block>>)"
+        ],
+        "dev.shadowsoffire.placebo.screen.PlaceboContainerScreen": [],
+        "dev.shadowsoffire.placebo.screen.ScreenUtil": [
+          "getHeight(float, int, int)"
+        ],
+        "dev.shadowsoffire.placebo.screen.TickableTextList": [
+          "addLine(FormattedText, float)",
+          "addLine(FormattedText)",
+          "continueLine(FormattedText, float)",
+          "setLine(int, FormattedText, float)",
+          "render(float, float, int, boolean, Matrix4f, MultiBufferSource, DisplayMode, int, int)",
+          "render(GuiGraphicsExtractor, float, float, int, boolean)",
+          "render(GuiGraphicsExtractor, float, float)",
           "clear()",
-          "forEach(Consumer<? super T>)",
+          "getTicks()",
+          "setTicks(int)",
+          "getMaxWidth()",
+          "setMaxWidth(int)",
+          "getLineSpacing()",
+          "setLineSpacing(int)",
+          "tick()",
+          "getWidth()"
+        ],
+        "dev.shadowsoffire.placebo.systems.gear.GearSet": [
+          "getWeight()",
+          "getQuality()",
+          "apply(LivingEntity)",
+          "getPotentials(EquipmentSlot)",
+          "getCodec()"
+        ],
+        "dev.shadowsoffire.placebo.systems.gear.GearSetRegistry": [
+          "getRandomSet(RandomSource, float, DynamicHolderSet<GearSet>)"
+        ],
+        "dev.shadowsoffire.placebo.systems.mixes.JsonMix": [],
+        "dev.shadowsoffire.placebo.systems.mixes.MixRegistry": [
+          "beginReload(DynamicRegistry.ReloadType)",
+          "onReload(DynamicRegistry.ReloadType)",
+          "applyMixes()"
+        ],
+        "dev.shadowsoffire.placebo.tabs.ITabFiller": [],
+        "dev.shadowsoffire.placebo.tabs.TabFillingRegistry": [
+          "register(ITabFiller, ResourceKey<CreativeModeTab>...)",
+          "register(ResourceKey<CreativeModeTab>, ITabFiller...)",
+          "registerSimple(ItemLike, ResourceKey<CreativeModeTab>...)",
+          "registerSimple(ResourceKey<CreativeModeTab>, ItemLike...)",
+          "register(ResourceKey<CreativeModeTab>, Supplier<? extends ItemLike>...)",
+          "register(ResourceKey<CreativeModeTab>, Holder<? extends ItemLike>...)",
+          "fillTabs(BuildCreativeModeTabContentsEvent)"
+        ],
+        "dev.shadowsoffire.placebo.util.AbstractBiMap": [
+          "delegate()",
+          "containsValue(Object)",
+          "put(K, V)",
+          "forcePut(K, V)",
+          "remove(Object)",
+          "putAll(Map<? extends K, ? extends V>)",
+          "replaceAll(BiFunction<? super K, ? super V, ? extends V>)",
+          "clear()",
+          "inverse()",
+          "keySet()",
+          "values()",
+          "entrySet()"
+        ],
+        "dev.shadowsoffire.placebo.util.CachedObject": [
+          "get(ItemStack)",
+          "reset()",
+          "compute(ItemStack)",
+          "hashComponents(DataComponentType<?>...)"
+        ],
+        "dev.shadowsoffire.placebo.util.data.DynamicRegistryProvider": [
+          "run(CachedOutput)",
+          "add(Identifier, R)",
+          "addConditionally(Identifier, R, ICondition...)",
+          "generate()",
+          "runSilently(DataGenBuilder.DataProviderFactory<T>)",
+          "runSilently(BiFunction<PackOutput, CompletableFuture<Provider>, T>)",
+          "runSilently(Factory<T>)"
+        ],
+        "dev.shadowsoffire.placebo.util.data.DynamicTagProvider": [
+          "addTags()",
+          "tag(DynamicTagKey<R>)",
+          "run(CachedOutput)",
+          "runSilently(DataGenBuilder.DataProviderFactory<T>)"
+        ],
+        "dev.shadowsoffire.placebo.util.data.RuntimeDatagenHelpers": [
+          "toJson(T, Codec<T>)",
+          "toJson(T)",
+          "write(T, Codec<T>, String, Identifier)",
+          "write(T, String, Identifier)",
+          "write(JsonElement, String, Identifier)"
+        ],
+        "dev.shadowsoffire.placebo.util.DeferredSet": [
+          "size()",
           "isEmpty()",
           "contains(Object)",
           "iterator()",
           "toArray()",
-          "toArray(T[])"
+          "toArray(T[])",
+          "add(E)",
+          "remove(Object)",
+          "containsAll(Collection<?>)",
+          "addAll(Collection<? extends E>)",
+          "retainAll(Collection<?>)",
+          "removeAll(Collection<?>)",
+          "clear()",
+          "set()"
         ],
-        "net.darkhax.bookshelf.lib.WeightedSelector": [
-          "addEntry(T, int)",
-          "addEntry(WeightedSelector.WeightedEntry<T>)",
-          "removeEntry(WeightedSelector.WeightedEntry<T>)",
-          "getEntries()",
-          "getRandomEntry()",
-          "updateTotal()"
+        "dev.shadowsoffire.placebo.util.DrawsOnLeft": [
+          "drawOnLeft(GuiGraphicsExtractor, List<? extends FormattedText>, int)",
+          "drawOnLeft(GuiGraphicsExtractor, List<? extends FormattedText>, int, int)",
+          "__ths()"
         ],
-        "net.darkhax.bookshelf.network.NetworkHandler": [
-          "register(Class, Side)",
-          "sendToAll(IMessage)",
-          "sendTo(IMessage, EntityPlayerMP)",
-          "sendToAllAround(IMessage, World, BlockPos, double)",
-          "sendToAllAround(IMessage, TargetPoint)",
-          "sendToDimension(IMessage, int)",
-          "sendToServer(IMessage)"
+        "dev.shadowsoffire.placebo.util.EnchantmentUtils": [
+          "chargeExperience(Player, int)",
+          "getExperience(Player)",
+          "getExperienceForLevel(int)",
+          "getExperienceDifference(int, int)",
+          "getTotalExperienceForLevel(int)",
+          "getLevelForExperience(int)"
         ],
-        "net.darkhax.bookshelf.network.SerializableMessage": [
-          "handleMessage(MessageContext)",
-          "onMessage(REQ, MessageContext)",
-          "fromBytes(ByteBuf)",
-          "toBytes(ByteBuf)",
-          "addIOHandler(Class<T>, SerializableMessage.Reader<T>, SerializableMessage.Writer<T>)"
+        "dev.shadowsoffire.placebo.util.LinearEquation": [
+          "step(double)",
+          "getSrc()",
+          "getDest()"
         ],
-        "net.darkhax.bookshelf.network.TileEntityMessage": [
-          "handleMessage(MessageContext)",
-          "getAction()"
+        "dev.shadowsoffire.placebo.util.Offset": [
+          "getX(Offset.Box, Offset.Box)",
+          "getY(Offset.Box, Offset.Box)",
+          "apply(PoseStack, Offset.Box, Offset.Box)",
+          "load(String, String, Offset, Configuration)",
+          "save(String, String, Offset, Configuration)",
+          "Box(int, int)"
         ],
-        "net.darkhax.bookshelf.registry.IVariant": [
-          "getPrefix()"
+        "dev.shadowsoffire.placebo.util.PlaceboTaskQueue": [
+          "submitTask(Identifier, PlaceboTaskQueue.Task)",
+          "submitDelayedTask(Identifier, int, PlaceboTaskQueue.Task)"
         ],
-        "net.darkhax.bookshelf.registry.RegistryHelper": [
-          "getTab()",
-          "setTab(CreativeTabs)",
-          "getModid()",
-          "getItems()",
-          "getBlocks()",
-          "registerBlock(Block, String)",
-          "registerBlock(Block, ItemBlock, String)",
-          "registerItem(Item, String)",
-          "registerItem(Item, ResourceLocation)",
-          "addLoot(ResourceLocation, String, String, int, Item)",
-          "addLoot(ResourceLocation, String, String, int, int, Item, List<LootCondition>, List<LootFunction>)",
-          "addLoot(ResourceLocation, LootBuilder)",
-          "onTableLoaded(LootTableLoadEvent)",
-          "registerColorHandler(Block, IBlockColor)",
-          "registerColorHandler(Item, IItemColor)",
-          "registerInventoryModel(Block)",
-          "registerInventoryModel(Block, String, String...)",
-          "registerInventoryModel(Block, int, String)",
-          "registerInventoryModel(Item)",
-          "registerInventoryModel(Item, String, String...)"
+        "dev.shadowsoffire.placebo.util.PlaceboUtil": [
+          "asList(T...)",
+          "makeStack(Object)",
+          "toStackArray(Object...)",
+          "toMutable(List<T>)",
+          "tryHarvestBlock(ServerPlayer, BlockPos)",
+          "addLore(ItemStack, Component)",
+          "registerCustomColor(T)"
         ],
-        "net.darkhax.bookshelf.registry.RegistryListener": [],
-        "net.darkhax.bookshelf.util.AnnotationUtils": [
-          "getData(Class<A>)",
-          "getData(ASMDataTable, Class<A>)",
-          "getAnnotatedClasses(Class<A>)",
-          "getAnnotatedClasses(ASMDataTable, Class<A>)",
-          "getAnnotatedFields(Collection<Class<?>>, Class<A>)",
-          "getAnnotations(Class<A>, Class<T>)",
-          "getAnnotations(ASMDataTable, Class<A>, Class<T>)"
+        "dev.shadowsoffire.placebo.util.RandomRange": [
+          "getInt(RandomSource)",
+          "getFloat(RandomSource)",
+          "getDouble(RandomSource)"
         ],
-        "net.darkhax.bookshelf.util.BannerUtils": [
-          "createBanner(EnumDyeColor, NBTTagList)",
-          "createPatternList(BannerUtils.BannerLayer...)",
-          "addBasicPattern(String, String)",
-          "addCraftingPattern(String, String, ItemStack)",
-          "addDyePattern(String, String, String, String, String)"
+        "dev.shadowsoffire.placebo.util.RunnableReloader": [
+          "prepare(ResourceManager, ProfilerFiller)",
+          "apply(Unit, ResourceManager, ProfilerFiller)",
+          "of(Runnable)"
         ],
-        "net.darkhax.bookshelf.util.baubles.BaubleUtils": [
-          "hasItem(EntityPlayer, Item, int)",
-          "getBaublesFromPlayer(EntityPlayer, Item, int)",
-          "getBaubleType(Item, int)",
-          "getBauble(EntityPlayer, BaubleType)",
-          "getBauble(EntityPlayer, int)",
-          "hasBauble(EntityPlayer, ItemStack, BaubleType)",
-          "equipBauble(EntityPlayer, ItemStack, int)"
-        ],
-        "net.darkhax.bookshelf.util.baubles.ItemBauble": [],
-        "net.darkhax.bookshelf.util.BlockUtils": [
-          "isOre(ItemStack, boolean)",
-          "isFluid(Block)"
-        ],
-        "net.darkhax.bookshelf.util.ClassUtils": [
-          "compareClasses(Class<?>, Class<?>)",
-          "compareObjectToClass(Object, Class<?>)",
-          "getClassFromString(String)"
-        ],
-        "net.darkhax.bookshelf.util.CollectionUtils": [
-          "toDouble(float[])",
-          "toFloat(double[])",
-          "toString(ResourceLocation[])",
-          "toIdentifier(String[])",
-          "toIdentifier(Item[])",
-          "toIdentifier(Block[])",
-          "toItem(ResourceLocation[])",
-          "toBlock(ResourceLocation[])",
-          "toString(ItemStack[])",
-          "toStack(String[])",
-          "toInt(Color)",
-          "toColor(int[])",
-          "toInt(BlockPos)",
-          "toPos(int[])"
-        ],
-        "net.darkhax.bookshelf.util.CraftingUtils": [
-          "getRecipeForMatrix(InventoryCrafting, World)",
-          "getCurrentCraftingRecipe(EntityPlayer)",
-          "getCurrentCraftingOutput(EntityPlayer)",
-          "getCraftingContainer(EntityPlayer)",
-          "getOwner(IRecipe)",
-          "getRecipeOwners()",
-          "getShapedRecipes(ItemStack)",
-          "getShapedOreRecipe(ItemStack)",
-          "getShapelessRecipes(ItemStack)",
-          "getShapelessOreRecipe(ItemStack)",
-          "getAnyRecipe(ItemStack)",
-          "getRecipesForStack(ItemStack, Predicate<IRecipe>)",
-          "createConversionRecipes(ItemStack, ItemStack)",
-          "validateCrafting(Object)"
-        ],
-        "net.darkhax.bookshelf.util.EnchantmentUtils": [
-          "isItemEnchantable(ItemStack)",
-          "getExperienceFromLevel(int)",
-          "getExperienceToLevel(int, int)",
-          "getLevelsFromExperience(int)",
-          "areEnchantmentsCompatible(Enchantment, Enchantment)",
-          "getExpForDisplay(int)"
-        ],
-        "net.darkhax.bookshelf.util.EntityUtils": [
-          "getDistanceFromEntity(Entity, Entity)",
-          "getDistaceFromPos(Entity, BlockPos)",
-          "pushTowards(Entity, EnumFacing, double)",
-          "pushTowards(Entity, BlockPos, double)",
-          "pushTowards(Entity, Entity, double)",
-          "pushTowardsDirection(Entity, EnumFacing, double)",
-          "areEntitiesCloseEnough(Entity, Entity, double)",
-          "getEntitiesInArea(Class<? extends Entity>, World, BlockPos, int)",
-          "getEquipmentSlot(int)",
-          "isWearingFullSet(EntityLivingBase, Class<Item>)"
-        ],
-        "net.darkhax.bookshelf.util.GameUtils": [
-          "isClient()"
-        ],
-        "net.darkhax.bookshelf.util.GuiUtils": [
-          "addPlayerInvToContainer(Container, InventoryPlayer)"
-        ],
-        "net.darkhax.bookshelf.util.MathsUtils": [
-          "isInRange(double, double, double)",
-          "getDistanceBetweenPoints(Vec3d, Vec3d)",
-          "round(double, int)",
-          "nextIntInclusive(int, int)",
-          "rayTrace(EntityPlayer, double)",
-          "tryPercentage(double)",
-          "getRandomColor()",
-          "getAverage(int, int)",
-          "ticksToTime(int)"
-        ],
-        "net.darkhax.bookshelf.util.MathUtils": [],
-        "net.darkhax.bookshelf.util.ModUtils": [
-          "getModName(Impl<?>)",
-          "getModName(Entity)",
-          "getModContainer(String)",
-          "getModName(String)",
-          "getTabFromLabel(String)"
-        ],
-        "net.darkhax.bookshelf.util.NBTUtils": [
-          "setGenericNBTValue(NBTTagCompound, String, Object)",
-          "writeInventoryToNBT(NBTTagCompound, InventoryBasic)",
-          "readInventoryFromNBT(NBTTagCompound, InventoryBasic)",
-          "getStoredItems(NBTTagCompound, int)",
-          "getDeepTagCompound(NBTTagCompound, String[])"
-        ],
-        "net.darkhax.bookshelf.util.NumericUtils": [
-          "isKeyCodeNumeric(int)",
-          "isChristmasTime()",
-          "isHalloweenTime()",
-          "isSpecialDay(int, int)",
-          "isSpecialDay(int, int, int)"
-        ],
-        "net.darkhax.bookshelf.util.OreDictUtils": [
-          "initAdditionalVanillaEntries()"
-        ],
-        "net.darkhax.bookshelf.util.ParticleUtils": [
-          "spawnDigParticles(ParticleManager, IBlockState, World, BlockPos, EnumFacing)",
-          "spawnBreakParticles(ParticleManager, IBlockState, World, BlockPos)",
-          "spawnParticleRing(World, EnumParticleTypes, double, double, double, double, double, double, double)",
-          "spawnPercentageParticleRing(World, EnumParticleTypes, float, double, double, double, double, double, double, double)"
-        ],
-        "net.darkhax.bookshelf.util.PlayerUtils": [
-          "canPlayerSleep(EntityPlayer)",
-          "isPlayerReal(EntityPlayer)",
-          "getPlayerFromUUID(World, UUID)",
-          "getPlayerNameFromUUID(UUID)",
-          "getUUIDFromName(String)",
-          "fixStrippedUUID(String)",
-          "getItemCountInInv(EntityPlayer, Item)",
-          "playerHasItem(EntityPlayer, Item, int)",
-          "getStacksFromPlayer(EntityPlayer, Item, int)",
-          "getClientPlayer()",
-          "sendSpamlessMessage(int, ITextComponent)",
-          "isPlayerInGame()",
-          "getClientUUID()"
-        ],
-        "net.darkhax.bookshelf.util.RenderUtils": [
-          "registerPlayerLayer(LayerRenderer<EntityLivingBase>)",
-          "getSteveRenderer()",
-          "getAlexRenderer()",
-          "getPlayerRenderer(String)",
-          "setPlayerTexture(Type, AbstractClientPlayer, ResourceLocation)",
-          "downloadResourceLocation(String, ResourceLocation, ResourceLocation, IImageBuffer)",
-          "downloadResource(String, ResourceLocation, ResourceLocation, IImageBuffer)",
-          "getCamera(Entity, float)",
-          "translateAgainstPlayer(BlockPos, boolean)",
-          "getParticleTexture(ItemStack)",
-          "getSprite(ItemStack)",
-          "getBakedModel(ModelResourceLocation)",
-          "getBakedModel(ItemStack)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double, double, double, double)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double, double, double, double, int)",
-          "addTexturedQuad(VertexBuffer, TextureAtlasSprite, double, double, double, double, double, double, EnumFacing, int, int)",
-          "addTextureQuad(VertexBuffer, TextureAtlasSprite, double, double, double, double, double, double, EnumFacing, int, int, int, int, int, int)",
-          "setupRenderState(double, double, double)",
-          "setupRenderState()"
-        ],
-        "net.darkhax.bookshelf.util.SkullUtils": [
-          "createSkull(EntityPlayer)",
-          "createSkull(String, UUID)",
-          "createSkull(SkullUtils.MHFAccount)",
-          "createSkull(SkullUtils.Player)",
-          "createSkull(String)",
-          "getWitherSkeletonSkull()",
-          "getZombieSkull()",
-          "getCreeperSkull()",
-          "getSteveSkull()",
-          "getSkeletonSkull()",
-          "getMHFSkulls()",
-          "getPlayerSkulls()"
-        ],
-        "net.darkhax.bookshelf.util.StackUtils": [
-          "prepareStackTag(ItemStack)",
-          "prepareStack(ItemStack)",
-          "setLore(ItemStack, String[])",
-          "writeStackToString(ItemStack)",
-          "createStackFromString(String)",
-          "compareStackToOreName(ItemStack, String)",
-          "doStacksShareOreName(ItemStack, ItemStack)",
-          "areStacksSimilar(ItemStack, ItemStack)",
-          "areStacksSimilarWithSize(ItemStack, ItemStack)",
-          "writePotionEffectsToStack(ItemStack, PotionEffect[])",
-          "writeStackToTag(ItemStack, NBTTagCompound, String)",
-          "decreaseStackSize(ItemStack, int)",
-          "areStacksEqual(ItemStack, ItemStack, boolean)",
-          "isStackInArray(ItemStack, boolean, ItemStack...)",
-          "copyStackWithSize(ItemStack, int)",
-          "getThingByName(String)",
-          "getBlockFromStack(ItemStack)",
-          "consumeStack(ItemStack)",
-          "dropStackInWorld(World, BlockPos, ItemStack)",
-          "createStackFromTileEntity(TileEntity)"
-        ],
-        "net.darkhax.bookshelf.util.TextUtils": [
-          "wrapStringToList(String, int, boolean, List<String>)",
-          "wrapStringToListWithFormat(String, int, boolean, List<String>, TextFormatting)",
-          "stripFormatting(String)",
-          "getValueByCharacter(char)",
-          "getValueByName(String)",
-          "formatString(String, TextUtils.ChatFormat)"
-        ],
-        "net.darkhax.bookshelf.world.loot.conditions.BiomeSpecific": [
-          "func_186618_a(Random, LootContext)"
-        ],
-        "net.darkhax.bookshelf.world.loot.functions.SetColor": [
-          "func_186553_a(ItemStack, Random, LootContext)"
+        "dev.shadowsoffire.placebo.util.SpecialTooltipItem": [],
+        "dev.shadowsoffire.placebo.util.StepFunction": [
+          "get(float)",
+          "getInt(float)",
+          "getStep(float)",
+          "getForStep(int)",
+          "getIntForStep(int)",
+          "isConstant()",
+          "write(FriendlyByteBuf)",
+          "read(FriendlyByteBuf)",
+          "fromBounds(float, float)",
+          "fromBounds(float, float, float)",
+          "constant(float)"
         ]
       },
-      "sampleCount": 80
+      "sampleCount": 100
+    },
+    "1.21.1": {
+      "packages": [
+        "dev.shadowsoffire.placebo",
+        "dev.shadowsoffire.placebo.block_entity",
+        "dev.shadowsoffire.placebo.cap",
+        "dev.shadowsoffire.placebo.codec",
+        "dev.shadowsoffire.placebo.color",
+        "dev.shadowsoffire.placebo.commands",
+        "dev.shadowsoffire.placebo.config",
+        "dev.shadowsoffire.placebo.datagen",
+        "dev.shadowsoffire.placebo.events",
+        "dev.shadowsoffire.placebo.json",
+        "dev.shadowsoffire.placebo.loot",
+        "dev.shadowsoffire.placebo.menu",
+        "dev.shadowsoffire.placebo.network",
+        "dev.shadowsoffire.placebo.patreon",
+        "dev.shadowsoffire.placebo.patreon.wings",
+        "dev.shadowsoffire.placebo.payloads",
+        "dev.shadowsoffire.placebo.registry",
+        "dev.shadowsoffire.placebo.reload",
+        "dev.shadowsoffire.placebo.screen",
+        "dev.shadowsoffire.placebo.systems.gear",
+        "dev.shadowsoffire.placebo.systems.mixes",
+        "dev.shadowsoffire.placebo.systems.wanderer",
+        "dev.shadowsoffire.placebo.tabs",
+        "dev.shadowsoffire.placebo.util",
+        "dev.shadowsoffire.placebo.util.data"
+      ],
+      "classes": [
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntity",
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntityType",
+        "dev.shadowsoffire.placebo.block_entity.TickingEntityBlock",
+        "dev.shadowsoffire.placebo.cap.InternalItemHandler",
+        "dev.shadowsoffire.placebo.cap.ModifiableEnergyStorage",
+        "dev.shadowsoffire.placebo.codec.CodecMap",
+        "dev.shadowsoffire.placebo.codec.CodecProvider",
+        "dev.shadowsoffire.placebo.codec.MapBackedCodec",
+        "dev.shadowsoffire.placebo.codec.PlaceboCodecs",
+        "dev.shadowsoffire.placebo.color.GradientColor",
+        "dev.shadowsoffire.placebo.commands.GetDimensionTypeCommand",
+        "dev.shadowsoffire.placebo.commands.HandToJsonCommand",
+        "dev.shadowsoffire.placebo.commands.PlaceboCommand",
+        "dev.shadowsoffire.placebo.commands.SerializeLootTableCommand",
+        "dev.shadowsoffire.placebo.config.ConfigCategory",
+        "dev.shadowsoffire.placebo.config.ConfigElement",
+        "dev.shadowsoffire.placebo.config.ConfigFlags",
+        "dev.shadowsoffire.placebo.config.ConfigGuiType",
+        "dev.shadowsoffire.placebo.config.Configuration",
+        "dev.shadowsoffire.placebo.config.IConfigElement",
+        "dev.shadowsoffire.placebo.config.Property",
+        "dev.shadowsoffire.placebo.datagen.DataGenBuilder",
+        "dev.shadowsoffire.placebo.datagen.FieldOrderingFactory",
+        "dev.shadowsoffire.placebo.datagen.FilteredOrderingFactory",
+        "dev.shadowsoffire.placebo.datagen.LegacyRecipeProvider",
+        "dev.shadowsoffire.placebo.events.AnvilLandEvent",
+        "dev.shadowsoffire.placebo.events.ResourceReloadEvent",
+        "dev.shadowsoffire.placebo.json.ChancedEffectInstance",
+        "dev.shadowsoffire.placebo.json.JsonUtil",
+        "dev.shadowsoffire.placebo.json.NBTAdapter",
+        "dev.shadowsoffire.placebo.json.OptionalStackCodec",
+        "dev.shadowsoffire.placebo.json.RandomAttributeModifier",
+        "dev.shadowsoffire.placebo.json.WeightedItemStack",
+        "dev.shadowsoffire.placebo.loot.StackLootEntry",
+        "dev.shadowsoffire.placebo.menu.BlockEntityMenu",
+        "dev.shadowsoffire.placebo.menu.FilteredSlot",
+        "dev.shadowsoffire.placebo.menu.IDataUpdateListener",
+        "dev.shadowsoffire.placebo.menu.LockedSlot",
+        "dev.shadowsoffire.placebo.menu.MenuUtil",
+        "dev.shadowsoffire.placebo.menu.PlaceboContainerMenu",
+        "dev.shadowsoffire.placebo.menu.QuickMoveHandler",
+        "dev.shadowsoffire.placebo.menu.SimpleDataSlots",
+        "dev.shadowsoffire.placebo.menu.SimplerMenuProvider",
+        "dev.shadowsoffire.placebo.menu.SlotUpdateListener",
+        "dev.shadowsoffire.placebo.network.PayloadHelper",
+        "dev.shadowsoffire.placebo.network.PayloadProvider",
+        "dev.shadowsoffire.placebo.network.VanillaPacketDispatcher",
+        "dev.shadowsoffire.placebo.patreon.PatreonPreview",
+        "dev.shadowsoffire.placebo.patreon.PatreonUtils",
+        "dev.shadowsoffire.placebo.patreon.TrailsManager",
+        "dev.shadowsoffire.placebo.patreon.wings.IWingModel",
+        "dev.shadowsoffire.placebo.patreon.wings.Wing",
+        "dev.shadowsoffire.placebo.patreon.wings.WingLayer",
+        "dev.shadowsoffire.placebo.patreon.WingsManager",
+        "dev.shadowsoffire.placebo.payloads.ButtonClickPayload",
+        "dev.shadowsoffire.placebo.payloads.PatreonDisablePayload",
+        "dev.shadowsoffire.placebo.Placebo",
+        "dev.shadowsoffire.placebo.PlaceboClient",
+        "dev.shadowsoffire.placebo.PlaceboConfig",
+        "dev.shadowsoffire.placebo.registry.DeferredHelper",
+        "dev.shadowsoffire.placebo.reload.DynamicHolder",
+        "dev.shadowsoffire.placebo.reload.DynamicRegistry",
+        "dev.shadowsoffire.placebo.reload.DynRegBiMap",
+        "dev.shadowsoffire.placebo.reload.RegistryCallback",
+        "dev.shadowsoffire.placebo.reload.ReloadListenerPayloads",
+        "dev.shadowsoffire.placebo.reload.WeightedDynamicRegistry",
+        "dev.shadowsoffire.placebo.screen.PlaceboContainerScreen",
+        "dev.shadowsoffire.placebo.screen.ScreenUtil",
+        "dev.shadowsoffire.placebo.screen.TickableText",
+        "dev.shadowsoffire.placebo.screen.TickableTextList",
+        "dev.shadowsoffire.placebo.systems.gear.GearSet",
+        "dev.shadowsoffire.placebo.systems.gear.GearSetRegistry",
+        "dev.shadowsoffire.placebo.systems.mixes.JsonMix",
+        "dev.shadowsoffire.placebo.systems.mixes.MixRegistry",
+        "dev.shadowsoffire.placebo.systems.wanderer.BasicWandererTrade",
+        "dev.shadowsoffire.placebo.systems.wanderer.WandererTrade",
+        "dev.shadowsoffire.placebo.systems.wanderer.WandererTradesRegistry",
+        "dev.shadowsoffire.placebo.tabs.ITabFiller",
+        "dev.shadowsoffire.placebo.tabs.TabFillingRegistry",
+        "dev.shadowsoffire.placebo.util.AbstractBiMap",
+        "dev.shadowsoffire.placebo.util.CachedObject",
+        "dev.shadowsoffire.placebo.util.ClientUtil",
+        "dev.shadowsoffire.placebo.util.data.DynamicRegistryProvider",
+        "dev.shadowsoffire.placebo.util.data.RuntimeDatagenHelpers",
+        "dev.shadowsoffire.placebo.util.DeferredSet",
+        "dev.shadowsoffire.placebo.util.DrawsOnLeft",
+        "dev.shadowsoffire.placebo.util.EnchantmentUtils",
+        "dev.shadowsoffire.placebo.util.LinearEquation",
+        "dev.shadowsoffire.placebo.util.Offset",
+        "dev.shadowsoffire.placebo.util.PlaceboTaskQueue",
+        "dev.shadowsoffire.placebo.util.PlaceboUtil",
+        "dev.shadowsoffire.placebo.util.RandomRange",
+        "dev.shadowsoffire.placebo.util.RunnableReloader",
+        "dev.shadowsoffire.placebo.util.SpecialTooltipItem",
+        "dev.shadowsoffire.placebo.util.StepFunction"
+      ],
+      "methods": {
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntity": [
+          "serverTick(Level, BlockPos, BlockState)",
+          "clientTick(Level, BlockPos, BlockState)"
+        ],
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntityType": [
+          "getTicker(boolean)"
+        ],
+        "dev.shadowsoffire.placebo.block_entity.TickingEntityBlock": [
+          "getTicker(Level, BlockState, BlockEntityType<T>)"
+        ],
+        "dev.shadowsoffire.placebo.cap.InternalItemHandler": [
+          "extractItemInternal(int, int, boolean)",
+          "insertItemInternal(int, ItemStack, boolean)"
+        ],
+        "dev.shadowsoffire.placebo.cap.ModifiableEnergyStorage": [
+          "setEnergy(int)",
+          "setCapacity(int)",
+          "setTransferRate(int)",
+          "setMaxExtract(int)",
+          "setMaxReceive(int)"
+        ],
+        "dev.shadowsoffire.placebo.codec.CodecMap": [
+          "getDefaultCodec()",
+          "setDefaultCodec(Codec<? extends V>)",
+          "isEmpty()",
+          "containsKey(ResourceLocation)",
+          "getValue(ResourceLocation)",
+          "getKey(Codec<?>)",
+          "register(ResourceLocation, Codec<? extends V>)",
+          "encode(V, DynamicOps<T>, T)",
+          "decode(DynamicOps<T>, T)"
+        ],
+        "dev.shadowsoffire.placebo.codec.CodecProvider": [],
+        "dev.shadowsoffire.placebo.codec.MapBackedCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(V, DynamicOps<T>, T)"
+        ],
+        "dev.shadowsoffire.placebo.codec.PlaceboCodecs": [
+          "mapBackedDefaulted(String, BiMap<ResourceLocation, Codec<? extends T>>, Codec<? extends T>)",
+          "mapBacked(String, BiMap<ResourceLocation, Codec<? extends T>>)",
+          "setOf(Codec<T>)",
+          "setFromList(Codec<List<T>>)",
+          "enumCodec(Class<E>)",
+          "stringResolverCodec(Function<E, String>, Function<String, E>)"
+        ],
+        "dev.shadowsoffire.placebo.color.GradientColor": [
+          "getValue()"
+        ],
+        "dev.shadowsoffire.placebo.commands.GetDimensionTypeCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "dev.shadowsoffire.placebo.commands.HandToJsonCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "toJsonStr(ItemStack, RegistryOps<JsonElement>)"
+        ],
+        "dev.shadowsoffire.placebo.commands.PlaceboCommand": [
+          "register(CommandDispatcher<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "dev.shadowsoffire.placebo.commands.SerializeLootTableCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "dev.shadowsoffire.placebo.config.ConfigCategory": [
+          "equals(Object)",
+          "getName()",
+          "getQualifiedName()",
+          "getQualifiedName(String, ConfigCategory)",
+          "getFirstParent()",
+          "isChild()",
+          "getValues()",
+          "getOrderedValues()",
+          "setLanguageKey(String)",
+          "getLanguagekey()",
+          "setComment(String)",
+          "getComment()",
+          "setRequiresWorldRestart(boolean)",
+          "requiresWorldRestart()",
+          "setShowInGui(boolean)",
+          "showInGui()",
+          "setRequiresMcRestart(boolean)",
+          "requiresMcRestart()",
+          "setPropertyOrder(List<String>)",
+          "getPropertyOrder()"
+        ],
+        "dev.shadowsoffire.placebo.config.ConfigElement": [
+          "listCategoriesFirst(boolean)",
+          "getChildElements()",
+          "getName()",
+          "isProperty()",
+          "getQualifiedName()",
+          "getType()",
+          "getType(Property)",
+          "isList()",
+          "isListLengthFixed()",
+          "getMaxListLength()",
+          "getComment()",
+          "isDefault()",
+          "setToDefault()",
+          "requiresWorldRestart()",
+          "showInGui()",
+          "requiresMcRestart()",
+          "getValidValues()",
+          "getValidValuesDisplay()",
+          "getLanguageKey()",
+          "getDefault()"
+        ],
+        "dev.shadowsoffire.placebo.config.ConfigFlags": [],
+        "dev.shadowsoffire.placebo.config.ConfigGuiType": [],
+        "dev.shadowsoffire.placebo.config.Configuration": [
+          "setTitle(String)",
+          "setComment(String)",
+          "toString()",
+          "get(String, String, boolean)",
+          "get(String, String, boolean, String)",
+          "get(String, String, boolean[])",
+          "get(String, String, boolean[], String)",
+          "get(String, String, boolean[], String, boolean, int)",
+          "get(String, String, int)",
+          "get(String, String, int, String)",
+          "get(String, String, int, String, int, int)",
+          "get(String, String, int[])",
+          "get(String, String, int[], String)",
+          "get(String, String, int[], String, int, int)",
+          "get(String, String, int[], String, int, int, boolean, int)",
+          "get(String, String, double)",
+          "get(String, String, double, String)",
+          "get(String, String, double, String, double, double)",
+          "get(String, String, double[])",
+          "get(String, String, double[], String)"
+        ],
+        "dev.shadowsoffire.placebo.config.IConfigElement": [
+          "hasSlidingControl()"
+        ],
+        "dev.shadowsoffire.placebo.config.Property": [
+          "getComment()",
+          "setComment(String)",
+          "isDefault()",
+          "setToDefault()",
+          "getDefault()",
+          "getDefaults()",
+          "setRequiresWorldRestart(boolean)",
+          "requiresWorldRestart()",
+          "setShowInGui(boolean)",
+          "showInGui()",
+          "setRequiresMcRestart(boolean)",
+          "requiresMcRestart()",
+          "setMaxListLength(int)",
+          "getMaxListLength()",
+          "setIsListLengthFixed(boolean)",
+          "isListLengthFixed()",
+          "setValidationPattern(Pattern)",
+          "getValidationPattern()",
+          "setLanguageKey(String)",
+          "getLanguageKey()"
+        ],
+        "dev.shadowsoffire.placebo.datagen.DataGenBuilder": [
+          "create(String...)",
+          "registry(ResourceKey<? extends Registry<R>>, RegistryBootstrap<R>)",
+          "conditions(ResourceKey<?>, List<ICondition>)",
+          "conditions(ResourceKey<?>, ICondition...)",
+          "conditions(Map<ResourceKey<?>, List<ICondition>>)",
+          "provider(DataGenBuilder.DataProviderFactory<T>)",
+          "provider(BiFunction<PackOutput, CompletableFuture<Provider>, T>)",
+          "provider(Factory<T>)",
+          "build(GatherDataEvent)",
+          "registerDataProviders(GatherDataEvent)"
+        ],
+        "dev.shadowsoffire.placebo.datagen.FieldOrderingFactory": [],
+        "dev.shadowsoffire.placebo.datagen.FilteredOrderingFactory": [
+          "getKeyComparator(JsonElement, Path)",
+          "builder()"
+        ],
+        "dev.shadowsoffire.placebo.datagen.LegacyRecipeProvider": [
+          "genRecipes(RecipeOutput, Provider)",
+          "addShaped(ResourceLocation, String, Object, int, int, Object...)",
+          "addShapeless(ResourceLocation, String, Object, Object...)",
+          "addShaped(ResourceLocation, Object, int, int, Object...)",
+          "addShapeless(ResourceLocation, Object, Object...)",
+          "addShaped(Object, int, int, Object...)",
+          "addShapeless(Object, Object...)",
+          "potionIngredient(Holder<Potion>)",
+          "buildRecipes(RecipeOutput, Provider)",
+          "buildRecipes(RecipeOutput)",
+          "resolvePath(ItemStack)",
+          "makeStack(Object)",
+          "createInput(boolean, Object...)",
+          "toPattern(int, int, NonNullList<Ingredient>)",
+          "getFirstChar(Collection<Character>, Ingredient)"
+        ],
+        "dev.shadowsoffire.placebo.events.AnvilLandEvent": [
+          "getLevel()",
+          "getPos()",
+          "getNewState()",
+          "getOldState()",
+          "getEntity()"
+        ],
+        "dev.shadowsoffire.placebo.events.ResourceReloadEvent": [
+          "getResourceManager()",
+          "getSide()"
+        ],
+        "dev.shadowsoffire.placebo.json.ChancedEffectInstance": [
+          "create(RandomSource, int)",
+          "createDeterministic(int)"
+        ],
+        "dev.shadowsoffire.placebo.json.JsonUtil": [
+          "checkAndLogEmpty(JsonElement, ResourceLocation, String, Logger)",
+          "checkConditions(JsonElement, ResourceLocation, String, Logger, ConditionalOps<JsonElement>)"
+        ],
+        "dev.shadowsoffire.placebo.json.NBTAdapter": [
+          "serialize(CompoundTag, Type, JsonSerializationContext)",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)"
+        ],
+        "dev.shadowsoffire.placebo.json.OptionalStackCodec": [],
+        "dev.shadowsoffire.placebo.json.RandomAttributeModifier": [
+          "create(ResourceLocation, RandomSource)",
+          "createDeterministic(ResourceLocation)",
+          "apply(ResourceLocation, RandomSource, LivingEntity)",
+          "create(RandomSource)",
+          "createDeterministic()",
+          "apply(RandomSource, LivingEntity)"
+        ],
+        "dev.shadowsoffire.placebo.json.WeightedItemStack": [
+          "getStack()",
+          "toString()",
+          "apply(LivingEntity, EquipmentSlot)"
+        ],
+        "dev.shadowsoffire.placebo.loot.StackLootEntry": [
+          "createItemStack(Consumer<ItemStack>, LootContext)",
+          "getType()"
+        ],
+        "dev.shadowsoffire.placebo.menu.BlockEntityMenu": [
+          "stillValid(Player)"
+        ],
+        "dev.shadowsoffire.placebo.menu.FilteredSlot": [
+          "mayPlace(ItemStack)",
+          "mayPickup(Player)",
+          "remove(int)"
+        ],
+        "dev.shadowsoffire.placebo.menu.IDataUpdateListener": [],
+        "dev.shadowsoffire.placebo.menu.LockedSlot": [
+          "mayPickup(Player)",
+          "mayPlace(ItemStack)"
+        ],
+        "dev.shadowsoffire.placebo.menu.MenuUtil": [
+          "type(MenuSupplier<T>)",
+          "bufType(IContainerFactory<T>)",
+          "posType(MenuUtil.PosFactory<T>)",
+          "openGui(Player, BlockPos, MenuUtil.PosFactory<M>)"
+        ],
+        "dev.shadowsoffire.placebo.menu.PlaceboContainerMenu": [
+          "addPlayerSlots(Inventory, int, int)",
+          "registerInvShuffleRules()",
+          "quickMoveStack(Player, int)",
+          "moveItemStackTo(ItemStack, int, int, boolean)",
+          "setData(int, int)",
+          "addDataListener(IDataUpdateListener)",
+          "addSlotListener(SlotUpdateListener)",
+          "clearContainer(Player, IItemHandler)"
+        ],
+        "dev.shadowsoffire.placebo.menu.QuickMoveHandler": [
+          "quickMoveStack(QuickMoveHandler.QuickMoveMenu, Player, int)",
+          "registerRule(BiPredicate<ItemStack, Integer>, int, int, boolean)",
+          "registerRule(BiPredicate<ItemStack, Integer>, int, int)",
+          "QuickMoveRule(BiPredicate<ItemStack, Integer>, int, int, boolean)"
+        ],
+        "dev.shadowsoffire.placebo.menu.SimpleDataSlots": [
+          "addSlot(DataSlot)",
+          "addData(IntSupplier, IntConsumer)",
+          "addData(BooleanSupplier, BooleanConsumer)",
+          "getSlots()",
+          "register(Consumer<DataSlot>)",
+          "addEnergy(ModifiableEnergyStorage)"
+        ],
+        "dev.shadowsoffire.placebo.menu.SimplerMenuProvider": [
+          "getDisplayName()",
+          "createMenu(int, Inventory, Player)"
+        ],
+        "dev.shadowsoffire.placebo.menu.SlotUpdateListener": [],
+        "dev.shadowsoffire.placebo.network.PayloadHelper": [
+          "registerPayload(PayloadProvider<T>)",
+          "registerProviders(RegisterPayloadHandlersEvent)"
+        ],
+        "dev.shadowsoffire.placebo.network.PayloadProvider": [
+          "isOptional()",
+          "getHandlerThread()"
+        ],
+        "dev.shadowsoffire.placebo.network.VanillaPacketDispatcher": [
+          "dispatchTEToNearbyPlayers(BlockEntity)",
+          "dispatchTEToNearbyPlayers(Level, BlockPos)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.PatreonPreview": [
+          "tick(Post)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.PatreonUtils": [],
+        "dev.shadowsoffire.placebo.patreon.TrailsManager": [
+          "init()",
+          "clientTick(Post)",
+          "keys(Key)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.wings.IWingModel": [],
+        "dev.shadowsoffire.placebo.patreon.wings.Wing": [
+          "setupAnim(AbstractClientPlayer, float, float, float, float, float)",
+          "renderToBuffer(PoseStack, VertexConsumer, int, int, int)",
+          "render(PoseStack, MultiBufferSource, int, AbstractClientPlayer, float, ResourceLocation, PlayerModel<AbstractClientPlayer>)",
+          "setRotationAngle(ModelPart, float, float, float)",
+          "createLayer()"
+        ],
+        "dev.shadowsoffire.placebo.patreon.wings.WingLayer": [
+          "render(PoseStack, MultiBufferSource, int, AbstractClientPlayer, float, float, float, float, float, float)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.WingsManager": [
+          "init(FMLClientSetupEvent)",
+          "keys(Key)",
+          "getType(UUID)"
+        ],
+        "dev.shadowsoffire.placebo.payloads.ButtonClickPayload": [
+          "type()"
+        ],
+        "dev.shadowsoffire.placebo.payloads.PatreonDisablePayload": [
+          "type()"
+        ],
+        "dev.shadowsoffire.placebo.Placebo": [
+          "setup(FMLCommonSetupEvent)",
+          "register(RegisterEvent)",
+          "registerCommands(RegisterCommandsEvent)",
+          "serverReload(AddReloadListenerEvent)",
+          "serverStart(ServerAboutToStartEvent)",
+          "loc(String)"
+        ],
+        "dev.shadowsoffire.placebo.PlaceboClient": [
+          "setup(FMLClientSetupEvent)",
+          "keys(RegisterKeyMappingsEvent)",
+          "clientResource(RegisterClientReloadListenersEvent)",
+          "addLayers(AddLayers)",
+          "getColorTicks()",
+          "getBrewingRegistry()",
+          "getTooltipScrollIndex()",
+          "getTooltipScrollIndex(int)",
+          "tick(Post)",
+          "scroll(Pre)",
+          "scroll2(MouseScrollingEvent)",
+          "tooltip(ItemTooltipEvent)"
+        ],
+        "dev.shadowsoffire.placebo.PlaceboConfig": [
+          "load()"
+        ],
+        "dev.shadowsoffire.placebo.registry.DeferredHelper": [
+          "create(String)",
+          "registry(String, UnaryOperator<RegistryBuilder<T>>)",
+          "block(String, Supplier<T>)",
+          "block(String, Function<Properties, T>, UnaryOperator<Properties>)",
+          "fluid(String, Supplier<T>)",
+          "item(String, Supplier<T>)",
+          "item(String, Function<net.minecraft.world.item.Item.Properties, T>, UnaryOperator<net.minecraft.world.item.Item.Properties>)",
+          "item(String, Function<net.minecraft.world.item.Item.Properties, T>)",
+          "blockItem(String, Holder<Block>, BiFunction<Block, net.minecraft.world.item.Item.Properties, T>, UnaryOperator<net.minecraft.world.item.Item.Properties>)",
+          "blockItem(String, Holder<Block>, UnaryOperator<net.minecraft.world.item.Item.Properties>)",
+          "blockItem(String, Holder<Block>)",
+          "effect(String, Supplier<T>)",
+          "sound(String, Supplier<T>)",
+          "sound(String)",
+          "potion(String, Supplier<T>)",
+          "singlePotion(String, Supplier<MobEffectInstance>)",
+          "multiPotion(String, Supplier<List<MobEffectInstance>>)",
+          "entity(String, Supplier<T>)",
+          "entity(String, EntityFactory<T>, MobCategory, UnaryOperator<Builder<T>>)",
+          "blockEntity(String, BlockEntitySupplier<T>, Supplier<Set<Block>>)"
+        ],
+        "dev.shadowsoffire.placebo.reload.DynamicHolder": [
+          "isBound()",
+          "get()",
+          "getOptional()",
+          "getRegistryPath()",
+          "getId()",
+          "is(ResourceLocation)",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.shadowsoffire.placebo.reload.DynamicRegistry": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "registerBuiltinCodecs()",
+          "beginReload(DynamicRegistry.ReloadType)",
+          "beginReload()",
+          "onReload(DynamicRegistry.ReloadType)",
+          "onReload()",
+          "getKeys()",
+          "getValues()",
+          "getValue(ResourceLocation)",
+          "getKey(R)",
+          "getOrDefault(ResourceLocation, R)",
+          "registerToBus()",
+          "holder(ResourceLocation)",
+          "holder(R)",
+          "emptyHolder()",
+          "holderCodec()",
+          "holderStreamCodec()",
+          "registerCodec(ResourceLocation, Codec<? extends R>, StreamCodec<RegistryFriendlyByteBuf, ? extends R>)",
+          "registerCodec(ResourceLocation, Codec<? extends R>)",
+          "registerDefaultCodec(ResourceLocation, Codec<? extends R>, StreamCodec<RegistryFriendlyByteBuf, ? extends R>)"
+        ],
+        "dev.shadowsoffire.placebo.reload.DynRegBiMap": [],
+        "dev.shadowsoffire.placebo.reload.RegistryCallback": [],
+        "dev.shadowsoffire.placebo.reload.ReloadListenerPayloads": [],
+        "dev.shadowsoffire.placebo.reload.WeightedDynamicRegistry": [
+          "beginReload(DynamicRegistry.ReloadType)",
+          "validateItem(ResourceLocation, V)",
+          "onReload(DynamicRegistry.ReloadType)",
+          "getRandomItem(RandomSource)",
+          "getRandomItem(RandomSource, float)",
+          "getRandomItem(RandomSource, float, Predicate<V>...)"
+        ],
+        "dev.shadowsoffire.placebo.screen.PlaceboContainerScreen": [
+          "render(GuiGraphics, int, int, float)"
+        ],
+        "dev.shadowsoffire.placebo.screen.ScreenUtil": [
+          "getHeight(float, int, int)"
+        ],
+        "dev.shadowsoffire.placebo.screen.TickableText": [
+          "tick()",
+          "setTicks(int)",
+          "render(Font, GuiGraphics, int, int)",
+          "getMaxUsefulTicks()",
+          "reset()",
+          "isDone()",
+          "causesNewLine()",
+          "getWidth(Font)",
+          "tickList(List<TickableText>)"
+        ],
+        "dev.shadowsoffire.placebo.screen.TickableTextList": [
+          "addLine(FormattedText, float)",
+          "addLine(FormattedText)",
+          "continueLine(FormattedText, float)",
+          "setLine(int, FormattedText, float)",
+          "render(float, float, int, boolean, Matrix4f, MultiBufferSource, DisplayMode, int, int)",
+          "render(GuiGraphics, float, float, int, boolean)",
+          "render(GuiGraphics, float, float)",
+          "clear()",
+          "getTicks()",
+          "setTicks(int)",
+          "getMaxWidth()",
+          "setMaxWidth(int)",
+          "getLineSpacing()",
+          "setLineSpacing(int)",
+          "tick()",
+          "getWidth()"
+        ],
+        "dev.shadowsoffire.placebo.systems.gear.GearSet": [
+          "getWeight()",
+          "getQuality()",
+          "apply(LivingEntity)",
+          "getPotentials(EquipmentSlot)",
+          "getCodec()"
+        ],
+        "dev.shadowsoffire.placebo.systems.gear.GearSetRegistry": [
+          "getRandomSet(RandomSource, float, List<GearSet.SetPredicate>)",
+          "registerBuiltinCodecs()"
+        ],
+        "dev.shadowsoffire.placebo.systems.mixes.JsonMix": [
+          "getCodec()"
+        ],
+        "dev.shadowsoffire.placebo.systems.mixes.MixRegistry": [
+          "registerBuiltinCodecs()",
+          "beginReload(DynamicRegistry.ReloadType)",
+          "onReload(DynamicRegistry.ReloadType)",
+          "applyMixes()"
+        ],
+        "dev.shadowsoffire.placebo.systems.wanderer.BasicWandererTrade": [
+          "isRare()",
+          "getCodec()",
+          "builder()"
+        ],
+        "dev.shadowsoffire.placebo.systems.wanderer.WandererTrade": [],
+        "dev.shadowsoffire.placebo.systems.wanderer.WandererTradesRegistry": [
+          "registerBuiltinCodecs()",
+          "beginReload(DynamicRegistry.ReloadType)",
+          "onReload(DynamicRegistry.ReloadType)",
+          "replaceTrades(WandererTradesEvent)"
+        ],
+        "dev.shadowsoffire.placebo.tabs.ITabFiller": [],
+        "dev.shadowsoffire.placebo.tabs.TabFillingRegistry": [
+          "register(ITabFiller, ResourceKey<CreativeModeTab>...)",
+          "register(ResourceKey<CreativeModeTab>, ITabFiller...)",
+          "registerSimple(ItemLike, ResourceKey<CreativeModeTab>...)",
+          "registerSimple(ResourceKey<CreativeModeTab>, ItemLike...)",
+          "register(ResourceKey<CreativeModeTab>, Supplier<? extends ItemLike>...)",
+          "register(ResourceKey<CreativeModeTab>, Holder<? extends ItemLike>...)",
+          "fillTabs(BuildCreativeModeTabContentsEvent)"
+        ],
+        "dev.shadowsoffire.placebo.util.AbstractBiMap": [
+          "delegate()",
+          "containsValue(Object)",
+          "put(K, V)",
+          "forcePut(K, V)",
+          "remove(Object)",
+          "putAll(Map<? extends K, ? extends V>)",
+          "replaceAll(BiFunction<? super K, ? super V, ? extends V>)",
+          "clear()",
+          "inverse()",
+          "keySet()",
+          "values()",
+          "entrySet()"
+        ],
+        "dev.shadowsoffire.placebo.util.CachedObject": [
+          "get(ItemStack)",
+          "reset()",
+          "compute(ItemStack)",
+          "hashComponents(DataComponentType<?>...)"
+        ],
+        "dev.shadowsoffire.placebo.util.ClientUtil": [
+          "colorBlit(PoseStack, float, float, float, float, float, float, int)",
+          "colorBlit(PoseStack, int, int, int, int, int, TextureAtlasSprite, int)",
+          "colorBlit(PoseStack, int, int, int, int, float, float, int, int, int, int, int)",
+          "innerBlit(PoseStack, float, float, float, float, int, float, float, float, float, int, int, int)",
+          "innerBlit(Matrix4f, float, float, float, float, int, float, float, float, float, int)"
+        ],
+        "dev.shadowsoffire.placebo.util.data.DynamicRegistryProvider": [
+          "run(CachedOutput)",
+          "add(ResourceLocation, R)",
+          "addConditionally(ResourceLocation, R, ICondition...)",
+          "generate()",
+          "runSilently(DataGenBuilder.DataProviderFactory<T>)",
+          "runSilently(BiFunction<PackOutput, CompletableFuture<Provider>, T>)",
+          "runSilently(Factory<T>)"
+        ],
+        "dev.shadowsoffire.placebo.util.data.RuntimeDatagenHelpers": [
+          "toJson(T, Codec<T>)",
+          "toJson(T)",
+          "write(T, Codec<T>, String, ResourceLocation)",
+          "write(T, String, ResourceLocation)",
+          "write(JsonElement, String, ResourceLocation)"
+        ],
+        "dev.shadowsoffire.placebo.util.DeferredSet": [
+          "size()",
+          "isEmpty()",
+          "contains(Object)",
+          "iterator()",
+          "toArray()",
+          "toArray(T[])",
+          "add(E)",
+          "remove(Object)",
+          "containsAll(Collection<?>)",
+          "addAll(Collection<? extends E>)",
+          "retainAll(Collection<?>)",
+          "removeAll(Collection<?>)",
+          "clear()",
+          "set()"
+        ],
+        "dev.shadowsoffire.placebo.util.DrawsOnLeft": [
+          "drawOnLeft(GuiGraphics, List<? extends FormattedText>, int)",
+          "drawOnLeft(GuiGraphics, List<? extends FormattedText>, int, int)",
+          "__ths()"
+        ],
+        "dev.shadowsoffire.placebo.util.EnchantmentUtils": [
+          "chargeExperience(Player, int)",
+          "getExperience(Player)",
+          "getExperienceForLevel(int)",
+          "getExperienceDifference(int, int)",
+          "getTotalExperienceForLevel(int)",
+          "getLevelForExperience(int)"
+        ],
+        "dev.shadowsoffire.placebo.util.LinearEquation": [
+          "step(double)",
+          "getSrc()",
+          "getDest()"
+        ],
+        "dev.shadowsoffire.placebo.util.Offset": [
+          "getX(Offset.Box, Offset.Box)",
+          "getY(Offset.Box, Offset.Box)",
+          "apply(PoseStack, Offset.Box, Offset.Box)",
+          "load(String, String, Offset, Configuration)",
+          "save(String, String, Offset, Configuration)",
+          "Box(int, int)"
+        ],
+        "dev.shadowsoffire.placebo.util.PlaceboTaskQueue": [
+          "submitTask(ResourceLocation, PlaceboTaskQueue.Task)",
+          "submitDelayedTask(ResourceLocation, int, PlaceboTaskQueue.Task)"
+        ],
+        "dev.shadowsoffire.placebo.util.PlaceboUtil": [
+          "asList(T...)",
+          "makeStack(Object)",
+          "toStackArray(Object...)",
+          "toMutable(List<T>)",
+          "tryHarvestBlock(ServerPlayer, BlockPos)",
+          "addLore(ItemStack, Component)",
+          "registerCustomColor(T)"
+        ],
+        "dev.shadowsoffire.placebo.util.RandomRange": [
+          "getInt(RandomSource)",
+          "getFloat(RandomSource)",
+          "getDouble(RandomSource)"
+        ],
+        "dev.shadowsoffire.placebo.util.RunnableReloader": [
+          "prepare(ResourceManager, ProfilerFiller)",
+          "apply(Unit, ResourceManager, ProfilerFiller)",
+          "of(Runnable)"
+        ],
+        "dev.shadowsoffire.placebo.util.SpecialTooltipItem": [],
+        "dev.shadowsoffire.placebo.util.StepFunction": [
+          "get(float)",
+          "getInt(float)",
+          "getStep(float)",
+          "getForStep(int)",
+          "getIntForStep(int)",
+          "isConstant()",
+          "write(FriendlyByteBuf)",
+          "read(FriendlyByteBuf)",
+          "fromBounds(float, float)",
+          "fromBounds(float, float, float)",
+          "constant(float)"
+        ]
+      },
+      "sampleCount": 95
+    },
+    "1.20.1": {
+      "packages": [
+        "dev.shadowsoffire.placebo",
+        "dev.shadowsoffire.placebo.block_entity",
+        "dev.shadowsoffire.placebo.cap",
+        "dev.shadowsoffire.placebo.codec",
+        "dev.shadowsoffire.placebo.collections",
+        "dev.shadowsoffire.placebo.color",
+        "dev.shadowsoffire.placebo.commands",
+        "dev.shadowsoffire.placebo.compat",
+        "dev.shadowsoffire.placebo.config",
+        "dev.shadowsoffire.placebo.events",
+        "dev.shadowsoffire.placebo.json",
+        "dev.shadowsoffire.placebo.loot",
+        "dev.shadowsoffire.placebo.menu",
+        "dev.shadowsoffire.placebo.network",
+        "dev.shadowsoffire.placebo.packets",
+        "dev.shadowsoffire.placebo.patreon",
+        "dev.shadowsoffire.placebo.patreon.wings",
+        "dev.shadowsoffire.placebo.recipe",
+        "dev.shadowsoffire.placebo.registry",
+        "dev.shadowsoffire.placebo.reload",
+        "dev.shadowsoffire.placebo.screen",
+        "dev.shadowsoffire.placebo.tabs",
+        "dev.shadowsoffire.placebo.util"
+      ],
+      "classes": [
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntity",
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntityType",
+        "dev.shadowsoffire.placebo.block_entity.TickingEntityBlock",
+        "dev.shadowsoffire.placebo.cap.InternalItemHandler",
+        "dev.shadowsoffire.placebo.cap.ModifiableEnergyStorage",
+        "dev.shadowsoffire.placebo.codec.PlaceboCodecs",
+        "dev.shadowsoffire.placebo.collections.BlockedDeque",
+        "dev.shadowsoffire.placebo.collections.BlockedList",
+        "dev.shadowsoffire.placebo.collections.BlockedMap",
+        "dev.shadowsoffire.placebo.color.GradientColor",
+        "dev.shadowsoffire.placebo.commands.PlaceboCommand",
+        "dev.shadowsoffire.placebo.commands.SerializeLootTableCommand",
+        "dev.shadowsoffire.placebo.compat.TOPCompat",
+        "dev.shadowsoffire.placebo.config.ConfigCategory",
+        "dev.shadowsoffire.placebo.config.ConfigElement",
+        "dev.shadowsoffire.placebo.config.ConfigFlags",
+        "dev.shadowsoffire.placebo.config.ConfigGuiType",
+        "dev.shadowsoffire.placebo.config.Configuration",
+        "dev.shadowsoffire.placebo.config.IConfigElement",
+        "dev.shadowsoffire.placebo.config.Property",
+        "dev.shadowsoffire.placebo.events.AnvilLandEvent",
+        "dev.shadowsoffire.placebo.events.GetEnchantmentLevelEvent",
+        "dev.shadowsoffire.placebo.events.ItemUseEvent",
+        "dev.shadowsoffire.placebo.events.PlaceboEventFactory",
+        "dev.shadowsoffire.placebo.json.ItemAdapter",
+        "dev.shadowsoffire.placebo.json.JsonUtil",
+        "dev.shadowsoffire.placebo.json.NBTAdapter",
+        "dev.shadowsoffire.placebo.json.PSerializer",
+        "dev.shadowsoffire.placebo.json.RandomAttributeModifier",
+        "dev.shadowsoffire.placebo.json.SerializerMap",
+        "dev.shadowsoffire.placebo.loot.EnchantedLootEntry",
+        "dev.shadowsoffire.placebo.loot.LootSystem",
+        "dev.shadowsoffire.placebo.loot.PoolBuilder",
+        "dev.shadowsoffire.placebo.loot.StackLootEntry",
+        "dev.shadowsoffire.placebo.menu.BlockEntityMenu",
+        "dev.shadowsoffire.placebo.menu.FilteredSlot",
+        "dev.shadowsoffire.placebo.menu.IDataUpdateListener",
+        "dev.shadowsoffire.placebo.menu.LockedSlot",
+        "dev.shadowsoffire.placebo.menu.MenuUtil",
+        "dev.shadowsoffire.placebo.menu.PlaceboContainerMenu",
+        "dev.shadowsoffire.placebo.menu.QuickMoveHandler",
+        "dev.shadowsoffire.placebo.menu.SimpleDataSlots",
+        "dev.shadowsoffire.placebo.menu.SimplerMenuProvider",
+        "dev.shadowsoffire.placebo.menu.SlotUpdateListener",
+        "dev.shadowsoffire.placebo.network.MessageHelper",
+        "dev.shadowsoffire.placebo.network.MessageProvider",
+        "dev.shadowsoffire.placebo.network.PacketDistro",
+        "dev.shadowsoffire.placebo.packets.ButtonClickMessage",
+        "dev.shadowsoffire.placebo.packets.PatreonDisableMessage",
+        "dev.shadowsoffire.placebo.patreon.PatreonPreview",
+        "dev.shadowsoffire.placebo.patreon.PatreonUtils",
+        "dev.shadowsoffire.placebo.patreon.TrailsManager",
+        "dev.shadowsoffire.placebo.patreon.wings.IWingModel",
+        "dev.shadowsoffire.placebo.patreon.wings.Wing",
+        "dev.shadowsoffire.placebo.patreon.wings.WingLayer",
+        "dev.shadowsoffire.placebo.patreon.WingsManager",
+        "dev.shadowsoffire.placebo.Placebo",
+        "dev.shadowsoffire.placebo.PlaceboClient",
+        "dev.shadowsoffire.placebo.recipe.NBTIngredient",
+        "dev.shadowsoffire.placebo.recipe.RecipeHelper",
+        "dev.shadowsoffire.placebo.recipe.VanillaPacketDispatcher",
+        "dev.shadowsoffire.placebo.registry.DeferredHelper",
+        "dev.shadowsoffire.placebo.registry.RegistryEvent",
+        "dev.shadowsoffire.placebo.registry.RegObjHelper",
+        "dev.shadowsoffire.placebo.reload.DynamicRegistryObject",
+        "dev.shadowsoffire.placebo.reload.ListenerCallback",
+        "dev.shadowsoffire.placebo.reload.PlaceboJsonReloadListener",
+        "dev.shadowsoffire.placebo.reload.ReloadListenerPacket",
+        "dev.shadowsoffire.placebo.reload.TypeKeyed",
+        "dev.shadowsoffire.placebo.reload.WeightedJsonReloadListener",
+        "dev.shadowsoffire.placebo.screen.PlaceboContainerScreen",
+        "dev.shadowsoffire.placebo.screen.ScreenUtil",
+        "dev.shadowsoffire.placebo.screen.TickableText",
+        "dev.shadowsoffire.placebo.tabs.ITabFiller",
+        "dev.shadowsoffire.placebo.tabs.TabFillingRegistry",
+        "dev.shadowsoffire.placebo.util.AttributeHelper",
+        "dev.shadowsoffire.placebo.util.CachedObject",
+        "dev.shadowsoffire.placebo.util.ChestBuilder",
+        "dev.shadowsoffire.placebo.util.ClientUtil",
+        "dev.shadowsoffire.placebo.util.EnchantmentUtils",
+        "dev.shadowsoffire.placebo.util.IReplacementBlock",
+        "dev.shadowsoffire.placebo.util.LinearEquation",
+        "dev.shadowsoffire.placebo.util.PlaceboTaskQueue",
+        "dev.shadowsoffire.placebo.util.PlaceboUtil",
+        "dev.shadowsoffire.placebo.util.RandomRange",
+        "dev.shadowsoffire.placebo.util.RunnableReloader",
+        "dev.shadowsoffire.placebo.util.StackPrimer",
+        "dev.shadowsoffire.placebo.util.StepFunction",
+        "dev.shadowsoffire.placebo.codec.CodecMap",
+        "dev.shadowsoffire.placebo.codec.CodecProvider",
+        "dev.shadowsoffire.placebo.codec.IngredientCodec",
+        "dev.shadowsoffire.placebo.codec.MapBackedCodec",
+        "dev.shadowsoffire.placebo.codec.NullableFieldCodec",
+        "dev.shadowsoffire.placebo.commands.HandToJsonCommand",
+        "dev.shadowsoffire.placebo.commands.StringToObjCommand",
+        "dev.shadowsoffire.placebo.json.ChancedEffectInstance",
+        "dev.shadowsoffire.placebo.json.GearSet",
+        "dev.shadowsoffire.placebo.json.GearSetRegistry",
+        "dev.shadowsoffire.placebo.json.WeightedItemStack",
+        "dev.shadowsoffire.placebo.reload.DynamicHolder",
+        "dev.shadowsoffire.placebo.reload.DynamicRegistry",
+        "dev.shadowsoffire.placebo.reload.RegistryCallback",
+        "dev.shadowsoffire.placebo.reload.WeightedDynamicRegistry"
+      ],
+      "methods": {
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntity": [
+          "serverTick(Level, BlockPos, BlockState)",
+          "clientTick(Level, BlockPos, BlockState)"
+        ],
+        "dev.shadowsoffire.placebo.block_entity.TickingBlockEntityType": [
+          "getTicker(boolean)"
+        ],
+        "dev.shadowsoffire.placebo.block_entity.TickingEntityBlock": [
+          "m_142354_(Level, BlockState, BlockEntityType<T>)"
+        ],
+        "dev.shadowsoffire.placebo.cap.InternalItemHandler": [
+          "extractItemInternal(int, int, boolean)",
+          "insertItemInternal(int, ItemStack, boolean)"
+        ],
+        "dev.shadowsoffire.placebo.cap.ModifiableEnergyStorage": [
+          "setEnergy(int)",
+          "setCapacity(int)",
+          "setTransferRate(int)",
+          "setMaxExtract(int)",
+          "setMaxReceive(int)"
+        ],
+        "dev.shadowsoffire.placebo.codec.PlaceboCodecs": [
+          "mapBackedDefaulted(String, BiMap<ResourceLocation, Codec<? extends T>>, Codec<? extends T>)",
+          "mapBacked(String, BiMap<ResourceLocation, Codec<? extends T>>)",
+          "setOf(Codec<T>)",
+          "setFromList(Codec<List<T>>)",
+          "enumCodec(Class<E>)",
+          "stringResolver(Function<String, T>)"
+        ],
+        "dev.shadowsoffire.placebo.collections.BlockedDeque": [
+          "isBlocked(T)",
+          "addFirst(T)",
+          "addLast(T)",
+          "add(T)",
+          "offerFirst(T)",
+          "offerLast(T)"
+        ],
+        "dev.shadowsoffire.placebo.collections.BlockedList": [
+          "isBlocked(T)",
+          "isBlocked(Collection<? extends T>)",
+          "add(int, T)",
+          "add(T)",
+          "addAll(Collection<? extends T>)",
+          "addAll(int, Collection<? extends T>)"
+        ],
+        "dev.shadowsoffire.placebo.collections.BlockedMap": [
+          "isBlocked(K, V)",
+          "isBlocked(Map<? extends K, ? extends V>)",
+          "put(K, V)",
+          "putAll(Map<? extends K, ? extends V>)",
+          "putIfAbsent(K, V)"
+        ],
+        "dev.shadowsoffire.placebo.color.GradientColor": [
+          "m_131265_()"
+        ],
+        "dev.shadowsoffire.placebo.commands.PlaceboCommand": [
+          "register(CommandDispatcher<CommandSourceStack>)"
+        ],
+        "dev.shadowsoffire.placebo.commands.SerializeLootTableCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "attemptSerialize(LootTable, File)"
+        ],
+        "dev.shadowsoffire.placebo.compat.TOPCompat": [
+          "register()",
+          "registerProvider(TOPCompat.Provider)"
+        ],
+        "dev.shadowsoffire.placebo.config.ConfigCategory": [
+          "equals(Object)",
+          "getName()",
+          "getQualifiedName()",
+          "getQualifiedName(String, ConfigCategory)",
+          "getFirstParent()",
+          "isChild()",
+          "getValues()",
+          "getOrderedValues()",
+          "setLanguageKey(String)",
+          "getLanguagekey()",
+          "setComment(String)",
+          "getComment()",
+          "setRequiresWorldRestart(boolean)",
+          "requiresWorldRestart()",
+          "setShowInGui(boolean)",
+          "showInGui()",
+          "setRequiresMcRestart(boolean)",
+          "requiresMcRestart()",
+          "setPropertyOrder(List<String>)",
+          "getPropertyOrder()"
+        ],
+        "dev.shadowsoffire.placebo.config.ConfigElement": [
+          "listCategoriesFirst(boolean)",
+          "getChildElements()",
+          "getName()",
+          "isProperty()",
+          "getQualifiedName()",
+          "getType()",
+          "getType(Property)",
+          "isList()",
+          "isListLengthFixed()",
+          "getMaxListLength()",
+          "getComment()",
+          "isDefault()",
+          "setToDefault()",
+          "requiresWorldRestart()",
+          "showInGui()",
+          "requiresMcRestart()",
+          "getValidValues()",
+          "getValidValuesDisplay()",
+          "getLanguageKey()",
+          "getDefault()"
+        ],
+        "dev.shadowsoffire.placebo.config.ConfigFlags": [],
+        "dev.shadowsoffire.placebo.config.ConfigGuiType": [],
+        "dev.shadowsoffire.placebo.config.Configuration": [
+          "setTitle(String)",
+          "setComment(String)",
+          "toString()",
+          "get(String, String, boolean)",
+          "get(String, String, boolean, String)",
+          "get(String, String, boolean[])",
+          "get(String, String, boolean[], String)",
+          "get(String, String, boolean[], String, boolean, int)",
+          "get(String, String, int)",
+          "get(String, String, int, String)",
+          "get(String, String, int, String, int, int)",
+          "get(String, String, int[])",
+          "get(String, String, int[], String)",
+          "get(String, String, int[], String, int, int)",
+          "get(String, String, int[], String, int, int, boolean, int)",
+          "get(String, String, double)",
+          "get(String, String, double, String)",
+          "get(String, String, double, String, double, double)",
+          "get(String, String, double[])",
+          "get(String, String, double[], String)"
+        ],
+        "dev.shadowsoffire.placebo.config.IConfigElement": [
+          "hasSlidingControl()"
+        ],
+        "dev.shadowsoffire.placebo.config.Property": [
+          "getComment()",
+          "setComment(String)",
+          "isDefault()",
+          "setToDefault()",
+          "getDefault()",
+          "getDefaults()",
+          "setRequiresWorldRestart(boolean)",
+          "requiresWorldRestart()",
+          "setShowInGui(boolean)",
+          "showInGui()",
+          "setRequiresMcRestart(boolean)",
+          "requiresMcRestart()",
+          "setMaxListLength(int)",
+          "getMaxListLength()",
+          "setIsListLengthFixed(boolean)",
+          "isListLengthFixed()",
+          "setValidationPattern(Pattern)",
+          "getValidationPattern()",
+          "setLanguageKey(String)",
+          "getLanguageKey()"
+        ],
+        "dev.shadowsoffire.placebo.events.AnvilLandEvent": [
+          "getLevel()",
+          "getPos()",
+          "getNewState()",
+          "getOldState()",
+          "getEntity()"
+        ],
+        "dev.shadowsoffire.placebo.events.GetEnchantmentLevelEvent": [
+          "getStack()",
+          "getEnchantments()"
+        ],
+        "dev.shadowsoffire.placebo.events.ItemUseEvent": [
+          "getContext()",
+          "getEntity()",
+          "getHand()",
+          "getItemStack()",
+          "getPos()",
+          "getFace()",
+          "getLevel()",
+          "getCancellationResult()",
+          "setCancellationResult(InteractionResult)"
+        ],
+        "dev.shadowsoffire.placebo.events.PlaceboEventFactory": [
+          "onItemUse(ItemStack, UseOnContext)",
+          "getEnchantmentLevelSpecific(int, IForgeItemStack, Enchantment)",
+          "getEnchantmentLevel(Map<Enchantment, Integer>, IForgeItemStack)"
+        ],
+        "dev.shadowsoffire.placebo.json.ItemAdapter": [
+          "deserialize(JsonElement, Type, JsonDeserializationContext)",
+          "serialize(ItemStack, Type, JsonSerializationContext)",
+          "readStack(JsonElement)",
+          "readStacks(JsonElement)"
+        ],
+        "dev.shadowsoffire.placebo.json.JsonUtil": [
+          "checkAndLogEmpty(JsonElement, ResourceLocation, String, Logger)",
+          "checkConditions(JsonElement, ResourceLocation, String, Logger, IContext)",
+          "getRegistryObject(JsonObject, String, IForgeRegistry<T>)",
+          "makeSerializer(IForgeRegistry<T>)",
+          "makeSerializer(com.google.gson.JsonDeserializer<T>, com.google.gson.JsonSerializer<T>)"
+        ],
+        "dev.shadowsoffire.placebo.json.NBTAdapter": [
+          "serialize(CompoundTag, Type, JsonSerializationContext)",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)"
+        ],
+        "dev.shadowsoffire.placebo.json.PSerializer": [
+          "write(V)",
+          "write(V, FriendlyByteBuf)",
+          "read(JsonObject)",
+          "read(FriendlyByteBuf)",
+          "writeUnchecked(Object)",
+          "writeUnchecked(Object, FriendlyByteBuf)",
+          "validate(boolean, boolean)",
+          "fromCodec(String, Codec<V>)",
+          "fromCodec(String, Codec<V>, Codec<V>)",
+          "builtin(String, Supplier<V>)",
+          "basic(String, JsonUtil.JsonDeserializer<V>)",
+          "builder(String)",
+          "builder(String, JsonUtil.JsonDeserializer<V>)"
+        ],
+        "dev.shadowsoffire.placebo.json.RandomAttributeModifier": [
+          "apply(RandomSource, LivingEntity)",
+          "genModifier(RandomSource)",
+          "genModifier(String, RandomSource)",
+          "getAttribute()",
+          "getOp()",
+          "getValue()"
+        ],
+        "dev.shadowsoffire.placebo.json.SerializerMap": [
+          "isEmpty()",
+          "contains(ResourceLocation)",
+          "get(ResourceLocation)",
+          "get(PSerializer<?>)",
+          "register(ResourceLocation, PSerializer<? extends V>)",
+          "read(JsonObject)",
+          "write(V)",
+          "read(FriendlyByteBuf)",
+          "write(V, FriendlyByteBuf)"
+        ],
+        "dev.shadowsoffire.placebo.loot.EnchantedLootEntry": [],
+        "dev.shadowsoffire.placebo.loot.LootSystem": [
+          "registerLootTable(ResourceLocation, LootTable)",
+          "tableBuilder()",
+          "poolBuilder(int, int)",
+          "defaultBlockTable(Block)"
+        ],
+        "dev.shadowsoffire.placebo.loot.PoolBuilder": [
+          "addEntries(LootPoolEntryContainer...)",
+          "addCondition(LootItemCondition...)",
+          "addFunc(LootItemFunction...)"
+        ],
+        "dev.shadowsoffire.placebo.loot.StackLootEntry": [
+          "m_6948_(Consumer<ItemStack>, LootContext)",
+          "m_6751_()"
+        ],
+        "dev.shadowsoffire.placebo.menu.BlockEntityMenu": [
+          "m_6875_(Player)"
+        ],
+        "dev.shadowsoffire.placebo.menu.FilteredSlot": [
+          "m_5857_(ItemStack)",
+          "m_8010_(Player)",
+          "m_6201_(int)"
+        ],
+        "dev.shadowsoffire.placebo.menu.IDataUpdateListener": [],
+        "dev.shadowsoffire.placebo.menu.LockedSlot": [
+          "m_8010_(Player)",
+          "m_5857_(ItemStack)"
+        ],
+        "dev.shadowsoffire.placebo.menu.MenuUtil": [
+          "type(MenuSupplier<T>)",
+          "type(IContainerFactory<T>)",
+          "posType(MenuUtil.PosFactory<T>)",
+          "openGui(Player, BlockPos, MenuUtil.PosFactory<M>)",
+          "split(int, boolean)",
+          "merge(int, int, boolean)",
+          "factory(MenuUtil.PosFactory<T>)"
+        ],
+        "dev.shadowsoffire.placebo.menu.PlaceboContainerMenu": [
+          "addPlayerSlots(Inventory, int, int)",
+          "registerInvShuffleRules()",
+          "m_7648_(Player, int)",
+          "m_38903_(ItemStack, int, int, boolean)",
+          "setDataListener(IDataUpdateListener)",
+          "addDataListener(IDataUpdateListener)",
+          "addSlotListener(SlotUpdateListener)"
+        ],
+        "dev.shadowsoffire.placebo.menu.QuickMoveHandler": [
+          "quickMoveStack(QuickMoveHandler.IExposedContainer, Player, int)",
+          "registerRule(BiPredicate<ItemStack, Integer>, int, int, boolean)",
+          "registerRule(BiPredicate<ItemStack, Integer>, int, int)",
+          "QuickMoveRule(BiPredicate<ItemStack, Integer>, int, int, boolean)"
+        ],
+        "dev.shadowsoffire.placebo.menu.SimpleDataSlots": [
+          "addSlot(DataSlot)",
+          "addData(IntSupplier, IntConsumer)",
+          "addData(BooleanSupplier, BooleanConsumer)",
+          "getSlots()",
+          "register(Consumer<DataSlot>)",
+          "addEnergy(ModifiableEnergyStorage)"
+        ],
+        "dev.shadowsoffire.placebo.menu.SimplerMenuProvider": [
+          "m_5446_()",
+          "m_7208_(int, Inventory, Player)"
+        ],
+        "dev.shadowsoffire.placebo.menu.SlotUpdateListener": [],
+        "dev.shadowsoffire.placebo.network.MessageHelper": [
+          "registerMessage(SimpleChannel, int, Class<MSG>, BiConsumer<MSG, FriendlyByteBuf>, Function<FriendlyByteBuf, MSG>, BiConsumer<MSG, Supplier<Context>>)",
+          "registerMessage(SimpleChannel, int, MessageProvider<T>)",
+          "handlePacket(Supplier<Runnable>, Supplier<Context>)"
+        ],
+        "dev.shadowsoffire.placebo.network.MessageProvider": [],
+        "dev.shadowsoffire.placebo.network.PacketDistro": [
+          "sendToTracking(SimpleChannel, Object, ServerLevel, BlockPos)",
+          "sendTo(SimpleChannel, Object, Player)",
+          "sendToAll(SimpleChannel, Object)"
+        ],
+        "dev.shadowsoffire.placebo.packets.ButtonClickMessage": [],
+        "dev.shadowsoffire.placebo.packets.PatreonDisableMessage": [],
+        "dev.shadowsoffire.placebo.patreon.PatreonPreview": [
+          "tick(PlayerTickEvent)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.PatreonUtils": [],
+        "dev.shadowsoffire.placebo.patreon.TrailsManager": [
+          "init()",
+          "clientTick(ClientTickEvent)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.wings.IWingModel": [],
+        "dev.shadowsoffire.placebo.patreon.wings.Wing": [
+          "setupAnim(AbstractClientPlayer, float, float, float, float, float)",
+          "m_7695_(PoseStack, VertexConsumer, int, int, float, float, float, float)",
+          "render(PoseStack, MultiBufferSource, int, AbstractClientPlayer, float, ResourceLocation, PlayerModel<AbstractClientPlayer>)",
+          "setRotationAngle(ModelPart, float, float, float)",
+          "createLayer()"
+        ],
+        "dev.shadowsoffire.placebo.patreon.wings.WingLayer": [
+          "render(PoseStack, MultiBufferSource, int, AbstractClientPlayer, float, float, float, float, float, float)"
+        ],
+        "dev.shadowsoffire.placebo.patreon.WingsManager": [
+          "init(FMLClientSetupEvent)",
+          "clientTick(ClientTickEvent)",
+          "addLayers(AddLayers)",
+          "getType(UUID)"
+        ],
+        "dev.shadowsoffire.placebo.Placebo": [
+          "setup(FMLCommonSetupEvent)",
+          "postRegistryEvents(RegisterEvent)",
+          "registerElse(RegistryEvent.Register<RecipeType<?>>)",
+          "registerCommands(RegisterCommandsEvent)"
+        ],
+        "dev.shadowsoffire.placebo.PlaceboClient": [
+          "setup(FMLClientSetupEvent)",
+          "keys(RegisterKeyMappingsEvent)",
+          "registerCustomColor(String, T)",
+          "tick(ClientTickEvent)",
+          "getColorTicks()"
+        ],
+        "dev.shadowsoffire.placebo.recipe.NBTIngredient": [],
+        "dev.shadowsoffire.placebo.recipe.RecipeHelper": [
+          "registerProvider(Consumer<RecipeHelper.RecipeFactory>)",
+          "makeStack(Object)",
+          "createInput(String, boolean, Object...)",
+          "getReloader(RecipeManager)"
+        ],
+        "dev.shadowsoffire.placebo.recipe.VanillaPacketDispatcher": [
+          "dispatchTEToNearbyPlayers(BlockEntity)",
+          "dispatchTEToNearbyPlayers(Level, BlockPos)"
+        ],
+        "dev.shadowsoffire.placebo.registry.DeferredHelper": [
+          "create(String)",
+          "block(String, Supplier<T>)",
+          "fluid(String, Supplier<T>)",
+          "item(String, Supplier<T>)",
+          "effect(String, Supplier<T>)",
+          "sound(String, Supplier<T>)",
+          "potion(String, Supplier<T>)",
+          "enchant(String, Supplier<T>)",
+          "entity(String, Supplier<T>)",
+          "blockEntity(String, Supplier<T>)",
+          "particle(String, Supplier<T>)",
+          "menu(String, Supplier<T>)",
+          "painting(String, Supplier<T>)",
+          "recipe(String, Supplier<T>)",
+          "recipeSerializer(String, Supplier<T>)",
+          "attribute(String, Supplier<T>)",
+          "stat(String, Supplier<T>)",
+          "customStat(String, StatFormatter)",
+          "feature(String, Supplier<T>)",
+          "tab(String, Supplier<T>)"
+        ],
+        "dev.shadowsoffire.placebo.registry.RegistryEvent": [],
+        "dev.shadowsoffire.placebo.registry.RegObjHelper": [
+          "block(String)",
+          "fluid(String)",
+          "item(String)",
+          "effect(String)",
+          "sound(String)",
+          "potion(String)",
+          "enchant(String)",
+          "entity(String)",
+          "blockEntity(String)",
+          "particle(String)",
+          "menu(String)",
+          "painting(String)",
+          "recipe(String)",
+          "recipeSerializer(String)",
+          "attribute(String)",
+          "stat(String)",
+          "feature(String)",
+          "custom(String, IForgeRegistry<? super T>)",
+          "create(String, String, IForgeRegistry<? super T>)"
+        ],
+        "dev.shadowsoffire.placebo.reload.DynamicRegistryObject": [
+          "get()",
+          "getOptional()",
+          "getId()",
+          "isPresent()",
+          "bind()",
+          "reset()",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "dev.shadowsoffire.placebo.reload.ListenerCallback": [],
+        "dev.shadowsoffire.placebo.reload.PlaceboJsonReloadListener": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "registerBuiltinSerializers()",
+          "beginReload()",
+          "onReload()",
+          "getKeys()",
+          "getValues()",
+          "getValue(ResourceLocation)",
+          "getOrDefault(ResourceLocation, V)",
+          "registerToBus()",
+          "registryObject(ResourceLocation)",
+          "registerSerializer(ResourceLocation, PSerializer<? extends V>)",
+          "registerCallback(ListenerCallback<V>)",
+          "removeCallback(ListenerCallback<V>)",
+          "register(ResourceLocation, V)",
+          "validateItem(V)",
+          "getContext()"
+        ],
+        "dev.shadowsoffire.placebo.reload.ReloadListenerPacket": [],
+        "dev.shadowsoffire.placebo.reload.TypeKeyed": [],
+        "dev.shadowsoffire.placebo.reload.WeightedJsonReloadListener": [
+          "beginReload()",
+          "validateItem(V)",
+          "onReload()",
+          "getRandomItem(RandomSource)",
+          "getRandomItem(RandomSource, float)",
+          "getRandomItem(RandomSource, float, Predicate<V>...)"
+        ],
+        "dev.shadowsoffire.placebo.screen.PlaceboContainerScreen": [
+          "m_88315_(GuiGraphics, int, int, float)"
+        ],
+        "dev.shadowsoffire.placebo.screen.ScreenUtil": [
+          "getHeight(float, int, int)"
+        ],
+        "dev.shadowsoffire.placebo.screen.TickableText": [
+          "tick()",
+          "setTicks(int)",
+          "render(Font, GuiGraphics, int, int)",
+          "getMaxUsefulTicks()",
+          "reset()",
+          "isDone()",
+          "causesNewLine()",
+          "getWidth(Font)",
+          "tickList(List<TickableText>)"
+        ],
+        "dev.shadowsoffire.placebo.tabs.ITabFiller": [],
+        "dev.shadowsoffire.placebo.tabs.TabFillingRegistry": [
+          "register(ITabFiller, ResourceKey<CreativeModeTab>...)",
+          "register(ResourceKey<CreativeModeTab>, ITabFiller...)",
+          "registerSimple(ItemLike, ResourceKey<CreativeModeTab>...)",
+          "registerSimple(ResourceKey<CreativeModeTab>, ItemLike...)",
+          "register(Supplier<? extends ItemLike>, ResourceKey<CreativeModeTab>...)",
+          "register(ResourceKey<CreativeModeTab>, Supplier<? extends ItemLike>...)",
+          "fillTabs(BuildCreativeModeTabContentsEvent)"
+        ],
+        "dev.shadowsoffire.placebo.util.AttributeHelper": [
+          "modify(LivingEntity, Attribute, String, double, Operation)",
+          "addToBase(LivingEntity, Attribute, String, double)",
+          "addXTimesNewBase(LivingEntity, Attribute, String, double)",
+          "multiplyFinal(LivingEntity, Attribute, String, double)",
+          "toComponent(Attribute, AttributeModifier)"
+        ],
+        "dev.shadowsoffire.placebo.util.CachedObject": [
+          "get(ItemStack)",
+          "reset()",
+          "compute(ItemStack)",
+          "defaultHash(ItemStack)",
+          "hashSubkey(String)"
+        ],
+        "dev.shadowsoffire.placebo.util.ChestBuilder": [
+          "fill(ResourceLocation)",
+          "place(LevelAccessor, BlockPos, ResourceLocation)",
+          "placeTrapped(LevelAccessor, BlockPos, ResourceLocation)"
+        ],
+        "dev.shadowsoffire.placebo.util.ClientUtil": [
+          "colorBlit(PoseStack, float, float, float, float, float, float, int)",
+          "colorBlit(PoseStack, int, int, int, int, int, TextureAtlasSprite, int)",
+          "colorBlit(PoseStack, int, int, int, int, float, float, int, int, int, int, int)",
+          "innerBlit(PoseStack, float, float, float, float, int, float, float, float, float, int, int, int)",
+          "innerBlit(Matrix4f, float, float, float, float, int, float, float, float, float, int)"
+        ],
+        "dev.shadowsoffire.placebo.util.EnchantmentUtils": [
+          "getPlayerXP(Player)",
+          "addPlayerXP(Player, int)",
+          "xpBarCap(int)",
+          "getExperienceForLevel(int)",
+          "getXpToNextLevel(int)",
+          "getLevelForExperience(int)",
+          "getPower(Level, BlockPos)",
+          "addAllBooks(Enchantment, List<ItemStack>)"
+        ],
+        "dev.shadowsoffire.placebo.util.IReplacementBlock": [],
+        "dev.shadowsoffire.placebo.util.LinearEquation": [
+          "step(double)",
+          "getSrc()",
+          "getDest()"
+        ],
+        "dev.shadowsoffire.placebo.util.PlaceboTaskQueue": [
+          "tick(ServerTickEvent)",
+          "stopped(ServerStoppedEvent)",
+          "started(ServerStartedEvent)",
+          "submitTask(String, BooleanSupplier)"
+        ],
+        "dev.shadowsoffire.placebo.util.PlaceboUtil": [
+          "asList(T...)",
+          "getStackNBT(ItemStack)",
+          "toStackArray(Object...)",
+          "registerOverride(Block, B, String)",
+          "overrideStates(Block, B)",
+          "toMutable(List<T>)",
+          "tryHarvestBlock(ServerPlayer, BlockPos)",
+          "addLore(ItemStack, Component)",
+          "makeRecipeType(String)",
+          "registerTypes()",
+          "registerCustomColor(T)"
+        ],
+        "dev.shadowsoffire.placebo.util.RandomRange": [
+          "getInt(RandomSource)",
+          "getFloat(RandomSource)",
+          "getDouble(RandomSource)"
+        ],
+        "dev.shadowsoffire.placebo.util.RunnableReloader": [
+          "m_5944_(ResourceManager, ProfilerFiller)",
+          "m_5787_(Object, ResourceManager, ProfilerFiller)",
+          "of(Runnable)"
+        ],
+        "dev.shadowsoffire.placebo.util.StackPrimer": [
+          "genStack()",
+          "isEmpty()",
+          "getBlock()",
+          "getItem()",
+          "getCount()"
+        ],
+        "dev.shadowsoffire.placebo.util.StepFunction": [
+          "get(float)",
+          "getInt(float)",
+          "min()",
+          "steps()",
+          "step()",
+          "max()",
+          "getStep(float)",
+          "getForStep(int)",
+          "getIntForStep(int)",
+          "write(FriendlyByteBuf)",
+          "read(FriendlyByteBuf)",
+          "constant(float)"
+        ],
+        "dev.shadowsoffire.placebo.codec.CodecMap": [
+          "getDefaultCodec()",
+          "setDefaultCodec(Codec<? extends V>)",
+          "isEmpty()",
+          "containsKey(ResourceLocation)",
+          "getValue(ResourceLocation)",
+          "getKey(Codec<?>)",
+          "register(ResourceLocation, Codec<? extends V>)",
+          "encode(V, DynamicOps<T>, T)",
+          "decode(DynamicOps<T>, T)"
+        ],
+        "dev.shadowsoffire.placebo.codec.CodecProvider": [],
+        "dev.shadowsoffire.placebo.codec.IngredientCodec": [
+          "encode(Ingredient, DynamicOps<T>, T)",
+          "decode(DynamicOps<T>, T)"
+        ],
+        "dev.shadowsoffire.placebo.codec.MapBackedCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(V, DynamicOps<T>, T)"
+        ],
+        "dev.shadowsoffire.placebo.codec.NullableFieldCodec": [
+          "decode(DynamicOps<T>, MapLike<T>)"
+        ],
+        "dev.shadowsoffire.placebo.commands.HandToJsonCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "toJsonStr(ItemStack)"
+        ],
+        "dev.shadowsoffire.placebo.commands.StringToObjCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>, CommandBuildContext)",
+          "toJsonStr(CompoundTag)"
+        ],
+        "dev.shadowsoffire.placebo.json.ChancedEffectInstance": [
+          "create(RandomSource, int)",
+          "createDeterministic(int)"
+        ],
+        "dev.shadowsoffire.placebo.json.GearSet": [
+          "getWeight()",
+          "getQuality()",
+          "apply(LivingEntity)",
+          "getPotentials(EquipmentSlot)",
+          "getCodec()"
+        ],
+        "dev.shadowsoffire.placebo.json.GearSetRegistry": [
+          "getRandomSet(RandomSource, float, List<GearSet.SetPredicate>)",
+          "registerBuiltinCodecs()"
+        ],
+        "dev.shadowsoffire.placebo.json.WeightedItemStack": [
+          "getStack()",
+          "toString()",
+          "apply(LivingEntity, EquipmentSlot)"
+        ],
+        "dev.shadowsoffire.placebo.reload.DynamicHolder": [
+          "isBound()",
+          "get()",
+          "getOptional()",
+          "getId()",
+          "is(ResourceLocation)",
+          "equals(Object)",
+          "hashCode()",
+          "value()"
+        ],
+        "dev.shadowsoffire.placebo.reload.DynamicRegistry": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "registerBuiltinCodecs()",
+          "beginReload()",
+          "onReload()",
+          "getKeys()",
+          "getValues()",
+          "getValue(ResourceLocation)",
+          "getKey(R)",
+          "getOrDefault(ResourceLocation, R)",
+          "registerToBus()",
+          "holder(ResourceLocation)",
+          "holder(T)",
+          "emptyHolder()",
+          "holderCodec()",
+          "registerCodec(ResourceLocation, Codec<? extends R>)",
+          "registerDefaultCodec(ResourceLocation, Codec<? extends R>)",
+          "addCallback(RegistryCallback<R>)",
+          "removeCallback(RegistryCallback<R>)",
+          "register(ResourceLocation, R)",
+          "validateItem(ResourceLocation, R)"
+        ],
+        "dev.shadowsoffire.placebo.reload.RegistryCallback": [],
+        "dev.shadowsoffire.placebo.reload.WeightedDynamicRegistry": [
+          "beginReload()",
+          "validateItem(ResourceLocation, V)",
+          "onReload()",
+          "getRandomItem(RandomSource)",
+          "getRandomItem(RandomSource, float)",
+          "getRandomItem(RandomSource, float, Predicate<V>...)"
+        ]
+      },
+      "sampleCount": 183
     }
   },
-  "classCount": 77,
-  "methodCount": 436
+  "classCount": 296,
+  "methodCount": 1348
 }

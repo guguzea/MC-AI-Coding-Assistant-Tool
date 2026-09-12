@@ -217,7 +217,7 @@
       {
         "title": "Implementing Blockstates",
         "level": 2,
-        "summary": "To implement a blockstate property, in your block class, create or reference a public static final Property constant. While you are free to make your own Property implementations, the vanilla code ..."
+        "summary": "To implement a blockstate property, in your block class, create or reference a public static final Property<?> constant. While you are free to make your own Property<?> implementations, the vanilla..."
       },
       {
         "title": "Using Blockstates",
@@ -401,7 +401,7 @@
       {
         "title": "ForgeAdvancementProvider.AdvancementGenerator",
         "level": 2,
-        "summary": "A ForgeAdvancementProvider.AdvancementGenerator is responsible for generating advancements, containing a method which takes in a registry lookup, the writer (Consumer), and the existing file helper.."
+        "summary": "A ForgeAdvancementProvider.AdvancementGenerator is responsible for generating advancements, containing a method which takes in a registry lookup, the writer (Consumer<Advancement>), and the existin..."
       },
       {
         "title": "Advancement.Builder",
@@ -432,7 +432,7 @@
       {
         "title": "Syncing",
         "level": 2,
-        "summary": "A synced data map will have its values synced to clients. A data map can be marked as synced using DataMapType$Builder#synced(Codec networkCodec, boolean mandatory)."
+        "summary": "A synced data map will have its values synced to clients. A data map can be marked as synced using DataMapType$Builder#synced(Codec<T> networkCodec, boolean mandatory)."
       },
       {
         "title": "JSON Structure and location",
@@ -540,7 +540,7 @@
       {
         "title": "Building and Testing Your Mod",
         "level": 2,
-        "summary": "To build your mod, run gradlew build. This will output a file in build/libs with the name -.jar. ` and  are properties set by the build.gradle and default to the mod_id and mod_version values in th..."
+        "summary": "To build your mod, run gradlew build. This will output a file in build/libs with the name <archivesBaseName>-<version>.jar. <archivesBaseName> and <version> are properties set by the build.gradle a..."
       },
       {
         "title": "Server Testing",
@@ -593,7 +593,7 @@
       {
         "title": "Dependency Configurations",
         "level": 3,
-        "summary": "Mods can specify their dependencies, which are checked by NeoForge before loading the mods. These configurations are created using the array of tables [[dependencies.]], where modid is the identifi..."
+        "summary": "Mods can specify their dependencies, which are checked by NeoForge before loading the mods. These configurations are created using the array of tables [[dependencies.<modid>]], where modid is the i..."
       },
       {
         "title": "Mod Entrypoints",
@@ -973,7 +973,7 @@
       {
         "title": "Language Files",
         "level": 2,
-        "summary": "Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at assets//lang/language_name.json. For example, US English translations for ..."
+        "summary": "Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at assets/<modid>/lang/language_name.json. For example, US English translatio..."
       },
       {
         "title": "Translation Keys",
@@ -1737,7 +1737,7 @@
       {
         "title": "Result Types",
         "level": 2,
-        "summary": "There are two different types of results: InteractionResults and InteractionResultHolders. InteractionResult is used most of the time, only Item#use uses InteractionResultHolder."
+        "summary": "There are two different types of results: InteractionResults and InteractionResultHolder<T>s. InteractionResult is used most of the time, only Item#use uses InteractionResultHolder<ItemStack>."
       },
       {
         "title": "IItemExtension#onItemUseFirst",
@@ -1752,7 +1752,7 @@
       {
         "title": "Item#use",
         "level": 2,
-        "summary": "This is the only instance where the return type is InteractionResultHolder. The resulting ItemStack in the InteractionResultHolder replaces the ItemStack the usage was initiated with, if it has cha..."
+        "summary": "This is the only instance where the return type is InteractionResultHolder<ItemStack>. The resulting ItemStack in the InteractionResultHolder<ItemStack> replaces the ItemStack the usage was initiat..."
       }
     ]
   },
@@ -1913,7 +1913,7 @@
       {
         "title": "The Test Method",
         "level": 3,
-        "summary": "A Game Test method is a Consumer reference, meaning it takes in a GameTestHelper and returns nothing. For a Game Test method to be recognized, it must have a @GameTest annotation:"
+        "summary": "A Game Test method is a Consumer<GameTestHelper> reference, meaning it takes in a GameTestHelper and returns nothing. For a Game Test method to be recognized, it must have a @GameTest annotation:"
       },
       {
         "title": "Generated Test Methods",
@@ -2112,7 +2112,7 @@
       {
         "title": "Implementing a configuration task",
         "level": 2,
-        "summary": "A configuration task is a simple interface: ICustomConfigurationTask. This interface has two methods: void run(Consumer sender);, and ConfigurationTask.Type type(); which returns the type of the co..."
+        "summary": "A configuration task is a simple interface: ICustomConfigurationTask. This interface has two methods: void run(Consumer<CustomPacketPayload> sender);, and ConfigurationTask.Type type(); which retur..."
       },
       {
         "title": "Acknowledging a configuration task",
@@ -2610,7 +2610,7 @@
       {
         "title": "SimpleCriterionTrigger",
         "level": 3,
-        "summary": "The SimpleCriterionTrigger subclass is responsible for specifying a codec to serialize the trigger instance T and supplying a method to check trigger instances and run attached listeners on success."
+        "summary": "The SimpleCriterionTrigger<T> subclass is responsible for specifying a codec to serialize the trigger instance T and supplying a method to check trigger instances and run attached listeners on succ..."
       },
       {
         "title": "Serialization",
@@ -2764,7 +2764,7 @@
       {
         "title": "Using a Loot Table",
         "level": 2,
-        "summary": "A loot table is referenced by its ResourceLocation which points to data//loot_tables/.json. The LootTable associated with the reference can be obtained using LootDataResolver#getLootTable, where Lo..."
+        "summary": "A loot table is referenced by its ResourceLocation which points to data/<namespace>/loot_tables/<path>.json. The LootTable associated with the reference can be obtained using LootDataResolver#getLo..."
       },
       {
         "title": "Additional Features",
@@ -3025,7 +3025,7 @@
       {
         "title": "Declaring Your Own Groupings",
         "level": 2,
-        "summary": "Tags are declared in your mod's datapack. For example, a TagKey with a given identifier of  modid:foo/tagname will reference a tag at /data//tags/blocks/foo/tagname.json. Tags for Blocks, Items, En..."
+        "summary": "Tags are declared in your mod's datapack. For example, a TagKey<Block> with a given identifier of  modid:foo/tagname will reference a tag at /data/<modid>/tags/blocks/foo/tagname.json. Tags for Blo..."
       },
       {
         "title": "Using Tags In Code",

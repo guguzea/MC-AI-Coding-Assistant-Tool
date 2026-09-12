@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "advanced/extensibleenums"
 url: "https://docs.neoforged.net/docs/1.20.6/advanced/extensibleenums/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:22.770Z"
+fetchedAt: "2026-09-12T12:00:49.509Z"
 ---
 # Extensible Enums
 

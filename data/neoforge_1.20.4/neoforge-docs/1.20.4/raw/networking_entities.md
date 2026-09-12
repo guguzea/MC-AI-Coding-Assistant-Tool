@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "networking/entities"
 url: "https://docs.neoforged.net/docs/1.20.4/networking/entities/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:05.895Z"
+fetchedAt: "2026-09-12T12:00:16.031Z"
 ---
 # Entities
 
@@ -28,7 +28,7 @@ Alternatively you can override the method `sendPairingData(...)` which is called
 
 This is the main vanilla system for synchronizing entity data from the server to the client. As such, a number of vanilla examples are available to refer to.
 
-Firstly, you need a `EntityDataAccessor` for the data you wish to keep synchronized. This should be stored as a `static final` field in your entity class, obtained by calling `SynchedEntityData#defineId` and passing the entity class and a serializer for that type of data. The available serializer implementations can be found as static constants within the `EntityDataSerializers` class.
+Firstly, you need a `EntityDataAccessor<T>` for the data you wish to keep synchronized. This should be stored as a `static final` field in your entity class, obtained by calling `SynchedEntityData#defineId` and passing the entity class and a serializer for that type of data. The available serializer implementations can be found as static constants within the `EntityDataSerializers` class.
 
 > **Caution**
 > caution

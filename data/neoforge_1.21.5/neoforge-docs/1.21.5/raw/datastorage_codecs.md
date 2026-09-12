@@ -4,7 +4,7 @@ version: "1.21.5"
 pageId: "datastorage/codecs"
 url: "https://docs.neoforged.net/docs/1.21.5/datastorage/codecs/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:59:11.790Z"
+fetchedAt: "2026-09-12T12:04:46.961Z"
 ---
 # Codecs
 
@@ -169,7 +169,7 @@ Minecraft and NeoForge define many codecs for objects that are frequently encode
 
 `CompoundTag`s cannot decode lists of numbers from JSON using `JsonOps`. `JsonOps`, when converting, sets a number to its most narrow type. `ListTag`s force a specific type for its data, so numbers with different types (e.g. `64` would be `byte`, `384` would be `short`) will throw an error on conversion.
 
-Vanilla and NeoForge registries also have codecs for the type of object the registry contains (e.g. `BuiltInRegistries#BLOCK` have a `Codec`). `Registry#byNameCodec` will encode the registry object to their registry name. Vanilla registries also have a `Registry#holderByNameCodec` which encodes to a registry name and decodes to the registry object wrapped in a `Holder`.
+Vanilla and NeoForge registries also have codecs for the type of object the registry contains (e.g. `BuiltInRegistries#BLOCK` have a `Codec<Block>`). `Registry#byNameCodec` will encode the registry object to their registry name. Vanilla registries also have a `Registry#holderByNameCodec` which encodes to a registry name and decodes to the registry object wrapped in a `Holder`.
 
 ## Creating Codecs
 
@@ -534,25 +534,33 @@ A pair codec decodes objects by first decoding the left object in the pair, then
 
 ```java
 
-public static final Codec
-> PAIR_CODEC = Codec.pair(
+public static final Codec<Pair<Integer, String>> PAIR_CODEC = Codec.pair(
+
     Codec.INT.fieldOf("left").codec(),
+
     Codec.STRING.fieldOf("right").codec()
+
 );
 
 ```
 
 ```json5
-// Encoded Pair
+
+// Encoded Pair<Integer, String>
+
 {
+
     "left": 5,       // fieldOf looks up 'left' key for left object
+
     "right": "value" // fieldOf looks up 'right' key for right object
+
 }
 
 ```
 
 > **Tip**
 > tip
+
 A map codec with a non-string key can be encoded/decoded using a list of key-value pairs applied with a [transformer](#transformer-codecs).
 
 ### Either

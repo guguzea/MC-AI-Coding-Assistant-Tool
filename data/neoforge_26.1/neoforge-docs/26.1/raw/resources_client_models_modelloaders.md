@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "resources/client/models/modelloaders"
 url: "https://docs.neoforged.net/docs/resources/client/models/modelloaders/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:58:07.985Z"
+fetchedAt: "2026-09-12T12:08:09.647Z"
 ---
 # Custom Model Loaders
 

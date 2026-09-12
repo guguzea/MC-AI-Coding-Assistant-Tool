@@ -4,7 +4,7 @@ version: "1.21.8"
 pageId: "entities/renderer"
 url: "https://docs.neoforged.net/docs/1.21.8/entities/renderer/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:00:28.821Z"
+fetchedAt: "2026-09-12T12:06:03.494Z"
 ---
 # Entity Renderers
 
@@ -114,7 +114,7 @@ That's literally it. Extend the class, add your field, change the generic type i
 
 In addition to being able to define new entity render states, NeoForge introduces a system that allows modifying existing render states.
 
-To do so, a `ContextKey` (where `T` is the type of the data you want to change) can be created and stored in a static field. Then, you can use it in an event handler for the `RegisterRenderStateModifiersEvent` like so:
+To do so, a `ContextKey<T>` (where `T` is the type of the data you want to change) can be created and stored in a static field. Then, you can use it in an event handler for the `RegisterRenderStateModifiersEvent` like so:
 
 ```java
 
@@ -790,7 +790,7 @@ public static void addPlayerLayers(EntityRenderersEvent.AddLayers event) {
 
 Minecraft includes an animation system for entity models through the `AnimationDefinition` class. NeoForge adds a system that allows these entity animations to be defined in JSON files, similar to third-party libraries such as [GeckoLib](https://github.com/bernie-g/geckolib).
 
-Animations are defined in JSON files located at `assets//neoforge/animations/entity/.json` (so for the [resource location](/docs/1.21.8/misc/resourcelocation) `examplemod:example`, the file would be located at `assets/examplemod/neoforge/animations/entity/example.json`). The format of an animation file is as follows:
+Animations are defined in JSON files located at `assets/<namespace>/neoforge/animations/entity/<path>.json` (so for the [resource location](/docs/1.21.8/misc/resourcelocation) `examplemod:example`, the file would be located at `assets/examplemod/neoforge/animations/entity/example.json`). The format of an animation file is as follows:
 
 ```json5
 

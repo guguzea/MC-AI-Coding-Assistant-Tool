@@ -15,7 +15,7 @@ The main reason this article exists is for reference in vanilla code, or if you 
 
 ## Basic Container Implementation
 
-Containers can be implemented in any way you like, so long as you satisfy the dictated methods (as with any other interface in Java). However, it is common to use a `NonNullList` with a fixed length as a backing structure. Single-slot containers may also simply use an `ItemStack` field instead.
+Containers can be implemented in any way you like, so long as you satisfy the dictated methods (as with any other interface in Java). However, it is common to use a `NonNullList<ItemStack>` with a fixed length as a backing structure. Single-slot containers may also simply use an `ItemStack` field instead.
 
 For example, a basic implementation of `Container` with a size of 27 slots (one chest) could look like this:
 
@@ -164,7 +164,7 @@ Aside from `Container`, it also implements the `MenuProvider` and `Nameable` int
 - `Nameable` defines a few methods related to setting (custom) names and, aside from many block entities, is implemented by classes such as `Entity`. This uses the [Component system](/docs/1.21.3/resources/client/i18n#components).
 - `MenuProvider`, on the other hand, defines the `#createMenu` method, which allows an [AbstractContainerMenu](/docs/1.21.3/gui/menus) to be constructed from the container. This means that using this class is not desirable if you want a container without an associated GUI, for example in jukeboxes.
 
-`BaseContainerBlockEntity` bundles all calls we would normally make to our `NonNullList` through two methods `#getItems` and `#setItems`, drastically reducing the amount of boilerplate we need to write. An example implementation of a `BaseContainerBlockEntity` could look like this:
+`BaseContainerBlockEntity` bundles all calls we would normally make to our `NonNullList<ItemStack>` through two methods `#getItems` and `#setItems`, drastically reducing the amount of boilerplate we need to write. An example implementation of a `BaseContainerBlockEntity` could look like this:
 
 ```java
 
@@ -420,7 +420,7 @@ If you are creating an entity yourself, there is nothing stopping you from imple
 
 `Mob`s do not implement `Container`, but they implement the `EquipmentUser` interface (among others). This interface defines the methods `#setItemSlot(EquipmentSlot, ItemStack)`, `#getItemBySlot(EquipmentSlot)` and `#setDropChance(EquipmentSlot, float)`. While not related to `Container` code-wise, the functionality is quite similar: we associate slots, in this case equipment slots, with `ItemStack`s.
 
-The most notable difference to `Container` is that there is no list-like order (though `Mob` uses `NonNullList`s in the background). Access does not work through slot indices, but rather through the seven `EquipmentSlot` enum values: `MAINHAND`, `OFFHAND`, `FEET`, `LEGS`, `CHEST`, `HEAD`, and `BODY` (where `BODY` is used for horse and dog armor).
+The most notable difference to `Container` is that there is no list-like order (though `Mob` uses `NonNullList<ItemStack>`s in the background). Access does not work through slot indices, but rather through the seven `EquipmentSlot` enum values: `MAINHAND`, `OFFHAND`, `FEET`, `LEGS`, `CHEST`, `HEAD`, and `BODY` (where `BODY` is used for horse and dog armor).
 
 An example of interaction with the mob's "slots" would look something like this:
 
@@ -448,7 +448,7 @@ mob.setDropChance(EquipmentSlot.FEET, 1f);
 
 The player's inventory is implemented through the `Inventory` class, a class implementing `Container` as well as the `Nameable` interface mentioned earlier. An instance of that `Inventory` is then stored as a field named `inventory` on the `Player`, accessible via `Player#getInventory`. The inventory can be interacted with like any other container.
 
-The inventory contents are stored in three `public final NonNullList`s:
+The inventory contents are stored in three `public final NonNullList<ItemStack>`s:
 
 - The `items` list covers the 36 main inventory slots, including the nine hotbar slots (indices 0-8).
 - The `armor` list is a list of length 4, containing armor for the `FEET`, `LEGS`, `CHEST`, and `HEAD`, in that order. This list uses `EquipmentSlot` accessors, similar to `Mob`s (see above).

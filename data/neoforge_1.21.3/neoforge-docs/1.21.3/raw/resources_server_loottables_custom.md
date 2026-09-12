@@ -4,7 +4,7 @@ version: "1.21.3"
 pageId: "resources/server/loottables/custom"
 url: "https://docs.neoforged.net/docs/1.21.3/resources/server/loottables/custom/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:52.047Z"
+fetchedAt: "2026-09-12T12:04:21.350Z"
 ---
 # Custom Loot Objects
 
@@ -366,7 +366,7 @@ public record HasXpLevelCondition(int level) implements LootItemCondition {
 
 ## Custom Loot Functions
 
-To get started, we create our own class extending `LootItemFunction`. `LootItemFunction` extends `BiFunction`, so what we want is to use the existing item stack and the loot context to return a new, modified item stack. However, almost all loot functions don't directly extend `LootItemFunction`, but extend `LootItemConditionalFunction` instead. This class has built-in functionality for applying loot conditions to the function - the function is only applied if the loot conditions apply. For the sake of example, let's apply a random enchantment with a specified level to the item:
+To get started, we create our own class extending `LootItemFunction`. `LootItemFunction` extends `BiFunction<ItemStack, LootContext, ItemStack>`, so what we want is to use the existing item stack and the loot context to return a new, modified item stack. However, almost all loot functions don't directly extend `LootItemFunction`, but extend `LootItemConditionalFunction` instead. This class has built-in functionality for applying loot conditions to the function - the function is only applied if the loot conditions apply. For the sake of example, let's apply a random enchantment with a specified level to the item:
 
 ```java
 

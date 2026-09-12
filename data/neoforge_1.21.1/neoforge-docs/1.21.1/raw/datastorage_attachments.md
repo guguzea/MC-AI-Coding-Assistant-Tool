@@ -4,7 +4,7 @@ version: "1.21.1"
 pageId: "datastorage/attachments"
 url: "https://docs.neoforged.net/docs/1.21.1/datastorage/attachments/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:53:13.482Z"
+fetchedAt: "2026-09-12T12:02:14.212Z"
 ---
 # Data Attachments
 

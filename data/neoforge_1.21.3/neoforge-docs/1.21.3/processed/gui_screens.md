@@ -44,7 +44,7 @@ Strings should typically be passed in as [Components](/docs/1.21.3/resources/cli
 
 Textures are drawn through blitting, hence the method name `#blit`, which, for this purpose, copies the bits of an image and draws them directly to the screen. These are drawn through a position texture shader.
 
-Each `#blit` method takes in a `Function`, which determines how to render the texture, and `ResourceLocation`, which represents the absolute location of the texture:
+Each `#blit` method takes in a `Function<ResourceLocation, RenderType>`, which determines how to render the texture, and `ResourceLocation`, which represents the absolute location of the texture:
 
 ```java
 
@@ -480,28 +480,46 @@ Within the super, `#renderBg` is called to render the background of the screen. 
 
 // In some AbstractContainerScreen subclass
 
-// The location of the background texture (assets/<namespace>/
-)
+// The location of the background texture (assets/<namespace>/<path>)
+
 private static final ResourceLocation BACKGROUND_LOCATION = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/gui/container/my_container_screen.png");
 
 @Override
+
 protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+
     /*
+
      * Renders the background texture to the screen. 'leftPos' and
+
      * 'topPos' should already represent the top left corner of where
+
      * the texture should be rendered as it was precomputed from the
+
      * 'imageWidth' and 'imageHeight'. The two zeros represent the
+
      * integer u/v coordinates inside the PNG file, whose size is
+
      * represented by the last two integers (typically 256 x 256).
+
      */
+
     graphics.blit(
+
         RenderType::guiTextured,
+
         BACKGROUND_LOCATION,
+
         this.leftPos, this.topPos,
+
         0, 0,
+
         this.imageWidth, this.imageHeight,
+
         256, 256
+
     );
+
 }
 
 ```

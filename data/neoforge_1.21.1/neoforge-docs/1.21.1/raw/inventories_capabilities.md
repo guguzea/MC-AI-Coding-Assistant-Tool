@@ -4,7 +4,7 @@ version: "1.21.1"
 pageId: "inventories/capabilities"
 url: "https://docs.neoforged.net/docs/1.21.1/inventories/capabilities/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:53:16.916Z"
+fetchedAt: "2026-09-12T12:02:19.567Z"
 ---
 # Capabilities
 

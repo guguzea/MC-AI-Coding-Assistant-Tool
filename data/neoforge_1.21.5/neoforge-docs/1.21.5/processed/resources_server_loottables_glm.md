@@ -7,7 +7,7 @@ GLMs work by first rolling the associated [loot table](/docs/1.21.5/resources/se
 To register a GLM, you will need four things:
 
 - A `global_loot_modifiers.json` file, located at `data/neoforge/loot_modifiers/global_loot_modifiers.json` (**not in your mod's namespace**). This file tells NeoForge what modifiers to apply, and in what order.
-- A JSON file representing your loot modifier. This file contains all the data for your modification, allowing data packs to tweak your effect. It is located at `data//loot_modifiers/.json`.
+- A JSON file representing your loot modifier. This file contains all the data for your modification, allowing data packs to tweak your effect. It is located at `data/<namespace>/loot_modifiers/<path>.json`.
 - A class that implements `IGlobalLootModifier` or extends `LootModifier` (which in turn implements `IGlobalLootModifier`). This class contains the code that makes the modifier work.
 - A map [codec](/docs/1.21.5/datastorage/codecs) to encode and decode your loot modifier class. Usually, this is implemented as a `public static final` field in the loot modifier class.
 
@@ -15,7 +15,7 @@ To register a GLM, you will need four things:
 
 The `global_loot_modifiers.json` file tells NeoForge what modifiers to apply to loot tables. The file may contain two keys:
 
-- `entries` is a list of modifiers that should be loaded. The [ResourceLocation](/docs/1.21.5/misc/resourcelocation)s specified points to their associated entry within `data//loot_modifiers/.json`. This list is ordered, meaning that modifiers will apply in the specified order, which is sometimes relevant when mod compatibility issues occur.
+- `entries` is a list of modifiers that should be loaded. The [ResourceLocation](/docs/1.21.5/misc/resourcelocation)s specified points to their associated entry within `data/<namespace>/loot_modifiers/<path>.json`. This list is ordered, meaning that modifiers will apply in the specified order, which is sometimes relevant when mod compatibility issues occur.
 - `replace` denotes whether the modifiers should replace old ones (`true`) or simply add to the existing list (`false`). This works similar to the `replace` key in [tags](/docs/1.21.5/resources/server/tags), however unlike tags, the key is required here. Generally, modders should always use `false` here; the ability to use `true` is directed at modpack or data pack developers.
 
 Example usage:

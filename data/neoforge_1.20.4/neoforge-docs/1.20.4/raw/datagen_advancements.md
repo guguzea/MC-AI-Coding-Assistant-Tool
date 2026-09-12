@@ -1,10 +1,10 @@
 ---
-title: "Datagen"
+title: "Advancements"
 version: "1.20.4"
 pageId: "datagen/advancements"
 url: "https://docs.neoforged.net/docs/1.20.4/datagen/advancements/"
 platform: "neoforge"
-fetchedAt: "2026-08-06T04:46:20.863Z"
+fetchedAt: "2026-09-12T11:59:46.799Z"
 ---
 # Advancement Generation
 
@@ -49,7 +49,7 @@ public static void gatherData(GatherDataEvent event) {
 
 ## ForgeAdvancementProvider.AdvancementGenerator
 
-A ForgeAdvancementProvider.AdvancementGenerator is responsible for generating advancements, containing a method which takes in a registry lookup, the writer (`Consumer`), and the existing file helper..
+A ForgeAdvancementProvider.AdvancementGenerator is responsible for generating advancements, containing a method which takes in a registry lookup, the writer (`Consumer<Advancement>`), and the existing file helper..
 
 ```java
 

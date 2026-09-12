@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "resources/metadata"
 url: "https://docs.neoforged.net/docs/resources/metadata/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:58:12.219Z"
+fetchedAt: "2026-09-12T12:08:17.126Z"
 ---
 # Resource Metadata
 
@@ -200,77 +200,128 @@ public class ResourceMetadataProvider implements DataProvider {
 
     private final PackOutput output;
 
-    private final Map
-metadata;
+    private final Map<Path, ResourceMetadata> metadata;
 
     public ResourceMetadataProvider(PackOutput output) {
+
         this.output = output;
+
         this.metadata = new HashMap<>();
+
     }
 
     protected void add() {
+
         // Add metadata here.
+
         this.textureMetadata(Identifier.fromNamespaceAndPath(
+
             "examplemod", "block/example_texture"
+
         ))
+
             // Can chain multiple `add` calls.
+
             .add(
+
                 // The metadata section to add.
+
                 TextureMetadataSection.TYPE
+
                 // The value of the metadata section.
+
                 new TextureMetadataSection(
+
                     true, TextureMetadataSection.DEFAULT_CLAMP, MipmapStrategy.AUTO, TextureMetadataSection.DEFAULT_ALPHA_CUTOFF_BIAS
+
                 )
+
             ).add(
+
                 ExampleMetadataSection.TYPE,
+
                 new ExampleMetadataSection("Hello world!")
+
             );
+
     }
 
     protected ResourceMetadata textureMetadata(Identifier resource) {
+
         return this.metadata(
+
             PackOutput.Target.RESOURCE_PACK,
+
             "textures",
+
             resource.withSuffix(".png")
+
         );
+
     }
 
     protected ResourceMetadata metadata(PackOutput.Target type, String directory, Identifier resource) {
+
         return this.metadata.computeIfAbsent(
+
             this.output.createPathProvider(type, directory).file(resource, "mcmeta"),
+
             p -> new ResourceMetadata()
+
         );
+
     }
 
     @Override
-    public CompletableFuture run(CachedOutput cache) {
+
+    public CompletableFuture<?> run(CachedOutput cache) {
+
         Executor executor = Util.backgroundExecutor().forName("serializeMetadata");
+
         return CompletableFuture.allOf(
+
             this.metadata.entrySet().stream().map(entry -> CompletableFuture.runAsync(() -> {
+
                     JsonObject result = new JsonObject();
+
                     entry.getValue().sections().forEach((type, data) -> result.add(type, data.get()));
+
                     return result;
+
                 }, executor).thenComposeAsync(json -> DataProvider.saveStable(cache, json, entry.getKey()), executor)
+
             ).toArray(CompletableFuture[]::new)
+
         );
+
     }
 
     @Override
+
     public final String getName() {
+
         return "Resource Metadata";
+
     }
 
-    public record ResourceMetadata(Map> sections) {
+    public record ResourceMetadata(Map<String, Supplier<JsonElement>> sections) {
 
         public ResourceMetadata() {
+
             this(new HashMap<>());
+
         }
 
-        public  ResourceMetadata add(MetadataSectionType type, T value) {
+        public <T> ResourceMetadata add(MetadataSectionType<T> type, T value) {
+
             this.sections.put(type.name(), () -> type.codec().encodeStart(JsonOps.INSTANCE, value).getOrThrow(IllegalArgumentException::new).getAsJsonObject());
+
             return this;
+
         }
+
     }
+
 }
 
 ```

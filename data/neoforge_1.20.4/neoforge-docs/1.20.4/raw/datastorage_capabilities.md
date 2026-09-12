@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "datastorage/capabilities"
 url: "https://docs.neoforged.net/docs/1.20.4/datastorage/capabilities/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:56:55.176Z"
+fetchedAt: "2026-09-12T11:59:53.349Z"
 ---
 # Capabilities
 

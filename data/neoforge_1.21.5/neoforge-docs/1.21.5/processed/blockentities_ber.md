@@ -48,7 +48,7 @@ public class MyBlockEntityRenderer implements BlockEntityRenderer<MyBlockEntity>
 
 ```
 
-Only one BER may exist for a given `BlockEntityType`. Therefore, values that are specific to a single block entity instance should be stored in that block entity instance, rather than the BER itself.
+Only one BER may exist for a given `BlockEntityType<?>`. Therefore, values that are specific to a single block entity instance should be stored in that block entity instance, rather than the BER itself.
 
 When you have created your BER, you must also register it to `EntityRenderersEvent.RegisterRenderers`, an [event](/docs/1.21.5/concepts/events#registering-an-event-handler) fired on the [mod event bus](/docs/1.21.5/concepts/events#event-buses):
 

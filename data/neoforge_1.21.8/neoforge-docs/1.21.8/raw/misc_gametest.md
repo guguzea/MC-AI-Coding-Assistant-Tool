@@ -4,7 +4,7 @@ version: "1.21.8"
 pageId: "misc/gametest"
 url: "https://docs.neoforged.net/docs/1.21.8/misc/gametest/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:00:36.634Z"
+fetchedAt: "2026-09-12T12:06:20.974Z"
 ---
 # Game Tests
 
@@ -222,11 +222,11 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ## Structure Templates
 
-Game Tests are performed within scenes loaded by structures, or templates. All templates define the dimensions of the scene and the initial data (blocks and entities) that will be loaded. The template must be stored as an `.nbt` file within `data//structure`. `TestData#structure` references the NBT file using a relative `ResourceLocation` (e.g., `examplemod:example_structure` points to `data/examplemod/structure/example_structure.nbt`)
+Game Tests are performed within scenes loaded by structures, or templates. All templates define the dimensions of the scene and the initial data (blocks and entities) that will be loaded. The template must be stored as an `.nbt` file within `data/<namespace>/structure`. `TestData#structure` references the NBT file using a relative `ResourceLocation` (e.g., `examplemod:example_structure` points to `data/examplemod/structure/example_structure.nbt`)
 
 ## Test Environments
 
-All game tests run in some `TestEnvironmentDefinition`, determining how the current `ServerLevel` should be set up. Then, once the test has finished, the environment is tore down, letting the next instance or instances run. All environments are batched, meaning that if multiple test instances have the same environment, they will run at the same time. All test environments are located within `data//test_environment/.json`.
+All game tests run in some `TestEnvironmentDefinition`, determining how the current `ServerLevel` should be set up. Then, once the test has finished, the environment is tore down, letting the next instance or instances run. All environments are batched, meaning that if multiple test instances have the same environment, they will run at the same time. All test environments are located within `data/<namespace>/test_environment/<path>.json`.
 
 Vanilla provides `minecraft:default`, which does not modify the `ServerLevel`. However, there are other supported definition types that can be used to construct an environment.
 
@@ -363,7 +363,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ### Time of Day
 
-This environment type sets the time to some non-negative integer, like how the `/time set ` command is used.
+This environment type sets the time to some non-negative integer, like how the `/time set <number>` command is used.
 
 - JSON
 - Datagen
@@ -963,7 +963,7 @@ At any time during a Game Test, an assertion can be made to check if a given con
 
 ## Registering The Test Instance
 
-With the `TestData`, `TestEnvironmentDefinition`, and test function in hand, we can now link everything together through a `GameTestInstance`. Each test instance is what represents a single game test to run. All test instances are located within `data//test_instance/.json`.
+With the `TestData`, `TestEnvironmentDefinition`, and test function in hand, we can now link everything together through a `GameTestInstance`. Each test instance is what represents a single game test to run. All test instances are located within `data/<namespace>/test_instance/<path>.json`.
 
 ### Function-Based Tests
 
@@ -1507,7 +1507,7 @@ Game Tests can be run using the `/test` command. The `test` command is highly co
 > **Note**
 > note
 
-Subcommands follow the test command: `/test `.
+Subcommands follow the test command: `/test <subcommand>`.
 
 ## Buildscript Configurations
 

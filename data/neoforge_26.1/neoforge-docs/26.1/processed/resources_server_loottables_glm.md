@@ -6,13 +6,13 @@ GLMs work by first rolling the associated [loot table](/docs/resources/server/lo
 
 To register a GLM, you will need three things:
 
-- A JSON file representing your loot modifier. This file contains all the data for your modification, allowing data packs to tweak your effect. It is located at `data//loot_modifiers/.json`.
+- A JSON file representing your loot modifier. This file contains all the data for your modification, allowing data packs to tweak your effect. It is located at `data/<namespace>/loot_modifiers/<path>.json`.
 - A class that implements `IGlobalLootModifier` or extends `LootModifier` (which in turn implements `IGlobalLootModifier`). This class contains the code that makes the modifier work.
 - A map [codec](/docs/datastorage/codecs) to encode and decode your loot modifier class. Usually, this is implemented as a `public static final` field in the loot modifier class.
 
 ## The Loot Modifier JSON
 
-This file contains all values related to your modifier, for example chances to apply, what items to add, etc. The JSON can be found at `data//loot_modifiers/.json`, where `` and `` are parts of the unique [Identifier](/docs/misc/identifier). It is recommended to avoid hard-coded values wherever possible so that data pack makers can adjust balance if they wish to. A loot modifier must contain at least two fields and may contain more, depending on the circumstances:
+This file contains all values related to your modifier, for example chances to apply, what items to add, etc. The JSON can be found at `data/<namespace>/loot_modifiers/<path>.json`, where `<namespace>` and `<path>` are parts of the unique [Identifier](/docs/misc/identifier). It is recommended to avoid hard-coded values wherever possible so that data pack makers can adjust balance if they wish to. A loot modifier must contain at least two fields and may contain more, depending on the circumstances:
 
 - The `type` field contains the registry name of the loot modifier.
 - The `conditions` field is a list of loot table conditions for this modifier to activate.

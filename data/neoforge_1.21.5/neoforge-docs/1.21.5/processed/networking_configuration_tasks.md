@@ -24,7 +24,7 @@ The `RegisterConfigurationTasksEvent` event is fired on the mod bus, and exposes
 
 ## Implementing a configuration task
 
-A configuration task is a simple interface: `ICustomConfigurationTask`. This interface has two methods: `void run(Consumer sender);`, and `ConfigurationTask.Type type();` which returns the type of the configuration task. The type is used to identify the configuration task. An example of a configuration task is shown below:
+A configuration task is a simple interface: `ICustomConfigurationTask`. This interface has two methods: `void run(Consumer<CustomPacketPayload> sender);`, and `ConfigurationTask.Type type();` which returns the type of the configuration task. The type is used to identify the configuration task. An example of a configuration task is shown below:
 
 ```java
 

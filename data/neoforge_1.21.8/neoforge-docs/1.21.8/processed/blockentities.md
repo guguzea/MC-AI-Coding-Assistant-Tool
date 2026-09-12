@@ -9,7 +9,7 @@ If you have a finite and reasonably small amount (= a few hundred at most) of po
 
 ## Creating and Registering Block Entities
 
-Like entities and unlike blocks, the `BlockEntity` class represents the block entity instance, not the [registered](/docs/1.21.8/concepts/registries#methods-for-registering) singleton object. The singleton is expressed through the `BlockEntityType` class instead. We will need both to create a new block entity.
+Like entities and unlike blocks, the `BlockEntity` class represents the block entity instance, not the [registered](/docs/1.21.8/concepts/registries#methods-for-registering) singleton object. The singleton is expressed through the `BlockEntityType<?>` class instead. We will need both to create a new block entity.
 
 Let's begin by creating our block entity class:
 
@@ -29,7 +29,7 @@ public class MyBlockEntity extends BlockEntity {
 
 As you may have noticed, we pass an undefined variable `type` to the super constructor. Let's leave that undefined variable there for a moment and instead move to registration.
 
-[Registration](/docs/1.21.8/concepts/registries#methods-for-registering) happens in a similar fashion to entities. We create an instance of the associated singleton class `BlockEntityType` and register it to the block entity type registry, like so:
+[Registration](/docs/1.21.8/concepts/registries#methods-for-registering) happens in a similar fashion to entities. We create an instance of the associated singleton class `BlockEntityType<?>` and register it to the block entity type registry, like so:
 
 ```java
 
@@ -91,7 +91,7 @@ public class MyBlockEntity extends BlockEntity {
 > **Info**
 > info
 
-The reason for this rather confusing setup process is that `BlockEntityType` expects a `BlockEntityType.BlockEntitySupplier`, which is basically a `BiFunction`. As such, having a constructor we can directly reference using `::new` is highly beneficial. However, we also need to provide the constructed block entity type to the default and only constructor of `BlockEntity`, so we need to pass references around a bit.
+The reason for this rather confusing setup process is that `BlockEntityType` expects a `BlockEntityType.BlockEntitySupplier<T extends BlockEntity>`, which is basically a `BiFunction<BlockPos, BlockState, T extends BlockEntity>`. As such, having a constructor we can directly reference using `::new` is highly beneficial. However, we also need to provide the constructed block entity type to the default and only constructor of `BlockEntity`, so we need to pass references around a bit.
 
 Finally, we need to modify the block class associated with the block entity. This means that we will not be able to attach block entities to simple instances of `Block`, instead, we need a subclass:
 

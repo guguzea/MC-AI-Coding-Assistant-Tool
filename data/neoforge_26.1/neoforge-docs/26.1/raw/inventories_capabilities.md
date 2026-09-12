@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "inventories/capabilities"
 url: "https://docs.neoforged.net/docs/inventories/capabilities/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:57:48.516Z"
+fetchedAt: "2026-09-12T12:07:45.117Z"
 ---
 # Capabilities
 
@@ -26,8 +26,8 @@ Capabilities are designed to separate **what** a block, entity or item stack can
 
 Here are a few examples of good capability usage:
 
-- *"I want my fluid container to be compatible with fluid containers from other mods, but I don't know the specifics of each fluid container."* - Yes, use the `ResourceHandler` capability.
-- *"I want to count how many items are in some entity, but I do not know how the entity might store them."* - Yes, use the `ResourceHandler` capability.
+- *"I want my fluid container to be compatible with fluid containers from other mods, but I don't know the specifics of each fluid container."* - Yes, use the `ResourceHandler<FluidResource>` capability.
+- *"I want to count how many items are in some entity, but I do not know how the entity might store them."* - Yes, use the `ResourceHandler<ItemResource>` capability.
 - *"I want to fill some item stack with power, but I do not know how the item stack might store it."* - Yes, use the `EnergyHandler` capability.
 - *"I want to apply some color to whatever block a player is currently targeting, but I do not know how the block will be transformed."* - Yes. NeoForge does not provide a capability to color blocks, but you can implement one yourself.
 
@@ -37,16 +37,16 @@ Here is an example of discouraged capability usage:
 
 ## NeoForge-provided capabilities
 
-NeoForge provides capabilities for the following three [resource handlers](/docs/inventories/transactions#resource-handlers): `ResourceHandler`, `ResourceHandler` and `EnergyHandler`.
+NeoForge provides capabilities for the following three [resource handlers](/docs/inventories/transactions#resource-handlers): `ResourceHandler<ItemResource>`, `ResourceHandler<FluidResource>` and `EnergyHandler`.
 
-`ResourceHandler` exposes an interface for managing inventory slots. The capabilities of type `ResourceHandler` are:
+`ResourceHandler<ItemResource>` exposes an interface for managing inventory slots. The capabilities of type `ResourceHandler<ItemResource>` are:
 
 - `Capabilities.Item.BLOCK`: automation-accessible inventory of a block (for chests, machines, etc).
 - `Capabilities.Item.ENTITY`: inventory contents of an entity (extra player slots, mob/creature inventories/bags).
 - `Capabilities.Item.ENTITY_AUTOMATION`: automation-accessible inventory of an entity (boats, minecarts, etc).
 - `Capabilities.Item.ITEM`: contents of an item stack (portable backpacks and such).
 
-`ResourceHandler` exposes an interface for managing fluid inventories. The capabilities of type `ResourceHandler` are:
+`ResourceHandler<FluidResource>` exposes an interface for managing fluid inventories. The capabilities of type `ResourceHandler<FluidResource>` are:
 
 - `Capabilities.Fluid.BLOCK`: automation-accessible fluid inventory of a block.
 - `Capabilities.Fluid.ENTITY`: fluid inventory of an entity.
@@ -98,7 +98,7 @@ Creating a capability with the same name multiple times will always return the s
 <li class="">The type for additional context in the query. This is the `C` type parameter.</li>
 </ul>
 
-For example, here is how a capability for side-aware block `ResourceHandler`s might be declared:
+For example, here is how a capability for side-aware block `ResourceHandler<ItemResource>`s might be declared:
 
 ```java
 
@@ -224,7 +224,7 @@ if (object != null) {
 
 ```
 
-To give a more concrete example, here is how one might query an `ResourceHandler` capability for a block, from the `Direction.NORTH` side:
+To give a more concrete example, here is how one might query an `ResourceHandler<ItemResource>` capability for a block, from the `Direction.NORTH` side:
 
 ```java
 

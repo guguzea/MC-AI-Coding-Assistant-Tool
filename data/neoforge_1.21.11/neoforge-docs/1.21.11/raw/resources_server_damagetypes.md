@@ -4,7 +4,7 @@ version: "1.21.11"
 pageId: "resources/server/damagetypes"
 url: "https://docs.neoforged.net/docs/1.21.11/resources/server/damagetypes/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:01:55.995Z"
+fetchedAt: "2026-09-12T12:09:40.817Z"
 ---
 # Damage Types & Damage Sources
 

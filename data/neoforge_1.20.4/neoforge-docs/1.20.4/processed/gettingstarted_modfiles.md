@@ -130,7 +130,7 @@ Some properties (`displayName` and `description`) can also be localized using la
 
 #### Features
 
-The features system allows mods to demand that certain settings, software, or hardware are available when loading the system. When a feature is not satisfied, mod loading will fail, informing the user about the requirement. These configurations are created using a [table](https://toml.io/en/v1.0.0#table) `[features.]`, where `modid` is the identifier of the mod that consumes the feature. Currently, NeoForge provides the following features:
+The features system allows mods to demand that certain settings, software, or hardware are available when loading the system. When a feature is not satisfied, mod loading will fail, informing the user about the requirement. These configurations are created using a [table](https://toml.io/en/v1.0.0#table) `[features.<modid>]`, where `modid` is the identifier of the mod that consumes the feature. Currently, NeoForge provides the following features:
 
 | Feature | Description | Example |
 | --- | --- | --- |
@@ -139,7 +139,7 @@ The features system allows mods to demand that certain settings, software, or ha
 
 #### Mod Properties
 
-The mod properties system is a map of arbitrary keys to values that are associated with a particular mod. These can be useful when mod files define identical keys that provide different metadata. From there, the specific property value for some key can be obtained by getting the object value from the map via `IModInfo#getModProperties`. These configurations are created using a [table](https://toml.io/en/v1.0.0#table) `[modproperties.]`, where `modid` is the identifier of the mod that consumes the defined properties.
+The mod properties system is a map of arbitrary keys to values that are associated with a particular mod. These can be useful when mod files define identical keys that provide different metadata. From there, the specific property value for some key can be obtained by getting the object value from the map via `IModInfo#getModProperties`. These configurations are created using a [table](https://toml.io/en/v1.0.0#table) `[modproperties.<modid>]`, where `modid` is the identifier of the mod that consumes the defined properties.
 
 ```java
 
@@ -189,7 +189,7 @@ public class ModTwo {
 
 ### Dependency Configurations
 
-Mods can specify their dependencies, which are checked by NeoForge before loading the mods. These configurations are created using the [array of tables](https://toml.io/en/v1.0.0#array-of-tables) `[[dependencies.]]`, where `modid` is the identifier of the mod that consumes the dependency.
+Mods can specify their dependencies, which are checked by NeoForge before loading the mods. These configurations are created using the [array of tables](https://toml.io/en/v1.0.0#array-of-tables) `[[dependencies.<modid>]]`, where `modid` is the identifier of the mod that consumes the dependency.
 
 | Property | Type | Default | Description | Example |
 | --- | --- | --- | --- | --- |

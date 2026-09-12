@@ -1,10 +1,10 @@
 ---
-title: "Client"
+title: "I18n"
 version: "1.21.10"
 pageId: "resources/client/i18n"
 url: "https://docs.neoforged.net/docs/1.21.10/resources/client/i18n/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:50:19.243Z"
+fetchedAt: "2026-09-12T12:08:01.567Z"
 ---
 # I18n and L10n
 
@@ -16,7 +16,6 @@ A `Component` is a piece of text with metadata, with the metadata including thin
 
 | Method | Description |
 | --- | --- |
-| Method | Description |
 | empty | Creates an empty component. |
 | literal | Creates a component with the given text and directly displays that text without translating. |
 | nullToEmpty | Creates an empty component when given null, and a literal component otherwise. |
@@ -159,24 +158,26 @@ Even the font used by the component can be set:
 
 // Set the font to be used by a style.
 
-// Must match an available FontDescription.Resource (found in `assets/<namespace>/font/
-.json`)
+// Must match an available FontDescription.Resource (found in `assets/<namespace>/font/<path>.json`)
 
 // Points to `assets/minecraft/font/illageralt.json`
+
 ResourceLocation fontLocation = ResourceLocation.withDefaultNamespace("illageralt");
 
 // Apply the font to a style
+
 Style customFont = Style.EMPTY.withFont(new FontDescription.Resource(fontLocation));
 
 ```
 
 > **Warning**
 > warning
+
 Font description types other than `FontDescription.Resource` will throw an exception when used in a style. To make use of other or custom `FontDescription`s, create and supply an `ObjectInfo` to a component with `ObjectContents`.
 
 ## Language Files
 
-Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at `assets//lang/language_name.json`. For example, US English translations for a mod with id `examplemod` would be located at `assets/examplemod/lang/en_us.json`. A full list of languages supported by Minecraft can be found [here](https://minecraft.wiki/w/Language).
+Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at `assets/<modid>/lang/language_name.json`. For example, US English translations for a mod with id `examplemod` would be located at `assets/examplemod/lang/en_us.json`. A full list of languages supported by Minecraft can be found [here](https://minecraft.wiki/w/Language).
 
 A language file generally looks like this:
 
@@ -211,7 +212,6 @@ Starting with NeoForge 20.4.179, translation files can override certain parts of
 
 |  | Translation Key | Overriding |
 | --- | --- | --- |
-|  | Translation Key | Overriding |
 | Description | fml.menu.mods.info.description.modid | A field named description may be placed in the [[mods]] section instead. |
 
 ### Datagen

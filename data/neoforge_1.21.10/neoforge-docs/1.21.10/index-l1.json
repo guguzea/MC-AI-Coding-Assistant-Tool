@@ -64,7 +64,7 @@
       {
         "title": "Creating and Registering Block Entities",
         "level": 2,
-        "summary": "Like entities and unlike blocks, the BlockEntity class represents the block entity instance, not the registered singleton object. The singleton is expressed through the BlockEntityType class instea..."
+        "summary": "Like entities and unlike blocks, the BlockEntity class represents the block entity instance, not the registered singleton object. The singleton is expressed through the BlockEntityType<?> class ins..."
       },
       {
         "title": "Storing Data",
@@ -207,7 +207,7 @@
       {
         "title": "Implementing Blockstates",
         "level": 2,
-        "summary": "To implement a blockstate property, in your block class, create or reference a public static final Property constant. While you are free to make your own Property implementations, the vanilla code ..."
+        "summary": "To implement a blockstate property, in your block class, create or reference a public static final Property<?> constant. While you are free to make your own Property<?> implementations, the vanilla..."
       },
       {
         "title": "Using Blockstates",
@@ -442,7 +442,7 @@
       {
         "title": "Building and Testing Your Mod",
         "level": 2,
-        "summary": "To build your mod, run gradlew build. This will output a file in build/libs with the name -.jar. ` and  are properties set by the build.gradle and default to the mod_id and mod_version values in th..."
+        "summary": "To build your mod, run gradlew build. This will output a file in build/libs with the name <archivesBaseName>-<version>.jar. <archivesBaseName> and <version> are properties set by the build.gradle a..."
       },
       {
         "title": "Server Testing",
@@ -510,7 +510,7 @@
       {
         "title": "Dependency Configurations",
         "level": 3,
-        "summary": "Mods can specify their dependencies, which are checked by NeoForge before loading the mods. These configurations are created using the array of tables [[dependencies.]], where modid is the identifi..."
+        "summary": "Mods can specify their dependencies, which are checked by NeoForge before loading the mods. These configurations are created using the array of tables [[dependencies.<modid>]], where modid is the i..."
       },
       {
         "title": "Mod Entrypoints",
@@ -648,7 +648,7 @@
       {
         "title": "Basic Container Implementation",
         "level": 2,
-        "summary": "Containers can be implemented in any way you like, so long as you satisfy the dictated methods (as with any other interface in Java). However, it is common to use a NonNullList with a fixed length ..."
+        "summary": "Containers can be implemented in any way you like, so long as you satisfy the dictated methods (as with any other interface in Java). However, it is common to use a NonNullList<ItemStack> with a fi..."
       },
       {
         "title": "SimpleContainer",
@@ -875,7 +875,7 @@
       {
         "title": "Implementing a configuration task",
         "level": 2,
-        "summary": "A configuration task is a simple interface: ICustomConfigurationTask. This interface has two methods: void run(Consumer sender);, and ConfigurationTask.Type type(); which returns the type of the co..."
+        "summary": "A configuration task is a simple interface: ICustomConfigurationTask. This interface has two methods: void run(Consumer<CustomPacketPayload> sender);, and ConfigurationTask.Type type(); which retur..."
       },
       {
         "title": "Acknowledging a configuration task",
@@ -1139,7 +1139,7 @@
       {
         "title": "Language Files",
         "level": 2,
-        "summary": "Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at assets//lang/language_name.json. For example, US English translations for ..."
+        "summary": "Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at assets/<modid>/lang/language_name.json. For example, US English translatio..."
       },
       {
         "title": "Translation Keys",
@@ -1198,7 +1198,7 @@
       {
         "title": "SimpleCriterionTrigger",
         "level": 3,
-        "summary": "The SimpleCriterionTrigger implementation has two purposes: supplying a method to check trigger instances and run attached listeners on success, and specifying a codec to serialize the trigger inst..."
+        "summary": "The SimpleCriterionTrigger<T> implementation has two purposes: supplying a method to check trigger instances and run attached listeners on success, and specifying a codec to serialize the trigger i..."
       },
       {
         "title": "Calling Criterion Triggers",
@@ -1236,7 +1236,7 @@
       {
         "title": "Applying Biome Modifiers",
         "level": 2,
-        "summary": "To have NeoForge load a biome modifier JSON file into the game, the file will need to be under data//neoforge/biome_modifier/.json folder in the mod's resources, or in a Datapack. Then, once NeoFor..."
+        "summary": "To have NeoForge load a biome modifier JSON file into the game, the file will need to be under data/<modid>/neoforge/biome_modifier/<path>.json folder in the mod's resources, or in a Datapack. Then..."
       },
       {
         "title": "Built-in Biome Modifiers",
@@ -1306,7 +1306,7 @@
       {
         "title": "Datagenning Biome Modifiers",
         "level": 2,
-        "summary": "A BiomeModifier JSON can be created through data generation by passing a RegistrySetBuilder to DatapackBuiltinEntriesProvider. The JSON will be placed at data//neoforge/biome_modifier/.json."
+        "summary": "A BiomeModifier JSON can be created through data generation by passing a RegistrySetBuilder to DatapackBuiltinEntriesProvider. The JSON will be placed at data/<modid>/neoforge/biome_modifier/<path>..."
       },
       {
         "title": "Targeting Biomes That May Not Exist",
@@ -1847,7 +1847,7 @@
       {
         "title": "Querying Attributes",
         "level": 2,
-        "summary": "Attribute values are stored on entities in an AttributeMap, which is basically a Map. Attribute instances are basically what item stacks are to items, i.e. whereas an attribute is a registered sing..."
+        "summary": "Attribute values are stored on entities in an AttributeMap, which is basically a Map<Attribute, AttributeInstance>. Attribute instances are basically what item stacks are to items, i.e. whereas an ..."
       },
       {
         "title": "Attribute Modifiers",
@@ -1857,7 +1857,7 @@
       {
         "title": "Custom Attributes",
         "level": 2,
-        "summary": "If needed, you can also add your own attributes. Like many other systems, attributes are a registry, and you can register your own objects to it. To get started, create a DeferredRegister like so:"
+        "summary": "If needed, you can also add your own attributes. Like many other systems, attributes are a registry, and you can register your own objects to it. To get started, create a DeferredRegister<Attribute..."
       }
     ]
   },
@@ -2081,7 +2081,7 @@
       {
         "title": "NeoForge-provided capabilities",
         "level": 2,
-        "summary": "NeoForge provides capabilities for the following three interfaces: ResourceHandler, ResourceHandler and EnergyHandler."
+        "summary": "NeoForge provides capabilities for the following three interfaces: ResourceHandler<ItemResource>, ResourceHandler<FluidResource> and EnergyHandler."
       },
       {
         "title": "Creating a capability",
@@ -2286,7 +2286,7 @@
       {
         "title": "DataComponentType",
         "level": 2,
-        "summary": "Each data component has an associated DataComponentType, where T is the component value type. The DataComponentType represents a key to reference the stored component value along with some codecs t..."
+        "summary": "Each data component has an associated DataComponentType<T>, where T is the component value type. The DataComponentType represents a key to reference the stored component value along with some codec..."
       },
       {
         "title": "Creating Custom Data Components",
@@ -2544,7 +2544,7 @@
       {
         "title": "Time of Day",
         "level": 3,
-        "summary": "This environment type sets the time to some non-negative integer, like how the /time set  command is used."
+        "summary": "This environment type sets the time to some non-negative integer, like how the /time set <number> command is used."
       },
       {
         "title": "Weather",
@@ -3205,17 +3205,17 @@
       "has-code",
       "registry"
     ],
-    "firstParagraph": "Models within Minecraft are simply a list of quads with attached textures. Each part of the modeling process has their own separate implementation, with the underlying model JSON deserialized into an `UnbakedModel`. In the end, each part of the pipelines takes in some `List` and properties necessary",
+    "firstParagraph": "Models within Minecraft are simply a list of quads with attached textures. Each part of the modeling process has their own separate implementation, with the underlying model JSON deserialized into an `UnbakedModel`. In the end, each part of the pipelines takes in some `List<BakedQuad>` and propertie",
     "sections": [
       {
         "title": "Common Models and Geometry",
         "level": 2,
-        "summary": "The basic model JSON (in assets//models) are deserialized into an UnbakedModel. The UnbakedModel is generally one step short of its baked output, containing some general form of the general propert..."
+        "summary": "The basic model JSON (in assets/<namespace>/models) are deserialized into an UnbakedModel. The UnbakedModel is generally one step short of its baked output, containing some general form of the gene..."
       },
       {
         "title": "Block State Definitions",
         "level": 2,
-        "summary": "The block state definition JSON (in assets//blockstates) is compiled and baked into a BlockStateModel for every BlockState. The process of creating the BlockStateModel goes like so:"
+        "summary": "The block state definition JSON (in assets/<namespace>/blockstates) is compiled and baked into a BlockStateModel for every BlockState. The process of creating the BlockStateModel goes like so:"
       },
       {
         "title": "Model Data",
@@ -3225,7 +3225,7 @@
       {
         "title": "Item Models",
         "level": 2,
-        "summary": "The client item JSON (in assets//items) is compiled and baked into an ItemModel for a given Item to be used by the ItemStack. The process of creating the ItemModel goes like so:"
+        "summary": "The client item JSON (in assets/<namespace>/items) is compiled and baked into an ItemModel for a given Item to be used by the ItemStack. The process of creating the ItemModel goes like so:"
       },
       {
         "title": "Perspectives",
@@ -3269,7 +3269,7 @@
       {
         "title": "Particle Descriptions",
         "level": 2,
-        "summary": "Particle descriptions are JSON files in the assets//particles directory. A particle description has the same name as its associated particle type, and consists of a list of textures relative to ass..."
+        "summary": "Particle descriptions are JSON files in the assets/<namespace>/particles directory. A particle description has the same name as its associated particle type, and consists of a list of textures rela..."
       },
       {
         "title": "Using the Description",
@@ -3333,7 +3333,7 @@
       {
         "title": "Level",
         "level": 3,
-        "summary": "- playSeededSound(Entity entity, double x, double y, double z, Holder soundEvent, SoundSource soundSource, float volume, float pitch, long seed)"
+        "summary": "- playSeededSound(Entity entity, double x, double y, double z, Holder<SoundEvent> soundEvent, SoundSource soundSource, float volume, float pitch, long seed)"
       },
       {
         "title": "ClientLevel",
@@ -3504,7 +3504,7 @@
       {
         "title": "File Location",
         "level": 2,
-        "summary": "Data maps are loaded from a JSON file located at /data_maps///.json, where:"
+        "summary": "Data maps are loaded from a JSON file located at <mapNamespace>/data_maps/<registryNamespace>/<registryPath>/<mapPath>.json, where:"
       },
       {
         "title": "JSON Structure",
@@ -3672,7 +3672,7 @@
       {
         "title": "ConditionalEffect",
         "level": 3,
-        "summary": "Wrapping the type in ConditionalEffect allows the enchantment effect component to optionally take effect based on a given LootContext."
+        "summary": "Wrapping the type in ConditionalEffect<?> allows the enchantment effect component to optionally take effect based on a given LootContext."
       },
       {
         "title": "Enchantment Data Generation",
@@ -3749,7 +3749,7 @@
       "deferredregister",
       "registry"
     ],
-    "firstParagraph": "Loot tables are data files that are used to define randomized loot drops. A loot table can be rolled, returning a (potentially empty) list of item stacks. The output of this process depends on (pseudo-)randomness. Loot tables are located at `data//loot_table/.json`. For example, the loot table `mine",
+    "firstParagraph": "Loot tables are data files that are used to define randomized loot drops. A loot table can be rolled, returning a (potentially empty) list of item stacks. The output of this process depends on (pseudo-)randomness. Loot tables are located at `data/<mod_id>/loot_table/<name>.json`. For example, the lo",
     "sections": [
       {
         "title": "Loot Entry",
@@ -3769,7 +3769,7 @@
       {
         "title": "Loot Parameters",
         "level": 2,
-        "summary": "A loot parameter, known internally as a ContextKey, is a parameter provided to a loot table when rolled, where T is the type of the provided parameter, for example BlockPos or Entity. They can be u..."
+        "summary": "A loot parameter, known internally as a ContextKey<T>, is a parameter provided to a loot table when rolled, where T is the type of the provided parameter, for example BlockPos or Entity. They can b..."
       },
       {
         "title": "Entity Targets",
@@ -3814,7 +3814,7 @@
       {
         "title": "EntityLootSubProvider",
         "level": 3,
-        "summary": "Similar to BlockLootSubProvider, EntityLootSubProvider provides many helpers for entity loot table generation. Also similar to BlockLootSubProvider, we must provide a Stream> of entities known to t..."
+        "summary": "Similar to BlockLootSubProvider, EntityLootSubProvider provides many helpers for entity loot table generation. Also similar to BlockLootSubProvider, we must provide a Stream<EntityType<?>> of entit..."
       }
     ]
   },
@@ -3858,7 +3858,7 @@
       {
         "title": "Custom Loot Functions",
         "level": 2,
-        "summary": "To get started, we create our own class extending LootItemFunction. LootItemFunction extends BiFunction, so what we want is to use the existing item stack and the loot context to return a new, modi..."
+        "summary": "To get started, we create our own class extending LootItemFunction. LootItemFunction extends BiFunction<ItemStack, LootContext, ItemStack>, so what we want is to use the existing item stack and the..."
       }
     ]
   },
@@ -4493,7 +4493,7 @@
       "data-components",
       "registry"
     ],
-    "firstParagraph": "`Ingredient`s are used in [recipes](/docs/1.21.10/resources/server/recipes/) to check whether a given [ItemStack](/docs/1.21.10/items/#itemstacks) is a valid input for the recipe. For this purpose, `Ingredient` implements `Predicate`, and `#test` can be called to confirm if a given `ItemStack` match",
+    "firstParagraph": "`Ingredient`s are used in [recipes](/docs/1.21.10/resources/server/recipes/) to check whether a given [ItemStack](/docs/1.21.10/items/#itemstacks) is a valid input for the recipe. For this purpose, `Ingredient` implements `Predicate<ItemStack>`, and `#test` can be called to confirm if a given `ItemS",
     "sections": [
       {
         "title": "Built-In Ingredient Types",
@@ -4541,7 +4541,7 @@
       {
         "title": "Using Tags",
         "level": 2,
-        "summary": "To reference tags in code, you must create a TagKey, where T is the type of tag (Block, Item, EntityType, etc.), using a registry key and a resource location:"
+        "summary": "To reference tags in code, you must create a TagKey<T>, where T is the type of tag (Block, Item, EntityType<?>, etc.), using a registry key and a resource location:"
       },
       {
         "title": "Tags for Static Registries During Bootstrap",
@@ -4556,7 +4556,7 @@
       {
         "title": "Custom Tag Providers",
         "level": 3,
-        "summary": "A custom tag provider, whether for an existing or custom registry, can be created by simply extending TagsProvider, where T is the registry object you are generating a tag for."
+        "summary": "A custom tag provider, whether for an existing or custom registry, can be created by simply extending TagsProvider<T>, where T is the registry object you are generating a tag for."
       }
     ]
   }

@@ -51,7 +51,6 @@ As such, your top level package should be something that you own: a domain, emai
 
 | Type | Value | Top-Level Package |
 | --- | --- | --- |
-| Type | Value | Top-Level Package |
 | Domain | example.com | com.example |
 | Subdomain | example.github.io | io.github.example |
 | Email | [email protected] | com.gmail.example |

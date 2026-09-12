@@ -58,9 +58,9 @@ public static final DeferredHolder<Block, Block> EXAMPLE_BLOCK = BLOCKS.register
 
 ```
 
-The class `DeferredHolder` holds our object. The type parameter `R` is the type of the registry we are registering to (in our case `Block`). The type parameter `T` is the type of our supplier. Since we directly register a `Block` in this example, we provide `Block` as the second parameter. If we were to register an object of a subclass of `Block`, for example `SlabBlock`, we would provide `SlabBlock` here instead.
+The class `DeferredHolder<R, T extends R>` holds our object. The type parameter `R` is the type of the registry we are registering to (in our case `Block`). The type parameter `T` is the type of our supplier. Since we directly register a `Block` in this example, we provide `Block` as the second parameter. If we were to register an object of a subclass of `Block`, for example `SlabBlock`, we would provide `SlabBlock` here instead.
 
-`DeferredHolder` is a subclass of `Supplier`. To get our registered object when we need it, we can call `DeferredHolder#get()`. The fact that `DeferredHolder` extends `Supplier` also allows us to use `Supplier` as the type of our field. That way, the above code block becomes the following:
+`DeferredHolder<R, T extends R>` is a subclass of `Supplier<T>`. To get our registered object when we need it, we can call `DeferredHolder#get()`. The fact that `DeferredHolder` extends `Supplier` also allows us to use `Supplier` as the type of our field. That way, the above code block becomes the following:
 
 ```java
 
@@ -394,22 +394,34 @@ public static final ResourceKey<ConfiguredFeature<?, ?>> EXAMPLE_CONFIGURED_FEAT
 
 );
 
-public static final ResourceKey
-EXAMPLE_PLACED_FEATURE = ResourceKey.create(
+public static final ResourceKey<PlacedFeature> EXAMPLE_PLACED_FEATURE = ResourceKey.create(
+
     Registries.PLACED_FEATURE,
+
     new ResourceLocation(MOD_ID, "example_placed_feature")
+
 );
 
 new RegistrySetBuilder()
+
     .add(Registries.CONFIGURED_FEATURE, bootstrap -> {
+
         bootstrap.register(EXAMPLE_CONFIGURED_FEATURE, ...);
+
     })
+
     .add(Registries.PLACED_FEATURE, bootstrap -> {
-        HolderGetter> otherRegistry = bootstrap.lookup(Registries.CONFIGURED_FEATURE);
+
+        HolderGetter<ConfiguredFeature<?, ?>> otherRegistry = bootstrap.lookup(Registries.CONFIGURED_FEATURE);
+
         bootstrap.register(EXAMPLE_PLACED_FEATURE, new PlacedFeature(
+
             otherRegistry.getOrThrow(EXAMPLE_CONFIGURED_FEATURE), // Get the configured feature
+
             List.of() // No-op when placement happens - replace with whatever your placement parameters are
+
         ));
+
     });
 
 ```

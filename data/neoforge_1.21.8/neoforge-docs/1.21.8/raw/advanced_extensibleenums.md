@@ -4,7 +4,7 @@ version: "1.21.8"
 pageId: "advanced/extensibleenums"
 url: "https://docs.neoforged.net/docs/1.21.8/advanced/extensibleenums/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:00:18.203Z"
+fetchedAt: "2026-09-12T12:05:49.246Z"
 ---
 # Extensible Enums
 
@@ -154,14 +154,14 @@ If a constructor is marked with the `@ReservedConstructor` annotation, then it c
 The parameters can be specified in three ways with limitations depending on the parameter types:
 
 - Inline in the JSON file as an array of constants (only allowed for primitive values, Strings and for passing null to any reference type)
-- As a reference to a field of type `EnumProxy` in a class from the mod (see `EnumProxy` example above)
+- As a reference to a field of type `EnumProxy<TheEnum>` in a class from the mod (see `EnumProxy` example above)
 
 The first parameter specifies the target enum and the subsequent parameters are the ones to be passed to the enum constructor
 
 </li>
 <li class="">As a reference to a method returning `Object`, where the return value is the parameter value to use. The method must have exactly two parameters of type `int` (index of the parameter) and `Class<?>` (expected type of the parameter)<!-- -->
 
-- The `Class` object should be used to cast (`Class#cast()`) the return value in order to keep `ClassCastException`s in mod code.
+- The `Class<?>` object should be used to cast (`Class#cast()`) the return value in order to keep `ClassCastException`s in mod code.
 
 </li>
 </ul>

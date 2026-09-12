@@ -31,7 +31,7 @@ A `KeyMapping` can be created using it's constructor. The `KeyMapping` takes in 
 > **Tip**
 > tip
 
-A `KeyMapping` can be added to a custom category by creating a new `KeyMapping.Category` with the `Identifier` and registering it via `RegisterKeyMappingsEvent#registerCategory` on the [mod event bus](/docs/1.21.11/concepts/events#registering-an-event-handler) only on the [physical client](/docs/1.21.11/concepts/sides#the-physical-side). The associated [translation key](/docs/1.21.11/resources/client/i18n#components) for the category is `key.category..`.
+A `KeyMapping` can be added to a custom category by creating a new `KeyMapping.Category` with the `Identifier` and registering it via `RegisterKeyMappingsEvent#registerCategory` on the [mod event bus](/docs/1.21.11/concepts/events#registering-an-event-handler) only on the [physical client](/docs/1.21.11/concepts/sides#the-physical-side). The associated [translation key](/docs/1.21.11/resources/client/i18n#components) for the category is `key.category.<namespace>.<path>`.
 
 ```java
 

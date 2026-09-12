@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "resources/client/sounds"
 url: "https://docs.neoforged.net/docs/1.20.4/resources/client/sounds/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:11.523Z"
+fetchedAt: "2026-09-12T12:00:27.814Z"
 ---
 # Sounds
 

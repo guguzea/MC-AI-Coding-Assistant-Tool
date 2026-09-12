@@ -4,7 +4,7 @@ version: "1.21.11"
 pageId: "advanced/featureflags"
 url: "https://docs.neoforged.net/docs/1.21.11/advanced/featureflags/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:01:33.229Z"
+fetchedAt: "2026-09-12T12:08:40.280Z"
 ---
 # Feature Flags
 
@@ -179,17 +179,24 @@ DeferredHolder<MobEffect, ExperimentalMobEffect> EXPERIMENTAL_MOB_EEFECT = MOB_E
 
 // Potion
 
-DeferredRegister
-POTIONS = DeferredRegister.create(Registries.POTION, "examplemod");
-DeferredHolder EXPERIMENTAL_POTION = POTIONS.register("experimental", registryName -> new ExperimentalPotion(registryName.toString(), new MobEffectInstance(EXPERIMENTAL_MOB_EEFECT))
+DeferredRegister<Potion> POTIONS = DeferredRegister.create(Registries.POTION, "examplemod");
+
+DeferredHolder<Potion, ExperimentalPotion> EXPERIMENTAL_POTION = POTIONS.register("experimental", registryName -> new ExperimentalPotion(registryName.toString(), new MobEffectInstance(EXPERIMENTAL_MOB_EEFECT))
+
     .requiredFeatures(EXPERIMENTAL) // mark as requiring the 'EXPERIMENTAL' flag
+
 );
 
 // GameRule
-DeferredRegister GAME_RULES = DefeferredRegister.create(Registries.GAME_RULE, "examplemod");
-DeferredHolder EXPERIMENTAL_GAME_RULE = GAME_RULES.register("experimental", registryName -> new GameRule(
+
+DeferredRegister<GameRule> GAME_RULES = DefeferredRegister.create(Registries.GAME_RULE, "examplemod");
+
+DeferredHolder<GameRule, GameRule> EXPERIMENTAL_GAME_RULE = GAME_RULES.register("experimental", registryName -> new GameRule(
+
     GameRuleCategory.MISC, GameRuleType.BOOL, BoolArgumentType.bool(), GameRuleTypeVisitor::visitBoolean, Codec.BOOL, bool -> bool ? 1 : 0, false,
+
     FeatureFlagSet.of(EXPERIMENTAL) // mark as requiring the 'EXPERIMENTAL' flag
+
 ));
 
 ```
@@ -284,45 +291,71 @@ public static void addFeaturePacks(final AddPackFindersEvent event) {
 
             // Take note this also defines your packs id using the following format
 
-            // mod/<namespace>:
-`, e.g. `mod/examplemod:data/examplemod/datapacks/experimental`
+            // mod/<namespace>:<path>`, e.g. `mod/examplemod:data/examplemod/datapacks/experimental`
+
             Identifier.fromNamespaceAndPath("examplemod", "data/examplemod/datapacks/experimental"),
+
             
+
             // What kind of resources are contained within this pack
+
             // 'CLIENT_RESOURCES' for packs with client assets (resource packs)
+
             // 'SERVER_DATA' for packs with server data (data packs)
+
             PackType.SERVER_DATA,
+
             
+
             // Display name shown in the Experiments screen
+
             Component.literal("ExampleMod: Experiments"),
+
             
+
             // In order for this pack to load and enable feature flags, this MUST be 'FEATURE',
+
             // any other PackSource type is invalid here
+
             PackSource.FEATURE,
+
             
+
             // If this is true, the pack is always active and cannot be disabled, should always be false for feature packs
+
             false,
+
             
+
             // Priority to load resources from this pack in
+
             // 'TOP' this pack will be prioritized over other packs
+
             // 'BOTTOM' other packs will be prioritized over this pack 
+
             Pack.Position.TOP
+
     );
+
 }
 
 ```
 
 #### Enabling in Singleplayer
 
-Create a new world.
-Navigate to the Experiments screen.
-Toggle on the desired packs.
-Confirm changes by clicking `Done`.
+<ol>
+<li class="">Create a new world.</li>
+<li class="">Navigate to the Experiments screen.</li>
+<li class="">Toggle on the desired packs.</li>
+<li class="">Confirm changes by clicking `Done`.</li>
+</ol>
 
 #### Enabling in Multiplayer
 
-Open your server's `server.properties` file.
-Add the feature pack id to `initial-enabled-packs`, separating each pack by a `,`. The pack id is defined during registering your pack finder, as seen above.
+<ol>
+<li class="">Open your server's `server.properties` file.</li>
+<li class="">Add the feature pack id to `initial-enabled-packs`, separating each pack by a `,`. The pack id is defined during registering your pack finder, as seen above.</li>
+</ol>
 
 ### External
 

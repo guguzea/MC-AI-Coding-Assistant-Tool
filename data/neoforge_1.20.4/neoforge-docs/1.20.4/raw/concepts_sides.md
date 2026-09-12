@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "concepts/sides"
 url: "https://docs.neoforged.net/docs/1.20.4/concepts/sides/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:56:50.458Z"
+fetchedAt: "2026-09-12T11:59:46.166Z"
 ---
 # Sides
 

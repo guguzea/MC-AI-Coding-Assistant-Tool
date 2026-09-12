@@ -6,7 +6,9 @@
   "version": "1.15.2",
   "sourceJarSha256": "b7b83f46f3dc0aaa5b61764a863a94fe917e5b016dc83b5607fee70512b1b107",
   "source": "official",
-  "loaders": [],
+  "loaders": [
+    "forge"
+  ],
   "decompile": {
     "found": true,
     "fromSourcesJar": true,

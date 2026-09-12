@@ -4,7 +4,7 @@ version: "1.21.8"
 pageId: "resources/server/tags"
 url: "https://docs.neoforged.net/docs/1.21.8/resources/server/tags/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:00:54.953Z"
+fetchedAt: "2026-09-12T12:07:07.852Z"
 ---
 # Tags
 
@@ -12,7 +12,7 @@ A tag is, simply put, a list of registered objects of the same type. They are lo
 
 Any [registry](/docs/1.21.8/concepts/registries) can have tag files - while blocks and items are the most common use cases, other registries such as fluids, entity types or damage types often utilize tags as well. You can also create your own tags if you need them.
 
-Tags are located at `data//tags//.json` for Minecraft registries, and `data//tags///.json` for non-Minecraft registries. For example, to modify the `minecraft:planks` item tag, you would place your tag file at `data/minecraft/tags/item/planks.json`.
+Tags are located at `data/<tag_namespace>/tags/<registry_path>/<tag_path>.json` for Minecraft registries, and `data/<tag_namespace>/tags/<registry_namespace>/<registry_path>/<tag_path>.json` for non-Minecraft registries. For example, to modify the `minecraft:planks` item tag, you would place your tag file at `data/minecraft/tags/item/planks.json`.
 
 > **Info**
 > info
@@ -104,7 +104,7 @@ Naming the tag itself also has some conventions to follow:
 
 ## Using Tags
 
-To reference tags in code, you must create a `TagKey`, where `T` is the type of tag (`Block`, `Item`, `EntityType`, etc.), using a [registry key](/docs/1.21.8/misc/resourcelocation#resourcekeys) and a [resource location](/docs/1.21.8/misc/resourcelocation):
+To reference tags in code, you must create a `TagKey<T>`, where `T` is the type of tag (`Block`, `Item`, `EntityType<?>`, etc.), using a [registry key](/docs/1.21.8/misc/resourcelocation#resourcekeys) and a [resource location](/docs/1.21.8/misc/resourcelocation):
 
 ```java
 
@@ -177,7 +177,7 @@ HolderSet<Block> blockTag = BuiltInRegistries.acquireBootstrapRegistrationLookup
 
 ## Datagen
 
-Like many other JSON files, tags can be [datagenned](/docs/1.21.8/resources/#data-generation). Each kind of tag has its own datagen base class - one class for block tags, one for item tags, etc. -, and as such, we need one class for each kind of tag as well. All of these classes extend from the `TagsProvider` base class, with `T` again being the type of the tag (`Block`, `Item`, etc.) The `TagsProvider`s are then further grouped into two categories: `IntrinsicHolderTagsProvider` for typically static registry objects, allowing you to directly pass the object to the tag; and `KeyTagProvider` for typically datapack registry objects, allowing you to pass the `ResourceKey` of an object to the tag.
+Like many other JSON files, tags can be [datagenned](/docs/1.21.8/resources/#data-generation). Each kind of tag has its own datagen base class - one class for block tags, one for item tags, etc. -, and as such, we need one class for each kind of tag as well. All of these classes extend from the `TagsProvider<T>` base class, with `T` again being the type of the tag (`Block`, `Item`, etc.) The `TagsProvider`s are then further grouped into two categories: `IntrinsicHolderTagsProvider<T>` for typically static registry objects, allowing you to directly pass the object to the tag; and `KeyTagProvider` for typically datapack registry objects, allowing you to pass the `ResourceKey` of an object to the tag.
 
 The following table shows a list of tag providers for different objects:
 
@@ -362,7 +362,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ### Custom Tag Providers
 
-A custom tag provider, whether for an existing or custom [registry](/docs/1.21.8/concepts/registries), can be created by simply extending `TagsProvider`, where `T` is the registry object you are generating a tag for.
+A custom tag provider, whether for an existing or custom [registry](/docs/1.21.8/concepts/registries), can be created by simply extending `TagsProvider<T>`, where `T` is the registry object you are generating a tag for.
 
 ```java
 
@@ -448,7 +448,7 @@ public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
 
 ```
 
-Currently, the entire tag is being constructed from `ResourceLocation`s. However, specifying the raw identifier every time can become tedious, especially when the `ResourceKey` or the direct object is available. That's where `TagAppender` comes in. `TagAppender` is functionally a wrapper around a `TagBuilder` that takes in some arbitrary entry object `E` and converts it into `TagBuilder` calls for the registry object `T`. The `TagAppender` can be remapped into any arbitrary object via `map`, provided there is a way to convert the new object type into the previous entry object `E`. This is basically what `KeyTagProvider` and `IntrinsicHolderTagsProvider` are doing. They provide a method `tag` that creates a `TagAppender` that maps `ResourceKey`s to `ResourceLocation`s or direct objects to `ResourceLocation`s, respectively:
+Currently, the entire tag is being constructed from `ResourceLocation`s. However, specifying the raw identifier every time can become tedious, especially when the `ResourceKey` or the direct object is available. That's where `TagAppender` comes in. `TagAppender<E, T>` is functionally a wrapper around a `TagBuilder` that takes in some arbitrary entry object `E` and converts it into `TagBuilder` calls for the registry object `T`. The `TagAppender` can be remapped into any arbitrary object via `map`, provided there is a way to convert the new object type into the previous entry object `E`. This is basically what `KeyTagProvider` and `IntrinsicHolderTagsProvider` are doing. They provide a method `tag` that creates a `TagAppender` that maps `ResourceKey`s to `ResourceLocation`s or direct objects to `ResourceLocation`s, respectively:
 
 ```java
 

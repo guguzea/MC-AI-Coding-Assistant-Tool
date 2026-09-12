@@ -814,6 +814,13 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `lib-api-summaries/*.json` | `mcp-server/data/` | 44 库 / 12,225 个 public 类 / 49,040 方法签名摘要（轻量 javadoc，约 4MB） |
 | `lib-manifests/all.json` | `mcp-server/data/` | **45** slug / **2867** 版本条目（版本号/URL/hash/loader 矩阵，Modrinth API 生成） |
 
+> **`packages` 是启发式产物，不可当 import 依据**：`verifiedApi.<版本/加载器>.packages` 由 `scripts/batch-decompile.mjs`
+> 从反编译产物的顶层目录截得来（通用 TLD 取前 3 段、其余取前 2 段，且同层只按字母序取首个子目录），
+> 所以它只回答「这个库大概活在哪几个包根下」，**不是**可直接照抄的全类名清单。要落到具体类名，
+> 必须走 `query_loader_api`（先让用户自备 jar 跑 `ingest_loader_api`）或 IDE 补全核对。
+> 归属侧已有硬约束：`scripts/merge-verified-api.mjs` 会整行拒绝「包根已被别的库条目证实」的包名（JiJ 内嵌库泄漏），
+> 自检见 `mcp-server/test-scripts.mjs` 的 §S3 块。
+
 > **已知缺口（已实测核实，不伪造）**：catalog 50 条中有 4 个条目**无 API 摘要** —— `lib-config-legacy`、`lib-libgui`、`lib-server-translations`、`lib-spruceui-obsidianui`。根因：这 4 条在 `library-catalog.ts` 中 `modrinthSlug` 为空，且实测 Modrinth `project/libgui`、`project/spruceui`、`project/server-translations-api`、`project/config-legacy` 均返回 **404**（无对应项目），因此 `build-lib-manifest` 拉不到版本清单、`batch-decompile` 无 jar 可反编译，`verifiedApi` 保持 `{}`。这些库的 API 请以各自 `officialUrls`（GitHub 仓库）为准，禁止从邻库或邻版克隆摘要。
 > 注：`lib-spruceui-obsidianui` 条目中的 `obsidianui` 在 Modrinth 确实存在（200）。若后续要为其补摘要，正确做法是在 `community_knowledge/authored/lib-spruceui-obsidianui.md` 的 frontmatter 补 `modrinthSlug` 后重跑数据链，**不要**直接手改生成物 `library-catalog.ts`。
 

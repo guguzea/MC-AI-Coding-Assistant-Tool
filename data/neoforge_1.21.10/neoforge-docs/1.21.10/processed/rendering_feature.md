@@ -10,7 +10,6 @@ The following methods are made available through the collector, in the order the
 
 | Method | Description |
 | --- | --- |
-| Method | Description |
 | submitHitbox | A wireframe representing the bounding box and a line representing the view vector, typically for entities. |
 | submitShadow | A number of black ovals for the desired radius, location, and opacity. |
 | submitNameTag | Text, transparency sorted. |

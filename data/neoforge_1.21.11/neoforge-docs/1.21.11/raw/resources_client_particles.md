@@ -4,7 +4,7 @@ version: "1.21.11"
 pageId: "resources/client/particles"
 url: "https://docs.neoforged.net/docs/1.21.11/resources/client/particles/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:01:53.331Z"
+fetchedAt: "2026-09-12T12:09:35.158Z"
 ---
 # Particles
 
@@ -22,26 +22,39 @@ public class MyParticleTypes {
 
     // Assuming that your mod id is examplemod
 
-    public static final DeferredRegister
-> PARTICLE_TYPES =
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =
+
         DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, "examplemod");
+
     
+
     // The easiest way to add new particle types is reusing vanilla's SimpleParticleType.
+
     // Implementing a custom ParticleType is also possible, see below.
-    public static final Supplier MY_QUAD_PARTICLE = PARTICLE_TYPES.register(
+
+    public static final Supplier<SimpleParticleType> MY_QUAD_PARTICLE = PARTICLE_TYPES.register(
+
         // The name of the particle type.
+
         "my_quad_particle",
+
         // The supplier. The boolean parameter denotes whether setting the Particles option in the
+
         // video settings to Minimal will affect this particle type or not; this is false for
+
         // most vanilla particles, but true for e.g. explosions, campfire smoke, or squid ink.
+
         () -> new SimpleParticleType(false)
+
     );
+
 }
 
 ```
 
 > **Info**
 > info
+
 A `ParticleType` is only necessary if you need to work with particles on the server side. The client can also use `Particle`s directly.
 
 ## Custom ParticleTypes
@@ -158,7 +171,7 @@ public class MyParticleOptions implements ParticleOptions {
 
 ## Particle Descriptions
 
-Particle descriptions are JSON files in the `assets//particles` directory. A particle description has the same name as its associated [particle type](#registering-particletypes), and consists of a list of textures relative to `assets//textures/particles`.
+Particle descriptions are JSON files in the `assets/<namespace>/particles` directory. A particle description has the same name as its associated [particle type](#registering-particletypes), and consists of a list of textures relative to `assets/<namespace>/textures/particles`.
 
 A particle description looks something like this:
 

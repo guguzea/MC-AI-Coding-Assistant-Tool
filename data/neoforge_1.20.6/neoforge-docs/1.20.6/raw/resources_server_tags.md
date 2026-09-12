@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "resources/server/tags"
 url: "https://docs.neoforged.net/docs/1.20.6/resources/server/tags/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:07.281Z"
+fetchedAt: "2026-09-12T12:02:01.473Z"
 ---
 # Tags
 
@@ -12,7 +12,7 @@ Tags are generalized sets of objects in the game used for grouping related thing
 
 ## Declaring Your Own Groupings
 
-Tags are declared in your mod's [datapack](/docs/1.20.6/resources/server/). For example, a `TagKey` with a given identifier of  `modid:foo/tagname` will reference a tag at `/data//tags/blocks/foo/tagname.json`. Tags for `Block`s, `Item`s, `EntityType`s, `Fluid`s, and `GameEvent`s use the plural forms for their folder location while all other registries use the singular version (`EntityType` uses the folder `entity_types` while `Potion` would use the folder `potion`). Similarly, you may append to or override tags declared in other domains, such as Vanilla, by declaring your own JSONs. For example, to add your own mod's saplings to the Vanilla sapling tag, you would specify it in `/data/minecraft/tags/blocks/saplings.json`, and Vanilla will merge everything into one tag at reload, if the `replace` option is false. If `replace` is true, then all entries before the json specifying `replace` will be removed. Values listed that are not present will cause the tag to error unless the value is listed using an `id` string and `required` boolean set to false, as in the following example:
+Tags are declared in your mod's [datapack](/docs/1.20.6/resources/server/). For example, a `TagKey<Block>` with a given identifier of  `modid:foo/tagname` will reference a tag at `/data/<modid>/tags/blocks/foo/tagname.json`. Tags for `Block`s, `Item`s, `EntityType`s, `Fluid`s, and `GameEvent`s use the plural forms for their folder location while all other registries use the singular version (`EntityType` uses the folder `entity_types` while `Potion` would use the folder `potion`). Similarly, you may append to or override tags declared in other domains, such as Vanilla, by declaring your own JSONs. For example, to add your own mod's saplings to the Vanilla sapling tag, you would specify it in `/data/minecraft/tags/blocks/saplings.json`, and Vanilla will merge everything into one tag at reload, if the `replace` option is false. If `replace` is true, then all entries before the json specifying `replace` will be removed. Values listed that are not present will cause the tag to error unless the value is listed using an `id` string and `required` boolean set to false, as in the following example:
 
 ```json5
 

@@ -7,7 +7,9 @@
   "sourceJarSha256": "05d4c04ce4604521b0e3ae35c4a853be9c805e0547d007b464f52eee868793a9",
   "sourceTreeMtime": 1788294107777.8137,
   "source": "official",
-  "loaders": [],
+  "loaders": [
+    "neoforge"
+  ],
   "decompile": {
     "found": true,
     "fromSourcesJar": true,

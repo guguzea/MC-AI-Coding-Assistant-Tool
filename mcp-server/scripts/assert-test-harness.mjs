@@ -50,7 +50,9 @@ for (const root of roots) {
     if (/\.test\.mjs$/.test(base) && !fs.existsSync(file)) continue;
     const text = fs.readFileSync(file, "utf8");
     if (!LOCAL_HARNESS.test(text)) continue;
-    if (!/^[\s\S]*(?:passed|failed|failures)[\s\S]*console\.(log|error)/m.test(text)) continue;
+    // F95：前置门以前要求计数器叫 passed|failed|failures —— 改叫 `ok` 就整文件跳过，闸门可被命名绕过。
+    // 现在只要求「这个脚本会用 console 汇报」，汇报什么名字由后面的判定说了算。
+    if (!/console\.(log|error)/.test(text)) continue;
     scanned += 1;
 
     const usesNodeTest = /from\s+["']node:test["']/.test(text);

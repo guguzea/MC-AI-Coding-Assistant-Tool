@@ -30,7 +30,7 @@
  *   node scripts/forge-javadoc-indexer.js --dry-run         # 只统计不写文件
  */
 
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -44,7 +44,12 @@ const dryRun = args.includes("--dry-run");
 
 // ── 路径 ────────────────────────────────────────────────────────────────
 
-const JAVADOC_ROOT = join(__dirname, "..", "..", "data", "forge_javadoc");
+// 可用 `MC_SKILL_JAVADOC_ROOT`（其次 `MC_SKILL_DATA/forge_javadoc`）指到别的数据根，
+// 便于在副本上验证去重行为而不碰仓库 `data/`。
+const JAVADOC_ROOT = process.env.MC_SKILL_JAVADOC_ROOT
+  || (process.env.MC_SKILL_DATA
+    ? join(process.env.MC_SKILL_DATA, "forge_javadoc")
+    : join(__dirname, "..", "..", "data", "forge_javadoc"));
 
 const ALL_VERSIONS = ["1.7.10", "1.8.9", "1.9.4", "1.10.2", "1.11.2", "1.12.2"];
 const VERSIONS = versionArg ? [versionArg] : ALL_VERSIONS;
@@ -210,6 +215,27 @@ function inferPriority(pkg) {
   return "🟢";
 }
 
+// ── 历史 ` (N)` 重复件过滤（F123 检索侧根因）───────────────────────────
+//
+// 盘上 1.7.10 / 1.12.2 有两批 `Foo (2).md`：与 `Foo.md` **逐字节相同**、frontmatter
+// 的 `source` 也是同一个 URL（浏览器/资源管理器式的重名落地形态）。id 取自文件名 ⇒
+// 两条 entry 同时进 index-l0/l1/l2，`search_docs` 对同一个类返回两次命中。
+// 这里只折叠「基名存在且字节全等」的那一类；若 `(2)` 与基名内容不同（真碰撞），
+// 一律照旧入库，绝不吞页。删除原件是数据拥有者的动作，本脚本不删。
+const LEGACY_DUP_RE = /^(.+) \((\d+)\)\.md$/;
+
+export function isLegacyDuplicate(fullPath, entryName) {
+  const m = LEGACY_DUP_RE.exec(entryName);
+  if (!m) return false;
+  const base = join(dirname(fullPath), m[1] + ".md");
+  if (!existsSync(base)) return false;
+  try {
+    return readFileSync(fullPath).equals(readFileSync(base));
+  } catch {
+    return false;
+  }
+}
+
 // ── 为单个版本生成索引 ────────────────────────────────────────────────
 
 function processVersion(version) {
@@ -222,6 +248,8 @@ function processVersion(version) {
   const l0Entries = [];
   const l1Entries = [];
   const l2Entries = [];
+  /** 本次折叠掉的历史 ` (N)` 重复件（F123）；只有与基名逐字节相同才计。 */
+  let legacyDupSkipped = 0;
 
   let totalFiles = 0;
   let forgeCount = 0;
@@ -236,6 +264,11 @@ function processVersion(version) {
         if (entry.isDirectory()) {
           walkDir(fullPath, relPath);
         } else if (entry.name.endsWith(".md")) {
+          // F123：与基名逐字节相同的历史 ` (N)` 重复件不进索引（同一类命中两次的根因）。
+          if (isLegacyDuplicate(fullPath, entry.name)) {
+            legacyDupSkipped++;
+            continue;
+          }
           // 类名（去掉 .md 后缀，处理 .inner-class）
           const fileName = entry.name.replace(/\.md$/, "");
           // 路径中的斜杠保留，用于语义 id
@@ -320,7 +353,8 @@ function processVersion(version) {
   mkdirSync(outDir, { recursive: true });
 
   if (dryRun) {
-    console.log(`  [DRY] ${version}: ${totalFiles} pages (${forgeCount} Forge)`);
+    console.log(`  [DRY] ${version}: ${totalFiles} pages (${forgeCount} Forge)` +
+      (legacyDupSkipped ? ` · 折叠历史重复件 ${legacyDupSkipped}` : ""));
     return;
   }
 
@@ -339,6 +373,7 @@ function processVersion(version) {
   mkdirSync(procDir, { recursive: true });
 
   const seenDest = new Set();
+  let procDupMirrored = 0;
   function copyRawToProcessed(srcDir, destDir, prefix) {
     let entries;
     try {
@@ -355,6 +390,10 @@ function processVersion(version) {
       if (entry.isDirectory()) {
         copyRawToProcessed(srcPath, destDir, destName);
       } else if (entry.name.endsWith(".md")) {
+        // processed 是 raw 的**镜像**（G3 的 raw/processed 篇数相等判据靠它），
+        // 所以历史 ` (N)` 重复件这里照样镜像；去重只发生在索引层（walkDir 已跳过）。
+        // 于是这些副本是「在盘但无 entry 指向」的孤儿 —— 由待删清单交人工删。
+        if (isLegacyDuplicate(srcPath, entry.name)) procDupMirrored++;
         if (seenDest.has(destPath)) {
           console.warn(`  [WARN] ${version}: name collision, skip ${srcPath} (would overwrite ${destPath})`);
           continue;
@@ -373,7 +412,10 @@ function processVersion(version) {
 
   copyRawToProcessed(rawDir, procDir, "");
 
-  console.log(`  [OK] ${version}: ${totalFiles} pages (${forgeCount} Forge)`);
+  console.log(`  [OK] ${version}: ${totalFiles} pages (${forgeCount} Forge)` +
+    (legacyDupSkipped
+      ? ` · 索引已折叠历史重复件 ${legacyDupSkipped}（processed 仍镜像 ${procDupMirrored} 份孤儿，等待人工删除）`
+      : ""));
 }
 
 // ── 主 ────────────────────────────────────────────────────────────────

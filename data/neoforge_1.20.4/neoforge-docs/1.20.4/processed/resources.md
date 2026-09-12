@@ -6,7 +6,7 @@ Minecraft generally has two kinds of resources: client-side resources, known as 
 
 Both resource and data packs normally require a [pack.mcmeta file](#packmcmeta), this was also the case in past NeoForge versions. However, NeoForge generates these at runtime for you, so you don't need to worry about it anymore.
 
-If you are confused about the format of something, have a look at the vanilla resources. Your NeoForge development environment not only contains vanilla code, but also vanilla resources. They can be found in the External Resources section (IntelliJ)/Project Libraries section (Eclipse), under the name `ng_dummy_ng.net.minecraft:client:client-extra:` (for Minecraft resources) or `ng_dummy_ng.net.neoforged:neoforge:` (for NeoForge resources).
+If you are confused about the format of something, have a look at the vanilla resources. Your NeoForge development environment not only contains vanilla code, but also vanilla resources. They can be found in the External Resources section (IntelliJ)/Project Libraries section (Eclipse), under the name `ng_dummy_ng.net.minecraft:client:client-extra:<minecraft_version>` (for Minecraft resources) or `ng_dummy_ng.net.neoforged:neoforge:<neoforge_version>` (for NeoForge resources).
 
 ## Assets
 
@@ -159,7 +159,7 @@ The event offers some context for you to use:
 - `event.getGenerator()` returns the `DataGenerator` that you register the providers to.
 - `event.getPackOutput()` returns a `PackOutput` that is used by some providers to determine their file output location.
 - `event.getExistingFileHelper()` returns an `ExistingFileHelper` that is used by providers for things that can reference other files (for example block models, which can specify a parent file).
-- `event.getLookupProvider()` returns a `CompletableFuture` that is mainly used by tags and datagen registries to reference other, potentially not yet existing elements.
+- `event.getLookupProvider()` returns a `CompletableFuture<HolderLookup.Provider>` that is mainly used by tags and datagen registries to reference other, potentially not yet existing elements.
 - `event.includeClient()`, `event.includeServer()`, `event.includeDev()` and `event.includeReports()` are `boolean` methods that allow you to check whether specific command line arguments (see below) are enabled.
 
 ### Command Line Arguments

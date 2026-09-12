@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "misc/debugprofiler"
 url: "https://docs.neoforged.net/docs/misc/debugprofiler/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:57:57.641Z"
+fetchedAt: "2026-09-12T12:07:54.759Z"
 ---
 # Debug Profiler
 

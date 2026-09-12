@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[46,)"
+license="LGPL-3.0-or-later"
+issueTrackerURL="https://github.com/TheIllusiveC4/Caelus/issues"
+logoFile="caelus_icon.png"
+logoBlur=false
+[[mods]]
+modId="caelus"
+version="3.2.0+1.20.1"
+displayName="Caelus API"
+displayURL="https://github.com/TheIllusiveC4/Caelus"
+authors="C4"
+description='''
+A coremod and API to provide developers access to elytra flight mechanics through an entity attribute.
+'''
+[[dependencies.caelus]]
+    modId="forge"
+    mandatory=true
+    versionRange="[46,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.caelus]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20,1.21)"
+    ordering="NONE"
+    side="BOTH"

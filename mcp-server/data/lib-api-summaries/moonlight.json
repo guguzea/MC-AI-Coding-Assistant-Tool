@@ -6,676 +6,1637 @@
   "source": {
     "shard": "jsonl",
     "dirs": [
-      "unknown-mod"
+      "selene"
     ],
     "merged": false
   },
-  "generatedAt": "2026-08-12T10:32:07.888Z",
+  "generatedAt": "2026-09-12T11:33:57.669Z",
   "versions": {
-    "unknown": {
-      "packages": [],
+    "1.18": {
+      "packages": [
+        "net.mehvahdjukaar.selene",
+        "net.mehvahdjukaar.selene.api",
+        "net.mehvahdjukaar.selene.block_set",
+        "net.mehvahdjukaar.selene.block_set.leaves",
+        "net.mehvahdjukaar.selene.block_set.wood",
+        "net.mehvahdjukaar.selene.blocks",
+        "net.mehvahdjukaar.selene.builtincompat",
+        "net.mehvahdjukaar.selene.client",
+        "net.mehvahdjukaar.selene.client.asset_generators",
+        "net.mehvahdjukaar.selene.client.asset_generators.textures",
+        "net.mehvahdjukaar.selene.client.texture_renderer",
+        "net.mehvahdjukaar.selene.entities",
+        "net.mehvahdjukaar.selene.example.map",
+        "net.mehvahdjukaar.selene.example.map.client",
+        "net.mehvahdjukaar.selene.fluids",
+        "net.mehvahdjukaar.selene.items",
+        "net.mehvahdjukaar.selene.map",
+        "net.mehvahdjukaar.selene.map.client",
+        "net.mehvahdjukaar.selene.map.markers",
+        "net.mehvahdjukaar.selene.map.type",
+        "net.mehvahdjukaar.selene.math",
+        "net.mehvahdjukaar.selene.math.colors",
+        "net.mehvahdjukaar.selene.math.kmeans",
+        "net.mehvahdjukaar.selene.misc",
+        "net.mehvahdjukaar.selene.misc.test",
+        "net.mehvahdjukaar.selene.mixins",
+        "net.mehvahdjukaar.selene.network",
+        "net.mehvahdjukaar.selene.resourcepack",
+        "net.mehvahdjukaar.selene.resourcepack.recipe",
+        "net.mehvahdjukaar.selene.resourcepack.resources",
+        "net.mehvahdjukaar.selene.util",
+        "net.mehvahdjukaar.selene.villager_ai"
+      ],
       "classes": [
-        "net.darkhax.bookshelf.block.BlockBasicChest",
-        "net.darkhax.bookshelf.block.BlockSubType",
-        "net.darkhax.bookshelf.block.BlockTileEntity",
-        "net.darkhax.bookshelf.block.property.PropertyObject",
-        "net.darkhax.bookshelf.block.property.PropertyString",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasic",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicChest",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicTickable",
-        "net.darkhax.bookshelf.Bookshelf",
-        "net.darkhax.bookshelf.BookshelfEvents",
-        "net.darkhax.bookshelf.BookshelfRegistry",
-        "net.darkhax.bookshelf.builder.ChestBuilder",
-        "net.darkhax.bookshelf.builder.LootBuilder",
-        "net.darkhax.bookshelf.client.gui.GuiGraphicButton",
-        "net.darkhax.bookshelf.client.gui.GuiSlider",
-        "net.darkhax.bookshelf.client.model.BakedModelRetexturable",
-        "net.darkhax.bookshelf.client.model.DefaultItemOverrideList",
-        "net.darkhax.bookshelf.client.model.ModelArmorExtended",
-        "net.darkhax.bookshelf.client.particle.OpenParticleDigging",
-        "net.darkhax.bookshelf.client.render.tileentity.TileEntityBasicChestRenderer",
-        "net.darkhax.bookshelf.command.Command",
-        "net.darkhax.bookshelf.command.CommandTree",
-        "net.darkhax.bookshelf.config.ConfigurationHandler",
-        "net.darkhax.bookshelf.crafting.AnvilRecipe",
-        "net.darkhax.bookshelf.crafting.IAnvilRecipe",
-        "net.darkhax.bookshelf.data.AttributeOperation",
-        "net.darkhax.bookshelf.data.Blockstates",
-        "net.darkhax.bookshelf.data.ColorHandlers",
-        "net.darkhax.bookshelf.data.FluidVolume",
-        "net.darkhax.bookshelf.data.VanillaColors",
-        "net.darkhax.bookshelf.entity.EntityArrowBase",
-        "net.darkhax.bookshelf.entity.EntityFake",
-        "net.darkhax.bookshelf.events.EnchantmentModifierEvent",
-        "net.darkhax.bookshelf.inventory.SlotArmor",
-        "net.darkhax.bookshelf.inventory.SlotFake",
-        "net.darkhax.bookshelf.item.ICustomMesh",
-        "net.darkhax.bookshelf.item.ItemBlockBasic",
-        "net.darkhax.bookshelf.item.ItemBlockChest",
-        "net.darkhax.bookshelf.item.ItemInventory",
-        "net.darkhax.bookshelf.item.ItemSubType",
-        "net.darkhax.bookshelf.lib.BookshelfException",
-        "net.darkhax.bookshelf.lib.Constants",
-        "net.darkhax.bookshelf.lib.MCColor",
-        "net.darkhax.bookshelf.lib.ModTrackingList",
-        "net.darkhax.bookshelf.lib.WeightedSelector",
-        "net.darkhax.bookshelf.network.NetworkHandler",
-        "net.darkhax.bookshelf.network.SerializableMessage",
-        "net.darkhax.bookshelf.network.TileEntityMessage",
-        "net.darkhax.bookshelf.registry.IVariant",
-        "net.darkhax.bookshelf.registry.RegistryHelper",
-        "net.darkhax.bookshelf.registry.RegistryListener",
-        "net.darkhax.bookshelf.util.AnnotationUtils",
-        "net.darkhax.bookshelf.util.BannerUtils",
-        "net.darkhax.bookshelf.util.baubles.BaubleUtils",
-        "net.darkhax.bookshelf.util.baubles.ItemBauble",
-        "net.darkhax.bookshelf.util.BlockUtils",
-        "net.darkhax.bookshelf.util.ClassUtils",
-        "net.darkhax.bookshelf.util.CollectionUtils",
-        "net.darkhax.bookshelf.util.CraftingUtils",
-        "net.darkhax.bookshelf.util.EnchantmentUtils",
-        "net.darkhax.bookshelf.util.EntityUtils",
-        "net.darkhax.bookshelf.util.GameUtils",
-        "net.darkhax.bookshelf.util.GuiUtils",
-        "net.darkhax.bookshelf.util.MathsUtils",
-        "net.darkhax.bookshelf.util.MathUtils",
-        "net.darkhax.bookshelf.util.ModUtils",
-        "net.darkhax.bookshelf.util.NBTUtils",
-        "net.darkhax.bookshelf.util.NumericUtils",
-        "net.darkhax.bookshelf.util.OreDictUtils",
-        "net.darkhax.bookshelf.util.ParticleUtils",
-        "net.darkhax.bookshelf.util.PlayerUtils",
-        "net.darkhax.bookshelf.util.RenderUtils",
-        "net.darkhax.bookshelf.util.SkullUtils",
-        "net.darkhax.bookshelf.util.StackUtils",
-        "net.darkhax.bookshelf.util.TextUtils",
-        "net.darkhax.bookshelf.world.loot.conditions.BiomeSpecific",
-        "net.darkhax.bookshelf.world.loot.functions.SetColor"
+        "net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider",
+        "net.mehvahdjukaar.selene.api.ISoftFluidConsumer",
+        "net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider",
+        "net.mehvahdjukaar.selene.api.IThirdPersonSpecialItemRenderer",
+        "net.mehvahdjukaar.selene.blocks.IBlockHolder",
+        "net.mehvahdjukaar.selene.blocks.IOwnerProtected",
+        "net.mehvahdjukaar.selene.blocks.ItemDisplayTile",
+        "net.mehvahdjukaar.selene.blocks.MimicBlockTile",
+        "net.mehvahdjukaar.selene.blocks.VerticalSlabBlock",
+        "net.mehvahdjukaar.selene.blocks.WaterBlock",
+        "net.mehvahdjukaar.selene.block_set.BlockRegistryHelper",
+        "net.mehvahdjukaar.selene.block_set.BlockSetManager",
+        "net.mehvahdjukaar.selene.block_set.BlockType",
+        "net.mehvahdjukaar.selene.block_set.BlockTypeRegistry",
+        "net.mehvahdjukaar.selene.block_set.IBlockType",
+        "net.mehvahdjukaar.selene.block_set.leaves.LeavesType",
+        "net.mehvahdjukaar.selene.block_set.leaves.LeavesTypeRegistry",
+        "net.mehvahdjukaar.selene.block_set.wood.WoodType",
+        "net.mehvahdjukaar.selene.block_set.wood.WoodTypeRegistry",
+        "net.mehvahdjukaar.selene.builtincompat.CompatWoodTypes",
+        "net.mehvahdjukaar.selene.builtincompat.MapAtlasPlugin",
+        "net.mehvahdjukaar.selene.client.asset_generators.BlockStateBuilder",
+        "net.mehvahdjukaar.selene.client.asset_generators.LangBuilder",
+        "net.mehvahdjukaar.selene.client.asset_generators.SimpleModelBuilder",
+        "net.mehvahdjukaar.selene.client.asset_generators.textures.Palette",
+        "net.mehvahdjukaar.selene.client.asset_generators.textures.PaletteColor",
+        "net.mehvahdjukaar.selene.client.asset_generators.textures.Respriter",
+        "net.mehvahdjukaar.selene.client.asset_generators.textures.SpriteUtils",
+        "net.mehvahdjukaar.selene.client.asset_generators.textures.TextureImage",
+        "net.mehvahdjukaar.selene.client.FluidParticleColors",
+        "net.mehvahdjukaar.selene.client.TextureCache",
+        "net.mehvahdjukaar.selene.client.texture_renderer.DummyCamera",
+        "net.mehvahdjukaar.selene.client.texture_renderer.DummyChunkManager",
+        "net.mehvahdjukaar.selene.client.texture_renderer.DummyWorld",
+        "net.mehvahdjukaar.selene.client.texture_renderer.FrameBufferBackedDynamicTexture",
+        "net.mehvahdjukaar.selene.client.texture_renderer.RenderedTexturesManager",
+        "net.mehvahdjukaar.selene.ClientSetup",
+        "net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity",
+        "net.mehvahdjukaar.selene.entities.ImprovedProjectileEntity",
+        "net.mehvahdjukaar.selene.example.map.client.ExampleClient",
+        "net.mehvahdjukaar.selene.example.map.ExampleMarker",
+        "net.mehvahdjukaar.selene.example.map.ExampleReg",
+        "net.mehvahdjukaar.selene.fluids.FluidContainerList",
+        "net.mehvahdjukaar.selene.fluids.FluidReference",
+        "net.mehvahdjukaar.selene.fluids.FluidTextures",
+        "net.mehvahdjukaar.selene.fluids.FoodProvider",
+        "net.mehvahdjukaar.selene.fluids.ISoftFluidHolder",
+        "net.mehvahdjukaar.selene.fluids.ISoftFluidProvider",
+        "net.mehvahdjukaar.selene.fluids.SoftFluid",
+        "net.mehvahdjukaar.selene.fluids.SoftFluidHolder",
+        "net.mehvahdjukaar.selene.fluids.SoftFluidRegistry",
+        "net.mehvahdjukaar.selene.items.BlockTypeBasedBlockItem",
+        "net.mehvahdjukaar.selene.items.WoodBasedBlockItem",
+        "net.mehvahdjukaar.selene.map.client.DecorationRenderer",
+        "net.mehvahdjukaar.selene.map.client.MapDecorationRenderHandler",
+        "net.mehvahdjukaar.selene.map.CustomDataHolder",
+        "net.mehvahdjukaar.selene.map.CustomMapDecoration",
+        "net.mehvahdjukaar.selene.map.ExpandedMapData",
+        "net.mehvahdjukaar.selene.map.MapDecorationRegistry",
+        "net.mehvahdjukaar.selene.map.MapHelper",
+        "net.mehvahdjukaar.selene.map.markers.GenericMapBlockMarker",
+        "net.mehvahdjukaar.selene.map.markers.MapBlockMarker",
+        "net.mehvahdjukaar.selene.map.markers.NamedMapBlockMarker",
+        "net.mehvahdjukaar.selene.map.type.CustomDecorationType",
+        "net.mehvahdjukaar.selene.map.type.IMapDecorationType",
+        "net.mehvahdjukaar.selene.map.type.SimpleDecorationType",
+        "net.mehvahdjukaar.selene.math.colors.BaseColor",
+        "net.mehvahdjukaar.selene.math.colors.ColorSpaces",
+        "net.mehvahdjukaar.selene.math.colors.HCLColor",
+        "net.mehvahdjukaar.selene.math.colors.HCLVColor",
+        "net.mehvahdjukaar.selene.math.colors.HSLColor",
+        "net.mehvahdjukaar.selene.math.colors.HSVColor",
+        "net.mehvahdjukaar.selene.math.colors.LABColor",
+        "net.mehvahdjukaar.selene.math.colors.LUVColor",
+        "net.mehvahdjukaar.selene.math.colors.RGBColor",
+        "net.mehvahdjukaar.selene.math.colors.XYZColor",
+        "net.mehvahdjukaar.selene.math.kmeans.DataSet",
+        "net.mehvahdjukaar.selene.math.kmeans.IDataEntry",
+        "net.mehvahdjukaar.selene.math.kmeans.KMeans",
+        "net.mehvahdjukaar.selene.math.MthUtils",
+        "net.mehvahdjukaar.selene.math.Vec2i",
+        "net.mehvahdjukaar.selene.misc.BlockLootTableAccessor",
+        "net.mehvahdjukaar.selene.misc.ModCriteriaTriggers",
+        "net.mehvahdjukaar.selene.misc.test.WaterTest",
+        "net.mehvahdjukaar.selene.mixins.CreativeModeTabMixin",
+        "net.mehvahdjukaar.selene.mixins.FirstPersonRendererMixin",
+        "net.mehvahdjukaar.selene.mixins.GrindstoneMenuSlotMixin",
+        "net.mehvahdjukaar.selene.mixins.LanguageManagerMixin",
+        "net.mehvahdjukaar.selene.mixins.MapDataMixin",
+        "net.mehvahdjukaar.selene.mixins.MapExtendingRecipeMixin",
+        "net.mehvahdjukaar.selene.mixins.MapItemMixin",
+        "net.mehvahdjukaar.selene.mixins.MapItemRendererMixin",
+        "net.mehvahdjukaar.selene.mixins.MultiPackResourceManagerMixin",
+        "net.mehvahdjukaar.selene.mixins.PlayerItemInHandLayerMixin",
+        "net.mehvahdjukaar.selene.mixins.ThirdPersonRendererMixin",
+        "net.mehvahdjukaar.selene.mixins.VillagerMixin",
+        "net.mehvahdjukaar.selene.network.ClientBoundSyncCustomMapDecorationPacket",
+        "net.mehvahdjukaar.selene.network.ClientBoundSyncFluidsPacket",
+        "net.mehvahdjukaar.selene.network.ClientBoundSyncMapDecorationTypesPacket",
+        "net.mehvahdjukaar.selene.network.NetworkHandler",
+        "net.mehvahdjukaar.selene.resourcepack.AfterLanguageLoadEvent",
+        "net.mehvahdjukaar.selene.resourcepack.BlockTypeResTransformer",
+        "net.mehvahdjukaar.selene.resourcepack.DynamicDataPack",
+        "net.mehvahdjukaar.selene.resourcepack.DynamicLanguageManager",
+        "net.mehvahdjukaar.selene.resourcepack.DynamicResourcePack",
+        "net.mehvahdjukaar.selene.resourcepack.DynamicTexturePack",
+        "net.mehvahdjukaar.selene.resourcepack.EarlyPackReloadEvent",
+        "net.mehvahdjukaar.selene.resourcepack.recipe.IRecipeTemplate",
+        "net.mehvahdjukaar.selene.resourcepack.recipe.ShapedRecipeTemplate",
+        "net.mehvahdjukaar.selene.resourcepack.recipe.ShapelessRecipeTemplate",
+        "net.mehvahdjukaar.selene.resourcepack.recipe.StoneCutterRecipeTemplate",
+        "net.mehvahdjukaar.selene.resourcepack.recipe.TemplateRecipeManager",
+        "net.mehvahdjukaar.selene.resourcepack.resources.TagBuilder",
+        "net.mehvahdjukaar.selene.resourcepack.ResType",
+        "net.mehvahdjukaar.selene.resourcepack.RPAwareDynamicDataProvider",
+        "net.mehvahdjukaar.selene.resourcepack.RPAwareDynamicResourceProvider",
+        "net.mehvahdjukaar.selene.resourcepack.RPAwareDynamicTextureProvider",
+        "net.mehvahdjukaar.selene.resourcepack.RPUtils",
+        "net.mehvahdjukaar.selene.resourcepack.StaticResource",
+        "net.mehvahdjukaar.selene.resourcepack.VanillaResourceManager",
+        "net.mehvahdjukaar.selene.Selene",
+        "net.mehvahdjukaar.selene.util.ClientUtils",
+        "net.mehvahdjukaar.selene.util.DispenserHelper",
+        "net.mehvahdjukaar.selene.util.ItemCategoryFiller",
+        "net.mehvahdjukaar.selene.util.PotionNBTHelper",
+        "net.mehvahdjukaar.selene.util.TwoHandedAnimation",
+        "net.mehvahdjukaar.selene.util.Utils",
+        "net.mehvahdjukaar.selene.villager_ai.VillagerAIManager",
+        "net.mehvahdjukaar.selene.villager_ai.VillagerBrainEvent"
       ],
       "methods": {
-        "net.darkhax.bookshelf.block.BlockBasicChest": [
-          "func_185496_a(IBlockState, IBlockAccess, BlockPos)",
-          "func_176213_c(World, BlockPos, IBlockState)",
-          "func_180642_a(World, BlockPos, EnumFacing, float, float, float, int, EntityLivingBase)",
-          "func_180633_a(World, BlockPos, IBlockState, EntityLivingBase, ItemStack)",
-          "func_149744_f(IBlockState)",
-          "func_176455_e(World, BlockPos, IBlockState)",
-          "func_176458_f(World, BlockPos, IBlockState)",
-          "func_176196_c(World, BlockPos)",
-          "removedByPlayer(IBlockState, World, BlockPos, EntityPlayer, boolean)",
-          "func_180657_a(World, EntityPlayer, BlockPos, IBlockState, TileEntity, ItemStack)",
-          "func_149915_a(World, int)",
-          "getDrops(IBlockAccess, BlockPos, IBlockState, int)",
-          "getPickBlock(IBlockState, RayTraceResult, World, BlockPos, EntityPlayer)",
-          "func_189418_a(World, BlockPos, boolean)",
-          "isTrapChest()",
-          "setState(World, BlockPos, IBlockState, int)",
-          "correctFacing(World, BlockPos, IBlockState, ChestBuilder.IChestType)",
-          "isDoubleChest(World, BlockPos, ChestBuilder.IChestType)",
-          "getCustomType(IBlockAccess, BlockPos)",
-          "getCustomType(ItemStack)"
+        "net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider": [],
+        "net.mehvahdjukaar.selene.api.ISoftFluidConsumer": [],
+        "net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider": [
+          "poseRightArmGeneric(ItemStack, AgeableListModel<T>, T, HumanoidArm, TwoHandedAnimation)",
+          "poseLeftArmGeneric(ItemStack, AgeableListModel<T>, T, HumanoidArm, TwoHandedAnimation)",
+          "isTwoHanded()"
         ],
-        "net.darkhax.bookshelf.block.BlockSubType": [
-          "func_149666_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "func_176203_a(int)",
-          "func_176201_c(IBlockState)",
-          "func_180661_e()",
-          "func_180651_a(IBlockState)",
-          "getVariant()",
-          "getVariantProp()"
+        "net.mehvahdjukaar.selene.api.IThirdPersonSpecialItemRenderer": [],
+        "net.mehvahdjukaar.selene.blocks.IBlockHolder": [
+          "getHeldBlock()",
+          "setHeldBlock(BlockState)"
         ],
-        "net.darkhax.bookshelf.block.BlockTileEntity": [
-          "func_180663_b(World, BlockPos, IBlockState)",
-          "func_189539_a(IBlockState, World, BlockPos, int, int)"
+        "net.mehvahdjukaar.selene.blocks.IOwnerProtected": [
+          "saveOwner(CompoundTag)",
+          "loadOwner(CompoundTag)",
+          "isOwnedBy(Player)",
+          "isPublic()",
+          "isAccessibleBy(Player)",
+          "isNotOwnedBy(Player)"
         ],
-        "net.darkhax.bookshelf.block.property.PropertyObject": [
-          "getName()",
+        "net.mehvahdjukaar.selene.blocks.ItemDisplayTile": [
+          "setOwner(UUID)",
+          "getOwner()",
+          "m_6596_()",
+          "updateTileOnInventoryChanged()",
+          "needsToUpdateClientWhenChanged()",
+          "updateClientVisualsOnLoad()",
+          "getDisplayedItem()",
+          "setDisplayedItem(ItemStack)",
+          "interact(Player, InteractionHand)",
+          "interact(Player, InteractionHand, int)",
+          "getAddItemSound()",
+          "m_142466_(CompoundTag)",
+          "m_183515_(CompoundTag)",
+          "getUpdatePacket()",
+          "m_5995_()",
+          "onDataPacket(Connection, ClientboundBlockEntityDataPacket)",
+          "m_6643_()",
+          "m_7983_()",
+          "m_6893_()",
+          "m_6555_(int, Inventory)"
+        ],
+        "net.mehvahdjukaar.selene.blocks.MimicBlockTile": [
+          "getModelData()",
+          "getHeldBlock(int)",
+          "setHeldBlock(BlockState, int)",
+          "m_142466_(CompoundTag)",
+          "m_183515_(CompoundTag)",
+          "onDataPacket(Connection, ClientboundBlockEntityDataPacket)",
+          "getUpdatePacket()",
+          "m_5995_()"
+        ],
+        "net.mehvahdjukaar.selene.blocks.VerticalSlabBlock": [
+          "m_6843_(BlockState, Rotation)",
+          "m_6943_(BlockState, Mirror)",
+          "m_7926_(Builder<Block, BlockState>)",
+          "m_7923_(BlockState)",
+          "m_5940_(BlockState, BlockGetter, BlockPos, CollisionContext)",
+          "m_5573_(BlockPlaceContext)",
+          "m_6864_(BlockState, BlockPlaceContext)",
+          "m_7361_(LevelAccessor, BlockPos, BlockState, FluidState)",
+          "m_6044_(BlockGetter, BlockPos, BlockState, Fluid)",
+          "m_7357_(BlockState, BlockGetter, BlockPos, PathComputationType)"
+        ],
+        "net.mehvahdjukaar.selene.blocks.WaterBlock": [
+          "m_5888_(BlockState)",
+          "m_7417_(BlockState, Direction, BlockState, LevelAccessor, BlockPos, BlockPos)",
+          "m_5573_(BlockPlaceContext)",
+          "m_7926_(Builder<Block, BlockState>)",
+          "m_7357_(BlockState, BlockGetter, BlockPos, PathComputationType)"
+        ],
+        "net.mehvahdjukaar.selene.block_set.BlockRegistryHelper": [
+          "registerFullBlockSet(DeferredRegister<Block>, DeferredRegister<Item>, String, Block, boolean)"
+        ],
+        "net.mehvahdjukaar.selene.block_set.BlockSetManager": [
+          "registerBlockSetDefinition(BlockTypeRegistry<T>)",
+          "addBlockTypeFinder(Class<T>, BlockType.SetFinder<T>)",
+          "addBlockTypeRemover(Class<T>, ResourceLocation)",
+          "getBlockSet(Class<T>)",
+          "addWoodRegistrationCallback(BlockSetManager.BlockSetRegistryCallback<WoodType, R>, Class<R>)",
+          "addBlockSetRegistrationCallback(BlockSetManager.BlockSetRegistryCallback<T, R>, Class<R>, Class<T>)",
+          "registerLateBlockAndItems(Register<Item>)",
+          "getRegistries()",
+          "getRegistry(Class<? extends BlockType>)"
+        ],
+        "net.mehvahdjukaar.selene.block_set.BlockType": [
+          "getId()",
+          "getTypeName()",
+          "getNamespace()",
+          "getAppendableId()",
+          "toString()",
+          "getTranslationKey()",
+          "getVariantId(String)",
+          "getVariantId(String, boolean)",
+          "getVariantId(String, String)",
+          "getReadableName()",
+          "isVanilla()",
+          "findRelatedEntry(String, IForgeRegistry<V>)",
+          "findRelatedEntry(String, String, IForgeRegistry<V>)",
+          "getChildren()",
+          "getItemOfThis(String)",
+          "getBlockOfThis(String)",
+          "getChild(String)",
+          "addChild(String, ItemLike)",
+          "initializeChildren()",
+          "initAfterSetup()"
+        ],
+        "net.mehvahdjukaar.selene.block_set.BlockTypeRegistry": [
           "getType()",
-          "isValid(T)",
-          "valueToString(T)"
-        ],
-        "net.darkhax.bookshelf.block.property.PropertyString": [
-          "func_177700_c()",
-          "func_185929_b(String)",
-          "getName(String)",
-          "getMetaData(String)"
-        ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasic": [
-          "func_145839_a(NBTTagCompound)",
-          "func_189515_b(NBTTagCompound)",
-          "func_189518_D_()",
-          "onDataPacket(NetworkManager, SPacketUpdateTileEntity)",
-          "func_189517_E_()",
-          "shouldRefresh(World, BlockPos, IBlockState, IBlockState)",
-          "writeNBT(NBTTagCompound)",
-          "readNBT(NBTTagCompound)"
-        ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicChest": [
-          "func_189515_b(NBTTagCompound)",
-          "func_189517_E_()",
-          "handleUpdateTag(NBTTagCompound)",
-          "shouldRefresh(World, BlockPos, IBlockState, IBlockState)",
-          "func_189518_D_()",
-          "onDataPacket(NetworkManager, SPacketUpdateTileEntity)",
-          "func_145839_a(NBTTagCompound)",
-          "func_174911_a(EnumFacing)",
-          "getRenderBoundingBox()",
-          "getType()",
-          "setType(ChestBuilder.IChestType)",
-          "getBuilder()"
-        ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicTickable": [
-          "func_73660_a()",
-          "onEntityUpdate()"
-        ],
-        "net.darkhax.bookshelf.Bookshelf": [
-          "onConstruction(FMLConstructionEvent)",
-          "postInit(FMLPostInitializationEvent)",
-          "preInitClient(FMLPreInitializationEvent)",
-          "init(FMLInitializationEvent)"
-        ],
-        "net.darkhax.bookshelf.BookshelfEvents": [
-          "onAnvilUpdate(AnvilUpdateEvent)",
-          "onClientTick(ClientTickEvent)"
-        ],
-        "net.darkhax.bookshelf.BookshelfRegistry": [
-          "addAnvilRecipe(String, ItemStack, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, String, int, int, ItemStack)",
-          "addAnvilRecipe(String, String, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, ItemStack, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, ItemStack, String, int, int, ItemStack)",
-          "addAnvilRecipe(AnvilRecipe)",
-          "getAnvilRecipes()"
-        ],
-        "net.darkhax.bookshelf.builder.ChestBuilder": [
-          "register(RegistryHelper)",
-          "getNormalChest()",
-          "getTrapChest()",
-          "addChestType(String...)",
-          "addChestType(String)",
-          "addChestType(ChestBuilder.IChestType)",
-          "getChestType(String)",
-          "getNormalType()",
-          "getTrapType()",
+          "getFromNBT(String)",
+          "get(ResourceLocation)",
+          "getDefaultType()",
           "getTypes()",
-          "getModid()",
-          "useTraps()"
+          "typeName()",
+          "detectTypeFromBlock(Block)",
+          "saveTypes(ImmutableMap<ResourceLocation, T>)",
+          "registerBlockType(T)",
+          "getFinders()",
+          "addFinder(BlockType.SetFinder<T>)",
+          "addRemover(ResourceLocation)",
+          "buildAll()",
+          "addTypeTranslations(AfterLanguageLoadEvent)"
         ],
-        "net.darkhax.bookshelf.builder.LootBuilder": [
-          "getName()",
-          "getPool()",
-          "setPool(String)",
-          "getWeight()",
-          "setWeight(int)",
-          "getQuality()",
-          "setQuality(int)",
-          "getItem()",
-          "setItem(Item)",
-          "getConditions()",
-          "addCondition(LootCondition)",
-          "getFunctions()",
-          "addFunction(LootFunction)",
+        "net.mehvahdjukaar.selene.block_set.IBlockType": [],
+        "net.mehvahdjukaar.selene.block_set.leaves.LeavesType": [
+          "mainChild()",
+          "getTranslationKey()",
+          "initializeChildren()"
+        ],
+        "net.mehvahdjukaar.selene.block_set.leaves.LeavesTypeRegistry": [
+          "fromNBT(String)",
+          "typeName()",
+          "getDefaultType()",
+          "getTypes()",
+          "saveTypes(ImmutableMap<ResourceLocation, LeavesType>)",
+          "detectTypeFromBlock(Block)",
+          "buildAll()",
+          "addTypeTranslations(AfterLanguageLoadEvent)"
+        ],
+        "net.mehvahdjukaar.selene.block_set.wood.WoodType": [
+          "findLogRelatedBlock(String, String)",
+          "getMaterial()",
+          "mainChild()",
+          "toVanilla()",
+          "getTexturePath()",
+          "canBurn()",
+          "getColor()",
+          "getTranslationKey()",
+          "initializeChildren()"
+        ],
+        "net.mehvahdjukaar.selene.block_set.wood.WoodTypeRegistry": [
+          "getValue(ResourceLocation)",
+          "fromNBT(String)",
+          "typeName()",
+          "getDefaultType()",
+          "getTypes()",
+          "saveTypes(ImmutableMap<ResourceLocation, WoodType>)",
+          "detectTypeFromBlock(Block)",
+          "addTypeTranslations(AfterLanguageLoadEvent)"
+        ],
+        "net.mehvahdjukaar.selene.builtincompat.CompatWoodTypes": [
+          "init()"
+        ],
+        "net.mehvahdjukaar.selene.builtincompat.MapAtlasPlugin": [
+          "isAtlas(Item)",
+          "getSavedDataFromAtlas(ItemStack, Level, Player)",
+          "getMapIdFromAtlas(ItemStack, Level, Object)"
+        ],
+        "net.mehvahdjukaar.selene.client.asset_generators.BlockStateBuilder": [
+          "forAllStatesExcept(Block, Function<BlockState, BlockStateBuilder.ModelConfiguration>, Property<?>...)",
+          "setModel(Map<Property<?>, Comparable<?>>, BlockStateBuilder.ModelConfiguration)",
+          "build()"
+        ],
+        "net.mehvahdjukaar.selene.client.asset_generators.LangBuilder": [
+          "addGenericEntry(String, String)",
+          "addEntry(Block, String)",
+          "addEntry(Registry<T>, T, String)",
+          "addSimpleEntry(Registry<T>, T)",
+          "addEntry(Item, String)",
+          "addEntry(EntityType<?>, String)",
           "build()",
+          "entries()",
+          "getReadableName(String)",
+          "getReadableComponent(String, String...)",
+          "addDynamicEntry(DynamicLanguageManager.LanguageAccessor, String, IBlockType, Item)",
+          "addDynamicEntry(DynamicLanguageManager.LanguageAccessor, String, BlockType, Item)",
+          "addDynamicEntry(DynamicLanguageManager.LanguageAccessor, String, IBlockType, Block)",
+          "addDynamicEntry(DynamicLanguageManager.LanguageAccessor, String, BlockType, Block)",
+          "addDynamicEntry(DynamicLanguageManager.LanguageAccessor, String, IBlockType, EntityType<?>)",
+          "addDynamicEntry(DynamicLanguageManager.LanguageAccessor, String, BlockType, EntityType<?>)"
+        ],
+        "net.mehvahdjukaar.selene.client.asset_generators.SimpleModelBuilder": [
+          "texture(String, ResourceLocation)",
+          "build()"
+        ],
+        "net.mehvahdjukaar.selene.client.asset_generators.textures.Palette": [
+          "isEmpty()",
+          "copy()",
+          "updateTolerance(float)",
+          "size()",
+          "getValues()",
+          "add(PaletteColor)",
+          "set(int, PaletteColor)",
+          "get(int)",
+          "indexOf(PaletteColor)",
+          "hasColor(PaletteColor)",
+          "hasColor(PaletteColor, float)",
+          "getDarkest()",
+          "getLightest()",
+          "remove(int)",
+          "remove(PaletteColor)",
+          "calculateAverage()",
+          "getColorAtSlope(float)",
+          "getCenterColor()",
+          "matchSize(int)",
+          "matchSize(int, Float)"
+        ],
+        "net.mehvahdjukaar.selene.client.asset_generators.textures.PaletteColor": [
+          "value()",
+          "rgb()",
+          "lab()",
+          "hcl()",
+          "getDarkened()",
+          "getLightened()",
+          "luminance()",
+          "distanceTo(PaletteColor)",
+          "compareTo(PaletteColor)",
+          "equals(Object)",
+          "hashCode()",
           "toString()"
         ],
-        "net.darkhax.bookshelf.client.gui.GuiGraphicButton": [
-          "func_146112_a(Minecraft, int, int)"
+        "net.mehvahdjukaar.selene.client.asset_generators.textures.Respriter": [
+          "of(TextureImage)",
+          "masked(TextureImage, TextureImage)",
+          "ofPalette(TextureImage, List<Palette>)",
+          "ofPalette(TextureImage, Palette)",
+          "recolorWithAnimationOf(TextureImage)",
+          "recolorWithAnimation(List<Palette>, AnimationMetadataSection)",
+          "recolor(Palette)",
+          "recolor(List<Palette>)"
         ],
-        "net.darkhax.bookshelf.client.gui.GuiSlider": [
-          "func_146119_b(Minecraft, int, int)",
-          "func_146116_c(Minecraft, int, int)",
-          "func_146118_a(int, int)",
-          "func_146114_a(boolean)",
-          "setSliderValue(float)",
-          "getSliderValue()"
+        "net.mehvahdjukaar.selene.client.asset_generators.textures.SpriteUtils": [
+          "readImage(ResourceManager, ResourceLocation)",
+          "forEachPixel(NativeImage, BiConsumer<Integer, Integer>)",
+          "grayscaleImage(NativeImage)",
+          "extrapolateSignBlockPalette(TextureImage)",
+          "extrapolateWoodItemPalette(TextureImage)",
+          "getLuminance(int, int, int)",
+          "reduceColors(NativeImage, Function<Integer, Integer>)",
+          "looksLikeTopLogTexture(String)",
+          "looksLikeSideLogTexture(String)"
         ],
-        "net.darkhax.bookshelf.client.model.BakedModelRetexturable": [
-          "getRetexturedModel(String)",
-          "getDefaultModel()",
-          "func_188616_a(IBlockState, EnumFacing, long)",
-          "func_177555_b()",
-          "func_177556_c()",
-          "func_188618_c()",
-          "func_177554_e()",
-          "func_177552_f()",
-          "func_188617_f()",
-          "handlePerspective(TransformType)"
+        "net.mehvahdjukaar.selene.client.asset_generators.textures.TextureImage": [
+          "forEachFrame(TextureImage.FramePixelConsumer)",
+          "toGrayscale()",
+          "frameWidth()",
+          "frameHeight()",
+          "getFrameX(int)",
+          "getFrameY(int)",
+          "getImage()",
+          "framesSize()",
+          "getMetadata()",
+          "makeCopy()",
+          "createAnimationTemplate(int, AnimationMetadataSection)",
+          "createAnimationTemplate(int, List<AnimationFrame>, int, boolean)",
+          "open(ResourceManager, ResourceLocation)",
+          "createNew(int, int, AnimationMetadataSection)",
+          "of(NativeImage, AnimationMetadataSection)",
+          "close()",
+          "imageWidth()",
+          "imageHeight()",
+          "serializeMcMeta()",
+          "applyOverlay(TextureImage...)"
         ],
-        "net.darkhax.bookshelf.client.model.DefaultItemOverrideList": [
-          "handleItemState(IBakedModel, ItemStack, World, EntityLivingBase)"
+        "net.mehvahdjukaar.selene.client.FluidParticleColors": [
+          "refresh()",
+          "get(Fluid)",
+          "get(SoftFluid)"
         ],
-        "net.darkhax.bookshelf.client.model.ModelArmorExtended": [
-          "addModelParts()",
-          "setRotateAngle(ModelRenderer, float, float, float)",
-          "func_78088_a(Entity, float, float, float, float, float, float)"
+        "net.mehvahdjukaar.selene.client.TextureCache": [
+          "registerSpecialTextureForBlock(ItemLike, String, ResourceLocation)",
+          "refresh()",
+          "getCached(ItemLike, Predicate<String>)",
+          "add(ItemLike, String)"
         ],
-        "net.darkhax.bookshelf.client.particle.OpenParticleDigging": [],
-        "net.darkhax.bookshelf.client.render.tileentity.TileEntityBasicChestRenderer": [
-          "renderTileEntityAt(TileEntityBasicChest, double, double, double, float, int)",
-          "func_147499_a(ResourceLocation)"
+        "net.mehvahdjukaar.selene.client.texture_renderer.DummyCamera": [
+          "m_90584_(double, double, double)",
+          "m_90581_(Vec3)",
+          "setPosition(BlockPos)"
         ],
-        "net.darkhax.bookshelf.command.Command": [
-          "func_184882_a(MinecraftServer, ICommandSender)"
+        "net.mehvahdjukaar.selene.client.texture_renderer.DummyChunkManager": [
+          "m_7587_(int, int, ChunkStatus, boolean)",
+          "m_201698_(BooleanSupplier, boolean)",
+          "m_6754_()",
+          "m_142061_()",
+          "m_7827_()",
+          "m_7653_()"
         ],
-        "net.darkhax.bookshelf.command.CommandTree": [
-          "func_184881_a(MinecraftServer, ICommandSender, String[])",
-          "func_184882_a(MinecraftServer, ICommandSender)"
+        "net.mehvahdjukaar.selene.client.texture_renderer.DummyWorld": [
+          "m_6188_()",
+          "m_7726_()",
+          "m_6263_(Player, double, double, double, SoundEvent, SoundSource, float, float)",
+          "m_7260_(BlockPos, BlockState, BlockState, int)",
+          "m_6269_(Player, Entity, SoundEvent, SoundSource, float, float)",
+          "m_46464_()",
+          "m_6815_(int)",
+          "m_7489_(String)",
+          "m_142325_(String, MapItemSavedData)",
+          "m_7354_()",
+          "m_6801_(int, BlockPos, int)",
+          "m_7465_()",
+          "m_142646_()",
+          "m_183326_()",
+          "m_183324_()",
+          "m_5898_(Player, int, BlockPos, int)",
+          "m_142346_(Entity, GameEvent, BlockPos)",
+          "m_7717_(Direction, boolean)",
+          "m_6907_()",
+          "m_5962_()"
         ],
-        "net.darkhax.bookshelf.config.ConfigurationHandler": [
-          "init(ASMDataTable)",
-          "sync()",
-          "onConfigChanged(ConfigChangedEvent)",
-          "hasChanged()",
-          "save()",
-          "getConfig()",
-          "addReader(Class<T>, ConfigurationHandler.Adapter<T>)"
+        "net.mehvahdjukaar.selene.client.texture_renderer.FrameBufferBackedDynamicTexture": [
+          "isInitialized()",
+          "m_6704_(ResourceManager)",
+          "getFrameBuffer()",
+          "bindWrite()",
+          "getWidth()",
+          "getHeight()",
+          "getTextureLocation()",
+          "m_117963_()",
+          "m_117964_()",
+          "close()",
+          "getPixels()",
+          "download()",
+          "upload()",
+          "saveTextureToFile(Path)",
+          "saveTextureToFile(Path, String)"
         ],
-        "net.darkhax.bookshelf.crafting.AnvilRecipe": [
-          "isValidRecipe(ItemStack, ItemStack, String)",
-          "getExperienceCost(ItemStack, ItemStack, String)",
-          "getMaterialCost(ItemStack, ItemStack, String)",
-          "getOutput(ItemStack, ItemStack, String)"
+        "net.mehvahdjukaar.selene.client.texture_renderer.RenderedTexturesManager": [
+          "clearCache()",
+          "getRenderedTexture(ResourceLocation, int, Consumer<FrameBufferBackedDynamicTexture>, boolean)",
+          "getFlatItemStackTexture(ResourceLocation, ItemStack, int)",
+          "getFlatItemTexture(Item, int, String)",
+          "getFlatItemTexture(Item, int, String, Consumer<NativeImage>)",
+          "getFlatItemTexture(Item, int)",
+          "updateTextures()",
+          "drawItem2(FrameBufferBackedDynamicTexture, BlockPos, Direction, float)",
+          "getProjectionMatrix(double, int, int)",
+          "drawItem(FrameBufferBackedDynamicTexture, ItemStack)"
         ],
-        "net.darkhax.bookshelf.crafting.IAnvilRecipe": [],
-        "net.darkhax.bookshelf.data.AttributeOperation": [],
-        "net.darkhax.bookshelf.data.Blockstates": [],
-        "net.darkhax.bookshelf.data.ColorHandlers": [],
-        "net.darkhax.bookshelf.data.FluidVolume": [],
-        "net.darkhax.bookshelf.data.VanillaColors": [
-          "getColor()"
+        "net.mehvahdjukaar.selene.ClientSetup": [
+          "init(FMLClientSetupEvent)",
+          "onResourcePackChanged(ModelBakeEvent)",
+          "onTextureStitch(Pre)"
         ],
-        "net.darkhax.bookshelf.entity.EntityArrowBase": [
-          "func_184550_j()",
-          "func_189511_e(NBTTagCompound)",
-          "func_70020_e(NBTTagCompound)",
+        "net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity": [
+          "fall(EntityType<? extends FallingBlockEntity>, Level, BlockPos, BlockState, boolean)",
+          "setSaveTileDataToItem(boolean)",
+          "m_7380_(CompoundTag)",
+          "m_7378_(CompoundTag)",
+          "setBlockState(BlockState)",
+          "m_20000_(ItemLike, int)",
+          "m_142535_(float, float, DamageSource)",
+          "setCancelDrop(boolean)"
+        ],
+        "net.mehvahdjukaar.selene.entities.ImprovedProjectileEntity": [
+          "m_8097_()",
+          "m_6001_(double, double, double)",
+          "setNoPhysics(boolean)",
+          "isNoPhysics()",
+          "m_8119_()",
+          "getDeceleration()",
+          "hasReachedEndOfLife()",
+          "reachedEndOfLife()",
+          "findHitEntity(Vec3, Vec3)",
+          "spawnTrailParticles(Vec3, Vec3)",
+          "m_7380_(CompoundTag)",
+          "m_7378_(CompoundTag)"
+        ],
+        "net.mehvahdjukaar.selene.example.map.client.ExampleClient": [
+          "init(FMLClientSetupEvent)"
+        ],
+        "net.mehvahdjukaar.selene.example.map.ExampleMarker": [
+          "saveToNBT(CompoundTag)",
+          "loadFromNBT(CompoundTag)",
+          "getFromWorld(BlockGetter, BlockPos)",
+          "doCreateDecoration(byte, byte, byte)",
           "equals(Object)",
-          "hashCode()"
+          "hashCode()",
+          "shouldUpdate(MapBlockMarker<?>)",
+          "updateDecoration(CustomMapDecoration)"
         ],
-        "net.darkhax.bookshelf.entity.EntityFake": [
-          "func_70088_a()",
-          "func_70037_a(NBTTagCompound)",
-          "func_70014_b(NBTTagCompound)"
+        "net.mehvahdjukaar.selene.example.map.ExampleReg": [
+          "init(FMLCommonSetupEvent)"
         ],
-        "net.darkhax.bookshelf.events.EnchantmentModifierEvent": [
-          "getEnchantment()",
-          "getEntity()",
-          "getLevels()",
-          "setLevels(int)"
+        "net.mehvahdjukaar.selene.fluids.FluidContainerList": [
+          "getEmpty(Item)",
+          "getFilled(Item)",
+          "getCategoryFromEmpty(Item)",
+          "getCategoryFromFilled(Item)",
+          "encodeList()",
+          "getPossibleFilled()",
+          "getPossibleEmpty()",
+          "getCategories()",
+          "merge(FluidContainerList)",
+          "add(Item, Item, int)",
+          "add(Item, Item, int, SoundEvent, SoundEvent)"
         ],
-        "net.darkhax.bookshelf.inventory.SlotArmor": [
-          "func_75219_a()",
-          "func_75214_a(ItemStack)",
-          "func_178171_c()"
+        "net.mehvahdjukaar.selene.fluids.FluidReference": [
+          "of(SoftFluid)",
+          "of(String)",
+          "of(ResourceLocation)",
+          "get()",
+          "getId()",
+          "is(SoftFluid)",
+          "is(FluidReference)"
         ],
-        "net.darkhax.bookshelf.inventory.SlotFake": [
-          "func_82869_a(EntityPlayer)",
-          "func_75214_a(ItemStack)",
-          "func_75209_a(int)",
-          "func_75215_d(ItemStack)"
+        "net.mehvahdjukaar.selene.fluids.FluidTextures": [
+          "getTexturesToStitch()"
         ],
-        "net.darkhax.bookshelf.item.ICustomMesh": [],
-        "net.darkhax.bookshelf.item.ItemBlockBasic": [
-          "func_77647_b(int)",
-          "func_77667_c(ItemStack)",
-          "func_179223_d()",
-          "getVariant()"
-        ],
-        "net.darkhax.bookshelf.item.ItemBlockChest": [
-          "func_77667_c(ItemStack)",
-          "func_77647_b(int)",
-          "placeBlockAt(ItemStack, EntityPlayer, World, BlockPos, EnumFacing, float, float, float, IBlockState)",
-          "func_150895_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "getCustomMesh()",
-          "registerMeshModels()",
-          "getBuilder()"
-        ],
-        "net.darkhax.bookshelf.item.ItemInventory": [
-          "readFromNBT()",
-          "writeToNBT()",
-          "getContents(ItemStack)",
-          "func_70005_c_()",
-          "func_145818_k_()",
-          "func_145748_c_()",
-          "func_70302_i_()",
-          "func_70301_a(int)",
-          "func_70298_a(int, int)",
-          "func_70304_b(int)",
-          "func_70299_a(int, ItemStack)",
-          "func_70297_j_()",
-          "func_70296_d()",
-          "func_174889_b(EntityPlayer)",
-          "func_174886_c(EntityPlayer)",
-          "func_94041_b(int, ItemStack)",
-          "func_174887_a_(int)",
-          "func_174885_b(int, int)",
-          "func_174890_g()",
-          "func_174888_l()"
-        ],
-        "net.darkhax.bookshelf.item.ItemSubType": [
-          "func_77647_b(int)",
-          "func_77667_c(ItemStack)",
-          "func_150895_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "getVariant()"
-        ],
-        "net.darkhax.bookshelf.lib.BookshelfException": [],
-        "net.darkhax.bookshelf.lib.Constants": [],
-        "net.darkhax.bookshelf.lib.MCColor": [
-          "writeToStack(ItemStack)",
-          "writeToNBT(NBTTagCompound)",
-          "getComponents()",
-          "getRedF()",
-          "getGreenF()",
-          "getBlueF()",
-          "setRenderColor()",
-          "getRandomColor(Random)",
-          "isAcceptable(ItemStack)",
-          "isAcceptable(IBlockAccess, BlockPos)",
-          "isAcceptable(TileEntity)",
-          "isAcceptable(NBTTagCompound)"
-        ],
-        "net.darkhax.bookshelf.lib.ModTrackingList": [
-          "getTrackedEntries()",
-          "getModContainer(T)",
-          "add(T)",
-          "get(int)",
-          "add(int, T)",
-          "addAll(int, Collection<? extends T>)",
-          "addAll(Collection<? extends T>)",
-          "remove(int)",
-          "remove(Object)",
-          "removeAll(Collection<?>)",
-          "set(int, T)",
-          "subList(int, int)",
-          "size()",
-          "clear()",
-          "forEach(Consumer<? super T>)",
+        "net.mehvahdjukaar.selene.fluids.FoodProvider": [
+          "getFood()",
+          "getDivider()",
           "isEmpty()",
-          "contains(Object)",
-          "iterator()",
-          "toArray()",
-          "toArray(T[])"
+          "consume(Player, Level, Consumer<ItemStack>)",
+          "create(Item, int)"
         ],
-        "net.darkhax.bookshelf.lib.WeightedSelector": [
-          "addEntry(T, int)",
-          "addEntry(WeightedSelector.WeightedEntry<T>)",
-          "removeEntry(WeightedSelector.WeightedEntry<T>)",
-          "getEntries()",
-          "getRandomEntry()",
-          "updateTotal()"
+        "net.mehvahdjukaar.selene.fluids.ISoftFluidHolder": [
+          "canInteractWithFluidHolder()"
         ],
-        "net.darkhax.bookshelf.network.NetworkHandler": [
-          "register(Class, Side)",
-          "sendToAll(IMessage)",
-          "sendTo(IMessage, EntityPlayerMP)",
-          "sendToAllAround(IMessage, World, BlockPos, double)",
-          "sendToAllAround(IMessage, TargetPoint)",
-          "sendToDimension(IMessage, int)",
-          "sendToServer(IMessage)"
+        "net.mehvahdjukaar.selene.fluids.ISoftFluidProvider": [],
+        "net.mehvahdjukaar.selene.fluids.SoftFluid": [
+          "getTextureOverride()",
+          "getFoodProvider()",
+          "getTranslatedName()",
+          "getTranslationKey()",
+          "getRegistryName()",
+          "toString()",
+          "getForgeFluid()",
+          "getNbtKeyFromItem()",
+          "getEquivalentFluids()",
+          "isEquivalent(Fluid)",
+          "isEmpty()",
+          "getFilledContainer(Item)",
+          "getEmptyContainer(Item)",
+          "getContainerList()",
+          "getLuminosity()",
+          "getTintColor()",
+          "getTintMethod()",
+          "isColored()",
+          "getFlowingTexture()",
+          "getStillTexture()"
         ],
-        "net.darkhax.bookshelf.network.SerializableMessage": [
-          "handleMessage(MessageContext)",
-          "onMessage(REQ, MessageContext)",
-          "fromBytes(ByteBuf)",
-          "toBytes(ByteBuf)",
-          "addIOHandler(Class<T>, SerializableMessage.Reader<T>, SerializableMessage.Writer<T>)"
+        "net.mehvahdjukaar.selene.fluids.SoftFluidHolder": [
+          "interactWithPlayer(Player, InteractionHand, Level, BlockPos)",
+          "interactWithItem(ItemStack, Level, BlockPos, boolean)",
+          "tryDrainItem(ItemStack, Level, BlockPos, boolean)",
+          "tryFillingItem(Item, Level, BlockPos, boolean)",
+          "tryFillingBottle(Level, BlockPos)",
+          "tryFillingBucket(Level, BlockPos)",
+          "tryFillingBowl(Level, BlockPos)",
+          "isSameFluidAs(FluidStack, CompoundTag)",
+          "isSameFluidAs(FluidStack)",
+          "isSameFluidAs(SoftFluid)",
+          "isSameFluidAs(SoftFluid, CompoundTag)",
+          "tryAddingFluid(FluidStack)",
+          "tryAddingFluid(SoftFluid, int, CompoundTag)",
+          "tryAddingFluid(SoftFluid, int)",
+          "tryAddingFluid(SoftFluid)",
+          "tryTransferFluid(SoftFluidHolder)",
+          "tryTransferFluid(SoftFluidHolder, int)",
+          "tryTransferToFluidTank(IFluidHandler, int)",
+          "tryTransferToFluidTank(IFluidHandler)",
+          "drainFluidTank(IFluidHandler, int)"
         ],
-        "net.darkhax.bookshelf.network.TileEntityMessage": [
-          "handleMessage(MessageContext)",
-          "getAction()"
+        "net.mehvahdjukaar.selene.fluids.SoftFluidRegistry": [
+          "getRegisteredFluids()",
+          "get(String)",
+          "get(ResourceLocation)",
+          "getOptional(ResourceLocation)",
+          "fromForgeFluid(Fluid)",
+          "fromItem(Item)",
+          "acceptClientFluids(ClientBoundSyncFluidsPacket)",
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)"
         ],
-        "net.darkhax.bookshelf.registry.IVariant": [
-          "getPrefix()"
+        "net.mehvahdjukaar.selene.items.BlockTypeBasedBlockItem": [
+          "getBurnTime(ItemStack, RecipeType<?>)",
+          "m_41389_(CreativeModeTab)",
+          "getBlockType()"
         ],
-        "net.darkhax.bookshelf.registry.RegistryHelper": [
-          "getTab()",
-          "setTab(CreativeTabs)",
-          "getModid()",
-          "getItems()",
-          "getBlocks()",
-          "registerBlock(Block, String)",
-          "registerBlock(Block, ItemBlock, String)",
-          "registerItem(Item, String)",
-          "registerItem(Item, ResourceLocation)",
-          "addLoot(ResourceLocation, String, String, int, Item)",
-          "addLoot(ResourceLocation, String, String, int, int, Item, List<LootCondition>, List<LootFunction>)",
-          "addLoot(ResourceLocation, LootBuilder)",
-          "onTableLoaded(LootTableLoadEvent)",
-          "registerColorHandler(Block, IBlockColor)",
-          "registerColorHandler(Item, IItemColor)",
-          "registerInventoryModel(Block)",
-          "registerInventoryModel(Block, String, String...)",
-          "registerInventoryModel(Block, int, String)",
-          "registerInventoryModel(Item)",
-          "registerInventoryModel(Item, String, String...)"
+        "net.mehvahdjukaar.selene.items.WoodBasedBlockItem": [
+          "getBurnTime(ItemStack, RecipeType<?>)"
         ],
-        "net.darkhax.bookshelf.registry.RegistryListener": [],
-        "net.darkhax.bookshelf.util.AnnotationUtils": [
-          "getData(Class<A>)",
-          "getData(ASMDataTable, Class<A>)",
-          "getAnnotatedClasses(Class<A>)",
-          "getAnnotatedClasses(ASMDataTable, Class<A>)",
-          "getAnnotatedFields(Collection<Class<?>>, Class<A>)",
-          "getAnnotations(Class<A>, Class<T>)",
-          "getAnnotations(ASMDataTable, Class<A>, Class<T>)"
+        "net.mehvahdjukaar.selene.map.client.DecorationRenderer": [
+          "getMapColor(T)",
+          "getRenderType(T)",
+          "render(T, PoseStack, MultiBufferSource, MapItemSavedData, boolean, int, int)"
         ],
-        "net.darkhax.bookshelf.util.BannerUtils": [
-          "createBanner(EnumDyeColor, NBTTagList)",
-          "createPatternList(BannerUtils.BannerLayer...)",
-          "addBasicPattern(String, String)",
-          "addCraftingPattern(String, String, ItemStack)",
-          "addDyePattern(String, String, String, String, String)"
+        "net.mehvahdjukaar.selene.map.client.MapDecorationRenderHandler": [
+          "bindDecorationRenderer(IMapDecorationType<T, ?>, DecorationRenderer<T>)",
+          "bindSimpleRenderer(IMapDecorationType<?, ?>)",
+          "unbindRenderer(IMapDecorationType<?, ?>)",
+          "getRenderer(E)",
+          "render(T, PoseStack, MultiBufferSource, MapItemSavedData, boolean, int, int)"
         ],
-        "net.darkhax.bookshelf.util.baubles.BaubleUtils": [
-          "hasItem(EntityPlayer, Item, int)",
-          "getBaublesFromPlayer(EntityPlayer, Item, int)",
-          "getBaubleType(Item, int)",
-          "getBauble(EntityPlayer, BaubleType)",
-          "getBauble(EntityPlayer, int)",
-          "hasBauble(EntityPlayer, ItemStack, BaubleType)",
-          "equipBauble(EntityPlayer, ItemStack, int)"
+        "net.mehvahdjukaar.selene.map.CustomDataHolder": [
+          "create(CompoundTag)",
+          "createFromBuffer(FriendlyByteBuf)"
         ],
-        "net.darkhax.bookshelf.util.baubles.ItemBauble": [],
-        "net.darkhax.bookshelf.util.BlockUtils": [
-          "isOre(ItemStack, boolean)",
-          "isFluid(Block)"
+        "net.mehvahdjukaar.selene.map.CustomMapDecoration": [
+          "getType()",
+          "getX()",
+          "getY()",
+          "getRot()",
+          "setDisplayName(Component)",
+          "setRot(byte)",
+          "setX(byte)",
+          "setY(byte)",
+          "getDisplayName()",
+          "equals(Object)",
+          "hashCode()",
+          "saveToBuffer(FriendlyByteBuf)"
         ],
-        "net.darkhax.bookshelf.util.ClassUtils": [
-          "compareClasses(Class<?>, Class<?>)",
-          "compareObjectToClass(Object, Class<?>)",
-          "getClassFromString(String)"
+        "net.mehvahdjukaar.selene.map.ExpandedMapData": [],
+        "net.mehvahdjukaar.selene.map.MapDecorationRegistry": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "acceptClientTypes(Collection<SimpleDecorationType>)",
+          "getTypes()",
+          "register(IMapDecorationType<T, ?>)",
+          "registerSimple(String, String)",
+          "makeSimpleType(String, String)",
+          "get(ResourceLocation)",
+          "get(String)",
+          "readWorldMarker(CompoundTag)",
+          "getMarkersFromWorld(BlockGetter, BlockPos)",
+          "registerCustomMapSavedData(ResourceLocation, Class<T>, Function<CompoundTag, T>, BiConsumer<CompoundTag, T>, TriFunction<MapItemSavedData, Entity, T, Boolean>, TriFunction<MapItemSavedData, ItemStack, T, Component>)"
         ],
-        "net.darkhax.bookshelf.util.CollectionUtils": [
-          "toDouble(float[])",
-          "toFloat(double[])",
-          "toString(ResourceLocation[])",
-          "toIdentifier(String[])",
-          "toIdentifier(Item[])",
-          "toIdentifier(Block[])",
-          "toItem(ResourceLocation[])",
-          "toBlock(ResourceLocation[])",
-          "toString(ItemStack[])",
-          "toStack(String[])",
-          "toInt(Color)",
-          "toColor(int[])",
-          "toInt(BlockPos)",
-          "toPos(int[])"
+        "net.mehvahdjukaar.selene.map.MapHelper": [
+          "getMapData(ItemStack, Level, Player)",
+          "getMapId(ItemStack, Player, Object)",
+          "addDecorationToMap(ItemStack, BlockPos, IMapDecorationType<?, ?>, int)",
+          "addVanillaDecorations(ItemStack, BlockPos, Type, int)",
+          "addDecorationToMap(ItemStack, BlockPos, ResourceLocation, int)",
+          "toggleMarkersAtPos(Level, BlockPos, ItemStack, Player)",
+          "removeAllCustomMarkers(Level, ItemStack, Player)"
         ],
-        "net.darkhax.bookshelf.util.CraftingUtils": [
-          "getRecipeForMatrix(InventoryCrafting, World)",
-          "getCurrentCraftingRecipe(EntityPlayer)",
-          "getCurrentCraftingOutput(EntityPlayer)",
-          "getCraftingContainer(EntityPlayer)",
-          "getOwner(IRecipe)",
-          "getRecipeOwners()",
-          "getShapedRecipes(ItemStack)",
-          "getShapedOreRecipe(ItemStack)",
-          "getShapelessRecipes(ItemStack)",
-          "getShapelessOreRecipe(ItemStack)",
-          "getAnyRecipe(ItemStack)",
-          "getRecipesForStack(ItemStack, Predicate<IRecipe>)",
-          "createConversionRecipes(ItemStack, ItemStack)",
-          "validateCrafting(Object)"
+        "net.mehvahdjukaar.selene.map.markers.GenericMapBlockMarker": [
+          "doCreateDecoration(byte, byte, byte)"
         ],
-        "net.darkhax.bookshelf.util.EnchantmentUtils": [
-          "isItemEnchantable(ItemStack)",
-          "getExperienceFromLevel(int)",
-          "getExperienceToLevel(int, int)",
-          "getLevelsFromExperience(int)",
-          "areEnchantmentsCompatible(Enchantment, Enchantment)",
-          "getExpForDisplay(int)"
+        "net.mehvahdjukaar.selene.map.markers.MapBlockMarker": [
+          "loadFromNBT(CompoundTag)",
+          "saveToNBT(CompoundTag)",
+          "equals(Object)",
+          "hashCode()",
+          "getType()",
+          "getTypeId()",
+          "getMarkerId()",
+          "getPos()",
+          "setPos(BlockPos)",
+          "getRotation()",
+          "doCreateDecoration(byte, byte, byte)",
+          "createDecorationFromMarker(byte, int, int, ResourceKey<Level>, boolean)",
+          "shouldUpdate(MapBlockMarker<?>)",
+          "updateDecoration(CustomMapDecoration)"
         ],
-        "net.darkhax.bookshelf.util.EntityUtils": [
-          "getDistanceFromEntity(Entity, Entity)",
-          "getDistaceFromPos(Entity, BlockPos)",
-          "pushTowards(Entity, EnumFacing, double)",
-          "pushTowards(Entity, BlockPos, double)",
-          "pushTowards(Entity, Entity, double)",
-          "pushTowardsDirection(Entity, EnumFacing, double)",
-          "areEntitiesCloseEnough(Entity, Entity, double)",
-          "getEntitiesInArea(Class<? extends Entity>, World, BlockPos, int)",
-          "getEquipmentSlot(int)",
-          "isWearingFullSet(EntityLivingBase, Class<Item>)"
+        "net.mehvahdjukaar.selene.map.markers.NamedMapBlockMarker": [
+          "saveToNBT(CompoundTag)",
+          "loadFromNBT(CompoundTag)",
+          "equals(Object)",
+          "hashCode()",
+          "shouldUpdate(MapBlockMarker<?>)",
+          "updateDecoration(CustomMapDecoration)"
         ],
-        "net.darkhax.bookshelf.util.GameUtils": [
-          "isClient()"
+        "net.mehvahdjukaar.selene.map.type.CustomDecorationType": [
+          "hasMarker()",
+          "getId()",
+          "toString()",
+          "loadDecorationFromBuffer(FriendlyByteBuf)",
+          "loadMarkerFromNBT(CompoundTag)",
+          "getWorldMarkerFromWorld(BlockGetter, BlockPos)"
         ],
-        "net.darkhax.bookshelf.util.GuiUtils": [
-          "addPlayerInvToContainer(Container, InventoryPlayer)"
+        "net.mehvahdjukaar.selene.map.type.IMapDecorationType": [],
+        "net.mehvahdjukaar.selene.map.type.SimpleDecorationType": [
+          "getTarget()",
+          "hasMarker()",
+          "getId()",
+          "toString()",
+          "loadDecorationFromBuffer(FriendlyByteBuf)",
+          "loadMarkerFromNBT(CompoundTag)",
+          "getWorldMarkerFromWorld(BlockGetter, BlockPos)"
         ],
-        "net.darkhax.bookshelf.util.MathsUtils": [
-          "isInRange(double, double, double)",
-          "getDistanceBetweenPoints(Vec3d, Vec3d)",
-          "round(double, int)",
-          "nextIntInclusive(int, int)",
-          "rayTrace(EntityPlayer, double)",
-          "tryPercentage(double)",
-          "getRandomColor()",
-          "getAverage(int, int)",
-          "ticksToTime(int)"
+        "net.mehvahdjukaar.selene.math.colors.BaseColor": [
+          "distTo(T)",
+          "mixWith(T)",
+          "mixWith(T, float)",
+          "mixColors(List<C>)",
+          "mixColors(C...)",
+          "asRGB()",
+          "asHSL()",
+          "asHSV()",
+          "asXYZ()",
+          "asLAB()",
+          "asHCL()",
+          "asLUV()",
+          "asHCLV()",
+          "weightedAverageAngles(float, float, float)",
+          "averageAngles(Float...)",
+          "fromRGB(RGBColor)"
         ],
-        "net.darkhax.bookshelf.util.MathUtils": [],
-        "net.darkhax.bookshelf.util.ModUtils": [
-          "getModName(Impl<?>)",
-          "getModName(Entity)",
-          "getModContainer(String)",
-          "getModName(String)",
-          "getTabFromLabel(String)"
+        "net.mehvahdjukaar.selene.math.colors.ColorSpaces": [
+          "RGBtoHSV(RGBColor)",
+          "HSVtoRGB(HSVColor)",
+          "RGBtoHSL(RGBColor)",
+          "HSLtoRGB(HSLColor)",
+          "RGBtoXYZ(RGBColor)",
+          "XYZtoRGB(XYZColor)",
+          "XYZtoLAB(XYZColor)",
+          "LABtoXYZ(LABColor)",
+          "LABtoHCL(LABColor)",
+          "HCLtoLAB(HCLColor)",
+          "XYZtoLUV(XYZColor)",
+          "LUVtoXYZ(LUVColor)",
+          "LUVtoHCLV(LUVColor)",
+          "HCLVtoLUV(HCLVColor)"
         ],
-        "net.darkhax.bookshelf.util.NBTUtils": [
-          "setGenericNBTValue(NBTTagCompound, String, Object)",
-          "writeInventoryToNBT(NBTTagCompound, InventoryBasic)",
-          "readInventoryFromNBT(NBTTagCompound, InventoryBasic)",
-          "getStoredItems(NBTTagCompound, int)",
-          "getDeepTagCompound(NBTTagCompound, String[])"
+        "net.mehvahdjukaar.selene.math.colors.HCLColor": [
+          "toString()",
+          "hue()",
+          "chroma()",
+          "luminance()",
+          "alpha()",
+          "withHue(float)",
+          "withChroma(float)",
+          "withLuminance(float)",
+          "withAlpha(float)",
+          "asRGB()",
+          "asHCL()",
+          "averageColors(HCLColor...)",
+          "mixWith(HCLColor, float)",
+          "fromRGB(RGBColor)",
+          "distTo(HCLColor)"
         ],
-        "net.darkhax.bookshelf.util.NumericUtils": [
-          "isKeyCodeNumeric(int)",
-          "isChristmasTime()",
-          "isHalloweenTime()",
-          "isSpecialDay(int, int)",
-          "isSpecialDay(int, int, int)"
+        "net.mehvahdjukaar.selene.math.colors.HCLVColor": [
+          "toString()",
+          "hue()",
+          "chroma()",
+          "luminance()",
+          "alpha()",
+          "withHue(float)",
+          "withChroma(float)",
+          "withLuminance(float)",
+          "withAlpha(float)",
+          "asRGB()",
+          "asHCLV()",
+          "averageColors(HCLVColor...)",
+          "mixWith(HCLVColor, float)",
+          "fromRGB(RGBColor)",
+          "distTo(HCLVColor)"
         ],
-        "net.darkhax.bookshelf.util.OreDictUtils": [
-          "initAdditionalVanillaEntries()"
+        "net.mehvahdjukaar.selene.math.colors.HSLColor": [
+          "toString()",
+          "hue()",
+          "saturation()",
+          "lightness()",
+          "alpha()",
+          "withHue(float)",
+          "withSaturation(float)",
+          "withLightness(float)",
+          "withAlpha(float)",
+          "asRGB()",
+          "asHSL()",
+          "averageColors(HSLColor...)",
+          "mixWith(HSLColor, float)",
+          "fromRGB(RGBColor)",
+          "distTo(HSLColor)"
         ],
-        "net.darkhax.bookshelf.util.ParticleUtils": [
-          "spawnDigParticles(ParticleManager, IBlockState, World, BlockPos, EnumFacing)",
-          "spawnBreakParticles(ParticleManager, IBlockState, World, BlockPos)",
-          "spawnParticleRing(World, EnumParticleTypes, double, double, double, double, double, double, double)",
-          "spawnPercentageParticleRing(World, EnumParticleTypes, float, double, double, double, double, double, double, double)"
+        "net.mehvahdjukaar.selene.math.colors.HSVColor": [
+          "toString()",
+          "hue()",
+          "saturation()",
+          "value()",
+          "alpha()",
+          "withHue(float)",
+          "withSaturation(float)",
+          "withValue(float)",
+          "withAlpha(float)",
+          "asHSV()",
+          "asRGB()",
+          "averageColors(HSVColor...)",
+          "mixWith(HSVColor, float)",
+          "fromRGB(RGBColor)",
+          "distTo(HSVColor)"
         ],
-        "net.darkhax.bookshelf.util.PlayerUtils": [
-          "canPlayerSleep(EntityPlayer)",
-          "isPlayerReal(EntityPlayer)",
-          "getPlayerFromUUID(World, UUID)",
-          "getPlayerNameFromUUID(UUID)",
-          "getUUIDFromName(String)",
-          "fixStrippedUUID(String)",
-          "getItemCountInInv(EntityPlayer, Item)",
-          "playerHasItem(EntityPlayer, Item, int)",
-          "getStacksFromPlayer(EntityPlayer, Item, int)",
-          "getClientPlayer()",
-          "sendSpamlessMessage(int, ITextComponent)",
-          "isPlayerInGame()",
-          "getClientUUID()"
+        "net.mehvahdjukaar.selene.math.colors.LABColor": [
+          "toString()",
+          "luminance()",
+          "a()",
+          "b()",
+          "alpha()",
+          "withLuminance(float)",
+          "withA(float)",
+          "withB(float)",
+          "withAlpha(float)",
+          "averageColors(LABColor...)",
+          "asLAB()",
+          "asRGB()",
+          "mixWith(LABColor, float)",
+          "fromRGB(RGBColor)"
         ],
-        "net.darkhax.bookshelf.util.RenderUtils": [
-          "registerPlayerLayer(LayerRenderer<EntityLivingBase>)",
-          "getSteveRenderer()",
-          "getAlexRenderer()",
-          "getPlayerRenderer(String)",
-          "setPlayerTexture(Type, AbstractClientPlayer, ResourceLocation)",
-          "downloadResourceLocation(String, ResourceLocation, ResourceLocation, IImageBuffer)",
-          "downloadResource(String, ResourceLocation, ResourceLocation, IImageBuffer)",
-          "getCamera(Entity, float)",
-          "translateAgainstPlayer(BlockPos, boolean)",
-          "getParticleTexture(ItemStack)",
-          "getSprite(ItemStack)",
-          "getBakedModel(ModelResourceLocation)",
-          "getBakedModel(ItemStack)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double, double, double, double)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double, double, double, double, int)",
-          "addTexturedQuad(VertexBuffer, TextureAtlasSprite, double, double, double, double, double, double, EnumFacing, int, int)",
-          "addTextureQuad(VertexBuffer, TextureAtlasSprite, double, double, double, double, double, double, EnumFacing, int, int, int, int, int, int)",
-          "setupRenderState(double, double, double)",
-          "setupRenderState()"
+        "net.mehvahdjukaar.selene.math.colors.LUVColor": [
+          "toString()",
+          "luminance()",
+          "u()",
+          "v()",
+          "alpha()",
+          "withLuminance(float)",
+          "withU(float)",
+          "withV(float)",
+          "withAlpha(float)",
+          "averageColors(LUVColor...)",
+          "asLUV()",
+          "asRGB()",
+          "mixWith(LUVColor, float)",
+          "fromRGB(RGBColor)"
         ],
-        "net.darkhax.bookshelf.util.SkullUtils": [
-          "createSkull(EntityPlayer)",
-          "createSkull(String, UUID)",
-          "createSkull(SkullUtils.MHFAccount)",
-          "createSkull(SkullUtils.Player)",
-          "createSkull(String)",
-          "getWitherSkeletonSkull()",
-          "getZombieSkull()",
-          "getCreeperSkull()",
-          "getSteveSkull()",
-          "getSkeletonSkull()",
-          "getMHFSkulls()",
-          "getPlayerSkulls()"
+        "net.mehvahdjukaar.selene.math.colors.RGBColor": [
+          "toString()",
+          "red()",
+          "green()",
+          "blue()",
+          "alpha()",
+          "withRed(float)",
+          "withGreen(float)",
+          "withBlue(float)",
+          "withAlpha(float)",
+          "asRGB()",
+          "averageColors(RGBColor...)",
+          "mixWith(RGBColor, float)",
+          "fromRGB(RGBColor)",
+          "toInt()"
         ],
-        "net.darkhax.bookshelf.util.StackUtils": [
-          "prepareStackTag(ItemStack)",
-          "prepareStack(ItemStack)",
-          "setLore(ItemStack, String[])",
-          "writeStackToString(ItemStack)",
-          "createStackFromString(String)",
-          "compareStackToOreName(ItemStack, String)",
-          "doStacksShareOreName(ItemStack, ItemStack)",
-          "areStacksSimilar(ItemStack, ItemStack)",
-          "areStacksSimilarWithSize(ItemStack, ItemStack)",
-          "writePotionEffectsToStack(ItemStack, PotionEffect[])",
-          "writeStackToTag(ItemStack, NBTTagCompound, String)",
-          "decreaseStackSize(ItemStack, int)",
-          "areStacksEqual(ItemStack, ItemStack, boolean)",
-          "isStackInArray(ItemStack, boolean, ItemStack...)",
-          "copyStackWithSize(ItemStack, int)",
-          "getThingByName(String)",
-          "getBlockFromStack(ItemStack)",
-          "consumeStack(ItemStack)",
-          "dropStackInWorld(World, BlockPos, ItemStack)",
-          "createStackFromTileEntity(TileEntity)"
+        "net.mehvahdjukaar.selene.math.colors.XYZColor": [
+          "toString()",
+          "x()",
+          "y()",
+          "z()",
+          "alpha()",
+          "withX(float)",
+          "withY(float)",
+          "withZ(float)",
+          "withAlpha(float)",
+          "asRGB()",
+          "asXYZ()",
+          "fromRGB(RGBColor)"
         ],
-        "net.darkhax.bookshelf.util.TextUtils": [
-          "wrapStringToList(String, int, boolean, List<String>)",
-          "wrapStringToListWithFormat(String, int, boolean, List<String>, TextFormatting)",
-          "stripFormatting(String)",
-          "getValueByCharacter(char)",
-          "getValueByName(String)",
-          "formatString(String, TextUtils.ChatFormat)"
+        "net.mehvahdjukaar.selene.math.kmeans.DataSet": [
+          "fromPalette(Palette)",
+          "calculateCentroid(int)",
+          "recomputeCentroids(int)",
+          "randomFromDataSet()",
+          "calculateClusterSSE(IDataEntry<A>, int)",
+          "calculateTotalSSE(List<IDataEntry<A>>)",
+          "calculateWeighedCentroid()",
+          "getColorPoints()",
+          "getLastCentroids()"
         ],
-        "net.darkhax.bookshelf.world.loot.conditions.BiomeSpecific": [
-          "func_186618_a(Random, LootContext)"
+        "net.mehvahdjukaar.selene.math.kmeans.IDataEntry": [],
+        "net.mehvahdjukaar.selene.math.kmeans.KMeans": [
+          "kMeansPP(DataSet<A>, int)",
+          "kMeans(DataSet<A>, int)"
         ],
-        "net.darkhax.bookshelf.world.loot.functions.SetColor": [
-          "func_186553_a(ItemStack, Random, LootContext)"
+        "net.mehvahdjukaar.selene.math.MthUtils": [
+          "polarToCartesian(float, float)",
+          "signedAngleDiff(double, double)",
+          "changeBasisN(Vec3, Vec3)",
+          "changeBasis(Vec3, Vec3, Vec3, Vec3)",
+          "getNormalFrom3DData(int)",
+          "V3itoV3(Vec3i)",
+          "rotateVec3(Vec3, Direction)",
+          "averageAngles(Float...)",
+          "nextWeighted(Random, float, float)",
+          "nextWeighted(Random, float, float, float)",
+          "nextWeighted(Random, float)"
+        ],
+        "net.mehvahdjukaar.selene.math.Vec2i": [
+          "subtract(Vec2i)",
+          "subtract(int, int)",
+          "add(Vec2i)",
+          "add(int, int)",
+          "lengthSqr()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()",
+          "compareTo(Vec2i)"
+        ],
+        "net.mehvahdjukaar.selene.misc.BlockLootTableAccessor": [
+          "dropping(ItemLike)"
+        ],
+        "net.mehvahdjukaar.selene.misc.ModCriteriaTriggers": [
+          "init()"
+        ],
+        "net.mehvahdjukaar.selene.misc.test.WaterTest": [
+          "setupSprites()",
+          "shouldRenderFace(BlockAndTintGetter, BlockPos, FluidState, BlockState, Direction)",
+          "tesselate(BlockAndTintGetter, BlockPos, VertexConsumer, FluidState)"
+        ],
+        "net.mehvahdjukaar.selene.mixins.CreativeModeTabMixin": [
+          "fixId(CallbackInfoReturnable<String>)"
+        ],
+        "net.mehvahdjukaar.selene.mixins.FirstPersonRendererMixin": [
+          "renderItem(AbstractClientPlayer, float, float, InteractionHand, float, ItemStack, float, PoseStack, MultiBufferSource, int, CallbackInfo)"
+        ],
+        "net.mehvahdjukaar.selene.mixins.GrindstoneMenuSlotMixin": [],
+        "net.mehvahdjukaar.selene.mixins.LanguageManagerMixin": [],
+        "net.mehvahdjukaar.selene.mixins.MapDataMixin": [
+          "getCustomData()",
+          "getCustomDecorations()",
+          "getCustomMarkers()",
+          "getVanillaDecorationSize()",
+          "addCustomDecoration(MapBlockMarker<D>)",
+          "copy()",
+          "resetCustomDecoration()",
+          "toggleCustomDecoration(LevelAccessor, BlockPos)",
+          "locked(CallbackInfoReturnable<MapItemSavedData>)",
+          "scaled(CallbackInfoReturnable<MapItemSavedData>)",
+          "tickCarriedBy(Player, ItemStack, CallbackInfo)",
+          "save(CompoundTag, CallbackInfoReturnable<CompoundTag>)",
+          "checkBanners(BlockGetter, int, int, CallbackInfo)"
+        ],
+        "net.mehvahdjukaar.selene.mixins.MapExtendingRecipeMixin": [],
+        "net.mehvahdjukaar.selene.mixins.MapItemMixin": [],
+        "net.mehvahdjukaar.selene.mixins.MapItemRendererMixin": [],
+        "net.mehvahdjukaar.selene.mixins.MultiPackResourceManagerMixin": [],
+        "net.mehvahdjukaar.selene.mixins.PlayerItemInHandLayerMixin": [
+          "poseRightArm(LivingEntity, ItemStack, TransformType, HumanoidArm, PoseStack, MultiBufferSource, int, CallbackInfo)"
+        ],
+        "net.mehvahdjukaar.selene.mixins.ThirdPersonRendererMixin": [
+          "poseRightArm(T, CallbackInfo)",
+          "poseLeftArm(T, CallbackInfo)",
+          "setupAnim(T, float, float, float, float, float, CallbackInfo)"
+        ],
+        "net.mehvahdjukaar.selene.mixins.VillagerMixin": [
+          "m_8075_(Dynamic<?>)",
+          "reg(Brain<Villager>, CallbackInfo)"
+        ],
+        "net.mehvahdjukaar.selene.network.ClientBoundSyncCustomMapDecorationPacket": [
+          "buffer(ClientBoundSyncCustomMapDecorationPacket, FriendlyByteBuf)",
+          "handler(ClientBoundSyncCustomMapDecorationPacket, Supplier<Context>)",
+          "getMapId()",
+          "applyToMap(MapItemSavedData)"
+        ],
+        "net.mehvahdjukaar.selene.network.ClientBoundSyncFluidsPacket": [
+          "buffer(ClientBoundSyncFluidsPacket, FriendlyByteBuf)",
+          "handler(ClientBoundSyncFluidsPacket, Supplier<Context>)",
+          "getFluids()"
+        ],
+        "net.mehvahdjukaar.selene.network.ClientBoundSyncMapDecorationTypesPacket": [
+          "buffer(ClientBoundSyncMapDecorationTypesPacket, FriendlyByteBuf)",
+          "handler(ClientBoundSyncMapDecorationTypesPacket, Supplier<Context>)"
+        ],
+        "net.mehvahdjukaar.selene.network.NetworkHandler": [
+          "nextID()",
+          "registerMessages()"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.AfterLanguageLoadEvent": [],
+        "net.mehvahdjukaar.selene.resourcepack.BlockTypeResTransformer": [
+          "create(String, ResourceManager)",
+          "wood(String, ResourceManager)",
+          "leaves(String, ResourceManager)",
+          "setIDModifier(BlockTypeResTransformer.TextModification<T>)",
+          "IDReplaceType(String)",
+          "IDReplaceBlock(String)",
+          "addModifier(BlockTypeResTransformer.TextModification<T>)",
+          "replaceSimpleType(String)",
+          "replaceGenericType(String, String)",
+          "replaceBlockType(String)",
+          "replaceItemType(String)",
+          "replaceSimpleBlock(Block)",
+          "replaceSimpleBlock(String, String)",
+          "replaceSimpleItem(Item)",
+          "replaceSimpleItem(String, String)",
+          "replaceSimpleEntry(String, String, String, String)",
+          "replaceString(String, String)",
+          "replaceOakLeaves()",
+          "replaceOakPlanks()",
+          "replaceOakBark()"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.DynamicDataPack": [
+          "addTag(TagKey<?>, Collection<T>, ResourceKey<?>)",
+          "addTag(ResourceLocation, Collection<ResourceLocation>, ResourceKey<?>)",
+          "addTag(TagBuilder, ResourceKey<?>)",
+          "addSimpleBlockLootTable(Block)",
+          "addRecipe(FinishedRecipe)",
+          "addRecipeNoAdvancement(FinishedRecipe)",
+          "addRecipeWithAdvancement(FinishedRecipe)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.DynamicLanguageManager": [
+          "register(RPAwareDynamicTextureProvider)",
+          "addDynamicEntries(ResourceManager, List<LanguageInfo>, Map<String, String>)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.DynamicResourcePack": [
+          "addNamespaces(String...)",
+          "getTitle()",
+          "m_8017_()",
+          "toString()",
+          "registerPack(IEventBus)",
+          "register(AddPackFindersEvent)",
+          "m_5698_(PackType)",
+          "m_5550_(MetadataSectionSerializer<T>)",
+          "addRootResource(String, byte[])",
+          "m_5542_(String)",
+          "m_7466_(PackType, String, String, int, Predicate<String>)",
+          "m_8031_(PackType, ResourceLocation)",
+          "m_7211_(PackType, ResourceLocation)",
+          "close()",
+          "makeFileNotFoundException(String)",
+          "addBytes(ResourceLocation, byte[])",
+          "addResource(StaticResource)",
+          "addJson(ResourceLocation, JsonElement, ResType)",
+          "addBytes(ResourceLocation, byte[], ResType)",
+          "getPackType()"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.DynamicTexturePack": [
+          "addAndCloseTexture(ResourceLocation, TextureImage)",
+          "addBlockModel(ResourceLocation, JsonElement)",
+          "addItemModel(ResourceLocation, JsonElement)",
+          "addBlockState(ResourceLocation, JsonElement)",
+          "addLang(ResourceLocation, JsonElement)",
+          "addLang(ResourceLocation, LangBuilder)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.EarlyPackReloadEvent": [
+          "getManager()",
+          "getPacks()"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.recipe.IRecipeTemplate": [
+          "createSimilar(T, T, Item)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.recipe.ShapedRecipeTemplate": [
+          "createSimilar(T, T, Item, String)",
+          "getConditions()",
+          "addCondition(ICondition)",
+          "shouldBeShapeless()",
+          "toShapeless()"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.recipe.ShapelessRecipeTemplate": [
+          "createSimilar(T, T, Item, String)",
+          "addCondition(ICondition)",
+          "getConditions()"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.recipe.StoneCutterRecipeTemplate": [
+          "createSimilar(T, T, Item, String)",
+          "getConditions()",
+          "addCondition(ICondition)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.recipe.TemplateRecipeManager": [
+          "registerTemplate(RecipeSerializer<?>, Function<JsonObject, T>)",
+          "registerTemplate(ResourceLocation, Function<JsonObject, T>)",
+          "read(JsonObject)",
+          "deserializeConditions(JsonArray)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.resources.TagBuilder": [
+          "getId()",
+          "of(ResourceLocation)",
+          "of(TagKey<?>)",
+          "add(ResourceLocation)",
+          "replace(boolean)",
+          "replace()",
+          "addTag(ResourceLocation)",
+          "addTag(TagKey<?>)",
+          "addOptionalTag(ResourceLocation)",
+          "addTag(TagBuilder)",
+          "addEntries(Collection<T>)",
+          "addEntry(T)",
+          "addFromJson(JsonObject)",
+          "m_13334_()"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.ResType": [
+          "getPath(ResourceLocation)",
+          "getPath(String)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.RPAwareDynamicDataProvider": [
+          "register(IEventBus)",
+          "getRepository()",
+          "onEarlyReload(EarlyPackReloadEvent)",
+          "onAddReloadListeners(AddReloadListenerEvent)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.RPAwareDynamicResourceProvider": [
+          "register(IEventBus)",
+          "getLogger()",
+          "getPack()",
+          "dependsOnLoadedPacks()",
+          "regenerateDynamicAssets(ResourceManager)",
+          "generateStaticAssetsOnStartup(ResourceManager)",
+          "m_5540_(PreparationBarrier, ResourceManager, ProfilerFiller, ProfilerFiller, Executor, Executor)",
+          "reloadResources(ResourceManager)",
+          "getRepository()",
+          "alreadyHasAssetAtLocation(ResourceManager, ResourceLocation, ResType)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.RPAwareDynamicTextureProvider": [
+          "register(IEventBus)",
+          "getRepository()",
+          "alreadyHasTextureAtLocation(ResourceManager, ResourceLocation)",
+          "addTextureIfNotPresent(ResourceManager, String, Supplier<TextureImage>)",
+          "addDynamicTranslations(DynamicLanguageManager.LanguageAccessor)",
+          "addDynamicTranslations(AfterLanguageLoadEvent)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.RPUtils": [
+          "serializeJson(JsonElement)",
+          "deserializeJson(InputStream)",
+          "findFirstBlockTextureLocation(ResourceManager, Block)",
+          "findFirstBlockTextureLocation(ResourceManager, Block, Predicate<String>)",
+          "findFirstItemTextureLocation(ResourceManager, Item)",
+          "findFirstItemTextureLocation(ResourceManager, Item, Predicate<String>)",
+          "findFirstResourceInJsonRecursive(JsonElement)",
+          "findAllResourcesInJsonRecursive(JsonElement)",
+          "findAllResourcesInJsonRecursive(JsonElement, Predicate<String>)",
+          "readRecipe(ResourceManager, String)",
+          "readRecipe(ResourceManager, ResourceLocation)",
+          "readRecipeAsTemplate(ResourceManager, String)",
+          "readRecipeAsTemplate(ResourceManager, ResourceLocation)",
+          "makeSimilarRecipe(Recipe<?>, T, T, String)",
+          "addSimpleBlockResources(String, ResourceManager, DynamicResourcePack, Map<T, Block>, String, ResourceLocation...)",
+          "addBlockResources(ResourceManager, DynamicResourcePack, Map<T, Block>, BlockTypeResTransformer<T>, ResourceLocation...)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.StaticResource": [
+          "getInputStream()",
+          "of(Resource)",
+          "create(byte[], ResourceLocation)",
+          "getOrLog(ResourceManager, ResourceLocation)",
+          "getOrFail(ResourceManager, ResourceLocation)"
+        ],
+        "net.mehvahdjukaar.selene.resourcepack.VanillaResourceManager": [
+          "m_7187_()",
+          "m_7165_(ResourceLocation)",
+          "m_7396_(ResourceLocation)",
+          "m_6540_(String, Predicate<String>)",
+          "m_7536_()",
+          "m_142591_(ResourceLocation)",
+          "close()"
+        ],
+        "net.mehvahdjukaar.selene.Selene": [
+          "res(String)",
+          "addJsonListener(AddReloadListenerEvent)",
+          "onDataLoad(OnDatapackSyncEvent)",
+          "init(FMLCommonSetupEvent)"
+        ],
+        "net.mehvahdjukaar.selene.util.ClientUtils": [
+          "registerISTER(Consumer<IItemRenderProperties>, BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer>)"
+        ],
+        "net.mehvahdjukaar.selene.util.DispenserHelper": [
+          "registerCustomBehavior(DispenserHelper.AdditionalDispenserBehavior)",
+          "registerPlaceBlockBehavior(ItemLike)",
+          "registerFluidBehavior(SoftFluid)"
+        ],
+        "net.mehvahdjukaar.selene.util.ItemCategoryFiller": [
+          "fillItemCategory(Item, NonNullList<ItemStack>)"
+        ],
+        "net.mehvahdjukaar.selene.util.PotionNBTHelper": [
+          "addPotionTooltip(CompoundTag, List<Component>, float)",
+          "getColorFromNBT(CompoundTag)"
+        ],
+        "net.mehvahdjukaar.selene.util.TwoHandedAnimation": [
+          "isTwoHanded()",
+          "setTwoHanded(boolean)"
+        ],
+        "net.mehvahdjukaar.selene.util.Utils": [
+          "swapItem(Player, InteractionHand, ItemStack, ItemStack, boolean)",
+          "swapItem(Player, InteractionHand, ItemStack, ItemStack)",
+          "swapItemNBT(Player, InteractionHand, ItemStack, ItemStack)",
+          "swapItem(Player, InteractionHand, ItemStack)",
+          "addStackToExisting(Player, ItemStack)",
+          "getXPinaBottle(int, Random)",
+          "rotateVoxelShape(VoxelShape, Direction)"
+        ],
+        "net.mehvahdjukaar.selene.villager_ai.VillagerAIManager": [
+          "onRegisterBrainGoals(Brain<Villager>, AbstractVillager)",
+          "init()",
+          "registerMemory(MemoryModuleType<?>)"
+        ],
+        "net.mehvahdjukaar.selene.villager_ai.VillagerBrainEvent": [
+          "getVillager()",
+          "getMemories()",
+          "addOrReplaceActivity(Activity, ImmutableList<? extends Pair<Integer, ? extends Behavior<? super Villager>>>)",
+          "scheduleActivity(Activity, int, int)",
+          "addSensor(SensorType<? extends Sensor<Villager>>)",
+          "addTaskToActivity(Activity, P)",
+          "buildFinalizedSchedule()",
+          "hasCustomSchedule()"
         ]
       },
-      "sampleCount": 80
+      "sampleCount": 129
+    },
+    "1.16.5": {
+      "packages": [
+        "net.mehvahdjukaar.selene",
+        "net.mehvahdjukaar.selene.api",
+        "net.mehvahdjukaar.selene.blocks",
+        "net.mehvahdjukaar.selene.common",
+        "net.mehvahdjukaar.selene.example.fluid",
+        "net.mehvahdjukaar.selene.example.map",
+        "net.mehvahdjukaar.selene.example.map.client",
+        "net.mehvahdjukaar.selene.fluids",
+        "net.mehvahdjukaar.selene.fluids.client",
+        "net.mehvahdjukaar.selene.map",
+        "net.mehvahdjukaar.selene.map.client",
+        "net.mehvahdjukaar.selene.map.markers",
+        "net.mehvahdjukaar.selene.mixins",
+        "net.mehvahdjukaar.selene.network",
+        "net.mehvahdjukaar.selene.setup",
+        "net.mehvahdjukaar.selene.util"
+      ],
+      "classes": [
+        "net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider",
+        "net.mehvahdjukaar.selene.api.ISoftFluidContainerItem",
+        "net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider",
+        "net.mehvahdjukaar.selene.blocks.IBlockHolder",
+        "net.mehvahdjukaar.selene.blocks.IOwnerProtected",
+        "net.mehvahdjukaar.selene.blocks.ItemDisplayTile",
+        "net.mehvahdjukaar.selene.blocks.MimicBlockTile",
+        "net.mehvahdjukaar.selene.blocks.WaterBlock",
+        "net.mehvahdjukaar.selene.common.ModCriteriaTriggers",
+        "net.mehvahdjukaar.selene.example.fluid.ExampleFluids",
+        "net.mehvahdjukaar.selene.example.map.client.ExampleClient",
+        "net.mehvahdjukaar.selene.example.map.ExampleMarker",
+        "net.mehvahdjukaar.selene.example.map.ExampleReg",
+        "net.mehvahdjukaar.selene.fluids.client.FluidParticleColors",
+        "net.mehvahdjukaar.selene.fluids.FluidTextures",
+        "net.mehvahdjukaar.selene.fluids.ISoftFluidConsumer",
+        "net.mehvahdjukaar.selene.fluids.ISoftFluidHolder",
+        "net.mehvahdjukaar.selene.fluids.ISoftFluidProvider",
+        "net.mehvahdjukaar.selene.fluids.SoftFluid",
+        "net.mehvahdjukaar.selene.fluids.SoftFluidHolder",
+        "net.mehvahdjukaar.selene.fluids.SoftFluidRegistry",
+        "net.mehvahdjukaar.selene.map.client.DecorationRenderer",
+        "net.mehvahdjukaar.selene.map.client.MapDecorationRenderHandler",
+        "net.mehvahdjukaar.selene.map.CustomDecoration",
+        "net.mehvahdjukaar.selene.map.CustomDecorationHolder",
+        "net.mehvahdjukaar.selene.map.CustomDecorationType",
+        "net.mehvahdjukaar.selene.map.MapDecorationHandler",
+        "net.mehvahdjukaar.selene.map.markers.DummyMapWorldMarker",
+        "net.mehvahdjukaar.selene.map.markers.MapWorldMarker",
+        "net.mehvahdjukaar.selene.map.markers.NamedMapWorldMarker",
+        "net.mehvahdjukaar.selene.mixins.FirstPersonRendererMixin",
+        "net.mehvahdjukaar.selene.mixins.GrindstoneTestSlotMixin",
+        "net.mehvahdjukaar.selene.mixins.MapDataMixin",
+        "net.mehvahdjukaar.selene.mixins.MapExtendingRecipeMixin",
+        "net.mehvahdjukaar.selene.mixins.MapItemRendererMixin",
+        "net.mehvahdjukaar.selene.mixins.MixinConfig",
+        "net.mehvahdjukaar.selene.mixins.ThirdPersonRendererMixin",
+        "net.mehvahdjukaar.selene.network.NetworkHandler",
+        "net.mehvahdjukaar.selene.network.SyncCustomMapDecorationPacket",
+        "net.mehvahdjukaar.selene.Selene",
+        "net.mehvahdjukaar.selene.setup.ClientSetup",
+        "net.mehvahdjukaar.selene.setup.ModSetup",
+        "net.mehvahdjukaar.selene.util.DispenserHelper",
+        "net.mehvahdjukaar.selene.util.PotionNBTHelper",
+        "net.mehvahdjukaar.selene.util.TwoHandedAnimation",
+        "net.mehvahdjukaar.selene.util.Utils"
+      ],
+      "methods": {
+        "net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider": [],
+        "net.mehvahdjukaar.selene.api.ISoftFluidContainerItem": [
+          "getFluidNBT()",
+          "getAmount()"
+        ],
+        "net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider": [
+          "poseRightArmGeneric(ItemStack, AgeableModel<T>, T, HandSide, TwoHandedAnimation)",
+          "poseLeftArmGeneric(ItemStack, AgeableModel<T>, T, HandSide, TwoHandedAnimation)",
+          "isTwoHanded()"
+        ],
+        "net.mehvahdjukaar.selene.blocks.IBlockHolder": [
+          "getHeldBlock()",
+          "setHeldBlock(BlockState)"
+        ],
+        "net.mehvahdjukaar.selene.blocks.IOwnerProtected": [
+          "saveOwner(CompoundNBT)",
+          "loadOwner(CompoundNBT)",
+          "isOwnedBy(PlayerEntity)",
+          "isPublic()",
+          "isAccessibleBy(PlayerEntity)",
+          "isNotOwnedBy(PlayerEntity)"
+        ],
+        "net.mehvahdjukaar.selene.blocks.ItemDisplayTile": [
+          "setOwner(UUID)",
+          "getOwner()",
+          "func_70296_d()",
+          "updateOnChangedBeforePacket()",
+          "updateTileOnInventoryChanged()",
+          "needsToUpdateClientWhenChanged()",
+          "updateClientVisualsOnLoad()",
+          "getDisplayedItem()",
+          "setDisplayedItem(ItemStack)",
+          "interact(PlayerEntity, Hand)",
+          "interact(PlayerEntity, Hand, int)",
+          "getAddItemSound()",
+          "func_230337_a_(BlockState, CompoundNBT)",
+          "func_189515_b(CompoundNBT)",
+          "func_189518_D_()",
+          "func_189517_E_()",
+          "onDataPacket(NetworkManager, SUpdateTileEntityPacket)",
+          "func_70302_i_()",
+          "func_191420_l()",
+          "func_70297_j_()"
+        ],
+        "net.mehvahdjukaar.selene.blocks.MimicBlockTile": [
+          "getModelData()",
+          "getHeldBlock(int)",
+          "setHeldBlock(BlockState, int)",
+          "func_230337_a_(BlockState, CompoundNBT)",
+          "func_189515_b(CompoundNBT)",
+          "onDataPacket(NetworkManager, SUpdateTileEntityPacket)",
+          "func_189518_D_()",
+          "func_189517_E_()"
+        ],
+        "net.mehvahdjukaar.selene.blocks.WaterBlock": [
+          "func_204507_t(BlockState)",
+          "func_196271_a(BlockState, Direction, BlockState, IWorld, BlockPos, BlockPos)",
+          "func_196258_a(BlockItemUseContext)",
+          "func_206840_a(Builder<Block, BlockState>)",
+          "func_196266_a(BlockState, IBlockReader, BlockPos, PathType)"
+        ],
+        "net.mehvahdjukaar.selene.common.ModCriteriaTriggers": [
+          "init()"
+        ],
+        "net.mehvahdjukaar.selene.example.fluid.ExampleFluids": [
+          "init(FMLCommonSetupEvent)"
+        ],
+        "net.mehvahdjukaar.selene.example.map.client.ExampleClient": [
+          "init(FMLClientSetupEvent)"
+        ],
+        "net.mehvahdjukaar.selene.example.map.ExampleMarker": [
+          "saveToNBT(CompoundNBT)",
+          "loadFromNBT(CompoundNBT)",
+          "getFromWorld(IBlockReader, BlockPos)",
+          "doCreateDecoration(byte, byte, byte)",
+          "equals(Object)",
+          "hashCode()",
+          "shouldUpdate(MapWorldMarker<?>)",
+          "updateDecoration(CustomDecoration)"
+        ],
+        "net.mehvahdjukaar.selene.example.map.ExampleReg": [
+          "init(FMLCommonSetupEvent)"
+        ],
+        "net.mehvahdjukaar.selene.fluids.client.FluidParticleColors": [
+          "refresh()",
+          "get(Fluid)",
+          "get(String)"
+        ],
+        "net.mehvahdjukaar.selene.fluids.FluidTextures": [
+          "getTexturesToStitch()"
+        ],
+        "net.mehvahdjukaar.selene.fluids.ISoftFluidConsumer": [],
+        "net.mehvahdjukaar.selene.fluids.ISoftFluidHolder": [
+          "canInteractWithFluidHolder()"
+        ],
+        "net.mehvahdjukaar.selene.fluids.ISoftFluidProvider": [],
+        "net.mehvahdjukaar.selene.fluids.SoftFluid": [
+          "isDisabled()",
+          "getFoodDivider()",
+          "getFoodItem()",
+          "getTranslatedName()",
+          "getTranslationKey()",
+          "getID()",
+          "getRegistryName()",
+          "getForgeFluid()",
+          "getNbtKeyFromItem()",
+          "getEquivalentFluids()",
+          "isEquivalent(Fluid)",
+          "isEmpty()",
+          "tryGettingFilledItems(Item)",
+          "tryGettingEmptyItem(Item)",
+          "getAllFilledContainers()",
+          "getFilledContainersMap()",
+          "getFilledContainer(Item)",
+          "getLuminosity()",
+          "getTintColor()",
+          "getTintMethod()"
+        ],
+        "net.mehvahdjukaar.selene.fluids.SoftFluidHolder": [
+          "interactWithPlayer(PlayerEntity, Hand, World, BlockPos)",
+          "interactWithItem(ItemStack, World, BlockPos, boolean)",
+          "tryDrainItem(ItemStack, World, BlockPos, boolean)",
+          "tryFillingItem(Item, World, BlockPos, boolean)",
+          "tryFillingBottle(World, BlockPos)",
+          "tryFillingBucket(World, BlockPos)",
+          "tryFillingBowl(World, BlockPos)",
+          "isSameFluidAs(FluidStack, CompoundNBT)",
+          "isSameFluidAs(FluidStack)",
+          "isSameFluidAs(SoftFluid)",
+          "isSameFluidAs(SoftFluid, CompoundNBT)",
+          "tryAddingFluid(FluidStack)",
+          "tryAddingFluid(SoftFluid, int, CompoundNBT)",
+          "tryAddingFluid(SoftFluid, int)",
+          "tryAddingFluid(SoftFluid)",
+          "tryTransferFluid(SoftFluidHolder)",
+          "tryTransferFluid(SoftFluidHolder, int)",
+          "tryTransferToFluidTank(IFluidHandler, int)",
+          "tryTransferToFluidTank(IFluidHandler)",
+          "drainFluidTank(IFluidHandler, int)"
+        ],
+        "net.mehvahdjukaar.selene.fluids.SoftFluidRegistry": [
+          "getFluids()",
+          "get(String)",
+          "fromForgeFluid(Fluid)",
+          "fromItem(Item)",
+          "addContainerToSoftFluid(String, Item, Item, int, SoundEvent, SoundEvent)",
+          "makeSF(SoftFluid.Builder)",
+          "register(SoftFluid)",
+          "init()"
+        ],
+        "net.mehvahdjukaar.selene.map.client.DecorationRenderer": [
+          "getMapColor(T)",
+          "getRenderType(T)",
+          "render(T, MatrixStack, IRenderTypeBuffer, MapData, boolean, int, int)"
+        ],
+        "net.mehvahdjukaar.selene.map.client.MapDecorationRenderHandler": [
+          "bindDecorationRenderer(CustomDecorationType<T, ?>, DecorationRenderer<T>)",
+          "bindSimpleRenderer(CustomDecorationType<?, ?>)",
+          "getRenderer(E)",
+          "render(T, MatrixStack, IRenderTypeBuffer, MapData, boolean, int, int)"
+        ],
+        "net.mehvahdjukaar.selene.map.CustomDecoration": [
+          "getType()",
+          "getTypeId()",
+          "getX()",
+          "getY()",
+          "getRot()",
+          "setDisplayName(ITextComponent)",
+          "setRot(byte)",
+          "setX(byte)",
+          "setY(byte)",
+          "getDisplayName()",
+          "equals(Object)",
+          "hashCode()",
+          "saveToBuffer(PacketBuffer)"
+        ],
+        "net.mehvahdjukaar.selene.map.CustomDecorationHolder": [],
+        "net.mehvahdjukaar.selene.map.CustomDecorationType": [
+          "hasMarker()",
+          "getId()",
+          "getRegistryId()",
+          "loadDecorationFromBuffer(PacketBuffer)",
+          "loadMarkerFromNBT(CompoundNBT)",
+          "getWorldMarkerFromWorld(IBlockReader, BlockPos)"
+        ],
+        "net.mehvahdjukaar.selene.map.MapDecorationHandler": [
+          "register(CustomDecorationType<?, ?>)",
+          "registerSimple(String, String)",
+          "makeSimpleType(String, String)",
+          "get(ResourceLocation)",
+          "get(String)",
+          "readWorldMarker(CompoundNBT)",
+          "getMarkersFromWorld(IBlockReader, BlockPos)",
+          "addTargetDecoration(ItemStack, BlockPos, CustomDecorationType<?, ?>, int)",
+          "addTargetDecoration(ItemStack, BlockPos, ResourceLocation, int)"
+        ],
+        "net.mehvahdjukaar.selene.map.markers.DummyMapWorldMarker": [
+          "doCreateDecoration(byte, byte, byte)"
+        ],
+        "net.mehvahdjukaar.selene.map.markers.MapWorldMarker": [
+          "loadFromNBT(CompoundNBT)",
+          "saveToNBT(CompoundNBT)",
+          "equals(Object)",
+          "hashCode()",
+          "getType()",
+          "getTypeId()",
+          "getMarkerId()",
+          "getPos()",
+          "setPos(BlockPos)",
+          "getRotation()",
+          "doCreateDecoration(byte, byte, byte)",
+          "createDecorationFromMarker(byte, int, int, RegistryKey<World>, boolean)",
+          "shouldUpdate(MapWorldMarker<?>)",
+          "updateDecoration(CustomDecoration)"
+        ],
+        "net.mehvahdjukaar.selene.map.markers.NamedMapWorldMarker": [
+          "saveToNBT(CompoundNBT)",
+          "loadFromNBT(CompoundNBT)",
+          "equals(Object)",
+          "hashCode()",
+          "shouldUpdate(MapWorldMarker<?>)",
+          "updateDecoration(CustomDecoration)"
+        ],
+        "net.mehvahdjukaar.selene.mixins.FirstPersonRendererMixin": [
+          "renderItem(AbstractClientPlayerEntity, float, float, Hand, float, ItemStack, float, MatrixStack, IRenderTypeBuffer, int, CallbackInfo)"
+        ],
+        "net.mehvahdjukaar.selene.mixins.GrindstoneTestSlotMixin": [],
+        "net.mehvahdjukaar.selene.mixins.MapDataMixin": [
+          "getCustomDecorations()",
+          "getCustomMarkers()",
+          "lockData(MapData, CallbackInfo)",
+          "tickCarriedBy(PlayerEntity, ItemStack, CallbackInfo)",
+          "load(CompoundNBT, CallbackInfo)",
+          "save(CompoundNBT, CallbackInfoReturnable<CompoundNBT>)",
+          "resetCustomDecoration()",
+          "toggleCustomDecoration(IWorld, BlockPos)",
+          "checkBanners(IBlockReader, int, int, CallbackInfo)",
+          "getUpdatePacket(ItemStack, IBlockReader, PlayerEntity, CallbackInfoReturnable<IPacket<?>>)"
+        ],
+        "net.mehvahdjukaar.selene.mixins.MapExtendingRecipeMixin": [],
+        "net.mehvahdjukaar.selene.mixins.MapItemRendererMixin": [],
+        "net.mehvahdjukaar.selene.mixins.MixinConfig": [
+          "onLoad(String)",
+          "getRefMapperConfig()",
+          "shouldApplyMixin(String, String)",
+          "acceptTargets(Set<String>, Set<String>)",
+          "getMixins()",
+          "preApply(String, ClassNode, String, IMixinInfo)",
+          "postApply(String, ClassNode, String, IMixinInfo)"
+        ],
+        "net.mehvahdjukaar.selene.mixins.ThirdPersonRendererMixin": [
+          "poseRightArm(T, CallbackInfo)",
+          "poseLeftArm(T, CallbackInfo)",
+          "setupAnim(T, float, float, float, float, float, CallbackInfo)"
+        ],
+        "net.mehvahdjukaar.selene.network.NetworkHandler": [
+          "nextID()",
+          "registerMessages()"
+        ],
+        "net.mehvahdjukaar.selene.network.SyncCustomMapDecorationPacket": [
+          "buffer(SyncCustomMapDecorationPacket, PacketBuffer)",
+          "handler(SyncCustomMapDecorationPacket, Supplier<Context>)",
+          "getMapId()",
+          "applyToMap(MapData)"
+        ],
+        "net.mehvahdjukaar.selene.Selene": [],
+        "net.mehvahdjukaar.selene.setup.ClientSetup": [
+          "init(FMLClientSetupEvent)",
+          "onResourcePackChanged(ModelBakeEvent)",
+          "onTextureStitch(Pre)"
+        ],
+        "net.mehvahdjukaar.selene.setup.ModSetup": [
+          "init(FMLCommonSetupEvent)"
+        ],
+        "net.mehvahdjukaar.selene.util.DispenserHelper": [
+          "registerCustomBehavior(DispenserHelper.AdditionalDispenserBehavior)",
+          "registerSpawnEggBehavior(IItemProvider)",
+          "registerPlaceBlockBehavior(IItemProvider)",
+          "registerFluidBehavior(SoftFluid)"
+        ],
+        "net.mehvahdjukaar.selene.util.PotionNBTHelper": [
+          "addPotionTooltip(CompoundNBT, List<ITextComponent>, float)",
+          "getColorFromNBT(CompoundNBT)"
+        ],
+        "net.mehvahdjukaar.selene.util.TwoHandedAnimation": [
+          "isTwoHanded()",
+          "setTwoHanded(boolean)"
+        ],
+        "net.mehvahdjukaar.selene.util.Utils": [
+          "swapItem(PlayerEntity, Hand, ItemStack, ItemStack, boolean)",
+          "swapItem(PlayerEntity, Hand, ItemStack, ItemStack)",
+          "swapItemNBT(PlayerEntity, Hand, ItemStack, ItemStack)",
+          "swapItem(PlayerEntity, Hand, ItemStack)",
+          "getXPinaBottle(int, Random)"
+        ]
+      },
+      "sampleCount": 46
     }
   },
-  "classCount": 77,
-  "methodCount": 436
+  "classCount": 175,
+  "methodCount": 1056
 }

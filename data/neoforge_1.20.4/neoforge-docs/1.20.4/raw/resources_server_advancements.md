@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "resources/server/advancements"
 url: "https://docs.neoforged.net/docs/1.20.4/resources/server/advancements/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:13.040Z"
+fetchedAt: "2026-09-12T12:00:31.462Z"
 ---
 # Advancements
 
@@ -70,13 +70,13 @@ A list of criteria triggers defined by vanilla can be found in `CriteriaTriggers
 
 ### Custom Criteria Triggers
 
-Custom criteria triggers are made up of two parts: the trigger, which is activated in code at some point you specify by calling `#trigger`, and the instance which defines the conditions under which the trigger should award the criterion. The trigger extends `SimpleCriterionTrigger` while the instance implements `SimpleCriterionTrigger.SimpleInstance`. The generic value `T` represents the trigger instance type.
+Custom criteria triggers are made up of two parts: the trigger, which is activated in code at some point you specify by calling `#trigger`, and the instance which defines the conditions under which the trigger should award the criterion. The trigger extends `SimpleCriterionTrigger<T>` while the instance implements `SimpleCriterionTrigger.SimpleInstance`. The generic value `T` represents the trigger instance type.
 
 ### The SimpleCriterionTrigger.SimpleInstance Implementation
 
 The `SimpleCriterionTrigger.SimpleInstance` represents a single criteria defined in the `criteria` object. Trigger instances are responsible for holding the defined conditions, and returning whether the inputs match the condition.
 
-Conditions are usually passed in through the constructor. The `SimpleCriterionTrigger.SimpleInstance` interface requires only one function, called `#player`, which returns the conditions the player must meet as an `Optional`. If the subclass is a Java record with a `player` parameter of this type (as below), the automatically generated `#player` method will suffice.
+Conditions are usually passed in through the constructor. The `SimpleCriterionTrigger.SimpleInstance` interface requires only one function, called `#player`, which returns the conditions the player must meet as an `Optional<ContextAwarePredicate>`. If the subclass is a Java record with a `player` parameter of this type (as below), the automatically generated `#player` method will suffice.
 
 ```java
 
@@ -91,7 +91,7 @@ public record ExampleTriggerInstance(Optional<ContextAwarePredicate> player, Ite
 > **Note**
 > note
 
-Typically, trigger instances have static helper methods which construct the full `Criterion` object from the arguments to the instance. This allows these instances to be easily created during data generation, but are optional.
+Typically, trigger instances have static helper methods which construct the full `Criterion<T>` object from the arguments to the instance. This allows these instances to be easily created during data generation, but are optional.
 
 ```java
 
@@ -123,7 +123,7 @@ public boolean matches(ItemStack stack) {
 
 ### SimpleCriterionTrigger
 
-The `SimpleCriterionTrigger` subclass is responsible for specifying a codec to [serialize](#serialization) the trigger instance `T` and supplying a method to check trigger instances and run attached listeners on success.
+The `SimpleCriterionTrigger<T>` subclass is responsible for specifying a codec to [serialize](#serialization) the trigger instance `T` and supplying a method to check trigger instances and run attached listeners on success.
 
 The latter is done by defining a method to check all trigger instances and run the listeners if their condition is met. This method takes in the `ServerPlayer` and whatever other data defined by the matching method in the `SimpleCriterionTrigger.SimpleInstance` subclass. This method should internally call `SimpleCriterionTrigger#trigger` to properly handle checking all listeners. Most trigger instances call this method `#trigger`.
 

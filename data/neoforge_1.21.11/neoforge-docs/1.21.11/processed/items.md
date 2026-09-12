@@ -72,7 +72,7 @@ The two most common use cases for items are left-clicking and right-clicking. Du
 
 ### DeferredRegister.Items
 
-All registries use `DeferredRegister` to register their contents, and items are no exceptions. However, due to the fact that adding new items is such an essential feature of an overwhelming amount of mods, NeoForge provides the `DeferredRegister.Items` helper class that extends `DeferredRegister` and provides some item-specific helpers:
+All registries use `DeferredRegister` to register their contents, and items are no exceptions. However, due to the fact that adding new items is such an essential feature of an overwhelming amount of mods, NeoForge provides the `DeferredRegister.Items` helper class that extends `DeferredRegister<Item>` and provides some item-specific helpers:
 
 ```java
 
@@ -196,7 +196,7 @@ Like with blocks and blockstates, most places where you'd expect an `Item` actua
 
 An `ItemStack` consists of three major parts:
 
-- The `Item` it represents, obtainable through `ItemStack#getItem`, or `getItemHolder` for `Holder`.
+- The `Item` it represents, obtainable through `ItemStack#getItem`, or `getItemHolder` for `Holder<Item>`.
 - The stack size, typically between 1 and 64, obtainable through `getCount` and changeable through `setCount` or `shrink`.
 - The [data components](/docs/1.21.11/items/datacomponents) map, where stack-specific data is stored. Obtainable through `getComponents`. The components values are typically accessed and mutated via `has`, `get`, `set`, `update`, and `remove`.
 

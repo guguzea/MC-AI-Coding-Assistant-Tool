@@ -110,10 +110,11 @@ public static final Supplier<SwordItem> COPPER_SWORD = ITEMS.register("copper_sw
 
 public static final Supplier<AxeItem> COPPER_AXE = ITEMS.register("copper_axe", () -> new AxeItem(...));
 
-public static final Supplier
-COPPER_PICKAXE = ITEMS.register("copper_pickaxe", () -> new PickaxeItem(...));
-public static final Supplier COPPER_SHOVEL = ITEMS.register("copper_shovel", () -> new ShovelItem(...));
-public static final Supplier COPPER_HOE = ITEMS.register("copper_hoe", () -> new HoeItem(...));
+public static final Supplier<PickaxeItem> COPPER_PICKAXE = ITEMS.register("copper_pickaxe", () -> new PickaxeItem(...));
+
+public static final Supplier<ShovelItem> COPPER_SHOVEL = ITEMS.register("copper_shovel", () -> new ShovelItem(...));
+
+public static final Supplier<HoeItem> COPPER_HOE = ITEMS.register("copper_hoe", () -> new HoeItem(...));
 
 ```
 
@@ -234,7 +235,7 @@ If you want to check if a tier is applicable for a block state, call `TierSortin
 
 Custom tool types can be created by extending `DiggerItem` (or `TieredItem` if you are making custom weapon types). They don't need too big of a setup, it is an item class like any other, with all implications that has.
 
-One thing worth noting is the parameters of `DiggerItem`. The first four parameters are the same as for its subclasses (see the explanation for `SwordItem` above), while the fifth parameter is the `mineable` tag for the tool type. Generally, the format here is `:mineable/`, though `forge` can be used as the namespace too if you expect other mods to add similar tools. For example, [Farmer's Delight](https://www.curseforge.com/minecraft/mc-mods/farmers-delight) uses a `forge:mineable/knives` tag.
+One thing worth noting is the parameters of `DiggerItem`. The first four parameters are the same as for its subclasses (see the explanation for `SwordItem` above), while the fifth parameter is the `mineable` tag for the tool type. Generally, the format here is `<mod_id>:mineable/<tool_type>`, though `forge` can be used as the namespace too if you expect other mods to add similar tools. For example, [Farmer's Delight](https://www.curseforge.com/minecraft/mc-mods/farmers-delight) uses a `forge:mineable/knives` tag.
 
 If you plan on making a multitool-like item (i.e. an item that combines two or more tools into one, e.g. an axe and a pickaxe as one item), it is best to extend `AxeItem` if applicable. This is because enchantment checks for things like Sharpness or Knockback are hardcoded to `instanceof AxeItem`.
 
@@ -439,7 +440,7 @@ public static final Supplier<ArmorItem> COPPER_BOOTS = ITEMS.register("copper_bo
 
 ```
 
-Besides the usual resources, armors also need a worn armor texture that will be rendered over the player model when the armor is equipped. This texture must be located at `src/main/resources/assets//textures/models/armor/_layer_1.png` for the helmet, chestplate and boots textures, and in the same directory at `_layer_2.png` for the leggings.
+Besides the usual resources, armors also need a worn armor texture that will be rendered over the player model when the armor is equipped. This texture must be located at `src/main/resources/assets/<mod_id>/textures/models/armor/<material>_layer_1.png` for the helmet, chestplate and boots textures, and in the same directory at `<material>_layer_2.png` for the leggings.
 
 When creating your armor texture, it is a good idea to work on top of the vanilla armor texture to see which part goes where.
 

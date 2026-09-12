@@ -34,7 +34,7 @@ import {
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, thinLoaderWikiWarning, type SearchResultLike } from "../search-utils.js";
-import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
+import { missingSemanticDbWarning, semanticDbAbsent, semanticStaleSearchWarning } from "../semantic/status.js";
 import { SEARCH_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR } from "../platforms.js";
 import { ownGet } from "../../utils/own-record.js";
 import { searchQuiltDocs, getQuiltDocSummary, getQuiltDocFull, getQuiltDocRelated } from "../quilt-search.js";
@@ -290,7 +290,9 @@ export async function searchForgeDocs(
                 args.version === "1.20.4"
                   ? "Forge 1.20.4 无独立 /en/1.20.4/ 路由，正文来自 /en/1.20.x/。不要当成独立 1.20.4 全文。"
                   : undefined,
-                missingSemanticDbWarning(semanticHits === null),
+                missingSemanticDbWarning(
+                  semanticDbAbsent(resolveDataDir(), "forge", detailed.resolvedVersion, "forge-docs"),
+                ),
               ),
               tags: args.tags,
               semantic: semanticHits !== null,
@@ -967,7 +969,9 @@ export async function searchDocs(
                   ? "Forge 1.20.4 无独立 /en/1.20.4/ 路由，正文来自 /en/1.20.x/。不要当成独立 1.20.4 全文。"
                   : undefined,
                 primerNote,
-                missingSemanticDbWarning(semanticHits === null),
+                missingSemanticDbWarning(
+                  semanticDbAbsent(resolveDataDir(), platform, resolvedVersion, docSource),
+                ),
                 semanticStaleSearchWarning(resolveDataDir(), platform, resolvedVersion, docSource),
                 loaderWikiWarn,
                 finalResults.length === 0 && /[\u4e00-\u9fff]/.test(String(args.query ?? ""))

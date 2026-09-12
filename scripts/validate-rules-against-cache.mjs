@@ -186,7 +186,14 @@ function looksLikeGradlePluginId(fqcn) {
   ) {
     return true;
   }
-  return /^[a-z0-9_.]+$/.test(fqcn) && last === last.toLowerCase() && last.length <= 12 && !last.includes("_");
+  // 只有两种形态不是「类」，本脚本无从核对：Gradle 插件命名空间（*.gradle[.*]）与末段不可能是类型名
+  // （小写开头 = 包路径 `net.fabricmc.fabric` 或方法引用 `Helper.registerKeyMapping`）。
+  // 旧启发式用「全小写 && 末段 ≤12 && 无下划线」近似插件 id，两条上限都是猜的。实测口径＝本脚本的 fqcnRe
+  // 扫 56 棵规则树 / 506 文件 / 67 个去重命中：其中 16 个小写尾段名全是包或方法引用，旧子句只跳过 14 个，
+  // 漏判 `net.minecraftforge`（14 字符）与 `…KeyMappingHelper.registerKeyMapping`（18 字符）。
+  // 反过来把子句收窄成「只认 .gradle 命名空间」也不行：16 个里只有 4 个属于 .gradle，剩下 7 个真包名候选
+  // 有 6 个会被报成假 fqcn_not_in_cache。现子句的跳过集（16）是旧子句（14）的超集、丢失 0 ⇒ 不可能新增 issue。
+  return /(^|\.)gradle(\.[a-z0-9_]+)*$/.test(fqcn) || !/^[A-Z]/.test(last);
 }
 
 function scanRulesDir(rel) {

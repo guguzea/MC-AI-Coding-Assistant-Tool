@@ -207,6 +207,65 @@ function parsePackageSummary(html, pkgSummaryUrl) {
   return classes;
 }
 
+// ── 落盘计划（F123 根因侧修复）────────────────────────────────────────
+//
+// 抓取器把每个类页写成 `raw/<pkg>/<ClassName>.md`，两件事会悄悄产出重复条目：
+//   1. Javadoc 的 package-summary 允许同一个类页出现多次（类表 + 「See also」等），
+//      同一 URL 被写两遍 ⇒ 盘上出现 `Foo.md` 与 `Foo (2).md` 两份**逐字节相同**的文件；
+//   2. 两个只差大小写的类名（`Foo` / `foo`）落在大小写不敏感的卷上（Windows / macOS 默认）
+//      ⇒ 第二次 `writeFileSync` 直接覆盖第一个，索引里两条 entry 指向同一份正文。
+// `planClassWrites` 把这两种情况在**写盘前**摊开：同 URL 去重、异 URL 同名冲突改成
+// 确定性后缀并存，并把冲突记进台账。后缀是纯 ASCII 定长片段（不是 ` (2)`，
+// 空格 + 括号正是历史上那批文件的来源形态），且总长受控在 Windows 255 之内。
+const MAX_BASENAME = 120;
+
+function shortHash(text) {
+  let h = 5381;
+  for (let i = 0; i < text.length; i++) h = ((h << 5) + h + text.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36).slice(0, 6);
+}
+
+/** @param {{name:string, absUrl:string}[]} classes @returns {{writes:{name:string,fileName:string,absUrl:string}[], conflicts:object[]}} */
+export function planClassWrites(classes) {
+  const writes = [];
+  const conflicts = [];
+  const seenUrl = new Set();
+  /** 小写名 → 已占用的写盘名（用于检测大小写碰撞） */
+  const taken = new Map();
+
+  for (const cls of classes) {
+    if (seenUrl.has(cls.absUrl)) continue; // 同一页在同一份清单里出现两次
+    seenUrl.add(cls.absUrl);
+
+    const key = cls.name.toLowerCase();
+    const owner = taken.get(key);
+    let fileName;
+    if (!owner) {
+      fileName = cls.name + ".md";
+    } else {
+      // 不同 URL 抢同一个大小写不敏感的文件名：给后来者一个确定性后缀，
+      // 两条都保住，不再静默覆盖（旧行为在大小写不敏感卷上会丢整页）。
+      const suffix = "~" + shortHash(cls.absUrl);
+      const base = cls.name.length + suffix.length > MAX_BASENAME
+        ? cls.name.slice(0, Math.max(1, MAX_BASENAME - suffix.length))
+        : cls.name;
+      fileName = base + suffix + ".md";
+      conflicts.push({
+        package: cls.absUrl.slice(0, cls.absUrl.lastIndexOf("/")),
+        kept: owner.fileName,
+        keptUrl: owner.absUrl,
+        renamedTo: fileName,
+        renamedUrl: cls.absUrl,
+        reason: "case-insensitive-name-collision",
+      });
+    }
+    taken.set(key, { fileName, absUrl: cls.absUrl });
+    writes.push({ name: cls.name, fileName, absUrl: cls.absUrl });
+  }
+
+  return { writes, conflicts };
+}
+
 /**
  * 将 class 页面 HTML 转换为 Markdown。
  */
@@ -276,6 +335,8 @@ async function fetchVersion(version, force) {
 
   // 2. 遍历每个包，抓取 package-summary.html → 解析类列表
   let totalClasses = 0, fetched = 0, failed = 0;
+  /** F123：本次抓取发现的大小写碰撞台账（有冲突才落盘） */
+  const allConflicts = [];
   for (const pkg of packages) {
     const pkgSummaryUrl = `${baseUrl}${pkg}/package-summary.html`;
     process.stdout.write(`  📄 ${pkg}... `);
@@ -291,22 +352,33 @@ async function fetchVersion(version, force) {
     const pkgDir = join(rawDir, pkg);
     if (!existsSync(pkgDir)) mkdirSync(pkgDir, { recursive: true });
 
-    for (const cls of classes) {
-      const classUrl = cls.absUrl;
-      const fileName = cls.name + ".md";
-      const filePath = join(pkgDir, fileName);
+    // F123 根因侧：先算落盘计划（同 URL 去重 + 大小写碰撞改判），再按文件名写盘。
+    const planned = classes.length;
+    const { writes, conflicts } = planClassWrites(classes);
+    const dropped = planned - writes.length;
+    if (dropped > 0) {
+      console.log(`    [DEDUP] ${pkg}: 同一页重复列出 ${dropped} 条，已折叠`);
+    }
+    if (conflicts.length > 0) {
+      allConflicts.push(...conflicts.map((c) => ({ ...c, package: pkg.replace(/\\/g, "/") })));
+      console.log(`    [CONFLICT] ${pkg}: 大小写碰撞 ${conflicts.length} 条（已用确定性后缀并存）`);
+    }
+
+    for (const w of writes) {
+      const classUrl = w.absUrl;
+      const filePath = join(pkgDir, w.fileName);
 
       if (existsSync(filePath) && !force) {
         fetched++;
         continue;
       }
 
-      process.stdout.write(`    📄 ${cls.name}... `);
+      process.stdout.write(`    📄 ${w.name}... `);
       const { ok: clsOk, content: classHtml } = await fetchUrl(classUrl);
       if (!clsOk) { console.log("❌"); await new Promise(r => setTimeout(r, 200)); continue; }
 
       const parsed = parseClassPage(classHtml);
-      const markdown = htmlToMarkdown(cls.name, pkg, parsed, mcVer, classUrl);
+      const markdown = htmlToMarkdown(w.name, pkg, parsed, mcVer, classUrl);
       writeFileSync(filePath, markdown, "utf-8");
       fetched++;
       console.log(`✅ (${parsed.methodSigs.length}m ${parsed.fields.length}f)`);
@@ -314,6 +386,17 @@ async function fetchVersion(version, force) {
     }
 
     await new Promise(r => setTimeout(r, 200));
+  }
+
+  if (allConflicts.length > 0) {
+    const reportPath = join(outVersionDir, "_name-conflicts.json");
+    writeFileSync(reportPath, JSON.stringify({
+      version: mcVer,
+      generatedAt: new Date().toISOString(),
+      note: "同一包内两个不同 URL 抢同一个大小写不敏感文件名；后来者已带确定性后缀落盘。",
+      conflicts: allConflicts,
+    }, null, 2), "utf-8");
+    console.log(`  ⚠️ 大小写碰撞 ${allConflicts.length} 条 → ${reportPath}`);
   }
 
   console.log(`  ✅ 完成：${totalClasses} 类 / ${fetched} 成功，${failed} 包失败`);

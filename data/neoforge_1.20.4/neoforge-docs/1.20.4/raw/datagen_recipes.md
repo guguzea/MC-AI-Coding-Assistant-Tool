@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "datagen/recipes"
 url: "https://docs.neoforged.net/docs/1.20.4/datagen/recipes/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:56:52.514Z"
+fetchedAt: "2026-09-12T11:59:48.997Z"
 ---
 # Recipe Generation
 

@@ -4,7 +4,7 @@ version: "1.21.8"
 pageId: "advanced/featureflags"
 url: "https://docs.neoforged.net/docs/1.21.8/advanced/featureflags/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:00:18.968Z"
+fetchedAt: "2026-09-12T12:05:50.116Z"
 ---
 # Feature Flags
 
@@ -177,10 +177,12 @@ DeferredHolder<MobEffect, ExperimentalMobEffect> EXPERIMENTAL_MOB_EEFECT = MOB_E
 
 // Potion
 
-DeferredRegister
-POTIONS = DeferredRegister.create(Registries.POTION, "examplemod");
-DeferredHolder EXPERIMENTAL_POTION = POTIONS.register("experimental", registryName -> new ExperimentalPotion(registryName.toString(), new MobEffectInstance(EXPERIMENTAL_MOB_EEFECT))
+DeferredRegister<Potion> POTIONS = DeferredRegister.create(Registries.POTION, "examplemod");
+
+DeferredHolder<Potion, ExperimentalPotion> EXPERIMENTAL_POTION = POTIONS.register("experimental", registryName -> new ExperimentalPotion(registryName.toString(), new MobEffectInstance(EXPERIMENTAL_MOB_EEFECT))
+
     .requiredFeatures(EXPERIMENTAL) // mark as requiring the 'EXPERIMENTAL' flag
+
 );
 
 ```
@@ -275,45 +277,71 @@ public static void addFeaturePacks(final AddPackFindersEvent event) {
 
             // Take note this also defines your packs id using the following format
 
-            // mod/<namespace>:
-`, e.g. `mod/examplemod:data/examplemod/datapacks/experimental`
+            // mod/<namespace>:<path>`, e.g. `mod/examplemod:data/examplemod/datapacks/experimental`
+
             ResourceLocation.fromNamespaceAndPath("examplemod", "data/examplemod/datapacks/experimental"),
+
             
+
             // What kind of resources are contained within this pack
+
             // 'CLIENT_RESOURCES' for packs with client assets (resource packs)
+
             // 'SERVER_DATA' for packs with server data (data packs)
+
             PackType.SERVER_DATA,
+
             
+
             // Display name shown in the Experiments screen
+
             Component.literal("ExampleMod: Experiments"),
+
             
+
             // In order for this pack to load and enable feature flags, this MUST be 'FEATURE',
+
             // any other PackSource type is invalid here
+
             PackSource.FEATURE,
+
             
+
             // If this is true, the pack is always active and cannot be disabled, should always be false for feature packs
+
             false,
+
             
+
             // Priority to load resources from this pack in
+
             // 'TOP' this pack will be prioritized over other packs
+
             // 'BOTTOM' other packs will be prioritized over this pack 
+
             Pack.Position.TOP
+
     );
+
 }
 
 ```
 
 #### Enabling in Singleplayer
 
-Create a new world.
-Navigate to the Experiments screen.
-Toggle on the desired packs.
-Confirm changes by clicking `Done`.
+<ol>
+<li class="">Create a new world.</li>
+<li class="">Navigate to the Experiments screen.</li>
+<li class="">Toggle on the desired packs.</li>
+<li class="">Confirm changes by clicking `Done`.</li>
+</ol>
 
 #### Enabling in Multiplayer
 
-Open your server's `server.properties` file.
-Add the feature pack id to `initial-enabled-packs`, separating each pack by a `,`. The pack id is defined during registering your pack finder, as seen above.
+<ol>
+<li class="">Open your server's `server.properties` file.</li>
+<li class="">Add the feature pack id to `initial-enabled-packs`, separating each pack by a `,`. The pack id is defined during registering your pack finder, as seen above.</li>
+</ol>
 
 ### External
 

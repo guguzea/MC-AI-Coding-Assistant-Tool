@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "datamaps/structure"
 url: "https://docs.neoforged.net/docs/1.20.4/datamaps/structure/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:56:54.488Z"
+fetchedAt: "2026-09-12T11:59:52.004Z"
 ---
 # JSON Structure
 

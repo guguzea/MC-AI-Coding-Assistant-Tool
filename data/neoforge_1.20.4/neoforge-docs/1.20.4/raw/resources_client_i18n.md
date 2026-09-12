@@ -1,10 +1,10 @@
 ---
-title: "Client"
+title: "I18n"
 version: "1.20.4"
 pageId: "resources/client/i18n"
 url: "https://docs.neoforged.net/docs/1.20.4/resources/client/i18n/"
 platform: "neoforge"
-fetchedAt: "2026-08-06T04:46:30.943Z"
+fetchedAt: "2026-09-12T12:00:19.512Z"
 ---
 # I18n and L10n
 
@@ -138,7 +138,7 @@ Style hoverable = Style.EMPTY.withHoverEvent(hoverEvent);
 
 ## Language Files
 
-Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at `assets//lang/language_name.json`. For example, US English translations for a mod with id `examplemod` would be located at `assets/examplemod/lang/en_us.json`. A full list of languages supported by Minecraft can be found [here](https://minecraft.wiki/w/Language).
+Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at `assets/<modid>/lang/language_name.json`. For example, US English translations for a mod with id `examplemod` would be located at `assets/examplemod/lang/en_us.json`. A full list of languages supported by Minecraft can be found [here](https://minecraft.wiki/w/Language).
 
 A language file generally looks like this:
 

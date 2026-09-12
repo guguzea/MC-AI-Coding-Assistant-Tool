@@ -70,8 +70,11 @@
 
 | 产物 | 位置 | 规模（当前） |
 |------|------|-------------|
-| `library-catalog.ts` | `mcp-server/src/diagnostics/` | 50 条 catalog / 1880 `verifiedApi` 键 |
+| `library-catalog.ts` | `mcp-server/src/diagnostics/` | 50 条 catalog / 1836 `verifiedApi` 键（磁盘实算，键数＝`"packages": [` 站点数；旧文档的 1880 有误） |
 | `lib-manifests/all.json` | `mcp-server/data/` | 45 slug / 2867 版本条目 |
 | `lib-api-summaries/*.json` | `mcp-server/data/` | 44 库 API 摘要 |
+
+`verifiedApi.<版本/加载器>.packages` 是反编译产物顶层目录的**启发式截取名**（2–3 段），只能用来定位包根，
+**不能当 import 依据**；落到类名必须走 `query_loader_api`（先 `ingest_loader_api` 用户自备 jar）或 IDE 核对。
 
 生成链见仓库根 `README.md`「社区知识与库模组」与 MCP 工具 §7.5。

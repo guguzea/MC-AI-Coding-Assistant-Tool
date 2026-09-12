@@ -26,6 +26,12 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 
 import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
 import { countCodeFences } from "./_lib/pipeline-helpers.mjs";
+import {
+  loadYarnNameMap,
+  makeYarnTagResolver,
+  emptyYarnStats,
+  replaceYarnTagsOutsideFences,
+} from "./_lib/yarn-name-resolve.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const MC_SKILL_ROOT = join(__dirname, "..", "..");
@@ -34,6 +40,28 @@ const VERSION_ARG = process.argv.find(a => a.startsWith("--version="));
 const VERSION = VERSION_ARG ? VERSION_ARG.split("=")[1] : "1.20.1";
 const DATA_DIR = join(MC_SKILL_ROOT, "data", `fabric_${VERSION}`, "fabric-wiki");
 
+// S7：`<yarn class_1792>` 里的 intermediary 名必须还原成上游那样的可读名，映射库缺失/查不到一律抛错。
+const YARN_MAP_PATH = join(MC_SKILL_ROOT, "data", `fabric_${VERSION}`, "mappings", "yarn-mappings.sqlite");
+const yarnStats = emptyYarnStats();
+const yarnMap = loadYarnNameMap(YARN_MAP_PATH, VERSION);
+const resolveYarnTag = makeYarnTagResolver(yarnMap, yarnStats);
+
+/** 把 yarn 段里的 `<yarn X>` 换成可读名；反查不到即抛错，不静默保留中介名。 */
+function replaceYarnChunk(chunk) {
+  return chunk.replace(/<yarn ([^>]+)>/g, (_whole, inner) => {
+    const got = resolveYarnTag(inner);
+    const bare = String(inner).trim();
+    if (!got) {
+      // 本版映射里没有这个 intermediary：上游 wiki 正文跨版本共用，写的是别的 MC 世代的混淆名
+      // （实测 class_7923 只在 1.19+ 映射里、class_2164 只在 1.20.1- 映射里）。
+      // 不猜名、也不整版失败：原样保留 + 计入 unresolved，运行日志与 G3 门都点名，
+      // 免得「看起来已还原」盖住「其实没还原」。
+      yarnStats.unresolved.push(bare);
+      return `${bare}`;
+    }
+    return got.text;
+  });
+}
 // ── Wiki 标记 → Markdown ─────────────────────────────────────────────────────
 
 function wikiToMarkdown(text) {
@@ -62,12 +90,12 @@ function wikiToMarkdown(text) {
           const yarnContent = text.slice(i, endIdx);
           i = endIdx + 2; // 跳过 ''
           // 把 yarn 内容中的 <yarn xxx> 转为 `` xxx ``
-          const processed = yarnContent.replace(/<yarn ([^>]+)>/g, "`$1`");
+          const processed = replaceYarnChunk(yarnContent);
           yarnChunks.push(processed);
         } else {
           // 没有关闭 ''，只处理开引号后的 yarn 标签
           i = yarnContentStart;
-          const yarnContent = text.slice(i).replace(/<yarn ([^>]+)>/g, "`$1`");
+          const yarnContent = replaceYarnChunk(text.slice(i));
           i = text.length;
           yarnChunks.push(yarnContent);
         }
@@ -434,7 +462,8 @@ function processVersion() {
 
     const l2Plus = generateL2Plus(markdown, keys);
     const processedFile = file.replace(".txt", ".md");
-    writeFileSync(join(processedDir, processedFile), l2Plus, "utf8");
+    const swept = replaceYarnTagsOutsideFences(l2Plus, resolveYarnTag);
+    writeFileSync(join(processedDir, processedFile), swept.content, "utf8");
 
     l0.push({
       id, version: VERSION, label: title,
@@ -480,4 +509,8 @@ function processVersion() {
 // ── 入口 ─────────────────────────────────────────────────────────────────
 
 processVersion();
+console.log(
+  `  [${VERSION}] yarn 名还原：class ${yarnStats.classResolved} · 成员 ${yarnStats.memberResolved} · ` +
+    `歧义保留 ${yarnStats.ambiguous.length} · 本版映射查不到 ${[...new Set(yarnStats.unresolved)].length}${yarnStats.unresolved.length ? "（" + [...new Set(yarnStats.unresolved)].join(", ") + "）" : ""}`,
+);
 console.log(`\n✅ process-fabric-wiki.js 完成（版本 ${VERSION}）`);

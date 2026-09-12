@@ -163,6 +163,15 @@ const files = existsSync(listPath)
       .filter((l) => l && !l.startsWith("#"))
   : [];
 
+// F95：零输入必须红。以前 `--list=<不存在的文件>` 会「扫 0 个文件」并 exit 0 —— 调用方拿到的是绿，实际什么都没查。
+if (!files.length) {
+  console.error(
+    `lint-skill-verified-api: 待检清单为空（${listPath}${listArg ? "" : " —— 默认清单"}）` +
+      "。零输入不算通过：改清单路径或显式传入 --list=<file>。",
+  );
+  process.exit(1);
+}
+
 const all = [];
 for (const f of files) all.push(...lintFile(f));
 const recipe = lintRecipeDocs();

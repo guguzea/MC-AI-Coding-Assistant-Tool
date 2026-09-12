@@ -23,8 +23,61 @@ import { existsSync, readFileSync } from "fs";
 import { isAbsolute, join, relative, resolve } from "path";
 import { trimOldest } from "../search-utils.js";
 
-/** 与上游 parser 的锚点一致：行首（允许前导空格）的 `@[code`。 */
+/** 上游 `@[code …](…)`：行首（允许前导空格）的 `@[code`。 */
 const MARKER_RE = /@\[code([^\]]*)\]\(([^)]*)\)/g;
+/**
+ * VitePress 的 `<<< @/path#region{lines}[Label] attrs`（fabric-docs 1.21.4+ 用它替代 `@[code]`）。
+ * 三种尾缀都是实测形态：`#repair_tags[Java]`（标签页标题）、`#loot_pool_builder{5-7}`（行选择）、
+ * `unit.json[Output]`（无区段只有标签）。它们都不属于路径，也不属于区段名。
+ */
+const ANGLE_RE = /^ *<<< *(\S+)(.*)$/;
+
+export interface AngleSpec {
+  /** 去掉区段/行选/标签之后的纯路径（就是取件与镜像查找用的键）。 */
+  path: string;
+  region: string | null;
+  /** `{5-7}` / `{2}` / `{1,3}`：区段内（无区段时全文）的 1-based 行选择。 */
+  lines: string | null;
+  /** `[Java]` 之类的标签页标题，只作出处留痕。 */
+  label: string;
+  /** 括号之后的其余 attrs 原文。 */
+  rest: string;
+}
+
+/** 拆 `<<<` 的目标文法。reader 与 G3 门都必须走这一条，否则两边判据会各自漂移。 */
+export function parseAngleSpec(raw: string, trailing = ""): AngleSpec {
+  let cur = raw;
+  let label = "";
+  const lm = /\[([^\]]*)\]$/.exec(cur);
+  if (lm) {
+    label = lm[1];
+    cur = cur.slice(0, lm.index);
+  }
+  let lines: string | null = null;
+  const bm = /\{([^}]*)\}$/.exec(cur);
+  if (bm) {
+    lines = bm[1];
+    cur = cur.slice(0, bm.index);
+  }
+  const lm2 = /\[([^\]]*)\]$/.exec(cur);
+  if (lm2 && !label) {
+    label = lm2[1];
+    cur = cur.slice(0, lm2.index);
+  }
+  const h = cur.lastIndexOf("#");
+  const region = h > 0 ? cur.slice(h + 1) : null;
+  if (h > 0) cur = cur.slice(0, h);
+  return { path: cur, region, lines, label, rest: trailing };
+}
+
+/**
+ * 区段名的候选写法。实测 fabric_1.21.11 的 interface-injection 页 6 处用 kebab 引用 snake_case 标记
+ * （语料 `#interface-injection-example-interface` ↔ blob `:7 // #region interface_injection_example_interface`），
+ * 其余 500 处是逐字命中。两式都取，是为了给模型真代码而不是空围栏；逐字命中优先，顺序固定。
+ */
+export function regionCandidates(region: string): string[] {
+  return [...new Set([region, region.replace(/-/g, "_"), region.replace(/_/g, "-")])];
+}
 /** 围栏内的内容是字面文本，上游 block ruler 不会进去，所以扫描时要跟踪围栏状态。 */
 const FENCE_RE = /^ {0,3}(```|~~~)/;
 /** 上游 contentTransclusion 无命中时返回的字面量。 */
@@ -225,6 +278,73 @@ function sliceTag(content: string, tag: string): string {
   return out;
 }
 
+/**
+ * `<<< path#region` 的区段切片。标记形态由镜像实测得出（非推测）：
+ * `data/fabric_1.21.11/reference/.../ExampleModItemTagProvider.java:46` 是 `\t// #region repair_tags`，
+ * `:49` 是 `\t// #endregion repair_tags`。首尾标记行不计入正文，与本文件 `transcludeWith` 的处理一致。
+ * 名字做字面匹配并转义（真实标签里有 `datagen-tags:provider` 这类含 `-`/`:` 的名字，不能当正则用）。
+ * 起止任一缺失即返回空串 ⇒ 上层按 `No lines matched.` 处理（宁可不给，不给半截）。
+ */
+function sliceRegionMarker(content: string, name: string): string {
+  const esc = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const startRe = new RegExp(`#region\\s+${esc}(\\b|$)`);
+  const endRe = new RegExp(`#endregion\\s+${esc}(\\b|$)`);
+  const lines = content.split("\n");
+  let i = 0;
+  while (i < lines.length && !startRe.test(lines[i])) i++;
+  if (i === lines.length) return "";
+  let j = i + 1;
+  while (j < lines.length && !endRe.test(lines[j])) j++;
+  if (j === lines.length) return "";
+  return lines.slice(i + 1, j).join("\n") + "\n";
+}
+
+/** `{5-7}` / `{2}` / `{1,3}`：1-based 闭区间，允许逗号并列。非法段忽略（不给半截）。 */
+export function pickLines(text: string, spec: string): string {
+  const kept: string[] = [];
+  for (const part of spec.split(",")) {
+    const m = /^(\d+)(?:-(\d+))?$/.exec(part.trim());
+    if (!m) continue;
+    const from = Number(m[1]);
+    const to = m[2] === undefined ? from : Number(m[2]);
+    if (to < from) continue;
+    for (let n = from; n <= to; n++) {
+      const line = text.split("\n")[n - 1];
+      if (line !== undefined) kept.push(line);
+    }
+  }
+  return kept.length ? kept.join("\n") + "\n" : "";
+}
+
+/**
+ * `<<<` 处的正文：区段（按候选名依次尝试）→ 可选行选择 → 整体左移。
+ * 返回 [正文, 实际用到的区段名]；两者取不到时正文为 No lines matched.
+ */
+export function angleResolve(fileText: string, spec: AngleSpec): [string, string | null] {
+  let body = fileText;
+  let used: string | null = null;
+  if (spec.region !== null) {
+    let hit = "";
+    for (const cand of regionCandidates(spec.region)) {
+      hit = sliceRegionMarker(fileText, cand);
+      if (hit !== "") {
+        used = cand;
+        break;
+      }
+    }
+    if (hit === "") return [NO_LINES_MATCHED, null];
+    body = hit;
+  }
+  // 只有纯数字形态才是行选择。实测花括号里还会装选项（26.1.2 三处 `{classtweaker:no-line-numbers}`），
+  // 把它当行号会让整个区段消失 ⇒ 非数字一律当选项忽略，整段照给。
+  if (spec.lines && /^[\d\s,-]+$/.test(spec.lines)) {
+    const sel = pickLines(body, spec.lines);
+    if (sel === "") return [NO_LINES_MATCHED, used];
+    body = sel;
+  }
+  return [dedent(body), used];
+}
+
 function contentTransclusion(content: string, options: AttrMap, type: TransclusionType): string {
   let raw = "";
   if (type === "line") raw = sliceLineRange(content, String(options.get("transclude")));
@@ -243,12 +363,19 @@ export interface ExpandTranscludesResult {
   sites: number;
   /** 展开成代码块的处数（含本地取不到时的 `Not Found:` 块）。 */
   expanded: number;
-  /** 本地 reference 树取不到的目标原样清单（去重，保持出现顺序）。 */
+  /** 本地 reference 树取不到的目标原样清单（去重，保持出现顺序）。**只统计 `@[code`**——
+   *  既有 gate 台账（1672 / 3344 / 669）是按这个口径钉的，`<<<` 走下面的独立字段。 */
   missing: string[];
   /** 展开结果为 `No lines matched.` 的处数（上游同形，不算缺陷）。 */
   noMatch: number;
   /** attrs/目标畸形到无法按上游语义解析、整行原样保留的处数。 */
   malformed: number;
+  /** `<<<` 形式的标记行数（与 sites 分开计，两者相加 = 全部占位符）。 */
+  angleSites: number;
+  /** `<<<` 形式在本地镜像取不到的目标（去重）= 取件侧未做，S6 逐档清空。 */
+  angleMissing: string[];
+  /** `<<<` 带 `#region` 但镜像文件里查不到该成对标记的处数 = 目标取到了但区段不对。 */
+  angleRegionMiss: number;
 }
 
 /**
@@ -288,37 +415,75 @@ export function expandTranscludes(
   const lines = markdown.split("\n");
   const out: string[] = [];
   const missing: string[] = [];
+  const angleMissingList: string[] = [];
   let sites = 0;
   let expanded = 0;
   let noMatch = 0;
   let malformed = 0;
+  let angleSites = 0;
+  let angleRegionMiss = 0;
   let inFence = false;
 
   for (const line of lines) {
     if (FENCE_RE.test(line)) inFence = !inFence;
-    if (inFence || !/^ *@\[code/.test(line)) {
+    const isCode = /^ *@\[code/.test(line);
+    const isAngle = !isCode && ANGLE_RE.test(line);
+    if (inFence || (!isCode && !isAngle)) {
       out.push(line);
       continue;
     }
-    MARKER_RE.lastIndex = 0;
-    const m = MARKER_RE.exec(line);
-    if (!m || !m[2].trim()) {
-      out.push(line);
-      malformed++;
-      continue;
-    }
-    sites++;
-    const rawAttrs = m[1];
-    const target = m[2].trim();
-    const options = parseAttrs(rawAttrs);
     const indent = (line.match(/^(\s*)/) as RegExpMatchArray)[0];
-    const type = transclusionType(options);
+    let rawAttrs: string;
+    let target: string;
+    let options: AttrMap;
+    let type: TransclusionType = null;
+    let region: string | null = null;
+    let angleSpec: AngleSpec | null = null;
+    if (isCode) {
+      MARKER_RE.lastIndex = 0;
+      const m = MARKER_RE.exec(line);
+      if (!m || !m[2].trim()) {
+        out.push(line);
+        malformed++;
+        continue;
+      }
+      sites++;
+      rawAttrs = m[1];
+      target = m[2].trim();
+      options = parseAttrs(rawAttrs);
+      type = transclusionType(options);
+    } else {
+      const am = ANGLE_RE.exec(line) as RegExpExecArray;
+      if (!am[1]) {
+        out.push(line);
+        malformed++;
+        continue;
+      }
+      angleSites++;
+      const ang = parseAngleSpec(am[1], am[2] ?? "");
+      target = ang.path;
+      angleSpec = ang;
+      region = ang.region;
+      rawAttrs = [ang.region ? `#${ang.region}` : "", ang.lines ? `{${ang.lines}}` : "", ang.label ? `[${ang.label}]` : "", ang.rest.trim()]
+        .filter(Boolean)
+        .join("");
+      // `{1,2}` 高亮与 `[Server]` 标签都是渲染期信息，对文本消费者是噪声（原文完整留在下面的出处注释里）
+      options = parseAttrs(rawAttrs.replace(/\[[^\]]*\]/g, "").replace(/\{[^}]*\}/g, ""));
+    }
     const absTarget = localPathFor(target, packRoot, provenance);
     const fileText = readReferenceFile(absTarget, now);
     let body: string;
     if (fileText === null) {
-      missing.push(target);
+      if (isAngle) angleMissingList.push(target);
+      else missing.push(target);
       body = `Not Found: ${absTarget}`;
+    } else if (angleSpec) {
+      const [got] = angleResolve(fileText, angleSpec);
+      body = got;
+      if (got === NO_LINES_MATCHED) {
+        noMatch++;
+        angleRegionMiss++;
+      }
     } else if (!type) {
       body = fileText;
     } else {
@@ -331,20 +496,30 @@ export function expandTranscludes(
       `${indent}\`\`\`${info}`,
       body.replace(/\n$/, ""),
       `${indent}\`\`\``,
-      `${indent}<!-- source: ${target}${attrsSuffix} -->`,
+      `${indent}<!-- source: ${target}${region === null ? "" : `#${region}`}${attrsSuffix} -->`,
     );
-    expanded++;
+    if (isCode) expanded++;
   }
 
-  return { content: out.join("\n"), sites, expanded, missing: [...new Set(missing)], noMatch, malformed };
+  return {
+    content: out.join("\n"),
+    sites,
+    expanded,
+    missing: [...new Set(missing)],
+    noMatch,
+    malformed,
+    angleSites,
+    angleMissing: [...new Set(angleMissingList)],
+    angleRegionMiss,
+  };
 }
 
-/** 正文里是否还有未展开的标记（gate 与运行时共用这条判据）。 */
+/** 正文里是否还有未展开的标记（gate 与运行时共用这条判据；两种形态都算）。 */
 export function hasUnexpandedMarker(content: string): boolean {
   let inFence = false;
   for (const line of content.split("\n")) {
     if (FENCE_RE.test(line)) inFence = !inFence;
-    if (!inFence && /^ *@\[code/.test(line)) return true;
+    if (!inFence && (/^ *@\[code/.test(line) || ANGLE_RE.test(line))) return true;
   }
   return false;
 }

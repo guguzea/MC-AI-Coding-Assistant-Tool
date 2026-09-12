@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="synthmulti"
+version="1.0.0"
+displayName="Synthetic Multi Line"
+description='''
+Line one of the description.
+
+This line contains an equals sign key = value which fools naive line-based parsers.
+And a "double quoted" fragment plus a single ' quote.
+Final line.
+'''
+
+[[dependencies.synthmulti]]
+modId="forge"
+mandatory=true
+versionRange="[47.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.synthmulti]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,)"
+ordering="NONE"
+side="BOTH"

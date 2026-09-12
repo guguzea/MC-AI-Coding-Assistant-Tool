@@ -16,7 +16,7 @@ Brigadier is a command parser & dispatcher written by Mojang for use in Minecraf
 The source code for brigadier can be found here: https://github.com/Mojang/brigadier
 
 ## The Command interface
-In Minecraft, com.mojang.brigadier.Command is a functional interface, which runs some specific things, and throw a CommandSyntaxException in some cases. It has a generic type S, which defines the type of the //command source//. The command source provides some context in which a command was ran. In Minecraft, the command source is typically a `class_2168` which can represent a server, a command block, rcon connection, a player or an entity. In some cases, it can also be a `class_637`.
+In Minecraft, com.mojang.brigadier.Command is a functional interface, which runs some specific things, and throw a CommandSyntaxException in some cases. It has a generic type S, which defines the type of the //command source//. The command source provides some context in which a command was ran. In Minecraft, the command source is typically a `net/minecraft/server/command/ServerCommandSource` which can represent a server, a command block, rcon connection, a player or an entity. In some cases, it can also be a `net/minecraft/client/network/ClientCommandSource`.
 
 The single method in Command, run(CommandContext<S>) takes a CommandContext<S> as the sole parameter and returns an integer. The command context holds your command source of S and allows you to obtain arguments, look at the parsed command nodes and see the input used in this command.
 
@@ -123,7 +123,7 @@ public class ExampleMod implements ModInitializer {
 
 In the sendFeedback method, the first parameter is the text to be sent, which is a Text in versions below 1.20, or a Supplier<Text> in 1.20 and above (this is used to avoid instantiating Text objects when not needed, so please do not use Suppliers.ofInstance or smiliar methods). The second parameter determines whether to broadcast the feedback to other operators. If the command is to //query// something without actually affecting the world, such as query the current time or some player's score, it should be false. If the command actually //does// something, such as changing the time or modifying someone's score, it should be true. If game rule sendCommandFeedback is false, you will not accept any feedback. If the sender is modifed through /execute as ..., the feedback is sent to the original sender.
 
-If the command fails, instead of calling sendFeedback, you may directly throw a CommandSyntaxException or `class_2164`. See [command_exceptions](command_exceptions) for details.
+If the command fails, instead of calling sendFeedback, you may directly throw a CommandSyntaxException or class_2164. See [command_exceptions](command_exceptions) for details.
 
 To execute this command, you must type /foo, which is case-sensitive. If /Foo, /FoO, /FOO, /fOO or /fooo is typed instead, the command will not run.
 

@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "items/tools"
 url: "https://docs.neoforged.net/docs/1.20.6/items/tools/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:44.478Z"
+fetchedAt: "2026-09-12T12:01:28.205Z"
 ---
 # Tools & Armor
 
@@ -130,10 +130,11 @@ public static final Supplier<SwordItem> COPPER_SWORD = ITEMS.register("copper_sw
 
 public static final Supplier<AxeItem> COPPER_AXE = ITEMS.register("copper_axe", () -> new AxeItem(...));
 
-public static final Supplier
-COPPER_PICKAXE = ITEMS.register("copper_pickaxe", () -> new PickaxeItem(...));
-public static final Supplier COPPER_SHOVEL = ITEMS.register("copper_shovel", () -> new ShovelItem(...));
-public static final Supplier COPPER_HOE = ITEMS.register("copper_hoe", () -> new HoeItem(...));
+public static final Supplier<PickaxeItem> COPPER_PICKAXE = ITEMS.register("copper_pickaxe", () -> new PickaxeItem(...));
+
+public static final Supplier<ShovelItem> COPPER_SHOVEL = ITEMS.register("copper_shovel", () -> new ShovelItem(...));
+
+public static final Supplier<HoeItem> COPPER_HOE = ITEMS.register("copper_hoe", () -> new HoeItem(...));
 
 ```
 

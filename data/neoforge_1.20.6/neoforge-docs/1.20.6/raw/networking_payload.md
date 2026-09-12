@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "networking/payload"
 url: "https://docs.neoforged.net/docs/1.20.6/networking/payload/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:52.330Z"
+fetchedAt: "2026-09-12T12:01:38.287Z"
 ---
 # Registering Payloads
 

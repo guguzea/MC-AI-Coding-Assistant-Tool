@@ -4,7 +4,7 @@ version: "1.21.5"
 pageId: "resources/server/enchantments/builtin"
 url: "https://docs.neoforged.net/docs/1.21.5/resources/server/enchantments/builtin/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:59:46.766Z"
+fetchedAt: "2026-09-12T12:05:33.496Z"
 ---
 # Built-In Enchantment Effect Components
 

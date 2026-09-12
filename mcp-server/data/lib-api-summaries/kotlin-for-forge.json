@@ -6,676 +6,1329 @@
   "source": {
     "shard": "jsonl",
     "dirs": [
-      "unknown-mod"
+      "kotlinforforge"
     ],
     "merged": false
   },
-  "generatedAt": "2026-08-12T10:32:00.732Z",
+  "generatedAt": "2026-09-12T03:48:07.817Z",
   "versions": {
-    "unknown": {
-      "packages": [],
+    "1.14.4": {
+      "packages": [
+        "kotlin.annotation",
+        "kotlinx.coroutines",
+        "kotlinx.coroutines.channels",
+        "kotlinx.coroutines.debug",
+        "kotlinx.coroutines.flow",
+        "kotlinx.coroutines.future",
+        "kotlinx.coroutines.intrinsics",
+        "kotlinx.coroutines.scheduling",
+        "kotlinx.coroutines.selects",
+        "kotlinx.coroutines.stream",
+        "kotlinx.coroutines.sync",
+        "kotlinx.coroutines.test",
+        "kotlinx.coroutines.time",
+        "net.minecraftforge.fml.event.lifecycle",
+        "org.intellij.lang.annotations",
+        "thedarkcolour.kotlinforforge",
+        "thedarkcolour.kotlinforforge.eventbus",
+        "thedarkcolour.kotlinforforge.forge",
+        "thedarkcolour.kotlinforforge.kotlin"
+      ],
       "classes": [
-        "net.darkhax.bookshelf.block.BlockBasicChest",
-        "net.darkhax.bookshelf.block.BlockSubType",
-        "net.darkhax.bookshelf.block.BlockTileEntity",
-        "net.darkhax.bookshelf.block.property.PropertyObject",
-        "net.darkhax.bookshelf.block.property.PropertyString",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasic",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicChest",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicTickable",
-        "net.darkhax.bookshelf.Bookshelf",
-        "net.darkhax.bookshelf.BookshelfEvents",
-        "net.darkhax.bookshelf.BookshelfRegistry",
-        "net.darkhax.bookshelf.builder.ChestBuilder",
-        "net.darkhax.bookshelf.builder.LootBuilder",
-        "net.darkhax.bookshelf.client.gui.GuiGraphicButton",
-        "net.darkhax.bookshelf.client.gui.GuiSlider",
-        "net.darkhax.bookshelf.client.model.BakedModelRetexturable",
-        "net.darkhax.bookshelf.client.model.DefaultItemOverrideList",
-        "net.darkhax.bookshelf.client.model.ModelArmorExtended",
-        "net.darkhax.bookshelf.client.particle.OpenParticleDigging",
-        "net.darkhax.bookshelf.client.render.tileentity.TileEntityBasicChestRenderer",
-        "net.darkhax.bookshelf.command.Command",
-        "net.darkhax.bookshelf.command.CommandTree",
-        "net.darkhax.bookshelf.config.ConfigurationHandler",
-        "net.darkhax.bookshelf.crafting.AnvilRecipe",
-        "net.darkhax.bookshelf.crafting.IAnvilRecipe",
-        "net.darkhax.bookshelf.data.AttributeOperation",
-        "net.darkhax.bookshelf.data.Blockstates",
-        "net.darkhax.bookshelf.data.ColorHandlers",
-        "net.darkhax.bookshelf.data.FluidVolume",
-        "net.darkhax.bookshelf.data.VanillaColors",
-        "net.darkhax.bookshelf.entity.EntityArrowBase",
-        "net.darkhax.bookshelf.entity.EntityFake",
-        "net.darkhax.bookshelf.events.EnchantmentModifierEvent",
-        "net.darkhax.bookshelf.inventory.SlotArmor",
-        "net.darkhax.bookshelf.inventory.SlotFake",
-        "net.darkhax.bookshelf.item.ICustomMesh",
-        "net.darkhax.bookshelf.item.ItemBlockBasic",
-        "net.darkhax.bookshelf.item.ItemBlockChest",
-        "net.darkhax.bookshelf.item.ItemInventory",
-        "net.darkhax.bookshelf.item.ItemSubType",
-        "net.darkhax.bookshelf.lib.BookshelfException",
-        "net.darkhax.bookshelf.lib.Constants",
-        "net.darkhax.bookshelf.lib.MCColor",
-        "net.darkhax.bookshelf.lib.ModTrackingList",
-        "net.darkhax.bookshelf.lib.WeightedSelector",
-        "net.darkhax.bookshelf.network.NetworkHandler",
-        "net.darkhax.bookshelf.network.SerializableMessage",
-        "net.darkhax.bookshelf.network.TileEntityMessage",
-        "net.darkhax.bookshelf.registry.IVariant",
-        "net.darkhax.bookshelf.registry.RegistryHelper",
-        "net.darkhax.bookshelf.registry.RegistryListener",
-        "net.darkhax.bookshelf.util.AnnotationUtils",
-        "net.darkhax.bookshelf.util.BannerUtils",
-        "net.darkhax.bookshelf.util.baubles.BaubleUtils",
-        "net.darkhax.bookshelf.util.baubles.ItemBauble",
-        "net.darkhax.bookshelf.util.BlockUtils",
-        "net.darkhax.bookshelf.util.ClassUtils",
-        "net.darkhax.bookshelf.util.CollectionUtils",
-        "net.darkhax.bookshelf.util.CraftingUtils",
-        "net.darkhax.bookshelf.util.EnchantmentUtils",
-        "net.darkhax.bookshelf.util.EntityUtils",
-        "net.darkhax.bookshelf.util.GameUtils",
-        "net.darkhax.bookshelf.util.GuiUtils",
-        "net.darkhax.bookshelf.util.MathsUtils",
-        "net.darkhax.bookshelf.util.MathUtils",
-        "net.darkhax.bookshelf.util.ModUtils",
-        "net.darkhax.bookshelf.util.NBTUtils",
-        "net.darkhax.bookshelf.util.NumericUtils",
-        "net.darkhax.bookshelf.util.OreDictUtils",
-        "net.darkhax.bookshelf.util.ParticleUtils",
-        "net.darkhax.bookshelf.util.PlayerUtils",
-        "net.darkhax.bookshelf.util.RenderUtils",
-        "net.darkhax.bookshelf.util.SkullUtils",
-        "net.darkhax.bookshelf.util.StackUtils",
-        "net.darkhax.bookshelf.util.TextUtils",
-        "net.darkhax.bookshelf.world.loot.conditions.BiomeSpecific",
-        "net.darkhax.bookshelf.world.loot.functions.SetColor"
+        "kotlin.annotation.enum",
+        "kotlinx.coroutines.AbstractCoroutine",
+        "kotlinx.coroutines.AbstractTimeSource",
+        "kotlinx.coroutines.Active",
+        "kotlinx.coroutines.AwaitAll",
+        "kotlinx.coroutines.BlockingCoroutine",
+        "kotlinx.coroutines.BlockingEventLoop",
+        "kotlinx.coroutines.BuildersKt",
+        "kotlinx.coroutines.BuildersKt__BuildersKt",
+        "kotlinx.coroutines.BuildersKt__Builders_commonKt",
+        "kotlinx.coroutines.CancelFutureOnCancel",
+        "kotlinx.coroutines.CancelFutureOnCompletion",
+        "kotlinx.coroutines.CancelHandlerBase",
+        "kotlinx.coroutines.CancellableContinuationImpl",
+        "kotlinx.coroutines.CancelledContinuation",
+        "kotlinx.coroutines.channels.AbstractChannel",
+        "kotlinx.coroutines.channels.AbstractSendChannel",
+        "kotlinx.coroutines.channels.ActorCoroutine",
+        "kotlinx.coroutines.channels.ArrayBroadcastChannel",
+        "kotlinx.coroutines.channels.ArrayChannel",
+        "kotlinx.coroutines.channels.BroadcastCoroutine",
+        "kotlinx.coroutines.channels.BufferOverflow",
+        "kotlinx.coroutines.channels.ChannelCoroutine",
+        "kotlinx.coroutines.channels.ChannelResult",
+        "kotlinx.coroutines.channels.ChannelsKt",
+        "kotlinx.coroutines.channels.ChannelsKt__ChannelsKt",
+        "kotlinx.coroutines.channels.ChannelsKt__Channels_commonKt",
+        "kotlinx.coroutines.channels.ChannelsKt__DeprecatedKt",
+        "kotlinx.coroutines.channels.Closed",
+        "kotlinx.coroutines.channels.ConflatedBroadcastChannel",
+        "kotlinx.coroutines.channels.ConflatedChannel",
+        "kotlinx.coroutines.channels.LazyActorCoroutine",
+        "kotlinx.coroutines.channels.LazyBroadcastCoroutine",
+        "kotlinx.coroutines.channels.LinkedListChannel",
+        "kotlinx.coroutines.channels.ProducerCoroutine",
+        "kotlinx.coroutines.channels.Receive",
+        "kotlinx.coroutines.channels.RendezvousChannel",
+        "kotlinx.coroutines.channels.Send",
+        "kotlinx.coroutines.channels.SendElement",
+        "kotlinx.coroutines.channels.SendElementWithUndeliveredHandler",
+        "kotlinx.coroutines.channels.TickerMode",
+        "kotlinx.coroutines.ChildContinuation",
+        "kotlinx.coroutines.ChildHandleNode",
+        "kotlinx.coroutines.CompletableDeferredImpl",
+        "kotlinx.coroutines.CompletedContinuation",
+        "kotlinx.coroutines.CompletedExceptionally",
+        "kotlinx.coroutines.CompletedWithCancellation",
+        "kotlinx.coroutines.CompletionHandlerBase",
+        "kotlinx.coroutines.CoroutineDispatcher",
+        "kotlinx.coroutines.CoroutineId",
+        "kotlinx.coroutines.CoroutineName",
+        "kotlinx.coroutines.CoroutineStart",
+        "kotlinx.coroutines.debug.AgentPremain",
+        "kotlinx.coroutines.DefaultExecutor",
+        "kotlinx.coroutines.DeferredCoroutine",
+        "kotlinx.coroutines.DispatchedCoroutine",
+        "kotlinx.coroutines.DispatchedTask",
+        "kotlinx.coroutines.DispatcherExecutor",
+        "kotlinx.coroutines.Dispatchers",
+        "kotlinx.coroutines.DisposableFutureHandle",
+        "kotlinx.coroutines.DisposeOnCancel",
+        "kotlinx.coroutines.DisposeOnCompletion",
+        "kotlinx.coroutines.Empty",
+        "kotlinx.coroutines.EventLoop",
+        "kotlinx.coroutines.EventLoopImplBase",
+        "kotlinx.coroutines.EventLoopImplPlatform",
+        "kotlinx.coroutines.ExecutorCoroutineDispatcher",
+        "kotlinx.coroutines.ExecutorCoroutineDispatcherImpl",
+        "kotlinx.coroutines.flow.AbstractFlow",
+        "kotlinx.coroutines.flow.CallbackFlowBuilder",
+        "kotlinx.coroutines.flow.CancellableFlowImpl",
+        "kotlinx.coroutines.flow.ChannelAsFlow",
+        "kotlinx.coroutines.flow.ChannelFlowBuilder",
+        "kotlinx.coroutines.flow.DistinctFlowImpl",
+        "kotlinx.coroutines.flow.EmptyFlow",
+        "kotlinx.coroutines.flow.FlowKt",
+        "kotlinx.coroutines.flow.FlowKt__BuildersKt",
+        "kotlinx.coroutines.flow.FlowKt__ChannelsKt",
+        "kotlinx.coroutines.flow.FlowKt__CollectionKt",
+        "kotlinx.coroutines.flow.FlowKt__CollectKt",
+        "kotlinx.coroutines.flow.FlowKt__ContextKt",
+        "kotlinx.coroutines.flow.FlowKt__CountKt",
+        "kotlinx.coroutines.flow.FlowKt__DelayKt",
+        "kotlinx.coroutines.flow.FlowKt__DistinctKt",
+        "kotlinx.coroutines.flow.FlowKt__EmittersKt",
+        "kotlinx.coroutines.flow.FlowKt__ErrorsKt",
+        "kotlinx.coroutines.flow.FlowKt__LimitKt",
+        "kotlinx.coroutines.flow.FlowKt__MergeKt",
+        "kotlinx.coroutines.flow.FlowKt__MigrationKt",
+        "kotlinx.coroutines.flow.FlowKt__ReduceKt",
+        "kotlinx.coroutines.flow.FlowKt__ShareKt",
+        "kotlinx.coroutines.flow.FlowKt__TransformKt",
+        "kotlinx.coroutines.flow.FlowKt__ZipKt",
+        "kotlinx.coroutines.flow.ReadonlySharedFlow",
+        "kotlinx.coroutines.flow.ReadonlyStateFlow",
+        "kotlinx.coroutines.flow.SafeFlow",
+        "kotlinx.coroutines.flow.SharedFlowImpl",
+        "kotlinx.coroutines.flow.SharedFlowSlot",
+        "kotlinx.coroutines.flow.SharingCommand",
+        "kotlinx.coroutines.flow.SharingConfig",
+        "kotlinx.coroutines.flow.StartedEagerly",
+        "kotlinx.coroutines.flow.StartedLazily",
+        "kotlinx.coroutines.flow.StartedWhileSubscribed",
+        "kotlinx.coroutines.flow.StateFlowImpl",
+        "kotlinx.coroutines.flow.StateFlowSlot",
+        "kotlinx.coroutines.flow.SubscribedFlowCollector",
+        "kotlinx.coroutines.flow.SubscribedSharedFlow",
+        "kotlinx.coroutines.flow.ThrowingCollector",
+        "kotlinx.coroutines.future.CompletableFutureCoroutine",
+        "kotlinx.coroutines.future.ContinuationConsumer",
+        "kotlinx.coroutines.GlobalScope",
+        "kotlinx.coroutines.InactiveNodeList",
+        "kotlinx.coroutines.IncompleteStateBox",
+        "kotlinx.coroutines.InvokeOnCancel",
+        "kotlinx.coroutines.InvokeOnCancelling",
+        "kotlinx.coroutines.InvokeOnCompletion",
+        "kotlinx.coroutines.JobCancellationException",
+        "kotlinx.coroutines.JobImpl",
+        "kotlinx.coroutines.JobKt",
+        "kotlinx.coroutines.JobKt__FutureKt",
+        "kotlinx.coroutines.JobKt__JobKt",
+        "kotlinx.coroutines.JobNode",
+        "kotlinx.coroutines.JobSupport",
+        "kotlinx.coroutines.LazyDeferredCoroutine",
+        "kotlinx.coroutines.LazyStandaloneCoroutine",
+        "kotlinx.coroutines.MainCoroutineDispatcher",
+        "kotlinx.coroutines.NodeList",
+        "kotlinx.coroutines.NonCancellable",
+        "kotlinx.coroutines.NonDisposableHandle",
+        "kotlinx.coroutines.RemoveOnCancel",
+        "kotlinx.coroutines.ResumeAwaitOnCompletion",
+        "kotlinx.coroutines.ResumeOnCompletion",
+        "kotlinx.coroutines.ResumeUndispatchedRunnable",
+        "kotlinx.coroutines.scheduling.CoroutineScheduler",
+        "kotlinx.coroutines.scheduling.DefaultIoScheduler",
+        "kotlinx.coroutines.scheduling.DefaultScheduler",
+        "kotlinx.coroutines.scheduling.ExperimentalCoroutineDispatcher",
+        "kotlinx.coroutines.scheduling.LimitingDispatcher",
+        "kotlinx.coroutines.scheduling.NanoTimeSource",
+        "kotlinx.coroutines.scheduling.SchedulerCoroutineDispatcher",
+        "kotlinx.coroutines.scheduling.SchedulerTimeSource",
+        "kotlinx.coroutines.scheduling.Task",
+        "kotlinx.coroutines.scheduling.TaskContextImpl",
+        "kotlinx.coroutines.scheduling.TaskImpl",
+        "kotlinx.coroutines.scheduling.UnlimitedIoScheduler",
+        "kotlinx.coroutines.scheduling.WorkQueue",
+        "kotlinx.coroutines.SelectAwaitOnCompletion",
+        "kotlinx.coroutines.SelectJoinOnCompletion",
+        "kotlinx.coroutines.selects.SelectBuilderImpl",
+        "kotlinx.coroutines.selects.SeqNumber",
+        "kotlinx.coroutines.selects.UnbiasedSelectBuilderImpl",
+        "kotlinx.coroutines.StandaloneCoroutine",
+        "kotlinx.coroutines.stream.StreamFlow",
+        "kotlinx.coroutines.SupervisorCoroutine",
+        "kotlinx.coroutines.SupervisorJobImpl",
+        "kotlinx.coroutines.sync.CancelSemaphoreAcquisitionHandler",
+        "kotlinx.coroutines.sync.Empty",
+        "kotlinx.coroutines.sync.MutexImpl",
+        "kotlinx.coroutines.sync.SemaphoreImpl",
+        "kotlinx.coroutines.sync.SemaphoreSegment",
+        "kotlinx.coroutines.test.TestCoroutineContext",
+        "kotlinx.coroutines.test.TimedRunnableObsolete",
+        "kotlinx.coroutines.ThreadLocalEventLoop",
+        "kotlinx.coroutines.ThreadState",
+        "kotlinx.coroutines.TimeoutCancellationException",
+        "kotlinx.coroutines.TimeoutCoroutine",
+        "kotlinx.coroutines.Unconfined",
+        "kotlinx.coroutines.UndispatchedCoroutine",
+        "kotlinx.coroutines.UndispatchedMarker",
+        "kotlinx.coroutines.YieldContext",
+        "net.minecraftforge.fml.event.lifecycle.IModBusEvent",
+        "org.intellij.lang.annotations.JdkConstants",
+        "thedarkcolour.kotlinforforge.AutoKotlinEventBusSubscriber",
+        "thedarkcolour.kotlinforforge.eventbus.KotlinEventBus",
+        "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper",
+        "thedarkcolour.kotlinforforge.eventbus.SpongeKotlinEventBusWrapper",
+        "thedarkcolour.kotlinforforge.forge.WhenMappings",
+        "thedarkcolour.kotlinforforge.forge.KDeferredRegister",
+        "thedarkcolour.kotlinforforge.forge.LazySidedDelegate",
+        "thedarkcolour.kotlinforforge.forge.ObjectHolderDelegate",
+        "thedarkcolour.kotlinforforge.forge.SidedDelegate",
+        "thedarkcolour.kotlinforforge.KotlinForForge",
+        "thedarkcolour.kotlinforforge.KotlinLanguageProvider",
+        "thedarkcolour.kotlinforforge.KotlinModContainer",
+        "thedarkcolour.kotlinforforge.KotlinModLoadingContext"
       ],
       "methods": {
-        "net.darkhax.bookshelf.block.BlockBasicChest": [
-          "func_185496_a(IBlockState, IBlockAccess, BlockPos)",
-          "func_176213_c(World, BlockPos, IBlockState)",
-          "func_180642_a(World, BlockPos, EnumFacing, float, float, float, int, EntityLivingBase)",
-          "func_180633_a(World, BlockPos, IBlockState, EntityLivingBase, ItemStack)",
-          "func_149744_f(IBlockState)",
-          "func_176455_e(World, BlockPos, IBlockState)",
-          "func_176458_f(World, BlockPos, IBlockState)",
-          "func_176196_c(World, BlockPos)",
-          "removedByPlayer(IBlockState, World, BlockPos, EntityPlayer, boolean)",
-          "func_180657_a(World, EntityPlayer, BlockPos, IBlockState, TileEntity, ItemStack)",
-          "func_149915_a(World, int)",
-          "getDrops(IBlockAccess, BlockPos, IBlockState, int)",
-          "getPickBlock(IBlockState, RayTraceResult, World, BlockPos, EntityPlayer)",
-          "func_189418_a(World, BlockPos, boolean)",
-          "isTrapChest()",
-          "setState(World, BlockPos, IBlockState, int)",
-          "correctFacing(World, BlockPos, IBlockState, ChestBuilder.IChestType)",
-          "isDoubleChest(World, BlockPos, ChestBuilder.IChestType)",
-          "getCustomType(IBlockAccess, BlockPos)",
-          "getCustomType(ItemStack)"
+        "kotlin.annotation.enum": [],
+        "kotlinx.coroutines.AbstractCoroutine": [
+          "get()",
+          "onCompleted(Any)",
+          "onCancelled(Throwable, Boolean)",
+          "cancellationExceptionMessage()",
+          "onCompletionInternal(Any?)",
+          "resumeWith(Result<Any>)",
+          "afterResume(Any?)",
+          "handleOnCompletionException(Throwable)",
+          "nameString()",
+          "start(CoroutineStart, R, (R, Continuation<Any>) -> Any?)"
         ],
-        "net.darkhax.bookshelf.block.BlockSubType": [
-          "func_149666_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "func_176203_a(int)",
-          "func_176201_c(IBlockState)",
-          "func_180661_e()",
-          "func_180651_a(IBlockState)",
-          "getVariant()",
-          "getVariantProp()"
+        "kotlinx.coroutines.AbstractTimeSource": [
+          "currentTimeMillis()",
+          "nanoTime()",
+          "wrapTask(Runnable)",
+          "trackTask()",
+          "unTrackTask()",
+          "registerTimeLoopThread()",
+          "unregisterTimeLoopThread()",
+          "parkNanos(Any, Long)",
+          "unpark(Thread)"
         ],
-        "net.darkhax.bookshelf.block.BlockTileEntity": [
-          "func_180663_b(World, BlockPos, IBlockState)",
-          "func_189539_a(IBlockState, World, BlockPos, int, int)"
-        ],
-        "net.darkhax.bookshelf.block.property.PropertyObject": [
-          "getName()",
-          "getType()",
-          "isValid(T)",
-          "valueToString(T)"
-        ],
-        "net.darkhax.bookshelf.block.property.PropertyString": [
-          "func_177700_c()",
-          "func_185929_b(String)",
-          "getName(String)",
-          "getMetaData(String)"
-        ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasic": [
-          "func_145839_a(NBTTagCompound)",
-          "func_189515_b(NBTTagCompound)",
-          "func_189518_D_()",
-          "onDataPacket(NetworkManager, SPacketUpdateTileEntity)",
-          "func_189517_E_()",
-          "shouldRefresh(World, BlockPos, IBlockState, IBlockState)",
-          "writeNBT(NBTTagCompound)",
-          "readNBT(NBTTagCompound)"
-        ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicChest": [
-          "func_189515_b(NBTTagCompound)",
-          "func_189517_E_()",
-          "handleUpdateTag(NBTTagCompound)",
-          "shouldRefresh(World, BlockPos, IBlockState, IBlockState)",
-          "func_189518_D_()",
-          "onDataPacket(NetworkManager, SPacketUpdateTileEntity)",
-          "func_145839_a(NBTTagCompound)",
-          "func_174911_a(EnumFacing)",
-          "getRenderBoundingBox()",
-          "getType()",
-          "setType(ChestBuilder.IChestType)",
-          "getBuilder()"
-        ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicTickable": [
-          "func_73660_a()",
-          "onEntityUpdate()"
-        ],
-        "net.darkhax.bookshelf.Bookshelf": [
-          "onConstruction(FMLConstructionEvent)",
-          "postInit(FMLPostInitializationEvent)",
-          "preInitClient(FMLPreInitializationEvent)",
-          "init(FMLInitializationEvent)"
-        ],
-        "net.darkhax.bookshelf.BookshelfEvents": [
-          "onAnvilUpdate(AnvilUpdateEvent)",
-          "onClientTick(ClientTickEvent)"
-        ],
-        "net.darkhax.bookshelf.BookshelfRegistry": [
-          "addAnvilRecipe(String, ItemStack, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, String, int, int, ItemStack)",
-          "addAnvilRecipe(String, String, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, ItemStack, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, ItemStack, String, int, int, ItemStack)",
-          "addAnvilRecipe(AnvilRecipe)",
-          "getAnvilRecipes()"
-        ],
-        "net.darkhax.bookshelf.builder.ChestBuilder": [
-          "register(RegistryHelper)",
-          "getNormalChest()",
-          "getTrapChest()",
-          "addChestType(String...)",
-          "addChestType(String)",
-          "addChestType(ChestBuilder.IChestType)",
-          "getChestType(String)",
-          "getNormalType()",
-          "getTrapType()",
-          "getTypes()",
-          "getModid()",
-          "useTraps()"
-        ],
-        "net.darkhax.bookshelf.builder.LootBuilder": [
-          "getName()",
-          "getPool()",
-          "setPool(String)",
-          "getWeight()",
-          "setWeight(int)",
-          "getQuality()",
-          "setQuality(int)",
-          "getItem()",
-          "setItem(Item)",
-          "getConditions()",
-          "addCondition(LootCondition)",
-          "getFunctions()",
-          "addFunction(LootFunction)",
-          "build()",
+        "kotlinx.coroutines.Active": [
           "toString()"
         ],
-        "net.darkhax.bookshelf.client.gui.GuiGraphicButton": [
-          "func_146112_a(Minecraft, int, int)"
+        "kotlinx.coroutines.AwaitAll": [
+          "await()"
         ],
-        "net.darkhax.bookshelf.client.gui.GuiSlider": [
-          "func_146119_b(Minecraft, int, int)",
-          "func_146116_c(Minecraft, int, int)",
-          "func_146118_a(int, int)",
-          "func_146114_a(boolean)",
-          "setSliderValue(float)",
-          "getSliderValue()"
+        "kotlinx.coroutines.BlockingCoroutine": [
+          "get()",
+          "afterCompletion(Any?)",
+          "joinBlocking()"
         ],
-        "net.darkhax.bookshelf.client.model.BakedModelRetexturable": [
-          "getRetexturedModel(String)",
-          "getDefaultModel()",
-          "func_188616_a(IBlockState, EnumFacing, long)",
-          "func_177555_b()",
-          "func_177556_c()",
-          "func_188618_c()",
-          "func_177554_e()",
-          "func_177552_f()",
-          "func_188617_f()",
-          "handlePerspective(TransformType)"
+        "kotlinx.coroutines.BlockingEventLoop": [],
+        "kotlinx.coroutines.BuildersKt": [
+          "runBlocking(CoroutineContext, (CoroutineScope?, Continuation<? super T>?) ->)",
+          "withContext(CoroutineContext, (CoroutineScope?, Continuation<? super T>?) ->, `$completion`: Continuation<? super T>)"
         ],
-        "net.darkhax.bookshelf.client.model.DefaultItemOverrideList": [
-          "handleItemState(IBakedModel, ItemStack, World, EntityLivingBase)"
+        "kotlinx.coroutines.BuildersKt__BuildersKt": [
+          "runBlocking(CoroutineContext, (CoroutineScope, Continuation<T>) -> Any?)"
         ],
-        "net.darkhax.bookshelf.client.model.ModelArmorExtended": [
-          "addModelParts()",
-          "setRotateAngle(ModelRenderer, float, float, float)",
-          "func_78088_a(Entity, float, float, float, float, float, float)"
+        "kotlinx.coroutines.BuildersKt__Builders_commonKt": [
+          "withContext(CoroutineContext, (CoroutineScope, Continuation<T>) -> Any?)"
         ],
-        "net.darkhax.bookshelf.client.particle.OpenParticleDigging": [],
-        "net.darkhax.bookshelf.client.render.tileentity.TileEntityBasicChestRenderer": [
-          "renderTileEntityAt(TileEntityBasicChest, double, double, double, float, int)",
-          "func_147499_a(ResourceLocation)"
+        "kotlinx.coroutines.CancelFutureOnCancel": [
+          "invoke(Throwable?)",
+          "toString()"
         ],
-        "net.darkhax.bookshelf.command.Command": [
-          "func_184882_a(MinecraftServer, ICommandSender)"
+        "kotlinx.coroutines.CancelFutureOnCompletion": [
+          "invoke(Throwable?)"
         ],
-        "net.darkhax.bookshelf.command.CommandTree": [
-          "func_184881_a(MinecraftServer, ICommandSender, String[])",
-          "func_184882_a(MinecraftServer, ICommandSender)"
+        "kotlinx.coroutines.CancelHandlerBase": [
+          "invoke(Throwable?)"
         ],
-        "net.darkhax.bookshelf.config.ConfigurationHandler": [
-          "init(ASMDataTable)",
-          "sync()",
-          "onConfigChanged(ConfigChangedEvent)",
-          "hasChanged()",
-          "save()",
-          "getConfig()",
-          "addReader(Class<T>, ConfigurationHandler.Adapter<T>)"
+        "kotlinx.coroutines.CancellableContinuationImpl": [
+          "get()",
+          "initCancellability()",
+          "isReusable()",
+          "resetStateReusable()",
+          "getStackTraceElement()",
+          "takeState()",
+          "cancelCompletedResult(Any?, Throwable)",
+          "cancelLater(Throwable)",
+          "cancel(Throwable?)",
+          "parentCancelled(Throwable)",
+          "callCancelHandlerSafely(() -> Unit)",
+          "callCancelHandler((Throwable?) -> Unit, Throwable?)",
+          "callCancelHandler(CancelHandler, Throwable?)",
+          "callOnCancellation((Throwable) -> Unit, Throwable)",
+          "getContinuationCancellationCause(Job)",
+          "trySuspend()",
+          "tryResume()",
+          "getResult()",
+          "installParentHandle()",
+          "releaseClaimedReusableContinuation()"
         ],
-        "net.darkhax.bookshelf.crafting.AnvilRecipe": [
-          "isValidRecipe(ItemStack, ItemStack, String)",
-          "getExperienceCost(ItemStack, ItemStack, String)",
-          "getMaterialCost(ItemStack, ItemStack, String)",
-          "getOutput(ItemStack, ItemStack, String)"
+        "kotlinx.coroutines.CancelledContinuation": [
+          "makeResumed()"
         ],
-        "net.darkhax.bookshelf.crafting.IAnvilRecipe": [],
-        "net.darkhax.bookshelf.data.AttributeOperation": [],
-        "net.darkhax.bookshelf.data.Blockstates": [],
-        "net.darkhax.bookshelf.data.ColorHandlers": [],
-        "net.darkhax.bookshelf.data.FluidVolume": [],
-        "net.darkhax.bookshelf.data.VanillaColors": [
-          "getColor()"
+        "kotlinx.coroutines.channels.AbstractChannel": [
+          "get()",
+          "pollInternal()",
+          "pollSelectInternal(SelectInstance<*>)",
+          "receive()",
+          "receiveSuspend(Int)",
+          "enqueueReceiveInternal(Receive<Any>)",
+          "enqueueReceive(Receive<Any>)",
+          "receiveCatching()",
+          "tryReceive()",
+          "cancel(CancellationException?)",
+          "cancelInternal(Throwable?)",
+          "onCancelIdempotent(Boolean)",
+          "onCancelIdempotentList(InlineList<Send>, Closed<*>)",
+          "iterator()",
+          "describeTryPoll()",
+          "registerSelectReceiveMode(SelectInstance<R>, Int, (Any?, Continuation<R>) -> Any?)",
+          "enqueueReceiveSelect(SelectInstance<R>, (Any?, Continuation<R>) -> Any?, Int)",
+          "takeFirstReceiveOrPeekClosed()",
+          "onReceiveEnqueued()",
+          "onReceiveDequeued()"
         ],
-        "net.darkhax.bookshelf.entity.EntityArrowBase": [
-          "func_184550_j()",
-          "func_189511_e(NBTTagCompound)",
-          "func_70020_e(NBTTagCompound)",
-          "equals(Object)",
+        "kotlinx.coroutines.channels.AbstractSendChannel": [
+          "get()",
+          "offerInternal(Any)",
+          "offerSelectInternal(Any, SelectInstance<*>)",
+          "takeFirstSendOrPeekClosed()",
+          "sendBuffered(Any)",
+          "describeSendBuffered(Any)",
+          "send(Any)",
+          "offer(Any)",
+          "trySend(Any)",
+          "helpCloseAndGetSendException(Closed<*>)",
+          "helpCloseAndGetSendException(Any, Closed<*>)",
+          "sendSuspend(Any)",
+          "enqueueSend(Send)",
+          "close(Throwable?)",
+          "invokeOnCloseHandler(Throwable?)",
+          "invokeOnClose((Throwable?) -> Unit)",
+          "helpClose(Closed<*>)",
+          "onClosedIdempotent(LockFreeLinkedListNode)",
+          "takeFirstReceiveOrPeekClosed()",
+          "describeTryOffer(Any)"
+        ],
+        "kotlinx.coroutines.channels.ActorCoroutine": [
+          "onCancelling(Throwable?)",
+          "handleJobException(Throwable)"
+        ],
+        "kotlinx.coroutines.channels.ArrayBroadcastChannel": [
+          "get()",
+          "set(value)",
+          "openSubscription()",
+          "close(Throwable?)",
+          "cancel(CancellationException?)",
+          "cancelInternal(Throwable?)",
+          "offerInternal(Any)",
+          "offerSelectInternal(Any, SelectInstance<*>)",
+          "checkSubOffers()",
+          "updateHead(kotlinx.coroutines.channels.ArrayBroadcastChannel.Subscriber<Any>?, kotlinx.coroutines.channels.ArrayBroadcastChannel.Subscriber<Any>?)",
+          "computeMinHead()",
+          "elementAt(Long)"
+        ],
+        "kotlinx.coroutines.channels.ArrayChannel": [
+          "get()",
+          "offerInternal(Any)",
+          "offerSelectInternal(Any, SelectInstance<*>)",
+          "enqueueSend(Send)",
+          "updateBufferSize(Int)",
+          "enqueueElement(Int, Any)",
+          "ensureCapacity(Int)",
+          "pollInternal()",
+          "pollSelectInternal(SelectInstance<*>)",
+          "enqueueReceiveInternal(Receive<Any>)",
+          "onCancelIdempotent(Boolean)"
+        ],
+        "kotlinx.coroutines.channels.BroadcastCoroutine": [
+          "get()",
+          "invokeOnClose((Throwable?) -> Unit)",
+          "offer(Any)",
+          "openSubscription()",
+          "send(Any)",
+          "trySend(Any)",
+          "cancel(CancellationException?)",
+          "cancelInternal(Throwable)",
+          "onCompleted(Unit)",
+          "onCancelled(Throwable, Boolean)",
+          "close(Throwable?)"
+        ],
+        "kotlinx.coroutines.channels.BufferOverflow": [],
+        "kotlinx.coroutines.channels.ChannelCoroutine": [
+          "get()",
+          "close(Throwable?)",
+          "invokeOnClose((Throwable?) -> Unit)",
+          "iterator()",
+          "offer(Any)",
+          "poll()",
+          "receive()",
+          "receiveCatching()",
+          "receiveOrNull()",
+          "send(Any)",
+          "tryReceive()",
+          "trySend(Any)",
+          "cancel(CancellationException?)",
+          "cancelInternal(Throwable)"
+        ],
+        "kotlinx.coroutines.channels.ChannelResult": [
+          "get()",
+          "getOrNull()",
+          "getOrThrow()",
+          "exceptionOrNull()",
+          "toString()",
+          "hashCode()",
+          "equals(Any?)",
+          "equals(Any)"
+        ],
+        "kotlinx.coroutines.channels.ChannelsKt": [
+          "consumesAll(vararg channels: ReceiveChannel<?>)"
+        ],
+        "kotlinx.coroutines.channels.ChannelsKt__ChannelsKt": [],
+        "kotlinx.coroutines.channels.ChannelsKt__Channels_commonKt": [],
+        "kotlinx.coroutines.channels.ChannelsKt__DeprecatedKt": [
+          "consumesAll(vararg channels: ReceiveChannel<*>)"
+        ],
+        "kotlinx.coroutines.channels.Closed": [
+          "get()",
+          "tryResumeSend(PrepareOp?)",
+          "completeResumeSend()",
+          "tryResumeReceive(Any, PrepareOp?)",
+          "completeResumeReceive(Any)",
+          "resumeSendClosed(Closed<*>)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.channels.ConflatedBroadcastChannel": [
+          "get()",
+          "constructor(Any)",
+          "openSubscription()",
+          "closeSubscriber(kotlinx.coroutines.channels.ConflatedBroadcastChannel.Subscriber<Any>)",
+          "addSubscriber(Array<kotlinx.coroutines.channels.ConflatedBroadcastChannel.Subscriber<Any>>?, kotlinx.coroutines.channels.ConflatedBroadcastChannel.Subscriber<Any>)",
+          "removeSubscriber(Array<kotlinx.coroutines.channels.ConflatedBroadcastChannel.Subscriber<Any>>, kotlinx.coroutines.channels.ConflatedBroadcastChannel.Subscriber<Any>)",
+          "close(Throwable?)",
+          "invokeOnCloseHandler(Throwable?)",
+          "invokeOnClose((Throwable?) -> Unit)",
+          "cancel(CancellationException?)",
+          "send(Any)",
+          "trySend(Any)",
+          "offerInternal(Any)",
+          "registerSelectSend(SelectInstance<Any>, Any, (SendChannel<Any>, Continuation<Any>) -> Any?)",
+          "offer(E)"
+        ],
+        "kotlinx.coroutines.channels.ConflatedChannel": [
+          "get()",
+          "offerInternal(Any)",
+          "offerSelectInternal(Any, SelectInstance<*>)",
+          "pollInternal()",
+          "pollSelectInternal(SelectInstance<*>)",
+          "onCancelIdempotent(Boolean)",
+          "updateValueLocked(Any?)",
+          "enqueueReceiveInternal(Receive<Any>)"
+        ],
+        "kotlinx.coroutines.channels.LazyActorCoroutine": [
+          "get()",
+          "onStart()",
+          "send(Any)",
+          "offer(Any)",
+          "trySend(Any)",
+          "close(Throwable?)",
+          "registerSelectClause2(SelectInstance<R>, Any, (SendChannel<Any>, Continuation<R>) -> Any?)"
+        ],
+        "kotlinx.coroutines.channels.LazyBroadcastCoroutine": [
+          "openSubscription()",
+          "onStart()"
+        ],
+        "kotlinx.coroutines.channels.LinkedListChannel": [
+          "get()",
+          "offerInternal(Any)",
+          "offerSelectInternal(Any, SelectInstance<*>)",
+          "onCancelIdempotentList(InlineList<Send>, Closed<*>)"
+        ],
+        "kotlinx.coroutines.channels.ProducerCoroutine": [
+          "get()",
+          "onCompleted(Unit)",
+          "onCancelled(Throwable, Boolean)"
+        ],
+        "kotlinx.coroutines.channels.Receive": [
+          "get()",
+          "resumeReceiveClosed(Closed<*>)",
+          "resumeOnCancellationFun(Any)"
+        ],
+        "kotlinx.coroutines.channels.RendezvousChannel": [
+          "get()"
+        ],
+        "kotlinx.coroutines.channels.Send": [
+          "tryResumeSend(PrepareOp?)",
+          "completeResumeSend()",
+          "resumeSendClosed(Closed<*>)",
+          "undeliveredElement()"
+        ],
+        "kotlinx.coroutines.channels.SendElement": [
+          "tryResumeSend(PrepareOp?)",
+          "completeResumeSend()",
+          "resumeSendClosed(Closed<*>)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.channels.SendElementWithUndeliveredHandler": [
+          "remove()",
+          "undeliveredElement()"
+        ],
+        "kotlinx.coroutines.channels.TickerMode": [],
+        "kotlinx.coroutines.ChildContinuation": [
+          "invoke(Throwable?)"
+        ],
+        "kotlinx.coroutines.ChildHandleNode": [
+          "get()",
+          "invoke(Throwable?)",
+          "childCancelled(Throwable)"
+        ],
+        "kotlinx.coroutines.CompletableDeferredImpl": [
+          "get()",
+          "getCompleted()",
+          "await()",
+          "registerSelectClause1(SelectInstance<R>, (Any, Continuation<R>) -> Any?)",
+          "complete(Any)",
+          "completeExceptionally(Throwable)"
+        ],
+        "kotlinx.coroutines.CompletedContinuation": [
+          "get()",
+          "invokeHandlers(CancellableContinuationImpl<*>, Throwable)",
+          "component1()",
+          "component2()",
+          "component3()",
+          "component4()",
+          "component5()",
+          "copy(Any?, CancelHandler?, ((Throwable) -> Unit)?, Any?, Throwable?)",
+          "toString()",
+          "hashCode()",
+          "equals(Any?)"
+        ],
+        "kotlinx.coroutines.CompletedExceptionally": [
+          "get()",
+          "makeHandled()",
+          "toString()"
+        ],
+        "kotlinx.coroutines.CompletedWithCancellation": [
+          "component1()",
+          "component2()",
+          "copy(Any?, (Throwable) -> Unit)",
+          "toString()",
+          "hashCode()",
+          "equals(Any?)"
+        ],
+        "kotlinx.coroutines.CompletionHandlerBase": [
+          "invoke(Throwable?)"
+        ],
+        "kotlinx.coroutines.CoroutineDispatcher": [
+          "isDispatchNeeded(CoroutineContext)",
+          "limitedParallelism(Int)",
+          "dispatch(CoroutineContext, Runnable)",
+          "dispatchYield(CoroutineContext, Runnable)",
+          "interceptContinuation(Continuation<T>)",
+          "releaseInterceptedContinuation(Continuation<*>)",
+          "plus(CoroutineDispatcher)",
+          "toString()",
+          "get(CoroutineContextKey<E>)",
+          "minusKey(CoroutineContextKey<?>)"
+        ],
+        "kotlinx.coroutines.CoroutineId": [
+          "toString()",
+          "updateThreadContext(CoroutineContext)",
+          "restoreThreadContext(CoroutineContext, String)",
+          "component1()",
+          "copy(Long)",
+          "hashCode()",
+          "equals(Any?)"
+        ],
+        "kotlinx.coroutines.CoroutineName": [
+          "toString()",
+          "component1()",
+          "copy(String)",
+          "hashCode()",
+          "equals(Any?)"
+        ],
+        "kotlinx.coroutines.CoroutineStart": [
+          "get()",
+          "invoke((Continuation<T>) -> Any?, Continuation<T>)",
+          "invoke((R, Continuation<T>) -> Any?, R, Continuation<T>)"
+        ],
+        "kotlinx.coroutines.debug.AgentPremain": [
+          "premain(String?, Instrumentation)",
+          "installSignalHandler()"
+        ],
+        "kotlinx.coroutines.DefaultExecutor": [
+          "get()",
+          "enqueue(Runnable)",
+          "reschedule(Long, DelayedTask)",
+          "shutdownError()",
+          "shutdown()",
+          "invokeOnTimeout(Long, Runnable, CoroutineContext)",
+          "run()",
+          "createThreadSync()",
+          "ensureStarted()",
+          "notifyStartup()",
+          "shutdownForTests(Long)",
+          "acknowledgeShutdownIfNeeded()"
+        ],
+        "kotlinx.coroutines.DeferredCoroutine": [
+          "get()",
+          "getCompleted()",
+          "await()",
+          "registerSelectClause1(SelectInstance<R>, (Any, Continuation<R>) -> Any?)"
+        ],
+        "kotlinx.coroutines.DispatchedCoroutine": [
+          "trySuspend()",
+          "tryResume()",
+          "afterCompletion(Any?)",
+          "afterResume(Any?)",
+          "getResult()"
+        ],
+        "kotlinx.coroutines.DispatchedTask": [
+          "takeState()",
+          "cancelCompletedResult(Any?, Throwable)",
+          "getSuccessfulResult(Any?)",
+          "getExceptionalResult(Any?)",
+          "run()",
+          "handleFatalException(Throwable?, Throwable?)"
+        ],
+        "kotlinx.coroutines.DispatcherExecutor": [
+          "execute(Runnable)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.Dispatchers": [
+          "get()",
+          "shutdown()"
+        ],
+        "kotlinx.coroutines.DisposableFutureHandle": [
+          "dispose()",
+          "toString()"
+        ],
+        "kotlinx.coroutines.DisposeOnCancel": [
+          "invoke(Throwable?)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.DisposeOnCompletion": [
+          "invoke(Throwable?)"
+        ],
+        "kotlinx.coroutines.Empty": [
+          "get()",
+          "toString()"
+        ],
+        "kotlinx.coroutines.EventLoop": [
+          "get()",
+          "processNextEvent()",
+          "processUnconfinedEvent()",
+          "shouldBeProcessedFromContext()",
+          "dispatchUnconfined(DispatchedTask<*>)",
+          "delta(Boolean)",
+          "incrementUseCount(Boolean)",
+          "decrementUseCount(Boolean)",
+          "limitedParallelism(Int)",
+          "shutdown()"
+        ],
+        "kotlinx.coroutines.EventLoopImplBase": [
+          "get()",
+          "set(value)",
+          "shutdown()",
+          "scheduleResumeAfterDelay(Long, CancellableContinuation<Unit>)",
+          "scheduleInvokeOnTimeout(Long, Runnable)",
+          "processNextEvent()",
+          "dispatch(CoroutineContext, Runnable)",
+          "enqueue(Runnable)",
+          "enqueueImpl(Runnable)",
+          "dequeue()",
+          "closeQueue()",
+          "schedule(Long, kotlinx.coroutines.EventLoopImplBase.DelayedTask)",
+          "shouldUnpark(kotlinx.coroutines.EventLoopImplBase.DelayedTask)",
+          "scheduleImpl(Long, kotlinx.coroutines.EventLoopImplBase.DelayedTask)",
+          "resetAll()",
+          "rescheduleAllDelayed()",
+          "delay(Long, `$completion`: Continuation<? super Unit>)",
+          "invokeOnTimeout(Long, Runnable, CoroutineContext)"
+        ],
+        "kotlinx.coroutines.EventLoopImplPlatform": [
+          "unpark()",
+          "reschedule(Long, DelayedTask)"
+        ],
+        "kotlinx.coroutines.ExecutorCoroutineDispatcher": [
+          "close()"
+        ],
+        "kotlinx.coroutines.ExecutorCoroutineDispatcherImpl": [
+          "dispatch(CoroutineContext, Runnable)",
+          "scheduleResumeAfterDelay(Long, CancellableContinuation<Unit>)",
+          "invokeOnTimeout(Long, Runnable, CoroutineContext)",
+          "cancelJobOnRejection(CoroutineContext, RejectedExecutionException)",
+          "close()",
+          "toString()",
+          "equals(Any?)",
+          "hashCode()",
+          "delay(Long, `$completion`: Continuation<? super Unit>)"
+        ],
+        "kotlinx.coroutines.flow.AbstractFlow": [
+          "collect(FlowCollector<Any>)",
+          "collectSafely(FlowCollector<Any>)"
+        ],
+        "kotlinx.coroutines.flow.CallbackFlowBuilder": [
+          "collectTo(ProducerScope<Any>)",
+          "create(CoroutineContext, Int, BufferOverflow)"
+        ],
+        "kotlinx.coroutines.flow.CancellableFlowImpl": [
+          "collect(FlowCollector<Any>)"
+        ],
+        "kotlinx.coroutines.flow.ChannelAsFlow": [
+          "markConsumed()",
+          "create(CoroutineContext, Int, BufferOverflow)",
+          "dropChannelOperators()",
+          "collectTo(ProducerScope<Any>)",
+          "produceImpl(CoroutineScope)",
+          "collect(FlowCollector<Any>)",
+          "additionalToStringProps()"
+        ],
+        "kotlinx.coroutines.flow.ChannelFlowBuilder": [
+          "create(CoroutineContext, Int, BufferOverflow)",
+          "collectTo(ProducerScope<Any>)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.flow.DistinctFlowImpl": [
+          "collect(FlowCollector<Any>)"
+        ],
+        "kotlinx.coroutines.flow.EmptyFlow": [
+          "collect(FlowCollector<Nothing>)"
+        ],
+        "kotlinx.coroutines.flow.FlowKt": [
+          "flow((FlowCollector<? super T>?, Continuation<? super Unit>?) ->)",
+          "flowOf(vararg elements:)",
+          "flowOf(T)",
+          "emptyFlow()",
+          "channelFlow((ProducerScope<? super T>?, Continuation<? super Unit>?) ->)",
+          "callbackFlow((ProducerScope<? super T>?, Continuation<? super Unit>?) ->)",
+          "getDEFAULT_CONCURRENCY()",
+          "merge(vararg flows: Flow<? extends T>)",
+          "noImpl()",
+          "combine(Flow<? extends T1>, Flow<? extends T2>, (T1?, T2?, Continuation<? super R>?) ->)",
+          "combineTransform(Flow<? extends T1>, Flow<? extends T2>, (FlowCollector<? super R>?, T1?, T2?, Continuation<? super Unit>?) ->)",
+          "combine(Flow<? extends T1>, Flow<? extends T2>, Flow<? extends T3>, (T1?, T2?, T3?, Continuation<? super R>?) ->)",
+          "combineTransform(Flow<? extends T1>, Flow<? extends T2>, Flow<? extends T3>, (FlowCollector<? super R>?, T1?, T2?, T3?, Continuation<? super Unit>?) ->)",
+          "combine(Flow<? extends T1>, Flow<? extends T2>, Flow<? extends T3>, Flow<? extends T4>, (T1?, T2?, T3?, T4?, Continuation<? super R>?) ->)",
+          "combineTransform(Flow<? extends T1>, Flow<? extends T2>, Flow<? extends T3>, Flow<? extends T4>, (FlowCollector<? super R>?, T1?, T2?, T3?, T4?, Continuation<? super Unit>?) ->)",
+          "combine(Flow<? extends T1>, Flow<? extends T2>, Flow<? extends T3>, Flow<? extends T4>, Flow<? extends T5>, (T1?, T2?, T3?, T4?, T5?, Continuation<? super R>?) ->)",
+          "combineTransform(Flow<? extends T1>, Flow<? extends T2>, Flow<? extends T3>, Flow<? extends T4>, Flow<? extends T5>, (FlowCollector<? super R>?, T1?, T2?, T3?, T4?, T5?, Continuation<? super Unit>?) ->)"
+        ],
+        "kotlinx.coroutines.flow.FlowKt__BuildersKt": [
+          "flow((FlowCollector<T>, Continuation<Unit>) -> Any?)",
+          "flowOf(vararg elements:)",
+          "flowOf(T)",
+          "emptyFlow()",
+          "channelFlow((ProducerScope<T>, Continuation<Unit>) -> Any?)",
+          "callbackFlow((ProducerScope<T>, Continuation<Unit>) -> Any?)"
+        ],
+        "kotlinx.coroutines.flow.FlowKt__ChannelsKt": [],
+        "kotlinx.coroutines.flow.FlowKt__CollectionKt": [],
+        "kotlinx.coroutines.flow.FlowKt__CollectKt": [],
+        "kotlinx.coroutines.flow.FlowKt__ContextKt": [
+          "checkFlowContext(CoroutineContext)"
+        ],
+        "kotlinx.coroutines.flow.FlowKt__CountKt": [],
+        "kotlinx.coroutines.flow.FlowKt__DelayKt": [],
+        "kotlinx.coroutines.flow.FlowKt__DistinctKt": [],
+        "kotlinx.coroutines.flow.FlowKt__EmittersKt": [],
+        "kotlinx.coroutines.flow.FlowKt__ErrorsKt": [],
+        "kotlinx.coroutines.flow.FlowKt__LimitKt": [],
+        "kotlinx.coroutines.flow.FlowKt__MergeKt": [
+          "merge(vararg flows: Flow<T>)"
+        ],
+        "kotlinx.coroutines.flow.FlowKt__MigrationKt": [
+          "noImpl()"
+        ],
+        "kotlinx.coroutines.flow.FlowKt__ReduceKt": [],
+        "kotlinx.coroutines.flow.FlowKt__ShareKt": [],
+        "kotlinx.coroutines.flow.FlowKt__TransformKt": [],
+        "kotlinx.coroutines.flow.FlowKt__ZipKt": [
+          "combine(Flow<T1>, Flow<T2>, (T1, T2, Continuation<R>) -> Any?)",
+          "combineTransform(Flow<T1>, Flow<T2>, (FlowCollector<R>, T1, T2, Continuation<Unit>) -> Any?)",
+          "combine(Flow<T1>, Flow<T2>, Flow<T3>, (T1, T2, T3, Continuation<R>) -> Any?)",
+          "combineTransform(Flow<T1>, Flow<T2>, Flow<T3>, (FlowCollector<R>, T1, T2, T3, Continuation<Unit>) -> Any?)",
+          "combine(Flow<T1>, Flow<T2>, Flow<T3>, Flow<T4>, (T1, T2, T3, T4, Continuation<R>) -> Any?)",
+          "combineTransform(Flow<T1>, Flow<T2>, Flow<T3>, Flow<T4>, (FlowCollector<R>, T1, T2, T3, T4, Continuation<Unit>) -> Any?)",
+          "combine(Flow<T1>, Flow<T2>, Flow<T3>, Flow<T4>, Flow<T5>, (T1, T2, T3, T4, T5, Continuation<R>) -> Any?)",
+          "combineTransform(Flow<T1>, Flow<T2>, Flow<T3>, Flow<T4>, Flow<T5>, (FlowCollector<R>, T1, T2, T3, T4, T5, Continuation<Unit>) -> Any?)",
+          "nullArrayFactory()"
+        ],
+        "kotlinx.coroutines.flow.ReadonlySharedFlow": [
+          "collect(FlowCollector<Any>)",
+          "fuse(CoroutineContext, Int, BufferOverflow)"
+        ],
+        "kotlinx.coroutines.flow.ReadonlyStateFlow": [
+          "collect(FlowCollector<Any>)",
+          "fuse(CoroutineContext, Int, BufferOverflow)"
+        ],
+        "kotlinx.coroutines.flow.SafeFlow": [
+          "collectSafely(FlowCollector<Any>)"
+        ],
+        "kotlinx.coroutines.flow.SharedFlowImpl": [
+          "get()",
+          "collect(FlowCollector<Any>)",
+          "tryEmit(Any)",
+          "emit(Any)",
+          "tryEmitLocked(Any)",
+          "tryEmitNoCollectorsLocked(Any)",
+          "dropOldestLocked()",
+          "correctCollectorIndexesOnDropOldest(Long)",
+          "enqueueLocked(Any?)",
+          "growBuffer(Array<Any?>?, Int, Int)",
+          "emitSuspend(Any)",
+          "cancelEmitter(kotlinx.coroutines.flow.SharedFlowImpl.Emitter)",
+          "updateNewCollectorIndexLocked()",
+          "updateCollectorIndexLocked(Long)",
+          "updateBufferLocked(Long, Long, Long, Long)",
+          "cleanupTailLocked()",
+          "tryTakeValue(SharedFlowSlot)",
+          "tryPeekLocked(SharedFlowSlot)",
+          "getPeekedValueLockedAt(Long)",
+          "awaitValue(SharedFlowSlot)"
+        ],
+        "kotlinx.coroutines.flow.SharedFlowSlot": [
+          "allocateLocked(SharedFlowImpl<*>)",
+          "freeLocked(SharedFlowImpl<*>)"
+        ],
+        "kotlinx.coroutines.flow.SharingCommand": [],
+        "kotlinx.coroutines.flow.SharingConfig": [],
+        "kotlinx.coroutines.flow.StartedEagerly": [
+          "command(StateFlow<Int>)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.flow.StartedLazily": [
+          "command(StateFlow<Int>)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.flow.StartedWhileSubscribed": [
+          "command(StateFlow<Int>)",
+          "toString()",
+          "equals(Any?)",
           "hashCode()"
         ],
-        "net.darkhax.bookshelf.entity.EntityFake": [
-          "func_70088_a()",
-          "func_70037_a(NBTTagCompound)",
-          "func_70014_b(NBTTagCompound)"
+        "kotlinx.coroutines.flow.StateFlowImpl": [
+          "get()",
+          "set(value)",
+          "compareAndSet(Any, Any)",
+          "updateState(Any?, Any)",
+          "tryEmit(Any)",
+          "emit(Any)",
+          "resetReplayCache()",
+          "collect(FlowCollector<Any>)",
+          "createSlot()",
+          "createSlotArray(Int)",
+          "fuse(CoroutineContext, Int, BufferOverflow)"
         ],
-        "net.darkhax.bookshelf.events.EnchantmentModifierEvent": [
-          "getEnchantment()",
-          "getEntity()",
-          "getLevels()",
-          "setLevels(int)"
+        "kotlinx.coroutines.flow.StateFlowSlot": [
+          "allocateLocked(StateFlowImpl<*>)",
+          "freeLocked(StateFlowImpl<*>)",
+          "makePending()",
+          "takePending()",
+          "awaitPending()"
         ],
-        "net.darkhax.bookshelf.inventory.SlotArmor": [
-          "func_75219_a()",
-          "func_75214_a(ItemStack)",
-          "func_178171_c()"
+        "kotlinx.coroutines.flow.SubscribedFlowCollector": [
+          "emit(Any)",
+          "onSubscription()"
         ],
-        "net.darkhax.bookshelf.inventory.SlotFake": [
-          "func_82869_a(EntityPlayer)",
-          "func_75214_a(ItemStack)",
-          "func_75209_a(int)",
-          "func_75215_d(ItemStack)"
+        "kotlinx.coroutines.flow.SubscribedSharedFlow": [
+          "collect(FlowCollector<Any>)"
         ],
-        "net.darkhax.bookshelf.item.ICustomMesh": [],
-        "net.darkhax.bookshelf.item.ItemBlockBasic": [
-          "func_77647_b(int)",
-          "func_77667_c(ItemStack)",
-          "func_179223_d()",
-          "getVariant()"
+        "kotlinx.coroutines.flow.ThrowingCollector": [
+          "emit(Any?)"
         ],
-        "net.darkhax.bookshelf.item.ItemBlockChest": [
-          "func_77667_c(ItemStack)",
-          "func_77647_b(int)",
-          "placeBlockAt(ItemStack, EntityPlayer, World, BlockPos, EnumFacing, float, float, float, IBlockState)",
-          "func_150895_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "getCustomMesh()",
-          "registerMeshModels()",
-          "getBuilder()"
+        "kotlinx.coroutines.future.CompletableFutureCoroutine": [
+          "accept(Any?, Throwable?)",
+          "onCompleted(Any)",
+          "onCancelled(Throwable, Boolean)"
         ],
-        "net.darkhax.bookshelf.item.ItemInventory": [
-          "readFromNBT()",
-          "writeToNBT()",
-          "getContents(ItemStack)",
-          "func_70005_c_()",
-          "func_145818_k_()",
-          "func_145748_c_()",
-          "func_70302_i_()",
-          "func_70301_a(int)",
-          "func_70298_a(int, int)",
-          "func_70304_b(int)",
-          "func_70299_a(int, ItemStack)",
-          "func_70297_j_()",
-          "func_70296_d()",
-          "func_174889_b(EntityPlayer)",
-          "func_174886_c(EntityPlayer)",
-          "func_94041_b(int, ItemStack)",
-          "func_174887_a_(int)",
-          "func_174885_b(int, int)",
-          "func_174890_g()",
-          "func_174888_l()"
+        "kotlinx.coroutines.future.ContinuationConsumer": [
+          "accept(Any?, Throwable?)"
         ],
-        "net.darkhax.bookshelf.item.ItemSubType": [
-          "func_77647_b(int)",
-          "func_77667_c(ItemStack)",
-          "func_150895_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "getVariant()"
+        "kotlinx.coroutines.GlobalScope": [
+          "get()"
         ],
-        "net.darkhax.bookshelf.lib.BookshelfException": [],
-        "net.darkhax.bookshelf.lib.Constants": [],
-        "net.darkhax.bookshelf.lib.MCColor": [
-          "writeToStack(ItemStack)",
-          "writeToNBT(NBTTagCompound)",
-          "getComponents()",
-          "getRedF()",
-          "getGreenF()",
-          "getBlueF()",
-          "setRenderColor()",
-          "getRandomColor(Random)",
-          "isAcceptable(ItemStack)",
-          "isAcceptable(IBlockAccess, BlockPos)",
-          "isAcceptable(TileEntity)",
-          "isAcceptable(NBTTagCompound)"
+        "kotlinx.coroutines.InactiveNodeList": [
+          "get()",
+          "toString()"
         ],
-        "net.darkhax.bookshelf.lib.ModTrackingList": [
-          "getTrackedEntries()",
-          "getModContainer(T)",
-          "add(T)",
-          "get(int)",
-          "add(int, T)",
-          "addAll(int, Collection<? extends T>)",
-          "addAll(Collection<? extends T>)",
-          "remove(int)",
-          "remove(Object)",
-          "removeAll(Collection<?>)",
-          "set(int, T)",
-          "subList(int, int)",
-          "size()",
-          "clear()",
-          "forEach(Consumer<? super T>)",
-          "isEmpty()",
-          "contains(Object)",
-          "iterator()",
-          "toArray()",
-          "toArray(T[])"
+        "kotlinx.coroutines.IncompleteStateBox": [],
+        "kotlinx.coroutines.InvokeOnCancel": [
+          "invoke(Throwable?)",
+          "toString()"
         ],
-        "net.darkhax.bookshelf.lib.WeightedSelector": [
-          "addEntry(T, int)",
-          "addEntry(WeightedSelector.WeightedEntry<T>)",
-          "removeEntry(WeightedSelector.WeightedEntry<T>)",
+        "kotlinx.coroutines.InvokeOnCancelling": [
+          "invoke(Throwable?)"
+        ],
+        "kotlinx.coroutines.InvokeOnCompletion": [
+          "invoke(Throwable?)"
+        ],
+        "kotlinx.coroutines.JobCancellationException": [
+          "fillInStackTrace()",
+          "createCopy()",
+          "toString()",
+          "equals(Any?)",
+          "hashCode()"
+        ],
+        "kotlinx.coroutines.JobImpl": [
+          "get()",
+          "complete()",
+          "completeExceptionally(Throwable)",
+          "handlesException()"
+        ],
+        "kotlinx.coroutines.JobKt": [
+          "Job(Job?)"
+        ],
+        "kotlinx.coroutines.JobKt__FutureKt": [],
+        "kotlinx.coroutines.JobKt__JobKt": [
+          "get()",
+          "Job(Job?)"
+        ],
+        "kotlinx.coroutines.JobNode": [
+          "get()",
+          "dispose()",
+          "toString()"
+        ],
+        "kotlinx.coroutines.JobSupport": [
+          "get()",
+          "set(value)",
+          "initParentJob(Job?)",
+          "loopOnState((Any?) -> Unit)",
+          "finalizeFinishingState(kotlinx.coroutines.JobSupport.Finishing, Any?)",
+          "getFinalRootCause(kotlinx.coroutines.JobSupport.Finishing, List<Throwable>)",
+          "addSuppressedExceptions(Throwable, List<Throwable>)",
+          "tryFinalizeSimpleState(Incomplete, Any?)",
+          "completeStateFinalization(Incomplete, Any?)",
+          "notifyCancelling(NodeList, Throwable)",
+          "cancelParent(Throwable)",
+          "start()",
+          "startInternal(Any?)",
+          "onStart()",
+          "getCancellationException()",
+          "invokeOnCompletion((Throwable?) -> Unit)",
+          "invokeOnCompletion(Boolean, Boolean, (Throwable?) -> Unit)",
+          "makeNode((Throwable?) -> Unit, Boolean)",
+          "addLastAtomic(Any, NodeList, JobNode)",
+          "promoteEmptyToNodeList(Empty)"
+        ],
+        "kotlinx.coroutines.LazyDeferredCoroutine": [
+          "onStart()"
+        ],
+        "kotlinx.coroutines.LazyStandaloneCoroutine": [
+          "onStart()"
+        ],
+        "kotlinx.coroutines.MainCoroutineDispatcher": [
+          "toString()",
+          "limitedParallelism(Int)",
+          "toStringInternalImpl()"
+        ],
+        "kotlinx.coroutines.NodeList": [
+          "get()",
+          "getString(String)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.NonCancellable": [
+          "get()",
+          "start()",
+          "join()",
+          "getCancellationException()",
+          "invokeOnCompletion((Throwable?) -> Unit)",
+          "invokeOnCompletion(Boolean, Boolean, (Throwable?) -> Unit)",
+          "cancel(CancellationException?)",
+          "attachChild(ChildJob)",
+          "toString()",
+          "plus(Job)"
+        ],
+        "kotlinx.coroutines.NonDisposableHandle": [
+          "get()",
+          "dispose()",
+          "childCancelled(Throwable)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.RemoveOnCancel": [
+          "invoke(Throwable?)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.ResumeAwaitOnCompletion": [
+          "invoke(Throwable?)"
+        ],
+        "kotlinx.coroutines.ResumeOnCompletion": [
+          "invoke(Throwable?)"
+        ],
+        "kotlinx.coroutines.ResumeUndispatchedRunnable": [
+          "run()"
+        ],
+        "kotlinx.coroutines.scheduling.CoroutineScheduler": [
+          "get()",
+          "addToGlobalQueue(Task)",
+          "parkedWorkersStackTopUpdate(kotlinx.coroutines.scheduling.CoroutineScheduler.Worker, Int, Int)",
+          "parkedWorkersStackPush(kotlinx.coroutines.scheduling.CoroutineScheduler.Worker)",
+          "parkedWorkersStackPop()",
+          "parkedWorkersStackNextIndex(kotlinx.coroutines.scheduling.CoroutineScheduler.Worker)",
+          "createdWorkers(Long)",
+          "blockingTasks(Long)",
+          "availableCpuPermits(Long)",
+          "incrementCreatedWorkers()",
+          "decrementCreatedWorkers()",
+          "incrementBlockingTasks()",
+          "decrementBlockingTasks()",
+          "tryAcquireCpuPermit()",
+          "releaseCpuPermit()",
+          "execute(Runnable)",
+          "close()",
+          "shutdown(Long)",
+          "dispatch(Runnable, TaskContext, Boolean)",
+          "createTask(Runnable, TaskContext)"
+        ],
+        "kotlinx.coroutines.scheduling.DefaultIoScheduler": [
+          "get()",
+          "execute(Runnable)",
+          "limitedParallelism(Int)",
+          "dispatch(CoroutineContext, Runnable)",
+          "dispatchYield(CoroutineContext, Runnable)",
+          "close()",
+          "toString()"
+        ],
+        "kotlinx.coroutines.scheduling.DefaultScheduler": [
+          "shutdown()",
+          "close()",
+          "toString()"
+        ],
+        "kotlinx.coroutines.scheduling.ExperimentalCoroutineDispatcher": [
+          "get()",
+          "constructor(Int, Int, String)",
+          "dispatch(CoroutineContext, Runnable)",
+          "dispatchYield(CoroutineContext, Runnable)",
+          "close()",
+          "toString()",
+          "blocking(Int)",
+          "limited(Int)",
+          "dispatchWithContext(Runnable, TaskContext, Boolean)",
+          "createScheduler()"
+        ],
+        "kotlinx.coroutines.scheduling.LimitingDispatcher": [
+          "get()",
+          "execute(Runnable)",
+          "close()",
+          "dispatch(CoroutineContext, Runnable)",
+          "dispatch(Runnable, Boolean)",
+          "dispatchYield(CoroutineContext, Runnable)",
+          "toString()",
+          "afterTask()"
+        ],
+        "kotlinx.coroutines.scheduling.NanoTimeSource": [
+          "nanoTime()"
+        ],
+        "kotlinx.coroutines.scheduling.SchedulerCoroutineDispatcher": [
+          "get()",
+          "createScheduler()",
+          "dispatch(CoroutineContext, Runnable)",
+          "dispatchYield(CoroutineContext, Runnable)",
+          "dispatchWithContext(Runnable, TaskContext, Boolean)",
+          "close()",
+          "usePrivateScheduler()",
+          "shutdown(Long)",
+          "restore()"
+        ],
+        "kotlinx.coroutines.scheduling.SchedulerTimeSource": [
+          "nanoTime()"
+        ],
+        "kotlinx.coroutines.scheduling.Task": [
+          "get()"
+        ],
+        "kotlinx.coroutines.scheduling.TaskContextImpl": [
+          "afterTask()"
+        ],
+        "kotlinx.coroutines.scheduling.TaskImpl": [
+          "run()",
+          "toString()"
+        ],
+        "kotlinx.coroutines.scheduling.UnlimitedIoScheduler": [
+          "dispatchYield(CoroutineContext, Runnable)",
+          "dispatch(CoroutineContext, Runnable)"
+        ],
+        "kotlinx.coroutines.scheduling.WorkQueue": [
+          "get()",
+          "poll()",
+          "add(Task, Boolean)",
+          "addLast(Task)",
+          "tryStealFrom(WorkQueue)",
+          "tryStealBlockingFrom(WorkQueue)",
+          "offloadAllWorkTo(GlobalQueue)",
+          "tryStealLastScheduled(WorkQueue, Boolean)",
+          "pollTo(GlobalQueue)",
+          "pollBuffer()"
+        ],
+        "kotlinx.coroutines.SelectAwaitOnCompletion": [
+          "invoke(Throwable?)"
+        ],
+        "kotlinx.coroutines.SelectJoinOnCompletion": [
+          "invoke(Throwable?)"
+        ],
+        "kotlinx.coroutines.selects.SelectBuilderImpl": [
+          "get()",
+          "set(value)",
+          "getStackTraceElement()",
+          "doResume(() -> Any?, () -> Unit)",
+          "resumeWith(Result<Any>)",
+          "resumeSelectWithException(Throwable)",
+          "getResult()",
+          "initCancellability()",
+          "handleBuilderException(Throwable)",
+          "disposeOnSelect(DisposableHandle)",
+          "doAfterSelect()",
+          "trySelect()",
+          "trySelectOther(PrepareOp?)",
+          "performAtomicTrySelect(AtomicDesc)",
+          "toString()",
+          "onTimeout(Long, (Continuation<Any>) -> Any?)"
+        ],
+        "kotlinx.coroutines.selects.SeqNumber": [
+          "next()"
+        ],
+        "kotlinx.coroutines.selects.UnbiasedSelectBuilderImpl": [
+          "handleBuilderException(Throwable)",
+          "initSelectResult()",
+          "onTimeout(Long, (Continuation<Any>) -> Any?)"
+        ],
+        "kotlinx.coroutines.StandaloneCoroutine": [
+          "handleJobException(Throwable)"
+        ],
+        "kotlinx.coroutines.stream.StreamFlow": [
+          "collect(FlowCollector<Any>)"
+        ],
+        "kotlinx.coroutines.SupervisorCoroutine": [
+          "childCancelled(Throwable)"
+        ],
+        "kotlinx.coroutines.SupervisorJobImpl": [
+          "childCancelled(Throwable)"
+        ],
+        "kotlinx.coroutines.sync.CancelSemaphoreAcquisitionHandler": [
+          "invoke(Throwable?)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.sync.Empty": [
+          "toString()"
+        ],
+        "kotlinx.coroutines.sync.MutexImpl": [
+          "get()",
+          "tryLock(Any?)",
+          "lock(Any?)",
+          "lockSuspend(Any?)",
+          "registerSelectClause2(SelectInstance<Any>, Any?, (Mutex, Continuation<Any>) -> Any?)",
+          "holdsLock(Any)",
+          "unlock(Any?)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.sync.SemaphoreImpl": [
+          "get()",
+          "tryAcquire()",
+          "acquire()",
+          "acquireSlowPath()",
+          "release()",
+          "addAcquireToQueue(CancellableContinuation<Unit>)",
+          "tryResumeNextFromQueue()"
+        ],
+        "kotlinx.coroutines.sync.SemaphoreSegment": [
+          "get()",
+          "get(Int)",
+          "set(Int, Any?)",
+          "cas(Int, Any?, Any?)",
+          "getAndSet(Int, Any?)",
+          "cancel(Int)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.test.TestCoroutineContext": [
+          "get()",
+          "fold(R, (R, Element) ->)",
+          "get(Key<E>)",
+          "minusKey(Key<*>)",
+          "now(TimeUnit)",
+          "advanceTimeBy(Long, TimeUnit)",
+          "advanceTimeTo(Long, TimeUnit)",
+          "triggerActions()",
+          "cancelAllActions()",
+          "assertUnhandledException(String, (Throwable) -> Boolean)",
+          "assertAllUnhandledExceptions(String, (Throwable) -> Boolean)",
+          "assertAnyUnhandledException(String, (Throwable) -> Boolean)",
+          "assertExceptions(String, (List<Throwable>) -> Boolean)",
+          "enqueue(Runnable)",
+          "postDelayed(Runnable, Long)",
+          "processNextEvent()",
+          "triggerActions(Long)",
+          "toString()",
+          "plus(CoroutineContext)"
+        ],
+        "kotlinx.coroutines.test.TimedRunnableObsolete": [
+          "run()",
+          "compareTo(TimedRunnableObsolete)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.ThreadLocalEventLoop": [
+          "get()",
+          "currentOrNull()",
+          "resetEventLoop()",
+          "setEventLoop(EventLoop)"
+        ],
+        "kotlinx.coroutines.ThreadState": [
+          "setup()",
+          "clearInterrupt()",
+          "invoke(Throwable?)",
+          "invalidState(Int)"
+        ],
+        "kotlinx.coroutines.TimeoutCancellationException": [
+          "createCopy()"
+        ],
+        "kotlinx.coroutines.TimeoutCoroutine": [
+          "run()",
+          "nameString()"
+        ],
+        "kotlinx.coroutines.Unconfined": [
+          "limitedParallelism(Int)",
+          "isDispatchNeeded(CoroutineContext)",
+          "dispatch(CoroutineContext, Runnable)",
+          "toString()"
+        ],
+        "kotlinx.coroutines.UndispatchedCoroutine": [
+          "saveThreadContext(CoroutineContext, Any?)",
+          "clearThreadContext()",
+          "afterResume(Any?)"
+        ],
+        "kotlinx.coroutines.UndispatchedMarker": [
+          "get()",
+          "fold(R, (R?, CoroutineContext.Element?) ->)",
+          "get(CoroutineContextKey<E>)",
+          "minusKey(CoroutineContextKey<?>)",
+          "plus(CoroutineContext)"
+        ],
+        "kotlinx.coroutines.YieldContext": [
+          "constructor()"
+        ],
+        "net.minecraftforge.fml.event.lifecycle.IModBusEvent": [],
+        "org.intellij.lang.annotations.JdkConstants": [],
+        "thedarkcolour.kotlinforforge.AutoKotlinEventBusSubscriber": [
+          "inject(ModContainer, ModFileScanData, ClassLoader)",
+          "registerTo(Any, Bus)"
+        ],
+        "thedarkcolour.kotlinforforge.eventbus.KotlinEventBus": [
+          "register(Any)",
+          "registerClass(Class<*>)",
+          "registerObject(Any)",
+          "typesFor(Class<*>, MutableSet<Class<*>>)",
+          "getDeclMethod(Class<*>, Method)",
+          "registerListener(Any, Method, Method)",
+          "register(Class<*>, Any, Method)",
+          "addToListeners(Any, Class<*>, EventPriority, IEventListener)",
+          "addListener(Consumer<T>)",
+          "addListener(EventPriority, Consumer<T>)",
+          "addListener(EventPriority, Boolean, Consumer<T>)",
+          "addListener(EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "addListener(EventPriority, (T) -> Boolean, Class<T>, Consumer<T>)",
+          "passCancelled(Boolean)",
+          "addGenericListener(Class<F>, Consumer<T>)",
+          "addGenericListener(Class<F>, EventPriority, Consumer<T>)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
+          "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
+          "reflectKotlinSAM(Consumer<*>)",
+          "passGenericCancelled(Class<F>, Boolean)"
+        ],
+        "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
+          "post(Event)"
+        ],
+        "thedarkcolour.kotlinforforge.eventbus.SpongeKotlinEventBusWrapper": [
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)"
+        ],
+        "thedarkcolour.kotlinforforge.forge.WhenMappings": [],
+        "thedarkcolour.kotlinforforge.forge.KDeferredRegister": [
+          "constructor(Class<Any>, String)",
+          "register(KotlinEventBus)",
+          "register(IEventBus)",
+          "registerObject(String, () -> T)",
+          "register(String, () -> T)",
           "getEntries()",
-          "getRandomEntry()",
-          "updateTotal()"
+          "addEntries(Register<Any>)"
         ],
-        "net.darkhax.bookshelf.network.NetworkHandler": [
-          "register(Class, Side)",
-          "sendToAll(IMessage)",
-          "sendTo(IMessage, EntityPlayerMP)",
-          "sendToAllAround(IMessage, World, BlockPos, double)",
-          "sendToAllAround(IMessage, TargetPoint)",
-          "sendToDimension(IMessage, int)",
-          "sendToServer(IMessage)"
+        "thedarkcolour.kotlinforforge.forge.LazySidedDelegate": [
+          "get()",
+          "getValue(Any?, KProperty<*>)"
         ],
-        "net.darkhax.bookshelf.network.SerializableMessage": [
-          "handleMessage(MessageContext)",
-          "onMessage(REQ, MessageContext)",
-          "fromBytes(ByteBuf)",
-          "toBytes(ByteBuf)",
-          "addIOHandler(Class<T>, SerializableMessage.Reader<T>, SerializableMessage.Writer<T>)"
+        "thedarkcolour.kotlinforforge.forge.ObjectHolderDelegate": [
+          "get()",
+          "getValue(Any?, KProperty<*>)",
+          "invoke()",
+          "accept(Predicate<ResourceLocation>)",
+          "component1()",
+          "component2()",
+          "copy(ResourceLocation, IForgeRegistry<*>)",
+          "toString()",
+          "hashCode()",
+          "equals(Any?)"
         ],
-        "net.darkhax.bookshelf.network.TileEntityMessage": [
-          "handleMessage(MessageContext)",
-          "getAction()"
+        "thedarkcolour.kotlinforforge.forge.SidedDelegate": [
+          "getValue(Any?, KProperty<*>)"
         ],
-        "net.darkhax.bookshelf.registry.IVariant": [
-          "getPrefix()"
+        "thedarkcolour.kotlinforforge.KotlinForForge": [],
+        "thedarkcolour.kotlinforforge.KotlinLanguageProvider": [
+          "name()",
+          "getFileVisitor()"
         ],
-        "net.darkhax.bookshelf.registry.RegistryHelper": [
-          "getTab()",
-          "setTab(CreativeTabs)",
-          "getModid()",
-          "getItems()",
-          "getBlocks()",
-          "registerBlock(Block, String)",
-          "registerBlock(Block, ItemBlock, String)",
-          "registerItem(Item, String)",
-          "registerItem(Item, ResourceLocation)",
-          "addLoot(ResourceLocation, String, String, int, Item)",
-          "addLoot(ResourceLocation, String, String, int, int, Item, List<LootCondition>, List<LootFunction>)",
-          "addLoot(ResourceLocation, LootBuilder)",
-          "onTableLoaded(LootTableLoadEvent)",
-          "registerColorHandler(Block, IBlockColor)",
-          "registerColorHandler(Item, IItemColor)",
-          "registerInventoryModel(Block)",
-          "registerInventoryModel(Block, String, String...)",
-          "registerInventoryModel(Block, int, String)",
-          "registerInventoryModel(Item)",
-          "registerInventoryModel(Item, String, String...)"
+        "thedarkcolour.kotlinforforge.KotlinModContainer": [
+          "onEventFailed(IEventBus, Event, Array<IEventListener>, Int, Throwable)",
+          "constructMod()",
+          "dispatchConfigEvent(ModConfigEvent)",
+          "matches(Any?)",
+          "getMod()",
+          "setupTriggerMap(MutableMap<ModLoadingStage, Any>)",
+          "afterEvent(Any)",
+          "fireEvent(Any)",
+          "createTrigger((Any) -> Unit, (Any) -> Unit)"
         ],
-        "net.darkhax.bookshelf.registry.RegistryListener": [],
-        "net.darkhax.bookshelf.util.AnnotationUtils": [
-          "getData(Class<A>)",
-          "getData(ASMDataTable, Class<A>)",
-          "getAnnotatedClasses(Class<A>)",
-          "getAnnotatedClasses(ASMDataTable, Class<A>)",
-          "getAnnotatedFields(Collection<Class<?>>, Class<A>)",
-          "getAnnotations(Class<A>, Class<T>)",
-          "getAnnotations(ASMDataTable, Class<A>, Class<T>)"
-        ],
-        "net.darkhax.bookshelf.util.BannerUtils": [
-          "createBanner(EnumDyeColor, NBTTagList)",
-          "createPatternList(BannerUtils.BannerLayer...)",
-          "addBasicPattern(String, String)",
-          "addCraftingPattern(String, String, ItemStack)",
-          "addDyePattern(String, String, String, String, String)"
-        ],
-        "net.darkhax.bookshelf.util.baubles.BaubleUtils": [
-          "hasItem(EntityPlayer, Item, int)",
-          "getBaublesFromPlayer(EntityPlayer, Item, int)",
-          "getBaubleType(Item, int)",
-          "getBauble(EntityPlayer, BaubleType)",
-          "getBauble(EntityPlayer, int)",
-          "hasBauble(EntityPlayer, ItemStack, BaubleType)",
-          "equipBauble(EntityPlayer, ItemStack, int)"
-        ],
-        "net.darkhax.bookshelf.util.baubles.ItemBauble": [],
-        "net.darkhax.bookshelf.util.BlockUtils": [
-          "isOre(ItemStack, boolean)",
-          "isFluid(Block)"
-        ],
-        "net.darkhax.bookshelf.util.ClassUtils": [
-          "compareClasses(Class<?>, Class<?>)",
-          "compareObjectToClass(Object, Class<?>)",
-          "getClassFromString(String)"
-        ],
-        "net.darkhax.bookshelf.util.CollectionUtils": [
-          "toDouble(float[])",
-          "toFloat(double[])",
-          "toString(ResourceLocation[])",
-          "toIdentifier(String[])",
-          "toIdentifier(Item[])",
-          "toIdentifier(Block[])",
-          "toItem(ResourceLocation[])",
-          "toBlock(ResourceLocation[])",
-          "toString(ItemStack[])",
-          "toStack(String[])",
-          "toInt(Color)",
-          "toColor(int[])",
-          "toInt(BlockPos)",
-          "toPos(int[])"
-        ],
-        "net.darkhax.bookshelf.util.CraftingUtils": [
-          "getRecipeForMatrix(InventoryCrafting, World)",
-          "getCurrentCraftingRecipe(EntityPlayer)",
-          "getCurrentCraftingOutput(EntityPlayer)",
-          "getCraftingContainer(EntityPlayer)",
-          "getOwner(IRecipe)",
-          "getRecipeOwners()",
-          "getShapedRecipes(ItemStack)",
-          "getShapedOreRecipe(ItemStack)",
-          "getShapelessRecipes(ItemStack)",
-          "getShapelessOreRecipe(ItemStack)",
-          "getAnyRecipe(ItemStack)",
-          "getRecipesForStack(ItemStack, Predicate<IRecipe>)",
-          "createConversionRecipes(ItemStack, ItemStack)",
-          "validateCrafting(Object)"
-        ],
-        "net.darkhax.bookshelf.util.EnchantmentUtils": [
-          "isItemEnchantable(ItemStack)",
-          "getExperienceFromLevel(int)",
-          "getExperienceToLevel(int, int)",
-          "getLevelsFromExperience(int)",
-          "areEnchantmentsCompatible(Enchantment, Enchantment)",
-          "getExpForDisplay(int)"
-        ],
-        "net.darkhax.bookshelf.util.EntityUtils": [
-          "getDistanceFromEntity(Entity, Entity)",
-          "getDistaceFromPos(Entity, BlockPos)",
-          "pushTowards(Entity, EnumFacing, double)",
-          "pushTowards(Entity, BlockPos, double)",
-          "pushTowards(Entity, Entity, double)",
-          "pushTowardsDirection(Entity, EnumFacing, double)",
-          "areEntitiesCloseEnough(Entity, Entity, double)",
-          "getEntitiesInArea(Class<? extends Entity>, World, BlockPos, int)",
-          "getEquipmentSlot(int)",
-          "isWearingFullSet(EntityLivingBase, Class<Item>)"
-        ],
-        "net.darkhax.bookshelf.util.GameUtils": [
-          "isClient()"
-        ],
-        "net.darkhax.bookshelf.util.GuiUtils": [
-          "addPlayerInvToContainer(Container, InventoryPlayer)"
-        ],
-        "net.darkhax.bookshelf.util.MathsUtils": [
-          "isInRange(double, double, double)",
-          "getDistanceBetweenPoints(Vec3d, Vec3d)",
-          "round(double, int)",
-          "nextIntInclusive(int, int)",
-          "rayTrace(EntityPlayer, double)",
-          "tryPercentage(double)",
-          "getRandomColor()",
-          "getAverage(int, int)",
-          "ticksToTime(int)"
-        ],
-        "net.darkhax.bookshelf.util.MathUtils": [],
-        "net.darkhax.bookshelf.util.ModUtils": [
-          "getModName(Impl<?>)",
-          "getModName(Entity)",
-          "getModContainer(String)",
-          "getModName(String)",
-          "getTabFromLabel(String)"
-        ],
-        "net.darkhax.bookshelf.util.NBTUtils": [
-          "setGenericNBTValue(NBTTagCompound, String, Object)",
-          "writeInventoryToNBT(NBTTagCompound, InventoryBasic)",
-          "readInventoryFromNBT(NBTTagCompound, InventoryBasic)",
-          "getStoredItems(NBTTagCompound, int)",
-          "getDeepTagCompound(NBTTagCompound, String[])"
-        ],
-        "net.darkhax.bookshelf.util.NumericUtils": [
-          "isKeyCodeNumeric(int)",
-          "isChristmasTime()",
-          "isHalloweenTime()",
-          "isSpecialDay(int, int)",
-          "isSpecialDay(int, int, int)"
-        ],
-        "net.darkhax.bookshelf.util.OreDictUtils": [
-          "initAdditionalVanillaEntries()"
-        ],
-        "net.darkhax.bookshelf.util.ParticleUtils": [
-          "spawnDigParticles(ParticleManager, IBlockState, World, BlockPos, EnumFacing)",
-          "spawnBreakParticles(ParticleManager, IBlockState, World, BlockPos)",
-          "spawnParticleRing(World, EnumParticleTypes, double, double, double, double, double, double, double)",
-          "spawnPercentageParticleRing(World, EnumParticleTypes, float, double, double, double, double, double, double, double)"
-        ],
-        "net.darkhax.bookshelf.util.PlayerUtils": [
-          "canPlayerSleep(EntityPlayer)",
-          "isPlayerReal(EntityPlayer)",
-          "getPlayerFromUUID(World, UUID)",
-          "getPlayerNameFromUUID(UUID)",
-          "getUUIDFromName(String)",
-          "fixStrippedUUID(String)",
-          "getItemCountInInv(EntityPlayer, Item)",
-          "playerHasItem(EntityPlayer, Item, int)",
-          "getStacksFromPlayer(EntityPlayer, Item, int)",
-          "getClientPlayer()",
-          "sendSpamlessMessage(int, ITextComponent)",
-          "isPlayerInGame()",
-          "getClientUUID()"
-        ],
-        "net.darkhax.bookshelf.util.RenderUtils": [
-          "registerPlayerLayer(LayerRenderer<EntityLivingBase>)",
-          "getSteveRenderer()",
-          "getAlexRenderer()",
-          "getPlayerRenderer(String)",
-          "setPlayerTexture(Type, AbstractClientPlayer, ResourceLocation)",
-          "downloadResourceLocation(String, ResourceLocation, ResourceLocation, IImageBuffer)",
-          "downloadResource(String, ResourceLocation, ResourceLocation, IImageBuffer)",
-          "getCamera(Entity, float)",
-          "translateAgainstPlayer(BlockPos, boolean)",
-          "getParticleTexture(ItemStack)",
-          "getSprite(ItemStack)",
-          "getBakedModel(ModelResourceLocation)",
-          "getBakedModel(ItemStack)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double, double, double, double)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double, double, double, double, int)",
-          "addTexturedQuad(VertexBuffer, TextureAtlasSprite, double, double, double, double, double, double, EnumFacing, int, int)",
-          "addTextureQuad(VertexBuffer, TextureAtlasSprite, double, double, double, double, double, double, EnumFacing, int, int, int, int, int, int)",
-          "setupRenderState(double, double, double)",
-          "setupRenderState()"
-        ],
-        "net.darkhax.bookshelf.util.SkullUtils": [
-          "createSkull(EntityPlayer)",
-          "createSkull(String, UUID)",
-          "createSkull(SkullUtils.MHFAccount)",
-          "createSkull(SkullUtils.Player)",
-          "createSkull(String)",
-          "getWitherSkeletonSkull()",
-          "getZombieSkull()",
-          "getCreeperSkull()",
-          "getSteveSkull()",
-          "getSkeletonSkull()",
-          "getMHFSkulls()",
-          "getPlayerSkulls()"
-        ],
-        "net.darkhax.bookshelf.util.StackUtils": [
-          "prepareStackTag(ItemStack)",
-          "prepareStack(ItemStack)",
-          "setLore(ItemStack, String[])",
-          "writeStackToString(ItemStack)",
-          "createStackFromString(String)",
-          "compareStackToOreName(ItemStack, String)",
-          "doStacksShareOreName(ItemStack, ItemStack)",
-          "areStacksSimilar(ItemStack, ItemStack)",
-          "areStacksSimilarWithSize(ItemStack, ItemStack)",
-          "writePotionEffectsToStack(ItemStack, PotionEffect[])",
-          "writeStackToTag(ItemStack, NBTTagCompound, String)",
-          "decreaseStackSize(ItemStack, int)",
-          "areStacksEqual(ItemStack, ItemStack, boolean)",
-          "isStackInArray(ItemStack, boolean, ItemStack...)",
-          "copyStackWithSize(ItemStack, int)",
-          "getThingByName(String)",
-          "getBlockFromStack(ItemStack)",
-          "consumeStack(ItemStack)",
-          "dropStackInWorld(World, BlockPos, ItemStack)",
-          "createStackFromTileEntity(TileEntity)"
-        ],
-        "net.darkhax.bookshelf.util.TextUtils": [
-          "wrapStringToList(String, int, boolean, List<String>)",
-          "wrapStringToListWithFormat(String, int, boolean, List<String>, TextFormatting)",
-          "stripFormatting(String)",
-          "getValueByCharacter(char)",
-          "getValueByName(String)",
-          "formatString(String, TextUtils.ChatFormat)"
-        ],
-        "net.darkhax.bookshelf.world.loot.conditions.BiomeSpecific": [
-          "func_186618_a(Random, LootContext)"
-        ],
-        "net.darkhax.bookshelf.world.loot.functions.SetColor": [
-          "func_186553_a(ItemStack, Random, LootContext)"
+        "thedarkcolour.kotlinforforge.KotlinModLoadingContext": [
+          "getKEventBus()",
+          "getEventBus()"
         ]
       },
-      "sampleCount": 80
+      "sampleCount": 432
     }
   },
-  "classCount": 77,
-  "methodCount": 436
+  "classCount": 185,
+  "methodCount": 759
 }

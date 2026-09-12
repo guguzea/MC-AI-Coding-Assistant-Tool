@@ -231,12 +231,12 @@
       {
         "title": "Introduction",
         "level": 2,
-        "summary": "Adding a basic item is one of the first steps in modding. You're going to need to create an `class_1792` object, register it, and give it a texture."
+        "summary": "Adding a basic item is one of the first steps in modding. You're going to need to create an `net/minecraft/item/Item` object, register it, and give it a texture."
       },
       {
         "title": "Create an Item instance (before 1.21.2)",
         "level": 2,
-        "summary": ":!: If you're in version 1.21.2 or above, please directly read [#Creating Items in 1.21.2+](#Creating Items in 1.21.2+). First, create an instance of `class_1792`."
+        "summary": ":!: If you're in version 1.21.2 or above, please directly read [#Creating Items in 1.21.2+](#Creating Items in 1.21.2+). First, create an instance of `net/minecraft/item/Item`."
       },
       {
         "title": "Register the item (before 1.21.2)",

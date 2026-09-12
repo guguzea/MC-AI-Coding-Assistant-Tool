@@ -79,7 +79,7 @@ The values themselves can be obtained using `ConfigValue#get`. The values are ad
 - **Range Values**
 
 Description: Value must be between the defined bounds
-- Class Type: `Comparable`
+- Class Type: `Comparable<T>`
 - Method Name: `#defineInRange`
 - Additional Components:
 
@@ -113,7 +113,7 @@ A collection of the allowed values the configuration can be
 **List Values**
 
 - Description: Value is a list of entries
-- Class Type: `List`
+- Class Type: `List<T>`
 - Method Name: `#defineList`, `#defineListAllowEmpty` if list can be empty
 - Additional Components:
 
@@ -127,7 +127,7 @@ A validator to make sure a deserialized element from the list is valid
 **Enum Values**
 
 - Description: An enum value in the supplied collection
-- Class Type: `Enum`
+- Class Type: `Enum<T>`
 - Method Name: `#defineEnum`
 - Additional Components:
 

@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "resources/server/recipes/custom"
 url: "https://docs.neoforged.net/docs/1.20.6/resources/server/recipes/custom/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:04.927Z"
+fetchedAt: "2026-09-12T12:01:58.355Z"
 ---
 # Custom Recipes
 

@@ -4,7 +4,7 @@ A tag is, simply put, a list of registered objects of the same type. They are lo
 
 Any [registry](/docs/1.21.5/concepts/registries) can have tag files - while blocks and items are the most common use cases, other registries such as fluids, entity types or damage types often utilize tags as well. You can also create your own tags if you need them.
 
-Tags are located at `data//tags//.json` for Minecraft registries, and `data//tags///.json` for non-Minecraft registries. For example, to modify the `minecraft:planks` item tag, you would place your tag file at `data/minecraft/tags/item/planks.json`.
+Tags are located at `data/<tag_namespace>/tags/<registry_path>/<tag_path>.json` for Minecraft registries, and `data/<tag_namespace>/tags/<registry_namespace>/<registry_path>/<tag_path>.json` for non-Minecraft registries. For example, to modify the `minecraft:planks` item tag, you would place your tag file at `data/minecraft/tags/item/planks.json`.
 
 > **Info**
 > info
@@ -96,7 +96,7 @@ Naming the tag itself also has some conventions to follow:
 
 ## Using Tags
 
-To reference tags in code, you must create a `TagKey`, where `T` is the type of tag (`Block`, `Item`, `EntityType`, etc.), using a [registry key](/docs/1.21.5/misc/resourcelocation#resourcekeys) and a [resource location](/docs/1.21.5/misc/resourcelocation):
+To reference tags in code, you must create a `TagKey<T>`, where `T` is the type of tag (`Block`, `Item`, `EntityType<?>`, etc.), using a [registry key](/docs/1.21.5/misc/resourcelocation#resourcekeys) and a [resource location](/docs/1.21.5/misc/resourcelocation):
 
 ```java
 
@@ -169,7 +169,7 @@ HolderSet<Block> blockTag = BuiltInRegistries.acquireBootstrapRegistrationLookup
 
 ## Datagen
 
-Like many other JSON files, tags can be [datagenned](/docs/1.21.5/resources/#data-generation). Each kind of tag has its own datagen base class - one class for block tags, one for item tags, etc. -, and as such, we need one class for each kind of tag as well. All of these classes extend from the `TagsProvider` base class, with `T` again being the type of the tag (`Block`, `Item`, etc.) The following table shows a list of tag providers for different objects:
+Like many other JSON files, tags can be [datagenned](/docs/1.21.5/resources/#data-generation). Each kind of tag has its own datagen base class - one class for block tags, one for item tags, etc. -, and as such, we need one class for each kind of tag as well. All of these classes extend from the `TagsProvider<T>` base class, with `T` again being the type of the tag (`Block`, `Item`, etc.) The following table shows a list of tag providers for different objects:
 
 | Type | Tag Provider Class |
 | --- | --- |
@@ -190,7 +190,7 @@ Like many other JSON files, tags can be [datagenned](/docs/1.21.5/resources/#dat
 | Structure | StructureTagsProvider |
 | WorldPreset | WorldPresetTagsProvider |
 
-Of note is the `IntrinsicHolderTagsProvider` class, which is a subclass of `TagsProvider` and a common superclass for `BlockTagsProvider`, `ItemTagsProvider`, `FluidTagsProvider`, `EntityTypeTagsProvider`, and `GameEventTagsProvider`. These classes (from now on called intrinsic providers for simplicity) have some additional functionality for generation that will be outlined in a moment.
+Of note is the `IntrinsicHolderTagsProvider<T>` class, which is a subclass of `TagsProvider<T>` and a common superclass for `BlockTagsProvider`, `ItemTagsProvider`, `FluidTagsProvider`, `EntityTypeTagsProvider`, and `GameEventTagsProvider`. These classes (from now on called intrinsic providers for simplicity) have some additional functionality for generation that will be outlined in a moment.
 
 For the sake of example, let's assume that we want to generate block tags. (All other classes work the same with their respective tag types.)
 
@@ -388,7 +388,7 @@ public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
 
 ```
 
-If desirable and applicable, you can also extend `IntrinsicHolderTagsProvider` instead of `TagsProvider`, allowing you to pass in objects directly rather than just their resource keys. This additionally requires a function parameter that returns a resource key for a given object. Using attribute tags as an example:
+If desirable and applicable, you can also extend `IntrinsicHolderTagsProvider<T>` instead of `TagsProvider<T>`, allowing you to pass in objects directly rather than just their resource keys. This additionally requires a function parameter that returns a resource key for a given object. Using attribute tags as an example:
 
 ```java
 
@@ -427,5 +427,5 @@ public class MyAttributeTagsProvider extends IntrinsicHolderTagsProvider<Attribu
 > **Info**
 > info
 
-`TagsProvider` also exposes the `#getOrCreateRawBuilder` method, returning a `TagBuilder`. A `TagBuilder` allows adding raw `ResourceLocation`s to a tag, which can be useful in some scenarios. The `TagsProvider.TagAppender` class, which is returned by `TagsProvider#tag`, is simply a wrapper around `TagBuilder`.
+`TagsProvider` also exposes the `#getOrCreateRawBuilder` method, returning a `TagBuilder`. A `TagBuilder` allows adding raw `ResourceLocation`s to a tag, which can be useful in some scenarios. The `TagsProvider.TagAppender<T>` class, which is returned by `TagsProvider#tag`, is simply a wrapper around `TagBuilder`.
 

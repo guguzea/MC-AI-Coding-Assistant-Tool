@@ -4,7 +4,7 @@ version: "1.21.10"
 pageId: "rendering/particles"
 url: "https://docs.neoforged.net/docs/1.21.10/rendering/particles/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:01:13.946Z"
+fetchedAt: "2026-09-12T12:07:57.736Z"
 ---
 # Client Particles
 

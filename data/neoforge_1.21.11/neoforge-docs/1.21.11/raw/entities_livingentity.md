@@ -4,7 +4,7 @@ version: "1.21.11"
 pageId: "entities/livingentity"
 url: "https://docs.neoforged.net/docs/1.21.11/entities/livingentity/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:01:39.349Z"
+fetchedAt: "2026-09-12T12:08:55.143Z"
 ---
 # Living Entities, Mobs & Players
 

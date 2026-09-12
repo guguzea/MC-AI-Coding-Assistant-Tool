@@ -140,6 +140,13 @@ function isFabric26_2Line(v: string): boolean {
   return v === "26.2" || v.startsWith("26.2.");
 }
 
+/**
+ * 26.2 线没有 `data/fabric_26.2` 主文档树（禁止克隆一棵冒充）。26.2 查询的正文
+ * 实际取自 `data/fabric_porting/` 移植旁路 + 最近已建档主树 `fabric_26.1.2`，
+ * 所以返回体的 resolvedVersion / source_version 必须是这个档位，不能谎报 26.2。
+ */
+const FABRIC_262_SOURCE_VERSION = "26.1.2";
+
 function detectFabricDocsTopic(query: string): "networking" | "mixin" | "datagen" | null {
   const q = query.toLowerCase();
   if (/network/.test(q)) return "networking";
@@ -418,7 +425,9 @@ export async function searchFabricDocs(
       if (isFabric26_2Line(requested)) {
         const portingHits = searchFabricPortingPages(query, version);
         const extraWarn =
-          "无 fabric_26.2 主文档树；26.2 移植页是独立旁路（source=porting-extra），26.1.2 develop_porting_index 是到 26.1。";
+          `无 fabric_26.2 主文档树；26.2 移植页是独立旁路（source=porting-extra），` +
+          `正文实际取自 data/fabric_porting + 最近已建档主树 fabric_${FABRIC_262_SOURCE_VERSION}` +
+          `（该档 develop_porting_index 是 1.21.11→26.1）。禁止当 26.2 本版专属正文抄写。`;
         return {
           content: [
             {
@@ -429,12 +438,17 @@ export async function searchFabricDocs(
                   query,
                   version: requested,
                   requestedVersion: requested,
-                  resolvedVersion: version,
-                  versionFallback: false,
+                  // 本分支不查主文档树：resolvedVersion 必须是实际取内容的档位，不是请求的 26.2
+                  resolvedVersion: FABRIC_262_SOURCE_VERSION,
+                  versionFallback: true,
                   fallback: true,
                   platform: "fabric",
                   source: "porting-extra",
                   sourceUsed: "porting-extra",
+                  // provenance 三件套（字段名与 quilt 回退路径一致）：平台仍是 Fabric，
+                  // 但不是请求版本自己的正文 —— 调用方必须看 sourceIsRequestedVersion。
+                  sourcePlatform: "fabric",
+                  sourceIsRequestedVersion: false,
                   warning: extraWarn,
                   total: portingHits.length,
                   results: portingHits,
@@ -575,6 +589,11 @@ export async function searchFabricDocs(
               versionFallback: requested !== version,
               wikiFallback: usedWikiFallback,
               platform: "fabric",
+              // provenance 字段名与 quilt/neoforge 回退路径一致：sourcePlatform 恒为平台族名
+              // （fabric-wiki 只是语料，由 wikiFallback / sourceUsed 表达）；
+              // sourceIsRequestedVersion=false 覆盖「版本折叠（26.1→26.1.2）」与「wiki 兜底」两种非本版正文。
+              sourcePlatform: "fabric",
+              sourceIsRequestedVersion: requested === version && !usedWikiFallback,
               source: resolvedSource,
               sourceUsed: usedWikiFallback ? "fabric-wiki" : resolvedSource,
               fabricDocsEmpty: docsEmpty || undefined,

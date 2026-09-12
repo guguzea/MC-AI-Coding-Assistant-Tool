@@ -32,6 +32,8 @@ const TIMEOUT_MS = 15000; // 每个请求 15s 超时
 const CONCURRENCY = 4;
 const USER_AGENT = "MC-AI-Coding-Assistant-Tool/build-lib-manifest (repo: MC_skill)";
 const TYPE_RANK = { release: 0, beta: 1, alpha: 2 };
+/** sha512 字段只装真 128 位十六进制；缺 sha512 的构件不可校验，不入清单 */
+const SHA512_RE = /^[0-9a-f]{128}$/i;
 
 /* ------------------------------ frontmatter ------------------------------ */
 
@@ -218,7 +220,9 @@ function buildEntries(versions, modId) {
             modId,
             fileName: file.filename || "",
             url: file.url || "",
-            sha512: hashes.sha512 || hashes.sha256 || "",
+            // 只接受真 sha512：旧写法 `hashes.sha512 || hashes.sha256` 会把 64 位 sha256 塞进本字段，
+            // 而下游 batch-decompile.mjs 用 sha512OfFile() 比它（缓存命中判定 + 下载后校验）⇒ 永不匹配、反复重下。
+            sha512: SHA512_RE.test(hashes.sha512 || "") ? hashes.sha512 : "",
             versionType: type,
             versionNumber: v.version_number || "",
             rank,
@@ -228,7 +232,13 @@ function buildEntries(versions, modId) {
       }
     }
   }
-  return [...picked.values()]
+  const usable = [];
+  const unverifiable = [];
+  for (const e of picked.values()) (e.sha512 ? usable : unverifiable).push(e);
+  if (unverifiable.length > 0) {
+    console.warn(`[build-lib-manifest] ${modId}: 丢弃 ${unverifiable.length} 个无 sha512 的构件（首个 ${unverifiable[0].fileName}）——下游按 sha512 校验，留着必然下载失败`);
+  }
+  return usable
     .sort((a, b) => a.gameVersion.localeCompare(b.gameVersion) || a.loader.localeCompare(b.loader))
     .map(({ rank, published, ...entry }) => entry);
 }

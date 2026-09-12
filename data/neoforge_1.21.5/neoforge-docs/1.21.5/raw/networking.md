@@ -4,7 +4,7 @@ version: "1.21.5"
 pageId: "networking"
 url: "https://docs.neoforged.net/docs/1.21.5/networking/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:52:11.755Z"
+fetchedAt: "2026-09-12T12:05:12.017Z"
 ---
 # Networking
 

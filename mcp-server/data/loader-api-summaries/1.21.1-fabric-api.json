@@ -16,7 +16,7 @@
     "outputDirHint": "$MC_SKILL_CACHE/loader-api-src/1.21.1-fabric-api"
   },
   "classCount": 1159,
-  "fqcnIndexCount": 1062,
+  "fqcnIndexCount": 1061,
   "fqcnIndex": [
     "net.fabricmc.fabric.api.event.AutoInvokingEvent",
     "net.fabricmc.fabric.api.event.Event",
@@ -992,7 +992,6 @@
     "net.fabricmc.fabric.mixin.tag.TagEntryAccessor",
     "net.fabricmc.fabric.mixin.tag.TagFileMixin",
     "net.fabricmc.fabric.mixin.tag.TagGroupLoaderMixin",
-    "net.fabricmc.fabric.mixin.tag.package-info",
     "net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler",
     "net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering",
     "net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext",

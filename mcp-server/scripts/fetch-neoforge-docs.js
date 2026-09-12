@@ -204,18 +204,14 @@ function htmlToMarkdown(html, pageHref, version) {
       if (!attrs.includes("prism-code")) return match; // Not a highlighted code block
       const langMatch = attrs.match(/language-(\w+)/);
       const lang = langMatch ? langMatch[1] : "";
+      // 实体解码一律推迟到 htmlToMarkdown 末尾的唯一一次 decode：
+      // 若在中间阶段把 &lt;/&gt; 还原成尖括号，后续的剥标签正则
+      // (/<[^>]+>/g) 会把 Java 泛型（如 List<ItemStack>）当 HTML 标签吃掉。
       let code = codeContent
         .replace(/<code[^>]*>/gi, "")
         .replace(/<\/code>/gi, "")
         .replace(/<span[^>]*>/gi, "")
         .replace(/<\/span>/gi, "")
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">")
-        .replace(/&amp;/g, "&")
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .replace(/&#x27;/g, "'")
-        .replace(/&nbsp;/g, " ")
         .trim();
       return `\n\`\`\`${lang}\n${code}\n\`\`\`\n`;
     }
@@ -225,9 +221,6 @@ function htmlToMarkdown(html, pageHref, version) {
   article = article.replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/gi, (_, code) => {
     const c = code
       .replace(/<[^>]+>/g, "")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/&amp;/g, "&")
       .trim();
     return `\n\`\`\`\n${c}\n\`\`\`\n`;
   });
@@ -246,9 +239,6 @@ function htmlToMarkdown(html, pageHref, version) {
     const body = content.replace(/<p[^>]*class="[^"]*admonition-title[^"]*"[^>]*>[\s\S]*?<\/p>/i, "");
     const bodyMd = body
       .replace(/<[^>]+>/g, "")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/&amp;/g, "&")
       .trim();
     return `\n> **${title}**\n${bodyMd.split("\n").map(l => l.trim() ? `> ${l}` : ">").join("\n")}\n`;
   });
@@ -319,7 +309,9 @@ function htmlToMarkdown(html, pageHref, version) {
     return `*${text}*`;
   });
   article = article.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, (_, content) => {
-    const text = content.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+    // 只剥真正的嵌套标签，保持 &lt;/&gt; 实体不解码：
+    // 若在此处提前解码出 `<Type>` 字面量，后面的 <p>/<li> 剥标签正则会把它当 HTML 标签吃掉。
+    const text = content.replace(/<[^>]+>/g, "");
     return `\`${text}\``;
   });
   article = article.replace(/<br\s*\/?>/gi, "\n");
@@ -373,9 +365,8 @@ function convertLists(text) {
       .filter((_, i) => i % 2 === 1);
     const items = lines.map(li => {
       let item = li.trim();
-      // Strip remaining HTML tags
+      // Strip remaining HTML tags（实体保持不解码，统一由末尾 final decode 还原）
       item = item.replace(/<[^>]+>/g, "");
-      item = item.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
       return `- ${item}`;
     });
     return `\n${items.join("\n")}\n`;

@@ -4,7 +4,7 @@ version: "1.21.1"
 pageId: "gettingstarted"
 url: "https://docs.neoforged.net/docs/1.21.1/gettingstarted/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:53:05.409Z"
+fetchedAt: "2026-09-12T12:02:03.695Z"
 ---
 # Getting Started with NeoForge
 
@@ -56,7 +56,7 @@ Only edit the `build.gradle` and `settings.gradle` files if you know what you ar
 
 ## Building and Testing Your Mod
 
-To build your mod, run `gradlew build`. This will output a file in `build/libs` with the name `-.jar`. `` and `` are properties set by the `build.gradle` and default to the `mod_id` and `mod_version` values in the `gradle.properties` file, respectively; this can be changed in the `build.gradle` if desired. The resulting JAR file can then be placed in the `mods` folder of a NeoForge-enabled Minecraft setup, or uploaded to a mod distribution platform.
+To build your mod, run `gradlew build`. This will output a file in `build/libs` with the name `<archivesBaseName>-<version>.jar`. `<archivesBaseName>` and `<version>` are properties set by the `build.gradle` and default to the `mod_id` and `mod_version` values in the `gradle.properties` file, respectively; this can be changed in the `build.gradle` if desired. The resulting JAR file can then be placed in the `mods` folder of a NeoForge-enabled Minecraft setup, or uploaded to a mod distribution platform.
 
 To run your mod in a test environment, you can either use the generated run configurations or use the associated tasks (e.g. `gradlew runClient`). This will launch Minecraft from the corresponding runs directory (e.g. `runs/client` or `runs/server`), along with any source sets specified. The default MDK includes the `main` source set, so any code written in `src/main/java` will be applied.
 

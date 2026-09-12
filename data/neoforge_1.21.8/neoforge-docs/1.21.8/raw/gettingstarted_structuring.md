@@ -4,7 +4,7 @@ version: "1.21.8"
 pageId: "gettingstarted/structuring"
 url: "https://docs.neoforged.net/docs/1.21.8/gettingstarted/structuring/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:50:48.637Z"
+fetchedAt: "2026-09-12T12:05:47.372Z"
 ---
 # Structuring Your Mod
 
@@ -59,7 +59,6 @@ As such, your top level package should be something that you own: a domain, emai
 
 | Type | Value | Top-Level Package |
 | --- | --- | --- |
-| Type | Value | Top-Level Package |
 | Domain | example.com | com.example |
 | Subdomain | example.github.io | io.github.example |
 | Email | [email protected] | com.gmail.example |

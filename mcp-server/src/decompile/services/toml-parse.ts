@@ -2,7 +2,7 @@
  * 极简 TOML 解析（覆盖 mods.toml / neoforge.mods.toml 所需子集）。
  *
  * 支持：注释、顶层 key = value、[table] / [[array-of-tables]] 段；
- * 值仅需字符串/数字/布尔（引号串原样保留）。不做完整 TOML 规范。
+ * 值仅需字符串/数字/布尔（引号串原样保留）+ 多行字符串 `''' … '''` / `""" … """`（含同行闭合）。不做完整 TOML 规范。
  */
 
 interface TomlRow {
@@ -115,11 +115,65 @@ export function parseTomlValue(raw: string): string {
   return v;
 }
 
-function parseTomlRows(text: string): { sections: Map<string, TomlRow[]> } {
-  const sections = new Map<string, TomlRow[]>();
-  let current: string | null = null;
+const MULTILINE_OPEN = /^\s*('''|""")/;
 
-  for (const rawLine of text.split(/\r?\n/)) {
+/** 多行基本字符串（"""）：先剥「行尾反斜杠续行」，再按 TOML 转义解码；字面字符串（'''）不解释转义。 */
+function finalizeMultilineTomlValue(delim: string, content: string): string {
+  if (delim === "'''") return content;
+  return unescapeTomlBasicString(content.replace(/\\\n[ \t]*/g, ""));
+}
+
+/**
+ * 从 `=` 右侧原始文本起读取多行字符串值。
+ *
+ * 返回 null = 该值不是多行字面量（交回单行路径）。未闭合一律抛错，不静默跳过。
+ */
+function readMultilineTomlValue(
+  rawTail: string,
+  lines: string[],
+  index: number
+): { value: string; nextIndex: number } | null {
+  const open = MULTILINE_OPEN.exec(rawTail);
+  if (!open) return null;
+  const delim = open[1];
+  const afterOpen = rawTail.slice(open[0].length);
+
+  const closeSameLine = afterOpen.indexOf(delim);
+  if (closeSameLine !== -1) {
+    return {
+      value: finalizeMultilineTomlValue(delim, afterOpen.slice(0, closeSameLine)),
+      nextIndex: index,
+    };
+  }
+
+  // 定界符后紧跟的首个换行不属于内容；同一行定界符后已有文字时该文字是内容起点。
+  const parts: string[] = afterOpen.trim() === "" ? [] : [afterOpen];
+  let closedAt = -1;
+  for (let j = index + 1; j < lines.length; j++) {
+    const closeAt = lines[j].indexOf(delim);
+    if (closeAt === -1) {
+      parts.push(lines[j]);
+      continue;
+    }
+    parts.push(lines[j].slice(0, closeAt));
+    closedAt = j;
+    break;
+  }
+  if (closedAt === -1) throw new Error("TOML_MULTILINE_UNTERMINATED");
+  return {
+    value: finalizeMultilineTomlValue(delim, parts.join("\n")),
+    nextIndex: closedAt,
+  };
+}
+
+function parseTomlRows(text: string): { sections: Map<string, TomlRow[]>; inlineSkipped: string[] } {
+  const sections = new Map<string, TomlRow[]>();
+  const inlineSkipped: string[] = [];
+  let current: string | null = null;
+  const lines = text.split(/\r?\n/);
+
+  for (let i = 0; i < lines.length; i++) {
+    const rawLine = lines[i];
     const line = stripTomlCommentOutsideQuotes(rawLine).trim();
     if (!line || line.startsWith("#")) continue;
     if (line.startsWith("[[")) {
@@ -139,26 +193,41 @@ function parseTomlRows(text: string): { sections: Map<string, TomlRow[]> } {
       sections.set(current, []);
       continue;
     }
-    if (line.includes('"""') || line.includes("'''")) {
-      throw new Error("TOML_MULTILINE_UNSUPPORTED");
-    }
     const eq = line.indexOf("=");
-    if (eq === -1) continue;
-    const rawVal = line.slice(eq + 1);
-    const valueSrc = stripTomlCommentOutsideQuotes(rawVal);
+    if (eq === -1) {
+      if (line.includes('"""') || line.includes("'''")) throw new Error("TOML_MULTILINE_MALFORMED");
+      continue;
+    }
+    // `=` 右侧取原始文本：多行字面量里的 `#` 是内容，不是注释。
+    const rawEq = rawLine.indexOf("=", rawLine.length - rawLine.trimStart().length);
+    const multi =
+      rawEq === -1
+        ? null
+        : readMultilineTomlValue(rawLine.slice(rawEq + 1), lines, i);
     let value: string;
-    try {
-      value = parseTomlValue(valueSrc);
-    } catch (err) {
-      if ((err as Error).message === "TOML_INLINE_UNSUPPORTED") continue;
-      throw err;
+    if (multi) {
+      i = multi.nextIndex;
+      value = multi.value;
+    } else {
+      if (line.includes('"""') || line.includes("'''")) throw new Error("TOML_MULTILINE_MALFORMED");
+      const rawVal = line.slice(eq + 1);
+      const valueSrc = stripTomlCommentOutsideQuotes(rawVal);
+      try {
+        value = parseTomlValue(valueSrc);
+      } catch (err) {
+        if ((err as Error).message === "TOML_INLINE_UNSUPPORTED") {
+          inlineSkipped.push(`${current ?? ""}${current ? "." : ""}${line.slice(0, eq).trim()}`);
+          continue;
+        }
+        throw err;
+      }
     }
     const row: TomlRow = { table: current ?? "", key: line.slice(0, eq).trim(), value };
     const tableKey = current ?? "";
     if (!sections.has(tableKey)) sections.set(tableKey, []);
     sections.get(tableKey)!.push(row);
   }
-  return { sections };
+  return { sections, inlineSkipped };
 }
 
 export interface ParsedModsToml {
@@ -167,6 +236,8 @@ export interface ParsedModsToml {
   license?: string;
   mods: Array<{ modId: string; version?: string; displayName?: string; description?: string }>;
   dependencies: Array<{ id: string; owner: string; version?: string; versionRange?: string; optional?: boolean; side?: string }>;
+  /** 解析器不支持的语法（内联表 `k = { ... }`）被整行跳过的键名：不为空必须向上报警，否则依赖块静默蒸发。 */
+  inlineSkipped: string[];
 }
 
 /**
@@ -176,8 +247,8 @@ export interface ParsedModsToml {
  * - [[dependencies.<owner>]] 段 → 依赖块；块内 modId 字段才是依赖的 id
  */
 export function parseModsToml(text: string): ParsedModsToml {
-  const { sections } = parseTomlRows(text);
-  const result: ParsedModsToml = { mods: [], dependencies: [] };
+  const { sections, inlineSkipped } = parseTomlRows(text);
+  const result: ParsedModsToml = { mods: [], dependencies: [], inlineSkipped };
 
   const topLevel = sections.get("") ?? [];
   for (const row of topLevel) {

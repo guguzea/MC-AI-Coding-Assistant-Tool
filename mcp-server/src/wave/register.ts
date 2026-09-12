@@ -760,7 +760,7 @@ export function registerWaveExtensions(server: McpServer): void {
     {
       title: "Decompile mod jar with VineFlower (on-demand)",
       description:
-        "按需反编译本地 mod jar → $MC_SKILL_CACHE/decompiled-mods/<modId>/<version>/，返回源码树摘要。\n" +
+        "按需反编译本地 mod jar → $MC_SKILL_CACHE/decompiled-mods/<modId>/<version>-<jarSha512_12>/，返回源码树摘要。\n" +
         "可选 remap（需匹配 MC 版本；26.1+ 免 remap）。需 Java 17+（VineFlower）；默认零下载（仅显式调用时下载工具 jar）。\n" +
         "⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n" +
         "⚠️ 下载量大。不给 jar 元数据（用 analyze_mod_jar）；26.1+ Vanilla 签名不要指望 query_api。",
@@ -942,7 +942,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "lookup_obfuscated", description: "崩溃日志反混淆：单 token 反查混淆短名（er）/ intermediary（method_6032）/ SRG（func_110143_aJ）→ yarn 可读名 + ownerClass + descriptor。\n方法优先 → 字段 → 类；多命中返回 AMBIGUOUS。26.1+ 无混淆层，返回 UNOBFUSCATED_NO_YARN。", inputSchema: lookupObfuscatedSchema },
   { name: "get_minecraft_source", description: "按需下载/重映射/反编译真实 MC 源码并返回类源码片段（支持行区间）。默认零下载：仅显式调用才下载到 $MC_SKILL_CACHE。\n支持矩阵：1.14–1.21.11 → yarn（两步 remap official→intermediary→named）或 mojmap；26.1+ → mojmap-only（免 remap）。\n首次约 3–10 分钟，同版本缓存命中 <1s。需 Java 17+；缺失时返回 TOOLCHAIN_MISSING 安装指引。\n⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n⚠️ 下载量大。1.16.5–1.20.4 Vanilla 签名用 query_api；平台 API 用 search_*_docs；26.1+ 无 query_api 索引。", inputSchema: getMinecraftSourceSchema },
   { name: "analyze_mod_jar", description: ANALYZE_MOD_JAR_DESCRIPTION, inputSchema: analyzeModJarSchema },
-  { name: "decompile_mod_jar", description: "按需反编译本地 mod jar → $MC_SKILL_CACHE/decompiled-mods/<modId>/<version>/，返回源码树摘要。\n可选 remap（需匹配 MC 版本；26.1+ 免 remap）。需 Java 17+（VineFlower）；默认零下载（仅显式调用时下载工具 jar）。\n⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n⚠️ 下载量大。不给 jar 元数据（用 analyze_mod_jar）；26.1+ Vanilla 签名不要指望 query_api。", inputSchema: decompileModJarSchema },
+  { name: "decompile_mod_jar", description: "按需反编译本地 mod jar → $MC_SKILL_CACHE/decompiled-mods/<modId>/<version>-<jarSha512_12>/，返回源码树摘要。\n可选 remap（需匹配 MC 版本；26.1+ 免 remap）。需 Java 17+（VineFlower）；默认零下载（仅显式调用时下载工具 jar）。\n⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n⚠️ 下载量大。不给 jar 元数据（用 analyze_mod_jar）；26.1+ Vanilla 签名不要指望 query_api。", inputSchema: decompileModJarSchema },
   { name: "search_mod_code", description: "对已反编译的模组源码做行级检索（子串或正则），返回 file:line 命中。\n入口二选一：decompiledDir（反编译目录）或 jarPath（须先 decompile_mod_jar 并缓存）。纯 Node，无 Java 需求。\n⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n⚠️ 源码未反编译时返回 NOT_FOUND，不会自动 decompile。", inputSchema: searchModCodeSchema },
   { name: "validate_at", description: VALIDATE_AT_DESCRIPTION, inputSchema: validateAtSchema },
   { name: "validate_aw", description: VALIDATE_AW_DESCRIPTION, inputSchema: validateAwSchema },

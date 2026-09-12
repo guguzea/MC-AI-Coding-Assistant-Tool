@@ -12,7 +12,7 @@ A `Consumable` can be created either by directly calling the record constructor 
 - `animation` - Sets the [ItemUseAnimation](#itemuseanimation) to play while the item is being used. Defaults to `ItemUseAnimation#EAT`.
 - `sound` - Sets the [SoundEvent](/docs/1.21.11/resources/client/sounds#creating-soundevents) to play while consuming the item. This must be a `Holder` instance. Defaults to `SoundEvents#GENERIC_EAT`.
 
-If a vanilla instance is not a `Holder`, a `Holder` wrapped version can be obtained by calling `BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent)`.
+If a vanilla instance is not a `Holder<SoundEvent>`, a `Holder` wrapped version can be obtained by calling `BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent)`.
 
 </li>
 <li class="">`soundAfterConsume` - Sets the [SoundEvent](/docs/1.21.11/resources/client/sounds#creating-soundevents) to player once the item has finished being consumed. This delegates to the [PlaySoundConsumeEffect](#consumeeffect).</li>

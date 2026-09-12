@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "misc/keymappings"
 url: "https://docs.neoforged.net/docs/misc/keymappings/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:58:00.469Z"
+fetchedAt: "2026-09-12T12:07:58.625Z"
 ---
 # Key Mappings
 
@@ -39,7 +39,7 @@ A `KeyMapping` can be created using it's constructor. The `KeyMapping` takes in 
 > **Tip**
 > tip
 
-A `KeyMapping` can be added to a custom category by creating a new `KeyMapping.Category` with the `Identifier` and registering it via `RegisterKeyMappingsEvent#registerCategory` on the [mod event bus](/docs/concepts/events#registering-an-event-handler) only on the [physical client](/docs/concepts/sides#the-physical-side). The associated [translation key](/docs/resources/client/i18n#components) for the category is `key.category..`.
+A `KeyMapping` can be added to a custom category by creating a new `KeyMapping.Category` with the `Identifier` and registering it via `RegisterKeyMappingsEvent#registerCategory` on the [mod event bus](/docs/concepts/events#registering-an-event-handler) only on the [physical client](/docs/concepts/sides#the-physical-side). The associated [translation key](/docs/resources/client/i18n#components) for the category is `key.category.<namespace>.<path>`.
 
 ```java
 

@@ -4,7 +4,7 @@ version: "1.21.11"
 pageId: "resources/server/recipes/builtin"
 url: "https://docs.neoforged.net/docs/1.21.11/resources/server/recipes/builtin/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:02:02.838Z"
+fetchedAt: "2026-09-12T12:09:53.135Z"
 ---
 # Built-In Recipe Types
 

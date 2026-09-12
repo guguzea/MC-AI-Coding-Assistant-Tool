@@ -758,4 +758,1026 @@ if (psProbe.status !== 0) {
   );
 }
 
+/**
+ * §S3 数据链上游：verifiedApi 包名归属 / catalog 白名单正则 / 缓存版本键 / 侧栏常量。
+ *
+ * 背景（审查 F94·F91·F58·F59·F97）：`library-catalog.ts` 的 verifiedApi 是「哪个库有哪些包」的
+ * 唯一权威，但它由 `batch-decompile → merge-verified-api → build-api-summaries` 三跳生成，每一跳
+ * 坏掉都不报错：
+ *  - merge 把 JiJ 内嵌库的包根写进宿主条目（实测 14 条目 50 处 `net.darkhax.bookshelf`），下游
+ *    `search_mod_code` / 库 Skill 会照着别人的包名生成 import；
+ *  - 解不出 modId 的行坍缩进 `unknown-mod`，冒领别的库目录树；
+ *  - build-api-summaries 取白名单的正则写成裸 `packages:` 而 catalog 实际是带引号的 `"packages":`
+ *    → 命中 0 处，白名单恒空 = 完全不过滤，摘要 `packages` 恒空；
+ *  - 缓存叶子目录名自 S2 起带 `-<sha512 前 12 hex>`，直接当版本键会把哈希泄漏成「版本号」。
+ * 四类都是「静默变空 / 变脏」，所以这里跑真脚本、建假根、并逐条投毒证明断言能失败。
+ *
+ * 归属规则的口径偏离（已在销账册登记）：故事原文写「包名必须以本条目 modId 开头」，字面实现会否掉
+ * 1829 处里的 1695 处（MC 包根是作者命名空间，`net.darkhax.bookshelf` 也不以 `bookshelf` 开头）。
+ * 生效规则改为：段级自有（modId 作为路径的一段）+ 只拒「命中他方已证实包根」的包。
+ */
+{
+  const SCRIPTS = fileURLToPath(new URL("../scripts", import.meta.url));
+  const MERGE_SRC = jpath(SCRIPTS, "merge-verified-api.mjs");
+  const BAS_SRC = jpath(SCRIPTS, "build-api-summaries.mjs");
+  const S3 = jpath(GATE_SCRATCH, "s3-data-chain");
+  const s3w = (p, s) => {
+    mkdirSync(dirname(p), { recursive: true });
+    writeFileSync(p, s, "utf8");
+  };
+
+  // verifiedApi 内层键必须带引号：产物由 JSON.stringify 生成，而「带引号」正是 F91 死正则的成因
+  const MERGE_CATALOG = `export const LIBRARY_CATALOG = [
+  {
+    id: "authored/lib-bookshelf",
+    modIds: ["bookshelf"],
+    modrinthSlug: "bookshelf",
+    verifiedApi: {
+      "1.20.1/forge": {
+        "verifiedAt": "2026-08",
+        "packages": ["net.darkhax.bookshelf"],
+        "entrypoints": ["net.darkhax.bookshelf.Bookshelf"],
+        "notes": "自动反编译提取",
+      },
+    },
+  },
+  {
+    id: "authored/lib-caelus",
+    modIds: ["caelus"],
+    modrinthSlug: "caelus",
+    verifiedApi: {
+      "1.20.1/forge": {
+        "verifiedAt": "2026-08",
+        "packages": ["top.theillusivec4.caelus"],
+        "entrypoints": ["top.theillusivec4.caelus.PluginCaelus"],
+        "notes": "自动反编译提取",
+      },
+      "1.19.2/forge": {
+        "verifiedAt": "2026-08",
+        "packages": ["net.darkhax.bookshelf"],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+      },
+    },
+  },
+  {
+    id: "authored/lib-trinkets",
+    modIds: ["trinkets"],
+    modrinthSlug: "trinkets",
+    verifiedApi: {
+      "1.20.1/fabric": {
+        "verifiedAt": "2026-08",
+        "packages": ["dev.emi.trinkets"],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+      },
+    },
+  },
+];
+`;
+  const MERGE_ROWS = [
+    // 自有包 + 键已存在且现值干净 → 不给 --force 就必须跳过（不得改写别人的历史核实值）
+    { status: "success", modId: "caelus", slug: "caelus", gameVersion: "1.20.1", loader: "forge", packages: ["top.theillusivec4.caelus"] },
+    // 自有包 + 键已存在但现值是外来包 → 无需 --force 也应自愈
+    { status: "success", modId: "caelus", slug: "caelus", gameVersion: "1.19.2", loader: "forge", packages: ["com.illusivesoulworks.caelus"] },
+    // 外来包（net.darkhax.bookshelf 已由 bookshelf 条目证实）→ 整行拒绝
+    { status: "success", modId: "caelus", slug: "caelus", gameVersion: "1.20.4", loader: "neoforge", packages: ["net.darkhax.bookshelf"] },
+    // 段级自有：dev.emi.trinkets 里含他方 modId `emi`，但本条目 modId `trinkets` 也是段 → 必须放行
+    { status: "success", modId: "trinkets", slug: "trinkets", gameVersion: "1.20.4", loader: "fabric", packages: ["dev.emi.trinkets"] },
+    // 凭证来源条目自身（冷启动时 catalog 已空，靠这行登记包根归属）
+    { status: "success", modId: "bookshelf", slug: "bookshelf", gameVersion: "1.20.4", loader: "forge", packages: ["net.darkhax.bookshelf"] },
+    // 身份不可解的两种形态：不得坍缩进 unknown-mod 去冒领 caelus 的树
+    { status: "success", modId: null, slug: "caelus", gameVersion: "1.21.1", loader: "neoforge", packages: ["top.theillusivec4.caelus"] },
+    { status: "success", modId: "unknown-mod", slug: "caelus", gameVersion: "1.21.1", loader: "fabric", packages: ["top.theillusivec4.caelus"] },
+  ];
+  const rowsJsonl = (rows) => rows.map((r) => JSON.stringify(r)).join("\n") + "\n";
+  /** 写盘后按条目切片（verifiedApi 内不得有注释：merge 的 parseVa 不认注释，整块会判成无法解析） */
+  const entryBlock = (text, id) => {
+    const at = text.indexOf(`id: "${id}"`);
+    if (at < 0) return "";
+    const next = text.indexOf('id: "', at + 1);
+    return text.slice(at, next < 0 ? text.length : next);
+  };
+  const runMerge = (script, input, catalog, extra = []) => {
+    const r = spawnSync(process.execPath, [script, "--input", input, "--catalog", catalog, ...extra], {
+      encoding: "utf8",
+      cwd: SCRIPTS,
+      windowsHide: true,
+    });
+    assert.equal(r.status, 0, `merge-verified-api 退出码 ${r.status}\n${r.stdout}\n${r.stderr}`);
+    return r.stdout;
+  };
+
+  try {
+    /* ── 1. 归属拒绝 + 身份拒绝 + 双跑幂等 ───────────────────────────── */
+    const dir = jpath(S3, "merge");
+    const catalog = jpath(dir, "catalog.ts");
+    const input = jpath(dir, "rows.jsonl");
+    s3w(catalog, MERGE_CATALOG);
+    s3w(input, rowsJsonl(MERGE_ROWS));
+
+    const dry = runMerge(MERGE_SRC, input, catalog);
+    assert.equal(readFileSync(catalog, "utf8"), MERGE_CATALOG, "默认 dry-run 却改了 catalog（写面失控）");
+    assert.match(dry, /包名归属拒绝：1 个条目/, `dry-run 未报出归属拒绝：\n${dry}`);
+    assert.match(dry, /authored\/lib-caelus：外来包 net\.darkhax\.bookshelf/, `拒绝未点名外来包：\n${dry}`);
+    assert.match(dry, /身份不可解 2/, `两条无身份行未计入：\n${dry}`);
+    assert.doesNotMatch(dry, /已写入/, `dry-run 声称写盘：\n${dry}`);
+
+    const first = runMerge(MERGE_SRC, input, catalog, ["--write"]);
+    assert.match(first, /已写入/, `--write 未落盘：\n${first}`);
+    const after = readFileSync(catalog, "utf8");
+    const caelus = entryBlock(after, "authored/lib-caelus");
+    assert.ok(caelus, "caelus 条目在写盘后消失");
+    assert.doesNotMatch(caelus, /net\.darkhax\.bookshelf/, `caelus 仍持有 bookshelf 的包根：\n${caelus}`);
+    assert.match(caelus, /"1\.19\.2\/forge"[\s\S]{0,200}com\.illusivesoulworks\.caelus/, "被污染的现值键未自愈");
+    assert.match(caelus, /"1\.20\.1\/forge"[\s\S]{0,200}top\.theillusivec4\.caelus/, "干净现值键被改写");
+    assert.doesNotMatch(caelus, /"1\.20\.4\/neoforge"/, "被拒绝的外来包行仍写成了新键");
+    assert.match(entryBlock(after, "authored/lib-trinkets"), /dev\.emi\.trinkets/, "段级自有包被误拒（dev.emi.trinkets）");
+    // 正向对照：bookshelf 自己的包根必须还在，否则「caelus 干净」可以靠清空全表蒙过去
+    assert.match(entryBlock(after, "authored/lib-bookshelf"), /net\.darkhax\.bookshelf/, "bookshelf 自有包根被误删");
+
+    const second = runMerge(MERGE_SRC, input, catalog, ["--write"]);
+    assert.match(second, /无变更，未写盘/, `同一份 JSONL 重跑不幂等：\n${second}`);
+    assert.equal(readFileSync(catalog, "utf8"), after, "重跑改动了 catalog 字节");
+
+    /* ── 2. 冷启动：catalog 现值清空后，凭证只能来自本轮输入 ─────────── */
+    const cold = jpath(S3, "merge-cold");
+    const stripped = MERGE_CATALOG.replace(/"packages": \[[^\]]*\]/g, '"packages": []');
+    assert.notEqual(stripped, MERGE_CATALOG, "冷启动假 catalog 没构造出来（packages 键写法已变）");
+    const coldCatalog = jpath(cold, "catalog.ts");
+    s3w(coldCatalog, stripped);
+    s3w(jpath(cold, "rows.jsonl"), rowsJsonl(MERGE_ROWS));
+    const coldOut = runMerge(MERGE_SRC, jpath(cold, "rows.jsonl"), coldCatalog, ["--write"]);
+    assert.match(coldOut, /包名归属拒绝：1 个条目/, `catalog 清空后不再拒外来包（凭证表未随输入冷启动）：\n${coldOut}`);
+    assert.doesNotMatch(
+      entryBlock(readFileSync(coldCatalog, "utf8"), "authored/lib-caelus"),
+      /net\.darkhax\.bookshelf/,
+      "冷启动下 bookshelf 包根仍冒领进 caelus",
+    );
+
+    /* ── 3. 投毒：关掉归属检查，上面那组断言必须失败 ────────────────── */
+    const poisonedDir = jpath(S3, "merge-poison");
+    const shippedMerge = readFileSync(MERGE_SRC, "utf8");
+    const poisoned = shippedMerge.replace(
+      "  const foreign = foreignPackages(entry, pkgs, rootOwners);",
+      "  const foreign = []; // 投毒：关掉包名归属检查",
+    );
+    assert.ok(poisoned !== shippedMerge, "merge 投毒锚点未命中，脚本写法已变 → 本自检需同步");
+    const poisonScript = jpath(poisonedDir, "merge.poisoned.mjs");
+    const poisonCatalog = jpath(poisonedDir, "catalog.ts");
+    s3w(poisonScript, poisoned);
+    s3w(poisonCatalog, MERGE_CATALOG);
+    s3w(jpath(poisonedDir, "rows.jsonl"), rowsJsonl(MERGE_ROWS));
+    const pr = runMerge(poisonScript, jpath(poisonedDir, "rows.jsonl"), poisonCatalog, ["--write"]);
+    assert.doesNotMatch(pr, /包名归属拒绝/, "投毒后仍报拒绝 = 拒绝断言不是靠这段输出成立的");
+    assert.match(
+      entryBlock(readFileSync(poisonCatalog, "utf8"), "authored/lib-caelus"),
+      /net\.darkhax\.bookshelf/,
+      "投毒后外来包没写进 caelus → 「caelus 不含 bookshelf」那条断言是摆设",
+    );
+
+    /* ── 4. build-api-summaries：假仓库根 + 版本键 + catalog 白名单正则 ─ */
+    const BAS_CATALOG = `export const LIBRARY_CATALOG = [
+  {
+    id: "authored/lib-caelus",
+    modIds: ["caelus"],
+    modrinthSlug: "caelus",
+    role: "api",
+    verifiedApi: {
+      "1.20.1/forge": {
+        "verifiedAt": "2026-08",
+        "packages": ["top.theillusivec4.caelus"],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+      },
+    },
+  },
+];
+`;
+    const JAVA_OWN = `package top.theillusivec4.caelus;
+
+public class PluginCaelus {
+  public static final String MODID = "caelus";
+
+  public void commonSetup(String s) {}
+}
+`;
+    const JAVA_FOREIGN = `package com.other.lib;
+
+public class ForeignHelper {
+  public int compute(int a) {
+    return a;
+  }
+}
+`;
+    /** 脚本副本放 <root>/scripts/ ⇒ 它的 ROOT 推导正好落在这棵假仓库根上 */
+    const buildBasRoot = (name, mutate) => {
+      const root = jpath(S3, name);
+      rmSync(root, { recursive: true, force: true });
+      const shipped = readFileSync(BAS_SRC, "utf8");
+      const src = mutate ? mutate(shipped) : shipped;
+      if (mutate) assert.notEqual(src, shipped, `${name}: 投毒锚点未命中，脚本写法已变 → 本自检需同步`);
+      s3w(jpath(root, "scripts", "build-api-summaries.mjs"), src);
+      s3w(jpath(root, "mcp-server", "src", "diagnostics", "library-catalog.ts"), BAS_CATALOG);
+      const lib = jpath(root, "cache-s1", "decompiled-mods", "caelus");
+      // 叶子 A：目录名带 sha 后缀段 + meta 里有权威版本号；内含一个白名单外的外来包
+      s3w(
+        jpath(lib, "1.20.1-aaaaaaaaaaaa", ".mc-skill-decompiled.json"),
+        JSON.stringify({ version: "3.2.0", jarName: "caelus-1.20.1-3.2.0.jar" }),
+      );
+      s3w(jpath(lib, "1.20.1-aaaaaaaaaaaa", "top/theillusivec4/caelus/PluginCaelus.java"), JAVA_OWN);
+      s3w(jpath(lib, "1.20.1-aaaaaaaaaaaa", "com/other/lib/ForeignHelper.java"), JAVA_FOREIGN);
+      // 叶子 B：无 meta → 只能退回「剥掉尾部 12 hex」
+      s3w(jpath(lib, "1.20.1-bbbbbbbbbbbb", "top/theillusivec4/caelus/PluginCaelus.java"), JAVA_OWN);
+      return { root, script: jpath(root, "scripts", "build-api-summaries.mjs"), out: jpath(root, "out") };
+    };
+    const runBas = ({ root, script, out }) => {
+      // MC_SKILL_CACHE 也指进假根：否则脚本会读真缓存里的 verified-api-all.jsonl，测的就不是这块摊位
+      const env = { ...process.env, MC_SKILL_CACHE: jpath(root, "unused-cache") };
+      const r = spawnSync(process.execPath, [script, "--only", "caelus", "--cache", jpath(root, "cache-s1"), "--out", out, "--write"], {
+        encoding: "utf8",
+        cwd: SCRIPTS,
+        env,
+        windowsHide: true,
+      });
+      assert.equal(r.status, 0, `build-api-summaries 退出码 ${r.status}\n${r.stdout}\n${r.stderr}`);
+      const p = jpath(out, "caelus.json");
+      assert.ok(existsSync(p), `摘要产物未生成：\n${r.stdout}`);
+      return JSON.parse(readFileSync(p, "utf8"));
+    };
+
+    const clean = runBas(buildBasRoot("bas-clean", null));
+    const keys = Object.keys(clean.versions);
+    assert.deepEqual(keys, ["3.2.0", "1.20.1"], `版本键不对：${JSON.stringify(keys)}`);
+    assert.ok(!keys.some((k) => /-[0-9a-f]{12}$/.test(k)), `版本键混进缓存叶子名（sha 后缀泄漏成版本号）：${JSON.stringify(keys)}`);
+    assert.deepEqual(clean.versions["3.2.0"].packages, ["top.theillusivec4.caelus"], "自有包没记进 packages（摘要登记的是实测包）");
+    assert.ok(
+      clean.versions["3.2.0"].classes.includes("top.theillusivec4.caelus.PluginCaelus"),
+      `自有包类未收进摘要：${JSON.stringify(clean.versions["3.2.0"].classes)}`,
+    );
+    assert.ok(
+      !clean.versions["3.2.0"].classes.some((c) => c.startsWith("com.other.lib.")),
+      "白名单没过滤外来包（prefixes 为空 = 全收）",
+    );
+
+    const poisonRegex = runBas(
+      buildBasRoot("bas-poison-regex", (s) => s.replace('/["\']?packages["\']?\\s*:\\s*\\[([^\\]]*)\\]/g', "/packages:\\s*\\[([^\\]]*)\\]/g")),
+    );
+    // packages 自 S5 起记「树里实测到的包」，不再回写声明白名单 ⇒ 白名单变哑的表现由「外来包漏进来」证明
+    assert.ok(
+      poisonRegex.versions["3.2.0"].packages.some((p) => p === "com.other.lib" || p.startsWith("com.other.lib.")),
+      `投毒（退回旧死正则）后白名单失效却没体现在 packages 上：${JSON.stringify(poisonRegex.versions["3.2.0"].packages)}`,
+    );
+    assert.ok(
+      poisonRegex.versions["3.2.0"].classes.some((c) => c.startsWith("com.other.lib.")),
+      "投毒后白名单仍在过滤 → classes 那条断言不靠它成立",
+    );
+    const poisonKey = runBas(
+      buildBasRoot("bas-poison-key", (s) => {
+        const t = s
+          .replace("if (typeof meta?.version === 'string' && meta.version) return meta.version;", "  // 投毒：忽略 meta 里的权威版本号")
+          .replace("  return dirName.replace(/-[0-9a-f]{12}$/, '');", "  return dirName;");
+        assert.ok(t !== s && !t.includes("dirName.replace"), "versionKeyOf 投毒锚点未命中，脚本写法已变");
+        return t;
+      }),
+    );
+    assert.ok(
+      Object.keys(poisonKey.versions).some((k) => /-[0-9a-f]{12}$/.test(k)),
+      `投毒（版本键直接用叶子名）后仍无哈希后缀键 → 该断言是摆设：${JSON.stringify(Object.keys(poisonKey.versions))}`,
+    );
+
+    /* ── 5. 侧栏常量：反编译侧包名启发式 + manifest sha 字段 ─────────── */
+    const bdSrc = readFileSync(jpath(SCRIPTS, "batch-decompile.mjs"), "utf8");
+    const grabSet = (name) => {
+      const m = new RegExp(`const ${name} = new Set\\((\\[[^)]*\\])\\)`).exec(bdSrc);
+      assert.ok(m, `未能从 batch-decompile.mjs 取出 ${name}，写法已变`);
+      return new Set(JSON.parse(m[1]));
+    };
+    const RESOURCE_DIRS = grabSet("RESOURCE_DIRS");
+    const GENERIC_TLDS = grabSet("GENERIC_TLDS");
+    for (const d of ["META-INF", "assets", "data", "licenses", "coremods", "asm", "profiles"]) {
+      assert.ok(RESOURCE_DIRS.has(d), `RESOURCE_DIRS 缺 ${d}（catalog 实测 30 行把目录名当包名）`);
+    }
+    for (const tld of ["fi", "eu", "team", "me", "software"]) {
+      assert.ok(GENERIC_TLDS.has(tld), `GENERIC_TLDS 缺 ${tld}（非通用 TLD 只取 2 段 = 包名被截断）`);
+    }
+    assert.ok(GENERIC_TLDS.has("top"), "top 域（top.theillusivec4.*）必须按 3 段取，否则只剩 `top.xxx`");
+
+    const lmSrc = readFileSync(jpath(SCRIPTS, "build-lib-manifest.mjs"), "utf8");
+    const shaLit = /const SHA512_RE = \/([\s\S]*?)\/([a-z]*);/.exec(lmSrc);
+    assert.ok(shaLit, "未能从 build-lib-manifest.mjs 取出 SHA512_RE，写法已变");
+    const shaRe = new RegExp(shaLit[1], shaLit[2]);
+    assert.ok(shaRe.test("a".repeat(128)), "128 位十六进制必须算 sha512");
+    assert.ok(!shaRe.test("a".repeat(64)), "sha256 长度不得混进 sha512 字段（F97 字段错位：下游按 sha512 校验必失败）");
+    assert.ok(!shaRe.test("a".repeat(129)), "超长不得算 sha512");
+    assert.ok(!shaRe.test("z".repeat(128)), "非十六进制不得算 sha512");
+
+    /* ── 6. validate-rules-against-cache 判定子句（取源码真函数体）───── */
+    const vracSrc = readFileSync(jpath(SCRIPTS, "validate-rules-against-cache.mjs"), "utf8");
+    const fnStart = vracSrc.indexOf("function looksLikeGradlePluginId(fqcn) {");
+    assert.ok(fnStart >= 0, "未能定位 looksLikeGradlePluginId，写法已变");
+    let braceDepth = 0;
+    let fnEnd = -1;
+    for (let i = fnStart + "function looksLikeGradlePluginId(fqcn)".length; i < vracSrc.length; i++) {
+      if (vracSrc[i] === "{") braceDepth++;
+      else if (vracSrc[i] === "}") {
+        braceDepth--;
+        if (braceDepth === 0) {
+          fnEnd = i + 1;
+          break;
+        }
+      }
+    }
+    assert.ok(fnEnd > 0, "looksLikeGradlePluginId 大括号未配平，取不出函数体");
+    const pluginLastLit = /const PLUGIN_ID_LAST = \/([\s\S]*?)\/([a-z]*);/.exec(vracSrc);
+    assert.ok(pluginLastLit, "未能取出 PLUGIN_ID_LAST，写法已变");
+    const looksLike = new Function(
+      "PLUGIN_ID_LAST",
+      `${vracSrc.slice(fnStart, fnEnd)}
+       return looksLikeGradlePluginId;`,
+    )(new RegExp(pluginLastLit[1], pluginLastLit[2]));
+    // 必须跳过：Gradle 插件命名空间与小写尾段（包路径 / 方法引用）。前两条是旧子句实测漏判的假 issue 源
+    for (const n of [
+      "net.minecraftforge", // 末段 14 字符 >12 → 旧子句去核对它，forge/1.20.1 一条假 fqcn_not_in_cache
+      "net.minecraftforge.gradle.liteloader",
+      "net.fabricmc.fabric",
+      "org.quiltmc.qsl",
+      "net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper.registerKeyMapping",
+      "net.neoforged.moddev",
+    ]) {
+      assert.ok(looksLike(n), `应跳过（不是类）却去核对：${n}`);
+    }
+    // 必须保留牙齿：真类名不得被顺手跳过
+    for (const n of [
+      "net.neoforged.neoforge.network.PayloadRegistrar",
+      "net.minecraftforge.common.MinecraftForge",
+      "net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents",
+    ]) {
+      assert.ok(!looksLike(n), `真类名被当成插件 id 跳过 → 子句已失去牙齿：${n}`);
+    }
+
+    /* ── 7. extractPackages：不可读目录必须 throw（F97 第三处吞异常）────── */
+    // processJar 只把 throw 折叠成 status:"failed"；返回 [] 会写成 status:"success" + packages:[] 的行，
+    // 而 --resume 对 success/failed 一律跳过（batch-decompile.mjs:208）⇒ 一次 I/O 抖动永久固化成脏数据。
+    const grabFn = (src, header) => {
+      const start = src.indexOf(header);
+      assert.ok(start >= 0, `未能定位 ${header}，脚本写法已变`);
+      let depth = 0;
+      for (let i = start + header.length; i < src.length; i++) {
+        if (src[i] === "{") depth++;
+        else if (src[i] === "}") {
+          depth--;
+          if (depth === 0) return src.slice(start, i + 1);
+        }
+      }
+      assert.fail(`${header} 大括号未配平，取不出函数体`);
+    };
+    const pkgSegLit = /const PKG_SEG = \/([\s\S]*?)\/([a-z]*);/.exec(bdSrc);
+    assert.ok(pkgSegLit, "未能取出 PKG_SEG，写法已变");
+    const extractBody = [
+      grabFn(bdSrc, "function collectPackage(outputDir, tld, depth)"),
+      grabFn(bdSrc, "function extractPackages(outputDir)"),
+    ].join("\n");
+    assert.ok(
+      extractBody.includes("throw new Error(`读取反编译产物目录失败"),
+      "extractPackages 已不 throw，不可读目录会被写成 packages:[] 的 success 行（F97 回归）",
+    );
+    const mkExtract = (body) => {
+      let tree = new Map();
+      let broken = new Set();
+      const fn = new Function(
+        "existsSync", "readdirSync", "join", "RESOURCE_DIRS", "GENERIC_TLDS", "PKG_SEG",
+        `${body}
+         return extractPackages;`,
+      )(
+        (p) => tree.has(p),
+        (p) => {
+          if (broken.has(p)) throw Object.assign(new Error("EACCES: permission denied"), { code: "EACCES" });
+          assert.ok(tree.has(p), `桩 FS 未登记该目录：${p}`);
+          return tree.get(p).map((e) => ({ name: e.name, isDirectory: () => e.dir }));
+        },
+        (...segs) => segs.join("/").replace(/\/{2,}/g, "/"),
+        RESOURCE_DIRS,
+        GENERIC_TLDS,
+        new RegExp(pkgSegLit[1], pkgSegLit[2]),
+      );
+      return { fn, set: (t, b) => { tree = t; broken = b; } };
+    };
+    const okTree = new Map([
+      ["/out", [{ name: "net", dir: true }, { name: "top", dir: true }, { name: "gg", dir: true }, { name: "licenses", dir: true }, { name: "fabric.mod.json", dir: false }]],
+      ["/out/net", [{ name: "darkhax", dir: true }]],
+      ["/out/net/darkhax", [{ name: "bookshelf", dir: true }]],
+      ["/out/top", [{ name: "theillusivec4", dir: true }]],
+      ["/out/top/theillusivec4", [{ name: "caelus", dir: true }]],
+      ["/out/gg", [{ name: "masters", dir: true }]],
+      ["/out/gg/masters", [{ name: "gamemodes", dir: true }]],
+      ["/out/licenses", []],
+    ]);
+    const harness = mkExtract(extractBody);
+    harness.set(okTree, new Set());
+    // 正常路径没被改坏：侧栏目录/文件照样跳过；GENERIC_TLDS 内的 tld 取 3 段，不在表内的只取 2 段
+    // ——`gg.masters`（真包是 gg.masters.gamemodes）就是 README 那句「packages 是启发式截断」的实证。
+    assert.deepEqual(
+      harness.fn("/out"),
+      ["gg.masters", "net.darkhax.bookshelf", "top.theillusivec4.caelus"],
+      "extractPackages 正常路径结果变了（侧栏过滤或段数口径）",
+    );
+    harness.set(new Map(), new Set(["/out"]));
+    assert.deepEqual(harness.fn("/out"), [], "目录不存在时应返回 []，不是 throw");
+    harness.set(okTree, new Set(["/out"]));
+    assert.throws(
+      () => harness.fn("/out"),
+      (err) => /读取反编译产物目录失败/.test(err.message) && err.message.includes("/out"),
+      "不可读目录必须 throw 且消息点名目录（否则落进 failed 行的 error 无从定位）",
+    );
+    const poisonedExtract = extractBody.replace(
+      /try \{ dirs = readdirSync\(outputDir, \{ withFileTypes: true \}\); \} catch \(err\) \{[\s\S]*?\n  \}/,
+      "try { dirs = readdirSync(outputDir, { withFileTypes: true }); } catch { return []; }",
+    );
+    assert.ok(
+      poisonedExtract !== extractBody && /catch \{ return \[\]; \}/.test(poisonedExtract),
+      "投毒锚点未命中，脚本写法已变（该断言是摆设）",
+    );
+    const poisonedHarness = mkExtract(poisonedExtract);
+    poisonedHarness.set(okTree, new Set(["/out"]));
+    assert.deepEqual(
+      poisonedHarness.fn("/out"),
+      [],
+      "投毒（改回吞成 []）后仍 throw → 上面那条不可读断言是摆设",
+    );
+
+    console.log(
+      "  §S3 数据链: merge 拒绝 1 条目+身份 2 行+双跑幂等 / 冷启动仍拒 / 投毒(关归属检查)可失败；" +
+        "bas 版本键 3.2.0+1.20.1 无哈希后缀 / 白名单正则两记投毒可失败；侧栏常量与判定子句实证；" +
+        "extractPackages 不可读 throw（投毒回吞 [] 可失败）",
+    );
+  } finally {
+    rmSync(S3, { recursive: true, force: true });
+    assert.ok(!existsSync(S3), `§S3 摊位未收干净，残留：${S3}`);
+    dropIfEmpty(GATE_SCRATCH);
+  }
+}
+
+/**
+ * §S4 · G1 库摘要身份与归属门：假根 + 八记投毒 + 真根台账复算。
+ *
+ * 这一门守的是「unknown-mod 坍缩 → 摘要冒领他方类 → catalog 冒领包名 → 模型照着别人的包名写 import」
+ * 这条整链静默通道（F113 终裁：catalog 50 行外来包无一例外来自坍缩目录 —— 本门 A6 独立复算出同一批 50 行）。
+ * S5 联网重建后端涨已归零：摘要侧冒领 385→0、unknown-mod 6→0，台账因此**留空但保留检查**，
+ * 再冒领一个类即以「不在存量台账」红；catalog 侧剩 8 行（S5b 补取件后只剩 KfF 的无自身路径证据 jar，原 36 行（S5 未重建的库 + KfF 的 8 个 MOD_ID_UNKNOWN 键）
+ * 逐行登记在 DEBT_CATALOG_FOREIGN，多一行少一行都红；36→8 由 S5b 完成，余 8 行待 prune 落地后清空。
+ */
+{
+  const ANCHOR_S4 = "if (ownsPackage(e, p)) attestPackage(roots, e.id, p);";
+  const GATE = fileURLToPath(new URL("./scripts/assert-lib-ownership.mjs", import.meta.url));
+  const S4 = jpath(GATE_SCRATCH, "s4-lib-ownership");
+  const w = (p, s) => {
+    mkdirSync(dirname(p), { recursive: true });
+    writeFileSync(p, s, "utf8");
+  };
+  const sum = (o) => JSON.stringify(o, null, 1);
+  /** 自有类：root `net.darkhax.bookshelf` 含段 `bookshelf` ⇒ modIds:["bookshelf"] 段级自有 */
+  const cleanSum = sum({
+    slug: "bookshelf-lib",
+    id: "authored/lib-bookshelf",
+    modId: "bookshelf",
+    source: { dirs: ["bookshelf/1.20.1"] },
+    versions: { "1.20.1/forge": { classes: ["net.darkhax.bookshelf.Bookshelf", "net.darkhax.bookshelf.block.BlockBasicChest"] } },
+  });
+  /** 挂到 geckolib 条目（modIds:["geckolib"]）名下 ⇒ `net.darkhax.bookshelf` 非自有且被他条目凭证占有 = 冒领 */
+  const foreignSum = (n) =>
+    sum({
+      slug: "geckolib",
+      id: "authored/lib-geckolib",
+      modId: "geckolib",
+      source: { dirs: ["geckolib/1.19.1"] },
+      versions: {
+        "1.19.1/fabric": {
+          classes: Array.from({ length: n }, (_, i) => `net.darkhax.bookshelf.cls.C${i}`),
+        },
+      },
+    });
+  const runGate = (env) =>
+    spawnSync(process.execPath, [GATE], { env: { ...process.env, ...env }, encoding: "utf8", windowsHide: true });
+
+  const cases = {
+    clean: { "bookshelf-lib.json": cleanSum },
+    foreignNewFile: { "poison-foreign.json": foreignSum(1) },
+    foreignCountDrift: { "geckolib.json": foreignSum(1) },
+    unjoined: { "no-such-lib.json": sum({ slug: "no-such", id: "authored/lib-nope", modId: "nope", source: { dirs: ["nope/1.20.1"] }, versions: { "1.20.1/forge": { classes: [] } } }) },
+    unknownModDir: { "balm.json": sum({ slug: "balm", id: "authored/lib-balm", modId: "balm", source: { dirs: ["unknown-mod"] }, versions: { unknown: { classes: [] } } }) },
+    sharedDir: {
+      "balm.json": sum({ slug: "balm", id: "authored/lib-balm", modId: "balm", source: { dirs: ["caelus/1.20.1"] }, versions: { "1.20.1/forge": { classes: [] } } }),
+      "bookshelf-lib.json": cleanSum.replace("bookshelf/1.20.1", "caelus/1.20.1"),
+    },
+  };
+  const runs = {};
+  try {
+    for (const [name, fixtures] of Object.entries(cases)) {
+      const root = jpath(S4, name);
+      for (const [f, text] of Object.entries(fixtures)) w(jpath(root, "data", "lib-api-summaries", f), text);
+      runs[name] = runGate({ MC_SKILL_LIB_OWN_TEST_ROOT: root });
+      rmSync(root, { recursive: true, force: true });
+    }
+    // A5 锚点自证：把 writer 副本改名 / 抽掉凭证登记行，门必须报「writer 规则已变」而不是静默换规则
+    const mergeSrc = readFileSync(jpath(import.meta.dirname, "..", "scripts", "merge-verified-api.mjs"), "utf8");
+    const writerCases = {
+      writerRenamed: mergeSrc.replace("function ownsPackage(entry, pkg)", "function ownsPackageX(entry, pkg)"),
+      writerIndexLine: mergeSrc.replace(ANCHOR_S4, "attestPackage(roots, e.id, p);"),
+    };
+    assert.equal(writerCases.writerRenamed.includes("ownsPackageX"), true, "投毒锚点未命中：writer 写法已变");
+    assert.equal(writerCases.writerIndexLine.includes(ANCHOR_S4), false, "投毒锚点未命中：凭证索引行写法已变");
+    for (const [name, text] of Object.entries(writerCases)) {
+      const p = jpath(S4, `${name}.mjs`);
+      w(p, text);
+      const root = jpath(S4, name);
+      w(jpath(root, "data", "lib-api-summaries", "bookshelf-lib.json"), cleanSum);
+      runs[name] = runGate({ MC_SKILL_LIB_OWN_TEST_ROOT: root, MC_SKILL_LIB_OWN_WRITER_SRC: p });
+      rmSync(root, { recursive: true, force: true });
+      rmSync(p, { force: true });
+    }
+    // A6 投毒：合成 catalog —— geckolib 条目冒领 bookshelf 已自有的包根（F113 的最后一跳）
+    const catSrc = jpath(S4, "catalog-foreign.mjs");
+    const fakeCatalog = [
+      {
+        id: "authored/lib-bookshelf",
+        modIds: ["bookshelf"],
+        modrinthSlug: "bookshelf-lib",
+        verifiedApi: { "1.20.1/forge": { verifiedAt: "2026-09", packages: ["net.darkhax.bookshelf"], entrypoints: [] } },
+      },
+      {
+        id: "authored/lib-geckolib",
+        modIds: ["geckolib"],
+        modrinthSlug: "geckolib",
+        verifiedApi: { "1.20.1/forge": { verifiedAt: "2026-09", packages: ["net.darkhax.bookshelf"], entrypoints: [] } },
+      },
+    ];
+    w(catSrc, `export const LIBRARY_CATALOG = ${JSON.stringify(fakeCatalog)};\n`);
+    const cfRoot = jpath(S4, "catalogForeign");
+    w(jpath(cfRoot, "data", "lib-api-summaries", "bookshelf-lib.json"), cleanSum);
+    runs.catalogForeign = runGate({
+      MC_SKILL_LIB_OWN_TEST_ROOT: cfRoot,
+      MC_SKILL_LIB_OWN_CATALOG_SRC: catSrc,
+    });
+    rmSync(cfRoot, { recursive: true, force: true });
+    rmSync(catSrc, { force: true });
+    // 真数据根：台账层必须真的跑过（S5 清零后端涨即红）
+    runs.realRoot = runGate({});
+  } finally {
+    rmSync(S4, { recursive: true, force: true });
+    assert.ok(!existsSync(S4), `§S4-G1 摊位未收干净，残留：${S4}`);
+    dropIfEmpty(GATE_SCRATCH);
+  }
+
+  assert.equal(runs.clean.status, 0, `G1 在干净假根上就红 = 投毒永远「通过」：\n${runs.clean.stdout}${runs.clean.stderr}`);
+  assert.match(runs.clean.stdout, /冒领 0/, `干净假根没跑到零冒领：\n${runs.clean.stdout}`);
+  const expect = (name, re, why) => {
+    const r = runs[name];
+    assert.notEqual(r.status, 0, `G1 漏掉「${name}」：${why}`);
+    assert.match(r.stderr, re, `G1「${name}」红了但没点名（锚点 ${re}）：\n${r.stderr}`);
+  };
+  expect("foreignNewFile", /不在存量台账/, "新文件冒领他方类");
+  expect("foreignCountDrift", /不在存量台账/, "S5 已把冒领台账排空 ⇒ 既有摘要文件再冒领一个类也必须红（零容忍）");
+  expect("unjoined", /连不上 catalog 条目/, "摘要连不上条目 ⇒ 归属检查整体失效");
+  expect("unknownModDir", /unknown-mod/, "非台账文件把产物落进 unknown-mod");
+  expect("sharedDir", /被 2 个 slug 共用/, "同一棵反编译产物被两个 slug 冒领");
+  expect("writerRenamed", /找不到 function ownsPackage/, "writer 归属规则改名后本门必须拒绝继续");
+  expect("writerIndexLine", /凭证索引行/, "writer 凭证登记方式变了，索引构建失去同源保证");
+  expect("catalogForeign", /catalog 冒领他方包根 1 行/, "catalog 条目冒领他方已证实包根 ⇒ 模型照它写 import（A6）");
+  assert.equal(runs.realRoot.status, 0, `G1 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
+  assert.match(
+    runs.realRoot.stdout,
+    /冒领 0（全在存量台账内）[\s\S]*已证实包根 42[\s\S]*台账 checked/,
+    `真根台账层没跑（S5 重建后冒领应已归零）：\n${runs.realRoot.stdout}`,
+  );
+  console.log(
+    "  §S4 G1 归属门: 干净假根=0 / 真根=0（S5 重建后 冒领 0 · unknown-mod 0 · catalog 余 8 行 KfF 登记在台账）；" +
+      "投毒 新文件冒领·既有文件再冒领·连不上条目·unknown-mod·共用目录·writer 锚点×2 全红并点名",
+  );
+}
+
+/**
+ * §S4 · G2 解析器可用性门：假钉点根 + 八记投毒 + 真根复跑。
+ *
+ * 守的是「解析器解不出身份就兜个 unknown 写成 success 行」「不认识的语法整行丢掉不留痕迹」——
+ * 两者都不报错，只有下游数据变脏（F113 的坍缩目录、依赖块蒸发后的假「无 MC 约束」）。
+ * 本门的投毒面只能落在**源文笔钉**上（A 层行为取证打的是真 dist，改不动），
+ * 所以每记投毒都拷一份源文件到 scratch 再改形；锚点未命中即当场断言失败，
+ * 避免「源文件写法变了 → 投毒变成空操作 → 门假绿」。
+ */
+{
+  const GATE = fileURLToPath(new URL("./scripts/assert-parser-availability.mjs", import.meta.url));
+  const S4G2 = jpath(GATE_SCRATCH, "s4-parser-availability");
+  const REPO = jpath(import.meta.dirname, "..");
+  const PIN_RELS = [
+    "scripts/batch-decompile.mjs",
+    "mcp-server/src/decompile/services/toml-parse.ts",
+    "mcp-server/src/decompile/services/mod-analyzer.ts",
+    "mcp-server/src/decompile/services/mod-decompile.ts",
+  ];
+  const live = Object.fromEntries(
+    PIN_RELS.map((relPath) => [relPath, readFileSync(jpath(REPO, ...relPath.split("/")), "utf8")]),
+  );
+  const MOD_ID_FALLBACK = 'modId: result.modId ?? meta.modId ?? "unknown",';
+  const poison = (relPath, from, to, all = false) => {
+    const src = live[relPath];
+    const out = all ? src.split(from).join(to) : src.replace(from, to);
+    assert.notEqual(out, src, `投毒锚点未命中（${relPath}）：${from} —— 写法已变，本记投毒是空操作`);
+    return out;
+  };
+  const runGate = (env) =>
+    spawnSync(process.execPath, [GATE], { env: { ...process.env, ...env }, encoding: "utf8", windowsHide: true });
+
+  const cases = {
+    clean: Object.fromEntries(PIN_RELS.map((p) => [p, live[p]])),
+    unknownFallback: {
+      ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[0]).map((p) => [p, live[p]])),
+      [PIN_RELS[0]]: (() => {
+        const first = poison(PIN_RELS[0], "modId: idN.modId,", MOD_ID_FALLBACK);
+        if (!first.includes("modId: idJ.modId,"))
+          throw new Error("投毒锚点未命中（JiJ 行的 modId 赋值写法已变）");
+        return first.replace("modId: idJ.modId,", MOD_ID_FALLBACK);
+      })(),
+    },
+    requireModIdNeutered: {
+      ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[0]).map((p) => [p, live[p]])),
+      [PIN_RELS[0]]: poison(PIN_RELS[0], "if (!identity.ok) {", "if (false) {"),
+    },
+    inlineSilentDrop: {
+      ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[1]).map((p) => [p, live[p]])),
+      [PIN_RELS[1]]: poison(PIN_RELS[1], "inlineSkipped.push(", "void ("),
+    },
+    inlineNotReturned: {
+      ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[1]).map((p) => [p, live[p]])),
+      [PIN_RELS[1]]: poison(PIN_RELS[1], "return { sections, inlineSkipped };", "return { sections };"),
+    },
+    analyzerMutesWarning: {
+      ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[2]).map((p) => [p, live[p]])),
+      [PIN_RELS[2]]: poison(PIN_RELS[2], "行内联表（本解析器不支持，已跳过）", "内联表"),
+    },
+    analyzerGuardGone: {
+      ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[2]).map((p) => [p, live[p]])),
+      [PIN_RELS[2]]: poison(PIN_RELS[2], "if (toml.inlineSkipped.length) {", "if (0) {"),
+    },
+    argsGuardRegressed: {
+      ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[3]).map((p) => [p, live[p]])),
+      [PIN_RELS[3]]: poison(PIN_RELS[3], "if (!args?.jarPath) {", "if (!args.jarPath) {"),
+    },
+    missingPin: Object.fromEntries(PIN_RELS.slice(1).map((p) => [p, live[p]])),
+  };
+
+  const runs = {};
+  try {
+    for (const [name, files] of Object.entries(cases)) {
+      const root = jpath(S4G2, name);
+      for (const [relPath, text] of Object.entries(files)) {
+        const p = jpath(root, ...relPath.split("/"));
+        mkdirSync(dirname(p), { recursive: true });
+        writeFileSync(p, text, "utf8");
+      }
+      runs[name] = runGate({ MC_SKILL_PARSER_TEST_ROOT: root });
+      rmSync(root, { recursive: true, force: true });
+    }
+    runs.realRoot = runGate({});
+  } finally {
+    rmSync(S4G2, { recursive: true, force: true });
+    assert.ok(!existsSync(S4G2), `§S4-G2 摊位未收干净，残留：${S4G2}`);
+    dropIfEmpty(GATE_SCRATCH);
+  }
+
+  assert.equal(
+    runs.clean.status,
+    0,
+    `G2 在干净假钉点根上就红 = 投毒永远「通过」：\n${runs.clean.stdout}${runs.clean.stderr}`,
+  );
+  assert.match(runs.clean.stdout, /13 个 jar 夹具/, `假根上 A 层行为取证没跑（夹具层被跳过 ⇒ 绿是空的）：\n${runs.clean.stdout}`);
+  const expect = (name, re, why) => {
+    const r = runs[name];
+    assert.notEqual(r.status, 0, `G2 漏掉「${name}」：${why}`);
+    assert.match(r.stderr, re, `G2「${name}」红了但没点名（锚点 ${re}）：\n${r.stderr}`);
+  };
+  expect("unknownFallback", /仍用 `\?\? "unknown"` 兜底/, "解不出身份的 modId 又写成 success 行（merge 照收 → 坍缩目录）");
+  expect("requireModIdNeutered", /解析不出必须抛错/, "requireModId 被掏空成 `if (false)`，兜底值照旧落盘");
+  expect("inlineSilentDrop", /内联表跳过必须记账/, "不认识的语法退回整行静默丢弃");
+  expect("inlineNotReturned", /必须把账目返回给上层/, "账记了但没交出去，上层永远看到空账");
+  expect("analyzerMutesWarning", /必须转成 warning/, "记了账却不报警 = 等于没记");
+  expect("analyzerGuardGone", /必须在有跳过时消费 inlineSkipped/, "消费点被摘成 `if (0)`，警告永不落地");
+  expect("argsGuardRegressed", /缺参守卫必须是可选链/, "漏传整个 args 会裸抛 TypeError，宿主只看到无诊断的内部错误");
+  expect("missingPin", /钉点文件不存在/, "钉点文件改名/搬迁后门必须拒绝继续，而不是扫不到就当通过");
+  assert.equal(runs.realRoot.status, 0, `G2 真根必须绿：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
+  assert.match(runs.realRoot.stdout, /身份 13\/13 唯一[\s\S]*死码扫描 mcp-server\/src/, `真根少跑了层：\n${runs.realRoot.stdout}`);
+  console.log(
+    "  §S4 G2 解析器门: 干净假根=0 / 真根=0（13 夹具 · 身份唯一 · 死码扫描已跑）；投毒 8 记全红并点名：" +
+      "unknown 兜底·掏空 requireModId·静默丢行·账目未返回·哑警告·摘守卫·裸 args 访问·钉点缺失",
+  );
+}
+
+/**
+ * §S4 · G3 语料保真门：假根 + 七记投毒 + 台账层可红 + 真根复算。
+ *
+ * 这一门守的是「检索侧照样 ok:true，但正文本身已经坏了」这条静默通道：
+ * `<<<` 占位符没展开（读者侧半截）、上游混淆名漏进正文、加工吃掉 `Foo<...>` 泛型签名、
+ * processed 重名让按名取页取错类、加工吞页。假根只跑 A 层规则，数字台账只跑真根。
+ */
+{
+  const GATE = fileURLToPath(new URL("./scripts/assert-corpus-faithfulness.mjs", import.meta.url));
+  const S4G3 = jpath(GATE_SCRATCH, "s4-corpus-faithfulness");
+  const w = (p, s) => {
+    mkdirSync(dirname(p), { recursive: true });
+    writeFileSync(p, s, "utf8");
+  };
+  const PAGE = "# Title\n\nProse.\n\n```java\nList<ItemStack> items = new ArrayList<>();\n```\n";
+  const packOf = (root) => jpath(root, "fabric_9.9.9", "fabric-docs", "9.9.9");
+  /** 干净树 = raw 与 processed 同字节（A 层对「加工改了什么」不设台账，只要求结构对得上）。 */
+  const tree = (root, rel, processedBody, rawBody = processedBody) => {
+    w(jpath(packOf(root), "raw", rel), rawBody);
+    w(jpath(packOf(root), "processed", rel), processedBody);
+  };
+  const runGate = (env) =>
+    spawnSync(process.execPath, [GATE], { env: { ...process.env, ...env }, encoding: "utf8", windowsHide: true });
+
+  const cases = {
+    clean: (r) => tree(r, "page.md", PAGE),
+    // 围栏内的 class_1792 是代码语境，必须**不**报（防「门永远红」→ 又被放宽）
+    cleanFenced: (r) => tree(r, "page.md", PAGE + "\n```\nclass_1792 method_1234\n```\n"),
+    // 正例：blob 在镜像里且区段标记成对 ⇒ 读者能给出真代码，门必须绿
+    cleanOnDiskRegion: (r) => {
+      tree(r, "page.md", PAGE + "\n<<< @/reference/Example.java#seg\n");
+      w(
+        jpath(r, "fabric_9.9.9", "reference", "Example.java"),
+        "public class Example {\n  // #region seg\n  int a = 1;\n  // #endregion seg\n}\n",
+      );
+    },
+    // 反例：同一个区段名在 blob 里不存在 ⇒ 展开成 No lines matched.（空围栏），必须红并点名
+    regionMissing: (r) => {
+      tree(r, "page.md", PAGE + "\n<<< @/reference/Example.java#nope\n");
+      w(jpath(r, "fabric_9.9.9", "reference", "Example.java"), "public class Example {\n  int a = 1;\n}\n");
+    },
+    directiveBadTarget: (r) => tree(r, "page.md", PAGE + "\n<<< reference/Example.java\n"),
+    dupBasename: (r) => {
+      tree(r, jpath("a", "page.md"), PAGE);
+      tree(r, jpath("b", "page.md"), PAGE);
+    },
+    rawDrift: (r) => {
+      tree(r, "page.md", PAGE);
+      w(jpath(packOf(r), "processed", "page2.md"), PAGE);
+    },
+    intermediaryBare: (r) => tree(r, "page.md", PAGE + "\nReplace the old <yarn class_1792> object with yours.\n"),
+    genericLoss: (r) => tree(r, "page.md", PAGE.replace("List<ItemStack> items", "List items"), PAGE),
+  };
+  const runs = {};
+  try {
+    for (const [name, build] of Object.entries(cases)) {
+      const root = jpath(S4G3, name);
+      build(root);
+      runs[name] = runGate({ MC_SKILL_CORPUS_TEST_ROOT: root });
+      rmSync(root, { recursive: true, force: true });
+    }
+    // 台账层（B）：只给 MC_SKILL_DATA、不给 TEST_ROOT ⇒ 门把假根当真根跑数字对账
+    const ledgerRoot = jpath(S4G3, "ledger");
+    tree(ledgerRoot, "page.md", PAGE);
+    runs.ledgerDrift = runGate({ MC_SKILL_DATA: ledgerRoot });
+    rmSync(ledgerRoot, { recursive: true, force: true });
+    runs.realRoot = runGate({});
+  } finally {
+    rmSync(S4G3, { recursive: true, force: true });
+    assert.ok(!existsSync(S4G3), `§S4-G3 摊位未收干净，残留：${S4G3}`);
+    dropIfEmpty(GATE_SCRATCH);
+  }
+
+  for (const name of ["clean", "cleanFenced", "cleanOnDiskRegion"]) {
+    assert.equal(runs[name].status, 0, `G3 在干净假根「${name}」上就红 = 投毒永远「通过」：\n${runs[name].stdout}${runs[name].stderr}`);
+    assert.match(runs[name].stdout, /内容层（假根）/, `G3「${name}」没跑到 A 层：\n${runs[name].stdout}`);
+  }
+  const expect = (name, re, why) => {
+    const r = runs[name];
+    assert.notEqual(r.status, 0, `G3 漏掉「${name}」：${why}`);
+    assert.match(r.stderr, re, `G3「${name}」红了但没点名（锚点 ${re}）：\n${r.stderr}`);
+  };
+  expect("regionMissing", /解析不出正文（区段名或行选对不上）/, "blob 在、区段名对不上 ⇒ 展开成空围栏而没有任何错误码");
+  expect("directiveBadTarget", /目标形态异常/, "目标不是仓库绝对路径，展开与取件都无从下手");
+  expect("dupBasename", /重名 basename/, "两个同名 processed 页 ⇒ 按名取页会取错文件");
+  expect("rawDrift", /加工吞页或造页/, "processed 比 raw 多一页 ⇒ 加工造页/镜像错位");
+  expect("intermediaryBare", /正文外泄上游中介名/, "混淆名漏进正文 ⇒ 模型照抄 class_1792");
+  expect("genericLoss", /个尖括号泛型在 processed 未原样存活/, "泛型签名被加工改掉 ⇒ 模型读到与上游不一致的签名");
+  expect("ledgerDrift", /不在台账 ⇒ 新增\/改名树/, "台账层没咬住未登记树 ⇒ 数字对账形同虚设");
+  assert.equal(runs.realRoot.status, 0, `G3 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
+  assert.match(
+    runs.realRoot.stdout,
+    /49 棵 raw\/processed 树[\s\S]*处字节已在盘上[\s\S]*泛型丢失 0 · 重名 0/,
+    `真根少跑了层或台账口径变了：\n${runs.realRoot.stdout}`,
+  );
+  console.log(
+    "  §S4 G3 语料保真门: 干净假根=0（含围栏内混淆名不报、区段标记齐全不报）/ 真根=0（49 树 · 633 处 <<< · 已取件处数逐档钉在台账 · 13 处正文中介名台账）；" +
+      "投毒 7 记全红并点名：区段标记缺失·目标形态·重名页·吞页·正文中介名·吃泛型·台账层未登记树",
+  );
+}
+
+/**
+ * §S4 · G4 索引与映射自洽门：造库夹具 + 十二记投毒 + 台账层可红 + 真根复算。
+ *
+ * 这一门守的是「台账与 sqlite 两份真相各说各话」：manifest 说 74 chunks 而库里 70（或反之）、
+ * chunks_fts 与 chunks 不同源、命中的 doc_id 在 docs 里不存在、嵌入层整段为 0、
+ * yarn 库 meta.methodCount 虚报。每一类在工具侧都只表现为「结果少一点 / 名字换一批」，
+ * 全绿退出，所以逐类都要能被打红。
+ */
+{
+  const GATE = fileURLToPath(new URL("./scripts/assert-index-consistency.mjs", import.meta.url));
+  const S4G4 = jpath(GATE_SCRATCH, "s4-index-consistency");
+  const { createHash } = await import("node:crypto");
+  const { DatabaseSync } = await import("node:sqlite");
+  const w = (p, s) => {
+    mkdirSync(dirname(p), { recursive: true });
+    writeFileSync(p, s, "utf8");
+  };
+  const relOf = (e) => `${e.platform}_${e.version}/${e.source}/${e.version}/semantic/db.sqlite`;
+  const SEM_DDL = `
+CREATE TABLE docs(doc_id TEXT PRIMARY KEY, title TEXT, url TEXT, tags_json TEXT, priority TEXT, section_count INTEGER);
+CREATE TABLE chunks(chunk_id TEXT PRIMARY KEY, doc_id TEXT NOT NULL, chunk_type TEXT, chunk_order INTEGER, text TEXT);
+CREATE VIRTUAL TABLE chunks_fts USING fts5(chunk_id UNINDEXED, text, tokenize = 'porter unicode61');
+CREATE TABLE chunk_embeddings(chunk_id TEXT PRIMARY KEY, doc_id TEXT NOT NULL, embedding BLOB);
+CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`;
+  /** 造一个自洽的语义库，返回**与磁盘相符**的 manifest 条目（投毒时再由调用方改坏其中一项）。 */
+  const makeIndex = (root, opt = {}) => {
+    const e = { platform: "fabric", version: "1.20.4", source: "fabric-docs", ...opt };
+    const abs = jpath(root, relOf(e));
+    mkdirSync(dirname(abs), { recursive: true });
+    const db = new DatabaseSync(abs);
+    db.exec(SEM_DDL);
+    const docs = e.docs ?? 1;
+    const chunks = e.chunks ?? 4;
+    const embedded = e.embedded ?? chunks;
+    for (let i = 0; i < docs; i++) {
+      db.prepare("INSERT INTO docs(doc_id,title) VALUES(?,?)").run(`d${i}`, `t${i}`);
+    }
+    for (let i = 0; i < chunks; i++) {
+      const doc = i < docs ? `d${i % docs}` : (e.orphan ? "ghost" : "d0");
+      db.prepare("INSERT INTO chunks(chunk_id,doc_id,chunk_type,chunk_order,text) VALUES(?,?,?,?,?)").run(
+        `c${i}`, doc, "prose", i, `body ${i}`,
+      );
+      if (i < chunks - (e.ftsMissing ?? 0)) db.prepare("INSERT INTO chunks_fts(chunk_id,text) VALUES(?,?)").run(`c${i}`, `body ${i}`);
+      if (i < embedded) db.prepare("INSERT INTO chunk_embeddings(chunk_id,doc_id,embedding) VALUES(?,?,?)").run(`c${i}`, doc, Buffer.alloc(4));
+    }
+    db.prepare("INSERT INTO meta(key,value) VALUES('chunks',?)").run(String(chunks));
+    db.prepare("INSERT INTO meta(key,value) VALUES('embedded',?)").run(String(embedded));
+    db.close();
+    return {
+      platform: e.platform,
+      version: e.version,
+      source: e.source,
+      path: relOf(e),
+      chunks,
+      embedded,
+      sha256: createHash("sha256").update(readFileSync(abs)).digest("hex"),
+    };
+  };
+  const makeYarn = (root, pack, opt = {}) => {
+    const abs = jpath(root, pack, "mappings", "yarn-mappings.sqlite");
+    mkdirSync(dirname(abs), { recursive: true });
+    const db = new DatabaseSync(abs);
+    db.exec(`
+CREATE TABLE classes(named TEXT PRIMARY KEY, intermediary TEXT, official TEXT);
+CREATE TABLE methods(owner_named TEXT, name_named TEXT, descriptor_named TEXT, name_official TEXT, descriptor_official TEXT, name_intermediary TEXT);
+CREATE TABLE fields(owner_named TEXT, name_named TEXT, descriptor_named TEXT, name_official TEXT, descriptor_official TEXT, name_intermediary TEXT);
+CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
+    const classes = opt.classes ?? 2;
+    const methods = opt.methods ?? 3;
+    const fields = opt.fields ?? 1;
+    for (let i = 0; i < classes; i++) db.prepare("INSERT INTO classes VALUES(?,?,?)").run(`C${i}`, `ci${i}`, `co${i}`);
+    for (let i = 0; i < methods; i++) db.prepare("INSERT INTO methods VALUES(?,?,?,?,?,?)").run("C0", `m${i}`, "()V", `mo${i}`, "()V", `mi${i}`);
+    for (let i = 0; i < fields; i++) db.prepare("INSERT INTO fields VALUES(?,?,?,?,?,?)").run("C0", `f${i}`, "I", `fo${i}`, "I", `fi${i}`);
+    for (const [k, v] of Object.entries({
+      schemaVersion: String(opt.schema ?? 3),
+      classCount: String(opt.metaClass ?? classes),
+      methodCount: String(opt.metaMethod ?? methods),
+      fieldCount: String(opt.metaField ?? fields),
+    })) db.prepare("INSERT INTO meta VALUES(?,?)").run(k, v);
+    if (!opt.dropMethodIdx) db.exec("CREATE INDEX idx_methods_official ON methods(name_official)");
+    if (!opt.dropFieldIdx) db.exec("CREATE INDEX idx_fields_official ON fields(name_official)");
+    db.close();
+  };
+  const writeManifest = (root, entries) =>
+    w(jpath(root, "semantic-index-manifest.json"), JSON.stringify({ built_at: "x", embedMode: "hybrid", entries }, null, 1));
+  const runGate = (env) =>
+    spawnSync(process.execPath, [GATE], { env: { ...process.env, ...env }, encoding: "utf8", windowsHide: true });
+
+  const cases = {
+    clean: (r) => writeManifest(r, [makeIndex(r)]),
+    missingDb: (r) => {
+      const e = makeIndex(r);
+      rmSync(jpath(r, relOf(e)), { force: true });
+      writeManifest(r, [e]);
+    },
+    unregisteredDb: (r) => {
+      makeIndex(r);
+      writeManifest(r, []);
+    },
+    countDrift: (r) => {
+      const e = makeIndex(r);
+      writeManifest(r, [{ ...e, chunks: e.chunks + 1 }]);
+    },
+    shaDrift: (r) => {
+      const e = makeIndex(r);
+      writeManifest(r, [{ ...e, sha256: "0".repeat(64) }]);
+    },
+    ftsDrift: (r) => writeManifest(r, [makeIndex(r, { ftsMissing: 1 })]),
+    orphanChunk: (r) => writeManifest(r, [makeIndex(r, { orphan: true })]),
+    emptyIndex: (r) => writeManifest(r, [makeIndex(r, { chunks: 0, embedded: 0 })]),
+    residueFile: (r) => {
+      writeManifest(r, [makeIndex(r)]);
+      w(jpath(r, "fabric_1.20.4", "fabric-docs", "1.20.4", "semantic", "db.sqlite.tmp-999"), "half-written");
+    },
+    pathMismatch: (r) => {
+      const e = makeIndex(r);
+      writeManifest(r, [{ ...e, path: relOf({ ...e, version: "9.9.9" }) }]);
+    },
+    yarnCountDrift: (r) => {
+      writeManifest(r, [makeIndex(r)]);
+      makeYarn(r, "fabric_1.20.4", { metaMethod: 999 });
+    },
+    yarnMissingIndex: (r) => {
+      writeManifest(r, [makeIndex(r)]);
+      makeYarn(r, "fabric_1.20.4", { dropFieldIdx: true });
+    },
+  };
+  const runs = {};
+  try {
+    for (const [name, build] of Object.entries(cases)) {
+      const root = jpath(S4G4, name);
+      build(root);
+      runs[name] = runGate({ MC_SKILL_INDEX_TEST_ROOT: root });
+      rmSync(root, { recursive: true, force: true });
+    }
+    // 台账层（B）：只给 MC_SKILL_DATA ⇒ 门把假根当真根，数字对账必须咬
+    const ledgerRoot = jpath(S4G4, "ledger");
+    writeManifest(ledgerRoot, [makeIndex(ledgerRoot)]);
+    runs.ledgerDrift = runGate({ MC_SKILL_DATA: ledgerRoot });
+    rmSync(ledgerRoot, { recursive: true, force: true });
+    runs.realRoot = runGate({});
+  } finally {
+    rmSync(S4G4, { recursive: true, force: true });
+    assert.ok(!existsSync(S4G4), `§S4-G4 摊位未收干净，残留：${S4G4}`);
+    dropIfEmpty(GATE_SCRATCH);
+  }
+
+  assert.equal(runs.clean.status, 0, `G4 在干净假根上就红 = 投毒永远「通过」：\n${runs.clean.stdout}${runs.clean.stderr}`);
+  assert.match(runs.clean.stdout, /内容层（假根）/, `G4 干净假根没跑到 A 层：\n${runs.clean.stdout}`);
+  const expect = (name, re, why) => {
+    const r = runs[name];
+    assert.notEqual(r.status, 0, `G4 漏掉「${name}」：${why}`);
+    assert.match(r.stderr, re, `G4「${name}」红了但没点名（锚点 ${re}）：\n${r.stderr}`);
+  };
+  expect("missingDb", /manifest 指向的库不存在/, "台账空指一个不存在的库 ⇒ 该档语义检索静默 0 命中");
+  expect("unregisteredDb", /磁盘有库 .* 但 manifest 没有条目/, "建了库没登记 ⇒ 索引存在但没人查得到");
+  expect("countDrift", /manifest\.chunks .*≠ 库内 COUNT/, "manifest 与库内行数各说各话");
+  expect("shaDrift", /库文件 sha256 ≠ manifest\.sha256/, "库重建过而台账没跟着写");
+  expect("ftsDrift", /chunks_fts .*≠ chunks/, "全文层与向量层不同源 ⇒ 关键词命中与向量命中不是同一批 chunk");
+  expect("orphanChunk", /孤儿 chunk/, "命中能返回但 get_doc_full 取不到正文");
+  expect("emptyIndex", /空索引且不在台账/, "整库空索引被当成有效索引");
+  expect("residueFile", /索引目录残留/, "半截事务文件留在索引目录");
+  expect("pathMismatch", /尾缀不等于规范路径/, "manifest.path 与自身的 platform/version/source 键不自洽");
+  expect("yarnCountDrift", /meta\.methodCount .*≠ methods 实际/, "读侧直接信 meta ⇒ 映射覆盖数虚报");
+  expect("yarnMissingIndex", /却缺索引 idx_fields_official/, "schema v3 缺 official 索引 ⇒ convert_mapping 反查只能吐 intermediary");
+  expect("ledgerDrift", /manifest 条目数: 台账 60 ≠ 实扫 1/, "台账层没咬住假根 ⇒ 数字对账形同虚设");
+  assert.equal(runs.realRoot.status, 0, `G4 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
+  assert.match(
+    runs.realRoot.stdout,
+    /60 库 · Σchunks \d+ · Σembedded \d+ · sha256 全对账 · 孤儿 chunk 0[\s\S]*台账层已跑/,
+    `真根少跑了层：\n${runs.realRoot.stdout}`,
+  );
+  console.log(
+    "  §S4 G4 索引自洽门: 干净假根=0 / 真根=0（60 库 · sha256 全对 · 8 纯FTS + 7 空库 + 5 计数虚报全在台账）；" +
+      "投毒 12 记全红并点名：库缺失·未登记·计数漂移·sha 过期·fts 不同源·孤儿 chunk·空库·残留·路径错档·yarn 计数·缺索引·台账层",
+  );
+}
+
+/**
+ * §S4 · 门串链：每个 `scripts/assert-*.mjs` 都必须被某个 `test-*.mjs` 或 `package.json` 的 test 链引用。
+ *
+ * 一道没人跑的门比没有门更糟：它本地手跑绿、CI 也「绿」，但坏数据照样入库。
+ * 四门（G1–G4）都是这个形状，所以把「可达性」本身钉成断言。
+ */
+{
+  const { readdirSync } = await import("node:fs");
+  const SCRIPTS = jpath(import.meta.dirname, "scripts");
+  const gates = readdirSync(SCRIPTS).filter((f) => /^assert-.*\.mjs$/.test(f)).sort();
+  const tests = readdirSync(import.meta.dirname).filter((f) => /^test-.*\.mjs$/.test(f));
+  const blob = tests.map((t) => readFileSync(jpath(import.meta.dirname, t), "utf8")).join("\n");
+  const pkg = readFileSync(jpath(import.meta.dirname, "package.json"), "utf8");
+  const findOrphans = (needleIn, pkgIn) =>
+    gates.filter((g) => !needleIn.includes(g) && !pkgIn.includes(g));
+  const orphans = findOrphans(blob, pkg);
+  assert.equal(orphans.length, 0, `以下门禁没有任何调用方 ⇒ 手跑绿也不会进 npm test：\n${orphans.join("\n")}`);
+  // 反身自证：抽掉一个门的引用，本条必须红（否则「串链」这句 itself 也是永远绿的）
+  const probe = gates[0];
+  assert.ok(
+    findOrphans(blob.replace(probe, ""), pkg.replace(probe, "")).includes(probe),
+    `门串链断言打不红（删掉 ${probe} 的引用后仍然全绿）`,
+  );
+  console.log(
+    `  §S4 门串链: ${gates.length} 道 assert-* 全部可达（${tests.length} 个 test-*.mjs + package.json test 链）；` +
+      `抽掉任一门的引用即红（自证已跑）`,
+  );
+}
+
 console.log("script helper regression tests passed");

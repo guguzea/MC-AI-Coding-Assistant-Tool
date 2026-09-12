@@ -3,7 +3,7 @@
   "branch": "main",
   "commitSha": "caa6822e596f16412b71e684edb748893c67a9c2",
   "treeFile": "temp/fabric-docs-main-tree.json",
-  "fetchedAt": "2026-09-06T17:09:58.404Z",
+  "fetchedAt": "2026-09-12T06:55:14.884Z",
   "integrity": "git blob SHA-1（`blob <len>\\0` + 内容）逐文件对账上游 tree 条目；sha256 为本地防漂移",
   "expandSpec": "markdown-it-vuepress-code-snippet-enhanced@dfb9fa25527b2f772d50ca37ae526484c890b8ae（transcludeWith=区间翻转 / transclude={a-b}=行区间 / 缺省整文件；除 dontTrim 外按最短前导空白反缩进）",
   "version": "1.21.10",
@@ -12,6 +12,12 @@
       "blobSha": "1d55d026c886a0f2f828029f906dc028b51249a0",
       "sha256": "38e241fdfe9892e2f99916dc9f4bcdc349b393e58ef6f05cb18001aceadc4261",
       "bytes": 2908,
+      "via": "cache"
+    },
+    "public/assets/develop/automatic-testing/crash-report.log": {
+      "blobSha": "bd08468d1781b89eab2b84c6dd7a80088b47d62f",
+      "sha256": "606389fcd0235cd12ff4959426092a807d00cff920690aff0ddc50ba5daed2a3",
+      "bytes": 1751,
       "via": "cache"
     },
     "reference/1.21.10/build.gradle": {
@@ -210,6 +216,24 @@
       "blobSha": "94f1f204fc99503058c55534ef994fcf20e942bf",
       "sha256": "acf737b08fc597331cf3443726925156fa5a2fac2f52dc217fb63178ca4199cc",
       "bytes": 343,
+      "via": "cache"
+    },
+    "reference/1.21.10/src/gametest/java/com/example/docs/ExampleModClientGameTest.java": {
+      "blobSha": "a67e98b8d3bcb7876fd75b32c06fed04fff030f4",
+      "sha256": "0805b9c1040c1bbceed7bcbc67af55584d29d1316d86b4584324e59963856dcf",
+      "bytes": 645,
+      "via": "cache"
+    },
+    "reference/1.21.10/src/gametest/java/com/example/docs/ExampleModGameTest.java": {
+      "blobSha": "d25336e555d72793c57744ba591baa0e44f2453b",
+      "sha256": "358cb8f5facd47a6d16a63539e2c9b8e14f23fcdaeedda65986eebe61609c6a2",
+      "bytes": 683,
+      "via": "cache"
+    },
+    "reference/1.21.10/src/gametest/resources/fabric.mod.json": {
+      "blobSha": "b4e314dc9059ae0c08510a351d844ef1cfb29ec5",
+      "sha256": "bd5965d8d85c9d2f9a36a235af79529714c767b42adffc0175d3955ca4433822",
+      "bytes": 355,
       "via": "cache"
     },
     "reference/1.21.10/src/main/generated/assets/example-mod/blockstates/condensed_dirt.json": {

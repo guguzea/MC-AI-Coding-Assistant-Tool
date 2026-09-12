@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "resources/server/recipes/incode"
 url: "https://docs.neoforged.net/docs/1.20.4/resources/server/recipes/incode/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:17.345Z"
+fetchedAt: "2026-09-12T12:00:39.322Z"
 ---
 # Non-Datapack Recipes
 

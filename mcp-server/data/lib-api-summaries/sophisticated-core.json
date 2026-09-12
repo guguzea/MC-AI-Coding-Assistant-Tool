@@ -6,676 +6,3358 @@
   "source": {
     "shard": "jsonl",
     "dirs": [
-      "unknown-mod"
+      "sophisticatedcore"
     ],
     "merged": false
   },
-  "generatedAt": "2026-08-12T10:32:15.223Z",
+  "generatedAt": "2026-09-12T11:33:58.724Z",
   "versions": {
-    "unknown": {
-      "packages": [],
+    "1.21.11": {
+      "packages": [
+        "net.p3pp3rf1y.sophisticatedcore",
+        "net.p3pp3rf1y.sophisticatedcore.api",
+        "net.p3pp3rf1y.sophisticatedcore.client",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils",
+        "net.p3pp3rf1y.sophisticatedcore.client.init",
+        "net.p3pp3rf1y.sophisticatedcore.client.render",
+        "net.p3pp3rf1y.sophisticatedcore.common",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui",
+        "net.p3pp3rf1y.sophisticatedcore.compat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.accessories",
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped",
+        "net.p3pp3rf1y.sophisticatedcore.compat.craftingtweaks",
+        "net.p3pp3rf1y.sophisticatedcore.compat.create",
+        "net.p3pp3rf1y.sophisticatedcore.compat.curios",
+        "net.p3pp3rf1y.sophisticatedcore.compat.ftbchunks",
+        "net.p3pp3rf1y.sophisticatedcore.compat.inventorysorter",
+        "net.p3pp3rf1y.sophisticatedcore.compat.iris",
+        "net.p3pp3rf1y.sophisticatedcore.compat.itemborders",
+        "net.p3pp3rf1y.sophisticatedcore.compat.mousetweaks",
+        "net.p3pp3rf1y.sophisticatedcore.compat.openpartiesandclaims",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.subtypes",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.subtypes",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.comparator",
+        "net.p3pp3rf1y.sophisticatedcore.compat.reliquary",
+        "net.p3pp3rf1y.sophisticatedcore.compat.sawmill",
+        "net.p3pp3rf1y.sophisticatedcore.compat.trashslot",
+        "net.p3pp3rf1y.sophisticatedcore.controller",
+        "net.p3pp3rf1y.sophisticatedcore.crafting",
+        "net.p3pp3rf1y.sophisticatedcore.data",
+        "net.p3pp3rf1y.sophisticatedcore.init",
+        "net.p3pp3rf1y.sophisticatedcore.inventory",
+        "net.p3pp3rf1y.sophisticatedcore.network",
+        "net.p3pp3rf1y.sophisticatedcore.renderdata",
+        "net.p3pp3rf1y.sophisticatedcore.settings",
+        "net.p3pp3rf1y.sophisticatedcore.settings.itemdisplay",
+        "net.p3pp3rf1y.sophisticatedcore.settings.main",
+        "net.p3pp3rf1y.sophisticatedcore.settings.memory",
+        "net.p3pp3rf1y.sophisticatedcore.settings.nosort",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.compacting",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.feeding",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.filter",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.infinity",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pickup",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.stack",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.stonecutter"
+      ],
       "classes": [
-        "net.darkhax.bookshelf.block.BlockBasicChest",
-        "net.darkhax.bookshelf.block.BlockSubType",
-        "net.darkhax.bookshelf.block.BlockTileEntity",
-        "net.darkhax.bookshelf.block.property.PropertyObject",
-        "net.darkhax.bookshelf.block.property.PropertyString",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasic",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicChest",
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicTickable",
-        "net.darkhax.bookshelf.Bookshelf",
-        "net.darkhax.bookshelf.BookshelfEvents",
-        "net.darkhax.bookshelf.BookshelfRegistry",
-        "net.darkhax.bookshelf.builder.ChestBuilder",
-        "net.darkhax.bookshelf.builder.LootBuilder",
-        "net.darkhax.bookshelf.client.gui.GuiGraphicButton",
-        "net.darkhax.bookshelf.client.gui.GuiSlider",
-        "net.darkhax.bookshelf.client.model.BakedModelRetexturable",
-        "net.darkhax.bookshelf.client.model.DefaultItemOverrideList",
-        "net.darkhax.bookshelf.client.model.ModelArmorExtended",
-        "net.darkhax.bookshelf.client.particle.OpenParticleDigging",
-        "net.darkhax.bookshelf.client.render.tileentity.TileEntityBasicChestRenderer",
-        "net.darkhax.bookshelf.command.Command",
-        "net.darkhax.bookshelf.command.CommandTree",
-        "net.darkhax.bookshelf.config.ConfigurationHandler",
-        "net.darkhax.bookshelf.crafting.AnvilRecipe",
-        "net.darkhax.bookshelf.crafting.IAnvilRecipe",
-        "net.darkhax.bookshelf.data.AttributeOperation",
-        "net.darkhax.bookshelf.data.Blockstates",
-        "net.darkhax.bookshelf.data.ColorHandlers",
-        "net.darkhax.bookshelf.data.FluidVolume",
-        "net.darkhax.bookshelf.data.VanillaColors",
-        "net.darkhax.bookshelf.entity.EntityArrowBase",
-        "net.darkhax.bookshelf.entity.EntityFake",
-        "net.darkhax.bookshelf.events.EnchantmentModifierEvent",
-        "net.darkhax.bookshelf.inventory.SlotArmor",
-        "net.darkhax.bookshelf.inventory.SlotFake",
-        "net.darkhax.bookshelf.item.ICustomMesh",
-        "net.darkhax.bookshelf.item.ItemBlockBasic",
-        "net.darkhax.bookshelf.item.ItemBlockChest",
-        "net.darkhax.bookshelf.item.ItemInventory",
-        "net.darkhax.bookshelf.item.ItemSubType",
-        "net.darkhax.bookshelf.lib.BookshelfException",
-        "net.darkhax.bookshelf.lib.Constants",
-        "net.darkhax.bookshelf.lib.MCColor",
-        "net.darkhax.bookshelf.lib.ModTrackingList",
-        "net.darkhax.bookshelf.lib.WeightedSelector",
-        "net.darkhax.bookshelf.network.NetworkHandler",
-        "net.darkhax.bookshelf.network.SerializableMessage",
-        "net.darkhax.bookshelf.network.TileEntityMessage",
-        "net.darkhax.bookshelf.registry.IVariant",
-        "net.darkhax.bookshelf.registry.RegistryHelper",
-        "net.darkhax.bookshelf.registry.RegistryListener",
-        "net.darkhax.bookshelf.util.AnnotationUtils",
-        "net.darkhax.bookshelf.util.BannerUtils",
-        "net.darkhax.bookshelf.util.baubles.BaubleUtils",
-        "net.darkhax.bookshelf.util.baubles.ItemBauble",
-        "net.darkhax.bookshelf.util.BlockUtils",
-        "net.darkhax.bookshelf.util.ClassUtils",
-        "net.darkhax.bookshelf.util.CollectionUtils",
-        "net.darkhax.bookshelf.util.CraftingUtils",
-        "net.darkhax.bookshelf.util.EnchantmentUtils",
-        "net.darkhax.bookshelf.util.EntityUtils",
-        "net.darkhax.bookshelf.util.GameUtils",
-        "net.darkhax.bookshelf.util.GuiUtils",
-        "net.darkhax.bookshelf.util.MathsUtils",
-        "net.darkhax.bookshelf.util.MathUtils",
-        "net.darkhax.bookshelf.util.ModUtils",
-        "net.darkhax.bookshelf.util.NBTUtils",
-        "net.darkhax.bookshelf.util.NumericUtils",
-        "net.darkhax.bookshelf.util.OreDictUtils",
-        "net.darkhax.bookshelf.util.ParticleUtils",
-        "net.darkhax.bookshelf.util.PlayerUtils",
-        "net.darkhax.bookshelf.util.RenderUtils",
-        "net.darkhax.bookshelf.util.SkullUtils",
-        "net.darkhax.bookshelf.util.StackUtils",
-        "net.darkhax.bookshelf.util.TextUtils",
-        "net.darkhax.bookshelf.world.loot.conditions.BiomeSpecific",
-        "net.darkhax.bookshelf.world.loot.functions.SetColor"
+        "net.p3pp3rf1y.sophisticatedcore.api.IDiscHandler",
+        "net.p3pp3rf1y.sophisticatedcore.api.IIOFilterUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.api.InventoryLayoutFitResult",
+        "net.p3pp3rf1y.sophisticatedcore.api.InventoryLayoutFitter",
+        "net.p3pp3rf1y.sophisticatedcore.api.InventoryLayoutPart",
+        "net.p3pp3rf1y.sophisticatedcore.api.ISlotChangeResponseUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.api.IStashStorageItem",
+        "net.p3pp3rf1y.sophisticatedcore.api.IStorageFluidHandler",
+        "net.p3pp3rf1y.sophisticatedcore.api.IStorageSavedData",
+        "net.p3pp3rf1y.sophisticatedcore.api.IStorageWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.api.IUpgradeClientTickHandler",
+        "net.p3pp3rf1y.sophisticatedcore.api.IUpgradeRenderDataValidator",
+        "net.p3pp3rf1y.sophisticatedcore.client.ClientEventHandler",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.Button",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ButtonBase",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ButtonDefinition",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ButtonDefinitions",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ColorButton",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ColorPicker",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.CompositeWidgetBase",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ImageButton",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.InventoryScrollPanel",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ItemButton",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.Label",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.LargeResultSelector",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ProgressBar",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.RotatablePreviewWidget",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.TextBox",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ToggleButton",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.WidgetBase",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.IForegroundRenderable",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.INameableEmptySlot",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.ISlotDecorationRenderer",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.SettingsScreen",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.SettingsTabBase",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.SettingsTabControl",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.SortButtonsPosition",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.StorageGuiHelper",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.StorageScreenBase",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.StorageSettingsTab",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.Tab",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.TemplatePersistanceControl",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.UpgradeGuiManager",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.UpgradeInventoryControlBase",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.UpgradeSettingsTab",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.UpgradeSettingsTabControl",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.Dimension",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.GuiHelper",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.GuiSoundHelper",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.Position",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.TextureBlitData",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.TranslationHelper",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.UV",
+        "net.p3pp3rf1y.sophisticatedcore.client.init.ModParticles",
+        "net.p3pp3rf1y.sophisticatedcore.client.render.BlockHighlightRenderer",
+        "net.p3pp3rf1y.sophisticatedcore.client.render.BlockHighlightRenderHelper",
+        "net.p3pp3rf1y.sophisticatedcore.client.render.ClientStorageContentsTooltipBase",
+        "net.p3pp3rf1y.sophisticatedcore.client.render.IItemActionPayloadBuilder",
+        "net.p3pp3rf1y.sophisticatedcore.client.render.ItemDisplayPreviewRenderer",
+        "net.p3pp3rf1y.sophisticatedcore.client.render.ItemDisplayPreviewRenderState",
+        "net.p3pp3rf1y.sophisticatedcore.client.render.UpgradeClientRegistry",
+        "net.p3pp3rf1y.sophisticatedcore.common.CommonEventHandler",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.FilterSlotItemHandler",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.HighStackCountSynchronizer",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.IAdditionalSlotInfoMenu",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.ICraftingContainer",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.IFilterSlot",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.IServerUpdater",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.ISyncedContainer",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.SettingsContainerMenu",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.SlotSuppliedHandler",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.SophisticatedMenuProvider",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.SortBy",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.StorageBackgroundProperties",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.StorageContainerMenuBase",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.StorageInventorySlot",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.TemplatePersistanceContainer",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.UpgradeContainerBase",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.UpgradeContainerRegistry",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.UpgradeContainerType",
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.UpgradeSlotChangeResult",
+        "net.p3pp3rf1y.sophisticatedcore.compat.accessories.AccessoriesCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationRecipeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationRecipeControl",
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.compat.CompatInfo",
+        "net.p3pp3rf1y.sophisticatedcore.compat.CompatModIds",
+        "net.p3pp3rf1y.sophisticatedcore.compat.CompatRegistry",
+        "net.p3pp3rf1y.sophisticatedcore.compat.craftingtweaks.CraftingTweaksCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.craftingtweaks.CraftingTweaksCompatClient",
+        "net.p3pp3rf1y.sophisticatedcore.compat.craftingtweaks.CraftingUpgradeTweakProvider",
+        "net.p3pp3rf1y.sophisticatedcore.compat.craftingtweaks.CraftingUpgradeTweakUIPart",
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.ContraptionHelper",
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.CreateCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageBase",
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageContainerMenuBase",
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageContentsPayload",
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageData",
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageSettingsContainerMenuBase",
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageSettingsPayload",
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageUpdatePayload",
+        "net.p3pp3rf1y.sophisticatedcore.compat.curios.CuriosCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.ftbchunks.FTBChunksCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.ICompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.inventorysorter.InventorySorterCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.iris.IrisCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.itemborders.ItemBordersCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.itemborders.ItemBordersCompatClient",
+        "net.p3pp3rf1y.sophisticatedcore.compat.mousetweaks.MouseTweaksCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.mousetweaks.MouseTweaksCompatClient",
+        "net.p3pp3rf1y.sophisticatedcore.compat.openpartiesandclaims.OpenPACCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.ClientRecipeHelper",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CommonPayloads",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CoreRecipeViewerDisplays",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CraftingContainerRecipeTransferHandlerServer",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CraftingDisplaySpec",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CraftingDisplayVariant",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CraftingDisplayView",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.DyeVariantPair",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.GroupedCraftingRecipe",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.GroupedCraftingVariant",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IFocusBehavior",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IGroupedOutputFocusBehavior",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeDisplayBuilder",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeDisplayGenerator",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeViewerCraftingSpecRecipe",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeViewerDisplayCatalog",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeViewerDisplayContext",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeViewerDisplaySpec",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.RecipeViewerDisplayCatalog",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SetGhostSlotPayload",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SetMemorySlotPayload",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.ShapedRecipeDisplayBuilder",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.ShapelessRecipeDisplayBuilder",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SingleColorDyeRecipeSpec",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SlotTransfer",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SmithingDisplaySpec",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SmithingDisplayVariant",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SmithingDisplayView",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SmithingSourceResultFocusBehavior",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SourceResultFocusBehavior",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.subtypes.PropertyBasedSubtypeInterpreter",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.subtypes.PropertyBasedSubtypeInterpreterWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.CoreJeiPlugin",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.CraftingDisplayCatalogRecipeManagerPlugin",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.CraftingDisplayCatalogRecipeManagerPluginCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.CraftingSpecCategoryExtension",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.GroupedCraftingRecipeCategoryExtension",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.GroupedCraftingRecipeManagerPlugin",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiCraftingContainerRecipeTransferHandlerBase",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiCraftingSpecExtensionRegistrar",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiRecipeDisplayGenerator",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiSettingsGhostIngredientHandler",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiShapedRecipeDisplayBuilder",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiShapelessRecipeDisplayBuilder",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiStorageGhostIngredientHandler",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiTransferRecipePayload",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.SmithingSpecCategoryExtension",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.SmithingSpecRecipeManagerPlugin",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.subtypes.JeiSubtypeInterpreter",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.comparator.ReiSubtypeInterpreter",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.CoreReiCommonPlugin",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.CraftingSpecReiDisplay",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.CraftingSpecReiDisplayGenerator",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.GroupedCraftingReiDisplay",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.GroupedCraftingReiDisplayGenerator",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiCraftingContainerTransferHandler",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiGhostTarget",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiRecipeDisplayGenerator",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiSettingsGhostIngredientHandler",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiShapedRecipeDisplayBuilder",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiShapelessRecipeDisplayBuilder",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiSlotAccessor",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiStorageGhostIngredientHandler",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiTransferRecipePayload",
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.SmithingSpecReiDisplayGenerator",
+        "net.p3pp3rf1y.sophisticatedcore.compat.reliquary.ReliquaryCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.sawmill.SawmillRecipeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.compat.sawmill.SawmillRecipeControl",
+        "net.p3pp3rf1y.sophisticatedcore.compat.sawmill.SawmillUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.compat.sawmill.SawmillUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.compat.sawmill.SawmillUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.compat.trashslot.SophisticatedContainerLayout",
+        "net.p3pp3rf1y.sophisticatedcore.compat.trashslot.TrashSlotCompat",
+        "net.p3pp3rf1y.sophisticatedcore.compat.trashslot.TrashSlotScreenRegistry",
+        "net.p3pp3rf1y.sophisticatedcore.Config",
+        "net.p3pp3rf1y.sophisticatedcore.controller.ControllerBlockEntityBase",
+        "net.p3pp3rf1y.sophisticatedcore.controller.IControllableStorage",
+        "net.p3pp3rf1y.sophisticatedcore.controller.IControllerBoundable",
+        "net.p3pp3rf1y.sophisticatedcore.controller.ILinkable",
+        "net.p3pp3rf1y.sophisticatedcore.crafting.CustomShapelessRecipe",
+        "net.p3pp3rf1y.sophisticatedcore.crafting.HoldingRecipeOutput",
+        "net.p3pp3rf1y.sophisticatedcore.crafting.ICustomSmithingRecipe",
+        "net.p3pp3rf1y.sophisticatedcore.crafting.ItemEnabledCondition",
+        "net.p3pp3rf1y.sophisticatedcore.crafting.IWrapperRecipe",
+        "net.p3pp3rf1y.sophisticatedcore.crafting.RecipeWrapperSerializer",
+        "net.p3pp3rf1y.sophisticatedcore.crafting.ShapeBasedRecipeBuilder",
+        "net.p3pp3rf1y.sophisticatedcore.crafting.ShapelessBasedRecipeBuilder",
+        "net.p3pp3rf1y.sophisticatedcore.crafting.StorageDyeRecipeBase",
+        "net.p3pp3rf1y.sophisticatedcore.crafting.UpgradeClearRecipe",
+        "net.p3pp3rf1y.sophisticatedcore.crafting.UpgradeNextTierRecipe",
+        "net.p3pp3rf1y.sophisticatedcore.data.CoreFluidTagsProvider",
+        "net.p3pp3rf1y.sophisticatedcore.data.CoreRecipeProvider",
+        "net.p3pp3rf1y.sophisticatedcore.data.DataGenerators",
+        "net.p3pp3rf1y.sophisticatedcore.data.SophisticatedModelProvider",
+        "net.p3pp3rf1y.sophisticatedcore.init.ModCompat",
+        "net.p3pp3rf1y.sophisticatedcore.init.ModCoreDataComponents",
+        "net.p3pp3rf1y.sophisticatedcore.init.ModFluids",
+        "net.p3pp3rf1y.sophisticatedcore.init.ModParticles",
+        "net.p3pp3rf1y.sophisticatedcore.init.ModPayloads",
+        "net.p3pp3rf1y.sophisticatedcore.init.ModRecipes",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ComponentItemStacksHandler",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ContainerContents",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.FilteredItemHandler",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.IInsertBlockOverride",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.IInventoryPartHandler",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.IItemHandlerSimpleExtractor",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.InventoryHandler",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.InventoryHandlerSlotTracker",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.InventoryIOHandler",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.InventoryPartitioner",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.InventoryPartRegistry",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.IResourceExtractor",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.IResourceInserter",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ISlotResourceMutator",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ISlotStackAccessor",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ISlotTracker",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ItemStackKey",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ITrackedContentsItemResourceHandler",
+        "net.p3pp3rf1y.sophisticatedcore.inventory.StorageWrapperRepository",
+        "net.p3pp3rf1y.sophisticatedcore.network.EmitConsumableClientParticlesAndSoundsPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncAdditionalSlotInfoPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncBlockHighlightsPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncContainerClientDataPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncContainerStacksPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncDatapackSettingsTemplatePayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncEmptySlotIconsPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncPlayerSettingsPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncRecentCraftedResultsPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncSlotChangeErrorPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncSlotStackPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncTemplateSettingsPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.TransferFullSlotPayload",
+        "net.p3pp3rf1y.sophisticatedcore.network.TransferItemsPayload",
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.DisplaySide",
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.IUpgradeClientData",
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.RenderData",
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.RenderDataHandler",
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.TankPosition",
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.UpgradeClientDataType",
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.UpgradeRenderDataValidatorRegistry",
+        "net.p3pp3rf1y.sophisticatedcore.settings.ColorToggleButton",
+        "net.p3pp3rf1y.sophisticatedcore.settings.DatapackSettingsTemplateManager",
+        "net.p3pp3rf1y.sophisticatedcore.settings.ISettingsCategory",
+        "net.p3pp3rf1y.sophisticatedcore.settings.ISlotColorCategory",
+        "net.p3pp3rf1y.sophisticatedcore.settings.itemdisplay.IItemDisplaySettingsPreviewProvider",
+        "net.p3pp3rf1y.sophisticatedcore.settings.itemdisplay.ItemDisplaySettingsCategory",
+        "net.p3pp3rf1y.sophisticatedcore.settings.itemdisplay.ItemDisplaySettingsCategoryData",
+        "net.p3pp3rf1y.sophisticatedcore.settings.itemdisplay.ItemDisplaySettingsContainer",
+        "net.p3pp3rf1y.sophisticatedcore.settings.itemdisplay.ItemDisplaySettingsTab",
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.Context",
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.ContextButton",
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.MainSettingsCategory",
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.MainSettingsCategoryData",
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.MainSettingsContainer",
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.MainSettingsTab",
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.PlayerMainSettingsSavedData",
+        "net.p3pp3rf1y.sophisticatedcore.settings.MainSetting",
+        "net.p3pp3rf1y.sophisticatedcore.settings.memory.MemorySettingsCategory",
+        "net.p3pp3rf1y.sophisticatedcore.settings.memory.MemorySettingsCategoryData",
+        "net.p3pp3rf1y.sophisticatedcore.settings.memory.MemorySettingsContainer",
+        "net.p3pp3rf1y.sophisticatedcore.settings.memory.MemorySettingsTab",
+        "net.p3pp3rf1y.sophisticatedcore.settings.nosort.NoSortSettingsCategory",
+        "net.p3pp3rf1y.sophisticatedcore.settings.nosort.NoSortSettingsCategoryData",
+        "net.p3pp3rf1y.sophisticatedcore.settings.nosort.NoSortSettingsContainer",
+        "net.p3pp3rf1y.sophisticatedcore.settings.nosort.NoSortSettingsTab",
+        "net.p3pp3rf1y.sophisticatedcore.settings.SettingsContainerBase",
+        "net.p3pp3rf1y.sophisticatedcore.settings.SettingsHandler",
+        "net.p3pp3rf1y.sophisticatedcore.settings.SettingsTab",
+        "net.p3pp3rf1y.sophisticatedcore.settings.SettingsTemplateStorage",
+        "net.p3pp3rf1y.sophisticatedcore.settings.StorageSettingsTabControlBase",
+        "net.p3pp3rf1y.sophisticatedcore.SophisticatedCore",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyCondition",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyFilterAttribute",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyUpgradeConfig",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryInventoryControl",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryUpgradeConfig",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterRecipeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterRecipeControl",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.IRecentCraftedResultsRefresh",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.RecentCraftedResultStorage",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeConfig",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ContentsFilterControl",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ContentsFilteredUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ContentsFilterLogic",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ContentsFilterLogicContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ContentsFilterType",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoBlastingUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoCookingUpgradeConfig",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoCookingUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoCookingUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoCookingUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoSmeltingUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoSmokingUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.BlastingUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingLogic",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingLogicContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingLogicControl",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeClientData",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeClientTickHandler",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeConfig",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeRenderDataValidator",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.IAutoCookingUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.ICookingUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.ICookingUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.SmeltingUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.SmokingUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.CraftingItemHandler",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.CraftingUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.CraftingUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.CraftingUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.CraftingUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.ICraftingUIPart",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.EntityMatch",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.feeding.FeedingUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.feeding.FeedingUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.feeding.FeedingUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.feeding.FeedingUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.feeding.HungerLevel",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.filter.Direction",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.filter.FilterUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.filter.FilterUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.filter.FilterUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.filter.FilterUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterAttributes",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilteredUpgradeConfig",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilteredUpgradeConfigBase",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterLogic",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterLogicContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterLogicContainerBase",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterLogicControl",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterLogicControlBase",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IClientStorageContentsProvider",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IContentsFilteredUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IExtractResponseUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IFilteredUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IInsertResponseUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IInventoryLayoutContributor",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IInventorySlotBlocker",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.infinity.InfinityInventoryPart",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.infinity.InfinityUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IOverflowResponseUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IPickupResponseUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IRenderedBatteryUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IRenderedTankUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IStackableContentsUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ITickableUpgrade",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IUpgradeAccessModifier",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IUpgradeCountLimitConfig",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IUpgradeWrapperAccessor",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.DiscHandlerRegistry",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeClientData",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeClientTickHandler",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeConfig",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeNoteParticle",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeNoteParticleData",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeRenderDataValidator",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.PlayDiscPayload",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.RepeatMode",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.ServerStorageSoundHandler",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.StopDiscPlaybackPayload",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.StorageSoundHandler",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.VanillaDiscHandler",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.IMagnetPreventionChecker",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.MagnetUpgradeConfig",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.MagnetUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.MagnetUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.MagnetUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.MagnetUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pickup.PickupUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pickup.PickupUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pickup.PickupUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.PrimaryMatch",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.FluidFilterContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.FluidFilterControl",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.FluidFilterLogic",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.PumpUpgradeConfig",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.PumpUpgradeContainer",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.PumpUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.PumpUpgradeTab",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.PumpUpgradeWrapper",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.stack.StackUpgradeConfig",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.stack.StackUpgradeConversionItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.stack.StackUpgradeItem",
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.stonecutter.StonecutterRecipeContainer"
       ],
       "methods": {
-        "net.darkhax.bookshelf.block.BlockBasicChest": [
-          "func_185496_a(IBlockState, IBlockAccess, BlockPos)",
-          "func_176213_c(World, BlockPos, IBlockState)",
-          "func_180642_a(World, BlockPos, EnumFacing, float, float, float, int, EntityLivingBase)",
-          "func_180633_a(World, BlockPos, IBlockState, EntityLivingBase, ItemStack)",
-          "func_149744_f(IBlockState)",
-          "func_176455_e(World, BlockPos, IBlockState)",
-          "func_176458_f(World, BlockPos, IBlockState)",
-          "func_176196_c(World, BlockPos)",
-          "removedByPlayer(IBlockState, World, BlockPos, EntityPlayer, boolean)",
-          "func_180657_a(World, EntityPlayer, BlockPos, IBlockState, TileEntity, ItemStack)",
-          "func_149915_a(World, int)",
-          "getDrops(IBlockAccess, BlockPos, IBlockState, int)",
-          "getPickBlock(IBlockState, RayTraceResult, World, BlockPos, EntityPlayer)",
-          "func_189418_a(World, BlockPos, boolean)",
-          "isTrapChest()",
-          "setState(World, BlockPos, IBlockState, int)",
-          "correctFacing(World, BlockPos, IBlockState, ChestBuilder.IChestType)",
-          "isDoubleChest(World, BlockPos, ChestBuilder.IChestType)",
-          "getCustomType(IBlockAccess, BlockPos)",
-          "getCustomType(ItemStack)"
+        "net.p3pp3rf1y.sophisticatedcore.api.IDiscHandler": [],
+        "net.p3pp3rf1y.sophisticatedcore.api.IIOFilterUpgrade": [],
+        "net.p3pp3rf1y.sophisticatedcore.api.InventoryLayoutFitResult": [
+          "fit(Map<String, Integer>)",
+          "fail(Set<Integer>, Map<String, Integer>)"
         ],
-        "net.darkhax.bookshelf.block.BlockSubType": [
-          "func_149666_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "func_176203_a(int)",
-          "func_176201_c(IBlockState)",
-          "func_180661_e()",
-          "func_180651_a(IBlockState)",
-          "getVariant()",
-          "getVariantProp()"
+        "net.p3pp3rf1y.sophisticatedcore.api.InventoryLayoutFitter": [
+          "fit(List<InventoryLayoutPart>, int, int)",
+          "fit(List<InventoryLayoutPart>, int, int, boolean)"
         ],
-        "net.darkhax.bookshelf.block.BlockTileEntity": [
-          "func_180663_b(World, BlockPos, IBlockState)",
-          "func_189539_a(IBlockState, World, BlockPos, int, int)"
+        "net.p3pp3rf1y.sophisticatedcore.api.InventoryLayoutPart": [],
+        "net.p3pp3rf1y.sophisticatedcore.api.ISlotChangeResponseUpgrade": [],
+        "net.p3pp3rf1y.sophisticatedcore.api.IStashStorageItem": [],
+        "net.p3pp3rf1y.sophisticatedcore.api.IStorageFluidHandler": [
+          "insert(TagKey<Fluid>, int, Fluid, TransactionContext)",
+          "insert(TagKey<Fluid>, int, Fluid, TransactionContext, boolean)",
+          "insert(FluidResource, int, TransactionContext, boolean)",
+          "insert(int, FluidResource, int, TransactionContext)",
+          "extract(int, TagKey<Fluid>, int, TransactionContext, boolean)",
+          "extract(TagKey<Fluid>, int, TransactionContext, boolean)",
+          "extract(int, FluidResource, int, TransactionContext)"
         ],
-        "net.darkhax.bookshelf.block.property.PropertyObject": [
-          "getName()",
-          "getType()",
-          "isValid(T)",
-          "valueToString(T)"
+        "net.p3pp3rf1y.sophisticatedcore.api.IStorageSavedData": [],
+        "net.p3pp3rf1y.sophisticatedcore.api.IStorageWrapper": [
+          "setInventorySlotChangeHandler(Runnable)",
+          "setUpgradeCachesInvalidatedHandler(Runnable)",
+          "getNumberOfSlotRows()",
+          "getInventoryLayoutParts(int)",
+          "getInventoryLayoutParts(int, int)",
+          "applyInventoryLayout(InventoryLayoutFitResult, int)",
+          "attachInventorySlotBlockers()",
+          "getFluidHandler()",
+          "getEnergyHandler()",
+          "getWrappedStorageStack()",
+          "getBaseStackSizeMultiplier()",
+          "onInit(Level)",
+          "isUpgradeRunnable(ItemStack)",
+          "registerOnInventoryInputOutputHandlerRefreshListener(Runnable)",
+          "StackMove(int, int, ItemStack)"
         ],
-        "net.darkhax.bookshelf.block.property.PropertyString": [
-          "func_177700_c()",
-          "func_185929_b(String)",
-          "getName(String)",
-          "getMetaData(String)"
+        "net.p3pp3rf1y.sophisticatedcore.api.IUpgradeClientTickHandler": [],
+        "net.p3pp3rf1y.sophisticatedcore.api.IUpgradeRenderDataValidator": [],
+        "net.p3pp3rf1y.sophisticatedcore.client.ClientEventHandler": [
+          "registerHandlers(IEventBus)",
+          "handleGuiKeyPress(Pre)",
+          "handleGuiMouseKeyPress(net.neoforged.neoforge.client.event.ScreenEvent.MouseButtonPressed.Pre)",
+          "isActiveAndMatchesIgnoringShift(KeyMapping, Key)"
         ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasic": [
-          "func_145839_a(NBTTagCompound)",
-          "func_189515_b(NBTTagCompound)",
-          "func_189518_D_()",
-          "onDataPacket(NetworkManager, SPacketUpdateTileEntity)",
-          "func_189517_E_()",
-          "shouldRefresh(World, BlockPos, IBlockState, IBlockState)",
-          "writeNBT(NBTTagCompound)",
-          "readNBT(NBTTagCompound)"
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.Button": [
+          "isHovered()",
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderHoveredBackground(GuiGraphics)",
+          "getTooltip()",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "updateNarration(NarrationElementOutput)",
+          "setTooltip(List<Component>)",
+          "renderTooltip(Screen, GuiGraphics, int, int)"
         ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicChest": [
-          "func_189515_b(NBTTagCompound)",
-          "func_189517_E_()",
-          "handleUpdateTag(NBTTagCompound)",
-          "shouldRefresh(World, BlockPos, IBlockState, IBlockState)",
-          "func_189518_D_()",
-          "onDataPacket(NetworkManager, SPacketUpdateTileEntity)",
-          "func_145839_a(NBTTagCompound)",
-          "func_174911_a(EnumFacing)",
-          "getRenderBoundingBox()",
-          "getType()",
-          "setType(ChestBuilder.IChestType)",
-          "getBuilder()"
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ButtonBase": [
+          "setOnClick(IntConsumer)",
+          "mouseClicked(MouseButtonEvent, boolean)"
         ],
-        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicTickable": [
-          "func_73660_a()",
-          "onEntityUpdate()"
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ButtonDefinition": [
+          "getDimension()",
+          "getBackgroundTexture()",
+          "getHoveredBackgroundTexture()",
+          "getForegroundTexture()",
+          "getTooltip()"
         ],
-        "net.darkhax.bookshelf.Bookshelf": [
-          "onConstruction(FMLConstructionEvent)",
-          "postInit(FMLPostInitializationEvent)",
-          "preInitClient(FMLPreInitializationEvent)",
-          "init(FMLInitializationEvent)"
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ButtonDefinitions": [
+          "getBooleanStateData(ToggleButton.StateData, ToggleButton.StateData)",
+          "createToggleButtonDefinition(Map<T, ToggleButton.StateData>)",
+          "createSmallToggleButtonDefinition(Map<T, ToggleButton.StateData>)"
         ],
-        "net.darkhax.bookshelf.BookshelfEvents": [
-          "onAnvilUpdate(AnvilUpdateEvent)",
-          "onClientTick(ClientTickEvent)"
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ColorButton": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "renderTooltip(Screen, GuiGraphics, int, int)"
         ],
-        "net.darkhax.bookshelf.BookshelfRegistry": [
-          "addAnvilRecipe(String, ItemStack, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, String, int, int, ItemStack)",
-          "addAnvilRecipe(String, String, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, ItemStack, int, int, ItemStack)",
-          "addAnvilRecipe(ItemStack, ItemStack, String, int, int, ItemStack)",
-          "addAnvilRecipe(AnvilRecipe)",
-          "getAnvilRecipes()"
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ColorPicker": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "setPosition(Position)"
         ],
-        "net.darkhax.bookshelf.builder.ChestBuilder": [
-          "register(RegistryHelper)",
-          "getNormalChest()",
-          "getTrapChest()",
-          "addChestType(String...)",
-          "addChestType(String)",
-          "addChestType(ChestBuilder.IChestType)",
-          "getChestType(String)",
-          "getNormalType()",
-          "getTrapType()",
-          "getTypes()",
-          "getModid()",
-          "useTraps()"
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.CompositeWidgetBase": [
+          "renderWidget(GuiGraphics, int, int, float)",
+          "addChild(U)",
+          "setPosition(Position)",
+          "children()",
+          "isDragging()",
+          "mouseClicked(MouseButtonEvent, boolean)",
+          "mouseDragged(MouseButtonEvent, double, double)",
+          "mouseScrolled(double, double, double, double)",
+          "setDragging(boolean)",
+          "getFocused()",
+          "setFocused(GuiEventListener)",
+          "renderTooltip(Screen, GuiGraphics, int, int)"
         ],
-        "net.darkhax.bookshelf.builder.LootBuilder": [
-          "getName()",
-          "getPool()",
-          "setPool(String)",
-          "getWeight()",
-          "setWeight(int)",
-          "getQuality()",
-          "setQuality(int)",
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ImageButton": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.InventoryScrollPanel": [
+          "setRestrictScrollToScrollbar(boolean)",
+          "getScrollAmount()",
+          "getContentHeight()",
+          "drawBackground(GuiGraphics, float)",
+          "drawPanel(GuiGraphics, int, int, int, int)",
+          "getHoveredSlot(double, double)",
+          "narrationPriority()",
+          "updateNarration(NarrationElementOutput)",
+          "mouseScrolled(double, double, double, double)",
+          "mouseDragged(MouseButtonEvent, double, double)",
+          "mouseClicked(MouseButtonEvent, boolean)",
+          "resetScrollDistance()",
+          "updateSlotsPosition()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ItemButton": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.Label": [
+          "getWidth()",
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "isMouseOver(double, double)",
+          "isTextTruncated(Font, Component, int)",
+          "getTruncatedText(Font, Component, int)",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.LargeResultSelector": [
+          "setPosition(Position)",
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "mouseClicked(MouseButtonEvent, boolean)",
+          "mouseDragged(MouseButtonEvent, double, double)",
+          "mouseReleased(MouseButtonEvent)",
+          "mouseScrolled(double, double, double, double)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "updateNarration(NarrationElementOutput)",
+          "ResultEntry(int, ItemStack, boolean)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ProgressBar": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.RotatablePreviewWidget": [
+          "resetToDefaultRotation()",
+          "setTargetRotations(float, float)",
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "renderPreview(GuiGraphics, int, int, int, int, float, float, float)",
+          "mouseClicked(MouseButtonEvent, boolean)",
+          "mouseDragged(MouseButtonEvent, double, double)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.TextBox": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "setFocused(boolean)",
+          "keyPressed(KeyEvent)",
+          "onEnterPressed()",
+          "getValue()",
+          "charTyped(CharacterEvent)",
+          "updateNarration(NarrationElementOutput)",
+          "setValue(String)",
+          "setValueWithoutNotification(String)",
+          "setTextColor(int)",
+          "setTextColorUneditable(int)",
+          "setBordered(boolean)",
+          "setMaxLength(int)",
+          "setResponder(Consumer<String>)",
+          "setEditable(boolean)",
+          "isEditable()",
+          "setUnfocusedEmptyHint(String)",
+          "setPosition(Position)",
+          "updateDimensions(int, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.ToggleButton": [
+          "renderWidget(GuiGraphics, int, int, float)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "getTooltip(ToggleButton.StateData)",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.controls.WidgetBase": [
+          "setVisible(boolean)",
+          "render(GuiGraphics, int, int, float)",
+          "renderInLatePass(GuiGraphics, int, int, float)",
+          "actuallyRender(GuiGraphics, int, int, float)",
+          "narrationPriority()",
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "getWidth()",
+          "getHeight()",
+          "updateDimensions(int, int)",
+          "isMouseOver(double, double)",
+          "getX()",
+          "getY()",
+          "setPosition(Position)",
+          "getCenteredX(int)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "setRenderInDefaultPass(boolean)",
+          "setFocused(boolean)",
+          "isFocused()",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.IForegroundRenderable": [],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.INameableEmptySlot": [],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.ISlotDecorationRenderer": [],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.SettingsScreen": [
+          "resize(int, int)",
+          "getStorageInventoryHeight(int)",
+          "getVisibleSlotsCount()",
+          "setVisibleSlotsCount(int)",
+          "updateStorageSlotsPositions()",
+          "getSlotsOnLine()",
+          "init()",
+          "initializeTabControl()",
+          "getItemDisplaySettingsPreviewProvider()",
+          "renderBg(GuiGraphics, float, int, int)",
+          "renderBackground(GuiGraphics, int, int, float)",
+          "drawSlotBg(GuiGraphics, int, int, int)",
+          "render(GuiGraphics, int, int, float)",
+          "renderLabels(GuiGraphics, int, int)",
+          "renderTooltip(GuiGraphics, int, int)",
+          "renderStorageInventorySlots(GuiGraphics, int, int, boolean)",
+          "renderSlot(GuiGraphics, Slot, int, int)",
+          "slotClicked(Slot, int, int, ClickType)",
+          "mouseDragged(MouseButtonEvent, double, double)",
+          "mouseScrolled(double, double, double, double)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.SettingsTabBase": [
+          "addHideableChild(U)",
+          "addHideableChildWithoutSizing(U)",
+          "refreshOpenTabDimension()",
+          "setHandlers(Runnable, Runnable, BooleanSupplier, BooleanSupplier)",
+          "isClosedTooltipVisible(int, int)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "close()",
+          "onTabOpen()",
+          "onTabClose()",
+          "setOpen(boolean)",
+          "onTabIconClicked(int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.SettingsTabControl": [
+          "addSettingsTab(Runnable, Runnable, U)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "renderClosedTabs(GuiGraphics, int, int, float)",
+          "renderOpenTab(GuiGraphics, int, int, float)",
+          "getOpenTab()",
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "getTopY()",
+          "getHeight()",
+          "getWidth()",
+          "getTabRectangles()",
+          "narrationPriority()",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.SortButtonsPosition": [
+          "getTranslatedName()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.StorageGuiHelper": [
+          "renderStorageBackground(Position, GuiGraphics, Identifier, int, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.StorageScreenBase": [
+          "setCraftingUIPart(ICraftingUIPart)",
+          "setSlotDecorationRenderer(ISlotDecorationRenderer)",
+          "getCraftingUIAddition()",
+          "resize(int, int)",
+          "getInventoryLabelX()",
+          "updateExtraSlotsPositions()",
+          "getStorageInventoryHeight(int)",
+          "getSlot(int)",
+          "updateUpgradeSlotsPositions()",
+          "getVisibleSlotsCount()",
+          "setVisibleSlotsCount(int)",
+          "updateStorageSlotsPositions()",
+          "getStackFilter()",
+          "updatePlayerSlotsPositions()",
+          "init()",
+          "addSearchBox()",
+          "shouldShowSortButtons()",
+          "getTransferToInventoryButtonPosition()",
+          "setTransferButtonsShift(int)",
+          "setExternalSearchPhrase(String)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.StorageSettingsTab": [
+          "onTabIconClicked(int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.Tab": [
+          "setHandlers(BooleanSupplier, BooleanSupplier)",
+          "render(GuiGraphics, int, int, float)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "getWidth()",
+          "getHeight()",
+          "setWidth(int)",
+          "setHeight(int)",
+          "getTabRectangle()",
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "isClosedTooltipVisible(int, int)",
+          "getTopY()",
+          "getBottomY()",
+          "onTabIconClicked(int)",
+          "narrationPriority()",
+          "updateNarration(NarrationElementOutput)",
+          "tick()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.TemplatePersistanceControl": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "updateNarration(NarrationElementOutput)",
+          "isTemplateLoadHovered()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.UpgradeGuiManager": [
+          "registerTab(UpgradeContainerType<W, C>, UpgradeGuiManager.IUpgradeSettingsFactory<C, S>)",
+          "registerInventoryControl(UpgradeContainerType<W, C>, UpgradeGuiManager.IUpgradeInventoryControlFactory<C, I>)",
+          "registerInventoryControl(UpgradeType<W>, UpgradeGuiManager.IStorageUpgradeInventoryControlFactory<I>)",
+          "getTab(C, Position, StorageScreenBase<?>)",
+          "getInventoryControl(int, C, Position, int, StorageScreenBase<?>)",
+          "getStorageUpgradeInventoryControls(StorageScreenBase<?>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.UpgradeInventoryControlBase": [
+          "render(GuiGraphics, int, int)",
+          "mouseClicked(double, double, int)",
+          "handleMouseReleased(double, double, int)",
+          "renderErrorOverlay(GuiGraphics)",
+          "renderErrorOverlay(GuiGraphics, Set<Integer>)",
+          "renderTooltip(StorageScreenBase<?>, GuiGraphics, int, int)",
+          "replacesSlotRender(int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.UpgradeSettingsTab": [
+          "getContainer()",
+          "moveSlotsToTab()",
+          "moveSlotsOutOfView()",
+          "onTabOpen()",
+          "onTabClose()",
+          "setOpen(boolean)",
+          "onAfterInit()",
+          "slotIsNotCoveredAt(Slot, double, double)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.UpgradeSettingsTabControl": [
+          "slotIsNotCoveredAt(Slot, double, double)",
+          "tick()",
+          "renderForeground(GuiGraphics, int, int, float)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.Dimension": [],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.GuiHelper": [
+          "renderItemInGUI(GuiGraphics, Minecraft, ItemStack, int, int)",
+          "renderSlotsBackground(GuiGraphics, int, int, int, int)",
+          "renderItemInGUI(GuiGraphics, Minecraft, ItemStack, int, int, boolean)",
+          "renderItemInGUI(GuiGraphics, Minecraft, ItemStack, int, int, boolean, String)",
+          "blit(GuiGraphics, int, int, TextureBlitData)",
+          "blit(GuiGraphics, int, int, TextureBlitData, int, int)",
+          "coloredBlit(GuiGraphics, int, int, TextureBlitData, int)",
+          "writeTooltipLines(GuiGraphics, List<FormattedCharSequence>, Font, int, int, int)",
+          "fill(GuiGraphics, int, int, int, int, int)",
+          "getButtonStateData(UV, Dimension, Position, Component...)",
+          "getButtonStateData(UV, String, Dimension)",
+          "getButtonStateData(UV, String, Dimension, Position)",
+          "getButtonStateData(UV, Dimension, Position, List<Component>)",
+          "renderSlotsBackground(GuiGraphics, int, int, int, int, int)",
+          "renderTiledSprite(GuiGraphics, TextureAtlasSprite, int, int, int, int)",
+          "renderControlBackground(GuiGraphics, int, int, int, int)",
+          "renderTabBackground(GuiGraphics, int, int, int, int)",
+          "renderTiledControlBackground(GuiGraphics, int, int, int, int, int, int, int, int)",
+          "renderTiledControlBackground(GuiGraphics, int, int, int, int, int, int, int, int, int)",
+          "renderTiledControlBackground(GuiGraphics, int, int, int, int, int, int, int, int, int, int, int, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.GuiSoundHelper": [
+          "playButtonClickSound()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.Position": [],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.TextureBlitData": [
+          "getTextureName()",
+          "getWidth()",
+          "getTextureWidth()",
+          "getTextureHeight()",
+          "getU()",
+          "getV()",
+          "getHeight()",
+          "getXOffset()",
+          "getYOffset()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.TranslationHelper": [
+          "translStatusMessage(String, Object...)",
+          "translUpgrade(String, Object...)",
+          "translUpgradeSlotTooltip(String)",
+          "translUpgradeKey(String)",
+          "translBlockTooltipKey(String)",
+          "translSettings(String)",
+          "translSettingsButton(String)",
+          "translSettingsMessage(String)",
+          "translUpgradeTooltip(String)",
+          "translSettingsTooltip(String)",
+          "translColoredButton(String, ChatFormatting)",
+          "translButton(String)",
+          "translError(String, Object...)",
+          "translUpgradeGroup(String)",
+          "translUpgradeButton(String)",
+          "translUpgradeControl(String)",
+          "translItemTooltip(Item)",
+          "translItemTooltip(String)",
+          "getTranslatedLines(String, Object, ChatFormatting...)",
+          "getTranslatedLines(String)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.gui.utils.UV": [],
+        "net.p3pp3rf1y.sophisticatedcore.client.init.ModParticles": [
+          "registerFactories(RegisterParticleProvidersEvent)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.render.BlockHighlightRenderer": [
+          "addHighlightedPositions(Map<Integer, List<List<BlockPos>>>, int)",
+          "render(PoseStack, float, Vec3)",
+          "tri01(double, double, double)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.render.BlockHighlightRenderHelper": [
+          "submitThickEdges(SubmitNodeCollector, PoseStack, int, List<VoxelOutliner.Edge>, BlockPos)",
+          "renderThickEdges(PoseStack, MultiBufferSource, int, List<VoxelOutliner.Edge>, BlockPos)",
+          "renderThickEdges(PoseStack, MultiBufferSource, int, List<VoxelOutliner.Edge>, double, double, double)",
+          "submitThickEdges(SubmitNodeCollector, PoseStack, int, List<VoxelOutliner.Edge>, double, double, double)",
+          "emitThickLineOrtho(VertexConsumer, Pose, Vec3, Vec3, float, int, int, int, int, double, double, double)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.render.ClientStorageContentsTooltipBase": [
+          "refreshContents()",
+          "setLastRequestTime(long)",
+          "getLastRequestTime()",
+          "sendInventorySyncRequest(UUID)",
+          "setShouldRefreshContents(boolean)",
+          "shouldRefreshContents()",
+          "getEnergyTooltipTranslation()",
+          "getFluidTooltipTranslation()",
+          "getEmptyFluidTooltipTranslation()",
+          "getWidth(Font)",
+          "getHeight(Font)",
+          "renderTooltip(IStorageWrapper, Font, int, int, GuiGraphics)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.render.IItemActionPayloadBuilder": [],
+        "net.p3pp3rf1y.sophisticatedcore.client.render.ItemDisplayPreviewRenderer": [
+          "getRenderStateClass()",
+          "renderToTexture(ItemDisplayPreviewRenderState, PoseStack)",
+          "textureIsReadyToBlit(ItemDisplayPreviewRenderState)",
+          "getTranslateY(int, int)",
+          "getTextureLabel()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.render.ItemDisplayPreviewRenderState": [
+          "scale()",
+          "bounds()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.client.render.UpgradeClientRegistry": [
+          "getUpgradeClientTickHandler(UpgradeClientDataType<T>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.CommonEventHandler": [
+          "registerHandlers(IEventBus)",
+          "onTickEnd(Post)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.FilterSlotItemHandler": [
+          "mayPickup(Player)",
+          "getMaxStackSize(ItemStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.HighStackCountSynchronizer": [
+          "sendInitialData(AbstractContainerMenu, List<ItemStack>, ItemStack, int[])",
+          "sendSlotChange(AbstractContainerMenu, int, ItemStack)",
+          "sendCarriedChange(AbstractContainerMenu, ItemStack)",
+          "sendDataChange(AbstractContainerMenu, int, int)",
+          "createSlot()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.IAdditionalSlotInfoMenu": [],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.ICraftingContainer": [],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.IFilterSlot": [
+          "onItemSet(int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.IServerUpdater": [],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.ISyncedContainer": [],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.SettingsContainerMenu": [
+          "setConstructCallback(Consumer<SettingsContainerMenu<?>>)",
+          "addInternalCompatibilitySlot(Slot)",
+          "getNumberOfStorageInventorySlots()",
+          "getStorageWrapper()",
+          "getColumnsTaken()",
+          "addSlot(Slot)",
+          "broadcastChanges()",
+          "broadcastFullState()",
+          "getNumberOfSlots()",
+          "sendAllDataToRemote()",
+          "detectSettingsChangeAndReload()",
+          "setSynchronizer(ContainerSynchronizer)",
+          "getSlot(int)",
+          "onMemorizedStackAdded(int)",
+          "onMemorizedStackRemoved(int)",
+          "onMemorizedItemsChanged()",
+          "stillValid(Player)",
+          "getStorageInventorySlots()",
+          "handlePacket(CompoundTag)",
+          "clicked(int, int, ClickType, Player)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.SlotSuppliedHandler": [
+          "getResourceHandler()",
+          "onQuickCraft(ItemStack, ItemStack)",
+          "mayPlace(ItemStack)",
           "getItem()",
-          "setItem(Item)",
-          "getConditions()",
-          "addCondition(LootCondition)",
-          "getFunctions()",
-          "addFunction(LootFunction)",
-          "build()",
+          "set(ItemStack)",
+          "setChanged()",
+          "remove(int)",
+          "getMaxStackSize()",
+          "getSlotIndex()",
+          "isSameInventory(Slot)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.SophisticatedMenuProvider": [
+          "getDisplayName()",
+          "createMenu(int, Inventory, Player)",
+          "shouldTriggerClientSideContainerClosingOnOpen()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.SortBy": [
+          "getSerializedName()",
+          "next()",
+          "fromName(String)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.StorageBackgroundProperties": [
+          "getSlotsOnLine()",
+          "getPlayerInventoryXOffset()",
+          "getTextureName()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.StorageContainerMenuBase": [
+          "getBlockPosition()",
+          "getEntity()",
+          "initSlotsAndContainers(Player, int, boolean, List<Slot>)",
+          "addExtraSlot(Slot)",
+          "getExtraSlots()",
+          "getStorageWrapper()",
+          "addUpgradeSettingsContainers(Player)",
+          "getColumnsTaken()",
+          "isUpgradeColumnCountSynced()",
+          "getErrorUpgradeSlotChangeResult()",
+          "sendStorageSettingsToClient()",
+          "addUpgradeSlot(Slot)",
+          "addSlot(Slot)",
+          "getInventorySlotsSize()",
+          "getNumberOfStorageInventorySlots()",
+          "getNumberOfUpgradeSlots()",
+          "getUpgradeContainers()",
+          "addStorageInventorySlots()",
+          "onStorageInventorySlotSet(int)",
+          "addPlayerInventorySlots(Inventory, int, boolean)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.StorageInventorySlot": [
+          "set(ItemStack)",
+          "mayPlace(ItemStack)",
+          "mayPickup(Player)",
+          "getMaxStackSize(ItemStack)",
+          "safeInsert(ItemStack, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.TemplatePersistanceContainer": [
+          "setOnSlotsRefreshed(Runnable)",
+          "handlePacket(CompoundTag)",
+          "loadTemplate()",
+          "saveTemplate(String)",
+          "scrollSaveSlot(boolean)",
+          "scrollLoadSlot(boolean)",
+          "getSaveSlotTooltipName()",
+          "getLoadSlotTooltipName()",
+          "getLoadSlot()",
+          "getSelectedTemplate()",
+          "showsTextbox()",
+          "refreshTemplateSlots()",
+          "exportTemplate(String)",
+          "findNonMatchingCharacters(Matcher, String)",
+          "templateHasTooManySlots()",
+          "getLoadSlotSource()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.UpgradeContainerBase": [
+          "getSlots()",
+          "getType()",
+          "setIsOpen(boolean)",
+          "isOpen()",
+          "sendBooleanToServer(String, boolean)",
+          "sendDataToServer(Supplier<CompoundTag>)",
+          "onInit()",
+          "handlePacket(CompoundTag)",
+          "getUpgradeStack()",
+          "getUpgradeWrapper()",
+          "supplyFromWrapper(Function<W, T>)",
+          "getPlayer()",
+          "setUpgradeWrapper(IUpgradeWrapper)",
+          "containsSlot(Slot)",
+          "getSlotStackToTransfer(Slot)",
+          "onTakeFromSlot(Slot, Player, ItemStack)",
+          "mergeIntoStorageFirst(Slot)",
+          "allowsPickupAll(Slot)",
+          "getRepeatedQuickMoveLimit(Slot, ItemStack)",
+          "getUpgradeContainerId()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.UpgradeContainerRegistry": [
+          "register(Identifier, UpgradeContainerType<? extends IUpgradeWrapper, ? extends UpgradeContainerBase<?, ?>>)",
+          "instantiateContainer(Player, int, W)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.UpgradeContainerType": [
+          "create(Player, int, W)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.common.gui.UpgradeSlotChangeResult": [
+          "getErrorMessage()",
+          "fail(Component, Set<Integer>, Set<Integer>, Set<Integer>)",
+          "success()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.accessories.AccessoriesCompat": [
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationRecipeContainer": [
+          "getInputSlot()",
+          "getOutputSlot()",
+          "setInventoryUpdateListener(Runnable)",
+          "getResults()",
+          "getSelectedRecipe()",
+          "hasItemsInInputSlot()",
+          "selectRecipeIndex(int)",
+          "isRecentResult(int)",
+          "getRecentResultOrder(int)",
+          "handlePacket(CompoundTag)",
+          "refreshRecentResultsFromClientCache()",
+          "isNotResultSlot(Slot)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationRecipeControl": [
+          "moveSlotsToView()",
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "mouseClicked(MouseButtonEvent, boolean)",
+          "mouseDragged(MouseButtonEvent, double, double)",
+          "mouseScrolled(double, double, double, double)",
+          "getHiddenRows()",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationUpgradeContainer": [
+          "handlePacket(CompoundTag)",
+          "shouldShiftClickIntoStorage()",
+          "refreshRecentResultsFromClientCache()",
+          "setShiftClickIntoStorage(boolean)",
+          "shouldRefillInput()",
+          "setRefillInput(boolean)",
+          "getRecipeContainer()",
+          "mergeIntoStorageFirst(Slot)",
+          "allowsPickupAll(Slot)",
+          "getRepeatedQuickMoveLimit(Slot, ItemStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getRecipeType()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationUpgradeTab": [
+          "moveSlotsToTab()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.chipped.BlockTransformationUpgradeWrapper": [
+          "getInputInventory()",
+          "setResult(ItemStack)",
+          "getResult()",
+          "canBeDisabled()",
+          "shouldShiftClickIntoStorage()",
+          "setShiftClickIntoStorage(boolean)",
+          "shouldRefillInput()",
+          "setRefillInput(boolean)",
+          "extractFromStorage(ItemStack, boolean)",
+          "getRecipeType()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.CompatInfo": [
+          "isLoaded()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.CompatModIds": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.CompatRegistry": [
+          "registerCompat(CompatInfo, Supplier<Function<IEventBus, ICompat>>)",
+          "setupCompats()",
+          "initCompats(IEventBus)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.craftingtweaks.CraftingTweaksCompat": [
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.craftingtweaks.CraftingTweaksCompatClient": [
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.craftingtweaks.CraftingUpgradeTweakProvider": [
+          "getModId()",
+          "handles(AbstractContainerMenu)",
+          "buildCraftingGrids(CraftingGridBuilder, AbstractContainerMenu)",
+          "clearGrid(Player, AbstractContainerMenu, boolean)",
+          "requiresServerSide()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.craftingtweaks.CraftingUpgradeTweakUIPart": [
+          "register()",
+          "onCraftingSlotsHidden()",
+          "getWidth()",
+          "setStorageScreen(StorageScreenBase<?>)",
+          "onCraftingSlotsDisplayed(List<Slot>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.ContraptionHelper": [
+          "getMountedItemStorages(AbstractContraptionEntity)",
+          "getMountedStorage(AbstractContraptionEntity, BlockPos)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.CreateCompat": [
+          "init(IEventBus)",
+          "setup()",
+          "registerPayloads(RegisterPayloadHandlersEvent)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageBase": [
+          "getStorageStack()",
+          "setStorageStack(ItemStack)",
+          "afterSync(Contraption, BlockPos)",
+          "markClean()",
+          "isDirty()",
+          "updateWithSyncedStorageStack(ItemStack, boolean)",
+          "getStorageWrapper()",
+          "getExternalItemHandler()",
+          "setStackInSlot(int, ItemStack)",
+          "getSlots()",
+          "getStackInSlot(int)",
+          "insertItem(int, ItemStack, boolean)",
+          "extractItem(int, int, boolean)",
+          "getSlotLimit(int)",
+          "isItemValid(int, ItemStack)",
+          "onClose(Player, Vec3)",
+          "onOpen(ServerLevel, Vec3)",
+          "onContraptionDestroyed()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageContainerMenuBase": [
+          "getMountedStorage()",
+          "getContraptionEntity()",
+          "getLocalPos()",
+          "removed(Player)",
+          "getBlockPosition()",
+          "getEntity()",
+          "openSettings()",
+          "writeSettingsContainerMenuExtraData(FriendlyByteBuf)",
+          "getSettingsTitleKey()",
+          "instantiateSettingsContainerMenu(int, Player, int, BlockPos)",
+          "storageItemHasChanged()",
+          "detectSettingsChangeAndReload()",
+          "getSettingsTag(CompoundTag)",
+          "stillValid(Player)",
+          "sendStorageSettingsToClient()",
+          "instantiateSettingsPayload(UUID, ContainerContents.SettingsData)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageContentsPayload": [
+          "type()",
+          "handlePayload(MountedStorageContentsPayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageData": [
+          "get()",
+          "getContents(UUID)",
+          "removeStorageContents(UUID)",
+          "setContentsClient(UUID, ContainerContents)",
+          "setContents(UUID, ContainerContents)",
+          "markChanged()",
+          "removeUpdatedStorageSettingsFlag(UUID)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageSettingsContainerMenuBase": [
+          "detectSettingsChangeAndReload()",
+          "updateFromContents(UUID)",
+          "getSettingsTag(CompoundTag)",
+          "getContraptionEntityId()",
+          "instantiateSettingsPayload(UUID, ContainerContents.SettingsData)",
+          "broadcastChanges()",
+          "getLocalPos()",
+          "getBlockPosition()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageSettingsPayload": [
+          "type()",
+          "handlePayload(MountedStorageSettingsPayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.create.MountedStorageUpdatePayload": [
+          "type()",
+          "handlePayload(MountedStorageUpdatePayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.curios.CuriosCompat": [
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.ftbchunks.FTBChunksCompat": [
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.ICompat": [
+          "init(IEventBus)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.inventorysorter.InventorySorterCompat": [
+          "init(IEventBus)",
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.iris.IrisCompat": [
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.itemborders.ItemBordersCompat": [
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.itemborders.ItemBordersCompatClient": [
+          "registerBorderDecorationRenderer()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.mousetweaks.MouseTweaksCompat": [
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.mousetweaks.MouseTweaksCompatClient": [
+          "restrictSophisticatedScrollInteraction()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.openpartiesandclaims.OpenPACCompat": [
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.ClientRecipeHelper": [
+          "emptyDisplayIngredient()",
+          "transformAllRecipesOfType(RecipeType<T>, Class<U>, BiFunction<Identifier, U, V>)",
+          "transformAllRecipesOfType(RecipeManager, RecipeType<T>, Class<U>, BiFunction<Identifier, U, V>)",
+          "transformAllRecipeHoldersOfType(RecipeType<T>, Class<U>, BiFunction<Identifier, RecipeHolder<U>, V>)",
+          "transformAllRecipeHoldersOfType(RecipeManager, RecipeType<T>, Class<U>, BiFunction<Identifier, RecipeHolder<U>, V>)",
+          "transformAllRecipesOfTypeIntoMultiple(RecipeType<T>, Class<U>, Function<U, List<V>>)",
+          "transformAllRecipesOfTypeIntoMultiple(RecipeManager, RecipeType<T>, Class<U>, Function<U, List<V>>)",
+          "transformAllRecipeHoldersOfTypeIntoMultiple(RecipeType<T>, Class<U>, Function<RecipeHolder<U>, List<V>>)",
+          "transformAllRecipeHoldersOfTypeIntoMultiple(RecipeManager, RecipeType<T>, Class<U>, Function<RecipeHolder<U>, List<V>>)",
+          "assemble(Recipe<I>, I)",
+          "assemble(Recipe<I>, I, Provider)",
+          "getResultItem(Recipe<I>)",
+          "getResultItem(Recipe<I>, Provider)",
+          "recipeKey(Identifier)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CommonPayloads": [
+          "registerPackets(PayloadRegistrar)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CoreRecipeViewerDisplays": [
+          "register(IRecipeViewerDisplayCatalog)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CraftingContainerRecipeTransferHandlerServer": [
+          "setItemsWithSlotIDMap(Player, ResourceKey<Recipe<?>>, RecipeType<?>, Map<Integer, Integer>, List<Integer>, List<Integer>, boolean)",
+          "setItemsWithSlotTransfers(Player, ResourceKey<Recipe<?>>, RecipeType<?>, List<SlotTransfer>, List<Integer>, List<Integer>, boolean)",
+          "setItemsWithStacks(Player, ResourceKey<Recipe<?>>, RecipeType<?>, List<ItemStack>, List<Integer>, List<Integer>, boolean)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CraftingDisplaySpec": [
+          "getAllDisplays()",
+          "getGlobalDisplays()",
+          "getRecipesFor(ItemStack)",
+          "getUsagesFor(ItemStack)",
+          "getInputSlots(List<CraftingDisplayVariant>)",
+          "getOutputStacks(List<CraftingDisplayVariant>)",
+          "replacesCraftingRecipe(RecipeHolder<?>)",
+          "recipeHolder(CraftingDisplayVariant)",
+          "recipeHolder(List<CraftingDisplayVariant>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CraftingDisplayVariant": [
+          "firstOutput()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.CraftingDisplayView": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.DyeVariantPair": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.GroupedCraftingRecipe": [
+          "getId()",
+          "getDisplayWidth()",
+          "getDisplayHeight()",
+          "getInputSlots()",
+          "getFixedInputSlots()",
+          "getResultStacks()",
+          "getVariants()",
+          "findVariantForResult(ItemStack)",
+          "findResultForDisplayedInput(ItemStack)",
+          "hasFixedInput(ItemStack)",
+          "narrowForResult(ItemStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.GroupedCraftingVariant": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IFocusBehavior": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IGroupedOutputFocusBehavior": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeDisplayBuilder": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeDisplayGenerator": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeViewerCraftingSpecRecipe": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeViewerDisplayCatalog": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeViewerDisplayContext": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.IRecipeViewerDisplaySpec": [
+          "getGlobalDisplays()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.RecipeViewerDisplayCatalog": [
+          "addGroupedCraftingSpec(SingleColorDyeRecipeSpec)",
+          "getGroupedCraftingSpecs()",
+          "addCraftingSpec(CraftingDisplaySpec)",
+          "getCraftingSpecs()",
+          "addCraftingSpecExtensionRecipeClass(Class<? extends CraftingRecipe>)",
+          "getCraftingSpecExtensionRecipeClasses()",
+          "addSmithingSpec(SmithingDisplaySpec)",
+          "getSmithingSpecs()",
+          "getSmithingDisplaySpecReplacing(SmithingRecipe)",
+          "getGlobalSmithingDisplays()",
+          "getSmithingRecipesFor(ItemStack)",
+          "getSmithingUsagesFor(ItemStack)",
+          "addCraftingRecipe(RecipeHolder<CraftingRecipe>)",
+          "getCraftingRecipes()",
+          "getGlobalCraftingDisplays()",
+          "getCraftingRecipesFor(ItemStack)",
+          "getCraftingUsagesFor(ItemStack)",
+          "replacesCraftingRecipe(RecipeHolder<?>)",
+          "getCraftingDisplaySpecReplacing(RecipeHolder<?>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SetGhostSlotPayload": [
+          "type()",
+          "handlePayload(SetGhostSlotPayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SetMemorySlotPayload": [
+          "type()",
+          "handlePayload(SetMemorySlotPayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.ShapedRecipeDisplayBuilder": [
+          "pattern(String)",
+          "define(Character, TagKey<Item>)",
+          "define(Character, ItemLike)",
+          "define(Character, ItemStack)",
+          "define(Character, List<ItemStack>)",
+          "define(HolderSet<Item>)",
+          "define(ItemStack)",
+          "define(Ingredient)",
+          "defineIngredients(List<Optional<Ingredient>>)",
+          "setDimensions(int, int)",
+          "unpack(Map<Character, D>, D)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.ShapelessRecipeDisplayBuilder": [
+          "requires(TagKey<Item>)",
+          "requires(ItemLike)",
+          "requires(ItemStack)",
+          "requires(HolderSet<Item>)",
+          "requires(Ingredient)",
+          "requires(List<Ingredient>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SingleColorDyeRecipeSpec": [
+          "recipe()",
+          "recipeHolder()",
+          "getAllDisplays()",
+          "getRecipesFor(ItemStack)",
+          "getUsagesFor(ItemStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SlotTransfer": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SmithingDisplaySpec": [
+          "getAllDisplays()",
+          "getGlobalDisplays()",
+          "getRecipesFor(ItemStack)",
+          "getUsagesFor(ItemStack)",
+          "getBaseStacks(List<SmithingDisplayVariant>)",
+          "getResultStacks(List<SmithingDisplayVariant>)",
+          "replacesSmithingRecipe(SmithingRecipe)",
+          "recipeHolder(SmithingDisplayVariant)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SmithingDisplayVariant": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SmithingDisplayView": [],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SmithingSourceResultFocusBehavior": [
+          "allDisplays(List<SmithingDisplayVariant>)",
+          "recipesFor(List<SmithingDisplayVariant>, ItemStack)",
+          "usagesFor(List<SmithingDisplayVariant>, ItemStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.SourceResultFocusBehavior": [
+          "allDisplays(List<CraftingDisplayVariant>)",
+          "recipesFor(List<CraftingDisplayVariant>, ItemStack)",
+          "usagesFor(List<CraftingDisplayVariant>, ItemStack)",
+          "sourceInputIndex()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.subtypes.PropertyBasedSubtypeInterpreter": [
+          "getPropertyDefinitions()",
+          "addOptionalProperty(Function<ItemStack, Optional<T>>, String, Function<T, String>)",
+          "addProperty(PropertyBasedSubtypeInterpreter.IPropertyValueGetter<T>, String, Function<T, String>)",
+          "getComparableData(ItemStack)",
+          "getRegistrySanitizedItemString(ItemStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.common.subtypes.PropertyBasedSubtypeInterpreterWrapper": [
+          "getPropertyDefinitions()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.CoreJeiPlugin": [
+          "getPluginUid()",
+          "registerGuiHandlers(IGuiHandlerRegistration)",
+          "registerRecipes(IRecipeRegistration)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.CraftingDisplayCatalogRecipeManagerPlugin": [
+          "isHandledInput(ITypedIngredient<?>)",
+          "isHandledOutput(ITypedIngredient<?>)",
+          "getRecipesForInput(ITypedIngredient<?>)",
+          "getRecipesForOutput(ITypedIngredient<?>)",
+          "getAllRecipes()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.CraftingDisplayCatalogRecipeManagerPluginCompat": [
+          "getRecipeTypes(IFocus<V>)",
+          "getRecipes(IRecipeType<T>, IFocus<V>)",
+          "getRecipes(IRecipeType<T>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.CraftingSpecCategoryExtension": [
+          "getIngredients(RecipeHolder<R>)",
+          "setRecipe(RecipeHolder<R>, IRecipeLayoutBuilder, ICraftingGridHelper, IFocusGroup)",
+          "onDisplayedIngredientsUpdate(RecipeHolder<R>, List<IRecipeSlotDrawable>, IFocusGroup)",
+          "getWidth(RecipeHolder<R>)",
+          "getHeight(RecipeHolder<R>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.GroupedCraftingRecipeCategoryExtension": [
+          "registerOnce(IVanillaCategoryExtensionRegistration)",
+          "getIngredients(RecipeHolder<GroupedCraftingRecipe>)",
+          "setRecipe(RecipeHolder<GroupedCraftingRecipe>, IRecipeLayoutBuilder, ICraftingGridHelper, IFocusGroup)",
+          "onDisplayedIngredientsUpdate(RecipeHolder<GroupedCraftingRecipe>, List<IRecipeSlotDrawable>, IFocusGroup)",
+          "getWidth(RecipeHolder<GroupedCraftingRecipe>)",
+          "getHeight(RecipeHolder<GroupedCraftingRecipe>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.GroupedCraftingRecipeManagerPlugin": [
+          "isHandledInput(ITypedIngredient<?>)",
+          "isHandledOutput(ITypedIngredient<?>)",
+          "getRecipesForInput(ITypedIngredient<?>)",
+          "getRecipesForOutput(ITypedIngredient<?>)",
+          "getAllRecipes()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiCompat": [
+          "init(IEventBus)",
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiCraftingContainerRecipeTransferHandlerBase": [
+          "getMenuType()",
+          "transferRecipe(C, R, IRecipeSlotsView, Player, boolean, boolean)",
+          "InventoryState(Map<Slot, ItemStack>, int, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiCraftingSpecExtensionRegistrar": [
+          "registerCraftingSpecExtensions(IVanillaCategoryExtensionRegistration, Supplier<IRecipeViewerDisplayCatalog>, Predicate<ItemStack>)",
+          "registerCraftingSpecExtensions(IVanillaCategoryExtensionRegistration, Supplier<IRecipeViewerDisplayCatalog>, Predicate<ItemStack>, List<Class<? extends CraftingRecipe>>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiRecipeDisplayGenerator": [
+          "shaped(ItemStack)",
+          "shapeless(ItemStack)",
+          "smithing(Optional<Ingredient>, Ingredient, Optional<Ingredient>, ItemStack)",
+          "acceptCrafting(RecipeHolder<CraftingRecipe>)",
+          "getCraftingRecipes()",
+          "getSmithingRecipes()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiSettingsGhostIngredientHandler": [
+          "getTargetsTyped(S, ITypedIngredient<I>, boolean)",
+          "onComplete()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiShapedRecipeDisplayBuilder": [
+          "define(Character, TagKey<Item>)",
+          "define(Character, ItemLike)",
+          "define(Character, ItemStack)",
+          "define(Character, List<ItemStack>)",
+          "setDimensions(int, int)",
+          "define(HolderSet<Item>)",
+          "define(ItemStack)",
+          "save(ResourceKey<Recipe<?>>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiShapelessRecipeDisplayBuilder": [
+          "requires(TagKey<Item>)",
+          "requires(ItemLike)",
+          "requires(ItemStack)",
+          "requires(HolderSet<Item>)",
+          "requires(Ingredient)",
+          "save(ResourceKey<Recipe<?>>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiStorageGhostIngredientHandler": [
+          "getTargetsTyped(S, ITypedIngredient<I>, boolean)",
+          "onComplete()",
+          "quickMove(S, ITypedIngredient<I>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.JeiTransferRecipePayload": [
+          "type()",
+          "handlePayload(JeiTransferRecipePayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.SmithingSpecCategoryExtension": [
+          "setTemplate(R, T)",
+          "setBase(R, T)",
+          "setAddition(R, T)",
+          "setOutput(R, T)",
+          "onDisplayedIngredientsUpdate(R, IRecipeSlotDrawable, IRecipeSlotDrawable, IRecipeSlotDrawable, IRecipeSlotDrawable, IFocusGroup)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.SmithingSpecRecipeManagerPlugin": [
+          "isHandledInput(ITypedIngredient<?>)",
+          "isHandledOutput(ITypedIngredient<?>)",
+          "getRecipesForInput(ITypedIngredient<?>)",
+          "getRecipesForOutput(ITypedIngredient<?>)",
+          "getAllRecipes()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.jei.subtypes.JeiSubtypeInterpreter": [
+          "of(PropertyBasedSubtypeInterpreter)",
+          "getSubtypeData(ItemStack, UidContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.comparator.ReiSubtypeInterpreter": [
+          "of(PropertyBasedSubtypeInterpreter)",
+          "hash(ComparisonContext, ItemStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.CoreReiCommonPlugin": [
+          "registerSlotAccessors(SlotAccessorRegistry)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.CraftingSpecReiDisplay": [
+          "getWidth()",
+          "getHeight()",
+          "getInputWidth(int, int)",
+          "getInputHeight(int, int)",
+          "isShapeless()",
+          "getSerializer()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.CraftingSpecReiDisplayGenerator": [
+          "getRecipeFor(EntryStack<?>)",
+          "getUsageFor(EntryStack<?>)",
+          "generate(ViewSearchBuilder)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.GroupedCraftingReiDisplay": [
+          "getWidth()",
+          "getHeight()",
+          "getInputWidth(int, int)",
+          "getInputHeight(int, int)",
+          "isShapeless()",
+          "getSerializer()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.GroupedCraftingReiDisplayGenerator": [
+          "getRecipeFor(EntryStack<?>)",
+          "getUsageFor(EntryStack<?>)",
+          "generate(ViewSearchBuilder)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiCompat": [
+          "init(IEventBus)",
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiCraftingContainerTransferHandler": [
+          "crafting(Class<? extends C>)",
+          "smithing(Class<? extends C>)",
+          "checkApplicable(Context)",
+          "getInputSlots(Context)",
+          "getInventorySlots(Context)",
+          "handle(Context)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiGhostTarget": [
+          "accept()",
+          "contains(int, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiRecipeDisplayGenerator": [
+          "shaped(ItemStack)",
+          "shapeless(ItemStack)",
+          "smithing(Optional<Ingredient>, Ingredient, Optional<Ingredient>, ItemStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiSettingsGhostIngredientHandler": [
+          "acceptDraggedStack(DraggingContext<S>, DraggableStack)",
+          "getDraggableAcceptingBounds(DraggingContext<S>, DraggableStack)",
+          "isHandingScreen(R)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiShapedRecipeDisplayBuilder": [
+          "define(Character, TagKey<Item>)",
+          "define(Character, ItemLike)",
+          "define(Character, ItemStack)",
+          "define(Character, List<ItemStack>)",
+          "define(HolderSet<Item>)",
+          "define(ItemStack)",
+          "setDimensions(int, int)",
+          "save(ResourceKey<Recipe<?>>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiShapelessRecipeDisplayBuilder": [
+          "requires(TagKey<Item>)",
+          "requires(ItemLike)",
+          "requires(ItemStack)",
+          "requires(HolderSet<Item>)",
+          "save(ResourceKey<Recipe<?>>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiSlotAccessor": [
+          "fromSlot(Slot)",
+          "getItemStack()",
+          "setItemStack(ItemStack)",
+          "takeStack(int)",
+          "getIndex()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiStorageGhostIngredientHandler": [
+          "acceptDraggedStack(DraggingContext<S>, DraggableStack)",
+          "getDraggableAcceptingBounds(DraggingContext<S>, DraggableStack)",
+          "isHandingScreen(R)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.ReiTransferRecipePayload": [
+          "type()",
+          "handlePayload(ReiTransferRecipePayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.recipeviewers.rei.SmithingSpecReiDisplayGenerator": [
+          "getRecipeFor(EntryStack<?>)",
+          "getUsageFor(EntryStack<?>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.reliquary.ReliquaryCompat": [
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.sawmill.SawmillRecipeContainer": [
+          "getRecipeType()",
+          "filterAndSortRecipes(List<RecipeHolder<WoodcuttingRecipe>>)",
+          "shouldRefreshRecipes(ItemStack, boolean)",
+          "getInputCount()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.sawmill.SawmillRecipeControl": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "getSelectRecipeSound()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.sawmill.SawmillUpgradeContainer": [
+          "createRecipeContainer(ContainerLevelAccess)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.sawmill.SawmillUpgradeItem": [
+          "getType()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.sawmill.SawmillUpgradeTab": [
+          "createRecipeControl(StorageScreenBase<?>, SawmillRecipeContainer, Position)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.trashslot.SophisticatedContainerLayout": [
+          "getDefaultSlotX(AbstractContainerScreen<?>)",
+          "getDefaultSlotY(AbstractContainerScreen<?>)",
+          "getSnaps(AbstractContainerScreen<?>, SlotRenderStyle)",
+          "getSlotRenderStyle(AbstractContainerScreen<?>, int, int)",
+          "getCollisionAreas(AbstractContainerScreen<?>)",
+          "getContainerId(AbstractContainerScreen<?>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.trashslot.TrashSlotCompat": [
+          "init(IEventBus)",
+          "setup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.compat.trashslot.TrashSlotScreenRegistry": [
+          "registerScreen(Class<? extends AbstractContainerScreen<?>>)",
+          "getRegisteredScreens()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.Config": [],
+        "net.p3pp3rf1y.sophisticatedcore.controller.ControllerBlockEntityBase": [
+          "addLinkedBlock(BlockPos)",
+          "removeLinkedBlock(BlockPos)",
+          "onLoad()",
+          "isStorageConnected(BlockPos)",
+          "searchAndAddBoundables()",
+          "changeSlots(BlockPos, int, boolean)",
+          "updateEmptySlots(BlockPos, boolean)",
+          "getSlots(int)",
+          "clearCachedHandler(BlockPos)",
+          "updateStorageInputFilter(BlockPos)",
+          "getSearchRange()",
+          "addStorage(BlockPos)",
+          "addStorageStacksAndRegisterListeners(BlockPos)",
+          "addStorageMemorizedItem(BlockPos, Item)",
+          "addStorageMemorizedStack(BlockPos, int)",
+          "removeStorageMemorizedItem(BlockPos, Item)",
+          "removeStorageMemorizedStack(BlockPos, int)",
+          "addStorageStack(BlockPos, ItemStackKey)",
+          "removeStorageStack(BlockPos, ItemStackKey)",
+          "removeStorageStacks(BlockPos)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.controller.IControllableStorage": [
+          "canConnectStorages()",
+          "hasStorageData()",
+          "getControlledStorageBlockPos()",
+          "tryToAddToController()",
+          "removeFromController()",
+          "addToController(Level, BlockPos, BlockPos)",
+          "registerController(ControllerBlockEntityBase)",
+          "unregisterController()",
+          "onInventoryInputOutputHandlerRefresh()",
+          "registerInventoryStackListeners()",
+          "registerWithControllerOnLoad()",
+          "changeSlots(int)",
+          "updateEmptySlots()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.controller.IControllerBoundable": [
+          "canBeConnected()",
+          "runOnController(Level, Consumer<ControllerBlockEntityBase>)",
+          "saveControllerPos(ValueOutput)",
+          "loadControllerPos(ValueInput)",
+          "addToController(Level, BlockPos, BlockPos)",
+          "addToAdjacentController()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.controller.ILinkable": [
+          "linkToController(BlockPos)",
+          "unlinkFromController()",
+          "setNotLinked()",
+          "canBeLinked()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.crafting.CustomShapelessRecipe": [
+          "group()",
+          "category()",
+          "placementInfo()",
+          "result()",
+          "matches(CraftingInput, Level)",
+          "getIngredients()",
+          "assemble(CraftingInput, Provider)",
+          "display()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.crafting.HoldingRecipeOutput": [
+          "advancement()",
+          "includeRootAdvancement()",
+          "accept(ResourceKey<Recipe<?>>, Recipe<?>, AdvancementHolder, ICondition...)",
+          "getRecipe()",
+          "getAdvancementHolder()",
+          "getConditions()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.crafting.ICustomSmithingRecipe": [],
+        "net.p3pp3rf1y.sophisticatedcore.crafting.ItemEnabledCondition": [
+          "test(IContext)",
+          "codec()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.crafting.IWrapperRecipe": [],
+        "net.p3pp3rf1y.sophisticatedcore.crafting.RecipeWrapperSerializer": [
+          "codec()",
+          "streamCodec()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.crafting.ShapeBasedRecipeBuilder": [
+          "shaped(HolderGetter<Item>, ItemStack)",
+          "shaped(HolderGetter<Item>, ItemLike)",
+          "shaped(HolderGetter<Item>, ItemLike, Function<ShapedRecipe, ? extends ShapedRecipe>)",
+          "shaped(HolderGetter<Item>, ItemStack, Function<ShapedRecipe, ? extends ShapedRecipe>)",
+          "save(RecipeOutput, ResourceKey<Recipe<?>>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.crafting.ShapelessBasedRecipeBuilder": [
+          "shapeless(HolderGetter<Item>, ItemStack, Function<ShapelessRecipe, ? extends CraftingRecipe>)",
+          "shapeless(HolderGetter<Item>, ItemStack)",
+          "shapeless(HolderGetter<Item>, ItemLike)",
+          "shapeless(HolderGetter<Item>, ItemLike, int)",
+          "shapeless(HolderGetter<Item>, ItemLike, Function<ShapelessRecipe, ? extends CraftingRecipe>)",
+          "shapeless(HolderGetter<Item>, ItemLike, int, Function<ShapelessRecipe, ? extends CraftingRecipe>)",
+          "save(RecipeOutput, ResourceKey<Recipe<?>>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.crafting.StorageDyeRecipeBase": [
+          "matches(CraftingInput, Level)",
+          "assemble(CraftingInput, Provider)",
+          "isDyeableStorageItem(ItemStack)",
+          "applyColors(ItemStack, List<DyeColor>, List<DyeColor>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.crafting.UpgradeClearRecipe": [
+          "matches(CraftingInput, Level)",
+          "assemble(CraftingInput, Provider)",
+          "getSerializer()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.crafting.UpgradeNextTierRecipe": [
+          "getCompose()",
+          "assemble(CraftingInput, Provider)",
+          "isSpecial()",
+          "getSerializer()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.data.CoreFluidTagsProvider": [
+          "addTags(Provider)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.data.CoreRecipeProvider": [
+          "buildRecipes()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.data.DataGenerators": [
+          "gatherData(Client)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.data.SophisticatedModelProvider": [
+          "generateCubeBottomTopReuseTopOnBottom(BlockModelGenerators, Block)",
+          "addItemClasses(List<Item>, List<Class<? extends Item>>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.init.ModCompat": [
+          "register()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.init.ModCoreDataComponents": [
+          "register(IEventBus)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.init.ModFluids": [
+          "registerHandlers(IEventBus)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.init.ModParticles": [
+          "registerParticles(IEventBus)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.init.ModPayloads": [
+          "registerPayloads(RegisterPayloadHandlersEvent)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.init.ModRecipes": [
+          "registerHandlers(IEventBus)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ComponentItemStacksHandler": [
+          "getContents()",
+          "onContentsChanged(int, ItemStack)",
+          "updateContents(ItemStack, int)",
+          "isValid(int, ItemResource)",
+          "getStackInSlot(int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ContainerContents": [
+          "copy()",
+          "reloadFrom(ContainerContents)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.FilteredItemHandler": [
+          "size()",
+          "getResource(int)",
+          "getAmountAsLong(int)",
+          "insert(int, ItemResource, int, TransactionContext)",
+          "insert(ItemResource, int, TransactionContext)",
+          "extract(ItemResource, int, TransactionContext)",
+          "extract(int, ItemResource, int, TransactionContext)",
+          "matchesFilters(ItemResource, List<FilterLogic>)",
+          "shouldMatchAllFilters(List<FilterLogic>)",
+          "getCapacityAsLong(int, ItemResource)",
+          "isValid(int, ItemResource)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.IInsertBlockOverride": [],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.IInventoryPartHandler": [
+          "getSlotLimit(int)",
+          "isSlotAccessible(int)",
+          "getCapacity(int, ItemResource)",
+          "shouldRenderInaccessibleSlotOverlay(int)",
+          "extract(int, ItemResource, int, TransactionContext, IResourceExtractor)",
+          "insert(int, ItemResource, int, TransactionContext, IResourceInserter)",
+          "set(int, ItemResource, int, IndexModifier<ItemResource>)",
+          "isValid(int, ItemResource, Player, BiPredicate<Integer, ItemResource>)",
+          "canBeReplaced()",
+          "size()",
+          "getNoItemIcon(int)",
+          "getFilterItem(int)",
+          "onSlotLimitChange()",
+          "getNoSortSlots()",
+          "onSlotFilterChanged(int)",
+          "isFilterItem(Item)",
+          "getFilterItems()",
+          "onInit()",
+          "isInfinite(int)",
+          "getResource(int, IntFunction<ItemResource>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.IItemHandlerSimpleExtractor": [],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.InventoryHandler": [
+          "directSet(int, ItemResource, int)",
+          "set(int, ItemResource, int)",
+          "getSlotTracker()",
+          "onContentsChanged(int, ItemStack)",
+          "triggerOnChangeListeners(int)",
+          "getBaseSlotLimit()",
+          "getInternalSlotLimit(int)",
+          "getCapacityNoInit(int, ItemResource)",
+          "getCapacity(int, ItemResource)",
+          "getCapacityAsLong(int, ItemResource)",
+          "getBaseCapacity(ItemResource)",
+          "getFilterItem(int)",
+          "isFilterItem(Item)",
+          "setBaseSlotLimit(int)",
+          "extract(ItemResource, int, TransactionContext)",
+          "extract(int, ItemResource, int, TransactionContext)",
+          "getResource(int)",
+          "getAmountAsLong(int)",
+          "getInternalStack(int)",
+          "setStackInSlot(int, ItemStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.InventoryHandlerSlotTracker": [
+          "setShouldInsertIntoEmpty(BooleanSupplier)",
+          "addPartiallyFilled(int, ItemStack)",
+          "getFullStacks()",
+          "getFullSlots(ItemStackKey)",
+          "getPartialStacks()",
+          "hasExactStackMemorized(ItemStackKey)",
+          "hasItemMemorizedOrFiltered(Item)",
+          "getItems()",
+          "hasMatchingFullStack(ItemStack, Predicate<ItemStack>)",
+          "addFull(int, ItemStack)",
+          "removePartiallyFilled(int)",
+          "removeAndSetSlotIndexes(InventoryHandler, int, ItemStack)",
+          "clear()",
+          "refreshSlotIndexesFrom(InventoryHandler)",
+          "createSlotSnapshot(int)",
+          "restoreSlotFromSnapshot(ISlotTracker.Snapshot)",
+          "registerListeners(Consumer<ItemStackKey>, Consumer<ItemStackKey>, Runnable, Runnable)",
+          "unregisterStackKeyListeners()",
+          "hasEmptySlots()",
+          "getFirstMatchingSlot(ItemStackKey)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.InventoryIOHandler": [
+          "getFilteredItemHandler()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.InventoryPartitioner": [
+          "getPartBySlot(int)",
+          "getNoItemIcon(int)",
+          "shouldRenderInaccessibleSlotOverlay(int)",
+          "onSlotLimitChange()",
+          "getNoSortSlots()",
+          "isFilterItem(Item)",
+          "getFilterItems()",
+          "onInit()",
+          "getFirstSpace(int)",
+          "addInventoryPart(int, int, IInventoryPartHandler)",
+          "removeInventoryPart(int)",
+          "isInfinite(int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.InventoryPartRegistry": [
+          "registerFactory(String, IInventoryPartHandler.Factory)",
+          "instantiatePart(String, InventoryHandler, SlotRange, Supplier<MemorySettingsCategory>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.IResourceExtractor": [],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.IResourceInserter": [],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ISlotResourceMutator": [],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ISlotStackAccessor": [],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ISlotTracker": [],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ItemStackKey": [
+          "of(ItemStack)",
+          "of(ItemResource)",
+          "clearCache()",
+          "toResource()",
+          "equals(Object)",
+          "hashCodeNotEquals(ItemStack)",
+          "hashCode()",
+          "matches(ItemStack)",
+          "stack()",
           "toString()"
         ],
-        "net.darkhax.bookshelf.client.gui.GuiGraphicButton": [
-          "func_146112_a(Minecraft, int, int)"
+        "net.p3pp3rf1y.sophisticatedcore.inventory.ITrackedContentsItemResourceHandler": [],
+        "net.p3pp3rf1y.sophisticatedcore.inventory.StorageWrapperRepository": [
+          "getExistingStorageWrapper(ItemStack, Class<T>)",
+          "getStorageWrapper(ItemStack, Class<T>, Function<ItemStack, T>)",
+          "setStorageWrapper(ItemStack, IStorageWrapper)",
+          "getWrapperCacheChangeCounter()",
+          "registerStorageWrapper(UUID, IStorageWrapper)",
+          "invalidateStorageWrapperContents(UUID, IStorageWrapper)",
+          "migrateToUuid(IStorageWrapper, ItemStack, UUID)",
+          "clearCache()"
         ],
-        "net.darkhax.bookshelf.client.gui.GuiSlider": [
-          "func_146119_b(Minecraft, int, int)",
-          "func_146116_c(Minecraft, int, int)",
-          "func_146118_a(int, int)",
-          "func_146114_a(boolean)",
-          "setSliderValue(float)",
-          "getSliderValue()"
+        "net.p3pp3rf1y.sophisticatedcore.network.EmitConsumableClientParticlesAndSoundsPayload": [
+          "type()",
+          "handlePayload(EmitConsumableClientParticlesAndSoundsPayload, IPayloadContext)"
         ],
-        "net.darkhax.bookshelf.client.model.BakedModelRetexturable": [
-          "getRetexturedModel(String)",
-          "getDefaultModel()",
-          "func_188616_a(IBlockState, EnumFacing, long)",
-          "func_177555_b()",
-          "func_177556_c()",
-          "func_188618_c()",
-          "func_177554_e()",
-          "func_177552_f()",
-          "func_188617_f()",
-          "handlePerspective(TransformType)"
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncAdditionalSlotInfoPayload": [
+          "type()",
+          "handlePayload(SyncAdditionalSlotInfoPayload, IPayloadContext)"
         ],
-        "net.darkhax.bookshelf.client.model.DefaultItemOverrideList": [
-          "handleItemState(IBakedModel, ItemStack, World, EntityLivingBase)"
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncBlockHighlightsPayload": [
+          "type()",
+          "handlePayload(SyncBlockHighlightsPayload, IPayloadContext)"
         ],
-        "net.darkhax.bookshelf.client.model.ModelArmorExtended": [
-          "addModelParts()",
-          "setRotateAngle(ModelRenderer, float, float, float)",
-          "func_78088_a(Entity, float, float, float, float, float, float)"
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncContainerClientDataPayload": [
+          "type()",
+          "handlePayload(SyncContainerClientDataPayload, IPayloadContext)"
         ],
-        "net.darkhax.bookshelf.client.particle.OpenParticleDigging": [],
-        "net.darkhax.bookshelf.client.render.tileentity.TileEntityBasicChestRenderer": [
-          "renderTileEntityAt(TileEntityBasicChest, double, double, double, float, int)",
-          "func_147499_a(ResourceLocation)"
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncContainerStacksPayload": [
+          "type()",
+          "handlePayload(SyncContainerStacksPayload, IPayloadContext)"
         ],
-        "net.darkhax.bookshelf.command.Command": [
-          "func_184882_a(MinecraftServer, ICommandSender)"
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncDatapackSettingsTemplatePayload": [
+          "type()",
+          "handlePayload(SyncDatapackSettingsTemplatePayload, IPayloadContext)"
         ],
-        "net.darkhax.bookshelf.command.CommandTree": [
-          "func_184881_a(MinecraftServer, ICommandSender, String[])",
-          "func_184882_a(MinecraftServer, ICommandSender)"
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncEmptySlotIconsPayload": [
+          "type()",
+          "handlePayload(SyncEmptySlotIconsPayload, IPayloadContext)"
         ],
-        "net.darkhax.bookshelf.config.ConfigurationHandler": [
-          "init(ASMDataTable)",
-          "sync()",
-          "onConfigChanged(ConfigChangedEvent)",
-          "hasChanged()",
-          "save()",
-          "getConfig()",
-          "addReader(Class<T>, ConfigurationHandler.Adapter<T>)"
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncPlayerSettingsPayload": [
+          "type()",
+          "handlePayload(SyncPlayerSettingsPayload, IPayloadContext)"
         ],
-        "net.darkhax.bookshelf.crafting.AnvilRecipe": [
-          "isValidRecipe(ItemStack, ItemStack, String)",
-          "getExperienceCost(ItemStack, ItemStack, String)",
-          "getMaterialCost(ItemStack, ItemStack, String)",
-          "getOutput(ItemStack, ItemStack, String)"
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncRecentCraftedResultsPayload": [
+          "type()",
+          "handlePayload(SyncRecentCraftedResultsPayload, IPayloadContext)"
         ],
-        "net.darkhax.bookshelf.crafting.IAnvilRecipe": [],
-        "net.darkhax.bookshelf.data.AttributeOperation": [],
-        "net.darkhax.bookshelf.data.Blockstates": [],
-        "net.darkhax.bookshelf.data.ColorHandlers": [],
-        "net.darkhax.bookshelf.data.FluidVolume": [],
-        "net.darkhax.bookshelf.data.VanillaColors": [
-          "getColor()"
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncSlotChangeErrorPayload": [
+          "type()",
+          "handlePayload(SyncSlotChangeErrorPayload, IPayloadContext)"
         ],
-        "net.darkhax.bookshelf.entity.EntityArrowBase": [
-          "func_184550_j()",
-          "func_189511_e(NBTTagCompound)",
-          "func_70020_e(NBTTagCompound)",
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncSlotStackPayload": [
+          "type()",
+          "handlePayload(SyncSlotStackPayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.network.SyncTemplateSettingsPayload": [
+          "type()",
+          "handlePayload(SyncTemplateSettingsPayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.network.TransferFullSlotPayload": [
+          "type()",
+          "handlePayload(TransferFullSlotPayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.network.TransferItemsPayload": [
+          "handlePayload(TransferItemsPayload, IPayloadContext)",
+          "type()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.DisplaySide": [
+          "getSerializedName()",
+          "next()",
+          "previous()",
+          "fromName(String)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.IUpgradeClientData": [],
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.RenderData": [
+          "register(UpgradeClientDataType<T>)",
+          "withUpgradeItems(List<ItemStack>)",
+          "withUpgradeClientData(UpgradeClientDataType<T>, T)",
+          "withoutUpgradeData(UpgradeClientDataType<?>)",
+          "withoutAllUpgradeData()",
+          "validated(IStorageWrapper, Level)",
+          "withoutUpgradeRenderInfo()",
+          "withBattery(RenderData.BatteryRenderData)",
+          "withTank(TankPosition, RenderData.TankRenderData)",
+          "withDisplayData(List<RenderData.DisplayItemData>, List<Integer>, List<Integer>, List<Integer>, List<Float>)",
+          "withDisplayItemsAndInaccessibleSlots(List<RenderData.DisplayItemData>, List<Integer>)",
+          "withSlotCountsFillRatiosAndInfiniteSlots(List<Integer>, List<Float>, List<Integer>)",
+          "getUpgradeItemStacks()",
+          "upgradeData()",
+          "tanks()",
+          "battery()",
+          "display()",
+          "copy()",
           "equals(Object)",
           "hashCode()"
         ],
-        "net.darkhax.bookshelf.entity.EntityFake": [
-          "func_70088_a()",
-          "func_70037_a(NBTTagCompound)",
-          "func_70014_b(NBTTagCompound)"
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.RenderDataHandler": [
+          "getDisplayData()",
+          "setUpgradeItems(List<ItemStack>)",
+          "setUpgradeClientData(UpgradeClientDataType<T>, T)",
+          "getUpgradeClientData(UpgradeClientDataType<T>)",
+          "refreshDisplayData(List<RenderData.DisplayItemData>, List<Integer>, List<Integer>, List<Integer>, List<Float>)",
+          "refreshDisplayItemsAndInaccessibleSlots(List<RenderData.DisplayItemData>, List<Integer>)",
+          "refreshSlotCountsFillRatiosAndInfiniteSlots(List<Integer>, List<Float>, List<Integer>)",
+          "setRenderUpdateChangeListener(Consumer<RenderDataHandler>)",
+          "setDisplayItemsChangeListener(Consumer<RenderDataHandler>)",
+          "save(boolean)",
+          "save()",
+          "getUpgradeClientData()",
+          "removeAllUpgradeClientData()",
+          "removeUpgradeClientData(UpgradeClientDataType<?>)",
+          "getData()",
+          "validate(IStorageWrapper, Level)",
+          "reloadFrom(RenderData)",
+          "resetUpgradeInfo(boolean)",
+          "setTankRenderData(TankPosition, RenderData.TankRenderData)",
+          "getTankRenderData()"
         ],
-        "net.darkhax.bookshelf.events.EnchantmentModifierEvent": [
-          "getEnchantment()",
-          "getEntity()",
-          "getLevels()",
-          "setLevels(int)"
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.TankPosition": [
+          "getSerializedName()"
         ],
-        "net.darkhax.bookshelf.inventory.SlotArmor": [
-          "func_75219_a()",
-          "func_75214_a(ItemStack)",
-          "func_178171_c()"
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.UpgradeClientDataType": [
+          "getName()",
+          "cast(IUpgradeClientData)",
+          "codec()",
+          "streamCodec()",
+          "equals(Object)",
+          "hashCode()"
         ],
-        "net.darkhax.bookshelf.inventory.SlotFake": [
-          "func_82869_a(EntityPlayer)",
-          "func_75214_a(ItemStack)",
-          "func_75209_a(int)",
-          "func_75215_d(ItemStack)"
+        "net.p3pp3rf1y.sophisticatedcore.renderdata.UpgradeRenderDataValidatorRegistry": [
+          "getValidator(UpgradeClientDataType<T>)"
         ],
-        "net.darkhax.bookshelf.item.ICustomMesh": [],
-        "net.darkhax.bookshelf.item.ItemBlockBasic": [
-          "func_77647_b(int)",
-          "func_77667_c(ItemStack)",
-          "func_179223_d()",
-          "getVariant()"
+        "net.p3pp3rf1y.sophisticatedcore.settings.ColorToggleButton": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "updateNarration(NarrationElementOutput)"
         ],
-        "net.darkhax.bookshelf.item.ItemBlockChest": [
-          "func_77667_c(ItemStack)",
-          "func_77647_b(int)",
-          "placeBlockAt(ItemStack, EntityPlayer, World, BlockPos, EnumFacing, float, float, float, IBlockState)",
-          "func_150895_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "getCustomMesh()",
-          "registerMeshModels()",
-          "getBuilder()"
+        "net.p3pp3rf1y.sophisticatedcore.settings.DatapackSettingsTemplateManager": [
+          "putTemplate(String, String, ContainerContents.SettingsData)",
+          "getTemplates()",
+          "getTemplateData(String, String)"
         ],
-        "net.darkhax.bookshelf.item.ItemInventory": [
-          "readFromNBT()",
-          "writeToNBT()",
-          "getContents(ItemStack)",
-          "func_70005_c_()",
-          "func_145818_k_()",
-          "func_145748_c_()",
-          "func_70302_i_()",
-          "func_70301_a(int)",
-          "func_70298_a(int, int)",
-          "func_70304_b(int)",
-          "func_70299_a(int, ItemStack)",
-          "func_70297_j_()",
-          "func_70296_d()",
-          "func_174889_b(EntityPlayer)",
-          "func_174886_c(EntityPlayer)",
-          "func_94041_b(int, ItemStack)",
-          "func_174887_a_(int)",
-          "func_174885_b(int, int)",
-          "func_174890_g()",
-          "func_174888_l()"
+        "net.p3pp3rf1y.sophisticatedcore.settings.ISettingsCategory": [],
+        "net.p3pp3rf1y.sophisticatedcore.settings.ISlotColorCategory": [],
+        "net.p3pp3rf1y.sophisticatedcore.settings.itemdisplay.IItemDisplaySettingsPreviewProvider": [
+          "renderItemDisplaySettingsPreview(ItemDisplaySettingsTab, SettingsScreen, GuiGraphics, int, int, int, int, ItemDisplaySettingsContainer, int, float, float, float)",
+          "getItemDisplaySettingsPreviewStack(SettingsScreen, ItemDisplaySettingsContainer, int)",
+          "getItemDisplayPreviewYAxisRotation(float)",
+          "getItemDisplayPreviewScaleMultiplier()"
         ],
-        "net.darkhax.bookshelf.item.ItemSubType": [
-          "func_77647_b(int)",
-          "func_77667_c(ItemStack)",
-          "func_150895_a(Item, CreativeTabs, NonNullList<ItemStack>)",
-          "getVariant()"
+        "net.p3pp3rf1y.sophisticatedcore.settings.itemdisplay.ItemDisplaySettingsCategory": [
+          "getItemNumberLimit()",
+          "unselectSlot(int)",
+          "selectSlot(int)",
+          "getSlots()",
+          "getRotation(int)",
+          "rotate(int, boolean)",
+          "getZOffset(int)",
+          "changeZOffset(int, int)",
+          "setZOffset(int, int)",
+          "setColor(DyeColor)",
+          "getColor()",
+          "getDisplaySide()",
+          "setDisplaySide(DisplaySide)",
+          "reloadFrom(ItemDisplaySettingsCategoryData)",
+          "overwriteWith(ItemDisplaySettingsCategory)",
+          "itemChanged(int)",
+          "itemsChanged()",
+          "getSlotColor(int)",
+          "selectSlots(int, int)",
+          "isLargerThanNumberOfSlots(int)"
         ],
-        "net.darkhax.bookshelf.lib.BookshelfException": [],
-        "net.darkhax.bookshelf.lib.Constants": [],
-        "net.darkhax.bookshelf.lib.MCColor": [
-          "writeToStack(ItemStack)",
-          "writeToNBT(NBTTagCompound)",
-          "getComponents()",
-          "getRedF()",
-          "getGreenF()",
-          "getBlueF()",
-          "setRenderColor()",
-          "getRandomColor(Random)",
-          "isAcceptable(ItemStack)",
-          "isAcceptable(IBlockAccess, BlockPos)",
-          "isAcceptable(TileEntity)",
-          "isAcceptable(NBTTagCompound)"
+        "net.p3pp3rf1y.sophisticatedcore.settings.itemdisplay.ItemDisplaySettingsCategoryData": [
+          "id()",
+          "copy()",
+          "reloadFrom(ItemDisplaySettingsCategoryData)",
+          "color()",
+          "slotIndexes()",
+          "removeSlotIndex(int)",
+          "slotRotations()",
+          "slotZOffsets()",
+          "displaySide()",
+          "setColor(DyeColor)",
+          "setRotation(int, int)",
+          "setZOffset(int, int)",
+          "setDisplaySide(DisplaySide)",
+          "addSlot(int)",
+          "removeSlot(int)",
+          "equals(Object)",
+          "hashCode()"
         ],
-        "net.darkhax.bookshelf.lib.ModTrackingList": [
-          "getTrackedEntries()",
-          "getModContainer(T)",
-          "add(T)",
-          "get(int)",
-          "add(int, T)",
-          "addAll(int, Collection<? extends T>)",
-          "addAll(Collection<? extends T>)",
-          "remove(int)",
-          "remove(Object)",
-          "removeAll(Collection<?>)",
-          "set(int, T)",
-          "subList(int, int)",
-          "size()",
-          "clear()",
-          "forEach(Consumer<? super T>)",
+        "net.p3pp3rf1y.sophisticatedcore.settings.itemdisplay.ItemDisplaySettingsContainer": [
+          "handlePacket(CompoundTag)",
+          "unselectSlot(int)",
+          "selectSlot(int)",
+          "rotateClockwise(int)",
+          "rotateCounterClockwise(int)",
+          "changeZOffset(int, int)",
+          "resetZOffset(int)",
+          "setColor(DyeColor)",
+          "setDisplaySide(DisplaySide)",
+          "isSlotSelected(int)",
+          "getColor()",
+          "getRotation(int)",
+          "getZOffset(int)",
+          "getFirstSelectedSlot()",
+          "getDisplaySide()",
+          "supportsSideSelection()",
+          "canDeselectSlots()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.itemdisplay.ItemDisplaySettingsTab": [
+          "getSlotOverlayColor(int, boolean)",
+          "handleSlotClick(Slot, int)",
+          "renderExtra(GuiGraphics, Slot)",
+          "getItemRotation(int, boolean)",
+          "renderDefaultItemDisplaySettingsPreview(GuiGraphics, int, int, int, int, ItemDisplaySettingsContainer, int, float, float)",
+          "renderItemDisplayPreviewItem(GuiGraphics, ItemStack, int, int, int, int, float, float, float)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.Context": [
+          "fromName(String)",
+          "getSerializedName()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.ContextButton": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.MainSettingsCategory": [
+          "getPlayerSettingsName()",
+          "reloadFrom(MainSettingsCategoryData)",
+          "overwriteWith(MainSettingsCategory)",
+          "toggleContext()",
+          "isLargerThanNumberOfSlots(int)",
+          "copyTo(MainSettingsCategory, int, int)",
+          "deleteSlotSettingsFrom(int)",
+          "getContext()",
+          "setContext(Context)",
+          "setValue(Consumer<MainSettingsCategoryData>)",
+          "getValue(Function<MainSettingsCategoryData, T>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.MainSettingsCategoryData": [
+          "shiftClickIntoOpenTab()",
+          "setShiftClickIntoOpenTab(boolean)",
+          "keepTabOpen()",
+          "setKeepTabOpen(boolean)",
+          "keepSearchPhrase()",
+          "setKeepSearchPhrase(boolean)",
+          "id()",
+          "anotherPlayerCanOpen()",
+          "setAnotherPlayerCanOpen(boolean)",
+          "copy()",
+          "reloadFrom(MainSettingsCategoryData)",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.MainSettingsContainer": [
+          "handlePacket(CompoundTag)",
+          "toggleContext()",
+          "getContext()",
+          "getPlayer()",
+          "toggleShiftClickIntoOpenTab()",
+          "shouldShiftClickIntoOpenTab()",
+          "toggleKeepTabOpen()",
+          "toggleKeepSearchPhrase()",
+          "shouldKeepTabOpen()",
+          "shouldKeepSearchPhrase()",
+          "getSettingValue(Function<MainSettingsCategoryData, T>)",
+          "setSettingValue(Consumer<MainSettingsCategoryData>, Consumer<CompoundTag>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.MainSettingsTab": [
+          "getSlotOverlayColor(int, boolean)",
+          "handleSlotClick(Slot, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.main.PlayerMainSettingsSavedData": [
+          "get()",
+          "get(UUID, String)",
+          "put(UUID, String, MainSettingsCategoryData)",
+          "setvalue(UUID, String, Consumer<MainSettingsCategoryData>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.MainSetting": [
+          "getName()",
+          "setValue(CompoundTag, T)",
+          "removeFrom(CompoundTag)",
+          "getValue(CompoundTag)",
+          "getDefaultValue()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.memory.MemorySettingsCategory": [
+          "matchesFilter(int, ItemStack)",
+          "matchesFilter(int, ItemResource)",
+          "getSlotFilterStack(int, boolean)",
+          "isSlotSelected(int)",
+          "unselectAllSlots()",
+          "selectSlots(int, int)",
+          "selectSlot(int)",
+          "unselectSlot(int)",
+          "ignoresNbt()",
+          "setIgnoreNbt(boolean)",
+          "reloadFrom(MemorySettingsCategoryData)",
+          "overwriteWith(MemorySettingsCategory)",
+          "getSlotIndexes()",
+          "getFilterItemSlots()",
+          "getFilterStackSlots()",
+          "matchesFilter(ItemStack)",
+          "matchesFilter(ItemResource)",
+          "matchesFilter(Item, DataComponentMap)",
+          "matchesStackKey(ItemStackKey)",
+          "matchesItem(Item)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.memory.MemorySettingsCategoryData": [
+          "slotFilterItems()",
+          "slotFilterStacks()",
+          "ignoreNbt()",
+          "id()",
+          "copy()",
+          "reloadFrom(MemorySettingsCategoryData)",
+          "addSlotStack(int, ItemStackKey)",
+          "clearSlotFilterStacks()",
+          "clearSlotFilterItems()",
+          "setIgnoreNbt(boolean)",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.memory.MemorySettingsContainer": [
+          "handlePacket(CompoundTag)",
+          "unselectSlot(int)",
+          "selectSlot(int)",
+          "unselectAllSlots()",
+          "selectAllSlots()",
+          "isSlotSelected(int)",
+          "ignoresNbt()",
+          "setIgnoreNbt(boolean)",
+          "getMemorizedStack(int)",
+          "getSelectedTemplatesMemorizedStack(int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.memory.MemorySettingsTab": [
+          "getSlotOverlayColor(int, boolean)",
+          "handleSlotClick(Slot, int)",
+          "getItemDisplayOverride(int, boolean)",
+          "drawSlotStackOverlay(GuiGraphics, Slot, boolean)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.nosort.NoSortSettingsCategory": [
+          "isSlotSelected(int)",
+          "unselectAllSlots()",
+          "selectSlots(int, int)",
+          "selectSlot(int)",
+          "unselectSlot(int)",
+          "setColor(DyeColor)",
+          "getColor()",
+          "getSlotColor(int)",
+          "getNoSortSlots()",
+          "reloadFrom(NoSortSettingsCategoryData)",
+          "overwriteWith(NoSortSettingsCategory)",
+          "isLargerThanNumberOfSlots(int)",
+          "copyTo(NoSortSettingsCategory, int, int)",
+          "deleteSlotSettingsFrom(int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.nosort.NoSortSettingsCategoryData": [
+          "selectedSlots()",
+          "color()",
+          "id()",
+          "copy()",
+          "reloadFrom(NoSortSettingsCategoryData)",
+          "equals(Object)",
+          "hashCode()",
+          "clearSelectedSlots()",
+          "addSelectedSlot(int)",
+          "removeSelectedSlot(int)",
+          "setColor(DyeColor)",
+          "addSelectedSlots(Set<Integer>)",
+          "removeSelectedSlotAtOrAfter(int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.nosort.NoSortSettingsContainer": [
+          "handlePacket(CompoundTag)",
+          "unselectSlot(int)",
+          "selectSlot(int)",
+          "unselectAllSlots()",
+          "selectAllSlots()",
+          "setColor(DyeColor)",
+          "isSlotSelected(int)",
+          "getColor()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.nosort.NoSortSettingsTab": [
+          "getSlotOverlayColor(int, boolean)",
+          "handleSlotClick(Slot, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.SettingsContainerBase": [
+          "getCategory()",
+          "getSettingsContainer()",
+          "sendIntToServer(String, int)",
+          "sendStringToServer(String, String)",
+          "sendBooleanToServer(String, boolean)",
+          "sendDataToServer(Supplier<CompoundTag>)",
+          "isServer()",
+          "handlePacket(CompoundTag)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.SettingsHandler": [
+          "getPlayerSettingsName()",
+          "addItemDisplayCategory(Supplier<InventoryHandler>, Supplier<RenderDataHandler>, ContainerContents.SettingsData)",
+          "addSettingsCategory(ContainerContents.SettingsData, String, Runnable, BiFunction<D, Runnable, T>, Supplier<D>)",
+          "getSettingsCategories()",
+          "getCategoriesThatImplement(Class<T>)",
+          "getTypeCategory(Class<T>)",
+          "getSettingsData()",
+          "setSearchPhrase(String)",
+          "reloadFrom(ContainerContents.SettingsData)",
+          "getMainSettingValue(Player, Function<MainSettingsCategoryData, S>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.SettingsTab": [
+          "getSettingsContainer()",
+          "getSlotOverlayColor(int, boolean)",
+          "handleSlotClick(Slot, int)",
+          "getItemRotation(int, boolean)",
+          "renderExtra(GuiGraphics, Slot)",
+          "getItemDisplayOverride(int, boolean)",
+          "drawSlotStackOverlay(GuiGraphics, Slot, boolean)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.SettingsTemplateStorage": [
+          "putPlayerTemplate(Player, int, ContainerContents.SettingsData)",
+          "putPlayerNamedTemplate(Player, String, ContainerContents.SettingsData)",
+          "getPlayerTemplates(Player)",
+          "getPlayerNamedTemplates(Player)",
+          "get()",
+          "clearPlayerTemplates(Player)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.settings.StorageSettingsTabControlBase": [
+          "addFactory(Builder<String, StorageSettingsTabControlBase.ISettingsTabFactory<?, ?>>, String, StorageSettingsTabControlBase.ISettingsTabFactory<C, T>)",
+          "isSettingsCategoryDisabled(String)",
+          "instantiateReturnBackTab()",
+          "renderSlotOverlays(GuiGraphics, Slot, StorageSettingsTabControlBase.ISlotOverlayRenderer, boolean)",
+          "getSlotStackDisplayOverride(int, boolean)",
+          "renderSlotExtra(GuiGraphics, Slot)",
+          "handleSlotClick(Slot, int)",
+          "renderGuiItem(GuiGraphics, ItemStack, Slot, boolean)",
+          "drawSlotStackOverlay(GuiGraphics, Slot, boolean)",
+          "getSettingsTabFactory(String)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.SophisticatedCore": [
+          "getIdentifier(String)",
+          "getRegistryName(String)",
+          "getNetworkProtocolVersion()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyCondition": [
+          "test(LivingEntity, float)",
+          "getSerializedName()",
+          "next()",
+          "fromName(String)",
+          "defaultValue()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyFilterAttribute": [
+          "setFilter(ItemStack)",
+          "setConditionAndValue(AlchemyCondition, float)",
+          "setValue(float)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyUpgradeConfig": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyUpgradeContainer": [
+          "handlePacket(CompoundTag)",
+          "getCondition(int)",
+          "hasNoFilter(int)",
+          "getValue(int)",
+          "toggleCondition(int)",
+          "setValue(int, float)",
+          "toggleMatchAll()",
+          "shouldMatchAll()",
+          "toggleMatchDuration()",
+          "shouldMatchDuration()",
+          "toggleMatchAmplifier()",
+          "shouldMatchAmplifier()",
+          "toggleEntityMatch()",
+          "getEntityMatch()",
+          "hasEntityMatchOption()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getFilterSlotCount()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyUpgradeTab": [
+          "moveSlotsToTab()",
+          "renderBg(GuiGraphics, Minecraft, int, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.alchemy.AlchemyUpgradeWrapper": [
+          "getFilterAttributes()",
+          "getCondition(int)",
+          "getValue(int)",
+          "setConditionValue(int, AlchemyCondition, float)",
+          "tick(Entity, Level, BlockPos)",
+          "triggerItemUseEffects()",
+          "addItemDefinition(AlchemyUpgradeWrapper.AlchemyItemDefinition)",
+          "stackPotionEffectsMatch(ItemStack, ItemStack, boolean, boolean, boolean)",
+          "getDefaultConditionForPotion(ItemStack)",
+          "shouldApplyPotionEffectsTo(LivingEntity, ItemStack, boolean, boolean)",
+          "isValidAlchemyItem(ItemStack)",
+          "getFilterHandler()",
+          "setMatchAllEffects(boolean)",
+          "shouldMatchAllEffects()",
+          "shouldMatchEffectDuration()",
+          "setMatchEffectDuration(boolean)",
+          "shouldMatchEffectAmplifier()",
+          "setMatchEffectAmplifier(boolean)",
+          "getEntityMatch()",
+          "setEntityMatch(EntityMatch)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryInventoryControl": [
+          "render(GuiGraphics, int, int)",
+          "renderErrorOverlay(GuiGraphics)",
+          "renderTooltip(StorageScreenBase<?>, GuiGraphics, int, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryUpgradeConfig": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryUpgradeContainer": [
+          "handlePacket(CompoundTag)",
+          "getEnergyStored()",
+          "getMaxEnergyStored()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryUpgradeItem": [
+          "getBatteryUpgradeConfig()",
+          "getType()",
+          "canSwapUpgradeFor(ItemStack, int, IStorageWrapper, boolean)",
+          "getInventoryColumnsTaken()",
+          "getUpgradeConflicts()",
+          "checkExtraInsertConditions(ItemStack, IStorageWrapper, boolean, IUpgradeItem<?>)",
+          "getMaxEnergyStored(IStorageWrapper)",
+          "getAdjustedStackMultiplier(IStorageWrapper)",
+          "getMaxEnergyBase(IStorageWrapper)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryUpgradeTab": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "moveSlotsToTab()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.battery.BatteryUpgradeWrapper": [
+          "getEnergyStored(ItemStack)",
+          "insert(int, TransactionContext)",
+          "extract(int, TransactionContext)",
+          "getAmountAsLong()",
+          "getCapacityAsLong()",
+          "setBatteryRenderDataUpdateCallback(Consumer<RenderData.BatteryRenderData>)",
+          "forceUpdateBatteryRenderData()",
+          "tick(Entity, Level, BlockPos)",
+          "getInventory()",
+          "getMinimumMultiplierRequired()",
+          "canBeDisabled()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterRecipeContainer": [
+          "getRecipeType()",
+          "filterAndSortRecipes(List<RecipeHolder<R>>)",
+          "shouldRefreshRecipes(ItemStack, boolean)",
+          "getInputSlot()",
+          "getOutputSlot()",
+          "setInventoryUpdateListener(Runnable)",
+          "getRecipeList()",
+          "getSelectedRecipe()",
+          "hasItemsInInputSlot()",
+          "selectRecipe(int)",
+          "isRecentResult(int)",
+          "getRecentResultOrder(int)",
+          "handlePacket(CompoundTag)",
+          "refreshRecentResultsFromClientCache()",
+          "isNotResultSlot(Slot)",
+          "getInputCount()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterRecipeControl": [
+          "moveSlotsToView()",
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "mouseClicked(MouseButtonEvent, boolean)",
+          "getSelectRecipeSound()",
+          "mouseDragged(MouseButtonEvent, double, double)",
+          "mouseScrolled(double, double, double, double)",
+          "getHiddenRows()",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterUpgradeContainer": [
+          "getRecipeContainer()",
+          "createRecipeContainer(ContainerLevelAccess)",
+          "handlePacket(CompoundTag)",
+          "shouldShiftClickIntoStorage()",
+          "setShiftClickIntoStorage(boolean)",
+          "shouldRefillInput()",
+          "setRefillInput(boolean)",
+          "refreshRecentResultsFromClientCache()",
+          "mergeIntoStorageFirst(Slot)",
+          "allowsPickupAll(Slot)",
+          "getRepeatedQuickMoveLimit(Slot, ItemStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterUpgradeItem": [
+          "getUpgradeConflicts()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterUpgradeTab": [
+          "createRecipeControl(StorageScreenBase<?>, RC, Position)",
+          "moveSlotsToTab()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.BlockConverterUpgradeWrapper": [
+          "getInputInventory()",
+          "setRecipeId(ResourceKey<Recipe<?>>)",
+          "getRecipeId()",
+          "canBeDisabled()",
+          "shouldShiftClickIntoStorage()",
+          "setShiftClickIntoStorage(boolean)",
+          "shouldRefillInput()",
+          "setRefillInput(boolean)",
+          "extractFromStorage(ItemStack, boolean)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.IRecentCraftedResultsRefresh": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.blockconverter.RecentCraftedResultStorage": [
+          "get(ServerLevel)",
+          "getRecentResults(Player, Identifier, Identifier)",
+          "getClientRecentResults(Identifier, Identifier)",
+          "syncToPlayer(ServerPlayer)",
+          "serializePlayerResults(Player)",
+          "updateClientRecentResults(CompoundTag)",
+          "recordCraftedResult(Player, Identifier, Identifier, Identifier)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeConfig": [
+          "getCompactingResult(ItemStack, int, int)",
+          "getCompactingResult(ItemStack, int, int, BiPredicate<ItemStack, Integer>)",
+          "getUncompactingResult(ItemStack, int, int)",
+          "clearCache()",
+          "CompactingDefinition(RecipeHelper.CompactingResult, int)",
+          "UncompactingDefinition(ItemStack, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeContainer": [
+          "getFilterLogicContainer()",
+          "setCompactNonUncraftable(boolean)",
+          "shouldCompactNonUncraftable()",
+          "handlePacket(CompoundTag)",
+          "setShouldWorkdInGUI(boolean)",
+          "shouldWorkInGUI()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "shouldCompactThreeByThree()",
+          "getFilterSlotCount()",
+          "getConfiguredCompactingResult(ItemStack, int, int)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeTab": [
+          "moveSlotsToTab()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeWrapper": [
+          "onAfterInsert(InventoryHandler, int, TransactionContext)",
+          "onAfterExtract(InventoryHandler, int, ItemResource)",
+          "getFilterLogic()",
+          "shouldCompactNonUncraftable()",
+          "setCompactNonUncraftable(boolean)",
+          "onSlotChange(InventoryHandler, int)",
+          "setShouldWorkdInGUI(boolean)",
+          "shouldWorkInGUI()",
+          "tick(Entity, Level, BlockPos)",
+          "resetFullSlotInfo()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ContentsFilterControl": [
+          "onTagsMatchSelected()",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ContentsFilteredUpgradeContainer": [
+          "getFilterLogicContainer()",
+          "handlePacket(CompoundTag)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ContentsFilterLogic": [
+          "getFilterType()",
+          "setDepositFilterType(ContentsFilterType)",
+          "matchesFilter(Stream<TagKey<Item>>, Item, int, boolean, DataComponentMap)",
+          "shouldFilterByStorage()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ContentsFilterLogicContainer": [
+          "setFilterType(ContentsFilterType)",
+          "handlePacket(CompoundTag)",
+          "getFilterType()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ContentsFilterType": [
+          "getSerializedName()",
+          "next()",
+          "fromName(String)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoBlastingUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getAutoCookingUpgradeConfig()",
+          "getUpgradeGroup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoCookingUpgradeConfig": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoCookingUpgradeContainer": [
+          "handlePacket(CompoundTag)",
+          "getCookingLogicContainer()",
+          "getInputFilterLogicContainer()",
+          "getFuelFilterLogicContainer()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoCookingUpgradeTab": [
+          "moveSlotsToTab()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoCookingUpgradeWrapper": [
+          "setEnabled(boolean)",
+          "onBeforeRemoved()",
+          "tick(Entity, Level, BlockPos)",
+          "getCookingLogic()",
+          "getInputFilterLogic()",
+          "getFuelFilterLogic()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoSmeltingUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getAutoCookingUpgradeConfig()",
+          "getUpgradeGroup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.AutoSmokingUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getAutoCookingUpgradeConfig()",
+          "getUpgradeGroup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.BlastingUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getCookingUpgradeConfig()",
+          "getUpgradeGroup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingLogic": [
+          "tick(Level)",
+          "isBurning(Level)",
+          "getStoredExperience()",
+          "drainStoredExperience(float)",
+          "setCookInput(ItemStack)",
+          "pause()",
+          "canSmelt(T)",
+          "getCookOutput()",
+          "getCookInput()",
+          "getFuel()",
+          "setFuel(ItemStack)",
+          "getCookingInventory()",
+          "getBurnTimeFinish()",
+          "getBurnTimeTotal()",
+          "getCookTimeFinish()",
+          "getCookTimeTotal()",
+          "isCooking()",
+          "awardUsedRecipesAndPopExperience(ServerPlayer)",
+          "getRecipesToAwardAndPopExperience(ServerLevel, Vec3)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingLogicContainer": [
+          "getBurnTimeTotal()",
+          "getBurnTimeFinish()",
+          "getCookTimeFinish()",
+          "getCookTimeTotal()",
+          "isCooking()",
+          "isBurning(Level)",
+          "getCookingSlots()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingLogicControl": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "moveSlotsToView(int, int)",
+          "updateNarration(NarrationElementOutput)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeClientData": [
+          "copy()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeClientTickHandler": [
+          "onClientTick(Level, RandomSource, UnaryOperator<Vector3f>, CookingUpgradeClientData)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeConfig": [
+          "getInstance(Builder, String, String)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeContainer": [
+          "handlePacket(CompoundTag)",
+          "getSmeltingLogicContainer()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeRenderDataValidator": [
+          "isValid(IStorageWrapper, Level, CookingUpgradeClientData)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeTab": [
+          "moveSlotsToTab()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.CookingUpgradeWrapper": [
+          "tick(Entity, Level, BlockPos)",
+          "setEnabled(boolean)",
+          "onBeforeRemoved()",
+          "getCookingLogic()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.IAutoCookingUpgradeItem": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.ICookingUpgrade": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.ICookingUpgradeItem": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.SmeltingUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getCookingUpgradeConfig()",
+          "getUpgradeGroup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.cooking.SmokingUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getCookingUpgradeConfig()",
+          "getUpgradeGroup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.CraftingItemHandler": [
+          "getContainerSize()",
           "isEmpty()",
-          "contains(Object)",
-          "iterator()",
-          "toArray()",
-          "toArray(T[])"
-        ],
-        "net.darkhax.bookshelf.lib.WeightedSelector": [
-          "addEntry(T, int)",
-          "addEntry(WeightedSelector.WeightedEntry<T>)",
-          "removeEntry(WeightedSelector.WeightedEntry<T>)",
-          "getEntries()",
-          "getRandomEntry()",
-          "updateTotal()"
-        ],
-        "net.darkhax.bookshelf.network.NetworkHandler": [
-          "register(Class, Side)",
-          "sendToAll(IMessage)",
-          "sendTo(IMessage, EntityPlayerMP)",
-          "sendToAllAround(IMessage, World, BlockPos, double)",
-          "sendToAllAround(IMessage, TargetPoint)",
-          "sendToDimension(IMessage, int)",
-          "sendToServer(IMessage)"
-        ],
-        "net.darkhax.bookshelf.network.SerializableMessage": [
-          "handleMessage(MessageContext)",
-          "onMessage(REQ, MessageContext)",
-          "fromBytes(ByteBuf)",
-          "toBytes(ByteBuf)",
-          "addIOHandler(Class<T>, SerializableMessage.Reader<T>, SerializableMessage.Writer<T>)"
-        ],
-        "net.darkhax.bookshelf.network.TileEntityMessage": [
-          "handleMessage(MessageContext)",
-          "getAction()"
-        ],
-        "net.darkhax.bookshelf.registry.IVariant": [
-          "getPrefix()"
-        ],
-        "net.darkhax.bookshelf.registry.RegistryHelper": [
-          "getTab()",
-          "setTab(CreativeTabs)",
-          "getModid()",
+          "getItem(int)",
           "getItems()",
-          "getBlocks()",
-          "registerBlock(Block, String)",
-          "registerBlock(Block, ItemBlock, String)",
-          "registerItem(Item, String)",
-          "registerItem(Item, ResourceLocation)",
-          "addLoot(ResourceLocation, String, String, int, Item)",
-          "addLoot(ResourceLocation, String, String, int, int, Item, List<LootCondition>, List<LootFunction>)",
-          "addLoot(ResourceLocation, LootBuilder)",
-          "onTableLoaded(LootTableLoadEvent)",
-          "registerColorHandler(Block, IBlockColor)",
-          "registerColorHandler(Item, IItemColor)",
-          "registerInventoryModel(Block)",
-          "registerInventoryModel(Block, String, String...)",
-          "registerInventoryModel(Block, int, String)",
-          "registerInventoryModel(Item)",
-          "registerInventoryModel(Item, String, String...)"
+          "removeItemNoUpdate(int)",
+          "removeItem(int, int)",
+          "setItem(int, ItemStack)",
+          "setChanged()",
+          "fillStackedContents(StackedItemContents)"
         ],
-        "net.darkhax.bookshelf.registry.RegistryListener": [],
-        "net.darkhax.bookshelf.util.AnnotationUtils": [
-          "getData(Class<A>)",
-          "getData(ASMDataTable, Class<A>)",
-          "getAnnotatedClasses(Class<A>)",
-          "getAnnotatedClasses(ASMDataTable, Class<A>)",
-          "getAnnotatedFields(Collection<Class<?>>, Class<A>)",
-          "getAnnotations(Class<A>, Class<T>)",
-          "getAnnotations(ASMDataTable, Class<A>, Class<T>)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.CraftingUpgradeContainer": [
+          "onInit()",
+          "getMatchedCraftingResults()",
+          "selectNextCraftingResult()",
+          "selectPreviousCraftingResult()",
+          "selectCraftingResult(int)",
+          "handlePacket(CompoundTag)",
+          "getSlotStackToTransfer(Slot)",
+          "getRecipeSlots()",
+          "getCraftMatrix()",
+          "setRecipeUsed(ResourceKey<Recipe<?>>)",
+          "getRecipeType()",
+          "shouldShiftClickIntoStorage()",
+          "setShiftClickIntoStorage(boolean)",
+          "shouldRefillCraftingGrid()",
+          "setRefillCraftingGrid(boolean)",
+          "mergeIntoStorageFirst(Slot)",
+          "allowsPickupAll(Slot)",
+          "getRepeatedQuickMoveLimit(Slot, ItemStack)"
         ],
-        "net.darkhax.bookshelf.util.BannerUtils": [
-          "createBanner(EnumDyeColor, NBTTagList)",
-          "createPatternList(BannerUtils.BannerLayer...)",
-          "addBasicPattern(String, String)",
-          "addCraftingPattern(String, String, ItemStack)",
-          "addDyePattern(String, String, String, String, String)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.CraftingUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()"
         ],
-        "net.darkhax.bookshelf.util.baubles.BaubleUtils": [
-          "hasItem(EntityPlayer, Item, int)",
-          "getBaublesFromPlayer(EntityPlayer, Item, int)",
-          "getBaubleType(Item, int)",
-          "getBauble(EntityPlayer, BaubleType)",
-          "getBauble(EntityPlayer, int)",
-          "hasBauble(EntityPlayer, ItemStack, BaubleType)",
-          "equipBauble(EntityPlayer, ItemStack, int)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.CraftingUpgradeTab": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderForeground(GuiGraphics, int, int, float)",
+          "mouseClicked(MouseButtonEvent, boolean)",
+          "onTabClose()",
+          "moveSlotsToTab()",
+          "slotIsNotCoveredAt(Slot, double, double)",
+          "renderTooltip(Screen, GuiGraphics, int, int)"
         ],
-        "net.darkhax.bookshelf.util.baubles.ItemBauble": [],
-        "net.darkhax.bookshelf.util.BlockUtils": [
-          "isOre(ItemStack, boolean)",
-          "isFluid(Block)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.CraftingUpgradeWrapper": [
+          "getInventory()",
+          "canBeDisabled()",
+          "shouldShiftClickIntoStorage()",
+          "setShiftClickIntoStorage(boolean)",
+          "shouldRefillCraftingGridNBT()",
+          "setRefillCraftingGridNBT(boolean)",
+          "extractFromStorageOrPlayer(Player, ItemStack)"
         ],
-        "net.darkhax.bookshelf.util.ClassUtils": [
-          "compareClasses(Class<?>, Class<?>)",
-          "compareObjectToClass(Object, Class<?>)",
-          "getClassFromString(String)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.ICraftingUIPart": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.EntityMatch": [
+          "getSerializedName()",
+          "next()",
+          "fromName(String)"
         ],
-        "net.darkhax.bookshelf.util.CollectionUtils": [
-          "toDouble(float[])",
-          "toFloat(double[])",
-          "toString(ResourceLocation[])",
-          "toIdentifier(String[])",
-          "toIdentifier(Item[])",
-          "toIdentifier(Block[])",
-          "toItem(ResourceLocation[])",
-          "toBlock(ResourceLocation[])",
-          "toString(ItemStack[])",
-          "toStack(String[])",
-          "toInt(Color)",
-          "toColor(int[])",
-          "toInt(BlockPos)",
-          "toPos(int[])"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.feeding.FeedingUpgradeContainer": [
+          "handlePacket(CompoundTag)",
+          "getFilterLogicContainer()",
+          "setFeedAtHungerLevel(HungerLevel)",
+          "getFeedAtHungerLevel()",
+          "setFeedImmediatelyWhenHurt(boolean)",
+          "shouldFeedImmediatelyWhenHurt()"
         ],
-        "net.darkhax.bookshelf.util.CraftingUtils": [
-          "getRecipeForMatrix(InventoryCrafting, World)",
-          "getCurrentCraftingRecipe(EntityPlayer)",
-          "getCurrentCraftingOutput(EntityPlayer)",
-          "getCraftingContainer(EntityPlayer)",
-          "getOwner(IRecipe)",
-          "getRecipeOwners()",
-          "getShapedRecipes(ItemStack)",
-          "getShapedOreRecipe(ItemStack)",
-          "getShapelessRecipes(ItemStack)",
-          "getShapelessOreRecipe(ItemStack)",
-          "getAnyRecipe(ItemStack)",
-          "getRecipesForStack(ItemStack, Predicate<IRecipe>)",
-          "createConversionRecipes(ItemStack, ItemStack)",
-          "validateCrafting(Object)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.feeding.FeedingUpgradeItem": [
+          "getFilterSlotCount()",
+          "getType()",
+          "getUpgradeConflicts()"
         ],
-        "net.darkhax.bookshelf.util.EnchantmentUtils": [
-          "isItemEnchantable(ItemStack)",
-          "getExperienceFromLevel(int)",
-          "getExperienceToLevel(int, int)",
-          "getLevelsFromExperience(int)",
-          "areEnchantmentsCompatible(Enchantment, Enchantment)",
-          "getExpForDisplay(int)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.feeding.FeedingUpgradeTab": [
+          "moveSlotsToTab()"
         ],
-        "net.darkhax.bookshelf.util.EntityUtils": [
-          "getDistanceFromEntity(Entity, Entity)",
-          "getDistaceFromPos(Entity, BlockPos)",
-          "pushTowards(Entity, EnumFacing, double)",
-          "pushTowards(Entity, BlockPos, double)",
-          "pushTowards(Entity, Entity, double)",
-          "pushTowardsDirection(Entity, EnumFacing, double)",
-          "areEntitiesCloseEnough(Entity, Entity, double)",
-          "getEntitiesInArea(Class<? extends Entity>, World, BlockPos, int)",
-          "getEquipmentSlot(int)",
-          "isWearingFullSet(EntityLivingBase, Class<Item>)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.feeding.FeedingUpgradeWrapper": [
+          "tick(Entity, Level, BlockPos)",
+          "getFilterLogic()",
+          "getFeedAtHungerLevel()",
+          "setFeedAtHungerLevel(HungerLevel)",
+          "shouldFeedImmediatelyWhenHurt()",
+          "setFeedImmediatelyWhenHurt(boolean)"
         ],
-        "net.darkhax.bookshelf.util.GameUtils": [
-          "isClient()"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.feeding.HungerLevel": [
+          "getSerializedName()",
+          "next()",
+          "fromName(String)"
         ],
-        "net.darkhax.bookshelf.util.GuiUtils": [
-          "addPlayerInvToContainer(Container, InventoryPlayer)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.filter.Direction": [
+          "getSerializedName()",
+          "next()",
+          "fromName(String)"
         ],
-        "net.darkhax.bookshelf.util.MathsUtils": [
-          "isInRange(double, double, double)",
-          "getDistanceBetweenPoints(Vec3d, Vec3d)",
-          "round(double, int)",
-          "nextIntInclusive(int, int)",
-          "rayTrace(EntityPlayer, double)",
-          "tryPercentage(double)",
-          "getRandomColor()",
-          "getAverage(int, int)",
-          "ticksToTime(int)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.filter.FilterUpgradeContainer": [
+          "getFilterLogicContainer()",
+          "getDirection()",
+          "setDirection(Direction)",
+          "handlePacket(CompoundTag)"
         ],
-        "net.darkhax.bookshelf.util.MathUtils": [],
-        "net.darkhax.bookshelf.util.ModUtils": [
-          "getModName(Impl<?>)",
-          "getModName(Entity)",
-          "getModContainer(String)",
-          "getModName(String)",
-          "getTabFromLabel(String)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.filter.FilterUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getFilterSlotCount()"
         ],
-        "net.darkhax.bookshelf.util.NBTUtils": [
-          "setGenericNBTValue(NBTTagCompound, String, Object)",
-          "writeInventoryToNBT(NBTTagCompound, InventoryBasic)",
-          "readInventoryFromNBT(NBTTagCompound, InventoryBasic)",
-          "getStoredItems(NBTTagCompound, int)",
-          "getDeepTagCompound(NBTTagCompound, String[])"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.filter.FilterUpgradeTab": [
+          "moveSlotsToTab()"
         ],
-        "net.darkhax.bookshelf.util.NumericUtils": [
-          "isKeyCodeNumeric(int)",
-          "isChristmasTime()",
-          "isHalloweenTime()",
-          "isSpecialDay(int, int)",
-          "isSpecialDay(int, int, int)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.filter.FilterUpgradeWrapper": [
+          "setDirection(Direction)",
+          "getDirection()",
+          "getFilterLogic()",
+          "setEnabled(boolean)",
+          "getInputFilter()",
+          "getOutputFilter()"
         ],
-        "net.darkhax.bookshelf.util.OreDictUtils": [
-          "initAdditionalVanillaEntries()"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterAttributes": [
+          "setTagKeys(Set<TagKey<Item>>)",
+          "setAllowList(boolean)",
+          "setMatchDurability(boolean)",
+          "setMatchComponents(boolean)",
+          "setPrimaryMatch(PrimaryMatch)",
+          "setMatchAnyTag(boolean)",
+          "setFilterItem(int, ItemStack)",
+          "setFilterByStorage(boolean)",
+          "setFilterByInventory(boolean)"
         ],
-        "net.darkhax.bookshelf.util.ParticleUtils": [
-          "spawnDigParticles(ParticleManager, IBlockState, World, BlockPos, EnumFacing)",
-          "spawnBreakParticles(ParticleManager, IBlockState, World, BlockPos)",
-          "spawnParticleRing(World, EnumParticleTypes, double, double, double, double, double, double, double)",
-          "spawnPercentageParticleRing(World, EnumParticleTypes, float, double, double, double, double, double, double, double)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilteredUpgradeConfig": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilteredUpgradeConfigBase": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterLogic": [
+          "setEmptyAllowListMatchesEverything()",
+          "getFilterHandler()",
+          "matchesFilter(ItemStack)",
+          "matchesFilter(Stream<TagKey<Item>>, Item, int, boolean, DataComponentMap)",
+          "matchesFilter(ItemResource)",
+          "getAttributes()",
+          "setAttributes(Function<FilterAttributes, FilterAttributes>)",
+          "setAllowByDefault(boolean)",
+          "save()",
+          "stackMatchesFilter(ItemStack, Item, int, boolean, DataComponentMap)",
+          "getTagKeys()",
+          "addTag(TagKey<Item>)",
+          "removeTagName(TagKey<Item>)",
+          "initTags()",
+          "setAllowList(boolean)",
+          "isAllowList()",
+          "shouldMatchDurability()",
+          "setMatchDurability(boolean)",
+          "setMatchComponents(boolean)",
+          "shouldMatchComponents()"
         ],
-        "net.darkhax.bookshelf.util.PlayerUtils": [
-          "canPlayerSleep(EntityPlayer)",
-          "isPlayerReal(EntityPlayer)",
-          "getPlayerFromUUID(World, UUID)",
-          "getPlayerNameFromUUID(UUID)",
-          "getUUIDFromName(String)",
-          "fixStrippedUUID(String)",
-          "getItemCountInInv(EntityPlayer, Item)",
-          "playerHasItem(EntityPlayer, Item, int)",
-          "getStacksFromPlayer(EntityPlayer, Item, int)",
-          "getClientPlayer()",
-          "sendSpamlessMessage(int, ITextComponent)",
-          "isPlayerInGame()",
-          "getClientUUID()"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterLogicContainer": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterLogicContainerBase": [
+          "getSelectedTagToAdd()",
+          "getSelectedTagToRemove()",
+          "getTagSelectionSlot()",
+          "getFilterSlots()",
+          "getTagNames()",
+          "getTagsToAdd()",
+          "addSelectedTag()",
+          "removeSelectedTag()",
+          "selectNextTagToRemove()",
+          "selectPreviousTagToRemove()",
+          "selectNextTagToAdd()",
+          "selectPreviousTagToAdd()",
+          "isAllowList()",
+          "shouldMatchDurability()",
+          "shouldMatchNbt()",
+          "getPrimaryMatch()",
+          "shouldMatchAnyTag()",
+          "setAllowList(boolean)",
+          "sendDataToServer(Supplier<CompoundTag>)",
+          "setMatchDurability(boolean)"
         ],
-        "net.darkhax.bookshelf.util.RenderUtils": [
-          "registerPlayerLayer(LayerRenderer<EntityLivingBase>)",
-          "getSteveRenderer()",
-          "getAlexRenderer()",
-          "getPlayerRenderer(String)",
-          "setPlayerTexture(Type, AbstractClientPlayer, ResourceLocation)",
-          "downloadResourceLocation(String, ResourceLocation, ResourceLocation, IImageBuffer)",
-          "downloadResource(String, ResourceLocation, ResourceLocation, IImageBuffer)",
-          "getCamera(Entity, float)",
-          "translateAgainstPlayer(BlockPos, boolean)",
-          "getParticleTexture(ItemStack)",
-          "getSprite(ItemStack)",
-          "getBakedModel(ModelResourceLocation)",
-          "getBakedModel(ItemStack)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double, double, double, double)",
-          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double, double, double, double, int)",
-          "addTexturedQuad(VertexBuffer, TextureAtlasSprite, double, double, double, double, double, double, EnumFacing, int, int)",
-          "addTextureQuad(VertexBuffer, TextureAtlasSprite, double, double, double, double, double, double, EnumFacing, int, int, int, int, int, int)",
-          "setupRenderState(double, double, double)",
-          "setupRenderState()"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterLogicControl": [
+          "updateNarration(NarrationElementOutput)"
         ],
-        "net.darkhax.bookshelf.util.SkullUtils": [
-          "createSkull(EntityPlayer)",
-          "createSkull(String, UUID)",
-          "createSkull(SkullUtils.MHFAccount)",
-          "createSkull(SkullUtils.Player)",
-          "createSkull(String)",
-          "getWitherSkeletonSkull()",
-          "getZombieSkull()",
-          "getCreeperSkull()",
-          "getSteveSkull()",
-          "getSkeletonSkull()",
-          "getMHFSkulls()",
-          "getPlayerSkulls()"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.FilterLogicControlBase": [
+          "setDimensionsChangedHandler(Runnable)",
+          "onTagsMatchSelected()",
+          "getMaxButtonWidth()",
+          "shouldShow(FilterLogicControlBase.MatchButton)",
+          "moveSlotsToView()",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "getTagListHeight()",
+          "renderBg(GuiGraphics, Minecraft, int, int)"
         ],
-        "net.darkhax.bookshelf.util.StackUtils": [
-          "prepareStackTag(ItemStack)",
-          "prepareStack(ItemStack)",
-          "setLore(ItemStack, String[])",
-          "writeStackToString(ItemStack)",
-          "createStackFromString(String)",
-          "compareStackToOreName(ItemStack, String)",
-          "doStacksShareOreName(ItemStack, ItemStack)",
-          "areStacksSimilar(ItemStack, ItemStack)",
-          "areStacksSimilarWithSize(ItemStack, ItemStack)",
-          "writePotionEffectsToStack(ItemStack, PotionEffect[])",
-          "writeStackToTag(ItemStack, NBTTagCompound, String)",
-          "decreaseStackSize(ItemStack, int)",
-          "areStacksEqual(ItemStack, ItemStack, boolean)",
-          "isStackInArray(ItemStack, boolean, ItemStack...)",
-          "copyStackWithSize(ItemStack, int)",
-          "getThingByName(String)",
-          "getBlockFromStack(ItemStack)",
-          "consumeStack(ItemStack)",
-          "dropStackInWorld(World, BlockPos, ItemStack)",
-          "createStackFromTileEntity(TileEntity)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IClientStorageContentsProvider": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IContentsFilteredUpgrade": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IExtractResponseUpgrade": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IFilteredUpgrade": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IInsertResponseUpgrade": [
+          "onBeforeInsert(InventoryHandler, ItemResource, int)",
+          "onBeforeInsert(InventoryHandler, int, ItemResource, int)",
+          "onAfterInsert(InventoryHandler, int, TransactionContext)"
         ],
-        "net.darkhax.bookshelf.util.TextUtils": [
-          "wrapStringToList(String, int, boolean, List<String>)",
-          "wrapStringToListWithFormat(String, int, boolean, List<String>, TextFormatting)",
-          "stripFormatting(String)",
-          "getValueByCharacter(char)",
-          "getValueByName(String)",
-          "formatString(String, TextUtils.ChatFormat)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IInventoryLayoutContributor": [
+          "applyInventoryLayout(InventoryLayoutFitResult, int)"
         ],
-        "net.darkhax.bookshelf.world.loot.conditions.BiomeSpecific": [
-          "func_186618_a(Random, LootContext)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IInventorySlotBlocker": [
+          "shouldRenderBlockedSlotOverlay(int)"
         ],
-        "net.darkhax.bookshelf.world.loot.functions.SetColor": [
-          "func_186553_a(ItemStack, Random, LootContext)"
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.infinity.InfinityInventoryPart": [
+          "isInfinite(int)",
+          "getSlotLimit(int)",
+          "isValid(int, ItemResource, Player, BiPredicate<Integer, ItemResource>)",
+          "isSlotAccessible(int)",
+          "getCapacity(int, ItemResource)",
+          "extract(int, ItemResource, int, TransactionContext, IResourceExtractor)",
+          "insert(int, ItemResource, int, TransactionContext, IResourceInserter)",
+          "set(int, ItemResource, int, IndexModifier<ItemResource>)",
+          "setStackInSlot(int, ItemStack, BiConsumer<Integer, ItemStack>)",
+          "getStackInSlot(int, IntFunction<ItemStack>)",
+          "getResource(int, IntFunction<ItemResource>)",
+          "getAmountAsLong(int, IntFunction<Long>)",
+          "size()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.infinity.InfinityUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "canRemoveUpgradeFrom(IStorageWrapper, boolean, Player)",
+          "checkPermission(Player)",
+          "createInventoryPartHandler(InventoryHandler, SlotRange)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IOverflowResponseUpgrade": [
+          "hasSlotOverflowMatch(InventoryHandler, ItemStack)",
+          "hasSlotOverflowMatch(InventoryHandler, ItemResource)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IPickupResponseUpgrade": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IRenderedBatteryUpgrade": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IRenderedTankUpgrade": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IStackableContentsUpgrade": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.ITickableUpgrade": [
+          "tick(Entity, Level, BlockPos)",
+          "clientTick(Entity, Level, BlockPos)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IUpgradeAccessModifier": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IUpgradeCountLimitConfig": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IUpgradeItem": [
+          "canAddUpgradeTo(IStorageWrapper, ItemStack, boolean, boolean)",
+          "checkThisForConflictsWithExistingUpgrades(ItemStack, IStorageWrapper, int)",
+          "canRemoveUpgradeFrom(IStorageWrapper, boolean, Player)",
+          "canRemoveUpgradeFrom(IStorageWrapper, boolean)",
+          "canSwapUpgradeFor(ItemStack, int, IStorageWrapper, boolean)",
+          "checkExtraInsertConditions(ItemStack, IStorageWrapper, boolean, int, IUpgradeItem<?>)",
+          "checkExtraInsertConditions(ItemStack, IStorageWrapper, boolean, IUpgradeItem<?>)",
+          "getInventoryColumnsTaken()",
+          "getCleanedUpgradeStack(ItemStack)",
+          "getUpgradeGroup()",
+          "UpgradeConflictDefinition(Predicate<Item>, int, Component, Component)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IUpgradeWrapper": [
+          "canBeDisabled()",
+          "hideSettingsTab()",
+          "onBeforeRemoved()",
+          "onAdded()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.IUpgradeWrapperAccessor": [
+          "onBeforeDeconstruct()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.DiscHandlerRegistry": [
+          "getHandlers()",
+          "registerHandler(IDiscHandler<?>)",
+          "findHandler(ItemStack)",
+          "getMusicLengthInTicks(ItemStack, Level)",
+          "isSupported(ItemStack)",
+          "getRandomDisc(RandomSource)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeClientData": [
+          "copy()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeClientTickHandler": [
+          "onClientTick(Level, RandomSource, UnaryOperator<Vector3f>, JukeboxUpgradeClientData)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeConfig": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeContainer": [
+          "handlePacket(CompoundTag)",
+          "play()",
+          "stop()",
+          "next()",
+          "previous()",
+          "isShuffleEnabled()",
+          "toggleShuffle()",
+          "getRepeatMode()",
+          "toggleRepeat()",
+          "getDiscSlotActive()",
+          "getDiscFinishTime()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getUpgradeGroup()",
+          "getNumberOfSlots()",
+          "getSlotsInRow()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeNoteParticle": [
+          "getLayer()",
+          "getQuadSize(float)",
+          "tick()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeNoteParticleData": [
+          "getType()",
+          "codec()",
+          "streamCodec()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeRenderDataValidator": [
+          "isValid(IStorageWrapper, Level, JukeboxUpgradeClientData)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeTab": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "moveSlotsToTab()",
+          "getBottomSlotY()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.JukeboxUpgradeWrapper": [
+          "isShuffleEnabled()",
+          "setShuffleEnabled(boolean)",
+          "getRepeatMode()",
+          "setRepeatMode(RepeatMode)",
+          "getDisc()",
+          "getDiscSlotActive()",
+          "play(Level, BlockPos)",
+          "play(Entity)",
+          "stop(LivingEntity)",
+          "getDiscInventory()",
+          "tick(Entity, Level, BlockPos)",
+          "isPlaying()",
+          "onBeforeRemoved()",
+          "next()",
+          "playNext()",
+          "playNext(boolean)",
+          "previous()",
+          "playPrevious()",
+          "getDiscFinishTime()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.PlayDiscPayload": [
+          "type()",
+          "handlePayload(PlayDiscPayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.RepeatMode": [
+          "getSerializedName()",
+          "next()",
+          "fromName(String)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.ServerStorageSoundHandler": [
+          "tick(Post)",
+          "updateKeepAlive(UUID, Level, Vec3, Runnable)",
+          "isStorageSoundPlayingNear(Level, Vec3, double)",
+          "startPlayingDisc(ServerLevel, BlockPos, UUID, Holder<JukeboxSong>, Runnable)",
+          "startPlayingDisc(ServerLevel, Vec3, UUID, int, Holder<JukeboxSong>, Runnable)",
+          "putSoundInfo(ServerLevel, UUID, Runnable, Vec3, long)",
+          "stopPlayingDisc(Level, Vec3, UUID)",
+          "onWorldUnload(Unload)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.StopDiscPlaybackPayload": [
+          "type()",
+          "handlePayload(StopDiscPlaybackPayload, IPayloadContext)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.StorageSoundHandler": [
+          "playStorageSound(UUID, SoundInstance)",
+          "stopStorageSound(UUID)",
+          "isStorageSoundPlayingNear(Vec3, double)",
+          "tick(Post)",
+          "playStorageSound(SoundEvent, UUID, BlockPos)",
+          "playStorageSound(SoundEvent, UUID, int)",
+          "onWorldUnload(Unload)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.jukebox.VanillaDiscHandler": [
+          "getSongInfo(ItemStack, Level)",
+          "playDisc(ServerLevel, BlockPos, UUID, ItemStack, Runnable)",
+          "playDisc(ServerLevel, Vec3, UUID, ItemStack, int, Runnable)",
+          "getMusicLengthInTicks(ItemStack, Level)",
+          "supports(ItemStack)",
+          "getRandomDisc(RandomSource)",
+          "getMusicDiscSize()",
+          "setDiscBlockListGetter(Supplier<List<? extends String>>)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.IMagnetPreventionChecker": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.MagnetUpgradeConfig": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.MagnetUpgradeContainer": [
+          "handlePacket(CompoundTag)",
+          "getFilterLogicContainer()",
+          "setPickupItems(boolean)",
+          "shouldPickupItems()",
+          "setPickupXp(boolean)",
+          "shouldPickupXp()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.MagnetUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getFilterSlotCount()",
+          "getRadius()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.MagnetUpgradeTab": [
+          "moveSlotsToTab()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.magnet.MagnetUpgradeWrapper": [
+          "globalPostTick(Pre)",
+          "onWorldUnload(Unload)",
+          "addMagnetPreventionChecker(IMagnetPreventionChecker)",
+          "getFilterLogic()",
+          "pickup(Level, ItemResource, int, TransactionContext)",
+          "tick(Entity, Level, BlockPos)",
+          "setPickupItems(boolean)",
+          "shouldPickupItems()",
+          "setPickupXp(boolean)",
+          "shouldPickupXp()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pickup.PickupUpgradeItem": [
+          "getFilterSlotCount()",
+          "getType()",
+          "getUpgradeConflicts()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pickup.PickupUpgradeTab": [
+          "moveSlotsToTab()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pickup.PickupUpgradeWrapper": [
+          "pickup(Level, ItemResource, int, TransactionContext)",
+          "getFilterLogic()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.PrimaryMatch": [
+          "getSerializedName()",
+          "next()",
+          "fromName(String)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.FluidFilterContainer": [
+          "getFluid(int)",
+          "setFluid(int, FluidStack)",
+          "handlePacket(CompoundTag)",
+          "getNumberOfFluidFilters()",
+          "slotClick(int)",
+          "getContainedFluid(ItemStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.FluidFilterControl": [
+          "renderBg(GuiGraphics, Minecraft, int, int)",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "mouseClicked(MouseButtonEvent, boolean)",
+          "renderTooltip(Screen, GuiGraphics, int, int)",
+          "getSlotTopLeftPositions()",
+          "updateNarration(NarrationElementOutput)",
+          "setFluid(int, FluidStack)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.FluidFilterLogic": [
+          "fluidMatches(FluidResource)",
+          "fluidMatches(FluidStack)",
+          "setFluid(int, FluidStack)",
+          "getFluid(int)",
+          "getNumberOfFluidFilters()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.PumpUpgradeConfig": [],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.PumpUpgradeContainer": [
+          "setIsInput(boolean)",
+          "isInput()",
+          "handlePacket(CompoundTag)",
+          "getFluidFilterContainer()",
+          "setInteractWithHand(boolean)",
+          "shouldInteractWithHand()",
+          "setInteractWithWorld(boolean)",
+          "shouldInteractWithWorld()",
+          "setInteractWithFluidHandlers(boolean)",
+          "shouldInteractWithFluidHandlers()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.PumpUpgradeItem": [
+          "getType()",
+          "getUpgradeConflicts()",
+          "getInteractWithHandDefault()",
+          "getInteractWithWorldDefault()",
+          "getPumpUpgradeConfig()",
+          "getInteractWithFluidHandlersDefault()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.PumpUpgradeTab": [
+          "moveSlotsToTab()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.pump.PumpUpgradeWrapper": [
+          "tick(Entity, Level, BlockPos)",
+          "getAdjustedStackMultiplier(IStorageWrapper)",
+          "setIsInput(boolean)",
+          "isInput()",
+          "getFluidFilterLogic()",
+          "setInteractWithHand(boolean)",
+          "shouldInteractWithHand()",
+          "setInteractWithWorld(boolean)",
+          "shouldInteractWithWorld()",
+          "setInteractWithFluidHandlers(boolean)",
+          "shouldInteractWithFluidHandlers()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.stack.StackUpgradeConfig": [
+          "canStackItem(Item)",
+          "clearNonStackableItems()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.stack.StackUpgradeConversionItem": [
+          "canConvert(ItemStack)",
+          "getTargetUpgradeStack()",
+          "appendHoverText(ItemStack, TooltipContext, TooltipDisplay, Consumer<Component>, TooltipFlag)"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.stack.StackUpgradeItem": [
+          "getInventorySlotLimit(IStorageWrapper)",
+          "getType()",
+          "getUpgradeConflicts()",
+          "getStackSizeMultiplier()",
+          "canRemoveUpgradeFrom(IStorageWrapper, boolean)",
+          "checkExtraInsertConditions(ItemStack, IStorageWrapper, boolean, int, IUpgradeItem<?>)",
+          "canSwapUpgradeFor(ItemStack, int, IStorageWrapper, boolean)",
+          "getUpgradeGroup()"
+        ],
+        "net.p3pp3rf1y.sophisticatedcore.upgrades.stonecutter.StonecutterRecipeContainer": [
+          "getRecipeType()",
+          "filterAndSortRecipes(List<RecipeHolder<StonecutterRecipe>>)"
         ]
       },
-      "sampleCount": 80
+      "sampleCount": 494,
+      "truncated": true
+    },
+    "1.21.10": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.21.8": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.21.5": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.21.4": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.21.1": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.20.1": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.19.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.18.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.4.98": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.4.26": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
     }
   },
-  "classCount": 77,
-  "methodCount": 436
+  "classCount": 425,
+  "methodCount": 2000,
+  "truncated": true,
+  "truncatedVersions": 1,
+  "skippedVersions": 10
 }

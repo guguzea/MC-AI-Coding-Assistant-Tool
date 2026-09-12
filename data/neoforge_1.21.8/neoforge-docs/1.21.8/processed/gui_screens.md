@@ -497,7 +497,7 @@ public record ExampleRenderState(
 
 ```
 
-To draw and submit the PiP render state to a picture, each PiP has its own `PictureInPictureRenderer`, where `T` is the implemented `PictureInPictureRenderState`. There are numerous methods that can be overridden, allowing the user almost full control of the entire pipeline, but there are three that must be implemented.
+To draw and submit the PiP render state to a picture, each PiP has its own `PictureInPictureRenderer<T>`, where `T` is the implemented `PictureInPictureRenderState`. There are numerous methods that can be overridden, allowing the user almost full control of the entire pipeline, but there are three that must be implemented.
 
 First is `getRenderStateClass`, which simply returns the class of the `PictureInPictureRenderState`. In vanilla, this method was used to register what render state the renderer was used for. NeoForge still uses the render state class, but provides registration through an event to map to a dynamic pool of renderers instead of calling `getRenderStateClass`.
 
@@ -971,26 +971,42 @@ public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTi
 
 // In some AbstractContainerScreen subclass
 
-// The location of the background texture (assets/<namespace>/
-)
+// The location of the background texture (assets/<namespace>/<path>)
+
 private static final ResourceLocation BACKGROUND_LOCATION = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/gui/container/my_container_screen.png");
 
 @Override
+
 protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+
     // Submits the background texture. 'leftPos' and 'topPos' should
+
     // already represent the top left corner of where the texture
+
     // should be rendered as it was precomputed from the 'imageWidth'
+
     // and 'imageHeight'. The two zeros represent the integer u/v
+
     // coordinates inside the PNG file, whose size is represented by
+
     // the last two integers (typically 256 x 256).
+
     graphics.blit(
+
         RenderPipelines.GUI_TEXTURED,
+
         BACKGROUND_LOCATION,
+
         this.leftPos, this.topPos,
+
         0, 0,
+
         this.imageWidth, this.imageHeight,
+
         256, 256
+
     );
+
 }
 
 ```

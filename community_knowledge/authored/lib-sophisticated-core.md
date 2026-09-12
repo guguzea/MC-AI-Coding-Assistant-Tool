@@ -61,7 +61,7 @@ Decision: 要不要把 Sophisticated Core 作为依赖
 ## 核对（2026-08 反编译验证）
 
 - 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
-  - 1.20.1/forge：顶层 API 包 `net.darkhax.bookshelf`
+  - 1.20.1/forge：顶层 API 包 `net.p3pp3rf1y.sophisticatedcore`
   - 1.21.1/neoforge：顶层 API 包 `net.p3pp3rf1y.sophisticatedcore`
   - 26.1/neoforge：顶层 API 包 `net.p3pp3rf1y.sophisticatedcore`
 - 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

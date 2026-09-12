@@ -1,12 +1,12 @@
 # Understanding the Model System
 
-Models within Minecraft are simply a list of quads with attached textures. Each part of the modeling process has their own separate implementation, with the underlying model JSON deserialized into an `UnbakedModel`. In the end, each part of the pipelines takes in some `List` and properties necessary for their own pipelines. Some [block entity renderers](/docs/blockentities/ber) also make use of these models. There is no limit to how complex a model may be.
+Models within Minecraft are simply a list of quads with attached textures. Each part of the modeling process has their own separate implementation, with the underlying model JSON deserialized into an `UnbakedModel`. In the end, each part of the pipelines takes in some `List<BakedQuad>` and properties necessary for their own pipelines. Some [block entity renderers](/docs/blockentities/ber) also make use of these models. There is no limit to how complex a model may be.
 
 Models are stored in the `ModelManager`, which can be accessed through `Minecraft.getInstance().getModelManager()`. For the item pipeline, you can get the associated [ItemModel](/docs/resources/client/models/items#manually-rendering-an-item) via `ModelManager#getItemModel` by passing in a [Identifier](/docs/misc/identifier). For the block state pipeline, you can get the associated `BlockStateModel` via `ModelManager.getBlockStateModelSet().get()` by passing in a `BlockState`. Mods will basically always reuse a model that was previously automatically loaded and baked.
 
 ## Common Models and Geometry
 
-The basic model JSON (in `assets//models`) are deserialized into an `UnbakedModel`. The `UnbakedModel` is generally one step short of its baked output, containing some general form of the general properties. The most important thing it contains is the `UnbakedGeometry` via `UnbakedModel#geometry`, which represents the data to become `BakedQuad`s. These quads are inlined into the item and block state model by (eventually) calling `UnbakedGeometry#bake`. This commonly constructs a `QuadCollection`, which contains that list of `BakedQuad`s which can be rendered at anytime or only if a given direction is not culled. Now, a quad compares to a triangle in a modeling program (and in most other games), however due to Minecraft's general focus on squares, the developers elected to use quads (4 vertices) instead of triangles (3 vertices) for rendering in Minecraft.
+The basic model JSON (in `assets/<namespace>/models`) are deserialized into an `UnbakedModel`. The `UnbakedModel` is generally one step short of its baked output, containing some general form of the general properties. The most important thing it contains is the `UnbakedGeometry` via `UnbakedModel#geometry`, which represents the data to become `BakedQuad`s. These quads are inlined into the item and block state model by (eventually) calling `UnbakedGeometry#bake`. This commonly constructs a `QuadCollection`, which contains that list of `BakedQuad`s which can be rendered at anytime or only if a given direction is not culled. Now, a quad compares to a triangle in a modeling program (and in most other games), however due to Minecraft's general focus on squares, the developers elected to use quads (4 vertices) instead of triangles (3 vertices) for rendering in Minecraft.
 
 The `UnbakedModel` contains information that is either used by the [block state definition](#block-state-definitions), [item models](#item-models), or both. For example, `useAmbientOcclusion` is used exclusively by the block state definition, `guiLight` and `transforms` are used exclusively by the item model, and `textureSlots` and `parent` are used by both.
 
@@ -14,7 +14,7 @@ During the baking process, every `UnbakedModel` is wrapped in a `ResolvedModel` 
 
 ## Block State Definitions
 
-The block state definition JSON (in `assets//blockstates`) is compiled and baked into a `BlockStateModel` for every `BlockState`. The process of creating the `BlockStateModel` goes like so:
+The block state definition JSON (in `assets/<namespace>/blockstates`) is compiled and baked into a `BlockStateModel` for every `BlockState`. The process of creating the `BlockStateModel` goes like so:
 
 - During the loading process:
 
@@ -38,7 +38,7 @@ The most important method within `BlockStateModel` is `collectParts`, which is r
 - A `BlockPos`: The position that the block is rendered at.
 - A `BlockState`: The [blockstate](/docs/blocks/states) being rendered. May be null, indicating that an item is being rendered.
 - A `RandomSource`: A client-bound random source you can use for randomization.
-- A `List`: The list that should receive the parts to render.
+- A `List<BlockStateModelPart>`: The list that should receive the parts to render.
 
 ### Model Data
 
@@ -46,7 +46,7 @@ Sometimes, a `BlockStateModel` may rely on the `BlockEntity` to determine what `
 
 ## Item Models
 
-The [client item](/docs/resources/client/models/items) JSON (in `assets//items`) is compiled and baked into an `ItemModel` for a given `Item` to be used by the `ItemStack`. The process of creating the `ItemModel` goes like so:
+The [client item](/docs/resources/client/models/items) JSON (in `assets/<namespace>/items`) is compiled and baked into an `ItemModel` for a given `Item` to be used by the `ItemStack`. The process of creating the `ItemModel` goes like so:
 
 - During the loading process:
 
@@ -56,7 +56,7 @@ The client item JSON is loaded into a `ClientItem`. This holds the item model an
 </li>
 <li class="">During the baking process:<!-- -->
 
-- `ItemModel.Unbaked#bake` is called for every `Item`, inlining the `ResolvedModel` to a `List`, along with some general `ModelRenderProperties` and the render type if the `Item` is a `BlockItem`.
+- `ItemModel.Unbaked#bake` is called for every `Item`, inlining the `ResolvedModel` to a `List<BakedQuad>`, along with some general `ModelRenderProperties` and the render type if the `Item` is a `BlockItem`.
 
 </li>
 </ul>

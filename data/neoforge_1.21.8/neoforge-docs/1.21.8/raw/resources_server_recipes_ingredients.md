@@ -4,11 +4,11 @@ version: "1.21.8"
 pageId: "resources/server/recipes/ingredients"
 url: "https://docs.neoforged.net/docs/1.21.8/resources/server/recipes/ingredients/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:00:54.159Z"
+fetchedAt: "2026-09-12T12:07:06.387Z"
 ---
 # Ingredients
 
-`Ingredient`s are used in [recipes](/docs/1.21.8/resources/server/recipes/) to check whether a given [ItemStack](/docs/1.21.8/items/#itemstacks) is a valid input for the recipe. For this purpose, `Ingredient` implements `Predicate`, and `#test` can be called to confirm if a given `ItemStack` matches the ingredient.
+`Ingredient`s are used in [recipes](/docs/1.21.8/resources/server/recipes/) to check whether a given [ItemStack](/docs/1.21.8/items/#itemstacks) is a valid input for the recipe. For this purpose, `Ingredient` implements `Predicate<ItemStack>`, and `#test` can be called to confirm if a given `ItemStack` matches the ingredient.
 
 Unfortunately, many internals of `Ingredient` are a mess. NeoForge works around this by ignoring the `Ingredient` class where possible, instead introducing the `ICustomIngredient` interface for custom ingredients. This is not a direct replacement for regular `Ingredient`s, but we can convert to and from `Ingredient`s using `ICustomIngredient#toVanilla` and `Ingredient#getCustomIngredient`, respectively.
 
@@ -18,7 +18,7 @@ The simplest way to get an ingredient is using the `Ingredient#of` helpers. Seve
 
 - `Ingredient.of()` returns an empty ingredient.
 - `Ingredient.of(Blocks.IRON_BLOCK, Items.GOLD_BLOCK)` returns an ingredient that accepts either an iron or a gold block. The parameter is a vararg of [ItemLikes](/docs/1.21.8/items/#itemlike), which means that any amount of both blocks and items may be used.
-- `Ingredient.of(Stream.of(Items.DIAMOND_SWORD))` returns an ingredient that accepts an item. Like the previous method, but with a `Stream` for if you happen to get your hands on one of those.
+- `Ingredient.of(Stream.of(Items.DIAMOND_SWORD))` returns an ingredient that accepts an item. Like the previous method, but with a `Stream<ItemLike>` for if you happen to get your hands on one of those.
 - `Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(ItemTags.WOODEN_SLABS))` returns an ingredient that accepts any item from the specified [tag](/docs/1.21.8/resources/server/tags), for example any wooden slab.
 
 Additionally, NeoForge adds a few additional ingredients:

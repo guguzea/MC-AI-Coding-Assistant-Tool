@@ -44,7 +44,7 @@ const opt = (name, def) => {
 
 const SOURCE_REPO = "FabricMC/fabric-docs";
 const BRANCH = "main";
-const VERSIONS = ["1.20.4", "1.21.1", "1.21.4", "1.21.8", "1.21.10", "1.21.11"];
+const VERSIONS = ["1.20.4", "1.21.1", "1.21.4", "1.21.8", "1.21.10", "1.21.11", "26.1.2"];
 const TREE_FILE = opt("tree", join(ROOT, "temp", "fabric-docs-main-tree.json"));
 const CACHE_DIR = opt("cache-dir", join(ROOT, "temp", "_w71_reference_cache"));
 /** 批量参数：实测（2026-09-07）jsDelivr 单进程 -Z 拉 8 件 1.06 s，逐个 1.3–2 s；raw 有 15 s 级长尾。 */
@@ -59,6 +59,11 @@ const WRITE = wantWrite(argv);
  * 无依据的一律不许进表 —— 表里的每条都必须能在 gate 的 evidence 里查到。
  */
 const ALIASES = {
+  "@/reference/1.21.8/src/client/java/com/example/docs/datagen/ExampleModItemTagProvider.java": {
+    realPath: "reference/1.21.8/src/client/java/com/example/docs/datagen/FabricDocsReferenceItemTagProvider.java",
+    reason: "1.21.8 起上游把示例模组改名 FabricDocsReference*；该版本树里 ExampleModItemTagProvider.java 不存在，同目录只有 FabricDocsReferenceItemTagProvider.java",
+    evidence: "git/trees/main 列 reference/1.21.8/src/client/java/com/example/docs/datagen/ 得 11 个 blob（含 FabricDocsReferenceItemTagProvider.java，无 ExampleModItemTagProvider.java）；jsDelivr GET 200/1743B 内 :44 `// #region repair_tags` 与 :47 `// #endregion repair_tags` 正是语料要的区段",
+  },
   "@/reference/1.20.4/src/main/java/com/example/docs/mixin/potion/PotionBrewingInvoker.java": {
     realPath: "reference/1.20.4/src/main/java/com/example/docs/mixin/potion/BrewingRecipeRegistryInvoker.java",
     reason: "上游该目录只有 BrewingRecipeRegistryInvoker.java（PotionBrewingInvoker 从未存在）；候选内含语料要的 :::1 区段",
@@ -115,16 +120,41 @@ function collectMarkers() {
         const line = lines[i];
         if (FENCE_RE.test(line)) { fence = !fence; continue; }
         if (fence) continue;
-        if (!/^ *@\[code/.test(line)) continue;
-        MARKER_RE.lastIndex = 0;
-        let m;
-        while ((m = MARKER_RE.exec(line))) {
-          sites.push({ version: v, file: relative(ROOT, f).split(sep).join("/"), line: i + 1, attrs: m[1].trim(), target: m[2].trim() });
+        if (/^ *@\[code/.test(line)) {
+          MARKER_RE.lastIndex = 0;
+          let m;
+          while ((m = MARKER_RE.exec(line))) {
+            sites.push({ version: v, file: relative(ROOT, f).split(sep).join("/"), line: i + 1, attrs: m[1].trim(), target: m[2].trim() });
+          }
+          continue;
         }
+        // VitePress 的 <<< 形态：目标可带 #region，尾部是展示期 attrs。取件只看路径，
+        // 区段名留在 attrs 里（去重键含 attrs ⇒ 同文件不同区段各自成立）。
+        const am = /^ *<<< *(\S+)(.*)$/.exec(line);
+        if (!am) continue;
+        const spec = stripLabel(am[1]);
+        const hash = spec.path.lastIndexOf("#");
+        sites.push({
+          version: v,
+          file: relative(ROOT, f).split(sep).join("/"),
+          line: i + 1,
+          attrs:
+            ((hash > 0 ? spec.path.slice(hash) : "") + (spec.label ? "[" + spec.label + "]" : "") + " " + (am[2] ?? "").trim()).trim(),
+          target: hash > 0 ? spec.path.slice(0, hash) : spec.path,
+        });
       }
     }
   }
   return sites;
+}
+
+/**
+ * 拆掉 <<< 目标末尾的标签页标题：「unit.json[Output]」「Foo.java#region[Java]」里的
+ * [Output] / [Java] 只是标题，既不是路径的一部分，也不是区段名（实测 26.1.2 有 13 处这样写）。
+ */
+function stripLabel(raw) {
+  const m = /\[([^\]]*)\]$/.exec(raw);
+  return m ? { path: raw.slice(0, m.index), label: m[1] } : { path: raw, label: "" };
 }
 
 function upstreamPathOf(target) {

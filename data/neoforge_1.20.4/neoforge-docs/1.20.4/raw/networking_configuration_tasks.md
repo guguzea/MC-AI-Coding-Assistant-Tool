@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "networking/configuration-tasks"
 url: "https://docs.neoforged.net/docs/1.20.4/networking/configuration-tasks/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:05.203Z"
+fetchedAt: "2026-09-12T12:00:14.862Z"
 ---
 # Using Configuration Tasks
 
@@ -36,7 +36,7 @@ A modder can use the exposed listener to figure out if the client is running the
 ## Implementing a configuration task
 
 A configuration task is a simple interface: `ICustomConfigurationTask`.
-This interface has two methods: `void run(Consumer sender);`, and `ConfigurationTask.Type type();` which returns the type of the configuration task.
+This interface has two methods: `void run(Consumer<CustomPacketPayload> sender);`, and `ConfigurationTask.Type type();` which returns the type of the configuration task.
 The type is used to identify the configuration task.
 An example of a configuration task is shown below:
 

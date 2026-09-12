@@ -4,7 +4,7 @@ version: "1.21.5"
 pageId: "concepts/events"
 url: "https://docs.neoforged.net/docs/1.21.5/concepts/events/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:59:07.752Z"
+fetchedAt: "2026-09-12T12:04:42.832Z"
 ---
 # Events
 

@@ -1,10 +1,10 @@
 ---
-title: "Data Maps"
+title: "Datamaps"
 version: "1.20.4"
 pageId: "datamaps"
 url: "https://docs.neoforged.net/docs/1.20.4/datamaps/"
 platform: "neoforge"
-fetchedAt: "2026-08-06T04:46:21.977Z"
+fetchedAt: "2026-09-12T11:59:50.754Z"
 ---
 # Data Maps
 
@@ -24,7 +24,7 @@ A data map type should be statically created and then registered to the `Registe
 
 The builder provides a `synced` method which can be used to mark a data map as synced and have it sent to clients.
 
-A simple `DataMapType` has two generic arguments: `R` (the type of the registry the data map is for) and `T` (the values that are being attached). A data map of `SomeObject`s that are attached to `Item`s can, as such, be represented as `DataMapType`.
+A simple `DataMapType` has two generic arguments: `R` (the type of the registry the data map is for) and `T` (the values that are being attached). A data map of `SomeObject`s that are attached to `Item`s can, as such, be represented as `DataMapType<Item, SomeObject>`.
 
 Data maps are serialized and deserialized using [Codecs](/docs/1.20.4/datastorage/codecs).
 
@@ -73,7 +73,7 @@ and then registered to the `RegisterDataMapTypesEvent` using `RegisterDataMapTyp
 
 ## Syncing
 
-A synced data map will have its values synced to clients. A data map can be marked as synced using `DataMapType$Builder#synced(Codec networkCodec, boolean mandatory)`.
+A synced data map will have its values synced to clients. A data map can be marked as synced using `DataMapType$Builder#synced(Codec<T> networkCodec, boolean mandatory)`.
 
 The values of the data map will then be synced using the `networkCodec`.
 
@@ -142,7 +142,7 @@ public static void onItemDrop(final ItemTossEvent event) {
 
 Advanced data maps are data maps which have additional functionality. Namely, the ability of merging values and selectively removing them, through a remover. Implementing some form of merging and removers is highly recommended for data maps whose values are collection-likes (like `Map`s or `List`s).
 
-`AdvancedDataMapType` have one more generic besides `T` and `R`: `VR extends DataMapValueRemover`. This additional generic allows you to datagen remove objects with increased type safety.
+`AdvancedDataMapType` have one more generic besides `T` and `R`: `VR extends DataMapValueRemover<R, T>`. This additional generic allows you to datagen remove objects with increased type safety.
 
 ### Creation
 
@@ -152,7 +152,7 @@ You create an `AdvancedDataMapType` using `AdvancedDataMapType#builder`. Unlike 
 
 An advanced data map can provide a `DataMapValueMerger` through `AdvancedDataMapType#merger`. This merger will be used to handle conflicts between data packs that attempt to attach a value to the same object.
 
-The merger will be given the two conflicting values, and their sources (as an `Either, ResourceKey>` since values can be attached to all entries within a tag, not just individual entries), and is expected to return the value that will actually be attached.
+The merger will be given the two conflicting values, and their sources (as an `Either<TagKey<R>, ResourceKey<R>>` since values can be attached to all entries within a tag, not just individual entries), and is expected to return the value that will actually be attached.
 
 Generally, mergers should simply merge the values, and should not perform "hard" overwrites unless necessary (i.e. if merging isn't possible). If a pack wants to bypass the merger, it can do so by specifying the object-level `replace` field.
 

@@ -231,8 +231,9 @@ entity.removeEffect(MobEffects.REGENERATION);
 
 ```java
 
-//POTIONS is a DeferredRegister
-public static final Supplier MY_POTION = POTIONS.register("my_potion", () -> new Potion(new MobEffectInstance(MY_MOB_EFFECT, 3600)));
+//POTIONS is a DeferredRegister<Potion>
+
+public static final Supplier<Potion> MY_POTION = POTIONS.register("my_potion", () -> new Potion(new MobEffectInstance(MY_MOB_EFFECT, 3600)));
 
 ```
 

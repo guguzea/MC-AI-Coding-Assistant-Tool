@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "gettingstarted/structuring"
 url: "https://docs.neoforged.net/docs/1.20.4/gettingstarted/structuring/"
 platform: "neoforge"
-fetchedAt: "2026-08-06T04:46:10.008Z"
+fetchedAt: "2026-09-12T11:59:40.085Z"
 ---
 # Structuring Your Mod
 

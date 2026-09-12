@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "inventories/menus"
 url: "https://docs.neoforged.net/docs/inventories/menus/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:57:49.597Z"
+fetchedAt: "2026-09-12T12:07:46.163Z"
 ---
 # Menus
 
@@ -506,12 +506,12 @@ public ItemStack quickMoveStack(Player player, int quickMovedSlotIndex) {
 
 ## Opening a Menu
 
-Once a menu type has been registered, the menu itself has been finished, and a [screen](/docs/rendering/screens) has been attached, a menu can then be opened by the player. Menus can be opened by calling `IPlayerExtension#openMenu` on the logical server. The method takes in the `MenuProvider` of the server side menu and optionally a `Consumer` if extra data needs to be synced to the client.
+Once a menu type has been registered, the menu itself has been finished, and a [screen](/docs/rendering/screens) has been attached, a menu can then be opened by the player. Menus can be opened by calling `IPlayerExtension#openMenu` on the logical server. The method takes in the `MenuProvider` of the server side menu and optionally a `Consumer<RegistryFriendlyByteBuf>` if extra data needs to be synced to the client.
 
 > **Note**
 > note
 
-`IPlayerExtension#openMenu` with the `Consumer` parameter should only be used if a menu type was created using an [IContainerFactory](#icontainerfactory).
+`IPlayerExtension#openMenu` with the `Consumer<RegistryFriendlyByteBuf>` parameter should only be used if a menu type was created using an [IContainerFactory](#icontainerfactory).
 
 #### MenuProvider
 

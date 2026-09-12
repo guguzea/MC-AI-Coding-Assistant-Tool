@@ -4,7 +4,7 @@ version: "1.21.3"
 pageId: "networking/entities"
 url: "https://docs.neoforged.net/docs/1.21.3/networking/entities/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:39.162Z"
+fetchedAt: "2026-09-12T12:03:58.830Z"
 ---
 # Entities
 
@@ -24,7 +24,7 @@ If your entity has data that is needed on the client, but does not change over t
 
 This is the main vanilla system for synchronizing entity data from the server to the client. As such, a number of vanilla examples are available to refer to.
 
-Firstly, you need a `EntityDataAccessor` for the data you wish to keep synchronized. This should be stored as a `static final` field in your entity class, obtained by calling `SynchedEntityData#defineId` and passing the entity class and a serializer for that type of data. The available serializer implementations can be found as static constants within the `EntityDataSerializers` class.
+Firstly, you need a `EntityDataAccessor<T>` for the data you wish to keep synchronized. This should be stored as a `static final` field in your entity class, obtained by calling `SynchedEntityData#defineId` and passing the entity class and a serializer for that type of data. The available serializer implementations can be found as static constants within the `EntityDataSerializers` class.
 
 > **Caution**
 > caution

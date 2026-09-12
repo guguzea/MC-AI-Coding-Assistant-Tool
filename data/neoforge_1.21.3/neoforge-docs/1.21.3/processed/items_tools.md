@@ -115,10 +115,11 @@ public static final DeferredItem<SwordItem> COPPER_SWORD = ITEMS.registerItem(
 
 public static final DeferredItem<AxeItem> COPPER_AXE = ITEMS.registerItem("copper_axe", props -> new AxeItem(...));
 
-public static final DeferredItem
-COPPER_PICKAXE = ITEMS.registerItem("copper_pickaxe", props -> new PickaxeItem(...));
-public static final DeferredItem COPPER_SHOVEL = ITEMS.registerItem("copper_shovel", props -> new ShovelItem(...));
-public static final DeferredItem COPPER_HOE = ITEMS.registerItem("copper_hoe", props -> new HoeItem(...));
+public static final DeferredItem<PickaxeItem> COPPER_PICKAXE = ITEMS.registerItem("copper_pickaxe", props -> new PickaxeItem(...));
+
+public static final DeferredItem<ShovelItem> COPPER_SHOVEL = ITEMS.registerItem("copper_shovel", props -> new ShovelItem(...));
+
+public static final DeferredItem<HoeItem> COPPER_HOE = ITEMS.registerItem("copper_hoe", props -> new HoeItem(...));
 
 ```
 

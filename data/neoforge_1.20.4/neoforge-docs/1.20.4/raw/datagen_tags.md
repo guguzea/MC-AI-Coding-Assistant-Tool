@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "datagen/tags"
 url: "https://docs.neoforged.net/docs/1.20.4/datagen/tags/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:56:53.161Z"
+fetchedAt: "2026-09-12T11:59:49.654Z"
 ---
 # Tag Generation
 

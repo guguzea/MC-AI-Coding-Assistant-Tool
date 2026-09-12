@@ -105,5 +105,8 @@
     }
   ],
   "note": "无独立 loader jar 可反编译；摘要来自已打开的 MCP named 安全表，不是混淆短名。1.5.2/1.2.5 未打开 named，不要用本文件冒充。",
-  "fqcnIndexCount": 0
+  "fqcnIndexCount": 0,
+  "loaders": [
+    "modloader"
+  ]
 }

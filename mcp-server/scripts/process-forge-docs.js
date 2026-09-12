@@ -349,30 +349,39 @@ function processVersion(version) {
     const raw = readFileSync(rawPath, "utf-8");
 
     // 提取元数据（支持 YAML frontmatter 和旧格式 > 来源：）
+    //
+    // 1.20.4 档的 68/70 份 raw 在 `---` 之前还压了一行 `> 版本：1.20.4`，
+    // 旧实现只看 `raw.startsWith("---")` ⇒ 这类文件的 frontmatter 整块漏进 processed/，
+    // 同时 l0 的 url/version 变空。先把可选的前导元数据行剥掉，再按 frontmatter 解析。
+    const PRE_META_RE = /^(?:> *(?:来源|版本)[：:][^\r\n]*\r?\n)+/;
+    const preLen = (raw.match(PRE_META_RE)?.[0] || "").length;
+    const afterPre = raw.slice(preLen);
+
     let url = "", sourceVersion = "";
-    if (raw.startsWith("---")) {
-      const fmEnd = raw.indexOf("---", 4);
+    let content = raw;
+    if (afterPre.startsWith("---")) {
+      const fmEnd = afterPre.indexOf("---", 4);
       if (fmEnd > 0) {
-        const fmText = raw.slice(3, fmEnd);
+        const fmText = afterPre.slice(3, fmEnd);
         const srcMatch = fmText.match(/^\s*source:\s*"?([^"\n]+)"?/m);
         const verMatch = fmText.match(/^\s*version:\s*"?([^"\n]+)"?/m);
         url = srcMatch?.[1] || "";
         sourceVersion = verMatch?.[1] || "";
+        content = afterPre.slice(fmEnd + 4).trimStart();
+      } else {
+        content = afterPre;
       }
     } else {
-      const metaMatch = raw.match(/^> 来源：(.+)\r?\n> 版本：(.+)\r?\n\r?\n/m);
-      url = metaMatch?.[1] || "";
-      sourceVersion = metaMatch?.[2] || "";
-    }
-
-    // 去掉元数据，获取正文
-    let content = raw;
-    if (raw.startsWith("---")) {
-      const fmEnd = raw.indexOf("---", 4);
-      if (fmEnd > 0) content = raw.slice(fmEnd + 4).trimStart();
-    } else {
-      const metaMatch = raw.match(/^> 来源：(.+)\r?\n> 版本：(.+)\r?\n\r?\n/m);
-      if (metaMatch) content = raw.slice(raw.indexOf(metaMatch[0]) + metaMatch[0].length);
+      // 旧格式：`# 合成标题` + `> 来源：` + `> 版本：` 三行元数据头，正文紧跟其后（无空行）。
+      // 旧正则强制要求头后有空行 ⇒ 1.20.4 有 30 份压根不匹配，整块元数据漏进 processed/。
+      const pairRe = /^> *来源[：:] *(.+)\r?\n> *版本[：:] *(.+)\r?\n/m;
+      const pair = raw.match(pairRe);
+      if (pair) {
+        url = pair[1].trim();
+        sourceVersion = pair[2].trim();
+        // 头上那行 `# 合成标题` 也是抓取器加的，跟元数据头一起切掉：正文从头块之后开始。
+        content = raw.slice(raw.indexOf(pair[0]) + pair[0].length).trimStart();
+      }
     }
     content = repairBrokenItalicMarkup(content);
 

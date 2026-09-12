@@ -4,7 +4,7 @@ version: "1.21.1"
 pageId: "misc/resourcelocation"
 url: "https://docs.neoforged.net/docs/1.21.1/misc/resourcelocation/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:53:22.177Z"
+fetchedAt: "2026-09-12T12:02:29.021Z"
 ---
 # Resource Locations
 
@@ -49,6 +49,6 @@ The variant is appended to the regular resource location, along with a `#`. For 
 
 `ResourceKey`s combine a registry id with a registry name. An example would be a registry key with the registry id `minecraft:item` and the registry name `minecraft:diamond_sword`. Unlike a `ResourceLocation`, `ResourceKey`s actually refer to a unique element, thus being able to clearly identify an element. They are most commonly used in contexts where many different registries come in contact with one another. A common use case are datapacks, especially worldgen.
 
-A new `ResourceKey` can be created through the static method `ResourceKey#create(ResourceKey>, ResourceLocation)`. The second parameter here is the registry name, while the first parameter is what is known as a registry key. Registry keys are a special kind of `ResourceKey` whose registry is the root registry (i.e. the registry of all other registries). A registry key can be created via `ResourceKey#createRegistryKey(ResourceLocation)` with the desired registry's id.
+A new `ResourceKey` can be created through the static method `ResourceKey#create(ResourceKey<? extends Registry<T>>, ResourceLocation)`. The second parameter here is the registry name, while the first parameter is what is known as a registry key. Registry keys are a special kind of `ResourceKey` whose registry is the root registry (i.e. the registry of all other registries). A registry key can be created via `ResourceKey#createRegistryKey(ResourceLocation)` with the desired registry's id.
 
 `ResourceKey`s are interned at creation. This means that comparing by reference equality (`==`) is possible and encouraged, but their creation is comparatively expensive.

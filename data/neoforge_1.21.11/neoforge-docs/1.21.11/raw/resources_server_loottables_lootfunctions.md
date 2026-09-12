@@ -4,11 +4,11 @@ version: "1.21.11"
 pageId: "resources/server/loottables/lootfunctions"
 url: "https://docs.neoforged.net/docs/1.21.11/resources/server/loottables/lootfunctions/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:02:01.620Z"
+fetchedAt: "2026-09-12T12:09:50.834Z"
 ---
 # Loot Functions
 
-Loot functions can be used to modify the result of a [loot entry](/docs/1.21.11/resources/server/loottables/#loot-entry), or the multiple results of a [loot pool](/docs/1.21.11/resources/server/loottables/#loot-pool) or [loot table](/docs/1.21.11/resources/server/loottables/#loot-table). In both cases, a list of functions is defined, which is run in order. During datagen, loot functions can be applied to `LootPoolSingletonContainer.Builder`s, `LootPool.Builder`s and `LootTable.Builder`s by calling `#apply`. This article will outline the available loot functions. To create your own loot functions, see [Custom Loot Functions](/docs/1.21.11/resources/server/loottables/custom#custom-loot-functions).
+Loot functions can be used to modify the result of a [loot entry](/docs/1.21.11/resources/server/loottables/#loot-entry), or the multiple results of a [loot pool](/docs/1.21.11/resources/server/loottables/#loot-pool) or [loot table](/docs/1.21.11/resources/server/loottables/#loot-table). In both cases, a list of functions is defined, which is run in order. During datagen, loot functions can be applied to `LootPoolSingletonContainer.Builder<?>`s, `LootPool.Builder`s and `LootTable.Builder`s by calling `#apply`. This article will outline the available loot functions. To create your own loot functions, see [Custom Loot Functions](/docs/1.21.11/resources/server/loottables/custom#custom-loot-functions).
 
 > **Note**
 > note

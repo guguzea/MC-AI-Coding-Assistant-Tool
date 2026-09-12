@@ -1,10 +1,10 @@
 ---
-title: "Data Storage"
+title: "Nbt"
 version: "1.21.5"
 pageId: "datastorage/nbt"
 url: "https://docs.neoforged.net/docs/1.21.5/datastorage/nbt/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:52:08.285Z"
+fetchedAt: "2026-09-12T12:04:47.694Z"
 ---
 # Named Binary Tag (NBT)
 
@@ -71,7 +71,7 @@ tag.putDouble("IAmRunningOutOfIdeasForNamesHere", 1d);
 
 ```
 
-Several helpers exist here, for example, `putIntArray` also has a convenience method that takes a `List` in addition to the standard variant that takes an `int[]`.
+Several helpers exist here, for example, `putIntArray` also has a convenience method that takes a `List<Integer>` in addition to the standard variant that takes an `int[]`.
 
 Of course, we can also get values from that tag:
 

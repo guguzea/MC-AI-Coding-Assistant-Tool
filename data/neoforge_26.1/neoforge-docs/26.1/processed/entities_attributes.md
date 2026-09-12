@@ -154,7 +154,7 @@ Be aware that unlike some other registries, custom attributes existing do not bl
 
 ## Querying Attributes
 
-Attribute values are stored on entities in an `AttributeMap`, which is basically a `Map`. Attribute instances are basically what item stacks are to items, i.e. whereas an attribute is a registered singleton, attribute instances are concrete attribute objects bound to a concrete entity.
+Attribute values are stored on entities in an `AttributeMap`, which is basically a `Map<Attribute, AttributeInstance>`. Attribute instances are basically what item stacks are to items, i.e. whereas an attribute is a registered singleton, attribute instances are concrete attribute objects bound to a concrete entity.
 
 The `AttributeMap` of an entity can be retrieved by calling `LivingEntity#getAttributes`. You can then query the map like so:
 
@@ -187,7 +187,7 @@ double value = livingEntity.getAttributeValue(Attributes.ARMOR);
 > **Info**
 > info
 
-When handling attributes, you will almost exclusively use `Holder`s instead of `Attribute`s. This is also why with custom attributes (see below), we explicitly store the `Holder`.
+When handling attributes, you will almost exclusively use `Holder<Attribute>`s instead of `Attribute`s. This is also why with custom attributes (see below), we explicitly store the `Holder<Attribute>`.
 
 ## Attribute Modifiers
 
@@ -301,7 +301,7 @@ double modifierValue = attributes.getModifierValue(Attributes.ARMOR, id);
 
 ## Custom Attributes
 
-If needed, you can also add your own attributes. Like many other systems, attributes are a [registry](/docs/concepts/registries), and you can register your own objects to it. To get started, create a `DeferredRegister` like so:
+If needed, you can also add your own attributes. Like many other systems, attributes are a [registry](/docs/concepts/registries), and you can register your own objects to it. To get started, create a `DeferredRegister<Attribute>` like so:
 
 ```java
 
@@ -346,9 +346,9 @@ And that's it! Just don't forget to register your `DeferredRegister` to the mod 
 > **Info**
 > info
 
-We use `Holder` here instead of `Supplier` like with many other registered objects, as it makes working with entities a lot easier (most entity methods expect `Holder`s).
+We use `Holder<Attribute>` here instead of `Supplier<RangedAttribute>` like with many other registered objects, as it makes working with entities a lot easier (most entity methods expect `Holder<Attribute>`s).
 
-If, for some reason, you need a `Supplier` (or a supplier of any other subclass of `Attribute`), you should use `DeferredHolder` as the type.
+If, for some reason, you need a `Supplier<RangedAttribute>` (or a supplier of any other subclass of `Attribute`), you should use `DeferredHolder<Attribute, RangedAttribute>` as the type.
 
-The same rules also apply for any other `Attribute` subclass, i.e., we generally use `Holder` instead of `Supplier` or `Supplier`.
+The same rules also apply for any other `Attribute` subclass, i.e., we generally use `Holder<Attribute>` instead of `Supplier<PercentageAttribute>` or `Supplier<BooleanAttribute>`.
 

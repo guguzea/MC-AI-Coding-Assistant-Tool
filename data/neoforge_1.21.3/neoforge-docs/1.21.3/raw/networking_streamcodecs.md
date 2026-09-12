@@ -1,10 +1,10 @@
 ---
-title: "Stream Codecs"
+title: "Streamcodecs"
 version: "1.21.3"
 pageId: "networking/streamcodecs"
 url: "https://docs.neoforged.net/docs/1.21.3/networking/streamcodecs/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:52:56.077Z"
+fetchedAt: "2026-09-12T12:04:01.245Z"
 ---
 # Stream Codecs
 
@@ -50,7 +50,6 @@ Unless you are manually handling the buffer object, you will generally never cal
 
 | Stream Codec | Java Type |
 | --- | --- |
-| Stream Codec | Java Type |
 | BOOL | Boolean |
 | BYTE | Byte |
 | SHORT | Short |
@@ -103,7 +102,7 @@ Stream codecs can be created for reading or writing any object to a stream. This
 
 Stream codecs have two generics: `B` representing the buffer and `V` representing the object value. `B` is generally one of three types: `ByteBuf`, `FriendlyByteBuf`, `RegistryFriendlyByteBuf`, each extending one another. `FriendlyByteBuf` adds Minecraft-specific read and write methods while `RegistryFriendlyByteBuf` provides access to the list of registries and its objects.
 
-When constructing a stream codec, `B` should be the least-specific buffer type. For example, a `ResourceLocation` is sent as a string. As strings are supported by a regular `ByteBuf`, its type should be `StreamCodec`. `FriendlyByteBuf` contains methods for writing a `ChunkPos`, so its type should be `StreamCodec`. An `Item` needs access to the registry, so its type should be `StreamCodec`.
+When constructing a stream codec, `B` should be the least-specific buffer type. For example, a `ResourceLocation` is sent as a string. As strings are supported by a regular `ByteBuf`, its type should be `StreamCodec<ByteBuf, ResourceLocation>`. `FriendlyByteBuf` contains methods for writing a `ChunkPos`, so its type should be `StreamCodec<FriendlyByteBuf, ChunkPos>`. An `Item` needs access to the registry, so its type should be `StreamCodec<RegistryFriendlyByteBuf, Item>`.
 
 Most methods that take in a stream codec look for `? super B` for the buffer type, meaning that all three of the above examples can be used if the buffer type is a `RegistryFriendlyByteBuf`.
 

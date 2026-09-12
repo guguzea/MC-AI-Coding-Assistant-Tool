@@ -4,7 +4,7 @@ version: "1.21.5"
 pageId: "items/tools"
 url: "https://docs.neoforged.net/docs/1.21.5/items/tools/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:59:30.313Z"
+fetchedAt: "2026-09-12T12:05:05.586Z"
 ---
 # Tools
 

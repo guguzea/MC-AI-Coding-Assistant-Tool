@@ -63,7 +63,7 @@ tag.putDouble("IAmRunningOutOfIdeasForNamesHere", 1d);
 
 ```
 
-Several helpers exist here, for example, `putIntArray` also has a convenience method that takes a `List` in addition to the standard variant that takes an `int[]`.
+Several helpers exist here, for example, `putIntArray` also has a convenience method that takes a `List<Integer>` in addition to the standard variant that takes an `int[]`.
 
 Of course, we can also get values from that tag:
 

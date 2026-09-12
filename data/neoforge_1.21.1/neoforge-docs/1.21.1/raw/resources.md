@@ -4,7 +4,7 @@ version: "1.21.1"
 pageId: "resources"
 url: "https://docs.neoforged.net/docs/1.21.1/resources/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:53:24.151Z"
+fetchedAt: "2026-09-12T12:02:37.139Z"
 ---
 # Resources
 
@@ -14,7 +14,7 @@ Minecraft generally has two kinds of resources: resources for the [logical clien
 
 Both resource and data packs normally require a [pack.mcmeta file](#packmcmeta); however, modern NeoForge generates these at runtime for you, so you don't need to worry about it.
 
-If you are confused about the format of something, have a look at the vanilla resources. Your NeoForge development environment not only contains vanilla code, but also vanilla resources. They can be found in the External Resources section (IntelliJ)/Project Libraries section (Eclipse), under the name `ng_dummy_ng.net.minecraft:client:client-extra:` (for Minecraft resources) or `ng_dummy_ng.net.neoforged:neoforge:` (for NeoForge resources).
+If you are confused about the format of something, have a look at the vanilla resources. Your NeoForge development environment not only contains vanilla code, but also vanilla resources. They can be found in the External Resources section (IntelliJ)/Project Libraries section (Eclipse), under the name `ng_dummy_ng.net.minecraft:client:client-extra:<minecraft_version>` (for Minecraft resources) or `ng_dummy_ng.net.neoforged:neoforge:<neoforge_version>` (for NeoForge resources).
 
 ## Assets
 
@@ -43,7 +43,6 @@ Data packs may contain folders with files affecting the following things:
 
 | Folder name | Contents |
 | --- | --- |
-| Folder name | Contents |
 | advancement | Advancements |
 | damage_type | Damage types |
 | loot_table | Loot tables |
@@ -57,7 +56,6 @@ Additionally, they may also contain subfolders for some systems that integrate w
 
 | Folder name | Contents |
 | --- | --- |
-| Folder name | Contents |
 | chat_type | Chat types |
 | function | Functions |
 | item_modifier | Item modifiers |
@@ -79,7 +77,6 @@ All data providers extend the `DataProvider` interface and usually require one m
 
 | Class | Method | Generates | Side | Notes |
 | --- | --- | --- | --- | --- |
-| Class | Method | Generates | Side | Notes |
 | BlockStateProvider | registerStatesAndModels() | Blockstate files, block models | Client |  |
 | ItemModelProvider | registerModels() | Item models | Client |  |
 | LanguageProvider | addTranslations() | Translations | Client | Also requires passing the language in the constructor. |
@@ -168,7 +165,7 @@ The event offers some context for you to use:
 - `event.getGenerator()` returns the `DataGenerator` that you register the providers to.
 - `event.getPackOutput()` returns a `PackOutput` that is used by some providers to determine their file output location.
 - `event.getExistingFileHelper()` returns an `ExistingFileHelper` that is used by providers for things that can reference other files (for example block models, which can specify a parent file).
-- `event.getLookupProvider()` returns a `CompletableFuture` that is mainly used by tags and datagen registries to reference other, potentially not yet existing elements.
+- `event.getLookupProvider()` returns a `CompletableFuture<HolderLookup.Provider>` that is mainly used by tags and datagen registries to reference other, potentially not yet existing elements.
 - `event.includeClient()`, `event.includeServer()`, `event.includeDev()` and `event.includeReports()` are `boolean` methods that allow you to check whether specific command line arguments (see below) are enabled.
 
 ### Command Line Arguments

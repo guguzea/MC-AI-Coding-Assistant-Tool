@@ -4,7 +4,7 @@ version: "1.21.8"
 pageId: "misc/keymappings"
 url: "https://docs.neoforged.net/docs/1.21.8/misc/keymappings/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:00:37.322Z"
+fetchedAt: "2026-09-12T12:06:22.856Z"
 ---
 # Key Mappings
 

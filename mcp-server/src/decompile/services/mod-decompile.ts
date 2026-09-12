@@ -2,14 +2,15 @@
  * decompile_mod_jar 编排服务（T2）。
  *
  * 流程：参数校验 → Java 17 探测（FIRST）→ skip-download 门控 → 元数据分析
- *   →（可选 remap，需匹配 MC 版本）→ VineFlower 反编译到
- *   $CACHE/decompiled-mods/<modId>/<version>/ → 源码树摘要。
+ *   →（可选 remap，需匹配 MC 版本）→ 写前清空目标子树 → VineFlower 反编译到
+ *   $CACHE/decompiled-mods/<modId>/<version>-<jar sha512 前 12 位>/ → 源码树摘要。
  *
  * 仅本地绝对路径 jar；缓存只写 $MC_SKILL_CACHE；不触碰项目目录。
  */
 
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync, openSync, readSync, closeSync } from "fs";
 import { basename, join, relative, sep } from "path";
+import { createHash } from "crypto";
 import { actionable, withAction, type ActionEnvelope } from "../../utils/actionable.js";
 import { parseMinecraftVersion, type MappingChoice } from "../version-manager.js";
 import {
@@ -28,6 +29,7 @@ import { ensureResourceJar, ensureTinyRemapperJars, VINEFLOWER_DEF, DownloadDisa
 import { downloadFile, DownloadError } from "../downloaders/http.js";
 import { resolveYarnMappings, mappingCacheViable } from "../downloaders/yarn.js";
 import { resolveMojangVersion } from "../downloaders/mojang.js";
+import { listZipEntries } from "../zip-util.js";
 import { analyzeModJar } from "./mod-analyzer.js";
 import {
   assertVineflowerDiskSpace,
@@ -44,11 +46,21 @@ export interface DecompileModJarArgs {
   /** remap 映射层（仅 1.14–1.21.11 有意义） */
   mapping?: "yarn" | "mojmap";
   force?: boolean;
+  /**
+   * S5b：纯库 jar（实测 `kotlinforforge-*.jar` 4026 条目内既无 mods.toml 也无 mcmod.info）
+   * 从自身元数据永远解不出身份。允许调用方（批处理器读 `lib-manifests/all.json` 的 `modId`）
+   * 给一个外部证据 candidate —— 但它不直接生效：必须在这个 jar 自己的条目路径里出现同一段
+   * 才被采信，否则照旧返回 MOD_ID_UNKNOWN 结构化失败。MCP 工具面不暴露该参数（只给内部调用），
+   * 免得 agent 可以随意给 jar 命名。
+   */
+  externalModId?: string;
 }
 
 export interface ModDecompileResult {
   found: boolean;
   modId?: string;
+  /** 身份来源：`jar` = 自身元数据；`external` = 调用方证据且已被本 jar 条目证实 */
+  modIdEvidence?: "jar" | "external";
   modVersion?: string;
   loaders?: string[];
   /** 该产物实际所用的 MC 版本（缓存命中时回填盘上记录，不等于本次请求；见 requestedVersion） */
@@ -82,6 +94,8 @@ export interface ModDecompileResult {
    * 字段缺席 = 本次标记写入正常。
    */
   partial?: boolean;
+  /** 失败诊断用：jar 内容身份（sha512 前 12 位）。modId 解析失败时靠它指明是哪个 jar。 */
+  jarIdentity?: string;
   warnings?: string[];
   note?: string;
   error?: string;
@@ -130,6 +144,181 @@ function summarizeTree(outDir: string): { fileCount: number; javaFileCount: numb
     sampleFiles,
     ...(walked.truncated ? { truncated: true } : {}),
   };
+}
+
+/** 递归统计目录内文件数（写前/写后清理实证用） */
+function countTreeFiles(dir: string): number {
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return 0;
+  }
+  let n = 0;
+  for (const e of entries) {
+    if (e.isDirectory()) n += countTreeFiles(join(dir, e.name));
+    else n++;
+  }
+  return n;
+}
+
+/**
+ * jar 内容身份段 = sha512 前 12 位十六进制（F92）。
+ *
+ * 必须来自字节内容而不是 mod 元数据：同 modId + 同 version 的两个不同构建
+ * （重新上传 / 不同 loader 打包 / 占位符版本回退出同一个名字）若共用一棵源码树，
+ * 后写的那次只会覆盖同名文件，残留会让 `javaFileCount` 与包名归属一起失真。
+ * 分块读，避免把整个 jar 读进内存。
+ */
+export function jarContentIdentity(jarPath: string): string {
+  const hash = createHash("sha512");
+  const fd = openSync(jarPath, "r");
+  try {
+    const buf = Buffer.alloc(1 << 20);
+    for (;;) {
+      const n = readSync(fd, buf, 0, buf.length, null);
+      if (n <= 0) break;
+      hash.update(buf.subarray(0, n));
+    }
+  } finally {
+    closeSync(fd);
+  }
+  return hash.digest("hex").slice(0, 12);
+}
+
+/**
+ * modId → 缓存目录段（纯函数，CI 可测）。
+ *
+ * 解析不出 modId 一律判失败：旧实现回落 `unknown-mod`，于是所有解析不出的 jar
+ * 挤进同一目录，后来者会把前者的源码树当自己的缓存命中冒领（F92）。
+ */
+export function resolveModIdSegment(
+  metaModId: string | null | undefined,
+): { ok: true; modId: string } | { ok: false; code: "MOD_ID_UNKNOWN" | "INVALID_INPUT"; message: string } {
+  const raw = typeof metaModId === "string" ? metaModId.trim() : "";
+  if (!raw) {
+    return { ok: false, code: "MOD_ID_UNKNOWN", message: "jar 内元数据未给出 modId" };
+  }
+  const cleaned = sanitizeCacheSegment(raw);
+  if (!cleaned) {
+    return { ok: false, code: "INVALID_INPUT", message: `modId 非法（含路径穿越或空段）：${raw}` };
+  }
+  return { ok: true, modId: cleaned };
+}
+
+/**
+ * 包路径里是否真有这一段（S5b 的外部证据硬闸）。
+ *
+ * 与 catalog / merge-verified-api 同一条自有判据：modId 当作「路径的一段」看，`-` 与 `_` 不敏感；
+ * 分隔符同时吃 `.`（Java 包名）与 `/`（jar 条目路径），所以包清单和 zip 条目都能直接喂进来
+ * （`kotlin-for-forge` ↔ `kotlinforforge` 视为同段）。空 modId 一律判否，免得空串退化成通配。
+ */
+export function packagesOwnModId(
+  packages: (string | null | undefined)[] | undefined,
+  modId: string | null | undefined,
+): boolean {
+  const seg = String(modId ?? "").toLowerCase().replace(/[-_]/g, "");
+  if (!seg) return false;
+  return (packages ?? []).some((p) =>
+    String(p ?? "")
+      .split(/[./]+/)
+      .some((raw) => raw.toLowerCase().replace(/[-_]/g, "") === seg),
+  );
+}
+
+/**
+ * 写前清空目标子树（F92）：VineFlower 只覆盖同名文件，旧树残留会混进本次产物。
+ *
+ * 两道护栏：`outDir` 必须严格落在 decompiled-mods 之下，且不等于该目录本身
+ * （`relative` 为空即两者相同）。win32 上 `rmSync(force)` 可能「成功返回却什么都没删」，
+ * 所以删除后必须再实证一次目录确实消失，否则调用方要判失败而不是带着旧树继续写。
+ */
+export function clearDecompileTarget(
+  decompiledModsRoot: string,
+  outDir: string,
+): { removedFiles: number; error: string | null } {
+  const rel = relative(decompiledModsRoot, outDir);
+  if (!rel || rel.startsWith("..") || !isPathInside(decompiledModsRoot, outDir)) {
+    return { removedFiles: 0, error: `拒绝清空：目标不在 decompiled-mods 子树内（${outDir}）` };
+  }
+  if (!existsSync(outDir)) return { removedFiles: 0, error: null };
+  const before = countTreeFiles(outDir);
+  try {
+    rmSync(outDir, { recursive: true, force: true });
+  } catch (err) {
+    return { removedFiles: 0, error: `清空 ${outDir} 抛出：${(err as Error).message}` };
+  }
+  if (existsSync(outDir)) {
+    return { removedFiles: 0, error: `清空 ${outDir} 未生效（仍有 ${countTreeFiles(outDir)} 个文件残留）` };
+  }
+  return { removedFiles: before, error: null };
+}
+
+/** 该目录（含子目录）里是否真的有 .java 源码 */
+function containsJava(dir: string): boolean {
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return false;
+  }
+  for (const e of entries) {
+    if (e.isFile()) {
+      if (e.name.endsWith(".java")) return true;
+    } else if (e.isDirectory() && containsJava(join(dir, e.name))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/** 源码树里的顶层包根（只取含 .java 的一级目录；文件与资源目录不参与归属判定） */
+function javaPackageRoots(dir: string): string[] {
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  const out: string[] = [];
+  for (const e of entries) {
+    if (e.isDirectory() && containsJava(join(dir, e.name))) out.push(e.name);
+  }
+  return out;
+}
+
+/**
+ * 源码树归属校验（F92/F93）：`.java` 的包根必须出自该 jar 自身的 `.class` 条目。
+ *
+ * 撞名 / 冒领来的树会带进别人的顶层包（如 `com/` 混进只有 `dev/` 的树）。只比顶层段：
+ * remap 会改类名与深层包，但不会改 `com` / `net` / `org` / `dev` 这类根段，误报面小。
+ * jar 内没有带包的 class（资源-only / 根目录 class）时无判据，返回 ok 让空产物分支处理。
+ */
+export function verifyOutputOwnership(
+  outputDir: string,
+  jarPath: string,
+): { ok: boolean; foreignPackages: string[]; reason?: string } {
+  let names: string[];
+  try {
+    names = listZipEntries(readFileSync(jarPath));
+  } catch (err) {
+    return { ok: false, foreignPackages: [], reason: `无法读取 jar 条目：${(err as Error).message}` };
+  }
+  const jarRoots = new Set<string>();
+  for (const name of names) {
+    if (!name.endsWith(".class") || name.includes("\\")) continue;
+    const slash = name.indexOf("/");
+    if (slash > 0) jarRoots.add(name.slice(0, slash).toLowerCase());
+  }
+  if (jarRoots.size === 0) return { ok: true, foreignPackages: [] };
+  const foreign = javaPackageRoots(outputDir).filter((root) => !jarRoots.has(root.toLowerCase()));
+  return foreign.length === 0
+    ? { ok: true, foreignPackages: [] }
+    : {
+        ok: false,
+        foreignPackages: foreign,
+        reason: `源码树包根 ${foreign.join(", ")} 不出现在该 jar 的 .class 条目中`,
+      };
 }
 
 /**
@@ -186,8 +375,8 @@ function recordDecompiledDir(jarPath: string, outDir: string, modId: string, cac
 }
 
 export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDecompileResult> {
-  // 0. 参数校验
-  if (!args.jarPath) {
+  // 0. 参数校验（`args` 整个缺失也要走结构化诊断，不许裸抛 TypeError）
+  if (!args?.jarPath) {
     return withAction(
       { found: false, error: "INVALID_INPUT" },
       actionable("INVALID_INPUT", "jarPath 不能为空", ["传入本地 jar 的绝对路径"]),
@@ -224,15 +413,41 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   if (!meta.found) {
     return withAction({ found: false, error: meta.action?.code ?? "NOT_FOUND", jarPath: args.jarPath }, meta.action);
   }
-  const modId = sanitizeCacheSegment(meta.modId ?? "unknown-mod");
-  if (!modId) {
+  // F92：产物目录身份段取自 jar 字节内容（sha512 前 12 位）。先算出来，失败诊断与 outDir 共用一份真值。
+  const jarIdentity = jarContentIdentity(args.jarPath);
+  const identity = resolveModIdSegment(meta.modId);
+  // S5b 外部证据：只在 jar 自身条目里真有那一段时成立（判据与摘要/catalog 同一条，不另写一份）
+  let externalId: { modId: string; evidence: "external" } | null = null;
+  if (!identity.ok && args.externalModId) {
+    const ext = resolveModIdSegment(args.externalModId);
+    if (ext.ok) {
+      let names: string[] = [];
+      try {
+        names = listZipEntries(readFileSync(args.jarPath));
+      } catch {
+        names = [];
+      }
+      if (packagesOwnModId(names, ext.modId)) externalId = { modId: ext.modId, evidence: "external" };
+    }
+  }
+  if (!identity.ok && !externalId) {
     return withAction(
-      { found: false, error: "INVALID_INPUT", jarPath: args.jarPath },
-      actionable("INVALID_INPUT", `modId 非法（含路径穿越或空段）：${meta.modId ?? ""}`, [
-        "modId 只允许 [a-z0-9._-]，且不得为 `.` / `..` 或包含 `..`",
-      ]),
+      { found: false, error: identity.code, jarPath: args.jarPath, jarIdentity },
+      actionable(
+        identity.code,
+        `${identity.message}；已拒绝回落 unknown-mod 目录（jar 内容身份 = sha512 前 12 位 ${jarIdentity}）。`,
+        [
+          "先 analyze_mod_jar 看该 jar 究竟有没有 modId（mods.toml / fabric.mod.json / quilt.mod.json）",
+          ...(args.externalModId
+            ? [`调用方给的外部证据「${args.externalModId}」未通过：它本身非法，或该 jar 自己的条目路径里没有这一段（外部证据不绕过归属）`]
+            : []),
+          "纯库 jar / 资源包本就没有 modId：直接解压读源码，或按库身份走 manifest 外部证据（批处理器 --filter 走的那条路）",
+          "若怀疑工具漏解析，把上面的 sha512 片段与该 jar 一并反馈开发者",
+        ],
+      ),
     );
   }
+  const modId = externalId ? externalId.modId : identity.ok ? identity.modId : "";
   // Forge 的 mods.toml 版本可用 ${file.jarVersion} 占位符（加载时按 jar 文件名解析）。
   // 此处按 FML 语义回退：去 .jar 后缀、取最后一个 '-' 之后的片段。避免把占位符
   // 原样用作输出目录名（含 ".jar" 子串会让 VineFlower 走单文件保存路径而失败）。
@@ -252,7 +467,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
     );
   }
   const cache = ensureCachePaths();
-  const outDir = join(cache.decompiledMods, modId, modVersion);
+  const outDir = join(cache.decompiledMods, modId, `${modVersion}-${jarIdentity}`);
   if (!isPathInside(cache.decompiledMods, outDir)) {
     return withAction(
       { found: false, error: "INVALID_INPUT", jarPath: args.jarPath },
@@ -435,6 +650,26 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   // 5. VineFlower 反编译
   try {
     const vineflower = await ensureResourceJar(VINEFLOWER_DEF, { cacheRoot: cache.root });
+    // F92：先清空目标子树再写。VineFlower 只覆盖同名文件，旧树残留会让本次
+    // javaFileCount / 包名归属把别人的源码算进来；清空不生效时宁可判失败。
+    const cleared = clearDecompileTarget(cache.decompiledMods, outDir);
+    if (cleared.error !== null) {
+      return withAction(
+        {
+          found: false,
+          error: "CACHE_CLEAN_FAILED",
+          modId,
+          modVersion,
+          jarPath: args.jarPath,
+          jarIdentity,
+          outputDir: outDir,
+        },
+        actionable("CACHE_CLEAN_FAILED", `写前清空反编译目标目录失败：${cleared.error}`, [
+          "排查占用：关闭 IDE / 杀毒对该目录的句柄后重试 decompile_mod_jar { jarPath, force: true }",
+          "仍失败则手动删除 decompiled-mods 下的这一个目录；不要复用可能混了树的旧产物",
+        ]),
+      );
+    }
     mkdirSync(outDir, { recursive: true });
     assertVineflowerDiskSpace(outDir, inputJar);
     const r = await runJava(vineflowerCli(vineflower, inputJar, outDir), { cwd: cache.root });

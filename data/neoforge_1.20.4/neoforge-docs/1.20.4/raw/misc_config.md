@@ -1,10 +1,10 @@
 ---
-title: "Miscellaneous"
+title: "Config"
 version: "1.20.4"
 pageId: "misc/config"
 url: "https://docs.neoforged.net/docs/1.20.4/misc/config/"
 platform: "neoforge"
-fetchedAt: "2026-08-06T04:46:27.768Z"
+fetchedAt: "2026-09-12T12:00:06.860Z"
 ---
 # Configuration
 
@@ -87,7 +87,7 @@ The values themselves can be obtained using `ConfigValue#get`. The values are ad
 - **Range Values**
 
 Description: Value must be between the defined bounds
-- Class Type: `Comparable`
+- Class Type: `Comparable<T>`
 - Method Name: `#defineInRange`
 - Additional Components:
 
@@ -121,7 +121,7 @@ A collection of the allowed values the configuration can be
 **List Values**
 
 - Description: Value is a list of entries
-- Class Type: `List`
+- Class Type: `List<T>`
 - Method Name: `#defineList`, `#defineListAllowEmpty` if list can be empty
 - Additional Components:
 
@@ -135,7 +135,7 @@ A validator to make sure a deserialized element from the list is valid
 **Enum Values**
 
 - Description: An enum value in the supplied collection
-- Class Type: `Enum`
+- Class Type: `Enum<T>`
 - Method Name: `#defineEnum`
 - Additional Components:
 

@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "resources/server/recipes/incode"
 url: "https://docs.neoforged.net/docs/1.20.6/resources/server/recipes/incode/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:05.713Z"
+fetchedAt: "2026-09-12T12:01:59.413Z"
 ---
 # Non-Datapack Recipes
 
@@ -14,7 +14,7 @@ Not all recipes are simplistic enough or migrated to using data-driven recipes. 
 
 Brewing is one of the few recipes that still exist in code. Brewing recipes are added as part of a bootstrap within `PotionBrewing` for their containers, container recipes, and potion mixes. To expand upon the existing system, NeoForge allows brewing recipes to be added by listening to `RegisterBrewingRecipesEvent`.
 
-Vanilla provides methods which take in a simple `Holder` and `Item` to create another `Holder` or two container `Item`s to create a new container `Item`. NeoForge provides an implementation that takes in an input ingredient, a catalyst ingredient, and a stack output. An `IBrewingRecipe` instance can also be supplied for a more flexible implemenation.
+Vanilla provides methods which take in a simple `Holder<Potion>` and `Item` to create another `Holder<Potion>` or two container `Item`s to create a new container `Item`. NeoForge provides an implementation that takes in an input ingredient, a catalyst ingredient, and a stack output. An `IBrewingRecipe` instance can also be supplied for a more flexible implemenation.
 
 ### IBrewingRecipe
 

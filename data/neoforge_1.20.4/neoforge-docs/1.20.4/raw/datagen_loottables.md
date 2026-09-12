@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "datagen/loottables"
 url: "https://docs.neoforged.net/docs/1.20.4/datagen/loottables/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:56:51.778Z"
+fetchedAt: "2026-09-12T11:59:48.049Z"
 ---
 # Loot Table Generation
 
@@ -44,7 +44,7 @@ public static void gatherData(GatherDataEvent event) {
 
 ## LootTableSubProvider
 
-Each LootTableProvider.SubProviderEntry takes in a supplied `LootTableSubProvider`, which generates the loot table, for a given `LootContextParamSet`. The `LootTableSubProvider` contains a method which takes in the writer (`BiConsumer`) to generate a table.
+Each LootTableProvider.SubProviderEntry takes in a supplied `LootTableSubProvider`, which generates the loot table, for a given `LootContextParamSet`. The `LootTableSubProvider` contains a method which takes in the writer (`BiConsumer<ResourceLocation, LootTable.Builder>`) to generate a table.
 
 ```java
 

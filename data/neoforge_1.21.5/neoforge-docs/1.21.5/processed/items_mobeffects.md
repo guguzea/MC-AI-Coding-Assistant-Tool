@@ -231,12 +231,18 @@ livingEntity.removeEffect(MobEffects.REGENERATION);
 
 ```java
 
-//POTIONS is a DeferredRegister
-public static final Holder MY_POTION = POTIONS.register("my_potion", registryName -> new Potion(
+//POTIONS is a DeferredRegister<Potion>
+
+public static final Holder<Potion> MY_POTION = POTIONS.register("my_potion", registryName -> new Potion(
+
     // The suffix applied to the potion
+
     registryName.getPath(),
+
     // The effects used by the potion
+
     new MobEffectInstance(MY_MOB_EFFECT, 3600)
+
 ));
 
 ```

@@ -1,10 +1,10 @@
 ---
-title: "Data Storage"
+title: "Attachments"
 version: "1.20.4"
 pageId: "datastorage/attachments"
 url: "https://docs.neoforged.net/docs/1.20.4/datastorage/attachments/"
 platform: "neoforge"
-fetchedAt: "2026-08-06T04:46:23.178Z"
+fetchedAt: "2026-09-12T11:59:52.664Z"
 ---
 # Data Attachments
 

@@ -4,7 +4,7 @@ version: "1.21.3"
 pageId: "items/tools"
 url: "https://docs.neoforged.net/docs/1.21.3/items/tools/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:35.453Z"
+fetchedAt: "2026-09-12T12:03:49.333Z"
 ---
 # Tools
 
@@ -123,10 +123,11 @@ public static final DeferredItem<SwordItem> COPPER_SWORD = ITEMS.registerItem(
 
 public static final DeferredItem<AxeItem> COPPER_AXE = ITEMS.registerItem("copper_axe", props -> new AxeItem(...));
 
-public static final DeferredItem
-COPPER_PICKAXE = ITEMS.registerItem("copper_pickaxe", props -> new PickaxeItem(...));
-public static final DeferredItem COPPER_SHOVEL = ITEMS.registerItem("copper_shovel", props -> new ShovelItem(...));
-public static final DeferredItem COPPER_HOE = ITEMS.registerItem("copper_hoe", props -> new HoeItem(...));
+public static final DeferredItem<PickaxeItem> COPPER_PICKAXE = ITEMS.registerItem("copper_pickaxe", props -> new PickaxeItem(...));
+
+public static final DeferredItem<ShovelItem> COPPER_SHOVEL = ITEMS.registerItem("copper_shovel", props -> new ShovelItem(...));
+
+public static final DeferredItem<HoeItem> COPPER_HOE = ITEMS.registerItem("copper_hoe", props -> new HoeItem(...));
 
 ```
 

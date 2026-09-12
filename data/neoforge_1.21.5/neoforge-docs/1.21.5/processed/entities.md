@@ -154,7 +154,6 @@ An entity's `MobCategory` determines some properties for the entity, which are r
 
 | Name | Spawn Cap | Examples |
 | --- | --- | --- |
-| Name | Spawn Cap | Examples |
 | MONSTER | 70 | Various monsters |
 | CREATURE | 10 | Various animals |
 | AMBIENT | 15 | Bats |
@@ -422,7 +421,6 @@ Vanilla defines the following four `EntityAttachment`s:
 
 | Name | Default | Usages |
 | --- | --- | --- |
-| Name | Default | Usages |
 | PASSENGER | Center X/top Y/center Z of the hitbox | Rideable entities, e.g. horses, to define where passengers appear |
 | VEHICLE | Center X/bottom Y/center Z of the hitbox | All entities, to define where they appear when riding another entity |
 | NAME_TAG | Center X/top Y/center Z of the hitbox | Define where the name tag of the entity appears, if applicable |
@@ -433,7 +431,7 @@ Vanilla defines the following four `EntityAttachment`s:
 
 `PASSENGER` and `VEHICLE` are related in that they are used in the same context. First, `PASSENGER` is applied to position the rider. Then, `VEHICLE` is applied on the rider.
 
-Every attachment can be thought of as a mapping from `EntityAttachment` to `List`. The amount of points actually used depends on the consuming system. For example, boats and camels will use two `PASSENGER` points, while entities like horses or minecarts will only use one `PASSENGER` point.
+Every attachment can be thought of as a mapping from `EntityAttachment` to `List<Vec3>`. The amount of points actually used depends on the consuming system. For example, boats and camels will use two `PASSENGER` points, while entities like horses or minecarts will only use one `PASSENGER` point.
 
 `EntityType.Builder` also has some helpers related to `EntityAttachment`s:
 

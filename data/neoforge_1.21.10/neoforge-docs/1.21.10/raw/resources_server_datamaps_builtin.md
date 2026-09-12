@@ -4,7 +4,7 @@ version: "1.21.10"
 pageId: "resources/server/datamaps/builtin"
 url: "https://docs.neoforged.net/docs/1.21.10/resources/server/datamaps/builtin/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:01:21.995Z"
+fetchedAt: "2026-09-12T12:08:20.473Z"
 ---
 # Built-In Data Maps
 

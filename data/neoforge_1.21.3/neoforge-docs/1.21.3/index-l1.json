@@ -64,7 +64,7 @@
       {
         "title": "Creating and Registering Block Entities",
         "level": 2,
-        "summary": "Like entities and unlike blocks, the BlockEntity class represents the block entity instance, not the registered singleton object. The singleton is expressed through the BlockEntityType class instea..."
+        "summary": "Like entities and unlike blocks, the BlockEntity class represents the block entity instance, not the registered singleton object. The singleton is expressed through the BlockEntityType<?> class ins..."
       },
       {
         "title": "Storing Data",
@@ -202,7 +202,7 @@
       {
         "title": "Implementing Blockstates",
         "level": 2,
-        "summary": "To implement a blockstate property, in your block class, create or reference a public static final Property constant. While you are free to make your own Property implementations, the vanilla code ..."
+        "summary": "To implement a blockstate property, in your block class, create or reference a public static final Property<?> constant. While you are free to make your own Property<?> implementations, the vanilla..."
       },
       {
         "title": "Using Blockstates",
@@ -354,7 +354,7 @@
       {
         "title": "Building and Testing Your Mod",
         "level": 2,
-        "summary": "To build your mod, run gradlew build. This will output a file in build/libs with the name -.jar. ` and  are properties set by the build.gradle and default to the mod_id and mod_version values in th..."
+        "summary": "To build your mod, run gradlew build. This will output a file in build/libs with the name <archivesBaseName>-<version>.jar. <archivesBaseName> and <version> are properties set by the build.gradle a..."
       },
       {
         "title": "Server Testing",
@@ -422,7 +422,7 @@
       {
         "title": "Dependency Configurations",
         "level": 3,
-        "summary": "Mods can specify their dependencies, which are checked by NeoForge before loading the mods. These configurations are created using the array of tables [[dependencies.]], where modid is the identifi..."
+        "summary": "Mods can specify their dependencies, which are checked by NeoForge before loading the mods. These configurations are created using the array of tables [[dependencies.<modid>]], where modid is the i..."
       },
       {
         "title": "Mod Entrypoints",
@@ -565,7 +565,7 @@
       {
         "title": "Basic Container Implementation",
         "level": 2,
-        "summary": "Containers can be implemented in any way you like, so long as you satisfy the dictated methods (as with any other interface in Java). However, it is common to use a NonNullList with a fixed length ..."
+        "summary": "Containers can be implemented in any way you like, so long as you satisfy the dictated methods (as with any other interface in Java). However, it is common to use a NonNullList<ItemStack> with a fi..."
       },
       {
         "title": "SimpleContainer",
@@ -787,7 +787,7 @@
       {
         "title": "Implementing a configuration task",
         "level": 2,
-        "summary": "A configuration task is a simple interface: ICustomConfigurationTask. This interface has two methods: void run(Consumer sender);, and ConfigurationTask.Type type(); which returns the type of the co..."
+        "summary": "A configuration task is a simple interface: ICustomConfigurationTask. This interface has two methods: void run(Consumer<CustomPacketPayload> sender);, and ConfigurationTask.Type type(); which retur..."
       },
       {
         "title": "Acknowledging a configuration task",
@@ -1025,7 +1025,7 @@
       {
         "title": "Language Files",
         "level": 2,
-        "summary": "Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at assets//lang/language_name.json. For example, US English translations for ..."
+        "summary": "Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at assets/<modid>/lang/language_name.json. For example, US English translatio..."
       },
       {
         "title": "Translation Keys",
@@ -1084,7 +1084,7 @@
       {
         "title": "SimpleCriterionTrigger",
         "level": 3,
-        "summary": "The SimpleCriterionTrigger implementation has two purposes: supplying a method to check trigger instances and run attached listeners on success, and specifying a codec to serialize the trigger inst..."
+        "summary": "The SimpleCriterionTrigger<T> implementation has two purposes: supplying a method to check trigger instances and run attached listeners on success, and specifying a codec to serialize the trigger i..."
       },
       {
         "title": "Calling Criterion Triggers",
@@ -1122,7 +1122,7 @@
       {
         "title": "Applying Biome Modifiers",
         "level": 2,
-        "summary": "To have NeoForge load a biome modifier JSON file into the game, the file will need to be under data//neoforge/biome_modifier/.json folder in the mod's resources, or in a Datapack. Then, once NeoFor..."
+        "summary": "To have NeoForge load a biome modifier JSON file into the game, the file will need to be under data/<modid>/neoforge/biome_modifier/<path>.json folder in the mod's resources, or in a Datapack. Then..."
       },
       {
         "title": "Built-in Biome Modifiers",
@@ -1192,7 +1192,7 @@
       {
         "title": "Datagenning Biome Modifiers",
         "level": 2,
-        "summary": "A BiomeModifier JSON can be created through data generation by passing a RegistrySetBuilder to DatapackBuiltinEntriesProvider. The JSON will be placed at data//neoforge/biome_modifier/.json."
+        "summary": "A BiomeModifier JSON can be created through data generation by passing a RegistrySetBuilder to DatapackBuiltinEntriesProvider. The JSON will be placed at data/<modid>/neoforge/biome_modifier/<path>..."
       },
       {
         "title": "Targeting Biomes That May Not Exist",
@@ -1972,7 +1972,7 @@
       {
         "title": "DataComponentType",
         "level": 2,
-        "summary": "Each data component has an associated DataComponentType, where T is the component value type. The DataComponentType represents a key to reference the stored component value along with some codecs t..."
+        "summary": "Each data component has an associated DataComponentType<T>, where T is the component value type. The DataComponentType represents a key to reference the stored component value along with some codec..."
       },
       {
         "title": "Creating Custom Data Components",
@@ -2203,7 +2203,7 @@
       {
         "title": "The Test Method",
         "level": 3,
-        "summary": "A Game Test method is a Consumer reference, meaning it takes in a GameTestHelper and returns nothing. For a Game Test method to be recognized, it must have a @GameTest annotation:"
+        "summary": "A Game Test method is a Consumer<GameTestHelper> reference, meaning it takes in a GameTestHelper and returns nothing. For a Game Test method to be recognized, it must have a @GameTest annotation:"
       },
       {
         "title": "Generated Test Methods",
@@ -2749,7 +2749,7 @@
       {
         "title": "Level",
         "level": 3,
-        "summary": "- playSeededSound(Player player, double x, double y, double z, Holder soundEvent, SoundSource soundSource, float volume, float pitch, long seed)"
+        "summary": "- playSeededSound(Player player, double x, double y, double z, Holder<SoundEvent> soundEvent, SoundSource soundSource, float volume, float pitch, long seed)"
       },
       {
         "title": "ClientLevel",
@@ -2915,7 +2915,7 @@
       {
         "title": "File Location",
         "level": 2,
-        "summary": "Data maps are loaded from a JSON file located at /data_maps///.json, where:"
+        "summary": "Data maps are loaded from a JSON file located at <mapNamespace>/data_maps/<registryNamespace>/<registryPath>/<mapPath>.json, where:"
       },
       {
         "title": "JSON Structure",
@@ -3073,12 +3073,12 @@
       {
         "title": "ConditionalEffect",
         "level": 3,
-        "summary": "Wrapping the type in ConditionalEffect allows the enchantment effect component to optionally take effect based on a given LootContext."
+        "summary": "Wrapping the type in ConditionalEffect<?> allows the enchantment effect component to optionally take effect based on a given LootContext."
       },
       {
         "title": "Enchantment Data Generation",
         "level": 2,
-        "summary": "Enchantment JSON files can be created automatically using the data generation system by passing a RegistrySetBuilder into DatapackBuiltInEntriesProvider. The JSON will be placed in /src/generated/d..."
+        "summary": "Enchantment JSON files can be created automatically using the data generation system by passing a RegistrySetBuilder into DatapackBuiltInEntriesProvider. The JSON will be placed in <project root>/s..."
       }
     ]
   },
@@ -3150,7 +3150,7 @@
       "deferredregister",
       "registry"
     ],
-    "firstParagraph": "Loot tables are data files that are used to define randomized loot drops. A loot table can be rolled, returning a (potentially empty) list of item stacks. The output of this process depends on (pseudo-)randomness. Loot tables are located at `data//loot_table/.json`. For example, the loot table `mine",
+    "firstParagraph": "Loot tables are data files that are used to define randomized loot drops. A loot table can be rolled, returning a (potentially empty) list of item stacks. The output of this process depends on (pseudo-)randomness. Loot tables are located at `data/<mod_id>/loot_table/<name>.json`. For example, the lo",
     "sections": [
       {
         "title": "Loot Entry",
@@ -3170,7 +3170,7 @@
       {
         "title": "Loot Parameters",
         "level": 2,
-        "summary": "A loot parameter, known internally as a ContextKey, is a parameter provided to a loot table when rolled, where T is the type of the provided parameter, for example BlockPos or Entity. They can be u..."
+        "summary": "A loot parameter, known internally as a ContextKey<T>, is a parameter provided to a loot table when rolled, where T is the type of the provided parameter, for example BlockPos or Entity. They can b..."
       },
       {
         "title": "Entity Targets",
@@ -3215,7 +3215,7 @@
       {
         "title": "EntityLootSubProvider",
         "level": 3,
-        "summary": "Similar to BlockLootSubProvider, EntityLootSubProvider provides many helpers for entity loot table generation. Also similar to BlockLootSubProvider, we must provide a Stream> of entities known to t..."
+        "summary": "Similar to BlockLootSubProvider, EntityLootSubProvider provides many helpers for entity loot table generation. Also similar to BlockLootSubProvider, we must provide a Stream<EntityType<?>> of entit..."
       }
     ]
   },
@@ -3259,7 +3259,7 @@
       {
         "title": "Custom Loot Functions",
         "level": 2,
-        "summary": "To get started, we create our own class extending LootItemFunction. LootItemFunction extends BiFunction, so what we want is to use the existing item stack and the loot context to return a new, modi..."
+        "summary": "To get started, we create our own class extending LootItemFunction. LootItemFunction extends BiFunction<ItemStack, LootContext, ItemStack>, so what we want is to use the existing item stack and the..."
       }
     ]
   },
@@ -3884,7 +3884,7 @@
       "data-components",
       "registry"
     ],
-    "firstParagraph": "`Ingredient`s are used in [recipes](/docs/1.21.3/resources/server/recipes/) to check whether a given [ItemStack](/docs/1.21.3/items/#itemstacks) is a valid input for the recipe. For this purpose, `Ingredient` implements `Predicate`, and `#test` can be called to confirm if a given `ItemStack` matches",
+    "firstParagraph": "`Ingredient`s are used in [recipes](/docs/1.21.3/resources/server/recipes/) to check whether a given [ItemStack](/docs/1.21.3/items/#itemstacks) is a valid input for the recipe. For this purpose, `Ingredient` implements `Predicate<ItemStack>`, and `#test` can be called to confirm if a given `ItemSta",
     "sections": [
       {
         "title": "Built-In Ingredient Types",
@@ -3932,7 +3932,7 @@
       {
         "title": "Using Tags",
         "level": 2,
-        "summary": "To reference tags in code, you must create a TagKey, where T is the type of tag (Block, Item, EntityType, etc.), using a registry key and a resource location:"
+        "summary": "To reference tags in code, you must create a TagKey<T>, where T is the type of tag (Block, Item, EntityType<?>, etc.), using a registry key and a resource location:"
       },
       {
         "title": "Tags for Static Registries During Bootstrap",

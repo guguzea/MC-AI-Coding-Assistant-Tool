@@ -1,12 +1,12 @@
 # Loot Tables
 
-Loot tables are data files that are used to define randomized loot drops. A loot table can be rolled, returning a (potentially empty) list of item stacks. The output of this process depends on (pseudo-)randomness. Loot tables are located at `data//loot_table/.json`. For example, the loot table `minecraft:blocks/dirt`, used by the dirt block, is located at `data/minecraft/loot_table/blocks/dirt.json`.
+Loot tables are data files that are used to define randomized loot drops. A loot table can be rolled, returning a (potentially empty) list of item stacks. The output of this process depends on (pseudo-)randomness. Loot tables are located at `data/<mod_id>/loot_table/<name>.json`. For example, the loot table `minecraft:blocks/dirt`, used by the dirt block, is located at `data/minecraft/loot_table/blocks/dirt.json`.
 
 Minecraft uses loot tables at various points in the game, including [block](/docs/1.21.8/blocks/) drops, [entity](/docs/1.21.8/entities/) drops, chest loot, fishing loot, and many others. How a loot table is referenced depends on the context:
 
-- Every block will, by default, receive an associated loot table, located at `:blocks/`. This can be disabled by calling `#noLootTable` on the block's `Properties`, resulting in no loot table being created and the block dropping nothing; this is mainly done by air-like or technical blocks.
-- Every entity that does not call `EntityType.Builder#noLootTable` (which is typically entities in `MobCategory#MISC`) will, by default, receive an associated loot table, located at `:entities/`. This can be changed by overriding `#getLootTable`. For example, sheep use this to roll different loot tables depending on their wool color.
-- Chests in structures specify their loot table in their block entity data. Minecraft stores all chest loot tables in `minecraft:chests/`; it is recommended, but not required to follow this practice in mods.
+- Every block will, by default, receive an associated loot table, located at `<block_namespace>:blocks/<block_name>`. This can be disabled by calling `#noLootTable` on the block's `Properties`, resulting in no loot table being created and the block dropping nothing; this is mainly done by air-like or technical blocks.
+- Every entity that does not call `EntityType.Builder#noLootTable` (which is typically entities in `MobCategory#MISC`) will, by default, receive an associated loot table, located at `<entity_namespace>:entities/<entity_name>`. This can be changed by overriding `#getLootTable`. For example, sheep use this to roll different loot tables depending on their wool color.
+- Chests in structures specify their loot table in their block entity data. Minecraft stores all chest loot tables in `minecraft:chests/<chest_name>`; it is recommended, but not required to follow this practice in mods.
 - The loot tables for gift items that villagers may throw at players after a raid are defined in the [neoforge:raid_hero_gifts data map](/docs/1.21.8/resources/server/datamaps/builtin#neoforgeraid_hero_gifts).
 - Other loot tables, for example the fishing loot table, are retrieved when needed from `level.getServer().reloadableRegistries().getLootTable(lootTableKey)`. A list of all vanilla loot table locations can be found in `BuiltInLootTables`.
 
@@ -81,7 +81,7 @@ Simply a constant value, without a specified type. Created through `LevelBasedVa
 - `minecraft:levels_squared`: Squares the enchantment value, and then adds an optional base value to it. Created through `new LevelBasedValue.LevelsSquared`.
 - `minecraft:fraction`: Accepts two other `LevelBasedValue`s, using them to create a fraction. Created through `new LevelBasedValue.Fraction`.
 - `minecraft:clamped`: Accepts another `LevelBasedValue`, alongside min and max values. Calculates the value using the other `LevelBasedValue` and clamps the result. Created through `new LevelBasedValue.Clamped`.
-- `minecraft:lookup`: Accepts a `List` and a fallback `LevelBasedValue`. Looks up the value to use in the list (level 1 is the first element in the list, level 2 is the second element, etc.), and uses the fallback value if the value for a level is missing. Created through `LevelBasedValue#lookup`.
+- `minecraft:lookup`: Accepts a `List<Float>` and a fallback `LevelBasedValue`. Looks up the value to use in the list (level 1 is the first element in the list, level 2 is the second element, etc.), and uses the fallback value if the value for a level is missing. Created through `LevelBasedValue#lookup`.
 
 </li>
 </ul>
@@ -90,7 +90,7 @@ Modders can also register [custom number providers](/docs/1.21.8/resources/serve
 
 ## Loot Parameters
 
-A loot parameter, known internally as a `ContextKey`, is a parameter provided to a loot table when rolled, where `T` is the type of the provided parameter, for example `BlockPos` or `Entity`. They can be used by [loot conditions](/docs/1.21.8/resources/server/loottables/lootconditions) and [loot functions](/docs/1.21.8/resources/server/loottables/lootfunctions). For example, the `minecraft:killed_by_player` loot condition checks for the presence of the `minecraft:player` parameter.
+A loot parameter, known internally as a `ContextKey<T>`, is a parameter provided to a loot table when rolled, where `T` is the type of the provided parameter, for example `BlockPos` or `Entity`. They can be used by [loot conditions](/docs/1.21.8/resources/server/loottables/lootconditions) and [loot functions](/docs/1.21.8/resources/server/loottables/lootfunctions). For example, the `minecraft:killed_by_player` loot condition checks for the presence of the `minecraft:player` parameter.
 
 Minecraft provides the following loot parameters:
 
@@ -107,7 +107,7 @@ Minecraft provides the following loot parameters:
 - `minecraft:direct_attacking_entity`: A direct attacking entity associated with the loot table. For example, if the attacking entity were a skeleton, the direct attacking entity would be the arrow. Access via `LootContextParams.DIRECT_ATTACKING_ENTITY`.
 - `minecraft:last_damage_player`: A player associated with the loot table, typically the player that last attacked the killed entity, even if the player kill was indirect (for example: the player tapped the entity, and it was then killed by spikes). Used e.g. for player-kill-only drops. Access via `LootContextParams.LAST_DAMAGE_PLAYER`.
 
-Custom loot parameters can be created by calling `new ContextKey` with the desired id. Since they are merely resource location wrappers, they do not need to be registered.
+Custom loot parameters can be created by calling `new ContextKey<T>` with the desired id. Since they are merely resource location wrappers, they do not need to be registered.
 
 ### Entity Targets
 
@@ -122,7 +122,7 @@ For example, the `minecraft:entity_properties` loot condition accepts an entity 
 
 ### Loot Parameter Sets
 
-Loot parameter sets, also known as loot table types and known as `ContextKeySet`s in code, are a collection of required and optional loot parameters. Despite their name, they are not `Set`s (not even `Collection`s). Rather, they are a wrapper around two `Set>`s, one holding the required parameters (`#required`) and one holding the optional parameters (`#allowed`). They are used to validate that users of loot parameters only use the parameters that can be expected to be available, and to verify that the required parameters are present when rolling a table. Besides that, they are also used in advancement and enchantment logic.
+Loot parameter sets, also known as loot table types and known as `ContextKeySet`s in code, are a collection of required and optional loot parameters. Despite their name, they are not `Set`s (not even `Collection`s). Rather, they are a wrapper around two `Set<ContextKey<?>>`s, one holding the required parameters (`#required`) and one holding the optional parameters (`#allowed`). They are used to validate that users of loot parameters only use the parameters that can be expected to be available, and to verify that the required parameters are present when rolling a table. Besides that, they are also used in advancement and enchantment logic.
 
 Vanilla provides the following loot parameter sets (required parameters are **bold**, optional parameters are *in italics*; the in-code names are constants in `LootContextParamSets`):
 
@@ -554,7 +554,7 @@ new LootTableProvider(output, Set.of(), List.of(new SubProviderEntry(
 
 ### EntityLootSubProvider
 
-Similar to `BlockLootSubProvider`, `EntityLootSubProvider` provides many helpers for entity loot table generation. Also similar to `BlockLootSubProvider`, we must provide a `Stream>` of entities known to the provider (instead of the `Iterable` used before). Overall, our implementation looks very similar to our `BlockLootSubProvider`, but with every mentioned of blocks swapped out for entity types:
+Similar to `BlockLootSubProvider`, `EntityLootSubProvider` provides many helpers for entity loot table generation. Also similar to `BlockLootSubProvider`, we must provide a `Stream<EntityType<?>>` of entities known to the provider (instead of the `Iterable<Block>` used before). Overall, our implementation looks very similar to our `BlockLootSubProvider`, but with every mentioned of blocks swapped out for entity types:
 
 ```java
 

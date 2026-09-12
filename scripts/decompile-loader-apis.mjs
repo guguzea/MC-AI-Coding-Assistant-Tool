@@ -370,16 +370,32 @@ function rebuildCatalogFromDisk() {
       });
       const next = dedupeLoaderClasses(rewritten);
       const classCount = next.length;
-      const fqcnIndexCount = (j.fqcnIndex || []).length;
+      // F61①：index 是集合不是条目清单 —— sources jar 同时含 Foo.class 与 Foo.java 时同一 FQCN 记两遍
+      //（实测 1.21.1-fabric-api：index 1062 / java 文件 1061，多的就是重复的 package-info）。
+      // 「没有索引」的表示法是**键不存在**，不是空数组（test-core 的 hygiene 规则把空数组判为不一致），
+      // 所以只在数组已存在时去重，绝不新建键。
+      const hadIdx = Array.isArray(j.fqcnIndex);
+      const index = hadIdx ? [...new Set(j.fqcnIndex.filter(Boolean))] : undefined;
+      const fqcnIndexCount = (index ?? []).length;
+      // F61②：档名里的平台就是这份摘要所属的加载器。analyzeModJar 只看 mods.toml，
+      // NeoForge 1.20.4 仍写 modLoader="javafml" ⇒ 曾记成 loaders:["forge"]，与同文件 modId=neoforge 自相矛盾。
+      const LOADER_NAMES = new Set(["forge", "neoforge", "fabric", "quilt", "liteloader", "rift", "modloader"]);
+      const plat = key.split("-").pop() ?? "";
+      const loaders = LOADER_NAMES.has(plat) && !(j.loaders ?? []).includes(plat) ? [plat] : j.loaders;
       const changed =
         next.length !== j.classes.length ||
         j.classCount !== classCount ||
+        (hadIdx && index.length !== j.fqcnIndex.length) ||
         j.fqcnIndexCount !== fqcnIndexCount ||
+        loaders !== j.loaders ||
         rewritten.some((c, i) => c.fqcn !== j.classes[i]?.fqcn || c.parseError !== j.classes[i]?.parseError);
       j.classes = next;
       j.classCount = classCount;
+      if (hadIdx) j.fqcnIndex = index;
       j.fqcnIndexCount = fqcnIndexCount;
-      if (changed) writeJsonPreservingEol(jsonPath, j);
+      j.loaders = loaders;
+      if (changed && WRITE) writeJsonPreservingEol(jsonPath, j);
+      else if (changed) console.log(`[dry-run] 摘要本会被规范化：${name}（classes/classCount/fqcnIndex/loaders）`);
     }
     const file = j.file || key;
     present.add(String(file).replace(/\.jar$/i, ""));

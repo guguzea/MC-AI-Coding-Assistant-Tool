@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "advanced/accesstransformers"
 url: "https://docs.neoforged.net/docs/advanced/accesstransformers/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:41:19.999Z"
+fetchedAt: "2026-09-12T12:07:05.524Z"
 ---
 # Access Transformers
 
@@ -162,12 +162,12 @@ Targeting methods require a special syntax to denote the method parameters and r
 
 ```text
 
-<access modifier> <fully qualified class name> <method name>(
-)
+<access modifier> <fully qualified class name> <method name>(<parameter types>)<return type>
 
 ```
 
-Specifying Types
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="specifying-types">Specifying Types</h5>
+
 Also called "descriptors": see the [Java Virtual Machine Specification, SE 21, sections 4.3.2 and 4.3.3](https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-4.html#jvms-4.3.2) for more technical details.
 
 - `B` - `byte`, a signed byte
@@ -190,12 +190,12 @@ Example: `[[S` refers to `short[][]`
 </li>
 <li class="">`(` - references a method descriptor, parameters should be supplied here or nothing if no parameters are present<!-- -->
 
-- Example: `(I)Z` refers to a method that requires an integer argument and returns a boolean
+- Example: `<method>(I)Z` refers to a method that requires an integer argument and returns a boolean
 
 </li>
 <li class="">`V` - indicates a method returns no value, can only be used at the end of a method descriptor<!-- -->
 
-- Example: `()V` refers to a method that has no arguments and returns nothing
+- Example: `<method>()V` refers to a method that has no arguments and returns nothing
 
 </li>
 </ul>

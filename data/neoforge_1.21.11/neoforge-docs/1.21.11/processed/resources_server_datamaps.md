@@ -8,12 +8,12 @@ NeoForge provides various [built-in data maps](/docs/1.21.11/resources/server/da
 
 ## File Location
 
-Data maps are loaded from a JSON file located at `/data_maps///.json`, where:
+Data maps are loaded from a JSON file located at `<mapNamespace>/data_maps/<registryNamespace>/<registryPath>/<mapPath>.json`, where:
 
-- `` is the namespace of the ID of the data map,
-- `` is the path of the ID of the data map,
-- `` is the namespace of the ID of the registry (omitted if it is `minecraft`), and
-- `` is the path of the ID of the registry.
+- `<mapNamespace>` is the namespace of the ID of the data map,
+- `<mapPath>` is the path of the ID of the data map,
+- `<registryNamespace>` is the namespace of the ID of the registry (omitted if it is `minecraft`), and
+- `<registryPath>` is the path of the ID of the registry.
 
 Examples:
 
@@ -304,7 +304,7 @@ This process of course also works for all data maps provided by NeoForge.
 
 Advanced data maps are data maps that use `AdvancedDataMapType` instead of the standard `DataMapType` (of which `AdvancedDataMapType` is a subclass). They have some extra functionality, namely the ability to specify custom mergers and custom removers. Implementing this is highly recommended for data maps whose values are collections or collection-likes, such as `List`s or `Map`s.
 
-While `DataMapType` has two generics `R` (registry type) and `T` (data map value type), `AdvancedDataMapType` has one more: `VR extends DataMapValueRemover`. This generic allows for datagenning removers with proper type safety.
+While `DataMapType` has two generics `R` (registry type) and `T` (data map value type), `AdvancedDataMapType` has one more: `VR extends DataMapValueRemover<R, T>`. This generic allows for datagenning removers with proper type safety.
 
 `AdvancedDataMapType`s are created using `AdvancedDataMapType#builder()` instead of `DataMapType#builder()`, returning an `AdvancedDataMapType.Builder`. This builder has two extra methods `#remover` and `#merger` for specifying removers and mergers (see below), respectively. All other functionality, including syncing, remains the same.
 
@@ -312,7 +312,7 @@ While `DataMapType` has two generics `R` (registry type) and `T` (data map value
 
 A merger can be used to handle conflicts between multiple data packs that attempt to add a value for the same object. The default merger (`DataMapValueMerger#defaultMerger`) will overwrite existing values (from e.g. data packs with lower priority) with new values, so a custom merger is necessary if this isn't the desired behavior.
 
-The merger will be given the two conflicting values, as well as the objects the values are being attached to (as an `Either, ResourceKey>`, since values can be attached to all objects in a tag or a single object) and the object's owning registry, and should return the value that should actually be attached. Generally, mergers should simply merge and not perform overwrites if possible (i.e. only if merging the normal way doesn't work). If a data pack wants to bypass the merger, it should specify the `replace` field on the object (see [Adding Values](#adding-values)).
+The merger will be given the two conflicting values, as well as the objects the values are being attached to (as an `Either<TagKey<R>, ResourceKey<R>>`, since values can be attached to all objects in a tag or a single object) and the object's owning registry, and should return the value that should actually be attached. Generally, mergers should simply merge and not perform overwrites if possible (i.e. only if merging the normal way doesn't work). If a data pack wants to bypass the merger, it should specify the `replace` field on the object (see [Adding Values](#adding-values)).
 
 Let's imagine a scenario where we have a data map that adds integers to items. We could then simply resolve conflicts by adding both values, like so:
 
@@ -363,7 +363,7 @@ Similar to mergers for more complex data, removers can be used for proper handli
 
 The codec passed to the builder (read on) will be used to decode remover instances. The remover will then be passed the value currently attached to the object and its source, and should return an `Optional` of the value to replace the old value. Alternatively, an empty `Optional` will lead to the value being actually removed.
 
-Consider the following example of a remover that will remove a value with a specific key from a `Map`-based data map:
+Consider the following example of a remover that will remove a value with a specific key from a `Map<String, String>`-based data map:
 
 ```java
 

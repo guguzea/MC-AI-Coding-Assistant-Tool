@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "resources/client/textures"
 url: "https://docs.neoforged.net/docs/1.20.6/resources/client/textures/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:00.124Z"
+fetchedAt: "2026-09-12T12:01:50.514Z"
 ---
 # Textures
 

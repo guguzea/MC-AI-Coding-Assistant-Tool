@@ -1,10 +1,10 @@
 ---
-title: "Concepts"
+title: "Events"
 version: "1.20.6"
 pageId: "concepts/events"
 url: "https://docs.neoforged.net/docs/1.20.6/concepts/events/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:54:03.391Z"
+fetchedAt: "2026-09-12T12:00:53.749Z"
 ---
 # Events
 

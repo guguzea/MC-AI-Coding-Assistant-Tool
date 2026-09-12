@@ -4,11 +4,11 @@ version: "26.1"
 pageId: "resources/server/loottables/lootconditions"
 url: "https://docs.neoforged.net/docs/resources/server/loottables/lootconditions/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:58:21.570Z"
+fetchedAt: "2026-09-12T12:08:29.512Z"
 ---
 # Loot Conditions
 
-Loot conditions can be used to check whether a [loot entry](/docs/resources/server/loottables/#loot-entry) or [loot pool](/docs/resources/server/loottables/#loot-pool) should be used in the current context. In both cases, a list of conditions is defined; the entry or pool is only used if all conditions pass. During datagen, they are added to a `LootPoolEntryContainer.Builder` or `LootPool.Builder` by calling `#when` with an instance of the desired condition. This article will outline the available loot conditions. To create your own loot conditions, see [Custom Loot Conditions](/docs/resources/server/loottables/custom#custom-loot-conditions).
+Loot conditions can be used to check whether a [loot entry](/docs/resources/server/loottables/#loot-entry) or [loot pool](/docs/resources/server/loottables/#loot-pool) should be used in the current context. In both cases, a list of conditions is defined; the entry or pool is only used if all conditions pass. During datagen, they are added to a `LootPoolEntryContainer.Builder<?>` or `LootPool.Builder` by calling `#when` with an instance of the desired condition. This article will outline the available loot conditions. To create your own loot conditions, see [Custom Loot Conditions](/docs/resources/server/loottables/custom#custom-loot-conditions).
 
 ## minecraft:inverted
 
@@ -212,18 +212,28 @@ This condition checks if a given `WorldClock` is within an `IntRange`. Optionall
 
     // The clock instance to check the time of.
 
-    // Points to a registered clock at `data/<namespace>/world_clock/
-.json`.
+    // Points to a registered clock at `data/<namespace>/world_clock/<path>.json`.
+
     "clock": "minecraft:overworld",
+
     // Optional, can be omitted. If omitted, no modulo operation will take place.
+
     // We use 24000 here, which is the length of one in-game day/night cycle.
+
     "period": 24000,
+
     // A range with min/max values. This example checks if the time is between 0 and 12000.
+
     // Combined with the modulo operand of 24000 specified above, this example checks if it is currently daytime.
+
     "value": {
+
         "min": 0,
+
         "max": 12000
+
     }
+
 }
 
 ```

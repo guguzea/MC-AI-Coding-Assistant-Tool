@@ -4,7 +4,7 @@ version: "1.21.11"
 pageId: "blockentities/ber"
 url: "https://docs.neoforged.net/docs/1.21.11/blockentities/ber/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:01:33.816Z"
+fetchedAt: "2026-09-12T12:08:42.159Z"
 ---
 # BlockEntityRenderer
 

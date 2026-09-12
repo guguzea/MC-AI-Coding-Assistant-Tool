@@ -20,15 +20,16 @@
  */
 import { createHash } from "node:crypto";
 import {
-  copyFileSync,
   existsSync,
   mkdirSync,
   readFileSync,
   readdirSync,
+  renameSync,
   rmSync,
   statSync,
+  writeFileSync,
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 import {
@@ -269,12 +270,34 @@ function discoverDocs(dataRoot, target) {
   return { processedDir, docs: dedupedDocs, skipped, l0Count: l0.length, versionDir };
 }
 
+export const dropLedger = { docs: 0, chunks: 0, chars: 0, keptShortest: 0, rows: [] };
+
 function collectChunks(processedDir, docs) {
   const rows = [];
   for (const d of docs) {
     const md = readFileSync(join(processedDir, `${d.stem}.md`), "utf8");
     const chunks = chunkMarkdown(md);
     const filtered = chunks.filter((c) => c.text.length >= MIN_CONTENT_CHARS);
+    const dropped = chunks.length - filtered.length;
+    if (dropped > 0) {
+      dropLedger.docs++;
+      dropLedger.chunks += dropped;
+      dropLedger.chars += chunks
+        .filter((c) => c.text.length < MIN_CONTENT_CHARS)
+        .reduce((n, c) => n + c.text.length, 0);
+      if (dropLedger.rows.length < 4000) {
+        dropLedger.rows.push({
+          doc: d.id,
+          dropped,
+          total: chunks.length,
+          shortest: Math.min(...chunks.map((c) => c.text.length)),
+        });
+      }
+    }
+    if (filtered.length === 0 && chunks.length > 0) {
+      // 整页都没有长块：保最短的一块，短页不至于变成 0 chunk
+      dropLedger.keptShortest++;
+    }
     const effective = filtered.length > 0 ? filtered : chunks.slice(0, 1);
     effective.forEach((c, i) => {
       rows.push({
@@ -353,25 +376,57 @@ async function buildIndex(dbPath, docs, chunks, embedder, extraMeta = {}) {
   }
   db.exec("COMMIT");
 
-  db.close();
-  copyFileSync(tmpPath, dbPath);
+  const bak = `${dbPath}.old`;
+  let movedAside = false;
   try {
-    rmSync(tmpPath);
-  } catch {
-    /* Windows 偶发占用 tmp，可忽略 */
+    db.close();
+    // 目标库先换成 .old 再改名顶上：中途失败时旧库还在，不会把可用索引换成半截
+    if (existsSync(dbPath)) {
+      renameSync(dbPath, bak);
+      movedAside = true;
+    }
+    try {
+      renameSync(tmpPath, dbPath);
+    } catch (err) {
+      if (movedAside && !existsSync(dbPath)) renameSync(bak, dbPath); // 回滚：旧库放回原位
+      throw err;
+    }
+  } finally {
+    // 两个临时产物都必须在这里收掉。以前只清 tmp，.old 漏在 finally 之外，
+    // 15 个库重建后留下 3 个 db.sqlite.old，正是本故事要消灭的那类残留。
+    for (const leftover of [tmpPath, movedAside ? bak : null]) {
+      if (!leftover || !existsSync(leftover)) continue;
+      try {
+        rmSync(leftover);
+      } catch (err) {
+        console.warn(
+          '[warn] 临时文件未清掉 ' + leftover + '（' + (err.code || err.message) + '）' +
+            ' —— Windows 偶发占用；下一次构建会先清同名 .old，不会静默累积',
+        );
+      }
+    }
   }
   return { docs: docs.length, chunks: chunks.length, embedded };
 }
 
-function indexLooksComplete(dbPath, requireEmbed = false) {
+/**
+ * 「已建好」的两个真门槛（以前只有 meta 里有 chunks 这一行就算完整）：
+ *  - chunks > 0：零 chunk 库以前被当成品，检索永远 0 命中还报 ok:true；
+ *  - source_fingerprint 与当前语料实算一致：`"0"` 是 truthy，所以旧实现等于没比。
+ *    语料改过而不重建，就会一直吐旧文本（S7 修完 fabric-wiki 中介名后正是这种状态）。
+ */
+function indexLooksComplete(dbPath, requireEmbed = false, expectedFingerprint = null) {
   if (!existsSync(dbPath)) return false;
   try {
     const db = new DatabaseSync(dbPath, { readOnly: true });
-    const row = db.prepare("SELECT value FROM meta WHERE key = 'chunks'").get();
-    const emb = db.prepare("SELECT value FROM meta WHERE key = 'embedded'").get();
+    const read = (key) => db.prepare("SELECT value FROM meta WHERE key = ?").get(key)?.value;
+    const chunks = Number(read("chunks") ?? 0);
+    const emb = Number(read("embedded") ?? 0);
+    const fp = read("source_fingerprint");
     db.close();
-    if (!row?.value) return false;
-    if (requireEmbed && !(Number(emb?.value ?? 0) > 0)) return false;
+    if (!(chunks > 0)) return false;
+    if (requireEmbed && !(emb > 0)) return false;
+    if (expectedFingerprint !== null && String(fp ?? "") !== String(expectedFingerprint)) return false;
     return true;
   } catch {
     return false;
@@ -426,10 +481,14 @@ async function main() {
         continue;
       }
       const dbPath = semanticDbPath(dataRoot, t.platform, t.version, t.source);
-      if (!args.force && indexLooksComplete(dbPath, Boolean(embedder))) {
+      const fingerprint = computeSourceFingerprint(discovered.versionDir);
+      if (!args.force && indexLooksComplete(dbPath, Boolean(embedder), fingerprint)) {
         console.log(`[skip ${i}/${targets.length}] ${label}（已有完整索引；--force 可重建）`);
         summary.skipped++;
         continue;
+      }
+      if (!args.force && existsSync(dbPath)) {
+        console.log(`[stale ${i}/${targets.length}] ${label}：语料指纹已变（旧索引会被重建覆盖）`);
       }
       console.log(`[build ${i}/${targets.length}] ${label}（${discovered.docs.length} docs）…`);
       if (discovered.skipped.length) {
@@ -440,7 +499,7 @@ async function main() {
       }
       const chunks = collectChunks(discovered.processedDir, discovered.docs);
       const stats = await buildIndex(dbPath, discovered.docs, chunks, embedder, {
-        source_fingerprint: computeSourceFingerprint(discovered.versionDir),
+        source_fingerprint: fingerprint,
       });
       const mode = stats.embedded > 0 ? "embedded" : "fts5-only";
       if (mode === "embedded") summary.embedded++;
@@ -452,6 +511,34 @@ async function main() {
       summary.failed++;
       console.error(`[FAIL ${i}/${targets.length}] ${label}: ${e.message}`);
     }
+  }
+
+  // 丢弃留痕（F99/F100）：哪些页被短块规则削掉、削掉多少字符，落到 temp 供复核
+  try {
+    const ledgerPath = join(dataRoot, "..", "temp", "semantic-chunk-drops.json");
+    mkdirSync(dirname(ledgerPath), { recursive: true });
+    writeFileSync(
+      ledgerPath,
+      JSON.stringify(
+        {
+          generatedAt: new Date().toISOString(),
+          minContentChars: MIN_CONTENT_CHARS,
+          pagesAffected: dropLedger.docs,
+          chunksDropped: dropLedger.chunks,
+          charsDropped: dropLedger.chars,
+          pagesKeptShortestChunk: dropLedger.keptShortest,
+          perDoc: dropLedger.rows,
+        },
+        null,
+        1,
+      ),
+      "utf8",
+    );
+    console.log(
+      `[丢弃留痕] 影响 ${dropLedger.docs} 页 / ${dropLedger.chunks} 块 / ${dropLedger.chars} 字符 → ${ledgerPath}`,
+    );
+  } catch (e) {
+    console.warn(`[warn] 丢弃清单写失败: ${e.message}`);
   }
 
   // 写简短 manifest
@@ -475,7 +562,7 @@ async function main() {
         platform: t.platform,
         version: t.version,
         source: t.source,
-        path: dbPath.replace(/\\/g, "/"),
+        path: relative(dataRoot, dbPath).replace(/\\/g, "/"),
         chunks: Number(meta.chunks ?? 0),
         embedded: Number(meta.embedded ?? 0),
         built_at: meta.built_at ?? null,

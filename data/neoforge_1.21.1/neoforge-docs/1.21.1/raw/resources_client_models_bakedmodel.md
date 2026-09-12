@@ -4,7 +4,7 @@ version: "1.21.1"
 pageId: "resources/client/models/bakedmodel"
 url: "https://docs.neoforged.net/docs/1.21.1/resources/client/models/bakedmodel/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:53:24.786Z"
+fetchedAt: "2026-09-12T12:02:40.711Z"
 ---
 # Baked Models
 

@@ -144,7 +144,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
 
 1. 定位 jar：请用户给出本地 mod jar 绝对路径（或 MC 版本号，用于 get_minecraft_source）
 2. 摸清元数据：analyze_mod_jar { jarPath } → modId / loaders / entrypoints / mixins / 依赖
-3. 反编译：decompile_mod_jar { jarPath, version?, mapping? } → $MC_SKILL_CACHE/decompiled-mods/<modId>/<version>/ 源码树摘要
+3. 反编译：decompile_mod_jar { jarPath, version?, mapping? } → $MC_SKILL_CACHE/decompiled-mods/<modId>/<version>-<jarSha512_12>/ 源码树摘要
    - 或查 MC 原生源码：get_minecraft_source { version, className, mapping:"auto" }
 4. 检索目标：search_mod_code { jarPath | decompiledDir, query } 定位目标类/方法/字段（可正则）
 5. 读源码 → 定位真实实现 → 给出修改建议（涉及 API 用法用 query_api 核对签名）

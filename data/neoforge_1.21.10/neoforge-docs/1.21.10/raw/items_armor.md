@@ -4,7 +4,7 @@ version: "1.21.10"
 pageId: "items/armor"
 url: "https://docs.neoforged.net/docs/1.21.10/items/armor/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:01:07.372Z"
+fetchedAt: "2026-09-12T12:07:40.818Z"
 ---
 # Armor
 

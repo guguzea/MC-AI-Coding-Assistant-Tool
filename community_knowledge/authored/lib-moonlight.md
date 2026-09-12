@@ -95,5 +95,5 @@ Decision: 要不要用 Moonlight Lib
 
 - 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
   - 1.20.1/fabric：顶层 API 包 `net.mehvahdjukaar.moonlight`，入口 `net.mehvahdjukaar.moonlight.api.integration.mod_menu.ModMenuCompat`；`net.mehvahdjukaar.moonlight.fabric.MoonlightFabric`；`net.mehvahdjukaar.moonlight.fabric.MoonlightFabricClient`
-  - 1.16.5/forge：顶层 API 包 `net.darkhax.bookshelf`，入口 无 entrypoint
+  - 1.16.5/forge：顶层 API 包 `net.mehvahdjukaar.selene`，入口 无 entrypoint（该库 1.19 前叫 Selene，包名随之；`net.mehvahdjukaar.moonlight` 是改名后的键）
 - 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

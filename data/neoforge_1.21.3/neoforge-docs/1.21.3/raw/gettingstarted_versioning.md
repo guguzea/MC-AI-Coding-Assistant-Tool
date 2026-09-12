@@ -4,7 +4,7 @@ version: "1.21.3"
 pageId: "gettingstarted/versioning"
 url: "https://docs.neoforged.net/docs/1.21.3/gettingstarted/versioning/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:52:30.285Z"
+fetchedAt: "2026-09-12T12:03:15.560Z"
 ---
 # Versioning
 
@@ -38,7 +38,7 @@ A few places in NeoForge also use [Maven version ranges](https://maven.apache.or
 
 There is no definitive best versioning system. Different styles of development, scopes of projects, etc. all influence the decision of what versioning system to use. Sometimes, versioning system can also be combined. This section attempts to give an overview over some commonly used versioning systems, with real-life examples.
 
-Usually, a mod's file name looks like `modid-.jar`. So if our mod id is `examplemod` and our version is `1.2.3`, our mod file would be named `examplemod-1.2.3.jar`.
+Usually, a mod's file name looks like `modid-<version>.jar`. So if our mod id is `examplemod` and our version is `1.2.3`, our mod file would be named `examplemod-1.2.3.jar`.
 
 > **Note**
 > note

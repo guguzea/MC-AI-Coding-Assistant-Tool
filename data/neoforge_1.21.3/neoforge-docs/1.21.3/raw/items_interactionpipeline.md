@@ -4,7 +4,7 @@ version: "1.21.3"
 pageId: "items/interactionpipeline"
 url: "https://docs.neoforged.net/docs/1.21.3/items/interactionpipeline/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:34.262Z"
+fetchedAt: "2026-09-12T12:03:47.127Z"
 ---
 # The Interaction Pipeline
 

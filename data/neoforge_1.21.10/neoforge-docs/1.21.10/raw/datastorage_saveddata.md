@@ -4,7 +4,7 @@ version: "1.21.10"
 pageId: "datastorage/saveddata"
 url: "https://docs.neoforged.net/docs/1.21.10/datastorage/saveddata/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:01:02.448Z"
+fetchedAt: "2026-09-12T12:07:27.206Z"
 ---
 # Saved Data
 
@@ -38,7 +38,7 @@ public class ExampleSavedData extends SavedData {
 
 ## SavedDataType
 
-As the `SavedData` is simply an object, there needs to be some sort of associated identifier. Additionally, we also need to read and write the data to disk. This is where the `SavedDataType` comes in. It takes in the identifier of the saved data, a default constructor for when no data is present, and a [codec](/docs/1.21.10/datastorage/codecs) used to encode and decode the data. The identifier is treated as the path location within the associated world folder and level dimension like so: `.///data/.dat`. Any missing directories will be created, including those used as part of the identifier.
+As the `SavedData` is simply an object, there needs to be some sort of associated identifier. Additionally, we also need to read and write the data to disk. This is where the `SavedDataType` comes in. It takes in the identifier of the saved data, a default constructor for when no data is present, and a [codec](/docs/1.21.10/datastorage/codecs) used to encode and decode the data. The identifier is treated as the path location within the associated world folder and level dimension like so: `./<world_folder>/<level_name>/data/<identifier>.dat`. Any missing directories will be created, including those used as part of the identifier.
 
 > **Note**
 > note

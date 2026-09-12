@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "networking/configuration-tasks"
 url: "https://docs.neoforged.net/docs/1.20.6/networking/configuration-tasks/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:50.600Z"
+fetchedAt: "2026-09-12T12:01:36.473Z"
 ---
 # Using Configuration Tasks
 
@@ -32,7 +32,7 @@ The `RegisterConfigurationTasksEvent` event is fired on the mod bus, and exposes
 
 ## Implementing a configuration task
 
-A configuration task is a simple interface: `ICustomConfigurationTask`. This interface has two methods: `void run(Consumer sender);`, and `ConfigurationTask.Type type();` which returns the type of the configuration task. The type is used to identify the configuration task. An example of a configuration task is shown below:
+A configuration task is a simple interface: `ICustomConfigurationTask`. This interface has two methods: `void run(Consumer<CustomPacketPayload> sender);`, and `ConfigurationTask.Type type();` which returns the type of the configuration task. The type is used to identify the configuration task. An example of a configuration task is shown below:
 
 ```java
 

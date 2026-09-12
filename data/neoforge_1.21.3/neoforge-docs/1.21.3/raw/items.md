@@ -4,7 +4,7 @@ version: "1.21.3"
 pageId: "items"
 url: "https://docs.neoforged.net/docs/1.21.3/items/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:52:36.833Z"
+fetchedAt: "2026-09-12T12:03:42.371Z"
 ---
 # Items
 
@@ -41,16 +41,16 @@ This **must** be set on every item; otherwise, an exception will be thrown.
 </li>
 <li class="">`overrideDescription` - Sets the translation key of the item. The created `Component` is stored in `DataComponents#ITEM_NAME`.</li>
 <li class="">`useBlockDescriptionPrefix` - Convenience helper that calls `overrideDescription` with the translation key `block.<modid>.<registry_name>`. This should be called on any `BlockItem`.</li>
-<li class="">`overrideModel` - Sets the `ResourceLocation` representing the item model and expands to `assets/<namespace>/models/item/
-.json`. The `ResourceLocation` is stored in `DataComponents#ITEM_MODEL`.
-`requiredFeatures` - Sets the required feature flags for this item. This is mainly used for vanilla's feature locking system in minor versions. It is discouraged to use this, unless you're integrating with a system locked behind feature flags by vanilla.
-`stacksTo` - Sets the max stack size (via `DataComponents#MAX_STACK_SIZE`) of this item. Defaults to 64. Used e.g. by ender pearls or other items that only stack to 16.
-`durability` - Sets the durability (via `DataComponents#MAX_DAMAGE`) of this item and the initial damage to 0 (via `DataComponents#DAMAGE`). Defaults to 0, which means "no durability". For example, iron tools use 250 here. Note that setting the durability automatically locks the max stack size to 1.
-`fireResistant` - Makes item entities that use this item immune to fire and lava (via `DataComponents#FIRE_RESISTANT`). Used by various netherite items.
-`rarity` - Sets the rarity of this item (via `DataComponents#RARITY`). Currently, this simply changes the item's color. `Rarity` is an enum consisting of the four values `COMMON` (white, default), `UNCOMMON` (yellow), `RARE` (aqua) and `EPIC` (light purple). Be aware that mods may add more rarity types.
-`setNoRepair` - Disables anvil and crafting grid repairing for this item. Unused in vanilla.
-`jukeboxPlayable` - Sets the resource key of the datapack `JukeboxSong` to play when inserted into a jukebox.
-`food` - Sets the [FoodProperties](/docs/1.21.3/items/consumables#food) of this item (via `DataComponents#FOOD`).
+<li class="">`overrideModel` - Sets the `ResourceLocation` representing the item model and expands to `assets/<namespace>/models/item/<path>.json`. The `ResourceLocation` is stored in `DataComponents#ITEM_MODEL`.</li>
+<li class="">`requiredFeatures` - Sets the required feature flags for this item. This is mainly used for vanilla's feature locking system in minor versions. It is discouraged to use this, unless you're integrating with a system locked behind feature flags by vanilla.</li>
+<li class="">`stacksTo` - Sets the max stack size (via `DataComponents#MAX_STACK_SIZE`) of this item. Defaults to 64. Used e.g. by ender pearls or other items that only stack to 16.</li>
+<li class="">`durability` - Sets the durability (via `DataComponents#MAX_DAMAGE`) of this item and the initial damage to 0 (via `DataComponents#DAMAGE`). Defaults to 0, which means "no durability". For example, iron tools use 250 here. Note that setting the durability automatically locks the max stack size to 1.</li>
+<li class="">`fireResistant` - Makes item entities that use this item immune to fire and lava (via `DataComponents#FIRE_RESISTANT`). Used by various netherite items.</li>
+<li class="">`rarity` - Sets the rarity of this item (via `DataComponents#RARITY`). Currently, this simply changes the item's color. `Rarity` is an enum consisting of the four values `COMMON` (white, default), `UNCOMMON` (yellow), `RARE` (aqua) and `EPIC` (light purple). Be aware that mods may add more rarity types.</li>
+<li class="">`setNoRepair` - Disables anvil and crafting grid repairing for this item. Unused in vanilla.</li>
+<li class="">`jukeboxPlayable` - Sets the resource key of the datapack `JukeboxSong` to play when inserted into a jukebox.</li>
+<li class="">`food` - Sets the [FoodProperties](/docs/1.21.3/items/consumables#food) of this item (via `DataComponents#FOOD`).</li>
+</ul>
 
 For examples, or to look at the various values used by Minecraft, have a look at the `Items` class.
 
@@ -81,7 +81,7 @@ The two most common use cases for items are left-clicking and right-clicking. Fo
 
 ### DeferredRegister.Items
 
-All registries use `DeferredRegister` to register their contents, and items are no exceptions. However, due to the fact that adding new items is such an essential feature of an overwhelming amount of mods, NeoForge provides the `DeferredRegister.Items` helper class that extends `DeferredRegister` and provides some item-specific helpers:
+All registries use `DeferredRegister` to register their contents, and items are no exceptions. However, due to the fact that adding new items is such an essential feature of an overwhelming amount of mods, NeoForge provides the `DeferredRegister.Items` helper class that extends `DeferredRegister<Item>` and provides some item-specific helpers:
 
 ```java
 
@@ -205,7 +205,7 @@ Like with blocks and blockstates, most places where you'd expect an `Item` actua
 
 An `ItemStack` consists of three major parts:
 
-- The `Item` it represents, obtainable through `ItemStack#getItem`, or `getItemHolder` for `Holder`.
+- The `Item` it represents, obtainable through `ItemStack#getItem`, or `getItemHolder` for `Holder<Item>`.
 - The stack size, typically between 1 and 64, obtainable through `getCount` and changeable through `setCount` or `shrink`.
 - The [data components](/docs/1.21.3/items/datacomponents) map, where stack-specific data is stored. Obtainable through `getComponents`. The components values are typically accessed and mutated via `has`, `get`, `set`, `update`, and `remove`.
 

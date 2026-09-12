@@ -38,10 +38,10 @@ const KNOWN_FLAGS = new Set([
   "shard", "cache-dir", "reset",
 ]);
 const FILTER_KEYS = new Set(["gameVersion", "loader", "slug"]);
-/** 非包目录（VineFlower 产物里可能出现的资源目录） */
-const RESOURCE_DIRS = new Set(["META-INF", "assets", "data"]);
+/** 非包目录（VineFlower 产物里可能出现的资源目录；licenses/coremods/asm/profiles = Forge jar 顶层资源目录，实测在 catalog 留下 30 行一段「包名」） */
+const RESOURCE_DIRS = new Set(["META-INF", "assets", "data", "licenses", "coremods", "asm", "profiles"]);
 /** 太通用的一层目录 → 取前 3 层（net.minecraft / com.google）；其余取前 2 层 */
-const GENERIC_TLDS = new Set(["net", "com", "org", "io", "dev", "co", "uk", "de", "fr", "ru", "jp", "cn", "cc", "xyz", "one", "top", "app"]);
+const GENERIC_TLDS = new Set(["net", "com", "org", "io", "dev", "co", "uk", "de", "fr", "ru", "jp", "cn", "cc", "xyz", "one", "top", "app", "fi", "eu", "team", "me", "software", "fuzs", "icyllis"]);
 const PKG_SEG = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
 class UsageError extends Error {}
@@ -285,46 +285,107 @@ async function workJar(jar, opts, state) {
   const { jarPath } = await withSlot(state.dl, () => ensureJar(opts.jarDir, jar.entry));
   const meta = state.analyzer.analyzeModJar(jarPath);
   if (!meta.found) throw new Error(`元数据分析失败（${meta.action?.code ?? "UNKNOWN"}）`);
-  const result = await withSlot(state.dc, () => state.decompiler.decompileModJar({ jarPath, version: jar.entry.gameVersion }));
+  const result = await withSlot(state.dc, () => state.decompiler.decompileModJar({
+        jarPath,
+        version: jar.entry.gameVersion,
+        externalModId: jar.entry.modId,
+      }));
   if (!result.found) throw new Error(`反编译失败（${result.error ?? "UNKNOWN"}${result.action?.message ? `：${result.action.message}` : ""}）`);
   if (!result.outputDir || !existsSync(result.outputDir)) throw new Error("反编译结果缺少 outputDir");
   return { meta, result, jarPath };
 }
 
 /**
- * Jar-in-Jar 壳处理：主 jar 反编译空产物但含 META-INF/jars/*.jar 时，
- * 解出内嵌 jar 逐个反编译，合并包名。返回 packages[] 或 null（非 JiJ 壳/仍无产物）。
+ * 成功行的 modId 必须真解析得出（G2）。
+ *
+ * 以前的 `result.modId ?? meta.modId ?? "unknown"` 产出的是一行 `status:"success"`，
+ * `merge-verified-api` 照单收下 ⇒ 所有解不出身份的 jar 挤进同一个目录段并互相冒领
+ * 源码树（F92/F113：`unknown-mod` 塌缩目录是他方包根泄漏的唯一来源）。
+ * 改判 failed 只是「不再污染下游」——`--resume` 对 success/failed 两种行都跳过，
+ * 不会自动重跑，所以 error 文本必须把是哪个 jar 说清。
+ *
+ * S5b 增加「外部证据」一层，但有硬闸：纯库 jar（如 `kotlinforforge-*.jar`，实测 4026 条目内
+ * 既无 `mods.toml` 也无 `mcmod.info`）从 jar 内部永远解不出身份 ⇒ 允许用 `lib-manifests/all.json`
+ * 实读的 modId 当 candidate；但该 candidate **必须出现在 jar 自身包路径的某一段里**才生效，
+ * 否则照旧抛错。外部证据只是换个来源，裁决仍归归属校验，不会退化成第三个兜底常量。
+ * 用的哪一路由 `modIdEvidence` 记在结果行里（`jar` / `manifest`）。
  */
+function requireModId(state, candidate, jarPath, ctx = {}) {
+  const identity = state.decompiler.resolveModIdSegment(candidate);
+  if (!identity.ok) {
+    const ext = state.decompiler.resolveModIdSegment(ctx.externalModId);
+    const pkgs = ctx.packages ?? [];
+    if (ext.ok && state.decompiler.packagesOwnModId(pkgs, ext.modId)) {
+      return { modId: ext.modId, evidence: "manifest" };
+    }
+    throw new Error(
+      `modId 解析失败（${identity.code}：${identity.message}），拒绝写 unknown 兜底成功行：${jarPath}` +
+        (ctx.externalModId
+          ? `｜外部证据「${ctx.externalModId}」也不成立（它本身非法，或 jar 自身包路径里没有这一段：${pkgs.slice(0, 3).join(", ") || "无包"}）`
+          : ""),
+    );
+  }
+  return { modId: identity.modId, evidence: "jar" };
+}
+
+/**
+ * Jar-in-Jar / jarjar 壳处理：主 jar 自身没有 class，实现藏在 `META-INF/jars/*.jar`
+ * （FML Jar-in-Jar）或 `META-INF/jarjar/*.jar`（KfF 5.x+ 的 shaded 壳）里。
+ *
+ * 两件事分开做，因为坑不一样：
+ *  - **身份**：取「内层里真正是该库的那个 jar」自己解出的 modId。外层壳贴什么标签都不算，
+ *    内层 mods.toml 才是 jar 内部证据（实测 KfF 1.20.6 外壳只有 15 条目、永远解不出 modId，
+ *    真身在 `META-INF/jarjar/thedarkcolour.kffmod-5.12.0.jar`）。
+ *  - **包名**：仍取所有内层 jar 的并集 —— CCA 那类多个平级子模组就是这么合出来的，收窄会倒退。
+ *    并集里谁是谁的捆绑不在这里偷偷裁决，交给 `bundledJars` + 后续 ownership 标签。
+ *
+ * 返回 {packages, self, bundledJars} 或 null（非壳 / 内层也无产物）。
+ */
+const EMBEDDED_DIRS = ["jars", "jarjar"];
+
 async function decompileEmbedded(jarPath, jar, opts, state) {
   const tmpRoot = join(opts.jarDir, "embedded", jar.sha512.slice(0, 12));
   mkdirSync(tmpRoot, { recursive: true });
-  let innerJars = [];
-  try {
-    execFileSync("tar", ["-xf", jarPath, "-C", tmpRoot, "META-INF/jars"], { stdio: "ignore", timeout: 60_000 });
-    const jij = join(tmpRoot, "META-INF", "jars");
-    if (existsSync(jij)) {
-      innerJars = readdirSync(jij).filter((f) => f.endsWith(".jar")).map((f) => join(jij, f));
+  const innerJars = [];
+  for (const dirName of EMBEDDED_DIRS) {
+    const member = `META-INF/${dirName}`;
+    try {
+      execFileSync("tar", ["-xf", jarPath, "-C", tmpRoot, member], { stdio: "ignore", timeout: 60_000 });
+    } catch {
+      continue; // 该壳没有这一层（tar 对不存在路径非零退出）
     }
-  } catch {
-    return null; // 非 JiJ 壳或解压失败
+    const jij = join(tmpRoot, "META-INF", dirName);
+    if (!existsSync(jij)) continue;
+    for (const f of readdirSync(jij)) {
+      if (f.endsWith(".jar")) innerJars.push({ path: join(jij, f), from: `${member}/${f}` });
+    }
   }
   if (innerJars.length === 0) return null;
   const pkgs = [];
+  const bundledJars = [];
+  let self = null;
   let anyJava = false;
+  const want = String(jar.entry?.modId || "").toLowerCase().replace(/[-_]/g, "");
   for (const inner of innerJars) {
+    let r = null;
     try {
-      const r = await withSlot(state.dc, () =>
-        state.decompiler.decompileModJar({ jarPath: inner, version: jar.entry.gameVersion }));
-      if (r.found && r.outputDir && countJavaFiles(r.outputDir) > 0) {
-        anyJava = true;
-        pkgs.push(...extractPackages(r.outputDir));
-      }
+      r = await withSlot(state.dc, () =>
+        state.decompiler.decompileModJar({ jarPath: inner.path, version: jar.entry.gameVersion }));
     } catch {
-      /* 单个内嵌 jar 失败不影响其他 */
+      continue; // 单个内层失败不影响其他
+    }
+    if (!r?.found || !r.outputDir || countJavaFiles(r.outputDir) === 0) continue;
+    anyJava = true;
+    pkgs.push(...extractPackages(r.outputDir));
+    const got = String(r.modId || "").toLowerCase().replace(/[-_]/g, "");
+    if (self === null && want && got === want) {
+      self = { modId: r.modId, modVersion: r.modVersion, evidence: "jarjar-self", from: inner.from };
+    } else {
+      bundledJars.push(inner.from); // 外壳自己声明的捆绑/兄弟件：ownership 的下一手证据
     }
   }
   if (!anyJava) return null;
-  return [...new Set(pkgs)].sort().slice(0, 8);
+  return { packages: [...new Set(pkgs)].sort().slice(0, 8), self, bundledJars: bundledJars.sort() };
 }
 
 // ── 包名提取（outputDir 顶层目录 → 前 2-3 层包名）────────────────────────────
@@ -362,7 +423,11 @@ function countJavaFiles(dir) {
 function extractPackages(outputDir) {
   if (!existsSync(outputDir)) return [];
   let dirs;
-  try { dirs = readdirSync(outputDir, { withFileTypes: true }); } catch { return []; }
+  // 不可读必须 throw，不能折叠成 []：processJar 只把 throw 记成 failed，返回 [] 会被写成
+  // status:"success" + packages:[] 的行，而 --resume 对 success/failed 一律跳过（:208）⇒ 脏行永不愈合。
+  try { dirs = readdirSync(outputDir, { withFileTypes: true }); } catch (err) {
+    throw new Error(`读取反编译产物目录失败（${outputDir}）：${err.message}`);
+  }
   const pkgs = [];
   for (const d of dirs) {
     if (!d.isDirectory()) continue;
@@ -414,30 +479,52 @@ async function processJar(jar, opts, state) {
       `反编译 ${jar.sha512.slice(0, 8)}`,
     );
     const jarPath = join(opts.jarDir, `${jar.sha512}.jar`);
+    // 归属校验（F92）：源码树的 .java 包根必须出自本 jar 自身的 .class 条目。
+    // 撞名 / 复用目录时的残留会把别人的包算进本条目，一旦写进 JSONL，下游库摘要全链路失真。
+    const owned = state.decompiler.verifyOutputOwnership(result.outputDir, jarPath);
     // 空产物防护：VineFlower 可能返回 found=true 但无 .java（资源-only jar / JiJ 壳 / 反编译失败）
     const javaFiles = countJavaFiles(result.outputDir);
-    if (javaFiles === 0) {
-      // JiJ 壳（如 CCA）：主 jar 无 class，实现在 META-INF/jars/*.jar
-      const embeddedPkgs = await decompileEmbedded(jarPath, jar, opts, state);
-      if (embeddedPkgs) {
+    if (!owned.ok) {
+      outcome = {
+        status: "failed",
+        error: `源码树归属校验失败：${owned.reason}（外来包根 ${owned.foreignPackages.join(", ") || "?"}）`,
+      };
+    } else if (javaFiles === 0) {
+      // JiJ / jarjar 壳（CCA 走 jars、KfF 5.x+ 走 jarjar）：主 jar 无 class，实现在内层 jar 里
+      const embedded = await decompileEmbedded(jarPath, jar, opts, state);
+      if (embedded) {
+        const idJ = embedded.self
+          ? { modId: embedded.self.modId, evidence: embedded.self.evidence }
+          : requireModId(state, result.modId ?? meta.modId, jarPath, {
+              externalModId: jar.entry?.modId,
+              packages: embedded.packages,
+            });
         outcome = {
           status: "success",
-          modId: result.modId ?? meta.modId ?? "unknown",
-          modVersion: result.modVersion ?? meta.modVersion ?? "unknown",
-          packages: embeddedPkgs,
+          modId: idJ.modId,
+          modIdEvidence: idJ.evidence,
+          modVersion: embedded.self?.modVersion ?? result.modVersion ?? meta.modVersion ?? "unknown",
+          packages: embedded.packages,
+          bundledJars: embedded.bundledJars,
           entrypoints: flattenEntrypoints(meta.entrypoints),
           outputDir: result.outputDir,
-          note: "JiJ 壳（包名取自内嵌 jar）",
+          note: "JiJ / jarjar 壳（包名取自内嵌 jar；捆绑件见 bundledJars）",
         };
       } else {
         outcome = { status: "failed", error: `反编译空产物（${result.outputDir} 无 .java）` };
       }
     } else {
+      const pkgs = extractPackages(result.outputDir);
+      const idN = requireModId(state, result.modId ?? meta.modId, jarPath, {
+        externalModId: jar.entry?.modId,
+        packages: pkgs,
+      });
       outcome = {
         status: "success",
-        modId: result.modId ?? meta.modId ?? "unknown",
+        modId: idN.modId,
+        modIdEvidence: result.modIdEvidence ?? idN.evidence,
         modVersion: result.modVersion ?? meta.modVersion ?? "unknown",
-        packages: extractPackages(result.outputDir),
+        packages: pkgs,
         entrypoints: flattenEntrypoints(meta.entrypoints),
         outputDir: result.outputDir,
       };

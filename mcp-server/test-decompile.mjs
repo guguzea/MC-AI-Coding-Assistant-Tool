@@ -11,7 +11,8 @@
  * 用法：node test-decompile.mjs （前置：npm run build）
  */
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -22,6 +23,11 @@ import {
   judgeDecompiledCacheHit,
   readDecompiledMeta,
   writeDecompiledMeta,
+  jarContentIdentity,
+  resolveModIdSegment,
+  packagesOwnModId,
+  clearDecompileTarget,
+  verifyOutputOwnership,
 } from "./dist/decompile/services/mod-decompile.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -121,6 +127,28 @@ displayName="Fixture Forge"
 description="A forge fixture"
 
 [[dependencies.fixtureforge]]
+modId="forge"
+versionRange="[47,)"
+mandatory=true
+ordering="NONE"
+side="BOTH"
+`;
+
+// S1（F90/F98）：Forge 官方模板里 description 常用 `'''` 多行字面量，块内 `#` 与引号都是内容。
+const FIXTURE_MODS_TOML_MULTILINE = `modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="multilinemod"
+version="3.1.0"
+displayName="Multiline Forge Mod"
+description='''
+第一行说明。
+第二行含 # 号与 "引号" 都不是注释。
+'''
+
+[[dependencies.multilinemod]]
 modId="forge"
 versionRange="[47,)"
 mandatory=true
@@ -834,6 +862,210 @@ section("zip-inflate (A-1)");
     const t = parseModsToml('modLoader="javafml"\n[[mods]]\nmodId="demo"\nversion="1.0" # c\n');
     assert.equal(t.mods[0]?.version, "1.0");
     assert.equal(stripTomlCommentOutsideQuotes(' "1.0" # c').trim(), '"1.0"');
+  });
+}
+
+{
+  section("toml-parse multiline literals (S1 · F90/F98)");
+  const { parseModsToml } = await import("./dist/decompile/services/toml-parse.js");
+  const { analyzeModJar } = await import("./dist/decompile/index.js");
+  const doc = (...lines) => lines.join("\n") + "\n";
+
+  test("三单引号同行闭合：取原样值，不再整份解析失败", () => {
+    const t = parseModsToml(doc('modLoader="javafml"', "[[mods]]", 'modId="m"', "description='''同行闭合'''"));
+    assert.equal(t.mods[0]?.modId, "m");
+    assert.equal(t.mods[0]?.description, "同行闭合");
+  });
+
+  test("跨行字面量：紧随定界符的首个换行修剪，块内 # / 引号 / 缩进是内容", () => {
+    const t = parseModsToml(
+      doc(
+        "[[mods]]",
+        'modId="m"',
+        "description='''",
+        "第一行",
+        "第二行 # 不是注释",
+        '   缩进保留 "带引号"',
+        "'''",
+      ),
+    );
+    assert.equal(t.mods[0]?.modId, "m");
+    assert.equal(t.mods[0]?.description, '第一行\n第二行 # 不是注释\n   缩进保留 "带引号"\n');
+  });
+
+  test("跨行基本字符串：行尾反斜杠续行合并，转义按 TOML 解码", () => {
+    const t = parseModsToml(
+      doc(
+        "[[mods]]",
+        'modId="m"',
+        'description="""',
+        '第一行 \\',
+        '第二行 制表\\t 换行\\n 重音\\u00e9',
+        '"""',
+      ),
+    );
+    assert.equal(t.mods[0]?.description, '第一行 第二行 制表\t 换行\n 重音é\n');
+  });
+
+  test("字面量块内的三双引号是内容，不提前闭合", () => {
+    const t = parseModsToml(doc("[[mods]]", 'modId="m"', `description='''包含 """ 三引号'''`));
+    assert.equal(t.mods[0]?.description, '包含 """ 三引号');
+  });
+
+  test("未闭合多行 → TOML_MULTILINE_UNTERMINATED 上浮，不静默跳过整块", () => {
+    assert.throws(
+      () => parseModsToml(doc("[[mods]]", 'modId="m"', "description='''", "第一行", "第二行")),
+      (err) => err.message === "TOML_MULTILINE_UNTERMINATED",
+    );
+  });
+
+  test("多行块之后的键仍归属正确的表（游标跳过整块，无幻影键）", () => {
+    const t = parseModsToml(FIXTURE_MODS_TOML_MULTILINE);
+    assert.equal(t.modLoader, "javafml");
+    assert.equal(t.license, "MIT");
+    assert.equal(t.mods.length, 1);
+    assert.equal(t.mods[0].modId, "multilinemod");
+    assert.equal(t.mods[0].version, "3.1.0");
+    assert.ok(t.mods[0].description?.startsWith("第一行说明。"), `desc=${JSON.stringify(t.mods[0].description)}`);
+    assert.deepEqual(
+      t.dependencies.map((d) => [d.id, d.versionRange, d.optional]),
+      [["forge", "[47,)", false]],
+    );
+  });
+
+  test("官方模板形态 description='''${mod_description}''' 可解析（forge/1.20.1 scaffold）", () => {
+    const t = parseModsToml(doc("[[mods]]", 'modId="m"', "description='''${mod_description}'''"));
+    assert.equal(t.mods[0]?.modId, "m");
+    assert.equal(t.mods[0]?.description, "${mod_description}");
+  });
+
+  const multiTmp = join(tmpdir(), `mc-skill-toml-multi-${Date.now()}`);
+  mkdirSync(multiTmp, { recursive: true });
+  const multiJar = join(multiTmp, "multilinemod-3.1.0.jar");
+  writeFileSync(
+    multiJar,
+    makeZip([
+      { name: "META-INF/mods.toml", data: FIXTURE_MODS_TOML_MULTILINE },
+      { name: "com/example/multi/MultiMod.class", data: Buffer.from([0xca, 0xfe, 0xba, 0xbe]) },
+    ]),
+  );
+  const brokenJar = join(multiTmp, "brokenmod-1.0.0.jar");
+  writeFileSync(
+    brokenJar,
+    makeZip([{ name: "META-INF/mods.toml", data: doc('modId="broken"', "description='''", "未闭合") }]),
+  );
+
+  test("jar 内多行 mods.toml → modId 命中且无「解析失败」warning", () => {
+    const r = analyzeModJar(multiJar);
+    assert.equal(r.modId, "multilinemod", `warnings=${JSON.stringify(r.warnings)}`);
+    assert.equal(r.modVersion, "3.1.0");
+    assert.ok(r.loaders.includes("forge"), `loaders=${JSON.stringify(r.loaders)}`);
+    assert.ok(
+      !r.warnings.some((w) => /解析失败/.test(w)),
+      `多行 mods.toml 不得再报解析失败：${JSON.stringify(r.warnings)}`,
+    );
+    assert.ok(r.description?.includes("# 号"), `description=${JSON.stringify(r.description)}`);
+  });
+
+  test("jar 内未闭合多行 → 失败以 warning 上浮（计数不被吞）", () => {
+    const r = analyzeModJar(brokenJar);
+    assert.ok(
+      r.warnings.some((w) => w.includes("TOML_MULTILINE_UNTERMINATED")),
+      `必须看到结构化解析失败：${JSON.stringify(r.warnings)}`,
+    );
+  });
+
+  rmSync(multiTmp, { recursive: true, force: true });
+  assert.ok(!existsSync(multiTmp), `临时 jar 目录未清干净: ${multiTmp}`);
+}
+
+{
+  section("mods.toml 真实夹具 + 仓库 scaffold 模板全量解析 (S1 · F90/F57)");
+  const { parseModsToml } = await import("./dist/decompile/services/toml-parse.js");
+  const fixtureDir = join(__dirname, "test-fixtures", "mods-toml");
+  const EXPECTED = {
+    "jei-1.18.2-9.7.1.255.toml": "jei",
+    "jei-1.20.1-forge-15.49.0.188.supp.toml": "jei",
+    "Placebo-1.20.1-8.6.3.toml": "placebo",
+    "caelus-forge-3.2.0+1.20.1.toml": "caelus",
+    "sophisticatedcore-1.20.1-1.3.79.2250.toml": "sophisticatedcore",
+    "synth-multiline-body.toml": "synthmulti",
+  };
+  const tomlFiles = readdirSync(fixtureDir).filter((f) => f.endsWith(".toml"));
+
+  test("夹具清单与期望表 1:1（增删必须同步改期望表）", () => {
+    assert.deepEqual(tomlFiles.slice().sort(), Object.keys(EXPECTED).sort());
+  });
+
+  test(`${tomlFiles.length} 份 mods.toml 全部解出正确 modId，失败数 0`, () => {
+    const bad = [];
+    for (const f of tomlFiles) {
+      let modId = null;
+      try {
+        modId = parseModsToml(readFileSync(join(fixtureDir, f), "utf8")).mods[0]?.modId ?? null;
+      } catch (err) {
+        bad.push(`${f}: ${err.message}`);
+        continue;
+      }
+      if (modId !== EXPECTED[f]) bad.push(`${f}: modId=${JSON.stringify(modId)} 期望 ${EXPECTED[f]}`);
+    }
+    assert.deepEqual(bad, [], `解析失败或 modId 不符：${JSON.stringify(bad)}`);
+  });
+
+  test("JEI 真实多行 description：换行保留、定界符不漏进值", () => {
+    const t = parseModsToml(readFileSync(join(fixtureDir, "jei-1.18.2-9.7.1.255.toml"), "utf8"));
+    const desc = t.mods[0]?.description ?? "";
+    assert.ok(desc.startsWith("JEI is an item and recipe viewing mod"), `desc=${JSON.stringify(desc)}`);
+    assert.ok(desc.endsWith(".\n"), `多行值须保留正文行尾：${JSON.stringify(desc)}`);
+    assert.ok(!desc.includes("'''"), `定界符漏进值：${JSON.stringify(desc)}`);
+    assert.equal(t.license, "The MIT License (MIT)");
+    assert.ok(t.dependencies.length >= 1, "块后依赖段必须仍在");
+  });
+
+  test("对抗夹具：空行 / 行内等号 / 引号逐字保留，块后两个依赖段未被吞", () => {
+    const t = parseModsToml(readFileSync(join(fixtureDir, "synth-multiline-body.toml"), "utf8"));
+    const desc = t.mods[0]?.description ?? "";
+    assert.ok(desc.includes("key = value"), "正文里的 `=` 行不得被当成新键值对");
+    assert.ok(desc.includes("\n\n"), "空行必须保留");
+    assert.ok(desc.includes('"double quoted"'), "双引号片段必须逐字保留");
+    assert.ok(desc.includes("single ' quote"), "单引号片段必须逐字保留");
+    assert.ok(desc.endsWith("Final line.\n"), `desc 尾部：${JSON.stringify(desc.slice(-20))}`);
+    assert.deepEqual(t.dependencies.map((d) => d.id).sort(), ["forge", "minecraft"]);
+  });
+
+  // 口径：2026-09-10 实测 8 个平台根下 `<平台>/<版本>/scaffold/**.toml` = 18 份，且 18/18 用 `'''`；
+  // 修复前这 18 份模板在 parseModsToml 上全部抛错（脚手架产物自身不可解析）。
+  test("仓库 scaffold TOML 模板全量可解析（≥18 份、0 失败、每份有 [[mods]]）", () => {
+    const root = join(__dirname, "..");
+    const platforms = ["forge", "neoforge", "fabric", "quilt", "liteloader", "rift", "modloader", "bedrock"];
+    const found = [];
+    for (const platform of platforms) {
+      const pdir = join(root, platform);
+      if (!existsSync(pdir)) continue;
+      for (const ver of readdirSync(pdir)) {
+        const sc = join(pdir, ver, "scaffold");
+        if (!existsSync(sc)) continue;
+        (function walk(dir) {
+          for (const e of readdirSync(dir, { withFileTypes: true })) {
+            const p = join(dir, e.name);
+            if (e.isDirectory()) walk(p);
+            else if (e.name.endsWith(".toml")) found.push(p);
+          }
+        })(sc);
+      }
+    }
+    const bad = [];
+    for (const p of found) {
+      try {
+        const t = parseModsToml(readFileSync(p, "utf8"));
+        if (!t.mods.length) bad.push(`${p}: 无 [[mods]]`);
+        else if (!t.mods[0].modId) bad.push(`${p}: modId 为空`);
+      } catch (err) {
+        bad.push(`${p}: ${err.message}`);
+      }
+    }
+    assert.ok(found.length >= 18, `scaffold TOML 只扫到 ${found.length} 份（开工基线 18），清单可能塌了`);
+    assert.deepEqual(bad, [], `scaffold 模板解析失败：${JSON.stringify(bad)}`);
   });
 }
 
@@ -1584,6 +1816,157 @@ section("Wave4-A4 decompile-family gates");
   }
 }
 
+// ── S2 · F92 反编译产物身份段 / unknown-mod 禁令 / 写前清空 / 源码树归属 ─────────
+// 旧行为：outDir = <modId>/<version>，且 modId 解析不出时回落 `unknown-mod`。
+// 于是（a）同 modId+version 的不同 jar 撞进同一棵树、（b）后来的 jar 冒领前者的源码树。
+section("decompile output identity & ownership (S2 · F92/F93)");
+{
+  const s2Root = join(tmpdir(), "mc-skill-s2-" + process.pid + "-" + Date.now());
+  const modsRoot = join(s2Root, "decompiled-mods");
+  mkdirSync(modsRoot, { recursive: true });
+  const fabJson = (id, ver) => JSON.stringify({ schemaVersion: 1, id, version: ver });
+  const jarA = join(s2Root, "collide-A.jar");
+  const jarB = join(s2Root, "collide-B.jar");
+  writeFileSync(
+    jarA,
+    makeZip([
+      { name: "fabric.mod.json", data: fabJson("collidemod", "1.0.0") },
+      { name: "dev/collidemod/A.class", data: Buffer.from("cafe") },
+    ]),
+  );
+  writeFileSync(
+    jarB,
+    makeZip([
+      { name: "fabric.mod.json", data: fabJson("collidemod", "1.0.0") },
+      { name: "com/othercorp/B.class", data: Buffer.from("cafe") },
+    ]),
+  );
+  const srcService = readFileSync(
+    join(__dirname, "src", "decompile", "services", "mod-decompile.ts"),
+    "utf8",
+  );
+  try {
+    test("身份段 = 整文件 sha512 前 12 位（钉住算法与截取长度，防悄悄改成 md5 / 前 8 位）", () => {
+      const got = jarContentIdentity(jarA);
+      assert.equal(got, createHash("sha512").update(readFileSync(jarA)).digest("hex").slice(0, 12));
+      assert.match(got, /^[0-9a-f]{12}$/);
+    });
+    test("身份段来自字节内容而非文件名：同 modId + 同 version 的两个 jar 必得不同身份段", () => {
+      assert.notEqual(jarContentIdentity(jarA), jarContentIdentity(jarB), "内容不同必须不同身份段");
+      const renamed = join(s2Root, "totally-different-name.jar");
+      writeFileSync(renamed, readFileSync(jarA));
+      assert.equal(jarContentIdentity(renamed), jarContentIdentity(jarA), "换个文件名不得换身份段");
+    });
+    test("身份段跨 1MiB 分块边界稳定（分块读不得漏尾块）", () => {
+      const big = join(s2Root, "over-1mib.bin");
+      writeFileSync(big, Buffer.alloc(1024 * 1024 + 7, 0x5a));
+      assert.equal(
+        jarContentIdentity(big),
+        createHash("sha512").update(readFileSync(big)).digest("hex").slice(0, 12),
+      );
+    });
+    test("解析不出 modId → MOD_ID_UNKNOWN；非法字符 → INVALID_INPUT", () => {
+      for (const bad of [null, undefined, "", "   "]) {
+        const r = resolveModIdSegment(bad);
+        assert.equal(r.ok, false, "modId=" + JSON.stringify(bad) + " 必须判失败");
+        assert.equal(r.code, "MOD_ID_UNKNOWN", JSON.stringify(r));
+      }
+      const evil = resolveModIdSegment("../evil");
+      assert.equal(evil.ok, false);
+      assert.equal(evil.code, "INVALID_INPUT", JSON.stringify(evil));
+      assert.equal(resolveModIdSegment("collidemod").modId, "collidemod");
+    });
+    test("回归门：unknown-mod 回落表达式不得回来", () => {
+      assert.ok(
+        !srcService.includes('meta.modId ?? "unknown-mod"'),
+        "unknown-mod 回落回归：解析不出 id 的 jar 会重新挤进同一目录互相冒领",
+      );
+    });
+    test("回归门：outDir 计算必须带上内容身份段", () => {
+      assert.ok(
+        srcService.includes("${modVersion}-${jarIdentity}"),
+        "outDir 退化回 <modId>/<version>：撞名 jar 又将共用一棵源码树",
+      );
+    });
+    test("写前清空：整棵目标子树删除，removedFiles 如实回报（写前/写后计数实证）", () => {
+      const target = join(modsRoot, "cleared", "1.0.0-deadbeefcafe");
+      mkdirSync(join(target, "dev", "cleared"), { recursive: true });
+      writeFileSync(join(target, "dev", "cleared", "A.java"), "x");
+      writeFileSync(join(target, "dev", "cleared", "B.java"), "x");
+      writeFileSync(join(target, ".mc-skill-decompiled.json"), "{}");
+      const before = readdirSync(modsRoot, { recursive: true }).length;
+      const r = clearDecompileTarget(modsRoot, target);
+      assert.equal(r.error, null, "清空应成功：" + String(r.error));
+      assert.equal(r.removedFiles, 3, "必须如实回报被删掉的文件数");
+      assert.ok(!existsSync(target), "rmSync 必须真的删掉（win32 假成功防护）");
+      const after = readdirSync(modsRoot, { recursive: true });
+      assert.deepEqual(after, ["cleared"], "版本叶必须整棵消失，只留空的 modId 父目录");
+      assert.ok(before > 0, "写前计数应非空，否则这条门什么都没测到");
+    });
+    test("写前清空：目标本就不存在 → 幂等成功", () => {
+      const r = clearDecompileTarget(modsRoot, join(modsRoot, "ghost", "1.0.0-000000000000"));
+      assert.equal(r.error, null);
+      assert.equal(r.removedFiles, 0);
+    });
+    test("写前清空护栏：即缓存根本身 / 越界目标一律拒绝，且一个文件都不能少", () => {
+      const self = clearDecompileTarget(modsRoot, modsRoot);
+      assert.ok(self.error, "目标即 decompiled-mods 本身时必须拒绝");
+      assert.ok(existsSync(modsRoot), "护栏必须生效在删除之前");
+      const outside = join(s2Root, "somewhere-else");
+      mkdirSync(outside, { recursive: true });
+      writeFileSync(join(outside, "keep.txt"), "x");
+      const escaped = clearDecompileTarget(modsRoot, outside);
+      assert.ok(escaped.error, "越出 decompiled-mods 的目标必须拒绝");
+      assert.ok(existsSync(join(outside, "keep.txt")), "越界路径下的文件一个都不能少");
+    });
+    test("归属校验：.java 包根必须出自本 jar 的 .class 条目，外来包点名判失败", () => {
+      const tree = join(s2Root, "tree-own");
+      mkdirSync(join(tree, "dev", "collidemod"), { recursive: true });
+      writeFileSync(join(tree, "dev", "collidemod", "A.java"), "x");
+      assert.equal(verifyOutputOwnership(tree, jarA).ok, true, "自己的包根必须放行");
+      mkdirSync(join(tree, "com", "othercorp"), { recursive: true });
+      writeFileSync(join(tree, "com", "othercorp", "B.java"), "x");
+      const bad = verifyOutputOwnership(tree, jarA);
+      assert.equal(bad.ok, false, "混进 jarB 的顶层包后必须判失败");
+      assert.deepEqual(bad.foreignPackages, ["com"]);
+      assert.deepEqual(verifyOutputOwnership(tree, jarB).foreignPackages, ["dev"]);
+    });
+    test("归属校验：无判据时不误报（无带包 class / 目录缺失 / outputDir 未给）", () => {
+      const rootOnly = join(s2Root, "root-only.jar");
+      writeFileSync(
+        rootOnly,
+        makeZip([
+          { name: "fabric.mod.json", data: fabJson("rootonly", "1.0.0") },
+          { name: "module-info.class", data: Buffer.from("cafe") },
+        ]),
+      );
+      assert.equal(verifyOutputOwnership(join(modsRoot, "missing-tree"), rootOnly).ok, true);
+      assert.equal(verifyOutputOwnership(undefined, jarA).ok, true, "outputDir 缺失交由空产物分支处理");
+      const tree = join(modsRoot, "whatever", "1.0.0-abc");
+      mkdirSync(join(tree, "dev"), { recursive: true });
+      writeFileSync(join(tree, "dev", "M.java"), "x");
+      assert.equal(verifyOutputOwnership(tree, rootOnly).ok, true, "jar 内无带包 class → 无判据，不得凭空判失败");
+    });
+    test("归属校验：顶层段大小写无关（remap 不改根段，win32 目录名不区分大小写）", () => {
+      const tree = join(s2Root, "tree-case");
+      mkdirSync(join(tree, "DEV", "collidemod"), { recursive: true });
+      writeFileSync(join(tree, "DEV", "collidemod", "A.java"), "x");
+      assert.equal(verifyOutputOwnership(tree, jarA).ok, true);
+    });
+    test("批处理侧接线：batch-decompile 在信任产物之前先做归属校验", () => {
+      const script = readFileSync(join(__dirname, "..", "scripts", "batch-decompile.mjs"), "utf8");
+      const guard = script.indexOf("verifyOutputOwnership(result.outputDir, jarPath)");
+      const use = script.indexOf("const javaFiles = countJavaFiles(result.outputDir);");
+      assert.ok(guard > 0, "批处理未接归属校验");
+      assert.ok(use > guard, "校验必须在 countJavaFiles / extractPackages 采用产物之前");
+      assert.ok(script.includes("源码树归属校验失败"), "校验不通过时必须把该条判失败而不是继续成功");
+    });
+  } finally {
+    rmSync(s2Root, { recursive: true, force: true });
+    assert.ok(!existsSync(s2Root), "S2 临时目录未真正删除（win32 rmSync 假成功）");
+  }
+}
+
 // ── Wave 4 · A9 P3 收口门（D-9 / D-12 / D-24）───────────────────────────────
 // 这三条是「行为等价、纯冗余/可读性」类：守卫**必须保留**（TS 收窄需要），而 D-24 的空操作**必须删除**。
 // 因此本组门只读源文本，不依赖 dist（永不 SKIP），把两个方向的回归都钉住。
@@ -1631,5 +2014,14 @@ section("Wave4-A9 P3 cleanup guards (D-9 / D-12 / D-24)");
   });
 }
 
+// ── S5b：外部证据 modId 的归属硬闸（纯函数） ──
+test("packagesOwnModId：包路径含该段才算数（S5b 外部证据硬闸）", () => {
+  assert.equal(packagesOwnModId(["thedarkcolour.kotlinforforge.dsl", "META-INF"], "kotlinforforge"), true);
+  assert.equal(packagesOwnModId(["thedarkcolour.kotlinforforge.dsl"], "kotlin-for-forge"), true, "-/_ 归一没生效");
+  assert.equal(packagesOwnModId(["net.darkhax.bookshelf"], "kotlinforforge"), false, "不含该段却判是 ⇒ 硬闸可被绕过");
+  assert.equal(packagesOwnModId([], "kotlinforforge"), false, "空包清单必须判否");
+  assert.equal(packagesOwnModId(["a.malilib"], ""), false, "空 modId 不许当通配");
+  assert.equal(packagesOwnModId(["a.b.c"], ".."), false, "穿越样 modId 必须判否");
+});
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed === 0 ? 0 : 1);

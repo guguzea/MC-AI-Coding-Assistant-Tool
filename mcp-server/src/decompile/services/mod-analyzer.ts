@@ -419,6 +419,12 @@ export function analyzeModJar(jarPath: string, requestedVersion?: string): Analy
     try {
       const toml = parseModsToml(buf.toString("utf8"));
       if (!meta.loaders.includes(loader)) meta.loaders.push(loader);
+      if (toml.inlineSkipped.length) {
+        meta.warnings.push(
+          `${label} 含 ${toml.inlineSkipped.length} 行内联表（本解析器不支持，已跳过）：${toml.inlineSkipped.slice(0, 5).join(", ")}` +
+            `${toml.inlineSkipped.length > 5 ? " …" : ""}；该处依赖/字段未计入，勿据此判断「无依赖约束」`,
+        );
+      }
       const mods = meta.mods ?? (meta.mods = []);
       if (toml.mods.length) {
         const seen = new Set(mods.map((m) => m.modId));

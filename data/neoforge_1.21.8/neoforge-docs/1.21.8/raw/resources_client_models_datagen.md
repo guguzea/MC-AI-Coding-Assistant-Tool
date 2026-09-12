@@ -4,7 +4,7 @@ version: "1.21.8"
 pageId: "resources/client/models/datagen"
 url: "https://docs.neoforged.net/docs/1.21.8/resources/client/models/datagen/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:00:39.934Z"
+fetchedAt: "2026-09-12T12:06:35.411Z"
 ---
 # Model Datagen
 
@@ -74,7 +74,7 @@ While elaborate and complex models can be created through datagen, it is recomme
 
 ### Creating the Model Instance
 
-Now that we have a `ModelTemplate`, we can generate the model itself by calling one of the `ModelTemplate#create*` methods. Although each create method takes in different parameters, at their core, they all take in the `ResourceLocation` representing the name of the file, a `TextureMapping` which maps a `TextureSlot` to some `ResourceLocation` relative to the `textures` directory, and the model output as a `BiConsumer`. Then, the method essentially creates the `JsonObject` used to generate the model, throwing an error if any duplicates are provided.
+Now that we have a `ModelTemplate`, we can generate the model itself by calling one of the `ModelTemplate#create*` methods. Although each create method takes in different parameters, at their core, they all take in the `ResourceLocation` representing the name of the file, a `TextureMapping` which maps a `TextureSlot` to some `ResourceLocation` relative to the `textures` directory, and the model output as a `BiConsumer<ResourceLocation, ModelInstance>`. Then, the method essentially creates the `JsonObject` used to generate the model, throwing an error if any duplicates are provided.
 
 > **Note**
 > note
@@ -200,7 +200,7 @@ Now, to actually generate blockstate and block model files, you can either call 
 > **Note**
 > note
 
-If you have an associated `BlockItem` registered for your block with no generated client item, the `ModelProvider` will automatically generate a client item using the default block model location `assets//models/block/.json` as its model.
+If you have an associated `BlockItem` registered for your block with no generated client item, the `ModelProvider` will automatically generate a client item using the default block model location `assets/<namespace>/models/block/<path>.json` as its model.
 
 ```java
 
@@ -226,124 +226,218 @@ public class ExampleModelProvider extends ModelProvider {
 
         // Create a simple block model with the same texture on each side.
 
-        // The texture must be located at assets/<namespace>/textures/block/
-.png, where
-        //  and  are the block's registry name's namespace and path, respectively.
+        // The texture must be located at assets/<namespace>/textures/block/<path>.png, where
+
+        // <namespace> and <path> are the block's registry name's namespace and path, respectively.
+
         // Used by the majority of (full) blocks, such as planks, cobblestone or bricks.
+
         blockModels.createTrivialCube(block);
 
         // Overload that accepts a `TexturedModel.Provider` to use.
+
         blockModels.createTrivialBlock(block, EXAMPLE_TEMPLATE_PROVIDER);
 
         // Block items have a model generated automatically
+
         // But let's assume you want to generate a different item, such as a flat item
+
         blockModels.registerSimpleFlatItemModel(block);
 
-        // Adds a log block model. Requires two textures at assets//textures/block/.png and
-        // assets//textures/block/_top.png, referencing the side and top texture, respectively.
+        // Adds a log block model. Requires two textures at assets/<namespace>/textures/block/<path>.png and
+
+        // assets/<namespace>/textures/block/<path>_top.png, referencing the side and top texture, respectively.
+
         // Note that the block input here is limited to RotatedPillarBlock, which is the class vanilla logs use.
+
         blockModels.woodProvider(block).log(block);
+
         
+
         // Like WoodProvider#logWithHorizontal. Used by quartz pillars and similar blocks.
+
         blockModels.createRotatedPillarWithHorizontalVariant(block, TexturedModel.COLUMN_ALT, TexturedModel.COLUMN_HORIZONTAL_ALT);
 
         // Using the `ExtendedModelTemplate` to specify the render type to use.
+
         blockModels.createRotatedPillarWithHorizontalVariant(block,
+
             TexturedModel.COLUMN_ALT.updateTemplate(template ->
+
                 template.extend().renderType("minecraft:cutout").build()
+
             ),
+
             TexturedModel.COLUMN_HORIZONTAL_ALT.updateTemplate(template ->
+
                 template.extend().renderType(this.mcLocation("cutout_mipped")).build()
+
             )
+
         );
 
         // Specifies a horizontally-rotatable block model with a side texture, a front texture, and a top texture.
+
         // The bottom will use the side texture as well. If you don't need the front or top texture,
+
         // just pass in the side texture twice. Used by e.g. furnaces and similar blocks.
+
         blockModels.createHorizontallyRotatedBlock(
+
             block,
+
             TexturedModel.Provider.ORIENTABLE_ONLY_TOP.updateTexture(mapping ->
+
                 mapping.put(TextureSlot.SIDE, this.modLocation("block/example_texture_side"))
+
                 .put(TextureSlot.FRONT, this.modLocation("block/example_texture_front"))
+
                 .put(TextureSlot.TOP, this.modLocation("block/example_texture_top"))
+
             )
+
         );
 
         // Specifies a horizontally-rotatable block model that is attached to a face, e.g. for buttons.
+
         // Accounts for placing the block on the ground and on the ceiling, and rotates them accordingly.
+
         blockModels.familyWithExistingFullBlock(block).button(block);
 
         // Create a model to use for blockstatefiles
+
         ResourceLocation modelLoc = TexturedModel.CUBE.create(block, blockModels.modelOutput);
 
         // Create a common variant to transform
+
         Variant variant = new Variant(modelLoc);
 
         // Basic single variant model
+
         blockModels.blockStateOutput.accept(
+
             MultiVariantGenerator.dispatch(
+
                 block,
+
                 new MultiVariant(
+
                     WeightedList.of(
+
                         new Weighted<>(
+
                             // Set model
+
                             variant
+
                                 // Set rotations around the x and y axes
+
                                 .with(VariantMutator.X_ROT.withValue(Quadrant.R90))
+
                                 .with(VariantMutator.Y_ROT.withValue(Quadrant.R180))
+
                                 // Set a uvlock
+
                                 .with(VariantMutator.UV_LOCK.withValue(true)),
+
                             // Set a weight
+
                             5
+
                         )
+
                     )
+
                 )
+
             )
+
         );
 
         // Add one or multiple models based on the block state properties
+
         blockModels.blockStateOutput.accept(
+
             MultiVariantGenerator.dispatch(
+
                 block,
+
                 // Create the basic multi-variant
+
                 BlockModelGenerators.variant(variant)
+
             ).with(
+
                 // Apply a property dispatch
+
                 // Will mutate the variant based on the provided mutators
+
                 PropertyDispatch.modify(BlockStateProperties.AXIS)
+
                     .select(Direction.Axis.Y, BlockModelGenerators.NOP)
+
                     .select(Direction.Axis.Z, BlockModelGenerators.X_ROT_90)
+
                     .select(Direction.Axis.X, BlockModelGenerators.X_ROT_90.then(BlockModelGenerators.Y_ROT_90))
+
             )
+
         );
 
         // Generate a multipart
+
         blockModels.blockStateOutput.accept(
+
             MultiPartGenerator.multiPart(block)
+
                 // Provide the base model
+
                 .with(BlockModelGenerators.variant(variant))
+
                 // Add conditions for variant to appear
+
                 .with(
+
                     // Add conditions to apply
+
                     new CombinedCondition(
+
                         CombinedCondition.Operation.OR,
+
                         List.of(
+
                             // Where at least one of the conditions are true
+
                             BlockModelGenerators.condition().term(BlockStateProperties.FACING, Direction.NORTH, Direction.SOUTH)
+
                             // Can nest as many conditions or groups as necessary
+
                             new CombinedCondition(
+
                                 CombinedCondition.Operation.AND,
+
                                 List.of(
+
                                     BlockModelGenerators.condition().term(BlockStateProperties.FACING, Direction.NORTH)
+
                                 )
+
                             )
+
                         )
+
                     ),
+
                     // Supply variant to mutate
+
                     BlockModelGenerators.variant(variant)
+
                 )
+
         );
+
     }
+
 }
 
 ```

@@ -7,12 +7,12 @@
 
 # Adding an Item
 ## Introduction
-Adding a basic item is one of the first steps in modding. You're going to need to create an `class_1792` object, register it, and give it a texture. To add additional behavior to the item you will need a custom <yarn class_1792> class. In this tutorial and all future ones, the “tutorial” namespace is used as a placeholder. If you have a separate mod id, feel free to use it instead.
+Adding a basic item is one of the first steps in modding. You're going to need to create an `net/minecraft/item/Item` object, register it, and give it a texture. To add additional behavior to the item you will need a custom `net/minecraft/item/Item` class. In this tutorial and all future ones, the “tutorial” namespace is used as a placeholder. If you have a separate mod id, feel free to use it instead.
 
 ## Create an Item instance (before 1.21.2)
 :!: If you're in version 1.21.2 or above, please directly read [#Creating Items in 1.21.2+](#Creating Items in 1.21.2+).
 
-First, create an instance of `class_1792`. The constructor takes in an `class_1792`.`class_1793` (or a FabricItemSettings unless versions since 1.20.5) instance, which is used to set item properties such as the durability, and stack count. For simplicity, we just do it in ExampleMod class, and store them in static fields.
+First, create an instance of `net/minecraft/item/Item`. The constructor takes in an `net/minecraft/item/Item`.`net/minecraft/item/Item$Settings` (or a FabricItemSettings unless versions since 1.20.5) instance, which is used to set item properties such as the durability, and stack count. For simplicity, we just do it in ExampleMod class, and store them in static fields.
 
 ```java
 public class ExampleMod implements ModInitializer {
@@ -29,7 +29,7 @@ public class ExampleMod implements ModInitializer {
 ## Register the item (before 1.21.2)
 We've create a basic item, but it still does not exist in Minecraft, because it has not been registered. In Minecraft, almost everything has an registry, and items are no exceptions.
 
-You'll use the vanilla registry system for registering new content. The basic syntax is `class_2378`.//`method_10230`//(Registry Type, `class_2960`, Content). Registry types are stored as static fields in the `class_7923` or `class_2378` class, and the identifier is what labels your content. Content is an instance of whatever you're adding. Specifically for item, the syntax is `class_2378`.//`method_10230`//(`class_7923`.`field_41178`, `class_2960`, `class_1792`). This can be called anywhere as long as it occurs during initialization. The method itself also returns the registered content itself.
+You'll use the vanilla registry system for registering new content. The basic syntax is `net/minecraft/registry/Registry`.//`register`//(Registry Type, `net/minecraft/util/Identifier`, Content). Registry types are stored as static fields in the `net/minecraft/registry/Registries` or `net/minecraft/registry/Registry` class, and the identifier is what labels your content. Content is an instance of whatever you're adding. Specifically for item, the syntax is `net/minecraft/registry/Registry`.//`register`//(`net/minecraft/registry/Registries`.`ITEM`, `net/minecraft/util/Identifier`, `net/minecraft/item/Item`). This can be called anywhere as long as it occurs during initialization. The method itself also returns the registered content itself.
 
 For versions since 1.21, an Identifier is created through `Identifier.of("namespace", "path")`. For versions below 1.21, it is created through `new Identifier("namespace", "path")` or `new Identifier("namespace:path")`. It will fail if the namespace or path contains illegal characters.
 
@@ -206,7 +206,7 @@ public class CustomItem extends class_1792 {
 }
 ```
 
-Replace the old <yarn class_1792> object with an instance of your new item class:
+Replace the old `net/minecraft/item/Item` object with an instance of your new item class:
 ```java
 public final class TutorialItems {
     [...]

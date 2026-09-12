@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "resources/server/conditions"
 url: "https://docs.neoforged.net/docs/resources/server/conditions/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:58:13.035Z"
+fetchedAt: "2026-09-12T12:08:19.442Z"
 ---
 # Data Load Conditions
 
@@ -359,6 +359,6 @@ While any datapack JSON file can use load conditions, only a few [data providers
 - `JsonCodecProvider` and its subclass `SpriteSourceProvider`
 - [DataMapProvider](/docs/resources/server/datamaps/#data-generation)
 - [GlobalLootModifierProvider](/docs/resources/server/loottables/glm#datagen)
-- [DatapackBuiltinEntriesProvider](/docs/concepts/registries#data-generation-for-datapack-registries) (via `Map, List>` parameter)
+- [DatapackBuiltinEntriesProvider](/docs/concepts/registries#data-generation-for-datapack-registries) (via `Map<ResourceKey<?>, List<ICondition>>` parameter)
 
 For the conditions themselves, the `NeoForgeConditions` class provides static helpers for each of the built-in condition types that return the corresponding `ICondition`s.

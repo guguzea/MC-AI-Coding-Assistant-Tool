@@ -4,7 +4,7 @@ version: "1.21.5"
 pageId: "resources"
 url: "https://docs.neoforged.net/docs/1.21.5/resources/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:52:00.895Z"
+fetchedAt: "2026-09-12T12:05:17.518Z"
 ---
 # Resources
 
@@ -14,7 +14,7 @@ Minecraft generally has two kinds of resources: resources for the [logical clien
 
 Both resource and data packs normally require a [pack.mcmeta file](#packmcmeta); however, modern NeoForge generates these at runtime for you, so you don't need to worry about it.
 
-If you are confused about the format of something, have a look at the vanilla resources. Your NeoForge development environment not only contains vanilla code, but also vanilla resources. They can be found in the External Resources section (IntelliJ)/Project Libraries section (Eclipse), under the name `ng_dummy_ng.net.minecraft:client:client-extra:` (for Minecraft resources) or `ng_dummy_ng.net.neoforged:neoforge:` (for NeoForge resources).
+If you are confused about the format of something, have a look at the vanilla resources. Your NeoForge development environment not only contains vanilla code, but also vanilla resources. They can be found in the External Resources section (IntelliJ)/Project Libraries section (Eclipse), under the name `ng_dummy_ng.net.minecraft:client:client-extra:<minecraft_version>` (for Minecraft resources) or `ng_dummy_ng.net.neoforged:neoforge:<neoforge_version>` (for NeoForge resources).
 
 ## Assets
 
@@ -28,7 +28,6 @@ Resource packs may contain folders with files affecting the following things:
 
 | Folder Name | Contents |
 | --- | --- |
-| Folder Name | Contents |
 | atlases | Texture Atlas Sources |
 | blockstates | Blockstate Files |
 | equipment | Equipment Info |
@@ -60,7 +59,6 @@ Data packs may contain folders with files affecting the following things:
 
 | Folder Name | Contents |
 | --- | --- |
-| Folder Name | Contents |
 | advancement | Advancements |
 | banner_pattern | Banner patterns |
 | cat_variant, chicken_variant, cow_variant, frog_variant, pig_variant, wolf_variant | Entity variants |
@@ -82,7 +80,6 @@ Additionally, they may also contain subfolders for some systems that integrate w
 
 | Folder name | Contents |
 | --- | --- |
-| Folder name | Contents |
 | chat_type | Chat types |
 | function | Functions |
 | item_modifier | Item modifiers |
@@ -113,7 +110,6 @@ All data providers extend the `DataProvider` interface and usually require one m
 
 | Class | Method | Generates | Side | Notes |
 | --- | --- | --- | --- | --- |
-| Class | Method | Generates | Side | Notes |
 | ModelProvider | registerModels() | Models, Blockstate Files, Client Items | Client |  |
 | LanguageProvider | addTranslations() | Translations | Client | Also requires passing the language in the constructor. |
 | ParticleDescriptionProvider | addDescriptions() | Particle definitions | Client |  |
@@ -221,12 +217,12 @@ public static void gatherData(GatherDataEvent.Client event) {
 The event offers some helpers and context for you to use:
 
 - `event.createDatapackRegistryObjects(...)` creates and registers a `DatapackBuiltinEntriesProvider` using the provided `RegistrySetBuilder`. It also forces any future use of the lookup provider to contain your datagenned entries.
-- `event.createProvider(...)` registers a provider by providing the `PackOutput` and optionally the `CompletableFuture` as part of a lambda.
-- `event.createBlockAndItemTags(...)` registers a `TagsProvider` and `TagsProvider` by constructing the `TagsProvider` using the `TagsProvider`.
+- `event.createProvider(...)` registers a provider by providing the `PackOutput` and optionally the `CompletableFuture<HolderLookup.Provider>` as part of a lambda.
+- `event.createBlockAndItemTags(...)` registers a `TagsProvider<Block>` and `TagsProvider<Item>` by constructing the `TagsProvider<Item>` using the `TagsProvider<Block>`.
 - `event.getGenerator()` returns the `DataGenerator` that you register the providers to.
 - `event.getPackOutput()` returns a `PackOutput` that is used by some providers to determine their file output location.
 - `event.getResourceManager(PackType)` returns a `ResourceManager` that can be used by providers to check for already existing files.
-- `event.getLookupProvider()` returns a `CompletableFuture` that is mainly used by tags and datagen registries to reference other, potentially not yet existing elements.
+- `event.getLookupProvider()` returns a `CompletableFuture<HolderLookup.Provider>` that is mainly used by tags and datagen registries to reference other, potentially not yet existing elements.
 - `event.includeDev()` and `event.includeReports()` are `boolean` methods that allow you to check whether specific command line arguments (see below) are enabled.
 
 ### Command Line Arguments

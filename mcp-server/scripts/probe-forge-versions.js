@@ -14,14 +14,18 @@
  * Network is required for live probing; tests use a mocked fetcher.
  */
 
-import { writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 import { parseCliArgs, compareVersions } from "./_lib/args.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const OUT_DIR  = join(__dirname, "..", "data");
+// 与 probe-neoforge-versions.js 一致：产物落在**仓库根 data/**。
+// 旧值 `join(__dirname, "..", "data")` 指向 `mcp-server/data/`，而 fetch-forge-docs.js /
+// fetch-forge-javadoc.js / validate-forge-build.js 读的都是 `<repo>/data/forge-versions-manifest.json`
+// —— 探测结果从来没被抓取器看见过，这正是 manifest chapters 停在 43 条（F122）的第二道根因。
+const OUT_DIR = join(__dirname, "..", "..", "data");
 const OUT_FILE = join(OUT_DIR, "forge-versions-manifest.json");
 
 // ── Version configuration ───────────────────────────────────────────────────
@@ -181,8 +185,10 @@ export function extractChapterPaths(navHtml, baseUrl) {
   for (const raw of hrefs) {
     const href = raw.match(/href="([^"]+)"/)?.[1];
     if (!href) continue;
-    if (href === ".." || href === "." || href === "#") continue;
-    if (href.match(/\.(png|jpg|jpeg|gif|svg|ico|css|js|json|woff2?|ttf|eot)(\?|$)/)) continue;
+    // 只跳过裸锚点。`..` / `.` **不能**提前丢：它们解析后正是版本根页
+    // （= MkDocs 站点首页），下面会归一成 chapter `index`（F122：1.12.2 缺 index 页）。
+    if (href === "#") continue;
+    if (href.match(/\.(png|jpg|jpeg|gif|svg|ico|css|js|json|md|woff2?|ttf|eot)(\?|$)/)) continue;
 
     let pathname;
     try {
@@ -199,11 +205,68 @@ export function extractChapterPaths(navHtml, baseUrl) {
     }
 
     const clean = pathname.split("#")[0].split("?")[0];
-    if (!clean) continue;
-    if (/^(en|images|css|fonts|contributing|styleguide|forgedev|cdn-cgi)\b/.test(clean)) continue;
-    chapters.add(clean);
+
+    // 上游 MkDocs 的导航会把站点首页写成 `…/en/<route>/`（去掉版本前缀后为空段），
+    // 个别档还会直连 `…/en/<route>/index/`。两种形态都归一到 chapter `index`，
+    // 而不是 `if (!clean) continue` 把它丢掉（F122：1.12.2 站点首页因此常年缺失）。
+    if (clean === "" || clean === "index" || clean === versionPrefix?.replace(/^\//, "").replace(/\/$/, "")) {
+      chapters.add("index");
+      continue;
+    }
+
+    // 只过滤真正的非内容前缀（资源 / CDN / 语言根）。
+    // 旧表里还列着 `contributing` / `styleguide` / `forgedev`——这三条是真实文档页
+    // （docs.minecraftforge.net 实测 200，且各自出现在上游 sitemap.xml 里），
+    // 把它们当噪声跳过就是 1.12.2 少 14 页的直接根因（F122）。
+    if (/^(en|images|css|fonts|cdn-cgi|assets|javascripts|stylesheets)\b/.test(clean)) continue;
+    // 上游导航里偶见 `%2B`（`imodelstate+part`），还原成真实页名再入库。
+    let decoded = clean;
+    try {
+      decoded = decodeURIComponent(clean);
+    } catch {
+      /* 非法百分号序列：保持原样 */
+    }
+    chapters.add(decoded);
   }
   return [...chapters].sort();
+}
+
+// ── 与既有 manifest 合并（单版本重跑不得清盘）───────────────────────────
+
+export function readPreviousManifest(file) {
+  if (!existsSync(file)) return null;
+  try {
+    const prev = JSON.parse(readFileSync(file, "utf-8"));
+    return prev && prev.versions && typeof prev.versions === "object" ? prev : null;
+  } catch {
+    console.warn(`  现有 manifest 无法解析，本次不继承任何条目：${file}`);
+    return null;
+  }
+}
+
+/**
+ * `--version=<mc>` 只重探一个档：
+ *  - 未探测的版本必须原样带过去（否则一份 manifest 被写成只剩一档）；
+ *  - 被探测的那一档按字段合并 —— `buildMkDocsEntry` 会写 `javadoc: null`，
+ *    而 1.12.2 的 javadoc 摘要、1.20.4 的 `routeNote*` 都是抓取链之外攒下来的字段，
+ *    逐字段覆盖会把它们抹掉。
+ * 全量重跑（filterMc = null）不继承，避免 stale 条目永生。
+ */
+export function mergeManifest(prev, fresh, { filterMc } = {}) {
+  if (!prev || !filterMc) return fresh;
+  const out = { ...fresh, versions: { ...prev.versions } };
+  for (const key of Object.keys(fresh.versions)) {
+    const freshEntry = fresh.versions[key];
+    const prevEntry = prev.versions[key];
+    if (!prevEntry) { out.versions[key] = freshEntry; continue; }
+    const merged = { ...prevEntry, ...freshEntry };
+    for (const sub of ["mkdocs", "javadoc"]) {
+      if (freshEntry[sub] && prevEntry[sub]) merged[sub] = { ...prevEntry[sub], ...freshEntry[sub] };
+      else if (prevEntry[sub] && !freshEntry[sub]) merged[sub] = prevEntry[sub];
+    }
+    out.versions[key] = merged;
+  }
+  return out;
 }
 
 // ── Main orchestration ─────────────────────────────────────────────────────
@@ -249,7 +312,8 @@ async function main() {
 
   mkdirSync(OUT_DIR, { recursive: true });
 
-  const manifest = await buildManifest({ filterMc });
+  const fresh = await buildManifest({ filterMc });
+  const manifest = mergeManifest(readPreviousManifest(OUT_FILE), fresh, { filterMc });
 
   if (dryRun) {
     console.log(JSON.stringify(manifest, null, 2));

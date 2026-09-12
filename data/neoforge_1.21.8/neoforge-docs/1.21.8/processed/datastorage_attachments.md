@@ -133,7 +133,7 @@ chunk.setUnsaved(true); // must be done manually because we did not use setData
 
 To sync block entity, chunk, level, or entity attachments to a client, you can implement `sync` in the builder. Attachments are then sent to the client when the attachment is default-created through `AttachmentHolder#getData`, updated through `AttachmentHolder#setData`, or removed through `AttachmentHolder#removeData`. If the data should be sent at other times, then `AttachmentHolder#syncData` can be called with the `AttachmentType` to sync.
 
-`AttachmentType.Builder#sync` has three overloads; however, they each create an `AttachmentSyncHandler`, where `T` is the type of the data attachment. The handler has three methods: two to `read` and `write` to the network, and one to determine whether a given player can see the data broadcasted by the holder (`sendToPlayer`). The sync handler is ignored if the data attachment is removed.
+`AttachmentType.Builder#sync` has three overloads; however, they each create an `AttachmentSyncHandler<T>`, where `T` is the type of the data attachment. The handler has three methods: two to `read` and `write` to the network, and one to determine whether a given player can see the data broadcasted by the holder (`sendToPlayer`). The sync handler is ignored if the data attachment is removed.
 
 ```java
 

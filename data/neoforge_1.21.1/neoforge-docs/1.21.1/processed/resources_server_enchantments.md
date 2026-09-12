@@ -212,7 +212,7 @@ public record Increment(int value) {
 
 ```
 
-Enchantment effect component types must be [registered](/docs/concepts/registries) to `BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE`, which takes a `DataComponentType`. For example, you could register an enchantment effect component that can store an `Increment` object as follows:
+Enchantment effect component types must be [registered](/docs/concepts/registries) to `BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE`, which takes a `DataComponentType<?>`. For example, you could register an enchantment effect component that can store an `Increment` object as follows:
 
 ```java
 
@@ -266,17 +266,17 @@ int modifiedValue = atomicValue.get();
 
 ```
 
-First, we invoke one of the overloads of `EnchantmentHelper#runIterationOnItem`. This function accepts an `EnchantmentHelper.EnchantmentVisitor`, which is a functional interface that accepts an enchantment and its level, and is invoked on all of the enchantments that the given itemstack has (essentially a `BiConsumer`).
+First, we invoke one of the overloads of `EnchantmentHelper#runIterationOnItem`. This function accepts an `EnchantmentHelper.EnchantmentVisitor`, which is a functional interface that accepts an enchantment and its level, and is invoked on all of the enchantments that the given itemstack has (essentially a `BiConsumer<Enchantment, Integer>`).
 
 To actually perform the adjustment, use the provided `Increment#add` method. Since this is inside of a lambda expression, we need to use a type that can be updated atomically, such as `AtomicInteger`, to modify this value. This also permits multiple `INCREMENT` components to run on the same item and stack their effects, like what happens in vanilla.
 
 ### ConditionalEffect
 
-Wrapping the type in `ConditionalEffect` allows the enchantment effect component to optionally take effect based on a given [LootContext](/docs/resources/server/loottables/#loot-context).
+Wrapping the type in `ConditionalEffect<?>` allows the enchantment effect component to optionally take effect based on a given [LootContext](/docs/resources/server/loottables/#loot-context).
 
-`ConditionalEffect` provides `ConditionalEffect#matches(LootContext context)`, which returns whether the effect should be allowed to run based on its internal `Optional`, and handled serialization and deserialization of its `LootItemCondition`.
+`ConditionalEffect` provides `ConditionalEffect#matches(LootContext context)`, which returns whether the effect should be allowed to run based on its internal `Optional<LootItemConditon>`, and handled serialization and deserialization of its `LootItemCondition`.
 
-Vanilla adds an additional helper method to further streamline the process of checking these conditions: `Enchantment#applyEffects()`. This method takes a `List>`, evaluates the conditions, and runs a `Consumer` on each `T` contained by a `ConditionalEffect` whose condition was met. Since many vanilla enchantment effect components are defined as a `List>`, these can be directly plugged into the helper method like so:
+Vanilla adds an additional helper method to further streamline the process of checking these conditions: `Enchantment#applyEffects()`. This method takes a `List<ConditionalEffect<T>>`, evaluates the conditions, and runs a `Consumer<T>` on each `T` contained by a `ConditionalEffect` whose condition was met. Since many vanilla enchantment effect components are defined as a `List<ConditionalEffect<?>>`, these can be directly plugged into the helper method like so:
 
 ```java
 
@@ -318,11 +318,11 @@ public static final DeferredHolder<DataComponentType<?>, DataComponentType<Condi
 
 ```
 
-The parameters to `ConditionalEffect.codec` are the codec for the generic `ConditionalEffect`, followed by some `LootContextParamSets` entry.
+The parameters to `ConditionalEffect.codec` are the codec for the generic `ConditionalEffect<T>`, followed by some `LootContextParamSets` entry.
 
 ## Enchantment Data Generation
 
-Enchantment JSON files can be created automatically using the [data generation](/docs/resources/#data-generation) system by passing a `RegistrySetBuilder` into `DatapackBuiltInEntriesProvider`. The JSON will be placed in `/src/generated/data//enchantment/.json`.
+Enchantment JSON files can be created automatically using the [data generation](/docs/resources/#data-generation) system by passing a `RegistrySetBuilder` into `DatapackBuiltInEntriesProvider`. The JSON will be placed in `<project root>/src/generated/data/<modid>/enchantment/<path>.json`.
 
 For more information on how `RegistrySetBuilder` and `DatapackBuiltinEntriesProvider` work, please see the article on [Data Generation for Datapack Registries](https://docs.neoforged.net/docs/concepts/registries/#data-generation-for-datapack-registries).
 

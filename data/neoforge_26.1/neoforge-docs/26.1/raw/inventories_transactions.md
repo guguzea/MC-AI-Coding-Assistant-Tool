@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "inventories/transactions"
 url: "https://docs.neoforged.net/docs/inventories/transactions/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:57:50.768Z"
+fetchedAt: "2026-09-12T12:07:47.571Z"
 ---
 # Transactions
 
@@ -207,7 +207,7 @@ While `Resource`s can be used for primitives, they are not strictly necessary (e
 
 ## Resource Handlers
 
-`ResourceHandler`s represent the backing inventories within a transaction, where `T` is the type of the `Resource` backing the object. Each handler maps to its associated contents using an index (e.g., index `0` maps to the first slot, index `1` maps to the second, etc). For every index, you can check whether a `Resource` can be contained at the location (`isValid`) or what `Resource` is already stored there (`getResource`). You can also check how many `Resource`s can be stored at the location (`getCapacityAsLong` / `getCapacityAsInt`) along with how many of a `Resource` is stored there (`getAmountAsLong` / `getAmountAsInt`). The number of indices accessible to the handler represents its `size`.
+`ResourceHandler<T>`s represent the backing inventories within a transaction, where `T` is the type of the `Resource` backing the object. Each handler maps to its associated contents using an index (e.g., index `0` maps to the first slot, index `1` maps to the second, etc). For every index, you can check whether a `Resource` can be contained at the location (`isValid`) or what `Resource` is already stored there (`getResource`). You can also check how many `Resource`s can be stored at the location (`getCapacityAsLong` / `getCapacityAsInt`) along with how many of a `Resource` is stored there (`getAmountAsLong` / `getAmountAsInt`). The number of indices accessible to the handler represents its `size`.
 
 To modify the contents of the backing inventory, `ResourceHandler` provides two methods: `insert` to put a `Resource` in, and `extract` to take a `Resource` out. `insert` and `extract` take in three arguments: the `Resource` being operated upon, the `int` amount to put in / take out, and a `TransactionContext` representing what [transaction](#transferring-between-handlers) that is performing the operation, returning the amount put in / taken out. Both of these methods will find the first indices available to put in / take out the contents to / from. If the handler should only transact on one specific index, then both `insert` and `extract` provide an overload that takes in the `int` index to put in / take out `Resource`s to / from.
 
@@ -772,7 +772,7 @@ try (Transaction tx = Transaction.openRoot()) {
 
 On its own, `Transaction#commit` does nothing. As such, the insertions and extractions performed are permanent regardless of whether the transfer was successful or not. What we want is that for any `Transaction`, the transfer only happens if it is `commit`ted. Otherwise, the transfer should be reverted.
 
-This is where the `SnapshotJournal` comes in. As the name implies, it can take a `T` 'snapshot' of the current handler state right before modifying its contents. Then, it can either release the snapshot if the transaction was successful, or it can revert the handler back to its previous state. Each `SnapshotJournal` must implement at least two methods: `createSnapshot` to actually create the saved state, and `revertToSnapshot` to revert the handler back to the specified state. If any backing objects need to be notified or updated due to the changes in the handler, then the journal can also override `onRootCommit` to handle these changes.
+This is where the `SnapshotJournal<T>` comes in. As the name implies, it can take a `T` 'snapshot' of the current handler state right before modifying its contents. Then, it can either release the snapshot if the transaction was successful, or it can revert the handler back to its previous state. Each `SnapshotJournal` must implement at least two methods: `createSnapshot` to actually create the saved state, and `revertToSnapshot` to revert the handler back to the specified state. If any backing objects need to be notified or updated due to the changes in the handler, then the journal can also override `onRootCommit` to handle these changes.
 
 All NeoForge `ResourceHandler` implementations use the `SnapshotJournal` in some fashion, either directly on the handler itself or as a field within. It's only when making new `ResourceHandler`s that the `SnapshotJournal` needs to be implemented.
 

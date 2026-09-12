@@ -1,6 +1,6 @@
 # Loot Conditions
 
-Loot conditions can be used to check whether a [loot entry](/docs/1.21.10/resources/server/loottables/#loot-entry) or [loot pool](/docs/1.21.10/resources/server/loottables/#loot-pool) should be used in the current context. In both cases, a list of conditions is defined; the entry or pool is only used if all conditions pass. During datagen, they are added to a `LootPoolEntryContainer.Builder` or `LootPool.Builder` by calling `#when` with an instance of the desired condition. This article will outline the available loot conditions. To create your own loot conditions, see [Custom Loot Conditions](/docs/1.21.10/resources/server/loottables/custom#custom-loot-conditions).
+Loot conditions can be used to check whether a [loot entry](/docs/1.21.10/resources/server/loottables/#loot-entry) or [loot pool](/docs/1.21.10/resources/server/loottables/#loot-pool) should be used in the current context. In both cases, a list of conditions is defined; the entry or pool is only used if all conditions pass. During datagen, they are added to a `LootPoolEntryContainer.Builder<?>` or `LootPool.Builder` by calling `#when` with an instance of the desired condition. This article will outline the available loot conditions. To create your own loot conditions, see [Custom Loot Conditions](/docs/1.21.10/resources/server/loottables/custom#custom-loot-conditions).
 
 ## minecraft:inverted
 

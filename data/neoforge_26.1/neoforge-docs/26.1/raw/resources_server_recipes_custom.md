@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "resources/server/recipes/custom"
 url: "https://docs.neoforged.net/docs/resources/server/recipes/custom/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:58:26.806Z"
+fetchedAt: "2026-09-12T12:08:34.642Z"
 ---
 # Custom Recipes
 
@@ -193,7 +193,7 @@ You are not required to make use of the `CommonInfo` record, or even make the `s
 
 ## Recipe Book Information
 
-Like the common information, there is also fields parsed from the JSON relating to the recipe book: a [GUI](/docs/rendering/screens) that displays recipes in some transformation menu (e.g., crafting table, furnace, etc.). For these fields, vanilla provides the `Recipe.BookInfo` interface, where `CategoryType` defines either the category of the recipe (assuming it is serializable) or an intermediate serializable object that can be converted to the category. Like `CommonInfo`, it provides a [map codec](/docs/datastorage/codecs) and [stream codec](/docs/networking/streamcodecs) for integrating with the [RecipeSerializer](#the-recipe-serializer) below.
+Like the common information, there is also fields parsed from the JSON relating to the recipe book: a [GUI](/docs/rendering/screens) that displays recipes in some transformation menu (e.g., crafting table, furnace, etc.). For these fields, vanilla provides the `Recipe.BookInfo<CategoryType>` interface, where `CategoryType` defines either the category of the recipe (assuming it is serializable) or an intermediate serializable object that can be converted to the category. Like `CommonInfo`, it provides a [map codec](/docs/datastorage/codecs) and [stream codec](/docs/networking/streamcodecs) for integrating with the [RecipeSerializer](#the-recipe-serializer) below.
 
 For example:
 

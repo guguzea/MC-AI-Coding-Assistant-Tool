@@ -1,10 +1,10 @@
 ---
-title: "Registering Payloads"
+title: "Payload"
 version: "1.21.11"
 pageId: "networking/payload"
 url: "https://docs.neoforged.net/docs/1.21.11/networking/payload/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:49:49.254Z"
+fetchedAt: "2026-09-12T12:09:19.305Z"
 ---
 # Registering Payloads
 

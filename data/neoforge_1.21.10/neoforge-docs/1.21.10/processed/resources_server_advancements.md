@@ -48,13 +48,13 @@ Minecraft only ever has one root advancement per tab, and always calls the root 
 
 To unlock an advancement, the specified criteria must be met. Criteria are tracked through triggers, which are executed from code when the associated action happens (e.g. the `player_killed_entity` trigger executes when the player kills the specified [entity](/docs/1.21.10/entities/)). Any time an advancement is loaded into the game, the criteria defined are read and added as listeners to the trigger. When a trigger is executed, all advancements that have a listener for the corresponding criterion are rechecked for completion. If the advancement is completed, the listeners are removed.
 
-Custom criteria triggers are made up of two parts: the trigger, which is activated in code by calling `#trigger`, and the instance which defines the conditions under which the trigger should award the criterion. The trigger extends `SimpleCriterionTrigger` while the instance implements `SimpleCriterionTrigger.SimpleInstance`. The generic value `T` represents the trigger instance type.
+Custom criteria triggers are made up of two parts: the trigger, which is activated in code by calling `#trigger`, and the instance which defines the conditions under which the trigger should award the criterion. The trigger extends `SimpleCriterionTrigger<T>` while the instance implements `SimpleCriterionTrigger.SimpleInstance`. The generic value `T` represents the trigger instance type.
 
 ### SimpleCriterionTrigger.SimpleInstance
 
 A `SimpleCriterionTrigger.SimpleInstance` represents a single criterion defined in the `criteria` object. Trigger instances are responsible for holding the defined conditions, and returning whether the inputs match the condition.
 
-Conditions are usually passed in through the constructor. The `SimpleCriterionTrigger.SimpleInstance` interface requires only one function, called `#player`, which returns the conditions the player must meet as an `Optional`. If the subclass is a record with a `player` parameter of this type (as below), the automatically generated `#player` method will suffice.
+Conditions are usually passed in through the constructor. The `SimpleCriterionTrigger.SimpleInstance` interface requires only one function, called `#player`, which returns the conditions the player must meet as an `Optional<ContextAwarePredicate>`. If the subclass is a record with a `player` parameter of this type (as below), the automatically generated `#player` method will suffice.
 
 ```java
 
@@ -64,7 +64,7 @@ public record ExampleTriggerInstance(Optional<ContextAwarePredicate> player/*, o
 
 ```
 
-Typically, trigger instances have static helper methods which construct the full `Criterion` object from the arguments to the instance. This allows these instances to be easily created during data generation, but are optional.
+Typically, trigger instances have static helper methods which construct the full `Criterion<T>` object from the arguments to the instance. This allows these instances to be easily created during data generation, but are optional.
 
 ```java
 
@@ -112,7 +112,7 @@ public record ExampleTriggerInstance(Optional<ContextAwarePredicate> player, Ite
 
 ### SimpleCriterionTrigger
 
-The `SimpleCriterionTrigger` implementation has two purposes: supplying a method to check trigger instances and run attached listeners on success, and specifying a [codec](/docs/1.21.10/datastorage/codecs) to serialize the trigger instance (`T`).
+The `SimpleCriterionTrigger<T>` implementation has two purposes: supplying a method to check trigger instances and run attached listeners on success, and specifying a [codec](/docs/1.21.10/datastorage/codecs) to serialize the trigger instance (`T`).
 
 First, we want to add a method that takes the inputs we need and calls `SimpleCriterionTrigger#trigger` to properly handle checking all listeners. Most trigger instances also name this method `#trigger`. Reusing our example trigger instance from above, our trigger would look something like this:
 

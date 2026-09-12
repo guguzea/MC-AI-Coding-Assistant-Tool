@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "resources/server/glm"
 url: "https://docs.neoforged.net/docs/1.20.6/resources/server/glm/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:02.556Z"
+fetchedAt: "2026-09-12T12:01:55.202Z"
 ---
 # Global Loot Modifiers
 
@@ -46,7 +46,7 @@ The `global_loot_modifiers.json` represents all loot modifiers to be loaded into
 
 `global_loot_modifiers.json` will only be read in the `neoforge` namespace. The file will be neglected if it is under the mod's namespace.
 
-`entries` is an *ordered list* of the modifiers that will be loaded. The [ResourceLocation](/docs/1.20.6/misc/resourcelocation)s specified points to their associated entry within `data//loot_modifiers/.json`. This is primarily relevant to datapack makers for resolving conflicts between modifiers from separate mods.
+`entries` is an *ordered list* of the modifiers that will be loaded. The [ResourceLocation](/docs/1.20.6/misc/resourcelocation)s specified points to their associated entry within `data/<namespace>/loot_modifiers/<path>.json`. This is primarily relevant to datapack makers for resolving conflicts between modifiers from separate mods.
 
 `replace`, when `true`, changes the behavior from appending loot modifiers to the global list to replacing the global list entries entirely. Modders will want to use `false` for compatibility with other mod implementations. Datapack makers may want to specify their overrides with `true`.
 

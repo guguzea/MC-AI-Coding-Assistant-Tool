@@ -130,7 +130,7 @@ More information about how item models are submitted for rendering can be found 
 
 ## A Basic Model
 
-The `type` field within `model` determines how to choose the model being submitted to render for the item. The simplest type is handled by `minecraft:model` (or `CuboidItemModelWrapper`), which functionally defines the model JSON being submitted to render, relative to the `models` directory (e.g. `assets//models/.json`).
+The `type` field within `model` determines how to choose the model being submitted to render for the item. The simplest type is handled by `minecraft:model` (or `CuboidItemModelWrapper`), which functionally defines the model JSON being submitted to render, relative to the `models` directory (e.g. `assets/<namespace>/models/<path>.json`).
 
 - JSON
 - Datagen
@@ -1362,7 +1362,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 
 ```
 
-Creating your own `SelectItemModelProperty` is similar to a codec-based registry object. You make a class that implements `SelectItemModelProperty`, create a `Codec` to serialize and deserialize the property value, create a `MapCodec` to encode and decode the object, and register the codec to its registry via `RegisterSelectItemModelPropertyEvent` on the [mod event bus](/docs/concepts/events#event-buses). The `SelectItemModelProperty` has a generic `T` that represents the value to switch on. It only contains one method `get`, which takes in the current `ItemStack`, the level the stack is in, the entity holding the stack, some seeded value, and the display context of the item to return an arbitrary `T` to be interpreted by the select model.
+Creating your own `SelectItemModelProperty` is similar to a codec-based registry object. You make a class that implements `SelectItemModelProperty<T>`, create a `Codec` to serialize and deserialize the property value, create a `MapCodec` to encode and decode the object, and register the codec to its registry via `RegisterSelectItemModelPropertyEvent` on the [mod event bus](/docs/concepts/events#event-buses). The `SelectItemModelProperty` has a generic `T` that represents the value to switch on. It only contains one method `get`, which takes in the current `ItemStack`, the level the stack is in, the entity holding the stack, some seeded value, and the display context of the item to return an arbitrary `T` to be interpreted by the select model.
 
 ```java
 
@@ -1380,33 +1380,52 @@ public record StackRarity() implements SelectItemModelProperty<Rarity> {
 
         // The codec for the object being selected
 
-        // Used to serialize the case entries ("when": 
-)
+        // Used to serialize the case entries ("when": <property value>)
+
         Rarity.CODEC
+
     );
 
     @Nullable
+
     @Override
+
     public Rarity get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed, ItemDisplayContext displayContext) {
+
         // When null, uses the fallback model
+
         return stack.get(DataComponents.RARITY);
+
     }
 
     @Override
-    public SelectItemModelProperty.Type type() {
+
+    public SelectItemModelProperty.Type<StackRarity, Rarity> type() {
+
         return TYPE;
+
     }
+
 }
 
 // In some event handler class
+
 @SubscribeEvent // on the mod event bus only on the physical client
+
 public static void registerSelectProperties(RegisterSelectItemModelPropertyEvent event) {
+
     event.register(
+
         // The name to reference as the type
+
         Identifier.fromNamespaceAndPath("examplemod", "rarity"),
+
         // The property type
+
         StackRarity.TYPE
+
     )
+
 }
 
 ```
@@ -1415,97 +1434,181 @@ public static void registerSelectProperties(RegisterSelectItemModelPropertyEvent
 - Datagen
 
 ```json5
+
 // For some item 'examplemod:example_item'
+
 // JSON at 'assets/examplemod/items/example_item.json'
+
 {
+
     "model": {
+
         "type": "minecraft:select",
 
         // The `SelectItemModelProperty` to use
+
         "property": "examplemod:rarity",
+
         "fallback": {
+
             // The fallback model to use if no case matches
+
             // Can be any unbaked model type
+
             "type": "minecraft:model",
+
             "model": "examplemod:item/example_item"
+
         },
 
         // Switch cases based on Selectable Property
+
         "cases": [
+
             {
+
                 // When the rarity is `Rarity#UNCOMMON`
+
                 "when": "uncommon",
+
                 "model": {
+
                     // Can be any unbaked model type
+
                     "type": "minecraft:model",
+
                     // Points to 'assets/examplemod/models/item/example_item_1.json'
+
                     "model": "examplemod:item/example_item_1"
+
                 }
+
             },
+
             {
+
                 // When the rarity is `Rarity#RARE`
+
                 "when": "rare",
+
                 "model": {
+
                      // Can be any unbaked model type
+
                     "type": "minecraft:model",
+
                     // Points to 'assets/examplemod/models/item/example_item_2.json'
+
                     "model": "examplemod:item/example_item_2"
+
                 }
+
             }
+
         ]
+
     }
+
 }
 
 ```
 
 ```java
-// Assume there is some DeferredItem EXAMPLE_ITEM
+
+// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
+
 // Within an extended ModelProvider
+
 @Override
+
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+
     itemModels.itemModelOutput.accept(
+
         EXAMPLE_ITEM.get(),
+
         new SelectItemModel.Unbaked(
+
             new SelectItemModel.UnbakedSwitch(
+
                 // The `SelectItemModelProperty` to use
+
                 new StackRarity(),
+
                 // Switch cases based on selectable property
+
                 List.of(
+
                     new SelectItemModel.SwitchCase(
+
                         // The list of cases to match for this model
+
                         List.of(Rarity.UNCOMMON),
+
                         // Can be any unbaked model type
+
                         new CuboidItemModelWrapper.Unbaked(
+
                             // Points to 'assets/examplemod/models/item/example_item_1.json'
+
                             Identifier.fromNamespaceAndPath("examplemod", "item/example_item_1"),
+
                             Optional.empty(),
+
                             Collections.emptyList()
+
                         )
+
                     ),
+
                     new SelectItemModel.SwitchCase(
+
                         // The list of cases to match for this model
+
                         List.of(Rarity.RARE),
+
                         // Can be any unbaked model type
+
                         new CuboidItemModelWrapper.Unbaked(
+
                             // Points to 'assets/examplemod/models/item/example_item_2.json'
+
                             Identifier.fromNamespaceAndPath("examplemod", "item/example_item_2"),
+
                             Optional.empty(),
+
                             Collections.emptyList()
+
                         )
+
                     )
+
                 )
+
             ),
+
             // The fallback model to use if no case matches
+
             Optional.of(
+
                 new CuboidItemModelWrapper.Unbaked(
+
                     // Points to 'assets/examplemod/models/item/example_item.json'
+
                     ModelLocationUtils.getModelLocation(EXAMPLE_ITEM.get()),
+
                     Optional.empty(),
+
                     Collections.emptyList()
+
                 )
+
             )
+
         )
+
     );
+
 }
 
 ```

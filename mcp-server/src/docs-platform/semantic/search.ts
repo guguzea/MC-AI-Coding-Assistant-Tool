@@ -435,9 +435,12 @@ export async function semanticSearch(
   const zhFtsDocs = zhExpr ? ftsMatchExec(db, zhExpr, 30) : [];
 
   const ftsExpr = opts?.ftsExpr ?? buildFtsQuery(query);
-  const ftsDocs = ftsExpr
-    ? ftsMatchExec(db, ftsExpr, 30)
-    : cjkLikeDocIdsSync(query, db, 30);
+  // F106：以前是「有 ASCII token 就只跑 FTS，否则才查 CJK」⇒ 混排查询（`方块 blockentity`）
+  // 会把中文通道整个跳过，命中只剩 ASCII 那半边的结果，看起来正常其实漏了一半语料。
+  // 两条通道现在各跑各的再并集。
+  const asciiDocs = ftsExpr ? ftsMatchExec(db, ftsExpr, 30) : [];
+  const cjkDocs = /[\u3400-\u9fff\uf900-\ufaff]/.test(query) ? cjkLikeDocIdsSync(query, db, 30) : [];
+  const ftsDocs = [...new Set([...asciiDocs, ...cjkDocs])];
 
   const docBest = new Map<string, number>();
   const chunkEmbScores = new Map<string, number>();

@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "datagen/glm"
 url: "https://docs.neoforged.net/docs/1.20.6/datagen/glm/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:27.070Z"
+fetchedAt: "2026-09-12T12:00:58.372Z"
 ---
 # Global Loot Modifier Generation
 

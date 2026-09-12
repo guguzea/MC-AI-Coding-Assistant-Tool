@@ -3,7 +3,7 @@
   "branch": "main",
   "commitSha": "caa6822e596f16412b71e684edb748893c67a9c2",
   "treeFile": "temp/fabric-docs-main-tree.json",
-  "fetchedAt": "2026-09-06T17:09:34.884Z",
+  "fetchedAt": "2026-09-12T06:54:51.104Z",
   "integrity": "git blob SHA-1（`blob <len>\\0` + 内容）逐文件对账上游 tree 条目；sha256 为本地防漂移",
   "expandSpec": "markdown-it-vuepress-code-snippet-enhanced@dfb9fa25527b2f772d50ca37ae526484c890b8ae（transcludeWith=区间翻转 / transclude={a-b}=行区间 / 缺省整文件；除 dontTrim 外按最短前导空白反缩进）",
   "version": "1.21.1",

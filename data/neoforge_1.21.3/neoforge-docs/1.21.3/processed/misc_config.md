@@ -8,7 +8,6 @@ A configuration can be created using a subtype of `IConfigSpec`. NeoForge implem
 
 | Method | Description |
 | --- | --- |
-| Method | Description |
 | build | Creates the ModConfigSpec. |
 | configure | Creates a pair of the class holding the config values and the ModConfigSpec. |
 
@@ -57,7 +56,6 @@ Each config value can be supplied with additional context to provide additional 
 
 | Method | Description |
 | --- | --- |
-| Method | Description |
 | comment | Provides a description of what the config value does. Can provide multiple strings for a multiline comment. |
 | translation | Provides a translation key for the name of the config value. |
 | worldRestart | The world must be restarted before the config value can be changed. |
@@ -101,7 +99,7 @@ The values themselves can be obtained using `ConfigValue#get`. The values are ad
 - **Range Values**
 
 Description: Value must be between the defined bounds
-- Class Type: `Comparable`
+- Class Type: `Comparable<T>`
 - Method Name: `#defineInRange`
 - Additional Components:
 
@@ -135,7 +133,7 @@ A collection of the allowed values the configuration can be
 **List Values**
 
 - Description: Value is a list of entries
-- Class Type: `List`
+- Class Type: `List<T>`
 - Method Name: `#defineList`, `#defineListAllowEmpty` if list can be empty
 - Additional Components:
 
@@ -151,7 +149,7 @@ A supplier that returns a default value to use when a new entry is added in conf
 **Enum Values**
 
 - Description: An enum value in the supplied collection
-- Class Type: `Enum`
+- Class Type: `Enum<T>`
 - Method Name: `#defineEnum`
 - Additional Components:
 
@@ -196,7 +194,7 @@ public ExampleMod(ModContainer container) {
 
 ### Configuration Types
 
-Configuration types determine where the configuration file is located, what time it is loaded, and whether the file is synced across the network. All configurations are, by default, either loaded from `.minecraft/config` on the physical client or `/config` on the physical server. Some nuances between each configuration type can be found in the following subsections.
+Configuration types determine where the configuration file is located, what time it is loaded, and whether the file is synced across the network. All configurations are, by default, either loaded from `.minecraft/config` on the physical client or `<server_folder>/config` on the physical server. Some nuances between each configuration type can be found in the following subsections.
 
 > **Tip**
 > tip
@@ -244,8 +242,8 @@ There is no server location for this configuration type
 
 Can be overridden for each world by adding a config to:
 
-Client: `.minecraft/saves//serverconfig`
-- Server: `/world/serverconfig`
+Client: `.minecraft/saves/<world_name>/serverconfig`
+- Server: `<server_folder>/world/serverconfig`
 
 </li>
 </ul>

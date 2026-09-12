@@ -203,7 +203,7 @@
       "note": "本仓 primer 从 1.14 起，1.13.2 无 primer ⇒ breakingChanges 空不代表无风险；1.12.2→1.13.2 的结构差异见 data/forge-porting/breaking-changes/1.12.2-1.14.4.json，正文见 primer 1.14。Rift 唯一档也在 1.13.2。"
     },
     "1.14.4": {
-      "forge": "26.0.21",
+      "forge": "28.2.26",
       "neoforge": null,
       "fabric": null,
       "java": 8,
@@ -231,7 +231,7 @@
       ]
     },
     "1.15.2": {
-      "forge": "29.0.23",
+      "forge": "31.2.57",
       "neoforge": null,
       "fabric": null,
       "java": 8,

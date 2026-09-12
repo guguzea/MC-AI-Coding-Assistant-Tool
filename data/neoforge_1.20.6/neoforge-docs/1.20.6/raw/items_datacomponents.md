@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "items/datacomponents"
 url: "https://docs.neoforged.net/docs/1.20.6/items/datacomponents/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:41.242Z"
+fetchedAt: "2026-09-12T12:01:24.441Z"
 ---
 # Data Components
 
@@ -12,7 +12,7 @@ Data components are key-value pairs within a map used to store data on an `ItemS
 
 ## DataComponentType
 
-Each data component has an associated `DataComponentType`, where `T` is the component value type. The `DataComponentType` represents a key to reference the stored component value along with some codecs to handle reading and writing to the disk and network, if desired.
+Each data component has an associated `DataComponentType<T>`, where `T` is the component value type. The `DataComponentType` represents a key to reference the stored component value along with some codecs to handle reading and writing to the disk and network, if desired.
 
 A list of existing components can be found within `DataComponents`.
 

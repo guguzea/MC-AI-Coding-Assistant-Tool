@@ -4,7 +4,7 @@ version: "1.21.10"
 pageId: "items/interactions"
 url: "https://docs.neoforged.net/docs/1.21.10/items/interactions/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:01:09.187Z"
+fetchedAt: "2026-09-12T12:07:44.494Z"
 ---
 # Interactions
 

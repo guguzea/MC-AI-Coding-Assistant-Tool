@@ -28,7 +28,7 @@ A modder can use the exposed listener to figure out if the client is running the
 ## Implementing a configuration task
 
 A configuration task is a simple interface: `ICustomConfigurationTask`.
-This interface has two methods: `void run(Consumer sender);`, and `ConfigurationTask.Type type();` which returns the type of the configuration task.
+This interface has two methods: `void run(Consumer<CustomPacketPayload> sender);`, and `ConfigurationTask.Type type();` which returns the type of the configuration task.
 The type is used to identify the configuration task.
 An example of a configuration task is shown below:
 

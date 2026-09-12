@@ -325,13 +325,23 @@ function htmlToMd(html) {
 
 // ── Fetch ────────────────────────────────────────────────────────────
 
+/**
+ * 把 chapter 拼到 route 根 URL 上。
+ * 特殊值 `index`（站点首页，probe 侧归一出来的合成 chapter）不拼路径：
+ * MkDocs 只把首页发布在 `<route>/`，`<route>/index/` 实测 404。
+ */
+function chapterUrl(routeRootUrl, chapter) {
+  if (!chapter || chapter === "index") return routeRootUrl;
+  return `${routeRootUrl}${chapter}/`;
+}
+
 async function fetchChapter(mcVersion, chapter) {
   const route = manifest.versions[mcVersion].mkdocs.route;
-  const primaryUrl = `https://docs.minecraftforge.net/en/${route}/${chapter}/`;
+  const primaryUrl = chapterUrl(`https://docs.minecraftforge.net/en/${route}/`, chapter);
 
   let { ok, status, content, error, finalUrl } = await fetchUrl(primaryUrl);
   if (!ok) {
-    const altUrl = `https://mcforge.readthedocs.io/en/${route}/${chapter}/`;
+    const altUrl = chapterUrl(`https://mcforge.readthedocs.io/en/${route}/`, chapter);
     const alt = await fetchUrl(altUrl);
     if (alt.ok) { ok = true; content = alt.content; finalUrl = alt.finalUrl; }
     else return { ok: false, status, error: error || alt.error };
@@ -370,7 +380,7 @@ async function main() {
 
     let success = 0, failed = 0;
     for (const chapter of filtered) {
-      const sourceUrl = `${manifest.mkdocsBaseUrl}${verInfo.mkdocs.route}/${chapter}/`;
+      const sourceUrl = chapterUrl(`${manifest.mkdocsBaseUrl}${verInfo.mkdocs.route}/`, chapter);
 
       if (dryRun) {
         console.log(`  DRY ${chapter}`);

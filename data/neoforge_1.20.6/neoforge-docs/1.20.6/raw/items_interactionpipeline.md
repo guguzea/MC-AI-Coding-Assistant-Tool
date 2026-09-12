@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "items/interactionpipeline"
 url: "https://docs.neoforged.net/docs/1.20.6/items/interactionpipeline/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:42.164Z"
+fetchedAt: "2026-09-12T12:01:25.755Z"
 ---
 # The Interaction Pipeline
 
@@ -54,11 +54,11 @@ If you want to add behavior for your own entity, override this method. If you wa
 
 ## Result Types
 
-There are three different types of results: `InteractionResult`s, `ItemInteractionResult`s, and `InteractionResultHolder`s. `InteractionResult` is used most of the time, only `Item#use` uses `InteractionResultHolder`, and only `BlockBehaviour#useItemOn` and `CauldronInteraction#interact` use `ItemInteractionResult`.
+There are three different types of results: `InteractionResult`s, `ItemInteractionResult`s, and `InteractionResultHolder<T>`s. `InteractionResult` is used most of the time, only `Item#use` uses `InteractionResultHolder<ItemStack>`, and only `BlockBehaviour#useItemOn` and `CauldronInteraction#interact` use `ItemInteractionResult`.
 
 `InteractionResult` is an enum consisting of five values: `SUCCESS`, `CONSUME`, `CONSUME_PARTIAL`, `PASS` and `FAIL`. Additionally, the method `InteractionResult#sidedSuccess` is available, which returns `SUCCESS` on the server and `CONSUME` on the client.
 
-`InteractionResultHolder` is a wrapper around `InteractionResult` that adds additional context for `T`. `T` can be anything, but in 99.99 percent of cases, it is an `ItemStack`. `InteractionResultHolder` provides wrapper methods for the enum values (`#success`, `#consume`, `#pass` and `#fail`), as well as `#sidedSuccess`, which calls `#success` on the server and `#consume` on the client.
+`InteractionResultHolder<T>` is a wrapper around `InteractionResult` that adds additional context for `T`. `T` can be anything, but in 99.99 percent of cases, it is an `ItemStack`. `InteractionResultHolder<T>` provides wrapper methods for the enum values (`#success`, `#consume`, `#pass` and `#fail`), as well as `#sidedSuccess`, which calls `#success` on the server and `#consume` on the client.
 
 `ItemInteractionResult` is a parallel to `InteractionResult` specifically for when an item is used on a block. It is an enum of six values: `SUCCESS`, `CONSUME`, `CONSUME_PARTIAL`, `PASS_TO_DEFAULT_BLOCK_INTERACTION`, `SKIP_DEFAULT_BLOCK_INTERACTION`,  and `FAIL`. Each `ItemInteractionResult` can be mapped to a `InteractionResult` via `#result`; `PASS_TO_DEFAULT_BLOCK_INTERACTION`, `SKIP_DEFAULT_BLOCK_INTERACTION` both represent `InteractionResult#PASS`. Similarly, `#sidedSucess` also exists for `ItemInteractionResult`.
 
@@ -92,7 +92,7 @@ If you want the operation to be considered successful, but you do not want the a
 
 ## Item#use
 
-This is the only instance where the return type is `InteractionResultHolder`. The resulting `ItemStack` in the `InteractionResultHolder` replaces the `ItemStack` the usage was initiated with, if it has changed.
+This is the only instance where the return type is `InteractionResultHolder<ItemStack>`. The resulting `ItemStack` in the `InteractionResultHolder<ItemStack>` replaces the `ItemStack` the usage was initiated with, if it has changed.
 
 The default implementation of `Item#use` returns `InteractionResultHolder#consume` when the item is edible and the player can eat the item (because they are hungry, or because the item is always edible), `InteractionResultHolder#fail` when the item is edible but the player cannot eat the item, and `InteractionResultHolder#pass` if the item is not edible.
 

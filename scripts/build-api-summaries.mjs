@@ -117,11 +117,11 @@ function parseCatalog() {
           const dirAliases = aliasMatch
             ? [...aliasMatch[1].matchAll(/"([^"]+)"/g)].map((m) => m[1])
             : [];
-          // verifiedApi 下所有 packages 的并集
+          // verifiedApi 下所有 packages 的并集（键在 catalog 里带引号：`"packages": [`；正则两种形态都认）
           const prefixes = [];
           const vaStart = block.indexOf('verifiedApi:');
           if (vaStart !== -1) {
-            for (const m of block.slice(vaStart).matchAll(/packages:\s*\[([^\]]*)\]/g)) {
+            for (const m of block.slice(vaStart).matchAll(/["']?packages["']?\s*:\s*\[([^\]]*)\]/g)) {
               for (const pm of m[1].matchAll(/"([^"]+)"/g)) prefixes.push(pm[1]);
             }
           }
@@ -260,6 +260,56 @@ function resolveSourceDirs(entry, opt) {
     return { shard: found.shard, dirs: [found.name, ...merged], merged: true, root: path.dirname(found.dir) };
   }
   return { shard: found.shard, dirs: [found.name], merged: false, root: path.dirname(found.dir) };
+}
+
+/**
+ * 树里真实存在的包路径（有界扫描）。用于核 catalog 传下来的 packages 白名单是否还成立。
+ * 深度/目录数都设上限：这只用于「白名单是否过期」的判断，不需要穷举。
+ */
+function treePackageRoots(leafDirs, maxDepth = 8, maxDirs = 600) {
+  const roots = new Set();
+  let visited = 0;
+  const walk = (dir, rel) => {
+    if (roots.size >= maxDirs || visited >= maxDirs * 4) return;
+    let ents = [];
+    try {
+      ents = fs.readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    visited++;
+    let hasJava = false;
+    for (const e of ents) if (e.isFile() && e.name.endsWith(".java")) hasJava = true;
+    if (rel && hasJava) roots.add(rel);
+    if (rel.split(".").length >= maxDepth) return;
+    for (const e of ents) {
+      if (!e.isDirectory() || isNoiseSegment(e.name)) continue;
+      walk(path.join(dir, e.name), rel ? `${rel}.${e.name}` : e.name);
+    }
+  };
+  for (const dir of leafDirs) walk(dir, "");
+  return [...roots];
+}
+
+/**
+ * 生效白名单 = catalog 声明的 packages 里**在树里真找得到**的那些；一个都不成立 ⇒ 不收窄。
+ *
+ * 为什么必须这样：packages 是上一轮摘要写回 catalog 的（F113：unknown-mod 坍缩树让
+ * placebo 这类库的条目冒领了 `net.darkhax.bookshelf`）。直接当白名单用会把本库真实包
+ * 全过滤掉 ⇒ 摘要 0 类 ⇒ 下一轮继续冒领，整条链自我固化。这里按树实测，过期即失效。
+ */
+function pickPrefixes(entry, leafDirs) {
+  if (!entry.prefixes.length) return { prefixes: null, rejected: [], mode: "none-declared" };
+  const roots = treePackageRoots(leafDirs);
+  const plausible = entry.prefixes.filter((p) => roots.some((r) => r === p || r.startsWith(`${p}.`)));
+  if (plausible.length) return { prefixes: plausible, rejected: [], mode: "declared" };
+  // 白名单整体失效：改按「modId 是路径的一段」从树里重建（与 catalog 同一判据），
+  // 而不是直接放开 —— `-all` 胖 jar（如 kotlinforforge）里捆了 Kotlin 标准库，
+  // 放开就等于把 kotlin.* 当成本库 API。
+  const ownSegs = new Set(entry.modIds.map((m) => String(m).toLowerCase().replace(/[-_]/g, "")).filter(Boolean));
+  const owned = roots.filter((r) => r.split(".").some((s) => ownSegs.has(s.toLowerCase().replace(/[-_]/g, ""))));
+  if (owned.length) return { prefixes: owned, rejected: entry.prefixes, mode: "rebuilt" };
+  return { prefixes: null, rejected: entry.prefixes, mode: "unfiltered" };
 }
 
 // ---------- 噪音过滤 ----------
@@ -583,6 +633,19 @@ function slugOf(entry) {
   return raw.replace(/[^A-Za-z0-9._-]/g, '_');
 }
 
+/**
+ * 叶子目录名 → 摘要里的版本键。反编译缓存叶子自 S2 起命名为
+ * `<modVersion>-<jar sha512 前 12 hex>`（同版本不同 jar 各有目录），裸目录名不能当版本键：
+ * 先读叶子内 `.mc-skill-decompiled.json` 的 version（权威），无 meta 时剥掉尾段 12 hex。
+ */
+function versionKeyOf(leafDir, dirName) {
+  try {
+    const meta = JSON.parse(fs.readFileSync(path.join(leafDir, '.mc-skill-decompiled.json'), 'utf8'));
+    if (typeof meta?.version === 'string' && meta.version) return meta.version;
+  } catch { /* 无 meta / 坏 meta → 退回目录名 */ }
+  return dirName.replace(/-[0-9a-f]{12}$/, '');
+}
+
 function processLib(entry, opt) {
   const src = resolveSourceDirs(entry, opt);
   if (!src) {
@@ -592,23 +655,39 @@ function processLib(entry, opt) {
   }
   const libStarted = Date.now();
   const srcDirs = src.dirs.map((d) => ({ name: d, dir: path.join(src.root, d) }));
-  // 版本目录（所有来源目录的并集；新版本在前，保证截断发生时最新 API 优先保留）
-  const verSet = new Set();
+  // 版本键 → 该键下的叶子目录名（所有来源目录的并集；新版本在前，保证截断发生时最新 API 优先保留）
+  const leavesByVer = new Map();
   for (const sd of srcDirs) {
     try {
       for (const e of fs.readdirSync(sd.dir, { withFileTypes: true })) {
-        if (e.isDirectory()) verSet.add(e.name);
+        if (!e.isDirectory()) continue;
+        const key = versionKeyOf(path.join(sd.dir, e.name), e.name);
+        const set = leavesByVer.get(key) ?? new Set();
+        set.add(e.name);
+        leavesByVer.set(key, set);
       }
     } catch { /* ignore */ }
   }
-  let versionDirs = [...verSet].sort((a, b) => cmpVersions(b, a));
+  let versionDirs = [...leavesByVer.keys()].sort((a, b) => cmpVersions(b, a));
   const droppedVersions = [];
   if (versionDirs.length > opt.maxVersions) {
     droppedVersions.push(...versionDirs.slice(opt.maxVersions));
     console.log(`[警告] ${entry.id}: 版本数 ${versionDirs.length} 超过上限 ${opt.maxVersions}，丢弃 ${droppedVersions.length} 个版本`);
     versionDirs = versionDirs.slice(0, opt.maxVersions);
   }
-  const prefixes = entry.prefixes.length > 0 ? entry.prefixes : null;
+  const leafDirs = [];
+  for (const sd of srcDirs) {
+    for (const set of leavesByVer.values()) {
+      for (const leaf of set) leafDirs.push(path.join(sd.dir, leaf));
+    }
+  }
+  const { prefixes, rejected, mode } = pickPrefixes(entry, leafDirs);
+  if (rejected.length) {
+    console.log(
+      `[白名单失效] ${entry.id}: catalog 声明的 packages [${rejected.join(", ")}] 在该库反编译树里一个都不存在` +
+        ` ⇒ 不收窄旧值，改按树重建（mode=${mode}；F113 自愈：那些行是上一轮冒领写回的）`,
+    );
+  }
 
   const versions = {};
   let classCount = 0;
@@ -618,19 +697,22 @@ function processLib(entry, opt) {
   let capsHit = false;
 
   for (const ver of versionDirs) {
-    const fileSet = new Set();
+    const fileSet = new Map(); // 文件绝对路径 → 所属叶子目录（包名相对该目录算）
     for (const sd of srcDirs) {
-      const verDir = path.join(sd.dir, ver);
-      if (!fs.existsSync(verDir)) continue;
-      const vfiles = [];
-      collectJavaFiles(verDir, '', prefixes, vfiles, opt.maxFiles, 0, opt.maxDepth);
-      for (const f of vfiles) fileSet.add(f);
+      for (const leaf of leavesByVer.get(ver) ?? [ver]) {
+        const verDir = path.join(sd.dir, leaf);
+        if (!fs.existsSync(verDir)) continue;
+        const vfiles = [];
+        collectJavaFiles(verDir, '', prefixes, vfiles, opt.maxFiles, 0, opt.maxDepth);
+        for (const f of vfiles) if (!fileSet.has(f)) fileSet.set(f, verDir);
+      }
     }
-    const files = [...fileSet];
+    const files = [...fileSet.keys()];
     const sampleCount = files.length;
     const fileTruncated = files.length >= opt.maxFiles;
     const classes = [];
     const methods = {};
+    const seenPkgs = new Set();
     const sizeCapBytes = opt.maxFileKb * 1024;
     let verTruncated = false;
     let verClassCount = 0;
@@ -646,10 +728,10 @@ function processLib(entry, opt) {
       } catch { continue; }
       const isKotlin = KOTLIN_MARKER.test(src);
       if (!isKotlin && !/(^|[^A-Za-z0-9_$])(public|protected|default)\s/.test(src)) continue;
-      const srcDir = srcDirs.filter((sd) => f.startsWith(sd.dir)).sort((a, b) => b.dir.length - a.dir.length)[0] ?? srcDirs[0];
-      const rel = path.relative(path.join(srcDir.dir, ver), f);
+      const rel = path.relative(fileSet.get(f), f);
       const segs = rel.split(path.sep);
       const pkg = segs.slice(0, -1).join('.');
+      if (pkg) seenPkgs.add(pkg);
       let clsList;
       try { clsList = scanJavaFile(src, opt.maxMethodsPerClass, isKotlin); } catch { continue; }
       for (const cls of clsList) {
@@ -672,7 +754,7 @@ function processLib(entry, opt) {
     }
     if (verTruncated) { truncated = true; truncatedVersions++; }
     versions[ver] = {
-      packages: entry.prefixes,
+      packages: [...seenPkgs].sort(),
       classes,
       methods,
       sampleCount,
@@ -687,12 +769,12 @@ function processLib(entry, opt) {
   let skippedVersions = 0;
   if (capsHit && versionDirs.length > Object.keys(versions).length) {
     for (const ver of versionDirs.slice(Object.keys(versions).length)) {
-      versions[ver] = { packages: entry.prefixes, classes: [], methods: {}, sampleCount: 0, skipped: true };
+      versions[ver] = { packages: [], classes: [], methods: {}, sampleCount: 0, skipped: true };
       skippedVersions++;
     }
   }
   for (const ver of droppedVersions) {
-    versions[ver] = { packages: entry.prefixes, classes: [], methods: {}, sampleCount: 0, skipped: true };
+    versions[ver] = { packages: [], classes: [], methods: {}, sampleCount: 0, skipped: true };
     skippedVersions++;
   }
   if (skippedVersions > 0) truncated = true;

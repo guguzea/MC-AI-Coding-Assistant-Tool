@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "gui/screens"
 url: "https://docs.neoforged.net/docs/1.20.6/gui/screens/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:39.164Z"
+fetchedAt: "2026-09-12T12:01:20.724Z"
 ---
 # Screens
 
@@ -484,20 +484,30 @@ Within the super, `#renderBg` is called to render the background of the screen. 
 
 // In some AbstractContainerScreen subclass
 
-// The location of the background texture (assets/<namespace>/
-)
+// The location of the background texture (assets/<namespace>/<path>)
+
 private static final ResourceLocation BACKGROUND_LOCATION = new ResourceLocation(MOD_ID, "textures/gui/container/my_container_screen.png");
 
 @Override
+
 protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+
     /*
+
      * Renders the background texture to the screen. 'leftPos' and
+
      * 'topPos' should already represent the top left corner of where
+
      * the texture should be rendered as it was precomputed from the
+
      * 'imageWidth' and 'imageHeight'. The two zeros represent the
+
      * integer u/v coordinates inside the 256 x 256 PNG file.
+
      */
+
     graphics.blit(BACKGROUND_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+
 }
 
 ```

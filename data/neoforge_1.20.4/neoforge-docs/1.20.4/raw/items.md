@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "items"
 url: "https://docs.neoforged.net/docs/1.20.4/items/"
 platform: "neoforge"
-fetchedAt: "2026-08-06T04:46:26.627Z"
+fetchedAt: "2026-09-12T12:00:00.530Z"
 ---
 # Items
 
@@ -71,7 +71,7 @@ The two most common use cases for items are left-clicking and right-clicking. Fo
 
 ### DeferredRegister.Items
 
-All registries use `DeferredRegister` to register their contents, and items are no exceptions. However, due to the fact that adding new items is such an essential feature of an overwhelming amount of mods, NeoForge provides the `DeferredRegister.Items` helper class that extends `DeferredRegister` and provides some item-specific helpers:
+All registries use `DeferredRegister` to register their contents, and items are no exceptions. However, due to the fact that adding new items is such an essential feature of an overwhelming amount of mods, NeoForge provides the `DeferredRegister.Items` helper class that extends `DeferredRegister<Item>` and provides some item-specific helpers:
 
 ```java
 

@@ -149,8 +149,7 @@ Targeting methods require a special syntax to denote the method parameters and r
 
 ```text
 
-<access modifier> <fully qualified class name> <method name>(
-)
+<access modifier> <fully qualified class name> <method name>(<parameter types>)<return type>
 
 ```
 
@@ -180,7 +179,7 @@ Example: `[[S` refers to `short[][]`
 <li class="">Example: `<method>(I)Z` refers to a method that requires an integer argument and returns a boolean</li>
 <li class="">`V` - indicates a method returns no value, can only be used at the end of a method descriptor<!-- -->
 
-- Example: `()V` refers to a method that has no arguments and returns nothing
+- Example: `<method>()V` refers to a method that has no arguments and returns nothing
 
 </li>
 </ul>

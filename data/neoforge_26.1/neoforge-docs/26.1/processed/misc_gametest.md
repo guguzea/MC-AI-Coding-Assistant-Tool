@@ -214,11 +214,11 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ## Structure Templates
 
-Game Tests are performed within scenes loaded by structures, or templates. All templates define the dimensions of the scene and the initial data (blocks and entities) that will be loaded. The template must be stored as an `.nbt` file within `data//structure`. `TestData#structure` references the NBT file using a relative `Identifier` (e.g., `examplemod:example_structure` points to `data/examplemod/structure/example_structure.nbt`)
+Game Tests are performed within scenes loaded by structures, or templates. All templates define the dimensions of the scene and the initial data (blocks and entities) that will be loaded. The template must be stored as an `.nbt` file within `data/<namespace>/structure`. `TestData#structure` references the NBT file using a relative `Identifier` (e.g., `examplemod:example_structure` points to `data/examplemod/structure/example_structure.nbt`)
 
 ## Test Environments
 
-All game tests run in some `TestEnvironmentDefinition`, determining how the current `ServerLevel` should be set up. Then, once the test has finished, the environment is tore down, letting the next instance or instances run. All environments are batched, meaning that if multiple test instances have the same environment, they will run at the same time. All test environments are located within `data//test_environment/.json`.
+All game tests run in some `TestEnvironmentDefinition`, determining how the current `ServerLevel` should be set up. Then, once the test has finished, the environment is tore down, letting the next instance or instances run. All environments are batched, meaning that if multiple test instances have the same environment, they will run at the same time. All test environments are located within `data/<namespace>/test_environment/<path>.json`.
 
 Vanilla provides `minecraft:default`, which does not modify the `ServerLevel`. However, there are other supported definition types that can be used to construct an environment.
 
@@ -305,7 +305,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ### Clock Time
 
-This environment type sets the specified `WorldClock` time to some non-negative integer, like how the `/time of  set ` command is used.
+This environment type sets the specified `WorldClock` time to some non-negative integer, like how the `/time of <clock> set <number>` command is used.
 
 - JSON
 - Datagen
@@ -322,42 +322,66 @@ This environment type sets the specified `WorldClock` time to some non-negative 
 
     // The clock to set the time of
 
-    // Points to a registered clock at `data/<namespace>/world_clock/
-.json`
+    // Points to a registered clock at `data/<namespace>/world_clock/<path>.json`
+
     "clock": "minecraft:overworld",
 
     // Sets the time of the clock
+
     "time": 13000
+
 }
 
 ```
 
 ```java
+
 // Let's assume we have some test environment
-public static final ResourceKey> EXAMPLE_ENVIRONMENT = ResourceKey.create(
+
+public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
+
     Registries.TEST_ENVIRONMENT,
+
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
+
 );
 
 @SubscribeEvent // on the mod event bus
+
 public static void gatherData(GatherDataEvent.Client event) {
+
     event.createDatapackRegistryObjects(
+
         new RegistrySetBuilder().add(Registries.TEST_ENVIRONMENT, bootstrap -> {
+
             // Getting clocks
-            HolderGetter clocks = bootstrap.lookup(Registries.WORLD_CLOCK);
+
+            HolderGetter<WorldClock> clocks = bootstrap.lookup(Registries.WORLD_CLOCK);
 
             // Register the environment
+
             bootstrap.register(
+
                 EXAMPLE_ENVIRONMENT,
+
                 new TestEnvironmentDefinition.ClockTime(
+
                     // The clock to set the time of
+
                     clocks.getOrThrow(WorldClocks.OVERWORLD),
+
                     // Sets the time of the clock
+
                     13000
+
                 )
+
             );
+
         })
+
     );
+
 }
 
 ```
@@ -728,36 +752,52 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ### Custom Definition Types
 
-A custom `TestEnvironmentDefinition` type provides three methods: `setup` to modify the `ServerLevel` and return the previous `SavedDataType` generic state, `teardown` to reset what was modified using the `SavedDataType`, and `codec` to provide the `MapCodec` to encode and decode the type:
+A custom `TestEnvironmentDefinition<SavedDataType>` type provides three methods: `setup` to modify the `ServerLevel` and return the previous `SavedDataType` generic state, `teardown` to reset what was modified using the `SavedDataType`, and `codec` to provide the `MapCodec` to encode and decode the type:
 
 ```java
 
-public record ExampleEnvironmentType(int value1, boolean value2) implements TestEnvironmentDefinition
-> {
+public record ExampleEnvironmentType(int value1, boolean value2) implements TestEnvironmentDefinition<Pair<Integer, Boolean>> {
 
     // Construct the map codec to register
-    public static final MapCodec CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+
+    public static final MapCodec<ExampleEnvironmentType> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+
             Codec.INT.fieldOf("value1").forGetter(ExampleEnvironmentType::value1),
+
             Codec.BOOL.fieldOf("value2").forGetter(ExampleEnvironmentType::value2)
+
         ).apply(instance, ExampleEnvironmentType::new)
+
     );
 
     @Override
-    public Pair setup(ServerLevel level) {
+
+    public Pair<Integer, Boolean> setup(ServerLevel level) {
+
         // Setup whatever is necessary here
+
         // return the original values of the modified level data
+
     }
 
     @Override
-    public void teardown(ServerLevel level, Pair originalState) {
+
+    public void teardown(ServerLevel level, Pair<Integer, Boolean> originalState) {
+
         // Undo whatever was changed within the setup method
+
         // This use the original state to reset the data
+
     }
 
     @Override
-    public MapCodec codec() {
+
+    public MapCodec<ExampleEnvironmentType> codec() {
+
         return CODEC;
+
     }
+
 }
 
 ```
@@ -938,7 +978,7 @@ At any time during a Game Test, an assertion can be made to check if a given con
 
 ## Registering The Test Instance
 
-With the `TestData`, `TestEnvironmentDefinition`, and test function in hand, we can now link everything together through a `GameTestInstance`. Each test instance is what represents a single game test to run. All test instances are located within `data//test_instance/.json`.
+With the `TestData`, `TestEnvironmentDefinition`, and test function in hand, we can now link everything together through a `GameTestInstance`. Each test instance is what represents a single game test to run. All test instances are located within `data/<namespace>/test_instance/<path>.json`.
 
 ### Function-Based Tests
 
@@ -1482,7 +1522,7 @@ Game Tests can be run using the `/test` command. The `test` command is highly co
 > **Note**
 > note
 
-Subcommands follow the test command: `/test `.
+Subcommands follow the test command: `/test <subcommand>`.
 
 ## Buildscript Configurations
 

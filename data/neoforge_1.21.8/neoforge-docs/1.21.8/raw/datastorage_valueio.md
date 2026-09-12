@@ -4,7 +4,7 @@ version: "1.21.8"
 pageId: "datastorage/valueio"
 url: "https://docs.neoforged.net/docs/1.21.8/datastorage/valueio/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:00:24.466Z"
+fetchedAt: "2026-09-12T12:05:58.988Z"
 ---
 # Value I/O
 

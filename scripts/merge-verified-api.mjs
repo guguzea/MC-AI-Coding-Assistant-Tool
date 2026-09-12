@@ -132,7 +132,9 @@ function extractEntries(text) {
     // 找到该行起始的缩进（用于重排缩进）
     let lineStart = text.lastIndexOf("\n", open) + 1;
     const closeIndent = text.slice(lineStart, open).match(/^\s*/)[0];
-    entries.set(id, { id, slug, vaStart: open, vaEnd: i, closeIndent });
+    const modIdsMatch = slice.match(/modIds:\s*\[([^\]]*)\]/);
+    const modIds = modIdsMatch ? [...modIdsMatch[1].matchAll(/"([^"]+)"/g)].map((x) => x[1]) : [];
+    entries.set(id, { id, slug, modIds, vaStart: open, vaEnd: i, closeIndent });
     reId.lastIndex = i + 1;
   }
   return entries;
@@ -160,13 +162,62 @@ function currentMonth() {
   return new Date().toISOString().slice(0, 7);
 }
 
-function packagesPlausible(entry, packages) {
-  const id = entry.id || "";
-  /** jei/emi 条目不得写入 bookshelf 包 */
-  if (id.includes("jei") || id.includes("emi")) {
-    if (packages.some((p) => String(p).startsWith("net.darkhax.bookshelf"))) return false;
+const normSeg = (s) => String(s).replace(/[-_]/g, "").toLowerCase();
+const ROOT_SEGMENTS = 3;
+
+/** 段级归属：modId 作为「包路径的一段」出现即算自有（`net.darkhax.bookshelf` ↔ modId `bookshelf`）。 */
+function ownsPackage(entry, pkg) {
+  const segs = String(pkg).split(".").map(normSeg);
+  return (entry.modIds || []).some((id) => id && segs.includes(normSeg(id)));
+}
+
+/** 包根 = 前 3 段（`net.darkhax.bookshelf` / `dev.emi.emi`）；不足 3 段时取整串。 */
+function packageRoot(pkg) {
+  const parts = String(pkg).toLowerCase().split(".");
+  return parts.slice(0, Math.min(ROOT_SEGMENTS, parts.length)).join(".");
+}
+
+/**
+ * 包根 → 该包根的「自有条目」集合（只收自身 modIds 解释得通的包）。
+ * 索引完全由 catalog 现有数据推出，不引入任何手写白名单：推不出归属的包一律不判外来。
+ */
+function buildRootOwnerIndex(text, entries) {
+  const roots = new Map();
+  for (const e of entries.values()) {
+    const parsed = parseVa(text.slice(e.vaStart, e.vaEnd + 1));
+    if (!parsed) continue;
+    const sites = new Set();
+    for (const v of Object.values(parsed)) {
+      for (const p of Array.isArray(v?.packages) ? v.packages : []) if (typeof p === "string") sites.add(p);
+    }
+    for (const p of sites) {
+      if (ownsPackage(e, p)) attestPackage(roots, e.id, p);
+    }
   }
-  return true;
+  return roots;
+}
+
+/** 把一个「条目自有」的包登记为该包根的凭证（catalog 现值与本轮输入共用同一凭证表）。 */
+function attestPackage(rootOwners, entryId, pkg) {
+  const r = packageRoot(pkg);
+  if (!rootOwners.has(r)) rootOwners.set(r, new Set());
+  rootOwners.get(r).add(entryId);
+}
+
+/** 非自有且命中「他方已证实包根」的包 = 冒领（JiJ 泄漏等）；返回空数组表示该组包可写入。 */
+function foreignPackages(entry, packages, rootOwners) {
+  const out = [];
+  for (const p of Array.isArray(packages) ? packages : []) {
+    const pkg = String(p);
+    if (ownsPackage(entry, pkg)) continue;
+    const owners = rootOwners.get(packageRoot(pkg));
+    if (owners && [...owners].some((o) => o !== entry.id)) out.push(pkg);
+  }
+  return out;
+}
+
+function packagesPlausible(entry, packages, rootOwners) {
+  return foreignPackages(entry, packages, rootOwners).length === 0;
 }
 
 function buildValue(r) {
@@ -179,7 +230,7 @@ function buildValue(r) {
 }
 
 function readResults(file) {
-  const out = { lines: [], bad: 0, failed: 0 };
+  const out = { lines: [], bad: 0, failed: 0, noIdentity: 0 };
   if (!existsSync(file)) {
     console.warn(`[merge-verified-api] 警告：输入 ${file} 不存在，按空结果处理`);
     return out;
@@ -197,6 +248,12 @@ function readResults(file) {
     }
     if (obj.status !== "success") {
       out.failed++;
+      continue;
+    }
+    // 「解不出身份」是拒绝理由，不是可忽略字段：S2 之前这类行会坍缩进 unknown-mod/unknown 并冒领别人的树
+    const identity = String(obj.modId ?? "").trim().toLowerCase();
+    if (!identity || identity === "null" || identity === "unknown" || identity === "unknown-mod") {
+      out.noIdentity++;
       continue;
     }
     out.lines.push(obj);
@@ -232,6 +289,14 @@ function main() {
   }
 
   const results = readResults(inputFile);
+  const rootOwners = buildRootOwnerIndex(text, entries);
+  // 冷启动补凭证：catalog 现值被清空/重建时，本轮输入里「条目自有」的包也要先登记，否则无法判外来
+  for (const r of results.lines) {
+    const e = r.slug ? entryBySlug.get(r.slug) : undefined;
+    if (!e) continue;
+    for (const p of Array.isArray(r.packages) ? r.packages : []) if (ownsPackage(e, p)) attestPackage(rootOwners, e.id, p);
+  }
+  const rejectedForeign = new Map(); // entryId -> Set(被拒的外来包)
   const planned = new Map(); // id -> { entry, additions: Map, addNew, overwrote, skipped, dups }
   let matched = 0;
   let unmatched = 0;
@@ -255,8 +320,12 @@ function main() {
     }
     const rawVa = text.slice(entry.vaStart, entry.vaEnd + 1);
     const pkgs = Array.isArray(r.packages) ? r.packages : [];
-    if (!packagesPlausible(entry, pkgs)) {
+    const foreign = foreignPackages(entry, pkgs, rootOwners);
+    if (foreign.length) {
       unmatched++;
+      const set = rejectedForeign.get(entry.id) ?? new Set();
+      for (const f of foreign) set.add(f);
+      rejectedForeign.set(entry.id, set);
       continue;
     }
     if (keyExists(entry, rawVa, key)) {
@@ -265,7 +334,7 @@ function main() {
       const wrongPrefix =
         Array.isArray(oldPkgs) &&
         oldPkgs.length > 0 &&
-        !packagesPlausible(entry, oldPkgs);
+        !packagesPlausible(entry, oldPkgs, rootOwners);
       if (!opts.force && !wrongPrefix) {
         p.skipped++;
         continue;
@@ -323,8 +392,12 @@ function main() {
   console.log(`=== verifiedApi 合并 ===`);
   console.log(`输入：${inputFile}`);
   console.log(`catalog：${catalogFile}`);
-  console.log(`结果行：共 ${results.lines.length + results.bad + results.failed} 行（成功 ${results.lines.length} / 失败 ${results.failed} / 坏行 ${results.bad}）`);
+  console.log(`结果行：共 ${results.lines.length + results.bad + results.failed + results.noIdentity} 行（成功 ${results.lines.length} / 失败 ${results.failed} / 坏行 ${results.bad} / 身份不可解 ${results.noIdentity}）`);
   console.log(`匹配：${matched} 行 / 未匹配：${unmatched} 行`);
+  if (rejectedForeign.size > 0) {
+    console.log(`包名归属拒绝：${rejectedForeign.size} 个条目（这些行整行不写入，不改成本地包清单）`);
+    for (const [id, set] of rejectedForeign) console.log(`  ${id}：外来包 ${[...set].join(", ")}`);
+  }
   console.log(`更新条目数：${entriesUpdated}`);
   console.log(`新增键：${keysAdded} / 跳过键：${keysSkipped} / 覆盖键：${keysOverwritten}`);
 

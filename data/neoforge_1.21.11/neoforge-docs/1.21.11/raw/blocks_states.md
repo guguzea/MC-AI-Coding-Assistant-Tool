@@ -1,10 +1,10 @@
 ---
-title: "Blockstates"
+title: "States"
 version: "1.21.11"
 pageId: "blocks/states"
 url: "https://docs.neoforged.net/docs/1.21.11/blocks/states/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:49:28.682Z"
+fetchedAt: "2026-09-12T12:08:44.352Z"
 ---
 # Blockstates
 
@@ -58,24 +58,24 @@ There is no definitive answer to the question "How many states are too much for 
 
 ## Implementing Blockstates
 
-To implement a blockstate property, in your block class, create or reference a `public static final Property` constant. While you are free to make your own `Property` implementations, the vanilla code provides several convenience implementations that should cover most use cases:
+To implement a blockstate property, in your block class, create or reference a `public static final Property<?>` constant. While you are free to make your own `Property<?>` implementations, the vanilla code provides several convenience implementations that should cover most use cases:
 
 - `IntegerProperty`
 
-Implements `Property`. Defines a property that holds an integer value. Note that negative values are not supported.
+Implements `Property<Integer>`. Defines a property that holds an integer value. Note that negative values are not supported.
 - Created by calling `IntegerProperty#create(String propertyName, int minimum, int maximum)`.
 
 </li>
 <li class="">`BooleanProperty`
 
-- Implements `Property`. Defines a property that holds a `true` or `false` value.
+- Implements `Property<Boolean>`. Defines a property that holds a `true` or `false` value.
 - Created by calling `BooleanProperty#create(String propertyName)`.
 
 </li>
 <li class="">`EnumProperty<E extends Enum<E>>`
 
-- Implements `Property`. Defines a property that can take on the values of an Enum class.
-- Created by calling `EnumProperty#create(String propertyName, Class enumClass)`.
+- Implements `Property<E>`. Defines a property that can take on the values of an Enum class.
+- Created by calling `EnumProperty#create(String propertyName, Class<E> enumClass)`.
 - It is also possible to use only a subset of the Enum values (e.g. 4 out of 16 `DyeColor`s), see the overloads of `EnumProperty#create`.
 
 </li>
@@ -151,7 +151,7 @@ public class EndPortalFrameBlock extends Block {
 
 To go from `Block` to `BlockState`, call `Block#defaultBlockState()`. The default blockstate can be changed through `Block#registerDefaultState`, as described above.
 
-You can get the value of a property by calling `BlockState#getValue(Property)`, passing it the property you want to get the value of. Reusing our end portal frame example, this would look something like this:
+You can get the value of a property by calling `BlockState#getValue(Property<?>)`, passing it the property you want to get the value of. Reusing our end portal frame example, this would look something like this:
 
 ```java
 
@@ -161,7 +161,7 @@ Direction direction = endPortalFrameBlockState.getValue(EndPortalFrameBlock.FACI
 
 ```
 
-If you want to get a `BlockState` with a different set of values, simply call `BlockState#setValue(Property, T)` on an existing block state with the property and its value. With our lever, this goes something like this:
+If you want to get a `BlockState` with a different set of values, simply call `BlockState#setValue(Property<T>, T)` on an existing block state with the property and its value. With our lever, this goes something like this:
 
 ```java
 
@@ -172,7 +172,7 @@ endPortalFrameBlockState = endPortalFrameBlockState.setValue(EndPortalFrameBlock
 > **Note**
 > note
 
-`BlockState`s are immutable. This means that when you call `#setValue(Property, T)`, you are not actually modifying the blockstate. Instead, a lookup is performed internally, and you are given the blockstate object you requested, which is the one and only object that exists with these exact property values. This also means that just calling `state#setValue` without saving it into a variable (for example back into `state`) does nothing.
+`BlockState`s are immutable. This means that when you call `#setValue(Property<T>, T)`, you are not actually modifying the blockstate. Instead, a lookup is performed internally, and you are given the blockstate object you requested, which is the one and only object that exists with these exact property values. This also means that just calling `state#setValue` without saving it into a variable (for example back into `state`) does nothing.
 
 To get a `BlockState` from the level, use `Level#getBlockState(BlockPos)`.
 

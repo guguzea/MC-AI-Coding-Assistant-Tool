@@ -130,7 +130,7 @@ Style hoverable = Style.EMPTY.withHoverEvent(hoverEvent);
 
 ## Language Files
 
-Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at `assets//lang/language_name.json`. For example, US English translations for a mod with id `examplemod` would be located at `assets/examplemod/lang/en_us.json`. A full list of languages supported by Minecraft can be found [here](https://minecraft.wiki/w/Language).
+Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at `assets/<modid>/lang/language_name.json`. For example, US English translations for a mod with id `examplemod` would be located at `assets/examplemod/lang/en_us.json`. A full list of languages supported by Minecraft can be found [here](https://minecraft.wiki/w/Language).
 
 A language file generally looks like this:
 

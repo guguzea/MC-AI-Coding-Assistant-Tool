@@ -97,5 +97,5 @@ data/<modid>/patchouli_books/<book_id>/
 - 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
   - 1.20.1/fabric：顶层 API 包 `vazkii.patchouli`，入口 `vazkii.patchouli.fabric.client.FabricClientInitializer`；`vazkii.patchouli.fabric.common.FabricModInitializer`；`vazkii.patchouli.fabric.common.PatchouliSmokeTest`
   - 26.1/fabric：顶层 API 包 `vazkii.patchouli`，入口 `vazkii.patchouli.fabric.client.FabricClientInitializer`；`vazkii.patchouli.fabric.common.FabricModInitializer`；`vazkii.patchouli.fabric.common.PatchouliSmokeTest`
-  - 1.12.2/forge：顶层 API 包 `net.darkhax.bookshelf`，入口 无 entrypoint
+  - 1.12.2/forge：顶层 API 包 `vazkii.patchouli`（Patchouli 1.0-23.6 实拆，`temp/verified-api-results.jsonl` 该行 packages）
 - 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

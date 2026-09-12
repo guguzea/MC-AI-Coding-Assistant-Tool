@@ -1,10 +1,10 @@
 ---
-title: "Client"
+title: "I18n"
 version: "1.21.3"
 pageId: "resources/client/i18n"
 url: "https://docs.neoforged.net/docs/1.21.3/resources/client/i18n/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:52:43.377Z"
+fetchedAt: "2026-09-12T12:04:03.317Z"
 ---
 # I18n and L10n
 
@@ -16,7 +16,6 @@ A `Component` is a piece of text with metadata, with the metadata including thin
 
 | Method | Description |
 | --- | --- |
-| Method | Description |
 | empty | Creates an empty component. |
 | literal | Creates a component with the given text and directly displays that text without translating. |
 | nullToEmpty | Creates an empty component when given null, and a literal component otherwise. |
@@ -148,7 +147,7 @@ Style hoverable = Style.EMPTY.withHoverEvent(hoverEvent);
 
 ## Language Files
 
-Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at `assets//lang/language_name.json`. For example, US English translations for a mod with id `examplemod` would be located at `assets/examplemod/lang/en_us.json`. A full list of languages supported by Minecraft can be found [here](https://minecraft.wiki/w/Language).
+Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at `assets/<modid>/lang/language_name.json`. For example, US English translations for a mod with id `examplemod` would be located at `assets/examplemod/lang/en_us.json`. A full list of languages supported by Minecraft can be found [here](https://minecraft.wiki/w/Language).
 
 A language file generally looks like this:
 
@@ -183,7 +182,6 @@ Starting with NeoForge 20.4.179, translation files can override certain parts of
 
 |  | Translation Key | Overriding |
 | --- | --- | --- |
-|  | Translation Key | Overriding |
 | Description | fml.menu.mods.info.description.modid | A field named description may be placed in the [[mods]] section instead. |
 
 ### Datagen

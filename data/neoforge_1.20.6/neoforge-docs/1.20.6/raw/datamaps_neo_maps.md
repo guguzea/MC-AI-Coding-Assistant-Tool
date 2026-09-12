@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "datamaps/neo_maps"
 url: "https://docs.neoforged.net/docs/1.20.6/datamaps/neo_maps/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:57:31.554Z"
+fetchedAt: "2026-09-12T12:01:07.950Z"
 ---
 # Built-in Data Maps
 

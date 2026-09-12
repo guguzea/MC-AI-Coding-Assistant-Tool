@@ -248,7 +248,7 @@ node dist/cli.js list-tools
 |------|------|
 | `get_minecraft_source` | `{version, className, mapping?: yarn\|mojmap\|auto, lines?: [start,end], force?}` → 下载 client jar（Mojang manifest，SHA1 校验）→ 映射（yarn v2 jar / client_mappings.txt）→ tiny-remapper 重映射 → VineFlower 反编译（`--only` 定向）→ 类源码片段。首次 3–10 分钟，缓存命中 <1s。 |
 | `analyze_mod_jar` | `{jarPath}`（本地绝对路径）→ 纯 Node zip 解析：fabric.mod.json / mods.toml / neoforge.mods.toml、mixins 引用、entrypoints、依赖、AW/AT。无 Java、零下载。 |
-| `decompile_mod_jar` | `{jarPath, version?, mapping?, force?}` → VineFlower 反编译到 `$CACHE/decompiled-mods/<modId>/<version>/`，返回源码树摘要；可选 remap（1.14–1.21.11 + 匹配版本）。 |
+| `decompile_mod_jar` | `{jarPath, version?, mapping?, force?}` → VineFlower 反编译到 `$CACHE/decompiled-mods/<modId>/<version>-<jarSha512_12>/`（身份段来自 jar 字节内容；解析不出 modId 的 jar 判 `MOD_ID_UNKNOWN` 失败，不再写 `unknown-mod` 共享目录），返回源码树摘要；可选 remap（1.14–1.21.11 + 匹配版本）。 |
 | `search_mod_code` | `{jarPath\|decompiledDir, query, pattern?, maxResults?}` → 已反编译源码行级 grep（子串/正则），返回 file:line 命中。 |
 
 **版本支持矩阵**：

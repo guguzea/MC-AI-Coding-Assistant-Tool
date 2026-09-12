@@ -3,7 +3,7 @@
   "branch": "main",
   "commitSha": "caa6822e596f16412b71e684edb748893c67a9c2",
   "treeFile": "temp/fabric-docs-main-tree.json",
-  "fetchedAt": "2026-09-06T17:10:01.795Z",
+  "fetchedAt": "2026-09-12T06:55:22.563Z",
   "integrity": "git blob SHA-1（`blob <len>\\0` + 内容）逐文件对账上游 tree 条目；sha256 为本地防漂移",
   "expandSpec": "markdown-it-vuepress-code-snippet-enhanced@dfb9fa25527b2f772d50ca37ae526484c890b8ae（transcludeWith=区间翻转 / transclude={a-b}=行区间 / 缺省整文件；除 dontTrim 外按最短前导空白反缩进）",
   "version": "1.21.11",
@@ -12,6 +12,12 @@
       "blobSha": "1d55d026c886a0f2f828029f906dc028b51249a0",
       "sha256": "38e241fdfe9892e2f99916dc9f4bcdc349b393e58ef6f05cb18001aceadc4261",
       "bytes": 2908,
+      "via": "cache"
+    },
+    "public/assets/develop/automatic-testing/crash-report.log": {
+      "blobSha": "bd08468d1781b89eab2b84c6dd7a80088b47d62f",
+      "sha256": "606389fcd0235cd12ff4959426092a807d00cff920690aff0ddc50ba5daed2a3",
+      "bytes": 1751,
       "via": "cache"
     },
     "reference/1.21.11/build.gradle": {
@@ -284,6 +290,24 @@
       "bytes": 343,
       "via": "cache"
     },
+    "reference/1.21.11/src/gametest/java/com/example/docs/ExampleModClientGameTest.java": {
+      "blobSha": "a67e98b8d3bcb7876fd75b32c06fed04fff030f4",
+      "sha256": "0805b9c1040c1bbceed7bcbc67af55584d29d1316d86b4584324e59963856dcf",
+      "bytes": 645,
+      "via": "cache"
+    },
+    "reference/1.21.11/src/gametest/java/com/example/docs/ExampleModGameTest.java": {
+      "blobSha": "d25336e555d72793c57744ba591baa0e44f2453b",
+      "sha256": "358cb8f5facd47a6d16a63539e2c9b8e14f23fcdaeedda65986eebe61609c6a2",
+      "bytes": 683,
+      "via": "cache"
+    },
+    "reference/1.21.11/src/gametest/resources/fabric.mod.json": {
+      "blobSha": "2559cc897c141d2a754fa2c58d4a79e6dcef8d31",
+      "sha256": "e8e3138999f174528964ccaec6c1c515e09178c6151590d1658b27e581335a9b",
+      "bytes": 327,
+      "via": "cache"
+    },
     "reference/1.21.11/src/main/generated/assets/example-mod/blockstates/condensed_dirt.json": {
       "blobSha": "a55f461797b749a1b085fc6d30eaf7db1e17704c",
       "sha256": "c1146086716eaa280ba6279deb588ec24b2a060b882325598f767063dc65863b",
@@ -518,6 +542,12 @@
       "bytes": 708,
       "via": "cache"
     },
+    "reference/1.21.11/src/main/generated/data/example-mod/tags/fluid/acid.json": {
+      "blobSha": "5febb64f8d33e70b50ea5c21f24304ba4d05b983",
+      "sha256": "76214ec9c1c47784755364294c88ca9b597ac79da75e53d93d0f460c9c0fc3a2",
+      "bytes": 76,
+      "via": "cache"
+    },
     "reference/1.21.11/src/main/generated/data/example-mod/worldgen/configured_feature/diamond_block_vein.json": {
       "blobSha": "b484de6ea4917ab73b2377ebe98f94c0aa91b470",
       "sha256": "eef716585d730058c6763d595878b6adea1c8524fbfb45586db423f59cd5f27e",
@@ -533,6 +563,12 @@
     "reference/1.21.11/src/main/generated/data/minecraft/tags/damage_type/bypasses_armor.json": {
       "blobSha": "cd53c354fc217e4e16f1fcb6bda9df88db37ddd5",
       "sha256": "32606ed35af2f07e6217968587e8086be15f3ace0865b0fcefd1d16e3bd20483",
+      "bytes": 45,
+      "via": "cache"
+    },
+    "reference/1.21.11/src/main/generated/data/minecraft/tags/fluid/water.json": {
+      "blobSha": "630d34035bf725f0b5cacf928f379ed5f9bc5253",
+      "sha256": "1d7ed78176293fab0d937f4399418a90b05075fa17d505de265b3a3497fbbeba",
       "bytes": 45,
       "via": "cache"
     },
@@ -620,6 +656,12 @@
       "bytes": 1390,
       "via": "cache"
     },
+    "reference/1.21.11/src/main/java/com/example/docs/block/custom/DuplicatorBlock.java": {
+      "blobSha": "1a6a9c02bc516c0db40f1871e88a405d94d2aa5b",
+      "sha256": "dd198ead2efb191e486b5f1e9322c3f9145bd6364442e292d4c4fd9317fef2be",
+      "bytes": 2566,
+      "via": "cache"
+    },
     "reference/1.21.11/src/main/java/com/example/docs/block/custom/PrismarineLampBlock.java": {
       "blobSha": "5d47c8fa82c0c89028cc63a527c9c4abc2965b72",
       "sha256": "77e3139d3a869679a471cceb5bc19ca2a7c3c0f52b0499687052616eb5371084",
@@ -648,6 +690,12 @@
       "blobSha": "03f1a66db6017e62b1eadba008566d720178fe86",
       "sha256": "1c6daec50ca3e9909ad0d413654c8d1c9191b8b2acce768cff1791ea05ab3049",
       "bytes": 2585,
+      "via": "cache"
+    },
+    "reference/1.21.11/src/main/java/com/example/docs/block/entity/custom/DuplicatorBlockEntity.java": {
+      "blobSha": "37a9465de8e0780342f75cebab8c48cd444635f9",
+      "sha256": "64599779eedc3277168250adff6d0f409b5436b85398dbb01f3cfc95ff67e1e2",
+      "bytes": 2943,
       "via": "cache"
     },
     "reference/1.21.11/src/main/java/com/example/docs/codec/Bean.java": {
@@ -714,6 +762,12 @@
       "blobSha": "69fad856a72ea28aebd7996da26b1245c29bfa75",
       "sha256": "8f175a1cdc87d540f094b447749fdc553652e4ed9c8f14bbac5617ed868a6e87",
       "bytes": 575,
+      "via": "cache"
+    },
+    "reference/1.21.11/src/main/java/com/example/docs/container/ImplementedContainer.java": {
+      "blobSha": "a4f6cd963f8305ec8b920856816cb236056b6cdd",
+      "sha256": "bf4596c0fbd83d377f62df02f02b2f1f0f0f21690db48ddd912861fc958101a5",
+      "bytes": 3259,
       "via": "cache"
     },
     "reference/1.21.11/src/main/java/com/example/docs/damage/ExampleModDamageTypes.java": {
@@ -1062,6 +1116,48 @@
       "blobSha": "b036839365b4c9193f7801c9ab055191fc0f49d8",
       "sha256": "acc571a5f811d61224add811e0db587892b60781f1ea0966dc385b45e1c31895",
       "bytes": 1532,
+      "via": "cache"
+    },
+    "reference/latest/src/client/java/com/example/docs/entity/renderer/MiniGolemEntityRenderer.java": {
+      "blobSha": "97926d6a7160314ab3e50aa3ca4ae964ea9e4dfa",
+      "sha256": "76941a9e48ece6a6da177f4712415c569faa61ebb2f4e5a82b6e027bf90ffe3e",
+      "bytes": 1575,
+      "via": "cache"
+    },
+    "reference/latest/src/client/java/com/example/docs/entity/state/MiniGolemEntityRenderState.java": {
+      "blobSha": "25f38c1765467841a1ac94de95ba8917be24ab4c",
+      "sha256": "c3db75ccf9824930385a01d174728c4810b2aaa5228ffaf4e1ff06a439fc8600",
+      "bytes": 476,
+      "via": "cache"
+    },
+    "reference/latest/src/main/java/com/example/docs/interface_injection/BucketEmptySoundGetter.java": {
+      "blobSha": "b1d3ed46e511efb0e13096fa00a81dc0287c87c0",
+      "sha256": "c423925b9e144f42ef52587af9f0af5649f94c512aed6a07eee080a0c171fdfd",
+      "bytes": 382,
+      "via": "cache"
+    },
+    "reference/latest/src/main/java/com/example/docs/interface_injection/ExampleModInterfaceInjection.java": {
+      "blobSha": "72825c31fdd41a0bccda293b1efbf2a48e4b58d1",
+      "sha256": "11e67dda592c58193d1fd618417adfdc2555d50f6b1107e18d2a692f1f26cdb3",
+      "bytes": 526,
+      "via": "cache"
+    },
+    "reference/latest/src/main/java/com/example/docs/interface_injection/GenericInterface.java": {
+      "blobSha": "1eb5c8f2768f1edb759f98e07233431113790509",
+      "sha256": "496552d3ca890126c4ca2f03cf5b38072ce15b058ade2d6ed50ee94ce8105d8a",
+      "bytes": 193,
+      "via": "cache"
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/class_tweakers/FlowingFluidMixin.java": {
+      "blobSha": "4924d63bba06372a23f0a43b9fb784fd1c02dac4",
+      "sha256": "75d8c77042fae708e778bfc9a766cdd26bbb964cbbef2e55fba908b23c557c88",
+      "bytes": 802,
+      "via": "cache"
+    },
+    "reference/latest/src/main/resources/example-mod.classtweaker": {
+      "blobSha": "2402a427b72290bff01bf1f22ba60a40efb4b185",
+      "sha256": "5828583331a233d4c509c31ef801ddd695adfca93609c39bb01a4f21bc811ddb",
+      "bytes": 2208,
       "via": "cache"
     }
   },

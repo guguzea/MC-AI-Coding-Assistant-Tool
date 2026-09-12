@@ -4,7 +4,7 @@ version: "1.21.5"
 pageId: "items/mobeffects"
 url: "https://docs.neoforged.net/docs/1.21.5/items/mobeffects/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:59:29.453Z"
+fetchedAt: "2026-09-12T12:05:04.791Z"
 ---
 # Mob Effects & Potions
 
@@ -239,12 +239,18 @@ livingEntity.removeEffect(MobEffects.REGENERATION);
 
 ```java
 
-//POTIONS is a DeferredRegister
-public static final Holder MY_POTION = POTIONS.register("my_potion", registryName -> new Potion(
+//POTIONS is a DeferredRegister<Potion>
+
+public static final Holder<Potion> MY_POTION = POTIONS.register("my_potion", registryName -> new Potion(
+
     // The suffix applied to the potion
+
     registryName.getPath(),
+
     // The effects used by the potion
+
     new MobEffectInstance(MY_MOB_EFFECT, 3600)
+
 ));
 
 ```

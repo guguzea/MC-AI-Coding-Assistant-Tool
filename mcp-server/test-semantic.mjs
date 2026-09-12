@@ -9,6 +9,8 @@
  *  - semanticSearch：库缺失 → null；FTS5-only 库 → 返回 FTS5 命中（不加载模型）
  *  - mergeSemanticResults：RRF 再融合 / 去重 / tag 过滤 / 截断 / matches 透传
  *  - semanticSearch：有 chunk 时 matches 非空
+ *  - search_fabric_docs 26.2 旁路 provenance（审计 S6 第 5 条）：sourcePlatform /
+ *    sourceIsRequestedVersion / resolvedVersion 不得谎报本版正文
  */
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync, readFileSync, existsSync, copyFileSync } from "node:fs";
@@ -751,6 +753,138 @@ test("D-49 源文件被删（竞态窗口）后指纹路径不崩", () => {
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+{
+  const { getSemanticIndexStatus, semanticDbAbsent, missingSemanticDbWarning, closeSemanticStatusDbs } = await import(
+    "./dist/docs-platform/semantic/status.js"
+  );
+  const { closeSemanticDbs } = await import("./dist/docs-platform/semantic/search.js");
+  const DDL_S11 = `
+CREATE TABLE docs(doc_id TEXT PRIMARY KEY, label TEXT, url TEXT, tags_json TEXT NOT NULL DEFAULT '[]', priority TEXT NOT NULL DEFAULT '🟢', section_count INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE chunks(chunk_id TEXT PRIMARY KEY, doc_id TEXT NOT NULL, chunk_type TEXT NOT NULL, chunk_order INTEGER NOT NULL, text TEXT NOT NULL);
+CREATE VIRTUAL TABLE chunks_fts USING fts5(chunk_id UNINDEXED, text, tokenize = 'porter unicode61');
+CREATE TABLE chunk_embeddings(chunk_id TEXT PRIMARY KEY, doc_id TEXT NOT NULL, embedding BLOB NOT NULL);
+CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);`;
+
+  /** 造一棵「库在、meta 自洽」的档；指纹可由调用方钉成与语料不符，用来验 stale。 */
+  const makeTreeS11 = (root, platform, version, source, { fingerprint, builtAt }) => {
+    const versionDir = join(root, `${platform}_${version}`, source, version);
+    mkdirSync(join(versionDir, "semantic"), { recursive: true });
+    mkdirSync(join(versionDir, "processed"), { recursive: true });
+    writeFileSync(join(versionDir, "processed", "a.md"), "# A\n\n注册方块与 blockentity 的说明。\n", "utf8");
+    const db = new DatabaseSync(join(versionDir, "semantic", "db.sqlite"));
+    db.exec(DDL_S11);
+    db.prepare("INSERT INTO docs(doc_id,label,url) VALUES(?,?,?)").run(`${version}/a`, "A 方块", "https://x/a");
+    db.prepare("INSERT INTO chunks VALUES(?,?,?,?,?)").run("c1", `${version}/a`, "prose", 0, "注册方块 blockentity");
+    db.prepare("INSERT INTO chunks_fts(chunk_id,text) VALUES(?,?)").run("c1", "注册方块 blockentity");
+    const meta = db.prepare("INSERT INTO meta(key,value) VALUES(?,?)");
+    meta.run("docs", "1");
+    meta.run("chunks", "1");
+    meta.run("embedded", "0");
+    meta.run("schemaVersion", "1");
+    meta.run("model", "Xenova/all-MiniLM-L6-v2");
+    meta.run("dim", "384");
+    meta.run("built_at", builtAt);
+    meta.run("source_fingerprint", fingerprint);
+    db.close();
+    return versionDir;
+  };
+
+  test("S11/F104: 抽样外的档过期也必须被 getSemanticIndexStatus 报出", () => {
+    const root = mkdtempSync(join(tmpdir(), "sem-stale-all-"));
+    try {
+      // quilt 1.21.1 不在 SAMPLE_TARGETS 里 ⇒ 改前「检索期报 stale、状态工具不报」
+      makeTreeS11(root, "quilt", "1.21.1", "quilt-docs", {
+        fingerprint: "deadbeefdeadbeef",
+        builtAt: "2020-01-01T00:00:00.000Z",
+      });
+      const st = getSemanticIndexStatus(root);
+      const hit = st.warnings.filter((w) => /stale/.test(w));
+      assert.ok(hit.length > 0, `抽样外的过期档没被报出（全树扫未生效）：${JSON.stringify(st.warnings)}`);
+      assert.match(hit.join("\n"), /quilt_1\.21\.1\/quilt-docs/);
+    } finally {
+      closeSemanticDbs();
+      closeSemanticStatusDbs();
+      rmSync(root, { recursive: true, force: true, maxRetries: 8, retryDelay: 150 });
+    }
+  });
+
+  testAsync("S11/F105: 库在时不得判缺库，库真缺时仍必须报", async () => {
+    const root = mkdtempSync(join(tmpdir(), "sem-empty-q-"));
+    try {
+      makeTreeS11(root, "forge", "1.20.1", "forge-docs", {
+        fingerprint: "0",
+        builtAt: new Date().toISOString(),
+      });
+      assert.equal(semanticDbAbsent(root, "forge", "1.20.1", "forge-docs"), false, "库在，却判缺");
+      assert.equal(
+        missingSemanticDbWarning(semanticDbAbsent(root, "forge", "1.20.1", "forge-docs")),
+        undefined,
+        "库在却报缺库 ⇒ 空查询会被谎称缺库（F105）",
+      );
+      assert.equal(semanticDbAbsent(root, "forge", "1.99.9", "forge-docs"), true);
+      assert.ok(missingSemanticDbWarning(semanticDbAbsent(root, "forge", "1.99.9", "forge-docs")));
+      // 不变量本身：空查询返回 null，而库确实在 ⇒ 任何「null 即缺库」的推断都是错的（F105 的成因）
+      const emptyHits = await semanticSearch("   ", "forge", "1.20.1", "forge-docs", root);
+      assert.equal(emptyHits, null, "空查询应被 C19 守卫挡住（返回 null）");
+      assert.equal(
+        semanticDbAbsent(root, "forge", "1.20.1", "forge-docs"),
+        false,
+        "上一步 null 的同时库其实在 ⇒ 用 null 判缺库必然说谎",
+      );
+    } finally {
+      closeSemanticDbs();
+      closeSemanticStatusDbs();
+      rmSync(root, { recursive: true, force: true, maxRetries: 8, retryDelay: 150 });
+    }
+  });
+
+  testAsync("S11/F106: 中英混排查询仍走 CJK 通道", async () => {
+    const root = mkdtempSync(join(tmpdir(), "sem-cjk-mix-"));
+    try {
+      makeTreeS11(root, "forge", "1.20.1", "forge-docs", {
+        fingerprint: "0",
+        builtAt: new Date().toISOString(),
+      });
+      const hits = await semanticSearch("方块 notarealword_zzz", "forge", "1.20.1", "forge-docs", root);
+      assert.notEqual(hits, null, "混排查询应进入语义通道");
+      assert.ok(
+        hits.some((h) => h.docId.endsWith("/a")),
+        `CJK 通道被跳过，只剩 ASCII 半边命中：${JSON.stringify((hits || []).map((h) => h.docId))}`,
+      );
+    } finally {
+      closeSemanticDbs();
+      closeSemanticStatusDbs();
+      rmSync(root, { recursive: true, force: true, maxRetries: 8, retryDelay: 150 });
+    }
+  });
+}
+
+// ── S6/F18：search_fabric_docs 26.2 旁路的 provenance ──────────────────────────
+
+testAsync("S6 26.2 旁路必须带 sourcePlatform 且 sourceIsRequestedVersion=false", async () => {
+  const dataRoot = process.env.MC_SKILL_DATA || join(process.cwd(), "..", "data");
+  if (!existsSync(join(dataRoot, "fabric_porting"))) {
+    console.log(`      ${dataRoot}/fabric_porting 不存在，跳过 26.2 provenance 断言`);
+    return;
+  }
+  const { searchFabricDocs } = await import("./dist/docs-platform/fabric/index.js");
+  // 26.2 既无 fabric_26.2 主文档树、也不在 list_fabric_versions 里：走的是
+  // index.ts 里 isFabric26_2Line 的早退旁路，而不是查完树的主返回体。
+  const out = JSON.parse((await searchFabricDocs({ query: "registry", version: "26.2" })).content[0].text);
+  assert.equal(out.ok, true, `26.2 旁路应返回 ok:true：${JSON.stringify(out).slice(0, 300)}`);
+  assert.equal(typeof out.sourcePlatform, "string", "26.2 旁路必须带 sourcePlatform（与 quilt 回退同名字段）");
+  assert.equal(out.sourcePlatform, "fabric", `sourcePlatform 是平台族名，实际=${out.sourcePlatform}`);
+  assert.equal(
+    out.sourceIsRequestedVersion,
+    false,
+    "26.2 正文来自 fabric_porting 旁路 + fabric_26.1.2 树，不得谎称本版专属正文",
+  );
+  assert.notEqual(out.resolvedVersion, "26.2", "resolvedVersion 不得谎报成请求版本");
+  assert.equal(out.source_version, out.resolvedVersion, "source_version 必须与 resolvedVersion 同档");
+  assert.equal(out.versionFallback, true, "resolvedVersion != requestedVersion ⇒ versionFallback 必须为 true");
+  assert.equal(out.fallback, true, "旁路必须带 fallback 标记，不得让 ok:true 被当成本版正文");
 });
 
 await Promise.all(asyncTasks);

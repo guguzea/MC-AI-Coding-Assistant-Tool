@@ -4,7 +4,7 @@ version: "1.21.5"
 pageId: "entities/data"
 url: "https://docs.neoforged.net/docs/1.21.5/entities/data/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:59:19.964Z"
+fetchedAt: "2026-09-12T12:04:51.836Z"
 ---
 # Data and Networking
 

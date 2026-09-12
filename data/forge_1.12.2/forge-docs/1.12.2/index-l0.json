@@ -88,6 +88,17 @@
     "sectionCount": 9
   },
   {
+    "id": "1.12.2/models_advanced_itemoverridelist",
+    "version": "1.12.2",
+    "label": "`ItemOverrideList",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/models/advanced/itemoverridelist/",
+    "tags": [
+      "item"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1
+  },
+  {
     "id": "1.12.2/blocks_interaction",
     "version": "1.12.2",
     "label": "Block Interaction",
@@ -121,6 +132,17 @@
     "sectionCount": 3
   },
   {
+    "id": "1.12.2/models_advanced_extended-blockstates",
+    "version": "1.12.2",
+    "label": "Extended Blockstates",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/models/advanced/extended-blockstates/",
+    "tags": [
+      "block"
+    ],
+    "priority": "🟡",
+    "sectionCount": 4
+  },
+  {
     "id": "1.12.2/datastorage_extendedentityproperties",
     "version": "1.12.2",
     "label": "Extended Entity Properties",
@@ -130,6 +152,28 @@
     ],
     "priority": "🟡",
     "sectionCount": 6
+  },
+  {
+    "id": "1.12.2/models_blockstates_forgeBlockstates",
+    "version": "1.12.2",
+    "label": "Forge&rsquo;s Blockstates",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/models/blockstates/forgeBlockstates/",
+    "tags": [
+      "block"
+    ],
+    "priority": "🟡",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.12.2/models_blockstates_introduction",
+    "version": "1.12.2",
+    "label": "Introduction to Blockstate JSONs",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/models/blockstates/introduction/",
+    "tags": [
+      "block"
+    ],
+    "priority": "🟡",
+    "sectionCount": 0
   },
   {
     "id": "1.12.2/items_items",
@@ -197,6 +241,42 @@
     "sectionCount": 12
   },
   {
+    "id": "1.12.2/models_advanced_ibakedmodel",
+    "version": "1.12.2",
+    "label": "`IBakedModel",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/models/advanced/ibakedmodel/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.12.2/models_advanced_icustommodelloader",
+    "version": "1.12.2",
+    "label": "`ICustomModelLoader",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/models/advanced/icustommodelloader/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.12.2/models_advanced_imodel",
+    "version": "1.12.2",
+    "label": "`IModel",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/models/advanced/imodel/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.12.2/models_advanced_imodelstate+part",
+    "version": "1.12.2",
+    "label": "`IModelState and <code>IModelPart",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/models/advanced/imodelstate+part/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
     "id": "1.12.2/animation_asm",
     "version": "1.12.2",
     "label": "Animation State Machine Files",
@@ -260,6 +340,15 @@
     "sectionCount": 3
   },
   {
+    "id": "1.12.2/forgedev",
+    "version": "1.12.2",
+    "label": "Getting Started",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/forgedev/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
     "id": "1.12.2/gettingstarted",
     "version": "1.12.2",
     "label": "Getting Started with Forge",
@@ -276,6 +365,15 @@
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/models_advanced_introduction",
+    "version": "1.12.2",
+    "label": "Intro to Advanced Models",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/models/advanced/introduction/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
   },
   {
     "id": "1.12.2/models_introduction",
@@ -325,6 +423,15 @@
     "sectionCount": 0
   },
   {
+    "id": "1.12.2/index",
+    "version": "1.12.2",
+    "label": "MinecraftForge Documentation",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
     "id": "1.12.2/models_files",
     "version": "1.12.2",
     "label": "Model Files",
@@ -350,6 +457,24 @@
     "tags": [],
     "priority": "🟢",
     "sectionCount": 4
+  },
+  {
+    "id": "1.12.2/models_advanced_perspective",
+    "version": "1.12.2",
+    "label": "Perspective",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/models/advanced/perspective/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/forgedev_prguidelines",
+    "version": "1.12.2",
+    "label": "Pull Request Guidelines",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/forgedev/prguidelines/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/concepts_resources",
@@ -390,6 +515,15 @@
     ],
     "priority": "🟢",
     "sectionCount": 6
+  },
+  {
+    "id": "1.12.2/styleguide",
+    "version": "1.12.2",
+    "label": "Style Guide",
+    "url": "https://docs.minecraftforge.net/en/1.12.x/styleguide/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/rendering_teisr",

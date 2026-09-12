@@ -1,10 +1,10 @@
 ---
-title: "Rendering"
+title: "Feature"
 version: "1.21.10"
 pageId: "rendering/feature"
 url: "https://docs.neoforged.net/docs/1.21.10/rendering/feature/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:50:38.215Z"
+fetchedAt: "2026-09-12T12:07:56.806Z"
 ---
 # Features
 
@@ -18,7 +18,6 @@ The following methods are made available through the collector, in the order the
 
 | Method | Description |
 | --- | --- |
-| Method | Description |
 | submitHitbox | A wireframe representing the bounding box and a line representing the view vector, typically for entities. |
 | submitShadow | A number of black ovals for the desired radius, location, and opacity. |
 | submitNameTag | Text, transparency sorted. |

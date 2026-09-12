@@ -2649,9 +2649,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.20.4/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "top.theillusivec4.caelus"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -2715,9 +2715,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.20.4/neoforge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "top.theillusivec4.caelus"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -3280,9 +3280,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.14/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "me.shedaniel.forge"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -5308,9 +5308,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.12.2/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "com.creativemd.creativecore"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -6943,9 +6943,10 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "以官方文档为准"
       },
       "1.12.2/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "org.apache.commons",
+          "software.bernie.example"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -7212,9 +7213,10 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.15.2/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "org.apache.commons",
+          "software.bernie.example"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -7467,43 +7469,62 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.17.1/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "software.bernie.example"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.18.2/quilt": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "org.apache.commons",
+          "software.bernie.example"
         ],
-        "entrypoints": [],
+        "entrypoints": [
+          "software.bernie.example.ClientListener",
+          "software.bernie.example.GeckoLibMod",
+          "software.bernie.geckolib3q.network.ClientPackets"
+        ],
         "notes": "自动反编译提取"
       },
       "1.19.1/quilt": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "org.apache.commons",
+          "software.bernie.example"
         ],
-        "entrypoints": [],
+        "entrypoints": [
+          "software.bernie.example.ClientListener",
+          "software.bernie.example.GeckoLibMod",
+          "software.bernie.geckolib3.network.ClientPackets"
+        ],
         "notes": "自动反编译提取"
       },
       "1.19.2/quilt": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "org.apache.commons",
+          "software.bernie.example"
         ],
-        "entrypoints": [],
+        "entrypoints": [
+          "software.bernie.example.ClientListener",
+          "software.bernie.example.GeckoLibMod",
+          "software.bernie.geckolib3.network.ClientPackets"
+        ],
         "notes": "自动反编译提取"
       },
       "1.19.3/quilt": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "org.apache.commons",
+          "software.bernie.example"
         ],
-        "entrypoints": [],
+        "entrypoints": [
+          "software.bernie.example.ClientListener",
+          "software.bernie.example.GeckoLibMod"
+        ],
         "notes": "自动反编译提取"
       },
       "1.19.3-rc2/fabric": {
@@ -7519,11 +7540,15 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.19.4/quilt": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "org.apache.commons",
+          "software.bernie.example"
         ],
-        "entrypoints": [],
+        "entrypoints": [
+          "software.bernie.example.ClientListener",
+          "software.bernie.example.GeckoLibMod"
+        ],
         "notes": "自动反编译提取"
       },
       "1.20.1/quilt": {
@@ -8024,9 +8049,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.10.2/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "glitchcore.block"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -9280,9 +9305,12 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     notes: "",
     verifiedApi: {
       "1.17/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "kotlin.annotation",
+          "kotlinx.coroutines",
+          "org.intellij.lang",
+          "thedarkcolour.kotlinforforge"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -9312,9 +9340,12 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.17.1/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "kotlin.annotation",
+          "kotlinx.coroutines",
+          "org.intellij.lang",
+          "thedarkcolour.kotlinforforge"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -9367,6 +9398,18 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "verifiedAt": "2026-08",
         "packages": [
           "net.darkhax.bookshelf"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取"
+      },
+      "1.14.4/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "kotlin.annotation",
+          "kotlinx.coroutines",
+          "net.minecraftforge.fml",
+          "org.intellij.lang",
+          "thedarkcolour.kotlinforforge"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -9785,9 +9828,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.12.2/liteloader": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "fi.dy.masa"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -9803,9 +9846,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.14.4/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "fi.dy.masa"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -10072,19 +10115,21 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.12.1/liteloader": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "fi.dy.masa"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.13.2/rift": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "fi.dy.masa"
         ],
-        "entrypoints": [],
+        "entrypoints": [
+          "fi.dy.masa.malilib.MaLiLib"
+        ],
         "notes": "自动反编译提取"
       },
       "1.14.3/fabric": {
@@ -10371,17 +10416,18 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.12/liteloader": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "fi.dy.masa"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.12.2/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "fi.dy.masa",
+          "org.spongepowered.asm"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -10428,9 +10474,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.15.2/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "fi.dy.masa"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -10458,9 +10504,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.16.5/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "fi.dy.masa"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -10706,17 +10752,17 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.7.10/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "mantle.blocks"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.12.2/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "slimeknights.mantle"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -11010,9 +11056,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.19/quilt": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "eu.midnightdust.core"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -11292,17 +11338,17 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.19.3/quilt": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "eu.midnightdust.core"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.19.4/quilt": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "eu.midnightdust.core"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -11840,9 +11886,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     notes: "",
     verifiedApi: {
       "1.16.5/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "net.mehvahdjukaar.selene"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -11914,9 +11960,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.18/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "net.mehvahdjukaar.selene"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -12034,6 +12080,14 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "verifiedAt": "2026-08",
         "packages": [
           "net.mehvahdjukaar.moonlight"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取"
+      },
+      "1.18.2/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "net.mehvahdjukaar.selene"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -12978,9 +13032,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.12.2/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "vazkii.patchouli"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -13172,9 +13226,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.17/fabric": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "virtuoel.pehkui"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -13445,9 +13499,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "21w10a/fabric": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "virtuoel.pehkui"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -13529,9 +13583,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.18/fabric": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "virtuoel.pehkui"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -13679,33 +13733,33 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     notes: "",
     verifiedApi: {
       "1.20.1/neoforge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "dev.shadowsoffire.placebo"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.21.1/neoforge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "dev.shadowsoffire.placebo"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.20.1/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "dev.shadowsoffire.placebo"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "26.1.2/neoforge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "dev.shadowsoffire.placebo"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -16032,9 +16086,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     notes: "",
     verifiedApi: {
       "1.19.2/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "net.p3pp3rf1y.sophisticatedcore"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -16064,17 +16118,17 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.20.1/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "net.p3pp3rf1y.sophisticatedcore"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.20.1/neoforge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "net.p3pp3rf1y.sophisticatedcore"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -16104,9 +16158,9 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       },
       "1.18.2/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "net.darkhax.bookshelf"
+          "net.p3pp3rf1y.sophisticatedcore"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"

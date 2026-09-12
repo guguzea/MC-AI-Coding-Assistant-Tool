@@ -4,13 +4,13 @@ version: "1.21.10"
 pageId: "resources/server/recipes"
 url: "https://docs.neoforged.net/docs/1.21.10/resources/server/recipes/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T04:01:27.171Z"
+fetchedAt: "2026-09-12T12:08:28.426Z"
 ---
 # Recipes
 
 Recipes are a way to transform a set of objects into other objects within a Minecraft world. Although Minecraft uses this system purely for item transformations, the system is built in a way that allows any kind of objects - blocks, entities, etc. - to be transformed. Almost all recipes use recipe data files; a "recipe" is assumed to be a data-driven recipe in this article unless explicitly stated otherwise.
 
-Recipe data files are located at `data//recipe/.json`. For example, the recipe `minecraft:diamond_block` is located at `data/minecraft/recipe/diamond_block.json`.
+Recipe data files are located at `data/<namespace>/recipe/<path>.json`. For example, the recipe `minecraft:diamond_block` is located at `data/minecraft/recipe/diamond_block.json`.
 
 ## Terminology
 
@@ -178,7 +178,7 @@ Collection<RecipeHolder<?>> list = recipes.recipeMap().byType(RecipeType.CRAFTIN
 
 Sometimes, recipes can overlap with others, usually because one pattern uses a specific item while another same pattern uses a tag that has the item within. In these instances, vanilla uses the first recipe it finds, which is determined by whatever recipe is read and loaded first. This can be an issue, as if the specific item recipe is loaded after the tag-based recipe, then the specific item recipe can never be obtained.
 
-To combat this issue, NeoForge introduces recipe priorities to order which recipes should be displayed first. The entries are represented as a map of recipe registry keys to integer priority values. The priority values are sorted based on the highest value, recipes not specified defaulting to `0`. This means that recipes with a priority greater than `0` are ordered first, while recipes less than `0` are ordered last. The priority map is located in `data//recipe_priorities.json`, where all the recipe priorities are merged together, unless `replace` is true, which will clear out all previously loaded entries.
+To combat this issue, NeoForge introduces recipe priorities to order which recipes should be displayed first. The entries are represented as a map of recipe registry keys to integer priority values. The priority values are sorted based on the highest value, recipes not specified defaulting to `0`. This means that recipes with a priority greater than `0` are ordered first, while recipes less than `0` are ordered last. The priority map is located in `data/<namespace>/recipe_priorities.json`, where all the recipe priorities are merged together, unless `replace` is true, which will clear out all previously loaded entries.
 
 - JSON
 - Datagen

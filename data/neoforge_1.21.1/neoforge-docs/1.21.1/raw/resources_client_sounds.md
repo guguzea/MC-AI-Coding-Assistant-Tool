@@ -4,7 +4,7 @@ version: "1.21.1"
 pageId: "resources/client/sounds"
 url: "https://docs.neoforged.net/docs/1.21.1/resources/client/sounds/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:53:27.621Z"
+fetchedAt: "2026-09-12T12:02:45.470Z"
 ---
 # Sounds
 
@@ -367,7 +367,7 @@ Minecraft offers various methods to play sounds, and it is sometimes unclear whi
 
 ### Level
 
-- `playSeededSound(Player player, double x, double y, double z, Holder soundEvent, SoundSource soundSource, float volume, float pitch, long seed)`
+- `playSeededSound(Player player, double x, double y, double z, Holder<SoundEvent> soundEvent, SoundSource soundSource, float volume, float pitch, long seed)`
 
 Client behavior: If the player passed in is the local player, play the sound event to the player at the given location, otherwise no-op.
 - Server behavior: A packet instructing the client to play the sound event to the player at the given location is sent to all players except the one passed in.

@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "items/bewlr"
 url: "https://docs.neoforged.net/docs/1.20.4/items/bewlr/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:56:58.741Z"
+fetchedAt: "2026-09-12T12:00:01.511Z"
 ---
 # BlockEntityWithoutLevelRenderer
 

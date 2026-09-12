@@ -1,10 +1,10 @@
 ---
-title: "Worldgen"
+title: "Biomemodifier"
 version: "1.21.8"
 pageId: "worldgen/biomemodifier"
 url: "https://docs.neoforged.net/docs/1.21.8/worldgen/biomemodifier/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:51:30.197Z"
+fetchedAt: "2026-09-12T12:07:10.110Z"
 ---
 # Biome Modifiers
 
@@ -42,7 +42,7 @@ Modders who want to do custom or complex biome modifications:
 
 ## Applying Biome Modifiers
 
-To have NeoForge load a biome modifier JSON file into the game, the file will need to be under `data//neoforge/biome_modifier/.json` folder in the mod's resources, or in a [Datapack](/docs/1.21.8/resources/#data). Then, once NeoForge loads the biome modifier, it will read its instructions and apply the described modifications to all target biomes when the world is loaded up. Pre-existing biome modifiers from mods can be overridden by datapacks having a new JSON file at the exact same location and name.
+To have NeoForge load a biome modifier JSON file into the game, the file will need to be under `data/<modid>/neoforge/biome_modifier/<path>.json` folder in the mod's resources, or in a [Datapack](/docs/1.21.8/resources/#data). Then, once NeoForge loads the biome modifier, it will read its instructions and apply the described modifications to all target biomes when the world is loaded up. Pre-existing biome modifiers from mods can be overridden by datapacks having a new JSON file at the exact same location and name.
 
 The JSON file can be created by hand following the examples in the '[Built-in NeoForge Biome Modifiers](#built-in-biome-modifiers)' section or be datagenned as shown in the '[Datagenning Biome Modifiers](#datagenning-biome-modifiers)' section.
 
@@ -158,26 +158,37 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
     HolderGetter<Biome> biomes = bootstrap.lookup(Registries.BIOME);
 
-    HolderGetter
-placedFeatures = bootstrap.lookup(Registries.PLACED_FEATURE);
+    HolderGetter<PlacedFeature> placedFeatures = bootstrap.lookup(Registries.PLACED_FEATURE);
 
     // Register the biome modifiers.
+
     bootstrap.register(ADD_FEATURES_EXAMPLE,
+
         new AddFeaturesBiomeModifier(
+
             // The biome(s) to generate within
+
             HolderSet.direct(biomes.getOrThrow(Biomes.PLAINS)),
+
             // The feature(s) to generate within the biomes
+
             HolderSet.direct(placedFeatures.getOrThrow(EXAMPLE_PLACED_FEATURE)),
+
             // The generation step
+
             GenerationStep.Decoration.LOCAL_MODIFICATIONS
+
         )
+
     );
+
 })
 
 ```
 
 > **Warning**
 > warning
+
 Care should be taken when adding vanilla `PlacedFeature`s to biomes, as doing so may cause what is known as a feature cycle violation (two biomes having the same two features in their feature lists, but in different orders within the same `GenerationStep`), leading to a crash. For similar reasons, you should not use the same `PlacedFeature` in more than one biome modifier.
 
 Vanilla `PlacedFeature`s can be referenced in biome JSONs or added via biome modifiers, but should not be used in both. If you still need to add them this way, making a copy of the vanilla `PlacedFeature` under your own namespace is the easiest solution to avoid these problems.
@@ -249,23 +260,36 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
     HolderGetter<Biome> biomes = bootstrap.lookup(Registries.BIOME);
 
-    HolderGetter
-placedFeatures = bootstrap.lookup(Registries.PLACED_FEATURE);
+    HolderGetter<PlacedFeature> placedFeatures = bootstrap.lookup(Registries.PLACED_FEATURE);
 
     // Register the biome modifiers.
+
     bootstrap.register(REMOVE_FEATURES_EXAMPLE,
+
         new RemoveFeaturesBiomeModifier(
+
             // The biome(s) to remove from
+
             biomes.getOrThrow(Tags.Biomes.IS_OVERWORLD),
+
             // The feature(s) to remove from the biomes
+
             HolderSet.direct(placedFeatures.getOrThrow(OrePlacements.ORE_DIAMOND)),
+
             // The generation steps to remove from
+
             Set.of(
+
                 GenerationStep.Decoration.LOCAL_MODIFICATIONS,
+
                 GenerationStep.Decoration.UNDERGROUND_ORES
+
             )
+
         )
+
     );
+
 });
 
 ```
@@ -826,7 +850,6 @@ The `step` or `steps` fields in many of the aforementioned JSONs are referring t
 
 | Step | Description |
 | --- | --- |
-| Step | Description |
 | raw_generation | First to run. This is used for special terrain-like features such as Small End Islands. |
 | lakes | Dedicated to spawning pond-like feature such as Lava Lakes. |
 | local_modifications | For modifications to terrain such as Geodes, Icebergs, Boulders, or Dripstone. |
@@ -853,7 +876,6 @@ A `BiomeModifier` contains two methods: `#modify` and `#codec`. `modify` takes i
 
 | Phase | Description |
 | --- | --- |
-| Phase | Description |
 | BEFORE_EVERYTHING | A catch-all for everything that needs to run before the standard phases. |
 | ADD | Adding features, mob spawns, etc. |
 | REMOVE | Removing features, mob spawns, etc. |
@@ -914,7 +936,7 @@ public static final Supplier<MapCodec<ExampleBiomeModifier>> EXAMPLE_BIOME_MODIF
 
 ## Datagenning Biome Modifiers
 
-A `BiomeModifier` JSON can be created through [data generation](/docs/1.21.8/resources/#data-generation) by passing a `RegistrySetBuilder` to `DatapackBuiltinEntriesProvider`. The JSON will be placed at `data//neoforge/biome_modifier/.json`.
+A `BiomeModifier` JSON can be created through [data generation](/docs/1.21.8/resources/#data-generation) by passing a `RegistrySetBuilder` to `DatapackBuiltinEntriesProvider`. The JSON will be placed at `data/<modid>/neoforge/biome_modifier/<path>.json`.
 
 For more information on how `RegistrySetBuilder` and `DatapackBuiltinEntriesProvider` work, please see the article on [Data Generation for Datapack Registries](/docs/1.21.8/concepts/registries#data-generation-for-datapack-registries).
 

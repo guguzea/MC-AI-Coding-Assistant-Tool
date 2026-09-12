@@ -4,7 +4,7 @@ version: "1.21.3"
 pageId: "misc/gametest"
 url: "https://docs.neoforged.net/docs/1.21.3/misc/gametest/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:36.613Z"
+fetchedAt: "2026-09-12T12:03:53.551Z"
 ---
 # Game Tests
 
@@ -24,7 +24,7 @@ As such, to create a Game Test, there must be an existing template holding the i
 
 ### The Test Method
 
-A Game Test method is a `Consumer` reference, meaning it takes in a `GameTestHelper` and returns nothing. For a Game Test method to be recognized, it must have a `@GameTest` annotation:
+A Game Test method is a `Consumer<GameTestHelper>` reference, meaning it takes in a `GameTestHelper` and returns nothing. For a Game Test method to be recognized, it must have a `@GameTest` annotation:
 
 ```java
 
@@ -148,7 +148,7 @@ Game Tests can be executed in batches instead of registration order. A test can 
 
 On its own, batching does not provide anything useful. However, batching can be used to perform setup and teardown states on the current level the tests are running in. This is done by annotating a method with either `@BeforeBatch` for setup or `@AfterBatch` for takedown. The `#batch` methods must match the string supplied to the game test.
 
-Batch methods are `Consumer` references, meaning they take in a `ServerLevel` and return nothing:
+Batch methods are `Consumer<ServerLevel>` references, meaning they take in a `ServerLevel` and return nothing:
 
 ```java
 
@@ -229,7 +229,7 @@ The value supplied to `GameTestHolder#value` and `GameTest#templateNamespace` ca
 
 ## Structure Templates
 
-Game Tests are performed within scenes loaded by structures, or templates. All templates define the dimensions of the scene and the initial data (blocks and entities) that will be loaded. The template must be stored as an `.nbt` file within `data//structure`.
+Game Tests are performed within scenes loaded by structures, or templates. All templates define the dimensions of the scene and the initial data (blocks and entities) that will be loaded. The template must be stored as an `.nbt` file within `data/<namespace>/structure`.
 
 > **Tip**
 > tip
@@ -311,7 +311,7 @@ Game Tests can be run using the `/test` command. The `test` command is highly co
 > **Note**
 > note
 
-Subcommands follow the test command: `/test `.
+Subcommands follow the test command: `/test <subcommand>`.
 
 ## Buildscript Configurations
 

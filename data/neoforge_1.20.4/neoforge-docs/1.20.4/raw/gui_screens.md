@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "gui/screens"
 url: "https://docs.neoforged.net/docs/1.20.4/gui/screens/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:56:58.060Z"
+fetchedAt: "2026-09-12T11:59:59.637Z"
 ---
 # Screens
 
@@ -367,30 +367,46 @@ Within the super, `#renderBg` is called to render the background of the screen. 
 
 // In some AbstractContainerScreen subclass
 
-// The location of the background texture (assets/<namespace>/
-)
+// The location of the background texture (assets/<namespace>/<path>)
+
 private static final ResourceLocation BACKGROUND_LOCATION = new ResourceLocation(MOD_ID, "textures/gui/container/my_container_screen.png");
 
 @Override
+
 protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+
     /*
+
      - Sets the texture location for the shader to use. While up to
+
      - 12 textures can be set, the shader used within 'blit' only
+
      - looks at the first texture index.
+
      -/
+
     RenderSystem.setShaderTexture(0, BACKGROUND_LOCATION);
 
     /*
+
      - Renders the background texture to the screen. 'leftPos' and
+
      - 'topPos' should already represent the top left corner of where
+
      - the texture should be rendered as it was precomputed from the
+
      - 'imageWidth' and 'imageHeight'. The two zeros represent the
+
      - integer u/v coordinates inside the 256 x 256 PNG file.
+
      -/
+
     graphics.blit(BACKGROUND_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+
 }
 
 ```
+
 Finally, `#renderLabels` is called to render any text above the background, but below the tooltips. This simply calls uses the font to draw the associated components.
 
 ```java

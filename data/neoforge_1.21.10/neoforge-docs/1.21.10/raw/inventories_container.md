@@ -1,10 +1,10 @@
 ---
-title: "Inventories & Transfers"
+title: "Container"
 version: "1.21.10"
 pageId: "inventories/container"
 url: "https://docs.neoforged.net/docs/1.21.10/inventories/container/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:50:24.721Z"
+fetchedAt: "2026-09-12T12:07:37.825Z"
 ---
 # Containers
 
@@ -23,7 +23,7 @@ The main reason this article exists is for reference in vanilla code, or if you 
 
 ## Basic Container Implementation
 
-Containers can be implemented in any way you like, so long as you satisfy the dictated methods (as with any other interface in Java). However, it is common to use a `NonNullList` with a fixed length as a backing structure. Single-slot containers may also simply use an `ItemStack` field instead.
+Containers can be implemented in any way you like, so long as you satisfy the dictated methods (as with any other interface in Java). However, it is common to use a `NonNullList<ItemStack>` with a fixed length as a backing structure. Single-slot containers may also simply use an `ItemStack` field instead.
 
 For example, a basic implementation of `Container` with a size of 27 slots (one chest) could look like this:
 
@@ -172,7 +172,7 @@ Aside from `Container`, it also implements the `MenuProvider` and `Nameable` int
 - `Nameable` defines a few methods related to setting (custom) names and, aside from many block entities, is implemented by classes such as `Entity`. This uses the [Component system](/docs/1.21.10/resources/client/i18n#components).
 - `MenuProvider`, on the other hand, defines the `#createMenu` method, which allows an [AbstractContainerMenu](/docs/1.21.10/inventories/menus) to be constructed from the container. This means that using this class is not desirable if you want a container without an associated GUI, for example in jukeboxes.
 
-`BaseContainerBlockEntity` bundles all calls we would normally make to our `NonNullList` through two methods `#getItems` and `#setItems`, drastically reducing the amount of boilerplate we need to write. An example implementation of a `BaseContainerBlockEntity` could look like this:
+`BaseContainerBlockEntity` bundles all calls we would normally make to our `NonNullList<ItemStack>` through two methods `#getItems` and `#setItems`, drastically reducing the amount of boilerplate we need to write. An example implementation of a `BaseContainerBlockEntity` could look like this:
 
 ```java
 
@@ -439,7 +439,7 @@ If you are creating an entity yourself, there is nothing stopping you from imple
 
 `Mob`s do not implement `Container`, but they implement the `EquipmentUser` interface (among others). This interface defines the methods `#setItemSlot(EquipmentSlot, ItemStack)`, `#getItemBySlot(EquipmentSlot)` and `#setDropChance(EquipmentSlot, float)`. While not related to `Container` code-wise, the functionality is quite similar: we associate slots, in this case equipment slots, with `ItemStack`s.
 
-The most notable difference to `Container` is that there is no list-like order (though `Mob` uses `NonNullList`s in the background). Access does not work through slot indices, but rather through the seven `EquipmentSlot` enum values: `MAINHAND`, `OFFHAND`, `FEET`, `LEGS`, `CHEST`, `HEAD`, and `BODY` (where `BODY` is used for horse and dog armor).
+The most notable difference to `Container` is that there is no list-like order (though `Mob` uses `NonNullList<ItemStack>`s in the background). Access does not work through slot indices, but rather through the seven `EquipmentSlot` enum values: `MAINHAND`, `OFFHAND`, `FEET`, `LEGS`, `CHEST`, `HEAD`, and `BODY` (where `BODY` is used for horse and dog armor).
 
 An example of interaction with the mob's "slots" would look something like this:
 
@@ -469,7 +469,7 @@ The player's inventory is implemented through the `Inventory` class, a class imp
 
 The inventory contents are stored in two places:
 
-- The `NonNullList items` list covers the 36 main inventory slots, including the nine hotbar slots (indices 0-8).
+- The `NonNullList<ItemStack> items` list covers the 36 main inventory slots, including the nine hotbar slots (indices 0-8).
 - The `EntityEquipment equipment` map stores the `EquipmentSlot` stacks: the armor slots (`FEET`, `LEGS`, `CHEST`, `HEAD`), `OFFHAND`, `BODY`, and `SADDLE`, in that order.
 
 When iterating over the inventory contents, it is recommended to iterate over `items`, then over `equipment` using `Inventory#EQUIPMENT_SLOT_MAPPING` for the indices.

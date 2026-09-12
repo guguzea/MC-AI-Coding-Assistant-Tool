@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "resources/server/conditional"
 url: "https://docs.neoforged.net/docs/1.20.6/resources/server/conditional/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:01.735Z"
+fetchedAt: "2026-09-12T12:01:54.201Z"
 ---
 # Conditionally-Loaded Data
 

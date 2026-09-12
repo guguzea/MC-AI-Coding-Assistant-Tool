@@ -4,7 +4,7 @@ version: "1.20.6"
 pageId: "resources/server/recipes/ingredients"
 url: "https://docs.neoforged.net/docs/1.20.6/resources/server/recipes/ingredients/"
 platform: "neoforge"
-fetchedAt: "2026-09-07T03:58:06.500Z"
+fetchedAt: "2026-09-12T12:02:00.417Z"
 ---
 # Ingredients
 

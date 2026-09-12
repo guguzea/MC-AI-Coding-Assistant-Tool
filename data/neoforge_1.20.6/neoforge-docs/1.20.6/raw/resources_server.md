@@ -1,10 +1,10 @@
 ---
-title: "Datapacks"
+title: "Server"
 version: "1.20.6"
 pageId: "resources/server"
 url: "https://docs.neoforged.net/docs/1.20.6/resources/server/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:54:23.105Z"
+fetchedAt: "2026-09-12T12:01:51.542Z"
 ---
 # Datapacks
 

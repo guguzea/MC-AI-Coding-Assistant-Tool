@@ -6,9 +6,9 @@ This article will break down how versioning works in Minecraft and NeoForge, and
 
 Minecraft's versioning scheme has changed over the years.
 
-Versions from 1.0 to 1.21.11 follow a [semver](https://semver.org/)-inspired format, `major.minor.`, with the patch version omitted for brevity. Examples of these versions would be 1.21 and 1.21.11.
+Versions from 1.0 to 1.21.11 follow a [semver](https://semver.org/)-inspired format, `major.minor.<patch>`, with the patch version omitted for brevity. Examples of these versions would be 1.21 and 1.21.11.
 
-Versions 26.1 and above follow a [calver](https://calver.org/)-inspired format, `year.release.`, with the patch version omitted for brevity. Examples of these versions would be 26.1 and 26.1.1.
+Versions 26.1 and above follow a [calver](https://calver.org/)-inspired format, `year.release.<patch>`, with the patch version omitted for brevity. Examples of these versions would be 26.1 and 26.1.1.
 
 ### The Early Release Era
 
@@ -32,7 +32,7 @@ Similarly, when the pre-release cycle completes, Mojang releases Release Candida
 
 ### The Game Drop Era
 
-Due to the decision to change from annual major updates with patches throughout the year to quarterly game drops, Mojang made the decision to change how Minecraft is versioned to a new format, `year.release.`. As an example, 26.1 will be the first release to adopt this new versioning, representing the first drop of 2026. If a hotfix needs to be released, it will be 26.1.1, and the second drop of 2026 will be 26.2.
+Due to the decision to change from annual major updates with patches throughout the year to quarterly game drops, Mojang made the decision to change how Minecraft is versioned to a new format, `year.release.<patch>`. As an example, 26.1 will be the first release to adopt this new versioning, representing the first drop of 2026. If a hotfix needs to be released, it will be 26.1.1, and the second drop of 2026 will be 26.2.
 
 #### Snapshots, Pre-Releases, and Release Candidates
 
@@ -52,7 +52,7 @@ A few places in NeoForge also use [Maven version ranges](https://maven.apache.or
 
 There is no definitive best versioning system. Different styles of development, scopes of projects, etc. all influence the decision of what versioning system to use. Sometimes, versioning system can also be combined. This section attempts to give an overview over some commonly used versioning systems, with real-life examples.
 
-Usually, a mod's file name looks like `modid-.jar`. So if our mod id is `examplemod` and our version is `1.2.3`, our mod file would be named `examplemod-1.2.3.jar`.
+Usually, a mod's file name looks like `modid-<version>.jar`. So if our mod id is `examplemod` and our version is `1.2.3`, our mod file would be named `examplemod-1.2.3.jar`.
 
 > **Note**
 > note

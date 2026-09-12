@@ -406,6 +406,20 @@ export function buildSemanticWarnings(opts: {
   return warnings;
 }
 
+/**
+ * 「语义库到底在不在」必须能单独问。F105 的成因是调用方拿 `semanticHits === null` 当缺库，
+ * 而 null 同时表示「空查询被 C19 守卫有意挡住」⇒ 空查询会谎称缺库（fabric 侧已改成显式判定，
+ * forge / neoforge 侧漏了）。
+ */
+export function semanticDbAbsent(
+  dataRoot: string,
+  platform: string,
+  version: string,
+  source: string,
+): boolean {
+  return !existsSync(semanticDbPath(dataRoot, platform, version, source));
+}
+
 export function missingSemanticDbWarning(missing: boolean): string | undefined {
   if (!missing) return undefined;
   return "语义索引缺库，本次已回退 L0 关键词检索。详见 diagnose_data_paths.semantic.warnings；补齐可运行 npm run build:semantic-index";
@@ -461,15 +475,31 @@ export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
       staleReason: staleInfo.reason,
     };
   });
+  const presence = listSemanticDbPresence(dataRoot);
+  // F104：stale 判定以前只遍历 SAMPLE_TARGETS（7 个抽样目标），抽样外的档就会出现
+  // 「检索期报 stale、状态工具不报」（实测 quilt 1.21.1）。改成对磁盘全树做同一套判定。
+  const staleTrees: Array<{ platform: string; version: string; source: string; reason: string }> = [];
+  for (const p of presence) {
+    if (!p.exists) continue;
+    const pinfo = inspectDb(semanticDbPath(dataRoot, p.platform, p.version, p.source));
+    if (pinfo.mode === "missing") continue;
+    const judged = isSemanticIndexStale({
+      builtAtIso: pinfo.builtAt,
+      storedFingerprint: pinfo.fingerprint,
+      versionDir: join(dataRoot, `${p.platform}_${p.version}`, p.source, p.version),
+    });
+    if (judged.stale) {
+      staleTrees.push({ platform: p.platform, version: p.version, source: p.source, reason: judged.reason ?? "" });
+    }
+  }
   const presentCount = samples.filter((s) => s.exists).length;
   const hybridCount = samples.filter((s) => s.mode === "hybrid").length;
   const fts5OnlyCount = samples.filter((s) => s.mode === "fts5-only").length;
-  const staleCount = samples.filter((s) => s.stale).length;
+  const staleCount = staleTrees.length;
   let modeHint: SemanticModeHint = "l0-only";
   if (hybridCount > 0 && modelsReady) modeHint = "hybrid";
   else if (presentCount > 0) modeHint = "fts5-only";
   else modeHint = "l0-only";
-  const presence = listSemanticDbPresence(dataRoot);
   const presentAll = presence.filter((s) => s.exists).length;
   // B-5：「刻意置空」（index-l0=[] / failures.json / L0 白名单）不算缺库，单独提示；
   // 只有真缺库才进缺库警告
@@ -495,9 +525,9 @@ export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
         .join(", ")}。`,
     );
   }
-  for (const s of samples.filter((x) => x.stale)) {
+  for (const t of staleTrees) {
     warnings.push(
-      `语义索引过期（stale）：${s.platform}_${s.version}/${s.source}${s.staleReason ? `（${s.staleReason}）` : ""}。processed/ 新于 sqlite 或指纹不一致。请运行 npm run build:semantic-index -- --platform=${s.platform} --version=${s.version} --force`,
+      `语义索引过期（stale）：${t.platform}_${t.version}/${t.source}${t.reason ? `（${t.reason}）` : ""}。processed/ 新于 sqlite 或指纹不一致。请运行 npm run build:semantic-index -- --platform=${t.platform} --version=${t.version} --force`,
     );
   }
   return {

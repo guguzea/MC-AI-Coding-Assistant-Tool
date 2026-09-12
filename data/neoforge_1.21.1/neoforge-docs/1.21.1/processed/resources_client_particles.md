@@ -14,26 +14,39 @@ public class MyParticleTypes {
 
     // Assuming that your mod id is examplemod
 
-    public static final DeferredRegister
-> PARTICLE_TYPES =
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =
+
         DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, "examplemod");
+
     
+
     // The easiest way to add new particle types is reusing vanilla's SimpleParticleType.
+
     // Implementing a custom ParticleType is also possible, see below.
-    public static final DeferredHolder, SimpleParticleType> MY_PARTICLE = PARTICLE_TYPES.register(
+
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> MY_PARTICLE = PARTICLE_TYPES.register(
+
         // The name of the particle type.
+
         "my_particle",
+
         // The supplier. The boolean parameter denotes whether setting the Particles option in the
+
         // video settings to Minimal will affect this particle type or not; this is false for
+
         // most vanilla particles, but true for e.g. explosions, campfire smoke, or squid ink.
+
         () -> new SimpleParticleType(false)
+
     );
+
 }
 
 ```
 
 > **Info**
 > info
+
 A `ParticleType` is only necessary if you need to work with particles on the server side. The client can also use `Particle`s directly.
 
 ### Particle
@@ -154,15 +167,15 @@ public static void registerParticleProviders(RegisterParticleProvidersEvent even
 
     // Other methods include #registerSprite, which is essentially a Supplier<TextureSheetParticle>,
 
-    // and #registerSpecial, which maps to a Supplier
-. See the source code of the event for further info.
+    // and #registerSpecial, which maps to a Supplier<Particle>. See the source code of the event for further info.
+
 }
 
 ```
 
 ### Particle Descriptions
 
-Finally, we must associate our particle type with a texture. Similar to how items are associated with an item model, we associate our particle type with what is known as a particle description. A particle description is a JSON file in the `assets//particles` directory and has the same name as the particle type (so for example `my_particle.json` for the above example). The particle definition JSON has the following format:
+Finally, we must associate our particle type with a texture. Similar to how items are associated with an item model, we associate our particle type with what is known as a particle description. A particle description is a JSON file in the `assets/<namespace>/particles` directory and has the same name as the particle type (so for example `my_particle.json` for the above example). The particle definition JSON has the following format:
 
 ```json5
 
