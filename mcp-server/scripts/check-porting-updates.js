@@ -27,7 +27,8 @@ import { dirname, join } from "node:path";
 import { parseCliArgs, compareVersions, isUpdateAvailable } from "./_lib/args.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = join(__dirname, "..", "data", "porting", "knowledge-base");
+// 仓库根 data/，不是 mcp-server/data/（后者没有 porting/）：少一层 ".." 会静默扫到 0 条。
+const DATA_DIR = join(__dirname, "..", "..", "data", "porting", "knowledge-base");
 
 // Curated "newest known" map. Manual updates belong in git history, not data/.
 const LATEST_VERSIONS = {
@@ -126,11 +127,32 @@ export function runCheck(kb, latestTable = LATEST_VERSIONS) {
 // ── CLI side ────────────────────────────────────────────────────────────────
 
 function loadVersionsKB() {
+  const file = join(DATA_DIR, "versions.json");
+  let raw;
   try {
-    return JSON.parse(readFileSync(join(DATA_DIR, "versions.json"), "utf-8"));
-  } catch {
-    return { versions: {} };
+    raw = readFileSync(file, "utf-8");
+  } catch (err) {
+    console.error(`read ${file} failed: ${err.code || err.name} ${err.message}`);
+    console.error("  读不到移植知识库不是「没有更新」：门禁必须红。检查仓库 data/ 布局或 MC_SKILL_DATA。");
+    process.exit(1);
   }
+  let kb;
+  try {
+    kb = JSON.parse(raw);
+  } catch (err) {
+    console.error(`parse ${file} failed: ${err.message}`);
+    console.error("  坏 JSON 不是「没有更新」：门禁必须红。");
+    process.exit(1);
+  }
+  if (!kb || typeof kb !== "object" || (kb.versions && typeof kb.versions !== "object")) {
+    console.error(`  ${file} 顶层形状不对（需要 { versions: { ... } }），实际 keys=${kb && typeof kb === "object" ? Object.keys(kb).join(",") : String(kb)}`);
+    process.exit(1);
+  }
+  if (!Object.keys(kb.versions || {}).length) {
+    console.error(`  ${file} 的 versions 为空：零输入不算通过。`);
+    process.exit(1);
+  }
+  return kb;
 }
 
 function printReport({ updates, scanned }, filterMc) {

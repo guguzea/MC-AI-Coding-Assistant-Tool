@@ -1,6 +1,6 @@
 # Render Types
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/rendertypes
+> 来源：https://docs.minecraftforge.net/en/1.20.x/rendering/modelextensions/rendertypes
 > 版本：1.20.4
 # Render Types
 

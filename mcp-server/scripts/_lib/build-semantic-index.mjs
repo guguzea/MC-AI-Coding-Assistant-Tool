@@ -27,6 +27,7 @@ import {
   renameSync,
   rmSync,
   statSync,
+  unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { dirname, join, relative } from "node:path";
@@ -164,6 +165,93 @@ export function chunkMarkdown(
 }
 
 // ── 构建流程 ──────────────────────────────────────────────────────────────────
+
+
+/**
+ * 启动清扫（S10 ②的后半，也是本轮实测逼出来的必需项）。
+ *
+ * 为什么必须有：try/finally 挡不住进程被杀。我用 timeout 跑重建时收到 SIGTERM，
+ * finally 根本没执行，当场多出 2 个 db.sqlite.tmp-<pid>；data/ 里原有那 8 个
+ * 极可能同一成因。所以「半截临时文件」这一类只能靠开工前先扫一遍来收口。
+ *
+ * 三条保守规则（宁可留痕，绝不误删可用索引）：
+ *  1. 只认本工具自己的命名法：db.sqlite.tmp-<pid>[-journal] 与 db.sqlite.old；
+ *     `db.sqlite` 本体永远不碰。
+ *  2. 只删「确定是孤儿」的：pid 已不存在，且 mtime 超过 GRACE_MS。
+ *     pid 判不了 / 太新 ⇒ 只报告不删。
+ *  3. 每一条删除都打日志，便于事后核对。
+ */
+const STALE_TMP_GRACE_MS = 10 * 60 * 1000;
+const STALE_TMP_RE = /^db\.sqlite\.(?:tmp-(\d+)(?:-journal)?|old)$/;
+
+function pidAlive(pid) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (err) {
+    // ESRCH=进程不存在；EPERM=存在但不属于我（Windows 上极少见）；其余按「判不了」处理
+    if (err?.code === "ESRCH") return false;
+    if (err?.code === "EPERM") return true;
+    return null;
+  }
+}
+
+export function sweepStaleTmp(dataRoot, now = Date.now(), { remove = false } = {}) {
+  const removed = [];
+  const kept = [];
+  (function walk(dir) {
+    let ents;
+    try {
+      ents = fsReaddirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const e of ents) {
+      const abs = dir + "/" + e.name;
+      if (e.isDirectory()) {
+        if (e.name === "_models" || e.name === "node_modules") continue;
+        walk(abs);
+      } else if (STALE_TMP_RE.test(e.name) && /\/semantic$/.test(dir)) {
+        const m = STALE_TMP_RE.exec(e.name);
+        const pid = m[1] === undefined ? null : Number(m[1]);
+        let st;
+        try {
+          st = fsStatSync(abs);
+        } catch {
+          continue;
+        }
+        const fresh = now - st.mtimeMs < STALE_TMP_GRACE_MS;
+        // 「命名里没有 pid」是**判不出**，不是「已死」：db.sqlite.old 是原子换身留下的旧库备份，
+        // 中途失败时还要靠它回滚 ⇒ 判不出就不删，只报告。
+        const alive = pid === null ? null : pidAlive(pid);
+        if (fresh || alive === null || alive === true) {
+          kept.push({
+            path: abs,
+            // 三种「为什么不删」要能分别说清：合并成一句会让排障与测试都失去意义
+            why: fresh ? "mtime 在宽限期内" : alive === true ? "pid 仍在跑" : "命名里没有 pid，判不出归属",
+          });
+          continue;
+        }
+        if (!remove) {
+          // 默认不动手：data/ 下陈旧产物的删除是数据拥有者的决定（既有裁定），这里只把孤儿点名出来
+          kept.push({ path: abs, why: "孤儿（未开 --sweep-stale-tmp，只报告不删）" });
+          continue;
+        }
+        try {
+          fsUnlinkSync(abs);
+          removed.push(abs);
+        } catch {
+          kept.push({ path: abs, why: "删除失败（占用），下次再清" });
+        }
+      }
+    }
+  })(dataRoot);
+  return { removed, kept };
+}
+
+const fsReaddirSync = readdirSync;
+const fsStatSync = statSync;
+const fsUnlinkSync = unlinkSync;
 
 function parseArgs(argv) {
   const args = { all: false, embed: true, force: false };
@@ -468,7 +556,20 @@ async function main() {
     }
   }
 
-  const summary = { embedded: 0, fts5Only: 0, skipped: 0, failed: 0 };
+  const sweepRemove = process.argv.includes("--sweep-stale-tmp");
+  const swept = sweepStaleTmp(dataRoot, Date.now(), { remove: sweepRemove });
+  const orphan = swept.kept.filter((k) => /孤儿/.test(k.why));
+  if (swept.removed.length || orphan.length || swept.kept.some((k) => /判不出|仍在跑|宽限期/.test(k.why))) {
+    console.log(
+      `[启动清扫] ${sweepRemove ? "已删孤儿临时库" : "发现孤儿临时库（未删；加 --sweep-stale-tmp 才动手）"} ` +
+        `${sweepRemove ? swept.removed.length : orphan.length} 个` +
+        `${swept.kept.length ? `；另有 ${swept.kept.length} 个按规则保留` : ""}`,
+    );
+    for (const p of swept.removed) console.log(`  - 已删 ${p.replace(dataRoot + "/", "")}`);
+    for (const k of orphan) console.log(`  - 待删 ${k.path.replace(dataRoot + "/", "")}`);
+  }
+
+  const summary = { embedded: 0, fts5Only: 0, skipped: 0, failed: 0, rebuilt: 0, orphanPages: 0 };
   let i = 0;
   for (const t of targets) {
     i++;
@@ -492,6 +593,7 @@ async function main() {
       }
       console.log(`[build ${i}/${targets.length}] ${label}（${discovered.docs.length} docs）…`);
       if (discovered.skipped.length) {
+        summary.orphanPages += discovered.skipped.length;
         const shown = discovered.skipped.slice(0, 10);
         console.log(
           `  [skipped ${discovered.skipped.length}] ${shown.join(" | ")}${discovered.skipped.length > 10 ? " …" : ""}`,
@@ -502,6 +604,7 @@ async function main() {
         source_fingerprint: fingerprint,
       });
       const mode = stats.embedded > 0 ? "embedded" : "fts5-only";
+      summary.rebuilt++;
       if (mode === "embedded") summary.embedded++;
       else summary.fts5Only++;
       console.log(
@@ -523,6 +626,15 @@ async function main() {
         {
           generatedAt: new Date().toISOString(),
           minContentChars: MIN_CONTENT_CHARS,
+          // 覆盖面必写：增量构建只对指纹变化的目标重算 chunk，
+          // 少了这组数字，chunksDropped=0 分不清「没有丢弃」和「本轮什么都没重建」。
+          coverage: {
+            targets: targets.length,
+            rebuilt: summary.rebuilt,
+            skippedUpToDate: summary.skipped,
+            failed: summary.failed,
+            pagesWithoutL0Entry: summary.orphanPages,
+          },
           pagesAffected: dropLedger.docs,
           chunksDropped: dropLedger.chunks,
           charsDropped: dropLedger.chars,
@@ -535,7 +647,7 @@ async function main() {
       "utf8",
     );
     console.log(
-      `[丢弃留痕] 影响 ${dropLedger.docs} 页 / ${dropLedger.chunks} 块 / ${dropLedger.chars} 字符 → ${ledgerPath}`,
+      `[丢弃留痕] 本轮重建 ${summary.rebuilt}/${targets.length} 个目标；影响 ${dropLedger.docs} 页 / ${dropLedger.chunks} 块 / ${dropLedger.chars} 字符 → ${ledgerPath}${summary.rebuilt === 0 ? "（本轮未重算任何 chunk，0 不代表没有丢弃）" : ""}`,
     );
   } catch (e) {
     console.warn(`[warn] 丢弃清单写失败: ${e.message}`);
@@ -605,7 +717,7 @@ async function main() {
   }
 
   console.log(
-    `[summary] embedMode=${embedMode} embedded=${summary.embedded} fts5-only=${summary.fts5Only} skipped=${summary.skipped} failed=${summary.failed}`,
+    `[summary] embedMode=${embedMode} embedded=${summary.embedded} fts5-only=${summary.fts5Only} skipped=${summary.skipped} failed=${summary.failed} 页级跳过=${summary.orphanPages}`,
   );
   if (summary.failed > 0) process.exit(1);
 }

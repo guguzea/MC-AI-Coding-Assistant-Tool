@@ -718,8 +718,15 @@ export function trimOldest<T>(map: Map<string, T>, max: number): void {
   }
 }
 
+/** 载荷里的平台族名：platform 优先，其次 provenance 的 sourcePlatform；缺失时只认 NeoForge 专属标记，不猜。 */
+function docsPlatformKey(payload: Record<string, unknown>): string {
+  const p = String(payload.platform ?? payload.sourcePlatform ?? "").trim().toLowerCase();
+  if (p) return p;
+  return payload.forgeCompatible === true || payload.unversionedCurrent === true ? "neoforge" : "";
+}
+
 function docsPlatformLabel(payload: Record<string, unknown>): string {
-  const p = String(payload.platform ?? payload.sourcePlatform ?? "").toLowerCase();
+  const p = docsPlatformKey(payload);
   if (p === "forge") return "Forge";
   if (p === "neoforge") return "NeoForge";
   if (p === "quilt") return "Quilt";
@@ -744,14 +751,19 @@ export function withDocsFallbackFields<T extends Record<string, unknown>>(payloa
     !/^26\.1/.test(requested) &&
     resolved !== "porting-extra";
   const plat = docsPlatformLabel(payload);
+  const platformKey = docsPlatformKey(payload);
   const cn =
     (wikiFallback || neighbor) && requested
-      ? `不是 ${requested} 官方 ${plat} 文档；正文来自 ${plat} ${resolved}。禁止当成本版官方页抄写。`
+      ? `不是 ${requested} 官方 ${plat} 文档；正文来自 ${plat} ${resolved}。禁止当成本版官方页抄写。` +
+        (platformKey
+          ? ""
+          : `（载荷没带 platform，上面的「${plat}」是占位符，不是平台名；实际归属看调用工具名，或改用显式 platform 的 search_docs。）`)
       : undefined;
   return {
     ...payload,
     fallback: true,
     confidence: "fallback",
+    ...(platformKey && payload.platform === undefined ? { platform: platformKey } : {}),
     source_version: resolved,
     action: payload.action ?? actionable(
       ActionCodes.VERSION_FALLBACK,

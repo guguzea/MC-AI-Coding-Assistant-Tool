@@ -1,6 +1,6 @@
 # Advancement Providers
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/datagen/server/advancements
+> 来源：https://docs.minecraftforge.net/en/1.20.x/datagen/server/advancements
 > 版本：1.20.4
 # Advancement Generation
 

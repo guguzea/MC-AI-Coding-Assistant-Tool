@@ -86,6 +86,27 @@ export function assertLinkForge1204(destDir = DEFAULT_DEST_DIR) {
     }
   }
 
+  // raw/*.md 是 index 的上游：process-forge-docs.js 从 raw 元数据行重建 index-l*.json，
+  // 只查 index 会放过「index 已洗、raw 仍脏」这种下次重建即复发的中间态。
+  // 只匹配元数据行；正文里提到 1.20.1 的移植说明属正常内容。
+  const rd = join(destDir, "raw");
+  if (existsSync(rd)) {
+    for (const name of readdirSync(rd)) {
+      if (!name.endsWith(".md")) continue;
+      const txt = readFileSync(join(rd, name), "utf8");
+      for (const line of txt.split(/\r?\n/)) {
+        const m = line.match(/^(?:> *(?:来源|版本)[：:] *|(?:source|version) *: *)([^\r\n]*)/);
+        if (!m) continue;
+        const value = m[1].trim().replace(/^["']|["']$/g, "");
+        if (value.includes(`/en/${SRC_VERSION}/`)) {
+          problems.push(`raw/${name} 元数据 url 仍指向 ${SRC_VERSION}: ${line.trim()}`);
+        } else if (value === SRC_VERSION) {
+          problems.push(`raw/${name} 元数据 version 仍为 ${SRC_VERSION}: ${line.trim()}`);
+        }
+      }
+    }
+  }
+
   if (problems.length > 0) {
     throw new Error(
       `forge_${DEST_VERSION} 数据残留 ${SRC_VERSION} 版本痕迹（${problems.length} 处）：\n` +

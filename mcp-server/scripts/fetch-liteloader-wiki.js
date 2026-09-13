@@ -15,7 +15,7 @@
  */
 import { existsSync, mkdirSync, writeFileSync, readdirSync, unlinkSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   dokuwikiToMarkdown,
   extractDokuTitle,
@@ -231,7 +231,15 @@ async function main() {
   }
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+// 只在直接执行时抓取；被 import 时不得联网爬取/写 data/（DRY 等参数来自 argv，
+// 测试进程里 import 就等于按「非 dry-run」真写盘）。
+const invokedDirectly =
+  !!process.argv[1] &&
+  import.meta.url.toLowerCase() ===
+    pathToFileURL(process.argv[1]).href.toLowerCase();
+if (invokedDirectly) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}

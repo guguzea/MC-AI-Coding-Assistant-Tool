@@ -1,6 +1,6 @@
 # Item Overrides
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/itemoverrides
+> 来源：https://docs.minecraftforge.net/en/1.20.x/rendering/modelloaders/itemoverrides
 > 版本：1.20.4
 # `ItemOverrides
 

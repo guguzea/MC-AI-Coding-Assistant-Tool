@@ -205,11 +205,6 @@ export async function mixinAnalyze(input: MixinAnalyzeInput): Promise<MixinAnaly
     warnings,
     errors,
     supportMatrix: SUPPORT_MATRIX,
-    ...(missing.length
-      ? {
-          // top-level hint when any missing
-        }
-      : {}),
     ...(deepResult ? { deepResult } : {}),
   };
 }

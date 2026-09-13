@@ -426,15 +426,19 @@ function rebuildCatalogFromDisk() {
     key,
     reason: "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar",
   }));
-  writeJsonPreservingEol(indexPath, { cache: "$MC_SKILL_CACHE", jars, notIndexed });
-  writeJsonPreservingEol(join(OUT, "status.json"), {
-    ok: true,
-    decompiled,
-    mappingsVersion: mappingsOrdered,
-    cache: "$MC_SKILL_CACHE",
-    invalid,
-    notIndexed,
-  });
+  if (WRITE) {
+    writeJsonPreservingEol(indexPath, { cache: "$MC_SKILL_CACHE", jars, notIndexed });
+    writeJsonPreservingEol(join(OUT, "status.json"), {
+      ok: true,
+      decompiled,
+      mappingsVersion: mappingsOrdered,
+      cache: "$MC_SKILL_CACHE",
+      invalid,
+      notIndexed,
+    });
+  } else {
+    console.log(`[dry-run] 摘要本会被重写：${basename(indexPath)} + status.json（catalog ${jars.length} 条）`);
+  }
   console.log(`catalog ${jars.length} summaries → ${OUT} (java stays in $MC_SKILL_CACHE)`);
 }
 
@@ -511,7 +515,7 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
           },
           key,
         );
-        writeJsonPreservingEol(existingPath, kept);
+        if (WRITE) writeJsonPreservingEol(existingPath, kept);
         summaries.push({ ...kept, file: name });
         console.log("idempotent keep", name, "classes", kept.classes.length);
         continue;

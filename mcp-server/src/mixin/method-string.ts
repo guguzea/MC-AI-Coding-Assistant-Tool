@@ -69,9 +69,7 @@ export function parseMethodReference(raw: string, separateDescriptor?: string): 
     descriptor = descriptor || split.descriptor;
   }
 
-  const style = descriptor
-    ? detectNamingStyle(methodName)
-    : detectNamingStyle(methodName);
+  const style = detectNamingStyle(methodName);
 
   return {
     methodName,

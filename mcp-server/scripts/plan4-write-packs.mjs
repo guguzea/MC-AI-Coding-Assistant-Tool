@@ -4,18 +4,17 @@
  * Plan 4 one-shot writer: Neo thin Skills, Quilt QSL Skills, old-loader Skills,
  * Neo 1.20.1 tree, Forge 1.7.10 verified-api, fabric 26.1.2 scaffold, lint file list.
  */
-import { mkdirSync, writeFileSync, appendFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { emit, logDryRunBanner, wantWrite } from "../../scripts/_lib/write-guard.mjs";
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const lintList = [];
 
 function writeRel(rel, text) {
-  const abs = join(repo, rel);
-  mkdirSync(dirname(abs), { recursive: true });
+  // write-guard 的 emit 是唯一落笔出口（默认 DRYRUN，--write 才真写并自建父目录）。
   const body = text.endsWith("\n") ? text : `${text}\n`;
-  writeFileSync(abs, body, "utf8");
+  emit(join(repo, rel), body);
   if (/SKILL\.md$/i.test(rel.replace(/\\/g, "/"))) lintList.push(rel.replace(/\\/g, "/"));
 }
 
@@ -729,6 +728,7 @@ public class ExampleMod implements ModInitializer {
 }
 
 // --- run ---
+if (!wantWrite()) logDryRunBanner("plan4-write-packs");
 for (const ver of ["1.20.6", "1.21.5", "1.21.10"]) writeNeoThin(ver);
 
 writeQuilt("1.18.2", "1.18.2 用 Registry.ITEM/BLOCK，没有 Registries。QSL RegistryEvents 未打开，禁止把 1.21 getEntryAddEvent 冒充本档。");

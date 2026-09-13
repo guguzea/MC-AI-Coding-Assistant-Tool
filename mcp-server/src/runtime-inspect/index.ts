@@ -23,7 +23,6 @@ const DEFAULT_MAX_BYTES = 512 * 1024;
 const HARD_MAX_BYTES = 2 * 1024 * 1024;
 const DUMP_MAX_BYTES = 64 * 1024;
 const SCAN_TIMEOUT_MS = 5000;
-const MAX_DIR_ENTRIES = 80;
 
 const REL_LOG_DIRS = [
   ["run", "logs"],

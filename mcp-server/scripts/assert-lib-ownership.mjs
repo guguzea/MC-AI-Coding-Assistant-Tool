@@ -267,17 +267,47 @@ for (const [d, slugs] of stats.dirsToSlugs) {
   }
 }
 
-// ── A6：catalog 自己冒领他方包根（模型的 import 直接抄这里，F113 的最后一跳）──
-const catalogForeign = [];
-const catalogForeignAll = [];
+// ── A6：catalog 每个包都要被分类（模型的 import 直接抄这里，F113 的最后一跳）──
+// 判据不是「foreign 计数 = 0」，而是：own 由规则当场复核；非 own 必须有标签；
+// bundled 必须带「外壳自己声明的捆绑件」证据；剩下的只能落 unresolved —— 只有 unresolved 才是债。
+const catalogForeign = []; // unresolved 且不在台账 ⇒ 新增脏行
+const catalogForeignAll = []; // 全部 unresolved 行（drain 对账用）
+const tagProblems = [];
 for (const e of LIBRARY_CATALOG) {
   for (const [k, v] of Object.entries(e.verifiedApi || {})) {
+    const tags = v?.packageOwnership ?? {};
     for (const p of Array.isArray(v?.packages) ? v.packages : []) {
       if (typeof p !== "string" || !p) continue;
-      if (rule.ownsPackage(e, p)) continue;
+      const owned = rule.ownsPackage(e, p);
+      const t = tags[p];
+      const row = `${e.id}|${k}|${p}`;
+      // own 不强制存标签（规则可当场推出，强推只会逼一次全量改写却不增加任何检出力）；
+      // 非 own 没标签 = 说不清来源，按最保守的 unresolved 处理，并单独报缺标签。
+      if (!owned && (!t || typeof t.ownership !== "string") && !DEBT_CATALOG_FOREIGN.includes(row)) {
+        const owners2 = rootOwners.get(rule.packageRoot(p));
+        if (owners2 && [...owners2].some((o) => o !== e.id)) {
+          tagProblems.push(`${row} 缺 packageOwnership 标签（该包根由他条目证实，却不写来源 = 下一次并入就是冒领）`);
+        }
+      }
+      if (t && typeof t.ownership === "string") {
+        if (t.ownership === "own") {
+          if (!owned) tagProblems.push(`${row} 标 own，但 modId 不在包路径里（冒标）`);
+        } else if (t.ownership === "bundled") {
+          if (typeof t.evidence !== "string" || !t.evidence || t.evidence === "none") {
+            tagProblems.push(`${row} 标 bundled 但无证据 ⇒ 捆绑必须来自 jar 自己的声明，不是包名猜测`);
+          }
+        } else if (t.ownership !== "unresolved") {
+          tagProblems.push(`${row} 的 ownership=「${t.ownership}」不在 own|bundled|unresolved 之内`);
+        }
+      }
+      const isUnresolved = owned ? false : t ? t.ownership === "unresolved" : true;
+      if (!isUnresolved) continue;
+      // 「own = 包路径含 modId 段」单独用作债务判据会淹没真信号：实测 catalog 里有 866 行
+      // 按该定义不是 own（GeckoLib 的真身就是 software.bernie、KubeJS 是 dev.latvian.mods，
+      // 库名压根不在包里），把它们一律记成债会把 8 行真冒领冲掉。
+      // 因此债务只算「该包根确由别条目证实自有」的那一类 —— 那才是 F113 的实际伤害。
       const owners = rootOwners.get(rule.packageRoot(p));
       if (!owners || ![...owners].some((o) => o !== e.id)) continue;
-      const row = `${e.id}|${k}|${p}`;
       catalogForeignAll.push(row);
       if (!DEBT_CATALOG_FOREIGN.includes(row)) catalogForeign.push(row);
     }
@@ -285,8 +315,15 @@ for (const e of LIBRARY_CATALOG) {
 }
 if (catalogForeign.length) {
   fail(
-    `catalog 冒领他方包根 ${catalogForeign.length} 行（模型会照这些包名写 import）：\n  ` +
+    `catalog 冒领他方包根 ${catalogForeign.length} 行（unresolved：既不含本库 modId 段、也无捆绑声明证据）：\n  ` +
       catalogForeign.sort().join("\n  "),
+  );
+}
+if (tagProblems.length) {
+  fail(
+    `catalog 归属标签不合规 ${tagProblems.length} 处（非 own 要有标签、bundled 要带证据、own 要能复核）：\n  ` +
+      tagProblems.sort().slice(0, 12).join("\n  ") +
+      (tagProblems.length > 12 ? `\n  …（另有 ${tagProblems.length - 12} 处）` : ""),
   );
 }
 

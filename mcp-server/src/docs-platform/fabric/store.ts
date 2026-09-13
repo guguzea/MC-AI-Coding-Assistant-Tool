@@ -33,7 +33,7 @@ import {
   type TtlCacheEntry,
 } from "../search-utils.js";
 import { ownGet } from "../../utils/own-record.js";
-import { PlatformDataMissingError, type DocPlatform } from "../platform-data.js";
+import { PlatformDataMissingError, sortMcVersions, type DocPlatform } from "../platform-data.js";
 import {
   expandTranscludes,
   loadReferenceProvenance,
@@ -488,7 +488,7 @@ export class FabricDocStore {
     } catch {
       return [];
     }
-    return [...versions].sort();
+    return sortMcVersions([...versions]);
   }
 
   getLastSearchMeta(): Omit<SearchIndexDetailed, "results"> | null {

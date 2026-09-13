@@ -222,45 +222,88 @@ export function sha256Buf(buf: Buffer): string {
   return createHash("sha256").update(buf).digest("hex");
 }
 
-function whichCmd(cmd: string): string | null {
+/** `where` / `which` 的**全部**命中（PATH 顺序）。只取第一条是本函数组的旧缺陷，见 pickUnzipTool。 */
+function whichAll(cmd: string): string[] {
   const bin = process.platform === "win32" ? "where" : "which";
   const r = spawnSync(bin, [cmd], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
-  if (r.status !== 0) return null;
-  const line = (r.stdout || "")
+  if (r.status !== 0) return [];
+  return (r.stdout || "")
     .split(/\r?\n/)
     .map((s) => s.trim())
-    .find((s) => s.length > 0);
-  return line || null;
+    .filter((s) => s.length > 0);
+}
+
+export interface UnzipProbeInput {
+  /** PATH 命中（`where unzip` / `where 7z` / `where tar` + `where tar.exe`），保持 PATH 顺序 */
+  pathHits: { unzip: string[]; sevenZip: string[]; tar: string[] };
+  /** 不吃 PATH 的绝对候选：Windows 自带 bsdtar、7-Zip 默认安装位 */
+  absolute: { sevenZip: string[]; tar: string[] };
+  tarAcceptsZip: (tarPath: string) => boolean;
+  exists: (p: string) => boolean;
+  isWin: boolean;
+}
+
+/**
+ * 解 zip 工具选择（纯函数，可单测；`probeUnzipTool` 只负责喂真实环境）。
+ *
+ * 为什么逐条试而不是只取第一条命中：Windows 上 `where tar` 的第一条经常是 Git/MSYS 的
+ * **GNU tar**（Node 从 Git Bash 启动时 PATH 以 `usr\bin` 打头），它解不了 zip；而真正可用的
+ * bsdtar 排在后面、甚至压根不在 PATH 里。旧实现只吃第一条 ⇒ help 不证明是 bsdtar 就直接返回
+ * null，明明装有 `System32\tar.exe` 的机器收到 `UNZIP_TOOL_MISSING`——一条死路。
+ * 同理 7-Zip 不能钉死 `C:\Program Files`。System32 的 tar.exe 就是 bsdtar（Win10+ 自带），
+ * 不必再花一次 spawn 去证明。
+ */
+export function pickUnzipTool(input: UnzipProbeInput): UnzipTool | null {
+  for (const p of input.pathHits.unzip) {
+    if (p && input.exists(p)) return { kind: "unzip", executable: p };
+  }
+  for (const p of [...input.pathHits.sevenZip, ...input.absolute.sevenZip]) {
+    if (p && input.exists(p)) return { kind: "7z", executable: p };
+  }
+  const seen = new Set<string>();
+  for (const p of [...input.pathHits.tar, ...input.absolute.tar]) {
+    if (!p || !input.exists(p)) continue;
+    const key = resolve(p).replace(/\//g, "\\").toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    if (input.isWin && key.endsWith("\\windows\\system32\\tar.exe")) return { kind: "bsdtar", executable: p };
+    if (input.tarAcceptsZip(p)) return { kind: "bsdtar", executable: p };
+  }
+  return null;
+}
+
+function tarHelpAcceptsZip(tarPath: string): boolean {
+  const help = spawnSync(tarPath, ["--help"], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
+  return /bsdtar|libarchive/i.test(`${help.stdout || ""}\n${help.stderr || ""}`);
+}
+
+/** Windows 不依赖 PATH 的绝对候选（SystemRoot / ProgramFiles 各形态）。 */
+export function absoluteToolCandidates(
+  env: NodeJS.ProcessEnv = process.env,
+  platform: NodeJS.Platform = process.platform,
+): { sevenZip: string[]; tar: string[] } {
+  if (platform !== "win32") return { sevenZip: [], tar: [] };
+  const root = env.SystemRoot || env.windir || env.WINDIR;
+  const pf = [env["ProgramFiles"], env["ProgramFiles(x86)"], env.ProgramW6432, "C:\\Program Files"];
+  return {
+    sevenZip: [...new Set(pf.filter((d): d is string => Boolean(d)).map((d) => join(d, "7-Zip", "7z.exe")))],
+    tar: root ? [join(root, "System32", "tar.exe")] : [],
+  };
 }
 
 /** 先探测 unzip / 7z / 能解 zip 的 bsdtar。不要假定 GNU tar 能解 zip。 */
 export function probeUnzipTool(): UnzipTool | null {
-  const unzip = whichCmd("unzip");
-  if (unzip) return { kind: "unzip", executable: unzip };
-
-  const sevenCandidates = [
-    whichCmd("7z"),
-    whichCmd("7za"),
-    process.platform === "win32" ? "C:\\Program Files\\7-Zip\\7z.exe" : null,
-  ];
-  for (const p of sevenCandidates) {
-    if (p && existsSync(p)) return { kind: "7z", executable: p };
-  }
-
-  const tar = whichCmd("tar") || (process.platform === "win32" ? whichCmd("tar.exe") : null);
-  if (tar) {
-    const help = spawnSync(tar, ["--help"], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
-    const text = `${help.stdout || ""}\n${help.stderr || ""}`;
-    // Windows 不整体短路接受任意 PATH tar（MSYS/GnuWin32 的 GNU tar 解不了 zip）；
-    // 仅 help 文本证明是 bsdtar/libarchive，或解析到 System32 自带的 bsdtar 时才接受。
-    const resolvedTar = resolve(tar).replace(/\//g, "\\").toLowerCase();
-    const isSystemBsdtar =
-      process.platform === "win32" && resolvedTar.endsWith("\\windows\\system32\\tar.exe");
-    if (/bsdtar|libarchive/i.test(text) || isSystemBsdtar) {
-      return { kind: "bsdtar", executable: tar };
-    }
-  }
-  return null;
+  return pickUnzipTool({
+    pathHits: {
+      unzip: whichAll("unzip"),
+      sevenZip: [...whichAll("7z"), ...whichAll("7za")],
+      tar: [...whichAll("tar"), ...(process.platform === "win32" ? whichAll("tar.exe") : [])],
+    },
+    absolute: absoluteToolCandidates(),
+    tarAcceptsZip: tarHelpAcceptsZip,
+    exists: (p) => existsSync(p),
+    isWin: process.platform === "win32",
+  });
 }
 
 // A-5：segment 级 `..` + Windows 保留名判定提升到 utils/zip-path-guard.ts（mdk 与 update 共用）

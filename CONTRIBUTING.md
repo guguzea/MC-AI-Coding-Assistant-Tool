@@ -171,6 +171,76 @@ data/
 
 ---
 
+## 数据链口径（官方标准，2026-09-12 裁定）
+
+本节把 `temp/PLAN-2026-09-08-销账-*.md` 里逐条登记的**口径偏离**固化为标准。口径与数字冲突时，**以本节 + 门禁实算为准**，旧台账只作历史。
+
+### 转引标签怎么读（`<<<` 与 `@[code`）
+
+processed 正文里的这两行都是**转引标记**，不是可执行代码；读取期由 `mcp-server/src/docs-platform/fabric/transclude.ts` 展开成代码块。`<<<` 的完整形态：
+
+```
+<<< @/相对路径[#区段名][{行选}][[标签页标题]] [其余 attrs]
+```
+
+| 构件 | 读法 | 实测处数（26.1.2 + 1.21.x） |
+|------|------|------|
+| `#区段名` | 上游 VitePress 区段导入。标记行是 `// #region 名` / `// #endregion 名`（注释前缀随语言变），**首尾标记行不计入正文** | 521 |
+| 无 `#` | 整份文件引用（含 `@/public/…`、`@/.github/…`） | 112 |
+| `[[Label]]` 或紧跟的 `[Label]` | **标签页标题**，既不是路径也不是区段名；从两者剥掉，只留在出处注释 | 13 |
+| `{5-7}` / `{2}` / `{1,3}` | 区段内（无区段则全文）**1-based 闭区间**行选，允许逗号并列 | 15 |
+| `{classtweaker:no-line-numbers}` 等非纯数字花括号 | **选项**，一律忽略并整段给出（当成行号会让整个区段消失） | 3 |
+| 语料写 kebab 而 blob 标 snake_case | `regionCandidates()` 先**逐字**匹配、再试 `-`↔`_` 变体；逐字命中 500 处 ⇒ 变体是兜底不是主路径 | 6 |
+
+- **判据只有一份**：`parseAngleSpec()` / `angleResolve()` / `pickLines()` 由 `transclude.ts` 导出，G3 门 `import` 复用。**禁止**在门或探针里另写一份「区段名在不在」的正则——曾经分叉过一次，后果是同一页读者展开成功、门算成「未取件」并跳过核对（13 处）。
+- 读者放行条件**同时认两种占位符**（`@[code` 或行首 `<<<`）。只认 `@[code` 会让「1.21.4+ 与 26.x 只用 `<<<`」的整页原样吐占位符。
+
+### 计数器分工（禁止混用分母）
+
+| 字段 | 口径 |
+|------|------|
+| `sites` / `expanded` / `missing` | **只算 `@[code`**。既有台账按此钉：`sites` 3344 处标记行、全局唯一目标 669 个（`assert-fabric-transcludes.mjs` 的 `EXPECTED_UNIQUE_TARGETS`）、processed 全展开 1672 篇 |
+| `angleSites` / `angleMissing` / `angleRegionMiss` | `<<<` 独立字段：标记行数 / 本地镜像取不到的目标 / 目标取到但区段对不上 |
+| 全部占位符 | `sites + angleSites`。判断「本页是否还有未展开残留」用 `hasUnexpandedMarker()`，它认两种形态 |
+| 展开正确性归属 | `@[code` 归 `assert-fabric-transcludes.mjs`，`<<<` 归 G3 `assert-corpus-faithfulness.mjs`。**两套不重叠**，谁也别补谁 |
+
+- 任何计数**必须写明分母口径**。中介名一例：S7 时点为 355 行命中 / 979 token 出现（一行两个名字记 1 行），今日盘面门重算后为 **288 行命中**——两个分母都对，只有钉住一个才有回归意义 ⇒ 门内注释与台账字段名都带「行命中」字样。
+- 仓库级计数**整体排除 `temp/**`**（不做点名式排除：temp 下同形副本 ≥3 份，且卷抖动会让 `statSync` 结果漂）。
+
+### 台账、豁免与债务
+
+- **数字只能由门自己重算**：G3 `MC_SKILL_CORPUS_RELEDGER=1`、G4 `MC_SKILL_INDEX_RELEDGER=1` 转储后回填；G1/G2 的 LEDGER 常量取门成功行打印的实测值。**文档不重述会腐烂的计数**，只述口径。
+- **台账外新增即红；台账条目停止复现也即红**（drain check，G1/G3/G4 均已实现双向对账）。债务清单**清空而不删除**：留空数组 = 零容忍，复发才响亮。
+- 门禁**一律不删文件**。`data/` 下的残留（`db.sqlite.old` / `tmp-*`）只钉进 `DEBT_RESIDUE` 并出待删清单，删除动作归数据拥有者。
+- 每个门禁条款必须**可被点名的投毒红**（`mcp-server/test-scripts.mjs` 内逐条 poison 已在册）。
+
+### 语料忠实性不变量
+
+- raw ↔ processed 的不变量是**逐树「篇数相等」+ 变换类别台账**（`identical` / `contentDiff` / `markerOnly` / `fmOnly` / `noTwin`），**不是** 1:1 同名配对——后者会造出 19747 处假缺失（真实 `noTwin` 19565）。
+- neoforge 侧更强：`processed == stripFrontmatter(raw)` 逐字节成立。
+- 泛型丢失判据 = 先解 `&lt;` / `&gt;` 实体，再用 `\b[A-Z]\w*<(?!\/)[^>\n]*>` 取**多重集**比对 raw→processed（同数改写也算未存活）。
+- 上游镜像的前端元数据（front matter）**不改**：语料层字节忠实优先于本地偏好。
+
+### jar 身份与 `packages` 归属
+
+- 反编译产物目录身份段 = **jar 字节内容的 sha512 前 12 位**（不读文件名、不读元数据）。
+- 取消 `?? "unknown-mod"` 回落：解不出 modId = 结构化失败 `MOD_ID_UNKNOWN`，**永不**坍缩进共享目录。
+- 身份优先级：① jar 自己的元数据 → ② **它自己声明的内层 jar**（`META-INF/jars|jarjar/*.jar`）→ ③ 调用方给的标签（必须被该 jar 自身条目路径证实）。结果行的 `modIdEvidence` ∈ `jar` / `jarjar-self` / `jarjar-labeled` / `external`。外部证据通道**只供内部批处理器**，不进 MCP 工具 schema。
+- 同 `modId` + 同 `version` 的多个 jar 是合法常态（JiJ / `.supp` / fork / repack）⇒ 按内容分叶，第二个 jar 应当**成功**。
+- `meta.modId` 为字符串 `"null"` 是合法 id；只有 JSON null / 空 / `unknown*` 判未知。
+- 摘要与 catalog 的 `packages` 登记**实测包**，不是声明白名单的回声：声明前缀先按本树校验，全不成立则按「modId 是路径一段（`-`/`_` 不敏感）」重建，两者都不成立时**留空并告警**，禁止退化成全收（`-all` 胖 jar 会把 Kotlin stdlib 当成本库 API）。归属判据是**段级自有**（`ROOT_SEGMENTS=3`）且只拒「命中他方已证实包根」；字面「以 modId 开头」会否掉 92.7% 的真数据。
+- `packages` 是**启发式产物，不可当 import 依据**。
+
+### 映射与版本口径
+
+- 未具名映射的口径 = `name_named == name_intermediary`；G4 A7 逐档钉 `classesNamed` / `unresolvedMethods` / `unresolvedFields`。yarn 覆盖率本身 30–36%、`field_*` 与 forge SRG/TSRG era 的 `classes named == intermediary` 都属**上游事实**，不是导入缺陷。
+- 成员数解析顺序一律 `meta` → `methods` → `searge_*`（**取用，不求和**），门与读者共用同一顺序。
+- Forge 依赖坐标 = maven **recommended** build，并带 `forgeVersionSource` 溯源字段。
+- 审计前提在磁盘上不可复现时（如已不存在的 JSONL 计数），**既不沿用为基线、也不判审计为假**：验收改用磁盘可复现的固定样本集，并把前后计数并排给出。
+- 吞异常裁定判据：折叠成 `success` 的必须修真缺陷；落成可见 `failed` 的带证据关闭——**不豁免、不转挂下一档**。
+
+---
+
 ## MCP Server 贡献
 
 ### 技术栈

@@ -1,6 +1,6 @@
 # Tag Providers
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/datagen/server/tags
+> 来源：https://docs.minecraftforge.net/en/1.20.x/datagen/server/tags
 > 版本：1.20.4
 # Tag Generation
 

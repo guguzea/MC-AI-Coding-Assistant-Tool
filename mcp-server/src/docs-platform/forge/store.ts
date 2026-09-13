@@ -26,7 +26,7 @@ import {
   type SymbolIndex,
   type TtlCacheEntry,
 } from "../search-utils.js";
-import { PlatformDataMissingError } from "../platform-data.js";
+import { compareMcVersions, PlatformDataMissingError } from "../platform-data.js";
 
 // ── 类型定义 ─────────────────────────────────────────────────────────────
 
@@ -121,27 +121,6 @@ export class IndexCorruptError extends Error {
 export function seriesKey(version: string): string | null {
   const n = version.trim().replace(/\.x$/i, "");
   return n.match(/^(\d+\.\d+)/)?.[1] ?? null;
-}
-
-function versionRankParts(version: string): number[] {
-  return version.split(".").map((p) => {
-    if (p === "x" || p === "X") return -1;
-    const n = Number(p);
-    return Number.isFinite(n) ? n : -1;
-  });
-}
-
-/** 数字补丁 > .x > 缺段。1.16.5 > 1.16.x > 1.16 */
-export function compareMcVersions(a: string, b: string): number {
-  const pa = versionRankParts(a);
-  const pb = versionRankParts(b);
-  const len = Math.max(pa.length, pb.length);
-  for (let i = 0; i < len; i++) {
-    const da = pa[i] ?? -2;
-    const db = pb[i] ?? -2;
-    if (da !== db) return da - db;
-  }
-  return 0;
 }
 
 /** 精确命中，否则同系列最高档；无亲缘则 null。 */

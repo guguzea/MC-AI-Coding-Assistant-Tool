@@ -26,6 +26,7 @@ import {
   platformDataMissingResult,
   hasPlatformDocData,
   buildListVersionsNotes,
+  versionNotFoundResult,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
@@ -84,19 +85,11 @@ function handleError(e: unknown): CallToolResult {
   if (miss) return miss;
   if (e instanceof VersionNotFoundError) {
     if (e.availableVersions.length === 0) return platformDataMissingResult("neoforge");
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify({
-          ok: false,
-          error: {
-            code: "VERSION_NOT_FOUND",
-            message: e.message,
-            hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}`,
-          },
-        }, null, 2),
-      }],
-    };
+    return versionNotFoundResult({
+      platform: "neoforge",
+      message: e.message,
+      availableVersions: e.availableVersions,
+    });
   }
   if (e instanceof IndexCorruptError) {
     return {

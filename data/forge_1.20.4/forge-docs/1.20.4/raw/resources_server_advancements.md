@@ -1,6 +1,6 @@
 # Advancements
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/resources/server/advancements
+> 来源：https://docs.minecraftforge.net/en/1.20.x/resources/server/advancements
 > 版本：1.20.4
 # Advancements
 

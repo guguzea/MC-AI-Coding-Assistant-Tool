@@ -1,6 +1,6 @@
 # Loot Table Providers
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/datagen/server/loottables
+> 来源：https://docs.minecraftforge.net/en/1.20.x/datagen/server/loottables
 > 版本：1.20.4
 # Loot Table Generation
 

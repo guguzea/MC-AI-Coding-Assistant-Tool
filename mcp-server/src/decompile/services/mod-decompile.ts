@@ -8,7 +8,8 @@
  * 仅本地绝对路径 jar；缓存只写 $MC_SKILL_CACHE；不触碰项目目录。
  */
 
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync, openSync, readSync, closeSync } from "fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync, openSync, readSync, closeSync } from "fs";
+import { tmpdir } from "os";
 import { basename, join, relative, sep } from "path";
 import { createHash } from "crypto";
 import { actionable, withAction, type ActionEnvelope } from "../../utils/actionable.js";
@@ -29,7 +30,7 @@ import { ensureResourceJar, ensureTinyRemapperJars, VINEFLOWER_DEF, DownloadDisa
 import { downloadFile, DownloadError } from "../downloaders/http.js";
 import { resolveYarnMappings, mappingCacheViable } from "../downloaders/yarn.js";
 import { resolveMojangVersion } from "../downloaders/mojang.js";
-import { listZipEntries } from "../zip-util.js";
+import { listZipEntries, readZip } from "../zip-util.js";
 import { analyzeModJar } from "./mod-analyzer.js";
 import {
   assertVineflowerDiskSpace,
@@ -59,8 +60,12 @@ export interface DecompileModJarArgs {
 export interface ModDecompileResult {
   found: boolean;
   modId?: string;
-  /** 身份来源：`jar` = 自身元数据；`external` = 调用方证据且已被本 jar 条目证实 */
-  modIdEvidence?: "jar" | "external";
+  /** 身份来源：`jar` = 自身元数据；`jarjar-self`/`jarjar-labeled` = 它自己声明的内层 jar；`external` = 调用方标签（已被条目证实） */
+  modIdEvidence?: "jar" | "external" | "jarjar-self" | "jarjar-labeled";
+  /** 外壳声明的内层件（`META-INF/jars|jarjar/*.jar`）：归属标签的 bundled 证据源 */
+  bundledJars?: string[];
+  /** 身份来自哪个内层件（仅 `jarjar-*` 时有值）：调用方据此只反编译那一个，不再猜 */
+  modIdSource?: string;
   modVersion?: string;
   loaders?: string[];
   /** 该产物实际所用的 MC 版本（缓存命中时回填盘上记录，不等于本次请求；见 requestedVersion） */
@@ -224,6 +229,70 @@ export function packagesOwnModId(
       .split(/[./]+/)
       .some((raw) => raw.toLowerCase().replace(/[-_]/g, "") === seg),
   );
+}
+
+/** 壳 jar 自己声明的内层件（FML Jar-in-Jar 与 jarjar shaded 两类都在外壳条目里）。 */
+export function bundledJarEntries(names: string[]): string[] {
+  return names.filter((n) => /^META-INF\/(jars|jarjar)\/[^/]+\.jar$/.test(n)).sort();
+}
+
+/**
+ * 外壳解不出身份时，从**它自己声明的**内层 jar 里读身份（S5b）。
+ *
+ * 顺序不是随便定的：`META-INF/jars|jarjar/*.jar` 是构建时写进外壳的声明，属 jar 内部证据，
+ * 强于调用方给的标签；而包名启发式会误判改名遗留（Moonlight 早期就是 selene），所以不猜包名。
+ * 只在无歧义时采信：内层恰好一个解得出 modId，或恰好一个与调用方标签相符。
+ * 多义（CCA 那类平级子模组）返回候选交人/agent 决定，绝不挑第一个。
+ */
+function resolveEmbeddedIdentity(
+  jarBuffer: Buffer,
+  innerEntries: string[],
+  hint: string | undefined,
+):
+  | { ok: true; modId: string; modVersion?: string; evidence: "jarjar-self" | "jarjar-labeled"; from: string }
+  | { ok: false; candidates: string[]; reason: string } {
+  let zip: Map<string, Buffer>;
+  try {
+    zip = readZip(jarBuffer);
+  } catch (err) {
+    return { ok: false, candidates: [], reason: `内层 jar 读取失败：${(err as Error).message}` };
+  }
+  const norm = (v: string) => v.trim().toLowerCase().replace(/[-_]/g, "");
+  const want = typeof hint === "string" ? norm(hint) : "";
+  const hits: { entry: string; modId: string; modVersion?: string }[] = [];
+  const scratch = mkdtempSync(join(tmpdir(), "mc-skill-jij-"));
+  try {
+    for (const entry of innerEntries) {
+      const buf = zip.get(entry);
+      if (!buf) continue;
+      const tmpJar = join(scratch, entry.replace(/[/\\]/g, "_"));
+      try {
+        writeFileSync(tmpJar, buf);
+        const inner = analyzeModJar(tmpJar);
+        const seg = resolveModIdSegment(inner.modId);
+        if (seg.ok) hits.push({ entry, modId: seg.modId, modVersion: inner.modVersion });
+      } catch {
+        /* 单个内层读不动：跳过，不影响其余判定 */
+      }
+    }
+  } finally {
+    rmSync(scratch, { recursive: true, force: true });
+  }
+  const uniq = [...new Set(hits.map((h) => h.modId))];
+  if (want) {
+    const match = hits.filter((h) => norm(h.modId) === want);
+    if (match.length === 1) {
+      return { ok: true, modId: match[0].modId, modVersion: match[0].modVersion, evidence: "jarjar-labeled", from: match[0].entry };
+    }
+  }
+  if (hits.length > 0 && uniq.length === 1) {
+    return { ok: true, modId: hits[0].modId, modVersion: hits[0].modVersion, evidence: "jarjar-self", from: hits[0].entry };
+  }
+  return {
+    ok: false,
+    candidates: hits.map((h) => `${h.entry}#${h.modId}`),
+    reason: hits.length === 0 ? "内层 jar 也没有 mods.toml / fabric.mod.json 等元数据" : `内层解出 ${uniq.length} 个不同 modId（平级子模组），不猜`,
+  };
 }
 
 /**
@@ -416,42 +485,70 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   // F92：产物目录身份段取自 jar 字节内容（sha512 前 12 位）。先算出来，失败诊断与 outDir 共用一份真值。
   const jarIdentity = jarContentIdentity(args.jarPath);
   const identity = resolveModIdSegment(meta.modId);
+  // 外壳（JiJ / jarjar）与条目只在需要时才读一次，成功路径不为它们付双倍解压成本
+  let shellNames: string[] | null = null;
+  const namesOf = (): string[] => {
+    if (shellNames === null) {
+      try {
+        shellNames = listZipEntries(readFileSync(args.jarPath));
+      } catch {
+        shellNames = [];
+      }
+    }
+    return shellNames;
+  };
+  const bundledJars = identity.ok ? [] : bundledJarEntries(namesOf());
+  // 身份优先级：① jar 自己的元数据 → ② 它自己声明的内层 jar（外壳的实证）→ ③ 调用方标签（须被条目证实）
+  let embeddedId: ReturnType<typeof resolveEmbeddedIdentity> | null = null;
+  if (!identity.ok && bundledJars.length > 0) {
+    embeddedId = resolveEmbeddedIdentity(readFileSync(args.jarPath), bundledJars, args.externalModId);
+  }
+  const embeddedOk = embeddedId && embeddedId.ok ? embeddedId : null;
   // S5b 外部证据：只在 jar 自身条目里真有那一段时成立（判据与摘要/catalog 同一条，不另写一份）
   let externalId: { modId: string; evidence: "external" } | null = null;
-  if (!identity.ok && args.externalModId) {
+  if (!identity.ok && !embeddedOk && args.externalModId) {
     const ext = resolveModIdSegment(args.externalModId);
-    if (ext.ok) {
-      let names: string[] = [];
-      try {
-        names = listZipEntries(readFileSync(args.jarPath));
-      } catch {
-        names = [];
-      }
-      if (packagesOwnModId(names, ext.modId)) externalId = { modId: ext.modId, evidence: "external" };
-    }
+    if (ext.ok && packagesOwnModId(namesOf(), ext.modId)) externalId = { modId: ext.modId, evidence: "external" };
   }
-  if (!identity.ok && !externalId) {
+  if (!identity.ok && !embeddedOk && !externalId) {
+    const why =
+      embeddedId && !embeddedId.ok
+        ? `｜内层声明件也定不下身份：${embeddedId.reason}${embeddedId.candidates.length ? `（候选 ${embeddedId.candidates.join(" , ")}）` : ""}`
+        : args.externalModId
+          ? `｜调用方给的外部证据「${args.externalModId}」未通过：它本身非法，或该 jar 自己的条目路径里没有这一段（外部证据不绕过归属）`
+          : "";
     return withAction(
-      { found: false, error: identity.code, jarPath: args.jarPath, jarIdentity },
+      { found: false, error: identity.code, jarPath: args.jarPath, jarIdentity, bundledJars },
       actionable(
         identity.code,
-        `${identity.message}；已拒绝回落 unknown-mod 目录（jar 内容身份 = sha512 前 12 位 ${jarIdentity}）。`,
+        `${identity.message}；已拒绝回落 unknown-mod 目录（jar 内容身份 = sha512 前 12 位 ${jarIdentity}）。${why}`,
         [
           "先 analyze_mod_jar 看该 jar 究竟有没有 modId（mods.toml / fabric.mod.json / quilt.mod.json）",
-          ...(args.externalModId
-            ? [`调用方给的外部证据「${args.externalModId}」未通过：它本身非法，或该 jar 自己的条目路径里没有这一段（外部证据不绕过归属）`]
+          ...(embeddedId && !embeddedId.ok && embeddedId.candidates.length > 1
+            ? ["外壳含多个平级子模组 ⇒ 由调用方用 externalModId 指定其中之一（批处理器按 manifest 的 modId 传），工具不替你猜"]
             : []),
-          "纯库 jar / 资源包本就没有 modId：直接解压读源码，或按库身份走 manifest 外部证据（批处理器 --filter 走的那条路）",
+          "纯库 jar / 资源包本就没有 modId：直接解压读源码，不要指望反编译缓存目录",
           "若怀疑工具漏解析，把上面的 sha512 片段与该 jar 一并反馈开发者",
         ],
       ),
     );
   }
-  const modId = externalId ? externalId.modId : identity.ok ? identity.modId : "";
+  const modId = embeddedOk
+    ? embeddedOk.modId
+    : externalId
+      ? externalId.modId
+      : identity.ok
+        ? identity.modId
+        : "";
+  const modIdEvidence: ModDecompileResult["modIdEvidence"] = embeddedOk
+    ? embeddedOk.evidence
+    : externalId
+      ? "external"
+      : "jar";
   // Forge 的 mods.toml 版本可用 ${file.jarVersion} 占位符（加载时按 jar 文件名解析）。
   // 此处按 FML 语义回退：去 .jar 后缀、取最后一个 '-' 之后的片段。避免把占位符
   // 原样用作输出目录名（含 ".jar" 子串会让 VineFlower 走单文件保存路径而失败）。
-  let rawModVersion = meta.modVersion ?? "unknown";
+  let rawModVersion = embeddedOk?.modVersion ?? meta.modVersion ?? "unknown";
   if (rawModVersion.includes("${file.jarVersion}")) {
     const stem = basename(args.jarPath).replace(/\.jar$/i, "");
     const dash = stem.lastIndexOf("-");
@@ -510,6 +607,9 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
       return {
         found: true,
         modId,
+        modIdEvidence,
+        modIdSource: embeddedOk?.from,
+        bundledJars,
         modVersion,
         loaders: meta.loaders,
         // 回填盘上真实判据；老缓存未记录时保持 undefined（字段缺席），不冒领。
@@ -730,6 +830,9 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   return {
     found: true,
     modId,
+    modIdEvidence,
+    modIdSource: embeddedOk?.from,
+    bundledJars,
     modVersion,
     loaders: meta.loaders,
     version: requestedKey.version ?? undefined,

@@ -32,6 +32,44 @@ const destForgeDocs = join(DATA_DIR, `forge_${DEST_VERSION}`, "forge-docs", DEST
 const URL_SRC_SEG = `/en/${SRC_VERSION}/`;
 const URL_DEST_SEG = `/en/1.20.x/`;
 
+// raw/*.md 才是索引的上游：process-forge-docs.js 从 raw 的元数据行取 url/version 重建
+// index-l*.json。只改 index 不改 raw 属半途修复——下次重建时 SRC 痕迹原样复活。
+// 只认元数据行（`> 来源：` / `> 版本：` / `source:` / `version:`），正文里提到
+// 1.20.1 的移植说明一律不动。
+const RAW_META_LINE = /^(> *(?:来源|版本)[：:] *|(?:source|version) *: *)([^\r\n]*)(\r?)$/;
+
+function rewriteMetaLine(line) {
+  const m = line.match(RAW_META_LINE);
+  if (!m) return line;
+  const body = m[2];
+  const quote = body.startsWith('"') && body.endsWith('"') ? '"' : body.startsWith("'") && body.endsWith("'") ? "'" : "";
+  const value = quote ? body.slice(1, -1) : body;
+  const next = value
+    .split(URL_SRC_SEG)
+    .join(URL_DEST_SEG)
+    .replace(new RegExp(`^${SRC_VERSION}$`), DEST_VERSION);
+  if (next === value) return line;
+  return `${m[1]}${quote}${next}${quote}${m[3]}`;
+}
+
+/** 重写 raw/*.md 头部元数据。返回改动的文件数；对已修复的树是空操作。 */
+function rewriteRawMetadata(dir) {
+  const rawDir = join(dir, "raw");
+  if (!existsSync(rawDir)) return 0;
+  let touched = 0;
+  for (const name of readdirSync(rawDir)) {
+    if (!name.endsWith(".md")) continue;
+    const p = join(rawDir, name);
+    const before = readFileSync(p, "utf8");
+    const after = before.split("\n").map(rewriteMetaLine).join("\n");
+    if (after !== before) {
+      writeFileSync(p, after);
+      touched++;
+    }
+  }
+  return touched;
+}
+
 function rewriteVersionDeep(node) {
   if (Array.isArray(node)) return node.map(rewriteVersionDeep);
   if (!node || typeof node !== "object") {
@@ -134,17 +172,32 @@ if (!existsSync(srcForgeDocs)) {
 // Ensure destination parent exists
 mkdirSync(join(DATA_DIR, `forge_${DEST_VERSION}`), { recursive: true });
 
-// Copy forge-docs content (skip mappings dir — mappings are separate)
-const skips = ["mappings"];
+// Copy forge-docs content.
+// skips：mappings 另有来源；semantic 是**每档各自**从 processed/ 派生的库，
+// 从 SRC 拷过来等于把 1.20.1 的向量塞进 1.20.4 的索引（且会把 SRC 侧
+// `.old` / tmp 残留一起带进 DEST）。
+const skips = ["mappings", "semantic"];
 const result = copyDirRecursive(srcForgeDocs, destForgeDocs, skips);
 
 console.log(`  Copied:  ${result.copied} files`);
 console.log(`  Skipped: ${result.skipped} files (already exist)`);
+if (result.copied > 0) {
+  // 本脚本只改写已有 index 条目，不会为新拷进来的页面补条目；
+  // 孤儿 processed/*.md 会被 audit-data-consistency 的 J 项判为不一致。
+  console.log(
+    `  ⚠️ 新增 ${result.copied} 个文件：必须接着跑 ` +
+      `node scripts/process-forge-docs.js --version ${DEST_VERSION} 重建索引，` +
+      `否则 processed/ 有孤儿页（index-l*.json 未收录）。`,
+  );
+}
 
 // 版本重写：把拷进来的 1.20.1 id/version/url 改写成 1.20.4
+// 顺序：先 raw（索引的上游），再 index，最后 processed frontmatter。
+const rewroteRaw = rewriteRawMetadata(destForgeDocs);
 const rewroteIndex = rewriteIndexFiles(destForgeDocs);
 const rewroteMd = rewriteProcessedFrontmatter(destForgeDocs);
-console.log(`  Rewrote: ${rewroteIndex ? "index-l*.json" : "index (no change)"}` +
+console.log(`  Rewrote: raw=${rewroteRaw} 个文件` +
+  `, ${rewroteIndex ? "index-l*.json" : "index (no change)"}` +
   `${rewroteMd ? ", processed frontmatter" : ""}`);
 
 // 落盘自检：失败即非零退出，防止版本污染静默溜进数据层

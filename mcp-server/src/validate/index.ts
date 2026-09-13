@@ -101,8 +101,6 @@ function extractBlockNamesFromBlockEntity(
 ): Array<{ name: string; line: number }> {
   const results: Array<{ name: string; line: number }> = [];
   const lines = content.split("\n");
-  const bePattern =
-    /BlockEntityType\.Builder\.of\s*\(\s*([^,)]+)\s*,\s*([^)]+)\s*\)/g;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const match = line.match(
@@ -306,14 +304,6 @@ function checkBlockEntityReferences(
     for (const rm of roMatches) {
       // 假设 RegistryObject 名称是 BLOCK 形式（去后缀），对应小写注册名
       const name = rm[1];
-      // MY_BLOCK -> my_block
-      const regName = name
-        .replace(/^([A-Z]+)_/, (_, prefix) => prefix.toLowerCase() + "_")
-        .replace(/_/g, "_")
-        .toLowerCase()
-        .replace(/([A-Z])/g, "_$1")
-        .toLowerCase()
-        .replace(/^_/, "");
       // 简化：如果 RegistryObject 名为 EXAMPLE_BLOCK，提取 example_block
       const simple = name.replace(/([A-Z])/g, "_$1").toLowerCase().replace(/^_/, "");
       if (simple.includes("_block")) {

@@ -220,12 +220,53 @@ function packagesPlausible(entry, packages, rootOwners) {
   return foreignPackages(entry, packages, rootOwners).length === 0;
 }
 
-function buildValue(r) {
+/**
+ * 给一个 verifiedApi 行的每个包打归属标签（own | bundled | unresolved）。
+ *
+ * 判据顺序与理由：
+ *  - own：modId 是包路径的一段（与 ownsPackage 同一条判据，一票通过）；
+ *  - bundled：**只用 jar 自己的声明**——批处理器把壳 jar 跳过的捆绑件连同它 zip 条目里的真实顶层包根
+ *    一起写进 `bundles`，这里只认「该包根确实出现在某个被声明的捆绑件里」。不用包名启发式：
+ *    启发式会把 Moonlight 的 `net.mehvahdjukaar.selene`（前身改名遗留）误判成捆绑，
+ *    而它其实既不含 modId 段也不是声明捆绑 ⇒ 正是需要人工判断的 unresolved；
+ *  - unresolved：既非 own 也无声明证据 ⇒ 保留为债，逐条点名（不静默放行）。
+ */
+export function tagPackages(entry, r, rootOwners) {
+  const packages = Array.isArray(r?.packages) ? r.packages : [];
+  const bundles = Array.isArray(r?.bundles) ? r.bundles : [];
+  const out = {};
+  for (const pkg of packages) {
+    if (typeof pkg !== "string" || !pkg) continue;
+    if (ownsPackage(entry, pkg)) {
+      out[pkg] = { ownership: "own", evidence: "modId-segment", reason: "modId 是包路径的一段" };
+      continue;
+    }
+    const root = pkg.split(".")[0];
+    const via = bundles.find((b) => Array.isArray(b?.roots) && b.roots.includes(root));
+    if (via) {
+      out[pkg] = { ownership: "bundled", evidence: `declared:${via.from}`, reason: "外壳声明的捆绑件里确有该包根" };
+      continue;
+    }
+    const owners = rootOwners ? rootOwners.get(packageRoot(pkg)) : undefined;
+    const thief = owners ? [...owners].find((o) => o !== entry.id) : undefined;
+    out[pkg] = {
+      ownership: "unresolved",
+      evidence: "none",
+      reason: thief ? `既不含本库 modId 段、也无捆绑声明，且该包根由 ${thief} 证实` : "既不含本库 modId 段、也无捆绑声明",
+    };
+  }
+  return out;
+}
+
+function buildValue(r, entry, rootOwners) {
   return {
     verifiedAt: r.verifiedAt ?? currentMonth(),
     packages: Array.isArray(r.packages) ? r.packages : [],
     entrypoints: Array.isArray(r.entrypoints) ? r.entrypoints : [],
     notes: "自动反编译提取",
+    // 每个包都必须有归属标签：A6 因此能区分「已证实的自有 API」「声明的捆绑」
+    // 与「说不清来源」，而不是只看一个 foreign 计数。
+    packageOwnership: tagPackages(entry, r, rootOwners),
   };
 }
 
@@ -343,7 +384,7 @@ function main() {
     } else {
       p.addNew++;
     }
-    p.additions.set(key, buildValue(r));
+    p.additions.set(key, buildValue(r, entry, rootOwners));
   }
 
   // 生成编辑：重排缩进后整体替换 verifiedApi 区间（按 start 降序应用）

@@ -1,6 +1,6 @@
 # Datapack Registry
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/datagen/server/datapackregistries
+> 来源：https://docs.minecraftforge.net/en/1.20.x/datagen/server/datapackregistries
 > 版本：1.20.4
 # Datapack Registry Object Generation
 

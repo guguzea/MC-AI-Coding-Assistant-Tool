@@ -901,8 +901,12 @@ async function testSearchEnhancements() {
 
   const fallback = parseToolText(await searchForgeDocs({ query: "block", version: "9.9.9" }));
   assert.equal(fallback.ok, false);
-  assert.equal(fallback.code, "VERSION_NOT_FOUND");
-  assert.match(String(fallback.hint ?? ""), /list_forge_versions/);
+  assert.equal(fallback.error?.code, "VERSION_NOT_FOUND");
+  assert.match(String(fallback.error?.hint ?? ""), /list_forge_versions/);
+  assert.ok(
+    Array.isArray(fallback.availableVersions),
+    "search_forge_docs 必须带顶层候选清单（F3 已统一，不再只有 quilt 带）",
+  );
 
   const dataRoot = resolveDataDir();
   const forgeStore = new ForgeDocStore(dataRoot);
@@ -3439,6 +3443,86 @@ public class ExampleMod {}
     assert.ok(existsSync(ok.archivePath));
   } finally {
     rmSync(dest, { recursive: true, force: true });
+  }
+}
+
+/**
+ * Windows 解 zip 工具探测（`pickUnzipTool`）。旧实现只吃 `where tar` 的**第一条**命中：
+ * Git Bash 起 Node 时 PATH 以 `Git\usr\bin` 打头，第一条是解不了 zip 的 GNU tar，help 又不证明
+ * 是 bsdtar ⇒ 直接返回 null，明明 `System32\tar.exe` 就是 bsdtar 却报 UNZIP_TOOL_MISSING（死路）。
+ * 现口径：逐条试全部命中 + 不吃 PATH 的绝对兜底（SystemRoot、ProgramFiles 各形态）。
+ */
+async function testUnzipToolProbe() {
+  const { pickUnzipTool, probeUnzipTool, absoluteToolCandidates } = await import("./dist/mdk/index.js");
+  const GNU = "C:\\Program Files\\Git\\usr\\bin\\tar.exe";
+  const BSD = "C:\\Windows\\System32\\tar.exe";
+  const WIN = { isWin: true, exists: () => true };
+  const mk = (over) => ({
+    pathHits: { unzip: [], sevenZip: [], tar: [] },
+    absolute: { sevenZip: [], tar: [] },
+    tarAcceptsZip: () => false,
+    ...over,
+  });
+
+  // ① 死路本体：PATH 只有 GNU tar，绝对兜底救回 bsdtar
+  assert.deepEqual(
+    pickUnzipTool(mk({ ...WIN, pathHits: { unzip: [], sevenZip: [], tar: [GNU] }, absolute: { sevenZip: [], tar: [BSD] } })),
+    { kind: "bsdtar", executable: BSD },
+  );
+  // ② 反证：没有兜底就必须 null ⇒ ①不是白给的，也说明 GNU tar 永不被采信
+  assert.equal(
+    pickUnzipTool(mk({ ...WIN, pathHits: { unzip: [], sevenZip: [], tar: [GNU] } })),
+    null,
+    "GNU tar 被当成可解 zip 的工具",
+  );
+  // ③ PATH 顺序：GNU 在前、真 libarchive 在后 ⇒ 取后面那条（只看第一条的旧实现会放弃）
+  const LATER = "D:\\msys64\\usr\\bin\\tar.exe";
+  assert.equal(
+    pickUnzipTool(mk({ ...WIN, pathHits: { unzip: [], sevenZip: [], tar: [GNU, LATER] }, tarAcceptsZip: (p) => p === LATER })).executable,
+    LATER,
+  );
+  // ④ unzip 优先于 7z 与 bsdtar
+  assert.equal(
+    pickUnzipTool(mk({ ...WIN, pathHits: { unzip: ["C:\\Tools\\unzip.exe"], sevenZip: ["C:\\7z.exe"], tar: [BSD] }, absolute: { sevenZip: [], tar: [BSD] } })).kind,
+    "unzip",
+  );
+  // ⑤ 7-Zip 装在非 C 盘（旧实现钉死 C:\Program Files ⇒ 找不到）
+  assert.equal(
+    pickUnzipTool(mk({ ...WIN, absolute: { sevenZip: ["D:\\Program Files\\7-Zip\\7z.exe"], tar: [] } })).executable,
+    "D:\\Program Files\\7-Zip\\7z.exe",
+  );
+  // ⑥ 命中但磁盘上没有（`where` 结果过期 / 注入假路径）⇒ 不采信
+  assert.equal(
+    pickUnzipTool({ isWin: true, exists: () => false, pathHits: { unzip: ["X"], sevenZip: ["Y"], tar: [BSD] }, absolute: { sevenZip: [], tar: [BSD] }, tarAcceptsZip: () => true }),
+    null,
+  );
+  // ⑦ 同一路径同时来自 PATH 与绝对兜底 ⇒ 只证明一次，不重复 spawn
+  let probes = 0;
+  pickUnzipTool(mk({ ...WIN, pathHits: { unzip: [], sevenZip: [], tar: [LATER] }, absolute: { sevenZip: [], tar: [LATER] }, tarAcceptsZip: (p) => (probes += 1, p === LATER && false) }));
+  assert.equal(probes, 1, `同一 tar 路径被证明 ${probes} 次（去重失效）`);
+  // ⑨ 绝对兜底按环境变量解析：7-Zip 在 D 盘也能列出，SystemRoot 决定 tar 路径
+  const cand = absoluteToolCandidates(
+    { SystemRoot: "D:\\Win", "ProgramFiles": "D:\\Program Files", "ProgramFiles(x86)": "D:\\Program Files (x86)", ProgramW6432: "D:\\Program Files" },
+    "win32",
+  );
+  assert.deepEqual(cand.tar, [join("D:\\Win", "System32", "tar.exe")], JSON.stringify(cand.tar));
+  assert.deepEqual(
+    cand.sevenZip,
+    [join("D:\\Program Files", "7-Zip", "7z.exe"), join("D:\\Program Files (x86)", "7-Zip", "7z.exe"), join("C:\\Program Files", "7-Zip", "7z.exe")],
+    "7-Zip 候选必须来自 env 的各 ProgramFiles 形态（去重后）+ 最后一条 C 盘保底",
+  );
+  // ⑩ 非 Windows 不得端出 Windows 路径
+  assert.deepEqual(absoluteToolCandidates({ SystemRoot: "C:\\Windows", ProgramFiles: "C:\\Program Files" }, "linux"), {
+    sevenZip: [],
+    tar: [],
+  });
+  // ⑧ 真机不变量：Windows 自带 bsdtar 就不该报「无工具」
+  if (process.platform === "win32") {
+    const sysTar = (process.env.SystemRoot || "C:\\Windows") + "\\System32\\tar.exe";
+    if (existsSync(sysTar)) {
+      const real = probeUnzipTool();
+      assert.ok(real, `本机有 ${sysTar}，probeUnzipTool() 却返回 null ⇒ 探测又成死路`);
+    }
   }
 }
 
@@ -7128,6 +7212,7 @@ await testThinLoaderAndFabricWiki();
 await testReviewFixes();
 await testPlan2PrimerMdkFabricPorting();
 await testMdkUnpackFixtures();
+await testUnzipToolProbe();
 await testProjectPathFill();
 testPlan1Fixes();
 await testPrototypeOwnKeys();
@@ -7145,6 +7230,73 @@ testBedrockMisdetectionFixed();
 await testScriptWriteGuardFunnel();
 testResidueDirsReport();
 testCommunityIndexSync();
+// ── S13（F2 / F3 / F110）：版本清单数值序 + VERSION_NOT_FOUND 四平台同键 ──────
+{
+  const { compareMcVersions } = await import("./dist/docs-platform/platform-data.js");
+  const isSorted = (list, label) => {
+    for (let i = 1; i < list.length; i++) {
+      assert.ok(
+        compareMcVersions(list[i - 1], list[i]) <= 0,
+        label + " 不是数值序（字典序复活？）：" + list.join(" "),
+      );
+    }
+  };
+  const listed = parseToolText(await listFabricVersions());
+  const vs = listed.versions;
+  assert.ok(vs.includes("1.21.8") && vs.includes("1.21.10"), "fabric 清单缺档：" + vs.join(" "));
+  assert.ok(
+    vs.indexOf("1.21.8") < vs.indexOf("1.21.10") && vs.indexOf("1.21.10") < vs.indexOf("1.21.11"),
+    "list_fabric_versions 把 1.21.10 排到 1.21.3 前 = 字典序：" + vs.join(" "),
+  );
+  isSorted(vs, "list_fabric_versions");
+  const quiltListed = parseToolText(await listVersions({ platform: "quilt" }));
+  const noteWithTrees = (quiltListed.notes || []).find((n) => n.includes("不在本清单"));
+  assert.ok(noteWithTrees, "quilt list_doc_versions 缺「规则树有 N 档不在本清单」note");
+  const paren = String(noteWithTrees).match(/（([^）]*\d[^）]*)）/);
+  assert.ok(paren, "note 里没找到括号内的档位清单：" + String(noteWithTrees).slice(0, 80));
+  isSorted(paren[1].split(",").map((v) => v.trim()).filter(Boolean), "note 内规则树清单");
+  const hollowCases = [
+    ["search_forge_docs", () => searchForgeDocs({ query: "block", version: "9.9.9" })],
+    ["search_docs forge", () => searchDocs({ query: "block", version: "9.9.9", platform: "forge" })],
+    ["search_fabric_docs", () => searchFabricDocs({ query: "block", version: "9.9.9" })],
+    ["search_docs neoforge", () => searchDocs({ query: "block", version: "9.9.9", platform: "neoforge" })],
+    ["search_docs quilt", () => searchDocs({ query: "block", version: "9.9.9", platform: "quilt" })],
+    ["search_docs liteloader", () => searchDocs({ query: "block", version: "9.9.9", platform: "liteloader" })],
+  ];
+  const coreKeySets = [];
+  for (const [label, run] of hollowCases) {
+    const o = parseToolText(await run());
+    // neoforge 的「无主文档树」走刻意回空 + 显式 warning，不是 VERSION_NOT_FOUND；
+    // 但它同样必须把候选清单交给机器消费方，否则调用方得再打一次 list_*_versions。
+    if (label === "search_docs neoforge") {
+      assert.equal(o.ok, true, "neoforge 未建档档应走刻意回空：" + JSON.stringify(o).slice(0, 200));
+      assert.ok(String(o.warning ?? "").includes("禁止读邻档"), JSON.stringify(o).slice(0, 200));
+      assert.ok(
+        Array.isArray(o.availableVersions) && o.availableVersions.length > 0,
+        "回空路径也必须带候选清单",
+      );
+      isSorted(o.availableVersions, label + " availableVersions");
+      continue;
+    }
+    assert.equal(o.ok, false, label + " 空洞档必须带内失败");
+    assert.equal(typeof o.error, "object", label + " error 必须是对象（历史上 forge 是字符串）");
+    assert.equal(o.error?.code, "VERSION_NOT_FOUND", label + " " + JSON.stringify(o).slice(0, 240));
+    assert.deepEqual(
+      Object.keys(o.error).sort(),
+      ["code", "hint", "message"],
+      label + " error 键集漂移",
+    );
+    assert.ok(
+      Array.isArray(o.availableVersions) && o.availableVersions.length > 0,
+      label + " 缺顶层 availableVersions",
+    );
+    isSorted(o.availableVersions, label + " availableVersions");
+    coreKeySets.push(["error", "platform", "availableVersions", "ok"].filter((k) => k in o).sort().join("+"));
+  }
+  assert.ok(new Set(coreKeySets).size === 1, "核心键集跨平台不一致：" + coreKeySets.join(" | "));
+  console.log("S13 版本数值序 + VERSION_NOT_FOUND 同键：ok");
+}
+
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

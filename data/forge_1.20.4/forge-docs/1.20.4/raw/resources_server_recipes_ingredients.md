@@ -1,6 +1,6 @@
 # Ingredients
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/ingredients
+> 来源：https://docs.minecraftforge.net/en/1.20.x/resources/server/recipes/ingredients
 > 版本：1.20.4
 # Ingredients
 

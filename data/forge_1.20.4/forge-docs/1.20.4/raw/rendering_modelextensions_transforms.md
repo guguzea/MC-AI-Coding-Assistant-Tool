@@ -1,6 +1,6 @@
 # Root Transforms
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/transforms
+> 来源：https://docs.minecraftforge.net/en/1.20.x/rendering/modelextensions/transforms
 > 版本：1.20.4
 # Root Transforms
 

@@ -13,10 +13,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { emit, wantWrite } from "../../scripts/_lib/write-guard.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const dataRoot = path.resolve(scriptDir, "..", "..", "data");
-const dryRun = process.argv.includes("--dry-run");
+const dryRun = !wantWrite();
 const versionArg = process.argv.find((arg) => arg.startsWith("--version="));
 const onlyVersion = versionArg ? versionArg.slice("--version=".length) : null;
 const markerRx = /(>\s*版本：\s*)(\S+)/;

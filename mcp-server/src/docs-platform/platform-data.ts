@@ -12,12 +12,89 @@ import { ALL_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR, type Platform } from "./platfor
 
 export type DocPlatform = Platform;
 
+function versionRankParts(version: string): number[] {
+  return version.split(".").map((p) => {
+    if (p === "x" || p === "X") return -1;
+    const n = Number(p);
+    return Number.isFinite(n) ? n : -1;
+  });
+}
+
+/** 数字补丁 > .x > 缺段。1.16.5 > 1.16.x > 1.16 */
+export function compareMcVersions(a: string, b: string): number {
+  const pa = versionRankParts(a);
+  const pb = versionRankParts(b);
+  const len = Math.max(pa.length, pb.length);
+  for (let i = 0; i < len; i++) {
+    const da = pa[i] ?? -2;
+    const db = pb[i] ?? -2;
+    if (da !== db) return da - db;
+  }
+  return 0;
+}
+
+/** 升序数值排（F2）：1.21.8 < 1.21.10 < 1.21.11；字典序会把 1.21.10 排到 1.21.3 前。 */
+export function sortMcVersions(versions: readonly string[]): string[] {
+  return [...versions].sort(compareMcVersions);
+}
+
 export class PlatformDataMissingError extends Error {
   readonly code = "PLATFORM_DATA_MISSING" as const;
   constructor(public readonly platform: DocPlatform) {
     super(`${platform} 文档数据未下载或不在当前 MC_SKILL_DATA 目录中`);
     this.name = "PlatformDataMissingError";
   }
+}
+
+/**
+ * VERSION_NOT_FOUND 的统一带内载荷（F3 / F110）。
+ * 四个平台的检索失败必须同一套键：顶层 availableVersions 让机器直接取候选清单，
+ * error 一律是对象（历史上只有 forge 的 search_forge_docs 吐字符串）。
+ */
+const LIST_TOOL: Record<DocPlatform, string> = {
+  forge: "list_forge_versions",
+  neoforge: "list_neoforge_versions",
+  fabric: "list_fabric_versions",
+  quilt: "list_doc_versions",
+  liteloader: "list_doc_versions",
+  rift: "list_doc_versions",
+  modloader: "list_doc_versions",
+  bedrock: "list_doc_versions",
+};
+
+export function versionNotFoundPayload(args: {
+  platform: DocPlatform;
+  message: string;
+  availableVersions: readonly string[];
+  extra?: Record<string, unknown>;
+}): Record<string, unknown> {
+  const versions = sortMcVersions(args.availableVersions);
+  const listTool = LIST_TOOL[args.platform] ?? "list_doc_versions";
+  return {
+    ok: false,
+    platform: args.platform,
+    ...(args.extra ?? {}),
+    availableVersions: versions,
+    error: {
+      code: "VERSION_NOT_FOUND",
+      message: args.message,
+      hint:
+        versions.length > 0
+          ? `请使用支持的版本：${versions.join(", ")}。先 ${listTool} / list_doc_versions。`
+          : "本仓库该版本无文档语料。请先用 list_doc_versions 查询可用版本，禁止拿邻版语料顶替。",
+    },
+  };
+}
+
+export function versionNotFoundResult(args: {
+  platform: DocPlatform;
+  message: string;
+  availableVersions: readonly string[];
+  extra?: Record<string, unknown>;
+}): CallToolResult {
+  return {
+    content: [{ type: "text", text: JSON.stringify(versionNotFoundPayload(args), null, 2) }],
+  };
 }
 
 const HINTS: Record<DocPlatform, string> = {
@@ -277,7 +354,7 @@ export function buildListVersionsNotes(
   }
 
   const trees = ruleTreeVersions(platform, repoRoot);
-  const treeOnly = trees.filter((t) => t.hasRules && !versions.includes(t.version)).map((t) => t.version).sort();
+  const treeOnly = sortMcVersions(trees.filter((t) => t.hasRules && !versions.includes(t.version)).map((t) => t.version));
   if (treeOnly.length > 0) {
     const tail =
       platform === "quilt"
@@ -285,7 +362,7 @@ export function buildListVersionsNotes(
         : "session 可激活该档规则树，但文档检索无本档语料。";
     notes.push(`规则树有 ${treeOnly.length} 档不在本清单（${clipList(treeOnly)}）：${tail}`);
   }
-  const drafts = trees.filter((t) => !t.hasRules).map((t) => t.version).sort();
+  const drafts = sortMcVersions(trees.filter((t) => !t.hasRules).map((t) => t.version));
   if (drafts.length > 0) {
     notes.push(
       `${drafts.length} 档版本目录是空壳（无 .cursor/rules/*.mdc，draft）（${clipList(drafts)}）：activate_platform_pack session 返回 PACK_NOT_FOUND，文档检索也无本档语料；禁止拿邻版规则树顶替，也不要为填版本号克隆一棵新树。`,

@@ -209,6 +209,14 @@ async function testApplyRequiresConfirm() {
     skipBuild: true,
   });
   assert.equal(res.action?.code, "CONFIRMATION_REQUIRED");
+  // F1：ok:true 时 CLI 的 isToolFailure 判不出失败 → 按退出码分支的脚本把「什么都没做」当成功。
+  assert.equal(res.ok, false, JSON.stringify(res).slice(0, 300));
+  const { isToolFailure } = await import(pathToFileURL(join(root, "cli-parse.js")).href);
+  assert.equal(
+    isToolFailure(res, false, false),
+    true,
+    "确认门拒绝必须让 CLI 走 exitCode=1（与 activate_platform_pack write 同类拒绝一致）",
+  );
   rmSync(dataDir, { recursive: true, force: true });
 }
 

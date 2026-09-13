@@ -24,6 +24,8 @@ import {
   platformDataMissingResult,
   hasPlatformDocData,
   buildListVersionsNotes,
+  sortMcVersions,
+  versionNotFoundResult,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
@@ -241,19 +243,11 @@ function handleError(e: unknown): CallToolResult {
   if (miss) return miss;
   if (e instanceof VersionNotFoundError) {
     if (e.availableVersions.length === 0) return platformDataMissingResult("fabric");
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify({
-          ok: false,
-          error: {
-            code: "VERSION_NOT_FOUND",
-            message: e.message,
-            hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}`,
-          },
-        }, null, 2),
-      }],
-    };
+    return versionNotFoundResult({
+      platform: "fabric",
+      message: e.message,
+      availableVersions: e.availableVersions,
+    });
   }
   if (e instanceof IndexCorruptError) {
     return {
@@ -347,7 +341,7 @@ export async function listFabricVersions(): Promise<CallToolResult> {
       console.warn(`[fabric] 扫描 fabric_* 版本目录失败: ${(err as Error).message}`);
     }
   }
-  const allVersions = [...versionSet].sort();
+  const allVersions = sortMcVersions([...versionSet]);
   if (allVersions.length === 0) return platformDataMissingResult("fabric");
   return {
     content: [{

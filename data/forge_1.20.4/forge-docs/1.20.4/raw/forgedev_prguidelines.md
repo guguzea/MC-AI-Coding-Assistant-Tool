@@ -1,6 +1,6 @@
 # Pull Request Guidelines
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/forgedev/prguidelines
+> 来源：https://docs.minecraftforge.net/en/1.20.x/forgedev/prguidelines
 > 版本：1.20.4
 # Pull Request Guidelines
 

@@ -5,7 +5,12 @@ import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { createFabricDocStore } from "./fabric/store.js";
-import { hasPlatformDocData, platformDataMissingPayload } from "./platform-data.js";
+import {
+  hasPlatformDocData,
+  platformDataMissingPayload,
+  sortMcVersions,
+  versionNotFoundPayload as sharedVersionNotFoundPayload,
+} from "./platform-data.js";
 import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "./semantic/search.js";
 import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, type SearchResultLike } from "./search-utils.js";
@@ -80,6 +85,23 @@ function quiltIndexHasPages(version: string, dataRoot = resolveDataDir()): boole
   }
 }
 
+/** 空洞档的候选清单必须是 quilt 自己的档位：Fabric 清单含 26.1.2 等 quilt 侧从未入库的档。 */
+function quiltAvailableVersions(dataRoot = resolveDataDir()): string[] {
+  if (!existsSync(dataRoot)) return [];
+  let entries;
+  try {
+    entries = readdirSync(dataRoot, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  return sortMcVersions(
+    entries
+      .filter((e) => e.isDirectory() && e.name.startsWith("quilt_"))
+      .map((e) => e.name.slice("quilt_".length))
+      .filter((v) => quiltIndexHasPages(v, dataRoot)),
+  );
+}
+
 function jsonOk(payload: unknown): CallToolResult {
   const rec = payload && typeof payload === "object" ? (payload as Record<string, unknown>) : { value: payload };
   return { content: [{ type: "text", text: JSON.stringify(withDocsFallbackFields(rec), null, 2) }] };
@@ -104,23 +126,14 @@ function versionNotFoundPayload(
   args: { query: string; version: string },
 ): Record<string, unknown> {
   const rec = e as { message?: string; availableVersions?: string[] };
-  const versions = rec.availableVersions ?? [];
-  return {
-    ok: false,
-    query: args.query,
-    version: args.version,
+  // 抛错的多半是 Fabric 回退 store：message 尾部的「当前仅支持」是 Fabric 档位，不能当 Quilt 候选念出去
+  const message = String(rec.message ?? `不支持的版本: ${args.version}`).replace(/。?当前仅支持:[\s\S]*$/, "");
+  return sharedVersionNotFoundPayload({
     platform: "quilt",
-    fallback: null,
-    availableVersions: versions,
-    error: {
-      code: "VERSION_NOT_FOUND",
-      message: rec.message ?? `不支持的版本: ${args.version}`,
-      hint:
-        versions.length > 0
-          ? `请使用支持的版本：${versions.join(", ")}`
-          : "文档数据未加载。请先用 list_doc_versions 查询可用版本。",
-    },
-  };
+    message: `${message}（Quilt 候选只列 data/quilt_* 已建档版本）。`,
+    availableVersions: quiltAvailableVersions(),
+    extra: { query: args.query, version: args.version, fallback: null },
+  });
 }
 
 export function exclusiveFabricFallbackRefusal(hit: DocHit): Record<string, unknown> | null {

@@ -1,6 +1,6 @@
 # Face Data
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/facedata
+> 来源：https://docs.minecraftforge.net/en/1.20.x/rendering/modelextensions/facedata
 > 版本：1.20.4
 # Face Data
 

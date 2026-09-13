@@ -92,22 +92,33 @@ export function isNoJavaIngest(platform: string, minecraftVersion: string): bool
   return false;
 }
 
+/** 未识别加载器的中性去处：跨平台版本清单工具，不再默认 Forge。 */
+const UNKNOWN_LOADER_TOOL = "list_doc_versions";
+
 export function docsToolForPlatform(platform: string): string {
   const p = platform.trim().toLowerCase();
   if (p === "fabric" || p === "quilt") return "search_fabric_docs";
   if (p === "neoforge") return "search_neoforge_docs";
   if (p === "bedrock") return "search_bedrock_docs";
   if (p === "liteloader" || p === "rift" || p === "modloader") return "search_docs";
-  return "search_forge_docs";
+  if (p === "forge") return "search_forge_docs";
+  return UNKNOWN_LOADER_TOOL;
 }
 
 export function notIndexedAction(platform: string, minecraftVersion: string): ActionEnvelope {
   const docs = docsToolForPlatform(platform);
+  const known = docs !== UNKNOWN_LOADER_TOOL;
   return actionable(
     "LOADER_API_NOT_INDEXED",
     `没有 ${platform} ${minecraftVersion} 的 loader-api 摘要（禁止用邻版冒充）。`,
-    [`改用 ${docs}`, "确认 platform + minecraftVersion 与知识库档一致"],
-    [docs],
+    known
+      ? [`改用 ${docs}`, "确认 platform + minecraftVersion 与知识库档一致"]
+      : [
+          `platform=${platform} 不在已入库加载器清单里：先 ${UNKNOWN_LOADER_TOOL} 看本仓到底建了哪些平台的档`,
+          "先确认工程实际加载器（Quilt / NeoForge / Fabric / Forge / LiteLoader / Rift / ModLoader / 基岩 Add-On），再选对应的 search_*_docs",
+          "有合法取得的 jar 就 ingest_loader_api 自备摘要，禁止拿邻版或别家加载器摘要冒充",
+        ],
+    known ? [docs] : [UNKNOWN_LOADER_TOOL, "query_loader_api"],
   );
 }
 

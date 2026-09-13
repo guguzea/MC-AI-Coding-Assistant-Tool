@@ -13,7 +13,7 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
 import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = join(__dirname, "..", "..", "data", "forge_javadoc");
@@ -435,4 +435,12 @@ async function main() {
   console.log("\n✅ 全部完成！");
 }
 
-main().catch(console.error);
+// 只在直接执行时抓取；被 import（test-scripts.mjs 取 planClassWrites）时不得启动
+// 联网爬取，否则跑测试就会真写 data/forge_javadoc。
+const invokedDirectly =
+  !!process.argv[1] &&
+  import.meta.url.toLowerCase() ===
+    pathToFileURL(process.argv[1]).href.toLowerCase();
+if (invokedDirectly) {
+  main().catch(console.error);
+}

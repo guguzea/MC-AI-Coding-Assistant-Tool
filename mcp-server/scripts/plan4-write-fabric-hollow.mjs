@@ -3,16 +3,16 @@
  * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖已人工修订的 Fabric 1.21.4/8/10 包）。
  * Write short Fabric 1.21.4 / 1.21.8 / 1.21.10 packs from versioned fabric-docs only.
  */
-import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { emit, logDryRunBanner, wantWrite } from "../../scripts/_lib/write-guard.mjs";
+import { isSafeVersionSegment } from "../dist/utils/minecraft-version.js";
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
 function writeRel(rel, text) {
-  const abs = join(repo, rel);
-  mkdirSync(dirname(abs), { recursive: true });
-  writeFileSync(abs, text.endsWith("\n") ? text : `${text}\n`, "utf8");
+  // write-guard 的 emit 是唯一落笔出口（默认 DRYRUN，--write 才真写并自建父目录）。
+  emit(join(repo, rel), text.endsWith("\n") ? text : `${text}\n`);
 }
 
 const SKILLS = [
@@ -227,5 +227,13 @@ public class ExampleMod implements ModInitializer {
   );
 }
 
-for (const ver of process.argv.slice(2)) writePack(ver);
-console.log("wrote fabric hollow packs", process.argv.slice(2).join(", "));
+const requested = process.argv.slice(2).filter((a) => a !== "--write");
+for (const ver of requested) {
+  if (!isSafeVersionSegment(ver)) {
+    console.error(`[plan4-write-fabric-hollow] 拒绝版本段 ${JSON.stringify(ver)}：只接受 1.21.4 这类数字段（禁止 ../ 与 \\ /）`);
+    process.exit(2);
+  }
+}
+if (!wantWrite()) logDryRunBanner("plan4-write-fabric-hollow");
+for (const ver of requested) writePack(ver);
+console.log("wrote fabric hollow packs", requested.join(", "));

@@ -390,7 +390,7 @@
     "id": "1.20.4/contributing",
     "version": "1.20.4",
     "label": "Contributing to This Documentation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/contributing",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/contributing",
     "tags": [],
     "sections": [
       {
@@ -441,7 +441,7 @@
     "id": "1.20.4/datagen_client_localization",
     "version": "1.20.4",
     "label": "Language Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/localization",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/datagen/client/localization",
     "tags": [
       "datagen",
       "tag"
@@ -463,7 +463,7 @@
     "id": "1.20.4/datagen_client_modelproviders",
     "version": "1.20.4",
     "label": "Model Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/modelproviders",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/datagen/client/modelproviders",
     "tags": [
       "datagen",
       "tag"
@@ -520,7 +520,7 @@
     "id": "1.20.4/datagen_client_sounds",
     "version": "1.20.4",
     "label": "Sound Definition Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/sounds",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/datagen/client/sounds",
     "tags": [
       "datagen",
       "tag",
@@ -543,7 +543,7 @@
     "id": "1.20.4/datagen_server_advancements",
     "version": "1.20.4",
     "label": "Advancement Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/advancements",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/datagen/server/advancements",
     "tags": [
       "datagen",
       "tag"
@@ -570,7 +570,7 @@
     "id": "1.20.4/datagen_server_datapackregistries",
     "version": "1.20.4",
     "label": "Datapack Registry Object Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/datapackregistries",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/datagen/server/datapackregistries",
     "tags": [
       "registry",
       "datagen",
@@ -598,7 +598,7 @@
     "id": "1.20.4/datagen_server_glm",
     "version": "1.20.4",
     "label": "Global Loot Modifier Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/glm",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/datagen/server/glm",
     "tags": [
       "datagen",
       "tag"
@@ -614,7 +614,7 @@
     "id": "1.20.4/datagen_server_loottables",
     "version": "1.20.4",
     "label": "Loot Table Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/loottables",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/datagen/server/loottables",
     "tags": [
       "datagen",
       "loot",
@@ -642,7 +642,7 @@
     "id": "1.20.4/datagen_server_recipes",
     "version": "1.20.4",
     "label": "Recipe Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/recipes",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/datagen/server/recipes",
     "tags": [
       "datagen",
       "recipe",
@@ -680,7 +680,7 @@
     "id": "1.20.4/datagen_server_tags",
     "version": "1.20.4",
     "label": "Tag Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/tags",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/datagen/server/tags",
     "tags": [
       "datagen",
       "tag"
@@ -816,7 +816,7 @@
     "id": "1.20.4/forgedev",
     "version": "1.20.4",
     "label": "Getting Started",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/forgedev",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/forgedev",
     "tags": [],
     "sections": [
       {
@@ -845,7 +845,7 @@
     "id": "1.20.4/forgedev_prguidelines",
     "version": "1.20.4",
     "label": "Pull Request Guidelines",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/forgedev/prguidelines",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/forgedev/prguidelines",
     "tags": [],
     "sections": [
       {
@@ -1464,7 +1464,7 @@
     "id": "1.20.4/rendering_modelextensions_facedata",
     "version": "1.20.4",
     "label": "Face Data",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/facedata",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/rendering/modelextensions/facedata",
     "tags": [
       "rendering"
     ],
@@ -1495,7 +1495,7 @@
     "id": "1.20.4/rendering_modelextensions_rendertypes",
     "version": "1.20.4",
     "label": "Render Types",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/rendertypes",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/rendering/modelextensions/rendertypes",
     "tags": [
       "rendering"
     ],
@@ -1521,7 +1521,7 @@
     "id": "1.20.4/rendering_modelextensions_transforms",
     "version": "1.20.4",
     "label": "Root Transforms",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/transforms",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/rendering/modelextensions/transforms",
     "tags": [
       "rendering"
     ],
@@ -1542,7 +1542,7 @@
     "id": "1.20.4/rendering_modelextensions_visibility",
     "version": "1.20.4",
     "label": "Part Visibility",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/visibility",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/rendering/modelextensions/visibility",
     "tags": [
       "rendering"
     ],
@@ -1578,7 +1578,7 @@
     "id": "1.20.4/rendering_modelloaders_bakedmodel",
     "version": "1.20.4",
     "label": "`BakedModel",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/bakedmodel",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/rendering/modelloaders/bakedmodel",
     "tags": [
       "rendering"
     ],
@@ -1593,7 +1593,7 @@
     "id": "1.20.4/rendering_modelloaders_itemoverrides",
     "version": "1.20.4",
     "label": "`ItemOverrides",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/itemoverrides",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/rendering/modelloaders/itemoverrides",
     "tags": [
       "item",
       "rendering"
@@ -1615,7 +1615,7 @@
     "id": "1.20.4/rendering_modelloaders_transform",
     "version": "1.20.4",
     "label": "Transform",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/transform",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/rendering/modelloaders/transform",
     "tags": [
       "rendering"
     ],
@@ -1659,7 +1659,7 @@
     "id": "1.20.4/resources_client_models",
     "version": "1.20.4",
     "label": "Models",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/resources/client/models",
     "tags": [],
     "sections": [
       {
@@ -1678,7 +1678,7 @@
     "id": "1.20.4/resources_client_models_itemproperties",
     "version": "1.20.4",
     "label": "Item Properties",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models/itemproperties",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/resources/client/models/itemproperties",
     "tags": [
       "item"
     ],
@@ -1704,7 +1704,7 @@
     "id": "1.20.4/resources_client_models_tinting",
     "version": "1.20.4",
     "label": "Coloring Textures",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models/tinting",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/resources/client/models/tinting",
     "tags": [],
     "sections": [],
     "hasCodeBlocks": true,
@@ -1730,7 +1730,7 @@
     "id": "1.20.4/resources_server_advancements",
     "version": "1.20.4",
     "label": "Advancements",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/advancements",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/resources/server/advancements",
     "tags": [],
     "sections": [
       {
@@ -1754,7 +1754,7 @@
     "id": "1.20.4/resources_server_conditional",
     "version": "1.20.4",
     "label": "Conditionally-Loaded Data",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/conditional",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/resources/server/conditional",
     "tags": [],
     "sections": [
       {
@@ -1783,7 +1783,7 @@
     "id": "1.20.4/resources_server_glm",
     "version": "1.20.4",
     "label": "Global Loot Modifiers",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/glm",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/resources/server/glm",
     "tags": [],
     "sections": [
       {
@@ -1822,7 +1822,7 @@
     "id": "1.20.4/resources_server_loottables",
     "version": "1.20.4",
     "label": "Loot Tables",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/loottables",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/resources/server/loottables",
     "tags": [
       "loot"
     ],
@@ -1853,7 +1853,7 @@
     "id": "1.20.4/resources_server_recipes",
     "version": "1.20.4",
     "label": "Recipes",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/resources/server/recipes",
     "tags": [
       "recipe"
     ],
@@ -1884,7 +1884,7 @@
     "id": "1.20.4/resources_server_recipes_incode",
     "version": "1.20.4",
     "label": "Non-Datapack Recipes",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/incode",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/resources/server/recipes/incode",
     "tags": [
       "recipe"
     ],
@@ -1915,7 +1915,7 @@
     "id": "1.20.4/resources_server_recipes_ingredients",
     "version": "1.20.4",
     "label": "Ingredients",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/ingredients",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/resources/server/recipes/ingredients",
     "tags": [
       "recipe"
     ],
@@ -1941,7 +1941,7 @@
     "id": "1.20.4/resources_server_tags",
     "version": "1.20.4",
     "label": "Tags",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/tags",
+    "url": "https://docs.minecraftforge.net/en/1.20.x/resources/server/tags",
     "tags": [
       "tag"
     ],

@@ -30,6 +30,8 @@ import {
   platformDataMissingResult,
   hasPlatformDocData,
   buildListVersionsNotes,
+  sortMcVersions,
+  versionNotFoundResult,
   type DocPlatform,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
@@ -310,23 +312,11 @@ export async function searchForgeDocs(
     if (miss) return miss;
     if (e instanceof VersionNotFoundError) {
       if (e.availableVersions.length === 0) return platformDataMissingResult("forge");
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(
-              {
-                ok: false,
-                error: e.message,
-                code: "VERSION_NOT_FOUND",
-                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
-              },
-              null,
-              2,
-            ),
-          },
-        ],
-      };
+      return versionNotFoundResult({
+        platform: "forge",
+        message: e.message,
+        availableVersions: e.availableVersions,
+      });
     }
     return forgeInternalError(e);
   }
@@ -646,22 +636,15 @@ function handleError(e: unknown, platform: string = "forge"): CallToolResult {
   if (e instanceof VersionNotFoundError || isVersionNotFoundLike(e)) {
     const rec = e as { message?: string; availableVersions?: string[] };
     const versions = rec.availableVersions ?? [];
+    const handlePlatform = asHandlePlatform(platform);
     if (versions.length === 0) {
-      return platformDataMissingResult(asHandlePlatform(platform));
+      return platformDataMissingResult(handlePlatform);
     }
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify({
-          ok: false,
-          error: {
-            code: "VERSION_NOT_FOUND",
-            message: rec.message ?? String(e),
-            hint: `请使用支持的版本：${versions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
-          },
-        }, null, 2),
-      }],
-    };
+    return versionNotFoundResult({
+      platform: handlePlatform,
+      message: rec.message ?? String(e),
+      availableVersions: versions,
+    });
   }
   if (e instanceof IndexCorruptError || (typeof e === "object" && e !== null && (e as { name?: string }).name === "IndexCorruptError")) {
     const rec = e as { message?: string };
@@ -856,13 +839,12 @@ export async function searchDocs(
     } catch (e) {
       const rec = e as { name?: string; availableVersions?: unknown };
       if (platform === "neoforge" && (rec.name === "VersionNotFoundError" || Array.isArray(rec.availableVersions))) {
-        const describeVersionResolution = (
-          store as { describeVersionResolution?: (v: string) => { mainDocsMissing?: boolean } }
-        ).describeVersionResolution;
-        const neoResolution =
-          typeof describeVersionResolution === "function"
-            ? describeVersionResolution(args.version)
-            : undefined;
+        // 必须带接收者调用：把原型方法摘成局部变量再调，this 丢失，方法内的
+        // this.resolveEffectiveVersion 抛 TypeError，被外层 catch 吞成 INTERNAL_ERROR。
+        const neoStore = store as {
+          describeVersionResolution?: (v: string) => { mainDocsMissing?: boolean };
+        };
+        const neoResolution = neoStore.describeVersionResolution?.(args.version);
         if (neoResolution?.mainDocsMissing) {
           threwMissing = true;
           result = [];
@@ -988,6 +970,13 @@ export async function searchDocs(
                   forgeCompatible: true,
                   source_version: neoResolution.sourceVersion ?? "1.20.1",
                   sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
+                }
+                : {}),
+              ...(threwMissing
+                ? {
+                  availableVersions: sortMcVersions(
+                    (store as { getAvailableVersions?: () => string[] }).getAvailableVersions?.() ?? [],
+                  ),
                 }
                 : {}),
             }),

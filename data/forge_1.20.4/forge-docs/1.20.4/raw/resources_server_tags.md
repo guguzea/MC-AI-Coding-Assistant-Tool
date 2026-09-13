@@ -1,6 +1,6 @@
 # Tags
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/resources/server/tags
+> 来源：https://docs.minecraftforge.net/en/1.20.x/resources/server/tags
 > 版本：1.20.4
 # Tags
 

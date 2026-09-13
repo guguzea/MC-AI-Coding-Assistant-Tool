@@ -293,11 +293,12 @@ const pin = (key, re, why, want = 1) => {
 };
 
 pin("batch", /modId:[^\n]*\?\?[^\n]*"unknown"/g, "B1 成功行仍用 `?? \"unknown\"` 兜底 modId —— 解不出身份的行会被 merge 照收（F113）", 0);
-pin("batch", /= requireModId\(state, result\.modId \?\? meta\.modId, jarPath,/g, "B1 两处成功行的 modId 必须走 requireModId", 2);
-pin("batch", /modIdEvidence:/g, "B1 每行必须记身份来源（jar / manifest），否则外部证据用过无从追查", 2);
+pin("batch", /[=:] requireModId\(state, result\.modId \?\? meta\.modId, jarPath,/g, "B1 两处成功行的 modId 必须走 requireModId（`= ` 与三元分支 `: ` 两种写法都计入；少一处即该行退回兜底）", 2);
+pin("batch", /modIdEvidence:/g, "B1 每条产出行必须记身份来源（jar / manifest）：两条成功行 + outcome 行透传 = 3 处，少一处即来源链断开", 3);
 pin("batch", /if \(ext\.ok && state\.decompiler\.packagesOwnModId\(pkgs, ext\.modId\)\)/g, "B1 外部证据必须归归属判据裁决：manifest 的 modId 若不在 jar 自身包路径里就照旧判 failed（S5b 硬闸；摘掉它这条通道就退化成兜底）");
-pin("decompile", /if \(packagesOwnModId\(names, ext\.modId\)\) externalId = \{ modId: ext\.modId, evidence: "external" \};/g,
-  "B3 身份决策处的外部证据必须由 jar 自身条目证实（摘掉它 ⇒ 调用方可给任意 jar 命名，unknown-mod 换个入口回来）");pin("batch", /const identity = state\.decompiler\.resolveModIdSegment\(candidate\);/g, "B1 requireModId 必须复用 dist 的 resolveModIdSegment（判据只有一份）");
+pin("decompile", /if \(ext\.ok && packagesOwnModId\(namesOf\(\), ext\.modId\)\) externalId = \{ modId: ext\.modId, evidence: "external" \};/g,
+  "B3 身份决策处的外部证据必须由 jar 自身条目证实（摘掉它 ⇒ 调用方可给任意 jar 命名，unknown-mod 换个入口回来）");
+pin("batch", /const identity = state\.decompiler\.resolveModIdSegment\(candidate\);/g, "B1 requireModId 必须复用 dist 的 resolveModIdSegment（判据只有一份）");
 pin("batch", /if \(!identity\.ok\) \{/g, "B1 requireModId 解析不出必须抛错（判 failed），不许 return 兜底值");
 pin("toml", /inlineSkipped\.push\(/g, "B2 内联表跳过必须记账；退回裸 `continue` = 依赖块静默蒸发");
 pin("toml", /TOML_INLINE_UNSUPPORTED"\) \{/g, "B2 内联表分支必须是带花括号的记账分支");

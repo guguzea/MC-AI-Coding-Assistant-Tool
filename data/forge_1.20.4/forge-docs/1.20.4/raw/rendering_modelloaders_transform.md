@@ -1,6 +1,6 @@
 # Model Transform
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/transform
+> 来源：https://docs.minecraftforge.net/en/1.20.x/rendering/modelloaders/transform
 > 版本：1.20.4
 # Transform
 

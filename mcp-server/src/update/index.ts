@@ -197,7 +197,9 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
   const dryRun = query.dryRun !== false;
   if (!dryRun && query.confirmed !== true) {
     return withAction(
-      { ...base, dryRun: true, applied: false },
+      // 带内失败（ok:false）而非 ok:true：「未确认、什么都没做」必须让按退出码判断的脚本看到 rc=1，
+      // 与 activate_platform_pack write 的同类拒绝一致（F1）。
+      { ...base, ok: false, dryRun: true, applied: false },
       actionable(
         "CONFIRMATION_REQUIRED",
         "真写需要 confirmed=true",

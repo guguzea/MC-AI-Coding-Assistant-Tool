@@ -55,14 +55,14 @@ const MANIFEST = path.join(DATA_DIR, "semantic-index-manifest.json");
 // ── 台账（只由本门 MC_SKILL_INDEX_RELEDGER=1 重算，禁止手改数字）────────────
 // B 层汇总 + 逐平台 {条目, chunks, embedded}
 const LEDGER_SUM = {
-  entries: 60, chunks: 25475, embedded: 25475,
+  entries: 60, chunks: 25634, embedded: 25634,
   perPlatform: {
     "bedrock": { entries: 1, chunks: 303, embedded: 303 },
     "fabric": { entries: 27, chunks: 5898, embedded: 5898 },
-    "forge": { entries: 10, chunks: 4304, embedded: 4304 },
+    "forge": { entries: 10, chunks: 4429, embedded: 4429 },
     "liteloader": { entries: 3, chunks: 364, embedded: 364 },
     "modloader": { entries: 3, chunks: 4, embedded: 4 },
-    "neoforge": { entries: 9, chunks: 14135, embedded: 14135 },
+    "neoforge": { entries: 9, chunks: 14169, embedded: 14169 },
     "quilt": { entries: 6, chunks: 437, embedded: 437 },
     "rift": { entries: 1, chunks: 30, embedded: 30 },
   },
@@ -93,6 +93,8 @@ const DEBT_RESIDUE = [
   "neoforge_1.21.5/neoforge-docs/1.21.5/semantic/db.sqlite.tmp-29892-journal",
   "neoforge_1.21.8/neoforge-docs/1.21.8/semantic/db.sqlite.tmp-26464",
   "neoforge_1.21.8/neoforge-docs/1.21.8/semantic/db.sqlite.tmp-26464-journal",
+  "neoforge_1.21.8/neoforge-docs/1.21.8/semantic/db.sqlite.tmp-9996",
+  "neoforge_1.21.8/neoforge-docs/1.21.8/semantic/db.sqlite.tmp-9996-journal",
 ];
 // A7 存量债务：yarn 库 meta 计数 ≠ 表内实际行数（键 pack|kind|meta|实际；读侧直接信 meta ⇒ 覆盖数虚报）
 const DEBT_MAPPING_COUNT = [

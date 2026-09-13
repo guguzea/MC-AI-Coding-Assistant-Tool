@@ -1,6 +1,6 @@
 # Contributing to Docs
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/contributing
+> 来源：https://docs.minecraftforge.net/en/1.20.x/contributing
 > 版本：1.20.4
 # Contributing to This Documentation
 

@@ -1403,6 +1403,26 @@ public class ForeignHelper {
       ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[0]).map((p) => [p, live[p]])),
       [PIN_RELS[0]]: poison(PIN_RELS[0], "if (!identity.ok) {", "if (false) {"),
     },
+    requireModIdLineDropped: {
+      ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[0]).map((p) => [p, live[p]])),
+      [PIN_RELS[0]]: poison(
+        PIN_RELS[0],
+        ": requireModId(state, result.modId ?? meta.modId, jarPath,",
+        ": result.modId, jarPath,",
+      ),
+    },
+    evidenceRowDropped: {
+      ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[0]).map((p) => [p, live[p]])),
+      [PIN_RELS[0]]: poison(PIN_RELS[0], "modIdEvidence: outcome.modIdEvidence,", "/* 证据链断开 */"),
+    },
+    externalEvidenceUnconfirmed: {
+      ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[3]).map((p) => [p, live[p]])),
+      [PIN_RELS[3]]: poison(
+        PIN_RELS[3],
+        "if (ext.ok && packagesOwnModId(namesOf(), ext.modId)) externalId =",
+        "if (ext.ok) externalId =",
+      ),
+    },
     inlineSilentDrop: {
       ...Object.fromEntries(PIN_RELS.filter((p) => p !== PIN_RELS[1]).map((p) => [p, live[p]])),
       [PIN_RELS[1]]: poison(PIN_RELS[1], "inlineSkipped.push(", "void ("),
@@ -1458,6 +1478,9 @@ public class ForeignHelper {
   };
   expect("unknownFallback", /仍用 `\?\? "unknown"` 兜底/, "解不出身份的 modId 又写成 success 行（merge 照收 → 坍缩目录）");
   expect("requireModIdNeutered", /解析不出必须抛错/, "requireModId 被掏空成 `if (false)`，兜底值照旧落盘");
+  expect("requireModIdLineDropped", /两种写法都计入/, "一条成功行不再走 requireModId（三元分支写法）→ 兜底 modId 复活");
+  expect("evidenceRowDropped", /每条产出行必须记身份来源/, "产出行少记一处身份来源 → 外部证据用过无从追查");
+  expect("externalEvidenceUnconfirmed", /必须由 jar 自身条目证实/, "外部证据不再由 jar 条目自证 → 调用方可给任意 jar 命名");
   expect("inlineSilentDrop", /内联表跳过必须记账/, "不认识的语法退回整行静默丢弃");
   expect("inlineNotReturned", /必须把账目返回给上层/, "账记了但没交出去，上层永远看到空账");
   expect("analyzerMutesWarning", /必须转成 warning/, "记了账却不报警 = 等于没记");
@@ -1467,8 +1490,8 @@ public class ForeignHelper {
   assert.equal(runs.realRoot.status, 0, `G2 真根必须绿：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
   assert.match(runs.realRoot.stdout, /身份 13\/13 唯一[\s\S]*死码扫描 mcp-server\/src/, `真根少跑了层：\n${runs.realRoot.stdout}`);
   console.log(
-    "  §S4 G2 解析器门: 干净假根=0 / 真根=0（13 夹具 · 身份唯一 · 死码扫描已跑）；投毒 8 记全红并点名：" +
-      "unknown 兜底·掏空 requireModId·静默丢行·账目未返回·哑警告·摘守卫·裸 args 访问·钉点缺失",
+    "  §S4 G2 解析器门: 干净假根=0 / 真根=0（13 夹具 · 身份唯一 · 死码扫描已跑）；投毒 11 记全红并点名：" +
+      "unknown 兜底·掏空 requireModId·成功行少一处 requireModId·证据行少记·外部证据摘掉 jar 自证·静默丢行·账目未返回·哑警告·摘守卫·裸 args 访问·钉点缺失",
   );
 }
 
@@ -1780,4 +1803,70 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   );
 }
 
+/**
+ * S9 · javadoc 落盘冲突计划（F123 根因侧）的负例测。
+ *
+ * 抓取器已用 planClassWrites 在写盘前摊开两类重复来源，但仓库里没有任何测试引用它：
+ * 没有测试的修复等于没修，下次改抓取器时没人知道这条约束存在。
+ * 历史包袱是盘上 1,490 个带空格括号后缀的 .md（旧自动改名产物，删除归数据拥有者）。
+ */
+{
+  const { planClassWrites } = await import("./scripts/fetch-forge-javadoc.js");
+  const fails = [];
+  const push = (name, fn) => {
+    try {
+      fn();
+      console.log("  \u2714 S9 " + name);
+    } catch (e) {
+      fails.push(name + " :: " + e.message);
+      console.log("  \u2718 S9 " + name + "\n      " + e.message);
+    }
+  };
+  const dupUrl = [
+    { name: "Foo", absUrl: "http://x/net/minecraft/Foo.html" },
+    { name: "Foo", absUrl: "http://x/net/minecraft/Foo.html" },
+  ];
+  push('同 URL 出现两次只写一遍', () => {
+    const r = planClassWrites(dupUrl);
+    assert.equal(r.writes.length, 1, JSON.stringify(r.writes));
+  });
+  const diffUrlSameName = [
+    { name: "Bar", absUrl: "http://x/p1/Bar.html" },
+    { name: "Bar", absUrl: "http://x/p2/Bar.html" },
+  ];
+  push('异 URL 同名两份并存且后缀确定、无空格括号', () => {
+    const a = planClassWrites(diffUrlSameName);
+    const b = planClassWrites(diffUrlSameName);
+    assert.equal(a.writes.length, 2, "冲突被吞掉，之后又会互相覆盖");
+    const names = a.writes.map((w) => w.fileName);
+    assert.equal(new Set(names).size, 2, "两个 writes 落在同一文件名：" + names.join(","));
+    for (const n of names) {
+      assert.ok(!/ \(\d+\)/.test(n), "复现了历史上的空格括号形态：" + n);
+      assert.ok(/^[A-Za-z0-9_.~-]{1,120}\.md$/.test(n), "后缀不是纯 ASCII 定长片段：" + n);
+    }
+    assert.match(names[1], /~[0-9a-z]{1,6}\.md$/, "冲突后缀必须是 `~` + 短哈希（换成可读后缀即回到历史形态）");
+    assert.deepEqual(names, b.writes.map((w) => w.fileName), "后缀不确定：同一输入两次结果不同");
+    assert.ok(a.conflicts.length >= 1, "冲突没记进台账");
+  });
+  push('只差大小写的类名在大小写不敏感卷上也不互相覆盖', () => {
+    const r = planClassWrites([
+      { name: "Foo", absUrl: "http://x/p/Foo.html" },
+      { name: "foo", absUrl: "http://x/p/foo.html" },
+    ]);
+    assert.equal(r.writes.length, 2, JSON.stringify(r.writes));
+    const lower = r.writes.map((w) => w.fileName.toLowerCase());
+    assert.equal(new Set(lower).size, 2, "仍会在不敏感卷上合并：" + r.writes.map((w) => w.fileName).join(","));
+  });
+  push('抓取器被 import 时不启动联网爬取', () => {
+    // 三个抓取器都在顶层读 argv 并带副作用（爬网 / mkdir / process.exit）。
+    // 本文件就 import 其中一个 ⇒ 没有直跑守卫时，npm test 等于真爬外网并写 data/。
+    for (const f of ["fetch-forge-javadoc.js", "fetch-fabric-wiki.js", "fetch-liteloader-wiki.js"]) {
+      const src = readFileSync(jpath(dirname(fileURLToPath(import.meta.url)), "scripts", f), "utf8");
+      assert.match(src, /const invokedDirectly =/, `${f} 直跑守卫被摘掉 ⇒ import 它就等于 npm test 真爬外网/写 data/`);
+      assert.ok(!/^main\(\)/m.test(src), `${f} 又出现裸的顶层 main() 调用 ⇒ 守卫形同虚设`);
+    }
+  });
+  assert.equal(fails.length, 0, "planClassWrites 回归：\n" + fails.join("\n"));
+  console.log("  S9 javadoc 冲突计划: 4 组负例全过（同 URL 去重 / 异 URL 确定后缀 / 大小写共存 / import 不触发爬取）");
+}
 console.log("script helper regression tests passed");

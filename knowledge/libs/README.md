@@ -70,11 +70,17 @@
 
 | 产物 | 位置 | 规模（当前） |
 |------|------|-------------|
-| `library-catalog.ts` | `mcp-server/src/diagnostics/` | 50 条 catalog / 1836 `verifiedApi` 键（磁盘实算，键数＝`"packages": [` 站点数；旧文档的 1880 有误） |
+| `library-catalog.ts` | `mcp-server/src/diagnostics/` | 50 条 catalog；`verifiedApi` 键数以 `mcp-server/scripts/assert-lib-ownership.mjs` 的 `LEDGER.verifiedApiKeys` 实算为准（旧文档写死的 1880 / 1836 均已过期） |
 | `lib-manifests/all.json` | `mcp-server/data/` | 45 slug / 2867 版本条目 |
 | `lib-api-summaries/*.json` | `mcp-server/data/` | 44 库 API 摘要 |
 
 `verifiedApi.<版本/加载器>.packages` 是反编译产物顶层目录的**启发式截取名**（2–3 段），只能用来定位包根，
 **不能当 import 依据**；落到类名必须走 `query_loader_api`（先 `ingest_loader_api` 用户自备 jar）或 IDE 核对。
+
+归属口径（2026-09-12 裁定，完整规则见根 `CONTRIBUTING.md` §数据链口径）：
+
+- `packages` 记的是**该树实测到的包**，不是声明白名单的回声。声明前缀先按本树校验；全不成立时按「modId 是路径的一段（`-`/`_` 不敏感）」重建；仍不成立则留空并告警，**禁止**退化成全收（`-all` 胖 jar 会把 Kotlin stdlib 当成本库 API）。
+- 拒收判据只有一条：包根已被**他方**证实拥有。字面「包名以本条目 modId 开头」会否掉 92.7% 的真数据（MC 包根是作者命名空间）。
+- 摘要行的身份来源记在 `modIdEvidence`：`jar`（自身元数据）/ `jarjar-self` / `jarjar-labeled`（它自己声明的内层 jar）/ `external`（调用方标签，且已被该 jar 条目证实）。
 
 生成链见仓库根 `README.md`「社区知识与库模组」与 MCP 工具 §7.5。

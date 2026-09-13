@@ -1,6 +1,6 @@
 # Texture Tinting
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/resources/client/models/tinting
+> 来源：https://docs.minecraftforge.net/en/1.20.x/resources/client/models/tinting
 > 版本：1.20.4
 # Coloring Textures
 

@@ -29,6 +29,7 @@ const REPO_ROOT = resolve(__dirname, "..");
 const MANIFEST_PATH = join(REPO_ROOT, "mcp-server", "data", "lib-manifests", "all.json");
 const MOD_ANALYZER_URL = pathToFileURL(join(REPO_ROOT, "mcp-server", "dist", "decompile", "services", "mod-analyzer.js")).href;
 const MOD_DECOMPILE_URL = pathToFileURL(join(REPO_ROOT, "mcp-server", "dist", "decompile", "services", "mod-decompile.js")).href;
+const ZIP_UTIL_URL = pathToFileURL(join(REPO_ROOT, "mcp-server", "dist", "decompile", "zip-util.js")).href;
 const JAVA_PROCESS_URL = pathToFileURL(join(REPO_ROOT, "mcp-server", "dist", "decompile", "java", "java-process.js")).href;
 /** JAVA_HOME 必须由环境提供；禁止本机路径兜底。 */
 const FETCH_TIMEOUT_MS = 120_000; // 单个 jar 下载超时
@@ -341,51 +342,109 @@ function requireModId(state, candidate, jarPath, ctx = {}) {
  *
  * 返回 {packages, self, bundledJars} 或 null（非壳 / 内层也无产物）。
  */
-const EMBEDDED_DIRS = ["jars", "jarjar"];
-
-async function decompileEmbedded(jarPath, jar, opts, state) {
+async function decompileEmbedded(jarPath, jar, opts, state, identityModId, identityEntry) {
   const tmpRoot = join(opts.jarDir, "embedded", jar.sha512.slice(0, 12));
   mkdirSync(tmpRoot, { recursive: true });
   const innerJars = [];
-  for (const dirName of EMBEDDED_DIRS) {
-    const member = `META-INF/${dirName}`;
+  // 不能 shell out 给 tar：Windows 上 `tar -xf D:/…` 会被 GNU tar 解释成 `host:path`，
+  // 实测报 "tar: Cannot connect to D: resolve failed" ⇒ JiJ 分支在真机上从来没成功过，
+  // 壳一律落到「反编译空产物」。改用与身份判定同一份 JS zip 读法，两层壳一起解。
+  let zip;
+  try {
+    zip = state.zipUtil.readZip(readFileSync(jarPath));
+  } catch (err) {
+    console.log(`   壳内层读取失败（${jar.sha512.slice(0, 12)}）：${err?.message ?? err}`);
+    return null;
+  }
+  for (const [name, bytes] of zip) {
+    if (!/^META-INF\/(jars|jarjar)\/[^/]+\.jar$/.test(name)) continue;
+    const dest = join(tmpRoot, name.replace(/[/\\]/g, "_"));
     try {
-      execFileSync("tar", ["-xf", jarPath, "-C", tmpRoot, member], { stdio: "ignore", timeout: 60_000 });
-    } catch {
-      continue; // 该壳没有这一层（tar 对不存在路径非零退出）
+      writeFileSync(dest, bytes);
+    } catch (err) {
+      console.log(`   内层落盘失败 ${name}：${err?.message ?? err}`);
+      continue;
     }
-    const jij = join(tmpRoot, "META-INF", dirName);
-    if (!existsSync(jij)) continue;
-    for (const f of readdirSync(jij)) {
-      if (f.endsWith(".jar")) innerJars.push({ path: join(jij, f), from: `${member}/${f}` });
-    }
+    innerJars.push({ path: dest, from: name });
   }
   if (innerJars.length === 0) return null;
+  const norm = (v) => String(v || "").toLowerCase().replace(/[-_]/g, "");
+  // 两层壳的语义不同，不能一视同仁：
+  //  - META-INF/jars（FML JiJ）里是**同库的兄弟子模组**（CCA 的 api/impl…）⇒ 包名要并起来；
+  //  - META-INF/jarjar 是 **jarjar 打包的第三方依赖** ⇒ 全反编译既慢又把别人的 API 记成本库的
+  //    （KfF 壳里躺着 kotlin-stdlib / kotlinx-coroutines / serialization，真身只有 kffmod 那个）。
+  // 所以先只做元数据探查（便宜），再按身份决定要不要真反编译；被跳过的照样记进 bundledJars 当证据。
+  const probe = [];
+  for (const inner of innerJars) {
+    let modId = null;
+    try {
+      const m = state.analyzer.analyzeModJar(inner.path);
+      const seg = state.decompiler.resolveModIdSegment(m?.modId);
+      if (seg.ok) modId = seg.modId;
+    } catch {
+      /* 读不动就当没有身份，交给下面的规则处理 */
+    }
+    probe.push({ ...inner, modId, dir: inner.from.split("/")[1] });
+  }
   const pkgs = [];
   const bundledJars = [];
   let self = null;
   let anyJava = false;
-  const want = String(jar.entry?.modId || "").toLowerCase().replace(/[-_]/g, "");
-  for (const inner of innerJars) {
+  const want = norm(identityModId) || norm(jar.entry?.modId);
+  // 服务侧已经说过「身份来自哪个内层件」就以它为准：上面的元数据探查读不动某个内层时，
+  // 旧写法会把这个库的真身当成第三方捆绑跳过 ⇒ 壳最后一无所出（KfF 1.20.6/1.21.10 实测如此）。
+  const knownSelf = identityEntry && probe.some((p) => p.from === identityEntry) ? identityEntry : null;
+  const isSelf = (p) => (knownSelf ? p.from === knownSelf : want !== "" && norm(p.modId) === want);
+  // 一个都对不上 ⇒ 退回「全并」（旧行为）。宁可多并也不要落空：落空是静默丢库，
+  // 多并是可见脏数据，后续归属标签会把它挑成 unresolved。此时不把并进来的件标 bundled，
+  // 否则「一边并它的包、一边说它是第三方」自相矛盾。
+  const mergeAll = knownSelf === null && !probe.some((p) => isSelf(p));
+  for (const p of probe) {
+    if (p.dir === "jarjar" && !mergeAll && !isSelf(p)) {
+      bundledJars.push(p.from); // 第三方捆绑：不并包、不反编译，只留证据
+      continue;
+    }
     let r = null;
     try {
       r = await withSlot(state.dc, () =>
-        state.decompiler.decompileModJar({ jarPath: inner.path, version: jar.entry.gameVersion }));
+        state.decompiler.decompileModJar({ jarPath: p.path, version: jar.entry.gameVersion }));
     } catch {
       continue; // 单个内层失败不影响其他
     }
     if (!r?.found || !r.outputDir || countJavaFiles(r.outputDir) === 0) continue;
     anyJava = true;
     pkgs.push(...extractPackages(r.outputDir));
-    const got = String(r.modId || "").toLowerCase().replace(/[-_]/g, "");
-    if (self === null && want && got === want) {
-      self = { modId: r.modId, modVersion: r.modVersion, evidence: "jarjar-self", from: inner.from };
-    } else {
-      bundledJars.push(inner.from); // 外壳自己声明的捆绑/兄弟件：ownership 的下一手证据
+    if (self === null && isSelf(p)) {
+      self = { modId: r.modId ?? p.modId ?? identityModId, modVersion: r.modVersion, evidence: "jarjar-self", from: p.from };
+    } else if (!isSelf(p) && !mergeAll) {
+      bundledJars.push(p.from); // 同库兄弟件也照记：它们是外壳自己声明的，归属标签要看见
     }
   }
   if (!anyJava) return null;
-  return { packages: [...new Set(pkgs)].sort().slice(0, 8), self, bundledJars: bundledJars.sort() };
+  // 归属标签的 bundled 证据必须来自「外壳自己声明的捆绑件」+ 该件真实的顶层包根，
+  // 不能靠包名启发式（否则 Moonlight 的 selene 改名遗留会被误判成捆绑）。
+  // 读捆绑件的 zip 条目只是列目录，不反编译，成本可忽略。
+  const bundles = [];
+  for (const from of [...new Set(bundledJars)]) {
+    let roots = [];
+    try {
+      const z = state.zipUtil.readZip(readFileSync(join(tmpRoot, from.replace(/[/\\]/g, "_"))));
+      roots = [...new Set(
+        [...z.keys()]
+          .map((n) => n.split("/")[0])
+          .filter((t) => t && t !== "META-INF" && !t.includes(".")),
+      )].sort();
+    } catch {
+      roots = []; // 读不动就不给证据：没证据的第三方包会被判 unresolved，而不是假装 bundled
+    }
+    bundles.push({ from, roots });
+  }
+  return {
+    packages: [...new Set(pkgs)].sort().slice(0, 8),
+    self,
+    bundledJars: [...new Set(bundledJars)].sort(),
+    bundles: bundles.sort((a, b) => a.from.localeCompare(b.from)),
+  };
 }
 
 // ── 包名提取（outputDir 顶层目录 → 前 2-3 层包名）────────────────────────────
@@ -491,21 +550,26 @@ async function processJar(jar, opts, state) {
       };
     } else if (javaFiles === 0) {
       // JiJ / jarjar 壳（CCA 走 jars、KfF 5.x+ 走 jarjar）：主 jar 无 class，实现在内层 jar 里
-      const embedded = await decompileEmbedded(jarPath, jar, opts, state);
+      const embedded = await decompileEmbedded(jarPath, jar, opts, state, result.modId, result.modIdSource);
       if (embedded) {
-        const idJ = embedded.self
-          ? { modId: embedded.self.modId, evidence: embedded.self.evidence }
-          : requireModId(state, result.modId ?? meta.modId, jarPath, {
-              externalModId: jar.entry?.modId,
-              packages: embedded.packages,
-            });
+        // 服务侧已经用外壳自己声明的内层件定过身份（比这里再匹配一次更强），有结果就直接采信。
+        const idJ = result.modId
+          ? { modId: result.modId, evidence: result.modIdEvidence ?? "jar" }
+          : embedded.self
+            ? { modId: embedded.self.modId, evidence: embedded.self.evidence }
+            : requireModId(state, result.modId ?? meta.modId, jarPath, {
+                externalModId: jar.entry?.modId,
+                packages: embedded.packages,
+              });
         outcome = {
           status: "success",
           modId: idJ.modId,
           modIdEvidence: idJ.evidence,
+          modIdSource: embedded.self?.from ?? result.modIdSource,
           modVersion: embedded.self?.modVersion ?? result.modVersion ?? meta.modVersion ?? "unknown",
           packages: embedded.packages,
           bundledJars: embedded.bundledJars,
+          bundles: embedded.bundles,
           entrypoints: flattenEntrypoints(meta.entrypoints),
           outputDir: result.outputDir,
           note: "JiJ / jarjar 壳（包名取自内嵌 jar；捆绑件见 bundledJars）",
@@ -545,6 +609,9 @@ async function processJar(jar, opts, state) {
     if (outcome.status === "success") {
       Object.assign(line, {
         modId: outcome.modId, modVersion: outcome.modVersion,
+        // 身份来源与壳声明的内层件是归属标签的证据，不能在这层投影里被丢掉（丢了就等于没有证据）
+        modIdEvidence: outcome.modIdEvidence, modIdSource: outcome.modIdSource,
+        bundledJars: outcome.bundledJars, bundles: outcome.bundles, note: outcome.note,
         packages: outcome.packages, entrypoints: outcome.entrypoints, outputDir: outcome.outputDir,
       });
     } else {
@@ -587,11 +654,12 @@ async function main() {
   mkdirSync(dirname(opts.output), { recursive: true });
   mkdirSync(dirname(opts.progress), { recursive: true });
 
-  let analyzerMod, decompilerMod;
+  let analyzerMod, decompilerMod, zipUtilMod;
   try {
-    [analyzerMod, decompilerMod] = await Promise.all([
+    [analyzerMod, decompilerMod, zipUtilMod] = await Promise.all([
       import(MOD_ANALYZER_URL),
       import(MOD_DECOMPILE_URL),
+      import(ZIP_UTIL_URL),
     ]);
   } catch (err) {
     console.error(`致命错误：MCP dist 模块加载失败：${err.message}`);
@@ -652,7 +720,7 @@ async function main() {
   let done = 0, successCount = 0, failCount = 0, linesWritten = 0;
   const startedAt = Date.now();
   const state = {
-    analyzer: analyzerMod, decompiler: decompilerMod, opts, progress,
+    analyzer: analyzerMod, decompiler: decompilerMod, zipUtil: zipUtilMod, opts, progress,
     dl: makeSemaphore(opts.concurrencyDownload),
     dc: makeSemaphore(opts.concurrencyDecompile),
     appendLine: (line) => {

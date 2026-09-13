@@ -565,11 +565,6 @@ function timedStatus(root) {
   return { ms: Date.now() - t0, st };
 }
 
-function median3(fn) {
-  const a = [fn(), fn(), fn()].map((x) => x.ms);
-  return a.sort((x, y) => x - y)[1];
-}
-
 test("A-38 dbOpens <= 8 且与语义库个数无关（60 → 120 棵树）", () => {
   const N = 60;
   const root = mkdtempSync(join(tmpdir(), "mc-a38-"));
@@ -583,7 +578,6 @@ test("A-38 dbOpens <= 8 且与语义库个数无关（60 → 120 棵树）", () 
     const statsN = warmN.st.readStats;
     assert.ok(statsN.dbOpens <= cap, `${N} 库 dbOpens=${statsN.dbOpens} 必须 <= ${cap}`);
     assert.equal(statsN.memoHits >= N, true, "热趟必须全部 memo 命中");
-    const medA = median3(() => timedStatus(root));
 
     // 翻倍语料：只复制文件，不新增任何依赖
     for (let i = 1; i <= N; i++) copySemanticTree(root, root, `2.0.${i}`, `3.0.${i}`);
@@ -602,12 +596,17 @@ test("A-38 dbOpens <= 8 且与语义库个数无关（60 → 120 棵树）", () 
     assert.equal(typeof warm2N.st.presentCount, "number", "readStats 不得挤掉既有状态字段");
     assert.equal(typeof warm2N.st.modeHint, "string", "readStats 不得挤掉既有状态字段");
 
-    const medB = median3(() => timedStatus(root));
-    console.log(`      A-38 实测：${N} 库热趟中位=${medA}ms，${2 * N} 库热趟中位=${medB}ms（改前每库一次 open）`);
-    // +25ms 项是目录遍历本身的 O(N) 地板；开库次数与 N 解耦由上面的 opensTotal==0 增量断言
-    assert.ok(
-      medB <= medA * 1.2 + 25,
-      `翻倍语料 wall-clock 必须远小于线性增长：${medA}ms → ${medB}ms（改前每多一个库多一次 open）`,
+    // 结构性替代（原来是 wall-clock 中位数比较，连跑会 1/0 抖动，不是可复现的判据）：
+    // 「开库数与 N 无关」的确定性结论 = 热趟活体 DB 工作量不随语料翻倍而增长。
+    // prepared 语句缓存正是改前随 N 线性增长的那一项（每库一次 open + 一次 prepare）；
+    // 实测 60 库热趟 dbOpens=8/dbPrepares=8，120 库热趟仍是 8/8，由 LRU cap 钉死。
+    assert.equal(
+      stats2N.dbPrepares,
+      statsN.dbPrepares,
+      `翻倍语料后热趟 prepared 语句数必须不变：${statsN.dbPrepares} → ${stats2N.dbPrepares}（改前每多一个库多一次 prepare，随 N 线性增长）`,
+    );
+    console.log(
+      `      A-38 实测：${N} 库热趟 dbOpens=${statsN.dbOpens}/dbPrepares=${statsN.dbPrepares}，${2 * N} 库热趟 dbOpens=${stats2N.dbOpens}/dbPrepares=${stats2N.dbPrepares}（cap=${cap}，改前每库一次 open）`,
     );
   } finally {
     // A-38 后句柄被长期持有：Windows 下不先 close 就删不掉（实测 EBUSY）。
@@ -615,6 +614,9 @@ test("A-38 dbOpens <= 8 且与语义库个数无关（60 → 120 棵树）", () 
     // closeSemanticStatusDbs() 的原因（见 temp/w4-A3-cross.patch P3/P4）。
     closeSemanticStatusDbs();
     rmSync(root, { recursive: true, force: true });
+    // rmSync(force) 在 Windows 上会「静默不删」（句柄没放干净时抛错被 force 吞掉的路径之外，
+    // 还有路径算错导致什么都没删的情况）——清理必须实证，不然夹具垃圾会喂给下一趟。
+    assert.ok(!existsSync(root), `A-38 夹具目录必须已被真正删除，实际仍存在：${root}`);
   }
 });
 

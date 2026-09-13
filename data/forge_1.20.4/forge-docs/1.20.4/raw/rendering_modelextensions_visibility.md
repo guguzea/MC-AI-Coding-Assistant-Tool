@@ -1,6 +1,6 @@
 # Part Visibility
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/visibility
+> 来源：https://docs.minecraftforge.net/en/1.20.x/rendering/modelextensions/visibility
 > 版本：1.20.4
 # Part Visibility
 

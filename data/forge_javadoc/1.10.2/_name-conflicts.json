@@ -1,0 +1,31 @@
+{
+  "version": "1.10.2",
+  "generatedAt": "2026-09-12T16:06:26.780Z",
+  "note": "同一包内两个不同 URL 抢同一个大小写不敏感文件名；后来者已带确定性后缀落盘。",
+  "conflicts": [
+    {
+      "package": "net/minecraftforge/fluids",
+      "kept": "IFluidHandler.md",
+      "keptUrl": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fluids/capability/IFluidHandler.html",
+      "renamedTo": "IFluidHandler~3oxlnf.md",
+      "renamedUrl": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fluids/IFluidHandler.html",
+      "reason": "case-insensitive-name-collision"
+    },
+    {
+      "package": "net/minecraftforge/fluids",
+      "kept": "ItemFluidContainer.md",
+      "keptUrl": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fluids/capability/ItemFluidContainer.html",
+      "renamedTo": "ItemFluidContainer~15cpov.md",
+      "renamedUrl": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fluids/ItemFluidContainer.html",
+      "reason": "case-insensitive-name-collision"
+    },
+    {
+      "package": "net/minecraftforge/fluids",
+      "kept": "TileFluidHandler.md",
+      "keptUrl": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fluids/TileFluidHandler.html",
+      "renamedTo": "TileFluidHandler~1axt0k.md",
+      "renamedUrl": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fluids/capability/TileFluidHandler.html",
+      "reason": "case-insensitive-name-collision"
+    }
+  ]
+}

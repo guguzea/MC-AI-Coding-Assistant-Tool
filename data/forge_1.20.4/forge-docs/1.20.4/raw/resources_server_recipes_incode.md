@@ -1,6 +1,6 @@
 # Non-Datapack Recipes
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/incode
+> 来源：https://docs.minecraftforge.net/en/1.20.x/resources/server/recipes/incode
 > 版本：1.20.4
 # Non-Datapack Recipes
 

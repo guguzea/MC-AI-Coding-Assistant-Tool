@@ -1,6 +1,6 @@
 # Sound Providers
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/datagen/client/sounds
+> 来源：https://docs.minecraftforge.net/en/1.20.x/datagen/client/sounds
 > 版本：1.20.4
 # Sound Definition Generation
 

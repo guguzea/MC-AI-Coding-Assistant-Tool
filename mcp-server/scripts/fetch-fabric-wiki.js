@@ -27,7 +27,7 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
 import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const MC_SKILL_ROOT = join(__dirname, "..", "..");
@@ -39,15 +39,22 @@ const VERSION = VERSION_ARG ? VERSION_ARG.split("=")[1] : "1.20.1";
 const DRY_RUN = process.argv.includes("--dry-run");
 const FORCE = process.argv.includes("--force");
 
+// 只在直接执行时才动 argv 语义下的副作用：本模块若被 import（测试取常量），
+// 顶层 process.exit(2) 会带走整个测试进程，mkdirSync 会在 data/ 下建目录。
+const invokedDirectly =
+  !!process.argv[1] &&
+  import.meta.url.toLowerCase() ===
+    pathToFileURL(process.argv[1]).href.toLowerCase();
+
 /** 去混淆档禁止挂 Yarn 现行 Wiki 树。 */
 const SKIP_WIKI_VERSIONS = new Set(["26.1.2", "26.1", "26.2"]);
-if (SKIP_WIKI_VERSIONS.has(VERSION)) {
+if (invokedDirectly && SKIP_WIKI_VERSIONS.has(VERSION)) {
   console.error(`[fetch-fabric-wiki] ${VERSION} 不建 wiki 树（现行 Wiki 用 Yarn 名，禁止当 26.1+ 去混淆 API）。`);
   process.exit(2);
 }
 
 const WIKI_DIR = join(MC_SKILL_ROOT, "data", `fabric_${VERSION}`, "fabric-wiki", VERSION, "raw");
-mkdirSync(WIKI_DIR, { recursive: true });
+if (invokedDirectly) mkdirSync(WIKI_DIR, { recursive: true });
 
 // ── Wiki 页面清单 ────────────────────────────────────────────────────────────
 
@@ -192,7 +199,9 @@ async function main() {
   }
 }
 
-main().catch(err => {
-  console.error("❌ 致命错误:", err);
-  process.exit(1);
-});
+if (invokedDirectly) {
+  main().catch(err => {
+    console.error("❌ 致命错误:", err);
+    process.exit(1);
+  });
+}

@@ -1,6 +1,6 @@
 # Item Properties
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/resources/client/models/itemproperties
+> 来源：https://docs.minecraftforge.net/en/1.20.x/resources/client/models/itemproperties
 > 版本：1.20.4
 # Item Properties
 

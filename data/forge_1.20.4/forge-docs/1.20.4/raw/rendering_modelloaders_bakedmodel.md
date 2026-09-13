@@ -1,6 +1,6 @@
 # Baked Model
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/bakedmodel
+> 来源：https://docs.minecraftforge.net/en/1.20.x/rendering/modelloaders/bakedmodel
 > 版本：1.20.4
 # `BakedModel
 
