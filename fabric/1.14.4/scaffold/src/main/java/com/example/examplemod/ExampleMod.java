@@ -3,23 +3,24 @@ package com.example.examplemod;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ExampleMod implements ModInitializer {
     public static final String MOD_ID = "examplemod";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     public static final Block MY_BLOCK = Registry.register(
         Registry.BLOCK,
         new Identifier(MOD_ID, "my_block"),
-        new Block(FabricBlockSettings.of(Material.STONE).hardness(1.5f).resistance(6.0f))
+        new Block(FabricBlockSettings.of(Material.STONE).hardness(1.5f).resistance(6.0f).build())
     );
 
     public static final Item MY_BLOCK_ITEM = Registry.register(
@@ -31,7 +32,7 @@ public class ExampleMod implements ModInitializer {
     public static final Block MY_PLANT = Registry.register(
         Registry.BLOCK,
         new Identifier(MOD_ID, "my_plant"),
-        new Block(FabricBlockSettings.of(Material.PLANTS).noCollision().breakInstantly())
+        new Block(FabricBlockSettings.of(Material.PLANT).noCollision().breakInstantly().build())
     );
 
     public static final Item MY_ITEM = Registry.register(

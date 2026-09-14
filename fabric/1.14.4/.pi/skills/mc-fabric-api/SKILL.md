@@ -64,7 +64,7 @@ Screen 注册与额外数据见 `10-gui.mdc` / `mc-gui`。不要在这里抄邻�
 ### fabric-object-builder-api-v1
 
 ```java
-new Block(FabricBlockSettings.of(Material.STONE).hardness(1.5f).resistance(6.0f));
+new Block(FabricBlockSettings.of(Material.STONE).hardness(1.5f).resistance(6.0f).build());
 ```
 
 ### 战利品 API

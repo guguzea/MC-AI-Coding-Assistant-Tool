@@ -3,13 +3,13 @@ package com.example.examplemod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Environment(EnvType.CLIENT)
 public class ExampleModClient implements ClientModInitializer {
     public static final String MOD_ID = "examplemod";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     @Override
     public void onInitializeClient() {

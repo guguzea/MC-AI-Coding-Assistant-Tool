@@ -25,7 +25,7 @@
 ```
 IF 简单静态方块
   → new Block(Block.Settings.of(Material.STONE))
-  → 或 FabricBlockSettings.of(Material.STONE) / FabricBlockSettings.copy(Blocks.STONE)
+  → 或 FabricBlockSettings.of(Material.STONE).build() / FabricBlockSettings.copy(Blocks.STONE).build()
 
 IF 可配置方块（如可交互、可放置）
   → 自定义 Block 子类（右键 Yarn 是 activate，不是 onUse）
@@ -43,7 +43,7 @@ IF 需要自定义渲染
 
 Yarn 原版 `Block.Settings`：`of(Material)`、`strength(float)`、`strength(float, float)`、`noCollision()`、`dropsLike(Block)`、`slipperiness`、`lightLevel`、`sounds`、`copy`。没有 `hardnessAndResistance`、`noCollission`、`doesNotBlockMovement`、`velocityMultiplier`、`jumpVelocityMultiplier`、`mapColor` 方法。
 
-FAPI `net.fabricmc.fabric.api.block.FabricBlockSettings`（loader-api 已核）：`of`、`copy(Block)`、`hardness(float)`、`resistance(float)`、`strength(float, float)`（**无**单参 `strength`）、`breakByTool(Tag)` / `breakByTool(Tag, miningLevel)`、`breakByHand(boolean)`、`materialColor`、`dropsLike`、`noCollision`、`friction` / `slipperiness`。本类 **没有** `requiresTool`、`solidBlock`、`suffocates`、`mapColor`（用地图色请用 `materialColor`）。
+FAPI `net.fabricmc.fabric.api.block.FabricBlockSettings`（loader-api 已核）：`of`、`copy(Block)`、`hardness(float)`、`resistance(float)`、`strength(float, float)`（**无**单参 `strength`）、`breakByTool(Tag)` / `breakByTool(Tag, miningLevel)`、`breakByHand(boolean)`、`materialColor`、`dropsLike`、`noCollision`、`friction` / `slipperiness`。本类 **没有** `requiresTool`、`solidBlock`、`suffocates`、`mapColor`（用地图色请用 `materialColor`）。**注意它是独立 builder、不是 `Block.Settings` 的子类**：交给 `new Block(...)` 前必须 `.build()`（返回 `AbstractBlock.Settings`）——本档 scaffold 真机构建实测 `incompatible types: FabricBlockSettings cannot be converted to Settings`。
 
 ```java
 FabricBlockSettings.of(Material.STONE)
@@ -55,6 +55,7 @@ FabricBlockSettings.of(Material.STONE)
     .materialColor(MaterialColor.STONE)
     .noCollision()
     .slipperiness(0.98f)
+    .build()
 ```
 
 ## 常用方块创建

@@ -17,7 +17,7 @@ FAPI 用 `net.fabricmc.fabric.api.block.FabricBlockSettings`（`copy(Block)` / `
 private static final Block MY_STONE = Registry.register(
     Registry.BLOCK,
     new Identifier(MOD_ID, "my_stone"),
-    new Block(FabricBlockSettings.copy(Blocks.STONE).hardness(1.5f))
+    new Block(FabricBlockSettings.copy(Blocks.STONE).hardness(1.5f).build())
 );
 
 private static final Item MY_STONE_ITEM = Registry.register(
@@ -31,7 +31,7 @@ private static final Item MY_STONE_ITEM = Registry.register(
 
 ```
 IF 静态方块（无特殊行为）
-  → new Block(FabricBlockSettings.of(Material.STONE)) 或 Block.Settings.of(...)
+  → new Block(FabricBlockSettings.of(Material.STONE).build()) 或 Block.Settings.of(...)
 
 IF 需要交互
   → 自定义 Block 子类（Yarn 1.14 右键是 activate）
@@ -45,7 +45,7 @@ IF 需要自定义渲染
 
 ## FabricBlockSettings 常用配置
 
-loader-api 已核 `net.fabricmc.fabric.api.block.FabricBlockSettings`：有 `hardness(float)`、`strength(float, float)`（无单参 strength）、`breakByTool`、`breakByHand`、`materialColor`、`dropsLike`、`noCollision`。没有 `requiresTool` / `solidBlock` / `suffocates` / `mapColor`。
+loader-api 已核 `net.fabricmc.fabric.api.block.FabricBlockSettings`：有 `hardness(float)`、`strength(float, float)`（无单参 strength）、`breakByTool`、`breakByHand`、`materialColor`、`dropsLike`、`noCollision`。没有 `requiresTool` / `solidBlock` / `suffocates` / `mapColor`。**它是独立 builder、不是 `Block.Settings` 的子类**：要交给 `new Block(...)` 必须链尾 `.build()`（`build()` 返回 `AbstractBlock.Settings`；实证见 `fabric/1.14.4/scaffold` 真机构建）。
 
 ```java
 FabricBlockSettings.of(Material.STONE)
@@ -56,6 +56,7 @@ FabricBlockSettings.of(Material.STONE)
     .dropsLike(Blocks.STONE)
     .materialColor(MaterialColor.STONE)
     .noCollision()
+    .build()
 ```
 
 ## BlockEntity（带数据存储）
