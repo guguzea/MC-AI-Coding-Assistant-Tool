@@ -7,9 +7,12 @@ communityDocId: authored/lib-satin
 mappings: hint
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/satin-api 版本表 limit=100；本轮 release 上界 fabric=1.21.1 / quilt=1.21.1 ⇒ 本文件 mcVersions 上界 1.21.4 高于 release 上界，仅 beta/alpha 支撑）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/satin-api/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Satin（Fabric 后期处理着色器）
 
-封装原版后期处理管线为易用 API，做全屏 shader 效果（滤镜、扭曲、调色）。仅 Fabric（1.18-1.21.4），Quilt 兼容以官方为准。Forge/Neo 无构建。
+封装原版后期处理管线为易用 API，做全屏 shader 效果（滤镜、扭曲、调色）。构建发布于 Fabric（1.18-1.21.4）；本仓库项目级把 Quilt 列入适用平台（frontmatter `platforms: [fabric, quilt]`）——Quilt 复用同一条 Fabric 构建，官方未单独出 artifact，兼容性以官方为准。Forge/Neo 无构建。
 
 ## Decision Flow
 
@@ -21,7 +24,7 @@ Decision: 要不要用 Satin
 → 只做局部材质/方块 shader → 原版 RenderType / material 路径，不必引 Satin
 → 已选：
    ├─ 版本：与 MC 对齐（Modrinth 文件页）
-   ├─ 加载器：仅 fabric
+   ├─ 加载器：fabric 构建（quilt 复用同一条，官方无独立 quilt artifact）
    └─ 客户端渲染侧注册，服务端不涉及
 ```
 

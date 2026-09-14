@@ -10,7 +10,7 @@ description: 00 — 项目结构（NeoForge 26.1）
 
 官方模组生成器对多个 MC 版本**同时**提供 ModDevGradle（`net.neoforged.moddev`）与 NeoGradle（`net.neoforged.gradle.userdev`）。**禁止按版本硬绑**。从零工程调用 `download_official_mdk` 时必须传 `buildPlugin`。
 
-版本锚点（26.1 线）：`neo_version` **以 maven 26.1 线最新为准**。2026-09-02 实读 `maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml`（`lastUpdated 20260830205855`）：26.1 线 144 个构建，最新 **26.1.2.100**（旧示例 `26.1.0.19-beta` 已过期）。取数陷阱：该文件的 `<release>` 标签仍停在 `20.6.141`，**不要**拿它当最新版，必须按 `26.1` 前缀自行取最大。官方 README 写 Gradle **8.8+**，wrapper 常见 **8.14.x**（不要把「≥9.1」当硬门）。ModDevGradle / NeoGradle 版本以 `download_official_mdk` 实际产物的 `gradle.properties` 为准。
+版本锚点（26.1 线）：`neo_version` **以 maven 26.1 线最新为准**，本文件**不钉具体构建号**。取数法：实读 `maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml`，记下**你的读取日期**与该文件的 `lastUpdated`，再在其 `<version>` 列表里按 `26.1` 前缀自行取最大者；该读数按周浮动，每次开工重读，且 `download_official_mdk` 的 pin 表优先。取数陷阱：该文件的 `<release>` 标签指向**当前 promoted 线，可能不是 26.1**，**不要**拿它当 26.1 线最新版。Gradle / wrapper 版本以 `download_official_mdk` 实际产物（`gradle.properties` + `gradle/wrapper/gradle-wrapper.properties`）为准，不要把任何 Gradle 小版本当硬门。ModDevGradle / NeoGradle 版本同上，取自实际产物的 `gradle.properties`。本句复核日期 **2026-09-13**（此前的 2026-09-02 读数与本规则内的具体构建号已移除）。
 
 入库官方页原文可能残留 `minecraft_version=1.20.6` / `neo_version=20.6.62`，**禁止照抄**。
 

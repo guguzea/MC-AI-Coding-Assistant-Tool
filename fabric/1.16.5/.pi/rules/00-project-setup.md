@@ -203,5 +203,5 @@ tasks.named('jar').configure {
 > - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
 > - `entrypoints` 中的类必须实现 `ModInitializer` 接口
 > - `depends` 中的 `fabricloader`、`minecraft` 是必需依赖
-> - `depends` 中使用 `"fabric": "*"`（而非 `"fabric-api"`，1.14-1.16.x 规范）
-> - ❌ **不要**使用 `environment` 字段（1.14-1.17.x 不支持）
+> - `depends` 中使用 `"fabric": "*"`（而非 `"fabric-api"`）：本档 scaffold `src/main/resources/fabric.mod.json:23` 即写 `"fabric": "*"`；`fabric-api` 键自 1.17 档 scaffold 起才用（见 `fabric/1.17.1/scaffold/src/main/resources/fabric.mod.json:20`）
+> - `environment` 字段本档**可用**：它是 `fabric.mod.json` v1 schema 的核心字段，官方规范未列最低 loader 版本门槛（本档 scaffold `gradle.properties:10` 钉 loader 0.11.2）。依据 https://docs.fabricmc.net/develop/loader/fabric-mod-json §Environment，读于 2026-09-13

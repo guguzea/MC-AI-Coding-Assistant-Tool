@@ -54,7 +54,7 @@ IF 需要在 mod constructor 执行前引用已注册对象
 |----------|----------|------|
 | 方块 | `RegistryEvent.Register<Block>` | |
 | 物品 | `RegistryEvent.Register<Item>` | |
-| TileEntity | 无需单独注册 | 通过 ITileEntityProvider 关联 |
+| TileEntity | `RegistryEvent.Register<TileEntityType>` | 用 `ITileEntityProvider` 把类型关联到方块；类型本身仍需注册（语料 `tileentities_tileentity.md:15`） |
 | 实体类型 | `RegistryEvent.Register<EntityType>` | |
 | 声音事件 | `RegistryEvent.Register<SoundEvent>` | |
 | 附魔 | `RegistryEvent.Register<Enchantment>` | |

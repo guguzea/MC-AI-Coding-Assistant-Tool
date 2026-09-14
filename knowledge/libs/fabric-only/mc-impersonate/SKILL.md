@@ -7,6 +7,9 @@ communityDocId: authored/lib-impersonate
 mappings: hint
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/impersonate 版本表 limit=100；本轮 release 上界 fabric=1.21.11 / quilt=1.21.11）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/impersonate/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Impersonate（Fabric/Quilt）
 
 Ladysnake 玩家伪装 API（5.1 万下载，F/Quilt 服务端，1.16.3-1.21.11）：服务端给玩家换皮肤、改名牌、扮演其他玩家/角色，基于 CCA 把伪装数据挂在玩家身上（依赖链：Impersonate → CCA，见 `mc-cca`）。典型场景：角色扮演服、伪装成 NPC 或生物的玩法。**Forge/NeoForge 不可用**（无 Forge/Neo 构建）。

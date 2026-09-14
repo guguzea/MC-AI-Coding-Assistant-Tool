@@ -35,7 +35,7 @@ public class MyRecipeProvider extends FabricRecipeProvider {
 
     @Override
     protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
-        ShapedRecipeJsonFactory.create(MY_TOOL)
+        ShapedRecipeJsonBuilder.create(MY_TOOL)
             .pattern("AAA")
             .pattern("A A")
             .pattern(" A ")

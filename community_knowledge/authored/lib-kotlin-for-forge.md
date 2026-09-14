@@ -2,7 +2,7 @@
 id: authored/lib-kotlin-for-forge
 title: Kotlin for Forge 语言加载器集成要点
 tags: [kotlin-for-forge, kotlin, language-loader, coroutines, forge, neoforge]
-summary: Forge/NeoForge 的 Kotlin 语言加载器（4410 万下载，Forge/Neo 1.14-26.2）：让模组用 Kotlin 编写，提供 Kotlin 标准库与协程运行时；Fabric 平台用 Fabric Language Kotlin。
+summary: Forge/NeoForge 的 Kotlin 语言加载器（4410 万下载，**Forge 线 1.14-1.21.11 / NeoForge 线 1.19.3-26.2**）：让模组用 Kotlin 编写，提供 Kotlin 标准库与协程运行时；Fabric 平台用 Fabric Language Kotlin。
 mcHint: 1.14-26.2
 minecraftVersions: "1.14-26.2"
 sourceKind: authored
@@ -12,6 +12,9 @@ modrinthSlug: kotlin-for-forge
 role: api
 skillId: mc-kotlin-for-forge
 ---
+
+> 数据读取日期：2026-09-14（源：Modrinth project/kotlin-for-forge 定向查询 game_versions=26.2 / 1.21.11：6.3.0 release（2026-06-28）只标 neoforge 且 gameVersions 含 26.2；6.0.0 是最后标 forge 的构建，最高 1.21.11）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/kotlin-for-forge/version?limit=100" 后按 game_versions + loaders + version_type 重取上界（本轮 limit=100 覆盖不到低界时改定向 game_versions 查询）
 
 # Kotlin for Forge 语言加载器集成要点
 
@@ -38,7 +41,7 @@ Decision: Forge 系用不用 Kotlin
    ├─ 平台分支：Forge / NeoForge 装对应构建（NeoForge 侧支持以 KFF 发布说明为准）
    ├─ 依赖：mods.toml 声明 kotlinforforge 为依赖，玩家需装语言加载器
    ├─ 标准库/协程：由 KFF 打包提供，避免自引冲突版本
-   └─ 版本：1.14-26.2 内与 MC 对齐（GitHub Releases / Modrinth 文件页）
+   └─ 版本：分 loader —— Forge 1.14-1.21.11（最后仍声明 forge 的构建是 6.0.0）、NeoForge 1.19.3-26.2（6.1.0 起纯 Neo 构建）；Modrinth 实读 2026-09-13，取用前按下方复核指令重跑
 ```
 
 ## Gradle / 声明文件检查顺序

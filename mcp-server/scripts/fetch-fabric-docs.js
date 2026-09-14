@@ -321,11 +321,22 @@ function writeRawFile(entry, content, source, fetchedAt, sha, finalUrl, branch) 
   return { filename, filepath };
 }
 
+/**
+ * 缓存的 raw 页是否需要重抓。三条判据：
+ *   1) 抓取源是已知会串版本的 github_raw / vitepress；
+ *   2) 头部压根没有 `> 抓取源：` 行 —— 说明它不是本写入者产出的文件；
+ *   3) 正文含控制字节 / U+FFFD —— 盘损或二进制覆盖的签名（2026-09-13 实测：
+ *      fabric_1.21.10 的 develop_networking.md 整页 11,062 B 里 35/36 行是二进制，
+ *      旧判据只看抓取源，对这种文件完全瞎掉，普通重抓会「已存在」跳过它）。
+ */
 function isPollutedCachedRaw(filepath) {
   if (!existsSync(filepath)) return false;
   const text = readFileSync(filepath, "utf8");
-  const src = text.match(/> 抓取源：(\S+)/);
-  const source = src?.[1] ?? "";
+  if (/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFD]/.test(text)) return true;
+  const head = text.slice(0, 600);
+  const src = head.match(/> 抓取源：(\S+)/);
+  if (!src) return true;
+  const source = src[1];
   if (source === "github_raw" || source === "vitepress") return true;
   return false;
 }
@@ -419,8 +430,10 @@ async function main() {
       success++;
       console.log(`✓ [${result.source}@${result.branch}] (${result.content.length} chars, sha256=${result.sha256.slice(0, 12)}…)`);
     } catch (err) {
+      // 取不到 ≠ 上游没有这页：网络抖动 / 限流 / TLS 失败都会走到这里，
+      // 以前顺手 deleteLocalDoc 会把已有 raw + processed 一起删掉（2026-09-13 实测：
+      // 一次 --version 跑因 6 页取回失败直接删了盘上文件）。失败只记账，不动语料。
       console.log(`✗ ${err.message}`);
-      deleteLocalDoc(filename);
       failures.push({ id, gitPath, error: err.message });
       failed++;
     }

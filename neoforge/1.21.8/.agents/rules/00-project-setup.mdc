@@ -20,7 +20,7 @@ public class ExampleMod {
     public static final String MODID = "examplemod";
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-    public ExampleMod(IEventBus modEventBus, ModContainer modContainer) — 以该版 MDK 为准 {
+    public ExampleMod(IEventBus modEventBus /* 可选再加 ModContainer modContainer，以你实跑的 MDK 产物为准 */) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
     }

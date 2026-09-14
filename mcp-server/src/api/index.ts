@@ -662,7 +662,26 @@ function uniqueExactSimpleNameHit(query: string, vData: VersionData): string | u
 
 function withAutoCorrect(result: ApiResult, requestedClassName: string, resolvedDot: string): ApiResult {
   if (requestedClassName === resolvedDot) return result;
-  return { ...result, autoCorrected: true, requestedClassName };
+  // 「补全包名 / 改大小写」与「返回另一个类」不是一回事：后者必须显式警告。
+  // 请求名已带包路径时，只有该路径逐段等于解析结果包路径的结尾才算同一个类。
+  const reqPkg = requestedClassName.includes(".")
+    ? requestedClassName.slice(0, requestedClassName.lastIndexOf(".")).toLowerCase()
+    : "";
+  const resPkg = resolvedDot.slice(0, resolvedDot.lastIndexOf(".")).toLowerCase();
+  const sameTail =
+    !reqPkg || resPkg === reqPkg || resPkg.endsWith("." + reqPkg);
+  const differentClass = !sameTail;
+  const warning = differentClass
+    ? `返回的是**另一个类**：你请求的 ${requestedClassName} 与命中的 ${resolvedDot} 包路径不同，` +
+      `不是补全包名或改大小写（autoCorrected=true）。不要据此写 import / 方法签名；` +
+      `请用完整包名重查，或把 className 当未命中处理。`
+    : result.warning;
+  return {
+    ...result,
+    autoCorrected: true,
+    requestedClassName,
+    ...(warning ? { warning } : {}),
+  };
 }
 
 // ── 辅助：查找相关类 ─────────────────────────────────────────────────────

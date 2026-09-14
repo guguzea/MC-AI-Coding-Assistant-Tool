@@ -1,5 +1,7 @@
+// 钉值出处：上游 FabricMC/fabric-example-mod 分支 26.1 的 gradle.properties（2026-09-14 实测 loom 1.17-SNAPSHOT、loader 0.19.5）。
+// SNAPSHOT 是移动分支，构建若报取不到请在下次复核日 2026-12-14 重新取该分支现值。
 plugins {
-    id "net.fabricmc.fabric-loom" version "1.11-SNAPSHOT"
+    id "net.fabricmc.fabric-loom" version "1.17-SNAPSHOT"
 }
 
 version = project.mod_version
@@ -13,7 +15,7 @@ java {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    implementation "net.fabricmc:fabric-loader:0.17.0"
+    implementation "net.fabricmc:fabric-loader:0.19.5"
 }
 
 processResources {

@@ -156,7 +156,7 @@ public ExampleMod() {
 
 ```java
 // entities/MyEntity.java
-public class MyEntity extends LivingEntity {
+public class MyEntity extends Mob {
     private int attackCooldown = 0;
 
     protected MyEntity(EntityType<? extends MyEntity> type, Level level) {
@@ -176,8 +176,9 @@ public class MyEntity extends LivingEntity {
     }
 
     @Override
-    protected void onChangedPotionHolder(MobEffectInstance effectInstance) {
-        // 药水效果变化时
+    protected void onEffectAdded(MobEffectInstance effectInstance, Entity source) {
+        super.onEffectAdded(effectInstance, source);
+        // 药水效果变化时（本档可重写：onEffectAdded / onEffectUpdated / onEffectRemoved）
     }
 }
 ```

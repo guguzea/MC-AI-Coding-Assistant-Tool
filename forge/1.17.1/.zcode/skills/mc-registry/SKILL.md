@@ -50,7 +50,7 @@ IF 需要在 mod constructor 执行前引用已注册对象
 | 声音事件 | `ForgeRegistries.SOUND_EVENTS` | |
 | 附魔 | `ForgeRegistries.ENCHANTMENTS` | |
 | 药水 | `ForgeRegistries.POTIONS` | |
-| 创造模式标签 | `ItemGroup` | 本档没有 `CreativeModeTab` / `CREATIVE_MODE_TAB` 注册表 |
+| 创造模式标签 | `CreativeModeTab`（1.17 起由 `ItemGroup` 更名；语料 items_items.md:16） | 本档无创造栏注册表 |
 
 ## 注册 BlockItem
 

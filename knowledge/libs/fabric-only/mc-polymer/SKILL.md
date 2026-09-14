@@ -7,6 +7,9 @@ communityDocId: authored/lib-polymer
 mappings: hint
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/polymer 版本表 limit=100；本轮 release 上界 fabric=26.2 / quilt=1.21.11）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/polymer/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Polymer（Fabric/Quilt，纯服务端内容）
 
 服务端注册虚拟方块/物品/实体，原版客户端免装 mod 即可见；AutoHost 把自定义模型/纹理托管到服务器 HTTP 端口。适合定制服与"客户端零 mod"分发。无 Forge/Neo 版。

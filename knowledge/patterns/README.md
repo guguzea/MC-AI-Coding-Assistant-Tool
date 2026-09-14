@@ -29,6 +29,7 @@ MCP：`read_knowledge_resource` → `mcskill://patterns/README`（实际服务�
 | cube_all 资源三元组 | `examples/cube-all-resources.md` | blockstate + block/item 模型 |
 | ContainerData 进度 | `examples/container-data-sync.md` | Menu/GUI 数值同步 |
 | ModList 兼容门闩 | `examples/modlist-compat-gate.md` | 软依赖第三方库 |
+| CI 构建与发布 | `examples/ci-github-actions.md` | GitHub Actions workflow 骨架（四平台 Gradle 通用） |
 
 ## 新增模式
 

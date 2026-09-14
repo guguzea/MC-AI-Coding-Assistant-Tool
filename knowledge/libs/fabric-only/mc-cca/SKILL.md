@@ -7,6 +7,9 @@ communityDocId: authored/lib-cca
 mappings: hint
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/cardinal-components-api 版本表 limit=100；本轮 release 上界 fabric=26.2 / quilt=26.2）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/cardinal-components-api/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Cardinal Components API（Fabric/Quilt）
 
 给实体/方块/区块/世界挂自定义数据的标准方案（1.18-26.2）。模块化（entity/block/chunk/world），ASM 生成扩展，Ladysnake 生态基石（Impersonate 等依赖它；PAL 仅 modImplementation，CCA 非硬依赖，见 `mc-player-ability-lib`）。无 Forge 版。

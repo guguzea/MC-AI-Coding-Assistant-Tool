@@ -401,7 +401,7 @@ export function lookupField(
       resultKind: "SCHEMA_FIELDS_UNAVAILABLE",
       notes: [
         `当前 schemaVersion=${schema ?? "unknown"} 无 fields 表`,
-        "请运行 npm run build:yarn-sqlite 重建为 schema v3",
+        "请运行 npm run build:yarn-sqlite 重建为 schema v4",
       ],
     };
   }
@@ -1088,7 +1088,7 @@ export function convertYarnMember(
       mappingType: "class",
       notes: [
         `未找到 yarn-mappings.sqlite（version=${version}）`,
-        "请运行: node mcp-server/scripts/_lib/build-yarn-sqlite.mjs --all",
+        "请运行: node mcp-server/scripts/_lib/build-yarn-sqlite.mjs --all --write（该脚本默认 dryRun，不带 --write 只打印计划）",
       ],
     };
   }
@@ -1122,14 +1122,20 @@ export function convertYarnMember(
   }
 
   // yarn-tiny 库的 named 列是 Yarn 名：跨层到 mcp/parchment 若返回 yarn 名即假成功，拒绝。
+  // F131：from 侧同理——lookupYarnClass 对 mcp/parchment 输入会回落到 named 列，
+  // 命中即把 Yarn 名当 MCP/Parchment 名用，故两侧一律拒绝（成员级 MCP 走 CSV/searge，不经此路）。
   const era = getMappingEra(version);
-  if (era === "yarn-tiny" && (to === "mcp" || to === "parchment")) {
+  const mcpLayerSide = to === "mcp" || to === "parchment" ? "to" : from === "mcp" || from === "parchment" ? "from" : null;
+  if (era === "yarn-tiny" && mcpLayerSide) {
+    const layer = mcpLayerSide === "to" ? to : from;
     return {
       found: false,
       converted: null,
       mappingType: "class",
       notes: [
-        `version=${version} 为 yarn-tiny 数据（named 列为 Yarn 名），无 MCP/Parchment 可读层，拒绝把 Yarn 名冒充 ${to} 名。`,
+        mcpLayerSide === "to"
+          ? `version=${version} 为 yarn-tiny 数据（named 列为 Yarn 名），无 MCP/Parchment 可读层，拒绝把 Yarn 名冒充 ${layer} 名。`
+          : `version=${version} 为 yarn-tiny 数据（named 列为 Yarn 名），无 MCP/Parchment 类层，拒绝把 ${layer} 类名拿去命中 Yarn 名列。`,
         "Mojang/Parchment 可读名请用 query_api / get_method_params；或改 to=yarn。",
       ],
     };

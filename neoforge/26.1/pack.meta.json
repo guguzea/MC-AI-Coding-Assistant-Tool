@@ -12,7 +12,13 @@
     "gaps": [
       "build.gradle 的版本锚点仅为参考（见该文件内注释：2026-09-02 实读 neoforge maven-metadata，26.1 线最新 26.1.2.100），真实工程以 download_official_mdk 实际产物的 gradle.properties 为准",
       "CLI: download_official_mdk --platform=neoforge --minecraftVersion=26.1 → MDK_NOT_PINNED（pin 表只有 26.1.1 / 26.1.2 / 26.2，禁止邻版冒充）",
-      "无 settings.gradle 与 wrapper 三件套"
+      "无 settings.gradle 与 wrapper 三件套",
+      "缺 src/main/templates/META-INF/neoforge.mods.toml（实算：find neoforge/26.1/scaffold -type f 只有 README.md、build.gradle、src/main/java/com/example/examplemod/ExampleMod.java 三件；同系 1.20.4–1.21.11 八档 scaffold 均有该模板件）。reference 模式的取舍是不代生成元数据，模组元数据须由用户工程自备或取 download_official_mdk 实际产物",
+      "缺 gradle.properties（同系八档 scaffold 用它钉 neo_version / mod_version / minecraft_version；本档 build.gradle 把值内联在文件里，reference 模式不产出该文件）",
+      "缺 .gitignore、.gitattributes、TEMPLATE_LICENSE.txt（同系八档 scaffold 均含）",
+      "缺 src/main/resources/assets/examplemod/lang/en_us.json（同系八档 scaffold 均含；本档 scaffold 无 resources 目录）",
+      "口径澄清：pack.mcmeta 不计入本档缺件——find neoforge/*/scaffold -name pack.mcmeta 只命中已归档的扁平 neoforge/scaffold/，1.20.4 / 1.20.6 / 1.21.1 / 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 / 1.21.11 八个 versioned scaffold 都不含该文件，故它不是 26.1 特有的缺口",
+      "遗留（本代理无权改 scaffold）：scaffold/build.gradle 第 2-5 行与第 24 行仍钉着 26.1.2.100 等具体构建号与 2026-09-02 读数，而同档 00-project-setup.mdc 的版本锚点句已于 2026-09-13 改为「读取日期 + 以 maven 26.1 线最新为准」——两处口径待中心统一裁定"
     ]
   }
 }

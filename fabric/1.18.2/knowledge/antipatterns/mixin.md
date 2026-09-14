@@ -72,7 +72,7 @@ public class MixinPlayerEntity {
 
 **错误代码：**
 ```java
-@Inject(at = @At(value = "HEAD"),  // ❌ 大小写敏感
+@Inject(at = @At(value = "head"),  // ❌ 大小写错误：@At 的目标常量必须写成大写 "HEAD"
     method = "tick")
 private void onTick(CallbackInfo ci) {
 }

@@ -136,9 +136,9 @@ loom {
 ```
 
 ```json
-// fabric.mixins.json
+// fabric.mod.json —— 不是 *.mixins.json！该键只存在于 fabric.mod.json
 {
-  "accessWidener": "examplemod.accesswidener"  // ✅ 引用 Access Widener
+  "accessWidener": "examplemod.accesswidener"  // ✅ 与上面 loom.accessWidenerPath 成对声明，缺一半 AW 就不生效
 }
 ```
 

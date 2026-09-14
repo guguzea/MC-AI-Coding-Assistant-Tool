@@ -98,7 +98,7 @@ fabric-loot-tables / loot-api **v1**（改现有表用 `LootTableLoadingCallback
 
 - ❌ 引入不存在的模块版本 — 以 `gradle.properties` 的 fabric-api 为准
 - ❌ group 写成 `net.fabric.sdk` — 正确是 `net.fabricmc.fabric-api`
-- ❌ 忘记在 `fabric.mod.json` 的 `depends` 中声明 `fabric-api`
+- ❌ 忘记在 `fabric.mod.json` 的 `depends` 中声明 Fabric API 依赖 — 本档键名是 `"fabric"`（`scaffold/src/main/resources/fabric.mod.json:23`），不是 `fabric-api`
 - ❌ `ArgumentCommandBuilder` / `FabricItemApi` — 编造 API
 
 ## 扩展点

@@ -82,13 +82,14 @@ world.addParticle(
 ### 服务端生成（广播给所有附近客户端）
 
 ```java
-// ServerWorld
-world.playSound(
-    player,                              // 来源玩家（可传 null）
-    ModSounds.MY_SOUND.get(),           // SoundEvent
-    SoundCategory.BLOCKS,
-    1.0f,                              // volume
-    1.0f                               // pitch
+// ServerLevel —— 广播用 sendParticles（本档 api-index 有该重载：
+//   sendParticles(ParticleOptions, double x, double y, double z, int count, double dx, double dy, double dz, double speed)）
+serverLevel.sendParticles(
+    ModParticles.MY_PARTICLE.get(),      // IParticleData
+    x, y, z,                             // 位置
+    16,                                  // 数量
+    dx, dy, dz,                          // 扩散范围
+    0.1                                  // 速度
 );
 ```
 
@@ -111,7 +112,7 @@ IF 粒子无纹理（纯数学渲染）
 
 - ❌ 在服务端调用 `clientWorld.addParticle` → 服务端没有 ClientWorld，调用会失败
 - ❌ 粒子不继承正确基类但使用 sprite 相关方法 → 会抛 NPE
-- ❌ `world.playSound` 在客户端调用 → 无效果（客户端没有 ServerWorld）
+- ❌ 用 `Level#addParticle` 做服务端广播 → 只在本端可见；广播必须走 `ServerLevel#sendParticles`
 - ❌ 粒子 `maxAge` 设为 0 → 粒子立即消失
 
 ## 参考资料

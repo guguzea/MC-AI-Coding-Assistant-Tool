@@ -5,5 +5,14 @@
   "minecraftVersion": "1.20.1",
   "gaps": {
     "fabric-docs": "上游 fabric-docs versions/ 无本版 develop/* 快照；data/fabric_1.20.1/fabric-docs/1.20.1/index-l0.json 为空数组，正文实际来自 data/fabric_1.20.1/fabric-wiki/1.20.1/processed/。禁止从邻版复制补索引"
+  },
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "8.4",
+    "buildVerified": true,
+    "provenance": {
+      "build": "2026-09-14 零改动副本（cp fabric/1.20.1/scaffold → D:/mc-skill-temp/_fab_build/1.20.1，逐文件 sha 比对与仓内一致 0 差异）gradlew build --no-daemon → BUILD SUCCESSFUL in 1m24s；JDK 17.0.12（G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12）+ Gradle 8.4 wrapper + fabric-loom 1.4-SNAPSHOT + loader_version=0.15.11 + yarn_mappings=1.20.1+build.10；产物 build/libs/examplemod-1.0.0.jar（5757 B，zip 内可扫到 fabric.mod.json）+ -sources.jar + -javadoc.jar；日志 D:/mc-skill-temp/_fab_build/1.20.1.log。边界：只覆盖 :build 任务链（含 remapJar），未跑 runClient / runServer / runData，也没有真机启动证据。 三件套出处登记依据：本档 gradle/wrapper/gradle-wrapper.jar 的 sha256 与 mcp-server/data/wrapper-jars.json 里 Gradle 8.4 的官方发行包内层条目钉值一致（0336f591…）⇒ provenance.wrapper=gradle-wrapper-task。",
+      "wrapper": "gradle-wrapper-task"
+    }
   }
 }

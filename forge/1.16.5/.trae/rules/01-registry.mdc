@@ -96,10 +96,10 @@ IF 注册 物品
   → 使用 DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID)
   → 在 ITEMS.register() 中注册
 
-IF 注册 方块实体（BlockEntity）
+IF 注册 方块实体（TileEntity）
   → 方块重写 hasTileEntity() + createTileEntity()（本档没有 EntityBlock）
   → 使用 DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID)
-  → 用 BlockEntityType.Builder.create(...).build(null) 注册
+  → 用 TileEntityType.Builder.of(...).build(null) 注册（语料 tileentities_tileentity.md:26；Builder.create 是 1.15.2 旧形，1.16.x.md:170）
 
 IF 注册 实体（Entity）
   → 使用 DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID)
@@ -122,9 +122,9 @@ IF 一个方块有对应的 ItemBlock
   → 必须先注册 Block，再注册 ItemBlock
   → ItemBlock 的 registry name 必须与 Block 完全相同
 
-IF 一个方块有 BlockEntity
-  → 必须先注册 Block，再注册 BlockEntityType
-  → Block 的 registry name 必须与 BlockEntityType 关联的 Block 匹配
+IF 一个方块有 TileEntity
+  → 必须先注册 Block，再注册 TileEntityType
+  → Block 的 registry name 必须与 TileEntityType 关联的 Block 匹配
 
 IF 一个物品有 Capability
   → Capability 注册应在 FMLCommonSetupEvent 中执行
@@ -164,7 +164,7 @@ public class ExampleMod {
         DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
     public static final DeferredRegister<Item> ITEMS =
         DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
+    public static final DeferredRegister<TileEntityType<?>> BLOCK_ENTITIES =
         DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
 
     // 注册方块（lambda 内可安全引用其他已注册的 RegistryObject）

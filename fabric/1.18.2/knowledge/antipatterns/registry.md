@@ -83,9 +83,16 @@ Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),  // ✅ 必
 
 **错误代码：**
 ```java
-// ❌ 使用了错误的 Registry 类型
+// ❌ 注册表类型与对象类型不匹配：BlockItem 是物品，却注册进 BLOCK 注册表
+Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"),
+    new BlockItem(myBlock, new Item.Settings()));  // 方块本体（myBlock）才属 BLOCK
+```
+
+**正确方案：**
+```java
+// ✅ BlockItem 属 ITEM；方块本体另按 3. 注册进 BLOCK
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),
-    new BlockItem(myBlock, new Item.Settings()));  // BlockItem 应该是 ITEM
+    new BlockItem(myBlock, new Item.Settings()));
 ```
 
 ### 5. Identifier 命名空间错误

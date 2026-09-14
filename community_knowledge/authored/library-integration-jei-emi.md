@@ -6,7 +6,7 @@ summary: DataGen 配方常零代码；三查看器软依赖 Gradle；Forge/Neo D
 mcHint: 1.20.1+ / 1.21+ / 26.x
 modIds: [jei, emi, roughlyenoughitems]
 loaders: [fabric, forge, neoforge]
-modrinthSlug: jei, emi, roughly-enough-items
+modrinthSlug: jei, emi, rei
 role: api
 skillId: mc-compat-jei
 sourceKind: authored

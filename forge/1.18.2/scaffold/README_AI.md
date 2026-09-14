@@ -5,6 +5,27 @@
 
 ---
 
+> **⚠️ Forge 1.18.2 `scaffold/` 与官方 MDK 存在代差 —— 有意保留，不是缺陷；禁止为了「对齐」去改 scaffold 钉值。**
+> 保留理由：本档 scaffold 钉值已在本仓真机 build 记过账（`pack.meta.json` → `buildVerified: true`，覆盖 `:compileJava` + `:reobfJar`；进游戏后的行为未验），改值会使既有构建账失效。
+> 需要新版工具链：自行调用 `download_official_mdk`（默认 dryRun，只落到 `$MC_SKILL_CACHE`，不写仓库），再把返回值填进**你自己的工程**。
+
+> | 字段 | 本档 `scaffold/` | 官方 MDK |
+> | --- | --- | --- |
+> | Gradle Wrapper | `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-7.6-bin` | `gradle-8.8-bin` |
+> | ForgeGradle | `scaffold/build.gradle:5` → `[5.1.2,5.2)` | `build.gradle:5` → `[6.0,6.2)` |
+> | Parchment librarian 插件 | `scaffold/build.gradle:6` → `org.parchmentmc.librarian.forgegradle` `1.+` | MDK 无此插件 |
+> | Forge | `scaffold/gradle.properties:9` → `40.1.80` | `gradle.properties:16` → `40.3.0` |
+> | mappings | `scaffold/gradle.properties:14-15` → `parchment` / `2022.08.21-1.18.2` | `gradle.properties:35,38` → `official` / `1.18.2` |
+
+> **取证与局限（2026-09-14 实读）**
+> - 官方侧来源：`%APPDATA%\mc-skill-cache\mdk\forge\1.18.2\forgegradle\unpacked\`{gradle.properties, build.gradle, gradle/wrapper/gradle-wrapper.properties}；
+>   本仓侧来源：本目录 `gradle.properties` / `build.gradle` / `gradle/wrapper/gradle-wrapper.properties`。
+>   两侧值均逐行实读，非训练记忆。
+> - 环境局限：本机 `JAVA_HOME` **未设**，PATH 上的 `java` 是 **Java 8（1.8.0_431）**。
+>   任何复现取证 / Gradle 调用必须**显式**把 `JAVA_HOME` 指到 JDK 17
+>   （本机：`G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12`），否则 FG6 档（1.20.x）直接 fail。
+> - **禁止**在本仓库 `scaffold/` 目录内跑 Gradle。要跑先复制到仓库外的临时目录。
+
 ## 文件清单与职责
 
 ```

@@ -55,7 +55,7 @@ code-patterns/
 
 ## 已知未核实项
 
-- `BlockBehaviour.Properties#insertXp`（1.20.1 档在用，1.19.4/1.20.1 索引均查不到）→ 见 `01-block-patterns.md` 矿物方块一节。
+- 经验掉落写法（`insertXp`/`xp` 在 1.17.1–1.20.4 全档 api-index 中 ABSENT；1.20.1/1.20.4 档原用法已移除）→ 见 `01-block-patterns.md` 矿物方块一节。
 - `Item#shouldCauseReequipAnimation` → 见 `02-item-patterns.md` 耐久处理一节。
-- `AmbientMoodSettings.LEGACY_CAVE` 常量、`ModelLayers.createHumanoidBody()` → 见 `03/04` 对应章节。
+- `AmbientMoodSettings.LEGACY_CAVE` 常量、`ModelLayers.createHumanoidBody()`（全档无此方法；1.17.1/1.20.1/1.20.4 档原用法已降级为 TODO）→ 见 `03/04` 对应章节。
 - configured / placed feature 与 biome modifier 的 **JSON 键**：本档无文档语料，未写入 → 改走 `generate_worldgen` 或按需反编译。

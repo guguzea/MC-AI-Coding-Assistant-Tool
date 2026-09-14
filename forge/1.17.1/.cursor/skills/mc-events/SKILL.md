@@ -28,11 +28,11 @@ public class ModEvents {
 ## Decision: 选择事件总线
 
 ```
-IF 监听 Forge 原生事件（Registry、LivingDrops 等）
+IF 监听游戏内 Forge 事件（LivingDrops、PlayerInteract 等）
   → @Mod.EventBusSubscriber(bus = Bus.FORGE)
 
-IF 监听 Mod 自定义事件
-  → 手动 event.addListener(this::method)
+IF 监听 Registry 注册事件（RegistryEvent.Register<T>）/ Capability 注册 / FML 生命周期事件
+  → @Mod.EventBusSubscriber(bus = Bus.MOD)
 
 IF 需要在 Mod 初始化时执行一次
   → FMLCommonSetupEvent（Bus.MOD）
@@ -45,7 +45,7 @@ IF 需要在 Mod 初始化时执行一次
 ```
 IF 监听玩家右键点击方块
   → PlayerInteractEvent.RightClickBlock
-  → 注意：此事件仅在服务端触发
+  → 注意：此事件双侧触发（客户端+服务端），改世界前用 level.isClientSide 守卫
 
 IF 监听生物死亡
   → LivingDeathEvent
@@ -77,7 +77,7 @@ IF 监听 Tick（每帧逻辑）
   → 注意：不要在 Tick 中做重操作，会导致卡顿
 
 IF 监听 Capability 附加
-  → AttachCapabilitiesEvent<Entity / Block / Item / Chunk>
+  → AttachCapabilitiesEvent<Entity / BlockEntity / ItemStack / Level / LevelChunk>
 
 IF 监听服务端/客户端启动
   → FMLCommonSetupEvent
@@ -119,7 +119,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 | 修改方块掉落物 | `BlockEvent.BreakEvent` | 可用 `setExpToDrop()` 改变经验值 |
 | 修改方块掉落列表 | `LivingDropsEvent` | 可操作 `getDrops()` 列表 |
 | 添加合成配方 | `ItemCraftedEvent` 或数据生成器 | 优先用数据生成器 |
-| 监听烧炼 | `FrmaceSmeltEvent` | 熔炉/烟熏炉烧炼时触发 |
+| 监听烧炼 | `FurnaceSmeltEvent` | 熔炉/烟熏炉烧炼时触发 |
 | 监听药水效果 | `PotionEvent` | 多个子事件 |
 | 监听实体生成 | `EntityJoinLevelEvent` | 注意不要做重操作 |
 | 修改物品 NBT | `ItemCraftedEvent` 或 `AnvilUpdateEvent` | |

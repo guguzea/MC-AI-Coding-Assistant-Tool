@@ -10,7 +10,7 @@
 
 - 方块类必须继承 `Block`（`net.minecraft.world.level.block.Block`）
 - 推荐使用 `BlockBehaviour.Properties.of(Material)` 创建属性
-- 禁止重写 `use`、`onDestroyedByPlayer` 等与物理交互相关的旧版方法
+- 禁止重写 `onDestroyedByPlayer`、`onBlockActivated` 等旧版（MCP 时代）交互方法名；注意 `use` 是本档现行方块交互方法（返回 `InteractionResult`），应重写它（见下方 Decision Flow）
 
 ### BlockBehaviour.Properties 常用配置
 

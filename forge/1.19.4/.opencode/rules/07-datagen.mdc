@@ -90,11 +90,11 @@ IF 生成战利品表
   → 放到 data/{modid}/loot_tables/blocks/
 
 IF 生成方块标签（哪些方块可被某工具挖掘）
-  → 使用 TagProvider.Block
+  → 使用 net.minecraft.data.tags.TagsProvider 子类（实现 #addTags；语料 datagen.md:62）
   → 放到 data/{modid}/tags/blocks/
 
 IF 生成物品标签
-  → 使用 TagProvider.Item
+  → 使用 net.minecraft.data.tags.ItemTagsProvider
   → 放到 data/{modid}/tags/items/
 
 IF 生成进度/ advancements

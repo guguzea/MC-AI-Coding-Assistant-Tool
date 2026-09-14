@@ -4,6 +4,7 @@
 
 - **抓取日**：2026-08-15
 - **源**：`data/quilt_<ver>/quilt-docs/<ver>/processed/qsl-readme.md`（QSL README）+ wiki 概念页 `qsl-qfapi`（该 wiki 为 SPA，入库正文可能只有导航壳，**方法名以 README 图表为准**）
+- ⚠️ **F115（2026-09-13 实测）**：上面这个「源」目录就是**语料侧副本**——`data/quilt_1.21.1/quilt-docs/1.21.1/processed/qsl-verified.md:3` 仍保留本文件 `:3` 已撤回的旧断言（「QSL 已于 2025-12 停更」/ `11.0.0-alpha.3+0.102.0-1.21`）。`search_docs({platform:"quilt", version:"1.21.1"})` 实测 `ok:true` + `fallback:null` + `total:4` 且命中含 `1.21.1/qsl-verified`，`get_doc_full` 取回的就是那份未更正正文。语料按「上游原样」原则不改写 ⇒ 检索命中**不得**把 `:3` 当结论端出，一律回读本文件（源稿）。
 - **禁止**编 `QuiltRegistry.register()`。
 - **02–10 仍读** `fabric/<同一 MC 版本>`。本表不是完整模组教程。本计划不写 Quilt 26.x。
 

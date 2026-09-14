@@ -197,7 +197,7 @@ jar {
 }
 ```
 
-- `id` 禁止包含 `-`（用 `_` 替代），必须全小写
+- `id`：全小写；**Fabric / Quilt 允许连字符**（官方示例 `example-mod`），下划线亦可；须与 `fabric.mod.json` 的 `id` 一致
 - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
 - `entrypoints` 中的类必须实现 `ModInitializer` 接口
 - `depends` 中的 `fabricloader`、`minecraft` 是必需依赖

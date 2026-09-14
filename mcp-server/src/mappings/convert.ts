@@ -169,6 +169,21 @@ function inferMemberKind(query: MappingQuery, era: string | null): "class" | "me
   return "method";
 }
 
+/**
+ * F131：yarn-tiny 档（fabric 1.14.4–1.21.x）没有 MCP/Parchment 层，报出 MCP/Parchment 在哪一侧。
+ * to 侧任何查询都不得由 Yarn 名列代答；from 侧仅类级查询设门
+ * （成员级 mcp→… 走 layerColumn(name_named)，行为由 test-core 钉住，不在本门范围）。
+ */
+export function mcpLayerSide(
+  from: MappingLayer,
+  to: MappingLayer,
+  kind: "class" | "method" | "field",
+): "from" | "to" | null {
+  if (to === "mcp" || to === "parchment") return "to";
+  if ((from === "mcp" || from === "parchment") && kind === "class") return "from";
+  return null;
+}
+
 function fail(query: MappingQuery, extras: Partial<MappingResult> = {}): MappingResult {
   const allow = query.allow_fallback === true;
   const { notes, action, resultKind: extrasKind, ...rest } = extras;
@@ -408,9 +423,13 @@ export function convertMapping(query: MappingQuery): MappingResult {
   }
 
   // yarn-tiny 库（fabric 1.14.4–1.21.x）的 named 层是 Yarn 名，不存在 MCP/Parchment 可读层。
-  // 把 Yarn 名当 MCP/Parchment 名返回属于假成功（禁止假成功），直接拒绝并指路。
+  // to 侧：把 Yarn 名当 MCP/Parchment 名返回属于假成功（禁止假成功），直接拒绝并指路。
+  // from 侧（F131）：同理不得拿 MCP/Parchment 输入去命中 Yarn 自己的名列反报「转换成功」；
+  //   仅收类级查询——成员级 mcp→… 经 layerColumn(name_named) 由 test-core 钉住，不在本门范围。
   // 例外：1.14.4 / 1.15.2 存在 mcp-csv searge 层，成员级 SRG↔named 走 CSV 路径照常可答。
-  if (era === "yarn-tiny" && (to === "mcp" || to === "parchment") && !resolveCsvMappingDbPath(version)) {
+  const yarnTinyMcpSide = mcpLayerSide(from, to, kind);
+  if (era === "yarn-tiny" && yarnTinyMcpSide !== null && !resolveCsvMappingDbPath(version)) {
+    const mcpLayerName = yarnTinyMcpSide === "to" ? to : from;
     return {
       found: false,
       original: memberName,
@@ -424,17 +443,20 @@ export function convertMapping(query: MappingQuery): MappingResult {
       mappingEra: era,
       schemaVersion,
       notes: [
-        `version=${version} 只有 yarn-tiny 数据（named 列为 Yarn 名），没有 MCP/Parchment 可读层，拒绝把 Yarn 名冒充 ${to} 名返回。`,
+        yarnTinyMcpSide === "to"
+          ? `version=${version} 只有 yarn-tiny 数据（named 列为 Yarn 名），没有 MCP/Parchment 可读层，拒绝把 Yarn 名冒充 ${mcpLayerName} 名返回。`
+          : `version=${version} 只有 yarn-tiny 数据（named 列为 Yarn 名），没有 MCP/Parchment 类层，拒绝把输入的 ${mcpLayerName} 类名拿去命中 Yarn 名列再报「转换成功」。`,
         "需要 Mojang/Parchment 可读名请用 query_api / get_method_params（Parchment 索引约 1.16.5–1.20.4）。",
-        "或改 to=yarn 获取 Yarn 名。",
+        yarnTinyMcpSide === "to"
+          ? "或改 to=yarn 获取 Yarn 名。"
+          : "类名请改 from=yarn / from=intermediary（本档实际存在的层）。",
       ],
       action: actionable(
         ActionCodes.DATA_UNAVAILABLE,
-        `yarn-tiny 数据无 ${to} 可读层（version=${version}）`,
-        [
-          "Mojang/Parchment 可读名改用 query_api / get_method_params",
-          "或改 to=yarn",
-        ],
+        `yarn-tiny 数据无 ${mcpLayerName} 可读层（version=${version}）`,
+        yarnTinyMcpSide === "to"
+          ? ["Mojang/Parchment 可读名改用 query_api / get_method_params", "或改 to=yarn"]
+          : ["Mojang/Parchment 可读名改用 query_api / get_method_params", "或改 from=yarn / from=intermediary"],
         ["query_api", "get_method_params"],
       ),
     };
@@ -677,7 +699,13 @@ export function convertMapping(query: MappingQuery): MappingResult {
     Boolean(descriptor);
 
   // 有全局 CSV（1.14–1.15 Forge）时，即使启发式判成 class 也要走方法表（getHealth 等裸名）
-  const allowCsvMethodPath = Boolean(resolveCsvMappingDbPath(version) && !ownerClass);
+  // F178：这条捷径只适用于裸成员名。1.14.4 是 fabric yarn-tiny（类表 4976 行）与 forge mcp-csv
+  // 共存的档，带包限定名的 FQCN（net.minecraft.block.Block / net/minecraft/block/Block）本来就是
+  // 类查询，被 CSV 全局方法表劫持后会得到「方法查询需要 ownerClass」的假 NOT_FOUND。
+  // CSV 的 searge 表里成员名永不含点/斜杠，故限裸名不会误伤任何合法成员查询。
+  const csvOnlyBareName = !memberName.includes("/") && !memberName.includes(".");
+  const allowCsvMethodPath =
+    Boolean(resolveCsvMappingDbPath(version) && !ownerClass) && (kind !== "class" || csvOnlyBareName);
   if (wantMethod && dbPath && (kind !== "class" || allowCsvMethodPath)) {
     // obfuscated/intermediary 层支持无 owner 全局反查（崩溃日志单 token）
     if (!ownerClass && (from === "obfuscated" || from === "intermediary")) {

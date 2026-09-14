@@ -1106,14 +1106,25 @@ function assertHasRuleIds(s, want, label) {
   assert.match(String(entIdx.relPosix), /fabric\/1\.21\.4\//);
   const entity = (s.skillBodies ?? []).find((b) => b.name === "mc-entity");
   assert.ok(entity, "fabric 1.21.4 local donor-noted mc-entity");
-  // B24 后薄档技能实体落盘：DONOR 注记在正文里（来源 fabric/1.21.3 + 本档版本核验指引）
-  assert.match(String(entity.text).trimStart(), /^\[DONOR_SKILL 禁止直接抄写\]/);
+  // S27 后 frontmatter 落回 L1、DONOR 注记紧随闭合围栏成为正文首行。
+  const et = String(entity.text).split(/\r?\n/);
+  assert.equal(et[0], "---", "frontmatter must open at L1");
+  const eClose = et.indexOf("---", 1);
+  assert.ok(eClose > 1, "frontmatter must close");
+  const eFm = et.slice(1, eClose).join("\n");
+  assert.match(eFm, /^name:[ \t]+mc-entity$/m, "frontmatter name");
+  assert.match(eFm, /^description:[ \t]+\S/m, "frontmatter description");
+  assert.match(et.slice(eClose + 1).join("\n").trimStart(), /^\[DONOR_SKILL 禁止直接抄写\]/);
+  assert.equal((String(entity.text).match(/\[DONOR_SKILL/g) ?? []).length, 1, "DONOR note exactly once");
+  assert.ok(entIdx.description && entIdx.description !== entIdx.name, "索引 description 不得退化成 name");
   assert.match(String(entity.text), /search_fabric_docs\(version=1\.21\.4\)/);
   assert.match(String(entity.text), /不要用 version=1\.21\.3/);
   const local = sessionPlatformPack({ platform: "fabric", minecraftVersion: "1.21.4", skillNames: ["mc-block"] });
   const block = (local.skillBodies ?? []).find((b) => b.name === "mc-block");
   assert.ok(block);
-  assert.doesNotMatch(String(block.text).trimStart(), /^\[DONOR_SKILL 禁止直接抄写\]/);
+  assert.doesNotMatch(String(block.text), /\[DONOR_SKILL/);
+  const blockIdx = (local.skills ?? []).find((x) => x.name === "mc-block");
+  assert.ok(blockIdx?.description && blockIdx.description !== blockIdx.name, "mc-block 索引 description 不得退化成 name");
 }
 
 {
@@ -1222,6 +1233,23 @@ function assertHasRuleIds(s, want, label) {
   assert.match(wrapped, /^---\n\[BANNER\] x\nnote\n---/);
   assert.doesNotMatch(wrapped, /^---\r?\n---/);
   console.log("BOM + wrapBanneredBody skip empty fence: ok");
+}
+
+{
+  // S27 frontmatterDescription 容错定位：合成样本钉住四种形态
+  const ok = "---\nname: mc-x\ndescription: real desc\n---\n# H1 标题\n";
+  assert.equal(frontmatterDescription(ok).description, "real desc");
+  assert.equal(frontmatterDescription(ok).name, "mc-x");
+  const donorHead = "[DONOR_SKILL 禁止直接抄写]\n说明文字\n\n---\n\n---\nname: mc-x\ndescription: real desc\n---\n# H1 标题\n";
+  const dh = frontmatterDescription(donorHead);
+  assert.equal(dh.description, "real desc", "S27 前形态：DONOR 在 L1 + 空围栏对，必须容错取真 description");
+  assert.equal(dh.name, "mc-x");
+  assert.doesNotMatch(dh.description, /H1 标题/, "禁止退化成正文 h1");
+  const emptyFence = "---\n\n---\nname: mc-x\ndescription: real desc\n---\n# H1 标题\n";
+  assert.equal(frontmatterDescription(emptyFence).description, "real desc", "锚点命中但捕获为空时不得返回空串");
+  const none = "# 只有标题\n\n正文\n";
+  assert.equal(frontmatterDescription(none).description, "只有标题", "无 frontmatter 仍回退 h1");
+  console.log("S27 frontmatterDescription 容错定位: ok");
 }
 
 {

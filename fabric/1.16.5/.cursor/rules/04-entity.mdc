@@ -65,10 +65,18 @@ Vanilla `EntityType.Builder` 尺寸方法是 `setDimensions(float,float)`，`bui
 
 ```java
 // 单独的客户端入口点（推荐）
+// 包：net.fabricmc.fabric.api.client.rendereregistry.v1
+// 1.16.5：register 是**实例方法**（摘要 modifiers=["public"]，非 static），第二参是 EntityRendererRegistry.Factory；
+// 该类构造器 modifiers=["private"] ⇒ 只能经静态入口字段取，但字段名本仓未取证
+//   （loader-api 摘要不记字段，实测 821 类 fields 计数 0），下面的 INSTANCE 是按 1.14.4 同形推断的写法。
+//   落地前用该档 fabric-api jar 跑 ingest_loader_api + query_loader_api 核字段名（TODO(未核实)）。
+// 1.17+ 才是静态 EntityRendererRegistry.register(...) + 原版 EntityRendererFactory（不要跨档套用）
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(MY_PIG, PigEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(MY_PIG, (dispatcher, context) ->
+            new PigEntityRenderer(dispatcher)
+        );
     }
 }
 ```

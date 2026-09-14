@@ -86,19 +86,17 @@ int val = player.getCapability(CAP).orElse(null).getValue(); // NPE!
 | 目标 | 事件 |
 |------|------|
 | 玩家 / 所有实体 | `AttachCapabilitiesEvent<Entity>` + 检查 `instanceof PlayerEntity` |
-| 方块实体 | `AttachCapabilitiesEvent<BlockEntity>` |
+| 方块实体 | `AttachCapabilitiesEvent<TileEntity>`（语料 datastorage_capabilities.md:96） |
 | 物品 | `ItemStack.getCapability()`（无需事件） |
 | 世界 / 区块 | `AttachCapabilitiesEvent<World>` / `AttachCapabilitiesEvent<Chunk>` |
 
 ## 内置 Capability（无需注册）
 
 ```java
-// ItemHandler（物品栏）
-player.getCapability(ForgeCapabilities.ITEM_HANDLER)
-// FluidHandler（流体栏）
-player.getCapability(ForgeCapabilities.FLUID_HANDLER)
-// EnergyStorage（能量）
-player.getCapability(ForgeCapabilities.ENERGY)
+// ItemHandler（物品栏）—— 1.16.5 token 语料背书：datastorage_capabilities.md:23/30/70-71
+player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.NORTH)
+// FluidHandler（流体栏）/ EnergyStorage（能量）：
+// TODO(未核实)：1.16.5 对应 token 名本档语料未收录；原写 `ForgeCapabilities.*` 属 1.19+ 类，非本档 API，禁止照抄
 ```
 
 ## 常见错误

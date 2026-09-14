@@ -17,7 +17,7 @@
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
 | Java 版本 | **Java 21**（Fabric 1.21.x 最低要求） |
 | Gradle | Gradle 9.5.1 + Loom remap（官方 example-mod 1.21.11 @ 8cd77ea） |
-| Mappings | **本档主用官方 Mojmap**（1.21.11 已可读名，无需额外映射也能写）；Yarn 仍可用（`net.fabricmc:yarn:1.21.11+build.6:v2`），但它是 2025 年以前的默认选择、目前处于退场期，官方移植页原话：「Note that Yarn is no longer officially supported by Fabric.」（`develop_porting_mappings_loom`）。**26.1+ 必须 Mojmap**，不要把 Yarn 抄到去混淆档。 |
+| Mappings | **本档主用 Yarn**（1.21.11 **仍是混淆版，必须带映射**——官方 Loom 文档把 `net.fabricmc.fabric-loom-remap` 明确划给「obfuscated versions (Minecraft 1.21.11 or older)」，去混淆从 26.1 才开始；本档 build.gradle 示例与 scaffold 均按 Yarn 写）；坐标 `net.fabricmc:yarn:1.21.11+build.6:v2`，它是 2025 年以前的默认选择、目前处于退场期，官方移植页原话：「Note that Yarn is no longer officially supported by Fabric.」（`develop_porting_mappings_loom`）。**26.1+ 必须 Mojmap**，不要把 Yarn 抄到去混淆档。 |
 | Build 工具 | Loom（`net.fabricmc.fabric-loom-remap` `${loom_version}` = 1.17-SNAPSHOT） |
 | Mod 元数据 | `fabric.mod.json` |
 | Mixin 支持 | **Loom 一流支持**（无需额外插件）|
@@ -153,7 +153,7 @@ fabric-mod/
 ### 命名规范
 
 - `id`：全小写；允许下划线与连字符（须与 fabric.mod.json 一致）
-- 注册名称：`Identifier(MOD_ID, "registry_name")`
+- 注册名称：`Identifier.of(MOD_ID, "registry_name")`（1.21 的 `Identifier` 构造器是 private，不要写 `Identifier(...)` / `new Identifier(...)`；见 `.cursor/rules/01-registry.mdc:16`）
 - 资源路径：`assets/{modid}/...` 全小写
 
 ### Minecraft 版本兼容性
@@ -233,7 +233,7 @@ Integer n = entity.getAttached(CLICKS);
 - [Fabric Docs](https://github.com/FabricMC/fabric-docs) — GitHub 文档仓库
 - [Mixin](https://github.com/SpongePowered/Mixin) — 字节码注入框架
 - [Yarn](https://github.com/FabricMC/yarn) — 社区维护映射
-- [Parchment](https://parchmentmc.org/) — 叠加在 Mojmap 上的参数名 + Javadoc 数据；Fabric 侧要用 `loom.layered()`，不是 Yarn 的扩展
+- [Parchment](https://parchmentmc.org/) — 叠加在 Mojmap 上的参数名 + Javadoc 数据；Fabric 侧要用 `loom.layered { officialMojangMappings(); parchment("org.parchmentmc.data:parchment-1.21.11:<发布日期>@zip") }`，不是 Yarn 的扩展；Parchment maven（`https://maven.parchmentmc.org`）必须手动添加。本仓 `data/fabric_1.21.11/mappings/` 实钉的是 `parchment-1.21.11:2025.12.20`
 
 ## 配置（不落盘树级 mc-config）
 

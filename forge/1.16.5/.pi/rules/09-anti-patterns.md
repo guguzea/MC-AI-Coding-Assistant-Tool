@@ -77,15 +77,15 @@ private static final String MOD_ID = "examplemod";
 
 ---
 
-## 方块/BlockEntity 相关
+## 方块/TileEntity 相关
 
-### ❌ 在 `BlockEntity.read()` 或构造函数中读取世界数据
+### ❌ 在 `TileEntity.load()` 或构造函数中读取世界数据
 
 ```java
 // 错误
 @Override
-public void load(CompoundNBT nbt) {
-    super.load(nbt);
+public void load(BlockState state, CompoundNBT nbt) { // 语料 tileentities_tileentity.md:38；本档无 read(CompoundNBT) 单参形
+    super.load(state, nbt);
     World world = this.getWorld(); // ❌ world 可能为 null 或 world 未完全加载
     if (world.getBlockState(pos).getBlock() == Blocks.DIAMOND_BLOCK) {
         this.activate();
@@ -98,11 +98,11 @@ public void load(CompoundNBT nbt) {
 **正确方案**：在 `onLoad()` 中处理需要世界数据的逻辑
 
 ```java
-// onLoad() 在 BlockEntity 进入 world 后调用，此时 world 已可用
+// onLoad() 在 TileEntity 进入 world 后调用，此时 world 已可用（TODO(未核实)：onLoad() 本档语料 0 命中，成员名以 IDE 为准）
 @Override
 public void onLoad() {
     super.onLoad();
-    if (this.world != null && !this.world.isRemote) {
+    if (this.world != null && !this.world.isClientSide) {
         // 基于世界的初始化逻辑
     }
 }
@@ -110,7 +110,7 @@ public void onLoad() {
 
 ---
 
-### ❌ 忘记在 `BlockEntity.remove()` 中清理监听器
+### ❌ 忘记在 `TileEntity.remove()` 中清理监听器（remove() 本档语料未背书，未核实，禁止照抄）
 
 ```java
 // 错误

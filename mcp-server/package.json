@@ -26,7 +26,7 @@
     "audit:data:neoforge": "node scripts/audit-data-consistency.mjs --platform=neoforge",
     "audit:data:fail-on-error": "node scripts/audit-data-consistency.mjs --platform=all",
     "build:yarn-sqlite": "node scripts/_lib/build-yarn-sqlite.mjs --all",
-    "community:index": "node scripts/build-community-index.mjs",
+    "community:index": "node scripts/build-community-index.mjs --write",
     "build:semantic-index": "npm run build && node scripts/_lib/build-semantic-index.mjs",
     "fetch:embedding-model": "node scripts/fetch-embedding-model.mjs",
     "fetch:quilt-docs": "node scripts/fetch-quilt-docs.js --version=all",

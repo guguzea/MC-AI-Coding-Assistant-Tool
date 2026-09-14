@@ -9,5 +9,14 @@
     "scaffold-README_AI": "scaffold/ 无 README_AI.md（实测有该文件的 10 档 = 1.16.5 / 1.18.2 / 1.20.1 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2；无的 4 档 = 1.14.4 / 1.17.1 / 1.19.4 / 1.20.4）。三件套本身齐，缺的是那份 agent 面向的 scaffold 说明 → 属 W5.4 scaffold 补齐面，不影响本档 rules / knowledge 可用性。",
     "verified-api": "无 knowledge/common/verified-api-1.20.4.md。本仓 fabric 14 档只有 5 档带核实表（1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2），本档属其余 9 档；实测本档引用 verified-api 的处数 = 0 → 覆盖差异非断链。本档签名依据只有工程 Yarn + query_api（1.20.4 在 Parchment 索引约 1.16.5–1.20.4 内）+ search_fabric_docs version=1.20.4。",
     "version-changes": "knowledge/version-changes/ 只有本档同系列的 1.20.x.md（87 行，标题《Minecraft 1.20.x 版本变更》，md5 7dcf77549390496065620a1598054c96；注意它与 fabric/1.20.1、fabric/1.21.3 的 69 行同名文件 md5 b6e8b46a3d2edd98321e878ca829f452《1.19.x → 1.20.x 版本变化》是两个不同文件，别当同一份）。无 1.21.x 纪要 → 往 1.21 迁移的问题本档不答，按版本切到 fabric/1.21.1（该档 2026-09-05 已补 knowledge/version-changes/1.21.x.md）或 search_fabric_docs，禁止克隆邻档同名文件顶数。"
+  },
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "8.8",
+    "buildVerified": true,
+    "provenance": {
+      "build": "2026-09-14 零改动副本（cp fabric/1.20.4/scaffold → D:/mc-skill-temp/_fab_build/1.20.4，逐文件 sha 比对与仓内一致 0 差异）gradlew build --no-daemon → BUILD SUCCESSFUL in 3m32s；JDK 17.0.12（G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12）+ Gradle 8.8 wrapper + fabric-loom 1.6.12 + loader_version=0.15.11 + yarn_mappings=1.20.4+build.3；产物 build/libs/examplemod-1.0.0.jar（5766 B，zip 内可扫到 fabric.mod.json）+ -sources.jar + -javadoc.jar；日志 D:/mc-skill-temp/_fab_build/1.20.4.log。边界：只覆盖 :build 任务链（含 remapJar），未跑 runClient / runServer / runData，也没有真机启动证据。 三件套出处登记依据：本档 gradle/wrapper/gradle-wrapper.jar 的 sha256 与 mcp-server/data/wrapper-jars.json 里 Gradle 8.8 的官方发行包内层条目钉值一致（cb0da675…）⇒ provenance.wrapper=gradle-wrapper-task。",
+      "wrapper": "gradle-wrapper-task"
+    }
   }
 }

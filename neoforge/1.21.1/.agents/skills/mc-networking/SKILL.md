@@ -9,7 +9,7 @@ mappings: mojmap
 
 # mc-networking（NeoForge 1.21.1）
 
-> 本档为**主档 neoforge 根下的子档**；主档同题 skill（neoforge 根 `mc-networking`）是 Payload 时代完整稿，本档给 1.21.1 入口快照；差异一律以本档 `search_neoforge_docs`（platform=neoforge, version=1.21.1）为准。**本档不是 Forge SimpleChannel。** 1.21.1 起事件名是**复数** `RegisterPayloadHandlersEvent`。
+> 本档为**主档 neoforge 根下的子档**；主档同题 skill（neoforge 根 `mc-networking`）是 Payload 时代完整稿，本档给 1.21.1 入口快照；差异一律以本档 `search_neoforge_docs`（platform=neoforge, version=1.21.1）为准。**本档不是 Forge SimpleChannel。** 事件名改**复数** `RegisterPayloadHandlersEvent` 的分界在 **1.20.5 / 1.20.6**、不是本档：`data/neoforge_1.20.4/neoforge-docs/1.20.4/processed/networking_payload.md:9` 仍是单数 `RegisterPayloadHandlerEvent` · `data/neoforge_1.20.6/neoforge-docs/1.20.6/processed/networking_payload.md:9` 已复数（本仓无 `data/neoforge_1.20.5` 主文档语料）。
 
 ## 入口（已核实：页 id `networking_payload`）
 

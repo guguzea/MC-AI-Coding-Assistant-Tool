@@ -6,15 +6,19 @@
  * (lookupByObfuscated UNION queries; runtime is readOnly and must not CREATE INDEX).
  * Runtime MUST NOT load yarn-mappings.json; only the sqlite artefact is queried.
  *
- * Usage:
- *   node scripts/_lib/build-yarn-sqlite.mjs <mappingsDir> [--version=1.20.1]
- *   node scripts/_lib/build-yarn-sqlite.mjs --all
+ * Usage（默认 dry-run，只打印 DRYRUN；--write 才真正产出）:
+ *   node scripts/_lib/build-yarn-sqlite.mjs <mappingsDir> [--version=1.20.1] [--write]
+ *   node scripts/_lib/build-yarn-sqlite.mjs --all [--write]
+ * 文本报告走 write-guard emit；二进制 sqlite 仍走 replaceSqliteAtomically
+ * （rename/.bak 重试，见 DEBT 在册理由）。
  */
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
+import { GUARD_ROOT, emit, logDryRunBanner, wantWrite } from "../../../scripts/_lib/write-guard.mjs";
 import { parseTiny, findTinyPath } from "./parse-tiny.mjs";
 import { importTsrgStream } from "./import-tsrg.mjs";
 import { importForgeSrgStream } from "./import-forge-srg.mjs";
@@ -23,6 +27,77 @@ import { importMcpCsvMethods, importMcpCsvFields } from "./import-mcp-csv.mjs";
 const SCHEMA_VERSION = "4";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// 本文件位于 <repo>/mcp-server/scripts/_lib ⇒ 三级上即仓库根。刻意不复用 GUARD_ROOT，
+// 免得这个不变量跟着 write-guard 那次改动一起漂。
+const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
+
+/**
+ * meta 里这四个键是「只写不读」的来源台账（运行时只读 mappingEra / schemaVersion / *Count），
+ * 但 .sqlite 是 tracked 二进制 ⇒ 绝对路径会把本机盘符钉进仓库历史（现存 22 个映射库正因如此
+ * 分裂成 19 个 `H:\MC_skill\…` + 3 个 OneDrive 桌面路径）。一律折成仓库相对 POSIX，
+ * 仓库外的源（夹具 / 用户自备 jar 目录）退化成 basename，绝不落盘符。
+ */
+const META_PATH_KEYS = new Set(["source", "sourceFile", "seargeCsv", "seargeFieldsCsv", "fellBackTo"]);
+
+/** 值为 JSON 序列化、内部还嵌着 `source` 路径的键（抓取失败回退台账 `buildAttempts`）。 */
+const META_PATH_JSON_KEYS = new Set(["buildAttempts"]);
+
+function repoRelativePosix(p) {
+  const abs = path.resolve(String(p));
+  const rel = path.relative(REPO_ROOT, abs);
+  if (!rel || rel.startsWith("..") || path.isAbsolute(rel)) return path.basename(abs);
+  return rel.split(path.sep).join("/");
+}
+
+/**
+ * 错误文本没法「折成相对路径」（它不是路径），但里面常整段嵌着仓库绝对路径（ENOENT 之类）。
+ * 把仓库根的三种文本形态（`\` / `/` / JSON 转义的 `\\`）换成 `<repo>/` 占位，机器信息即归零。
+ */
+function stripRepoRoot(text) {
+  let s = String(text);
+  for (const form of [
+    REPO_ROOT.split(path.sep).join("\\"),
+    REPO_ROOT.split(path.sep).join("/"),
+    REPO_ROOT.split(path.sep).join("\\\\"),
+  ]) {
+    s = s.split(form).join("<repo>");
+  }
+  return s;
+}
+
+/** JSON 台账里的 `source` 字段同样不许带盘符；解析不了就原样留（清洗不许吞台账）。 */
+function neutralizeJsonPaths(s) {
+  try {
+    const parsed = JSON.parse(s);
+    const walkOne = (row) => {
+      if (!row || typeof row !== "object") return row;
+      const next = { ...row };
+      if (typeof next.source === "string") next.source = repoRelativePosix(next.source);
+      if (typeof next.error === "string") next.error = stripRepoRoot(next.error);
+      return next;
+    };
+    if (Array.isArray(parsed)) return JSON.stringify(parsed.map(walkOne));
+    if (parsed && typeof parsed === "object") return JSON.stringify(walkOne(parsed));
+    return s;
+  } catch {
+    return s;
+  }
+}
+
+/** 路径折相对后就只剩文件名可辨 ⇒ 用内容哈希保住「这个库出自哪一份字节」。 */
+function sha256FileSync(absPath) {
+  const fd = fs.openSync(absPath, "r");
+  const hash = createHash("sha256");
+  const buf = Buffer.alloc(1 << 20);
+  try {
+    let n;
+    while ((n = fs.readSync(fd, buf, 0, buf.length, null)) > 0) hash.update(buf.subarray(0, n));
+  } finally {
+    fs.closeSync(fd);
+  }
+  return hash.digest("hex");
+}
 
 export function openYarnDb(dbPath, { readonly = false } = {}) {
   return new DatabaseSync(dbPath, { readOnly: readonly });
@@ -94,10 +169,34 @@ export function initYarnSchema(db) {
 }
 
 function setMeta(db, entries) {
-  const stmt = db.prepare("INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)");
+  const out = {};
   for (const [k, v] of Object.entries(entries)) {
-    stmt.run(k, v == null ? "" : String(v));
+    if (v == null) {
+      out[k] = "";
+      continue;
+    }
+    const s = String(v);
+    if (META_PATH_KEYS.has(k)) {
+      out[k] = repoRelativePosix(s);
+      continue;
+    }
+    if (META_PATH_JSON_KEYS.has(k)) {
+      out[k] = neutralizeJsonPaths(s);
+      continue;
+    }
+    out[k] = s;
   }
+  // 来源身份 = 可移植相对路径 + 内容哈希。源取不到（流式夹具）就不写这个键，不写空串冒充哈希。
+  if (entries.source != null && out.sourceSha256 === undefined) {
+    try {
+      const abs = path.resolve(String(entries.source));
+      if (fs.existsSync(abs)) out.sourceSha256 = sha256FileSync(abs);
+    } catch {
+      /* 同上：宁可少一个键 */
+    }
+  }
+  const stmt = db.prepare("INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)");
+  for (const [k, v] of Object.entries(out)) stmt.run(k, v);
 }
 
 function clearMappingTables(db) {
@@ -527,9 +626,9 @@ export async function buildYarnSqliteForDir(mappingsDir, opts = {}) {
       seargeMethodCount: seargeCount || undefined,
       seargeFieldCount: seargeFieldCount || undefined,
       mappingEra: result.mappingEra,
-      source: used.path || used.kind,
+      source: repoRelativePosix(used.path || used.kind),
       attempts,
-      fellBackTo: attempts.some((a) => !a.ok) ? used.path || used.kind : undefined,
+      fellBackTo: attempts.some((a) => !a.ok) ? repoRelativePosix(used.path || used.kind) : undefined,
     };
   } catch (err) {
     try {
@@ -606,9 +705,9 @@ function replaceSqliteAtomically(tmpPath, outPath) {
   throw lastErr || new Error(`Failed to place sqlite at ${outPath}`);
 }
 
-export async function buildAllMappingSqlite(dataRoot) {
-  const results = [];
-  const report = [];
+/** fabric_/forge_ 下含可导入源的 mappings 目录（整体构建与 CLI dry 列举共用一份口径）。 */
+export function collectMappingTargets(dataRoot) {
+  const targets = [];
   for (const entry of fs.readdirSync(dataRoot, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     const isFabric = entry.name.startsWith("fabric_");
@@ -618,14 +717,22 @@ export async function buildAllMappingSqlite(dataRoot) {
     const mappingsDir = path.join(dataRoot, entry.name, "mappings");
     if (!fs.existsSync(mappingsDir)) continue;
     if (listCandidateSources(mappingsDir).length === 0) continue;
+    targets.push({ name: entry.name, platform: isFabric ? "fabric" : "forge", ver, mappingsDir });
+  }
+  return targets;
+}
 
+export async function buildAllMappingSqlite(dataRoot) {
+  const results = [];
+  const report = [];
+  for (const t of collectMappingTargets(dataRoot)) {
     const started = Date.now();
     try {
-      const r = await buildYarnSqliteForDir(mappingsDir, { version: ver });
-      results.push({ platform: isFabric ? "fabric" : "forge", version: ver, ...r });
+      const r = await buildYarnSqliteForDir(t.mappingsDir, { version: t.ver });
+      results.push({ platform: t.platform, version: t.ver, ...r });
       report.push({
-        version: ver,
-        platform: isFabric ? "fabric" : "forge",
+        version: t.ver,
+        platform: t.platform,
         source: r.source,
         era: r.mappingEra,
         methodCount: r.methodCount,
@@ -639,18 +746,18 @@ export async function buildAllMappingSqlite(dataRoot) {
       );
     } catch (err) {
       report.push({
-        version: ver,
-        platform: isFabric ? "fabric" : "forge",
+        version: t.ver,
+        platform: t.platform,
         ok: false,
-        error: err instanceof Error ? err.message : String(err),
+        error: stripRepoRoot(err instanceof Error ? err.message : String(err)),
         durationMs: Date.now() - started,
       });
-      console.error(`FAIL ${entry.name}: ${err instanceof Error ? err.message : err}`);
+      console.error(`FAIL ${t.name}: ${err instanceof Error ? err.message : err}`);
     }
   }
 
   const reportPath = path.join(__dirname, "mapping-sqlite-build-report.json");
-  fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
+  emit(reportPath, JSON.stringify(report, null, 2));
   const failed = report.filter((r) => !r.ok).length;
   return { results, report, reportPath, failed };
 }
@@ -667,33 +774,48 @@ function defaultDataRoot() {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
+  const write = wantWrite(args);
+  const repoRel = (p) => path.relative(GUARD_ROOT, p).split(path.sep).join("/");
   if (args.includes("--all")) {
     const dataRoot = defaultDataRoot();
-    buildAllMappingSqlite(dataRoot)
-      .then(({ results, reportPath, failed }) => {
-        console.log(
-          JSON.stringify({ ok: failed === 0, built: results.length, failed, reportPath }, null, 2),
-        );
-        if (failed > 0) process.exit(1);
-      })
-      .catch((err) => {
-        console.error(err);
-        process.exit(1);
-      });
+    if (!write) {
+      for (const t of collectMappingTargets(dataRoot)) {
+        console.log(`DRYRUN ${repoRel(path.join(t.mappingsDir, "yarn-mappings.sqlite"))}`);
+      }
+      console.log(`DRYRUN ${repoRel(path.join(__dirname, "mapping-sqlite-build-report.json"))}`);
+      logDryRunBanner("build-yarn-sqlite");
+    } else {
+      buildAllMappingSqlite(dataRoot)
+        .then(({ results, reportPath, failed }) => {
+          console.log(
+            JSON.stringify({ ok: failed === 0, built: results.length, failed, reportPath }, null, 2),
+          );
+          if (failed > 0) process.exit(1);
+        })
+        .catch((err) => {
+          console.error(err);
+          process.exit(1);
+        });
+    }
   } else {
     const dir = args.find((a) => !a.startsWith("--"));
     if (!dir) {
-      console.error("usage: build-yarn-sqlite.mjs <mappingsDir> | --all");
+      console.error("usage: build-yarn-sqlite.mjs <mappingsDir> | --all  （默认 dry-run，加 --write 才产出）");
       process.exit(2);
     }
-    const versionFlag = args.find((a) => a.startsWith("--version="));
-    buildYarnSqliteForDir(path.resolve(dir), {
-      version: versionFlag ? versionFlag.slice(10) : undefined,
-    })
-      .then((r) => console.log(JSON.stringify({ ok: true, ...r }, null, 2)))
-      .catch((err) => {
-        console.error(err);
-        process.exit(1);
-      });
+    if (!write) {
+      console.log(`DRYRUN ${repoRel(path.join(path.resolve(dir), "yarn-mappings.sqlite"))}`);
+      logDryRunBanner("build-yarn-sqlite");
+    } else {
+      const versionFlag = args.find((a) => a.startsWith("--version="));
+      buildYarnSqliteForDir(path.resolve(dir), {
+        version: versionFlag ? versionFlag.slice(10) : undefined,
+      })
+        .then((r) => console.log(JSON.stringify({ ok: true, ...r }, null, 2)))
+        .catch((err) => {
+          console.error(err);
+          process.exit(1);
+        });
+    }
   }
 }

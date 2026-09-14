@@ -10,7 +10,7 @@
 
 | 目录 | 含义 |
 |------|------|
-| `permitted/` | 作者已许可可入库的社区帖（Markdown 提炼，非原始 HTML） |
+| `permitted/` | 作者已许可收录的社区帖：**仅指针页**（归属声明 + 原文 URL），与 `links/` 一样**不入库正文**（磁盘 4 页标题均带「仅指针」，2026-09-13 实扫） |
 | `links/` | 无全文许可：仅标题、摘要、外链 URL |
 | `authored/` | 本仓库自写短文（可自由修改） |
 
@@ -84,6 +84,8 @@
 | 发布 / 崩溃 / 性能 / 测试 | `publishing`、`crash-reports`、`profiling-performance`、`testing-automation`（跨版本通用，四列同） | ← | ← | ← |
 
 基岩版不在这套 Java 版本轴里：Script API 见 `authored/bedrock-script-api-primer`（stable 线，模块版本随游戏走）。老加载器（LiteLoader / Rift / ModLoader）走仓库版本档规则树，社区层只有 `authored/modloader-1.6.4`。
+| 主题 | 条目 |
+|------|------|
 | 映射字段 schema v3 | `authored/mapping-fields-v3` |
 | 历史加载器 | `authored/modloader-1.6.4`（1.6.4 只许用仓库 safe-api 表） |
 | 代码模式库 | `patterns/`（DeferredRegister / SimpleChannel / DataComponent / cube_all / ConfigSpec） |

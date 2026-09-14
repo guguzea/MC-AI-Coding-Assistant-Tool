@@ -83,7 +83,7 @@ src/main/java/com/example/mod/
 
 ## Version-Specific Notes (1.19.4)
 
-- **MobCategory** is used for entity spawn groups (Yarn `SpawnGroup` is not a Forge 1.20.7 rename)
+- **MobCategory** is used for entity spawn groups (`net.minecraft.world.entity.MobCategory`); `SpawnGroup` is a Yarn (Fabric) name that exists in **no** Forge/Mojmap version — there is no "some Forge minor version renamed it" event, so never rename on that basis
 - **Parchment mappings** recommended: `2023.06.26-1.19.4`
 - **pack_format**：数据包 **12**、资源包 **13**（1.19.4）
 - **Forge 45.4.x** for Minecraft 1.19.4

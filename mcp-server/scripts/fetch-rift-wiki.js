@@ -9,11 +9,12 @@
  *   - 不覆盖 listeners.md / making-mods-wiki.md / upstream-readme.md（核实表）
  *   - making-mods 官方全文另存 wiki_making_mods.md，不改核实摘录
  *
- *   node scripts/fetch-rift-wiki.js [--dry-run]
+ *   默认 dry-run（只打印 DRYRUN，不联网不写盘）：node scripts/fetch-rift-wiki.js
+ *   实抓实写：node scripts/fetch-rift-wiki.js --write
  */
-import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { emit, logDryRunBanner, wantWrite } from "../../scripts/_lib/write-guard.mjs";
 import {
   fetchTextRetry,
   mergeThinL0,
@@ -23,7 +24,11 @@ import {
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const VERSION = "1.13.2";
-const DRY = process.argv.includes("--dry-run");
+const WRITE = wantWrite();
+
+function repoRel(p) {
+  return relative(ROOT, p).split("\\").join("/");
+}
 
 const WIKI_WARNING =
   "Rift GitHub wiki 是归档只读官方页，不是本地核实表。方法名以 listeners.md / 已核实源码为准。";
@@ -74,14 +79,10 @@ function wrapMarkdown(page, body) {
 }
 
 async function main() {
-  console.log(`[fetch-rift-wiki] dry-run=${DRY}`);
+  console.log(`[fetch-rift-wiki] write=${WRITE}`);
   const outDir = join(ROOT, "data", `rift_${VERSION}`, "rift-docs", VERSION);
   const processed = join(outDir, "processed");
   const rawDir = join(outDir, "raw");
-  if (!DRY) {
-    mkdirSync(processed, { recursive: true });
-    mkdirSync(rawDir, { recursive: true });
-  }
 
   const fetchedAt = new Date().toISOString();
   const wikiEntries = [];
@@ -89,8 +90,11 @@ async function main() {
   for (const page of PAGES) {
     const url = rawUrl(page.wikiPath);
     process.stdout.write(`  ${page.slug} ... `);
-    if (DRY) {
-      console.log(url);
+    if (!WRITE) {
+      // 默认 dry：不联网，只报本会产出的仓库目标。
+      console.log(
+        `DRYRUN ${repoRel(join(rawDir, `${page.slug}.md`))} + ${repoRel(join(processed, `${page.slug}.md`))}（抓取 ${url}）`,
+      );
       continue;
     }
     const res = await fetchTextRetry(url, { accept: "text/plain,text/markdown,*/*" });
@@ -99,7 +103,7 @@ async function main() {
       continue;
     }
     const md = wrapMarkdown(page, res.text);
-    writeFileSync(join(rawDir, `${page.slug}.md`), res.text, "utf8");
+    emit(join(rawDir, `${page.slug}.md`), res.text);
     writeWikiProcessed(processed, `${page.slug}.md`, md);
     wikiEntries.push({
       id: `${VERSION}/${page.slug}`,
@@ -117,7 +121,11 @@ async function main() {
     console.log(`ok ${res.text.length}b`);
   }
 
-  if (DRY) return;
+  if (!WRITE) {
+    console.log(`DRYRUN ${repoRel(join(outDir, "index-l0.json"))}（mergeThinL0 合并 wiki 卡片）`);
+    logDryRunBanner("fetch-rift-wiki");
+    return;
+  }
   if (wikiEntries.length === 0) {
     console.error("未抓到任何 Rift wiki 页，保持原 L0（核实表不动）。");
     process.exit(2);

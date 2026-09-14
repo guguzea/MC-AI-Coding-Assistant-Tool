@@ -88,12 +88,12 @@ Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),
     new BlockItem(myBlock, new Item.Settings()));  // BlockItem 应该是 ITEM
 ```
 
-### 5. Identifier 命名空间错误
+### 5. Identifier 单参写法（本 pack 未取证，统一用两参）
 
 **错误代码：**
 ```java
-// ❌ 直接写完整字符串
-new Identifier("examplemod:my_item");  // 这会被当作 namespace = "examplemod:my_item"
+// ⚠️ 单参写法：本档映射导出 0 条 <init> 行，该重载未取证
+new Identifier("examplemod:my_item");  // 1.14.4 wiki 记 <1.21 可按 "namespace:path" 解析（非整串当 namespace）；本 pack 不采用 → TODO(未核实)
 // ✅ 正确方式
 new Identifier(MOD_ID, "my_item");
 ```

@@ -14,7 +14,7 @@
 ```groovy
 dependencies {
     // ❌ 缺少 v2 后缀
-    mappings "net.fabricmc:yarn:1.19.4+build.10"
+    mappings "net.fabricmc:yarn:1.19.4+build.2"
 }
 ```
 
@@ -22,7 +22,7 @@ dependencies {
 ```groovy
 dependencies {
     // ✅ 必须包含 :v2 后缀
-    mappings "net.fabricmc:yarn:1.19.4+build.10:v2"
+    mappings "net.fabricmc:yarn:1.19.4+build.2:v2"
 }
 ```
 
@@ -56,14 +56,14 @@ MyClass.class_12345 obj = new MyClass.class_12345();
 
 **错误配置：**
 ```groovy
-// ❌ build number 与其他依赖不匹配
-mappings "net.fabricmc:yarn:1.19.4+build.5:v2"
+// ❌ build number 与其他依赖不匹配（本档 scaffold 钉的是 build.2）
+mappings "net.fabricmc:yarn:1.19.4+build.1:v2"
 ```
 
 **正确配置：**
 ```groovy
 // ✅ 使用一致版本
-mappings "net.fabricmc:yarn:1.19.4+build.10:v2"
+mappings "net.fabricmc:yarn:1.19.4+build.2:v2"
 ```
 
 ### 5. 忘记运行 clean loom

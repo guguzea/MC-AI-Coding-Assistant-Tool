@@ -276,7 +276,7 @@ const CONVERT_MAPPING_DESC =
   "obfuscated = Tiny official 混淆短名（er）；intermediary = method_6032 类。to=mojang 仍返回混淆短名（兼容），建议改用 to=obfuscated；可读名请用 to=yarn / query_api。\n" +
   "无 ownerClass 时 obfuscated/intermediary→yarn/mcp 走 method→field→class 全局反查（崩溃日志单 token）。26.1+ 无混淆层 → UNOBFUSCATED_NO_YARN。\n" +
   "mcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n" +
-  "yarn-tiny 数据（fabric 1.14.4–1.21.x）无 MCP/Parchment 可读层：to=mcp/parchment 直接拒绝（YARN_TINY_NO_MCP_LAYER），改用 query_api / get_method_params 或 to=yarn。\n" +
+  "yarn-tiny 数据（fabric 1.14.4–1.21.x）无 MCP/Parchment 可读层：from 或 to 取 mcp/parchment 一律拒绝（YARN_TINY_NO_MCP_LAYER，反向会把 Yarn 名列当 MCP 列伪报 found:true），改用 query_api / get_method_params 或 to=yarn。\n" +
   "方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n" +
   "1.12–1.13 SRG/TSRG+CSV：可带 ownerClass（MCP named→searge→obf）；1.14–1.15 纯 CSV 仅全局 searge↔named（勿传 owner）。\n" +
   "失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n" +

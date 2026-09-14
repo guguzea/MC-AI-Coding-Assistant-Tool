@@ -265,7 +265,7 @@ side = "BOTH"
 - `modId` 禁止包含 `-`，必须全小写
 - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
 - `[[dependencies.xxx]]` 的 `modId` 必须与外层 `modId` 一致
-- `loaderVersion` 的格式：`"[44,)"` 表示 Forge 44 及以上
+- `loaderVersion` 的格式：`"[47,)"` 表示 Forge / FML 47 及以上（本档实值证据：`scaffold/gradle.properties:11` `loader_version_range=[47,)`，同文件 `:10` `forge_version_range=[47,)`）
 
 ## 发布前清单（轻量）
 

@@ -6,7 +6,7 @@ description: 06 — 网络（NeoForge 1.21.10）
 
 来源：https://docs.neoforged.net/docs/1.21.10/networking/payload/
 
-**本档不是 Forge SimpleChannel，也不是 1.21.8 的 `DirectionalPayloadHandler` 双向注册。**
+**本档不是 Forge SimpleChannel，也不是 1.21.5 及更早的 `DirectionalPayloadHandler` 双向注册。**（语料计数：`DirectionalPayloadHandler` 在 1.21.5 processed 3 命中、1.21.8 起 0 命中；该类的宿主档是 1.21.5，不是 1.21.8）
 
 双向包拆成两边：
 - 公共：`RegisterPayloadHandlersEvent` 里 `registrar.playBidirectional(TYPE, STREAM_CODEC, ServerPayloadHandler::handleDataOnMain)`（只传服务端 handler）

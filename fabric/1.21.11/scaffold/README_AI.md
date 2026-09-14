@@ -69,4 +69,4 @@ Integer n = entity.getAttached(CLICKS);
 
 ## 许可证
 
-MIT
+CC0-1.0 —— 与本档 `scaffold/gradle.properties:21` 的 `mod_license=CC0-1.0` 同值（该键经 `scaffold/build.gradle:38` 展开进 `src/main/resources/fabric.mod.json:11` 的 `license`）。此钉值随上游模板 FabricMC/fabric-example-mod @ `8cd77ea`（见本文件 :13 血统注）一并钉入；旧写法 MIT 与钉住的元数据不符。仓库自身的 LICENSE 另计，见销账台账「需要用户裁定」。

@@ -70,7 +70,7 @@
 
 | 产物 | 位置 | 规模（当前） |
 |------|------|-------------|
-| `library-catalog.ts` | `mcp-server/src/diagnostics/` | 50 条 catalog；`verifiedApi` 键数以 `mcp-server/scripts/assert-lib-ownership.mjs` 的 `LEDGER.verifiedApiKeys` 实算为准（旧文档写死的 1880 / 1836 均已过期） |
+| `library-catalog.ts` | `mcp-server/src/diagnostics/`（生成物） | 50 条 catalog；`verifiedApi` 键 **实算 1830（2026-09-14）**，复核 `grep -cE '"[0-9][^"]*/[a-z]+": \{' mcp-server/src/diagnostics/library-catalog.ts`；同数钉在 `mcp-server/scripts/assert-lib-ownership.mjs` 的 `LEDGER.verifiedApiKeys`（不一致即红）。旧文档写死的 1880 / 1836 均已过期。另有**不同分母**：摘要侧 `lib-api-summaries/*.json` 44 份 / `versions` 组键 320（见根 `README.md` §7.5 计数口径 B），勿与本数混用 |
 | `lib-manifests/all.json` | `mcp-server/data/` | 45 slug / 2867 版本条目 |
 | `lib-api-summaries/*.json` | `mcp-server/data/` | 44 库 API 摘要 |
 

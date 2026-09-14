@@ -7,10 +7,11 @@
 逐名可核来源见 **`knowledge/common/verified-api-26.1.2.md`**（表 A 名称来源 / 表 B 已核实方法签名 / 表 C 改名对照 / 表 D javap 核实 / 表 E 未核实清单）。
 该摘要**只有 methods**，不含构造器参数表：下文 Provider 构造器签名以本档示例为准，改动前先 `query_loader_api` 复核，禁止按邻版默写。
 
-> ⚠️ 易错点：**`Identifier` 不是 Yarn 名**。Mojang 官方映射自 **1.21.11** 起把 `ResourceLocation`
-> 改名为 `Identifier`（mappings.dev 核实：1.21.10 及更早为 `ResourceLocation`，1.21.11 起为 `Identifier`）。
-> 26.1 的「去混淆」是另一件事，与本次改名不是同一节点。本档（26.1.2）与 1.21.11 起各档一律用 `Identifier`；
-> 1.21.10 及更早才用 `ResourceLocation`。
+> ⚠️ 易错点：**`Identifier` 不是 Yarn 名**。本档（26.1.2，Mojmap 轴）的官方类名就叫 `Identifier`，已核实依据 =
+> 本档核实表 `knowledge/common/verified-api-26.1.2.md:95`（26.1 client jar 内 `resources/Identifier.class` 1 条、无嵌套，`ResourceLocation` 0 条）。
+> 旧文本在此断言「改名自 **1.21.11** 起、1.21.10 及更早为 `ResourceLocation`（mappings.dev 核实）」——该节点按同表 :95 **未核实**
+> （1.21.11 客户端 jar 仍是混淆名，无法用同名核对，本仓也没有可引的 mappings.dev 取件记录）。26.1 的「去混淆」是另一件事，与本档写 `Identifier` 这个名不冲突。
+> 跨到 1.21.x 档时**不要**把本段当结论抄：Yarn 轴以该档 `data/fabric_<ver>/mappings/` 映射表为准，Mojmap 轴以该档自己的 verified-api 表为准，两边都缺证据就留 `TODO(未核实)`。
 
 ---
 
@@ -46,7 +47,7 @@ IF 标签 → FabricTagsProvider 系（以本版 loader-api 为准）
 fabricApi {
     configureDataGeneration()
 }
-// build.gradle — 用完整 fabric-api，不要单独钉死 fabric-datagen-api-v0 的假版本号
+// build.gradle — 用完整 fabric-api，不要单独钉死 fabric-data-generation-api-v1 的假版本号
 dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }

@@ -13,7 +13,7 @@
 
 **错误代码：**
 ```java
-// ❌ 默认 durability 为 Integer.MAX_VALUE，物品永远不会消耗
+// ❌ 没调 maxDamage：本档 Yarn Item.Settings 默认 maxDamage=0（不可损坏），不是 Integer.MAX_VALUE
 private static final Item MY_TOOL = Registry.register(
     Registries.ITEM,
     Identifier.of(MOD_ID, "my_tool"),

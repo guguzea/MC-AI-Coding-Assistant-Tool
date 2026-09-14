@@ -1,6 +1,6 @@
 ---
 name: mc-gui
-description: Minecraft Forge GUI/菜单开发。创建自定义 Container、Screen、数据同步。触发词：Screen、Container、ContainerType、ContainerScreens、IContainerProvider
+description: Minecraft Forge GUI/菜单开发。创建自定义 Container、Screen、数据同步。触发词：Screen、Container、ContainerType、ScreenManager、IContainerProvider
 platform: forge
 version: "1.16.5"
 dependencies: []
@@ -13,13 +13,13 @@ mappings: official
 
 ```
 IF 交互时需要持久数据存储（机器进度、箱子物品）
-  → 使用 AbstractContainerMenu + ContainerType + ContainerScreen
+  → 使用 Container + ContainerType + ContainerScreen
 
 IF 只是显示 UI（无数据）
   → 直接使用 Screen（无需 Container）
 
 IF 需要物品栏槽位（多格容器）
-  → AbstractContainerMenu（slot 管理）
+  → Container（slot 管理）
 ```
 
 ## 完整示例：方块交互打开 GUI
@@ -39,10 +39,10 @@ public static final RegistryObject<ContainerType<MyContainer>> MY_CONTAINER =
 CONTAINERS.register(modEventBus);
 ```
 
-### 2. 实现 AbstractContainerMenu
+### 2. 实现 Container
 
 ```java
-public class MyContainer extends AbstractContainerMenu {
+public class MyContainer extends Container {
     private final IIntArray dataSlots;
 
     // 服务端构造函数
@@ -74,18 +74,18 @@ public class MyBlock extends Block {
     @Override
     public ActionResult onBlockActivated(BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             // 服务端打开 GUI
             NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new SimpleNamedContainerProvider(
                     (id, inv, p) -> new MyContainer(id, inv, world, pos),
-                    Text.of("My Container")
+                    new StringTextComponent("My Container")  // 10-gui.mdc:144；Text.of 系 Fabric 类名，禁止照抄
                 ),
                 pos
             );
         }
-        return ActionResult.func_233537_a_(world.isRemote);
+        return ActionResultType.sidedSuccess(world.isClientSide); // TODO(未核实)：类名 ActionResultType 见语料 blocks_interaction.md:32/44；sidedSuccess 本档语料 0 命中，原写 SRG 名 func_233537_a_ 属混淆映射残留，禁止照抄
     }
 }
 ```
@@ -98,7 +98,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
         event.enqueueWork(() ->
-            MenuScreens.register(MY_CONTAINER.get(), MyScreen::new)
+            ScreenManager.registerFactory(MY_CONTAINER.get(), MyScreen::new)
         );
     }
 }
@@ -136,7 +136,7 @@ public class MyScreen extends ContainerScreen<MyContainer> {
 
 ## 数据同步（IIntArray）
 
-Menu 自己持有 `IIntArray` 并通过 `trackIntArray` 注册，Screen 通过 `menu.dataSlots` 访问：
+Container 自己持有 `IIntArray` 并通过 `trackIntArray` 注册，Screen 通过 `menu.dataSlots` 访问：
 
 ```java
 // 服务端设置
@@ -148,9 +148,9 @@ int value = this.menu.dataSlots.get(0);
 
 ## 常见错误
 
-- ❌ `MenuScreens.register()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
+- ❌ `ScreenManager.registerFactory()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
 - ❌ `canInteractWith` 始终返回 true → 添加距离检查
-- ❌ 在 Menu 构造函数中直接修改世界数据 → 使用 `detectAndSendChanges()`
+- ❌ 在 Container 构造函数中直接修改世界数据 → 使用 `detectAndSendChanges()`
 
 ## 参考资料
 

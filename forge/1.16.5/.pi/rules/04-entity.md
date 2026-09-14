@@ -161,7 +161,7 @@ public static void onAttributes(EntityAttributeCreationEvent event) {
 
 ```java
 // entities/MyEntity.java
-public class MyEntity extends LivingEntity {
+public class MyEntity extends Mob {
     private int attackCooldown = 0;
 
     protected MyEntity(EntityType<? extends MyEntity> type, World world) {

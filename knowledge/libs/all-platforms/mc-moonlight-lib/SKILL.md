@@ -6,21 +6,28 @@ mcVersions: ["1.16.5-1.21.1"]
 communityDocId: authored/lib-moonlight
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/moonlight limit=100：release 上界 1.21.1（1.21.1-3.6.4，2026-09-10，fabric+neoforge），Forge 线 release 止 1.20.1（1.20-2.16.35，2026-09-07）；26.1.2 只有 4.0.x **beta**（4.0.2，2026-09-07）＝预发布，不是 release）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/moonlight/version?limit=100" 后按 game_versions + loaders + version_type 重取上界（本轮 limit=100 覆盖不到低界时改定向 game_versions 查询）
+
 # Moonlight Lib（原 Selene）集成（操作指引）
 
-给 AI 的操作指引：目标 MC 版本 ≤ 1.21.1 且需要动态注册、BlockSetAPI、村民 AI、流体系统之一时，用 Moonlight Lib（曾用名 Selene）。详细信息用 `search_community_docs` 查 `authored/lib-moonlight`，API 细节以 [官方仓库](https://github.com/MehVahdJukaar/Moonlight) 当前 README 为准。
+给 AI 的操作指引：目标 MC 版本 ≤ 1.21.1（release 窗口；26.1.2 只有 beta，见「定位」）且需要动态注册、BlockSetAPI、村民 AI、流体系统之一时，用 Moonlight Lib（曾用名 Selene）。详细信息用 `search_community_docs` 查 `authored/lib-moonlight`，API 细节以 [官方仓库](https://github.com/MehVahdJukaar/Moonlight) 当前 README 为准。
 
 ## 定位
 
 - 能力：**动态注册**（运行时注册/动态资源，减少静态样板）、**BlockSetAPI**（把新方块接入原版方块族，楼梯/台阶/墙/栅栏/门等成套变体免手写）、**村民 AI**（给村民职业加自定义 AI 行为/任务）、**流体系统**（流体渲染与行为封装）
 - 生态：MehVahdJukaar 出品，Supplementaries、Sawmill 等模组依赖，生态成熟（3690 万下载）
-- 版本 / loader 边界：F/Forge/Neo，支持窗口 **1.16.5-1.21.1**；**硬上限 1.21.1，1.21.4+ / 26.x 无构建**
+- 版本 / loader 边界（release 口径）：整体窗口 **1.16.5-1.21.1**（1.16.5 / 1.18 只有 Forge 构建，Fabric 有 release 的最低实测档是 1.19.2）
+- **Forge 线 release 止于 1.20.1**；Fabric / NeoForge release 止于 **1.21.1** ⇒ **硬上限 1.21.1，1.21.4 / 1.21.10 / 1.21.11 零构建**
+- **26.x 不是「无构建」，而是只有 beta**：`26.1.2-4.0.0 / 4.0.1 / 4.0.2`（**beta**，2026-09-07，Fabric+Neo 两路，无 Forge）。未 release ⇒ 不并入 mcVersions，也不按稳定支持写进兼容表
+- 依据：Modrinth 实读 2026-09-13（逐版 `game_versions` + `loaders` 查询）
 
 ## Decision Flow
 
 ```
 Decision: 要不要用 Moonlight Lib
-→ 目标版本 > 1.21.1（如 1.21.4 / 26.x）→ 不用（无构建），自研或换方案
+→ 目标版本 > 1.21.1（如 1.21.4 / 1.21.11）→ 不用（release 无构建），自研或换方案
+→ 目标 26.1.2 → 只有 4.0.x beta（Fabric/Neo，无 Forge）；用户没明确接受预发布就按未核实处理
 → 目标 ≤ 1.21.1 且需要 动态注册/BlockSet/村民 AI/流体 中 ≥1 项 → Moonlight
 → 只要注册抽象，不需要上述能力 → Architectury（见 mc-architectury）或 Balm（见 mc-balm）
 → 已选 Moonlight：
@@ -46,7 +53,7 @@ Decision: 要不要用 Moonlight Lib
 
 ## 常见错误
 
-- **在 1.21.4+ / 26.x 项目里声明 moonlight 依赖** → 找不到构建或启动崩溃（最常见）
+- **在 1.21.4+ 项目里声明 moonlight 依赖** → 找不到构建或启动崩溃（最常见）；Forge 工程高于 1.20.1 同样没有构建；26.1.2 只有未 release 的 4.0.x beta
 - 用了 BlockSet 却没给变体补掉落物/合成 → 方块获取不到
 - 把村民 AI 逻辑写进客户端类 → 专用服异常
 - 只 `compileOnly` 却硬依赖 → 未装 Moonlight 时 `NoClassDefFoundError`

@@ -209,8 +209,8 @@ public class ExampleMod {
     }
 
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        LOGGER.info("Server starting: {}", event.getServer().getWorld().getWorldInfo().getWorldName());
+    public void onServerStarting(FMLServerStartingEvent event) {
+        LOGGER.info("Server starting: {}", event.getServer().getWorldName());
     }
 }
 ```

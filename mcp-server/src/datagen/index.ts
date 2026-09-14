@@ -4,7 +4,7 @@
  * Forge 1.20.1、NeoForge 1.21.x、NeoForge 26.1、Fabric Loom。
  */
 
-import { isExactMcVersionToken, isMcVersionFamily } from "../utils/minecraft-version.js";
+import { isExactMcVersionToken, isMcVersionFamily, isMcVersionAtLeast } from "../utils/minecraft-version.js";
 import { ownGet } from "../utils/own-record.js";
 import { normalizeModIdentifier, toJavaClassName } from "./common.js";
 import * as forge from "./forge-1.20.1.js";
@@ -352,6 +352,9 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       isMcVersionFamily(ver, "26.1"),
       idStyle,
       FABRIC_RECIPE_TWO_LAYER_VERSIONS.has(ver),
+      // 语料实测分界 = 1.21.8：fabric_1.21.8/1.21.10/1.21.11/26.1.2 的 tags 页只有
+      // valueLookupBuilder（各 4 档文件命中），1.20.4/1.21.1/1.21.3/1.21.4 只有 getOrCreateTagBuilder。
+      isMcVersionAtLeast(ver, "1.21.8"),
     );
     if (ver !== "1.21.11" && !isMcVersionFamily(ver, "26.1")) {
       code = prependDocsReview(code, "search_fabric_docs", ver);
@@ -360,6 +363,14 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
     if (providerType === "particle" || providerType === "sound") {
       warnings.push(
         `Fabric 无独立 ${providerType} DataGen Provider；骨架仅为资源路径注释，请 search_fabric_docs 手写 JSON。`,
+      );
+    }
+    if (providerType === "tag") {
+      // 语料反证：审查原称「addTags 全语料 0 命中」，实测 fabric_1.21.1 起 .java 参照件与
+      // 1.21.11 / 26.1.2 文档里 addTags 与 configure 两个 override 名同时存在 ⇒ 骨架方法名未经核实。
+      warnings.push(
+        `Fabric ${ver} tag 骨架空里的 override 名（addTags / configure）本仓语料两种都有命中且无签名级证据；` +
+          `入库 fabric-api jar（ingest_loader_api）后用 query_loader_api 核对 FabricTagProvider 的方法签名再落笔。`,
       );
     }
     if (idStyle === "Identifier") {

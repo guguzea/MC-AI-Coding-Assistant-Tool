@@ -13,7 +13,8 @@ import {
   renameSync,
   readdirSync,
   statSync,
-  cpSync,
+  copyFileSync,
+  realpathSync,
   rmSync,
 } from "fs";
 import { dirname, join, resolve, sep, isAbsolute } from "path";
@@ -275,6 +276,51 @@ export function pickUnzipTool(input: UnzipProbeInput): UnzipTool | null {
 function tarHelpAcceptsZip(tarPath: string): boolean {
   const help = spawnSync(tarPath, ["--help"], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
   return /bsdtar|libarchive/i.test(`${help.stdout || ""}\n${help.stderr || ""}`);
+}
+
+/**
+ * 递归复制（覆盖式）。不能用 fs.cpSync 的 recursive 形态：在同步卷
+ * （OneDrive、路径含非 ASCII）上它会让**宿主进程**以 0xC0000409 静默消失 ——
+ * 无异常、catch 不住，实测 0/5；逐文件 copyFileSync 5/5 正常。
+ * 仓内脚本层同一件事走 scripts/_lib/copy-tree.mjs（这里是被打包的运行时，不能反向依赖脚本目录）。
+ */
+function copyTreeSync(from: string, to: string, seen: Set<string> = new Set()): number {
+  let n = 0;
+  if (!statSync(from).isDirectory()) {
+    mkdirSync(dirname(to), { recursive: true });
+    copyFileSync(from, to);
+    return 1;
+  }
+  mkdirSync(to, { recursive: true });
+  for (const entry of readdirSync(from, { withFileTypes: true })) {
+    const sp = join(from, entry.name);
+    const dp = join(to, entry.name);
+    let isDir = entry.isDirectory();
+    if (entry.isSymbolicLink()) {
+      try {
+        isDir = statSync(sp).isDirectory();
+      } catch {
+        continue; // 断链：跳过而不是让整次解包挂掉
+      }
+    }
+    if (isDir) {
+      let real: string | null = null;
+      try {
+        real = realpathSync(sp);
+      } catch {
+        real = null;
+      }
+      if (real) {
+        if (seen.has(real)) continue; // 链接成环
+        seen.add(real);
+      }
+      n += copyTreeSync(sp, dp, seen);
+      continue;
+    }
+    copyFileSync(sp, dp);
+    n++;
+  }
+  return n;
 }
 
 /** Windows 不依赖 PATH 的绝对候选（SystemRoot / ProgramFiles 各形态）。 */
@@ -1010,7 +1056,7 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
       mkdirSync(args.destPath, { recursive: true });
       // mkdir 后复核：destPath 若是预置 junction/symlink，cpSync 会整树穿出沙箱（F-B02）
       assertWritablePath(args.destPath);
-      cpSync(cached.unpackedRoot!, args.destPath, { recursive: true });
+      copyTreeSync(cached.unpackedRoot!, args.destPath);
     }
     return {
       ...base,
@@ -1099,7 +1145,7 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
     mkdirSync(args.destPath, { recursive: true });
     // mkdir 后复核：destPath 若是预置 junction/symlink，cpSync 会整树穿出沙箱（F-B02）
     assertWritablePath(args.destPath);
-    cpSync(unpacked.unpackedRoot!, args.destPath, { recursive: true });
+    copyTreeSync(unpacked.unpackedRoot!, args.destPath);
   }
 
   return {

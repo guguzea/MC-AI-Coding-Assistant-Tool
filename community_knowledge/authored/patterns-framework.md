@@ -54,6 +54,7 @@ Agent 流程建议：**先反模式排除坑 → 再模式库拿最小片段 →
 | `cube-all-resources.md` | blockstate + block/item 模型 |
 | `container-data-sync.md` | Menu 侧 ContainerData 进度同步 |
 | `modlist-compat-gate.md` | 软依赖探测后再进兼容类 |
+| `ci-github-actions.md` | GitHub Actions 构建/发布 workflow 骨架 |
 
 ## 自检
 

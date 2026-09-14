@@ -77,7 +77,7 @@ new Item(new Item.Settings().maxDamage(100))
 new Block(FabricBlockSettings.copyOf(Blocks.STONE))
 
 // 自定义属性
-new Block(FabricBlockSettings.create().strength(1.5f).requiresTool())
+new Block(FabricBlockSettings.of().strength(1.5f).requiresTool())
 ```
 
 ### FabricBlockSettings
@@ -85,13 +85,14 @@ new Block(FabricBlockSettings.create().strength(1.5f).requiresTool())
 方块属性构建器。
 
 ```java
-FabricBlockSettings.create()
+FabricBlockSettings.of()                  // 本档无 create()（rules/02-block.mdc:151）
     .strength(1.5f)                    // 硬度和抗爆性
     .strength(1.5f, 6.0f)             // hardness, resistance
-    .breakByTool(FabricToolTags.PICKAXES)
+    // 1.21.1 的 Settings 无 breakByTool（rules/02-block.mdc:4 + tiny 实测）
+    //   → requiresTool() + 方块侧 data/minecraft/tags/block/mineable/<tool>.json
     .requiresTool()
     .dropsLike(Blocks.STONE)
-    .mapColor(MapColor.STONE)
+    .mapColor(MapColor.STONE_GRAY)     // Yarn 常量名（rules/02-block.mdc:4：不是 MapColor.STONE）
     .noCollision()
 ```
 

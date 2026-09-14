@@ -9,7 +9,7 @@ mappings: mojmap
 
 # mc-registry（NeoForge 1.21.8）
 
-禁止从 Forge 或邻档复制。1.21.8 的关键分界是 DataGen 拆成 GatherDataEvent.Client 与 Server，以及 createDatapackRegistryObjects / createProvider。
+禁止从 Forge 或邻档复制。DataGen 拆成 GatherDataEvent.Client 与 Server（含 createDatapackRegistryObjects / createProvider）的分界**不晚于 1.21.5**、不是本档引入：本仓 raw 计数 `GatherDataEvent.Client` 在 1.21.3 = 0、1.21.5 = 33（`data/neoforge_1.21.5/neoforge-docs/1.21.5/processed/resources.md:92` 已拆；反例 `data/neoforge_1.21.3/neoforge-docs/1.21.3/processed/resources.md:113` 仍是裸 `GatherDataEvent`），与 `neoforge/1.21.5/knowledge/porting/02-version-migration.md` 同值。本档只沿用该已拆形态。
 
 # 01 — 注册（NeoForge 1.21.8）
 

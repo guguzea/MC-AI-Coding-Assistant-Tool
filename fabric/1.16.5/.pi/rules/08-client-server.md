@@ -58,8 +58,8 @@ public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         // 仅客户端执行的代码
-        EntityRendererRegistry.register(...);
-        KeyBindingHelper.registerKeyBinding(...);
+        // EntityRendererRegistry 注册：1.16.5 是实例形态（register 非 static），取法见 04-entity
+        KeyBindingHelper.registerKeyBinding(...);   // 该方法 1.16.5 摘要 modifiers=["public","static"]
         ClientPlayNetworking.registerGlobalReceiver(PACKET_ID, (client, handler, buf, responseSender) -> {});
     }
 }
@@ -121,7 +121,7 @@ public class ExampleMod implements ModInitializer {
 // ✅ 正确：客户端逻辑放在 ClientModInitializer
 public class ExampleModClient implements ClientModInitializer {
     public void onInitializeClient() {
-        EntityRendererRegistry.register(...);
+        // 渲染器注册写在这里（1.16.5 实例形态与未核实字段名的口径见 04-entity）
     }
 }
 ```
@@ -133,7 +133,7 @@ public class ExampleModClient implements ClientModInitializer {
 {
   "required": true,
   "package": "com.example.examplemod.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_8",  // 本档 Java 8：见 scaffold/src/main/resources/examplemod.mixins.json:5
   "client": ["client.ClientMixinClass"],
   "server": [],
   "mixins": ["common.CommonMixinClass"]

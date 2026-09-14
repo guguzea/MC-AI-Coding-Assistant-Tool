@@ -18,7 +18,7 @@ Cloth Config 是 Fabric 官方推荐的配置库，提供类型安全的配置�
 ```groovy
 // build.gradle
 dependencies {
-    modApi "me.shedaniel.cloth:cloth-config-fabric:11.0.106+1.20.1" {
+    modApi "me.shedaniel.cloth:cloth-config-fabric:TODO(未核实)" { // 第三方库：maven.shedaniel.me cloth-config-fabric/maven-metadata.xml（2026-09-14 读，126 版，最低 4.10.11，无 11.0.106，无 1.14.4 档）未取证；Cloth 非加载器 API，方法签名须由用户自备 jar 走 ingest_loader_api 核实
         exclude group: "net.fabricmc.fabric-api"
     }
 }

@@ -7,6 +7,9 @@ communityDocId: authored/lib-curios
 mappings: hint
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/curios 版本表 limit=100；本轮 release 上界 forge=1.20.6）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/curios/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Curios 饰品槽（Forge）
 
 Forge 饰品槽事实标准（**止于 1.20.6**）：tag 驱动扩展槽位、自带背包 GUI。Artifacts、Iron's Spells 'n Spellbooks、Apotheosis 等都在用。官方**没有** Fabric 构建。Forge 1.21+ / 26.x 请改读 `neo-only/mc-curios`（`curios-neoforge`），不要再写 curios-forge。

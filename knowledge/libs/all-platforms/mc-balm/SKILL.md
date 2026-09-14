@@ -7,6 +7,9 @@ communityDocId: authored/lib-balm
 mappings: "库按各 loader 预重映射；公共代码禁止 import 平台类，映射差异由 Balm 隔离"
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/balm 版本表 limit=100；本轮 release 上界 fabric=26.2 / forge=26.1.2 / neoforge=26.2）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/balm/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Balm 跨平台抽象（操作指引）
 
 给 AI 的操作指引：一码多端（Fabric + Forge + NeoForge）且愿意跟随 Blay 体系时，用 Balm 统一注册/事件/网络/配置/按键/模型加载的平台差异。详细信息用 `search_community_docs` 查 `authored/lib-balm`，API 细节以 [官方仓库](https://github.com/BlayTheNinth/Balm) 当前 README 与示例 mod（Waystones 源码是现成范例）为准。

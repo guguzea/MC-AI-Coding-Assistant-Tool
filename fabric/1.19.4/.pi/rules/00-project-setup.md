@@ -72,7 +72,7 @@ description: 00 — 项目结构与构建
 ```
 IF 这是新项目（没有 build.gradle）
   → 使用 fabric/1.19.4/scaffold/ 中的模板生成项目骨架
-  → README_AI.md 包含每个文件的职责说明
+  → 本档 scaffold 无 README_AI.md；各文件职责见本文件「示例：正确的 build.gradle 结构（Fabric 1.19.4）」与「fabric.mod.json 字段说明」两节
 
 IF 这是已有项目
   → 读取 gradle.properties 获取版本配置
@@ -108,7 +108,7 @@ IF 报错包含 "No resource bundling found"
 
 ```groovy
 plugins {
-    id 'fabric-loom' version '0.14-SNAPSHOT'
+    id 'fabric-loom' version '1.0.18'
     id 'maven-publish'
     id 'eclipse'
     id 'idea'

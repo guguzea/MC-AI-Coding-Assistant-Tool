@@ -47,7 +47,7 @@ IF build.gradle contains "neoforge"  /* 真实标记：id 'net.neoforged.moddev'
 | `03-item.mdc` | Item, Item.Properties, ItemGroup |
 | `04-entity.mdc` | EntityType, LivingEntity, EntityRenderer |
 | `05-events.mdc` | @SubscribeEvent, RegistryEvent, Dist checks |
-| `06-networking.mdc` | SimpleNetworkWrapper, IMessage, DistExecutor |
+| `06-networking.mdc` | `SimpleChannel`（`NetworkRegistry.newSimpleChannel`）、`registerMessage`、`DistExecutor`；`SimpleNetworkWrapper` / `IMessage` / `IMessageHandler` 是 1.12 名，本档禁用 |
 | `07-datagen.mdc` | DataGen for 1.13.2 (limited) |
 | `08-client-server.mdc` | @OnlyIn, DistExecutor, KeyBinding |
 | `09-anti-patterns.mdc` | Common mistakes and fixes |

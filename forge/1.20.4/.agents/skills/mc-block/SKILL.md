@@ -38,7 +38,7 @@ IF 需要流体
 ## BlockBehaviour.Properties 常用配置
 
 ```java
-BlockBehaviour.Properties.of(Material.WOOD)
+BlockBehaviour.Properties.of().mapColor(MapColor.WOOD)
     .strength(1.5f, 6.0f)              // 硬度和抗爆性
     .requiresCorrectToolForDrops()       // 需要正确工具才能掉落
     .noOcclusion()                      // 不阻挡光影

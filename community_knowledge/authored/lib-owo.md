@@ -2,9 +2,9 @@
 id: authored/lib-owo
 title: owo-config 配置集成要点（owo-lib）
 tags: [owo-lib, owo-config, owo-ui, config, gui, client, network, fabric, neoforge, quilt]
-summary: owo-lib 内的注解式配置（owo-config）+ 自动 GUI + 配置同步（owo-lib 4380 万下载；F/Neo/Quilt，1.17-26.1.2）。⚠️ 不支持 Forge，纯 Forge 项目不可用。
-mcHint: 1.17-26.1.2
-minecraftVersions: "1.17-26.1.2"
+summary: owo-lib 内的注解式配置（owo-config）+ 自动 GUI + 配置同步（owo-lib 4380 万下载；Fabric/Quilt 1.17-26.2、NeoForge 1.21.1-1.21.10）。⚠️ 不支持 Forge，纯 Forge 项目不可用；Neo 侧没有 1.21.11/26.x 构建。
+mcHint: 1.17-26.2
+minecraftVersions: "1.17-26.2"
 sourceKind: authored
 modIds: [owo-lib]
 loaders: [fabric, neoforge, quilt]
@@ -13,15 +13,18 @@ role: api
 skillId: mc-owo
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/owo-lib limit=100：release 上界 fabric=26.2 / quilt=26.2（0.13.1+26.2，2026-08-19），neoforge=1.21.10（0.12.28+1.21.10，2025-11-22）；声明 forge 的构建 0 个）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/owo-lib/version?limit=100" 后按 game_versions + loaders + version_type 重取上界（本轮 limit=100 覆盖不到低界时改定向 game_versions 查询）
+
 # owo-config 配置集成要点（owo-lib）
 
 自写短文。版本与 API 细节以 [owo 文档站](https://docs.wispforest.io/) 为准。
 
 ## 何时用 / 何时不用
 
-用：Fabric / NeoForge / Quilt 项目（1.17-26.1.2），想要注解式配置 + 自动 GUI + 配置同步一体方案。owo-config 是 owo-lib（Modrinth 4380 万下载）的组件之一，同库还提供 owo-ui 声明式 GUI 与网络层，配置和界面风格统一。
+用：Fabric / Quilt 项目（1.17-26.2）与 NeoForge 项目（**只到 1.21.10**），想要注解式配置 + 自动 GUI + 配置同步一体方案。上界按 loader 分窗，依据为 Modrinth 实读（2026-09-13）：Fabric/Quilt 最新 release `0.13.1+26.2`；NeoForge 最新 release `0.12.28+1.21.10`（1.21.11 与 26.x 无 Neo 构建）；声明 forge 的构建 0 个。owo-config 是 owo-lib（Modrinth 4380 万下载）的组件之一，同库还提供 owo-ui 声明式 GUI 与网络层，配置和界面风格统一。
 
-不用：**纯 Forge 项目不可用**（owo-lib 只支持 Fabric / NeoForge / Quilt，全览 §五 陷阱 2 明确标注）。Forge 用户请用 Cloth / YACL / ForgeConfigSpec；Neo ≥1.20.4 服务端配置用 ModConfigSpec。也不用于：只想要 Builder 式手工配置界面（选 YACL）、版本窗口外（低于 1.17 / 高于 26.1.2）。
+不用：**纯 Forge 项目不可用**（owo-lib 只支持 Fabric / NeoForge / Quilt，全览 §五 陷阱 2 明确标注）。Forge 用户请用 Cloth / YACL / ForgeConfigSpec；Neo ≥1.20.4 服务端配置用 ModConfigSpec。也不用于：只想要 Builder 式手工配置界面（选 YACL）、版本窗口外（低于 1.17 / Fabric·Quilt 高于 26.2 / NeoForge 高于 1.21.10；Modrinth 实读 2026-09-14）。
 
 ## Decision Flow
 
@@ -29,7 +32,7 @@ skillId: mc-owo
 Decision: 要不要用 owo-config
 → Forge 用户 → 停止，用 Cloth / YACL / ForgeConfigSpec（owo 无 Forge 构建）
 → NeoForge 仅服务端配置且不用 owo → ModConfigSpec（≥1.20.4）
-→ 版本不在 1.17-26.1.2 → YACL（1.19+）/ Cloth（1.14+）
+→ 版本不在上表窗口内（NeoForge 超 1.21.10 也算不在）→ YACL（1.19+）/ Cloth（1.14+）
 → F/Neo/Quilt 且想要注解式 + 自动 GUI + 同步 → owo-config
 → 只想要手工 Builder 界面 → YACL / Cloth
 → 已选 owo-config：
@@ -44,7 +47,7 @@ Decision: 要不要用 owo-config
 2. 确认项目不是纯 Forge：构建脚本里没有 Forge-only artifact 混用（owo 无 Forge 构建）
 3. `mods.toml`（NeoForge）：`depends` 写 owo-lib；软依赖用 `ModList.get().isLoaded("owo-lib")` 门闩（见 `authored/soft-deps-modlist`）
 4. `fabric.mod.json` / `quilt.mod.json`：`depends` / `suggests` 写 owo-lib
-5. 版本核对：26.1.2 上界以官方发布为准，坐标以文件页为准
+5. 版本核对：上界以官方发布为准（Fabric/Quilt 线到 `26.2`、NeoForge 线止 `1.21.10`，Modrinth 实读 2026-09-13），坐标以文件页为准
 
 ## 集成要点（伪代码级）
 
@@ -64,7 +67,7 @@ Decision: 要不要用 owo-config
 - **纯 Forge 项目直接引入 → 构建/运行失败**（无 Forge artifact，先确认加载器）
 - 抄 Fabric 教程到 NeoForge 但 artifact 混用 → 依赖解析失败
 - 同步方向搞反 → 客户端改动被服务端覆盖或静默失效
-- 期待 26.1.2 以上新版本 → 以官方发布为准，勿假定滚动跟进
+- 期待 26.2 以上新版本 → 以官方发布为准，勿假定滚动跟进；NeoForge 侧不跟进（止于 1.21.10）
 
 ## 自检清单
 

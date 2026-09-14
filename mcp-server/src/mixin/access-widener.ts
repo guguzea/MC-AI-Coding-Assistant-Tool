@@ -7,7 +7,9 @@
  *   type ∈ {accessible, extendable, mutable}
  *
  * 校验核心与 AT 同框架（继承成员 / record 组件 / 内部类可达性 / 跨文件冲突），
- * 另加 Fabric 语义：transitive 前缀、namespace 合法性、extendable 目标不得为 final。
+ * 另加 Fabric 语义：transitive 前缀与 namespace 合法性。
+ *   （不校验「extendable 目标必须/不得为 final」：AW 的 extendable 正是用来放开 final 的指令，
+ *    见 fabric_26.1.2 develop_class-tweakers_access-widening.md:61-68；全仓 forge 语料无 extendable-final 写法。）
  */
 
 import type { JarIndex } from "./bytecode.js";

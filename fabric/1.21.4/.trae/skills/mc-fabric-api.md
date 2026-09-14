@@ -1,8 +1,3 @@
-[DONOR_SKILL 禁止直接抄写]
-本 Skill 正文为本地维护的结构/流程草稿，未经官方 API 核验（无外部捐入源版本：fabric/1.21.3 无同名技能；fabric/1.21.8 与 fabric/1.21.10 的同名 Skill 均由本档派生）。不得直接使用正文里的类名/方法。先 search_fabric_docs(version=1.21.4) 核对类名/方法签名（不要用 version=1.21.3），对不上就改口官方文档、禁止照抄。Yarn 档互捐，禁止把 26.1.2 mojmap 当本档。
-
----
-
 ---
 name: mc-fabric-api
 description: Fabric API 模块系统。fabric-command-api-v2、内容注册表、networking。触发词：Fabric API、fabric-api、modImplementation、fabric-networking
@@ -11,6 +6,9 @@ version: "1.21.4"
 dependencies: []
 mappings: yarn
 ---
+
+[DONOR_SKILL 禁止直接抄写]
+本 Skill 正文为本地维护的结构/流程草稿，未经官方 API 核验（无外部捐入源版本：fabric/1.21.3 无同名技能；fabric/1.21.8 与 fabric/1.21.10 的同名 Skill 均由本档派生）。不得直接使用正文里的类名/方法。先 search_fabric_docs(version=1.21.4) 核对类名/方法签名（不要用 version=1.21.3），对不上就改口官方文档、禁止照抄。Yarn 档互捐，禁止把 26.1.2 mojmap 当本档。
 
 # Fabric API 模块（Fabric 1.21.4）
 
@@ -91,7 +89,7 @@ fabric-loot-api-v3（`LootTableEvents` + `RegistryKey`，见 `05-events.mdc`）
 | fabric-command-api-v2 | 命令注册 |
 | fabric-networking-api-v1 | 网络通信 |
 | fabric-object-builder-api-v1 | 方块/物品/实体设置 helper |
-| fabric-datagen-api-v0 | 数据生成（1.17+；1.14/1.16 无） |
+| fabric-data-generation-api-v1 | 数据生成（1.17+；1.14/1.16 无） |
 | fabric-renderer-api-v1 | 渲染 API |
 
 版本号随 `fabric-api` BOM，不要在规则里写死 `0.4.29+1.20.1` 这种邻版数字。

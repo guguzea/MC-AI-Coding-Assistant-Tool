@@ -107,13 +107,11 @@ public class MyMessage {
         this.targetId = targetId;
     }
 
-    @Override
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(value);
         buf.writeResourceLocation(targetId);
     }
 
-    @Override
     public void fromBytes(FriendlyByteBuf buf) {
         this.value = buf.readInt();
         this.targetId = buf.readResourceLocation();

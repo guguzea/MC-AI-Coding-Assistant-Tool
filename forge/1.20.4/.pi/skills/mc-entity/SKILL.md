@@ -32,7 +32,7 @@ ENTITY_TYPES.register(modEventBus);
 ## 实体类基础结构
 
 ```java
-public class MyEntity extends LivingEntity {
+public class MyEntity extends Mob {
     protected MyEntity(EntityType<? extends MyEntity> type, Level level) {
         super(type, level);
         this.noPhysics = true;
@@ -225,7 +225,10 @@ public class MyEntity extends LivingEntity {
         super.animateTick();
         if (!this.level().isClientSide) return;
         // 客户端：驱动动画状态机
-        this.idleAnimationState.tryTransition(MyEntityModel.ANIMATION_LOCATION);
+        // TODO(未核实)：AnimationState 无 tryTransition —— 本档 api-index 实测方法仅 start(int) /
+        //   startIfStopped(int) / animateWhen(boolean,int) / updateTime(float,float) / stop() / ifStarted(...)；
+        //   原写法引用的 Java 版 JSON 动画（AnimationDefinition）加载路径在本档语料 0 命中，
+        //   正确的驱动写法（含时间参数来源）待 ingest_loader_api 入库原版 jar 后核实。
     }
 }
 ```

@@ -104,7 +104,7 @@ IF 报错包含 "No resource bundling found"
 
 ```groovy
 plugins {
-    id 'fabric-loom' version '1.3-SNAPSHOT'
+    id 'fabric-loom' version '1.8'   // 与本档 scaffold/build.gradle:2 同值；旧示例写 1.3-SNAPSHOT 属 1.20.1 模板残留（见下方「Loom 版本口径」）
     id 'maven-publish'
     id 'eclipse'
     id 'idea'
@@ -152,7 +152,7 @@ processResources {
 tasks.named('jar').configure {
     manifest {
         attributes([
-            "Fabric-ModuleType": "Lib",
+            "Fabric-ModuleType": "Lib",  // 装饰性 jar manifest 属性，Loader 不读；模组元数据一律看 fabric.mod.json（本档官方模板血统的 1.21.11/scaffold/build.gradle 无此属性）
             "Implementation-Title": project.name,
             "Implementation-Version": project.jar.archiveVersion,
             "Implementation-Vendor": project.maven_group
@@ -160,6 +160,8 @@ tasks.named('jar').configure {
     }
 }
 ```
+
+> **Loom 版本口径（F185，读值日期 2026-09-13）**：本档原先三处互不相同 —— 本节示例与 `knowledge/antipatterns/gradle.md:41` / `:113`、`.cursor/skills/mc-kotlin.md:23` 写 `1.3-SNAPSHOT`，而唯一真机构建过的 `scaffold/build.gradle:2` 钉 `1.8`。现统一取 **本档 scaffold 实钉值 `1.8`**；`1.3-SNAPSHOT` 的上游最后一次发布是 2024-01-04（`https://maven.fabricmc.net/net/fabricmc/fabric-loom/maven-metadata.xml` + 该目录 `Last-Modified`），属 1.20.x 时代，不是 1.21.3 的可用组合。**未核实**：上游 1.8 线只有 `1.8.0-alpha.*` 与 `1.8.1`–`1.8.13`，探测不到裸 `1.8` 的 pom（`net/fabricmc/fabric-loom/1.8/fabric-loom-1.8.pom` → HTTP 404）；scaffold 裸 `1.8` 是否可解析归 S25a 处理，本代理不改钉值。
 
 ---
 

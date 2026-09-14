@@ -7,6 +7,9 @@ communityDocId: authored/lib-text-placeholder-api
 mappings: hint
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/placeholder-api 版本表 limit=100；本轮 release 上界 fabric=26.2 / quilt=1.21.11）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/placeholder-api/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Text Placeholder API（Fabric/Quilt）
 
 注册与消费 `%modid:type%` 占位符（1.17-26.2），配合 Simplified Text Format 简化文本构建。适用聊天、名牌、命令输出、GUI 与数据驱动文本。无 Forge/Neo 版。

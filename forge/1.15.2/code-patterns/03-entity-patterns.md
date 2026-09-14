@@ -97,18 +97,12 @@ public class MyEntityRenderer extends Render<MyEntity> {
 ## 实体属性注册
 
 ```java
-public static final DeferredRegister<Attribute> ATTRIBUTES =
-    DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID);
-
-public static final RegistryObject<Attribute> EXTRA_HEALTH = ATTRIBUTES.register("extra_health",
-    () -> new RangedAttribute("attribute.modid.extra_health", 0.0, 0.0, 1000.0).setSyncable(true)
-);
-
-// 在 mod 构造函数中
-ATTRIBUTES.register(modEventBus);
-
-// 实体中应用
-this.getAttribute(ATTRIBUTES.get("extra_health")).ifPresent(attr ->
-    this.getAttributeMap().registerAttribute(attr)
-);
+// 本档**没有** `ForgeRegistries.ATTRIBUTES`（1.16+ 才有）—— 见 `04-entity.mdc:29-30`、`09-anti-patterns.mdc:22-28`
+// 属性基值在实体类里重写 registerAttributes() 设置（同文件 :33-40 已有完整形态）：
+@Override
+protected void registerAttributes() {
+    super.registerAttributes();
+    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0);
+    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
+}
 ```

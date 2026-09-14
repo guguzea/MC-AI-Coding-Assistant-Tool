@@ -124,14 +124,14 @@ EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
 
 | 1.18.2 字段 | 1.20.x 字段 |
 |------------|-------------|
-| `BLOCKENTITIES` | `BLOCK_ENTITY_TYPES` |
+| `BLOCK_ENTITIES` | `BLOCK_ENTITY_TYPES` |
 | `ENTITYTYPES` | `ENTITY_TYPES` |
 | `CONTAINERS` | `MENU_TYPES` |
 | `FLUIDTYPES` | `FLUID_TYPES` |
 
 ```java
 // ✅ Forge 1.18.2
-DeferredRegister.create(ForgeRegistries.BLOCKENTITIES, MOD_ID)
+DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MOD_ID)
 DeferredRegister.create(ForgeRegistries.ENTITYTYPES, MOD_ID)
 DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID)
 DeferredRegister.create(ForgeRegistries.FLUIDS, MOD_ID)

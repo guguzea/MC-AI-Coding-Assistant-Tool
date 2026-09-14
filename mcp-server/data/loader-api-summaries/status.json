@@ -14,12 +14,14 @@
     "1.17.1-forge.jar",
     "1.18.2-fabric-api.jar",
     "1.18.2-forge.jar",
+    "1.18.2-qsl",
     "1.19.4-fabric-api.jar",
     "1.19.4-forge.jar",
     "1.19.4-qsl",
     "1.20.1-fabric-api.jar",
     "1.20.1-forge.jar",
     "1.20.1-neoforge.jar",
+    "1.20.1-qsl",
     "1.20.4-fabric-api.jar",
     "1.20.4-forge.jar",
     "1.20.4-neoforge.jar",
@@ -52,12 +54,14 @@
     "1.17.1-forge": "official-1.17.1",
     "1.18.2-fabric-api": "yarn-1.18.2+build.4",
     "1.18.2-forge": "official-1.18.2",
+    "1.18.2-qsl": "qsl-git-v1.1.0-beta.26+1.18.2-5d241174beaa",
     "1.19.4-fabric-api": "yarn-1.19.4+build.2",
     "1.19.4-forge": "official-1.19.4",
     "1.19.4-qsl": "qsl-git-1.19.4-ff5d1124c9eb",
     "1.20.1-fabric-api": "yarn-1.20.1+build.10",
     "1.20.1-forge": "official-1.20.1",
     "1.20.1-neoforge": "parchment-1.20.1-2023.09.03",
+    "1.20.1-qsl": "qsl-git-v6.1.2+1.20.1-ff5d1124c9eb",
     "1.20.4-fabric-api": "yarn-1.20.4",
     "1.20.4-forge": "official-1.20.4",
     "1.20.4-neoforge": "parchment-1.20.4-2024.04.14",
@@ -78,5 +82,10 @@
   },
   "cache": "$MC_SKILL_CACHE",
   "invalid": [],
-  "notIndexed": []
+  "notIndexed": [
+    {
+      "key": "1.20.4-qsl",
+      "reason": "LOADER_API_NOT_INDEXED：上游 QSL 无 +1.20.4 tag 也无 1.20.4 分支（实测 branches/tags），按裁定保持缺档并计为本档 QSL 未索引；QSL 签名请用户自备 jar 走 ingest_loader_api，禁止借邻线分支。"
+    }
+  ]
 }

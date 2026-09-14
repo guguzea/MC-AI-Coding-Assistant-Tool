@@ -11,8 +11,7 @@
   "license": "${mod_license}",
   "icon": "assets/${mod_id}/icon.png",
   "entrypoints": {
-    "main": ["${maven_group}.${mod_id}.ExampleMod"],
-    "client": ["${maven_group}.${mod_id}.ExampleModClient"]
+    "main": ["${maven_group}.${mod_id}.ExampleMod"]
   },
   "mixins": ["${mod_id}.mixins.json"],
   "depends": {

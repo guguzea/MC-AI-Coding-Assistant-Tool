@@ -42,7 +42,8 @@ IF 注册 客户端专用组件（渲染器/快捷键）
   → 在 ClientModInitializer 中处理
 
 IF 平台 = Forge
-  → 跳转 forge/1.21.1/.cursor/rules/01-registry.mdc
+  → 跳转 forge/1.20.4/.cursor/rules/01-registry.mdc（forge/1.21.1 是 draft：磁盘无 00–10 规则树，
+    activate_platform_pack session 返回 PACK_NOT_FOUND，故跳最近已建档的 Forge 档）
 ```
 
 ## Registry 类型

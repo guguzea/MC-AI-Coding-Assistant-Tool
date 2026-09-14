@@ -352,7 +352,7 @@ function main() {
     matched++;
     let p = planned.get(entry.id);
     if (!p) {
-      p = { entry, additions: new Map(), addNew: 0, overwrote: 0, skipped: 0, dups: 0 };
+      p = { entry, additions: new Map(), addNew: 0, overwrote: 0, skipped: 0, dups: 0, pruned: new Set() };
       planned.set(entry.id, p);
     }
     if (p.additions.has(key)) {
@@ -387,14 +387,38 @@ function main() {
     p.additions.set(key, buildValue(r, entry, rootOwners));
   }
 
+  // writer 侧剔除：catalog 里**已存在**的键若其 packages 被判冒领（非自有 + 他方已证实该包根），
+  // 而本轮又没有干净数据覆盖它，就删键。不删的话旧假键会永久留在生成物里，
+  // 归属门只能一直挂债（KfF 那 8 行即如此：取件救不了，只能由 writer 剔除）。
+  const pruneReport = new Map();
+  for (const entry of entries.values()) {
+    const parsed = parseVa(text.slice(entry.vaStart, entry.vaEnd + 1));
+    if (!parsed) continue; // 旧值解析不出：本轮不碰它（下面按原样插入的路径也不删）
+    let p2 = planned.get(entry.id);
+    for (const [key, val] of Object.entries(parsed)) {
+      const pkgs = Array.isArray(val?.packages) ? val.packages : [];
+      if (pkgs.length === 0 || packagesPlausible(entry, pkgs, rootOwners)) continue;
+      if (p2?.additions.has(key)) continue; // 本轮已用干净数据覆盖，不算剔除
+      if (!p2) {
+        p2 = { entry, additions: new Map(), addNew: 0, overwrote: 0, skipped: 0, dups: 0, pruned: new Set() };
+        planned.set(entry.id, p2);
+      }
+      p2.pruned.add(key);
+      const list = pruneReport.get(entry.id) ?? [];
+      list.push(`${key} → ${pkgs.join(", ")}`);
+      pruneReport.set(entry.id, list);
+    }
+  }
+
   // 生成编辑：重排缩进后整体替换 verifiedApi 区间（按 start 降序应用）
   const edits = [];
   for (const p of planned.values()) {
-    if (p.additions.size === 0) continue;
+    if (p.additions.size === 0 && p.pruned.size === 0) continue;
     const rawVa = text.slice(p.entry.vaStart, p.entry.vaEnd + 1);
     const parsed = parseVa(rawVa);
     if (parsed) {
       for (const [k, v] of p.additions) parsed[k] = v;
+      for (const k of p.pruned) delete parsed[k];
       const json = JSON.stringify(parsed, null, 2);
       const lines = json.split("\n");
       const reindented = lines
@@ -422,10 +446,12 @@ function main() {
   let keysAdded = 0;
   let keysSkipped = 0;
   let keysOverwritten = 0;
+  let keysPruned = 0;
   for (const p of planned.values()) {
     keysAdded += p.addNew;
     keysSkipped += p.skipped;
     keysOverwritten += p.overwrote;
+    keysPruned += p.pruned.size;
   }
   const entriesUpdated = planned.size;
 
@@ -440,12 +466,16 @@ function main() {
     for (const [id, set] of rejectedForeign) console.log(`  ${id}：外来包 ${[...set].join(", ")}`);
   }
   console.log(`更新条目数：${entriesUpdated}`);
-  console.log(`新增键：${keysAdded} / 跳过键：${keysSkipped} / 覆盖键：${keysOverwritten}`);
+  console.log(`新增键：${keysAdded} / 跳过键：${keysSkipped} / 覆盖键：${keysOverwritten} / 剔除冒领键：${keysPruned}`);
+  if (pruneReport.size > 0) {
+    console.log(`剔除明细（${pruneReport.size} 个条目）：`);
+    for (const [id, list] of pruneReport) for (const line of list) console.log(`  ${id} | ${line}`);
+  }
 
   if (opts.dryRun) {
     for (const p of planned.values()) {
       const keys = [...p.additions.keys()].join(", ");
-      console.log(`  [dry-run] ${p.entry.id}：+${p.additions.size} 键（${keys}）${p.skipped ? `；跳过 ${p.skipped} 个已存在键` : ""}${p.overwrote ? `；覆盖 ${p.overwrote} 个已存在键` : ""}`);
+      console.log(`  [dry-run] ${p.entry.id}：+${p.additions.size} 键（${keys}）${p.skipped ? `；跳过 ${p.skipped} 个已存在键` : ""}${p.overwrote ? `；覆盖 ${p.overwrote} 个已存在键` : ""}${p.pruned.size ? `；剔除 ${p.pruned.size} 个冒领键（${[...p.pruned].join(", ")}）` : ""}`);
     }
     console.log(`（dry-run，未写盘）`);
     return;

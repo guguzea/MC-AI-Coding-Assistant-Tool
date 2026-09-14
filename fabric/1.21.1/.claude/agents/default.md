@@ -164,7 +164,7 @@ fabric-mod/
 ### 命名规范
 
 - `id`：全小写；允许下划线与连字符（须与 fabric.mod.json 一致）
-- 注册名称：`Identifier(MOD_ID, "registry_name")`
+- 注册名称：`Identifier.of(MOD_ID, "registry_name")`（1.21+ Yarn 两参构造是 private，与本档 :192 的 `Identifier.of(MOD_ID, "clicks")` 及 `.cursor/skills/mc-registry.md:89-96` 一致）
 - 资源路径：`assets/{modid}/...` 全小写
 
 ### Minecraft 版本兼容性

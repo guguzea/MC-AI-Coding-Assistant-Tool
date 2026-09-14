@@ -24,14 +24,27 @@ export interface DownloadResult {
   bytes: number;
 }
 
+/**
+ * 流式下载的硬体积上限。Mojang 客户端 jar 是数百 MB 量级，正常件远到不了这里；
+ * 它只用来兜住「上游坏了 / 指到了别的东西」导致的一路写爆磁盘。
+ */
+const DEFAULT_MAX_DOWNLOAD_BYTES = 4 * 1024 * 1024 * 1024;
+
 /** 流式下载 + 可选哈希校验（下载超时 10min，可覆盖） */
 export async function downloadFile(
   url: string,
   dest: string,
-  opts: { expectedSha256?: string | null; expectedSha1?: string | null; label?: string; timeoutMs?: number } = {},
+  opts: {
+    expectedSha256?: string | null;
+    expectedSha1?: string | null;
+    label?: string;
+    timeoutMs?: number;
+    maxBytes?: number;
+  } = {},
 ): Promise<DownloadResult> {
   const label = opts.label ?? url;
   const timeoutMs = opts.timeoutMs ?? 600_000;
+  const maxBytes = opts.maxBytes ?? DEFAULT_MAX_DOWNLOAD_BYTES;
   const partPath = dest + ".part";
 
   // C34：网络错误 / 5xx / 429 做两次退避重试（哈希不匹配与 4xx 不重试）
@@ -51,6 +64,13 @@ export async function downloadFile(
         continue;
       }
       throw new DownloadError("DOWNLOAD_FAILED", lastErr);
+    }
+    const declared = Number(res.headers.get("content-length") ?? NaN);
+    if (Number.isFinite(declared) && declared > maxBytes) {
+      throw new DownloadError(
+        "DOWNLOAD_TOO_LARGE",
+        `${label}: Content-Length ${declared} 字节超过上限 maxBytes=${maxBytes}，已拒绝落盘`,
+      );
     }
     if (!res.ok || !res.body) {
       if ((res.status >= 500 || res.status === 429) && attempt < 2) {
@@ -79,6 +99,12 @@ export async function downloadFile(
         for await (const chunk of source) {
           const b = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
           bytes += b.length;
+          if (bytes > maxBytes) {
+            throw new DownloadError(
+              "DOWNLOAD_TOO_LARGE",
+              `${label}: 已下载 ${bytes} 字节超过上限 maxBytes=${maxBytes}`,
+            );
+          }
           sha256.update(b);
           sha1.update(b);
           yield b;

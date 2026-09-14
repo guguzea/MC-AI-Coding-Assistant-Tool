@@ -138,7 +138,7 @@ minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
 ### pack_format
 
-Forge 1.13.2 使用 `pack_format = 6`（在 pack.mcmeta 中）。
+Forge 1.13.2 使用 `pack_format = 4`（与同档 `pack.mcmeta:4` 一致；6 是 1.16.2+ 的号）。
 
 ---
 

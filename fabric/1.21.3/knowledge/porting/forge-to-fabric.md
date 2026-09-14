@@ -121,7 +121,7 @@ public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
 private static final Block MY_BLOCK = Registry.register(
     Registries.BLOCK,
     Identifier.of(MOD_ID, "my_block"),
-    new Block(FabricBlockSettings.copyOf(Blocks.STONE))
+    new Block(AbstractBlock.Settings.copy(Blocks.STONE))
 );
 ```
 
@@ -180,7 +180,7 @@ mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 | `PlayerEntity` | `PlayerEntity`（相同）|
 | `sendChatMessage()` | `sendMessage(Text)` |
 | `world.getBlockState(pos)` | `world.getBlockState(pos)`（相同）|
-| `BlockBehaviour.Properties` | `FabricBlockSettings` |
+| `BlockBehaviour.Properties` | `AbstractBlock.Settings`（Yarn 具名工厂 `create()` / `copy()` / `copyShallow()`；`FabricBlockSettings` 自 1.21.2 起已删） |
 | `CreativeModeTab` | `ItemGroup` |
 | `Items.DIAMOND_SWORD` | `Items.DIAMOND_SWORD`（相同）|
 

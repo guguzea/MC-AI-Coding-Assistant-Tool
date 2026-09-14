@@ -38,7 +38,7 @@ plugins {
 **正确配置：**
 ```groovy
 plugins {
-    id 'fabric-loom' version '1.4-SNAPSHOT'  // ✅ 1.20.x 推荐
+    id 'fabric-loom' version '1.6.12'  // ✅ 1.20.4（本档 scaffold 实值）
 }
 ```
 
@@ -56,7 +56,7 @@ dependencies {
 ```groovy
 dependencies {
     // ✅ Fabric API 使用 modApi（需要传递依赖给其他 mod）
-    modApi "net.fabricmc.fabric-api:fabric-api:0.91.0+1.20.4"
+    modApi "net.fabricmc.fabric-api:fabric-api:0.97.3+1.20.4"
     // ✅ 第三方 mod 使用 modImplementation
     modImplementation "com.example:third-party:1.0.0"
 }

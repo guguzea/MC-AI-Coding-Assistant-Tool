@@ -15,12 +15,12 @@ public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
             .waterColor(0x3f76e4)
             .waterFogColor(0x50533)
             .skyColor(0x78a9ff)
-            .grassColor(0x7ed957)
-            .foliageColor(0x60bd3f)
+            .grassColorOverride(0x7ed957)
+            .foliageColorOverride(0x60bd3f)
             .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE)
             .build())
         .generationSettings(...)
-        .mobSettings(...)
+        .mobSpawnSettings(...)
         .build()
 );
 ```

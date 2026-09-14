@@ -130,6 +130,15 @@ export const getWorkflowTemplateSchema = z.object({
     "mc-villager",
     "mc-multiblock",
     "mc-ai",
+    "mc-datapack-standalone",
+    "mc-resourcepack-standalone",
+    "mc-rendering",
+    "mc-profiling",
+    "mc-save-migration",
+    "mc-server-multiplayer-test",
+    "mc-combat-attribute",
+    "mc-multi-loader",
+    "mc-modpack",
   ]),
 });
 export const localizeModSchema = z.object({

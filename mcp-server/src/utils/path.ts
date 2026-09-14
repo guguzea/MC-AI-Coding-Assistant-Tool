@@ -138,7 +138,7 @@ export function resolveCommunityDir(...subpaths: string[]): string {
   const env = process.env.MC_SKILL_COMMUNITY;
   let base: string | null = null;
   if (env && existsSync(env)) {
-    base = env;
+    base = resolve(env);
   } else {
     const dataDir = resolveDataDir();
     const sibling = join(dirname(dataDir), "community_knowledge");

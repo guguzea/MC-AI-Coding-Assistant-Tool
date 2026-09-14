@@ -165,7 +165,7 @@ fabric-mod/
 ### 命名规范
 
 - `id`：全小写；允许下划线与连字符（须与 fabric.mod.json 一致）
-- 注册名称：`Identifier(MOD_ID, "registry_name")`
+- 注册名称：`Identifier.of(MOD_ID, "registry_name")`（1.21 的 `Identifier` 构造器是 private，不要写 `Identifier(...)` / `new Identifier(...)`；见 `.cursor/rules/01-registry.mdc:16`）
 - 资源路径：`assets/{modid}/...` 全小写
 
 ### Minecraft 版本兼容性
@@ -245,7 +245,7 @@ Integer n = entity.getAttached(CLICKS);
 - [Fabric Docs](https://github.com/FabricMC/fabric-docs) — GitHub 文档仓库
 - [Mixin](https://github.com/SpongePowered/Mixin) — 字节码注入框架
 - [Yarn](https://github.com/FabricMC/yarn) — 社区维护映射
-- [Parchment](https://parchmentmc.org/) — 叠加在 Mojmap 上的参数名 + Javadoc 数据；Fabric 侧要用 `loom.layered()`，不是 Yarn 的扩展
+- [Parchment](https://parchmentmc.org/) — 叠加在 Mojmap 上的参数名 + Javadoc 数据；Fabric 侧要用 `loom.layered { officialMojangMappings(); parchment("org.parchmentmc.data:parchment-1.21.3:<发布日期>@zip") }`，不是 Yarn 的扩展；Parchment maven（`https://maven.parchmentmc.org`）必须手动添加。本仓 `data/fabric_1.21.3/mappings/` 实钉的是 `parchment-1.21.3:2024.12.07`
 
 ## 配置（不落盘树级 mc-config）
 

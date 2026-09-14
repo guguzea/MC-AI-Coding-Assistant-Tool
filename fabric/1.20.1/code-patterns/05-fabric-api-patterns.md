@@ -35,13 +35,13 @@ public void onInitialize() {
 }
 ```
 
-## 模式 2：快捷键（fabric-keybindings-api-v1）
+## 模式 2：快捷键（fabric-key-binding-api-v1）
 
 ```yaml
 模式: Key Binding
 平台: Fabric
 分类: fabric-api
-依赖: [fabric-keybindings-api-v1]
+依赖: [fabric-key-binding-api-v1]
 扩展点: [ClientModInitializer]
 ---
 public class MyKeyBindings {

@@ -42,7 +42,7 @@ yarn_mappings=1.18.2+build.4
 loader_version=0.14.24
 fabric_api_version=0.77.0+1.18.2
 
-mod_id=examplemod          # 全部小写，禁止含 `-`
+mod_id=examplemod          # 全小写；Fabric 允许 `_` 与 `-`（官方示例 example-mod），Forge 系才禁止 `-`
 mod_name=Example Mod
 mod_version=1.0.0
 mod_group_id=com.example.examplemod   # Java 包名前缀
@@ -125,15 +125,19 @@ public void onInitialize() {
 // Registry.register() 在类加载时已执行，不需要再次调用
 ```
 
-### 禁止使用 `-` 作为 mod ID 的一部分
+### mod ID 里的 `-`：Fabric 允许，Forge 系禁止
 
 ```properties
-# ❌ 错误
+# ✅ Fabric / Quilt 允许连字符（官方示例即 example-mod）
 mod_id=example-mod
 
-# ✅ 正确
+# ✅ 也允许下划线
 mod_id=example_mod
+
+# ❌ 真正的禁令：mod_id 与 fabric.mod.json 的 "id"、MOD_ID 常量、资源路径不一致
 ```
+
+> 只有 Forge / NeoForge / LiteLoader / Rift / ModLoader 才禁止 `-`（那些平台须用 `_`）。本 scaffold 默认值写 `examplemod`（无分隔符），两种分隔符在 Fabric 下都合法；改 `mod_id` 后必须同步 `fabric.mod.json` 的 `id`、`ExampleMod.java` 的 `MOD_ID` 与所有 `Identifier` 注册名（见同档 `AGENTS.md:167`、`.cursor/rules/00-project-setup.mdc:197`）。
 
 ### 禁止在服务端引用客户端类
 
@@ -221,4 +225,4 @@ public class ExampleModClient implements ClientModInitializer {
 
 > **AI 注意**：`fabric.mod.json` 中的 `${mod_id}` 会在 Gradle 构建时替换为 `gradle.properties` 中的值。不要手动修改 `fabric.mod.json` 中的 `id`，修改 `gradle.properties` 即可。
 
-> **1.18.x vs 1.18.x 差异**：1.18.2 的 `fabric.mod.json` **没有** `environment` 字段，该字段从 1.19+ 开始支持。
+> **`fabric.mod.json` 的 `environment` 字段**：Fabric 侧 `environment` 自 schemaVersion 1 起即支持（同档 `AGENTS.md:80`），本 scaffold 未写该字段 = 省略声明，不是「1.19+ 才有」。旧稿「1.18.x vs 1.18.x 差异 / 该字段从 1.19+ 开始支持」为误记，已改。

@@ -13,16 +13,16 @@ mappings: parchment
 
 ```java
 // 注册 BlockEntityType（用 DeferredRegister）
-public static final DeferredRegister<BlockEntityType<?>> BLOCKENTITIES =
-    DeferredRegister.create(ForgeRegistries.BLOCKENTITIES, MOD_ID);
+public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
+    DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MOD_ID);
 
 public static final RegistryObject<BlockEntityType<MyBE>> MY_BE =
-    BLOCKENTITIES.register("mybe",
+    BLOCK_ENTITIES.register("mybe",
         () -> BlockEntityType.Builder.of(MyBE::new, validBlocks).build(null)
     );
 
 // 在 mod 构造函数中
-BLOCKENTITIES.register(modEventBus);
+BLOCK_ENTITIES.register(modEventBus);
 ```
 
 `validBlocks` 是持有此 BlockEntity 的 Block 实例集合。

@@ -560,9 +560,8 @@ function copySemanticTree(fromRoot, toRoot, fromVersion, toVersion) {
 }
 
 function timedStatus(root) {
-  const t0 = Date.now();
   const st = getSemanticIndexStatus(root);
-  return { ms: Date.now() - t0, st };
+  return { st };
 }
 
 test("A-38 dbOpens <= 8 且与语义库个数无关（60 → 120 棵树）", () => {

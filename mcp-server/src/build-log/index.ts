@@ -53,7 +53,7 @@ export interface AnalyzeBuildLogResult {
 const LOG_MAX = 2 * 1024 * 1024;
 const LOG_HEAD_RATIO = 0.25;
 
-interface LogClamp {
+export interface LogClamp {
   text: string;
   truncated: boolean;
   totalBytes: number;
@@ -66,7 +66,7 @@ interface LogClamp {
  * 留头部一小段 + 尾部一大段：Gradle 的真正异常与 BUILD FAILED 在末尾，javac 的 error 段
  * 在任意位置；只留头部等于「看不到失败原因」，还可能报出 0 issues 让人以为日志是干净的。
  */
-function clampLogBytes(text: string): LogClamp {
+export function clampLogBytes(text: string): LogClamp {
   const buf = Buffer.from(text, "utf8");
   const totalBytes = buf.length;
   if (totalBytes <= LOG_MAX) {

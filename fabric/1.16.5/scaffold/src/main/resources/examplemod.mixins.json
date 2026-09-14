@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "${maven_group}.${mod_id}.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_8",
   "client": ["client.ExampleMixin"],
   "server": [],
   "mixins": ["ExampleMixin"]

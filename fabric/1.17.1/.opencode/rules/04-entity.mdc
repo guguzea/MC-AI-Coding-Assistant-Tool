@@ -79,7 +79,8 @@ public void onInitialize() {
         MY_PIG,
         SpawnRestriction.Location.ON_GROUND,
         Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-        AnimalEntity::canSpawn
+        // 本档映射库：AnimalEntity 名下没有 canSpawn；public 静态谓词是 isValidNaturalSpawn
+        AnimalEntity::isValidNaturalSpawn
     );
 }
 ```

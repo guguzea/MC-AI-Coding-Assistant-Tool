@@ -2,7 +2,7 @@
 id: authored/lib-moonlight
 title: Moonlight Lib（原 Selene）集成要点
 tags: [moonlight, selene, dynamic-registration, blockset, villager, fluid, forge, fabric, neoforge]
-summary: MehVahdJukaar 的动态注册/资源库（3690 万下载，CF 2.33 亿，F/Forge/Neo 1.16.5-1.21.1）。动态注册、BlockSetAPI、村民 AI、流体系统；⚠️ 版本上限 1.21.1，26.x 无构建。Supplementaries/Sawmill 依赖。
+summary: MehVahdJukaar 的动态注册/资源库（3690 万下载，CF 2.33 亿，release 窗口 1.16.5-1.21.1）。动态注册、BlockSetAPI、村民 AI、流体系统；⚠️ release 上限 1.21.1（Forge 线止 1.20.1）；26.x 并非无构建，但 26.1.2 只有 4.0.x beta（预发布，非 release）。Supplementaries/Sawmill 依赖。
 mcHint: 1.16.5-1.21.1
 minecraftVersions: "1.16.5-1.21.1"
 sourceKind: authored
@@ -12,6 +12,9 @@ modrinthSlug: moonlight
 role: api
 skillId: mc-moonlight-lib
 ---
+
+> 数据读取日期：2026-09-14（源：Modrinth project/moonlight limit=100：release 上界 1.21.1（1.21.1-3.6.4，2026-09-10，fabric+neoforge），Forge 线 release 止 1.20.1（1.20-2.16.35，2026-09-07）；26.1.2 只有 4.0.x **beta**（4.0.2，2026-09-07）＝预发布，不是 release）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/moonlight/version?limit=100" 后按 game_versions + loaders + version_type 重取上界（本轮 limit=100 覆盖不到低界时改定向 game_versions 查询）
 
 # Moonlight Lib（原 Selene）集成要点
 
@@ -30,7 +33,7 @@ Supplementaries、Sawmill 等模组依赖它，生态成熟。
 
 不用（重要）：
 
-- **目标版本 1.21.4+ / 26.x → 不要用。** Moonlight 停在 1.21.1，没有 26.x 构建（全览报告 §二.3 版本列明确为 1.16.5-1.21.1）。新版需求要么自研，要么等作者更新
+- **目标版本 1.21.4+ / 26.x → 不要用。** Moonlight 的 **release** 停在 1.21.1；但「26.x 无构建」不成立——Modrinth 实测 `26.1.2-4.0.0 / 4.0.1 / 4.0.2`（**beta**，2026-09-07，Fabric + NeoForge 两路，**无 Forge**）（全览报告 §二.3 版本列明确为 1.16.5-1.21.1）。新版需求要么自研，要么等作者更新
 - 只需要零散的方块族变体 → 原版/自己写变体注册可能更轻
 - 只想要通用跨平台抽象 → Architectury / Balm 定位不同
 
@@ -38,7 +41,7 @@ Supplementaries、Sawmill 等模组依赖它，生态成熟。
 
 ```
 Decision: 要不要用 Moonlight Lib
-→ 目标版本 > 1.21.1（如 1.21.4 / 26.x）→ 不用（无构建），自研或换方案
+→ 目标版本 > 1.21.1（如 1.21.4 / 1.21.11）→ release 无构建，自研或换方案；26.1.2 只有 4.0.x beta（Fabric+Neo，无 Forge），未接受预发布时按未核实处理
 → 目标 ≤ 1.21.1 且需要 动态注册/BlockSet/村民 AI/流体 中 ≥1 项 → Moonlight
 → 只要注册抽象，不需要上述能力 → Architectury（lib-architectury）或 Balm（lib-balm）
 → 已选 Moonlight：
@@ -70,7 +73,7 @@ Decision: 要不要用 Moonlight Lib
 
 ## 常见坑
 
-- **在 1.21.4+ / 26.x 项目里声明 moonlight 依赖** → 找不到构建或启动崩溃，这是最常见的坑
+- **在 1.21.4+ / 26.x 项目里声明 moonlight 依赖** → release 渠道找不到构建或启动崩溃，这是最常见的坑（例外：26.1.2 有 4.0.x **beta**，Fabric+NeoForge 两路、无 Forge；用户没明确接受预发布就按无构建处理）
 - 用了 BlockSet 却没给变体补掉落物/合成 → 方块获取不到
 - 把村民 AI 逻辑写进客户端类 → 专用服异常
 - 只 `compileOnly` 却硬依赖 → 未装 Moonlight 时 `NoClassDefFoundError`

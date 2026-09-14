@@ -9,5 +9,5 @@ description: 05 — Quilt 事件差异
 - QSL 生命周期/注册事件 ≠ `net.fabricmc.fabric.api.event.lifecycle`
 - **禁止** `QuiltRegistry.register()`；不要把 FAPI Registry 事件当 QSL
 - **禁止**把 `quilt/1.21.1/knowledge/common/qsl-verified.md` 的 `getEntryAddEvent` / `startingServer` 等 1.21 源码名抄进本档（本档未打开对应 QSL 源码）
-- 不清楚方法名 → `search_docs({platform:"quilt"})`；无独立树时 QSL 查询会 `PLATFORM_DATA_MISSING`，**不会**回退 Fabric Registry 页
+- 不清楚方法名 → `search_docs({platform:"quilt", version:"1.19.4"})`；实测本版 `ok:true` + `fallback:null` + `resolvedVersion:"1.19.4"` + `semantic:true` + `total:4`（命中本版 QSL 语料，本档无跨平台回退）。**quilt 检索不存在 `PLATFORM_DATA_MISSING` 路径**：本仓完全无语料的空洞档（如 1.21.2）返回 `ok:false` + `VERSION_NOT_FOUND` + `fallback:null`（载荷无 `total`），有树但本版缺 quilt-docs 页的档位则返回 `fallback:"quilt"`（同线语料）或 `fallback:"fabric"` + `sourcePlatform:"fabric"`（同版 Fabric 正文）⇒ 三条路径不得混写成一句「不回退」禁令。QSL 方法名一律 `query_loader_api`（先 `ingest_loader_api`）
 - 通用 Mixin / 数据包问题可回退 Fabric 文档（已过滤 FAPI 专属类）

@@ -7,6 +7,11 @@ communityDocId: authored/lib-player-ability-lib
 mappings: hint
 ---
 
+> API 摘要状态（2026-09-14 实核）：有 ⇒ `mcp-server/data/lib-api-summaries/pal.json` 存在，catalog `authored/lib-player-ability-lib` 的 `verifiedApi` 非空（最低 1.20/fabric）⇒ 「本库无摘要」的说法不成立；落到类名仍走 `query_loader_api` 或自备 jar 核实
+
+> 数据读取日期：2026-09-14（源：Modrinth project/pal 版本表 limit=100；本轮 release 上界 fabric=26.1 / quilt=26.1）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/pal/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # PlayerAbilityLib（Fabric/Quilt）
 
 Ladysnake 玩家能力库（42 万下载，F/Quilt 服务端，1.20-26.1）：给玩家注册飞行、缩放等"能力型"状态，并带兼容修正，可与同类模组共存不打架。服务端注册能力、客户端经网络/属性同步表现。**Forge/NeoForge 不可用**（Ladysnake 系无 Forge 构建）。

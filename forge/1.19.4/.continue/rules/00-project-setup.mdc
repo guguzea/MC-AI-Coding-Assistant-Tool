@@ -242,7 +242,7 @@ license = "MIT"               # 可选，许可证
 [[dependencies.examplemod]]
 modId = "forge"               # 必需
 mandatory = true              # 必需
-versionRange = "[43,)"        # 必需：Forge 版本范围
+versionRange = "[45,)"        # 必需：Forge 版本范围（证据：scaffold/gradle.properties:10 forge_version_range=[45,)）
 ordering = "NONE"             # 可选：NONE / BEFORE / AFTER
 side = "BOTH"                # 可选：BOTH / CLIENT / SERVER
 
@@ -257,4 +257,4 @@ side = "BOTH"
 - `modId` 禁止包含 `-`，必须全小写
 - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
 - `[[dependencies.xxx]]` 的 `modId` 必须与外层 `modId` 一致
-- `loaderVersion` 的格式：`"[45,)"` 表示 Forge 45 及以上
+- `loaderVersion` 的格式：`"[45,)"` 表示 Forge / FML 45 及以上（本档实值证据：`scaffold/gradle.properties:11` `loader_version_range=[45,)`，同文件 `:10` `forge_version_range=[45,)`）

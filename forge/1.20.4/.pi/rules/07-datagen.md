@@ -73,7 +73,7 @@ public class DataGenerators {
 ### LootTableProvider 使用规范
 
 - 使用 `BlockLootSubProvider` 子类管理方块掉落表
-- `LootPool.Builder` 添加掉落池，`ItemLootEntry` 添加物品掉落
+- `LootPool.Builder` 添加掉落池，`LootItem.lootTableItem(...)` 添加物品掉落
 - `LootItemFunction` 应用修饰器（如 `setCount`、`explosionDecay`）
 
 ---
@@ -94,11 +94,11 @@ IF 生成战利品表
   → 放到 data/{modid}/loot_tables/blocks/
 
 IF 生成方块标签（哪些方块可被某工具挖掘）
-  → 使用 TagProvider.Block
+  → 使用 BlockTagsProvider（net.minecraftforge.common.data；语料 datagen_server_tags.md:15）
   → 放到 data/{modid}/tags/blocks/
 
 IF 生成物品标签
-  → 使用 TagProvider.Item
+  → 使用 ItemTagsProvider（net.minecraftforge.common.data；语料 datagen_server_tags.md:72）
   → 放到 data/{modid}/tags/items/
 
 IF 生成进度/ advancements
@@ -242,7 +242,7 @@ public class ModBlockLootSubProvider extends BlockLootSubProvider {
     }
 
     @Override
-    protected void addTables() {
+    public void generate() {
         // 简单掉落：破坏方块后掉落该方块物品
         dropSelf(ModBlocks.MY_BLOCK.get());
 
@@ -250,10 +250,10 @@ public class ModBlockLootSubProvider extends BlockLootSubProvider {
         this.add(ModBlocks.SPECIAL_BLOCK.get(),
             LootTable.lootTable()
                 .withPool(LootPool.lootPool()
-                    .add(ItemLootEntry.lootItem(ModItems.SPECIAL_DROP.get())
+                    .add(LootItem.lootTableItem(ModItems.SPECIAL_DROP.get())
                         .apply(SetItemCountFunction.setCount(
                             UniformGenerator.between(1, 3)))
-                        .apply(ExplosionDecay.explosionDecay())
+                        .apply(ApplyExplosionDecay.explosionDecay())
                     )
                 )
         );

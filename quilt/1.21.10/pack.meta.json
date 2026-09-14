@@ -5,7 +5,7 @@
   "minecraftVersion": "1.21.10",
   "overlay": "fabric/1.21.10",
   "gaps": {
-    "quilt-docs": "本版无任何已发布 QSL/QFAPI 构件（见本档 01-registry / 05-events 顶部声明），data/quilt_1.21.10/ 无离线文档树；search_docs(platform=quilt) 对 QSL 查询返回 PLATFORM_DATA_MISSING（不回退 Fabric），非 QSL 查询回退同版 Fabric。属上游真实状态，非漏抓，禁止补抓或克隆邻版"
+    "quilt-docs": "data/quilt_1.21.10/ 无 quilt-docs 语料树（本仓库缺档，非漏抓，禁止补抓或克隆邻版树；本版无已发布 QSL/QFAPI 构件之说属上游断言、本仓未联网复核，不得写成上游没有该 API）。实测两态（2026-09-13 逐档实跑：MC_SKILL_DATA=data node mcp-server/dist/cli.js search_docs --platform=quilt --version=1.21.10 --query=…）：① query=QSL registry key → ok:true + fallback:quilt + resolvedVersion:1.21.11 + semantic:true + total:3（同线已建档语料，不是本版专属正文；载荷无 source_version 键，该串只出现在 warning 文本内）；② query=registry → ok:true + fallback:fabric + sourcePlatform:fabric + resolvedVersion:1.21.10 + semantic:true + total:15（命中同版 Fabric 正文，不能当 QSL 证据）。两条路径均不返回 PLATFORM_DATA_MISSING，也不返回 VERSION_NOT_FOUND（后者只属于本仓完全无语料的空洞档，如 1.21.2：ok:false + fallback:null 且载荷无 total）。QSL 签名一律 query_loader_api（先 ingest_loader_api）"
   },
   "scaffold": {
     "mode": "reference",

@@ -27,7 +27,7 @@ AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> Acti
 
 // 右键方块 / 使用物品
 UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> ActionResult.PASS);
-UseItemCallback.EVENT.register((player, world, hand) -> TypedActionResult.pass(player.getStackInHand(hand)));
+UseItemCallback.EVENT.register((player, world, hand) -> ActionResult.PASS);
 
 // 破坏：BEFORE 返回 boolean（false 取消）
 PlayerBlockBreakEvents.BEFORE.register((world, player, pos, state, blockEntity) -> true);

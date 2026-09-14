@@ -51,7 +51,7 @@ public BlockState getStateForPlacement(PlayerEntity player, Hand hand,
 public void neighborChanged(BlockState state, World world, BlockPos pos,
         Block block, BlockPos fromPos, boolean isMoving) {
     super.neighborChanged(state, world, pos, block, fromPos, isMoving);
-    if (!world.isRemote) {
+    if (!world.isClientSide) {
         boolean powered = world.isBlockPowered(pos);
         if (powered != state.get(POWERED)) {
             world.setBlockState(pos, state.with(POWERED, powered), 2);

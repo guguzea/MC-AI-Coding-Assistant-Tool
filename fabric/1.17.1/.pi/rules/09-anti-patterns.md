@@ -129,7 +129,7 @@ player.sendChatMessage("hello");
 
 // ✅ 正确：使用 Yarn 映射
 ServerPlayerEntity player;  // Yarn 风格（Fabric）
-player.sendMessage(Text.literal("hello"));
+player.sendMessage(new LiteralText("hello"));
 ```
 
 ### ❌ 误解 class_XXXXX 命名

@@ -6,6 +6,9 @@ mcVersions: ["1.13.2-1.21.5"]
 communityDocId: authored/lib-caelus
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/caelus 版本表 limit=100；本轮 release 上界 fabric=近100内无 / forge=1.21.1 / neoforge=1.21.5）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/caelus/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Caelus API 鞘翅飞行抽象（操作指引）
 
 给 AI 的操作指引：需要把「鞘翅飞行能力」从「鞘翅这件物品」中解耦、抽象成实体属性时，用 Caelus。详细信息用 `search_community_docs` 查 `authored/lib-caelus`，API 细节以 [官方仓库](https://github.com/TheIllusiveC4/Caelus) 当前 README 为准。

@@ -16,10 +16,16 @@ Fabric 主要使用 **REI（Roughly Enough Items）** 作为物品管理器。JE
 ## 添加 REI 依赖
 
 ```groovy
+repositories {
+    maven { url "https://maven.shedaniel.me/" }   // REI 的 maven 坐标在这个仓库
+}
+
 dependencies {
-    modImplementation "com.github.shedaniel:RoughlyEnoughItems:16.0.762+1.21"
+    modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:21.11.816"
 }
 ```
+
+> **坐标复核（读取日期 2026-09-13）**：原写 `com.github.shedaniel:RoughlyEnoughItems:16.0.762+1.21` —— 组名是 jitpack 形状、版本号属 1.21 档，与本档 MC 1.21.11 不匹配。现值：`curl -sS -o /dev/null -w '%{http_code}' https://maven.shedaniel.me/me/shedaniel/RoughlyEnoughItems-fabric/21.11.816/RoughlyEnoughItems-fabric-21.11.816.pom` → **200**；Modrinth `project/rei/version?game_versions=["1.21.11"]` 首条即 `21.11.816+fabric`。再次复核：`curl -sS "https://api.modrinth.com/v2/project/rei/version?limit=400"`。
 
 ## 创建 REI 插件
 
@@ -33,6 +39,8 @@ public class MyModPlugin implements REIPluginClient {
 }
 ```
 
+> **未核实**：`REIPluginClient` / `registerEntries(RegisterClientPluginsEvent)` 这组签名本轮未对上游 javadoc 复核（REI 的 API 站未取到；yarn 映射只覆盖原版类，帮不上）。本代理只改了坐标，**没有**据此改名；落地前请按 REI 官方文档复核插件接口与入口点键名。
+
 ```json
 // fabric.mod.json
 {
@@ -40,7 +48,7 @@ public class MyModPlugin implements REIPluginClient {
     "rei_client": ["com.example.examplemod.MyModPlugin"]
   },
   "depends": {
-    "roughlyenoughitems": ">=16.0.762"
+    "roughlyenoughitems": ">=21.11.816"
   }
 }
 ```

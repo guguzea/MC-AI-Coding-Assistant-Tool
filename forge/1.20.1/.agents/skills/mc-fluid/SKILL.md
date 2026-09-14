@@ -88,7 +88,7 @@ public static final RegistryObject<LiquidBlock> MY_FLUID_BLOCK =
 ### 6. 注册桶物品
 
 ```java
-public static final RegistryObject<BUCKET_ITEM> MY_BUCKET =
+public static final RegistryObject<Item> MY_BUCKET =
     ITEMS.register("my_fluid_bucket",
         () -> new BucketItem(MY_FLUID_SOURCE.get(),
             new Item.Properties()

@@ -33,7 +33,7 @@ public class ExampleMod {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     // DeferredRegister — 持有某类对象的延迟注册器
-    // 所有注册通过 modEventBus 延迟到正确的 RegistryEvent 时机执行
+    // 所有注册通过 modEventBus 延迟到正确的 RegisterEvent 时机执行（RegisterEvent 只派发于 Mod 总线）
     // 泛型参数可选，但显式写明可提升 IDE 代码补全体验
     public static final DeferredRegister<Block> BLOCKS =
         DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
@@ -81,7 +81,7 @@ public class ExampleMod {
         IEventBus modEventBus = context.getModEventBus();
 
         // 将 DeferredRegister 注册到 modEventBus
-        // DeferredRegister 内部会在正确的 RegistryEvent 时机执行注册逻辑
+        // DeferredRegister 内部会在正确的 RegisterEvent 时机执行注册逻辑
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
 

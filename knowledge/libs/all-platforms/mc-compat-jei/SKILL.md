@@ -7,6 +7,9 @@ communityDocId: authored/library-integration-jei-emi
 mappings: hint
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/jei 版本表 limit=100；本轮 release 上界 fabric=近100内无 / forge=近100内无 / neoforge=近100内无 ⇒ 本文件 mcVersions 上界 26.2 高于 release 上界，仅 beta/alpha 支撑）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/jei/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # JEI / EMI / REI 配方查看器集成
 
 三库都是软依赖（装了才显示配方界面），Fabric / Forge / NeoForge 均有构建。版本与注册 API 以各自官方仓库为准，不写死签名。

@@ -30,6 +30,8 @@ new Item.Properties()
 
 > **注意**：`Item.Properties` 在 Forge 1.19.4 中**没有 `tab()` 方法**。物品的创造模式标签通过 `CreativeModeTabEvent.BuildContents` 单独注册，不要写在 Properties 里。
 
+- ❌ `Item.Properties#tab(...)` —— 证据：本档 api-index 的 `Item$Properties` 无 `tab`（`tab(Lnet/minecraft/world/item/CreativeModeTab;)` 只在 1.16.5–1.18.2 是 METHOD）；正解见语料 `items.md:28-41`（`CreativeModeTabEvent$BuildContents`）。
+
 ### ItemTier（工具材料）规范
 
 ```java

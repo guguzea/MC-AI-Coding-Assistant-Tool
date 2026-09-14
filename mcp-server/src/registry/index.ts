@@ -20,6 +20,8 @@ export interface QueryRegistryResult {
   relatedTools: string[];
   notes: string[];
   action?: ReturnType<typeof actionable>;
+  /** 查询串像 Java 类/成员名（`registry` 工具仍按 registry id 匹配了一次）。 */
+  looksLikeJavaIdentifier?: boolean;
 }
 
 function looksLikeJavaIdentifier(q: string): boolean {
@@ -89,26 +91,29 @@ export function queryRegistry(input: QueryRegistryInput): QueryRegistryResult {
 
   if (looksLikeJavaIdentifier(query)) {
     const matches = searchRegistryEntries(version, input.registry, query, input.limit ?? 25);
-    return withAction(
-      {
-        found: matches.length > 0,
-        matches,
-        nameLayer: "registry_id",
-        version,
-        relatedTools,
-        notes,
-      },
-      actionable(
-        ActionCodes.INVALID_INPUT,
-        "查询看起来像 Java 类/成员名，而非 registry id",
-        [
-          "注册表查询请使用 minecraft:stone 等形式",
-          "类/方法映射请改用 convert_mapping",
-          "API 签名请改用 query_api",
-        ],
-        relatedTools,
-      ),
+    const hint = actionable(
+      ActionCodes.INVALID_INPUT,
+      "查询看起来像 Java 类/成员名，而非 registry id",
+      [
+        "注册表查询请使用 minecraft:stone 等形式",
+        "类/方法映射请改用 convert_mapping",
+        "API 签名请改用 query_api",
+      ],
+      relatedTools,
     );
+    const payload: QueryRegistryResult = {
+      found: matches.length > 0,
+      matches,
+      nameLayer: "registry_id",
+      version,
+      relatedTools,
+      notes,
+    };
+    // 命中了就是一次正常查询：带内 INVALID_INPUT 与 found:true 互相矛盾，只会让消费方误判失败。
+    if (matches.length > 0) {
+      return { ...payload, looksLikeJavaIdentifier: true };
+    }
+    return withAction(payload, hint);
   }
 
   const matches = searchRegistryEntries(version, input.registry, query, input.limit ?? 25);

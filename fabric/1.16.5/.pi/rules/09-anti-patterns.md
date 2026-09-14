@@ -118,7 +118,7 @@ player.sendChatMessage("hello");
 
 // ✅ 正确：使用 Yarn 映射
 ServerPlayerEntity player;  // Yarn 风格（Fabric）
-player.sendMessage(Text.literal("hello"));
+player.sendMessage(new LiteralText("hello"));
 ```
 
 ### ❌ 误解 class_XXXXX 命名
@@ -206,12 +206,12 @@ MyClass.class_12345 obj = new MyClass.class_12345();  // 错误！
 ```groovy
 // ❌ 错误：依赖传递性混淆
 dependencies {
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.16.x+build.4-1.16.5")  // 不传递依赖
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.42.0+1.16")  // 不传递依赖
 }
 
 # ✅ 正确：API 需要传递，实现不需要
 dependencies {
-    modApi("net.fabricmc.fabric-api:fabric-api:0.16.x+build.4-1.16.5")  // 传递依赖
+    modApi("net.fabricmc.fabric-api:fabric-api:0.42.0+1.16")  // 传递依赖
     modImplementation("com.example:third-party-mod:1.0.0")  // 不传递
 }
 ```

@@ -10,7 +10,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
-import { spawnSync } from "child_process";
 import os from "os";
 import { emit, scratchMkdirAll, scratchRemove, scratchWriteText } from "./_lib/write-guard.mjs";
 import { redactAbs } from "./_lib/redact-abs.mjs";
@@ -23,13 +22,28 @@ const UA = { "User-Agent": "MC-AI-Coding-Assistant-Tool" };
 const NOTE =
   "许可证允许引用签名；源码不入库。禁止编 QuiltRegistry.register()。quilt-template-mod 打开到的是 org.quiltmc:qsl 与 QFAPI bundle，不是 fat quilt-standard-libraries 坐标。";
 
-/** 只映射本仓库已有 Quilt 档；branch 必须是 QSL 上真实存在的 ref，禁止借邻版。 */
+/**
+ * 只映射本仓库已有 Quilt 档；ref 必须是 QSL 上真实存在的 ref，禁止借邻版。
+ * 实测（GitHub API，2026-09-13，本表逐条对过）：
+ *   branches = 1.17 / 1.17.1 / 1.18 / 1.19 / 1.19.3 / 1.19.4 / 1.20 / 1.20.2 / 1.20.3 / 1.20.6 / 1.21 / 1.21.5
+ *   tags：带 +1.18.2 的 23 个（最新 v1.1.0-beta.26+1.18.2）、+1.19.4 的 14 个、+1.20.1 的 7 个（最新 v6.1.2+1.20.1）；
+ *         带 +1.20.4 与 +1.21.1 的 **各 0 个**。
+ * 原先 1.20.1 / 1.18.2 写的分支名根本不存在（commit API 回 422），而**精确同名 tag 存在**
+ * ⇒ 这两档改走 tag（证据强度高于邻版分支）。1.21.1 无 tag，只能走同线 branch 1.21，
+ * 摘要里的 branch 字段就是它的披露。
+ */
 const TARGETS = [
   { key: "1.21.1-qsl", version: "1.21.1", branch: "1.21" },
+  // 待裁：QSL 既无 +1.20.4 tag 也无 1.20.4 分支，同线只有 1.20 / 1.20.2 / 1.20.3；
+  // 拿邻线分支补本档属「借邻版」，未经用户裁定前保持 NOT_FOUND（脚本按行拒绝，不静默凑数）。
   { key: "1.20.4-qsl", version: "1.20.4", branch: "1.20.4" },
-  { key: "1.20.1-qsl", version: "1.20.1", branch: "1.20.1" },
+  { key: "1.20.1-qsl", version: "1.20.1", branch: "v6.1.2+1.20.1" },
+  // 实测（GitHub API）：分支 1.19.4 的 tip、tag v5.0.0-beta.11+1.19.4、tag v6.1.2+1.20.1
+  // 三者同为 commit ff5d1124（2023-10-01）⇒ 1.19.4 与 1.20.1 两份摘要同源。
+  // 这是上游自己的状态（QSL 把 1.19.4 分支停在 1.20.1 发布线上），不是本仓贴错标签；
+  // 用户裁定：TARGETS 保持分支名原样，不往前另取 commit。同源事实由 branch/ref 字段自证。
   { key: "1.19.4-qsl", version: "1.19.4", branch: "1.19.4" },
-  { key: "1.18.2-qsl", version: "1.18.2", branch: "1.18.2" },
+  { key: "1.18.2-qsl", version: "1.18.2", branch: "v1.1.0-beta.26+1.18.2" },
 ];
 
 function walkJava(dir, acc = []) {
@@ -105,7 +119,7 @@ async function resolveCommit(branch) {
   return last;
 }
 
-async function extractOne(target, extractCompilationUnit, repoSafeSourcePath, dedupeLoaderClasses) {
+async function extractOne(target, extractCompilationUnit, repoSafeSourcePath, dedupeLoaderClasses, zipTool) {
   const commit = await resolveCommit(target.branch);
   if (!commit.ok) {
     const cls = commit.failureClass || "UNKNOWN";
@@ -137,16 +151,33 @@ async function extractOne(target, extractCompilationUnit, repoSafeSourcePath, de
   const unpack = join(work, "unpacked");
   scratchRemove(unpack);
   scratchMkdirAll(unpack);
-  const tar = spawnSync("tar", ["-xf", got.path, "-C", unpack], { windowsHide: true, encoding: "utf8" });
+  // 解压器由 main 统一实测后传进来（unzip / 7z / bsdtar 按「能不能读 zip」选，不看 PATH 顺序）：
+  // 原先这里硬编码 spawnSync("tar")，在 GNU tar 抢先得 PATH 的机器上会把「C:\\…」当 host:path，
+  // 于是每个目标都只留下一句「zip 解压失败」，QSL 面永远补不齐。
   try {
-    scratchRemove(got.path);
-  } catch {
-    /* ignore */
+    zipTool.extract(got.path, unpack);
+  } catch (e) {
+    return {
+      key: target.key,
+      failureClass: "EXTRACT_FAILED",
+      skipped: `zip 解压失败（${zipTool.kind}）：${String(e?.message ?? e).slice(0, 160)}`,
+    };
+  } finally {
+    try {
+      scratchRemove(got.path);
+    } catch {
+      /* ignore */
+    }
   }
-  if (tar.status !== 0) {
-    return { key: target.key, skipped: "zip 解压失败", detail: tar.stderr || tar.stdout };
+  const javaFiles = walkJava(zipTool.root(unpack)).filter((f) => keepMainJava(f.replace(/\\/g, "/")));
+  // 解压"成功"但什么都没出来 = 与失败同罪；落成 classCount:0 的摘要会让查询侧 found:true 而零方法
+  if (javaFiles.length === 0) {
+    return {
+      key: target.key,
+      failureClass: "EMPTY_EXTRACT",
+      skipped: `解压成功但 0 个 main/java（${zipTool.kind}）⇒ 不落空摘要`,
+    };
   }
-  const javaFiles = walkJava(unpack).filter((f) => keepMainJava(f.replace(/\\/g, "/")));
   const classes = [];
   const parseErrors = [];
   for (const jf of javaFiles) {
@@ -202,17 +233,32 @@ async function extractOne(target, extractCompilationUnit, repoSafeSourcePath, de
 async function main() {
   const distExtract = join(ROOT, "mcp-server", "dist", "loader-api", "extract.js");
   const distStore = join(ROOT, "mcp-server", "dist", "loader-api", "store.js");
-  if (!existsSync(distExtract) || !existsSync(distStore)) {
+  const distMdk = join(ROOT, "mcp-server", "dist", "mdk", "index.js");
+  if (!existsSync(distExtract) || !existsSync(distStore) || !existsSync(distMdk)) {
     console.error("need mcp-server dist: cd mcp-server && npm run build");
     process.exit(1);
   }
   const { extractCompilationUnit, repoSafeSourcePath } = await import(pathToFileURL(distExtract).href);
   const { dedupeLoaderClasses } = await import(pathToFileURL(distStore).href);
+  const mdk = await import(pathToFileURL(distMdk).href);
+  const found = mdk.probeUnzipTool();
+  if (!found) {
+    console.error(
+      "没有实测可读 zip 的解压器（unzip / 7z / bsdtar 都不行）⇒ 拒绝退回 GNU tar，直接停。",
+    );
+    process.exit(1);
+  }
+  const zipTool = {
+    kind: found.kind,
+    extract: (zipPath, destDir) => mdk.extractZip(zipPath, destDir, found),
+    root: (extractDir) => mdk.resolveUnpackedRoot(extractDir),
+  };
+  console.log(`解压器：${zipTool.kind}`);
   scratchMkdirAll(join(CACHE, "loader-api-summaries"));
   const log = [];
   for (const t of TARGETS) {
     try {
-      const row = await extractOne(t, extractCompilationUnit, repoSafeSourcePath, dedupeLoaderClasses);
+      const row = await extractOne(t, extractCompilationUnit, repoSafeSourcePath, dedupeLoaderClasses, zipTool);
       log.push(row);
       console.log(JSON.stringify(row));
     } catch (e) {

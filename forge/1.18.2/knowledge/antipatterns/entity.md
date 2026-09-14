@@ -102,5 +102,5 @@ public void onLoad() {
 // ✅ 1.18.2 字段名
 ForgeRegistries.ENTITYTYPES
 ForgeRegistries.ATTRIBUTES
-ForgeRegistries.BLOCKENTITIES
+ForgeRegistries.BLOCK_ENTITIES
 ```

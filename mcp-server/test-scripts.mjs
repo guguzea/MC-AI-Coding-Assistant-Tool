@@ -1347,11 +1347,11 @@ public class ForeignHelper {
   assert.equal(runs.realRoot.status, 0, `G1 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
   assert.match(
     runs.realRoot.stdout,
-    /冒领 0（全在存量台账内）[\s\S]*已证实包根 42[\s\S]*台账 checked/,
+    /冒领 0（台账已清空）[\s\S]*已证实包根 42[\s\S]*台账 checked/,
     `真根台账层没跑（S5 重建后冒领应已归零）：\n${runs.realRoot.stdout}`,
   );
   console.log(
-    "  §S4 G1 归属门: 干净假根=0 / 真根=0（S5 重建后 冒领 0 · unknown-mod 0 · catalog 余 8 行 KfF 登记在台账）；" +
+    "  §S4 G1 归属门: 干净假根=0 / 真根=0（S5 重建后 冒领 0 · unknown-mod 0 · catalog 台账已清空 —— KfF 末 8 行由 merge-verified-api writer 侧剔除，非取件救回）；" +
       "投毒 新文件冒领·既有文件再冒领·连不上条目·unknown-mod·共用目录·writer 锚点×2 全红并点名",
   );
 }
@@ -1545,6 +1545,11 @@ public class ForeignHelper {
       tree(r, "page.md", PAGE);
       w(jpath(packOf(r), "processed", "page2.md"), PAGE);
     },
+    // 反方向（2026-09-14 活例）：fetch 抓进 raw 的新页没人重跑生产者 ⇒ processed 少一页。
+    procMissing: (r) => {
+      tree(r, "page.md", PAGE);
+      w(jpath(packOf(r), "raw", "page2.md"), PAGE);
+    },
     intermediaryBare: (r) => tree(r, "page.md", PAGE + "\nReplace the old <yarn class_1792> object with yours.\n"),
     genericLoss: (r) => tree(r, "page.md", PAGE.replace("List<ItemStack> items", "List items"), PAGE),
   };
@@ -1581,6 +1586,7 @@ public class ForeignHelper {
   expect("directiveBadTarget", /目标形态异常/, "目标不是仓库绝对路径，展开与取件都无从下手");
   expect("dupBasename", /重名 basename/, "两个同名 processed 页 ⇒ 按名取页会取错文件");
   expect("rawDrift", /加工吞页或造页/, "processed 比 raw 多一页 ⇒ 加工造页/镜像错位");
+  expect("procMissing", /raw 侧有新页未镜像/, "raw 比 processed 多一页 ⇒ 生产者没重跑，门必须给出重跑指引");
   expect("intermediaryBare", /正文外泄上游中介名/, "混淆名漏进正文 ⇒ 模型照抄 class_1792");
   expect("genericLoss", /个尖括号泛型在 processed 未原样存活/, "泛型签名被加工改掉 ⇒ 模型读到与上游不一致的签名");
   expect("ledgerDrift", /不在台账 ⇒ 新增\/改名树/, "台账层没咬住未登记树 ⇒ 数字对账形同虚设");
@@ -1591,8 +1597,8 @@ public class ForeignHelper {
     `真根少跑了层或台账口径变了：\n${runs.realRoot.stdout}`,
   );
   console.log(
-    "  §S4 G3 语料保真门: 干净假根=0（含围栏内混淆名不报、区段标记齐全不报）/ 真根=0（49 树 · 633 处 <<< · 已取件处数逐档钉在台账 · 13 处正文中介名台账）；" +
-      "投毒 7 记全红并点名：区段标记缺失·目标形态·重名页·吞页·正文中介名·吃泛型·台账层未登记树",
+    "  §S4 G3 语料保真门: 干净假根=0（含围栏内混淆名不报、区段标记齐全不报）/ 真根=0（49 树 · 633 处 <<< · 已取件处数逐档钉在台账 · 11 处正文中介名台账）；" +
+      "投毒 8 记全红并点名：区段标记缺失·目标形态·重名页·造页·吞页（生产者未重跑）·正文中介名·吃泛型·台账层未登记树",
   );
 }
 
@@ -1630,6 +1636,7 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`;
     const docs = e.docs ?? 1;
     const chunks = e.chunks ?? 4;
     const embedded = e.embedded ?? chunks;
+    const embeddable = e.embeddable ?? embedded;
     for (let i = 0; i < docs; i++) {
       db.prepare("INSERT INTO docs(doc_id,title) VALUES(?,?)").run(`d${i}`, `t${i}`);
     }
@@ -1643,6 +1650,7 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`;
     }
     db.prepare("INSERT INTO meta(key,value) VALUES('chunks',?)").run(String(chunks));
     db.prepare("INSERT INTO meta(key,value) VALUES('embedded',?)").run(String(embedded));
+    if (!e.noEmbeddable) db.prepare("INSERT INTO meta(key,value) VALUES('embeddable',?)").run(String(embeddable));
     db.close();
     return {
       platform: e.platform,
@@ -1674,6 +1682,9 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
       classCount: String(opt.metaClass ?? classes),
       methodCount: String(opt.metaMethod ?? methods),
       fieldCount: String(opt.metaField ?? fields),
+      // A7-b 的合规默认：来源身份 = 仓库相对 POSIX + 内容哈希（投毒按 opt 改这两项）
+      source: opt.absSource ? "H:\\MC_skill\\data\\fabric_1.20.4\\mappings\\yarn-tiny.gz" : `${pack}/mappings/yarn-tiny.gz`,
+      ...(opt.dropSourceSha ? {} : { sourceSha256: "a".repeat(64) }),
     })) db.prepare("INSERT INTO meta VALUES(?,?)").run(k, v);
     if (!opt.dropMethodIdx) db.exec("CREATE INDEX idx_methods_official ON methods(name_official)");
     if (!opt.dropFieldIdx) db.exec("CREATE INDEX idx_fields_official ON fields(name_official)");
@@ -1694,6 +1705,15 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     unregisteredDb: (r) => {
       makeIndex(r);
       writeManifest(r, []);
+    },
+    vectorGap: (r) => {
+      // 声明 4 块都该有向量，实际只落了 3 个 ⇒ 长块静默丢向量（F99 修法要咬住的就是这个）
+      const e = makeIndex(r, { embedded: 3, embeddable: 4 });
+      writeManifest(r, [e]);
+    },
+    vectorLayerUnprovable: (r) => {
+      const e = makeIndex(r, { noEmbeddable: true });
+      writeManifest(r, [e]);
     },
     countDrift: (r) => {
       const e = makeIndex(r);
@@ -1721,6 +1741,15 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     yarnMissingIndex: (r) => {
       writeManifest(r, [makeIndex(r)]);
       makeYarn(r, "fabric_1.20.4", { dropFieldIdx: true });
+    },
+    // A7-b（2026-09-14）：tracked 二进制里不许钉本机路径；来源字节必须可核对。
+    yarnAbsSource: (r) => {
+      writeManifest(r, [makeIndex(r)]);
+      makeYarn(r, "fabric_1.20.4", { absSource: true });
+    },
+    yarnNoSourceSha: (r) => {
+      writeManifest(r, [makeIndex(r)]);
+      makeYarn(r, "fabric_1.20.4", { dropSourceSha: true });
     },
   };
   const runs = {};
@@ -1753,6 +1782,8 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   expect("missingDb", /manifest 指向的库不存在/, "台账空指一个不存在的库 ⇒ 该档语义检索静默 0 命中");
   expect("unregisteredDb", /磁盘有库 .* 但 manifest 没有条目/, "建了库没登记 ⇒ 索引存在但没人查得到");
   expect("countDrift", /manifest\.chunks .*≠ 库内 COUNT/, "manifest 与库内行数各说各话");
+  expect("vectorGap", /≠ 构建器声明的应嵌数/, "长块没拿到向量（或短块混进向量层）却没人报 ⇒ F99 的向量层缺口不再是可证明的");
+  expect("vectorLayerUnprovable", /没有 meta\.embeddable/, "库不声明应嵌数 ⇒ 向量层缺口无法与「故意不嵌」区分");
   expect("shaDrift", /库文件 sha256 ≠ manifest\.sha256/, "库重建过而台账没跟着写");
   expect("ftsDrift", /chunks_fts .*≠ chunks/, "全文层与向量层不同源 ⇒ 关键词命中与向量命中不是同一批 chunk");
   expect("orphanChunk", /孤儿 chunk/, "命中能返回但 get_doc_full 取不到正文");
@@ -1761,6 +1792,8 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   expect("pathMismatch", /尾缀不等于规范路径/, "manifest.path 与自身的 platform/version/source 键不自洽");
   expect("yarnCountDrift", /meta\.methodCount .*≠ methods 实际/, "读侧直接信 meta ⇒ 映射覆盖数虚报");
   expect("yarnMissingIndex", /却缺索引 idx_fields_official/, "schema v3 缺 official 索引 ⇒ convert_mapping 反查只能吐 intermediary");
+  expect("yarnAbsSource", /yarn meta 含本机绝对路径/, "tracked 二进制被钉上本机盘符 ⇒ 换机器/换卷就分裂，且 diff 噪声永久化");
+  expect("yarnNoSourceSha", /缺 sourceSha256/, "来源折成相对路径后没哈希 ⇒ 「这个库出自哪一份字节」不可核对");
   expect("ledgerDrift", /manifest 条目数: 台账 60 ≠ 实扫 1/, "台账层没咬住假根 ⇒ 数字对账形同虚设");
   assert.equal(runs.realRoot.status, 0, `G4 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
   assert.match(
@@ -1769,9 +1802,59 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     `真根少跑了层：\n${runs.realRoot.stdout}`,
   );
   console.log(
-    "  §S4 G4 索引自洽门: 干净假根=0 / 真根=0（60 库 · sha256 全对 · 8 纯FTS + 7 空库 + 5 计数虚报全在台账）；" +
-      "投毒 12 记全红并点名：库缺失·未登记·计数漂移·sha 过期·fts 不同源·孤儿 chunk·空库·残留·路径错档·yarn 计数·缺索引·台账层",
+    "  §S4 G4 索引自洽门: 干净假根=0 / 真根=0（60 库 · Σchunks 34029 · Σembedded 25630 · sha256 全对 · 2 纯FTS + 7 空库 + 5 计数虚报全在台账）；" +
+      "投毒 16 记全红并点名：库缺失·未登记·计数漂移·sha 过期·fts 不同源·向量层缺口·向量层不可证明·孤儿 chunk·空库·残留·路径错档·yarn 计数·缺索引·二进制钉本机路径·来源哈希缺失·台账层",
   );
+}
+
+// ── 中文路径 / 同步卷：目录级递归 cpSync 唯一出口门 ────────────────────────────
+// 这不是风格门。`cpSync(dir, dir, {recursive:true})` 在本工作区（OneDrive + 非 ASCII 路径）
+// 上会让 node 进程以 0xC0000409（STATUS_STACK_BUFFER_OVERRUN）静默消失：无异常、无栈、
+// catch 不住，实测 0/5；带 filter 或手工 walk+copyFileSync 各 5/5 正常。
+// 它曾让 test-core 在 testScaffoldWrappers → mirrorScaffolds 处整进程蒸发（退出码 127）。
+{
+  const fs = await import("node:fs");
+  const CPSYNC_GATE = jpath(import.meta.dirname, "scripts", "assert-no-recursive-cpsync.mjs");
+  const sandbox = `${GATE_SCRATCH}/cpsync`;
+  fs.rmSync(sandbox, { recursive: true, force: true });
+  try {
+    const runOn = (files) => {
+      const root = `${sandbox}/${Object.keys(files)[0].replace(/\W/g, "")}-${Math.random().toString(36).slice(2, 7)}`;
+      for (const [name, body] of Object.entries(files)) {
+        const abs = `${root}/${name}`;
+        fs.mkdirSync(abs.slice(0, abs.lastIndexOf("/")), { recursive: true });
+        fs.writeFileSync(abs, body);
+      }
+      return spawnSync(process.execPath, [CPSYNC_GATE], {
+        env: { ...process.env, MC_SKILL_CPSYNC_TEST_ROOT: root },
+        encoding: "utf8",
+        windowsHide: true,
+      });
+    };
+    const real = spawnSync(process.execPath, [CPSYNC_GATE], { encoding: "utf8", windowsHide: true });
+    assert.equal(real.status, 0, `递归 cpSync 门在真仓库就红：\n${real.stdout}${real.stderr}`);
+    const bare = runOn({ "a.js": 'import { cpSync } from "node:fs";\ncpSync("a", "b", { recursive: true });\n' });
+    assert.notEqual(bare.status, 0, "裸递归 cpSync 放过去了 ⇒ 门没牙");
+    assert.match(bare.stderr, /目录级递归 cpSync/, "裸递归红了但没点名");
+    const byFilter = runOn({ "b.js": 'import { cpSync } from "node:fs";\ncpSync("a", "b", { recursive: true, filter: () => true });\n' });
+    assert.notEqual(byFilter.status, 0, "靠 filter 绕开的写法放过去了");
+    assert.match(byFilter.stderr, /filter/, "filter 绕法红了但没点名");
+    const noImport = runOn({ "c.js": "const n = copyTree(\"a\", \"b\");\n" });
+    assert.notEqual(noImport.status, 0, "用了 copyTree 却没 import 放过去了");
+    assert.match(noImport.stderr, /没有 import/, "无 import 红了但没点名");
+    const legal = runOn({
+      "d.js":
+        'import { copyTree } from "../../scripts/_lib/copy-tree.mjs";\nimport { cpSync } from "node:fs";\ncopyTree("a", "b");\ncpSync("a", "b");\nconst z = { recursive: true };\n',
+    });
+    assert.equal(legal.status, 0, `合法写法被误报：\n${legal.stdout}${legal.stderr}`);
+    console.log(
+      "  中文路径门 assert-no-recursive-cpsync: 真根=0 · 假根投毒 3 记全红并点名（裸递归 / filter 绕法 / copyTree 无 import）· 合法写法不误报",
+    );
+  } finally {
+    fs.rmSync(sandbox, { recursive: true, force: true, maxRetries: 8 });
+    assert.ok(!fs.existsSync(sandbox), `§cpsync 门摊位未收干净：${sandbox}`);
+    dropIfEmpty(GATE_SCRATCH);
+  }
 }
 
 /**
@@ -1801,6 +1884,42 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     `  §S4 门串链: ${gates.length} 道 assert-* 全部可达（${tests.length} 个 test-*.mjs + package.json test 链）；` +
       `抽掉任一门的引用即红（自证已跑）`,
   );
+}
+
+/**
+ * §S18/S19 · 两道新门的**真跑**（不只是被字符串引用骗过门串链）。
+ * 串链断言只保证「有人提到这门」，这里保证「npm test 真的跑过它一次」。
+ */
+{
+  const { spawnSync } = await import("node:child_process");
+  const { fileURLToPath } = await import("node:url");
+  for (const gate of [
+    "./scripts/assert-forge-1204-material.mjs",
+    "./scripts/assert-scaffold-rules-conflict.mjs",
+    // S20 的一次性脚本 temp/f146-gate.mjs 已并入门族（2026-09-13 裁定）；这里真跑它。
+    "./scripts/assert-forge-1182-registry-consts.mjs",
+    // S32：NeoForge LEGACY 共享树的检索隔离门（归档路径出现在正常命中里即红）。
+    "./scripts/assert-legacy-isolation.mjs",
+    // S25a：Fabric scaffold 自洽门（expand 键 ⊇ 占位符 / 声明指向的档存在 / 入口类可解析 / wrapper 三件 / 注释依赖未被 import）。
+    "./scripts/assert-scaffold-selfcheck.mjs",
+    // S34：community_knowledge 豁免台账与解释文件双向对齐（豁免条目原文必须仍在盘上）。
+    "./scripts/assert-community-attribution.mjs",
+    // S30：quilt 规则正文与工具真实回载荷三态口径同源（含禁用形态 + 配对判据活性自证）。
+    "./scripts/assert-rules-match-tool.mjs",
+  ]) {
+    const GATE = fileURLToPath(new URL(gate, import.meta.url));
+    const r = spawnSync(process.execPath, [GATE], {
+      encoding: "utf8",
+      windowsHide: true,
+      env: { ...process.env },
+    });
+    assert.equal(
+      r.status,
+      0,
+      `${gate} 真跑失败（rc=${r.status}）：\n${String(r.stdout || "").slice(0, 800)}${String(r.stderr || "").slice(0, 400)}`,
+    );
+  }
+  console.log("  §S18/S19/S20/S25a/S30/S32/S34 新门真跑: forge-1204-material + scaffold-rules-conflict + forge-1182-registry-consts + legacy-isolation + scaffold-selfcheck + community-attribution + rules-match-tool 共 7 道均 rc=0");
 }
 
 /**

@@ -55,7 +55,12 @@ SpawnRestriction.register(
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(ExampleMod.MY_ENTITY, PigEntityRenderer::new);
+        // 1.16.5：register 是**实例方法**（摘要 modifiers=["public"]），第二参 EntityRendererRegistry.Factory；
+        // 入口字段名 INSTANCE 未取证（摘要不记字段），按 1.14.4 同形推断，落地前先 ingest_loader_api 核
+        // 静态 EntityRendererRegistry.register(...) 属 1.17+ 形态（本档 rules 04-entity 同口径）
+        EntityRendererRegistry.INSTANCE.register(ExampleMod.MY_ENTITY, (dispatcher, context) ->
+            new PigEntityRenderer(dispatcher)
+        );
     }
 }
 ```

@@ -30,7 +30,10 @@ FabricDefaultAttributeRegistry.register(MY_ENTITY,
 // 注册生成限制
 SpawnRestriction.register(
     MY_ENTITY,
-    SpawnRestriction.Location.ON_GROUND,
+    SpawnLocationTypes.ON_GROUND,  // 1.21.1: 第二参是 SpawnLocation；SpawnRestriction.Location 已删
+                                   // tiny: SpawnRestriction.register(EntityType, SpawnLocation, Heightmap.Type, SpawnPredicate)
+                                   // SpawnLocationTypes 常量 = ON_GROUND / IN_WATER / IN_LAVA / UNRESTRICTED
+                                   // import net.minecraft.entity.SpawnLocationTypes
     Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
     MyEntity::canSpawn
 );

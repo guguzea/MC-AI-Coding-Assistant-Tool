@@ -7,6 +7,9 @@ communityDocId: authored/lib-trinkets
 mappings: hint
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/trinkets 版本表 limit=100；本轮 release 上界 fabric=1.21.1 / quilt=1.20.4）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/trinkets/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Trinkets 饰品槽（Fabric/Quilt）
 
 Fabric 系饰品槽事实标准：6 组默认槽位（头/胸/腿/脚/手/副手类），槽位数据驱动，支持扩展槽组。**已停更于 1.21.1（2024-07 后无新构建），1.21.4+ / 26.x 不要选它。**

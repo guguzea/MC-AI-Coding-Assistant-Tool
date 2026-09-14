@@ -38,7 +38,7 @@ plugins {
 **正确配置：**
 ```groovy
 plugins {
-    id 'fabric-loom' version '1.3-SNAPSHOT'  // ✅ 1.21.x 推荐
+    id 'fabric-loom' version '1.8'  // ✅ 与本档 scaffold/build.gradle:2 同值；旧写法 1.3-SNAPSHOT 是 1.20.1 模板残留
 }
 ```
 
@@ -90,18 +90,28 @@ fabric_api_version=0.110.0+1.21.3
 
 ### 6. accessWidener 路径错误
 
+> 更正（F185，2026-09-13）：本节原先的 ❌ / ✅ 两段代码逐字节相同，示例等于没写；「相对路径是错的」这个断言也不成立——`file("src/main/resources/…")` 正是官方写法。真正会踩的坑是**成对声明缺一半**，下面按这个口径重写（标题保留原样以免打乱本节编号）。
+
 **错误配置：**
 ```groovy
+// build.gradle：只声明了 loom 这一半
 loom {
-    accessWidenerPath = file("src/main/resources/examplemod.accesswidener")  // ❌ 相对路径
+    accessWidenerPath = file("src/main/resources/examplemod.accesswidener")  // ❌ fabric.mod.json 里没有配对的 "accessWidener" 键 → AW 不生效
 }
 ```
 
 **正确配置：**
 ```groovy
+// build.gradle：相对路径本身就是官方写法
 loom {
-    accessWidenerPath = file("src/main/resources/examplemod.accesswidener")
-    // ✅ Loom 会自动处理
+    accessWidenerPath = file("src/main/resources/examplemod.accesswidener")  // ✅ 与下面的键成对
+}
+```
+
+```json
+// fabric.mod.json —— 必须与上面成对；该键只存在于 fabric.mod.json，不要写进 *.mixins.json
+{
+  "accessWidener": "examplemod.accesswidener"
 }
 ```
 
@@ -110,8 +120,9 @@ loom {
 | 检查项 | 方法 |
 |--------|------|
 | Fabric Maven 是否配置 | 检查 repositories 中是否有 maven.fabricmc.net |
-| Loom 版本 | 检查 `fabric-loom` 插件版本（1.3-SNAPSHOT for 1.21.x）|
+| Loom 版本 | 检查 `fabric-loom` 插件版本，本档取 scaffold/build.gradle:2 的 `1.8`（裸 `1.8` 能否解析见 未核实 项）|
 | 依赖类型 | API 使用 modApi，实现使用 modImplementation |
 | 映射变更 | 执行 `./gradlew clean loom` |
 | 版本一致性 | gradle.properties 中的版本与 build.gradle 一致 |
+| AW 成对声明 | `loom.accessWidenerPath` 与 fabric.mod.json 的 `"accessWidener"` 键必须同时存在（见 §6）|
 | Java 版本 | 1.21.x 必须使用 **Java 21** |

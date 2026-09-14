@@ -11,6 +11,7 @@ loaders: [fabric, forge, neoforge]
 modrinthSlug: ""
 role: api
 skillId: mc-server-translations
+notes: "无 API 摘要（`lib-api-summaries/` 无条目、catalog `verifiedApi` 为空对象 {}；Modrinth 页面已下架，分发走 maven.nucleoid.xyz）；类名以 GitHub README 为准，需 `ingest_loader_api` 自备 jar 核实。记于 2026-09-14"
 ---
 
 # Server Translations API 服务端翻译库集成要点

@@ -26,6 +26,8 @@ new Item.Properties()
 
 > **注意**：`Item.Properties` 在 Forge 1.20.1 中**没有 `tab()` 方法**。物品的创造模式标签通过 `BuildCreativeModeTabContentsEvent` 单独注册，不要写在 Properties 里。
 
+- ❌ `Item.Properties#tab(...)` —— 证据：本档 api-index 的 `Item$Properties` 无 `tab`（该重载只在 1.16.5–1.18.2 存在）；正解见语料 `items.md:30,39`（`BuildCreativeModeTabContentsEvent`，配 `event.getTabKey() == CreativeModeTabs.*`）。
+
 ### ItemTier（工具材料）规范
 
 ```java
@@ -182,7 +184,7 @@ public enum MyTier implements Tier {
     private final float speed;
     private final float damage;         // 工具的基础伤害加成（不含类型加成）
     private final int enchantmentValue;
-    private final Ingredient repairIngredient;
+    private final Supplier<Ingredient> repairIngredient;
 
     MyTier(int level, int uses, float speed, float damage, int enchantmentValue, Supplier<Ingredient> repairIngredient) {
         this.level = level;

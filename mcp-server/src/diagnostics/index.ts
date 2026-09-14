@@ -1,4 +1,5 @@
 import { analyzeCrash } from "../crash/index.js";
+import { clampLogBytes } from "../build-log/index.js";
 import { actionable, ActionCodes, versionRequiredAction, missingMcVersion } from "../utils/actionable.js";
 import { ownGet } from "../utils/own-record.js";
 import { escapeRegExp } from "../utils/regex.js";
@@ -45,9 +46,11 @@ export function analyzeLog(input: AnalyzeLogInput): Record<string, unknown> {
     ]);
     return { ok: false, action, error: action.message };
   }
-  const LOG_MAX = 2 * 1024 * 1024;
-  const truncated = Buffer.byteLength(text, "utf8") > LOG_MAX;
-  if (truncated) text = text.slice(0, LOG_MAX);
+  // 口径与 analyze_build_log 一致：按 UTF-8 字节裁（slice 数的是 UTF-16 码元，中文日志会超预算），
+  // 且留头部一小段 + 尾部一大段（崩溃摘要常在末尾）。
+  const clamped = clampLogBytes(text);
+  const truncated = clamped.truncated;
+  text = clamped.text;
   const lines = text.split(/\r?\n/);
   const errors = lines.filter((l) => /\b(?:ERROR|Exception|Caused by:)\b/i.test(l)).slice(0, 30);
   const warnings = lines.filter((l) => /WARN/i.test(l)).slice(0, 20);

@@ -18,6 +18,9 @@
  *        且 entry.path 的尾缀必须等于「键推出的规范路径」（库放错档 / 条目抄错行都会被点名）；
  *     A2 逐库重算：COUNT(chunks)==entry.chunks、COUNT(chunk_embeddings)==entry.embedded、
  *        COUNT(chunks_fts)==COUNT(chunks)、库内 meta.chunks/meta.embedded 与 manifest 三者一致；
+ *     A2b 向量层缺口必须「按声明故意缺」：COUNT(chunk_embeddings)==库内 meta.embeddable
+ *        （F99 修法：短块照旧进 chunks/chunks_fts，只有向量层按阈值不嵌 ⇒ 缺口必须可证明，
+ *        整库退纯 FTS 仍只许躺在 DEBT_FTS_ONLY）；
  *     A3 entry.sha256 == 磁盘文件 sha256（库重建过但 manifest 没跟着写 = 过期台账，零容忍）；
  *     A4 命中可取回：`chunks.doc_id` 必须都能在 `docs` 找到（孤儿 chunk = 命中了但正文取不到）；
  *     A5 `embedded==0 && chunks>0` 与 `chunks==0` 两类降级只许逐条躺在存量台账里；
@@ -54,21 +57,27 @@ const MANIFEST = path.join(DATA_DIR, "semantic-index-manifest.json");
 
 // ── 台账（只由本门 MC_SKILL_INDEX_RELEDGER=1 重算，禁止手改数字）────────────
 // B 层汇总 + 逐平台 {条目, chunks, embedded}
+// F99 修法后重算（MC_SKILL_INDEX_RELEDGER=1）：chunks 25634→34029 = 短块回到关键词层；
+// embedded 保持长块数（25634→25630 的 -4 是 4 个「整页只有一块且低于阈值」的兜底块，改由关键词层覆盖）。
 const LEDGER_SUM = {
-  entries: 60, chunks: 25634, embedded: 25634,
+  entries: 60, chunks: 34029, embedded: 25630,
   perPlatform: {
-    "bedrock": { entries: 1, chunks: 303, embedded: 303 },
-    "fabric": { entries: 27, chunks: 5898, embedded: 5898 },
-    "forge": { entries: 10, chunks: 4429, embedded: 4429 },
-    "liteloader": { entries: 3, chunks: 364, embedded: 364 },
-    "modloader": { entries: 3, chunks: 4, embedded: 4 },
-    "neoforge": { entries: 9, chunks: 14169, embedded: 14169 },
-    "quilt": { entries: 6, chunks: 437, embedded: 437 },
-    "rift": { entries: 1, chunks: 30, embedded: 30 },
+    "bedrock": { entries: 1, chunks: 308, embedded: 303 },
+    "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
+    "forge": { entries: 10, chunks: 5856, embedded: 4429 },
+    "liteloader": { entries: 3, chunks: 443, embedded: 363 },
+    "modloader": { entries: 3, chunks: 6, embedded: 2 },
+    "neoforge": { entries: 9, chunks: 18877, embedded: 14169 },
+    "quilt": { entries: 6, chunks: 557, embedded: 437 },
+    "rift": { entries: 1, chunks: 47, embedded: 29 },
   },
 };
 // A5 存量债务：有 chunks 但嵌入层为 0（语义检索静默退化成纯 FTS）
 const DEBT_FTS_ONLY = [
+  // F99 修法后的必然结果：整库唯一那块低于向量阈值 ⇒ 只有关键词层。
+  // 阈值只管向量层是设计，登记在此是为了让「以后又多一个纯 FTS 库」必须被看见。
+  "modloader|1.2.5|modloader-docs",
+  "modloader|1.5.2|modloader-docs",
 ];
 // A5 存量债务：整库空索引（该 source 在本仓库没有 processed/l0 正文）
 const DEBT_EMPTY_INDEX = [
@@ -81,10 +90,9 @@ const DEBT_EMPTY_INDEX = [
   "fabric|1.21.3|fabric-docs",
 ];
 // A6 存量债务：索引目录里的半截事务残留（相对 data 根；删除动作交数据拥有者，本门只登记不删）
+// 2026-09-13：三条 db.sqlite.old 不在盘上了 —— 本轮全量重建走「旧库改名成 .old → 新库顶上 →
+// finally 清同名 .old」这条既定路径，等于被构建器收走；登记按实盘撤下，不是谁手工删的。
 const DEBT_RESIDUE = [
-  "fabric_1.16.5/fabric-wiki/1.16.5/semantic/db.sqlite.old",
-  "fabric_1.19.4/fabric-wiki/1.19.4/semantic/db.sqlite.old",
-  "fabric_1.21.4/fabric-wiki/1.21.4/semantic/db.sqlite.old",
   "neoforge_1.21.10/neoforge-docs/1.21.10/semantic/db.sqlite.tmp-26696",
   "neoforge_1.21.10/neoforge-docs/1.21.10/semantic/db.sqlite.tmp-26696-journal",
   "neoforge_1.21.5/neoforge-docs/1.21.5/semantic/db.sqlite.tmp-29532",
@@ -106,28 +114,28 @@ const DEBT_MAPPING_COUNT = [
 ];
 // B 层：逐档 yarn-mappings.sqlite 实际行数 + official（mojmap）覆盖行数 + schemaVersion
 const LEDGER_YARN = {
-  "fabric_1.14.4": { classes: 4976, classesNamed: 4891, unresolvedMethods: 8154, unresolvedFields: 6263, methods: 21982, fields: 18196, seargeMethods: 0, seargeFields: 0, classesOfficial: 4976, officialMethods: 21982, officialFields: 18196, schema: 3 },
-  "fabric_1.16.5": { classes: 5445, classesNamed: 5430, unresolvedMethods: 9495, unresolvedFields: 6538, methods: 27094, fields: 21480, seargeMethods: 0, seargeFields: 0, classesOfficial: 5445, officialMethods: 27094, officialFields: 21480, schema: 3 },
-  "fabric_1.17.1": { classes: 6107, classesNamed: 6092, unresolvedMethods: 7195, unresolvedFields: 8758, methods: 28016, fields: 27553, seargeMethods: 0, seargeFields: 0, classesOfficial: 6107, officialMethods: 28016, officialFields: 27553, schema: 3 },
-  "fabric_1.18.2": { classes: 6391, classesNamed: 6374, unresolvedMethods: 7839, unresolvedFields: 8934, methods: 29716, fields: 28654, seargeMethods: 0, seargeFields: 0, classesOfficial: 6391, officialMethods: 29716, officialFields: 28654, schema: 3 },
-  "fabric_1.19.4": { classes: 7326, classesNamed: 7305, unresolvedMethods: 11052, unresolvedFields: 10513, methods: 36036, fields: 32454, seargeMethods: 0, seargeFields: 0, classesOfficial: 7326, officialMethods: 36036, officialFields: 32454, schema: 3 },
-  "fabric_1.20.1": { classes: 7431, classesNamed: 7411, unresolvedMethods: 11623, unresolvedFields: 10582, methods: 36992, fields: 32923, seargeMethods: 0, seargeFields: 0, classesOfficial: 7431, officialMethods: 36992, officialFields: 32923, schema: 3 },
-  "fabric_1.20.4": { classes: 7782, classesNamed: 7762, unresolvedMethods: 13111, unresolvedFields: 11486, methods: 39370, fields: 35024, seargeMethods: 0, seargeFields: 0, classesOfficial: 7782, officialMethods: 39370, officialFields: 35024, schema: 3 },
-  "fabric_1.21.10": { classes: 9953, classesNamed: 9907, unresolvedMethods: 16438, unresolvedFields: 15555, methods: 48591, fields: 44095, seargeMethods: 0, seargeFields: 0, classesOfficial: 9953, officialMethods: 48591, officialFields: 44095, schema: 3 },
-  "fabric_1.21.11": { classes: 10274, classesNamed: 10227, unresolvedMethods: 16880, unresolvedFields: 16151, methods: 49730, fields: 45248, seargeMethods: 0, seargeFields: 0, classesOfficial: 10274, officialMethods: 49730, officialFields: 45248, schema: 3 },
-  "fabric_1.21.1": { classes: 8262, classesNamed: 8243, unresolvedMethods: 13108, unresolvedFields: 12867, methods: 41282, fields: 37682, seargeMethods: 0, seargeFields: 0, classesOfficial: 8262, officialMethods: 41282, officialFields: 37682, schema: 3 },
-  "fabric_1.21.3": { classes: 8719, classesNamed: 8700, unresolvedMethods: 14488, unresolvedFields: 13696, methods: 43811, fields: 39464, seargeMethods: 0, seargeFields: 0, classesOfficial: 8719, officialMethods: 43811, officialFields: 39464, schema: 3 },
-  "fabric_1.21.4": { classes: 8850, classesNamed: 8829, unresolvedMethods: 14707, unresolvedFields: 13895, methods: 44336, fields: 39883, seargeMethods: 0, seargeFields: 0, classesOfficial: 8850, officialMethods: 44336, officialFields: 39883, schema: 3 },
-  "fabric_1.21.8": { classes: 9469, classesNamed: 9423, unresolvedMethods: 15707, unresolvedFields: 14771, methods: 46592, fields: 42418, seargeMethods: 0, seargeFields: 0, classesOfficial: 9469, officialMethods: 46592, officialFields: 42418, schema: 3 },
-  "forge_1.10.2": { classes: 2949, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 18571, fields: 10813, seargeMethods: 0, seargeFields: 0, classesOfficial: 2949, officialMethods: 18571, officialFields: 10813, schema: 3 },
-  "forge_1.11.2": { classes: 3091, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 19334, fields: 11076, seargeMethods: 0, seargeFields: 0, classesOfficial: 3091, officialMethods: 19334, officialFields: 11076, schema: 3 },
-  "forge_1.12.2": { classes: 3313, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 20817, fields: 11915, seargeMethods: 9654, seargeFields: 10005, classesOfficial: 3313, officialMethods: 20817, officialFields: 11915, schema: 3 },
-  "forge_1.13.2": { classes: 3993, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 26024, fields: 14536, seargeMethods: 10770, seargeFields: 11816, classesOfficial: 3993, officialMethods: 26024, officialFields: 14536, schema: 3 },
-  "forge_1.14.4": { classes: 0, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 0, fields: 0, seargeMethods: 11445, seargeFields: 15133, classesOfficial: 0, officialMethods: 0, officialFields: 0, schema: 3 },
-  "forge_1.15.2": { classes: 0, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 0, fields: 0, seargeMethods: 10598, seargeFields: 15756, classesOfficial: 0, officialMethods: 0, officialFields: 0, schema: 3 },
-  "forge_1.7.10": { classes: 1815, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 13263, fields: 6900, seargeMethods: 0, seargeFields: 0, classesOfficial: 1815, officialMethods: 13263, officialFields: 6900, schema: 3 },
-  "forge_1.8.9": { classes: 2507, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 16426, fields: 8917, seargeMethods: 0, seargeFields: 0, classesOfficial: 2507, officialMethods: 16426, officialFields: 8917, schema: 3 },
-  "forge_1.9.4": { classes: 2908, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 18228, fields: 10634, seargeMethods: 0, seargeFields: 0, classesOfficial: 2908, officialMethods: 18228, officialFields: 10634, schema: 3 },
+  "fabric_1.14.4": { classes: 4976, classesNamed: 4891, unresolvedMethods: 8154, unresolvedFields: 6263, methods: 21982, fields: 18196, seargeMethods: 0, seargeFields: 0, classesOfficial: 4976, officialMethods: 21982, officialFields: 18196, schema: 4 },
+  "fabric_1.16.5": { classes: 5445, classesNamed: 5430, unresolvedMethods: 9495, unresolvedFields: 6538, methods: 27094, fields: 21480, seargeMethods: 0, seargeFields: 0, classesOfficial: 5445, officialMethods: 27094, officialFields: 21480, schema: 4 },
+  "fabric_1.17.1": { classes: 6107, classesNamed: 6092, unresolvedMethods: 7195, unresolvedFields: 8758, methods: 28016, fields: 27553, seargeMethods: 0, seargeFields: 0, classesOfficial: 6107, officialMethods: 28016, officialFields: 27553, schema: 4 },
+  "fabric_1.18.2": { classes: 6391, classesNamed: 6374, unresolvedMethods: 7839, unresolvedFields: 8934, methods: 29716, fields: 28654, seargeMethods: 0, seargeFields: 0, classesOfficial: 6391, officialMethods: 29716, officialFields: 28654, schema: 4 },
+  "fabric_1.19.4": { classes: 7326, classesNamed: 7305, unresolvedMethods: 11052, unresolvedFields: 10513, methods: 36036, fields: 32454, seargeMethods: 0, seargeFields: 0, classesOfficial: 7326, officialMethods: 36036, officialFields: 32454, schema: 4 },
+  "fabric_1.20.1": { classes: 7431, classesNamed: 7411, unresolvedMethods: 11623, unresolvedFields: 10582, methods: 36992, fields: 32923, seargeMethods: 0, seargeFields: 0, classesOfficial: 7431, officialMethods: 36992, officialFields: 32923, schema: 4 },
+  "fabric_1.20.4": { classes: 7782, classesNamed: 7762, unresolvedMethods: 13111, unresolvedFields: 11486, methods: 39370, fields: 35024, seargeMethods: 0, seargeFields: 0, classesOfficial: 7782, officialMethods: 39370, officialFields: 35024, schema: 4 },
+  "fabric_1.21.10": { classes: 9953, classesNamed: 9907, unresolvedMethods: 16438, unresolvedFields: 15555, methods: 48591, fields: 44095, seargeMethods: 0, seargeFields: 0, classesOfficial: 9953, officialMethods: 48591, officialFields: 44095, schema: 4 },
+  "fabric_1.21.11": { classes: 10274, classesNamed: 10227, unresolvedMethods: 16880, unresolvedFields: 16151, methods: 49730, fields: 45248, seargeMethods: 0, seargeFields: 0, classesOfficial: 10274, officialMethods: 49730, officialFields: 45248, schema: 4 },
+  "fabric_1.21.1": { classes: 8262, classesNamed: 8243, unresolvedMethods: 13108, unresolvedFields: 12867, methods: 41282, fields: 37682, seargeMethods: 0, seargeFields: 0, classesOfficial: 8262, officialMethods: 41282, officialFields: 37682, schema: 4 },
+  "fabric_1.21.3": { classes: 8719, classesNamed: 8700, unresolvedMethods: 14488, unresolvedFields: 13696, methods: 43811, fields: 39464, seargeMethods: 0, seargeFields: 0, classesOfficial: 8719, officialMethods: 43811, officialFields: 39464, schema: 4 },
+  "fabric_1.21.4": { classes: 8850, classesNamed: 8829, unresolvedMethods: 14707, unresolvedFields: 13895, methods: 44336, fields: 39883, seargeMethods: 0, seargeFields: 0, classesOfficial: 8850, officialMethods: 44336, officialFields: 39883, schema: 4 },
+  "fabric_1.21.8": { classes: 9469, classesNamed: 9423, unresolvedMethods: 15707, unresolvedFields: 14771, methods: 46592, fields: 42418, seargeMethods: 0, seargeFields: 0, classesOfficial: 9469, officialMethods: 46592, officialFields: 42418, schema: 4 },
+  "forge_1.10.2": { classes: 2949, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 18571, fields: 10813, seargeMethods: 0, seargeFields: 0, classesOfficial: 2949, officialMethods: 18571, officialFields: 10813, schema: 4 },
+  "forge_1.11.2": { classes: 3091, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 19334, fields: 11076, seargeMethods: 0, seargeFields: 0, classesOfficial: 3091, officialMethods: 19334, officialFields: 11076, schema: 4 },
+  "forge_1.12.2": { classes: 3313, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 20817, fields: 11915, seargeMethods: 9654, seargeFields: 10005, classesOfficial: 3313, officialMethods: 20817, officialFields: 11915, schema: 4 },
+  "forge_1.13.2": { classes: 3993, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 26024, fields: 14536, seargeMethods: 10770, seargeFields: 11816, classesOfficial: 3993, officialMethods: 26024, officialFields: 14536, schema: 4 },
+  "forge_1.14.4": { classes: 0, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 0, fields: 0, seargeMethods: 11445, seargeFields: 15133, classesOfficial: 0, officialMethods: 0, officialFields: 0, schema: 4 },
+  "forge_1.15.2": { classes: 0, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 0, fields: 0, seargeMethods: 10598, seargeFields: 15756, classesOfficial: 0, officialMethods: 0, officialFields: 0, schema: 4 },
+  "forge_1.7.10": { classes: 1815, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 13263, fields: 6900, seargeMethods: 0, seargeFields: 0, classesOfficial: 1815, officialMethods: 13263, officialFields: 6900, schema: 4 },
+  "forge_1.8.9": { classes: 2507, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 16426, fields: 8917, seargeMethods: 0, seargeFields: 0, classesOfficial: 2507, officialMethods: 16426, officialFields: 8917, schema: 4 },
+  "forge_1.9.4": { classes: 2908, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 18228, fields: 10634, seargeMethods: 0, seargeFields: 0, classesOfficial: 2908, officialMethods: 18228, officialFields: 10634, schema: 4 },
 };
 
 const failures = [];
@@ -241,6 +249,15 @@ for (const e of entries) {
   if (meta.embedded !== undefined && Number(meta.embedded) !== emb) {
     fail(`${key}: 库内 meta.embedded ${meta.embedded} ≠ COUNT(chunk_embeddings) ${emb}`);
   }
+  // A2b 向量层缺口必须「按声明故意缺」（F99：短块只退向量层，不退关键词层）
+  if (chunks > 0 && meta.embeddable === undefined) {
+    fail(`${key}: 库内没有 meta.embeddable ⇒ 无法证明向量层的缺口都是故意的（短块按阈值不嵌）`);
+  } else if (chunks > 0 && emb !== Number(meta.embeddable) && !DEBT_FTS_ONLY.includes(key)) {
+    fail(
+      `${key}: COUNT(chunk_embeddings) ${emb} ≠ 构建器声明的应嵌数 ${meta.embeddable}（全量块 ${chunks}）` +
+        `⇒ 有长块没拿到向量，或短块混进了向量层`,
+    );
+  }
   // A4 命中可取回
   if (orphan > 0) fail(`${key}: ${orphan} 个孤儿 chunk（doc_id 在 docs 里不存在）⇒ 命中了但 get_doc_full 取不到正文`);
 
@@ -307,6 +324,20 @@ for (const abs of yarnFiles.sort()) {
     for (const r of db.prepare("SELECT key, value FROM meta").all()) meta[r.key] = r.value;
   } catch {
     fail(`${pack}: yarn 库没有 meta 表`);
+  }
+  // A7-b 机器无关（2026-09-14）：yarn 库是 tracked 二进制，meta 里出现本机绝对路径 = 把盘符钉进仓库历史。
+  //      现存教训：22 个库的 meta.source 曾分裂在 `H:\MC_skill\…`（19 个）与 OneDrive 桌面路径（3 个）之间。
+  const dirtyKeys = Object.entries(meta)
+    .filter(([, v]) => /\b[A-Za-z]:[\\/]/.test(String(v)) || String(v).includes("/home/") || String(v).includes("/Users/"))
+    .map(([k]) => k);
+  if (dirtyKeys.length) {
+    fail(`${pack}: yarn meta 含本机绝对路径（键 ${dirtyKeys.join(", ")}）⇒ tracked 二进制不许钉盘符，重跑生产者 build-yarn-sqlite.mjs --all --write`);
+  }
+  if (meta.source && (meta.source.includes("\\") || /^[A-Za-z]:/.test(meta.source))) {
+    fail(`${pack}: meta.source=${meta.source} 不是仓库相对 POSIX 形态 ⇒ 生产者 setMeta 的机器无关化被绕开`);
+  }
+  if (!/^[0-9a-f]{64}$/.test(String(meta.sourceSha256 ?? ""))) {
+    fail(`${pack}: 缺 sourceSha256（64 位十六进制）⇒ 相对路径只剩文件名，来源字节无从核对`);
   }
   const classes = countOf(db, "classes");
   const methods = countOf(db, "methods");

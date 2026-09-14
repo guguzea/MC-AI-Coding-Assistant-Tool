@@ -1,6 +1,6 @@
 # NeoForge 1.21.3 已核实 API
 
-签字：官官方文档 https://docs.neoforged.net/docs/1.21.3/ + 官方 MDK（download_official_mdk 精确 
+签字：官方文档 https://docs.neoforged.net/docs/1.21.3/ + 官方 MDK（download_official_mdk 精确 
 1.21.3）。  + **官方 API jar 反编译摘要**（`mcp-server/data/loader-api-summaries/1.21.3-neoforge.json`，`decompile-loader-apis.mjs` / `query_loader_api`）。  
 **核实优先级**：jar 摘要与反编译 FQCN **高于**本库 `search_neoforge_docs` 缺页（`DOC_NOT_FOUND` 不得把已入库反编译项标成「未核实」）。  
 摘要 JSON **必须**含 `mappingsVersion`，否则不得写进本表。clone-audit：与邻档教程骨架相似是预期，误报不算验收失败。

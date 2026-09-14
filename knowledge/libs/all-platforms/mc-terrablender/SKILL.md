@@ -7,6 +7,9 @@ communityDocId: authored/lib-terrablender
 mappings: "库按各 loader 预重映射，无需特殊配置；Fabric ≤1.21.x 为 yarn、26.x 为 mojmap"
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/terrablender 版本表 limit=100；本轮 release 上界 fabric=近100内无 / forge=近100内无 / neoforge=近100内无 ⇒ 本文件 mcVersions 上界 26.2 高于 release 上界，仅 beta/alpha 支撑）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/terrablender/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # TerraBlender 群系集成（操作指引）
 
 给 AI 的操作指引：把自定义生物群系兼容式混入现有世界生成（1.18+ 地形系统标准方案）。详细信息用 `search_community_docs` 查 `authored/lib-terrablender`，API 细节以[官方仓库](https://github.com/Glitchfiend/TerraBlender)当前 README 与 wiki 为准。
@@ -50,7 +53,7 @@ Decision: 要不要用 TerraBlender
 - Surface Rule 顺序或优先级不对 → 地表被覆盖或地形异常
 - 群系 ID / 数据包路径与 modId 不一致 → 群系不生成或加载失败
 - 权重配得极端 → 原版群系几乎不出现
-- 版本不核对就抄旧坐标 → 1.26 之前与 26.x 的地形 API 差异大
+- 版本不核对就抄旧坐标 → 1.21.x 及更早与 26.x 的地形 API 差异大（MC 版本线没有「1.26」）
 
 ## 自检清单
 

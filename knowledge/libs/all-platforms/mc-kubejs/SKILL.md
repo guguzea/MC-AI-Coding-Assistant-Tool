@@ -7,6 +7,9 @@ communityDocId: authored/lib-kubejs
 mappings: "脚本层 API 由 KubeJS 封装，与项目 mappings 无关；类名以 docs.kubejs.com 对应版本为准"
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/kubejs 版本表 limit=100；本轮 release 上界 fabric=1.20.1 / forge=1.20.1 / neoforge=1.21.1 ⇒ 本文件 mcVersions 上界 26.1.2 高于 release 上界，仅 beta/alpha 支撑）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/kubejs/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # KubeJS 整合包脚本（操作指引）
 
 Forge 构建止于 **1.20.1**；1.21+ 只用 Fabric / NeoForge，不要给 Forge 1.21+ 找不存在的构件。

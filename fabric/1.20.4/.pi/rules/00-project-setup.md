@@ -52,7 +52,7 @@ description: 00 — 项目结构与构建
   minecraft_version=1.20.4
   yarn_mappings=1.20.4+build.3
   loader_version=0.15.11
-  fabric_api_version=0.91.0+1.20.4
+  fabric_api_version=0.97.3+1.20.4
   ```
 - **禁止**在 `build.gradle` 中直接写版本号，必须引用 `${minecraft_version}` 等属性
 
@@ -108,7 +108,7 @@ IF 报错包含 "No resource bundling found"
 
 ```groovy
 plugins {
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.6.12'
     id 'maven-publish'
     id 'eclipse'
     id 'idea'

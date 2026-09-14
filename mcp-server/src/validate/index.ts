@@ -86,7 +86,9 @@ function extractModIdFromJava(content: string): string | null {
 }
 
 function extractClassName(content: string): string | null {
-  const match = content.match(/public\s+class\s+(\w+)/);
+  const match = content.match(
+    /public\s+(?:(?:final|abstract|static|sealed|non-sealed)\s+)*class\s+(\w+)/,
+  );
   return match ? match[1] : null;
 }
 

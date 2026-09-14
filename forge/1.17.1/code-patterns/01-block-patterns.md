@@ -29,9 +29,10 @@ public static final RegistryObject<Item> STONE_BLOCK_ITEM = ITEMS.register("ston
 );
 ```
 
-**注意：** Forge 1.17.1 DeferredRegister API 不如 1.18+ 成熟。如遇兼容性问题，推荐使用 `RegistryEvent.Register<Block>` 方式注册：
+**注意：** 1.17.1 同样**推荐 `DeferredRegister`**（见同档 `01-registry.mdc:15-16`、`AGENTS.md:122`）。下面这段 `RegistryEvent.Register` + `setRegistryName` 是**已过时的旧写法**（同档 `02-block.mdc:155-159` 标为 ❌），仅在维护旧代码时参考：
 
 ```java
+// ❌ 旧写法（过时）：新代码请用 DeferredRegister（见 01-registry.mdc:15-16）
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Bus.MOD)
 public class RegistryHandlers {
     @SubscribeEvent
@@ -162,9 +163,9 @@ public static final RegistryObject<Block> MY_ORE = BLOCKS.register("my_ore",
         .color(MaterialColor.STONE)
         .strength(3.0f, 3.0f)
         .requiresCorrectToolForDrops()
-        .xp(1, 3, 7)  // 掉落经验 1~7
+        // TODO(未核实)：经验掉落不在 Properties 上（本档 api-index 无 xp/insertXp），待核实后补
     )
 );
 ```
 
-> **注意：** Forge 1.17.1 的 `BlockBehaviour.Properties` 中使用 `xp()` 方法设置掉落经验，而非 1.20.x 中的 `insertXp()`。
+> **注意：** 经验掉落**不在** `BlockBehaviour.Properties` 上 —— `xp()` 与 `insertXp()` 在本档与 1.20.x 的 api-index 中均不存在（原示例的 `.xp(1, 3, 7)` 已移除）。正解需 `ingest_loader_api` 入库原版/Forge jar 后核实。

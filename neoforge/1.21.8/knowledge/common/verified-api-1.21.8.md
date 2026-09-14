@@ -10,7 +10,7 @@
 | 符号 | 口径 |
 |---|---|
 | `@Mod` | 要 |
-| `public ExampleMod(IEventBus modEventBus, ModContainer modContainer) — 以该版 MDK 为准` | 要 |
+| `public ExampleMod(IEventBus modEventBus)`（可选再加 `ModContainer modContainer`；scaffold `ExampleMod.java:46` 实测单参） | 要 |
 | `NeoForgeAddonPlugin` | **不存在，禁止输出** |
 | 元数据 | neoforge.mods.toml |
 
@@ -44,7 +44,7 @@
 - DataGen：GatherDataEvent.Client / GatherDataEvent.Server（已拆分）
 - Java 21；mojmap
 - 1.21.8 文档 resources 页已用 GatherDataEvent.Client；网络配置任务仍见 ResourceLocation.fromNamespaceAndPath。
-- 1.21.8 的关键分界是 DataGen 拆成 GatherDataEvent.Client 与 Server，以及 createDatapackRegistryObjects / createProvider。
+- DataGen 拆成 GatherDataEvent.Client 与 Server（含 createDatapackRegistryObjects / createProvider）的分界**不晚于 1.21.5**、不是本档引入：本仓 raw 计数 `GatherDataEvent.Client` 在 1.21.3 = 0、1.21.5 = 33（`data/neoforge_1.21.5/neoforge-docs/1.21.5/processed/resources.md:92` 已拆；反例 `data/neoforge_1.21.3/neoforge-docs/1.21.3/processed/resources.md:113` 仍是裸 `GatherDataEvent`），与 `neoforge/1.21.5/knowledge/porting/02-version-migration.md` 同值。本档只沿用该已拆形态。
 
 ## 对照签字
 

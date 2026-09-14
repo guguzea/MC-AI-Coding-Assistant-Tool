@@ -28,8 +28,9 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // Fabric API（选择性引入，删除注释即可使用）
-    // modImplementation "net.fabricmc:fabric-api:${project.fabric_api_version}"
+    // Fabric API：本档 src 有 2 处 import net.fabricmc.fabric.api.*，不启用这条就编译不过
+    // 坐标 groupId 与本文件 Cloth 段的 exclude group 同源；版本取自 gradle.properties 的 fabric_api_version，不在此硬编码
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     // Cloth Config（配置系统）
     // modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
@@ -43,11 +44,17 @@ processResources {
     inputs.property "yarn_mappings", project.yarn_mappings
     inputs.property "loader_version", project.loader_version
 
-    filesMatching(["fabric.mod.json", "pack.mcmeta"]) {
+    filesMatching(["fabric.mod.json", "pack.mcmeta", "examplemod.mixins.json"]) {
         expand "version": project.version,
             "minecraft_version": project.minecraft_version,
             "yarn_mappings": project.yarn_mappings,
-            "loader_version": project.loader_version
+            "loader_version": project.loader_version,
+            "mod_id": project.mod_id,
+            "mod_name": project.mod_name,
+            "mod_description": project.mod_description,
+            "mod_authors": project.mod_authors,
+            "mod_license": project.mod_license,
+            "maven_group": project.maven_group
     }
 }
 

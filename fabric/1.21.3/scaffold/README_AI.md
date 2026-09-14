@@ -42,7 +42,7 @@ yarn_mappings=1.21.3+build.2
 loader_version=0.16.9
 fabric_api_version=0.110.0+1.21.3
 
-mod_id=examplemod          # 全部小写，禁止含 `-`
+mod_id=examplemod          # 全部小写；Fabric / Quilt 允许连字符（官方示例 example-mod），Forge 系禁止
 mod_name=Example Mod
 mod_version=1.0.0
 mod_group_id=com.example.examplemod   # Java 包名前缀
@@ -67,7 +67,7 @@ private static final Block MY_BLOCK =
     Registry.register(
         Registries.BLOCK,
         Identifier.of(MOD_ID, "my_block"),
-        new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
+        new Block(AbstractBlock.Settings.copy(Blocks.STONE).strength(1.5f))
     );
 
 // 同名 BlockItem
@@ -125,13 +125,13 @@ public void onInitialize() {
 // Registry.register() 在类加载时已执行，不需要再次调用
 ```
 
-### 禁止使用 `-` 作为 mod ID 的一部分
+### mod ID 连字符：Fabric 允许，Forge 系才禁止
 
 ```properties
-# ❌ 错误
+# ✅ 合法：Fabric / Quilt 允许连字符（官方 fabric-docs 正文即用 example-mod）
 mod_id=example-mod
 
-# ✅ 正确
+# ✅ 同样合法：本仓 scaffold 默认这种无连字符写法（Forge / NeoForge 系只认这种）
 mod_id=example_mod
 ```
 

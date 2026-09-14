@@ -4,7 +4,7 @@
 > 版本：1.21.10
 > GitHub 路径：develop/networking.md
 > 抓取源：github_raw_versioned
-> 抓取时间：2026-08-19T15:25:43.948Z
+> 抓取时间：2026-09-13T08:50:07.605Z
 > SHA256：64ed954bbd914ef315b4d010fc2046dada0a172b7e17ea4d43c539dc12de05c3
 > 分支：main
 

@@ -3,5 +3,14 @@
   "pack-status": "ready",
   "platform": "fabric",
   "minecraftVersion": "1.21.11",
-  "note": "本文件 2026-09-05 补建（§3.1-2 / §3.5.5c「缺 pack.meta.json」）。四候选面实测全部 present：code-patterns/ 6 篇 + README（README 目录与文件名逐一对得上）；.cursor/rules 11 篇 + 38 个 skill 与 7 套投影及 .cursor/agent/default.md 一致（一致性检查器：node mcp-server/scripts/assert-skill-mirrors.mjs；本文件不记录该门禁某次运行的瞬时结果）；38 个 skill 在本档 .cursor/skills 下是平铺 *.md（与 1.21.4 / 1.21.8 / 1.21.10 / 26.1.2 的 mc-*/SKILL.md 目录形态不同，条数同为 38）；knowledge/version-changes/1.21.x.md 文内即写「适用于 Fabric 1.21.11」；knowledge/ 共 13 文件，含 common/verified-api-1.21.11.md。档形态与已跟踪的 fabric/1.21.1 / fabric/1.20.1 同构（那两档 meta 均已是 ready 且无 scaffold 块），故 status 取 ready。键集抄自 fabric/1.20.1/pack.meta.json。"
+  "note": "本文件 2026-09-05 补建（§3.1-2 / §3.5.5c「缺 pack.meta.json」）。四候选面实测全部 present：code-patterns/ 6 篇 + README（README 目录与文件名逐一对得上）；.cursor/rules 11 篇 + 38 个 skill 与 7 套投影及 .cursor/agent/default.md 一致（一致性检查器：node mcp-server/scripts/assert-skill-mirrors.mjs；本文件不记录该门禁某次运行的瞬时结果）；38 个 skill 在本档 .cursor/skills 下是平铺 *.md（与 1.21.4 / 1.21.8 / 1.21.10 / 26.1.2 的 mc-*/SKILL.md 目录形态不同，条数同为 38）；knowledge/version-changes/1.21.x.md 文内即写「适用于 Fabric 1.21.11」；knowledge/ 共 13 文件，含 common/verified-api-1.21.11.md。档形态与已跟踪的 fabric/1.21.1 / fabric/1.20.1 同构（那两档 meta 均已是 ready 且无 scaffold 块），故 status 取 ready。键集抄自 fabric/1.20.1/pack.meta.json。",
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "9.5.1",
+    "buildVerified": true,
+    "provenance": {
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-14 零改动副本（cp fabric/1.21.11/scaffold → D:/mc-skill-temp/_fab_build2/1.21.11，逐文件 sha256 比对与仓内一致 0 差异）gradlew build --no-daemon → BUILD SUCCESSFUL in 80m36s；JDK 21（G:/graalvm-jdk-21_windows-x64_bin/graalvm-jdk-21.0.12+7.1）+ Gradle 9.5.1 wrapper + fabric-loom 1.17-SNAPSHOT（取自 gradle.properties 的 loom_version） + loader_version=0.19.3 + yarn=1.21.11+build.6；产物 build/libs/examplemod-1.0.0.jar（5419 B，zip 内可扫到 fabric.mod.json）共 2 件：examplemod-1.0.0-sources.jar=4485 examplemod-1.0.0.jar=5419；日志 D:/mc-skill-temp/_fab_build2/1.21.11.log。 三件套出处登记依据：本档 gradle/wrapper/gradle-wrapper.jar 的 sha256 与 mcp-server/data/wrapper-jars.json 里 Gradle 9.5.1 的官方发行包内层条目钉值一致（497c8c2a…）。 边界：只覆盖 :build 任务链（含 remapJar），未跑 runClient / runServer / runData，也没有真机启动证据。"
+    }
+  }
 }

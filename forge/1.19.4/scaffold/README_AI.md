@@ -218,7 +218,7 @@ side="BOTH"                 # 加载侧：BOTH / CLIENT / SERVER
 
 ## 版本注意事项（1.19.4）
 
-- **MobCategory**：1.19.4 Forge / Mojmap 用 `MobCategory`。`SpawnGroup` 是 Yarn 名，不是本档 1.20.7 重命名
+- **MobCategory**：1.19.4 Forge / Mojmap 用 `MobCategory`。`SpawnGroup` 是 Yarn 名，Forge / Mojmap 各版本都没有这个类，本档更不存在所谓「重命名」
 - **pack_format**：1.19.4 数据包为 `12`、资源包为 `13`
 - **Parchment 映射**：`mapping_channel=parchment`，`mapping_version=2023.06.26-1.19.4`
 - **Forge 版本**：`45.4.0`（对应 Minecraft 1.19.4）

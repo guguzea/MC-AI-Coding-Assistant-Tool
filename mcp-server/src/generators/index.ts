@@ -1017,7 +1017,9 @@ public class ${pascal}Packet implements IMessage {
     return forgeSimpleChannelOfficialSkeleton(mod.value, pascal, "1.17.1");
   }
 
-  // 未知 platform token 目前落入 Forge 1.20.1 SimpleChannel；新增枚举必须在此之前接分支，禁止默默吃掉。
+  // 可达性：未知 platform token 已在上方 NETWORK_PACKET_PLATFORMS 白名单处返回 code:null + errors，不会落到这里。
+  // 白名单 32 档里唯一没有专属分支的就是 forge_1.20.1，本行即服务该档；
+  // 新增枚举必须在上面接自己的分支，禁止让它默默落到这里。
   return forgeSimpleChannelSkeleton(mod.value, pascal, "1.20.1", false);
 }
 
@@ -1273,8 +1275,19 @@ export function generateConfig(
     if (library === "yacl") {
       return yaclConfigSkeleton(mod.value, toPascalCase(mod.value), loader, version.trim());
     }
-    return {
-      code: `package com.example.${mod.value}.config;
+    const body = withDocsReviewHeader(
+      `package com.example.${mod.value}.config;
+
+// ── Cloth Config 骨架（${loader} 默认输出：library 不传即此分支，YACL 需显式 opt-in）─────
+// Cloth 方法名与官方文档一致，问题只在未入库却按已核实输出 ⇒ 下面每个 Cloth 成员调用都带未核实标记。
+// 本仓库唯一的 Cloth 入库摘要 mcp-server/data/lib-api-summaries/cloth-config.json
+//   versions 只有 1.14 一档，包名是 me.shedaniel.forge.clothconfig2.*（Forge 工件），
+//   而本骨架吐的是 Fabric 包名 me.shedaniel.clothconfig2.* ⇒ 两者不是同一个工件，
+//   该摘要不能为本骨架任一成员背书（ConfigBuilder 在摘要里只有 getEntryBuilder()）。
+// 编译前置（强制）：先 ingest_loader_api(jarPath=<你自备的 cloth-config jar 绝对路径>, platform=${loader}, minecraftVersion=...)
+// 把 jar 抽成摘要写入 $MC_SKILL_CACHE overlay（禁写仓库 data/），再 query_loader_api 逐签名复核，
+// 才能把 TODO 换成真实调用。
+// 选型只读 knowledge/libs/all-platforms/mc-config/SKILL.md —— 那份文件不含任何方法链，不能当签名依据。
 
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
@@ -1288,25 +1301,33 @@ public final class ${toPascalCase(mod.value)}Config {
     private ${toPascalCase(mod.value)}Config() {}
 
     public static Screen create(Screen parent) {
-        ConfigBuilder builder = ConfigBuilder.create()
-            .setParentScreen(parent)
-            .setTitle(Component.translatable("config.${mod.value}.title"));
-        ConfigEntryBuilder entry = builder.entryBuilder();
-        ConfigCategory general = builder.getOrCreateCategory(Component.translatable("config.${mod.value}.general"));
-        general.addEntry(
-            entry.startBooleanToggle(Component.translatable("config.${mod.value}.enable_feature"), enableFeature)
-                .setDefaultValue(true)
-                .setSaveConsumer(v -> enableFeature = v)
-                .build());
-        builder.setSavingRunnable(() -> { /* persist */ });
-        return builder.build();
+        ConfigBuilder builder = ConfigBuilder.create() // TODO(未核实)
+            .setParentScreen(parent) // TODO(未核实)
+            .setTitle(Component.translatable("config.${mod.value}.title")); // TODO(未核实)
+        ConfigEntryBuilder entry = builder.entryBuilder(); // TODO(未核实)
+        ConfigCategory general = builder.getOrCreateCategory(Component.translatable("config.${mod.value}.general")); // TODO(未核实)
+        general.addEntry( // TODO(未核实)
+            entry.startBooleanToggle(Component.translatable("config.${mod.value}.enable_feature"), enableFeature) // TODO(未核实)
+                .setDefaultValue(true) // TODO(未核实)
+                .setSaveConsumer(v -> enableFeature = v) // TODO(未核实)
+                .build()); // TODO(未核实)
+        builder.setSavingRunnable(() -> { /* persist */ }); // TODO(未核实)
+        return builder.build(); // TODO(未核实)
     }
 }
 `,
+      "query_loader_api",
+      version.trim(),
+    );
+    const todoCount = (body.match(/TODO\(未核实\)/g) ?? []).length;
+    return {
+      code: body,
       warnings: [
         "Cloth Config 最小骨架：请在 build.gradle / fabric.mod.json（或 quilt.mod.json）声明 cloth-config 依赖；未声明则无法编译。",
         "配置屏仅客户端；不要在服务端加载 ConfigBuilder。",
-        "Cloth Config 不是官方 loader API；Cloth 骨架以 knowledge/libs/all-platforms/mc-config/SKILL.md 为准，不要把本模板当 loader 文档。",
+        `Cloth Config 不是官方 loader API；本骨架 ${todoCount} 处成员调用零入库证据（已核实计数 0）。先 ingest_loader_api 把你自备的 cloth-config jar 入库（默认 dryRun，只写 $MC_SKILL_CACHE overlay），再 query_loader_api 逐签名核对，才能去掉 TODO。`,
+        "入库摘要与本骨架不是同一个工件：data/lib-api-summaries/cloth-config.json 的 versions 只有 1.14 一档、包名 me.shedaniel.forge.clothconfig2.*（Forge），本骨架是 Fabric 包名 me.shedaniel.clothconfig2.* ⇒ 该摘要不为任一成员背书。",
+        "Cloth 方法名与官方文档一致，问题只在未入库却按已核实输出；knowledge/libs/all-platforms/mc-config/SKILL.md 只讲选型、不含方法链，不能当签名依据。",
         ...(loader === "quilt" ? ["Quilt 不要把 Cloth Config 当成 QSL。"] : []),
       ],
     };

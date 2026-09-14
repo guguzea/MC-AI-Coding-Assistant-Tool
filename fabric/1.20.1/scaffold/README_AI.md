@@ -42,7 +42,7 @@ yarn_mappings=1.20.1+build.10
 loader_version=0.15.11
 fabric_api_version=0.91.0+1.20.1
 
-mod_id=examplemod          # 全部小写，禁止含 `-`
+mod_id=examplemod          # 全小写；Fabric/Quilt 允许 - 与 _（本示例按官方骨架用无连字符的 examplemod）
 mod_name=Example Mod
 mod_version=1.0.0
 mod_group_id=com.example.examplemod   # Java 包名前缀

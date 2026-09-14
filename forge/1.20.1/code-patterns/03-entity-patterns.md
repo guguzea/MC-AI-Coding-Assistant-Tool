@@ -84,7 +84,10 @@ public class ClientSetup {
     @SubscribeEvent
     public static void onRegisterLayerDefs(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(MY_MODEL_LAYER, () ->
-            LayerDefinition.create(ModelLayers.createHumanoidBody(), 64, 32)
+            // TODO(未核实)：ModelLayers.createHumanoidBody() 不存在（本档 api-index 的 ModelLayers
+            //   只有 createBoatModelName/createSignModelName/register* 等）；已核实可用的构造：
+            //   LayerDefinition.create(PlayerModel.createMesh(CubeDeformation, boolean), 64, 32)
+            LayerDefinition.create(PlayerModel.createMesh(new CubeDeformation(0.0f), false), 64, 32)
         );
     }
 
@@ -97,9 +100,11 @@ public class ClientSetup {
 public class MyEntityRenderer extends HumanoidMobRenderer<MyEntity, MyEntityModel<MyEntity>> {
     public MyEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new MyEntityModel<>(context.bakeLayer(MY_MODEL_LAYER)), 0.5f);
+        // 1.19.4+ 索引实测为 4 参：(RenderLayerParent, HumanoidModel, HumanoidModel, ModelManager)
         this.addLayer(new HumanoidArmorLayer<>(this,
             new MyEntityModel<>(context.bakeLayer(INNER_ARMOR)),
-            new MyEntityModel<>(context.bakeLayer(OUTER_ARMOR))));
+            new MyEntityModel<>(context.bakeLayer(OUTER_ARMOR)),
+            context.getModelManager()));
     }
 
     @Override

@@ -8,5 +8,14 @@
     "verified-api": "无 knowledge/common/verified-api-1.17.1.md。本仓 fabric 14 档只有 5 档带核实表（1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2），本档属其余 9 档；实测本档 .cursor/rules 与 AGENTS.md 引用 verified-api 的处数 = 0 → 不是断链，只是覆盖差异。本档签名依据只有工程 Yarn + query_api（1.17.1 在 Parchment 索引内）+ search_fabric_docs version=1.17.1，禁止拿 1.21.x 档的核实表为本档背书。",
     "version-changes": "knowledge/version-changes/ 只有 1.17.x.md（本档同系列），无 1.18.x / 1.19.x / 1.20.x 后续纪要 → 「1.17.1 之后各版改了什么」本档不答；需要时按版本切到对应档或 search_fabric_docs，禁止克隆 fabric/1.21.11/knowledge/version-changes/1.21.x.md 顶数。",
     "fabric-docs": "上游 fabric-docs versions/ 无本版 develop/* 快照；data/fabric_1.17.1/fabric-docs/1.17.1/index-l0.json 为空数组，正文实际来自 data/fabric_1.17.1/fabric-wiki/1.17.1/processed/。禁止从邻版复制补索引"
+  },
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "7.4.2",
+    "buildVerified": true,
+    "provenance": {
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-14 零改动副本（cp fabric/1.17.1/scaffold → D:/mc-skill-temp/_fab_build2/1.17.1，逐文件 sha256 比对与仓内一致 0 差异）gradlew build --no-daemon → BUILD SUCCESSFUL in 2m34s；JDK 16（G:/openjdk-16.0.2_windows-x64_bin/jdk-16.0.2）+ Gradle 7.4.2 wrapper + fabric-loom 0.10.31 + loader_version=0.11.7 + yarn=1.17.1+build.65；产物 build/libs/examplemod-1.0.0.jar（7296 B，zip 内可扫到 fabric.mod.json）共 5 件：examplemod-1.0.0-dev.jar=5551 examplemod-1.0.0-javadoc.jar=131048 examplemod-1.0.0-sources-dev.jar=4746 examplemod-1.0.0-sources.jar=5930 examplemod-1.0.0.jar=7296；日志 D:/mc-skill-temp/_fab_build2/1.17.1.log。 三件套出处登记依据：本档 gradle/wrapper/gradle-wrapper.jar 的 sha256 与 mcp-server/data/wrapper-jars.json 里 Gradle 7.4.2 的官方发行包内层条目钉值一致（29e49b10…）。 边界：只覆盖 :build 任务链（含 remapJar），未跑 runClient / runServer / runData，也没有真机启动证据。"
+    }
   }
 }

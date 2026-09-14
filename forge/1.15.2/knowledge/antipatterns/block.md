@@ -6,7 +6,7 @@
 
 ```java
 // 错误
-public static final Block MY_BLOCK = new Block(Properties.create(Material.STONE));
+public static final Block MY_BLOCK = new Block(Properties.create(Material.ROCK));
 ```
 
 **症状**：方块在世界显示为缺失方块（紫色黑色格子）。
@@ -18,7 +18,7 @@ public static final DeferredRegister<Block> BLOCKS =
     DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> MY_BLOCK =
-    BLOCKS.register("my_block", () -> new Block(Properties.create(Material.STONE)));
+    BLOCKS.register("my_block", () -> new Block(Properties.create(Material.ROCK)));
 ```
 
 ---

@@ -42,7 +42,7 @@ IF 注册 客户端专用组件（渲染器/快捷键）
   → 在 ClientModInitializer 中处理
 
 IF 平台 = Forge
-  → 跳转 forge/1.20.1/.cursor/rules/01-registry.mdc
+  → 回仓库根 AGENTS.md 重判平台与精确 MC 版本，再 activate_platform_pack action=session（platform=forge）加载 Forge 档；禁止直接 Read 他平台的 .cursor/rules（本档口径见 .cursor/rules/01-registry.mdc:73-77）
 ```
 
 ## Registry 类型

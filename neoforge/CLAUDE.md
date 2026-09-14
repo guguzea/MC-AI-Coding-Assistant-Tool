@@ -25,7 +25,7 @@ Decision:
 
 - 1.20.1：Forge 兼容层，网络 SimpleChannel、数据 Capability（session overlay Forge 1.20.1；包名禁止默写）
 - 1.20.4：`RegisterPayloadHandlerEvent`（单数）+ `IPayloadRegistrar`
-- 1.21.1–1.21.5：`RegisterPayloadHandlersEvent` + `PayloadRegistrar` + `DirectionalPayloadHandler` 双向注册（1.21.5 已核）
+- 1.20.6–1.21.5：`RegisterPayloadHandlersEvent` + `PayloadRegistrar` + `DirectionalPayloadHandler` 双向注册（1.21.5 已核）。「1.21.1 起才变复数」是误标：分界实测落在 1.20.4 → 1.20.6 之间（`data/neoforge_1.20.4/neoforge-docs/1.20.4/processed/networking_payload.md:9` 单数 · `data/neoforge_1.20.6/neoforge-docs/1.20.6/processed/networking_payload.md:9` 复数；本仓无 `data/neoforge_1.20.5` 主文档语料）
 - 1.21.8+：拆成 `RegisterPayloadHandlersEvent`（服务端 handler）+ `RegisterClientPayloadHandlersEvent`（客户端）；禁止把 1.21.5 的 `DirectionalPayloadHandler` 当本档双向注册
 - 26.1：`Identifier` + 与 1.21.8+ 相同的拆分注册（不要 `new ResourceLocation`）
 - Forge 1.20.1 / Neo 1.20.1 才是 SimpleChannel 形态；Neo 1.20.4+ 才是 Payload

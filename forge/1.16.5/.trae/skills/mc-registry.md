@@ -61,7 +61,7 @@ public static final RegistryObject<Item> MY_BLOCK_ITEM = ITEMS.register("my_bloc
 );
 ```
 
-## 注册方块实体（BlockEntity）
+## 注册方块实体（TileEntity）
 
 本档没有 `EntityBlock` / `ServerTicker`。详见 `mc-blockentity`。
 
@@ -71,17 +71,17 @@ public class MyBlock extends Block {
     public boolean hasTileEntity(BlockState state) { return true; }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return MY_BE.get().create();
     }
 }
 
-public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITIES =
+public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES =
     DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
 
-public static final RegistryObject<BlockEntityType<MyBE>> MY_BE =
+public static final RegistryObject<TileEntityType<MyBE>> MY_BE =
     TILE_ENTITIES.register("my_be",
-        () -> BlockEntityType.Builder.of(MyBE::new, EXAMPLE_BLOCK.get()).build(null)
+        () -> TileEntityType.Builder.of(MyBE::new, EXAMPLE_BLOCK.get()).build(null)
     );
 ```
 

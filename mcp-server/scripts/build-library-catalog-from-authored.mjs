@@ -12,6 +12,15 @@
  * - verifiedApi 恒为 {} 初始（D 波次只 patch verifiedApi）；若旧生成文件已有 verifiedApi，
  *   按 id 合并保留，避免重跑丢数据
  * - 按 id 排序输出，2 空格缩进、双引号字符串
+ *
+ * S37 结构噪声收口（2026-09-13，生成器侧）：
+ *   ① `loaders` 按 LOADER_ORDER 规范序输出（不再随 frontmatter 写法漂移：实测旧产物 36 条以 fabric 起、14 条以 forge 起、0 条 neoforge 起）；
+ *   ② `modrinthSlug` 逗号多值做 trim + 去重 + 字典序（消费方 `src/diagnostics/index.ts:525` 就是按逗号切，顺序本无语义）；
+ *   ③ `notes` 为空串 ⇒ **整键省略**（旧产物 50/50 全是 `notes: ""`，纯噪声）；
+ *   ④ `verifiedApi` 为空对象 ⇒ **整键省略**（旧产物 6 条 `{}`；`src/` 零读取，`scripts/assert-lib-ownership.mjs:160,164,265` 三处均为 `e.verifiedApi || {}` 防御式）；
+ *   ⇒ 接口里 `notes` / `verifiedApi` 随之改为可选。`officialUrls: []` / `supportedVersions: []` 未列入本轮噪声清单，保持原样。
+ * ⚠ 本脚本仍是**一次性改写器**（整文件覆盖 `library-catalog.ts`）⇒ 上面四条只保证「未来真重跑时不再产噪」，
+ *   不构成现在可以重跑的理由；现存产物的空键是否摘除属用户裁定（销账 S37 §3）。
  */
 import { readdirSync, readFileSync, writeFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
@@ -203,29 +212,46 @@ if (existsSync(AUTH_DIR)) {
 }
 
 entries.sort((a, b) => a.id.localeCompare(b.id));
+
+// S37 噪声收口：loaders 规范序 + modrinthSlug 多值归一（未列出的 loader 追加在尾部、按字典序，保证不丢值）
+const LOADER_ORDER = ["fabric", "forge", "neoforge", "quilt", "liteloader", "rift", "modloader", "bedrock"];
+function orderLoaders(list) {
+  const arr = Array.isArray(list) ? list.map((x) => String(x).trim()).filter(Boolean) : [];
+  const uniq = [...new Set(arr)];
+  return uniq.sort((x, y) => {
+    const ix = LOADER_ORDER.indexOf(x), iy = LOADER_ORDER.indexOf(y);
+    if (ix !== iy) { if (ix === -1) return 1; if (iy === -1) return -1; return ix - iy; }
+    return x.localeCompare(y);
+  });
+}
+function normalizeSlugList(v) {
+  const raw = String(v ?? "");
+  if (!raw.includes(",")) return raw.trim();
+  return [...new Set(raw.split(",").map((s) => s.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b)).join(",");
+}
 const existingVerifiedApi = loadExistingVerifiedApi();
 const existingSupportedVersions = loadExistingSupportedVersions();
 const existingOfficialUrls = loadExistingOfficialUrls();
 
 const lines = [];
 lines.push("// 由 scripts/build-library-catalog-from-authored.mjs 自动生成，勿手改（D 波次只 patch verifiedApi）");
-lines.push("export interface LibraryCatalogEntry { id: string; modIds: string[]; loaders: string[]; modrinthSlug: string; role: \"api\" | \"author_shared\" | \"trap\"; communityDocId: string; skillId?: string; officialUrls: string[]; notes: string; verifiedApi: Record<string, unknown>; supportedVersions: string[]; }");
+lines.push("export interface LibraryCatalogEntry { id: string; modIds: string[]; loaders: string[]; modrinthSlug: string; role: \"api\" | \"author_shared\" | \"trap\"; communityDocId: string; skillId?: string; officialUrls: string[]; notes?: string; verifiedApi?: Record<string, unknown>; supportedVersions: string[]; }");
 lines.push("export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [");
 for (const e of entries) {
   lines.push("  {");
   lines.push(`    id: ${JSON.stringify(e.id)},`);
   lines.push(`    modIds: ${JSON.stringify(e.modIds)},`);
-  lines.push(`    loaders: ${JSON.stringify(e.loaders)},`);
-  lines.push(`    modrinthSlug: ${JSON.stringify(e.modrinthSlug)},`);
+  lines.push(`    loaders: ${JSON.stringify(orderLoaders(e.loaders))},`);
+  lines.push(`    modrinthSlug: ${JSON.stringify(normalizeSlugList(e.modrinthSlug))},`);
   lines.push(`    role: ${JSON.stringify(e.role)},`);
   lines.push(`    communityDocId: ${JSON.stringify(e.communityDocId)},`);
   if (e.skillId) lines.push(`    skillId: ${JSON.stringify(e.skillId)},`);
   const ou = existingOfficialUrls.get(e.id);
   lines.push(`    officialUrls: ${ou && ou.length > 0 ? JSON.stringify(ou) : "[]"},`);
-  lines.push(`    notes: ${JSON.stringify(e.notes)},`);
+  if (String(e.notes ?? "").trim()) lines.push(`    notes: ${JSON.stringify(e.notes)},`);
   const va = existingVerifiedApi.get(e.id);
-  const vaRaw = va && va.length > 2 ? va : "{}";
-  lines.push(`    verifiedApi: ${vaRaw},`);
+  const vaRaw = va && va.length > 2 ? va : "";
+  if (vaRaw) lines.push(`    verifiedApi: ${vaRaw},`);
   const sv = existingSupportedVersions.get(e.id);
   lines.push(`    supportedVersions: ${sv ? JSON.stringify(sv) : "[]"},`);
   lines.push("  },");

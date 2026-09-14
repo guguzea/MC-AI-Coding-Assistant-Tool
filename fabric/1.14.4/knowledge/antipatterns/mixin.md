@@ -64,7 +64,7 @@ public class MixinPlayerEntity {
 @Mixin(PlayerEntity.class)
 public class MixinPlayerEntity {
     @Shadow
-    private static MinecraftClient instance;  // ✅ 使用 Yarn 映射中的正确名称
+    private PlayerInventory inventory;  // ✅ PlayerEntity 确有该字段（yarn-mappings.sqlite fields 表：inventory / field_7514）
 }
 ```
 
@@ -136,7 +136,7 @@ loom {
 ```
 
 ```json
-// fabric.mixins.json
+// fabric.mod.json
 {
   "accessWidener": "examplemod.accesswidener"  // ✅ 引用 Access Widener
 }

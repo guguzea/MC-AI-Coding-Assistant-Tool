@@ -92,8 +92,9 @@ Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),
 
 **错误代码：**
 ```java
-// ❌ 直接写完整字符串
-Identifier.of("examplemod:my_item");  // 这会被当作 namespace = "examplemod:my_item"
+// ❌ 单字符串重载不是「整串当 namespace」：它会按冒号拆分
+Identifier.of("examplemod:my_item");  // → namespace="examplemod", path="my_item"（结果与两段写法相同）
+Identifier.of("my_item");             // → 真正的坑：没有冒号时 namespace 默认 "minecraft"，注册到别人命名空间
 // ✅ 正确方式
 Identifier.of(MOD_ID, "my_item");
 ```

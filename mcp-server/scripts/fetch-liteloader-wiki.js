@@ -11,11 +11,13 @@
  *   - 不写 liteloader/<ver>/knowledge/
  *   - 官方站未按 MC 版本切分；三档各挂一份，L0 带 wikiIsCurrentSite
  *
- *   node scripts/fetch-liteloader-wiki.js [--dry-run]
+ *   默认 dry-run（只打印 DRYRUN，不联网不写盘）：node scripts/fetch-liteloader-wiki.js
+ *   实抓实写：node scripts/fetch-liteloader-wiki.js --write
  */
-import { existsSync, mkdirSync, writeFileSync, readdirSync, unlinkSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { existsSync, readdirSync, unlinkSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { emit, logDryRunBanner, wantWrite } from "../../scripts/_lib/write-guard.mjs";
 import {
   dokuwikiToMarkdown,
   extractDokuTitle,
@@ -28,7 +30,11 @@ import {
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const VERSIONS = ["1.12.2", "1.10.2", "1.8.9"];
-const DRY = process.argv.includes("--dry-run");
+const WRITE = wantWrite();
+
+function repoRel(p) {
+  return relative(ROOT, p).split("\\").join("/");
+}
 
 const RAW_BASE = "https://www.liteloader.com/explore/docs/_export/raw/";
 const HTML_BASE = "https://www.liteloader.com/explore/docs/";
@@ -173,12 +179,12 @@ function wrapMarkdown(page, version) {
 }
 
 async function main() {
-  console.log(`[fetch-liteloader-wiki] dry-run=${DRY}`);
+  console.log(`[fetch-liteloader-wiki] write=${WRITE}`);
   console.log("抓取官方 DokuWiki raw export …");
-  const pages = DRY
-    ? SEEDS.map((id) => ({ id, title: id, raw: "", mdBody: "", htmlUrl: HTML_BASE + id }))
-    : await crawl();
-  if (!DRY && pages.length === 0) {
+  const pages = WRITE
+    ? await crawl()
+    : SEEDS.map((id) => ({ id, title: id, raw: "", mdBody: "", htmlUrl: HTML_BASE + id }));
+  if (WRITE && pages.length === 0) {
     console.error("未抓到任何 wiki 页，保持原 L0（核实表不动）。");
     process.exit(2);
   }
@@ -189,17 +195,13 @@ async function main() {
     const outDir = join(ROOT, "data", `liteloader_${ver}`, "liteloader-docs", ver);
     const processed = join(outDir, "processed");
     const rawDir = join(outDir, "raw");
-    if (!DRY) {
-      mkdirSync(processed, { recursive: true });
-      mkdirSync(rawDir, { recursive: true });
-    }
     const wikiEntries = [];
     for (const page of pages) {
       const slug = wikiSlug(page.id);
       const filename = `${slug}.md`;
       const md = wrapMarkdown(page, ver);
-      if (!DRY) {
-        writeFileSync(join(rawDir, `${slug}.txt`), page.raw, "utf8");
+      if (WRITE) {
+        emit(join(rawDir, `${slug}.txt`), page.raw);
         writeWikiProcessed(processed, filename, md);
       }
       wikiEntries.push({
@@ -216,7 +218,7 @@ async function main() {
         sha256: sha256(md),
       });
     }
-    if (!DRY) {
+    if (WRITE) {
       const keep = new Set(wikiEntries.flatMap((e) => {
         const slug = e.id.replace(/^[^/]+\//, "");
         return [`${slug}.md`, `${slug}.txt`];
@@ -226,13 +228,18 @@ async function main() {
       const stats = mergeThinL0(join(outDir, "index-l0.json"), wikiEntries);
       console.log(`  ${ver}: kept ${stats.kept} 核实表卡片 + wiki ${stats.wiki} → L0 ${stats.total}`);
     } else {
-      console.log(`  ${ver}: would merge ${wikiEntries.length} wiki cards`);
+      console.log(
+        `  ${ver}: DRYRUN ${repoRel(processed)}/wiki_*.md × ${wikiEntries.length}` +
+          ` + ${repoRel(rawDir)}/wiki_*.txt × ${wikiEntries.length}` +
+          ` + ${repoRel(join(outDir, "index-l0.json"))}（mergeThinL0）`,
+      );
     }
   }
+  if (!WRITE) logDryRunBanner("fetch-liteloader-wiki");
 }
 
-// 只在直接执行时抓取；被 import 时不得联网爬取/写 data/（DRY 等参数来自 argv，
-// 测试进程里 import 就等于按「非 dry-run」真写盘）。
+// 只在直接执行时抓取；被 import 时不得联网爬取/写 data/（WRITE 来自 argv，
+// 默认 dry：不传 --write 时 emit 只打 DRYRUN，测试进程 import 更不落笔）。
 const invokedDirectly =
   !!process.argv[1] &&
   import.meta.url.toLowerCase() ===

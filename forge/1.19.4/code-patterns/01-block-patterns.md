@@ -162,10 +162,9 @@ public static final RegistryObject<Block> MY_ORE = BLOCKS.register("my_ore",
         .color(MaterialColor.STONE)
         .strength(3.0f, 3.0f)
         .requiresCorrectToolForDrops()
-        // TODO(未核实)：.insertXp(1, 3, 7) —— forge/1.20.1/code-patterns/01-block-patterns.md:137 在用，
-        //   但 query_api（--version=1.19.4 与 --version=1.20.1 的 BlockBehaviour$Properties）与
-        //   get_method_params net.minecraft.world.level.block.state.BlockBehaviour$Properties#insertXp 都查不到该方法。
-        //   掉落经验请改由战利品表（LootTableProvider 的 SetCountFunction/爆炸衰减）实现，见 05-datagen-patterns.md。
+        // TODO(未核实)：经验掉落不在 Properties 上 —— insertXp/xp 在 1.17.1–1.20.4 的 api-index
+        //   （BlockBehaviour$Properties）中全部 ABSENT（1.20.1/1.20.4 档原用法已按此移除）。
+        //   正解需 ingest_loader_api 入库原版/Forge jar 后核实；落地可考虑战利品表路径（见 05-datagen-patterns.md）。
     )
 );
 ```

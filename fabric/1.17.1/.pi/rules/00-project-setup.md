@@ -193,7 +193,7 @@ tasks.named('jar').configure {
     "fabricloader": ">=0.11.0",
     "fabric-api": "*",
     "minecraft": ">=1.17.1",
-    "java": ">=17"
+    "java": ">=16"
   },
   "suggests": {}
 }
@@ -203,4 +203,4 @@ tasks.named('jar').configure {
 - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
 - `entrypoints` 中的类必须实现 `ModInitializer`（client 为 `ClientModInitializer`）
 - `depends` 中的 `fabricloader`、`minecraft` 是必需依赖
-- `environment`：`"*"` 表示全平台，`"client"` 仅客户端，`"server"` 仅服务端
+- `environment`：`"*"` 表示全平台，`"client"` 仅客户端，`"server"` 仅服务端（`fabric.mod.json` v1 schema 核心字段，本档 loader 0.11.7 支持；官方规范未列最低 loader 版本门槛，与 1.16.5 同口径）

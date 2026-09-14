@@ -2,20 +2,24 @@
 name: mc-kotlin-for-forge
 description: Kotlin for Forge（KFF）语言加载器（Forge）。触发词：Kotlin、KFF、kotlinforforge、协程、coroutines、语言加载器
 platforms: [forge]
-mcVersions: ["1.14-1.21.10"]
+mcVersions: ["1.14-1.21.11"]
 communityDocId: authored/lib-kotlin-for-forge
 mappings: hint
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/kotlin-for-forge 定向查询 game_versions=26.2 / 1.21.11：6.3.0 release（2026-06-28）只标 neoforge 且 gameVersions 含 26.2；6.0.0 是最后标 forge 的构建，最高 1.21.11）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/kotlin-for-forge/version?limit=100" 后按 game_versions + loaders + version_type 重取上界（本轮 limit=100 覆盖不到低界时改定向 game_versions 查询）
+
 # Kotlin for Forge（Forge）
 
-Forge 模组用 Kotlin 编写：语言加载器把 Kotlin 标准库、kotlinx-coroutines 运行时带进游戏（1.14-1.21.10），玩家装 KFF 即可运行 Kotlin 模组。Fabric 平台用 `mc-fabric-language-kotlin`。
+Forge 模组用 Kotlin 编写：语言加载器把 Kotlin 标准库、kotlinx-coroutines 运行时带进游戏（1.14-1.21.11），玩家装 KFF 即可运行 Kotlin 模组。Fabric 平台用 `mc-fabric-language-kotlin`。
 
-> 版本区间口径：以 `library-catalog.ts` 的 `verifiedApi` 实测键为准（最低 1.14、最高 1.21.10）。
+> 版本区间口径：上界以 Modrinth `loaders[]` + `game_versions[]` 实读为准（Modrinth 实读 2026-09-13：**最后仍声明 forge 的构建是 `6.0.0`（release，覆盖到 1.21.11）**；`6.1.0`/`6.2.0`/`6.3.0` 已转 **neoforge-only**；按发布日最新的 forge 标注构建 `5.12.0` 只覆盖到 1.21.8）。
+> `library-catalog.ts` 的 `verifiedApi` 最高 forge 键仍是 `1.21.10`，属滞后记录，不再充当上界依据。
 > ⚠️ **勿凭「classic Forge 止于 1.20.4」推断上界**——Forge 51.x=1.21、52.x=1.21.1 真实存在
 > （本仓 `forge/1.21.1/` 草稿树即证据），catalog 中 KFF 确有 1.21.10 记录。
-> catalog 里 KFF 是**单一条目**（`loaders: [forge, neoforge]`），未按 loader 拆分，
-> 故 forge-only 与 neo-only 两档取同一区间；将来若按 loader 分别核实再各自收紧。
+> catalog 里 KFF 是**单一条目**（`loaders: [forge, neoforge]`），未按 loader 拆分区间，
+> 故两档已各自按 Modrinth 收紧：**forge-only 止于 1.21.11**（26.x 无 Forge 构建），NeoForge 工程读 `neo-only` 档（可达 26.2）。
 
 > 本稿位于 `knowledge/libs/forge-only/`，供 Forge 解析路径使用。NeoForge 工程请读 `neo-only/mc-kotlin-for-forge`。
 
@@ -30,7 +34,7 @@ Decision: Forge 用不用 Kotlin
 → 已选：
    ├─ 依赖：mods.toml 声明 kotlinforforge（玩家需装语言加载器）
    ├─ 标准库/协程：由 KFF 打包提供，避免自引冲突版本
-   └─ 版本：1.14-26.2 内与 MC 对齐
+   └─ 版本：1.14-1.21.11 内与 MC 对齐（26.x 无 Forge 构建）
 ```
 
 ## 软/硬依赖

@@ -518,7 +518,21 @@ description: |
   const diskSet = new Set(disk);
   const described = new Set();
   const dirs = new Map();
-  for (const r of cp) {
+  // S32 归档腿：LEGACY 共享树的条目 description 是归档说明（指向 neoforge/LEGACY-NOTICE.md），
+  // 按设计不含自身路径 ⇒ 不参与「description 指 own path」对账，改查另一组同样硬的不变量。
+  const NOTICE_REL = "neoforge/LEGACY-NOTICE.md";
+  const archivedEntries = cp.filter((r) => r.archived === true);
+  if (archivedEntries.length) {
+    assert.ok(existsSync(join(repo, NOTICE_REL)), `${archivedEntries.length} 条 archived 条目，但 ${NOTICE_REL} 不在盘上（归档面空指）`);
+    for (const r of archivedEntries) {
+      assert.ok(String(r.description).includes(NOTICE_REL), `${r.uri} 标了 archived 但 description 未指向 ${NOTICE_REL}`);
+      const body = readKnowledgeResource(r.uri);
+      assert.equal(body.found, false, `${r.uri} 已归档却仍把正文当可用知识返回（found:${body.found}）`);
+      assert.equal(body.archived, true, `${r.uri} 读取结果未带 archived:true`);
+      assert.ok(String(body.text).includes(NOTICE_REL), `${r.uri} 的归档 hint 未指向 ${NOTICE_REL}`);
+    }
+  }
+  for (const r of cp.filter((x) => x.archived !== true)) {
     const rel = String(r.description).match(/[\w./-]+\.md/)?.[0] ?? "";
     assert.ok(diskSet.has(rel), `${r.uri} 的 description 指向盘上没有的文件：${rel}`);
     described.add(rel);
@@ -533,7 +547,8 @@ description: |
     if (!dirs.has(dir)) dirs.set(dir, new Set());
     dirs.get(dir).add(segs[segs.length - 1]);
   }
-  assert.equal(described.size, disk.length, `清单 description 去重后 ${described.size} ≠ 盘上 ${disk.length}`);
+  assert.equal(described.size + archivedEntries.length, disk.length,
+    `清单 description 去重后 ${described.size} + 归档 ${archivedEntries.length} ≠ 盘上 ${disk.length}`);
   for (const [dir, files] of dirs) {
     assert.ok(files.has("README.md"), `${dir}/ 没有 README.md 索引（§3.1-4 裁定不重命名，索引必须由每档 README 承担）`);
   }
@@ -1645,14 +1660,24 @@ description: |
     assert.deepEqual(r.candidates ?? null, expectCandidates, `${platform} ${version} 候选清单 ≠ 登记面写的 ${JSON.stringify(expectCandidates)}`);
   }
   const { searchDocs } = await import("./dist/docs-platform/forge/index.js");
-  const searched = async (platform, version) =>
-    JSON.parse((await searchDocs({ platform, version, query: "registry" })).content[0].text);
+  const searched = async (platform, version, query = "registry") =>
+    JSON.parse((await searchDocs({ platform, version, query })).content[0].text);
   for (const version of ["1.20.6", "1.21.2", "1.21.5", "1.21.6", "1.21.7", "1.21.9"]) {
     const s = await searched("quilt", version);
     assert.equal(s.ok, false, `quilt ${version} 空洞档检索居然成功`);
     assert.equal(codeOf(s), "VERSION_NOT_FOUND", `quilt ${version} 检索没按 VERSION_NOT_FOUND 报错`);
     assert.equal(s.fallback ?? null, null, `quilt ${version} 空洞档不得 fallback 到邻版正文`);
     assert.equal("total" in s, false, `quilt ${version} 错误载荷冒出 total，登记面「没有 total 字段」作废`);
+  }
+  // QSL 措辞腿（2026-09-13 补）：空洞档在 QSL 关键词下改口给同线语料。
+  // 没有这一半，登记面「普通词一律 VERSION_NOT_FOUND」会被误读成「quilt 空洞档查不到任何 QSL 内容」，
+  // 而实际它会静悄悄返回 1.21.1 的正文 —— 那既不是本版证据，也不会报错。
+  for (const version of ["1.20.6", "1.21.2", "1.21.5", "1.21.6", "1.21.7", "1.21.9"]) {
+    const q = await searched("quilt", version, "QSL registry key");
+    assert.equal(q.ok, true, `quilt ${version} 的 QSL 措辞查询不再改口到同线语料 ⇒ 登记面新写的例外段作废，须同步改文`);
+    assert.equal(q.fallback, "quilt", `quilt ${version} QSL 查询缺 fallback:"quilt" 标记 ⇒ 调用方无法分辨这不是本版正文`);
+    assert.equal(typeof q.source_version, "string", `quilt ${version} QSL 查询没带 source_version ⇒ 无法知道实际取的是哪一档`);
+    assert.equal(q.total > 0, true, `quilt ${version} QSL 查询 ok:true 却零命中`);
   }
   const fabHollowSearch = JSON.parse((await searchFabricDocs({ query: "registry", version: "1.21.6" })).content[0].text);
   assert.equal(fabHollowSearch.ok, false, "fabric 1.21.6 空洞档检索居然成功");

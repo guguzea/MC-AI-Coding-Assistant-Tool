@@ -20,7 +20,7 @@ public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
             .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE)
             .build())
         .generationSettings(...)
-        .mobSettings(...)
+        .mobSpawnSettings(...)
         .build()
 );
 ```

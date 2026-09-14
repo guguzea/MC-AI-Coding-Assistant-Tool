@@ -51,7 +51,7 @@ for (const { name, version } of listFabricDirs()) {
       }
       if (match[2] === version) continue;
       const updated = text.replace(markerRx, `$1${version}`);
-      if (!dryRun) fs.writeFileSync(file, updated, "utf8");
+      emit(file, updated);
       changed++;
       changes.push({ file: path.relative(dataRoot, file), from: match[2], to: version });
     }

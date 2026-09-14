@@ -13,7 +13,7 @@
 
 **错误代码：**
 ```java
-// ❌ 默认 durability 为 Integer.MAX_VALUE，物品永远不会消耗
+// ❌ 未调 .maxDamage()：Item.Settings 默认 maxDamage=0 → 物品不可损坏（不是 Integer.MAX_VALUE，见 03-item.mdc:14）
 private static final Item MY_TOOL = Registry.register(
     Registry.ITEM,
     new Identifier(MOD_ID, "my_tool"),

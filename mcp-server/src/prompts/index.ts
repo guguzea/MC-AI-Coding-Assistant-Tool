@@ -3,6 +3,7 @@ import { join } from "path";
 import { resolveDataDir, resolveCommunityDir, resolveRepoRoot, isResolvedInside } from "../utils/path.js";
 import { getWorkflowTemplate, listWorkflowTemplateNames, WORKFLOW_TEMPLATES } from "./templates.js";
 import { getCommunityDocStore } from "../docs-platform/community/store.js";
+import { legacyArchiveMatchRel, legacyArchivedNote } from "../platform-pack/legacy-archive.js";
 
 export { getWorkflowTemplate, listWorkflowTemplateNames, WORKFLOW_TEMPLATES };
 
@@ -10,6 +11,8 @@ export interface KnowledgeResource {
   uri: string;
   name: string;
   description: string;
+  /** S32：正文已 Archived 的条目 —— 只登记名字与解释，read_knowledge_resource 不再吐正文。 */
+  archived?: boolean;
 }
 
 /** §3.1-4：只有这三家平台树有 `code-patterns/`，与 catalog.ts 的 KNOWLEDGE_PLATFORM_DIRS 同集合。 */
@@ -64,10 +67,27 @@ function codePatternRel(uri: string): string | null {
   return `${parts.slice(0, -1).join("/")}/code-patterns/${file}`;
 }
 
+/**
+ * S32：任意 `mcskill://` URI 是否指向 LEGACY 归档树？命中返回所属归档目录。
+ * 两条形态都要管：`mcskill://code-patterns/neoforge/<文件>.md`（经 codePatternRel 归位）
+ * 与直接把仓库相对路径写进 URI 的形态（`mcskill://neoforge/knowledge/...`）。
+ */
+function legacyHitFromUri(uri: string): string | null {
+  const raw = String(uri ?? "");
+  if (raw.startsWith(CODE_PATTERN_PREFIX)) {
+    const rel = codePatternRel(raw);
+    if (rel) {
+      const dir = legacyArchiveMatchRel(rel);
+      if (dir) return dir;
+    }
+  }
+  return legacyArchiveMatchRel(raw.replace(/^mcskill:\/\//, ""));
+}
+
 export function listKnowledgeResources(): KnowledgeResource[] {
   const resources: KnowledgeResource[] = [
     { uri: "mcskill://matrix/mixin-support", name: "mixin-support-matrix", description: "mixin_analyze 支持矩阵摘要" },
-    { uri: "mcskill://schema/sqlite", name: "mapping-sqlite-schema", description: "yarn-mappings.sqlite v2/v3 字段说明。必须带 ?version=<精确 MC 版本>；裸 URI 只返回参数缺失提示" },
+    { uri: "mcskill://schema/sqlite", name: "mapping-sqlite-schema", description: "yarn-mappings.sqlite 的 schema 谱系（v2 / v3 / 现批次 v4）字段说明。必须带 ?version=<精确 MC 版本>；裸 URI 只返回参数缺失提示" },
     { uri: "mcskill://version-changes/1.21", name: "version-1.21", description: "1.21 变更专章；实读 fabric/1.21.11/knowledge/version-changes/1.21.x.md，仅该档，不代表其他 1.21 档 —— 另有 fabric/1.21.1/knowledge/version-changes/1.21.x.md、fabric/1.21.4/knowledge/version-changes/1.21.x.md、fabric/1.21.8/knowledge/version-changes/1.21.x.md、fabric/1.21.10/knowledge/version-changes/1.21.x.md 各写自己的迁移区间，不在本 URI 面，按文件读" },
     { uri: "mcskill://antipatterns/registry", name: "antipattern-registry", description: "注册反模式短文；实读 forge/1.20.1/knowledge/antipatterns/registry.md，仅该档" },
     { uri: "mcskill://patterns/README", name: "patterns-index", description: "社区 patterns 索引；实读 community_knowledge/patterns/README.md，不是仓库根 knowledge/patterns/ 短片段库" },
@@ -77,6 +97,12 @@ export function listKnowledgeResources(): KnowledgeResource[] {
     const dir = rel.slice(0, rel.lastIndexOf("/code-patterns/"));
     const fileName = rel.slice(rel.lastIndexOf("/") + 1);
     const name = `code-patterns-${uri.slice(CODE_PATTERN_PREFIX.length).replace(/\//g, "-").replace(/\.md$/, "")}`;
+    // S32：LEGACY 共享树只登记名字 + 解释，正文不再当可用知识返回。
+    const archivedDir = legacyArchiveMatchRel(rel);
+    if (archivedDir) {
+      resources.push({ uri, name, description: legacyArchivedNote(archivedDir), archived: true });
+      continue;
+    }
     resources.push(
       fileName === "README.md"
         ? { uri, name, description: `实读 ${rel}；本目录「主题 → 文件」索引（其余 code-patterns 条从这里取主题归属）` }
@@ -100,7 +126,26 @@ export function listKnowledgeResources(): KnowledgeResource[] {
   return resources;
 }
 
-export function readKnowledgeResource(uri: string): { found: boolean; uri: string; mimeType: string; text: string } {
+export function readKnowledgeResource(uri: string): {
+  found: boolean;
+  uri: string;
+  mimeType: string;
+  text: string;
+  archived?: boolean;
+} {
+  // S32：LEGACY 归档树命中 → 带内拒答（found:false + archived:true），先于任何正文读取。
+  // 不抛异常、不带 error.code：CLI 的 isToolFailure 因此仍按正常否定答案退出 0。
+  const archivedHit = legacyHitFromUri(uri);
+  if (archivedHit) {
+    return {
+      found: false,
+      uri,
+      mimeType: "text/plain",
+      archived: true,
+      text: legacyArchivedNote(archivedHit),
+    };
+  }
+
   if (uri.startsWith("mcskill://workflow/")) {
     const name = uri.replace("mcskill://workflow/", "");
     const t = getWorkflowTemplate(name);
@@ -142,11 +187,21 @@ export function readKnowledgeResource(uri: string): { found: boolean; uri: strin
       };
     }
     const p = join(resolveDataDir(`forge_${ver}`, "mappings"), "yarn-mappings.sqlite");
+    if (!existsSync(p)) {
+      return {
+        found: false,
+        uri,
+        mimeType: "text/plain",
+        text:
+          `该版本没有映射库文件：${p}。先用 diagnose_data_paths 确认 MC_SKILL_DATA，` +
+          `或改查已入库档位（list_doc_versions / npm run build:yarn-sqlite 生成）。`,
+      };
+    }
     return {
       found: true,
       uri,
       mimeType: "text/plain",
-      text: `映射库路径: ${p}\nschema v3: methods, fields, searge_fields；v2 只读 methods。`,
+      text: `映射库路径: ${p}\nschema 谱系：v2 只读 methods；v3 起含 fields / searge_fields；现批次生产者产 v4（另加单列 name_official 索引）。`,
     };
   }
 

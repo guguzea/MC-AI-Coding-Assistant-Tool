@@ -271,7 +271,7 @@ public class ExampleMod {
 ```
 
 > 注意：
-> - DeferredRegister 在 modEventBus 上注册后，会在正确的 RegistryEvent 时机自动执行所有 register() 调用
+> - DeferredRegister 在 modEventBus 上注册后，会在正确的 RegisterEvent 时机自动执行所有 register() 调用（证据：本档语料 `concepts_registries.md:18`「registers the objects from those suppliers during `RegisterEvent`」；该事件只派发于 Mod 总线，见 `:39`）
 > - BlockItem 与方块使用相同 registry name，Forge 自动关联，无需手动设置
 > - `RegistryObject.get()` 可在 lambda 内部安全使用，此时对象已完成注册
 

@@ -32,6 +32,7 @@ import { detectLoader, detectProjectLoaders, classifyJavaFmlToml, getMigrationGu
 import { getVersionInfo } from "./dist/version/index.js";
 import { resolvePackFormat } from "./dist/localize/pack-format.js";
 import { mapShortCommand } from "./dist/cli-parse.js";
+import { copyTree } from "../scripts/_lib/copy-tree.mjs";
 import { isQslSpecificQuery, filterFabricFallbackHits } from "./dist/docs-platform/quilt-fallback-filter.js";
 import {
   generateAddonManifest,
@@ -1238,7 +1239,7 @@ async function testDatagenAndMappingGates() {
     JSON.stringify(csvOwnerGuided.notes),
   );
 
-  // schema v3 field: CSV searge field
+  // schema v4 field: CSV searge field
   const fieldCsv = convertMapping({
     from: "mojang",
     to: "mcp",
@@ -1249,9 +1250,10 @@ async function testDatagenAndMappingGates() {
   assert.equal(fieldCsv.found, true, "1.14.4 fields.csv should resolve field searge");
   assert.equal(fieldCsv.converted, "isPotionDurationMax");
   assert.equal(fieldCsv.mappingType, "field");
-  assert.equal(fieldCsv.schemaVersion, "3");
+  // 2026-09-14 Q0：22 库全量重建后批次 schema=4；这里回显的是库自身 schema，判据仍是严格相等。
+  assert.equal(fieldCsv.schemaVersion, "4");
 
-  // yarn-tiny field path must not claim SCHEMA_FIELDS_UNAVAILABLE on v3
+  // yarn-tiny field path must not claim SCHEMA_FIELDS_UNAVAILABLE on the current schema
   const fieldYarn = convertMapping({
     from: "yarn",
     to: "mojang",
@@ -1261,7 +1263,7 @@ async function testDatagenAndMappingGates() {
     memberKind: "field",
   });
   assert.notEqual(fieldYarn.resultKind, "SCHEMA_FIELDS_UNAVAILABLE");
-  assert.equal(fieldYarn.schemaVersion, "3");
+  assert.equal(fieldYarn.schemaVersion, "4");
 
   const csvRevUnique = convertMapping({
     from: "mojang",
@@ -1477,6 +1479,22 @@ async function testDatagenAndMappingGates() {
   assert.equal(itemSimple.className, "net.minecraft.world.item.Item");
   assert.equal(itemSimple.autoCorrected, true);
   assert.equal(itemSimple.requestedClassName, "Item");
+  // S15a-6：请求名已带包路径却命中**另一个类**时，不能只留一个 autoCorrected 布尔。
+  const wrongPkg = await queryApi({ className: "level.material.Material", version: "1.20.4" });
+  assert.equal(wrongPkg.found, true, JSON.stringify(wrongPkg).slice(0, 300));
+  assert.equal(wrongPkg.autoCorrected, true, JSON.stringify(wrongPkg).slice(0, 300));
+  assert.equal(wrongPkg.className, "net.minecraft.client.resources.model.Material");
+  assert.ok(
+    wrongPkg.warning && /另一个类/.test(wrongPkg.warning) &&
+      wrongPkg.warning.includes("level.material.Material") &&
+      wrongPkg.warning.includes("net.minecraft.client.resources.model.Material"),
+    `跨包改写 className 必须给显著 warning：${JSON.stringify(wrongPkg.warning)}`,
+  );
+  // 正控：简名唯一命中只是补全包名，不是换类，不得冒出「另一个类」warning。
+  assert.ok(
+    !/另一个类/.test(itemSimple.warning ?? ""),
+    `简名补全不该报「另一个类」：${JSON.stringify(itemSimple.warning)}`,
+  );
   const q1211 = await queryApi({
     className: "net.minecraft.world.entity.LivingEntity",
     version: "1.21.1",
@@ -3183,6 +3201,35 @@ async function testReviewFixes() {
   assert.equal(neoCommentBus.status, "failed", JSON.stringify(neoCommentBus));
   assert.ok(neoCommentBus.errors.some((e) => /IEventBus/.test(e)), JSON.stringify(neoCommentBus.errors));
 
+  // S15a-5：类名/文件名一致性检查旧正则只认 `public class`，
+  // `public final class` 之类的声明被静默跳过（文件名与类名不符也不报）。
+  const finalClassMismatch = validateProject({
+    buildGradle: "plugins { id 'net.minecraftforge.gradle' }\n",
+    modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content: '@Mod("examplemod")\npublic final class WrongName {}\n',
+    }],
+  });
+  assert.ok(
+    finalClassMismatch.errors.some((e) => /文件名 'ExampleMod\.java' 与类名 'WrongName' 不匹配/.test(e)),
+    `public final class 类名与文件名不符必须报错：${JSON.stringify(finalClassMismatch.errors)}`,
+  );
+
+  // 正控：同名 public final class 不得冒出该错误（防止只是把检查反过来写坏）。
+  const finalClassMatch = validateProject({
+    buildGradle: "plugins { id 'net.minecraftforge.gradle' }\n",
+    modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content: '@Mod("examplemod")\npublic final class ExampleMod {}\n',
+    }],
+  });
+  assert.ok(
+    !finalClassMatch.errors.some((e) => /与类名/.test(e)),
+    `同名 public final class 不应报类名不匹配：${JSON.stringify(finalClassMatch.errors)}`,
+  );
+
   const exclusiveHit = exclusiveFabricFallbackRefusal({
     id: "wiki/FabricRegistryBuilder",
     label: "net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder",
@@ -4115,7 +4162,22 @@ public class ExampleMod { }
   const cfgYacl = generateConfig("my_mod", "fabric", "1.21.11", "yacl");
   assert.ok(cfgYacl.code?.includes("dev.isxander.yacl3"), cfgYacl.code?.slice(0, 300));
   assert.ok(!/clothconfig2/.test(cfgYacl.code || ""), "library=yacl 不得再吐 Cloth 骨架");
-  assert.ok(!cfgFab.code?.includes("TODO(未核实)"), "默认 cloth 骨架不得被 yacl 未核实标记污染");
+  // S16/F10 裁定：Cloth 成员也没有入库证据（仓内唯一摘要只有 1.14 一档、且是 Forge 包名工件），
+  // 所以默认骨架必须自带未核实标记。旧断言把「不被 yacl 污染」写成了「假装已核实」。
+  const clothTodo = (cfgFab.code.match(/TODO\(未核实\)/g) ?? []).length;
+  assert.ok(clothTodo > 0, "cloth 骨架成员调用必须带未核实标记");
+  assert.ok(
+    cfgFab.warnings?.some(
+      (w) => w.includes(`本骨架 ${clothTodo} 处成员调用零入库证据`) && /ingest_loader_api/.test(w),
+    ),
+    JSON.stringify(cfgFab.warnings),
+  );
+  assert.match(cfgFab.code || "", /^\/\/ 修改此骨架前必须用 query_loader_api\(version=1\.21\.11\) 复核/);
+  // 不污染的真判据：cloth 分支里不得出现任何 YACL 符号。
+  assert.ok(
+    !/dev\.isxander|YetAnotherConfigLib/.test(cfgFab.code || ""),
+    "默认 cloth 骨架不得混入 yacl 符号",
+  );
   // 未核实计数由骨架自身 TODO 条数推导，禁止写死数字。
   const yaclTodo = (cfgYacl.code.match(/TODO\(未核实\)/g) ?? []).length;
   assert.ok(yaclTodo > 0, "yacl 骨架必须保留未核实 TODO");
@@ -5290,7 +5352,7 @@ function mirrorScaffolds(dest, srcRoot) {
   for (const key of scaffoldKeys(srcRoot)) {
     const dstScaffold = scaffoldDirFor(dest, key);
     mkdirSync(dirname(dstScaffold), { recursive: true });
-    cpSync(scaffoldDirFor(srcRoot, key), dstScaffold, { recursive: true });
+    copyTree(scaffoldDirFor(srcRoot, key), dstScaffold);
     const metaPath = packMetaFor(srcRoot, key);
     if (metaPath && existsSync(metaPath)) {
       mkdirSync(join(dest, key), { recursive: true });
@@ -6091,7 +6153,8 @@ function scanLoaderApiData(dir) {
 async function testLoaderApiRepoDataHygiene() {
   const dir = join(REPO_ROOT, "mcp-server", "data", "loader-api-summaries");
   const clean = scanLoaderApiData(dir);
-  assert.equal(clean.count, 36, `官方摘要应为 36 份，实际 ${clean.count}`);
+  // 36 → 38：S5c/QSL 分支补出 1.18.2-qsl 与 1.20.1-qsl 两份官方摘要（各走本版精确 tag）。
+  assert.equal(clean.count, 38, `官方摘要应为 38 份，实际 ${clean.count}`);
   assert.deepEqual(clean.problems, [], `loader-api 数据卫生门禁:\n  ${clean.problems.join("\n  ")}`);
 
   const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));
@@ -6166,7 +6229,7 @@ async function testLoaderApiRepoDataHygiene() {
   // 目录 79MB：只拷一次，注入后按路径还原，避免 10 份全量拷贝
   const tmp = mkdtempSync(join(tmpdir(), "mc-skill-loaderapi-"));
   try {
-    cpSync(dir, tmp, { recursive: true });
+    copyTree(dir, tmp);
     for (const [name, needle, touched, mutate] of mutations) {
       mutate(tmp);
       const r = scanLoaderApiData(tmp);
@@ -6177,7 +6240,9 @@ async function testLoaderApiRepoDataHygiene() {
       );
       for (const rel of touched) {
         const src = join(dir, rel);
-        if (existsSync(src)) cpSync(src, join(tmp, rel));
+        if (existsSync(src)) copyTree(src, join(tmp, rel));
+        /* 不用 cpSync 复制单文件：它会自行 mkdirp 目标父目录，
+           本卷上该内部路径以 ESRCH（ERROR_PATH_NOT_FOUND）报死 */
         else rmSync(join(tmp, rel), { force: true });
       }
       assert.deepEqual(scanLoaderApiData(tmp).problems, [], `${name}: 还原后门禁应重新全绿`);
@@ -6589,12 +6654,22 @@ const SCRIPT_WRITE_GUARD_ALWAYS_DIRS = ["scripts/_oneoff"];
 const SCRIPT_WRITE_GUARD_FILES = [
   "scripts/index-qsl-verified.mjs",
   "scripts/fetch-neoforge-primers.mjs",
+  // S17：这三个以前挂在 DEBT（默认就写 / 裸 join(repo, rel)），现已全量走 emit。
+  "mcp-server/scripts/plan4-write-fabric-hollow.mjs",
+  "mcp-server/scripts/plan4-write-packs.mjs",
+  "mcp-server/scripts/repair-fabric-version-headers.mjs",
+  // S17 第二轮：rift 抓取器与 community 索引器已从「默认就写」改成 wantWrite 语义。
+  "mcp-server/scripts/fetch-rift-wiki.js",
+  "mcp-server/scripts/build-community-index.mjs",
 ];
 /** 已核实不写仓库正文：只写 $MC_SKILL_CACHE / .gitignore 的 temp/ / 由调用方给的 dest。值为依据正则。 */
 const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   ["scripts/fetch-loader-api-jars.mjs", /join\(CACHE/],
   ["scripts/batch-decompile.mjs", /join\(REPO_ROOT, "temp"/],
   ["scripts/_lib/fetch-with-ua.mjs", /export async function downloadWithFallback/],
+  // 递归复制原语：目标由调用方给（同步卷上不能用 fs.cpSync 的 recursive 形态，
+  // 见 scripts/_lib/copy-tree.mjs 头注释）；写仓库的调用点各自带 wantWrite 闸门。
+  ["scripts/_lib/copy-tree.mjs", /export function copyTree\(/],
   // ── S4 扩面：mcp-server/scripts/**（逐条对活文本复验过依据正则）──────────
   ["mcp-server/scripts/assert-powershell.mjs", /mkdtempSync\(join\(tmpdir\(\), "mcskill-ps-"/], // 全部落笔在 OS tmpdir 的 workDir；仓库根只读（MC_SKILL_PS_TEST_ROOT 可换根）
   ["mcp-server/scripts/assert-parser-availability.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "mcskill-g2-"/], // 夹具 jar 只落 OS tmpdir；rmSync 收的就是那个目录，仓库源码全程只读
@@ -6632,15 +6707,13 @@ const SCRIPT_WRITE_GUARD_DEBT = new Map([
   ["mcp-server/scripts/fetch-fabric-wiki.js", /const DRY_RUN = process\.argv\.includes\("--dry-run"/],
   ["mcp-server/scripts/fetch-forge-docs.js", /const dryRun = parsedArgs\.flags/],
   ["mcp-server/scripts/fetch-forge-javadoc.js", /const dryRun = args\.includes\("--dry-run"/],
-  ["mcp-server/scripts/fetch-liteloader-wiki.js", /const DRY = process\.argv\.includes\("--dry-run"/],
+  ["mcp-server/scripts/fetch-liteloader-wiki.js", /unlinkSync\(join\(dir, name\)\)/], // 写盘已走 emit；只剩这一处仓库删除口，守卫真源无仓库删除出口
   ["mcp-server/scripts/fetch-neoforge-docs.js", /const dryRun = args\.includes\("--dry-run"/],
   ["mcp-server/scripts/fetch-neoforge-primers.js", /const dryRun = args\.includes\("--dry-run"/], // 仓库根孪生 scripts/fetch-neoforge-primers.mjs 已改道，本 .js 是未转换的副本
   ["mcp-server/scripts/fetch-quilt-docs.js", /const dry = argv\.includes\("--dry-run"/],
-  ["mcp-server/scripts/fetch-rift-wiki.js", /const DRY = process\.argv\.includes\("--dry-run"/],
   ["mcp-server/scripts/forge-javadoc-indexer.js", /const dryRun = args\.includes\("--dry-run"/],
   ["mcp-server/scripts/probe-forge-versions.js", /const OUT_FILE = join\(OUT_DIR, "forge-versions-manifest\.json"/],
   ["mcp-server/scripts/probe-neoforge-versions.js", /const OUT_FILE = join\(OUT_DIR, "neoforge-versions-manifest\.json"/],
-  ["mcp-server/scripts/repair-fabric-version-headers.mjs", /const dryRun = process\.argv\.includes\("--dry-run"/],
   ["mcp-server/scripts/repair-quilt-indexes.js", /const dry = argv\.includes\("--dry-run"/],
   ["mcp-server/scripts/update-architectury-examples.js", /const DRY_RUN = process\.argv\.includes\("--dry-run"/],
   // ── S4 扩面 ②：只有 --force / 范围选择器，不是写盘闸门（缺索引时默认照写）────────
@@ -6654,7 +6727,6 @@ const SCRIPT_WRITE_GUARD_DEBT = new Map([
   ["mcp-server/scripts/_repair-broken-italic.mjs", /writeFileSync\(p, next, "utf8"/], // 未入库，就地改写 data/**/*.md
   ["mcp-server/scripts/_lib/build-yarn-sqlite.mjs", /const reportPath = path\.join\(__dirname, "mapping-sqlite-build-report\.json"/], // outPath=data/**/yarn-mappings.sqlite + 报告落在 scripts/ 且已入库
   ["mcp-server/scripts/_lib/ensure-mojang-mappings.mjs", /const dest = join\(versionDir, "client\.txt"/],
-  ["mcp-server/scripts/build-community-index.mjs", /join\(ROOT, "indexes", "index-l0\.json"/], // 写入库的 community_knowledge/indexes/
   ["mcp-server/scripts/build-library-catalog-from-authored.mjs", /const OUT_FILE = join\(__dirname, "\.\.", "src", "diagnostics", "library-catalog\.ts"/], // 覆盖的是 TS 源码而非 data/；S5 重生成 catalog 走的就是它
   ["mcp-server/scripts/fetch-forge-mappings.js", /const versionDir = join\(OUT_ROOT,/],
   ["mcp-server/scripts/forge-srg-extractor.js", /const EXTRACTED = join\(DATA_ROOT, "extracted"/],
@@ -6662,8 +6734,6 @@ const SCRIPT_WRITE_GUARD_DEBT = new Map([
   ["mcp-server/scripts/link-forge-1.20.4-from-1.20.1.js", /const destForgeDocs = join\(DATA_DIR,/], // F139：无闸门整棵 1.20.1 语料拷成 1.20.4 再就地改版本号
   ["mcp-server/scripts/mcp-csv-extractor.js", /function writeOutputs\(outDir, outputs/],
   ["mcp-server/scripts/parchment-extractor.js", /const OUT_DIR = join\(__dirname, "\.\.", "\.\.", "data",/],
-  ["mcp-server/scripts/plan4-write-fabric-hollow.mjs", /const abs = join\(repo, rel\)/],
-  ["mcp-server/scripts/plan4-write-packs.mjs", /const abs = join\(repo, rel\)/],
   ["mcp-server/scripts/process-fabric-docs.js", /const DATA_DIR = join\(MC_SKILL_ROOT, "data",/],
   ["mcp-server/scripts/process-fabric-wiki.js", /const DATA_DIR = join\(MC_SKILL_ROOT, "data",/],
   ["mcp-server/scripts/process-forge-docs.js", /const DATA_DIR = join\(__dirname, "\.\.", "\.\.", "data"/],
@@ -7171,7 +7241,7 @@ function testCommunityIndexSync() {
   for (const [kind, ids] of [["陈旧", stale], ["索引多余", orphan], ["未入库", unindexed]]) {
     for (const id of ids.slice(0, 10)) console.log(`    ${kind}: ${id}`);
   }
-  assert.deepEqual(stale, [], `索引摘要/标签与正文不一致，跑 npm run community:index 重建 ${indexPath}`);
+  assert.deepEqual(stale, [], `索引摘要/标签与正文不一致，跑 node scripts/build-community-index.mjs --write 重建（npm run community:index 现在只 dryRun） ${indexPath}`);
   assert.deepEqual(orphan, [], "索引里有已删除的短文，跑 npm run community:index 重建");
   assert.deepEqual(unindexed, [], "新短文没进索引，跑 npm run community:index 重建");
   assert.ok(refDocs > 0, "没有任何短文引用 Modrinth 实测分发数据 ⇒ 来源级别检查是空转");

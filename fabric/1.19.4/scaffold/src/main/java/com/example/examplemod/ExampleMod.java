@@ -89,7 +89,7 @@ public class ExampleMod implements ModInitializer {
             EXAMPLE_ANIMAL,
             SpawnRestriction.Location.ON_GROUND,
             Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-            AnimalEntity::canSpawn
+            AnimalEntity::isValidNaturalSpawn
         );
     }
 }

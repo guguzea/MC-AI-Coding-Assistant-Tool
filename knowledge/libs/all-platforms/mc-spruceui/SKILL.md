@@ -6,6 +6,8 @@ mcVersions: ["1.16.4-1.21.5"]
 communityDocId: authored/lib-spruceui-obsidianui
 ---
 
+> API 摘要状态（2026-09-14 实核）：无 ⇒ `mcp-server/data/lib-api-summaries/` 无 spruceui/obsidianui 条目，catalog 条目 `authored/lib-spruceui-obsidianui` 的 `verifiedApi` 为空对象 {}，即上游用「空 `verifiedApi`」表示无摘要；Modrinth 亦无该项目（slug 空，404）。类名/方法以官方 GitHub README 为准，要签名先 `ingest_loader_api`（用户自备 jar），禁止凭记忆补
+
 # SpruceUI / ObsidianUI GUI 抽象（操作指引）
 
 给 AI 的操作指引：需要把 SpruceUI 风格的控件/布局抽象（列表、按钮、文本框等）带到多个加载器时，选 ObsidianUI（Architectury 移植的延续版本）。详细信息用 `search_community_docs` 查 `authored/lib-spruceui-obsidianui`，版本与 API 细节以 [ObsidianUI](https://github.com/architectury/ObsidianUI)（及原版 [SpruceUI](https://github.com/LambdAurora/SpruceUI) 历史仓库）为准。

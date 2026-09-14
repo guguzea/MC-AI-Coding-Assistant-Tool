@@ -7,6 +7,9 @@ communityDocId: authored/lib-modern-ui
 mappings: "库按各 loader 预重映射；GUI/渲染全部客户端侧，与项目 mappings 无直接交互"
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/modern-ui 版本表 limit=100；本轮 release 上界 fabric=26.1.2 / forge=26.1.2 / neoforge=26.1.2）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/modern-ui/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Modern UI 文本排版与 GUI（操作指引）
 
 给 AI 的操作指引：对文本渲染质量有硬需求（尤其中文/Unicode/emoji）时引入 Modern UI，或直接用其 GUI 控件 API。详细信息用 `search_community_docs` 查 `authored/lib-modern-ui`，版本与 API 细节以 [官方仓库 ModernUI-MC](https://github.com/BloCamLimb/ModernUI-MC) 当前 README 与 Releases 为准（**注意仓库是 BloCamLimb/ModernUI-MC，旧地址 Block-Network/ModernUI 已失效**）。

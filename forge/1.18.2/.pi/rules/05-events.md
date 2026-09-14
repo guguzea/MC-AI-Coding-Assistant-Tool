@@ -21,8 +21,8 @@ description: 05 — 事件系统
 
 | 事件总线 | 使用场景 | 订阅方式 |
 |----------|----------|----------|
-| `Bus.FORGE` | Forge 原生事件（Registry、LivingDrops 等） | `@Mod.EventBusSubscriber(bus = Bus.FORGE)` |
-| `Bus.MOD` | Mod 自定义事件 | 手动 `event.addListener(this::method)` |
+| `Bus.FORGE` | 游戏内 Forge 事件（LivingDrops、PlayerInteract 等） | `@Mod.EventBusSubscriber(bus = Bus.FORGE)` |
+| `Bus.MOD` | Registry 注册事件（`RegistryEvent.Register<T>`）、Capability 注册、FML 生命周期事件 | `@Mod.EventBusSubscriber(bus = Bus.MOD)` 或 `modEventBus.addListener(...)` |
 
 ### Dist（物理端）约束
 

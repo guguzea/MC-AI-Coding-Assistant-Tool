@@ -13,13 +13,13 @@ description: 02 — 方块开发
 ### Block 子类规范
 
 - 方块类必须继承 `Block`（`net.minecraft.world.level.block.Block`）
-- 推荐使用 `BlockBehaviour.Properties.of(Material)` 创建属性
+- 推荐使用 `BlockBehaviour.Properties.of()`（无参；1.20+ 已移除 `Material` 参数）创建属性
 - 禁止重写 `use`、`onDestroyedByPlayer` 等与物理交互相关的旧版方法（Forge 1.20.x 已在大部分方法上标注 `@Deprecated`）
 
 ### BlockBehaviour.Properties 常用配置
 
 ```java
-BlockBehaviour.Properties.of(Material material)
+BlockBehaviour.Properties.of()
     .strength(float breakTime)                          // 破坏时间和硬度
     .strength(float breakTime, float explosionResistance)
     .requiresCorrectToolForDrops()                      // 需要正确工具才能掉落
@@ -80,22 +80,22 @@ IF 需要特殊渲染（多面材质、透明度、动画）
   → 参考 08-client-server.mdc 中的渲染规则
 ```
 
-### Decision: 方块属性（Material）选择
+### Decision: 方块属性（mapColor）选择
 
 ```
 IF 自然方块（石头、木头、草）
-  → Material.STONE / Material.WOOD / Material.GRASS
+  → MapColor.STONE / MapColor.WOOD / MapColor.GRASS
   → 需要 .requiresCorrectToolForDrops() 时用 STONE/WOOD
 
 IF 泥土类
-  → Material.DIRT / Material.SAND / Material.SNOW
+  → MapColor.DIRT / MapColor.SAND / MapColor.SNOW
 
 IF 玻璃/冰/透明
-  → Material.GLASS / Material.ICE
+  → MapColor.ICE / MapColor.COLOR_* 色（1.20.4 无 MapColor.GLASS 常量）
   → 需要 .noOcclusion() 和 .isSuffocating((s,l,p)->false)
 
 IF 植物
-  → Material.PLANT / Material.REPLACEABLE_PLANT
+  → MapColor.PLANT（旧 REPLACEABLE_PLANT 在 1.20.4 无对应色）
   → 不能放置方块，需要特殊放置逻辑
 
 IF 液体
@@ -127,7 +127,8 @@ IF 只需要静态方块（装饰、完整方块）
 // blocks/MyBlock.java
 public class MyBlock extends Block {
     public MyBlock() {
-        super(Properties.of(Material.STONE)
+        super(Properties.of()
+            .mapColor(MapColor.STONE)
             .strength(1.5f, 6.0f)
             .requiresCorrectToolForDrops()
             .sound(SoundType.STONE)
@@ -169,7 +170,7 @@ event.getRegistry().register(
 // blocks/MyBlockEntityBlock.java
 public class MyBlockEntityBlock extends Block implements EntityBlock {
     public MyBlockEntityBlock() {
-        super(Properties.of(Material.WOOD).noOcclusion());
+        super(Properties.of().mapColor(MapColor.WOOD).noOcclusion());
     }
 
     @Override

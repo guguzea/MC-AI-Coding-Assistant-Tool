@@ -6,6 +6,9 @@ mcVersions: ["1.19-26.2"]
 communityDocId: authored/lib-yacl
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/yacl 版本表 limit=100；本轮 release 上界 fabric=26.2 / forge=1.20.1 / neoforge=26.2）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/yacl/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # YACL 配置库集成
 
 YACL（Yet Another Config Lib）是新项目配置库首选之一（截至 2026-09-04，Modrinth slug `yacl` 下载量 1.188 亿；F/Forge/Neo/Quilt，1.19-26.2；26.3 目前仅 snapshot 构建）。Builder 式 API，界面贴近原版风格，因 Cloth Config 冷冻而生。版本与 API 以官方 README 为准。

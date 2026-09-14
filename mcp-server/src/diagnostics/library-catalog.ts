@@ -1,5 +1,5 @@
 // 由 scripts/build-library-catalog-from-authored.mjs 自动生成，勿手改（D 波次只 patch verifiedApi）
-export interface LibraryCatalogEntry { id: string; modIds: string[]; loaders: string[]; modrinthSlug: string; role: "api" | "author_shared" | "trap"; communityDocId: string; skillId?: string; officialUrls: string[]; notes: string; verifiedApi: Record<string, unknown>; supportedVersions: string[]; }
+export interface LibraryCatalogEntry { id: string; modIds: string[]; loaders: string[]; modrinthSlug: string; role: "api" | "author_shared" | "trap"; communityDocId: string; skillId?: string; officialUrls: string[]; notes?: string; verifiedApi?: Record<string, unknown>; supportedVersions: string[]; }
 export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-architectury",
@@ -10,7 +10,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-architectury",
     skillId: "mc-architectury",
     officialUrls: ["https://docs.architectury.dev/","https://github.com/architectury/architectury-templates"],
-    notes: "",
     verifiedApi: {
       "1.20.1/fabric": {
         "verifiedAt": "2026-08",
@@ -1392,7 +1391,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-balm",
     skillId: "mc-balm",
     officialUrls: ["https://github.com/BlayTheNinth/Balm"],
-    notes: "",
     verifiedApi: {
       "26.1.2/forge": {
         "verifiedAt": "2026-08",
@@ -1982,7 +1980,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-bookshelf",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/Darkhax/Bookshelf"],
-    notes: "",
     verifiedApi: {
       "1.11.2/forge": {
         "verifiedAt": "2026-08",
@@ -2610,7 +2607,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-caelus",
     skillId: "mc-caelus",
     officialUrls: ["https://github.com/TheIllusiveC4/Caelus"],
-    notes: "",
     verifiedApi: {
       "1.13.2/forge": {
         "verifiedAt": "2026-08",
@@ -2793,7 +2789,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-cca",
     skillId: "mc-cca",
     officialUrls: ["https://github.com/Ladysnake/cardinal-components-api"],
-    notes: "",
     verifiedApi: {
       "1.19-pre1/fabric": {
         "verifiedAt": "2026-08",
@@ -3065,7 +3060,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-cloth-config",
     skillId: "mc-config",
     officialUrls: ["https://github.com/shedaniel/cloth-config","https://github.com/isxander/yet-another-config-lib"],
-    notes: "",
     verifiedApi: {
       "1.20.1/fabric": {
         "verifiedAt": "2026-08",
@@ -3669,13 +3663,12 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-collective",
     modIds: ["collective"],
-    loaders: ["forge","neoforge","fabric"],
+    loaders: ["fabric","forge","neoforge"],
     modrinthSlug: "collective",
     role: "author_shared",
     communityDocId: "authored/lib-collective",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/Serilum/Collective","https://modrinth.com/user/Serilum"],
-    notes: "",
     verifiedApi: {
       "1.18.2/fabric": {
         "verifiedAt": "2026-08",
@@ -4872,20 +4865,17 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-config-legacy",
     skillId: "mc-config",
     officialUrls: ["https://github.com/isxander/yet-another-config-lib","https://github.com/shedaniel/cloth-config","https://github.com/fzzyhmstrs/fzzy_config"],
-    notes: "",
-    verifiedApi: {},
     supportedVersions: [],
   },
   {
     id: "authored/lib-corgilib",
     modIds: ["corgilib"],
-    loaders: ["forge","neoforge","fabric"],
+    loaders: ["fabric","forge","neoforge"],
     modrinthSlug: "corgilib",
     role: "author_shared",
     communityDocId: "authored/lib-corgilib",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/CorgiTaco/CorgiLib"],
-    notes: "",
     verifiedApi: {
       "1.19.2/forge": {
         "verifiedAt": "2026-08",
@@ -5141,13 +5131,12 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-creativecore",
     modIds: ["creativecore"],
-    loaders: ["forge","neoforge","fabric"],
+    loaders: ["fabric","forge","neoforge"],
     modrinthSlug: "creativecore",
     role: "author_shared",
     communityDocId: "authored/lib-creativecore",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/CreativeMD/CreativeCore"],
-    notes: "",
     verifiedApi: {
       "1.17.1/forge": {
         "verifiedAt": "2026-08",
@@ -5669,7 +5658,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-curios",
     skillId: "mc-curios",
     officialUrls: ["https://github.com/TheIllusiveC4/Curios","https://docs.illusivesoulworks.com/category/curios"],
-    notes: "",
     verifiedApi: {
       "1.20.1/forge": {
         "verifiedAt": "2026-08",
@@ -5923,7 +5911,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-fabric-language-kotlin",
     skillId: "mc-fabric-language-kotlin",
     officialUrls: ["https://github.com/FabricMC/fabric-language-kotlin"],
-    notes: "",
     verifiedApi: {
       "1.14/fabric": {
         "verifiedAt": "2026-08",
@@ -5953,7 +5940,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-forge-config-api-port",
     skillId: "mc-config",
     officialUrls: ["https://github.com/Fuzss/forgeconfigapiport"],
-    notes: "",
     verifiedApi: {
       "1.16/fabric": {
         "verifiedAt": "2026-08",
@@ -6555,7 +6541,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-fzzy-config",
     skillId: "mc-config",
     officialUrls: ["https://github.com/fzzyhmstrs/fzzy_config"],
-    notes: "",
     verifiedApi: {
       "1.20.1/forge": {
         "verifiedAt": "2026-08",
@@ -6929,7 +6914,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-geckolib",
     skillId: "mc-geckolib",
     officialUrls: ["https://docs.geckolib.com/","https://github.com/bernie-g/geckolib"],
-    notes: "",
     verifiedApi: {
       "1.20.1/fabric": {
         "verifiedAt": "2026-08",
@@ -7749,13 +7733,12 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-glitchcore",
     modIds: ["glitchcore"],
-    loaders: ["forge","neoforge","fabric"],
+    loaders: ["fabric","forge","neoforge"],
     modrinthSlug: "glitchcore",
     role: "author_shared",
     communityDocId: "authored/lib-glitchcore",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/Glitchfiend/GlitchCore"],
-    notes: "",
     verifiedApi: {
       "1.20.1/fabric": {
         "verifiedAt": "2026-08",
@@ -8255,7 +8238,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-iceberg",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/Grend-G/Iceberg"],
-    notes: "",
     verifiedApi: {
       "1.18.2/fabric": {
         "verifiedAt": "2026-08",
@@ -8654,7 +8636,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-impersonate",
     skillId: "mc-impersonate",
     officialUrls: ["https://github.com/Ladysnake/Impersonate","https://github.com/Ladysnake/cardinal-components-api"],
-    notes: "",
     verifiedApi: {
       "1.17-pre1/fabric": {
         "verifiedAt": "2026-08",
@@ -8882,13 +8863,12 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-kiwi",
     modIds: ["kiwi"],
-    loaders: ["forge","neoforge","fabric"],
+    loaders: ["fabric","forge","neoforge"],
     modrinthSlug: "kiwi",
     role: "author_shared",
     communityDocId: "authored/lib-kiwi",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/Snownee/Kiwi"],
-    notes: "",
     verifiedApi: {
       "1.18.2/fabric": {
         "verifiedAt": "2026-08",
@@ -9302,7 +9282,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-kotlin-for-forge",
     skillId: "mc-kotlin-for-forge",
     officialUrls: ["https://github.com/thedarkcolour/KotlinForForge"],
-    notes: "",
     verifiedApi: {
       "1.17/forge": {
         "verifiedAt": "2026-09",
@@ -9311,30 +9290,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
           "kotlinx.coroutines",
           "org.intellij.lang",
           "thedarkcolour.kotlinforforge"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.19.3/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.19.3/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.21.10/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -9350,22 +9305,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "entrypoints": [],
         "notes": "自动反编译提取"
       },
-      "1.20.5/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.21.10/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
       "1.14/forge": {
         "verifiedAt": "2026-08",
         "packages": [
@@ -9374,30 +9313,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
           "net.minecraftforge.fml",
           "org.intellij.lang",
           "thedarkcolour.kotlinforforge"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.18/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.20.6/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.20.6/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
         ],
         "entrypoints": [],
         "notes": "自动反编译提取"
@@ -9426,7 +9341,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-kubejs",
     skillId: "mc-kubejs",
     officialUrls: ["https://github.com/KubeJS-Mods/KubeJS"],
-    notes: "",
     verifiedApi: {
       "1.18.2/forge": {
         "verifiedAt": "2026-08",
@@ -9592,20 +9506,18 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-libgui",
     skillId: "mc-libgui",
     officialUrls: ["https://github.com/CottonMC/LibGui"],
-    notes: "",
-    verifiedApi: {},
+    notes: "无 API 摘要（`lib-api-summaries/` 无条目、catalog `verifiedApi` 为空对象 {}；Modrinth 无项目，分发走 Cotton maven）；类名以 GitHub README 为准，需 `ingest_loader_api` 自备 jar 核实。记于 2026-09-14",
     supportedVersions: [],
   },
   {
     id: "authored/lib-libx",
     modIds: ["libx"],
-    loaders: ["forge","neoforge","fabric"],
+    loaders: ["fabric","forge","neoforge"],
     modrinthSlug: "libx",
     role: "author_shared",
     communityDocId: "authored/lib-libx",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/ModdingX/LibX"],
-    notes: "",
     verifiedApi: {
       "1.17.1/forge": {
         "verifiedAt": "2026-08",
@@ -9734,7 +9646,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-libz",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/Globox1997/LibZ"],
-    notes: "",
     verifiedApi: {
       "1.19.2/fabric": {
         "verifiedAt": "2026-08",
@@ -9814,7 +9725,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-malilib",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/maruohon/malilib"],
-    notes: "",
     verifiedApi: {
       "1.12/ornithe": {
         "verifiedAt": "2026-08",
@@ -10717,7 +10627,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-mantle",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/SlimeKnights/Mantle"],
-    notes: "",
     verifiedApi: {
       "1.16.5/forge": {
         "verifiedAt": "2026-08",
@@ -10787,7 +10696,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-midnightlib",
     skillId: "mc-config",
     officialUrls: ["https://github.com/TeamMidnightDust/MidnightLib"],
-    notes: "",
     verifiedApi: {
       "1.17-pre1/fabric": {
         "verifiedAt": "2026-08",
@@ -11523,7 +11431,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-modern-ui",
     skillId: "mc-modern-ui",
     officialUrls: ["https://github.com/BloCamLimb/ModernUI-MC","https://modrinth.com/mod/modern-ui"],
-    notes: "",
     verifiedApi: {
       "1.19.4/forge": {
         "verifiedAt": "2026-08",
@@ -11883,7 +11790,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-moonlight",
     skillId: "mc-moonlight-lib",
     officialUrls: ["https://github.com/MehVahdJukaar/Moonlight"],
-    notes: "",
     verifiedApi: {
       "1.16.5/forge": {
         "verifiedAt": "2026-09",
@@ -12098,13 +12004,12 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-necronomicon",
     modIds: ["necronomicon"],
-    loaders: ["forge","neoforge","fabric"],
+    loaders: ["fabric","forge","neoforge"],
     modrinthSlug: "necronomicon",
     role: "author_shared",
     communityDocId: "authored/lib-necronomicon",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/ElocinDev/Necronomicon"],
-    notes: "",
     verifiedApi: {
       "1.17/forge": {
         "verifiedAt": "2026-08",
@@ -12204,7 +12109,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-owo",
     skillId: "mc-owo",
     officialUrls: ["https://docs.wispforest.io/"],
-    notes: "",
     verifiedApi: {
       "1.18/fabric": {
         "verifiedAt": "2026-08",
@@ -12748,7 +12652,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-patchouli",
     skillId: "mc-patchouli",
     officialUrls: ["https://github.com/VazkiiMods/Patchouli"],
-    notes: "",
     verifiedApi: {
       "1.14.4/forge": {
         "verifiedAt": "2026-08",
@@ -13201,7 +13104,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-pehkui",
     skillId: "mc-pehkui",
     officialUrls: ["https://github.com/Virtuoel/Pehkui"],
-    notes: "",
     verifiedApi: {
       "1.14.4/fabric": {
         "verifiedAt": "2026-08",
@@ -13730,7 +13632,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-placebo",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/Shadows-of-Fire/Placebo"],
-    notes: "",
     verifiedApi: {
       "1.20.1/neoforge": {
         "verifiedAt": "2026-09",
@@ -13776,7 +13677,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-player-ability-lib",
     skillId: "mc-player-ability-lib",
     officialUrls: ["https://github.com/Ladysnake/PlayerAbilityLib"],
-    notes: "",
     verifiedApi: {
       "1.20/fabric": {
         "verifiedAt": "2026-08",
@@ -13950,7 +13850,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-playeranimator",
     skillId: "mc-playeranimator",
     officialUrls: ["https://github.com/KosmX/playerAnimator"],
-    notes: "",
     verifiedApi: {
       "1.16.4/fabric": {
         "verifiedAt": "2026-08",
@@ -14280,7 +14179,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-polymer",
     skillId: "mc-polymer",
     officialUrls: ["https://github.com/Patbox/polymer"],
-    notes: "",
     verifiedApi: {
       "1.18.1/fabric": {
         "verifiedAt": "2026-08",
@@ -15006,7 +14904,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-puzzles-lib",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/Fuzss/PuzzlesLib"],
-    notes: "",
     verifiedApi: {
       "1.18.2/fabric": {
         "verifiedAt": "2026-08",
@@ -15443,7 +15340,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-resourceful",
     skillId: "mc-resourceful-lib",
     officialUrls: ["https://github.com/Team-Resourceful/ResourcefulLib"],
-    notes: "",
     verifiedApi: {
       "1.19.2/fabric": {
         "verifiedAt": "2026-08",
@@ -15816,7 +15712,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-satin",
     skillId: "mc-satin",
     officialUrls: ["https://github.com/Ladysnake/Satin"],
-    notes: "",
     verifiedApi: {
       "1.18/fabric": {
         "verifiedAt": "2026-08",
@@ -16070,8 +15965,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-server-translations",
     skillId: "mc-server-translations",
     officialUrls: ["https://github.com/NucleoidMC/server-translations-api"],
-    notes: "",
-    verifiedApi: {},
+    notes: "无 API 摘要（`lib-api-summaries/` 无条目、catalog `verifiedApi` 为空对象 {}；Modrinth 页面已下架，分发走 maven.nucleoid.xyz）；类名以 GitHub README 为准，需 `ingest_loader_api` 自备 jar 核实。记于 2026-09-14",
     supportedVersions: [],
   },
   {
@@ -16083,7 +15977,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-sophisticated-core",
     skillId: "mc-author-shared-libs",
     officialUrls: ["https://github.com/P3pp3rF1y/SophisticatedCore"],
-    notes: "",
     verifiedApi: {
       "1.19.2/forge": {
         "verifiedAt": "2026-09",
@@ -16209,8 +16102,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-spruceui-obsidianui",
     skillId: "mc-spruceui",
     officialUrls: ["https://github.com/architectury/ObsidianUI","https://github.com/LambdAurora/SpruceUI"],
-    notes: "",
-    verifiedApi: {},
+    notes: "无 API 摘要（`lib-api-summaries/` 无条目、catalog `verifiedApi` 为空对象 {}；Modrinth 返回 404）；类名以 GitHub README 为准，需 `ingest_loader_api` 自备 jar 核实。记于 2026-09-14",
     supportedVersions: [],
   },
   {
@@ -16222,7 +16114,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-terrablender",
     skillId: "mc-terrablender",
     officialUrls: ["https://github.com/Glitchfiend/TerraBlender","https://github.com/Glitchfiend/BiomesOPlenty"],
-    notes: "",
     verifiedApi: {
       "1.18.1/fabric": {
         "verifiedAt": "2026-08",
@@ -16920,7 +16811,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-text-placeholder-api",
     skillId: "mc-text-placeholder",
     officialUrls: ["https://github.com/Patbox/text_placeholder_api"],
-    notes: "",
     verifiedApi: {
       "1.19/fabric": {
         "verifiedAt": "2026-08",
@@ -17353,8 +17243,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "trap",
     communityDocId: "authored/lib-traps-2026",
     officialUrls: [],
-    notes: "",
-    verifiedApi: {},
     supportedVersions: [],
   },
   {
@@ -17366,7 +17254,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-trinkets",
     skillId: "mc-trinkets",
     officialUrls: ["https://github.com/emilyploszaj/trinkets"],
-    notes: "",
     verifiedApi: {
       "1.17.1/fabric": {
         "verifiedAt": "2026-08",
@@ -17608,7 +17495,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-yacl",
     skillId: "mc-yacl",
     officialUrls: ["https://github.com/isxander/yet-another-config-lib","https://github.com/shedaniel/cloth-config"],
-    notes: "",
     verifiedApi: {
       "1.19.3/fabric": {
         "verifiedAt": "2026-08",
@@ -18129,20 +18015,17 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/library-integration",
     officialUrls: [],
-    notes: "",
-    verifiedApi: {},
     supportedVersions: [],
   },
   {
     id: "authored/library-integration-jei-emi",
     modIds: ["jei","emi","roughlyenoughitems"],
     loaders: ["fabric","forge","neoforge"],
-    modrinthSlug: "jei, emi, roughly-enough-items",
+    modrinthSlug: "emi,jei,rei",
     role: "api",
     communityDocId: "authored/library-integration-jei-emi",
     skillId: "mc-compat-jei",
     officialUrls: ["https://github.com/mezz/JustEnoughItems","https://github.com/emilyploszaj/emi","https://github.com/shedaniel/RoughlyEnoughItems"],
-    notes: "",
     verifiedApi: {
       "1.19.1/fabric": {
         "verifiedAt": "2026-08",

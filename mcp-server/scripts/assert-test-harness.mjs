@@ -44,16 +44,26 @@ const problems = [];
 let scanned = 0;
 let harnesses = 0;
 
+/** 失败出口：process.exit(<非0>) / exitCode = / throw new / fail( */
+const FAILURE_EXIT = /\bprocess\.exit\s*\(\s*(?!0\s*\))[^\s)]|\bexitCode\s*=|\bthrow\s+new\b|(?<![\w$])fail\s*\(/;
+
 for (const root of roots) {
   for (const file of walk(root)) {
-    const base = path.basename(file);
-    if (/\.test\.mjs$/.test(base) && !fs.existsSync(file)) continue;
     const text = fs.readFileSync(file, "utf8");
     if (!LOCAL_HARNESS.test(text)) continue;
-    // F95：前置门以前要求计数器叫 passed|failed|failures —— 改叫 `ok` 就整文件跳过，闸门可被命名绕过。
-    // 现在只要求「这个脚本会用 console 汇报」，汇报什么名字由后面的判定说了算。
-    if (!/console\.(log|error)/.test(text)) continue;
+    // F95：前置门以前要求计数器叫 passed|failed|failures、后来到 console ——
+    // 都可被命名绕过（文件不写 console 就整文件逃检）。现在凡定义本地 test(name, fn) 即入检，
+    // 必须同时具备 assert. 调用与失败出口，缺任一项判红。
     scanned += 1;
+    const missing = [];
+    if (!/\bassert\./.test(text)) missing.push("`assert.` 调用");
+    if (!FAILURE_EXIT.test(text)) missing.push("失败出口（`process.exit(<非0>)` / `exitCode =` / `throw new` / `fail(`）");
+    if (missing.length) {
+      problems.push({
+        file,
+        why: `本地 harness 缺 ${missing.join(" 与 ")}：没有断言或没有失败出口的测试文件永远绿，入检面不得被命名绕过`,
+      });
+    }
 
     const usesNodeTest = /from\s+["']node:test["']/.test(text);
     if (usesNodeTest) continue; // 官方 runner 自己会 await，不在本闸门范围

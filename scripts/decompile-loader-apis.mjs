@@ -10,12 +10,13 @@
  *
  * 摘要 JSON 必须含 mappingsVersion，否则视为无效、禁止写进规则。
  */
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, cpSync, statSync } from "fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, statSync } from "fs";
 import { join, dirname, basename } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { createHash } from "crypto";
 import os from "os";
 import { failureNote, fetchTextWithUa, FETCH_FAILURE } from "./_lib/fetch-with-ua.mjs";
+import { copyTree } from "./_lib/copy-tree.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CACHE = process.env.MC_SKILL_CACHE || join(os.tmpdir(), "mc-skill-cache");
@@ -309,6 +310,21 @@ mkdirSync(slimDir, { recursive: true });
 
 const indexPath = join(OUT, "index.json");
 
+/**
+ * QSL 侧「有意保持缺档」的键（用户裁定 2026-09-13）。
+ * 实测：QuiltMC/quilt-standard-libraries 的 branches = 1.17 / 1.17.1 / 1.18 / 1.19 / 1.19.3 /
+ * 1.19.4 / 1.20 / 1.20.2 / 1.20.3 / 1.20.6 / 1.21 / 1.21.5，tags 里带 +1.20.4 的 **0 个**
+ * ⇒ 上游自己就没有 1.20.4 这一档 QSL。裁定：保持缺档并计为本档 QSL 未索引，禁止借邻线分支冒充。
+ */
+const WANTED_QSL_NOT_INDEXED = [
+  {
+    key: "1.20.4-qsl",
+    reason:
+      "LOADER_API_NOT_INDEXED：上游 QSL 无 +1.20.4 tag 也无 1.20.4 分支（实测 branches/tags），" +
+      "按裁定保持缺档并计为本档 QSL 未索引；QSL 签名请用户自备 jar 走 ingest_loader_api，禁止借邻线分支。",
+  },
+];
+
 const WANTED_FABRIC_API = [
   "1.14.4-fabric-api",
   "1.16.5-fabric-api",
@@ -426,6 +442,9 @@ function rebuildCatalogFromDisk() {
     key,
     reason: "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar",
   }));
+  for (const t of WANTED_QSL_NOT_INDEXED) {
+    if (!notIndexed.some((x) => x.key === t.key)) notIndexed.push(t);
+  }
   if (WRITE) {
     writeJsonPreservingEol(indexPath, { cache: "$MC_SKILL_CACHE", jars, notIndexed });
     writeJsonPreservingEol(join(OUT, "status.json"), {
@@ -603,7 +622,7 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
     });
     if (result.outputDir && existsSync(result.outputDir)) {
       try {
-        cpSync(result.outputDir, srcOut, { recursive: true });
+        copyTree(result.outputDir, srcOut);
       } catch {
         /* ignore */
       }

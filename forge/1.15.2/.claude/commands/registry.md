@@ -20,7 +20,7 @@ public static final DeferredRegister<Block> BLOCKS =
 
 // 2. 创建 RegistryObject 持有引用
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-    () -> new Block(Block.Properties.create(Material.STONE))
+    () -> new Block(Block.Properties.create(Material.ROCK))
 );
 
 // 3. 在 mod 构造函数中注册到 modEventBus

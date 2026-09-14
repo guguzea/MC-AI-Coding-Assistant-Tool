@@ -259,7 +259,7 @@ public class MyMixin { ... }
 |---------|------|---------|
 | `NullPointerException` at `Registry.register` | 注册在 `onInitialize()` 外执行 | 将注册移入 `onInitialize()` |
 | `Mixin did not apply` | mixin 包名不匹配或 `fabric.mixins.json` 配置错误 | 检查 package 和配置 |
-| `Could not find net.fabricmc:yarn` | yarn 版本号格式错误 | 格式：`1.20.1+build.10` |
+| `Could not find net.fabricmc:yarn` | yarn 版本号格式错误 | 格式：`1.21.1+build.N`（本档实值：scaffold `gradle.properties:10` 钉 `1.21.1+build.2`；本仓语料文件是 `data/fabric_1.21.1/mappings/yarn-1.21.1+build.3-tiny.gz`） |
 | `FabricLoader not found` | 依赖缺失 | 检查 `fabricloader` 在 depends 中 |
 | `No such registry` | Registry 类型错误 | 确认 `Registries.XXX` 正确 |
 | `duplicate id` | 注册 ID 重复 | 检查 mod ID 是否冲突 |

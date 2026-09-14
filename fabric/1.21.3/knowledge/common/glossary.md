@@ -8,7 +8,7 @@
 |------|------|
 | Loom | Fabric 的 Gradle 插件，处理映射和 mixin 编译 |
 | Yarn | Fabric 社区维护的 Minecraft 映射，提供可读的类/方法/字段名 |
-| Parchment | 在 Yarn 基础上添加了参数名和 Javadoc 的增强映射 |
+| Parchment | 叠加在 **Mojang 官方映射（mojmap）** 之上的参数名 + Javadoc 数据；**不是 Yarn 的扩展**，不能单独当 `mappings`。用法：手动加 `https://maven.parchmentmc.org` 仓库后走 `loom.layered { officialMojangMappings(); parchment("org.parchmentmc.data:parchment-<MC 版本>:<发布日期>@zip") }`（详见 `knowledge/antipatterns/yarn-mappings.md` §可选） |
 | Mixin | 字节码注入框架，用于修改 Minecraft 行为 |
 | Fabric API | Fabric 官方模块化 API 库，提供各种扩展功能 |
 | Registry | Minecraft 的注册表系统，管理所有游戏内对象 |
@@ -27,9 +27,9 @@ namespace:id
 ```
 
 **规则：**
-- `namespace` 必须是 mod ID（小写字母和数字）
+- `namespace` 必须是 mod ID（Fabric / Quilt 允许小写字母、数字、下划线与连字符，官方示例 `example-mod`）
 - `id` 必须是全小写（下划线分隔）
-- 禁止使用 `-`，使用 `_` 替代
+- 连字符 `-`：**Fabric / Quilt 允许**（官方 `fabric-docs` 正文即用 `example-mod`）；Forge / NeoForge / LiteLoader / Rift / ModLoader **禁止**，须改用 `_`（本仓 scaffold 示例统一写无连字符的 `examplemod`）
 
 ## Yarn 命名约定
 
@@ -50,7 +50,7 @@ namespace:id
 | 未解析方法 | `method_NNNNN[_suffix]` | `method_12345_a` |
 | 未解析字段 | `field_NNNNN` | `field_12345` |
 
-> 升级 Yarn 版本或使用 Parchment 可以减少未解析成员数量。
+> 只有升级 **Yarn** 版本才可能减少未解析成员；Parchment 叠在 mojmap 上，**补不了 Yarn 未解析的名字**（同档 `antipatterns/yarn-mappings.md:53` 已定案）。
 
 ## Registry 类型参考
 

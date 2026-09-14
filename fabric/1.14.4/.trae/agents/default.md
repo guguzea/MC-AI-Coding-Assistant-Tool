@@ -143,7 +143,7 @@ fabric-mod/
 
 ### 命名规范
 
-- modId：全小写，无 -，无空格
+- modId：全小写，无空格；允许连字符 `-` 与下划线 `_`（官方示例 `example-mod`）
 - 注册名称：new Identifier(MOD_ID, "registry_name")
 - 资源路径：assets/{modid}/... 全小写
 

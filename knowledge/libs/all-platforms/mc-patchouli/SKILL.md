@@ -7,6 +7,9 @@ communityDocId: authored/lib-patchouli
 mappings: "Forge ≤1.20.6 用 MCP、NeoForge 1.21+/26.x 用 mojmap；Java 代码只在自定义页面类型时出现"
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/patchouli 版本表 limit=100；本轮 release 上界 fabric=1.21.1 / forge=1.20.1 / neoforge=1.21.1 ⇒ 本文件 mcVersions 上界 26.1.2 高于 release 上界，仅 beta/alpha 支撑）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/patchouli/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Patchouli 指南书（操作指引）
 
 给 AI 的操作指引：给模组做游戏内指南书（分类 + 条目 + 多语言），JSON 数据为主，少写 Java UI。详细信息用 `search_community_docs` 查 `authored/lib-patchouli`，book.json 格式、页面类型与版本支持以 [官方文档](https://vazkiimods.github.io/Patchouli/) 与 [GitHub Releases](https://github.com/VazkiiMods/Patchouli) 为准。

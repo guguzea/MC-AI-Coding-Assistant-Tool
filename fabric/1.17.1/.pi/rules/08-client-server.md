@@ -98,7 +98,7 @@ if (world.isClient) {
 {
   "required": true,
   "package": "com.example.examplemod.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_16",  // 本档 Java 16：见 scaffold/src/main/resources/examplemod.mixins.json:5
   "client": ["client.ClientMixinClass"],
   "server": [],
   "mixins": ["common.CommonMixinClass"]

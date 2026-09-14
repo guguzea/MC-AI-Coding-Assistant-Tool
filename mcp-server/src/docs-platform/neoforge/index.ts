@@ -245,6 +245,7 @@ export async function searchNeoForgeDocs(args: {
         type: "text",
         text: JSON.stringify(withDocsFallbackFields({
           ok: true,
+          platform: "neoforge",
           query: args.query,
           version,
           resolvedVersion: detailed.resolvedVersion,

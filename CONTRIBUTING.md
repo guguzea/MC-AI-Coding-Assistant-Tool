@@ -230,6 +230,16 @@ processed 正文里的这两行都是**转引标记**，不是可执行代码；
 - `meta.modId` 为字符串 `"null"` 是合法 id；只有 JSON null / 空 / `unknown*` 判未知。
 - 摘要与 catalog 的 `packages` 登记**实测包**，不是声明白名单的回声：声明前缀先按本树校验，全不成立则按「modId 是路径一段（`-`/`_` 不敏感）」重建，两者都不成立时**留空并告警**，禁止退化成全收（`-all` 胖 jar 会把 Kotlin stdlib 当成本库 API）。归属判据是**段级自有**（`ROOT_SEGMENTS=3`）且只拒「命中他方已证实包根」；字面「以 modId 开头」会否掉 92.7% 的真数据。
 - `packages` 是**启发式产物，不可当 import 依据**。
+- `verifiedApi[key].packageOwnership` 三态 ∈ `own` / `bundled` / `unresolved`，由 `merge-verified-api.mjs` 的
+  `tagPackages()` 生产（2026-09-13 裁定固化为标准）：
+  - **只有非 `own` 行必须有标签**。按字面要求「每行都要有标签」在今天是 no-op（`merge --write` 新增 0 / 覆盖 0 ⇒
+    目录里 0 行带标签），要先做一遍全量 retag 才满足；而 `own` 本就能由规则当场推出，强制存标签**不增加任何检出力**。
+  - **债务只算「该包根确实由别的条目证实自有」那一类**（F113 的实际伤害）。纯用「含 modId 段」当债务判据会把 **866 行**
+    真数据打成非 own（GeckoLib 真身 `software.bernie`、KubeJS `dev.latvian.mods`，库名根本不在包里），反而把 8 行真冒领冲掉；
+    其余非 own 行靠标签可见、不记债。
+  - `bundled` 必须带证据：只认**外壳自己声明的捆绑件** + 该件 zip 条目里真实的顶层包根，不猜包名 ⇒ Moonlight 早期版本的
+    `net.mehvahdjukaar.selene` 会正确落 `unresolved` 而不是被冒认成 own。
+  - A6 除「新增即红」外还要过 drain 对账：catalog 的 unresolved 行集与台账**双向**比，清一行必须显式删一行。
 
 ### 映射与版本口径
 
@@ -238,6 +248,14 @@ processed 正文里的这两行都是**转引标记**，不是可执行代码；
 - Forge 依赖坐标 = maven **recommended** build，并带 `forgeVersionSource` 溯源字段。
 - 审计前提在磁盘上不可复现时（如已不存在的 JSONL 计数），**既不沿用为基线、也不判审计为假**：验收改用磁盘可复现的固定样本集，并把前后计数并排给出。
 - 吞异常裁定判据：折叠成 `success` 的必须修真缺陷；落成可见 `failed` 的带证据关闭——**不豁免、不转挂下一档**。
+- **`yarn-mappings.sqlite` 是可再生物，不是孤本**：源 `yarn-*-tiny.gz` 与它同目录且已跟踪 ⇒ 离线逐档重建即可，无需网络：
+  `node scripts/_lib/build-yarn-sqlite.mjs data/fabric_<ver>/mappings --version=<ver>`。重建会把 `schemaVersion` 往前带
+  （实测 3 → 4，只多 `name_official`/`name_intermediary` 单列索引），属正常迁移 ⇒ 台账按门的 `MC_SKILL_INDEX_RELEDGER=1`
+  重算回填，**不许手改数字**；回填前先比对「变化是否只有 schema 那几项」，多一项就说明不是迁移而是数据变了。
+- **损坏可以长得像「表存在、但 `COUNT(*)` 抛错」**（单个 b-tree 页坏），而不是「表不存在」；因此门的 `-1` 哨兵必须继续与
+  「缺表」区分开上报。判定「坏在提交之前还是拷贝造成」的唯一办法是**在两个独立副本上跑同一条查询对比**：2026-09-13 实测
+  `1.21.8`/`1.21.10` 的 `methods`、`1.21.11` 的 `fields` 在故障卷与其抢救副本上报错逐字一致 ⇒ 已提交字节本身坏，与拷贝无关；
+  重建后每档 `methods`/`fields`/`classes` 与自身 `meta` 全部相符（46592 / 48591 / 49730 等），即内容未变、仅页坏。
 
 ---
 

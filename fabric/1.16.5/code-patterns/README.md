@@ -1,4 +1,4 @@
-# Fabric 1.20.1 代码模式库
+# Fabric 1.16.5 代码模式库
 
 > 本目录为 AI 提供可直接引用的代码模式，按「功能」分类。
 > 参见 `../.cursor/rules/` 中的决策流文档以了解何时使用哪种模式。
@@ -18,7 +18,7 @@ code-patterns/
 
 ```yaml
 模式: Basic Stone Block
-版本: Fabric 1.20.1
+版本: Fabric 1.16.5
 平台: Fabric
 分类: block
 依赖: []

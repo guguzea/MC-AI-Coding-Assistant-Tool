@@ -57,10 +57,19 @@ export function generateFabric(
   version26: boolean,
   idStyle: FabricIdStyle = "ResourceLocation",
   recipeTwoLayer = false,
+  tagBuilderUsesLookup = false,
 ): string {
   const pascalName = classBase || toPascalCase(modId);
   if (version26) return generateFabric261(providerType, modId, targetName, pascalName);
-  return generateFabric21(providerType, modId, targetName, pascalName, idStyle, recipeTwoLayer);
+  return generateFabric21(
+    providerType,
+    modId,
+    targetName,
+    pascalName,
+    idStyle,
+    recipeTwoLayer,
+    tagBuilderUsesLookup,
+  );
 }
 
 function generateFabric21(
@@ -70,6 +79,7 @@ function generateFabric21(
   pascalName: string,
   idStyle: FabricIdStyle = "ResourceLocation",
   recipeTwoLayer = false,
+  tagBuilderUsesLookup = false,
 ): string {
   const header = `// Fabric Datagen 1.21.x — DataGeneratorEntrypoint + fabric-datagen（${modId}:${targetName}）
 package com.example.${modId}.datagen;
@@ -181,7 +191,7 @@ public class ${pascalName}ItemTagProvider extends FabricTagProvider.ItemTagProvi
 
     @Override
     protected void addTags(HolderLookup.Provider wrapperLookup) {
-        getOrCreateTagBuilder(EXAMPLE).add(Items.DIRT);
+        ${tagBuilderUsesLookup ? "valueLookupBuilder" : "getOrCreateTagBuilder"}(EXAMPLE).add(Items.DIRT);
     }
 }
 ${entrypoint(modId, pascalName, `${pascalName}ItemTagProvider`)}

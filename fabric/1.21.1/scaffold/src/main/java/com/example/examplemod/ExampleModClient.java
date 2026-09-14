@@ -5,18 +5,12 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingConstants;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingRegistry;
-import net.fabricmc.fabric.api.client.model.BakedModelManager;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.particle.v1.SimpleParticleProvider;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.fabricmc.fabric.api.client.sound.v1.MovingSoundInstanceSoundInstanceCallback;
-import net.fabricmc.fabric.api.client.sound.v1.SoundEvents;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
@@ -40,8 +34,8 @@ import java.util.Map;
 
 public class ExampleModClient implements ClientModInitializer {
     public static final String MOD_ID = "examplemod";
-    public static final Identifier EXAMPLE_SOUND = new Identifier(MOD_ID, "example_sound");
-    public static final Identifier EXAMPLE_PARTICLE = new Identifier(MOD_ID, "example_particle");
+    public static final Identifier EXAMPLE_SOUND = Identifier.of(MOD_ID, "example_sound");
+    public static final Identifier EXAMPLE_PARTICLE = Identifier.of(MOD_ID, "example_particle");
 
     // Example keybinding
     // public static final KeyBinding EXAMPLE_KEY = new KeyBinding(
@@ -64,19 +58,16 @@ public class ExampleModClient implements ClientModInitializer {
         //         return new AnimalEntityRenderer<>(context.getModelLoader().getModelPart(EntityModelLayers.COW), 0.5f);
         // });
 
-        // Example: Register particle
-        // ParticleFactoryRegistry.INSTANCE.register(EXAMPLE_PARTICLE, SimpleParticleProvider(SpriteSet, Sprite));
+        // Example: Register particle（本版真实入口：ParticleFactoryRegistry.getInstance().register(ParticleType, ParticleFactory)）
+        // ParticleFactoryRegistry.getInstance().register(EXAMPLE_PARTICLE_TYPE, MyParticle::new);
 
-        // Example: Register custom model loader
-        // ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
-        //         out.accept(new Identifier(MOD_ID, "model/example_model.obj"));
+        // Example: Register custom model loader（本版真实入口：ModelLoadingPlugin.register(plugin)）
+        // ModelLoadingPlugin.register(context -> {
+        //         // TODO(未核实)：context 上的具体注册方法名本仓未取证（javap 只证到 register(...) 与 onInitializeModelLoader(Context) 这一层）
         // });
 
-        // Example: Register custom BakedModel handler
-        // MinecraftClient.getInstance().getBakedModelManager().registerModelProperty();
-
-        // Example: Keybinding
-        // KeyBindingRegistry.INSTANCE.registerKeyBinding(EXAMPLE_KEY);
+        // Example: Keybinding（本版真实入口是 KeyBindingHelper，不存在 KeyBindingRegistry / KeyBindingConstants）
+        // KeyBindingHelper.registerKeyBinding(EXAMPLE_KEY);
         // ClientTickEvents.END_CLIENT_TICK.register(client -> {
         //         while (EXAMPLE_KEY.wasPressed()) {
         //                 // Do something
@@ -86,15 +77,11 @@ public class ExampleModClient implements ClientModInitializer {
         // Example: Block render layer (for transparent/translucent blocks)
         // BlockRenderLayerMap.INSTANCE.putBlock(EXAMPLE_BLOCK.get(), RenderLayer.getTranslucent());
 
-        // Example: Screen handler
-        // ScreenRegistry.register(ExampleMod.EXAMPLE_SCREEN_HANDLER, (window, inventory, title) -> {
-        //         return new ExampleScreen(window, inventory, title);
-        // });
-
-        // Example: Sound
-        // SoundEvents.register(EXAMPLE_SOUND, new SoundEvent(EXAMPLE_SOUND));
-        // MovingSoundInstanceSoundInstanceCallback callback = (sound, listener, distance) -> {...};
-        // MovingSoundInstanceSoundInstanceCallback.register(EXAMPLE_SOUND, callback);
+        // Example: Screen handler / Sound —— 本版 Fabric API 无对应公开注册入口，别照抄：
+        //   screen-handler 模块只暴露 net.fabricmc.fabric.api.screenhandler.v1 的
+        //     ExtendedScreenHandlerFactory / ExtendedScreenHandlerType / FabricScreenHandlerFactory（没有 client.screenhandler.v1.ScreenRegistry）；
+        //   sound 模块只有 net.fabricmc.fabric.api.client.sound.v1.FabricSoundInstance（没有 SoundEvents / MovingSoundInstance…Callback）。
+        //   要写这两类功能须先按本仓纪律取证（query_loader_api / 自备 jar + ingest_loader_api），禁止凭记忆补。
 
         // Example: HUD Render callback
         // HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {

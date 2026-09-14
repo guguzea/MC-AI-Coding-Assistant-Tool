@@ -1,4 +1,4 @@
-﻿# 注册相关反模式
+# 注册相关反模式
 
 ## 错误：在 lambda 外部引用 RegistryObject
 

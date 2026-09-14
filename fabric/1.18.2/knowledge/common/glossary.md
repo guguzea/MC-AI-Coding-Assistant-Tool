@@ -27,9 +27,9 @@ namespace:id
 ```
 
 **规则：**
-- `namespace` 必须是 mod ID（小写字母和数字）
-- `id` 必须是全小写（下划线分隔）
-- 禁止使用 `-`，使用 `_` 替代
+- `namespace` 必须是 mod ID（Fabric 1.18.2：全小写，可含 `_` 与 `-`；见同档 `AGENTS.md:167`、`.cursor/rules/00-project-setup.mdc:197`）
+- `id` 必须是全小写（习惯用 `_` 分隔）
+- 连字符 `-`：Fabric / Quilt **允许**（官方示例 `example-mod`）；Forge / NeoForge / LiteLoader / Rift / ModLoader **禁止**，须用 `_`
 
 ## Yarn 命名约定
 

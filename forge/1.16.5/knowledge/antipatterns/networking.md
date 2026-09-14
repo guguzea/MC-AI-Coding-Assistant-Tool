@@ -43,18 +43,18 @@ channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络�
 
 **症状**：网络阻塞，服务器卡顿，玩家感受到明显延迟。
 
-**正确方案**：使用 `CompoundNBT` 或自定义 `FriendlyByteBuf` 批量序列化。
+**正确方案**：使用 `CompoundNBT` 或自定义 `PacketBuffer` 批量序列化（语料 networking_simpleimpl.md:36-38；`FriendlyByteBuf` 属别的版本线名）。
 
 ```java
 public class SyncAllDataMessage {
     private CompoundNBT data;
 
-    public void toBytes(FriendlyByteBuf buf) {
-        buf.writeCompoundTag(data);
+    public void encode(PacketBuffer buf) { // 1.16.5 编码入口 MSG#encode(PacketBuffer)：networking_simpleimpl.md:38 + 本包 06-networking.mdc:107
+        buf.writeCompoundTag(data); // TODO(未核实)：PacketBuffer 的 NBT 读写方法名本档语料未收录
     }
 
-    public void fromBytes(FriendlyByteBuf buf) {
-        data = buf.readCompoundTag();
+    public SyncAllDataMessage(PacketBuffer buf) { // 1.16.5 解码入口为构造器（06-networking.mdc:103）；原写 fromBytes(FriendlyByteBuf) 属别的版本线，禁止照抄
+        data = buf.readCompoundTag(); // TODO(未核实)：同上
     }
 }
 ```

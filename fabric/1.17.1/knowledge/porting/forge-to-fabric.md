@@ -166,7 +166,7 @@ mixin { add sourceSets.main, "${mod_id}.refmap.json" }
   "required": true,
   "minVersion": "0.8",
   "package": "com.example.examplemod.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_16",
   "client": ["client.MyMixin"],
   "mixins": []
 }

@@ -1,13 +1,13 @@
 ---
 name: mc-sound
-description: Minecraft Forge 声音开发。SoundEvent 注册、sounds.json、SoundType、播放声音。触发词：SoundEvent、SoundType、SoundSource、sounds.json、playSound
+description: Minecraft Forge 声音开发。SoundEvent 注册、sounds.json、SoundType、播放声音。触发词：SoundEvent、SoundType、SoundCategory、sounds.json、playSound
 platform: forge
 version: "1.14.4"
 dependencies: []
 mappings: parchment
 ---
 
-# 声音开发（Forge 1.19.4）
+# 声音开发（Forge 1.14.4）
 
 ## 快速开始
 
@@ -19,16 +19,14 @@ private static final DeferredRegister<SoundEvent> SOUNDS =
 
 public static final RegistryObject<SoundEvent> MY_SOUND =
     SOUNDS.register("my_sound",
-        () -> SoundEvent.createVariableRangeEvent(
-            new ResourceLocation(MOD_ID, "my_sound")
-        )
+        () -> new SoundEvent(new ResourceLocation(MOD_ID, "my_sound"))
     );
 
 // 在 mod 构造函数中
 SOUNDS.register(modEventBus);
 ```
 
-> 使用 `SoundEvent.createVariableRangeEvent(id)`，不要用已废弃的构造函数。
+> 1.14.4 用**构造函数** `new SoundEvent(ResourceLocation)`（官方 sounds 页 `SoundEvent event = new SoundEvent(location);`）。`createVariableRangeEvent` 是 1.16+ 的写法，本档没有。
 
 ### 2. sounds.json
 
@@ -73,7 +71,7 @@ public static final SoundType MY_BLOCK_SOUNDS = new SoundType(
 );
 
 // 使用
-BlockBehaviour.Properties.of(Material.STONE)
+Block.Properties.create(Material.ROCK)
     .sound(MY_BLOCK_SOUNDS)
 ```
 
@@ -83,11 +81,11 @@ BlockBehaviour.Properties.of(Material.STONE)
 
 ```java
 // 服务端调用：播放给附近所有玩家（不含 player 参数传入者）
-level.playSound(
-    player,                          // Player（可传 null 使所有人都听到）
+world.playSound(
+    player,                          // EntityPlayer（可传 null 使所有人都听到）
     x, y, z,                         // 坐标
     ModSounds.MY_SOUND.get(),         // SoundEvent
-    SoundSource.BLOCKS,               // 类别（控制音量滑条）
+    SoundCategory.BLOCKS,             // 类别（控制音量滑条）
     1.0f,                            // volume（音量，1.0 为正常）
     1.0f                             // pitch（音高，1.0 为正常）
 );
@@ -97,9 +95,9 @@ level.playSound(
 
 | 方法 | 行为 |
 |------|------|
-| `playSound(Player, BlockPos, ...)` | 同上，坐标自动 +0.5 |
-| `playSound(Player, double x, y, z, ...)` | 坐标固定，排除 player 玩家 |
-| `entity.playSound(SoundEvent, vol, pitch)` | 从实体位置播放给所有人（不含实体本身） |
+| `playSound(EntityPlayer, BlockPos, ...)` | 同上，坐标自动 +0.5 |
+| `playSound(EntityPlayer, double x, y, z, ...)` | 坐标固定，排除 player 玩家 |
+| `entity.playSound(SoundEvent, vol, pitch)` | 从实体位置播放给所有人（不含实体本身，`Entity#playSound`） |
 
 ### 服务端播放给特定玩家
 
@@ -110,11 +108,12 @@ level.playSound(
 ### 客户端播放本地声音
 
 ```java
-// ClientLevel 上调用，仅本地玩家听到
-clientLevel.playLocalSound(x, y, z, sound, source, vol, pitch, distanceDelay);
+// WorldClient 上调用（1.14.4 没有 playLocalSound）
+// `WorldClient#playSound(BlockPos, SoundEvent, SoundCategory, volume, pitch, distanceDelay)`
+worldClient.playSound(pos, ModSounds.MY_SOUND.get(), SoundCategory.BLOCKS, 1.0f, 1.0f, false);
 ```
 
-## SoundSource 枚举值
+## SoundCategory 枚举值（1.14.4 没有 SoundSource）
 
 | 值 | 用途 |
 |----|------|
@@ -133,18 +132,18 @@ clientLevel.playLocalSound(x, y, z, sound, source, vol, pitch, distanceDelay);
 
 ```
 IF 服务端触发、所有附近玩家听到
-  → level.playSound(player, x, y, z, sound, source, vol, pitch)
+  → world.playSound(player, x, y, z, sound, SoundCategory.X, vol, pitch)
 
 IF 服务端触发、仅特定玩家听到
-  → 通过 mc-networking Skill 发自定义包，客户端收到后 playLocalSound
+  → 通过 mc-networking Skill 发自定义包，客户端收到后走 WorldClient#playSound
 
 IF 客户端触发、仅本地玩家听到
-  → clientLevel.playLocalSound(...)
+  → worldClient.playSound(pos, sound, SoundCategory.X, vol, pitch, distanceDelay)
 ```
 
 ## 常见错误
 
-- ❌ 废弃的 `new SoundEvent(id)` 构造函数 → 使用 `SoundEvent.createVariableRangeEvent(id)`
+- ❌ `SoundEvent.createVariableRangeEvent(id)` / `SoundSource` —— 都是 1.16+ 名，本档用 `new SoundEvent(id)` 与 `SoundCategory`
 - ❌ `sounds.json` 中 `sounds` 写成对象而非数组 → 必须是 `["ns:sound"]` 格式
 - ❌ `sounds` key 使用了命名空间前缀（如 `"minecraft:stone"`）→ `sounds.json` 中的 key 本身无命名空间
 - ❌ 忘记在 `sounds.json` 中注册事件名 → `SoundEvent` 存在但游戏无法解析
@@ -152,9 +151,9 @@ IF 客户端触发、仅本地玩家听到
 
 ## 参考资料
 
-- 官方文档：https://docs.minecraftforge.net/en/1.19.4/gameeffects/sounds
+- 官方文档：https://docs.minecraftforge.net/en/1.14.4/gameeffects/sounds
 - sounds.json 规范：https://minecraft.wiki/w/Sounds.json
-- DataGen 生成：https://docs.minecraftforge.net/en/1.19.4/datagen/client/sounds/
+- 1.14.4 无声效 DataGen（`datagen/client/sounds` 是 1.16+ 的页）
 
 ## 扩展点
 

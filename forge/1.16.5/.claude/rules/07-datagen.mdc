@@ -133,7 +133,7 @@ IF 用自定义工作台配方
 
 ```
 IF 固定掉落某物品
-  → ItemLootEntry / LootItem + SetCount
+  → LootItem.lootTableItem(...) + SetCount（`ItemLootEntry` 在本档 api-index 中不存在）
 
 IF 掉落方块本身（方块被破坏时）
   → BlockLoot#dropSelf（1.16 已有）
@@ -225,6 +225,8 @@ public class ModLootTableProvider extends LootTableProvider {
 }
 
 public class ModBlockLoot extends BlockLoot {
+    // TODO(未核实)：本档 api-index 的 BlockLoot 无 addTables / generate（只有 add / createSingleItemTable / dropSelf…与 accept(...)）；
+    //   1.17.1/1.18.2 同形，1.19.4+ 才由 BlockLootSubProvider 提供 generate()。本档该子类的正确重写点待核实。
     @Override
     protected void addTables() {
         dropSelf(ModBlocks.MY_BLOCK.get());

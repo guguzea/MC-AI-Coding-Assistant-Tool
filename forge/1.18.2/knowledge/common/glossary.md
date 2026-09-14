@@ -39,11 +39,11 @@
 |------|------|
 | `BLOCKS` | 方块 |
 | `ITEMS` | 物品 |
-| `BLOCKENTITIES` | 方块实体 |
+| `BLOCK_ENTITIES` | 方块实体 |
 | `ENTITYTYPES` | 实体类型 |
 | `FLUIDTYPES` | 流体类型 |
-| `SOUNDEVENTS` | 声音事件 |
-| `PARTICLETYPES` | 粒子类型 |
+| `SOUND_EVENTS` | 声音事件 |
+| `PARTICLE_TYPES` | 粒子类型 |
 | `CONTAINERS` | 菜单类型 |
 | `ATTRIBUTES` | 属性 |
 | `BIOMES` | 生物群系 |

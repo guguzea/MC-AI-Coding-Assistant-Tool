@@ -17,12 +17,19 @@ Cloth Config 是 Fabric 官方推荐的配置库，提供类型安全的配置�
 
 ```groovy
 // build.gradle
+repositories {
+    maven { url "https://maven.shedaniel.me/" }   // Cloth 的 maven 坐标在这个仓库，缺这段解析不到
+}
+
 dependencies {
-    modApi "me.shedaniel.cloth:cloth-config-fabric:11.0.106+1.20.1" {
+    modApi "me.shedaniel.cloth:cloth-config-fabric:16.0.143" {
         exclude group: "net.fabricmc.fabric-api"
     }
 }
 ```
+
+> **坐标复核（读取日期 2026-09-13）**：原写 `11.0.106+1.20.1` 是 1.20.1 档的版本号，与本档 MC 1.21.3 不匹配。现值 `16.0.143`：`curl -sS -o /dev/null -w '%{http_code}' https://maven.shedaniel.me/me/shedaniel/cloth/cloth-config-fabric/16.0.143/cloth-config-fabric-16.0.143.pom` → **200**；Modrinth `project/cloth-config/version?game_versions=["1.21.3"]&loaders=["fabric"]` 首条即 `16.0.143+fabric`。再次复核：`curl -sS "https://api.modrinth.com/v2/project/cloth-config/version?limit=400"`。
+> **未核实**：本节以下代码里的 `ConfigSerializable`、`ConfigEntry.BoolOption.createBuilder(...)` 等成员名本轮未逐条对上游 javadoc 复核（只改坐标），需要单独立项。
 
 ## 基本配置
 

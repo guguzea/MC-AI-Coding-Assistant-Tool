@@ -91,7 +91,7 @@ private static final Item MY_BLOCK_ITEM =
 new Identifier("fabric", "diamond");          // fabric:diamond
 new Identifier(MOD_ID, "my_item");           // examplemod:my_item
 
-// 单字符串也可以（wiki：new Identifier("namespace:path")），推荐两参
+// 单参形式 wiki 记为可按 "namespace:path" 解析（<1.21）；本档映射导出 0 条 <init> 行 → 该重载 TODO(未核实)，一律用上方两参形式
 new Identifier("examplemod", "my_item");
 ```
 

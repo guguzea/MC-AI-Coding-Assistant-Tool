@@ -77,7 +77,7 @@ private static final Item IRON_PICKAXE = Registry.register(
 
 ## 自定义物品行为
 
-Yarn 1.21.1/1.21.3 `Item#use` 仍返回 `TypedActionResult<ItemStack>`。手持是 `getStackInHand`。`ItemStack.damage` 签名已改，不要抄 1.18 的三参 lambda。
+Yarn 1.21.3 `Item#use` 返回 `ActionResult`（**不带泛型**）——1.21.2 起 `TypedActionResult` 已并进 `net.minecraft.util.ActionResult`，本档映射表查不到 `TypedActionResult`（1.21.1 才有）。手持是 `getStackInHand`。`ItemStack.damage` 签名已改，不要抄 1.18 的三参 lambda。
 
 ```java
 public class MySpecialItem extends Item {
@@ -86,8 +86,8 @@ public class MySpecialItem extends Item {
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        return TypedActionResult.success(player.getStackInHand(hand));
+    public ActionResult use(World world, PlayerEntity player, Hand hand) {
+        return ActionResult.SUCCESS;
     }
 }
 ```

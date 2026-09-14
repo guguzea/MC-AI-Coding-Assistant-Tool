@@ -17,8 +17,10 @@
 
 | 事件总线 | 使用场景 | 订阅方式 |
 |----------|----------|----------|
-| `Bus.FORGE` | Forge 原生事件（Registry、LivingDrops 等） | `@Mod.EventBusSubscriber(bus = Bus.FORGE)` |
-| `Bus.MOD` | Mod 自定义事件 | 手动 `event.addListener(this::method)` |
+| `Bus.FORGE`（游戏总线，默认） | 游戏内事件（PlayerInteract、LivingDrops、`AttachCapabilitiesEvent` 等） | `@Mod.EventBusSubscriber(bus = Bus.FORGE)` |
+| `Bus.MOD`（Mod 总线） | FML 生命周期与**注册**事件（`RegisterEvent`、`NewRegistryEvent`、`FMLCommonSetupEvent` 等） | `@Mod.EventBusSubscriber(bus = Bus.MOD)` 或 mod 构造器内 `modEventBus.addListener(...)` |
+
+> 证据：本档语料 `concepts_events.md:28-29`「// This event is on the mod bus」→ `modEventHandler(RegisterEvent event)`、`:33-34`「// This event is on the forge bus」→ `AttachCapabilitiesEvent<Entity>`；`concepts_lifecycle.md:3,5`（生命周期/注册事件 fired on the mod-specific event bus，用 `@EventBusSubscriber(bus = Bus.MOD)`）、`:34`（本档注册事件 = `NewRegistryEvent` + `DataPackRegistryEvent$NewRegistry` + `RegisterEvent`）。**在 `Bus.FORGE` 上订阅 `RegisterEvent` 永不触发。**
 
 ### Dist（物理端）约束
 
@@ -107,7 +109,7 @@ IF 监听服务端/客户端启动
   → FMLClientSetupEvent
 
 IF 监听 Registry 注册
-  → RegistryEvent.Register<T>
+  → RegisterEvent（必须订阅在 Bus.MOD / modEventBus；挂 Bus.FORGE 永不触发）
   → 参考 01-registry.mdc
 ```
 

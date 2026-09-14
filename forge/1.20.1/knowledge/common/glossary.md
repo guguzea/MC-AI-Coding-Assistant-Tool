@@ -3,7 +3,7 @@
 ## 核心概念
 
 ### DeferredRegister
-: Forge 1.18+ 推荐的注册方式。延迟注册到 `RegistryEvent`，避免在 mod 构造函数执行前引用未注册的 content。
+: Forge 1.18+ 推荐的注册方式。延迟注册到 `RegisterEvent`（1.18 前名为 `RegistryEvent`），避免在 mod 构造函数执行前引用未注册的 content。证据：本档语料 `concepts_registries.md:11,18`。
 
 ### RegistryObject
 : 持有注册表条目的懒引用。`.get()` 在注册完成后才返回实际对象，可在 lambda 内部安全使用。

@@ -141,7 +141,7 @@
 4304 KubeJS6 设定Attribute属性 · 6012 CrT合成继承原书NBT · 1630 Reskillable自定义物品 · 2994 模块化机械Part.3.1 · 4149 geckolib模型发光(no optifine) · 4475 CrT事件仿机械动力使用配方 · 4620 kubejs实现无中生有(1.20.1) · 5207 KubeJS修改炎葬伤害 · 5449 kjs6 Forge事件改伤害类型 · 2974 Kubejs实现@功能 · 2811 Mekatweaker教程 · 4239 数据包/资源包载入顺序指定 · 5594 自定义技能文档(Pufferfish Skills?)
 
 ## 社区区正文级全量扫描（进行中）
-- 断点：C:UserszzrCNAppDataLocalTemp\\mcmod_comm_scan.json；原始数据：C:UserszzrCNAppDataLocalTemp\\mcmod_comm_bodies.txt
+- 断点：`C:\Users\zzrCN\AppData\Local\Temp\mcmod_comm_scan.json`；原始数据：`C:\Users\zzrCN\AppData\Local\Temp\mcmod_comm_bodies.txt`（本机临时文件，不入库；2026-09-13 未复核是否仍在）
 - 新宝石：2571 浅谈Forge的事件系统和使用（Java基础要求，讲Forge事件系统——真·模组开发内容，标题隐蔽）★待核许可入库
 - 已复核确认无遗漏：2017/3081/2373(Create目录大纲)/51/1258/1960/7/2050/499/197/114/347/872/53/173/166/32/2799/436/1848/415/286/572/808(禁转C,玩法)/1333/609/38/1799/1479/4952/570/1515/822(XCustomizedBlade json附属)/200/2270/2(gamerule EU概念元老帖)/2505/2420/297/392/3668/126/3632/336/651(C,TC6研究参考)/670
 

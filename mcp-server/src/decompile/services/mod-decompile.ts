@@ -10,7 +10,7 @@
 
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync, openSync, readSync, closeSync } from "fs";
 import { tmpdir } from "os";
-import { basename, join, relative, sep } from "path";
+import { basename, isAbsolute, join, relative, sep } from "path";
 import { createHash } from "crypto";
 import { actionable, withAction, type ActionEnvelope } from "../../utils/actionable.js";
 import { parseMinecraftVersion, type MappingChoice } from "../version-manager.js";
@@ -243,8 +243,11 @@ export function bundledJarEntries(names: string[]): string[] {
  * 强于调用方给的标签；而包名启发式会误判改名遗留（Moonlight 早期就是 selene），所以不猜包名。
  * 只在无歧义时采信：内层恰好一个解得出 modId，或恰好一个与调用方标签相符。
  * 多义（CCA 那类平级子模组）返回候选交人/agent 决定，绝不挑第一个。
+ *
+ * S5c：导出只为让 `test-decompile.mjs` 能离线合成胖壳 fixture 直接对拍这条无歧义判据
+ * （不联网、不需要 JDK）；判据本身未改。
  */
-function resolveEmbeddedIdentity(
+export function resolveEmbeddedIdentity(
   jarBuffer: Buffer,
   innerEntries: string[],
   hint: string | undefined,
@@ -293,6 +296,81 @@ function resolveEmbeddedIdentity(
     candidates: hits.map((h) => `${h.entry}#${h.modId}`),
     reason: hits.length === 0 ? "内层 jar 也没有 mods.toml / fabric.mod.json 等元数据" : `内层解出 ${uniq.length} 个不同 modId（平级子模组），不猜`,
   };
+}
+
+/** `pickDecompileInput` 允许换成内层件的身份来源（= `resolveEmbeddedIdentity` 的两种 ok evidence）。 */
+const EMBEDDED_EVIDENCES: readonly string[] = ["jarjar-self", "jarjar-labeled"];
+
+export interface PickDecompileInputArgs {
+  /** 用户传进来的 jar（胖壳时它是外壳）；任何分支的默认输入都是它 */
+  jarPath: string;
+  /** 身份来源。只有 `jarjar-self` / `jarjar-labeled` 才允许换输入；`jar` / `external` 原样用外壳 */
+  evidence: ModDecompileResult["modIdEvidence"];
+  /** 身份出自哪个内层件（`resolveEmbeddedIdentity().from`）；缺省即不换 */
+  modIdSource?: string;
+  /** 外壳字节内容身份（sha512 前 12 位），参与内层落盘文件名 */
+  jarIdentity: string;
+  /** 内层件落盘目录（`cache.remapped`）；产物必须落在它之内 */
+  extractDir: string;
+  /** 从外壳取一个条目的字节。生产实现 = `readZip(readFileSync(jarPath)).get(name)` */
+  readEntry: (name: string) => Buffer | undefined | null;
+  /** 落盘（建目录 + 已存在则跳过）。缺省 = 不落盘（纯决策，测试用）；生产必须注入 */
+  extract?: (destPath: string, data: Buffer) => void;
+}
+
+export interface PickDecompileInputResult {
+  /** 真正送去 remap / VineFlower 的 jar */
+  inputJar: string;
+  /** true = 用的是内层件（等价于旧代码 `bytecodeJar !== args.jarPath`） */
+  usingEmbedded: boolean;
+  /** 采用内层件时的条目名（诊断用） */
+  embeddedSource?: string;
+  /** 未采用内层件的原因。**只回给测试**：旧代码这条路径静默 catch，不并进 warnings，行为保持不变 */
+  reason?: string;
+}
+
+/**
+ * S5c（F57）：胖壳的**输入选择**（纯函数，CI 可测）。
+ *
+ * 原缺陷：`decompile_mod_jar` 只回传 `modIdSource` 不消费它，remap + VineFlower 全跑在外壳上，
+ * 于是 Modrinth 的 `kotlinforforge-*-all.jar`（4527 条目里真身只占 13 条）解出来的是被 shade
+ * 进来的 Kotlin stdlib。S35 已把消费逻辑落进 `decompileModJar`；这里把同一套判据搬出来，
+ * 让它能离线对拍——不联网、不需要 JDK/VineFlower、不读 dist 之外的运行时。
+ *
+ * 判据与搬之前逐位一致：
+ *  1. 身份来自内层件（`evidence` 是 `jarjar-*` 且有 `modIdSource`）才换输入；`jar` / `external`
+ *     ⇒ 原样外壳（普通模组的输入绝不能被换掉）。等价于旧代码的 `if (embeddedOk)`。
+ *  2. 落盘名 = `extractDir/embedded-<jarIdentity>-<sanitizeCacheSegment(条目名展平)>`，
+ *     再过 `isPathInside(extractDir, …)`；取不到字节 / 任一环节抛错 ⇒ 维持外壳（旧的静默 catch）。
+ *     `inner == null` 而不是 `!inner`：`Buffer.alloc(0)` 是 truthy，旧代码会采用 0 字节条目。
+ *  3. 额外的 zip-path 守卫（条目名含 `..` 段 / 是绝对路径 ⇒ 直接拒绝、不调 `readEntry`）：
+ *     生产上 `modIdSource` 只能来自 `bundledJarEntries` 的 `^META-INF/(jars|jarjar)/[^/]+\.jar$`，
+ *     这类名字进不来 ⇒ 该守卫不改变任何生产可达输入的决策，只给纯函数面兜底。
+ */
+export function pickDecompileInput(a: PickDecompileInputArgs): PickDecompileInputResult {
+  const shell: PickDecompileInputResult = { inputJar: a.jarPath, usingEmbedded: false };
+  const src = typeof a.modIdSource === "string" ? a.modIdSource : "";
+  if (!EMBEDDED_EVIDENCES.includes(String(a.evidence)) || !src) return shell;
+  if (src.split(/[/\\]/).some((seg) => seg === "..")) {
+    return { ...shell, reason: `内层条目名含 ".." 段，zip-path 守卫拒绝：${src}` };
+  }
+  if (isAbsolute(src) || /^[a-zA-Z]:[/\\]/.test(src) || src.startsWith("\\\\")) {
+    return { ...shell, reason: `内层条目名是绝对路径，zip-path 守卫拒绝：${src}` };
+  }
+  try {
+    const embeddedName = sanitizeCacheSegment(src.replace(/[/\\]/g, "_"));
+    const extracted = embeddedName ? join(a.extractDir, `embedded-${a.jarIdentity}-${embeddedName}`) : "";
+    if (!extracted) return { ...shell, reason: `内层落盘文件名非法（含路径穿越或空段）：${src}` };
+    if (!isPathInside(a.extractDir, extracted)) {
+      return { ...shell, reason: `内层落盘路径逃出 remapped 缓存目录：${extracted}` };
+    }
+    const inner = a.readEntry(src);
+    if (inner == null) return { ...shell, reason: `外壳条目里没有该内层件：${src}` };
+    a.extract?.(extracted, inner);
+    return { inputJar: extracted, usingEmbedded: true, embeddedSource: src };
+  } catch (err) {
+    return { ...shell, reason: `内层件取不出（维持解外壳）：${(err as Error).message}` };
+  }
 }
 
 /**
@@ -598,7 +676,9 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   if (!args.force && existsSync(outDir) && readdirSync(outDir).length > 0) {
     const metaHit = readDecompiledMeta(outDir);
     const verdict = metaHit.found ? judgeDecompiledCacheHit(metaHit, args.jarPath, requestedKey) : null;
-    if (verdict?.usable) {
+    // S35：胖壳（JiJ / jarjar）自身 0 个 .class，旧缓存会命中「只有 META-INF 的空树」并永久返回
+    // javaFileCount:0。身份来自内层件时，空树不算可用命中，落到下面改解真身内层 jar。
+    if (verdict?.usable && !(embeddedOk && !containsJava(outDir))) {
       const storedRemapped = metaHit.remapped === true;
       const storedRemapError = metaHit.remapError ?? null;
       const degradation = decompileDegradation(storedRemapped, storedRemapError);
@@ -635,7 +715,23 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   }
 
   // 4. 可选 remap（仅 1.14–1.21.11 + yarn/mojmap 有意义；26.1+ 免 remap）
-  let inputJar = args.jarPath;
+  // S35：`modIdSource` 必须被消费——胖壳自身 0 个 .class，只解外壳会得到 0 .java 的 META-INF 空树。
+  // 身份来自内层件时，解出的内层 jar 才是字节码输入（输出目录仍按外壳内容寻址，不改缓存键）。
+  // 决策本体在 `pickDecompileInput`（S5c 抽成纯函数，可离线对拍）；这里只注入两个副作用。
+  const pickedInput = pickDecompileInput({
+    jarPath: args.jarPath,
+    evidence: modIdEvidence,
+    modIdSource: embeddedOk?.from,
+    jarIdentity,
+    extractDir: cache.remapped,
+    readEntry: (name) => readZip(readFileSync(args.jarPath)).get(name),
+    extract: (dest, data) => {
+      mkdirSync(cache.remapped, { recursive: true });
+      if (!existsSync(dest)) writeFileSync(dest, data);
+    },
+  });
+  const bytecodeJar = pickedInput.inputJar;
+  let inputJar = bytecodeJar;
   let remapped = false;
   let remapError: string | null = null;
   const remapVersion = requestedKey.version;
@@ -713,7 +809,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
               throw new Error("remap 中间路径逃出 remapped 缓存目录");
             }
             const r1 = await runJava(
-              remapperCli(tinyJars, args.jarPath, step1, mappings, "official", "intermediary"),
+              remapperCli(tinyJars, bytecodeJar, step1, mappings, "official", "intermediary"),
               { cwd: cache.root },
             );
             if (r1.code !== 0) {
@@ -729,7 +825,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
           } else {
             const tinyMappings = await ensureMojmapTiny(mappings);
             const r = await runJava(
-              remapperCli(tinyJars, args.jarPath, remappedJar, tinyMappings, "official", "named"),
+              remapperCli(tinyJars, bytecodeJar, remappedJar, tinyMappings, "official", "named"),
               { cwd: cache.root },
             );
             if (r.code !== 0) {
@@ -743,7 +839,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
         // remap 失败 → 诚实降级：保留错误信息到 note，用原始 jar 反编译
         remapped = false;
         remapError = (err as Error).message;
-        inputJar = args.jarPath;
+        inputJar = bytecodeJar;
       }
   }
 
@@ -823,6 +919,12 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
       `反编译产物已生成（partial success），但完成标记写入失败：${metaWriteError}。` +
         `本次源码树可直接使用；search_mod_code 对该目录的缓存命中判据（version/mapping）会缺失，` +
         `可重试 decompile_mod_jar { jarPath, force: true } 或在可写盘上重建缓存。`,
+    );
+  }
+  if (bytecodeJar !== args.jarPath) {
+    degradation.warnings.push(
+      `外壳自身不含 .class（JiJ / jarjar 胖壳）：本次实际反编译的是内层件 ${embeddedOk?.from ?? "?"}；` +
+        "同壳其余内层件（纯库，如 kotlin / kfflib 之类）没有 modId，不进本目录，需解压另行阅读。",
     );
   }
   // remap 失败降级后输出的是混淆/中间名，必须在**结构字段**上诚实暴露，

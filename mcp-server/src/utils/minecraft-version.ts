@@ -151,6 +151,19 @@ export type McVersionBand =
   | "unknown"
   | "other";
 
+/** 数值下限判定：1.21.10 ≥ 1.21.8（字典序会把 1.21.10 判成更小）。缺段按 0 补。 */
+export function isMcVersionAtLeast(version: string, floor: string): boolean {
+  const a = version.trim().split(".").map((p) => Number(p) || 0);
+  const b = floor.trim().split(".").map((p) => Number(p) || 0);
+  const len = Math.max(a.length, b.length);
+  for (let i = 0; i < len; i++) {
+    const da = a[i] ?? 0;
+    const db = b[i] ?? 0;
+    if (da !== db) return da > db;
+  }
+  return true;
+}
+
 export function classifyMinecraftVersion(version: string): McVersionBand {
   const v = version.trim();
   if (!v || v === "unknown") return "unknown";

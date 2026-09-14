@@ -131,18 +131,18 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityMod
 public class MyHumanoidRenderer extends HumanoidMobRenderer<MyEntity, MyEntityModel<MyEntity>> {
     public MyHumanoidRenderer(EntityRendererProvider.Context context) {
         super(context, new MyEntityModel<>(context.bakeLayer(MY_MODEL_LAYER)), 0.5f);
-        // ⚠️ 1.19.4 与 1.20.1 索引都是 4 参数：(RenderLayerParent, HumanoidModel, HumanoidModel, ModelManager)
-        //    forge/1.20.1/code-patterns/03-entity-patterns.md:100 的 3 参数写法未被索引证实，勿照抄。
+        // ⚠️ 1.19.4 起索引都是 4 参数：(RenderLayerParent, HumanoidModel, HumanoidModel, ModelManager)
+        //    （1.18.2 才是 3 参；1.20.1/1.20.4 档的 3 参写法已按此修正）
         this.addLayer(new HumanoidArmorLayer<>(this,
             new MyEntityModel<>(context.bakeLayer(INNER_ARMOR)),
             new MyEntityModel<>(context.bakeLayer(OUTER_ARMOR)),
             context.getModelManager()));
     }
 }
-// TODO(未核实)：ModelLayers.createHumanoidBody() —— 1.20.1 档用它拼 LayerDefinition.create(...)，
-//   但 get_method_params net.minecraft.client.model.geom.ModelLayers#createHumanoidBody --version=1.19.4 返回 MISS。
-//   本文件因此只用实体模型类自带的 createBodyLayer 工厂，不引用原版 ModelLayers 工厂方法。
-// 已核实：LayerDefinition.create(MeshDefinition, int, int)、EntityRendererProvider$Context.bakeLayer(ModelLayerLocation)
+// TODO(未核实)：ModelLayers.createHumanoidBody() —— 1.17.1–1.20.4 的 api-index 中 ModelLayers 只有
+//   createBoatModelName/createSignModelName/register* 等，没有该方法（1.17.1/1.20.1/1.20.4 档原用法已降级为 TODO）。
+// 已核实：LayerDefinition.create(MeshDefinition, int, int)（net.minecraft.client.model.geom.builders）、
+//   PlayerModel.createMesh(CubeDeformation, boolean) → MeshDefinition、Context.bakeLayer(ModelLayerLocation)
 ```
 
 ## 实体属性注册

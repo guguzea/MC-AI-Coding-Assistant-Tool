@@ -12,7 +12,7 @@
 private static final Block MY_STONE = Registry.register(
     Registries.BLOCK,
     Identifier.of(MOD_ID, "my_stone"),
-    new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
+    new Block(AbstractBlock.Settings.copy(Blocks.STONE).strength(1.5f))
 );
 
 private static final Item MY_STONE_ITEM = Registry.register(
@@ -69,15 +69,15 @@ public class MyChestBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, inventory);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
+        Inventories.writeNbt(nbt, inventory, registries);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        Inventories.readNbt(nbt, inventory);
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
+        Inventories.readNbt(nbt, inventory, registries);
     }
 }
 
@@ -102,9 +102,9 @@ public class MyChestBlock extends Block implements BlockEntityProvider {
 private static final Block MY_PLANT = Registry.register(
     Registries.BLOCK,
     Identifier.of(MOD_ID, "my_plant"),
-    new Block(FabricBlockSettings.copyOf(Blocks.DANDELION)
+    new Block(AbstractBlock.Settings.copy(Blocks.DANDELION)
         .noCollision()
         .breakInstantly()
-        .sounds(BlockSoundGroups.GRASS))
+        .sounds(BlockSoundGroup.GRASS))
 );
 ```

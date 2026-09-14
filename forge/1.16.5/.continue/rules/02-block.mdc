@@ -30,11 +30,11 @@ Block.Properties.of(Material material)
 - 注册名称必须全小写
 - BlockItem 需要单独注册（与方块使用相同 registry name）
 
-### 方块实体（BlockEntity）约束
+### 方块实体（TileEntity）约束
 
-- 有状态或需要持久化的方块必须使用 BlockEntity（而非仅靠 Block）
+- 有状态或需要持久化的方块必须使用 TileEntity（而非仅靠 Block）
 - 本档没有 `EntityBlock` / `newBlockEntity`。方块重写 `hasTileEntity` + `createTileEntity`
-- BlockEntity 用 `save(CompoundTag)` / `load(BlockState, CompoundTag)`。不要 `saveAdditional`（1.17+）
+- TileEntity 用 `save(CompoundNBT)` / `load(BlockState, CompoundNBT)`（语料 tileentities_tileentity.md:38）。不要 `saveAdditional`（1.17+）
 - **禁止**在 `load()` 中直接读取世界数据（会导致 NPE）
 
 ### BlockState 配置
@@ -56,14 +56,14 @@ IF 需要可放置物品、不可交互的基础方块
   → 创建 blockstates JSON 和 models JSON
 
 IF 需要存储数据（箱子、熔炉等）
-  → 方块实体方块（Block + BlockEntity）
+  → 方块实体方块（Block + TileEntity）
   → 方块重写 hasTileEntity + createTileEntity
-  → 需要注册 BlockEntityType
+  → 需要注册 TileEntityType
   → 需要在 mods.toml 中添加 blockEntity 字段
 
 IF 需要可交互（右键打开 GUI、触发事件）
   → 基础方块 + onBlockActivated 事件
-  → 或使用 ContainerProvider + ITickableBlockEntity 实现 GUI
+  → 或使用 IContainerProvider + ITickableTileEntity 实现 GUI（TODO(未核实)：原写 ContainerProvider/ITickableBlockEntity 本档语料 0 命中、属别的版本线，禁止照抄；ITickableTileEntity 见语料 tileentities_tileentity.md:55）
 
 IF 需要流体
   → 使用 Forge 专用流体系统
@@ -97,20 +97,20 @@ IF 液体
   → 不在 Block 中实现，使用 Fluid 系统
 ```
 
-### Decision: BlockEntity vs 普通方块
+### Decision: TileEntity vs 普通方块
 
 ```
 IF 需要存储玩家数据（容器内容、熔炉燃料/物品）
-  → 必须使用 BlockEntity
+  → 必须使用 TileEntity
   → 方块重写 hasTileEntity + createTileEntity
-  → 注册时先注册方块再注册 BlockEntityType
+  → 注册时先注册方块再注册 TileEntityType
 
 IF 需要每 tick 逻辑（自动机、计时器）
-  → 必须使用 BlockEntity + ITickable<BlockEntity>
-  → 在 ModBlocks 中注册 BlockEntityType 时关联 Block
+  → 必须使用 TileEntity + ITickableTileEntity（语料 tileentities_tileentity.md:55）
+  → 在 ModBlocks 中注册 TileEntityType 时关联 Block
 
 IF 只需要静态方块（装饰、完整方块）
-  → 普通 Block 即可，不需要 BlockEntity
+  → 普通 Block 即可，不需要 TileEntity
   → 减少内存占用和复杂度
 ```
 
@@ -157,7 +157,7 @@ event.getRegistry().register(
 );
 ```
 
-## 示例：带 BlockEntity 的方块
+## 示例：带 TileEntity 的方块
 
 ```java
 // blocks/MyBlockEntityBlock.java
@@ -172,7 +172,7 @@ public class MyBlockEntityBlock extends Block {
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, IBlockReader world) {
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return ModBlockEntities.MY_BLOCK_ENTITY.get().create();
     }
 
@@ -190,7 +190,7 @@ public class MyBlockEntityBlock extends Block {
 
 ```java
 // entities/MyBlockEntity.java
-public class MyBlockEntity extends BlockEntity {
+public class MyBlockEntity extends TileEntity {
     private CompoundNBT data = new CompoundNBT();
 
     public MyBlockEntity() {

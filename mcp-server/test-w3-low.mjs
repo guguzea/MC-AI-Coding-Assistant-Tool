@@ -246,4 +246,123 @@ function makeStoreZip(name, data, { lieCsize } = {}) {
   console.log("D-50/D-51 preloader+types 消息契约: ok");
 }
 
+// ── S15b：F131（yarn-tiny MCP/Parchment 门要盖住 from 侧）+ F178（1.14.4 类查询被 CSV 方法表劫持）──
+// 本波 dist 冻结（改 src 不代跑 npm run build），故两条按本文件 D-37 的约定双机制核：
+// 把 src 里真正会编译进 dist 的判据文本抠出来当场复算，再用 dist 钉住「未改动的邻路 + 数据面」。
+// 中心 build 后可升级为运行时门：convertMapping(from=mcp,to=yarn,1.21.1) → resultKind
+// YARN_TINY_NO_MCP_LAYER；convertMapping(from=yarn,to=intermediary,net.minecraft.block.Block,1.14.4)
+// → found:true + mappingType:"class" + converted net.minecraft.class_2248。
+{
+  const { existsSync, readFileSync } = await import("node:fs");
+  const { DatabaseSync } = await import("node:sqlite");
+  const cv = readFileSync(join(repo, "mcp-server/src/mappings/convert.ts"), "utf8");
+  const ys = readFileSync(join(repo, "mcp-server/src/mappings/yarn-sqlite.ts"), "utf8");
+  const { convertMapping } = await import("./dist/mappings/convert.js");
+  const { convertYarnMember } = await import("./dist/mappings/yarn-sqlite.js");
+
+  // 从 src 抠「const NAME = <expr>;」的表达式原文（可能是多行）
+  const constRhs = (text, name) => {
+    const at = text.indexOf(`const ${name} =`);
+    assert.ok(at >= 0, `未找到 const ${name}`);
+    const start = text.indexOf("=", at) + 1;
+    const end = text.indexOf(";", start);
+    assert.ok(end > start, `const ${name} 没有终止分号`);
+    return text.slice(start, end).trim();
+  };
+  const ifCond = (text, needle) => {
+    const line = text.split(/\r?\n/).find((l) => l.trimStart().startsWith("if (") && l.includes(needle));
+    assert.ok(line, `未找到含 ${needle} 的 if 行`);
+    return line.slice(line.indexOf("if (") + 4, line.lastIndexOf(") {"));
+  };
+
+  // ── F131-a：门判据（to 侧恒设门，from 侧只收类级）当场复算 ──
+  const fnAt = cv.indexOf("export function mcpLayerSide(");
+  assert.ok(fnAt >= 0, "F131 convert.ts 缺少 mcpLayerSide 门函数");
+  const bodyStart = cv.indexOf("{", fnAt) + 1;
+  const sideBody = cv.slice(bodyStart, cv.indexOf("\n}", bodyStart));
+  assert.ok(sideBody.includes('return "to"') && sideBody.includes('return "from"'), `F131 判据抽取失败: ${sideBody}`);
+  const side = (from, to, kind) => new Function("from", "to", "kind", sideBody)(from, to, kind);
+  assert.equal(side("yarn", "mcp", "class"), "to", "F131 既有 to 侧门不得退化");
+  assert.equal(side("mcp", "yarn", "class"), "from", "F131 from=mcp 类查询必须进同一道门");
+  assert.equal(side("parchment", "intermediary", "class"), "from", "F131 from=parchment 同理");
+  assert.equal(side("mcp", "mojang", "method"), null, "F131 成员级 mcp 查询不得误伤（test-core 钉住）");
+  assert.equal(side("intermediary", "yarn", "class"), null, "F131 intermediary/yarn 输入不是 MCP 层");
+  const gateCond = ifCond(cv, "yarnTinyMcpSide !== null").replace(/yarnTinyMcpSide/g, "s").replace(/resolveCsvMappingDbPath\(version\)/g, "hasCsv");
+  const gated = (era, from, to, kind, hasCsv) =>
+    Boolean(new Function("era", "s", "hasCsv", `return (${gateCond});`)(era, side(from, to, kind), hasCsv));
+  assert.equal(gated("yarn-tiny", "mcp", "yarn", "class", false), true, "F131 1.21.1 from=mcp 类查询应被拒");
+  assert.equal(gated("yarn-tiny", "yarn", "mcp", "class", false), true, "F131 to=mcp 侧行为保持");
+  assert.equal(gated("yarn-tiny", "mcp", "yarn", "class", true), false, "F131 1.14.4 有 mcp-csv 层：不走 convert.ts 这道门");
+  assert.equal(gated("yarn-tiny", "mcp", "mojang", "method", false), false, "F131 成员级路径不受本门影响");
+  assert.equal(gated("mcp-csv", "mcp", "mojang", "class", true), false, "F131 纯 CSV 档不得被拒");
+
+  // ── F131-b：第二道门（yarn-sqlite 类级）同样盖住 from 侧 ──
+  const ysSideRhs = constRhs(ys, "mcpLayerSide");
+  const ysSide = (from, to) => new Function("from", "to", `return (${ysSideRhs});`)(from, to);
+  assert.ok(ifCond(ys, "mcpLayerSide").includes('era === "yarn-tiny"'), "F131 yarn-sqlite 门条件未含 era");
+  assert.equal(ysSide("yarn", "mcp"), "to", "F131 类级 to 侧保持");
+  assert.equal(ysSide("mcp", "yarn"), "from", "F131 类级 from 侧必须进门（1.14.4 CSV 例外档由这道门兜）");
+  assert.equal(ysSide("intermediary", "yarn"), null, "F131 intermediary 输入保持可答");
+
+  // ── F131-c：dist 运行时钉住既有载荷形状与不得误伤的邻路 ──
+  const toSideGate = convertMapping({ from: "yarn", to: "mcp", memberName: "net.minecraft.block.Block", version: "1.21.1" });
+  assert.equal(toSideGate.found, false);
+  assert.equal(toSideGate.resultKind, "YARN_TINY_NO_MCP_LAYER", toSideGate.resultKind);
+  assert.equal(toSideGate.action?.code, "DATA_UNAVAILABLE", toSideGate.action?.code);
+  const memberMcp = convertMapping({
+    from: "mcp",
+    to: "mojang",
+    memberName: "getHealth",
+    ownerClass: "net.minecraft.world.entity.LivingEntity",
+    version: "1.20.1",
+  });
+  assert.equal(memberMcp.found, true, `F131 过度设门会打死 yarn-tiny 成员级 mcp：${JSON.stringify(memberMcp.notes)}`);
+  assert.equal(memberMcp.converted, "er");
+  console.log("F131 yarn-tiny MCP/Parchment 门 from+to 双侧: ok");
+
+  // ── F178-a：CSV 方法表捷径只接裸名（判据原文复算）──
+  const bareRhs = constRhs(cv, "csvOnlyBareName");
+  const isBare = (memberName) => Boolean(new Function("memberName", `return (${bareRhs});`)(memberName));
+  assert.equal(isBare("getHealth"), true, "F178 裸名必须仍走 CSV 捷径");
+  assert.equal(isBare("func_110143_aJ"), true, "F178 searge 名必须仍走 CSV 捷径");
+  assert.equal(isBare("net.minecraft.block.Block"), false, "F178 FQCN 不是裸名");
+  assert.equal(isBare("net/minecraft/block/Block"), false, "F178 slash FQCN 不是裸名");
+  const allowRhs = constRhs(cv, "allowCsvMethodPath").replace(/resolveCsvMappingDbPath\(version\)/g, "hasCsv");
+  const allowCsv = (memberName, kind, ownerClass, hasCsv) =>
+    Boolean(new Function("kind", "ownerClass", "hasCsv", "csvOnlyBareName", `return (${allowRhs});`)(
+      kind,
+      ownerClass,
+      hasCsv,
+      isBare(memberName),
+    ));
+  assert.equal(allowCsv("net.minecraft.block.Block", "class", undefined, true), false, "F178 1.14.4 类查询不得走方法表");
+  assert.equal(allowCsv("getHealth", "class", undefined, true), true, "F178 裸名 CSV 捷径保持（R2/R3）");
+  assert.equal(allowCsv("func_110143_aJ", "method", undefined, true), true, "F178 searge 分派保持");
+  assert.equal(allowCsv("getHealth", "method", "net.minecraft.entity.LivingEntity", true), false, "F178 带 owner 仍不走全局 CSV");
+  assert.equal(allowCsv("net.minecraft.block.Block", "class", undefined, false), false, "F178 无 CSV 档本就不走此路");
+
+  // ── F178-b：第二机制 = 表实况（只读打开，勿留 -journal/-wal）──
+  const sqlitePath = join(process.env.MC_SKILL_DATA ?? join(repo, "data"), "fabric_1.14.4", "mappings", "yarn-mappings.sqlite");
+  const db = new DatabaseSync(sqlitePath, { readOnly: true });
+  try {
+    const row = db.prepare("select named, intermediary, official from classes where named=?").get("net/minecraft/block/Block");
+    assert.equal(row.intermediary, "net/minecraft/class_2248", JSON.stringify(row));
+    assert.equal(row.official, "bmv", JSON.stringify(row));
+  } finally {
+    db.close();
+  }
+  assert.ok(!existsSync(`${sqlitePath}-wal`) && !existsSync(`${sqlitePath}-journal`), "只读打开不得留下 wal/journal");
+
+  // ── F178-c：dist 运行时钉住分派目标与反方向邻路 ──
+  const cls = convertYarnMember("1.14.4", "yarn", "intermediary", "net.minecraft.block.Block");
+  assert.equal(cls.found, true, `F178 类表数据在，类路径必须命中: ${JSON.stringify(cls.notes)}`);
+  assert.equal(cls.mappingType, "class");
+  assert.equal(cls.converted, "net.minecraft.class_2248", JSON.stringify(cls.converted));
+  const rev = convertMapping({ from: "intermediary", to: "yarn", memberName: "net.minecraft.class_2248", version: "1.14.4" });
+  assert.equal(rev.converted, "net.minecraft.block.Block", JSON.stringify(rev.notes));
+  const bareCsv = convertMapping({ from: "mcp", to: "mojang", memberName: "getHealth", version: "1.14.4" });
+  assert.equal(bareCsv.ambiguous, true, `F178 不得改坏 1.14.4 裸名 CSV 路径: ${JSON.stringify(bareCsv.notes)}`);
+  console.log("F178 1.14.4 yarn 类查询分派: ok");
+}
+
 console.log("test-w3-low: ok");

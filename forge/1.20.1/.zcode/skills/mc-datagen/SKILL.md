@@ -151,7 +151,7 @@ public class ModBlockLootSubProvider extends BlockLootSubProvider {
     }
 
     @Override
-    protected void addTables() {
+    public void generate() {
         this.dropSelf(ModBlocks.MY_BLOCK.get());
     }
 

@@ -17,7 +17,7 @@ mappings: parchment
 
 ```java
 private static final DeferredRegister<ParticleType<?>> PARTICLES =
-    DeferredRegister.create(ForgeRegistries.PARTICLETYPES, MOD_ID);
+    DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MOD_ID);
 
 public static final RegistryObject<SimpleParticleType> MY_PARTICLE =
     PARTICLES.register("my_particle",

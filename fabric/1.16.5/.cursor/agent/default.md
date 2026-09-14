@@ -18,7 +18,7 @@
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |
 | Mixin 支持 | Loom 处理 Mixin；不要手写 Mixin Plugin / MixinBootstrap |
-| Fabric API | 0.16.x（`net.fabricmc.fabric-api:fabric-api:0.42.0+1.16`）|
+| Fabric API | 0.42.x（`net.fabricmc.fabric-api:fabric-api:0.42.0+1.16`）|
 
 ---
 
@@ -208,10 +208,10 @@ fabric-mod/
 
 ### 1.16.5 特有注意事项
 
-- ❌ **不要**使用 1.17+ 引入的 `Registries` 类（使用 `Registry`）
+- ❌ **不要**使用 1.19.3+ 引入的 `Registries` 类（使用 `Registry`）
 - ❌ **不要**使用 1.17+ 引入的 `Identifier` 简化 API
 - Mixin 走 `mixins.json` + fmj 的 `mixins` 键；Loom 自动处理，不要手写 MixinBootstrap
-- `fabric.mod.json` **可以**写 `environment`（schemaVersion 1 一直有该字段）
+- `fabric.mod.json` **可以**写 `environment`（v1 schema 核心字段；本档 loader 0.11.2 支持，官方规范未列最低 loader 版本门槛 —— docs.fabricmc.net/develop/loader/fabric-mod-json §Environment，2026-09-13 核读）；本档规则 `00-project-setup.mdc` 旧述「1.14-1.17.x 不支持」已废除
 
 ---
 

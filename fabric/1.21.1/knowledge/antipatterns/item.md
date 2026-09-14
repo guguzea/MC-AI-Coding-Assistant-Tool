@@ -47,9 +47,12 @@ new Item(new Item.Settings().maxDamage(100))
 // ✅ 正确：在事件中消耗耐久
 @Override
 public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-    stack.damage(1, attacker, (entity) -> {
-        entity.sendToolBreakStatus(attacker.getActiveHand());
-    });
+    // TODO(未核实): 1.20.x 这里的 damage(int, LivingEntity, Consumer) 与 sendToolBreakStatus
+    //   在 Yarn 1.21.1 均已不存在。tiny 实测 ItemStack(cuq)#damage 只剩
+    //   (int, ServerWorld, ServerPlayerEntity, Consumer) / (int, LivingEntity, EquipmentSlot) /
+    //   (int, ItemConvertible, LivingEntity, EquipmentSlot)→ItemStack，而 EquipmentSlot 常量名
+    //   在 yarn-1.21.1+build.3 tiny 中仍是 field_61xx 未具名 → 消耗耐久的正确写法待反编译核实，不臆造。
+    // 上限耐久仍由 maxDamage()/ToolMaterial#getDurability() 决定（同档 rules/03-item.mdc:37）。
     return true;
 }
 ```
@@ -58,20 +61,20 @@ public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attack
 
 **症状**：食物可食用但消耗速度不对，或根本不消耗
 
-**原因**：`FoodComponent.Builder` 中忘记调用 `.hunger()`
+**原因**：`FoodComponent.Builder` 中忘记调用 `.nutrition()`（tiny 实测 `cpr$a` 成员是 `nutrition(I)`；1.20.x 的 `hunger()` 已无）
 
 ```java
 // ❌ 错误
 new Item(new Item.Settings().food(
     new FoodComponent.Builder()
-        .saturationModifier(1.0f)  // 忘记 hunger()
+        .saturationModifier(1.0f)  // 忘记 nutrition()
         .build()
 ))
 
 // ✅ 正确
 new Item(new Item.Settings().food(
     new FoodComponent.Builder()
-        .hunger(4)  // 饱食度恢复量
+        .nutrition(4)  // 饱食度恢复量（本档无 hunger()）
         .saturationModifier(1.2f)  // 饱和度
         .build()
 ))

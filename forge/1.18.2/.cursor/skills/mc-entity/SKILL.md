@@ -32,7 +32,7 @@ ENTITYTYPES.register(modEventBus);
 ## 实体类基础结构
 
 ```java
-public class MyEntity extends LivingEntity {
+public class MyEntity extends Mob {
     protected MyEntity(EntityType<? extends MyEntity> type, Level level) {
         super(type, level);
         this.noPhysics = true;

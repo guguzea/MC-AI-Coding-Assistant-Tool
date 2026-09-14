@@ -29,12 +29,12 @@ public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPE
 ENTITY_TYPES.register(modEventBus);
 ```
 
-> **注意**：1.19.4 Forge / Mojmap 使用 `MobCategory`。`SpawnGroup` 是 Yarn 名，不是 Forge 1.20.7 重命名。
+> **注意**：1.19.4 Forge / Mojmap 使用 `MobCategory`。`SpawnGroup` 是 Yarn 名，Forge / Mojmap 任何版本都不存在该类，不存在所谓「重命名」。
 
 ## 实体类基础结构
 
 ```java
-public class MyEntity extends LivingEntity {
+public class MyEntity extends Mob {
     protected MyEntity(EntityType<? extends MyEntity> type, Level level) {
         super(type, level);
         this.noPhysics = true;

@@ -5,6 +5,26 @@
 
 ---
 
+> **⚠️ Forge 1.15.2 `scaffold/` 与官方 MDK 存在代差 —— 有意保留，不是缺陷；禁止为了「对齐」去改 scaffold 钉值。**
+> 注意（不是「已跑通」）：本档 `pack.meta.json` → `buildVerified: **false**`，卡点就是钉值本身 —— FG `[4.1,4.2)` 硬拒 Gradle ≥7（2026-09-11 真机 `_g_fg4gw_1.15.2.log`："Found Gradle version Gradle 7.3.3. Versions Gradle 7.0 and newer are not supported yet"，BUILD FAILED in 12s）。按根裁定「代差不追平、不擅自改钉值」wrapper 保持不动；**是否把 wrapper 降到 Gradle 6.x 需用户裁定**，本档只登记。
+> 需要新版工具链：自行调用 `download_official_mdk`（默认 dryRun，只落到 `$MC_SKILL_CACHE`，不写仓库），再把返回值填进**你自己的工程**。
+
+> | 字段 | 本档 `scaffold/` | 官方 MDK |
+> | --- | --- | --- |
+> | Gradle Wrapper | `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-7.3.3-bin` | `gradle-4.10.3-bin` |
+> | ForgeGradle | `scaffold/build.gradle:5` → `[4.1,4.2)` | `build.gradle:7` → `ForgeGradle:3.+` |
+> | Forge | `scaffold/gradle.properties:9` → `31.2.50` | `build.gradle:93` → `1.15.2-31.2.57` |
+> | mappings | `scaffold/gradle.properties:14-15` → `official` / `1.15.2` | `build.gradle:30` → `snapshot` / `20200514-1.15.1` |
+
+> **取证与局限（2026-09-14 实读）**
+> - 官方侧来源：`%APPDATA%\mc-skill-cache\mdk\forge\1.15.2\forgegradle\unpacked\`{gradle.properties, build.gradle, gradle/wrapper/gradle-wrapper.properties}；
+>   本仓侧来源：本目录 `gradle.properties` / `build.gradle` / `gradle/wrapper/gradle-wrapper.properties`。
+>   两侧值均逐行实读，非训练记忆。
+> - 环境局限：本机 `JAVA_HOME` **未设**，PATH 上的 `java` 是 **Java 8（1.8.0_431）**。
+>   任何复现取证 / Gradle 调用必须**显式**把 `JAVA_HOME` 指到 JDK 17
+>   （本机：`G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12`），否则 FG6 档（1.20.x）直接 fail。
+> - **禁止**在本仓库 `scaffold/` 目录内跑 Gradle。要跑先复制到仓库外的临时目录。
+
 ## 文件清单与职责
 
 ```
@@ -110,8 +130,8 @@ ENTITY_TYPES.register(modEventBus);
 ### 添加方块实体（TileEntity）
 
 ```java
-// 方块实现 ITileEntityProvider 接口：
-public class MyBlock extends Block implements ITileEntityProvider {
+// 方块实体：重写 hasTileEntity() + createTileEntity()（本档没有 ITileEntityProvider）：
+public class MyBlock extends Block {
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new MyTileEntity();
@@ -217,7 +237,7 @@ side="BOTH"                 # 加载侧：BOTH / CLIENT / SERVER
 | 项目 | 1.15.2 | 1.20.x |
 |------|---------|---------|
 | 方块属性 | `Block.Properties.create(Material)` | `Block.Properties.of(Material)` |
-| 方块实体 | `TileEntity` + `ITileEntityProvider` | `BlockEntity` |
+| 方块实体 | `TileEntity` + `hasTileEntity`/`createTileEntity` | `BlockEntity` |
 | 工具材料 | `IItemTier` | `Tier` |
 | 食物 | `Food.Builder()` | `FoodProperties.Builder()` |
 | 药水效果 | `EffectInstance` | `MobEffectInstance` |

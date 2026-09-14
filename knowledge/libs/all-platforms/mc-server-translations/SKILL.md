@@ -6,6 +6,8 @@ mcVersions: []
 communityDocId: authored/lib-server-translations
 ---
 
+> API 摘要状态（2026-09-14 实核）：无 ⇒ `mcp-server/data/lib-api-summaries/` 无 server-translations 条目，catalog `authored/lib-server-translations` 的 `verifiedApi` 为空对象 {}；Modrinth 页面已下架（slug 空），分发走 maven.nucleoid.xyz。类名以 GitHub 仓库为准，要签名先 `ingest_loader_api`（用户自备 jar）
+
 # Server Translations API 服务端翻译（操作指引）
 
 给 AI 的操作指引：服务端要向不同语言玩家发送「按各自语言渲染」的可翻译文本（聊天、命令输出、GUI、书等）时，用 Server Translations API。详细信息用 `search_community_docs` 查 `authored/lib-server-translations`，版本、maven 坐标与 API 细节以 [官方仓库](https://github.com/NucleoidMC/server-translations-api) 当前 README 为准。

@@ -1,8 +1,3 @@
-[DONOR_SKILL 禁止直接抄写]
-本 Skill 正文来自 fabric/1.21.4，仅作结构/流程提示，不是 1.21.10 官方 API。不得直接使用 donor 正文里的类名/方法。先 search_fabric_docs(version=1.21.10) 核对类名/方法签名（不要用 version=1.21.3），对不上就改口官方文档、禁止照抄。Yarn 档互捐，禁止把 26.1.2 mojmap 当本档。
-
----
-
 ---
 name: mc-kotlin
 description: Fabric Kotlin 语言支持。fabric-language-kotlin、kotlin("jvm")、@PublishedApi。触发词：Kotlin、fabric-language-kotlin、build.gradle.kts
@@ -11,6 +6,9 @@ version: "1.21.10"
 dependencies: []
 mappings: yarn
 ---
+
+[DONOR_SKILL 禁止直接抄写]
+本 Skill 正文来自 fabric/1.21.4，仅作结构/流程提示，不是 1.21.10 官方 API。不得直接使用 donor 正文里的类名/方法。先 search_fabric_docs(version=1.21.10) 核对类名/方法签名（不要用 version=1.21.3），对不上就改口官方文档、禁止照抄。Yarn 档互捐，禁止把 26.1.2 mojmap 当本档。
 
 # Kotlin 语言支持（Fabric 1.21.10）
 
@@ -25,7 +23,10 @@ Fabric 官方支持 Kotlin，通过 `fabric-language-kotlin` 和 Gradle Kotlin D
 ```kotlin
 plugins {
     kotlin("jvm") version "2.0.0"
-    id("fabric-loom") version "1.3-SNAPSHOT"
+    // 本档 Loom 插件 id 以同档 scaffold / rules 00 为准：1.21.x 混淆线用 net.fabricmc.fabric-loom-remap
+    // （见 scaffold/build.gradle:4 与 .cursor/rules/00-project-setup.mdc:10）；
+    // 旧文本的 fabric-loom + 1.3-SNAPSHOT 属未核实组合；去混淆的 26.x 才用 net.fabricmc.fabric-loom。
+    id("net.fabricmc.fabric-loom-remap")
     id("maven-publish")
 }
 
@@ -78,14 +79,17 @@ tasks.processResources {
 
 ```kotlin
 // ExampleMod.kt
-@AutoStorageAware
+// TODO(未核实)：以下注解与 override 成员在全仓「已入库摘要」里零命中，禁止照抄：
+//   · @AutoStorageAware —— mcp-server/data/lib-api-summaries/fabric-language-kotlin.json 只收录
+//     net.fabricmc.language.kotlin.KotlinAdapter / KotlinLanguageAdapter 两个类；
+//     mcp-server/data/loader-api-summaries/*-fabric-api.json 与 data/fabric_*/ 语料对该注解零命中。
+//   · override val modId / modName / version —— 已入库摘要内没有 net.fabricmc.fabric.api.ModInitializer
+//     条目（只有 FabricGameTestModInitializer），本仓未收录它的成员表，这三行同样属未核实。
+// 归因：这些属未入库的第三方库 API。要用先按根 AGENTS.md 口径自备 jar 跑 ingest_loader_api（默认 dryRun），
+// 再 query_loader_api 逐签名核对；入库前只保留下面的结构壳。
 class ExampleMod : ModInitializer {
-    override val modId = "examplemod"
-    override val modName = "Example Mod"
-    override val version = "1.0.0"
-
     companion object {
-        val LOG = Logger.getLogger(modId)
+        val LOG = Logger.getLogger("examplemod")
     }
 
     override fun onInitialize() {

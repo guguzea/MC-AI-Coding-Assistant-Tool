@@ -69,15 +69,15 @@ public class MyChestBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, inventory);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        Inventories.writeData(view, inventory);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        Inventories.readNbt(nbt, inventory);
+    protected void readData(ReadView view) {
+        super.readData(view);
+        Inventories.readData(view, inventory);
     }
 }
 
@@ -105,6 +105,6 @@ private static final Block MY_PLANT = Registry.register(
     new Block(AbstractBlock.Settings.copy(Blocks.DANDELION)
         .noCollision()
         .breakInstantly()
-        .sounds(BlockSoundGroups.GRASS))
+        .sounds(BlockSoundGroup.GRASS))
 );
 ```

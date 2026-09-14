@@ -1,6 +1,6 @@
 ---
 name: mc-block
-description: Minecraft Forge 方块开发。创建方块、方块实体、方块状态属性、实体方块接口。触发词：方块、Block、BlockEntity、EntityBlock、Block.Properties
+description: Minecraft Forge 方块开发。创建方块、方块实体、方块状态属性、实体方块接口。触发词：方块、Block、TileEntity、hasTileEntity、Block.Properties
 platform: forge
 version: "1.16.5"
 dependencies: []
@@ -25,7 +25,7 @@ public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
 
 ```
 IF 需要持久的 extra data（如机器存储、村民记忆）
-  → 方块实体（BlockEntity）→ 重写 hasTileEntity() + createTileEntity()
+  → 方块实体（TileEntity）→ 重写 hasTileEntity() + createTileEntity()
 
 IF 只是静态显示（无状态）
   → 普通方块
@@ -57,7 +57,7 @@ IF 方块不应出现在物品栏（如空气、光源方块）
   → 不注册 BlockItem
 ```
 
-## 带 BlockEntity 的方块
+## 带 TileEntity 的方块
 
 本档没有 `EntityBlock` / `ServerTicker`。详见 `mc-blockentity`。
 
@@ -67,16 +67,16 @@ public class MyMachineBlock extends Block {
     public boolean hasTileEntity(BlockState state) { return true; }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return MyMachineBE.TYPE.get().create();
     }
 }
 ```
 
-## BlockEntity 基础结构
+## TileEntity 基础结构
 
 ```java
-public class MyMachineBlockEntity extends BlockEntity implements ITickableTileEntity {
+public class MyMachineBlockEntity extends TileEntity implements ITickableTileEntity {
     private int progress = 0;
 
     public MyMachineBlockEntity() {
@@ -97,8 +97,8 @@ public class MyMachineBlockEntity extends BlockEntity implements ITickableTileEn
     }
 
     @Override
-    public void handleUpdateTag(CompoundNBT nbt) {
-        super.handleUpdateTag(nbt);
+    public void handleUpdateTag(BlockState state, CompoundNBT nbt) { // 语料 tileentities_tileentity.md:71
+        super.handleUpdateTag(state, nbt);
         this.progress = nbt.getInt("progress");
     }
 }
@@ -127,10 +127,10 @@ public class MyMachineBlockEntity extends BlockEntity implements ITickableTileEn
 
 ## 常见错误
 
-- ❌ `createBlockEntity()` 返回 null（必须返回新实例）
-- ❌ 在 BlockEntity 构造函数中访问 world（world 可能为 null）
+- ❌ `createTileEntity()` 返回 null（必须返回新实例；语料 tileentities_tileentity.md:31；原写 `createBlockEntity()` 属别的版本线，未核实禁止照抄）
+- ❌ 在 TileEntity 构造函数中访问 world（world 可能为 null）
 - ❌ `getServerTicker()` 在客户端返回非 null（tick 只应在服务端执行）
-- ❌忘记 `requiresCorrectToolForDrops()` 导致任何物品都能掉落
+- ❌忘记 `requiresCorrectToolForDrops()` 导致任何物品都能掉落（TODO(未核实)：该名本档语料 0 命中、属别的版本线；本包 01-registry.mdc:174 示例用 `.requiresTool()`，成员名以 IDE 为准）
 
 ## 参考资料
 

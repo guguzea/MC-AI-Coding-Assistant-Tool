@@ -18,7 +18,7 @@
  *     A5 同源：规则不另写一份 —— `normSeg / ROOT_SEGMENTS / ownsPackage / packageRoot / foreignPackages`
  *        从 `scripts/merge-verified-api.mjs` 原文抽出跑，并钉住 `buildRootOwnerIndex` 的凭证登记行。
  *  B. 台账层（只跑真数据根）：把今天的存量债务逐数钉死（385 类 / 5 文件 / 每份 77 / 单一包根 /
- *     6 份 unknown-mod / 1 个共用目录 / 38 个已证实包根 / 1836 组 verifiedApi / 0 处凭证缺失）。
+ *     6 份 unknown-mod / 1 个共用目录 / 42 个已证实包根 / 1830 组 verifiedApi / 0 处凭证缺失）。
  *     S5 联网重建把存量清零时，本层会红并要求显式改台账 —— 数据面收敛必须签字，不许悄悄漂移。
  *
  * 测试假根：MC_SKILL_LIB_OWN_TEST_ROOT 指向含 `data/lib-api-summaries` 的目录（B 层跳过，A 层照咬）。
@@ -55,21 +55,10 @@ const DEBT_FOREIGN_ROOTS = {};
  * 而是那些 jar 自己不含 `kotlinforforge` 路径段（`-all` 把 kotlin/kotlinx 摊平、新版只剩
  * `META-INF/jarjar/` 壳）——外部证据按定义不许替 jar 编造身份，故归「jarjar 发现」后续。
  */
-// S5b：36 行 → 8 行。剩下的 8 行全是 kotlin-for-forge，且**不是**「还没取件」而是「取件救不了」：
-// 实测这些 jar 自身条目里没有 `kotlinforforge` 这一段（`-all` 把 kotlin/kotlinx 摊平成顶层、
-// 1.20.5+ 只剩 `META-INF/jarjar/` 壳），而外部证据按定义不许替 jar 编造身份 ⇒ 硬闸拒绝。
-// 正解是剔除这些已确定为假的键（走 merge-verified-api 的覆盖/剔除路，不手改生成物）；
-// 登记在此是为了让它成为可见的 8 行而不是悄悄消失。prune 落地后必须清空本清单。
-const DEBT_CATALOG_FOREIGN = [
-  "authored/lib-kotlin-for-forge|1.18/forge|net.darkhax.bookshelf",
-  "authored/lib-kotlin-for-forge|1.19.3/forge|net.darkhax.bookshelf",
-  "authored/lib-kotlin-for-forge|1.19.3/neoforge|net.darkhax.bookshelf",
-  "authored/lib-kotlin-for-forge|1.20.5/neoforge|net.darkhax.bookshelf",
-  "authored/lib-kotlin-for-forge|1.20.6/forge|net.darkhax.bookshelf",
-  "authored/lib-kotlin-for-forge|1.20.6/neoforge|net.darkhax.bookshelf",
-  "authored/lib-kotlin-for-forge|1.21.10/forge|net.darkhax.bookshelf",
-  "authored/lib-kotlin-for-forge|1.21.10/neoforge|net.darkhax.bookshelf",
-];
+// S5c 已落地：merge-verified-api 的 writer 侧剔除删掉了最后 8 行（全是 kotlin-for-forge 冒领
+// net.darkhax.bookshelf）—— 那些 jar 自身不含 kotlinforforge 路径段（-all 把 kotlin/kotlinx 摊平、
+// 1.20.5+ 只剩 META-INF/jarjar 壳），取件救不了，只能剔除。本清单必须保持空：新冒领行当场红。
+const DEBT_CATALOG_FOREIGN = [];
 const DEBT_UNKNOWN_MOD_DIRS = [];
 /**
  * S5b 补取件带出的新残留：pehkui 的 `21w10a` 快照行 jar 内没解出 modVersion，
@@ -86,7 +75,7 @@ const LEDGER = {
   catalogEntries: 50,
   attestedRoots: 42,
   multiOwnerRoots: 0,
-  verifiedApiKeys: 1838,
+  verifiedApiKeys: 1830,
   badVerifiedAt: 0,
   foreignTotal: 0,
   foreignFiles: Object.keys(DEBT_FOREIGN).length,
@@ -371,6 +360,6 @@ if (failures.length) {
   process.exit(1);
 }
 console.log(
-  `  assert-lib-ownership(G1): ${summary.summaries} 份摘要 · ${summary.classes} 类 · 冒领 ${summary.foreign}（全在存量台账内）· ` +
+  `  assert-lib-ownership(G1): ${summary.summaries} 份摘要 · ${summary.classes} 类 · 冒领 ${summary.foreign}（${DEBT_CATALOG_FOREIGN.length ? `全在存量台账内 ${DEBT_CATALOG_FOREIGN.length} 行` : `台账已清空`}）· ` +
     `已证实包根 ${summary.attestedRoots} · 台账 ${summary.ledger}`,
 );

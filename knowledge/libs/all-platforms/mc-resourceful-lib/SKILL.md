@@ -6,6 +6,9 @@ mcVersions: ["1.19.2-26.2"]
 communityDocId: authored/lib-resourceful
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/resourceful-lib 版本表 limit=100；本轮 release 上界 fabric=26.2 / forge=1.20.4 / neoforge=26.2）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/resourceful-lib/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Resourceful Lib 集成（操作指引）
 
 给 AI 的操作指引：需要跨平台（Fabric + Forge + NeoForge，1.19.2-26.2）的通用工具时，用 Resourceful Lib 覆盖跨平台网络、codec 工具、内存资源包与 Highlight API 四块能力。详细信息用 `search_community_docs` 查 `authored/lib-resourceful`，API 细节以 [官方仓库](https://github.com/Team-Resourceful/ResourcefulLib) 当前 README 与示例为准。

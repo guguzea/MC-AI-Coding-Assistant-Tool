@@ -47,10 +47,10 @@ IF 需要在 mod constructor 执行前引用已注册对象
 |----------|---------------------|------|
 | 方块 | `ForgeRegistries.BLOCKS` | |
 | 物品 | `ForgeRegistries.ITEMS` | |
-| 方块实体 | `ForgeRegistries.BLOCKENTITIES` | |
+| 方块实体 | `ForgeRegistries.BLOCK_ENTITIES` | |
 | 实体类型 | `ForgeRegistries.ENTITYTYPES` | |
 | 生物群系 | `ForgeRegistries.BIOMES` | |
-| 声音事件 | `ForgeRegistries.SOUNDEVENTS` | |
+| 声音事件 | `ForgeRegistries.SOUND_EVENTS` | |
 | 附魔 | `ForgeRegistries.ENCHANTMENTS` | |
 | 药水 | `ForgeRegistries.POTIONS` | |
 
@@ -83,11 +83,11 @@ public class MyBlock extends Block implements EntityBlock {
 }
 
 // 注册 BlockEntityType
-public static final DeferredRegister<BlockEntityType<?>> BLOCKENTITIES =
-    DeferredRegister.create(ForgeRegistries.BLOCKENTITIES, MOD_ID);
+public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
+    DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MOD_ID);
 
 public static final RegistryObject<BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY =
-    BLOCKENTITIES.register("my_block",
+    BLOCK_ENTITIES.register("my_block",
         () -> BlockEntityType.Builder.of(MyBlockEntity::new, EXAMPLE_BLOCK.get())
             .build(null)
     );

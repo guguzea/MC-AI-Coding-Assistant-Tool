@@ -57,14 +57,14 @@ Block#onBlockActivated (Server) ──► creates IContainerProvider ──► o
                                                                 Renders Screen
 ```
 
-## Decision: Container/Menu type
+## Decision: Container type
 
 ```
 IF interactable block with persistent data (machine, chest)
   → Container + ContainerType + ContainerScreen
 
 IF just a simple interaction (no data)
-  → IScreen / Screen directly (without Menu)
+  → IScreen / Screen directly (without Container)
 
 IF inventory with multiple slots
   → Container (for slot management and transferHandler)
@@ -133,9 +133,9 @@ int value = this.dataSlots.get(0);
 ```java
 public class MyBlock extends Block {
     @Override
-    public ActionResult onBlockActivated(BlockState state, World world, BlockPos pos,
-            PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (!world.isRemote) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos,
+            PlayerEntity player, Hand hand, BlockRayTraceResult hit) { // 类名见语料 blocks_interaction.md:32
+        if (!world.isClientSide) {
             // Server side: open the container
             NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
@@ -146,7 +146,7 @@ public class MyBlock extends Block {
                 pos
             );
         }
-        return ActionResult.sidedSuccess(world.isRemote);
+        return ActionResultType.sidedSuccess(world.isClientSide); // TODO(未核实)：sidedSuccess 本档语料 0 命中，成员名以 IDE 为准
     }
 }
 ```

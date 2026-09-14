@@ -5,15 +5,15 @@
 **症状：** 编译错误，找不到对应构造函数
 
 ```java
-// ❌ 错误
-new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties());
+// ❌ 错误（第 2 参数写成 float）
+new SwordItem(MyTier.COPPER, 3.0f, 1.6f, new Item.Properties());
 ```
 
 **正确（来源：Forge 1.14.4 MCP 层）：**
 
 ```java
-// ✅ 正确：4 参数构造函数
-new SwordItem(IItemTier tier, float attackDamageIn, float attackSpeedIn, Item.Properties properties)
+// ✅ 正确：4 参数构造函数（第 2 参数是 int）
+new SwordItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Item.Properties properties)
 ```
 
 参数解析（按顺序）：
@@ -21,7 +21,7 @@ new SwordItem(IItemTier tier, float attackDamageIn, float attackSpeedIn, Item.Pr
 | # | 参数名 | 类型 | 说明 |
 |---|--------|------|------|
 | 1 | `tier` | `IItemTier` | 工具材料枚举 |
-| 2 | `attackDamageIn` | `float` | 基础攻击伤害加成 |
+| 2 | `attackDamageIn` | `int` | 基础攻击伤害加成（同档 `03-item.mdc:87`：`SwordItem(IItemTier, int, float, Properties)`） |
 | 3 | `attackSpeedIn` | `float` | 攻击速度修正值 |
 | 4 | `properties` | `Item.Properties` | 物品属性配置 |
 

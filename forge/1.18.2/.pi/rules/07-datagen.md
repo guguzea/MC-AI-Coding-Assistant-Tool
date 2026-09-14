@@ -138,7 +138,7 @@ IF 用自定义工作台配方
 
 ```
 IF 固定掉落某物品
-  → ItemLootEntry / LootItem + SetCount
+  → LootItem.lootTableItem(...) + SetCount
 
 IF 掉落方块本身（方块被破坏时）
   → BlockLoot#dropSelf
@@ -230,6 +230,9 @@ public class ModLootTableProvider extends LootTableProvider {
 }
 
 public class ModBlockLoot extends BlockLoot {
+    // TODO(未核实)：本档 api-index 的 BlockLoot 无 addTables / getKnownBlocks（只有 add / createSingleItemTable /
+    //   dropSelf… 与 accept(...)）；1.19.4+ 才由 BlockLootSubProvider 提供 generate() / getKnownBlocks()。
+    //   本档该子类的正确重写点待 ingest_loader_api 入库原版 jar 后核实，勿照抄本段。
     @Override
     protected void addTables() {
         dropSelf(ModBlocks.MY_BLOCK.get());
@@ -272,7 +275,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
 }
 ```
 
-> 注意：用 `BlockTagsProvider` / `ItemTagsProvider`，不要 `TagProvider.Block`。
+> 注意：用 `BlockTagsProvider` / `ItemTagsProvider`（`net.minecraft.data.tags`）。
 
 ## 示例：模型 / 语言
 
@@ -325,7 +328,7 @@ public class ModLanguageProvider extends LanguageProvider {
 - ❌ `FurnaceRecipe.Builder` / `setRegistryName` 当 DataGen 保存配方
 - ❌ `modLoc()` 与 `mcLoc()` 用反
 - ❌ `buildRecipes()` — 本档是 `buildCraftingRecipes`
-- ❌ `TagProvider.Block` — 用 `BlockTagsProvider`
+- ❌ 用错标签提供器 —— 方块标签用 `BlockTagsProvider`
 
 ## 扩展点
 

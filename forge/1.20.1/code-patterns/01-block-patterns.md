@@ -1,4 +1,4 @@
-﻿# 方块代码模式（Forge 1.20.1）
+# 方块代码模式（Forge 1.20.1）
 
 ```yaml
 模式: 普通方块（无变体）
@@ -134,7 +134,7 @@ public static final RegistryObject<Block> MY_ORE = BLOCKS.register("my_ore",
         .mapColor(MapColor.STONE)
         .strength(3.0f, 3.0f)
         .requiresCorrectToolForDrops()
-        .insertXp(1, 3, 7)  // 掉落经验 1~7
+        // TODO(未核实)：经验掉落不在 Properties 上（本档 api-index 无 insertXp/xp），待核实后补
     )
 );
 ```

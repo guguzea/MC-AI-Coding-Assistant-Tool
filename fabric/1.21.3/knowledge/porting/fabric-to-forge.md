@@ -23,8 +23,8 @@
 ```groovy
 // Fabric → Forge
 plugins {
-    // ❌ Fabric
-    id 'fabric-loom' version '1.3-SNAPSHOT'
+    // ❌ Fabric（版本取本档 scaffold/build.gradle:2 的实钉值 1.8；旧写法 1.3-SNAPSHOT 是 1.20.1 模板残留）
+    id 'fabric-loom' version '1.8'
     // ✅ Forge
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
 }

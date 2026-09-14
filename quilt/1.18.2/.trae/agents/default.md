@@ -14,7 +14,7 @@
 | Gradle | Quilt Loom（`id 'org.quiltmc.loom'`） |
 | Mappings | Yarn / intermediary（与 Fabric 同层） |
 | 元数据 | `quilt.mod.json`（`quilt_loader.id`） |
-| 注册 | 优先 **QSL `org.quiltmc`**；不要生成 `net.fabricmc.fabric.api.event.registry` 当 QSL |
+| 注册 | **方向**优先 QSL `org.quiltmc`，但**不可直接编译**：本档 `scaffold/build.gradle:17` 只有 `modImplementation "org.quiltmc:quilt-loader:0.31.0-beta.3"`，`:18` 仅是「按模块引入 `org.quiltmc.qsl.*`」的注释 ⇒ 依赖块内**无任何 QSL 模块**；要写 QSL 必须自行加 QSL 模块并用 `query_loader_api` 核签名。不要生成 `net.fabricmc.fabric.api.event.registry` 当 QSL |
 
 库 Skill：仍按 `fabric-only` + `all-platforms` 读 `knowledge/libs/`。
 

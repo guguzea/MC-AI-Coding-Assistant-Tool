@@ -101,14 +101,19 @@ loom {
 
 **症状**：兼容性问题、构建失败
 
-**原因**：使用了不支持的 Gradle 版本
+**原因**：使用了**低于下限**的 Gradle 版本（同档 `.cursor/rules/00-project-setup.mdc:13`：Wrapper 不低于 **Gradle 8.5**）
 
 ```properties
+# ❌ 错误：低于 8.5 下限（示例 gradle-8.4 / gradle-7.6）
 # gradle/wrapper/gradle-wrapper.properties
-distributionUrl=https\://services.gradle.org/distributions/gradle-8.5-bin.zip
+distributionUrl=https\://services.gradle.org/distributions/gradle-8.4-bin.zip
+
+# ✅ 正确：满足 8.5+ 下限；本档 scaffold 实钉 8.10
+# （scaffold/gradle/wrapper/gradle-wrapper.properties:3）
+distributionUrl=https\://services.gradle.org/distributions/gradle-8.10-bin.zip
 ```
 
-Fabric 1.21.x 需要 Gradle 8.5+。
+Fabric 1.21.x 需要 Gradle 8.5+；下限之上按本档 scaffold 实钉的 8.10 走。
 
 ## ❌ Java 版本不匹配
 

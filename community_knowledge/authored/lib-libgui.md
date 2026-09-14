@@ -11,6 +11,7 @@ loaders: [fabric]
 modrinthSlug: ""
 role: api
 skillId: mc-libgui
+notes: "无 API 摘要（`lib-api-summaries/` 无条目、catalog `verifiedApi` 为空对象 {}；Modrinth 无项目，分发走 Cotton maven）；类名以 GitHub README 为准，需 `ingest_loader_api` 自备 jar 核实。记于 2026-09-14"
 ---
 
 # LibGui 声明式 GUI 库集成要点

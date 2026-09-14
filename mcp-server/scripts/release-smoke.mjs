@@ -14,6 +14,7 @@ import {
   mkdirSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
+import { copyTree } from "../../scripts/_lib/copy-tree.mjs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -30,10 +31,10 @@ const serverDir = join(staging, "mcp-server");
 const dataDir = join(staging, "data");
 
 mkdirSync(serverDir, { recursive: true });
-cpSync(join(REPO, "dist"), join(serverDir, "dist"), { recursive: true });
+copyTree(join(REPO, "dist"), join(serverDir, "dist"));
 cpSync(join(REPO, "package.json"), join(serverDir, "package.json"));
 cpSync(join(REPO, "package-lock.json"), join(serverDir, "package-lock.json"));
-cpSync(join(REPO, "node_modules"), join(serverDir, "node_modules"), { recursive: true });
+copyTree(join(REPO, "node_modules"), join(serverDir, "node_modules"));
 // Copy data (may take a while on full tree). Prefer MC_SKILL_SMOKE_DATA_LINK=1 to junction.
 if (process.env.MC_SKILL_SMOKE_DATA_LINK === "1") {
   // Windows junction / posix symlink for speed
@@ -45,7 +46,7 @@ if (process.env.MC_SKILL_SMOKE_DATA_LINK === "1") {
   }
 } else {
   console.log("Copying data/ into staging (set MC_SKILL_SMOKE_DATA_LINK=1 to junction)...");
-  cpSync(DATA, dataDir, { recursive: true });
+  copyTree(DATA, dataDir);
 }
 
 let nextId = 1;

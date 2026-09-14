@@ -5,11 +5,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererRegistry;
 import net.minecraft.client.render.entity.model.CowEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.render.entity.model.CowModel;
-import net.minecraft.client.render.entity.renderer.AnimalsRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +19,15 @@ public class ExampleModClient implements ClientModInitializer {
     public void onInitializeClient() {
         LOGGER.info("ExampleMod client initialized");
 
-        // 注册实体渲染器（1.18.x 使用 EntityRendererRegistry.Context）
-        EntityRendererRegistry.register(ExampleMod.EXAMPLE_ANIMAL.get(), (context) ->
-            new AnimalsRenderer<>(context, new CowEntityModel(context.getModelLoader().getModelPart(getCowModelLayer())), 0.5f)
-        );
+        // 1.18.2 的注册类是 net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
+        // （public static void register(EntityType<? extends E>, EntityRendererFactory<E>)，
+        //   证据 M:/mcp-server/data/loader-api-summaries/1.18.2-fabric-api.json:581）；
+        // 本档牛模型类实名 net.minecraft.client.render.entity.model.CowEntityModel
+        // （net...entity.model.CowModel 与 net...entity.renderer.AnimalsRenderer 在 1.18.2 都不存在），
+        // 原版也没有 net.minecraft.client.render.entity.EntityRendererRegistry 这一类。
+        // 注册需要 EntityType 字段，而 ExampleAnimalEntity 未在本档注册，ExampleMod 里没有可传的字段，
+        // 故此处不写会编译失败的示例调用。
+        // TODO(未核实)：补 ExampleMod 的 EntityType 注册后再在此挂渲染器。
     }
 
     // 1.18.x uses EntityModelLayer for model registration

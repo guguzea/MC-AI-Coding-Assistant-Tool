@@ -29,9 +29,16 @@ dependencies {
     // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    // Cloth Config (optional)
-    modImplementation "me.shedaniel.cloth:cloth-config-fabric:15.0.96"
-    include "me.shedaniel.cloth:cloth-config-fabric:15.0.96"
+    // Cloth Config（可选，本档保持注释——同族 1.21.3 / 1.20.4 亦然）。启用它会立刻失败，两个独立原因：
+    //   ① 本文件 repositories 只有 mavenCentral() 与 https://maven.fabricmc.net/，没有 Cloth 自己的仓库
+    //      https://maven.shedaniel.me/；
+    //   ② 15.0.96 这个版本上游不存在（2026-09-14 实取 maven.shedaniel.me/.../cloth-config-fabric/maven-metadata.xml，
+    //      1.21 线列的是 15.0.127 / 15.0.128 / 15.0.130 / 15.0.140）。
+    // 实测：启用态下 `gradlew build` 配置期即报 `Could not find me.shedaniel.cloth:cloth-config-fabric:15.0.96`。
+    // 三处一致 ⇒ 注释才是本档形态：src 无任何 me.shedaniel 导入；fabric.mod.json 的 depends 里也没有 cloth 条目。
+    // 真要接 Cloth：先补上面的仓库，再换成上游真实存在的版本（版本自行核实，禁止默写）。
+    // modImplementation "me.shedaniel.cloth:cloth-config-fabric:15.0.96"
+    // include "me.shedaniel.cloth:cloth-config-fabric:15.0.96"
 
     // modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}+extra"
 }
@@ -48,7 +55,10 @@ processResources {
             "minecraft_version": project.minecraft_version,
             "yarn_mappings": project.yarn_mappings,
             "loader_version": project.loader_version,
-            "fabric_api_version": project.fabric_api_version
+            "fabric_api_version": project.fabric_api_version,
+            "mod_id": project.mod_id,
+            "mod_name": project.mod_name,
+            "mod_description": project.mod_description
     }
 }
 

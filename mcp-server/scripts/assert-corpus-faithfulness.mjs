@@ -63,6 +63,23 @@ const DATA_DIR = TEST_ROOT
 const LEDGER_MODE = !TEST_ROOT;
 
 /** 与 transclude.ts 的 FENCE_RE 一致：围栏内的标记是字面文本，不是占位符。 */
+function statSyncIsDir(p) {
+  try {
+    return fs.readdirSync(p) && true;
+  } catch {
+    return false;
+  }
+}
+/** 只列目录名：data/<pack>/ 下混着 meta.json 这类散文件，直接 readdirSync 会 ENOTDIR。 */
+function dirsOf(d) {
+  let es;
+  try {
+    es = fs.readdirSync(d, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  return es.filter((e) => e.isDirectory()).map((e) => e.name);
+}
 const FENCE_RE = /^ {0,3}(```|~~~)/;
 const DIRECTIVE_RE = /^ *<<< *(.*)$/;
 const CODE_MARKER_RE = /^ *@\[code/;
@@ -113,7 +130,7 @@ const LEDGER_TREES = {
   "forge_1.19.4/forge-docs/1.19.4": { raw: 39, proc: 39, identical: 0, contentDiff: 32, markerOnly: 0, fmOnly: 7, noTwin: 0, dup: 0, dir: 0 },
   "forge_1.20.1/forge-docs/1.20.1": { raw: 70, proc: 70, identical: 0, contentDiff: 63, markerOnly: 0, fmOnly: 7, noTwin: 0, dup: 0, dir: 0 },
   "forge_1.20.4/forge-docs/1.20.4": { raw: 70, proc: 70, identical: 0, contentDiff: 69, markerOnly: 0, fmOnly: 1, noTwin: 0, dup: 0, dir: 0 },
-  "forge_javadoc/1.10.2": { raw: 3251, proc: 3251, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 3251, dup: 0, dir: 0 },
+  "forge_javadoc/1.10.2": { raw: 3254, proc: 3254, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 3254, dup: 0, dir: 0 },
   "forge_javadoc/1.11.2": { raw: 3335, proc: 3335, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 3335, dup: 0, dir: 0 },
   "forge_javadoc/1.12.2": { raw: 4567, proc: 4567, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 4567, dup: 0, dir: 0 },
   "forge_javadoc/1.7.10": { raw: 2464, proc: 2464, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 2464, dup: 0, dir: 0 },
@@ -310,7 +327,12 @@ for (const t of findTrees()) {
 
   // A1 raw/processed 计数
   if (entry.rawFiles !== entry.procFiles) {
-    fail(`${t.tree}: raw ${entry.rawFiles} 篇 ≠ processed ${entry.procFiles} 篇 ⇒ 加工吞页或造页`);
+    // 方向要分清：活例是 fetch-forge-javadoc.js 抓进 raw 后没人重跑 indexer ⇒ processed 少。
+    const a1Remedy =
+      entry.rawFiles > entry.procFiles
+        ? "raw 侧有新页未镜像 ⇒ 重跑该树生产者（forge_javadoc：`node mcp-server/scripts/forge-javadoc-indexer.js --version=<v>`）"
+        : "processed 侧多页 ⇒ 镜像错位或 raw 侧删页未同步";
+    fail(`${t.tree}: raw ${entry.rawFiles} 篇 ≠ processed ${entry.procFiles} 篇 ⇒ 加工吞页或造页 · ${a1Remedy}`);
   }
 
   // `<<<` 残留：只算 processed（那才是读者吐给模型的正文）
@@ -425,6 +447,57 @@ for (const tree of Object.keys(DEBT_ANGLE_LOSS)) {
   if (!stat.angleLoss[tree]) fail(`泛型丢失台账条目 ${tree} 已不在实扫结果里 ⇒ 清零是好事，但要显式改台账`);
 }
 
+// A8 内容级损坏签名：raw / processed 里出现控制字节或 U+FFFD ⇒ 该文件已不是文本。
+// 2026-09-13 实例：fabric_1.21.10 的 develop_networking.md 整页被二进制覆盖
+// （11,062 B 里 35/36 行含控制字节）。A1 只比「页数」、A5 只比「泛型是否存活」，
+// 两者都放过它 —— 因为 processed 是坏之前从好 raw 生成的，配对看起来完全正常。
+const DAMAGE_RE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFD]/;
+function* walkMd(dir) {
+  let entries;
+  try {
+    entries = fs.readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const e of entries) {
+    const abs = dir + path.sep + e.name;
+    if (e.isDirectory()) yield* walkMd(abs);
+    else if (e.name.endsWith(".md")) yield abs;
+  }
+}
+{
+  let scanned = 0;
+  for (const pack of fs.readdirSync(DATA_DIR)) {
+    const packDir = DATA_DIR + path.sep + pack;
+    if (!pack.includes("_") || statSyncIsDir(packDir) === false) continue;
+    for (const srcDir of dirsOf(packDir)) {
+      for (const ver of dirsOf(packDir + path.sep + srcDir)) {
+        for (const layer of ["raw", "processed"]) {
+          const base = packDir + path.sep + srcDir + path.sep + ver + path.sep + layer;
+          for (const abs of walkMd(base)) {
+            scanned++;
+            let text;
+            try {
+              const buf = fs.readFileSync(abs);
+              if (buf.length > (8 << 20)) continue;
+              text = buf.toString("utf8");
+            } catch {
+              continue;
+            }
+            if (!DAMAGE_RE.test(text)) continue;
+            const line = text.split(/\r?\n/).findIndex((l) => DAMAGE_RE.test(l)) + 1;
+            fail(
+              `${path.relative(DATA_DIR, abs).split(path.sep).join("/")}:${line} 含控制字节/替换符（损坏签名）` +
+                ` ⇒ 这份语料已不可信，必须用写入者重抓（fetch-fabric-docs / fetch-forge-docs），禁止手改正文`,
+            );
+          }
+        }
+      }
+    }
+  }
+  stat.damageScanned = scanned;
+}
+
 // ── B 层：台账对账 ──────────────────────────────────────────────────────────
 if (process.env.MC_SKILL_CORPUS_RELEDGER) {
   console.log(
@@ -517,7 +590,7 @@ if (failures.length) {
   for (const f of failures.slice(0, 25)) console.error(`✗ ${f}`);
   if (failures.length > 25) console.error(`✗ …（另有 ${failures.length - 25} 条，同上）`);
   if (LEDGER_MODE) {
-    console.error("（台账漂移：跑 `MC_SKILL_CORPUS_RELEDGER=1 node scripts/assert-corpus-faithfulness.mjs` 重算，别手改数字）");
+    console.error("（台账漂移：跑 `MC_SKILL_CORPUS_RELEDGER=1 node mcp-server/scripts/assert-corpus-faithfulness.mjs` 重算，别手改数字）");
   }
   console.error(`assert-corpus-faithfulness(G3): ${failures.length} 项不达标`);
   process.exit(1);

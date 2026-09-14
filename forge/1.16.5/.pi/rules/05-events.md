@@ -52,7 +52,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 - 在普通方法上直接使用 `@OnlyIn` 不是推荐做法，应优先使用 `DistExecutor`
 - `@OnlyIn` 是编译器级别的物理端隔离，会导致另一端完全无法加载该类
 
-> **警告**：`FMLEnvironment.dist` 返回物理端，但单玩家世界（逻辑服务端+逻辑客户端在同一物理客户端内）的 `dist` 恒为 `Dist.CLIENT`，不要用此判断逻辑端（用 `world.isRemote`）
+> **警告**：`FMLEnvironment.dist` 返回物理端，但单玩家世界（逻辑服务端+逻辑客户端在同一物理客户端内）的 `dist` 恒为 `Dist.CLIENT`，不要用此判断逻辑端（用 `world.isClientSide`）
 
 ---
 
@@ -65,7 +65,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 ```
 IF 监听玩家右键点击方块
   → PlayerInteractEvent.RightClickBlock（或 RightClickItem）
-  → 注意：此事件双侧触发（客户端+服务端），改世界前用 level.isRemote 守卫
+  → 注意：此事件双侧触发（客户端+服务端），改世界前用 level.isClientSide 守卫
 
 IF 监听生物死亡
   → LivingDeathEvent
@@ -91,7 +91,7 @@ IF 监听方块放置/破坏
   → BlockEvent.PlaceEvent
 
 IF 监听配方解锁（合成/烧炼/烟熏等）
-  → `CraftingEvent`（玩家完成合成时）
+  // TODO(未核实)：`CraftingEvent` 无任何出处（本档语料 0 命中，api-index 无 Forge 类）；合成完成事件待 `ingest_loader_api` 入库 Forge jar 后核实
   → `FurnaceSmeltEvent`（物品被烧炼时）
   → 优先使用 DataGenerator 注册配方，而非监听事件
 
@@ -128,7 +128,7 @@ IF 事件涉及渲染、输入
 
 IF 不确定
   → 优先考虑服务端处理（更安全）
-  → 用 `world.isRemote` 进行逻辑端检查
+  → 用 `world.isClientSide` 进行逻辑端检查
 ```
 
 ### Decision: 常用事件选择对照
@@ -139,11 +139,11 @@ IF 不确定
 | 实体死亡时处理掉落 | `LivingDeathEvent` | 与 `LivingDropsEvent` 区分 |
 | 修改方块掉落物 | `BlockEvent.BreakEvent` | 可用 `setExpToDrop()` 改变经验值 |
 | 修改方块掉落列表 | `LivingDropsEvent` | 可操作 `getDrops()` 列表 |
-| 添加合成配方 | `CraftingEvent` 或 DataGenerator | 优先用 DataGenerator |
+| 添加合成配方 | DataGenerator | 优先用 DataGenerator（原写 `CraftingEvent`，无出处已摘） |
 | 监听烧炼 | `FurnaceSmeltEvent` | 熔炉/烟熏炉烧炼时触发 |
 | 监听药水效果 | `PotionEvent` | 多个子事件 |
 | 监听实体生成 | `EntityJoinWorldEvent` | 注意不要做重操作 |
-| 修改物品 NBT | `CraftingEvent` 或 `AnvilUpdateEvent` | |
+| 修改物品 NBT | `AnvilUpdateEvent` | 原写 `CraftingEvent` 无出处已摘 |
 
 ---
 
@@ -157,14 +157,14 @@ public class ModEvents {
     @SubscribeEvent
     public static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
         // 玩家右键方块
-        if (event.getWorld().isRemote) return; // 确保服务端
+        if (event.getWorld().isClientSide) return; // 确保服务端
         // ...
     }
 
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
         // 生物死亡
-        if (event.getEntity().world.isRemote) return;
+        if (event.getEntity().world.isClientSide) return;
         // ...
     }
 

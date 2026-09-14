@@ -77,7 +77,7 @@ public static final RegistryObject<FlowingFluid> MY_FLUID =
 public static final RegistryObject<LiquidBlock> MY_FLUID_BLOCK =
     BLOCKS.register("my_fluid",
         () -> new LiquidBlock(MY_FLUID_SOURCE.get(),
-            BlockBehaviour.Properties.of(Material.WATER)
+            BlockBehaviour.Properties.of().mapColor(MapColor.WATER)
                 .noCollision()
                 .strength(100.0f)
                 .noDrops()
@@ -88,7 +88,7 @@ public static final RegistryObject<LiquidBlock> MY_FLUID_BLOCK =
 ### 6. 注册桶物品
 
 ```java
-public static final RegistryObject<BUCKET_ITEM> MY_BUCKET =
+public static final RegistryObject<Item> MY_BUCKET =
     ITEMS.register("my_fluid_bucket",
         () -> new BucketItem(MY_FLUID_SOURCE.get(),
             new Item.Properties()
@@ -142,7 +142,7 @@ new FluidType(Properties.create()
 - ❌ 只注册 `Fluid` 而不注册 `FluidType` → 流体无法加载
 - ❌ `FluidType` 在 `ForgeRegistries.FLUIDS` 中注册 → 必须在 `ForgeRegistries.Keys.FLUID_TYPES` 中注册
 - ❌ `BucketItem` 引用了未注册的 `Fluid` → 桶无法装填
-- ❌ `LiquidBlock` 使用 `Material.WATER` 但未设置 `noDrops()` → 挖掘时掉落水桶物品
+- ❌ `LiquidBlock` 使用 `MapColor.WATER` 但未设置 `noDrops()` → 挖掘时掉落水桶物品
 - ❌ 密度/黏度设为 0 → 流体行为异常
 - ❌ 在服务端初始化流体相关资源 → 纹理等客户端资源必须客户端加载
 

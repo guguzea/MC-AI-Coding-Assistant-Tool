@@ -17,7 +17,7 @@ Fabric 主要使用 **REI（Roughly Enough Items）** 作为物品管理器。JE
 
 ```groovy
 dependencies {
-    modImplementation "com.github.shedaniel:RoughlyEnoughItems:9.1.618+1.20.1"
+    modImplementation "com.github.shedaniel:RoughlyEnoughItems:TODO(未核实)" // 第三方库：maven.shedaniel.me me/shedaniel/RoughlyEnoughItems-fabric/maven-metadata.xml（2026-09-14 读，451 版，最低 6.0.277-alpha，无 9.1.618，无 1.14.4 档）未取证；REI 非加载器 API，方法签名须由用户自备 jar 走 ingest_loader_api 核实
 }
 ```
 
@@ -40,7 +40,7 @@ public class MyModPlugin implements REIPluginClient {
     "rei_client": ["com.example.examplemod.MyModPlugin"]
   },
   "depends": {
-    "roughlyenoughitems": ">=9.1.618"
+    "roughlyenoughitems": "*"  // 1.14.4 时代 REI 版本未取证，见上方依赖注
   }
 }
 ```

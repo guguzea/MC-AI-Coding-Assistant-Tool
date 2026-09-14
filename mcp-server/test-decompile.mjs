@@ -2023,5 +2023,288 @@ test("packagesOwnModId：包路径含该段才算数（S5b 外部证据硬闸）
   assert.equal(packagesOwnModId(["a.malilib"], ""), false, "空 modId 不许当通配");
   assert.equal(packagesOwnModId(["a.b.c"], ".."), false, "穿越样 modId 必须判否");
 });
+
+// ── S5c（F57）：jarjar 胖壳的输入选择 —— 纯函数 + 合成 fixture + 三例投毒对拍 ──
+// 离线门：不联网、不需要 JDK/VineFlower；jar 全部现造，产物只落 os.tmpdir()。
+section("jarjar fat-jar decompile input (S5c · F57)");
+{
+  const { readZip, listZipEntries } = await import("./dist/decompile/zip-util.js");
+  const { sanitizeCacheSegment, isPathInside } = await import("./dist/decompile/cache.js");
+  const { pickDecompileInput, resolveEmbeddedIdentity, bundledJarEntries } = await import(
+    "./dist/decompile/services/mod-decompile.js"
+  );
+  const { analyzeModJar } = await import("./dist/decompile/index.js");
+
+  const s5cRoot = join(tmpdir(), "mc-skill-s5c-" + process.pid + "-" + Date.now());
+  const shellDir = join(s5cRoot, "shells");
+  const extractDir = join(s5cRoot, "remapped"); // 故意不预先 mkdir：任何偷偷落盘都会留痕
+  mkdirSync(shellDir, { recursive: true });
+  let embeddedOnDisk = "";
+
+  const modsTomlOf = (id, ver) =>
+    `modLoader="javafml"\nloaderVersion="[47,)"\nlicense="MIT"\n\n[[mods]]\nmodId="${id}"\nversion="${ver}"\ndisplayName="${id}"\n`;
+  const innerJarBytes = (id, ver, pkg) =>
+    makeZip([
+      { name: "META-INF/mods.toml", data: modsTomlOf(id, ver) },
+      { name: `${pkg}/Inner.class`, data: Buffer.from([0xca, 0xfe, 0xba, 0xbe, 0, 0, 0, 0]) },
+    ]);
+  /** 合成 jarjar 胖壳：外壳**只有** META-INF/jarjar/*.jar —— 自身零模组元数据、零 .class */
+  const writeShell = (name, inners) => {
+    const bytes = makeZip(inners.map((e) => ({ name: e.name, data: e.buf })));
+    const path = join(shellDir, name);
+    writeFileSync(path, bytes);
+    return { path, bytes, entries: bundledJarEntries(listZipEntries(bytes)) };
+  };
+  /** 记录型副作用：用来证明「拒绝分支上一次都不读、一个文件都不写」 */
+  const spy = (bytes) => {
+    const map = readZip(bytes);
+    const read = [];
+    const wrote = [];
+    return {
+      read,
+      wrote,
+      readEntry: (n) => {
+        read.push(n);
+        return map.get(n);
+      },
+      extract: (dest, data) => {
+        wrote.push(dest);
+        mkdirSync(dirname(dest), { recursive: true });
+        writeFileSync(dest, data);
+      },
+    };
+  };
+
+  const one = writeShell("kff-all.jar", [
+    { name: "META-INF/jarjar/inner.jar", buf: innerJarBytes("innermod", "1.2.3", "com/example/inner") },
+  ]);
+  const oneMap = readZip(one.bytes);
+
+  try {
+    test("fixture 成立：外壳只有 META-INF/jarjar/inner.jar，自身零元数据零 class 且解不出身份", () => {
+      assert.deepEqual(one.entries, ["META-INF/jarjar/inner.jar"], `内层声明=${JSON.stringify(one.entries)}`);
+      assert.equal(oneMap.has("META-INF/mods.toml"), false, "外壳不得自带 mods.toml");
+      assert.equal(oneMap.has("fabric.mod.json"), false, "外壳不得自带 fabric.mod.json");
+      assert.ok(
+        [...oneMap.keys()].every((n) => !n.endsWith(".class")),
+        "外壳必须零 .class（胖壳自身没有字节码，这正是 F57 的病灶）",
+      );
+      assert.equal(resolveModIdSegment(analyzeModJar(one.path).modId).ok, false, "外壳自身身份必须解析不出");
+    });
+    test("正例：唯一内层件定身份 = jarjar-self + from，modId/modVersion 出自内层 mods.toml", () => {
+      const id = resolveEmbeddedIdentity(one.bytes, one.entries, undefined);
+      assert.equal(id.ok, true, JSON.stringify(id));
+      assert.equal(id.modId, "innermod", JSON.stringify(id));
+      assert.equal(id.modVersion, "1.2.3", JSON.stringify(id));
+      assert.equal(id.evidence, "jarjar-self");
+      assert.equal(id.from, "META-INF/jarjar/inner.jar");
+    });
+    test("正例：pickDecompileInput 必须选中内层（真落盘；落盘件的身份 = 内层 modId，不是外壳）", () => {
+      const id = resolveEmbeddedIdentity(one.bytes, one.entries, undefined);
+      const jarIdentity = jarContentIdentity(one.path);
+      const s = spy(one.bytes);
+      const r = pickDecompileInput({
+        jarPath: one.path,
+        evidence: id.evidence,
+        modIdSource: id.from,
+        jarIdentity,
+        extractDir,
+        readEntry: s.readEntry,
+        extract: s.extract,
+      });
+      const expect = join(extractDir, `embedded-${jarIdentity}-${sanitizeCacheSegment("META-INF_jarjar_inner.jar")}`);
+      assert.equal(r.usingEmbedded, true, `没换成内层件：${JSON.stringify(r)}`);
+      assert.equal(r.inputJar, expect, `落盘名不符：${r.inputJar}`);
+      assert.notEqual(r.inputJar, one.path, "输入必须已经离开外壳");
+      assert.equal(r.embeddedSource, "META-INF/jarjar/inner.jar");
+      assert.equal(r.reason, undefined, `正例不该带拒绝理由：${r.reason}`);
+      assert.deepEqual(s.read, ["META-INF/jarjar/inner.jar"], "读条目的次数/名称不符");
+      assert.deepEqual(s.wrote, [expect]);
+      assert.ok(isPathInside(extractDir, expect), "内层件必须落在 remapped 目录之内");
+      embeddedOnDisk = expect;
+      const onDisk = readFileSync(expect);
+      assert.ok(onDisk.equals(oneMap.get("META-INF/jarjar/inner.jar")), "落盘字节必须就是内层件原字节");
+      const inner = readZip(onDisk);
+      assert.ok(inner.has("META-INF/mods.toml") && inner.has("com/example/inner/Inner.class"));
+      assert.equal(analyzeModJar(expect).modId, "innermod");
+      assert.equal(oneMap.has("com/example/inner/Inner.class"), false, "真身若同时塞进外壳，这条门就失去意义");
+    });
+
+    // 投毒①：内层换成两个平级子模组（两个不同 modId）⇒ 只回候选，绝不猜第一个
+    const two = writeShell("two-subs.jar", [
+      { name: "META-INF/jarjar/a.jar", buf: innerJarBytes("alphamod", "1.0.0", "com/example/alpha") },
+      { name: "META-INF/jarjar/b.jar", buf: innerJarBytes("betamod", "2.0.0", "com/example/beta") },
+    ]);
+    test("投毒①：两个平级子模组 → 必须返回全部候选且不给单一身份、不指定 from（不猜第一个）", () => {
+      const id = resolveEmbeddedIdentity(two.bytes, two.entries, undefined);
+      assert.equal(id.ok, false, `多义竟被折叠成单一身份：${JSON.stringify(id)}`);
+      assert.equal(id.modId, undefined);
+      assert.equal(id.from, undefined, "多义时不得指定内层件——否则输入选择会偷偷拿它去换");
+      assert.deepEqual(id.candidates, ["META-INF/jarjar/a.jar#alphamod", "META-INF/jarjar/b.jar#betamod"]);
+      assert.equal(new Set(id.candidates).size, 2, "两个候选必须各自可分辨");
+      assert.match(id.reason, /不猜/);
+      // 接线：多义 ⇒ embeddedOk 为 null ⇒ 输入仍是外壳，且一次都不去读内层
+      const s = spy(two.bytes);
+      const r = pickDecompileInput({
+        jarPath: two.path,
+        evidence: undefined,
+        modIdSource: undefined,
+        jarIdentity: "aaaaaaaaaaaa",
+        extractDir,
+        readEntry: s.readEntry,
+        extract: s.extract,
+      });
+      assert.equal(r.inputJar, two.path);
+      assert.equal(r.usingEmbedded, false);
+      assert.deepEqual(s.read, [], "身份没定下来时不得偷偷去取内层件");
+      assert.deepEqual(s.wrote, []);
+    });
+    test("投毒①补：externalModId 点名其一时按标签采信，采的是被点名的 b 而非排序首项 a", () => {
+      const id = resolveEmbeddedIdentity(two.bytes, two.entries, "betamod");
+      assert.equal(id.ok, true, JSON.stringify(id));
+      assert.equal(id.evidence, "jarjar-labeled");
+      assert.equal(id.modId, "betamod");
+      assert.equal(id.from, "META-INF/jarjar/b.jar");
+    });
+
+    // 投毒②：evidence="jar"（身份出自外壳自身元数据）⇒ 原样用外壳
+    const plainBytes = makeZip([
+      { name: "META-INF/mods.toml", data: modsTomlOf("shellmod", "9.9.9") },
+      { name: "com/example/shell/Shell.class", data: Buffer.from([0xca, 0xfe, 0xba, 0xbe]) },
+      { name: "META-INF/jarjar/inner.jar", buf: innerJarBytes("innermod", "1.0.0", "com/example/inner") },
+    ]);
+    const plainPath = join(shellDir, "plain-with-jij.jar");
+    writeFileSync(plainPath, plainBytes);
+    test("投毒②：evidence=jar/external 时即使递来 modIdSource 也必须原样用外壳（普通模组的输入没被换）", () => {
+      assert.equal(resolveModIdSegment(analyzeModJar(plainPath).modId).modId, "shellmod", "外壳必须自身就有身份");
+      for (const evidence of ["jar", "external"]) {
+        const s = spy(plainBytes);
+        const r = pickDecompileInput({
+          jarPath: plainPath,
+          evidence,
+          modIdSource: "META-INF/jarjar/inner.jar", // 故意误传：也不许换
+          jarIdentity: jarContentIdentity(plainPath),
+          extractDir,
+          readEntry: s.readEntry,
+          extract: s.extract,
+        });
+        assert.equal(r.inputJar, plainPath, `evidence=${evidence} 时输入被换掉了`);
+        assert.equal(r.usingEmbedded, false, `evidence=${evidence} 竟走了内层分支`);
+        assert.deepEqual(s.read, [], `evidence=${evidence} 时不该去读内层条目`);
+        assert.deepEqual(s.wrote, [], `evidence=${evidence} 时不该落任何文件`);
+      }
+    });
+
+    // 投毒③：内层条目名带 ".." 或是绝对路径 ⇒ 必须被 zip-path 守卫拒绝，且不落盘任何文件
+    const guardDir = join(s5cRoot, "never-created");
+    const badNames = [
+      "../evil.jar",
+      "META-INF/jarjar/../../evil.jar",
+      "META-INF/jarjar/sub/../../../evil.jar",
+      "/etc/evil.jar",
+      "\\srv\\share\\evil.jar",
+      "C:\\evil\\evil.jar",
+      "D:/evil/evil.jar",
+    ];
+    test("投毒③：含 .. 段 / 绝对路径的条目名一律拒绝，readEntry+extract 零次调用，守卫目录都不出现", () => {
+      for (const name of badNames) {
+        const read = [];
+        const wrote = [];
+        const r = pickDecompileInput({
+          jarPath: join(shellDir, "guard-probe.jar"),
+          evidence: "jarjar-self", // 身份判据给足，逼它只能靠 zip-path 守卫拦
+          modIdSource: name,
+          jarIdentity: "bbbbbbbbbbbb",
+          extractDir: guardDir,
+          readEntry: (n) => {
+            read.push(n);
+            return Buffer.from("x");
+          },
+          extract: (dest, data) => {
+            wrote.push(dest);
+            mkdirSync(dirname(dest), { recursive: true });
+            writeFileSync(dest, data);
+          },
+        });
+        assert.equal(r.usingEmbedded, false, `${name} 竟被采用为输入`);
+        assert.equal(r.inputJar, join(shellDir, "guard-probe.jar"), `${name} 的输入不是外壳`);
+        assert.match(String(r.reason), /守卫拒绝/, `${name} 没走守卫分支：${r.reason}`);
+        assert.deepEqual(read, [], `${name} 被拒后仍去读了条目`);
+        assert.deepEqual(wrote, [], `${name} 被拒后仍落了盘`);
+      }
+      assert.equal(existsSync(guardDir), false, "守卫拒绝后连目录都不该出现");
+    });
+    test("投毒③补：三层守卫各司其职（sanitizeCacheSegment / isPathInside / 取字节抛错静默降级）", () => {
+      const probe = (over) => {
+        const wrote = [];
+        return {
+          r: pickDecompileInput({
+            jarPath: join(shellDir, "guard-probe.jar"),
+            evidence: "jarjar-self",
+            modIdSource: "META-INF/jarjar/inner.jar",
+            jarIdentity: "bbbbbbbbbbbb",
+            extractDir: guardDir,
+            readEntry: () => Buffer.from("x"),
+            extract: (dest) => {
+              wrote.push(dest);
+            },
+            ...over,
+          }),
+          wrote,
+        };
+      };
+      // 层 1：没有 .. 段、但展平后带 .. 的名字 → sanitizeCacheSegment 判非法（旧实现那一层）
+      assert.equal(sanitizeCacheSegment("META-INF_jarjar_x..y.jar"), null, "前提变了要重判：sanitize 不再拦 ..");
+      const bySanitize = probe({ modIdSource: "META-INF/jarjar/x..y.jar" });
+      assert.equal(bySanitize.r.usingEmbedded, false);
+      assert.match(String(bySanitize.r.reason), /文件名非法/, JSON.stringify(bySanitize.r));
+      assert.deepEqual(bySanitize.wrote, []);
+      // 层 2：落盘路径算出后仍要过 isPathInside。注意 `embedded-<jarIdentity>-<展平名>` 的
+      // 前缀会先吃掉一个 ".."（实测 jarIdentity="../../escape" 与 "../../.." 都仍落在目录内并被采用），
+      // 故须 ../../../.. 才真逃出去；而 jarIdentity 生产上恒为 12 位十六进制（见下钉），这条纯属兜底。
+      assert.match(jarContentIdentity(one.path), /^[0-9a-f]{12}$/, "生产侧 jarIdentity 形态变了，这条投毒的可达性要重判");
+      const byInside = probe({ jarIdentity: "../../../.." });
+      assert.equal(byInside.r.usingEmbedded, false);
+      assert.match(String(byInside.r.reason), /逃出/, JSON.stringify(byInside.r));
+      assert.deepEqual(byInside.wrote, []);
+      // 层 3：取字节抛错（外壳 zip 坏了）⇒ 静默维持外壳，绝不把异常抛穿 handler
+      const boom = pickDecompileInput({
+        jarPath: one.path,
+        evidence: "jarjar-labeled",
+        modIdSource: "META-INF/jarjar/inner.jar",
+        jarIdentity: "cccccccccccc",
+        extractDir,
+        readEntry: () => {
+          throw new Error("模拟外壳读坏了");
+        },
+      });
+      assert.equal(boom.inputJar, one.path);
+      assert.equal(boom.usingEmbedded, false);
+      assert.match(String(boom.reason), /模拟外壳读坏了/);
+      assert.equal(existsSync(guardDir), false, "三层守卫的拒绝分支一个文件都不许落");
+    });
+
+    test("接线门：decompileModJar 的输入选择必须经 pickDecompileInput，且内联决策已搬走", () => {
+      const src = readFileSync(join(__dirname, "src", "decompile", "services", "mod-decompile.ts"), "utf8");
+      assert.equal(src.split("pickDecompileInput({").length - 1, 1, "调用点必须恰好一处");
+      assert.equal(src.split("readZip(readFileSync(args.jarPath)).get(embeddedOk.from)").length - 1, 0, "决策又内联回主流程了");
+      assert.equal(src.split("let bytecodeJar = args.jarPath").length - 1, 0, "旧的默认值+重赋值形态必须已被 const 结果取代");
+      assert.match(src, /const bytecodeJar = pickedInput\.inputJar;/);
+      assert.match(src, /evidence: modIdEvidence,/, "不传 evidence 的话投毒②的门形同虚设");
+      assert.match(src, /modIdSource: embeddedOk\?\.from,/);
+      assert.match(src, /if \(bytecodeJar !== args\.jarPath\) \{/, "回显 warning 的判据必须仍是「输入确实换了」");
+      assert.match(src, /export function resolveEmbeddedIdentity\(/, "无歧义判据需可离线回归");
+      assert.match(src, /export function pickDecompileInput\(/);
+    });
+
+    test("总账：整段门跑完，remapped 目录里只许有正例那一个文件", () => {
+      const all = readdirSync(extractDir);
+      assert.deepEqual(all, [basename(embeddedOnDisk)], `落盘留痕不符：${JSON.stringify(all)}`);
+    });
+  } finally {
+    rmSync(s5cRoot, { recursive: true, force: true });
+    assert.ok(!existsSync(s5cRoot), "S5c 临时目录未真正删除（win32 rmSync 假成功）");
+  }
+}
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed === 0 ? 0 : 1);

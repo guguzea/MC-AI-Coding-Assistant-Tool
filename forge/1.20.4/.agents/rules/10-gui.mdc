@@ -48,7 +48,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 Player interacts
       │
       ▼
-Block#use (Server) ──► creates MenuProvider ──► openContainer (Server)
+Block#use (Server) ──► creates MenuProvider ──► player.openMenu (Server)  // Player/ServerPlayer#openMenu(MenuProvider)
                                                        │
                                                        ▼
                                               ContainerMenu + Screen pair
@@ -126,8 +126,9 @@ private final ContainerData dataSlots = new ContainerData() {
     @Override public int getCount() { return 1; }
 };
 
-// In Menu constructor
-super(menuType, windowId, inventory, extraData, dataSlots);
+// In Menu constructor —— AbstractContainerMenu 只有 (MenuType, int) 一个构造器
+super(menuType, windowId);
+this.addDataSlots(dataSlots);   // ContainerData 须显式加入才会同步；inventory / extraData 在构造器体内自行 addSlot(...)
 
 // Set from server
 menu.dataSlots.set(0, newValue); // Triggers sync to client automatically

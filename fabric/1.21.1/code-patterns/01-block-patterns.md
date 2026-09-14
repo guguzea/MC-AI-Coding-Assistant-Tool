@@ -33,9 +33,10 @@ FabricBlockSettings.copyOf(Blocks.OAK_LOG)
 FabricBlockSettings.copyOf(Blocks.DIRT)
 
 // 自定义属性
-FabricBlockSettings.create()
+FabricBlockSettings.of()
     .strength(1.5f, 6.0f)                        // 硬度, 抗爆性
-    .breakByTool(FabricToolTags.PICKAXES)          // 需要镐
+    // 1.21.1 的 Settings 没有 breakByTool（tiny: AbstractBlock$Settings 全成员 0 命中）
+    // 镐类采集走下面这行 requiresTool() + 放 data/minecraft/tags/block/mineable/pickaxe.json
     .requiresTool()                                // 需要工具
     .dropsLike(Blocks.STONE)                       // 掉落物同另一个方块
     .mapColor(MapColor.DIRT_BROWN)                 // 地图颜色
@@ -46,7 +47,7 @@ FabricBlockSettings.create()
     .slipperiness(0.98f)                          // 摩擦力
     .velocityMultiplier(1.0f)                      // 速度倍率
     .jumpVelocityMultiplier(1.0f)                  // 跳跃倍率
-    .luminance(0)                                  // 亮度
+    .luminance(state -> 0)                         // 亮度（tiny: luminance(ToIntFunction)，1.20.5+ 无 int 版）
     .hardness(1.5f)                               // 硬度
     .resistance(6.0f)                             // 抗爆性
 ```
@@ -110,15 +111,15 @@ public class MyBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
         nbt.putInt("counter", counter);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         counter = nbt.getInt("counter");
-        super.readNbt(nbt);
+        super.readNbt(nbt, registries);
     }
 
     public void increment() {

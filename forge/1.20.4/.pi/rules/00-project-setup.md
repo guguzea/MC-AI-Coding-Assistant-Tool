@@ -14,8 +14,27 @@ description: 00 — 项目结构与构建
 
 - **必须使用 Java 17**（Forge 1.20.4 要求；Java 21 仅在 Minecraft 1.20.6+ 才需要）
 - `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_17` 或通过 toolchain `java.toolchain.languageVersion = JavaLanguageVersion.of(17)`
-- Gradle Wrapper 版本不低于 **Gradle 8.4**
+- Gradle Wrapper 以**实钉值**为准：本仓库 `scaffold/gradle/wrapper/gradle-wrapper.properties:3` = **Gradle 8.5**；官方 `1.20.4-49.2.0` MDK = **Gradle 8.12.1**（二者是已登记的代差，见下方代差表）。禁止凭记忆写「不低于某版本」这类无出处下限。
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
+
+> **⚠️ Forge 1.20.4 `scaffold/` 与官方 MDK 存在代差 —— 有意保留，不是缺陷；禁止为了「对齐」去改 scaffold 钉值。**
+> 保留理由：本档 scaffold 钉值已在本仓真机 build 记过账（`pack.meta.json` → `buildVerified: true`，覆盖 `:compileJava` + `:reobfJar`；进游戏后的行为未验），改值会使既有构建账失效。
+> 需要新版工具链：自行调用 `download_official_mdk`（默认 dryRun，只落到 `$MC_SKILL_CACHE`，不写仓库），再把返回值填进**你自己的工程**。
+
+> **工具边界（防误用）**：`mcp-server/data/mdk-checksums.json` 的 forge 条目只有
+> `id / platform / minecraftVersion / buildPlugin / source / repo / ref / archiveUrl / sha256 / license / gitPolicy / mappings / notes`
+> —— **没有** `gradle` / `forgeGradle` / `distributionUrl` / `forge_version` 任何字段
+> （实测 `grep -n` 对这四个键 0 命中）。
+> ⇒ 该文件只能钉「下载哪个 zip、zip 有没有被篡改」，**不能**当 Gradle 或 ForgeGradle 版本的断言依据；
+> 要核 Gradle / FG 钉值，必须实读 `download_official_mdk` 解包后的
+> `gradle-wrapper.properties` 与 `build.gradle`。
+
+> - Gradle Wrapper：本档 `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-8.5-bin` ↔ 官方 MDK `gradle-8.12.1-bin`
+> - ForgeGradle：本档 `scaffold/build.gradle:5` → `[6.0,6.2)` ↔ 官方 MDK `build.gradle:5` → `[6.0.16,6.2)`
+> - Parchment librarian 插件：本档 `scaffold/build.gradle:6` → `org.parchmentmc.librarian.forgegradle` `1.+` ↔ 官方 MDK 无此插件（未装 librarian）
+> - Forge：本档 `scaffold/gradle.properties:9` → `49.2.0` ↔ 官方 MDK `gradle.properties:16` → `49.2.0`（同）
+> - forge / loader version range：本档 `scaffold/gradle.properties:10-11` → `[49,)` / `[49,)` ↔ 官方 MDK `gradle.properties:18,20` → `[0,)` / `[0,)`
+> - mappings：本档 `scaffold/gradle.properties:16-17` → `parchment` / `2024.02.25-1.20.4` ↔ 官方 MDK `gradle.properties:35,38` → `official` / `1.20.4`
 
 ### Gradle 约束
 
@@ -261,4 +280,4 @@ side = "BOTH"
 - `modId` 禁止包含 `-`，必须全小写
 - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
 - `[[dependencies.xxx]]` 的 `modId` 必须与外层 `modId` 一致
-- `loaderVersion` 的格式：`"[44,)"` 表示 Forge 44 及以上
+- `loaderVersion` 的格式：`"[49,)"` 表示 Forge / FML 49 及以上（本档实值证据：`scaffold/gradle.properties:11` `loader_version_range=[49,)`，同文件 `:10` `forge_version_range=[49,)`）

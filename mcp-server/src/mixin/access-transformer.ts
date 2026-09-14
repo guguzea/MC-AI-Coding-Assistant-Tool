@@ -2,8 +2,9 @@
  * T4 Access Transformer（Forge/NeoForge `*_at.cfg`）解析与字节码级校验。
  *
  * 行格式：`<access> <owner> [<member> [<descriptor>]]`，
- *   access ∈ {public, protected, private, public-f, protected-f, private-f,
- *             public-static, protected-static, private-static, ...}
+ *   access ∈ {public, protected, default, private} 后接可选粘连的 +f / -f
+ *   （如 public+f、protected-f）——见 forge_1.20.1 advanced_accesstransformers.md:33-38, 95；
+ *   文档没有 -static 一类 token。
  *
  * 校验（基于任务2 缓存的 remapped 客户端 jar）：
  *   (a) owner 类存在于 jar（支持 `Outer$Inner` / `Outer.Inner` 归一化）
@@ -187,7 +188,10 @@ export function mappingMismatchSuggestion(member: string, mapping?: string): str
 
 // ── AT 解析 ───────────────────────────────────────────────────────────────────
 
-const AT_ACCESS_RE = /^(public|protected|private)(-static|-f|-static-f)?$/;
+// 合法 access：public / protected / default / private + 可选粘连的 +f / -f
+// （证据 forge_1.20.1 advanced_accesstransformers.md:33-38 与示例行 :95 `protected-f ...`；
+//  文档从未出现 -static 一类 token，故不再放行。）
+const AT_ACCESS_RE = /^(public|protected|private|default)([+-]f)?$/;
 
 export interface AccessTransformerEntry {
   access: string;
@@ -217,7 +221,7 @@ export function parseAccessTransformer(
       errors.push({
         target: line,
         issue: `无法识别的 access 修饰符「${access}」（第 ${lineNo} 行）`,
-        suggestion: "AT access 应为 public / protected / private，可带 -f（字段）/ -static 后缀",
+        suggestion: "AT access 应为 public / protected / default / private，可粘连追加 +f / -f 改 final（如 protected-f）",
       });
       return;
     }
@@ -354,9 +358,9 @@ function detectCrossFileConflicts(entries: AccessTransformerEntry[]): { conflict
     for (const e of list.slice(1)) {
       if (e.access === first.access) {
         warnings.push(`重复声明（相同 access）：${target}（第 ${e.lineNo} 行）`);
-      } else if (e.access.replace(/-f$/, "") === first.access.replace(/-f$/, "")) {
+      } else if (e.access.replace(/[+-]f$/, "") === first.access.replace(/[+-]f$/, "")) {
         warnings.push(
-          `同一目标 ${target} 可见性相同、仅 -f（去 final）不同：${first.access} vs ${e.access}（不视为冲突）`,
+          `同一目标 ${target} 可见性相同、仅 ±f（加/去 final）不同：${first.access} vs ${e.access}（不视为冲突）`,
         );
       } else {
         conflicts.push({ target, accessA: first.access, accessB: e.access });

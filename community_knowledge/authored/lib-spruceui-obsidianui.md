@@ -11,6 +11,7 @@ loaders: [fabric, forge, neoforge, quilt]
 modrinthSlug: ""
 role: api
 skillId: mc-spruceui
+notes: "无 API 摘要（`lib-api-summaries/` 无条目、catalog `verifiedApi` 为空对象 {}；Modrinth 返回 404）；类名以 GitHub README 为准，需 `ingest_loader_api` 自备 jar 核实。记于 2026-09-14"
 ---
 
 # SpruceUI / ObsidianUI GUI 抽象库要点

@@ -161,7 +161,7 @@ Access Transformer 开放 `private`/`protected` 成员为 `public`，无需字�
 文件：`src/main/resources/META-INF/accesstransformer.cfg`
 ```
 # 开放 private 方法为 public
-public net.minecraft.world.entity.Entity getHealth()V
+public net.minecraft.world.entity.LivingEntity getHealth()F  # 证据：本档 api-index LivingEntity#getHealth()F；Entity 类无 getHealth
 # 开放 protected 字段为 public
 public net.minecraft.world.entity.Entity health F
 ```

@@ -260,7 +260,11 @@ export function listPlatformPacks() {
       minecraftVersion: p.minecraftVersion,
       packDir: p.packDir,
     })),
-    traps: traps.map((t) => ({ path: t.agentsPath, note: t.trapNote })),
+    traps: traps.map((t) => ({
+      path: t.agentsPath,
+      note: t.trapNote,
+      ...(t.archived ? { archived: true } : {}),
+    })),
     drafts: drafts.map((p) => ({
       platform: p.platform,
       minecraftVersion: p.minecraftVersion,

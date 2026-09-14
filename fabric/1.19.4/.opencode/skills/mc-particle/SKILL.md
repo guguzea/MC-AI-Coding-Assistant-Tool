@@ -31,10 +31,13 @@ private static final ParticleType<?> MY_PARTICLE =
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        ParticleFactoryRegistry.INSTANCE.register(
-            (ParticleType<MyParticle>) MY_PARTICLE,
-            MyParticle.Factory::new
-        );
+        // TODO(未核实)：本包 data/fabric_1.19.4/mappings/
+        //   yarn-mappings.json 的 net/minecraft/particle/ 只有 ParticleType / ParticleEffect /
+        //   ParticleEffect$Factory / ParticleTypes / DefaultParticleType 等，
+        //   不存在 MyParticle，也不存在 MyParticle.Factory（上面定义的类是 MyParticleType）。
+        //   ParticleFactoryRegistry 属 Fabric API，未经 ingest_loader_api 入库前签名一律未核实。
+        //   核实前不要照抄下面这行：
+        // ParticleFactoryRegistry.INSTANCE.register(MY_PARTICLE, /* 工厂实现待核实 */);
     }
 }
 ```

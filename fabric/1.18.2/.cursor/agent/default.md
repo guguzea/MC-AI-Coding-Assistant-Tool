@@ -174,7 +174,7 @@ fabric-mod/
 - Fabric Loader 0.14.x（推荐 0.14.24）
 - Fabric API 0.77.x for 1.18.2
 - Java 17+
-- Pack format **8**
+- Pack format：数据包 **9** / 资源包 **8**（见 `knowledge/common/datapack-format.md`）
 
 ---
 

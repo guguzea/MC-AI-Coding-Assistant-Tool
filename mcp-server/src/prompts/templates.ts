@@ -245,7 +245,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
     body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-recipe / mc-loottable / mc-advancement；规则 07-datagen。
 1. 确认平台与精确 MC 版本。
 2. 配方/战利品/进度 JSON 路径按该档 data/<modid>/。
-3. generate_datagen 仅白名单版本（Forge 1.20.1 / 1.20.4 FinishedRecipe；NeoForge 1.20.1 改口 search_neoforge_docs，禁止默写 Forge import；NeoForge 1.20.4 / 1.20.6 仅 recipe——1.20.4 一参 PackOutput+RecipeOutput，1.20.6 两参 PackOutput+HolderLookup；1.21.0–1.21.4 为 GatherDataEvent+addProvider，1.21.5+ 为 GatherDataEvent.Client+createProvider，1.21.11/26.1 用 Identifier；Fabric 1.21.1/1.21.3/1.21.4/1.21.8 为 generate()，1.21.10/1.21.11 为 buildRecipes，26.1 Loom；Quilt 无足够 QSL 类名则 error）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
+3. generate_datagen 仅白名单版本（Forge 1.20.1 / 1.20.4 FinishedRecipe；NeoForge 1.20.1 改口 search_neoforge_docs，禁止默写 Forge import；NeoForge 1.20.4 / 1.20.6 仅 recipe——1.20.4 一参 PackOutput+RecipeOutput，1.20.6 两参 PackOutput+HolderLookup；1.21.0–1.21.4 为 GatherDataEvent+addProvider，1.21.5+ 为 GatherDataEvent.Client+createProvider，1.21.11/26.1 用 Identifier；Fabric 方法名按**映射**取（Yarn=generate(RecipeExporter) / Mojmap=buildRecipes，同类同名差异，不是版本差异，禁止同一文件混映射），26.1 Loom；Quilt 无足够 QSL 类名则 error）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
 4. validate_datapack_json 须传 version；minecraft:crafting_special_* 无 result 不报错。`,
   },
   "mc-audio-vfx": {
@@ -374,6 +374,136 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
 4. mc-ingame-iterate：隔离实例 mods 目录 + 读 latest.log / crash-reports。
 5. 可选 mc-localize-mod（无机器翻译）。
 6. mc-publish：check_publish_ready；用户自行上传。不要把本链当改已有代码的入口。`,
+  },
+  "mc-datapack-standalone": {
+    title: "独立数据包工作流（无 Java 代码）",
+    body: `${WORKFLOW_HITL}
+${WORKFLOW_ERA_GUARD}
+【适用】纯数据包：世界 datapacks/ 目录或独立 zip，无 build.gradle、无 Java 源码。模组附带的配方/战利品走 mc-recipe-data 与对应平台 session，不要把数据包当模组工程判结构。
+1. 【停】先与用户确认并等回复，不要自行开工：精确 MC 版本、目标命名空间 ns、要覆盖的数据面（recipe / loot_table / advancement / tag / function / damage_type）。pack_format 随版本变，禁止默认 1.20.1。
+2. 结构：pack.mcmeta + data/<ns>/<kind>/*.json。1.21 起 loot / recipe / tag 的目录层级与字段有分叉，逐档取：search_docs（platform=实际加载器档，version=精确档）或 get_doc_full 读整页；核不到就留 TODO(未核实)，禁止拿邻版目录树顶替。
+3. 函数 / 命令面同样按档核（命令参数跨版本变），核不到不要凭记忆写。
+4. 逐文件校验：validate_datapack_json（须传精确 version；kind=recipe|loot_table|advancement|tag）。【边界】它不是全 pack_format 官方 schema，passed 不等于游戏一定认。
+5. 有音效 / 文本 / 模型的部分另走 mc-resourcepack-standalone；混包时数据包与资源包两册 pack.mcmeta 分开写，不要合成一册。
+6. 【停】打包与装载由用户执行：Agent 只出文件清单与结构预览（dryRun 口径），不代写 saves/<world>/datapacks，不代跑 /reload，不代跑启动器。
+7. 装载后不生效：读该实例 logs 走 analyze_log / crash_analyze；先查 ns 拼写与目录层级、再查 pack_format，最后才怀疑语法。`,
+  },
+  "mc-resourcepack-standalone": {
+    title: "独立资源包工作流",
+    body: `${WORKFLOW_HITL}
+${WORKFLOW_ERA_GUARD}
+【适用】纯资源包：resourcepacks/ 目录或独立 zip（模型 / 方块状态 / 纹理 / lang / 音效 / GUI 贴图）。模组内资源走对应平台 session 与该档规则，不走本流程。
+1. 【停】与用户确认后再落文件：精确 MC 版本、pack_format、命名空间、要改的资产面。pack_format 与模型语法跨版本变，禁止默认 1.20.1。
+2. 结构：pack.mcmeta + assets/<ns>/blockstates|models|textures|lang|sounds。逐档核字段：search_docs / get_doc_full 取该版模型语法，核不到留 TODO(未核实)。
+3. 骨架生成（只吐文本 + suggestedPath，默认不写盘）：generate_model（version 必填；kind=block|item）、generate_lang（version 必填；en_us/zh_cn）。注意这两个工具只有 version 必填、无 platform 参数，且 suggestedPath 面向模组工程的 assets/<modid>/——独立资源包要用户确认后自己挪目录，别当已就位。
+4. 静态自检：audit_resources 传 resourceRoot（该包的 assets/<ns> 根）或 projectPath 让工具自推，看缺失纹理 / 孤儿纹理 / modId 命名。它只查引用完整性，不判 pack_format。
+5. 汉化面接 mc-localize-mod（无机器翻译，中文由人填）。
+6. 【停】打包与安装由用户执行：Agent 不代写 resourcepacks/、不代跑启动器。zip 根必须是 pack.mcmeta，不要多套一层目录。
+7. 生效核对：游戏内重载资源包逐项看模型 / 纹理 / 文案；异常读 logs 走 analyze_log。`,
+  },
+  "mc-rendering": {
+    title: "渲染工作流（BER / 自定义模型加载器 / 着色器）",
+    body: `${WORKFLOW_HITL}
+${WORKFLOW_ERA_GUARD}
+【分叉】渲染注册入口按平台 + 版本分叉，禁止一条 API 名覆盖全档。先确认平台与精确 MC 版本，再 activate_platform_pack action=session（可 task=mc-new-blockentity / mc-new-entity）取该档核实表；禁止 Read 平台/<ver>/.cursor。
+1. 【停】与用户确认要渲的是方块实体（BER）、实体渲染器、还是模型加载 / 着色器，以及目标档；不同答案走完全不同的注册面，不要混。
+2. BER：
+   - Forge 1.20.1：mod 总线订阅 EntityRenderersEvent.RegisterRenderers 并调 #registerBlockEntityRenderer（已核实 data/forge_1.20.1/forge-docs/1.20.1/processed/blockentities_ber.md:26）。
+   - NeoForge 1.21.1：同名事件 + event.registerBlockEntityRenderer（已核实 data/neoforge_1.21.1/neoforge-docs/1.21.1/processed/blockentities_ber.md:51,57,59）。其余 Neo 档（1.20.4 / 1.20.6 / 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1）本模板未逐档核实 → 改口 search_neoforge_docs version=该档。
+   - Fabric / Quilt：渲染注册入口类名在本仓全部 fabric 语料 0 命中（grep -rln EntityRendererRegistry data/ 无结果）⇒ TODO(未核实)，禁止默写。1.21.11 只核实到「BER 在 ClientModInitializer 里注册」（develop_blocks_block-entity-renderer.md:44）与 EntityRenderState（develop_entities_first-entity.md:65）。要签名先 search_fabric_docs，再由用户自备渲染 jar 走 ingest_loader_api + query_loader_api 逐条核对。
+   - Rift 1.13.2：核实表监听器 org.dimdev.rift.listener.client.EntityRendererAdder 的 addEntityRenderers(Map, RenderManager)，方块实体侧 TileEntityRendererAdder 的 addTileEntityRenderers(Map)（已核实 data/rift_1.13.2/rift-docs/1.13.2/processed/listeners.md:51,57）。表外名字禁止输出。
+   - LiteLoader / ModLoader：只使用该档核实表里的渲染钩子；表里没有就停，不要吐现代 BER 骨架。
+3. 实体渲染器骨架：generate_entity_renderer 的 platform 与 version 必填，当前只覆盖 forge 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 与 neoforge 26.1，fabric / quilt 直接 error（见工具描述）。不支持档改口该档 04 + search_*_docs，不要绕道硬写。
+4. 自定义模型加载器：NeoForge 1.21.1 走 ModelEvent.RegisterGeometryLoaders + 实现 IGeometryLoader（已核实 data/neoforge_1.21.1/neoforge-docs/1.21.1/processed/resources_client_models_modelloaders.md:323,335）。Forge 1.20.1 另有 rendering_modelloaders 系列专页但本模板未逐页取签名 → 那一档改口 get_forge_doc_full 核过再写，禁止把 Neo 名字抄进 Forge。基岩没有模型加载器概念，走 RP 定义。
+5. 着色器 / 后处理：本仓 neoforge_1.21.1 与 fabric_1.21.11 的 processed 无着色器专页（ls 实核）⇒ 整面 TODO(未核实)。禁止默写 shader 实例类名、后处理管线名、GLSL include 语法；改口 get_minecraft_source 或由用户自备源码逐签名核。
+6. 跨端纪律：渲染类只许在客户端侧加载，服务端引用即崩；按该档 08 做分离。
+7. 【停】构建与真机看效果由用户执行（不代跑 Gradle、不代拷 jar）；可接 mc-ingame-iterate 或 mc-server-multiplayer-test。`,
+  },
+  "mc-profiling": {
+    title: "性能剖析工作流",
+    body: `${WORKFLOW_HITL}
+${WORKFLOW_ERA_GUARD}
+【定位】卡顿 / 内存 / 耗时的独立剖析面。mc-crash-triage 第 5 步与 mc-build-mod 第 7 步只留了「先读短文再改代码」一句，要走完整剖析用本模板。原则：先测量后优化，没有数据的瓶颈不改。
+1. 【停】与用户确认瓶颈类型（服务端 tick / 客户端帧率 / 内存 / 加载耗时 / 构建慢）和可接受的取舍——优化常换实现，属性能权衡，由用户拍板，不要自作主张重写。
+2. 主读 community_knowledge/authored/profiling-performance.md：先测量原则:14、spark:20-24（/spark profiler、/spark tps、/spark gcmonitor）、原版 /debug start 与 /debug stop 产物在 debug/ 下:26-28、客户端帧率与 /sparkc:31-34、内存诊断:36、「先测量后优化」清单:45-51。检索用 search_community_docs，整篇用 get_community_doc_full。短文不替代官方 API 规范。
+3. 服务端 tick：spark 由用户自行安装与采样（Agent 不代下载、不代起服、不代跑 profiler）；无 spark 时用原版 /debug start → 复现 → /debug stop。采样回来的日志用 analyze_log，运行时目录用 inspect_runtime（优先 logsDir，禁止全盘探测）。
+4. 客户端 / 自埋段：NeoForge 1.21.1 有 Debug Profiler 专页——F3 + L 起停、10 秒自动停（已核实 data/neoforge_1.21.1/neoforge-docs/1.21.1/processed/misc_debugprofiler.md:7）；自定义段 ProfilerFiller#push / #pop，实例取自 Level / MinecraftServer / Minecraft（同页 :57,61,65）。其它档改口 search_neoforge_docs / search_forge_docs version=该档，禁止把 1.21.1 页当全档通用。
+5. 热点属于未知模组时：analyze_mod_jar → decompile_mod_jar → search_mod_code（首次 3-10 分钟，默认只写 $MC_SKILL_CACHE，不写项目目录）。
+6. 构建慢不属本面：analyze_build_log + diagnose_gradle（先看 status / skipped），别拿运行时剖析器量编译。
+7. 老平台（LiteLoader / Rift / ModLoader）没有现代 profiler 文档页 ⇒ 只按该档核实表；核不到就退回「二分关闭模组」的经验定位，禁止吐 spark / ProfilerFiller 骨架。
+8. 【停】优化改法交用户确认后再动代码；改完由用户自己构建与复测（不代跑 Gradle、不代拷 jar），一次只改一处、重测对比。`,
+  },
+  "mc-save-migration": {
+    title: "存档数据结构迁移工作流",
+    body: `${WORKFLOW_HITL}
+${WORKFLOW_ERA_GUARD}
+【适用】存档数据结构变更：SavedData 的 .dat 内容、方块实体 / 实体 / 区块读写格式、以及跨版本升级旧世界的兼容面。
+1. 【停 · 强制第一步】改存档 schema 之前，必须先让用户整份备份世界目录并回报备份路径，确认后才进第 2 步。本模板只出代码与人工步骤清单：Agent 不代改真实存档、不代写 saves/ 下的 .dat 与 region 文件、不代跑任何迁移命令。没备份就停在这里。
+2. 确认平台 + 精确 MC 版本 + 兼容窗口：要不要读旧档？读不了时是报错、静默重置还是回退默认值？这是破坏性取舍，用户定。
+3. 持久化面先选型：读 community_knowledge/authored/saveddata-world-persistence.md —— 适用场景:14、旧 API（≤1.20.6 的 DimensionDataStorage + Factory + NBT）:25、新 API（≥1.21.5 的 SavedDataType + Codec）:59、setDirty 是最常见丢档原因:81、挂哪个维度:85、反模式:97。Fabric 侧另读 authored/fabric-saveddata-persistent-state.md。短文不替代官方签名。
+4. NeoForge 1.21.1 已核实面：SavedData 子类要实现 save 并在改数据后调 setDirty（不调则原数据不变）；实例经 DimensionDataStorage#computeIfAbsent 取得，参数是 SavedData.Factory（新建 supplier + 读 NBT 函数）与 .dat 文件名（不得含路径分隔符）；存储入口 ServerChunkCache#getDataStorage 或 ServerLevel#getDataStorage（data/neoforge_1.21.1/neoforge-docs/1.21.1/processed/datastorage_saveddata.md:9,12,18,20）。其它 Neo 档未逐档核实 ⇒ 改口 search_neoforge_docs version=该档，禁止把 1.21.1 签名抄进 1.20.4 / 1.20.6。
+5. 版本字段与迁移路径由你自己定义：在自写数据里放显式整数版本字段，加载时逐段升级（v1 到 v2 到 v3，不要跳级重写），并把「无版本字段的旧档」当 v0 特例。这套 schema 版本是本模组约定，不是原版 API。
+6. DataFixer / type-updating 面：本仓 neoforge_1.21.1 的 datastorage_codecs.md:3,13 只把 DataFixerUpper 当成 Codecs 序列化库来讲，正文没有任何游戏侧 DataFixer / 版本升级器注册流程 ⇒ 该面整片 TODO(未核实)。要落笔必须先 get_minecraft_source（原版类）或 query_api（覆盖约 1.16.5-1.20.4，1.21+ / 26.1+ 无索引）核到签名，核不到就写 TODO(未核实)，禁止凭记忆补升级器类名与方法链。
+7. Codec 面（若走新版持久化）：NeoForge 1.21.1 有 datastorage_codecs.md 专页可整篇 get_neoforge_doc_full 读；跨端读写另接 StreamCodec（同档 networking_streamcodecs.md）。没读页就别说方法名。
+8. 兼容性验证（人工、只在测试档）：复制一份旧世界 → 只改代码不动数据先加载，看是崩溃还是把旧数据清零 → 再加载一次让它写新 schema → 第三次加载验幂等。全程 analyze_log / crash_analyze 读日志。禁止拿正式存档试。
+9. 【停】「旧档不兼容时的处置」（拒绝加载 / 自动升级 / 放弃旧数据）必须用户选定后再写代码；发布说明里的破坏性变更措辞由用户决定（可接 mc-publish 清单，不代上传）。`,
+  },
+  "mc-server-multiplayer-test": {
+    title: "服务端与多人联机测试工作流",
+    body: `${WORKFLOW_HITL}
+${WORKFLOW_ERA_GUARD}
+【适用】联机侧验证：专用服务端、多客户端同房、状态同步、权限与延迟下的行为。构建本身走 mc-build-mod，单机真机走 mc-ingame-iterate。
+1. 【停】与用户确认测试拓扑：几个客户端、是否服务端与客户端两套环境、要不要第二台机器。端口开放、EULA、白名单 / op 全部由用户操作，Agent 不代起服务器、不代改防火墙。
+2. 起服与连服由用户执行（runServer 或启动器）。Agent 只列需要哪份 jar、哪个 mods 目录、看哪个日志路径；不代跑 Gradle、不代把 jar 拷进服务端目录。
+3. 分诊输入要分侧：服务端 logs 与各客户端 logs 分开取（inspect_runtime 优先 logsDir，禁止全盘探测）→ analyze_log / crash_analyze 按时间戳对照。客户端崩溃别当服务端崩溃修。
+4. 同步面逐项两人同房实测：服务端权威的状态变更、方块实体 / 实体数据是否下发、GUI 打开与关闭、重进世界与跨维度、死亡与重生。网络骨架接 mc-networking（generate_network_packet 的 platform 必填且须带版本后缀，如 forge_1.20.1 / neoforge_1.21.1 / fabric_26.1.2；只传 fabric 会 error，未列出的组合一律拒绝）。
+5. 端分离纪律：客户端专用类被服务端引用即崩。按该档 08 与 session 注入的分端规则查，禁止靠「运行时猜物理端」。有 Mixin 时用 mixin_analyze 核对 common / client / server 分桶，别把 common 写进 client。
+6. 权限面必测非 op 玩家路径；命令注册按该档文档（现代档为 Brigadier 系，可读 authored/custom-commands-brigadier.md），核不到留 TODO(未核实)。
+7. 能不能自动化先判：读 community_knowledge/authored/testing-automation.md —— 选型:14、JUnit 只能测干净逻辑:23、按 loader 的 test 配置:29、可测性设计清单:36、客户端渲染类的现实路径:43。GameTest 面走 mc-gametest。短文不替代官方签名。
+8. 依赖与共存：check_dependencies 看依赖与版本窗口；加载顺序与 mod 间冲突分诊另走 mc-modpack。
+9. 【停】性能与卡顿不属本流程：转 mc-profiling（先测量再改）。联机「卡」常常是带宽或实现往返，不由 Agent 单方面改协议。`,
+  },
+  "mc-combat-attribute": {
+    title: "伤害 / 属性 / 战斗工作流",
+    body: `${WORKFLOW_HITL}
+${WORKFLOW_ERA_GUARD}
+【适用】伤害种类、实体属性与加成、战斗数值。附魔 / 药水 / 效果走 mc-enchant-potion，战利品走 mc-recipe-data。
+1. 【停】与用户确认平台 + 精确 MC 版本，以及要改的是「伤害种类」「实体属性」还是「战斗事件」；数值倍率属创意与平衡决策，由用户拍板，Agent 不代定。参数纪律：本面下游工具 platform / version 必填（activate_platform_pack 需 platform + minecraftVersion；generate_entity_renderer 需 platform 与 version；generate_network_packet 的 platform 需带版本后缀），缺省即 INVALID_INPUT / 直接 error，版本没落实就不要往下要骨架。
+2. 伤害类型（现代档为数据驱动）：NeoForge 1.21.1 已核实——DamageType 是数据包 registry，代码侧只提供 ResourceKey，属性写在 data/<modid>/damage_type/<name>.json（已核实 data/neoforge_1.21.1/neoforge-docs/1.21.1/processed/resources_server_damagetypes.md:1,7,19）；构造 DamageSource 需要 RegistryAccess，取自 Level#registryAccess（同页 :72）；DamageSources#source 会调换 direct 与 causing 两个实体参数，别传反（同页 :109）。Forge 同族页存在但本模板未逐页取签名 ⇒ 那一档改口 get_forge_doc_full 读过再写。
+3. 实体属性：只许逐档核。vanilla 索引可核到 net.minecraft.world.entity.ai.attributes.Attributes 及其 register(String, Attribute)（实测 query_api className=Attributes version=1.20.1 → found:true；query_api 只覆盖约 1.16.5-1.20.4）。1.20.5 起属性面跨版本差异大，且本仓 neoforge_1.21.1 与 forge_1.20.1 的 processed 都没有 attributes 专页（实核 0 命中）⇒ 属性注册与 modifier 施加点在 ≥1.20.5 一律 TODO(未核实)，必须 get_minecraft_source 或 query_loader_api（先 ingest_loader_api，用户自备 jar）核到签名才写。禁止拿 1.20.1 的名字覆盖全档。
+4. 战斗事件名改过多次：LivingHurt / LivingIncomingDamage 一类在本仓 forge_1.20.1 与 neoforge_1.21.1 语料 0 命中 ⇒ TODO(未核实)。要拦伤害先 search_*_docs（version=该档）定位事件面，需要注入口时用 get_minecraft_source + mixin_analyze；核不到就不要写注入目标。
+5. 端侧纪律：战斗数值在服务端算，客户端只显示；血量 / 冷却同步接 mc-networking 与该档 06，禁止客户端直接改服务端实体数据。
+6. 表现层（受击动画 / 粒子 / 音效）接 mc-audio-vfx 与 mc-rendering，不要在本流程里顺手写渲染注册。
+7. 【停】数值表交用户确认后再落常量；构建与实测由用户执行（不代跑 Gradle、不代拷 jar），联机下的战斗一致性另走 mc-server-multiplayer-test。`,
+  },
+  "mc-multi-loader": {
+    title: "多加载器（Architectury）工作流",
+    body: `${WORKFLOW_HITL}
+${WORKFLOW_ERA_GUARD}
+【适用】一份源码同时产出 Fabric / NeoForge（或 Forge）多加载器构建的 Architectury 工程。已有工程改代码走对应平台 session，不走本流程。
+1. 【停】与用户确认：是否真要上多加载器（构建与调试成本翻倍，属取舍）、目标 loader 清单与各自精确 MC 版本、modId。参数纪律：下游 generate_* 与 activate_platform_pack 的 platform / version 必填（platform 需带版本后缀，只传裸 loader 名会 error），版本未定就先别要骨架。
+2. 选型读短文 community_knowledge/authored/lib-architectury.md：何时用 / 何时不用:20、Decision Flow:30、Gradle 与声明文件检查顺序:43、集成要点:51、常见坑:66、自检清单:74。短文不替代 API 签名。
+3. 库 Skill 源稿：knowledge/libs/all-platforms/mc-architectury/SKILL.md —— 直接读源稿，不落盘到平台 .cursor/skills（库组映射与 frontmatter 的 platforms / mcVersions 过滤见 knowledge/libs/README.md）。
+4. 脚手架：先 analyze_porting_path 看路线，再 port_project action=init_architectury。该动作必须传 neoforgeVersion（写进 gradle.properties 的 neoforge_version，缺省即被拒），modId 不给则从目录名推导，且只适用于空目录；已有工程改用 action=extract_common / apply_version_migration。port_project 的写文件默认 dryRun=true，只出 diff 预览。
+5. 【停】把第 4 步的 dryRun 预览清单原样给用户过目、得到确认后，才允许 dryRun=false + confirmed=true 真写（另需环境 MC_SKILL_ALLOW_WRITE=1 且 projectPath 落在 MC_SKILL_PROJECT_ROOT 内）。Agent 不擅自落盘、不代跑 Gradle、不代拷产物。
+6. 抽象层签名：Architectury 与各 loader 的入口类名 / 方法名一律 query_loader_api 逐条核（先由用户自备 architectury jar 走 ingest_loader_api，它只写 $MC_SKILL_CACHE overlay，不写仓库 data/）。未入库 ⇒ 只留 TODO(未核实) 结构壳，禁止凭记忆补方法链。
+7. 三套声明文件（common / fabric / loader 侧）按各自档写；跨加载器库冲突与依赖窗口用 check_dependencies 预检（它是启发式 + library-catalog，不是 Gradle 依赖解析器，未收录库可能漏报）。
+8. 产物与发布：各 loader 分别出 jar，发布前清单接 mc-publish 与 mc-ci-publish-extra，由用户自行上传（不代传 Curse / Modrinth）。移植旧工程另走 mc-port-mod。`,
+  },
+  "mc-modpack": {
+    title: "整合包集成工作流",
+    body: `${WORKFLOW_HITL}
+${WORKFLOW_ERA_GUARD}
+【适用】整合包：把第三方 mod 装成一套能跑的包——依赖闭包、加载顺序、冲突分诊。本流程不做自动发布，也不代下载 / 代上传 mod 文件。
+1. 【停】向用户索取 mod 清单与每个 jar 的本地绝对路径（禁止臆造盘符、禁止猜下载源）。参数纪律：本面下游工具 platform / version 必填（activate_platform_pack 需 platform + minecraftVersion，generate_* 需带版本后缀的 platform，validate_datapack_json 与 audit_resources 建议传精确 version / modId），缺省即 INVALID_INPUT / 直接 error。
+2. 逐 jar 摸元数据：analyze_mod_jar 读 modId / loaders / entrypoints / mixins / 依赖声明。它只读用户自备 jar。
+3. 依赖闭包与版本窗口：check_dependencies（loader 判定、库模组识别、跨加载器冲突如 owo / CCA / Polymer / Trinkets、常见陷阱）。【边界】启发式 + catalog，不是 Gradle 依赖解析器 ⇒ 报「没问题」不等于一定共存，最终以真机为准。
+4. 软 / 硬依赖：读 community_knowledge/authored/soft-deps-modlist.md（硬依赖 vs 软依赖:14、Forge 运行时探测:22、mods.toml 声明建议:37、常见错误:52、自检:59）。Fabric 的 depends / breaks 与 Forge 系 orderings 语义不同，按各自加载器档核，不要互抄。
+5. 加载顺序：只在确有先后依赖时处理；声明面按该版加载器文档核（本模板不预设顺序 API 名，核不到留 TODO(未核实)）。
+6. 冲突分诊走 mc-crash-triage 主干：analyze_log / crash_analyze / lookup_obfuscated（崩溃短名反查）/ mixin_analyze（注入目标缺失）；diagnose_gradle 只用于构建期。换 jar、删 jar、改目录这些动作由用户执行，Agent 只出「这轮先关掉哪些」的清单。
+7. 资源与配方面冲突：audit_resources 看模型 / 纹理引用与命名空间（传 resourceRoot 或 projectPath）；配方 / 战利品 / 进度 / 标签 JSON 用 validate_datapack_json 且必须传精确 version。两者都不判同名覆盖优先级，那要按档查文档。
+8. 真机验证接 mc-ingame-iterate（隔离实例、路径与拷贝先经用户确认）；多人服务端表现接 mc-server-multiplayer-test；卡顿与内存接 mc-profiling。
+9. 【停】发布与分发不在本流程内：不代调 Curse / Modrinth 上传接口、不代下第三方 jar；每个 mod 的授权与再分发条款由用户自行核对（可接 mc-publish 与 mc-ci-publish-extra，二者都只出清单）。`,
   },
 };
 

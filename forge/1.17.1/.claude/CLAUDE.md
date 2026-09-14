@@ -33,7 +33,7 @@ IF build.gradle contains "neoforge"  /* 真实标记：id 'net.neoforged.moddev'
 - Prefer `DistExecutor.unsafeRunWhenOn()` over raw `@OnlyIn`
 
 ### Mappings
-- Use **Parchment** mappings (e.g., `LivingEntity#getHealth`, not `func_70024_e`)
+- Use **official** (mojmap) mappings (e.g., `LivingEntity#getHealth`, not `func_70024_e`) — 本档默认不是 Parchment：`scaffold/gradle.properties:14-15` = `official` / `1.17.1`，`00-project-setup.mdc:58-59` 已判定 1.17.1 无 Parchment 通道可用
 
 ---
 
@@ -46,8 +46,8 @@ IF build.gradle contains "neoforge"  /* 真实标记：id 'net.neoforged.moddev'
 || Java | **16** |
 || Gradle | 7.x |
 || ForgeGradle | 5.x（FG 5.1.+，官方 1.17.1 MDK） |
-|| Mappings | **official** (`20210624.103621`) |
-|  | pack_format | **8** |
+|| Mappings | **official**（`mapping_version=1.17.1`，非日期戳） |
+|  | pack_format | **7** |
 
 ---
 

@@ -18,7 +18,7 @@
 ## 通用约定
 
 - 所有 `setRegistryName()` 必须使用 `MOD_ID` 作为 namespace
-- `pack_format = 4`（mcmod.info 和 pack.mcmeta）
+- `pack_format = 3`（1.12.2 的 pack.mcmeta；语料 `conventions_locations.md:22` 明写 pack_format 3）
 - `@EventBusSubscriber(modid = MOD_ID)` 注解注册类
 - 使用 `@SideOnly(Side.CLIENT)` 标记客户端专用代码
 - 资源路径全部小写
@@ -32,10 +32,10 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.registry.RegistryEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.SubscribeEvent;
+// TODO(未核实)：@SubscribeEvent 的 import 路径本档语料/索引均未出现，用 IDE 补全或 javap 核实后再写
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 ```

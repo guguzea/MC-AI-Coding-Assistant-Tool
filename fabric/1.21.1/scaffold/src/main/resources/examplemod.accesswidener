@@ -1,0 +1,7 @@
+accessWidener v2 named
+# 本 scaffold 目前不宽开任何原版成员；这个空 AW 的存在是被声明逼出来的：
+#   build.gradle 的 loom { accessWidenerPath = file("src/main/resources/examplemod.accesswidener") }
+#   与 fabric.mod.json 的 custom["fabric-loom:accessWidener"] 都指向本文件，缺件即配置失败。
+# 需要宽开时按 `[transitive ]<type> <class> [<member> <descriptor>]` 追加条目，type ∈ accessible / extendable / mutable，例：
+#   accessible method net/minecraft/entity/LivingEntity getHealth ()F
+# 格式出处：fabric/1.21.1/.cursor/skills/mc-mixin.md:146-150（同档正文示例）+ mcp-server/src/mixin/access-widener.ts:5,29-30,60。

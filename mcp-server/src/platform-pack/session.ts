@@ -215,6 +215,51 @@ const TASK_SPECS: Record<string, TaskSpec> = {
   "mc-ci-publish-extra": { rules: ["00"], skills: [], nextReads: [] },
   "mc-setup-env": { rules: ["00"], skills: [], nextReads: [] },
   "mc-full-mod": { rules: [...ALL_RULE_IDS], skills: [], nextReads: [] },
+  "mc-rendering": { rules: ["08"], skills: ["mc-renderer"], nextReads: ["mc-model"] },
+  "mc-server-multiplayer-test": { rules: ["06", "08"], skills: ["mc-networking"], nextReads: [] },
+  "mc-combat-attribute": { rules: ["04"], skills: ["mc-entity"], nextReads: [] },
+  "mc-datapack-standalone": {
+    rules: [],
+    skills: ["mc-datapack"],
+    nextReads: [],
+    warning:
+      "独立数据包不是模组工程：不灌规则 07（datagen 面向模组内生成器）。逐文件校验用 validate_datapack_json（须传精确 version），pack_format 与目录层级逐档核 search_docs，核不到留 TODO(未核实)。",
+  },
+  "mc-resourcepack-standalone": {
+    rules: [],
+    skills: ["mc-resourcepack"],
+    nextReads: ["mc-model"],
+    warning:
+      "独立资源包不是模组工程：generate_model / generate_lang 只有 version 必填、无 platform 参数，suggestedPath 面向模组工程的 assets/<modid>/，挪到包根由用户确认。引用完整性用 audit_resources，它不判 pack_format。",
+  },
+  "mc-profiling": {
+    rules: [],
+    skills: [],
+    nextReads: [],
+    warning:
+      "性能剖析无对应 00–10 规则：先 search_community_docs 读 authored/profiling-performance.md，运行时日志用 inspect_runtime / analyze_log；构建慢另走 analyze_build_log + diagnose_gradle。Agent 不代起服、不代跑 profiler。",
+  },
+  "mc-save-migration": {
+    rules: [],
+    skills: [],
+    nextReads: [],
+    warning:
+      "存档迁移无对应规则主题：SavedData / Codec 面改口 search_neoforge_docs / search_forge_docs version=该档，未核实的属性与 DataFixer 面留 TODO(未核实)。改 schema 前必须先由用户整份备份世界。",
+  },
+  "mc-multi-loader": {
+    rules: [],
+    skills: [],
+    nextReads: [],
+    warning:
+      "多加载器（Architectury）工程不按单平台 session 走：库 Skill 读 knowledge/libs/all-platforms/mc-architectury/SKILL.md 源稿，脚手架用 port_project action=init_architectury（默认 dryRun），签名一律 query_loader_api（先 ingest_loader_api）。",
+  },
+  "mc-modpack": {
+    rules: [],
+    skills: [],
+    nextReads: [],
+    warning:
+      "整合包不是单个模组工程：本平台 00–10 规则不自动升级成规范。依赖与冲突面用 check_dependencies / analyze_mod_jar / audit_resources；Agent 不代下载 mod、不代上传发布。",
+  },
 };
 
 function isTaskSpec(v: unknown): v is TaskSpec {

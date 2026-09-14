@@ -41,7 +41,7 @@ IF build.gradle contains "neoforge"  /* 真实标记：id 'net.neoforged.moddev'
 
 | File | Topic |
 |------|-------|
-| `00-project-setup.mdc` | Java 17, Gradle 8.4, build.gradle structure |
+| `00-project-setup.mdc` | Java 17, Gradle 8.5（本档 `scaffold` 实钉；官方 1.20.1-47.4.10 MDK = 8.8，见 `00:13-14`）, build.gradle structure |
 | `01-registry.mdc` | DeferredRegister, RegistryObject (most important) |
 | `02-block.mdc` | Block, EntityBlock, BlockEntity |
 | `03-item.mdc` | Item, SwordItem, ArmorItem, FoodProperties |

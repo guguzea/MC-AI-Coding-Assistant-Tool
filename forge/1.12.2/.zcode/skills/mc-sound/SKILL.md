@@ -55,7 +55,7 @@ public static final SoundType MY_BLOCK_SOUNDS = new SoundType(
     SoundEvents.BLOCK_STONE_FALL
 );
 
-new Block(Material.WOOD).sound(MY_BLOCK_SOUNDS)
+new Block(Material.WOOD).setSoundType(MY_BLOCK_SOUNDS)   // 1.12.2 是 setter 形态（语料 blocks_blocks.md:13 列 `setSoundType`）
 ```
 
 ## 播放声音

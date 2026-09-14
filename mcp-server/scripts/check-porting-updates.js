@@ -16,8 +16,11 @@
  *   --dry-run         identical to default behaviour; reserved for symmetry with
  *                     other scripts.
  *
- * Exit code: always 0; this script is informational. Validation belongs in
- * validate-forge-build.js.
+ * Exit code: 0 when the check ran to completion (the report itself is
+ * informational; validation belongs in validate-forge-build.js);
+ * 1 when the porting knowledge base cannot be read, is invalid JSON, has a
+ * bad top-level shape, or has empty `versions` (unreadable data is a gate
+ * failure, not "no updates"); 2 for an invalid --version value.
  */
 
 import { readFileSync } from "node:fs";

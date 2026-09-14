@@ -8,6 +8,15 @@
 
 ---
 
+> **⚠️ Forge 1.15.2 `scaffold/` 与官方 MDK 存在代差 —— 有意保留，不是缺陷；禁止为了「对齐」去改 scaffold 钉值。**
+> 注意（不是「已跑通」）：本档 `pack.meta.json` → `buildVerified: **false**`，卡点就是钉值本身 —— FG `[4.1,4.2)` 硬拒 Gradle ≥7（2026-09-11 真机 `_g_fg4gw_1.15.2.log`："Found Gradle version Gradle 7.3.3. Versions Gradle 7.0 and newer are not supported yet"，BUILD FAILED in 12s）。按根裁定「代差不追平、不擅自改钉值」wrapper 保持不动；**是否把 wrapper 降到 Gradle 6.x 需用户裁定**，本档只登记。
+> 需要新版工具链：自行调用 `download_official_mdk`（默认 dryRun，只落到 `$MC_SKILL_CACHE`，不写仓库），再把返回值填进**你自己的工程**。
+
+> - Gradle Wrapper：本档 `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-7.3.3-bin` ↔ 官方 MDK `gradle-4.10.3-bin`
+> - ForgeGradle：本档 `scaffold/build.gradle:5` → `[4.1,4.2)` ↔ 官方 MDK `build.gradle:7` → `ForgeGradle:3.+`
+> - Forge：本档 `scaffold/gradle.properties:9` → `31.2.50` ↔ 官方 MDK `build.gradle:93` → `1.15.2-31.2.57`
+> - mappings：本档 `scaffold/gradle.properties:14-15` → `official` / `1.15.2` ↔ 官方 MDK `build.gradle:30` → `snapshot` / `20200514-1.15.1`
+
 ## 基本信息
 
 | 项目 | 值 |
@@ -122,7 +131,7 @@ src/main/java/
 
 ## 常见陷阱（必读）
 
-1. **推荐使用 DeferredRegister**：`DeferredRegister` 是 Forge 官方推荐的注册方式，自 Forge 1.18 起即可用于所有注册表，1.15.2 完全支持
+1. **推荐使用 DeferredRegister**：`DeferredRegister` 是 Forge 官方推荐的注册方式，自 Forge 1.14 引入（1.14.4 起可用），1.15.2 完全支持
 2. **不要用 Mixin 的 `@Inject` 在构造函数里修改 final 字段**：会导致游戏崩溃
 3. **不要在 `server` 包里放 `@OnlyIn(Dist.CLIENT)` 的代码**：客户端类会被服务端打包进 jar，导致混淆问题
 4. **不要忘记 `mods.toml` 中的 `dependencies`**：任何对 Forge API 的依赖必须声明

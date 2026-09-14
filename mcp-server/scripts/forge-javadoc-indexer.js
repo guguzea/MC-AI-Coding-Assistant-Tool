@@ -348,6 +348,14 @@ function processVersion(version) {
 
   walkDir(rawDir, "");
 
+  // 确定性排序（钉口径）：walkDir 的产出顺序 = readdir 的目录枚举顺序，Windows 上按大小写折叠排、
+  // 跨机器与跨次都不保证稳定 ⇒ 「重跑生产者」会产出整份重排的 index diff。这里按 id 的**码点序**
+  // 统一排（不用 localeCompare，它随 locale 变），id 相同再按 url 兜底 ⇒ 同输入必得同字节输出。
+  const stableOrder = (a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : a.url < b.url ? -1 : a.url > b.url ? 1 : 0);
+  l0Entries.sort(stableOrder);
+  l1Entries.sort(stableOrder);
+  l2Entries.sort(stableOrder);
+
   // 写入索引文件
   const outDir = join(JAVADOC_ROOT, version);
   mkdirSync(outDir, { recursive: true });

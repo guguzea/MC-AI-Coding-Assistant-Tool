@@ -6,10 +6,6 @@
       "gitPath": "develop/loader/fabric-mod-json.md",
       "tried": [
         "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.10/develop/loader/fabric-mod-json.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/1.21.10.x-archive/develop/loader/fabric-mod-json.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/versions/1.21.10/develop/loader/fabric-mod-json.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.10/develop/loader/fabric-mod-json.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.10.x/develop/loader/fabric-mod-json.md",
         "vitepress-skipped-unversioned:https://docs.fabricmc.net/develop/loader/fabric-mod-json"
       ]
     },
@@ -18,10 +14,6 @@
       "gitPath": "develop/entities/first-entity.md",
       "tried": [
         "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.10/develop/entities/first-entity.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/1.21.10.x-archive/develop/entities/first-entity.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/versions/1.21.10/develop/entities/first-entity.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.10/develop/entities/first-entity.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.10.x/develop/entities/first-entity.md",
         "vitepress-skipped-unversioned:https://docs.fabricmc.net/develop/entities/first-entity"
       ]
     },
@@ -30,11 +22,23 @@
       "gitPath": "develop/getting-started/building-a-mod.md",
       "tried": [
         "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.10/develop/getting-started/building-a-mod.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/1.21.10.x-archive/develop/getting-started/building-a-mod.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/versions/1.21.10/develop/getting-started/building-a-mod.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.10/develop/getting-started/building-a-mod.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.10.x/develop/getting-started/building-a-mod.md",
         "vitepress-skipped-unversioned:https://docs.fabricmc.net/develop/getting-started/building-a-mod"
+      ]
+    },
+    {
+      "id": "saved-data",
+      "gitPath": "develop/serialization/saved-data.md",
+      "tried": [
+        "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.10/develop/serialization/saved-data.md",
+        "vitepress-skipped-unversioned:https://docs.fabricmc.net/develop/serialization/saved-data"
+      ]
+    },
+    {
+      "id": "codecs",
+      "gitPath": "develop/serialization/codecs.md",
+      "tried": [
+        "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.10/develop/serialization/codecs.md",
+        "vitepress-skipped-unversioned:https://docs.fabricmc.net/develop/serialization/codecs"
       ]
     },
     {
@@ -42,10 +46,6 @@
       "gitPath": "develop/key-mappings.md",
       "tried": [
         "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.10/develop/key-mappings.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/1.21.10.x-archive/develop/key-mappings.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/versions/1.21.10/develop/key-mappings.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.10/develop/key-mappings.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.10.x/develop/key-mappings.md",
         "vitepress-skipped-unversioned:https://docs.fabricmc.net/develop/key-mappings"
       ]
     }

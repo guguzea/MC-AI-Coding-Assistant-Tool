@@ -32,7 +32,7 @@ ENTITY_TYPES.register(modEventBus);
 ## 实体类基础结构
 
 ```java
-public class MyEntity extends LivingEntity {
+public class MyEntity extends Mob {
     protected MyEntity(EntityType<? extends MyEntity> type, World world) {
         super(type, world);
         this.stepHeight = 1.0F;
@@ -66,7 +66,7 @@ public class MyEntity extends LivingEntity {
 | 投掷物（雪球、末影珍珠） | `ThrowableEntity` |
 | 物品实体 | `ItemEntity` |
 | 矿车/船只 | `AbstractMinecartEntity` / `BoatEntity` |
-| 存储实体 | `ILockableContainer`（或 BlockEntity） |
+| 存储实体 | `ILockableContainer`（未核实；或 TileEntity） |
 
 ## EntityRenderer 注册（客户端）
 

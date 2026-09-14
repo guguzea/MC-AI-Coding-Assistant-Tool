@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-command
 description: Commands.literal、权限、客户端命令。触发词：command、Brigadier、argument
 platform: forge

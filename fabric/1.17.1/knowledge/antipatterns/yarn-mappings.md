@@ -36,7 +36,7 @@ player.sendChatMessage("hello");
 
 // ✅ Fabric 使用 Yarn 映射
 ServerPlayerEntity player;  // Yarn 风格（Fabric）
-player.sendMessage(Text.literal("hello"), false);
+player.sendMessage(new LiteralText("hello"), false);
 ```
 
 ### 3. 误解 class_XXXXX 命名

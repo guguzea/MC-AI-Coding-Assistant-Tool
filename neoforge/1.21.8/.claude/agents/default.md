@@ -11,13 +11,13 @@
 | 平台 | NeoForge 1.21.8 |
 | Java | **21** |
 | Mappings | mojmap |
-| 入口 | `@Mod` + `public ExampleMod(IEventBus modEventBus, ModContainer modContainer) — 以该版 MDK 为准` |
+| 入口 | `@Mod` + `public ExampleMod(IEventBus modEventBus)`（本档 scaffold `src/main/java/com/example/examplemod/ExampleMod.java:46` 实测单参；可选再加 `ModContainer modContainer`，以你实跑的 MDK 产物为准） |
 | 元数据 | neoforge.mods.toml |
 | 网络 | `RegisterPayloadHandlersEvent` + `PayloadRegistrar` |
 | 文档 | https://docs.neoforged.net/docs/1.21.8/ |
 | MDK | download_official_mdk 精确 1.21.8 |
 
-1.21.8 的关键分界是 DataGen 拆成 GatherDataEvent.Client 与 Server，以及 createDatapackRegistryObjects / createProvider。
+DataGen 拆成 GatherDataEvent.Client 与 Server（含 createDatapackRegistryObjects / createProvider）的分界**不晚于 1.21.5**、不是本档引入：本仓 raw 计数 `GatherDataEvent.Client` 在 1.21.3 = 0、1.21.5 = 33（`data/neoforge_1.21.5/neoforge-docs/1.21.5/processed/resources.md:92` 已拆；反例 `data/neoforge_1.21.3/neoforge-docs/1.21.3/processed/resources.md:113` 仍是裸 `GatherDataEvent`），与 `neoforge/1.21.5/knowledge/porting/02-version-migration.md` 同值。本档只沿用该已拆形态。
 
 工作流提醒（**不是硬门**）：只有从零建工程 / 完整新方块 / GUI / 崩溃分诊 / 移植 / 真机循环 / 汉化 / 反编译研究才调 `get_workflow_template`。改已有类不要调。从零工程 step1 用 `download_official_mdk`（dryRun 先看 URL；26.1.x/26.2 必须传 buildPlugin）。
 

@@ -24,7 +24,7 @@ new SwordItem(...); new DiggerItem(...); new ArmorItem(...);
 
 本档 `GatherDataEvent.Client` / `GatherDataEvent.Server` 已拆，先 `event.createDatapackRegistryObjects(...)` 再 `event.createProvider(...)`，`RecipeProvider` 构造 `(HolderLookup.Provider, RecipeOutput)` + `buildRecipes()` 无参 + 套 `RecipeProvider.Runner`，模型走 `ModelProvider`（`07-datagen.mdc`）。
 
-语料计数为证：`GatherDataEvent.Client`/`.Server` 与 `createProvider`/`createDatapackRegistryObjects` 在 1.20.4 / 1.20.6 / 1.21.1 / **1.21.3** 的 raw 语料中为 0，在 **1.21.5** / 1.21.8 / 1.21.10 / 1.21.11 均已出现。⚠️ `neoforge/1.21.8/.../02-version-migration.md` 把这次拆分写成 1.21.8 的「关键分界」——按语料，该分界**不晚于本档**。两档措辞冲突时以各自 raw 语料计数为准，不要任选一侧照抄。
+语料计数为证：`GatherDataEvent.Client`/`.Server` 与 `createProvider`/`createDatapackRegistryObjects` 在 1.20.4 / 1.20.6 / 1.21.1 / **1.21.3** 的 raw 语料中为 0，在 **1.21.5** / 1.21.8 / 1.21.10 / 1.21.11 均已出现。⚠️ `neoforge/1.21.8/`（`AGENTS.md` / `knowledge/porting/02-version-migration.md` / `knowledge/common/verified-api-1.21.8.md`）原把这次拆分写成 1.21.8 的「关键分界」——按语料，该分界**不晚于本档**，实测落在 **1.21.3 与 1.21.5 之间**（本仓无 `data/neoforge_1.21.4` / `data/neoforge_1.21.6` 主文档语料，故不能再往细里钉），本档是**第一个可核的已拆档**；1.21.8 侧措辞已于 2026-09-13 按本值改齐。两档措辞冲突时以各自 raw 语料计数为准，不要任选一侧照抄。
 
 ## 本档仍是 CompoundTag，不是 ValueInput/ValueOutput
 

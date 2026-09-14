@@ -154,7 +154,7 @@ processResources {
 tasks.named('jar').configure {
     manifest {
         attributes([
-            "Fabric-ModuleType": "Lib",
+            "Fabric-ModuleType": "Lib",  // 装饰性 jar manifest 属性，Loader 不读；模组元数据一律看 fabric.mod.json（本档官方模板血统的 scaffold/build.gradle 无此属性）
             "Implementation-Title": project.name,
             "Implementation-Version": project.jar.archiveVersion,
             "Implementation-Vendor": project.maven_group

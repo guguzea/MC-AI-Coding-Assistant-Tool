@@ -5,6 +5,26 @@
 
 ---
 
+> **⚠️ Forge 1.16.5 `scaffold/` 与官方 MDK 存在代差 —— 有意保留，不是缺陷；禁止为了「对齐」去改 scaffold 钉值。**
+> 注意（不是「已跑通」）：本档 `pack.meta.json` → `buildVerified: **false**`，卡点就是钉值本身 —— FG `[4.1,4.2)` 硬拒 Gradle 7+（2026-09-10 实测 `_g_forge1.16.5_v5.log`："Found Gradle version Gradle 7.6. Versions Gradle 7.0 and newer are not supported yet"），而 `gradle/wrapper/gradle-wrapper.properties:3` 钉的正是 7.6。按根裁定 wrapper 钉值保持不动；**是否降到 Gradle 6.x 需用户裁定**，本档只登记。
+> 需要新版工具链：自行调用 `download_official_mdk`（默认 dryRun，只落到 `$MC_SKILL_CACHE`，不写仓库），再把返回值填进**你自己的工程**。
+
+> | 字段 | 本档 `scaffold/` | 官方 MDK |
+> | --- | --- | --- |
+> | Gradle Wrapper | `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-7.6-bin` | `gradle-7.3.3-bin` |
+> | ForgeGradle | `scaffold/build.gradle:5` → `[4.1,4.2)` | `build.gradle:7` → `ForgeGradle:5.1.+` |
+> | Forge | `scaffold/gradle.properties:9` → `36.2.34` | `build.gradle:120` → `1.16.5-36.2.34`（同） |
+> | mappings | `scaffold/gradle.properties:16-17` → `official` / `1.16.5` | `build.gradle:33` → `official` / `1.16.5`（同） |
+
+> **取证与局限（2026-09-14 实读）**
+> - 官方侧来源：`%APPDATA%\mc-skill-cache\mdk\forge\1.16.5\forgegradle\unpacked\`{gradle.properties, build.gradle, gradle/wrapper/gradle-wrapper.properties}；
+>   本仓侧来源：本目录 `gradle.properties` / `build.gradle` / `gradle/wrapper/gradle-wrapper.properties`。
+>   两侧值均逐行实读，非训练记忆。
+> - 环境局限：本机 `JAVA_HOME` **未设**，PATH 上的 `java` 是 **Java 8（1.8.0_431）**。
+>   任何复现取证 / Gradle 调用必须**显式**把 `JAVA_HOME` 指到 JDK 17
+>   （本机：`G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12`），否则 FG6 档（1.20.x）直接 fail。
+> - **禁止**在本仓库 `scaffold/` 目录内跑 Gradle。要跑先复制到仓库外的临时目录。
+
 ## 文件清单与职责
 
 ```

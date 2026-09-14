@@ -2,13 +2,20 @@
 name: mc-owo
 description: owo-lib 配置与 GUI（owo-config、owo-ui）。触发词：owo、owo-lib、owo-config、owo-ui、wispforest、注解式配置、自动配置界面
 platforms: [fabric, neoforge, quilt]
-mcVersions: ["1.17+"]
+mcVersions: ["1.17-26.2"]
 communityDocId: authored/lib-owo
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/owo-lib limit=100：release 上界 fabric=26.2 / quilt=26.2（0.13.1+26.2，2026-08-19），neoforge=1.21.10（0.12.28+1.21.10，2025-11-22）；声明 forge 的构建 0 个）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/owo-lib/version?limit=100" 后按 game_versions + loaders + version_type 重取上界（本轮 limit=100 覆盖不到低界时改定向 game_versions 查询）
+
 # owo-lib（owo-config / owo-ui）集成
 
-⚠️ **owo-lib 不支持纯 Forge**：只支持 Fabric / NeoForge / Quilt（1.17-26.1.2）。Forge 用户请直接用 Cloth / YACL / ForgeConfigSpec，本 skill 的 Forge 分支没有可用方案。
+⚠️ **owo-lib 不支持纯 Forge**（Modrinth 113 个构建里 forge loader 零命中）。按 loader 的兼容窗口并不相同：
+- **Fabric / Quilt：1.17-26.2**（最新 release `0.13.1+26.2`，2026-08-19）
+- **NeoForge：1.21.1-1.21.10**（最新 release `0.12.28+1.21.10`，2025-11-22；1.21.11 与 26.x **没有 NeoForge 构建**）
+
+（Modrinth 实读 2026-09-13。frontmatter 的 `1.17-26.2` 取三 loader **并集**，NeoForge 工程一律以上面的 Neo 窗口为准。）Forge 用户请直接用 Cloth / YACL / ForgeConfigSpec，本 skill 的 Forge 分支没有可用方案。
 
 ## Decision: 用不用 owo-config
 
@@ -19,7 +26,7 @@ IF loader == fabric | quilt → 用 owo-lib：Fabric / Quilt 坐标
   → fabric.mod.json / quilt.mod.json 的 depends / suggests 写 owo-lib
 IF loader == neoforge → 用 owo-lib：NeoForge 坐标
   → neoforge.mods.toml 的 depends 写 owo-lib；软依赖用 ModList.isLoaded("owo-lib") 门闩
-IF 版本不在 1.17-26.1.2 → YACL（1.19+）/ Cloth（1.14+）
+IF 版本不在 Fabric/Quilt 1.17-26.2 或 NeoForge 1.21.1-1.21.10 内 → YACL（1.19+）/ Cloth（1.14+）
 IF 只想要手工 Builder 界面 → YACL / Cloth
 → 已选 owo-config：
    ├─ 注解式配置 + 自动 GUI + 配置同步一体（owo-lib 组件，可拆分构件，以文档为准）
@@ -52,7 +59,7 @@ IF 只想要手工 Builder 界面 → YACL / Cloth
 - 纯 Forge 项目直接引入 owo-lib → 构建 / 运行失败（无 Forge artifact）
 - 抄 Fabric 教程到 NeoForge 但 artifact 混用 → 依赖解析失败
 - 同步方向搞反 → 客户端改动被服务端覆盖或静默失效
-- 期待 26.1.2 以上新版本 → 以官方发布为准，勿假定滚动跟进
+- 期待最新已发布版本以上 → 以官方发布为准，勿假定滚动跟进；NeoForge 线明显落后（Fabric/Quilt 已到 26.2，Neo 仍停在 1.21.10）
 
 ## 相关
 

@@ -43,7 +43,7 @@ event.getRegistry().register(
 ```java
 // 错误
 @Override
-public TileEntity createTileEntity(BlockState state, IBlockAccess world) {
+public TileEntity createTileEntity(BlockState state, IBlockReader world) { // 语料 tileentities_tileentity.md:31
     return null; // ❌ 必须返回新实例
 }
 ```
@@ -54,7 +54,7 @@ public TileEntity createTileEntity(BlockState state, IBlockAccess world) {
 
 ```java
 @Override
-public TileEntity createTileEntity(BlockState state, IBlockAccess world) {
+public TileEntity createTileEntity(BlockState state, IBlockReader world) { // 语料 tileentities_tileentity.md:31
     return new MyTileEntity();
 }
 ```
@@ -70,7 +70,7 @@ public TileEntity createTileEntity(BlockState state, IBlockAccess world) {
 public MyTileEntity() {
     super(ModTileEntities.MY_TILE_ENTITY.get());
     World world = this.getWorld(); // ❌ world 可能为 null
-    if (world != null && !world.isRemote) { ... }
+    if (world != null && !world.isClientSide) { ... }
 }
 ```
 
@@ -85,9 +85,9 @@ public MyTileEntity() {
 ```java
 // 错误
 @Override
-public void read(CompoundNBT nbt) {
-    super.read(nbt);
-    BlockState state = world.getBlockState(pos); // ❌ world 可能为 null
+public void load(BlockState state, CompoundNBT nbt) { // 语料 tileentities_tileentity.md:38；本档无 read(CompoundNBT) 单参形
+    super.load(state, nbt);
+    world.getBlockState(pos); // ❌ world 可能为 null
 }
 ```
 

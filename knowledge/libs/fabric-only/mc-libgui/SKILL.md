@@ -7,6 +7,8 @@ communityDocId: authored/lib-libgui
 mappings: hint
 ---
 
+> API 摘要状态（2026-09-14 实核）：无 ⇒ `mcp-server/data/lib-api-summaries/` 无 libgui 条目，catalog `authored/lib-libgui` 的 `verifiedApi` 为空对象 {}；Modrinth 已下架（slug 空），分发走 Cotton maven。类名以 GitHub 仓库为准，要签名先 `ingest_loader_api`（用户自备 jar）
+
 # LibGui（Fabric 声明式 GUI）
 
 Panel/Widget 树声明式建客户端界面（物品栏类、设置屏、HUD 组件），免手写坐标布局。GitHub 活跃至 26.2。**Modrinth 页面已下架（404）**：分发走 Cotton maven + Jar-in-Jar。仅 Fabric（Quilt 以官方为准）。

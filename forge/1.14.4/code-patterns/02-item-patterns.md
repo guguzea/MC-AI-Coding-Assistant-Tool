@@ -48,9 +48,9 @@ public enum MyTier implements IItemTier {
 }
 
 // 剑：4 参数构造函数
-// SwordItem(IItemTier tier, float attackDamageIn, float attackSpeedIn, Item.Properties)
+// SwordItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Item.Properties)
 public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
-    () -> new SwordItem(MyTier.COPPER, 3.0f, -2.4f, new Item.Properties()
+    () -> new SwordItem(MyTier.COPPER, 3, -2.4f, new Item.Properties()
         .group(ItemGroup.COMBAT)
     )
 );
@@ -142,7 +142,7 @@ public class MyUseItem extends Item {
 ```java
 // 自定义剑可以直接继承 SwordItem 并覆盖方法
 public class MySwordItem extends SwordItem {
-    public MySwordItem(IItemTier tier, float attackDamageIn, float attackSpeedIn, Properties props) {
+    public MySwordItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Properties props) {
         super(tier, attackDamageIn, attackSpeedIn, props);
     }
 

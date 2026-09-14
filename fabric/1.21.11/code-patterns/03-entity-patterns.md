@@ -24,19 +24,19 @@ private static final EntityType<MyCowEntity> MY_COW =
             .dimensions(0.9f, 1.4f)
     .maxTrackingRange(8)
             .trackingTickInterval(3)
-    .build("my_entity")
+    .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(MOD_ID, "my_cow")))
     );
 
 // 在 onInitialize() 中注册属性
     FabricDefaultAttributeRegistry.register(MY_COW,
     MobEntity.createMobAttributes()
-        .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
-        .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25));
+        .add(EntityAttributes.MAX_HEALTH, 20.0)
+        .add(EntityAttributes.MOVEMENT_SPEED, 0.25));
 
 // 生成限制
 SpawnRestriction.register(
     MY_COW,
-    SpawnRestriction.Location.ON_GROUND,
+    SpawnLocationTypes.ON_GROUND,
     Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
     MyCowEntity::canSpawn
 );

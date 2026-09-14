@@ -139,6 +139,15 @@
       "invalid": false
     },
     {
+      "file": "1.18.2-qsl",
+      "mappingsVersion": "qsl-git-v1.1.0-beta.26+1.18.2-5d241174beaa",
+      "mappingsSource": "github QuiltMC/quilt-standard-libraries",
+      "classCount": 362,
+      "fqcnIndexCount": 362,
+      "source": "qsl-github-java",
+      "invalid": false
+    },
+    {
       "file": "1.19.4-fabric-api.jar",
       "mappingsVersion": "yarn-1.19.4+build.2",
       "mappingsSource": "mdk-gradle.properties",
@@ -200,6 +209,15 @@
       "sourceJarSha256": "937636f7dc8c6e9fdb561c29f1cba9963e06935b91ad87e9f01e61070a540207",
       "source": "official",
       "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.20.1-qsl",
+      "mappingsVersion": "qsl-git-v6.1.2+1.20.1-ff5d1124c9eb",
+      "mappingsSource": "github QuiltMC/quilt-standard-libraries",
+      "classCount": 556,
+      "fqcnIndexCount": 556,
+      "source": "qsl-github-java",
       "invalid": false
     },
     {
@@ -385,5 +403,10 @@
       "invalid": false
     }
   ],
-  "notIndexed": []
+  "notIndexed": [
+    {
+      "key": "1.20.4-qsl",
+      "reason": "LOADER_API_NOT_INDEXED：上游 QSL 无 +1.20.4 tag 也无 1.20.4 分支（实测 branches/tags），按裁定保持缺档并计为本档 QSL 未索引；QSL 签名请用户自备 jar 走 ingest_loader_api，禁止借邻线分支。"
+    }
+  ]
 }

@@ -56,7 +56,7 @@ dependencies {
 ```groovy
 dependencies {
     // ✅ 使用正确的 maven 组名和 1.14.4 对应版本
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.4.1+build.18-1.14"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.28.5+1.14"
 }
 ```
 
@@ -66,7 +66,7 @@ dependencies {
 ```groovy
 dependencies {
     // ❌ Fabric API 应该使用 modApi（需要传递依赖）
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.4.1+build.18-1.14"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.28.5+1.14"
 }
 ```
 
@@ -74,7 +74,7 @@ dependencies {
 ```groovy
 dependencies {
     // ✅ Fabric API 使用 modApi
-    modApi "net.fabricmc.fabric-api:fabric-api:0.4.1+build.18-1.14"
+    modApi "net.fabricmc.fabric-api:fabric-api:0.28.5+1.14"
     // ✅ 第三方 mod 使用 modImplementation
     modImplementation "com.example:third-party:1.0.0"
 }

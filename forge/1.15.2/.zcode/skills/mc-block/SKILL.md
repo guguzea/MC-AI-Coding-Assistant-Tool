@@ -14,7 +14,7 @@ mappings: mcp
 ```java
 // 注册（参见 mc-registry Skill）
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-    () -> new Block(Block.Properties.create(Material.STONE)
+    () -> new Block(Block.Properties.create(Material.ROCK)
         .hardnessAndResistance(1.5f, 6.0f)
         .harvestTool(ToolType.PICKAXE)
         .harvestLevel(0)

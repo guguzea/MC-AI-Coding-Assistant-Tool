@@ -108,7 +108,7 @@ IF 注册 物品
 
 IF 注册 方块实体（BlockEntity）
   → 方块实现 ITileEntityProvider，重写 createNewTileEntity()
-  → 不需要单独注册 BlockEntity 类型（在方块关联时注册）
+  → 需要注册 TileEntityType（`RegistryEvent.Register<TileEntityType>`）—— 语料 `tileentities_tileentity.md:15`：建 `TileEntityType` 并 `evt.getRegistry().register(type)`
 
 IF 注册 实体（Entity）
   → 在 RegistryEvent.Register<EntityType> 中注册 EntityType

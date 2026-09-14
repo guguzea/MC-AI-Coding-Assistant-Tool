@@ -61,7 +61,7 @@ public class MyProjectile extends ProjectileEntity {
     @Override
     protected void onImpact(RayTraceResult result) {
         super.onImpact(result);
-        if (!this.world.isRemote) {
+        if (!this.world.isClientSide) {
             this.world.playEvent(2001, this.getPosition(), Block.getStateId(Blocks.AIR.getDefaultState()));
             this.remove();
         }

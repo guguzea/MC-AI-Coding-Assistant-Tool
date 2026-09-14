@@ -7,6 +7,9 @@ communityDocId: authored/lib-pehkui
 mappings: "库按各 loader 预重映射；Fabric ≤1.21.x 为 yarn、Forge 为 MCP，经依赖坐标自动匹配"
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/pehkui 版本表 limit=100；本轮 release 上界 fabric=1.21.1 / forge=1.20.1 / neoforge=1.21.1 / quilt=1.21.1）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/pehkui/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # Pehkui 实体缩放（操作指引）
 
 给 AI 的操作指引：改变实体（含玩家）尺寸，按缩放类型分别控制并支持平滑过渡。详细信息用 `search_community_docs` 查 `authored/lib-pehkui`，API 细节以 [官方仓库](https://github.com/Virtuoel/Pehkui) 当前 README 与示例为准。

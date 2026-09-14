@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-04T05:10:21.466Z",
+  "generatedAt": "2026-09-13T18:17:53.928Z",
   "entries": [
     {
       "id": "authored/addon-dev-workflow",
@@ -849,7 +849,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "Forge/NeoForge 的 Kotlin 语言加载器（4410 万下载，Forge/Neo 1.14-26.2）：让模组用 Kotlin 编写，提供 Kotlin 标准库与协程运行时；Fabric 平台用 Fabric Language Kotlin。",
+      "summary": "Forge/NeoForge 的 Kotlin 语言加载器（4410 万下载，**Forge 线 1.14-1.21.11 / NeoForge 线 1.19.3-26.2**）：让模组用 Kotlin 编写，提供 Kotlin 标准库与协程运行时；Fabric 平台用 Fabric Language Kotlin。",
       "mcHint": "1.14-26.2"
     },
     {
@@ -1027,7 +1027,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "MehVahdJukaar 的动态注册/资源库（3690 万下载，CF 2.33 亿，F/Forge/Neo 1.16.5-1.21.1）。动态注册、BlockSetAPI、村民 AI、流体系统；⚠️ 版本上限 1.21.1，26.x 无构建。Supplementaries/Sawmill 依赖。",
+      "summary": "MehVahdJukaar 的动态注册/资源库（3690 万下载，CF 2.33 亿，release 窗口 1.16.5-1.21.1）。动态注册、BlockSetAPI、村民 AI、流体系统；⚠️ release 上限 1.21.1（Forge 线止 1.20.1）；26.x 并非无构建，但 26.1.2 只有 4.0.x beta（预发布，非 release）。Supplementaries/Sawmill 依赖。",
       "mcHint": "1.16.5-1.21.1"
     },
     {
@@ -1068,8 +1068,8 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "owo-lib 内的注解式配置（owo-config）+ 自动 GUI + 配置同步（owo-lib 4380 万下载；F/Neo/Quilt，1.17-26.1.2）。⚠️ 不支持 Forge，纯 Forge 项目不可用。",
-      "mcHint": "1.17-26.1.2"
+      "summary": "owo-lib 内的注解式配置（owo-config）+ 自动 GUI + 配置同步（owo-lib 4380 万下载；Fabric/Quilt 1.17-26.2、NeoForge 1.21.1-1.21.10）。⚠️ 不支持 Forge，纯 Forge 项目不可用；Neo 侧没有 1.21.11/26.x 构建。",
+      "mcHint": "1.17-26.2"
     },
     {
       "id": "authored/lib-patchouli",

@@ -1,13 +1,13 @@
-# Fabric 1.20.1 知识库
+# Fabric 1.21.3 知识库
 
 > AI 在生成代码前，应先阅读本知识库中相关文档以获取背景知识。
 
 ## 知识层级说明
 
-本目录是 **Fabric 1.20.1 专属知识库**，与 `AGENTS.md`、`.cursor/rules/` 的分工如下：
+本目录是 **Fabric 1.21.3 专属知识库**，与 `AGENTS.md`、`.cursor/rules/` 的分工如下：
 
 ```
-fabric/1.20.1/
+fabric/1.21.3/
 ├── .cursor/rules/00-10      ← 技术领域正面教程（版本专属）
 ├── AGENTS.md              ← AI 入口总纲
 └── knowledge/             ← Fabric 平台反模式知识库

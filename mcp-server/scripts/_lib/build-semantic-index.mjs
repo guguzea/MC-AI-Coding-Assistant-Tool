@@ -365,35 +365,38 @@ function collectChunks(processedDir, docs) {
   for (const d of docs) {
     const md = readFileSync(join(processedDir, `${d.stem}.md`), "utf8");
     const chunks = chunkMarkdown(md);
-    const filtered = chunks.filter((c) => c.text.length >= MIN_CONTENT_CHARS);
-    const dropped = chunks.length - filtered.length;
-    if (dropped > 0) {
+    // F99：短块不再退出索引，只退出向量层。旧实现把 <200 字过滤放在入库**之前**，
+    // chunks_fts 于是也看不见它 —— 实测 forge_1.20.1 有 132 个标识符只出现在被削掉的短块里
+    // （80 个像 API/键名：UUIDUtil、leastMostToIntArray、saveAdditional…），向量路与关键词路
+    // 同时查不到。向量降噪是设计，把关键词检索一起削掉是缺陷。
+    const embeddable = chunks.filter((c) => c.text.length >= MIN_CONTENT_CHARS);
+    const short = chunks.length - embeddable.length;
+    if (short > 0) {
       dropLedger.docs++;
-      dropLedger.chunks += dropped;
+      dropLedger.chunks += short;
       dropLedger.chars += chunks
         .filter((c) => c.text.length < MIN_CONTENT_CHARS)
         .reduce((n, c) => n + c.text.length, 0);
       if (dropLedger.rows.length < 4000) {
         dropLedger.rows.push({
           doc: d.id,
-          dropped,
+          dropped: short,
           total: chunks.length,
           shortest: Math.min(...chunks.map((c) => c.text.length)),
         });
       }
     }
-    if (filtered.length === 0 && chunks.length > 0) {
-      // 整页都没有长块：保最短的一块，短页不至于变成 0 chunk
-      dropLedger.keptShortest++;
+    if (embeddable.length === 0 && chunks.length > 0) {
+      dropLedger.keptShortest++; // 整页没有长块：本页只进关键词层
     }
-    const effective = filtered.length > 0 ? filtered : chunks.slice(0, 1);
-    effective.forEach((c, i) => {
+    chunks.forEach((c, i) => {
       rows.push({
         docId: d.id,
         chunkId: createHash("sha1").update(`${d.id}:${i}`).digest("hex"),
         chunkType: c.type,
         chunkOrder: i,
         text: c.text,
+        embeddable: c.text.length >= MIN_CONTENT_CHARS,
       });
     });
   }
@@ -429,14 +432,18 @@ async function buildIndex(dbPath, docs, chunks, embedder, extraMeta = {}) {
   db.exec("COMMIT");
 
   let embedded = 0;
-  if (embedder && chunks.length > 0) {
-    const totalBatches = Math.ceil(chunks.length / BATCH_SIZE);
-    for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+  // 向量层只收 >= MIN_CONTENT_CHARS 的块；chunks / chunks_fts 收全量（F99 的修法）。
+  const toEmbed = chunks.filter((c) => c.embeddable !== false);
+  if (embedder && toEmbed.length > 0) {
+    const totalBatches = Math.ceil(toEmbed.length / BATCH_SIZE);
+    for (let i = 0; i < toEmbed.length; i += BATCH_SIZE) {
       const batchIdx = Math.floor(i / BATCH_SIZE) + 1;
       if (batchIdx === 1 || batchIdx % 5 === 0 || batchIdx === totalBatches) {
-        console.log(`  … embedding batch ${batchIdx}/${totalBatches} (${i}/${chunks.length} chunks)`);
+        console.log(
+          `  … embedding batch ${batchIdx}/${totalBatches} (${i}/${toEmbed.length} 长块，全量 ${chunks.length} 块)`,
+        );
       }
-      const batch = chunks.slice(i, i + BATCH_SIZE);
+      const batch = toEmbed.slice(i, i + BATCH_SIZE);
       const vecs = await embedder.embed(batch.map((c) => c.text));
       db.exec("BEGIN");
       for (let j = 0; j < batch.length; j++) {
@@ -458,6 +465,10 @@ async function buildIndex(dbPath, docs, chunks, embedder, extraMeta = {}) {
   insMeta.run("docs", String(docs.length));
   insMeta.run("chunks", String(chunks.length));
   insMeta.run("embedded", String(embedded));
+  insMeta.run("minContentChars", String(MIN_CONTENT_CHARS));
+  // 意图数单独记：SQL 的 length() 数码点、JS 的 .length 数 UTF-16 单元，
+  // 让 G4 直接对账 emb == 应嵌数，而不是在 SQL 里重算阈值边界。
+  insMeta.run("embeddable", String(toEmbed.length));
   insMeta.run("built_at", new Date().toISOString());
   if (extraMeta.source_fingerprint) {
     insMeta.run("source_fingerprint", extraMeta.source_fingerprint);
@@ -616,7 +627,7 @@ async function main() {
     }
   }
 
-  // 丢弃留痕（F99/F100）：哪些页被短块规则削掉、削掉多少字符，落到 temp 供复核
+  // 向量层留痕（F99/F100）：哪些页含低于阈值的短块、短掉多少字符，落到 temp 供复核
   try {
     const ledgerPath = join(dataRoot, "..", "temp", "semantic-chunk-drops.json");
     mkdirSync(dirname(ledgerPath), { recursive: true });
@@ -626,6 +637,9 @@ async function main() {
         {
           generatedAt: new Date().toISOString(),
           minContentChars: MIN_CONTENT_CHARS,
+          accounting:
+            "短块（text < minContentChars）仍进 chunks / chunks_fts，只不进 chunk_embeddings；" +
+            "pagesAffected/chunksDropped/charsDropped 数的是「不进向量层」的量，不是「从索引消失」的量。",
           // 覆盖面必写：增量构建只对指纹变化的目标重算 chunk，
           // 少了这组数字，chunksDropped=0 分不清「没有丢弃」和「本轮什么都没重建」。
           coverage: {
@@ -647,10 +661,10 @@ async function main() {
       "utf8",
     );
     console.log(
-      `[丢弃留痕] 本轮重建 ${summary.rebuilt}/${targets.length} 个目标；影响 ${dropLedger.docs} 页 / ${dropLedger.chunks} 块 / ${dropLedger.chars} 字符 → ${ledgerPath}${summary.rebuilt === 0 ? "（本轮未重算任何 chunk，0 不代表没有丢弃）" : ""}`,
+      `[向量层留痕] 本轮重建 ${summary.rebuilt}/${targets.length} 个目标；${dropLedger.docs} 页含 ${dropLedger.chunks} 个 <${MIN_CONTENT_CHARS} 字短块（共 ${dropLedger.chars} 字符）——仍进 chunks/chunks_fts，只不进 chunk_embeddings → ${ledgerPath}${summary.rebuilt === 0 ? "（本轮未重算任何 chunk，0 不代表没有短块）" : ""}`,
     );
   } catch (e) {
-    console.warn(`[warn] 丢弃清单写失败: ${e.message}`);
+    console.warn(`[warn] 向量层清单写失败: ${e.message}`);
   }
 
   // 写简短 manifest

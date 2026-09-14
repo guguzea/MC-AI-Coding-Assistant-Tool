@@ -14,7 +14,7 @@ public static final DeferredRegister<Block> BLOCKS =
     DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_block",
-    () -> new Block(Block.Properties.create(Material.STONE)
+    () -> new Block(Block.Properties.create(Material.ROCK)
         .hardnessAndResistance(1.5f, 6.0f)
         .harvestTool(ToolType.PICKAXE)
         .harvestLevel(0)
@@ -64,7 +64,7 @@ public void neighborChanged(BlockState state, World world, BlockPos pos,
 
 ```java
 // 方块
-public class MachineBlock extends Block implements ITileEntityProvider {
+public class MachineBlock extends Block {   // 方块实体：重写 hasTileEntity() + createTileEntity()（本档没有 ITileEntityProvider）
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new MachineTileEntity();

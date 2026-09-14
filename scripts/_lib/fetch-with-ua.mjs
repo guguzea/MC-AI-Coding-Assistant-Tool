@@ -11,6 +11,8 @@ import { existsSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 
 export const USER_AGENT = "MC-AI-Coding-Assistant-Tool";
+/** curl 的 -w 模板：正文后另起一行只放状态码，便于从 stdout 尾部切出来。 */
+const EOL_CODE = "\n%{http_code}";
 export const DEFAULT_TIMEOUT_MS = 30_000;
 
 /** 失败类别。TLS_* 与 NOT_FOUND 必须互斥。 */
@@ -209,7 +211,92 @@ export function curlBatchDownload({
 }
 
 /** fetch 腿：始终 UA + AbortSignal.timeout。as = text | buffer | json | none */
-export async function fetchWithUa(url, { method = "GET", headers = {}, timeoutMs = DEFAULT_TIMEOUT_MS, as = "text" } = {}) {
+/** 只有「链路本身不通」才值得换腿重试；4xx/NOT_FOUND 换腿也一样是 404，重试会把「没有这个资源」洗成别的东西。 */
+const CURL_RETRY_CLASSES = new Set([
+  FETCH_FAILURE.TLS_VERIFY_FAILED,
+  FETCH_FAILURE.TLS_HANDSHAKE_FAILED,
+]);
+
+/** curl 取文本腿（win32）：同 curlDownload 的 `--ssl-no-revoke` + UA，状态码用 -w 回读。 */
+function curlFetchText({ url, timeoutMs = DEFAULT_TIMEOUT_MS, headers = {} } = {}) {
+  const args = [
+    "-sS",
+    "--ssl-no-revoke",
+    "--max-time",
+    String(Math.max(1, Math.ceil(timeoutMs / 1000))),
+    "-w",
+    EOL_CODE,
+    "-H",
+    `User-Agent: ${USER_AGENT}`,
+  ];
+  for (const [k, v] of Object.entries(headers)) {
+    if (typeof v === "string") args.push("-H", `${k}: ${v}`);
+  }
+  args.push(url);
+  const r = spawnSync("curl.exe", args, { windowsHide: true, encoding: "utf8" });
+  if (r.error) return { ok: false, status: 0, ...classifyFailure({ error: r.error }) };
+  const out = String(r.stdout || "");
+  const cut = out.lastIndexOf("\n");
+  const status = Number(cut >= 0 ? out.slice(cut + 1).trim() : "");
+  const text = cut >= 0 ? out.slice(0, cut) : out;
+  const httpOk = r.status === 0 && Number.isFinite(status) && status >= 200 && status < 300;
+  if (httpOk) return { ok: true, status, text };
+  const stderr = String(r.stderr || "").trim();
+  const classified = classifyFailure({
+    status: Number.isFinite(status) ? status : 0,
+    error: stderr || `curl exit ${r.status}`,
+    curlExit: r.status,
+  });
+  return {
+    ok: false,
+    status: Number.isFinite(status) ? status : 0,
+    text,
+    ...classified,
+    reason: `${classified.reason} ${stderr}`.trim().slice(0, 400),
+  };
+}
+
+/**
+ * JSON / 文本取件的唯一入口。
+ * Node 的 TLS 只认自带的那份 Mozilla CA 包，不读 Windows 证书库；本机 HTTPS 被本地工具
+ * 中间人重签时 `fetch` 必然 UNABLE_TO_VERIFY_LEAF_SIGNATURE，而 curl（走系统库）同一 URL 正常。
+ * 所以链路类失败换 curl 重试；buffer 不换腿（文本解码会毁二进制），4xx 也不换腿。
+ */
+export async function fetchWithUa(url, opts = {}) {
+  const first = await fetchWithUaNode(url, opts);
+  if (
+    first.ok ||
+    process.platform !== "win32" ||
+    opts.as === "buffer" ||
+    !CURL_RETRY_CLASSES.has(first.failureClass)
+  ) {
+    return first;
+  }
+  const viaCurl = curlFetchText({
+    url,
+    timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS,
+    headers: opts.headers ?? {},
+  });
+  if (!viaCurl.ok) {
+    // curl 完成了 TLS 并拿到 HTTP 状态 ⇒ 「资源在不在」以它为准；
+    // 只有 curl 也没能建立链路时，才保持 Node 腿的 TLS 归类。
+    if (viaCurl.status >= 400) {
+      return { ...viaCurl, headers: {}, text: viaCurl.text ?? "", via: "curl", nodeReason: first.reason };
+    }
+    return { ...first, curlReason: viaCurl.reason };
+  }
+  const as = opts.as ?? "text";
+  return {
+    ok: true,
+    status: viaCurl.status,
+    headers: {},
+    text: as === "none" ? "" : viaCurl.text,
+    json: as === "json" ? safeJson(viaCurl.text) : undefined,
+    via: "curl",
+  };
+}
+
+async function fetchWithUaNode(url, { method = "GET", headers = {}, timeoutMs = DEFAULT_TIMEOUT_MS, as = "text" } = {}) {
   try {
     const res = await fetch(url, {
       method,

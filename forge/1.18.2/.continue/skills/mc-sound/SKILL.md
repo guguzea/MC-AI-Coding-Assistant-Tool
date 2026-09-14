@@ -15,7 +15,7 @@ mappings: parchment
 
 ```java
 private static final DeferredRegister<SoundEvent> SOUNDS =
-    DeferredRegister.create(ForgeRegistries.SOUNDEVENTS, MOD_ID);
+    DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, MOD_ID);
 
 public static final RegistryObject<SoundEvent> MY_SOUND =
     SOUNDS.register("my_sound",

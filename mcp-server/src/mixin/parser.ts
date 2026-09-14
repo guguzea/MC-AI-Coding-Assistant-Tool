@@ -267,7 +267,12 @@ export function extractJavaAnnotationBlocks(source: string, name: string): JavaA
 }
 
 function parseAtValue(block: string, key: string): string | undefined {
-  const re = new RegExp(`${key}\\s*=\\s*"([^"]*)"`, "s");
+  // key 前必须有词边界（否则 format = "…" 会被 key="at" 冒领）；
+  // 允许 at = @At(value = "INVOKE", …) 与 at = @At("HEAD") 的注解包装。
+  const re = new RegExp(
+    `(?:^|[^\\w$])${key}\\s*=\\s*(?:@\\w*\\(\\s*(?:value\\s*=\\s*)?)?"([^"]*)"`,
+    "s",
+  );
   const m = block.match(re);
   return m?.[1];
 }

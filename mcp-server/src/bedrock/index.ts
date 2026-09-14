@@ -512,6 +512,12 @@ export function generateBpEntity(args: z.infer<typeof generateBpEntitySchema>): 
   const warnings: string[] = [];
   const ident = args.identifier.replace(/\\/g, "/").split("/").pop() ?? args.identifier;
   const cleaned = ident.replace(/\.\./g, "").replace(/[^a-z0-9_:-]/gi, "");
+  if (cleaned !== ident || ident !== args.identifier) {
+    warnings.push(
+      `identifier「${args.identifier}」被改写成「${cleaned}」（先取路径尾段，再剥 ../ 与非法字符）——` +
+        `这不是你写的名字，落盘前请核对；路径穿越不会被接受，但也不会替你保留原样。`,
+    );
+  }
   if (!cleaned.includes(":")) {
     return { ok: false, errors: ["identifier 必须是 namespace:name"], files: {} };
   }

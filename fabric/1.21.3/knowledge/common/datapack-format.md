@@ -12,15 +12,17 @@
 ```
 src/main/resources/
 └── data/{namespace}/
-    ├── advancements/{id}.json
-    ├── loot_tables/{id}.json
-    ├── recipes/{id}.json
+    ├── advancement/{id}.json
+    ├── loot_table/{id}.json
+    ├── recipe/{id}.json
     ├── tags/
     │   ├── block/{id}.json
     │   ├── item/{id}.json
     │   └── entity_type/{id}.json
     └── dimension_type/{id}.json
 ```
+
+> 1.21 起这些分类目录名是**单数**（`advancement` / `loot_table` / `recipe` / `structure`），不要再抄 1.20.x 的复数写法；本档 `mc-loottable` Skill 同口径（`data/<modid>/loot_table/...`）。
 
 ## 配方格式
 

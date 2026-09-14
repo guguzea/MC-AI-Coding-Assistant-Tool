@@ -17,8 +17,8 @@
 
 | 事件总线 | 使用场景 | 订阅方式 |
 |----------|----------|----------|
-| `Bus.FORGE` | Forge 原生事件（Registry、LivingDrops 等） | `@Mod.EventBusSubscriber(bus = Bus.FORGE)` |
-| `Bus.MOD` | Mod 自定义事件 | 手动 `event.addListener(this::method)` |
+| `Bus.FORGE` | 游戏内 Forge 事件（LivingDrops、PlayerInteract 等） | `@Mod.EventBusSubscriber(bus = Bus.FORGE)` |
+| `Bus.MOD` | Registry 注册事件（`RegistryEvent.Register<T>`）、Capability 注册、FML 生命周期事件 | `@Mod.EventBusSubscriber(bus = Bus.MOD)` 或 `modEventBus.addListener(...)` |
 
 ### Dist（物理端）约束
 
@@ -138,7 +138,7 @@ IF 不确定
 | 添加合成配方 | `ItemCraftedEvent` 或数据生成器 | 优先用数据生成器 |
 | 监听烧炼 | `FurnaceSmeltEvent` | 熔炉/烟熏炉烧炼时触发 |
 | 监听药水效果 | `PotionEvent` | 多个子事件 |
-| 监听实体生成 | `EntityJoinWorldEvent` | 注意不要做重操作 |
+| 监听实体生成 | `EntityJoinLevelEvent` | 注意不要做重操作 |
 | 修改物品 NBT | `ItemCraftedEvent` 或 `AnvilUpdateEvent` | |
 
 ---

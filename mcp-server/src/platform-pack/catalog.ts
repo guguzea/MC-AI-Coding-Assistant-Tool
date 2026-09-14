@@ -5,6 +5,11 @@ import { resolveRepoRoot } from "../utils/path.js";
 import { isInsideReal, nativeReal } from "../utils/project-sandbox.js";
 import { nextRealYamlFence, stripUtf8Bom } from "../utils/text.js";
 import { ownGet } from "../utils/own-record.js";
+import {
+  LEGACY_ARCHIVED_PACKS,
+  LEGACY_NOTICE_REL,
+  legacyArchivedNote,
+} from "./legacy-archive.js";
 
 export const PACK_PLATFORMS = [
   "forge",
@@ -28,6 +33,8 @@ export type PackInfo = {
   agentsPath: string;
   trap?: boolean;
   trapNote?: string;
+  /** S32：LEGACY 归档树（结构保留供回退，禁止当知识读）。 */
+  archived?: boolean;
   status?: PackActivationStatus;
 };
 
@@ -95,6 +102,26 @@ export function listPacks(repoRoot = resolveRepoRoot()): { packs: PackInfo[]; tr
         trap: true,
         trapNote: "neoforge/AGENTS.md 是分发说明，禁止当版本档激活",
       });
+      // S32：LEGACY 跨版本共享树标 Archived。它们本来也进不了 packs（isVersionDirName 不认
+      // code-patterns / knowledge / scaffold），这里补的是**可发现的带内解释**，
+      // agentsPath 直接指向归档声明正文。盘上结构一律保留，不删。
+      for (const archived of LEGACY_ARCHIVED_PACKS) {
+        const archivedDir = join(dir, archived.dirName);
+        try {
+          if (!existsSync(archivedDir) || !statSync(archivedDir).isDirectory()) continue;
+        } catch {
+          continue;
+        }
+        traps.push({
+          platform,
+          minecraftVersion: "",
+          packDir: archivedDir,
+          agentsPath: join(repoRoot, LEGACY_NOTICE_REL),
+          trap: true,
+          archived: true,
+          trapNote: legacyArchivedNote(archived.rel),
+        });
+      }
     }
     let names: string[] = [];
     try {
@@ -610,12 +637,35 @@ function parseYamlDescription(fm: string): string {
   return "";
 }
 
+/**
+ * Tolerant frontmatter locator: returns the body of the first `---`-delimited block
+ * that actually contains a `key: value` line. Used only when the strict line-1 anchor
+ * misses or lands on a stray empty delimiter pair (e.g. a leading DONOR warning).
+ */
+function locateFrontmatterBlock(s: string): string | null {
+  const lines = s.split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].trim() !== "---") continue;
+    let close = -1;
+    for (let j = i + 1; j < lines.length; j++) {
+      if (lines[j].trim() === "---") { close = j; break; }
+    }
+    if (close < 0) return null;
+    const body = lines.slice(i + 1, close);
+    if (body.some((l) => /^[A-Za-z_][\w.-]*\s*:/.test(l))) return body.join("\n");
+  }
+  return null;
+}
+
 export function frontmatterDescription(text: string): { name?: string; description: string } {
   const s = stripUtf8Bom(text);
   const m = s.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!m) return { description: s.split("\n").find((l) => l.startsWith("# "))?.replace(/^#\s+/, "") ?? "" };
-  const name = m[1].match(/^name:\s*(.+)$/m)?.[1]?.trim();
-  const description = parseYamlDescription(m[1]);
+  const anchored = m ? m[1] : null;
+  const anchoredHasKey = anchored !== null && anchored.split(/\r?\n/).some((l) => /^[A-Za-z_][\w.-]*\s*:/.test(l));
+  const fm = anchoredHasKey ? anchored : locateFrontmatterBlock(s);
+  if (fm === null) return { description: s.split("\n").find((l) => l.startsWith("# "))?.replace(/^#\s+/, "") ?? "" };
+  const name = fm.match(/^name:\s*(.+)$/m)?.[1]?.trim();
+  const description = parseYamlDescription(fm);
   return { name, description };
 }
 

@@ -63,6 +63,7 @@ public class ExampleModClient implements ClientModInitializer {
     public void onInitializeClient() {
         // 包：net.fabricmc.fabric.api.client.rendereregistry.v1
         // register 是实例方法，不是 1.17+ 的静态 register
+        // INSTANCE 字段名未取证（loader-api 摘要不记字段），落地前 ingest_loader_api 核
         EntityRendererRegistry.INSTANCE.register(MY_PIG, (dispatcher, context) ->
             new PigEntityRenderer(dispatcher)
         );

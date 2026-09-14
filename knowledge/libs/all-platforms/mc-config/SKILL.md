@@ -6,6 +6,9 @@ mcVersions: ["1.14-26.2"]
 communityDocId: authored/lib-cloth-config
 ---
 
+> 数据读取日期：2026-09-14（源：Modrinth project/cloth-config 版本表 limit=100；本轮 release 上界 fabric=26.2 / forge=1.21.3 / neoforge=26.2）
+> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/cloth-config/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+
 # 配置库选型总纲
 
 先定"要不要 GUI 配置界面"，再按平台和版本选库。库的接入细节读对应 skill 源稿（mc-yacl / mc-owo）。
@@ -18,7 +21,7 @@ IF 单平台 Forge 1.20.1 / NeoForge 1.20.1 且只做服务端配置
 IF 单平台 NeoForge ≥1.20.4 且只做服务端配置
   → ModConfigSpec
 IF 需要客户端配置 GUI：
-  → 新项目 / 长期维护 → YACL（1.19-26.3，F/Forge/Neo/Quilt）优先
+  → 新项目 / 长期维护 → YACL（1.19–26.2 稳定，26.3 仅 snapshot；Fabric/NeoForge 全覆盖，Forge 最高 1.20.2、Quilt 最高 1.20.4 —— Modrinth 2026-09-13 实读）优先
      → 或 Fzzy Config（1.20.1-26.2，自动 GUI、强校验、服务端-客户端同步）
   → 已在 REI / Kiwi 生态，只需现成 API → Cloth Config（1.14-26.2，已冷冻，别期待新特性）
   → Fabric / NeoForge / Quilt 且想要注解式 + 自动 GUI + 同步 → owo-config（⚠️ 无 Forge）

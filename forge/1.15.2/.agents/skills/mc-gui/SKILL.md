@@ -88,7 +88,7 @@ public class MyContainer extends Container {
 ### 3. 方块绑定 Container
 
 ```java
-public class MyBlock extends Block implements ITileEntityProvider {
+public class MyBlock extends Block {   // 方块实体：重写 hasTileEntity() + createTileEntity()（本档没有 ITileEntityProvider）
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new MyTileEntity();

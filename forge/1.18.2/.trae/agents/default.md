@@ -5,6 +5,16 @@
 
 ---
 
+> **⚠️ Forge 1.18.2 `scaffold/` 与官方 MDK 存在代差 —— 有意保留，不是缺陷；禁止为了「对齐」去改 scaffold 钉值。**
+> 保留理由：本档 scaffold 钉值已在本仓真机 build 记过账（`pack.meta.json` → `buildVerified: true`，覆盖 `:compileJava` + `:reobfJar`；进游戏后的行为未验），改值会使既有构建账失效。
+> 需要新版工具链：自行调用 `download_official_mdk`（默认 dryRun，只落到 `$MC_SKILL_CACHE`，不写仓库），再把返回值填进**你自己的工程**。
+
+> - Gradle Wrapper：本档 `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-7.6-bin` ↔ 官方 MDK `gradle-8.8-bin`
+> - ForgeGradle：本档 `scaffold/build.gradle:5` → `[5.1.2,5.2)` ↔ 官方 MDK `build.gradle:5` → `[6.0,6.2)`
+> - Parchment librarian 插件：本档 `scaffold/build.gradle:6` → `org.parchmentmc.librarian.forgegradle` `1.+` ↔ 官方 MDK 无此插件（未装 librarian）
+> - Forge：本档 `scaffold/gradle.properties:9` → `40.1.80` ↔ 官方 MDK `gradle.properties:16` → `40.3.0`
+> - mappings：本档 `scaffold/gradle.properties:14-15` → `parchment` / `2022.08.21-1.18.2` ↔ 官方 MDK `gradle.properties:35,38` → `official` / `1.18.2`
+
 ## 基本信息
 
 | 项目 | 值 |

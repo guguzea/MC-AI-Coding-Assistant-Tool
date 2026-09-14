@@ -80,7 +80,7 @@ public MyTileEntity() {
 @Override
 public void validate() {
     super.validate();
-    if (!this.world.isRemote) {
+    if (!this.world.isClientSide) {
         // 安全访问
     }
 }

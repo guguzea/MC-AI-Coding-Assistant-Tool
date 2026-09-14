@@ -92,7 +92,7 @@
 | `ShapedRecipeBuilder` | 26.1 client jar `net.minecraft.data.recipes.ShapedRecipeBuilder` | docs 零命中 |
 | `RecipeCategory` | 26.1 client jar `net.minecraft.data.recipes.RecipeCategory` | docs `26.1.2/develop_class-tweakers_enum-extension` |
 | `BlockLootSubProvider` | 26.1 client jar `net.minecraft.data.loot.BlockLootSubProvider` | docs 零命中 |
-| `Identifier` 补充 | 官方映射把旧 `ResourceLocation` 改名为 `Identifier`：26.1 client jar（10682 条）内 `resources/Identifier.class` **1 条、无嵌套**，`ResourceLocation` **0 条**。 | 1.21.11 及更早那半句（改名发生在 1.21.11）本表 **未核实**：1.21.11 客户端 jar 仍是混淆名（`fzu$a.class` 之类），无法用同名核对；`07-datagen.mdc` 该段按 mappings.dev 口径书写。 |
+| `Identifier` 补充 | 官方映射把旧 `ResourceLocation` 改名为 `Identifier`：26.1 client jar（10682 条）内 `resources/Identifier.class` **1 条、无嵌套**，`ResourceLocation` **0 条**。 | 1.21.11 及更早那半句（改名发生在 1.21.11）本表 **未核实**：1.21.11 客户端 jar 仍是混淆名（`fzu$a.class` 之类），无法用同名核对；`07-datagen.mdc:10-14` 该段已改按本表口径书写：只断本档（26.1.2）用 `Identifier`，1.21.x 那半句在本档正文里同样标 **未核实**（2026-09-14）。 |
 
 ## 表 B — Fabric API 关键方法签名（逐字取自已入库 loader-api 摘要）
 
