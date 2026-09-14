@@ -1906,6 +1906,8 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-community-attribution.mjs",
     // S30：quilt 规则正文与工具真实回载荷三态口径同源（含禁用形态 + 配对判据活性自证）。
     "./scripts/assert-rules-match-tool.mjs",
+    // 2026-09-14：api-index 类名必须与本档实钉通道一致（1.16.5 的 official 不映射类名，FG #795）。
+    "./scripts/assert-index-channel-layout.mjs",
   ]) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE], {
@@ -1920,6 +1922,73 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     );
   }
   console.log("  §S18/S19/S20/S25a/S30/S32/S34 新门真跑: forge-1204-material + scaffold-rules-conflict + forge-1182-registry-consts + legacy-isolation + scaffold-selfcheck + community-attribution + rules-match-tool 共 7 道均 rc=0");
+}
+
+/**
+ * §A5/§idx · 两个 2026-09-14 新层的**投毒自检**：判死符号台账（A5）与 api-index 通道布局。
+ * 每例先证明基线绿，再证明改一处必红 —— 门不投毒，就不知道它是否还活着。
+ */
+{
+  const { spawnSync } = await import("node:child_process");
+  const { mkdtempSync, writeFileSync, readFileSync } = await import("node:fs");
+  const { tmpdir } = await import("node:os");
+  const { fileURLToPath } = await import("node:url");
+  const tmp = mkdtempSync(`${tmpdir()}\\mcp-gate-poison-`);
+  const runGate = (rel, env) =>
+    spawnSync(process.execPath, [fileURLToPath(new URL(rel, import.meta.url))], {
+      encoding: "utf8",
+      windowsHide: true,
+      env: { ...process.env, ...env },
+    });
+  const expect = (label, rc, want) => assert.equal(rc, want, `${label}: rc=${rc} 期望 ${want}`);
+
+  // A5 · 判死符号台账
+  const LED = fileURLToPath(new URL("./scripts/data/scaffold-banned-symbols.json", import.meta.url));
+  const led = JSON.parse(readFileSync(LED, "utf8"));
+  const pk = Object.keys(led.packs)[0];
+  const sym = Object.keys(led.packs[pk])[0];
+  const p1 = `${tmp}\\led-missing.json`;
+  const o1 = JSON.parse(JSON.stringify(led));
+  delete o1.packs[pk][sym];
+  writeFileSync(p1, JSON.stringify(o1));
+  const p2 = `${tmp}\\led-ghost.json`;
+  const o2 = JSON.parse(JSON.stringify(led));
+  o2.packs[pk].GhostSymbolForPoison = "01-registry.mdc:1";
+  writeFileSync(p2, JSON.stringify(o2));
+  const p3 = `${tmp}\\led-anchor.json`;
+  const o3 = JSON.parse(JSON.stringify(led));
+  o3.packs[pk][sym] = "02-block.mdc:9999";
+  writeFileSync(p3, JSON.stringify(o3));
+  const G = "./scripts/assert-scaffold-rules-conflict.mjs";
+  expect("A5 台账基线", runGate(G, { MC_SKILL_SCAFFOLD_SYMBOL_LEDGER: LED }).status, 0);
+  for (const [tag, p] of [["少记", p1], ["多记", p2], ["锚点挪位", p3]]) {
+    expect(`A5 判死符号台账投毒（${tag}）`, runGate(G, { MC_SKILL_SCAFFOLD_SYMBOL_LEDGER: p }).status, 1);
+  }
+
+  // api-index · 通道类名布局
+  const IDX = fileURLToPath(new URL("../data/forge_1.16.5/extracted/api-index.json", import.meta.url));
+  const idx = JSON.parse(readFileSync(IDX, "utf8"));
+  const q1 = `${tmp}\\idx-mojangpath.json`;
+  const i1 = { ...idx };
+  i1["net/minecraft/world/level/Level"] = idx["net/minecraft/world/World"];
+  writeFileSync(q1, JSON.stringify(i1));
+  const q2 = `${tmp}\\idx-renamed.json`;
+  const i2 = { ...idx };
+  delete i2["net/minecraft/data/loot/BlockLootTables"];
+  i2["net/minecraft/data/loot/BlockLoot"] = { methods: [], fields: [] };
+  writeFileSync(q2, JSON.stringify(i2));
+  const q3 = `${tmp}\\idx-anchor.json`;
+  const i3 = { ...idx };
+  delete i3["net/minecraft/loot/ItemLootEntry"];
+  writeFileSync(q3, JSON.stringify(i3));
+  const H = "./scripts/assert-index-channel-layout.mjs";
+  expect("idx 布局基线", runGate(H, { MC_SKILL_INDEX_LAYOUT_TEST_INDEX: IDX }).status, 0);
+  for (const [tag, p] of [["注入 Mojang 专属类", q1], ["改名 BlockLootTables", q2], ["删锚点", q3]]) {
+    expect(`api-index 通道布局投毒（${tag}）`, runGate(H, { MC_SKILL_INDEX_LAYOUT_TEST_INDEX: p }).status, 1);
+  }
+  console.log(
+    "  §A5/§idx 投毒自检: 判死符号台账（基线绿 + 少记/多记/锚点挪位 3 记必红）· api-index 通道布局（基线绿 + Mojang 类注入/改名/删锚点 3 记必红）",
+  );
 }
 
 /**

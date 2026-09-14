@@ -2,7 +2,7 @@
 
 本目录是**所有库模组 Skill 的唯一源稿**，**不落盘**：各平台 `.cursor/skills`（及 .claude / .continue / .opencode / .agents / .zcode / .pi 镜像）**不再**写入库项。使用方（AGENTS 指引 / library-catalog / check_dependencies）按解析规则**直接读源稿**。
 
-**当前规模**：五组共 **35** 份 `mc-*/SKILL.md`（**33** 唯一 skillId；`mc-curios` / `mc-kotlin-for-forge` 在 forge-only 与 neo-only 各有一份镜像）。
+**当前规模**：五组共 **36** 份 `mc-*/SKILL.md`（**34** 唯一 skillId；`mc-curios` / `mc-kotlin-for-forge` 在 forge-only 与 neo-only 各有一份镜像）。
 
 ## 分组规则
 
@@ -58,7 +58,7 @@
 
 **all-platforms（20）**：mc-lib-catalog、mc-author-shared-libs、mc-compat-jei、mc-config、mc-yacl、mc-geckolib、mc-architectury、mc-owo（platforms 不含 forge）、mc-terrablender、mc-playeranimator、mc-pehkui、mc-kubejs、mc-balm、mc-modern-ui、mc-patchouli、mc-resourceful-lib、mc-moonlight-lib、mc-caelus、mc-spruceui、mc-server-translations
 
-**fabric-only（9）**：mc-trinkets、mc-cca、mc-polymer、mc-text-placeholder、mc-satin、mc-fabric-language-kotlin、mc-libgui、mc-player-ability-lib、mc-impersonate
+**fabric-only（10）**：mc-trinkets、mc-cca、mc-polymer、mc-text-placeholder、mc-satin、mc-fabric-language-kotlin、mc-libgui、mc-player-ability-lib、mc-impersonate、mc-cloth-config
 
 **forge-only（2）**：mc-curios、mc-kotlin-for-forge（`platforms: [forge]`）
 

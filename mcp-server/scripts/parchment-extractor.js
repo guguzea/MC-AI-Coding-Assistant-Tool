@@ -254,8 +254,83 @@ async function mergeMojangSupplement() {
   return { added, tinyParsed };
 }
 
+/**
+ * 通道类名回映射（1.16.5 特例；ForgeGradle issue #795）。
+ *
+ * 事实：1.16.5 的 Forge `official` 通道**不应用 Mojang 类名**（为与 1.16 其它版本保持二进制兼容），
+ * 类名沿用 SRG（`obf_to_srg.tsrg` 右列：实测 `brx net/minecraft/world/World`、`aqa net/minecraft/entity/Entity`），
+ * 只有字段/方法用 Mojang 名（实测 `World#isClientSide`、`Item.Properties#stacksTo`）。
+ * 而 parchment.json / client.txt 给的是 **Mojang 类名**（`net.minecraft.world.level.Level`）⇒
+ * 本档索引若按 Mojang 类名生成，就与「照文档写代码能不能直接编译」的硬判据冲突
+ * （2026-09-14 javap 实测：`forge-1.16.5-36.2.34_mapped_official_1.16.5.jar` 里只有
+ *  `net/minecraft/world/World`、`net/minecraft/data/loot/BlockLootTables`，无 `world/level/*`）。
+ */
+const CHANNEL_CLASS_REMAP_VERSIONS = new Set(["1.16.5"]);
+
+async function buildChannelClassRemap() {
+  const tsrgPath = join(DATA_DIR, "obf_to_srg.tsrg");
+  if (!existsSync(tsrgPath)) {
+    console.warn(
+      `WARN: 缺 ${tsrgPath}（1.16.5 通道类名回映射跳过 —— 见 forge/1.16.5 通道说明与 FG #795）`,
+    );
+    return null;
+  }
+  const obfToSrg = new Map();
+  for (const line of readFileSync(tsrgPath, "utf-8").split(/\r?\n/)) {
+    if (!line || /^\s/.test(line)) continue; // 类行无缩进；缩进行是字段/方法
+    const parts = line.trim().split(/\s+/);
+    if (parts.length === 2 && parts[1].includes("/")) obfToSrg.set(parts[0], parts[1]);
+  }
+  const mojangFile = await ensureMojangClientMappings(DATA_DIR, versionArg);
+  if (!mojangFile.path) return null;
+  const mojangMaps = await parseMojangProguardFile(mojangFile.path);
+  const namedToSrg = new Map();
+  for (const [obf, named] of mojangMaps.obfToNamed) {
+    const srg = obfToSrg.get(obf);
+    if (srg && srg !== named) namedToSrg.set(named, srg);
+  }
+  console.log(
+    `Channel class remap (${versionArg}, FG #795): ${namedToSrg.size} Mojang 类名 → SRG 类名（仅本档需要）`,
+  );
+  return namedToSrg;
+}
+
+function applyChannelClassRemap(map) {
+  const rename = (n) => map.get(n) ?? n;
+  const renamedIndex = {};
+  let movedClasses = 0;
+  for (const [key, value] of Object.entries(apiIndex)) {
+    const nk = rename(key);
+    if (nk !== key) movedClasses++;
+    renamedIndex[nk] = value;
+  }
+  const renamedLookup = {};
+  for (const [key, value] of Object.entries(methodLookup)) {
+    const oldClass = value.className;
+    const nk = rename(oldClass);
+    if (nk !== oldClass) {
+      value.className = nk;
+      renamedLookup[`${nk}.${key.slice(oldClass.length + 1)}`] = value;
+    } else {
+      renamedLookup[key] = value;
+    }
+  }
+  for (const k of Object.keys(apiIndex)) delete apiIndex[k];
+  for (const k of Object.keys(methodLookup)) delete methodLookup[k];
+  Object.assign(apiIndex, renamedIndex);
+  Object.assign(methodLookup, renamedLookup);
+  console.log(`Channel class remap applied: ${movedClasses} 个类键已改写为 SRG 名`);
+}
+
 mkdirSync(OUT_DIR, { recursive: true });
 const mergeResult = await mergeMojangSupplement();
+
+// 通道回映射必须在 Mojang supplement **之后**（supplement 用 Mojang 名查 apiIndex），
+// 但在写盘与 critical/class-names 之前。
+const channelClassRemap = CHANNEL_CLASS_REMAP_VERSIONS.has(versionArg)
+  ? await buildChannelClassRemap()
+  : null;
+if (channelClassRemap) applyChannelClassRemap(channelClassRemap);
 
 writeFileSync(join(OUT_DIR, "api-index.json"), JSON.stringify(apiIndex, null, 0));
 console.log(
@@ -267,7 +342,9 @@ console.log(`method-lookup.json — ${Object.keys(methodLookup).length} entries`
 
 const critical = {};
 for (const name of CRITICAL_CLASSES) {
-  if (apiIndex[name]) critical[name] = apiIndex[name];
+  // 若本档做过通道类名回映射，CRITICAL_CLASSES 里的 Mojang 名要先换成 SRG 名再查。
+  const key = channelClassRemap ? (channelClassRemap.get(name) ?? name) : name;
+  if (apiIndex[key]) critical[key] = apiIndex[key];
 }
 writeFileSync(join(OUT_DIR, "critical-classes.json"), JSON.stringify(critical, null, 2));
 console.log(`critical-classes.json — ${Object.keys(critical).length} classes`);

@@ -8,21 +8,16 @@ plugins {
 version = project.mod_version
 group = project.maven_group
 
-base {
-    archivesName = project.mod_id
-}
+// Gradle 6.9.4（本档 wrapper 钉死）没有 base { archivesName } 访问器（7.1+ 起）⇒ 用 6.x 的顶层属性
+archivesBaseName = project.mod_id
 
 repositories {
     mavenCentral()
     maven { url "https://maven.fabricmc.net/" }
 }
 
-loom {
-    // 1.14.x 需要显式指定 mixin 配置
-    // mixin {
-    //     add sourceSets.main, "${mod_id}.mixins"
-    // }
-}
+// 本档 Loom（0.4-SNAPSHOT，实取 0.4.33）不注册 `loom` 扩展：空壳 `loom { }` 也会在配置期报
+// Could not find method loom()。1.14.x 若要 mixin，须按当时 loom/mixin 的写法另取证，不要照抄邻版的 loom 块。
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -76,5 +71,11 @@ tasks.withType(JavaCompile).configureEach {
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
-    withSourcesJar()
 }
+
+// withSourcesJar() 是 Gradle 7.1+ 的 java 扩展方法；6.9.4 用显式 task
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+artifacts { archives sourcesJar }

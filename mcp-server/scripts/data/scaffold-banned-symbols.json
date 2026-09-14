@@ -1,0 +1,99 @@
+{
+  "note": "A5 判死符号台账：`packs.<platform>/<version>.<符号名>` = 该符号被判死的那条规则行（`<规则文件>:<行>`）。由 assert-scaffold-rules-conflict.mjs 生成与比对；判死面变化（新增/消失/锚点挪位）一律红。禁止手改，改判据要改规则后重生成。",
+  "packs": {
+    "fabric/1.14.4": {
+      "world.isRemote": "08-client-server.mdc:167"
+    },
+    "fabric/1.17.1": {
+      "FabricBlockSettings.create": "02-block.mdc:154"
+    },
+    "fabric/1.18.2": {
+      "FabricBlockSettings.create": "02-block.mdc:151",
+      "offerShapedRecipe": "07-datagen.mdc:187"
+    },
+    "fabric/1.19.4": {
+      "FabricBlockSettings.create": "02-block.mdc:151",
+      "FeatureFlag": "10-gui.mdc:206",
+      "FeatureFlags.VANILLA": "10-gui.mdc:206"
+    },
+    "fabric/1.20.1": {
+      "FabricBlockSettings.create": "02-block.mdc:151",
+      "FeatureFlag": "10-gui.mdc:206",
+      "FeatureFlags.VANILLA": "10-gui.mdc:206"
+    },
+    "fabric/1.20.4": {
+      "FabricBlockSettings.create": "02-block.mdc:151",
+      "FeatureFlag": "10-gui.mdc:206",
+      "FeatureFlags.VANILLA": "10-gui.mdc:206"
+    },
+    "fabric/1.21.1": {
+      "FabricBlockSettings.create": "02-block.mdc:151",
+      "FeatureFlag": "10-gui.mdc:203",
+      "FeatureFlags.VANILLA": "10-gui.mdc:203"
+    },
+    "fabric/1.21.11": {
+      "FabricItemSettings": "09-anti-patterns.mdc:229",
+      "FeatureFlag": "10-gui.mdc:225",
+      "FeatureFlags.VANILLA": "10-gui.mdc:225",
+      "FuelRegistry.INSTANCE.add": "09-anti-patterns.mdc:230",
+      "ScreenHandlerRegistry.registerSimple": "09-anti-patterns.mdc:228",
+      "registerSimple": "09-anti-patterns.mdc:228"
+    },
+    "fabric/1.21.3": {
+      "FeatureFlag": "10-gui.mdc:203",
+      "FeatureFlags.VANILLA": "10-gui.mdc:203"
+    },
+    "fabric/26.1.2": {
+      "RecipeProvider#buildRecipes": "07-datagen.mdc:157",
+      "ShapedRecipeBuilder.shaped.save": "07-datagen.mdc:157",
+      "offerShapedRecipe": "07-datagen.mdc:157",
+      "offerTo": "07-datagen.mdc:157"
+    },
+    "forge/1.14.4": {
+      "event.getRegistry": "02-block.mdc:171",
+      "getRegistry": "02-block.mdc:171",
+      "type.setRegistryName": "04-entity.mdc:194"
+    },
+    "forge/1.15.2": {
+      "event.getRegistry": "02-block.mdc:159",
+      "getRegistry": "02-block.mdc:159",
+      "setRegistryName": "02-block.mdc:160",
+      "type.setRegistryName": "04-entity.mdc:196"
+    },
+    "forge/1.16.5": {
+      "event.getRegistry": "02-block.mdc:155",
+      "getRegistry": "02-block.mdc:155",
+      "setRegistryName": "02-block.mdc:156",
+      "type.setRegistryName": "04-entity.mdc:220"
+    },
+    "forge/1.17.1": {
+      "event.getRegistry": "02-block.mdc:156",
+      "getRegistry": "02-block.mdc:156",
+      "setRegistryName": "02-block.mdc:157",
+      "type.setRegistryName": "04-entity.mdc:219"
+    },
+    "forge/1.18.2": {
+      "event.getRegistry": "02-block.mdc:159",
+      "getRegistry": "02-block.mdc:159",
+      "setRegistryName": "02-block.mdc:160"
+    },
+    "forge/1.19.4": {
+      "event.getRegistry": "02-block.mdc:157",
+      "getRegistry": "02-block.mdc:157",
+      "setRegistryName": "02-block.mdc:158",
+      "type.setRegistryName": "04-entity.mdc:221"
+    },
+    "forge/1.20.1": {
+      "event.getRegistry": "02-block.mdc:157",
+      "getRegistry": "02-block.mdc:157",
+      "setRegistryName": "02-block.mdc:158",
+      "type.setRegistryName": "04-entity.mdc:219"
+    },
+    "forge/1.20.4": {
+      "event.getRegistry": "02-block.mdc:158",
+      "getRegistry": "02-block.mdc:158",
+      "setRegistryName": "02-block.mdc:159",
+      "type.setRegistryName": "04-entity.mdc:219"
+    }
+  }
+}

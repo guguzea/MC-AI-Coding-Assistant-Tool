@@ -79,10 +79,11 @@ IF 需要特殊渲染（多面材质、透明度、动画）
 
 ```
 IF 自然方块（石头、木头、草）
-  → Material.ROCK / Material.WOOD   // TODO(未核实)：Material.GRASS 未在 1.15.2 语料出现，待核实
+  → Material.STONE / Material.WOOD / Material.GRASS（2026-09-14 javap 实测：三者均在场，`ROCK` 不存在）
 
-通道口径：以上是 MCP 名（官方 1.15.2 docs 页写 `Material.ROCK`）。official 通道该常量为 `STONE`
-（本档 scaffold 以 `net.minecraft.block.material.Material.STONE` 真机构建通过，2026-09-11），两套名字不可混用。
+通道口径（2026-09-14 以 `forge-1.15.2-31.2.50_mapped_official_1.15.2.jar` javap 实测）：本档实钉 **official** 通道，
+`net.minecraft.block.material.Material` 的 42 个常量里 **`STONE` / `GRASS` / `WOOD` 在场、`ROCK` 不存在**；同档 scaffold 也写
+`Material.STONE`（真机构建通过）。官方 1.15.2 docs 页 `concepts_registries.md:25` 用的是 MCP 名（`ROCK`），**本档勿照抄**。
   → 需要 .harvestTool() 时用 STONE/WOOD
 
 IF 泥土类
@@ -125,7 +126,7 @@ IF 只需要静态方块（装饰、完整方块）
 // blocks/MyBlock.java
 public class MyBlock extends Block {
     public MyBlock() {
-        super(Properties.create(Material.ROCK)
+        super(Properties.create(Material.STONE)
             .hardnessAndResistance(1.5f, 6.0f)
             .harvestTool(ToolType.PICKAXE)
             .harvestLevel(0)

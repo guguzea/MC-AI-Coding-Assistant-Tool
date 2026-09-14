@@ -48,7 +48,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 - 在普通方法上直接使用 `@OnlyIn` 不是推荐做法，应优先使用 `DistExecutor`
 - `@OnlyIn` 是编译器级别的物理端隔离，会导致另一端完全无法加载该类
 
-> **警告**：`FMLEnvironment.dist` 返回物理端，但单玩家世界（逻辑服务端+逻辑客户端在同一物理客户端内）的 `dist` 恒为 `Dist.CLIENT`，不要用此判断逻辑端（用 `world.isRemote`）
+> **警告**：`FMLEnvironment.dist` 返回物理端，但单玩家世界（逻辑服务端+逻辑客户端在同一物理客户端内）的 `dist` 恒为 `Dist.CLIENT`，不要用此判断逻辑端（用 `world.isClientSide`）
 
 ---
 
@@ -61,7 +61,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 ```
 IF 监听玩家右键点击方块
   → PlayerInteractEvent.RightClickBlock（或 RightClickItem）
-  → 注意：此事件双侧触发（客户端+服务端），改世界前用 world.isRemote 守卫（本档语料 concepts_sides.md 只有 `World#isRemote`，`isClientSide` 是 1.16+ 名）
+  → 注意：此事件双侧触发（客户端+服务端），改世界前用 `world.isClientSide` 守卫（2026-09-14 javap 实测：official 1.15.2 的 `World` 有 `isClientSide` 字段与方法；`isClientSide` 是 MCP 名，语料 `concepts_sides.md:26` 是 MCP 写法）
 
 IF 监听生物死亡
   → LivingDeathEvent
@@ -123,7 +123,7 @@ IF 事件涉及渲染、输入
 
 IF 不确定
   → 优先考虑服务端处理（更安全）
-  → 用 `world.isRemote` 进行逻辑端检查
+  → 用 `world.isClientSide` 进行逻辑端检查
 ```
 
 ### Decision: 常用事件选择对照
@@ -151,14 +151,14 @@ public class ModEvents {
     @SubscribeEvent
     public static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
         // 玩家右键方块
-        if (event.getWorld().isRemote) return; // 确保服务端
+        if (event.getWorld().isClientSide) return; // 确保服务端
         // ...
     }
 
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
         // 生物死亡
-        if (event.getEntity().world.isRemote) return;
+        if (event.getEntity().world.isClientSide) return;
         // ...
     }
 

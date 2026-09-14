@@ -137,10 +137,10 @@ IF 用自定义工作台配方
 
 ```
 IF 固定掉落某物品
-  → LootItem.lootTableItem(...) + SetCount（`ItemLootEntry` 在本档 api-index 中不存在）
+  → `ItemLootEntry.lootTableItem(...)` + SetCount（2026-09-14 javap 实测：official 1.16.5 有 `net.minecraft.loot.ItemLootEntry.lootTableItem(IItemProvider)`；`LootItem` 不在）
 
 IF 掉落方块本身（方块被破坏时）
-  → BlockLoot#dropSelf（1.16 已有）
+  → `BlockLootTables#dropSelf`（javap 实测：1.16.5 官方类名是 `net.minecraft.data.loot.BlockLootTables`）
 
 IF 有条件的掉落（附魔工具挖掘等）
   → MatchTool + enchantment 条件
@@ -228,9 +228,9 @@ public class ModLootTableProvider extends LootTableProvider {
     }
 }
 
-public class ModBlockLoot extends BlockLoot {
-    // TODO(未核实)：本档 api-index 的 BlockLoot 无 addTables / generate（只有 add / createSingleItemTable / dropSelf…与 accept(...)）；
-    //   1.17.1/1.18.2 同形，1.19.4+ 才由 BlockLootSubProvider 提供 generate()。本档该子类的正确重写点待核实。
+public class ModBlockLoot extends BlockLootTables {
+    // 2026-09-14 javap 实测（forge-1.16.5-36.2.34_mapped_official_1.16.5.jar）：BlockLootTables 有
+    // protected void addTables() / protected Iterable<Block> getKnownBlocks() / dropSelf(Block) ⇒ 示例形态正确。
     @Override
     protected void addTables() {
         dropSelf(ModBlocks.MY_BLOCK.get());

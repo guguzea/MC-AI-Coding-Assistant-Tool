@@ -19,14 +19,14 @@ public class ModEvents {
     @SubscribeEvent
     public static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
         // 玩家右键方块
-        if (event.getWorld().isRemote) return; // 确保服务端
+        if (event.getWorld().isClientSide) return; // 确保服务端
         // ...
     }
 
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
         // 生物死亡
-        if (event.getEntity().world.isRemote) return;
+        if (event.getEntity().world.isClientSide) return;
         // ...
     }
 }
@@ -74,7 +74,7 @@ IF 监听客户端启动
 
 ```java
 // 世界逻辑端判断
-if (world.isRemote) {
+if (world.isClientSide) {
     // 客户端逻辑
 } else {
     // 服务端逻辑

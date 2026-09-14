@@ -43,7 +43,7 @@ public class MyRecipeProvider extends FabricRecipeProvider {
             .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
             .offerTo(exporter);
 
-        ShapelessRecipeJsonFactory.create(MY_ITEM)
+        ShapelessRecipeJsonBuilder.create(MY_ITEM)
             .input(Items.DIAMOND)
             .input(Items.GOLD_INGOT)
             .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))

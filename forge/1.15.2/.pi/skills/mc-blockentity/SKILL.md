@@ -35,7 +35,7 @@ public class MyTE extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void tick() {
-        if (world == null || world.isRemote) return;
+        if (world == null || world.isClientSide) return;
     }
 }
 ```

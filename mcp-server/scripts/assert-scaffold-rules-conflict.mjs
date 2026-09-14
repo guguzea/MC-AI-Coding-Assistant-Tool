@@ -96,6 +96,24 @@ const VERDICT_CUES = [
 const hasVerdict = (text) => VERDICT_CUES.some((cue) => text.includes(cue));
 const DEBUG = process.env.MC_SKILL_SCAFFOLD_GATE_DEBUG === "1";
 
+/**
+ * A5 · 判死符号台账（`<platform>/<version>` → 符号名 → 规则锚点 `<rules 文件>:<行>`）。
+ *
+ * 为什么要落成文件：判死符号是从 ❌ 行**推导**出来的，规则改写时这个集合会静默变化
+ * （改一个词、挪一行、把 ❌ 换成散文断言），门只会说「总数漂移」，不会说「哪个符号的
+ * 判据没了」。台账把每个符号连同它的规则出处钉住，于是：
+ *   ① 规则删掉一条 ❌ ⇒ 台账里那个符号成了孤儿 ⇒ 红（并点名）；
+ *   ② 新写一条 ❌ 判死一个名字 ⇒ 台账里没有 ⇒ 红（判死面扩大必须签字）；
+ *   ③ 锚点从 `01-registry.mdc:41` 挪到 `:88` ⇒ 红（判据还在不在同一处，要人看一眼）。
+ * 生成：`MC_SKILL_SCAFFOLD_WRITE_SYMBOL_LEDGER=1 node scripts/assert-scaffold-rules-conflict.mjs`
+ * 指到别处（投毒对拍用）：`MC_SKILL_SCAFFOLD_SYMBOL_LEDGER=<path>`
+ */
+const symbolLedger = {};
+const SYMBOL_LEDGER_PATH = process.env.MC_SKILL_SCAFFOLD_SYMBOL_LEDGER
+  ? path.resolve(process.env.MC_SKILL_SCAFFOLD_SYMBOL_LEDGER)
+  : path.join(HERE, "data", "scaffold-banned-symbols.json");
+const WRITE_SYMBOL_LEDGER = process.env.MC_SKILL_SCAFFOLD_WRITE_SYMBOL_LEDGER === "1";
+
 const failures = [];
 const fail = (msg) => failures.push(msg);
 const rel = (p) => path.relative(ROOT, p).split(path.sep).join("/") || ".";
@@ -280,6 +298,10 @@ for (const pack of packs.sort((a, b) => rel(a.dir).localeCompare(rel(b.dir)))) {
     }
   }
   census.banned += banned.size;
+  // A5：本档判死符号连锚点入台账（符号名 → `规则文件:行`），供 §C 与人审对照。
+  symbolLedger[`${pack.platform}/${pack.version}`] = Object.fromEntries(
+    [...banned.values()].map((s) => [s.name, s.where]),
+  );
   perPackBanned[`${pack.platform}/${pack.version}`] = banned.size;
   if (banned.size) infoLines.push(`${rel(pack.dir)}: 判死符号 ${banned.size} → ${[...banned.values()].map((s) => s.name).join(", ")}`);
 
@@ -378,6 +400,64 @@ if (!TEST_ROOT) {
       if (!gotBanned[k]) {
         fail(`判死分布漂移: ${k} 的 ${v} 个判死符号没了 —— 复核是真修好了还是 ❌ 示证被删（删示证不算修好）`);
       }
+    }
+  }
+}
+
+// ── C. 符号台账层（A5 · 逐符号锚点，把 ❌ 行抽成可审阅的符号清单）────────────
+if (!TEST_ROOT) {
+  /** 只留非空档，符号按名排序，便于人审 diff。 */
+  const gotSymbols = {};
+  for (const [k, v] of Object.entries(symbolLedger)) {
+    if (Object.keys(v).length) gotSymbols[k] = Object.fromEntries(Object.entries(v).sort());
+  }
+  const totalSymbols = Object.values(gotSymbols).reduce((n, m) => n + Object.keys(m).length, 0);
+
+  if (WRITE_SYMBOL_LEDGER) {
+    fs.mkdirSync(path.dirname(SYMBOL_LEDGER_PATH), { recursive: true });
+    fs.writeFileSync(
+      SYMBOL_LEDGER_PATH,
+      `${JSON.stringify(
+        {
+          note:
+            "A5 判死符号台账：`packs.<platform>/<version>.<符号名>` = 该符号被判死的那条规则行（`<规则文件>:<行>`）。" +
+            "由 assert-scaffold-rules-conflict.mjs 生成与比对；判死面变化（新增/消失/锚点挪位）一律红。禁止手改，改判据要改规则后重生成。",
+          packs: gotSymbols,
+        },
+        null,
+        2,
+      )}\n`,
+      "utf8",
+    );
+    console.log(`  [symbol-ledger] 已写 ${rel(SYMBOL_LEDGER_PATH)}（${Object.keys(gotSymbols).length} 档 / ${totalSymbols} 符号）`);
+  } else if (!fs.existsSync(SYMBOL_LEDGER_PATH)) {
+    fail(
+      `判死符号台账缺失：${rel(SYMBOL_LEDGER_PATH)} —— 生成：MC_SKILL_SCAFFOLD_WRITE_SYMBOL_LEDGER=1 node scripts/assert-scaffold-rules-conflict.mjs`,
+    );
+  } else {
+    let led = {};
+    try {
+      led = JSON.parse(fs.readFileSync(SYMBOL_LEDGER_PATH, "utf8")).packs ?? {};
+    } catch (e) {
+      fail(`判死符号台账不可解析：${rel(SYMBOL_LEDGER_PATH)}（${e.message}）`);
+    }
+    for (const [pk, syms] of Object.entries(gotSymbols)) {
+      const l = led[pk] ?? {};
+      for (const [name, where] of Object.entries(syms)) {
+        if (l[name] === undefined) {
+          fail(`判死符号新增: ${pk} \`${name}\`（规则 ${where}）不在台账 ⇒ 判死面扩大必须人签字并重生成台账`);
+        } else if (l[name] !== where) {
+          fail(`判死符号锚点漂移: ${pk} \`${name}\` 台账记 ${l[name]}，实测 ${where}`);
+        }
+      }
+      for (const [name, where] of Object.entries(l)) {
+        if (syms[name] === undefined) {
+          fail(`判死符号孤儿: ${pk} \`${name}\`（台账 ${where}）已判不出 —— ❌ 示证被删/改成散文不算修好`);
+        }
+      }
+    }
+    for (const pk of Object.keys(led)) {
+      if (!gotSymbols[pk]) fail(`判死符号整档消失: ${pk}（台账 ${Object.keys(led[pk]).length} 个）`);
     }
   }
 }

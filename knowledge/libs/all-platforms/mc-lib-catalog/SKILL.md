@@ -62,7 +62,7 @@ IF 平台 = bedrock
 | mc-spruceui | SpruceUI / ObsidianUI |
 | mc-server-translations | Server Translations API |
 
-**其它组（不落盘，按平台解析）**：fabric-only 9（Trinkets / CCA / Polymer…）、forge-only 2（Curios / KFF）、neo-only 2（镜像）、bedrock-only 2（Script API）。全库 **35** 份源稿 / **33** 唯一 skillId。
+**其它组（不落盘，按平台解析）**：fabric-only 10（Trinkets / CCA / Polymer / Cloth Config…）、forge-only 2（Curios / KFF）、neo-only 2（镜像）、bedrock-only 2（Script API）。全库 **36** 份源稿 / **34** 唯一 skillId。
 
 ## 查找流程
 

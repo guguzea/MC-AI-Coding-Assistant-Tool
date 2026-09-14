@@ -69,7 +69,7 @@ public static final SoundType MY_BLOCK_SOUNDS = new SoundType(
 );
 
 // 使用
-Block.Properties.create(Material.ROCK)
+Block.Properties.create(Material.STONE)
     .sound(MY_BLOCK_SOUNDS)
 ```
 

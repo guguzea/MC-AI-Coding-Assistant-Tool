@@ -225,9 +225,8 @@ public class ModLootTableProvider extends LootTableProvider {
 }
 
 public class ModBlockLoot extends BlockLoot {
-    // TODO(未核实)：本档 api-index 的 BlockLoot 无 addTables / getKnownBlocks（只有 add / createSingleItemTable /
-    //   dropSelf… 与 accept(...)）；1.19.4+ 才由 BlockLootSubProvider 提供 generate() / getKnownBlocks()。
-    //   本档该子类的正确重写点待 ingest_loader_api 入库原版 jar 后核实，勿照抄本段。
+    // 2026-09-14 javap 实测（forge-1.17.1-37.1.1_mapped_official_1.17.1.jar）：
+    // BlockLoot 有 protected void addTables() / protected Iterable<Block> getKnownBlocks() / dropSelf(Block) ⇒ 示例形态正确。
     @Override
     protected void addTables() {
         dropSelf(ModBlocks.MY_BLOCK.get());

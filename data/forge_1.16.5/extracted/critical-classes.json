@@ -1,5 +1,5 @@
 {
-  "net/minecraft/world/item/Item": {
+  "net/minecraft/item/Item": {
     "javadoc": null,
     "methods": [
       {
@@ -660,7 +660,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/world/item/BlockItem": {
+  "net/minecraft/item/BlockItem": {
     "javadoc": null,
     "methods": [
       {
@@ -943,7 +943,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/world/item/SwordItem": {
+  "net/minecraft/item/SwordItem": {
     "javadoc": null,
     "methods": [
       {
@@ -1114,7 +1114,7 @@
       }
     ]
   },
-  "net/minecraft/world/item/PickaxeItem": {
+  "net/minecraft/item/PickaxeItem": {
     "javadoc": null,
     "methods": [
       {
@@ -1169,7 +1169,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/world/item/AxeItem": {
+  "net/minecraft/item/AxeItem": {
     "javadoc": null,
     "methods": [
       {
@@ -1224,7 +1224,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/world/item/HoeItem": {
+  "net/minecraft/item/HoeItem": {
     "javadoc": null,
     "methods": [
       {
@@ -1264,7 +1264,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/world/item/ShovelItem": {
+  "net/minecraft/item/ShovelItem": {
     "javadoc": null,
     "methods": [
       {
@@ -1332,7 +1332,7 @@
       }
     ]
   },
-  "net/minecraft/world/item/ArmorItem": {
+  "net/minecraft/item/ArmorItem": {
     "javadoc": null,
     "methods": [
       {
@@ -1452,7 +1452,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/world/entity/Entity": {
+  "net/minecraft/entity/Entity": {
     "javadoc": null,
     "methods": [
       {
@@ -5113,7 +5113,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/world/entity/LivingEntity": {
+  "net/minecraft/entity/LivingEntity": {
     "javadoc": null,
     "methods": [
       {
@@ -7767,7 +7767,7 @@
       }
     ]
   },
-  "net/minecraft/world/entity/Mob": {
+  "net/minecraft/entity/MobEntity": {
     "javadoc": null,
     "methods": [
       {
@@ -9144,7 +9144,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/world/entity/animal/Animal": {
+  "net/minecraft/entity/passive/AnimalEntity": {
     "javadoc": null,
     "methods": [
       {
@@ -9415,7 +9415,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/world/entity/projectile/Projectile": {
+  "net/minecraft/entity/projectile/ProjectileEntity": {
     "javadoc": null,
     "methods": [
       {
@@ -9630,7 +9630,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/world/entity/EntityType": {
+  "net/minecraft/entity/EntityType": {
     "javadoc": null,
     "methods": [
       {
@@ -10189,7 +10189,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/world/entity/ai/attributes/Attribute": {
+  "net/minecraft/entity/ai/attributes/Attribute": {
     "javadoc": "Defines an entity attribute. These are properties of entities that can be dynamically modified. @see net.minecraft.core.Registry#ATTRIBUTE",
     "methods": [
       {
@@ -10266,7 +10266,7 @@
       }
     ]
   },
-  "net/minecraft/world/entity/ai/attributes/RangedAttribute": {
+  "net/minecraft/entity/ai/attributes/RangedAttribute": {
     "javadoc": "Defines an entity @see net.minecraft.world.entity.ai.attributes.Attribute attribute that is limited to a range of values.",
     "methods": [
       {
@@ -10333,7 +10333,7 @@
       }
     ]
   },
-  "net/minecraft/world/item/crafting/RecipeSerializer": {
+  "net/minecraft/item/crafting/IRecipeSerializer": {
     "javadoc": null,
     "methods": [
       {
@@ -10399,7 +10399,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/data/recipes/RecipeProvider": {
+  "net/minecraft/data/RecipeProvider": {
     "javadoc": null,
     "methods": [
       {
@@ -10908,7 +10908,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/data/recipes/ShapedRecipeBuilder": {
+  "net/minecraft/data/ShapedRecipeBuilder": {
     "javadoc": null,
     "methods": [
       {
@@ -11061,7 +11061,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/data/recipes/ShapelessRecipeBuilder": {
+  "net/minecraft/data/ShapelessRecipeBuilder": {
     "javadoc": null,
     "methods": [
       {
@@ -11221,7 +11221,7 @@
     ],
     "fields": []
   },
-  "net/minecraft/data/loot/LootTableProvider": {
+  "net/minecraft/data/LootTableProvider": {
     "javadoc": null,
     "methods": [
       {

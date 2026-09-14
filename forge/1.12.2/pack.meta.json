@@ -15,7 +15,7 @@
     "gaps": [
       "本档 scaffold 是官方 1.12.2 MDK 形态：只有 @Mod + CommonProxy/ClientProxy + 事件日志，不注册任何方块/物品 → 既无注册演示代码，也谈不上缺纹理；其余 9 档 scaffold 至少注册 example_item 或 example_block（1.16.5 只注册物品）",
       "buildVerified 只覆盖 :compileJava + :reobfJar（编译期与字节码产物）；@Mod 构造器、注册时机、进游戏后的行为均未在本机实跑验证（本仓库不代人跑游戏）",
-      "构建期上游打印「WARNING: You are using an unsupported version of ForgeGradle. Please consider upgrading to ForgeGradle 5」——FG 2.3 上游已停止支持，本档能跑通是历史组合（FG2.3 + Gradle 4.9 + JDK 8）仍可用，不代表上游会继续修；buildscript 里保留的 jcenter() 上游已于 2021-04 关停，本次构建日志无一处从该主机取件（全部来自 files.minecraftforge.net / mavenCentral），故未改动",
+      "构建期上游打印「WARNING: You are using an unsupported version of ForgeGradle. Please consider upgrading to ForgeGradle 5」——FG 2.3 上游已停止支持，本档能跑通是历史组合（FG2.3 + Gradle 4.9 + JDK 8）仍可用，不代表上游会继续修；2026-09-14（A2）已把 buildscript 的 jcenter()（上游 2021-04 关停，留着只是个死主机）换成 mavenCentral()，并把 files.minecraftforge.net/maven 换成 maven.minecraftforge.net/（实测 2026-09-14：旧主机 FG maven-metadata 返回 301，新主机返回 200 且 latest=6.0.54）。改后真机构建复跑：仓库外零改动副本 M:/temp/a2_build + JDK 8（G:/zulu8.96…）+ Gradle 4.9 wrapper → BUILD SUCCESSFUL in 1m 9s，16 actionable tasks 全 executed（含 :reobfJar/:sourceJar），产物 build/libs/Example Mod-1.0.0.jar（4286 B）+ Example Mod-1.0.0-sources.jar（2463 B）；日志 temp/_a2_build_forge-1.12.2_2026-09-14.log（69 行：BUILD FAILED 0 次、jcenter 取件 0 次、maven.minecraftforge.net 取件 2 次）",
       "产物文件名含空格（archivesBaseName = \"Example Mod\"）→ 实际为 build/libs/Example Mod-1.0.0.jar，其余 9 档为 examplemod-1.0.0.jar；脚本引用该产物必须加引号"
     ]
   }

@@ -28,6 +28,12 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+    // mixin 注解处理器需要 log4j，而 loom 0.10.31 不把它放上 annotationProcessor 路径
+    // （实测 `gradlew dependencies --configuration annotationProcessor`：该路径只有 sponge-mixin 0.9.2+mixin.0.8.2
+    //   等 9 项、无任何 log4j），:compileJava 因此崩在 AnnotatedMethodInfo.<clinit> 的 LogManager。
+    // 取 2.17.1 = Log4Shell 之后的修复稳定线（2.0-beta9 是当年 issue 的写法，早于全部安全修复 ⇒ 不用）。
+    annotationProcessor "org.apache.logging.log4j:log4j-core:2.17.1"
+
     // Fabric API（本档 ExampleAnimalEntity / ExampleModClient 已 import net.fabricmc.fabric.api.*，必须启用）
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 

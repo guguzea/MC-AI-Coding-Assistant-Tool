@@ -5,5 +5,14 @@
   "minecraftVersion": "1.16.5",
   "gaps": {
     "fabric-docs": "上游 fabric-docs versions/ 无本版 develop/* 快照；data/fabric_1.16.5/fabric-docs/1.16.5/index-l0.json 为空数组，正文实际来自 data/fabric_1.16.5/fabric-wiki/1.16.5/processed/。禁止从邻版复制补索引"
+  },
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "7.6.1",
+    "buildVerified": true,
+    "provenance": {
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-14 跑通前修掉 2 处构建配置缺陷（都是真机构建 + `--stacktrace`/`dependencies --configuration annotationProcessor` 实测出来的，静态门一条也看不见）：① mixin 注解处理器缺 log4j —— 本档 AP 路径解析到 net.fabricmc:sponge-mixin:0.9.2+mixin.0.8.2，整条 annotationProcessor 上没有任何 log4j（loom 0.10.31 不代它补），`:compileJava` 崩在 org.spongepowered.asm.mixin.struct.AnnotatedMethodInfo.<clinit> 的 LogManager ⇒ 显式加 annotationProcessor \"org.apache.logging.log4j:log4j-core:2.17.1\"（取 Log4Shell 之后的修复稳定线；2.0-beta9 是 2016 年那版 issue 的写法，早于全部安全修复 ⇒ 不用）。② 日志门面写错代 —— ExampleAnimalEntity / ExampleModClient 用 org.slf4j，但 slf4j 是 MC 1.17 才换的门面，本档编译类路径上没有（javac: package org.slf4j does not exist），而同档 ExampleMod.java 本来就用 org.apache.logging.log4j ⇒ 这两处改用同档已有的 log4j 写法，不新增依赖。修复后副本（cp fabric/1.16.5/scaffold → D:/mc-skill-temp/_fab_165v2/1.16.5，逐文件 sha256 与仓内一致 0 差异）gradlew build --no-daemon → BUILD SUCCESSFUL in 0m56s；JDK 16（G:/openjdk-16.0.2_windows-x64_bin/jdk-16.0.2）+ Gradle 7.6.1 wrapper + fabric-loom 0.10.31 + loader_version=0.11.2 + yarn=1.16.5+build.10；产物 build/libs/examplemod-1.0.0.jar（7330 B，zip 内可扫到 fabric.mod.json）共 5 件：examplemod-1.0.0-dev.jar examplemod-1.0.0-javadoc.jar examplemod-1.0.0-sources-dev.jar examplemod-1.0.0-sources.jar examplemod-1.0.0.jar；日志 D:/mc-skill-temp/_fab_165v2/1.16.5.log。 三件套出处登记依据：本档 gradle/wrapper/gradle-wrapper.jar 的 sha256 与 wrapper-jars.json 里 Gradle 7.6.1 的官方发行包内层条目钉值（c5a643cf… vs c5a643cf…）。 边界：只覆盖 :build 任务链（含 remapJar），未跑 runClient / runServer / runData，也没有真机启动证据。"
+    }
   }
 }

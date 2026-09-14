@@ -68,14 +68,29 @@ const DEBT_UNKNOWN_MOD_DIRS = [];
 const DEBT_UNKNOWN_VERSION_KEYS = ["pehkui.json"];
 const DEBT_SHARED_DIRS = {};
 
-/** 台账层数字：B 层只在真数据根比对。 */
+/**
+ * 台账层数字：B 层只在真数据根比对。
+ *
+ * 2026-09-14 签字（B1 第四层落地，唯一一次类名合计变化）：`classes` 12583 → **16975**。
+ * 成因是 KFF 摘要按「发布清单」重新归属 —— 旧态只认目录里 `meta.version` 单值，一个 jar 只出一个版本键；
+ * 新态 = `meta.version` ∪ `lib-manifests` 里该 jar 的 `gameVersion` 集合，于是
+ * `kotlin-for-forge.json` 从 1 个版本键（`1.14.4`）变成 **47** 个（1.14…26.2），同一个类的
+ * 多版本重复计入是**预期**口径（`classes` 是「各版本键类名之和」，不是去重数）。
+ * 同一批改动同时消掉了 `versions.unknown`（KFF 侧）——`DEBT_UNKNOWN_VERSION_KEYS` 保持只有 pehkui。
+ * 其余数字未动，`foreignTotal` 仍 0（没有新冒领）。
+ */
 const LEDGER = {
   summaries: 44,
-  classes: 12583,
+  classes: 16975,
   catalogEntries: 50,
-  attestedRoots: 42,
+  // 2026-09-14 第二处签字（打通 catalog 层，KFF 内层件产物入库）：
+  //   verifiedApiKeys 1830 → **1893**（+63 = KFF 按发布清单展开出的新键）
+  //   attestedRoots   42   → **47**  （+5 = KFF 新键带出的自有包根，全部靠 `ownsPackage` 自证）
+  // 依据：`scripts/emit-verified-api-from-summaries.mjs` 把「已按清单归属的摘要」转成记录 →
+  // `merge-verified-api --write --force` 写入（63 新增 + 4 覆盖，0 剔除）。`foreignTotal` 仍 0（无冒领）。
+  attestedRoots: 47,
   multiOwnerRoots: 0,
-  verifiedApiKeys: 1830,
+  verifiedApiKeys: 1893,
   badVerifiedAt: 0,
   foreignTotal: 0,
   foreignFiles: Object.keys(DEBT_FOREIGN).length,

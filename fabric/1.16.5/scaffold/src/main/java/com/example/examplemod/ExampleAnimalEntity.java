@@ -7,11 +7,11 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ExampleAnimalEntity extends AnimalEntity {
-    public static final Logger LOGGER = LoggerFactory.getLogger("examplemod");
+    public static final Logger LOGGER = LogManager.getLogger("examplemod");
 
     public ExampleAnimalEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);

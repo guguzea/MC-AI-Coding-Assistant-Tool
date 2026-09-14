@@ -9286,48 +9286,4895 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
       "1.17/forge": {
         "verifiedAt": "2026-09",
         "packages": [
-          "kotlin.annotation",
-          "kotlinx.coroutines",
-          "org.intellij.lang",
-          "thedarkcolour.kotlinforforge"
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
         ],
         "entrypoints": [],
-        "notes": "自动反编译提取"
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
       },
       "1.17.1/forge": {
         "verifiedAt": "2026-09",
         "packages": [
-          "kotlin.annotation",
-          "kotlinx.coroutines",
-          "org.intellij.lang",
-          "thedarkcolour.kotlinforforge"
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
         ],
         "entrypoints": [],
-        "notes": "自动反编译提取"
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
       },
       "1.14/forge": {
-        "verifiedAt": "2026-08",
+        "verifiedAt": "2026-09",
         "packages": [
-          "kotlin.annotation",
-          "kotlinx.coroutines",
-          "net.minecraftforge.fml",
-          "org.intellij.lang",
-          "thedarkcolour.kotlinforforge"
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
         ],
         "entrypoints": [],
-        "notes": "自动反编译提取"
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
       },
       "1.14.4/forge": {
         "verifiedAt": "2026-09",
         "packages": [
-          "kotlin.annotation",
-          "kotlinx.coroutines",
-          "net.minecraftforge.fml",
-          "org.intellij.lang",
-          "thedarkcolour.kotlinforforge"
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
         ],
         "entrypoints": [],
-        "notes": "自动反编译提取"
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "26.2/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "26.1.2/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "26.1.1/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "26.1/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.11/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.11/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.10/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.10/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.9/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.9/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.8/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.8/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.7/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.7/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.6/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.6/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.5/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.5/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.4/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.4/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.3/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.3/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.2/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.2/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.1/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21.1/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.21/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20.6/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20.6/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20.5/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20.4/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20.4/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20.3/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20.3/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20.2/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20.2/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20.1/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20.1/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.20/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.19.4/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.19.4/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.19.3/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.19.3/neoforge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge",
+          "thedarkcolour.kotlinforforge.neoforge.forge",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d",
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d",
+          "thedarkcolour.kotlinforforge.neoforge.kotlin",
+          "thedarkcolour.kotlinforforge.neoforge.test",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v2d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v4d": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.neoforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.19.2/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.19.1/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.19/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.18.2/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.18.1/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.18/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.forge.vectorutil",
+          "thedarkcolour.kotlinforforge.kotlin",
+          "thedarkcolour.kotlinforforge.test"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge.vectorutil": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.test": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.16.5/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.16.4/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.16.3/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.16.2/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.16.1/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.16/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.15.2/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.15.1/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.15/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.14.3/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.14.2/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
+      },
+      "1.14.1/forge": {
+        "verifiedAt": "2026-09",
+        "packages": [
+          "thedarkcolour.kotlinforforge",
+          "thedarkcolour.kotlinforforge.eventbus",
+          "thedarkcolour.kotlinforforge.forge",
+          "thedarkcolour.kotlinforforge.kotlin"
+        ],
+        "entrypoints": [],
+        "notes": "自动反编译提取",
+        "packageOwnership": {
+          "thedarkcolour.kotlinforforge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.eventbus": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.forge": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          },
+          "thedarkcolour.kotlinforforge.kotlin": {
+            "ownership": "own",
+            "evidence": "modId-segment",
+            "reason": "modId 是包路径的一段"
+          }
+        }
       }
     },
     supportedVersions: ["1.17","1.19.3","1.21.10","1.17.1","1.20.5","1.14","1.18","1.20.6"],

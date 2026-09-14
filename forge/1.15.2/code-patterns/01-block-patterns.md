@@ -14,7 +14,7 @@ public static final DeferredRegister<Block> BLOCKS =
     DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_block",
-    () -> new Block(Block.Properties.create(Material.ROCK)
+    () -> new Block(Block.Properties.create(Material.STONE)
         .hardnessAndResistance(1.5f, 6.0f)
         .harvestTool(ToolType.PICKAXE)
         .harvestLevel(0)
@@ -51,7 +51,7 @@ public BlockState getStateForPlacement(BlockItemUseContext context) {
 public void neighborChanged(BlockState state, World world, BlockPos pos,
         Block block, BlockPos fromPos, boolean isMoving) {
     super.neighborChanged(state, world, pos, block, fromPos, isMoving);
-    if (!world.isRemote) {
+    if (!world.isClientSide) {
         boolean powered = world.isBlockPowered(pos);
         if (powered != state.get(POWERED)) {
             world.setBlockState(pos, state.with(POWERED, powered), 2);
@@ -81,7 +81,7 @@ public class MachineTileEntity extends TileEntity {
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, MachineTileEntity tileEntity) {
-        if (world.isRemote) return;
+        if (world.isClientSide) return;
         // 定时逻辑
     }
 
@@ -122,7 +122,7 @@ public class MachineTileEntity extends TileEntity {
 
 ```java
 public static final RegistryObject<Block> MY_ORE = BLOCKS.register("my_ore",
-    () -> new Block(Block.Properties.create(Material.ROCK)
+    () -> new Block(Block.Properties.create(Material.STONE)
         .hardnessAndResistance(3.0f, 3.0f)
         .harvestTool(ToolType.PICKAXE)
         .harvestLevel(2)

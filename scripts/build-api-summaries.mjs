@@ -634,16 +634,112 @@ function slugOf(entry) {
 }
 
 /**
- * 叶子目录名 → 摘要里的版本键。反编译缓存叶子自 S2 起命名为
- * `<modVersion>-<jar sha512 前 12 hex>`（同版本不同 jar 各有目录），裸目录名不能当版本键：
- * 先读叶子内 `.mc-skill-decompiled.json` 的 version（权威），无 meta 时剥掉尾段 12 hex。
+ * 归属层 · jar sha512 前 12 位 → 该 jar 服务的 MC 版本集合。
+ *
+ * 来源：`mcp-server/data/lib-manifests/all.json`（Modrinth 取件的**已解析产物**：同一 jar 会以它
+ * 支持的每个 MC 版本各列一条 entry，字段 `gameVersion` / `loader` / `sha512` / `versionNumber`）。
+ * 为什么需要它：库的 jar ↔ MC 版本是**多对多且跨度大**的（实测 KFF：`6.3.0` 一个 jar 覆盖
+ * 1.21.9–26.2 共 7 个版本；`1.17.0` 覆盖 1.14–1.16.5 共 14 个），而反编译产物里「纯库内层件」
+ * （如 KFF 的 kfflib/kfflang）自身没有 mods.toml ⇒ 声明不出 MC 版本 ⇒ `meta.version = null`。
+ * 这时**不要猜一个版本**、也不要落 `unknown` 键，而是按 jar sha 回清单取权威版本集合、逐版本展开。
  */
-function versionKeyOf(leafDir, dirName) {
+let MANIFEST_ALL = null;
+/** 每库一份索引：`slug` → { bySha, byVer }。**必须按库收窄** —— 不同库会有同名 `versionNumber`
+ *（实测：KFF 的 `5.0.2` / `6.0.0` 与别库同号，全局索引会把 `1.19.1/1.19.2`、`1.20.5/1.20.6`
+ * 串进 KFF 的版本键）。 */
+const MANIFEST_INDEX_BY_SLUG = new Map();
+
+function manifestIndexFor(entry) {
+  const slugKey = slugOf(entry);
+  if (MANIFEST_INDEX_BY_SLUG.has(slugKey)) return MANIFEST_INDEX_BY_SLUG.get(slugKey);
+  if (!MANIFEST_ALL) {
+    try {
+      const raw = JSON.parse(
+        fs.readFileSync(path.join(ROOT, 'mcp-server', 'data', 'lib-manifests', 'all.json'), 'utf8'),
+      );
+      MANIFEST_ALL = Array.isArray(raw) ? raw : Object.values(raw);
+    } catch { MANIFEST_ALL = []; }
+  }
+  const modIds = new Set([...(entry.modIds || []), entry.slug].filter(Boolean).map(String));
+  const bySha = new Map();
+  const byVer = new Map();
+  for (const lib of MANIFEST_ALL) {
+    // 归属：清单条目的 slug / modId 必须与本 catalog 条目对得上（含 JEI/EMI/REI 共享条目的多 slug）
+    const libKeys = [lib?.slug, ...(lib?.entries || []).map((e) => e?.modId)].filter(Boolean).map(String);
+    if (!libKeys.some((k) => modIds.has(k))) continue;
+    for (const e of lib.entries || []) {
+      if (!e?.gameVersion) continue;
+      if (e.sha512) {
+        const k = String(e.sha512).slice(0, 12);
+        const set = bySha.get(k) ?? new Set();
+        set.add(e.gameVersion);
+        bySha.set(k, set);
+      }
+      // 二级键：**发布版本号**。内层件（jarjar 里的 kfflib/kfflang）有自己的 sha，
+      // 与清单里记的外壳 sha 不同 ⇒ 按 sha 查不到，但它与外壳同属一个发布版本
+      // （目录名前缀 `<modVersion>-<sha12>` 就是发布版本号）⇒ 用版本号 join。
+      if (e.versionNumber) {
+        const set = byVer.get(e.versionNumber) ?? new Set();
+        set.add(e.gameVersion);
+        byVer.set(e.versionNumber, set);
+      }
+    }
+  }
+  const idx = { bySha, byVer };
+  MANIFEST_INDEX_BY_SLUG.set(slugKey, idx);
+  return idx;
+}
+
+/** 目录名（`<modVersion>-<sha12>`）→ 该发布版本覆盖的 MC 版本集合（本库范围内）。 */
+function manifestVersionsForDirName(dirName, entry, meta = null) {
+  const { bySha, byVer } = manifestIndexFor(entry);
+  const sha12 = (dirName.match(/-([0-9a-f]{12})$/) || [])[1];
+  if (sha12) {
+    const byShaHit = bySha.get(sha12);
+    if (byShaHit && byShaHit.size) return [...byShaHit].sort(cmpVersions);
+  }
+  // 三级键：目录名前缀 = 发布版本号（`<modVersion>-<sha12>`）。
+  let verNum = dirName.replace(/-[0-9a-f]{12}$/, '');
+  if (!/^[0-9]/.test(verNum)) {
+    // 四级键：纯库内层件（jarjar 里的 kfflib/kfflang）没有自己的 mods.toml、目录名因此落成
+    // `unknown-<sha12>`（身份来源是 external）⇒ 前缀不带版本号。这时用 meta 里记的**源 jar 文件名**
+    // 提版本号（实测 meta.jar = `thedarkcolour.kfflib-6.3.0.jar`），再按发布版本号 join 清单。
+    const src = String(meta?.jar || meta?.jarPath || '');
+    const m = src.match(/-(\d+\.\d+(?:\.\d+)*)(?:[-+.]|\.jar$)/);
+    if (!m) return null;
+    verNum = m[1];
+  }
+  const byVerHit = byVer.get(verNum);
+  return byVerHit && byVerHit.size ? [...byVerHit].sort(cmpVersions) : null;
+}
+
+/**
+ * 叶子目录名 → 摘要里的版本键（**可能有多个**）。反编译缓存叶子自 S2 起命名为
+ * `<modVersion>-<jar sha512 前 12 hex>`（同版本不同 jar 各有目录），裸目录名不能当版本键。
+ * 优先级：① 叶子 meta 的 `version`（权威，反编译时已知 MC 版本）
+ *        ② 清单按 sha12 反查到的 `gameVersion` 集合（多对多时逐个展开，同 jar 在每个覆盖版本下各出一份）
+ *        ③ 兜底：目录名剥掉尾段 12 hex（旧行为，保留以免影响未入清单的档）
+ */
+function versionKeysOf(leafDir, dirName, entry) {
+  let metaVersion = null;
+  let meta = null;
   try {
-    const meta = JSON.parse(fs.readFileSync(path.join(leafDir, '.mc-skill-decompiled.json'), 'utf8'));
-    if (typeof meta?.version === 'string' && meta.version) return meta.version;
-  } catch { /* 无 meta / 坏 meta → 退回目录名 */ }
-  return dirName.replace(/-[0-9a-f]{12}$/, '');
+    meta = JSON.parse(fs.readFileSync(path.join(leafDir, '.mc-skill-decompiled.json'), 'utf8'));
+    if (typeof meta?.version === 'string' && meta.version) metaVersion = meta.version;
+  } catch { /* 无 meta / 坏 meta → 继续往下 */ }
+  const fromManifest = manifestVersionsForDirName(dirName, entry, meta);
+  // 取并集：`meta.version` 是「反编译时调用方说的版本」（常常是当时随手选的其中一个），
+  // 清单是「发布记录里该 jar 服务的全部版本」——两者都是事实，合起来才是完整归属。
+  const keys = new Set();
+  if (metaVersion) keys.add(metaVersion);
+  if (fromManifest) fromManifest.forEach((v) => keys.add(v));
+  const out = keys.size ? [...keys].sort(cmpVersions) : [dirName.replace(/-[0-9a-f]{12}$/, '')];
+  if (process.env.MC_SKILL_SUMMARY_DEBUG === '1') {
+    console.log(
+      `    [归属] ${dirName} → ${JSON.stringify(out)}（meta=${JSON.stringify(metaVersion)} + 清单=${JSON.stringify(fromManifest)}）`,
+    );
+  }
+  return out;
 }
 
 function processLib(entry, opt) {
@@ -661,10 +757,12 @@ function processLib(entry, opt) {
     try {
       for (const e of fs.readdirSync(sd.dir, { withFileTypes: true })) {
         if (!e.isDirectory()) continue;
-        const key = versionKeyOf(path.join(sd.dir, e.name), e.name);
-        const set = leavesByVer.get(key) ?? new Set();
-        set.add(e.name);
-        leavesByVer.set(key, set);
+        // 归属层：一个叶子可属多个 MC 版本键（清单里同一 jar 覆盖多版本）⇒ 逐个登记。
+        for (const key of versionKeysOf(path.join(sd.dir, e.name), e.name, entry)) {
+          const set = leavesByVer.get(key) ?? new Set();
+          set.add(e.name);
+          leavesByVer.set(key, set);
+        }
       }
     } catch { /* ignore */ }
   }

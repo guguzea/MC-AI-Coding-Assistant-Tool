@@ -715,11 +715,19 @@ async function main() {
     for (const e of entries) {
       byKey.set(`${e.platform}|${e.version}|${e.source}`, e);
     }
+    // A1（2026-09-14 裁定）：历史条目里可能存着绝对路径（F60：60/60 条曾钉成 `H:/MC_skill/...`）。
+    // 合并前一律按**数据根**重算 path，杜绝绝对路径随 prev 回流；末尾再加一道自检（绝对路径必须为 0）。
+    for (const e of byKey.values()) {
+      e.path = relative(dataRoot, semanticDbPath(dataRoot, e.platform, e.version, e.source)).replace(/\\/g, "/");
+    }
     const merged = [...byKey.values()].sort((a, b) =>
       `${a.platform}|${a.version}|${a.source}`.localeCompare(`${b.platform}|${b.version}|${b.source}`),
     );
     const mergedMode =
       prev.embedMode === "hybrid" || embedMode === "hybrid" ? "hybrid" : embedMode;
+    // A1 自检：manifest 里不允许出现绝对路径（win32 盘符 / posix 根）。
+    const absLeak = merged.filter((e) => /^([A-Za-z]:[\\/]|\/)/.test(String(e.path ?? "")));
+    if (absLeak.length) console.warn(`[warn] semantic-index-manifest.json 仍有绝对路径 ${absLeak.length} 条：` + absLeak.slice(0, 3).map((e) => `${e.platform}/${e.version}/${e.source}`).join(", "));
     writeFileSync(
       manifestPath,
       JSON.stringify({ built_at: new Date().toISOString(), embedMode: mergedMode, entries: merged }, null, 2),

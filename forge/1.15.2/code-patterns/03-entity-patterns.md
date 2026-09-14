@@ -54,7 +54,7 @@ public class MyProjectile extends Projectile {
     @Override
     protected void onImpact(RayTraceResult result) {
         super.onImpact(result);
-        if (!this.world.isRemote) {
+        if (!this.world.isClientSide) {
             this.world.createExplosion(null, this.getPosX(), this.getPosY(), this.getPosZ(),
                 2.0f, false, Explosion.Mode.BREAK);
             this.remove();

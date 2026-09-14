@@ -7,7 +7,7 @@
 
 - Minecraft `1.16.5` / Yarn `1.16.5+build.10` / Fabric Loader `0.11.2` / Fabric API `0.42.0+1.16`（全部在 `gradle.properties`）
 - Loom 插件 `fabric-loom` 版本 `0.10.31`（`build.gradle:2`），Gradle Wrapper `7.6.1`（`gradle/wrapper/gradle-wrapper.properties`）
-- **Java 8**：`build.gradle:71-82`（`options.release = 8` + `JavaVersion.VERSION_1_8`）、`src/main/resources/fabric.mod.json:25`（`"java": ">=8"`）、`src/main/resources/examplemod.mixins.json:5`（`"compatibilityLevel": "JAVA_8"`）三处同口径。权威依据：`.cursor/rules/00-project-setup.mdc:11`「Minecraft 1.16.5 运行在 Java 8；Java 16 从 Minecraft 1.17 起才要求」与 `:87`「用 Java 16/17 编译的模组无法在 1.16.5 加载」。**1.16.5 不是 Java 16/17 档**，任何 `JAVA_16` / `JAVA_17` / `">=17"` 出现在本档都是缺陷。
+- **Java 8**：`build.gradle:79-81`（`options.release = 8`）+ `build.gradle:83-88`（`JavaVersion.VERSION_1_8`）、`src/main/resources/fabric.mod.json:25`（`"java": ">=8"`）、`src/main/resources/examplemod.mixins.json:5`（`"compatibilityLevel": "JAVA_8"`）三处同口径。权威依据：`.cursor/rules/00-project-setup.mdc:11`「Minecraft 1.16.5 运行在 Java 8；Java 16 从 Minecraft 1.17 起才要求」与 `:87`「用 Java 16/17 编译的模组无法在 1.16.5 加载」。**1.16.5 不是 Java 16/17 档**，任何 `JAVA_16` / `JAVA_17` / `">=17"` 出现在本档都是缺陷。
 - 名字的第一方证据：原版/Yarn 名查 `M:/data/fabric_1.16.5/mappings/yarn-1.16.5+build.10-tiny.gz`；Fabric API 名查 `M:/mcp-server/data/loader-api-summaries/1.16.5-fabric-api.json`（或 `query_loader_api --platform=fabric --minecraftVersion=1.16.5`）；写法口径查本档 `.cursor/rules/*.mdc`。**禁止**把 1.17+ / 1.20.x 的名字当本档可用名（差异见下节）。
 
 ---
@@ -77,7 +77,7 @@ maven_group=com.example    # Java 包名前缀：${maven_group}.${mod_id} = com.
 | 实体渲染器注册类 | `net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry`（本档**没有** `client.rendering.v1` 包） | `...client.rendering.v1.EntityRendererRegistry`（1.17+ 现役形态） | `loader-api-summaries/1.16.5-fabric-api.json:487`；`query_loader_api` 查 `rendering.v1` 形态 → `found:false` |
 | 实体生成分类 | Yarn `SpawnGroup`（例：`SpawnGroup.CREATURE`） | Mojmap `MobCategory` | `.cursor/rules/04-entity.mdc:61,91` |
 | 实体工厂类型 | `EntityType.EntityFactory<T>`（tiny 中 `EntityType$EntityFactory`；FAPI 签名里的 `class_1299.class_4049<T>`） | —— | tiny `CLASS net/minecraft/entity/EntityType$EntityFactory`；`1.16.5-fabric-api.json` 的 `FabricEntityTypeBuilder.create(class_1311, class_1299.class_4049<T>)`（`class_1311` = `SpawnGroup`） |
-| 客户端分离注解 | `@Environment(EnvType.CLIENT)`（本档 `ExampleModClient.java:11` 现状） | `@OnlyIn(Dist.CLIENT)`（Forge/Neo 写法） | 根 `AGENTS.md`「物理端约束」+ 本 scaffold 代码 |
+| 客户端分离注解 | `@Environment(EnvType.CLIENT)`（本档 `ExampleModClient.java:10` 现状） | `@OnlyIn(Dist.CLIENT)`（Forge/Neo 写法） | 根 `AGENTS.md`「物理端约束」+ 本 scaffold 代码 |
 | Java 级别 | 8 | 16 / 17 / 21 | 见首节「本档事实核」 |
 
 ---
@@ -224,5 +224,5 @@ MinecraftClient client = MinecraftClient.getInstance();
 
 - 1.16.5 的依赖键是 **`fabric`**，不是 1.17+ 的 `fabric-api`（本档 `fabric.mod.json:23` 现状）。
 - `java` 是 `>=8`，与 `build.gradle` 的 `release = 8` 和 `mixins.json` 的 `JAVA_8` 对齐。
-- `${...}` 由 `build.gradle:46-57` 的 `processResources { filesMatching(...) { expand ... } }` 在构建期替换；该 glob 现含 `fabric.mod.json`、`pack.mcmeta`、**`examplemod.mixins.json`** 三件 —— 少了第三件的话 `examplemod.mixins.json:4` 的 `"package": "${maven_group}.${mod_id}.mixin"` 不会被展开，Mixin 运行期按字面量找包，两个 mixin 全部失效。
+- `${...}` 由 `build.gradle:46-64` 的 `processResources { filesMatching(...) { expand ... } }` 在构建期替换；该 glob 现含 `fabric.mod.json`、`pack.mcmeta`、**`examplemod.mixins.json`** 三件 —— 少了第三件的话 `examplemod.mixins.json:4` 的 `"package": "${maven_group}.${mod_id}.mixin"` 不会被展开，Mixin 运行期按字面量找包，两个 mixin 全部失效。
 - 手工预览展开结果：`./gradlew processResources` 后读 `build/resources/main/` 下同名文件，而不是直接改展开后的产物。

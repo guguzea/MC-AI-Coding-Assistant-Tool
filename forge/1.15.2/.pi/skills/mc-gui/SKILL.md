@@ -97,7 +97,7 @@ public class MyBlock extends Block {   // 方块实体：重写 hasTileEntity() 
     @Override
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             TileEntity tile = world.getTileEntity(pos);
             if (tile instanceof MyTileEntity) {
                 NetworkHooks.openGui(

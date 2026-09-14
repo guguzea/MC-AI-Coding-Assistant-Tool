@@ -128,7 +128,7 @@ public class MyUseItem extends Item {
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World world, LivingEntity entity) {
         entity.addPotionEffect(new EffectInstance(Effects.SPEED, 600, 1));
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             stack.shrink(1);
         }
         return stack;

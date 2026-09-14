@@ -12,7 +12,7 @@
 - 服务端 mod 的网络包发送给客户端时，客户端收到的是**反序列化后的数据对象**，不是完整类
 - 禁止在客户端包类中直接访问服务端独有类（如 `WorldServer`）
 - 使用 `DistExecutor` 或 `FMLEnvironment.dist` 判断当前物理端
-- 使用 `world.isRemote` 判断当前逻辑端（1.15.2 使用 `isRemote`，不是 `isClientSide`）
+- 使用 `world.isClientSide` 判断当前逻辑端（2026-09-14 javap 实测：official 1.15.2 `World` 有 `isClientSide`；原写 `isRemote` 是 MCP 名）
 
 ### SimpleChannel 配置
 

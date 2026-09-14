@@ -230,9 +230,9 @@ public class ModLootTableProvider extends LootTableProvider {
 }
 
 public class ModBlockLoot extends BlockLoot {
-    // TODO(未核实)：本档 api-index 的 BlockLoot 无 addTables / getKnownBlocks（只有 add / createSingleItemTable /
-    //   dropSelf… 与 accept(...)）；1.19.4+ 才由 BlockLootSubProvider 提供 generate() / getKnownBlocks()。
-    //   本档该子类的正确重写点待 ingest_loader_api 入库原版 jar 后核实，勿照抄本段。
+    // TODO(未核实)：本档 Gradle 缓存里没有 1.18.2 的 mapped jar 可直接 javap。邻居已实测：
+    //   1.17.1 `net.minecraft.data.loot.BlockLoot` 有 addTables()/getKnownBlocks()；1.19.4 起改为 `BlockLootSubProvider#generate()`。
+    //   本档应属前者，待入库 jar 核实后再去掉本标记。
     @Override
     protected void addTables() {
         dropSelf(ModBlocks.MY_BLOCK.get());

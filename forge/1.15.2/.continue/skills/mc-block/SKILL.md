@@ -14,7 +14,7 @@ mappings: mcp
 ```java
 // 注册（参见 mc-registry Skill）
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-    () -> new Block(Block.Properties.create(Material.ROCK)
+    () -> new Block(Block.Properties.create(Material.STONE)
         .hardnessAndResistance(1.5f, 6.0f)
         .harvestTool(ToolType.PICKAXE)
         .harvestLevel(0)
@@ -85,7 +85,7 @@ public class MyMachineTileEntity extends TileEntity implements ITickableTileEnti
 
     @Override
     public void tick() {
-        if (world == null || world.isRemote) return;
+        if (world == null || world.isClientSide) return;
         // 定时逻辑...
     }
 
