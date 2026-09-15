@@ -14,7 +14,7 @@ mappings: yarn
 **推荐**手写 JSON（见 `07-datagen.mdc`）。若走 DataGen：
 
 ```groovy
-// build.gradle — 用完整 fabric-api，不要单独钉死 fabric-datagen-api-v0 的假版本号
+// build.gradle — 用完整 fabric-api，不要单独钉死 fabric-data-generation-api-v1 的假版本号
 dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }

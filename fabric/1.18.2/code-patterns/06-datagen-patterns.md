@@ -6,7 +6,7 @@
 模式: Language Generation
 平台: Fabric
 分类: datagen
-依赖: [fabric-datagen-api-v0]
+依赖: [fabric-data-generation-api-v1]
 扩展点: [DataGeneratorEntrypoint]
 ---
 public class MyEnLangProvider extends FabricLanguageProvider {
@@ -27,7 +27,7 @@ public class MyEnLangProvider extends FabricLanguageProvider {
 模式: Recipe Generation
 平台: Fabric
 分类: datagen
-依赖: [fabric-datagen-api-v0]
+依赖: [fabric-data-generation-api-v1]
 扩展点: [DataGeneratorEntrypoint]
 ---
 public class MyRecipeProvider extends FabricRecipeProvider {
@@ -58,7 +58,7 @@ public class MyRecipeProvider extends FabricRecipeProvider {
 模式: Loot Table Generation
 平台: Fabric
 分类: datagen
-依赖: [fabric-datagen-api-v0]
+依赖: [fabric-data-generation-api-v1]
 扩展点: [DataGeneratorEntrypoint]
 ---
 public class MyBlockLootProvider extends FabricBlockLootTableProvider {
@@ -77,7 +77,7 @@ public class MyBlockLootProvider extends FabricBlockLootTableProvider {
 模式: Tag Generation
 平台: Fabric
 分类: datagen
-依赖: [fabric-datagen-api-v0]
+依赖: [fabric-data-generation-api-v1]
 扩展点: [DataGeneratorEntrypoint]
 ---
 # 手写 tags JSON，或查本版 FabricTagProvider

@@ -89,7 +89,7 @@ fabric-loot-tables / loot-api **v1**（改现有表用 `LootTableLoadingCallback
 | fabric-command-api-v1 | 命令注册 |
 | fabric-networking-api-v1 | 网络通信 |
 | fabric-object-builder-api-v1 | 方块/物品/实体设置 helper |
-| fabric-datagen-api-v0 | 数据生成（1.17+；1.14/1.16 无） |
+| fabric-data-generation-api-v1 | 数据生成（1.17+；1.14/1.16 无） |
 | fabric-renderer-api-v1 | 渲染 API |
 
 版本号随 `fabric-api` BOM，不要在规则里写死 `0.4.29+1.20.1` 这种邻版数字。
