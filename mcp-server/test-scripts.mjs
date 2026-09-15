@@ -1034,10 +1034,17 @@ public class ForeignHelper {
     );
     const poisonKey = runBas(
       buildBasRoot("bas-poison-key", (s) => {
+        // 锚点随归属层改写同步（2026-09-15）：`versionKeyOf` → `versionKeysOf`（返回数组 + 多版本署名），
+        // meta 权威版本号由「直接 return」改为「赋给 metaVersion」，兜底剥 12 hex 挪进三元表达式。
+        // 锚点各带自己的存在性断言 ⇒ 脚本再改写法会在这里点名，不会再静默失效。
+        const A_META = "if (typeof meta?.version === 'string' && meta.version) metaVersion = meta.version;";
+        const A_FALLBACK = ": [dirName.replace(/-[0-9a-f]{12}$/, '')];";
+        assert.ok(s.includes(A_META), "versionKeysOf 投毒锚点①（meta 里的权威版本号）未命中，脚本写法已变");
+        assert.ok(s.includes(A_FALLBACK), "versionKeysOf 投毒锚点②（兜底剥 12 hex）未命中，脚本写法已变");
         const t = s
-          .replace("if (typeof meta?.version === 'string' && meta.version) return meta.version;", "  // 投毒：忽略 meta 里的权威版本号")
-          .replace("  return dirName.replace(/-[0-9a-f]{12}$/, '');", "  return dirName;");
-        assert.ok(t !== s && !t.includes("dirName.replace"), "versionKeyOf 投毒锚点未命中，脚本写法已变");
+          .replace(A_META, "  // 投毒：忽略 meta 里的权威版本号")
+          .replace(A_FALLBACK, ": [dirName];");
+        assert.notEqual(t, s, "versionKeysOf 投毒未生效");
         return t;
       }),
     );
@@ -1345,9 +1352,12 @@ public class ForeignHelper {
   expect("writerIndexLine", /凭证索引行/, "writer 凭证登记方式变了，索引构建失去同源保证");
   expect("catalogForeign", /catalog 冒领他方包根 1 行/, "catalog 条目冒领他方已证实包根 ⇒ 模型照它写 import（A6）");
   assert.equal(runs.realRoot.status, 0, `G1 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
+  // 42 → 47（2026-09-15 同步，非放松）：第二处机制独立钉仍保留硬值，
+  // 与 `assert-lib-ownership.mjs` LEDGER.attestedRoots 同源。+5 = 打通 catalog 层那轮
+  // KFF 内层件按发布清单展开出的自有包根，全部靠 ownsPackage 自证（见该门 LEDGER 注释）。
   assert.match(
     runs.realRoot.stdout,
-    /冒领 0（台账已清空）[\s\S]*已证实包根 42[\s\S]*台账 checked/,
+    /冒领 0（台账已清空）[\s\S]*已证实包根 47[\s\S]*台账 checked/,
     `真根台账层没跑（S5 重建后冒领应已归零）：\n${runs.realRoot.stdout}`,
   );
   console.log(
