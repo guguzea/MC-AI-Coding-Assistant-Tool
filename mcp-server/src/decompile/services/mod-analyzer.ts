@@ -13,7 +13,7 @@ import { existsSync, readFileSync } from "fs";
 import { isAbsolute } from "path";
 import { actionable, type ActionEnvelope } from "../../utils/actionable.js";
 import { parseJsonUtf8 } from "../../utils/json-utf8.js";
-import { readZip, listZipEntries } from "../zip-util.js";
+import { readZip, listZipEntries, readJarBytes, ZipParseError } from "../zip-util.js";
 import { parseMinecraftVersion } from "../version-manager.js";
 import { parseModsToml } from "./toml-parse.js";
 
@@ -290,8 +290,18 @@ export function analyzeModJar(jarPath: string, requestedVersion?: string): Analy
 
   let buffer: Buffer;
   try {
-    buffer = readFileSync(jarPath);
+    buffer = readJarBytes(jarPath);
   } catch (err) {
+    // 「读之前」的体积门是独立一支：报错必须点明是体积，否则用户会去查权限/占用。
+    if (err instanceof ZipParseError && err.code === "JAR_FILE_TOO_LARGE") {
+      return {
+        ...emptyMeta(jarPath),
+        action: invalidAction(`${(err as Error).message}`, [
+          "确认传的是 mod jar，而不是整个整合包 / 服务端包 / 备份压缩包",
+          "纯资源包或超大整合不需要本工具：直接解压读源码",
+        ]),
+      };
+    }
     return {
       ...emptyMeta(jarPath),
       action: notFoundAction(`jar 读取失败: ${(err as Error).message}`, ["确认文件可读（非目录/被占用）"]),
@@ -608,8 +618,17 @@ export function listJarEntries(jarPath: string): ListJarEntriesResult {
   }
   let buffer: Buffer;
   try {
-    buffer = readFileSync(jarPath);
+    buffer = readJarBytes(jarPath);
   } catch (err) {
+    if (err instanceof ZipParseError && err.code === "JAR_FILE_TOO_LARGE") {
+      return {
+        ok: false,
+        entries: [],
+        action: invalidAction(`${(err as Error).message}`, [
+          "确认传的是 mod jar，而不是整个整合包 / 服务端包 / 备份压缩包",
+        ]),
+      };
+    }
     return {
       ok: false,
       entries: [],

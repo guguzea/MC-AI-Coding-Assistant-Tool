@@ -98,6 +98,8 @@ public class MyEntityRenderer extends Render<MyEntity> {
 
 ```java
 // 本档**没有** `ForgeRegistries.ATTRIBUTES`（1.16+ 才有）—— 见 `04-entity.mdc:29-30`、`09-anti-patterns.mdc:22-28`
+// TODO(未核实)：1.15.2 是否真的没有该常量、注册表引入版本，仓内无一手语料（仅 1.16.5+ 各档示例出现
+// `ForgeRegistries.ATTRIBUTES`）；取证前不要把本断言当已核实事实（见根 AGENTS.md 证据纪律）。
 // 属性基值在实体类里重写 registerAttributes() 设置（同文件 :33-40 已有完整形态）：
 @Override
 protected void registerAttributes() {

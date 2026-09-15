@@ -42,6 +42,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+// A5（2026-09-15 用户裁定 adopt）：本门在 MC_SKILL_SCAFFOLD_WRITE_SYMBOL_LEDGER=1 时会写
+// 仓库跟踪文件 mcp-server/scripts/data/scaffold-banned-symbols.json ⇒ 落笔必须走 write-guard。
+import { emit, wantWrite } from "../../scripts/_lib/write-guard.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SERVER_ROOT = path.resolve(HERE, "..");
@@ -105,7 +108,7 @@ const DEBUG = process.env.MC_SKILL_SCAFFOLD_GATE_DEBUG === "1";
  *   ① 规则删掉一条 ❌ ⇒ 台账里那个符号成了孤儿 ⇒ 红（并点名）；
  *   ② 新写一条 ❌ 判死一个名字 ⇒ 台账里没有 ⇒ 红（判死面扩大必须签字）；
  *   ③ 锚点从 `01-registry.mdc:41` 挪到 `:88` ⇒ 红（判据还在不在同一处，要人看一眼）。
- * 生成：`MC_SKILL_SCAFFOLD_WRITE_SYMBOL_LEDGER=1 node scripts/assert-scaffold-rules-conflict.mjs`
+ * 生成：`MC_SKILL_SCAFFOLD_WRITE_SYMBOL_LEDGER=1 node scripts/assert-scaffold-rules-conflict.mjs --write`
  * 指到别处（投毒对拍用）：`MC_SKILL_SCAFFOLD_SYMBOL_LEDGER=<path>`
  */
 const symbolLedger = {};
@@ -414,8 +417,10 @@ if (!TEST_ROOT) {
   const totalSymbols = Object.values(gotSymbols).reduce((n, m) => n + Object.keys(m).length, 0);
 
   if (WRITE_SYMBOL_LEDGER) {
-    fs.mkdirSync(path.dirname(SYMBOL_LEDGER_PATH), { recursive: true });
-    fs.writeFileSync(
+    // adopt write-guard：仓库跟踪文件只能走 emit（--write 才落盘，默认打印 DRYRUN）。
+    // 闸门仍是本门的 env 开关；注意没给 --write 时 emit 只打印不写，
+    // 而台账文件已在库内 ⇒ 不会因此触发「台账缺失」的红。
+    emit(
       SYMBOL_LEDGER_PATH,
       `${JSON.stringify(
         {
@@ -427,12 +432,11 @@ if (!TEST_ROOT) {
         null,
         2,
       )}\n`,
-      "utf8",
     );
-    console.log(`  [symbol-ledger] 已写 ${rel(SYMBOL_LEDGER_PATH)}（${Object.keys(gotSymbols).length} 档 / ${totalSymbols} 符号）`);
+    console.log(`  [symbol-ledger] ${wantWrite() ? "已写" : "dry-run（加 --write 才落盘）"} ${rel(SYMBOL_LEDGER_PATH)}（${Object.keys(gotSymbols).length} 档 / ${totalSymbols} 符号）`);
   } else if (!fs.existsSync(SYMBOL_LEDGER_PATH)) {
     fail(
-      `判死符号台账缺失：${rel(SYMBOL_LEDGER_PATH)} —— 生成：MC_SKILL_SCAFFOLD_WRITE_SYMBOL_LEDGER=1 node scripts/assert-scaffold-rules-conflict.mjs`,
+      `判死符号台账缺失：${rel(SYMBOL_LEDGER_PATH)} —— 生成：MC_SKILL_SCAFFOLD_WRITE_SYMBOL_LEDGER=1 node scripts/assert-scaffold-rules-conflict.mjs --write`,
     );
   } else {
     let led = {};

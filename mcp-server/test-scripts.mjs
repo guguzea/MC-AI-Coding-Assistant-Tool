@@ -1352,12 +1352,12 @@ public class ForeignHelper {
   expect("writerIndexLine", /凭证索引行/, "writer 凭证登记方式变了，索引构建失去同源保证");
   expect("catalogForeign", /catalog 冒领他方包根 1 行/, "catalog 条目冒领他方已证实包根 ⇒ 模型照它写 import（A6）");
   assert.equal(runs.realRoot.status, 0, `G1 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
-  // 42 → 47（2026-09-15 同步，非放松）：第二处机制独立钉仍保留硬值，
-  // 与 `assert-lib-ownership.mjs` LEDGER.attestedRoots 同源。+5 = 打通 catalog 层那轮
-  // KFF 内层件按发布清单展开出的自有包根，全部靠 ownsPackage 自证（见该门 LEDGER 注释）。
+  // 42 → 47 → 62（2026-09-15 同步，非放松）：第二处机制独立钉仍保留硬值，
+  // 与 `assert-lib-ownership.mjs` LEDGER.attestedRoots 同源。47→62 = 43 库摘要重建批次
+  // 新增 328 个 verifiedApi 键带出的自有包根，全部靠 ownsPackage 自证（见该门 LEDGER 注释）。
   assert.match(
     runs.realRoot.stdout,
-    /冒领 0（台账已清空）[\s\S]*已证实包根 47[\s\S]*台账 checked/,
+    /冒领 0（台账已清空）[\s\S]*已证实包根 62[\s\S]*台账 checked/,
     `真根台账层没跑（S5 重建后冒领应已归零）：\n${runs.realRoot.stdout}`,
   );
   console.log(
@@ -1562,6 +1562,18 @@ public class ForeignHelper {
     },
     intermediaryBare: (r) => tree(r, "page.md", PAGE + "\nReplace the old <yarn class_1792> object with yours.\n"),
     genericLoss: (r) => tree(r, "page.md", PAGE.replace("List<ItemStack> items", "List items"), PAGE),
+    // A9 目录层（2026-09-15 新增）：树里出现目录空壳（写入者 mkdir 了却没写内容）。
+    // 只加空目录、不加文件 ⇒ A1 计数不变，保证红的是 A9 而不是别的判据。
+    emptyDir: (r) => {
+      tree(r, "page.md", PAGE);
+      mkdirSync(jpath(packOf(r), "processed", "emptyshell"), { recursive: true });
+    },
+    // A9 目录层：目录名是字节错解码产物（U+2594 方框绘制符 —— 实测那批的名字正是这种形状）。
+    // raw/processed 两侧同名同文件 ⇒ A1/A2 都不动，红的只能是「名字」这一条。
+    mojibakeDir: (r) => {
+      w(jpath(packOf(r), "raw", "bad\u2594name", "page.md"), PAGE);
+      w(jpath(packOf(r), "processed", "bad\u2594name", "page.md"), PAGE);
+    },
   };
   const runs = {};
   try {
@@ -1600,15 +1612,25 @@ public class ForeignHelper {
   expect("intermediaryBare", /正文外泄上游中介名/, "混淆名漏进正文 ⇒ 模型照抄 class_1792");
   expect("genericLoss", /个尖括号泛型在 processed 未原样存活/, "泛型签名被加工改掉 ⇒ 模型读到与上游不一致的签名");
   expect("ledgerDrift", /不在台账 ⇒ 新增\/改名树/, "台账层没咬住未登记树 ⇒ 数字对账形同虚设");
+  expect(
+    "emptyDir",
+    /是 0 条目目录/,
+    "树里出现目录空壳 ⇒ 新增的 A9 目录层判据必须咬住（2026-09-13 那批 5 个空壳在旧门下躺了 2 天，因为 A1–A5/A8 全是文件级）",
+  );
+  expect(
+    "mojibakeDir",
+    /目录名含非 ASCII \/ 控制字符/,
+    "目录名是字节错解码产物 ⇒ 必须点名并给出码点，禁止只删不查",
+  );
   assert.equal(runs.realRoot.status, 0, `G3 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
   assert.match(
     runs.realRoot.stdout,
-    /49 棵 raw\/processed 树[\s\S]*处字节已在盘上[\s\S]*泛型丢失 0 · 重名 0/,
+    /49 棵 raw\/processed 树[\s\S]*处字节已在盘上[\s\S]*泛型丢失 0 · 重名 0[\s\S]*目录层 \d+ 个目录（0 条目 0 \/ 非法名 0）/,
     `真根少跑了层或台账口径变了：\n${runs.realRoot.stdout}`,
   );
   console.log(
-    "  §S4 G3 语料保真门: 干净假根=0（含围栏内混淆名不报、区段标记齐全不报）/ 真根=0（49 树 · 633 处 <<< · 已取件处数逐档钉在台账 · 11 处正文中介名台账）；" +
-      "投毒 8 记全红并点名：区段标记缺失·目标形态·重名页·造页·吞页（生产者未重跑）·正文中介名·吃泛型·台账层未登记树",
+    "  §S4 G3 语料保真门: 干净假根=0（含围栏内混淆名不报、区段标记齐全不报）/ 真根=0（49 树 · 633 处 <<< · 已取件处数逐档钉在台账 · 11 处正文中介名台账 · 目录层 1185 个目录全合法）；" +
+      "投毒 10 记全红并点名：区段标记缺失·目标形态·重名页·造页·吞页（生产者未重跑）·正文中介名·吃泛型·台账层未登记树·目录空壳·目录名错解码",
   );
 }
 

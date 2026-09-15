@@ -6689,6 +6689,10 @@ const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   ["mcp-server/scripts/_lib/build-yarn-mappings.mjs", /fs\.writeFileSync\(out, renderYarnMappingJson/], // out = CLI 位置参数（build <tiny.gz> <outJson>）
   ["mcp-server/scripts/_debug_article.mjs", /_debug_raw\.html/], // 只写 scripts/_debug*（gitignore）；该文件本身未入库
   ["mcp-server/scripts/_test_fetch.mjs", /_test_curl_output\.txt/], // 只写 scripts/_test_*（gitignore）；该文件本身未入库，url 由 argv 给
+  // ── B1 转换器（2026-09-15 用户裁定登记豁免，不 adopt）─────────────────────
+  // 缺省只写 gitignore 的 temp/verified-api-from-summaries.jsonl，不碰跟踪文件；
+  // --out 由调用方给（同 batch-decompile 的 destPath 先例）。未来若改成写跟踪文件 ⇒ 必须改道 emit 并撤本条。
+  ["scripts/emit-verified-api-from-summaries.mjs", /out: "temp\/verified-api-from-summaries\.jsonl"/],
 ]);
 /**
  * 会写仓库但本轮不收口的债务（并发代理 owns / 自带显式 --write 闸门未改道 / 新文件只靠 --force）。
@@ -6745,6 +6749,12 @@ const FS_MUTATION_PRIMITIVES = [
   "writeFileSync",
   "appendFileSync",
   "copyFileSync",
+  // 2026-09-15 加固（write-guard 全扫批次）：两词补入后对 159 个脚本零新违例（预扫实证）——
+  // cpSync 真调用仅 release-smoke（写 tmpdir，NW 豁免成立）；writeSync 真调用仅
+  // repair-quilt-indexes（该文件已被 openSync 命中 + DEBT 登记）。补入是为了让「用这两个
+  // 原语写仓库」的未来脚本也被抓住，而不是只依赖 openSync 的连带命中。
+  "cpSync",
+  "writeSync",
   "mkdirSync",
   "rmSync",
   "unlinkSync",

@@ -10,46 +10,17 @@
     ],
     "merged": false
   },
-  "generatedAt": "2026-09-12T11:33:57.235Z",
+  "generatedAt": "2026-09-15T12:19:25.977Z",
   "versions": {
-    "1.0.0": {
+    "1.10.2": {
       "packages": [
-        "glitchcore.block",
-        "glitchcore.core",
-        "glitchcore.entity",
-        "glitchcore.gui",
-        "glitchcore.inventory",
-        "glitchcore.item",
-        "glitchcore.particle",
-        "glitchcore.potion",
-        "glitchcore.render",
-        "glitchcore.util",
-        "glitchcore.world"
+        "glitchcore.block"
       ],
       "classes": [
         "glitchcore.block.BlockHelper",
         "glitchcore.block.GFBlock",
         "glitchcore.block.IGFBlock",
-        "glitchcore.block.IGFBlockContainer",
-        "glitchcore.core.GlitchCore",
-        "glitchcore.entity.EntityHelper",
-        "glitchcore.gui.GFGuiFactory",
-        "glitchcore.inventory.GFCreativeTab",
-        "glitchcore.inventory.InventoryHelper",
-        "glitchcore.inventory.InventorySlotType",
-        "glitchcore.item.GFItem",
-        "glitchcore.item.GFItemBlock",
-        "glitchcore.item.IGFItem",
-        "glitchcore.item.ItemHelper",
-        "glitchcore.item.StackHelper",
-        "glitchcore.particle.GFParticle",
-        "glitchcore.potion.PotionHelper",
-        "glitchcore.render.GFBufferBuilder",
-        "glitchcore.render.GFTessellator",
-        "glitchcore.render.GFWrappedBufferBuilder",
-        "glitchcore.util.GFNonNullList",
-        "glitchcore.world.GFSavedData",
-        "glitchcore.world.WorldHelper"
+        "glitchcore.block.IGFBlockContainer"
       ],
       "methods": {
         "glitchcore.block.BlockHelper": [
@@ -69,118 +40,11 @@
           "func_180646_a(IBlockState, World, BlockPos)",
           "func_180639_a(World, BlockPos, IBlockState, EntityPlayer, EnumHand, ItemStack, EnumFacing, float, float, float)",
           "func_189540_a(IBlockState, World, BlockPos, Block)"
-        ],
-        "glitchcore.core.GlitchCore": [
-          "preInit(FMLPreInitializationEvent)",
-          "init(FMLInitializationEvent)"
-        ],
-        "glitchcore.entity.EntityHelper": [
-          "registerEntity(ResourceLocation, Class<? extends Entity>, String, int, Object, int, int, boolean)",
-          "registerEgg(ResourceLocation, int, int)",
-          "getEntityEggOwner(EntityEggInfo)"
-        ],
-        "glitchcore.gui.GFGuiFactory": [
-          "getGuiClass()",
-          "initialize(Minecraft)",
-          "mainConfigGuiClass()",
-          "runtimeGuiCategories()",
-          "getHandlerFor(RuntimeOptionCategoryElement)"
-        ],
-        "glitchcore.inventory.GFCreativeTab": [
-          "func_78018_a(List<ItemStack>)",
-          "func_78016_d()",
-          "displayAllRelevantItems(GFNonNullList<ItemStack>)"
-        ],
-        "glitchcore.inventory.InventoryHelper": [
-          "getSlot(EntityPlayer, InventorySlotType, int)"
-        ],
-        "glitchcore.inventory.InventorySlotType": [],
-        "glitchcore.item.GFItem": [
-          "func_77659_a(ItemStack, World, EntityPlayer, EnumHand)",
-          "func_150895_a(Item, CreativeTabs, List<ItemStack>)",
-          "func_180614_a(ItemStack, EntityPlayer, World, BlockPos, EnumHand, EnumFacing, float, float, float)"
-        ],
-        "glitchcore.item.GFItemBlock": [
-          "func_77659_a(ItemStack, World, EntityPlayer, EnumHand)",
-          "func_150895_a(Item, CreativeTabs, List<ItemStack>)",
-          "func_180614_a(ItemStack, EntityPlayer, World, BlockPos, EnumHand, EnumFacing, float, float, float)"
-        ],
-        "glitchcore.item.IGFItem": [
-          "func_194125_a(CreativeTabs)",
-          "isInCreativeTab(CreativeTabs)",
-          "onItemRightClick(World, EntityPlayer, EnumHand)",
-          "getSubItems(CreativeTabs, GFNonNullList<ItemStack>)",
-          "onItemUse(EntityPlayer, World, BlockPos, EnumHand, EnumFacing, float, float, float)"
-        ],
-        "glitchcore.item.ItemHelper": [
-          "registerItem(ResourceLocation, Item)",
-          "setRepairMaterial(ArmorMaterial, ItemStack)",
-          "getSubItems(CreativeTabs, Item)",
-          "onItemRightClick(ItemStack, World, EntityPlayer, EnumHand)"
-        ],
-        "glitchcore.item.StackHelper": [
-          "isEmpty(ItemStack)",
-          "setSize(ItemStack, int)",
-          "getSize(ItemStack)",
-          "increment(ItemStack, int)",
-          "decrement(ItemStack, int)"
-        ],
-        "glitchcore.particle.GFParticle": [
-          "renderParticle(GFWrappedBufferBuilder, Entity, float, float, float, float, float, float)",
-          "func_180434_a(VertexBuffer, Entity, float, float, float, float, float, float)"
-        ],
-        "glitchcore.potion.PotionHelper": [
-          "registerPotion(ResourceLocation, Potion)",
-          "registerPotionType(ResourceLocation, PotionType)"
-        ],
-        "glitchcore.render.GFBufferBuilder": [
-          "func_187315_a(double, double)",
-          "gfTex(double, double)",
-          "func_187314_a(int, int)",
-          "gfLightmap(int, int)",
-          "func_181666_a(float, float, float, float)",
-          "gfColor(float, float, float, float)",
-          "func_181669_b(int, int, int, int)",
-          "gfColor(int, int, int, int)",
-          "func_181662_b(double, double, double)",
-          "gfPos(double, double, double)",
-          "func_181663_c(float, float, float)",
-          "gfNormal(float, float, float)"
-        ],
-        "glitchcore.render.GFTessellator": [
-          "getInstance()",
-          "func_78381_a()",
-          "getBufferBuilder()",
-          "func_178180_c()"
-        ],
-        "glitchcore.render.GFWrappedBufferBuilder": [
-          "tex(double, double)",
-          "lightmap(int, int)",
-          "color(float, float, float, float)",
-          "color(int, int, int, int)",
-          "pos(double, double, double)",
-          "normal(float, float, float)"
-        ],
-        "glitchcore.util.GFNonNullList": [
-          "create()",
-          "withSize(int, T)",
-          "from(T, T...)",
-          "get(int)",
-          "set(int, T)",
-          "add(int, T)",
-          "remove(int)",
-          "size()",
-          "clear()"
-        ],
-        "glitchcore.world.GFSavedData": [],
-        "glitchcore.world.WorldHelper": [
-          "getOrLoadSavedData(World, Class<T>, String)",
-          "setData(World, String, T)"
         ]
       },
-      "sampleCount": 23
+      "sampleCount": 4
     }
   },
-  "classCount": 23,
-  "methodCount": 81
+  "classCount": 4,
+  "methodCount": 10
 }

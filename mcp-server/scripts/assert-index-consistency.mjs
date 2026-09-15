@@ -92,18 +92,10 @@ const DEBT_EMPTY_INDEX = [
 // A6 存量债务：索引目录里的半截事务残留（相对 data 根；删除动作交数据拥有者，本门只登记不删）
 // 2026-09-13：三条 db.sqlite.old 不在盘上了 —— 本轮全量重建走「旧库改名成 .old → 新库顶上 →
 // finally 清同名 .old」这条既定路径，等于被构建器收走；登记按实盘撤下，不是谁手工删的。
-const DEBT_RESIDUE = [
-  "neoforge_1.21.10/neoforge-docs/1.21.10/semantic/db.sqlite.tmp-26696",
-  "neoforge_1.21.10/neoforge-docs/1.21.10/semantic/db.sqlite.tmp-26696-journal",
-  "neoforge_1.21.5/neoforge-docs/1.21.5/semantic/db.sqlite.tmp-29532",
-  "neoforge_1.21.5/neoforge-docs/1.21.5/semantic/db.sqlite.tmp-29532-journal",
-  "neoforge_1.21.5/neoforge-docs/1.21.5/semantic/db.sqlite.tmp-29892",
-  "neoforge_1.21.5/neoforge-docs/1.21.5/semantic/db.sqlite.tmp-29892-journal",
-  "neoforge_1.21.8/neoforge-docs/1.21.8/semantic/db.sqlite.tmp-26464",
-  "neoforge_1.21.8/neoforge-docs/1.21.8/semantic/db.sqlite.tmp-26464-journal",
-  "neoforge_1.21.8/neoforge-docs/1.21.8/semantic/db.sqlite.tmp-9996",
-  "neoforge_1.21.8/neoforge-docs/1.21.8/semantic/db.sqlite.tmp-9996-journal",
-];
+// 2026-09-15 全部清空（**不是手工清账，是实盘先变、台账跟账**）：10 个半截事务残留
+// （5 个 git 跟踪的 `db.sqlite.tmp-<pid>` + 5 个未跟踪的 `-journal`）已由用户全部删除，
+// 本门 drain check 逐条点名后按纪律处理 —— 「债务清单**清空而不删除**：留空数组 = 零容忍，复发才响亮」。
+const DEBT_RESIDUE = [];
 // A7 存量债务：yarn 库 meta 计数 ≠ 表内实际行数（键 pack|kind|meta|实际；读侧直接信 meta ⇒ 覆盖数虚报）
 const DEBT_MAPPING_COUNT = [
   "fabric_1.19.4|methodCount|39820|36036",

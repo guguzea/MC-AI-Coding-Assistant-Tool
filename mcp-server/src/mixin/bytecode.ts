@@ -13,7 +13,7 @@
  */
 
 import { readFileSync, statSync } from "fs";
-import { readZip } from "../decompile/zip-util.js";
+import { readZip, readJarBytes } from "../decompile/zip-util.js";
 
 export interface ClassMethod {
   name: string;
@@ -433,8 +433,10 @@ function loadJarMap(jarPath: string): Map<string, Buffer> {
   for (const k of [...JAR_CACHE.keys()]) {
     if (k === jarPath || k.startsWith(`${jarPath}\0`)) JAR_CACHE.delete(k);
   }
-  const data = readZip(readFileSync(jarPath));
-  // A-1 放大器防护：单 jar 解压总量超上限不进缓存（读本身已被 zip-inflate 逐条目限制）
+  const data = readZip(readJarBytes(jarPath));
+  // A-1 放大器防护：单 jar 解压总量超上限不进缓存（读本身已被 zip-inflate 逐条目限制）。
+  // 已登记残余（本轮未修）：`JAR_CACHE_MAX` 只挡**个数**，4 × 256MB 理论最坏驻留 ~1GB；
+  // 且 `readJarBytes` 的门只界定「读之前」的最坏情况，读完仍是全驻留（非流式）。
   let total = 0;
   for (const buf of data.values()) total += buf.length;
   if (total <= 256 * 1024 * 1024) {

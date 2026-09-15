@@ -57,7 +57,8 @@ public class ExampleMod {
     );
 
     // ---- 注册普通物品 ----
-    // 创造模式标签不放在这里：1.19.3+ 走 BuildCreativeModeTabContentsEvent，见下方 addCreative
+    // 创造模式标签不放在这里：1.19.3–1.19.4 走嵌套类 CreativeModeTabEvent.BuildContents，
+    // 1.20 起重构为独立类 BuildCreativeModeTabContentsEvent，见下方 addCreative
     public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item",
         () -> new Item(new Item.Properties()
             .stacksTo(64)

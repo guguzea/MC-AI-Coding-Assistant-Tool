@@ -35,7 +35,7 @@ code-patterns/
 | 项目 | 1.18.2 | **1.19.4（本档）** | 1.20.1 | 引入差异的版本 |
 |------|--------|--------------------|--------|----------------|
 | 方块颜色 | `.color(MaterialColor.STONE)` | `.color(MaterialColor.STONE)` | `.mapColor(MapColor.STONE)` | 改名在 1.20.x |
-| 创造标签 | `Item.Properties.tab(CreativeModeTab.TAB_*)` | **无 `tab()`**；`CreativeModeTabEvent.BuildContents` + `CreativeModeTabs.*` | 同 1.19.4 | 1.19.3 |
+| 创造标签 | `Item.Properties.tab(CreativeModeTab.TAB_*)` | **无 `tab()`**；`CreativeModeTabEvent.BuildContents`（嵌套类）`+ CreativeModeTabs.*`、`event.getTab()` | `BuildCreativeModeTabContentsEvent`（**独立类**，1.20 起重构自 1.19.4 的嵌套 `CreativeModeTabEvent.BuildContents`）+ `event.getTabKey()` | 1.19.3 |
 | 盔甲槽位 | `ArmorItem(mat, EquipmentSlot.HEAD, props)` | `ArmorItem(mat, ArmorItem.Type.HELMET, props)` | 同 1.19.4 | **1.19.4** |
 | 实体注册表 | `ForgeRegistries.ENTITYTYPES` | `ForgeRegistries.ENTITY_TYPES` | `ENTITY_TYPES` | 见本档 `01-registry.mdc:27` |
 | 配方 DataGen | `buildCraftingRecipes` + `shaped(ItemLike)` | `buildRecipes` + `shaped(RecipeCategory, ItemLike, int)` | 同 1.19.4 | 1.18.2 与 1.19.3 之间（1.19.1–1.19.3 无索引，无法再收窄） |

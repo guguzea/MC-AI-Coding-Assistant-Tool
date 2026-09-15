@@ -10,10 +10,314 @@
     ],
     "merged": false
   },
-  "generatedAt": "2026-08-12T10:32:07.977Z",
+  "generatedAt": "2026-09-15T15:12:53.532Z",
   "versions": {
-    "1.6.0": {
-      "packages": [],
+    "1.21-pre2": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 24
+    },
+    "1.21-pre1": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 24
+    },
+    "1.21.3": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
       "classes": [
         "elocindev.necronomicon.api.config.v1.NecConfigAPI",
         "elocindev.necronomicon.api.json.JsonFileAPI",
@@ -44,16 +348,16 @@
           "setPrettyPrint(Path)"
         ],
         "elocindev.necronomicon.api.NecUtilsAPI": [
-          "getLookVec(class_1309)",
-          "getEntityId(class_1297)",
-          "getEntityIdentifier(class_1297)",
-          "getWorldTime(class_1309)",
-          "getWorldTime(class_1937)",
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
           "isModLoaded(String)"
         ],
         "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
-          "registerBuiltinPack(FabricLoader, String, String, class_2561, boolean, boolean)",
-          "registerResourcePack(FabricLoader, String, String, class_2561, ResourcePackActivationType)"
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)",
+          "registerResourcePack(FabricLoader, String, String, Text, ResourcePackActivationType)"
         ],
         "elocindev.necronomicon.api.resource.v1.ResourceIdentifier": [
           "of(String, String)",
@@ -66,17 +370,17 @@
         "elocindev.necronomicon.api.text.AnimatedText": [
           "getName()",
           "getId()",
-          "getText(class_2561)",
-          "getText(class_2561, int)"
+          "getText(Text)",
+          "getText(Text, int)"
         ],
         "elocindev.necronomicon.api.text.IAnimatedGradientName": [],
         "elocindev.necronomicon.api.text.IAnimatedText": [],
         "elocindev.necronomicon.api.text.IGradientName": [],
         "elocindev.necronomicon.api.text.TextAPI": [
-          "setStaticGradient(class_5250, int, int)",
-          "setSlideGradient(class_5250, int, int, int, float)",
-          "setBreathingGradient(class_5250, int, int, int, float)",
-          "setRainbowGradient(class_5250, int, float)"
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
         ],
         "elocindev.necronomicon.CommonInitializer": [
           "onInitialize()",
@@ -87,116 +391,27 @@
           "initializeConfigs(Class<T>)"
         ],
         "elocindev.necronomicon.datagen.ModelGenerator": [
-          "generateBlockStateModels(class_4910)",
-          "generateItemModels(class_4915)",
-          "registerSlabStairSet(class_4910, class_2248, class_2248, class_2248)",
-          "registerWoodset(class_4910, class_2248, class_2248, class_2248, class_2248, class_2248, class_2248, class_2248, class_2248)",
-          "registerBars(class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
-          "registerItemModel(class_2248, BiConsumer<class_2960, Supplier<JsonElement>>)",
-          "registerFence(class_2248, class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
-          "registerFenceGate(class_2248, class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
-          "registerSlab(class_2248, class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
-          "registerButton(class_2248, class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
-          "registerStairs(class_2248, class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
-          "registerFronds(class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
-          "createSingletonBlockState(class_2248, class_2960)",
-          "createSlabBlockState(class_2248, class_2960, class_2960, class_2960)",
-          "createStairsBlockState(class_2248, class_2960, class_2960, class_2960)",
-          "createButtonBlockState(class_2248, class_2960, class_2960)",
-          "registerParentedItemModel(class_2248, class_2960, BiConsumer<class_2960, Supplier<JsonElement>>)"
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
         ],
         "elocindev.necronomicon.item.FancyItem": [
-          "getAnimatedName(class_1799)"
+          "getAnimatedName(ItemStack)"
         ],
-        "elocindev.necronomicon.math.MathUtils": [
-          "getLookingVec(class_1309)"
-        ],
-        "elocindev.necronomicon.NecronomiconConfig": [
-          "getFile()"
-        ],
-        "elocindev.necronomicon.util.ColorUtils": [
-          "interpolate(int, int, double)",
-          "interpolateAnimation(int, int, double, double)",
-          "getRed(int)",
-          "getGreen(int)",
-          "getBlue(int)",
-          "gradientSlide(float, Color, Color)"
-        ],
-        "elocindev.necronomicon.util.FileUtils": [
-          "setPrettyPrint(Path)"
-        ]
-      },
-      "sampleCount": 23
-    },
-    "1.4.2": {
-      "packages": [],
-      "classes": [
-        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
-        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
-        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
-        "elocindev.necronomicon.api.json.JsonFileAPI",
-        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
-        "elocindev.necronomicon.api.NecUtilsAPI",
-        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
-        "elocindev.necronomicon.api.text.AnimatedText",
-        "elocindev.necronomicon.api.text.IAnimatedText",
-        "elocindev.necronomicon.api.text.TextAPI",
-        "elocindev.necronomicon.CommonInitializer",
-        "elocindev.necronomicon.config.ConfigBuilder",
-        "elocindev.necronomicon.datagen.ModelGenerator",
-        "elocindev.necronomicon.item.FancyItem",
-        "elocindev.necronomicon.math.MathUtils",
-        "elocindev.necronomicon.NecronomiconConfig",
-        "elocindev.necronomicon.util.ColorUtils",
-        "elocindev.necronomicon.util.FileUtils"
-      ],
-      "methods": {
-        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
-          "registerConfig(Class<T>)",
-          "getFile(String)"
-        ],
-        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
-        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
-          "makeItem(ItemModelProvider, RegistryObject<Item>, String)"
-        ],
-        "elocindev.necronomicon.api.json.JsonFileAPI": [
-          "setPrettyPrint(Path)"
-        ],
-        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
-        "elocindev.necronomicon.api.NecUtilsAPI": [
-          "getLookVec(LivingEntity)",
-          "getEntityId(Entity)",
-          "getEntityIdentifier(Entity)",
-          "getWorldTime(LivingEntity)",
-          "getWorldTime(Level)",
-          "isModLoaded(String)"
-        ],
-        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
-          "registerBuiltinPack(String, Path, Component, boolean, Component, PackType, Position, boolean)",
-          "registerBuiltinPack(String, Path, Component, boolean, Component, PackType, Position, boolean, int)"
-        ],
-        "elocindev.necronomicon.api.text.AnimatedText": [
-          "getName()",
-          "getId()",
-          "getText(Component)",
-          "getText(Component, int)"
-        ],
-        "elocindev.necronomicon.api.text.IAnimatedText": [],
-        "elocindev.necronomicon.api.text.TextAPI": [
-          "setStaticGradient(MutableComponent, int, int)",
-          "setSlideGradient(MutableComponent, int, int, int, float)",
-          "setBreathingGradient(MutableComponent, int, int, int, float)",
-          "setRainbowGradient(MutableComponent, int, float)"
-        ],
-        "elocindev.necronomicon.CommonInitializer": [
-          "init()"
-        ],
-        "elocindev.necronomicon.config.ConfigBuilder": [
-          "registerConfig(Path, Class<T>)",
-          "initializeConfigs(Class<T>)"
-        ],
-        "elocindev.necronomicon.datagen.ModelGenerator": [],
-        "elocindev.necronomicon.item.FancyItem": [],
         "elocindev.necronomicon.math.MathUtils": [
           "getLookingVec(LivingEntity)"
         ],
@@ -215,9 +430,2977 @@
           "setPrettyPrint(Path)"
         ]
       },
-      "sampleCount": 22
+      "sampleCount": 46
+    },
+    "1.21.2": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier",
+        "elocindev.necronomicon.api.ResourceIdentifier",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedGradientName",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.IGradientName",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)",
+          "registerResourcePack(FabricLoader, String, String, Text, ResourcePackActivationType)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier": [
+          "of(String, String)",
+          "of(String)"
+        ],
+        "elocindev.necronomicon.api.ResourceIdentifier": [
+          "get(String)",
+          "get(String, String)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedGradientName": [],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.IGradientName": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 46
+    },
+    "1.21.1": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier",
+        "elocindev.necronomicon.api.ResourceIdentifier",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedGradientName",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.IGradientName",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)",
+          "registerResourcePack(FabricLoader, String, String, Text, ResourcePackActivationType)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier": [
+          "of(String, String)",
+          "of(String)"
+        ],
+        "elocindev.necronomicon.api.ResourceIdentifier": [
+          "get(String)",
+          "get(String, String)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedGradientName": [],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.IGradientName": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 46
+    },
+    "1.21": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils",
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier",
+        "elocindev.necronomicon.api.ResourceIdentifier",
+        "elocindev.necronomicon.api.text.IAnimatedGradientName",
+        "elocindev.necronomicon.api.text.IGradientName"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier": [
+          "of(String, String)",
+          "of(String)"
+        ],
+        "elocindev.necronomicon.api.ResourceIdentifier": [
+          "get(String)",
+          "get(String, String)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedGradientName": [],
+        "elocindev.necronomicon.api.text.IGradientName": []
+      },
+      "sampleCount": 70
+    },
+    "1.20.6": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.20.5": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.20.4": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils",
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier",
+        "elocindev.necronomicon.api.ResourceIdentifier",
+        "elocindev.necronomicon.api.text.IAnimatedGradientName",
+        "elocindev.necronomicon.api.text.IGradientName"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier": [
+          "of(String, String)",
+          "of(String)"
+        ],
+        "elocindev.necronomicon.api.ResourceIdentifier": [
+          "get(String)",
+          "get(String, String)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedGradientName": [],
+        "elocindev.necronomicon.api.text.IGradientName": []
+      },
+      "sampleCount": 70
+    },
+    "1.20.3": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils",
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier",
+        "elocindev.necronomicon.api.ResourceIdentifier",
+        "elocindev.necronomicon.api.text.IAnimatedGradientName",
+        "elocindev.necronomicon.api.text.IGradientName"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier": [
+          "of(String, String)",
+          "of(String)"
+        ],
+        "elocindev.necronomicon.api.ResourceIdentifier": [
+          "get(String)",
+          "get(String, String)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedGradientName": [],
+        "elocindev.necronomicon.api.text.IGradientName": []
+      },
+      "sampleCount": 70
+    },
+    "1.20.2": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils",
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier",
+        "elocindev.necronomicon.api.ResourceIdentifier",
+        "elocindev.necronomicon.api.text.IAnimatedGradientName",
+        "elocindev.necronomicon.api.text.IGradientName"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier": [
+          "of(String, String)",
+          "of(String)"
+        ],
+        "elocindev.necronomicon.api.ResourceIdentifier": [
+          "get(String)",
+          "get(String, String)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedGradientName": [],
+        "elocindev.necronomicon.api.text.IGradientName": []
+      },
+      "sampleCount": 70
+    },
+    "1.20.1": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils",
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier",
+        "elocindev.necronomicon.api.ResourceIdentifier",
+        "elocindev.necronomicon.api.text.IAnimatedGradientName",
+        "elocindev.necronomicon.api.text.IGradientName"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier": [
+          "of(String, String)",
+          "of(String)"
+        ],
+        "elocindev.necronomicon.api.ResourceIdentifier": [
+          "get(String)",
+          "get(String, String)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedGradientName": [],
+        "elocindev.necronomicon.api.text.IGradientName": []
+      },
+      "sampleCount": 70
+    },
+    "1.20": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils",
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier",
+        "elocindev.necronomicon.api.ResourceIdentifier",
+        "elocindev.necronomicon.api.text.IAnimatedGradientName",
+        "elocindev.necronomicon.api.text.IGradientName"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier": [
+          "of(String, String)",
+          "of(String)"
+        ],
+        "elocindev.necronomicon.api.ResourceIdentifier": [
+          "get(String)",
+          "get(String, String)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedGradientName": [],
+        "elocindev.necronomicon.api.text.IGradientName": []
+      },
+      "sampleCount": 70
+    },
+    "1.19.4": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.19.3": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.19.2": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.19.1": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.19": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.18.2": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.18.1": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.18": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.17.1": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.17": {
+      "packages": [
+        "elocindev.necronomicon",
+        "elocindev.necronomicon.api",
+        "elocindev.necronomicon.api.config.v1",
+        "elocindev.necronomicon.api.datagen.v1",
+        "elocindev.necronomicon.api.json",
+        "elocindev.necronomicon.api.nbt.v1",
+        "elocindev.necronomicon.api.resource.v1",
+        "elocindev.necronomicon.api.text",
+        "elocindev.necronomicon.config",
+        "elocindev.necronomicon.datagen",
+        "elocindev.necronomicon.example",
+        "elocindev.necronomicon.item",
+        "elocindev.necronomicon.math",
+        "elocindev.necronomicon.util"
+      ],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.example.AnimItemExample",
+        "elocindev.necronomicon.example.ExampleFancyItem",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(Item, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItem(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Item[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeItems(Block[], BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "makeCubeAllBlocks(BlockStateModelGenerator, Block[])",
+          "makeWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "makeSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeStair(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeSlabStair(BlockStateModelGenerator, Block, Block, Block)",
+          "makeBarBlock(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeFenceGateBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "makeButtonBlock(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(World)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack()",
+          "registerBuiltinPack(String)",
+          "registerBuiltinPack(FabricLoader, String, String, Text, boolean, boolean)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Text)",
+          "getText(Text, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableText, int, int)",
+          "setSlideGradient(MutableText, int, int, int, float)",
+          "setBreathingGradient(MutableText, int, int, int, float)",
+          "setRainbowGradient(MutableText, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(BlockStateModelGenerator)",
+          "generateItemModels(ItemModelGenerator)",
+          "registerSlabStairSet(BlockStateModelGenerator, Block, Block, Block)",
+          "registerWoodset(BlockStateModelGenerator, Block, Block, Block, Block, Block, Block, Block, Block)",
+          "registerBars(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerItemModel(Block, BiConsumer<Identifier, Supplier<JsonElement>>)",
+          "registerFence(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFenceGate(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerSlab(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerButton(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerStairs(Block, Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "registerFronds(Block, BiConsumer<Identifier, Supplier<JsonElement>>, Consumer<BlockStateSupplier>)",
+          "createSingletonBlockState(Block, Identifier)",
+          "createSlabBlockState(Block, Identifier, Identifier, Identifier)",
+          "createStairsBlockState(Block, Identifier, Identifier, Identifier)",
+          "createButtonBlockState(Block, Identifier, Identifier)",
+          "registerParentedItemModel(Block, Identifier, BiConsumer<Identifier, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.example.AnimItemExample": [
+          "init()"
+        ],
+        "elocindev.necronomicon.example.ExampleFancyItem": [
+          "method_7851(ItemStack, World, List<Text>, TooltipContext)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(ItemStack)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 48
     }
   },
-  "classCount": 37,
-  "methodCount": 86
+  "classCount": 481,
+  "methodCount": 1506
 }

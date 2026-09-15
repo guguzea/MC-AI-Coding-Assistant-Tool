@@ -10,9 +10,9 @@
     ],
     "merged": false
   },
-  "generatedAt": "2026-09-12T11:33:55.789Z",
+  "generatedAt": "2026-09-15T12:19:28.828Z",
   "versions": {
-    "1.3.3.55": {
+    "1.12.2": {
       "packages": [
         "slimeknights.mantle",
         "slimeknights.mantle.block",
@@ -146,6 +146,7 @@
         "slimeknights.mantle.config.AbstractConfigFile",
         "slimeknights.mantle.config.AbstractConfigSyncPacket",
         "slimeknights.mantle.config.BlockMeta",
+        "slimeknights.mantle.config.ExampleSync",
         "slimeknights.mantle.configurate.commented.CommentedConfigurationNode",
         "slimeknights.mantle.configurate.commented.SimpleCommentedConfigurationNode",
         "slimeknights.mantle.configurate.ConfigurationNode",
@@ -347,7 +348,9 @@
           "getItemAction(ItemStackData)",
           "getVisibleSections(GuiBook.AdvancementCache)",
           "translate(String)",
-          "openGui(ItemStack)"
+          "openGui(ItemStack)",
+          "addRepository(BookRepository)",
+          "addTransformer(BookTransformer)"
         ],
         "slimeknights.mantle.client.book.data.BookmarkData": [],
         "slimeknights.mantle.client.book.data.content.ContentBlank": [
@@ -579,7 +582,12 @@
           "func_73876_c()",
           "func_146284_a(GuiButton)",
           "func_73869_a(char, int)",
-          "func_146274_d()"
+          "func_146274_d()",
+          "func_73864_a(int, int, int)",
+          "func_146286_b(int, int, int)",
+          "func_146273_a(int, int, int, long)",
+          "func_146281_b()",
+          "func_73868_f()"
         ],
         "slimeknights.mantle.client.gui.book.GuiBookmark": [
           "func_191745_a(Minecraft, int, int, float)"
@@ -640,7 +648,9 @@
           "func_146273_a(int, int, int, long)",
           "func_146286_b(int, int, int)",
           "getModuleForPoint(int, int)",
-          "getModuleForSlot(int)"
+          "getModuleForSlot(int)",
+          "getModuleForContainer(Container)",
+          "getContainer()"
         ],
         "slimeknights.mantle.client.gui.GuiWidget": [
           "draw()",
@@ -762,6 +772,10 @@
           "equals(Object)",
           "hashCode()",
           "toString()"
+        ],
+        "slimeknights.mantle.config.ExampleSync": [
+          "playerLoggedIn(PlayerLoggedInEvent)",
+          "playerJoinedWorld(ClientTickEvent)"
         ],
         "slimeknights.mantle.configurate.commented.CommentedConfigurationNode": [],
         "slimeknights.mantle.configurate.commented.SimpleCommentedConfigurationNode": [
@@ -898,7 +912,22 @@
           "isVirtual()",
           "hasListChildren()",
           "hasMapChildren()",
-          "getChildrenList()"
+          "getChildrenList()",
+          "getChildrenMap()",
+          "getChild(Object, boolean)",
+          "removeChild(Object)",
+          "getAppendedNode()",
+          "getKey()",
+          "getPath()",
+          "getParent()",
+          "getOptions()",
+          "createNode(Object)",
+          "attachIfNecessary()",
+          "attachChild(SimpleConfigurationNode)",
+          "clear()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
         ],
         "slimeknights.mantle.configurate.transformation.ChainedConfigurationTransformation": [
           "apply(ConfigurationNode)"
@@ -1177,7 +1206,16 @@
           "func_145748_c_()",
           "func_70300_a(EntityPlayer)",
           "func_174889_b(EntityPlayer)",
-          "func_174886_c(EntityPlayer)"
+          "func_174886_c(EntityPlayer)",
+          "func_145839_a(NBTTagCompound)",
+          "func_189515_b(NBTTagCompound)",
+          "writeInventoryToNBT(NBTTagCompound)",
+          "readInventoryFromNBT(NBTTagCompound)",
+          "getStackInSlotOnClosing(int)",
+          "func_174887_a_(int)",
+          "func_174885_b(int, int)",
+          "func_174890_g()",
+          "func_191420_l()"
         ],
         "slimeknights.mantle.typesafe.config.Config": [],
         "slimeknights.mantle.typesafe.config.ConfigBeanFactory": [
@@ -1206,7 +1244,40 @@
           "defaultReference(ClassLoader)",
           "defaultOverrides()",
           "defaultOverrides(ClassLoader)",
-          "defaultApplication()"
+          "defaultApplication()",
+          "defaultApplication(ClassLoader)",
+          "defaultApplication(ConfigParseOptions)",
+          "invalidateCaches()",
+          "empty()",
+          "empty(String)",
+          "systemProperties()",
+          "systemEnvironment()",
+          "parseProperties(Properties, ConfigParseOptions)",
+          "parseProperties(Properties)",
+          "parseReader(Reader, ConfigParseOptions)",
+          "parseReader(Reader)",
+          "parseURL(URL, ConfigParseOptions)",
+          "parseURL(URL)",
+          "parseFile(File, ConfigParseOptions)",
+          "parseFile(File)",
+          "parseFileAnySyntax(File, ConfigParseOptions)",
+          "parseFileAnySyntax(File)",
+          "parseResources(Class<?>, String, ConfigParseOptions)",
+          "parseResources(Class<?>, String)",
+          "parseResourcesAnySyntax(Class<?>, String, ConfigParseOptions)",
+          "parseResourcesAnySyntax(Class<?>, String)",
+          "parseResources(ClassLoader, String, ConfigParseOptions)",
+          "parseResources(ClassLoader, String)",
+          "parseResourcesAnySyntax(ClassLoader, String, ConfigParseOptions)",
+          "parseResourcesAnySyntax(ClassLoader, String)",
+          "parseResources(String, ConfigParseOptions)",
+          "parseResources(String)",
+          "parseResourcesAnySyntax(String, ConfigParseOptions)",
+          "parseResourcesAnySyntax(String)",
+          "parseString(String, ConfigParseOptions)",
+          "parseString(String)",
+          "parseMap(Map<String, ? extends Object>, String)",
+          "parseMap(Map<String, ? extends Object>)"
         ],
         "slimeknights.mantle.typesafe.config.ConfigIncludeContext": [],
         "slimeknights.mantle.typesafe.config.ConfigIncluder": [],
@@ -1318,7 +1389,10 @@
           "add(int, E)",
           "remove(int)",
           "indexOf(Object)",
-          "lastIndexOf(Object)"
+          "lastIndexOf(Object)",
+          "listIterator()",
+          "listIterator(int)",
+          "subList(int, int)"
         ],
         "slimeknights.mantle.util.ItemStackList": [
           "create()",
@@ -1398,13 +1472,154 @@
       },
       "sampleCount": 209
     },
-    "0.3.2b": {
-      "packages": [],
-      "classes": [],
-      "methods": {},
-      "sampleCount": 0
+    "1.7.10": {
+      "packages": [
+        "mantle.blocks",
+        "mantle.blocks.abstracts",
+        "mantle.blocks.iface"
+      ],
+      "classes": [
+        "mantle.blocks.abstracts.AdaptiveInventoryLogic",
+        "mantle.blocks.abstracts.ExpandableInventoryLogic",
+        "mantle.blocks.abstracts.InventoryBlock",
+        "mantle.blocks.abstracts.InventoryLogic",
+        "mantle.blocks.abstracts.InventorySlab",
+        "mantle.blocks.abstracts.MultiItemBlock",
+        "mantle.blocks.abstracts.MultiServantLogic",
+        "mantle.blocks.BlockUtils",
+        "mantle.blocks.iface.IActiveLogic",
+        "mantle.blocks.iface.IFacingLogic",
+        "mantle.blocks.iface.IMasterLogic",
+        "mantle.blocks.iface.IMasterNode",
+        "mantle.blocks.iface.IServantLogic",
+        "mantle.blocks.MantleBlock"
+      ],
+      "methods": {
+        "mantle.blocks.abstracts.AdaptiveInventoryLogic": [
+          "adjustInventory(int, boolean)",
+          "getTossDirection()"
+        ],
+        "mantle.blocks.abstracts.ExpandableInventoryLogic": [
+          "func_70301_a(int)",
+          "isStackInSlot(int)",
+          "func_70302_i_()",
+          "getMaxSize()",
+          "func_70297_j_()",
+          "canDropInventorySlot(int)",
+          "func_70299_a(int, ItemStack)",
+          "func_70298_a(int, int)",
+          "func_70300_a(EntityPlayer)",
+          "getGuiContainer(InventoryPlayer, World, int, int, int)",
+          "func_145839_a(NBTTagCompound)",
+          "func_145841_b(NBTTagCompound)",
+          "func_70304_b(int)",
+          "openChest()",
+          "closeChest()",
+          "getDefaultName()",
+          "setInvName(String)",
+          "getInvName()",
+          "isInvNameLocalized()",
+          "cleanInventory()",
+          "func_94041_b(int, ItemStack)"
+        ],
+        "mantle.blocks.abstracts.InventoryBlock": [
+          "createNewTileEntity(World)",
+          "func_149915_a(World, int)",
+          "getGui(World, int, int, int, EntityPlayer)",
+          "getModInstance()",
+          "func_149727_a(World, int, int, int, EntityPlayer, int, float, float, float)",
+          "func_149749_a(World, int, int, int, Block, int)",
+          "func_149660_a(World, int, int, int, int, float, float, float, int)",
+          "func_149689_a(World, int, int, int, EntityLivingBase, ItemStack)",
+          "isActive(IBlockAccess, int, int, int)",
+          "func_149692_a(int)",
+          "getTextureNames()",
+          "getTextureDomain(int)",
+          "func_149651_a(IIconRegister)",
+          "func_149699_a(World, int, int, int, EntityPlayer)"
+        ],
+        "mantle.blocks.abstracts.InventoryLogic": [
+          "func_70301_a(int)",
+          "isStackInSlot(int)",
+          "func_70302_i_()",
+          "func_70297_j_()",
+          "canDropInventorySlot(int)",
+          "func_70299_a(int, ItemStack)",
+          "func_70298_a(int, int)",
+          "func_70300_a(EntityPlayer)",
+          "getGuiContainer(InventoryPlayer, World, int, int, int)",
+          "func_145839_a(NBTTagCompound)",
+          "readInventoryFromNBT(NBTTagCompound)",
+          "func_145841_b(NBTTagCompound)",
+          "writeInventoryToNBT(NBTTagCompound)",
+          "func_70304_b(int)",
+          "openChest()",
+          "closeChest()",
+          "getDefaultName()",
+          "setInvName(String)",
+          "getInvName()",
+          "func_145818_k_()",
+          "isInvNameLocalized()",
+          "func_94041_b(int, ItemStack)",
+          "placeBlock(EntityLivingBase, ItemStack)",
+          "removeBlock()",
+          "getDebugInfo(EntityPlayer)"
+        ],
+        "mantle.blocks.abstracts.InventorySlab": [
+          "func_149686_d()",
+          "func_149662_c()",
+          "func_149646_a(IBlockAccess, int, int, int, int)",
+          "func_149743_a(World, int, int, int, AxisAlignedBB, List, Entity)",
+          "func_149683_g()",
+          "func_149719_a(IBlockAccess, int, int, int)",
+          "func_149660_a(World, int, int, int, int, float, float, float, int)",
+          "func_149692_a(int)"
+        ],
+        "mantle.blocks.abstracts.MultiItemBlock": [
+          "setSpecialIndex(int, int)",
+          "func_77647_b(int)",
+          "func_77667_c(ItemStack)"
+        ],
+        "mantle.blocks.abstracts.MultiServantLogic": [
+          "canUpdate()",
+          "getHasMaster()",
+          "hasValidMaster()",
+          "getMasterPosition()",
+          "overrideMaster(int, int, int)",
+          "removeMaster()",
+          "setPotentialMaster(IMasterLogic, World, int, int, int)",
+          "verifyMaster(IMasterLogic, int, int, int)",
+          "verifyMaster(IMasterLogic, World, int, int, int)",
+          "invalidateMaster(IMasterLogic, World, int, int, int)",
+          "notifyMasterOfChange()",
+          "readCustomNBT(NBTTagCompound)",
+          "writeCustomNBT(NBTTagCompound)",
+          "func_145839_a(NBTTagCompound)",
+          "func_145841_b(NBTTagCompound)",
+          "func_145844_m()",
+          "onDataPacket(NetworkManager, S35PacketUpdateTileEntity)",
+          "getDebugInfo(EntityPlayer)",
+          "getWorld()",
+          "setMaster(int, int, int)"
+        ],
+        "mantle.blocks.BlockUtils": [
+          "getBlockFromItem(Item)",
+          "getBlockFromItemStack(ItemStack)",
+          "getUniqueName(Block)",
+          "getBlockFromUniqueName(String)"
+        ],
+        "mantle.blocks.iface.IActiveLogic": [],
+        "mantle.blocks.iface.IFacingLogic": [],
+        "mantle.blocks.iface.IMasterLogic": [],
+        "mantle.blocks.iface.IMasterNode": [],
+        "mantle.blocks.iface.IServantLogic": [],
+        "mantle.blocks.MantleBlock": [
+          "func_149699_a(World, int, int, int, EntityPlayer)"
+        ]
+      },
+      "sampleCount": 14
     }
   },
-  "classCount": 194,
-  "methodCount": 799
+  "classCount": 209,
+  "methodCount": 968
 }

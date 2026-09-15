@@ -150,8 +150,19 @@ try {
   const hasBom = srcBuf[0] === 0xef && srcBuf[1] === 0xbb && srcBuf[2] === 0xbf;
   writeFileSync(fxPath, JSON.stringify(FIXTURES.map(([, t]) => t)), "utf8");
 
+  // 钩子行必须保持**纯 ASCII**：本 harness 按源稿 BOM 状态落盘（本仓 sync-skills.ps1 无 BOM），
+  // 而 PS 5.1 在中文机器上把无 BOM 的 .ps1 按 ANSI(GBK) 解码 ⇒ 内联在钩子里的绝对路径
+  // （仓库真实路径含中文：`…\桌面\…`）会被解成乱码，ParseFile 报
+  // 「无法读取文件: 未找到路径…的一部分」并被计成 1 个「解析错误」——
+  // 于是一条本来绿的链在**中文路径下假红**，且报错指向的 assert-powershell 是绿的。
+  // 2026-09-15 实测：`M:\` 别名下绿、`C:\Users\…\桌面\…` 下红，确定性复现。
+  // 修法：路径走 base64 传，钩子行零非 ASCII；被抽取函数体的 BOM 状态一字不动（那才是本门要验的前提）。
+  const b64 = (s) => Buffer.from(String(s), "utf8").toString("base64");
   const tailLines = [
     "$ErrorActionPreference = 'Stop'",
+    // 让报错明细以 UTF-8 回来，否则中文消息在 stdout 上是 GBK 混排、肉眼定不了性
+    "try { [Console]::OutputEncoding = [Text.Encoding]::UTF8 } catch { }",
+    "$psFilePath = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('" + b64(PS_FILE) + "'))",
     "$fx = ConvertFrom-Json ([IO.File]::ReadAllText('" + q(fxPath) + "', [Text.Encoding]::UTF8))",
     "$i = 0",
     "foreach ($t in $fx) {",
@@ -161,8 +172,12 @@ try {
     "  $i++",
     "}",
     "$tok = $null; $err = $null",
-    "[void][System.Management.Automation.Language.Parser]::ParseFile('" + q(PS_FILE) + "', [ref]$tok, [ref]$err)",
+    "[void][System.Management.Automation.Language.Parser]::ParseFile($psFilePath, [ref]$tok, [ref]$err)",
     "Write-Output ('PARSE-ERRORS=' + $err.Count)",
+    // 逐条吐出位置与消息：>0 时若只丢一个计数，读的人只能去跑 assert-powershell，
+    // 而那门报的可能是绿的（两门取数路径不同）⇒ 红点无法定位。2026-09-15 实测到过一次
+    // PARSE-ERRORS=1 而手工 ParseFile 连跑 5 次全 0（瞬时读失败/占用），有位置才能判性质。
+    "foreach ($pe in @($err)) { Write-Output ('PARSE-ERR=' + $pe.Extent.StartLineNumber + ':' + $pe.Extent.StartColumnNumber + ' ' + ($pe.Message -replace '\\s+', ' ')) }",
     "",
   ];
   // 与生产同 BOM 状态：抽出来的函数体按原字节落盘，钩子代码本身纯 ASCII。
@@ -185,12 +200,18 @@ try {
   } else {
     const meta = {};
     const rows = [];
+    const parseErrDetail = [];
     for (const line of stdout.split(/\r?\n/)) {
       const t = line.trim();
       if (!t) continue;
       const m = t.match(/^(?:NONASCII-LITERALS|PARSE-ERRORS)=(\d+)$/);
       if (m) {
         meta[t.split("=")[0]] = Number(m[1]);
+        continue;
+      }
+      const pe = t.match(/^PARSE-ERR=(.+)$/);
+      if (pe) {
+        parseErrDetail.push(pe[1].slice(0, 200));
         continue;
       }
       const row = t.match(/^IDX=(\d+) B64=([A-Za-z0-9+/=]*)$/);
@@ -219,8 +240,14 @@ try {
     if (meta["PARSE-ERRORS"] === undefined) {
       failures.push("PS harness 没回 PARSE-ERRORS，编码前提未证");
     } else if (meta["PARSE-ERRORS"] > 0) {
+      // 两门取数路径不同（本门 ParseFile 单文件 / assert-powershell 自己那套），实测出现过
+      // 本门红而 assert-powershell 绿 ⇒ 不能再把定位甩给另一门。位置与消息必须自曝，
+      // 否则无法区分「文件真坏」与「瞬时读失败（占用 / 云盘占位符水合）」。
       failures.push(
-        `scripts/sync-skills.ps1 有 ${meta["PARSE-ERRORS"]} 个 PowerShell ${psVersion} 解析错误（详单跑 assert-powershell）`,
+        `scripts/sync-skills.ps1 有 ${meta["PARSE-ERRORS"]} 个 PowerShell ${psVersion} 解析错误` +
+          (parseErrDetail.length ? `：\n      ${parseErrDetail.join("\n      ")}` : "（PS harness 未回位置明细）") +
+          `\n      ⇒ 若手工 ParseFile 复跑为 0，则属瞬时读失败（占用 / 云盘占位符水合），不是文件缺陷；` +
+          `两门取数路径不同，assert-powershell 可能同时报绿。`,
       );
     }
     const nonAscii = scanNonAsciiLiterals(ps.text);

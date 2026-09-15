@@ -10,9 +10,9 @@
     ],
     "merged": false
   },
-  "generatedAt": "2026-09-12T11:33:59.780Z",
+  "generatedAt": "2026-09-15T12:19:30.146Z",
   "versions": {
-    "unknown": {
+    "21w10a": {
       "packages": [
         "virtuoel.pehkui",
         "virtuoel.pehkui.api",
@@ -66,7 +66,20 @@
           "getScaleTickDelay()",
           "setScaleTickDelay(int)",
           "getPrevScale()",
-          "markForSync(boolean)"
+          "markForSync(boolean)",
+          "markForSync()",
+          "shouldSync()",
+          "onUpdate()",
+          "toPacketByteBuf(class_2540)",
+          "fromPacketByteBufToTag(class_2540)",
+          "fromTag(class_2487)",
+          "toTag(class_2487)",
+          "fromScale(ScaleData)",
+          "fromScale(ScaleData, boolean)",
+          "averagedFromScales(ScaleData, ScaleData...)",
+          "averagedFromScales(boolean, ScaleData, ScaleData...)",
+          "hashCode()",
+          "equals(final Object)"
         ],
         "virtuoel.pehkui.api.ScaleEventCallback": [],
         "virtuoel.pehkui.api.ScaleModifier": [
@@ -182,7 +195,19 @@
           "getReachScale(class_1297)",
           "getReachScale(class_1297, float)",
           "getAttackScale(class_1297)",
-          "getAttackScale(class_1297, float)"
+          "getAttackScale(class_1297, float)",
+          "getDefenseScale(class_1297)",
+          "getDefenseScale(class_1297, float)",
+          "getHealthScale(class_1297)",
+          "getHealthScale(class_1297, float)",
+          "getDropScale(class_1297)",
+          "getDropScale(class_1297, float)",
+          "getProjectileScale(class_1297)",
+          "getProjectileScale(class_1297, float)",
+          "getExplosionScale(class_1297)",
+          "getExplosionScale(class_1297, float)",
+          "getConfigurableTypedScale(class_1297, ScaleType, String, float)",
+          "getTypedScale(class_1297, ScaleType, float)"
         ],
         "virtuoel.pehkui.util.VersionUtils": [
           "shouldApplyCompatibilityMixin(String)"
@@ -251,7 +276,20 @@
           "getPrevScale()",
           "getPrevBaseScale()",
           "markForSync(boolean)",
-          "shouldSync()"
+          "shouldSync()",
+          "onUpdate()",
+          "toPacket(class_2540)",
+          "readNbt(class_2487)",
+          "writeNbt(class_2487)",
+          "resetScale()",
+          "resetScale(boolean)",
+          "isReset()",
+          "fromScale(ScaleData)",
+          "fromScale(ScaleData, boolean)",
+          "averagedFromScales(ScaleData, ScaleData...)",
+          "hashCode()",
+          "equals(final Object)",
+          "equals(final ScaleData)"
         ],
         "virtuoel.pehkui.api.ScaleEventCallback": [],
         "virtuoel.pehkui.api.ScaleModifier": [
@@ -388,7 +426,26 @@
           "syncScales(class_1297, Consumer<class_2596<?>>, Predicate<ScaleData>, boolean)",
           "getWidthScale(class_1297)",
           "getWidthScale(class_1297, float)",
-          "getHeightScale(class_1297)"
+          "getHeightScale(class_1297)",
+          "getHeightScale(class_1297, float)",
+          "getMotionScale(class_1297)",
+          "getMotionScale(class_1297, float)",
+          "getReachScale(class_1297)",
+          "getReachScale(class_1297, float)",
+          "getAttackScale(class_1297)",
+          "getAttackScale(class_1297, float)",
+          "getDefenseScale(class_1297)",
+          "getDefenseScale(class_1297, float)",
+          "getHealthScale(class_1297)",
+          "getHealthScale(class_1297, float)",
+          "getDropScale(class_1297)",
+          "getDropScale(class_1297, float)",
+          "getProjectileScale(class_1297)",
+          "getProjectileScale(class_1297, float)",
+          "getExplosionScale(class_1297)",
+          "getExplosionScale(class_1297, float)",
+          "getConfigurableTypedScale(class_1297, ScaleType, Supplier<Boolean>, float)",
+          "getTypedScale(class_1297, ScaleType, float)"
         ],
         "virtuoel.pehkui.util.VersionUtils": [
           "shouldApplyCompatibilityMixin(String)"
@@ -457,7 +514,20 @@
           "getPrevScale()",
           "getPrevBaseScale()",
           "markForSync(boolean)",
-          "shouldSync()"
+          "shouldSync()",
+          "onUpdate()",
+          "toPacket(class_2540)",
+          "readNbt(class_2487)",
+          "writeNbt(class_2487)",
+          "resetScale()",
+          "resetScale(boolean)",
+          "isReset()",
+          "fromScale(ScaleData)",
+          "fromScale(ScaleData, boolean)",
+          "averagedFromScales(ScaleData, ScaleData...)",
+          "hashCode()",
+          "equals(final Object)",
+          "equals(final ScaleData)"
         ],
         "virtuoel.pehkui.api.ScaleEventCallback": [],
         "virtuoel.pehkui.api.ScaleModifier": [
@@ -594,7 +664,26 @@
           "syncScales(class_1297, Consumer<class_2596<?>>, Predicate<ScaleData>, boolean)",
           "getWidthScale(class_1297)",
           "getWidthScale(class_1297, float)",
-          "getHeightScale(class_1297)"
+          "getHeightScale(class_1297)",
+          "getHeightScale(class_1297, float)",
+          "getMotionScale(class_1297)",
+          "getMotionScale(class_1297, float)",
+          "getReachScale(class_1297)",
+          "getReachScale(class_1297, float)",
+          "getAttackScale(class_1297)",
+          "getAttackScale(class_1297, float)",
+          "getDefenseScale(class_1297)",
+          "getDefenseScale(class_1297, float)",
+          "getHealthScale(class_1297)",
+          "getHealthScale(class_1297, float)",
+          "getDropScale(class_1297)",
+          "getDropScale(class_1297, float)",
+          "getProjectileScale(class_1297)",
+          "getProjectileScale(class_1297, float)",
+          "getExplosionScale(class_1297)",
+          "getExplosionScale(class_1297, float)",
+          "getConfigurableTypedScale(class_1297, ScaleType, Supplier<Boolean>, float)",
+          "getTypedScale(class_1297, ScaleType, float)"
         ],
         "virtuoel.pehkui.util.VersionUtils": [
           "shouldApplyCompatibilityMixin(String)"
@@ -604,5 +693,5 @@
     }
   },
   "classCount": 77,
-  "methodCount": 333
+  "methodCount": 422
 }

@@ -1,0 +1,42 @@
+name: Wrapper upstream checksum (non-blocking)
+
+# 用户裁定（2026-09-15）：上游校验默认关闭（opt-in），CI 里**独立、非阻塞** job。
+#  - 不并入 mcp-server-ci.yml 的 npm test：那是离线链，不能引入外网依赖；
+#  - 本 job 只跑 `MC_SKILL_WRAPPER_UPSTREAM=1 node mcp-server/scripts/assert-scaffold-wrappers.mjs`；
+#  - 策略在门内实现：登记值 ≠ 上游 → 红；主机不可达 → info（rc=0，不红）；未登记 zipSha256 → info。
+# 因为 `continue-on-error: true` 在 job 级，本 job 红**不会**让 workflow 红 —— 它只是把
+# 「wrapper-jars.json 登记的发行包 sha256 与上游脱节」亮出来，供人裁决，不拦合并。
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 每周一 03:00 UTC
+    - cron: "0 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  upstream:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify wrapper jars against upstream distribution checksums
+        run: node mcp-server/scripts/assert-scaffold-wrappers.mjs
+        env:
+          MC_SKILL_WRAPPER_UPSTREAM: "1"
+          SCAFFOLD_WRAPPER_GATE_INFO: "1"
+
+      - name: Note
+        if: always()
+        run: |
+          echo "非阻塞 job：本步骤失败（登记值 ≠ 上游）不拦合并，但必须人工复核 wrapper-jars.json。"
+          echo "主机不可达 / 未登记 zipSha256 只会打 info，rc=0。"

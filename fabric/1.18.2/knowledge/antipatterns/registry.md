@@ -101,6 +101,7 @@ Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),
 ```java
 // ❌ 直接写完整字符串
 new Identifier("examplemod:my_item");  // 这会被当作 namespace = "examplemod:my_item"
+// TODO(未核实)：单参 `Identifier("ns:path")` 是否真会被当作整串 namespace —— 本仓 1.18.2 语料无一手证据
 // ✅ 正确方式
 new Identifier(MOD_ID, "my_item");
 ```

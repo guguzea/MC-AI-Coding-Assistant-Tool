@@ -354,7 +354,17 @@ function collectJavaFiles(dir, relPkg, prefixes, out, maxFiles, depth, maxDepth)
 const CLASS_RE = /^(public\s+(?:(?:abstract|final|sealed|non-sealed|static)\s+)*(?:class|interface|enum|record)\s+)([A-Za-z_$][\w$]*)/;
 // Kotlin 反编译形态（Kotlin 类默认 public，VineFlower 输出 open class / object / fun）
 const KCLASS_RE = /^(?:(?:public)\s+)?(?:(?:abstract|final|open|sealed|data|value)\s+)*(?:enum\s+)?(?:class|interface|object|annotation)\s+([A-Za-z_$][\w$]*)/;
-const KOTLIN_MARKER = /(@SourceDebugExtension|import kotlin\.|\bopen class|\bsealed class|\bdata class|\benum class|\bobject [A-Za-z_$]|\bfun\s+[A-Za-z_$]|\bval\s+[A-Za-z_$])/;
+// `\bfun\s*(?:[A-Za-z_$]|<)`：**泛型**顶层函数（`public fun <T> Foo.bar(...)`）也必须算 Kotlin。
+// 旧写法 `\bfun\s+[A-Za-z_$]` 匹配不到 `fun <T>` ⇒ 整个文件被判成非 Kotlin，
+// 既过不了 CLASS_RE 又走不到门面回退（实测 kfflib 的 CapabilityUtilKt 正是这样漏掉的唯一一个真类）。
+const KOTLIN_MARKER = /(@SourceDebugExtension|import kotlin\.|\bopen class|\bsealed class|\bdata class|\benum class|\bobject [A-Za-z_$]|\bfun\s*(?:[A-Za-z_$]|<)|\bval\s+[A-Za-z_$])/;
+/**
+ * 文件门面判据：某个**行首**顶层声明是 `fun` / `val` / `var`，且**没有** `internal|private|protected` 前缀。
+ * Kotlin 默认可见性是 public，所以裸 `fun foo()` 也算。用于确认「这文件确实只有顶层声明、没有类型」——
+ * 避免把一个空文件/纯注释文件也登记成一个假类。
+ */
+const FACADE_DECL_RE =
+  /^(?:(?:public|actual|expect|external|inline|operator|infix|tailrec|suspend|const|lateinit|vararg|abstract|open|override|final)\s+)*(?:fun|val|var)\s+\S/m;
 const REJECT_WORDS = new Set(['new', 'return', 'this', 'super', 'case', 'throw', 'assert', 'class', 'instanceof', 'if', 'while', 'for', 'switch', 'catch']);
 // '>' 覆盖 switch 箭头 (-> foo())；+ - * / % 覆盖字段初始化里的算术调用
 const REJECT_CHARS = new Set(['.', '=', '(', ',', '!', '?', ':', ';', '[', ')', '{', '}', '>', '-', '+', '*', '/', '%']);
@@ -385,13 +395,23 @@ function findClassBodyBrace(src, from) {
 /**
  * 扫描一个 .java 文件，返回顶层 public 类的 [{name, methods:[{sig, name, types}]}]
  * isKotlin: 反编译产物为 Kotlin 形态（open class / object / fun），类与方法均默认 public
+ * facadeName: Kotlin **文件门面**（`Foo.kt` 的顶层 fun/val 编译成 JVM 类 `FooKt`）。
+ *   这类文件里**没有类型声明**，主循环一条都收不到 —— 但它在 JVM 侧确实是个类，
+ *   且类名就写在文件名上（实测 `CapabilityUtilKt.java` 只有 `public fun <T> …`，无 class）。
+ *   传了 facadeName 就先把它登记成一个类，后续成员扫描按「已在类体内」跑（depth=1）。
+ *   只对「无类型声明」的文件启用；`internal/private/protected` 顶层声明仍按既有口径不收。
  */
-function scanJavaFile(src, maxMethodsPerClass, isKotlin) {
+function scanJavaFile(src, maxMethodsPerClass, isKotlin, facadeName = null) {
   const out = [];
   const n = src.length;
   let depth = 0;
   let cur = null; // {name, methods, bodyDepth}
   let i = 0;
+  if (facadeName) {
+    cur = { name: facadeName, methods: [], bodyDepth: 1 };
+    out.push(cur);
+    depth = 1;
+  }
 
   const tryMethod = (tokenEnd) => {
     // 从修饰符后向前扫描到 '('
@@ -693,7 +713,14 @@ function manifestIndexFor(entry) {
 /** 目录名（`<modVersion>-<sha12>`）→ 该发布版本覆盖的 MC 版本集合（本库范围内）。 */
 function manifestVersionsForDirName(dirName, entry, meta = null) {
   const { bySha, byVer } = manifestIndexFor(entry);
-  const sha12 = (dirName.match(/-([0-9a-f]{12})$/) || [])[1];
+  let sha12 = (dirName.match(/-([0-9a-f]{12})$/) || [])[1];
+  if (!sha12 && /^[0-9a-f]{16,}$/.test(dirName)) {
+    // balm 实测（2026-09-15）：5 个叶子目录名是 **sha512 全长**（64 hex，无 `<ver>-` 前缀、
+    // 无 `-` 分隔）⇒ 旧匹配只认 `…-<sha12>` 尾缀 ⇒ join 断 ⇒ meta.version 也无（该批反编译
+    // 未记版本）⇒ 兜底把整串 hex 当版本键，脏键（`03ab49d3…/fabric`）漏进 emit → catalog。
+    // 这 5 个 sha12 在清单里全部命中（balm 3.2.5→6.0.2 forge，gv 1.18–1.19.4）⇒ 取前 12 位 join。
+    sha12 = dirName.slice(0, 12);
+  }
   if (sha12) {
     const byShaHit = bySha.get(sha12);
     if (byShaHit && byShaHit.size) return [...byShaHit].sort(cmpVersions);
@@ -790,6 +817,8 @@ function processLib(entry, opt) {
   const versions = {};
   let classCount = 0;
   let methodCount = 0;
+  /** 靠文件名门面补回来的类数（Kotlin 顶层 fun/val 文件）—— 落进产物便于下一轮核对 */
+  let facadeFiles = 0;
   let truncated = false;
   let truncatedVersions = 0;
   let capsHit = false;
@@ -832,6 +861,23 @@ function processLib(entry, opt) {
       if (pkg) seenPkgs.add(pkg);
       let clsList;
       try { clsList = scanJavaFile(src, opt.maxMethodsPerClass, isKotlin); } catch { continue; }
+      // Kotlin 文件门面：文件里**没有任何类型声明**（纯顶层 fun/val），但 JVM 侧它就是 `<Stem>` 这个类。
+      // 不补这一步，kfflib 这种「一个 .kt 一个门面」的库会整棵漏掉
+      // （实测 kfflib-6.3.0 的 30 个文件里，现行只收到 1 个类，25 个是纯门面）。
+      if (!clsList.length && isKotlin && FACADE_DECL_RE.test(src)) {
+        const stem = path.basename(f).replace(/\.java$/, '');
+        if (/^[A-Za-z_$][\w$]*$/.test(stem) && !/^(package-info|module-info)$/.test(stem)) {
+          try {
+            const facade = scanJavaFile(src, opt.maxMethodsPerClass, true, stem);
+            if (facade.length) {
+              clsList = facade;
+              facadeFiles++;
+            }
+          } catch {
+            /* 保持既有行为：解析失败 = 不收，不抛 */
+          }
+        }
+      }
       for (const cls of clsList) {
         if (verClassCount >= opt.maxClasses || verMethodCount >= opt.maxMethods) { verTruncated = true; break; }
         const fqn = pkg ? `${pkg}.${cls.name}` : cls.name;
@@ -888,6 +934,7 @@ function processLib(entry, opt) {
     versions,
     classCount,
     methodCount,
+    ...(facadeFiles ? { facadeFiles } : {}),
     ...(truncated ? { truncated: true } : {}),
     ...(truncatedVersions ? { truncatedVersions } : {}),
     ...(skippedVersions ? { skippedVersions } : {}),
@@ -908,7 +955,8 @@ function processLib(entry, opt) {
   const ms = Date.now() - libStarted;
   const verCount = Object.keys(versions).length;
   console.log(
-    `[完成] ${slug} | id=${entry.id} | modId=${result.modId} | source=${src.shard}/${src.dirs.join('+')}${src.merged ? ' [合并]' : ''} | 版本 ${verCount} | 类 ${classCount} | 方法 ${methodCount}${shortfall} | ${ms}ms`,
+    `[完成] ${slug} | id=${entry.id} | modId=${result.modId} | source=${src.shard}/${src.dirs.join('+')}${src.merged ? ' [合并]' : ''} | 版本 ${verCount} | 类 ${classCount} | 方法 ${methodCount}` +
+      `${facadeFiles ? ` | 门面补回 ${facadeFiles}` : ''}${shortfall} | ${ms}ms`,
   );
   for (const [ver, v] of Object.entries(versions)) {
     console.log(`    ${ver}: 类 ${v.classes.length} 方法 ${Object.values(v.methods).reduce((a, m) => a + m.length, 0)} 样本 ${v.sampleCount}${v.skipped ? ' (上限跳过，未提取)' : ''}${v.truncated ? ' (类/方法上限截断)' : ''}${v.fileTruncated ? ' (文件截断)' : ''}`);

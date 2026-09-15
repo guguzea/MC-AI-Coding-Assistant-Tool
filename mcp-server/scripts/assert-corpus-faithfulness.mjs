@@ -295,7 +295,8 @@ const stat = {
   angleLossSample: {},
 };
 
-for (const t of findTrees()) {
+const TREES = findTrees();
+for (const t of TREES) {
   const rawFiles = walk(t.raw);
   const procFiles = walk(t.processed).sort();
   const entry = {
@@ -498,6 +499,61 @@ function* walkMd(dir) {
   stat.damageScanned = scanned;
 }
 
+// A9 目录层完整性：raw / processed 树里的**目录对象**也要过一遍。
+// 2026-09-13 实例（2026-09-15 查明）：`data/forge_javadoc/1.10.2/raw` 下躺着 5 个「0 条目 + 名字是字节
+// 错解码」的目录，躺了 2 天无人发现。原因是 A1–A5 / A8 全是**文件级**判据，而 `walk()` 只收 `e.isFile()`
+// ⇒ 目录对象对整门是结构性盲区（G3 一直 rc=0）。
+// 判据取两条「不可能合法」的：① 0 条目目录（语料树只该有文件，不该有目录空壳 —— 写入者
+// `fetch-forge-javadoc.js` 先 `mkdirSync` 再抓页，抓不到就 `continue`，留下的正是空壳）；
+// ② 目录名含非 ASCII / 控制字符（合法包名只来自 `net|cpw` 命名空间，实测那 5 个名字含 U+2594 方框
+// 绘制符与 U+E65E 私用区，根本不是标识符字符）。零容忍，不设台账 —— 出现即红。
+const DIR_NAME_BAD_RE = /[^\u0020-\u007E]/;
+{
+  let scannedDirs = 0;
+  for (const t of TREES) {
+    for (const layer of ["raw", "processed"]) {
+      const stack = [layer === "raw" ? t.raw : t.processed];
+      while (stack.length) {
+        const d = stack.pop();
+        let entries;
+        try {
+          entries = fs.readdirSync(d, { withFileTypes: true });
+        } catch {
+          continue;
+        }
+        scannedDirs++;
+        for (const e of entries) {
+          if (!e.isDirectory()) continue;
+          const abs = path.join(d, e.name);
+          const shown = [...e.name]
+            .map((c) => (c.codePointAt(0) > 0x7e ? `U+${c.codePointAt(0).toString(16).toUpperCase()}` : c))
+            .join("");
+          if (DIR_NAME_BAD_RE.test(e.name)) {
+            fail(
+              `${relData(abs)} 目录名含非 ASCII / 控制字符（${shown}）⇒ 不是人写的名字，是字节被错解码后当成了路径段` +
+                `（2026-09-13 实测出现 5 个，全部 birth=ctime=mtime 且 0 条目）⇒ 必须回到写入者查根因，禁止只删不查`,
+            );
+          }
+          let inner = -1;
+          try {
+            inner = fs.readdirSync(abs).length;
+          } catch {
+            /* 读不了留 -1，不当作 0 条目 */
+          }
+          if (inner === 0) {
+            fail(
+              `${relData(abs)} 是 0 条目目录 ⇒ 语料树里不该有目录空壳：写入者建了目录却没写内容` +
+                "（fetch-forge-javadoc 先 mkdirSync 再抓页，抓不到即 continue）⇒ 查该树生产者与取件日志",
+            );
+          }
+          stack.push(abs);
+        }
+      }
+    }
+  }
+  stat.dirScanned = scannedDirs;
+}
+
 // ── B 层：台账对账 ──────────────────────────────────────────────────────────
 if (process.env.MC_SKILL_CORPUS_RELEDGER) {
   console.log(
@@ -604,5 +660,6 @@ console.log(
     `<<< 残留 ${stat.directive.sites} 处/${stat.directive.files} 文件` +
     `（其中 ${stat.directive.onDiskSites} 处字节已在盘上，区段标记已逐个核实） · ` +
     `中介名 ${stat.intermediary.total} 处（围栏 ${stat.intermediary.code} · 行内码 ${stat.intermediary.inline} · ` +
-    `正文 ${stat.intermediary.prose.length}，全在存量台账） · 泛型丢失 ${angleLossTotal} · 重名 0`,
+    `正文 ${stat.intermediary.prose.length}，全在存量台账） · 泛型丢失 ${angleLossTotal} · 重名 0 · ` +
+    `目录层 ${stat.dirScanned} 个目录（0 条目 0 / 非法名 0）`,
 );

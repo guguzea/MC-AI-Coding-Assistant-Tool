@@ -163,6 +163,10 @@ function checkRecipeResultShape(
   }
 }
 
+// TODO(未核实)：pack_format 的 0 与 null 语义未统一 —— 本函数对 null 直接放行（:167）、`<= 0` 判非法
+// (:181)，而 localize 侧对未知版本回 `null`（mcp-server/src/localize/pack-format.ts:77,87,108；消费点
+// mcp-server/src/localize/index.ts:500,593 以 `!= null` 分叉）。0-vs-null 的官方语义仓内无一手语料，
+// 统一口径前先取证（见根 AGENTS.md 证据纪律）。记于 2026-09-15。
 function checkPackFormatShape(packFormat: unknown, warnings: string[]): void {
   if (packFormat === undefined || packFormat === null) return;
   // 1.21.9+ 官方允许 [主版本, 次版本] 数组写法；整数写法仍合法；

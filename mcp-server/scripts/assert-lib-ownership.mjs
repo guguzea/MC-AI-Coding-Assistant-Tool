@@ -64,8 +64,12 @@ const DEBT_UNKNOWN_MOD_DIRS = [];
  * S5b 补取件带出的新残留：pehkui 的 `21w10a` 快照行 jar 内没解出 modVersion，
  * 摘要因此又出现 `versions.unknown` 键（源码 dirs 是干净的，只有版本键脏）。
  * 登记而非放宽：修 versionKeyOf/modVersion 之后必须把它删掉。
+ *
+ * 2026-09-15 drain：43 库重建批次里 pehkui 用显式上限重建（归属层同一轮修了 sha512
+ * 全名目录的 join），`21w10a` 快照行正确归属 ⇒ `versions.unknown` 键消失。
+ * 台账条目停止复现 ⇒ 按「清空而不删除」纪律撤登记（drain 检查双向对账）。
  */
-const DEBT_UNKNOWN_VERSION_KEYS = ["pehkui.json"];
+const DEBT_UNKNOWN_VERSION_KEYS = [];
 const DEBT_SHARED_DIRS = {};
 
 /**
@@ -81,16 +85,59 @@ const DEBT_SHARED_DIRS = {};
  */
 const LEDGER = {
   summaries: 44,
-  classes: 16975,
+  // 2026-09-15 第三处签字（B1：KFF 摘要重建两轮）：
+  //   classes 16975 → 13097 → **13801**
+  //   轮一 −3878：旧 `kotlin-for-forge.json` 把捆进本库的 `kotlin.*` / `kotlinx.*` 运行时类
+  //     也记成了本库 API（旧 classCount 4577 里只有 699 是真 KFF 类）。
+  //   轮二 +704：修 `scripts/build-api-summaries.mjs` 的两处 Kotlin 识别缺陷后补回的真类 ——
+  //     ① **文件门面**：`Foo.kt` 的顶层 fun/val 编译成 JVM 类 `FooKt`，而这类文件里**没有类型声明**，
+  //        旧的 `scanJavaFile` 一条都收不到（实测 kfflib 30 个文件只收到 1 个类，25 个是纯门面）。
+  //        新增 facade 回退：无类型声明 + 有非 internal 顶层 fun/val ⇒ 按文件名登记成类。
+  //     ② `KOTLIN_MARKER` 的 `\bfun\s+[A-Za-z_$]` 匹配不到**泛型**顶层函数 `fun <T> Foo.bar()`，
+  //        整份文件被判成非 Kotlin ⇒ 既过不了 CLASS_RE 也走不到门面回退（`CapabilityUtilKt` 就是这样漏的）。
+  //   依据：`scripts/build-api-summaries.mjs --only kotlin-for-forge --max-classes 20000
+  //     --max-methods 80000 --max-versions 60 --max-files 20000 --write`
+  //     ⇒ 47 版 / 1403 类 / 2972 方法 / 零截断 / Σ 非 thedarkcolour = 0 / 去重 KFF 类 26 → 57。
+  //   覆盖度已闭合：与 6 个 `-all.jar` 内层件的真实类面逐名比对，剩余差集 26 条 = 24 个 `$` 内部类
+  //     （本门摘要**按设计**只收顶层类）+ 2 个 `LoggerKt`（唯一声明是 `internal final val`，无公开 API）。
+  //   注意：`catalogEntries` / `attestedRoots` / `verifiedApiKeys` **两轮均未变** ——
+  //     `emit-verified-api-from-summaries` + `merge-verified-api --dry-run` 报「跳过 67 键、新增 0、覆盖 0」，
+  //     因为 catalog 存的是 `packages`（已剔除运行时根），而两轮只动了 `classes` 侧。
+  //   纪律提醒：默认上限重建会**倒退**（类 505、丢 7 版、跳过 9 版）—— `--max-*` 必须显式给足，
+  //     见 `CONTRIBUTING.md` §验证纪律。
+  //   未做：其余 43 个库没跟着重建 —— 本修法对任何 Kotlin 库都成立，但会改它们的摘要与台账，
+  //     属独立批次（见 `temp/PLAN-2026-09-08-销账-B1与上游校验-2026-09-15.md` §六）。
+  // 2026-09-15 第四次签字（43 库摘要重建批次）：
+  //   classes 13801 → **36935**（+23134）。构成：
+  //   ① **上限劣化存量清偿**（19 个有树库用 `--max-versions 200 --max-classes 50000
+  //     --max-methods 200000 --max-files 50000 --max-methods-per-class 200 --max-file-kb 8192`
+  //     显式重建，全部零截断）：architectury 503→10350 / balm 630→6548 / bookshelf 539→1333 /
+  //     malilib 575→1914 / sophisticated-core 420→5316 / moonlight 384→430 等 ——
+  //     旧文件全是默认上限（500/40）静默截断的产物，与 KFF 同一颗雷。
+  //   ② **geckolib F46 同构清污**：5937 → **797**（−5140 = shadowed 3540 + example 319 +
+  //     org.apache.commons 1281；797 与普查真类面 `software.bernie.geckolib3.*` 精确一致）。
+  //     路径：emit 扩 shaded/示例**段级**判据 + catalog 84 键全量键值清洗
+  //     （temp/_r43_clean_geckolib_keys.mjs → merge --force --write）。
+  //     裸 `software.bernie` 父根（直下 0 类）按「冗余父根」判据删除 —— 它在前缀匹配里
+  //     放行整个 bernie 子树，是 shadowed/example 被持续收进摘要的根因。
+  //   ③ **归属层修复**（`manifestVersionsForDirName`）：balm 有 5 个 sha512 **全名**（64 hex）
+  //     反编译目录，旧匹配只认 `…-<sha12>` 尾缀 ⇒ join 断 ⇒ 整串 hex 被当版本键成脏键。
+  //     现按前 12 位 join 清单（5 个 sha12 全命中：balm 3.2.5→6.0.2 forge，gv 1.18–1.19.4）
+  //     ⇒ balm 6075→6548（+473）且 28 键零 hex 残留。
+  //   `foreignTotal` 仍 0（无新冒领）；`DEBT_UNKNOWN_VERSION_KEYS` 清空（pehkui 复现消失）。
+  classes: 36935,
   catalogEntries: 50,
-  // 2026-09-14 第二处签字（打通 catalog 层，KFF 内层件产物入库）：
-  //   verifiedApiKeys 1830 → **1893**（+63 = KFF 按发布清单展开出的新键）
-  //   attestedRoots   42   → **47**  （+5 = KFF 新键带出的自有包根，全部靠 `ownsPackage` 自证）
-  // 依据：`scripts/emit-verified-api-from-summaries.mjs` 把「已按清单归属的摘要」转成记录 →
-  // `merge-verified-api --write --force` 写入（63 新增 + 4 覆盖，0 剔除）。`foreignTotal` 仍 0（无冒领）。
-  attestedRoots: 47,
+  // 2026-09-15 第四次签字（43 库重建批次，与 classes 同轮）：
+  //   verifiedApiKeys 1893 → **2221**（+328 新增键 = architectury 232（58 版 × 4 loader）+
+  //     balm 67（含归属修复带出的 1.18–1.19.4）+ cloth-config 8 + bookshelf 4 + midnightlib 4 +
+  //     caelus/curios 各 3 + libz/malilib 各 2 + fabric-language-kotlin/moonlight/sophisticated-core 各 1）
+  //   attestedRoots   47   → **62**  （+15 = 新键带出的自有包根，全部 `ownsPackage` 自证）
+  // 依据：emit 全量（503 行）→ merge --write（328 新增 + 0 覆盖 + 0 剔除）。
+  //   geckolib 的 84 键由一次性键值清洗另走 merge --force（键数不变，只洗 packages）。
+  //   `multiOwnerRoots` / `badVerifiedAt` / `foreignTotal` 均未变。
+  attestedRoots: 62,
   multiOwnerRoots: 0,
-  verifiedApiKeys: 1893,
+  verifiedApiKeys: 2221,
   badVerifiedAt: 0,
   foreignTotal: 0,
   foreignFiles: Object.keys(DEBT_FOREIGN).length,

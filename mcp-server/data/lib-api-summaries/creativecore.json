@@ -10,9 +10,9 @@
     ],
     "merged": false
   },
-  "generatedAt": "2026-09-12T11:33:56.871Z",
+  "generatedAt": "2026-09-15T12:19:14.514Z",
   "versions": {
-    "1.10": {
+    "1.12.2": {
       "packages": [
         "com.creativemd.creativecore",
         "com.creativemd.creativecore.client",
@@ -252,8 +252,6 @@
         "com.creativemd.creativecore.common.tileentity.TileEntityCreative",
         "com.creativemd.creativecore.common.utils.math.BooleanUtils",
         "com.creativemd.creativecore.common.utils.math.box.AlignedBox",
-        "com.creativemd.creativecore.common.utils.math.box.BoxCorner",
-        "com.creativemd.creativecore.common.utils.math.box.BoxFace",
         "com.creativemd.creativecore.common.utils.math.box.BoxPlane",
         "com.creativemd.creativecore.common.utils.math.box.BoxUtils",
         "com.creativemd.creativecore.common.utils.math.box.CreativeAxisAlignedBB",
@@ -489,7 +487,23 @@
           "getOffsetZ()",
           "getOverallScale(EnumFacing)",
           "getScaleX()",
-          "getScaleY()"
+          "getScaleY()",
+          "getScaleZ()",
+          "scaleAndOffsetQuads(EnumFacing)",
+          "onlyScaleOnceNoOffset(EnumFacing)",
+          "getBakedQuad(IBlockAccess, BlockPos, BlockPos, IBlockState, IBakedModel, EnumFacing, BlockRenderLayer, long, boolean, int)",
+          "deleteQuadCache()",
+          "previewScalingAndOffset()",
+          "getPreviewOffX()",
+          "getPreviewOffY()",
+          "getPreviewOffZ()",
+          "getPreviewScaleX()",
+          "getPreviewScaleY()",
+          "getPreviewScaleZ()",
+          "renderPreview(double, double, double, int)",
+          "renderLines(double, double, double, int)",
+          "renderLines(double, double, double, int, Vector3d, double)",
+          "isTranslucent()"
         ],
         "com.creativemd.creativecore.client.rendering.RenderCubeObject": [
           "setQuad(EnumFacing, List<BakedQuad>)",
@@ -892,7 +906,17 @@
           "isAnyControlFocused()",
           "getFocusedControl(boolean)",
           "onOpened()",
-          "onClosed()"
+          "onClosed()",
+          "onTick()",
+          "onLoseFocus()",
+          "mouseScrolled(int, int, int)",
+          "clickControl(GuiControl, int, int, int)",
+          "mousePressed(int, int, int)",
+          "mouseMove(int, int, int)",
+          "mouseDragged(int, int, int, long)",
+          "mouseReleased(int, int, int)",
+          "onKeyPressed(char, int)",
+          "getToolTipEvent()"
         ],
         "com.creativemd.creativecore.common.gui.container.IControlParent": [
           "removeControls(String...)",
@@ -921,7 +945,11 @@
           "createControls()",
           "updateEqualContainers()",
           "sendNBTToGui(NBTTagCompound)",
-          "sendNBTUpdate(NBTTagCompound)"
+          "sendNBTUpdate(NBTTagCompound)",
+          "sendNBTUpdate(ContainerControl, NBTTagCompound)",
+          "writeOpeningNBT(NBTTagCompound)",
+          "writeToNBTUpdate(NBTTagCompound)",
+          "createGuiControl()"
         ],
         "com.creativemd.creativecore.common.gui.container.SubGui": [
           "isTopLayer()",
@@ -943,7 +971,21 @@
           "closeGuiUsingEscape()",
           "onKeyPressed(char, int)",
           "getPixelOffsetX()",
-          "getPixelOffsetY()"
+          "getPixelOffsetY()",
+          "receiveContainerPacket(NBTTagCompound)",
+          "sendPacketToServer(NBTTagCompound)",
+          "getPlayer()",
+          "createControls()",
+          "renderBackground(GuiRenderHelper, Style)",
+          "isMouseOver()",
+          "hasGrayBackground()",
+          "onTick()",
+          "onClosed()",
+          "addContainerControls()",
+          "onOpened()",
+          "raiseEvent(ControlEvent)",
+          "addListener(Object)",
+          "removeListener(Object)"
         ],
         "com.creativemd.creativecore.common.gui.ContainerControl": [
           "getParent()",
@@ -1271,7 +1313,13 @@
           "setSelectionPos(int)",
           "setCursorPosition(int)",
           "setCursorPositionZero()",
-          "setCursorPositionEnd()"
+          "setCursorPositionEnd()",
+          "onKeyPressed(char, int)",
+          "updateCursorCounter()",
+          "onTextChange()",
+          "renderContent(GuiRenderHelper, Style, int, int)",
+          "parseFloat()",
+          "parseInteger()"
         ],
         "com.creativemd.creativecore.common.gui.controls.gui.timeline.GuiTimeline": [
           "setSidebarWidth(int)",
@@ -1336,7 +1384,9 @@
           "moveControlToBottom()",
           "moveControlToTop()",
           "translateOrDefault(String, String)",
-          "translateOrNull(String)"
+          "translateOrNull(String)",
+          "translate(String)",
+          "translate(List<String>)"
         ],
         "com.creativemd.creativecore.common.gui.event.container.ContainerControlEvent": [],
         "com.creativemd.creativecore.common.gui.event.container.SlotChangeEvent": [
@@ -1373,7 +1423,37 @@
           "hasStyle()",
           "getStyle()",
           "getBorderDisplay(DisplayStyle)",
-          "hasBorder()"
+          "hasBorder()",
+          "hasBackground()",
+          "hasMouseOverEffect()",
+          "canOverlap()",
+          "getToolTipEvent()",
+          "getTooltip()",
+          "getCenterOffset()",
+          "getContentOffset()",
+          "isVisibleInsideRect(int, int, int, int, float)",
+          "getGuiScale()",
+          "getPixelOffsetX()",
+          "getPixelOffsetY()",
+          "renderContent(GuiRenderHelper, Style, int, int)",
+          "renderContent(GuiRenderHelper, Style, int, int, Rect)",
+          "renderBackground(GuiRenderHelper, Style)",
+          "renderForeground(GuiRenderHelper, Style)",
+          "getRect()",
+          "prepareContentStencil(GuiRenderHelper, Rect)",
+          "renderControl(GuiRenderHelper, float, Rect)",
+          "onLoseFocus()",
+          "mouseScrolled(int, int, int)",
+          "mousePressed(int, int, int)",
+          "mouseMove(int, int, int)",
+          "mouseReleased(int, int, int)",
+          "mouseDragged(int, int, int, long)",
+          "onKeyPressed(char, int)",
+          "getScreenRect()",
+          "playSound(ISound)",
+          "playSound(SoundEvent)",
+          "playSound(SoundEvent, float, float)",
+          "getRotationAround(double, Vec3d, Vec3d)"
         ],
         "com.creativemd.creativecore.common.gui.GuiRenderHelper": [
           "drawLine(int, int, int, int, int)",
@@ -1395,7 +1475,10 @@
           "drawStringWithShadow(String, int, int, int)",
           "drawStringWithShadow(String, int, int, int, int, int)",
           "drawStringWithShadow(String, int, int, int, int, int, int)",
-          "drawItemStackAndOverlay(ItemStack, int, int, int, int)"
+          "drawItemStackAndOverlay(ItemStack, int, int, int, int)",
+          "drawItemStack(ItemStack, int, int, int, int, int, int)",
+          "drawItemStack(ItemStack, int, int, int, int)",
+          "drawItemStack(ItemStack, int, int, int, int, int)"
         ],
         "com.creativemd.creativecore.common.gui.mc.ContainerSub": [
           "func_75145_c(EntityPlayer)",
@@ -1424,7 +1507,15 @@
           "func_73863_a(int, int, float)",
           "func_146979_b(int, int)",
           "func_146281_b()",
-          "func_73869_a(char, int)"
+          "func_73869_a(char, int)",
+          "func_146269_k()",
+          "handleScrolling()",
+          "func_73864_a(int, int, int)",
+          "func_146273_a(int, int, int, long)",
+          "func_146286_b(int, int, int)",
+          "onMouseReleased(int, int, int)",
+          "onLayerClosed()",
+          "sendChat(String)"
         ],
         "com.creativemd.creativecore.common.gui.mc.GuiScreenSub": [
           "func_73866_w_()",
@@ -1446,7 +1537,16 @@
           "drawGuiContainerForegroundLayer()",
           "func_146281_b()",
           "onLayerClosed()",
-          "func_73869_a(char, int)"
+          "func_73869_a(char, int)",
+          "func_146269_k()",
+          "handleScrolling()",
+          "func_73864_a(int, int, int)",
+          "func_146273_a(int, int, int, long)",
+          "func_146286_b(int, int, int)",
+          "onMouseReleased(int, int, int)",
+          "sendChat(String)",
+          "getGuiLeft()",
+          "getGuiTop()"
         ],
         "com.creativemd.creativecore.common.gui.mc.IVanillaGUI": [],
         "com.creativemd.creativecore.common.gui.mc.MaterialUtils": [
@@ -1528,7 +1628,18 @@
           "writeVec3d(Vec3d, ByteBuf)",
           "readVec3d(ByteBuf)",
           "writeInfoStack(ByteBuf, InfoStack)",
-          "readInfoStack(ByteBuf)"
+          "readInfoStack(ByteBuf)",
+          "writeInfoStacks(ByteBuf, ArrayList<InfoStack>)",
+          "readInfoStacks(ByteBuf)",
+          "writeItemStack(ByteBuf, ItemStack)",
+          "readItemStack(ByteBuf)",
+          "readFacing(ByteBuf)",
+          "writeFacing(ByteBuf, EnumFacing)",
+          "writePacket(ByteBuf, Packet<?>)",
+          "readPacket(ByteBuf)",
+          "writeJson(ByteBuf, JsonObject)",
+          "readJson(ByteBuf)",
+          "openContainerOnServer(EntityPlayerMP, Container)"
         ],
         "com.creativemd.creativecore.common.packet.CreativeMessageHandler": [
           "fromBytes(ByteBuf)",
@@ -1720,35 +1831,12 @@
           "set(float, float, float, float, float, float)",
           "getOffset()",
           "getValueOfFacing(EnumFacing)",
-          "getSize(Axis)"
-        ],
-        "com.creativemd.creativecore.common.utils.math.box.BoxCorner": [
-          "getVector(AxisAlignedBB)",
-          "isFacing(EnumFacing)",
-          "isFacingPositive(Axis)",
-          "getFacing(Axis)",
-          "flip(Axis)",
-          "rotate(Rotation)",
-          "getCornerUnsorted(EnumFacing, EnumFacing, EnumFacing)",
-          "getCorner(EnumFacing, EnumFacing, EnumFacing)",
-          "faceCorners(EnumFacing)"
-        ],
-        "com.creativemd.creativecore.common.utils.math.box.BoxFace": [
-          "getCornerInQuestion(boolean, boolean)",
-          "getTexUAxis()",
-          "getTexVAxis()",
-          "getTexU()",
-          "getTexV()",
-          "getTriangleFirst(boolean)",
-          "getTriangleSecond(boolean)",
-          "first(Vector3d[])",
-          "normal(Vector3d[])",
-          "isFacingOutwards(boolean, boolean, Vector3f)",
-          "getTraingleNormal(BoxCorner[], Vector3f[])",
-          "ensureSameLength(Vector3f, Vector3f)",
-          "get(EnumFacing)",
-          "get(Axis, boolean)",
-          "getVecArray(BoxCorner[], Vector3f[])"
+          "getSize(Axis)",
+          "setMin(Axis, float)",
+          "getMin(Axis)",
+          "setMax(Axis, float)",
+          "getMax(Axis)",
+          "shrink(Axis, float)"
         ],
         "com.creativemd.creativecore.common.utils.math.box.BoxPlane": [
           "getIntersectingScale(Vector3d, Vector3d)",
@@ -1785,7 +1873,12 @@
           "getValueOfFacing(AxisAlignedBB, EnumFacing)",
           "getMin(AxisAlignedBB, Axis)",
           "getMax(AxisAlignedBB, Axis)",
-          "getCorner(AxisAlignedBB, BoxCorner)"
+          "getCorner(AxisAlignedBB, BoxCorner)",
+          "getCornerValue(AxisAlignedBB, BoxCorner, Axis)",
+          "getCornerX(AxisAlignedBB, BoxCorner)",
+          "getCornerY(AxisAlignedBB, BoxCorner)",
+          "getCornerZ(AxisAlignedBB, BoxCorner)",
+          "isClosest(Vec3d, Vec3d, Vec3d)"
         ],
         "com.creativemd.creativecore.common.utils.math.box.CubeObject": [
           "applyExtraCubeData(CubeObject)",
@@ -1807,7 +1900,19 @@
           "getVertexInformationPosition(int)",
           "getValueOfFacing(EnumFacing)",
           "getSize(Axis)",
-          "setMin(Axis, float)"
+          "setMin(Axis, float)",
+          "getMin(Axis)",
+          "setMax(Axis, float)",
+          "getMax(Axis)",
+          "rotateCube(CubeObject, EnumFacing)",
+          "rotateCube(CubeObject, EnumFacing, Vec3d)",
+          "applyVectorRotation(Vec3d, EnumFacing)",
+          "applyCubeRotation(CubeObject, EnumFacing)",
+          "applyCubeRotation(CubeObject, EnumFacing, Vec3d)",
+          "calculateIntercept(Vec3d, Vec3d)",
+          "intersectsWithYZ(Vec3d)",
+          "intersectsWithXZ(Vec3d)",
+          "intersectsWithXY(Vec3d)"
         ],
         "com.creativemd.creativecore.common.utils.math.box.OrientatedBoundingBox": [
           "buildCache()",
@@ -1829,7 +1934,17 @@
           "greaterThanAndEquals(double, double)",
           "equals(double, double)",
           "calculateYOffsetStepUp(AxisAlignedBB, AxisAlignedBB, double)",
-          "getMaxTranslated(Axis)"
+          "getMaxTranslated(Axis)",
+          "getMinTranslated(Axis)",
+          "calculateOffset(AxisAlignedBB, Axis, double)",
+          "func_72316_a(AxisAlignedBB, double)",
+          "func_72323_b(AxisAlignedBB, double)",
+          "func_72322_c(AxisAlignedBB, double)",
+          "func_72326_a(AxisAlignedBB)",
+          "func_186668_a(double, double, double, double, double, double)",
+          "toString()",
+          "getCenter3d()",
+          "getPushOutScale(double, OrientatedBoundingBox, Vector3d)"
         ],
         "com.creativemd.creativecore.common.utils.math.collision.CollidingPlane": [
           "isInFront(Vector3d)",
@@ -1997,7 +2112,15 @@
           "flip(BlockPos, Axis)",
           "flip(Vector3f, Axis)",
           "flip(Vector3d, Axis)",
-          "isFacingPositive(int)"
+          "isFacingPositive(int)",
+          "getUAxisFromFacing(EnumFacing)",
+          "getVAxisFromFacing(EnumFacing)",
+          "getUFromFacing(EnumFacing, float, float, float)",
+          "getVFromFacing(EnumFacing, float, float, float)",
+          "getMirrorAxis(Mirror)",
+          "getRotation(net.minecraft.util.Rotation)",
+          "getRotationCount(net.minecraft.util.Rotation)",
+          "getOffset(double)"
         ],
         "com.creativemd.creativecore.common.utils.math.SmoothValue": [
           "setStart(double)",
@@ -2087,7 +2210,17 @@
           "rot(double, double, double)",
           "center()",
           "rotation()",
-          "rotationInv()"
+          "rotationInv()",
+          "translation()",
+          "setCenter(Vector3d)",
+          "offXLast()",
+          "offYLast()",
+          "offZLast()",
+          "rotXLast()",
+          "rotYLast()",
+          "rotZLast()",
+          "tick()",
+          "getParent()"
         ],
         "com.creativemd.creativecore.common.utils.math.vec.VectorFan": [
           "getCoords()",
@@ -2109,7 +2242,29 @@
           "set(VectorFan)",
           "set(Vector3f[])",
           "cutWithoutCopy(NormalPlane[])",
-          "cutWithoutCopy(NormalPlane)"
+          "cutWithoutCopy(NormalPlane)",
+          "isEmpty()",
+          "cutInternal(NormalPlane, boolean)",
+          "cut(NormalPlane)",
+          "move(float, float, float)",
+          "scale(float)",
+          "divide(float)",
+          "intersects(NormalPlane, NormalPlane)",
+          "copy()",
+          "equals(Object)",
+          "equalsIgnoreOrder(VectorFan, Axis)",
+          "calculateIntercept(Ray3f, Vector3f, Vector3f, Vector3f)",
+          "calculateIntercept(Ray3f)",
+          "createPlane()",
+          "createPlane(RenderBox.RenderInformationHolder)",
+          "isInside(List<List<NormalPlane>>)",
+          "intersect2d(VectorFan, Axis, Axis, boolean)",
+          "cut2d(List<VectorFan>, Axis, Axis, boolean, boolean)",
+          "cut2d(VectorFan, Axis, Axis, boolean, boolean)",
+          "cut2d(com.creativemd.creativecore.common.utils.math.geo.Ray2d, Axis, Axis, List<VectorFan>, boolean)",
+          "isInside(List<NormalPlane>, Vector3f, Vector3f, Boolean, Boolean, int)",
+          "isInside(List<NormalPlane>, Vector3f, int)",
+          "toString()"
         ],
         "com.creativemd.creativecore.common.utils.math.vec.VecUtils": [
           "distanceToSquared(double, double, double, Vector3d)",
@@ -2165,7 +2320,9 @@
           "colorToVec(Color)",
           "isWhite(int)",
           "isTransparent(int)",
-          "isInvisible(int)"
+          "isInvisible(int)",
+          "blend(int, int)",
+          "blend(int, int, float)"
         ],
         "com.creativemd.creativecore.common.utils.mc.InventoryUtils": [
           "saveInventoryBasic(IInventory)",
@@ -2350,7 +2507,12 @@
           "copy()",
           "getItemStack()",
           "getAllPossibleItemStacks()",
-          "getItemStack(int)"
+          "getItemStack(int)",
+          "isStackInstanceIgnoreSize(ItemStack)",
+          "isInstanceIgnoreSize(ItemStack)",
+          "equals(Object)",
+          "equalsIgnoreSize(Object)",
+          "getAllExistingItems()"
         ],
         "com.creativemd.creativecore.common.utils.tooltip.TooltipUtils": [
           "printRGB(int)",
@@ -2392,7 +2554,9 @@
           "size()",
           "clear()",
           "toString()",
-          "isEmpty()"
+          "isEmpty()",
+          "getFirst()",
+          "iterator()"
         ],
         "com.creativemd.creativecore.common.utils.type.LinkedHashMapDouble": [
           "put(K, Double)",
@@ -2435,7 +2599,11 @@
           "indexOfKey(K)",
           "removeKey(K)",
           "values()",
-          "keys()"
+          "keys()",
+          "getFirst()",
+          "getLast()",
+          "getValue(K)",
+          "getPair(K)"
         ],
         "com.creativemd.creativecore.common.utils.type.SingletonList": [
           "setElement(E)",
@@ -2469,7 +2637,28 @@
           "canPass(Object)",
           "canPass(ItemStack)",
           "add(InfoStack)",
-          "add(int, InfoStack)"
+          "add(int, InfoStack)",
+          "addAll(Collection<? extends InfoStack>)",
+          "addAll(int, Collection<? extends InfoStack>)",
+          "clear()",
+          "contains(Object)",
+          "containsAll(Collection<?>)",
+          "get(int)",
+          "indexOf(Object)",
+          "isEmpty()",
+          "iterator()",
+          "lastIndexOf(Object)",
+          "listIterator()",
+          "listIterator(int)",
+          "remove(Object)",
+          "remove(int)",
+          "removeAll(Collection<?>)",
+          "retainAll(Collection<?>)",
+          "set(int, InfoStack)",
+          "size()",
+          "subList(int, int)",
+          "toArray()",
+          "toArray(T[])"
         ],
         "com.creativemd.creativecore.common.utils.type.TickQueue": [
           "setQueueLength(int)",
@@ -2668,6 +2857,6 @@
       "sampleCount": 294
     }
   },
-  "classCount": 276,
-  "methodCount": 1773
+  "classCount": 274,
+  "methodCount": 1968
 }

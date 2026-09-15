@@ -10,10 +10,32 @@
     ],
     "merged": false
   },
-  "generatedAt": "2026-08-12T10:31:58.060Z",
+  "generatedAt": "2026-09-15T15:12:54.086Z",
   "versions": {
-    "3.2.1": {
-      "packages": [],
+    "1.21.11": {
+      "packages": [
+        "org.ladysnake.impersonate"
+      ],
+      "classes": [
+        "org.ladysnake.impersonate.Impersonate",
+        "org.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "org.ladysnake.impersonate.Impersonate": [
+          "id(String)",
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "org.ladysnake.impersonate.Impersonator": [
+          "impersonate(Identifier, PlayerConfigEntry)"
+        ]
+      },
+      "sampleCount": 2
+    },
+    "1.21.4": {
+      "packages": [
+        "org.ladysnake.impersonate"
+      ],
       "classes": [
         "org.ladysnake.impersonate.Impersonate",
         "org.ladysnake.impersonate.Impersonator"
@@ -28,8 +50,99 @@
       },
       "sampleCount": 2
     },
-    "2.10.3": {
-      "packages": [],
+    "1.21.1": {
+      "packages": [
+        "org.ladysnake.impersonate"
+      ],
+      "classes": [
+        "org.ladysnake.impersonate.Impersonate",
+        "org.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "org.ladysnake.impersonate.Impersonate": [
+          "id(String)",
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "org.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.21": {
+      "packages": [
+        "org.ladysnake.impersonate"
+      ],
+      "classes": [
+        "org.ladysnake.impersonate.Impersonate",
+        "org.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "org.ladysnake.impersonate.Impersonate": [
+          "id(String)",
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "org.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.20.6": {
+      "packages": [
+        "org.ladysnake.impersonate"
+      ],
+      "classes": [
+        "org.ladysnake.impersonate.Impersonate",
+        "org.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "org.ladysnake.impersonate.Impersonate": [
+          "id(String)",
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "org.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.20.5": {
+      "packages": [
+        "org.ladysnake.impersonate"
+      ],
+      "classes": [
+        "org.ladysnake.impersonate.Impersonate",
+        "org.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "org.ladysnake.impersonate.Impersonate": [
+          "id(String)",
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "org.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.20.4": {
+      "packages": [
+        "org.ladysnake.impersonate"
+      ],
+      "classes": [
+        "org.ladysnake.impersonate.Impersonate",
+        "org.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "org.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "org.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.20.1": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
       "classes": [
         "io.github.ladysnake.impersonate.Impersonate",
         "io.github.ladysnake.impersonate.Impersonator"
@@ -43,8 +156,10 @@
       },
       "sampleCount": 2
     },
-    "2.6.1": {
-      "packages": [],
+    "1.20": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
       "classes": [
         "io.github.ladysnake.impersonate.Impersonate",
         "io.github.ladysnake.impersonate.Impersonator"
@@ -58,8 +173,197 @@
       },
       "sampleCount": 2
     },
-    "2.3.0": {
-      "packages": [],
+    "1.19.3": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.19.2": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.19.1": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.19": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.18.2": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.18.1": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.18": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.17-pre1": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.17": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.16.5": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.16.4": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "1.16.3": {
+      "packages": [
+        "io.github.ladysnake.impersonate"
+      ],
       "classes": [
         "io.github.ladysnake.impersonate.Impersonate",
         "io.github.ladysnake.impersonate.Impersonator"
@@ -74,6 +378,6 @@
       "sampleCount": 2
     }
   },
-  "classCount": 8,
-  "methodCount": 9
+  "classCount": 42,
+  "methodCount": 49
 }

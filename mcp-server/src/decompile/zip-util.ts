@@ -9,6 +9,8 @@
  * 不做路径穿越/解压到盘，仅内存读取。
  */
 
+import { readFileSync, statSync } from "node:fs";
+
 import { inflateZipEntry, zipCrc32 } from "../utils/zip-inflate.js";
 
 export class ZipParseError extends Error {
@@ -117,6 +119,39 @@ function readEntryData(buf: Buffer, entry: CentralEntry): Buffer {
 }
 
 const ZIP_TOTAL_MAX_UNCOMPRESSED = 512 * 1024 * 1024;
+
+/**
+ * 「读进内存之前」的字节上限 —— 与 `ZIP_TOTAL_MAX_UNCOMPRESSED` 是**两本账**。
+ *
+ * `ZIP_TOTAL_MAX_UNCOMPRESSED` 检的是中央目录声明的**解压后总量**，而它在 `readZip(buffer)`
+ * 内部检查；调用方那时已经 `readFileSync(jarPath)` 把整份文件读进内存了。于是一个体积异常的
+ * （伪造 / 截断 / 误传的）jar 会先让 `readFileSync` 吃掉全部可用内存（Node 在 64 位上约 2GB
+ * 也会抛 `ERR_FS_FILE_TOO_LARGE`），才轮到那句「解压总量过大」报错 —— 报错点晚了一整步。
+ * 上限必须提到**读之前**。
+ *
+ * 残余边界（如实登记，本轮未修）：读进来之后 `Map<name, Buffer>` 仍是**全驻留**的；
+ * 512MB 只界定最坏情况，不是流式。要真正去掉驻留得把 `readZip` 改成「流式中央目录 +
+ * 按需解压单条目」，那会改动 mod-analyzer / mod-decompile 的全部调用面。
+ */
+export const JAR_READ_MAX_BYTES = 512 * 1024 * 1024;
+
+/** 纯判据：该体积是否超「读之前」的门。单测可用合成尺寸，不必造 512MB 真文件。 */
+export function isJarTooLarge(size: number): boolean {
+  return size > JAR_READ_MAX_BYTES;
+}
+
+/** 读之前先按**文件体积**拦一道；超限抛 `JAR_FILE_TOO_LARGE`（不抛则返回整个文件字节）。 */
+export function readJarBytes(jarPath: string, knownSize?: number): Buffer {
+  const size = knownSize ?? statSync(jarPath).size;
+  if (isJarTooLarge(size)) {
+    throw new ZipParseError(
+      `文件体积 ${(size / 1048576).toFixed(1)}MB 超过读取上限 ${JAR_READ_MAX_BYTES / 1048576}MB` +
+        `（这是「读进内存之前」的门；解压后总量另有 ${ZIP_TOTAL_MAX_UNCOMPRESSED / 1048576}MB 的门）`,
+      "JAR_FILE_TOO_LARGE",
+    );
+  }
+  return readFileSync(jarPath);
+}
 
 /** 读取 zip/jar 二进制 → 条目名 → 内容（不含目录项）。 */
 export function readZip(buffer: Buffer): Map<string, Buffer> {

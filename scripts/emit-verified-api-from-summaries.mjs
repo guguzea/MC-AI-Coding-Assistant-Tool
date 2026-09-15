@@ -96,6 +96,24 @@ function isRuntimePackage(pkg) {
   return RUNTIME_ROOTS.some((r) => pkg === r || pkg.startsWith(`${r}.`));
 }
 
+/**
+ * shaded / 示例**区段**判据（按完整段匹配，不是命名空间黑名单）：
+ *  - `shadowed` / `shadow` 整段 = 重定位 shaded 区（实测 geckolib：`software.bernie.shadowed.*`
+ *    3540 类，是把第三方库整体搬进自家包名下的惯例位置）。安全边界：placebo 的
+ *    `dev.shadowsoffire.*` 是作者名（整段 `shadowsoffire`），不命中；
+ *  - `example` / `examples` 整段 = jar 自带示例 mod 代码（实测 geckolib：`software.bernie.example.*`
+ *    319 类），不是库 API。
+ * 实测 19 个有树库包根普查（2026-09-15）：只有 geckolib 命中这两条，对其余库零影响。
+ */
+const SHADED_SEGMENT = /^(?:shadowed?|examples?)$/;
+
+/** 该包路径任一整段是 shaded/示例区段 ⇒ 非本库 API。 */
+function isBundledNonApiPackage(pkg) {
+  return String(pkg)
+    .split(".")
+    .some((s) => SHADED_SEGMENT.test(s));
+}
+
 /** 清单：slug → { bySha12, byVerNum }、以及 (slug, gameVersion) → loaders。 */
 function loadManifest() {
   const raw = JSON.parse(fs.readFileSync(MANIFEST, "utf8"));
@@ -147,9 +165,10 @@ function main() {
     if (!man) { skipped.push(`${f}: 清单里没有 slug=${slug}`); continue; }
     for (const [mcVersion, v] of Object.entries(sum.versions || {})) {
       const rawPkgs = Array.isArray(v?.packages) ? v.packages : [];
-      // F46 残余：摘掉捆绑运行时/平台命名空间（黑名单见文件头；**不是**「只留 modId 段」）
-      const packages = rawPkgs.filter((p) => !isRuntimePackage(p));
-      const droppedHere = rawPkgs.filter((p) => isRuntimePackage(p));
+      // F46 残余：摘掉捆绑运行时/平台命名空间（黑名单见文件头；**不是**「只留 modId 段」）；
+      // 2026-09-15 扩：shaded/示例区段（shadowed|shadow|example|examples 整段）同摘（geckolib 实测）。
+      const packages = rawPkgs.filter((p) => !isRuntimePackage(p) && !isBundledNonApiPackage(p));
+      const droppedHere = rawPkgs.filter((p) => isRuntimePackage(p) || isBundledNonApiPackage(p));
       if (droppedHere.length) {
         droppedBySlug.set(slug, (droppedBySlug.get(slug) ?? 0) + droppedHere.length);
         for (const d of droppedHere) droppedSamples.add(d);

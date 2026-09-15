@@ -34,7 +34,7 @@ fabric-mod/
 
 ## 优先修改：`gradle.properties`
 
-所有版本号集中在此文件，**禁止在 `build.gradle` 中硬编码版本号**：
+所有**依赖/映射/loader/mod** 版本号集中在此文件，禁止在 `build.gradle` 中硬编码；唯一例外是 Gradle **插件**版本（`fabric-loom` 等），插件块按 Gradle 惯例必须内联，不算违规：
 
 ```properties
 minecraft_version=1.21.3

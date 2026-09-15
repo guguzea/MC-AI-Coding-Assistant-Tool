@@ -30,7 +30,7 @@ import { ensureResourceJar, ensureTinyRemapperJars, VINEFLOWER_DEF, DownloadDisa
 import { downloadFile, DownloadError } from "../downloaders/http.js";
 import { resolveYarnMappings, mappingCacheViable } from "../downloaders/yarn.js";
 import { resolveMojangVersion } from "../downloaders/mojang.js";
-import { listZipEntries, readZip } from "../zip-util.js";
+import { listZipEntries, readZip, readJarBytes } from "../zip-util.js";
 import { analyzeModJar } from "./mod-analyzer.js";
 import {
   assertVineflowerDiskSpace,
@@ -447,7 +447,7 @@ export function verifyOutputOwnership(
 ): { ok: boolean; foreignPackages: string[]; reason?: string } {
   let names: string[];
   try {
-    names = listZipEntries(readFileSync(jarPath));
+    names = listZipEntries(readJarBytes(jarPath));
   } catch (err) {
     return { ok: false, foreignPackages: [], reason: `无法读取 jar 条目：${(err as Error).message}` };
   }

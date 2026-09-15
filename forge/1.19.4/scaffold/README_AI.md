@@ -86,8 +86,10 @@ public static final DeferredRegister<Item> ITEMS = ...;  // 已存在
 
 // 在 RegistryObject 声明区域添加：
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
-    () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC))
+    () -> new Item(new Item.Properties())
 );
+// 创造标签：本档 Item.Properties 没有 tab()，注册后在
+// modEventBus 的 CreativeModeTabEvent.BuildContents 里 accept（见 code-patterns/02-item-patterns.md）
 ```
 
 ### 添加自定义实体

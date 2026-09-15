@@ -12,7 +12,7 @@
  */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -29,6 +29,7 @@ import {
   clearDecompileTarget,
   verifyOutputOwnership,
 } from "./dist/decompile/services/mod-decompile.js";
+import { isJarTooLarge, readJarBytes, JAR_READ_MAX_BYTES } from "./dist/decompile/zip-util.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -2306,5 +2307,35 @@ section("jarjar fat-jar decompile input (S5c · F57)");
     assert.ok(!existsSync(s5cRoot), "S5c 临时目录未真正删除（win32 rmSync 假成功）");
   }
 }
+
+// ── P0-7「读进内存之前」的体积门（2026-09-15 新增）────────────────────────────
+// 旧形态：`ZIP_TOTAL_MAX_UNCOMPRESSED` 只在 `readZip(buffer)` 里检，而调用方那时**已经**
+// `readFileSync(jarPath)` 把整份文件读进内存了 ⇒ 体积异常的（伪造/截断/误传）jar 先吃光内存，
+// 才轮到那句「解压总量过大」。门必须提到读之前。
+test("读之前的体积门：边界是「大于」而不是「大于等于」", () => {
+  assert.equal(isJarTooLarge(JAR_READ_MAX_BYTES), false, "恰好等于上限必须放行");
+  assert.equal(isJarTooLarge(JAR_READ_MAX_BYTES + 1), true, "超过一个字节就要拦");
+  assert.equal(isJarTooLarge(3 * 1024 * 1024 * 1024), true, "3GB 必须在读之前拦下（旧形态会先读满内存）");
+  assert.equal(isJarTooLarge(0), false);
+});
+
+test("readJarBytes 正常路径与 readFileSync 逐字节一致，超限时抛 JAR_FILE_TOO_LARGE", () => {
+  const dir = mkdtempSync(join(tmpdir(), "mcskill-jarsize-"));
+  try {
+    const p = join(dir, "small.bin");
+    writeFileSync(p, Buffer.alloc(1024, 7));
+    assert.deepEqual(readJarBytes(p), readFileSync(p), "正常路径必须与旧读法等价（新门不得改变行为）");
+    // 显式 size = 生产调用点传 statSync 的值；用它就不必造一个真 512MB 文件
+    assert.throws(
+      () => readJarBytes(p, JAR_READ_MAX_BYTES + 1),
+      (e) => e?.code === "JAR_FILE_TOO_LARGE" && /超过读取上限/.test(e.message),
+      "超限必须抛带 code 的 ZipParseError，调用点靠 code 区分「体积」与「不可读」",
+    );
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+    assert.ok(!existsSync(dir), "体积门测试的临时目录未真正删除");
+  }
+});
+
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed === 0 ? 0 : 1);

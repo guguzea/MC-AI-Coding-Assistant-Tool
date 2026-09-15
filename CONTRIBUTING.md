@@ -214,6 +214,32 @@ processed 正文里的这两行都是**转引标记**，不是可执行代码；
 - 门禁**一律不删文件**。`data/` 下的残留（`db.sqlite.old` / `tmp-*`）只钉进 `DEBT_RESIDUE` 并出待删清单，删除动作归数据拥有者。
 - 每个门禁条款必须**可被点名的投毒红**（`mcp-server/test-scripts.mjs` 内逐条 poison 已在册）。
 
+### 验证纪律（2026-09-15 追加；三条都来自实测事故，不是预防性条款）
+
+- **改了 `mcp-server/scripts/**` 或 `scripts/**`，收口必须跑第 8 步**：`cd mcp-server && node test-scripts.mjs`。
+  单列的理由：`package.json` 的 `npm test` 链很长，一轮里往往只抽跑其中几道门（只跑
+  `assert-lib-ownership` / `lint-skill-verified-api` / `assert-scripts-parse` 这类）。2026-09-15 实测到
+  这样一轮「抽跑」之后 `test-scripts.mjs` **本身是红的**（生产者 `scripts/build-api-summaries.mjs`
+  被改写、harness 里的投毒锚点没跟着同步），而那一轮销账只登记了跑过的那 5 道门 ⇒ 台账上看不出链在冒烟。
+  第 8 步是门禁总入口（25 道 `assert-*` 串链 + G1–G4 全量 + 假根投毒），**它绿才叫「链上无已知红」**。
+- **harness 里硬钉的文本锚点与计数必须随批次同步，且只许「先对齐生产侧、再改 harness」**。
+  `mcp-server/test-scripts.mjs` 用硬值做**第二道独立钉**（例：`已证实包根 47`、投毒替换用的源码原文片段），
+  这是刻意的双机制，不是冗余。代价是生产侧改写法/改口径后 harness 会**当场断言失败**而非静默失效 ——
+  这是设计意图，**不要靠删断言让它变绿**。同步时在注释里写清「改了什么 / 为什么这不是放松」，并与
+  被钉的那道门自己的 `LEDGER` 常量对齐（对齐不上说明真漂移，该改的是门台账而不是 harness）。
+- **`npm test` 不能与语料/文档抓取并发跑**。`test-cli.mjs` 的 4000 ms lag 门与磁盘负载耦合
+  （实测：一边跑 forge javadoc 抓取一边跑全链，`convert_mapping` 三次都在 4000 ms 内无 stdout ⇒ 假红）。
+  终局验收与任何全链跑**必须独占该卷**。
+- **引用门名以磁盘为准**，别照抄台账里的名字：`assert-skill-raw-normalize.mjs` 从来不存在
+  （`git log --all --diff-filter=AD` 零命中），真正的门是已在链上的 `assert-sync-normalizers.mjs`。
+  清单看 `ls mcp-server/scripts/assert-*.mjs`。
+- **重建 `build-api-summaries.mjs` 的产物时必须显式给足 `--max-*`**：脚本默认
+  `maxVersions=40 / maxClasses=500 / maxMethods=2000`，而**在库的产物是用远高于默认的上限生成的**。
+  照默认重跑 = **静默劣化**（实测 `kotlin-for-forge`：给足前 类 505 / 丢 7 版 / 上限跳过 9 版；
+  给足后 类 699 / 零截断）。判据：产物里的 `truncated` / `skippedVersions` / `droppedVersions` 三个键
+  **出现即说明这次重建不完整**，不许拿它覆盖旧产物。KFF 那轮用的下限见
+  `assert-lib-ownership.mjs` 的 `LEDGER` 注释。
+
 ### 语料忠实性不变量
 
 - raw ↔ processed 的不变量是**逐树「篇数相等」+ 变换类别台账**（`identical` / `contentDiff` / `markerOnly` / `fmOnly` / `noTwin`），**不是** 1:1 同名配对——后者会造出 19747 处假缺失（真实 `noTwin` 19565）。
