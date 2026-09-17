@@ -15,6 +15,7 @@
  *   前者管"调工具"，后者管"跑仓库脚本"；两者都不复制对方逻辑。
  */
 import { spawnSync } from "node:child_process";
+import { installStdioErrorGuard, installCrashGuards } from "../utils/stdio-guard.js";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -44,33 +45,60 @@ const COMMANDS: Cmd[] = [
   { group: "gate", name: "run", summary: "跑一道门：mc-skill gate run <name>（名字可省略 assert- 前缀）", script: null },
 ];
 
-function pkgVersion(): string {
+/** 版本：读失败返回 null（调用方显式提示，不静默伪装成功 —— 审计 L3）。 */
+function pkgVersion(): string | null {
   try {
     const pj = JSON.parse(fs.readFileSync(path.join(PKG_ROOT, "package.json"), "utf8"));
-    return String(pj.version ?? "0.0.0");
+    return String(pj.version ?? "") || null;
   } catch {
-    return "0.0.0";
+    return null;
   }
 }
 
-function printHelp(): void {
-  console.log(`mc-skill ${pkgVersion()} —— MC_skill 仓库 CLI（与 MCP 同权重；库/语料/门 三条线）
+/**
+ * 入口名：从 package.json 的 bin 反射（按目标 dist/cli/index.js 反查键名），失败回退常量。
+ * 防再次漂移（审计 L2：帮助文本曾自称 mc-skill 而实际 bin 是 mc-skill-scripts）。
+ */
+function entryName(): string {
+  try {
+    const pj = JSON.parse(fs.readFileSync(path.join(PKG_ROOT, "package.json"), "utf8")) as { bin?: Record<string, string> };
+    const hit = Object.entries(pj.bin ?? {}).find(([, rel]) => rel.replace(/\\/g, "/").endsWith("dist/cli/index.js"));
+    if (hit) return hit[0];
+  } catch {
+    /* fallthrough */
+  }
+  return "mc-skill-scripts";
+}
+const ENTRY = entryName();
 
-用法：mc-skill <group> <command> [args...]
-      mc-skill <group> --help            组内命令
-      mc-skill <group> <command> --help  命令帮助（含透传参数）
-      mc-skill --help | --version
+// 入口守卫（审计 M3/M4）：EPIPE 静默退出；崩溃/未处理拒绝 → JSON 信封 + exit 1（信封经 flush 屏障后退出）。
+installStdioErrorGuard();
+installCrashGuards({
+  emitEnvelope: (err) => {
+    const message = err instanceof Error ? err.message : String(err);
+    if (err instanceof Error && err.stack) process.stderr.write(`${err.stack}\n`);
+    process.stdout.write(JSON.stringify({ success: false, tool: ENTRY, error: message, errorKind: "tool_failure" }) + "\n");
+  },
+});
+
+function printHelp(): void {
+  console.log(`${ENTRY} ${pkgVersion() ?? "(version unknown)"} —— MC_skill 仓库 CLI（与 MCP 同权重；库/语料/门 三条线）
+
+用法：${ENTRY} <group> <command> [args...]
+      ${ENTRY} <group> --help            组内命令
+      ${ENTRY} <group> <command> --help  命令帮助（含透传参数）
+      ${ENTRY} --help | --version
 
 组与命令：`);
   for (const c of COMMANDS) console.log(`  ${(c.group + " " + c.name).padEnd(20)} ${c.summary}`);
   console.log(`
 示例：
-  mc-skill lib resolve --platform fabric --version 1.21.1
-  mc-skill lib resolve --validate
-  mc-skill lib summary --only libgui --write
-  mc-skill corpus merge --input D:/gap3-verified.jsonl --dry-run
-  mc-skill gate list
-  mc-skill gate run lib-ownership
+  ${ENTRY} lib resolve --platform fabric --version 1.21.1
+  ${ENTRY} lib resolve --validate
+  ${ENTRY} lib summary --only libgui --write
+  ${ENTRY} corpus merge --input D:/gap3-verified.jsonl --dry-run
+  ${ENTRY} gate list
+  ${ENTRY} gate run lib-ownership
 
 边界：CLI 需在仓库内运行（脚本位于仓库根 scripts/ 与 mcp-server/scripts/）；
 透传命令的参数与退出码与直接跑脚本完全一致（薄壳，不复制逻辑）。`);
@@ -79,26 +107,50 @@ function printHelp(): void {
 function printGroupHelp(group: string): number {
   const inG = COMMANDS.filter((c) => c.group === group);
   if (!inG.length) return -1;
-  console.log(`mc-skill ${group} —— ${inG.length} 个命令：`);
+  console.log(`${ENTRY} ${group} —— ${inG.length} 个命令：`);
   for (const c of inG) console.log(`  ${c.name.padEnd(12)} ${c.summary}`);
   return 0;
 }
 
 function printCmdHelp(c: Cmd): void {
-  console.log(`mc-skill ${c.group} ${c.name} —— ${c.summary}`);
+  console.log(`${ENTRY} ${c.group} ${c.name} —— ${c.summary}`);
   if (c.script) console.log(`转发脚本：${c.script}（参数与退出码原样透传；脚本 --help 见直接运行）`);
   else console.log("CLI 内建命令（无转发脚本）");
 }
 
-function listGates(): string[] {
+/** 门清单：读目录失败时返回 error（调用方非 0 退出），不再静默「0 道门」（审计 L1）。 */
+function listGates(): { gates: string[]; error?: string } {
   try {
-    return fs
-      .readdirSync(MCP_SCRIPTS)
-      .filter((f) => /^(assert|verify|check)-.*\.mjs$/.test(f))
-      .sort();
-  } catch {
-    return [];
+    return {
+      gates: fs
+        .readdirSync(MCP_SCRIPTS)
+        .filter((f) => /^(assert|verify|check)-.*\.mjs$/.test(f))
+        .sort(),
+    };
+  } catch (e) {
+    return { gates: [], error: e instanceof Error ? e.message : String(e) };
   }
+}
+
+/**
+ * 转发子进程（本文件唯一 spawnSync 调用点）：失败时打印诊断，退出码 0/1 语义不变（审计 M2）。
+ * opts.nodeBin 可注入（测试用，默认真实 node）—— 不引入产品侧后门/环境变量。
+ */
+export function spawnNodeScript(
+  scriptPath: string,
+  args: string[],
+  opts: { nodeBin?: string } = {},
+): { status: number; signal?: NodeJS.Signals | null; error?: NodeJS.ErrnoException } {
+  const r = spawnSync(opts.nodeBin ?? process.execPath, [scriptPath, ...args], { stdio: "inherit", windowsHide: true });
+  if (r.error) {
+    process.stderr.write(`启动失败: ${r.error.message}（${scriptPath}）\n`);
+    return { status: 1, error: r.error };
+  }
+  if (r.signal) {
+    process.stderr.write(`被信号终止: ${r.signal}（${scriptPath}）\n`);
+    return { status: 1, signal: r.signal };
+  }
+  return { status: r.status ?? 1 };
 }
 
 export async function main(argv: string[]): Promise<number> {
@@ -109,7 +161,12 @@ export async function main(argv: string[]): Promise<number> {
     return 0;
   }
   if (a === "--version" || a === "-v") {
-    console.log(pkgVersion());
+    const v = pkgVersion();
+    if (v === null) {
+      process.stderr.write("无法读取 package.json 的 version（--version 不可用）\n");
+      return 1;
+    }
+    console.log(v);
     return 0;
   }
   if (!b || b === "--help" || b === "-h") {
@@ -139,7 +196,11 @@ export async function main(argv: string[]): Promise<number> {
   }
   // ── 内建：gate list / gate run ──
   if (cmd.group === "gate" && cmd.name === "list") {
-    const gates = listGates();
+    const { gates, error } = listGates();
+    if (error) {
+      process.stderr.write(`无法读取门目录 ${MCP_SCRIPTS}：${error}\n`);
+      return 1;
+    }
     console.log(`mcp-server/scripts 下 ${gates.length} 道门：`);
     for (const g of gates) console.log("  " + g.replace(/\.mjs$/, ""));
     return 0;
@@ -147,16 +208,21 @@ export async function main(argv: string[]): Promise<number> {
   if (cmd.group === "gate" && cmd.name === "run") {
     const want = (rest[0] ?? "").replace(/\.mjs$/, "");
     if (!want) {
-      console.error("用法：mc-skill gate run <name>（mc-skill gate list 看清单）");
+      console.error(`用法：${ENTRY} gate run <name>（${ENTRY} gate list 看清单）`);
       return 2;
     }
-    const hits = listGates().filter((f) => f === want + ".mjs" || f === "assert-" + want + ".mjs");
+    const { gates, error } = listGates();
+    if (error) {
+      process.stderr.write(`无法读取门目录 ${MCP_SCRIPTS}：${error}\n`);
+      return 1;
+    }
+    const hits = gates.filter((f) => f === want + ".mjs" || f === "assert-" + want + ".mjs");
     if (hits.length !== 1) {
       console.error(hits.length ? `匹配到多道门：${hits.join(", ")}` : `没有匹配的门：${want}`);
       return 2;
     }
-    const r = spawnSync(process.execPath, [path.join(MCP_SCRIPTS, hits[0]), ...rest.slice(1)], { stdio: "inherit", windowsHide: true });
-    return r.status ?? 1;
+    const r = spawnNodeScript(path.join(MCP_SCRIPTS, hits[0]), rest.slice(1));
+    return r.status;
   }
   // ── 通用：薄壳转发 ──
   if (!cmd.script) {
@@ -168,6 +234,6 @@ export async function main(argv: string[]): Promise<number> {
     console.error(`脚本不存在：${scriptPath}（CLI 需在仓库内运行）`);
     return 1;
   }
-  const r = spawnSync(process.execPath, [scriptPath, ...rest], { stdio: "inherit", windowsHide: true });
-  return r.status ?? 1;
+  const r = spawnNodeScript(scriptPath, rest);
+  return r.status;
 }

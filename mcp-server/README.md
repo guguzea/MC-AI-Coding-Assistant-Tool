@@ -174,11 +174,13 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 `package.json` 的 `bin` 键叫 `mc-skill`，但本包没有发布到 registry，clone 后该命令不可解析；下面的示例一律按可运行形式书写。本文档代码块里的短形式以 `mcp-server/` 为 cwd，仓库根请在前面补上目录（`node mcp-server/dist/cli.js …`）。
 
+**第二入口 `mc-skill-scripts`（仓库线，2026-09-17 提级）**：`package.json` 的 `bin` 同时声明 `mc-skill-scripts` → `bin/mc-skill-scripts.mjs`（同样未发布，clone 后按 `node mcp-server/bin/mc-skill-scripts.mjs …` 调用）。它把散装维护脚本收成 **9 个子命令**：`lib resolve|summary|ownership`、`corpus decompile|emit|merge`、`cloth project`、`gate list|run`（薄壳转发 `scripts/` 与 `mcp-server/scripts/` 的既有脚本，参数与退出码原样透传）。与工具线同一 core、互不分叉；其 `lib resolve` 与 MCP 工具 `resolve_lib_skills` 为同一份实现。冒烟门 `scripts/assert-cli-smoke.mjs`（接 `test-core` §S16）。
+
 一条执行路径：短名只做 alias（`query`→`query_api`、`convert`→`convert_mapping`、`update`→`mc_skill_update`、`status`/`warmup`→`get_server_status`；`warmup` 会注入 `warmup=true`，用户显式 `--warmup=false` 优先）。`descriptor` 是本地命令，不加载 MCP 工具注册表。
 
 全局 flag（不进工具 schema）：`--help`/`-h`、`--version`/`-V`（放在工具名之前、或整条命令没写工具名时打印 CLI 版本；`--version` 跟在工具名后面时是工具字段，而 `-V` 在那个位置会被当未知参数 exit 2）、`--json`（不改变工具输出，仅为兼容保留；只在交互式终端下影响 `--help` 的呈现）、`--compact`、`--fail-on-error`、`--quiet`、`--timeout <ms>`、`--project <dir>`、`--file field=path`、`--raw [field]`、`--output-format json`、`--stdin-json`。`--quiet`、`--timeout` 与 `--stdin-json` 与全部工具字段名零碰撞（连字符/大小写归一化后同样复检），所以它们不需要进 `FIELD_OWNED_GLOBALS`；将来任何工具新增 `timeout` / `quiet` / `stdinJson` 字段都会让该门转红。
 
-同名让位（字段优先）：目标工具 schema 里存在与全局 flag 同名的字段时，这个名字归**工具字段**所有，全局剥离让位。当前唯一一例是 `validate_bp_json` 的 `json`——`--json '<BP 全文>'`、`--json=<全文>`、`--json=@file`、`--file json=path` 都是传待校验内容，不是输出开关；该工具的 `--json` 缺值时按 schema 报校验错（exit 2 `validation`），而不是「未知/缺参」。这份冲突清单显式写在 `FIELD_OWNED_GLOBALS`，`test-cli-parse` 的枚举门断言它恒等于「80 工具 schema 字段名 ∩ 全局 flag 名」，将来新增同名字段而不改清单会让 CI 转红。
+同名让位（字段优先）：目标工具 schema 里存在与全局 flag 同名的字段时，这个名字归**工具字段**所有，全局剥离让位。当前唯一一例是 `validate_bp_json` 的 `json`——`--json '<BP 全文>'`、`--json=<全文>`、`--json=@file`、`--file json=path` 都是传待校验内容，不是输出开关；该工具的 `--json` 缺值时按 schema 报校验错（exit 2 `validation`），而不是「未知/缺参」。这份冲突清单显式写在 `FIELD_OWNED_GLOBALS`，`test-cli-parse` 的枚举门断言它恒等于「81 工具 schema 字段名 ∩ 全局 flag 名」，将来新增同名字段而不改清单会让 CI 转红。
 
 kebab-case 会转到 camelCase（`--dry-run`→`dryRun`、`--highlight-key`→`highlight_key`）；另有 `--name`→`memberName`、`--confirm`→`confirmed`、`--class`→`className` 等语义别名（仅当目标字段存在于该工具 schema 时）。只有分隔符/大小写之差的名字（`--allow-fallback`、`--allowFallback`、`--ALLOW_FALLBACK`→`allow_fallback`）由通用归一化接管，不再逐个写进别名表；归一化只在候选唯一时接受，命中多个则报歧义并列出候选写法。未知 flag **exit 2**，报错里带近似名和 `node mcp-server/dist/cli.js <工具> --help` 指针。
 

@@ -8,6 +8,10 @@
 - `npm run community:index` 补 `--write`（此前该链是 dry-run，`wrote N entries` 不可复现）。
 - `tools/list` 现 80 个工具（`release-smoke` 实跑），CI 步骤名同步。
 - 知识包文档面：forge / fabric / quilt / neoforge 各档「本档不存在的 API」、版本分界与第三方库上界按一手语料 + Modrinth/maven 实读更正。
+- **当前为 81 个工具**（上方「`tools/list` 现 80 个工具」是当时的记录）：新增 `resolve_lib_skills`（按平台 + 精确 MC 版本解析 `knowledge/libs` 库 skill 源稿；与 CLI `lib resolve` 同一 core，只解析不返回正文）。
+- **CLI 双入口提级（2026-09-17）**：工具线 `mc-skill`（= `dist/cli.js`，dispatch 全部工具）+ 仓库线 `mc-skill-scripts`（`bin/mc-skill-scripts.mjs`；`lib` / `corpus` / `cloth` / `gate` 四组共 9 个子命令，薄壳转发既有脚本）。
+- **CLI 审计修复（1 高 5 中 4 低）**：`provision-26x-docs.mjs` 收口 write-guard（默认干跑、`--write` 才删、`--data-root` 沙盒）；`--timeout` 超时信封后强制退出；转发失败打印诊断、EPIPE 静默退出、入口崩溃输出 JSON 信封；`fetch-embedding-model.mjs` 下载加超时与重试提示；`gate list` 目录错非 0、帮助用真实入口名、版本读失败不静默。
+- **CLI 测试双档**：`assert-cli-quick.mjs`（快档，进默认门链）与 `assert-cli-full.mjs`（81 工具全量档，**不默认跑**；含逐条豁免原因与汇总表）。
 
 ## Plan 1 — validate_project / diagnose_gradle 返回值
 

@@ -11,6 +11,7 @@
  * 旧位置参数形式仍兼容（stderr 迁移提示）。descriptor 为本地子命令，不经 MCP registry。
  */
 import "./utils/node-sqlite-guard.js"; // 必须保持第一个 import：22.5–22.12 未带 --experimental-sqlite 时先给出指引再退出
+import { installStdioErrorGuard, installCrashGuards } from "./utils/stdio-guard.js";
 import { existsSync, readFileSync, realpathSync, statSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
@@ -664,7 +665,11 @@ function outputFormatError(value: FlagScalar | undefined): string | null {
   return null;
 }
 
-/** 到点只放弃等待：绝不 process.exit，否则 run 路径 finally 的资源回收不会跑 */
+/**
+ * 到点只放弃等待（不在计时器里 process.exit —— 否则 run 路径 finally 的资源回收不会跑）；
+ * 2026-09-17 审计 M1 保守兜底：超时信封打出后，在 catch 出口以「空写 flush 屏障」强制退出，
+ * 防事件循环仍有悬挂句柄（socket / 子进程）时进程挂住。
+ */
 class TimeoutCliError extends Error {
   constructor(
     readonly ms: number,
@@ -949,6 +954,11 @@ async function main(): Promise<void> {
     }
     printJson(envelope, compact);
     process.exitCode = isUsage ? 2 : 1;
+    if (errorKind === "timeout") {
+      // 审计 M1（2026-09-17 保守兜底）：信封已出，但 handler 内部可能仍有悬挂句柄；
+      // 以空写为 flush 屏障，确保信封交给管道后强制退出（否则进程可能一直挂住）。
+      process.stdout.write("", () => process.exit(1));
+    }
   }
 }
 
@@ -965,9 +975,24 @@ function isMainModule(): boolean {
 }
 
 if (isMainModule()) {
+  // 入口守卫（审计 M3/M4）：EPIPE 静默退出；崩溃/未处理拒绝 → JSON 信封 + exit 1。
+  installStdioErrorGuard();
+  installCrashGuards({
+    emitEnvelope: (err) => {
+      const message = err instanceof Error ? err.message : String(err);
+      if (err instanceof Error && err.stack) process.stderr.write(`${err.stack}\n`);
+      process.stdout.write(JSON.stringify({ success: false, tool: "mc-skill", error: message, errorKind: "tool_failure" }) + "\n");
+    },
+  });
   main().catch((err) => {
-    console.error(err);
-    process.exit(1);
+    // 原为 console.error 裸栈（审计 M4）：stderr 留栈、stdout 出信封、flush 后 exit 1。
+    if (err instanceof Error && err.stack) process.stderr.write(`${err.stack}\n`);
+    else process.stderr.write(`${String(err)}\n`);
+    const message = err instanceof Error ? err.message : String(err);
+    process.stdout.write(
+      JSON.stringify({ success: false, tool: "mc-skill", error: message, errorKind: "tool_failure" }) + "\n",
+      () => process.exit(1),
+    );
   });
 }
 

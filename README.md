@@ -7,9 +7,9 @@
 
 为 AI 提供一个「读懂 MC Mod 开发生态」的环境，消除知识陈旧、API 版本混淆、构建系统复杂、映射不一致等结构性障碍。
 
-## 定位：人在环的副驾驶（不是无人值守流水线）
+## 定位：人在环的副驾驶
 
-模组开发**不是**确定性流水线。创意设计（做什么内容）等必须由**人**判断,如果你无法拍板,可以让agent代劳,完成后agent会给你做出解释；
+模组开发**不是**确定性流水线。创意设计（做什么内容）等必须由**人**判断；如果你无法拍板，可以让 Agent 代劳，完成后 Agent 会按「解释模板」（见「快速开始」一节）向你说明取舍与替代方案。
 Agent 负责版本门禁、文档检索、规则/反模式、骨架草稿、校验与崩溃分诊等。
 
 下列高风险操作默认停在清单或 `dryRun`，**必须有人在环**（先展示、经用户确认后再做）：写盘、运行 Gradle、拷贝 jar 到游戏目录、上传发布。
@@ -156,38 +156,39 @@ MC_skill/
 
 **对 AI（打开一个 MC Mod 项目时）：**
 
-> 按根目录 `AGENTS.md` 判断平台与**精确**版本，然后调用 `activate_platform_pack action=session` 加载该档规则 / Skill 索引（不要直接读邻版 `平台/<ver>/.cursor`）。官方文档先 `list_*_versions`，再把 `version` 写死成工程版本去 `search_*_docs` / `search_docs`。创意、兼容取舍、API 选择由用户拍板,兼容取舍、API 选择在用户不想或者没有能力决定时,可以代劳,但是一定要对用户进行解释,解释模板见下文的解释模板部分；写盘 / Gradle / 拷 jar / 上传须确认后再做（人在环，不是无人值守流水线）。
-*解释模板*
-  1. 决策透明
-  任何代替用户做出的兼容取舍或 API 选择，都必须在决策后立即在回复中明确说明，不得默默执行。
-  格式示例：
+> 按根目录 `AGENTS.md` 判断平台与**精确**版本，然后调用 `activate_platform_pack action=session` 加载该档规则 / Skill 索引（不要直接读邻版 `平台/<ver>/.cursor`）。官方文档先 `list_*_versions`，再把 `version` 写死成工程版本去 `search_*_docs` / `search_docs`。创意设计由用户拍板；兼容取舍 / API 选择默认也由用户决定，用户不想或没能力决定时可代劳，但必须按下方「解释模板」说明（模板已同步写入根 `AGENTS.md`「人在环」节，对 Agent 强制生效）；写盘 / Gradle / 拷 jar / 上传须确认后再做（人在环，不是无人值守流水线）。
 
-  我已替你选择使用 DeferredRegister，原因见下。
+#### 解释模板（代劳决策时的强制说明格式）
 
-  2. 解释必须包含四要素
-  每次代替用户决策，解释至少包含：
+1. **决策透明**
 
-  选择了什么：具体的技术点或方案（例如“使用 Forge 1.20.1 的 SimpleChannel 而不是 NeoForge 的 Payload”）。
+   任何代替用户做出的兼容取舍或 API 选择，都必须在决策后立即在回复中明确说明，不得默默执行。
 
-  为什么这样选：与当前版本、文档、最佳实践或用户项目情况的关联（例如“NeoForge 1.20.1 是 Forge 兼容层，官方文档指向 SimpleChannel”）。
+   格式示例：
 
-  主要替代方案：一到两个可选方案，并说明为何没有采用（例如“也可以使用 NeoForge 1.20.4+ 的 Payload，但你的版本是 1.20.1，不适用”）。
+   > 我已替你选择使用 `DeferredRegister`，原因见下。
 
-  影响与风险：该选择可能带来的后果、限制或需要注意的地方（例如“这样写会在编译时依赖 net.minecraftforge 包，请确认你的工程已包含该依赖”）。
+2. **解释必须包含四要素**
 
-  3. 语言适配用户水平
-  如果用户表示“不太懂技术”或“你决定就行”，解释应避免堆砌术语，用通俗语言说明选择会带来什么结果。
+   每次代替用户决策，解释至少包含：
 
-  如果用户是专业开发者，可以给出更技术性的依据（如类名、方法签名、文档链接）。
+   - **选择了什么**：具体的技术点或方案（例如「使用 Forge 1.20.1 的 SimpleChannel 而不是 NeoForge 的 Payload」）。
+   - **为什么这样选**：与当前版本、文档、最佳实践或用户项目情况的关联（例如「NeoForge 1.20.1 是 Forge 兼容层，官方文档指向 SimpleChannel」）。
+   - **主要替代方案**：一到两个可选方案，并说明为何没有采用（例如「也可以使用 NeoForge 1.20.4+ 的 Payload，但你的版本是 1.20.1，不适用」）。
+   - **影响与风险**：该选择可能带来的后果、限制或需要注意的地方（例如「这样写会在编译时依赖 net.minecraftforge 包，请确认你的工程已包含该依赖」）。
 
-  无论哪种，都必须给出可验证的出处（例如 search_forge_docs 的结果、规则编号、官方文档链接），不能只说“最佳实践”。
+3. **语言适配用户水平**
 
-  4. 高风险决策需先行确认
-  低风险决策（如选择某个 API 写法、推荐某个依赖版本）：可以直接代劳，但执行后立即按第 2 条解释。
+   - 用户表示「不太懂技术」或「你决定就行」→ 解释应避免堆砌术语，用通俗语言说明选择会带来什么结果。
+   - 专业开发者 → 可给出更技术性的依据（类名、方法签名、文档链接）。
+   - 无论哪种，都必须给出**可验证的出处**（`search_forge_docs` 的结果、规则编号、官方文档链接），不能只说「最佳实践」。
 
-  高风险决策（如切换加载器平台、更改包结构、移除依赖、修改构建脚本）：即使可以代劳，也应在执行前简要说明推荐方案和理由，等待用户回复确认，除非用户已经明确表示“不用问我，直接做”。
+4. **高风险决策需先行确认**
 
-  如果用户说“我不懂，你来决定”，则视为已授权，但仍需在决策后解释清楚，并告知如何回退。
+   - **低风险决策**（选择某个 API 写法、推荐某个依赖版本）：可以直接代劳，但执行后立即按第 2 条解释。
+   - **高风险决策**（切换加载器平台、更改包结构、移除依赖、修改构建脚本）：即使可以代劳，也应在执行前简要说明推荐方案和理由，等待用户回复确认，除非用户已明确表示「不用问我，直接做」。
+   - 用户说「我不懂，你来决定」→ 视为已授权，但仍需在决策后解释清楚，并告知如何回退。
+
 **对新项目使用脚手架：**
 
 > 使用对应平台版本下的 `scaffold/`（如 `forge/1.20.1/scaffold/`）生成带规则的项目骨架。
@@ -407,7 +408,7 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 | 用网站 URL 当 `get_*_doc_full` 的 `id` | **必须**用搜索结果里的 `id` |
 | `search_community_docs` 可当官方 API | **不能**。`links` 条目不抓网页正文 |
 | `port_project` 会改用户工程 | 默认 **dryRun**；真写需 `confirmed` + `MC_SKILL_ALLOW_WRITE` + 路径在 `MC_SKILL_PROJECT_ROOT` 内 |
-| 工作流 / MCP 不跑 Gradle、不拷 jar、不上传 = 漏做无人值守 | **人在环设计**。创意、兼容取舍、API、性能、调试由人决定；高风险操作须确认后再执行 |
+| 工作流 / MCP 不跑 Gradle、不拷 jar、不上传 = 漏做无人值守 | **人在环设计**。创意、性能、调试由人决定；兼容取舍 / API 选择可代劳但须按「解释模板」说明；高风险操作须确认后再执行 |
 | `analyze_porting_path` 对任意文件夹都有移植路径 | 非模组目录 → `NOT_A_MOD_PROJECT`；LiteLoader / Rift / ModLoader / 基岩 → `UNSUPPORTED_PORT` |
 | `generate_*` / `generate_datagen` 会写文件 | **默认只返回文本骨架 + `suggestedPath`**。可选写盘须 `write=true` + `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + 绝对 `MC_SKILL_PROJECT_ROOT`，路径相对工程根且不含 `..`；缺任一条件只吐文本，不会静默落盘。`platform`/`loader` 与（datagen/config/capability/renderer 的）`version` 必填，禁止默认 forge。datagen：**Forge 1.20.1 与 1.20.4**（1.20.4 仅 recipe）、NeoForge 1.20.4/1.20.6（仅 recipe）/1.21.x/26.1、**Fabric** 1.21.1/**1.21.3**/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（无 1.21.5）；Quilt 无 generate_datagen（改口 `search_docs platform=quilt`）；其它 Forge 版本（含 1.12.2）error。`generate_capability`：forge=Capability；neoforge 仅 1.20.4+ Attachment；fabric/quilt 改口 CCA |
 | `localize_mod` 会自动译成中文 | **无机器翻译**，只标 `needsTranslation` |
@@ -935,7 +936,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mcskill://workflow/mc-new-block` 等 | 与 Prompt 同名的工作流正文（以 `get_workflow_template` 列表为准） |
 
 
-### 独立 CLI（`node mcp-server/dist/cli.js`，80 工具全可用）
+### 独立 CLI（`node mcp-server/dist/cli.js`，81 工具全可用）
 
 flags-only（`--key value` / `--key=value` / 裸 `--flag`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误。全局 flag（不进工具 schema）：`--help`/`-h`、`--version`/`-V`（放在工具名之前、或整条命令没写工具名时打印 CLI 版本；`--version` 跟在工具名后面时是工具字段，而 `-V` 在那个位置会被当未知参数 exit 2）、`--json`（不改变工具输出，仅为兼容保留；只在交互式终端下影响 `--help` 的呈现）、`--compact`、`--fail-on-error`、`--quiet`（静音进度行与心跳，错误 / 警告 / 迁移提示照旧）、`--timeout <ms>`（到点 exit 1 + `errorKind:"timeout"`，退出码仍不越 0/1/2）、`--project <dir>`、`--file field=path`、`--raw [field]`（该字段完全按字面传，裸写则全局关闭 `@` 展开）、`--output-format json`（表达格式意图的规范入口，当前唯一合法值，其它值 exit 2）、`--stdin-json`（从 stdin 一次读入整个参数对象当基座，命令行同名字段恒胜；TTY 下、以及与 `@-` / `=-` / `--file f=-` 同现时一律 exit 2）；所有 string 字段支持文件输入——`--crashReport @./latest.txt` 读文件、`--crashReport=-` / `@-` 读 stdin（全进程一次）、`--file crashReport=./latest.txt` 等价写法，单文件与 `--stdin-json` 载荷共用约 8MB 上限。**加 `--fail-on-error` 时，`found:false` 与 `errors[]` 非空也升为退出码 1**。`--fail-on-error=false` **关闭**该行为（不要把写出 `=false` 当成开启）。布尔 flag 只接受 `true/false/1/0/yes/no/on/off`；`--flag=junk` 拒绝。完整语义见 [mcp-server/README.md](./mcp-server/README.md) §独立 CLI：
 

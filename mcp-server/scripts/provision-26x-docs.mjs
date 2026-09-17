@@ -18,18 +18,23 @@
  * 4) Remove any leftover misleading neoforge_26.2 / fabric_26.2 clone trees
  *
  * Usage:
- *   node scripts/provision-26x-docs.mjs
- *   node scripts/provision-26x-docs.mjs --skip-fetch
+ *   node scripts/provision-26x-docs.mjs                  # 抓取段照跑；删除段走干跑（打印清单）
+ *   node scripts/provision-26x-docs.mjs --write          # 才真正执行删除（write-guard 语义）
+ *   node scripts/provision-26x-docs.mjs --skip-fetch     # 只做删除段（同样受 --write 管）
+ *   node scripts/provision-26x-docs.mjs --data-root=<dir> [--write]   # 沙盒/自定义数据根（默认仓库 data/）
  */
 
 import { spawnSync } from "child_process";
-import { existsSync, rmSync } from "fs";
-import { dirname, join } from "path";
+import { existsSync } from "fs";
+import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
+import { wantWrite, emitRemove } from "../../scripts/_lib/write-guard.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..");
-const DATA = join(ROOT, "data");
+/** --data-root=<dir>：沙盒/自定义数据根（默认仍是仓库 data/；仅影响本脚本的读写定位） */
+const dataRootArg = process.argv.find((a) => a.startsWith("--data-root="))?.slice("--data-root=".length);
+const DATA = dataRootArg ? resolve(dataRootArg) : join(ROOT, "data");
 const skipFetch = process.argv.includes("--skip-fetch");
 
 function run(cmd, args) {
@@ -51,13 +56,17 @@ function removeMisleadingClone(relPath, reason) {
     console.log(`skip remove (missing): ${relPath}`);
     return;
   }
-  rmSync(p, { recursive: true, force: true });
-  console.log(`removed misleading clone: ${relPath} (${reason})`);
+  // 2026-09-17 write-guard 收口（审计 H1）：默认干跑打印「将删除」清单，--write 才真删。
+  if (!wantWrite()) console.log(`[dry-run] 将删除 ${relPath}（${reason}）`);
+  emitRemove(p);
 }
 
 async function main() {
   console.log("=== provision-26x-docs (no version alias/clone) ===");
   console.log(`skipFetch=${skipFetch}`);
+  if (!wantWrite()) {
+    console.log("[provision-26x-docs] dry-run：删除段只打印清单（--write 才真删）；抓取段按各子脚本自身开关。");
+  }
 
   if (!skipFetch) {
     run(process.execPath, ["scripts/probe-neoforge-versions.js", "--force"]);

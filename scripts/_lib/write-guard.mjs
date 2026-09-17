@@ -4,6 +4,7 @@
  *
  * 两类出口，互不重叠：
  *  - 仓库内：emit / emitCopy（受 `--write` 管，默认只打 `DRYRUN <rel>`）
+ *    以及 emitRemove（仓库内删除出口，受同一 `--write` 管，默认只打 `DRYRUN rm <rel>`）
  *  - 仓库外（`$MC_SKILL_CACHE` / 系统临时目录，以及 gitignore 的 `temp/`）：
  *    scratchMkdirAll / scratchRemove / scratchWriteText（不受 `--write` 管，
  *    但目标一旦落进仓库即 throw）
@@ -73,6 +74,18 @@ export function emit(target, text) {
   mkdirSync(dirname(p), { recursive: true });
   writeFileSync(p, text, "utf8");
   console.log(`WROTE ${display(p)}`);
+  return true;
+}
+
+/** 唯一删除出口：默认只打印 `DRYRUN rm <仓库相对路径>`（`--write` 才真删）。 */
+export function emitRemove(target, opts = {}) {
+  const p = toAbs(target);
+  if (!WRITE) {
+    console.log(`DRYRUN rm ${display(p)}`);
+    return false;
+  }
+  rmSync(p, { recursive: true, force: true, ...opts });
+  console.log(`REMOVED ${display(p)}`);
   return true;
 }
 

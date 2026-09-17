@@ -6743,7 +6743,6 @@ const SCRIPT_WRITE_GUARD_DEBT = new Map([
   ["mcp-server/scripts/process-fabric-docs.js", /const DATA_DIR = join\(MC_SKILL_ROOT, "data",/],
   ["mcp-server/scripts/process-fabric-wiki.js", /const DATA_DIR = join\(MC_SKILL_ROOT, "data",/],
   ["mcp-server/scripts/process-forge-docs.js", /const DATA_DIR = join\(__dirname, "\.\.", "\.\.", "data"/],
-  ["mcp-server/scripts/provision-26x-docs.mjs", /const p = join\(DATA, relPath\)/], // 唯一带 rmSync 递归删除仓库 data/** 的脚本，风险面最高
   ["mcp-server/scripts/tsrg-extractor.js", /const EXTRACTED = join\(__dirname, "\.\.", "\.\.", "data",/],
   ["mcp-server/scripts/fetch-embedding-model.mjs", /const cacheDir = join\(dataRoot, "_models"/],
 ]);
@@ -7454,6 +7453,21 @@ testCommunityIndexSync();
   const bad = resolveLibSkills({ platform: "nope", mcVersion: "1.21.1" });
   assert.equal(bad.ok, false, "未知平台必须 ok:false（fail-soft 而非抛错）");
   console.log(`S17 resolve_lib_skills（${r.count} 个 skill + cloth versionsJson 提示）：ok`);
+}
+
+/**
+ * §S18 · CLI 快速档（审计补齐，2026-09-17）：主要模块 + 三零覆盖分支 + 健壮性，进默认门链。
+ * 全量档（81 工具逐个）见 scripts/assert-cli-full.mjs，按需手动（npm run test:cli:full），不默认跑。
+ */
+{
+  const { spawnSync } = await import("node:child_process");
+  const { fileURLToPath } = await import("node:url");
+  const GATE = fileURLToPath(new URL("./scripts/assert-cli-quick.mjs", import.meta.url));
+  const r = spawnSync(process.execPath, [GATE], { encoding: "utf8", windowsHide: true });
+  const out = `${r.stdout ?? ""}${r.stderr ?? ""}`;
+  assert.equal(r.status, 0, `assert-cli-quick 失败：\n${out}`);
+  assert.match(out, /assert-cli-quick: ok/, `快档没有输出 ok 结论，可能已退化成空检查：\n${out}`);
+  console.log("S18 CLI 快速档（主要模块 + 零覆盖分支 + 健壮性）：ok");
 }
 
 console.log("core regression tests passed");
