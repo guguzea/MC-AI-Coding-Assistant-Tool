@@ -62,7 +62,7 @@ MC_skill/
 │   ├── batch-decompile.mjs      # 分批反编译（源码 → $MC_SKILL_CACHE，不入库）
 │   └── merge-verified-api.mjs   # 回填 catalog verifiedApi
 │
-├── mcp-server/                  # 本地 stdio MCP Server（80 个工具）
+├── mcp-server/                  # 本地 stdio MCP Server（81 个工具）
 │   ├── src/                     # 工具实现（api / docs / diagnostics / wave…）
 │   ├── scripts/                 # 文档抓取、语义索引、数据审计；含 build-library-catalog-from-authored.mjs
 │   └── data/                    # 随仓分发的 MCP 侧数据（非 MC_SKILL_DATA）
@@ -199,7 +199,7 @@ MC_skill/
 **配置本地 MCP Server：**
 
 > 将 [AUTO_SETUP.md](./AUTO_SETUP.md) 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
-> 要求 **Node.js >= 22.5**（**22.5–22.12 与 23.0–23.3 需加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 / 23.4 起才默认开启；服务入口会检测并给出醒目指引）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，80 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
+> 要求 **Node.js >= 22.5**（**22.5–22.12 与 23.0–23.3 需加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 / 23.4 起才默认开启；服务入口会检测并给出醒目指引）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，81 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
 
 ## 社区知识与库模组
 
@@ -252,6 +252,49 @@ MC_skill/
 本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**80** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 与 23.0–23.3 需在 NODE_OPTIONS 或启动参数加 `--experimental-sqlite`，22.13+ / 23.4+ 无需**）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
 **测试**：`cd mcp-server && npm test`（构建 + 全部单测：核心 / 脚本 / 数据审计 / Wave BCD / localize / update / CLI / 反编译 / 深 mixin / MCP 协议）。CI 语义：`MC_SKILL_SKIP_DOWNLOAD=1` 时下载类工具诚实失败。
+
+### 两个一等公民入口：MCP 与 CLI（2026-09-17 提级）
+
+同一条 core、两个适配器（**互不分叉**）：MCP（stdio，给 AI 宿主）与 CLI（终端 / 脚本，给人）。前提与 MCP 相同：Node ≥ 22.5 + `cd mcp-server && npm ci && npm run build`（CLI 跑 `dist/`）。
+
+#### 入口一：工具线（= MCP 工具，全量可调）
+
+```bash
+node mcp-server/dist/cli.js --version
+node mcp-server/dist/cli.js list-tools --names-only                    # 工具名清单
+node mcp-server/dist/cli.js list-tools --tool resolve_lib_skills       # 单工具 schema
+node mcp-server/dist/cli.js search_docs --platform fabric --version 1.21.1 --query registry
+node mcp-server/dist/cli.js resolve_lib_skills --platform fabric --mcVersion 1.21.1
+node mcp-server/dist/cli.js check_dependencies --project .
+node mcp-server/dist/cli.js crash_analyze --crashReport @./crash-reports/latest.txt
+```
+
+- **参数约定**：flags-only（`--key value` / `--key=value` / 裸 `--flag`→true）；`--file field=path`、`@path` / `@-`（读文件 / stdin）、`--stdin-json`（整参对象基座，命令行同名恒胜）、`--raw [field]`（字面量逃生）、`--timeout <ms>`、`--quiet`、`--project <dir>`、`--output-format json`。**参数名按各工具 schema**（如 `resolve_lib_skills` 用 `--mcVersion`；拿不准先 `… <工具名> --help`）。
+- **输出**：恒定 JSON 包装 `{success, tool, result|error}`；**退出码** 0=成功 / 1=工具失败或超时（`errorKind: tool_failure | timeout`）/ 2=用法错误（`usage | validation`）。
+- **工程类工具**：`--project <dir>` 映射 `projectPath`；`--fail-on-error` 把 `found:false` / 非空 `errors[]` 升为退出码 1。
+- 全部细节（全局 flag 全表 / 别名 / 字段优先 / 迁移提示）见 [`mcp-server/README.md`](./mcp-server/README.md)「独立 CLI」节。
+
+#### 入口二：仓库线（维护侧脚本子命令）
+
+```bash
+node mcp-server/bin/mc-skill-scripts.mjs --help                 # 命令总表
+node mcp-server/bin/mc-skill-scripts.mjs lib resolve --platform fabric --version 1.21.1
+node mcp-server/bin/mc-skill-scripts.mjs lib resolve --validate # 三组合解析校验（= test-core §S15 同一门）
+node mcp-server/bin/mc-skill-scripts.mjs lib summary --only libgui --write
+node mcp-server/bin/mc-skill-scripts.mjs lib ownership          # G1 库归属门
+node mcp-server/bin/mc-skill-scripts.mjs corpus decompile --filter slug=cloth-config,jei
+node mcp-server/bin/mc-skill-scripts.mjs corpus merge --input x.jsonl --dry-run
+node mcp-server/bin/mc-skill-scripts.mjs cloth project          # 注入标记 ↔ versions.json 校验
+node mcp-server/bin/mc-skill-scripts.mjs gate list
+node mcp-server/bin/mc-skill-scripts.mjs gate run lib-ownership # 跑一道门（退出码透传）
+```
+
+- 九个命令 = `lib resolve|summary|ownership` · `corpus decompile|emit|merge` · `cloth project` · `gate list|run`；
+- **薄壳**：转发 `scripts/` 与 `mcp-server/scripts/` 的既有脚本，参数与退出码原样透传；`… <组> <命令> --help` 给命令说明（脚本自带参数的 `--help` 走直跑脚本）；
+- **边界**：CLI 需在仓库内运行（脚本位于仓库根 `scripts/` 与 `mcp-server/scripts/`）；仓库线属**维护侧**作业（批量反编译 / 摘要重建 / G1 门 / 注入回填），MCP 工具面不暴露。
+- 冒烟门：`mcp-server/scripts/assert-cli-smoke.mjs`（双入口 `--version`/`--help` + 8 组 `--help` + `gate list` + `lib resolve` 真跑×2）已接 `test-core` §S16。装包后（如 `npm i -g ./mcp-server`）两入口暴露为 bin：mc-skill 与 mc-skill-scripts。
+
+> **库模组文件保持 AI 直接可读**：`knowledge/libs/**` 是"源稿即用"——AI 按 `AGENTS.md`「库模组 Skill」规则**直接读文件**；`resolve_lib_skills`（MCP 与 CLI `lib resolve` 同一 core）只做**解析与真值提示**（返回仓库相对路径 + `versionsJson`），**不代替文件、不缓存正文**。
 
 ### 向量 / 语义搜索（T1）
 
@@ -523,7 +566,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2–1.20.4 与 Fabric 主档均含 `mc-events`（2026-08 D-1 补齐，经 `FABRIC_SKILL_DONORS` 回填的薄档带 DONOR_SKILL 横幅）。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
-## MCP Server 工具（80 个）
+## MCP Server 工具（81 个）
 
 服务名：`MC-AI-Coding-Assistant-Tool`。安装与配置见 [AUTO_SETUP.md](./AUTO_SETUP.md)、[mcp-server/README.md](./mcp-server/README.md)。
 
@@ -568,7 +611,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 | `activate_platform_pack` | `list` / `session` / `write` / `deactivate`。session 不写盘、不依赖项目根：默认规则 **00/01/09** + Skill **索引**（`topics`/`task` 追加并集；`skillNames` 注入正文上限 8；见上文「规则包加载」）。write 默认 dryRun，`hosts` 必填。不要再用 `includeSkills`，改用 `writeSkillStubs`（默认 true，只写 stub）；`includeSkillBodies` 才写全文。目标只能是用户模组工程（拒绝知识库根）。**不能**开关 IDE 扫描器。 |
 
 
-### 2. 工程辅助（6）
+### 2. 工程辅助（7）
 
 
 | 工具                 | 作用                                                                                                                                                                     |
@@ -579,6 +622,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 | `validate_project` | Forge：mods.toml / DeferredRegister。Fabric/Quilt：`fabric.mod.json` / `quilt.mod.json` + entrypoint。NeoForge：`neoforge.mods.toml`、`@Mod` + `IEventBus`。LiteLoader/Rift/ModLoader/基岩 `skipped`。坏 recipe 只 warning。Java 扫描上限默认 300（`MC_SKILL_JAVA_SCAN_MAX_FILES`）。 |
 | `check_publish_ready` | 发布前清单：license/version、`build/libs` 是否像正式 jar，并读 `community_knowledge/authored/publishing.md` 的清单（缺项只 warning）。**不上传**、不调 Curse/Modrinth API。 |
 | `inspect_runtime` | 日志型 inspector：优先 `logsDir`/`crashReportsDir`；否则有界探测 `run/logs` 等。禁止全盘 / JVM attach。默认读文件尾部。 |
+| `resolve_lib_skills` | 按平台 + 精确 MC 版本解析 `knowledge/libs` 库 skill 源稿（§3.6：组映射 + `platforms`/`mcVersions` 过滤）；返回仓库相对 `path` 与 `versionsJson` 真值提示（带该文件的库写坐标前先读对应 MC 版本 slot）。与 CLI `lib resolve` **同一 core**；只解析、不返回正文 —— AI 仍直接读源稿（文件即用）。 |
 
 
 
@@ -902,7 +946,7 @@ node mcp-server/dist/cli.js status --version 1.20.1            # 服务器状态
 node mcp-server/dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1
 node mcp-server/dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F'
 node mcp-server/dist/cli.js update --action check
-node mcp-server/dist/cli.js list-tools                          # 全部 80 个工具的 schema
+node mcp-server/dist/cli.js list-tools                          # 全部 81 个工具的 schema
 ```
 
 **通用 dispatch（v0.2+）**：除上述命令外，**任意 MCP 工具名可直接调用**（handler 自动收集，缺参时返回 zod 校验提示）：

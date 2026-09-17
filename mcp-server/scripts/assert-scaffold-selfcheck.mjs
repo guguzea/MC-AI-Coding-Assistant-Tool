@@ -73,9 +73,9 @@ const PLATFORM = "fabric";
  * 新出现的违规没有上榜 = 红。⇒ 台账只能显式改，不会被门悄悄放宽。
  */
 const KNOWN = [
-  // A1 · expand 缺 6 键（1.21.3 gradle.properties 也缺 mod_authors / mod_license，
-  //      补齐要连 gradle.properties 一起改 ⇒ 整档归 S25b）
-  "A1|1.21.3|src/main/resources",
+  // A1 · （原 "A1|1.21.3|src/main/resources" 豁免已于 2026-09-16 撤销：该档升 Gradle 8.10 时
+  //      按 fabric/1.21.1 成功基线补齐 expand 的 mod_name / mod_description，并把 fabric.mod.json 的
+  //      authors/license 改硬编码 ⇒ 真机构建 BUILD SUCCESSFUL in 1m54s，命中归零，台账不许留空壳）
   // A2 · icon 声明 `assets/examplemod/icon.png` 但 scaffold 不带货架图标二进制：
   //      loader 侧缺图标只 WARN（回退默认图标），不属「照模板即失败」的阻断族；
   //      补 PNG 是往知识库塞二进制资产，需用户裁定，不由本门顺手生成。10 档同形。

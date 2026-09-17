@@ -1,0 +1,66 @@
+{
+  "note": "mc-cloth-config 档位版本注入数据源（2026-09-16 建，用户裁定「保留中心稿 + 加投影版本注入点」）。scripts/project-cloth-skill.mjs 以本文件为源，校验/回填 fabric/<v>/.cursor/skills/mc-cloth-config.md 的 cloth-version-inject 标记行。改坐标先改这里再重投影；两套选法（该线最新 release / 对齐项目自带 FAPI）见中心稿 SKILL.md「版本映射表」与同表尾注。coord/state 为各档手稿实况（实证坐标 2026-09-14 落地、2026-09-16 提取）；textApi = 该档示例代码的 Text API 写法（constructor = new LiteralText(...)，literal = Text.literal(...)）。",
+  "dataDate": "2026-09-16",
+  "slots": {
+    "1.14.4": {
+      "coord": "TODO(未核实)",
+      "state": "todo",
+      "textApi": "constructor",
+      "basis": "maven.shedaniel.me 126 版、最低 4.10.11，无 1.14.4 时代取证；API 签名须用户自备 jar 走 ingest_loader_api"
+    },
+    "1.16.5": {
+      "coord": "4.14.64",
+      "state": "active",
+      "textApi": "constructor",
+      "basis": "pom 里 fabric-api 依赖为 0.30.0+1.16（对齐 FAPI 选法）"
+    },
+    "1.17.1": {
+      "coord": "5.3.63",
+      "state": "active",
+      "textApi": "constructor",
+      "basis": "pom 里 fabric-api 依赖为 0.37.1+1.17（旧稿的 6.0.46 上游 404）"
+    },
+    "1.18.2": {
+      "coord": "6.5.133",
+      "state": "active",
+      "textApi": "constructor",
+      "basis": "pom 里 fabric-api 依赖为 0.46.4+1.18"
+    },
+    "1.19.4": {
+      "coord": "10.0.96",
+      "state": "commented",
+      "textApi": "literal",
+      "basis": "pom 里 fabric-api 依赖为 0.76.0+1.19.4（与本档 MC 同线）；正文保持注释态（API 面未入库 = TODO(未核实) 模式，坐标在注释里给出）"
+    },
+    "1.20.1": {
+      "coord": "11.1.106",
+      "state": "active",
+      "textApi": "literal",
+      "basis": "pom 里 fabric-api 依赖为 0.83.0+1.20（旧稿写的 11.0.106 上游不存在）"
+    },
+    "1.20.4": {
+      "coord": "13.0.114",
+      "state": "active",
+      "textApi": "literal",
+      "basis": "pom 里 fabric-api 依赖为 0.91.2+1.20.4（与本档 MC 同线）"
+    },
+    "1.21.1": {
+      "coord": "15.0.127",
+      "state": "active",
+      "textApi": "literal",
+      "basis": "该版 jar 的 fabric.mod.json 声明 depends.minecraft => 1.21-"
+    },
+    "1.21.3": {
+      "coord": "16.0.143",
+      "state": "active",
+      "textApi": "literal",
+      "basis": "同线 16.0.131 的 manifest 声明 => 1.21.2-；本档原稿已是 16.0.143，仅补仓库行与依据"
+    },
+    "1.21.11": {
+      "coord": "21.11.153",
+      "state": "active",
+      "textApi": "literal",
+      "basis": "版本号前缀即 1.21.11 线"
+    }
+  }
+}

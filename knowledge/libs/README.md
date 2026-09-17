@@ -8,14 +8,15 @@
 
 | 组 | 适用平台 | 说明 |
 |----|----------|------|
-| `all-platforms/` | forge / fabric / quilt / neoforge | 多端均有集成意义，正文 Decision 分平台 |
-| `fabric-only/` | fabric / quilt | 仅 Fabric 系，**永不**用于 forge / neoforge |
-| `neo-only/` | neoforge | Neo 归属稿；与 forge-only **镜像同名**时可并存（如 Curios / KFF） |
-| `forge-only/` | forge | Forge 归属稿；Neo 共用库请在 `neo-only/` 放镜像，**不要**改解析组映射 |
+| `all-platforms/` | forge / fabric / quilt / neoforge | **多平台（组名不承诺全平台）**：实际覆盖以各库 frontmatter `platforms` 为准（实测 2026-09-16：20 份里 17 份不含 quilt、`mc-owo` 不含 forge）；正文 Decision 分平台 |
+| `fabric-only/` | fabric / quilt | 仅 Fabric 系，**永不**用于 forge / neoforge；**only = 本仓维护面，不是库的平台支持面**（见下注） |
+| `neo-only/` | neoforge | Neo 归属稿；与 forge-only **镜像同名**时可并存（如 Curios / KFF）；**only = 本仓维护面，不是库的平台支持面**（见下注） |
+| `forge-only/` | forge | Forge 归属稿；Neo 共用库请在 `neo-only/` 放镜像，**不要**改解析组映射；**only = 本仓维护面，不是库的平台支持面**（见下注） |
 | `bedrock-only/` | bedrock | 基岩 Script API（`mc-script-ui` / `mc-script-server`）；**禁止**把 Java 库 Skill（CCA/Trinkets/GeckoLib 等）当基岩教程 |
 
 - 分组是主依据；frontmatter `platforms` 二次确认，防组内误放
 - fabric-only 只对 fabric/quilt；forge-only 只对 forge；neo-only 只对 neoforge；bedrock-only 只对 bedrock
+- **`*-only` 的 "only" = 本仓维护面**（本仓只维护该平台的稿），**不是库的平台支持面**——上游可能在其它平台也有构建。实测（2026-09-16）：`mc-cloth-config` 在 fabric-only 而 manifest 取件含 fabric/forge/neoforge；`mc-curios` 只有 forge/neo 两份稿而取件面还含 fabric；`mc-server-translations` / `mc-spruceui` 声明含 forge/neoforge 而取件面只有 fabric。跨平台工程按 frontmatter `platforms` 选稿；本条**不改变**解析组映射
 
 ## 同 id 规则
 
@@ -45,6 +46,7 @@
 
 - `scripts/propagate-wave-d-skills.mjs` 的 WAVE_D **不含库项**（已移除 mc-config / mc-geckolib / mc-curios / mc-patchouli），文件头注释指向本目录
 - 库项**不做**任何落盘/复制/写入动作；`sync-skills.ps1` 仅同步平台自有 skill 的 IDE 镜像
+- **例外（2026-09-16 裁定：保留中心稿 + 加投影版本注入点）**：`mc-cloth-config` 双轨——本目录 `fabric-only/mc-cloth-config/`（SKILL.md 通用形 + `versions.json` 档位坐标真值）为权威；各档 `fabric/<v>/.cursor/skills/mc-cloth-config.md` 为档内实况（frontmatter 后带 `cloth-version-inject` 标记行），由 `scripts/project-cloth-skill.mjs` 按 versions.json 校验/回填标记（默认 dry-run）。仍**禁止**把中心稿正文批量覆盖到档内——注入点只管理版本标记，档内正文含逐档修正
 
 ## 使用方式
 

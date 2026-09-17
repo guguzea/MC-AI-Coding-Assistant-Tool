@@ -6,31 +6,1411 @@
   "source": {
     "shard": "jsonl",
     "dirs": [
-      "polymer-all"
+      "polymer"
     ],
     "merged": false
   },
-  "generatedAt": "2026-08-12T10:32:11.901Z",
+  "generatedAt": "2026-09-16T03:26:03.895Z",
   "versions": {
-    "0.2.10_1.19": {
-      "packages": [],
-      "classes": [],
-      "methods": {},
-      "sampleCount": 0
+    "1.19.2": {
+      "packages": [
+        "eu.pb4.polymer.api.block",
+        "eu.pb4.polymer.api.client",
+        "eu.pb4.polymer.api.client.registry",
+        "eu.pb4.polymer.api.entity",
+        "eu.pb4.polymer.api.item",
+        "eu.pb4.polymer.api.networking",
+        "eu.pb4.polymer.api.other",
+        "eu.pb4.polymer.api.resourcepack",
+        "eu.pb4.polymer.api.utils",
+        "eu.pb4.polymer.api.utils.events",
+        "eu.pb4.polymer.api.x"
+      ],
+      "classes": [
+        "eu.pb4.polymer.api.block.PlayerAwarePolymerBlock",
+        "eu.pb4.polymer.api.block.PolymerBlock",
+        "eu.pb4.polymer.api.block.PolymerBlockUtils",
+        "eu.pb4.polymer.api.block.PolymerHeadBlock",
+        "eu.pb4.polymer.api.block.SimplePolymerBlock",
+        "eu.pb4.polymer.api.client.PolymerClientDecoded",
+        "eu.pb4.polymer.api.client.PolymerClientPacketHandler",
+        "eu.pb4.polymer.api.client.PolymerClientUtils",
+        "eu.pb4.polymer.api.client.PolymerKeepModel",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerBlock",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntityType",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntry",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerItem",
+        "eu.pb4.polymer.api.entity.PolymerEntity",
+        "eu.pb4.polymer.api.entity.PolymerEntityUtils",
+        "eu.pb4.polymer.api.entity.PolymerVillagerProfession",
+        "eu.pb4.polymer.api.item.PolymerBlockItem",
+        "eu.pb4.polymer.api.item.PolymerHeadBlockItem",
+        "eu.pb4.polymer.api.item.PolymerItem",
+        "eu.pb4.polymer.api.item.PolymerItemGroup",
+        "eu.pb4.polymer.api.item.PolymerItemUtils",
+        "eu.pb4.polymer.api.item.PolymerRecipe",
+        "eu.pb4.polymer.api.item.PolymerSpawnEggItem",
+        "eu.pb4.polymer.api.item.SimplePolymerItem",
+        "eu.pb4.polymer.api.networking.PolymerHandshakeHandler",
+        "eu.pb4.polymer.api.networking.PolymerPacketUtils",
+        "eu.pb4.polymer.api.networking.PolymerServerPacketHandler",
+        "eu.pb4.polymer.api.networking.PolymerSyncUtils",
+        "eu.pb4.polymer.api.other.PolymerEnchantment",
+        "eu.pb4.polymer.api.other.PolymerSoundEvent",
+        "eu.pb4.polymer.api.other.PolymerStat",
+        "eu.pb4.polymer.api.other.PolymerStatusEffect",
+        "eu.pb4.polymer.api.resourcepack.PolymerArmorModel",
+        "eu.pb4.polymer.api.resourcepack.PolymerModelData",
+        "eu.pb4.polymer.api.resourcepack.PolymerRPBuilder",
+        "eu.pb4.polymer.api.resourcepack.PolymerRPUtils",
+        "eu.pb4.polymer.api.resourcepack.ResourcePackCreator",
+        "eu.pb4.polymer.api.utils.DynamicPacket",
+        "eu.pb4.polymer.api.utils.events.BooleanEvent",
+        "eu.pb4.polymer.api.utils.events.FunctionEvent",
+        "eu.pb4.polymer.api.utils.events.SimpleEvent",
+        "eu.pb4.polymer.api.utils.PolymerObject",
+        "eu.pb4.polymer.api.utils.PolymerRegistry",
+        "eu.pb4.polymer.api.utils.PolymerUtils",
+        "eu.pb4.polymer.api.x.BlockMapper",
+        "eu.pb4.polymer.api.x.EarlyPlayNetworkHandler"
+      ],
+      "methods": {
+        "eu.pb4.polymer.api.block.PlayerAwarePolymerBlock": [],
+        "eu.pb4.polymer.api.block.PolymerBlock": [
+          "getPolymerBlock(ServerPlayerEntity, BlockState)",
+          "getPolymerBlockState(BlockState)",
+          "getPolymerBlockState(ServerPlayerEntity, BlockState)",
+          "onPolymerBlockSend(ServerPlayerEntity, Mutable, BlockState)",
+          "onBlockAddedToChunk(ServerWorld, WorldChunk, BlockState)",
+          "onBlockRemovedFromChunk(ServerWorld, WorldChunk, BlockState)",
+          "forceLightUpdates(BlockState)",
+          "getPolymerBreakEventBlockState(BlockState, ServerPlayerEntity)"
+        ],
+        "eu.pb4.polymer.api.block.PolymerBlockUtils": [
+          "registerBlockEntity(BlockEntityType<?>...)",
+          "isRegisteredBlockEntity(BlockEntityType<?>)",
+          "isLightSource(BlockState)",
+          "getPolymerBlockState(BlockState)",
+          "getPolymerBlockState(BlockState, ServerPlayerEntity)",
+          "getPolymerBlock(Block, ServerPlayerEntity)",
+          "getBlockStateSafely(PolymerBlock, BlockState, int)",
+          "getBlockStateSafely(PolymerBlock, BlockState, int, ServerPlayerEntity)",
+          "getBlockStateSafely(PolymerBlock, BlockState, ServerPlayerEntity)",
+          "getBlockStateSafely(PolymerBlock, BlockState)",
+          "getBlockSafely(PolymerBlock, BlockState, int, ServerPlayerEntity)",
+          "getBlockSafely(PolymerBlock, BlockState, ServerPlayerEntity)",
+          "getBlockSafely(PolymerBlock, BlockState, int)",
+          "getBlockSafely(PolymerBlock, BlockState)",
+          "createBlockEntityPacket(BlockPos, BlockEntityType<?>, NbtCompound)",
+          "getBlockStateOffset()"
+        ],
+        "eu.pb4.polymer.api.block.PolymerHeadBlock": [
+          "getPolymerBlock()",
+          "getPolymerHeadSkullOwner(BlockState)",
+          "getPolymerHeadPacket(BlockState, BlockPos)",
+          "onPolymerBlockSend(ServerPlayerEntity, Mutable, BlockState)"
+        ],
+        "eu.pb4.polymer.api.block.SimplePolymerBlock": [
+          "getPolymerBlock(BlockState)"
+        ],
+        "eu.pb4.polymer.api.client.PolymerClientDecoded": [
+          "shouldDecodePolymer()"
+        ],
+        "eu.pb4.polymer.api.client.PolymerClientPacketHandler": [],
+        "eu.pb4.polymer.api.client.PolymerClientUtils": [
+          "getPolymerStateAt(BlockPos)",
+          "setPolymerStateAt(BlockPos, ClientPolymerBlock.State)",
+          "getEntityType(Entity)",
+          "getServerVersion()",
+          "isEnabled()",
+          "sendPacket(ClientPlayNetworkHandler, Identifier, PacketByteBuf)",
+          "registerPacketHandler(Identifier, PolymerClientPacketHandler, int...)",
+          "registerClientPacket(Identifier, int...)",
+          "getSupportedVersion(Identifier)",
+          "registerPacket(Identifier, PolymerClientPacketHandler, int...)",
+          "getBlockStateOffset()"
+        ],
+        "eu.pb4.polymer.api.client.PolymerKeepModel": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerBlock": [
+          "realServerBlock()",
+          "State(Map<String, String>, ClientPolymerBlock, BlockState)"
+        ],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntityType": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntry": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerItem": [
+          "realServerItem()"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerEntity": [
+          "getPolymerEntityType(ServerPlayerEntity)",
+          "getPolymerVisibleEquipment(List<Pair<EquipmentSlot, ItemStack>>)",
+          "getPolymerVisibleEquipment(List<Pair<EquipmentSlot, ItemStack>>, ServerPlayerEntity)",
+          "onBeforeSpawnPacket(Consumer<Packet<?>>)",
+          "modifyTrackedData(List<Entry<?>>)",
+          "modifyTrackedData(List<Entry<?>>, ServerPlayerEntity)",
+          "getClientSidePosition(Vec3d)",
+          "getClientSideYaw(float)",
+          "getClientSideHeadYaw(float)",
+          "getClientSidePitch(float)",
+          "sendPacketsTo(ServerPlayerEntity)",
+          "getPolymerVisibleEquipment(Map<EquipmentSlot, ItemStack>)",
+          "onEntityTrackerTick(Set<EntityTrackingListener>)"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerEntityUtils": [
+          "requestFreeId()",
+          "registerType(EntityType<?>...)",
+          "registerProfession(VillagerProfession, PolymerVillagerProfession)",
+          "getPolymerProfession(VillagerProfession)",
+          "isRegisteredEntityType(EntityType<?>)",
+          "getDefaultDataTrackerEntries(EntityType<?>)",
+          "getEntityClass(EntityType<T>)",
+          "isLivingEntity(EntityType<?>)",
+          "isMobEntity(EntityType<?>)",
+          "createPlayerSpawnPacket(int, UUID, double, double, double, float, float)",
+          "createPlayerSpawnPacket(Entity)",
+          "canHoldEntityContext(Packet<?>)",
+          "setEntityContext(T, Entity)",
+          "forceSetEntityContext(T, Entity)",
+          "getEntityContext(Packet<?>)",
+          "sendEntityType(ServerPlayerEntity, int, EntityType<?>)"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerVillagerProfession": [],
+        "eu.pb4.polymer.api.item.PolymerBlockItem": [
+          "getPolymerItem(ItemStack, ServerPlayerEntity)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerHeadBlockItem": [
+          "getPolymerItem(ItemStack, ServerPlayerEntity)",
+          "getPolymerItemStack(ItemStack, ServerPlayerEntity)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItem": [
+          "getPolymerItemStack(ItemStack, ServerPlayerEntity)",
+          "getPolymerCustomModelData(ItemStack, ServerPlayerEntity)",
+          "getPolymerArmorColor(ItemStack, ServerPlayerEntity)",
+          "modifyClientTooltip(List<Text>, ItemStack, ServerPlayerEntity)",
+          "showDefaultNameInItemFrames()"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItemGroup": [
+          "create(Identifier, Text, ItemStack)",
+          "create(Identifier, Text, Supplier<ItemStack>)",
+          "create(Identifier, Text)",
+          "createPrivate(Identifier, Text)",
+          "setIcon(Supplier<ItemStack>)",
+          "setIcon(ItemStack)",
+          "setSync(boolean)",
+          "setCustomAppend(Consumer<DefaultedList<ItemStack>>)",
+          "method_7750()",
+          "method_7737()",
+          "getId()",
+          "method_7738(DefaultedList<ItemStack>)",
+          "shouldSyncWithPolymerClient(ServerPlayerEntity)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItemUtils": [
+          "getPolymerItemStack(ItemStack, ServerPlayerEntity)",
+          "getRealItemStack(ItemStack)",
+          "getPolymerIdentifier(ItemStack)",
+          "getServerIdentifier(ItemStack)",
+          "getPolymerNbt(ItemStack)",
+          "isPolymerServerItem(ItemStack)",
+          "createMinimalItemStack(ItemStack, ServerPlayerEntity)",
+          "getSafeColor(int)",
+          "createItemStack(ItemStack, ServerPlayerEntity)",
+          "getItemSafely(PolymerItem, ItemStack, ServerPlayerEntity, int)",
+          "getItemSafely(PolymerItem, ItemStack, ServerPlayerEntity)",
+          "ItemWithMetadata(Item, int, int)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerRecipe": [
+          "getPolymerRecipe(Recipe<?>, ServerPlayerEntity)",
+          "getPolymerRecipe(Recipe<?>)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerSpawnEggItem": [
+          "getPolymerItem(ItemStack, ServerPlayerEntity)"
+        ],
+        "eu.pb4.polymer.api.item.SimplePolymerItem": [
+          "getPolymerItem(ItemStack, ServerPlayerEntity)"
+        ],
+        "eu.pb4.polymer.api.networking.PolymerHandshakeHandler": [],
+        "eu.pb4.polymer.api.networking.PolymerPacketUtils": [
+          "buf(int)",
+          "sendPacket(ServerPlayNetworkHandler, Identifier, PacketByteBuf)",
+          "registerPacketHandler(Identifier, PolymerServerPacketHandler, int...)",
+          "registerServerPacket(Identifier, int...)",
+          "getSupportedVersion(ServerPlayNetworkHandler, Identifier)",
+          "registerPacket(Identifier, PolymerServerPacketHandler, int...)"
+        ],
+        "eu.pb4.polymer.api.networking.PolymerServerPacketHandler": [],
+        "eu.pb4.polymer.api.networking.PolymerSyncUtils": [
+          "synchronizePolymerRegistries(ServerPlayNetworkHandler)",
+          "synchronizeCreativeTabs(ServerPlayNetworkHandler)",
+          "sendCreativeTab(PolymerItemGroup, ServerPlayNetworkHandler)",
+          "removeCreativeTab(PolymerItemGroup, ServerPlayNetworkHandler)",
+          "rebuildCreativeSearch(ServerPlayNetworkHandler)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerEnchantment": [
+          "getPolymerEnchantment(ServerPlayerEntity)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerSoundEvent": [
+          "getVanillaPolymerSound()",
+          "getSoundEffectFor(ServerPlayerEntity)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerStat": [
+          "registerStat(String, StatFormatter)",
+          "registerStat(String, Text, StatFormatter)",
+          "registerStat(Identifier, StatFormatter)",
+          "registerStat(Identifier, Text, StatFormatter)",
+          "getName(Identifier)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerStatusEffect": [
+          "getPolymerStatusEffect()",
+          "getPolymerStatusEffect(ServerPlayerEntity)",
+          "getPolymerIcon(ServerPlayerEntity)"
+        ],
+        "eu.pb4.polymer.api.resourcepack.PolymerArmorModel": [],
+        "eu.pb4.polymer.api.resourcepack.PolymerModelData": [],
+        "eu.pb4.polymer.api.resourcepack.PolymerRPBuilder": [
+          "copyFromPath(Path)"
+        ],
+        "eu.pb4.polymer.api.resourcepack.PolymerRPUtils": [
+          "requestModel(Item, Identifier)",
+          "requestArmor(Identifier)",
+          "addAssetSource(String)",
+          "shouldGenerate()",
+          "markAsRequired()",
+          "isRequired()",
+          "hasPack(ServerPlayerEntity)",
+          "setPlayerStatus(ServerPlayerEntity, boolean)",
+          "isColorTaken(int)",
+          "getModelsFor(Item)",
+          "disableDefaultCheck()",
+          "shouldCheckByDefault()",
+          "ignoreNextDefaultCheck(ServerPlayerEntity)",
+          "createBuilder(Path)",
+          "build()",
+          "build(Path)",
+          "build(Path, Consumer<String>)",
+          "getInstance()"
+        ],
+        "eu.pb4.polymer.api.resourcepack.ResourcePackCreator": [
+          "create()",
+          "requestModel(Item, Identifier)",
+          "forceDefineModel(Item, int, Identifier, boolean)",
+          "requestArmor(Identifier)",
+          "addAssetSource(String)",
+          "addAssetSource(Path)",
+          "isColorTaken(int)",
+          "getModelsFor(Item)",
+          "setPackDescription(String)",
+          "setPackDescription(Text)",
+          "getPackDescription()",
+          "getPackDescriptionText()",
+          "setPackIcon(byte[])",
+          "getPackIcon()",
+          "isEmpty()",
+          "build(Path)",
+          "build(Path, Consumer<String>)"
+        ],
+        "eu.pb4.polymer.api.utils.DynamicPacket": [
+          "method_11052(PacketByteBuf)",
+          "apply(ClientPlayPacketListener)",
+          "method_11051()"
+        ],
+        "eu.pb4.polymer.api.utils.events.BooleanEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Predicate<T>)"
+        ],
+        "eu.pb4.polymer.api.utils.events.FunctionEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Function<Collection<T>, R>)"
+        ],
+        "eu.pb4.polymer.api.utils.events.SimpleEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Consumer<T>)",
+          "isEmpty()"
+        ],
+        "eu.pb4.polymer.api.utils.PolymerObject": [
+          "shouldSyncWithPolymerClient(ServerPlayerEntity)",
+          "canSendServerEntry(ServerPlayerEntity)"
+        ],
+        "eu.pb4.polymer.api.utils.PolymerRegistry": [],
+        "eu.pb4.polymer.api.utils.PolymerUtils": [
+          "getVersion()",
+          "getMainModuleId()",
+          "getMainModuleName()",
+          "getPlayer()",
+          "isSingleplayer()",
+          "isOnClientThread()",
+          "isOnClientSide()",
+          "isOnPlayerNetworking()",
+          "schedulePacket(ServerPlayNetworkHandler, Packet<?>, int)",
+          "reloadWorld(ServerPlayerEntity)",
+          "reloadInventory(ServerPlayerEntity)",
+          "getTooltipContext(ServerPlayerEntity)",
+          "getItemGroups(ServerPlayerEntity)",
+          "createSkullOwner(String)",
+          "executeWithPlayerContext(ServerPlayerEntity, Runnable)",
+          "getFakeWorld()",
+          "getClientJar()",
+          "isServerOnly(Object)"
+        ],
+        "eu.pb4.polymer.api.x.BlockMapper": [],
+        "eu.pb4.polymer.api.x.EarlyPlayNetworkHandler": [
+          "register(Function<EarlyPlayNetworkHandler.Context, EarlyPlayNetworkHandler>)",
+          "isEnabled()",
+          "getId()",
+          "handleDisconnect(Text)",
+          "handleKeepAlive(long)",
+          "handleCustomPayload(CustomPayloadC2SPacket)",
+          "tick()",
+          "forceRespawnPacket()",
+          "isForcingRespawnPacket()",
+          "method_12082(KeepAliveC2SPacket)",
+          "sendPacket(Packet<?>)",
+          "sendKeepAlive(long)",
+          "sendKeepAlive()",
+          "sendPing(int)",
+          "tickInternal()",
+          "method_12075(CustomPayloadC2SPacket)",
+          "sendInitialGameJoin()",
+          "method_10839(Text)",
+          "method_2872()",
+          "disconnect(Text)",
+          "getServer()",
+          "continueJoining()",
+          "getPlayer()",
+          "getConnectionInfo()",
+          "method_36580(PlayPongC2SPacket)",
+          "method_12052(HandSwingC2SPacket)",
+          "method_12048(ChatMessageC2SPacket)",
+          "method_43667(CommandExecutionC2SPacket)",
+          "method_43931(RequestChatPreviewC2SPacket)",
+          "method_44898(MessageAcknowledgmentC2SPacket)",
+          "method_12068(ClientStatusC2SPacket)",
+          "method_12069(ClientSettingsC2SPacket)",
+          "method_12055(ButtonClickC2SPacket)",
+          "method_12076(ClickSlotC2SPacket)",
+          "method_12061(CraftRequestC2SPacket)",
+          "method_12054(CloseHandledScreenC2SPacket)",
+          "method_12062(PlayerInteractEntityC2SPacket)",
+          "method_12063(PlayerMoveC2SPacket)",
+          "method_12083(UpdatePlayerAbilitiesC2SPacket)",
+          "method_12066(PlayerActionC2SPacket)",
+          "method_12045(ClientCommandC2SPacket)",
+          "method_12067(PlayerInputC2SPacket)",
+          "method_12056(UpdateSelectedSlotC2SPacket)",
+          "method_12070(CreativeInventoryActionC2SPacket)",
+          "method_12071(UpdateSignC2SPacket)",
+          "method_12046(PlayerInteractBlockC2SPacket)",
+          "method_12065(PlayerInteractItemC2SPacket)",
+          "method_12073(SpectatorTeleportC2SPacket)",
+          "method_12081(ResourcePackStatusC2SPacket)",
+          "method_12064(BoatPaddleStateC2SPacket)",
+          "method_12078(VehicleMoveC2SPacket)",
+          "method_12050(TeleportConfirmC2SPacket)",
+          "method_12047(RecipeBookDataC2SPacket)",
+          "method_30303(RecipeCategoryOptionsC2SPacket)",
+          "method_12058(AdvancementTabC2SPacket)",
+          "method_12059(RequestCommandCompletionsC2SPacket)",
+          "method_12077(UpdateCommandBlockC2SPacket)",
+          "method_12049(UpdateCommandBlockMinecartC2SPacket)",
+          "method_12084(PickFromInventoryC2SPacket)",
+          "method_12060(RenameItemC2SPacket)",
+          "method_12057(UpdateBeaconC2SPacket)",
+          "method_12051(UpdateStructureBlockC2SPacket)",
+          "method_12080(SelectMerchantTradeC2SPacket)",
+          "method_12053(BookUpdateC2SPacket)",
+          "method_12074(QueryEntityNbtC2SPacket)",
+          "method_12072(QueryBlockNbtC2SPacket)",
+          "method_16383(UpdateJigsawC2SPacket)",
+          "method_27273(JigsawGeneratingC2SPacket)",
+          "method_19475(UpdateDifficultyC2SPacket)",
+          "method_19476(UpdateDifficultyLockC2SPacket)"
+        ]
+      },
+      "sampleCount": 46
     },
     "0.2.0-rc.4_1.19-rc2": {
-      "packages": [],
-      "classes": [],
-      "methods": {},
-      "sampleCount": 0
+      "packages": [
+        "eu.pb4.polymer.api.block",
+        "eu.pb4.polymer.api.client",
+        "eu.pb4.polymer.api.client.registry",
+        "eu.pb4.polymer.api.entity",
+        "eu.pb4.polymer.api.item",
+        "eu.pb4.polymer.api.networking",
+        "eu.pb4.polymer.api.other",
+        "eu.pb4.polymer.api.resourcepack",
+        "eu.pb4.polymer.api.utils",
+        "eu.pb4.polymer.api.utils.events",
+        "eu.pb4.polymer.api.x"
+      ],
+      "classes": [
+        "eu.pb4.polymer.api.block.PlayerAwarePolymerBlock",
+        "eu.pb4.polymer.api.block.PolymerBlock",
+        "eu.pb4.polymer.api.block.PolymerBlockUtils",
+        "eu.pb4.polymer.api.block.PolymerHeadBlock",
+        "eu.pb4.polymer.api.block.SimplePolymerBlock",
+        "eu.pb4.polymer.api.client.PolymerClientDecoded",
+        "eu.pb4.polymer.api.client.PolymerClientPacketHandler",
+        "eu.pb4.polymer.api.client.PolymerClientUtils",
+        "eu.pb4.polymer.api.client.PolymerKeepModel",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerBlock",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntityType",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntry",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerItem",
+        "eu.pb4.polymer.api.entity.PolymerEntity",
+        "eu.pb4.polymer.api.entity.PolymerEntityUtils",
+        "eu.pb4.polymer.api.entity.PolymerVillagerProfession",
+        "eu.pb4.polymer.api.item.PolymerBlockItem",
+        "eu.pb4.polymer.api.item.PolymerHeadBlockItem",
+        "eu.pb4.polymer.api.item.PolymerItem",
+        "eu.pb4.polymer.api.item.PolymerItemGroup",
+        "eu.pb4.polymer.api.item.PolymerItemUtils",
+        "eu.pb4.polymer.api.item.PolymerRecipe",
+        "eu.pb4.polymer.api.item.PolymerSpawnEggItem",
+        "eu.pb4.polymer.api.item.SimplePolymerItem",
+        "eu.pb4.polymer.api.networking.PolymerHandshakeHandler",
+        "eu.pb4.polymer.api.networking.PolymerPacketUtils",
+        "eu.pb4.polymer.api.networking.PolymerServerPacketHandler",
+        "eu.pb4.polymer.api.networking.PolymerSyncUtils",
+        "eu.pb4.polymer.api.other.PolymerSoundEvent",
+        "eu.pb4.polymer.api.other.PolymerStat",
+        "eu.pb4.polymer.api.other.PolymerStatusEffect",
+        "eu.pb4.polymer.api.resourcepack.PolymerArmorModel",
+        "eu.pb4.polymer.api.resourcepack.PolymerModelData",
+        "eu.pb4.polymer.api.resourcepack.PolymerRPBuilder",
+        "eu.pb4.polymer.api.resourcepack.PolymerRPUtils",
+        "eu.pb4.polymer.api.resourcepack.ResourcePackCreator",
+        "eu.pb4.polymer.api.utils.DynamicPacket",
+        "eu.pb4.polymer.api.utils.events.BooleanEvent",
+        "eu.pb4.polymer.api.utils.events.FunctionEvent",
+        "eu.pb4.polymer.api.utils.events.SimpleEvent",
+        "eu.pb4.polymer.api.utils.PolymerObject",
+        "eu.pb4.polymer.api.utils.PolymerRegistry",
+        "eu.pb4.polymer.api.utils.PolymerUtils",
+        "eu.pb4.polymer.api.x.BlockMapper"
+      ],
+      "methods": {
+        "eu.pb4.polymer.api.block.PlayerAwarePolymerBlock": [],
+        "eu.pb4.polymer.api.block.PolymerBlock": [
+          "getPolymerBlock(class_3222, class_2680)",
+          "getPolymerBlockState(class_2680)",
+          "getPolymerBlockState(class_3222, class_2680)",
+          "onPolymerBlockSend(class_3222, class_2339, class_2680)",
+          "forceLightUpdates(class_2680)"
+        ],
+        "eu.pb4.polymer.api.block.PolymerBlockUtils": [
+          "registerBlockEntity(class_2591<?>...)",
+          "isRegisteredBlockEntity(class_2591<?>)",
+          "isLightSource(class_2680)",
+          "getPolymerBlockState(class_2680)",
+          "getPolymerBlockState(class_2680, class_3222)",
+          "getPolymerBlock(class_2248, class_3222)",
+          "getBlockStateSafely(PolymerBlock, class_2680, int)",
+          "getBlockStateSafely(PolymerBlock, class_2680, int, class_3222)",
+          "getBlockStateSafely(PolymerBlock, class_2680, class_3222)",
+          "getBlockStateSafely(PolymerBlock, class_2680)",
+          "getBlockSafely(PolymerBlock, class_2680, int, class_3222)",
+          "getBlockSafely(PolymerBlock, class_2680, class_3222)",
+          "getBlockSafely(PolymerBlock, class_2680, int)",
+          "getBlockSafely(PolymerBlock, class_2680)",
+          "createBlockEntityPacket(class_2338, class_2591<?>, class_2487)",
+          "getBlockStateOffset()"
+        ],
+        "eu.pb4.polymer.api.block.PolymerHeadBlock": [
+          "getPolymerBlock()",
+          "getPolymerHeadSkullOwner(class_2680)",
+          "getPolymerHeadPacket(class_2680, class_2338)",
+          "onPolymerBlockSend(class_3222, class_2339, class_2680)"
+        ],
+        "eu.pb4.polymer.api.block.SimplePolymerBlock": [
+          "getPolymerBlock(class_2680)"
+        ],
+        "eu.pb4.polymer.api.client.PolymerClientDecoded": [
+          "shouldDecodePolymer()"
+        ],
+        "eu.pb4.polymer.api.client.PolymerClientPacketHandler": [],
+        "eu.pb4.polymer.api.client.PolymerClientUtils": [
+          "getPolymerStateAt(class_2338)",
+          "setPolymerStateAt(class_2338, ClientPolymerBlock.State)",
+          "getEntityType(class_1297)",
+          "getServerVersion()",
+          "isEnabled()",
+          "sendPacket(class_634, class_2960, class_2540)",
+          "registerPacketHandler(class_2960, PolymerClientPacketHandler, int...)",
+          "registerClientPacket(class_2960, int...)",
+          "getSupportedVersion(class_2960)",
+          "registerPacket(class_2960, PolymerClientPacketHandler, int...)",
+          "getBlockStateOffset()"
+        ],
+        "eu.pb4.polymer.api.client.PolymerKeepModel": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerBlock": [
+          "realServerBlock()",
+          "State(Map<String, String>, ClientPolymerBlock, class_2680)"
+        ],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntityType": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntry": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerItem": [
+          "realServerItem()"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerEntity": [
+          "getPolymerEntityType(class_3222)",
+          "getPolymerVisibleEquipment(List<Pair<class_1304, class_1799>>)",
+          "getPolymerVisibleEquipment(List<Pair<class_1304, class_1799>>, class_3222)",
+          "onBeforeSpawnPacket(Consumer<class_2596<?>>)",
+          "modifyTrackedData(List<class_2946<?>>)",
+          "modifyTrackedData(List<class_2946<?>>, class_3222)",
+          "getClientSidePosition(class_243)",
+          "getClientSideYaw(float)",
+          "getClientSideHeadYaw(float)",
+          "getClientSidePitch(float)",
+          "sendPacketsTo(class_3222)",
+          "getPolymerVisibleEquipment(Map<class_1304, class_1799>)",
+          "onEntityTrackerTick(Set<class_5629>)"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerEntityUtils": [
+          "requestFreeId()",
+          "registerType(class_1299<?>...)",
+          "registerProfession(class_3852, PolymerVillagerProfession)",
+          "getPolymerProfession(class_3852)",
+          "isRegisteredEntityType(class_1299<?>)",
+          "getDefaultDataTrackerEntries(class_1299<?>)",
+          "getEntityClass(class_1299<T>)",
+          "isLivingEntity(class_1299<?>)",
+          "isMobEntity(class_1299<?>)",
+          "createPlayerSpawnPacket(int, UUID, double, double, double, float, float)",
+          "createPlayerSpawnPacket(class_1297)",
+          "canHoldEntityContext(class_2596<?>)",
+          "setEntityContext(T, class_1297)",
+          "forceSetEntityContext(T, class_1297)",
+          "getEntityContext(class_2596<?>)"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerVillagerProfession": [],
+        "eu.pb4.polymer.api.item.PolymerBlockItem": [
+          "getPolymerItem(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerHeadBlockItem": [
+          "getPolymerItem(class_1799, class_3222)",
+          "getPolymerItemStack(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItem": [
+          "getPolymerItemStack(class_1799, class_3222)",
+          "getPolymerCustomModelData(class_1799, class_3222)",
+          "getPolymerArmorColor(class_1799, class_3222)",
+          "modifyClientTooltip(List<class_2561>, class_1799, class_3222)",
+          "showDefaultNameInItemFrames()"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItemGroup": [
+          "create(class_2960, class_2561, class_1799)",
+          "create(class_2960, class_2561, Supplier<class_1799>)",
+          "create(class_2960, class_2561)",
+          "createPrivate(class_2960, class_2561)",
+          "setIcon(Supplier<class_1799>)",
+          "setIcon(class_1799)",
+          "setSync(boolean)",
+          "setCustomAppend(Consumer<class_2371<class_1799>>)",
+          "method_7750()",
+          "method_7737()",
+          "getId()",
+          "method_7738(class_2371<class_1799>)",
+          "shouldSyncWithPolymerClient(class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItemUtils": [
+          "getPolymerItemStack(class_1799, class_3222)",
+          "getRealItemStack(class_1799)",
+          "getPolymerIdentifier(class_1799)",
+          "isPolymerServerItem(class_1799)",
+          "createMinimalItemStack(class_1799, class_3222)",
+          "getSafeColor(int)",
+          "createItemStack(class_1799, class_3222)",
+          "getItemSafely(PolymerItem, class_1799, class_3222, int)",
+          "getItemSafely(PolymerItem, class_1799, class_3222)",
+          "ItemWithMetadata(class_1792, int, int)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerRecipe": [
+          "getPolymerRecipe(class_1860<?>, class_3222)",
+          "getPolymerRecipe(class_1860<?>)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerSpawnEggItem": [
+          "getPolymerItem(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.SimplePolymerItem": [
+          "getPolymerItem(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.networking.PolymerHandshakeHandler": [],
+        "eu.pb4.polymer.api.networking.PolymerPacketUtils": [
+          "buf(int)",
+          "sendPacket(class_3244, class_2960, class_2540)",
+          "registerPacketHandler(class_2960, PolymerServerPacketHandler, int...)",
+          "registerServerPacket(class_2960, int...)",
+          "getSupportedVersion(class_3244, class_2960)",
+          "registerPacket(class_2960, PolymerServerPacketHandler, int...)"
+        ],
+        "eu.pb4.polymer.api.networking.PolymerServerPacketHandler": [],
+        "eu.pb4.polymer.api.networking.PolymerSyncUtils": [
+          "synchronizePolymerRegistries(class_3244)",
+          "synchronizeCreativeTabs(class_3244)",
+          "sendCreativeTab(PolymerItemGroup, class_3244)",
+          "removeCreativeTab(PolymerItemGroup, class_3244)",
+          "rebuildCreativeSearch(class_3244)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerSoundEvent": [
+          "getVanillaPolymerSound()",
+          "getSoundEffectFor(class_3222)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerStat": [
+          "registerStat(String, class_3446)",
+          "registerStat(String, class_2561, class_3446)",
+          "registerStat(class_2960, class_3446)",
+          "registerStat(class_2960, class_2561, class_3446)",
+          "getName(class_2960)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerStatusEffect": [
+          "getPolymerStatusEffect()",
+          "getPolymerStatusEffect(class_3222)",
+          "getPolymerIcon(class_3222)"
+        ],
+        "eu.pb4.polymer.api.resourcepack.PolymerArmorModel": [],
+        "eu.pb4.polymer.api.resourcepack.PolymerModelData": [],
+        "eu.pb4.polymer.api.resourcepack.PolymerRPBuilder": [],
+        "eu.pb4.polymer.api.resourcepack.PolymerRPUtils": [
+          "requestModel(class_1792, class_2960)",
+          "requestArmor(class_2960)",
+          "addAssetSource(String)",
+          "shouldGenerate()",
+          "markAsRequired()",
+          "isRequired()",
+          "hasPack(class_3222)",
+          "setPlayerStatus(class_3222, boolean)",
+          "isColorTaken(int)",
+          "getModelsFor(class_1792)",
+          "disableDefaultCheck()",
+          "shouldCheckByDefault()",
+          "ignoreNextDefaultCheck(class_3222)",
+          "createBuilder(Path)",
+          "build(Path)",
+          "getInstance()"
+        ],
+        "eu.pb4.polymer.api.resourcepack.ResourcePackCreator": [
+          "create()",
+          "requestModel(class_1792, class_2960)",
+          "requestArmor(class_2960)",
+          "addAssetSource(String)",
+          "isColorTaken(int)",
+          "getModelsFor(class_1792)",
+          "setPackDescription(String)",
+          "getPackDescription()",
+          "setPackIcon(byte[])",
+          "getPackIcon()",
+          "isEmpty()",
+          "build(Path)"
+        ],
+        "eu.pb4.polymer.api.utils.DynamicPacket": [
+          "method_11052(class_2540)",
+          "apply(class_2602)",
+          "method_11051()"
+        ],
+        "eu.pb4.polymer.api.utils.events.BooleanEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Predicate<T>)"
+        ],
+        "eu.pb4.polymer.api.utils.events.FunctionEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Function<Collection<T>, R>)"
+        ],
+        "eu.pb4.polymer.api.utils.events.SimpleEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Consumer<T>)"
+        ],
+        "eu.pb4.polymer.api.utils.PolymerObject": [
+          "shouldSyncWithPolymerClient(class_3222)",
+          "canSendServerEntry(class_3222)"
+        ],
+        "eu.pb4.polymer.api.utils.PolymerRegistry": [],
+        "eu.pb4.polymer.api.utils.PolymerUtils": [
+          "getVersion()",
+          "getMainModuleId()",
+          "getMainModuleName()",
+          "getPlayer()",
+          "isSingleplayer()",
+          "isOnClientThread()",
+          "isOnClientSide()",
+          "isOnPlayerNetworking()",
+          "schedulePacket(class_3244, class_2596<?>, int)",
+          "reloadWorld(class_3222)",
+          "reloadInventory(class_3222)",
+          "getTooltipContext(class_3222)",
+          "getItemGroups(class_3222)",
+          "createSkullOwner(String)",
+          "executeWithPlayerContext(class_3222, Runnable)",
+          "getClientJar()",
+          "isServerOnly(Object)"
+        ],
+        "eu.pb4.polymer.api.x.BlockMapper": []
+      },
+      "sampleCount": 44
     },
-    "0.2.0-beta.27_1.18.1": {
-      "packages": [],
-      "classes": [],
-      "methods": {},
-      "sampleCount": 0
+    "0.2.0-rc.2_1.19-pre5": {
+      "packages": [
+        "eu.pb4.polymer.api.block",
+        "eu.pb4.polymer.api.client",
+        "eu.pb4.polymer.api.client.registry",
+        "eu.pb4.polymer.api.entity",
+        "eu.pb4.polymer.api.item",
+        "eu.pb4.polymer.api.networking",
+        "eu.pb4.polymer.api.other",
+        "eu.pb4.polymer.api.resourcepack",
+        "eu.pb4.polymer.api.utils",
+        "eu.pb4.polymer.api.utils.events",
+        "eu.pb4.polymer.api.x"
+      ],
+      "classes": [
+        "eu.pb4.polymer.api.block.PlayerAwarePolymerBlock",
+        "eu.pb4.polymer.api.block.PolymerBlock",
+        "eu.pb4.polymer.api.block.PolymerBlockUtils",
+        "eu.pb4.polymer.api.block.PolymerHeadBlock",
+        "eu.pb4.polymer.api.block.SimplePolymerBlock",
+        "eu.pb4.polymer.api.client.PolymerClientDecoded",
+        "eu.pb4.polymer.api.client.PolymerClientPacketHandler",
+        "eu.pb4.polymer.api.client.PolymerClientUtils",
+        "eu.pb4.polymer.api.client.PolymerKeepModel",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerBlock",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntityType",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntry",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerItem",
+        "eu.pb4.polymer.api.entity.PolymerEntity",
+        "eu.pb4.polymer.api.entity.PolymerEntityUtils",
+        "eu.pb4.polymer.api.entity.PolymerVillagerProfession",
+        "eu.pb4.polymer.api.item.PolymerBlockItem",
+        "eu.pb4.polymer.api.item.PolymerHeadBlockItem",
+        "eu.pb4.polymer.api.item.PolymerItem",
+        "eu.pb4.polymer.api.item.PolymerItemGroup",
+        "eu.pb4.polymer.api.item.PolymerItemUtils",
+        "eu.pb4.polymer.api.item.PolymerRecipe",
+        "eu.pb4.polymer.api.item.PolymerSpawnEggItem",
+        "eu.pb4.polymer.api.item.SimplePolymerItem",
+        "eu.pb4.polymer.api.networking.PolymerHandshakeHandler",
+        "eu.pb4.polymer.api.networking.PolymerPacketUtils",
+        "eu.pb4.polymer.api.networking.PolymerServerPacketHandler",
+        "eu.pb4.polymer.api.networking.PolymerSyncUtils",
+        "eu.pb4.polymer.api.other.PolymerSoundEvent",
+        "eu.pb4.polymer.api.other.PolymerStat",
+        "eu.pb4.polymer.api.other.PolymerStatusEffect",
+        "eu.pb4.polymer.api.resourcepack.PolymerArmorModel",
+        "eu.pb4.polymer.api.resourcepack.PolymerModelData",
+        "eu.pb4.polymer.api.resourcepack.PolymerRPBuilder",
+        "eu.pb4.polymer.api.resourcepack.PolymerRPUtils",
+        "eu.pb4.polymer.api.resourcepack.ResourcePackCreator",
+        "eu.pb4.polymer.api.utils.DynamicPacket",
+        "eu.pb4.polymer.api.utils.events.BooleanEvent",
+        "eu.pb4.polymer.api.utils.events.FunctionEvent",
+        "eu.pb4.polymer.api.utils.events.SimpleEvent",
+        "eu.pb4.polymer.api.utils.PolymerObject",
+        "eu.pb4.polymer.api.utils.PolymerRegistry",
+        "eu.pb4.polymer.api.utils.PolymerUtils",
+        "eu.pb4.polymer.api.x.BlockMapper"
+      ],
+      "methods": {
+        "eu.pb4.polymer.api.block.PlayerAwarePolymerBlock": [],
+        "eu.pb4.polymer.api.block.PolymerBlock": [
+          "getPolymerBlock(class_3222, class_2680)",
+          "getPolymerBlockState(class_2680)",
+          "getPolymerBlockState(class_3222, class_2680)",
+          "onPolymerBlockSend(class_3222, class_2339, class_2680)",
+          "forceLightUpdates(class_2680)"
+        ],
+        "eu.pb4.polymer.api.block.PolymerBlockUtils": [
+          "registerBlockEntity(class_2591<?>...)",
+          "isRegisteredBlockEntity(class_2591<?>)",
+          "isLightSource(class_2680)",
+          "getPolymerBlockState(class_2680)",
+          "getPolymerBlockState(class_2680, class_3222)",
+          "getPolymerBlock(class_2248, class_3222)",
+          "getBlockStateSafely(PolymerBlock, class_2680, int)",
+          "getBlockStateSafely(PolymerBlock, class_2680, int, class_3222)",
+          "getBlockStateSafely(PolymerBlock, class_2680, class_3222)",
+          "getBlockStateSafely(PolymerBlock, class_2680)",
+          "getBlockSafely(PolymerBlock, class_2680, int, class_3222)",
+          "getBlockSafely(PolymerBlock, class_2680, class_3222)",
+          "getBlockSafely(PolymerBlock, class_2680, int)",
+          "getBlockSafely(PolymerBlock, class_2680)",
+          "createBlockEntityPacket(class_2338, class_2591<?>, class_2487)",
+          "getBlockStateOffset()"
+        ],
+        "eu.pb4.polymer.api.block.PolymerHeadBlock": [
+          "getPolymerBlock()",
+          "getPolymerHeadSkullOwner(class_2680)",
+          "getPolymerHeadPacket(class_2680, class_2338)",
+          "onPolymerBlockSend(class_3222, class_2339, class_2680)"
+        ],
+        "eu.pb4.polymer.api.block.SimplePolymerBlock": [
+          "getPolymerBlock(class_2680)"
+        ],
+        "eu.pb4.polymer.api.client.PolymerClientDecoded": [
+          "shouldDecodePolymer()"
+        ],
+        "eu.pb4.polymer.api.client.PolymerClientPacketHandler": [],
+        "eu.pb4.polymer.api.client.PolymerClientUtils": [
+          "getPolymerStateAt(class_2338)",
+          "setPolymerStateAt(class_2338, ClientPolymerBlock.State)",
+          "getEntityType(class_1297)",
+          "getServerVersion()",
+          "isEnabled()",
+          "sendPacket(class_634, class_2960, class_2540)",
+          "registerPacketHandler(class_2960, PolymerClientPacketHandler, int...)",
+          "registerClientPacket(class_2960, int...)",
+          "getSupportedVersion(class_2960)",
+          "registerPacket(class_2960, PolymerClientPacketHandler, int...)",
+          "getBlockStateOffset()"
+        ],
+        "eu.pb4.polymer.api.client.PolymerKeepModel": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerBlock": [
+          "realServerBlock()",
+          "State(Map<String, String>, ClientPolymerBlock, class_2680)"
+        ],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntityType": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntry": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerItem": [
+          "realServerItem()"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerEntity": [
+          "getPolymerEntityType(class_3222)",
+          "getPolymerVisibleEquipment(List<Pair<class_1304, class_1799>>)",
+          "getPolymerVisibleEquipment(List<Pair<class_1304, class_1799>>, class_3222)",
+          "onBeforeSpawnPacket(Consumer<class_2596<?>>)",
+          "modifyTrackedData(List<class_2946<?>>)",
+          "modifyTrackedData(List<class_2946<?>>, class_3222)",
+          "getClientSidePosition(class_243)",
+          "getClientSideYaw(float)",
+          "getClientSideHeadYaw(float)",
+          "getClientSidePitch(float)",
+          "sendPacketsTo(class_3222)",
+          "getPolymerVisibleEquipment(Map<class_1304, class_1799>)",
+          "onEntityTrackerTick(Set<class_5629>)"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerEntityUtils": [
+          "requestFreeId()",
+          "registerType(class_1299<?>...)",
+          "registerProfession(class_3852, PolymerVillagerProfession)",
+          "getPolymerProfession(class_3852)",
+          "isRegisteredEntityType(class_1299<?>)",
+          "getDefaultDataTrackerEntries(class_1299<?>)",
+          "getEntityClass(class_1299<T>)",
+          "isLivingEntity(class_1299<?>)",
+          "isMobEntity(class_1299<?>)",
+          "createPlayerSpawnPacket(int, UUID, double, double, double, float, float)",
+          "createPlayerSpawnPacket(class_1297)",
+          "canHoldEntityContext(class_2596<?>)",
+          "setEntityContext(T, class_1297)",
+          "forceSetEntityContext(T, class_1297)",
+          "getEntityContext(class_2596<?>)"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerVillagerProfession": [],
+        "eu.pb4.polymer.api.item.PolymerBlockItem": [
+          "getPolymerItem(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerHeadBlockItem": [
+          "getPolymerItem(class_1799, class_3222)",
+          "getPolymerItemStack(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItem": [
+          "getPolymerItemStack(class_1799, class_3222)",
+          "getPolymerCustomModelData(class_1799, class_3222)",
+          "getPolymerArmorColor(class_1799, class_3222)",
+          "modifyClientTooltip(List<class_2561>, class_1799, class_3222)",
+          "showDefaultNameInItemFrames()"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItemGroup": [
+          "create(class_2960, class_2561, class_1799)",
+          "create(class_2960, class_2561, Supplier<class_1799>)",
+          "create(class_2960, class_2561)",
+          "createPrivate(class_2960, class_2561)",
+          "setIcon(Supplier<class_1799>)",
+          "setIcon(class_1799)",
+          "setSync(boolean)",
+          "setCustomAppend(Consumer<class_2371<class_1799>>)",
+          "method_7750()",
+          "method_7737()",
+          "getId()",
+          "method_7738(class_2371<class_1799>)",
+          "shouldSyncWithPolymerClient(class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItemUtils": [
+          "getPolymerItemStack(class_1799, class_3222)",
+          "getRealItemStack(class_1799)",
+          "getPolymerIdentifier(class_1799)",
+          "isPolymerServerItem(class_1799)",
+          "createMinimalItemStack(class_1799, class_3222)",
+          "getSafeColor(int)",
+          "createItemStack(class_1799, class_3222)",
+          "getItemSafely(PolymerItem, class_1799, class_3222, int)",
+          "getItemSafely(PolymerItem, class_1799, class_3222)",
+          "ItemWithMetadata(class_1792, int, int)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerRecipe": [
+          "getPolymerRecipe(class_1860<?>, class_3222)",
+          "getPolymerRecipe(class_1860<?>)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerSpawnEggItem": [
+          "getPolymerItem(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.SimplePolymerItem": [
+          "getPolymerItem(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.networking.PolymerHandshakeHandler": [],
+        "eu.pb4.polymer.api.networking.PolymerPacketUtils": [
+          "buf(int)",
+          "sendPacket(class_3244, class_2960, class_2540)",
+          "registerPacketHandler(class_2960, PolymerServerPacketHandler, int...)",
+          "registerServerPacket(class_2960, int...)",
+          "getSupportedVersion(class_3244, class_2960)",
+          "registerPacket(class_2960, PolymerServerPacketHandler, int...)"
+        ],
+        "eu.pb4.polymer.api.networking.PolymerServerPacketHandler": [],
+        "eu.pb4.polymer.api.networking.PolymerSyncUtils": [
+          "synchronizePolymerRegistries(class_3244)",
+          "synchronizeCreativeTabs(class_3244)",
+          "sendCreativeTab(PolymerItemGroup, class_3244)",
+          "removeCreativeTab(PolymerItemGroup, class_3244)",
+          "rebuildCreativeSearch(class_3244)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerSoundEvent": [
+          "getVanillaPolymerSound()",
+          "getSoundEffectFor(class_3222)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerStat": [
+          "registerStat(String, class_3446)",
+          "registerStat(String, class_2561, class_3446)",
+          "registerStat(class_2960, class_3446)",
+          "registerStat(class_2960, class_2561, class_3446)",
+          "getName(class_2960)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerStatusEffect": [
+          "getPolymerStatusEffect()",
+          "getPolymerStatusEffect(class_3222)",
+          "getPolymerIcon(class_3222)"
+        ],
+        "eu.pb4.polymer.api.resourcepack.PolymerArmorModel": [],
+        "eu.pb4.polymer.api.resourcepack.PolymerModelData": [],
+        "eu.pb4.polymer.api.resourcepack.PolymerRPBuilder": [],
+        "eu.pb4.polymer.api.resourcepack.PolymerRPUtils": [
+          "requestModel(class_1792, class_2960)",
+          "requestArmor(class_2960)",
+          "addAssetSource(String)",
+          "shouldGenerate()",
+          "markAsRequired()",
+          "isRequired()",
+          "hasPack(class_3222)",
+          "setPlayerStatus(class_3222, boolean)",
+          "isColorTaken(int)",
+          "getModelsFor(class_1792)",
+          "disableDefaultCheck()",
+          "shouldCheckByDefault()",
+          "ignoreNextDefaultCheck(class_3222)",
+          "createBuilder(Path)",
+          "build(Path)",
+          "getInstance()"
+        ],
+        "eu.pb4.polymer.api.resourcepack.ResourcePackCreator": [
+          "create()",
+          "requestModel(class_1792, class_2960)",
+          "requestArmor(class_2960)",
+          "addAssetSource(String)",
+          "isColorTaken(int)",
+          "getModelsFor(class_1792)",
+          "setPackDescription(String)",
+          "getPackDescription()",
+          "setPackIcon(byte[])",
+          "getPackIcon()",
+          "isEmpty()",
+          "build(Path)"
+        ],
+        "eu.pb4.polymer.api.utils.DynamicPacket": [
+          "method_11052(class_2540)",
+          "apply(class_2602)",
+          "method_11051()"
+        ],
+        "eu.pb4.polymer.api.utils.events.BooleanEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Predicate<T>)"
+        ],
+        "eu.pb4.polymer.api.utils.events.FunctionEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Function<Collection<T>, R>)"
+        ],
+        "eu.pb4.polymer.api.utils.events.SimpleEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Consumer<T>)"
+        ],
+        "eu.pb4.polymer.api.utils.PolymerObject": [
+          "shouldSyncWithPolymerClient(class_3222)",
+          "canSendServerEntry(class_3222)"
+        ],
+        "eu.pb4.polymer.api.utils.PolymerRegistry": [],
+        "eu.pb4.polymer.api.utils.PolymerUtils": [
+          "getVersion()",
+          "getMainModuleId()",
+          "getMainModuleName()",
+          "getPlayer()",
+          "isSingleplayer()",
+          "isOnClientThread()",
+          "isOnClientSide()",
+          "isOnPlayerNetworking()",
+          "schedulePacket(class_3244, class_2596<?>, int)",
+          "reloadWorld(class_3222)",
+          "reloadInventory(class_3222)",
+          "getTooltipContext(class_3222)",
+          "getItemGroups(class_3222)",
+          "createSkullOwner(String)",
+          "executeWithPlayerContext(class_3222, Runnable)",
+          "getClientJar()",
+          "isServerOnly(Object)"
+        ],
+        "eu.pb4.polymer.api.x.BlockMapper": []
+      },
+      "sampleCount": 44
+    },
+    "0.2.0-pre.6_1.19-pre4": {
+      "packages": [
+        "eu.pb4.polymer.api.block",
+        "eu.pb4.polymer.api.client",
+        "eu.pb4.polymer.api.client.registry",
+        "eu.pb4.polymer.api.entity",
+        "eu.pb4.polymer.api.item",
+        "eu.pb4.polymer.api.networking",
+        "eu.pb4.polymer.api.other",
+        "eu.pb4.polymer.api.resourcepack",
+        "eu.pb4.polymer.api.utils",
+        "eu.pb4.polymer.api.utils.events",
+        "eu.pb4.polymer.api.x"
+      ],
+      "classes": [
+        "eu.pb4.polymer.api.block.PlayerAwarePolymerBlock",
+        "eu.pb4.polymer.api.block.PolymerBlock",
+        "eu.pb4.polymer.api.block.PolymerBlockUtils",
+        "eu.pb4.polymer.api.block.PolymerHeadBlock",
+        "eu.pb4.polymer.api.block.SimplePolymerBlock",
+        "eu.pb4.polymer.api.client.PolymerClientDecoded",
+        "eu.pb4.polymer.api.client.PolymerClientPacketHandler",
+        "eu.pb4.polymer.api.client.PolymerClientUtils",
+        "eu.pb4.polymer.api.client.PolymerKeepModel",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerBlock",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntityType",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntry",
+        "eu.pb4.polymer.api.client.registry.ClientPolymerItem",
+        "eu.pb4.polymer.api.entity.PolymerEntity",
+        "eu.pb4.polymer.api.entity.PolymerEntityUtils",
+        "eu.pb4.polymer.api.entity.PolymerVillagerProfession",
+        "eu.pb4.polymer.api.item.PolymerBlockItem",
+        "eu.pb4.polymer.api.item.PolymerHeadBlockItem",
+        "eu.pb4.polymer.api.item.PolymerItem",
+        "eu.pb4.polymer.api.item.PolymerItemGroup",
+        "eu.pb4.polymer.api.item.PolymerItemUtils",
+        "eu.pb4.polymer.api.item.PolymerRecipe",
+        "eu.pb4.polymer.api.item.PolymerSpawnEggItem",
+        "eu.pb4.polymer.api.item.SimplePolymerItem",
+        "eu.pb4.polymer.api.networking.PolymerHandshakeHandler",
+        "eu.pb4.polymer.api.networking.PolymerPacketUtils",
+        "eu.pb4.polymer.api.networking.PolymerServerPacketHandler",
+        "eu.pb4.polymer.api.networking.PolymerSyncUtils",
+        "eu.pb4.polymer.api.other.PolymerSoundEvent",
+        "eu.pb4.polymer.api.other.PolymerStat",
+        "eu.pb4.polymer.api.other.PolymerStatusEffect",
+        "eu.pb4.polymer.api.resourcepack.PolymerArmorModel",
+        "eu.pb4.polymer.api.resourcepack.PolymerModelData",
+        "eu.pb4.polymer.api.resourcepack.PolymerRPBuilder",
+        "eu.pb4.polymer.api.resourcepack.PolymerRPUtils",
+        "eu.pb4.polymer.api.resourcepack.ResourcePackCreator",
+        "eu.pb4.polymer.api.utils.DynamicPacket",
+        "eu.pb4.polymer.api.utils.events.BooleanEvent",
+        "eu.pb4.polymer.api.utils.events.FunctionEvent",
+        "eu.pb4.polymer.api.utils.events.SimpleEvent",
+        "eu.pb4.polymer.api.utils.PolymerObject",
+        "eu.pb4.polymer.api.utils.PolymerRegistry",
+        "eu.pb4.polymer.api.utils.PolymerUtils",
+        "eu.pb4.polymer.api.x.BlockMapper"
+      ],
+      "methods": {
+        "eu.pb4.polymer.api.block.PlayerAwarePolymerBlock": [],
+        "eu.pb4.polymer.api.block.PolymerBlock": [
+          "getPolymerBlock(class_3222, class_2680)",
+          "getPolymerBlockState(class_2680)",
+          "getPolymerBlockState(class_3222, class_2680)",
+          "onPolymerBlockSend(class_3222, class_2339, class_2680)",
+          "forceLightUpdates(class_2680)"
+        ],
+        "eu.pb4.polymer.api.block.PolymerBlockUtils": [
+          "registerBlockEntity(class_2591<?>...)",
+          "isRegisteredBlockEntity(class_2591<?>)",
+          "isLightSource(class_2680)",
+          "getPolymerBlockState(class_2680)",
+          "getPolymerBlockState(class_2680, class_3222)",
+          "getPolymerBlock(class_2248, class_3222)",
+          "getBlockStateSafely(PolymerBlock, class_2680, int)",
+          "getBlockStateSafely(PolymerBlock, class_2680, int, class_3222)",
+          "getBlockStateSafely(PolymerBlock, class_2680, class_3222)",
+          "getBlockStateSafely(PolymerBlock, class_2680)",
+          "getBlockSafely(PolymerBlock, class_2680, int, class_3222)",
+          "getBlockSafely(PolymerBlock, class_2680, class_3222)",
+          "getBlockSafely(PolymerBlock, class_2680, int)",
+          "getBlockSafely(PolymerBlock, class_2680)",
+          "createBlockEntityPacket(class_2338, class_2591<?>, class_2487)",
+          "getBlockStateOffset()"
+        ],
+        "eu.pb4.polymer.api.block.PolymerHeadBlock": [
+          "getPolymerBlock()",
+          "getPolymerHeadSkullOwner(class_2680)",
+          "getPolymerHeadPacket(class_2680, class_2338)",
+          "onPolymerBlockSend(class_3222, class_2339, class_2680)"
+        ],
+        "eu.pb4.polymer.api.block.SimplePolymerBlock": [
+          "getPolymerBlock(class_2680)"
+        ],
+        "eu.pb4.polymer.api.client.PolymerClientDecoded": [
+          "shouldDecodePolymer()"
+        ],
+        "eu.pb4.polymer.api.client.PolymerClientPacketHandler": [],
+        "eu.pb4.polymer.api.client.PolymerClientUtils": [
+          "getPolymerStateAt(class_2338)",
+          "setPolymerStateAt(class_2338, ClientPolymerBlock.State)",
+          "getEntityType(class_1297)",
+          "getServerVersion()",
+          "isEnabled()",
+          "sendPacket(class_634, class_2960, class_2540)",
+          "registerPacketHandler(class_2960, PolymerClientPacketHandler, int...)",
+          "registerClientPacket(class_2960, int...)",
+          "getSupportedVersion(class_2960)",
+          "registerPacket(class_2960, PolymerClientPacketHandler, int...)",
+          "getBlockStateOffset()"
+        ],
+        "eu.pb4.polymer.api.client.PolymerKeepModel": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerBlock": [
+          "realServerBlock()",
+          "State(Map<String, String>, ClientPolymerBlock, class_2680)"
+        ],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntityType": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerEntry": [],
+        "eu.pb4.polymer.api.client.registry.ClientPolymerItem": [
+          "realServerItem()"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerEntity": [
+          "getPolymerEntityType(class_3222)",
+          "getPolymerVisibleEquipment(List<Pair<class_1304, class_1799>>)",
+          "getPolymerVisibleEquipment(List<Pair<class_1304, class_1799>>, class_3222)",
+          "onBeforeSpawnPacket(Consumer<class_2596<?>>)",
+          "modifyTrackedData(List<class_2946<?>>)",
+          "modifyTrackedData(List<class_2946<?>>, class_3222)",
+          "getClientSidePosition(class_243)",
+          "getClientSideYaw(float)",
+          "getClientSideHeadYaw(float)",
+          "getClientSidePitch(float)",
+          "sendPacketsTo(class_3222)",
+          "getPolymerVisibleEquipment(Map<class_1304, class_1799>)",
+          "onEntityTrackerTick(Set<class_5629>)"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerEntityUtils": [
+          "requestFreeId()",
+          "registerType(class_1299<?>...)",
+          "registerProfession(class_3852, PolymerVillagerProfession)",
+          "getPolymerProfession(class_3852)",
+          "isRegisteredEntityType(class_1299<?>)",
+          "getDefaultDataTrackerEntries(class_1299<?>)",
+          "getEntityClass(class_1299<T>)",
+          "isLivingEntity(class_1299<?>)",
+          "isMobEntity(class_1299<?>)",
+          "createPlayerSpawnPacket(int, UUID, double, double, double, float, float)",
+          "createPlayerSpawnPacket(class_1297)",
+          "canHoldEntityContext(class_2596<?>)",
+          "setEntityContext(T, class_1297)",
+          "forceSetEntityContext(T, class_1297)",
+          "getEntityContext(class_2596<?>)"
+        ],
+        "eu.pb4.polymer.api.entity.PolymerVillagerProfession": [],
+        "eu.pb4.polymer.api.item.PolymerBlockItem": [
+          "getPolymerItem(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerHeadBlockItem": [
+          "getPolymerItem(class_1799, class_3222)",
+          "getPolymerItemStack(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItem": [
+          "getPolymerItemStack(class_1799, class_3222)",
+          "getPolymerCustomModelData(class_1799, class_3222)",
+          "getPolymerArmorColor(class_1799, class_3222)",
+          "modifyClientTooltip(List<class_2561>, class_1799, class_3222)",
+          "showDefaultNameInItemFrames()"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItemGroup": [
+          "create(class_2960, class_2561, class_1799)",
+          "create(class_2960, class_2561, Supplier<class_1799>)",
+          "create(class_2960, class_2561)",
+          "createPrivate(class_2960, class_2561)",
+          "setIcon(Supplier<class_1799>)",
+          "setIcon(class_1799)",
+          "setSync(boolean)",
+          "setCustomAppend(Consumer<class_2371<class_1799>>)",
+          "method_7750()",
+          "method_7737()",
+          "getId()",
+          "method_7738(class_2371<class_1799>)",
+          "shouldSyncWithPolymerClient(class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerItemUtils": [
+          "getPolymerItemStack(class_1799, class_3222)",
+          "getRealItemStack(class_1799)",
+          "getPolymerIdentifier(class_1799)",
+          "isPolymerServerItem(class_1799)",
+          "createMinimalItemStack(class_1799, class_3222)",
+          "getSafeColor(int)",
+          "createItemStack(class_1799, class_3222)",
+          "getItemSafely(PolymerItem, class_1799, class_3222, int)",
+          "getItemSafely(PolymerItem, class_1799, class_3222)",
+          "ItemWithMetadata(class_1792, int, int)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerRecipe": [
+          "getPolymerRecipe(class_1860<?>, class_3222)",
+          "getPolymerRecipe(class_1860<?>)"
+        ],
+        "eu.pb4.polymer.api.item.PolymerSpawnEggItem": [
+          "getPolymerItem(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.item.SimplePolymerItem": [
+          "getPolymerItem(class_1799, class_3222)"
+        ],
+        "eu.pb4.polymer.api.networking.PolymerHandshakeHandler": [],
+        "eu.pb4.polymer.api.networking.PolymerPacketUtils": [
+          "buf(int)",
+          "sendPacket(class_3244, class_2960, class_2540)",
+          "registerPacketHandler(class_2960, PolymerServerPacketHandler, int...)",
+          "registerServerPacket(class_2960, int...)",
+          "getSupportedVersion(class_3244, class_2960)",
+          "registerPacket(class_2960, PolymerServerPacketHandler, int...)"
+        ],
+        "eu.pb4.polymer.api.networking.PolymerServerPacketHandler": [],
+        "eu.pb4.polymer.api.networking.PolymerSyncUtils": [
+          "synchronizePolymerRegistries(class_3244)",
+          "synchronizeCreativeTabs(class_3244)",
+          "sendCreativeTab(PolymerItemGroup, class_3244)",
+          "removeCreativeTab(PolymerItemGroup, class_3244)",
+          "rebuildCreativeSearch(class_3244)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerSoundEvent": [
+          "getVanillaPolymerSound()",
+          "getSoundEffectFor(class_3222)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerStat": [
+          "registerStat(String, class_3446)",
+          "registerStat(String, class_2561, class_3446)",
+          "registerStat(class_2960, class_3446)",
+          "registerStat(class_2960, class_2561, class_3446)",
+          "getName(class_2960)"
+        ],
+        "eu.pb4.polymer.api.other.PolymerStatusEffect": [
+          "getPolymerStatusEffect()",
+          "getPolymerStatusEffect(class_3222)",
+          "getPolymerIcon(class_3222)"
+        ],
+        "eu.pb4.polymer.api.resourcepack.PolymerArmorModel": [],
+        "eu.pb4.polymer.api.resourcepack.PolymerModelData": [],
+        "eu.pb4.polymer.api.resourcepack.PolymerRPBuilder": [],
+        "eu.pb4.polymer.api.resourcepack.PolymerRPUtils": [
+          "requestModel(class_1792, class_2960)",
+          "requestArmor(class_2960)",
+          "addAssetSource(String)",
+          "shouldGenerate()",
+          "markAsRequired()",
+          "isRequired()",
+          "hasPack(class_3222)",
+          "setPlayerStatus(class_3222, boolean)",
+          "isColorTaken(int)",
+          "getModelsFor(class_1792)",
+          "disableDefaultCheck()",
+          "shouldCheckByDefault()",
+          "ignoreNextDefaultCheck(class_3222)",
+          "createBuilder(Path)",
+          "build(Path)",
+          "getInstance()"
+        ],
+        "eu.pb4.polymer.api.resourcepack.ResourcePackCreator": [
+          "create()",
+          "requestModel(class_1792, class_2960)",
+          "requestArmor(class_2960)",
+          "addAssetSource(String)",
+          "isColorTaken(int)",
+          "getModelsFor(class_1792)",
+          "setPackDescription(String)",
+          "getPackDescription()",
+          "setPackIcon(byte[])",
+          "getPackIcon()",
+          "isEmpty()",
+          "build(Path)"
+        ],
+        "eu.pb4.polymer.api.utils.DynamicPacket": [
+          "method_11052(class_2540)",
+          "apply(class_2602)",
+          "method_11051()"
+        ],
+        "eu.pb4.polymer.api.utils.events.BooleanEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Predicate<T>)"
+        ],
+        "eu.pb4.polymer.api.utils.events.FunctionEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Function<Collection<T>, R>)"
+        ],
+        "eu.pb4.polymer.api.utils.events.SimpleEvent": [
+          "register(T)",
+          "registerRet(T)",
+          "unregister(T)",
+          "invoke(Consumer<T>)"
+        ],
+        "eu.pb4.polymer.api.utils.PolymerObject": [
+          "shouldSyncWithPolymerClient(class_3222)",
+          "canSendServerEntry(class_3222)"
+        ],
+        "eu.pb4.polymer.api.utils.PolymerRegistry": [],
+        "eu.pb4.polymer.api.utils.PolymerUtils": [
+          "getVersion()",
+          "getMainModuleId()",
+          "getMainModuleName()",
+          "getPlayer()",
+          "isSingleplayer()",
+          "isOnClientThread()",
+          "isOnClientSide()",
+          "isOnPlayerNetworking()",
+          "schedulePacket(class_3244, class_2596<?>, int)",
+          "reloadWorld(class_3222)",
+          "reloadInventory(class_3222)",
+          "getTooltipContext(class_3222)",
+          "getItemGroups(class_3222)",
+          "createSkullOwner(String)",
+          "executeWithPlayerContext(class_3222, Runnable)",
+          "getClientJar()",
+          "isServerOnly(Object)"
+        ],
+        "eu.pb4.polymer.api.x.BlockMapper": []
+      },
+      "sampleCount": 44
     }
   },
-  "classCount": 0,
-  "methodCount": 0
+  "classCount": 178,
+  "methodCount": 835
 }

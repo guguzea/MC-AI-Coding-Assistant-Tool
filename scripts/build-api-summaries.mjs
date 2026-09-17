@@ -167,6 +167,17 @@ function findModDir(entry, caches) {
   // ① JSONL 精确目录（最高优先级；outputDir 是版本级 → 取库级父目录）
   const fromJsonl = JSONL_DIRS.get(entry.slug) ?? [];
   const libLevel = new Set(fromJsonl.map((d) => path.dirname(d)));
+  // 多目录组（2026-09-16）：同一 slug 的历史批次可能落在多个 modId 目录（如 cloth-config 与 cloth-config2），
+  // 且都在同一 decompiled-mods 根下 —— 全部存在时必须都取（否则只取第一个会永久漏掉另一组的全部版本键）。
+  const libLevelArr = [...libLevel];
+  const existing = libLevelArr.filter((dir) => {
+    try {
+      return fs.statSync(dir).isDirectory() && path.dirname(dir) === path.dirname(libLevelArr[0]);
+    } catch { return false; }
+  });
+  if (existing.length > 1) {
+    return { dirs: existing, shard: 'jsonl', names: existing.map((d) => path.basename(d)) };
+  }
   for (const dir of libLevel) {
     try {
       if (fs.statSync(dir).isDirectory()) return { dir, shard: 'jsonl', name: path.basename(dir) };
@@ -244,6 +255,10 @@ function hasJavaFiles(dir, maxCheck = 1) {
 function resolveSourceDirs(entry, opt) {
   const found = findModDir(entry, opt.caches);
   if (!found) return null;
+  // 多目录组（findModDir 新 shape）：dirs 直接是各组目录名，root 为共同父（decompiled-mods/）
+  if (found.dirs) {
+    return { shard: found.shard, dirs: found.names, merged: true, root: path.dirname(found.dirs[0]) };
+  }
   if (hasJavaFiles(found.dir)) {
     return { shard: found.shard, dirs: [found.name], merged: false, root: path.dirname(found.dir) };
   }

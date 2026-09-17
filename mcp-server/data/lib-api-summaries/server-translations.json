@@ -1,0 +1,61 @@
+{
+  "slug": "server-translations",
+  "modId": "server_translations_api",
+  "id": "authored/lib-server-translations",
+  "role": "api",
+  "source": {
+    "shard": "mc-skill-cache",
+    "dirs": [
+      "server_translations_api"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-09-16T15:04:34.262Z",
+  "versions": {
+    "1.21.5": {
+      "packages": [
+        "xyz.nucleoid.server.translations.api",
+        "xyz.nucleoid.server.translations.api.language"
+      ],
+      "classes": [
+        "xyz.nucleoid.server.translations.api.language.ServerLanguage",
+        "xyz.nucleoid.server.translations.api.language.ServerLanguageDefinition",
+        "xyz.nucleoid.server.translations.api.language.TranslationAccess",
+        "xyz.nucleoid.server.translations.api.Localization",
+        "xyz.nucleoid.server.translations.api.LocalizationTarget"
+      ],
+      "methods": {
+        "xyz.nucleoid.server.translations.api.language.ServerLanguage": [
+          "getLanguage(String)",
+          "getLanguage(ServerLanguageDefinition)"
+        ],
+        "xyz.nucleoid.server.translations.api.language.ServerLanguageDefinition": [
+          "getAllLanguages()",
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "compareTo(ServerLanguageDefinition)"
+        ],
+        "xyz.nucleoid.server.translations.api.language.TranslationAccess": [
+          "get(String)",
+          "union(TranslationAccess)",
+          "subtract(TranslationAccess)"
+        ],
+        "xyz.nucleoid.server.translations.api.Localization": [
+          "text(Text, ServerPlayerEntity)",
+          "text(Text, LocalizationTarget)",
+          "text(Text, ServerLanguage)",
+          "raw(String, ServerPlayerEntity)",
+          "raw(String, LocalizationTarget)",
+          "raw(String, ServerLanguage)"
+        ],
+        "xyz.nucleoid.server.translations.api.LocalizationTarget": [
+          "getLanguage()"
+        ]
+      },
+      "sampleCount": 5
+    }
+  },
+  "classCount": 5,
+  "methodCount": 17
+}

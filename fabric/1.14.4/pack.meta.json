@@ -9,5 +9,14 @@
     "verified-api": "无 knowledge/common/verified-api-1.14.4.md；本档类名靠 1.14.4-fabric-api.json 摘要 + 本档 fabric-wiki 短文。要补核实表须先入库更多本页语料，禁止抄 1.21.x",
     "fabric-docs": "data/fabric_1.14.4/fabric-docs/1.14.4/ 只有 index/semantic，无 processed/ 正文 → search_fabric_docs 命中的正文实际来自 data/fabric_1.14.4/fabric-wiki/1.14.4/processed/",
     "attachments": "1.14 原版无 Data Attachments API；规则 01-registry「IF 需要物品附加数据」已登记为负例（NBT 或第三方库），不是空洞"
+  },
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "6.9.4",
+    "buildVerified": true,
+    "provenance": {
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-16 换钉后零改动副本（cp fabric/1.14.4/scaffold → D:/mc-skill-temp/_v144verify）gradlew build --no-daemon → BUILD SUCCESSFUL in 51s（rc=0）；JDK 8（G:/zulu8.96.0.205-ca-jdk8.0.504-win_x64）+ Gradle 6.9.4 wrapper + fabric-loom 0.6.60（2026-09-16 用户裁定换钉：原 0.4-SNAPSHOT/实取 0.4.33 的 DownloadUtil 发 Accept-Encoding 不解 gzip，无法从零装配 MC）+ loader/yarn/fabric_api 以 gradle.properties 为准；产物 build/libs 4 件：examplemod-1.0.0.jar=7239 examplemod-1.0.0-dev.jar=5769 examplemod-1.0.0-sources.jar=5147 examplemod-1.0.0-sources-dev.jar=3822；日志 D:/mc-skill-temp/_v144verify/build.log。三件套出处登记依据：本档 gradle/wrapper/gradle-wrapper.jar 的 sha256（e996d452…9e637）与 mcp-server/data/wrapper-jars.json 里 Gradle 6.9.4 的 jarSha256 钉值逐字节一致（本轮实算）。边界：只覆盖 :build 任务链（含 remapJar），未跑 runClient / runServer / runData，也没有真机启动证据。"
+    }
   }
 }

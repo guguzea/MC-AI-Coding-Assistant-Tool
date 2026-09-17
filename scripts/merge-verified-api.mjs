@@ -8,7 +8,9 @@
  * - 平衡括号扫描定位每个条目的 verifiedApi 对象区间（思路复用
  *   build-library-catalog-from-authored.mjs 的 loadExistingVerifiedApi，但按精确偏移
  *   只替换 verifiedApi 内容，其余字段逐字节保留）
- * - 匹配：catalog 条目 modrinthSlug 按逗号拆分后包含结果 slug（兼容 JEI/EMI/REI 共享条目）
+ * - 匹配：catalog 条目 modrinthSlug 按逗号拆分后包含结果 slug（兼容 JEI/EMI/REI 共享条目）；
+ *   modrinthSlug 为空的条目（author-authored 三条：libgui / server-translations / spruceui-obsidianui）
+ *   回退按 modIds 匹配（2026-09-16 补，见 entryByModId）
  * - 键 = "<gameVersion>/<loader>"，值 = { verifiedAt, packages, entrypoints, notes: "自动反编译提取" }
  * - 默认不覆盖已存在键（--force 才覆盖）；--dry-run 只打印差异不写盘
  * - 零依赖 Node ESM；中文日志
@@ -328,12 +330,21 @@ function main() {
       if (!entryBySlug.has(s)) entryBySlug.set(s, e);
     }
   }
+  // 2026-09-16 补（3 缺口库补建批次）：author-authored 的三条 catalog 条目
+  // （authored/lib-libgui、authored/lib-server-translations、authored/lib-spruceui-obsidianui）
+  // modrinthSlug 是空串 ⇒ slug 索引永远命中不了，合法记录只能落「未匹配」。
+  // 对「slug 为空」的条目另建 modIds 索引；有 slug 的条目维持原路径不动（向后兼容）。
+  const entryByModId = new Map();
+  for (const e of entries.values()) {
+    if (e.slug) continue;
+    for (const m of e.modIds || []) if (m && !entryByModId.has(m)) entryByModId.set(m, e);
+  }
 
   const results = readResults(inputFile);
   const rootOwners = buildRootOwnerIndex(text, entries);
   // 冷启动补凭证：catalog 现值被清空/重建时，本轮输入里「条目自有」的包也要先登记，否则无法判外来
   for (const r of results.lines) {
-    const e = r.slug ? entryBySlug.get(r.slug) : undefined;
+    const e = (r.slug ? entryBySlug.get(r.slug) : undefined) ?? (r.modId ? entryByModId.get(r.modId) : undefined);
     if (!e) continue;
     for (const p of Array.isArray(r.packages) ? r.packages : []) if (ownsPackage(e, p)) attestPackage(rootOwners, e.id, p);
   }
@@ -343,7 +354,7 @@ function main() {
   let unmatched = 0;
 
   for (const r of results.lines) {
-    const entry = r.slug ? entryBySlug.get(r.slug) : undefined;
+    const entry = (r.slug ? entryBySlug.get(r.slug) : undefined) ?? (r.modId ? entryByModId.get(r.modId) : undefined);
     const key = r.gameVersion && r.loader ? `${r.gameVersion}/${r.loader}` : "";
     if (!entry || !key) {
       unmatched++;

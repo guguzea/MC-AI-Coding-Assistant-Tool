@@ -4162,13 +4162,15 @@ public class ExampleMod { }
   const cfgYacl = generateConfig("my_mod", "fabric", "1.21.11", "yacl");
   assert.ok(cfgYacl.code?.includes("dev.isxander.yacl3"), cfgYacl.code?.slice(0, 300));
   assert.ok(!/clothconfig2/.test(cfgYacl.code || ""), "library=yacl 不得再吐 Cloth 骨架");
-  // S16/F10 裁定：Cloth 成员也没有入库证据（仓内唯一摘要只有 1.14 一档、且是 Forge 包名工件），
-  // 所以默认骨架必须自带未核实标记。旧断言把「不被 yacl 污染」写成了「假装已核实」。
+  // S16/F10 裁定的 2026-09-16 演进：12 处成员签名已由 4 条版本线 Fabric 构件 javap 逐签名核实（见骨架头注），
+  // TODO 归零；「不得假装已核实」的纪律改为「已核实必须有证据口径」——warning 必须带四版构件名，仍禁 YACL 符号混入。
   const clothTodo = (cfgFab.code.match(/TODO\(未核实\)/g) ?? []).length;
-  assert.ok(clothTodo > 0, "cloth 骨架成员调用必须带未核实标记");
+  assert.equal(clothTodo, 0, "cloth 骨架成员签名已核实（4 版 javap），不得再带未核实 TODO");
+  const clothVerified = (cfgFab.code.match(/已核实：/g) ?? []).length;
+  assert.equal(clothVerified, 12, `cloth 骨架应有 12 处已核实标注，实得 ${clothVerified}`);
   assert.ok(
     cfgFab.warnings?.some(
-      (w) => w.includes(`本骨架 ${clothTodo} 处成员调用零入库证据`) && /ingest_loader_api/.test(w),
+      (w) => /12 处成员调用签名已核实/.test(w) && /4\.17\.101/.test(w) && /21\.11\.150/.test(w),
     ),
     JSON.stringify(cfgFab.warnings),
   );
@@ -5097,8 +5099,9 @@ async function testPortingKbProvenance() {
 // diffWrapperPins 强制对齐。
 // 钉值语义（见 JSON method.notVersionBound）：钉的是「props 声明版本 → 该版本发行包 wrapper 任务
 // 产物字节」，不是 jar 内嵌版本字符串。wrapper 产物不随版本唯一——实测 7.2≡7.3.3、7.6≡7.6.1
-// 三件套全等、8.5≡8.6 jar 全等、8.4/8.5/8.6 的 gradlew 全等，故表内出现重复 sha 是对证结果而非抄错，
-// 判定一律按字节集合相等。
+// 三件套全等、8.5≡8.6 jar 全等、8.4/8.5 的 gradlew 全等，故表内出现重复 sha 是对证结果而非抄错，
+// 判定一律按字节集合相等。8.6 表项已于 2026-09-16 随 fabric/1.21.3 升 Gradle 8.10 撤除
+// （撤项后无任何 scaffold 声明 8.6，留着会触发「孤儿钉值」判据；其 jar 字节类由 8.5 代表）。
 const WRAPPER_JARS = {
   "4.9": { sha256: "e55e7e47a79e04c26363805b31e2f40b7a9cc89ea12113be7de750a3b2cede85", size: 54413, gradlewSha: "8c4c04dd98db1f00d49456dd162418a39312c5cb13d6865d783deb483bd1ed22", gradlewBatSha: "0008d785920c9ff5cab17403e0270ccc7ceee8e169b6d67a82d96a5475fec5c9" },
   "6.9.4": { sha256: "e996d452d2645e70c01c11143ca2d3742734a28da2bf61f25c82bdc288c9e637", size: 59203, gradlewSha: "f9594eb5c08a148f23b9d7a5fd99551224db96dadb1b7cecd3985c4758c4f867", gradlewBatSha: "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b" },
@@ -5109,7 +5112,6 @@ const WRAPPER_JARS = {
   "7.6.1": { sha256: "c5a643cf80162e665cc228f7b16f343fef868e47d3a4836f62e18b7e17ac018a", size: 61574, gradlewSha: "638c2862d623c302f3029f5bd1441276be484c5b79909b706a614ebe8e7a409b", gradlewBatSha: "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955" },
   "8.4": { sha256: "0336f591bc0ec9aa0c9988929b93ecc916b3c1d52aed202c7381db144aa0ef15", size: 63721, gradlewSha: "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d", gradlewBatSha: "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955" },
   "8.5": { sha256: "d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd", size: 43462, gradlewSha: "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d", gradlewBatSha: "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955" },
-  "8.6": { sha256: "d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd", size: 43462, gradlewSha: "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d", gradlewBatSha: "bdecf875b6868cbcbd36a1f85eedf0832f358ff28092c5797ed645f7edce77d9" },
   "8.8": { sha256: "cb0da6751c2b753a16ac168bb354870ebb1e162e9083f116729cec9c781156b8", size: 43453, gradlewSha: "d8231d345ab33433ab7b2c0720d5beb416c8d5c6789dbc01ad122b63bc2cae0d", gradlewBatSha: "bdecf875b6868cbcbd36a1f85eedf0832f358ff28092c5797ed645f7edce77d9" },
   "8.10": { sha256: "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046", size: 43583, gradlewSha: "a3648413b47ef77af21d5ebc36c687c7d103aaef3e17f33de7d4f080a6f300a3", gradlewBatSha: "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f" },
   "9.2.1": { sha256: "423cb469ccc0ecc31f0e4e1c309976198ccb734cdcbb7029d4bda0f18f57e8d9", size: 45633, gradlewSha: "fb68debc1b1acf8ec55dc0d5e5495e1dedd0bd6b61f304bee61613eeb2bd9b92", gradlewBatSha: "fedad02c18e266ec094995a5751b7fe1eb6e74f66bf75db64fae2e50eb22c234" },
@@ -6493,7 +6495,7 @@ async function testDocsToolTablesMatchRegistry() {
 
   const poisoned = [
     ["README 少一行工具", { ...base, readme: readme.replace(/^\|[ \t]*`check_dependencies`[ \t]*\|.*\n/m, "") }, /缺 `check_dependencies`/],
-    ["README 总数标错", { ...base, readme: readme.replace("## MCP Server 工具（80 个）", "## MCP Server 工具（79 个）") }, /标题声明 79/],
+    ["README 总数标错", { ...base, readme: readme.replace("## MCP Server 工具（81 个）", "## MCP Server 工具（80 个）") }, /标题声明 80/],
     ["README 分节计数标错", { ...base, readme: readme.replace("### 10. 代码生成模板（8）", "### 10. 代码生成模板（7）") }, /§10 声明 7 个/],
     ["README 出现未注册名", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（4）", "### 11. 日志与依赖诊断（4）\n\n| 工具 | 作用 |\n|------|------|\n| `not_a_real_tool` | x |") }, /未注册的工具名 `not_a_real_tool`/],
     ["README 跨节重复", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（4）", "### 11. 日志与依赖诊断（4）\n\n| 工具 | 作用 |\n|------|------|\n| `validate_at` | x |") }, /同时出现在 §/],
@@ -7375,6 +7377,83 @@ testCommunityIndexSync();
   }
   assert.ok(new Set(coreKeySets).size === 1, "核心键集跨平台不一致：" + coreKeySets.join(" | "));
   console.log("S13 版本数值序 + VERSION_NOT_FOUND 同键：ok");
+}
+
+/**
+ * §S14 · mc-cloth-config 档内注入标记 ↔ 中心稿 versions.json 一致性门（2026-09-16 接入）。
+ * 机制：`scripts/project-cloth-skill.mjs` 默认 --check（全一致 exit 0 / 否则 1，脚本自述「可串门禁」）。
+ * 防的是「跳过版本标记」：档内手稿的 coord/state/textApi 与 versions.json 失步、被手改，
+ * 不再无声无息 —— 这是版本标记唯一真值链（versions.json → 注入行 → 档内正文）上的自动化闸。
+ */
+{
+  const { spawnSync } = await import("node:child_process");
+  const { fileURLToPath } = await import("node:url");
+  const GATE = fileURLToPath(new URL("../scripts/project-cloth-skill.mjs", import.meta.url));
+  const r = spawnSync(process.execPath, [GATE], { encoding: "utf8", windowsHide: true });
+  const out = `${r.stdout ?? ""}${r.stderr ?? ""}`;
+  assert.equal(r.status, 0, `project-cloth-skill --check 失败（档内注入标记与 versions.json 已失步）：\n${out}`);
+  // 反退化：门必须真的报出一致性结论，否则路径失效/空跑要在这里被接住。
+  assert.match(out, /check: \d+ 档全部一致/, `project-cloth-skill 没有输出一致性结论行，门可能已退化成空检查：\n${out}`);
+  console.log(`S14 cloth-version-inject 注入标记一致性（${(out.match(/check: (\d+) 档全部一致/) || [])[1]} 档）：ok`);
+}
+
+/**
+ * §S15 · knowledge/libs 解析规则校验门（2026-09-16 接入）。
+ * 机制：`scripts/resolve-lib-skills.mjs` 默认 --validate —— 对 (forge,1.20.1)/(fabric,1.20.1)/
+ * (neoforge,1.20.4) 三组合跑解析（组映射 + frontmatter platforms/mcVersions 过滤），
+ * 结果非空 + 全局 skillId 查重，输出 JSON {ok:true, results:{...}}；失败 exit 1。
+ * 守的是「平台/版本解析链」不漂移（组名与实际覆盖、mcVersions 窗口写错都会在这里露）。
+ */
+{
+  const { spawnSync } = await import("node:child_process");
+  const { fileURLToPath } = await import("node:url");
+  const GATE = fileURLToPath(new URL("../scripts/resolve-lib-skills.mjs", import.meta.url));
+  const r = spawnSync(process.execPath, [GATE], { encoding: "utf8", windowsHide: true });
+  const out = `${r.stdout ?? ""}${r.stderr ?? ""}`;
+  assert.equal(r.status, 0, `resolve-lib-skills --validate 失败（平台/版本解析链漂移）：\n${out}`);
+  // 反退化：必须真的输出校验结果 JSON，否则路径失效退化成空跑时在这里接住。
+  assert.match(out, /"ok"\s*:\s*true/, `resolve-lib-skills 没有输出 {"ok":true,...}，门可能已退化成空检查：\n${out}`);
+  console.log("S15 lib-skills 解析校验（组映射 + platforms/mcVersions 过滤）：ok");
+}
+
+/**
+ * §S16 · CLI 双入口冒烟门（2026-09-17 CLI 提级批次接入）。
+ * 守两个入口可用：mc-skill（dist/cli.js，工具线 dispatch 全部 MCP 工具）与
+ * mc-skill-scripts（bin/mc-skill-scripts.mjs，仓库线：lib/corpus/cloth/gate）。
+ * 检查项：--version/--help、逐子命令 --help、gate list、lib resolve 真跑×2。
+ */
+{
+  const { spawnSync } = await import("node:child_process");
+  const { fileURLToPath } = await import("node:url");
+  const GATE = fileURLToPath(new URL("./scripts/assert-cli-smoke.mjs", import.meta.url));
+  const r = spawnSync(process.execPath, [GATE], { encoding: "utf8", windowsHide: true });
+  const out = `${r.stdout ?? ""}${r.stderr ?? ""}`;
+  assert.equal(r.status, 0, `assert-cli-smoke 失败（CLI 入口 / 命令表 / 转发链坏了）：\n${out}`);
+  assert.match(out, /assert-cli-smoke: ok/, `冒烟门没有输出 ok 结论，可能已退化成空检查：\n${out}`);
+  console.log("S16 CLI 双入口冒烟（mc-skill + mc-skill-scripts）：ok");
+}
+
+/**
+ * §S17 · resolve_lib_skills（MCP 工具）真跑门（2026-09-17 与 CLI/MCP 双入口提级同批）。
+ * 守：输出形状（ok/count/skills[].path 仓库相对）+ 同一 core（走 scripts/resolve-lib-skills.mjs）
+ * + cloth 的 versionsJson 真值提示（用户侧"跳过版本标记"的硬拦锚点）+ 未知平台 fail-soft。
+ */
+{
+  const { resolveLibSkills } = await import("./dist/lib-skills/index.js");
+  const r = resolveLibSkills({ platform: "fabric", mcVersion: "1.21.1" });
+  assert.equal(r.ok, true, `resolve_lib_skills 失败：${r.error ?? ""}`);
+  assert.ok(r.count > 0, "fabric/1.21.1 解析结果为空（门失效或数据面异常）");
+  const cloth = r.skills.find((s) => s.skillId === "mc-cloth-config");
+  assert.ok(cloth, "fabric/1.21.1 未解析出 mc-cloth-config");
+  assert.match(cloth.path, /^knowledge\/libs\//, `path 应为仓库相对：${cloth.path}`);
+  assert.equal(
+    cloth.versionsJson,
+    "knowledge/libs/fabric-only/mc-cloth-config/versions.json",
+    `versionsJson 真值提示缺失：${cloth.versionsJson}`,
+  );
+  const bad = resolveLibSkills({ platform: "nope", mcVersion: "1.21.1" });
+  assert.equal(bad.ok, false, "未知平台必须 ok:false（fail-soft 而非抛错）");
+  console.log(`S17 resolve_lib_skills（${r.count} 个 skill + cloth versionsJson 提示）：ok`);
 }
 
 console.log("core regression tests passed");

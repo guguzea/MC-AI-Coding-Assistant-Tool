@@ -264,6 +264,9 @@ Decision: 选择注册方式
    - LiteLoader / Rift / ModLoader：暂无独立 Java 库组；不要把 Fabric/Forge 库 Skill 当这些加载器的 API
 2. 在组内按名称找 `knowledge/libs/<group>/mc-<name>/SKILL.md`，**直接读源稿**，不要查平台 `.cursor/skills` 的库项（那里已清理，不存在库项）
 3. 用 frontmatter 二次过滤：`platforms`（组是主依据，白名单防组内误放）、`mcVersions`（留空/未写 = 不限版本；非空则必须包含目标 MC 版本；与 knowledge/libs/README.md §3.6 及解析代码一致）
+   - **版本标记是坐标唯一真值（2026-09-16 起）**：库 skill 若带 `versions.json`（当前：`knowledge/libs/fabric-only/mc-cloth-config/versions.json`），**写依赖坐标前必须读它对应 MC 版本的 slot**（`coord` / `state` / `basis`）；**`state != active`（`commented` / `todo`）一律不采纳**——`todo` 即 `TODO(未核实)`，**不许按邻居档推**。中心稿 SKILL.md 的「版本映射表」是证据说明，**不是取值入口**。
+   - **档内手稿优先（档内工程）**：`fabric/<v>/.cursor/skills/mc-<lib>.md` 的 `<!-- cloth-version-inject v=… coord=… state=… textApi=… -->` 标记行是该档实况，由 `scripts/project-cloth-skill.mjs` 按 versions.json 回填（**禁止手改标记行**）——直接读它，不要从中心稿表格抄。
+   - 这两条由 `mcp-server/test-core.mjs` §S14（注入标记 ↔ versions.json 一致性）与 §S15（`resolve-lib-skills --validate` 解析链校验）自动闸住；维护侧失步即红。
 4. 不确定该用哪个库 Skill → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`；完整清单见 `knowledge/libs/README.md`
 5. **禁止**把 Fabric 专属库（Trinkets / CCA / Polymer / Text Placeholder 等）当 Forge 教程；Forge/NeoForge 饰品用 `mc-curios`（`forge-only`），Fabric 用 `mc-trinkets`（`fabric-only`）
 6. **配置不要新写树级 `mc-config` Skill**：一律读 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
@@ -317,6 +320,7 @@ Decision: 选择注册方式
 | `lookup_obfuscated` | 崩溃短名反查 |
 | `get_minecraft_source` / `decompile_mod_jar` / `search_mod_code` / `analyze_mod_jar` / `download_official_mdk` | 按需反编译与 jar 元数据；`download_official_mdk` 拉官方 MDK 到 `$MC_SKILL_CACHE`（**默认 dryRun**，校验和钉在 `mcp-server/data/mdk-checksums.json`）；必填参数只有 `platform` + `minecraftVersion`，其余（`buildPlugin` / `destPath` / `allowUnpinned` 等）可选。`search_mod_code` 源码未生成时 `NOT_FOUND`，先调反编译。 |
 | `validate_at` / `validate_aw` | AT / AW 字节码校验 |
+| `resolve_lib_skills` | 库 skill 解析（平台 + 精确 MC 版本；与 CLI `lib resolve` 同一 core；只解析不返回正文 —— AI 仍直接读 `knowledge/libs` 源稿；带 `versionsJson` 的库写坐标前先读该文件 slot） |
 
 ### 工具边界（禁止误判）
 
@@ -342,7 +346,8 @@ Decision: 选择注册方式
   cd mcp-server && npm ci && npm run build
   ```
   （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。配置宿主见 `AUTO_SETUP.md`：先识别 IDE/CLI，再按该宿主的文件与顶层键合并草稿，不要默认写 Cursor 的 `mcp.json`。）
-- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，80 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。工具输出始终为 JSON；`--json` 不改变工具输出，仅为兼容保留；它只在交互式终端下影响 `--help` 的呈现（人读摘要 → 机器可读 schema），表达格式意图用 `--output-format json`（当前唯一合法值）。
+- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，81 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar` / `resolve_lib_skills`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。工具输出始终为 JSON；`--json` 不改变工具输出，仅为兼容保留；它只在交互式终端下影响 `--help` 的呈现（人读摘要 → 机器可读 schema），表达格式意图用 `--output-format json`（当前唯一合法值）。
+- **CLI 双入口（2026-09-17 提级）**：**工具线** = 上面的 `dist/cli.js`（与 MCP 同一份 `toolHandlers`）；**仓库线** = `node mcp-server/bin/mc-skill-scripts.mjs <lib|corpus|cloth|gate> <命令>`（薄壳转发 `scripts/` 与 `mcp-server/scripts/` 的既有脚本）。仓库线属**维护侧**作业（批量反编译、摘要重建、G1 门、注入标记回填），MCP 工具面不暴露；两者互不分叉；冒烟门 `assert-cli-smoke`（test-core §S16）。安装/链接 mcp-server 包后，两入口的 bin 名分别为 mc-skill 与 mc-skill-scripts。
 - **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`，然后**重载宿主 MCP**（只编 dist 不够， AI IDE 进程仍跑旧代码）。
 - **反编译工具报 `TOOLCHAIN_MISSING`**：需要 Java 17+（VineFlower/tiny-remapper）；安装 Temurin 17+ 后重启 MCP，或按返回指引操作。
 - **`search_mod_code` 报 `NOT_FOUND`**：反编译源码尚未生成（按设计不入库），按返回指引先调 `decompile_mod_jar` / `get_minecraft_source` 按需生成。

@@ -6,6 +6,7 @@ version: "1.21.3"
 dependencies: []
 mappings: yarn
 ---
+<!-- cloth-version-inject v=1.21.3 coord=16.0.143 state=active textApi=literal -->
 
 # Cloth Config（Fabric 1.21.3）
 

@@ -93,6 +93,45 @@ curl -sS "https://maven.shedaniel.me/me/shedaniel/cloth/cloth-config-fabric/mave
 >
 > Modrinth 的 `version_number` 带 `+fabric` 后缀、maven 坐标不带后缀（如 Modrinth `4.17.101` = 坐标 `me.shedaniel.cloth:cloth-config-fabric:4.17.101`）；两者是同一构建的两种写法，**坐标里不要带 `+fabric`**，也不要用 `+1.16.5` / `+1.20.1` 这类后缀（本仓 `client.txt`-式后缀在 Cloth 的 maven 上不存在）。
 
+## 档位版本注入点（投影机制，2026-09-16）
+
+- 各档手稿（`fabric/<v>/.cursor/skills/mc-cloth-config.md`）frontmatter 后带 **`cloth-version-inject` 标记行**（coord/state/textApi 三字段），由 `scripts/project-cloth-skill.mjs` 按本目录 `versions.json` 校验/回填——**改坐标先改 versions.json 再重投影**，禁止手改标记行。
+- 本中心稿是**通用形权威**；手稿正文是各档已逐档修正的实况（2026-09-14 落地）。本表「本仓现状」列反映 2026-09-14 上午前的状态（S41-b 当日深夜已把各档坐标落为实证值），**以 `versions.json` 与档内标记为准**。
+- 两套选法（本表「该线最新 release」/ 档内「对齐项目自带 FAPI」）都成立：同线内取哪一版是选型，不改变「哪条 MC 线用哪个大版本」。
+
+## 已核实成员（签名级，2026-09-16）
+
+**来源**：4 条 MC 版本线的 **Fabric 构件本体**（`me.shedaniel.cloth:cloth-config-fabric`）`javap` 直读，**逐签名四版一致**：
+
+| jar | MC 线 | 字节数 |
+| --- | --- | --- |
+| `cloth-fabric-4.17.101.jar` | 1.16.4 / 1.16.5 | 1,117,847 |
+| `cloth-11.1.106.jar` | 1.20 / 1.20.1 | 1,159,179 |
+| `cloth-15.0.127.jar` | 1.21 / 1.21.1 | 1,144,382 |
+| `cloth-21.11.150.jar` | 1.21.11 | 1,148,412 |
+
+**12 个成员（= `generate_config` 默认骨架的调用点）**——jar 内为 intermediary 名，映射：`class_437` = Screen、`class_2561` = Component（yarn 名 `Text`）：
+
+| # | 调用点 | 核实签名 |
+| --- | --- | --- |
+| 1 | `ConfigBuilder.create()` | `static ConfigBuilder create()` |
+| 2 | `.setParentScreen(parent)` | `ConfigBuilder setParentScreen(class_437)` |
+| 3 | `.setTitle(...)` | `ConfigBuilder setTitle(class_2561)` |
+| 4 | `.entryBuilder()` | `ConfigEntryBuilder entryBuilder()`（default 方法） |
+| 5 | `.getOrCreateCategory(...)` | `ConfigCategory getOrCreateCategory(class_2561)` |
+| 6 | `category.addEntry(...)` | `ConfigCategory addEntry(AbstractConfigListEntry)` |
+| 7 | `entry.startBooleanToggle(...)` | `BooleanToggleBuilder startBooleanToggle(class_2561, boolean)` |
+| 8 | `.setDefaultValue(true)` | `BooleanToggleBuilder setDefaultValue(boolean)`（另有 `setDefaultValue(Supplier<Boolean>)`） |
+| 9 | `.setSaveConsumer(v -> …)` | `BooleanToggleBuilder setSaveConsumer(Consumer<Boolean>)` |
+| 10 | `.build()`（条目） | `BooleanListEntry build()`（`extends AbstractConfigListEntry`，可进 `addEntry`） |
+| 11 | `builder.setSavingRunnable(...)` | `ConfigBuilder setSavingRunnable(Runnable)` |
+| 12 | `builder.build()` | `Screen build()`（`class_437`） |
+
+**边界**：
+- 仓内摘要 `data/lib-api-summaries/cloth-config.json`（键 `1.14`）是 **Forge 工件** `me.shedaniel.forge.clothconfig2.*`，与本表的 Fabric 包名 **不同工件**，不作为本表来源（本表 = Fabric 构件本体直读）。
+- **只核实这 12 个骨架调用点**；其它成员（`startIntSlider` / `startStrField` / `setCategoryBackground` …）**未逐个核实**，要写先 `javap` 或 `ingest_loader_api` 核（强制前置见规则与 `mc-config`）。
+- 映射口径按你工程二选一：`generate_config` 骨架用 Mojang 名（`Component` / `client.gui.screens.Screen`）；yarn 工程对齐为 `Text` / `client.gui.screen.Screen`。
+
 ## 通用形（API 形态，与版本无关）
 
 ```java

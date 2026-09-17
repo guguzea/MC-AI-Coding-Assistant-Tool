@@ -4,11 +4,11 @@
   "version": "${version}",
   "name": "${mod_name}",
   "description": "${mod_description}",
-  "authors": ["${mod_authors}"],
+  "authors": ["ExampleAuthor"],
   "contact": {
     "homepage": "https://fabricmc.net"
   },
-  "license": "${mod_license}",
+  "license": "MIT",
   "icon": "assets/${mod_id}/icon.png",
   "environment": "*",
   "entrypoints": {

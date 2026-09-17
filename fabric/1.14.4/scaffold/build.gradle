@@ -1,10 +1,10 @@
-// 本档钉的 fabric-loom '0.4-SNAPSHOT'（实取 0.4.33）在 2026 年已无法从零装配 MC：
-// 它的 DownloadUtil 发 Accept-Encoding 却不解 gzip，Mojang 返回的 JSON 被原样按 gzip 落盘，
-// 配置期报 Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $（另有 SNAPSHOT 漂移风险）。
-// 实测把钉换成 0.6.60 或 0.7.35，其余按本文件现状，可在 JDK 8 + Gradle 6.9.4 下 BUILD SUCCESSFUL。
-// 改钉属版本兼容取舍 ⇒ 未代改，本档不登记 scaffold.buildVerified。
+// 本档钉的 fabric-loom 已由 '0.4-SNAPSHOT'（实取 0.4.33）换为 '0.6.60'（2026-09-16 用户裁定落地：
+// 0.6.60 有明确 maven 记录；旧钉在 2026 年已无法从零装配 MC——它的 DownloadUtil 发 Accept-Encoding
+// 却不解 gzip，Mojang 返回的 JSON 被原样按 gzip 落盘，配置期报 Expected BEGIN_OBJECT but was STRING
+// at line 1 column 1 path $）。换钉后的真机构建（JDK 8 + Gradle 6.9.4）结果见 pack.meta.json 的
+// scaffold.provenance（本轮实跑）。
 plugins {
-    id 'fabric-loom' version '0.4-SNAPSHOT'
+    id 'fabric-loom' version '0.6.60'
     id 'maven-publish'
     id 'eclipse'
     id 'idea'

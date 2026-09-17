@@ -22,6 +22,7 @@ import {
 import { maybeWriteGeneratorResult } from "../generators/write-helper.js";
 import { analyzeBuildLog, analyzeBuildLogSchema } from "../build-log/index.js";
 import { analyzeLog, getMigrationGuide, checkDependencies } from "../diagnostics/index.js";
+import { resolveLibSkills, resolveLibSkillsSchema, RESOLVE_LIB_SKILLS_DESCRIPTION } from "../lib-skills/index.js";
 import { getWorkflowTemplate, listKnowledgeResources, readKnowledgeResource } from "../prompts/index.js";
 import { WORKFLOW_TEMPLATES } from "../prompts/templates.js";
 import { mcSkillUpdate } from "../update/index.js";
@@ -703,6 +704,13 @@ export function registerWaveExtensions(server: McpServer): void {
     addonManifest: a.addonManifest,
     projectPath: a.projectPath,
   })));
+
+  // ── 库 skill 解析（2026-09-17 提级：CLI `lib resolve` ↔ MCP 同一 core）──────────
+  server.registerTool("resolve_lib_skills", {
+    title: "Resolve lib skills for (platform, mcVersion)",
+    description: RESOLVE_LIB_SKILLS_DESCRIPTION,
+    inputSchema: resolveLibSkillsSchema,
+  }, async (a) => jsonResult(resolveLibSkills({ platform: a.platform, mcVersion: a.mcVersion })));
 
   server.registerTool(
     "mc_skill_update",

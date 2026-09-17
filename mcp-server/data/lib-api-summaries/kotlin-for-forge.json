@@ -10,7 +10,7 @@
     ],
     "merged": false
   },
-  "generatedAt": "2026-09-15T06:30:28.571Z",
+  "generatedAt": "2026-09-16T03:25:36.382Z",
   "versions": {
     "26.2": {
       "packages": [
@@ -5748,7 +5748,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -5869,7 +5876,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -5990,7 +6004,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -6111,7 +6132,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -6232,7 +6260,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -6353,7 +6388,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -6474,7 +6516,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -6595,7 +6644,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -6716,7 +6772,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -6837,7 +6900,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -6958,7 +7028,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -7079,7 +7156,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -7200,7 +7284,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -7321,7 +7412,14 @@
           "addGenericListener(Class<F>, EventPriority, Boolean, Consumer<T>)",
           "addListener(EventPriority, (T) -> Boolean, Consumer<T>)",
           "reflectKotlinSAM(Consumer<*>)",
-          "passGenericCancelled(Class<F>, Boolean)"
+          "passGenericCancelled(Class<F>, Boolean)",
+          "addGenericListener(Class<F>, EventPriority, Boolean, Class<T>, Consumer<T>)",
+          "unregister(Any?)",
+          "post(Event)",
+          "post((IEventListener, Event) ->, Event)",
+          "handleException(IEventBus, Event, Array<out IEventListener>, Int, Throwable)",
+          "shutdown()",
+          "start()"
         ],
         "thedarkcolour.kotlinforforge.eventbus.KotlinEventBusWrapper": [
           "post(Event)"
@@ -7396,6 +7494,6 @@
     }
   },
   "classCount": 1403,
-  "methodCount": 2972,
+  "methodCount": 3070,
   "facadeFiles": 779
 }

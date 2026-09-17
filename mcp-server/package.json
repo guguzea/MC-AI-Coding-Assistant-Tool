@@ -5,7 +5,8 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "mc-skill": "./dist/cli.js"
+    "mc-skill": "./dist/cli.js",
+    "mc-skill-scripts": "./bin/mc-skill-scripts.mjs"
   },
   "scripts": {
     "build": "tsc",

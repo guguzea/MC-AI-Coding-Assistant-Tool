@@ -45,8 +45,8 @@ const MERGE_SRC = process.env.MC_SKILL_LIB_OWN_WRITER_SRC
  * 这些清单**保留为空**而不是删掉检查：重建后的摘要再冒领一个类，就会以「不在台账」的形式红，
  * 而不是因为台账被删而没人管。清零当时的数：冒领 385 类 / 5 文件 / unknown-mod 6 目录 → 全 0。
  */
-const DEBT_FOREIGN = {};
-const DEBT_FOREIGN_ROOTS = {};
+const DEBT_FOREIGN = { "pal.json": 120 };
+const DEBT_FOREIGN_ROOTS = { "io.github.ladysnake": "authored/lib-impersonate" };
 /**
  * catalog 侧存量债务：`verifiedApi[key].packages` 里冒领他方包根的行（键 `条目id|版本键|包名`）。
  * 摘要只是中段，这一层才是模型真正抄成 import 的地方，所以逐行钉死而不是只记总数。
@@ -70,7 +70,14 @@ const DEBT_UNKNOWN_MOD_DIRS = [];
  * 台账条目停止复现 ⇒ 按「清空而不删除」纪律撤登记（drain 检查双向对账）。
  */
 const DEBT_UNKNOWN_VERSION_KEYS = [];
-const DEBT_SHARED_DIRS = {};
+/**
+ * 共用反编译目录的存量登记（口径：目录名被 >1 个 slug 引用即「共用」，键=目录名，值=引用方数）。
+ * 2026-09-16 第五次签字（30 无树库重建批次）：`{ jei: 2 }` —— 新产物 `emi_jei_rei.json`
+ * 与旧游离产物 `jei__emi__roughly-enough-items.json` 同引 `jei` 树。按 3 条判定
+ * （temp/PLAN-2026-09-08-销账-3条判定-2026-09-15.md 第 3 条）：旧文件「重建产出新产物后
+ * 按被替代处置」——本批次即该时点，**处置动作（删）待用户一句话**；在动作前先登记承认现状。
+ */
+const DEBT_SHARED_DIRS = { jei: 2 };
 
 /**
  * 台账层数字：B 层只在真数据根比对。
@@ -84,7 +91,18 @@ const DEBT_SHARED_DIRS = {};
  * 其余数字未动，`foreignTotal` 仍 0（没有新冒领）。
  */
 const LEDGER = {
-  summaries: 44,
+  // 2026-09-16 第五次签字（30 无树库重建批次）：
+  //   summaries 44 → **45**（+1 = 新产物 `emi_jei_rei`；旧游离产物仍计在实算里，
+  //     其删除待用户一句话，期间共用目录走 DEBT_SHARED_DIRS 登记）。
+  // 2026-09-16 第七次签字（3 缺口库补齐：libgui / server-translations / spruceui-obsidianui）：
+  //   summaries 45 → **48**（+3 新产物）。
+  //   过程：① `lib-manifests/all.json` 补 3 条目（45 → 48 slug；sha512 本地实算，
+  //     ObsidianUI 与 Modrinth 返回逐字节一致）；② `batch-decompile --filter
+  //     slug=libgui,server-translations,spruceui-obsidianui`（libgui 首跑 fetch failed——
+  //     undici 拉 GitHub Releases 失败，本地 jar 预置 `<sha512>.jar` 后 cached 复用重跑 success）；
+  //     ③ `build-api-summaries --only <modId> --write`（上限显式给足）。
+  //   依据：`temp/PLAN-2026-09-08-销账-裁定落地与外部条件-2026-09-16.md` §9.2（三库原为「已知缺口」，本轮闭环）。
+  summaries: 48,
   // 2026-09-15 第三处签字（B1：KFF 摘要重建两轮）：
   //   classes 16975 → 13097 → **13801**
   //   轮一 −3878：旧 `kotlin-for-forge.json` 把捆进本库的 `kotlin.*` / `kotlinx.*` 运行时类
@@ -125,7 +143,27 @@ const LEDGER = {
   //     现按前 12 位 join 清单（5 个 sha12 全命中：balm 3.2.5→6.0.2 forge，gv 1.18–1.19.4）
   //     ⇒ balm 6075→6548（+473）且 28 键零 hex 残留。
   //   `foreignTotal` 仍 0（无新冒领）；`DEBT_UNKNOWN_VERSION_KEYS` 清空（pehkui 复现消失）。
-  classes: 36935,
+  // 2026-09-16 第五次签字（30 无树库重建批次）：
+  //   classes 36935 → **103834**（+66899）。构成 = 24 个「无树库」从 CDN 取件 + 反编译
+  //   （batch-decompile 全绿：iceberg/resourceful/owo/playeranimator/terra/yacl/puzzles/
+  //   fc-api/polymer/jei/emi/satin/cca 等）→ 全量大上限重建 + 全量 --write 落盘（44 产物 33.75MB）。
+  //   旧产物全是 8/12 默认上限劣化件：**14 库类数撞死 500 上限**、跳过键普遍、polymer 为 0 类空壳；
+  //   重建后全量 dry-run = 成功 44 / 跳过 6（无 manifest）/ 截断库 0 / 版本内截断 0。
+  //   注：前批 43 库批次已在 36935 里；本批增量全部来自这 24 库（含版本覆盖率扩展）。
+  // 2026-09-16 第六次签字（cloth-config 摘要重建 + 多目录组归并修复，窗口终态）：
+  //   classes 103834 → **114567**（+10733）；verifiedApiKeys 2583 → **2629**（+46）。
+  //   过程：① 首轮重建只进旧组（16 键，1.14–1.17.1）——根因 = `findModDir` 的 JSONL 短路只取
+  //     「第一个存在的库级目录」，同一 slug 的第二组（`decompiled-mods/cloth-config`，1.18+ 的树）永久不参与；
+  //   ② 修复（scripts/build-api-summaries.mjs）：JSONL 分支收集同父下的**全部**存在组并返回 `{dirs,names}`，
+  //     `resolveSourceDirs` 识别该 shape 直接给出多组 dirs（`merged:true`）；单目录行为不变（向后兼容）。
+  //   ③ 重建 = **56 键 / 10928 类 / 65255 方法**（1.14–26.2 + 22w43a / 23w13a_or_b / 24w14potato 等快照档；
+  //     旧组 7 leaf + 新组 24 leaf 并集），emit 114 条（摘 shaded/runtime 包根 1150 项）→ merge --write **新增 34 键**
+  //     → npm run build。
+  //   依据：`batch-decompile --filter slug=cloth-config --filter loader=fabric`（33 唯一 jar）+ 上述多目录组修复。
+  //   summaries 45 / catalogEntries 50 / attestedRoots 98 / foreignTotal 120 未变（G1 实跑仅 classes 与 verifiedApiKeys 两项变化）。
+  // 2026-09-16 第七次签字（3 缺口库补齐，与 summaries 同轮）：
+  //   classes 114567 → **114708**（+141 = libgui 64 + server-translations 5 + spruceui-obsidianui 72）。
+  classes: 114708,
   catalogEntries: 50,
   // 2026-09-15 第四次签字（43 库重建批次，与 classes 同轮）：
   //   verifiedApiKeys 1893 → **2221**（+328 新增键 = architectury 232（58 版 × 4 loader）+
@@ -135,11 +173,37 @@ const LEDGER = {
   // 依据：emit 全量（503 行）→ merge --write（328 新增 + 0 覆盖 + 0 剔除）。
   //   geckolib 的 84 键由一次性键值清洗另走 merge --force（键数不变，只洗 packages）。
   //   `multiOwnerRoots` / `badVerifiedAt` / `foreignTotal` 均未变。
-  attestedRoots: 62,
+  // 2026-09-16 第五次签字（30 无树库重建批次，与 classes 同轮）：
+  //   verifiedApiKeys 2221 → **2583**（+362 = 全量 emit 1567 行 → merge --write
+  //     **新增 378 键**（jei/emi 合并条目 emi_jei_rei 50 版 × 多 loader 为大头）
+  //     **剔除 16 冒领键**（pal 的旧键在 catalog 侧含 ladysnake.pal 外来包，merge writer 侧按判据剔）
+  //     —— 新增 378 − 剔除 16 = 净 +362。
+  //   attestedRoots 62 → **98**（+36 = 新键带出的自有包根，全部 `ownsPackage` 自证）。
+  //   foreignTotal 0 → **120**：`pal.json` 的 120 个 `io.github.ladysnake.pal.*` 类被判外来——
+  //     根因 = `packageRoot` 取**前 3 段** ⇒ `io.github.ladysnake` 根已被 impersonate 的凭证占据
+  //     （同作者 Ladysnake 的两库同根）。判据边界登记：`DEBT_FOREIGN_ROOTS` 记
+  //     `io.github.ladysnake → authored/lib-impersonate`（与 G1 实算的「真主」对账一致）；
+  //     pal 的 catalog modIds 同轮补入 `pal` 段（library-catalog.ts，附注释）。
+  //     处置 = 登记不改摘要（pal 类本体归属无误，纯 3 段根粒度问题；未来若细化 packageRoot
+  //     粒度可撤此登记）。
+  // 2026-09-16 第七次签字（3 缺口库补齐，与 classes 同轮）：
+  //   attestedRoots 98 → **99**（+1 = 3 条新 verifiedApi 键带出的自有包根，按 3 段根口径
+  //     io.github.cottonmc.cotton.gui / xyz.nucleoid.server.translations.api /
+  //     org.thinkingstudio.obsidianui 里只有 1 个是新根，其余 2 段已被既有条目占据；
+  //     全部 `ownsPackage` 自证）。
+  attestedRoots: 99,
   multiOwnerRoots: 0,
-  verifiedApiKeys: 2221,
+  // 2026-09-16 第七次签字（3 缺口库补齐，与 classes 同轮）：
+  //   verifiedApiKeys 2629 → **2632**（+3 = libgui `26.3/fabric`、server-translations `1.21.5/fabric`、
+  //     spruceui-obsidianui `1.21.5/fabric`）。过程：3 条 authored 条目原**无 verifiedApi 字段**
+  //     （`extractEntries` 见无 `verifiedApi:` 即跳过）⇒ 先各补 `verifiedApi: {}`，再
+  //     `merge-verified-api --input gap3-verified.jsonl --write`（匹配 3 / 新增 3 / 覆盖 0 / 剔除 0）。
+  //   catalog `verifiedApi` 3 键值含 packages（io.github.cottonmc.cotton.gui.* / xyz.nucleoid.server.translations.api.* /
+  //     org.thinkingstudio.obsidianui.*），notes 亦改为「已补建」口径。
+  //   注：本条在 merge 写盘后、dist 重建前 G1 仍绿（G1 从 dist 读 catalog）——重建后才见 +3，属预期时序。
+  verifiedApiKeys: 2632,
   badVerifiedAt: 0,
-  foreignTotal: 0,
+  foreignTotal: 120,
   foreignFiles: Object.keys(DEBT_FOREIGN).length,
 };
 

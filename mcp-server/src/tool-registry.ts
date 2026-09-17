@@ -14,6 +14,7 @@ import { generateDatagen } from "./datagen/index.js";
 import { maybeWriteGeneratorResult } from "./generators/write-helper.js";
 import { analyzeCrash } from "./crash/index.js";
 import { validateProject } from "./validate/index.js";
+import { resolveLibSkillsSchema, RESOLVE_LIB_SKILLS_DESCRIPTION } from "./lib-skills/index.js";
 import {
   // 旧 Forge 别名（向后兼容）
   listForgeVersions,
@@ -1207,6 +1208,7 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "validate_bp_json", description: "精简校验 entity/block/item/recipe JSON。不是 validate_datapack_json（Java pack_format）。", inputSchema: validateBpJsonSchema },
   { name: "generate_addon_manifest", description: "只吐 manifest JSON 文本与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。默认 stable @minecraft/server；beta=true 才写 beta 依赖并提示世界 Beta APIs。", inputSchema: generateAddonManifestSchema },
   { name: "generate_bp_entity", description: "只吐 BP 实体 JSON 文本与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。点名 Beta 爆炸事件时才给 script 片段，并附带 BP/manifest.json（@minecraft/server version=beta）。禁止写 experimentalGameplay。", inputSchema: generateBpEntitySchema },
+  { name: "resolve_lib_skills", description: RESOLVE_LIB_SKILLS_DESCRIPTION, inputSchema: resolveLibSkillsSchema },
 ];
 
 /** 全部工具 schema（index + wave；基岩 9 个工具计入 index）。 */

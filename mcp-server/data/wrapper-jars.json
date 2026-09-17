@@ -14,8 +14,8 @@
     "propsTemplate": "props 键集模板：用该版本自己的 Gradle 离线跑 wrapper 任务，取它写出的 gradle/wrapper/gradle-wrapper.properties 键集（2026-09-05，14/14 版本全测）。networkTimeout 从 7.6 起才有、validateDistributionUrl 从 8.4 起才有、retries/retryBackOffMs 到 9.5.1 才出现；键集与版本不匹配 = props 被更高版本 Gradle 重写过（多余键该版本 wrapper 类不读，属惰性噪声，不改变行为）。缓存位置键（distributionBase/distributionPath/zipStoreBase/zipStorePath）由 S13 scanScaffoldWrappers 强制等于官方产物值，因为它们真的会改引导落地路径。"
   },
   "boot": {
-    "measuredOn": "2026-09-05",
-    "note": "29 档全 rc=0：29 个有 props 的 scaffold 各自用自己的 props + 三件套离线引导成功。14 个钉值版本 → 11 个不同 jar 字节类（7.2≡7.3.3、7.6≡7.6.1、8.5≡8.6），11 类全部被至少一行覆盖，故无「钉了字节却没引导过」的版本。门禁 diffWrapperPins 校三件事：boot.rows 存在、每个钉值版本都有 rc=0 行、每行的档在该版本 usedBy 内。",
+    "measuredOn": "2026-09-16",
+    "note": "29 档全 rc=0：29 个有 props 的 scaffold 各自用自己的 props + 三件套离线引导成功。13 个钉值版本 → 10 个不同 jar 字节类（7.2≡7.3.3、7.6≡7.6.1），10 类全部被至少一行覆盖，故无「钉了字节却没引导过」的版本。门禁 diffWrapperPins 校三件事：boot.rows 存在、每个钉值版本都有 rc=0 行、每行的档在该版本 usedBy 内。（2026-09-16 更新：fabric/1.21.3 随升 Gradle 8.10 重测 boot rc=0（banner=8.10）；8.6 表项因无档声明已撤，其 jar 字节类由 8.5 代表。）",
     "rows": [
       {
         "pack": "fabric/1.14.4",
@@ -91,11 +91,11 @@
       },
       {
         "pack": "fabric/1.21.3",
-        "gradle": "8.6",
-        "jvm": 17,
+        "gradle": "8.10",
+        "jvm": 21,
         "rc": 0,
-        "jarSha8": "d3b261c2",
-        "gradleBanner": "8.6"
+        "jarSha8": "2db75c40",
+        "gradleBanner": "8.10"
       },
       {
         "pack": "forge/1.12.2",
@@ -595,23 +595,6 @@
       ],
       "measuredOn": "2026-09-04"
     },
-    "8.6": {
-      "verified": "official-distribution",
-      "distributionUrl": "https://services.gradle.org/distributions/gradle-8.6-bin.zip",
-      "zipSha256": "9631d53cf3e74bfa726893aee1f8994fee4e060c401335946dba2156f440f24c",
-      "jarSha256": "d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd",
-      "jarSize": 43462,
-      "gradlewSize": 8692,
-      "gradlewBatSize": 2918,
-      "usedBy": [
-        "fabric/1.21.3"
-      ],
-      "gradlewSha256": "fc977a94723af68aaffa4e5d60496fb4aeed1884b6b19e5e2f2fd7612673313d",
-      "gradlewBatSha256": "bdecf875b6868cbcbd36a1f85eedf0832f358ff28092c5797ed645f7edce77d9",
-      "measuredOn": "2026-09-05",
-      "jarByteCompareWithZipEntry": true,
-      "jarEntry": "gradle-8.6/lib/plugins/gradle-wrapper-8.6.jar!gradle-wrapper.jar"
-    },
     "8.8": {
       "verified": "official-distribution",
       "distributionUrl": "https://services.gradle.org/distributions/gradle-8.8-bin.zip",
@@ -640,7 +623,8 @@
       "gradlewSize": 8762,
       "gradlewBatSize": 2966,
       "usedBy": [
-        "fabric/1.21.1"
+        "fabric/1.21.1",
+        "fabric/1.21.3"
       ],
       "gradlewSha256": "a3648413b47ef77af21d5ebc36c687c7d103aaef3e17f33de7d4f080a6f300a3",
       "gradlewBatSha256": "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f",

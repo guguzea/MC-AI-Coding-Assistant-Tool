@@ -7,5 +7,18 @@
   "gaps": {
     "version-changes": "本档 knowledge/version-changes/ 只有 1.20.x.md，且与 fabric/1.20.1/knowledge/version-changes/1.20.x.md 逐字节相同（md5 b6e8b46a3d2edd98321e878ca829f452），文内自称「适用于 Fabric 1.20.1」→ 对本档属过期转发件，非 1.21.3 证据。无 1.21.x.md；fabric/1.21.1 的同名文件内容不同（md5 f298626b89d968277feb63c5cf28e353），两侧不同源，禁止互相背书。",
     "fabric-docs": "上游 fabric-docs versions/ 无本版 develop/* 快照；data/fabric_1.21.3/fabric-docs/1.21.3/index-l0.json 为空数组，正文实际来自 data/fabric_1.21.3/fabric-wiki/1.21.3/processed/。禁止从邻版复制补索引"
+  },
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "8.10",
+    "buildVerified": true,
+    "provenance": {
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-09-16 用户裁定改走「升 Gradle ≥8.10」：本档 wrapper 8.6 → 8.10（三件套换 8.10 官方产物、properties 改 gradle-8.10-bin.zip），loom 保持 1.8.13。零改动副本（cp fabric/1.21.3/scaffold → D:/mc-skill-temp/_v1213b810b）gradlew build --no-daemon → BUILD SUCCESSFUL in 1m 54s（rc=0）；JDK 21（G:/graalvm-jdk-21_windows-x64_bin/graalvm-jdk-21.0.12+7.1）+ Gradle 8.10 wrapper + fabric-loom 1.8.13 + yarn 1.21.3+build.2 + loader 0.16.9 + fabric-api 0.110.0+1.21.3；任务链 :compileJava → :processResources → :jar → :remapJar → :build 全过；产物 build/libs 3 件：examplemod-1.0.0.jar=5813 examplemod-1.0.0-sources.jar=5418 examplemod-1.0.0-javadoc.jar=108545；日志 D:/mc-skill-temp/_v1213b810b_out.log（另：首跑 6m44s BUILD FAILED，失败点=:processResources 的 Missing property (mod_name)，已修，见下）。为什么必须升：fabric-api 0.110.0+1.21.3 的 MANIFEST.MF 硬声明 Fabric-Loom-Version: 1.8.11 ⇒ loom <1.8.11 在 setup Minecraft 阶段被拒（实测 1.6.12：\"Mod was built with a newer version of Loom (1.8.11), you are using Loom (1.6.12)\"，逻辑在 ArtifactMetadata）；loom ≥1.8.11 要求 Gradle ≥8.10（GMM 实测 1.8.1/1.8.6/1.8.11 均 api-version=8.10；1.8.0 无 jar）。跑通前修掉 1 处真机才能暴露的模板缺陷：fabric.mod.json 用了 ${mod_name}/${mod_description}/${mod_authors}/${mod_license} 而 processResources.expand 只传 6 键 ⇒ 照同平台成功基线 fabric/1.21.1 修（authors→[\"ExampleAuthor\"]、license→\"MIT\" 硬编码；expand 补 mod_name/mod_description）。三件套出处：本档 gradle-wrapper.jar sha256=2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046（43583B）== wrapper-jars.json 的 8.10 钉值；boot 实测 rc=0 / banner=Gradle 8.10（wrapper-jars.json boot.rows 的 fabric/1.21.3 行）。"
+    },
+    "gaps": [
+      "覆盖边界：buildVerified 只覆盖 :build 任务链（含 :compileJava / :processResources / :remapJar）；未跑 runClient / runServer / runData，也没有进游戏行为验证（本仓不代人跑游戏）",
+      "javadoc 在构建中报 13 条中文注释相关提示（默认码集下的「没有注释 / 使用不提供注释的默认构造器」），本档已设 javadoc encoding=UTF-8 仍出现；不影响 :build 成功，未清"
+    ]
   }
 }

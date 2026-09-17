@@ -28893,5 +28893,50 @@
         "versionNumber": "3.0.0-beta.2+26.1"
       }
     ]
+  },
+  {
+    "slug": "libgui",
+    "entries": [
+      {
+        "gameVersion": "26.3",
+        "loader": "fabric",
+        "modId": "libgui",
+        "fileName": "LibGui-18.0.1+26.3-rc-2.jar",
+        "url": "https://github.com/CottonMC/LibGui/releases/download/18.0.1/LibGui-18.0.1%2B26.3-rc-2.jar",
+        "sha512": "68d5233c960d7aacf34dd4803b040673b6f699bcebe885d044281c9fc8ecafb28770e065529bf485484e71c59f3d965b9825ac53cb20495d869960ac518767d6",
+        "versionType": "release",
+        "versionNumber": "18.0.1+26.3-rc-2"
+      }
+    ]
+  },
+  {
+    "slug": "server-translations",
+    "entries": [
+      {
+        "gameVersion": "1.21.5",
+        "loader": "fabric",
+        "modId": "server_translations_api",
+        "fileName": "server-translations-api-2.5.1+1.21.5.jar",
+        "url": "https://maven.nucleoid.xyz/xyz/nucleoid/server-translations-api/2.5.1+1.21.5/server-translations-api-2.5.1+1.21.5.jar",
+        "sha512": "ba36d49bb2cd6ca42dc9c016da82e07d5c4a804e127ccfe8de2f65a442d2236fdfc3f7ff4ba7c63dd54d8df9380f487107d7ebb9717f22b196660276ee4c7ec3",
+        "versionType": "release",
+        "versionNumber": "2.5.1+1.21.5"
+      }
+    ]
+  },
+  {
+    "slug": "spruceui-obsidianui",
+    "entries": [
+      {
+        "gameVersion": "1.21.5",
+        "loader": "fabric",
+        "modId": "obsidianui",
+        "fileName": "ObsidianUI-fabric-0.2.12+mc1.21.6.jar",
+        "url": "https://cdn.modrinth.com/data/E0L8mfJZ/versions/apnfIehn/ObsidianUI-fabric-0.2.12%2Bmc1.21.6.jar",
+        "sha512": "69385f99cdb59f03b78d785c390aa79795009a2fb65e3207ed1dba73a52a879a42f738b1ccc8595b6dc380d604541cc12606bea4a04ff7717e73dec4e8c0d402",
+        "versionType": "release",
+        "versionNumber": "0.2.12+mc1.21.6-fabric"
+      }
+    ]
   }
 ]

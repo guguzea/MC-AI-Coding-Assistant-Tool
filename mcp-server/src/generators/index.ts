@@ -1279,14 +1279,16 @@ export function generateConfig(
       `package com.example.${mod.value}.config;
 
 // ── Cloth Config 骨架（${loader} 默认输出：library 不传即此分支，YACL 需显式 opt-in）─────
-// Cloth 方法名与官方文档一致，问题只在未入库却按已核实输出 ⇒ 下面每个 Cloth 成员调用都带未核实标记。
-// 本仓库唯一的 Cloth 入库摘要 mcp-server/data/lib-api-summaries/cloth-config.json
-//   versions 只有 1.14 一档，包名是 me.shedaniel.forge.clothconfig2.*（Forge 工件），
-//   而本骨架吐的是 Fabric 包名 me.shedaniel.clothconfig2.* ⇒ 两者不是同一个工件，
-//   该摘要不能为本骨架任一成员背书（ConfigBuilder 在摘要里只有 getEntryBuilder()）。
-// 编译前置（强制）：先 ingest_loader_api(jarPath=<你自备的 cloth-config jar 绝对路径>, platform=${loader}, minecraftVersion=...)
-// 把 jar 抽成摘要写入 $MC_SKILL_CACHE overlay（禁写仓库 data/），再 query_loader_api 逐签名复核，
-// 才能把 TODO 换成真实调用。
+// 成员已核实（2026-09-16）：下面 12 个成员调用点的签名由 4 条 MC 版本线的 Fabric 构件 javap 直读、
+//   逐签名一致（1.16.5 线 4.17.101 / 1.20.1 线 11.1.106 / 1.21.1 线 15.0.127 / 1.21.11 线 21.11.150；
+//   包根 me.shedaniel.clothconfig2.*）。jar 内为 intermediary 名：class_437=Screen、class_2561=Component(yarn: Text)。
+//   ⚠️ 仓内摘要 data/lib-api-summaries/cloth-config.json（键 1.14）是 Forge 工件 me.shedaniel.forge.clothconfig2.*，
+//   与本骨架的 Fabric 包名不是同一工件，不作为背书来源 —— 本轮背书证据是 Fabric 构件本体（见下方逐行注释）。
+// 仍要你做的（编译前置）：
+//   1) 声明依赖 + 仓库：maven.shedaniel.me 缺了就是 Could not find（见 mc-cloth-config SKILL.md「仓库行」）；
+//   2) 映射口径：骨架用 Mojang 名（Component / client.gui.screens.Screen）；yarn 工程对齐为 Text / client.gui.screen.Screen；
+//   3) 要再核对签名可 ingest_loader_api(jarPath=<你自备的同版 cloth-config jar>, platform=${loader}, minecraftVersion=...)
+//      再 query_loader_api 逐签名复核（默认 dryRun，只写 $MC_SKILL_CACHE overlay，禁写仓库 data/）。
 // 选型只读 knowledge/libs/all-platforms/mc-config/SKILL.md —— 那份文件不含任何方法链，不能当签名依据。
 
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
@@ -1301,33 +1303,33 @@ public final class ${toPascalCase(mod.value)}Config {
     private ${toPascalCase(mod.value)}Config() {}
 
     public static Screen create(Screen parent) {
-        ConfigBuilder builder = ConfigBuilder.create() // TODO(未核实)
-            .setParentScreen(parent) // TODO(未核实)
-            .setTitle(Component.translatable("config.${mod.value}.title")); // TODO(未核实)
-        ConfigEntryBuilder entry = builder.entryBuilder(); // TODO(未核实)
-        ConfigCategory general = builder.getOrCreateCategory(Component.translatable("config.${mod.value}.general")); // TODO(未核实)
-        general.addEntry( // TODO(未核实)
-            entry.startBooleanToggle(Component.translatable("config.${mod.value}.enable_feature"), enableFeature) // TODO(未核实)
-                .setDefaultValue(true) // TODO(未核实)
-                .setSaveConsumer(v -> enableFeature = v) // TODO(未核实)
-                .build()); // TODO(未核实)
-        builder.setSavingRunnable(() -> { /* persist */ }); // TODO(未核实)
-        return builder.build(); // TODO(未核实)
+        ConfigBuilder builder = ConfigBuilder.create() // 已核实：static ConfigBuilder create()
+            .setParentScreen(parent) // 已核实：ConfigBuilder setParentScreen(class_437=Screen)
+            .setTitle(Component.translatable("config.${mod.value}.title")); // 已核实：ConfigBuilder setTitle(class_2561=Component/Text)
+        ConfigEntryBuilder entry = builder.entryBuilder(); // 已核实：ConfigEntryBuilder entryBuilder()（default）
+        ConfigCategory general = builder.getOrCreateCategory(Component.translatable("config.${mod.value}.general")); // 已核实：ConfigCategory getOrCreateCategory(class_2561)
+        general.addEntry( // 已核实：ConfigCategory addEntry(AbstractConfigListEntry)
+            entry.startBooleanToggle(Component.translatable("config.${mod.value}.enable_feature"), enableFeature) // 已核实：BooleanToggleBuilder startBooleanToggle(class_2561, boolean)
+                .setDefaultValue(true) // 已核实：BooleanToggleBuilder setDefaultValue(boolean)
+                .setSaveConsumer(v -> enableFeature = v) // 已核实：BooleanToggleBuilder setSaveConsumer(Consumer<Boolean>)
+                .build()); // 已核实：BooleanListEntry build()（extends AbstractConfigListEntry）
+        builder.setSavingRunnable(() -> { /* persist */ }); // 已核实：ConfigBuilder setSavingRunnable(Runnable)
+        return builder.build(); // 已核实：Screen build()（class_437）
     }
 }
 `,
       "query_loader_api",
       version.trim(),
     );
-    const todoCount = (body.match(/TODO\(未核实\)/g) ?? []).length;
+    const verifiedCount = (body.match(/已核实：/g) ?? []).length;
     return {
       code: body,
       warnings: [
-        "Cloth Config 最小骨架：请在 build.gradle / fabric.mod.json（或 quilt.mod.json）声明 cloth-config 依赖；未声明则无法编译。",
+        "Cloth Config 最小骨架：请在 build.gradle / fabric.mod.json（或 quilt.mod.json）声明 cloth-config 依赖并加仓库 maven.shedaniel.me；未声明则无法编译。",
         "配置屏仅客户端；不要在服务端加载 ConfigBuilder。",
-        `Cloth Config 不是官方 loader API；本骨架 ${todoCount} 处成员调用零入库证据（已核实计数 0）。先 ingest_loader_api 把你自备的 cloth-config jar 入库（默认 dryRun，只写 $MC_SKILL_CACHE overlay），再 query_loader_api 逐签名核对，才能去掉 TODO。`,
-        "入库摘要与本骨架不是同一个工件：data/lib-api-summaries/cloth-config.json 的 versions 只有 1.14 一档、包名 me.shedaniel.forge.clothconfig2.*（Forge），本骨架是 Fabric 包名 me.shedaniel.clothconfig2.* ⇒ 该摘要不为任一成员背书。",
-        "Cloth 方法名与官方文档一致，问题只在未入库却按已核实输出；knowledge/libs/all-platforms/mc-config/SKILL.md 只讲选型、不含方法链，不能当签名依据。",
+        `Cloth Config 不是官方 loader API；本骨架 ${verifiedCount} 处成员调用签名已核实（4 条版本线 Fabric 构件 javap 逐签名一致：4.17.101 / 11.1.106 / 15.0.127 / 21.11.150；intermediary 名映射见骨架头注）。要再核对可 ingest_loader_api + query_loader_api（默认 dryRun，只写 $MC_SKILL_CACHE overlay）。`,
+        "映射口径：骨架用 Mojang 名（Component / client.gui.screens.Screen）；yarn 工程请对齐为 Text / client.gui.screen.Screen。",
+        "仓内摘要 data/lib-api-summaries/cloth-config.json（键 1.14）是 Forge 工件、与 Fabric 包名不同工件，不作为背书来源；本轮背书 = Fabric 构件本体 javap。",
         ...(loader === "quilt" ? ["Quilt 不要把 Cloth Config 当成 QSL。"] : []),
       ],
     };

@@ -1,13 +1,14 @@
 plugins {
-    // 状态：本档仍未跑通 ⇒ 不得登记 buildVerified。
-    // 原钉 '1.8' 上游不存在（2026-09-14 实取 maven.fabricmc.net 的 net/fabricmc/fabric-loom/maven-metadata.xml，
-    // 873 个版本里 1.8 线只有 1.8.1…1.8.13 与 1.8-SNAPSHOT）⇒ 配置期必然失败，先改到同线已发布的最新具体版 1.8.13。
-    // 但改完仍失败，根因是两把版本钉互斥（实测 Gradle Module Metadata）：
-    //   loom 1.8.13 与 1.7.4 都声明 org.gradle.plugin.api-version = 8.10，
-    //   而本档 gradle/wrapper 钉 8.6 —— 且 8.6 被三处门禁钉值固定：
-    //   mcp-server/test-core.mjs 的 WRAPPER_JARS 表、mcp-server/data/wrapper-jars.json 的 jars / boot.usedBy。
-    // 收敛方式二选一，由维护者裁定：① 升本档 Gradle 到 ≥8.10（同步改 wrapper 三件套与 pack.meta 的 scaffold.gradle 及上述钉值表）；
-    // ② 把 loom 降到「声明 api-version 8.6」的那一版（须先按元数据核实，禁止默写）。
+    // 状态：2026-09-16 用户裁定改走「升 Gradle ≥8.10」——本档 wrapper 8.6 → 8.10（三件套换 8.10 官方产物、
+    //   properties 改 gradle-8.10-bin.zip），loom 保持 1.8.13；真机构建结果见 pack.meta.json 的 scaffold.provenance。
+    // 为什么必须升（降 loom 已实测不可行）：
+    //   ① fabric-api 0.110.0+1.21.3 的 MANIFEST.MF 硬声明 Fabric-Loom-Version: 1.8.11（本档唯一可用的 fapi 构建）
+    //      ⇒ loom <1.8.11 在 setup Minecraft 阶段被拒：实测 loom 1.6.12 →
+    //      "Mod was built with a newer version of Loom (1.8.11), you are using Loom (1.6.12)"（拒绝逻辑在 ArtifactMetadata）。
+    //   ② loom ≥1.8.11 要求 Gradle ≥8.10：GMM 实测 1.8.1 / 1.8.6 / 1.8.11 均声明 org.gradle.plugin.api-version=8.10
+    //      （1.8.0 无 jar 仅 404；1.7.4=8.8；1.6.12 不声明但被 ① 拒）。
+    //   ⇒ 8.10 与 loom 1.8.13 相容（api-version=8.10 正好满足）；钉值同步：test-core 的 WRAPPER_JARS 撤 "8.6" 条目、
+    //      wrapper-jars.json 撤 8.6 表项并把 fabric/1.21.3 记入 8.10.usedBy 与 boot.rows（boot 实测 rc=0，banner=8.10）。
     id 'fabric-loom' version '1.8.13'
     id 'maven-publish'
     id 'eclipse'
@@ -57,7 +58,9 @@ processResources {
             "yarn_mappings": project.yarn_mappings,
             "loader_version": project.loader_version,
             "mod_id": project.mod_id,
-            "maven_group": project.maven_group
+            "maven_group": project.maven_group,
+            "mod_name": project.mod_name,
+            "mod_description": project.mod_description
     }
 }
 
