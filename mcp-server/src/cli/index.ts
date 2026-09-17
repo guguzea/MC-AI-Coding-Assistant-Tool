@@ -87,7 +87,7 @@ function printHelp(): void {
 用法：${ENTRY} <group> <command> [args...]
       ${ENTRY} <group> --help            组内命令
       ${ENTRY} <group> <command> --help  命令帮助（含透传参数）
-      ${ENTRY} --help | --version
+      ${ENTRY} --help | --version（-h / -V / -v 同义）
 
 组与命令：`);
   for (const c of COMMANDS) console.log(`  ${(c.group + " " + c.name).padEnd(20)} ${c.summary}`);
@@ -160,7 +160,7 @@ export async function main(argv: string[]): Promise<number> {
     printHelp();
     return 0;
   }
-  if (a === "--version" || a === "-v") {
+  if (a === "--version" || a === "-V" || a === "-v") {
     const v = pkgVersion();
     if (v === null) {
       process.stderr.write("无法读取 package.json 的 version（--version 不可用）\n");

@@ -15,7 +15,7 @@ mc_skill_update
   allowDirty / stashDirty       # git 脏工作区选项
 ```
 
-CLI：`mc-skill update --action check|apply [--scope=…] [--channel=…] [--confirm] …`（旧位置参数 `check|apply` 仍兼容，stderr 有迁移提示）
+CLI：`node mcp-server/dist/cli.js mc_skill_update --action=check|apply [--scope=…] [--channel=…] [--confirm] …`（仓库根可运行形式；安装/链接 mcp-server 后 bin 名为 `mc-skill`。旧位置参数 `check|apply` 仍兼容，stderr 有迁移提示）
 
 真写门禁（与 `port_project` 相同）：
 

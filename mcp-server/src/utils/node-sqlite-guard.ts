@@ -10,59 +10,67 @@
  * process.exit 无法抢在它前面 —— 同构复现：入口写 `import "./guard.mjs"; import "./不存在.mjs";`
  * 时守卫体的输出一行都不会出现（link 报错先抛）。守卫真正覆盖的是 sqlite 经**动态** import
  * 或运行期再次 emit 的警告（见本文件末尾与 test-decompile.mjs 的 D-53 子进程用例）。
- * 要把链接期那一行也消掉，只有两条路：进程级 `--disable-warning=ExperimentalWarning`，
- * 或把 sqlite 边界改成动态 import —— 两者都改动用户可见签名，本波不做。
+ *
+ * 2026-09-17（审计 NP-5）已把 sqlite 边界本身改成运行期加载：src/utils/sqlite-runtime.ts 的
+ * loadNodeSqlite() 在 `createRequire("node:sqlite")` 之前调用本模块导出的
+ * assertSqliteRuntimeReady() ⇒ link 阶段不再触碰 node:sqlite，横幅在任何 sqlite 使用之前可达。
+ * 下面的顶层调用保留，作为「入口第一个 import」场景的双保险（幂等，只读 process.versions）。
  */
-const parts = process.versions.node.split(".").map(Number);
-const major = parts[0] ?? 0;
-const minor = parts[1] ?? 0;
+export function assertSqliteRuntimeReady(): void {
+  const parts = process.versions.node.split(".").map(Number);
+  const major = parts[0] ?? 0;
+  const minor = parts[1] ?? 0;
 
-if (major < 22 || (major === 22 && minor < 5)) {
-  // eslint-disable-next-line no-console
-  console.error(
-    [
-      "",
-      "==================================================================",
-      "  当前 Node.js " + process.versions.node + " 低于本项目要求（需要 >= 22.5）",
-      "  内置 node:sqlite 从 22.5 起可用；22.5–22.12 还需 --experimental-sqlite。",
-      "",
-      "  请升级到 Node 22.13+ / 24 LTS 后再启动 MCP/CLI。",
-      "  详见仓库 README「快速开始」与 AUTO_SETUP.md 前置条件。",
-      "==================================================================",
-      "",
-    ].join("\n"),
-  );
-  process.exit(1);
+  if (major < 22 || (major === 22 && minor < 5)) {
+    // eslint-disable-next-line no-console
+    console.error(
+      [
+        "",
+        "==================================================================",
+        "  当前 Node.js " + process.versions.node + " 低于本项目要求（需要 >= 22.5）",
+        "  内置 node:sqlite 从 22.5 起可用；22.5–22.12 还需 --experimental-sqlite。",
+        "",
+        "  请升级到 Node 22.13+ / 24 LTS 后再启动 MCP/CLI。",
+        "  详见仓库 README「快速开始」与 AUTO_SETUP.md 前置条件。",
+        "==================================================================",
+        "",
+      ].join("\n"),
+    );
+    process.exit(1);
+  }
+
+  const inSqliteFlagWindow =
+    (major === 22 && minor >= 5 && minor <= 12) || (major === 23 && minor <= 3);
+  const hasSqliteFlag =
+    process.execArgv.includes("--experimental-sqlite") ||
+    /(^|\s)--experimental-sqlite(\s|=|$)/.test(process.env.NODE_OPTIONS ?? "");
+
+  if (inSqliteFlagWindow && !hasSqliteFlag) {
+    // eslint-disable-next-line no-console
+    console.error(
+      [
+        "",
+        "==================================================================",
+        "  当前 Node.js " + process.versions.node + " 的 node:sqlite 需要 --experimental-sqlite 标志",
+        "  （22.13+ / 23.4+ 默认开启，无需手动添加；22.5–22.12 与 23.0–23.3 必须加标志）",
+        "",
+        "  两种解法（任选其一）：",
+        "  1. 升级 Node 到 22.13+ / 24 LTS（推荐）",
+        "  2. 启动时加标志，例如：",
+        "     node --experimental-sqlite dist/index.js",
+        "     或设置环境变量 NODE_OPTIONS=--experimental-sqlite 后再启动 MCP/CLI",
+        "",
+        "  详见仓库 README「快速开始」与 AUTO_SETUP.md 前置条件。",
+        "==================================================================",
+        "",
+      ].join("\n"),
+    );
+    process.exit(1);
+  }
 }
 
-const inSqliteFlagWindow =
-  (major === 22 && minor >= 5 && minor <= 12) || (major === 23 && minor <= 3);
-const hasSqliteFlag =
-  process.execArgv.includes("--experimental-sqlite") ||
-  /(^|\s)--experimental-sqlite(\s|=|$)/.test(process.env.NODE_OPTIONS ?? "");
-
-if (inSqliteFlagWindow && !hasSqliteFlag) {
-  // eslint-disable-next-line no-console
-  console.error(
-    [
-      "",
-      "==================================================================",
-      "  当前 Node.js " + process.versions.node + " 的 node:sqlite 需要 --experimental-sqlite 标志",
-      "  （22.13+ / 23.4+ 默认开启，无需手动添加；22.5–22.12 与 23.0–23.3 必须加标志）",
-      "",
-      "  两种解法（任选其一）：",
-      "  1. 升级 Node 到 22.13+ / 24 LTS（推荐）",
-      "  2. 启动时加标志，例如：",
-      "     node --experimental-sqlite dist/index.js",
-      "     或设置环境变量 NODE_OPTIONS=--experimental-sqlite 后再启动 MCP/CLI",
-      "",
-      "  详见仓库 README「快速开始」与 AUTO_SETUP.md 前置条件。",
-      "==================================================================",
-      "",
-    ].join("\n"),
-  );
-  process.exit(1);
-}
+// 入口第一个 import 时的自校验（幂等）；真取值前的校验由 sqlite-runtime.loadNodeSqlite() 兜。
+assertSqliteRuntimeReady();
 
 /**
  * 抑制**运行期**经 `process.emitWarning` 抵达的 node:sqlite ExperimentalWarning（D-53）。

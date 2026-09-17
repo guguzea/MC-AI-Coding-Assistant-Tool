@@ -41,11 +41,13 @@ import { fileURLToPath } from "url";
 // win32 上 Node fetch 对 raw.githubusercontent.com / api.github.com 必失败
 // （UNABLE_TO_VERIFY_LEAF_SIGNATURE）→ 取件一律走仓内 curl 优先漏斗。
 import { downloadWithFallback } from "../../scripts/_lib/fetch-with-ua.mjs";
+import { resolveDataRoot } from "./_lib/data-root.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // 从 mcp-server/scripts/ 向上 2 层到 MC_skill 根目录
 const MC_SKILL_ROOT = resolve(__dirname, "..", "..");
-const DATA_ROOT = join(MC_SKILL_ROOT, "data");
+// NP-6（2026-09-17）：数据根统一走 _lib/data-root.js（--data-root > MC_SKILL_DATA > <repo>/data）
+const DATA_ROOT = resolveDataRoot();
 const TEMPLATES_PATH = join(DATA_ROOT, "porting", "official-templates.json");
 
 // ── CLI 参数解析（支持空格 / 等号两种风格） ────────────────────────────────────

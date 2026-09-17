@@ -29,24 +29,30 @@ import { existsSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { wantWrite, emitRemove } from "../../scripts/_lib/write-guard.mjs";
+import { resolveDataRoot } from "./_lib/data-root.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..");
-/** --data-root=<dir>：沙盒/自定义数据根（默认仍是仓库 data/；仅影响本脚本的读写定位） */
-const dataRootArg = process.argv.find((a) => a.startsWith("--data-root="))?.slice("--data-root=".length);
-const DATA = dataRootArg ? resolve(dataRootArg) : join(ROOT, "data");
+/**
+ * 数据根（NP-6，2026-09-17）：`--data-root=<dir>` > `MC_SKILL_DATA` > 仓库 `data/`，
+ * 与 6 个抓取/处理子脚本用**同一个解析器**（scripts/_lib/data-root.js）。
+ * 此前只有删除段享受 --data-root，抓取段不透传 ⇒ `--write` 下抓取仍写默认 data/（半截沙盒）。
+ */
+const DATA = resolveDataRoot();
 const skipFetch = process.argv.includes("--skip-fetch");
 
 function run(cmd, args) {
-  console.log(`\n> node ${args.join(" ")}`);
-  const r = spawnSync(cmd, args, {
+  // NP-6：抓取段与删除段共用同一数据根；两条通道（argv + env）都给，子脚本任一命中即可。
+  const full = [...args, `--data-root=${DATA}`];
+  console.log(`\n> node ${full.join(" ")}`);
+  const r = spawnSync(cmd, full, {
     cwd: join(ROOT, "mcp-server"),
     stdio: "inherit",
     shell: false,
-    env: process.env,
+    env: { ...process.env, MC_SKILL_DATA: DATA },
   });
   if (r.status !== 0) {
-    throw new Error(`Command failed (${r.status}): node ${args.join(" ")}`);
+    throw new Error(`Command failed (${r.status}): node ${full.join(" ")}`);
   }
 }
 

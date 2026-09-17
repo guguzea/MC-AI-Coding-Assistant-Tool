@@ -37,7 +37,7 @@ export const LEGAL_OUTPUT_FORMATS = new Set(["json"]);
 /**
  * 与全局 flag 同名的工具字段 —— 在该工具上这个名字归字段所有，全局剥离让位。
  * 这是一份显式声明（解析阶段还没有 schema 可用），test-cli-parse 的枚举门断言它
- * 等于 80 个 schema 字段名与 GLOBAL_FLAG_KEYS 的实际交集；新增同名字段必须同时改这里。
+ * 等于 81 个 schema 字段名与 GLOBAL_FLAG_KEYS 的实际交集；新增同名字段必须同时改这里。
  */
 export const FIELD_OWNED_GLOBALS: Record<string, string[]> = {
   validate_bp_json: ["json"],
@@ -140,6 +140,12 @@ export function parseFlags(argv: string[], fieldOwned?: Set<string>): {
     }
     if (a === "-h") {
       appendFlag(flags, "help", true);
+      continue;
+    }
+    // 边缘项（2026-09-17 审计）：-V / -v 此前落 suspectFlags（报「疑似漏写一个连字符」exit 2），
+    // 与 McSkill 仓库线 mc-skill-scripts 的 -v、以及惯例的 -V=version 不一致。
+    if (a === "-V" || a === "-v") {
+      appendFlag(flags, "version", true);
       continue;
     }
     if (a.startsWith("--")) {

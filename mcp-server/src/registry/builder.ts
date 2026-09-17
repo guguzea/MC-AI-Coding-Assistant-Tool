@@ -3,7 +3,8 @@
  */
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
-import { DatabaseSync } from "node:sqlite";
+import type { DatabaseSync } from "node:sqlite";
+import { openDatabaseSync } from "../utils/sqlite-runtime.js";
 import { resolveDataDir } from "../utils/path.js";
 import { parseJsonUtf8 } from "../utils/json-utf8.js";
 
@@ -57,7 +58,7 @@ export function buildRegistryIndex(
   const sqlitePath = options?.sqlitePath ?? vanillaRegistrySqlitePath(version);
   if (existsSync(sqlitePath) && !options?.force) {
     try {
-      const db = new DatabaseSync(sqlitePath, { readOnly: true });
+      const db = openDatabaseSync(sqlitePath, { readOnly: true });
       try {
         const metaRow = db.prepare("SELECT value FROM meta WHERE key = 'mcVersion'").get() as { value?: string } | undefined;
         if (metaRow?.value && metaRow.value !== version) {
@@ -88,7 +89,7 @@ export function buildRegistryIndex(
     }
   }
 
-  const db = new DatabaseSync(sqlitePath);
+  const db = openDatabaseSync(sqlitePath);
   db.exec("DROP TABLE IF EXISTS entries");
   db.exec("DROP TABLE IF EXISTS meta");
   db.exec(`

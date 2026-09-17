@@ -12,6 +12,8 @@
 - **CLI 双入口提级（2026-09-17）**：工具线 `mc-skill`（= `dist/cli.js`，dispatch 全部工具）+ 仓库线 `mc-skill-scripts`（`bin/mc-skill-scripts.mjs`；`lib` / `corpus` / `cloth` / `gate` 四组共 9 个子命令，薄壳转发既有脚本）。
 - **CLI 审计修复（1 高 5 中 4 低）**：`provision-26x-docs.mjs` 收口 write-guard（默认干跑、`--write` 才删、`--data-root` 沙盒）；`--timeout` 超时信封后强制退出；转发失败打印诊断、EPIPE 静默退出、入口崩溃输出 JSON 信封；`fetch-embedding-model.mjs` 下载加超时与重试提示；`gate list` 目录错非 0、帮助用真实入口名、版本读失败不静默。
 - **CLI 测试双档**：`assert-cli-quick.mjs`（快档，进默认门链）与 `assert-cli-full.mjs`（81 工具全量档，**不默认跑**；含逐条豁免原因与汇总表）。
+- **CLI 审计第二轮修复（NP-1~NP-13，2026-09-17）**：`update --action=apply` 的 npm 调用改走 `cmd.exe /d /s /c`（Node 对 `.bat/.cmd` 的无 shell 加固实测 `EINVAL`，此前 Windows 构建步恒败）并带步骤归因；EPIPE 不再洗白已置的非零退出码；sqlite 边界改**运行期加载**（22.5–22.12 无 `--experimental-sqlite` 时入口横幅真正可达）；`mdk` 解压失败清残树 + 成功落 `.mdk-unpack-ok` 哨兵 + `allowCacheFallback` 强判据；`update --action=apply` 新增 `update-apply` 跨进程锁（`utils/dir-lock.ts`，与反编译缓存锁同源）；`--timeout`/崩溃强退前同步收掉在跑的 java 子进程；`provision-26x-docs.mjs` 的 `--data-root` 覆盖到抓取段（6 个子脚本同一解析器）；`fetch-bedrock-docs.js` 的 fetch 加 30s 超时；`-V`/`-v` 短别名与 `-h/-V/camel` 帮助文案；`argv[1]` 缺失时入口明示 + 非零退出。
+- **勘误（计数，不回改历史行）**：上方「CLI 审计修复（1 高 5 中 4 低）」的枚举与计数不对应（枚举 9 条；标题按 1 高 + 5 中 + 4 低 = 10 条，且未含同批的 S1/S2）。该批真实清单以 `temp/ralph-cli-audit-PLAN.md` 为准。另：根 `README.md` 的「MCP 服务名（80 个工具）」当时并未改净，本轮修为 81。
 
 ## Plan 1 — validate_project / diagnose_gradle 返回值
 

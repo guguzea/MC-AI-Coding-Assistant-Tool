@@ -8,7 +8,8 @@
  */
 import { existsSync, statSync } from "fs";
 import { join } from "path";
-import { DatabaseSync } from "node:sqlite";
+import type { DatabaseSync } from "node:sqlite";
+import { openDatabaseSync } from "../../utils/sqlite-runtime.js";
 import { cosine, EMBEDDING_DIM, getEmbedder } from "./embeddings.js";
 import { buildExpandedFtsExpr, expandZhQuery } from "../search-utils.js";
 
@@ -191,7 +192,7 @@ export function openSemanticDb(dbPath: string): DatabaseSync | null {
   let db: DatabaseSync | null = null;
   if (st) {
     try {
-      const candidate = new DatabaseSync(dbPath, { readOnly: true });
+      const candidate = openDatabaseSync(dbPath, { readOnly: true });
       const row = candidate
         .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='chunks_fts'")
         .get() as { name: string } | undefined;

@@ -23,6 +23,8 @@ import { dirname, join, relative, sep } from "path";
 import { tmpdir } from "os";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
 import { resolveDataDir } from "../utils/path.js";
+import { DirLockBusyError } from "../utils/dir-lock.js";
+import { acquireUpdateApplyLock } from "./apply-lock.js";
 import {
   assertCreatableDir,
   assertWritablePath,
@@ -341,6 +343,8 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
   const zipPath = opts.localZipPath ?? join(tmpBase, "mc-skill-data.zip");
   const sumsPath = opts.localSumsPath ?? (opts.sums ? join(tmpBase, "SHA256SUMS.txt") : undefined);
   const staging = join(tmpBase, "staging");
+  // NP-4（2026-09-17）：update-apply 跨进程锁（覆盖解压 → next 组装 → 换入）；dryRun 在下方提前返回，不取锁。
+  let releaseLock: (() => void) | undefined;
 
   try {
     if (!opts.localZipPath) {
@@ -425,6 +429,24 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
       };
     }
 
+    // 写盘阶段开始（解压 → 组装 → 换入）：持锁；同进程重入由 acquireUpdateApplyLock 兜住。
+    try {
+      releaseLock = await acquireUpdateApplyLock(600_000);
+    } catch (err) {
+      const busy = err instanceof DirLockBusyError;
+      return {
+        ok: false,
+        steps,
+        filesToOverwrite,
+        diskSpace,
+        action: actionable(
+          busy ? "UPDATE_BUSY" : "DATA_APPLY_FAILED",
+          busy ? `另一个进程正在执行 update：${(err as Error).message}` : (err as Error).message,
+          busy ? ["等另一个 apply 结束后重试"] : ["检查 update-apply 锁目录可写"],
+          ["mc_skill_update"],
+        ),
+      };
+    }
     const ex = extractZip(zipPath, staging);
     if (!ex.ok) return { ok: false, steps, filesToOverwrite, diskSpace, action: ex.action };
     const symlink = findSymlinkInTree(staging);
@@ -506,6 +528,7 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
       };
     }
   } finally {
+    releaseLock?.();
     cleanupPath(tmpBase);
   }
 }

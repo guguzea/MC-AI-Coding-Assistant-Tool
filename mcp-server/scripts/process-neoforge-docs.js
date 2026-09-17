@@ -13,10 +13,12 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 
 import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
 import { countCodeFences } from "./_lib/pipeline-helpers.mjs";
+import { resolveDataRoot } from "./_lib/data-root.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = join(__dirname, "..", "..", "data");
-const MANIFEST_PATH = join(__dirname, "..", "..", "data", "neoforge-versions-manifest.json");
+// NP-6（2026-09-17）：数据根统一走 _lib/data-root.js（--data-root > MC_SKILL_DATA > <repo>/data）
+const DATA_DIR = resolveDataRoot();
+const MANIFEST_PATH = join(DATA_DIR, "neoforge-versions-manifest.json");
 
 // ── CLI ─────────────────────────────────────────────────────────────────────
 

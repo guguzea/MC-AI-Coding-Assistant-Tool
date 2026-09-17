@@ -206,7 +206,7 @@ kebab-case 会转到 camelCase（`--dry-run`→`dryRun`、`--highlight-key`→`h
 
 失败信封另有 `nearFlags` / `knownFlags`（仅未知 flag 且能给出建议时出现）。
 
-`--timeout <ms>` 到点后 CLI **放弃等待**而不是截断进程：信封先落（`success:false` + `errorKind:"timeout"`，文案明写「这是超时，不是工具失败」），`disposeApiData()` / `closeAllYarnDbs()` 照旧跑完，因此退出码仍是 1 而非新造第三种码，进程也仍要等被放弃的那次 IO 自己收尾后才结束。
+`--timeout <ms>` 到点后 CLI **放弃等待**而不是截断进程：信封先落（`success:false` + `errorKind:"timeout"`，文案明写「这是超时，不是工具失败」），`disposeApiData()` / `closeAllYarnDbs()` 照旧跑完，退出码仍是 1 而非新造第三种码；信封之后走**空写 flush 屏障 + 强制退出**（`process.exit(1)`，审计 M1），**不再等被放弃的那次 IO 自己收尾** —— 否则悬挂句柄会把进程挂住；强退前还会同步收掉在跑的 java 子进程（审计 NP-7：`process.exit` 会销毁 runJava 自己的 kill timer）。
 
 `--fail-on-error` 再把 `found===false` 以及 `errors[]` 非空升为 1。`--fail-on-error=false` **关闭**（旧：写出即开启）。
 

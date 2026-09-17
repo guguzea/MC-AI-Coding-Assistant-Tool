@@ -170,7 +170,12 @@ async function fetchText(url) {
   let last;
   for (let i = 0; i < 4; i++) {
     try {
-      const res = await fetch(url, { redirect: "follow", headers: { "user-agent": "MC-skill-docs-fetch" } });
+      // NP-13（2026-09-17）：fetch 加超时，避免网络挂死时每次重试都无限等
+      const res = await fetch(url, {
+        redirect: "follow",
+        headers: { "user-agent": "MC-skill-docs-fetch" },
+        signal: AbortSignal.timeout(30_000),
+      });
       if (res.ok) return await res.text();
       last = new Error(`${res.status} ${url}`);
     } catch (e) {

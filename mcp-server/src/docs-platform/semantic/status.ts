@@ -3,8 +3,9 @@
  */
 import { existsSync, readFileSync, readdirSync, statSync } from "fs";
 import { join } from "path";
-import { DatabaseSync } from "node:sqlite";
+import type { DatabaseSync } from "node:sqlite";
 import type { StatementSync } from "node:sqlite";
+import { openDatabaseSync } from "../../utils/sqlite-runtime.js";
 import { EMBEDDING_MODEL } from "./embeddings.js";
 import { semanticDbPath } from "./search.js";
 import { isSemanticIndexStale } from "./fingerprint.js";
@@ -93,7 +94,7 @@ function getCachedReadDb(dbPath: string): DatabaseSync | null {
   }
   let db: DatabaseSync;
   try {
-    db = new DatabaseSync(dbPath, { readOnly: true });
+    db = openDatabaseSync(dbPath, { readOnly: true });
   } catch {
     return null;
   }

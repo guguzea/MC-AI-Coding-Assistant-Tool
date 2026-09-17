@@ -9,6 +9,8 @@ import { join } from "path";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
 import { resolveRepoRoot } from "../utils/path.js";
 import { assertWritablePath, getAllowRootReal, nativeReal, isInsideReal } from "../utils/project-sandbox.js";
+import { DirLockBusyError } from "../utils/dir-lock.js";
+import { acquireUpdateApplyLock } from "./apply-lock.js";
 import { defaultUpdateRepo } from "./github.js";
 
 /**
@@ -39,6 +41,62 @@ async function execCapture(file: string, args: string[], cwd: string, timeoutMs:
   pending.child?.stdin?.end();
   const { stdout } = await pending;
   return stdout;
+}
+
+/**
+ * npm 调用的唯一封装（审计 NP-1，2026-09-17）。
+ *
+ * 背景：Node 22 对 `.bat`/`.cmd` 做了无 shell 加固，`execFile("npm.cmd", …)` 直接抛
+ * `EINVAL`（本机探针实锤）⇒ `update --action=apply` 的构建步在 Windows 上恒败。
+ * 收敛为：
+ * - win32：`%ComSpec% /d /s /c npm <子命令>`。命令串只由下面的**白名单字面量**拼出，
+ *   不含任何用户输入；cwd 走 execFile 的 options.cwd（不进命令串）⇒ 中文/空格路径安全。
+ * - 其它平台：直接 `execFile("npm", args, …)`，行为与旧版一致。
+ *
+ * 导出供门/探针直接调用（自带白名单校验，无其它副作用）。
+ */
+const NPM_ALLOWED_SUBCOMMANDS = new Set(["ci", "run build", "--version"]);
+
+export async function runNpm(args: string[], cwd: string, timeoutMs: number): Promise<string> {
+  const sub = args.join(" ");
+  if (!NPM_ALLOWED_SUBCOMMANDS.has(sub)) {
+    throw new Error(`npm 子命令不在白名单内：npm ${sub}（仅允许 ${[...NPM_ALLOWED_SUBCOMMANDS].join(" / ")}）`);
+  }
+  if (process.platform === "win32") {
+    const comspec = process.env.ComSpec ?? process.env.COMSPEC ?? "cmd.exe";
+    return execCapture(comspec, ["/d", "/s", "/c", `npm ${sub}`], cwd, timeoutMs);
+  }
+  return execCapture("npm", args, cwd, timeoutMs);
+}
+
+/** 把子进程失败整理成「步骤归因」串（步骤 / 命令 / cwd / 退出码 / 输出尾部）。 */
+function describeNpmFailure(
+  step: string,
+  cwd: string,
+  err: unknown,
+): { code?: string; message: string } {
+  const e = err as {
+    code?: string;
+    status?: number | null;
+    signal?: NodeJS.Signals | null;
+    stderr?: string;
+    stdout?: string;
+    message?: string;
+    killed?: boolean;
+  };
+  const parts: string[] = [`步骤=${step}`, `命令=npm ${step}`, `cwd=${cwd}`];
+  if (typeof e.status === "number") parts.push(`退出码=${e.status}`);
+  if (e.signal) parts.push(`信号=${e.signal}`);
+  if (e.killed) parts.push("已被超时终止");
+  if (e.code) parts.push(`错误码=${e.code}`);
+  const tail = (e.stderr || e.stdout || "")
+    .trim()
+    .split(/\r?\n/)
+    .slice(-3)
+    .join(" | ");
+  if (tail) parts.push(`输出尾部=${tail}`);
+  else if (e.message) parts.push(`消息=${e.message}`);
+  return { code: e.code, message: parts.join("；") };
 }
 
 export function readLocalToolingVersion(repoRoot?: string): string {
@@ -268,6 +326,26 @@ export async function applyToolingUpdate(opts: ToolingApplyOpts): Promise<Toolin
     : (args: string[]) => git(repoRoot, args);
   let stashed = false;
   let merged = false;
+  // NP-4（2026-09-17）：真写路径取 update-apply 跨进程锁（覆盖 git 合并 + npm 构建），
+  // 防两个进程并发 apply 互踩工作区；同进程重入由 acquireUpdateApplyLock 兜住（data 段随后各自 include）。
+  let releaseLock: (() => void) | undefined;
+  try {
+    releaseLock = await acquireUpdateApplyLock(600_000);
+  } catch (err) {
+    const busy = err instanceof DirLockBusyError;
+    return {
+      ok: false,
+      steps,
+      remote,
+      restartRequired: false,
+      action: actionable(
+        busy ? "UPDATE_BUSY" : "TOOLING_UPDATE_FAILED",
+        busy ? `另一个进程正在执行 update：${(err as Error).message}` : (err as Error).message,
+        busy ? ["等另一个 apply 结束后重试"] : ["查看 git/npm 输出"],
+        ["mc_skill_update"],
+      ),
+    };
+  }
   try {
     await run(["fetch", "--tags", remote]);
     if (dirty && opts.allowDirty && opts.stashDirty) {
@@ -315,24 +393,38 @@ export async function applyToolingUpdate(opts: ToolingApplyOpts): Promise<Toolin
 
     if (!opts.skipBuild) {
       steps.push(`cd mcp-server && npm ci && npm run build`);
-      try {
-        const npm = process.platform === "win32" ? "npm.cmd" : "npm";
-        const npmCwd = join(repoRoot, "mcp-server");
-        await execCapture(npm, ["ci"], npmCwd, 600_000);
-        await execCapture(npm, ["run", "build"], npmCwd, 600_000);
-      } catch (err) {
-        return {
-          ok: false,
-          steps,
-          remote,
-          restartRequired: true,
-          action: actionable(
-            "TOOLING_MERGED_BUILD_FAILED",
-            `merge 已完成但 npm build 失败: ${(err as Error).message}`,
-            ["源码已在新 tag，dist 可能仍旧；重载 MCP 前先修好 build", "手动 npm ci && npm run build"],
-            ["mc_skill_update"],
-          ),
-        };
+      // NP-1（2026-09-17）：逐步执行 + 步骤归因；EINVAL（Node 对 .bat/.cmd 的无 shell 加固）
+      // 单独成 actionable，不再笼统报「npm build 失败」。
+      const npmCwd = join(repoRoot, "mcp-server");
+      for (const step of ["ci", "run build"] as const) {
+        try {
+          await runNpm([...step.split(" ")], npmCwd, 600_000);
+        } catch (err) {
+          const detail = describeNpmFailure(step, npmCwd, err);
+          const spawnUnsupported = detail.code === "EINVAL";
+          return {
+            ok: false,
+            steps,
+            remote,
+            restartRequired: true,
+            action: actionable(
+              spawnUnsupported ? "TOOLING_NPM_SPAWN_UNSUPPORTED" : "TOOLING_MERGED_BUILD_FAILED",
+              spawnUnsupported
+                ? `merge 已完成但 npm 无法启动（该步骤被本机 Node 拒绝，EINVAL）：${detail.message}`
+                : `merge 已完成但 npm ${step} 失败：${detail.message}`,
+              spawnUnsupported
+                ? [
+                    "本机 Node 对 .bat/.cmd 的加固拒绝无 shell 生成；本版已改走 cmd.exe /d /s /c 调用",
+                    "仍失败时手动在 mcp-server 目录执行 npm ci && npm run build",
+                  ]
+                : [
+                    "源码已在新 tag，dist 可能仍旧；重载 MCP 前先修好 build",
+                    "手动 npm ci && npm run build",
+                  ],
+              ["mc_skill_update"],
+            ),
+          };
+        }
       }
     }
 
@@ -350,5 +442,7 @@ export async function applyToolingUpdate(opts: ToolingApplyOpts): Promise<Toolin
         ["mc_skill_update"],
       ),
     };
+  } finally {
+    releaseLock?.();
   }
 }

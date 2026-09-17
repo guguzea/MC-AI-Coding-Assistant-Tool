@@ -8,7 +8,8 @@
  */
 
 import { existsSync } from "fs";
-import { DatabaseSync } from "node:sqlite";
+import type { DatabaseSync } from "node:sqlite";
+import { openDatabaseSync } from "../utils/sqlite-runtime.js";
 import { resolveDataDir } from "../utils/path.js";
 import { isSafeVersionSegment } from "../utils/minecraft-version.js";
 
@@ -67,7 +68,7 @@ function dbCacheKey(dbPath: string): string {
 }
 
 function withReadOnlyDb<T>(dbPath: string, fn: (db: MappingDb) => T): T {
-  const db = new DatabaseSync(dbPath, { readOnly: true });
+  const db = openDatabaseSync(dbPath, { readOnly: true });
   try {
     return fn(db);
   } finally {
@@ -88,7 +89,7 @@ function openDbCached(dbPath: string): MappingDb | null {
     return cached;
   }
   try {
-    const db = new DatabaseSync(dbPath, { readOnly: true });
+    const db = openDatabaseSync(dbPath, { readOnly: true });
     _dbs.set(key, db);
     while (_dbs.size > MAPPING_DB_CAP) {
       const oldest = _dbs.keys().next().value;

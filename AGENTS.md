@@ -351,7 +351,7 @@ Decision: 选择注册方式
 - **正文里的 `<<< @/…` 与 `@[code …]` 是转引标记，不是可照抄的代码**：`get_doc_full` / `get_fabric_doc_full` 返回的正文已由 reader（`docs-platform/fabric/transclude.ts`）展开成围栏代码块，块尾带 `<!-- source: … -->`（实测 26.1.2 `develop_networking`：21 处展开、0 处裸标记）。若返回正文里**仍有裸标记行** ⇒ 该页取件目标未落盘，属缺陷：不要把标记贴给用户，也不要凭训练记忆补正文，改口 `query_loader_api` / 用户自备 jar 核实。
 - **「本档 docs 零命中」≠「该 API 不存在」**：官方文档的示例常写在 `<<< @/reference/...` include 内，`reference/` 是另一棵目录；检索按页面正文计。同理 `query_api` 的 `found:false` 只说明索引未覆盖。
 - **口径以 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §数据链口径为准**：标签读法（`[Label]` 是标签页标题、非数字花括号是选项、区段名先逐字再 `-`↔`_`）、计数器分母（`sites`/`expanded` 只算 `@[code`，`<<<` 走 `angleSites`）、台账与豁免规则、`packages` 归属与「不可当 import 依据」。
-- **验证纪律见 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §验证纪律**：改了 `mcp-server/scripts/**` 或 `scripts/**` 后，收口**必须**跑第 8 步（`cd mcp-server && node test-scripts.mjs`）——`npm test` 里抽跑几道门**不能**代替它；harness 里的硬钉锚点/计数只许「先对齐生产侧、再改 harness」，禁止靠删断言变绿；`npm test` 不得与语料抓取并发（4000 ms lag 门与磁盘负载耦合，会假红）。
+- **验证纪律见 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §验证纪律**：改了 `mcp-server/scripts/**` 或 `scripts/**` 后，收口**必须**跑第 8 步（`cd mcp-server && node test-scripts.mjs`）——`npm test` 里抽跑几道门**不能**代替它；harness 里的硬钉锚点/计数只许「先对齐生产侧、再改 harness」，禁止靠删断言变绿；`npm test` 不得与语料抓取并发（4000 ms lag 门与磁盘负载耦合，会假红）。CLI 侧另有两档独立门：`npm run test:cli:quick`（`scripts/assert-cli-quick.mjs`，进默认门链）与 `npm run test:cli:full`（`scripts/assert-cli-full.mjs`，81 工具全量档，不默认跑；改动 CLI 入口/退出码/信封后应补跑）。
 
 ### 工具不可用排查（clone 后必读）
 

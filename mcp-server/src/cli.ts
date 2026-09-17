@@ -12,6 +12,7 @@
  */
 import "./utils/node-sqlite-guard.js"; // 必须保持第一个 import：22.5–22.12 未带 --experimental-sqlite 时先给出指引再退出
 import { installStdioErrorGuard, installCrashGuards } from "./utils/stdio-guard.js";
+import { killLiveJavaChildren } from "./decompile/java/java-process.js";
 import { existsSync, readFileSync, realpathSync, statSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
@@ -122,6 +123,7 @@ function printGlobalHelp(json: boolean, compact: boolean): void {
       ...USAGE_LINES.map((l) => `  ${l}`),
       "",
       "全局 flag: --help  --version  --json（不改变工具输出，仅兼容保留）  --output-format json  --compact  --fail-on-error  --quiet  --timeout <ms>  --project <dir>  --file field=path  --raw <field>  --stdin-json",
+      "短别名/等价写法: -h = --help；-V / -v = --version；全局 flag 的 kebab 与 camelCase 互换（--failOnError / --outputFormat / --stdinJson）",
       "布尔 flag 只接受 true/false/1/0/yes/no/on/off；裸 --flag 为 true；--flag=junk 拒绝（exit 2）",
       "字段优先: 工具 schema 有同名 flag 时归工具（如 validate_bp_json --json '<全文>'）；--output-format 当前只认 json",
       "文件输入: --crashReport @./latest.txt   --crashReport=-   --file crashReport=./latest.txt   @@ 为字面 @   --raw <field> 关闭展开   文件与 stdin 同受 8MB 上限",
@@ -151,8 +153,8 @@ async function printNamedToolHelp(userCmd: string, json: boolean, compact: boole
   const entry = toolHandlers.get(mapped) ?? toolHandlers.get(userCmd);
   const listed = reg.listAllToolSchemas().find((t) => t.name === mapped || t.name === userCmd);
   if (!entry && !listed) {
+    process.exitCode = 2; // NP-2：先置退出码再写信封（信封写管道时撞 EPIPE 不得洗白成 0）
     printJson({ success: false, tool: userCmd, error: `未知命令：${userCmd}`, errorKind: "usage" }, compact);
-    process.exitCode = 2;
     return;
   }
   const schema = (entry?.inputSchema ?? listed?.inputSchema) as z.ZodTypeAny;
@@ -612,6 +614,7 @@ async function runListTools(rest: RawFlags, positional: string[], compact: boole
       (t) => t.name.toLowerCase().includes(q) || oneLine(t.description, 100000).toLowerCase().includes(q),
     );
     if (list.length === 0) {
+      process.exitCode = 1; // NP-2：先置码再写信封
       printJson(
         {
           success: false,
@@ -623,7 +626,6 @@ async function runListTools(rest: RawFlags, positional: string[], compact: boole
         },
         compact,
       );
-      process.exitCode = 1;
       return;
     }
   }
@@ -745,8 +747,8 @@ async function main(): Promise<void> {
     rest = extracted.rest;
   } catch (err) {
     if (err instanceof InvalidBooleanFlagError) {
+      process.exitCode = 2; // NP-2：先置码再写信封
       printJson({ success: false, tool: positional[0] ?? "cli", error: err.message, errorKind: "usage" }, false);
-      process.exitCode = 2;
       return;
     }
     throw err;
@@ -754,14 +756,14 @@ async function main(): Promise<void> {
 
   const formatError = outputFormatError(globals.outputFormat);
   if (formatError) {
+    process.exitCode = 2; // NP-2：先置码再写信封
     printJson({ success: false, tool: positional[0] ?? "cli", error: formatError, errorKind: "usage" }, false);
-    process.exitCode = 2;
     return;
   }
   const budget = parseTimeoutMs(globals.timeout);
   if (budget.error) {
+    process.exitCode = 2; // NP-2：先置码再写信封
     printJson({ success: false, tool: positional[0] ?? "cli", error: budget.error, errorKind: "usage" }, false);
-    process.exitCode = 2;
     return;
   }
   const machineHelp = globals.json || globals.outputFormat === "json";
@@ -776,8 +778,8 @@ async function main(): Promise<void> {
       printGlobalHelp(machineHelp, globals.compact);
       return;
     }
+    process.exitCode = 2; // NP-2：先置码再打印
     printGlobalHelp(machineHelp, globals.compact);
-    process.exitCode = 2;
     return;
   }
 
@@ -796,11 +798,11 @@ async function main(): Promise<void> {
     try {
       await printNamedToolHelp(helpTarget, machineHelp, globals.compact);
     } catch (err) {
+      process.exitCode = 2; // NP-2：先置码再写信封
       printJson(
         { success: false, tool: helpTarget, error: (err as Error).message, errorKind: "usage" },
         globals.compact,
       );
-      process.exitCode = 2;
     }
     return;
   }
@@ -907,11 +909,11 @@ async function main(): Promise<void> {
       );
       const { result, isError } = unwrapHandlerResult(raw);
       const failed = isToolFailure(result, isError, globals.failOnError);
+      if (failed) process.exitCode = 1; // NP-2：先置码再写信封
       printJson(
         { success: !failed, tool: userCmd, result, ...(failed ? { errorKind: "tool_failure" } : {}) },
         globals.compact,
       );
-      if (failed) process.exitCode = 1;
     } finally {
       try {
         const { disposeApiData } = await import("./api/index.js");
@@ -952,12 +954,16 @@ async function main(): Promise<void> {
       if (err.nearFlags.length > 0) envelope.nearFlags = err.nearFlags;
       if (err.knownFlags.length > 0) envelope.knownFlags = err.knownFlags;
     }
+    process.exitCode = isUsage ? 2 : 1; // NP-2：先置码再写信封（EPIPE 出口据此保持非零）
     printJson(envelope, compact);
-    process.exitCode = isUsage ? 2 : 1;
     if (errorKind === "timeout") {
       // 审计 M1（2026-09-17 保守兜底）：信封已出，但 handler 内部可能仍有悬挂句柄；
       // 以空写为 flush 屏障，确保信封交给管道后强制退出（否则进程可能一直挂住）。
-      process.stdout.write("", () => process.exit(1));
+      // NP-7：强退会销毁 runJava 自己的 kill timer ⇒ 退出前同步收掉在跑的 java 子进程（跨平台兜底）。
+      process.stdout.write("", () => {
+        killLiveJavaChildren();
+        process.exit(1);
+      });
     }
   }
 }
@@ -974,11 +980,21 @@ function isMainModule(): boolean {
   }
 }
 
+// 边缘项（2026-09-17）：argv[1] 不可读时此前静默 exit 0（既不跑 CLI 也不报错，掩盖「入口没跑」）。
+// 正常直接执行必有 argv[1]；缺失只可能来自 `node -e` / `--input-type=module` 之类非常规调用。
+if (!process.argv[1]) {
+  process.stderr.write(
+    "[mc-skill] 无法确定入口路径（process.argv[1] 缺失）：CLI 未启动。请用 node mcp-server/dist/cli.js … 运行。\n",
+  );
+  process.exitCode = 1;
+}
+
 if (isMainModule()) {
   // 入口守卫（审计 M3/M4）：EPIPE 静默退出；崩溃/未处理拒绝 → JSON 信封 + exit 1。
   installStdioErrorGuard();
   installCrashGuards({
     emitEnvelope: (err) => {
+      killLiveJavaChildren(); // NP-7：信封输出后即 exit(1)，先把在跑的 java 子进程同步收掉
       const message = err instanceof Error ? err.message : String(err);
       if (err instanceof Error && err.stack) process.stderr.write(`${err.stack}\n`);
       process.stdout.write(JSON.stringify({ success: false, tool: "mc-skill", error: message, errorKind: "tool_failure" }) + "\n");

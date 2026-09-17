@@ -26,6 +26,7 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from "fs";
 import { join, resolve, dirname, basename } from "path";
 import { fileURLToPath } from "url";
+import { resolveDataRoot } from "./_lib/data-root.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const MC_SKILL_ROOT = resolve(__dirname, "..", "..");
@@ -62,7 +63,8 @@ if (!VERSION) {
   console.error("用法：node scripts/process-fabric-docs.js --version 1.21.1");
   process.exit(2);
 }
-const DATA_DIR = join(MC_SKILL_ROOT, "data", `fabric_${VERSION}`, "fabric-docs");
+// NP-6（2026-09-17）：数据根统一走 _lib/data-root.js（--data-root > MC_SKILL_DATA > <repo>/data）
+const DATA_DIR = join(resolveDataRoot(), `fabric_${VERSION}`, "fabric-docs");
 
 // ── Fabric 专用 PRIORITY_TAGS ──────────────────────────────────────────────
 // 与 Forge 的 DeferredRegister/ForgeRegistry 不同，Fabric 使用：

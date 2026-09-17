@@ -25,6 +25,15 @@ function isMainModule(): boolean {
   }
 }
 
+// 边缘项（2026-09-17）：argv[1] 不可读时此前静默 exit 0（MCP 入口既不启动也不报错，掩盖「入口没跑」）。
+// 正常直接执行必有 argv[1]；缺失只可能来自 `node -e` / `--input-type=module` 之类非常规调用。
+if (!process.argv[1]) {
+  process.stderr.write(
+    "[mc-mcp-server] 无法确定入口路径（process.argv[1] 缺失）：MCP 入口未启动（stdio 未连接）。\n",
+  );
+  process.exitCode = 1;
+}
+
 if (isMainModule()) {
   process.on("unhandledRejection", (reason) => {
     console.error("[mc-mcp-server] unhandledRejection:", reason);

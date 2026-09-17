@@ -16,8 +16,17 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync, readdirSync, renameSync } from "fs";
 import { join, resolve } from "path";
 import { createHash } from "crypto";
-import { DatabaseSync } from "node:sqlite";
+import type { DatabaseSync } from "node:sqlite";
+import { openDatabaseSync } from "../utils/sqlite-runtime.js";
 import { resolveCacheRoot } from "../utils/path.js";
+import {
+  acquireDirLock,
+  dirLockPathOf,
+  DirLockBusyError,
+  listDirLocks,
+  sanitizeDirLockName,
+  touchDirLock,
+} from "../utils/dir-lock.js";
 
 export interface CachePaths {
   root: string;
@@ -71,13 +80,13 @@ export function openCacheDb(root: string = resolveCacheRoot()): DatabaseSync {
   if (!existsSync(root)) mkdirSync(root, { recursive: true });
   let db: DatabaseSync;
   try {
-    db = new DatabaseSync(dbPath);
+    db = openDatabaseSync(dbPath);
     const row = db.prepare("PRAGMA user_version").get() as { user_version?: number } | undefined;
     const ver = Number(row?.user_version ?? 0);
     if (ver !== 0 && ver !== CACHE_DB_SCHEMA) {
       db.close();
       rmSync(dbPath, { force: true });
-      db = new DatabaseSync(dbPath);
+      db = openDatabaseSync(dbPath);
     }
   } catch (err) {
     const msg = String((err as Error)?.message ?? err);
@@ -88,7 +97,7 @@ export function openCacheDb(root: string = resolveCacheRoot()): DatabaseSync {
     } catch {
       /* ignore */
     }
-    db = new DatabaseSync(dbPath);
+    db = openDatabaseSync(dbPath);
   }
   db.exec(`
     CREATE TABLE IF NOT EXISTS meta (
@@ -198,103 +207,21 @@ export function isPathInside(parent: string, child: string): boolean {
  * 「陈旧锁抢占」「心跳锁不被抢」两个用例会在从未触达被测代码的情况下假绿。
  */
 export function sanitizeLockName(name: string): string {
-  const hash = createHash("sha1").update(name).digest("hex").slice(0, 8);
-  const segment = sanitizeCacheSegment(name.toLowerCase()) ?? "invalid";
-  return `${segment.slice(0, 80)}_${hash}`;
+  return sanitizeDirLockName(name);
 }
 
 export function lockDirOf(root: string, name: string): string {
-  return join(root, "locks", sanitizeLockName(name));
+  return dirLockPathOf(root, name);
 }
 
-function writeOwner(lockDir: string): void {
-  writeFileSync(join(lockDir, "owner.json"), JSON.stringify({ pid: process.pid, at: Date.now() }));
-}
-
-/** 持锁方心跳：续租 owner.at（同时刷新目录 mtime），防止长任务（VineFlower 可超时窗）被误抢占。 */
-const lockHeartbeats = new Map<string, NodeJS.Timeout>();
-
-function lockHeartbeatKey(root: string, name: string): string {
-  return `${root}\0${name}`;
-}
-
-function startLockHeartbeat(root: string, name: string, lockDir: string, timeoutMs: number): void {
-  stopLockHeartbeat(root, name);
-  const interval = Math.max(1_000, Math.min(Math.floor(timeoutMs / 3), 30_000));
-  const key = lockHeartbeatKey(root, name);
-  const timer = setInterval(() => {
-    try {
-      writeOwner(lockDir);
-    } catch {
-      /* 锁目录被异常移除时停止续租 */
-      stopLockHeartbeat(root, name);
-    }
-  }, interval);
-  timer.unref?.();
-  lockHeartbeats.set(key, timer);
-}
-
-function stopLockHeartbeat(root: string, name: string): void {
-  const key = lockHeartbeatKey(root, name);
-  const timer = lockHeartbeats.get(key);
-  if (timer) {
-    clearInterval(timer);
-    lockHeartbeats.delete(key);
-  }
-}
-
-/** 持锁期间手动续租（长任务分段时调用）。 */
+/** 持锁期间手动续租（长任务分段时调用）；实现见 utils/dir-lock.ts（审计 NP-4 抽出）。 */
 export function touchCacheLock(name: string, root: string = resolveCacheRoot()): void {
-  const lockDir = lockDirOf(root, name);
-  if (!existsSync(lockDir)) return;
-  try {
-    writeOwner(lockDir);
-  } catch {
-    /* ignore */
-  }
-}
-
-function lockAgeMs(lockDir: string): number | null {
-  try {
-    const raw = JSON.parse(readFileSync(join(lockDir, "owner.json"), "utf8")) as { at?: number };
-    if (typeof raw.at === "number") return Date.now() - raw.at;
-  } catch {
-    /* fall through to mtime */
-  }
-  try {
-    return Date.now() - statSync(lockDir).mtimeMs;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * rename 原子抢占陈旧锁（proper-lockfile 式 CAS）：
- * renameSync 只有一个赢家；赢家再复核 owner.at 确认确实陈旧，仍存活的锁原位还回。
- */
-function takeOverStaleLock(locksDir: string, lockDir: string, timeoutMs: number): boolean {
-  const tmp = join(locksDir, `.${Date.now()}-${process.pid}.taken`);
-  try {
-    renameSync(lockDir, tmp);
-  } catch {
-    return false; // 他人已抢先 rename / 锁已被释放
-  }
-  const age = lockAgeMs(tmp);
-  if (age !== null && age <= timeoutMs) {
-    // 锁其实仍存活（可能刚被并发持有者续租）：原位恢复，放弃本次抢占
-    try {
-      renameSync(tmp, lockDir);
-    } catch {
-      rmSync(tmp, { recursive: true, force: true });
-    }
-    return false;
-  }
-  rmSync(tmp, { recursive: true, force: true });
-  return true;
+  touchDirLock(name, root);
 }
 
 /**
  * 获取缓存锁（mkdir 原子性 + rename 原子抢占 + 持锁心跳）。返回释放函数。
+ * 实现已抽到 utils/dir-lock.ts（审计 NP-4）；本函数**保持原签名与 CacheLockBusyError 语义不变**。
  * - 空闲 → 直接获取，启动心跳续租
  * - busy 且未超时 → CACHE_LOCK_BUSY
  * - busy 且陈旧（owner.at 超时，持锁进程死亡/失联）→ rename 原子抢占后获取
@@ -304,44 +231,15 @@ export async function acquireCacheLock(
   name: string,
   timeoutMs = 600_000,
 ): Promise<() => void> {
-  const locksDir = join(root, "locks");
-  mkdirSync(locksDir, { recursive: true });
-  const lockDir = lockDirOf(root, name);
-
-  const tryAcquire = (): boolean => {
-    try {
-      mkdirSync(lockDir);
-      writeOwner(lockDir);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const acquire = (): (() => void) | null => {
-    if (!tryAcquire()) return null;
-    startLockHeartbeat(root, name, lockDir, timeoutMs);
-    return () => {
-      stopLockHeartbeat(root, name);
-      rmSync(lockDir, { recursive: true, force: true });
-    };
-  };
-
-  const acquired = acquire();
-  if (acquired) return acquired;
-
-  const age = lockAgeMs(lockDir);
-  if (age !== null && age > timeoutMs && takeOverStaleLock(locksDir, lockDir, timeoutMs)) {
-    const retried = acquire();
-    if (retried) return retried;
+  try {
+    return await acquireDirLock(root, name, timeoutMs);
+  } catch (err) {
+    if (err instanceof DirLockBusyError) throw new CacheLockBusyError(name, timeoutMs);
+    throw err;
   }
-
-  throw new CacheLockBusyError(name, timeoutMs);
 }
 
-/** 调试辅助：列出锁目录残留（不用于生产逻辑） */
+/** 调试辅助：列出锁目录残留（不用于生产逻辑）；实现见 utils/dir-lock.ts。 */
 export function listLocks(root: string = resolveCacheRoot()): string[] {
-  const locksDir = join(root, "locks");
-  if (!existsSync(locksDir)) return [];
-  return readdirSync(locksDir);
+  return listDirLocks(root);
 }

@@ -1,5 +1,6 @@
 import { existsSync } from "fs";
-import { DatabaseSync } from "node:sqlite";
+import type { DatabaseSync } from "node:sqlite";
+import { openDatabaseSync } from "../utils/sqlite-runtime.js";
 import { vanillaRegistrySqlitePath } from "./builder.js";
 
 const _cache = new Map<string, DatabaseSync>();
@@ -14,7 +15,7 @@ function openRegistryDb(version: string): DatabaseSync | null {
     _cache.set(path, cached);
     return cached;
   }
-  const db = new DatabaseSync(path, { readOnly: true });
+  const db = openDatabaseSync(path, { readOnly: true });
   _cache.set(path, db);
   while (_cache.size > REGISTRY_DB_CAP) {
     const oldest = _cache.keys().next().value;

@@ -22,7 +22,12 @@ const PKG = path.resolve(HERE, "..");
 const CLI = path.join(PKG, "dist", "cli.js");
 const PER_TOOL_TIMEOUT_MS = 60_000;
 
-/** A 类：离线可真跑（36 项；每项 = [工具名, 建议参数]）。 */
+// NP-11（2026-09-17）：夹具路径按脚本自身位置解析（此前写死 M:/…，fresh clone 下夹具全落空、
+// 本档会退化成纯契约检查）。统一正斜杠，便于直接拼进 CLI 参数。
+const PKG_DIR = PKG.replace(/\\/g, "/");
+const REPO_DIR = path.resolve(PKG, "..").replace(/\\/g, "/");
+
+/** A 类：离线可真跑（35 项；每项 = [工具名, 建议参数]）。 */
 const OFFLINE = [
   ["get_server_status", ["--version", "1.20.1"]],
   ["diagnose_data_paths", []],
@@ -34,7 +39,7 @@ const OFFLINE = [
   ["crash_analyze", ["--crashReport", "java.lang.NullPointerException\n\tat com.example.Foo.bar(Foo.java:1)"]],
   ["validate_project", ["--modsToml", 'modLoader="javafml"']],
   ["mixin_analyze", ["--version", "1.20.1"]],
-  ["audit_resources", ["--resourceRoot", "M:/mcp-server/src"]],
+  ["audit_resources", ["--resourceRoot", `${PKG_DIR}/src`]],
   ["validate_datapack_json", ["--kind", "recipe", "--jsonContent", '{"type":"minecraft:crafting_shaped","pattern":["#"],"key":{"#":{"item":"minecraft:stone"}},"result":{"item":"minecraft:stone"}}']],
   ["get_workflow_template", ["--name", "mc-new-block"]],
   ["localize_mod", ["--mode", "own", "--action", "diff", "--enUsJson", '{"item.x":"X"}']],
@@ -46,8 +51,8 @@ const OFFLINE = [
   ["generate_addon_manifest", ["--packName", "Test", "--packType", "data"]],
   ["generate_bp_entity", ["--identifier", "demo:widget"]],
   ["activate_platform_pack", ["--action", "list"]],
-  ["detect_mod_project", ["--projectPath", "M:/forge/1.20.1/scaffold"]],
-  ["check_publish_ready", ["--projectPath", "M:/forge/1.20.1/scaffold"]],
+  ["detect_mod_project", ["--projectPath", `${REPO_DIR}/forge/1.20.1/scaffold`]],
+  ["check_publish_ready", ["--projectPath", `${REPO_DIR}/forge/1.20.1/scaffold`]],
   ["generate_model", ["--modId", "mymod", "--blockName", "my_block", "--version", "1.20.1"]],
   ["generate_lang", ["--modId", "mymod", "--entries", '{"block.mymod.x":"X"}', "--version", "1.20.1"]],
   ["generate_network_packet", ["--modId", "mymod", "--packetName", "MyPacket", "--platform", "forge_1.20.1"]],
@@ -56,8 +61,8 @@ const OFFLINE = [
   ["generate_entity_renderer", ["--modId", "mymod", "--entityName", "Widget", "--platform", "forge", "--version", "1.20.1"]],
   ["generate_worldgen", ["--modId", "mymod", "--featureName", "my_feature", "--platform", "forge", "--version", "1.20.1"]],
   ["resolve_lib_skills", ["--platform", "fabric", "--mcVersion", "1.21.1"]],
-  ["port_project", ["--projectPath", "M:/forge/1.20.1/scaffold", "--action", "extract_common"]],
-  ["search_mod_code", ["--decompiledDir", "M:/mcp-server/src", "--query", "handler"]],
+  ["port_project", ["--projectPath", `${REPO_DIR}/forge/1.20.1/scaffold`, "--action", "extract_common"]],
+  ["search_mod_code", ["--decompiledDir", `${PKG_DIR}/src`, "--query", "handler"]],
   ["get_migration_guide", ["--route", "1.21.11->26.1"]],
 ];
 
@@ -72,9 +77,9 @@ const DATA_BACKED = [
   ["list_community_sources", []],
   ["search_community_docs", ["--query", "config"]],
   ["query_loader_api", ["--platform", "neoforge", "--minecraftVersion", "1.21.1", "--className", "IEventBus"]],
-  ["analyze_porting_path", ["--projectPath", "M:/forge/1.20.1/scaffold"]],
+  ["analyze_porting_path", ["--projectPath", `${REPO_DIR}/forge/1.20.1/scaffold`]],
   ["get_method_params", ["--className", "Block", "--methodName", "getCodec", "--version", "1.20.1"]],
-  ["analyze_mod_jar", ["--jarPath", "M:/mcp-server/temp/s25a_pristine/gradle/wrapper/gradle-wrapper.jar"]],
+  ["analyze_mod_jar", ["--jarPath", `${PKG_DIR}/temp/s25a_pristine/gradle/wrapper/gradle-wrapper.jar`]],
 ];
 
 /** C 类：需网络/下载/缓存预热/自备 jar（逐条豁免原因）。 */
@@ -173,6 +178,8 @@ for (const [tool, args] of REAL) {
 for (const [tool, why] of EXEMPT_NETWORK) exemptLines.push(`${tool} —— ${why}`);
 for (const [what, why] of EXEMPT_DATA_GAP) exemptLines.push(`${what} —— ${why}`);
 stats.exempt = exemptLines.length;
+// NP-9（2026-09-17）：汇总列此前恒 0（判定用的是 failures，门不空转，只是显示失真）——按实算回填。
+stats.failed = failures;
 
 // 汇总表
 const budgetSec = Math.round((Date.now() - budgetStart) / 1000);

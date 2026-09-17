@@ -760,11 +760,16 @@ export function unpackMdkArchive(opts: {
   try {
     names = listZipEntries(archivePath, tool);
   } catch (e) {
+    // NP-3：尚未轮到我们重建树，此时只清「明显不完整」的残树；完整树（可能是上一轮可用 cache）不动。
+    const residue = cleanupIncompleteResidue(join(opts.destCache, "unpacked"));
     return {
       ok: false,
       sha256: hash,
       archivePath,
-      error: { code: "UNPACK_FAILED", message: `列出 zip 条目失败（${tool.kind}）：${String(e)} zip=${archivePath}` },
+      error: {
+        code: "UNPACK_FAILED",
+        message: `列出 zip 条目失败（${tool.kind}）：${String(e)} zip=${archivePath}` + (residue ? `；${residue}` : ""),
+      },
     };
   }
 
@@ -798,12 +803,18 @@ export function unpackMdkArchive(opts: {
     mkdirSync(unpackedDir, { recursive: true });
     extractZip(archivePath, unpackedDir, tool);
   } catch (e) {
+    const residue = cleanupResidue(unpackedDir);
     return {
       ok: false,
       sha256: hash,
       archivePath,
       unpackedDir,
-      error: { code: "UNPACK_FAILED", message: `解压失败：${String(e)} zip=${archivePath}` },
+      error: {
+        code: "UNPACK_FAILED",
+        message:
+          `解压失败：${String(e)} zip=${archivePath}` +
+          (residue ? `；${residue}` : "；已清理半截残树（残树不得当可用 cache，NP-3）"),
+      },
     };
   }
 
@@ -813,6 +824,7 @@ export function unpackMdkArchive(opts: {
     names.filter((n) => !n.endsWith("/")),
   );
   if (!verify.ok) {
+    const residue = cleanupResidue(unpackedDir);
     return {
       ok: false,
       sha256: hash,
@@ -820,9 +832,18 @@ export function unpackMdkArchive(opts: {
       unpackedDir,
       error: {
         code: "ZIP_SLIP",
-        message: `解压产物与中央目录清单不一致: ${verify.problem} zip=${archivePath}`,
+        message:
+          `解压产物与中央目录清单不一致: ${verify.problem} zip=${archivePath}` +
+          (residue ? `；${residue}` : "；已清理半截残树（NP-3）"),
       },
     };
+  }
+
+  // NP-3（2026-09-17）：整树复核通过才落哨兵；强判据（含下载失败回退）只认完整树。
+  try {
+    writeFileSync(join(unpackedDir, UNPACK_SENTINEL), `${hash}\n`, "utf8");
+  } catch {
+    /* 哨兵写失败不影响本次解压结论；只是回退判据退回标志物校验 */
   }
 
   const unpackedRoot = resolveUnpackedRoot(unpackedDir);
@@ -894,11 +915,58 @@ function cacheLooksReady(destCache: string, entry: MdkChecksumEntry): { ready: b
   return { ready: true, unpackedRoot: root };
 }
 
-/** 下载失败时的宽松 cache：只要 unpacked 能解析出 entryClass，不要求 sha/ref 完全匹配。 */
+/** 解压完成哨兵（NP-3）：只有整树复核通过后才写，供强判据使用。 */
+const UNPACK_SENTINEL = ".mdk-unpack-ok";
+
+/** 模板骨架标志物：旧缓存树（无哨兵）的等价强校验——半截解压不会带这些文件。 */
+const UNPACK_MARKERS = [
+  "build.gradle",
+  "build.gradle.kts",
+  "settings.gradle",
+  "settings.gradle.kts",
+  "gradlew",
+  "gradlew.bat",
+  "gradle/wrapper/gradle-wrapper.jar",
+  "pom.xml",
+];
+
+/** 该 unpacked 目录是否来自一次**完整**解压（哨兵优先，旧树退回标志物校验）。导出供门/探针直接断言（NP-3 防回归）。 */
+export function unpackLooksComplete(unpackedDir: string, root: string): boolean {
+  if (existsSync(join(unpackedDir, UNPACK_SENTINEL))) return true;
+  return UNPACK_MARKERS.some((f) => existsSync(join(root, f)));
+}
+
+/** best-effort 清掉半截残树（NP-3）：不抛；失败时返回给调用方并入错误消息。 */
+function cleanupResidue(unpackedDir: string): string | undefined {
+  try {
+    if (existsSync(unpackedDir)) rmSync(unpackedDir, { recursive: true, force: true });
+    return undefined;
+  } catch (e) {
+    return `残树清理失败（需手动删 ${unpackedDir}）：${String(e)}`;
+  }
+}
+
+/** 早期失败路径专用：只清「明显不完整」的残树，完整树（哨兵/骨架标志物）保持不动（NP-3）。 */
+function cleanupIncompleteResidue(unpackedDir: string): string | undefined {
+  try {
+    if (!existsSync(unpackedDir)) return undefined;
+    if (unpackLooksComplete(unpackedDir, resolveUnpackedRoot(unpackedDir))) return undefined;
+    rmSync(unpackedDir, { recursive: true, force: true });
+    return undefined;
+  } catch (e) {
+    return `残树清理失败（需手动删 ${unpackedDir}）：${String(e)}`;
+  }
+}
+
+/**
+ * 下载失败时的宽松 cache（NP-3 收紧）：不要求 sha/ref 完全匹配，但必须是**完整**解压树
+ * （哨兵或骨架标志物）+ 能解析出 entryClass —— 半截残树不得被当可用 MDK 采纳。
+ */
 function cacheLooksUsable(destCache: string): { ready: boolean; unpackedRoot?: string } {
   const unpacked = join(destCache, "unpacked");
   if (!existsSync(unpacked)) return { ready: false };
   const root = resolveUnpackedRoot(unpacked);
+  if (!unpackLooksComplete(unpacked, root)) return { ready: false };
   if (!parseExampleEntry(root).entryClass) return { ready: false };
   return { ready: true, unpackedRoot: root };
 }
@@ -1097,12 +1165,15 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
         ...parsed,
       };
     }
+    const why = args.allowCacheFallback
+      ? `；cacheFallback 未采纳：${destCache} 下没有**完整**解压树（哨兵/骨架标志物缺失，或未解析到 entryClass）—— 半截残树不当可用 MDK（NP-3）`
+      : "；未开 allowCacheFallback";
     return {
       ...base,
       ok: false,
       error: {
         code: "DOWNLOAD_FAILED",
-        message: `${fetched.message}。cache=${destCache}。无 cache 则 Step 1 停止，不要编造 MDK。`,
+        message: `${fetched.message}。cache=${destCache}${why}。无 cache 则 Step 1 停止，不要编造 MDK。`,
       },
     };
   }

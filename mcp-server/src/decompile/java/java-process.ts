@@ -8,7 +8,7 @@
  * - VineFlower（1.9+ 需 Java 17）与 tiny-remapper 均为 Java 17+ 工具。
  */
 
-import { spawn } from "child_process";
+import { spawn, spawnSync, type ChildProcess } from "child_process";
 import { existsSync } from "fs";
 import { join } from "path";
 import { actionable, type ActionEnvelope } from "../../utils/actionable.js";
@@ -210,6 +210,60 @@ export interface JavaRunResult {
   truncated?: boolean;
 }
 
+/**
+ * 活动 java 子进程注册表 + 强退用同步清理（审计 NP-7，2026-09-17）。
+ *
+ * 背景：runJava 自己的超时 timer 只活在事件循环里；CLI `--timeout` 强退走 process.exit，
+ * 会连同该 timer 一起销毁 ⇒ 强退路径缺进程级清理。这里维护活动 PID 集合，供强退前调用
+ * killLiveJavaChildren() 同步收尾。
+ *
+ * 实机结论（2026-09-17，Windows / Node 22.18，本机 JVM 探针）：非 detached 子进程被 libuv
+ * 放进带 KILL_ON_JOB_CLOSE 的 job object，父进程一退子进程即被回收 ⇒ **Windows 上未观察到
+ * 遗孤 JVM**；对照实验里只有 detached spawn 会在父进程退出后存活（alive=True）。
+ * 本清理因此定位为**跨平台兜底**（POSIX 无 job object；将来若改 detached spawn 亦覆盖）。
+ */
+const liveJavaChildren = new Map<number, ChildProcess>();
+
+function registerLiveChild(child: ChildProcess): void {
+  const pid = child.pid;
+  if (typeof pid !== "number") return;
+  liveJavaChildren.set(pid, child);
+  const drop = () => liveJavaChildren.delete(pid);
+  child.once("close", drop);
+  child.once("error", drop);
+}
+
+/** 同步杀 java 进程树（win32：taskkill /T /F；其它：SIGKILL）。用于超时与强退路径。 */
+export function killJavaTreeSync(pid: number): void {
+  if (process.platform === "win32") {
+    try {
+      spawnSync("taskkill", ["/T", "/F", "/PID", String(pid)], {
+        windowsHide: true,
+        stdio: "ignore",
+        timeout: 5_000,
+      });
+    } catch {
+      /* 进程可能已退出 */
+    }
+    return;
+  }
+  const child = liveJavaChildren.get(pid);
+  try {
+    if (child) child.kill("SIGKILL");
+    else process.kill(pid, "SIGKILL");
+  } catch {
+    /* ignore */
+  }
+}
+
+/** 强退前调用：同步收掉所有在跑的 java 子进程（process.exit 会销毁 runJava 的 kill timer）。返回清理数。 */
+export function killLiveJavaChildren(): number {
+  const pids = [...liveJavaChildren.keys()];
+  for (const pid of pids) killJavaTreeSync(pid);
+  liveJavaChildren.clear();
+  return pids.length;
+}
+
 /** 运行 Java 子进程（已探测过的 javaPath；超时/信号 → code=null + stderr 说明） */
 export async function runJava(
   args: string[],
@@ -224,6 +278,7 @@ export async function runJava(
       cwd: opts.cwd,
       env: opts.env ? { ...process.env, ...opts.env } : process.env,
     });
+    registerLiveChild(child); // NP-7：进入活动表，供强退路径同步清理
     let stdout = "";
     let stderr = "";
     let truncated = false;
@@ -238,11 +293,9 @@ export async function runJava(
       if (next.truncated) truncated = true;
     });
     const timer = setTimeout(() => {
-      if (process.platform === "win32" && child.pid) {
-        spawn("taskkill", ["/T", "/F", "/PID", String(child.pid)], { windowsHide: true, stdio: "ignore" });
-      } else {
-        child.kill();
-      }
+      // NP-7：改为同步杀（原来 win32 用 spawn taskkill 且无 unref，父进程若此刻退出杀就丢了）
+      if (typeof child.pid === "number") killJavaTreeSync(child.pid);
+      else child.kill();
       resolve({ code: null, stdout, stderr: (stderr + "\n[timed out]").trim(), truncated });
     }, timeoutMs);
     child.on("error", (err) => {
