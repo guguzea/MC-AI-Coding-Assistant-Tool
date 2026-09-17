@@ -115,12 +115,14 @@ const run = (args, timeoutMs = PER_TOOL_TIMEOUT_MS) =>
 /** stdout 是 JSON 信封（或 at least 可解析 JSON）+ stderr 无异常栈特征。 */
 function envelopeOk(r) {
   const out = (r.stdout ?? "").trim();
+  // P2-5 收紧：必须是 CLI 信封 JSON（非空对象 + success 布尔键；cli.ts 全部出口均带 success）。
+  // 「任意 JSON 可解析即算」与 "success": 正则兜底不再算数。
   let isJson = false;
   try {
-    JSON.parse(out);
-    isJson = true;
+    const parsed = JSON.parse(out);
+    isJson = parsed !== null && typeof parsed === "object" && typeof parsed.success === "boolean";
   } catch {
-    isJson = /"success"\s*:/.test(out);
+    isJson = false;
   }
   const stacky = /at [\w$.]+ \(.+:\d+:\d+\)/.test(r.stderr ?? "") || /\bError:/.test((r.stderr ?? "").trim().split("\n")[0] ?? "");
   return { isJson, stacky };

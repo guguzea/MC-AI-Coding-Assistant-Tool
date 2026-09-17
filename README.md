@@ -235,10 +235,10 @@ MC_skill/
 
 | 变量                      | 说明                                     | 示例                                |
 | ----------------------- | -------------------------------------- | --------------------------------- |
-| `MC_SKILL_DATA`         | 数据目录根路径（指向 `data/`，不含版本子目录）            | `H:/MC_skill/data`                |
-| `MC_SKILL_COMMUNITY`    | 社区知识库根路径（默认仓库根 `community_knowledge/`） | `H:/MC_skill/community_knowledge` |
+| `MC_SKILL_DATA`         | 数据目录根路径（指向 `data/`，不含版本子目录）            | `<仓库根>/data`                |
+| `MC_SKILL_COMMUNITY`    | 社区知识库根路径（默认仓库根 `community_knowledge/`） | `<仓库根>/community_knowledge` |
 | `MC_SKILL_ALLOW_WRITE`  | `1` 时允许 `port_project` 写盘              | `1`                               |
-| `MC_SKILL_PROJECT_ROOT` | 写盘允许的项目根（绝对路径）                         | `H:/mods/my-mod`                  |
+| `MC_SKILL_PROJECT_ROOT` | 写盘允许的项目根（绝对路径）                         | `<你的模组工程绝对路径>`                  |
 | `MC_SKILL_STRICT`       | `1` 时数据无效则 MCP 启动失败                    | `1`                               |
 | `MC_SKILL_DEBUG_PATHS`  | `1` 打印路径解析过程                           | `1`                               |
 | `MC_SKILL_CACHE`        | 反编译/MDK/loader-jar 缓存根。MCP 与脚本都读此变量；不设则 MCP 默认 APPDATA、脚本默认 `os.tmpdir()/mc-skill-cache`，会分家 | `%APPDATA%/mc-skill-cache`（脚本回退 `os.tmpdir()/mc-skill-cache`） |

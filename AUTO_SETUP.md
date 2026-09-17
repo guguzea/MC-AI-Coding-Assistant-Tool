@@ -69,7 +69,7 @@ MCP 负责运行时查询；规则集负责写代码约束。完整注意项见�
   - **注意标志**：`node:sqlite` 在 **22.5–22.12 与 23.0–23.3 需要 `--experimental-sqlite`**（22.13 LTS / 23.4+ 起默认开启）。落在该区间的 Node 须把 `--experimental-sqlite` 写进启动参数或 `NODE_OPTIONS`，否则 MCP/CLI 入口会打印醒目警告并以非零码退出。**建议直接安装 Node 22.13+ / 24 LTS 省心。**
 - 本机已有完整仓库（`mcp-server/` + `data/`）
 - GitHub Release / git clone **不含** `node_modules`，必须本地 `npm ci`
-- JSON/YAML/TOML 里的路径一律用**正斜杠**绝对路径（`H:/MC_skill/...`），不要用 Windows 反斜杠，不要用 `~`（部分宿主不展开）
+- JSON/YAML/TOML 里的路径一律用**正斜杠**绝对路径（比如`H:/MC_skill/...`），不要用 Windows 反斜杠，不要用 `~`（部分宿主不展开）
 - 本服务冷启动可能超过 5 秒（读 `data/`）。OpenCode 等默认超时偏短，草稿里应把 timeout 提到 **60000** 以上
 
 ---
@@ -94,7 +94,7 @@ MCP 负责运行时查询；规则集负责写代码约束。完整注意项见�
 
 **配置写到哪里：**
 
-- **推荐默认：用户级 / 全局**，这样打开任意模组工程都能用这 80 个工具。`args` 与 `MC_SKILL_DATA` 仍指向 **本仓库**（`MC_skill`），不要改成模组工程路径。
+- **推荐默认：用户级 / 全局**，这样打开任意模组工程都能用这 81 个工具。`args` 与 `MC_SKILL_DATA` 仍指向 **本仓库**（`MC_skill`），不要改成模组工程路径。
 - **项目级**（`.mcp.json`、`.cursor/mcp.json`、`.trae/mcp.json` 等）只在用户明确要求「只给这个仓库用」时写。
 - **不要**把带本机绝对路径的 MCP 配置提交进 `MC_skill` 仓库。
 - 用户的**模组工程**可以放项目级 MCP（路径仍指向本仓库的 `dist/index.js` 与 `data/`）。
@@ -488,7 +488,9 @@ description: "[Forge 1.20.1] <从源 SKILL.md 复制的 description>"
 
 # forge-1-20-1-mc-block
 
-必须用 Read 打开 `H:/MC_skill/forge/1.20.1/.cursor/skills/mc-block/SKILL.md` 并严格遵循其全文；不要凭 stub 的 description 写代码。
+必须用 Read 打开 `<仓库根>/forge/1.20.1/.cursor/skills/mc-block/SKILL.md` 并严格遵循其全文；不要凭 stub 的 description 写代码。
+
+（`<仓库根>` 写 stub 时按实际部署根展开为**正斜杠绝对路径**，如 `D:/MC_skill`。）
 ```
 
 路径用**正斜杠绝对路径**。禁止只写「参见源文件」。
@@ -566,7 +568,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 ## CLI 兜底（宿主没有 MCP，或配置尚未生效）
 
-80 个工具均可：
+81 个工具均可：
 
 ```bash
 cd mcp-server
@@ -619,4 +621,4 @@ node dist/cli.js <工具名> --key=value
 - 服务名必须是 **`MC-AI-Coding-Assistant-Tool`**
 - 本服务是 **stdio**，不要配成 HTTP `url`
 - 验收靠调用 `get_server_status` / `diagnose_data_paths`，不要只描述点击路径
-- 无 MCP 宿主时用 CLI，不要假装已经连上 80 个工具
+- 无 MCP 宿主时用 CLI，不要假装已经连上 81 个工具

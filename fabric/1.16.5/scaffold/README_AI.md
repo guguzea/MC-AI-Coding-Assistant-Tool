@@ -8,7 +8,7 @@
 - Minecraft `1.16.5` / Yarn `1.16.5+build.10` / Fabric Loader `0.11.2` / Fabric API `0.42.0+1.16`（全部在 `gradle.properties`）
 - Loom 插件 `fabric-loom` 版本 `0.10.31`（`build.gradle:2`），Gradle Wrapper `7.6.1`（`gradle/wrapper/gradle-wrapper.properties`）
 - **Java 8**：`build.gradle:79-81`（`options.release = 8`）+ `build.gradle:83-88`（`JavaVersion.VERSION_1_8`）、`src/main/resources/fabric.mod.json:25`（`"java": ">=8"`）、`src/main/resources/examplemod.mixins.json:5`（`"compatibilityLevel": "JAVA_8"`）三处同口径。权威依据：`.cursor/rules/00-project-setup.mdc:11`「Minecraft 1.16.5 运行在 Java 8；Java 16 从 Minecraft 1.17 起才要求」与 `:87`「用 Java 16/17 编译的模组无法在 1.16.5 加载」。**1.16.5 不是 Java 16/17 档**，任何 `JAVA_16` / `JAVA_17` / `">=17"` 出现在本档都是缺陷。
-- 名字的第一方证据：原版/Yarn 名查 `M:/data/fabric_1.16.5/mappings/yarn-1.16.5+build.10-tiny.gz`；Fabric API 名查 `M:/mcp-server/data/loader-api-summaries/1.16.5-fabric-api.json`（或 `query_loader_api --platform=fabric --minecraftVersion=1.16.5`）；写法口径查本档 `.cursor/rules/*.mdc`。**禁止**把 1.17+ / 1.20.x 的名字当本档可用名（差异见下节）。
+- 名字的第一方证据：原版/Yarn 名查 `data/fabric_1.16.5/mappings/yarn-1.16.5+build.10-tiny.gz`；Fabric API 名查 `mcp-server/data/loader-api-summaries/1.16.5-fabric-api.json`（或 `query_loader_api --platform=fabric --minecraftVersion=1.16.5`）；写法口径查本档 `.cursor/rules/*.mdc`。**禁止**把 1.17+ / 1.20.x 的名字当本档可用名（差异见下节）。
 
 ---
 

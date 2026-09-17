@@ -82,7 +82,10 @@ export function resolveLibSkills(args: { platform?: unknown; mcVersion?: unknown
     return bad("解析输出不是 JSON 数组");
   }
   const skills: LibSkillHit[] = arr.map((s) => {
-    const abs = String(s.path ?? "");
+    // 脚本返回的是仓库相对路径（相对其自身 ROOT）。必须先锚定 REPO_ROOT 再取 relative：
+    // 否则 path.relative 会把相对 `to` 按 cwd 解析，从 mcp-server/ 起跑就多出 "mcp-server/" 前缀
+    // （test-core S15「path 应为仓库相对」红的根因，HEAD 上即复现，非本轮引入）。
+    const abs = path.resolve(REPO_ROOT, String(s.path ?? ""));
     const dir = path.dirname(abs);
     const rel = path.relative(REPO_ROOT, dir).replace(/\\/g, "/");
     const hit: LibSkillHit = { ...s, path: `${rel}/SKILL.md` };

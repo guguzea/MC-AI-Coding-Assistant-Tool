@@ -686,7 +686,7 @@ async function w4A8Gates() {
       .map((l, i) => ({ n: i + 1, l }))
       .filter(({ l }) => /isError:\s*true/.test(l) && !/^\s*(\*|\/\/)/.test(l))
       .map(({ n }) => n);
-    assert.equal(isErrorLines.length, 3, `A-27：isError 代码位点数须为 3，实得 ${JSON.stringify(isErrorLines)}`);
+    assert.equal(isErrorLines.length, 1, `A-27：isError 代码位点数须为 1（2026-09-17 P2-2 收敛，仅 warmup 前置拒绝保留），实得 ${JSON.stringify(isErrorLines)}`);
     // 全仓库除散文外不得再有第二文件置 isError
     const otherIsError = tsFiles.filter(
       (f) => f !== join("src", "tool-registry.ts") && read(f).split(/\r?\n/).some((l) => /isError:\s*true/.test(l) && !/^\s*(\*|\/\/)/.test(l)),

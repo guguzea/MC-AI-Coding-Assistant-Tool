@@ -17,6 +17,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 import {
   auditIndex,
@@ -27,7 +28,10 @@ import {
   l0ProcessedStem,
 } from "./scripts/audit-data-consistency.mjs";
 
-const REPO = path.dirname(new URL(import.meta.url).pathname.replace(/^\//, ""));
+// 2026-09-17：pathname 在含非 ASCII 的路径下是百分号编码（如 桌面 → %E6%A1%8C%E9%9D%A2），
+// 手搓 replace 前导 "/" 会得到不存在的编码路径 → spawnSync ENOENT、stdout undefined。
+// 必须用 fileURLToPath（解码 + Windows 盘符处理），与 test-core 等同口径。
+const REPO = path.dirname(fileURLToPath(import.meta.url));
 const SCRIPTS_DIR = path.join(REPO, "scripts");
 
 function tmpRoot(label) {

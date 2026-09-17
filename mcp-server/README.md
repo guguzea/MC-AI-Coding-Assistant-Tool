@@ -15,7 +15,7 @@ npm run build
 
 ## 能力概览
 
-- 共 **80** 个 MCP 工具：`src/tool-registry.ts` **45** + `src/wave/register.ts` **35**
+- 共 **81** 个 MCP 工具：`src/tool-registry.ts` **46** + `src/wave/register.ts` **35**
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
@@ -54,14 +54,14 @@ npm run build
 
 ### 2. MCP 配置（按宿主翻译）
 
-使用 **绝对路径**，`MC_SKILL_DATA` 指向仓库 `data/`。多数宿主（Cursor / Claude / Trae / Windsurf）顶层键为 `mcpServers`：
+使用 **绝对路径**，`MC_SKILL_DATA` 指向仓库 `data/`。多数宿主（Cursor / Claude / Trae / Windsurf）顶层键为 `mcpServers`。下文示例里的 `<仓库根>` = 本仓库实际部署根的绝对路径（Windows 用正斜杠，如 `D:/MC_skill`）：
 
 ```json
 {
   "mcpServers": {
     "MC-AI-Coding-Assistant-Tool": {
       "command": "node",
-      "args": ["H:/MC_skill/mcp-server/dist/index.js"],
+      "args": ["<仓库根>/mcp-server/dist/index.js"],
       "env": {
         "MC_SKILL_DATA": "H:/MC_skill/data"
       }
@@ -76,9 +76,9 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 ```json
 "env": {
-  "MC_SKILL_DATA": "H:/MC_skill/data",
+  "MC_SKILL_DATA": "<仓库根>/data",
   "MC_SKILL_ALLOW_WRITE": "1",
-  "MC_SKILL_PROJECT_ROOT": "H:/path/to/your/mod"
+  "MC_SKILL_PROJECT_ROOT": "<你的模组工程绝对路径>"
 }
 ```
 
@@ -86,16 +86,16 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 ### 3. 验收
 
-重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **80**。不要只让用户「看设置页」。
+重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **81**。不要只让用户「看设置页」。
 
 ### 4. 环境变量
 
 | 变量 | 说明 | 示例 |
 |------|------|------|
-| `MC_SKILL_DATA` | data 根目录（非版本子目录） | `H:/MC_skill/data` |
-| `MC_SKILL_COMMUNITY` | 社区知识库根（可选） | `H:/MC_skill/community_knowledge` |
+| `MC_SKILL_DATA` | data 根目录（非版本子目录） | `<仓库根>/data` |
+| `MC_SKILL_COMMUNITY` | 社区知识库根（可选） | `<仓库根>/community_knowledge` |
 | `MC_SKILL_ALLOW_WRITE` | `1` 允许 `port_project` / `mc_skill_update` / `generate_*`（`write=true`）写盘 | `1` |
-| `MC_SKILL_PROJECT_ROOT` | 允许写入的根（更新工具须为 **MC_skill 仓库根**）。`generate_*` 写盘必须设它——单次调用的 `projectPath` 只能在其内选子目录，不能替代它 | `H:/MC_skill` |
+| `MC_SKILL_PROJECT_ROOT` | 允许写入的根（更新工具须为 **MC_skill 仓库根**）。`generate_*` 写盘必须设它——单次调用的 `projectPath` 只能在其内选子目录，不能替代它 | `<仓库根>` |
 | `MC_SKILL_UPDATE_REPO` | GitHub `owner/repo`（默认本仓库） | `guguzea/MC-AI-Coding-Assistant-Tool` |
 | `MC_SKILL_UPDATE_REMOTE` | 强制 git remote 名；空则扫描匹配 URL | `origin` |
 | `MC_SKILL_UPDATE_CACHE_TTL_SEC` | `get_server_status` updateHint 缓存 TTL | `3600` |
@@ -153,6 +153,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | MDK | `download_official_mdk` |
 | T4 字节码校验（Wave D） | `validate_at`、`validate_aw`（+ `mixin_analyze` 的 `deep:true` 深度模式） |
 | Loader API / 平台包 | `query_loader_api`、`search_loader_api`、`ingest_loader_api`、`detect_mod_project`（知识库根 → `KNOWLEDGE_REPO_NOT_MOD`）、`activate_platform_pack` |
+| 库 Skill 解析 | `resolve_lib_skills`（platform + mcVersion 必填；按平台 + 精确 MC 版本解析 `knowledge/libs` 库 skill 源稿，只解析不返回正文；与 CLI `lib resolve` 同一 core） |
 | 基岩 Add-On | `search_bedrock_docs`、`get_bedrock_doc_*`、`validate_addon_manifest`、`validate_bp_json`、`generate_addon_manifest`、`generate_bp_entity`、`analyze_bedrock_log` |
 | 自我更新 | `mc_skill_update` |
 

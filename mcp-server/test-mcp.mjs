@@ -432,7 +432,10 @@ async function runTests() {
   ]) {
     assert.ok(toolNames.includes(required), `tools/list missing ${required}`);
   }
-  assert.equal(toolNames.length, 80, `expected 80 tools, got ${toolNames.length}`);
+  // P1-1（2026-09-17）：基准不再钉死 80，动态取 registry 权威数（与 test-cli.mjs staleTotalClaims 同口径）。
+  const { listAllToolSchemas } = await import("./dist/tool-registry.js");
+  const expectedTools = listAllToolSchemas().length;
+  assert.equal(toolNames.length, expectedTools, `expected ${expectedTools} tools, got ${toolNames.length}`);
   assert.ok(toolNames.includes("download_official_mdk"), "tools/list missing download_official_mdk");
   for (const waveD of ["validate_at", "validate_aw"]) {
     assert.ok(toolNames.includes(waveD), `tools/list missing ${waveD}`);

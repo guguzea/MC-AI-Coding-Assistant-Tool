@@ -4,7 +4,7 @@
  * 运行时 semanticSearch 保持 allowRemoteModels=false；构建前请先跑本脚本。
  *
  *   npm run fetch:embedding-model
- *   npm run fetch:embedding-model -- --data-root=H:/MC_skill/data
+ *   npm run fetch:embedding-model -- --data-root=<仓库>/data
  */
 import { existsSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";

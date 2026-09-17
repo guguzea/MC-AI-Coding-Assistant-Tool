@@ -2,7 +2,7 @@
 /**
  * data consistency audit (read-only)
  * ───────────────────────────────────
- * Walks H:/MC_skill/data (or `--data-root=<path>`) and verifies structural
+ * Walks <data-root> (default: repo `data/`, or `--data-root=<path>`) and verifies structural
  * integrity of indexed documentation/metadata bundles for Forge, Fabric, and
  * NeoForge. Never writes to disk; never opens a network socket.
  *
@@ -37,6 +37,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { DatabaseSync } from "node:sqlite";
+import { fileURLToPath } from "node:url";
 
 const PLATFORMS = ["forge", "fabric", "neoforge", "quilt", "liteloader", "rift"];
 const RAW_VERSION_RX = />\s*版本：\s*(\S+)/;
@@ -708,7 +709,9 @@ function summarize(issues) {
 
 function main() {
   const opts = parseArgs(process.argv);
-  const scriptDir = path.dirname(new URL(import.meta.url).pathname.replace(/^\//, ""));
+  // pathname 在非 ASCII 路径下是百分号编码（桌面 → %E6%A1%8C%E9%9D%A2），
+  // 手搓 replace 会得到不存在的编码路径 → 默认 data-root 失效。必须 fileURLToPath。
+  const scriptDir = path.dirname(fileURLToPath(import.meta.url));
   const repoRoot = path.resolve(scriptDir, "..", "..");
   const dataRoot = path.resolve(opts.dataRoot ?? path.join(repoRoot, "data"));
   const versionArg = opts.version ? { value: opts.version, form: opts.form } : null;
@@ -749,7 +752,7 @@ function isMainModule() {
   try {
     const entry = require.main?.filename ?? null;
     if (!entry) return false;
-    const here = new URL(import.meta.url).pathname.replace(/^\//, "");
+    const here = fileURLToPath(import.meta.url);
     return entry.replace(/\\/g, "/").endsWith(here.replace(/\\/g, "/"));
   } catch {
     return false;

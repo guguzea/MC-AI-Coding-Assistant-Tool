@@ -54,7 +54,7 @@ function getDataDirFromEnv(): string | null {
   if (existsSync(abs)) return abs;
   console.error(
     `[mc-mcp-server] WARN: MC_SKILL_DATA=${envPath} 不存在，已回退到推导/cwd 路径。` +
-      `请检查路径是否为 data 目录的绝对路径（例如 H:/MC_skill/data）。`,
+      `请检查路径是否为 data 目录的绝对路径（例如 D:/MC_skill/data）。`,
   );
   return null;
 }

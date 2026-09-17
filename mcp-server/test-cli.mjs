@@ -55,9 +55,12 @@ function staleTotalClaims(docs, total) {
 }
 
 {
-  assert.deepEqual(staleTotalClaims("服务共 79 个工具", 80), ["79"], "stale total must be caught");
-  assert.deepEqual(staleTotalClaims("计数口径：本组 **9 个工具 / 8 行**", 80), [], "group count must be ignored");
-  assert.deepEqual(staleTotalClaims("全部 80 个工具的 schema", 80), [], "matching total must pass");
+  // P1-1：基准不再钉死 80，动态取 registry 权威数，防止下次工具增减单元块再腐。
+  const { listAllToolSchemas } = await import("./dist/tool-registry.js");
+  const total = listAllToolSchemas().length;
+  assert.deepEqual(staleTotalClaims(`服务共 ${total - 1} 个工具`, total), [String(total - 1)], "stale total must be caught");
+  assert.deepEqual(staleTotalClaims("计数口径：本组 **9 个工具 / 8 行**", total), [], "group count must be ignored");
+  assert.deepEqual(staleTotalClaims(`全部 ${total} 个工具的 schema`, total), [], "matching total must pass");
 }
 
 // ── 1. flags-only convert（--key value / --key=value 混用）────────────────────
@@ -139,6 +142,9 @@ function staleTotalClaims(docs, total) {
   const docs = [
     readFileSync(join(repoRoot, "README.md"), "utf8"),
     readFileSync(join(repoRoot, "CONTRIBUTING.md"), "utf8"),
+    // P1-1 门扩面：mcp-server/README.md 与 AUTO_SETUP.md 正是「80」残留漏网处（此前只扫根 README + CONTRIBUTING）。
+    readFileSync(join(repoRoot, "mcp-server", "README.md"), "utf8"),
+    readFileSync(join(repoRoot, "AUTO_SETUP.md"), "utf8"),
   ].join("\n");
   const stale = staleTotalClaims(docs, j.result.total);
   if (stale.length > 0) {

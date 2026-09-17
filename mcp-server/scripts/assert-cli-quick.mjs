@@ -164,9 +164,11 @@ if (!bad) {
     const lockRoot = fs.mkdtempSync(path.join(os.tmpdir(), "cli-quick-lock-"));
     const release = await dirLock.acquireDirLock(lockRoot, "quick-probe", 3000);
     const lockModHref = pathToFileURL(path.join(PKG, "dist", "utils", "dir-lock.js")).href;
+    // 子进程用 30s 超时（不能用 150ms 那种小值：父进程的 owner.at 在子进程启动后已超过该窗口，
+    // 会被判「陈旧锁」而被合法抢占 —— 那测的就不是互斥语义了）
     const childCode = `const m = await import(${JSON.stringify(lockModHref)}); try { const r = await m.acquireDirLock(${JSON.stringify(
       lockRoot,
-    )}, "quick-probe", 150); console.log("ACQ"); r(); } catch (e) { console.log("BUSY:" + e.code); }`;
+    )}, "quick-probe", 30000); console.log("ACQ"); r(); } catch (e) { console.log("BUSY:" + e.code); }`;
     const childOut = await new Promise((resolve) => {
       const c = spawn(process.execPath, ["--input-type=module", "-e", childCode], { windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
       let out = "";
@@ -213,7 +215,7 @@ if (!bad) {
     delete process.env.MC_SKILL_DATA;
     fs.rmSync(drTmp, { recursive: true, force: true });
 
-    // NP-7：强退清理入口可调用（真 JVM 探针见 temp/_np7_verify.mjs，不进门链）
+    // NP-7：强退清理入口可调用（真 JVM 的那次实机验证是一次性作业，不进门链）
     const jp = await import("../dist/decompile/java/java-process.js");
     if (typeof jp.killLiveJavaChildren !== "function" || typeof jp.killJavaTreeSync !== "function") {
       fail("java 子进程清理入口缺失（NP-7 回归）");

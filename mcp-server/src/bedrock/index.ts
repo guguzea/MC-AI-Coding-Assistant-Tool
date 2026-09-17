@@ -178,7 +178,14 @@ export async function getBedrockDocSummary(
     const summary = getStore(version).loadSummary(args.id, version);
     return jsonOk(withStatus({ ok: true, platform: "bedrock", ...summary, version }));
   } catch (e) {
-    return jsonOk(withStatus({ ok: false, error: String(e) }));
+    return jsonOk(withStatus({
+      ok: false,
+      error: {
+        code: "INTERNAL_ERROR",
+        message: e instanceof Error ? e.message : String(e),
+        hint: "请用 search_bedrock_docs 确认 id（形如 stable/<path>）后重试",
+      },
+    }));
   }
 }
 
@@ -199,7 +206,14 @@ export async function getBedrockDocFull(
     const full = await getStore(version).loadFullDoc(args.id, version, args.highlight_key !== false);
     return jsonOk(withStatus({ ok: true, platform: "bedrock", ...full, version }));
   } catch (e) {
-    return jsonOk(withStatus({ ok: false, error: String(e) }));
+    return jsonOk(withStatus({
+      ok: false,
+      error: {
+        code: "INTERNAL_ERROR",
+        message: e instanceof Error ? e.message : String(e),
+        hint: "请用 search_bedrock_docs 确认 id（形如 stable/<path>）后重试",
+      },
+    }));
   }
 }
 
@@ -220,7 +234,14 @@ export async function getBedrockDocRelated(
     const related = getStore(version).getRelatedDocs(args.id, version, args.limit ?? 8);
     return jsonOk(withStatus({ ok: true, platform: "bedrock", version, related }));
   } catch (e) {
-    return jsonOk(withStatus({ ok: false, error: String(e) }));
+    return jsonOk(withStatus({
+      ok: false,
+      error: {
+        code: "INTERNAL_ERROR",
+        message: e instanceof Error ? e.message : String(e),
+        hint: "请用 search_bedrock_docs 确认 id（形如 stable/<path>）后重试",
+      },
+    }));
   }
 }
 

@@ -50,19 +50,9 @@ import {
 import { actionable, ActionCodes } from "../../utils/actionable.js";
 
 function forgeInternalError(e: unknown): CallToolResult {
-  const message = e instanceof Error ? e.message : String(e);
-  return {
-    content: [
-      {
-        type: "text",
-        text: JSON.stringify(
-          { ok: false, code: "INTERNAL_ERROR", error: { code: "INTERNAL_ERROR", message } },
-          null,
-          2,
-        ),
-      },
-    ],
-  };
+  // P2-1：单轨化——委托 handleError 的 INTERNAL_ERROR 分支（{ok:false, error:{code,message}}），
+  // 废除本文件 {ok, code, error:{...}} 双轨形状。
+  return handleError(e, "forge");
 }
 
 const _forgeStoreByDir = new Map<string, ForgeDocStore>();
@@ -360,50 +350,9 @@ export async function getForgeDocSummary(
       ],
     };
   } catch (e) {
-    if (e instanceof VersionNotFoundError) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(
-              {
-                ok: false,
-                error: e.message,
-                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
-              },
-              null,
-              2,
-            ),
-          },
-        ],
-      };
-    }
-    if (e instanceof DocNotFoundError) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(
-              {
-                ok: false,
-                error: e.message,
-                hint: `请使用 search_forge_docs 查询正确的页面 ID，格式为 "1.20.1/文件名"`,
-              },
-              null,
-              2,
-            ),
-          },
-        ],
-      };
-    }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify({ ok: false, code: "INTERNAL_ERROR", error: { code: "INTERNAL_ERROR", message: (e as Error).message } }, null, 2),
-        },
-      ],
-    };
+    // P2-1：统一走 handleError 对象形状（内含 PLATFORM_DATA_MISSING / VERSION_NOT_FOUND /
+    // DOC_NOT_FOUND / INTERNAL_ERROR 单轨分支），废除本文件历史平形状与双轨 INTERNAL 副本。
+    return handleError(e, "forge");
   }
 }
 
@@ -452,50 +401,9 @@ export async function getForgeDocFull(
       ],
     };
   } catch (e) {
-    if (e instanceof VersionNotFoundError) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(
-              {
-                ok: false,
-                error: e.message,
-                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
-              },
-              null,
-              2,
-            ),
-          },
-        ],
-      };
-    }
-    if (e instanceof DocNotFoundError) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(
-              {
-                ok: false,
-                error: e.message,
-                hint: `请使用 search_forge_docs 查询正确的页面 ID，格式为 "1.20.1/文件名"`,
-              },
-              null,
-              2,
-            ),
-          },
-        ],
-      };
-    }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify({ ok: false, code: "INTERNAL_ERROR", error: { code: "INTERNAL_ERROR", message: (e as Error).message } }, null, 2),
-        },
-      ],
-    };
+    // P2-1：统一走 handleError 对象形状（内含 PLATFORM_DATA_MISSING / VERSION_NOT_FOUND /
+    // DOC_NOT_FOUND / INTERNAL_ERROR 单轨分支），废除本文件历史平形状与双轨 INTERNAL 副本。
+    return handleError(e, "forge");
   }
 }
 
@@ -544,50 +452,9 @@ export async function getForgeDocRelated(
       }],
     };
   } catch (e) {
-    if (e instanceof DocNotFoundError) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(
-              {
-                ok: false,
-                error: e.message,
-                hint: "请使用 search_forge_docs 查询正确的页面 ID",
-              },
-              null,
-              2,
-            ),
-          },
-        ],
-      };
-    }
-    if (e instanceof VersionNotFoundError) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(
-              {
-                ok: false,
-                error: e.message,
-                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
-              },
-              null,
-              2,
-            ),
-          },
-        ],
-      };
-    }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify({ ok: false, code: "INTERNAL_ERROR", error: { code: "INTERNAL_ERROR", message: (e as Error).message } }, null, 2),
-        },
-      ],
-    };
+    // P2-1：统一走 handleError 对象形状（内含 PLATFORM_DATA_MISSING / VERSION_NOT_FOUND /
+    // DOC_NOT_FOUND / INTERNAL_ERROR 单轨分支），废除本文件历史平形状与双轨 INTERNAL 副本。
+    return handleError(e, "forge");
   }
 }
 
@@ -665,9 +532,13 @@ function handleError(e: unknown, platform: string = "forge"): CallToolResult {
   if (e instanceof DocNotFoundError || isDocNotFoundLike(e)) {
     const rec = e as { code?: string; version?: string; message: string };
     const code = rec.code === "UNSUPPORTED_PLATFORM" ? "UNSUPPORTED_PLATFORM" : "DOC_NOT_FOUND";
+    // P2-1：hint 按平台指到对应 search_*_docs，forge/fabric/neoforge 专属页面不再退化成泛化 search_docs。
+    const searchHint = ["forge", "fabric", "neoforge"].includes(platform)
+      ? `请使用 search_${platform}_docs 查询正确的页面 ID（id 必须来自搜索结果）`
+      : "请使用 search_docs 查询正确的页面 ID（id 必须来自搜索结果）";
     const hint = rec.code === "UNSUPPORTED_PLATFORM"
       ? "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift 或 modloader；基岩请用 search_bedrock_docs"
-      : "请使用 search_docs 查询正确的页面 ID";
+      : searchHint;
     const message = rec.code === "UNSUPPORTED_PLATFORM"
       ? rec.version ?? rec.message
       : rec.message;

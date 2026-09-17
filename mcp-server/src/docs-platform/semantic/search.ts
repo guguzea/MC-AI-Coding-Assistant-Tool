@@ -466,8 +466,9 @@ export async function semanticSearch(
         }
       }
     }
-  } catch {
-    // 嵌入层失败 → 仅 FTS5 结果
+  } catch (e) {
+    // 嵌入层失败 → 仅 FTS5 结果。P2-4：stderr 留痕，不再零日志零标记静默降级。
+    console.error(`[mc-skill][semantic] 嵌入层失败，本次回退 FTS5-only：${e instanceof Error ? e.message : String(e)}`);
   }
 
   const semanticDocs = semanticAvailable
@@ -508,8 +509,9 @@ export async function semanticSearch(
       });
     }
     return hits;
-  } catch {
-    // 语义库结构异常 → 视同不可用，纯 L0
+  } catch (e) {
+    // 语义库结构异常 → 视同不可用，纯 L0。P2-4：stderr 留痕，不再静默降级。
+    console.error(`[mc-skill][semantic] 语义库结构异常，回退 L0：${e instanceof Error ? e.message : String(e)}`);
     return null;
   }
 }

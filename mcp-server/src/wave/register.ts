@@ -249,8 +249,8 @@ export const generateConfigSchema = z.object({
 export const generateEntityRendererSchema = z.object({
   modId: z.string(),
   entityName: z.string(),
-  platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填。forge 1.20.1/1.20.4 与 neoforge 26.1 生成代码"),
-  version: z.string().describe("必填。forge 仅 1.20.1 / 1.20.4；neoforge 仅 26.1"),
+  platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填。forge 1.18.2/1.19.4/1.20.1/1.20.4 与 neoforge 26.1 生成代码"),
+  version: z.string().describe("必填。forge 仅 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4；neoforge 仅 26.1"),
   ...generateWriteFields,
 });
 export const generateWorldgenSchema = z.object({

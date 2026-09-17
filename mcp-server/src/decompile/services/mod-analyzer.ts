@@ -277,7 +277,7 @@ export function analyzeModJar(jarPath: string, requestedVersion?: string): Analy
       ...emptyMeta(jarPath),
       action: invalidAction(
         `jarPath 必须是本地绝对路径（收到「${jarPath}」）`,
-        ["传绝对路径，例如 H:/mods/my-mod.jar", "v1 不支持 URL 下载"],
+        ["传绝对路径，例如 D:/mods/my-mod.jar", "v1 不支持 URL 下载"],
       ),
     };
   }
@@ -612,7 +612,7 @@ export function listJarEntries(jarPath: string): ListJarEntriesResult {
       entries: [],
       action: invalidAction(
         `jarPath 必须是本地绝对路径（收到「${jarPath}」）`,
-        ["传绝对路径，例如 H:/mods/my-mod.jar"],
+        ["传绝对路径，例如 D:/mods/my-mod.jar"],
       ),
     };
   }

@@ -232,15 +232,28 @@ const ONNX_WEIGHT_CANDIDATES = [
   ["model.onnx"],
 ] as const;
 
+/** P2-4 体积下限：只拦截截断/零字节文件（实测基准 model_quantized≈23MB、tokenizer≈711KB、config≈650B）。 */
+const MIN_ONNX_WEIGHT_BYTES = 5 * 1024 * 1024;
+const MIN_TOKENIZER_BYTES = 100 * 1024;
+
+function fileSizeAtLeast(p: string, minBytes: number): boolean {
+  try {
+    return statSync(p).size >= minBytes;
+  } catch {
+    return false;
+  }
+}
+
 function modelsDirReady(dataRoot: string): boolean {
   const root = join(dataRoot, "_models", "Xenova", "all-MiniLM-L6-v2");
   if (!existsSync(root)) return false;
-  if (!existsSync(join(root, "config.json")) || !existsSync(join(root, "tokenizer.json"))) {
+  if (!fileSizeAtLeast(join(root, "config.json"), 1) || !fileSizeAtLeast(join(root, "tokenizer.json"), MIN_TOKENIZER_BYTES)) {
     return false;
   }
-  // 只要任一候选权重存在即可。旧实现只认 model.onnx，而实际分发的是
+  // 只要任一候选权重存在且体积达标即可。旧实现只认 model.onnx，而实际分发的是
   // onnx/model_quantized.onnx → 模型明明可用却误报 fts5-only。
-  return ONNX_WEIGHT_CANDIDATES.some((parts) => existsSync(join(root, ...parts)));
+  // 体积下限防「截断/零字节文件仅 existsSync 即放行」（P2-4）。
+  return ONNX_WEIGHT_CANDIDATES.some((parts) => fileSizeAtLeast(join(root, ...parts), MIN_ONNX_WEIGHT_BYTES));
 }
 
 export function inspectSemanticDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "embedded" | "mode"> & {

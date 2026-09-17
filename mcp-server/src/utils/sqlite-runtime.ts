@@ -36,5 +36,7 @@ export function openDatabaseSync(
   options?: ConstructorParameters<NodeSqliteModule["DatabaseSync"]>[1],
 ): InstanceType<NodeSqliteModule["DatabaseSync"]> {
   const { DatabaseSync } = loadNodeSqlite();
-  return new DatabaseSync(path, options);
+  // 实测（Node 22.18）：显式传 undefined 会被 node:sqlite 拒（`options 必须是对象`）
+  // ⇒ 无选项时必须只传 1 个参数，保持与 `new DatabaseSync(path)` 逐字节等价。
+  return options === undefined ? new DatabaseSync(path) : new DatabaseSync(path, options);
 }

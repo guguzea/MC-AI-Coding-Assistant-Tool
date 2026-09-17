@@ -6675,6 +6675,7 @@ const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // ── S4 扩面：mcp-server/scripts/**（逐条对活文本复验过依据正则）──────────
   ["mcp-server/scripts/assert-powershell.mjs", /mkdtempSync\(join\(tmpdir\(\), "mcskill-ps-"/], // 全部落笔在 OS tmpdir 的 workDir；仓库根只读（MC_SKILL_PS_TEST_ROOT 可换根）
   ["mcp-server/scripts/assert-parser-availability.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "mcskill-g2-"/], // 夹具 jar 只落 OS tmpdir；rmSync 收的就是那个目录，仓库源码全程只读
+  ["mcp-server/scripts/assert-cli-quick.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "cli-quick-"/], // R3（NP-10 防回归）：新增夹具（薄壳拷贝 / mdk 树 / 锁根 / 数据根）全部落 OS tmpdir，仓库只读
   ["mcp-server/scripts/assert-sync-normalizers.mjs", /mkdtempSync\(join\(tmpdir\(\), "mcskill-norm-"/], // 同上：workDir 在 tmpdir，PS_FILE/JS_FILE 只作输入
   ["mcp-server/scripts/release-smoke.mjs", /mkdtempSync\(join\(tmpdir\(\), "mc-skill-release-smoke-"/], // 装配 staging 在 tmpdir，仓库 dist/package.json 只读
   ["mcp-server/scripts/_lib/build-yarn-mappings.test.mjs", /mkdtempSync\(path\.join\(tmpdir\(\), "yarnpacks-"/], // 测试根全在 tmpdir
@@ -6740,7 +6741,9 @@ const SCRIPT_WRITE_GUARD_DEBT = new Map([
   ["mcp-server/scripts/link-forge-1.20.4-from-1.20.1.js", /const destForgeDocs = join\(DATA_DIR,/], // F139：无闸门整棵 1.20.1 语料拷成 1.20.4 再就地改版本号
   ["mcp-server/scripts/mcp-csv-extractor.js", /function writeOutputs\(outDir, outputs/],
   ["mcp-server/scripts/parchment-extractor.js", /const OUT_DIR = join\(__dirname, "\.\.", "\.\.", "data",/],
-  ["mcp-server/scripts/process-fabric-docs.js", /const DATA_DIR = join\(MC_SKILL_ROOT, "data",/],
+  // 重签（NP-6，2026-09-17）：数据根改走 scripts/_lib/data-root.js（--data-root > MC_SKILL_DATA > <repo>/data）
+  // ⇒ 旧依据 `join(MC_SKILL_ROOT, "data",` 已不成立，锚点改钉「由解析器决定根」这一事实本身。
+  ["mcp-server/scripts/process-fabric-docs.js", /const DATA_DIR = join\(resolveDataRoot\(\)/],
   ["mcp-server/scripts/process-fabric-wiki.js", /const DATA_DIR = join\(MC_SKILL_ROOT, "data",/],
   ["mcp-server/scripts/process-forge-docs.js", /const DATA_DIR = join\(__dirname, "\.\.", "\.\.", "data"/],
   ["mcp-server/scripts/tsrg-extractor.js", /const EXTRACTED = join\(__dirname, "\.\.", "\.\.", "data",/],

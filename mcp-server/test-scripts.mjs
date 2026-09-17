@@ -1352,16 +1352,20 @@ public class ForeignHelper {
   expect("writerIndexLine", /凭证索引行/, "writer 凭证登记方式变了，索引构建失去同源保证");
   expect("catalogForeign", /catalog 冒领他方包根 1 行/, "catalog 条目冒领他方已证实包根 ⇒ 模型照它写 import（A6）");
   assert.equal(runs.realRoot.status, 0, `G1 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
-  // 42 → 47 → 62（2026-09-15 同步，非放松）：第二处机制独立钉仍保留硬值，
-  // 与 `assert-lib-ownership.mjs` LEDGER.attestedRoots 同源。47→62 = 43 库摘要重建批次
-  // 新增 328 个 verifiedApi 键带出的自有包根，全部靠 ownsPackage 自证（见该门 LEDGER 注释）。
+  // 42 → 47 → 62 → 98 → 99（2026-09-16 第五/七次签字同步，非放松）：第二处机制独立钉仍保留硬值，
+  // 与 `assert-lib-ownership.mjs` LEDGER.attestedRoots 同源。62→98 = 30 无树库重建批次的净 +362
+  // verifiedApi 键；98→99 = 3 缺口库（libgui / server-translations / spruceui-obsidianui）补齐
+  // 带出的 1 个新自有包根，全部 `ownsPackage` 自证（见该门 LEDGER 注释）。
+  // 冒领 120 = pal.json 的**已登记存量**（DEBT_FOREIGN 点名 120 / DEBT_FOREIGN_ROOTS 点名真主
+  // io.github.ladysnake → authored/lib-impersonate；纯 3 段根粒度问题，摘要本体归属无误）——
+  // 本锚点钉两个事实：未登记冒领为 0（「台账已清空」）+ 登记存量恰为 120。
   assert.match(
     runs.realRoot.stdout,
-    /冒领 0（台账已清空）[\s\S]*已证实包根 62[\s\S]*台账 checked/,
-    `真根台账层没跑（S5 重建后冒领应已归零）：\n${runs.realRoot.stdout}`,
+    /冒领 120（台账已清空）[\s\S]*已证实包根 99[\s\S]*台账 checked/,
+    `真根台账层没跑（G1 台账层必须真跑真根，且与 LEDGER 同源）：\n${runs.realRoot.stdout}`,
   );
   console.log(
-    "  §S4 G1 归属门: 干净假根=0 / 真根=0（S5 重建后 冒领 0 · unknown-mod 0 · catalog 台账已清空 —— KfF 末 8 行由 merge-verified-api writer 侧剔除，非取件救回）；" +
+    "  §S4 G1 归属门: 干净假根=0 / 真根=0（冒领 120 全部在册（pal 登记存量）· unknown-mod 0 · catalog 台账已清空 —— KfF 末 8 行由 merge-verified-api writer 侧剔除，非取件救回）；" +
       "投毒 新文件冒领·既有文件再冒领·连不上条目·unknown-mod·共用目录·writer 锚点×2 全红并点名",
   );
 }
@@ -1664,26 +1668,32 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`;
     const abs = jpath(root, relOf(e));
     mkdirSync(dirname(abs), { recursive: true });
     const db = new DatabaseSync(abs);
-    db.exec(SEM_DDL);
+    // 计数声明在 try 外（return 还要引用）；写库留在 try 内，关句柄兜在 finally。
     const docs = e.docs ?? 1;
     const chunks = e.chunks ?? 4;
     const embedded = e.embedded ?? chunks;
     const embeddable = e.embeddable ?? embedded;
-    for (let i = 0; i < docs; i++) {
-      db.prepare("INSERT INTO docs(doc_id,title) VALUES(?,?)").run(`d${i}`, `t${i}`);
+    // 2026-09-17（用户终端实测 EBUSY 定案）：中途抛错（如残留摊位的「table already exists」）时
+    // 不关句柄 ⇒ 本进程把随后的收摊 rmSync 锁成 EBUSY，且 finally 的新异常会顶掉原始错误。
+    try {
+      db.exec(SEM_DDL);
+      for (let i = 0; i < docs; i++) {
+        db.prepare("INSERT INTO docs(doc_id,title) VALUES(?,?)").run(`d${i}`, `t${i}`);
+      }
+      for (let i = 0; i < chunks; i++) {
+        const doc = i < docs ? `d${i % docs}` : (e.orphan ? "ghost" : "d0");
+        db.prepare("INSERT INTO chunks(chunk_id,doc_id,chunk_type,chunk_order,text) VALUES(?,?,?,?,?)").run(
+          `c${i}`, doc, "prose", i, `body ${i}`,
+        );
+        if (i < chunks - (e.ftsMissing ?? 0)) db.prepare("INSERT INTO chunks_fts(chunk_id,text) VALUES(?,?)").run(`c${i}`, `body ${i}`);
+        if (i < embedded) db.prepare("INSERT INTO chunk_embeddings(chunk_id,doc_id,embedding) VALUES(?,?,?)").run(`c${i}`, doc, Buffer.alloc(4));
+      }
+      db.prepare("INSERT INTO meta(key,value) VALUES('chunks',?)").run(String(chunks));
+      db.prepare("INSERT INTO meta(key,value) VALUES('embedded',?)").run(String(embedded));
+      if (!e.noEmbeddable) db.prepare("INSERT INTO meta(key,value) VALUES('embeddable',?)").run(String(embeddable));
+    } finally {
+      db.close();
     }
-    for (let i = 0; i < chunks; i++) {
-      const doc = i < docs ? `d${i % docs}` : (e.orphan ? "ghost" : "d0");
-      db.prepare("INSERT INTO chunks(chunk_id,doc_id,chunk_type,chunk_order,text) VALUES(?,?,?,?,?)").run(
-        `c${i}`, doc, "prose", i, `body ${i}`,
-      );
-      if (i < chunks - (e.ftsMissing ?? 0)) db.prepare("INSERT INTO chunks_fts(chunk_id,text) VALUES(?,?)").run(`c${i}`, `body ${i}`);
-      if (i < embedded) db.prepare("INSERT INTO chunk_embeddings(chunk_id,doc_id,embedding) VALUES(?,?,?)").run(`c${i}`, doc, Buffer.alloc(4));
-    }
-    db.prepare("INSERT INTO meta(key,value) VALUES('chunks',?)").run(String(chunks));
-    db.prepare("INSERT INTO meta(key,value) VALUES('embedded',?)").run(String(embedded));
-    if (!e.noEmbeddable) db.prepare("INSERT INTO meta(key,value) VALUES('embeddable',?)").run(String(embeddable));
-    db.close();
     return {
       platform: e.platform,
       version: e.version,
@@ -1698,29 +1708,33 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`;
     const abs = jpath(root, pack, "mappings", "yarn-mappings.sqlite");
     mkdirSync(dirname(abs), { recursive: true });
     const db = new DatabaseSync(abs);
-    db.exec(`
+    // 同 makeIndex：关句柄必须兜在 finally（泄漏 = 自己锁死自己的收摊 rmSync）
+    try {
+      db.exec(`
 CREATE TABLE classes(named TEXT PRIMARY KEY, intermediary TEXT, official TEXT);
 CREATE TABLE methods(owner_named TEXT, name_named TEXT, descriptor_named TEXT, name_official TEXT, descriptor_official TEXT, name_intermediary TEXT);
 CREATE TABLE fields(owner_named TEXT, name_named TEXT, descriptor_named TEXT, name_official TEXT, descriptor_official TEXT, name_intermediary TEXT);
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
-    const classes = opt.classes ?? 2;
-    const methods = opt.methods ?? 3;
-    const fields = opt.fields ?? 1;
-    for (let i = 0; i < classes; i++) db.prepare("INSERT INTO classes VALUES(?,?,?)").run(`C${i}`, `ci${i}`, `co${i}`);
-    for (let i = 0; i < methods; i++) db.prepare("INSERT INTO methods VALUES(?,?,?,?,?,?)").run("C0", `m${i}`, "()V", `mo${i}`, "()V", `mi${i}`);
-    for (let i = 0; i < fields; i++) db.prepare("INSERT INTO fields VALUES(?,?,?,?,?,?)").run("C0", `f${i}`, "I", `fo${i}`, "I", `fi${i}`);
-    for (const [k, v] of Object.entries({
-      schemaVersion: String(opt.schema ?? 3),
-      classCount: String(opt.metaClass ?? classes),
-      methodCount: String(opt.metaMethod ?? methods),
-      fieldCount: String(opt.metaField ?? fields),
-      // A7-b 的合规默认：来源身份 = 仓库相对 POSIX + 内容哈希（投毒按 opt 改这两项）
-      source: opt.absSource ? "H:\\MC_skill\\data\\fabric_1.20.4\\mappings\\yarn-tiny.gz" : `${pack}/mappings/yarn-tiny.gz`,
-      ...(opt.dropSourceSha ? {} : { sourceSha256: "a".repeat(64) }),
-    })) db.prepare("INSERT INTO meta VALUES(?,?)").run(k, v);
-    if (!opt.dropMethodIdx) db.exec("CREATE INDEX idx_methods_official ON methods(name_official)");
-    if (!opt.dropFieldIdx) db.exec("CREATE INDEX idx_fields_official ON fields(name_official)");
-    db.close();
+      const classes = opt.classes ?? 2;
+      const methods = opt.methods ?? 3;
+      const fields = opt.fields ?? 1;
+      for (let i = 0; i < classes; i++) db.prepare("INSERT INTO classes VALUES(?,?,?)").run(`C${i}`, `ci${i}`, `co${i}`);
+      for (let i = 0; i < methods; i++) db.prepare("INSERT INTO methods VALUES(?,?,?,?,?,?)").run("C0", `m${i}`, "()V", `mo${i}`, "()V", `mi${i}`);
+      for (let i = 0; i < fields; i++) db.prepare("INSERT INTO fields VALUES(?,?,?,?,?,?)").run("C0", `f${i}`, "I", `fo${i}`, "I", `fi${i}`);
+      for (const [k, v] of Object.entries({
+        schemaVersion: String(opt.schema ?? 3),
+        classCount: String(opt.metaClass ?? classes),
+        methodCount: String(opt.metaMethod ?? methods),
+        fieldCount: String(opt.metaField ?? fields),
+        // A7-b 的合规默认：来源身份 = 仓库相对 POSIX + 内容哈希（投毒按 opt 改这两项）
+        source: opt.absSource ? "H:\\MC_skill\\data\\fabric_1.20.4\\mappings\\yarn-tiny.gz" : `${pack}/mappings/yarn-tiny.gz`,
+        ...(opt.dropSourceSha ? {} : { sourceSha256: "a".repeat(64) }),
+      })) db.prepare("INSERT INTO meta VALUES(?,?)").run(k, v);
+      if (!opt.dropMethodIdx) db.exec("CREATE INDEX idx_methods_official ON methods(name_official)");
+      if (!opt.dropFieldIdx) db.exec("CREATE INDEX idx_fields_official ON fields(name_official)");
+    } finally {
+      db.close();
+    }
   };
   const writeManifest = (root, entries) =>
     w(jpath(root, "semantic-index-manifest.json"), JSON.stringify({ built_at: "x", embedMode: "hybrid", entries }, null, 1));
@@ -1785,21 +1799,27 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     },
   };
   const runs = {};
+  // 预清残留（2026-09-17）：上一轮失败（守卫拦截 / EBUSY）留下的摊位带**已建好的表**，而 SEM_DDL
+  // 不带 IF NOT EXISTS ⇒ 不清就重建必抛「table already exists」，且泄漏的打开句柄会把下面 finally
+  // 的收摊 rmSync 撞成 EBUSY（新异常顶掉原始错误）。先清，重建才幂等。
+  rmSync(S4G4, { recursive: true, force: true, maxRetries: 10, retryDelay: 250 });
   try {
     for (const [name, build] of Object.entries(cases)) {
       const root = jpath(S4G4, name);
       build(root);
       runs[name] = runGate({ MC_SKILL_INDEX_TEST_ROOT: root });
-      rmSync(root, { recursive: true, force: true });
+      // 夹具含 semantic/yarn 的 db.sqlite：Windows 下（OneDrive/杀软/索引器）关闭后仍可能被
+      // 短暂握住 ⇒ 收摊必须带重试（与 :430 java-spawn-cwd 收摊同一模式），否则 EBUSY 假红。
+      rmSync(root, { recursive: true, force: true, maxRetries: 10, retryDelay: 250 });
     }
     // 台账层（B）：只给 MC_SKILL_DATA ⇒ 门把假根当真根，数字对账必须咬
     const ledgerRoot = jpath(S4G4, "ledger");
     writeManifest(ledgerRoot, [makeIndex(ledgerRoot)]);
     runs.ledgerDrift = runGate({ MC_SKILL_DATA: ledgerRoot });
-    rmSync(ledgerRoot, { recursive: true, force: true });
+    rmSync(ledgerRoot, { recursive: true, force: true, maxRetries: 10, retryDelay: 250 });
     runs.realRoot = runGate({});
   } finally {
-    rmSync(S4G4, { recursive: true, force: true });
+    rmSync(S4G4, { recursive: true, force: true, maxRetries: 10, retryDelay: 250 });
     assert.ok(!existsSync(S4G4), `§S4-G4 摊位未收干净，残留：${S4G4}`);
     dropIfEmpty(GATE_SCRATCH);
   }

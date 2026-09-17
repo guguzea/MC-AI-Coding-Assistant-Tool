@@ -10,8 +10,8 @@
  * 1) **带内（in-band）失败：`ok:false` + `action`（本模块）** —— 默认且压倒性多数。
  *    实测口径（**一律排除本文件自身**：合同散文里就写着 `ok: false` 字面量，计入即自指；
  *    `test-wave-bcd.mjs` 的 A-27 门按同一口径当场复算，数字脱节就翻红）：
- *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **309** 行 / **46** 个文件（按行计）；
- *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **313** 处 / **48** 个文件。
+ *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **303** 行 / **47** 个文件（按行计）；
+ *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **308** 处 / **49** 个文件。
  *    该口径数的是**字面量位点**，同时涵盖工具带内 envelope 与模块内 helper 判别联合两类
  *    （如 `src/mdk/index.ts` 的 `assertNoZipSlip`、`src/decompile/services/mod-decompile.ts` 的 `resolveModIdSegment`）；两类都不置 isError。
  *    语义 = “工具正常执行完了，但结论是否定/不完整/需要人决策”：
@@ -19,12 +19,12 @@
  *    VERSION_REQUIRED、PACK_INCOMPLETE、VERSION_FALLBACK…（见下方 ActionCodes）。
  *    这类返回 **一律不置 isError**，MCP 层看到的是一次成功调用，模型必须去读 `action.nextSteps`。
  *
- * 2) **协议层失败：`isError: true`** —— 全仓库只有 **3 处**，都在 `src/tool-registry.ts`：
- *    · `:237` community 文档抛 `CommunityDocNotFoundError`（带 code/id/hint 的包装）；
- *    · `:250` community 处理器的兜底 `INTERNAL_ERROR`（未知异常，连返回形状都无法保证）；
- *    · `:425` `get_server_status` 的 `warmup=true` 但没传 version（VERSION_REQUIRED）。
- *    判据：**handler 没能产出它自己声明的结果对象**（抛异常、或结果通道的
- *    前置条件在注册层就被拒），才用 isError。
+ * 2) **协议层失败：`isError: true`** —— 全仓库只有 **1 处**，在 `src/tool-registry.ts`：
+ *    · `:429` `get_server_status` 的 `warmup=true` 但没传 version（VERSION_REQUIRED）。
+ *      （行号 424→429：2026-09-17 communityDocError 对象化净 +5 行，A-27 门当场点名同步。）
+ *    （2026-09-17 P2-2 收敛：communityDocError 的 2 处 isError 已降级为带内 `ok:false`，
+ *    与全部文档工具错误路径同形；CLI 退出码不变——isToolFailure 先看 `ok===false`。）
+ *    判据：**结果通道的前置条件在注册层就被拒**，才用 isError。
  *
  * 消费方（勿改，只读合同）：
  *    · MCP host：直接看 `CallToolResult.isError`。
@@ -39,10 +39,10 @@
  *      `found===false` 带 error.code / `errors[]` 非空（仅在 --fail-on-error）。
  *      两条通道在 CLI 里汇成同一个出口：`success:false` + `errorKind:"tool_failure"` + `exitCode=1`。
  *
- * 结论性规则：**不要把带内 ok:false 抬升成 isError**，也不要把 isError 降成 ok:false。
- * 抬升会让 host 把“正常的否定答案”当传输/服务端故障重试；降级会让 CLI 之外的宿主
- * 读不到失败信号。新增失败点时，先问：handler 有没有产出自己声明的结果对象？
- * 有 → ok:false + action；没有 → isError。
+ * 结论性规则：**不要把带内 ok:false 抬升成 isError**；isError 仅保留注册层前置拒绝一类
+ * （2026-09-17 P2-2 裁定：此前 communityDocError 的 isError 已降为带内，统一宿主呈现）。
+ * 抬升会让 host 把“正常的否定答案”当传输/服务端故障重试。新增失败点时，先问：
+ * handler 的前置条件是否在注册层就被拒？是 → isError；否则 → ok:false + action。
  */
 
 export interface ActionEnvelope {

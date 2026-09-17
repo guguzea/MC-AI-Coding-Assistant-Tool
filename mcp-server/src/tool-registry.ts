@@ -229,13 +229,14 @@ function communityDocError(e: unknown): CallToolResult {
         type: "text",
         text: JSON.stringify({
           ok: false,
-          error: e.message,
-          code: e.code,
           id: e.id,
-          hint: "请用 search_community_docs 或 list_community_sources 确认 id",
+          error: {
+            code: e.code,
+            message: e.message,
+            hint: "请用 search_community_docs 或 list_community_sources 确认 id",
+          },
         }, null, 2),
       }],
-      isError: true,
     };
   }
   return {
@@ -243,12 +244,14 @@ function communityDocError(e: unknown): CallToolResult {
       type: "text",
       text: JSON.stringify({
         ok: false,
-        error: (e as Error).message,
-        code: "INTERNAL_ERROR",
-        hint: "请检查 community_knowledge 路径与索引",
+        error: {
+          code: "INTERNAL_ERROR",
+          // 非 Error 抛出值（字符串/对象）也能拿到可读 message，而非 "undefined"。
+          message: e instanceof Error ? e.message : String(e),
+          hint: "请检查 community_knowledge 路径与索引",
+        },
       }, null, 2),
     }],
-    isError: true,
   };
 }
 
