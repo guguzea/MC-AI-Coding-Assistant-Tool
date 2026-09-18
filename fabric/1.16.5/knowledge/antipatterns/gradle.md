@@ -86,7 +86,7 @@ dependencies {
 
 **正确方案：**
 ```bash
-./gradlew clean loom
+./gradlew clean genSources
 ```
 
 ### 6. gradle.properties 版本号不一致
@@ -127,5 +127,5 @@ loom {
 | Fabric Maven 是否配置 | 检查 repositories 中是否有 maven.fabricmc.net |
 | Loom 版本 | 检查 `fabric-loom` 插件版本，应为 `0.10.31` |
 | 依赖类型 | API 使用 modApi，实现使用 modImplementation |
-| 映射变更 | 执行 `./gradlew clean loom` |
+| 映射变更 | 执行 `./gradlew clean genSources` |
 | 版本一致性 | gradle.properties 中的版本与 build.gradle 一致 |

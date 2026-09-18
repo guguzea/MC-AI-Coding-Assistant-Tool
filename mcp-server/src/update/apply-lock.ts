@@ -13,11 +13,25 @@ import { resolveCacheRoot } from "../utils/path.js";
 
 const LOCK_NAME = "update-apply";
 let held: (() => void) | null = null;
+/** C16：正在取锁的 in-flight promise —— 同进程**交错**并发必须复用同一次取锁，而不是各自真去抢。 */
+let inflight: Promise<void> | null = null;
 
 /** 取 update-apply 锁（同进程重入返回 no-op release）；别的进程持有时抛 DirLockBusyError。 */
 export async function acquireUpdateApplyLock(timeoutMs = 600_000): Promise<() => void> {
   if (held) return () => {};
-  held = await acquireDirLock(resolveCacheRoot(), LOCK_NAME, timeoutMs);
+  if (inflight) {
+    // 交错并发：等首次取锁完成并复用它，返回 no-op（真释放只由首次调用者那次 release 执行）。
+    await inflight;
+    return () => {};
+  }
+  inflight = acquireDirLock(resolveCacheRoot(), LOCK_NAME, timeoutMs).then((release) => {
+    held = release;
+  });
+  try {
+    await inflight;
+  } finally {
+    inflight = null;
+  }
   return () => {
     const release = held;
     if (!release) return;

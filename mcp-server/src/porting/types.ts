@@ -200,6 +200,14 @@ export interface InitArchitecturyOutput {
   } | null;
   filesToWrite: string[];
   diffPreview?: Record<string, string>;
+  /**
+   * dryRun=false 但未传 confirmed=true：未写盘，仅返回 diffPreview。
+   * 形制对齐 generators/write-helper.ts 的 writeError（code CONFIRMATION_REQUIRED）。
+   */
+  writeError?: {
+    code: string;
+    message: string;
+  };
   /** 未传 targetVersion 时提示 Architectury 模板默认 1.20.4 */
   warnings?: string[];
 }

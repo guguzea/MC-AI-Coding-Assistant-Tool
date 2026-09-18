@@ -97,8 +97,8 @@ mod_description=Example mod description.\nAdd lines as needed.
 ```java
 // 在 RegistryObject 声明区域添加：
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-    () -> new Block(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.WOOD)
+    () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
+        .color(MaterialColor.WOOD)
         .strength(2.0f)
     )
 );

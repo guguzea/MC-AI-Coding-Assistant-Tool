@@ -130,5 +130,5 @@ private void onMinecraftTick(MinecraftClient client) {
 ./gradlew build  # 可能不生效
 
 # ✅ 正确
-./gradlew clean loom
+./gradlew clean genSources
 ```

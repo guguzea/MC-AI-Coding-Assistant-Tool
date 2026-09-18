@@ -6,7 +6,7 @@ version: "1.20.1"
 dependencies: []
 mappings: yarn
 ---
-<!-- cloth-version-inject v=1.20.1 coord=11.1.106 state=active textApi=literal -->
+<!-- cloth-version-inject v=1.20.1 coord=11.1.136 state=active textApi=literal -->
 
 # Cloth Config（Fabric 1.20.1）
 
@@ -26,14 +26,14 @@ repositories {
 }
 
 dependencies {
-    modApi("me.shedaniel.cloth:cloth-config-fabric:11.1.106") {
+    modApi("me.shedaniel.cloth:cloth-config-fabric:11.1.136") {
         exclude group: "net.fabricmc.fabric-api"
     }
 }
 ```
 
 
-> 本档取 11.1.106：pom 里 fabric-api 依赖为 0.83.0+1.20（旧稿写的 11.0.106 上游不存在）。Cloth 是第三方库，其 **API 面**（ConfigBuilder / ConfigEntryBuilder 等签名）本包未走 `ingest_loader_api` 入库 ⇒ 写代码前仍须自备 jar 入库逐签名核对，版本号已核实不代表 API 面已核实。
+> 本档取 11.1.136：pom 里 fabric-api 依赖为 0.83.0+1.20（旧稿写的 11.0.106 上游不存在）。Cloth 是第三方库，其 **API 面**（ConfigBuilder / ConfigEntryBuilder 等签名）本包未走 `ingest_loader_api` 入库 ⇒ 写代码前仍须自备 jar 入库逐签名核对，版本号已核实不代表 API 面已核实。
 
 > 版本怎么定（一手判据，2026-09-14 实取 `maven.shedaniel.me/.../cloth-config-fabric/maven-metadata.xml`，126 条）：
 > cloth 的版本号形态**从来不带 `+<MC>` 后缀**；MC 线绑在「该版 pom 里 fabric-api 依赖的后缀」上。对照：

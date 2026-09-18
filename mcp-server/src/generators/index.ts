@@ -1280,7 +1280,7 @@ export function generateConfig(
 
 // ── Cloth Config 骨架（${loader} 默认输出：library 不传即此分支，YACL 需显式 opt-in）─────
 // 成员已核实（2026-09-16）：下面 12 个成员调用点的签名由 4 条 MC 版本线的 Fabric 构件 javap 直读、
-//   逐签名一致（1.16.5 线 4.17.101 / 1.20.1 线 11.1.106 / 1.21.1 线 15.0.127 / 1.21.11 线 21.11.150；
+//   逐签名一致（1.16.5 线 4.17.101 / 1.20.1 线 11.1.136 / 1.21.1 线 15.0.127 / 1.21.11 线 21.11.150；
 //   包根 me.shedaniel.clothconfig2.*）。jar 内为 intermediary 名：class_437=Screen、class_2561=Component(yarn: Text)。
 //   ⚠️ 仓内摘要 data/lib-api-summaries/cloth-config.json（键 1.14）是 Forge 工件 me.shedaniel.forge.clothconfig2.*，
 //   与本骨架的 Fabric 包名不是同一工件，不作为背书来源 —— 本轮背书证据是 Fabric 构件本体（见下方逐行注释）。
@@ -1327,7 +1327,7 @@ public final class ${toPascalCase(mod.value)}Config {
       warnings: [
         "Cloth Config 最小骨架：请在 build.gradle / fabric.mod.json（或 quilt.mod.json）声明 cloth-config 依赖并加仓库 maven.shedaniel.me；未声明则无法编译。",
         "配置屏仅客户端；不要在服务端加载 ConfigBuilder。",
-        `Cloth Config 不是官方 loader API；本骨架 ${verifiedCount} 处成员调用签名已核实（4 条版本线 Fabric 构件 javap 逐签名一致：4.17.101 / 11.1.106 / 15.0.127 / 21.11.150；intermediary 名映射见骨架头注）。要再核对可 ingest_loader_api + query_loader_api（默认 dryRun，只写 $MC_SKILL_CACHE overlay）。`,
+        `Cloth Config 不是官方 loader API；本骨架 ${verifiedCount} 处成员调用签名已核实（4 条版本线 Fabric 构件 javap 逐签名一致：4.17.101 / 11.1.136 / 15.0.127 / 21.11.150；intermediary 名映射见骨架头注）。要再核对可 ingest_loader_api + query_loader_api（默认 dryRun，只写 $MC_SKILL_CACHE overlay）。`,
         "映射口径：骨架用 Mojang 名（Component / client.gui.screens.Screen）；yarn 工程请对齐为 Text / client.gui.screen.Screen。",
         "仓内摘要 data/lib-api-summaries/cloth-config.json（键 1.14）是 Forge 工件、与 Fabric 包名不同工件，不作为背书来源；本轮背书 = Fabric 构件本体 javap。",
         ...(loader === "quilt" ? ["Quilt 不要把 Cloth Config 当成 QSL。"] : []),

@@ -211,7 +211,28 @@ export async function fetchReleasesList(
         };
       }
       if (!Array.isArray(batch) || batch.length === 0) break;
-      all.push(...batch.filter((r) => !r.draft));
+      // C3：列表路径必须与单 release 路径（:147）同形校验元素 —— 消费者
+      // （update/index.ts 的 pickDataAssets / release.tag_name）会解引用 .assets/.tag_name。
+      const valid = batch.filter(
+        (r): r is GhRelease =>
+          !!r &&
+          typeof r === "object" &&
+          typeof (r as GhRelease).tag_name === "string" &&
+          Array.isArray((r as GhRelease).assets),
+      );
+      if (batch.length > 0 && valid.length === 0) {
+        // 200 的畸形体不得被静默当成「仓库没有 Release」。
+        return {
+          ok: false,
+          action: actionable(
+            "UPDATE_CHECK_FAILED",
+            "GitHub releases 列表元素无法解析（元素缺少 tag_name 或 assets）",
+            ["检查代理/镜像是否改写了 JSON 结构", "稍后重试或改用单 Release 接口"],
+            ["mc_skill_update"],
+          ),
+        };
+      }
+      all.push(...valid.filter((r) => !r.draft));
       if (batch.length < perPage) break;
       if (all.length >= 150) break;
     }

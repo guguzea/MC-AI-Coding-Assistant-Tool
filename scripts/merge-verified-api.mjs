@@ -275,8 +275,11 @@ function buildValue(r, entry, rootOwners) {
 function readResults(file) {
   const out = { lines: [], bad: 0, failed: 0, noIdentity: 0 };
   if (!existsSync(file)) {
-    console.warn(`[merge-verified-api] 警告：输入 ${file} 不存在，按空结果处理`);
-    return out;
+    // C21：输入不存在不得 rc=0（脚本/CI 串联会误判成功）——与同文件 catalog 缺失时的 process.exit(1) 同口径。
+    console.error(`[merge-verified-api] 错误：输入 ${file} 不存在。`);
+    console.error("  纠正：先产出输入（node scripts/batch-decompile.mjs → temp/verified-api-results.jsonl），");
+    console.error("  或用 --input <path> 指向已存在的 JSONL。");
+    process.exit(1);
   }
   let text = readFileSync(file, "utf8");
   if (text.charCodeAt(0) === 0xfeff) text = text.slice(1); // 容忍 UTF-8 BOM

@@ -13,7 +13,7 @@ public static final DeferredRegister<Block> BLOCKS =
     DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_block",
-    () -> new Block(BlockBehaviour.Properties.of()
+    () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
         .color(MaterialColor.STONE)
         .strength(1.5f, 6.0f)
         .requiresCorrectToolForDrops()
@@ -128,7 +128,7 @@ public class MachineBlockEntity extends BlockEntity {
 
 ```java
 public static final RegistryObject<Block> MY_ORE = BLOCKS.register("my_ore",
-    () -> new Block(BlockBehaviour.Properties.of()
+    () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
         .color(MaterialColor.STONE)
         .strength(3.0f, 3.0f)
         .requiresCorrectToolForDrops()

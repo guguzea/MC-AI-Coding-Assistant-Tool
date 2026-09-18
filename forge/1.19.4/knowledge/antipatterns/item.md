@@ -131,13 +131,13 @@ import net.minecraft.world.food.FoodProperties;
 
 ```java
 // ❌ 未设置 requiresCorrectToolForDrops()
-BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+BlockBehaviour.Properties.of(Material.STONE).color(MaterialColor.STONE)
 // 方块总是掉落（无论工具类型），但如果设置为需要特定工具才能掉落：
 ```
 
 **正确方案：**
 ```java
-BlockBehaviour.Properties.of()
+BlockBehaviour.Properties.of(Material.STONE)
     .requiresCorrectToolForDrops()    // 需要正确工具才能掉落
     .strength(3.0f, 3.0f)
 ```

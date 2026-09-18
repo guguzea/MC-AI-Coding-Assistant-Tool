@@ -307,6 +307,27 @@ export function validateAddonManifest(manifestJson: string): Record<string, unkn
       "禁止写入 experimentalGameplay。世界 Beta APIs 须在游戏 UI 打开；level.dat 实验键名按社区权威 wiki.bedrock.dev/nbt/enabling-experiments 为 experiments compound + byte=1（「Beta APIs」= gametest），非 Microsoft Learn 官方，不得当 API 规范写进 pack。pack JSON 打不开该开关。",
     );
   }
+  // C13：规则承诺「header.uuid 与每个 module.uuid 必须两两不同」（bedrock/.cursor/rules/00-project-setup.mdc:18），
+  // 而本函数此前只逐条 UUID_RE.test、全函数无任何集合/两两比较 —— 重复 uuid 会全绿通过。
+  const uuidSites: Array<{ where: string; uuid: string }> = [];
+  if (header && typeof header.uuid === "string") {
+    uuidSites.push({ where: "header.uuid", uuid: header.uuid.toLowerCase() });
+  }
+  if (Array.isArray(modules)) {
+    for (const [i, m] of modules.entries()) {
+      const u = (m as Record<string, unknown>).uuid;
+      if (typeof u === "string") uuidSites.push({ where: `modules[${i}].uuid`, uuid: u.toLowerCase() });
+    }
+  }
+  for (let i = 0; i < uuidSites.length; i++) {
+    for (let j = i + 1; j < uuidSites.length; j++) {
+      if (uuidSites[i].uuid === uuidSites[j].uuid) {
+        errors.push(
+          `${uuidSites[i].where} 与 ${uuidSites[j].where} 的 UUID 重复（header.uuid 与每个 module.uuid 必须两两不同）`,
+        );
+      }
+    }
+  }
   const caps = parsed.capabilities;
   if (Array.isArray(caps)) {
     for (const c of caps) {

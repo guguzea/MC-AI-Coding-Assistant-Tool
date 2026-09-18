@@ -44,7 +44,7 @@ MC_skill/
 │   └── README.md                # 主题 id 速查
 │
 ├── knowledge/                   # 仓库级知识源稿（不落盘到平台 .cursor/skills）
-│   ├── libs/                    # 库模组 Skill 源稿：35 份 / 33 唯一 skillId
+│   ├── libs/                    # 库模组 Skill 源稿：36 份 / 34 唯一 skillId
 │   │   ├── all-platforms/       # 20（含 mc-lib-catalog 路由中枢）
 │   │   ├── fabric-only/         # 9（Trinkets / CCA / Polymer…）
 │   │   ├── forge-only/          # 2（Curios / KFF）
@@ -67,7 +67,7 @@ MC_skill/
 │   ├── scripts/                 # 文档抓取、语义索引、数据审计；含 build-library-catalog-from-authored.mjs
 │   └── data/                    # 随仓分发的 MCP 侧数据（非 MC_SKILL_DATA）
 │       ├── lib-manifests/       # Modrinth 版本矩阵（45 slug / 2867 条目）
-│       ├── lib-api-summaries/   # 44 库 public API 摘要
+│       ├── lib-api-summaries/   # 48 库 public API 摘要
 │       └── loader-api-summaries/ # Forge/Neo/Fabric-API/QSL 类摘要
 │
 └── data/                        # 离线官方数据（MC_SKILL_DATA 指向此处根）
@@ -226,7 +226,7 @@ MC_skill/
 
 1. **社区短文** — `authored/lib-*.md`，经 `search_community_docs` 检索；含反编译验证小节（`verifiedApi` 来源）。
 2. **库 Skill 源稿** — `knowledge/libs/<group>/mc-<name>/SKILL.md`，**不落盘**到平台 `.cursor/skills`；按 `AGENTS.md`「库模组 Skill」解析：platform → 组映射（`forge-only`+`all-platforms` / `fabric-only`+`all-platforms` / `neo-only`+`all-platforms` / `bedrock-only`）+ frontmatter 二次过滤。不确定选哪个库 → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`。
-3. **数据链** — 短文 frontmatter → `mcp-server/scripts/build-library-catalog-from-authored.mjs` → `library-catalog.ts`（**50** 条 / **1830** `verifiedApi` 键）+ `lib-manifests/all.json`（**45** slug / **2867** 版本条目）+ `lib-api-summaries/`（**44** 库 API 摘要）→ `check_dependencies` 识别依赖与版本窗口。（计数口径与脚本位置见 §7.5）
+3. **数据链** — 短文 frontmatter → `mcp-server/scripts/build-library-catalog-from-authored.mjs` → `library-catalog.ts`（**50** 条 / **1830** `verifiedApi` 键）+ `lib-manifests/all.json`（**45** slug / **2867** 版本条目）+ `lib-api-summaries/`（**48** 库 API 摘要）→ `check_dependencies` 识别依赖与版本窗口。（计数口径与脚本位置见 §7.5）
 
 **Agent 推荐路径（库相关）**：`check_dependencies`（看 `detectedLibraries`）→ `search_community_docs`（`lib-<name>` 或 `library-catalog-2026`）→ 按 `skillId` 或名称 Read `knowledge/libs/.../SKILL.md` → 仍缺签名再走 `search_*_docs` / `query_loader_api`。
 
@@ -728,7 +728,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 
 **② 库 Skill 源稿**（`knowledge/libs/`，按 AGENTS.md「库模组 Skill」解析使用，**不落盘**平台目录）
 
-- 五组：`all-platforms` 20 / `fabric-only` 9 / `forge-only` 2 / `neo-only` 2（Curios、KFF 与 forge-only 镜像）/ `bedrock-only` 2 = **35 份** `mc-*/SKILL.md`（**33** 唯一 skillId）
+- 五组：`all-platforms` 20 / `fabric-only` 10 / `forge-only` 2 / `neo-only` 2（Curios、KFF 与 forge-only 镜像）/ `bedrock-only` 2 = **36 份** `mc-*/SKILL.md`（**34** 唯一 skillId）
 - 解析规则：platform → 组映射（forge→forge-only+all-platforms；fabric/quilt→fabric-only+all-platforms；neoforge→neo-only+all-platforms；bedrock→bedrock-only）+ frontmatter `platforms`/`mcVersions` 二次过滤。路由中枢：`mc-lib-catalog`
 
 **③ 数据链**（短文 frontmatter → 脚本生成 → MCP 消费）

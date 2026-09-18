@@ -373,6 +373,11 @@ export function analyzeModJar(jarPath: string, requestedVersion?: string): Analy
     }
   }
 
+  // C10：残留 fabric.mod.json 不得压过 Neo/Forge 元数据（根 AGENTS.md）。
+  // 只保护 id/version/name/description 四类赋值；loaders.push("fabric") 保留（多 loader 事实仍要登记）。
+  const hasNeoOrForgeToml =
+    entries.has("META-INF/neoforge.mods.toml") || entries.has("META-INF/mods.toml");
+
   // ── fabric.mod.json ─────────────────────────────────────────────────────────
   const fabricJson = entries.get("fabric.mod.json");
   if (fabricJson) {
@@ -381,10 +386,10 @@ export function analyzeModJar(jarPath: string, requestedVersion?: string): Analy
       const quiltWins = meta.loaders.includes("quilt");
       if (!quiltWins) {
         meta.loaders.push("fabric");
-        if (typeof fabric.id === "string") meta.modId = fabric.id;
-        if (typeof fabric.version === "string") meta.modVersion = fabric.version;
-        if (typeof fabric.name === "string") meta.modName = fabric.name;
-        if (typeof fabric.description === "string") meta.description = fabric.description;
+        if (typeof fabric.id === "string" && !hasNeoOrForgeToml) meta.modId = fabric.id;
+        if (typeof fabric.version === "string" && !hasNeoOrForgeToml) meta.modVersion = fabric.version;
+        if (typeof fabric.name === "string" && !hasNeoOrForgeToml) meta.modName = fabric.name;
+        if (typeof fabric.description === "string" && !hasNeoOrForgeToml) meta.description = fabric.description;
         const eps = parseEntrypointsMap(fabric.entrypoints);
         if (eps) meta.entrypoints = eps;
       } else if (!meta.entrypoints) {

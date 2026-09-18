@@ -216,17 +216,24 @@ export function fabricRulesOverlay(
   } catch {
     ruleNames = [];
   }
-  const overlayRules = ruleNames.filter((n) => /^(0[2-9]|10)-/.test(n));
+  // C22：与权威集合 QUILT_FABRIC_OVERLAY_IDS（02–04、07–10，不含 05/06）保持一致。
+  const overlayRules = ruleNames.filter((n) => /^(0[2-4]|0[7-9]|10)-/.test(n));
   if (!overlayRules.length) {
     return {
       wanted,
       status: "version_mismatch",
-      note: `${wanted} 有 AGENTS 但没有 02–10 规则。仍返回 Quilt 本档；改口 search_fabric_docs，不要用邻版 Fabric。`,
+      note: `${wanted} 有 AGENTS 但没有 02–04/07–10 规则。仍返回 Quilt 本档；改口 search_fabric_docs，不要用邻版 Fabric。`,
       fabricDir,
       kind: "fabric",
     };
   }
-  return { wanted, status: "ok", note: `02–10 可读 ${wanted}/.cursor/rules`, fabricDir, kind: "fabric" };
+  return {
+    wanted,
+    status: "ok",
+    note: `02–04/07–10 可读 ${wanted}/.cursor/rules（05/06 用本档 QSL/QSL 网络短规则）`,
+    fabricDir,
+    kind: "fabric",
+  };
 }
 
 export function forgeCompatOverlay(

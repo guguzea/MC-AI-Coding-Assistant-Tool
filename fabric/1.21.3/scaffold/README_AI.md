@@ -187,8 +187,8 @@ public class ExampleModClient implements ClientModInitializer {
 # 启动数据生成器
 ./gradlew runDatagen
 
-# 刷新 Loom（Mappings 变更后必需）
-./gradlew clean loom
+# 刷新映射后的源码（Mappings 变更后必需）
+./gradlew clean genSources
 
 # 生成 IDE 项目
 ./gradlew idea    # IntelliJ IDEA

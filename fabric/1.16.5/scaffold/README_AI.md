@@ -188,7 +188,7 @@ MinecraftClient client = MinecraftClient.getInstance();
 ./gradlew build                                            # 首次构建（下载依赖，耗时较长）
 ./gradlew build --no-build-cache --rerun-tasks              # 疑似缓存脏时全量重跑
 ./gradlew processResources                                 # 只看 fabric.mod.json / mixins 是否展开成期望值
-./gradlew clean loom                                       # 换 yarn mappings 后刷新 Loom
+./gradlew clean genSources                                       # 换 yarn mappings 后刷新 Loom
 ./gradlew runClient                                         # 启动客户端
 ./gradlew runServer                                         # 启动服务端
 ./gradlew idea                                             # 生成 IntelliJ IDEA 工程

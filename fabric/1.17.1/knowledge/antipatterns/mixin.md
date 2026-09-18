@@ -96,13 +96,13 @@ private void onTick(CallbackInfo ci) {
 }
 ```
 
-### 6. 未运行 `./gradlew clean loom`
+### 6. 未运行 `./gradlew clean genSources`
 
 **错误：** Mapping 变更或 mixin 配置变更后没有刷新 Loom 缓存。
 
 **正确方案：**
 ```bash
-./gradlew clean loom
+./gradlew clean genSources
 # 或
 ./gradlew clean build
 ```
@@ -131,5 +131,5 @@ loom {
 | Mixin 是否注入 | 添加日志输出测试 |
 | 包名是否匹配 | 对比 fabric.mixins.json 的 package 和实际类包名 |
 | @At 选项是否正确 | 确认 HEAD/RETURN/TAIL/INVOKE 大小写 |
-| 是否需要 clean loom | 变更后执行 `./gradlew clean loom` |
+| 是否需要 clean loom | 变更后执行 `./gradlew clean genSources` |
 | @Shadow 成员是否存在 | 在 Yarn 映射中查找正确名称 |

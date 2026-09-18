@@ -69,7 +69,7 @@ dependencies {
 
 **正确方案：**
 ```bash
-./gradlew clean loom
+./gradlew clean genSources
 ```
 
 ### 5. gradle.properties 版本号不一致
@@ -126,5 +126,5 @@ loom {
 | Loom 版本 | 本档插件 id 是 `net.fabricmc.fabric-loom-remap`，版本取 scaffold 的 `loom_version=1.17-SNAPSHOT`（见 §2、rules/00:109）|
 | 依赖类型 | API 使用 modApi，实现使用 modImplementation |
 | Fabric API 坐标 | 使用 `net.fabricmc.fabric-api:fabric-api`（不是 `net.fabric.sdk`） |
-| 映射变更 | 执行 `./gradlew clean loom` |
+| 映射变更 | 执行 `./gradlew clean genSources` |
 | 版本一致性 | gradle.properties 中的版本与 build.gradle 一致 |

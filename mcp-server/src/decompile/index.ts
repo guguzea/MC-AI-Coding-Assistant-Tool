@@ -9,7 +9,8 @@
  * - 缓存只写 $MC_SKILL_CACHE；不触碰 MC_SKILL_ALLOW_WRITE / 项目目录
  */
 
-import { existsSync } from "fs";
+import { existsSync, realpathSync } from "fs";
+import { isAbsolute, resolve } from "path";
 import { actionable } from "../utils/actionable.js";
 import { getMinecraftSource, type MinecraftSourceArgs } from "./services/decompile-service.js";
 import { analyzeModJar } from "./services/mod-analyzer.js";
@@ -46,6 +47,32 @@ export function analyzeModJarHandler(args: AnalyzeModJarArgs) {
 export function searchModCodeHandler(args: SearchModCodeArgs) {
   let root = args.decompiledDir?.trim();
   let viaJar: string | null = null;
+
+  // C11：读侧的 decompiledDir 此前原样收下（相对路径会被 resolve(cwd) 收下，等于「绝对路径」这条
+  // 隐含约束不成立）。这里强制绝对路径 + realpath 规范化，越界处置见 LEDGER/NEXT-ROUND（是否进一步
+  // 限制到缓存根属能力变更，需用户裁定）。
+  if (root) {
+    if (!isAbsolute(root)) {
+      return {
+        found: false,
+        query: args.query,
+        root,
+        hits: [],
+        total: 0,
+        truncated: false,
+        action: actionable("INVALID_INPUT", `decompiledDir 必须是绝对路径（收到「${root}」）`, [
+          "传绝对路径，如 <MC_SKILL_CACHE>/decompiled-mods/<modId>/<version>",
+          "或传 jarPath（须先 decompile_mod_jar）",
+        ]),
+      };
+    }
+    root = resolve(root);
+    try {
+      if (existsSync(root)) root = realpathSync(root);
+    } catch {
+      /* realpath 失败时保留 resolve 后的绝对路径，后续按「目录不存在」报 NOT_FOUND */
+    }
+  }
 
   if (!root && args.jarPath) {
     if (!existsSync(args.jarPath)) {

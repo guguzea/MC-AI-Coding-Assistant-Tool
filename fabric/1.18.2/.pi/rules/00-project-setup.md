@@ -38,8 +38,8 @@ description: 00 — 项目结构与构建
 # 仅重新编译资源文件
 ./gradlew processResources
 
-# 刷新 Loom（修复 mappings 问题后必需执行）
-./gradlew clean loom
+# 刷新映射后的源码（修复 mappings 问题后执行；任务名以 ./gradlew tasks 为准）
+./gradlew clean genSources
 
 # 在 IDEA 中同步项目后，使用 IDE 内置构建
 ```
@@ -96,7 +96,7 @@ IF 报错包含 "Could not find net.fabricmc:yarn"
 IF 报错包含 "Mixin injection failed"
   → 确认 fabric.mixins.json 格式正确
   → 确认 mixin 包的包名与 fabric.mixins.json 中的 package 一致
-  → 运行 ./gradlew clean loom
+  → 运行 ./gradlew clean genSources
 
 IF 报错包含 "No resource bundling found"
   → 这是正常的（非客户端打包时），可忽略

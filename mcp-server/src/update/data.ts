@@ -447,6 +447,9 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
         ),
       };
     }
+    // C5：取锁成功后立刻自愈上次崩溃留下的半交换态（data/ 缺、data.prev/ 握旧内容）。
+    // 放在这里而不是换入之前：dryRun 更早 return（不写盘），busy 路径不能抢新持有者的锁。
+    recoverPartialSwap(dataDir);
     const ex = extractZip(zipPath, staging);
     if (!ex.ok) return { ok: false, steps, filesToOverwrite, diskSpace, action: ex.action };
     const symlink = findSymlinkInTree(staging);
@@ -481,7 +484,7 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
         ),
       };
     }
-    recoverPartialSwap(dataDir);
+    // C5：恢复已上移到取锁成功之后（紧随 acquireUpdateApplyLock）；此处不再重复调用。
     const nextDir = siblingName(dataDir, ".next");
     mkdirSync(nextDir, { recursive: true });
     try {

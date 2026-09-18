@@ -29,7 +29,7 @@ knowledge/
 
 1. 先查阅 `antipatterns/gradle.md`
 2. 检查 `build.gradle` 和 `gradle.properties`
-3. 尝试 `./gradlew clean loom`
+3. 尝试 `./gradlew clean genSources`
 
 ### 遇到注册问题？
 

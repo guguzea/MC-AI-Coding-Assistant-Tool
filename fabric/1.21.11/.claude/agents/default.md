@@ -129,9 +129,9 @@ fabric-mod/
 # 运行服务端
 ./gradlew runServer
 
-# 刷新 Loom（修复混淆映射问题）
+# 刷新映射后的源码（修复混淆映射问题）
 ./gradlew clean
-./gradlew loom
+./gradlew genSources
 
 # 生成 IDE 项目文件
 ./gradlew idea   # IntelliJ IDEA

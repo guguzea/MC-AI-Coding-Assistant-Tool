@@ -807,6 +807,16 @@ export function validateProject(query: ValidateQuery): ValidationResult {
   }
   if (loader === "neoforge") {
     const r = validateNeoForge(query);
+    // C14：@Mod-id 与元数据一致性对 NeoForge 同样成立 —— 下方 `loader === "forge"` 的增强校验门
+    // 对 neo 路径永远不可达（这里已 early return），此前该不变量在 neo 工程上完全没有校验。
+    const neoTomlModId = extractModIdFromModsToml(query.neoModsToml ?? query.modsToml ?? "");
+    checkModAnnotation(javaFiles, neoTomlModId, r.errors, r.warnings);
+    if (r.errors.length > 0) {
+      // 复刻 loaders.ts finish() 的判定：push 过 error 后 status/passed/ok 必须同步，否则会「有错却 passed」。
+      r.passed = false;
+      r.ok = false;
+      r.status = "failed";
+    }
     if (crashReportsWarning) r.warnings.unshift(crashReportsWarning);
     if (javaWarning) r.warnings.unshift(javaWarning);
     r.warnings.push(...recipeWarnings);

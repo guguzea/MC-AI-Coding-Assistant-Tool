@@ -16,7 +16,7 @@ public static final ItemStack STACK = new ItemStack(MY_ITEM.get()); // NPE! MY_I
 ```java
 // ✅ 在 DeferredHolder 的 lambda 内部引用（延迟到注册完成后）
 public static final DeferredHolder<Item, Item> MY_ITEM = ITEMS.register("my_item",
-    () -> new Item(new Item.Properties().stacksTo(64).tab(CreativeModeTab.TAB_MISC))
+    () -> new Item(new Item.Properties().stacksTo(64))
 );
 
 // ✅ 或者在 modEventBus 回调中使用

@@ -109,7 +109,7 @@ public static final DeferredRegister<Item> ITEMS = ...;  // 已存在
 
 // 在 RegistryObject 声明区域添加：
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
-    () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC))
+    () -> new Item(new Item.Properties())
 );
 ```
 

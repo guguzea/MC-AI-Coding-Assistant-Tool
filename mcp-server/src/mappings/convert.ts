@@ -207,7 +207,7 @@ function fail(query: MappingQuery, extras: Partial<MappingResult> = {}): Mapping
     } else if (extrasKind === "SCHEMA_FIELDS_UNAVAILABLE") {
       resolvedAction = actionable(
         ActionCodes.SCHEMA_FIELDS_UNAVAILABLE,
-        "当前 sqlite 为 schema v2，无 fields 表",
+        "当前 sqlite 无 fields 表（schema 过旧，需重建）",
         ["运行 npm run build:yarn-sqlite --all 重建为 schema v4", "或改查 method/class"],
         ["get_server_status"],
       );
@@ -472,7 +472,16 @@ export function convertMapping(query: MappingQuery): MappingResult {
     dbPath
   ) {
     const hit = resolveObfuscatedThreeWay(version, memberName);
-    if (hit.found && (hit.kind === "method" || hit.kind === "field") && (to === "mcp" || to === "parchment")) {
+    // C9：补「时代」前置 —— 原实现只判 looked.source !== "csv"，于是 1.12.2/1.13.2（era=mcp-csv、
+    // 走 Forge CSV 库）也被判成「没有 MCP 可读层」。这里只加 era 判定，**不**加 :412 的
+    // `!resolveCsvMappingDbPath(version)`：1.14.4 虽有 CSV 层，其 yarn 专名仍不得冒充 MCP
+    //（test-core.mjs:1300 的 fake114 与 :593 的 1.20.1 parchment 用例把这条语义钉死）。
+    if (
+      era === "yarn-tiny" &&
+      hit.found &&
+      (hit.kind === "method" || hit.kind === "field") &&
+      (to === "mcp" || to === "parchment")
+    ) {
       return yarnTinyNoMcpLayer(query, {
         mappingEra: hit.mappingEra ?? era,
         schemaVersion,
@@ -656,7 +665,13 @@ export function convertMapping(query: MappingQuery): MappingResult {
       });
     }
     if (looked.found && looked.row) {
-      if ((to === "mcp" || to === "parchment") && looked.source !== "csv") {
+      // C9：补「时代」前置 —— 原实现只判 looked.source !== "csv"，1.12.2/1.13.2 因此被误判成无 MCP 层。
+      // 只加 era 判定，**不**加 CSV 合取项（会放松 1.14.4，见 test-core.mjs:1300）。
+      if (
+        era === "yarn-tiny" &&
+        (to === "mcp" || to === "parchment") &&
+        looked.source !== "csv"
+      ) {
         return yarnTinyNoMcpLayer(query, {
           mappingEra: looked.mappingEra ?? era,
           schemaVersion,
@@ -787,7 +802,12 @@ export function convertMapping(query: MappingQuery): MappingResult {
       });
     }
     if (looked.found && looked.row) {
-      if ((to === "mcp" || to === "parchment") && looked.source !== "csv") {
+      // C9：method 路径同站点 2 —— 只加 era 前置（不加 CSV 合取项）。
+      if (
+        era === "yarn-tiny" &&
+        (to === "mcp" || to === "parchment") &&
+        looked.source !== "csv"
+      ) {
         return yarnTinyNoMcpLayer(query, {
           mappingEra: looked.mappingEra ?? era,
           schemaVersion,

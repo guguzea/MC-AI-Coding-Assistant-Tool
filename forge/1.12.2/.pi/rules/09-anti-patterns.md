@@ -16,7 +16,7 @@ description: 09 — 反模式库
 ```java
 // 错误
 public class ModBlocks {
-    public static Block MY_BLOCK = new Block().setRegistryName(MODID, "my_block"); // ❌ 太早
+    public static Block MY_BLOCK = new Block(Material.ROCK).setRegistryName(MODID, "my_block"); // ❌ 太早
 }
 ```
 
@@ -30,7 +30,7 @@ public class ModBlocks {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        MY_BLOCK = new Block().setRegistryName(MODID, "my_block");
+        MY_BLOCK = new Block(Material.ROCK).setRegistryName(MODID, "my_block");
         event.getRegistry().register(MY_BLOCK);
     }
 }

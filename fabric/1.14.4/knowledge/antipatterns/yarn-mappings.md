@@ -72,7 +72,7 @@ mappings "net.fabricmc:yarn:1.14.4+build.4:v2"
 
 **正确方案：**
 ```bash
-./gradlew clean loom
+./gradlew clean genSources
 ./gradlew build
 ```
 

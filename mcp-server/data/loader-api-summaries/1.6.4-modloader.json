@@ -33,6 +33,13 @@
           "signature": "addName(...)"
         },
         {
+          "name": "addLocalization",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "addLocalization(...)"
+        },
+        {
           "name": "registerBlock",
           "returnType": "?",
           "parameters": [],
@@ -40,11 +47,32 @@
           "signature": "registerBlock(...)"
         },
         {
-          "name": "registerItem",
+          "name": "registerBlock",
           "returnType": "?",
           "parameters": [],
           "modifiers": [],
-          "signature": "registerItem(...)"
+          "signature": "registerBlock(...)"
+        },
+        {
+          "name": "registerTileEntity",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerTileEntity(...)"
+        },
+        {
+          "name": "addSpawn",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "addSpawn(...)"
+        },
+        {
+          "name": "getUniqueEntityId",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "getUniqueEntityId(...)"
         },
         {
           "name": "setInGameHook",

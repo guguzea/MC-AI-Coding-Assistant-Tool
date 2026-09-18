@@ -35,7 +35,7 @@ src/main/
 ./gradlew build        # 构建模组
 ./gradlew runClient    # 运行客户端
 ./gradlew runServer    # 运行服务端
-./gradlew loom        # 刷新 Loom
+./gradlew genSources        # 刷新映射后的源码
 ```
 
 ## 关键 API 变化 (1.21.x)

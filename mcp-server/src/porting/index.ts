@@ -1451,13 +1451,30 @@ export async function portProject(args: unknown) {
       }
     }
 
+    // C6：调用方要求写（dryRun=false）但未 confirmed=true ⇒ 只回文本、盘上 0 文件。
+    // dryRun 字段必须报「有效值」，否则机器/agent 会误判为已落盘。
+    const writeNotConfirmed = dryRun === false && !doWrite;
+    const warnings = [
+      ...(defaultVersionWarning ?? []),
+      ...(writeNotConfirmed
+        ? ["dryRun=false 但未传 confirmed=true：未写入任何文件（仅返回 diffPreview）"]
+        : []),
+    ];
     const output: InitArchitecturyOutput = {
       ok: true,
-      dryRun,
+      dryRun: !doWrite,
       conflicts: null,
       filesToWrite: Object.keys(files),
       diffPreview: doWrite ? undefined : files,
-      warnings: defaultVersionWarning,
+      ...(warnings.length > 0 ? { warnings } : {}),
+      ...(writeNotConfirmed
+        ? {
+            writeError: {
+              code: "CONFIRMATION_REQUIRED",
+              message: "dryRun=false 须同时传 confirmed=true；未确认时只返回文本（人在环）",
+            },
+          }
+        : {}),
     };
     return JSON.stringify(output, null, 2);
   }

@@ -14,7 +14,7 @@ public static final DeferredRegister<Block> BLOCKS =
 
 // 1.19.4 用 MaterialColor + .color()；.mapColor(MapColor...) 是 1.20.x 才有的名字
 public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_block",
-    () -> new Block(BlockBehaviour.Properties.of()
+    () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
         .color(MaterialColor.STONE)
         .strength(1.5f, 6.0f)
         .requiresCorrectToolForDrops()
@@ -76,7 +76,7 @@ public void neighborChanged(BlockState state, Level level, BlockPos pos,
 public class MachineBlock extends Block implements EntityBlock {
     public MachineBlock() {
         // of() 无形与 of(Material) 均有本档规则用例（01-registry.mdc:175、02-block.mdc:168）
-        super(BlockBehaviour.Properties.of()
+        super(BlockBehaviour.Properties.of(Material.STONE)
             .color(MaterialColor.STONE)
             .strength(1.5f, 6.0f));
     }
@@ -158,7 +158,7 @@ public class MachineBlockEntity extends BlockEntity {
 
 ```java
 public static final RegistryObject<Block> MY_ORE = BLOCKS.register("my_ore",
-    () -> new Block(BlockBehaviour.Properties.of()
+    () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
         .color(MaterialColor.STONE)
         .strength(3.0f, 3.0f)
         .requiresCorrectToolForDrops()

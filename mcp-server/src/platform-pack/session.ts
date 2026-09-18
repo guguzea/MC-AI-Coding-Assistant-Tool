@@ -422,8 +422,14 @@ function verifiedApiNotes(packDir: string): Array<{ path: string; excerpt: strin
   } catch {
     return [];
   }
+  // C12：覆盖该档 knowledge/common 下**全部**核实表，不再按「文件名含 verified-api」白名单过滤 ——
+  // quilt 的 qsl-verified.md（10 档）、modloader 的 safe-api.md（3 档）、rift 的 listeners.md 等
+  // 都曾因字面量不匹配而永不进 session（正是 AGENTS.md 要求「方法名只许来自该档核实表」的那些表）。
+  // sort + 上限 8 保证输出确定性且不会撑爆上下文（实测各档 common 仅 1–3 个 .md）。
   return names
-    .filter((n) => /verified-api/i.test(n) && n.endsWith(".md"))
+    .filter((n) => n.endsWith(".md"))
+    .sort()
+    .slice(0, 8)
     .map((n) => {
       const abs = join(common, n);
       const text = readText(abs, 1200);

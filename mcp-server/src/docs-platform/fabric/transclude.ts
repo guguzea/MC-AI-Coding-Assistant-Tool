@@ -383,7 +383,7 @@ export interface ExpandTranscludesResult {
  * 所以**档根**（`data/fabric_<ver>`）扮演 cwd；无 `@` 前缀的目标同样落档根（上游是进程 cwd）。
  * 别名列（provenance `aliases`）优先，用于覆盖上游仓库里改名/挪位的少数目标。
  */
-function localPathFor(target: string, packRoot: string, provenance: ReferenceProvenance | null): string {
+function localPathFor(target: string, packRoot: string, provenance: ReferenceProvenance | null): string | null {
   const root = resolve(packRoot);
   const alias = provenance?.aliases.get(target);
   if (alias) {
@@ -391,7 +391,12 @@ function localPathFor(target: string, packRoot: string, provenance: ReferencePro
     const rel = relative(root, abs);
     if (!rel.startsWith("..") && !isAbsolute(rel)) return abs;
   }
-  return join(root, target.replace(/^@/, ""));
+  // C7：回退分支必须与别名分支同形做越界检查 —— join 会把 `../..` 规范化掉，否则
+  // `../../../../Windows/win.ini` 能逃出 packRoot 并被内联进交付正文（FullDocResult.content）。
+  const abs = join(root, target.replace(/^@/, ""));
+  const rel = relative(root, abs);
+  if (!rel.startsWith("..") && !isAbsolute(rel)) return abs;
+  return null;
 }
 
 /** 目标 → 上游相对路径（= provenance `files` 的键；别名已折叠）。gate 与运行时共用这一条公式。 */
@@ -402,7 +407,7 @@ export function upstreamRelPathFor(target: string, provenance: ReferenceProvenan
 }
 
 /** 目标 → 本地镜像绝对路径（`<packRoot>/<上游相对路径>`）。 */
-export function referenceLocalPath(target: string, packRoot: string, provenance: ReferenceProvenance | null): string {
+export function referenceLocalPath(target: string, packRoot: string, provenance: ReferenceProvenance | null): string | null {
   return localPathFor(target, packRoot, provenance);
 }
 
@@ -471,12 +476,13 @@ export function expandTranscludes(
       options = parseAttrs(rawAttrs.replace(/\[[^\]]*\]/g, "").replace(/\{[^}]*\}/g, ""));
     }
     const absTarget = localPathFor(target, packRoot, provenance);
-    const fileText = readReferenceFile(absTarget, now);
+    // C7：越界目标返回 null ⇒ 并入既有「本地取不到」通道，绝不让转义路径进入交付正文。
+    const fileText = absTarget === null ? null : readReferenceFile(absTarget, now);
     let body: string;
     if (fileText === null) {
       if (isAngle) angleMissingList.push(target);
       else missing.push(target);
-      body = `Not Found: ${absTarget}`;
+      body = `Not Found: ${absTarget ?? target}`;
     } else if (angleSpec) {
       const [got] = angleResolve(fileText, angleSpec);
       body = got;

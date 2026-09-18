@@ -86,7 +86,7 @@ dependencies {
 
 **正确方案：**
 ```bash
-./gradlew clean loom
+./gradlew clean genSources
 ```
 
 ### 6. gradle.properties 版本号不一致
@@ -144,5 +144,5 @@ targetCompatibility = JavaVersion.VERSION_1_8
 | Loom 版本 | 检查 `fabric-loom` 插件版本，应为 `0.4-SNAPSHOT` |
 | Java 版本 | 检查 source/targetCompatibility，应为 `VERSION_1_8` |
 | 依赖类型 | API 使用 modApi，实现使用 modImplementation |
-| 映射变更 | 执行 `./gradlew clean loom` |
+| 映射变更 | 执行 `./gradlew clean genSources` |
 | 版本一致性 | gradle.properties 中的版本与 build.gradle 一致 |

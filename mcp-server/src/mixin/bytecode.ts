@@ -174,10 +174,11 @@ export class Cp {
     }
     return { name: this.utf8(e.idx1), desc: this.utf8(e.idx2) };
   }
-  memberRef(index: number, tag: number): ClassMemberRef {
+  memberRef(index: number, tag: number | readonly number[]): ClassMemberRef {
     const e = this.at(index);
-    if (!e || e.tag !== tag || e.idx1 === undefined || e.idx2 === undefined) {
-      throw new ClassFormatError(`常量池 #${index} 非 member ref (tag ${tag})`);
+    const tags = typeof tag === "number" ? [tag] : tag;
+    if (!e || !tags.includes(e.tag) || e.idx1 === undefined || e.idx2 === undefined) {
+      throw new ClassFormatError(`常量池 #${index} 非 member ref (tag ${tags.join("|")})`);
     }
     return { owner: this.className(e.idx1), ...this.nameType(e.idx2) };
   }
@@ -234,9 +235,16 @@ function disassemble(code: Buffer, cp: Cp): { opcodes: number[]; calls: CallSite
     if (op === 0xb2 || op === 0xb3 || op === 0xb4 || op === 0xb5) {
       needBuf(code, pos, 2, "字段引用操作数");
       calls.push({ opcode: op, target: cp.memberRef(code.readUInt16BE(pos), 9) });
-    } else if (op === 0xb6 || op === 0xb7 || op === 0xb8) {
+    } else if (op === 0xb6 || op === 0xb7) {
       needBuf(code, pos, 2, "方法引用操作数");
       calls.push({ opcode: op, target: cp.memberRef(code.readUInt16BE(pos), 10) });
+    } else if (op === 0xb8) {
+      // C1：invokestatic 的操作数可以是 CONSTANT_Methodref(10) 或 CONSTANT_InterfaceMethodref(11)
+      // —— Java 8+ 的接口静态方法（JEP 113）由 javac 发 tag 11。只放宽 0xb8：
+      // A20 放宽实验实测 temp/dg.jar 15/90 → 0、temp/bus.jar 2/22 → 0、26.1 档 8 → 0；
+      // 0xb6/0xb7 保留严格 tag 10（无任何夹具证据，不凭推测放松）。
+      needBuf(code, pos, 2, "invokestatic 操作数");
+      calls.push({ opcode: op, target: cp.memberRef(code.readUInt16BE(pos), [10, 11]) });
     } else if (op === 0xb9) {
       needBuf(code, pos, 2, "invokeinterface 操作数");
       calls.push({ opcode: op, target: cp.memberRef(code.readUInt16BE(pos), 11) });
@@ -324,6 +332,9 @@ export function parseClassFile(buf: Buffer): ClassInfo {
   }
 
   const fields: ClassField[] = [];
+  // C2：字段表紧跟在接口表之后，前面最后一次 needBuf 只覆盖接口元素 ⇒ 这里必须重新守边界，
+  // 否则截断 class 会在 readUInt16BE 抛 RangeError，而不是契约的 ClassFormatError。
+  needBuf(buf, pos, 2, "fields_count");
   const fieldCount = buf.readUInt16BE(pos);
   pos += 2;
   for (let i = 0; i < fieldCount; i++) {
@@ -338,6 +349,8 @@ export function parseClassFile(buf: Buffer): ClassInfo {
   const methods: ClassMethod[] = [];
   const methodCodes = new Map<string, number[]>();
   const calls = new Map<string, CallSite[]>();
+  // C2：上面 forEachAttribute 会按属性表任意前进 ⇒ methods_count 必须重新守边界。
+  needBuf(buf, pos, 2, "methods_count");
   const methodCount = buf.readUInt16BE(pos);
   pos += 2;
   for (let i = 0; i < methodCount; i++) {

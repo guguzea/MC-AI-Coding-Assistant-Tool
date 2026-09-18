@@ -14,7 +14,7 @@ mappings: parchment
 ```java
 // 注册（参见 mc-registry Skill）
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-    () -> new Block(BlockBehaviour.Properties.of()
+    () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
         .color(MaterialColor.STONE)
         .strength(1.5f, 6.0f)
         .requiresCorrectToolForDrops()

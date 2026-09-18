@@ -136,6 +136,8 @@ package com.example.${modId}.datagen;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
@@ -153,26 +155,30 @@ public class ${pascalName}LootTableProvider extends LootTableProvider {
     public static final DeferredBlock<Block> ${upperName}_BLOCK =
         BLOCKS.register("${targetName}", () -> new Block(BlockBehaviour.Properties.of()));
 
-    public ${pascalName}LootTableProvider(PackOutput output) {
+    // 1.20.5 起 LootTableProvider 构造器为 4 参：超级构造必须收 CompletableFuture<HolderLookup.Provider>。
+    public ${pascalName}LootTableProvider(
+            PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(
             output,
             Set.of(),
             List.of(
                 new LootTableProvider.SubProviderEntry(
                     ${pascalName}BlockLoot::new,
-                    LootContextParamSets.BLOCK)));
+                    LootContextParamSets.BLOCK)),
+            registries);
     }
 
     public static void gatherData(GatherDataEvent event) {
         event.getGenerator().addProvider(
             event.includeServer(),
-            ${pascalName}LootTableProvider::new);
+            (PackOutput output) -> new ${pascalName}LootTableProvider(
+                output, event.getLookupProvider()));
     }
 }
 
 class ${pascalName}BlockLoot extends BlockLootSubProvider {
-    public ${pascalName}BlockLoot() {
-        super(Set.of(), FeatureFlags.REGISTRY.allFlags());
+    public ${pascalName}BlockLoot(HolderLookup.Provider lookupProvider) {
+        super(Set.of(), FeatureFlags.DEFAULT_FLAGS, lookupProvider);
     }
 
     @Override

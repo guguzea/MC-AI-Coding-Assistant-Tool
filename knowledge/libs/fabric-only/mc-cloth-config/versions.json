@@ -33,10 +33,10 @@
       "basis": "pom 里 fabric-api 依赖为 0.76.0+1.19.4（与本档 MC 同线）；正文保持注释态（API 面未入库 = TODO(未核实) 模式，坐标在注释里给出）"
     },
     "1.20.1": {
-      "coord": "11.1.106",
+      "coord": "11.1.136",
       "state": "active",
       "textApi": "literal",
-      "basis": "pom 里 fabric-api 依赖为 0.83.0+1.20（旧稿写的 11.0.106 上游不存在）"
+      "basis": "坐标真值经 4 条仓内 oracle 复核：mcp-server/data/lib-manifests/all.json（11.1.136 = true / 11.1.106 = false）、mcp-server/data/lib-api-summaries/cloth-config.json（键 11.1.136）、生成物 mcp-server/src/diagnostics/library-catalog.ts（3 处 11.1.136）、community_knowledge/authored/lib-cloth-config.md:55/63/102（2026-08 反编译核对 325 个 java 文件）。此前的 11.1.106 不成立；更早的 11.0.106 上游不存在（历史说明保留）。"
     },
     "1.20.4": {
       "coord": "13.0.114",

@@ -190,14 +190,14 @@ MyClass.class_12345 obj = new MyClass.class_12345();  // 错误！
 
 ## 5. Loom / Gradle 反模式
 
-### ❌ 忘记运行 ./gradlew clean loom
+### ❌ 运行不存在的 ./gradlew genSources（Gradle 无此任务）
 
 ```bash
 # ❌ 错误：Mappings 变更后直接 build
 ./gradlew build  # 可能不生效
 
-# ✅ 正确：Mappings 变更后先 clean 再 loom
-./gradlew clean loom
+# ✅ 正确：Mappings 变更后先 clean 再 genSources
+./gradlew clean genSources
 ```
 
 ### ❌ 混用 modImplementation 和 modApi

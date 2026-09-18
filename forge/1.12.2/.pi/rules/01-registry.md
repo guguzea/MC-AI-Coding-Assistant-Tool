@@ -37,16 +37,16 @@ private static final String MODID = "ExampleMod";    // 不能大写
 
 ```java
 // ✅ 正确：全小写，下划线分隔
-event.getRegistry().register(new Block().setRegistryName(MODID, "my_awesome_block"));
+event.getRegistry().register(new Block(Material.ROCK).setRegistryName(MODID, "my_awesome_block"));
 
 // ❌ 错误：驼峰命名
-event.getRegistry().register(new Block().setRegistryName(MODID, "myAwesomeBlock"));
+event.getRegistry().register(new Block(Material.ROCK).setRegistryName(MODID, "myAwesomeBlock"));
 
 // ❌ 错误：大写开头
-event.getRegistry().register(new Block().setRegistryName(MODID, "MyAwesomeBlock"));
+event.getRegistry().register(new Block(Material.ROCK).setRegistryName(MODID, "MyAwesomeBlock"));
 
 // ❌ 错误：使用横杠
-event.getRegistry().register(new Block().setRegistryName(MODID, "my-awesome-block"));
+event.getRegistry().register(new Block(Material.ROCK).setRegistryName(MODID, "my-awesome-block"));
 ```
 
 ---
@@ -74,7 +74,7 @@ IF 平台 = NeoForge
 ```
 IF 注册 方块
   → @EventBusSubscriber + RegistryEvent.Register<Block>
-  → 使用 event.getRegistry().register(new Block().setRegistryName(...))
+  → 使用 event.getRegistry().register(new Block(Material.ROCK).setRegistryName(...))
 
 IF 注册 物品
   → @EventBusSubscriber + RegistryEvent.Register<Item>

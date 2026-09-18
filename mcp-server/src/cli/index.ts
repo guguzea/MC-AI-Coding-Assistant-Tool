@@ -45,6 +45,114 @@ const COMMANDS: Cmd[] = [
   { group: "gate", name: "run", summary: "跑一道门：mc-skill gate run <name>（名字可省略 assert- 前缀）", script: null },
 ];
 
+/**
+ * C18：薄壳转发命令的下游脚本实际接受的 flag 白名单。
+ * 逐条取自各脚本的参数解析段（不猜）：
+ *   lib resolve      → scripts/resolve-lib-skills.mjs:261-274
+ *   lib summary      → scripts/build-api-summaries.mjs:39-75
+ *   lib ownership    → mcp-server/scripts/assert-lib-ownership.mjs（不解析 argv）
+ *   corpus decompile → scripts/batch-decompile.mjs:36-40 KNOWN_FLAGS
+ *   corpus emit      → scripts/emit-verified-api-from-summaries.mjs:41-51
+ *   corpus merge     → scripts/merge-verified-api.mjs:40-86
+ *   cloth project    → scripts/project-cloth-skill.mjs:24 + scripts/_lib/write-guard.mjs:21-23
+ */
+const SCRIPT_FLAGS: Record<string, { long: ReadonlySet<string>; short: ReadonlySet<string> }> = {
+  "lib resolve": {
+    long: new Set(["platform", "version", "validate", "mcVersion"]),
+    short: new Set(["h"]),
+  },
+  "lib summary": {
+    long: new Set([
+      "only", "out", "cache", "max-files", "max-classes", "max-methods", "max-methods-per-class",
+      "max-depth", "max-versions", "max-file-kb", "write",
+    ]),
+    short: new Set(["h"]),
+  },
+  "lib ownership": { long: new Set<string>([]), short: new Set<string>([]) },
+  "corpus decompile": {
+    long: new Set([
+      "filter", "limit", "resume", "concurrency-download", "concurrency-decompile", "java-xmx",
+      "jar-dir", "output", "progress", "timeout-ms", "help", "shard", "cache-dir", "reset",
+    ]),
+    short: new Set(["h"]),
+  },
+  "corpus emit": { long: new Set(["slug", "out", "dry-run"]), short: new Set(["h"]) },
+  "corpus merge": { long: new Set(["input", "catalog", "write", "dry-run", "force"]), short: new Set<string>([]) },
+  "cloth project": { long: new Set(["write", "dry-run"]), short: new Set<string>([]) },
+};
+
+function editDistance(a: string, b: string): number {
+  const dp: number[][] = Array.from({ length: a.length + 1 }, () => new Array<number>(b.length + 1).fill(0));
+  for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+  for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1),
+      );
+    }
+  }
+  return dp[a.length][b.length];
+}
+
+function nearestFlag(name: string, longs: ReadonlySet<string>): string | null {
+  let best: string | null = null;
+  let bestD = Infinity;
+  for (const f of longs) {
+    const d = editDistance(name, f);
+    if (d < bestD) {
+      bestD = d;
+      best = f;
+    }
+  }
+  return best !== null && bestD <= 2 ? best : null;
+}
+
+/** C18：转发前校验 flag；未知/拼错 ⇒ rc=2 + 自带纠正路径（本仓 S3 判据）。 */
+function validateForwardFlags(cmd: Cmd, rest: string[]): number | null {
+  const spec = SCRIPT_FLAGS[`${cmd.group} ${cmd.name}`];
+  if (!spec) return null;
+  const allowed = [...spec.long].map((f) => `--${f}`).join(" ");
+  const reject = (msg: string): number => {
+    console.error(`${cmd.group} ${cmd.name}: ${msg}`);
+    console.error(
+      `可用参数：${allowed || "（本命令无可用参数）"}（帮助：${ENTRY} ${cmd.group} ${cmd.name} --help）`,
+    );
+    return 2;
+  };
+  for (const t of rest) {
+    if (!t.startsWith("-") || t === "-" || /^-\d/.test(t)) continue; // 单独的 "-" 与负数是值
+    if (t.startsWith("--")) {
+      const name = t.slice(2).split("=")[0];
+      if (name === "" || spec.long.has(name)) continue;
+      const near = nearestFlag(name, spec.long);
+      return reject(`未知参数 --${name}${near ? `（是否想写 --${near}？）` : ""}`);
+    }
+    const name = t.slice(1).split("=")[0];
+    if (spec.short.has(name)) continue;
+    if (spec.long.has(name)) return reject(`疑似漏写一个连字符：-${name} → --${name}`);
+    const near = nearestFlag(name, spec.long);
+    return reject(`未知参数 -${name}${near ? `（是否想写 --${near}？）` : ""}`);
+  }
+  return null;
+}
+
+/** C19：仓库线 `lib resolve` 接受工具线的 `--mcVersion`，就地改写为脚本认的 `--version`。 */
+function translateForwardAliases(cmd: Cmd, rest: string[]): string[] {
+  if (cmd.group === "lib" && cmd.name === "resolve") {
+    return rest.map((t) =>
+      t === "--mcVersion"
+        ? "--version"
+        : t.startsWith("--mcVersion=")
+          ? `--version=${t.slice("--mcVersion=".length)}`
+          : t,
+    );
+  }
+  return rest;
+}
+
 /** 版本：读失败返回 null（调用方显式提示，不静默伪装成功 —— 审计 L3）。 */
 function pkgVersion(): string | null {
   try {
@@ -234,6 +342,9 @@ export async function main(argv: string[]): Promise<number> {
     console.error(`脚本不存在：${scriptPath}（CLI 需在仓库内运行）`);
     return 1;
   }
-  const r = spawnNodeScript(scriptPath, rest);
+  // C18：本层此前对 flag 零校验（--bogus / -version 都被静默转给下游并 rc=0）。
+  const flagError = validateForwardFlags(cmd, rest);
+  if (flagError !== null) return flagError;
+  const r = spawnNodeScript(scriptPath, translateForwardAliases(cmd, rest));
   return r.status;
 }

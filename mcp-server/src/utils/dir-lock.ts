@@ -42,6 +42,16 @@ function writeOwner(lockDir: string): void {
   writeFileSync(join(lockDir, "owner.json"), JSON.stringify({ pid: process.pid, at: Date.now() }));
 }
 
+/** C17：仅当 owner.json 的 pid 仍是本进程时才认定持有 —— 陈旧抢占后原持有者不得删掉新持有者的锁。 */
+function isLockOwner(lockDir: string): boolean {
+  try {
+    const raw = JSON.parse(readFileSync(join(lockDir, "owner.json"), "utf8")) as { pid?: number };
+    return raw.pid === process.pid;
+  } catch {
+    return false;
+  }
+}
+
 /** 持锁方心跳：续租 owner.at（同时刷新目录 mtime），防止长任务被误抢占。 */
 const lockHeartbeats = new Map<string, NodeJS.Timeout>();
 
@@ -51,7 +61,10 @@ function lockHeartbeatKey(root: string, name: string): string {
 
 function startLockHeartbeat(root: string, name: string, lockDir: string, timeoutMs: number): void {
   stopLockHeartbeat(root, name);
-  const interval = Math.max(1_000, Math.min(Math.floor(timeoutMs / 3), 30_000));
+  // C17：心跳间隔必须恒 < timeoutMs。原式 max(1000, min(floor(t/3), 30000)) 在 t < 3000 时间隔 > t
+  // ⇒ 该锁永远自判陈旧（NP-4 探针曾因 150ms 踩此窗口）。算例：t=600000→30000；t=1500→750；t=150→75。
+  const capped = Math.min(Math.max(Math.floor(timeoutMs / 3), 1_000), 30_000);
+  const interval = Math.min(capped, Math.max(1, Math.floor(timeoutMs / 2)));
   const timer = setInterval(() => {
     try {
       writeOwner(lockDir);
@@ -152,6 +165,8 @@ export async function acquireDirLock(
     startLockHeartbeat(root, name, lockDir, timeoutMs);
     return () => {
       stopLockHeartbeat(root, name);
+      // C17：陈旧抢占后 owner.json 已被新持有者改写 ⇒ 不能再无条件删锁目录（会删掉别人的锁）。
+      if (!isLockOwner(lockDir)) return;
       rmSync(lockDir, { recursive: true, force: true });
     };
   };
