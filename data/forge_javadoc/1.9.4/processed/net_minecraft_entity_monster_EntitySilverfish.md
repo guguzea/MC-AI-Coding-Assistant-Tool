@@ -1,1 +1,30 @@
 # EntitySilverfish
+
+## Class signature
+
+```java
+public class EntitySilverfish extends EntityMob
+```
+
+## Constructors
+
+- `public EntitySilverfish( World worldIn)`
+
+## Methods
+
+- `protected void initEntityAI()`
+- `public double getYOffset()`
+- `public float getEyeHeight()`
+- `protected void applyEntityAttributes()`
+- `protected boolean canTriggerWalking()`
+- `protected SoundEvent getAmbientSound()`
+- `protected SoundEvent getHurtSound()`
+- `protected SoundEvent getDeathSound()`
+- `protected void playStepSound( BlockPos pos, Block blockIn)`
+- `public boolean attackEntityFrom( DamageSource source, float amount)`
+- `@Nullable protected ResourceLocation getLootTable()`
+- `public void onUpdate()`
+- `public float getBlockPathWeight( BlockPos pos)`
+- `protected boolean isValidLightLevel()`
+- `public boolean getCanSpawnHere()`
+- `public EnumCreatureAttribute getCreatureAttribute()`

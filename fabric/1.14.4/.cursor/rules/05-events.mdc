@@ -141,6 +141,7 @@ UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
 
 对准方块的右键走 `UseBlockCallback`，不对准方块走这里。
 本档返回 `ActionResult`。
+> ⚠️ TODO(未核实)：本档 `UseItemCallback` 的返回类型**无仓内 oracle**（1.14.4 无核实表/映射面）——上面与下方示例里的返回类型未经核实，不要照抄；需要时用自备 jar 走 `ingest_loader_api` 核实。
 不要返回不存在的 `ActionResult.PISTON`。
 
 ```java

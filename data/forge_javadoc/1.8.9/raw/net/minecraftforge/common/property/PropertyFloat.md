@@ -1,6 +1,6 @@
 ---
 title: "PropertyFloat"
-description: ""
+description: "public class PropertyFloat extends java.lang.Object implements IUnlistedProperty <java.lang.Float>"
 package: "net/minecraftforge/common/property"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/common/property/PropertyFloat.html"
@@ -8,3 +8,21 @@ sourceType: javadoc
 ---
 
 # PropertyFloat
+
+## Class signature
+
+```java
+public class PropertyFloat extends java.lang.Object implements IUnlistedProperty <java.lang.Float>
+```
+
+## Constructors
+
+- `public PropertyFloat(java.lang.String name)`
+- `public PropertyFloat(java.lang.String name, <any> validator)`
+
+## Methods
+
+- `public java.lang.String getName()`
+- `public boolean isValid(java.lang.Float value)`
+- `public java.lang.Class<java.lang.Float> getType()`
+- `public java.lang.String valueToString(java.lang.Float value)`

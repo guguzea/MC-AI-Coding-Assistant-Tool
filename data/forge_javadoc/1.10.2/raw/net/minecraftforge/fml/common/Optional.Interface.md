@@ -1,6 +1,6 @@
 ---
 title: "Optional.Interface"
-description: ""
+description: "Used to remove optional interfaces"
 package: "net/minecraftforge/fml/common"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/Optional.Interface.html"
@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # Optional.Interface
+
+## Description
+
+Used to remove optional interfaces

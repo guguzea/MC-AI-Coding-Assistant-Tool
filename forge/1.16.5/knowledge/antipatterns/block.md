@@ -105,7 +105,7 @@ public void load(BlockState state, CompoundNBT nbt) { // 语料 tileentities_til
 ```java
 Block.Properties.of(Material.STONE)
     .requiresCorrectToolForDrops()    // 需要正确工具才能掉落
-    .hardnessAndResistance(3.0f, 3.0f)
+    .strength(3.0f, 3.0f)
 ```
 
 ---

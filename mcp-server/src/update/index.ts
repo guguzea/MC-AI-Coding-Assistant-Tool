@@ -217,7 +217,9 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
   let restartRequired = Boolean(state.pendingRestart);
 
   if ((scope === "data" || scope === "all") && dataBlocked) {
-    return withAction({ ...base, dryRun, steps, applied: false, appliedTooling: false }, assets.action);
+    // G-1（sweep81）：带内失败必须 ok:false —— 否则 isToolFailure 只认 ok===false，CLI 会出
+    // success:true + rc=0（一次声称成功的失败 apply）。与下方 CONFIRMATION_REQUIRED 分支同范式。
+    return withAction({ ...base, ok: false, dryRun, steps, applied: false, appliedTooling: false }, assets.action);
   }
 
   if (scope === "tooling" || scope === "all") {
@@ -236,7 +238,7 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
       steps.push(...tr.steps.map((s) => `tooling: ${s}`));
       if (!tr.ok) {
         return withAction(
-          { ...base, dryRun, steps, applied: false, appliedTooling: false, restartRequired },
+          { ...base, ok: false, dryRun, steps, applied: false, appliedTooling: false, restartRequired },
           tr.action,
         );
       }
@@ -248,13 +250,13 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
   if (scope === "data" || scope === "all") {
     if (!assets.zip) {
       return withAction(
-        { ...base, dryRun, steps, applied: false },
+        { ...base, ok: false, dryRun, steps, applied: false },
         actionable("DATA_ASSET_MISSING", "缺少 data 资产", ["检查 Release"], ["mc_skill_update"]),
       );
     }
     if (!assets.sums && !assets.checksumHex && !query.localSumsPath) {
       return withAction(
-        { ...base, dryRun, steps, applied: false },
+        { ...base, ok: false, dryRun, steps, applied: false },
         assets.action ??
           actionable("DATA_CHECKSUM_MISSING", "缺少 checksum", ["检查 Release"], ["mc_skill_update"]),
       );
@@ -289,6 +291,7 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
             return withAction(
               {
                 ...base,
+                ok: false,
                 dryRun,
                 steps,
                 filesToOverwrite,
@@ -308,6 +311,7 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
         return withAction(
           {
             ...base,
+            ok: false,
             dryRun,
             steps,
             filesToOverwrite,

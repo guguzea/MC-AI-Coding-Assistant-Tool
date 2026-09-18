@@ -4,7 +4,7 @@ description: Minecraft Forge 流体开发。创建流体 Fluid、ForgeFlowingFlu
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: parchment
+mappings: official
 ---
 
 # 流体开发（Forge 1.17.1）

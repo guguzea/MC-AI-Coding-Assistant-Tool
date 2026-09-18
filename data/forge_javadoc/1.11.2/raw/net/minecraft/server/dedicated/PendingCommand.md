@@ -1,6 +1,6 @@
 ---
 title: "PendingCommand"
-description: ""
+description: "public class PendingCommand extends java.lang.Object"
 package: "net/minecraft/server/dedicated"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/server/dedicated/PendingCommand.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # PendingCommand
+
+## Class signature
+
+```java
+public class PendingCommand extends java.lang.Object
+```
+
+## Constructors
+
+- `public PendingCommand(java.lang.String input, ICommandSender sender)`

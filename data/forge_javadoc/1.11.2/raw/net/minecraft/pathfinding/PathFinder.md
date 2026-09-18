@@ -1,6 +1,6 @@
 ---
 title: "PathFinder"
-description: ""
+description: "public class PathFinder extends java.lang.Object"
 package: "net/minecraft/pathfinding"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/pathfinding/PathFinder.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # PathFinder
+
+## Class signature
+
+```java
+public class PathFinder extends java.lang.Object
+```
+
+## Constructors
+
+- `public PathFinder( NodeProcessor processor)`
+
+## Methods
+
+- `@Nullable public Path findPath( IBlockAccess worldIn, EntityLiving p_186333_2_, Entity p_186333_3_, float p_186333_4_)`
+- `@Nullable public Path findPath( IBlockAccess worldIn, EntityLiving p_186336_2_, BlockPos p_186336_3_, float p_186336_4_)`

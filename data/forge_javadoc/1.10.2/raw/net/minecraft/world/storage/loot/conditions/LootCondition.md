@@ -1,6 +1,6 @@
 ---
 title: "LootCondition"
-description: ""
+description: "public interface LootCondition"
 package: "net/minecraft/world/storage/loot/conditions"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/storage/loot/conditions/LootCondition.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # LootCondition
+
+## Class signature
+
+```java
+public interface LootCondition
+```
+
+## Methods
+
+- `boolean testCondition(java.util.Random rand, LootContext context)`

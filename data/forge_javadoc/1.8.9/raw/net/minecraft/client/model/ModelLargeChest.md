@@ -1,6 +1,6 @@
 ---
 title: "ModelLargeChest"
-description: ""
+description: "public class ModelLargeChest extends ModelChest"
 package: "net/minecraft/client/model"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/model/ModelLargeChest.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # ModelLargeChest
+
+## Class signature
+
+```java
+public class ModelLargeChest extends ModelChest
+```
+
+## Constructors
+
+- `public ModelLargeChest()`

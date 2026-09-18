@@ -1,6 +1,6 @@
 ---
 title: "BiomeGenBeach"
-description: ""
+description: "public class BiomeGenBeach extends BiomeGenBase"
 package: "net/minecraft/world/biome"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/world/biome/BiomeGenBeach.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # BiomeGenBeach
+
+## Class signature
+
+```java
+public class BiomeGenBeach extends BiomeGenBase
+```
+
+## Constructors
+
+- `public BiomeGenBeach(int p_i1969_1_)`

@@ -414,6 +414,9 @@ function freshUuid(): string {
 export function generateAddonManifest(args: z.infer<typeof generateAddonManifestSchema>): Record<string, unknown> {
   // 钉值依据（核对日期 2026-09-07）：npm `@minecraft/server` 最近一个 `-stable` 版本串
   // `2.10.0-beta.1.26.44-stable` 内嵌的引擎版本 1.26.44；改号须同步 8 份 00-project-setup 与 bedrock/scaffold。
+  // 上游实况（npm dist-tags 一手复核，as-of 2026-09-18）：latest(stable)=2.10.0、
+  // beta=2.11.0-beta.1.26.51-stable（引擎 1.26.51）、rc=2.11.0-rc.1.26.60-preview.25
+  // ⇒ 本默认已是上一代 beta 引擎；是否随上游推进属行为变更，须用户逐次裁定（2026-09-18 裁定：默认不动，输出加注说明）。
   const min = args.minEngineVersion ?? [1, 26, 44];
   const status = loadBedrockDocsStatus();
   const warnings: string[] = [];
@@ -434,6 +437,12 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
   const stableVer = status.scriptApiStable ?? "1.11.0";
   warnings.push(
     `默认 @minecraft/server 版本取自 bedrock-docs-status.scriptApiStable（当前 ${stableVer}）。入库可能滞后，发布前对照 Learn。`,
+  );
+  // bedrock 默认值说明（2026-09-18 用户裁定：不改代码默认 [1,26,44]，只在输出里加注当前 stable）：
+  warnings.push(
+    `min_engine_version 默认 [1,26,44] 是本生成器的钉值（2026-09-07 依 npm beta 串 2.10.0-beta.1.26.44-stable 所指引擎）。` +
+      `上游实况（npm dist-tags，as-of 2026-09-18）：@minecraft/server latest(stable)=2.10.0、beta=2.11.0-beta.1.26.51-stable（引擎 1.26.51）` +
+      `—— 若你的目标引擎更新，用 minEngineVersion 参数显式指定，不要依赖本默认值。`,
   );
 
   /** C-29：哪个槽位是调用方钉住的、哪个是现生成的、哪个传值被拒 */

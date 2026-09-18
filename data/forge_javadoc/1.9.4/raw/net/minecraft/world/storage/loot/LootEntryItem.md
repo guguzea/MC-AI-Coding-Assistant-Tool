@@ -1,6 +1,6 @@
 ---
 title: "LootEntryItem"
-description: ""
+description: "public class LootEntryItem extends LootEntry"
 package: "net/minecraft/world/storage/loot"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/world/storage/loot/LootEntryItem.html"
@@ -8,3 +8,19 @@ sourceType: javadoc
 ---
 
 # LootEntryItem
+
+## Class signature
+
+```java
+public class LootEntryItem extends LootEntry
+```
+
+## Constructors
+
+- `public LootEntryItem( Item itemIn, int weightIn, int qualityIn, LootFunction [] functionsIn, LootCondition [] conditionsIn, java.lang.String entryName)`
+
+## Methods
+
+- `public void addLoot(java.util.Collection< ItemStack > stacks, java.util.Random rand, LootContext context)`
+- `protected void serialize(com.google.gson.JsonObject json, com.google.gson.JsonSerializationContext context)`
+- `public static LootEntryItem deserialize(com.google.gson.JsonObject object, com.google.gson.JsonDeserializationContext deserializationContext, int weightIn, int qualityIn, LootCondition [] conditionsIn)`

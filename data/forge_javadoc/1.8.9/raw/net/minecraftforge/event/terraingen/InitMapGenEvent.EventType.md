@@ -1,6 +1,6 @@
 ---
 title: "InitMapGenEvent.EventType"
-description: ""
+description: "Use CUSTOM to filter custom event types"
 package: "net/minecraftforge/event/terraingen"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/terraingen/InitMapGenEvent.EventType.html"
@@ -8,3 +8,12 @@ sourceType: javadoc
 ---
 
 # InitMapGenEvent.EventType
+
+## Methods
+
+- `public static InitMapGenEvent.EventType [] values()`
+- `public static InitMapGenEvent.EventType valueOf(java.lang.String name)`
+
+## Description
+
+Use CUSTOM to filter custom event types

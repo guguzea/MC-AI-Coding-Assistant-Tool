@@ -199,6 +199,49 @@ for (const { version, packRoot } of packs) {
     if (!listed.has(relPath)) fail(`${rel(packRoot)}: 盘上有 ${relPath} 但 provenance 没记（孤儿镜像文件）`);
   }
 
+  // C-7 门⑤：越界目标不得被解析成 packRoot 之外的路径 —— 修前**回退分支没有检查**
+  // （`join(root, target.replace(/^@/, ""))` 会把 `../..` 规范化掉），于是
+  // `../../../../Windows/win.ini` 这类目标能逃出 packRoot，且内容会被内联进交付正文。
+  const escapeTargets = [
+    "../../../../Windows/win.ini",
+    "../" + "..".repeat(6) + "/mcp-server/package.json",
+  ];
+  for (const t of escapeTargets) {
+    const got = referenceLocalPath(t, packRoot, provenance);
+    if (got !== null) {
+      const out = path.relative(packRoot, got);
+      if (!out || out.startsWith("..") || path.isAbsolute(out)) {
+        fail(`${rel(packRoot)}: 越界目标 ${t} 被解析成 ${got}（逃出 packRoot，内容会被内联进交付正文）—— C7 回归`);
+      }
+    }
+    // 端到端：越界目标必须并进既有「本地取不到」通道，且**不得有任何内容被内联**
+    const probe = expandTranscludes(`@[code](${t})\n`, packRoot, provenance);
+    if (!probe.missing.includes(t)) {
+      fail(`${rel(packRoot)}: 越界目标 ${t} 未被计入 missing（missing=${JSON.stringify(probe.missing)})—— C7 回归`);
+    }
+    if (!probe.content.includes(`Not Found: ${t}`)) {
+      fail(
+        `${rel(packRoot)}: 越界目标 ${t} 的展开体不是「Not Found」占位，实得 ${JSON.stringify(probe.content.slice(0, 120))} —— C7 回归`,
+      );
+    }
+  }
+  // 正对照：真实目标仍必须解析到 packRoot 内且文件存在（防「一律返 null」式假绿）
+  const realKey = [...provenance.files.keys()][0];
+  if (!realKey) {
+    fail(`${rel(packRoot)}: provenance.files 为空 —— 本门没法做正对照，取件端没跑？`);
+  } else {
+    const absReal = referenceLocalPath(`@/${realKey}`, packRoot, provenance);
+    if (absReal === null) {
+      fail(`${rel(packRoot)}: 正对照失败 —— 合法目标 @/${realKey} 被判越界（修完必须仍然解析得到）`);
+    } else {
+      const inside = path.relative(packRoot, absReal);
+      if (inside.startsWith("..") || path.isAbsolute(inside)) {
+        fail(`${rel(packRoot)}: 正对照 ${realKey} 解析到 packRoot 之外：${absReal}`);
+      }
+      if (!fs.existsSync(absReal)) fail(`${rel(packRoot)}: 正对照 ${realKey} 解析成 ${absReal} 但盘上不存在`);
+    }
+  }
+
   let versionProcessed = 0;
   const perTreeSites = {};
   for (const { source, kind, dir } of findTrees(packRoot)) {

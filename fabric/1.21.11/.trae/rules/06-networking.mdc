@@ -55,6 +55,8 @@ ServerPlayNetworking.send(player, new MyPayload(value));
 ClientPlayNetworking.send(new MyPayload(value));
 ```
 
+> **映射口径对照（不是二选一）**：本档 yarn tiny 下 `net.minecraft.network.codec.PacketCodec` **就是真名**（本档可编译；实测该 token 在本档映射命中 21 次、`StreamCodec` 0 次）。而仓内抓取的**上游 Fabric 文档快照**用的是 Mojang 名 `StreamCodec`（同一材料、两种映射口径）。查文档时按**来源**判名：看到 `StreamCodec` 是上游页的写法，回到本档代码仍写 `PacketCodec`；反过来也别把 `PacketCodec` 当臆造名。
+
 ## 常见错误
 
 - 不要用 `PayloadTypeRegistry.s2c()` / `clientboundPlay()`（后者是 26.1 Mojmap）

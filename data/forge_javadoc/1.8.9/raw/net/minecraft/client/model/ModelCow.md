@@ -1,6 +1,6 @@
 ---
 title: "ModelCow"
-description: ""
+description: "public class ModelCow extends ModelQuadruped"
 package: "net/minecraft/client/model"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/model/ModelCow.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # ModelCow
+
+## Class signature
+
+```java
+public class ModelCow extends ModelQuadruped
+```
+
+## Constructors
+
+- `public ModelCow()`

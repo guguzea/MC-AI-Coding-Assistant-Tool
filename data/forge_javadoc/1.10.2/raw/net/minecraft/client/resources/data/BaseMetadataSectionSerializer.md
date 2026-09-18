@@ -1,6 +1,6 @@
 ---
 title: "BaseMetadataSectionSerializer"
-description: ""
+description: "public abstract class BaseMetadataSectionSerializer<T extends IMetadataSection > extends java.lang.Object implements IMetadataSectionSerializer <T>"
 package: "net/minecraft/client/resources/data"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/resources/data/BaseMetadataSectionSerializer.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # BaseMetadataSectionSerializer
+
+## Class signature
+
+```java
+public abstract class BaseMetadataSectionSerializer<T extends IMetadataSection > extends java.lang.Object implements IMetadataSectionSerializer <T>
+```
+
+## Constructors
+
+- `public BaseMetadataSectionSerializer()`

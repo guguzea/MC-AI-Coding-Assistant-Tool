@@ -1,6 +1,6 @@
 ---
 title: "LayerVillagerArmor"
-description: ""
+description: "public class LayerVillagerArmor extends LayerBipedArmor"
 package: "net/minecraft/client/renderer/entity/layers"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/renderer/entity/layers/LayerVillagerArmor.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # LayerVillagerArmor
+
+## Class signature
+
+```java
+public class LayerVillagerArmor extends LayerBipedArmor
+```
+
+## Constructors
+
+- `public LayerVillagerArmor( RenderLivingBase <?> rendererIn)`
+
+## Methods
+
+- `protected void initArmor()`

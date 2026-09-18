@@ -1,6 +1,6 @@
 ---
 title: "ChunkCoordComparator"
-description: ""
+description: "public class ChunkCoordComparator extends java.lang.Object implements java.util.Comparator< ChunkCoordIntPair >"
 package: "net/minecraftforge/common/util"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/common/util/ChunkCoordComparator.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # ChunkCoordComparator
+
+## Class signature
+
+```java
+public class ChunkCoordComparator extends java.lang.Object implements java.util.Comparator< ChunkCoordIntPair >
+```
+
+## Constructors
+
+- `public ChunkCoordComparator( EntityPlayerMP entityplayer)`
+
+## Methods
+
+- `public int compare( ChunkCoordIntPair a, ChunkCoordIntPair b)`

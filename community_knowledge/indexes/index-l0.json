@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-13T18:17:53.928Z",
+  "generatedAt": "2026-09-18T03:26:51.642Z",
   "entries": [
     {
       "id": "authored/addon-dev-workflow",
@@ -2047,8 +2047,8 @@
         "modrinth",
         "link-only"
       ],
-      "sourceKind": "permitted-pointer",
-      "priority": "🟢",
+      "sourceKind": "permitted",
+      "priority": "🟡",
       "summary": "仅指针页：《如何制作并且维护你的mod？（Forge）》游戏崩溃篇 / 发表模组篇入口（作者耿悠博），本页不入库正文。崩溃分类看 `authored/crash-reports.md`，发布看 `authored/publishing.md`。",
       "mcHint": "version-agnostic"
     },
@@ -2064,8 +2064,8 @@
         "creativetab",
         "link-only"
       ],
-      "sourceKind": "permitted-pointer",
-      "priority": "🟢",
+      "sourceKind": "permitted",
+      "priority": "🟡",
       "summary": "仅指针页：《如何制作并且维护你的mod？（Forge）》物品注册篇入口（作者耿悠博；1.18/1.19 与 1.20 差异），本页不入库正文。注册写法以各版本 rules `01-registry` 与 `search_forge_docs` 为准。",
       "mcHint": "1.18-1.20"
     },
@@ -2081,8 +2081,8 @@
         "bytecode",
         "link-only"
       ],
-      "sourceKind": "permitted-pointer",
-      "priority": "🟢",
+      "sourceKind": "permitted",
+      "priority": "🟡",
       "summary": "仅指针页：《如何制作并且维护你的mod？（Forge）》Mixin 篇入口（作者耿悠博），本页不入库正文。生产环境配合官方 Mixin 文档与本仓库 `mc-mixin` skill，API 细节用 `search_forge_docs`。",
       "mcHint": "version-agnostic"
     },
@@ -2098,8 +2098,8 @@
         "idea",
         "link-only"
       ],
-      "sourceKind": "permitted-pointer",
-      "priority": "🟢",
+      "sourceKind": "permitted",
+      "priority": "🟡",
       "summary": "仅指针页：《如何制作并且维护你的mod？（Forge）》工程搭建 / MDK 篇入口（作者耿悠博，主体偏 1.18），本页不入库正文。工程与 API 细节用 `search_forge_docs` / 平台 rules。",
       "mcHint": "1.18.x+"
     }

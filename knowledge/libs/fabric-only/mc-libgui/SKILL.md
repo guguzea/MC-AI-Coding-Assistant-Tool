@@ -7,7 +7,7 @@ communityDocId: authored/lib-libgui
 mappings: hint
 ---
 
-> API 摘要状态（2026-09-14 实核）：无 ⇒ `mcp-server/data/lib-api-summaries/` 无 libgui 条目，catalog `authored/lib-libgui` 的 `verifiedApi` 为空对象 {}；Modrinth 已下架（slug 空），分发走 Cotton maven。类名以 GitHub 仓库为准，要签名先 `ingest_loader_api`（用户自备 jar）
+> API 摘要状态（2026-09-18 复核）：**有** ⇒ `mcp-server/data/lib-api-summaries/libgui.json`（33.8 KB）在盘，catalog `authored/lib-libgui` 的 `verifiedApi` 非空（键含 `26.3/fabric` 等）；Modrinth 已下架（slug 空），分发走 Cotton maven。**旧稿「无摘要 / `verifiedApi` 为空对象 {}」已不成立**。落到类名用 `query_loader_api`，要签名先 `ingest_loader_api`（用户自备 jar）
 
 # LibGui（Fabric 声明式 GUI）
 

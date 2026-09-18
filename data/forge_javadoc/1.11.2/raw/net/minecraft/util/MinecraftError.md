@@ -1,6 +1,6 @@
 ---
 title: "MinecraftError"
-description: ""
+description: "public class MinecraftError extends java.lang.Error"
 package: "net/minecraft/util"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/util/MinecraftError.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # MinecraftError
+
+## Class signature
+
+```java
+public class MinecraftError extends java.lang.Error
+```
+
+## Constructors
+
+- `public MinecraftError()`

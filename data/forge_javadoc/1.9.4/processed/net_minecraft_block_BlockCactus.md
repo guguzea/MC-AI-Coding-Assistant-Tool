@@ -1,1 +1,29 @@
 # BlockCactus
+
+## Class signature
+
+```java
+public class BlockCactus extends Block implements IPlantable
+```
+
+## Constructors
+
+- `protected BlockCactus()`
+
+## Methods
+
+- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, World worldIn, BlockPos pos)`
+- `public AxisAlignedBB getSelectedBoundingBox( IBlockState state, World worldIn, BlockPos pos)`
+- `public boolean isFullCube( IBlockState state)`
+- `public boolean isOpaqueCube( IBlockState state)`
+- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
+- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `public boolean canBlockStay( World worldIn, BlockPos pos)`
+- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
+- `public IBlockState getStateFromMeta(int meta)`
+- `public BlockRenderLayer getBlockLayer()`
+- `public int getMetaFromState( IBlockState state)`
+- `public EnumPlantType getPlantType( IBlockAccess world, BlockPos pos)`
+- `public IBlockState getPlant( IBlockAccess world, BlockPos pos)`
+- `protected BlockStateContainer createBlockState()`

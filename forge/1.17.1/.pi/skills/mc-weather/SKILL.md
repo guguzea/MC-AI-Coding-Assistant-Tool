@@ -4,7 +4,7 @@ description: 天气、雷暴、降雨与维度气候相关 API。触发词：wea
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: mcp
+mappings: official
 ---
 
 # mc-weather

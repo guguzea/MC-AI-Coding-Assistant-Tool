@@ -186,7 +186,11 @@ export function readKnowledgeResource(uri: string): {
         text: `非法 version「${rawVer}」，禁止默认 1.20.1。`,
       };
     }
-    const p = join(resolveDataDir(`forge_${ver}`, "mappings"), "yarn-mappings.sqlite");
+    // Y-3（sweep81 顺延）：yarn-mappings.sqlite 按 MC 版本入库，但 fabric 侧有 14 档而 forge 侧只到
+    // 1.15.2 ⇒ 只找 forge 目录会把 fabric-only 档误报「没有映射库文件」。按 forge → fabric 回退。
+    const forgePath = join(resolveDataDir(`forge_${ver}`, "mappings"), "yarn-mappings.sqlite");
+    const fabricPath = join(resolveDataDir(`fabric_${ver}`, "mappings"), "yarn-mappings.sqlite");
+    const p = existsSync(forgePath) ? forgePath : fabricPath;
     if (!existsSync(p)) {
       return {
         found: false,

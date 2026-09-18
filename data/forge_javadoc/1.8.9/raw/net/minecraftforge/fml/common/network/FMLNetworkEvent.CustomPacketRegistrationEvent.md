@@ -1,6 +1,6 @@
 ---
 title: "FMLNetworkEvent.CustomPacketRegistrationEvent"
-description: ""
+description: "Fired when the REGISTER/UNREGISTER for custom channels is received."
 package: "net/minecraftforge/fml/common/network"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/network/FMLNetworkEvent.CustomPacketRegistrationEvent.html"
@@ -8,3 +8,11 @@ sourceType: javadoc
 ---
 
 # FMLNetworkEvent.CustomPacketRegistrationEvent
+
+## Constructors
+
+- `public CustomPacketRegistrationEvent( NetworkManager manager, java.util.Set<java.lang.String> registrations, java.lang.String operation, Side side, java.lang.Class< S > type)`
+
+## Description
+
+Fired when the REGISTER/UNREGISTER for custom channels is received.

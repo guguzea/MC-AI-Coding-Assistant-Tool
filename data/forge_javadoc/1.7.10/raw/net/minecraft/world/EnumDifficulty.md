@@ -1,6 +1,6 @@
 ---
 title: "EnumDifficulty"
-description: ""
+description: "Returns the enum constant of this type with the specified name."
 package: "net/minecraft/world"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/world/EnumDifficulty.html"
@@ -8,3 +8,21 @@ sourceType: javadoc
 ---
 
 # EnumDifficulty
+
+## Class signature
+
+```java
+public enum EnumDifficulty extends java.lang.Enum< EnumDifficulty >
+```
+
+## Methods
+
+- `public static EnumDifficulty [] values()`
+- `public static EnumDifficulty valueOf(java.lang.String name)`
+- `public int getDifficultyId()`
+- `public static EnumDifficulty getDifficultyEnum(int p_151523_0_)`
+- `public java.lang.String getDifficultyResourceKey()`
+
+## Description
+
+Returns the enum constant of this type with the specified name.

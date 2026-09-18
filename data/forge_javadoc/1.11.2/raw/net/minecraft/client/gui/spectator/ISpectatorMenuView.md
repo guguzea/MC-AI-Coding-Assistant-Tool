@@ -1,6 +1,6 @@
 ---
 title: "ISpectatorMenuView"
-description: ""
+description: "public interface ISpectatorMenuView"
 package: "net/minecraft/client/gui/spectator"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/gui/spectator/ISpectatorMenuView.html"
@@ -8,3 +8,14 @@ sourceType: javadoc
 ---
 
 # ISpectatorMenuView
+
+## Class signature
+
+```java
+public interface ISpectatorMenuView
+```
+
+## Methods
+
+- `java.util.List< ISpectatorMenuObject > getItems()`
+- `ITextComponent getPrompt()`

@@ -1,6 +1,6 @@
 ---
 title: "AttachCapabilitiesEvent.Entity"
-description: ""
+description: "Deprecated."
 package: "net/minecraftforge/event"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/AttachCapabilitiesEvent.Entity.html"
@@ -8,3 +8,15 @@ sourceType: javadoc
 ---
 
 # AttachCapabilitiesEvent.Entity
+
+## Constructors
+
+- `public Entity( Entity entity)`
+
+## Methods
+
+- `public Entity getEntity()`
+
+## Description
+
+Deprecated.

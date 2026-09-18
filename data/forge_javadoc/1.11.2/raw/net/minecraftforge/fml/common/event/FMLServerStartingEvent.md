@@ -1,6 +1,6 @@
 ---
 title: "FMLServerStartingEvent"
-description: ""
+description: "Called after FMLServerAboutToStartEvent and before FMLServerStartedEvent . This event allows for customizations of the server, such as loading custom commands, perhaps customizing recipes or other act"
 package: "net/minecraftforge/fml/common/event"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/common/event/FMLServerStartingEvent.html"
@@ -8,3 +8,23 @@ sourceType: javadoc
 ---
 
 # FMLServerStartingEvent
+
+## Class signature
+
+```java
+public class FMLServerStartingEvent extends FMLStateEvent
+```
+
+## Constructors
+
+- `public FMLServerStartingEvent(java.lang.Object... data)`
+
+## Methods
+
+- `public LoaderState.ModState getModState()`
+- `public MinecraftServer getServer()`
+- `public void registerServerCommand( ICommand command)`
+
+## Description
+
+Called after FMLServerAboutToStartEvent and before FMLServerStartedEvent . This event allows for customizations of the server, such as loading custom commands, perhaps customizing recipes or other act

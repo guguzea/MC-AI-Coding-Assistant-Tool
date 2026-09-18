@@ -15,7 +15,7 @@
  *   前者管"调工具"，后者管"跑仓库脚本"；两者都不复制对方逻辑。
  */
 import { spawnSync } from "node:child_process";
-import { installStdioErrorGuard, installCrashGuards } from "../utils/stdio-guard.js";
+import { installStdioErrorGuard, installCrashGuards, markFailureExit } from "../utils/stdio-guard.js";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -120,6 +120,7 @@ function validateForwardFlags(cmd: Cmd, rest: string[]): number | null {
     console.error(
       `可用参数：${allowed || "（本命令无可用参数）"}（帮助：${ENTRY} ${cmd.group} ${cmd.name} --help）`,
     );
+    markFailureExit(); // A-9c：失败路径先置标记，EPIPE 早关不得洗成 0
     return 2;
   };
   for (const t of rest) {
@@ -247,9 +248,19 @@ function listGates(): { gates: string[]; error?: string } {
 export function spawnNodeScript(
   scriptPath: string,
   args: string[],
-  opts: { nodeBin?: string } = {},
+  opts: { nodeBin?: string; timeoutMs?: number } = {},
 ): { status: number; signal?: NodeJS.Signals | null; error?: NodeJS.ErrnoException } {
-  const r = spawnSync(opts.nodeBin ?? process.execPath, [scriptPath, ...args], { stdio: "inherit", windowsHide: true });
+  // A-9b（sweep81 顺延）：可注入超时。默认**不设**（corpus decompile 等合法长跑不得被误杀）；
+  // 产品侧可用 MC_SKILL_SCRIPT_TIMEOUT_MS 按需启用；超时 ⇒ spawnSync 给 error=ETIMEDOUT，
+  // 走既有「启动失败」分支（非零退出 + 诊断行）。
+  const envTimeout = Number(process.env.MC_SKILL_SCRIPT_TIMEOUT_MS ?? "");
+  const timeoutMs =
+    opts.timeoutMs ?? (Number.isFinite(envTimeout) && envTimeout > 0 ? envTimeout : undefined);
+  const r = spawnSync(opts.nodeBin ?? process.execPath, [scriptPath, ...args], {
+    stdio: "inherit",
+    windowsHide: true,
+    ...(timeoutMs ? { timeout: timeoutMs } : {}),
+  });
   if (r.error) {
     process.stderr.write(`启动失败: ${r.error.message}（${scriptPath}）\n`);
     return { status: 1, error: r.error };
@@ -272,6 +283,7 @@ export async function main(argv: string[]): Promise<number> {
     const v = pkgVersion();
     if (v === null) {
       process.stderr.write("无法读取 package.json 的 version（--version 不可用）\n");
+      markFailureExit();
       return 1;
     }
     console.log(v);
@@ -282,6 +294,7 @@ export async function main(argv: string[]): Promise<number> {
     if (rc < 0) {
       console.error(`未知组或缺少子命令：${a}`);
       printHelp();
+      markFailureExit();
       return 2;
     }
     return 0;
@@ -292,9 +305,11 @@ export async function main(argv: string[]): Promise<number> {
     if (rc < 0) {
       console.error(`未知命令：${argv.join(" ")}`);
       printHelp();
+      markFailureExit();
       return 2;
     }
     console.error(`组 ${a} 下没有命令 ${b}`);
+    markFailureExit();
     return 2;
   }
   const rest = argv.slice(2);
@@ -307,6 +322,7 @@ export async function main(argv: string[]): Promise<number> {
     const { gates, error } = listGates();
     if (error) {
       process.stderr.write(`无法读取门目录 ${MCP_SCRIPTS}：${error}\n`);
+      markFailureExit();
       return 1;
     }
     console.log(`mcp-server/scripts 下 ${gates.length} 道门：`);
@@ -317,34 +333,44 @@ export async function main(argv: string[]): Promise<number> {
     const want = (rest[0] ?? "").replace(/\.mjs$/, "");
     if (!want) {
       console.error(`用法：${ENTRY} gate run <name>（${ENTRY} gate list 看清单）`);
+      markFailureExit();
       return 2;
     }
     const { gates, error } = listGates();
     if (error) {
       process.stderr.write(`无法读取门目录 ${MCP_SCRIPTS}：${error}\n`);
+      markFailureExit();
       return 1;
     }
     const hits = gates.filter((f) => f === want + ".mjs" || f === "assert-" + want + ".mjs");
     if (hits.length !== 1) {
       console.error(hits.length ? `匹配到多道门：${hits.join(", ")}` : `没有匹配的门：${want}`);
+      markFailureExit();
       return 2;
     }
     const r = spawnNodeScript(path.join(MCP_SCRIPTS, hits[0]), rest.slice(1));
+    if (r.status !== 0) markFailureExit();
     return r.status;
   }
   // ── 通用：薄壳转发 ──
   if (!cmd.script) {
     console.error(`${cmd.group} ${cmd.name} 未配置转发脚本`);
+    markFailureExit();
     return 2;
   }
   const scriptPath = path.join(REPO_ROOT, cmd.script);
   if (!fs.existsSync(scriptPath)) {
     console.error(`脚本不存在：${scriptPath}（CLI 需在仓库内运行）`);
+    markFailureExit();
     return 1;
   }
   // C18：本层此前对 flag 零校验（--bogus / -version 都被静默转给下游并 rc=0）。
   const flagError = validateForwardFlags(cmd, rest);
-  if (flagError !== null) return flagError;
+  if (flagError !== null) {
+    markFailureExit();
+    return flagError;
+  }
   const r = spawnNodeScript(scriptPath, translateForwardAliases(cmd, rest));
+  if (r.status !== 0) markFailureExit();
   return r.status;
 }

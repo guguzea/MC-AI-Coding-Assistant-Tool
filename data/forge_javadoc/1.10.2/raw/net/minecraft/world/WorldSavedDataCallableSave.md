@@ -1,6 +1,6 @@
 ---
 title: "WorldSavedDataCallableSave"
-description: ""
+description: "public class WorldSavedDataCallableSave extends java.lang.Object implements java.lang.Runnable"
 package: "net/minecraft/world"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/WorldSavedDataCallableSave.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # WorldSavedDataCallableSave
+
+## Class signature
+
+```java
+public class WorldSavedDataCallableSave extends java.lang.Object implements java.lang.Runnable
+```
+
+## Constructors
+
+- `public WorldSavedDataCallableSave( WorldSavedData dataIn)`
+
+## Methods
+
+- `public void run()`

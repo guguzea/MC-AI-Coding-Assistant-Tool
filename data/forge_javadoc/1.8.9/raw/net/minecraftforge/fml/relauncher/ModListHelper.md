@@ -1,6 +1,6 @@
 ---
 title: "ModListHelper"
-description: ""
+description: "public class ModListHelper extends java.lang.Object"
 package: "net/minecraftforge/fml/relauncher"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/relauncher/ModListHelper.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # ModListHelper
+
+## Class signature
+
+```java
+public class ModListHelper extends java.lang.Object
+```
+
+## Constructors
+
+- `public ModListHelper()`

@@ -1,6 +1,6 @@
 ---
 title: "ScoreCriteriaReadOnly"
-description: ""
+description: "public class ScoreCriteriaReadOnly extends ScoreCriteria"
 package: "net/minecraft/scoreboard"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/scoreboard/ScoreCriteriaReadOnly.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # ScoreCriteriaReadOnly
+
+## Class signature
+
+```java
+public class ScoreCriteriaReadOnly extends ScoreCriteria
+```
+
+## Constructors
+
+- `public ScoreCriteriaReadOnly(java.lang.String name)`
+
+## Methods
+
+- `public boolean isReadOnly()`

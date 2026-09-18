@@ -63,7 +63,7 @@ npm run build
       "command": "node",
       "args": ["<仓库根>/mcp-server/dist/index.js"],
       "env": {
-        "MC_SKILL_DATA": "H:/MC_skill/data"
+        "MC_SKILL_DATA": "<仓库根>/data"
       }
     }
   }
@@ -162,8 +162,8 @@ npx @modelcontextprotocol/inspector node dist/index.js
 ### 社区知识与库模组（与官方文档分离）
 
 - **社区实务**：`community_knowledge/`（`MC_SKILL_COMMUNITY`）。MCP 四工具见上表「社区」行；**不替代** `search_*_docs`。依据短文写代码前须遵守 [`community_knowledge/AGENT_USAGE.md`](../community_knowledge/AGENT_USAGE.md)。
-- **库模组**：`knowledge/libs/` 下 **35** 份 Skill 源稿（**33** 唯一 skillId，五组含 `bedrock-only`），按仓库根 `AGENTS.md`「库模组 Skill」解析，**不落盘**平台 `.cursor/skills`。路由：`knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`。
-- **数据链**：`library-catalog.ts`（50 条）+ `data/lib-manifests/all.json`（45 slug）+ `data/lib-api-summaries/`（44 库）→ `check_dependencies`。完整说明见仓库根 [`README.md`](../README.md)「社区知识与库模组」与 MCP 工具 §7 / §7.5。
+- **库模组**：`knowledge/libs/` 下 **36** 份 Skill 源稿（**34** 唯一 skillId，五组含 `bedrock-only`），按仓库根 `AGENTS.md`「库模组 Skill」解析，**不落盘**平台 `.cursor/skills`。路由：`knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`。计数以 `find knowledge/libs -name SKILL.md | wc -l` 实测为准。
+- **数据链**：`library-catalog.ts`（50 条）+ `data/lib-manifests/all.json`（45 slug）+ `data/lib-api-summaries/`（**48** 库）→ `check_dependencies`。完整说明见仓库根 [`README.md`](../README.md)「社区知识与库模组」与 MCP 工具 §7 / §7.5。
 
 ### 字段映射（`convert_mapping`）
 
@@ -215,7 +215,7 @@ kebab-case 会转到 camelCase（`--dry-run`→`dryRun`、`--highlight-key`→`h
 
 ```bash
 node dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1
-node dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F'
+node dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F' --version 1.20.1
 node dist/cli.js convert --from obfuscated --to yarn --name er --version 1.20.1
 node dist/cli.js mc_skill_update --action apply --dry-run=false --confirm
 node dist/cli.js crash_analyze --crashReport @./crash-reports/latest.txt

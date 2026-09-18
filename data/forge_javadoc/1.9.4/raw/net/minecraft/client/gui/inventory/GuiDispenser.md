@@ -1,6 +1,6 @@
 ---
 title: "GuiDispenser"
-description: ""
+description: "public class GuiDispenser extends GuiContainer"
 package: "net/minecraft/client/gui/inventory"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/gui/inventory/GuiDispenser.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # GuiDispenser
+
+## Class signature
+
+```java
+public class GuiDispenser extends GuiContainer
+```
+
+## Constructors
+
+- `public GuiDispenser( InventoryPlayer playerInv, IInventory dispenserInv)`
+
+## Methods
+
+- `protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)`
+- `protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)`

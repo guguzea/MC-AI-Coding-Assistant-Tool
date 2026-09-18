@@ -2526,6 +2526,42 @@ async function testFivePlatformRouting() {
   }));
   assert.equal(noModUuid.ok, false);
   assert.ok(noModUuid.errors.some((e) => /modules\[0\]\.uuid/.test(e)), JSON.stringify(noModUuid.errors));
+  // C-7 门⑥：header.uuid 与每个 module.uuid 必须**两两互异**
+  // （规则承诺见 bedrock/.cursor/rules/00-project-setup.mdc:18；修前该函数只逐条 UUID_RE.test、无任何集合比较）
+  const sameUuid = "00000000-0000-0000-0000-000000000000";
+  const dupHeaderModule = validateAddonManifest(JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: sameUuid, version: [1, 0, 0] },
+    modules: [{ type: "data", uuid: sameUuid, version: [1, 0, 0] }],
+  }));
+  assert.equal(dupHeaderModule.ok, false, "header.uuid 与 module.uuid 相同时必须报错（两两互异）");
+  assert.ok(dupHeaderModule.errors.some((e) => /UUID 重复/.test(e)), JSON.stringify(dupHeaderModule.errors));
+  const dupBetweenModules = validateAddonManifest(JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
+    modules: [
+      { type: "data", uuid: "22222222-2222-2222-2222-222222222222", version: [1, 0, 0] },
+      { type: "data", uuid: "22222222-2222-2222-2222-222222222222", version: [1, 0, 0] },
+    ],
+  }));
+  assert.equal(dupBetweenModules.ok, false, "两个 module.uuid 相同必须报错（不能只比 header）");
+  assert.ok(dupBetweenModules.errors.some((e) => /UUID 重复/.test(e)), JSON.stringify(dupBetweenModules.errors));
+  const caseInsensitiveDup = validateAddonManifest(JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: "AAAABBBB-CCCC-DDDD-EEEE-FFFF00001111", version: [1, 0, 0] },
+    modules: [{ type: "data", uuid: "aaaabbbb-cccc-dddd-eeee-ffff00001111", version: [1, 0, 0] }],
+  }));
+  assert.equal(caseInsensitiveDup.ok, false, "UUID 大小写不同应视为同一个（按规范化后比较）");
+  // 正对照：三段互异必须通过（防「一红到底」式假判别力）
+  const distinctUuids = validateAddonManifest(JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
+    modules: [
+      { type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0] },
+      { type: "data", uuid: "22222222-2222-2222-2222-222222222222", version: [1, 0, 0] },
+    ],
+  }));
+  assert.equal(distinctUuids.ok, true, JSON.stringify(distinctUuids.errors));
   const strVer = validateAddonManifest(JSON.stringify({
     format_version: 2,
     header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
@@ -6772,9 +6808,64 @@ function fsMutationPrimitiveRe(fn) {
   return new RegExp(`\\b(?:fs\\.)?${fn}\\s*\\(`);
 }
 
+/**
+ * C-3（sweep81）：异步 / promise 化 / 回调式写盘原语。
+ * 旧表只认 `*Sync` ⇒ 实测 11/11 种异步写入形态**完全不可见**（`await fs.promises.writeFile(p,t)`、
+ * `import { writeFile } from "node:fs/promises"`、回调式 `fs.writeFile(p,t,cb)`、
+ * `await fs.promises.rm(p,{recursive:true})` …）。只收**高置信**形态，避免把同名本地 helper
+ * 误判成写盘（sweep80 活体扫描里 12 处异步形态全是同名的本地函数）。
+ */
+const FS_ASYNC_MUTATION_PRIMITIVES = [
+  "writeFile",
+  "appendFile",
+  "copyFile",
+  "cp",
+  "rm",
+  "unlink",
+  "rename",
+  "mkdir",
+  "truncate",
+  "open",
+  "createWriteStream",
+];
+
+/** `fs.promises.writeFile(` / `fsp.rm(` / `fsPromises.mkdir(` —— 限定名，无需 import 推断。 */
+function fsPromiseQualifiedRe(fn) {
+  return new RegExp(`\\b(?:fs\\.promises|fsp|fsPromises)\\.${fn}\\s*\\(`);
+}
+
+/** 回调式 `fs.writeFile(` / `fs.rm(` —— 旧表只认 `*Sync`，这一族同样不可见。 */
+function fsCallbackRe(fn) {
+  return new RegExp(`\\bfs\\.${fn}\\s*\\(`);
+}
+
+/** 从 `"node:fs/promises"`（或 `"fs/promises"`）具名 import 进来的写盘原语名。 */
+function promiseImportedPrimitives(text) {
+  const out = new Set();
+  for (const m of text.matchAll(/import\s*\{([^}]*)\}\s*from\s*["'](?:node:)?fs\/promises["']/g)) {
+    for (const raw of m[1].split(",")) {
+      const name = raw.trim().split(/\s+as\s+/)[0].trim();
+      if (FS_ASYNC_MUTATION_PRIMITIVES.includes(name)) out.add(name);
+    }
+  }
+  return out;
+}
+
+/** 单行是否命中「异步写盘」：限定名 / 回调式 / 该文件从 fs/promises 具名导入的原语。 */
+function lineHasAsyncWritePrimitive(line, fn, importedPromiseNames) {
+  if (fsPromiseQualifiedRe(fn).test(line) || fsCallbackRe(fn).test(line)) return true;
+  if (!importedPromiseNames.has(fn)) return false;
+  return new RegExp(`\\b${fn}\\s*\\(`).test(line);
+}
+
 /** 文本里是否出现任何 fs 写盘原语（= 该脚本「能写文件」）。 */
 function scriptWritesFiles(text) {
-  return FS_MUTATION_PRIMITIVES.some((fn) => fsMutationPrimitiveRe(fn).test(text));
+  if (FS_MUTATION_PRIMITIVES.some((fn) => fsMutationPrimitiveRe(fn).test(text))) return true;
+  if (FS_ASYNC_MUTATION_PRIMITIVES.some((fn) => fsPromiseQualifiedRe(fn).test(text))) return true;
+  if (FS_ASYNC_MUTATION_PRIMITIVES.some((fn) => fsCallbackRe(fn).test(text))) return true;
+  const imported = promiseImportedPrimitives(text);
+  for (const fn of imported) if (new RegExp(`\\b${fn}\\s*\\(`).test(text)) return true;
+  return false;
 }
 
 /** 在册豁免：NON_WRITERS / DEBT 两张清单之一（依据正则在 testScriptWriteGuardFunnel 里逐条复核）。 */
@@ -6802,6 +6893,7 @@ function diffScriptWriteGuard(files) {
   for (const file of files) {
     const isGuard = file.rel === SCRIPT_WRITE_GUARD_REL;
     const exempt = scriptGuardExempt(file.rel);
+    const importedPromiseNames = promiseImportedPrimitives(file.text); // C-3
     const importsGuard = /(?:^|\n)\s*(?:import|export)[^;\n]*from\s+["'][^"']*write-guard\.mjs["']/.test(file.text);
     if (importsGuard) guardAdopted++;
     if (!isGuard && scriptRequiresGuard(file.rel, file.text) && !importsGuard) {
@@ -6827,6 +6919,25 @@ function diffScriptWriteGuard(files) {
         }
         outsideGuardHits++;
         problems.push(`${file.rel}:${idx + 1} 直接调用 ${fn}()，写盘必须走 write-guard 的 emit / emitCopy`);
+      }
+      // C-3：旧表只认 `*Sync` ⇒ 异步 / promise 化 / 回调式写入者此前完全不在扫描面（实测 11/11 不可见）。
+      // 注意豁免口径的收窄：两张在册清单只为旧表的 `*Sync` 原语签过字，
+      // 「某文件是 NON_WRITER」不等于「它可以用 fs.promises 写盘」⇒ 豁免文件里出现即算问题。
+      for (const fn of FS_ASYNC_MUTATION_PRIMITIVES) {
+        if (!lineHasAsyncWritePrimitive(line, fn, importedPromiseNames)) continue;
+        primitiveHits++;
+        if (isGuard) continue;
+        if (exempt) {
+          exemptPrimitiveHits++;
+          problems.push(
+            `${file.rel}:${idx + 1} 在册豁免文件出现异步/回调式写盘原语 ${fn}( —— 豁免只覆盖旧表 *Sync 原语，请改道 write-guard 或重签豁免`,
+          );
+          continue;
+        }
+        outsideGuardHits++;
+        problems.push(
+          `${file.rel}:${idx + 1} 异步/回调式写盘原语 ${fn}( 未经 write-guard（C-3：旧表只认 *Sync，这类写入者此前完全不可见）`,
+        );
       }
     });
     if (isGuard) {
@@ -7262,6 +7373,38 @@ function testCommunityIndexSync() {
   assert.equal(refHits.length, refDocs, "正文引用了 Modrinth 实测数字，索引摘要却没标注实测");
 }
 
+// ── C-7 门⑦：session 必须把各档「核实表」递出去（sweep80 C12）────────────────────
+/**
+ * 回归对象：`verifiedApiNotes()` 曾按文件名 `/verified-api/i` 白名单过滤 ⇒ `qsl-verified.md`
+ * （quilt 10 档）、`safe-api.md`（modloader 3 档）、rift 的 `listeners.md` 等**永不进 session** ——
+ * 而这几张表正是根 `AGENTS.md` 规定「方法名只许来自该档核实表」的那些表。
+ * 修后：收该档 `knowledge/common/` 下全部 .md（排序 + 上限 8）。
+ * 改前活体：`quilt/1.21.1` 与 `modloader/1.6.4` 的 `verifiedApi` 恒为 `[]`（本门改前必红）。
+ */
+function testSessionVerifiedApiReachesRealTables() {
+  const cases = [
+    ["quilt", "1.21.1", "qsl-verified.md"],
+    ["modloader", "1.6.4", "safe-api.md"],
+    ["rift", "1.13.2", "listeners.md"],
+    ["liteloader", "1.12.2", "verified-api.md"], // 改前已非空的对照档：证明修法没把好的弄坏
+  ];
+  for (const [platform, version, needle] of cases) {
+    const s = sessionPlatformPack({ platform, minecraftVersion: version, repoRoot: REPO_ROOT });
+    assert.equal(s?.ok, true, `${platform}/${version} session 不 ok：${JSON.stringify(s?.action ?? null)}`);
+    const api = s?.verifiedApi ?? [];
+    assert.ok(api.length > 0, `${platform}/${version} 的 session.verifiedApi 为空 ⇒ 该档核实表对宿主不可达（C12 回归）`);
+    const paths = api.map((x) => String(x.path));
+    assert.ok(
+      paths.some((p) => p.includes(needle)),
+      `${platform}/${version} 的 verifiedApi 里没有 ${needle}，实得 ${JSON.stringify(paths)}`,
+    );
+    assert.ok(
+      api.every((x) => typeof x.excerpt === "string" && x.excerpt.length > 0),
+      `${platform}/${version} 的核实表摘要为空（只给路径不给正文等于没递）`,
+    );
+  }
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -7305,6 +7448,28 @@ await testPortingHandoffArgsAreCallable();
 await testPortingKbProvenance();
 await testScaffoldWrappers();
 await testAssertionProvenance();
+testSessionVerifiedApiReachesRealTables(); // C-7 门⑦
+
+// ── Y-2（sweep81 顺延）：loaderVersion 大窗按「官方 scheme 证据」钉住现状 ──────────
+// 证据：Forge javafml 的 loaderVersion 主版本 ≥14（官方 1.12.2 MDK = [14,)；scaffold 检索
+// 「Forge 1.12.2 = [8,)」0 命中 ⇒ 审计建议的「[8,)→forge」前提无据，不采纳）。
+// NeoForge：20.1–20.9 用 [1,)...[9,)、20.4 用 [11,)、21.0 用 [21,)；1.19+/1.20.1 的 Forge 与
+// Neo 20.1 兼容层同窗（[47,)）⇒ 判 unknown 让 PICK_PLATFORM 问用户（现行为，非缺陷）。
+{
+  const y2 = [
+    ["[1,)", "neoforge"],
+    ["[8,)", "neoforge"],
+    ["[14,)", "forge"],
+    ["[36,)", "forge"],
+    ["[45,)", "forge"],
+    ["[21,)", "neoforge"],
+    ["[47,)", "unknown"],
+  ];
+  for (const [lv, want] of y2) {
+    const toml = `modLoader="javafml"\nloaderVersion="${lv}"`;
+    assert.equal(classifyJavaFmlToml(toml), want, `loaderVersion ${lv} 应判 ${want}（Y-2 现状钉）`);
+  }
+}
 await testFabric2612Knowledge();
 await testLoaderApiRepoDataHygiene();
 await testZipInflateZeroByteDeflate();

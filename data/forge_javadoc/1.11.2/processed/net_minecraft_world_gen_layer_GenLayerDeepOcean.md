@@ -1,1 +1,15 @@
 # GenLayerDeepOcean
+
+## Class signature
+
+```java
+public class GenLayerDeepOcean extends GenLayer
+```
+
+## Constructors
+
+- `public GenLayerDeepOcean(long p_i45472_1_, GenLayer p_i45472_3_)`
+
+## Methods
+
+- `public int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight)`

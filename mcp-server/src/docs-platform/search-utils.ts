@@ -740,7 +740,10 @@ function docsPlatformLabel(payload: Record<string, unknown>): string {
 export function withDocsFallbackFields<T extends Record<string, unknown>>(payload: T): T {
   const versionFallback = Boolean(payload.versionFallback);
   const wikiFallback = Boolean(payload.wikiFallback);
-  const explicit = payload.fallback === true;
+  // A-6 X（成立）：quilt 档发的是**字符串** `fallback: "quilt"`（同线改口），而这里只认 `=== true`
+  // ⇒ 那些命中拿不到 confidence / VERSION_FALLBACK（降级信息整段丢失）。字符串同样表示「降级」。
+  const explicit =
+    payload.fallback === true || (typeof payload.fallback === "string" && payload.fallback.length > 0);
   if (!versionFallback && !wikiFallback && !explicit) return payload;
   const requested = String(payload.requestedVersion ?? payload.version ?? "");
   const resolved = wikiFallback
@@ -761,7 +764,10 @@ export function withDocsFallbackFields<T extends Record<string, unknown>>(payloa
       : undefined;
   return {
     ...payload,
-    fallback: true,
+    // A-6 X：**不得**把载荷自带的字符串 fallback（quilt 同线改口 = `"quilt"`）覆写成 `true`
+    // ——那是下游判「回退到哪个平台」的判别字段（test-assistant-gaps / test-core 都钉着它）。
+    // 归一只对布尔形态生效：没有值 → true。
+    fallback: typeof payload.fallback === "string" && payload.fallback.length > 0 ? payload.fallback : true,
     confidence: "fallback",
     ...(platformKey && payload.platform === undefined ? { platform: platformKey } : {}),
     source_version: resolved,

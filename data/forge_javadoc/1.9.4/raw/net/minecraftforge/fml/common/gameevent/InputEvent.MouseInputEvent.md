@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # InputEvent.MouseInputEvent
+
+## Constructors
+
+- `public MouseInputEvent()`

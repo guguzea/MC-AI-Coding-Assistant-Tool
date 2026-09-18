@@ -1,1 +1,23 @@
 # AnimationMetadataSection
+
+## Class signature
+
+```java
+public class AnimationMetadataSection extends java.lang.Object implements IMetadataSection
+```
+
+## Constructors
+
+- `public AnimationMetadataSection(java.util.List< AnimationFrame > animationFramesIn, int frameWidthIn, int frameHeightIn, int frameTimeIn, boolean interpolateIn)`
+
+## Methods
+
+- `public int getFrameHeight()`
+- `public int getFrameWidth()`
+- `public int getFrameCount()`
+- `public int getFrameTime()`
+- `public boolean isInterpolate()`
+- `public int getFrameTimeSingle(int frame)`
+- `public boolean frameHasTime(int frame)`
+- `public int getFrameIndex(int frame)`
+- `public java.util.Set<java.lang.Integer> getFrameIndexSet()`

@@ -220,6 +220,10 @@ export class CommunityDocStore {
   private bodyHaystack(e: CommunityIndexEntry): string {
     if (e.sourceKind === "links") return "";
     const filePath = resolve(this.root, e.path);
+    // A-8 CC-2（成立）：`e.path` 来自索引文件（索引可被替换/污染），此前直接 resolve + readFileSync
+    // ⇒ `../cc-outside-secret.txt` 会被读进检索 haystack（正文外泄）。与 getFull 同形做包含性检查。
+    const relToRoot = relative(this.root, filePath);
+    if (!relToRoot || relToRoot.startsWith("..") || isAbsolute(relToRoot)) return "";
     if (!existsSync(filePath)) return "";
     // D-48：每次 search 都对全部条目 readFileSync → O(条目数) 次磁盘读。
     // 正文 haystack 只截 12k 且转小写，结果稳定，按 (mtimeMs,size) 缓存即可。

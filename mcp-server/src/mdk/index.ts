@@ -95,8 +95,17 @@ export function checksumsPath(): string {
 export function loadMdkChecksums(): MdkChecksumEntry[] {
   const p = checksumsPath();
   if (!existsSync(p)) return [];
-  const raw = JSON.parse(readFileSync(p, "utf8")) as { entries?: MdkChecksumEntry[] };
-  return raw.entries ?? [];
+  try {
+    const raw = JSON.parse(readFileSync(p, "utf8")) as { entries?: MdkChecksumEntry[] };
+    return raw.entries ?? [];
+  } catch (err) {
+    // Z-1（sweep81 顺延）：checksum 文件损坏此前裸抛 SyntaxError ⇒ 工具以 tool_failure 形式崩掉。
+    // 与 :880 的「损坏：失败关闭」同口径：降级为空表 + 大声告警（不静默、不伪装成未配置）。
+    console.error(
+      `[mdk] MDK_CHECKSUMS_INVALID: checksum 文件不可解析，按空表处理 —— ${p} :: ${(err as Error).message}`,
+    );
+    return [];
+  }
 }
 
 function urlAllowed(url: string): boolean {
@@ -319,6 +328,18 @@ function copyTreeSync(from: string, to: string, seen: Set<string> = new Set()): 
     }
     copyFileSync(sp, dp);
     n++;
+  }
+  return n;
+}
+
+/** mdk 覆盖预检（sweep81 顺延，用户采纳「统计 + 回 warning、不阻断」）：复制前统计 destPath 下既有文件数。 */
+function countExistingFilesDeep(dir: string): number {
+  if (!existsSync(dir)) return 0;
+  let n = 0;
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    const p = join(dir, e.name);
+    if (e.isDirectory()) n += countExistingFilesDeep(p);
+    else n++;
   }
   return n;
 }
@@ -1120,10 +1141,13 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
   const cached = cacheLooksReady(destCache, entry);
   if (cached.ready) {
     const parsed = parseExampleEntry(cached.unpackedRoot!);
+    let overwrote = 0;
     if (args.destPath) {
       mkdirSync(args.destPath, { recursive: true });
       // mkdir 后复核：destPath 若是预置 junction/symlink，cpSync 会整树穿出沙箱（F-B02）
       assertWritablePath(args.destPath);
+      // mdk 覆盖预检（不阻断）：目标目录已有内容时如实报数（覆盖式复制是有意行为）
+      overwrote = countExistingFilesDeep(args.destPath);
       copyTreeSync(cached.unpackedRoot!, args.destPath);
     }
     return {
@@ -1133,6 +1157,7 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
       dest: destCache,
       unpackedRoot: cached.unpackedRoot,
       sha256: entry.sha256,
+      ...(overwrote > 0 ? { overwrote, warning: `目标目录已存在 ${overwrote} 个文件，本次复制已覆盖` } : {}),
       ...parsed,
     };
   }
@@ -1212,10 +1237,13 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
     wroteSha = writebackSha256IfNull(entry.id, unpacked.sha256);
   }
 
+  let overwrote = 0;
   if (args.destPath) {
     mkdirSync(args.destPath, { recursive: true });
     // mkdir 后复核：destPath 若是预置 junction/symlink，cpSync 会整树穿出沙箱（F-B02）
     assertWritablePath(args.destPath);
+    // mdk 覆盖预检（不阻断）：目标目录已有内容时如实报数（覆盖式复制是有意行为）
+    overwrote = countExistingFilesDeep(args.destPath);
     copyTreeSync(unpacked.unpackedRoot!, args.destPath);
   }
 
@@ -1227,6 +1255,7 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
     archivePath: unpacked.archivePath,
     sha256: unpacked.sha256,
     sha256Pinned: Boolean(entry.sha256) || wroteSha,
+    ...(overwrote > 0 ? { overwrote, warning: `目标目录已存在 ${overwrote} 个文件，本次复制已覆盖` } : {}),
     sha256WroteBack: wroteSha,
     warnings: wroteSha
       ? ["已写仓库 mcp-server/data/mdk-checksums.json（唯一绕过写门禁的点）"]

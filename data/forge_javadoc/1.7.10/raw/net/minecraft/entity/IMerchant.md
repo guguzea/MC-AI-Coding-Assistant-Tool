@@ -1,6 +1,6 @@
 ---
 title: "IMerchant"
-description: ""
+description: "public interface IMerchant"
 package: "net/minecraft/entity"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/entity/IMerchant.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # IMerchant
+
+## Class signature
+
+```java
+public interface IMerchant
+```
+
+## Methods
+
+- `void setCustomer( EntityPlayer p_70932_1_)`
+- `EntityPlayer getCustomer()`
+- `MerchantRecipeList getRecipes( EntityPlayer p_70934_1_)`
+- `void setRecipes( MerchantRecipeList p_70930_1_)`
+- `void useRecipe( MerchantRecipe p_70933_1_)`
+- `void func_110297_a_( ItemStack p_110297_1_)`

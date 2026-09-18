@@ -43,6 +43,8 @@ private static final Item MY_APPLE = Registry.register(
 
 ## 模式 3：工具（剑）
 
+> ⚠️ 下面代码块里的 `FabricToolTags.PICKAXES` **未核实**：14 档 yarn tiny 逐档实测该 token 命中 **0**，仓内无可证名字（`ItemTags.PICKAXES` 同样 0 命中）。抄这段前先核实常量名：`query_loader_api --className=ItemTags`，或用自备 jar 走 `ingest_loader_api`；**禁止凭记忆补**。
+
 ```yaml
 模式: Sword Tool
 平台: Fabric

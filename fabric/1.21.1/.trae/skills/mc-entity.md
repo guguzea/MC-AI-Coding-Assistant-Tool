@@ -28,6 +28,7 @@ private static final EntityType<MyPigEntity> MY_PIG =
         Registries.ENTITY_TYPE,
         Identifier.of(MOD_ID, "my_pig"),
         FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MyPigEntity::new)
+            // TODO(未核实)：EntityDimensions.changing 在本档无 oracle，方法名勿照抄
             .dimensions(EntityDimensions.changing(0.9f, 1.4f))
             .trackable(8, 3)
             .build()

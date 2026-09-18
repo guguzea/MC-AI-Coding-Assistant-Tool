@@ -1,6 +1,6 @@
 ---
 title: "RenderSnowMan"
-description: ""
+description: "public class RenderSnowMan extends RenderLiving < EntitySnowman >"
 package: "net/minecraft/client/renderer/entity"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/renderer/entity/RenderSnowMan.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # RenderSnowMan
+
+## Class signature
+
+```java
+public class RenderSnowMan extends RenderLiving < EntitySnowman >
+```
+
+## Constructors
+
+- `public RenderSnowMan( RenderManager renderManagerIn)`
+
+## Methods
+
+- `protected ResourceLocation getEntityTexture( EntitySnowman entity)`
+- `public ModelSnowMan getMainModel()`

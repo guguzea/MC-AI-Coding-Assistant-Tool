@@ -59,6 +59,28 @@ if (!bad) {
   const lv = run(SCRIPT_BIN, ["lib", "resolve", "--validate"]);
   if (lv.status !== 0 || !/"ok"\s*:\s*true/.test(lv.stdout ?? "")) fail(`lib resolve --validate 真跑失败\n${lv.stdout}${lv.stderr}`);
 
+  // C-7 门⑧：薄壳转发必须校验 flag（sweep80 C18/C19）——
+  // 修前本层对 flag **零校验**：`--bogus x` 与拼错的 `-version` 都被原样转给下游并 rc=0（静默吞掉）。
+  const bogusFlag = run(SCRIPT_BIN, ["lib", "resolve", "--platform", "fabric", "--bogus", "x"]);
+  if (bogusFlag.status !== 2) {
+    fail(`未知 flag 必须 rc=2（实得 ${bogusFlag.status}）—— C18 回归\n${bogusFlag.stdout}${bogusFlag.stderr}`);
+  }
+  if (!/未知参数 --bogus/.test(`${bogusFlag.stdout}${bogusFlag.stderr}`)) {
+    fail(`未知 flag 的报错须点名该参数（实得 ${JSON.stringify((bogusFlag.stderr ?? "").slice(0, 120))}）`);
+  }
+  const oneDash = run(SCRIPT_BIN, ["lib", "resolve", "--platform", "fabric", "-version", "1.21.1"]);
+  if (oneDash.status !== 2) {
+    fail(`「漏写一个连字符」必须 rc=2（实得 ${oneDash.status}）—— C18 回归\n${oneDash.stdout}${oneDash.stderr}`);
+  }
+  if (!/疑似漏写一个连字符/.test(`${oneDash.stdout}${oneDash.stderr}`)) {
+    fail("拼错 flag 的报错必须自带纠正路径（「疑似漏写一个连字符」）");
+  }
+  // C19：仓库线必须认工具线的参数名（--mcVersion），否则两条线之间搬参数直接撞校验错
+  const aliasFlag = run(SCRIPT_BIN, ["lib", "resolve", "--platform", "fabric", "--mcVersion", "1.21.1"]);
+  if (aliasFlag.status !== 0) {
+    fail(`--mcVersion 别名应正常转发（实得 ${aliasFlag.status}）—— C19 回归\n${aliasFlag.stdout}${aliasFlag.stderr}`);
+  }
+
   // ③ 工具线三个零覆盖分支
   const tailVersion = run(TOOL_BIN, ["query_api", "--className", "Block", "--version"]);
   if (tailVersion.status === 0) fail("query_api --version（置尾）应失败（非 0）——零覆盖分支回归");
@@ -189,6 +211,67 @@ if (!bad) {
     const afterRelease = dirLock.listDirLocks(lockRoot).filter((n) => n.startsWith("update-apply")).length;
     delete process.env.MC_SKILL_CACHE;
     if (stillHeld !== 1 || afterRelease !== 0) fail(`update-apply 重入语义错（嵌套释放后=${stillHeld}，真释放后=${afterRelease}）—— NP-4 回归`);
+
+    // C-7 门③：同进程**交错**并发取 update-apply 锁（旧实现是布尔 check-then-act 跨 await ⇒
+    // 交错时两个调用者都看到 held===null，各自真去抢 ⇒ 一个 fulfilled、另一个误报 DIR_LOCK_BUSY）。
+    process.env.MC_SKILL_CACHE = lockRoot;
+    const interleaved = await Promise.allSettled([
+      applyLock.acquireUpdateApplyLock(3000),
+      applyLock.acquireUpdateApplyLock(3000),
+    ]);
+    const rejected = interleaved.filter((x) => x.status === "rejected");
+    if (rejected.length > 0) {
+      fail(
+        `同进程交错并发取 update-apply 锁不得失败（实得 ${rejected
+          .map((r) => r.reason?.code ?? String(r.reason))
+          .join(",")}）—— C16 回归`,
+      );
+    } else {
+      const heldDuring = dirLock.listDirLocks(lockRoot).filter((n) => n.startsWith("update-apply")).length;
+      for (const x of interleaved) x.value();
+      const heldAfter = dirLock.listDirLocks(lockRoot).filter((n) => n.startsWith("update-apply")).length;
+      if (heldDuring !== 1 || heldAfter !== 0) {
+        fail(`交错并发期间应恰好 1 把锁、全部释放后 0（实得 ${heldDuring}/${heldAfter}）—— C16 回归`);
+      }
+    }
+
+    // C-7 门④a：release 必须校验 owner（陈旧抢占后原持有者不得删掉**新持有者**的锁）
+    const ownerRelease = await dirLock.acquireDirLock(lockRoot, "quick-owner", 30000);
+    const ownerLockDir = dirLock.dirLockPathOf(lockRoot, "quick-owner");
+    fs.writeFileSync(path.join(ownerLockDir, "owner.json"), JSON.stringify({ pid: 999999, at: Date.now() }));
+    ownerRelease();
+    if (!fs.existsSync(ownerLockDir)) {
+      fail("release 未校验 owner：owner.json 已易主却仍删掉了锁目录（会删掉新持有者的锁）—— C17 回归");
+    }
+    fs.rmSync(ownerLockDir, { recursive: true, force: true }); // 清掉本门自己造的残留
+
+    // C-7 门④b：心跳间隔必须**恒 < timeoutMs**（旧式 max(1000, …) 在 timeoutMs<3000 时
+    // 间隔 > timeoutMs ⇒ 该锁永远自判陈旧；NP-4 曾用一个 30s 子进程绕开这个窗口）。
+    const hbRelease = await dirLock.acquireDirLock(lockRoot, "quick-hb", 150);
+    const hbDir = dirLock.dirLockPathOf(lockRoot, "quick-hb");
+    const hbAt0 = JSON.parse(fs.readFileSync(path.join(hbDir, "owner.json"), "utf8")).at;
+    await new Promise((r) => setTimeout(r, 400));
+    const hbAt1 = JSON.parse(fs.readFileSync(path.join(hbDir, "owner.json"), "utf8")).at;
+    if (!(hbAt1 > hbAt0)) fail(`小超时（150ms）锁的心跳未续租（owner.at ${hbAt0} → ${hbAt1}）—— C17 回归`);
+    const hbCode = `const m = await import(${JSON.stringify(lockModHref)}); try { const r = await m.acquireDirLock(${JSON.stringify(
+      lockRoot,
+    )}, "quick-hb", 150); console.log("ACQ"); r(); } catch (e) { console.log("BUSY:" + e.code); }`;
+    const hbOut = await new Promise((resolve) => {
+      const c = spawn(process.execPath, ["--input-type=module", "-e", hbCode], {
+        windowsHide: true,
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+      let out = "";
+      let err = "";
+      c.stdout.on("data", (d) => (out += d));
+      c.stderr.on("data", (d) => (err += d));
+      c.on("close", () => resolve(out.trim() || `stderr:${err.trim().split("\n")[0]}`));
+    });
+    if (hbOut !== "BUSY:DIR_LOCK_BUSY") {
+      fail(`150ms 超时的锁在 400ms 后仍须判「存活」（实得 ${hbOut}）—— C17 回归（心跳间隔未 clamp 到 < timeoutMs）`);
+    }
+    hbRelease();
+    fs.rmSync(hbDir, { recursive: true, force: true });
     fs.rmSync(lockRoot, { recursive: true, force: true });
 
     // NP-5：dist 不得再有静态 node:sqlite 取值导入（link 期抢占守卫），运行期加载器必须在

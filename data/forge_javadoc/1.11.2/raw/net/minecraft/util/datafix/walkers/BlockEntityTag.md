@@ -1,6 +1,6 @@
 ---
 title: "BlockEntityTag"
-description: ""
+description: "public class BlockEntityTag extends java.lang.Object implements IDataWalker"
 package: "net/minecraft/util/datafix/walkers"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/util/datafix/walkers/BlockEntityTag.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # BlockEntityTag
+
+## Class signature
+
+```java
+public class BlockEntityTag extends java.lang.Object implements IDataWalker
+```
+
+## Constructors
+
+- `public BlockEntityTag()`
+
+## Methods
+
+- `public NBTTagCompound process( IDataFixer fixer, NBTTagCompound compound, int versionIn)`

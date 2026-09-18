@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # InputEvent.KeyInputEvent
+
+## Constructors
+
+- `public KeyInputEvent()`

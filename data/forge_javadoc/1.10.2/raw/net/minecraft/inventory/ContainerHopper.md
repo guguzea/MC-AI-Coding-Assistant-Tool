@@ -1,6 +1,6 @@
 ---
 title: "ContainerHopper"
-description: ""
+description: "public class ContainerHopper extends Container"
 package: "net/minecraft/inventory"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/inventory/ContainerHopper.html"
@@ -8,3 +8,19 @@ sourceType: javadoc
 ---
 
 # ContainerHopper
+
+## Class signature
+
+```java
+public class ContainerHopper extends Container
+```
+
+## Constructors
+
+- `public ContainerHopper( InventoryPlayer playerInventory, IInventory hopperInventoryIn, EntityPlayer player)`
+
+## Methods
+
+- `public boolean canInteractWith( EntityPlayer playerIn)`
+- `@Nullable public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
+- `public void onContainerClosed( EntityPlayer playerIn)`

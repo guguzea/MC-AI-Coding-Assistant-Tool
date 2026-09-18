@@ -1,1 +1,28 @@
 # BlockEndPortalFrame
+
+## Class signature
+
+```java
+public class BlockEndPortalFrame extends Block
+```
+
+## Constructors
+
+- `public BlockEndPortalFrame()`
+
+## Methods
+
+- `public boolean isOpaqueCube()`
+- `public void setBlockBoundsForItemRender()`
+- `public void addCollisionBoxesToList( World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, java.util.List< AxisAlignedBB > list, Entity collidingEntity)`
+- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
+- `public IBlockState onBlockPlaced( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `public boolean hasComparatorInputOverride()`
+- `public int getComparatorInputOverride( World worldIn, BlockPos pos)`
+- `public IBlockState getStateFromMeta(int meta)`
+- `public int getMetaFromState( IBlockState state)`
+- `protected BlockState createBlockState()`
+
+## Description
+
+Add all collision boxes of this Block to the list that intersect with the given mask.

@@ -1,6 +1,6 @@
 ---
 title: "KilledByPlayer"
-description: ""
+description: "public class KilledByPlayer extends java.lang.Object implements LootCondition"
 package: "net/minecraft/world/storage/loot/conditions"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/storage/loot/conditions/KilledByPlayer.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # KilledByPlayer
+
+## Class signature
+
+```java
+public class KilledByPlayer extends java.lang.Object implements LootCondition
+```
+
+## Constructors
+
+- `public KilledByPlayer(boolean inverseIn)`
+
+## Methods
+
+- `public boolean testCondition(java.util.Random rand, LootContext context)`

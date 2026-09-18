@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # PersistentRegistryManager.GameDataSnapshot
+
+## Constructors
+
+- `public GameDataSnapshot()`

@@ -1,6 +1,6 @@
 ---
 title: "FMLClientHandler"
-description: ""
+description: "Handles primary communication from hooked code into the system The FML entry point is #beginMinecraftLoading(Minecraft, List) called from Minecraft Obfuscated code should focus on this class and other"
 package: "cpw/mods/fml/client"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/client/FMLClientHandler.html"
@@ -8,3 +8,75 @@ sourceType: javadoc
 ---
 
 # FMLClientHandler
+
+## Class signature
+
+```java
+public class FMLClientHandler extends java.lang.Object implements IFMLSidedHandler
+```
+
+## Constructors
+
+- `public FMLClientHandler()`
+
+## Methods
+
+- `public void beginMinecraftLoading( Minecraft minecraft, java.util.List resourcePackList, IReloadableResourceManager resourceManager)`
+- `public void haltGame(java.lang.String message, java.lang.Throwable t)`
+- `public void finishMinecraftLoading()`
+- `public void extendModList()`
+- `public void onInitializationComplete()`
+- `public Minecraft getClient()`
+- `public static FMLClientHandler instance()`
+- `public void displayGuiScreen( EntityPlayer player, GuiScreen gui)`
+- `public void addSpecialModEntries(java.util.ArrayList< ModContainer > mods)`
+- `public java.util.List<java.lang.String> getAdditionalBrandingInformation()`
+- `public Side getSide()`
+- `public boolean hasOptifine()`
+- `public void showGuiScreen(java.lang.Object clientGuiElement)`
+- `public void queryUser( StartupQuery query) throws java.lang.InterruptedException`
+- `public boolean handleLoadingScreen( ScaledResolution scaledResolution)`
+- `public WorldClient getWorldClient()`
+- `public EntityClientPlayerMP getClientPlayerEntity()`
+- `public void beginServerLoading( MinecraftServer server)`
+- `public void finishServerLoading()`
+- `public java.io.File getSavesDirectory()`
+- `public MinecraftServer getServer()`
+- `public void displayMissingMods(java.lang.Object modMissingPacket)`
+- `public boolean isLoading()`
+- `public boolean shouldServerShouldBeKilledQuietly()`
+- `public boolean isGUIOpen(java.lang.Class<? extends GuiScreen > gui)`
+- `public void addModAsResource( ModContainer container)`
+- `public IResourcePack getResourcePackFor(java.lang.String modId)`
+- `public java.lang.String getCurrentLanguage()`
+- `public void serverStopped()`
+- `public INetHandler getClientPlayHandler()`
+- `public NetworkManager getClientToServerNetworkManager()`
+- `public void handleClientWorldClosing( WorldClient world)`
+- `public void startIntegratedServer(java.lang.String id, java.lang.String name, WorldSettings settings)`
+- `public java.io.File getSavesDir()`
+- `public void tryLoadExistingWorld( GuiSelectWorld selectWorldGUI, java.lang.String dirName, java.lang.String saveName)`
+- `public void showInGameModOptions( GuiIngameMenu guiIngameMenu)`
+- `public IModGuiFactory getGuiFactoryFor( ModContainer selectedMod)`
+- `public void setupServerList()`
+- `public void captureAdditionalData( ServerStatusResponse serverstatusresponse, JsonObject jsonobject)`
+- `public void bindServerListData( ServerData data, ServerStatusResponse originalResponse)`
+- `public java.lang.String enhanceServerListEntry( ServerListEntryNormal serverListEntry, ServerData serverEntry, int x, int width, int y, int relativeMouseX, int relativeMouseY)`
+- `public java.lang.String fixDescription(java.lang.String description)`
+- `public void connectToServerAtStartup(java.lang.String host, int port)`
+- `public void connectToServer( GuiScreen guiMultiplayer, ServerData serverEntry)`
+- `public void connectToRealmsServer(java.lang.String host, int port)`
+- `public void setPlayClient( NetHandlerPlayClient netHandlerPlayClient)`
+- `public void waitForPlayClient()`
+- `public void fireNetRegistrationEvent( EventBus bus, NetworkManager manager, java.util.Set<java.lang.String> channelSet, java.lang.String channel, Side side)`
+- `public boolean shouldAllowPlayerLogins()`
+- `public void allowLogins()`
+- `public void trackMissingTexture( ResourceLocation resourceLocation)`
+- `public void trackBrokenTexture( ResourceLocation resourceLocation, java.lang.String error)`
+- `public void logMissingTextureErrors()`
+- `public void processWindowMessages()`
+- `public java.lang.String stripSpecialChars(java.lang.String message)`
+
+## Description
+
+Handles primary communication from hooked code into the system The FML entry point is #beginMinecraftLoading(Minecraft, List) called from Minecraft Obfuscated code should focus on this class and other

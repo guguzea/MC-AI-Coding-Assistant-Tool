@@ -1,6 +1,6 @@
 ---
 title: "ItemWrittenBook"
-description: ""
+description: "public class ItemWrittenBook extends Item"
 package: "net/minecraft/item"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/item/ItemWrittenBook.html"
@@ -8,3 +8,22 @@ sourceType: javadoc
 ---
 
 # ItemWrittenBook
+
+## Class signature
+
+```java
+public class ItemWrittenBook extends Item
+```
+
+## Constructors
+
+- `public ItemWrittenBook()`
+
+## Methods
+
+- `public static boolean validBookTagContents( NBTTagCompound nbt)`
+- `public static int getGeneration( ItemStack book)`
+- `public java.lang.String getItemStackDisplayName( ItemStack stack)`
+- `public void addInformation( ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
+- `public ActionResult < ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+- `public boolean hasEffect( ItemStack stack)`

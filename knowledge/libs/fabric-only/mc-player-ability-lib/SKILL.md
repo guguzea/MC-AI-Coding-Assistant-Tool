@@ -7,7 +7,7 @@ communityDocId: authored/lib-player-ability-lib
 mappings: hint
 ---
 
-> API 摘要状态（2026-09-14 实核）：有 ⇒ `mcp-server/data/lib-api-summaries/pal.json` 存在，catalog `authored/lib-player-ability-lib` 的 `verifiedApi` 非空（最低 1.20/fabric）⇒ 「本库无摘要」的说法不成立；落到类名仍走 `query_loader_api` 或自备 jar 核实
+> API 摘要状态（2026-09-18 复核）：摘要文件**有** ⇒ `mcp-server/data/lib-api-summaries/pal.json`（37.9 KB）在盘；但 catalog `authored/lib-player-ability-lib` 的 `verifiedApi` **当前为空对象 `{}`**（生成链未回填，已登记为待办）⇒ 「catalog 非空」这句旧稿不成立。落到类名仍走 `query_loader_api` 或自备 jar 核实
 
 > 数据读取日期：2026-09-14（源：Modrinth project/pal 版本表 limit=100；本轮 release 上界 fabric=26.1 / quilt=26.1）
 > 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/pal/version?limit=100" 后按 game_versions + loaders + version_type 取上界

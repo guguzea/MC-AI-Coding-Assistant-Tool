@@ -1,6 +1,6 @@
 ---
 title: "ModelChicken"
-description: ""
+description: "public class ModelChicken extends ModelBase"
 package: "net/minecraft/client/model"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/model/ModelChicken.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # ModelChicken
+
+## Class signature
+
+```java
+public class ModelChicken extends ModelBase
+```
+
+## Constructors
+
+- `public ModelChicken()`
+
+## Methods
+
+- `public void render( Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`

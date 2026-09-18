@@ -21,7 +21,7 @@ docsTool: search_fabric_docs
 
 ## 本档版本特有事实（05-events.mdc 差异点）
 
-- 物品使用 `UseItemCallback.EVENT` 本档返回 `ActionResult`（不要写 TypedActionResult）。
+- 物品使用 `UseItemCallback.EVENT` —— TODO(未核实)：返回类型无仓内 oracle（`ActionResult` / `TypedActionResult` 均未核实），不要照抄；先用自备 jar 走 `ingest_loader_api` 核实。
 - 实体交互：`AttackEntityCallback.EVENT`；本档**没有** `ServerEntityEvents`（该模块 1.14.4 不存在）；本档**没有** `ServerLivingEntityEvents` / `ServerEntityCombatEvents`，死亡/受伤用实体方法或 Mixin。
 - 数据包重载：Decision 段提示优先 `ServerLifecycleEvents.SERVER_STARTED`（loader-api 索引有 `StartDataPackReload` 嵌套类型但字段表为空，未钉死静态字段名）；示例段使用 `END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> ...)`。
 

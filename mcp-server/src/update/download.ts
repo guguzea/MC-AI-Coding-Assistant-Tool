@@ -9,25 +9,11 @@ import { Readable } from "stream";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
 import { curlGetToFile, isTlsCertError } from "./http.js";
 
-const ALLOWED_HOSTS = new Set([
-  "api.github.com",
-  "github.com",
-  "objects.githubusercontent.com",
-  "release-assets.githubusercontent.com",
-]);
-
-export function isAllowedDownloadUrl(urlStr: string): boolean {
-  try {
-    const u = new URL(urlStr);
-    if (u.protocol !== "https:") return false;
-    if (ALLOWED_HOSTS.has(u.hostname)) return true;
-    // githubusercontent / CDN variants
-    if (u.hostname.endsWith(".githubusercontent.com")) return true;
-    return false;
-  } catch {
-    return false;
-  }
-}
+// A-8 BB-4（用户裁定：**收掉通配**）：谓词下沉到 ./hosts.js 的**唯一权威**。
+// 原实现多一条 `endsWith(".githubusercontent.com")` 无限后缀通配 —— 那会让「守 Authorization 与
+// 重定向终点复核」的 http 侧信任域被削弱（并集方向），故按裁定收敛为精确集合。
+import { isAllowedDownloadUrl } from "./hosts.js";
+export { isAllowedDownloadUrl };
 
 function downloadTimeoutMs(): number {
   const n = Number(process.env.MC_SKILL_UPDATE_DOWNLOAD_TIMEOUT_MS ?? "600000");

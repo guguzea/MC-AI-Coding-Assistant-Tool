@@ -4,7 +4,7 @@ description: GameTest 结构测试。触发词：GameTest、@GameTest
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: mcp
+mappings: official
 ---
 
 # mc-gametest

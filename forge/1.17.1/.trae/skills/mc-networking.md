@@ -4,7 +4,7 @@ description: Minecraft Forge 网络通信。注册网络通道、发送数据包
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: mcp
+mappings: official
 ---
 
 # 网络通信（Forge 1.17.1）

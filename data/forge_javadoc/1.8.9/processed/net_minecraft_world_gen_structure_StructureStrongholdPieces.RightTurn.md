@@ -1,1 +1,14 @@
 # StructureStrongholdPieces.RightTurn
+
+## Constructors
+
+- `public RightTurn()`
+
+## Methods
+
+- `public void buildComponent( StructureComponent componentIn, java.util.List< StructureComponent > listIn, java.util.Random rand)`
+- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+
+## Description
+
+second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at the end, it adds Fences...

@@ -1,1 +1,51 @@
 # EntitySlime
+
+## Class signature
+
+```java
+public class EntitySlime extends EntityLiving implements IMob
+```
+
+## Constructors
+
+- `public EntitySlime( World worldIn)`
+
+## Methods
+
+- `protected void initEntityAI()`
+- `protected void entityInit()`
+- `protected void setSlimeSize(int size)`
+- `public int getSlimeSize()`
+- `public void writeEntityToNBT( NBTTagCompound compound)`
+- `public boolean isSmallSlime()`
+- `public void readEntityFromNBT( NBTTagCompound compound)`
+- `protected EnumParticleTypes getParticleType()`
+- `public void onUpdate()`
+- `protected void alterSquishAmount()`
+- `protected int getJumpDelay()`
+- `protected EntitySlime createInstance()`
+- `public void notifyDataManagerChange( DataParameter <?> key)`
+- `public void setDead()`
+- `public void applyEntityCollision( Entity entityIn)`
+- `public void onCollideWithPlayer( EntityPlayer entityIn)`
+- `protected void dealDamage( EntityLivingBase entityIn)`
+- `public float getEyeHeight()`
+- `protected boolean canDamagePlayer()`
+- `protected int getAttackStrength()`
+- `protected SoundEvent getHurtSound()`
+- `protected SoundEvent getDeathSound()`
+- `protected SoundEvent getSquishSound()`
+- `protected Item getDropItem()`
+- `@Nullable protected ResourceLocation getLootTable()`
+- `public boolean getCanSpawnHere()`
+- `protected float getSoundVolume()`
+- `public int getVerticalFaceSpeed()`
+- `protected boolean makesSoundOnJump()`
+- `protected void jump()`
+- `@Nullable public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)`
+- `protected SoundEvent getJumpSound()`
+- `protected boolean spawnCustomParticles()`
+
+## Description
+
+Called when the slime spawns particles on landing, see onUpdate.

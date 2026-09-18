@@ -10,8 +10,8 @@
  * 1) **带内（in-band）失败：`ok:false` + `action`（本模块）** —— 默认且压倒性多数。
  *    实测口径（**一律排除本文件自身**：合同散文里就写着 `ok: false` 字面量，计入即自指；
  *    `test-wave-bcd.mjs` 的 A-27 门按同一口径当场复算，数字脱节就翻红）：
- *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **303** 行 / **47** 个文件（按行计）；
- *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **308** 处 / **49** 个文件。
+ *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **311** 行 / **47** 个文件（按行计）；
+ *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **317** 处 / **49** 个文件。
  *    该口径数的是**字面量位点**，同时涵盖工具带内 envelope 与模块内 helper 判别联合两类
  *    （如 `src/mdk/index.ts` 的 `assertNoZipSlip`、`src/decompile/services/mod-decompile.ts` 的 `resolveModIdSegment`）；两类都不置 isError。
  *    语义 = “工具正常执行完了，但结论是否定/不完整/需要人决策”：

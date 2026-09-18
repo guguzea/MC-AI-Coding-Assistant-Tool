@@ -1,6 +1,6 @@
 ---
 title: "TickEvent.Type"
-description: ""
+description: "Returns the enum constant of this type with the specified name."
 package: "net/minecraftforge/fml/common/gameevent"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/common/gameevent/TickEvent.Type.html"
@@ -8,3 +8,12 @@ sourceType: javadoc
 ---
 
 # TickEvent.Type
+
+## Methods
+
+- `public static TickEvent.Type [] values()`
+- `public static TickEvent.Type valueOf(java.lang.String name)`
+
+## Description
+
+Returns the enum constant of this type with the specified name.

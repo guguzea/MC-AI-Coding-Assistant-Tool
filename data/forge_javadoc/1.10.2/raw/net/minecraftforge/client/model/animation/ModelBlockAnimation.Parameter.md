@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # ModelBlockAnimation.Parameter
+
+## Constructors
+
+- `protected Parameter()`

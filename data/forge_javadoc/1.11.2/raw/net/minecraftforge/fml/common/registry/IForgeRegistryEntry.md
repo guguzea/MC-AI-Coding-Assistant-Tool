@@ -1,6 +1,6 @@
 ---
 title: "IForgeRegistryEntry"
-description: ""
+description: "A unique identifier for this entry, if this entry is registered already it will return it's official registry name."
 package: "net/minecraftforge/fml/common/registry"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/common/registry/IForgeRegistryEntry.html"
@@ -8,3 +8,19 @@ sourceType: javadoc
 ---
 
 # IForgeRegistryEntry
+
+## Class signature
+
+```java
+public interface IForgeRegistryEntry<V>
+```
+
+## Methods
+
+- `V setRegistryName( ResourceLocation name)`
+- `@Nullable ResourceLocation getRegistryName()`
+- `java.lang.Class<? super V > getRegistryType()`
+
+## Description
+
+A unique identifier for this entry, if this entry is registered already it will return it's official registry name.

@@ -26,6 +26,19 @@ const BANNED = [
     re: /new\s+ICapabilityProvider\s*</,
     why: 'ICapabilityProvider（Forge）是非泛型接口，`new ICapabilityProvider<...>` 编译不过',
   },
+  // ── sweep81 C-1：从「已修好的行为」回填**全局**回归判据 ─────────────────────────
+  // 只收**全局无歧义**的族：任何平台/版本都不存在这个 Gradle 任务（上游 tasks 页 = 0；全仓
+  // `.gradle/.kts` 里 `task loom` 定义 = 0；真实任务见 Loom develop 页：generateModJson /
+  // download / enigma / validateMixinNames 与 genSources）。sweep80 已在 235 个文件里清掉 706 处，
+  // 本规则防「再一次从邻档拷回」。**注意写法**：旧复核曾用 `gradlew loom` 漏掉 `gradlew clean loom`，
+  // 这里两种形态都钉。
+  {
+    id: 'fabric-phantom-loom-task',
+    re: /\.\/gradlew\s+(?:clean\s+)?loom\b/,
+    why: '`loom` 不是 Gradle 任务（Task \'loom\' not found）；刷新映射后源码用 `./gradlew clean genSources`，任务名以 `./gradlew tasks` 为准',
+  },
+  // 版本区间型族（`Properties.of()` 正反两面 / 1.20+ 的 `TAB_MISC`）**不放在本门** ——
+  // 本门设计是全局无版本上下文；版本区间判据在 assert-forge-blockshape-family.mjs（C-6）。
 ];
 
 const files = execFileSync('git', ['-C', ROOT, 'ls-files', '-z'],

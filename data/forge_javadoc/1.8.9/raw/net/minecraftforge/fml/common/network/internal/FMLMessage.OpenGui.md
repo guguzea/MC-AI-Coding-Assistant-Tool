@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # FMLMessage.OpenGui
+
+## Constructors
+
+- `public OpenGui()`

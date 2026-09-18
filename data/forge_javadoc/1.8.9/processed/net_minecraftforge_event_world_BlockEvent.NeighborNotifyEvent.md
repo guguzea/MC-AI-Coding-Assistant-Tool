@@ -1,1 +1,13 @@
 # BlockEvent.NeighborNotifyEvent
+
+## Constructors
+
+- `public NeighborNotifyEvent( World world, BlockPos pos, IBlockState state, java.util.EnumSet< EnumFacing > notifiedSides)`
+
+## Methods
+
+- `public java.util.EnumSet< EnumFacing > getNotifiedSides()`
+
+## Description
+
+Fired when a physics update occurs on a block. This event acts as a way for mods to detect physics updates, in the same way a BUD switch does. This event is only called on the server.

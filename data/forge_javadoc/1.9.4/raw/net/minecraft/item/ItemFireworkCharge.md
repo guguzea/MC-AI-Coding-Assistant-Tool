@@ -1,6 +1,6 @@
 ---
 title: "ItemFireworkCharge"
-description: ""
+description: "public class ItemFireworkCharge extends Item"
 package: "net/minecraft/item"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/item/ItemFireworkCharge.html"
@@ -8,3 +8,19 @@ sourceType: javadoc
 ---
 
 # ItemFireworkCharge
+
+## Class signature
+
+```java
+public class ItemFireworkCharge extends Item
+```
+
+## Constructors
+
+- `public ItemFireworkCharge()`
+
+## Methods
+
+- `public static NBTBase getExplosionTag( ItemStack stack, java.lang.String key)`
+- `public void addInformation( ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
+- `public static void addExplosionInfo( NBTTagCompound nbt, java.util.List<java.lang.String> tooltip)`

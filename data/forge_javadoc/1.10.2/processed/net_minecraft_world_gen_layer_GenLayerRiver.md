@@ -1,1 +1,15 @@
 # GenLayerRiver
+
+## Class signature
+
+```java
+public class GenLayerRiver extends GenLayer
+```
+
+## Constructors
+
+- `public GenLayerRiver(long p_i2128_1_, GenLayer p_i2128_3_)`
+
+## Methods
+
+- `public int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight)`

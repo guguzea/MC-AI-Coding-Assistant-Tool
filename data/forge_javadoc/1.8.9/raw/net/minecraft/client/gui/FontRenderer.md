@@ -1,6 +1,6 @@
 ---
 title: "FontRenderer"
-description: ""
+description: "Array of width of all the characters in default.png"
 package: "net/minecraft/client/gui"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/gui/FontRenderer.html"
@@ -8,3 +8,44 @@ sourceType: javadoc
 ---
 
 # FontRenderer
+
+## Class signature
+
+```java
+public class FontRenderer extends java.lang.Object implements IResourceManagerReloadListener
+```
+
+## Constructors
+
+- `public FontRenderer( GameSettings gameSettingsIn, ResourceLocation location, TextureManager textureManagerIn, boolean unicode)`
+
+## Methods
+
+- `public void onResourceManagerReload( IResourceManager resourceManager)`
+- `protected float renderDefaultChar(int ch, boolean italic)`
+- `protected float renderUnicodeChar(char ch, boolean italic)`
+- `public int drawStringWithShadow(java.lang.String text, float x, float y, int color)`
+- `public int drawString(java.lang.String text, int x, int y, int color)`
+- `public int drawString(java.lang.String text, float x, float y, int color, boolean dropShadow)`
+- `protected void doDraw(float f)`
+- `public int getStringWidth(java.lang.String text)`
+- `public int getCharWidth(char character)`
+- `public java.lang.String trimStringToWidth(java.lang.String text, int width)`
+- `public java.lang.String trimStringToWidth(java.lang.String text, int width, boolean reverse)`
+- `public void drawSplitString(java.lang.String str, int x, int y, int wrapWidth, int textColor)`
+- `public int splitStringWidth(java.lang.String p_78267_1_, int p_78267_2_)`
+- `public void setUnicodeFlag(boolean unicodeFlagIn)`
+- `public boolean getUnicodeFlag()`
+- `public void setBidiFlag(boolean bidiFlagIn)`
+- `public java.util.List<java.lang.String> listFormattedStringToWidth(java.lang.String str, int wrapWidth)`
+- `public static java.lang.String getFormatFromString(java.lang.String text)`
+- `public boolean getBidiFlag()`
+- `protected void setColor(float r, float g, float b, float a)`
+- `protected void enableAlpha()`
+- `protected void bindTexture( ResourceLocation location)`
+- `protected java.io.InputStream getResourceInputStream( ResourceLocation location) throws java.io.IOException`
+- `public int getColorCode(char character)`
+
+## Description
+
+Array of width of all the characters in default.png

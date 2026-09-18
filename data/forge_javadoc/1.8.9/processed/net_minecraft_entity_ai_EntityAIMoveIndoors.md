@@ -1,1 +1,22 @@
 # EntityAIMoveIndoors
+
+## Class signature
+
+```java
+public class EntityAIMoveIndoors extends EntityAIBase
+```
+
+## Constructors
+
+- `public EntityAIMoveIndoors( EntityCreature entityObjIn)`
+
+## Methods
+
+- `public boolean shouldExecute()`
+- `public boolean continueExecuting()`
+- `public void startExecuting()`
+- `public void resetTask()`
+
+## Description
+
+Returns whether an in-progress EntityAIBase should continue executing

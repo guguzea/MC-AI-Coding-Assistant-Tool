@@ -1,1 +1,16 @@
 # ChunkGeneratorEvent.ReplaceBiomeBlocks
+
+## Constructors
+
+- `public ReplaceBiomeBlocks( IChunkGenerator chunkProvider, int x, int z, ChunkPrimer primer, World world)`
+
+## Methods
+
+- `public int getX()`
+- `public int getZ()`
+- `public ChunkPrimer getPrimer()`
+- `public World getWorld()`
+
+## Description
+
+This event is fired when a chunks blocks are replaced by a biomes top and filler blocks. You can set the result to DENY to prevent the default replacement.

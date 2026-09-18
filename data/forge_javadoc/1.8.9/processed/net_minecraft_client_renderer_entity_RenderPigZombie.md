@@ -1,1 +1,19 @@
 # RenderPigZombie
+
+## Class signature
+
+```java
+public class RenderPigZombie extends RenderBiped < EntityPigZombie >
+```
+
+## Constructors
+
+- `public RenderPigZombie( RenderManager renderManagerIn)`
+
+## Methods
+
+- `protected ResourceLocation getEntityTexture( EntityPigZombie entity)`
+
+## Description
+
+Returns the location of an entity's texture.

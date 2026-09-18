@@ -1,1 +1,22 @@
 # ChunkProviderHell
+
+## Class signature
+
+```java
+public class ChunkProviderHell extends java.lang.Object implements IChunkGenerator
+```
+
+## Constructors
+
+- `public ChunkProviderHell( World worldIn, boolean p_i45637_2_, long seed)`
+
+## Methods
+
+- `public void prepareHeights(int p_185936_1_, int p_185936_2_, ChunkPrimer primer)`
+- `public void buildSurfaces(int p_185937_1_, int p_185937_2_, ChunkPrimer primer)`
+- `public Chunk provideChunk(int x, int z)`
+- `public void populate(int x, int z)`
+- `public boolean generateStructures( Chunk chunkIn, int x, int z)`
+- `public java.util.List< Biome.SpawnListEntry > getPossibleCreatures( EnumCreatureType creatureType, BlockPos pos)`
+- `@Nullable public BlockPos getStrongholdGen( World worldIn, java.lang.String structureName, BlockPos position, boolean p_180513_4_)`
+- `public void recreateStructures( Chunk chunkIn, int x, int z)`

@@ -1,6 +1,6 @@
 ---
 title: "FMLNetworkEvent.ServerDisconnectionFromClientEvent"
-description: ""
+description: "Fired at the server when a client disconnects."
 package: "cpw/mods/fml/common/network"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/network/FMLNetworkEvent.ServerDisconnectionFromClientEvent.html"
@@ -8,3 +8,11 @@ sourceType: javadoc
 ---
 
 # FMLNetworkEvent.ServerDisconnectionFromClientEvent
+
+## Constructors
+
+- `public ServerDisconnectionFromClientEvent( NetworkManager manager)`
+
+## Description
+
+Fired at the server when a client disconnects.

@@ -1,6 +1,6 @@
 ---
 title: "ParticleSpell"
-description: ""
+description: "public class ParticleSpell extends Particle"
 package: "net/minecraft/client/particle"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/particle/ParticleSpell.html"
@@ -8,3 +8,19 @@ sourceType: javadoc
 ---
 
 # ParticleSpell
+
+## Class signature
+
+```java
+public class ParticleSpell extends Particle
+```
+
+## Constructors
+
+- `protected ParticleSpell( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double p_i1229_8_, double ySpeed, double p_i1229_12_)`
+
+## Methods
+
+- `public boolean isTransparent()`
+- `public void onUpdate()`
+- `public void setBaseSpellTextureIndex(int baseSpellTextureIndexIn)`

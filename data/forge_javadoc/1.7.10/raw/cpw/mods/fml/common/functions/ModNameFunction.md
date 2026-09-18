@@ -1,6 +1,6 @@
 ---
 title: "ModNameFunction"
-description: ""
+description: "public class ModNameFunction extends java.lang.Object"
 package: "cpw/mods/fml/common/functions"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/functions/ModNameFunction.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # ModNameFunction
+
+## Class signature
+
+```java
+public class ModNameFunction extends java.lang.Object
+```
+
+## Constructors
+
+- `public ModNameFunction()`
+
+## Methods
+
+- `public java.lang.String apply( ModContainer input)`

@@ -1,6 +1,6 @@
 ---
 title: "ForgeGuiFactory.ForgeConfigGui.ModIDEntry"
-description: ""
+description: "This custom list entry provides a Mod ID selector. The control is a button that opens a list of values to select from. This entry also overrides onGuiClosed() to run code to save the data to a new Con"
 package: "net/minecraftforge/client/gui"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/client/gui/ForgeGuiFactory.ForgeConfigGui.ModIDEntry.html"
@@ -8,3 +8,15 @@ sourceType: javadoc
 ---
 
 # ForgeGuiFactory.ForgeConfigGui.ModIDEntry
+
+## Constructors
+
+- `public ModIDEntry( GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)`
+
+## Methods
+
+- `public void onGuiClosed()`
+
+## Description
+
+This custom list entry provides a Mod ID selector. The control is a button that opens a list of values to select from. This entry also overrides onGuiClosed() to run code to save the data to a new Con

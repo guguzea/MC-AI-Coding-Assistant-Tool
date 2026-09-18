@@ -1,6 +1,6 @@
 ---
 title: "EntityPlayer"
-description: ""
+description: "public abstract class EntityPlayer extends EntityLivingBase implements ICommandSender"
 package: "net/minecraft/entity/player"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/entity/player/EntityPlayer.html"
@@ -8,3 +8,136 @@ sourceType: javadoc
 ---
 
 # EntityPlayer
+
+## Class signature
+
+```java
+public abstract class EntityPlayer extends EntityLivingBase implements ICommandSender
+```
+
+## Constructors
+
+- `public EntityPlayer( World p_i45324_1_, GameProfile p_i45324_2_)`
+
+## Methods
+
+- `protected void applyEntityAttributes()`
+- `protected void entityInit()`
+- `public ItemStack getItemInUse()`
+- `public int getItemInUseCount()`
+- `public boolean isUsingItem()`
+- `public int getItemInUseDuration()`
+- `public void stopUsingItem()`
+- `public void clearItemInUse()`
+- `public boolean isBlocking()`
+- `public void onUpdate()`
+- `public int getMaxInPortalTime()`
+- `protected java.lang.String getSwimSound()`
+- `protected java.lang.String getSplashSound()`
+- `public int getPortalCooldown()`
+- `public void playSound(java.lang.String p_85030_1_, float p_85030_2_, float p_85030_3_)`
+- `protected void updateItemUse( ItemStack p_71010_1_, int p_71010_2_)`
+- `protected void onItemUseFinish()`
+- `public void handleHealthUpdate(byte p_70103_1_)`
+- `protected boolean isMovementBlocked()`
+- `public void closeScreen()`
+- `public void mountEntity( Entity p_70078_1_)`
+- `public void updateRidden()`
+- `public void preparePlayerToSpawn()`
+- `protected void updateEntityActionState()`
+- `public void onLivingUpdate()`
+- `public int getScore()`
+- `public void setScore(int p_85040_1_)`
+- `public void addScore(int p_85039_1_)`
+- `public void onDeath( DamageSource p_70645_1_)`
+- `protected java.lang.String getHurtSound()`
+- `protected java.lang.String getDeathSound()`
+- `public void addToPlayerScore( Entity p_70084_1_, int p_70084_2_)`
+- `public EntityItem dropOneItem(boolean p_71040_1_)`
+- `public EntityItem dropPlayerItemWithRandomChoice( ItemStack p_71019_1_, boolean p_71019_2_)`
+- `public EntityItem func_146097_a( ItemStack p_146097_1_, boolean p_146097_2_, boolean p_146097_3_)`
+- `public void joinEntityItemWithWorld( EntityItem p_71012_1_)`
+- `public float getCurrentPlayerStrVsBlock( Block p_146096_1_, boolean p_146096_2_)`
+- `public boolean canHarvestBlock( Block p_146099_1_)`
+- `public void readEntityFromNBT( NBTTagCompound p_70037_1_)`
+- `public void writeEntityToNBT( NBTTagCompound p_70014_1_)`
+- `public void displayGUIChest( IInventory p_71007_1_)`
+- `public void func_146093_a( TileEntityHopper p_146093_1_)`
+- `public void displayGUIHopperMinecart( EntityMinecartHopper p_96125_1_)`
+- `public void displayGUIHorse( EntityHorse p_110298_1_, IInventory p_110298_2_)`
+- `public void displayGUIEnchantment(int p_71002_1_, int p_71002_2_, int p_71002_3_, java.lang.String p_71002_4_)`
+- `public void displayGUIAnvil(int p_82244_1_, int p_82244_2_, int p_82244_3_)`
+- `public void displayGUIWorkbench(int p_71058_1_, int p_71058_2_, int p_71058_3_)`
+- `public float getEyeHeight()`
+- `protected void resetHeight()`
+- `public boolean attackEntityFrom( DamageSource p_70097_1_, float p_70097_2_)`
+- `public boolean canAttackPlayer( EntityPlayer p_96122_1_)`
+- `protected void damageArmor(float p_70675_1_)`
+- `public int getTotalArmorValue()`
+- `public float getArmorVisibility()`
+- `protected void damageEntity( DamageSource p_70665_1_, float p_70665_2_)`
+- `public void func_146101_a( TileEntityFurnace p_146101_1_)`
+- `public void func_146102_a( TileEntityDispenser p_146102_1_)`
+- `public void func_146100_a( TileEntity p_146100_1_)`
+- `public void func_146095_a( CommandBlockLogic p_146095_1_)`
+- `public void func_146098_a( TileEntityBrewingStand p_146098_1_)`
+- `public void func_146104_a( TileEntityBeacon p_146104_1_)`
+- `public void displayGUIMerchant( IMerchant p_71030_1_, java.lang.String p_71030_2_)`
+- `public void displayGUIBook( ItemStack p_71048_1_)`
+- `public boolean interactWith( Entity p_70998_1_)`
+- `public ItemStack getCurrentEquippedItem()`
+- `public void destroyCurrentEquippedItem()`
+- `public double getYOffset()`
+- `public void attackTargetEntityWithCurrentItem( Entity p_71059_1_)`
+- `public void onCriticalHit( Entity p_71009_1_)`
+- `public void onEnchantmentCritical( Entity p_71047_1_)`
+- `public void respawnPlayer()`
+- `public void setDead()`
+- `public boolean isEntityInsideOpaqueBlock()`
+- `public GameProfile getGameProfile()`
+- `public EntityPlayer.EnumStatus sleepInBedAt(int p_71018_1_, int p_71018_2_, int p_71018_3_)`
+- `public void wakeUpPlayer(boolean p_70999_1_, boolean p_70999_2_, boolean p_70999_3_)`
+- `public static ChunkCoordinates verifyRespawnCoordinates( World p_71056_0_, ChunkCoordinates p_71056_1_, boolean p_71056_2_)`
+- `public float getBedOrientationInDegrees()`
+- `public boolean isPlayerSleeping()`
+- `public boolean isPlayerFullyAsleep()`
+- `public int getSleepTimer()`
+- `protected boolean getHideCape(int p_82241_1_)`
+- `protected void setHideCape(int p_82239_1_, boolean p_82239_2_)`
+- `public void addChatComponentMessage( IChatComponent p_146105_1_)`
+- `public ChunkCoordinates getBedLocation()`
+- `public boolean isSpawnForced()`
+- `public void setSpawnChunk( ChunkCoordinates p_71063_1_, boolean p_71063_2_)`
+- `public void triggerAchievement( StatBase p_71029_1_)`
+- `public void addStat( StatBase p_71064_1_, int p_71064_2_)`
+- `public void jump()`
+- `public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_)`
+- `public float getAIMoveSpeed()`
+- `public void addMovementStat(double p_71000_1_, double p_71000_3_, double p_71000_5_)`
+- `protected void fall(float p_70069_1_)`
+- `protected java.lang.String func_146067_o(int p_146067_1_)`
+- `public void onKillEntity( EntityLivingBase p_70074_1_)`
+- `public void setInWeb()`
+- `public IIcon getItemIcon( ItemStack p_70620_1_, int p_70620_2_)`
+- `public ItemStack getCurrentArmor(int p_82169_1_)`
+- `public void addExperience(int p_71023_1_)`
+- `public void addExperienceLevel(int p_82242_1_)`
+- `public int xpBarCap()`
+- `public void addExhaustion(float p_71020_1_)`
+- `public FoodStats getFoodStats()`
+- `public boolean canEat(boolean p_71043_1_)`
+- `public boolean shouldHeal()`
+- `public void setItemInUse( ItemStack p_71008_1_, int p_71008_2_)`
+- `public boolean isCurrentToolAdventureModeExempt(int p_82246_1_, int p_82246_2_, int p_82246_3_)`
+- `public boolean canPlayerEdit(int p_82247_1_, int p_82247_2_, int p_82247_3_, int p_82247_4_, ItemStack p_82247_5_)`
+- `protected int getExperiencePoints( EntityPlayer p_70693_1_)`
+- `protected boolean isPlayer()`
+- `public boolean getAlwaysRenderNameTagForRender()`
+- `public void clonePlayer( EntityPlayer p_71049_1_, boolean p_71049_2_)`
+- `protected boolean canTriggerWalking()`
+- `public void sendPlayerAbilities()`
+- `public void setGameType( WorldSettings.GameType p_71033_1_)`
+- `public java.lang.String getCommandSenderName()`
+- `public World getEntityWorld()`
+- `public InventoryEnderChest getInventoryEnderChest()`
+- `public ItemStack getEquipmentInSlot(int p_71124_1_)`

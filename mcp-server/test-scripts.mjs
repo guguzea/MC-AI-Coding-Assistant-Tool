@@ -1947,6 +1947,10 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   const { fileURLToPath } = await import("node:url");
   for (const gate of [
     "./scripts/assert-forge-1204-material.mjs",
+    // sweep81 C-6：Properties 形态**族 × 版本区间**门（正反两面；补 1.18.2/1.19.4 反向面）。
+    "./scripts/assert-forge-blockshape-family.mjs",
+    // sweep81 C-2：审计结论机读清单门骨架（登记的不变量必须点名一道存在且被本文件真跑的门）。
+    "./scripts/assert-rule-ledger.mjs",
     "./scripts/assert-scaffold-rules-conflict.mjs",
     // S20 的一次性脚本 temp/f146-gate.mjs 已并入门族（2026-09-13 裁定）；这里真跑它。
     "./scripts/assert-forge-1182-registry-consts.mjs",
@@ -1973,7 +1977,10 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
       `${gate} 真跑失败（rc=${r.status}）：\n${String(r.stdout || "").slice(0, 800)}${String(r.stderr || "").slice(0, 400)}`,
     );
   }
-  console.log("  §S18/S19/S20/S25a/S30/S32/S34 新门真跑: forge-1204-material + scaffold-rules-conflict + forge-1182-registry-consts + legacy-isolation + scaffold-selfcheck + community-attribution + rules-match-tool 共 7 道均 rc=0");
+  // sweep81 C-6/C-2 附带的诚实性修正：此处原写死「共 7 道」（且逐名枚举），加入新门后立刻陈旧。
+  // 按本仓规矩（CONTRIBUTING:212「文档不重述会腐烂的计数，只述口径」）去掉计数与逐名枚举：
+  // 真跑面以**上面那个数组**为唯一权威，数组里每一道都在本块内被 assert.equal(rc,0) 咬住。
+  console.log("  §S18/S19/S20/S25a/S30/S32/S34 新门真跑: 本块清单逐道 rc=0（含 sweep81 新增 blockshape-family 与 rule-ledger；权威=上方数组）");
 }
 
 /**

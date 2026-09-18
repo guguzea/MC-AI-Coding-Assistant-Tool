@@ -7,6 +7,8 @@
 
 import { execFile, type ExecFileException } from "node:child_process";
 import { existsSync, statSync } from "node:fs";
+// A-8 BB-4：host 白名单的唯一权威在 ./hosts.js（叶子模块，避免 http ↔ download 成环）。
+import { isAllowedGithubHost } from "./hosts.js";
 
 function execFileStdin(
   file: string,
@@ -116,22 +118,6 @@ function headersToPairs(init?: RequestInit): Array<[string, string]> {
   return out;
 }
 
-function isAllowedGithubHost(hostname: string): boolean {
-  const h = hostname.toLowerCase();
-  if (h === "api.github.com" || h === "github.com" || h === "objects.githubusercontent.com" || h === "release-assets.githubusercontent.com") {
-    return true;
-  }
-  const envBase = process.env.MC_SKILL_GITHUB_API_BASE;
-  if (envBase) {
-    try {
-      return new URL(envBase).hostname.toLowerCase() === h;
-    } catch {
-      return false;
-    }
-  }
-  return false;
-}
-
 export function assertAllowedGithubUrl(url: string): void {
   const parsed = new URL(url);
   if (parsed.protocol !== "https:") {
@@ -179,7 +165,9 @@ export async function curlGetToBuffer(
 ): Promise<{ status: number; body: Buffer }> {
   assertAllowedGithubUrl(url);
   const timeoutSec = Math.max(5, Math.ceil(githubTimeoutMs() / 1000));
-  const args = ["-sS", "-L", "--ssl-no-revoke", "--max-time", String(timeoutSec), "-w", "\n__MC_SKILL_HTTP_STATUS__:%{http_code}"];
+  // A-8 BB-3（成立）：与 curlGetToFile 同形回报终址 —— `-L` 会跟随重定向，只校验起址等于把
+  // 「白名单外的终点」放进信任区（对照 :225 的 `%{http_code} %{url_effective}` 与 :257-260 的复核）。
+  const args = ["-sS", "-L", "--ssl-no-revoke", "--max-time", String(timeoutSec), "-w", "\n__MC_SKILL_HTTP_STATUS__:%{http_code} %{url_effective}"];
   const proxy = proxyUrl();
   if (proxy) args.push("-x", proxy);
   const configLines: string[] = [];
@@ -208,8 +196,14 @@ export async function curlGetToBuffer(
     throw err;
   }
   const text = stdout.toString("utf8");
-  const m = text.match(/\n__MC_SKILL_HTTP_STATUS__:(\d+)\s*$/);
+  const m = text.match(/\n__MC_SKILL_HTTP_STATUS__:(\d+)(?: (.*))?\s*$/);
   const status = m ? Number(m[1]) : 0;
+  const effective = (m?.[2] ?? "").trim();
+  // A-8 BB-3：终址必须复核（与 curlGetToFile 同形），否则白名单只护住了起址。
+  if (!effective) {
+    throw new Error("curl 未回报终址（url_effective 为空），无法复核重定向目标，拒绝该请求");
+  }
+  assertAllowedGithubUrl(effective);
   const body = Buffer.from(m ? text.slice(0, m.index) : text, "utf8");
   return { status: status || 502, body };
 }

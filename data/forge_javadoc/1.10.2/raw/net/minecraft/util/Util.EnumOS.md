@@ -1,6 +1,6 @@
 ---
 title: "Util.EnumOS"
-description: ""
+description: "Returns the enum constant of this type with the specified name."
 package: "net/minecraft/util"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/util/Util.EnumOS.html"
@@ -8,3 +8,12 @@ sourceType: javadoc
 ---
 
 # Util.EnumOS
+
+## Methods
+
+- `public static Util.EnumOS [] values()`
+- `public static Util.EnumOS valueOf(java.lang.String name)`
+
+## Description
+
+Returns the enum constant of this type with the specified name.

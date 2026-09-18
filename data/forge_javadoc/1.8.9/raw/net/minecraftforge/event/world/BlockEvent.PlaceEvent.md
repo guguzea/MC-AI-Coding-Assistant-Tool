@@ -1,6 +1,6 @@
 ---
 title: "BlockEvent.PlaceEvent"
-description: ""
+description: "Called when a block is placed by a player. If a Block Place event is cancelled, the block will not be placed."
 package: "net/minecraftforge/event/world"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/world/BlockEvent.PlaceEvent.html"
@@ -8,3 +8,11 @@ sourceType: javadoc
 ---
 
 # BlockEvent.PlaceEvent
+
+## Constructors
+
+- `public PlaceEvent( BlockSnapshot blockSnapshot, IBlockState placedAgainst, EntityPlayer player)`
+
+## Description
+
+Called when a block is placed by a player. If a Block Place event is cancelled, the block will not be placed.

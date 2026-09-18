@@ -1,6 +1,6 @@
 ---
 title: "UserList"
-description: ""
+description: "Adds an entry to the list"
 package: "net/minecraft/server/management"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/server/management/UserList.html"
@@ -8,3 +8,34 @@ sourceType: javadoc
 ---
 
 # UserList
+
+## Class signature
+
+```java
+public class UserList<K,V extends UserListEntry <K>> extends java.lang.Object
+```
+
+## Constructors
+
+- `public UserList(java.io.File saveFile)`
+
+## Methods
+
+- `public boolean isLanServer()`
+- `public void setLanServer(boolean state)`
+- `public void addEntry( V entry)`
+- `public V getEntry( K obj)`
+- `public void removeEntry( K entry)`
+- `public java.io.File getSaveFile()`
+- `public java.lang.String[] getKeys()`
+- `protected java.lang.String getObjectKey( K obj)`
+- `protected boolean hasEntry( K entry)`
+- `protected UserListEntry < K > createEntry(JsonObject entryData)`
+- `protected java.util.Map<java.lang.String, V > getValues()`
+- `public void writeChanges() throws java.io.IOException`
+- `public boolean isEmpty()`
+- `public void readSavedFile() throws java.io.IOException, java.io.FileNotFoundException`
+
+## Description
+
+Adds an entry to the list

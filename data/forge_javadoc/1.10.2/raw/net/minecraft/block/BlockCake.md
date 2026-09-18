@@ -1,6 +1,6 @@
 ---
 title: "BlockCake"
-description: ""
+description: "public class BlockCake extends Block"
 package: "net/minecraft/block"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/block/BlockCake.html"
@@ -8,3 +8,32 @@ sourceType: javadoc
 ---
 
 # BlockCake
+
+## Class signature
+
+```java
+public class BlockCake extends Block
+```
+
+## Constructors
+
+- `protected BlockCake()`
+
+## Methods
+
+- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
+- `public AxisAlignedBB getSelectedBoundingBox( IBlockState state, World worldIn, BlockPos pos)`
+- `public boolean isFullCube( IBlockState state)`
+- `public boolean isOpaqueCube( IBlockState state)`
+- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
+- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `public int quantityDropped(java.util.Random random)`
+- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
+- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
+- `public IBlockState getStateFromMeta(int meta)`
+- `public BlockRenderLayer getBlockLayer()`
+- `public int getMetaFromState( IBlockState state)`
+- `protected BlockStateContainer createBlockState()`
+- `public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos)`
+- `public boolean hasComparatorInputOverride( IBlockState state)`

@@ -1,6 +1,6 @@
 ---
 title: "ContainerLocalMenu"
-description: ""
+description: "public class ContainerLocalMenu extends InventoryBasic implements ILockableContainer"
 package: "net/minecraft/client/player/inventory"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/player/inventory/ContainerLocalMenu.html"
@@ -8,3 +8,24 @@ sourceType: javadoc
 ---
 
 # ContainerLocalMenu
+
+## Class signature
+
+```java
+public class ContainerLocalMenu extends InventoryBasic implements ILockableContainer
+```
+
+## Constructors
+
+- `public ContainerLocalMenu(java.lang.String id, IChatComponent title, int slotCount)`
+
+## Methods
+
+- `public int getField(int id)`
+- `public void setField(int id, int value)`
+- `public int getFieldCount()`
+- `public boolean isLocked()`
+- `public void setLockCode( LockCode code)`
+- `public LockCode getLockCode()`
+- `public java.lang.String getGuiID()`
+- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`

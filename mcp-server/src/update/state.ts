@@ -50,11 +50,19 @@ export function updateStateLegacyPath(dataDir?: string): string {
 }
 
 function readStateFile(path: string): UpdateState | null {
+  return readStateFileDetailed(path).state;
+}
+
+/**
+ * A-8 CC-3（成立）：必须区分「没有状态文件」与「有但坏了」—— 后者此前被同一个 catch 静默当成 `{}`，
+ * 随后 `writeUpdateState` 拿它当基线合并并写回去，**把损坏现场连同信息一起抹掉且不告警**。
+ */
+function readStateFileDetailed(path: string): { state: UpdateState | null; corrupt: boolean } {
+  if (!existsSync(path)) return { state: null, corrupt: false };
   try {
-    if (!existsSync(path)) return null;
-    return JSON.parse(readFileSync(path, "utf8")) as UpdateState;
+    return { state: JSON.parse(readFileSync(path, "utf8")) as UpdateState, corrupt: false };
   } catch {
-    return null;
+    return { state: null, corrupt: true };
   }
 }
 
@@ -78,13 +86,30 @@ export function readUpdateState(dataDir?: string): UpdateState {
 }
 
 export function writeUpdateState(patch: Partial<UpdateState>, dataDir?: string): WriteUpdateStateResult {
-  const cur = readUpdateState(dataDir);
+  const p = updateStatePath(dataDir);
+  const prior = readStateFileDetailed(p);
+  const warnings: string[] = [];
+  // A-8 CC-3：损坏的状态文件不得被「当成 {} 合并后覆盖」——先挪成 `.corrupt-<ts>` 再重建，
+  // 并把这件事回成 warning（此前损坏现场被静默抹掉，无备份、无告警）。
+  if (prior.corrupt) {
+    const bak = `${p}.corrupt-${Date.now()}`;
+    try {
+      renameSync(p, bak);
+      warnings.push(`既有更新状态文件不可解析，已备份为 ${bak} 后重建`);
+    } catch (err) {
+      warnings.push(
+        `既有更新状态文件不可解析，且备份失败（${err instanceof Error ? err.message : String(err)}）：本次写入会覆盖它`,
+      );
+    }
+  }
+  const cur = prior.state ?? readUpdateState(dataDir);
   const next: UpdateState = { ...cur, ...patch };
   try {
-    const p = updateStatePath(dataDir);
     mkdirSync(dirname(p), { recursive: true });
     const payload = JSON.stringify(next, null, 2) + "\n";
-    if (existsSync(p) && readFileSync(p, "utf8") === payload) return { state: next };
+    if (!prior.corrupt && existsSync(p) && readFileSync(p, "utf8") === payload) {
+      return warnings.length > 0 ? { state: next, warning: warnings.join("；") } : { state: next };
+    }
     const tmp = `${p}.tmp-${process.pid}-${Date.now()}`;
     try {
       writeFileSync(tmp, payload, "utf8");
@@ -93,10 +118,10 @@ export function writeUpdateState(patch: Partial<UpdateState>, dataDir?: string):
       rmSync(tmp, { force: true });
       throw err;
     }
-    return { state: next };
+    return warnings.length > 0 ? { state: next, warning: warnings.join("；") } : { state: next };
   } catch (err) {
     const warning = `无法写入更新状态：${err instanceof Error ? err.message : String(err)}`;
-    return { state: next, writeFailed: true, warning };
+    return { state: next, writeFailed: true, warning: warnings.length > 0 ? `${warnings.join("；")}；${warning}` : warning };
   }
 }
 

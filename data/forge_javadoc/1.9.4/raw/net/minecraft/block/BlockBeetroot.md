@@ -1,6 +1,6 @@
 ---
 title: "BlockBeetroot"
-description: ""
+description: "public class BlockBeetroot extends BlockCrops"
 package: "net/minecraft/block"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/BlockBeetroot.html"
@@ -8,3 +8,24 @@ sourceType: javadoc
 ---
 
 # BlockBeetroot
+
+## Class signature
+
+```java
+public class BlockBeetroot extends BlockCrops
+```
+
+## Constructors
+
+- `public BlockBeetroot()`
+
+## Methods
+
+- `protected PropertyInteger getAgeProperty()`
+- `public int getMaxAge()`
+- `protected Item getSeed()`
+- `protected Item getCrop()`
+- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `protected int getBonemealAgeIncrease( World worldIn)`
+- `protected BlockStateContainer createBlockState()`
+- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`

@@ -4,7 +4,7 @@ description: Minecraft Forge 声音开发。SoundEvent 注册、sounds.json、So
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: parchment
+mappings: official
 ---
 
 # 声音开发（Forge 1.17.1）

@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # FMLMessage.EntityMessage
+
+## Constructors
+
+- `public EntityMessage()`

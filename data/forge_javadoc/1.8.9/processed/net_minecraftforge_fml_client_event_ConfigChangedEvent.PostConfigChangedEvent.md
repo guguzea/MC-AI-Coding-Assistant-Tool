@@ -1,1 +1,9 @@
 # ConfigChangedEvent.PostConfigChangedEvent
+
+## Constructors
+
+- `public PostConfigChangedEvent(java.lang.String modID, java.lang.String configID, boolean isWorldRunning, boolean requiresMcRestart)`
+
+## Description
+
+This event is provided for mods to consume if they want to be able to check if other mods' configs have been changed. This event only fires if the OnConfigChangedEvent result is not DENY.

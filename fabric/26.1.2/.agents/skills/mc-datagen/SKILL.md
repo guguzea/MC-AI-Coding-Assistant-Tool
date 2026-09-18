@@ -22,6 +22,8 @@ fabricApi {
     configureDataGeneration()
 }
 // build.gradle — 用完整 fabric-api，不要单独钉死 fabric-data-generation-api-v1 的假版本号
+// 先声明：`fabric_api_version` 写在 `gradle.properties`（与当前 Minecraft 匹配）。
+// 本档 scaffold 的 gradle.properties **不含该键**，直接抄这段会解析失败。
 dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }

@@ -1,6 +1,6 @@
 ---
 title: "ModelBlockAnimation.Parameter.Type"
-description: ""
+description: "Returns the enum constant of this type with the specified name."
 package: "net/minecraftforge/client/model/animation"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/model/animation/ModelBlockAnimation.Parameter.Type.html"
@@ -8,3 +8,12 @@ sourceType: javadoc
 ---
 
 # ModelBlockAnimation.Parameter.Type
+
+## Methods
+
+- `public static ModelBlockAnimation.Parameter.Type [] values()`
+- `public static ModelBlockAnimation.Parameter.Type valueOf(java.lang.String name)`
+
+## Description
+
+Returns the enum constant of this type with the specified name.

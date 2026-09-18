@@ -1,1 +1,19 @@
 # I18n
+
+## Class signature
+
+```java
+public class I18n extends java.lang.Object
+```
+
+## Constructors
+
+- `public I18n()`
+
+## Methods
+
+- `public static java.lang.String format(java.lang.String translateKey, java.lang.Object... parameters)`
+
+## Description
+
+format(a, b) is equivalent to String.format(translate(a), b).

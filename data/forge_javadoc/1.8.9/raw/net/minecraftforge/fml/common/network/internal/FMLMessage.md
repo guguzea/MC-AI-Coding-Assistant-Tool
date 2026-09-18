@@ -1,6 +1,6 @@
 ---
 title: "FMLMessage"
-description: ""
+description: "public abstract class FMLMessage extends java.lang.Object"
 package: "net/minecraftforge/fml/common/network/internal"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/network/internal/FMLMessage.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # FMLMessage
+
+## Class signature
+
+```java
+public abstract class FMLMessage extends java.lang.Object
+```
+
+## Constructors
+
+- `public FMLMessage()`

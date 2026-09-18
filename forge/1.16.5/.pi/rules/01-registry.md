@@ -174,7 +174,7 @@ public class ExampleMod {
     // 注册方块（lambda 内可安全引用其他已注册的 RegistryObject）
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
         () -> new Block(Block.Properties.of(Material.STONE)
-            .hardnessAndResistance(1.5f, 6.0f)
+            .strength(1.5f, 6.0f)
             .requiresTool()
         )
     );
@@ -225,7 +225,7 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
         () -> new Block(Block.Properties.of(Material.STONE)
-            .hardnessAndResistance(1.5f, 6.0f)
+            .strength(1.5f, 6.0f)
             .requiresTool()
         )
     );

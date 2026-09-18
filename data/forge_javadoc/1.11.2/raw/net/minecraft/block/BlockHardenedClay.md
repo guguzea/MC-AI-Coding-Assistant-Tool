@@ -1,6 +1,6 @@
 ---
 title: "BlockHardenedClay"
-description: ""
+description: "public class BlockHardenedClay extends Block"
 package: "net/minecraft/block"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/BlockHardenedClay.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # BlockHardenedClay
+
+## Class signature
+
+```java
+public class BlockHardenedClay extends Block
+```
+
+## Constructors
+
+- `public BlockHardenedClay()`
+
+## Methods
+
+- `public MapColor getMapColor( IBlockState state)`

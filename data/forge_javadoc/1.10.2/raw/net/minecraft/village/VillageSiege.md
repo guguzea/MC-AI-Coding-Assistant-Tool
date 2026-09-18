@@ -1,6 +1,6 @@
 ---
 title: "VillageSiege"
-description: ""
+description: "public class VillageSiege extends java.lang.Object"
 package: "net/minecraft/village"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/village/VillageSiege.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # VillageSiege
+
+## Class signature
+
+```java
+public class VillageSiege extends java.lang.Object
+```
+
+## Constructors
+
+- `public VillageSiege( World worldIn)`
+
+## Methods
+
+- `public void tick()`

@@ -1,6 +1,6 @@
 ---
 title: "INetHandler"
-description: ""
+description: "Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination"
 package: "net/minecraft/network"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/network/INetHandler.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # INetHandler
+
+## Class signature
+
+```java
+public interface INetHandler
+```
+
+## Methods
+
+- `void onDisconnect( IChatComponent reason)`
+
+## Description
+
+Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination

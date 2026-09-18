@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import * as z from "zod";
@@ -346,8 +349,20 @@ const PORT_PROJECT_DESC =
   "注意：extract_common 仅做静态分析，输出候选清单，不执行文件移动。" +
   "apply_version_migration 在确认写入时会真实执行包名替换（两阶段提交，失败自动回滚）；冲突文件在 confirmed 写入时会被拒绝。";
 
+/** Z-2（sweep81 顺延）：MCP server 版本从 package.json 单源读取 —— 曾硬编码 0.1.0 而实际 1.0.4。 */
+function pkgVersion(): string {
+  try {
+    const pj = JSON.parse(
+      readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "package.json"), "utf8"),
+    ) as { version?: string };
+    return String(pj.version ?? "") || "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
+
 export const server = new McpServer({
-  version: "0.1.0",
+  version: pkgVersion(),
   name: "MC-AI-Coding-Assistant-Tool",
 });
 

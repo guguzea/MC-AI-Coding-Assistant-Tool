@@ -1,6 +1,6 @@
 ---
 title: "ModelPig"
-description: ""
+description: "public class ModelPig extends ModelQuadruped"
 package: "net/minecraft/client/model"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/model/ModelPig.html"
@@ -8,3 +8,14 @@ sourceType: javadoc
 ---
 
 # ModelPig
+
+## Class signature
+
+```java
+public class ModelPig extends ModelQuadruped
+```
+
+## Constructors
+
+- `public ModelPig()`
+- `public ModelPig(float scale)`

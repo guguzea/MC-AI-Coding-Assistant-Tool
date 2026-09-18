@@ -43,13 +43,22 @@ function parseJson(r, label) {
 /**
  * 文档里写死的工具总数声明必须等于 registry 实际数。
  * 只认总数：紧跟「本组 / 该组 / 组内 …」限定语的是分组计数，不是总数声明。
+ * C-5（sweep81）：旧正则 `(\d+)\s*个工具` **看不见加粗写法**（`**80** 个工具` 里 `80` 后紧跟 `**`），
+ * 也看不见 `AUTO_SETUP.md:418` 的「数量 **80**（…）」形态 ⇒ 补第二种声明形态；
+ * 实测全仓 `数量 **N**（` 仅 1 处（AUTO_SETUP.md:418，值 81 = 权威数），故不引入新误报。
  */
 const GROUP_SCOPED = /(?:本组|该组|这组|组内|每组)\s*\**\s*$/;
+const TOOL_COUNT_CLAIM_RES = [
+  /\*{0,2}(\d{1,3})\*{0,2}\s*个工具/g, // `80 个工具` / `**80** 个工具`
+  /数量\s*\*{0,2}(\d{1,3})\*{0,2}\s*[（(]/g, // `数量 **80**（`
+];
 function staleTotalClaims(docs, total) {
   const bad = [];
-  for (const m of docs.matchAll(/(\d+)\s*个工具/g)) {
-    if (GROUP_SCOPED.test(docs.slice(Math.max(0, m.index - 16), m.index))) continue;
-    if (Number(m[1]) !== total) bad.push(m[1]);
+  for (const re of TOOL_COUNT_CLAIM_RES) {
+    for (const m of docs.matchAll(re)) {
+      if (GROUP_SCOPED.test(docs.slice(Math.max(0, m.index - 16), m.index))) continue;
+      if (Number(m[1]) !== total) bad.push(m[1]);
+    }
   }
   return bad;
 }

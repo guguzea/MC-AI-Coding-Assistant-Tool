@@ -61,6 +61,18 @@ export function sourceKindOf(rel) {
   return "unknown";
 }
 
+/**
+ * 来源类别的 **canonical 别名表**（B-14 / A-8 C8）：frontmatter 里出现过 `permitted-pointer`
+ * 这类别名，而查询侧 schema 只接受 `permitted|authored|links` ⇒ 索引与查询必须收敛到同一值域。
+ * 只折叠**已知别名**，其余原样透传（不新增丢弃行为）。
+ */
+const SOURCE_KIND_ALIASES = new Map([["permitted-pointer", "permitted"]]);
+
+export function canonicalSourceKind(kind) {
+  const k = String(kind ?? "").trim().toLowerCase();
+  return SOURCE_KIND_ALIASES.get(k) ?? (k || "unknown");
+}
+
 export function loadNearestMeta(file) {
   let dir = dirname(file);
   for (let i = 0; i < 4; i++) {
@@ -89,7 +101,7 @@ export function buildEntries(root) {
     if (rel.startsWith("patterns/")) continue;
     const text = readFileSync(file, "utf8");
     const { meta, body } = parseFrontmatter(text);
-    const kind = meta.sourceKind || sourceKindOf(rel);
+    const kind = canonicalSourceKind(meta.sourceKind || sourceKindOf(rel));
     if (kind === "unknown") continue;
     const id =
       meta.id ||

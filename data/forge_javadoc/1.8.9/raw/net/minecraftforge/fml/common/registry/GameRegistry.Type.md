@@ -1,6 +1,6 @@
 ---
 title: "GameRegistry.Type"
-description: ""
+description: "Returns the enum constant of this type with the specified name."
 package: "net/minecraftforge/fml/common/registry"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/registry/GameRegistry.Type.html"
@@ -8,3 +8,12 @@ sourceType: javadoc
 ---
 
 # GameRegistry.Type
+
+## Methods
+
+- `public static GameRegistry.Type [] values()`
+- `public static GameRegistry.Type valueOf(java.lang.String name)`
+
+## Description
+
+Returns the enum constant of this type with the specified name.

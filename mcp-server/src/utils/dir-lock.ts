@@ -153,9 +153,20 @@ export async function acquireDirLock(
   const tryAcquire = (): boolean => {
     try {
       mkdirSync(lockDir);
+    } catch {
+      return false; // 已被占用（EEXIST 等）
+    }
+    try {
       writeOwner(lockDir);
       return true;
     } catch {
+      // A-9a（sweep81 顺延）：mkdir 成功但 owner.json 写失败（权限/只读卷等）⇒ 空锁目录残留，
+      // lockAgeMs 回落 mtime ⇒ 永远不算陈旧 ⇒ 后续一直 BUSY（挂满整个超时）。回滚空目录。
+      try {
+        rmSync(lockDir, { recursive: true, force: true });
+      } catch {
+        /* 尽力回滚；失败则交给陈旧抢占兜底 */
+      }
       return false;
     }
   };

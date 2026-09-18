@@ -1,6 +1,6 @@
 ---
 title: "Mod.Metadata"
-description: ""
+description: "Populate the annotated field with the mod's metadata."
 package: "cpw/mods/fml/common"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/Mod.Metadata.html"
@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # Mod.Metadata
+
+## Description
+
+Populate the annotated field with the mod's metadata.

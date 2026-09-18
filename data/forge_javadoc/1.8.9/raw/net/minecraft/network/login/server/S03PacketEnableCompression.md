@@ -1,6 +1,6 @@
 ---
 title: "S03PacketEnableCompression"
-description: ""
+description: "Passes this Packet on to the NetHandler for processing."
 package: "net/minecraft/network/login/server"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/network/login/server/S03PacketEnableCompression.html"
@@ -8,3 +8,25 @@ sourceType: javadoc
 ---
 
 # S03PacketEnableCompression
+
+## Class signature
+
+```java
+public class S03PacketEnableCompression extends java.lang.Object implements Packet < INetHandlerLoginClient >
+```
+
+## Constructors
+
+- `public S03PacketEnableCompression()`
+- `public S03PacketEnableCompression(int compressionTresholdIn)`
+
+## Methods
+
+- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
+- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `public void processPacket( INetHandlerLoginClient handler)`
+- `public int getCompressionTreshold()`
+
+## Description
+
+Passes this Packet on to the NetHandler for processing.

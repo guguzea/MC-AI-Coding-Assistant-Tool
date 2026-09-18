@@ -1,6 +1,6 @@
 ---
 title: "StructureVillagePieces.Well"
-description: ""
+description: "second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at the end, it adds Fences..."
 package: "net/minecraft/world/gen/structure"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/gen/structure/StructureVillagePieces.Well.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # StructureVillagePieces.Well
+
+## Constructors
+
+- `public Well()`
+- `public Well( StructureVillagePieces.Start start, int p_i2109_2_, java.util.Random rand, int p_i2109_4_, int p_i2109_5_)`
+
+## Methods
+
+- `public void buildComponent( StructureComponent componentIn, java.util.List< StructureComponent > listIn, java.util.Random rand)`
+- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+
+## Description
+
+second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at the end, it adds Fences...

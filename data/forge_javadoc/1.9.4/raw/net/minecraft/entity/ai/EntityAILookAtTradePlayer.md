@@ -1,6 +1,6 @@
 ---
 title: "EntityAILookAtTradePlayer"
-description: ""
+description: "public class EntityAILookAtTradePlayer extends EntityAIWatchClosest"
 package: "net/minecraft/entity/ai"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/ai/EntityAILookAtTradePlayer.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # EntityAILookAtTradePlayer
+
+## Class signature
+
+```java
+public class EntityAILookAtTradePlayer extends EntityAIWatchClosest
+```
+
+## Constructors
+
+- `public EntityAILookAtTradePlayer( EntityVillager theMerchantIn)`
+
+## Methods
+
+- `public boolean shouldExecute()`

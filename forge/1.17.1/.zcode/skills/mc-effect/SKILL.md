@@ -4,7 +4,7 @@ description: MobEffect 状态效果。触发词：MobEffect、AttributeModifier
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: mcp
+mappings: official
 ---
 
 # mc-effect

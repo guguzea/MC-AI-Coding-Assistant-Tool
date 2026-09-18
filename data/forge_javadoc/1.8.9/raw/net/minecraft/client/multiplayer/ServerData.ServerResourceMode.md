@@ -1,6 +1,6 @@
 ---
 title: "ServerData.ServerResourceMode"
-description: ""
+description: "Returns the enum constant of this type with the specified name."
 package: "net/minecraft/client/multiplayer"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/multiplayer/ServerData.ServerResourceMode.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # ServerData.ServerResourceMode
+
+## Methods
+
+- `public static ServerData.ServerResourceMode [] values()`
+- `public static ServerData.ServerResourceMode valueOf(java.lang.String name)`
+- `public IChatComponent getMotd()`
+
+## Description
+
+Returns the enum constant of this type with the specified name.

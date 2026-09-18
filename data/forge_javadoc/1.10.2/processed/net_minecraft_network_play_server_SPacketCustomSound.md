@@ -1,1 +1,25 @@
 # SPacketCustomSound
+
+## Class signature
+
+```java
+public class SPacketCustomSound extends java.lang.Object implements Packet < INetHandlerPlayClient >
+```
+
+## Constructors
+
+- `public SPacketCustomSound()`
+- `public SPacketCustomSound(java.lang.String soundNameIn, SoundCategory categoryIn, double xIn, double yIn, double zIn, float volumeIn, float pitchIn)`
+
+## Methods
+
+- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
+- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `public java.lang.String getSoundName()`
+- `public void processPacket( INetHandlerPlayClient handler)`
+- `public SoundCategory getCategory()`
+- `public double getX()`
+- `public double getY()`
+- `public double getZ()`
+- `public float getVolume()`
+- `public float getPitch()`

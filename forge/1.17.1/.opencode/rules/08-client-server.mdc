@@ -133,13 +133,8 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        // FMLClientSetupEvent 仅用于客户端特有初始化
-        // KeyBinding 注册应在 RegisterKeyMappingsEvent 中完成（见下方）
-    }
-
-    @SubscribeEvent
-    public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(TEST_KEY);  // TEST_KEY 需定义在静态字段中
+        // 1.17.1：客户端特有初始化 + 按键注册都在这里
+        net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(TEST_KEY); // TEST_KEY 需定义在静态字段中
     }
 
     @SubscribeEvent
@@ -154,13 +149,13 @@ public class ClientSetup {
 }
 ```
 
-> **KeyBinding 注册方式**：必须通过 `RegisterKeyMappingsEvent` + `event.register()`，而非 `FMLClientSetupEvent` 中的 `ClientRegistry.registerKeyBinding()`。
+> **KeyBinding 注册方式**：1.17.1 **必须**在 `FMLClientSetupEvent`（`Bus.MOD` + `Dist.CLIENT`）中调用 `net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(KeyMapping)`（oracle：`query_loader_api --platform=forge --minecraftVersion=1.17.1 --className=net.minecraftforge.fmlclient.registry.ClientRegistry` → `void registerKeyBinding(KeyMapping)`）。`RegisterKeyMappingsEvent` 是 **1.19+** API，本档**不存在**（1.17.1 摘要命中 0）。
 
 ## 示例：KeyBinding 处理
 
 ```java
 // client/input/ModKeyBindings.java
-// KeyMapping 定义（静态字段，在 RegisterKeyMappingsEvent 中注册）
+// KeyMapping 定义（静态字段；1.17.1 在 FMLClientSetupEvent 里注册）
 public static final KeyMapping TEST_KEY = new KeyMapping(
     "key.examplemod.test",
     KeyConflictContext.IN_GAME,
@@ -173,8 +168,8 @@ public static final KeyMapping TEST_KEY = new KeyMapping(
 public class ModKeyBindings {
     // 注册 KeyMapping（在 MOD 总线上，Forge 自动处理到主线程）
     @SubscribeEvent
-    public static void register(RegisterKeyMappingsEvent event) {
-        event.register(TEST_KEY);
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(TEST_KEY);
     }
 
     // 检测按键（在 FORGE 总线上）
@@ -191,6 +186,8 @@ public class ModKeyBindings {
 ```
 
 > 注意：`InputEvent.Key` 在 Forge 1.17.1 中**已废弃**，应使用 `ClientTickEvent` + `consumeClick()`。
+>
+> **总线归属（别把两者塞进同一个类）**：按键**注册**走 `Bus.MOD`（`FMLClientSetupEvent` + `ClientRegistry.registerKeyBinding`），按键**检测**（`ClientTickEvent`）走 **FORGE 总线**——同一个类不能同时挂两条总线；检测逻辑请放到另一个不带 `bus = Bus.MOD` 的 `@Mod.EventBusSubscriber` 类里。
 
 ## 示例：服务端数据同步（SynchedEntityData）
 

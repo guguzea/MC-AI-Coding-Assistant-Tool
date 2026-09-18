@@ -4,6 +4,8 @@ import { openDatabaseSync } from "../utils/sqlite-runtime.js";
 import { vanillaRegistrySqlitePath } from "./builder.js";
 
 const _cache = new Map<string, DatabaseSync>();
+/** A-7 Y-1：每个损坏库只告警一次（注册表检索会被频繁调用）。 */
+const _openWarned = new Set<string>();
 export const REGISTRY_DB_CAP = 8;
 
 function openRegistryDb(version: string): DatabaseSync | null {
@@ -15,7 +17,18 @@ function openRegistryDb(version: string): DatabaseSync | null {
     _cache.set(path, cached);
     return cached;
   }
-  const db = openDatabaseSync(path, { readOnly: true });
+  let db: DatabaseSync;
+  try {
+    db = openDatabaseSync(path, { readOnly: true });
+  } catch (err) {
+    // A-7 Y-1（成立）：损坏/不兼容的 sqlite 此前**裸抛** ⇒ 宿主看到的是 tool_failure（像服务坏了），
+    // 而 builder.ts:83-86 对同条件是有 catch 的。这里按「本档注册表不可用」降级（每次路径只告警一次）。
+    if (!_openWarned.has(path)) {
+      _openWarned.add(path);
+      console.warn(`[registry] 打开 registry sqlite 失败，本档注册表按不可用处理: ${path} —— ${(err as Error).message}`);
+    }
+    return null;
+  }
   _cache.set(path, db);
   while (_cache.size > REGISTRY_DB_CAP) {
     const oldest = _cache.keys().next().value;

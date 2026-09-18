@@ -1,6 +1,6 @@
 ---
 title: "IProgressMeter"
-description: ""
+description: "public interface IProgressMeter"
 package: "net/minecraft/client/gui"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/gui/IProgressMeter.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # IProgressMeter
+
+## Class signature
+
+```java
+public interface IProgressMeter
+```
+
+## Methods
+
+- `void doneLoading()`

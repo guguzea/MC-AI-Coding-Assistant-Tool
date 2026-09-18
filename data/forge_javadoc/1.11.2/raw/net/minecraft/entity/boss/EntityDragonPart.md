@@ -1,6 +1,6 @@
 ---
 title: "EntityDragonPart"
-description: ""
+description: "public class EntityDragonPart extends Entity"
 package: "net/minecraft/entity/boss"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/entity/boss/EntityDragonPart.html"
@@ -8,3 +8,22 @@ sourceType: javadoc
 ---
 
 # EntityDragonPart
+
+## Class signature
+
+```java
+public class EntityDragonPart extends Entity
+```
+
+## Constructors
+
+- `public EntityDragonPart( IEntityMultiPart parent, java.lang.String partName, float base, float sizeHeight)`
+
+## Methods
+
+- `protected void entityInit()`
+- `protected void readEntityFromNBT( NBTTagCompound compound)`
+- `protected void writeEntityToNBT( NBTTagCompound compound)`
+- `public boolean canBeCollidedWith()`
+- `public boolean attackEntityFrom( DamageSource source, float amount)`
+- `public boolean isEntityEqual( Entity entityIn)`

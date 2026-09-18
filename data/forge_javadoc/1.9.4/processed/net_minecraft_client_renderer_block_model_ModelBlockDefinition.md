@@ -1,1 +1,23 @@
 # ModelBlockDefinition
+
+## Class signature
+
+```java
+public class ModelBlockDefinition extends java.lang.Object
+```
+
+## Constructors
+
+- `public ModelBlockDefinition(java.util.Map<java.lang.String, VariantList > variants, Multipart multipartIn)`
+- `public ModelBlockDefinition(java.util.List< ModelBlockDefinition > p_i46222_1_)`
+
+## Methods
+
+- `public static ModelBlockDefinition parseFromReader(java.io.Reader p_178331_0_)`
+- `public boolean hasVariant(java.lang.String p_188000_1_)`
+- `public VariantList getVariant(java.lang.String p_188004_1_)`
+- `public boolean equals(java.lang.Object p_equals_1_)`
+- `public int hashCode()`
+- `public java.util.Set< VariantList > getMultipartVariants()`
+- `public boolean hasMultipartData()`
+- `public Multipart getMultipartData()`

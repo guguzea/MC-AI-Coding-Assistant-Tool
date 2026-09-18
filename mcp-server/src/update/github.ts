@@ -210,7 +210,20 @@ export async function fetchReleasesList(
           ),
         };
       }
-      if (!Array.isArray(batch) || batch.length === 0) break;
+      // A-8 BB-1（成立）：200 的**对象**体（非数组）此前与「空数组」同走 `break` ⇒ 被静默当成
+      // 「仓库没有 Release」。两者必须分开：前者是结构化异常，后者才是正常的「没有更多页」。
+      if (!Array.isArray(batch)) {
+        return {
+          ok: false,
+          action: actionable(
+            "UPDATE_CHECK_FAILED",
+            "GitHub releases 响应不是数组（代理/镜像可能改写了 JSON 结构）",
+            ["检查代理/镜像是否改写了响应结构（对照 MC_SKILL_GITHUB_API_BASE）", "稍后重试或改用单 Release 接口"],
+            ["mc_skill_update"],
+          ),
+        };
+      }
+      if (batch.length === 0) break;
       // C3：列表路径必须与单 release 路径（:147）同形校验元素 —— 消费者
       // （update/index.ts 的 pickDataAssets / release.tag_name）会解引用 .assets/.tag_name。
       const valid = batch.filter(

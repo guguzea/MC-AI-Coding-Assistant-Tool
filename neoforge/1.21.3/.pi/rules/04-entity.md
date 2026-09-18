@@ -4,8 +4,8 @@ description: 04 — 实体（NeoForge 1.21.3）
 
 # 04 — 实体（NeoForge 1.21.3）
 
-来源：本档 `search_neoforge_docs` **没有**独立 `entities` 页（`get_neoforge_doc_full id=entities` 返回 `DOC_NOT_FOUND`）。
+来源：本档 `search_neoforge_docs` **有**实体页（2026-09-18 实测：`get_neoforge_doc_full --version=1.21.3 --id=entities` → `ok:true`，正文约 2,292 字符；`--id=networking/entities` 同样 ok）。
 
-实体 API 未核实。禁止输出 `DeferredRegister.Entities` 等具体签名。用 `search_neoforge_docs query=entities version=1.21.3`；若仍无页则停。不要用 1.21.8 实体页回填。
+实体 API 细节以该档 `entities` 页为准。**页面存在 ≠ 任意签名都存在**：`DeferredRegister.Entities` 等具体签名必须先在页里核到再输出；核不到就用 `search_neoforge_docs query=entities version=1.21.3` 继续查，仍核不到则停。不要用 1.21.8 实体页回填。
 
 禁止：Forge 1.12 `EntityRegistry`；把邻档 entities 页改版本号当本档已核。

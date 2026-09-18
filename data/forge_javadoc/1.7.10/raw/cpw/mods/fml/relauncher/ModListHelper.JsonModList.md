@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # ModListHelper.JsonModList
+
+## Constructors
+
+- `public JsonModList()`

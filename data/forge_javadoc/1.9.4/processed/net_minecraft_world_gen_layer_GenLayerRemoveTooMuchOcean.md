@@ -1,1 +1,15 @@
 # GenLayerRemoveTooMuchOcean
+
+## Class signature
+
+```java
+public class GenLayerRemoveTooMuchOcean extends GenLayer
+```
+
+## Constructors
+
+- `public GenLayerRemoveTooMuchOcean(long p_i45480_1_, GenLayer p_i45480_3_)`
+
+## Methods
+
+- `public int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight)`

@@ -1,6 +1,6 @@
 ---
 title: "NBTSizeTracker"
-description: ""
+description: "public class NBTSizeTracker extends java.lang.Object"
 package: "net/minecraft/nbt"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/nbt/NBTSizeTracker.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # NBTSizeTracker
+
+## Class signature
+
+```java
+public class NBTSizeTracker extends java.lang.Object
+```
+
+## Constructors
+
+- `public NBTSizeTracker(long p_i1203_1_)`
+
+## Methods
+
+- `public void func_152450_a(long p_152450_1_)`

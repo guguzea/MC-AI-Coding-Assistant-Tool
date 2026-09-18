@@ -47,7 +47,7 @@
 id 'org.quiltmc.loom'
 ```
 
-如果匹配 → 调用 `activate_platform_pack action=session`（`platform=quilt` + 精确 `minecraftVersion`）。session 注入本档 AGENTS/规则；02–10 经同版 Fabric overlay。禁止把 `quilt/<ver>/.cursor` 或邻版 Fabric 当加载器 Read。本目录只写 QSL 差异。
+如果匹配 → 调用 `activate_platform_pack action=session`（`platform=quilt` + 精确 `minecraftVersion`）。session 注入本档 AGENTS/规则；**02–04、07–10** 经同版 Fabric overlay（**05/06 用本目录**：QSL 事件与 Quilt 网络短规则——与 `QUILT_FABRIC_OVERLAY_IDS` 及各档 `quilt/*/AGENTS.md` 自述一致）。禁止把 `quilt/<ver>/.cursor` 或邻版 Fabric 当加载器 Read。本目录只写 QSL 差异。
 
 库 Skill：Quilt 仍按 `fabric-only` + `all-platforms` 读 `knowledge/libs/` 源稿。
 

@@ -1,1 +1,29 @@
 # BlockNetherWart
+
+## Class signature
+
+```java
+public class BlockNetherWart extends BlockBush
+```
+
+## Constructors
+
+- `protected BlockNetherWart()`
+
+## Methods
+
+- `protected boolean canPlaceBlockOn( Block ground)`
+- `public boolean canBlockStay( World worldIn, BlockPos pos, IBlockState state)`
+- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `public void dropBlockAsItemWithChance( World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
+- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
+- `public int quantityDropped(java.util.Random random)`
+- `public IBlockState getStateFromMeta(int meta)`
+- `public Item getItem( World worldIn, BlockPos pos)`
+- `public int getMetaFromState( IBlockState state)`
+- `protected BlockState createBlockState()`
+- `public java.util.List< ItemStack > getDrops( IBlockAccess world, BlockPos pos, IBlockState state, int fortune)`
+
+## Description
+
+is the block grass, dirt or farmland

@@ -4,7 +4,7 @@ description: 结构集、模板、jigsaw。触发词：Structure、TemplateManag
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: mcp
+mappings: official
 ---
 
 # mc-structure

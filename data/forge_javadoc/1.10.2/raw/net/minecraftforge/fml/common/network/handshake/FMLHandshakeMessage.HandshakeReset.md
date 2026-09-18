@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # FMLHandshakeMessage.HandshakeReset
+
+## Constructors
+
+- `public HandshakeReset()`

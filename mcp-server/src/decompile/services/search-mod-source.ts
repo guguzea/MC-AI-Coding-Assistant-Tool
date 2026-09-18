@@ -143,6 +143,8 @@ export function searchModSource(args: SearchModSourceArgs): SearchModSourceResul
 
   const hits: SearchHit[] = [];
   let truncated = false;
+  /** A-8 CC-1：因超过 MAX_LINE_LEN 而未参与正则检索的行数（>0 时返回 truncated + action）。 */
+  let longLinesSkipped = 0;
   const walked = walkFiltered(root, extensions);
   if (walked.truncated) truncated = true;
   const started = Date.now();
@@ -167,7 +169,12 @@ export function searchModSource(args: SearchModSourceArgs): SearchModSourceResul
     const lines = content.split(/\r?\n/);
     for (let i = 0; i < lines.length; i++) {
       const lineText = lines[i];
-      if (lineText.length > MAX_LINE_LEN && re) continue;
+      // A-8 CC-1（成立）：`pattern:true` 下超长行此前被 `continue` **静默丢弃** ⇒ 返回
+      // `found:false / truncated:false`，用户读作「确实没有命中」，实则该行根本没被检索。
+      if (lineText.length > MAX_LINE_LEN && re) {
+        longLinesSkipped++;
+        continue;
+      }
       const matched = re ? re.test(lineText) : lineText.toLowerCase().includes(query.toLowerCase());
       if (matched) {
         hits.push({
@@ -190,6 +197,20 @@ export function searchModSource(args: SearchModSourceArgs): SearchModSourceResul
     root,
     hits: hits.slice(0, maxResults),
     total: hits.length,
-    truncated,
+    // A-8 CC-1：跳过的超长行必须体现为 truncated（否则「静默少搜」被读成「确实没有」）
+    truncated: truncated || longLinesSkipped > 0,
+    ...(longLinesSkipped > 0
+      ? {
+          action: actionable(
+            "PARTIAL_SCAN",
+            `有 ${longLinesSkipped} 行超过 ${MAX_LINE_LEN} 字符，未参与正则检索`,
+            [
+              "把正则写具体一些，或改用不带 pattern 的纯文本检索",
+              "超长行常见于压缩/生成的单行文件，可先格式化后再检索",
+            ],
+            ["decompile_mod_jar"],
+          ),
+        }
+      : {}),
   };
 }

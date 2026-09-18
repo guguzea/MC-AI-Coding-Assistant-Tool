@@ -6,7 +6,7 @@ mcVersions: ["1.16.4-1.21.5"]
 communityDocId: authored/lib-spruceui-obsidianui
 ---
 
-> API 摘要状态（2026-09-14 实核）：无 ⇒ `mcp-server/data/lib-api-summaries/` 无 spruceui/obsidianui 条目，catalog 条目 `authored/lib-spruceui-obsidianui` 的 `verifiedApi` 为空对象 {}，即上游用「空 `verifiedApi`」表示无摘要；Modrinth 亦无该项目（slug 空，404）。类名/方法以官方 GitHub README 为准，要签名先 `ingest_loader_api`（用户自备 jar），禁止凭记忆补
+> API 摘要状态（2026-09-18 复核）：**有** ⇒ `mcp-server/data/lib-api-summaries/spruceui-obsidianui.json`（31.2 KB）在盘，catalog 条目 `authored/lib-spruceui-obsidianui` 的 `verifiedApi` 非空（键含 `1.21.5/fabric` 等）。**旧稿「无摘要 / 空 `verifiedApi` 表示无摘要」已不成立**。Modrinth 亦无该项目（slug 空，404）；类名/方法以官方 GitHub README 为准，要签名先 `query_loader_api` 或 `ingest_loader_api`（用户自备 jar），禁止凭记忆补
 
 # SpruceUI / ObsidianUI GUI 抽象（操作指引）
 

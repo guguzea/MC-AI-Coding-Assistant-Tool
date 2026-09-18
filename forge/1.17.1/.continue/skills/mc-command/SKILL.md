@@ -4,7 +4,7 @@ description: Commands.literal、权限、客户端命令。触发词：command�
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: mcp
+mappings: official
 ---
 
 # mc-command

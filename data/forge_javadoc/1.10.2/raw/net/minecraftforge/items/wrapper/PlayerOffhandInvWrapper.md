@@ -1,6 +1,6 @@
 ---
 title: "PlayerOffhandInvWrapper"
-description: ""
+description: "public class PlayerOffhandInvWrapper extends RangedWrapper"
 package: "net/minecraftforge/items/wrapper"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/items/wrapper/PlayerOffhandInvWrapper.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # PlayerOffhandInvWrapper
+
+## Class signature
+
+```java
+public class PlayerOffhandInvWrapper extends RangedWrapper
+```
+
+## Constructors
+
+- `public PlayerOffhandInvWrapper( InventoryPlayer inv)`

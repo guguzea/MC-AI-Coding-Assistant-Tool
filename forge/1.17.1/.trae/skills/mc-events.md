@@ -4,7 +4,7 @@ description: Minecraft Forge 事件系统。监听 Forge/FML 事件、@Subscribe
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: mcp
+mappings: official
 ---
 
 # 事件系统（Forge 1.17.1）
@@ -149,12 +149,8 @@ public class ModSetup {
 public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        // KeyBinding 在 RegisterKeyMappingsEvent 中注册
-    }
-
-    @SubscribeEvent
-    public static void registerBindings(RegisterKeyMappingsEvent event) {
-        event.register(EXAMPLE_KEY_MAPPING.get());
+        // 1.17.1：按键就在 FMLClientSetupEvent 里注册
+        net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(EXAMPLE_KEY_MAPPING);
     }
 }
 ```

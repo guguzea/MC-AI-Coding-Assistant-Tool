@@ -1,6 +1,6 @@
 ---
 title: "SPacketTabComplete"
-description: ""
+description: "public class SPacketTabComplete extends java.lang.Object implements Packet < INetHandlerPlayClient >"
 package: "net/minecraft/network/play/server"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/network/play/server/SPacketTabComplete.html"
@@ -8,3 +8,21 @@ sourceType: javadoc
 ---
 
 # SPacketTabComplete
+
+## Class signature
+
+```java
+public class SPacketTabComplete extends java.lang.Object implements Packet < INetHandlerPlayClient >
+```
+
+## Constructors
+
+- `public SPacketTabComplete()`
+- `public SPacketTabComplete(java.lang.String[] matchesIn)`
+
+## Methods
+
+- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
+- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `public void processPacket( INetHandlerPlayClient handler)`
+- `public java.lang.String[] getMatches()`

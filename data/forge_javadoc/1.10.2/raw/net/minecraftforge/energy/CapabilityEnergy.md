@@ -1,6 +1,6 @@
 ---
 title: "CapabilityEnergy"
-description: ""
+description: "public class CapabilityEnergy extends java.lang.Object"
 package: "net/minecraftforge/energy"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/energy/CapabilityEnergy.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # CapabilityEnergy
+
+## Class signature
+
+```java
+public class CapabilityEnergy extends java.lang.Object
+```
+
+## Constructors
+
+- `public CapabilityEnergy()`
+
+## Methods
+
+- `public static void register()`

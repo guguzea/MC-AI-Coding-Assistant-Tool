@@ -1,6 +1,6 @@
 ---
 title: "ParticleSimpleAnimated"
-description: ""
+description: "public class ParticleSimpleAnimated extends Particle"
 package: "net/minecraft/client/particle"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/particle/ParticleSimpleAnimated.html"
@@ -8,3 +8,22 @@ sourceType: javadoc
 ---
 
 # ParticleSimpleAnimated
+
+## Class signature
+
+```java
+public class ParticleSimpleAnimated extends Particle
+```
+
+## Constructors
+
+- `public ParticleSimpleAnimated( World worldIn, double x, double y, double z, int textureIdxIn, int numFrames, float yAccelIn)`
+
+## Methods
+
+- `public void setColor(int p_187146_1_)`
+- `public void setColorFade(int rgb)`
+- `public boolean isTransparent()`
+- `public void onUpdate()`
+- `public int getBrightnessForRender(float p_189214_1_)`
+- `protected void setBaseAirFriction(float p_191238_1_)`

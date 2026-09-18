@@ -1,6 +1,6 @@
 ---
 title: "GuiIngameForge"
-description: ""
+description: "Renders dragon's (boss) health on the HUD"
 package: "net/minecraftforge/client"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/client/GuiIngameForge.html"
@@ -8,3 +8,40 @@ sourceType: javadoc
 ---
 
 # GuiIngameForge
+
+## Class signature
+
+```java
+public class GuiIngameForge extends GuiIngame
+```
+
+## Constructors
+
+- `public GuiIngameForge( Minecraft mc)`
+
+## Methods
+
+- `public void renderGameOverlay(float partialTicks)`
+- `public ScaledResolution getResolution()`
+- `protected void renderCrosshairs(int width, int height)`
+- `protected void renderBossHealth()`
+- `protected void renderArmor(int width, int height)`
+- `protected void renderPortal( ScaledResolution res, float partialTicks)`
+- `protected void renderTooltip( ScaledResolution res, float partialTicks)`
+- `protected void renderAir(int width, int height)`
+- `public void renderHealth(int width, int height)`
+- `public void renderFood(int width, int height)`
+- `protected void renderSleepFade(int width, int height)`
+- `protected void renderExperience(int width, int height)`
+- `protected void renderJumpBar(int width, int height)`
+- `protected void renderToolHightlight( ScaledResolution res)`
+- `protected void renderHUDText(int width, int height)`
+- `protected void renderRecordOverlay(int width, int height, float partialTicks)`
+- `protected void renderTitle(int width, int height, float partialTicks)`
+- `protected void renderChat(int width, int height)`
+- `protected void renderPlayerList(int width, int height)`
+- `protected void renderHealthMount(int width, int height)`
+
+## Description
+
+Renders dragon's (boss) health on the HUD

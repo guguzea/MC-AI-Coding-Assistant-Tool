@@ -1,6 +1,6 @@
 ---
 title: "IEntityAdditionalSpawnData"
-description: ""
+description: "A interface for Entities that need extra information to be communicated between the server and client when they are spawned."
 package: "net/minecraftforge/fml/common/registry"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/registry/IEntityAdditionalSpawnData.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # IEntityAdditionalSpawnData
+
+## Class signature
+
+```java
+public interface IEntityAdditionalSpawnData
+```
+
+## Methods
+
+- `void writeSpawnData(ByteBuf buffer)`
+- `void readSpawnData(ByteBuf additionalData)`
+
+## Description
+
+A interface for Entities that need extra information to be communicated between the server and client when they are spawned.

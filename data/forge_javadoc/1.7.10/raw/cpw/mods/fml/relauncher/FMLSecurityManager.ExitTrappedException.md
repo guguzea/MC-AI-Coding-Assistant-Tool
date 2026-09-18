@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # FMLSecurityManager.ExitTrappedException
+
+## Constructors
+
+- `public ExitTrappedException()`

@@ -1,6 +1,6 @@
 ---
 title: "Mod.CustomProperty"
-description: ""
+description: "A custom key => value property pair for use with Mod.customProperties()"
 package: "net/minecraftforge/fml/common"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/common/Mod.CustomProperty.html"
@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # Mod.CustomProperty
+
+## Description
+
+A custom key => value property pair for use with Mod.customProperties()

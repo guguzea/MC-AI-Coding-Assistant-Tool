@@ -1,6 +1,6 @@
 ---
 title: "Optional.Method"
-description: ""
+description: "Used to remove optional methods"
 package: "net/minecraftforge/fml/common"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/Optional.Method.html"
@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # Optional.Method
+
+## Description
+
+Used to remove optional methods

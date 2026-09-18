@@ -1,0 +1,45 @@
+{
+  "_comment": "sweep81 C-2 机读清单骨架：把「审计结论 → 已销账 → 由哪道门兜住」钉成机器可检的三元组，堵 sweep80 §I/§H-1 的根因（发现后没变成门、没销账 ⇒ 4 条 S1 跨 70+ sweep 存活）。本文件由 assert-rule-ledger.mjs 校验；条目只增不删，销账状态变更须显式改这里。",
+  "_schema": {
+    "id": "唯一标识（与所依赖门的规则 id 对齐最佳）",
+    "claim": "被保证的不变量（一句话，可证伪）",
+    "author": "结论来源（审计轮次 + 修复轮次）",
+    "evidence": "一手证据（file:line 或可复跑命令）",
+    "status": "closed（已销账且有门）/ open（已登记但还没门）",
+    "gate": "兜住该不变量的门文件名（必须在 mcp-server/scripts/ 下存在，且被 test-scripts.mjs 真跑）"
+  },
+  "rules": [
+    {
+      "id": "fabric-phantom-loom-task",
+      "claim": "任何平台的规则/文档里都不出现不存在的 Gradle 任务 `./gradlew [clean] loom`",
+      "author": "sweep80 G-1/H-1（轮次 9 判 S1，跨 70+ sweep 未修）+ sweep81 R1 修复",
+      "evidence": "上游 docs.fabricmc.net/develop/loom/tasks 无 `loom`；全仓 `.gradle/.kts` 的 `task loom` 定义 = 0；sweep81 已在 235 文件 / 706 处清零，`git grep -n \"gradlew[^ ]* [^ ]*loom\"` 无命中",
+      "status": "closed",
+      "gate": "assert-no-invalid-api-shapes.mjs"
+    },
+    {
+      "id": "forge-props-shape-family",
+      "claim": "BlockBehaviour.Properties 形态按版本区间成立：1.18.2/1.19.4 必须带 Material 且颜色用 .color(MaterialColor)；1.20.1/1.20.4 必须无参且用 .mapColor(MapColor)",
+      "author": "sweep80 §I / O-2 / H-1（B2-#1 跨轮存活）+ sweep81 C-6 建族门",
+      "evidence": "query_api --className='BlockBehaviour$Properties'：1.18.2/1.19.4 of=4 个全 (Material…)/mapColor=0；1.20.1/1.20.4 of=1 个无参/mapColor=3",
+      "status": "closed",
+      "gate": "assert-forge-blockshape-family.mjs"
+    },
+    {
+      "id": "forge-1204-no-block-material",
+      "claim": "forge/1.20.4 源稿不引用 1.20+ 已移除的方块 Material",
+      "author": "sweep80 F145 门 + sweep81 C-6 并入族门",
+      "evidence": "data/forge_1.20.4/mappings/client.txt 里 block.material = 0；forge/1.20.1/knowledge/version-changes/1.20.x.md:36「1.20+ 已移除 Material」",
+      "status": "closed",
+      "gate": "assert-forge-1204-material.mjs"
+    },
+    {
+      "id": "forge-1182-registry-consts",
+      "claim": "forge/1.18.2 注册表常量下划线形态（replace 形绝迹 + hold 形计数钉值 + 投影零漂移）",
+      "author": "sweep80 F146 门 + A21 复核",
+      "evidence": "assert-forge-1182-registry-consts.mjs 的 LEDGER.holds 钉值 + --selftest 三记投毒",
+      "status": "closed",
+      "gate": "assert-forge-1182-registry-consts.mjs"
+    }
+  ]
+}

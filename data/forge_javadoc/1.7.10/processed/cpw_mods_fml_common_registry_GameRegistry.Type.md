@@ -1,1 +1,11 @@
 # GameRegistry.Type
+
+## Methods
+
+- `public static GameRegistry.Type [] values()`
+- `public static GameRegistry.Type valueOf(java.lang.String name)`
+- `public abstract FMLControlledNamespacedRegistry <?> getRegistry()`
+
+## Description
+
+Returns the enum constant of this type with the specified name.

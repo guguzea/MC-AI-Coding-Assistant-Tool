@@ -37,6 +37,8 @@ function getDataDirFromSelf(): string {
 }
 
 let warnedMissingDataEnv = false;
+/** G-2：MC_SKILL_DATA 已设但目录暂不存在（半交换/未下载）时只告警一次。 */
+let warnedMissingDataDir = false;
 
 function getDataDirFromEnv(): string | null {
   const envPath = process.env.MC_SKILL_DATA;
@@ -51,12 +53,18 @@ function getDataDirFromEnv(): string | null {
     return null;
   }
   const abs = resolve(envPath);
-  if (existsSync(abs)) return abs;
-  console.error(
-    `[mc-mcp-server] WARN: MC_SKILL_DATA=${envPath} 不存在，已回退到推导/cwd 路径。` +
-      `请检查路径是否为 data 目录的绝对路径（例如 D:/MC_skill/data）。`,
-  );
-  return null;
+  // G-2（sweep81）：**不再要求目录存在**。半交换态（`data/` 缺失）恰恰是「存在性检查」失效的场景 ——
+  // 那时 existsSync(abs) 为假 ⇒ 回退 `<cwd>/data`，于是 update 的 `recoverPartialSwap` 去找**错位置**
+  // 的 `data.prev`（C5 自愈不可达），apply 还可能把数据写到别处。用户显式声明的根必须以它为准；
+  // 「目录不存在」由下游按「数据不可用」处理（各工具本就逐一 existsSync / found 判定）。
+  if (!existsSync(abs) && !warnedMissingDataDir) {
+    warnedMissingDataDir = true;
+    console.error(
+      `[mc-mcp-server] WARN: MC_SKILL_DATA=${envPath} 当前不存在，仍按该路径解析（未下载 / 半交换残留）。` +
+        `若这不是你想要的根，请设为 data 目录的绝对路径（例如 D:/MC_skill/data）。`,
+    );
+  }
+  return abs;
 }
 
 function getDataDirFromCwd(): string {

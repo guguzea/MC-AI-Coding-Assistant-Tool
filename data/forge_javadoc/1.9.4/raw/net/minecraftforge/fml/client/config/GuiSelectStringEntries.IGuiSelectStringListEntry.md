@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # GuiSelectStringEntries.IGuiSelectStringListEntry
+
+## Methods
+
+- `java.lang.Object getValue()`

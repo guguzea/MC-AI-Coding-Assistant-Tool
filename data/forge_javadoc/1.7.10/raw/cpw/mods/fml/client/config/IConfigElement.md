@@ -1,6 +1,6 @@
 ---
 title: "IConfigElement"
-description: ""
+description: "This interface provides the information needed by GuiConfig and GuiConfigEntries to display config elements for editing."
 package: "cpw/mods/fml/client/config"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/client/config/IConfigElement.html"
@@ -8,3 +8,43 @@ sourceType: javadoc
 ---
 
 # IConfigElement
+
+## Class signature
+
+```java
+public interface IConfigElement<T>
+```
+
+## Methods
+
+- `boolean isProperty()`
+- `java.lang.Class<? extends GuiConfigEntries.IConfigEntry > getConfigEntryClass()`
+- `java.lang.Class<? extends GuiEditArrayEntries.IArrayEntry > getArrayEntryClass()`
+- `java.lang.String getName()`
+- `java.lang.String getQualifiedName()`
+- `java.lang.String getLanguageKey()`
+- `java.lang.String getComment()`
+- `java.util.List< IConfigElement > getChildElements()`
+- `ConfigGuiType getType()`
+- `boolean isList()`
+- `boolean isListLengthFixed()`
+- `int getMaxListLength()`
+- `boolean isDefault()`
+- `java.lang.Object getDefault()`
+- `java.lang.Object[] getDefaults()`
+- `void setToDefault()`
+- `boolean requiresWorldRestart()`
+- `boolean showInGui()`
+- `boolean requiresMcRestart()`
+- `java.lang.Object get()`
+- `java.lang.Object[] getList()`
+- `void set( T value)`
+- `void set( T [] aVal)`
+- `java.lang.String[] getValidValues()`
+- `T getMinValue()`
+- `T getMaxValue()`
+- `java.util.regex.Pattern getValidationPattern()`
+
+## Description
+
+This interface provides the information needed by GuiConfig and GuiConfigEntries to display config elements for editing.

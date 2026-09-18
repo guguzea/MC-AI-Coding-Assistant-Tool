@@ -27,7 +27,7 @@ description: 01 — manifest.json
 - `metadata` 可选；官方 metadata 表列 `authors`(Array) / `license`(String) / `generated_with`(JSON Object) / `product_type`(String) / `url`(String)。`product_type` **语料只点名一个值**：`"addon"`（原文「The only supported value is "addon"」，并写明设为该值也不改变 in-game 行为）；社区流传的其他历史值**未核实**，不要当枚举成员写。`generated_with` 的 `[a-zA-Z0-9_-]` + 32 字符上限管的是**工具名**，与实体/方块 identifier 无关，禁止挪用。
 - **禁止** `"experimentalGameplay": true`。依据 = **Learn pack-manifest 从未列出该键**（语料 0 命中），不是「Learn 明令禁止」。世界实验见 07 与 `knowledge/common/experiments.md`。
 
-脚本依赖版本以 `data/bedrock-docs-status.json` 的 `scriptApiStable` 为准（抓取时曾为 `2.9.0`），不要用 Yarn/`modImplementation`。
+脚本依赖版本以 `data/bedrock-docs-status.json` 的 `scriptApiStable` 为准（快照时曾为 `2.9.0`；npm registry 一手复核 as-of 2026-09-18：`dist-tags.latest` = **`2.10.0`**、`beta` = `2.11.0-beta.1.26.51-stable`）——**不要**凭记忆填版本号，也不要用 Yarn/`modImplementation`。
 
 ## 文档
 

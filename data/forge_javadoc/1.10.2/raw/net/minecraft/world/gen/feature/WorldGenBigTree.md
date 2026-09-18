@@ -1,6 +1,6 @@
 ---
 title: "WorldGenBigTree"
-description: ""
+description: "public class WorldGenBigTree extends WorldGenAbstractTree"
 package: "net/minecraft/world/gen/feature"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/gen/feature/WorldGenBigTree.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # WorldGenBigTree
+
+## Class signature
+
+```java
+public class WorldGenBigTree extends WorldGenAbstractTree
+```
+
+## Constructors
+
+- `public WorldGenBigTree(boolean notify)`
+
+## Methods
+
+- `public void setDecorationDefaults()`
+- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`

@@ -1,6 +1,6 @@
 ---
 title: "EntityJumpHelper"
-description: ""
+description: "public class EntityJumpHelper extends java.lang.Object"
 package: "net/minecraft/entity/ai"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/ai/EntityJumpHelper.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # EntityJumpHelper
+
+## Class signature
+
+```java
+public class EntityJumpHelper extends java.lang.Object
+```
+
+## Constructors
+
+- `public EntityJumpHelper( EntityLiving entityIn)`
+
+## Methods
+
+- `public void setJumping()`
+- `public void doJump()`

@@ -4,7 +4,7 @@ description: 附魔注册与效果。触发词：Enchantment、Enchantments
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: mcp
+mappings: official
 ---
 
 # mc-enchantment

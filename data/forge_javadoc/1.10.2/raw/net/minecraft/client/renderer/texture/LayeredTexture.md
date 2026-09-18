@@ -1,6 +1,6 @@
 ---
 title: "LayeredTexture"
-description: ""
+description: "public class LayeredTexture extends AbstractTexture"
 package: "net/minecraft/client/renderer/texture"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/renderer/texture/LayeredTexture.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # LayeredTexture
+
+## Class signature
+
+```java
+public class LayeredTexture extends AbstractTexture
+```
+
+## Constructors
+
+- `public LayeredTexture(java.lang.String... textureNames)`
+
+## Methods
+
+- `public void loadTexture( IResourceManager resourceManager) throws java.io.IOException`

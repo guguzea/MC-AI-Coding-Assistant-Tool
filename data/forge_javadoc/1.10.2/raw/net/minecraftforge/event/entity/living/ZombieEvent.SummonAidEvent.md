@@ -1,6 +1,6 @@
 ---
 title: "ZombieEvent.SummonAidEvent"
-description: ""
+description: "SummonAidEvent is fired when a Zombie Entity is summoned. This event is fired whenever a Zombie Entity is summoned in EntityZombie.attackEntityFrom(DamageSource, float) . This event is fired via the F"
 package: "net/minecraftforge/event/entity/living"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/entity/living/ZombieEvent.SummonAidEvent.html"
@@ -8,3 +8,22 @@ sourceType: javadoc
 ---
 
 # ZombieEvent.SummonAidEvent
+
+## Constructors
+
+- `public SummonAidEvent( EntityZombie entity, World world, int x, int y, int z, EntityLivingBase attacker, double summonChance)`
+
+## Methods
+
+- `public EntityZombie getCustomSummonedAid()`
+- `public void setCustomSummonedAid( EntityZombie customSummonedAid)`
+- `public World getWorld()`
+- `public int getX()`
+- `public int getY()`
+- `public int getZ()`
+- `public EntityLivingBase getAttacker()`
+- `public double getSummonChance()`
+
+## Description
+
+SummonAidEvent is fired when a Zombie Entity is summoned. This event is fired whenever a Zombie Entity is summoned in EntityZombie.attackEntityFrom(DamageSource, float) . This event is fired via the F

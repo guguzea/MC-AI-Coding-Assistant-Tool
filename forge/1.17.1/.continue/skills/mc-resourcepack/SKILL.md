@@ -4,7 +4,7 @@ description: 资源包格式、pack_format、纹理。触发词：resourcepack�
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: mcp
+mappings: official
 ---
 
 # mc-resourcepack

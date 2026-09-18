@@ -1,6 +1,6 @@
 ---
 title: "FMLInterModComms.IMCEvent"
-description: ""
+description: "Subscribe to this event to receive your messages (they are sent between FMLInitializationEvent and FMLPostInitializationEvent )"
 package: "net/minecraftforge/fml/common/event"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/event/FMLInterModComms.IMCEvent.html"
@@ -8,3 +8,16 @@ sourceType: javadoc
 ---
 
 # FMLInterModComms.IMCEvent
+
+## Constructors
+
+- `public IMCEvent()`
+
+## Methods
+
+- `public void applyModContainer( ModContainer activeContainer)`
+- `public <any> getMessages()`
+
+## Description
+
+Subscribe to this event to receive your messages (they are sent between FMLInitializationEvent and FMLPostInitializationEvent )

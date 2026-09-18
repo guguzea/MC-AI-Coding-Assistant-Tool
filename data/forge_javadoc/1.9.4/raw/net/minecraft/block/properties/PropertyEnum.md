@@ -1,6 +1,6 @@
 ---
 title: "PropertyEnum"
-description: ""
+description: "public class PropertyEnum<T extends java.lang.Enum<T> & IStringSerializable > extends PropertyHelper <T>"
 package: "net/minecraft/block/properties"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/properties/PropertyEnum.html"
@@ -8,3 +8,25 @@ sourceType: javadoc
 ---
 
 # PropertyEnum
+
+## Class signature
+
+```java
+public class PropertyEnum<T extends java.lang.Enum<T> & IStringSerializable > extends PropertyHelper <T>
+```
+
+## Constructors
+
+- `protected PropertyEnum(java.lang.String name, java.lang.Class< T > valueClass, java.util.Collection< T > allowedValues)`
+
+## Methods
+
+- `public java.util.Collection< T > getAllowedValues()`
+- `public com.google.common.base.Optional< T > parseValue(java.lang.String value)`
+- `public java.lang.String getName( T value)`
+- `public boolean equals(java.lang.Object p_equals_1_)`
+- `public int hashCode()`
+- `public static <T extends java.lang.Enum<T> & IStringSerializable > PropertyEnum <T> create(java.lang.String name, java.lang.Class<T> clazz)`
+- `public static <T extends java.lang.Enum<T> & IStringSerializable > PropertyEnum <T> create(java.lang.String name, java.lang.Class<T> clazz, com.google.common.base.Predicate<T> filter)`
+- `public static <T extends java.lang.Enum<T> & IStringSerializable > PropertyEnum <T> create(java.lang.String name, java.lang.Class<T> clazz, T... values)`
+- `public static <T extends java.lang.Enum<T> & IStringSerializable > PropertyEnum <T> create(java.lang.String name, java.lang.Class<T> clazz, java.util.Collection<T> values)`

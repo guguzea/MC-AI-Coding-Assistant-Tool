@@ -1,6 +1,6 @@
 ---
 title: "OreGenEvent.GenerateMinable.EventType"
-description: ""
+description: "Returns the enum constant of this type with the specified name."
 package: "net/minecraftforge/event/terraingen"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/terraingen/OreGenEvent.GenerateMinable.EventType.html"
@@ -8,3 +8,12 @@ sourceType: javadoc
 ---
 
 # OreGenEvent.GenerateMinable.EventType
+
+## Methods
+
+- `public static OreGenEvent.GenerateMinable.EventType [] values()`
+- `public static OreGenEvent.GenerateMinable.EventType valueOf(java.lang.String name)`
+
+## Description
+
+Returns the enum constant of this type with the specified name.

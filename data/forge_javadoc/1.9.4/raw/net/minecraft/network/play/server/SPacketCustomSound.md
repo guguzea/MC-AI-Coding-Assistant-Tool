@@ -1,6 +1,6 @@
 ---
 title: "SPacketCustomSound"
-description: ""
+description: "public class SPacketCustomSound extends java.lang.Object implements Packet < INetHandlerPlayClient >"
 package: "net/minecraft/network/play/server"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/play/server/SPacketCustomSound.html"
@@ -8,3 +8,27 @@ sourceType: javadoc
 ---
 
 # SPacketCustomSound
+
+## Class signature
+
+```java
+public class SPacketCustomSound extends java.lang.Object implements Packet < INetHandlerPlayClient >
+```
+
+## Constructors
+
+- `public SPacketCustomSound()`
+- `public SPacketCustomSound(java.lang.String soundNameIn, SoundCategory categoryIn, double xIn, double yIn, double zIn, float volumeIn, float pitchIn)`
+
+## Methods
+
+- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
+- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `public java.lang.String getSoundName()`
+- `public void processPacket( INetHandlerPlayClient handler)`
+- `public SoundCategory getCategory()`
+- `public double getX()`
+- `public double getY()`
+- `public double getZ()`
+- `public float getVolume()`
+- `public float getPitch()`

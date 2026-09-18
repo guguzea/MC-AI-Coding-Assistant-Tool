@@ -1,6 +1,6 @@
 ---
 title: "B3DClip"
-description: ""
+description: "Returns the enum constant of this type with the specified name."
 package: "net/minecraftforge/client/model/b3d"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/client/model/b3d/B3DClip.html"
@@ -8,3 +8,20 @@ sourceType: javadoc
 ---
 
 # B3DClip
+
+## Class signature
+
+```java
+public enum B3DClip extends java.lang.Enum< B3DClip > implements IClip
+```
+
+## Methods
+
+- `public static B3DClip [] values()`
+- `public static B3DClip valueOf(java.lang.String name)`
+- `public IJointClip apply( IJoint joint)`
+- `public java.lang.Iterable< Event > pastEvents(float lastPollTime, float time)`
+
+## Description
+
+Returns the enum constant of this type with the specified name.

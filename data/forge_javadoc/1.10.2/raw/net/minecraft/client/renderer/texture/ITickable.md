@@ -1,6 +1,6 @@
 ---
 title: "ITickable"
-description: ""
+description: "public interface ITickable"
 package: "net/minecraft/client/renderer/texture"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/renderer/texture/ITickable.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # ITickable
+
+## Class signature
+
+```java
+public interface ITickable
+```
+
+## Methods
+
+- `void tick()`

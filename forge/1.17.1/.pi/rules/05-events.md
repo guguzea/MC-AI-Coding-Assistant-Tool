@@ -202,17 +202,13 @@ public class ModSetup {
 public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        // KeyBinding 在 RegisterKeyMappingsEvent 中注册
-    }
-
-    @SubscribeEvent
-    public static void registerBindings(RegisterKeyMappingsEvent event) {
-        event.register(EXAMPLE_KEY_MAPPING.get());
+        // 1.17.1：按键就在 FMLClientSetupEvent 里注册（ClientRegistry 在本档位于 fmlclient 包）
+        net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(EXAMPLE_KEY_MAPPING);
     }
 }
 ```
 
-KeyBinding 注册应使用 `RegisterKeyMappingsEvent` + `event.register()`，而非 `KeyMappingRegistry.registerKeyBinding()`。
+按键（KeyBinding）注册：1.17.1 在 `FMLClientSetupEvent`（`Bus.MOD` + `Dist.CLIENT`）中调用 `net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(KeyMapping)`（`public static synchronized`）。出处可复现：`mcp-server/data/loader-api-summaries/1.17.1-forge.json`，用 `query_loader_api --platform=forge --minecraftVersion=1.17.1 --className=net.minecraftforge.fmlclient.registry.ClientRegistry` 可查到 `void registerKeyBinding(KeyMapping)`。**不要**用 `RegisterKeyMappingsEvent` —— 该事件 **1.19+ 才引入**，1.17.1 摘要里命中 **0**。
 
 ## 示例：Capability 附加事件
 

@@ -1,6 +1,6 @@
 ---
 title: "SplashProgress"
-description: ""
+description: "Not a fully fleshed out API, may change in future MC versions. However feel free to use and suggest additions."
 package: "net/minecraftforge/fml/client"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/client/SplashProgress.html"
@@ -8,3 +8,28 @@ sourceType: javadoc
 ---
 
 # SplashProgress
+
+## Class signature
+
+```java
+public class SplashProgress extends java.lang.Object
+```
+
+## Constructors
+
+- `public SplashProgress()`
+
+## Methods
+
+- `public static void start()`
+- `public static int getMaxTextureSize()`
+- `@Deprecated public static void pause()`
+- `@Deprecated public static void resume()`
+- `public static void finish()`
+- `public static void drawVanillaScreen( TextureManager renderEngine) throws org.lwjgl.LWJGLException`
+- `public static void clearVanillaResources( TextureManager renderEngine, ResourceLocation mojangLogo)`
+- `public static void checkGLError(java.lang.String where)`
+
+## Description
+
+Not a fully fleshed out API, may change in future MC versions. However feel free to use and suggest additions.

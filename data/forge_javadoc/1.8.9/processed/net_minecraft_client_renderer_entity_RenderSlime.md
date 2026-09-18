@@ -1,1 +1,21 @@
 # RenderSlime
+
+## Class signature
+
+```java
+public class RenderSlime extends RenderLiving < EntitySlime >
+```
+
+## Constructors
+
+- `public RenderSlime( RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)`
+
+## Methods
+
+- `public void doRender( EntitySlime entity, double x, double y, double z, float entityYaw, float partialTicks)`
+- `protected void preRenderCallback( EntitySlime entitylivingbaseIn, float partialTickTime)`
+- `protected ResourceLocation getEntityTexture( EntitySlime entity)`
+
+## Description
+
+Actually renders the given argument.

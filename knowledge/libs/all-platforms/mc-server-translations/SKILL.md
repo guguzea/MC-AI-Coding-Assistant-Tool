@@ -6,7 +6,7 @@ mcVersions: []
 communityDocId: authored/lib-server-translations
 ---
 
-> API 摘要状态（2026-09-14 实核）：无 ⇒ `mcp-server/data/lib-api-summaries/` 无 server-translations 条目，catalog `authored/lib-server-translations` 的 `verifiedApi` 为空对象 {}；Modrinth 页面已下架（slug 空），分发走 maven.nucleoid.xyz。类名以 GitHub 仓库为准，要签名先 `ingest_loader_api`（用户自备 jar）
+> API 摘要状态（2026-09-18 复核）：**有** ⇒ `mcp-server/data/lib-api-summaries/server-translations.json`（2.0 KB）在盘，catalog `authored/lib-server-translations` 的 `verifiedApi` 非空（键含 `1.21.5/fabric` 等）；Modrinth 页面已下架（slug 空），分发走 maven.nucleoid.xyz。**旧稿「无摘要 / `verifiedApi` 为空对象 {}」已不成立**。落到类名用 `query_loader_api`，要签名先 `ingest_loader_api`（用户自备 jar）
 
 # Server Translations API 服务端翻译（操作指引）
 

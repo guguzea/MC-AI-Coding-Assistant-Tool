@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # ForgeMessage.FluidIdMapMessage
+
+## Constructors
+
+- `public FluidIdMapMessage()`

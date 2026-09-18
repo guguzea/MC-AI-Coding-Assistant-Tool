@@ -1,6 +1,6 @@
 ---
 title: "ReobfuscationMarker"
-description: ""
+description: "Used to force certain classes to reobfuscate"
 package: "cpw/mods/fml/common/asm"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/asm/ReobfuscationMarker.html"
@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # ReobfuscationMarker
+
+## Description
+
+Used to force certain classes to reobfuscate

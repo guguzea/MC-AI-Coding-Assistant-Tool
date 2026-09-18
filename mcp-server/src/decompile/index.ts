@@ -10,7 +10,7 @@
  */
 
 import { existsSync, realpathSync } from "fs";
-import { isAbsolute, resolve } from "path";
+import { isAbsolute, relative, resolve } from "path";
 import { actionable } from "../utils/actionable.js";
 import { getMinecraftSource, type MinecraftSourceArgs } from "./services/decompile-service.js";
 import { analyzeModJar } from "./services/mod-analyzer.js";
@@ -49,8 +49,10 @@ export function searchModCodeHandler(args: SearchModCodeArgs) {
   let viaJar: string | null = null;
 
   // C11：读侧的 decompiledDir 此前原样收下（相对路径会被 resolve(cwd) 收下，等于「绝对路径」这条
-  // 隐含约束不成立）。这里强制绝对路径 + realpath 规范化，越界处置见 LEDGER/NEXT-ROUND（是否进一步
-  // 限制到缓存根属能力变更，需用户裁定）。
+  // 隐含约束不成立）。这里强制绝对路径 + realpath 规范化。
+  // B-13（用户拍板）：**不**进一步收窄到「缓存根 ∪ 工程根」——封死用户自备目录属能力变更；
+  // 但「零校验」的观感要消掉 ⇒ 越界时只在信封 warnings[] 里写明（read-side 无沙箱，有意的能力保留）。
+  const outsideWarnings: string[] = [];
   if (root) {
     if (!isAbsolute(root)) {
       return {
@@ -71,6 +73,15 @@ export function searchModCodeHandler(args: SearchModCodeArgs) {
       if (existsSync(root)) root = realpathSync(root);
     } catch {
       /* realpath 失败时保留 resolve 后的绝对路径，后续按「目录不存在」报 NOT_FOUND */
+    }
+    // B-13：越界只提示、不拒绝。允许根 = 反编译缓存根（ensureCachePaths().root）。
+    const cacheRoot = resolve(ensureCachePaths().root);
+    const relToCache = relative(cacheRoot, root);
+    if (relToCache.startsWith("..") || isAbsolute(relToCache)) {
+      outsideWarnings.push(
+        `read-side 无沙箱：${root} 不在反编译缓存根（${cacheRoot}）之内。本工具只做绝对路径 + realpath ` +
+          `规范化，不限制目录范围（自备目录的可用性是刻意保留的）；请自行确认该目录可信。`,
+      );
     }
   }
 
@@ -129,7 +140,7 @@ export function searchModCodeHandler(args: SearchModCodeArgs) {
     pattern: args.pattern,
     maxResults: args.maxResults,
   });
-  return { ...result, viaJar };
+  return { ...result, viaJar, ...(outsideWarnings.length > 0 ? { warnings: outsideWarnings } : {}) };
 }
 
 /** get_minecraft_source handler（薄包装） */

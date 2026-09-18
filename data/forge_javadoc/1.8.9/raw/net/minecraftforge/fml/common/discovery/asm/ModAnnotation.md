@@ -1,6 +1,6 @@
 ---
 title: "ModAnnotation"
-description: ""
+description: "public class ModAnnotation extends java.lang.Object"
 package: "net/minecraftforge/fml/common/discovery/asm"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/discovery/asm/ModAnnotation.html"
@@ -8,3 +8,27 @@ sourceType: javadoc
 ---
 
 # ModAnnotation
+
+## Class signature
+
+```java
+public class ModAnnotation extends java.lang.Object
+```
+
+## Constructors
+
+- `public ModAnnotation(net.minecraftforge.fml.common.discovery.asm.ASMModParser.AnnotationType type, Type asmType, java.lang.String member)`
+- `public ModAnnotation(net.minecraftforge.fml.common.discovery.asm.ASMModParser.AnnotationType type, Type asmType, ModAnnotation parent)`
+
+## Methods
+
+- `public java.lang.String toString()`
+- `public net.minecraftforge.fml.common.discovery.asm.ASMModParser.AnnotationType getType()`
+- `public Type getASMType()`
+- `public java.lang.String getMember()`
+- `public java.util.Map<java.lang.String,java.lang.Object> getValues()`
+- `public void addArray(java.lang.String name)`
+- `public void addProperty(java.lang.String key, java.lang.Object value)`
+- `public void addEnumProperty(java.lang.String key, java.lang.String enumName, java.lang.String value)`
+- `public void endArray()`
+- `public ModAnnotation addChildAnnotation(java.lang.String name, java.lang.String desc)`

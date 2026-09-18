@@ -1,6 +1,6 @@
 ---
 title: "FMLNetworkEvent.CustomPacketEvent"
-description: ""
+description: "The packet that generated the event"
 package: "net/minecraftforge/fml/common/network"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/network/FMLNetworkEvent.CustomPacketEvent.html"
@@ -8,3 +8,11 @@ sourceType: javadoc
 ---
 
 # FMLNetworkEvent.CustomPacketEvent
+
+## Methods
+
+- `public abstract Side side()`
+
+## Description
+
+The packet that generated the event

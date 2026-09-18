@@ -1,6 +1,6 @@
 ---
 title: "MobEffects"
-description: ""
+description: "public class MobEffects extends java.lang.Object"
 package: "net/minecraft/init"
 version: "1.11.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/init/MobEffects.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # MobEffects
+
+## Class signature
+
+```java
+public class MobEffects extends java.lang.Object
+```
+
+## Constructors
+
+- `public MobEffects()`

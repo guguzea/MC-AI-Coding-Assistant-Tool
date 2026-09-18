@@ -1,6 +1,6 @@
 ---
 title: "EntityAIFleeSun"
-description: ""
+description: "Returns whether an in-progress EntityAIBase should continue executing"
 package: "net/minecraft/entity/ai"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/entity/ai/EntityAIFleeSun.html"
@@ -8,3 +8,23 @@ sourceType: javadoc
 ---
 
 # EntityAIFleeSun
+
+## Class signature
+
+```java
+public class EntityAIFleeSun extends EntityAIBase
+```
+
+## Constructors
+
+- `public EntityAIFleeSun( EntityCreature theCreatureIn, double movementSpeedIn)`
+
+## Methods
+
+- `public boolean shouldExecute()`
+- `public boolean continueExecuting()`
+- `public void startExecuting()`
+
+## Description
+
+Returns whether an in-progress EntityAIBase should continue executing

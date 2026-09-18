@@ -1,6 +1,6 @@
 ---
 title: "LootTableManager"
-description: ""
+description: "public class LootTableManager extends java.lang.Object"
 package: "net/minecraft/world/storage/loot"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/storage/loot/LootTableManager.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # LootTableManager
+
+## Class signature
+
+```java
+public class LootTableManager extends java.lang.Object
+```
+
+## Constructors
+
+- `public LootTableManager(java.io.File folder)`
+
+## Methods
+
+- `public LootTable getLootTableFromLocation( ResourceLocation ressources)`
+- `public void reloadLootTables()`

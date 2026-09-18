@@ -1,6 +1,6 @@
 ---
 title: "SetDamage"
-description: ""
+description: "public class SetDamage extends LootFunction"
 package: "net/minecraft/world/storage/loot/functions"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/storage/loot/functions/SetDamage.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # SetDamage
+
+## Class signature
+
+```java
+public class SetDamage extends LootFunction
+```
+
+## Constructors
+
+- `public SetDamage( LootCondition [] conditionsIn, RandomValueRange damageRangeIn)`
+
+## Methods
+
+- `public ItemStack apply( ItemStack stack, java.util.Random rand, LootContext context)`

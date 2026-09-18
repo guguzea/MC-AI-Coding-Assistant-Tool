@@ -1,1 +1,20 @@
 # BlockColored
+
+## Class signature
+
+```java
+public class BlockColored extends Block
+```
+
+## Constructors
+
+- `public BlockColored( Material materialIn)`
+
+## Methods
+
+- `public int damageDropped( IBlockState state)`
+- `public void getSubBlocks( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > list)`
+- `public MapColor getMapColor( IBlockState state)`
+- `public IBlockState getStateFromMeta(int meta)`
+- `public int getMetaFromState( IBlockState state)`
+- `protected BlockStateContainer createBlockState()`

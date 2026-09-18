@@ -1,6 +1,6 @@
 ---
 title: "GuiModList"
-description: ""
+description: "public class GuiModList extends GuiScreen"
 package: "cpw/mods/fml/client"
 version: "1.7.10"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/client/GuiModList.html"
@@ -8,3 +8,22 @@ sourceType: javadoc
 ---
 
 # GuiModList
+
+## Class signature
+
+```java
+public class GuiModList extends GuiScreen
+```
+
+## Constructors
+
+- `public GuiModList( GuiScreen mainMenu)`
+
+## Methods
+
+- `public void initGui()`
+- `protected void actionPerformed( GuiButton button)`
+- `public int drawLine(java.lang.String line, int offset, int shifty)`
+- `public void drawScreen(int p_571_1_, int p_571_2_, float p_571_3_)`
+- `public void selectModIndex(int var1)`
+- `public boolean modIndexSelected(int var1)`

@@ -1,6 +1,6 @@
 ---
 title: "IItemColor"
-description: ""
+description: "public interface IItemColor"
 package: "net/minecraft/client/renderer/color"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/renderer/color/IItemColor.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # IItemColor
+
+## Class signature
+
+```java
+public interface IItemColor
+```
+
+## Methods
+
+- `int getColorFromItemstack( ItemStack stack, int tintIndex)`

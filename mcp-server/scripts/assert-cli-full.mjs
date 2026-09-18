@@ -1,10 +1,14 @@
 /**
- * assert-cli-full：CLI 全量档（审计补齐，2026-09-17）——81 个 MCP 工具逐个经 dist/cli.js 入口真跑。
+ * assert-cli-full：CLI 全量档（审计补齐，2026-09-17；sweep81 C-4 改口径）——
+ * 81 个工具**逐个走入口契约探针**（`--help` + 无参），另有 OFFLINE+DATA_BACKED 子集**真实调用**
+ * （分母 = 该子集长度，实测 47；**不是 81**）。
  *
  * 口径（用户 review B4 写死）：
  *  - 「入口契约探针」= `<工具> --help`（全量 81，断言 exit 0）+ 无参探针（断言 exit ∈ {0,1,2}
  *    且 stdout 为 JSON 信封、stderr 无异常栈）——**单列计数，不算"真跑"**；
- *  - 「真实调用」= A 类（离线安全，逐条建议参数）全量 + B 类抽样（data/ 本机具备）；
+ *  - 「真实调用」= A 类（离线安全，逐条建议参数）全量 + B 类抽样（data/ 本机具备）= 实测 47 项；
+ *    **C-4：退出码与信封 `success` 必须一致**（rc=1 不再与 rc=0 一视同仁；
+ *    rc=0+success:false 与 rc=1+success:true 都算失败，「诚实失败」单列计数并打印工具名）；
  *  - 「豁免」= C 类（网络/下载/缓存/自备 jar）+ B 类缺口版本档 —— **逐条打印原因，不静默跳过**；
  *  - 汇总表分「探针 / 真实调用 / 豁免 / 失败」四列；**exit = 失败 > 0 ? 1 : 0（豁免绝不混进通过）**。
  *
@@ -19,7 +23,14 @@ import { fileURLToPath } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PKG = path.resolve(HERE, "..");
-const CLI = path.join(PKG, "dist", "cli.js");
+// C-4 投毒钩子（sweep81）：只用于「把本门指向一个假 CLI，证明 rc=0 + success:false 会被判 bad」。
+// 默认永远走真 dist/cli.js；一旦被设置就大声声明，避免它变成静默洗白通道。
+const CLI = process.env.MC_SKILL_CLI_FULL_ENTRY
+  ? path.resolve(process.env.MC_SKILL_CLI_FULL_ENTRY)
+  : path.join(PKG, "dist", "cli.js");
+if (process.env.MC_SKILL_CLI_FULL_ENTRY) {
+  console.error(`[投毒模式] MC_SKILL_CLI_FULL_ENTRY=${CLI} —— 本档不测真实 CLI，仅作门判据的证伪实验`);
+}
 const PER_TOOL_TIMEOUT_MS = 60_000;
 
 // NP-11（2026-09-17）：夹具路径按脚本自身位置解析（此前写死 M:/…，fresh clone 下夹具全落空、
@@ -105,7 +116,7 @@ const EXEMPT_DATA_GAP = [
 
 const budgetStart = Date.now();
 let failures = 0;
-const stats = { probeHelp: 0, probeNoArgs: 0, realCall: 0, exempt: 0, failed: 0 };
+const stats = { probeHelp: 0, probeNoArgs: 0, realCall: 0, realCallHonestFail: 0, exempt: 0, failed: 0 };
 const realResults = [];
 const exemptLines = [];
 
@@ -117,15 +128,19 @@ function envelopeOk(r) {
   const out = (r.stdout ?? "").trim();
   // P2-5 收紧：必须是 CLI 信封 JSON（非空对象 + success 布尔键；cli.ts 全部出口均带 success）。
   // 「任意 JSON 可解析即算」与 "success": 正则兜底不再算数。
+  // C-4（sweep81）：把 success 的**取值**也回传 —— 旧版只回 isJson/stacky，于是 rc=1 与 rc=0
+  // 一视同仁，"success":false 的坏死工具与正常工具在门里完全不可区分。
   let isJson = false;
+  let success = null;
   try {
     const parsed = JSON.parse(out);
     isJson = parsed !== null && typeof parsed === "object" && typeof parsed.success === "boolean";
+    if (isJson) success = parsed.success;
   } catch {
     isJson = false;
   }
   const stacky = /at [\w$.]+ \(.+:\d+:\d+\)/.test(r.stderr ?? "") || /\bError:/.test((r.stderr ?? "").trim().split("\n")[0] ?? "");
-  return { isJson, stacky };
+  return { isJson, stacky, success };
 }
 
 if (!fs.existsSync(CLI)) {
@@ -170,11 +185,17 @@ for (const [tool, args] of REAL) {
   const r = run([tool, ...args]);
   const ms = Date.now() - t0;
   const code = r.status ?? 1;
-  const { isJson, stacky } = envelopeOk(r);
-  const bad = ![0, 1].includes(code) || !isJson || stacky;
+  const { isJson, stacky, success } = envelopeOk(r);
+  // C-4b：rc 与信封 success 必须一致（两类不一致都算 bad，且都能在明细里定位到具体工具）：
+  //   rc=1 + success:true  ⇒ 信封谎报成功（洗白）
+  //   rc=0 + success:false ⇒ 静默失败（退出码说没问题、工具其实没干活）
+  // 「诚实的失败」（rc=1 + success:false）不算 bad，但单独计数并打印，避免与成功混为一谈。
+  const consistent = !isJson ? true : (code === 0) === (success === true);
+  const bad = ![0, 1].includes(code) || !isJson || stacky || !consistent;
   if (bad) failures++;
   else stats.realCall++;
-  realResults.push({ tool, code, ms, bad });
+  if (!bad && success === false) stats.realCallHonestFail++;
+  realResults.push({ tool, code, ms, bad, success });
 }
 // ④ 豁免（逐条打印原因；不静默）
 for (const [tool, why] of EXEMPT_NETWORK) exemptLines.push(`${tool} —— ${why}`);
@@ -189,6 +210,15 @@ console.log(`[全量档] 预算耗时 ${budgetSec}s（单工具超时 ${PER_TOOL
 console.log("=== 汇总（探针 / 真实调用 / 豁免 / 失败）===");
 console.log(`  契约探针：--help ${stats.probeHelp}/${names.length}；无参 ${stats.probeNoArgs}/${names.length}`);
 console.log(`  真实调用：${stats.realCall}/${REAL.length} 通过（≤1s 视为快：${realResults.filter((x) => !x.bad && x.ms <= 1000).length} 个）`);
+// C-4d：把「诚实失败」单列 —— 旧版只报「N/N 通过」，success:false 的工具与正常工具不可区分。
+if (stats.realCallHonestFail > 0) {
+  console.log(
+    `  真实调用中的诚实失败（rc=1 且 success=false，不计入失败也不等于可用）：${stats.realCallHonestFail} 项`,
+  );
+  for (const x of realResults.filter((y) => !y.bad && y.success === false)) {
+    console.log(`    - ${x.tool} rc=${x.code}（${x.ms}ms）`);
+  }
+}
 console.log(`  豁免：${stats.exempt} 条（逐条原因如下）`);
 for (const l of exemptLines) console.log(`    - ${l}`);
 console.log(`  失败：${stats.failed}`);

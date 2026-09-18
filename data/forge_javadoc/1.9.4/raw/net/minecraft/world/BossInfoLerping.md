@@ -1,6 +1,6 @@
 ---
 title: "BossInfoLerping"
-description: ""
+description: "public class BossInfoLerping extends BossInfo"
 package: "net/minecraft/world"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/world/BossInfoLerping.html"
@@ -8,3 +8,19 @@ sourceType: javadoc
 ---
 
 # BossInfoLerping
+
+## Class signature
+
+```java
+public class BossInfoLerping extends BossInfo
+```
+
+## Constructors
+
+- `public BossInfoLerping( SPacketUpdateBossInfo packetIn)`
+
+## Methods
+
+- `public void setPercent(float percentIn)`
+- `public float getPercent()`
+- `public void updateFromPacket( SPacketUpdateBossInfo packetIn)`

@@ -1,6 +1,6 @@
 ---
 title: "PacketBuffer"
-description: ""
+description: "public class PacketBuffer extends io.netty.buffer.ByteBuf"
 package: "net/minecraft/network"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/network/PacketBuffer.html"
@@ -8,3 +8,136 @@ sourceType: javadoc
 ---
 
 # PacketBuffer
+
+## Class signature
+
+```java
+public class PacketBuffer extends io.netty.buffer.ByteBuf
+```
+
+## Constructors
+
+- `public PacketBuffer(io.netty.buffer.ByteBuf wrapped)`
+
+## Methods
+
+- `public static int getVarIntSize(int input)`
+- `public PacketBuffer writeByteArray(byte[] array)`
+- `public byte[] readByteArray()`
+- `public byte[] readByteArray(int maxLength)`
+- `public PacketBuffer writeVarIntArray(int[] array)`
+- `public int[] readVarIntArray()`
+- `public int[] readVarIntArray(int maxLength)`
+- `public PacketBuffer writeLongArray(long[] array)`
+- `public long[] readLongArray(@Nullable long[] array)`
+- `public long[] readLongArray(@Nullable long[] p_189423_1_, int p_189423_2_)`
+- `public BlockPos readBlockPos()`
+- `public PacketBuffer writeBlockPos( BlockPos pos)`
+- `public ITextComponent readTextComponent() throws java.io.IOException`
+- `public PacketBuffer writeTextComponent( ITextComponent component)`
+- `public <T extends java.lang.Enum<T>> T readEnumValue(java.lang.Class<T> enumClass)`
+- `public PacketBuffer writeEnumValue(java.lang.Enum<?> value)`
+- `public int readVarIntFromBuffer()`
+- `public long readVarLong()`
+- `public PacketBuffer writeUuid(java.util.UUID uuid)`
+- `public java.util.UUID readUuid()`
+- `public PacketBuffer writeVarIntToBuffer(int input)`
+- `public PacketBuffer writeVarLong(long value)`
+- `public PacketBuffer writeNBTTagCompoundToBuffer(@Nullable NBTTagCompound nbt)`
+- `@Nullable public NBTTagCompound readNBTTagCompoundFromBuffer() throws java.io.IOException`
+- `public PacketBuffer writeItemStackToBuffer(@Nullable ItemStack stack)`
+- `@Nullable public ItemStack readItemStackFromBuffer() throws java.io.IOException`
+- `public java.lang.String readStringFromBuffer(int maxLength)`
+- `public PacketBuffer writeString(java.lang.String string)`
+- `public int capacity()`
+- `public io.netty.buffer.ByteBuf capacity(int p_capacity_1_)`
+- `public int maxCapacity()`
+- `public io.netty.buffer.ByteBufAllocator alloc()`
+- `public java.nio.ByteOrder order()`
+- `public io.netty.buffer.ByteBuf order(java.nio.ByteOrder p_order_1_)`
+- `public io.netty.buffer.ByteBuf unwrap()`
+- `public boolean isDirect()`
+- `public int readerIndex()`
+- `public io.netty.buffer.ByteBuf readerIndex(int p_readerIndex_1_)`
+- `public int writerIndex()`
+- `public io.netty.buffer.ByteBuf writerIndex(int p_writerIndex_1_)`
+- `public io.netty.buffer.ByteBuf setIndex(int p_setIndex_1_, int p_setIndex_2_)`
+- `public int readableBytes()`
+- `public int writableBytes()`
+- `public int maxWritableBytes()`
+- `public boolean isReadable()`
+- `public boolean isReadable(int p_isReadable_1_)`
+- `public boolean isWritable()`
+- `public boolean isWritable(int p_isWritable_1_)`
+- `public io.netty.buffer.ByteBuf clear()`
+- `public io.netty.buffer.ByteBuf markReaderIndex()`
+- `public io.netty.buffer.ByteBuf resetReaderIndex()`
+- `public io.netty.buffer.ByteBuf markWriterIndex()`
+- `public io.netty.buffer.ByteBuf resetWriterIndex()`
+- `public io.netty.buffer.ByteBuf discardReadBytes()`
+- `public io.netty.buffer.ByteBuf discardSomeReadBytes()`
+- `public io.netty.buffer.ByteBuf ensureWritable(int p_ensureWritable_1_)`
+- `public int ensureWritable(int p_ensureWritable_1_, boolean p_ensureWritable_2_)`
+- `public boolean getBoolean(int p_getBoolean_1_)`
+- `public byte getByte(int p_getByte_1_)`
+- `public short getUnsignedByte(int p_getUnsignedByte_1_)`
+- `public short getShort(int p_getShort_1_)`
+- `public int getUnsignedShort(int p_getUnsignedShort_1_)`
+- `public int getMedium(int p_getMedium_1_)`
+- `public int getUnsignedMedium(int p_getUnsignedMedium_1_)`
+- `public int getInt(int p_getInt_1_)`
+- `public long getUnsignedInt(int p_getUnsignedInt_1_)`
+- `public long getLong(int p_getLong_1_)`
+- `public char getChar(int p_getChar_1_)`
+- `public float getFloat(int p_getFloat_1_)`
+- `public double getDouble(int p_getDouble_1_)`
+- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, io.netty.buffer.ByteBuf p_getBytes_2_)`
+- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, io.netty.buffer.ByteBuf p_getBytes_2_, int p_getBytes_3_)`
+- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, io.netty.buffer.ByteBuf p_getBytes_2_, int p_getBytes_3_, int p_getBytes_4_)`
+- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, byte[] p_getBytes_2_)`
+- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, byte[] p_getBytes_2_, int p_getBytes_3_, int p_getBytes_4_)`
+- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, java.nio.ByteBuffer p_getBytes_2_)`
+- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, java.io.OutputStream p_getBytes_2_, int p_getBytes_3_) throws java.io.IOException`
+- `public int getBytes(int p_getBytes_1_, java.nio.channels.GatheringByteChannel p_getBytes_2_, int p_getBytes_3_) throws java.io.IOException`
+- `public io.netty.buffer.ByteBuf setBoolean(int p_setBoolean_1_, boolean p_setBoolean_2_)`
+- `public io.netty.buffer.ByteBuf setByte(int p_setByte_1_, int p_setByte_2_)`
+- `public io.netty.buffer.ByteBuf setShort(int p_setShort_1_, int p_setShort_2_)`
+- `public io.netty.buffer.ByteBuf setMedium(int p_setMedium_1_, int p_setMedium_2_)`
+- `public io.netty.buffer.ByteBuf setInt(int p_setInt_1_, int p_setInt_2_)`
+- `public io.netty.buffer.ByteBuf setLong(int p_setLong_1_, long p_setLong_2_)`
+- `public io.netty.buffer.ByteBuf setChar(int p_setChar_1_, int p_setChar_2_)`
+- `public io.netty.buffer.ByteBuf setFloat(int p_setFloat_1_, float p_setFloat_2_)`
+- `public io.netty.buffer.ByteBuf setDouble(int p_setDouble_1_, double p_setDouble_2_)`
+- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, io.netty.buffer.ByteBuf p_setBytes_2_)`
+- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, io.netty.buffer.ByteBuf p_setBytes_2_, int p_setBytes_3_)`
+- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, io.netty.buffer.ByteBuf p_setBytes_2_, int p_setBytes_3_, int p_setBytes_4_)`
+- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, byte[] p_setBytes_2_)`
+- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, byte[] p_setBytes_2_, int p_setBytes_3_, int p_setBytes_4_)`
+- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, java.nio.ByteBuffer p_setBytes_2_)`
+- `public int setBytes(int p_setBytes_1_, java.io.InputStream p_setBytes_2_, int p_setBytes_3_) throws java.io.IOException`
+- `public int setBytes(int p_setBytes_1_, java.nio.channels.ScatteringByteChannel p_setBytes_2_, int p_setBytes_3_) throws java.io.IOException`
+- `public io.netty.buffer.ByteBuf setZero(int p_setZero_1_, int p_setZero_2_)`
+- `public boolean readBoolean()`
+- `public byte readByte()`
+- `public short readUnsignedByte()`
+- `public short readShort()`
+- `public int readUnsignedShort()`
+- `public int readMedium()`
+- `public int readUnsignedMedium()`
+- `public int readInt()`
+- `public long readUnsignedInt()`
+- `public long readLong()`
+- `public char readChar()`
+- `public float readFloat()`
+- `public double readDouble()`
+- `public io.netty.buffer.ByteBuf readBytes(int p_readBytes_1_)`
+- `public io.netty.buffer.ByteBuf readSlice(int p_readSlice_1_)`
+- `public io.netty.buffer.ByteBuf readBytes(io.netty.buffer.ByteBuf p_readBytes_1_)`
+- `public io.netty.buffer.ByteBuf readBytes(io.netty.buffer.ByteBuf p_readBytes_1_, int p_readBytes_2_)`
+- `public io.netty.buffer.ByteBuf readBytes(io.netty.buffer.ByteBuf p_readBytes_1_, int p_readBytes_2_, int p_readBytes_3_)`
+- `public io.netty.buffer.ByteBuf readBytes(byte[] p_readBytes_1_)`
+- `public io.netty.buffer.ByteBuf readBytes(byte[] p_readBytes_1_, int p_readBytes_2_, int p_readBytes_3_)`
+- `public io.netty.buffer.ByteBuf readBytes(java.nio.ByteBuffer p_readBytes_1_)`
+- `public io.netty.buffer.ByteBuf readBytes(java.io.OutputStream p_readBytes_1_, int p_readBytes_2_) throws java.io.IOException`
+- `public int readBytes(java.nio.channels.GatheringByteChannel p_readBytes_1_, int p_readBytes_2_) throws java.io.IOException`
+- `public io.netty.buffer.ByteBuf skipBytes(int p_skipBytes_1_)`

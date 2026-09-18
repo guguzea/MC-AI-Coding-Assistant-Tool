@@ -61,7 +61,7 @@ jobs:
         working-directory: mcp-server
         run: npm run build
 
-      - name: Release smoke (80 tools)
+      - name: Release smoke (81 tools)
         working-directory: mcp-server
         run: npm run smoke:release
         env:

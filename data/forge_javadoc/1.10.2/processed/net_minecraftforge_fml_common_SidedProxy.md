@@ -1,1 +1,11 @@
 # SidedProxy
+
+## Class signature
+
+```java
+public class MySidedProxyHolder { {@literal @}SidedProxy(modId="MyModId",clientSide="mymod.ClientProxy", serverSide="mymod.CommonProxy") public static CommonProxy proxy; } public class CommonProxy { // Common or server stuff here that needs to be overridden on the client } public class ClientProxy extends CommonProxy { // Override common stuff with client specific stuff here }
+```
+
+## Description
+
+Sided proxies are loaded based on the specific environment they find themselves loaded into. They are used to ensure that client-specific code (such as GUIs) is only loaded into the game on the client

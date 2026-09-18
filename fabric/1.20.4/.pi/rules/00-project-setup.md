@@ -72,7 +72,7 @@ description: 00 — 项目结构与构建
 ```
 IF 这是新项目（没有 build.gradle）
   → 使用 fabric/1.20.4/scaffold/ 中的模板生成项目骨架
-  → README_AI.md 包含每个文件的职责说明
+  → 本档 scaffold **无 README_AI.md**（实测 8 项：build.gradle / settings.gradle / gradle.properties / gradlew(.bat) / gradle/ / src/）；各文件职责以 build.gradle 内注释与 `search_fabric_docs version=1.20.4` 为准
 
 IF 这是已有项目
   → 读取 gradle.properties 获取版本配置

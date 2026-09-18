@@ -1,6 +1,6 @@
 ---
 title: "IReloadableResourceManager"
-description: ""
+description: "public interface IReloadableResourceManager extends IResourceManager"
 package: "net/minecraft/client/resources"
 version: "1.10.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/resources/IReloadableResourceManager.html"
@@ -8,3 +8,14 @@ sourceType: javadoc
 ---
 
 # IReloadableResourceManager
+
+## Class signature
+
+```java
+public interface IReloadableResourceManager extends IResourceManager
+```
+
+## Methods
+
+- `void reloadResources(java.util.List< IResourcePack > resourcesPacksList)`
+- `void registerReloadListener( IResourceManagerReloadListener reloadListener)`

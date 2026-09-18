@@ -1,6 +1,6 @@
 ---
 title: "S1BPacketEntityAttach"
-description: ""
+description: "Passes this Packet on to the NetHandler for processing."
 package: "net/minecraft/network/play/server"
 version: "1.8.9"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/network/play/server/S1BPacketEntityAttach.html"
@@ -8,3 +8,27 @@ sourceType: javadoc
 ---
 
 # S1BPacketEntityAttach
+
+## Class signature
+
+```java
+public class S1BPacketEntityAttach extends java.lang.Object implements Packet < INetHandlerPlayClient >
+```
+
+## Constructors
+
+- `public S1BPacketEntityAttach()`
+- `public S1BPacketEntityAttach(int leashIn, Entity entityIn, Entity vehicle)`
+
+## Methods
+
+- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
+- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `public void processPacket( INetHandlerPlayClient handler)`
+- `public int getLeash()`
+- `public int getEntityId()`
+- `public int getVehicleEntityId()`
+
+## Description
+
+Passes this Packet on to the NetHandler for processing.

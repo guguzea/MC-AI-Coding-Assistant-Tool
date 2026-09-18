@@ -1,6 +1,6 @@
 ---
 title: "RenderEndermite"
-description: ""
+description: "public class RenderEndermite extends RenderLiving < EntityEndermite >"
 package: "net/minecraft/client/renderer/entity"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/renderer/entity/RenderEndermite.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # RenderEndermite
+
+## Class signature
+
+```java
+public class RenderEndermite extends RenderLiving < EntityEndermite >
+```
+
+## Constructors
+
+- `public RenderEndermite( RenderManager renderManagerIn)`
+
+## Methods
+
+- `protected float getDeathMaxRotation( EntityEndermite entityLivingBaseIn)`
+- `protected ResourceLocation getEntityTexture( EntityEndermite entity)`

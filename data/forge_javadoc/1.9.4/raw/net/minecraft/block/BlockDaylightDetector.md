@@ -1,6 +1,6 @@
 ---
 title: "BlockDaylightDetector"
-description: ""
+description: "public class BlockDaylightDetector extends BlockContainer"
 package: "net/minecraft/block"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/BlockDaylightDetector.html"
@@ -8,3 +8,31 @@ sourceType: javadoc
 ---
 
 # BlockDaylightDetector
+
+## Class signature
+
+```java
+public class BlockDaylightDetector extends BlockContainer
+```
+
+## Constructors
+
+- `public BlockDaylightDetector(boolean inverted)`
+
+## Methods
+
+- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
+- `public int getWeakPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `public void updatePower( World worldIn, BlockPos pos)`
+- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
+- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
+- `public boolean isFullCube( IBlockState state)`
+- `public boolean isOpaqueCube( IBlockState state)`
+- `public EnumBlockRenderType getRenderType( IBlockState state)`
+- `public boolean canProvidePower( IBlockState state)`
+- `public TileEntity createNewTileEntity( World worldIn, int meta)`
+- `public IBlockState getStateFromMeta(int meta)`
+- `public int getMetaFromState( IBlockState state)`
+- `protected BlockStateContainer createBlockState()`
+- `public void getSubBlocks( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > list)`

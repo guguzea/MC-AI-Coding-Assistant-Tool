@@ -4,7 +4,7 @@ description: 多方块结构模式。触发词：multiblock、master、slave
 platform: forge
 version: "1.17.1"
 dependencies: []
-mappings: mcp
+mappings: official
 ---
 
 # mc-multiblock

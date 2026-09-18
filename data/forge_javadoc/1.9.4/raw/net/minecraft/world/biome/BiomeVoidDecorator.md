@@ -1,6 +1,6 @@
 ---
 title: "BiomeVoidDecorator"
-description: ""
+description: "public class BiomeVoidDecorator extends BiomeDecorator"
 package: "net/minecraft/world/biome"
 version: "1.9.4"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/world/biome/BiomeVoidDecorator.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # BiomeVoidDecorator
+
+## Class signature
+
+```java
+public class BiomeVoidDecorator extends BiomeDecorator
+```
+
+## Constructors
+
+- `public BiomeVoidDecorator()`
+
+## Methods
+
+- `public void decorate( World worldIn, java.util.Random random, Biome biome, BlockPos pos)`
