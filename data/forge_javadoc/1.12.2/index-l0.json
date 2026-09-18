@@ -9772,7 +9772,7 @@
       "EnumFaceDirection.VertexInformation"
     ],
     "priority": "🟢",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/net/minecraft/client/renderer/GLAllocation",
@@ -34824,7 +34824,7 @@
       "Cancelable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/net/minecraftforge/client/event/ClientChatEvent",
@@ -38495,7 +38495,7 @@
       "ForgeVersion.CheckResult"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/net/minecraftforge/common/ForgeVersion.Status",
@@ -39163,7 +39163,7 @@
       "Config.Comment"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/net/minecraftforge/common/config/Config.Ignore",
@@ -39177,7 +39177,7 @@
       "Config.Ignore"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/net/minecraftforge/common/config/Config.LangKey",
@@ -39191,7 +39191,7 @@
       "Config.LangKey"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/net/minecraftforge/common/config/Config.Name",
@@ -39205,7 +39205,7 @@
       "Config.Name"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/net/minecraftforge/common/config/Config.RangeDouble",
@@ -39219,7 +39219,7 @@
       "Config.RangeDouble"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/net/minecraftforge/common/config/Config.RangeInt",
@@ -39233,7 +39233,7 @@
       "Config.RangeInt"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/net/minecraftforge/common/config/Config.RequiresMcRestart",
@@ -39247,7 +39247,7 @@
       "Config.RequiresMcRestart"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/net/minecraftforge/common/config/Config.RequiresWorldRestart",
@@ -39261,7 +39261,7 @@
       "Config.RequiresWorldRestart"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/net/minecraftforge/common/config/Config.SlidingOption",
@@ -39474,7 +39474,7 @@
       "CraftingHelper.FactoryLoader"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/net/minecraftforge/common/crafting/CraftingHelper.ShapedPrimer",
@@ -43744,7 +43744,7 @@
       "Cancelable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/net/minecraftforge/event/world/ChunkDataEvent",
@@ -46035,7 +46035,7 @@
       "API"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/net/minecraftforge/fml/common/AutomaticEventSubscriber",
@@ -47876,7 +47876,7 @@
       "Cancelable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/net/minecraftforge/fml/common/eventhandler/Event",
@@ -47906,7 +47906,7 @@
       "Event.HasResult"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/net/minecraftforge/fml/common/eventhandler/Event.Result",
@@ -48071,7 +48071,7 @@
       "SubscribeEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/net/minecraftforge/fml/common/gameevent/InputEvent",
@@ -50009,7 +50009,7 @@
       "IFMLLoadingPlugin.DependsOn"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/net/minecraftforge/fml/relauncher/IFMLLoadingPlugin.MCVersion",

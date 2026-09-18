@@ -8,7 +8,8 @@
  *
  * 本门做什么（可复算的「语义读」，不是 LLM 阅读）：
  *   ① 逐树统计**正文存活**指标：`bodyChars`（去 frontmatter / 标题行 / `>`/`<<<`/`<!--` 标记行后的正文字符数）；
- *      `stub` := bodyChars < 40（标题桩）。
+ *      `stub` := bodyChars < 40 **且无任何 `## ` 小节**（真·空页；2026-09-18 收紧：仅 body<40 会把
+ *      「单构造器嵌套类」这类合法极薄页误报——实测 132/197 是这种，故 `thin`（薄但有结构）只打印不判红）。
  *   ② 每条树必须**在基线里登记**（新树/改名树 = 红，防「新增一棵没人看过的树」）；基线里登记但盘上没有 = 红。
  *   ③ `stub ≤ 基线 allowedStubs`（**ratchet：只许降**，超即红）。
  *   ④ 有 ≥5 篇的树：`median ≥ 基线 medianFloor`（生成基线时取 0.6×实测中位，且不低于 100）。
@@ -75,11 +76,13 @@ export function collectMdFiles(dir, out = []) {
   return out;
 }
 
-/** 度量一棵树（目录 = `.../processed`）。 */
+/** 度量一棵树（目录 = `.../processed`）。stub = 真·空页（body<40 且无任何 `## ` 小节）。 */
 export function measureTree(tree, dir) {
   const files = collectMdFiles(dir);
   const bodies = [];
+  const stubFiles = [];
   let stub = 0;
+  let thin = 0;
   let sectionless = 0;
   for (const f of files) {
     let text = '';
@@ -90,12 +93,19 @@ export function measureTree(tree, dir) {
     }
     const bc = countBodyChars(text);
     bodies.push(bc);
-    if (bc < STUB_MIN) stub++;
-    if (!/^##\s/m.test(stripFrontmatter(text))) sectionless++;
+    const hasSections = /^##\s/m.test(stripFrontmatter(text));
+    if (!hasSections) sectionless++;
+    if (bc < STUB_MIN) {
+      if (hasSections) thin++;
+      else {
+        stub++;
+        stubFiles.push(path.relative(dir, f).split(path.sep).join('/'));
+      }
+    }
   }
   bodies.sort((a, b) => a - b);
   const q = (p) => (bodies.length ? bodies[Math.min(bodies.length - 1, Math.floor(bodies.length * p))] : 0);
-  return { tree, files: files.length, stub, sectionless, p10: q(0.1), median: q(0.5) };
+  return { tree, files: files.length, stub, thin, sectionless, stubFiles, p10: q(0.1), median: q(0.5) };
 }
 
 /** 纯函数：逐树判定（真跑与 --selftest 共用）。 */
@@ -105,6 +115,7 @@ export function judgeTrees(stats, baseline) {
     return ['基线文件缺失/结构不对：顶层必须含 trees 对象'];
   }
   const budget = baseline.totalStubBudget;
+  const residueEnabled = Array.isArray(baseline.residue);
   const seen = new Set();
   for (const s of stats) {
     seen.add(s.tree);
@@ -121,6 +132,20 @@ export function judgeTrees(stats, baseline) {
     const floor = Math.max(GLOBAL_MEDIAN_FLOOR, typeof b.medianFloor === 'number' ? b.medianFloor : 0);
     if (s.files >= 5 && s.median < floor) {
       problems.push(`${s.tree}: 正文中位 ${s.median} < 地板 ${floor}（整树变薄/回退为桩）`);
+    }
+    // 具名 residue（可选层）：允许留下的真·空页必须**逐条具名**，且条目过期（文件已不是空页）即红。
+    if (residueEnabled) {
+      const named = baseline.residue.filter((r) => r && r.tree === s.tree);
+      if (named.length !== s.stub) {
+        problems.push(
+          `${s.tree}: 真·空页 ${s.stub} 篇但具名 residue 只有 ${named.length} 条（允许的桩必须逐条登记，不许留匿名额度）`,
+        );
+      }
+      for (const n of named) {
+        if (!(s.stubFiles ?? []).includes(n.file)) {
+          problems.push(`${s.tree}: residue 过期 —— ${n.file} 已不是真·空页（删掉该条；ratchet 只许降）`);
+        }
+      }
     }
   }
   for (const tree of Object.keys(baseline.trees)) {
@@ -184,6 +209,36 @@ function selftest() {
       base({ 'a/good/1': { allowedStubs: 2, medianFloor: 0 }, 'b/thin/1': { allowedStubs: 2, medianFloor: 0 } }, 1),
       false,
     ],
+    [
+      'residue 具名齐全（应绿）',
+      [{ tree: 'a/good/1', files: 10, stub: 1, median: 400, stubFiles: ['processed/x.md'] }],
+      {
+        totalStubBudget: 1,
+        trees: { 'a/good/1': { allowedStubs: 1, medianFloor: 100 } },
+        residue: [{ tree: 'a/good/1', file: 'processed/x.md', reason: 'fixture' }],
+      },
+      true,
+    ],
+    [
+      'residue 匿名额度（有桩未具名 ⇒ 红）',
+      [{ tree: 'a/good/1', files: 10, stub: 2, median: 400, stubFiles: ['processed/x.md', 'processed/y.md'] }],
+      {
+        totalStubBudget: 2,
+        trees: { 'a/good/1': { allowedStubs: 2, medianFloor: 100 } },
+        residue: [{ tree: 'a/good/1', file: 'processed/x.md', reason: 'fixture' }],
+      },
+      false,
+    ],
+    [
+      'residue 过期（条目对应文件已非空页 ⇒ 红）',
+      [{ tree: 'a/good/1', files: 10, stub: 0, median: 400, stubFiles: [] }],
+      {
+        totalStubBudget: 0,
+        trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 100 } },
+        residue: [{ tree: 'a/good/1', file: 'processed/x.md', reason: 'fixture' }],
+      },
+      false,
+    ],
   ];
   let missed = 0;
   for (const [name, stats, b, wantGreen] of cases) {
@@ -238,8 +293,10 @@ if (process.argv.includes('--selftest')) {
   const totalStub = stats.reduce((a, s) => a + s.stub, 0);
   const totalFiles = stats.reduce((a, s) => a + s.files, 0);
   if (INFO) {
-    console.log('tree | files | stub | sectionless | p10 | median');
-    for (const s of stats) console.log(`${s.tree} | ${s.files} | ${s.stub} | ${s.sectionless} | ${s.p10} | ${s.median}`);
+    console.log('tree | files | stub(真·空页) | thin(薄但有结构) | sectionless | p10 | median');
+    for (const s of stats) {
+      console.log(`${s.tree} | ${s.files} | ${s.stub} | ${s.thin} | ${s.sectionless} | ${s.p10} | ${s.median}`);
+    }
   }
   if (problems.length > 0) {
     console.error(

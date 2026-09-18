@@ -146,9 +146,9 @@
     },
     {
       "id": "corpus-semantics-all-trees",
-      "claim": "data/** 每棵 processed 树都有语义层判据：逐树标题桩 ≤ 基线 ratchet、正文中位 ≥ 地板、树必须登记（新树即红）",
-      "author": "sweep81（用户口径：data/** 全树语义读缺口，本轮闭合）",
-      "evidence": "首跑即抓到 forge_javadoc/1.12.2 整树 4,567 篇空壳（100% stub/median=0）⇒ 重抓该树后回归同级残桩（~1%）；基线 corpus-semantics-baseline.json 由实测生成，ratchet 只许降",
+      "claim": "data/** 每棵 processed 树都有语义层判据：逐树**真·空页**（body<40 且无任何 `## ` 小节）≤ 基线 ratchet、正文中位 ≥ 地板、树必须登记（新树即红）、允许的空页必须逐条具名（residue 过期即红）",
+      "author": "sweep81（用户口径：data/** 全树语义读缺口，本轮闭合；含注解页解析缺口修复）",
+      "evidence": "首跑抓到 forge_javadoc/1.12.2 整树 4,567 篇空壳 ⇒ 重抓 + 索引重建；二轮抓到 Java 8 注解页整类漏解析（Config.Comment/API 等）⇒ 修 crawl-javadoc.mjs 后重抓 136 篇（0 失败）；判据收紧为真·空页（剔除 132 篇合法极薄页误报）⇒ 全仓真·空页 4,717 → 1（唯一者 = rift 上游 wiki Home，具名 residue）；基线 corpus-semantics-baseline.json 由实测生成，ratchet 只许降",
       "evidenceRefs": ["mcp-server/scripts/assert-corpus-semantics.mjs", "mcp-server/scripts/corpus-semantics-baseline.json"],
       "status": "closed",
       "gates": ["assert-corpus-semantics.mjs"],

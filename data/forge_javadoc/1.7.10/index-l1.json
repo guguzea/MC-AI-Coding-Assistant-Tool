@@ -2262,8 +2262,19 @@
       "cpw_mods_fml_common",
       "API"
     ],
-    "firstParagraph": "",
-    "sections": []
+    "firstParagraph": "```java",
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract java.lang.String owner`"
+      }
+    ]
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/BukkitPluginRef",
@@ -5565,8 +5576,14 @@
       "cpw_mods_fml_common_eventhandler",
       "Cancelable"
     ],
-    "firstParagraph": "",
-    "sections": []
+    "firstParagraph": "```java",
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      }
+    ]
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/eventhandler/Event",
@@ -5616,8 +5633,14 @@
       "cpw_mods_fml_common_eventhandler",
       "Event.HasResult"
     ],
-    "firstParagraph": "",
-    "sections": []
+    "firstParagraph": "```java",
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      }
+    ]
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/eventhandler/Event.Result",
@@ -5812,8 +5835,19 @@
       "cpw_mods_fml_common_eventhandler",
       "SubscribeEvent"
     ],
-    "firstParagraph": "",
-    "sections": []
+    "firstParagraph": "```java",
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract EventPriority priority`"
+      }
+    ]
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/functions/ArtifactVersionNameFunction",
@@ -9633,8 +9667,19 @@
       "cpw_mods_fml_relauncher",
       "IFMLLoadingPlugin.DependsOn"
     ],
-    "firstParagraph": "",
-    "sections": []
+    "firstParagraph": "```java",
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract java.lang.String[] value`"
+      }
+    ]
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/IFMLLoadingPlugin.MCVersion",

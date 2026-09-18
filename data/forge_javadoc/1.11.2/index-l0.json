@@ -8163,7 +8163,7 @@
       "EnumFaceDirection.VertexInformation"
     ],
     "priority": "🟢",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.11.2/net/minecraft/client/renderer/GLAllocation",
@@ -32289,7 +32289,7 @@
       "Cancelable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.11.2/net/minecraftforge/client/event/ClientChatReceivedEvent",
@@ -35765,7 +35765,7 @@
       "ForgeVersion.CheckResult"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.11.2/net/minecraftforge/common/ForgeVersion.Status",
@@ -36307,7 +36307,7 @@
       "Config.Comment"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.11.2/net/minecraftforge/common/config/Config.LangKey",
@@ -36321,7 +36321,7 @@
       "Config.LangKey"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.11.2/net/minecraftforge/common/config/Config.RangeDouble",
@@ -36335,7 +36335,7 @@
       "Config.RangeDouble"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.11.2/net/minecraftforge/common/config/Config.RangeInt",
@@ -36349,7 +36349,7 @@
       "Config.RangeInt"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.11.2/net/minecraftforge/common/config/Config.Type",
@@ -42031,7 +42031,7 @@
       "API"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.11.2/net/minecraftforge/fml/common/AutomaticEventSubscriber",
@@ -43802,7 +43802,7 @@
       "Cancelable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.11.2/net/minecraftforge/fml/common/eventhandler/Event",
@@ -43832,7 +43832,7 @@
       "Event.HasResult"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.11.2/net/minecraftforge/fml/common/eventhandler/Event.Result",
@@ -43982,7 +43982,7 @@
       "SubscribeEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.11.2/net/minecraftforge/fml/common/functions/ArtifactVersionNameFunction",
@@ -46156,7 +46156,7 @@
       "IFMLLoadingPlugin.DependsOn"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.11.2/net/minecraftforge/fml/relauncher/IFMLLoadingPlugin.MCVersion",

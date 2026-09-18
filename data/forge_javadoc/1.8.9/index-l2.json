@@ -17059,7 +17059,13 @@
       "EnumFaceDirection.VertexInformation"
     ],
     "processedFile": "processed/net_minecraft_client_renderer_EnumFaceDirection.VertexInformation.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      }
+    ]
   },
   {
     "id": "1.8.9/net/minecraft/client/renderer/GLAllocation",
@@ -69116,7 +69122,13 @@
       "ForgeVersion.CheckResult"
     ],
     "processedFile": "processed/net_minecraftforge_common_ForgeVersion.CheckResult.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      }
+    ]
   },
   {
     "id": "1.8.9/net/minecraftforge/common/ForgeVersion.Status",
@@ -78531,7 +78543,18 @@
       "API"
     ],
     "processedFile": "processed/net_minecraftforge_fml_common_API.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract java.lang.String owner`"
+      }
+    ]
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/common/CertificateHelper",
@@ -82000,7 +82023,13 @@
       "Cancelable"
     ],
     "processedFile": "processed/net_minecraftforge_fml_common_eventhandler_Cancelable.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      }
+    ]
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/common/eventhandler/Event",
@@ -82051,7 +82080,13 @@
       "Event.HasResult"
     ],
     "processedFile": "processed/net_minecraftforge_fml_common_eventhandler_Event.HasResult.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      }
+    ]
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/common/eventhandler/Event.Result",
@@ -82247,7 +82282,18 @@
       "SubscribeEvent"
     ],
     "processedFile": "processed/net_minecraftforge_fml_common_eventhandler_SubscribeEvent.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract EventPriority priority`"
+      }
+    ]
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/common/functions/ArtifactVersionNameFunction",
@@ -86224,7 +86270,18 @@
       "IFMLLoadingPlugin.DependsOn"
     ],
     "processedFile": "processed/net_minecraftforge_fml_relauncher_IFMLLoadingPlugin.DependsOn.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract java.lang.String[] value`"
+      }
+    ]
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/relauncher/IFMLLoadingPlugin.MCVersion",
@@ -86539,7 +86596,18 @@
       "SideOnly"
     ],
     "processedFile": "processed/net_minecraftforge_fml_relauncher_SideOnly.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract Side value`"
+      }
+    ]
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/repackage/com/nothome/delta/ByteBufferSeekableSource",

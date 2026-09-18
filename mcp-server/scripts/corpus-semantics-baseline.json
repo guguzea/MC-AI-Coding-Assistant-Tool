@@ -1,7 +1,14 @@
 {
-  "_comment": "sweep81 data/** 全树语义读基线（assert-corpus-semantics.mjs 读）：allowedStubs=ratchet（只许降，超即红）；medianFloor 对有 ≥5 篇的树生效。改动须走 MC_SKILL_CORPUS_SEMANTICS_RELEDGER=1 重算并显式提交。",
+  "_comment": "sweep81 data/** 全树语义读基线（assert-corpus-semantics.mjs 读）：stub=真·空页（body<40 且无任何 `## ` 小节）；allowedStubs=ratchet（只许降，超即红）；medianFloor 对有 ≥5 篇的树生效；residue[]=允许留下的空页**逐条具名**（有 residue 数组时，每棵树的具名条目数必须等于实测空页数，条目过期即红）。改动须走 MC_SKILL_CORPUS_SEMANTICS_RELEDGER=1 重算并显式提交。",
   "asOf": "2026-09-18",
-  "totalStubBudget": 197,
+  "totalStubBudget": 1,
+  "residue": [
+    {
+      "tree": "rift_1.13.2/rift-docs/1.13.2",
+      "file": "wiki_home.md",
+      "reason": "上游 Rift GitHub wiki 的 Home 页本身就只有一句欢迎语（正文 25 字符）；其余 5 篇承载全部内容。采集忠实、非解析缺口 —— 2026-09-18 逐篇核过。"
+    }
+  ],
   "trees": {
     "bedrock_stable/bedrock-docs/stable": {
       "files": 20,
@@ -160,32 +167,32 @@
     },
     "forge_javadoc/1.10.2": {
       "files": 3254,
-      "allowedStubs": 34,
+      "allowedStubs": 0,
       "medianFloor": 229
     },
     "forge_javadoc/1.11.2": {
       "files": 3335,
-      "allowedStubs": 35,
+      "allowedStubs": 0,
       "medianFloor": 230
     },
     "forge_javadoc/1.12.2": {
       "files": 4567,
-      "allowedStubs": 47,
+      "allowedStubs": 0,
       "medianFloor": 228
     },
     "forge_javadoc/1.7.10": {
       "files": 2464,
-      "allowedStubs": 20,
+      "allowedStubs": 0,
       "medianFloor": 253
     },
     "forge_javadoc/1.8.9": {
       "files": 2837,
-      "allowedStubs": 30,
+      "allowedStubs": 0,
       "medianFloor": 233
     },
     "forge_javadoc/1.9.4": {
       "files": 3111,
-      "allowedStubs": 30,
+      "allowedStubs": 0,
       "medianFloor": 229
     },
     "liteloader_1.10.2/liteloader-docs/1.10.2": {

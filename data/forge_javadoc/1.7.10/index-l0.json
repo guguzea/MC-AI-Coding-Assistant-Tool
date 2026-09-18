@@ -1082,7 +1082,7 @@
       "API"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/BukkitPluginRef",
@@ -2754,7 +2754,7 @@
       "Cancelable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/eventhandler/Event",
@@ -2784,7 +2784,7 @@
       "Event.HasResult"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/eventhandler/Event.Result",
@@ -2889,7 +2889,7 @@
       "SubscribeEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/functions/ArtifactVersionNameFunction",
@@ -4896,7 +4896,7 @@
       "IFMLLoadingPlugin.DependsOn"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/IFMLLoadingPlugin.MCVersion",

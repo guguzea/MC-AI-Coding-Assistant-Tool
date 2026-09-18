@@ -16625,7 +16625,13 @@
       "EnumFaceDirection.VertexInformation"
     ],
     "processedFile": "processed/net_minecraft_client_renderer_EnumFaceDirection.VertexInformation.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraft/client/renderer/GLAllocation",
@@ -64484,7 +64490,13 @@
       "Cancelable"
     ],
     "processedFile": "processed/net_minecraftforge_client_event_Cancelable.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraftforge/client/event/ClientChatReceivedEvent",
@@ -71191,7 +71203,13 @@
       "ForgeVersion.CheckResult"
     ],
     "processedFile": "processed/net_minecraftforge_common_ForgeVersion.CheckResult.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraftforge/common/ForgeVersion.Status",
@@ -72290,7 +72308,18 @@
       "Config.Comment"
     ],
     "processedFile": "processed/net_minecraftforge_common_config_Config.Comment.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract java.lang.String[] value`"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraftforge/common/config/Config.LangKey",
@@ -72304,7 +72333,18 @@
       "Config.LangKey"
     ],
     "processedFile": "processed/net_minecraftforge_common_config_Config.LangKey.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract java.lang.String value`"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraftforge/common/config/Config.RangeDouble",
@@ -72318,7 +72358,18 @@
       "Config.RangeDouble"
     ],
     "processedFile": "processed/net_minecraftforge_common_config_Config.RangeDouble.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract double min`"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraftforge/common/config/Config.RangeInt",
@@ -72332,7 +72383,18 @@
       "Config.RangeInt"
     ],
     "processedFile": "processed/net_minecraftforge_common_config_Config.RangeInt.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract int min`"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraftforge/common/config/Config.Type",
@@ -84334,7 +84396,18 @@
       "API"
     ],
     "processedFile": "processed/net_minecraftforge_fml_common_API.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract java.lang.String owner`"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraftforge/fml/common/AutomaticEventSubscriber",
@@ -87933,7 +88006,13 @@
       "Cancelable"
     ],
     "processedFile": "processed/net_minecraftforge_fml_common_eventhandler_Cancelable.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraftforge/fml/common/eventhandler/Event",
@@ -87984,7 +88063,13 @@
       "Event.HasResult"
     ],
     "processedFile": "processed/net_minecraftforge_fml_common_eventhandler_Event.HasResult.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraftforge/fml/common/eventhandler/Event.Result",
@@ -88258,7 +88343,18 @@
       "SubscribeEvent"
     ],
     "processedFile": "processed/net_minecraftforge_fml_common_eventhandler_SubscribeEvent.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract EventPriority priority`"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraftforge/fml/common/functions/ArtifactVersionNameFunction",
@@ -92350,7 +92446,18 @@
       "IFMLLoadingPlugin.DependsOn"
     ],
     "processedFile": "processed/net_minecraftforge_fml_relauncher_IFMLLoadingPlugin.DependsOn.md",
-    "sections": []
+    "sections": [
+      {
+        "title": "Class signature",
+        "level": 2,
+        "summary": " ```java"
+      },
+      {
+        "title": "Elements",
+        "level": 2,
+        "summary": " - `public abstract java.lang.String[] value`"
+      }
+    ]
   },
   {
     "id": "1.10.2/net/minecraftforge/fml/relauncher/IFMLLoadingPlugin.MCVersion",

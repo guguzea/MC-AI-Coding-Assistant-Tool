@@ -1,6 +1,6 @@
 ---
 title: "Event.HasResult"
-description: ""
+description: "public static @interface Event.HasResult"
 package: "net/minecraftforge/fml/common/eventhandler"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/common/eventhandler/Event.HasResult.html"
@@ -8,3 +8,9 @@ sourceType: javadoc
 ---
 
 # Event.HasResult
+
+## Class signature
+
+```java
+public static @interface Event.HasResult
+```

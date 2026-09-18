@@ -7409,7 +7409,7 @@
       "EnumFaceDirection.VertexInformation"
     ],
     "priority": "🟢",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.8.9/net/minecraft/client/renderer/GLAllocation",
@@ -30643,7 +30643,7 @@
       "ForgeVersion.CheckResult"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.8.9/net/minecraftforge/common/ForgeVersion.Status",
@@ -35312,7 +35312,7 @@
       "API"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/common/CertificateHelper",
@@ -37027,7 +37027,7 @@
       "Cancelable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/common/eventhandler/Event",
@@ -37057,7 +37057,7 @@
       "Event.HasResult"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/common/eventhandler/Event.Result",
@@ -37162,7 +37162,7 @@
       "SubscribeEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/common/functions/ArtifactVersionNameFunction",
@@ -39245,7 +39245,7 @@
       "IFMLLoadingPlugin.DependsOn"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/relauncher/IFMLLoadingPlugin.MCVersion",
@@ -39447,7 +39447,7 @@
       "SideOnly"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.8.9/net/minecraftforge/fml/repackage/com/nothome/delta/ByteBufferSeekableSource",
