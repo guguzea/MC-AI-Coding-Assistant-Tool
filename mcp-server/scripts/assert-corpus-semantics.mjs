@@ -16,8 +16,12 @@
  *   ⑤ 全局：`Σstub ≤ 基线 totalStubBudget`（ratchet）。
  *
  * 诚实边界（明写，不夸大）：
- *   · `sectionless`（无 `## ` 小节）**只打印、不判红** —— 实测存在整类「无 ## 但正文厚」的体例
- *     （liteloader 90%、bedrock 100%、forge-docs 最高 21%），没有证据说它们错。
+ *   · `sectionless`（无 `## ` 小节）**只打印、不判红** —— 2026-09-18 **逐族定性完成**
+ *     （证据：temp/audit/sweep81/SECTIONLESS-TRIAGE.md + logs/sectionless.log）：
+ *     bedrock 20/20（Learn 转储为扁平文本）、liteloader 27/30（上游用 `#`+`###` 跳 `##`）、
+ *     forge-docs 12–21%（`#`+`###` 或扁平）、fabric-docs 2–6%（setext/MDX 索引页）、
+ *     neoforge-docs 1–7%、quilt 25%、modloader 1/1（设计如此的空表页）、rift 1/6（上游空页，具名 residue）
+ *     —— **全部为体例差异，无内容缺失**；⇒ 结论：**不升级为判据**（若未来某族改为「应有 ##」体裁，再按族加判据）。
  *   · 本门不判断语义**正确性**（内容对不对），只判断正文**存活与厚度**；正确性由各专族门与源稿门负责。
  *
  * 用法：

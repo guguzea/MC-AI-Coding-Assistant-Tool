@@ -132,7 +132,8 @@ const LEDGER_TREES = {
   "forge_1.20.4/forge-docs/1.20.4": { raw: 70, proc: 70, identical: 0, contentDiff: 69, markerOnly: 0, fmOnly: 1, noTwin: 0, dup: 0, dir: 0 },
   "forge_javadoc/1.10.2": { raw: 3254, proc: 3254, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 3254, dup: 0, dir: 0 },
   "forge_javadoc/1.11.2": { raw: 3335, proc: 3335, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 3335, dup: 0, dir: 0 },
-  "forge_javadoc/1.12.2": { raw: 4567, proc: 4567, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 4567, dup: 0, dir: 0 },
+  // 2026-09-18：历史重名件成对删除（914 processed 孤儿 + 914 raw ` (2).md`），4567 → 3653（与索引引用一致）。
+  "forge_javadoc/1.12.2": { raw: 3653, proc: 3653, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 3653, dup: 0, dir: 0 },
   "forge_javadoc/1.7.10": { raw: 2464, proc: 2464, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 2464, dup: 0, dir: 0 },
   "forge_javadoc/1.8.9": { raw: 2837, proc: 2837, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 2837, dup: 0, dir: 0 },
   "forge_javadoc/1.9.4": { raw: 3111, proc: 3111, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 3111, dup: 0, dir: 0 },

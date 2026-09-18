@@ -156,23 +156,23 @@
     },
     {
       "id": "forge-javadoc-1122-orphans-deletion",
-      "claim": "forge_javadoc/1.12.2 的 914 份 processed 孤儿与 raw 侧 914 份重名件成对删除后，A1（raw==processed）口径同步改 4567→3653",
-      "author": "sweep81 D 批索引器折叠历史重复件的残余（删除待用户执行）",
-      "evidence": "探针实测：索引引用 3,653 / 盘上 4,567 / 孤儿 914 / 悬空 0；raw 侧重名「Foo (2).md」= 恰好 914；完整清单 DELETE-LIST-1.12.2-orphans.txt",
-      "evidenceRefs": ["mcp-server/scripts/assert-corpus-faithfulness.mjs"],
-      "status": "open",
-      "whyOpen": "删除属 data/ 交付面变更，须用户执行；且只删一边会让 A1 当场红（必须先定成对删除 + 台账改数）",
-      "nextRound": "CLEANUP-list.md §1.5（含成对删除条件与 LEDGER_TREES 改数）"
+      "claim": "forge_javadoc/1.12.2 的历史重名件已**成对删除**（914 processed 孤儿 + 914 raw ` (2).md`），A1（raw==processed）口径同步改为 3653/3653",
+      "author": "sweep81 D 批索引器折叠残余 → 2026-09-18 用户授权成对删除",
+      "evidence": "删除探针实测：deleted=1828/1828、**0 失败**；删后 raw=3653 / processed=3653（与索引引用 3,653 一致）；成对关系先经精确核验（orphan↔raw(2) 零偏差）；LEDGER_TREES 已按 RELEDGER 口径同步 4567→3653",
+      "evidenceRefs": ["mcp-server/scripts/assert-corpus-faithfulness.mjs", "temp/audit/sweep81/CLEANUP-list.md"],
+      "status": "closed",
+      "gates": ["assert-corpus-faithfulness.mjs"],
+      "closedAt": "2026-09-18"
     },
     {
       "id": "corpus-sectionless-classification",
-      "claim": "`sectionless`（无 `## ` 小节）当前只打印不判红——liteloader 90% / bedrock 100% / forge-docs 最高 21% 疑似体例差异，未逐族定性前不得升级为判据",
-      "author": "sweep81（全树语义读首跑观测）",
-      "evidence": "语义审计实测：liteloader 27/30、bedrock 20/20、forge-docs 12/57 等无 ## 但正文中位 1496–11,323 字符（正文厚，非空壳）",
-      "evidenceRefs": ["mcp-server/scripts/assert-corpus-semantics.mjs"],
-      "status": "open",
-      "whyOpen": "逐族体例未定性：需要逐树抽样确认「无 ##」是采集口径还是文档体例，才能决定是否升级为判据",
-      "nextRound": "后续轮：逐族抽样定性（优先 liteloader/bedrock），定完把结论并入 assert-corpus-semantics 或写进其诚实边界"
+      "claim": "`sectionless`（无 `## ` 小节）经逐族定性：**全部为体例差异**（上游 `#`/`###`/setext 排版、纯文本转储、设计空表页、上游空页），无内容缺失 ⇒ 不升级为判据、保持只打印",
+      "author": "sweep81 全树语义读首跑观测 → 2026-09-18 逐族抽样定性",
+      "evidence": "逐树抽样（≤5 篇/树；logs/sectionless.log + SECTIONLESS-TRIAGE.md）：bedrock 20/20 扁平转储（中位 11,323 字符）、liteloader 27/30 用 `#`+`###` 跳 `##`、forge-docs 12–21%（`#`+`###` 或扁平）、fabric-docs setext/MDX 索引页、neoforge 1–7%、quilt 25%、modloader 单页「空表」（设计）、rift 上游空页（已具名 residue）",
+      "evidenceRefs": ["mcp-server/scripts/assert-corpus-semantics.mjs", "temp/audit/sweep81/SECTIONLESS-TRIAGE.md"],
+      "status": "closed",
+      "gates": ["assert-corpus-semantics.mjs"],
+      "closedAt": "2026-09-18"
     }
   ]
 }
