@@ -1,6 +1,6 @@
 ---
 title: "SoundList"
-description: ""
+description: "public class SoundList extends java.lang.Object"
 package: "net/minecraft/client/audio"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/audio/SoundList.html"
@@ -8,3 +8,19 @@ sourceType: javadoc
 ---
 
 # SoundList
+
+## Class signature
+
+```java
+public class SoundList extends java.lang.Object
+```
+
+## Constructors
+
+- `public SoundList(java.util.List< Sound > soundsIn, boolean replceIn, java.lang.String subtitleIn)`
+
+## Methods
+
+- `public java.util.List< Sound > getSounds()`
+- `public boolean canReplaceExisting()`
+- `public java.lang.String getSubtitle()`

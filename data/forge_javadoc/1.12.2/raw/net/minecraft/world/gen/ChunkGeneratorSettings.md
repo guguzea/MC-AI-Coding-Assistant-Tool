@@ -1,6 +1,6 @@
 ---
 title: "ChunkGeneratorSettings"
-description: ""
+description: "public class ChunkGeneratorSettings extends java.lang.Object"
 package: "net/minecraft/world/gen"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/gen/ChunkGeneratorSettings.html"
@@ -8,3 +8,9 @@ sourceType: javadoc
 ---
 
 # ChunkGeneratorSettings
+
+## Class signature
+
+```java
+public class ChunkGeneratorSettings extends java.lang.Object
+```

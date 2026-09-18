@@ -1949,8 +1949,10 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-forge-1204-material.mjs",
     // sweep81 C-6：Properties 形态**族 × 版本区间**门（正反两面；补 1.18.2/1.19.4 反向面）。
     "./scripts/assert-forge-blockshape-family.mjs",
-    // sweep81 C-2：审计结论机读清单门骨架（登记的不变量必须点名一道存在且被本文件真跑的门）。
+    // sweep81 C-2 v2：审计结论机读清单 + 逐条销账（closed 必带 gates/closedAt/evidenceRefs；open 必带 whyOpen/nextRound）。
     "./scripts/assert-rule-ledger.mjs",
+    // sweep81：data/** 全树语义读门（逐树标题桩 ratchet + median 地板 + 树必须登记；补 M 类机械对账的盲区）。
+    "./scripts/assert-corpus-semantics.mjs",
     "./scripts/assert-scaffold-rules-conflict.mjs",
     // S20 的一次性脚本 temp/f146-gate.mjs 已并入门族（2026-09-13 裁定）；这里真跑它。
     "./scripts/assert-forge-1182-registry-consts.mjs",

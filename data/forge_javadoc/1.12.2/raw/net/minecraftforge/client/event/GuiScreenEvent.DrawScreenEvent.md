@@ -1,6 +1,6 @@
 ---
 title: "GuiScreenEvent.DrawScreenEvent"
-description: ""
+description: "This event fires just after GuiScreen.drawScreen(int, int, float) is called."
 package: "net/minecraftforge/client/event"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/client/event/GuiScreenEvent.DrawScreenEvent.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # GuiScreenEvent.DrawScreenEvent
+
+## Constructors
+
+- `public DrawScreenEvent( GuiScreen gui, int mouseX, int mouseY, float renderPartialTicks)`
+
+## Methods
+
+- `public int getMouseX()`
+- `public int getMouseY()`
+- `public float getRenderPartialTicks()`
+
+## Description
+
+This event fires just after GuiScreen.drawScreen(int, int, float) is called.

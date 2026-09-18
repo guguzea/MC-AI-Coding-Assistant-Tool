@@ -1,6 +1,6 @@
 ---
 title: "RegistryEvent"
-description: ""
+description: "RegistryEvent supertype."
 package: "net/minecraftforge/event"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/RegistryEvent.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # RegistryEvent
+
+## Class signature
+
+```java
+public class RegistryEvent<T extends IForgeRegistryEntry <T>> extends GenericEvent <T> implements IContextSetter
+```
+
+## Description
+
+RegistryEvent supertype.

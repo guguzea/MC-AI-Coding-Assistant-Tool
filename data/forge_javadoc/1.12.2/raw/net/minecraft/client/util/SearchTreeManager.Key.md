@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # SearchTreeManager.Key
+
+## Constructors
+
+- `public Key()`

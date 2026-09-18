@@ -1,6 +1,6 @@
 ---
 title: "WorldGenLiquids"
-description: ""
+description: "public class WorldGenLiquids extends WorldGenerator"
 package: "net/minecraft/world/gen/feature"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/gen/feature/WorldGenLiquids.html"
@@ -8,3 +8,17 @@ sourceType: javadoc
 ---
 
 # WorldGenLiquids
+
+## Class signature
+
+```java
+public class WorldGenLiquids extends WorldGenerator
+```
+
+## Constructors
+
+- `public WorldGenLiquids( Block blockIn)`
+
+## Methods
+
+- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`

@@ -106,3 +106,14 @@ data/mc-skill-update-state.json
 # BOM / scratch audit dumps
 temp/audit-report.json
 
+# sweep81 删除清单（temp/audit/sweep81/CLEANUP-list.md）：防复发忽略
+# ⚠️ 这两项当前**已被跟踪**：要让本规则真正生效，需先
+#    git rm --cached -- "sm-120x.xml" "mcp-server/e.check*"
+#    （只从索引移除、保留工作区文件；不代删文件本体）
+/sm-120x.xml
+/mcp-server/e.check*
+# 说明：`_scanbin.js`/`_scanbin.txt` 已被上方 **/_scan* 命中，`mcp-server-local.zip` 已被 *.zip 命中，
+# 故不在此重复登记；`%TEMP%\mcp-gate-poison-*` 在仓库外（.gitignore 管不到）；
+# `data/forge_javadoc/1.12.2/processed/` 的 914 份孤儿混在 3,653 份有效文件里，无法用模式表达
+# （只删 processed 会破坏 raw==processed 的 A1 口径，须与 raw 侧重名件成对删 —— 见 CLEANUP-list §1.5）。
+

@@ -44,10 +44,10 @@
       "FeatureFlags.VANILLA": "10-gui.mdc:203"
     },
     "fabric/26.1.2": {
-      "RecipeProvider#buildRecipes": "07-datagen.mdc:157",
-      "ShapedRecipeBuilder.shaped.save": "07-datagen.mdc:157",
-      "offerShapedRecipe": "07-datagen.mdc:157",
-      "offerTo": "07-datagen.mdc:157"
+      "RecipeProvider#buildRecipes": "07-datagen.mdc:159",
+      "ShapedRecipeBuilder.shaped.save": "07-datagen.mdc:159",
+      "offerShapedRecipe": "07-datagen.mdc:159",
+      "offerTo": "07-datagen.mdc:159"
     },
     "forge/1.14.4": {
       "event.getRegistry": "02-block.mdc:171",

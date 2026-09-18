@@ -1,6 +1,6 @@
 ---
 title: "TickEvent"
-description: ""
+description: "public class TickEvent extends Event"
 package: "net/minecraftforge/fml/common/gameevent"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/common/gameevent/TickEvent.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # TickEvent
+
+## Class signature
+
+```java
+public class TickEvent extends Event
+```
+
+## Constructors
+
+- `public TickEvent( TickEvent.Type type, Side side, TickEvent.Phase phase)`

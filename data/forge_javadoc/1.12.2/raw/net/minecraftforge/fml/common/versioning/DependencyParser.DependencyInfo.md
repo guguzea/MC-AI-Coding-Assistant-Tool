@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # DependencyParser.DependencyInfo
+
+## Constructors
+
+- `public DependencyInfo()`

@@ -1,6 +1,6 @@
 ---
 title: "ISmartVariant"
-description: ""
+description: "public interface ISmartVariant"
 package: "net/minecraftforge/client/model"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/client/model/ISmartVariant.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # ISmartVariant
+
+## Class signature
+
+```java
+public interface ISmartVariant
+```
+
+## Methods
+
+- `IModel process( IModel base)`

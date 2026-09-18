@@ -1,6 +1,6 @@
 ---
 title: "IStringSerializable"
-description: ""
+description: "public interface IStringSerializable"
 package: "net/minecraft/util"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/util/IStringSerializable.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # IStringSerializable
+
+## Class signature
+
+```java
+public interface IStringSerializable
+```
+
+## Methods
+
+- `java.lang.String getName()`

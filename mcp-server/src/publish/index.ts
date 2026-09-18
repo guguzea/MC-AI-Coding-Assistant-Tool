@@ -3,6 +3,7 @@
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { join, relative, sep } from "path";
+import { actionable } from "../utils/actionable.js";
 import { loadModProject, preferExplicit, resolveProjectDir } from "../utils/project-files.js";
 import { loadPublishingChecklist } from "./publishing-checklist.js";
 
@@ -15,12 +16,20 @@ export interface PublishReadyQuery {
 }
 
 export interface PublishReadyResult {
+  /** 硬项（元数据存在、version 字段、可解析的 projectPath）通过。 */
   ok: boolean;
+  /**
+   * 可发布就绪：`ok` **且**（当给了 projectPath 时）扫描目录里有像正式包的 jar。
+   * 与 `ok` 的差异只在「硬项都过但没扫到正式 jar」这一种状态（A19-S3-8 修复：
+   * 此前 ok 与 ready 是同一表达式的两个字段）。
+   */
   ready: boolean;
   errors: string[];
   warnings: string[];
   checks: string[];
   jars?: string[];
+  /** A19-S3-4（I-3）：早退路径也带结构化 action，不再只给裸 errors 字符串。 */
+  action?: ReturnType<typeof actionable>;
   publishing?: {
     source: string;
     available: boolean;
@@ -164,6 +173,8 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
         errors: [resolved.action.message],
         warnings: [],
         checks,
+        // A19-S3-4（I-3）：早退必须带结构化 action，不再是裸 errors 字符串
+        action: resolved.action,
       };
     }
     projectRoot = resolved.root;
@@ -188,15 +199,20 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
     { name: "quilt.mod.json", text: quiltModJson ?? "" },
   ].filter((m) => m.text.trim());
 
-  const meta = provided.map((m) => m.text).join("\n");
-  if (!meta.trim()) {
+  if (provided.length === 0) {
     errors.push("缺少 mods.toml / neoforge.mods.toml / fabric.mod.json / quilt.mod.json");
   } else {
-    if (!hasLicense(meta)) {
-      warnings.push("元数据未看到 license 字段；对照 community_knowledge/authored/publishing.md");
+    // AA 修复（sweep81 A19-S2-6）：**逐文件**核，替代旧的 join("\n") 后统一查 ——
+    // 旧实现「任一文件有 license/version」就会替其余文件判过（跨文件并集误判）。
+    const missingVersion = provided.filter((m) => !hasVersion(m.text)).map((m) => m.name);
+    if (missingVersion.length) {
+      errors.push(`元数据未看到 version 字段：${missingVersion.join(", ")}`);
     }
-    if (!hasVersion(meta)) {
-      errors.push("元数据未看到 version 字段");
+    const missingLicense = provided.filter((m) => !hasLicense(m.text)).map((m) => m.name);
+    if (missingLicense.length) {
+      warnings.push(
+        `元数据未看到 license 字段：${missingLicense.join(", ")}；对照 community_knowledge/authored/publishing.md`,
+      );
     }
   }
 
@@ -241,9 +257,14 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
   }
 
   warnings.push("本工具不上传、不调用 CurseForge/Modrinth API");
-  const ready = errors.length === 0;
+  const ok = errors.length === 0;
+  // AA 修复（sweep81 A19-S3-8）：ok 与 ready 曾恒为同一表达式。拆分语义：
+  //   ok    = 硬项通过（元数据存在 / version 字段 / projectPath 可解析）；
+  //   ready = 可发布就绪 —— ok 且（给了 projectPath 时）扫到了像正式包的 jar。
+  // 未给 projectPath 时产物未经检查（已有「跳过扫描」warning），ready 与 ok 同判。
+  const ready = ok && (!query.projectPath || jars.length > 0);
   return {
-    ok: ready,
+    ok,
     ready,
     errors,
     warnings,

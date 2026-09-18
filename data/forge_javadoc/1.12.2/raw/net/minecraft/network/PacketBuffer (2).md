@@ -1,6 +1,6 @@
 ---
 title: "PacketBuffer"
-description: ""
+description: "public class PacketBuffer extends ByteBuf"
 package: "net/minecraft/network"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/network/PacketBuffer.html"
@@ -8,3 +8,136 @@ sourceType: javadoc
 ---
 
 # PacketBuffer
+
+## Class signature
+
+```java
+public class PacketBuffer extends ByteBuf
+```
+
+## Constructors
+
+- `public PacketBuffer(ByteBuf wrapped)`
+
+## Methods
+
+- `public static int getVarIntSize(int input)`
+- `public PacketBuffer writeByteArray(byte[] array)`
+- `public byte[] readByteArray()`
+- `public byte[] readByteArray(int maxLength)`
+- `public PacketBuffer writeVarIntArray(int[] array)`
+- `public int[] readVarIntArray()`
+- `public int[] readVarIntArray(int maxLength)`
+- `public PacketBuffer writeLongArray(long[] array)`
+- `public long[] readLongArray(long[] array)`
+- `public long[] readLongArray(long[] array, int maxLength)`
+- `public BlockPos readBlockPos()`
+- `public PacketBuffer writeBlockPos( BlockPos pos)`
+- `public ITextComponent readTextComponent() throws java.io.IOException`
+- `public PacketBuffer writeTextComponent( ITextComponent component)`
+- `public <T extends java.lang.Enum<T>> T readEnumValue(java.lang.Class<T> enumClass)`
+- `public PacketBuffer writeEnumValue(java.lang.Enum<?> value)`
+- `public int readVarInt()`
+- `public long readVarLong()`
+- `public PacketBuffer writeUniqueId(java.util.UUID uuid)`
+- `public java.util.UUID readUniqueId()`
+- `public PacketBuffer writeVarInt(int input)`
+- `public PacketBuffer writeVarLong(long value)`
+- `public PacketBuffer writeCompoundTag( NBTTagCompound nbt)`
+- `public NBTTagCompound readCompoundTag() throws java.io.IOException`
+- `public PacketBuffer writeItemStack( ItemStack stack)`
+- `public ItemStack readItemStack() throws java.io.IOException`
+- `public java.lang.String readString(int maxLength)`
+- `public PacketBuffer writeString(java.lang.String string)`
+- `public ResourceLocation readResourceLocation()`
+- `public PacketBuffer writeResourceLocation( ResourceLocation resourceLocationIn)`
+- `public java.util.Date readTime()`
+- `public PacketBuffer writeTime(java.util.Date time)`
+- `public int capacity()`
+- `public ByteBuf capacity(int p_capacity_1_)`
+- `public int maxCapacity()`
+- `public ByteBufAllocator alloc()`
+- `public java.nio.ByteOrder order()`
+- `public ByteBuf order(java.nio.ByteOrder p_order_1_)`
+- `public ByteBuf unwrap()`
+- `public boolean isDirect()`
+- `public boolean isReadOnly()`
+- `public ByteBuf asReadOnly()`
+- `public int readerIndex()`
+- `public ByteBuf readerIndex(int p_readerIndex_1_)`
+- `public int writerIndex()`
+- `public ByteBuf writerIndex(int p_writerIndex_1_)`
+- `public ByteBuf setIndex(int p_setIndex_1_, int p_setIndex_2_)`
+- `public int readableBytes()`
+- `public int writableBytes()`
+- `public int maxWritableBytes()`
+- `public boolean isReadable()`
+- `public boolean isReadable(int p_isReadable_1_)`
+- `public boolean isWritable()`
+- `public boolean isWritable(int p_isWritable_1_)`
+- `public ByteBuf clear()`
+- `public ByteBuf markReaderIndex()`
+- `public ByteBuf resetReaderIndex()`
+- `public ByteBuf markWriterIndex()`
+- `public ByteBuf resetWriterIndex()`
+- `public ByteBuf discardReadBytes()`
+- `public ByteBuf discardSomeReadBytes()`
+- `public ByteBuf ensureWritable(int p_ensureWritable_1_)`
+- `public int ensureWritable(int p_ensureWritable_1_, boolean p_ensureWritable_2_)`
+- `public boolean getBoolean(int p_getBoolean_1_)`
+- `public byte getByte(int p_getByte_1_)`
+- `public short getUnsignedByte(int p_getUnsignedByte_1_)`
+- `public short getShort(int p_getShort_1_)`
+- `public short getShortLE(int p_getShortLE_1_)`
+- `public int getUnsignedShort(int p_getUnsignedShort_1_)`
+- `public int getUnsignedShortLE(int p_getUnsignedShortLE_1_)`
+- `public int getMedium(int p_getMedium_1_)`
+- `public int getMediumLE(int p_getMediumLE_1_)`
+- `public int getUnsignedMedium(int p_getUnsignedMedium_1_)`
+- `public int getUnsignedMediumLE(int p_getUnsignedMediumLE_1_)`
+- `public int getInt(int p_getInt_1_)`
+- `public int getIntLE(int p_getIntLE_1_)`
+- `public long getUnsignedInt(int p_getUnsignedInt_1_)`
+- `public long getUnsignedIntLE(int p_getUnsignedIntLE_1_)`
+- `public long getLong(int p_getLong_1_)`
+- `public long getLongLE(int p_getLongLE_1_)`
+- `public char getChar(int p_getChar_1_)`
+- `public float getFloat(int p_getFloat_1_)`
+- `public double getDouble(int p_getDouble_1_)`
+- `public ByteBuf getBytes(int p_getBytes_1_, ByteBuf p_getBytes_2_)`
+- `public ByteBuf getBytes(int p_getBytes_1_, ByteBuf p_getBytes_2_, int p_getBytes_3_)`
+- `public ByteBuf getBytes(int p_getBytes_1_, ByteBuf p_getBytes_2_, int p_getBytes_3_, int p_getBytes_4_)`
+- `public ByteBuf getBytes(int p_getBytes_1_, byte[] p_getBytes_2_)`
+- `public ByteBuf getBytes(int p_getBytes_1_, byte[] p_getBytes_2_, int p_getBytes_3_, int p_getBytes_4_)`
+- `public ByteBuf getBytes(int p_getBytes_1_, java.nio.ByteBuffer p_getBytes_2_)`
+- `public ByteBuf getBytes(int p_getBytes_1_, java.io.OutputStream p_getBytes_2_, int p_getBytes_3_) throws java.io.IOException`
+- `public int getBytes(int p_getBytes_1_, java.nio.channels.FileChannel p_getBytes_2_, long p_getBytes_3_, int p_getBytes_5_) throws java.io.IOException`
+- `public java.lang.CharSequence getCharSequence(int p_getCharSequence_1_, int p_getCharSequence_2_, java.nio.charset.Charset p_getCharSequence_3_)`
+- `public ByteBuf setBoolean(int p_setBoolean_1_, boolean p_setBoolean_2_)`
+- `public ByteBuf setByte(int p_setByte_1_, int p_setByte_2_)`
+- `public ByteBuf setShort(int p_setShort_1_, int p_setShort_2_)`
+- `public ByteBuf setShortLE(int p_setShortLE_1_, int p_setShortLE_2_)`
+- `public ByteBuf setMedium(int p_setMedium_1_, int p_setMedium_2_)`
+- `public ByteBuf setMediumLE(int p_setMediumLE_1_, int p_setMediumLE_2_)`
+- `public ByteBuf setInt(int p_setInt_1_, int p_setInt_2_)`
+- `public ByteBuf setIntLE(int p_setIntLE_1_, int p_setIntLE_2_)`
+- `public ByteBuf setLong(int p_setLong_1_, long p_setLong_2_)`
+- `public ByteBuf setLongLE(int p_setLongLE_1_, long p_setLongLE_2_)`
+- `public ByteBuf setChar(int p_setChar_1_, int p_setChar_2_)`
+- `public ByteBuf setFloat(int p_setFloat_1_, float p_setFloat_2_)`
+- `public ByteBuf setDouble(int p_setDouble_1_, double p_setDouble_2_)`
+- `public ByteBuf setBytes(int p_setBytes_1_, ByteBuf p_setBytes_2_)`
+- `public ByteBuf setBytes(int p_setBytes_1_, ByteBuf p_setBytes_2_, int p_setBytes_3_)`
+- `public ByteBuf setBytes(int p_setBytes_1_, ByteBuf p_setBytes_2_, int p_setBytes_3_, int p_setBytes_4_)`
+- `public ByteBuf setBytes(int p_setBytes_1_, byte[] p_setBytes_2_)`
+- `public ByteBuf setBytes(int p_setBytes_1_, byte[] p_setBytes_2_, int p_setBytes_3_, int p_setBytes_4_)`
+- `public ByteBuf setBytes(int p_setBytes_1_, java.nio.ByteBuffer p_setBytes_2_)`
+- `public int setBytes(int p_setBytes_1_, java.nio.channels.FileChannel p_setBytes_2_, long p_setBytes_3_, int p_setBytes_5_) throws java.io.IOException`
+- `public ByteBuf setZero(int p_setZero_1_, int p_setZero_2_)`
+- `public int setCharSequence(int p_setCharSequence_1_, java.lang.CharSequence p_setCharSequence_2_, java.nio.charset.Charset p_setCharSequence_3_)`
+- `public boolean readBoolean()`
+- `public byte readByte()`
+- `public short readUnsignedByte()`
+- `public short readShort()`
+- `public short readShortLE()`
+- `public int readUnsignedShort()`

@@ -1,6 +1,6 @@
 ---
 title: "VertexLighterSmoothAo"
-description: ""
+description: "public class VertexLighterSmoothAo extends VertexLighterFlat"
 package: "net/minecraftforge/client/model/pipeline"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/client/model/pipeline/VertexLighterSmoothAo.html"
@@ -8,3 +8,21 @@ sourceType: javadoc
 ---
 
 # VertexLighterSmoothAo
+
+## Class signature
+
+```java
+public class VertexLighterSmoothAo extends VertexLighterFlat
+```
+
+## Constructors
+
+- `public VertexLighterSmoothAo( BlockColors colors)`
+
+## Methods
+
+- `protected void updateLightmap(float[] normal, float[] lightmap, float x, float y, float z)`
+- `protected void updateColor(float[] normal, float[] color, float x, float y, float z, float tint, int multiplier)`
+- `protected void calcLightmap(float[] lightmap, float x, float y, float z)`
+- `protected float getAo(float x, float y, float z)`
+- `public void updateBlockInfo()`

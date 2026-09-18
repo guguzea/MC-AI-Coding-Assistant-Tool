@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # CraftingHelper.ShapedPrimer
+
+## Constructors
+
+- `public ShapedPrimer()`

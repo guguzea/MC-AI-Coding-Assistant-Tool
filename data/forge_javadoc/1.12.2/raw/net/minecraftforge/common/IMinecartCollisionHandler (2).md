@@ -1,6 +1,6 @@
 ---
 title: "IMinecartCollisionHandler"
-description: ""
+description: "This class defines a replacement for the default minecart collision code. Only one handler can be registered at a time. It it registered with EntityMinecart.registerCollisionHandler(). If you use this"
 package: "net/minecraftforge/common"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/common/IMinecartCollisionHandler.html"
@@ -8,3 +8,20 @@ sourceType: javadoc
 ---
 
 # IMinecartCollisionHandler
+
+## Class signature
+
+```java
+public interface IMinecartCollisionHandler
+```
+
+## Methods
+
+- `void onEntityCollision( EntityMinecart cart, Entity other)`
+- `AxisAlignedBB getCollisionBox( EntityMinecart cart, Entity other)`
+- `AxisAlignedBB getMinecartCollisionBox( EntityMinecart cart)`
+- `AxisAlignedBB getBoundingBox( EntityMinecart cart)`
+
+## Description
+
+This class defines a replacement for the default minecart collision code. Only one handler can be registered at a time. It it registered with EntityMinecart.registerCollisionHandler(). If you use this

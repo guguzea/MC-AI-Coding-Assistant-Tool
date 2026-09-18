@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # BlockStateLoader.Marker
+
+## Constructors
+
+- `public Marker()`

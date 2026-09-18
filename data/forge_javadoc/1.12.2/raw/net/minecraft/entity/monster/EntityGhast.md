@@ -1,6 +1,6 @@
 ---
 title: "EntityGhast"
-description: ""
+description: "public class EntityGhast extends EntityFlying implements IMob"
 package: "net/minecraft/entity/monster"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/monster/EntityGhast.html"
@@ -8,3 +8,36 @@ sourceType: javadoc
 ---
 
 # EntityGhast
+
+## Class signature
+
+```java
+public class EntityGhast extends EntityFlying implements IMob
+```
+
+## Constructors
+
+- `public EntityGhast( World worldIn)`
+
+## Methods
+
+- `protected void initEntityAI()`
+- `public boolean isAttacking()`
+- `public void setAttacking(boolean attacking)`
+- `public int getFireballStrength()`
+- `public void onUpdate()`
+- `public boolean attackEntityFrom( DamageSource source, float amount)`
+- `protected void entityInit()`
+- `protected void applyEntityAttributes()`
+- `public SoundCategory getSoundCategory()`
+- `protected SoundEvent getAmbientSound()`
+- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
+- `protected SoundEvent getDeathSound()`
+- `protected ResourceLocation getLootTable()`
+- `protected float getSoundVolume()`
+- `public boolean getCanSpawnHere()`
+- `public int getMaxSpawnedInChunk()`
+- `public static void registerFixesGhast( DataFixer fixer)`
+- `public void writeEntityToNBT( NBTTagCompound compound)`
+- `public void readEntityFromNBT( NBTTagCompound compound)`
+- `public float getEyeHeight()`

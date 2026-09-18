@@ -1,1 +1,23 @@
 # EntityEvokerFangs
+
+## Class signature
+
+```java
+public class EntityEvokerFangs extends Entity
+```
+
+## Constructors
+
+- `public EntityEvokerFangs( World worldIn)`
+- `public EntityEvokerFangs( World worldIn, double x, double y, double z, float p_i47276_8_, int p_i47276_9_, EntityLivingBase casterIn)`
+
+## Methods
+
+- `protected void entityInit()`
+- `public void setCaster( EntityLivingBase p_190549_1_)`
+- `public EntityLivingBase getCaster()`
+- `protected void readEntityFromNBT( NBTTagCompound compound)`
+- `protected void writeEntityToNBT( NBTTagCompound compound)`
+- `public void onUpdate()`
+- `public void handleStatusUpdate(byte id)`
+- `public float getAnimationProgress(float partialTicks)`

@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # ModelBlock.LoopException
+
+## Constructors
+
+- `public LoopException()`

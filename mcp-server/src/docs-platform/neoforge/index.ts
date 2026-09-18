@@ -235,6 +235,8 @@ export async function searchNeoForgeDocs(args: {
           version: detailed.resolvedVersion,
           allowedIds: semanticAllowedIds(s, detailed.resolvedVersion, detailed.results),
         });
+    // AA 修复（sweep81 A2-S2-2）：searchNeoForgePrimers 内部已加相关性门槛（verHit 不再免检）；
+    // 此处「前置」保留为**有意**的迁移优先级 —— 能进来的 primer 都是与查询相关且版本命中的。
     const primerHits = searchNeoForgePrimers({ query: args.query, version, dataRoot: neoDataRoot() });
     if (primerHits.length) {
       const seen = new Set(results.map((r) => r.id));

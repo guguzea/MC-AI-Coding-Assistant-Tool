@@ -1,8 +1,14 @@
 import { actionable, ActionCodes, withAction, versionRequiredAction, missingMcVersion } from "../utils/actionable.js";
-import { searchRegistryEntries, listRegistryNames, registryDataAvailable } from "./store.js";
+import { searchRegistryEntries, listRegistryNames, registryDataAvailable, registryOpenError } from "./store.js";
 
 export { buildRegistryIndex, vanillaRegistryDir, vanillaRegistrySqlitePath } from "./builder.js";
-export { searchRegistryEntries, listRegistryNames, registryDataAvailable, closeRegistryDbs } from "./store.js";
+export {
+  searchRegistryEntries,
+  listRegistryNames,
+  registryDataAvailable,
+  registryOpenError,
+  closeRegistryDbs,
+} from "./store.js";
 
 export interface QueryRegistryInput {
   registry?: string;
@@ -52,6 +58,33 @@ export function queryRegistry(input: QueryRegistryInput): QueryRegistryResult {
   ];
 
   if (!registryDataAvailable(version)) {
+    // Y-1（sweep81 结构化信封）：区分「索引没建」与「建了但 sqlite 损坏」——两者对用户的
+    // 下一步完全不同（重建 vs 重装/报环境），此前都塌缩成同一句「数据不可用」。
+    const openErr = registryOpenError(version);
+    if (openErr) {
+      return withAction(
+        {
+          found: false,
+          matches: [],
+          nameLayer: "registry_id",
+          version,
+          relatedTools,
+          notes: [
+            ...notes,
+            `registry sqlite 打开失败（损坏或格式不兼容）：${openErr}`,
+          ],
+        },
+        actionable(
+          ActionCodes.DATA_UNAVAILABLE,
+          `Vanilla registry 索引损坏（${version}）：registry-index.sqlite 无法打开`,
+          [
+            `删除或重建 data/vanilla_${version}/registries/registry-index.sqlite（在 mcp-server 目录执行: npm run build:vanilla-registries -- --version ${version} --force）`,
+            "若反复损坏，先检查磁盘/同步盘对该文件的占用（OneDrive 等在线占位会导致读取失败）",
+          ],
+          ["diagnose_data_paths"],
+        ),
+      );
+    }
     return withAction(
       {
         found: false,

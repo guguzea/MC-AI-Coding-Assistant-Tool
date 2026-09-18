@@ -43,7 +43,7 @@ private static final Item MY_APPLE = Registry.register(
 
 ## 模式 3：工具（剑）
 
-> ⚠️ 下面代码块里的 `FabricToolTags.PICKAXES` **未核实**：14 档 yarn tiny 逐档实测该 token 命中 **0**，仓内无可证名字（`ItemTags.PICKAXES` 同样 0 命中）。抄这段前先核实常量名：`query_loader_api --className=ItemTags`，或用自备 jar 走 `ingest_loader_api`；**禁止凭记忆补**。
+> ℹ️ oracle 口径（2026-09-18）：`FabricToolTags` 已从 fabric-api **移除**——≤1.17.1 摘要在、1.18.2/1.20.1/1.21.3 摘要 0 命中；旧包 0.45.0+1.18 起 @Deprecated。官方文档口径：工具类别归**原版物品标签**（ItemTags.SWORDS/AXES 例）。下面是**示意**草图：`ToolMaterial` 的参数形态本仓无可核 oracle（fabric-api 摘要无该类条目），抄前用自备 jar 走 `ingest_loader_api` 核实签名；**禁止凭记忆补**。
 
 ```yaml
 模式: Sword Tool
@@ -53,8 +53,8 @@ private static final Item MY_APPLE = Registry.register(
 扩展点: [ToolMaterial]
 ---
 public enum MyToolMaterial implements ToolMaterial {
-    COPPER(2, 250, 6.0f, 2.0f, 15,
-        FabricToolTags.PICKAXES, () -> Items.COPPER_INGOT);
+    // 参数形态示意（无仓内 oracle）；挖掘类别归原版物品标签，不得引用已移除的 FabricToolTags
+    COPPER(2, 250, 6.0f, 2.0f, 15, () -> Items.COPPER_INGOT);
 
     // ... getDurability, getMiningSpeed, getAttackDamage, etc.
 }

@@ -1,1 +1,19 @@
 # EntityAIVillagerMate
+
+## Class signature
+
+```java
+public class EntityAIVillagerMate extends EntityAIBase
+```
+
+## Constructors
+
+- `public EntityAIVillagerMate( EntityVillager villagerIn)`
+
+## Methods
+
+- `public boolean shouldExecute()`
+- `public void startExecuting()`
+- `public void resetTask()`
+- `public boolean shouldContinueExecuting()`
+- `public void updateTask()`

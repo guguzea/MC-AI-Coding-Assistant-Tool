@@ -1,6 +1,6 @@
 ---
 title: "DuplicateModsFoundException"
-description: ""
+description: "public class DuplicateModsFoundException extends LoaderException implements IDisplayableError"
 package: "net/minecraftforge/fml/common"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/common/DuplicateModsFoundException.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # DuplicateModsFoundException
+
+## Class signature
+
+```java
+public class DuplicateModsFoundException extends LoaderException implements IDisplayableError
+```
+
+## Constructors
+
+- `public DuplicateModsFoundException(<any> dupes)`
+
+## Methods
+
+- `protected void printStackTrace( EnhancedRuntimeException.WrappedPrintStream stream)`
+- `public GuiScreen createGui()`

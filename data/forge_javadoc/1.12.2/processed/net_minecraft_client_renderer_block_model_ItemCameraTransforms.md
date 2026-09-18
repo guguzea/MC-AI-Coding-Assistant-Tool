@@ -1,1 +1,20 @@
 # ItemCameraTransforms
+
+## Class signature
+
+```java
+public class ItemCameraTransforms extends java.lang.Object
+```
+
+## Methods
+
+- `@Deprecated public ItemCameraTransforms( ItemCameraTransforms transforms)`
+- `@Deprecated public ItemCameraTransforms( ItemTransformVec3f thirdperson_leftIn, ItemTransformVec3f thirdperson_rightIn, ItemTransformVec3f firstperson_leftIn, ItemTransformVec3f firstperson_rightIn, ItemTransformVec3f headIn, ItemTransformVec3f guiIn, ItemTransformVec3f groundIn, ItemTransformVec3f fixedIn)`
+- `public void applyTransform( ItemCameraTransforms.TransformType type)`
+- `public static void applyTransformSide( ItemTransformVec3f vec, boolean leftHand)`
+- `@Deprecated public ItemTransformVec3f getTransform( ItemCameraTransforms.TransformType type)`
+- `public boolean hasCustomTransform( ItemCameraTransforms.TransformType type)`
+
+## Description
+
+Deprecated.

@@ -1,6 +1,6 @@
 ---
 title: "PhaseSittingBase"
-description: ""
+description: "public abstract class PhaseSittingBase extends PhaseBase"
 package: "net/minecraft/entity/boss/dragon/phase"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/boss/dragon/phase/PhaseSittingBase.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # PhaseSittingBase
+
+## Class signature
+
+```java
+public abstract class PhaseSittingBase extends PhaseBase
+```
+
+## Constructors
+
+- `public PhaseSittingBase( EntityDragon p_i46794_1_)`
+
+## Methods
+
+- `public boolean getIsStationary()`
+- `public float getAdjustedDamage( MultiPartEntityPart pt, DamageSource src, float damage)`

@@ -787,6 +787,8 @@ export async function searchDocs(
     let finalResults = finalResultsBase;
     let primerNote: string | undefined;
     if (platform === "neoforge") {
+      // AA 修复（sweep81 A2-S2-2）：门槛在 searchNeoForgePrimers 内部（verHit 不再免检相关性）；
+      // 前置插入保留为有意的迁移优先级。
       const primerHits = searchNeoForgePrimers({
         query: args.query,
         version: args.version,

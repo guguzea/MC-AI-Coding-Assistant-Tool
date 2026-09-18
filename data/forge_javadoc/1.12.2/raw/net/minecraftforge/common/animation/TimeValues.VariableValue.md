@@ -1,6 +1,6 @@
 ---
 title: "TimeValues.VariableValue"
-description: ""
+description: "Simple value holder."
 package: "net/minecraftforge/common/animation"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/common/animation/TimeValues.VariableValue.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # TimeValues.VariableValue
+
+## Constructors
+
+- `public VariableValue(float initialValue)`
+
+## Methods
+
+- `public void setValue(float newValue)`
+- `public float apply(float input)`
+- `public int hashCode()`
+- `public boolean equals(java.lang.Object obj)`
+
+## Description
+
+Simple value holder.

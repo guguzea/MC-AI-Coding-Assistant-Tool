@@ -92,19 +92,24 @@ export function checksumsPath(): string {
   return join(dirname(fileURLToPath(import.meta.url)), "..", "..", "data", "mdk-checksums.json");
 }
 
-export function loadMdkChecksums(): MdkChecksumEntry[] {
+/**
+ * Z-1（sweep81 结构化信封）：返回里带 `invalid` —— 调用方（resolveMdkEntry → downloadOfficialMdk）
+ * 据此把「pin 表为空」与「pin 表损坏」分成两个错误码（MDK_NOT_PINNED vs MDK_CHECKSUMS_INVALID），
+ * 不再把损坏伪装成「未配置」。`entries` 仍按失败关闭口径降级为空表。
+ */
+export function loadMdkChecksums(): { entries: MdkChecksumEntry[]; invalid?: string } {
   const p = checksumsPath();
-  if (!existsSync(p)) return [];
+  if (!existsSync(p)) return { entries: [] };
   try {
     const raw = JSON.parse(readFileSync(p, "utf8")) as { entries?: MdkChecksumEntry[] };
-    return raw.entries ?? [];
+    return { entries: raw.entries ?? [] };
   } catch (err) {
-    // Z-1（sweep81 顺延）：checksum 文件损坏此前裸抛 SyntaxError ⇒ 工具以 tool_failure 形式崩掉。
+    // Z-1：checksum 文件损坏此前裸抛 SyntaxError ⇒ 工具以 tool_failure 形式崩掉。
     // 与 :880 的「损坏：失败关闭」同口径：降级为空表 + 大声告警（不静默、不伪装成未配置）。
     console.error(
       `[mdk] MDK_CHECKSUMS_INVALID: checksum 文件不可解析，按空表处理 —— ${p} :: ${(err as Error).message}`,
     );
-    return [];
+    return { entries: [], invalid: `${p} :: ${(err as Error).message}` };
   }
 }
 
@@ -199,11 +204,20 @@ export function resolveMdkEntry(args: {
   platform: MdkPlatform;
   minecraftVersion: string;
   buildPlugin?: BuildPlugin;
-}): { entry?: MdkChecksumEntry; candidates: MdkChecksumEntry[]; error?: string } {
-  const all = loadMdkChecksums().filter(
+}): { entry?: MdkChecksumEntry; candidates: MdkChecksumEntry[]; error?: string; checksumsInvalid?: string } {
+  const loaded = loadMdkChecksums();
+  const all = loaded.entries.filter(
     (e) => e.platform === args.platform && e.minecraftVersion === args.minecraftVersion,
   );
   if (all.length === 0) {
+    // Z-1：pin 表本身损坏 ≠ 没有 pin —— 让上层回 MDK_CHECKSUMS_INVALID（含原因），别误导用户去查版本号
+    if (loaded.invalid) {
+      return {
+        candidates: [],
+        error: `MDK pin 表（mdk-checksums.json）不可解析：${loaded.invalid}`,
+        checksumsInvalid: loaded.invalid,
+      };
+    }
     return {
       candidates: [],
       error: `无 pin 表条目：${args.platform} ${args.minecraftVersion}。禁止用邻版 MDK 冒充。返回 MDK_NOT_PINNED。`,
@@ -1009,8 +1023,15 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
     }
     return {
       ok: false,
-      error: { code: "MDK_NOT_PINNED", message },
+      // Z-1：pin 表损坏必须是**自己的错误码**（MDK_CHECKSUMS_INVALID），不得冒充 MDK_NOT_PINNED
+      error: {
+        code: resolved.checksumsInvalid ? "MDK_CHECKSUMS_INVALID" : "MDK_NOT_PINNED",
+        message,
+      },
       ...(nextSteps ? { nextSteps } : {}),
+      ...(resolved.checksumsInvalid
+        ? { nextSteps: ["修复或重建 mcp-server/data/mdk-checksums.json（合法 JSON，含 entries[]）", ...(nextSteps ?? [])] }
+        : {}),
       candidates: resolved.candidates.map((c) => ({
         id: c.id,
         buildPlugin: c.buildPlugin,

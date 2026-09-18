@@ -1,6 +1,6 @@
 ---
 title: "GuiListButton"
-description: ""
+description: "public class GuiListButton extends GuiButton"
 package: "net/minecraft/client/gui"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/gui/GuiListButton.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # GuiListButton
+
+## Class signature
+
+```java
+public class GuiListButton extends GuiButton
+```
+
+## Constructors
+
+- `public GuiListButton( GuiPageButtonList.GuiResponder responder, int buttonId, int x, int y, java.lang.String localizationStrIn, boolean valueIn)`
+
+## Methods
+
+- `public void setValue(boolean valueIn)`
+- `public boolean mousePressed( Minecraft mc, int mouseX, int mouseY)`

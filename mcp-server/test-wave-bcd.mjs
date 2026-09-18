@@ -119,6 +119,33 @@ function testRegistry() {
     else process.env.MC_SKILL_DATA = prevData;
     rmSync(tmpData, { recursive: true, force: true });
   }
+
+  // Y-1（sweep81 结构化信封）：**损坏的** registry-index.sqlite 必须与「索引没建」分开报——
+  // 同样是 DATA_UNAVAILABLE，但 action.message 必须点名「损坏」，nextSteps 指向重建而非「先建索引」。
+  const corruptData = mkdtempSync(join(tmpdir(), "mc-skill-reg-corrupt-"));
+  const prevData2 = process.env.MC_SKILL_DATA;
+  try {
+    mkdirSync(join(corruptData, "vanilla_9.9.8", "registries"), { recursive: true });
+    writeFileSync(join(corruptData, "vanilla_9.9.8", "registries", "registry-index.sqlite"), "definitely not a sqlite file");
+    process.env.MC_SKILL_DATA = corruptData;
+    closeRegistryDbs();
+    const corrupt = queryRegistry({ query: "air", version: "9.9.8" });
+    assert.equal(corrupt.action?.code, "DATA_UNAVAILABLE", JSON.stringify(corrupt));
+    assert.match(
+      String(corrupt.action?.message ?? ""),
+      /损坏/,
+      `损坏库必须点名「损坏」（否则与「没建索引」不可区分）→ ${String(corrupt.action?.message ?? "")}`,
+    );
+    assert.ok(
+      (corrupt.action?.nextSteps ?? []).some((s) => /删除或重建|build:vanilla-registries/.test(s)),
+      JSON.stringify(corrupt.action),
+    );
+  } finally {
+    closeRegistryDbs();
+    if (prevData2 === undefined) delete process.env.MC_SKILL_DATA;
+    else process.env.MC_SKILL_DATA = prevData2;
+    rmSync(corruptData, { recursive: true, force: true });
+  }
 }
 
 function testDatapack() {

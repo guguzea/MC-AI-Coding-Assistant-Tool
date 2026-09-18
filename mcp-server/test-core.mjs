@@ -3325,6 +3325,54 @@ async function testReviewFixes() {
   );
 }
 
+// ── AA 三条修复（sweep81）：primers 相关性门槛 / publish 逐文件+拆分 / preloader 类型单源 ──
+async function testAaThreeFixes() {
+  // ① primers（A2-S2-2）：版本命中不再免检相关性 —— 无关查询不得被「版本 Primer」前置
+  const noise = parseToolText(await searchNeoForgeDocs({ query: "zzz_unrelated_token_xyz", version: "1.20.5" }));
+  assert.ok(
+    !(noise.results ?? []).some((r) => r.source === "primer"),
+    `与查询零相关的版本 Primer 不得被前置（A2-S2-2）→ ${JSON.stringify((noise.results ?? []).slice(0, 3))}`,
+  );
+  const mig = parseToolText(await searchNeoForgeDocs({ query: "primer migration", version: "1.20.5" }));
+  assert.ok(
+    (mig.results ?? []).some((r) => r.source === "primer"),
+    "迁移查询仍须返回 Primer（防一刀切）",
+  );
+
+  // ② publish（A19-S2-6 / S3-4 / S3-8）：逐文件核 + ok/ready 拆分 + 早退带 action
+  const validToml =
+    'modLoader="javafml"\nloaderVersion="[47,)"\nversion="1.0.0"\nlicense="MIT"\n[[mods]]\nmodId="examplemod"\n';
+  const mixed = checkPublishReady({
+    modsToml: validToml,
+    fabricModJson: JSON.stringify({ id: "examplemod", license: "MIT" }), // 缺 version
+  });
+  assert.equal(mixed.ok, false, JSON.stringify(mixed));
+  assert.ok(
+    mixed.errors.some((e) => /fabric\.mod\.json/.test(e)),
+    `缺 version 必须点名文件（逐文件核，A19-S2-6）→ ${JSON.stringify(mixed.errors)}`,
+  );
+  const emptyProj = mkdtempSync(join(tmpdir(), "mc-aa-pub-"));
+  try {
+    const noJar = checkPublishReady({ projectPath: emptyProj, modsToml: validToml });
+    assert.equal(noJar.ok, true, JSON.stringify(noJar));
+    assert.equal(
+      noJar.ready,
+      false,
+      `给了 projectPath 但没扫到正式 jar ⇒ ready:false（A19-S3-8 拆分）→ ${JSON.stringify({ ok: noJar.ok, ready: noJar.ready })}`,
+    );
+  } finally {
+    rmSync(emptyProj, { recursive: true, force: true });
+  }
+  const badPath = checkPublishReady({ projectPath: join(tmpdir(), `mc-aa-not-exist-${process.pid}`) });
+  assert.equal(badPath.ok, false);
+  assert.ok(badPath.action, "早退必须带结构化 action（A19-S3-4 / I-3）");
+
+  // ③ preloader（A1-S3）：出向契约单源（源码形状钉，防再复制）
+  const pre = readFileSync(join(import.meta.dirname, "src", "workers", "preloader.ts"), "utf8");
+  assert.match(pre, /import type \{ WorkerOutMessage \} from "\.\/types\.js"/, "preloader 必须 import 共享出向类型（A1-S3）");
+  assert.ok(!/interface PreloadResult/.test(pre), "本地出向类型副本已删（防再复制）");
+}
+
 async function testPlan2PrimerMdkFabricPorting() {
   const nf1205 = parseToolText(await searchNeoForgeDocs({ query: "primer migration", version: "1.20.5" }));
   assert.equal(nf1205.ok, true, JSON.stringify(nf1205).slice(0, 400));
@@ -3379,6 +3427,32 @@ async function testPlan2PrimerMdkFabricPorting() {
     assert.ok(String(neo1211.url).includes(String(neo1211.ref)), JSON.stringify({ url: neo1211.url, ref: neo1211.ref }));
   } else {
     assert.equal(neo1211.error?.code, "MDK_NOT_PINNED");
+  }
+
+  // Z-1（sweep81 结构化信封）：pin 表**损坏**必须回 MDK_CHECKSUMS_INVALID（含原因 + 修复指引），
+  // 不得与「没有 pin」共用 MDK_NOT_PINNED——否则用户会去查版本号而不是修文件。
+  const corruptSums = mkdtempSync(join(tmpdir(), "mc-skill-mdk-corrupt-"));
+  const sumsPath = join(corruptSums, "mdk-checksums.json");
+  writeFileSync(sumsPath, "{ not valid json !!!");
+  const prevSumsEnv = process.env.MC_SKILL_MDK_CHECKSUMS;
+  try {
+    process.env.MC_SKILL_MDK_CHECKSUMS = sumsPath;
+    const bad = await downloadOfficialMdk({ platform: "neoforge", minecraftVersion: "26.1.2", dryRun: true });
+    assert.equal(bad.ok, false, JSON.stringify(bad).slice(0, 200));
+    assert.equal(
+      bad.error?.code,
+      "MDK_CHECKSUMS_INVALID",
+      `pin 表损坏必须独立错误码，实得 ${JSON.stringify(bad.error)}`,
+    );
+    assert.match(String(bad.error?.message ?? ""), /不可解析/);
+    assert.ok(
+      (bad.nextSteps ?? []).some((s) => /mdk-checksums\.json/.test(s)),
+      JSON.stringify(bad.nextSteps),
+    );
+  } finally {
+    if (prevSumsEnv === undefined) delete process.env.MC_SKILL_MDK_CHECKSUMS;
+    else process.env.MC_SKILL_MDK_CHECKSUMS = prevSumsEnv;
+    rmSync(corruptSums, { recursive: true, force: true });
   }
 
   const { generateNetworkPacket: genPkt } = await import("./dist/generators/index.js");
@@ -7438,6 +7512,7 @@ await testFivePlatformRouting();
 await testThinLoaderAndFabricWiki();
 await testReviewFixes();
 await testPlan2PrimerMdkFabricPorting();
+await testAaThreeFixes(); // AA 三条修复（sweep81）
 await testMdkUnpackFixtures();
 await testUnzipToolProbe();
 await testProjectPathFill();

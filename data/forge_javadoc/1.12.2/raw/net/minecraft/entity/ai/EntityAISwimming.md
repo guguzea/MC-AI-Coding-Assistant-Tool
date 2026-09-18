@@ -1,6 +1,6 @@
 ---
 title: "EntityAISwimming"
-description: ""
+description: "public class EntityAISwimming extends EntityAIBase"
 package: "net/minecraft/entity/ai"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/ai/EntityAISwimming.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # EntityAISwimming
+
+## Class signature
+
+```java
+public class EntityAISwimming extends EntityAIBase
+```
+
+## Constructors
+
+- `public EntityAISwimming( EntityLiving entityIn)`
+
+## Methods
+
+- `public boolean shouldExecute()`
+- `public void updateTask()`

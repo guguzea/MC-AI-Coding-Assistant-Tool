@@ -1,1 +1,16 @@
 # GenLayerRiverMix
+
+## Class signature
+
+```java
+public class GenLayerRiverMix extends GenLayer
+```
+
+## Constructors
+
+- `public GenLayerRiverMix(long p_i2129_1_, GenLayer p_i2129_3_, GenLayer p_i2129_4_)`
+
+## Methods
+
+- `public void initWorldGenSeed(long seed)`
+- `public int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight)`

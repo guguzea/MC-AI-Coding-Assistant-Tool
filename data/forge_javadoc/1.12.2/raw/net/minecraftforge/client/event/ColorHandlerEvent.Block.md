@@ -8,3 +8,11 @@ sourceType: javadoc
 ---
 
 # ColorHandlerEvent.Block
+
+## Constructors
+
+- `public Block( BlockColors blockColors)`
+
+## Methods
+
+- `public BlockColors getBlockColors()`

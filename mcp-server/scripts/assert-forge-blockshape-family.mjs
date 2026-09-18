@@ -53,7 +53,7 @@ const INFO = process.env.MC_SKILL_BLOCKS_GATE_INFO === '1';
 
 /** 7 份 IDE 投影 + `.cursor/agent`（同为投影）：只查源稿，一致性由 assert-skill-mirrors 保证。 */
 const PROJECTION_DIRS = ['.agents', '.claude', '.continue', '.opencode', '.pi', '.trae', '.zcode'];
-const SCAN_EXT = /\.(md|mdc|java)$/;
+const SCAN_EXT = /\.(md|mdc|java|gradle)$/;
 /** 豁免 ①：迁移指南 / 跨版本对照目录（**包内**相对路径前缀，不含 `<平台>/<版本>/` 段）。 */
 const MIGRATION_DIRS = ['knowledge/version-changes', 'knowledge/porting'];
 
@@ -74,6 +74,43 @@ const KNOWN_LEGIT = [
     id: 'mapcolor-call',
     why: 'block-patterns 索引的**跨版本对照表**：1.20 列写 `.mapColor(MapColor.STONE)`（表格本身就该并列两版）',
   },
+  // ── C-1 阶段二三族的合法提及（2026-09-18 首跑门时逐处裁定）──
+  {
+    rel: 'forge/1.12.2/.cursor/rules/09-anti-patterns.mdc',
+    line: 37,
+    id: 'block-noarg',
+    why: '反模式**标题**：教的是「未注册」缺陷，不是无参构造；正文示例是 `new Block(...)`',
+  },
+  {
+    rel: 'forge/1.16.5/AGENTS.md',
+    line: 25,
+    id: 'archives-name-dsl',
+    why: '钉值矛盾档案行：逐字记录 2026-09-11 的修复（`base { archivesName }` → 顶层 `archivesBaseName`）',
+  },
+  {
+    rel: 'forge/1.16.5/knowledge/antipatterns/gradle.md',
+    line: 97,
+    id: 'archives-name-dsl',
+    why: '取证边界段：故意并列 Gradle-7-only 构造，解释钉值自相矛盾（根因文档）',
+  },
+  {
+    rel: 'forge/1.16.5/knowledge/antipatterns/gradle.md',
+    line: 199,
+    id: 'archives-name-dsl',
+    why: '根因段：`base { archivesName }` 需要 Gradle 7+ 正是本档报错根因（根因文档）',
+  },
+  {
+    rel: 'forge/1.16.5/knowledge/antipatterns/gradle.md',
+    line: 204,
+    id: 'archives-name-dsl',
+    why: '❌ 形态示例块：展示「本包 2026-09-11 前的形态」供对照（根因文档）',
+  },
+  {
+    rel: 'forge/1.16.5/scaffold/build.gradle',
+    line: 11,
+    id: 'archives-name-dsl',
+    why: 'scaffold 注释：逐字解释为什么改用顶层 archivesBaseName（修复留痕本身）',
+  },
 ];
 
 const PACKS = [
@@ -81,6 +118,13 @@ const PACKS = [
   { pack: 'forge/1.19.4', kind: 'with-material' },
   { pack: 'forge/1.20.1', kind: 'no-material' },
   { pack: 'forge/1.20.4', kind: 'no-material' },
+  // ── C-1 阶段二（sweep81 收尾）：三族进同一「族 × 区间」框架 ──
+  { pack: 'fabric/1.18.2', kind: 'no-fabrictooltags' },
+  { pack: 'fabric/1.20.1', kind: 'no-fabrictooltags' },
+  { pack: 'fabric/1.21.3', kind: 'no-fabrictooltags' },
+  { pack: 'forge/1.12.2', kind: 'block-noarg-112' },
+  { pack: 'fabric/1.14.4', kind: 'gradle6-no-archivesname' },
+  { pack: 'forge/1.16.5', kind: 'gradle6-no-archivesname' },
 ];
 
 /** 族判据：按 kind 取；`re` 逐行布尔判定（不带 g，避免 lastIndex 残留）。 */
@@ -121,6 +165,56 @@ const RULES = {
       { id: 'mapColorCalls', re: /\.\s*mapColor\s*\(/g },
     ],
   },
+  // C-1 阶段二族 1：`FabricToolTags`（fabric 1.18.2+ 幻影类）。
+  // oracle（2026-09-18，两机制）：① 仓内 loader-api-summaries —— ≤1.17.1 fabric-api 在（1.14.4=7 /
+  // 1.16.5=14 / 1.17.1=14），1.18.2 / 1.20.1 / 1.21.3 全 0；② 上游 —— maven.fabricmc.net javadoc
+  // 0.45.0+1.18 起 `net.fabricmc.fabric.api.tools.FabricToolTags` 标 @Deprecated，
+  // docs.fabricmc.net「工具和武器」口径 = 工具类别归原版物品标签（ItemTags.SWORDS/AXES 例）。
+  'no-fabrictooltags': {
+    banned: [
+      {
+        id: 'fabric-tooltags-removed',
+        re: /FabricToolTags\s*\./,
+        why: '`FabricToolTags` 已从 fabric-api 移除（≤1.17.1 在、1.18.2+ 摘要 0 命中；旧包 0.45+1.18 起 @Deprecated）；工具类别走原版物品标签（官方文档口径）',
+      },
+    ],
+    positive: [
+      { id: 'toolMaterialRef', re: /\bToolMaterial\b/g },
+    ],
+  },
+  // C-1 阶段二族 2：`new Block()` 无参（forge/1.12.2 不存在该重载）。
+  // oracle：本档正解 `new Block(Material.ROCK)`（.cursor/rules/01-registry.mdc:116/:162）+
+  // knowledge/antipatterns/{registry,block}.md 全部带 Material；全仓 `new Block()` 无参 = 0 命中。
+  'block-noarg-112': {
+    banned: [
+      {
+        id: 'block-noarg',
+        re: /(?<![\w$])new\s+Block\s*\(\s*\)/,
+        why: '1.12.2 的 `Block` 构造没有无参重载（本档正解 `new Block(Material.ROCK)`，见 rules/01-registry.mdc）',
+      },
+    ],
+    positive: [
+      { id: 'blockWithMaterial', re: /new\s+Block\s*\(\s*Material\b/g },
+    ],
+  },
+  // C-1 阶段二族 3：`base { archivesName }`（Gradle 7+ DSL）在 Gradle 6.x 档不可用。
+  // oracle：fabric/1.14.4 wrapper 钉 6.9.4（gradle-wrapper.properties:3）且 pack.meta.json:19 记
+  // 2026-09-16 真机 BUILD SUCCESSFUL（改用 archivesBaseName 后）；forge/1.16.5/scaffold/build.gradle:11-13
+  // 注释逐字「FG4 硬拒 Gradle ≥7，而 base.archivesName 是 Gradle 7+ DSL（6.9.4 实测无此属性）」。
+  // 注意：forge/1.15.2 wrapper = Gradle 7.3.3，其 scaffold 用 archivesName 属合法 ⇒ 族按**档**枚举，
+  // 不能按 MC 版本推断（与 with-material/no-material 的分界逻辑同源）。
+  'gradle6-no-archivesname': {
+    banned: [
+      {
+        id: 'archives-name-dsl',
+        re: /(?<![A-Za-z0-9_$])archivesName\b/,
+        why: 'Gradle 6.x（本档 wrapper 钉 6.9.4）没有 `base.archivesName`（Gradle 7+ DSL，6.9.4 实测 Could not find method base()）；用顶层 `archivesBaseName`',
+      },
+    ],
+    positive: [
+      { id: 'archivesBaseName', re: /\barchivesBaseName\b/g },
+    ],
+  },
 };
 /** `no-material` 的合法同名成员（`ArmorMaterial.IRON` …），不得被上条误伤。 */
 const NO_MATERIAL_EXEMPT = /[A-Za-z0-9_$]Material\s*[.]\s*[A-Za-z_$]/g;
@@ -128,13 +222,24 @@ const NO_MATERIAL_EXEMPT = /[A-Za-z0-9_$]Material\s*[.]\s*[A-Za-z_$]/g;
 function collect(dir, out) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
-    if (e.isDirectory()) {
+    // `readdirSync(withFileTypes)` 对 junction/symlink 目录回报 isSymbolicLink() ⇒ TEST_ROOT 投毒
+    // 基建（junction 假根）会被整棵跳过。真实仓库无 symlink，此处 statSync 只影响假根。
+    const isDir = e.isDirectory() || (e.isSymbolicLink() && statIsDir(p));
+    if (isDir) {
       if (PROJECTION_DIRS.includes(e.name)) continue;
       if (p.endsWith(path.join('.cursor', 'agent'))) continue;
       collect(p, out);
     } else if (SCAN_EXT.test(e.name)) {
       out.push(p);
     }
+  }
+}
+
+function statIsDir(p) {
+  try {
+    return fs.statSync(p).isDirectory();
+  } catch {
+    return false;
   }
 }
 
@@ -181,6 +286,14 @@ function selftest() {
     ['no-material', 'bad', 'BlockBehaviour.Properties.of()\n    .mapColor(Material.STONE)\n', 'material-constant'],
     ['no-material', 'good', 'BlockBehaviour.Properties.of()\n    .mapColor(MapColor.STONE)\n', null],
     ['no-material', 'good', 'new Item(new Item.Properties(), ArmorMaterial.IRON)\n', null],
+    ['no-fabrictooltags', 'bad', 'FabricToolTags.PICKAXES.contains(stack.getItem())\n', 'fabric-tooltags-removed'],
+    ['no-fabrictooltags', 'good', 'COPPER(2, 250, 6.0f, 2.0f, 15, () -> Items.COPPER_INGOT);\n', null],
+    ['block-noarg-112', 'bad', 'public static final Block B = new Block();\n', 'block-noarg'],
+    ['block-noarg-112', 'good', 'EXAMPLE_BLOCK = new Block(Material.ROCK)\n', null],
+    ['gradle6-no-archivesname', 'bad', 'base { archivesName = mod_id }\n', 'archives-name-dsl'],
+    ['gradle6-no-archivesname', 'good', 'archivesBaseName = mod_id\n', null],
+    // `archivesBaseName` 不得被 archivesName 规则误伤（子串不同名）
+    ['gradle6-no-archivesname', 'good', 'archivesBaseName = project.archivesBaseName\n', null],
   ];
   let missed = 0;
   for (const [kind, want, text, id] of cases) {

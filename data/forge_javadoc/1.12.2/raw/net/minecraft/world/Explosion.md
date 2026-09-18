@@ -1,6 +1,6 @@
 ---
 title: "Explosion"
-description: ""
+description: "public class Explosion extends java.lang.Object"
 package: "net/minecraft/world"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/Explosion.html"
@@ -8,3 +8,25 @@ sourceType: javadoc
 ---
 
 # Explosion
+
+## Class signature
+
+```java
+public class Explosion extends java.lang.Object
+```
+
+## Constructors
+
+- `public Explosion( World worldIn, Entity entityIn, double x, double y, double z, float size, java.util.List< BlockPos > affectedPositions)`
+- `public Explosion( World worldIn, Entity entityIn, double x, double y, double z, float size, boolean causesFire, boolean damagesTerrain, java.util.List< BlockPos > affectedPositions)`
+- `public Explosion( World worldIn, Entity entityIn, double x, double y, double z, float size, boolean flaming, boolean damagesTerrain)`
+
+## Methods
+
+- `public void doExplosionA()`
+- `public void doExplosionB(boolean spawnParticles)`
+- `public java.util.Map< EntityPlayer , Vec3d > getPlayerKnockbackMap()`
+- `public EntityLivingBase getExplosivePlacedBy()`
+- `public void clearAffectedBlockPositions()`
+- `public java.util.List< BlockPos > getAffectedBlockPositions()`
+- `public Vec3d getPosition()`

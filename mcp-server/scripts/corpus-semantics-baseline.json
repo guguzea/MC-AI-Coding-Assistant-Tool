@@ -1,0 +1,302 @@
+{
+  "_comment": "sweep81 data/** 全树语义读基线（assert-corpus-semantics.mjs 读）：allowedStubs=ratchet（只许降，超即红）；medianFloor 对有 ≥5 篇的树生效。改动须走 MC_SKILL_CORPUS_SEMANTICS_RELEDGER=1 重算并显式提交。",
+  "asOf": "2026-09-18",
+  "totalStubBudget": 197,
+  "trees": {
+    "bedrock_stable/bedrock-docs/stable": {
+      "files": 20,
+      "allowedStubs": 0,
+      "medianFloor": 6794
+    },
+    "fabric_1.14.4/fabric-wiki/1.14.4": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.16.5/fabric-wiki/1.16.5": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.17.1/fabric-wiki/1.17.1": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.18.2/fabric-wiki/1.18.2": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.19.4/fabric-wiki/1.19.4": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.20.1/fabric-wiki/1.20.1": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.20.4/fabric-docs/1.20.4": {
+      "files": 31,
+      "allowedStubs": 0,
+      "medianFloor": 1989
+    },
+    "fabric_1.20.4/fabric-wiki/1.20.4": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.21.1/fabric-docs/1.21.1": {
+      "files": 45,
+      "allowedStubs": 0,
+      "medianFloor": 2155
+    },
+    "fabric_1.21.1/fabric-wiki/1.21.1": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.21.10/fabric-docs/1.21.10": {
+      "files": 79,
+      "allowedStubs": 0,
+      "medianFloor": 2113
+    },
+    "fabric_1.21.10/fabric-wiki/1.21.10": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.21.11/fabric-docs/1.21.11": {
+      "files": 93,
+      "allowedStubs": 0,
+      "medianFloor": 2222
+    },
+    "fabric_1.21.11/fabric-wiki/1.21.11": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.21.3/fabric-wiki/1.21.3": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.21.4/fabric-docs/1.21.4": {
+      "files": 51,
+      "allowedStubs": 0,
+      "medianFloor": 2179
+    },
+    "fabric_1.21.4/fabric-wiki/1.21.4": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_1.21.8/fabric-docs/1.21.8": {
+      "files": 67,
+      "allowedStubs": 0,
+      "medianFloor": 2076
+    },
+    "fabric_1.21.8/fabric-wiki/1.21.8": {
+      "files": 7,
+      "allowedStubs": 0,
+      "medianFloor": 2608
+    },
+    "fabric_26.1.2/fabric-docs/26.1.2": {
+      "files": 100,
+      "allowedStubs": 0,
+      "medianFloor": 2180
+    },
+    "forge_1.12.2/forge-docs/1.12.2": {
+      "files": 57,
+      "allowedStubs": 0,
+      "medianFloor": 2202
+    },
+    "forge_1.13.2/forge-docs/1.13.2": {
+      "files": 43,
+      "allowedStubs": 0,
+      "medianFloor": 2146
+    },
+    "forge_1.14.4/forge-docs/1.14.4": {
+      "files": 45,
+      "allowedStubs": 0,
+      "medianFloor": 2177
+    },
+    "forge_1.15.2/forge-docs/1.15.2": {
+      "files": 40,
+      "allowedStubs": 0,
+      "medianFloor": 2075
+    },
+    "forge_1.16.5/forge-docs/1.16.5": {
+      "files": 41,
+      "allowedStubs": 0,
+      "medianFloor": 1917
+    },
+    "forge_1.17.1/forge-docs/1.17.1": {
+      "files": 41,
+      "allowedStubs": 0,
+      "medianFloor": 1944
+    },
+    "forge_1.18.2/forge-docs/1.18.2": {
+      "files": 33,
+      "allowedStubs": 0,
+      "medianFloor": 2147
+    },
+    "forge_1.19.4/forge-docs/1.19.4": {
+      "files": 39,
+      "allowedStubs": 0,
+      "medianFloor": 2397
+    },
+    "forge_1.20.1/forge-docs/1.20.1": {
+      "files": 70,
+      "allowedStubs": 0,
+      "medianFloor": 2395
+    },
+    "forge_1.20.4/forge-docs/1.20.4": {
+      "files": 70,
+      "allowedStubs": 0,
+      "medianFloor": 2352
+    },
+    "forge_javadoc/1.10.2": {
+      "files": 3254,
+      "allowedStubs": 34,
+      "medianFloor": 229
+    },
+    "forge_javadoc/1.11.2": {
+      "files": 3335,
+      "allowedStubs": 35,
+      "medianFloor": 230
+    },
+    "forge_javadoc/1.12.2": {
+      "files": 4567,
+      "allowedStubs": 47,
+      "medianFloor": 228
+    },
+    "forge_javadoc/1.7.10": {
+      "files": 2464,
+      "allowedStubs": 20,
+      "medianFloor": 253
+    },
+    "forge_javadoc/1.8.9": {
+      "files": 2837,
+      "allowedStubs": 30,
+      "medianFloor": 233
+    },
+    "forge_javadoc/1.9.4": {
+      "files": 3111,
+      "allowedStubs": 30,
+      "medianFloor": 229
+    },
+    "liteloader_1.10.2/liteloader-docs/1.10.2": {
+      "files": 30,
+      "allowedStubs": 0,
+      "medianFloor": 1209
+    },
+    "liteloader_1.12.2/liteloader-docs/1.12.2": {
+      "files": 31,
+      "allowedStubs": 0,
+      "medianFloor": 898
+    },
+    "liteloader_1.8.9/liteloader-docs/1.8.9": {
+      "files": 30,
+      "allowedStubs": 0,
+      "medianFloor": 1209
+    },
+    "modloader_1.2.5/modloader-docs/1.2.5": {
+      "files": 1,
+      "allowedStubs": 0,
+      "medianFloor": 0
+    },
+    "modloader_1.5.2/modloader-docs/1.5.2": {
+      "files": 1,
+      "allowedStubs": 0,
+      "medianFloor": 0
+    },
+    "modloader_1.6.4/modloader-docs/1.6.4": {
+      "files": 1,
+      "allowedStubs": 0,
+      "medianFloor": 0
+    },
+    "neoforge_1.20.4/neoforge-docs/1.20.4": {
+      "files": 61,
+      "allowedStubs": 0,
+      "medianFloor": 3939
+    },
+    "neoforge_1.20.6/neoforge-docs/1.20.6": {
+      "files": 64,
+      "allowedStubs": 0,
+      "medianFloor": 4461
+    },
+    "neoforge_1.21.1/neoforge-docs/1.21.1": {
+      "files": 63,
+      "allowedStubs": 0,
+      "medianFloor": 7129
+    },
+    "neoforge_1.21.10/neoforge-docs/1.21.10": {
+      "files": 75,
+      "allowedStubs": 0,
+      "medianFloor": 7667
+    },
+    "neoforge_1.21.11/neoforge-docs/1.21.11": {
+      "files": 75,
+      "allowedStubs": 0,
+      "medianFloor": 7780
+    },
+    "neoforge_1.21.3/neoforge-docs/1.21.3": {
+      "files": 67,
+      "allowedStubs": 0,
+      "medianFloor": 7320
+    },
+    "neoforge_1.21.5/neoforge-docs/1.21.5": {
+      "files": 72,
+      "allowedStubs": 0,
+      "medianFloor": 7739
+    },
+    "neoforge_1.21.8/neoforge-docs/1.21.8": {
+      "files": 73,
+      "allowedStubs": 0,
+      "medianFloor": 7768
+    },
+    "neoforge_26.1/neoforge-docs/26.1": {
+      "files": 77,
+      "allowedStubs": 0,
+      "medianFloor": 7926
+    },
+    "quilt_1.18.2/quilt-docs/1.18.2": {
+      "files": 4,
+      "allowedStubs": 0,
+      "medianFloor": 0
+    },
+    "quilt_1.19.4/quilt-docs/1.19.4": {
+      "files": 4,
+      "allowedStubs": 0,
+      "medianFloor": 0
+    },
+    "quilt_1.20.1/quilt-docs/1.20.1": {
+      "files": 4,
+      "allowedStubs": 0,
+      "medianFloor": 0
+    },
+    "quilt_1.20.4/quilt-docs/1.20.4": {
+      "files": 4,
+      "allowedStubs": 0,
+      "medianFloor": 0
+    },
+    "quilt_1.21.1/quilt-docs/1.21.1": {
+      "files": 4,
+      "allowedStubs": 0,
+      "medianFloor": 0
+    },
+    "quilt_1.21.11/quilt-docs/1.21.11": {
+      "files": 3,
+      "allowedStubs": 0,
+      "medianFloor": 0
+    },
+    "rift_1.13.2/rift-docs/1.13.2": {
+      "files": 6,
+      "allowedStubs": 1,
+      "medianFloor": 2498
+    }
+  }
+}

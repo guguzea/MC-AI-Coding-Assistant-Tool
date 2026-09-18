@@ -16,6 +16,10 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 import { workerData, parentPort } from "worker_threads";
 import { parseJsonUtf8 } from "../utils/json-utf8.js";
+// AA 修复（sweep81 A1-S3）：出向契约单源化 —— 出向类型真源在共享的 ./types.js
+// （消费端 src/api/index.ts 用的就是它）；本文件此前另写一份逐字段重复的本地副本，
+// 字段漂移不会被编译期发现。
+import type { WorkerOutMessage } from "./types.js";
 
 /**
  * 入站消息唯一契约（D-51）：生产者 src/api/index.ts 发的是 `{ type:"start", timeout, dataDir }`。
@@ -31,35 +35,9 @@ interface PreloadMessage {
   timeout?: number;
 }
 
-interface PreloadResult {
-  type: "ready";
-  /** apiIndex: 直接传解析后的对象（v8 序列化，效率高）。主线程直接使用，无需 JSON.parse */
-  apiIndex: Record<string, unknown>;
-  classNames: string[];
-  /** Trie 扁平数组，仅在剩余时间充足时构建；超时时为 null，改用线性扫描 */
-  trieFlat: unknown;
-  trieSkipped: boolean;
-  elapsed: number;
-  classCount: number;
-}
-
-interface PreloadError {
-  type: "error";
-  errors: string[];
-}
-
-/**
- * D-50：预加载进行中新到的 start 不再被静默丢弃，回一条 ack 说明它已排队。
- * 与 src/workers/types.ts 的 PreloadQueuedMessage 保持一致（主线程目前忽略未识别类型，不会因此改变行为）。
- */
-interface PreloadQueued {
-  type: "queued";
-  /** 当前排队的 start 请求数（只保留最新一份，故恒为 1） */
-  pending: number;
-  elapsedSinceStart: number;
-}
-
-type WorkerOutMessage = PreloadResult | PreloadError | PreloadQueued;
+// 出向消息（ready / error / queued）的类型定义已删 —— 用 import type 的 WorkerOutMessage 单源强制：
+// 见本文件顶部 import 与 src/workers/types.ts（D-50 的排队 ack = PreloadQueuedMessage）。
+// 下方 `parentPort?.postMessage({...} satisfies WorkerOutMessage)` 会让字段漂移在编译期报错。
 
 // ── 数据目录解析（3 策略，按可靠性从高到低）──────────────────────────────
 

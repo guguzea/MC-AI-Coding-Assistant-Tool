@@ -1,6 +1,6 @@
 ---
 title: "ProgressManager"
-description: ""
+description: "Not a fully fleshed out API, may change in future MC versions. However feel free to use and suggest additions."
 package: "net/minecraftforge/fml/common"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/common/ProgressManager.html"
@@ -8,3 +8,25 @@ sourceType: javadoc
 ---
 
 # ProgressManager
+
+## Class signature
+
+```java
+public class ProgressManager extends java.lang.Object
+```
+
+## Constructors
+
+- `public ProgressManager()`
+
+## Methods
+
+- `public static ProgressManager.ProgressBar push(java.lang.String title, int steps)`
+- `public static ProgressManager.ProgressBar push(java.lang.String title, int steps, boolean timeEachStep)`
+- `public static boolean isDisplayVSyncForced()`
+- `public static void pop( ProgressManager.ProgressBar bar)`
+- `public static java.util.Iterator< ProgressManager.ProgressBar > barIterator()`
+
+## Description
+
+Not a fully fleshed out API, may change in future MC versions. However feel free to use and suggest additions.

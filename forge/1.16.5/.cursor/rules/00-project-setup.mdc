@@ -156,9 +156,10 @@ plugins {
 version = mod_version
 group = mod_group_id
 
-base {
-    archivesName = mod_id
-}
+// Gradle 6.9.4（本档 wrapper 钉值）没有 base{} DSL（Gradle 7+，6.9.4 真机实测
+// Could not find method base()）⇒ 用 Gradle 6 认的顶层 archivesBaseName
+// （与 scaffold/build.gradle:13 一致；2026-09-11 改后真机 BUILD SUCCESSFUL）
+archivesBaseName = mod_id
 
 // 官方 1.16.5-36.2.34 MDK build.gradle:19 即 of(8)；上游文档只背书「按 Java 8 编译」
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)

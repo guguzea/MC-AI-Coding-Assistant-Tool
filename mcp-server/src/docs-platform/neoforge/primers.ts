@@ -192,6 +192,11 @@ function scorePrimer(query: string, primer: PrimerEntry): number {
   return score;
 }
 
+/** 非 verHit 的最低相关性（rel 即旧的 s，沿用原 16 分门槛）。 */
+const PRIMER_MIN_REL = 16;
+/** verHit 的最低相关性：≥8 = 至少一个标题/小节标题 token 命中（8 分/个）。 */
+const PRIMER_MIN_REL_VER_HIT = 8;
+
 /** 仅 loader=neoforge 的 Primer 进入 search_neoforge_docs */
 export function searchNeoForgePrimers(args: {
   query: string;
@@ -203,8 +208,13 @@ export function searchNeoForgePrimers(args: {
   const hits: Array<SearchResult & { _s: number }> = [];
   for (const p of primers) {
     const verHit = primerMatchesVersion(p, args.version);
-    const s = scorePrimer(args.query, p) + (verHit ? 20 : 0);
-    if (!verHit && s < 16) continue;
+    const rel = scorePrimer(args.query, p);
+    // AA 修复（sweep81 A2-S2-2）：门槛判在**加分前**的 rel 上。旧式 `if (!verHit && s < 16) continue;`
+    // 在 verHit 时形同虚设（s = rel + 20 ≥ 20 恒成立）⇒ 与查询零相关的版本 Primer（含空查询
+    // 0.2 分兜底路径）会被接住，并被两处调用方（neoforge/index.ts / forge/index.ts）前置到结果顶部。
+    // 现在 verHit 只保留排序加分、不再免检相关性：verHit 也要 ≥8（至少一个标题 token 命中）。
+    if (rel < (verHit ? PRIMER_MIN_REL_VER_HIT : PRIMER_MIN_REL)) continue;
+    const s = rel + (verHit ? 20 : 0);
     hits.push({
       id: p.id,
       version: p.to,

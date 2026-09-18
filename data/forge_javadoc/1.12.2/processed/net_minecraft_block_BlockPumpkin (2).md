@@ -1,1 +1,27 @@
 # BlockPumpkin
+
+## Class signature
+
+```java
+public class BlockPumpkin extends BlockHorizontal
+```
+
+## Constructors
+
+- `protected BlockPumpkin()`
+
+## Methods
+
+- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
+- `public boolean canDispenserPlace( World worldIn, BlockPos pos)`
+- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
+- `public IBlockState withRotation( IBlockState state, Rotation rot)`
+- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
+- `public IBlockState getStateForPlacement( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `public IBlockState getStateFromMeta(int meta)`
+- `public int getMetaFromState( IBlockState state)`
+- `protected BlockStateContainer createBlockState()`
+- `protected BlockPattern getSnowmanBasePattern()`
+- `protected BlockPattern getSnowmanPattern()`
+- `protected BlockPattern getGolemBasePattern()`
+- `protected BlockPattern getGolemPattern()`

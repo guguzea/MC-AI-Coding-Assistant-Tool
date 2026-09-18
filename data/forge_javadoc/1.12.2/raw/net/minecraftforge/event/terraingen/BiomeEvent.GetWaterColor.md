@@ -1,6 +1,6 @@
 ---
 title: "BiomeEvent.GetWaterColor"
-description: ""
+description: "This event is fired when a biome is queried for its water color."
 package: "net/minecraftforge/event/terraingen"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/terraingen/BiomeEvent.GetWaterColor.html"
@@ -8,3 +8,11 @@ sourceType: javadoc
 ---
 
 # BiomeEvent.GetWaterColor
+
+## Constructors
+
+- `public GetWaterColor( Biome biome, int original)`
+
+## Description
+
+This event is fired when a biome is queried for its water color.

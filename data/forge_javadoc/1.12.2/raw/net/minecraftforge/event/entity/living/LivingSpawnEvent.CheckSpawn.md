@@ -1,6 +1,6 @@
 ---
 title: "LivingSpawnEvent.CheckSpawn"
-description: ""
+description: "Fires before mob spawn events. Result is significant: DEFAULT: use vanilla spawn rules ALLOW: allow the spawn DENY: deny the spawn"
 package: "net/minecraftforge/event/entity/living"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/living/LivingSpawnEvent.CheckSpawn.html"
@@ -8,3 +8,18 @@ sourceType: javadoc
 ---
 
 # LivingSpawnEvent.CheckSpawn
+
+## Constructors
+
+- `public CheckSpawn( EntityLiving entity, World world, float x, float y, float z, MobSpawnerBaseLogic spawner)`
+
+## Methods
+
+- `@Deprecated public CheckSpawn( EntityLiving entity, World world, float x, float y, float z, boolean isSpawner)`
+- `@Deprecated public CheckSpawn( EntityLiving entity, World world, float x, float y, float z)`
+- `public boolean isSpawner()`
+- `public MobSpawnerBaseLogic getSpawner()`
+
+## Description
+
+Fires before mob spawn events. Result is significant: DEFAULT: use vanilla spawn rules ALLOW: allow the spawn DENY: deny the spawn

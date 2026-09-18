@@ -1,45 +1,178 @@
 {
-  "_comment": "sweep81 C-2 机读清单骨架：把「审计结论 → 已销账 → 由哪道门兜住」钉成机器可检的三元组，堵 sweep80 §I/§H-1 的根因（发现后没变成门、没销账 ⇒ 4 条 S1 跨 70+ sweep 存活）。本文件由 assert-rule-ledger.mjs 校验；条目只增不删，销账状态变更须显式改这里。",
+  "_comment": "sweep81 C-2 v2（2026-09-18）：审计结论「机读清单 + 逐条销账」。每条不变量 = claim（可证伪）+ author（审计轮+修复轮）+ evidence（散文）+ evidenceRefs（仓库内可解析文件，逐条须存在）+ status；closed 必须带 gates[] 与 closedAt，open 必须带 whyOpen/nextRound。门的存在性与「真跑」（test-scripts.mjs ∪ package.json test 链）由 assert-rule-ledger.mjs 校验；MC_SKILL_LEDGER_VERIFY=1 会把每道门真跑一遍做逐条销账。条目只增不删；状态变更须显式改这里（open → closed 要补 gates/closedAt/evidenceRefs）。",
   "_schema": {
     "id": "唯一标识（与所依赖门的规则 id 对齐最佳）",
     "claim": "被保证的不变量（一句话，可证伪）",
     "author": "结论来源（审计轮次 + 修复轮次）",
-    "evidence": "一手证据（file:line 或可复跑命令）",
-    "status": "closed（已销账且有门）/ open（已登记但还没门）",
-    "gate": "兜住该不变量的门文件名（必须在 mcp-server/scripts/ 下存在，且被 test-scripts.mjs 真跑）"
+    "evidence": "一手证据（散文：外部 oracle / 实测命令 / 计数）",
+    "evidenceRefs": "仓库内证据文件（≥1；逐条做存在性校验；优先 tracked 文件）",
+    "status": "closed（已销账且有门）/ open（已登记，写清 whyOpen + nextRound）",
+    "gates": "兜住该不变量的门文件名数组（≥1；assert-* 在 scripts/ 下，test-* 在 mcp-server/ 根；必须被宿主真跑）",
+    "gate": "v1 单数兼容字段（可选；与 gates[] 合并去重）",
+    "closedAt": "closed 必填（YYYY-MM-DD）",
+    "whyOpen": "open 必填：为什么还没闭合",
+    "nextRound": "open 必填：下一轮从哪里接手"
   },
   "rules": [
     {
       "id": "fabric-phantom-loom-task",
       "claim": "任何平台的规则/文档里都不出现不存在的 Gradle 任务 `./gradlew [clean] loom`",
       "author": "sweep80 G-1/H-1（轮次 9 判 S1，跨 70+ sweep 未修）+ sweep81 R1 修复",
-      "evidence": "上游 docs.fabricmc.net/develop/loom/tasks 无 `loom`；全仓 `.gradle/.kts` 的 `task loom` 定义 = 0；sweep81 已在 235 文件 / 706 处清零，`git grep -n \"gradlew[^ ]* [^ ]*loom\"` 无命中",
+      "evidence": "上游 docs.fabricmc.net/develop/loom/tasks 无 `loom`；全仓 `.gradle/.kts` 的 `task loom` 定义 = 0；sweep81 已在 235 文件 / 706 处清零，C-1 投毒（临时写回 `clean loom`）验证门可红",
+      "evidenceRefs": ["mcp-server/scripts/assert-no-invalid-api-shapes.mjs", "mcp-server/README.md"],
       "status": "closed",
-      "gate": "assert-no-invalid-api-shapes.mjs"
+      "gates": ["assert-no-invalid-api-shapes.mjs"],
+      "closedAt": "2026-09-18"
     },
     {
       "id": "forge-props-shape-family",
       "claim": "BlockBehaviour.Properties 形态按版本区间成立：1.18.2/1.19.4 必须带 Material 且颜色用 .color(MaterialColor)；1.20.1/1.20.4 必须无参且用 .mapColor(MapColor)",
-      "author": "sweep80 §I / O-2 / H-1（B2-#1 跨轮存活）+ sweep81 C-6 建族门",
-      "evidence": "query_api --className='BlockBehaviour$Properties'：1.18.2/1.19.4 of=4 个全 (Material…)/mapColor=0；1.20.1/1.20.4 of=1 个无参/mapColor=3",
+      "author": "sweep80 §I / O-2 / H-1（B2-#1 跨轮存活）+ sweep81 C-6 建族门 + C-1 阶段二扩三族",
+      "evidence": "query_api --className='BlockBehaviour$Properties'：1.18.2/1.19.4 of=4 个全 (Material…)/mapColor=0；1.20.1/1.20.4 of=1 个无参/mapColor=3；门现为 5 族/10 档，含 3×投毒（绿→红→绿）证据",
+      "evidenceRefs": ["mcp-server/scripts/assert-forge-blockshape-family.mjs", "data/forge_1.20.4/mappings/client.txt"],
       "status": "closed",
-      "gate": "assert-forge-blockshape-family.mjs"
+      "gates": ["assert-forge-blockshape-family.mjs"],
+      "closedAt": "2026-09-18"
     },
     {
       "id": "forge-1204-no-block-material",
       "claim": "forge/1.20.4 源稿不引用 1.20+ 已移除的方块 Material",
       "author": "sweep80 F145 门 + sweep81 C-6 并入族门",
       "evidence": "data/forge_1.20.4/mappings/client.txt 里 block.material = 0；forge/1.20.1/knowledge/version-changes/1.20.x.md:36「1.20+ 已移除 Material」",
+      "evidenceRefs": ["mcp-server/scripts/assert-forge-1204-material.mjs", "forge/1.20.1/knowledge/version-changes/1.20.x.md"],
       "status": "closed",
-      "gate": "assert-forge-1204-material.mjs"
+      "gates": ["assert-forge-1204-material.mjs", "assert-forge-blockshape-family.mjs"],
+      "closedAt": "2026-09-18"
     },
     {
       "id": "forge-1182-registry-consts",
       "claim": "forge/1.18.2 注册表常量下划线形态（replace 形绝迹 + hold 形计数钉值 + 投影零漂移）",
       "author": "sweep80 F146 门 + A21 复核",
       "evidence": "assert-forge-1182-registry-consts.mjs 的 LEDGER.holds 钉值 + --selftest 三记投毒",
+      "evidenceRefs": ["mcp-server/scripts/assert-forge-1182-registry-consts.mjs"],
       "status": "closed",
-      "gate": "assert-forge-1182-registry-consts.mjs"
+      "gates": ["assert-forge-1182-registry-consts.mjs"],
+      "closedAt": "2026-09-18"
+    },
+    {
+      "id": "update-apply-inband-fail-okfalse",
+      "claim": "mc_skill_update action=apply 的带内失败一律 ok:false（CLI 不得出现 success:true + rc=0 的静默失败）",
+      "author": "sweep81 G-1（C-7 门②过程中新发现，用户裁定修复）",
+      "evidence": "失败六分支补 ok:false（dataBlocked / tooling 合并失败 / 缺 data 资产 / 缺 checksum / writeFailed / data 失败）；门⑨走真实链路 mcSkillUpdate→applyDataUpdate 并用 isToolFailure 复核判定链",
+      "evidenceRefs": ["mcp-server/src/update/index.ts", "mcp-server/test-update.mjs"],
+      "status": "closed",
+      "gates": ["test-update.mjs"],
+      "closedAt": "2026-09-18"
+    },
+    {
+      "id": "data-root-env-authoritative",
+      "claim": "MC_SKILL_DATA 显式声明即权威：目录缺失（半交换态）时不得回退 <cwd>/data",
+      "author": "sweep81 G-2（C-7 门②夹具调试发现，用户裁定修复）",
+      "evidence": "getDataDirFromEnv 去掉 existsSync 门槛；门⑩在子进程隔离断言「指向不存在目录仍按它解析、不回退 <cwd>/data」",
+      "evidenceRefs": ["mcp-server/src/utils/path.ts", "mcp-server/test-update.mjs"],
+      "status": "closed",
+      "gates": ["test-update.mjs"],
+      "closedAt": "2026-09-18"
+    },
+    {
+      "id": "github-host-single-source",
+      "claim": "GitHub 下载/HTTPS 两条链共用同一份精确 host 白名单（无 .githubusercontent.com 后缀通配）",
+      "author": "sweep81 A-8 BB-4（清单 + 用户裁定「收掉通配」）",
+      "evidence": "谓词下沉 hosts.ts 单源；门⑪：5 个通配 host 两侧一致拒绝、4 个精确 host 仍接受、download.isAllowedDownloadUrl === hosts 同名函数、协议门先于 host 门",
+      "evidenceRefs": ["mcp-server/src/update/hosts.ts", "mcp-server/test-update.mjs"],
+      "status": "closed",
+      "gates": ["test-update.mjs"],
+      "closedAt": "2026-09-18"
+    },
+    {
+      "id": "registry-open-degrade-envelope",
+      "claim": "registry sqlite 缺失/损坏区分呈现：损坏 ⇒ DATA_UNAVAILABLE 载荷点名「损坏」+ 重建指引，不得裸抛、不得冒充「没建索引」",
+      "author": "sweep81 A-7 Y-1（结构化信封部分，本轮补完）",
+      "evidence": "openRegistryDb 层探测查询拦惰性损坏（errcode 26 在首查才抛）+ 失败句柄 close；queryRegistry 拆「损坏」载荷；测试：损坏 sqlite 与缺索引分报",
+      "evidenceRefs": ["mcp-server/src/registry/store.ts", "mcp-server/src/registry/index.ts", "mcp-server/test-wave-bcd.mjs"],
+      "status": "closed",
+      "gates": ["test-wave-bcd.mjs"],
+      "closedAt": "2026-09-18"
+    },
+    {
+      "id": "mdk-checksums-envelope",
+      "claim": "mdk-checksums.json 损坏 ⇒ MDK_CHECKSUMS_INVALID（含修复指引），不得冒充 MDK_NOT_PINNED",
+      "author": "sweep81 A-7 Z-1（结构化信封部分，本轮补完）",
+      "evidence": "loadMdkChecksums 返回 {entries, invalid?}；resolveMdkEntry 透传；downloadOfficialMdk 独立错误码 + nextSteps；测试：损坏 pin 表独立错误码",
+      "evidenceRefs": ["mcp-server/src/mdk/index.ts", "mcp-server/test-core.mjs"],
+      "status": "closed",
+      "gates": ["test-core.mjs"],
+      "closedAt": "2026-09-18"
+    },
+    {
+      "id": "aa-primer-relevance-gate",
+      "claim": "版本命中的迁移 Primer 不再免检相关性（verHit 只保留排序加分）",
+      "author": "sweep80 A2-S2-2（CHANGED-SINCE 重写）+ sweep81 AA 修复",
+      "evidence": "门槛判在加分前 rel 上（verHit ≥8 / 非 verHit 16）；实测无关查询 primer=0、迁移查询 primer=8；门 testAaThreeFixes 双向钉",
+      "evidenceRefs": ["mcp-server/src/docs-platform/neoforge/primers.ts", "mcp-server/test-core.mjs"],
+      "status": "closed",
+      "gates": ["test-core.mjs"],
+      "closedAt": "2026-09-18"
+    },
+    {
+      "id": "aa-publish-per-file-and-split",
+      "claim": "check_publish_ready 逐文件核 license/version；早退带 action；ok（硬项）与 ready（含正式 jar）语义拆分",
+      "author": "sweep80 A19-S2-6/S3-4/S3-8 + sweep81 AA 修复",
+      "evidence": "混合缺 version 报错点名文件；坏 projectPath 回 action=INVALID_INPUT；给了 projectPath 但无 jar ⇒ ok:true/ready:false；门 testAaThreeFixes",
+      "evidenceRefs": ["mcp-server/src/publish/index.ts", "mcp-server/test-core.mjs"],
+      "status": "closed",
+      "gates": ["test-core.mjs"],
+      "closedAt": "2026-09-18"
+    },
+    {
+      "id": "aa-preloader-out-types-single-source",
+      "claim": "preloader 出向消息类型与消费端单源（字段漂移改为编译期报错）",
+      "author": "sweep80 A1-S3（CHANGED-SINCE 重写）+ sweep81 AA 修复",
+      "evidence": "删本地 PreloadResult/PreloadError/PreloadQueued/union，改 import type { WorkerOutMessage } from \"./types.js\"；源码形状钉进 testAaThreeFixes",
+      "evidenceRefs": ["mcp-server/src/workers/preloader.ts", "mcp-server/src/workers/types.ts"],
+      "status": "closed",
+      "gates": ["test-core.mjs"],
+      "closedAt": "2026-09-18"
+    },
+    {
+      "id": "javadoc-parse-root-cause",
+      "claim": "forge_javadoc 正文抽取以无属性 <pre> 兜底（Java 8 javadoc 的详情签名无 class 属性），重建后 raw 与 processed 对账同源",
+      "author": "sweep81 D 批（前置门推翻「上游没正文」，定位仓内解析口径根因）+ 重抓 15,001 页",
+      "evidence": "旧 parseClassPage 只匹配带 class 的 <pre> ⇒ methodSigs 恒空；重抓器按 <h4>名</h4><pre>签名</pre> 抽取（无属性兜底），5 档改写 14,971 / 跳过 30 / 失败 0 / 含签名 94.6%；保真门 G3 与 validate-forge-build rc=0",
+      "evidenceRefs": ["mcp-server/scripts/assert-corpus-faithfulness.mjs", "mcp-server/test-assistant-gaps.mjs"],
+      "status": "closed",
+      "gates": ["assert-corpus-faithfulness.mjs"],
+      "closedAt": "2026-09-18"
+    },
+    {
+      "id": "corpus-semantics-all-trees",
+      "claim": "data/** 每棵 processed 树都有语义层判据：逐树标题桩 ≤ 基线 ratchet、正文中位 ≥ 地板、树必须登记（新树即红）",
+      "author": "sweep81（用户口径：data/** 全树语义读缺口，本轮闭合）",
+      "evidence": "首跑即抓到 forge_javadoc/1.12.2 整树 4,567 篇空壳（100% stub/median=0）⇒ 重抓该树后回归同级残桩（~1%）；基线 corpus-semantics-baseline.json 由实测生成，ratchet 只许降",
+      "evidenceRefs": ["mcp-server/scripts/assert-corpus-semantics.mjs", "mcp-server/scripts/corpus-semantics-baseline.json"],
+      "status": "closed",
+      "gates": ["assert-corpus-semantics.mjs"],
+      "closedAt": "2026-09-18"
+    },
+    {
+      "id": "forge-javadoc-1122-orphans-deletion",
+      "claim": "forge_javadoc/1.12.2 的 914 份 processed 孤儿与 raw 侧 914 份重名件成对删除后，A1（raw==processed）口径同步改 4567→3653",
+      "author": "sweep81 D 批索引器折叠历史重复件的残余（删除待用户执行）",
+      "evidence": "探针实测：索引引用 3,653 / 盘上 4,567 / 孤儿 914 / 悬空 0；raw 侧重名「Foo (2).md」= 恰好 914；完整清单 DELETE-LIST-1.12.2-orphans.txt",
+      "evidenceRefs": ["mcp-server/scripts/assert-corpus-faithfulness.mjs"],
+      "status": "open",
+      "whyOpen": "删除属 data/ 交付面变更，须用户执行；且只删一边会让 A1 当场红（必须先定成对删除 + 台账改数）",
+      "nextRound": "CLEANUP-list.md §1.5（含成对删除条件与 LEDGER_TREES 改数）"
+    },
+    {
+      "id": "corpus-sectionless-classification",
+      "claim": "`sectionless`（无 `## ` 小节）当前只打印不判红——liteloader 90% / bedrock 100% / forge-docs 最高 21% 疑似体例差异，未逐族定性前不得升级为判据",
+      "author": "sweep81（全树语义读首跑观测）",
+      "evidence": "语义审计实测：liteloader 27/30、bedrock 20/20、forge-docs 12/57 等无 ## 但正文中位 1496–11,323 字符（正文厚，非空壳）",
+      "evidenceRefs": ["mcp-server/scripts/assert-corpus-semantics.mjs"],
+      "status": "open",
+      "whyOpen": "逐族体例未定性：需要逐树抽样确认「无 ##」是采集口径还是文档体例，才能决定是否升级为判据",
+      "nextRound": "后续轮：逐族抽样定性（优先 liteloader/bedrock），定完把结论并入 assert-corpus-semantics 或写进其诚实边界"
     }
   ]
 }

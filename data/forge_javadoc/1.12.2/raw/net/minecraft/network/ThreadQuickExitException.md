@@ -1,6 +1,6 @@
 ---
 title: "ThreadQuickExitException"
-description: ""
+description: "public final class ThreadQuickExitException extends java.lang.RuntimeException"
 package: "net/minecraft/network"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/network/ThreadQuickExitException.html"
@@ -8,3 +8,13 @@ sourceType: javadoc
 ---
 
 # ThreadQuickExitException
+
+## Class signature
+
+```java
+public final class ThreadQuickExitException extends java.lang.RuntimeException
+```
+
+## Methods
+
+- `public java.lang.Throwable fillInStackTrace()`

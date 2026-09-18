@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # EnumFaceDirection.Constants
+
+## Constructors
+
+- `public Constants()`

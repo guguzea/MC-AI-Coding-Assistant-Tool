@@ -1,6 +1,6 @@
 ---
 title: "DecorateBiomeEvent.Post"
-description: ""
+description: "This event is fired after a chunk is decorated with a biome feature."
 package: "net/minecraftforge/event/terraingen"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/terraingen/DecorateBiomeEvent.Post.html"
@@ -8,3 +8,15 @@ sourceType: javadoc
 ---
 
 # DecorateBiomeEvent.Post
+
+## Constructors
+
+- `public Post( World world, java.util.Random rand, ChunkPos chunkPos)`
+
+## Methods
+
+- `@Deprecated public Post( World world, java.util.Random rand, BlockPos pos)`
+
+## Description
+
+This event is fired after a chunk is decorated with a biome feature.

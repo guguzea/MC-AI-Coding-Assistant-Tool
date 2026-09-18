@@ -1,6 +1,6 @@
 ---
 title: "Constants.AttributeModifierOperation"
-description: ""
+description: "The operation used for Attribute modifier operations, AttributeModifier(String, double, int) Can be found at ModifiableAttributeInstance.computeValue() The total value starts with the base value. Orde"
 package: "net/minecraftforge/common/util"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/common/util/Constants.AttributeModifierOperation.html"
@@ -8,3 +8,11 @@ sourceType: javadoc
 ---
 
 # Constants.AttributeModifierOperation
+
+## Constructors
+
+- `public AttributeModifierOperation()`
+
+## Description
+
+The operation used for Attribute modifier operations, AttributeModifier(String, double, int) Can be found at ModifiableAttributeInstance.computeValue() The total value starts with the base value. Orde

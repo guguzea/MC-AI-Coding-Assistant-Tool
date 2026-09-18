@@ -1,6 +1,6 @@
 ---
 title: "EntityEnderPearl"
-description: ""
+description: "public class EntityEnderPearl extends EntityThrowable"
 package: "net/minecraft/entity/item"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/item/EntityEnderPearl.html"
@@ -8,3 +8,22 @@ sourceType: javadoc
 ---
 
 # EntityEnderPearl
+
+## Class signature
+
+```java
+public class EntityEnderPearl extends EntityThrowable
+```
+
+## Constructors
+
+- `public EntityEnderPearl( World worldIn)`
+- `public EntityEnderPearl( World worldIn, EntityLivingBase throwerIn)`
+- `public EntityEnderPearl( World worldIn, double x, double y, double z)`
+
+## Methods
+
+- `public static void registerFixesEnderPearl( DataFixer fixer)`
+- `protected void onImpact( RayTraceResult result)`
+- `public void onUpdate()`
+- `public Entity changeDimension(int dimensionIn, ITeleporter teleporter)`

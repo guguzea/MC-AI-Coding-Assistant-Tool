@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # ImpossibleTrigger.Instance
+
+## Constructors
+
+- `public Instance()`

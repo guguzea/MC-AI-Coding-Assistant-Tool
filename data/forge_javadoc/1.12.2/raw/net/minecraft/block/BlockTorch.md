@@ -1,6 +1,6 @@
 ---
 title: "BlockTorch"
-description: ""
+description: "public class BlockTorch extends Block"
 package: "net/minecraft/block"
 version: "1.12.2"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/block/BlockTorch.html"
@@ -8,3 +8,34 @@ sourceType: javadoc
 ---
 
 # BlockTorch
+
+## Class signature
+
+```java
+public class BlockTorch extends Block
+```
+
+## Constructors
+
+- `protected BlockTorch()`
+
+## Methods
+
+- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
+- `public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
+- `public boolean isOpaqueCube( IBlockState state)`
+- `public boolean isFullCube( IBlockState state)`
+- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
+- `public IBlockState getStateForPlacement( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
+- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `protected boolean onNeighborChangeInternal( World worldIn, BlockPos pos, IBlockState state)`
+- `protected boolean checkForDrop( World worldIn, BlockPos pos, IBlockState state)`
+- `public void randomDisplayTick( IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
+- `public IBlockState getStateFromMeta(int meta)`
+- `public BlockRenderLayer getBlockLayer()`
+- `public int getMetaFromState( IBlockState state)`
+- `public IBlockState withRotation( IBlockState state, Rotation rot)`
+- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
+- `protected BlockStateContainer createBlockState()`
+- `public BlockFaceShape getBlockFaceShape( IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)`

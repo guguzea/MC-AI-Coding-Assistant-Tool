@@ -8,3 +8,7 @@ sourceType: javadoc
 ---
 
 # TickTrigger.Instance
+
+## Constructors
+
+- `public Instance()`
