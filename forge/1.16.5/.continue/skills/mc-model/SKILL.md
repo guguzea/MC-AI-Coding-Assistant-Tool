@@ -7,16 +7,33 @@ dependencies: []
 mappings: mcp
 ---
 
-# mc-model
+# mc-model（1.16.5）
 
-> Wave D 技能骨架（forge 1.16.5）。详细规则见对应 `.cursor/rules/` 与 MCP `search_forge_docs` / 专题工具。
+> 一手来源：`forge/1.16.5/knowledge/common/resourcepack-format.md`（方块状态/方块模型/物品模型节 + 「Forge 模型层叠」节）；进一步语料页：`data/forge_1.16.5/forge-docs/1.16.5/processed/blocks_blocks.md`、`blocks_states.md`、`datagen_modelproviders.md`。
 
-## 快速入口
+## Decision Flow
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`forge/1.16.5/knowledge/antipatterns/`
+```
+→ 手写 JSON → blockstates + models（assets/<namespace>/ 下，本技能）
+→ 批量生成模型 → data generation（语料 datagen_modelproviders 页）
+→ 同一模型多份贴图/分层 → 见速查「Forge 模型层叠」节
+→ 生成骨架代码 → generate_model MCP 工具
+```
+
+## 模型 JSON 速写（已核实）
+
+- 方块模型：`parent`（如 `block/cube_all`）+ `textures`；物品模型：`parent` 指向方块模型或 `item/generated` 系。
+- blockstate：`variants` 按 `属性=值` 串命中模型。
+- Forge 模型层叠形状见速查专节。
+
+## 反模式
+
+- 纹理路径含大写字母（`block/MyBlock.png` → `block/myblock.png`）。
+- lang 键分隔符用 `.` 连 namespace（应 `item.examplemod.my_item`）。
+- 物品模型用 `minecraft:block/my_block` 但没定义 blockstates。
+- `pack_format` 注意：资源面 pack_format 6（1.18 前与数据包共用）。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 完整 JSON 形状：`forge/1.16.5/knowledge/common/resourcepack-format.md`。
+- 骨架生成：`generate_model`；反模式库：`forge/1.16.5/knowledge/antipatterns/`。
