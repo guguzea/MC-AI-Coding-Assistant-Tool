@@ -1,0 +1,84 @@
+{
+  "total": 867,
+  "banner": 222,
+  "noPascal": 94,
+  "bySkill": {
+    "mc-advancement": {
+      "banner": 13,
+      "noPascal": 0
+    },
+    "mc-ai": {
+      "banner": 13,
+      "noPascal": 13
+    },
+    "mc-datapack": {
+      "banner": 13,
+      "noPascal": 13
+    },
+    "mc-dimension": {
+      "banner": 13,
+      "noPascal": 0
+    },
+    "mc-effect": {
+      "banner": 13,
+      "noPascal": 0
+    },
+    "mc-enchantment": {
+      "banner": 13,
+      "noPascal": 13
+    },
+    "mc-energy": {
+      "banner": 13,
+      "noPascal": 0
+    },
+    "mc-gametest": {
+      "banner": 7,
+      "noPascal": 0
+    },
+    "mc-multiblock": {
+      "banner": 13,
+      "noPascal": 13
+    },
+    "mc-potion": {
+      "banner": 13,
+      "noPascal": 0
+    },
+    "mc-resourcepack": {
+      "banner": 13,
+      "noPascal": 13
+    },
+    "mc-structure": {
+      "banner": 13,
+      "noPascal": 0
+    },
+    "mc-villager": {
+      "banner": 13,
+      "noPascal": 0
+    },
+    "mc-weather": {
+      "banner": 13,
+      "noPascal": 0
+    },
+    "mc-command": {
+      "banner": 10,
+      "noPascal": 9
+    },
+    "mc-loottable": {
+      "banner": 10,
+      "noPascal": 0
+    },
+    "mc-model": {
+      "banner": 10,
+      "noPascal": 10
+    },
+    "mc-renderer": {
+      "banner": 6,
+      "noPascal": 0
+    },
+    "mc-worldgen": {
+      "banner": 10,
+      "noPascal": 10
+    }
+  },
+  "_comment": "骨架技能普查基线（口径见 assert-skill-skeleton-census.mjs 头注释）；只由 MC_SKILL_SKELETON_RELEDGER=1 重算，禁止手改数字；5-B 补正使计数只降不升，簇消失=补正完成"
+}

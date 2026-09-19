@@ -36,7 +36,7 @@ ddfff1d83adca54ac44fe70a6f3b85d3033f0e3a）。
 | StreamCodec / type() | 不要（本档用 write/id + FriendlyByteBuf 构造器） |
 | SimpleChannel / IMessage / newSimpleChannel | **禁止** |
 
-网络类名来源：`1.20.4-neoforge.json`（mappingsVersion: `official-1.20.4` / `parchment-1.20.4-2024.04.14`）。本库无 `networking/payload` 文档页时仍以 jar 为准。
+网络类名来源：`1.20.4-neoforge.json`（mappingsVersion: `official-1.20.4` / `parchment-1.20.4-2024.04.14`）+ `networking_payload.md` 文档页（已入库，W5-2 裁定 1-A 更正：原「本库无 networking/payload 文档页」不成立）。两者冲突时以文档页为准，页面未覆盖的以 jar 为准。
 
 ## 附加数据（Data Attachments）
 
@@ -70,6 +70,6 @@ ddfff1d83adca54ac44fe70a6f3b85d3033f0e3a）。
 | 编号 | 对照 URL | 抓取日 | 结论 |
 | 03 | https://docs.neoforged.net/docs/1.20.4/items/ | 2026-08-16 | 已按该版文档改写 |
 | 04 | — | — | 无独立 entities 页（DOC_NOT_FOUND）；04-entity 为 stub |
-| 06 | — | — | payload 页 DOC_NOT_FOUND；网络 API 以 `1.20.4-neoforge.json` jar 反编译为准 |
+| 06 | https://docs.neoforged.net/docs/1.20.4/networking/payload/ | — | payload 页已入库（`networking_payload.md`；W5-2 裁定 1-A 更正，原「DOC_NOT_FOUND」不成立）；网络 API 结论 = 页面 + `1.20.4-neoforge.json` jar 双源 |
 | 08 | https://docs.neoforged.net/docs/1.20.4/concepts/sides/ | 2026-08-16 | 已按该版文档改写（MDK ClientModEvents；payload 默认网络线程） |
 

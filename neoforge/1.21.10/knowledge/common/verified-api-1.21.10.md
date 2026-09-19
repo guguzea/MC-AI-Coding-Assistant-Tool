@@ -11,9 +11,9 @@
 | ModConfigSpec | misc/config |
 | AttachmentType / Data Attachments | datastorage/attachments |
 | BlockEntity / BlockEntityType.Builder | blockentities |
-| MenuType | gui/menus |
+| MenuType | inventories/menus |
 | GatherDataEvent / RecipeProvider / LanguageProvider | resources |
-| DataMapType / RegisterDataMapTypesEvent | datamaps |
+| DataMapType / RegisterDataMapTypesEvent | resources/server/datamaps |
 | @SubscribeEvent / LivingJumpEvent | concepts/events |
 | DeferredRegister.Entities / createEntities | entities |
 | RegisterPayloadHandlersEvent + PayloadRegistrar（playBidirectional 只传服务端 handler） | networking/payload |

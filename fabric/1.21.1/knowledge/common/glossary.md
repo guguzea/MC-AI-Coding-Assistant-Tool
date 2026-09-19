@@ -4,7 +4,7 @@
 
 ### Yarn
 
-Minecraft 官方服务端使用 Mojang 名称（混淆名），但模组需要可读的命名。
+Minecraft 官方名称是 Mojang 官方可读名（mojmap），但模组生态也常用社区维护的可读命名。
 Fabric 社区维护的 **Yarn** 项目提供官方名称到可读名称的映射。
 
 **格式**：`class_XXXXX` / `method_XXXXX` / `field_XXXXX`

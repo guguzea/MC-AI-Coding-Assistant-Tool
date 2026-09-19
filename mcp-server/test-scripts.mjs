@@ -1979,6 +1979,12 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-lib-census-counts.mjs",
     // 2026-09-19 W3-4 路线 A：qsl-verified 语料派生件必须与其声明复制源归一化一致（F115 + 路线 A）。
     "./scripts/assert-qsl-verified-sync.mjs",
+    // 2026-09-19 W3-3：glossary 的 mojang 行不得再写成混淆名（否定感知判别，21 份 glossary）。
+    "./scripts/assert-glossary-mojmap-face.mjs",
+    // 2026-09-19 W5-1：规则内「见本文件「X」」引文的 X 必须存在（621 份 survey，围栏感知 + KNOWN 豁免）。
+    "./scripts/assert-rule-internal-refs.mjs",
+    // 2026-09-19 W5-2 裁定 5-B：骨架技能口径 2 普查棘轮（补正使计数只降不升）。
+    "./scripts/assert-skill-skeleton-census.mjs",
   ]) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE], {

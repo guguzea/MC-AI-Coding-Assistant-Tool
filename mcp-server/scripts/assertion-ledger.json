@@ -323,6 +323,106 @@
       "status": "closed",
       "gates": ["assert-qsl-verified-sync.mjs", "assert-rules-match-tool.mjs", "assert-index-consistency.mjs", "assert-corpus-semantics.mjs"],
       "closedAt": "2026-09-19"
+    },
+    {
+      "id": "networking-request-reply-compile-clean",
+      "claim": "forge/{1.17.1,1.19.4,1.20.1,1.20.4} 的「双向 Request-Reply」示例按 SimpleImpl 契约自洽：MyRequest 类内必有 (FriendlyByteBuf) 构造器（decoder 位合法）、handler 包进 public static class MyRequestHandler 并写 MyRequestHandler::handleRequest（裸静态 MyRequest::handleRequest 不得复活）；1.18.2 无此块不入 kind；1.13.2 合法形态（显式 PacketBuffer 构造器 + MyMessage::new）不误伤",
+      "author": "原审查 A6/计划 v2 W3-1 + 2026-09-19 执行代理修复（爆炸半径 4 档 × 8 宿主 = 32 件已重投影）",
+      "evidence": "四档源稿逐档修复（类内 buf 构造器 + MyRequestHandler 包装）并 sync-skills.ps1 重投影；assert-forge-blockshape-family 新增 kind networking-decoder-noctor（banned=裸 MyRequest::handleRequest——正则不含 Handler 前缀故不误伤修复形态；positive=MyRequest(FriendlyByteBuf 计数为 0 即门瞎）+ selftest 3 例（含 1.13.2 :142 合法对照应绿）；门 --selftest 与真跑全绿；assert-skill-mirrors 0 漂移",
+      "evidenceRefs": ["forge/1.20.1/.cursor/rules/06-networking.mdc", "forge/1.13.2/.cursor/rules/06-networking.mdc", "mcp-server/scripts/assert-forge-blockshape-family.mjs"],
+      "status": "closed",
+      "gates": ["assert-forge-blockshape-family.mjs", "assert-skill-mirrors.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "gui-clientsetup-mod-bus",
+      "claim": "forge/{1.15.2..1.20.4} 七档的 ClientSetup（订阅 FMLClientSetupEvent 等 Mod 总线生命周期事件）注解必须带 bus = Mod.EventBusSubscriber.Bus.MOD（1.14.4:100 全称形态）；Menu 示例必须双构造器（1.17.1/1.19.4/1.20.1/1.20.4 补 (int, Inventory)，1.18.2 工厂改调 2 参构造）；1.13.2:120 KeyInputEvent 是游戏总线事件，无 bus 属合法、不入 kind",
+      "author": "原审查 A7/计划 v2 W3-2 + 2026-09-19 执行代理修复（含 1.15.2 mc-entity/mc-particle/mc-gui、1.16.5–1.20.4 mc-gui、1.13.2 08-client-server:93、code-patterns 同串件，逐件判定）",
+      "evidence": "七档 10-gui + 连带技能件逐件补 bus（1.13.2:120 保持原样）并重投影；1.18.2 的工厂 lambda 保留 (id, inv, player) 签名改调 2 参构造（原缺陷 = 把 Player 传进 FriendlyByteBuf 形参）；assert-forge-blockshape-family 新增 kind gui-clientsetup-needs-modbus（banned=缺 bus 精确串含缩进变体；positive=busMod 计数为 0 即门瞎）+ selftest 3 例（含 1.14.4 全称应绿）；门 --selftest 与真跑全绿；assert-skill-mirrors 0 漂移",
+      "evidenceRefs": ["forge/1.20.1/.cursor/rules/10-gui.mdc", "forge/1.14.4/.cursor/rules/10-gui.mdc", "forge/1.18.2/.cursor/rules/10-gui.mdc", "mcp-server/scripts/assert-forge-blockshape-family.mjs"],
+      "status": "closed",
+      "gates": ["assert-forge-blockshape-family.mjs", "assert-skill-mirrors.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "worldgen-task-no-fake-coverage",
+      "claim": "mc-worldgen task 不再承诺注入 rules:[\"07\"]（57 棵规则树 07 正文 0 worldgen token = 假覆盖）：TASK_SPECS 为 rules:[]，各档 mc-worldgen SKILL 头部带「本技能不含已核实签名，一律改口 search_*_docs 的 worldgen_* 页」披露；Fabric 侧已有真签名的技能不受影响",
+      "author": "原审查§4 假覆盖 + 2026-09-19 用户裁定 4-C（保留 task、摘承诺、加披露）",
+      "evidence": "session.ts TASK_SPECS 改 rules:[]（带裁定注释）；各档 .cursor/skills/mc-worldgen/SKILL.md 头部加披露并重投影（forge/neoforge 全档 + 命令镜像）；test-platform-pack 全绿；1.21.10 语料含 worldgen_biomemodifier.md（corpus 有 rules 无，披露点名改口目标）",
+      "evidenceRefs": ["mcp-server/src/platform-pack/session.ts", "forge/1.20.1/.cursor/skills/mc-worldgen/SKILL.md", "data/neoforge_1.21.10/neoforge-docs/1.21.10/processed/worldgen_biomemodifier.md"],
+      "status": "closed",
+      "gates": ["test-platform-pack.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "modloader-125-152-no-substitution",
+      "claim": "modloader 1.2.5 / 1.5.2 的规则树 + 语料虽存在但未建 ready 档：根 AGENTS 第 7 步明写「禁止按 1.6.4 顶替」，且 modloader 1.6.4 的 session 载荷带同款警示（6-B 止血；审后是否升 ready 另议）",
+      "author": "原审查§4 路由缺口 + 2026-09-19 用户裁定 6-B 止血",
+      "evidence": "根 AGENTS.md 第 7 步新增裁定块（1.2.5/1.5.2 未建 ready 档、PACK_NOT_FOUND、BaseMod 形态随版本未核实）；session.ts 在 platform=modloader && minecraftVersion=1.6.4 时 push 同款 warning；test-platform-pack 全绿；A 升级路径 = 逐档审规则横幅后注册 ready",
+      "evidenceRefs": ["AGENTS.md", "mcp-server/src/platform-pack/session.ts"],
+      "status": "closed",
+      "gates": ["test-platform-pack.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "bedrock-format-version-acceptance-frozen",
+      "claim": "validate_addon_manifest / generate_addon_manifest 的 format_version 接受面维持现状（整数形与 beta 串收；semver 形如 \"3.0.1\" 有意拒绝），规则 01 明写「semver 形未核实，以 Learn pack-manifest 现页为准」——官方逐字语义核实前不放行（7-B）",
+      "author": "原审查§3（拒官方合法 format_version 3 semver）+ 2026-09-19 用户裁定 7-B 维持现状 + 文档化",
+      "evidence": "bedrock/.cursor/rules/01-manifest.mdc 八宿主同步裁定段（3 是 Preview/semver 字符串版本；TODO(未核实) 口径保留）；工具行为零改动 ⇒ 既有验证行为即钉（整数 3 过 / Preview 串拒，test-core 既有用例）；一手样例到位后重开（nextRound）",
+      "evidenceRefs": ["bedrock/.cursor/rules/01-manifest.mdc", "data/bedrock_stable/bedrock-docs/stable/processed/pack-manifest.md"],
+      "status": "closed",
+      "gates": ["test-core.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "neoforge-1201-backup-noted",
+      "claim": "neoforge/1.20.1 的 8 份本地规则是**备份**：session/write 的生效面走 FORGE_COMPAT_1.20.1 overlay（正文来自 forge/1.20.1，预期行为）；每份本地规则头部带备份声明（「与 forge 1.20.1 通用，只做备份、不进注入，编辑以 forge/1.20.1 为真值源」）",
+      "author": "原审查§3（forceOverlay||!local 使本地规则永不生效）+ 2026-09-19 用户裁定 8「不用管，写明备份口径」",
+      "evidence": "neoforge/1.20.1/.cursor/rules/{02,03,04,05,06,07,08,10}*.mdc + agent 派生件头部加备份声明并重投影（8 宿主）；catalog.ts 的 overlay 行为零改动（本就是裁定认可的预期行为）",
+      "evidenceRefs": ["neoforge/1.20.1/.cursor/rules/10-gui.mdc", "mcp-server/src/platform-pack/catalog.ts"],
+      "status": "closed",
+      "gates": ["assert-skill-mirrors.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "glossary-mojmap-definition-corrected",
+      "claim": "全仓 glossary 的 mojang 行 = 「Mojang 官方可读映射名（不是 SRG/混淆名）」（neoforge:94 口径），行内不得把 mojang 说成混淆名/srg；「official（即 mojang）」类矛盾括注一并清除；新门做否定感知判别（30 字符窗内否定词豁免，不误杀「不是 SRG」正例）",
+      "author": "原审查 A10/计划 v2 W3-3 + 2026-09-19 执行代理修复（forge 8 档 + 1.17.1:101/1.20.1:98/1.20.4:98 注行 + neoforge:100/:96 + fabric/1.21.1:7，共 10 文件）",
+      "evidence": "10 文件逐字修正；新门 assert-glossary-mojmap-face.mjs（selftest 6 畸形 + 2 内存正例 + 真实正对照 21 份 glossary；exit-1 用临时坏文件实测）；门真跑 21 份绿并接入 npm test 与 test-scripts §S18",
+      "evidenceRefs": ["forge/1.20.1/knowledge/common/glossary.md", "fabric/1.21.1/knowledge/common/glossary.md", "neoforge/knowledge/common/glossary.md", "mcp-server/scripts/assert-glossary-mojmap-face.mjs"],
+      "status": "closed",
+      "gates": ["assert-glossary-mojmap-face.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "quilt-maven-ref-repointed",
+      "claim": "quilt 7 档 01-registry/05-events :3 的「见本文件「maven 实证」段」死引用全部改指真实锚点（quilt/<ver>/AGENTS.md 顶部横幅；1.21.1 :9 粗体块保留）；新门钉「规则内「见本文件「X」」引文的 X 必须存在」（621 份 .cursor/rules survey：15 处命中 = 14 死已修 + 1 活引用；KNOWN 豁免台账空）",
+      "author": "原审查 A8/计划 v2 W5-1（报告写 8 档，实测 7 档 / 死引用 14 处含 05-events 全 7 档）+ 2026-09-19 执行代理修复",
+      "evidence": "14 件源稿 + 98 件镜像（7 档 × 6 宿主 .mdc + .pi）重投影，112/112 件含新句、0 残留死句；1.21.1:27 F115 段与 sweep85 :19/:17 实测 INTACT；新门 assert-rule-internal-refs.mjs（selftest 6 红例 + 围栏感知 + 517 份正对照；KNOWN 空台账）接入双链",
+      "evidenceRefs": ["quilt/1.21.3/.cursor/rules/05-events.mdc", "quilt/1.21.1/.cursor/rules/01-registry.mdc", "mcp-server/scripts/assert-rule-internal-refs.mjs"],
+      "status": "closed",
+      "gates": ["assert-rule-internal-refs.mjs", "assert-skill-mirrors.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "verified-api-payload-premises-corrected",
+      "claim": "verified-api 表的 payload 前提按一手语料更正（W5-2 裁定 1-A/2-A/3）：1.20.4 :39/:73 的「无 payload 页/DOC_NOT_FOUND」不成立（networking_payload.md 在库）⇒ 改双源口径；1.20.6 :10 的「类名未核实/禁止抄 1.21」不成立（页面在场且 1.20.6 起即 RegisterPayloadHandlersEvent + PayloadRegistrar + StreamCodec + CustomPacketPayload TYPE/STREAM_CODEC/type() 新形，DirectionalPayloadHandler 页内在场）⇒ 按页面写实；1.21.10 表 13 行 API 结论逐行对页全命中（原「给错 API 结论」未复现），实修 = 两处出处 id 纠正为 L0 真实 id（gui/menus→inventories/menus、datamaps→resources/server/datamaps）",
+      "author": "计划 v2 W5-2（假核实表）+ 2026-09-19 用户裁定 1.A/2.A/3.可以 + 本轮取证修复",
+      "evidence": "1.20.4 页含 RegisterPayloadHandlerEvent/IPayloadRegistrar/PlayPayloadContext 且无 StreamCodec（表结论原样成立）；1.20.6 页含新名全套、旧名单 0 命中；1.21.10 逐行 token 命中 13/13（:13 的 2/3 为碎片 token 非真失配）；三处修正均带裁定标注",
+      "evidenceRefs": ["neoforge/1.20.4/knowledge/common/verified-api-1.20.4.md", "neoforge/1.20.6/knowledge/common/verified-api-1.20.6.md", "neoforge/1.21.10/knowledge/common/verified-api-1.21.10.md", "data/neoforge_1.20.6/neoforge-docs/1.20.6/processed/networking_payload.md"],
+      "status": "closed",
+      "gates": ["test-core.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "skeleton-skill-census-ratchet",
+      "claim": "骨架技能按口径 2（横幅 + 无 PascalCase 类名）普查并钉棘轮：当前源稿 867 件 / 横幅 222 / noPascal 94（19 簇；top：mc-ai、mc-datapack、mc-enchantment、mc-multiblock、mc-resourcepack 各 13、mc-model 10）——5-B 补正使计数只降不升，簇消失 = 补正完成；基线只由 MC_SKILL_SKELETON_RELEDGER=1 重算",
+      "author": "2026-09-19 用户裁定 5-B（逐簇补正）+ 本轮建普查棘轮门",
+      "evidence": "横幅形态取自真实骨架样例（forge/1.12.2/.cursor/skills/mc-datapack/SKILL.md「Wave D 技能骨架」）；新门 assert-skill-skeleton-census.mjs（selftest 7 例：棘轮 5 形态 + census 2 例）+ 基线 skill-skeleton-census-baseline.json 已登记并接入双链；报告的 1,400/14.0% 为镜像重复计数已证伪，源稿侧口径以本门为准；逐簇补正工程另立批次（首批建议 top-5 簇 × 13 档）",
+      "evidenceRefs": ["mcp-server/scripts/assert-skill-skeleton-census.mjs", "mcp-server/scripts/skill-skeleton-census-baseline.json", "forge/1.12.2/.cursor/skills/mc-datapack/SKILL.md"],
+      "status": "closed",
+      "gates": ["assert-skill-skeleton-census.mjs"],
+      "closedAt": "2026-09-19"
     }
   ]
 }

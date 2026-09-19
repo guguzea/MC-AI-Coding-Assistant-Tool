@@ -93,8 +93,8 @@
 |--------|------|
 | **mojang** | Mojang 官方可读映射名（**不是** SRG/混淆名） |
 | **mcp** | Forge/NeoForge 维护的中间映射（已废弃，由 official 取代） |
-| **official** | MCP 的官方版本，Mojang 混淆名 + MCP 映射 |
+| **official** | Mojang 官方发布的可读映射（即 mojmap，**不是** SRG/混淆名） |
 | **yarn** | Fabric 社区的映射，与 MCP 类似 |
 | **parchment** | 基于 mojang 的社区映射，补充了参数名和 javadoc |
 
-> 注：NeoForge 1.20.4 主要使用 **official**（即 mojang）和 **parchment** 两种映射通道。
+> 注：NeoForge 1.20.4 主要使用 **official**（即 mojmap/官方可读名）和 **parchment** 两种映射通道。

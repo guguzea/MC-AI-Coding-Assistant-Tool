@@ -7,7 +7,7 @@
 | DeferredRegister.Items / createItems | items |
 | DeferredRegister.Blocks / createBlocks / DeferredBlock | blocks |
 | @Mod + IEventBus | gettingstarted/modfiles |
-| Payload 类名未核实：search_neoforge_docs query=networking version=1.20.6；禁止抄 1.21 RegisterPayloadHandlersEvent / DirectionalPayloadHandler | networking |
+| Payload：`RegisterPayloadHandlersEvent` + `event.registrar("1")` → `PayloadRegistrar`；payload = record implements `CustomPacketPayload`（`static TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(...))` + `static STREAM_CODEC = StreamCodec.composite(...)` + `type()`）；`DirectionalPayloadHandler` 本档页面在场（W5-2 裁定 2-A：原「类名未核实/禁止抄 1.21」不成立——1.20.6 起就是这套新名，与 1.21 同形） | networking/payload |
 | ModConfigSpec | misc/config |
 | AttachmentType.builder / AttachmentType#serializable / Builder.copyOnDeath / Builder.build | datastorage/attachments + `1.20.6-neoforge.json`（`net.neoforged.neoforge.attachment.AttachmentType`） |
 | NeoForgeRegistries.ATTACHMENT_TYPES 与 `DeferredRegister<AttachmentType<?>>` → `ATTACHMENT_TYPES.register(modBus)` | datastorage/attachments（摘要无字段，该注册表字段本身以该页为准） |
