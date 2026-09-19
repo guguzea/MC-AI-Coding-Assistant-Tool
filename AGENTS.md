@@ -160,6 +160,8 @@ id 'net.minecraftforge.gradle'
 
 如果匹配 → 调用 `activate_platform_pack action=session`（`platform=modloader`，`minecraftVersion=1.6.4`）。生成代码 **只能**用该档安全 API 表内的名字。禁止把 `modloader/1.6.4/.cursor` 当加载器 Read。
 
+> ⚠️ **W5-2 裁定（2026-09-19）**：modloader 另有 **1.2.5 / 1.5.2** 规则树 + 各自 `data/modloader_*` 语料，但**未建 ready 档**（session 返回 `PACK_NOT_FOUND`）。1.2.5 / 1.5.2 工程**禁止**按本步调 `minecraftVersion=1.6.4` 顶替——BaseMod 形态随版本未核实；1.6.4 的 session 载荷也已带同款警示。
+
 ### 8. 检查基岩版 Add-On
 
 查找包根 `manifest.json` 且含 `format_version` + `modules`（`resources` / `data` / `script` / `world_template`）。

@@ -13,6 +13,8 @@
 
 1.20.1 = Forge 兼容层：`activate_platform_pack session` 注入 Forge 1.20.1 的 02–08/10（SimpleChannel / Capability 形态）。仍禁止读 `neoforge/1.20.4` 邻档。
 
+> **W5-2 裁定（2026-09-19）**：neoforge 1.20.1 与 forge 1.20.1 **通用**（API 形态按 Forge 1.20.1）。本档 `.cursor/rules/02–08、10` 共 8 份本地规则**只做备份、不进注入**（生效面 = `FORGE_COMPAT_1.20.1` overlay，正文来自 forge/1.20.1，注入时自动带 `[FORGE_COMPAT_1.20.1]` 横幅）；编辑以 forge/1.20.1 对应规则为真值源，本目录副本不单独维护。
+
 核实表：knowledge/common/verified-api-1.20.1.md。核不到禁止默写。
 
 ## 配置（不落盘树级 mc-config）

@@ -7,6 +7,8 @@ dependencies: []
 mappings: mcp
 ---
 
+> ⚠️ **W5-2 裁定（2026-09-19）**：本仓 07 规则正文未核实 worldgen（全树 0 个 worldgen token），本技能**不含已核实签名**——一律改口 `search_forge_docs` / `search_neoforge_docs` / `search_fabric_docs`（worldgen_* 页，如 neoforge_1.21.10 的 `worldgen_biomemodifier.md`）核实后再写；禁止把本技能当已核实 API 白名单。
+
 # mc-worldgen
 
 > Wave D 技能骨架（forge 1.19.4）。详细规则见对应 `.cursor/rules/` 与 MCP `search_forge_docs` / 专题工具。

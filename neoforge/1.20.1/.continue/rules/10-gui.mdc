@@ -4,6 +4,8 @@ globs:
 alwaysApply: false
 ---
 
+> ⚠️ **备份声明（W5-2 裁定 2026-09-19）**：neoforge 1.20.1 与 forge 1.20.1 **通用**（API 形态按 Forge 1.20.1）。session/write 的生效面走 `FORGE_COMPAT_1.20.1` overlay（正文来自 forge/1.20.1），**本文件只做备份、不进注入**；编辑以 forge/1.20.1 对应规则为真值源。
+
 # 10 — GUI（NeoForge 1.20.1）
 
 **mappingNote：** 本档是 Forge 兼容层（SimpleChannel 时代）。Menu / Screen / `IForgeMenuType` 与 Forge 1.20.1 同形态。**禁止**把 1.20.4+ `RegisterPayloadHandlersEvent` / Payload 当本档 GUI 同步。类名以 `search_neoforge_docs query=gui version=1.20.1` 核过的页为准。

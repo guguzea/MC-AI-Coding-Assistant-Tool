@@ -167,8 +167,10 @@ const TASK_SPECS: Record<string, TaskSpec> = {
   gui: { rules: ["10", "08", "06"], skills: ["mc-gui"], nextReads: ["mc-networking"] },
   "mc-mixin": { rules: ["09"], skills: ["mc-mixin"], nextReads: [] },
   mixin: { rules: ["09"], skills: ["mc-mixin"], nextReads: [] },
-  "mc-worldgen": { rules: ["07"], skills: ["mc-worldgen"], nextReads: [] },
-  worldgen: { rules: ["07"], skills: ["mc-worldgen"], nextReads: [] },
+  // W5-2 裁定 4-C（2026-09-19）：57 棵规则树的 07 正文未核实 worldgen（0 token）⇒ 不再承诺注入
+  // rules:["07"]（那是假覆盖）；worldgen 方向改口 search_*_docs 的 worldgen_* 页（披露在 SKILL 头部）。
+  "mc-worldgen": { rules: [], skills: ["mc-worldgen"], nextReads: [] },
+  worldgen: { rules: [], skills: ["mc-worldgen"], nextReads: [] },
   "mc-networking": { rules: ["06"], skills: ["mc-networking"], nextReads: [] },
   network: { rules: ["06"], skills: ["mc-networking"], nextReads: [] },
   networking: { rules: ["06"], skills: ["mc-networking"], nextReads: [] },
@@ -484,6 +486,13 @@ export function sessionPlatformPack(args: SessionArgs) {
   if (platform === "neoforge" && minecraftVersion !== pack.minecraftVersion && /^26\.1/.test(minecraftVersion)) {
     warnings.push(
       `NeoForge ${minecraftVersion} 折叠到知识档 ${pack.minecraftVersion}；不为 26.1.x 单造规则树。`,
+    );
+  }
+  // W5-2 裁定 6-B 止血（2026-09-19）：modloader 另有 1.2.5 / 1.5.2 规则树 + 语料（draft，未建 ready
+  // 档）。draft 门拦不住「工程实为 1.2.5 却按根纲示例填 1.6.4」的误用——在 1.6.4 的注入载荷里点破。
+  if (platform === "modloader" && minecraftVersion === "1.6.4") {
+    warnings.push(
+      "modloader 1.2.5 / 1.5.2 另有规则树 + 语料但未建 ready 档（session PACK_NOT_FOUND）：若你的工程实为这两档，禁止用本档（1.6.4）内容顶替——BaseMod 形态随版本未核实。",
     );
   }
   const includeAll = args.includeAllRules === true;
