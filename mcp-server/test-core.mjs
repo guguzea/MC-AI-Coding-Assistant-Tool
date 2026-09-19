@@ -1563,6 +1563,28 @@ copyIdeResources = true
   assert.ok(loom261.errors.some((e) => /modImplementation/.test(e)));
   assert.ok(loom261.errors.some((e) => /25/.test(e)));
 
+  // W4-2：fabric/1.21.4~1.21.11 scaffold 用官方 remap 线插件 id `net.fabricmc.fabric-loom-remap`
+  //（官方 Loom 文档划给 ≤1.21.11 混淆时代；本仓 4 档 scaffold 实钉）。旧正则只认无 -remap 形态
+  // ⇒ 自家 scaffold 被 diagnose_gradle 判「缺少 Loom 插件 id」假红（旧 dist 实测 4 档）。
+  const loomRemap = diagnoseGradle({
+    buildGradle: `plugins { id "net.fabricmc.fabric-loom-remap" }\n`,
+    gradleProperties: "minecraft_version=1.21.10\nyarn_mappings=1.21.10+build.5\n",
+  });
+  assert.ok(
+    !loomRemap.errors.some((e) => /缺少 Loom 插件 id/.test(e)),
+    `fabric-loom-remap 插件 id 被判缺失: ${JSON.stringify(loomRemap.errors)}`,
+  );
+  // W4-2 顺修：`JavaVersion.VERSION_1_8`（fabric/1.14.4、1.16.5 scaffold 实钉 Java 8）也是
+  // Java 版别声明；旧式 `VERSION_\d+\b` 因 1_8 的下划线无词边界漏判 ⇒ 假红「未找到 Java toolchain」。
+  const loom18 = diagnoseGradle({
+    buildGradle: `plugins { id 'fabric-loom' version '0.6.60' }\nsourceCompatibility = JavaVersion.VERSION_1_8\n`,
+    gradleProperties: "minecraft_version=1.14.4\n",
+  });
+  assert.ok(
+    !loom18.errors.some((e) => /未找到 Java toolchain 配置/.test(e)),
+    `VERSION_1_8 未被认作 Java 版别声明: ${JSON.stringify(loom18.errors)}`,
+  );
+
   const neo = diagnoseGradle({
     buildGradle: `plugins { id 'net.neoforged.gradle.userdev' version '7.0.80' }\n`,
   });
@@ -1737,6 +1759,159 @@ function testGradlePropertiesInlineComment() {
   assert.ok(
     diff.warnings.some((w) => /gradle\.properties 中 mod_id='other_mod'/.test(w)),
     `真不一致未报警：${diff.warnings.join(" | ")}`,
+  );
+}
+
+// W4-1/2/3（C1 代理遗留 + 主线程接线收账）：
+//  - W4-2 全 scaffold 扫描：自家 scaffold 在自家 diagnose_gradle 下必须 0 error
+//   （修前旧 dist 实测 6 档假红：1.21.4/1.21.8/1.21.10/1.21.11 缺插件 id、1.14.4/1.16.5 缺 toolchain）；
+//  - W4-1：validate_at 解析官方方法级 AT（描述符粘连在方法名后，
+//    neoforge_1.21.10 processed/advanced_accesstransformers.md「Examples」两例），
+//    按 `(` 拆成员名+描述符；旧式独立 token、字段级、类级行为不变；坏行报错且不中止其余行；
+//  - W4-3：mods.toml / neoforge.mods.toml / fabric.mod.json 的 modId="${mod_id}" 占位符
+//    先经 gradle.properties 解析再校验（forge/1.20.1 与 fabric/1.20.1、1.21.11 scaffold 实值）；
+//    解析得到按解析值校验（随后续 @Mod 交叉核对更准），解析不到降级 warning，真非法 id 仍判红。
+async function testW4ScaffoldGreenPlaceholderAndAtParse() {
+  let scaffolds = 0;
+  for (const plat of readdirSync(REPO_ROOT).filter((n) => /^(forge|fabric|neoforge|quilt)$/.test(n))) {
+    for (const ver of readdirSync(join(REPO_ROOT, plat))) {
+      const sc = join(REPO_ROOT, plat, ver);
+      if (!statSync(sc).isDirectory()) continue;
+      const bg = join(sc, "scaffold", "build.gradle");
+      if (!existsSync(bg)) continue;
+      const gp = join(sc, "scaffold", "gradle.properties");
+      const r = diagnoseGradle({
+        buildGradle: readFileSync(bg, "utf8"),
+        gradleProperties: existsSync(gp) ? readFileSync(gp, "utf8") : undefined,
+      });
+      scaffolds++;
+      assert.equal(r.errors.length, 0, `${plat}/${ver} scaffold 被 diagnose_gradle 判红: ${JSON.stringify(r.errors)}`);
+    }
+  }
+  assert.ok(scaffolds >= 40, `scaffold 扫描数量异常: ${scaffolds}`);
+
+  const { parseAccessTransformer } = await import("./dist/mixin/access-transformer.js");
+  const at = parseAccessTransformer(
+    [
+      "public net.minecraft.Util makeExecutor(Ljava/lang/String;)Lnet/minecraft/TracingExecutor;",
+      "public net.minecraft.core.UUIDUtil leastMostToIntArray(JJ)[I",
+      "public-f net.minecraft.world.item.Item maxStackSize I",
+      "protected net.minecraft.world.level.block.BaseRailBlock",
+      "public net.minecraft.Util (Ljava/lang/String;)V",
+    ].join("\n"),
+  );
+  assert.equal(at.errors.length, 1, JSON.stringify(at.errors));
+  assert.match(at.errors[0].issue, /缺少方法名/);
+  assert.equal(at.entries.length, 4, JSON.stringify(at.entries));
+  const byName = new Map(at.entries.filter((e) => e.member).map((e) => [e.member, e]));
+  const executor = byName.get("makeExecutor");
+  assert.ok(executor, "方法级 AT 未解析出成员名");
+  assert.equal(executor.descriptor, "(Ljava/lang/String;)Lnet/minecraft/TracingExecutor;");
+  assert.equal(executor.kind, "member");
+  const leastMost = byName.get("leastMostToIntArray");
+  assert.ok(leastMost, "数组返回描述符行未解析");
+  assert.equal(leastMost.descriptor, "(JJ)[I");
+  assert.equal(byName.get("maxStackSize")?.descriptor, "I", "旧式独立描述符 token 行为必须保持");
+  const classEntry = at.entries.find((e) => e.kind === "class");
+  assert.equal(classEntry?.owner, "net.minecraft.world.level.block.BaseRailBlock");
+  assert.ok(!byName.has("makeExecutor(Ljava"), "粘连描述符不得残留在成员名里");
+
+  const forgeToml = 'modLoader="javafml"\nloaderVersion="[46,)"\n[[mods]]\nmodId="${mod_id}"\nversion="${version}"\n';
+  const forgeGradle = "plugins { id 'net.minecraftforge.gradle' version '[6.0,7.0)' }\n";
+  const forgeJava = [{
+    path: "src/main/java/com/example/ExampleMod.java",
+    content: 'package com.example;\n@Mod("examplemod")\npublic class ExampleMod { public ExampleMod() {} }\n',
+  }];
+
+  const forgeResolved = validateProject({
+    modsToml: forgeToml,
+    buildGradle: forgeGradle,
+    gradleProperties: "mod_id=examplemod\n",
+    javaFiles: forgeJava,
+  });
+  assert.ok(
+    !forgeResolved.errors.some((e) => /modId=/.test(e)),
+    `占位符被当非法 modId: ${JSON.stringify(forgeResolved.errors)}`,
+  );
+  assert.ok(
+    !forgeResolved.warnings.some((w) => /占位符/.test(w)),
+    `可解析的占位符不该报 warning: ${JSON.stringify(forgeResolved.warnings)}`,
+  );
+
+  const forgeUnresolved = validateProject({
+    modsToml: forgeToml,
+    buildGradle: forgeGradle,
+    javaFiles: forgeJava,
+  });
+  assert.ok(
+    !forgeUnresolved.errors.some((e) => /modId=/.test(e)),
+    `解析不到的占位符必须降级 warning 而非 error: ${JSON.stringify(forgeUnresolved.errors)}`,
+  );
+  assert.ok(
+    forgeUnresolved.warnings.some((w) => /Gradle 占位符/.test(w)),
+    `解析不到的占位符必须给出 warning 说明: ${JSON.stringify(forgeUnresolved.warnings)}`,
+  );
+
+  const forgeBadId = validateProject({
+    modsToml: forgeToml.replace("${mod_id}", "Example Mod"),
+    buildGradle: forgeGradle,
+    javaFiles: forgeJava,
+  });
+  assert.ok(
+    forgeBadId.errors.some((e) => /必须全小写/.test(e)),
+    `真非法 modId 仍必须判红: ${JSON.stringify(forgeBadId.errors)}`,
+  );
+
+  const neoResolved = validateProject({
+    neoModsToml: 'modLoader="javafml"\nloaderVersion="[46,)"\n[[mods]]\nmodId="${mod_id}"\n',
+    buildGradle: "plugins { id 'net.neoforged.moddev' version '1.0.0' }\n",
+    gradleProperties: "mod_id=examplemod\n",
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content: 'package com.example;\n@Mod("examplemod")\npublic class ExampleMod { public ExampleMod(IEventBus bus) {} }\n',
+    }],
+  });
+  assert.ok(
+    !neoResolved.errors.some((e) => /modId=|mod id=/.test(e)),
+    `neo 占位符被当非法 modId: ${JSON.stringify(neoResolved.errors)}`,
+  );
+
+  const fabricJava = [{
+    path: "src/main/java/com/example/ExampleMod.java",
+    content: "package com.example;\nimport net.fabricmc.api.ModInitializer;\npublic class ExampleMod implements ModInitializer {\n  public void onInitialize() {}\n}\n",
+  }];
+  const fabricResolved = validateProject({
+    fabricModJson: JSON.stringify({
+      schemaVersion: 1,
+      id: "${mod_id}",
+      entrypoints: { main: ["com.example.ExampleMod"] },
+    }),
+    gradleProperties: "mod_id=example_mod\n",
+    javaFiles: fabricJava,
+  });
+  assert.ok(
+    !fabricResolved.errors.some((e) => /mod id=/.test(e)),
+    `fabric 占位符被当非法 id: ${JSON.stringify(fabricResolved.errors)}`,
+  );
+  assert.ok(
+    !fabricResolved.warnings.some((w) => /占位符/.test(w)),
+    `fabric 可解析的占位符不该报 warning: ${JSON.stringify(fabricResolved.warnings)}`,
+  );
+  const fabricUnresolved = validateProject({
+    fabricModJson: JSON.stringify({
+      schemaVersion: 1,
+      id: "${mod_id}",
+      entrypoints: { main: ["com.example.ExampleMod"] },
+    }),
+    javaFiles: fabricJava,
+  });
+  assert.ok(
+    !fabricUnresolved.errors.some((e) => /mod id=/.test(e)),
+    `fabric 解析不到的占位符不得判红: ${JSON.stringify(fabricUnresolved.errors)}`,
+  );
+  assert.ok(
+    fabricUnresolved.warnings.some((w) => /Gradle 占位符/.test(w)),
+    `fabric 解析不到的占位符必须 warning: ${JSON.stringify(fabricUnresolved.warnings)}`,
   );
 }
 
@@ -7778,7 +7953,8 @@ await testPlatformDataMissing();
 await testNeoForgeResolveDirForgeCompat();
 await testSearchEnhancements();
 await testDatagenAndMappingGates();
-await testPortingFabricYarnAndProps();
+  await testPortingFabricYarnAndProps();
+  await testW4ScaffoldGreenPlaceholderAndAtParse();
 testGradlePropertiesInlineComment();
 await testObfuscatedLayerAndLookup();
 await testFivePlatformRouting();

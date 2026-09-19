@@ -38,6 +38,7 @@ import {
   validateFabricOrQuilt,
   validateNeoForge,
 } from "./loaders.js";
+import { resolveGradlePlaceholder } from "./placeholder.js";
 
 export interface ValidateQuery {
   /** mods.toml 文件内容 */
@@ -562,6 +563,7 @@ function checkModsToml(
   modsToml: string | undefined,
   errors: string[],
   warnings: string[],
+  gradleProperties?: string,
 ): string | null {
   if (!modsToml) return null;
 
@@ -583,12 +585,24 @@ function checkModsToml(
     errors.push("[[mods]] 表必须包含 version 字段");
   }
 
-  const modId = extractModIdFromModsToml(modsToml);
-  if (modId && !/^[a-z][a-z0-9_]*$/.test(modId)) {
-    errors.push(`mods.toml modId='${modId}' 必须全小写、只能含字母/数字/下划线`);
-  }
-  if (modId && modId.includes("-")) {
-    errors.push(`mods.toml modId='${modId}' 不能含横杠（-），用下划线替代`);
+  // W4-3：官方 Forge MDK / 本仓 scaffold 的 mods.toml 写 modId="${mod_id}"（Gradle 占位符，
+  // 构建期由 processResources 用 gradle.properties 同名属性展开）。能解析出属性值时按
+  // 解析值校验（随后续 @Mod / MOD_ID 交叉核对也更准）；解析不到时降级为 warning。
+  const rawModId = extractModIdFromModsToml(modsToml);
+  let modId: string | null = null;
+  if (rawModId) {
+    const ph = resolveGradlePlaceholder(rawModId, gradleProperties);
+    if (!ph.resolved) {
+      warnings.push(`mods.toml modId='${rawModId}' 是 Gradle 占位符，gradle.properties 未提供同名属性，跳过 modId 规则校验`);
+    } else {
+      modId = ph.value;
+      if (!/^[a-z][a-z0-9_]*$/.test(modId)) {
+        errors.push(`mods.toml modId='${modId}' 必须全小写、只能含字母/数字/下划线`);
+      }
+      if (modId.includes("-")) {
+        errors.push(`mods.toml modId='${modId}' 不能含横杠（-），用下划线替代`);
+      }
+    }
   }
 
   return modId;
@@ -809,7 +823,11 @@ export function validateProject(query: ValidateQuery): ValidationResult {
     const r = validateNeoForge(query);
     // C14：@Mod-id 与元数据一致性对 NeoForge 同样成立 —— 下方 `loader === "forge"` 的增强校验门
     // 对 neo 路径永远不可达（这里已 early return），此前该不变量在 neo 工程上完全没有校验。
-    const neoTomlModId = extractModIdFromModsToml(query.neoModsToml ?? query.modsToml ?? "");
+    // W4-3：toml 里 modId="${mod_id}" 时先用 gradle.properties 解析再交叉核对；
+    // 解析不到则传 null 跳过注解核对（validateNeoForge 内部已就同一 id 报过占位符 warning）。
+    const neoRawModId = extractModIdFromModsToml(query.neoModsToml ?? query.modsToml ?? "");
+    const neoResolution = neoRawModId ? resolveGradlePlaceholder(neoRawModId, query.gradleProperties) : null;
+    const neoTomlModId = neoResolution?.resolved ? neoResolution.value : null;
     checkModAnnotation(javaFiles, neoTomlModId, r.errors, r.warnings);
     if (r.errors.length > 0) {
       // 复刻 loaders.ts finish() 的判定：push 过 error 后 status/passed/ok 必须同步，否则会「有错却 passed」。
@@ -863,8 +881,8 @@ export function validateProject(query: ValidateQuery): ValidationResult {
     "重复注册名检测",
   ];
 
-  // 1. mods.toml 基础检查，提取 modId
-  const modsTomlModId = checkModsToml(modsToml, errors, warnings);
+  // 1. mods.toml 基础检查，提取 modId（W4-3：占位符经 gradle.properties 解析）
+  const modsTomlModId = checkModsToml(modsToml, errors, warnings, gradleProperties);
   // F-E203：Forge 工程缺 META-INF/mods.toml 是必然加载失败的坏工程，不得静默 passed。
   // 仅在 projectPath 加载路径（真工程）下报 error；纯内联 javaFiles 查询（无 projectPath 且未传 modsToml）
   // 保持无告警以兼容片段校验。

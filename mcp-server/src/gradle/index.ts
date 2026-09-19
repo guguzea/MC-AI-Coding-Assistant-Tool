@@ -374,7 +374,9 @@ function diagnoseLoomGradle(buildGradle: string, gradleProperties: string | unde
   const suggestions: string[] = [];
   const mcVersion = detectMinecraftVersion({ buildGradle, gradleProperties });
   const is261 = isMcVersionFamily(mcVersion, "26.1");
-  const hasNewFabricPlugin = /id\s+['"]net\.fabricmc\.fabric-loom['"]/.test(buildGradle);
+  // W4-2：fabric/{1.21.4,1.21.8,1.21.10,1.21.11} scaffold 用官方新 id `net.fabricmc.fabric-loom-remap`，
+  // 旧正则只认无 `-remap` 后缀的形态 ⇒ 自家 scaffold 被 diagnose_gradle 判红。`-remap` 为可选后缀。
+  const hasNewFabricPlugin = /id\s+['"]net\.fabricmc\.fabric-loom(?:-remap)?['"]/.test(buildGradle);
   const hasOldFabricPlugin = /id\s+['"]fabric-loom['"]/.test(buildGradle);
   const hasQuiltPlugin = /id\s+['"]org\.quiltmc\.loom['"]|quilt-loom/i.test(buildGradle);
 
@@ -386,7 +388,7 @@ function diagnoseLoomGradle(buildGradle: string, gradleProperties: string | unde
     suggestions.push('可配合 search_docs({platform:"quilt"}) 核 QSL');
   } else {
     if (!hasNewFabricPlugin && !hasOldFabricPlugin) {
-      errors.push("缺少 Loom 插件 id（1.21 常用 fabric-loom；26.1 必须 net.fabricmc.fabric-loom）");
+      errors.push("缺少 Loom 插件 id（1.21 常用 fabric-loom 或 net.fabricmc.fabric-loom[-remap]；26.1 必须 net.fabricmc.fabric-loom）");
     }
     suggestions.push("可配合 search_fabric_docs 核 Loom / 映射");
   }
@@ -405,7 +407,10 @@ function diagnoseLoomGradle(buildGradle: string, gradleProperties: string | unde
       warnings.push("26.1 游戏已去混淆，不要再声明 Yarn mappings");
     }
   } else {
-    if (!/JavaLanguageVersion\.of\s*\(/.test(buildGradle) && !/JavaVersion\.VERSION_\d+\b/.test(buildGradle)) {
+    // W4-2 顺修（共用门）：旧模板（fabric/1.14.4、1.16.5 scaffold）用 `JavaVersion.VERSION_1_8`
+    // 钉 Java 8 —— 这也是 Java 版别声明。原式 `VERSION_\d+\b` 因 `1_8` 的下划线无词边界而漏判，
+    // 误报「未找到 Java toolchain 配置」。允许多段版本号（VERSION_1_8）。
+    if (!/JavaLanguageVersion\.of\s*\(/.test(buildGradle) && !/JavaVersion\.VERSION_\d+(?:_\d+)?\b/.test(buildGradle)) {
       errors.push("未找到 Java toolchain 配置（1.21 建议 JavaLanguageVersion.of(21) 或 JavaVersion.VERSION_21）");
     } else if (isMcVersionFamily(mcVersion, "1.21") && !hasJavaLanguageVersionOf(buildGradle, 21) && !hasJavaLanguageVersionOf(buildGradle, 25)) {
       warnings.push("1.21.x 建议 Java toolchain 21");

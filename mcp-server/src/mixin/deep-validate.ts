@@ -113,9 +113,15 @@ export function findCachedClientJar(version: string): ResolvedValidationJar | nu
     }
   }
   if (jars.length === 0) return null;
-  // 优先命名层（yarn > mojmap > official > 其他）；同层优先版本整段精确的 jar
+  // W4-1 顺修：优先 vanilla 客户端 jar（minecraft-*.jar）。mod jar（mod-* / embedded-*）
+  // 文件名里也可能带 -yarn / -mojmap（inferMappingFromName 按子串判层），此前它们凭
+  // yarn 层 rank 0 压过 minecraft-*-mojmap.jar，导致 validate_at / deep 校验读到 mod jar。
+  // 排序层级：vanilla 优先 → 映射层（yarn > mojmap > official）→ 版本整段精确。
+  const isVanillaClientJar = (p: string): boolean => /^minecraft[-_.]/i.test(basename(p));
   const rank: Record<string, number> = { yarn: 0, mojmap: 1, official: 2, unknown: 3 };
   jars.sort((a, b) => {
+    const vanillaDiff = Number(isVanillaClientJar(b.jarPath)) - Number(isVanillaClientJar(a.jarPath));
+    if (vanillaDiff !== 0) return vanillaDiff;
     const rankDiff = rank[a.mapping ?? "unknown"] - rank[b.mapping ?? "unknown"];
     if (rankDiff !== 0) return rankDiff;
     return Number(versionIsExactSegment(b.jarPath, version)) - Number(versionIsExactSegment(a.jarPath, version));

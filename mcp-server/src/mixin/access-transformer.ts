@@ -1,7 +1,9 @@
 /**
  * T4 Access Transformer（Forge/NeoForge `*_at.cfg`）解析与字节码级校验。
  *
- * 行格式：`<access> <owner> [<member> [<descriptor>]]`，
+ * 行格式：`<access> <owner> [<member> [<descriptor>]]`，另支持官方方法级粘连写法
+ *   `<access> <owner> <name>(<desc>)`（advanced_accesstransformers.md「Methods」节），
+ *   解析时按 `(` 拆开取成员名 + 描述符（W4-1）。
  *   access ∈ {public, protected, default, private} 后接可选粘连的 +f / -f
  *   （如 public+f、protected-f）——见 forge_1.20.1 advanced_accesstransformers.md:33-38, 95；
  *   文档没有 -static 一类 token。
@@ -237,8 +239,28 @@ export function parseAccessTransformer(
       warnings.push(`第 ${lineNo} 行 token 过多，多余部分忽略: ${line}`);
     }
     const owner = tokens[1];
-    const member = tokens[2];
-    const descriptor = tokens[3];
+    let member = tokens[2];
+    let descriptor = tokens[3];
+    // W4-1：官方方法级 AT 把描述符粘连在方法名后 —— `<access> <owner> <name>(<desc>)`
+    // （neoforge_1.21.10 processed/advanced_accesstransformers.md「Examples」：
+    //   `public net.minecraft.Util makeExecutor(Ljava/lang/String;)Lnet/minecraft/TracingExecutor;`、
+    //   `public net.minecraft.core.UUIDUtil leastMostToIntArray(JJ)[I`）。
+    // 按 `(` 拆开取成员名 + 描述符，校验按「名 + 描述符」命中；字段级（无括号）
+    // 与旧式「名字 + 独立描述符 token」写法行为不变。
+    if (member && member.includes("(")) {
+      const parenIdx = member.indexOf("(");
+      const name = member.slice(0, parenIdx);
+      if (!name) {
+        errors.push({
+          target: line,
+          issue: `缺少方法名（第 ${lineNo} 行）`,
+          suggestion: "方法级 AT 格式：<access> <owner> <method name>(<parameter types>)<return type>",
+        });
+        return;
+      }
+      descriptor = member.slice(parenIdx) + (descriptor ?? "");
+      member = name;
+    }
     entries.push({
       access,
       owner,

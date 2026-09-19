@@ -8,6 +8,7 @@ import { walkProjectFiles } from "../utils/project-files.js";
 import { escapeRegExp } from "../utils/regex.js";
 import { detectMinecraftVersion } from "../utils/minecraft-version.js";
 import { parseJsonUtf8 } from "../utils/json-utf8.js";
+import { resolveGradlePlaceholder } from "./placeholder.js";
 import type { ValidateQuery, ValidationResult } from "./index.js";
 
 function finish(
@@ -150,8 +151,15 @@ export function validateFabricOrQuilt(query: ValidateQuery, loader: "fabric" | "
 
   if (!id) {
     errors.push(loader === "quilt" ? "quilt_loader.id 缺失" : "fabric.mod.json id 缺失");
-  } else if (!/^[a-z][a-z0-9_-]*$/.test(id)) {
-    errors.push(`mod id='${id}' 必须全小写、可含字母/数字/下划线/连字符`);
+  } else {
+    // W4-3：官方 MDK / 本仓 scaffold 的 fabric.mod.json 写 id="${mod_id}"（Gradle 占位符）。
+    // 能从 gradle.properties 解析出属性值时按解析值校验（检查更强）；解析不到降级为 warning。
+    const ph = resolveGradlePlaceholder(id, query.gradleProperties);
+    if (!ph.resolved) {
+      warnings.push(`mod id='${id}' 是 Gradle 占位符，gradle.properties 未提供同名属性，跳过 mod id 规则校验`);
+    } else if (!/^[a-z][a-z0-9_-]*$/.test(ph.value)) {
+      errors.push(`mod id='${ph.value}' 必须全小写、可含字母/数字/下划线/连字符`);
+    }
   }
 
   const names = Object.values(entrypoints).flatMap(entrypointNames);
@@ -194,8 +202,14 @@ export function validateNeoForge(query: ValidateQuery): ValidationResult {
       errors.push("neoforge.mods.toml / mods.toml 必须包含 [[mods]]");
     }
     const id = toml.match(/modId\s*=\s*["']([^"']+)["']/)?.[1];
-    if (id && !/^[a-z][a-z0-9_]*$/.test(id)) {
-      errors.push(`modId='${id}' 必须全小写、只能含字母/数字/下划线`);
+    if (id) {
+      // W4-3：官方 NeoForge MDK 的 neoforge.mods.toml 写 modId="${mod_id}"，同 fabric 路径处理。
+      const ph = resolveGradlePlaceholder(id, query.gradleProperties);
+      if (!ph.resolved) {
+        warnings.push(`modId='${id}' 是 Gradle 占位符，gradle.properties 未提供同名属性，跳过 modId 规则校验`);
+      } else if (!/^[a-z][a-z0-9_]*$/.test(ph.value)) {
+        errors.push(`modId='${ph.value}' 必须全小写、只能含字母/数字/下划线`);
+      }
     }
   }
 

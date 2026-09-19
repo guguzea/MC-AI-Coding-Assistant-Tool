@@ -19,9 +19,14 @@
       "claim": "任何平台的规则/文档里都不出现不存在的 Gradle 任务 `./gradlew [clean] loom`",
       "author": "sweep80 G-1/H-1（轮次 9 判 S1，跨 70+ sweep 未修）+ sweep81 R1 修复",
       "evidence": "上游 docs.fabricmc.net/develop/loom/tasks 无 `loom`；全仓 `.gradle/.kts` 的 `task loom` 定义 = 0；sweep81 已在 235 文件 / 706 处清零，C-1 投毒（临时写回 `clean loom`）验证门可红",
-      "evidenceRefs": ["mcp-server/scripts/assert-no-invalid-api-shapes.mjs", "mcp-server/README.md"],
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-no-invalid-api-shapes.mjs",
+        "mcp-server/README.md"
+      ],
       "status": "closed",
-      "gates": ["assert-no-invalid-api-shapes.mjs"],
+      "gates": [
+        "assert-no-invalid-api-shapes.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -29,9 +34,14 @@
       "claim": "BlockBehaviour.Properties 形态按版本区间成立：1.18.2/1.19.4 必须带 Material 且颜色用 .color(MaterialColor)；1.20.1/1.20.4 必须无参且用 .mapColor(MapColor)",
       "author": "sweep80 §I / O-2 / H-1（B2-#1 跨轮存活）+ sweep81 C-6 建族门 + C-1 阶段二扩三族",
       "evidence": "query_api --className='BlockBehaviour$Properties'：1.18.2/1.19.4 of=4 个全 (Material…)/mapColor=0；1.20.1/1.20.4 of=1 个无参/mapColor=3；门现为 5 族/10 档，含 3×投毒（绿→红→绿）证据",
-      "evidenceRefs": ["mcp-server/scripts/assert-forge-blockshape-family.mjs", "data/forge_1.20.4/mappings/client.txt"],
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-forge-blockshape-family.mjs",
+        "data/forge_1.20.4/mappings/client.txt"
+      ],
       "status": "closed",
-      "gates": ["assert-forge-blockshape-family.mjs"],
+      "gates": [
+        "assert-forge-blockshape-family.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -39,9 +49,15 @@
       "claim": "forge/1.20.4 源稿不引用 1.20+ 已移除的方块 Material",
       "author": "sweep80 F145 门 + sweep81 C-6 并入族门",
       "evidence": "data/forge_1.20.4/mappings/client.txt 里 block.material = 0；forge/1.20.1/knowledge/version-changes/1.20.x.md:36「1.20+ 已移除 Material」",
-      "evidenceRefs": ["mcp-server/scripts/assert-forge-1204-material.mjs", "forge/1.20.1/knowledge/version-changes/1.20.x.md"],
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-forge-1204-material.mjs",
+        "forge/1.20.1/knowledge/version-changes/1.20.x.md"
+      ],
       "status": "closed",
-      "gates": ["assert-forge-1204-material.mjs", "assert-forge-blockshape-family.mjs"],
+      "gates": [
+        "assert-forge-1204-material.mjs",
+        "assert-forge-blockshape-family.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -49,9 +65,13 @@
       "claim": "forge/1.18.2 注册表常量下划线形态（replace 形绝迹 + hold 形计数钉值 + 投影零漂移）",
       "author": "sweep80 F146 门 + A21 复核",
       "evidence": "assert-forge-1182-registry-consts.mjs 的 LEDGER.holds 钉值 + --selftest 三记投毒",
-      "evidenceRefs": ["mcp-server/scripts/assert-forge-1182-registry-consts.mjs"],
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-forge-1182-registry-consts.mjs"
+      ],
       "status": "closed",
-      "gates": ["assert-forge-1182-registry-consts.mjs"],
+      "gates": [
+        "assert-forge-1182-registry-consts.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -59,9 +79,14 @@
       "claim": "mc_skill_update action=apply 的带内失败一律 ok:false（CLI 不得出现 success:true + rc=0 的静默失败）",
       "author": "sweep81 G-1（C-7 门②过程中新发现，用户裁定修复）",
       "evidence": "失败六分支补 ok:false（dataBlocked / tooling 合并失败 / 缺 data 资产 / 缺 checksum / writeFailed / data 失败）；门⑨走真实链路 mcSkillUpdate→applyDataUpdate 并用 isToolFailure 复核判定链",
-      "evidenceRefs": ["mcp-server/src/update/index.ts", "mcp-server/test-update.mjs"],
+      "evidenceRefs": [
+        "mcp-server/src/update/index.ts",
+        "mcp-server/test-update.mjs"
+      ],
       "status": "closed",
-      "gates": ["test-update.mjs"],
+      "gates": [
+        "test-update.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -69,9 +94,14 @@
       "claim": "MC_SKILL_DATA 显式声明即权威：目录缺失（半交换态）时不得回退 <cwd>/data",
       "author": "sweep81 G-2（C-7 门②夹具调试发现，用户裁定修复）",
       "evidence": "getDataDirFromEnv 去掉 existsSync 门槛；门⑩在子进程隔离断言「指向不存在目录仍按它解析、不回退 <cwd>/data」",
-      "evidenceRefs": ["mcp-server/src/utils/path.ts", "mcp-server/test-update.mjs"],
+      "evidenceRefs": [
+        "mcp-server/src/utils/path.ts",
+        "mcp-server/test-update.mjs"
+      ],
       "status": "closed",
-      "gates": ["test-update.mjs"],
+      "gates": [
+        "test-update.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -79,9 +109,14 @@
       "claim": "GitHub 下载/HTTPS 两条链共用同一份精确 host 白名单（无 .githubusercontent.com 后缀通配）",
       "author": "sweep81 A-8 BB-4（清单 + 用户裁定「收掉通配」）",
       "evidence": "谓词下沉 hosts.ts 单源；门⑪：5 个通配 host 两侧一致拒绝、4 个精确 host 仍接受、download.isAllowedDownloadUrl === hosts 同名函数、协议门先于 host 门",
-      "evidenceRefs": ["mcp-server/src/update/hosts.ts", "mcp-server/test-update.mjs"],
+      "evidenceRefs": [
+        "mcp-server/src/update/hosts.ts",
+        "mcp-server/test-update.mjs"
+      ],
       "status": "closed",
-      "gates": ["test-update.mjs"],
+      "gates": [
+        "test-update.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -89,9 +124,15 @@
       "claim": "registry sqlite 缺失/损坏区分呈现：损坏 ⇒ DATA_UNAVAILABLE 载荷点名「损坏」+ 重建指引，不得裸抛、不得冒充「没建索引」",
       "author": "sweep81 A-7 Y-1（结构化信封部分，本轮补完）",
       "evidence": "openRegistryDb 层探测查询拦惰性损坏（errcode 26 在首查才抛）+ 失败句柄 close；queryRegistry 拆「损坏」载荷；测试：损坏 sqlite 与缺索引分报",
-      "evidenceRefs": ["mcp-server/src/registry/store.ts", "mcp-server/src/registry/index.ts", "mcp-server/test-wave-bcd.mjs"],
+      "evidenceRefs": [
+        "mcp-server/src/registry/store.ts",
+        "mcp-server/src/registry/index.ts",
+        "mcp-server/test-wave-bcd.mjs"
+      ],
       "status": "closed",
-      "gates": ["test-wave-bcd.mjs"],
+      "gates": [
+        "test-wave-bcd.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -99,9 +140,14 @@
       "claim": "mdk-checksums.json 损坏 ⇒ MDK_CHECKSUMS_INVALID（含修复指引），不得冒充 MDK_NOT_PINNED",
       "author": "sweep81 A-7 Z-1（结构化信封部分，本轮补完）",
       "evidence": "loadMdkChecksums 返回 {entries, invalid?}；resolveMdkEntry 透传；downloadOfficialMdk 独立错误码 + nextSteps；测试：损坏 pin 表独立错误码",
-      "evidenceRefs": ["mcp-server/src/mdk/index.ts", "mcp-server/test-core.mjs"],
+      "evidenceRefs": [
+        "mcp-server/src/mdk/index.ts",
+        "mcp-server/test-core.mjs"
+      ],
       "status": "closed",
-      "gates": ["test-core.mjs"],
+      "gates": [
+        "test-core.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -109,9 +155,14 @@
       "claim": "版本命中的迁移 Primer 不再免检相关性（verHit 只保留排序加分）",
       "author": "sweep80 A2-S2-2（CHANGED-SINCE 重写）+ sweep81 AA 修复",
       "evidence": "门槛判在加分前 rel 上（verHit ≥8 / 非 verHit 16）；实测无关查询 primer=0、迁移查询 primer=8；门 testAaThreeFixes 双向钉",
-      "evidenceRefs": ["mcp-server/src/docs-platform/neoforge/primers.ts", "mcp-server/test-core.mjs"],
+      "evidenceRefs": [
+        "mcp-server/src/docs-platform/neoforge/primers.ts",
+        "mcp-server/test-core.mjs"
+      ],
       "status": "closed",
-      "gates": ["test-core.mjs"],
+      "gates": [
+        "test-core.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -119,9 +170,14 @@
       "claim": "check_publish_ready 逐文件核 license/version；早退带 action；ok（硬项）与 ready（含正式 jar）语义拆分",
       "author": "sweep80 A19-S2-6/S3-4/S3-8 + sweep81 AA 修复",
       "evidence": "混合缺 version 报错点名文件；坏 projectPath 回 action=INVALID_INPUT；给了 projectPath 但无 jar ⇒ ok:true/ready:false；门 testAaThreeFixes",
-      "evidenceRefs": ["mcp-server/src/publish/index.ts", "mcp-server/test-core.mjs"],
+      "evidenceRefs": [
+        "mcp-server/src/publish/index.ts",
+        "mcp-server/test-core.mjs"
+      ],
       "status": "closed",
-      "gates": ["test-core.mjs"],
+      "gates": [
+        "test-core.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -129,9 +185,14 @@
       "claim": "preloader 出向消息类型与消费端单源（字段漂移改为编译期报错）",
       "author": "sweep80 A1-S3（CHANGED-SINCE 重写）+ sweep81 AA 修复",
       "evidence": "删本地 PreloadResult/PreloadError/PreloadQueued/union，改 import type { WorkerOutMessage } from \"./types.js\"；源码形状钉进 testAaThreeFixes",
-      "evidenceRefs": ["mcp-server/src/workers/preloader.ts", "mcp-server/src/workers/types.ts"],
+      "evidenceRefs": [
+        "mcp-server/src/workers/preloader.ts",
+        "mcp-server/src/workers/types.ts"
+      ],
       "status": "closed",
-      "gates": ["test-core.mjs"],
+      "gates": [
+        "test-core.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -139,9 +200,14 @@
       "claim": "forge_javadoc 正文抽取以无属性 <pre> 兜底（Java 8 javadoc 的详情签名无 class 属性），重建后 raw 与 processed 对账同源",
       "author": "sweep81 D 批（前置门推翻「上游没正文」，定位仓内解析口径根因）+ 重抓 15,001 页",
       "evidence": "旧 parseClassPage 只匹配带 class 的 <pre> ⇒ methodSigs 恒空；重抓器按 <h4>名</h4><pre>签名</pre> 抽取（无属性兜底），5 档改写 14,971 / 跳过 30 / 失败 0 / 含签名 94.6%；保真门 G3 与 validate-forge-build rc=0",
-      "evidenceRefs": ["mcp-server/scripts/assert-corpus-faithfulness.mjs", "mcp-server/test-assistant-gaps.mjs"],
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-corpus-faithfulness.mjs",
+        "mcp-server/test-assistant-gaps.mjs"
+      ],
       "status": "closed",
-      "gates": ["assert-corpus-faithfulness.mjs"],
+      "gates": [
+        "assert-corpus-faithfulness.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -149,9 +215,14 @@
       "claim": "data/** 每棵 processed 树都有语义层判据：逐树**真·空页**（body<40 且无任何 `## ` 小节）≤ 基线 ratchet、正文中位 ≥ 地板、树必须登记（新树即红）、允许的空页必须逐条具名（residue 过期即红）",
       "author": "sweep81（用户口径：data/** 全树语义读缺口，本轮闭合；含注解页解析缺口修复）",
       "evidence": "首跑抓到 forge_javadoc/1.12.2 整树 4,567 篇空壳 ⇒ 重抓 + 索引重建；二轮抓到 Java 8 注解页整类漏解析（Config.Comment/API 等）⇒ 修 crawl-javadoc.mjs 后重抓 136 篇（0 失败）；判据收紧为真·空页（剔除 132 篇合法极薄页误报）⇒ 全仓真·空页 4,717 → 1（唯一者 = rift 上游 wiki Home，具名 residue）；基线 corpus-semantics-baseline.json 由实测生成，ratchet 只许降",
-      "evidenceRefs": ["mcp-server/scripts/assert-corpus-semantics.mjs", "mcp-server/scripts/corpus-semantics-baseline.json"],
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-corpus-semantics.mjs",
+        "mcp-server/scripts/corpus-semantics-baseline.json"
+      ],
       "status": "closed",
-      "gates": ["assert-corpus-semantics.mjs"],
+      "gates": [
+        "assert-corpus-semantics.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -159,9 +230,14 @@
       "claim": "forge_javadoc/1.12.2 的历史重名件已**成对删除**（914 processed 孤儿 + 914 raw ` (2).md`），A1（raw==processed）口径同步改为 3653/3653",
       "author": "sweep81 D 批索引器折叠残余 → 2026-09-18 用户授权成对删除",
       "evidence": "删除探针实测：deleted=1828/1828、**0 失败**；删后 raw=3653 / processed=3653（与索引引用 3,653 一致）；成对关系先经精确核验（orphan↔raw(2) 零偏差）；LEDGER_TREES 已按 RELEDGER 口径同步 4567→3653",
-      "evidenceRefs": ["mcp-server/scripts/assert-corpus-faithfulness.mjs", "temp/audit/sweep81/CLEANUP-list.md"],
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-corpus-faithfulness.mjs",
+        "temp/audit/sweep81/CLEANUP-list.md"
+      ],
       "status": "closed",
-      "gates": ["assert-corpus-faithfulness.mjs"],
+      "gates": [
+        "assert-corpus-faithfulness.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -169,9 +245,14 @@
       "claim": "`sectionless`（无 `## ` 小节）经逐族定性：**全部为体例差异**（上游 `#`/`###`/setext 排版、纯文本转储、设计空表页、上游空页），无内容缺失 ⇒ 不升级为判据、保持只打印",
       "author": "sweep81 全树语义读首跑观测 → 2026-09-18 逐族抽样定性",
       "evidence": "逐树抽样（≤5 篇/树；logs/sectionless.log + SECTIONLESS-TRIAGE.md）：bedrock 20/20 扁平转储（中位 11,323 字符）、liteloader 27/30 用 `#`+`###` 跳 `##`、forge-docs 12–21%（`#`+`###` 或扁平）、fabric-docs setext/MDX 索引页、neoforge 1–7%、quilt 25%、modloader 单页「空表」（设计）、rift 上游空页（已具名 residue）",
-      "evidenceRefs": ["mcp-server/scripts/assert-corpus-semantics.mjs", "temp/audit/sweep81/SECTIONLESS-TRIAGE.md"],
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-corpus-semantics.mjs",
+        "temp/audit/sweep81/SECTIONLESS-TRIAGE.md"
+      ],
       "status": "closed",
-      "gates": ["assert-corpus-semantics.mjs"],
+      "gates": [
+        "assert-corpus-semantics.mjs"
+      ],
       "closedAt": "2026-09-18"
     },
     {
@@ -179,9 +260,15 @@
       "claim": "yarn tiny 的 named 列完整性：每档有 provenance、member selfEq ≤ 基线×1.15、零成员类 ≤ 基线×1.15+30、provenance↔磁盘双向 sha 一致；且「有 mappings/ 却缺 -tiny.gz」与「memberTotal=0」不再静默跳过（判红）",
       "author": "sweep85 建门 + 2026-09-19 用户裁定「收口两个洞 + 补投毒」",
       "evidence": "13 档 v1(.bak) 复算比率 32.89–35.88% 全部超各自上限（1.21.1 32.89% vs 21.11% / 1.21.11 34.78% vs 21.03% / 1.14.4 35.88% vs 30.61%）⇒ 判据非恒真；--selftest 8 例（1 正对照绿 + 7 类畸形红，含两个新洞）逐例相符并已接入 npm test 链；provenance stats.classFixed=0 ⇒ classSelfEq≤200 判据对本次重建惰性（属已登记盲区，不假装有判别力）",
-      "evidenceRefs": ["mcp-server/scripts/assert-yarn-named-integrity.mjs", "mcp-server/scripts/yarn-named-baseline.json", "CONTRIBUTING.md"],
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-yarn-named-integrity.mjs",
+        "mcp-server/scripts/yarn-named-baseline.json",
+        "CONTRIBUTING.md"
+      ],
       "status": "closed",
-      "gates": ["assert-yarn-named-integrity.mjs"],
+      "gates": [
+        "assert-yarn-named-integrity.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -189,9 +276,15 @@
       "claim": "13 档 data/fabric_<ver>/mappings/upstream/*.bak（上游 v1 原件）继续入库、不删不 ignore，并由门按字节 sha 对账 —— 它是判据⑤的被核对象，不是可清理的垃圾",
       "author": "2026-09-19 用户裁定「继续入库，不删不 ignore」",
       "evidence": "git ls-files '*.bak' = 13 个 / 12,641,827 B（12.06 MB）；.gitignore 全文无 *.bak / upstream 规则；门第 5 判据要求 upstreamV1.sha256 == 盘上 .bak 实测 sha256（缺件 / 不等即红）；CONTRIBUTING.md 明写「不许删」",
-      "evidenceRefs": ["data/fabric_1.21.1/mappings/yarn-tiny-provenance.json", "mcp-server/scripts/assert-yarn-named-integrity.mjs", "CONTRIBUTING.md"],
+      "evidenceRefs": [
+        "data/fabric_1.21.1/mappings/yarn-tiny-provenance.json",
+        "mcp-server/scripts/assert-yarn-named-integrity.mjs",
+        "CONTRIBUTING.md"
+      ],
       "status": "closed",
-      "gates": ["assert-yarn-named-integrity.mjs"],
+      "gates": [
+        "assert-yarn-named-integrity.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -199,9 +292,15 @@
       "claim": "「配置」口径三方一致：根 AGENTS.md 的配置条目写出 generate_config 的四平台面（forge/neoforge/fabric/quilt）+ 不支持平台（LiteLoader/Rift/ModLoader/基岩）的显式禁令；支持面档不得标禁令、不支持面档提及它必须标禁令；工具面 = generateConfig 的 loader 枚举（源码解析）",
       "author": "sweep85 单侧改 7 档子档而根纲未同步（2026-09-19 用户裁定「立即改根纲」）",
       "evidence": "sweep85 git diff：根 AGENTS.md 仅去 BOM，同一提交在 liteloader×3 / rift×1 / modloader×3 写入「不要对本档调用 generate_config」；实测 generateConfig loader 枚举 = forge|neoforge|fabric|quilt（generators/index.ts:1258）；门 --selftest 7 类畸形全检出 + 59 档 AGENTS.md 正对照绿",
-      "evidenceRefs": ["AGENTS.md", "mcp-server/scripts/assert-config-platform-face.mjs", "mcp-server/src/generators/index.ts"],
+      "evidenceRefs": [
+        "AGENTS.md",
+        "mcp-server/scripts/assert-config-platform-face.mjs",
+        "mcp-server/src/generators/index.ts"
+      ],
       "status": "closed",
-      "gates": ["assert-config-platform-face.mjs"],
+      "gates": [
+        "assert-config-platform-face.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -209,9 +308,15 @@
       "claim": "bedrock 模板 @minecraft/server 钉值有唯一真值源（mcp-server/data/bedrock-script-api-pin.json）并与 bedrock/scaffold 逐字一致；它与 data/bedrock-docs-status.json.scriptApiStable 的分歧必须显式登记（declared + why），不得静默漂移",
       "author": "sweep85 把模板提到 2.10.0 而快照仍 2.9.0（2026-09-19 用户裁定「统一真值，但先区分语义」）",
       "evidence": "sweep85 git diff：bedrock/scaffold/BP/manifest.json 2.9.0→2.10.0；data/bedrock-docs-status.json fetchedAt=2026-08-14 / scriptApiStable=2.9.0；修前 validate_addon_manifest 对 dependencies 零检查（实测）⇒ 分叉静默通过；修后门 --selftest 7 类畸形全检出 + 真实输入正对照绿",
-      "evidenceRefs": ["mcp-server/data/bedrock-script-api-pin.json", "mcp-server/scripts/assert-bedrock-script-api-pin.mjs", "bedrock/scaffold/BP/manifest.json"],
+      "evidenceRefs": [
+        "mcp-server/data/bedrock-script-api-pin.json",
+        "mcp-server/scripts/assert-bedrock-script-api-pin.mjs",
+        "bedrock/scaffold/BP/manifest.json"
+      ],
       "status": "closed",
-      "gates": ["assert-bedrock-script-api-pin.mjs"],
+      "gates": [
+        "assert-bedrock-script-api-pin.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -219,9 +324,15 @@
       "claim": "generate_worldgen 有两端版本哨兵：1.x 只收 1.18.2 ≤ v ≤ 1.21.x（超界报「未跟进 + WORLDGEN_MAX_MINOR_1X 抬哨兵出口」）、26.x 只收 /^26\\.\\d+(\\.\\d+)?$/；forge×26.x 拒绝（Forge 无 26.x）—— 编造版本号不得再「吐 files + suggestedPaths + exit 0」",
       "author": "sweep12 只写下界（措辞却写「无白名单时不要生成」）+ 2026-09-19 用户裁定「余下已核实项做完」（N6）",
       "evidence": "实测 node dist/cli.js generate_worldgen --platform fabric --version 1.99.9 曾 success:true + 完整 files + suggestedPaths + exit 0（比 C1 更坏：根本不拒绝）；修后 test-core 两正对照（fabric 1.21.1=2 files / neoforge 26.1.2=3 files）+ 三反例（1.99.9 / 2.0 / forge×26.1.2）逐条点名原因",
-      "evidenceRefs": ["mcp-server/src/generators/index.ts", "mcp-server/test-core.mjs", "README.md"],
+      "evidenceRefs": [
+        "mcp-server/src/generators/index.ts",
+        "mcp-server/test-core.mjs",
+        "README.md"
+      ],
       "status": "closed",
-      "gates": ["test-core.mjs"],
+      "gates": [
+        "test-core.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -229,9 +340,15 @@
       "claim": "取锁前的半交换自愈必须**持锁**进行（tryAcquireUpdateApplyLock 非阻塞原子占位），不得只靠 existsSync 探测 —— 那是 TOCTOU：两进程可同时过闸并发动盘，且 recoverPartialSwap 无条件删 .next 会与刚取到锁的进程撞车",
       "author": "sweep85 A-40 以探测式引入锁外自愈 + 2026-09-19 用户裁定「余下已核实项做完」（N7）",
       "evidence": "A-40 原实现 tryRecoverPartialSwap 只有 existsSync(dirLockPathOf(resolveCacheRoot(),\"update-apply\")) 一道闸；修后「不抢锁、不等待」语义保留（锁目录存在一律返回 null），但动盘段与并发 apply 互斥；test-update 用例 ①（取锁后自愈）/③（busy 不得恢复）/④（取锁前自愈）双向钉，用例名改 …PreAndPostLock",
-      "evidenceRefs": ["mcp-server/src/update/apply-lock.ts", "mcp-server/src/update/data.ts", "mcp-server/test-update.mjs"],
+      "evidenceRefs": [
+        "mcp-server/src/update/apply-lock.ts",
+        "mcp-server/src/update/data.ts",
+        "mcp-server/test-update.mjs"
+      ],
       "status": "closed",
-      "gates": ["test-update.mjs"],
+      "gates": [
+        "test-update.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -239,9 +356,15 @@
       "claim": "【id 保留历史命名，状态已反转】script 模块必须 language=javascript 与非空 entry（缺任一判 error），dependencies 结构校验（条目为对象、module_name/version 非空字符串）判 error —— 曾以「缓存官方页无必填口径」为由不判错，2026-09-19 用户裁定 N9(b) 判真洞/P1 后改为最小校验",
       "author": "原审查 HIGH「language/entry 零检查而规则当已核实约束」→ N9(b) 复核降级 → 2026-09-19 用户裁定改判 P1 真洞并修复",
       "evidence": "判级依据 = 用户裁定 + 本仓自证形态（bedrock/scaffold/BP/manifest.json 与 generate_addon_manifest/generate_bp_entity 产出的 script 模块都带 language+entry）；一手页面状态留痕：pack-manifest.md:97-99 对 language 是条件句、entry 全页 0 命中（重抓后若口径变化须重定判级）；test-core 双向钉（缺 language / 缺 entry / dependencies 结构 3 反例 + langOk 正对照）",
-      "evidenceRefs": ["data/bedrock_stable/bedrock-docs/stable/processed/pack-manifest.md", "mcp-server/src/bedrock/index.ts", "bedrock/.cursor/rules/01-manifest.mdc"],
+      "evidenceRefs": [
+        "data/bedrock_stable/bedrock-docs/stable/processed/pack-manifest.md",
+        "mcp-server/src/bedrock/index.ts",
+        "bedrock/.cursor/rules/01-manifest.mdc"
+      ],
       "status": "closed",
-      "gates": ["test-core.mjs"],
+      "gates": [
+        "test-core.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -249,9 +372,15 @@
       "claim": "check_publish_ready 对 Fabric/Quilt **有机核字段**（publishing.md 点名 fabric.mod.json 的 id/version/license/name、quilt.mod.json 的 id/version/name，缺失进 missing）；且当清单退化为只剩 mods.toml 族（无任何 .json 目标）时必须说破「0 项被机核 + manual 含 Forge 专属文案」，不得静默",
       "author": "原审查 V9/§3（check_publish_ready 对 Fabric 核 0 字段）+ 2026-09-19 用户裁定「修复完整深层」（N8）",
       "evidence": "深层已落地：publishing.md 增 Fabric/Quilt 字段行（一手依据 = 本仓两份 scaffold 元数据实形态：fabric.mod.json 顶层 id/version/name/license；quilt.mod.json 的 license 非必备故不进机核），机核面经 requirements 自动扩展、发布/index.ts 无字段写死；test-core 用例 ③ 改为「Fabric 缺 license/name 进 missing」+ 毒例 ④ 加「清单无 .json 目标 ⇒ 说破」+ 对照（mods.toml 工程不触发）",
-      "evidenceRefs": ["mcp-server/src/publish/index.ts", "mcp-server/test-core.mjs", "community_knowledge/authored/publishing.md"],
+      "evidenceRefs": [
+        "mcp-server/src/publish/index.ts",
+        "mcp-server/test-core.mjs",
+        "community_knowledge/authored/publishing.md"
+      ],
       "status": "closed",
-      "gates": ["test-core.mjs"],
+      "gates": [
+        "test-core.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -259,9 +388,17 @@
       "claim": "8 道 Java 系 generate_*（model/lang/network_packet/capability/config/entity_renderer/worldgen/datagen）在生成器拒绝（errors 非空或 code/files 双空）或写盘被拒（writeError）时，出向对象 ok:false ⇒ CLI success:false + exit 1，不再「拒绝也 success:true + exit 0」",
       "author": "原审查 C1/V1（write-helper × isToolFailure 只认 ok/passed/error.code）+ 2026-09-19 用户裁定「动判定链，不只修 worldgen」",
       "evidence": "根因 = 生成器出向对象没有 ok 字段；修法 = maybeWriteGeneratorResult 统一出口按 generatorRejected() && !writeError 收口（MCP 与 CLI 两路全走它，单点覆盖 8 道）；CLI 实测 generate_worldgen --version=1.99.9 从 success:true/exit 0 变 success:false/exit 1 + errorKind:tool_failure，正常产出仍 success:true/exit 0；test-cli C1 块 + test-core 单元断言双向钉；行为面补充（2026-09-19 用户裁定）：resultKind 三态 ok/generation_failed/write_blocked 把「写入未完成」与「生成失败」拆开（ok 为其派生），dry-run 语义（不传 write 恒 ok、无 written/writeError）与 writeError.code 错误码枚举已进 README/AGENTS 与契约测试",
-      "evidenceRefs": ["mcp-server/src/generators/write-helper.ts", "mcp-server/src/cli-parse.ts", "mcp-server/test-cli.mjs", "mcp-server/test-core.mjs"],
+      "evidenceRefs": [
+        "mcp-server/src/generators/write-helper.ts",
+        "mcp-server/src/cli-parse.ts",
+        "mcp-server/test-cli.mjs",
+        "mcp-server/test-core.mjs"
+      ],
       "status": "closed",
-      "gates": ["test-cli.mjs", "test-core.mjs"],
+      "gates": [
+        "test-cli.mjs",
+        "test-core.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -269,9 +406,19 @@
       "claim": "5 处恒真/死断言全部改为可红断言：①loader-api search 必须真命中 IPayloadContext（hits 为 FQCN 数组）；②quilt getDocRelated(qsl-qfapi) 必须召回 QSL 条目（非空且 id 含 qsl）；③symlink 用例验证段移出创建 try（验证期 AssertionError 不得被外层 catch 咽成 skip）且创建失败不再 return 中止函数余例；④test-localize optionalRealJars 对 temp/ 真 .jar 真跑 extract 冒烟（结果必须可判定：ok:true 带源语言或 ok:false 带机器可读 code），无 jar 才合法 skip；⑤unpackMdkArchive 成功路径 unpackedRoot 必须指向 MDK-sha 解压根",
       "author": "计划 v2 W1-1（审计「5 处恒真/死断言」）+ 2026-09-19 本轮修复",
       "evidence": "逐条投毒红→复原绿：①dist 注入 matched=[] → test-loader-api 红「IPayloadContext 必须真命中 total=0」；②dist quilt related 注入 [] → test-core 红「qsl-qfapi 关联必须含 QSL 条目」；⑤dist 注入 unpackedRoot:unpackedDir → test-core 红「unpackedRoot 应指向 MDK-sha 解压根」；③为结构化修复（红路径=验证断言不再可被吞）；④以 temp/ 7 个真 jar 实测冒烟真跑（LANG_NOT_IN_JAR/NAMESPACE_AMBIGUOUS 皆可判定）。⑤的投毒还揪出真生产缺陷：resolveUnpackedRoot 的「唯一根目录则进入」被完成哨兵 .mdk-unpack-ok 恒打破（unpackedRoot 恒为解压根、unpackLooksComplete 骨架标志物回退查错层、copyTreeSync 会把哨兵拷进用户工程）——修为根条目计数无视 UNPACK_SENTINEL；修复后 test-core/test-loader-api/test-localize/test-scripts 全绿",
-      "evidenceRefs": ["mcp-server/test-loader-api.mjs", "mcp-server/test-core.mjs", "mcp-server/test-localize.mjs", "mcp-server/src/mdk/index.ts"],
+      "evidenceRefs": [
+        "mcp-server/test-loader-api.mjs",
+        "mcp-server/test-core.mjs",
+        "mcp-server/test-localize.mjs",
+        "mcp-server/src/mdk/index.ts"
+      ],
       "status": "closed",
-      "gates": ["test-loader-api.mjs", "test-core.mjs", "test-localize.mjs", "test-scripts.mjs"],
+      "gates": [
+        "test-loader-api.mjs",
+        "test-core.mjs",
+        "test-localize.mjs",
+        "test-scripts.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -279,9 +426,15 @@
       "claim": "四道自带 --selftest 投毒自证的门（assert-corpus-semantics / assert-forge-blockshape-family / assert-forge-1182-registry-consts / assert-rule-ledger）的自证接入默认链：test-scripts §S18/S19 真跑块追加 --selftest 逐道 rc=0；改瞎任一 banned 形态，默认链必须红（不再需要手跑 --selftest）",
       "author": "计划 v2 W1-2（审计「报告说三门实为四门」）+ 2026-09-19 本轮接线",
       "evidence": "投毒验证：把 assert-forge-blockshape-family 的 FabricToolTags 正则改瞎 → node … --selftest rc=1（「1 例不符」）→ 复原 rc=0；四门 selftest 基线全绿（9 类/7+7 例/3 记/11 类畸形全检出）；test-scripts.mjs 全绿（新循环在 §S18/S19 真跑块内）；CI .github/workflows/mcp-server-ci.yml:40 跑 npm test ⇒ 覆盖",
-      "evidenceRefs": ["mcp-server/test-scripts.mjs", "mcp-server/scripts/assert-forge-blockshape-family.mjs", ".github/workflows/mcp-server-ci.yml"],
+      "evidenceRefs": [
+        "mcp-server/test-scripts.mjs",
+        "mcp-server/scripts/assert-forge-blockshape-family.mjs",
+        ".github/workflows/mcp-server-ci.yml"
+      ],
       "status": "closed",
-      "gates": ["test-scripts.mjs"],
+      "gates": [
+        "test-scripts.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -289,9 +442,16 @@
       "claim": "search_neoforge_docs 的「无主文档树刻意回空」路径（ok:true + total:0 + warning 点名「无独立 <v> 主文档树」）必须同样带 availableVersions（数值序、含全部已建档档位）——与通用口 VERSION_NOT_FOUND 的载荷键对齐，不是静默空返回；generate_* 的两条不支持出口（entity_renderer fabric/quilt、capability fabric/quilt 改口）必须 exit 1 + success:false + resultKind:generation_failed",
       "author": "计划 v2 W2-3 + W2-1 任务② + 2026-09-19 本轮修复（sweep87 终态已带 forge 侧 availableVersions 与 resultKind 三态，本条补 neoforge 独立路径与 CLI 探针）",
       "evidence": "修前实测 search_neoforge_docs --version=9.9.9 无 availableVersions 键（searchNeoForgeDocs 刻意回空分支未透传 VersionNotFoundError.availableVersions，forge 侧通用口 ：848 已带 ⇒ 两路键面漂移）；修后载荷带数值序候选，test-assistant-gaps A-43 新增 W2-3 腿逐键钉（含 1.21.8<1.21.10<1.21.11 数值序）；test-cli C1 块补 entity_renderer/capability 两条不支持出口探针（exit 1 + generation_failed + 改口文案 /cca/i）",
-      "evidenceRefs": ["mcp-server/src/docs-platform/neoforge/index.ts", "mcp-server/test-assistant-gaps.mjs", "mcp-server/test-cli.mjs"],
+      "evidenceRefs": [
+        "mcp-server/src/docs-platform/neoforge/index.ts",
+        "mcp-server/test-assistant-gaps.mjs",
+        "mcp-server/test-cli.mjs"
+      ],
       "status": "closed",
-      "gates": ["test-assistant-gaps.mjs", "test-cli.mjs"],
+      "gates": [
+        "test-assistant-gaps.mjs",
+        "test-cli.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -299,9 +459,18 @@
       "claim": "三端构建窗口不同的库用 mcVersionsByPlatform（平台专属窗口，整组替换 mcVersions）收窄白名单：resolve_lib_skills 不得给 fabric 1.21.x 吐出 mc-caelus（Fabric 实际止 1.17.1）；库 SKILL宣称「N 条(目)实测」必须引用 lib-manifests/all.json 锚点且 caelus 散文计数（31 条目 = Forge 20 / NeoForge 8=5 构件 / Fabric 3=2 构件）能由 all.json 机械复算；resolveLibSkillsSchema 与运行时对齐（mcVersion/version 至少一个）",
       "author": "计划 v2 W0-1 剩余 + W0-5 剩余 + 2026-09-19 本轮修复（正文 31 条目口径为 sweep87 落地）",
       "evidence": "修前实测 resolve_lib_skills --platform=fabric --mcVersion=1.21.1 吐 mc-caelus（count 30）；修后 count 29 无 caelus，五点矩阵（fabric 1.16.5 吐 / forge 1.20.1 吐 / neoforge 1.21.1 吐 / forge 1.21.5 不吐 / fabric 1.21.1 不吐）全过；census 复算 total=31 forge=20行/13构件 neoforge=8行/5构件 fabric=3行/2构件 与散文逐数一致；新门 assert-lib-census-counts.mjs（85 文件锚点腿 + 逐数复算腿 + selftest 6 例）接入 npm test 与 test-scripts §S18；schema 缺 mcVersion/version 现走 zod validation（errorKind:validation，报文含指引）",
-      "evidenceRefs": ["scripts/resolve-lib-skills.mjs", "knowledge/libs/all-platforms/mc-caelus/SKILL.md", "mcp-server/scripts/assert-lib-census-counts.mjs", "mcp-server/src/lib-skills/index.ts", "community_knowledge/authored/lib-caelus.md"],
+      "evidenceRefs": [
+        "scripts/resolve-lib-skills.mjs",
+        "knowledge/libs/all-platforms/mc-caelus/SKILL.md",
+        "mcp-server/scripts/assert-lib-census-counts.mjs",
+        "mcp-server/src/lib-skills/index.ts",
+        "community_knowledge/authored/lib-caelus.md"
+      ],
       "status": "closed",
-      "gates": ["assert-lib-census-counts.mjs", "test-platform-pack.mjs"],
+      "gates": [
+        "assert-lib-census-counts.mjs",
+        "test-platform-pack.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -309,9 +478,15 @@
       "claim": "mc_skill_update apply 的全量快照换入不得静默销毁本地新增：dryRun 载荷必须带完整 localAdditions 清单（现树有、新快照没有的文件）；本地新增非空且未 confirmed=true 时真换入必须拒绝（UPDATE_LOCAL_ADDITIONS_CONFIRM_REQUIRED，文件原样保留）；confirmed 换入后 steps 留痕「localAdditions destroyed: N」",
       "author": "计划 v2 W0-6 主体（报告§3「更新会删数据」）+ 2026-09-19 本轮修复（N7 锁竞态已由 sweep87 关闭）",
       "evidence": "修前 rmSync(prevDir) 无条件销毁旧树、dryRun 只给 new∩old（filesToOverwrite）——本地新增零披露；修后 listLocalAdditions(dataDir, incoming) 算 old−new，test-update 新增 testDataApplyLocalAdditionsGate 三段式（dryRun 清单 / 未确认拒绝且文件保留 / confirmed 换入且 destroyed 留痕），halfSwap 用例补 confirmed（自愈路径与新门正交）",
-      "evidenceRefs": ["mcp-server/src/update/data.ts", "mcp-server/src/update/index.ts", "mcp-server/test-update.mjs"],
+      "evidenceRefs": [
+        "mcp-server/src/update/data.ts",
+        "mcp-server/src/update/index.ts",
+        "mcp-server/test-update.mjs"
+      ],
       "status": "closed",
-      "gates": ["test-update.mjs"],
+      "gates": [
+        "test-update.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -319,9 +494,21 @@
       "claim": "qsl-verified 语料派生件（data/quilt_<ver>/…/processed/qsl-verified.md）必须由 scripts/index-qsl-verified.mjs 与其声明复制源 quilt/<ver>/knowledge/common/qsl-verified.md 保持归一化逐字节一致（2026-09-19 用户裁定路线 A，取代 F115 的「副本过期容忍」状态）：有源稿 + 有语料树 ⇒ processed 必须存在且一致；processed 存在 ⇒ 源稿必在；1.21.1 的虚构横幅（2025-12 停更 / 11.0.0-alpha.3+0.102.0-1.21）不再出现在任何 snippet / get_doc_full；F115 三处表述已同步为「已同步 + 机械刷新」口径",
       "author": "原审查 A8/§3（虚构横幅进检索）+ F115（2026-09-13 语料不改写）+ 2026-09-19 用户裁定路线 A（刷新派生件 + F115 同步）",
       "evidence": "index-qsl-verified.mjs --write 实跑：6 档 processed 与源稿逐字节一致（含 1.21.11 新建页 + index-l0 登记）；1.21.3/1.21.4/1.21.8/1.21.10 有源稿无语料树 = 合法无派生件（门按 hasCorpusTree 判）；quilt 1.21.1 语义索引 --force 重建（97 chunks / 76 embedded）+ LEDGER_SUM 重算回填（34032/25632，quilt 560/439）；验收探针：search_docs QSL 4 命中 snippet 无旧横幅，get_doc_full 新头「2026-09 maven 复核」在、旧头「2026-08 二轮审计」不在；新门 assert-qsl-verified-sync.mjs（selftest 7 例：过期/缺失/孤儿/归一化/无语料树合法形）接入双链；源稿/01-registry 七镜像经 sync-skills.ps1 重投影后 assert-skill-mirrors 0 漂移",
-      "evidenceRefs": ["scripts/index-qsl-verified.mjs", "mcp-server/scripts/assert-qsl-verified-sync.mjs", "quilt/1.21.1/knowledge/common/qsl-verified.md", "quilt/1.21.1/.cursor/rules/01-registry.mdc", "mcp-server/scripts/assert-rules-match-tool.mjs", "mcp-server/scripts/assert-index-consistency.mjs"],
+      "evidenceRefs": [
+        "scripts/index-qsl-verified.mjs",
+        "mcp-server/scripts/assert-qsl-verified-sync.mjs",
+        "quilt/1.21.1/knowledge/common/qsl-verified.md",
+        "quilt/1.21.1/.cursor/rules/01-registry.mdc",
+        "mcp-server/scripts/assert-rules-match-tool.mjs",
+        "mcp-server/scripts/assert-index-consistency.mjs"
+      ],
       "status": "closed",
-      "gates": ["assert-qsl-verified-sync.mjs", "assert-rules-match-tool.mjs", "assert-index-consistency.mjs", "assert-corpus-semantics.mjs"],
+      "gates": [
+        "assert-qsl-verified-sync.mjs",
+        "assert-rules-match-tool.mjs",
+        "assert-index-consistency.mjs",
+        "assert-corpus-semantics.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -329,9 +516,16 @@
       "claim": "forge/{1.17.1,1.19.4,1.20.1,1.20.4} 的「双向 Request-Reply」示例按 SimpleImpl 契约自洽：MyRequest 类内必有 (FriendlyByteBuf) 构造器（decoder 位合法）、handler 包进 public static class MyRequestHandler 并写 MyRequestHandler::handleRequest（裸静态 MyRequest::handleRequest 不得复活）；1.18.2 无此块不入 kind；1.13.2 合法形态（显式 PacketBuffer 构造器 + MyMessage::new）不误伤",
       "author": "原审查 A6/计划 v2 W3-1 + 2026-09-19 执行代理修复（爆炸半径 4 档 × 8 宿主 = 32 件已重投影）",
       "evidence": "四档源稿逐档修复（类内 buf 构造器 + MyRequestHandler 包装）并 sync-skills.ps1 重投影；assert-forge-blockshape-family 新增 kind networking-decoder-noctor（banned=裸 MyRequest::handleRequest——正则不含 Handler 前缀故不误伤修复形态；positive=MyRequest(FriendlyByteBuf 计数为 0 即门瞎）+ selftest 3 例（含 1.13.2 :142 合法对照应绿）；门 --selftest 与真跑全绿；assert-skill-mirrors 0 漂移",
-      "evidenceRefs": ["forge/1.20.1/.cursor/rules/06-networking.mdc", "forge/1.13.2/.cursor/rules/06-networking.mdc", "mcp-server/scripts/assert-forge-blockshape-family.mjs"],
+      "evidenceRefs": [
+        "forge/1.20.1/.cursor/rules/06-networking.mdc",
+        "forge/1.13.2/.cursor/rules/06-networking.mdc",
+        "mcp-server/scripts/assert-forge-blockshape-family.mjs"
+      ],
       "status": "closed",
-      "gates": ["assert-forge-blockshape-family.mjs", "assert-skill-mirrors.mjs"],
+      "gates": [
+        "assert-forge-blockshape-family.mjs",
+        "assert-skill-mirrors.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -339,9 +533,17 @@
       "claim": "forge/{1.15.2..1.20.4} 七档的 ClientSetup（订阅 FMLClientSetupEvent 等 Mod 总线生命周期事件）注解必须带 bus = Mod.EventBusSubscriber.Bus.MOD（1.14.4:100 全称形态）；Menu 示例必须双构造器（1.17.1/1.19.4/1.20.1/1.20.4 补 (int, Inventory)，1.18.2 工厂改调 2 参构造）；1.13.2:120 KeyInputEvent 是游戏总线事件，无 bus 属合法、不入 kind",
       "author": "原审查 A7/计划 v2 W3-2 + 2026-09-19 执行代理修复（含 1.15.2 mc-entity/mc-particle/mc-gui、1.16.5–1.20.4 mc-gui、1.13.2 08-client-server:93、code-patterns 同串件，逐件判定）",
       "evidence": "七档 10-gui + 连带技能件逐件补 bus（1.13.2:120 保持原样）并重投影；1.18.2 的工厂 lambda 保留 (id, inv, player) 签名改调 2 参构造（原缺陷 = 把 Player 传进 FriendlyByteBuf 形参）；assert-forge-blockshape-family 新增 kind gui-clientsetup-needs-modbus（banned=缺 bus 精确串含缩进变体；positive=busMod 计数为 0 即门瞎）+ selftest 3 例（含 1.14.4 全称应绿）；门 --selftest 与真跑全绿；assert-skill-mirrors 0 漂移",
-      "evidenceRefs": ["forge/1.20.1/.cursor/rules/10-gui.mdc", "forge/1.14.4/.cursor/rules/10-gui.mdc", "forge/1.18.2/.cursor/rules/10-gui.mdc", "mcp-server/scripts/assert-forge-blockshape-family.mjs"],
+      "evidenceRefs": [
+        "forge/1.20.1/.cursor/rules/10-gui.mdc",
+        "forge/1.14.4/.cursor/rules/10-gui.mdc",
+        "forge/1.18.2/.cursor/rules/10-gui.mdc",
+        "mcp-server/scripts/assert-forge-blockshape-family.mjs"
+      ],
       "status": "closed",
-      "gates": ["assert-forge-blockshape-family.mjs", "assert-skill-mirrors.mjs"],
+      "gates": [
+        "assert-forge-blockshape-family.mjs",
+        "assert-skill-mirrors.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -349,9 +551,15 @@
       "claim": "mc-worldgen task 不再承诺注入 rules:[\"07\"]（57 棵规则树 07 正文 0 worldgen token = 假覆盖）：TASK_SPECS 为 rules:[]，各档 mc-worldgen SKILL 头部带「本技能不含已核实签名，一律改口 search_*_docs 的 worldgen_* 页」披露；Fabric 侧已有真签名的技能不受影响",
       "author": "原审查§4 假覆盖 + 2026-09-19 用户裁定 4-C（保留 task、摘承诺、加披露）",
       "evidence": "session.ts TASK_SPECS 改 rules:[]（带裁定注释）；各档 .cursor/skills/mc-worldgen/SKILL.md 头部加披露并重投影（forge/neoforge 全档 + 命令镜像）；test-platform-pack 全绿；1.21.10 语料含 worldgen_biomemodifier.md（corpus 有 rules 无，披露点名改口目标）",
-      "evidenceRefs": ["mcp-server/src/platform-pack/session.ts", "forge/1.20.1/.cursor/skills/mc-worldgen/SKILL.md", "data/neoforge_1.21.10/neoforge-docs/1.21.10/processed/worldgen_biomemodifier.md"],
+      "evidenceRefs": [
+        "mcp-server/src/platform-pack/session.ts",
+        "forge/1.20.1/.cursor/skills/mc-worldgen/SKILL.md",
+        "data/neoforge_1.21.10/neoforge-docs/1.21.10/processed/worldgen_biomemodifier.md"
+      ],
       "status": "closed",
-      "gates": ["test-platform-pack.mjs"],
+      "gates": [
+        "test-platform-pack.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -359,9 +567,14 @@
       "claim": "modloader 1.2.5 / 1.5.2 的规则树 + 语料虽存在但未建 ready 档：根 AGENTS 第 7 步明写「禁止按 1.6.4 顶替」，且 modloader 1.6.4 的 session 载荷带同款警示（6-B 止血；审后是否升 ready 另议）",
       "author": "原审查§4 路由缺口 + 2026-09-19 用户裁定 6-B 止血",
       "evidence": "根 AGENTS.md 第 7 步新增裁定块（1.2.5/1.5.2 未建 ready 档、PACK_NOT_FOUND、BaseMod 形态随版本未核实）；session.ts 在 platform=modloader && minecraftVersion=1.6.4 时 push 同款 warning；test-platform-pack 全绿；A 升级路径 = 逐档审规则横幅后注册 ready",
-      "evidenceRefs": ["AGENTS.md", "mcp-server/src/platform-pack/session.ts"],
+      "evidenceRefs": [
+        "AGENTS.md",
+        "mcp-server/src/platform-pack/session.ts"
+      ],
       "status": "closed",
-      "gates": ["test-platform-pack.mjs"],
+      "gates": [
+        "test-platform-pack.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -369,9 +582,14 @@
       "claim": "validate_addon_manifest / generate_addon_manifest 的 format_version 接受面维持现状（整数形与 beta 串收；semver 形如 \"3.0.1\" 有意拒绝），规则 01 明写「semver 形未核实，以 Learn pack-manifest 现页为准」——官方逐字语义核实前不放行（7-B）",
       "author": "原审查§3（拒官方合法 format_version 3 semver）+ 2026-09-19 用户裁定 7-B 维持现状 + 文档化",
       "evidence": "bedrock/.cursor/rules/01-manifest.mdc 八宿主同步裁定段（3 是 Preview/semver 字符串版本；TODO(未核实) 口径保留）；工具行为零改动 ⇒ 既有验证行为即钉（整数 3 过 / Preview 串拒，test-core 既有用例）；一手样例到位后重开（nextRound）",
-      "evidenceRefs": ["bedrock/.cursor/rules/01-manifest.mdc", "data/bedrock_stable/bedrock-docs/stable/processed/pack-manifest.md"],
+      "evidenceRefs": [
+        "bedrock/.cursor/rules/01-manifest.mdc",
+        "data/bedrock_stable/bedrock-docs/stable/processed/pack-manifest.md"
+      ],
       "status": "closed",
-      "gates": ["test-core.mjs"],
+      "gates": [
+        "test-core.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -379,9 +597,14 @@
       "claim": "neoforge/1.20.1 的 8 份本地规则是**备份**：session/write 的生效面走 FORGE_COMPAT_1.20.1 overlay（正文来自 forge/1.20.1，预期行为）；每份本地规则头部带备份声明（「与 forge 1.20.1 通用，只做备份、不进注入，编辑以 forge/1.20.1 为真值源」）",
       "author": "原审查§3（forceOverlay||!local 使本地规则永不生效）+ 2026-09-19 用户裁定 8「不用管，写明备份口径」",
       "evidence": "neoforge/1.20.1/.cursor/rules/{02,03,04,05,06,07,08,10}*.mdc + agent 派生件头部加备份声明并重投影（8 宿主）；catalog.ts 的 overlay 行为零改动（本就是裁定认可的预期行为）",
-      "evidenceRefs": ["neoforge/1.20.1/.cursor/rules/10-gui.mdc", "mcp-server/src/platform-pack/catalog.ts"],
+      "evidenceRefs": [
+        "neoforge/1.20.1/.cursor/rules/10-gui.mdc",
+        "mcp-server/src/platform-pack/catalog.ts"
+      ],
       "status": "closed",
-      "gates": ["assert-skill-mirrors.mjs"],
+      "gates": [
+        "assert-skill-mirrors.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -389,9 +612,16 @@
       "claim": "全仓 glossary 的 mojang 行 = 「Mojang 官方可读映射名（不是 SRG/混淆名）」（neoforge:94 口径），行内不得把 mojang 说成混淆名/srg；「official（即 mojang）」类矛盾括注一并清除；新门做否定感知判别（30 字符窗内否定词豁免，不误杀「不是 SRG」正例）",
       "author": "原审查 A10/计划 v2 W3-3 + 2026-09-19 执行代理修复（forge 8 档 + 1.17.1:101/1.20.1:98/1.20.4:98 注行 + neoforge:100/:96 + fabric/1.21.1:7，共 10 文件）",
       "evidence": "10 文件逐字修正；新门 assert-glossary-mojmap-face.mjs（selftest 6 畸形 + 2 内存正例 + 真实正对照 21 份 glossary；exit-1 用临时坏文件实测）；门真跑 21 份绿并接入 npm test 与 test-scripts §S18",
-      "evidenceRefs": ["forge/1.20.1/knowledge/common/glossary.md", "fabric/1.21.1/knowledge/common/glossary.md", "neoforge/knowledge/common/glossary.md", "mcp-server/scripts/assert-glossary-mojmap-face.mjs"],
+      "evidenceRefs": [
+        "forge/1.20.1/knowledge/common/glossary.md",
+        "fabric/1.21.1/knowledge/common/glossary.md",
+        "neoforge/knowledge/common/glossary.md",
+        "mcp-server/scripts/assert-glossary-mojmap-face.mjs"
+      ],
       "status": "closed",
-      "gates": ["assert-glossary-mojmap-face.mjs"],
+      "gates": [
+        "assert-glossary-mojmap-face.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -399,9 +629,16 @@
       "claim": "quilt 7 档 01-registry/05-events :3 的「见本文件「maven 实证」段」死引用全部改指真实锚点（quilt/<ver>/AGENTS.md 顶部横幅；1.21.1 :9 粗体块保留）；新门钉「规则内「见本文件「X」」引文的 X 必须存在」（621 份 .cursor/rules survey：15 处命中 = 14 死已修 + 1 活引用；KNOWN 豁免台账空）",
       "author": "原审查 A8/计划 v2 W5-1（报告写 8 档，实测 7 档 / 死引用 14 处含 05-events 全 7 档）+ 2026-09-19 执行代理修复",
       "evidence": "14 件源稿 + 98 件镜像（7 档 × 6 宿主 .mdc + .pi）重投影，112/112 件含新句、0 残留死句；1.21.1:27 F115 段与 sweep85 :19/:17 实测 INTACT；新门 assert-rule-internal-refs.mjs（selftest 6 红例 + 围栏感知 + 517 份正对照；KNOWN 空台账）接入双链",
-      "evidenceRefs": ["quilt/1.21.3/.cursor/rules/05-events.mdc", "quilt/1.21.1/.cursor/rules/01-registry.mdc", "mcp-server/scripts/assert-rule-internal-refs.mjs"],
+      "evidenceRefs": [
+        "quilt/1.21.3/.cursor/rules/05-events.mdc",
+        "quilt/1.21.1/.cursor/rules/01-registry.mdc",
+        "mcp-server/scripts/assert-rule-internal-refs.mjs"
+      ],
       "status": "closed",
-      "gates": ["assert-rule-internal-refs.mjs", "assert-skill-mirrors.mjs"],
+      "gates": [
+        "assert-rule-internal-refs.mjs",
+        "assert-skill-mirrors.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -409,9 +646,16 @@
       "claim": "verified-api 表的 payload 前提按一手语料更正（W5-2 裁定 1-A/2-A/3）：1.20.4 :39/:73 的「无 payload 页/DOC_NOT_FOUND」不成立（networking_payload.md 在库）⇒ 改双源口径；1.20.6 :10 的「类名未核实/禁止抄 1.21」不成立（页面在场且 1.20.6 起即 RegisterPayloadHandlersEvent + PayloadRegistrar + StreamCodec + CustomPacketPayload TYPE/STREAM_CODEC/type() 新形，DirectionalPayloadHandler 页内在场）⇒ 按页面写实；1.21.10 表 13 行 API 结论逐行对页全命中（原「给错 API 结论」未复现），实修 = 两处出处 id 纠正为 L0 真实 id（gui/menus→inventories/menus、datamaps→resources/server/datamaps）",
       "author": "计划 v2 W5-2（假核实表）+ 2026-09-19 用户裁定 1.A/2.A/3.可以 + 本轮取证修复",
       "evidence": "1.20.4 页含 RegisterPayloadHandlerEvent/IPayloadRegistrar/PlayPayloadContext 且无 StreamCodec（表结论原样成立）；1.20.6 页含新名全套、旧名单 0 命中；1.21.10 逐行 token 命中 13/13（:13 的 2/3 为碎片 token 非真失配）；三处修正均带裁定标注",
-      "evidenceRefs": ["neoforge/1.20.4/knowledge/common/verified-api-1.20.4.md", "neoforge/1.20.6/knowledge/common/verified-api-1.20.6.md", "neoforge/1.21.10/knowledge/common/verified-api-1.21.10.md", "data/neoforge_1.20.6/neoforge-docs/1.20.6/processed/networking_payload.md"],
+      "evidenceRefs": [
+        "neoforge/1.20.4/knowledge/common/verified-api-1.20.4.md",
+        "neoforge/1.20.6/knowledge/common/verified-api-1.20.6.md",
+        "neoforge/1.21.10/knowledge/common/verified-api-1.21.10.md",
+        "data/neoforge_1.20.6/neoforge-docs/1.20.6/processed/networking_payload.md"
+      ],
       "status": "closed",
-      "gates": ["test-core.mjs"],
+      "gates": [
+        "test-core.mjs"
+      ],
       "closedAt": "2026-09-19"
     },
     {
@@ -419,9 +663,67 @@
       "claim": "骨架技能按口径 2（横幅 + 无 PascalCase 类名）普查并钉棘轮：当前源稿 867 件 / 横幅 222 / noPascal 94（19 簇；top：mc-ai、mc-datapack、mc-enchantment、mc-multiblock、mc-resourcepack 各 13、mc-model 10）——5-B 补正使计数只降不升，簇消失 = 补正完成；基线只由 MC_SKILL_SKELETON_RELEDGER=1 重算",
       "author": "2026-09-19 用户裁定 5-B（逐簇补正）+ 本轮建普查棘轮门",
       "evidence": "横幅形态取自真实骨架样例（forge/1.12.2/.cursor/skills/mc-datapack/SKILL.md「Wave D 技能骨架」）；新门 assert-skill-skeleton-census.mjs（selftest 7 例：棘轮 5 形态 + census 2 例）+ 基线 skill-skeleton-census-baseline.json 已登记并接入双链；报告的 1,400/14.0% 为镜像重复计数已证伪，源稿侧口径以本门为准；逐簇补正工程另立批次（首批建议 top-5 簇 × 13 档）",
-      "evidenceRefs": ["mcp-server/scripts/assert-skill-skeleton-census.mjs", "mcp-server/scripts/skill-skeleton-census-baseline.json", "forge/1.12.2/.cursor/skills/mc-datapack/SKILL.md"],
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-skill-skeleton-census.mjs",
+        "mcp-server/scripts/skill-skeleton-census-baseline.json",
+        "forge/1.12.2/.cursor/skills/mc-datapack/SKILL.md"
+      ],
       "status": "closed",
-      "gates": ["assert-skill-skeleton-census.mjs"],
+      "gates": [
+        "assert-skill-skeleton-census.mjs"
+      ],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "validate-at-method-level-descriptor",
+      "claim": "validate_at 支持官方方法级 AT 粘连描述符写法 <access> <owner> <name>(<desc>)（advanced_accesstransformers.md「Methods/Examples」两例：makeExecutor(Ljava/lang/String;)Lnet/minecraft/TracingExecutor; 与 leastMostToIntArray(JJ)[I）：解析按第一个 ( 拆成员名+描述符，校验按「名+描述符」命中；修前粘连描述符整段当成员名⇒必报成员不存在。旧式「名字+独立描述符 token」、字段级、类级行为不变；坏行（缺方法名）报错且不中止其余行（forEach 语义）",
+      "author": "计划 v2 W4-1（C1 代理实现，平台故障亡后主线程收账核实）",
+      "evidence": "diff 审查 + forEach 作用域核实（return 仅跳过当前行）+ test-core 新钉 5 行 AT 解析（含负例与 4 正例、entries.length=4）；validateAccessTransformer 的描述符命中走既有 lookupMemberInHierarchy",
+      "evidenceRefs": [
+        "mcp-server/src/mixin/access-transformer.ts",
+        "mcp-server/test-core.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "test-core.mjs"
+      ],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "diagnose-gradle-scaffold-green",
+      "claim": "diagnose_gradle 对本仓全部 scaffold 判绿（test-core 内嵌全扫 44 档 0 error）：(1) fabric/1.21.4、1.21.8、1.21.10、1.21.11 scaffold 实钉官方 remap 线插件 id net.fabricmc.fabric-loom-remap（官方 Loom 文档划给 ≤1.21.11 混淆时代），旧正则只认无 -remap 形态⇒4 档假红「缺少 Loom 插件 id」，已改 (?:-remap)? 可选后缀；(2) fabric/1.14.4、1.16.5 scaffold 实钉 sourceCompatibility = JavaVersion.VERSION_1_8，旧式 VERSION_\\d+\\b 因 1_8 下划线无词边界漏判⇒2 档假红「未找到 Java toolchain 配置」，已允许多段版本号。旧 dist 复现 red=6/green=38 → 修复后 red=0/green=44",
+      "author": "计划 v4-2（C1 代理实现，平台故障亡后主线程收账核实 + 逐条第一手证据核verify）",
+      "evidence": "git grep 实证：fabric/1.21.10/scaffold/build.gradle:4 与 1.21.11/scaffold/build.gradle:5 为 net.fabricmc.fabric-loom-remap，1.14.4/1.16.5 scaffold:76/84 为 VERSION_1_8；stale-dist 复现扫描 6 假红与 diff 注释完全一致；test-core 内嵌全 scaffold 扫描（≥40 档）+ 两 inline 钉（-remap 形态、VERSION_1_8 形态）",
+      "evidenceRefs": [
+        "fabric/1.21.10/scaffold/build.gradle",
+        "fabric/1.21.11/scaffold/build.gradle",
+        "fabric/1.21.4/scaffold/build.gradle",
+        "fabric/1.21.8/scaffold/build.gradle",
+        "fabric/1.14.4/scaffold/build.gradle",
+        "mcp-server/src/gradle/index.ts",
+        "mcp-server/test-core.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "test-core.mjs"
+      ],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "gradle-placeholder-modid-not-false-red",
+      "claim": "validate_project 对元数据 modId=\"${mod_id}\" Gradle 占位符不再假红（forge mods.toml / neoforge neoforge.mods.toml / fabric fabric.mod.json 三路径）：新增 src/validate/placeholder.ts（gradlePlaceholderProp/resolveGradlePlaceholder），能从 gradle.properties 解析出同名属性时按解析值校验（@Mod 注解交叉核对随之更准），解析不到降级 warning；真非法 id 仍判红。修前毒化实测 7/10 断言红（含第二假红「@Mod 注解与 mods.toml ${mod_id} 不一致」）",
+      "author": "计划 v4-3（C1 代理建模块未及接线而亡，主线程完成三处接线）",
+      "evidence": "接线点：validate/index.ts checkModsToml(+gradleProperties 参数) 与 neo 注解交叉核对、validate/loaders.ts fabric/quilt id 与 neo modId 两正则；红→绿证据链：poisoned dist（gradlePlaceholderProp 恒 null）probe 7 失败，恢复后 10/10 绿；test-core 新增三平台占位符钉（resolved/unresolved/bad-id 正控）",
+      "evidenceRefs": [
+        "mcp-server/src/validate/placeholder.ts",
+        "mcp-server/src/validate/index.ts",
+        "mcp-server/src/validate/loaders.ts",
+        "mcp-server/test-core.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "test-core.mjs"
+      ],
       "closedAt": "2026-09-19"
     }
   ]
