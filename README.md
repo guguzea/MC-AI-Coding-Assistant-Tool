@@ -315,6 +315,43 @@ node mcp-server/bin/mc-skill-scripts.mjs gate run lib-ownership # 跑一道门�
 
 **数据与模型位置**：语义库在 `data/{platform}_{ver}/{source}/{ver}/semantic/db.sqlite`（跳过 `forge_javadoc`），当前 **60** 个（2026-09-13 实算：`find data -type f -name db.sqlite -path "*/semantic/*"`；不含 `db.sqlite.tmp-*` / `-journal` 残渣，`forge_javadoc` 树本就没有语义库）；嵌入模型在 `data/_models/Xenova/all-MiniLM-L6-v2`（transformers.js，**唯一允许远程拉模型的入口**）。构建：`npm run fetch:embedding-model`；`npm run build:semantic-index -- --all`（可 `--platform` / `--version` / `--source` / `--no-embed` / `--force`；可中断续跑）。产物清单：`data/semantic-index-manifest.json`。
 
+#### Agent 怎么调用（两条入口、两步走、一个字段）
+
+**入口 A：MCP 工具**（AI IDE 已挂 `MC-AI-Coding-Assistant-Tool` 时，这是 Agent 的正规调用方式）。按平台选工具，参数只有 `version` + `query`，语义层**自动**参与、没有任何开关：
+
+- Forge → `search_forge_docs { version: "1.14.4", query: "entity goal" }`
+- Fabric → `search_fabric_docs { version: "1.21.4", query: "custom enchantment effect" }`（先 `list_fabric_versions` 确认入库档名）
+- NeoForge → `search_neoforge_docs { version: "1.20.1", query: "..." }`（1.20.1 回退 Forge 语料，属预期）
+- 通用（quilt / liteloader / rift / modloader 等）→ `search_docs { platform: "...", version: "...", query: "..." }`
+
+**入口 B：独立 CLI**（无 MCP 客户端，或想在 shell 里立刻验证——改完源码没重载宿主时也用它）：
+
+```bash
+node mcp-server/dist/cli.js search_forge_docs --version=1.14.4 --query="entity goal selector"
+```
+
+（`MC_SKILL_DATA` 指向 `data/`；工具输出恒为 JSON，`--json` 不改变工具输出。）
+
+**两步走**：`search_*_docs` 拿结果里的 **`id`**（不是网站 URL）→ `get_*_doc_full` / `get_*_doc_summary` 读正文。一次最多 2 页，防止上下文溢出。
+
+**响应契约**：`{ ok, total, semantic, results: [{ id, score, … }], matches? }`。Agent 必须读 `semantic` 字段：
+
+- `semantic: true` = 本轮走语义库（FTS5 BM25 + MiniLM 向量余弦、RRF 融合），命中可视为按相关性排序的 coverage 证据；
+- `semantic: false` = 降级 L0 关键词（该树没建语义库 / 嵌入模型缺失 / `semanticSearch` 返回 null），带 warning——此时命中**不穷尽**，`found:false` 什么都不能证明；
+- 命中可带 `matches[]`（`sectionHeading` / `snippet` / `score`），snippet 来自 chunks 表**真实正文**，可直接引用。
+
+**Agent 侧规矩**（根 `AGENTS.md`「不确定时」条款，2026-09-19 起）：查 API / 文档 / 机制**先语义搜索**；`query_api` / `query_loader_api` 是兼容工具（见下节），只作兜底。
+
+#### query_\* 兼容工具与 1.14.4/1.15.2 边界报告（2026-09-19，sweep104）
+
+`query_api` / `query_loader_api` 被标记为**兼容工具**（类名/签名索引类，覆盖按版本而异且有限）。每次调用的响应都显式提醒，不再静默：
+
+1. **query_api 每次响应**：`notes` 末尾追加「query_api 是兼容工具……文档与语义面请优先 search_forge_docs / search_docs 语义搜索」。
+2. **query_api 查 1.14.4 / 1.15.2**：`warning` 显式报告边界——这两档 api-index 为空是**设计行为**（MCP stable CSV 仅成员级 searge↔named，Parchment 索引自 1.16.5 起才有），`found:false` 不代表游戏里没有该类；响应推荐改用 `search_forge_docs` **语义搜索**（这两档语料与语义库完整：1.68MB / 1.32MB，实测 `semantic: true`）+ `convert_mapping`（1.14–1.15 CSV 仅 searge↔named，**类名不可查**，方法名可以）。背景：这两档旧版恰好落在「1.7–1.13 空壳警告」与「classCount===0 警告」两条分支之间静默返回，sweep104 补上专门分支。
+3. **query_loader_api 每次响应**：`notes` 追加兼容注释（覆盖以已 ingest 的档为界）。
+
+钉子：`test-core.mjs`（1.20.1 兼容注释 / 1.14.4 与 1.15.2 边界 warning / 1.12.2 空壳警告保留）与 `test-loader-api.mjs`（兼容注释）。
+
 ### 文档查询（Forge / Fabric / NeoForge）
 
 1. **页面 ID 必须用搜索结果里的** `id`，不要用网站 URL 路径。
@@ -333,7 +370,7 @@ node mcp-server/bin/mc-skill-scripts.mjs gate run lib-ownership # 跑一道门�
 | Forge **1.12.2** | `search_forge_docs` / `search_docs`（`version=1.12.2`）。有 `data/forge_1.12.2/forge-docs` 教程（如 `1.12.2/blocks_blocks`） | **不要**把 `query_api` 当 javadoc：该版 extracted 约 3300 个**类名空壳**，`found:true` 且 `methods:[]`。映射用 `convert_mapping`（MCP SRG） | `query_loader_api` / `search_loader_api`（`1.12.2-forge` 已索引，约 1100 类） |
 | Forge **1.7.10–1.11.2** | 无教程规则树；落到 `forge_javadoc` / `search_docs`，`semantic: false` | 同上，类名空壳；不要 `query_api` | 无 loader 摘要（`search_loader_api mode=list` 的 `noIngest`） |
 | Forge **1.13.2** | `search_forge_docs` / javadoc | 类名空壳 | `1.13.2-forge` 已索引 |
-| Forge **1.14.4 / 1.15.2** | `search_forge_docs` | `query_api` 索引为 `{}`（0 类） | `*-forge` 已索引 |
+| Forge **1.14.4 / 1.15.2** | `search_forge_docs`（**语义库完整**，1.68MB / 1.32MB，实测 `semantic: true`——查这两档优先用语义搜索） | `query_api` 索引为 `{}`（0 类，**设计边界**——每次查询响应带边界 `warning` 并推荐语义搜索，见「向量 / 语义搜索」节；类名在文档语料里逐字可引，见 sweep103 验证） | `*-forge` 已索引 |
 | Forge **1.16.5–1.20.4** | `search_forge_docs` | Vanilla 可用 `query_api`（真方法签名） | `query_loader_api` 或文档 |
 | Fabric | 先 `list_fabric_versions`；**禁止**把邻版 wiki 当本版。26.1.2 仅 `fabric-docs`、无 wiki | 26.1+ 无 `query_api` 索引 | `search_loader_api mode=list`：`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.11` / `26.1.2` 的 fabric-api **已索引**（不要再当成 maven 404；**11 档 = 14 个 `fabric/*` 规则树 − 薄档 `1.21.4` / `1.21.8` / `1.21.10`**） |
 | Quilt | `search_docs({platform:"quilt"})`；问 QSL 禁止把 Fabric Registry 当命中 | 同左版本的 Vanilla 边界 | QSL 摘要见 `mode=list`（如 `1.19.4-qsl` / `1.21.1-qsl`） |
@@ -382,7 +419,7 @@ node mcp-server/bin/mc-skill-scripts.mjs gate run lib-ownership # 跑一道门�
 | 情况 | 表现 | Agent 应改用 |
 |------|------|----------------|
 | MC **26.1+** 的 `query_api` / `get_method_params` | 该类 extracted 为 **0 个类**（无 Parchment api-index） | `search_neoforge_docs`（须传 version，先 `list_neoforge_versions`）/ `search_fabric_docs`（先 `list_fabric_versions`，如 26.1.2）；或 `get_minecraft_source` / 反编译。映射层返回 `UNOBFUSCATED_NO_YARN` |
-| Forge **1.14.4 / 1.15.2** `api-index.json` | 占位 `{}`，Parchment 约从 1.16.5 才有（`forge_1.8.9` / `forge_1.9.4` 的 `class-names.json` 同为 `[]` 占位） | 换 `version=1.16.5+` 查相近 Vanilla 名，或靠文档 / MCP 映射，不要当有完整 javadoc |
+| Forge **1.14.4 / 1.15.2** `api-index.json` | 占位 `{}`，Parchment 约从 1.16.5 才有（`forge_1.8.9` / `forge_1.9.4` 的 `class-names.json` 同为 `[]` 占位）。**每次 `query_api` 查询都会报此边界并推荐 `search_forge_docs` 语义搜索**（sweep104；这两档 docs 语料与语义库完整） | 换 `version=1.16.5+` 查相近 Vanilla 名，或靠文档 / MCP 映射，不要当有完整 javadoc |
 | Fabric **26.1.2** | 仅 `fabric-docs`（页数少），**无** `fabric-wiki` | `source` 保持默认 `fabric-docs`；不要把 1.21.x wiki 当 26.1.2 |
 | Forge **1.12.2** | `list_forge_versions` **含** 1.12.2；有 `forge-docs` 教程树。`query_api` 可能 `found:true` 但 `methods:[]`（类名空壳） | `search_forge_docs` / `search_docs({platform:"forge", version:"1.12.2"})` → `get_forge_doc_full`。Forge 类用 `query_loader_api`。**禁止**把空 methods 当完整签名 |
 | Forge **1.7.10–1.11.2** | `1.7.10` 有 javadoc 核实表与短 00/01/09；其余档搜索落到 Javadoc 类名，`semantic: false` | 当类名索引用；`search_forge_docs version=1.7.10` / `search_docs({platform:"forge"})`。不要用 1.12.2 / 1.20.1 规则顶上，也不要假 pin 1.7.10 MDK |
