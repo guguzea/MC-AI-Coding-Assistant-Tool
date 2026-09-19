@@ -7,16 +7,47 @@ dependencies: []
 mappings: mcp
 ---
 
-# mc-resourcepack
+# mc-resourcepack（1.15.2）
 
-> Wave D 技能骨架（forge 1.15.2）。详细规则见对应 `.cursor/rules/` 与 MCP `search_forge_docs` / 专题工具。
+> 一手来源：`forge/1.15.2/knowledge/common/resourcepack-format.md`（pack_format 对齐官方 1.15.2-31.2.57 MDK，sha256 钉在 `mcp-server/data/mdk-checksums.json`）。
 
-## 快速入口
+## Decision Flow
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`forge/1.15.2/knowledge/antipatterns/`
+```
+→ 方块/物品视觉（blockstate、模型、贴图）→ 本技能
+→ 语言/字体/粒子/着色器 → assets/<namespace>/ 对应目录
+→ 配方/战利品 JSON → data/（mc-datapack）
+→ Java 侧 → mc-registry、01-registry.mdc
+```
+
+## pack.mcmeta（已核实）
+
+```json
+{ "pack": { "pack_format": 5, "description": "..." } }
+```
+
+1.15.2 的资源包与数据包**同为 5**；1.18 起两类包编号分家（1.18.2 = 资源 8 / 数据 9），别把「相同」外推到 1.18+。
+
+## 目录结构（已核实）
+
+```
+assets/<namespace>/
+├── blockstates/  fonts/  gui/  lang/{en_us,zh_cn}.json
+├── models/{block,item}/  particles/  shaders/
+└── textures/{block,entity,item}/
+```
+
+Forge 模型层叠（overrides 机制）见一手速查「Forge 模型层叠」节。
+
+## 反模式
+
+- 纹理路径含大写字母（`block/MyBlock.png` → `block/myblock.png`）。
+- lang 键分隔符用 `.` 连 namespace（应为 `item.examplemod.my_item`）。
+- blockstates 引用不存在的模型路径；模型 JSON 缺 `parent`。
+- 物品模型用 `minecraft:block/my_block` 但没定义 blockstates。
+- `pack_format` 填错（1.15.2 = **5**，不是 4 或 6）。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 完整速查：`forge/1.15.2/knowledge/common/resourcepack-format.md`。
+- 反模式库：`forge/1.15.2/knowledge/antipatterns/`。

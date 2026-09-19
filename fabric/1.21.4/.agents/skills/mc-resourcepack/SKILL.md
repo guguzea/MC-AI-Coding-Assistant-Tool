@@ -7,19 +7,49 @@ dependencies: []
 mappings: yarn
 ---
 
-[DONOR_SKILL 禁止直接抄写]
-本 Skill 正文为本地维护的结构/流程草稿，未经官方 API 核验（无外部捐入源版本：fabric/1.21.3 无同名技能；fabric/1.21.8 与 fabric/1.21.10 的同名 Skill 均由本档派生）。不得直接使用正文里的类名/方法。先 search_fabric_docs(version=1.21.4) 核对类名/方法签名（不要用 version=1.21.3），对不上就改口官方文档、禁止照抄。Yarn 档互捐，禁止把 26.1.2 mojmap 当本档。
+# mc-resourcepack（1.21.4）
 
-# mc-resourcepack
+> 一手来源（2026-09-19 核实）：Minecraft Wiki《Pack format》资源包格式表（https://minecraft.wiki/w/Pack_format ，1.21.4 = 46）与《Resource pack》页（https://minecraft.wiki/w/Resource_pack ，24w45a 起新增物品模型定义目录）。本技能不含 Java API；客户端渲染类名走 `search_fabric_docs(version=1.21.4)`。
 
-> Wave D 技能骨架（fabric 1.21.4）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+## Decision Flow
 
-## 快速入口
+```
+→ 方块/物品视觉（blockstate、模型、贴图）→ 本技能
+→ 物品的「用哪个模型渲染」定义 → 1.21.4 新制 assets/<ns>/items/<item>.json（下述）
+→ 数据 JSON（配方/战利品/标签）→ data/（mc-datapack）
+→ Java 侧 → mc-registry、01-registry.mdc
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.21.3/knowledge/antipatterns/`
+## pack.mcmeta（已核实，出处见上）
+
+| MC 版本 | 资源包 pack_format | 数据包 |
+|---------|------------------|--------|
+| **1.21.4** | **46** | 61 |
+| 1.21.7–1.21.8 | 64 | 81 |
+| 1.21.9–1.21.10 | 69.0（1.21.9 起 pack_format 引入小版本号） | 88.0 |
+
+## 1.21.4 新制：物品模型定义（已核实）
+
+1.21.4（快照 24w45a）在 `assets/<namespace>/items/` 新增**物品模型定义** JSON——把「物品用哪个模型渲染」的定义从模型文件本身分离出来；`assets/<ns>/models/item/` 仍是模型文件本体。写 1.21.4+ 物品外观时两层都要分清。
+
+## 目录结构（要点）
+
+```
+assets/<namespace>/
+├── blockstates/  lang/  models/{block,item}/
+├── items/        # 1.21.4 起的物品模型定义
+└── textures/{block,item,entity}/
+```
+
+Fabric 模组自带的资源 JSON 同形，随 jar 根的 `assets/<namespace>/` 分发。
+
+## 反模式
+
+- `pack_format` 填邻版数字（1.21.4 资源包是 **46**，不是 61/64）。
+- 把 1.21.4 的 `items/` 定义与 `models/item/` 模型本体混为一谈。
+- 纹理路径含大写字母；blockstate 引用不存在的模型。
+- Java 类名问题带进本技能（数据/资源面无类名；类名核实走 search_fabric_docs）。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 模型/blockstate JSON 细节以 wiki 原文为准（出处 URL 见顶部）；数据面：`mc-datapack`。

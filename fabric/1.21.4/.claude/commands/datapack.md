@@ -7,19 +7,52 @@ dependencies: []
 mappings: yarn
 ---
 
-[DONOR_SKILL 禁止直接抄写]
-本 Skill 正文为本地维护的结构/流程草稿，未经官方 API 核验（无外部捐入源版本：fabric/1.21.3 无同名技能；fabric/1.21.8 与 fabric/1.21.10 的同名 Skill 均由本档派生）。不得直接使用正文里的类名/方法。先 search_fabric_docs(version=1.21.4) 核对类名/方法签名（不要用 version=1.21.3），对不上就改口官方文档、禁止照抄。Yarn 档互捐，禁止把 26.1.2 mojmap 当本档。
+# mc-datapack（1.21.4）
 
-# mc-datapack
+> 一手来源（2026-09-19 核实）：Minecraft Wiki《Pack format》数据包格式表（https://minecraft.wiki/w/Pack_format ，1.21.4 = 61）与《Data pack》目录改名记载（https://minecraft.wiki/w/Data_pack ，1.21 起 recipes/loot_tables 等改单数）。本技能不含 Java API——数据包是 JSON 面；Java 侧数据生成走 `mc-datagen`。
 
-> Wave D 技能骨架（fabric 1.21.4）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+## Decision Flow
 
-## 快速入口
+```
+→ 改 Java 行为/注册 → 不是数据包，走 mc-datagen / 01-registry（Fabric 用 Registry.register）
+→ 数据包 JSON（配方/战利品/标签/函数）→ 本技能
+→ 版本 → 1.21.4 数据包 pack_format = 61（资源包为 46）
+→ JSON 写完 → validate_datapack_json 校验，再进游戏 /reload
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.21.3/knowledge/antipatterns/`
+## pack.mcmeta（已核实，出处见上）
+
+```json
+{ "pack": { "pack_format": 61, "description": "My Datapack" } }
+```
+
+| MC 版本 | 数据包 pack_format | 资源包 |
+|---------|------------------|--------|
+| **1.21.4** | **61** | 46 |
+| 1.21.7–1.21.8 | 81 | 64 |
+| 1.21.9–1.21.10 | 88.0（1.21.9 起 pack_format 引入小版本号） | 69.0 |
+
+## 目录结构（已核实——1.21 起单数）
+
+1.21 开发周期（24w19a/24w21a，pack_format 48）把目录从复数改单数：`recipes→recipe`、`loot_tables→loot_table`、`advancements→advancement`、`predicates→predicate`、`structures→structure`、`functions→function`、`tags/items→tags/item`（block、entity_type、fluid 等 tag 目录同步改单数）。
+
+```
+data/<namespace>/
+├── advancement/  function/（.mcfunction）  loot_table/
+├── predicate/  recipe/  structure/
+└── tags/{block,item,entity_type,fluid,...}   # 1.21 起单数
+```
+
+Fabric 模组自带的数据 JSON 同形，随 jar 根的 `data/<namespace>/` 分发，进游戏即可被加载。
+
+## 反模式
+
+- `pack_format` 填邻版数字（1.21.4 数据包是 **61**，不是 48/81）。
+- 写 1.20.x 时代的复数目录（`recipes/`、`loot_tables/`、`tags/items/`）——1.21 起必须单数。
+- 把 Java 类名问题带到本技能：数据包没有类名，类名核实走 `search_fabric_docs(version=1.21.4)`。
+- 手写 JSON 后不跑 `validate_datapack_json` 直接进游戏。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 校验：`validate_datapack_json`；资源包面：`mc-resourcepack`。
+- 完整格式细节以两页 wiki 原文为准（出处 URL 见顶部）。
