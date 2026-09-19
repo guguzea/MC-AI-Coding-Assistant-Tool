@@ -1,0 +1,15 @@
+{
+  "_comment": "bedrock 模板（bedrock/scaffold/**/manifest.json）的 @minecraft/server 依赖钉值 —— 唯一机器可读真值源，由 mcp-server/scripts/assert-bedrock-script-api-pin.mjs 看守（模板 ↔ 本文件 ⇄ 文档快照的语义分层）。单侧改动即红。",
+  "_semantics": "本文件的 version 与 data/bedrock-docs-status.json 的 scriptApiStable 是**两个不同概念**，不得当同一个数比对（2026-09-19 用户裁定「统一真值，但先区分语义」）：① scriptApiStable = Microsoft Learn 文档快照所载 stable，随抓取更新、天然滞后，服务 generate_addon_manifest 的默认值；② 本文件 = 本仓给新工程的模板钉值，按 npm registry dist-tags 一手复核推进。两者由各自的 as-of/fetchedAt 标日期，分歧必须显式登记（见 divergenceFromDocsStatus）。",
+  "scaffoldDependency": {
+    "module_name": "@minecraft/server",
+    "version": "2.10.0"
+  },
+  "basis": "npm registry dist-tags.latest 一手复核 = 2.10.0（as-of 2026-09-18，sweep85 记入 bedrock/.cursor/rules/01-manifest.mdc；2026-09-19 sweep85 把模板从 2.9.0 同步到 2.10.0）",
+  "asOf": "2026-09-18",
+  "divergenceFromDocsStatus": {
+    "declared": true,
+    "why": "模板钉值 2.10.0（npm latest）高于 Learn 文档快照 scriptApiStable=2.9.0（快照 fetchedAt=2026-08-14，抓取管线更新后应自行追上）。生成器默认值仍走快照值 —— 那是 2026-09-18 已定的语义（默认跟随文档快照并在输出里披露上游实况），不是本文件要改的东西；本文件只负责让「模板钉值 vs 快照值」这处分歧**有登记、有门看守**，不许再静默漂移。"
+  },
+  "updatedAt": "2026-09-19"
+}

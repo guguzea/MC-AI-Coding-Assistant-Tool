@@ -1927,9 +1927,14 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   const orphans = findOrphans(blob, pkg);
   assert.equal(orphans.length, 0, `以下门禁没有任何调用方 ⇒ 手跑绿也不会进 npm test：\n${orphans.join("\n")}`);
   // 反身自证：抽掉一个门的引用，本条必须红（否则「串链」这句 itself 也是永远绿的）
+  // 2026-09-19（N3/N5/N9c 批次）：换成 split/join 去掉**全部**出现。原用 String.replace 只去首个，
+  // 当一道门在同一宿主里被调用两处（新增的 --selftest + 门模式调用形）时，自证会静默失效 ——
+  // 实测 probe=assert-bedrock-script-api-pin.mjs 时打不红。这是把自证**加强**（去全部 > 去首个），
+  // 不是放宽：主断言（orphans 全清）与探针语义都没变。
   const probe = gates[0];
+  const strip = (text) => text.split(probe).join("");
   assert.ok(
-    findOrphans(blob.replace(probe, ""), pkg.replace(probe, "")).includes(probe),
+    findOrphans(strip(blob), strip(pkg)).includes(probe),
     `门串链断言打不红（删掉 ${probe} 的引用后仍然全绿）`,
   );
   console.log(
@@ -1966,6 +1971,10 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-rules-match-tool.mjs",
     // 2026-09-14：api-index 类名必须与本档实钉通道一致（1.16.5 的 official 不映射类名，FG #795）。
     "./scripts/assert-index-channel-layout.mjs",
+    // 2026-09-19 N5：配置口径平台面 —— 根 AGENTS.md 条目 ↔ 59 档 AGENTS.md ↔ generateConfig loader 枚举三方一致。
+    "./scripts/assert-config-platform-face.mjs",
+    // 2026-09-19 N9(c)：bedrock 脚本 API 钉值真值源（scaffold 钉值 ↔ 声明文件 ↔ 文档快照语义分层）。
+    "./scripts/assert-bedrock-script-api-pin.mjs",
   ]) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE], {

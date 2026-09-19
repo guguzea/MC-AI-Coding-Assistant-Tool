@@ -23,11 +23,45 @@ export interface GeneratorWriteOpts {
   javaPrefix?: string;
 }
 
+/**
+ * C1 行为面（2026-09-19 用户裁定：接受 writeError → ok:false 不回退，但必须把「写入未完成」与
+ * 「生成失败」拆开）：三态机读判别字段，`ok` 只是它的派生（`resultKind === "ok"`）。
+ *
+ *   - `"generation_failed"` —— **生成失败**：该输入下没有可交付骨架（版本/平台不支持、参数非法…）。
+ *     细节在 `errors[]`（自由文本，含 noNativeGeneratorError 的改口建议）。CLI `errorKind:"tool_failure"`。
+ *   - `"write_blocked"` —— **写入未完成**：骨架已生成（文本预览完整在 `result`），但请求的写盘没有发生。
+ *     细粒度原因在 `writeError.code` ∈ {CONFIRMATION_REQUIRED, PROJECT_ROOT_REQUIRED,
+ *     PATH_OUTSIDE_ALLOWLIST, NOTHING_TO_WRITE, WRITE_FAILED}；`written` 必然缺失。
+ *   - `"ok"` —— 成功：不传 `write` 即 **dry-run**（只吐文本 + suggestedPath，恒 ok，`ok` 不对写盘作任何
+ *     承诺）；`write=true` 且全部条件满足时 `written[]` 逐条列出实际落盘绝对路径。
+ */
+export type GeneratorResultKind = "ok" | "generation_failed" | "write_blocked";
+
 export interface GeneratorWriteResult extends GeneratorResult {
+  /**
+   * C1（2026-09-19 用户裁定「动判定链」）：生成器**拒绝**（errors 非空 / 无 code 也无 files）或
+   * 写盘被拒（writeError）时为 `false` —— `cli-parse.isToolFailure` 认 `ok:false` ⇒ CLI 输出
+   * `success:false` + exit 1，不再「工具明确拒绝仍 success:true + exit 0」。
+   * MCP 侧同一对象随 jsonResult 透出，消费方也能据此判失败。
+   */
+  ok: boolean;
+  /** 三态判别（见类型注释）：`ok` = `resultKind === "ok"` 的派生，二者不得各自漂移。 */
+  resultKind: GeneratorResultKind;
   suggestedPath: string | null;
   suggestedPaths: string[];
   written?: string[];
   writeError?: { code: string; message: string };
+}
+
+/**
+ * 生成器是否处于「拒绝」态：errors 非空，或 code 与 files 双空（没有任何产出）。
+ * 单一来源 —— attachSuggestedPaths / maybeWriteGeneratorResult 都用它，两边判据漂移即红。
+ */
+export function generatorRejected(result: GeneratorResult): boolean {
+  return (
+    Boolean(result.errors?.length) ||
+    (result.code === null && (!result.files || Object.keys(result.files).length === 0))
+  );
 }
 
 /** 去掉注释行后逐行扫源码：行注释与块注释里的示例文字不能被当成真声明。 */
@@ -154,30 +188,34 @@ export function attachSuggestedPaths(
   if (pathWarnings.length) {
     merged.warnings = [...(result.warnings ?? []), ...pathWarnings];
   }
-  return merged;
+  return { ...merged, ok: !generatorRejected(result), resultKind: generatorRejected(result) ? "generation_failed" : "ok" };
 }
 
 /**
  * 可选写盘。write 缺省/false → 只返回 suggestedPath。
  * write=true 且无 confirmed → 拒绝。写盘走 project-sandbox。
  */
-export function maybeWriteGeneratorResult(
+function maybeWriteGeneratorResultInner(
   result: GeneratorResult,
   opts: GeneratorWriteOpts = {},
   pathOpts?: { resourcesPrefix?: string; javaPrefix?: string; singleFileName?: string },
 ): GeneratorWriteResult {
   const base = attachSuggestedPaths(result, pathOpts);
-  if (result.errors?.length || result.code === null && (!result.files || Object.keys(result.files).length === 0)) {
+  if (generatorRejected(result)) {
     return base;
   }
   if (!opts.write) return base;
 
   if (!opts.confirmed) {
+    // C1 行为面（2026-09-19 用户确认）：write 被拒 = 请求的操作未完成 ⇒ ok:false / CLI exit 1。
+    // 文本预览仍在 result（人在环：看完预览再带 confirmed=true 重发），不引入第三种返回状态；
+    // 与真失败（WRITE_FAILED / PATH_OUTSIDE_ALLOWLIST）的区分仍靠 writeError.code。
     return {
       ...base,
       writeError: {
         code: "CONFIRMATION_REQUIRED",
-        message: "write=true 须同时传 confirmed=true；默认仍只吐文本（人在环）",
+        message:
+          "write=true 须同时传 confirmed=true —— 本次未写盘，文本预览仍在 result；确认后带 confirmed=true 重发即可",
       },
     };
   }
@@ -232,5 +270,30 @@ export function maybeWriteGeneratorResult(
       writeError: { code: "WRITE_FAILED", message: (err as Error).message },
     };
   }
+}
+
+/**
+ * C1（2026-09-19 用户裁定「动判定链，不只修 worldgen」）：**统一出口** —— 不管走哪条分支，
+ * `ok` 都按「生成器未拒绝 且 写盘未被拒」收口。此前本函数对拒绝路径原样透传（结果对象里**没有
+ * `ok` 字段**），`cli-parse.isToolFailure` 只认 `ok/passed/error.code` ⇒ 8 道 `generate_*` 在工具
+ * 明确拒绝时仍 `success:true` + exit 0，自动化会把「本版本不支持」读成「生成成功」。
+ * 修后：`ok:false` ⇒ CLI `success:false` + exit 1；MCP 侧同一对象随 jsonResult 透出。
+ *
+ * C1 行为面（2026-09-19 用户裁定补充）：`resultKind` 把「写入未完成」与「生成失败」**拆开** ——
+ * `generation_failed`（生成器拒绝，原因在 errors[]）/ `write_blocked`（骨架已出、写盘未发生，原因在
+ * writeError.code）/ `ok`（成功；不传 write 即 dry-run）。`ok` 恒为 `resultKind === "ok"` 的派生。
+ */
+export function maybeWriteGeneratorResult(
+  result: GeneratorResult,
+  opts: GeneratorWriteOpts = {},
+  pathOpts?: { resourcesPrefix?: string; javaPrefix?: string; singleFileName?: string },
+): GeneratorWriteResult {
+  const out = maybeWriteGeneratorResultInner(result, opts, pathOpts);
+  const resultKind: GeneratorResultKind = generatorRejected(result)
+    ? "generation_failed"
+    : out.writeError
+      ? "write_blocked"
+      : "ok";
+  return { ...out, resultKind, ok: resultKind === "ok" };
 }
 

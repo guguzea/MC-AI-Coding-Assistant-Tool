@@ -249,6 +249,19 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
         }
       }
     }
+    // N8（2026-09-19 裁定「修复完整深层」）：publishing.md 已点名 fabric.mod.json / quilt.mod.json 的
+    // 机核字段 ⇒ 纯 Fabric/Quilt 工程不再 0 项被机核。守卫保留：若哪天清单又只剩 mods.toml 族
+    // （文档被改回 / 字段行被删），这里必须**说破**「json 元数据 0 项被机核 + manual 含 Forge 专属文案」，
+    // 不得静默 —— 判据是「requirements 里没有任何 .json 目标」，与提供的元数据无关。
+    const jsonOnly = provided.length > 0 && provided.every((m) => m.name.endsWith(".json"));
+    const jsonReqs = checklist.requirements.filter((r) => r.file.endsWith(".json"));
+    if (jsonOnly && jsonReqs.length === 0) {
+      warnings.push(
+        "publishing.md 清单的可机核字段只点 mods.toml 族 ⇒ 本工程（纯 Fabric/Quilt 元数据）0 项被机核；" +
+          "publishing.manual 未按平台过滤、含 Forge 专属文案（[[dependencies.*]] / reobfJar / toml 声明）—— " +
+          "发布前按平台自行核对，不要把这份清单当全平台清单",
+      );
+    }
     checks.push(`community_knowledge publishing.md 清单（${fields.length} 项可机器核对）`);
   } else {
     warnings.push(

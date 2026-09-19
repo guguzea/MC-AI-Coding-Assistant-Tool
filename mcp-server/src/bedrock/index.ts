@@ -4,7 +4,8 @@
  */
 import { existsSync, readFileSync } from "fs";
 import { randomUUID } from "crypto";
-import { join } from "path";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { z } from "zod";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { FabricDocStore } from "../docs-platform/fabric/store.js";
@@ -245,6 +246,49 @@ export async function getBedrockDocRelated(
   }
 }
 
+/**
+ * N9(c)（2026-09-19 用户裁定「统一真值，但先区分语义」）：模板钉值的唯一机器可读真值源。
+ *
+ * 语义分层（**不得把两个数当同一个比对**）：
+ *   · `data/bedrock-docs-status.json.scriptApiStable` = Learn 文档快照所载 stable（随抓取更新、天然滞后）
+ *     ⇒ `generate_addon_manifest` 的默认值来源（2026-09-18 既定语义）。
+ *   · 本文件 = 本仓给新工程的**模板钉值**（`bedrock/scaffold/<pack>/manifest.json`），按 npm dist-tags 推进。
+ * 两者不同是常态，但必须**有登记、有门**（`scripts/assert-bedrock-script-api-pin.mjs`），不许静默漂移。
+ */
+export function scriptApiPinPath(): string {
+  if (process.env.MC_SKILL_BEDROCK_API_PIN) return process.env.MC_SKILL_BEDROCK_API_PIN;
+  return join(dirname(fileURLToPath(import.meta.url)), "..", "..", "data", "bedrock-script-api-pin.json");
+}
+
+export interface BedrockScriptApiPin {
+  version: string | null;
+  basis: string | null;
+  asOf: string | null;
+  /** 读取/解析失败原因（不抛；调用方按 warning 披露，禁止静默当作「没有钉值」） */
+  invalid?: string;
+}
+
+export function loadBedrockScriptApiPin(): BedrockScriptApiPin {
+  const p = scriptApiPinPath();
+  try {
+    const raw = JSON.parse(readFileSync(p, "utf8")) as {
+      scaffoldDependency?: { version?: unknown };
+      basis?: unknown;
+      asOf?: unknown;
+    };
+    const v = raw?.scaffoldDependency?.version;
+    const version = typeof v === "string" && v.trim() ? v.trim() : null;
+    return {
+      version,
+      basis: typeof raw?.basis === "string" ? raw.basis : null,
+      asOf: typeof raw?.asOf === "string" ? raw.asOf : null,
+      ...(version ? {} : { invalid: `${p} 的 scaffoldDependency.version 缺失或非字符串` }),
+    };
+  } catch (e) {
+    return { version: null, basis: null, asOf: null, invalid: `读不到 ${p}（${(e as Error).message}）` };
+  }
+}
+
 export const validateAddonManifestSchema = z.object({
   manifestJson: z.string().describe("manifest.json 全文"),
 });
@@ -307,7 +351,18 @@ export function validateAddonManifest(manifestJson: string): Record<string, unkn
       // 原审查 S3（2026-09-19 裁定）：官方页 modules 表逐字「language … **Only present if type is script**.
       // This indicates the language in which scripts are written in the pack. **The only supported value is javascript**」
       // ⇒ 声明了 language 就必须是 "javascript"（唯一值，判 error）；非 script 模块出现 language 语义上不该有（warning）。
-      // 未声明不报（官方未述必填）。
+      // N9(b)（2026-09-19 用户裁定「判真洞/P1：最小校验」）：script 模块**必须** language + 非空 entry ——
+      // 实测缺两者仍 ok:true（引擎无从加载脚本）。判级依据 = 用户裁定 + 本仓自证形态（scaffold 与
+      // generate_addon_manifest/generate_bp_entity 产出的 script 模块都带 language+entry），
+      // 不是 pack-manifest 页的必填口径（该页 entry 0 命中，见台账 bedrock-script-module-language-entry-not-enforced 留痕）。
+      if (t === "script") {
+        if (mod.language === undefined) {
+          errors.push(`modules[${i}].language 缺失 —— script 模块必须声明 language="javascript"（N9(b) 最小校验）`);
+        }
+        if (typeof mod.entry !== "string" || !mod.entry.trim()) {
+          errors.push(`modules[${i}].entry 缺失或不是非空字符串 —— script 模块必须有入口（如 "scripts/main.js"）`);
+        }
+      }
       if (mod.language !== undefined) {
         if (typeof mod.language !== "string" || mod.language !== "javascript") {
           errors.push(`modules[${i}].language 只能是 "javascript"（官方唯一支持值）`);
@@ -356,6 +411,42 @@ export function validateAddonManifest(manifestJson: string): Record<string, unkn
       if (typeof c === "string" && !BEDROCK_CAPABILITIES.includes(c)) {
         warnings.push(
           `未知 capability「${c}」；官方 pack-manifest capabilities 表只列 ${BEDROCK_CAPABILITIES.join(" / ")}`,
+        );
+      }
+    }
+  }
+  // N9(b)（2026-09-19 用户裁定「dependencies 纳入校验」）：**结构**校验判 error —— 条目必须是对象、
+  // module_name / version 必须是非空字符串（version 允许 "beta"）。这是「写没写对」；
+  // N9(c)（下方）的「版本值是不是本仓已知真值」是另一回事，维持 warning（老包合法，不能判错）。
+  // N9(c)（2026-09-19 裁定）：dependencies 里的 `@minecraft/server` 版本此前**零检查** —— 模板钉值 /
+  // 生成器默认（文档快照）/ 用户手写三方分叉可以静默通过。这里只给 **warning**（老包合法，不能判错），
+  // 并点名本仓两个已知真值；真值来源与语义分层见 loadBedrockScriptApiPin。
+  const deps = parsed.dependencies;
+  if (Array.isArray(deps)) {
+    const pinVer = loadBedrockScriptApiPin().version;
+    const snapshotVer = loadBedrockDocsStatus().scriptApiStable;
+    const known = [pinVer, snapshotVer].filter((v): v is string => typeof v === "string" && v.length > 0);
+    for (const [i, d] of deps.entries()) {
+      const dep = d as Record<string, unknown> | null;
+      if (!dep || typeof dep !== "object" || Array.isArray(dep)) {
+        errors.push(`dependencies[${i}] 必须是对象（module_name + version）`);
+        continue;
+      }
+      if (typeof dep.module_name !== "string" || !dep.module_name.trim()) {
+        errors.push(`dependencies[${i}].module_name 必须是非空字符串`);
+      }
+      if (typeof dep.version !== "string" || !dep.version.trim()) {
+        errors.push(`dependencies[${i}].version 必须是非空字符串（stable 版本号或 "beta"）`);
+      }
+      if (dep.module_name !== "@minecraft/server") continue;
+      const v = dep.version;
+      if (typeof v !== "string" || !v.trim()) {
+        continue; // 结构问题已在上面积 error，值域 warning 无从谈起
+      }
+      if (v.trim() !== "beta" && known.length > 0 && !known.includes(v.trim())) {
+        warnings.push(
+          `dependencies[${i}] 声明 @minecraft/server=${v}，既不是本仓模板钉值（${pinVer ?? "未登记"}）也不是文档快照 stable（${snapshotVer ?? "?"}）` +
+            ` —— 若确为更新版本，请对照 Learn 与 npm dist-tags；本仓真值见 mcp-server/data/bedrock-script-api-pin.json`,
         );
       }
     }
@@ -460,6 +551,17 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
   warnings.push(
     `默认 @minecraft/server 版本取自 bedrock-docs-status.scriptApiStable（当前 ${stableVer}）。入库可能滞后，发布前对照 Learn。`,
   );
+  // N9(c)：把「模板钉值」与「文档快照」两个真值同时摊开（只加披露，不动默认值 —— 默认跟随快照是既定语义）。
+  const apiPin = loadBedrockScriptApiPin();
+  if (apiPin.invalid) {
+    warnings.push(`钉值表不可用（${apiPin.invalid}）—— 无法核对本仓模板钉值；本工具默认值不受影响（那是文档快照语义）。`);
+  } else if (apiPin.version && apiPin.version !== stableVer) {
+    warnings.push(
+      `语义分层（2026-09-19 裁定）：本工具默认值 = 文档快照 scriptApiStable（${stableVer}，随抓取滞后）；` +
+        `本仓模板 bedrock/scaffold/BP/manifest.json 的钉值 = ${apiPin.version}` +
+        `（as-of ${apiPin.asOf ?? "?"}；依据见 mcp-server/data/bedrock-script-api-pin.json）。两者不同是有意为之，取舍不要照抄任一侧。`,
+    );
+  }
   // bedrock 默认值说明（2026-09-18 用户裁定：不改代码默认 [1,26,44]，只在输出里加注当前 stable）：
   warnings.push(
     `min_engine_version 默认 [1,26,44] 是本生成器的钉值（2026-09-07 依 npm beta 串 2.10.0-beta.1.26.44-stable 所指引擎）。` +

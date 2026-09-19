@@ -28,7 +28,10 @@ sourceKind: authored
 
 1. **元数据**  
    - Forge：`mods.toml` 的 `modId`（全小写）、`version`、`license`、`displayName`、`description`  
+   - Fabric：`fabric.mod.json` 的 `id`、`version`、`license`、`name`（schemaVersion 不进清单字段）  
+   - Quilt：`quilt.mod.json` 的 `id`、`version`、`name`（license 在 Quilt 元数据里非必备，不进机核字段）  
    - `[[dependencies.*]]`：`forge` / `minecraft`（及真实硬前置）的 `mandatory`、`versionRange`、`side`  
+   - 依赖声明（Fabric/Quilt）：`depends`（硬前置）/ `suggests`（软前置），写法以对应 schema 为准  
 2. **产物**  
    - 使用 `gradlew build`（或 IDE `build`），取 **reobf 后** 的 jar（Forge 流程里通常 `jar.finalizedBy('reobfJar')`）  
    - 路径多在 `build/libs/`；不要把手改、未混淆的开发 jar 当正式包  

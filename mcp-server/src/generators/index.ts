@@ -1534,6 +1534,9 @@ public class ${pascal}Renderer extends EntityRenderer<${pascal}> {
   };
 }
 
+/** N6：1.x 代上限哨兵（as-of 2026-09-19 本仓只核到 1.21.11 的 datapack feature 格式；上游出新代时改这里并附依据）。 */
+const WORLDGEN_MAX_MINOR_1X = 21;
+
 export function generateWorldgen(
   modId: string,
   featureName: string,
@@ -1579,6 +1582,29 @@ export function generateWorldgen(
         ],
       };
     }
+    // N6（2026-09-19 裁定「余下已核实项做完」）：本门此前**只有下界**，`1.99.9` 这类编造版本号会一路走到
+    // 「吐出完整 files + suggestedPaths + exit 0」—— 比 C1（工具拒绝但 CLI 仍 success）更坏。
+    // 这里补**上界 era 哨兵**，与 generate_entity_renderer 的白名单同形（不在已知代内一律拒绝、不默默
+    // 生成）。它不是说「上游只有 1.21.x」，而是「本仓只核到 1.21.x 的 datapack feature 格式，未跟进的
+    // 代不许瞎编」。上游出新代时抬 WORLDGEN_MAX_MINOR_1X 并把依据写进注释。
+    if (minor > WORLDGEN_MAX_MINOR_1X) {
+      return {
+        code: null,
+        errors: [
+          `generate_worldgen 未跟进 1.${minor}.x（本仓 as-of 2026-09-19 只核到 1.${WORLDGEN_MAX_MINOR_1X}.x 的 datapack feature 格式）—— 禁止默默生成；` +
+            `先按 search_*_docs 核该代格式，再抬 WORLDGEN_MAX_MINOR_1X。` +
+            noNativeGeneratorError("search_*_docs", "规则 07 / mc-worldgen Skill"),
+        ],
+      };
+    }
+  } else if (!/^26\.\d+(\.\d+)?$/.test(ver)) {
+    return {
+      code: null,
+      errors: [
+        `generate_worldgen 只认 1.x（1.18.2+）与 26.x 的精确 MC 版本，收到 ${version}。` +
+          noNativeGeneratorError("search_*_docs", "规则 07 / mc-worldgen Skill"),
+      ],
+    };
   }
   const p = platform.trim().toLowerCase();
   const allowed = ["forge", "neoforge", "fabric", "quilt"];
@@ -1587,6 +1613,17 @@ export function generateWorldgen(
       code: null,
       errors: [
         `未知 platform=${platform}。可选：${allowed.join(" | ")}。无模板时改用 search_*_docs + 07-datagen / mc-worldgen Skill。`,
+      ],
+    };
+  }
+  // N6：Forge 在 26.x 已不存在（26.x 是 NeoForge/Fabric 时代；isForgeConfigSpecVersion 同判）⇒
+  // 禁止给 forge 生成 26.x 的 biome_modifier（`forge:add_features` 在那个代没有对应物）。
+  if (p === "forge" && /^26\./.test(ver)) {
+    return {
+      code: null,
+      errors: [
+        `Forge 无 26.x（26.x 是 NeoForge/Fabric 时代），收到 platform=forge version=${version} —— 禁止默默生成 forge biome_modifier。` +
+          noNativeGeneratorError("search_forge_docs", "规则 07 / mc-worldgen Skill"),
       ],
     };
   }

@@ -22,9 +22,9 @@ import {
 import { dirname, join, relative, sep } from "path";
 import { tmpdir } from "os";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
-import { resolveDataDir, resolveCacheRoot } from "../utils/path.js";
-import { DirLockBusyError, dirLockPathOf } from "../utils/dir-lock.js";
-import { acquireUpdateApplyLock } from "./apply-lock.js";
+import { resolveDataDir } from "../utils/path.js";
+import { DirLockBusyError } from "../utils/dir-lock.js";
+import { acquireUpdateApplyLock, tryAcquireUpdateApplyLock } from "./apply-lock.js";
 import {
   assertCreatableDir,
   assertWritablePath,
@@ -223,11 +223,18 @@ function recoverPartialSwap(dataDir: string): void {
  *   · dryRun 不调用本函数（与 :422 的早退语义一致：不代用户改盘）。
  */
 function tryRecoverPartialSwap(dataDir: string): void {
+  // N7（2026-09-19 裁定）：A-40 的锁外自愈此前只有「锁目录不存在」这一道 existsSync 守卫（TOCTOU），
+  // 两个进程可同时过闸后并发动盘 —— recoverPartialSwap 还会**无条件删 `.next`**，可能与刚取到锁、
+  // 正在组装 `.next` 的进程撞车。改成 `tryAcquireUpdateApplyLock()`：**拿到锁才动盘**、拿不到原样跳过。
+  // 「不抢锁、不等待」的 A-40 语义不变，但动盘这段与并发 apply 互斥了（持锁窗口 = 一次恢复）。
+  const release = tryAcquireUpdateApplyLock();
+  if (!release) return; // 有人持锁/残锁：交给主路径
   try {
-    if (existsSync(dirLockPathOf(resolveCacheRoot(), "update-apply"))) return; // 有人持锁/残锁：交给主路径
     recoverPartialSwap(dataDir);
   } catch {
     /* 与并发进程的极小窗口内 rename/rm 竞争：失败即跳过，不影响调用方语义 */
+  } finally {
+    release();
   }
 }
 

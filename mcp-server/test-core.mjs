@@ -24,7 +24,8 @@ import { NeoForgeDocStore } from "./dist/docs-platform/neoforge/store.js";
 import { assertWritablePath, ProjectPathError, isInsideReal, nativeReal } from "./dist/utils/project-sandbox.js";
 import { searchNeoForgeDocs, getNeoForgeDocSummary, getNeoForgeDocFull, getNeoForgeDocRelated } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen, parseNeo21Patch } from "./dist/datagen/index.js";
-import { generateLang, generateCapability, generateConfig, generateEntityRenderer, generateNetworkPacket, NETWORK_PACKET_PLATFORMS, generateNetworkPacketDescription } from "./dist/generators/index.js";
+import { generateLang, generateCapability, generateConfig, generateEntityRenderer, generateWorldgen, generateNetworkPacket, NETWORK_PACKET_PLATFORMS, generateNetworkPacketDescription } from "./dist/generators/index.js";
+import { maybeWriteGeneratorResult, generatorRejected } from "./dist/generators/write-helper.js";
 import { diagnoseGradle, detectMinecraftVersion, parseGradleProperties } from "./dist/gradle/index.js";
 import { isExactMcVersionToken, matchesExactMcVersion, isMcVersionFamily, VERSION_SEGMENT_RE, isSafeVersionSegment, classifyMinecraftVersion } from "./dist/utils/minecraft-version.js";
 import { withDocsFallbackFields, matchDocIndexId, pathBoost } from "./dist/docs-platform/search-utils.js";
@@ -2621,6 +2622,41 @@ async function testFivePlatformRouting() {
     `非 script 模块带 language 应给 warning → ${JSON.stringify(langMisplaced.warnings)}`,
   );
 
+  // N9(b)（2026-09-19 用户裁定「判真洞/P1：最小校验」）：script 模块必须 language + 非空 entry；
+  // dependencies 结构（module_name / version 非空字符串）判 error。判级依据 = 用户裁定 + 本仓自证形态
+  // （scaffold 与两个生成器的 script 模块都带 language+entry），不是 pack-manifest 页的必填口径。
+  const scriptBase = {
+    format_version: 2,
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0], min_engine_version: [1, 21, 0] },
+  };
+  const langMissing = validateAddonManifest(JSON.stringify({
+    ...scriptBase,
+    modules: [{ type: "script", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0], entry: "scripts/main.js" }],
+  }));
+  assert.ok(
+    langMissing.errors.some((e) => /modules\[0\]\.language 缺失/.test(e)),
+    `script 缺 language 必须判错 → ${JSON.stringify(langMissing.errors)}`,
+  );
+  const entryMissing = validateAddonManifest(JSON.stringify({
+    ...scriptBase,
+    modules: [{ type: "script", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0], language: "javascript" }],
+  }));
+  assert.ok(
+    entryMissing.errors.some((e) => /modules\[0\]\.entry/.test(e)),
+    `script 缺 entry 必须判错 → ${JSON.stringify(entryMissing.errors)}`,
+  );
+  const depStruct = validateAddonManifest(JSON.stringify({
+    ...scriptBase,
+    modules: [{ type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0] }],
+    dependencies: [{ module_name: "@minecraft/server" }, "nope"],
+  }));
+  assert.equal(depStruct.ok, false, "dependencies 结构问题必须判错");
+  assert.ok(
+    depStruct.errors.some((e) => /dependencies\[0\]\.version 必须是非空字符串/.test(e)) &&
+      depStruct.errors.some((e) => /dependencies\[1\] 必须是对象/.test(e)),
+    `dependencies 结构校验 → ${JSON.stringify(depStruct.errors)}`,
+  );
+
   // S4：capabilities 白名单必须跟着本仓缓存的官方页走，不能各自漂移
   {
     const pagePath = join(
@@ -4375,6 +4411,54 @@ public class ExampleMod { }
   assert.ok(rend261.code?.includes("Identifier"), rend261.code);
   assert.ok(rend261.code?.includes("EntityRenderer"), rend261.code);
   assert.ok(!/net\.minecraftforge/.test(rend261.code || ""));
+
+  // N6（2026-09-19）：generate_worldgen 补两端 era 哨兵 —— 编造版本号（1.99.9）不得再「吐 files + exit 0」。
+  // 正对照（支持代照常产出）+ 三个反例（超上界 / 非法代形 / forge×26.x），全部点名原因。
+  const wfFab = generateWorldgen("my_mod", "mana_ore", "fabric", "1.21.1");
+  assert.ok(wfFab.files && Object.keys(wfFab.files).length === 2, JSON.stringify(wfFab).slice(0, 240));
+  const wfFabBad = generateWorldgen("my_mod", "mana_ore", "fabric", "1.99.9");
+  assert.equal(wfFabBad.code, null, "编造版本 1.99.9 必须拒绝");
+  assert.ok(
+    (wfFabBad.errors ?? []).some((e) => /未跟进 1\.99\.x/.test(e) && /WORLDGEN_MAX_MINOR_1X/.test(e)),
+    `超上界必须点名原因与抬哨兵的出口 → ${JSON.stringify(wfFabBad.errors)}`,
+  );
+  // 27.x 能过 exactMcVersion（utils/minecraft-version.ts:117 收 1|26|27）但 worldgen 不认 ⇒ 走「只认 1.x/26.x」分支；
+  // 2.0 这类在 exactMcVersion 就被拒（报「version 必须是精确 MC 版本」），不进本分支。
+  const wfFabJunk = generateWorldgen("my_mod", "mana_ore", "fabric", "27.1");
+  assert.ok(
+    (wfFabJunk.errors ?? []).some((e) => /只认 1\.x（1\.18\.2\+）与 26\.x/.test(e)),
+    `非法代形必须点名 → ${JSON.stringify(wfFabJunk.errors)}`,
+  );
+  const wfForge26 = generateWorldgen("my_mod", "mana_ore", "forge", "26.1.2");
+  assert.ok(
+    (wfForge26.errors ?? []).some((e) => /Forge 无 26\.x/.test(e)),
+    `forge×26.x 必须拒绝 → ${JSON.stringify(wfForge26.errors)}`,
+  );
+  const wfNeo261 = generateWorldgen("my_mod", "mana_ore", "neoforge", "26.1.2");
+  assert.ok(wfNeo261.files && Object.keys(wfNeo261.files).length === 3, JSON.stringify(wfNeo261).slice(0, 240));
+
+  // C1（2026-09-19 裁定「动判定链」）：生成器拒绝必须以 ok:false 出向 —— CLI 據此 success:false + exit 1，
+  // 不再「工具明确拒绝仍 success:true + exit 0」。出口单点 = maybeWriteGeneratorResult（8 道 generate_* 共用）。
+  // C1 行为面（2026-09-19 用户裁定补充）：「写入未完成」与「生成失败」用 resultKind 拆开；ok = 其派生。
+  const c1Bad = maybeWriteGeneratorResult(generateWorldgen("my_mod", "mana_ore", "fabric", "1.99.9"));
+  assert.equal(c1Bad.ok, false, `拒绝必须 ok:false → ${JSON.stringify(c1Bad).slice(0, 240)}`);
+  assert.equal(c1Bad.resultKind, "generation_failed", `生成失败态 → ${JSON.stringify(c1Bad).slice(0, 240)}`);
+  assert.ok((c1Bad.errors ?? []).length > 0 && !c1Bad.writeError, "generation_failed 的原因在 errors[]，无 writeError");
+  assert.equal(generatorRejected(generateWorldgen("my_mod", "mana_ore", "fabric", "1.99.9")), true);
+  const c1Good = maybeWriteGeneratorResult(generateWorldgen("my_mod", "mana_ore", "fabric", "1.21.1"));
+  assert.equal(c1Good.ok, true, `正常产出必须 ok:true → ${JSON.stringify(c1Good).slice(0, 200)}`);
+  // dry-run 语义：不传 write = 只吐文本，恒 ok:true；ok 不对写盘作任何承诺（written/writeError 均不得出现）。
+  assert.equal(c1Good.resultKind, "ok");
+  assert.equal(c1Good.written, undefined, "dry-run 不得出现 written");
+  assert.equal(c1Good.writeError, undefined, "dry-run 不得出现 writeError");
+  const c1WriteNoConfirm = maybeWriteGeneratorResult(generateWorldgen("my_mod", "mana_ore", "fabric", "1.21.1"), {
+    write: true,
+  });
+  assert.equal(c1WriteNoConfirm.ok, false, "write 未 confirmed = 写盘被拒 ⇒ ok:false");
+  assert.equal(c1WriteNoConfirm.resultKind, "write_blocked", "写入未完成态（骨架已出）");
+  assert.equal(c1WriteNoConfirm.writeError?.code, "CONFIRMATION_REQUIRED");
+  assert.equal(c1WriteNoConfirm.written, undefined, "write_blocked 必然没有 written");
+  assert.ok((c1WriteNoConfirm.errors ?? []).length === 0, "write_blocked 不得混入生成错误（两态不得混淆）");
 
   const cfgFab = generateConfig("my_mod", "fabric", "1.21.11");
   assert.ok(cfgFab.code?.includes("clothconfig2"), cfgFab.code);
@@ -6782,13 +6866,40 @@ function testPublishChecklistFromCommunityDoc() {
       assert.ok(!r.warnings.some((w) => /已上传|已发布|已代发布/.test(w)), JSON.stringify(r.warnings));
     }
 
-    // 3) 纯 Fabric 工程不被要求 Forge 的 mods.toml 字段（要求按文件名绑定）
+    // 3) 纯 Fabric 工程不被要求 Forge 的 mods.toml 字段（要求按文件名绑定）；
+    //    N8 深层（2026-09-19 裁定）：publishing.md 已点名 fabric.mod.json 的 id/version/license/name
+    //    ⇒ Fabric 有自己的机核字段（不再 0 项），且「0 项被机核」守卫不得误触发。
     const fabric = checkPublishReady({
-      fabricModJson: JSON.stringify({ id: "examplemod", version: "1.0.0", license: "MIT" }),
+      fabricModJson: JSON.stringify({
+        schemaVersion: 1,
+        id: "examplemod",
+        version: "1.0.0",
+        license: "MIT",
+        name: "Example",
+      }),
     });
     assert.equal(fabric.ready, true, JSON.stringify(fabric));
     assert.deepEqual(fabric.publishing.missing, [], JSON.stringify(fabric.publishing));
     assert.equal(fieldWarnings(fabric).length, 0, JSON.stringify(fabric.warnings));
+    assert.ok(
+      !fabric.warnings.some((w) => /0 项被机核/.test(w)),
+      `清单已覆盖 fabric.mod.json ⇒ 守卫不得误触发 → ${JSON.stringify(fabric.warnings)}`,
+    );
+    // Fabric 自己的字段缺失也要被抓（机核面真的扩到了 .json，不是空转）
+    const fabricThin = checkPublishReady({
+      fabricModJson: JSON.stringify({ schemaVersion: 1, id: "examplemod", version: "1.0.0" }),
+    });
+    assert.ok(
+      fabricThin.publishing.missing.includes("fabric.mod.json:license") &&
+        fabricThin.publishing.missing.includes("fabric.mod.json:name"),
+      `Fabric 缺 license/name 必须进 missing → ${JSON.stringify(fabricThin.publishing.missing)}`,
+    );
+    assert.ok(fieldWarnings(fabricThin).length > 0, JSON.stringify(fabricThin.warnings));
+    // 对照：给了 mods.toml 的工程不触发该提示（清单字段本就为它而设）。
+    assert.ok(
+      !thin.warnings.some((w) => /0 项被机核/.test(w)),
+      JSON.stringify(thin.warnings),
+    );
 
     // 4) 投毒 A：换掉文档里的字段 → 要求随之改变，证明字段清单没写死
     mkdirSync(join(docRoot, "authored"), { recursive: true });
@@ -6817,6 +6928,14 @@ function testPublishChecklistFromCommunityDoc() {
     });
     assert.deepEqual(swapped.publishing.missing, ["mods.toml:authorBio"], JSON.stringify(swapped.publishing));
     assert.ok(!fieldWarnings(swapped).some((w) => /displayName/.test(w)), "文档没点 displayName 就不该要求它");
+    // N8 守卫：换掉的清单没有任何 .json 目标 ⇒ 纯 Fabric 工程必须被说破「0 项被机核 + Forge 专属文案」。
+    const swappedFab = checkPublishReady({
+      fabricModJson: JSON.stringify({ schemaVersion: 1, id: "e", version: "1", license: "MIT", name: "E" }),
+    });
+    assert.ok(
+      swappedFab.warnings.some((w) => /0 项被机核/.test(w) && /Forge 专属文案/.test(w)),
+      `清单无 .json 目标时必须说破 → ${JSON.stringify(swappedFab.warnings)}`,
+    );
 
     // 5) 投毒 B：断开读取（清单里没有可机器核的条目）→ 降级 warning，不是静默通过
     process.env.MC_SKILL_COMMUNITY = emptyRoot;
@@ -6898,6 +7017,10 @@ const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // ── S4 扩面：mcp-server/scripts/**（逐条对活文本复验过依据正则）──────────
   ["mcp-server/scripts/assert-powershell.mjs", /mkdtempSync\(join\(tmpdir\(\), "mcskill-ps-"/], // 全部落笔在 OS tmpdir 的 workDir；仓库根只读（MC_SKILL_PS_TEST_ROOT 可换根）
   ["mcp-server/scripts/assert-parser-availability.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "mcskill-g2-"/], // 夹具 jar 只落 OS tmpdir；rmSync 收的就是那个目录，仓库源码全程只读
+  // 2026-09-19 N3 裁定「补投毒」：--selftest 的 8 例夹具（tiny.gz / upstream *.bak / provenance / 假基线）
+  // 全部落 OS tmpdir 下一个一次目录，finally 里 rmSync 收掉；门模式与 --measure-zero-member 全程不写盘。
+  // 依据正则咬住那个 mkdtemp 前缀 —— 夹具落点一旦改到仓库内，本豁免即失效（重签或改道 write-guard）。
+  ["mcp-server/scripts/assert-yarn-named-integrity.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "mc-yarn-gate-selftest-"/],
   ["mcp-server/scripts/assert-cli-quick.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "cli-quick-"/], // R3（NP-10 防回归）：新增夹具（薄壳拷贝 / mdk 树 / 锁根 / 数据根）全部落 OS tmpdir，仓库只读
   ["mcp-server/scripts/assert-sync-normalizers.mjs", /mkdtempSync\(join\(tmpdir\(\), "mcskill-norm-"/], // 同上：workDir 在 tmpdir，PS_FILE/JS_FILE 只作输入
   ["mcp-server/scripts/release-smoke.mjs", /mkdtempSync\(join\(tmpdir\(\), "mc-skill-release-smoke-"/], // 装配 staging 在 tmpdir，仓库 dist/package.json 只读

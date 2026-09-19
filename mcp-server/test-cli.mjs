@@ -773,6 +773,54 @@ function staleTotalClaims(docs, total) {
   }
 }
 
+// ── C1（2026-09-19 裁定「动判定链」）：generate_* 明确拒绝 ⇒ success:false + exit 1 ──
+// 修复前实测：`generate_worldgen --version=1.99.9` → success:true + exit 0（V1：8 道 Java 系 generate_* 同病，
+// 根因 = 出向对象没有 ok 字段而 isToolFailure 只认 ok/passed/error.code）。
+{
+  const bad = run(["generate_worldgen", "--modId=demo", "--featureName=f", "--platform=fabric", "--version=1.99.9"]);
+  const badJ = parseJson(bad, "c1-generate-reject");
+  if (bad.status !== 1) {
+    throw new Error(`C1: 工具拒绝必须 exit 1，实得 ${bad.status}\n${String(bad.stdout).slice(0, 300)}`);
+  }
+  if (badJ.success !== false || badJ.result?.ok !== false || badJ.errorKind !== "tool_failure") {
+    throw new Error(`C1: 载荷必须 success:false + result.ok:false + errorKind → ${JSON.stringify(badJ).slice(0, 300)}`);
+  }
+  if (!String(badJ.result?.errors?.[0] ?? "").includes("未跟进 1.99")) {
+    throw new Error(`C1: 拒绝文案丢失 → ${JSON.stringify(badJ).slice(0, 300)}`);
+  }
+  // 生成失败态的机读判别（与「写入未完成」拆开）
+  if (badJ.result?.resultKind !== "generation_failed") {
+    throw new Error(`C1: 生成失败必须 resultKind=generation_failed → ${JSON.stringify(badJ.result?.resultKind ?? null)}`);
+  }
+  const ok = run(["generate_worldgen", "--modId=demo", "--featureName=f", "--platform=fabric", "--version=1.21.1"]);
+  const okJ = parseJson(ok, "c1-generate-ok");
+  if (ok.status !== 0 || okJ.success !== true || okJ.result?.ok !== true) {
+    throw new Error(`C1: 正常产出必须 success:true + exit 0 → ${ok.status} ${JSON.stringify(okJ).slice(0, 240)}`);
+  }
+  // dry-run 语义：不传 write = 只吐文本，恒 success；written/writeError 不得出现
+  if (okJ.result?.resultKind !== "ok" || okJ.result?.written !== undefined || okJ.result?.writeError !== undefined) {
+    throw new Error(`C1: dry-run 语义被破坏 → ${JSON.stringify(okJ.result ?? null).slice(0, 300)}`);
+  }
+  // 行为面（2026-09-19 用户确认）：write 缺 confirmed = 请求的操作未完成 ⇒ exit 1 + success:false，
+  // 但文本预览仍在 result（人在环：看完预览再带 confirmed 重发）；区分度靠 resultKind + writeError.code。
+  const needConfirm = run(["generate_config", "--modId=demo", "--loader=forge", "--version=1.20.1", "--write"]);
+  const needConfirmJ = parseJson(needConfirm, "c1-write-no-confirm");
+  if (needConfirm.status !== 1 || needConfirmJ.success !== false) {
+    throw new Error(
+      `C1 行为面: --write 缺 confirmed 必须 exit 1 + success:false → ${needConfirm.status} ${JSON.stringify(needConfirmJ).slice(0, 240)}`,
+    );
+  }
+  if (needConfirmJ.result?.writeError?.code !== "CONFIRMATION_REQUIRED" || needConfirmJ.result?.resultKind !== "write_blocked") {
+    throw new Error(
+      `C1 行为面: write_blocked 语义丢失 → ${JSON.stringify({
+        writeError: needConfirmJ.result?.writeError ?? null,
+        resultKind: needConfirmJ.result?.resultKind ?? null,
+      }).slice(0, 240)}`,
+    );
+  }
+  console.log("C1 generate_* 拒绝 → success:false + exit 1；正常产出 → success:true + exit 0；三态 resultKind（ok / generation_failed / write_blocked）已钉");
+}
+
 // ── S4: 与全局 flag 同名的字段归工具；--output-format 是唯一格式开关 ─────────
 {
   const dir = mkdtempSync(join(tmpdir(), "mc-skill-s4-"));

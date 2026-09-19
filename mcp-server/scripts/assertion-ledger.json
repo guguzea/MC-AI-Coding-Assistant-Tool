@@ -173,6 +173,96 @@
       "status": "closed",
       "gates": ["assert-corpus-semantics.mjs"],
       "closedAt": "2026-09-18"
+    },
+    {
+      "id": "yarn-named-integrity-ratchet",
+      "claim": "yarn tiny 的 named 列完整性：每档有 provenance、member selfEq ≤ 基线×1.15、零成员类 ≤ 基线×1.15+30、provenance↔磁盘双向 sha 一致；且「有 mappings/ 却缺 -tiny.gz」与「memberTotal=0」不再静默跳过（判红）",
+      "author": "sweep85 建门 + 2026-09-19 用户裁定「收口两个洞 + 补投毒」",
+      "evidence": "13 档 v1(.bak) 复算比率 32.89–35.88% 全部超各自上限（1.21.1 32.89% vs 21.11% / 1.21.11 34.78% vs 21.03% / 1.14.4 35.88% vs 30.61%）⇒ 判据非恒真；--selftest 8 例（1 正对照绿 + 7 类畸形红，含两个新洞）逐例相符并已接入 npm test 链；provenance stats.classFixed=0 ⇒ classSelfEq≤200 判据对本次重建惰性（属已登记盲区，不假装有判别力）",
+      "evidenceRefs": ["mcp-server/scripts/assert-yarn-named-integrity.mjs", "mcp-server/scripts/yarn-named-baseline.json", "CONTRIBUTING.md"],
+      "status": "closed",
+      "gates": ["assert-yarn-named-integrity.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "yarn-v1-upstream-backup-tracked",
+      "claim": "13 档 data/fabric_<ver>/mappings/upstream/*.bak（上游 v1 原件）继续入库、不删不 ignore，并由门按字节 sha 对账 —— 它是判据⑤的被核对象，不是可清理的垃圾",
+      "author": "2026-09-19 用户裁定「继续入库，不删不 ignore」",
+      "evidence": "git ls-files '*.bak' = 13 个 / 12,641,827 B（12.06 MB）；.gitignore 全文无 *.bak / upstream 规则；门第 5 判据要求 upstreamV1.sha256 == 盘上 .bak 实测 sha256（缺件 / 不等即红）；CONTRIBUTING.md 明写「不许删」",
+      "evidenceRefs": ["data/fabric_1.21.1/mappings/yarn-tiny-provenance.json", "mcp-server/scripts/assert-yarn-named-integrity.mjs", "CONTRIBUTING.md"],
+      "status": "closed",
+      "gates": ["assert-yarn-named-integrity.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "config-tool-platform-face",
+      "claim": "「配置」口径三方一致：根 AGENTS.md 的配置条目写出 generate_config 的四平台面（forge/neoforge/fabric/quilt）+ 不支持平台（LiteLoader/Rift/ModLoader/基岩）的显式禁令；支持面档不得标禁令、不支持面档提及它必须标禁令；工具面 = generateConfig 的 loader 枚举（源码解析）",
+      "author": "sweep85 单侧改 7 档子档而根纲未同步（2026-09-19 用户裁定「立即改根纲」）",
+      "evidence": "sweep85 git diff：根 AGENTS.md 仅去 BOM，同一提交在 liteloader×3 / rift×1 / modloader×3 写入「不要对本档调用 generate_config」；实测 generateConfig loader 枚举 = forge|neoforge|fabric|quilt（generators/index.ts:1258）；门 --selftest 7 类畸形全检出 + 59 档 AGENTS.md 正对照绿",
+      "evidenceRefs": ["AGENTS.md", "mcp-server/scripts/assert-config-platform-face.mjs", "mcp-server/src/generators/index.ts"],
+      "status": "closed",
+      "gates": ["assert-config-platform-face.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "bedrock-script-api-pin-truth-source",
+      "claim": "bedrock 模板 @minecraft/server 钉值有唯一真值源（mcp-server/data/bedrock-script-api-pin.json）并与 bedrock/scaffold 逐字一致；它与 data/bedrock-docs-status.json.scriptApiStable 的分歧必须显式登记（declared + why），不得静默漂移",
+      "author": "sweep85 把模板提到 2.10.0 而快照仍 2.9.0（2026-09-19 用户裁定「统一真值，但先区分语义」）",
+      "evidence": "sweep85 git diff：bedrock/scaffold/BP/manifest.json 2.9.0→2.10.0；data/bedrock-docs-status.json fetchedAt=2026-08-14 / scriptApiStable=2.9.0；修前 validate_addon_manifest 对 dependencies 零检查（实测）⇒ 分叉静默通过；修后门 --selftest 7 类畸形全检出 + 真实输入正对照绿",
+      "evidenceRefs": ["mcp-server/data/bedrock-script-api-pin.json", "mcp-server/scripts/assert-bedrock-script-api-pin.mjs", "bedrock/scaffold/BP/manifest.json"],
+      "status": "closed",
+      "gates": ["assert-bedrock-script-api-pin.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "worldgen-version-era-sentinel",
+      "claim": "generate_worldgen 有两端版本哨兵：1.x 只收 1.18.2 ≤ v ≤ 1.21.x（超界报「未跟进 + WORLDGEN_MAX_MINOR_1X 抬哨兵出口」）、26.x 只收 /^26\\.\\d+(\\.\\d+)?$/；forge×26.x 拒绝（Forge 无 26.x）—— 编造版本号不得再「吐 files + suggestedPaths + exit 0」",
+      "author": "sweep12 只写下界（措辞却写「无白名单时不要生成」）+ 2026-09-19 用户裁定「余下已核实项做完」（N6）",
+      "evidence": "实测 node dist/cli.js generate_worldgen --platform fabric --version 1.99.9 曾 success:true + 完整 files + suggestedPaths + exit 0（比 C1 更坏：根本不拒绝）；修后 test-core 两正对照（fabric 1.21.1=2 files / neoforge 26.1.2=3 files）+ 三反例（1.99.9 / 2.0 / forge×26.1.2）逐条点名原因",
+      "evidenceRefs": ["mcp-server/src/generators/index.ts", "mcp-server/test-core.mjs", "README.md"],
+      "status": "closed",
+      "gates": ["test-core.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "update-partial-swap-recovery-fenced",
+      "claim": "取锁前的半交换自愈必须**持锁**进行（tryAcquireUpdateApplyLock 非阻塞原子占位），不得只靠 existsSync 探测 —— 那是 TOCTOU：两进程可同时过闸并发动盘，且 recoverPartialSwap 无条件删 .next 会与刚取到锁的进程撞车",
+      "author": "sweep85 A-40 以探测式引入锁外自愈 + 2026-09-19 用户裁定「余下已核实项做完」（N7）",
+      "evidence": "A-40 原实现 tryRecoverPartialSwap 只有 existsSync(dirLockPathOf(resolveCacheRoot(),\"update-apply\")) 一道闸；修后「不抢锁、不等待」语义保留（锁目录存在一律返回 null），但动盘段与并发 apply 互斥；test-update 用例 ①（取锁后自愈）/③（busy 不得恢复）/④（取锁前自愈）双向钉，用例名改 …PreAndPostLock",
+      "evidenceRefs": ["mcp-server/src/update/apply-lock.ts", "mcp-server/src/update/data.ts", "mcp-server/test-update.mjs"],
+      "status": "closed",
+      "gates": ["test-update.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "bedrock-script-module-language-entry-not-enforced",
+      "claim": "【id 保留历史命名，状态已反转】script 模块必须 language=javascript 与非空 entry（缺任一判 error），dependencies 结构校验（条目为对象、module_name/version 非空字符串）判 error —— 曾以「缓存官方页无必填口径」为由不判错，2026-09-19 用户裁定 N9(b) 判真洞/P1 后改为最小校验",
+      "author": "原审查 HIGH「language/entry 零检查而规则当已核实约束」→ N9(b) 复核降级 → 2026-09-19 用户裁定改判 P1 真洞并修复",
+      "evidence": "判级依据 = 用户裁定 + 本仓自证形态（bedrock/scaffold/BP/manifest.json 与 generate_addon_manifest/generate_bp_entity 产出的 script 模块都带 language+entry）；一手页面状态留痕：pack-manifest.md:97-99 对 language 是条件句、entry 全页 0 命中（重抓后若口径变化须重定判级）；test-core 双向钉（缺 language / 缺 entry / dependencies 结构 3 反例 + langOk 正对照）",
+      "evidenceRefs": ["data/bedrock_stable/bedrock-docs/stable/processed/pack-manifest.md", "mcp-server/src/bedrock/index.ts", "bedrock/.cursor/rules/01-manifest.mdc"],
+      "status": "closed",
+      "gates": ["test-core.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "publish-ready-fabric-nonsilent",
+      "claim": "check_publish_ready 对 Fabric/Quilt **有机核字段**（publishing.md 点名 fabric.mod.json 的 id/version/license/name、quilt.mod.json 的 id/version/name，缺失进 missing）；且当清单退化为只剩 mods.toml 族（无任何 .json 目标）时必须说破「0 项被机核 + manual 含 Forge 专属文案」，不得静默",
+      "author": "原审查 V9/§3（check_publish_ready 对 Fabric 核 0 字段）+ 2026-09-19 用户裁定「修复完整深层」（N8）",
+      "evidence": "深层已落地：publishing.md 增 Fabric/Quilt 字段行（一手依据 = 本仓两份 scaffold 元数据实形态：fabric.mod.json 顶层 id/version/name/license；quilt.mod.json 的 license 非必备故不进机核），机核面经 requirements 自动扩展、发布/index.ts 无字段写死；test-core 用例 ③ 改为「Fabric 缺 license/name 进 missing」+ 毒例 ④ 加「清单无 .json 目标 ⇒ 说破」+ 对照（mods.toml 工程不触发）",
+      "evidenceRefs": ["mcp-server/src/publish/index.ts", "mcp-server/test-core.mjs", "community_knowledge/authored/publishing.md"],
+      "status": "closed",
+      "gates": ["test-core.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "generate-rejection-is-tool-failure",
+      "claim": "8 道 Java 系 generate_*（model/lang/network_packet/capability/config/entity_renderer/worldgen/datagen）在生成器拒绝（errors 非空或 code/files 双空）或写盘被拒（writeError）时，出向对象 ok:false ⇒ CLI success:false + exit 1，不再「拒绝也 success:true + exit 0」",
+      "author": "原审查 C1/V1（write-helper × isToolFailure 只认 ok/passed/error.code）+ 2026-09-19 用户裁定「动判定链，不只修 worldgen」",
+      "evidence": "根因 = 生成器出向对象没有 ok 字段；修法 = maybeWriteGeneratorResult 统一出口按 generatorRejected() && !writeError 收口（MCP 与 CLI 两路全走它，单点覆盖 8 道）；CLI 实测 generate_worldgen --version=1.99.9 从 success:true/exit 0 变 success:false/exit 1 + errorKind:tool_failure，正常产出仍 success:true/exit 0；test-cli C1 块 + test-core 单元断言双向钉；行为面补充（2026-09-19 用户裁定）：resultKind 三态 ok/generation_failed/write_blocked 把「写入未完成」与「生成失败」拆开（ok 为其派生），dry-run 语义（不传 write 恒 ok、无 written/writeError）与 writeError.code 错误码枚举已进 README/AGENTS 与契约测试",
+      "evidenceRefs": ["mcp-server/src/generators/write-helper.ts", "mcp-server/src/cli-parse.ts", "mcp-server/test-cli.mjs", "mcp-server/test-core.mjs"],
+      "status": "closed",
+      "gates": ["test-cli.mjs", "test-core.mjs"],
+      "closedAt": "2026-09-19"
     }
   ]
 }

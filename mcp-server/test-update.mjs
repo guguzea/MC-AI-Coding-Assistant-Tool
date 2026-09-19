@@ -759,8 +759,11 @@ function corruptZipExtraction(zipPath) {
  * 实现边界（不抢锁、不等待）：仅当 update-apply 锁目录**不存在**（无人持锁）才动盘；锁目录存在
  * 一律跳过（活锁由持有者自愈、残锁由下次主路径陈旧抢占后自愈）。故用例 ④ 必须在用例 ③（建活锁）
  * **之前**跑，且用例 ③ 的反例断言保持不变。
+ * N7（2026-09-19 裁定）：取锁前的自愈从「existsSync 探测」升级为 **`tryAcquireUpdateApplyLock()`**
+ * （非阻塞原子占位）—— 拿到锁才动盘，消除「两进程同时过闸并发动盘 / 无条件删 `.next` 撞车」的窗口。
+ * 用例名随之从 …OnlyPostLock 改为 …PreAndPostLock（它本来就同时覆盖取锁前 ④ 与取锁后 ①）。
  */
-async function testDataHalfSwapSelfHealsOnlyPostLock() {
+async function testDataHalfSwapSelfHealsPreAndPostLock() {
   const root = mkdtempSync(join(tmpdir(), "mc-upd-halfswap-"));
   const dataDir = join(root, "data");
   const prevDir = `${dataDir}.prev`;
@@ -997,7 +1000,7 @@ async function main() {
   await testStableSkipsPrerelease();
   await testStablePaginatesPastFirstPage();
   await testGithubListRejectsMalformedElements(); // C-7 ①
-  await testDataHalfSwapSelfHealsOnlyPostLock(); // C-7 ②
+  await testDataHalfSwapSelfHealsPreAndPostLock(); // C-7 ② + A-40（取锁前）+ N7（恢复持锁）
   await testUpdateApplyFailureIsNotOk(); // G-1
   await testResolveDataDirKeepsDeclaredRootWhenMissing(); // G-2
   await testHostAllowlistIsExactAndSingleSource(); // BB-4

@@ -8,7 +8,9 @@
  *
  * busy（别的进程正持有）时抛 DirLockBusyError，由调用方翻成 UPDATE_BUSY 信封。
  */
-import { acquireDirLock } from "../utils/dir-lock.js";
+import { existsSync, mkdirSync, rmSync, writeFileSync } from "fs";
+import { join } from "path";
+import { acquireDirLock, dirLockPathOf } from "../utils/dir-lock.js";
 import { resolveCacheRoot } from "../utils/path.js";
 
 const LOCK_NAME = "update-apply";
@@ -37,5 +39,43 @@ export async function acquireUpdateApplyLock(timeoutMs = 600_000): Promise<() =>
     if (!release) return;
     held = null;
     release();
+  };
+}
+
+/**
+ * N7（2026-09-19 裁定）：**非阻塞**试探取锁 —— 锁目录不存在时用 mkdir 原子占住，拿到才动盘。
+ *
+ * 为什么不用 `acquireUpdateApplyLock(小 timeout)`：dir-lock 的 `timeoutMs` 同时是**陈旧抢占阈值**
+ * （`age <= timeoutMs` 视为存活），传小值会把别的进程**正持有的活锁**当成陈旧抢走。
+ * 为什么不保持 A-40 原样的「existsSync 探测」：那是 TOCTOU —— 两个进程可以同时过闸，
+ * 并发动盘（`recoverPartialSwap` 还会无条件删 `.next`，可能与刚取到锁、正在组装 `.next` 的进程撞车）。
+ *
+ * 语义边界（与 A-40 注释一致，只是把「探测」升级成「原子占位」）：
+ *   · **不等待**：拿不到立刻返回 null（活锁/残锁一律交给主路径：活锁由持有者自愈、残锁由
+ *     `takeOverStaleLock` 陈旧抢占后自愈）；
+ *   · **不陈旧抢占**：`owner.json` 过期也不抢 —— 那是主路径的职责；
+ *   · 拿到锁的窗口极短（一次 `recoverPartialSwap`），期间并发 apply 会看到锁目录 ⇒ UPDATE_BUSY，
+ *     这是正确串行化，不再是并发写盘。
+ * 返回 release（调用方必须 finally 释放）；本进程崩溃留下的目录会被主路径当残锁按陈旧接管。
+ */
+export function tryAcquireUpdateApplyLock(): (() => void) | null {
+  const lockDir = dirLockPathOf(resolveCacheRoot(), LOCK_NAME);
+  if (existsSync(lockDir)) return null;
+  try {
+    mkdirSync(lockDir, { recursive: true });
+  } catch {
+    return null; // 与并发取锁的极小窗口竞争：抢不到就放弃（不等待）
+  }
+  try {
+    writeFileSync(join(lockDir, "owner.json"), JSON.stringify({ pid: process.pid, at: Date.now() }));
+  } catch {
+    /* owner 写不进去不影响互斥：目录存在本身就是占位 */
+  }
+  return () => {
+    try {
+      rmSync(lockDir, { recursive: true, force: true });
+    } catch {
+      /* 释放失败 = 残锁，交给主路径陈旧抢占 */
+    }
   };
 }

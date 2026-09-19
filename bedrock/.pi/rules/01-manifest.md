@@ -26,9 +26,15 @@ description: 01 — manifest.json
 - `modules[].type`：官方属性表**只列** `resources` | `data` | `world_template` | `script`（`stable/pack-manifest` 的 modules.type 行）；同一页官方示例却写 `"type": "client_data"` —— **官方自相矛盾**。`client_data` 按遗留值处理：`validate_addon_manifest` 只给「建议迁移到 data」的 warning，不得当作已核实的枚举成员。`skin` 为皮肤包类型。不要把 SP 当第三种顶层包（脚本模块放在 BP 内）。
 - `capabilities` 可选；官方表只列 `chemistry` / `editorExtension` / `experimental_custom_ui` / `raytraced` / `pbr`（同页 capabilities 段）。Learn **未列出** `script_eval`（勿当已核实能力举例）。**不是** 世界「Beta APIs」开关。
 - `metadata` 可选；官方 metadata 表列 `authors`(Array) / `license`(String) / `generated_with`(JSON Object) / `product_type`(String) / `url`(String)。`product_type` **语料只点名一个值**：`"addon"`（原文「The only supported value is "addon"」，并写明设为该值也不改变 in-game 行为）；社区流传的其他历史值**未核实**，不要当枚举成员写。`generated_with` 的 `[a-zA-Z0-9_-]` + 32 字符上限管的是**工具名**，与实体/方块 identifier 无关，禁止挪用。
+- **`language` / `entry` 的判级口径（2026-09-19 裁定 N9(b) 判真洞/P1，反转前判）**：script 模块**必须** `language="javascript"` 且 `entry` 非空（如 `"scripts/main.js"`）——缺任一 `validate_addon_manifest` 判 **error**。前判（「缓存官方页 `entry` 0 命中、`language` 是条件句 ⇒ 不判错」）已作废：实测缺两者仍 `ok:true` 属真洞。`dependencies` 结构校验同批判 error：条目必须是对象、`module_name` / `version` 必须是非空字符串（`version` 允许 `"beta"`）；版本**值**不是本仓已知真值（模板钉值 / 文档快照）仍只 warning（见下）。一手页面状态（`entry` 全页 0 命中）留痕在台账 `bedrock-script-module-language-entry-not-enforced` —— 重抓 pack-manifest 页后若口径变化须重定判级。
 - **禁止** `"experimentalGameplay": true`。依据 = **Learn pack-manifest 从未列出该键**（语料 0 命中），不是「Learn 明令禁止」。世界实验见 07 与 `knowledge/common/experiments.md`。
 
-脚本依赖版本以 `data/bedrock-docs-status.json` 的 `scriptApiStable` 为准（快照时曾为 `2.9.0`；npm registry 一手复核 as-of 2026-09-18：`dist-tags.latest` = **`2.10.0`**、`beta` = `2.11.0-beta.1.26.51-stable`）——**不要**凭记忆填版本号，也不要用 Yarn/`modImplementation`。scaffold 的 `BP/manifest.json` 依赖版本已同步为 `2.10.0`（as-of 2026-09-19），且**两份 scaffold manifest 都带 `min_engine_version`**（模板示例口径）；生成器的默认 mev 钉值（`[1,26,44]`）按既有裁定不改，输出附当前 stable 注记。
+脚本依赖版本有**两个语义不同的真值**（2026-09-19 裁定；别当同一个数比对）：
+
+- **文档快照值** = `data/bedrock-docs-status.json` 的 `scriptApiStable`（Learn 抓取时刻所载 stable，快照时曾为 `2.9.0`；随抓取更新、天然滞后）——`generate_addon_manifest` 的默认值取它。
+- **模板钉值** = `mcp-server/data/bedrock-script-api-pin.json` 的 `scaffoldDependency.version`（本仓给新工程的推荐值，按 npm registry `dist-tags` 一手复核推进；当前 `2.10.0`、as-of 2026-09-18）。
+
+`bedrock/scaffold/BP/manifest.json` 必须与**模板钉值**逐字一致；`validate_addon_manifest` 对既不是钉值也不是快照值的依赖版本回 warning（不判错）。三者由 `mcp-server/scripts/assert-bedrock-script-api-pin.mjs` 看守，单侧改动即红（npm `dist-tags` as-of 2026-09-18：`latest` = `2.10.0`、`beta` = `2.11.0-beta.1.26.51-stable`）。**不要**凭记忆填版本号，也不要用 Yarn/`modImplementation`。两份 scaffold manifest 都带 `min_engine_version`（模板示例口径）；生成器的默认 mev 钉值（`[1,26,44]`）按既有裁定不改，输出附当前 stable 注记。
 
 ## 文档
 

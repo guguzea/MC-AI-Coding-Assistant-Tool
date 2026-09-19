@@ -8,7 +8,12 @@
  *
  * 本门（纯只读），5 条判据：
  *   1) 每档 `mappings/yarn-tiny-provenance.json` 必须存在（修复可追溯）；
+ *      **前置面收口（2026-09-19 裁定）**：`data/fabric_<ver>/mappings/` 存在却找不到 `-tiny.gz` 时**判红**，
+ *      不再静默跳过 —— 「本档不带 mappings/ 目录」（如 fabric_26.1.2 / fabric_porting，设计如此）
+ *      与「带了 mappings/ 却缺工件」是两回事，后者意味着判据 1–4 对整档根本没跑。
  *   2) 当前 member selfEq 比率 ≤ 修复基线 × 1.15（防再次喂有损 artifact —— 有损态会高出 ~50% 相对量）；
+ *      **空过收口（2026-09-19 裁定）**：member 行数为 0 时比率无从计算（旧式 `memberTotal ? … : 0`
+ *      会把它判成 0% 静默通过）⇒ 判红（工件被截断/换件，与「yarn 未命名」不可区分）。
  *   3) class selfEq 绝对数 ≤ 200；
  *   4) 零成员类 ≤ 逐档基线 × 1.15 + 30（按 ownerOfficial 列归因；捕获「CLASS 行在、成员行整批缺失」）；
  *   5) provenance ↔ 磁盘双向 sha 对账：`upstreamV1.sha256` 必须等于 `mappings/upstream/*.bak` 的实测
@@ -20,17 +25,30 @@
  *   node scripts/assert-yarn-named-integrity.mjs                    # 判红/绿（打印逐档一行）
  *   node scripts/assert-yarn-named-integrity.mjs --measure-zero-member
  *       # 只读重算各档零成员类计数：打印可直接提交的基线表 JSON + 现基线 vs 实测对照（不写盘，退出码 0）
+ *   node scripts/assert-yarn-named-integrity.mjs --selftest
+ *       # 投毒自证：在 $TMP 造 8 例夹具（1 正对照 + 7 类畸形），用**真门**（child process）逐例断言 rc，
+ *       # 跑完即删；不碰仓库 data/。判据活性由此证明，而不是靠「它一直没红」。
+ * 投毒专用环境变量（生产链不设，只由 --selftest 与 test 链的投毒块使用）：
+ *   MC_SKILL_YARN_GATE_ROOT=<假根>        # 顶替仓库根（门只读 <假根>/data/fabric_<ver>/mappings）
+ *   MC_SKILL_YARN_GATE_BASELINE=<文件>    # 顶替基线 JSON 路径
  */
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import crypto from "node:crypto";
 import zlib from "node:zlib";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, "..", "..");
-const DATA = path.join(REPO, "data");
-const BASELINE_PATH = path.join(HERE, "yarn-named-baseline.json");
+// 假根/假基线只服务投毒自证（与 assert-scaffold-selfcheck / assert-legacy-isolation 同惯例）。
+const TEST_ROOT = process.env.MC_SKILL_YARN_GATE_ROOT ? path.resolve(process.env.MC_SKILL_YARN_GATE_ROOT) : null;
+const ROOT = TEST_ROOT ?? REPO;
+const DATA = path.join(ROOT, "data");
+const BASELINE_PATH = process.env.MC_SKILL_YARN_GATE_BASELINE
+  ? path.resolve(process.env.MC_SKILL_YARN_GATE_BASELINE)
+  : path.join(HERE, "yarn-named-baseline.json");
 const FACTOR = 1.15;
 const CLASS_SELF_EQ_CAP = 200;
 const ZERO_MEMBER_SLACK = 30; // 绝对余量（对抗版本内小改动的抖动）
@@ -122,16 +140,27 @@ function scanZeroMember(txt) {
 }
 
 /** 发现全部档：data/ 下各 fabric_&lt;ver&gt; 档 mappings/ 里带 -tiny.gz 的（含档名、mappings 目录、tiny 文件名）。 */
+/**
+ * 发现全部档：data/ 下各 fabric_<ver> 档 mappings/ 里带 -tiny.gz 的（含档名、mappings 目录、tiny 文件名）。
+ *
+ * 同时**显式登记**「有 mappings/ 却没有 -tiny.gz」的档 —— 这才是洞①的收口点：
+ * 旧版 `if (!tinyName) continue` 把这类档静默跳过，判据 1–5 对它一条都没跑，而门照报 ok。
+ * 「没有 mappings/ 目录」仍然跳过（fabric_26.1.2 / fabric_porting 本就不带映射工件，是设计不是漏检）。
+ */
 function discoverPacks() {
-  const out = [];
+  const packs = [];
+  const missingTiny = [];
   for (const pack of fs.readdirSync(DATA).filter((d) => d.startsWith("fabric_")).sort()) {
     const dir = path.join(DATA, pack, "mappings");
     if (!fs.existsSync(dir)) continue;
     const tinyName = fs.readdirSync(dir).find((f) => /-tiny\.gz$/.test(f));
-    if (!tinyName) continue;
-    out.push({ pack, dir, tinyName });
+    if (!tinyName) {
+      missingTiny.push(pack);
+      continue;
+    }
+    packs.push({ pack, dir, tinyName });
   }
-  return out;
+  return { packs, missingTiny };
 }
 
 /**
@@ -185,8 +214,158 @@ function checkProvenanceSha(pack, dir, tinyName) {
   return errs;
 }
 
+// ── --selftest：投毒自证（纯 $TMP 夹具，不碰仓库 data/；跑完即删）───────────────────────
+// 立此块的缘由（2026-09-19 用户裁定「收口两个洞 + 补投毒」）：本门此前**没有任何投毒证明**，
+// 于是「门一直绿」既可能是数据好、也可能是判据已经死了（classSelfEq ≤ 200 对本次重建就完全惰性）。
+// 做法：把**真门**当被测对象（child process + MC_SKILL_YARN_GATE_ROOT 假根），逐例投毒断言退出码，
+// 正对照必须绿 —— 判据活性由「真跑」证明，而不是在原地另写一套判分逻辑自说自话。
+if (process.argv.includes("--selftest")) {
+  const tmpBase = fs.mkdtempSync(path.join(os.tmpdir(), "mc-yarn-gate-selftest-"));
+  const PK = "fabric_9.9.9";
+  const gz = (s) => zlib.gzipSync(Buffer.from(s, "utf8"));
+  const cls = (official, named) => `CLASS\t${official}\tofficial/${official}\t${named}\n`;
+  const mem = (kind, owner, official, named) =>
+    `${kind}\t${owner}\t()V\tn.o.${official}\tn.i.${official}\t${named}\n`;
+  /** 健康档：3 类 × 4 成员，named 列与 intermediary 列全不同（member/class selfEq 皆 0） */
+  const healthyTiny = () => {
+    let s = "";
+    for (let c = 0; c < 3; c++) {
+      s += cls(`C${c}`, `NamedC${c}`);
+      for (let m = 0; m < 4; m++) s += mem(m % 2 ? "FIELD" : "METHOD", `C${c}`, `m${c}_${m}`, `namedM${c}_${m}`);
+    }
+    return s;
+  };
+  /** 有损 v1 形态：成员 named 列 == intermediary 列（比率 100%，判据②必须咬住） */
+  const lossyTiny = () => {
+    let s = "";
+    for (let c = 0; c < 3; c++) {
+      s += cls(`C${c}`, `NamedC${c}`);
+      for (let m = 0; m < 4; m++) s += mem("METHOD", `C${c}`, `m${c}_${m}`, `n.i.m${c}_${m}`);
+    }
+    return s;
+  };
+  /** 只有 CLASS 行、没有任何成员行（memberTotal=0 ⇒ 洞②必须咬住；旧式 `? : 0` 会静默放行） */
+  const classesOnlyTiny = () => [0, 1, 2].map((c) => cls(`C${c}`, `NamedC${c}`)).join("");
+  /** 1 类有成员 + 40 类无成员（zero=40 > ceil(0×1.15)+30 ⇒ 判据④必须咬住） */
+  const zeroBatchTiny = () => {
+    let s = cls("C0", "NamedC0");
+    for (let m = 0; m < 4; m++) s += mem("METHOD", "C0", `m${m}`, `namedM${m}`);
+    for (let c = 1; c <= 40; c++) s += cls(`Z${c}`, `NamedZ${c}`);
+    return s;
+  };
+  const newRoot = (tag) => {
+    const root = path.join(tmpBase, tag, "root");
+    fs.mkdirSync(path.join(root, "data"), { recursive: true });
+    return root;
+  };
+  /** 造一档：<root>/data/<pack>/mappings/{tiny.gz, upstream/*.bak, provenance.json}；noProv 时由调用方写 provenance */
+  const seed = (root, tinyText, opts = {}) => {
+    const dir = path.join(root, "data", opts.pack ?? PK, "mappings");
+    fs.mkdirSync(path.join(dir, "upstream"), { recursive: true });
+    const bakRel = "upstream/yarn-9.9.9-tiny.gz.v1-upstream.gz.bak";
+    const bakBuf = gz(healthyTiny());
+    fs.writeFileSync(path.join(dir, bakRel), bakBuf);
+    let tinySha = "0".repeat(64);
+    if (!opts.skipTiny) {
+      const tinyBuf = gz(tinyText);
+      fs.writeFileSync(path.join(dir, "yarn-9.9.9-tiny.gz"), tinyBuf);
+      tinySha = sha256(tinyBuf);
+    }
+    const bakSha = sha256(bakBuf);
+    if (!opts.noProv) {
+      fs.writeFileSync(
+        path.join(dir, "yarn-tiny-provenance.json"),
+        JSON.stringify({ upstreamV1: { file: bakRel, sha256: bakSha }, repairedSha256: tinySha }),
+      );
+    }
+    return { dir, bakRel, bakSha, tinySha };
+  };
+  const baselineOf = (ratio, zero) => ({ memberSelfEqRatio: { [PK]: ratio }, zeroMemberClasses: { [PK]: zero } });
+  const runGate = (root, baseline) => {
+    const bl = path.join(root, "baseline.json");
+    fs.writeFileSync(bl, JSON.stringify(baseline));
+    return spawnSync(process.execPath, [fileURLToPath(import.meta.url)], {
+      encoding: "utf8",
+      windowsHide: true,
+      env: { ...process.env, MC_SKILL_YARN_GATE_ROOT: root, MC_SKILL_YARN_GATE_BASELINE: bl },
+    });
+  };
+  const cases = [
+    ["正对照·健康档", (r) => (seed(r, healthyTiny()), baselineOf(0, 0)), 0],
+    ["判据②·有损 v1（named==intermediary）", (r) => (seed(r, lossyTiny()), baselineOf(0, 0)), 1],
+    ["洞②·memberTotal=0（空 member 列）", (r) => (seed(r, classesOnlyTiny()), baselineOf(0, 0)), 1],
+    ["判据④·零成员类批量超限", (r) => (seed(r, zeroBatchTiny()), baselineOf(0, 0)), 1],
+    [
+      "洞①·mappings/ 在却无 -tiny.gz",
+      (r) => {
+        // 必须同时放一档**健康**档：否则 packs 为空时旧版会走「发现逻辑失效」分支而报红，
+        // 测不出「有别的档在跑 ⇒ 缺工件那档被静默跳过」这个真形态（旧版在此夹具下是绿的）。
+        seed(r, healthyTiny());
+        seed(r, "", { pack: `${PK}_missing`, skipTiny: true });
+        return baselineOf(0, 0);
+      },
+      1,
+    ],
+    [
+      "判据⑤·repaired sha 不符",
+      (r) => {
+        const s = seed(r, healthyTiny(), { noProv: true });
+        fs.writeFileSync(
+          path.join(s.dir, "yarn-tiny-provenance.json"),
+          JSON.stringify({ upstreamV1: { file: s.bakRel, sha256: s.bakSha }, repairedSha256: "b".repeat(64) }),
+        );
+        return baselineOf(0, 0);
+      },
+      1,
+    ],
+    [
+      "判据⑤·上游备份缺失",
+      (r) => {
+        const s = seed(r, healthyTiny(), { noProv: true });
+        fs.writeFileSync(
+          path.join(s.dir, "yarn-tiny-provenance.json"),
+          JSON.stringify({ upstreamV1: { file: "upstream/absent.bak", sha256: s.bakSha }, repairedSha256: s.tinySha }),
+        );
+        return baselineOf(0, 0);
+      },
+      1,
+    ],
+    ["基线·新档未登记", (r) => (seed(r, healthyTiny()), { memberSelfEqRatio: {}, zeroMemberClasses: {} }), 1],
+  ];
+  let missed = 0;
+  try {
+    for (const [name, build, want] of cases) {
+      const root = newRoot(name.replace(/[^\w\u4e00-\u9fa5]+/g, "_"));
+      const r = runGate(root, build(root));
+      const rc = r.status ?? 1;
+      if (rc !== want) {
+        missed++;
+        const tail = `${r.stdout ?? ""}${r.stderr ?? ""}`
+          .trim()
+          .split(/\r?\n/)
+          .filter(Boolean)
+          .slice(-3)
+          .join(" | ");
+        console.error(`  ✗ selftest「${name}」期望 rc=${want}，实得 rc=${rc}${tail ? ` —— ${tail.slice(0, 300)}` : ""}`);
+      } else {
+        console.log(`  ✓ ${name}（rc=${rc}）`);
+      }
+    }
+  } finally {
+    fs.rmSync(tmpBase, { recursive: true, force: true });
+  }
+  console.log(
+    `\nassert-yarn-named-integrity(selftest): ${
+      missed === 0
+        ? `OK（${cases.length} 例全符：1 正对照绿 + ${cases.length - 1} 类畸形全检出；$TMP 夹具已删）`
+        : `${cases.length - missed}/${cases.length} 例相符`
+    }`,
+  );
+  process.exit(missed === 0 ? 0 : 1);
+}
+
 const BASELINE = loadBaseline(!MEASURE);
-const packs = discoverPacks();
+const { packs, missingTiny } = discoverPacks();
 
 // ── --measure-zero-member：只读重算零成员类基线（不写盘，退出码 0）──────────────────────
 if (MEASURE) {
@@ -214,6 +393,9 @@ if (MEASURE) {
   );
   console.log(JSON.stringify({ zeroMemberClasses: measured }, null, 2));
   console.log("");
+  if (missingTiny.length) {
+    console.log(`[MEASURE] ⚠ 另有 ${missingTiny.length} 档有 mappings/ 却无 -tiny.gz（门模式下判红）：${missingTiny.join(", ")}`);
+  }
   console.log(`[MEASURE] 现基线 vs 实测对照：`);
   for (const l of lines) console.log(l);
   process.exit(0);
@@ -232,6 +414,13 @@ for (const { pack, dir, tinyName } of packs) {
   }
   const tiny = tinyText === null ? { classSelfEq: 0, classTotal: 0, memberSelfEq: 0, memberTotal: 0 } : scanTiny(tinyText);
   const ratio = tiny.memberTotal ? tiny.memberSelfEq / tiny.memberTotal : 0;
+  // 洞②收口（2026-09-19 裁定）：`memberTotal === 0` 时上式把比率算成 0% ⇒ 判据②静默通过。
+  // 空 member 列与「yarn 未命名」不可区分，必须red —— 否则一个只剩 CLASS 行的截断工件能骗过整道门。
+  if (tinyText !== null && tiny.memberTotal === 0) {
+    errors.push(
+      `${pack}: tiny 里 FIELD/METHOD 行数为 0（判据②无从计算、旧式写法会静默判成 0%）—— 工件被截断/换件？`,
+    );
+  }
   const base = BASELINE.member[pack];
   if (tinyText !== null) rows.push(`${pack} ${(ratio * 100).toFixed(2)}%`);
   const provPath = path.join(dir, "yarn-tiny-provenance.json");
@@ -268,7 +457,11 @@ for (const { pack, dir, tinyName } of packs) {
     errors.push(...checkProvenanceSha(pack, dir, tinyName));
   }
 }
-if (!packs.length) {
+// 洞①收口（2026-09-19 裁定）：有 mappings/ 却没有 -tiny.gz 的档必须点名判红，不再静默跳过。
+for (const pack of missingTiny) {
+  errors.push(`${pack}: 有 mappings/ 却找不到 -tiny.gz —— 判据 1–5 对该档一条都没跑（缺工件 ≠ 本档不带映射）`);
+}
+if (!packs.length && !missingTiny.length) {
   console.error("assert-yarn-named-integrity: RED —— data/fabric_*/mappings 下找不到任何 -tiny.gz（发现逻辑失效）");
   process.exit(1);
 }
@@ -279,6 +472,7 @@ if (errors.length) {
 }
 console.log(
   `assert-yarn-named-integrity: ok（${rows.length} 档 · 全部有 provenance 且 selfEq ≤ 基线×${FACTOR}` +
-    ` · 零成员类 ≤ 基线×${FACTOR}+${ZERO_MEMBER_SLACK} · provenance↔磁盘 sha 对账一致）`,
+    ` · 零成员类 ≤ 基线×${FACTOR}+${ZERO_MEMBER_SLACK} · provenance↔磁盘 sha 对账一致` +
+    ` · 无「有 mappings/ 却缺 -tiny.gz」的档 · 无 memberTotal=0 的空过档；--selftest 可投毒自证）`,
 );
 console.log(`  比率/零成员: ${rows.join(" · ")}`);
