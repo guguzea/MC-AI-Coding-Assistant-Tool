@@ -117,7 +117,7 @@ public class MyBlock extends Block {   // 方块实体：重写 hasTileEntity() 
 ### 4. 客户端 Screen 注册
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {

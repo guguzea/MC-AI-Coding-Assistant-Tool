@@ -90,7 +90,7 @@ IF 代码涉及网络消息处理
 
 ```java
 // client/ClientSetup.java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {

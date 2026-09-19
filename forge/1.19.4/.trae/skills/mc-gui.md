@@ -133,7 +133,7 @@ public class MyBlock extends Block implements EntityBlock {
 ### 4. 客户端 Screen 注册
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {

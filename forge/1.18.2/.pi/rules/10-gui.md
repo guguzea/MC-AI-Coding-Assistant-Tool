@@ -84,6 +84,9 @@ public class MyMenu extends AbstractContainerMenu {
         // slot layout...
     }
 
+    // 客户端 2 参构造：SimpleMenuProvider 工厂只提供 (windowId, inv)，extraData 缺省为 null
+    public MyMenu(int windowId, Inventory inv) { this(windowId, inv, null); }
+
     // Shift-click transfer logic
     @Override
     public ItemStack quickMoveStack(Player player, int slotIndex) {
@@ -109,7 +112,7 @@ public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
 ## Screen registration (CLIENT ONLY)
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
@@ -161,7 +164,7 @@ public class MyBlock extends Block {
     public MenuProvider getMenuProvider(BlockState state, Level level,
             BlockPos pos) {
         return new SimpleMenuProvider(
-            (id, inv, player) -> new MyMenu(id, inv, player),
+            (id, inv, player) -> new MyMenu(id, inv),
             Component.literal("My Menu")
         );
     }

@@ -114,17 +114,23 @@ const KNOWN_LEGIT = [
 ];
 
 const PACKS = [
-  { pack: 'forge/1.18.2', kind: 'with-material' },
-  { pack: 'forge/1.19.4', kind: 'with-material' },
-  { pack: 'forge/1.20.1', kind: 'no-material' },
-  { pack: 'forge/1.20.4', kind: 'no-material' },
+  // kind 支持数组（同档多族，各族独立扫描记账）。W3（2026-09-19）新增两族：
+  // networking-decoder-noctor（Request-Reply 示例，1.17.1–1.20.4）与
+  // gui-clientsetup-needs-modbus（ClientSetup 注解，1.15.2–1.20.4 七档；
+  // 1.13.2 不入 —— 其 08-client-server:120 KeyInputEvent 是游戏总线事件，无 bus 属合法）。
+  { pack: 'forge/1.18.2', kind: ['with-material', 'gui-clientsetup-needs-modbus'] },
+  { pack: 'forge/1.19.4', kind: ['with-material', 'networking-decoder-noctor', 'gui-clientsetup-needs-modbus'] },
+  { pack: 'forge/1.20.1', kind: ['no-material', 'networking-decoder-noctor', 'gui-clientsetup-needs-modbus'] },
+  { pack: 'forge/1.20.4', kind: ['no-material', 'networking-decoder-noctor', 'gui-clientsetup-needs-modbus'] },
   // ── C-1 阶段二（sweep81 收尾）：三族进同一「族 × 区间」框架 ──
   { pack: 'fabric/1.18.2', kind: 'no-fabrictooltags' },
   { pack: 'fabric/1.20.1', kind: 'no-fabrictooltags' },
   { pack: 'fabric/1.21.3', kind: 'no-fabrictooltags' },
   { pack: 'forge/1.12.2', kind: 'block-noarg-112' },
   { pack: 'fabric/1.14.4', kind: 'gradle6-no-archivesname' },
-  { pack: 'forge/1.16.5', kind: 'gradle6-no-archivesname' },
+  { pack: 'forge/1.16.5', kind: ['gradle6-no-archivesname', 'gui-clientsetup-needs-modbus'] },
+  { pack: 'forge/1.17.1', kind: ['networking-decoder-noctor', 'gui-clientsetup-needs-modbus'] },
+  { pack: 'forge/1.15.2', kind: 'gui-clientsetup-needs-modbus' },
 ];
 
 /** 族判据：按 kind 取；`re` 逐行布尔判定（不带 g，避免 lastIndex 残留）。 */
@@ -215,6 +221,42 @@ const RULES = {
       { id: 'archivesBaseName', re: /\barchivesBaseName\b/g },
     ],
   },
+  // W3-1（2026-09-19）：1.17.1–1.20.4「双向 Request-Reply」示例此前编译不过 ——
+  // MyRequest 只有 (int)/() 构造器，decoder 位 `MyRequest::new` 解析不到 (FriendlyByteBuf)；
+  // 且 handleRequest 是类外裸静态方法，注册却写 `MyRequest::handleRequest`（方法引用解析不到；
+  // 正确对照 = 同文件 MyOpenGuiHandler::handle 独立 handler 类）。修复形态对齐 1.13.2 :103 正例：
+  // 类内补 `MyRequest(FriendlyByteBuf)` 构造器 + handler 包进 `public static class MyRequestHandler`，
+  // 注册行 `MyRequestHandler::handleRequest`。局限：逐行正则看不见跨行类型不匹配，
+  // 钉的是撤回后的**回归形态**（类体缺 buf 构造器 + 裸 `MyRequest::handleRequest` 复活）。
+  // 注意 banned 正则不误伤修复后的 `MyRequestHandler::handleRequest`（`Handler` 前缀中断匹配）。
+  'networking-decoder-noctor': {
+    banned: [
+      {
+        id: 'networking-handler-ref',
+        re: /MyRequest\s*::\s*handleRequest/,
+        why: '`handleRequest` 不在 MyRequest 类内（裸静态方法），`MyRequest::handleRequest` 方法引用解析不到；包进 handler 类写 `MyRequestHandler::handleRequest`，decoder 需类内 `MyRequest(FriendlyByteBuf)` 构造器（1.13.2 :103 正例）',
+      },
+    ],
+    positive: [
+      { id: 'requestBufCtor', re: /MyRequest\s*\(\s*FriendlyByteBuf\b/g },
+    ],
+  },
+  // W3-2（2026-09-19）：七档 10-gui / mc-gui / 1.15.2 mc-entity·mc-particle·code-patterns 的
+  // ClientSetup 订阅 FMLClientSetupEvent / RegistryEvent.Register（Mod 总线生命周期·注册事件），
+  // 注解却缺 `bus = …Bus.MOD` ⇒ 默认 FORGE 总线，事件永远收不到。修复形态对齐 1.14.4:100 全称。
+  // 1.13.2 不入本 kind：其 08-client-server:120 KeyInputEvent 是游戏总线事件（无 bus 属合法）。
+  'gui-clientsetup-needs-modbus': {
+    banned: [
+      {
+        id: 'clientsetup-no-modbus',
+        re: /@Mod\.EventBusSubscriber\(modid = MOD_ID, value = Dist\.CLIENT\)/,
+        why: 'FMLClientSetupEvent / RegistryEvent.Register 等生命周期·注册事件走 Mod 总线：注解缺 `bus = …Bus.MOD` ⇒ 默认 FORGE 总线收不到；对齐 1.14.4:100 形态 `bus = Mod.EventBusSubscriber.Bus.MOD`',
+      },
+    ],
+    positive: [
+      { id: 'busMod', re: /bus = (?:Mod\.)?EventBusSubscriber\.Bus\.MOD/g },
+    ],
+  },
 };
 /** `no-material` 的合法同名成员（`ArmorMaterial.IRON` …），不得被上条误伤。 */
 const NO_MATERIAL_EXEMPT = /[A-Za-z0-9_$]Material\s*[.]\s*[A-Za-z_$]/g;
@@ -294,6 +336,15 @@ function selftest() {
     ['gradle6-no-archivesname', 'good', 'archivesBaseName = mod_id\n', null],
     // `archivesBaseName` 不得被 archivesName 规则误伤（子串不同名）
     ['gradle6-no-archivesname', 'good', 'archivesBaseName = project.archivesBaseName\n', null],
+    // W3-1：裸 `MyRequest::handleRequest`（handle 归属缺陷）必须咬住；修复形态不误伤
+    ['networking-decoder-noctor', 'bad', '    MyRequest::handleRequest\n', 'networking-handler-ref'],
+    ['networking-decoder-noctor', 'good', 'public MyRequest(FriendlyByteBuf buf) { this.data = buf.readInt(); }\n    MyRequestHandler::handleRequest\n', null],
+    // 1.13.2 合法对照：显式 (PacketBuffer) 构造器 + `MyMessage::new` decoder 不入 banned
+    ['networking-decoder-noctor', 'good', 'INSTANCE.registerMessage(id++, MyMessage.class, MyMessage::encode, MyMessage::new, (msg, ctx) -> msg.handle(ctx));\n', null],
+    // W3-2：缺 bus 的 ClientSetup 注解必须咬住（含缩进变体）；1.14.4 全称形态不误伤
+    ['gui-clientsetup-needs-modbus', 'bad', '@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)\npublic class ClientSetup {\n', 'clientsetup-no-modbus'],
+    ['gui-clientsetup-needs-modbus', 'bad', '    @Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)\n', 'clientsetup-no-modbus'],
+    ['gui-clientsetup-needs-modbus', 'good', '@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)\n', null],
   ];
   let missed = 0;
   for (const [kind, want, text, id] of cases) {
@@ -316,7 +367,7 @@ if (process.argv.includes('--selftest')) {
 } else {
   const census = [];
   const allHits = [];
-  for (const { pack, kind } of PACKS) {
+  for (const { pack, kind: kindsSpec } of PACKS) {
     const packDir = path.join(ROOT, pack);
     if (!fs.existsSync(packDir)) {
       fail(`${pack}: 档目录不存在（根=${relOf(ROOT) || '.'}）`);
@@ -335,20 +386,32 @@ if (process.argv.includes('--selftest')) {
       }
       entries.push({ rel: relOf(f), text: fs.readFileSync(f, 'utf8') });
     }
-    const r = scanTexts(entries, kind);
-    census.push({ pack, kind, scanned: entries.length, migrationExempt, ...r });
     if (entries.length === 0) fail(`${pack}: 被扫文件数 0（换错根 / 档被搬走不等于零缺陷）`);
-    for (const [id, n] of Object.entries(r.positives)) {
-      if (n === 0) fail(`${pack}: 正解形态 ${id} 计数为 0（示例被删空 / 正则改瞎 ⇒ 本门已瞎）`);
-    }
-    allHits.push(...r.hits);
-    if (INFO || RELEDGER) {
-      console.log(
-        `  info ${pack} [${kind}] 扫=${entries.length}（豁免迁移指南 ${migrationExempt}）禁用命中=${r.bannedHits} ` +
-          `正解=${Object.entries(r.positives).map(([k, v]) => `${k}:${v}`).join('/')}${kind === 'no-material' ? ` Armor 同名豁免=${r.armorExempt}` : ''}`,
-      );
+    // 同档可挂多族（数组 kind）：每族独立扫描、独立记账（census 每族一条；总览按档去重）。
+    for (const kind of Array.isArray(kindsSpec) ? kindsSpec : [kindsSpec]) {
+      const r = scanTexts(entries, kind);
+      census.push({ pack, kind, scanned: entries.length, migrationExempt, ...r });
+      for (const [id, n] of Object.entries(r.positives)) {
+        if (n === 0) fail(`${pack}: 正解形态 ${id} 计数为 0（示例被删空 / 正则改瞎 ⇒ 本门已瞎）`);
+      }
+      allHits.push(...r.hits);
+      if (INFO || RELEDGER) {
+        console.log(
+          `  info ${pack} [${kind}] 扫=${entries.length}（豁免迁移指南 ${migrationExempt}）禁用命中=${r.bannedHits} ` +
+            `正解=${Object.entries(r.positives).map(([k, v]) => `${k}:${v}`).join('/')}${kind === 'no-material' ? ` Armor 同名豁免=${r.armorExempt}` : ''}`,
+        );
+      }
     }
   }
+
+  // 同档多族时每族各记一次 scanned；总览按档去重（一档文件只算一次）。
+  const scannedOnce = new Map();
+  for (const c of census) if (!scannedOnce.has(c.pack)) scannedOnce.set(c.pack, c.scanned);
+  const scannedTotal = [...scannedOnce.values()].reduce((s, n) => s + n, 0);
+  const migrationTotal = [...scannedOnce.entries()].reduce((s, [p]) => {
+    const c = census.find((x) => x.pack === p);
+    return s + (c ? c.migrationExempt : 0);
+  }, 0);
 
   // 台账 ② 双向对账：未登记的命中 = 红；登记了但不再命中 = 红（过期）
   const key = (h) => `${h.rel}:${h.line}:${h.id}`;
@@ -378,23 +441,23 @@ if (process.argv.includes('--selftest')) {
       );
     }
     console.log(
-      `  合计：档 ${census.length} / 被扫 ${census.reduce((s, c) => s + c.scanned, 0)} / 豁免迁移指南 ${census.reduce((s, c) => s + c.migrationExempt, 0)} / ` +
+      `  合计：档 ${scannedOnce.size} / 被扫 ${scannedTotal} / 豁免迁移指南 ${migrationTotal} / ` +
         `禁用命中 ${census.reduce((s, c) => s + c.bannedHits, 0)}（其中 KNOWN_LEGIT 具名合法 ${legitUsed}）`,
     );
   }
 
   if (failures.length > 0) {
     console.error(
-      `assert-forge-blockshape-family: ${failures.length} 项不通过（族=${Object.keys(RULES).length} 区间 / 档=${census.length} / ` +
-        `被扫文件=${census.reduce((s, c) => s + c.scanned, 0)} / 台账 ${TEST_ROOT ? 'skipped(test-root)' : RELEDGER ? 'recomputed' : 'checked'}）`,
+      `assert-forge-blockshape-family: ${failures.length} 项不通过（族=${Object.keys(RULES).length} 区间 / 档=${scannedOnce.size} / ` +
+        `被扫文件=${scannedTotal} / 台账 ${TEST_ROOT ? 'skipped(test-root)' : RELEDGER ? 'recomputed' : 'checked'}）`,
     );
     for (const f of failures.slice(0, 30)) console.error(`  ✗ ${f}`);
     if (failures.length > 30) console.error(`  …另有 ${failures.length - 30} 项`);
     process.exit(1);
   }
   console.log(
-    `assert-forge-blockshape-family: ok（${census.length} 档 / 被扫文件 ${census.reduce((s, c) => s + c.scanned, 0)} · ` +
-      `豁免迁移指南 ${census.reduce((s, c) => s + c.migrationExempt, 0)} 篇 + 具名合法提及 ${legitUsed} 处 · 禁用形态 0 · ` +
+    `assert-forge-blockshape-family: ok（${scannedOnce.size} 档 / 被扫文件 ${scannedTotal} · ` +
+      `豁免迁移指南 ${migrationTotal} 篇 + 具名合法提及 ${legitUsed} 处 · 禁用形态 0 · ` +
       `台账 ${TEST_ROOT ? 'skipped(test-root)' : RELEDGER ? 'recomputed' : 'checked'}）`,
   );
 }

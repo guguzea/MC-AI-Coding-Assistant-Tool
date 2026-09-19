@@ -55,7 +55,7 @@ public class MyParticle extends SpriteTexturedParticle {
 ### 3. 注册粒子工厂（客户端）
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ParticleRenderers {
     @SubscribeEvent
     public static void registerParticleFactories(RegistryEvent.Register<ParticleType<?>> event) {

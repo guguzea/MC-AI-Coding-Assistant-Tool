@@ -66,7 +66,7 @@ public class MyProjectile extends Projectile {
 ## 实体渲染器
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {

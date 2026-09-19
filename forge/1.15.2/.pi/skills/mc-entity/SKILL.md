@@ -75,7 +75,7 @@ public class MyEntity extends LivingEntity {
 
 ```java
 // 客户端 — FMLClientSetupEvent 中注册
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {

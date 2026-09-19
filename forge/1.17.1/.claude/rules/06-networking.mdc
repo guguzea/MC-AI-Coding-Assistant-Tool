@@ -229,6 +229,7 @@ INSTANCE.send(PacketDistributor.ALL.noArg(), new MyBroadcastMessage(data));
 public class MyRequest {
     private int data;
     public MyRequest(int data) { this.data = data; }
+    public MyRequest(FriendlyByteBuf buf) { this.data = buf.readInt(); }
     public MyRequest() {}
     public void toBytes(FriendlyByteBuf buf) { buf.writeInt(data); }
     public void fromBytes(FriendlyByteBuf buf) { data = buf.readInt(); }
@@ -254,19 +255,21 @@ public class MyReply {
 }
 
 // 处理器：5 参数 BiConsumer 风格（推荐）
-public static void handleRequest(MyRequest msg, Supplier<NetworkEvent.Context> ctx) {
-    ctx.get().enqueueWork(() -> {
-        ServerPlayer player = ctx.get().getSender();
-        if (player != null) {
-            int result = processOnServer(player, msg.data);
-            // 回复客户端
-            NetworkHandler.INSTANCE.send(
-                PacketDistributor.PLAYER.with(() -> player),
-                new MyReply(true, result)
-            );
-        }
-    });
-    ctx.get().setPacketHandled(true);
+public static class MyRequestHandler {
+    public static void handleRequest(MyRequest msg, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            ServerPlayer player = ctx.get().getSender();
+            if (player != null) {
+                int result = processOnServer(player, msg.data);
+                // 回复客户端
+                NetworkHandler.INSTANCE.send(
+                    PacketDistributor.PLAYER.with(() -> player),
+                    new MyReply(true, result)
+                );
+            }
+        });
+        ctx.get().setPacketHandled(true);
+    }
 }
 
 // 注册（5 参数，最后一项是 BiConsumer<MSG, Supplier<NetworkEvent.Context>>）
@@ -276,7 +279,7 @@ INSTANCE.registerMessage(
     MyRequest.class,
     MyRequest::toBytes,
     MyRequest::new,
-    MyRequest::handleRequest
+    MyRequestHandler::handleRequest
 );
 ```
 
