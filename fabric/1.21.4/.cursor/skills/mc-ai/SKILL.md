@@ -7,19 +7,29 @@ dependencies: []
 mappings: yarn
 ---
 
-[DONOR_SKILL 禁止直接抄写]
-本 Skill 正文为本地维护的结构/流程草稿，未经官方 API 核验（无外部捐入源版本：fabric/1.21.3 无同名技能；fabric/1.21.8 与 fabric/1.21.10 的同名 Skill 均由本档派生）。不得直接使用正文里的类名/方法。先 search_fabric_docs(version=1.21.4) 核对类名/方法签名（不要用 version=1.21.3），对不上就改口官方文档、禁止照抄。Yarn 档互捐，禁止把 26.1.2 mojmap 当本档。
+# mc-ai（1.21.4）
 
-# mc-ai
+> 一手来源：Yarn 类名 `net/minecraft/entity/ai/goal/GoalSelector` 经本档映射库核实存在（`data/fabric_1.21.4/mappings/yarn-mappings.sqlite` 含该路径记录）。Fabric docs 语料无 AI 专页。
 
-> Wave D 技能骨架（fabric 1.21.4）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+## Decision Flow
 
-## 快速入口
+```
+→ 实体行为 = 优先级 Goal 系统 → Goal 子类（Yarn 名 net.minecraft.entity.ai.goal.Goal）
+→ goal 容器 → net.minecraft.entity.ai.goal.GoalSelector（映射库已钉）
+→ goal 挂载方法签名 → 本档无一手语料，写前先核实
+→ 注册与生命周期 → mc-registry、01-registry.mdc、04-entity.mdc
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.21.3/knowledge/antipatterns/`
+## 本档口径（已核实）
+
+- Yarn 命名 `entity/ai/goal/GoalSelector`、`entity/ai/goal/Goal` 在本档映射库中有记录（不是 26.1.2 mojmap，不是 1.21.3 捐入）。
+- goal 挂载/优先级方法链本档无一手来源——先 `get_method_params`（to=yarn）或反编译核实再写。
+
+## 反模式
+
+- 把 mojmap 名（无包前缀的 `Goal` 直译）当 Yarn 全名用——Yarn 是 `net.minecraft.entity.ai.goal.*` 包。
+- 凭记忆写挂载链。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 名字核实：`convert_mapping`（to=yarn）/ 本档映射库；反模式库：同档 `knowledge/`。

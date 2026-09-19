@@ -7,16 +7,28 @@ dependencies: []
 mappings: mcp
 ---
 
-# mc-ai
+# mc-ai（1.19.4）
 
-> Wave D 技能骨架（forge 1.19.4）。详细规则见对应 `.cursor/rules/` 与 MCP `search_forge_docs` / 专题工具。
+> 一手来源：类名 `Goal` / `GoalSelector` 经 `query_api`（version=1.19.4）核实存在（官方命名）。
 
-## 快速入口
+## Decision Flow
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`forge/1.19.4/knowledge/antipatterns/`
+```
+→ 实体行为 = 优先级 Goal 系统 → Goal 子类
+→ goal 容器 → GoalSelector（挂载方法签名先核实再写）
+→ 注册与生命周期 → mc-registry、01-registry.mdc、04-entity.mdc
+```
+
+## 本档口径（已核实）
+
+- `Goal` / `GoalSelector` 在本档存在（query_api found）。
+- goal 挂载方法与优先级参数在本仓无一手语料，写前核实。
+
+## 反模式
+
+- 混用 1.12.2 的 EntityAIBase 名（两代命名）。
+- 凭记忆写 goalSelector 挂载链。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 类/方法核实：`query_api`（version=1.19.4）；反模式库：`forge/1.19.4/knowledge/antipatterns/`、`04-entity.mdc`。
