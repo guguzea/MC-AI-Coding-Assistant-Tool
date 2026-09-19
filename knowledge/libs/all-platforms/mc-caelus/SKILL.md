@@ -3,6 +3,7 @@ name: mc-caelus
 description: Caelus API 鞘翅飞行抽象库（TheIllusiveC4），把鞘翅飞行抽象为实体属性。触发词：Caelus、caelus、鞘翅、Elytra、飞行属性、飞行能力、TheIllusiveC4、elytra flight
 platforms: [fabric, forge, neoforge]
 mcVersions: ["1.13.2-1.21.5"]
+mcVersionsByPlatform: "forge=1.13.2-1.21.1; neoforge=1.20-1.21.5; fabric=1.16.4-1.17.1"
 communityDocId: authored/lib-caelus
 ---
 

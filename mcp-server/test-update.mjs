@@ -260,6 +260,8 @@ async function testDataDryRunOverwriteList() {
   assert.equal(res.ok, true);
   assert.ok(res.filesToOverwrite?.includes("forge_1.20.1/keep.json"));
   assert.ok(!res.filesToOverwrite?.includes("forge_1.20.1/new.json"));
+  // W0-6：dryRun 预览必须携带本地新增清单（换入即销毁的文件）
+  assert.ok(res.localAdditions?.includes("user-extra.txt"), JSON.stringify(res.localAdditions ?? null));
   assert.ok(res.diskSpace);
   // dry-run must not overwrite
   assert.equal(JSON.parse(readFileSync(join(dataDir, "forge_1.20.1", "keep.json"), "utf8")).old, 1);
@@ -330,6 +332,68 @@ async function testDataApplyWritesAndChecksumFail() {
   delete process.env.MC_SKILL_ALLOW_WRITE;
   delete process.env.MC_SKILL_PROJECT_ROOT;
   rmSync(dataDir, { recursive: true, force: true });
+}
+
+async function testDataApplyLocalAdditionsGate() {
+  // W0-6（2026-09-19）：换入销毁本地新增文件必须有披露（dryRun 载荷）+ 显式确认（真换入前）。
+  const root = mkdtempSync(join(tmpdir(), "mc-upd-additions-"));
+  const dataDir = join(root, "data");
+  mkdirSync(join(dataDir, "forge_1.20.1"), { recursive: true });
+  writeFileSync(join(dataDir, "forge_1.20.1", "keep.json"), '{"old":true}');
+  writeFileSync(join(dataDir, "user-extra.txt"), "keep-me");
+
+  const ZIP = join(root, "pkg.zip");
+  dataMod.writeStoreZip(ZIP, { "forge_1.20.1/keep.json": '{"new":true}' });
+  const SUMS = join(root, "SHA256SUMS.txt");
+  writeFileSync(SUMS, `${sha256(readFileSync(ZIP))}  mc-skill-data-full-0.2.0.zip\n`);
+
+  const prevAllow = process.env.MC_SKILL_ALLOW_WRITE;
+  const prevProj = process.env.MC_SKILL_PROJECT_ROOT;
+  const prevCache = process.env.MC_SKILL_CACHE;
+  process.env.MC_SKILL_ALLOW_WRITE = "1";
+  process.env.MC_SKILL_PROJECT_ROOT = root;
+  const lockRoot = mkdtempSync(join(tmpdir(), "mc-upd-additions-lock-"));
+  process.env.MC_SKILL_CACHE = lockRoot; // update-apply 锁根
+  const base = {
+    zip: {
+      name: "mc-skill-data-full-0.2.0.zip",
+      size: 128,
+      browser_download_url: "https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/releases/download/v0.2.0/mc-skill-data-full-0.2.0.zip",
+    },
+    releaseTag: "v9.9.9",
+    dataDir,
+    localZipPath: ZIP,
+    localSumsPath: SUMS,
+    fetchImpl: makeFetch(() => jsonRes({}, 404)),
+  };
+  try {
+    // ① dryRun：预览必须带完整本地新增清单
+    const dry = await dataMod.applyDataUpdate({ ...base, dryRun: true });
+    assert.equal(dry.ok, true);
+    assert.deepEqual(dry.localAdditions, ["user-extra.txt"]);
+
+    // ② 反例：本地新增非空 + 未 confirmed ⇒ 拒绝换入，文件原样保留
+    const refused = await dataMod.applyDataUpdate({ ...base, dryRun: false });
+    assert.equal(refused.ok, false);
+    assert.equal(refused.action?.code, "UPDATE_LOCAL_ADDITIONS_CONFIRM_REQUIRED", JSON.stringify(refused.action ?? null));
+    assert.deepEqual(refused.localAdditions, ["user-extra.txt"]);
+    assert.equal(readFileSync(join(dataDir, "user-extra.txt"), "utf8"), "keep-me", "未确认不得销毁本地新增");
+
+    // ③ 正例：confirmed=true ⇒ 换入放行，本地新增按披露销毁，steps 留痕
+    const applied = await dataMod.applyDataUpdate({ ...base, dryRun: false, confirmed: true });
+    assert.equal(applied.ok, true, JSON.stringify(applied.action ?? null));
+    assert.ok(!existsSync(join(dataDir, "user-extra.txt")), "confirmed 后本地新增按披露销毁");
+    assert.ok(applied.steps.some((s) => /localAdditions destroyed: 1/.test(s)), applied.steps.join(" | "));
+    assert.equal(readFileSync(join(dataDir, "forge_1.20.1", "keep.json"), "utf8"), '{"new":true}');
+  } finally {
+    if (prevAllow === undefined) delete process.env.MC_SKILL_ALLOW_WRITE;
+    else process.env.MC_SKILL_ALLOW_WRITE = prevAllow;
+    if (prevProj === undefined) delete process.env.MC_SKILL_PROJECT_ROOT;
+    else process.env.MC_SKILL_PROJECT_ROOT = prevProj;
+    if (prevCache === undefined) delete process.env.MC_SKILL_CACHE;
+    else process.env.MC_SKILL_CACHE = prevCache;
+    rmSync(root, { recursive: true, force: true });
+  }
 }
 
 async function testChecksumMissingAsset() {
@@ -799,6 +863,8 @@ async function testDataHalfSwapSelfHealsPreAndPostLock() {
     zip: ZIP_ASSET,
     releaseTag: "v9.9.9",
     dryRun: false,
+    // W0-6：本用例测「半交换自愈」与本地新增确认门正交，直连调用必须带 confirmed 才能走到解压失败分支
+    confirmed: true,
     dataDir,
     localZipPath: ZIP,
     localSumsPath: SUMS,
@@ -1013,6 +1079,7 @@ async function main() {
   await testApplyRequiresConfirm();
   await testDataDryRunOverwriteList();
   await testDataApplyWritesAndChecksumFail();
+  await testDataApplyLocalAdditionsGate(); // W0-6：本地新增披露 + 显式确认
   await testChecksumMissingAsset();
   await testDataZipAndGithubDigest();
   await testTlsCertErrorDetect();

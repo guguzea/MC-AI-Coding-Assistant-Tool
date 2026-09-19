@@ -32,7 +32,13 @@ export const resolveLibSkillsSchema = z.object({
     .string()
     .optional()
     .describe("mcVersion 的别名（CLI `--version`）——与 mcVersion 二选一，同时给出时以 mcVersion 为准"),
-});
+})
+  // W0-5（2026-09-19）：schema 与运行时对齐 —— mcVersion/version 至少给一个，缺省不再是
+  // 「schema 允许、运行时才报错」的两层面。缺省走 zod 校验错误（errorKind:validation）。
+  .refine(
+    (a) => Boolean(String(a.mcVersion ?? "").trim() || String(a.version ?? "").trim()),
+    { message: "mcVersion 必填（精确 MC 版本，如 1.21.1 / 26.1.2；bedrock 可传 stable；或用别名 version）" },
+  );
 
 /** 工具描述单一来源（registerTool 与静态 schema 表共用 —— test-cli 有 description drift 门） */
 export const RESOLVE_LIB_SKILLS_DESCRIPTION =

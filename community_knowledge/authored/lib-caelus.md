@@ -3,8 +3,8 @@ id: authored/lib-caelus
 title: Caelus API 鞘翅飞行抽象集成要点
 tags: [caelus, elytra, flight, attribute, forge, fabric, neoforge]
 summary: 将鞘翅飞行抽象为实体属性的 API（690 万下载，三端窗口各异：Forge 1.13.2-1.21.1 / NeoForge 1.20-1.21.5 / Fabric 仅 1.16.4-1.17.1），支持自定义飞行能力。⚠️ 26.x 新版号未跟进（全览 §五 陷阱 8），选依赖注意版本窗口。
-mcHint: 1.13.2-1.21.5
-minecraftVersions: "1.13.2-1.21.5"
+mcHint: 平台窗口不同 —— Forge 1.13.2-1.21.1 / NeoForge 1.20-1.21.5 / Fabric 1.16.4-1.17.1（26.x 无构建）
+minecraftVersions: "forge=1.13.2-1.21.1; neoforge=1.20-1.21.5; fabric=1.16.4-1.17.1"
 sourceKind: authored
 modIds: [caelus]
 loaders: [fabric, forge, neoforge]
@@ -25,7 +25,7 @@ skillId: mc-caelus
 - 让特定实体具备飞行能力，而不绑定原版鞘翅物品
 - 查询/控制实体当前能否鞘翅飞行，做能力门闩
 
-Caelus 由 TheIllusiveC4（Curios 作者）维护，三端**各有构建但版本窗口不同**（A-43 更正 2026-09-19，`all.json` **31 条目**实测，口径 = gameVersion×loader 条目、非独立构件数：**Forge 1.13.2→1.21.1（20 条）· NeoForge 1.20→1.21.5（8 条 = 5 个构件）· Fabric 仅 1.16.4/1.16.5/1.17.1（3 条 = 2 个构件，1.16.5 复用 1.16.4 的 jar）**；原写「三端 1.13.2-1.21.5 都有」不成立）。
+Caelus 由 TheIllusiveC4（Curios 作者）维护，三端**各有构建但版本窗口不同**（A-43 更正 2026-09-19，`mcp-server/data/lib-manifests/all.json` **31 条目**实测，口径 = gameVersion×loader 条目、非独立构件数：**Forge 1.13.2→1.21.1（20 条）· NeoForge 1.20→1.21.5（8 条 = 5 个构件）· Fabric 仅 1.16.4/1.16.5/1.17.1（3 条 = 2 个构件，1.16.5 复用 1.16.4 的 jar）**；原写「三端 1.13.2-1.21.5 都有」不成立）。
 
 不用（重要）：
 

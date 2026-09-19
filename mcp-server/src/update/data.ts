@@ -289,16 +289,38 @@ export interface DataApplyOpts {
   localZipPath?: string;
   localSumsPath?: string;
   fetchImpl?: typeof fetch;
+  /** W0-6（2026-09-19）：本地新增文件将被换入销毁时必须显式确认（dryRun 预览即可看到清单）。 */
+  confirmed?: boolean;
 }
 
 export interface DataApplyResult {
   ok: boolean;
   steps: string[];
   filesToOverwrite: string[];
+  /** W0-6：现树有、新快照没有的文件（换入即销毁的「本地新增集」）。 */
+  localAdditions?: string[];
   diskSpace?: DiskSpaceInfo;
   strippedDataPrefix?: boolean;
   writtenCount?: number;
   action?: ActionEnvelope;
+}
+
+/**
+ * W0-6（2026-09-19）：相对 dataDir 的全部文件（POSIX 风格相对路径；只列普通文件）。
+ * 用于换入前算 old−new —— 全量快照换入会销毁新快照里不存在的本地新增文件，必须先披露。
+ */
+function listLocalAdditions(dataDir: string, incoming: Set<string>): string[] {
+  if (!existsSync(dataDir)) return [];
+  const out: string[] = [];
+  const walk = (dir: string) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (e.isFile()) out.push(relative(dataDir, p).split(sep).join("/"));
+    }
+  };
+  walk(dataDir);
+  return out.filter((rel) => !incoming.has(rel)).sort();
 }
 
 export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyResult> {
@@ -448,14 +470,37 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
 
     const filesToOverwrite = layout.mapped.filter((rel) => existsSync(join(dataDir, rel)));
     steps.push(`filesToOverwrite: ${filesToOverwrite.length}`);
+    // W0-6（2026-09-19）：old−new 本地新增集 —— 换入（swapInDataDir → rmSync(prevDir)）即销毁。
+    // 此前 rmSync(prevDir) 无条件销毁旧树，本地新增文件没有任何披露路径。
+    const localAdditions = listLocalAdditions(dataDir, new Set(layout.mapped));
+    steps.push(`localAdditions: ${localAdditions.length}`);
 
     if (opts.dryRun) {
       return {
         ok: true,
         steps,
         filesToOverwrite,
+        localAdditions,
         diskSpace,
         strippedDataPrefix: layout.strippedDataPrefix,
+      };
+    }
+
+    // W0-6：本地新增非空 ⇒ 必须显式确认后才允许真换入（dryRun 预览即含完整清单）。
+    if (localAdditions.length > 0 && opts.confirmed !== true) {
+      return {
+        ok: false,
+        steps,
+        filesToOverwrite,
+        localAdditions,
+        diskSpace,
+        action: actionable(
+          "UPDATE_LOCAL_ADDITIONS_CONFIRM_REQUIRED",
+          `当前 data/ 含 ${localAdditions.length} 个本地新增文件（新快照不存在，换入即销毁）：` +
+            `${localAdditions.slice(0, 5).join(", ")}${localAdditions.length > 5 ? " …" : ""}`,
+          ["先备份本地新增文件", "确认可销毁后 dryRun=false + confirmed=true 重发", "或把本地新增挪出 data/ 再更新"],
+          ["mc_skill_update"],
+        ),
       };
     }
 
@@ -521,6 +566,9 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
       // 全量快照：nextDir 仅含本 Release zip，撤档树/非 zip 文件不会残留
       const written = copyTree(contentRoot, nextDir, allowRoot!);
       swapInDataDir(nextDir, dataDir);
+      if (localAdditions.length > 0) {
+        steps.push(`localAdditions destroyed: ${localAdditions.length}（confirmed=true 换入，详见载荷 localAdditions）`);
+      }
       writeUpdateState(
         {
           dataReleaseTag: opts.releaseTag,
@@ -534,6 +582,7 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
         ok: true,
         steps,
         filesToOverwrite,
+        localAdditions,
         diskSpace,
         strippedDataPrefix: layout.strippedDataPrefix,
         writtenCount: written.length,

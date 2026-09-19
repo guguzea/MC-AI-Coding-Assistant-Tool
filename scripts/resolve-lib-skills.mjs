@@ -79,6 +79,29 @@ function parseFrontmatter(text) {
   return meta;
 }
 
+/**
+ * W0-1（2026-09-19）：按平台收窄版本窗口 —— `mcVersionsByPlatform: "forge=1.13.2-1.21.1; fabric=1.16.4-1.17.1"`。
+ * 三端构建窗口不同的库（如 Caelus）此前只能写全档 union，resolver 会把 fabric 1.21.x 也吐出来。
+ * 语法：分号分隔 `平台=token[,token…]`，token 与 mcVersions 同形（精确 / A-B / X+ / ≤X）。
+ * 命中平台键时**整组替换** mcVersions；未命中的平台沿用 mcVersions。
+ */
+function parsePlatformVersionMap(value) {
+  const out = {};
+  const s = String(value ?? "").trim();
+  if (!s) return out;
+  for (const part of s.split(";")) {
+    const seg = part.trim();
+    if (!seg) continue;
+    const m = seg.match(/^([\w-]+)\s*=\s*(.+)$/);
+    if (!m) continue;
+    out[m[1]] = m[2]
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+  }
+  return out;
+}
+
 /* ----------------------------- 版本窗口匹配 ----------------------------- */
 
 /** 数字分段比较 MC 版本（"1.20.1" < "1.21" < "26.1.2" < "26.2"） */
@@ -146,6 +169,7 @@ function loadAllSkills() {
         mcVersions: Array.isArray(meta.mcVersions || meta.minecraftVersions)
           ? meta.mcVersions || meta.minecraftVersions
           : [],
+        mcVersionsByPlatform: parsePlatformVersionMap(meta.mcVersionsByPlatform),
         communityDocId: String(meta.communityDocId || ""),
         file,
       });
@@ -189,7 +213,10 @@ function resolve(platform, mcVersion, allSkills) {
   for (const skill of allSkills) {
     if (!groups.includes(skill.group)) continue; // 组映射（主依据）
     if (!skill.platforms.includes(platform)) continue; // platforms 二次确认
-    const versions = skill.mcVersions;
+    // W0-1：平台专属窗口优先（三端构建窗口不同的库不再被 union 误放行）
+    const versions = skill.mcVersionsByPlatform[platform]?.length
+      ? skill.mcVersionsByPlatform[platform]
+      : skill.mcVersions;
     if (versions.length > 0 && !versions.some((t) => coversVersion(t, mcVersion))) continue; // 版本过滤
     matched.push({
       skillId: skill.skillId,

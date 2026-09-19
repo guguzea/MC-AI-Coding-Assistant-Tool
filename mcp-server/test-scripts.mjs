@@ -1975,6 +1975,8 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-config-platform-face.mjs",
     // 2026-09-19 N9(c)：bedrock 脚本 API 钉值真值源（scaffold 钉值 ↔ 声明文件 ↔ 文档快照语义分层）。
     "./scripts/assert-bedrock-script-api-pin.mjs",
+    // 2026-09-19 W0-1：库 SKILL「N 条实测」计数必须能由 lib-manifests/all.json 机械复算。
+    "./scripts/assert-lib-census-counts.mjs",
   ]) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE], {

@@ -211,6 +211,7 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
 
   const steps: string[] = [];
   let filesToOverwrite: string[] = [];
+  let localAdditions: string[] = [];
   let diskSpace: unknown;
   let appliedTooling = false;
   let appliedData = false;
@@ -274,9 +275,11 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
         fetchImpl: query.fetchImpl as typeof fetch | undefined,
         localZipPath: query.localZipPath,
         localSumsPath: query.localSumsPath,
+        confirmed: query.confirmed,
       });
       steps.push(...dr.steps.map((s) => `data: ${s}`));
       filesToOverwrite = dr.filesToOverwrite;
+      localAdditions = dr.localAdditions ?? [];
       diskSpace = dr.diskSpace;
       if (!dr.ok) {
         if (appliedTooling) {
@@ -315,6 +318,7 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
             dryRun,
             steps,
             filesToOverwrite,
+            localAdditions,
             diskSpace,
             applied: false,
             appliedTooling,
@@ -360,6 +364,7 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
     dryRun,
     steps,
     filesToOverwrite: filesToOverwrite.length ? filesToOverwrite : undefined,
+    localAdditions: localAdditions.length ? localAdditions : undefined,
     diskSpace,
     applied: !dryRun && (appliedTooling || appliedData),
     appliedTooling,

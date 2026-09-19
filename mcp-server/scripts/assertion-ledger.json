@@ -293,6 +293,26 @@
       "status": "closed",
       "gates": ["test-assistant-gaps.mjs", "test-cli.mjs"],
       "closedAt": "2026-09-19"
+    },
+    {
+      "id": "caelus-platform-windows-census-gate",
+      "claim": "三端构建窗口不同的库用 mcVersionsByPlatform（平台专属窗口，整组替换 mcVersions）收窄白名单：resolve_lib_skills 不得给 fabric 1.21.x 吐出 mc-caelus（Fabric 实际止 1.17.1）；库 SKILL宣称「N 条(目)实测」必须引用 lib-manifests/all.json 锚点且 caelus 散文计数（31 条目 = Forge 20 / NeoForge 8=5 构件 / Fabric 3=2 构件）能由 all.json 机械复算；resolveLibSkillsSchema 与运行时对齐（mcVersion/version 至少一个）",
+      "author": "计划 v2 W0-1 剩余 + W0-5 剩余 + 2026-09-19 本轮修复（正文 31 条目口径为 sweep87 落地）",
+      "evidence": "修前实测 resolve_lib_skills --platform=fabric --mcVersion=1.21.1 吐 mc-caelus（count 30）；修后 count 29 无 caelus，五点矩阵（fabric 1.16.5 吐 / forge 1.20.1 吐 / neoforge 1.21.1 吐 / forge 1.21.5 不吐 / fabric 1.21.1 不吐）全过；census 复算 total=31 forge=20行/13构件 neoforge=8行/5构件 fabric=3行/2构件 与散文逐数一致；新门 assert-lib-census-counts.mjs（85 文件锚点腿 + 逐数复算腿 + selftest 6 例）接入 npm test 与 test-scripts §S18；schema 缺 mcVersion/version 现走 zod validation（errorKind:validation，报文含指引）",
+      "evidenceRefs": ["scripts/resolve-lib-skills.mjs", "knowledge/libs/all-platforms/mc-caelus/SKILL.md", "mcp-server/scripts/assert-lib-census-counts.mjs", "mcp-server/src/lib-skills/index.ts", "community_knowledge/authored/lib-caelus.md"],
+      "status": "closed",
+      "gates": ["assert-lib-census-counts.mjs", "test-platform-pack.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "update-apply-discloses-local-additions",
+      "claim": "mc_skill_update apply 的全量快照换入不得静默销毁本地新增：dryRun 载荷必须带完整 localAdditions 清单（现树有、新快照没有的文件）；本地新增非空且未 confirmed=true 时真换入必须拒绝（UPDATE_LOCAL_ADDITIONS_CONFIRM_REQUIRED，文件原样保留）；confirmed 换入后 steps 留痕「localAdditions destroyed: N」",
+      "author": "计划 v2 W0-6 主体（报告§3「更新会删数据」）+ 2026-09-19 本轮修复（N7 锁竞态已由 sweep87 关闭）",
+      "evidence": "修前 rmSync(prevDir) 无条件销毁旧树、dryRun 只给 new∩old（filesToOverwrite）——本地新增零披露；修后 listLocalAdditions(dataDir, incoming) 算 old−new，test-update 新增 testDataApplyLocalAdditionsGate 三段式（dryRun 清单 / 未确认拒绝且文件保留 / confirmed 换入且 destroyed 留痕），halfSwap 用例补 confirmed（自愈路径与新门正交）",
+      "evidenceRefs": ["mcp-server/src/update/data.ts", "mcp-server/src/update/index.ts", "mcp-server/test-update.mjs"],
+      "status": "closed",
+      "gates": ["test-update.mjs"],
+      "closedAt": "2026-09-19"
     }
   ]
 }
