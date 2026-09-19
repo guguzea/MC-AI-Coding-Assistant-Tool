@@ -1988,6 +1988,27 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
       `${gate} 真跑失败（rc=${r.status}）：\n${String(r.stdout || "").slice(0, 800)}${String(r.stderr || "").slice(0, 400)}`,
     );
   }
+  // W1-2（2026-09-19）：四道自带 --selftest 投毒自证的门，把自证也接进默认链 ——
+  // 上面的「真跑」只证明**数据**绿；「selftest」才证明**判据**活着（改瞎 banned 形态必须当场红）。
+  // 原缺陷：selftest 只能手跑，默认链永远看不见判据死活。
+  for (const gate of [
+    "./scripts/assert-corpus-semantics.mjs",
+    "./scripts/assert-forge-blockshape-family.mjs",
+    "./scripts/assert-forge-1182-registry-consts.mjs",
+    "./scripts/assert-rule-ledger.mjs",
+  ]) {
+    const GATE = fileURLToPath(new URL(gate, import.meta.url));
+    const r = spawnSync(process.execPath, [GATE, "--selftest"], {
+      encoding: "utf8",
+      windowsHide: true,
+      env: { ...process.env },
+    });
+    assert.equal(
+      r.status,
+      0,
+      `${gate} --selftest 失败（rc=${r.status}）：\n${String(r.stdout || "").slice(0, 800)}${String(r.stderr || "").slice(0, 400)}`,
+    );
+  }
   // sweep81 C-6/C-2 附带的诚实性修正：此处原写死「共 7 道」（且逐名枚举），加入新门后立刻陈旧。
   // 按本仓规矩（CONTRIBUTING:212「文档不重述会腐烂的计数，只述口径」）去掉计数与逐名枚举：
   // 真跑面以**上面那个数组**为唯一权威，数组里每一道都在本块内被 assert.equal(rc,0) 咬住。

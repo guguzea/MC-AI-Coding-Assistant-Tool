@@ -238,7 +238,12 @@ public class Other {
     limit: 5,
     offset: 0,
   });
-  assert.ok(s.hits?.some((h) => String(h).includes("IPayloadContext")) || s.total >= 0);
+  // W1-1a（2026-09-19）：原式 `|| s.total >= 0` 恒真 ⇒ 整条 assert 空过。改为真断言：
+  // IPayloadContext 在 neoforge 1.21.1 索引里必须真命中（hits 为 FQCN 字符串数组）。
+  assert.ok(
+    s.total >= 1 && (s.hits ?? []).some((h) => String(h).includes("IPayloadContext")),
+    `IPayloadContext 必须真命中 —— total=${s.total}，hits=${JSON.stringify(s.hits)?.slice(0, 200)}`,
+  );
   const paged = searchLoaderApi({
     platform: "neoforge",
     minecraftVersion: "1.21.1",

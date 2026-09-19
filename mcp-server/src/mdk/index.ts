@@ -513,7 +513,11 @@ export function zipUncompressedBytes(zipPath: string, tool: UnzipTool): number |
 /** 解压后若根下只有一个目录则进入该目录，否则解压根本身即为 unpackedRoot */
 export function resolveUnpackedRoot(extractDir: string): string {
   if (!existsSync(extractDir)) return extractDir;
-  const names = readdirSync(extractDir).filter((n) => n !== "." && n !== "..");
+  // W1-1e（2026-09-19）：完成哨兵（NP-3）写在本层，原实现把哨兵也计进根条目 ⇒
+  // 「唯一根目录则进入」对一切成功解压恒不触发——unpackedRoot 恒为解压根，连带
+  // unpackLooksComplete 的骨架标志物回退查错层、copyTreeSync 把哨兵点文件拷进用户工程。
+  // 哨兵不是解压产物，根条目计数必须无视它；哨兵校验本身走 unpackLooksComplete(unpackedDir,…)。
+  const names = readdirSync(extractDir).filter((n) => n !== "." && n !== ".." && n !== UNPACK_SENTINEL);
   if (names.length === 1) {
     const only = join(extractDir, names[0]);
     try {

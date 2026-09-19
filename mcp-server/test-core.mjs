@@ -751,33 +751,47 @@ async function testSandboxAssertWritablePath() {
     process.env.MC_SKILL_PROJECT_ROOT = root;
 
     // Symlink / junction escape: link inside root pointing outside
+    // W1-1c（2026-09-19）：创建失败只允许跳过**本用例**，不得 return 中止函数剩余用例
+    // （原 :761 return 会把后面的 file-symlink、大小写前缀等用例一起吞掉）。
     const linkInside = join(root, "escape-link");
+    let linkCreated = false;
     try {
       symlinkSync(secret, linkInside, "junction");
+      linkCreated = true;
     } catch {
       try {
         symlinkSync(secret, linkInside, "dir");
+        linkCreated = true;
       } catch (e) {
         console.log("skip symlink escape test:", e.message);
-        return;
       }
     }
-    let threw = false;
-    try {
-      assertWritablePath(join(linkInside, "leak.txt"), nativeReal(root));
-    } catch (e) {
-      threw = true;
-      assert.ok(e instanceof ProjectPathError);
-      assert.equal(e.code, "PATH_OUTSIDE_ALLOWLIST");
+    if (linkCreated) {
+      let threw = false;
+      try {
+        assertWritablePath(join(linkInside, "leak.txt"), nativeReal(root));
+      } catch (e) {
+        threw = true;
+        assert.ok(e instanceof ProjectPathError);
+        assert.equal(e.code, "PATH_OUTSIDE_ALLOWLIST");
+      }
+      assert.equal(threw, true, "symlink/junction escape must be rejected");
     }
-    assert.equal(threw, true, "symlink/junction escape must be rejected");
 
     // 目标自身是已存在 symlink 时也必须拒绝（F-B02：upsert/marker 类读旧写新会穿透链接）
+    // W1-1c（2026-09-19）：验证段必须移出创建 try —— 原来验证里的 AssertionError（比如抛错
+    // 类型不对）会落进外层 catch 被咽成「skip」，安全回归从此静默。
     const targetFile = join(secret, "outside.txt");
     writeFileSync(targetFile, "x", "utf8");
     const fileLink = join(root, "leak-file.txt");
+    let fileLinkCreated = false;
     try {
       symlinkSync(targetFile, fileLink, "file");
+      fileLinkCreated = true;
+    } catch (e) {
+      console.log("skip file-symlink target creation:", e.message);
+    }
+    if (fileLinkCreated) {
       let threw2 = false;
       try {
         assertWritablePath(fileLink, nativeReal(root));
@@ -787,8 +801,6 @@ async function testSandboxAssertWritablePath() {
         assert.equal(e.code, "PATH_OUTSIDE_ALLOWLIST");
       }
       assert.equal(threw2, true, "existing symlink target must be rejected");
-    } catch (e) {
-      console.log("skip file-symlink target test:", e.message);
     }
 
     // Windows case-insensitive prefix
@@ -3372,7 +3384,12 @@ async function testReviewFixes() {
     await getDocRelated({ platform: "quilt", version: "1.20.1", id: "qsl-qfapi", limit: 5 }),
   );
   assert.ok(Array.isArray(qRelated), JSON.stringify(qRelated).slice(0, 400));
-  assert.ok(qRelated.length >= 0);
+  // W1-1b（2026-09-19）：原 `qRelated.length >= 0` 恒真 ⇒ 空数组也绿。qsl-qfapi 的关联
+  // 必须真召回 QSL 条目（实测恒为 qsl-verified / qsl-readme 形态），钉结构与非空。
+  assert.ok(
+    qRelated.length >= 1 && qRelated.every((r) => /qsl/.test(String(r.id)) && r.label),
+    `qsl-qfapi 关联必须含 QSL 条目 —— ${JSON.stringify(qRelated).slice(0, 300)}`,
+  );
 
   const qRelatedFb = parseToolText(
     await getDocRelated({
@@ -3684,7 +3701,12 @@ public class ExampleMod {}
     const ok = unpackMdkArchive({ zip: goodZip, destCache: join(dest, "ok"), allowUnpinned: true });
     assert.equal(ok.ok, true, JSON.stringify(ok.error));
     assert.equal(ok.entryClass, "com.example.examplemod.ExampleMod");
-    assert.ok(ok.unpackedRoot?.includes("MDK-sha") || ok.unpackedRoot, ok.unpackedRoot);
+    // W1-1e（2026-09-19）：原式 `|| ok.unpackedRoot` 兜底让「包含 MDK-sha」的检查死掉
+    // —— 任何非空字符串都绿。zip 根唯一目录是 MDK-sha/，unpackedRoot 必须指向它。
+    assert.ok(
+      typeof ok.unpackedRoot === "string" && ok.unpackedRoot.includes("MDK-sha"),
+      `unpackedRoot 应指向 MDK-sha 解压根 —— 实得 ${String(ok.unpackedRoot)}`,
+    );
     assert.ok(existsSync(ok.archivePath));
   } finally {
     rmSync(dest, { recursive: true, force: true });

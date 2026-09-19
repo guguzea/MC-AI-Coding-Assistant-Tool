@@ -263,6 +263,26 @@
       "status": "closed",
       "gates": ["test-cli.mjs", "test-core.mjs"],
       "closedAt": "2026-09-19"
+    },
+    {
+      "id": "harness-dead-asserts-live",
+      "claim": "5 处恒真/死断言全部改为可红断言：①loader-api search 必须真命中 IPayloadContext（hits 为 FQCN 数组）；②quilt getDocRelated(qsl-qfapi) 必须召回 QSL 条目（非空且 id 含 qsl）；③symlink 用例验证段移出创建 try（验证期 AssertionError 不得被外层 catch 咽成 skip）且创建失败不再 return 中止函数余例；④test-localize optionalRealJars 对 temp/ 真 .jar 真跑 extract 冒烟（结果必须可判定：ok:true 带源语言或 ok:false 带机器可读 code），无 jar 才合法 skip；⑤unpackMdkArchive 成功路径 unpackedRoot 必须指向 MDK-sha 解压根",
+      "author": "计划 v2 W1-1（审计「5 处恒真/死断言」）+ 2026-09-19 本轮修复",
+      "evidence": "逐条投毒红→复原绿：①dist 注入 matched=[] → test-loader-api 红「IPayloadContext 必须真命中 total=0」；②dist quilt related 注入 [] → test-core 红「qsl-qfapi 关联必须含 QSL 条目」；⑤dist 注入 unpackedRoot:unpackedDir → test-core 红「unpackedRoot 应指向 MDK-sha 解压根」；③为结构化修复（红路径=验证断言不再可被吞）；④以 temp/ 7 个真 jar 实测冒烟真跑（LANG_NOT_IN_JAR/NAMESPACE_AMBIGUOUS 皆可判定）。⑤的投毒还揪出真生产缺陷：resolveUnpackedRoot 的「唯一根目录则进入」被完成哨兵 .mdk-unpack-ok 恒打破（unpackedRoot 恒为解压根、unpackLooksComplete 骨架标志物回退查错层、copyTreeSync 会把哨兵拷进用户工程）——修为根条目计数无视 UNPACK_SENTINEL；修复后 test-core/test-loader-api/test-localize/test-scripts 全绿",
+      "evidenceRefs": ["mcp-server/test-loader-api.mjs", "mcp-server/test-core.mjs", "mcp-server/test-localize.mjs", "mcp-server/src/mdk/index.ts"],
+      "status": "closed",
+      "gates": ["test-loader-api.mjs", "test-core.mjs", "test-localize.mjs", "test-scripts.mjs"],
+      "closedAt": "2026-09-19"
+    },
+    {
+      "id": "gate-selftest-default-chain",
+      "claim": "四道自带 --selftest 投毒自证的门（assert-corpus-semantics / assert-forge-blockshape-family / assert-forge-1182-registry-consts / assert-rule-ledger）的自证接入默认链：test-scripts §S18/S19 真跑块追加 --selftest 逐道 rc=0；改瞎任一 banned 形态，默认链必须红（不再需要手跑 --selftest）",
+      "author": "计划 v2 W1-2（审计「报告说三门实为四门」）+ 2026-09-19 本轮接线",
+      "evidence": "投毒验证：把 assert-forge-blockshape-family 的 FabricToolTags 正则改瞎 → node … --selftest rc=1（「1 例不符」）→ 复原 rc=0；四门 selftest 基线全绿（9 类/7+7 例/3 记/11 类畸形全检出）；test-scripts.mjs 全绿（新循环在 §S18/S19 真跑块内）；CI .github/workflows/mcp-server-ci.yml:40 跑 npm test ⇒ 覆盖",
+      "evidenceRefs": ["mcp-server/test-scripts.mjs", "mcp-server/scripts/assert-forge-blockshape-family.mjs", ".github/workflows/mcp-server-ci.yml"],
+      "status": "closed",
+      "gates": ["test-scripts.mjs"],
+      "closedAt": "2026-09-19"
     }
   ]
 }

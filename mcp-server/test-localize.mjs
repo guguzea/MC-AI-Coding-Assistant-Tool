@@ -2,7 +2,7 @@
  * Tests for localize_mod (own + third_party jar flows).
  */
 import assert from "node:assert/strict";
-import { mkdirSync, writeFileSync, rmSync, existsSync } from "node:fs";
+import { mkdirSync, writeFileSync, rmSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { deflateRawSync } from "node:zlib";
@@ -471,10 +471,25 @@ function testWorkflow() {
 }
 
 function optionalRealJars() {
+  // W1-1d（2026-09-19）：原函数无条件打一行「skipped unless present」就返回 —— 假可选冒烟。
+  // 现口径：temp/ 下真有 .jar 就真跑 extract 冒烟（结果必须可判定：ok=true 带源语言与词条源，
+  // ok=false 必须带机器可读 code）；没有 jar 才是合法 skip，且点名启用前提。
   const tempRoot = join(__dirname, "..", "temp");
-  if (!existsSync(tempRoot)) return;
-  // Smoke only if known jars exist — skip quietly otherwise
-  console.log("  (optional real jar smoke skipped unless present)");
+  const jars = existsSync(tempRoot)
+    ? readdirSync(tempRoot).filter((f) => f.toLowerCase().endsWith(".jar"))
+    : [];
+  if (jars.length === 0) {
+    console.log("  (optional real jar smoke: skip —— temp/ 下无第三方 .jar；放一个进 temp/ 即启用)");
+    return;
+  }
+  for (const jar of jars) {
+    const r = localizeMod({ mode: "third_party", action: "extract", jarPath: join(tempRoot, jar) });
+    assert.ok(
+      (r.ok === true && r.sourceLocaleUsed && typeof r.source === "object") || (r.ok === false && r.code),
+      `真 jar 冒烟结果必须可判定：${jar} → ${JSON.stringify(r).slice(0, 200)}`,
+    );
+    console.log(`  (optional real jar smoke: ${jar} → ok=${r.ok}${r.code ? ` code=${r.code}` : ""})`);
+  }
 }
 
 function cleanup() {
