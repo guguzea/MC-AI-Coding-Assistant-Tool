@@ -6,60 +6,74 @@
  * selfEq 当「yarn 未命名」长期静默，导致 convert_mapping 查不到 `MAX_HEALTH` 这类真实命名。
  * 2026-09-19 已按上游 `-v2.jar` 逐行重写 named 列（13 档，备份+provenance 落在各 `mappings/`）。
  *
- * 本门（纯只读）：
+ * 本门（纯只读），5 条判据：
  *   1) 每档 `mappings/yarn-tiny-provenance.json` 必须存在（修复可追溯）；
  *   2) 当前 member selfEq 比率 ≤ 修复基线 × 1.15（防再次喂有损 artifact —— 有损态会高出 ~50% 相对量）；
- *   3) class selfEq 绝对数 ≤ 200。
- * 基线 = 2026-09-19 修复完成实测（见下方表）；阈值只许**收紧**，放宽需附新证据。
+ *   3) class selfEq 绝对数 ≤ 200；
+ *   4) 零成员类 ≤ 逐档基线 × 1.15 + 30（按 ownerOfficial 列归因；捕获「CLASS 行在、成员行整批缺失」）；
+ *   5) provenance ↔ 磁盘双向 sha 对账：`upstreamV1.sha256` 必须等于 `mappings/upstream/*.bak` 的实测
+ *      sha256；`repairedSha256` 必须等于盘上 `*-tiny.gz` 的实测 sha256（备份缺失 / 字段缺失 / 不等 = 红）。
+ * 基线 = 2026-09-19 修复完成实测，外置在同目录 `yarn-named-baseline.json`（文件或字段缺失 = 红）；
+ * 阈值只许**收紧**，放宽需附新证据。
+ *
+ * 用法：
+ *   node scripts/assert-yarn-named-integrity.mjs                    # 判红/绿（打印逐档一行）
+ *   node scripts/assert-yarn-named-integrity.mjs --measure-zero-member
+ *       # 只读重算各档零成员类计数：打印可直接提交的基线表 JSON + 现基线 vs 实测对照（不写盘，退出码 0）
  */
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 
-const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const REPO = path.resolve(HERE, "..", "..");
 const DATA = path.join(REPO, "data");
+const BASELINE_PATH = path.join(HERE, "yarn-named-baseline.json");
 const FACTOR = 1.15;
 const CLASS_SELF_EQ_CAP = 200;
-/** pack → 修复后 member selfEq 比率（2026-09-19，v2 重写后实测）。 */
-const BASELINE = {
-  "fabric_1.14.4": 0.2662,
-  "fabric_1.16.5": 0.2275,
-  "fabric_1.17.1": 0.1834,
-  "fabric_1.18.2": 0.1812,
-  "fabric_1.19.4": 0.239,
-  "fabric_1.20.1": 0.2399,
-  "fabric_1.20.4": 0.2425,
-  "fabric_1.21.1": 0.1836,
-  "fabric_1.21.10": 0.1829,
-  "fabric_1.21.11": 0.1829,
-  "fabric_1.21.3": 0.1888,
-  "fabric_1.21.4": 0.1883,
-  "fabric_1.21.8": 0.1853,
-};
-/**
- * 第 4 判据（N-11.2，2026-09-19）：**零成员类 ratchet**（相对形态）。
- * 动机：v1 有损的另一种表现是「CLASS 行在、METHOD/FIELD 行整批缺失」；绝对阈值不可用
- * （1.20+ 各档天然就有 ~9–14% 零成员类），故按**逐档基线** ratchet。
- * 归因口径：按 FIELD/METHOD 行的 **ownerOfficial 列** 归因（扁平布局档 1.14.4–1.19.4 的近邻归因会全错）。
- * `--measure-zero-member` 可重算基线（实测日期 2026-09-19）。
- */
-const ZERO_MEMBER_BASELINE = {
-  "fabric_1.14.4": 652,
-  "fabric_1.16.5": 597,
-  "fabric_1.17.1": 869,
-  "fabric_1.18.2": 915,
-  "fabric_1.19.4": 721,
-  "fabric_1.20.1": 715,
-  "fabric_1.20.4": 701,
-  "fabric_1.21.1": 1044,
-  "fabric_1.21.10": 1261,
-  "fabric_1.21.11": 1389,
-  "fabric_1.21.3": 1095,
-  "fabric_1.21.4": 1089,
-  "fabric_1.21.8": 1199,
-};
 const ZERO_MEMBER_SLACK = 30; // 绝对余量（对抗版本内小改动的抖动）
+const MEASURE = process.argv.includes("--measure-zero-member");
+
+const sha256 = (buf) => crypto.createHash("sha256").update(buf).digest("hex");
+
+/**
+ * 基线外置（同目录 yarn-named-baseline.json，风格同 corpus-semantics-baseline.json）。
+ * 门模式（!MEASURE）：文件 / 表字段缺失 = 直接红退出（strict）；measure 模式宽松读取（仅用于对照）。
+ */
+function loadBaseline(strict) {
+  if (!fs.existsSync(BASELINE_PATH)) {
+    if (strict) {
+      console.error(`assert-yarn-named-integrity: RED —— 基线文件缺失：${path.relative(REPO, BASELINE_PATH).split(path.sep).join("/")}`);
+      process.exit(1);
+    }
+    return null;
+  }
+  let json;
+  try {
+    json = JSON.parse(fs.readFileSync(BASELINE_PATH, "utf8"));
+  } catch (e) {
+    if (strict) {
+      console.error(`assert-yarn-named-integrity: RED —— 基线文件解析失败（${e.message}）：${path.relative(REPO, BASELINE_PATH).split(path.sep).join("/")}`);
+      process.exit(1);
+    }
+    return null;
+  }
+  const member = json.memberSelfEqRatio;
+  const zero = json.zeroMemberClasses;
+  if (strict) {
+    if (!member || typeof member !== "object" || Array.isArray(member)) {
+      console.error(`assert-yarn-named-integrity: RED —— 基线缺 memberSelfEqRatio 表：${path.relative(REPO, BASELINE_PATH).split(path.sep).join("/")}`);
+      process.exit(1);
+    }
+    if (!zero || typeof zero !== "object" || Array.isArray(zero)) {
+      console.error(`assert-yarn-named-integrity: RED —— 基线缺 zeroMemberClasses 表：${path.relative(REPO, BASELINE_PATH).split(path.sep).join("/")}`);
+      process.exit(1);
+    }
+  }
+  return { member: member && typeof member === "object" ? member : {}, zero: zero && typeof zero === "object" ? zero : {} };
+}
 
 function scanTiny(txt) {
   let classSelfEq = 0,
@@ -107,24 +121,122 @@ function scanZeroMember(txt) {
   return { zero };
 }
 
-const packs = fs
-  .readdirSync(DATA)
-  .filter((d) => d.startsWith("fabric_"))
-  .sort();
+/** 发现全部档：data/ 下各 fabric_&lt;ver&gt; 档 mappings/ 里带 -tiny.gz 的（含档名、mappings 目录、tiny 文件名）。 */
+function discoverPacks() {
+  const out = [];
+  for (const pack of fs.readdirSync(DATA).filter((d) => d.startsWith("fabric_")).sort()) {
+    const dir = path.join(DATA, pack, "mappings");
+    if (!fs.existsSync(dir)) continue;
+    const tinyName = fs.readdirSync(dir).find((f) => /-tiny\.gz$/.test(f));
+    if (!tinyName) continue;
+    out.push({ pack, dir, tinyName });
+  }
+  return out;
+}
+
+/**
+ * 第 5 判据（provenance ↔ 磁盘双向 sha 对账）：provenance 存在时，
+ *   a) `upstreamV1.sha256` == `mappings/<upstreamV1.file>`（即 upstream/*.bak）实测 sha256；
+ *   b) `repairedSha256` == 盘上 `*-tiny.gz` 实测 sha256。
+ * 备份缺失 / provenance 字段缺失 / 任一不等 → 返回错误行（失败计数与退出码走门内既有通道）。
+ */
+function checkProvenanceSha(pack, dir, tinyName) {
+  const errs = [];
+  let prov;
+  try {
+    prov = JSON.parse(fs.readFileSync(path.join(dir, "yarn-tiny-provenance.json"), "utf8"));
+  } catch (e) {
+    errs.push(`${pack}: yarn-tiny-provenance.json 解析失败（${e.message}）`);
+    return errs;
+  }
+  const upV1 = prov && typeof prov === "object" ? prov.upstreamV1 : undefined;
+  const bakRel = upV1 && upV1.file;
+  const upSha = upV1 && upV1.sha256;
+  if (!bakRel || !upSha) {
+    errs.push(`${pack}: provenance 缺 upstreamV1.file / upstreamV1.sha256（判据 5 无法对账）`);
+  } else {
+    const bakAbs = path.join(dir, bakRel);
+    const inside = path.relative(dir, bakAbs);
+    if (inside.startsWith("..") || path.isAbsolute(inside)) {
+      errs.push(`${pack}: provenance.upstreamV1.file 越出 mappings/ 目录：${bakRel}`);
+    } else if (!fs.existsSync(bakAbs)) {
+      errs.push(`${pack}: provenance 指向的上游备份缺失：mappings/${bakRel.split(path.sep).join("/")}（named 修复不可追溯）`);
+    } else {
+      const got = sha256(fs.readFileSync(bakAbs));
+      if (got !== upSha) {
+        errs.push(
+          `${pack}: 上游 v1 备份 sha256 对账失败 want=${upSha} got=${got}` +
+            `（mappings/${bakRel.split(path.sep).join("/")} 被替换 / 重拉了上游 v1？）`,
+        );
+      }
+    }
+  }
+  const repSha = prov ? prov.repairedSha256 : undefined;
+  if (typeof repSha !== "string" || !repSha) {
+    errs.push(`${pack}: provenance 缺 repairedSha256（判据 5 无法对账）`);
+  } else {
+    const got = sha256(fs.readFileSync(path.join(dir, tinyName)));
+    if (got !== repSha) {
+      errs.push(
+        `${pack}: 盘上 tiny sha256 对账失败 want=${repSha} got=${got}（mappings/${tinyName} 与 provenance 不一致 —— tiny 被重拉 / 重新生成过？）`,
+      );
+    }
+  }
+  return errs;
+}
+
+const BASELINE = loadBaseline(!MEASURE);
+const packs = discoverPacks();
+
+// ── --measure-zero-member：只读重算零成员类基线（不写盘，退出码 0）──────────────────────
+if (MEASURE) {
+  const measured = {};
+  const lines = [];
+  for (const { pack, dir, tinyName } of packs) {
+    let zero = null;
+    try {
+      zero = scanZeroMember(zlib.gunzipSync(fs.readFileSync(path.join(dir, tinyName))).toString("utf8")).zero;
+    } catch (e) {
+      lines.push(`  ${pack}  gunzip 失败（${e.message}）—— 不计入实测`);
+      continue;
+    }
+    measured[pack] = zero;
+    const cur = BASELINE ? BASELINE.zero[pack] : undefined;
+    const cap = typeof cur === "number" ? Math.ceil(cur * FACTOR) + ZERO_MEMBER_SLACK : null;
+    const verdict = cap === null ? "未登记" : zero <= cap ? "ok" : "超限";
+    lines.push(
+      `  ${pack}  现基线=${cur ?? "?"}  实测=${zero}  ratchet上限=${cap ?? "?"}（ceil(基线×${FACTOR})+${ZERO_MEMBER_SLACK}）  ${verdict}`,
+    );
+  }
+  console.log(
+    `[MEASURE] 零成员类重算（${packs.length} 档，只读不写盘；实测日期 ${new Date().toISOString().slice(0, 10)}）——` +
+      `可直接提交的基线表（替换 yarn-named-baseline.json 的 "zeroMemberClasses" 字段）：`,
+  );
+  console.log(JSON.stringify({ zeroMemberClasses: measured }, null, 2));
+  console.log("");
+  console.log(`[MEASURE] 现基线 vs 实测对照：`);
+  for (const l of lines) console.log(l);
+  process.exit(0);
+}
+
+// ── 门模式：5 条判据 ─────────────────────────────────────────────────────────────────────
 const errors = [];
 const rows = [];
-for (const pack of packs) {
-  const dir = path.join(DATA, pack, "mappings");
-  if (!fs.existsSync(dir)) continue;
-  const tinyName = fs.readdirSync(dir).find((f) => /-tiny\.gz$/.test(f));
-  if (!tinyName) continue;
-  const prov = fs.existsSync(path.join(dir, "yarn-tiny-provenance.json"));
-  const tinyText = zlib.gunzipSync(fs.readFileSync(path.join(dir, tinyName))).toString("utf8");
-  const tiny = scanTiny(tinyText);
+for (const { pack, dir, tinyName } of packs) {
+  // gunzip 失败不炸栈：named/selfEq/零成员三系判据跳过，判据 5 的 sha 对账仍按原始字节执行
+  let tinyText = null;
+  try {
+    tinyText = zlib.gunzipSync(fs.readFileSync(path.join(dir, tinyName))).toString("utf8");
+  } catch (e) {
+    errors.push(`${pack}: mappings/${tinyName} gunzip 失败（${e.message}）—— tiny 已损坏或被换件`);
+  }
+  const tiny = tinyText === null ? { classSelfEq: 0, classTotal: 0, memberSelfEq: 0, memberTotal: 0 } : scanTiny(tinyText);
   const ratio = tiny.memberTotal ? tiny.memberSelfEq / tiny.memberTotal : 0;
-  const base = BASELINE[pack];
-  rows.push(`${pack} ${(ratio * 100).toFixed(2)}%`);
-  if (!prov) errors.push(`${pack}: 缺 mappings/yarn-tiny-provenance.json（named 修复不可追溯）`);
+  const base = BASELINE.member[pack];
+  if (tinyText !== null) rows.push(`${pack} ${(ratio * 100).toFixed(2)}%`);
+  const provPath = path.join(dir, "yarn-tiny-provenance.json");
+  const provExists = fs.existsSync(provPath);
+  if (!provExists) errors.push(`${pack}: 缺 mappings/yarn-tiny-provenance.json（named 修复不可追溯）`);
   if (base === undefined) errors.push(`${pack}: 不在基线表中（新档须先完成 named 源核验并登记）`);
   else if (ratio > base * FACTOR) {
     errors.push(
@@ -136,8 +248,8 @@ for (const pack of packs) {
     errors.push(`${pack}: class selfEq=${tiny.classSelfEq} > ${CLASS_SELF_EQ_CAP}`);
   }
   // 第 4 判据（N-11.2）：零成员类 ratchet —— 捕获「CLASS 行在、成员行整批缺失」的相对形态
-  const zero = scanZeroMember(tinyText).zero;
-  const zeroBase = ZERO_MEMBER_BASELINE[pack];
+  const zero = tinyText === null ? 0 : scanZeroMember(tinyText).zero;
+  const zeroBase = BASELINE.zero[pack];
   if (zeroBase === undefined) {
     errors.push(`${pack}: 不在零成员基线表中（新档先 --measure-zero-member 并登记）`);
   } else {
@@ -146,12 +258,17 @@ for (const pack of packs) {
       errors.push(
         `${pack}: 零成员类 ${zero} > 基线 ${zeroBase}×${FACTOR}+${ZERO_MEMBER_SLACK}（=${cap4}） —— 疑似 v1 有损（成员整批缺失）`,
       );
-    } else {
+    } else if (tinyText !== null) {
+      // gunzip 失败的档不进 rows（已由 gunzip 错误行点名），避免把 zero=0 拼到上一档的行尾
       rows[rows.length - 1] = `${rows[rows.length - 1]} zero=${zero}`;
     }
   }
+  // 第 5 判据：provenance ↔ 磁盘双向 sha 对账（备份字节 + 修复产物字节都不可漂移）
+  if (provExists) {
+    errors.push(...checkProvenanceSha(pack, dir, tinyName));
+  }
 }
-if (!rows.length) {
+if (!packs.length) {
   console.error("assert-yarn-named-integrity: RED —— data/fabric_*/mappings 下找不到任何 -tiny.gz（发现逻辑失效）");
   process.exit(1);
 }
@@ -162,6 +279,6 @@ if (errors.length) {
 }
 console.log(
   `assert-yarn-named-integrity: ok（${rows.length} 档 · 全部有 provenance 且 selfEq ≤ 基线×${FACTOR}` +
-    ` · 零成员类 ≤ 基线×${FACTOR}+${ZERO_MEMBER_SLACK}）`,
+    ` · 零成员类 ≤ 基线×${FACTOR}+${ZERO_MEMBER_SLACK} · provenance↔磁盘 sha 对账一致）`,
 );
 console.log(`  比率/零成员: ${rows.join(" · ")}`);

@@ -34,10 +34,19 @@
  * 1.14–1.19: all CLASS lines first) are resolved through official→named.
  */
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
+import { emit, emitCopy, logDryRunBanner, scratchMkdirAll, wantWrite } from "../../../scripts/_lib/write-guard.mjs";
+import {
+  buildProvenance,
+  fetchV2Tiny,
+  readZipEntry,
+  repairNamed,
+  sha256Hex,
+} from "./repair-yarn-named.mjs";
 
 /** Expected column counts per tiny v1 tag. Any other count is an error. */
 export const TINY_V1_COLUMNS = Object.freeze({ CLASS: 4, FIELD: 6, METHOD: 6 });
@@ -649,6 +658,145 @@ export function verifyPack(pack) {
   }
 }
 
+/**
+ * repair-named-v2 子命令（N-11.2 产品化，收编 temp/audit/sweep81/probes/fix-yarn-named.mjs）：
+ * 按上游 yarn v2 jar 的 named 列逐行重写 `data/fabric_<ver>/mappings/yarn-<ver>-tiny.gz`。
+ * 默认 dry-run（经 write-guard 打 DRYRUN 预览；gz 产物先落 os.tmpdir() scratch，仓库目标只经
+ * emitCopy）；`--write` 才落盘（upstream/*.bak 备份 + provenance + 已有 yarn-mappings.json 原地重建）。
+ * 已有 provenance 的档默认 SKIP；`--force` 重算，修复结果与盘上逐字节一致时报告 idempotent 不写盘。
+ */
+async function repairNamedCli(rest) {
+  const packFlag = rest.find((a) => a.startsWith("--pack="));
+  const all = rest.includes("--all");
+  const force = rest.includes("--force");
+  const write = wantWrite(rest);
+  const dataFlag = rest.find((a) => a.startsWith("--data="));
+  const dataRoot = path.resolve(dataFlag ? dataFlag.slice("--data=".length) : defaultDataRoot());
+  if (!packFlag && !all) {
+    console.error(
+      "usage: build-yarn-mappings.mjs repair-named-v2 [--pack=fabric_X | --all] [--data=path] [--write] [--force]",
+    );
+    process.exit(2);
+    return;
+  }
+  // pack 发现与 fix-yarn-named.mjs:226-228 同口径：dataRoot 下 fabric_* 目录、mappings/*-tiny.gz
+  const packs = packFlag
+    ? [packFlag.slice("--pack=".length)]
+    : fs.readdirSync(dataRoot).filter((d) => /^fabric_/.test(d)).sort();
+  const scratchDir = path.join(os.tmpdir(), "yarn-named-repair");
+  let skip = 0;
+  let idle = 0;
+  let dry = 0;
+  let fix = 0;
+  let err = 0;
+  for (const pack of packs) {
+    const dir = path.join(dataRoot, pack, "mappings");
+    let tinyName;
+    try {
+      tinyName = fs.readdirSync(dir).find((f) => /-tiny\.gz$/.test(f));
+    } catch {
+      tinyName = undefined;
+    }
+    if (!tinyName) {
+      console.log(`SKIP ${pack.padEnd(16)} 无 mappings/*-tiny.gz`);
+      skip++;
+      continue;
+    }
+    const tinyPath = path.join(dir, tinyName);
+    const provPath = path.join(dir, "yarn-tiny-provenance.json");
+    if (!force && fs.existsSync(provPath)) {
+      console.log(`SKIP ${pack.padEnd(16)} 已有 yarn-tiny-provenance.json（已修复）；--force 可重算`);
+      skip++;
+      continue;
+    }
+    try {
+      const ver = tinyName.replace(/^yarn-/, "").replace(/-tiny\.gz$/, "");
+      const { jarBuffer, url } = await fetchV2Tiny({ version: ver });
+      const v2Entry = readZipEntry(jarBuffer, "mappings/mappings.tiny");
+      if (!v2Entry) throw new Error(`jar 内无 mappings/mappings.tiny: ${url}`);
+      const tinyBuf = fs.readFileSync(tinyPath);
+      const v1Text = zlib.gunzipSync(tinyBuf).toString("utf8");
+      const { newTinyText, stats } = repairNamed({ tinyV1Text: v1Text, v2TinyText: v2Entry.toString("utf8") });
+      const line = (label) =>
+        `${label} ${pack.padEnd(16)} v1 selfEq=${stats.classSelfEqBefore}C/${stats.memberSelfEqBefore}M` +
+        ` → 修后=${stats.classSelfEqAfter}C/${stats.memberSelfEqAfter}M` +
+        ` | v2基线 selfEq=${stats.v2Base.classSelfEq}C/${stats.v2Base.memberSelfEq}M（成员总 ${stats.v2Base.members}）` +
+        ` | 修 cls ${stats.classFixed}/${stats.classes} mbr ${stats.memberFixed}/${stats.members}` +
+        ` | 缺配 cls ${stats.missClass} mbr ${stats.missMember}（修后仍 selfEq 且缺配 ${stats.stillSelfEqUnmatched}）` +
+        ` · 冲突 ${stats.conflict.length} | 来源 ${url}`;
+      if (newTinyText === v1Text) {
+        console.log(`${line("IDLE")} —— 盘上内容已与 v2 对齐（idempotent），跳过写盘`);
+        idle++;
+        continue;
+      }
+      const outGz = zlib.gzipSync(Buffer.from(newTinyText, "utf8"));
+      const bakPath = path.join(dir, "upstream", `${tinyName}.v1-upstream.gz.bak`);
+      const bakExisted = fs.existsSync(bakPath);
+      // upstreamV1 台账：备份已存在（--force 重修）时以 bak 实测字节为准 —— bak 是首次修复
+      // 留下的有损 v1 原件，重修不得改写成「当前盘上 tiny」（那已是修复产物）。这样
+      // assert-yarn-named-integrity 判据 5a（prov.upstreamV1.sha256 == bak 实测）按构造恒绿。
+      const upstreamV1Sha = bakExisted ? sha256Hex(fs.readFileSync(bakPath)) : sha256Hex(tinyBuf);
+      const scratchGz = path.join(scratchDir, `${pack}-${tinyName}`);
+      scratchMkdirAll(scratchDir);
+      // write-guard 没有二进制 scratch 出口（scratchWriteText 强制 utf8）：gz 只能落 os.tmpdir()
+      // （GUARD_ROOT 之外，与 scratch* 同一信任域）；仓库目标仍只经 emitCopy，与
+      // build-yarn-sqlite 的二进制 sqlite 同类（DEBT 在册理由）。
+      fs.writeFileSync(scratchGz, outGz);
+      if (!bakExisted) emitCopy(bakPath, tinyPath);
+      emitCopy(tinyPath, scratchGz);
+      const prov = buildProvenance({
+        tinyName,
+        upstreamV1Sha256: upstreamV1Sha,
+        upstreamV2Url: url,
+        repairedGz: outGz,
+        stats,
+        now: new Date(),
+      });
+      emit(provPath, JSON.stringify(prov, null, 2));
+      if (write) {
+        // 写盘后自校验：盘上 tiny.gz 的 sha256 必须等于 provenance.repairedSha256
+        const got = sha256Hex(fs.readFileSync(tinyPath));
+        if (got !== prov.repairedSha256) {
+          console.error(
+            `SELF-CHECK RED ${pack}: 盘上 tiny sha256 ${got} != provenance.repairedSha256 ${prov.repairedSha256}`,
+          );
+          process.exit(1);
+          return;
+        }
+        // 已有 yarn-mappings.json 的档原地重建（保留旧 meta，同 rebuild-yarn-json.mjs 语义）；薄档不动
+        const jsonPath = path.join(dir, "yarn-mappings.json");
+        if (fs.existsSync(jsonPath)) {
+          const oldMeta = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+          const parsed = parseTinyToClassMap(newTinyText);
+          emit(
+            jsonPath,
+            renderYarnMappingJson(parsed, {
+              version: String(oldMeta.version ?? ver),
+              source: oldMeta.source ?? null,
+              format: oldMeta.format ?? "yarn-tiny-v1",
+            }),
+          );
+        }
+      }
+      console.log(line(write ? "FIX " : "DRY "));
+      if (write) fix++;
+      else dry++;
+    } catch (e) {
+      console.log(`ERR  ${pack.padEnd(16)} ${e instanceof Error ? e.message : String(e)}`);
+      err++;
+    }
+  }
+  console.log(
+    `repair-named-v2 完成：${packs.length} 档（IDLE ${idle} / DRY ${dry} / FIX ${fix} / SKIP ${skip} / ERR ${err}）` +
+      (write ? "" : "（dry-run，未写盘；加 --write 落盘）"),
+  );
+  if (!write) logDryRunBanner("repair-named-v2");
+  if (err > 0) {
+    console.error(`REPAIR RED: ${err}/${packs.length} 档失败`);
+    process.exit(1);
+  }
+}
+
 function main(argv) {
   const [cmd, ...rest] = argv;
   if (cmd === "verify-all") {
@@ -730,11 +878,18 @@ function main(argv) {
     console.log("VERIFY GREEN: tiny ⇄ JSON ⇄ sqlite 三方逐行对账 0 差异");
     return;
   }
+  if (cmd === "repair-named-v2") {
+    repairNamedCli(rest).catch((err) => {
+      console.error(err);
+      process.exit(1);
+    });
+    return;
+  }
 
   const [tiny, out, ...flags] = argv;
   if (!tiny || !out) {
     console.error(
-      "usage: build-yarn-mappings.mjs <tiny[.gz]> <outJson> [--version=X] [--source=url] [--format=...] | verify <tiny> <json> [--sqlite=path] | verify-all [--data=path]",
+      "usage: build-yarn-mappings.mjs <tiny[.gz]> <outJson> [--version=X] [--source=url] [--format=...] | verify <tiny> <json> [--sqlite=path] | verify-all [--data=path] | repair-named-v2 [--pack=fabric_X | --all] [--data=path] [--write] [--force]",
     );
     process.exit(2);
     return;

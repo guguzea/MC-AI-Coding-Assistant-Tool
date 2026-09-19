@@ -143,11 +143,13 @@ data/
 ├── fabric_1.20.1/
 │   ├── fabric-docs/<ver>/...
 │   ├── fabric-wiki/<ver>/...
-│   ├── mappings/          # yarn-*.jar/tiny、yarn-mappings.json、yarn-mappings.sqlite、parchment*
+│   ├── mappings/          # yarn-*.jar/tiny、yarn-mappings.json、yarn-mappings.sqlite、parchment*、yarn-tiny-provenance.json、upstream/*.bak
 │   └── meta.json
 └── neoforge_*/
     └── neoforge-docs/...
 ```
+
+fabric 档 `mappings/` 里的 `yarn-tiny-provenance.json` 记录 tiny named 列修复的溯源（上游 v1 备份的 sha256 与修复后 tiny 的 sha256），`upstream/*.bak` 是修复前的上游 v1 原件备份；两者由 `assert-yarn-named-integrity.mjs` 逐档存在性检查 + sha 双向对账，不许删。
 
 文档仍遵循 **L0 → L1 → L2 → L2+（processed）** 分层，不可跳层。
 
@@ -278,6 +280,10 @@ processed 正文里的这两行都是**转引标记**，不是可执行代码；
   `node scripts/_lib/build-yarn-sqlite.mjs data/fabric_<ver>/mappings --version=<ver>`。重建会把 `schemaVersion` 往前带
   （实测 3 → 4，只多 `name_official`/`name_intermediary` 单列索引），属正常迁移 ⇒ 台账按门的 `MC_SKILL_INDEX_RELEDGER=1`
   重算回填，**不许手改数字**；回填前先比对「变化是否只有 schema 那几项」，多一项就说明不是迁移而是数据变了。
+- **`yarn-*-tiny.gz` 的 named 列是修复产物，不是上游原件**：2026-09-19 起按上游 v2 jar 逐行重写（v1 原件备份与 sha 溯源在
+  各档 `mappings/yarn-tiny-provenance.json` + `mappings/upstream/*.bak`）。从 maven 重拉上游 v1 会把 named 打回
+  `named==intermediary`，立即命中 `assert-yarn-named-integrity` 的降级判定；自愈路径 = 先重建 named（新管线
+  `scripts/_lib/repair-yarn-named.mjs` / `npm run build:yarn-named`），再按上一条重建 sqlite。
 - **损坏可以长得像「表存在、但 `COUNT(*)` 抛错」**（单个 b-tree 页坏），而不是「表不存在」；因此门的 `-1` 哨兵必须继续与
   「缺表」区分开上报。判定「坏在提交之前还是拷贝造成」的唯一办法是**在两个独立副本上跑同一条查询对比**：2026-09-13 实测
   `1.21.8`/`1.21.10` 的 `methods`、`1.21.11` 的 `fields` 在故障卷与其抢救副本上报错逐字一致 ⇒ 已提交字节本身坏，与拷贝无关；

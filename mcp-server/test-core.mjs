@@ -3778,6 +3778,67 @@ function testProjectPathFill() {
   assert.equal(badD.action?.code, "INVALID_INPUT");
 }
 
+// C14 回归钉（NeoForge @Mod-id ↔ neoforge.mods.toml 一致性，checkModAnnotation）：
+// 该检查此前只有 gitignored 的 temp/ 审计夹具验证过（test-*.mjs 搜 wrong_id 零命中），
+// 这里补仓内常驻夹具 + 内存用例。夹具内容与 sweep80 审计实测同形
+// （temp/audit/sweep80/p4b-validate-neo-clean.mjs：moddev 2.0.78 / neoForge 21.1.72，
+// 主类带 (IEventBus) 构造器，保证 modId mismatch 是唯一 error）。
+function testNeoModIdMismatch() {
+  const fixturesRoot = join(dirname(fileURLToPath(import.meta.url)), "test-fixtures");
+
+  // 反控：@Mod("wrong_id") vs modId="neotest" → status/passed/ok 同步 failed，errors 恰含逐字消息
+  const mismatch = validateProject({ projectPath: join(fixturesRoot, "neo-modid-mismatch") });
+  assert.equal(mismatch.status, "failed", JSON.stringify(mismatch));
+  assert.equal(mismatch.passed, false, JSON.stringify(mismatch));
+  assert.equal(mismatch.ok, false, JSON.stringify(mismatch));
+  assert.ok(
+    mismatch.errors.some((e) =>
+      /@Mod 注解 modId='wrong_id' 与 mods\.toml modId='neotest' 不一致$/.test(e)),
+    JSON.stringify(mismatch.errors),
+  );
+
+  // 正控：@Mod("neotest") → 干净通过（errors 为空）
+  const match = validateProject({ projectPath: join(fixturesRoot, "neo-modid-match") });
+  assert.equal(match.status, "passed", JSON.stringify(match));
+  assert.equal(match.passed, true, JSON.stringify(match));
+  assert.equal(match.ok, true, JSON.stringify(match));
+  assert.equal(match.errors.length, 0, JSON.stringify(match.errors));
+
+  // 内存用例（同 Forge 常量测试 :3979 的 query 形态，Neo 侧改用 neoModsToml）：钉常量分支
+  const neoModsToml = 'modLoader="javafml"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n';
+
+  // 常量解析后 mismatch → ERROR「解析为」（src/validate/index.ts:271-274）
+  const constMismatch = validateProject({
+    neoModsToml,
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content:
+        "package com.example;\nimport net.neoforged.bus.api.IEventBus;\nimport net.neoforged.fml.common.Mod;\n\n@Mod(ExampleMod.MOD_ID)\npublic class ExampleMod {\n  public static final String MOD_ID = \"othermod\";\n  public ExampleMod(IEventBus bus) {}\n}\n",
+    }],
+  });
+  assert.ok(
+    constMismatch.errors.some((e) =>
+      /@Mod\(ExampleMod\.MOD_ID\) 解析为 'othermod'，与 mods\.toml modId='examplemod' 不一致$/.test(e)),
+    JSON.stringify(constMismatch.errors),
+  );
+
+  // 常量无法解析 → WARN「无法解析常量」，不产生 error（src/validate/index.ts:266-268）
+  const constUnresolved = validateProject({
+    neoModsToml,
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content:
+        "package com.example;\nimport net.neoforged.bus.api.IEventBus;\nimport net.neoforged.fml.common.Mod;\n\n@Mod(MOD_ID)\npublic class ExampleMod {\n  public ExampleMod(IEventBus bus) {}\n}\n",
+    }],
+  });
+  assert.ok(
+    constUnresolved.warnings.some((e) => /@Mod\(MOD_ID\) 无法解析常量，已跳过与 mods\.toml 的硬比对/.test(e)),
+    JSON.stringify(constUnresolved.warnings),
+  );
+  assert.equal(constUnresolved.status, "passed", JSON.stringify(constUnresolved));
+  assert.equal(constUnresolved.errors.length, 0, JSON.stringify(constUnresolved.errors));
+}
+
 async function testPrototypeOwnKeys() {
   const protoKeys = ["constructor", "toString", "__proto__", "hasOwnProperty", "valueOf"];
   const { queryApi } = await import("./dist/api/index.js");
@@ -6845,6 +6906,7 @@ const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   ["mcp-server/scripts/_lib/import-legacy.test.mjs", /fs\.mkdtempSync\(path\.join\(os\.tmpdir\(\), "tsrg-"/], // 同上
   ["mcp-server/scripts/_lib/pipeline-helpers.test.mjs", /mkdtempSync\(join\(tmpdir\(\), "ph-test-"/], // 同上
   ["mcp-server/scripts/_lib/thin-docs-wiki.test.mjs", /mkdtempSync\(join\(tmpdir\(\), "thin-wiki-"/], // 同上
+  ["mcp-server/scripts/_lib/repair-yarn-named.test.mjs", /mkdtempSync\(path\.join\(tmpdir\(\), "yarncache/], // N-11.2 单测：三个 cacheDir 夹具根全在 OS tmpdir（yarncache*/bad*/fb*），仓库只读
   ["mcp-server/scripts/audit-all-tools.mjs", /"_audit-findings\.json"/], // 唯一产物 mcp-server/_audit-findings.json 已 gitignore
   ["mcp-server/scripts/sweep-similar-traps.mjs", /"_sweep-findings\.json"/], // 产物 gitignore；它代跑的写盘工具一律传 dryRun:true
   ["mcp-server/scripts/snapshot-sha256.mjs", /const OUT_DIR = join\(REPO, "agent-tools", "audit-snapshots"/], // 落 gitignore 的 agent-tools/；「豁免定义允许 gitignore 输出目录而非仅 temp」这一口径已登记在 S4 销账台账
@@ -6852,6 +6914,7 @@ const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   ["mcp-server/scripts/_lib/pipeline-helpers.mjs", /export async function downloadFileAtomic/], // 纯库，destPath 由调用方给；.tmp 只在 destPath 同目录
   ["mcp-server/scripts/_lib/thin-docs-wiki.mjs", /export function writeWikiProcessed\(processedDir, filename, markdown/], // indexPath/processedDir 都是函数参数
   ["mcp-server/scripts/_lib/build-yarn-mappings.mjs", /fs\.writeFileSync\(out, renderYarnMappingJson/], // out = CLI 位置参数（build <tiny.gz> <outJson>）
+  ["mcp-server/scripts/_lib/repair-yarn-named.mjs", /process\.env\.TEMP \?\? "\/tmp", "yarn-v2-cache"/], // N-11.2 纯库：唯一 fs 落笔是 fetchV2Tiny 的 OS tmpdir jar 缓存；对仓库的写盘全在 CLI 侧（build-yarn-mappings repairNamedCli）走 write-guard
   ["mcp-server/scripts/_debug_article.mjs", /_debug_raw\.html/], // 只写 scripts/_debug*（gitignore）；该文件本身未入库
   ["mcp-server/scripts/_test_fetch.mjs", /_test_curl_output\.txt/], // 只写 scripts/_test_*（gitignore）；该文件本身未入库，url 由 argv 给
   // ── B1 转换器（2026-09-15 用户裁定登记豁免，不 adopt）─────────────────────
@@ -7568,6 +7631,7 @@ await testAaThreeFixes(); // AA 三条修复（sweep81）
 await testMdkUnpackFixtures();
 await testUnzipToolProbe();
 await testProjectPathFill();
+await testNeoModIdMismatch();
 testPlan1Fixes();
 await testPrototypeOwnKeys();
 await testW2MappingDocsFixes();

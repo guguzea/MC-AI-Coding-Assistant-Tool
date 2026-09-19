@@ -1,0 +1,34 @@
+{
+  "_comment": "yarn tiny named 列完整性门的基线（assert-yarn-named-integrity.mjs 读）。memberSelfEqRatio = 修复后各档 member selfEq 比率（判据② ratchet：实测 ≤ 基线×1.15，防再次摄入有损 v1 artifact）；zeroMemberClasses = 按 ownerOfficial 列归因的零成员类计数（判据④ ratchet：实测 ≤ ceil(基线×1.15)+30）。基线 = 2026-09-19 v2 重写完成实测；阈值只许收紧，放宽需附新证据。新档用 `node scripts/assert-yarn-named-integrity.mjs --measure-zero-member` 重算（只打印不写盘）后显式登记。",
+  "asOf": "2026-09-19",
+  "memberSelfEqRatio": {
+    "fabric_1.14.4": 0.2662,
+    "fabric_1.16.5": 0.2275,
+    "fabric_1.17.1": 0.1834,
+    "fabric_1.18.2": 0.1812,
+    "fabric_1.19.4": 0.239,
+    "fabric_1.20.1": 0.2399,
+    "fabric_1.20.4": 0.2425,
+    "fabric_1.21.1": 0.1836,
+    "fabric_1.21.10": 0.1829,
+    "fabric_1.21.11": 0.1829,
+    "fabric_1.21.3": 0.1888,
+    "fabric_1.21.4": 0.1883,
+    "fabric_1.21.8": 0.1853
+  },
+  "zeroMemberClasses": {
+    "fabric_1.14.4": 652,
+    "fabric_1.16.5": 597,
+    "fabric_1.17.1": 869,
+    "fabric_1.18.2": 915,
+    "fabric_1.19.4": 721,
+    "fabric_1.20.1": 715,
+    "fabric_1.20.4": 701,
+    "fabric_1.21.1": 1044,
+    "fabric_1.21.10": 1261,
+    "fabric_1.21.11": 1389,
+    "fabric_1.21.3": 1095,
+    "fabric_1.21.4": 1089,
+    "fabric_1.21.8": 1199
+  }
+}
