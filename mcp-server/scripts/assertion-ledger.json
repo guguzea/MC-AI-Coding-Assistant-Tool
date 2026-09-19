@@ -313,6 +313,16 @@
       "status": "closed",
       "gates": ["test-update.mjs"],
       "closedAt": "2026-09-19"
+    },
+    {
+      "id": "qsl-verified-derived-synced-route-a",
+      "claim": "qsl-verified 语料派生件（data/quilt_<ver>/…/processed/qsl-verified.md）必须由 scripts/index-qsl-verified.mjs 与其声明复制源 quilt/<ver>/knowledge/common/qsl-verified.md 保持归一化逐字节一致（2026-09-19 用户裁定路线 A，取代 F115 的「副本过期容忍」状态）：有源稿 + 有语料树 ⇒ processed 必须存在且一致；processed 存在 ⇒ 源稿必在；1.21.1 的虚构横幅（2025-12 停更 / 11.0.0-alpha.3+0.102.0-1.21）不再出现在任何 snippet / get_doc_full；F115 三处表述已同步为「已同步 + 机械刷新」口径",
+      "author": "原审查 A8/§3（虚构横幅进检索）+ F115（2026-09-13 语料不改写）+ 2026-09-19 用户裁定路线 A（刷新派生件 + F115 同步）",
+      "evidence": "index-qsl-verified.mjs --write 实跑：6 档 processed 与源稿逐字节一致（含 1.21.11 新建页 + index-l0 登记）；1.21.3/1.21.4/1.21.8/1.21.10 有源稿无语料树 = 合法无派生件（门按 hasCorpusTree 判）；quilt 1.21.1 语义索引 --force 重建（97 chunks / 76 embedded）+ LEDGER_SUM 重算回填（34032/25632，quilt 560/439）；验收探针：search_docs QSL 4 命中 snippet 无旧横幅，get_doc_full 新头「2026-09 maven 复核」在、旧头「2026-08 二轮审计」不在；新门 assert-qsl-verified-sync.mjs（selftest 7 例：过期/缺失/孤儿/归一化/无语料树合法形）接入双链；源稿/01-registry 七镜像经 sync-skills.ps1 重投影后 assert-skill-mirrors 0 漂移",
+      "evidenceRefs": ["scripts/index-qsl-verified.mjs", "mcp-server/scripts/assert-qsl-verified-sync.mjs", "quilt/1.21.1/knowledge/common/qsl-verified.md", "quilt/1.21.1/.cursor/rules/01-registry.mdc", "mcp-server/scripts/assert-rules-match-tool.mjs", "mcp-server/scripts/assert-index-consistency.mjs"],
+      "status": "closed",
+      "gates": ["assert-qsl-verified-sync.mjs", "assert-rules-match-tool.mjs", "assert-index-consistency.mjs", "assert-corpus-semantics.mjs"],
+      "closedAt": "2026-09-19"
     }
   ]
 }

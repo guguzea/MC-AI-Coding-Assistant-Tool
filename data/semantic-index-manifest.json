@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-14T14:05:07.023Z",
+  "built_at": "2026-09-19T12:42:29.190Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -691,12 +691,12 @@
       "version": "1.21.1",
       "source": "quilt-docs",
       "path": "quilt_1.21.1/quilt-docs/1.21.1/semantic/db.sqlite",
-      "chunks": 94,
-      "embedded": 74,
-      "built_at": "2026-09-13T05:37:07.089Z",
+      "chunks": 97,
+      "embedded": 76,
+      "built_at": "2026-09-19T12:42:29.171Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "923e9f92ce5ce8cdea6eb2bb19aa39a119a224c291203b54d865d697a9d0ed20"
+      "sha256": "eeb3378da3b42e511e25b931283c69a8159a64a9c85966f1be54f769b4fc9f2b"
     },
     {
       "platform": "quilt",

@@ -1977,6 +1977,8 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-bedrock-script-api-pin.mjs",
     // 2026-09-19 W0-1：库 SKILL「N 条实测」计数必须能由 lib-manifests/all.json 机械复算。
     "./scripts/assert-lib-census-counts.mjs",
+    // 2026-09-19 W3-4 路线 A：qsl-verified 语料派生件必须与其声明复制源归一化一致（F115 + 路线 A）。
+    "./scripts/assert-qsl-verified-sync.mjs",
   ]) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE], {

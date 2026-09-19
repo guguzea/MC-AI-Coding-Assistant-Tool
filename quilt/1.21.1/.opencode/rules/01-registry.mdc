@@ -24,4 +24,4 @@ Decision: 注册方式
 对照：https://wiki.quiltmc.org/en/concepts/qsl-qfapi
 已核实表：`quilt/1.21.1/knowledge/common/qsl-verified.md`（02–10 仍读 fabric/1.21.1）。
 
-> **F115 读法警示（语料 ≠ 事实源）**：`search_docs({platform:"quilt", version:"1.21.1"})` 命中的是索引语料 `data/quilt_1.21.1/quilt-docs/1.21.1/processed/qsl-verified.md`，其 `:3` **仍原样带着**本版 knowledge 已撤回的两条说法（「QSL 已于 2025-12 停更」与版本号 `11.0.0-alpha.3`）。语料正文按仓规**上游原样、不改写**，所以这不是矛盾而是两处不同步：读到该页正文时**必须回读** `quilt/1.21.1/knowledge/common/qsl-verified.md` 的降级/撤回声明（停更说法原引 `quiltmc.org/en/faq/` 已 404 → `// TODO(未核实)`；构件实证以 `:9` 的 maven 计数为准），**禁止**把语料正文里的停更日期或版本号当可引用事实写进答案。
+> **F115 读法（语料 = 源稿的机械派生件；2026-09-19 路线 A 已同步）**：`search_docs({platform:"quilt", version:"1.21.1"})` 命中的语料页 `data/quilt_1.21.1/quilt-docs/1.21.1/processed/qsl-verified.md` 由 `scripts/index-qsl-verified.mjs` 从 `quilt/1.21.1/knowledge/common/qsl-verified.md` 机械复制（逐字节一致；此前副本曾滞留已撤回的「QSL 已于 2025-12 停更」与 `11.0.0-alpha.3` 旧断言，已随路线 A 刷新清除，虚构横幅不再出现在任何 snippet / get_doc_full）。语料正文按仓规**上游原样、不改写**——编辑只发生在源稿，data 侧副本只准由生成器刷新。读到该页正文即等同源稿口径；降级/撤回声明与构件实证以源稿 `:3`（maven 复核横幅）与 `:9`（maven 计数）为准，**禁止**把已撤回的停更日期或版本号当可引用事实写进答案。

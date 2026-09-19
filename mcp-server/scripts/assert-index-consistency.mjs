@@ -59,8 +59,10 @@ const MANIFEST = path.join(DATA_DIR, "semantic-index-manifest.json");
 // B 层汇总 + 逐平台 {条目, chunks, embedded}
 // F99 修法后重算（MC_SKILL_INDEX_RELEDGER=1）：chunks 25634→34029 = 短块回到关键词层；
 // embedded 保持长块数（25634→25630 的 -4 是 4 个「整页只有一块且低于阈值」的兜底块，改由关键词层覆盖）。
+// W3-4 路线 A（2026-09-19 RELEDGER 重算）：quilt 1.21.1 qsl-verified 派生件与源稿同步后重建语义索引
+// ⇒ chunks 34029→34032 / embedded 25630→25632，quilt 557→560 / 437→439（+1.21.11 新页 L0/processed，无语义库变化）。
 const LEDGER_SUM = {
-  entries: 60, chunks: 34029, embedded: 25630,
+  entries: 60, chunks: 34032, embedded: 25632,
   perPlatform: {
     "bedrock": { entries: 1, chunks: 308, embedded: 303 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
@@ -68,7 +70,7 @@ const LEDGER_SUM = {
     "liteloader": { entries: 3, chunks: 443, embedded: 363 },
     "modloader": { entries: 3, chunks: 6, embedded: 2 },
     "neoforge": { entries: 9, chunks: 18877, embedded: 14169 },
-    "quilt": { entries: 6, chunks: 557, embedded: 437 },
+    "quilt": { entries: 6, chunks: 560, embedded: 439 },
     "rift": { entries: 1, chunks: 47, embedded: 29 },
   },
 };

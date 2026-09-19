@@ -256,8 +256,8 @@ for (const ent of entries) {
     has(text, /无任何 QSL 模块/, `F82 ${v} AGENTS：须写明依赖块内无任何 QSL 模块`);
   }
   if (v === '1.21.1' && (ent.inPack === 'knowledge/common/qsl-verified.md' || ent.inPack === '.cursor/rules/01-registry.mdc')) {
-    has(text, new RegExp(F115_CORPUS_PAGE.replace(/\./g, '\\.').replace(/\//g, '\\/')), `F115：须点名仍带撤回断言的语料页 ${F115_CORPUS_PAGE}`);
-    has(text, /上游原样|不改写/, `F115：须写明语料正文不改写、结论以源稿为准`);
+    has(text, new RegExp(F115_CORPUS_PAGE.replace(/\./g, '\\.').replace(/\//g, '\\/')), `F115：须点名派生语料页 ${F115_CORPUS_PAGE}`);
+    has(text, /上游原样|不改写/, `F115：须写明语料正文不改写、编辑真值在源稿（2026-09-19 路线 A 后副本已与源稿同步）`);
   }
 }
 
