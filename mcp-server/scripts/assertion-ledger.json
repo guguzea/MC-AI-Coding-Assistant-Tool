@@ -283,6 +283,16 @@
       "status": "closed",
       "gates": ["test-scripts.mjs"],
       "closedAt": "2026-09-19"
+    },
+    {
+      "id": "neoforge-empty-search-payload-keys",
+      "claim": "search_neoforge_docs 的「无主文档树刻意回空」路径（ok:true + total:0 + warning 点名「无独立 <v> 主文档树」）必须同样带 availableVersions（数值序、含全部已建档档位）——与通用口 VERSION_NOT_FOUND 的载荷键对齐，不是静默空返回；generate_* 的两条不支持出口（entity_renderer fabric/quilt、capability fabric/quilt 改口）必须 exit 1 + success:false + resultKind:generation_failed",
+      "author": "计划 v2 W2-3 + W2-1 任务② + 2026-09-19 本轮修复（sweep87 终态已带 forge 侧 availableVersions 与 resultKind 三态，本条补 neoforge 独立路径与 CLI 探针）",
+      "evidence": "修前实测 search_neoforge_docs --version=9.9.9 无 availableVersions 键（searchNeoForgeDocs 刻意回空分支未透传 VersionNotFoundError.availableVersions，forge 侧通用口 ：848 已带 ⇒ 两路键面漂移）；修后载荷带数值序候选，test-assistant-gaps A-43 新增 W2-3 腿逐键钉（含 1.21.8<1.21.10<1.21.11 数值序）；test-cli C1 块补 entity_renderer/capability 两条不支持出口探针（exit 1 + generation_failed + 改口文案 /cca/i）",
+      "evidenceRefs": ["mcp-server/src/docs-platform/neoforge/index.ts", "mcp-server/test-assistant-gaps.mjs", "mcp-server/test-cli.mjs"],
+      "status": "closed",
+      "gates": ["test-assistant-gaps.mjs", "test-cli.mjs"],
+      "closedAt": "2026-09-19"
     }
   ]
 }

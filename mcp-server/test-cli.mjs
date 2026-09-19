@@ -818,7 +818,29 @@ function staleTotalClaims(docs, total) {
       }).slice(0, 240)}`,
     );
   }
-  console.log("C1 generate_* 拒绝 → success:false + exit 1；正常产出 → success:true + exit 0；三态 resultKind（ok / generation_failed / write_blocked）已钉");
+  // W2-1 任务②（2026-09-19）：两条不支持出口的 CLI 级回归 —— entity_renderer 的 fabric/quilt 禁生成
+  // 与 capability 的 fabric/quilt 改口 CCA，都必须走统一判定链（exit 1 + success:false + generation_failed）。
+  const erBad = run(["generate_entity_renderer", "--modId=demo", "--entityName=Dragon", "--platform=fabric", "--version=1.21.1"]);
+  const erBadJ = parseJson(erBad, "c1-entity-renderer-fabric");
+  if (erBad.status !== 1 || erBadJ.success !== false || erBadJ.result?.ok !== false || erBadJ.result?.resultKind !== "generation_failed") {
+    throw new Error(
+      `C1: entity_renderer fabric 拒绝必须 exit 1 + success:false + generation_failed → ${erBad.status} ${JSON.stringify(erBadJ).slice(0, 300)}`,
+    );
+  }
+  if (!String(erBadJ.result?.errors?.[0] ?? "").includes("禁止生成 @OnlyIn/Dist")) {
+    throw new Error(`C1: entity_renderer fabric 拒绝文案丢失 → ${JSON.stringify(erBadJ.result?.errors).slice(0, 300)}`);
+  }
+  const capBad = run(["generate_capability", "--modId=demo", "--name=flight", "--platform=fabric", "--version=1.21.1"]);
+  const capBadJ = parseJson(capBad, "c1-capability-fabric");
+  if (capBad.status !== 1 || capBadJ.success !== false || capBadJ.result?.ok !== false || capBadJ.result?.resultKind !== "generation_failed") {
+    throw new Error(
+      `C1: capability fabric 拒绝必须 exit 1 + success:false + generation_failed → ${capBad.status} ${JSON.stringify(capBadJ).slice(0, 300)}`,
+    );
+  }
+  if (!/cca/i.test(String(capBadJ.result?.errors?.[0] ?? ""))) {
+    throw new Error(`C1: capability fabric 改口文案必须点名 CCA → ${JSON.stringify(capBadJ.result?.errors).slice(0, 300)}`);
+  }
+  console.log("C1 generate_* 拒绝 → success:false + exit 1；正常产出 → success:true + exit 0；三态 resultKind（ok / generation_failed / write_blocked）已钉；entity_renderer/capability 不支持出口已钉");
 }
 
 // ── S4: 与全局 flag 同名的字段归工具；--output-format 是唯一格式开关 ─────────

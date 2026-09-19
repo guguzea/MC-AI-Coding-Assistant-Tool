@@ -26,6 +26,7 @@ import {
   platformDataMissingResult,
   hasPlatformDocData,
   buildListVersionsNotes,
+  sortMcVersions,
   versionNotFoundResult,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
@@ -196,6 +197,10 @@ export async function searchNeoForgeDocs(args: {
     if (missingMcVersion(args.version)) return versionRequiredDocResult();
     const version = args.version!.trim();
     const resolution = s.describeVersionResolution(version);
+    // W2-3（2026-09-19）：刻意回空路径（无主文档树 → ok:true + total:0）与通用口 VERSION_NOT_FOUND
+    // 的载荷键对齐 —— 同样带 availableVersions 候选（数值序），不是静默空返回（AGENTS「并同样带
+    // availableVersions」的承诺以此为实现依据）。
+    let neoMissingVersions: string[] | null = null;
     let detailed: ReturnType<NeoForgeDocStore["searchIndexDetailed"]>;
     try {
       detailed = s.searchIndexDetailed(args.query, version, args.tags);
@@ -207,6 +212,7 @@ export async function searchNeoForgeDocs(args: {
         resolvedVersion: version,
         versionFallback: false,
       };
+      neoMissingVersions = sortMcVersions(e.availableVersions ?? []);
     }
     const forgeCompatible = resolution.sourcePlatform === "forge";
     const resolutionSource = resolution.sourcePlatform === "forge" ? resolution.sourceVersion : undefined;
@@ -277,6 +283,9 @@ export async function searchNeoForgeDocs(args: {
           semantic: semanticHits !== null,
           total: results.length,
           results,
+          ...(resolution.mainDocsMissing && neoMissingVersions
+            ? { availableVersions: neoMissingVersions }
+            : {}),
         }), null, 2),
       }],
     };

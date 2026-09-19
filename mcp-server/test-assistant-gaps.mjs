@@ -1688,6 +1688,26 @@ description: |
   assert.equal(q26.fallback, "fabric");
   assert.equal(q26.sourcePlatform, "fabric");
   assert.equal(q26.total, 17, "quilt 26.1.2 改口 Fabric 后命中数不是登记面写的「实测 17 条」");
+  // W2-3 腿（2026-09-19）：neoforge 刻意回空路径（无主文档树）与通用口键面对齐 ——
+  // ok:true + total:0 + warning 点名「无独立主文档树」，且必须同样带 availableVersions 候选
+  // （数值序）。没有这一半，根 AGENTS「并同样带 availableVersions」就是无门承诺。
+  const { searchNeoForgeDocs } = await import("./dist/docs-platform/neoforge/index.js");
+  const neoEmpty = JSON.parse((await searchNeoForgeDocs({ query: "registry", version: "9.9.9" })).content[0].text);
+  assert.equal(neoEmpty.ok, true, "neoforge 无树档检索应刻意回空（ok:true）而不是报错");
+  assert.equal(neoEmpty.total, 0, "neoforge 刻意回空的 total 应为 0");
+  assert.match(String(neoEmpty.warning), /无独立 9\.9\.9 主文档树/, "neoforge 刻意回空必须点名「无独立主文档树」");
+  assert.ok(
+    Array.isArray(neoEmpty.availableVersions) && neoEmpty.availableVersions.length > 0,
+    `neoforge 刻意回空载荷缺 availableVersions（W2-3）→ ${JSON.stringify(Object.keys(neoEmpty))}`,
+  );
+  for (const v of ["1.20.1", "1.20.4", "1.20.6", "1.21.1", "1.21.8", "1.21.10", "1.21.11", "26.1"]) {
+    assert.ok(neoEmpty.availableVersions.includes(v), `availableVersions 缺已建档的 ${v}`);
+  }
+  assert.ok(
+    neoEmpty.availableVersions.indexOf("1.21.8") < neoEmpty.availableVersions.indexOf("1.21.10")
+      && neoEmpty.availableVersions.indexOf("1.21.10") < neoEmpty.availableVersions.indexOf("1.21.11"),
+    "availableVersions 必须数值序（1.21.8 < 1.21.10 < 1.21.11）",
+  );
   console.log(`A-43 根 AGENTS.md 建档面 ↔ 磁盘实扫 + 空洞档行为一致（fabric ${fabTrees.length} / quilt ${qTrees.length}·缺语料 ${qGap.length}）: ok`);
 }
 
