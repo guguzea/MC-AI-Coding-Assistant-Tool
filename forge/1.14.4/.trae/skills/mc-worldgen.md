@@ -7,18 +7,30 @@ dependencies: []
 mappings: mcp
 ---
 
-> ⚠️ **W5-2 裁定（2026-09-19）**：本仓 07 规则正文未核实 worldgen（全树 0 个 worldgen token），本技能**不含已核实签名**——一律改口 `search_forge_docs` / `search_neoforge_docs` / `search_fabric_docs`（worldgen_* 页，如 neoforge_1.21.10 的 `worldgen_biomemodifier.md`）核实后再写；禁止把本技能当已核实 API 白名单。
+# mc-worldgen（1.14.4）
 
-# mc-worldgen
+> 一手来源：本档 docs 语料 `data/forge_1.14.4/forge-docs/1.14.4/processed/primer_1_14.md:295/302`（原文「Biome ids are internally ints now instead of bytes…」「More things are stored in registries now: Entities, BiomeProviders, ChunkGenerators, ParticleTypes, Stats, Paintings」）+ `concepts_registries.md:84`（代码例逐字 `public static final Biome ice_flat = null;`）。
 
-> Wave D 技能骨架（forge 1.14.4）。详细规则见对应 `.cursor/rules/` 与 MCP `search_forge_docs` / 专题工具。
+## Decision Flow
 
-## 快速入口
+```
+→ Biome 相关类 → Biome（本档语料代码例逐字在档）
+→ 生成体系 → 1.14 起 BiomeProviders / ChunkGenerators 也进注册表体系（primer:302 原文）
+→ 数据包 worldgen JSON → 本版不存在（data/<ns>/worldgen/ 是 1.16 起形态，见 mc-datapack）
+→ 注册与生命周期 → mc-registry、01-registry.mdc
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`forge/1.14.4/knowledge/antipatterns/`
+## 本档口径（已核实，均出自本档语料）
+
+- `Biome` 类名在 concepts_registries:84 逐字在档。
+- Biome id 内部从 byte 改 int，群系数量上限 255 → 20 亿（primer:295 原文）。
+- BiomeProviders / ChunkGenerators 在 1.14 进入注册表存储（primer:302 原文）——写生成器前先按注册表规则核实。
+
+## 反模式
+
+- 假设 Biome id 还是 byte 上限（primer 明载已改 int）。
+- 把 1.16+ 的 `data/<modid>/worldgen/` JSON 写进 1.14.4。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 语料全文：`get_doc_full`（primer_1_14 / concepts_registries，version=1.14.4）；反模式库：`forge/1.14.4/knowledge/antipatterns/`。

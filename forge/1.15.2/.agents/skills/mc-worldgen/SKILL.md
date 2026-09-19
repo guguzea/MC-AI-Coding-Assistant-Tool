@@ -7,18 +7,28 @@ dependencies: []
 mappings: mcp
 ---
 
-> ⚠️ **W5-2 裁定（2026-09-19）**：本仓 07 规则正文未核实 worldgen（全树 0 个 worldgen token），本技能**不含已核实签名**——一律改口 `search_forge_docs` / `search_neoforge_docs` / `search_fabric_docs`（worldgen_* 页，如 neoforge_1.21.10 的 `worldgen_biomemodifier.md`）核实后再写；禁止把本技能当已核实 API 白名单。
+# mc-worldgen（1.15.2）
 
-# mc-worldgen
+> 一手来源：本档 docs 语料 `data/forge_1.15.2/forge-docs/1.15.2/processed/concepts_registries.md:115`（长行代码例逐字含 `public static final Biome ice_flat = null;`）。类名 `Biome` 另经 1.14.4 同版线 primer 佐证体系（1.15.2 语料无 primer 页）。
 
-> Wave D 技能骨架（forge 1.15.2）。详细规则见对应 `.cursor/rules/` 与 MCP `search_forge_docs` / 专题工具。
+## Decision Flow
 
-## 快速入口
+```
+→ Biome 相关类 → Biome（本档语料代码例逐字在档）
+→ 生成体系 → 代码面为主；数据包 worldgen JSON（data/<ns>/worldgen/）1.16 起才有，本版不存在
+→ 注册与生命周期 → mc-registry、01-registry.mdc
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`forge/1.15.2/knowledge/antipatterns/`
+## 本档口径（已核实）
+
+- `Biome` 类名在 concepts_registries:115 逐字在档。
+- 本档 docs 语料（40 页）无 worldgen 专页、无 primer——feature/生成器机制写前先 `get_doc_full` 核实。
+
+## 反模式
+
+- 把 1.16+ 的 worldgen 数据包 JSON 写进 1.15.2。
+- 凭记忆写 BiomeProvider/Feature 类链（本档无一手来源）。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 语料全文：`get_doc_full`（concepts_registries，version=1.15.2）；反模式库：`forge/1.15.2/knowledge/antipatterns/`。
