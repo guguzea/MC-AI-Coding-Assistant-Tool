@@ -458,18 +458,12 @@ export function fqcnFromSourceHint(fileHint?: string): string | undefined {
   return undefined;
 }
 
-export function isThinLoaderSummary(prev: Pick<LoaderApiSummary, "classes" | "fqcnIndex" | "classCount">): boolean {
-  const classes = prev.classes ?? [];
-  if (!classes.length) return true;
-  if (classes.some((c) => Array.isArray(c.methods) && c.methods.some((m) => typeof m === "string"))) {
-    return true;
-  }
-  const indexLen = (prev.fqcnIndex ?? []).length;
-  if (classes.length === 400 && indexLen > 400) return true;
-  if (typeof prev.classCount === "number" && prev.classCount > classes.length + 10) return true;
-  if (indexLen > 0 && classes.length < indexLen * 0.5) return true;
-  return false;
-}
+/**
+ * 判 thin 的实现已移到 store.ts（A-42：合并判据与 loadMergedSummaries 同源）。
+ * 这里只 re-export 保兼容（test-loader-api 从 extract 取用）；**不要**在 extract 重新实现
+ * —— store 被 query_loader_api 静态导入，而 extract 带 java-parser，禁止反向依赖把重模块拖进查询路径。
+ */
+export { isThinLoaderSummary } from "./store.js";
 
 export function extractCompilationUnit(javaText: string, fileHint?: string): LoaderClassRecord[] {
   let cst: CstNode;

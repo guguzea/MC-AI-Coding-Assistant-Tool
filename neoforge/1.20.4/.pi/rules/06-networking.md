@@ -4,7 +4,7 @@ description: 06 — 网络（NeoForge 1.20.4）
 
 # 06 — 网络（NeoForge 1.20.4）
 
-**本档不是 Forge SimpleChannel。** 本库 `search_neoforge_docs` 的 `networking/payload` 页为 `DOC_NOT_FOUND`；下列类名与签名以 **官方 NeoForge 1.20.4 API jar 反编译**为准（`mcp-server/data/loader-api-summaries/1.20.4-neoforge.json`，`query_loader_api` / `decompile-loader-apis.mjs`），**不因缺页降级为未核实**。
+**本档不是 Forge SimpleChannel。** 本库 `search_neoforge_docs` 的 `networking/payload` 页**可查**（A-43 活体复核 2026-09-19：`get_neoforge_doc_full --id=networking/payload --version=1.20.4` = `ok:true`；旧稿「`DOC_NOT_FOUND`」是过期前提，已作废）。下列类名与签名仍以 **官方 NeoForge 1.20.4 API jar 反编译**为准（`mcp-server/data/loader-api-summaries/1.20.4-neoforge.json`，`query_loader_api` / `decompile-loader-apis.mjs`）；文档页与 jar 不一致时以 jar 为准。
 
 ## 核实骨架（jar 反编译）
 

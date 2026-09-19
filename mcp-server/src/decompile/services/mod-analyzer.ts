@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 模组 jar 元数据分析（analyze_mod_jar / decompile_mod_jar 前置）。
  *
  * 读取本地 jar（zip central directory，零依赖）：

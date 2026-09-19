@@ -1,4 +1,4 @@
-﻿# 贡献指南
+# 贡献指南
 
 感谢你愿意为 **MC AI Coding Assistant Tool** 贡献力量。本文说明如何扩展规则、数据与 MCP Server。
 

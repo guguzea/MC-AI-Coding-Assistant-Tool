@@ -57,7 +57,8 @@ const OFFLINE = [
   ["analyze_build_log", ["--logText", "error: cannot find symbol Foo"]],
   ["analyze_log", ["--logText", "java.lang.NullPointerException", "--version", "1.20.1"]],
   ["check_dependencies", []],
-  ["validate_addon_manifest", ["--manifestJson", '{"format_version":2,"header":{"name":"t","uuid":"00000000-0000-0000-0000-000000000000","version":[1,0,0]},"modules":[]}']],
+  // 判级更正 2026-09-19：mev 必填 ⇒ CLI 冒烟夹具同步带上 min_engine_version（否则该调用会多一条 mev error）
+  ["validate_addon_manifest", ["--manifestJson", '{"format_version":2,"header":{"name":"t","uuid":"00000000-0000-0000-0000-000000000000","version":[1,0,0],"min_engine_version":[1,21,0]},"modules":[]}']],
   ["validate_bp_json", ["--kind", "entity", "--json", '{"minecraft:entity":{"format_version":"1.10.0","components":{}}}']],
   ["generate_addon_manifest", ["--packName", "Test", "--packType", "data"]],
   ["generate_bp_entity", ["--identifier", "demo:widget"]],

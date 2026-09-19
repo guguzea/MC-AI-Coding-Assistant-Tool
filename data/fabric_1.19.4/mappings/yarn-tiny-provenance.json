@@ -1,0 +1,32 @@
+{
+  "repairedAt": "2026-09-19T02:38:12.411Z",
+  "reason": "上游 v1 导出件丢 named（见 temp/audit/sweep81/UNFIXED-REPORT-VERDICT.md §7）",
+  "agent": "temp/audit/sweep81/probes/fix-yarn-named.mjs",
+  "upstreamV1": {
+    "file": "upstream/yarn-1.19.4+build.2-tiny.gz.v1-upstream.gz.bak",
+    "sha256": "a648b24bb2a0111ce7a8de2ef80ca6555f5f0a1ece4290c9e64995bbc4522419",
+    "note": "与上游 maven 同 artifact 逐字节相同（2026-09-19 实测）"
+  },
+  "upstreamV2Used": "https://maven.fabricmc.net/net/fabricmc/yarn/1.19.4+build.2/yarn-1.19.4+build.2-v2.jar",
+  "repairedSha256": "8c31daad4e004e139199d8abe597b99a03efa338c4255da9074065b95554678b",
+  "stats": {
+    "classes": 7326,
+    "classFixed": 0,
+    "members": 72274,
+    "memberFixed": 8074,
+    "missClassSample": [
+      "net/minecraft/class_2824$1",
+      "net/minecraft/class_156$1",
+      "net/minecraft/class_156$5"
+    ],
+    "missMemberSample": [
+      "FIELD net/minecraft/class_155.field_29705:F",
+      "FIELD net/minecraft/class_155.field_29706:F",
+      "FIELD net/minecraft/class_155.field_29707:F"
+    ],
+    "stillSelfEqUnmatched": 5992,
+    "conflict": [
+      "METHO net/minecraft/class_8016$class_8018.comp_1189: v1=comp_1188 v2=component"
+    ]
+  }
+}

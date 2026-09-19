@@ -84,9 +84,9 @@ IF 用户要对照 Forge / NeoForge（非 Fabric）
 ### Decision: 注册顺序（依赖关系）
 
 ```
-IF 一个方块有对应的 ItemBlock
-  → 必须先注册 Block，再注册 ItemBlock
-  → ItemBlock 的 registry name 必须与 Block 完全相同
+IF 一个方块有对应的 BlockItem
+  → 必须先注册 Block，再注册 BlockItem
+  → BlockItem 的 registry name 必须与 Block 完全相同
 
 IF 一个方块有 BlockEntity
   → 必须先注册 Block，再注册 BlockEntityType

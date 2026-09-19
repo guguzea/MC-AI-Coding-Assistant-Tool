@@ -22,8 +22,8 @@ import {
 import { dirname, join, relative, sep } from "path";
 import { tmpdir } from "os";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
-import { resolveDataDir } from "../utils/path.js";
-import { DirLockBusyError } from "../utils/dir-lock.js";
+import { resolveDataDir, resolveCacheRoot } from "../utils/path.js";
+import { DirLockBusyError, dirLockPathOf } from "../utils/dir-lock.js";
 import { acquireUpdateApplyLock } from "./apply-lock.js";
 import {
   assertCreatableDir,
@@ -211,6 +211,26 @@ function recoverPartialSwap(dataDir: string): void {
   }
 }
 
+/**
+ * A-40（2026-09-19 原审查报告裁定）：**取锁前**失败路径的尽力自愈。
+ * 下载失败 / SHA 缺失 / 校验和不匹配 / 清单不符都是常见重试场景——不能因为「这次没拉到包」
+ * 就把用户永远卡在 data/ 缺失的半交换态。语义边界（**不抢锁、不等待**）：
+ *   · 仅当 update-apply 锁目录不存在（当前无人持锁）才动盘；锁目录存在（活锁或崩溃残锁）
+ *     一律跳过——活锁由持有者在取锁成功后自愈（主路径 :450-452），残锁由下次主路径的
+ *     陈旧抢占（takeOverStaleLock）接管后再自愈。
+ *   · 不能走 `acquireUpdateApplyLock(小 timeout)`：dir-lock 的 timeoutMs 同时是**陈旧抢占
+ *     阈值**（`age <= timeoutMs` 视为存活），传 1ms 会把别的进程正在持有的锁当成陈旧抢走。
+ *   · dryRun 不调用本函数（与 :422 的早退语义一致：不代用户改盘）。
+ */
+function tryRecoverPartialSwap(dataDir: string): void {
+  try {
+    if (existsSync(dirLockPathOf(resolveCacheRoot(), "update-apply"))) return; // 有人持锁/残锁：交给主路径
+    recoverPartialSwap(dataDir);
+  } catch {
+    /* 与并发进程的极小窗口内 rename/rm 竞争：失败即跳过，不影响调用方语义 */
+  }
+}
+
 /** 把 nextDir rename 成活 dataDir；失败则尽量把 prev 换回。 */
 function swapInDataDir(nextDir: string, dataDir: string): void {
   const prevDir = siblingName(dataDir, ".prev");
@@ -347,6 +367,9 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
   let releaseLock: (() => void) | undefined;
 
   try {
+    // A-40：**取锁前的失败路径**（下载/SHA/校验和/清单）也要尽力自愈半交换态；详见 tryRecoverPartialSwap。
+    // 放在 allowlist 检查之后（写被禁时不越权动盘）、下载之前（覆盖所有早退分支）。
+    if (!opts.dryRun) tryRecoverPartialSwap(dataDir);
     if (!opts.localZipPath) {
       const dl = await downloadToFile(opts.zip.browser_download_url, zipPath, {
         fetchImpl: opts.fetchImpl,

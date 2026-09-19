@@ -1,0 +1,32 @@
+{
+  "repairedAt": "2026-09-19T02:37:57.177Z",
+  "reason": "上游 v1 导出件丢 named（见 temp/audit/sweep81/UNFIXED-REPORT-VERDICT.md §7）",
+  "agent": "temp/audit/sweep81/probes/fix-yarn-named.mjs",
+  "upstreamV1": {
+    "file": "upstream/yarn-1.14.4+build.18-tiny.gz.v1-upstream.gz.bak",
+    "sha256": "a66232f67757692d5c199e4aef0091423adaab40d3fc657e0a96c5288dad22c0",
+    "note": "与上游 maven 同 artifact 逐字节相同（2026-09-19 实测）"
+  },
+  "upstreamV2Used": "https://maven.fabricmc.net/net/fabricmc/yarn/1.14.4+build.18/yarn-1.14.4+build.18-v2.jar",
+  "repairedSha256": "5c825e36f74901cb367a35241f5efdd5346bdd8909b27c57eda5ba1e44f45489",
+  "stats": {
+    "classes": 4976,
+    "classFixed": 1,
+    "members": 40178,
+    "memberFixed": 3719,
+    "missClassSample": [
+      "net/minecraft/class_3551$1",
+      "net/minecraft/class_3551$2",
+      "net/minecraft/class_3579$1"
+    ],
+    "missMemberSample": [
+      "FIELD net/minecraft/class_189.field_1253:[Lnet/minecraft/class_189;",
+      "FIELD net/minecraft/class_3538$1.field_15748:Lnet/minecraft/class_3538;",
+      "FIELD net/minecraft/class_3540.field_15760:D"
+    ],
+    "stillSelfEqUnmatched": 9979,
+    "conflict": [
+      "CLASS net/minecraft/class_353$class_354: v1=net/minecraft/client/gui/widget/ButtonListWidget$class_354 v2=net/minecraft/client/gui/widget/ButtonListWidget$ButtonEntry"
+    ]
+  }
+}

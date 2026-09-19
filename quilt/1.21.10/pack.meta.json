@@ -5,7 +5,7 @@
   "minecraftVersion": "1.21.10",
   "overlay": "fabric/1.21.10",
   "gaps": {
-    "quilt-docs": "data/quilt_1.21.10/ 无 quilt-docs 语料树（本仓库缺档，非漏抓，禁止补抓或克隆邻版树；本版无已发布 QSL/QFAPI 构件之说属上游断言、本仓未联网复核，不得写成上游没有该 API）。实测两态（2026-09-13 逐档实跑：MC_SKILL_DATA=data node mcp-server/dist/cli.js search_docs --platform=quilt --version=1.21.10 --query=…）：① query=QSL registry key → ok:true + fallback:quilt + resolvedVersion:1.21.11 + semantic:true + total:3（同线已建档语料，不是本版专属正文；载荷无 source_version 键，该串只出现在 warning 文本内）；② query=registry → ok:true + fallback:fabric + sourcePlatform:fabric + resolvedVersion:1.21.10 + semantic:true + total:15（命中同版 Fabric 正文，不能当 QSL 证据）。两条路径均不返回 PLATFORM_DATA_MISSING，也不返回 VERSION_NOT_FOUND（后者只属于本仓完全无语料的空洞档，如 1.21.2：ok:false + fallback:null 且载荷无 total）。QSL 签名一律 query_loader_api（先 ingest_loader_api）"
+    "quilt-docs": "data/quilt_1.21.10/ 无 quilt-docs 语料树（本仓库缺档，非漏抓，禁止补抓或克隆邻版树；本版无已发布 QSL/QFAPI 构件之说属上游断言、本仓未联网复核，不得写成上游没有该 API）。实测两态（2026-09-13 逐档实跑：MC_SKILL_DATA=data node mcp-server/dist/cli.js search_docs --platform=quilt --version=1.21.10 --query=…）：① query=QSL registry key → ok:true + fallback:quilt + resolvedVersion:1.21.11 + semantic:true + total:3（同线已建档语料，不是本版专属正文；载荷带 source_version 顶层键（A-43 更正 2026-09-19：活体 search_docs --platform quilt --version 1.21.4 --query qsl 的 fallback=quilt 载荷含顶层 source_version=1.21.1；原写「无该键」系误读；同档规则 06-networking.mdc 已按实测记为「source_version 与 resolvedVersion 同为顶层键」））；② query=registry → ok:true + fallback:fabric + sourcePlatform:fabric + resolvedVersion:1.21.10 + semantic:true + total:15（命中同版 Fabric 正文，不能当 QSL 证据）。两条路径均不返回 PLATFORM_DATA_MISSING，也不返回 VERSION_NOT_FOUND（后者只属于本仓完全无语料的空洞档，如 1.21.2：ok:false + fallback:null 且载荷无 total）。QSL 签名一律 query_loader_api（先 ingest_loader_api）"
   },
   "scaffold": {
     "mode": "reference",

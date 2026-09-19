@@ -11,9 +11,9 @@ base { archivesName = 'examplemod' }
 repositories { maven { url = 'https://maven.quiltmc.org/repository/release' } }
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.minecraft_version}+build.1:v2"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     // quilt-loader 取 maven.quiltmc.org/repository/release/org/quiltmc/quilt-loader/maven-metadata.xml
-    //   最新 = 0.31.0-beta.3（lastUpdated 20260830210050，核对日期 2026-09-02）
-    modImplementation "org.quiltmc:quilt-loader:0.31.0-beta.3"
+    //   最新 = 0.31.0-beta.4（lastUpdated 20260904212919，核对日期 2026-09-19）
+    modImplementation "org.quiltmc:quilt-loader:0.31.0-beta.4"
     // QSL：按模块引入 org.quiltmc.qsl.*，不要把 fabric-api 整包当 QSL
 }

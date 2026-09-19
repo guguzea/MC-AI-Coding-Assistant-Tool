@@ -7,7 +7,7 @@
 本目录是**跨平台通用知识库**，与 `AGENTS.md`、`.cursor/rules/` 的分工如下：
 
 ```
-neoforge/1.20.4/
+neoforge/<版本>/（1.20.4 … 26.1；本 README 为平台级共用，不绑定单版）
 ├── .cursor/rules/00-10      ← 技术领域正面教程（版本专属）
 ├── AGENTS.md / CLAUDE.md   ← AI 入口总纲
 └── knowledge/              ← 跨平台反模式知识库（单一来源）

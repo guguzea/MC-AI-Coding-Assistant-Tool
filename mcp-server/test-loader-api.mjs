@@ -496,4 +496,85 @@ void readFileSync;
   console.log("loader-api INVALID_INPUT + sidecar schema: ok");
 }
 
+// ── A-42（2026-09-19，原审查 A1）：overlay 与官方**按类合并**（不再整档覆盖）────────────
+{
+  const store = await import("./dist/loader-api/store.js");
+  const { isThinLoaderSummary } = await import("./dist/loader-api/extract.js");
+  const tmpCache = mkdtempSync(join(tmpdir(), "mc-loader-merge-"));
+  const prevCache = process.env.MC_SKILL_CACHE;
+  try {
+    process.env.MC_SKILL_CACHE = tmpCache;
+    store.invalidateMergedSummariesCache();
+    const officialPath = join(root, "data", "loader-api-summaries", "1.21.1-neoforge.json");
+    const official = JSON.parse(readFileSync(officialPath, "utf8"));
+    const officialFqcns = (official.classes ?? []).map((c) => c.fqcn);
+    assert.ok(officialFqcns.length > 0, "夹具：官方 1.21.1-neoforge 必须含类");
+    const probeFqcn = "com.example.userjar.OnlyInOverlay";
+    const mkOverlay = (classes) => ({
+      platform: "neoforge",
+      minecraftVersion: "1.21.1",
+      mappingsVersion: "user-mappings",
+      source: "user_jar",
+      classes,
+      fqcnIndex: classes.map((c) => c.fqcn),
+      classCount: classes.length,
+    });
+    const ovDir = store.overlaySummariesDir();
+    assert.ok(ovDir.startsWith(tmpCache), "夹具：overlay 目录必须落在临时 cache 根");
+    mkdirSync(ovDir, { recursive: true });
+    const ovFile = join(ovDir, "1.21.1-neoforge.json");
+    // ① rich overlay（只含用户 1 个类）：官方类**必须仍在**（旧行为=整档顶掉，用户查官方类 found:false）
+    writeFileSync(
+      ovFile,
+      JSON.stringify(
+        mkOverlay([
+          {
+            fqcn: probeFqcn,
+            simpleName: "OnlyInOverlay",
+            apiStatusInternal: false,
+            environment: false,
+            methods: [{ name: "f", returnType: "void", parameters: [], modifiers: [], signature: "void f()" }],
+          },
+        ]),
+      ),
+      "utf8",
+    );
+    store.invalidateMergedSummariesCache();
+    const merged = store.loadMergedSummaries().get("1.21.1-neoforge");
+    assert.ok(merged, "A-42：合并后条目必须在");
+    const mergedFqcns = new Set((merged.summary.classes ?? []).map((c) => c.fqcn));
+    assert.ok(mergedFqcns.has(probeFqcn), "A-42：overlay 类必须并入");
+    const lost = officialFqcns.filter((f) => !mergedFqcns.has(f));
+    assert.deepEqual(lost, [], `A-42：官方类不得因 overlay 消失（丢了 ${lost.length} 个，例如 ${lost[0]}）`);
+    assert.equal(
+      merged.summary.classCount,
+      Math.max(official.classCount ?? 0, merged.summary.classes.length),
+      "A-42：classCount 取 max(官方, 合并后)",
+    );
+    assert.match(String(merged.summary.mergeNote ?? ""), /A-42 按类合并/, "A-42：必须留 mergeNote 痕迹");
+    assert.match(String(merged.summary.mergeNote ?? ""), /thin=false/, "A-42：rich overlay 的 thin 应为 false");
+    assert.ok(merged.overlay === true, "A-42：overlay 标记保持 true");
+    // ② thin overlay（无类）：官方计数不得被收缩，仍保留官方类
+    writeFileSync(ovFile, JSON.stringify(mkOverlay([])), "utf8");
+    store.invalidateMergedSummariesCache();
+    assert.equal(isThinLoaderSummary(mkOverlay([])), true, "夹具：空 overlay 必须判 thin");
+    const thinMerged = store.loadMergedSummaries().get("1.21.1-neoforge");
+    assert.equal(
+      thinMerged.summary.classCount,
+      official.classCount ?? 0,
+      "A-42：thin overlay 不得收缩官方 classCount",
+    );
+    assert.match(String(thinMerged.summary.mergeNote ?? ""), /thin=true/, "A-42：thin 判据必须留痕");
+    // ③ 查询面活体：overlay 在场时官方类仍可查（XpOrbTargetingEvent 是官方摘要里的类）
+    const hit = queryLoaderApi({ platform: "neoforge", minecraftVersion: "1.21.1", className: "XpOrbTargetingEvent" });
+    assert.equal(hit.found, true, `A-42 活体：overlay 在场时官方类仍须可查 → ${hit.code}`);
+    console.log("A-42 overlay×官方 按类合并（rich/thin/查询面）: ok");
+  } finally {
+    if (prevCache === undefined) delete process.env.MC_SKILL_CACHE;
+    else process.env.MC_SKILL_CACHE = prevCache;
+    store.invalidateMergedSummariesCache();
+    rmSync(tmpCache, { recursive: true, force: true });
+  }
+}
+
 console.log("test-loader-api: all passed");

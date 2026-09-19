@@ -2553,9 +2553,10 @@ async function testFivePlatformRouting() {
   }));
   assert.equal(caseInsensitiveDup.ok, false, "UUID 大小写不同应视为同一个（按规范化后比较）");
   // 正对照：三段互异必须通过（防「一红到底」式假判别力）
+  // （判级更正 2026-09-19：mev 已是必填 ⇒ 正对照夹具同步带上 min_engine_version）
   const distinctUuids = validateAddonManifest(JSON.stringify({
     format_version: 2,
-    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0], min_engine_version: [1, 21, 0] },
     modules: [
       { type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0] },
       { type: "data", uuid: "22222222-2222-2222-2222-222222222222", version: [1, 0, 0] },
@@ -2569,6 +2570,56 @@ async function testFivePlatformRouting() {
   }));
   assert.equal(strVer.ok, false);
   assert.ok(strVer.errors.some((e) => /modules\[0\]\.version/.test(e)));
+  // 判级更正 2026-09-19（诚实留痕）：本块上一版把「缺 mev」钉成「不判错 + warning」——那是基于
+  // 官方页**抓取不全的摘录**（只截到示例段）得出的误判。补读全文后官方逐字：
+  //   「min_engine_version … **This is a required field for resource and behavior packs**」
+  // ⇒ 缺 mev 是 error（上轮裁定作废）；正/反双向钉在下方，fixtures 同步见 distinctUuids / manifest(caps) / assert-cli-full。
+  const noMev = validateAddonManifest(JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
+    modules: [{ type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0] }],
+  }));
+  assert.equal(noMev.ok, false, `缺 mev 必须判错（官方逐字 required）→ ${JSON.stringify(noMev.errors)}`);
+  assert.ok(
+    noMev.errors.some((e) => /min_engine_version/.test(e)),
+    `缺 mev 的 error 必须点名字段 → ${JSON.stringify(noMev.errors)}`,
+  );
+  const withMev = validateAddonManifest(JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0], min_engine_version: [1, 21, 0] },
+    modules: [{ type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0] }],
+  }));
+  assert.equal(withMev.ok, true, `声明 mev 后不得再因它判错 → ${JSON.stringify(withMev.errors)}`);
+  assert.ok(
+    !withMev.errors.some((e) => /min_engine_version/.test(e)),
+    `声明了 mev 不得再报该 error（防一红到底）→ ${JSON.stringify(withMev.errors)}`,
+  );
+  // 原审查 S3（modules[].language，2026-09-19 裁定）：官方页逐字「only present if type is script … The only
+  // supported value is javascript」⇒ script 模块声明了 language 就必须是 "javascript"；非 script 出现给 warning。
+  const langOk = validateAddonManifest(JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0], min_engine_version: [1, 21, 0] },
+    modules: [{ type: "script", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0], language: "javascript", entry: "scripts/main.js" }],
+  }));
+  assert.ok(!langOk.errors.some((e) => /language/.test(e)), `language=javascript 不得报错 → ${JSON.stringify(langOk.errors)}`);
+  const langBad = validateAddonManifest(JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0], min_engine_version: [1, 21, 0] },
+    modules: [{ type: "script", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0], language: "typescript" }],
+  }));
+  assert.ok(
+    langBad.errors.some((e) => /language/.test(e)),
+    `language=typescript 必须判错（官方唯一值 javascript）→ ${JSON.stringify(langBad.errors)}`,
+  );
+  const langMisplaced = validateAddonManifest(JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0], min_engine_version: [1, 21, 0] },
+    modules: [{ type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0], language: "javascript" }],
+  }));
+  assert.ok(
+    langMisplaced.warnings.some((w) => /language/.test(w)),
+    `非 script 模块带 language 应给 warning → ${JSON.stringify(langMisplaced.warnings)}`,
+  );
 
   // S4：capabilities 白名单必须跟着本仓缓存的官方页走，不能各自漂移
   {
@@ -2592,7 +2643,8 @@ async function testFivePlatformRouting() {
 
     const manifest = (caps) => JSON.stringify({
       format_version: 2,
-      header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
+      // 判级更正 2026-09-19：mev 必填 ⇒ capability 正/反夹具同步带上
+      header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0], min_engine_version: [1, 21, 0] },
       modules: [{ type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0] }],
       capabilities: caps,
     });

@@ -1,4 +1,4 @@
-﻿# MC AI Coding Assistant — 根总纲
+# MC AI Coding Assistant — 根总纲
 
 你是一个专门协助 Minecraft 模组开发的 AI 编程助手。
 

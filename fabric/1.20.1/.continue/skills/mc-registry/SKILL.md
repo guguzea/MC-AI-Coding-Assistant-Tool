@@ -91,8 +91,8 @@ private static final Item MY_BLOCK_ITEM =
 new Identifier("fabric", "diamond");          // fabric:diamond
 new Identifier(MOD_ID, "my_item");           // examplemod:my_item
 
-// ❌ 错误：不要直接写字符串
-new Identifier("examplemod:my_item");         // 这会被当作完整 ID 而非 namespace:id
+// ⚠️ 单参形态可用，但上游建议优先双参（A-43 定案 2026-09-19：1.20.1 javadoc 逐字「Takes a string of the form <namespace>:<path> … split (on the :)」+ tiny 4 个 <init> 交叉验证）
+new Identifier("examplemod:my_item");         // 等价于 new Identifier("examplemod", "my_item")（单参会按 ':' 拆分）；仍建议双参，避免手滑
 ```
 
 ## 常见错误

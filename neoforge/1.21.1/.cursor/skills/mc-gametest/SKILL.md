@@ -9,7 +9,7 @@ mappings: mojmap
 
 # mc-gametest（NeoForge 1.21.1）
 
-> 本档为**主档 neoforge 根下的子档**；差异以本档 `search_neoforge_docs`（platform=neoforge, version=1.21.1）为准。**1.21.1 树（data/neoforge_1.21.1）没有 GameTest 独立文档页**：以下为机制路线 + Forge 1.20.1 语义基线（页 id `misc_gametest`），NeoForge 侧类/事件/属性名一律**先复核**，核不到不输出签名。禁止从扁平 neoforge/.agents/skills 或邻档复制旧 API。
+> 本档为**主档 neoforge 根下的子档**；差异以本档 `search_neoforge_docs`（platform=neoforge, version=1.21.1）为准。**GameTest 页在工具服务面可查**（A-43 活体复核 2026-09-19：`get_neoforge_doc_full --id=gametest --version=1.21.1` = `ok:true`；旧稿「没有独立文档页」是按 data 树文件名推断、已被活体推翻）。以下为机制路线 + Forge 1.20.1 语义基线（页 id `misc_gametest`），NeoForge 侧类/事件/属性名一律**先复核**，核不到不输出签名。禁止从扁平 neoforge/.agents/skills 或邻档复制旧 API。
 
 ## 入口（机制路线 + Forge 语义基线）
 

@@ -24,8 +24,8 @@
    - `mod_version` - 版本号
    - `mod_group_id` - Java 包名
 3. 重命名 Java 包和类
-4. 运行 `./gradlew setupDecompWorkspace` 初始化
-5. 运行 `./gradlew idea` 或 `./gradlew eclipse` 生成 IDE 项目
+4. 运行 `./gradlew build` 初始化（本档用 **ForgeGradle 3.+**，`setupDecompWorkspace` 是 FG2 任务，本档不存在）
+5. 运行 `./gradlew genEclipseRuns` 或 `./gradlew genIntellijRuns` 生成 IDE 运行配置（FG3 形态；`idea`/`eclipse` 任务属 FG2）
 
 ## 版本信息
 

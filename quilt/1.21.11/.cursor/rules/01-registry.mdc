@@ -14,6 +14,6 @@
 
 ```
 → 简单 Item/Block → Vanilla Registry.register（ModInitializer#onInitialize(ModContainer)）
-→ QSL 专属 → 只使用 org.quiltmc.qsl.* 已核实 API；不清楚就拒绝臆造
+→ QSL 专属 → **先按 00-project-setup / AGENTS 给工程补 QSL 模块依赖**（本档 scaffold 依赖块没有 QSL 模块，直接写 QSL 编译不过；A-43 补）→ 再只使用 org.quiltmc.qsl.* 已核实 API；不清楚就拒绝臆造
 → 禁止：把 Fabric Registry 教程改名交差
 ```

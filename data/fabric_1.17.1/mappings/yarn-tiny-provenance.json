@@ -1,0 +1,30 @@
+{
+  "repairedAt": "2026-09-19T02:38:03.970Z",
+  "reason": "上游 v1 导出件丢 named（见 temp/audit/sweep81/UNFIXED-REPORT-VERDICT.md §7）",
+  "agent": "temp/audit/sweep81/probes/fix-yarn-named.mjs",
+  "upstreamV1": {
+    "file": "upstream/yarn-1.17.1+build.65-tiny.gz.v1-upstream.gz.bak",
+    "sha256": "ce96ea01eb8e5a9cf017e9d412241399fccb9c3f876deb8640aa5d01d7e7d270",
+    "note": "与上游 maven 同 artifact 逐字节相同（2026-09-19 实测）"
+  },
+  "upstreamV2Used": "https://maven.fabricmc.net/net/fabricmc/yarn/1.17.1+build.65/yarn-1.17.1+build.65-v2.jar",
+  "repairedSha256": "1e7d831ca37690ec29bd62d248fe7bb18c6f289db29c20927fc364c3bdf4c2a6",
+  "stats": {
+    "classes": 6107,
+    "classFixed": 0,
+    "members": 55569,
+    "memberFixed": 5761,
+    "missClassSample": [
+      "net/minecraft/class_3161$1",
+      "net/minecraft/class_3169$1",
+      "net/minecraft/class_4580$1"
+    ],
+    "missMemberSample": [
+      "FIELD net/minecraft/class_3161$1.field_13787:Ljava/lang/String;",
+      "FIELD net/minecraft/class_3169$1.field_13802:Ljava/lang/String;",
+      "FIELD net/minecraft/class_4580$1.field_20859:Ljava/lang/String;"
+    ],
+    "stillSelfEqUnmatched": 7258,
+    "conflict": []
+  }
+}

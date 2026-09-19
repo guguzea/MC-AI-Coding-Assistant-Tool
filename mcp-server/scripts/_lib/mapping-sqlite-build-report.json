@@ -7,7 +7,7 @@
     "methodCount": 21982,
     "classCount": 4976,
     "ok": true,
-    "durationMs": 460
+    "durationMs": 485
   },
   {
     "version": "1.16.5",
@@ -17,7 +17,7 @@
     "methodCount": 27094,
     "classCount": 5445,
     "ok": true,
-    "durationMs": 502
+    "durationMs": 514
   },
   {
     "version": "1.17.1",
@@ -27,7 +27,7 @@
     "methodCount": 28016,
     "classCount": 6107,
     "ok": true,
-    "durationMs": 536
+    "durationMs": 525
   },
   {
     "version": "1.18.2",
@@ -37,7 +37,7 @@
     "methodCount": 29716,
     "classCount": 6391,
     "ok": true,
-    "durationMs": 590
+    "durationMs": 543
   },
   {
     "version": "1.19.4",
@@ -47,7 +47,7 @@
     "methodCount": 39820,
     "classCount": 7326,
     "ok": true,
-    "durationMs": 672
+    "durationMs": 665
   },
   {
     "version": "1.20.1",
@@ -57,7 +57,7 @@
     "methodCount": 40911,
     "classCount": 7431,
     "ok": true,
-    "durationMs": 722
+    "durationMs": 706
   },
   {
     "version": "1.20.4",
@@ -67,7 +67,7 @@
     "methodCount": 43440,
     "classCount": 7782,
     "ok": true,
-    "durationMs": 765
+    "durationMs": 675
   },
   {
     "version": "1.21.1",
@@ -77,7 +77,7 @@
     "methodCount": 41282,
     "classCount": 8262,
     "ok": true,
-    "durationMs": 791
+    "durationMs": 707
   },
   {
     "version": "1.21.10",
@@ -87,7 +87,7 @@
     "methodCount": 48591,
     "classCount": 9953,
     "ok": true,
-    "durationMs": 952
+    "durationMs": 840
   },
   {
     "version": "1.21.11",
@@ -97,7 +97,7 @@
     "methodCount": 49730,
     "classCount": 10274,
     "ok": true,
-    "durationMs": 986
+    "durationMs": 823
   },
   {
     "version": "1.21.3",
@@ -107,7 +107,7 @@
     "methodCount": 43811,
     "classCount": 8719,
     "ok": true,
-    "durationMs": 863
+    "durationMs": 755
   },
   {
     "version": "1.21.4",
@@ -117,7 +117,7 @@
     "methodCount": 44336,
     "classCount": 8850,
     "ok": true,
-    "durationMs": 850
+    "durationMs": 782
   },
   {
     "version": "1.21.8",
@@ -127,7 +127,7 @@
     "methodCount": 46592,
     "classCount": 9469,
     "ok": true,
-    "durationMs": 919
+    "durationMs": 786
   },
   {
     "version": "1.10.2",
@@ -137,7 +137,7 @@
     "methodCount": 18571,
     "classCount": 2949,
     "ok": true,
-    "durationMs": 271
+    "durationMs": 296
   },
   {
     "version": "1.11.2",
@@ -147,7 +147,7 @@
     "methodCount": 19334,
     "classCount": 3091,
     "ok": true,
-    "durationMs": 264
+    "durationMs": 412
   },
   {
     "version": "1.12.2",
@@ -157,7 +157,7 @@
     "methodCount": 20817,
     "classCount": 3313,
     "ok": true,
-    "durationMs": 367
+    "durationMs": 393
   },
   {
     "version": "1.13.2",
@@ -167,7 +167,7 @@
     "methodCount": 26093,
     "classCount": 3993,
     "ok": true,
-    "durationMs": 470
+    "durationMs": 425
   },
   {
     "version": "1.14.4",
@@ -177,7 +177,7 @@
     "methodCount": 11445,
     "classCount": 0,
     "ok": true,
-    "durationMs": 108
+    "durationMs": 193
   },
   {
     "version": "1.15.2",
@@ -187,7 +187,7 @@
     "methodCount": 10598,
     "classCount": 0,
     "ok": true,
-    "durationMs": 88
+    "durationMs": 198
   },
   {
     "version": "1.7.10",
@@ -197,7 +197,7 @@
     "methodCount": 13263,
     "classCount": 1815,
     "ok": true,
-    "durationMs": 193
+    "durationMs": 229
   },
   {
     "version": "1.8.9",
@@ -207,7 +207,7 @@
     "methodCount": 16426,
     "classCount": 2507,
     "ok": true,
-    "durationMs": 214
+    "durationMs": 267
   },
   {
     "version": "1.9.4",
@@ -217,6 +217,6 @@
     "methodCount": 18228,
     "classCount": 2908,
     "ok": true,
-    "durationMs": 247
+    "durationMs": 305
   }
 ]

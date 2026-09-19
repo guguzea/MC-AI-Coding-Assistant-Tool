@@ -18,7 +18,7 @@ communityDocId: authored/lib-moonlight
 - 能力：**动态注册**（运行时注册/动态资源，减少静态样板）、**BlockSetAPI**（把新方块接入原版方块族，楼梯/台阶/墙/栅栏/门等成套变体免手写）、**村民 AI**（给村民职业加自定义 AI 行为/任务）、**流体系统**（流体渲染与行为封装）
 - 生态：MehVahdJukaar 出品，Supplementaries、Sawmill 等模组依赖，生态成熟（3690 万下载）
 - 版本 / loader 边界（release 口径）：整体窗口 **1.16.5-1.21.1**（1.16.5 / 1.18 只有 Forge 构建，Fabric 有 release 的最低实测档是 1.19.2）
-- **Forge 线 release 止于 1.20.1**；Fabric / NeoForge release 止于 **1.21.1** ⇒ **硬上限 1.21.1，1.21.4 / 1.21.10 / 1.21.11 零构建**
+- **Forge 线 release 至少到 1.20.4**（A-43 更正 2026-09-19：原写「止于 1.20.1」与仓内 manifest 实证矛盾——`mcp-server/data/lib-manifests/all.json` 含 `moonlight-1.20.4-2.9.9-forge.jar`）；Fabric / NeoForge release 止于 **1.21.1** ⇒ 这两线 **1.21.4 / 1.21.10 / 1.21.11 零构建**（Forge 完整上界以 manifest 复核为准）
 - **26.x 不是「无构建」，而是只有 beta**：`26.1.2-4.0.0 / 4.0.1 / 4.0.2`（**beta**，2026-09-07，Fabric+Neo 两路，无 Forge）。未 release ⇒ 不并入 mcVersions，也不按稳定支持写进兼容表
 - 依据：Modrinth 实读 2026-09-13（逐版 `game_versions` + `loaders` 查询）
 

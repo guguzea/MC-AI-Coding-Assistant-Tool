@@ -125,7 +125,8 @@ private final ContainerData dataSlots = new ContainerData() {
 };
 
 // In Menu constructor
-super(menuType, windowId, inventory, extraData, dataSlots);
+super(MY_MENU_TYPE.get(), windowId); // A-43：AbstractContainerMenu 只有 (MenuType, int) 两个构造参数（原 5 参示例编译不过）
+this.addDataSlots(dataSlots); // A-43：不接线则客户端收不到同步（原版承诺自动同步但没接线）
 
 // Set from server
 menu.dataSlots.set(0, newValue); // Triggers sync to client automatically

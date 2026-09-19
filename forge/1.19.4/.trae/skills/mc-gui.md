@@ -32,7 +32,11 @@ public static final DeferredRegister<MenuType<?>> MENUS =
 
 public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
     MENUS.register("my_menu",
-        () -> new MenuType<>(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)
+        // A-43（2026-09-19 更正）：原行 `new MenuType<>(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)` 与本文件
+        // 的 3 参（extraData）构造器**不配对**——vanilla 供应器只接 (int windowId, Inventory inv) 两参，照抄编译不过。
+        // 3 参路径改用 Forge 工厂（形态与同仓 forge/1.18.2 档实测写法一致；签名 TODO(未核实)：
+        // 先 query_loader_api 核 net.minecraftforge.common.extensions.IForgeMenuType 再落地，禁止凭记忆补）。
+        () -> IForgeMenuType.create(MyMenu::new)
     );
 
 // 在 mod 构造函数中
@@ -45,8 +49,9 @@ MENUS.register(modEventBus);
 public class MyMenu extends AbstractContainerMenu {
     private final SimpleContainerData dataSlots;
 
-    // 服务端构造函数（3 参数：通过 NetworkHooks.openScreen 调用）
-    public MyMenu(int windowId, Inventory inv, Player player) {
+    // 服务端构造函数（3 参数：通过 NetworkHooks.openScreen 调用；第 3 参是 extraData buf——
+    // 与上方 IForgeMenuType.create 的 IContainerFactory(windowId, inv, buf) 配对，A-43 更正）
+    public MyMenu(int windowId, Inventory inv, FriendlyByteBuf extraData) {
         super(MY_MENU.get(), windowId);
         // 添加槽位（示例：3 行 9 列容器 = 27 格，索引 0-26）
         for (int row = 0; row < 3; row++) {

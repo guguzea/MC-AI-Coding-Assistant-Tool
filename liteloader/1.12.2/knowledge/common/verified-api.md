@@ -30,3 +30,5 @@
 | `com.mumfrey.liteloader.PluginChannelListener` | extends `LiteMod` + `CommonPluginChannelListener`；`void onCustomPayload(String channel, PacketBuffer data)` |
 
 1.10.2 / 1.8.9 的 `HUDRenderListener` 方法名与 1.12.2 相同（已打开对应分支）。其它接口仍须打开该分支源码，禁止把本表当全版本百科。
+
+`getName()` 归属复议（A-43，2026-09-19 **登记**）：本表按分支实测记 **`Listener#getName()`**；`LiteMod` 实现类对它的覆写属**继承覆写**（`LiteMod` 系继承 `Listener` 线），与 scaffold `LiteModExample implements LiteMod, OutboundChatListener` 的 `@Override getName()` 不矛盾。上游 source jar 未全开（UNVERIFIABLE 面）——如后续打开更多分支再扩表；本条为**登记项，非缺陷**。

@@ -14,6 +14,8 @@ mappings: yarn
 
 Fabric 没有 NeoForge `AttachmentType` 注册表或 `entity.getData`。用 `fabric-attachment-api-v1`（含在 `fabric-api`）：
 
+> ⚠️ **FQCN / 模块 id 未核实（A-43 复议 2026-09-19）**：本档 `knowledge/common/verified-api-1.21.10.md:25` 明文——该页只写简名、示例走 `@[code](@/reference/…)` include（仓内无 `reference/`），`net.fabricmc.fabric.api.attachment.v1.*` FQCN 与 `fabric-attachment-api-v1` 模块 id **在本档未核实、禁止当已核实依赖坐标输出**。下列 import 仅为**形态示意**（包名为真实 Fabric 包名，但未在本档核实）：先 `search_fabric_docs(version=1.21.10)` 或官方文档核对再落地。
+
 ```java
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;

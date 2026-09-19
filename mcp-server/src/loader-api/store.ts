@@ -130,7 +130,69 @@ function scanDir(dir: string, source: "official" | "user_jar"): Map<string, { su
   return out;
 }
 
-/** 官方先，cache overlay 后覆盖同 key。 */
+/**
+ * A-42（2026-09-19，原审查 A1）：**thin summary 判据**。
+ * 从 extract.ts 搬来（合并判据必须与 loadMergedSummaries 同源）；extract.ts 带 java-parser，
+ * 而本模块被 query_loader_api 静态导入 —— 禁止反向依赖，故实现归 store。
+ * thin = 无类 / 遗留 string-methods / 自计数明显不自治（400 截断、classCount 远超实有、index 远大于类数）。
+ */
+export function isThinLoaderSummary(prev: Pick<LoaderApiSummary, "classes" | "fqcnIndex" | "classCount">): boolean {
+  const classes = prev.classes ?? [];
+  if (!classes.length) return true;
+  if (classes.some((c) => Array.isArray(c.methods) && c.methods.some((m) => typeof m === "string"))) {
+    return true;
+  }
+  const indexLen = (prev.fqcnIndex ?? []).length;
+  if (classes.length === 400 && indexLen > 400) return true;
+  if (typeof prev.classCount === "number" && prev.classCount > classes.length + 10) return true;
+  if (indexLen > 0 && classes.length < indexLen * 0.5) return true;
+  return false;
+}
+
+/**
+ * A-42（2026-09-19，原审查 A1）：「按类合并」的**可引用语义**。
+ *
+ * 旧行为 = overlay **整档覆盖**同 key 官方摘要 ⇒ 用户只 ingest 自己的**局部/薄 jar**（常见）时，
+ * 官方类在查询侧整批消失（query_loader_api 对官方类 found:false）。
+ *
+ * 合并语义：
+ *   1. `classes` = overlay 类 ∪ 官方类，**同 fqcn 以 overlay 记录为准**（用户 jar 是本地真相），
+ *      再经 dedupeLoaderClasses 兜底（同 fqcn 保留信息更全的一条）；
+ *   2. `fqcnIndex` = 双边并集（去重排序）；
+ *   3. `classCount` = max(官方 classCount, 合并后 classes.length) —— 官方树有合法
+ *      「展开被跳过」计数（skippedExpansion），不得因薄 overlay 收缩；
+ *   4. `skippedExpansion` = official || overlay；
+ *   5. **thin overlay 判据** = `isThinLoaderSummary(overlay)`：为真则**不采信** overlay 的计数类元数据
+ *      （classCount 仍取 max 保护官方），只把它的类并进来；`mergeNote` 留痕（thin 真假 + 双边/合并后类数）。
+ */
+function mergeOverlayIntoOfficial(official: LoaderApiSummary, overlay: LoaderApiSummary): LoaderApiSummary {
+  const thin = isThinLoaderSummary(overlay);
+  const officialClasses = official.classes ?? [];
+  const overlayClasses = overlay.classes ?? [];
+  const byFqcn = new Map<string, LoaderClassRecord>();
+  for (const c of overlayClasses) if (c?.fqcn) byFqcn.set(String(c.fqcn), c); // overlay 逐类优先
+  for (const c of officialClasses) {
+    const fq = String(c?.fqcn ?? "");
+    if (fq && !byFqcn.has(fq)) byFqcn.set(fq, c);
+  }
+  const classes = dedupeLoaderClasses([...byFqcn.values()]);
+  const fqcnIndex = [...new Set([...(official.fqcnIndex ?? []), ...(overlay.fqcnIndex ?? [])])].sort();
+  const officialCount = typeof official.classCount === "number" ? official.classCount : officialClasses.length;
+  return {
+    ...official,
+    ...overlay,
+    classes,
+    fqcnIndex,
+    classCount: Math.max(officialCount, classes.length),
+    skippedExpansion: Boolean(official.skippedExpansion || overlay.skippedExpansion),
+    source: "user_jar",
+    mergeNote:
+      `A-42 按类合并：overlay ${overlayClasses.length} 类（thin=${thin}）+ 官方 ${officialClasses.length} 类` +
+      ` → ${classes.length} 类；classCount=max(${officialCount}, ${classes.length})`,
+  };
+}
+
+/** 官方先，cache overlay 后与同 key **按类合并**（旧行为「整档覆盖」已废，见 mergeOverlayIntoOfficial）。 */
 export function loadMergedSummaries(): Map<string, { summary: LoaderApiSummary; overlay: boolean }> {
   const officialDir = officialSummariesDir();
   const overlayDir = overlaySummariesDir();
@@ -140,7 +202,9 @@ export function loadMergedSummaries(): Map<string, { summary: LoaderApiSummary; 
   const overlay = scanDir(overlayDir, "user_jar");
   for (const [key, val] of overlay) {
     val.summary.source = "user_jar";
-    merged.set(key, { summary: val.summary, overlay: true });
+    const base = merged.get(key);
+    if (base) merged.set(key, { summary: mergeOverlayIntoOfficial(base.summary, val.summary), overlay: true });
+    else merged.set(key, { summary: val.summary, overlay: true });
   }
   _mergedCache = { stamp, map: merged };
   return merged;

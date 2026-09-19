@@ -277,6 +277,16 @@ export function validateAddonManifest(manifestJson: string): Record<string, unkn
       if (!Array.isArray(mev) || mev.length !== 3 || !mev.every((n) => typeof n === "number" && Number.isInteger(n))) {
         errors.push("min_engine_version 应为三维整数数组 [major, minor, patch]");
       }
+    } else {
+      // 【判级更正 2026-09-19（诚实留痕）】上轮本项据官方页**抓取不全的摘录**裁为「不判错、只给 warning」——
+      // 当时只截到示例段，未读到 pack-manifest 表格行的逐字口径。本轮补读全文，官方原文逐字：
+      //   「min_engine_version … **This is a required field for resource and behavior packs.**
+      //     This helps the game identify whether any backwards compatibility is needed for your pack.
+      //     You should always use the highest version currently available when creating packs.」
+      // ⇒ 缺 mev 由 warning **升为 error**（上轮裁定作废；夹具已同步：test-core 正对照 + assert-cli-full）。
+      errors.push(
+        "header 缺 min_engine_version —— 官方 pack-manifest 明述其为 resource/behavior packs 的**必填**字段（可用 [major, minor, patch]）",
+      );
     }
   }
   const modules = parsed.modules;
@@ -293,6 +303,18 @@ export function validateAddonManifest(manifestJson: string): Record<string, unkn
         warnings.push(`modules[${i}].type 为 legacy "client_data"，建议迁移到 "data"`);
       } else if (t !== "resources" && t !== "data" && t !== "script" && t !== "world_template") {
         errors.push(`modules[${i}].type 无效（允许 resources/data/script/world_template/skin）`);
+      }
+      // 原审查 S3（2026-09-19 裁定）：官方页 modules 表逐字「language … **Only present if type is script**.
+      // This indicates the language in which scripts are written in the pack. **The only supported value is javascript**」
+      // ⇒ 声明了 language 就必须是 "javascript"（唯一值，判 error）；非 script 模块出现 language 语义上不该有（warning）。
+      // 未声明不报（官方未述必填）。
+      if (mod.language !== undefined) {
+        if (typeof mod.language !== "string" || mod.language !== "javascript") {
+          errors.push(`modules[${i}].language 只能是 "javascript"（官方唯一支持值）`);
+        }
+        if (t !== "script") {
+          warnings.push(`modules[${i}].language 仅在 type=script 时才有意义（官方页逐字 only present if type is script）`);
+        }
       }
       if (typeof mod.uuid !== "string" || !UUID_RE.test(mod.uuid)) {
         errors.push(`modules[${i}].uuid 必须是标准 UUID`);

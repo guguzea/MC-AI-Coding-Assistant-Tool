@@ -2,11 +2,11 @@
 
 不要写「1.20.x 完全移除 RegistryObject」——那是错误断言。Forge 1.20.4 仍用 RegistryObject；本档用 DeferredRegister 族（`DeferredRegister.createBlocks` / `createItems` / `DeferredBlock`，见 `knowledge/common/verified-api-1.20.6.md`）。
 
-跨版本用 `get_migration_guide`（默认 toc）+ Primer。本档网络：**未核实**——`get_neoforge_doc_full --id=networking/payload --version=1.20.6` 实测 `DOC_NOT_FOUND`，本档语料只有 `networking.md` 概览页。
+跨版本用 `get_migration_guide`（默认 toc）+ Primer。本档网络：**可查**——A-43 活体复核（2026-09-19）：`get_neoforge_doc_full --id=networking/payload --version=1.20.6` 返回 **ok:true**（旧稿「实测 `DOC_NOT_FOUND`、语料只有 `networking.md` 概览页」是过期前提，已作废）。
 
 ## 本档不是 Forge，但也不因此就是 1.21
 
-本档是 NeoForge 分档，`SimpleChannel` / `IMessage` / `NetworkRegistry.newSimpleChannel` 一律禁止（`06-networking.mdc`）。但**禁止反向推断**：不能因为「NeoForge 都用 Payload」就把 1.21 族签名（`playBidirectional` / `DirectionalPayloadHandler` / `PayloadRegistrar` 方法表）当本档已核 API 写出来。本档 06 规则判 payload 未核实，本文件不改口。
+本档是 NeoForge 分档，`SimpleChannel` / `IMessage` / `NetworkRegistry.newSimpleChannel` 一律禁止（`06-networking.mdc`）。但**禁止反向推断**：不能因为「NeoForge 都用 Payload」就把 1.21 族签名（`playBidirectional` / `DirectionalPayloadHandler` / `PayloadRegistrar` 方法表）当本档已核 API 写出来。本档 06 规则曾把 payload 判为「未核实」；A-43（2026-09-19）已按活体复核更正为「页面可查」——**「不改口」的做法作废：证据优先于旧结论**。
 
 NeoForge 与 Forge 1.20.x 分叉的具体构建号：**未核实**（本档不写任何 NeoForge / Forge 版本号数字）。要核实走 `list_neoforge_versions` + `download_official_mdk`（dryRun）+ `query_loader_api`。
 

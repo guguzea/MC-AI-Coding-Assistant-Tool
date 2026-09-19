@@ -17,7 +17,7 @@ communityDocId: authored/lib-caelus
 
 - 能力：把鞘翅飞行抽象为**实体属性**，让自定义装备/饰品赋予鞘翅式滑翔（与 Curios / Trinkets 类槽位配合）、让特定实体具备飞行能力而不绑定原版鞘翅物品、查询/控制实体当前能否鞘翅飞行做能力门闩
 - 生态：TheIllusiveC4（Curios 作者）维护，Fabric / Forge / NeoForge 三端构建（690 万下载）
-- 版本 / loader 边界：三端同窗口 **1.13.2-1.21.5**；**26.x 新版号未跟进，1.21.5+ / 26.x 项目没有对应构建**
+- 版本 / loader 边界（A-43 更正 2026-09-19，按 `mcp-server/data/lib-manifests/all.json` 31 条目实测，**三端窗口不同**）：**Forge 1.13.2→1.21.1（20 条）** · **NeoForge 1.20→1.21.5（8 条）** · **Fabric 仅 1.16.4 / 1.16.5 / 1.17.1（3 条，其后无 release）**；**26.x 新版号未跟进，1.21.5+ / 26.x 项目没有对应构建**
 
 ## Decision Flow
 
@@ -28,7 +28,7 @@ Decision: 要不要用 Caelus
 → 只用原版鞘翅，无自定义需求 → 不引库，直接原版机制
 → 已选 Caelus：
    ├─ 版本：1.13.2-1.21.5 内与 MC 对齐（文件页为准）
-   ├─ 平台：三端（F/Forge/Neo）同版本窗口，按端选构建（artifact 名如 caelus-fabric / caelus-forge / caelus-neoforge，别混用）
+   ├─ 平台：按端选构建（artifact 名如 caelus-fabric / caelus-forge / caelus-neoforge，别混用）；⚠️ **不是同窗口**（A-43）：Fabric 止于 1.17.1、Forge 1.13.2→1.21.1、NeoForge 1.20→1.21.5
    └─ 集成：用其 API 给实体/装备挂飞行能力，属性/状态在服务端
 ```
 

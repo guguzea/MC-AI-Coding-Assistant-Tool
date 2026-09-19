@@ -38,7 +38,7 @@ Java 8。映射：混合工程钉 `mappings = 'stable_39'`（社区 1.12.2 常�
 
 ## 配置（不落盘树级 mc-config）
 
-不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+不要为本档新写 `mc-config` Skill。配置**原则**走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md`（工作流 `mc-config`）；**不要**对本档调用 `generate_config`——该工具当前平台面不含 LiteLoader / Rift / ModLoader（A-43 更正：原稿把它写成可用路径）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
 
 <!-- MC_SKILL_WORKFLOW_NOTE -->
 

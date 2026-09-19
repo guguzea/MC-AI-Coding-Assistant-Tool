@@ -74,7 +74,7 @@
 |------|------|-------------|
 | `library-catalog.ts` | `mcp-server/src/diagnostics/`（生成物） | 50 条 catalog；`verifiedApi` 键 **实算 1830（2026-09-14）**，复核 `grep -cE '"[0-9][^"]*/[a-z]+": \{' mcp-server/src/diagnostics/library-catalog.ts`；同数钉在 `mcp-server/scripts/assert-lib-ownership.mjs` 的 `LEDGER.verifiedApiKeys`（不一致即红）。旧文档写死的 1880 / 1836 均已过期。另有**不同分母**：摘要侧 `lib-api-summaries/*.json` 44 份 / `versions` 组键 320（见根 `README.md` §7.5 计数口径 B），勿与本数混用 |
 | `lib-manifests/all.json` | `mcp-server/data/` | 45 slug / 2867 版本条目 |
-| `lib-api-summaries/*.json` | `mcp-server/data/` | 44 库 API 摘要 |
+| `lib-api-summaries/*.json` | `mcp-server/data/` | **48** 库 API 摘要（A-43 复计 2026-09-19：目录内 48 个 `.json`，无 meta 文件混入；旧稿写 44 已过期） |
 
 `verifiedApi.<版本/加载器>.packages` 是反编译产物顶层目录的**启发式截取名**（2–3 段），只能用来定位包根，
 **不能当 import 依据**；落到类名必须走 `query_loader_api`（先 `ingest_loader_api` 用户自备 jar）或 IDE 核对。

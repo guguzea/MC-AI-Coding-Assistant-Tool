@@ -1,0 +1,32 @@
+{
+  "repairedAt": "2026-09-19T02:38:26.091Z",
+  "reason": "上游 v1 导出件丢 named（见 temp/audit/sweep81/UNFIXED-REPORT-VERDICT.md §7）",
+  "agent": "temp/audit/sweep81/probes/fix-yarn-named.mjs",
+  "upstreamV1": {
+    "file": "upstream/yarn-1.21.3+build.2-tiny.gz.v1-upstream.gz.bak",
+    "sha256": "10424f9b00f2eb462fac45d6a0ac6ec5f64ee536d9a86e3b18516754992cca57",
+    "note": "与上游 maven 同 artifact 逐字节相同（2026-09-19 实测）"
+  },
+  "upstreamV2Used": "https://maven.fabricmc.net/net/fabricmc/yarn/1.21.3+build.2/yarn-1.21.3+build.2-v2.jar",
+  "repairedSha256": "c73c96e60b1c360ed10b2eb66fd3c98c295ec30fcf3b9410282d40dd9f49d238",
+  "stats": {
+    "classes": 8719,
+    "classFixed": 0,
+    "members": 83275,
+    "memberFixed": 12460,
+    "missClassSample": [
+      "net/minecraft/class_4990$1",
+      "net/minecraft/class_156$1",
+      "net/minecraft/class_156$5"
+    ],
+    "missMemberSample": [
+      "METHO net/minecraft/class_7836.method_46403:(II)Ljava/util/Iterator;",
+      "FIELD net/minecraft/class_4990.field_23298:[Lnet/minecraft/class_4990;",
+      "METHO net/minecraft/class_4990.method_26384:(I)[Lnet/minecraft/class_4990;"
+    ],
+    "stillSelfEqUnmatched": 6576,
+    "conflict": [
+      "METHO net/minecraft/class_8016$class_8018.comp_1189: v1=comp_1188 v2=component"
+    ]
+  }
+}

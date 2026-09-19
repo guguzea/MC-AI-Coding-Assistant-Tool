@@ -2,4 +2,4 @@
 
 - `tweaker-client` + `RiftLoaderClientTweaker` + Java 8
 - `riftmod.json` 在 `src/main/resources`
-- 依赖：优先 `libs/rift-dev.jar`；wiki 曾写 `implementation 'org.dimdev:rift:1.0.3-45:dev'` 与 `https://www.dimdev.org/maven/`（实施时可能失效）
+- 依赖：优先 `libs/rift-1.0.3-45-dev.jar`（具体名与 `scaffold/build.gradle:19` 的 `implementation name: 'rift-1.0.3-45-dev'` 和 `scaffold/libs/README.md` 一致；不要用泛称 `rift-dev.jar`）；wiki 曾写 `implementation 'org.dimdev:rift:1.0.3-45:dev'` 与 `https://www.dimdev.org/maven/`（实施时可能失效）

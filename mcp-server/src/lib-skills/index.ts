@@ -24,7 +24,14 @@ export const resolveLibSkillsSchema = z.object({
     .describe("平台：forge | fabric | quilt | neoforge | bedrock"),
   mcVersion: z
     .string()
+    .optional()
     .describe("精确 MC 版本（如 1.21.1 / 26.1.2）；bedrock 可传 stable。禁止用邻版顶替"),
+  // A-6（2026-09-19）：工具线历史参数名分裂 —— 底层脚本用 --version、本工具用 --mcVersion，
+  // 用户按本仓其它工具的习惯传 --version 会被 CLI 判 rc=2。收为**别名**（mcVersion 优先），不动既有参数面。
+  version: z
+    .string()
+    .optional()
+    .describe("mcVersion 的别名（CLI `--version`）——与 mcVersion 二选一，同时给出时以 mcVersion 为准"),
 });
 
 /** 工具描述单一来源（registerTool 与静态 schema 表共用 —— test-cli 有 description drift 门） */
@@ -33,7 +40,8 @@ export const RESOLVE_LIB_SKILLS_DESCRIPTION =
   "返回 {skillId, path, modIds, platforms[, versionsJson]}（path 为仓库相对路径）。" +
   "与 CLI `lib resolve` 同一 core（同一份脚本，不复制逻辑）。" +
   "【边界】只解析、不返回正文 —— AI 仍直接读源稿文件（文件即用）；" +
-  "带 versionsJson 的库（当前 mc-cloth-config）写依赖坐标前必须读该文件对应 MC 版本的 slot（coord/state/basis），state != active 一律不采纳。";
+  "带 versionsJson 的库（当前 mc-cloth-config）写依赖坐标前必须读该文件对应 MC 版本的 slot（coord/state/basis），state != active 一律不采纳。" +
+  " CLI 亦接受 `--version` 作为 `--mcVersion` 的别名（二者二选一，同时给出以 mcVersion 为准）。";
 
 export interface LibSkillHit {
   skillId: string;
@@ -54,9 +62,11 @@ export interface ResolveLibSkillsOutput {
   error?: string;
 }
 
-export function resolveLibSkills(args: { platform?: unknown; mcVersion?: unknown }): ResolveLibSkillsOutput {
+export function resolveLibSkills(args: { platform?: unknown; mcVersion?: unknown; version?: unknown }): ResolveLibSkillsOutput {
   const platform = String(args.platform ?? "").trim();
-  const mcVersion = String(args.mcVersion ?? "").trim();
+  // A-6（2026-09-19）：`version` 是 mcVersion 的别名（底层脚本 resolve-lib-skills.mjs 即用 --version）；
+  // 同时给出时以 mcVersion 为准（显式参数优先）。
+  const mcVersion = String(args.mcVersion ?? args.version ?? "").trim();
   const bad = (error: string): ResolveLibSkillsOutput => ({ ok: false, platform, mcVersion, count: 0, skills: [], error });
   if (!platform) return bad("platform 必填（forge | fabric | quilt | neoforge | bedrock）");
   if (!PLATFORMS.has(platform)) return bad(`未知平台：${platform}（应为 forge | fabric | quilt | neoforge | bedrock）`);

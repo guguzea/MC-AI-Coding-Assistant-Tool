@@ -710,7 +710,7 @@ export function registerWaveExtensions(server: McpServer): void {
     title: "Resolve lib skills for (platform, mcVersion)",
     description: RESOLVE_LIB_SKILLS_DESCRIPTION,
     inputSchema: resolveLibSkillsSchema,
-  }, async (a) => jsonResult(resolveLibSkills({ platform: a.platform, mcVersion: a.mcVersion })));
+  }, async (a) => jsonResult(resolveLibSkills({ platform: a.platform, mcVersion: a.mcVersion, version: a.version })));
 
   server.registerTool(
     "mc_skill_update",

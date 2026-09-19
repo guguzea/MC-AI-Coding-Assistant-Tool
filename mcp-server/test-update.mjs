@@ -753,6 +753,12 @@ function corruptZipExtraction(zipPath) {
  * 即足以证明放置点；另加两条**反例**证明不该恢复的路径确实没动：
  *   · `dryRun`（更早 return、不写盘）⇒ 半交换态**保持原样**，不得代用户改盘；
  *   · 取锁 busy（持锁者存在）⇒ **不得**恢复（否则与持锁者抢写）。
+ *
+ * A-40 扩展（2026-09-19 原审查报告裁定）：**取锁前**失败路径（下载/SHA/校验和/清单）也要尽力
+ * 自愈——否则「崩在换入窗口 + 下次重试拉包失败（如校验和不匹配）」会把用户永远卡在 data/ 缺失态。
+ * 实现边界（不抢锁、不等待）：仅当 update-apply 锁目录**不存在**（无人持锁）才动盘；锁目录存在
+ * 一律跳过（活锁由持有者自愈、残锁由下次主路径陈旧抢占后自愈）。故用例 ④ 必须在用例 ③（建活锁）
+ * **之前**跑，且用例 ③ 的反例断言保持不变。
  */
 async function testDataHalfSwapSelfHealsOnlyPostLock() {
   const root = mkdtempSync(join(tmpdir(), "mc-upd-halfswap-"));
@@ -819,6 +825,19 @@ async function testDataHalfSwapSelfHealsOnlyPostLock() {
     assert.equal(dry.ok, true, JSON.stringify(dry));
     assert.equal(existsSync(dataDir), false, "dryRun 不得写盘（也不得顺手恢复半交换态）");
     assert.ok(existsSync(join(prevDir, "forge_1.7.10", "old.json")), "dryRun 不得动 data.prev/");
+
+    // ④ A-40 主判据（2026-09-19）：**取锁前**的失败（校验和不匹配）也要尽力自愈。
+    //    此时锁目录不存在 ⇒ 无人持锁 ⇒ 允许动盘；用例 ③ 会建活锁，故 ④ 必须在 ③ 之前。
+    resetHalfSwap();
+    const badSum = await dataMod.applyDataUpdate(applyArgs({ checksumHex: "0".repeat(64) }));
+    assert.equal(
+      badSum.action?.code,
+      "DATA_CHECKSUM_MISMATCH",
+      `校验和不匹配应走该分支，实得 ${JSON.stringify(badSum).slice(0, 200)}`,
+    );
+    assert.ok(existsSync(dataDir), "A-40：取锁前的失败（校验和不匹配）未尽力自愈——data/ 仍缺失");
+    assert.equal(readFileSync(join(dataDir, "forge_1.7.10", "old.json"), "utf8"), '{"old":true}', "A-40 自愈必须带回旧内容");
+    assert.ok(!existsSync(prevDir), "A-40 自愈后 data.prev/ 应已消失（换回后不留残件）");
 
     // ③ 反例：取锁 busy 不得抢着恢复（否则与持锁者抢写）
     resetHalfSwap();

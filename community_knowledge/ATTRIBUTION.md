@@ -8,7 +8,11 @@
 - 许可说明：作者在评论区（约 51 楼）回复「随意吧」，允许本仓库收录提炼内容用于 MCP / 知识库。
 - 注意：教程主体偏 **1.18.X**；查当前版本 API 仍以官方文档与 `search_*_docs` 为准。
 
-指针页位于 `permitted/mcmod-3993-forge-mod-guide/`（与 `links/` 相同，**不入库正文**）。
+已获许可**入库提炼正文**：`permitted/mcmod-3993-forge-mod-guide/pages/` 4 篇（crash-publishing / items-registry / mixin-basics / setup，约 0.8 KB/篇）+ `meta.json`（作者/来源/许可）。`links/` 侧只收指针，两者不同面（A-43 更正：原写「不入库正文」与 permitted 目录实况矛盾）。
+
+## 自写报告 / 综述（不列第三方致谢）
+
+本仓自写的报告与综述（如仓库根《Minecraft 社区常用库模组全览（2026 版）》及其副本 `authored/library-catalog-2026.md`、各 `authored/lib-*.md` 短文等）属**原创内容**，不属第三方致谢范围，故不在本文件登记；本文件只登记有**外部出处**的来源。（A-43 口径说明，2026-09-19：消 T-F6 悬账。）
 
 ## Kaupenjoe 教程仓库（MIT 许可）
 

@@ -19,6 +19,8 @@ sourceKind: authored
 | **平台 code-patterns** | 如 `forge/1.20.1/code-patterns/` | 某系统（方块/物品/网络）有哪些完整写法？ |
 | **反模式** | `knowledge/antipatterns/`、各平台 `09-anti-patterns.mdc` | 错了会怎样、应怎么改？ |
 
+> ⚠️ `patterns/**` **不进 community 搜索索引**（`community-index-core.mjs` 显式排除，避免 sourceKind=unknown）：检索/取文请直接读文件或走 MCP Resource `mcskill://patterns/README`，**不要**用 `search_community_docs` / `get_community_doc_full` 找它们（A-43 口径对齐）。
+
 Agent 流程建议：**先反模式排除坑 → 再模式库拿最小片段 → 不够再打开 code-patterns / 规则 Decision Flow**。
 
 ## 模式文件约定

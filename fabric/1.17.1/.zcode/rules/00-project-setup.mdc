@@ -9,8 +9,8 @@
 ### Java 版本
 
 - **必须使用 Java 16**（Minecraft 1.17.1 要求；Java 21 仅在 Minecraft 1.21+ 才需要）
-- `build.gradle` 中声明 `java.toolchain.languageVersion = JavaLanguageVersion.of(17)` 或 `sourceCompatibility = JavaVersion.VERSION_17`
-- Gradle Wrapper 版本不低于 **Gradle 7.3**（适配 Loom 0.11-SNAPSHOT）
+- `build.gradle` 中声明 `java.toolchain.languageVersion = JavaLanguageVersion.of(16)` 或 `sourceCompatibility = JavaVersion.VERSION_16`（A-43 更正：Minecraft 1.17.1 是 **Java 16** 时代，原写 17 与上一条自相矛盾）
+- Gradle Wrapper 版本不低于 **Gradle 7.3**（适配 Loom 0.10.31 —— A-43 更正：原写 0.11-SNAPSHOT，与 scaffold 实测钉值不符且 SNAPSHOT 不可复现）
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
 ### Loom / Gradle 约束
@@ -104,7 +104,7 @@ IF 报错包含 "No resource bundling found"
 
 ```groovy
 plugins {
-    id 'fabric-loom' version '0.11-SNAPSHOT'
+    id 'fabric-loom' version '0.10.31'
     id 'maven-publish'
     id 'eclipse'
     id 'idea'
