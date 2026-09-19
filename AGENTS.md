@@ -294,7 +294,7 @@ Decision: 选择注册方式
 
 永远选择**保守**方案：
 - 不确定用哪个事件 → 选更通用的事件
-- 不确定方法名 → 用 IDE 自动补全、官方文档工具或 `query_api`（仅 Vanilla/Parchment，约 1.16.5–1.20.4；**不含** Forge/Fabric 类。**1.12.2 可能 found:true 但 methods 为空**；**26.1+ 无索引**）。平台 API 用 `search_*_docs` / `query_loader_api`。Forge 1.12.2 教程用 `search_forge_docs`（`version=1.12.2`），不要用 `query_api` 核 `Block` 构造。
+- 不确定方法名 → **先语义搜索**：`search_forge_docs` / `search_fabric_docs` / `search_neoforge_docs` / `search_docs`（语料与语义索引按档在盘，命中页面可直接引用）；IDE 自动补全次之。`query_api` 之类是**兼容工具**（每次调用响应都带兼容警告，仅作兜底；仅 Vanilla/Parchment，约 1.16.5–1.20.4；**不含** Forge/Fabric 类。**1.12.2–1.13.2 可能 found:true 但 methods 为空；1.14.4/1.15.2 api-index 为空是设计边界——工具会报边界并推荐语义搜索；26.1+ 无索引**）。平台 API 摘要用 `query_loader_api`（同为兼容工具）。Forge 1.12.2 教程用 `search_forge_docs`（`version=1.12.2`），不要用 `query_api` 核 `Block` 构造。
 - 不确定是否跨平台 → 明确标注 `// Forge only` 或 `// Fabric only`
 - `DOC_NOT_FOUND` / 无本档规则树：保持未核实骨架，**禁止**用邻版 API 补全。空 stub 不是漏写。
 
@@ -304,7 +304,7 @@ Decision: 选择注册方式
 
 | 工具 | 功能 |
 | --- | --- |
-| `query_api` | 按类名查询 Vanilla/Parchment API 签名（约 1.16.5–1.20.4；1.12.2 类名空壳；26.1+ 无索引）。精确 FQCN 或唯一简名才 `found:true`；`Handler` 等歧义子串 `found:false` + suggestions |
+| `query_api` | **兼容工具（每次调用响应带兼容警告，优先用语义搜索）**：按类名查询 Vanilla/Parchment API 签名（约 1.16.5–1.20.4；1.12.2–1.13.2 类名空壳；**1.14.4/1.15.2 api-index 为空是设计边界——工具会报边界并推荐 `search_forge_docs` 语义搜索**；26.1+ 无索引）。精确 FQCN 或唯一简名才 `found:true`；`Handler` 等歧义子串 `found:false` + suggestions |
 | `get_method_params` | 查询方法参数名（可选 version） |
 | `convert_mapping` | 在 **mojang / mcp / yarn / parchment / obfuscated / intermediary** 间互转类 / 方法 / 字段（Yarn 走预建 SQLite 惰性点查；1.12.2 用 MCP SRG；`to=mojang` 与 `obfuscated` 同为 Tiny official 短名；yarn-tiny 档 fabric **1.14.4–1.21.x** 无 MCP/Parchment 层，`to=mcp`/`to=parchment` → `YARN_TINY_NO_MCP_LAYER`；**26.1+ 已去混淆 → `UNOBFUSCATED_NO_YARN`，禁止转 yarn**） |
 | `get_server_status` | 预热/数据路径与 descriptor 自检（含 updateHint）；另返回 **`java`** 探测（`node` / `JAVA_HOME` / `version` / `ready` / `hint`，反编译与 remap 需 JDK 17+）。**只报本机 Java 现状，不做 Gradle ↔ JDK 匹配判定**（那走 `diagnose_gradle`） |
@@ -317,7 +317,7 @@ Decision: 选择注册方式
 | `check_publish_ready` | 发布前清单（license/version/`build/libs` + `community_knowledge` publishing.md 清单，缺项只 warning）。不上传、不调外网发布 API。 |
 | `inspect_runtime` | 日志型 inspector。优先 `logsDir`；否则有界探测 `run/logs`。禁止全盘 / JVM attach。 |
 | `detect_mod_project` / `activate_platform_pack` | 探测工程；`session` 加载规则/Skill 索引（默认 00/01/09），`write` 写入用户工程（见根 README「规则包加载」） |
-| `query_loader_api` / `search_loader_api` / `ingest_loader_api` | 加载器/模组 API 摘要（必填 platform+minecraftVersion）。**不是** `query_api`。ingest 把用户自备 jar 抽成摘要，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁止写仓库 `data/` |
+| `query_loader_api` / `search_loader_api` / `ingest_loader_api` | **`query_loader_api` 是兼容工具（每次调用响应带兼容警告，优先用语义搜索）**：加载器/模组 API 逐签名摘要（必填 platform+minecraftVersion；覆盖以已 ingest 的档为界）。**不是** `query_api`。ingest 把用户自备 jar 抽成摘要，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁止写仓库 `data/` |
 | `search_forge_docs` / `get_forge_doc_*` / `list_forge_versions` | Forge 文档。先 `list_forge_versions`；**1.12.2 用这套**，不要用 `query_api`。与 `search_docs({platform:"forge"})` 等价 （`list_*_versions` 列的是**本仓库已入库**档位，不在清单 ≠ 上游没有文档） |
 | `search_fabric_docs` / `get_fabric_doc_*` / `list_fabric_versions` | Fabric 文档。先 `list_fabric_versions`；查询参数用入库档名（如 `26.1.2`），不要把工程 `minecraftVersion=26.1` 当参数名 （`list_*_versions` 列的是**本仓库已入库**档位，不在清单 ≠ 上游没有文档） |
 | `search_neoforge_docs` / `get_neoforge_doc_*` / `list_neoforge_versions` | NeoForge 文档（1.20.1 回退 Forge）。先 `list_neoforge_versions` （`list_*_versions` 列的是**本仓库已入库**档位，不在清单 ≠ 上游没有文档） |
@@ -343,7 +343,8 @@ Decision: 选择注册方式
 
 完整对照表见根目录 `README.md`「工具边界」。调用前必须遵守：
 
-- **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外，或简名歧义（`Handler` 不会命中 `MouseHandler`）。1.12.2 **空壳**（`found:true` + 空 methods）与 26.1+ 零类不同；Forge 特有类改 `query_loader_api` / `search_*_docs` 或反编译。
+- **优先语义搜索；`query_*` 是兼容工具**：查 API/文档/机制，先用 `search_forge_docs` / `search_fabric_docs` / `search_neoforge_docs` / `search_docs`（语义索引按档在盘），`query_api` / `query_loader_api` 仅作兜底——它们的每次响应都带兼容警告，1.14.4/1.15.2 还会显式报告「api-index 为空」边界。
+- **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外，或简名歧义（`Handler` 不会命中 `MouseHandler`）。1.12.2 **空壳**（`found:true` + 空 methods）与 26.1+ 零类不同；**1.14.4/1.15.2 是空索引档（该档 docs 语料与语义索引反而完整）**；Forge 特有类改 `query_loader_api` / `search_*_docs` 或反编译。
 - **`search_*_docs` 查 `constructor` 崩溃**：旧 bug（`Object.prototype`）；已修。改完 `mcp-server` 后必须 `npm run build` **并重载 MCP**，或用 `node mcp-server/dist/cli.js` 验证。
 - **平台工具不要混用**：`get_version_info` 仍仅 Forge。`diagnose_gradle` 覆盖 ForgeGradle + Loom + Neo/MDG；liteloader 插件走轻量模式；Rift / BaseMod / 基岩仍早退。`validate_project` 对 Fabric/Quilt/NeoForge 做真检查，LiteLoader/Rift/ModLoader/基岩 skipped。基岩用 `validate_addon_manifest`。
 - **文档 fallback 仅限查询 API**，不代表规则树可用；命中邻近版时结果含 `fallback: true` 与 `source_version`。本版无树则 `PACK_NOT_FOUND`。

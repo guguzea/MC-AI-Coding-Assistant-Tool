@@ -725,6 +725,26 @@
         "test-core.mjs"
       ],
       "closedAt": "2026-09-19"
+    },
+    {
+      "id": "query-tools-compat-warning-and-1415-boundary",
+      "claim": "query_* 类工具标为兼容工具并在每次响应显式提醒（2026-09-19 用户裁定）：(1) query_api 每次响应 notes 末尾追加「兼容工具…优先 search_forge_docs/search_docs 语义搜索」注释（withCoverage 包装全部数据返回路径）；(2) query_api 查 1.14.4/1.15.2 时显式报告「api-index 为空是设计边界」（queryApiCoverageWarning 新增 1.14.x/1.15.x 分支，QUERY_API_EMPTY_1415 文案：MCP stable CSV 仅成员级、Parchment 自 1.16.5 起、推荐 search_forge_docs 语义搜索+convert_mapping 查方法名）——此前这两档落在 1.7-1.13 空壳分支与 classCount===0 分支之间静默无警告；(3) query_loader_api 同样每次响应带兼容注释（withLoaderCompatNote 包装 impl 全部返回）。根 AGENTS.md 同步立规：不确定方法名先语义搜索、工具表两行标兼容工具、工具边界节新增优先级条款",
+      "author": "2026-09-19 用户裁定（根目录 agent 文件立规 + 兼容工具标记 + 1.14.4/1.15.2 边界报告）",
+      "evidence": "响应实测：query_api@1.14.4 warning 含「1.14.4/1.15.2 的 api-index 为空是设计边界…search_forge_docs」+ notes 含兼容注释；test-loader-api 全绿（兼容注释断言）；test-core 全量绿（compatNote/q1415/q1415b/q1415shell 四钉）；test-wave-bcd ok（A-27 不受影响，新增文案不含 ok:false 字面量）；assert-rules-match-tool / assert-config-platform-face 绿（AGENTS.md 编辑未破坏门）",
+      "evidenceRefs": [
+        "mcp-server/src/api/index.ts",
+        "mcp-server/src/loader-api/query.ts",
+        "mcp-server/test-core.mjs",
+        "mcp-server/test-loader-api.mjs",
+        "AGENTS.md"
+      ],
+      "status": "closed",
+      "gates": [
+        "test-core.mjs",
+        "test-loader-api.mjs",
+        "test-wave-bcd.mjs"
+      ],
+      "closedAt": "2026-09-19"
     }
   ]
 }

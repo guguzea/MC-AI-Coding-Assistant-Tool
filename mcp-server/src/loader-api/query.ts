@@ -101,7 +101,21 @@ function indexHasClass(index: string[], className: string): boolean {
   );
 }
 
+// 兼容工具标记（sweep104，用户裁定）：query_loader_api 属逐签名摘要类兼容工具，每次调用响应都带此注释，
+// 提示文档/语义面优先 search_*_docs 语义搜索。
+const LOADER_API_COMPAT_NOTE =
+  "query_loader_api 是兼容工具（用户自备 jar 入库的逐签名摘要，覆盖以已 ingest 的档为界）；文档与语义面请优先 search_forge_docs / search_fabric_docs / search_neoforge_docs 语义搜索。";
+
+function withLoaderCompatNote<T>(r: T): T & { notes: string[] } {
+  const notes = (r as { notes?: string[] }).notes ?? [];
+  return { ...r, notes: [...notes, LOADER_API_COMPAT_NOTE] };
+}
+
 export function queryLoaderApi(args: QueryLoaderApiArgs) {
+  return withLoaderCompatNote(queryLoaderApiImpl(args));
+}
+
+function queryLoaderApiImpl(args: QueryLoaderApiArgs) {
   const platform = String(args.platform ?? "").trim();
   const minecraftVersion = String(args.minecraftVersion ?? "").trim();
   const className = String(args.className ?? "").trim();

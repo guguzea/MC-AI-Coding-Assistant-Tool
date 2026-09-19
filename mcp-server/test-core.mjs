@@ -1515,6 +1515,36 @@ async function testDatagenAndMappingGates() {
   assert.equal(q1211.found, false);
   assert.equal(q1211.action?.code, "DATA_UNAVAILABLE");
   assert.ok(q1211.warning && /无 Vanilla API 索引/.test(q1211.warning), JSON.stringify(q1211).slice(0, 500));
+
+  // 兼容工具标记（sweep104，用户裁定）：query_api 每次调用响应都带兼容注释；
+  // 1.14.4/1.15.2 的 api-index 为空是设计边界——响应必须显式报告边界并推荐语义搜索。
+  const compatNote = await queryApi({ className: "Item", version: "1.20.1" });
+  assert.ok(
+    compatNote.found === true &&
+      (compatNote.notes ?? []).some((n) => /兼容工具/.test(n)),
+    `query_api 响应必须带兼容工具注释: ${JSON.stringify(compatNote.notes)}`,
+  );
+  const q1415 = await queryApi({ className: "Goal", version: "1.14.4" });
+  assert.equal(q1415.found, false);
+  assert.ok(
+    q1415.warning && /1\.14\.4|1\.15\.2/.test(q1415.warning) && /search_forge_docs/.test(q1415.warning),
+    `1.14.4 查询必须报告空索引边界并推荐语义搜索: ${JSON.stringify(q1415.warning)}`,
+  );
+  assert.ok(
+    (q1415.notes ?? []).some((n) => /兼容工具/.test(n)),
+    `1.14.4 响应也必须带兼容注释: ${JSON.stringify(q1415.notes)}`,
+  );
+  const q1415b = await queryApi({ className: "GoalSelector", version: "1.15.2" });
+  assert.ok(
+    q1415b.warning && /1\.14\.4\/1\.15\.2/.test(q1415b.warning),
+    `1.15.2 同样必须报边界: ${JSON.stringify(q1415b.warning)}`,
+  );
+  const q1415shell = await queryApi({ className: "EntityAIBase", version: "1.12.2" });
+  assert.ok(
+    q1415shell.warning && /类名空壳/.test(q1415shell.warning),
+    `1.12.2 空壳档警告必须保留: ${JSON.stringify(q1415shell.warning)}`,
+  );
+
   const { getMethodParams } = await import("./dist/mappings/convert.js");
   const overloads = getMethodParams({
     className: "net.minecraft.world.entity.LivingEntity",

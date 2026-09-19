@@ -805,10 +805,23 @@ const QUERY_API_EMPTY_INDEX =
 const QUERY_API_SHELL_INDEX =
   "该版 extracted 多为类名空壳（methods 为空）。found:true 只表示类名在索引里，不是完整 javadoc/签名。请改 search_forge_docs / query_loader_api / convert_mapping。";
 
+// 兼容工具标记（sweep104，用户裁定）：query_api 属类名/签名索引类兼容工具，每次调用响应都带此注释，
+// 提示文档/语义面优先 search_*_docs 语义搜索。
+const QUERY_API_COMPAT_NOTE =
+  "query_api 是兼容工具（类名/签名索引，覆盖按版本而异且有限）；文档与语义面请优先 search_forge_docs / search_docs 语义搜索。";
+
+// 1.14.4–1.15.2：api-index 刻意为空（MCP stable CSV 仅成员级 searge↔named，Parchment 自 1.16.5 起）。
+// 该版 docs 语料与语义索引完整——每次查询都显式报告边界并推荐语义搜索（sweep103 工具诊断结论）。
+const QUERY_API_EMPTY_1415 =
+  "1.14.4/1.15.2 的 api-index 为空是设计边界（MCP stable CSV 仅成员级 searge↔named，Parchment 索引自 1.16.5 起才有）：found:false 不代表游戏里没有该类。" +
+  "请改用 search_forge_docs 语义搜索（1.14.4/1.15.2 语料与语义索引完整，semantic=true）；方法名可走 convert_mapping（1.14–1.15 CSV 仅 searge↔named）。";
+
 function queryApiCoverageWarning(version: string, classCount?: number): string | undefined {
   const v = version.trim();
   const outOfRange = isUnobfuscatedMcVersion(v) || /^1\.21(\.|$)/.test(v) || /^26\./.test(v);
   if (outOfRange || classCount === 0) return QUERY_API_EMPTY_INDEX;
+  // 1.14.4–1.15.2：api-index 刻意为空的设计边界——报告并推荐语义搜索
+  if (/^1\.1[45](\.|$)/.test(v)) return QUERY_API_EMPTY_1415;
   // 1.7.10–1.13.2：有类名列表，但几乎没有方法条目
   if (/^1\.(7|8|9|10|11|12|13)(\.|$)/.test(v)) return QUERY_API_SHELL_INDEX;
   return undefined;
@@ -855,8 +868,11 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
 
   const vData = getVersionData(version);
   const coverageWarning = queryApiCoverageWarning(version, vData.classNames?.length ?? 0);
-  const withCoverage = (r: ApiResult): ApiResult =>
-    coverageWarning ? { ...r, warning: r.warning ?? coverageWarning } : r;
+  const withCoverage = (r: ApiResult): ApiResult => {
+    // 兼容工具标记：每次 query_api 响应都附加兼容注释（notes 追加，不改写既有字段）
+    const notes = [...(r.notes ?? []), QUERY_API_COMPAT_NOTE];
+    return coverageWarning ? { ...r, warning: r.warning ?? coverageWarning, notes } : { ...r, notes };
+  };
 
   // 数据不可用：无索引目录或 Worker 未就绪（同一 DATA_UNAVAILABLE 信封）
   if (vData.lastError === "INDEX_CORRUPT") {

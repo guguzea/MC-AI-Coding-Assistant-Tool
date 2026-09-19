@@ -122,6 +122,11 @@ public class Other {
   const infos = q.methods;
   assert.ok(infos.length > 0, "IPayloadContext methods must be non-empty MethodInfo (re-extract if still [])");
   assert.ok(infos[0].signature || infos[0].name, "MethodInfo has signature/name");
+  // 兼容工具标记（sweep104，用户裁定）：query_loader_api 每次调用响应都带兼容注释，推荐优先语义搜索。
+  assert.ok(
+    (q.notes ?? []).some((n) => /兼容工具/.test(n) && /语义搜索/.test(n)),
+    `query_loader_api 响应必须带兼容工具注释: ${JSON.stringify(q.notes)}`,
+  );
   console.log(`query IPayloadContext methods=${infos.length} signature0=${infos[0].signature ?? infos[0].name}`);
 }
 
