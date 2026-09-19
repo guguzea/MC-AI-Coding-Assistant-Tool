@@ -7,19 +7,28 @@ dependencies: []
 mappings: yarn
 ---
 
-[DONOR_SKILL 禁止直接抄写]
-本 Skill 正文来自 fabric/1.21.4，仅作结构/流程提示，不是 1.21.10 官方 API。不得直接使用 donor 正文里的类名/方法。先 search_fabric_docs(version=1.21.10) 核对类名/方法签名（不要用 version=1.21.3），对不上就改口官方文档、禁止照抄。Yarn 档互捐，禁止把 26.1.2 mojmap 当本档。
+# mc-multiblock（1.21.10）
 
-# mc-multiblock
+> 一手来源：Yarn 原语类路径 `net/minecraft/util/math/BlockPos`、`net/minecraft/block/BlockState`、`net/minecraft/block/entity/BlockEntity`、`net/minecraft/world/World` 经本档映射库核实存在（`data/fabric_1.21.10/mappings/yarn-mappings.sqlite` 含记录）。多方块无平台 API——**模式技能**。
 
-> Wave D 技能骨架（fabric 1.21.10）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+## Decision Flow
 
-## 快速入口
+```
+→ 多方块 = 控制器（BlockEntity）+ 结构校验 + formed 状态
+→ 结构探测 → BlockPos / World 逐格扫描（方法签名先核实）
+→ 状态比对 → BlockState
+→ 注册与生命周期 → mc-registry、01-registry.mdc、02-block.mdc
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.21.3/knowledge/antipatterns/`
+## 本档口径（已核实）
+
+- Yarn 全名：`util/math/BlockPos`、`block/BlockState`、`block/entity/BlockEntity`、`world/World`（映射库记录）。
+
+## 反模式
+
+- 把 mojmap 名（如 `Level`）当 Yarn 名用。
+- 每帧全量扫描结构。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 名字核实：`convert_mapping`（to=yarn）/ 本档映射库；反模式库：同档 `knowledge/`。

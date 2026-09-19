@@ -7,19 +7,29 @@ dependencies: []
 mappings: yarn
 ---
 
-[DONOR_SKILL 禁止直接抄写]
-本 Skill 正文来自 fabric/1.21.4，仅作结构/流程提示，不是 1.21.10 官方 API。不得直接使用 donor 正文里的类名/方法。先 search_fabric_docs(version=1.21.10) 核对类名/方法签名（不要用 version=1.21.3），对不上就改口官方文档、禁止照抄。Yarn 档互捐，禁止把 26.1.2 mojmap 当本档。
+# mc-enchantment（1.21.10）
 
-# mc-enchantment
+> 一手来源：本档 docs 语料 `develop_items_custom-enchantment-effects.md`（同 1.21 系语料：附魔 data-driven，effect components 机制）。
 
-> Wave D 技能骨架（fabric 1.21.10）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+## Decision Flow
 
-## 快速入口
+```
+→ 简单附魔（属性加成类）→ 数据驱动：注册表 JSON + 默认 effect components
+→ 默认效果不够 → 自定义 enchantment effect（语料专页 + 代码面）
+→ 效果组件清单 → Minecraft Wiki《Enchantment definition#Effect components》（语料页引用链接）
+→ 类名核实 → search_fabric_docs(version=1.21.10) / convert_mapping（to=yarn）
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.21.3/knowledge/antipatterns/`
+## 本档口径（已核实）
+
+- 1.21 起附魔是数据驱动的（语料专页原文，1.21.10 延续该机制）。
+- 复杂效果走自定义 effect component（Java 侧）。
+
+## 反模式
+
+- 把 1.20.x 的纯代码注册附魔写法套到 1.21.10。
+- effect 组件名凭记忆写。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 语料全文：`get_doc_full`（develop_items_custom-enchantment-effects，version=1.21.10）；数据面：`mc-datapack`。

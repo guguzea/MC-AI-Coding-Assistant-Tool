@@ -7,18 +7,29 @@ dependencies: []
 mappings: mcp
 ---
 
-> ⚠️ **W5-2 裁定（2026-09-19）**：本仓 07 规则正文未核实 worldgen（全树 0 个 worldgen token），本技能**不含已核实签名**——一律改口 `search_forge_docs` / `search_neoforge_docs` / `search_fabric_docs`（worldgen_* 页，如 neoforge_1.21.10 的 `worldgen_biomemodifier.md`）核实后再写；禁止把本技能当已核实 API 白名单。
+# mc-worldgen（1.12.2）
 
-# mc-worldgen
+> 一手来源：类名 `Biome` / `World` 经 `query_api`（version=1.12.2）核实存在（MCP 命名）。1.12.2 世界生成是**代码面**（没有 1.16+ 的 worldgen 数据包目录）；BiomeProvider 等生成器类名本档语料无专页，写前核实。
 
-> Wave D 技能骨架（forge 1.12.2）。详细规则见对应 `.cursor/rules/` 与 MCP `search_forge_docs` / 专题工具。
+## Decision Flow
 
-## 快速入口
+```
+→ 修改生物群系/生成物 → 1.12.2 是代码面（无 worldgen JSON 目录）
+→ Biome 相关类 → Biome（query_api 已钉）；生成器类名先核实再写
+→ 数据包 worldgen JSON → 本版不存在（那是 1.16+ 形态，见 mc-datapack）
+→ 注册与生命周期 → mc-registry、01-registry.mdc
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`forge/1.12.2/knowledge/antipatterns/`
+## 本档口径（已核实）
+
+- `Biome` / `World` 在本档存在（query_api found）。
+- 本档语料无世界生成专页——不要把 1.16+ 的 `data/<modid>/worldgen/` JSON 或 `BiomeLoadingEvent` 写进 1.12.2 工程（那些机制本版不存在）。
+
+## 反模式
+
+- 把 1.16+ 的 worldgen 数据包形态写进 1.12.2。
+- 凭记忆写 BiomeProvider/生成器链（本档无一手来源）。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 类/方法核实：`query_api`（version=1.12.2）+ 反编译；反模式库：`forge/1.12.2/knowledge/antipatterns/`。

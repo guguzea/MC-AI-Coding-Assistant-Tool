@@ -7,19 +7,30 @@ dependencies: []
 mappings: yarn
 ---
 
-[DONOR_SKILL 禁止直接抄写]
-本 Skill 正文为本地维护的结构/流程草稿，未经官方 API 核验（无外部捐入源版本：fabric/1.21.3 无同名技能；fabric/1.21.8 与 fabric/1.21.10 的同名 Skill 均由本档派生）。不得直接使用正文里的类名/方法。先 search_fabric_docs(version=1.21.4) 核对类名/方法签名（不要用 version=1.21.3），对不上就改口官方文档、禁止照抄。Yarn 档互捐，禁止把 26.1.2 mojmap 当本档。
+# mc-enchantment（1.21.4）
 
-# mc-enchantment
+> 一手来源：本档 docs 语料 `data/fabric_1.21.4/fabric-docs/1.21.4/processed/develop_items_custom-enchantment-effects.md`（原文：「Starting from version 1.21, custom enchantments in Minecraft use a "data-driven" approach」——附魔拆解为 effect components，默认效果含 item damage / knockback / experience）。
 
-> Wave D 技能骨架（fabric 1.21.4）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+## Decision Flow
 
-## 快速入口
+```
+→ 简单附魔（属性加成类）→ 数据驱动：注册表 JSON + 默认 effect components
+→ 默认效果不够 → 自定义 enchantment effect（语料专页 + 代码面）
+→ 效果组件清单 → Minecraft Wiki《Enchantment definition#Effect components》（语料页原文给出的链接）
+→ 类名核实 → search_fabric_docs(version=1.21.4) / convert_mapping（to=yarn）
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.21.3/knowledge/antipatterns/`
+## 本档口径（已核实）
+
+- **1.21 起附魔是数据驱动的**（语料专页原文）；效果被拆成 effect components，默认支持伤害/击退/经验等。
+- 复杂效果需要自定义 effect component（Java 侧）——该页即「Custom Enchantment Effects」教程。
+- 默认效果清单以 wiki《Enchantment definition》页为准（语料页引用的官方 wiki 链接）。
+
+## 反模式
+
+- 把 1.20.x 的纯代码注册附魔写法套到 1.21（两代机制）。
+- effect 组件名凭记忆写（先查语料专页 / wiki）。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 语料全文：`get_doc_full`（develop_items_custom-enchantment-effects，version=1.21.4）；数据面：`mc-datapack`。

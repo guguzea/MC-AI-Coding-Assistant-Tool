@@ -7,18 +7,29 @@ dependencies: []
 mappings: mcp
 ---
 
-> ⚠️ **W5-2 裁定（2026-09-19）**：本仓 07 规则正文未核实 worldgen（全树 0 个 worldgen token），本技能**不含已核实签名**——一律改口 `search_forge_docs` / `search_neoforge_docs` / `search_fabric_docs`（worldgen_* 页，如 neoforge_1.21.10 的 `worldgen_biomemodifier.md`）核实后再写；禁止把本技能当已核实 API 白名单。
+# mc-worldgen（1.20.4）
 
-# mc-worldgen
+> 一手来源：本档 docs 语料 `datagen_server_datapackregistries.md`（与 1.20.1 同版线专页：DatapackBuiltinEntriesProvider + RegistrySetBuilder）；类名 `Biome` 经 `query_api`（version=1.20.4）核实存在。
 
-> Wave D 技能骨架（forge 1.20.4）。详细规则见对应 `.cursor/rules/` 与 MCP `search_forge_docs` / 专题工具。
+## Decision Flow
 
-## 快速入口
+```
+→ 数据包注册表对象（biome 等）的代码生成 → DatapackBuiltinEntriesProvider + RegistrySetBuilder（语料专页）
+→ 挂进 data gen → GatherDataEvent 里 addProvider(..., event.includeServer(), ...)（语料示例，MOD 事件总线）
+→ 数据包 JSON 直写路线 → data/<ns>/worldgen/（见 mc-datapack）
+→ 引用群系 → Biome（query_api 已钉）
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`forge/1.20.4/knowledge/antipatterns/`
+## 本档口径（已核实）
+
+- DatapackBuiltinEntriesProvider / RegistrySetBuilder 生成路线在本档语料专页有示例（1.20.1 全页引文同线适用，本档同页在档）。
+- `Biome` 在本档存在（query_api found）。
+
+## 反模式
+
+- 在 client datagen 侧跑 datapack 注册表生成。
+- 凭记忆写 RegistrySetBuilder 链。
 
 ## 下一步
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+- 语料全文：`get_doc_full`（datagen_server_datapackregistries）；数据面：mc-datapack；反模式库：`forge/1.20.4/knowledge/antipatterns/`。
