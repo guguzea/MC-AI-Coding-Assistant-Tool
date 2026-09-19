@@ -2532,6 +2532,19 @@ async function testFivePlatformRouting() {
   const bad = validateAddonManifest(JSON.stringify({ format_version: 2, experimentalGameplay: true, header: {}, modules: [] }));
   assert.equal(bad.ok, false);
   assert.ok(bad.errors.some((e) => /experimentalGameplay/.test(e)));
+  // W5-2 裁定 7-B（2026-09-19）：format_version 接受面冻结 —— 整数形收（含 3），一切字符串形（semver /
+  // Preview 串）拒绝；官方 semver 语义一手核实前不放行（bedrock/.cursor/rules/01-manifest.mdc 裁定段）。
+  const semverProbe = (v) => validateAddonManifest(JSON.stringify({
+    format_version: v,
+    header: { name: "x", description: "d", version: [1, 0, 0], min_engine_version: [1, 26, 0], uuid: "123e4567-e89b-12d3-a456-426614174000" },
+    modules: [{ type: "data", uuid: "123e4567-e89b-12d3-a456-426614174001", version: [1, 0, 0] }],
+  }));
+  assert.equal(semverProbe(3).ok, true, "整数 3 必须继续接受（3 是 Preview 版本号，接受面不含字符串形）");
+  for (const v of ["3", "3.0.1", "3.0.0-beta.1"]) {
+    const r = semverProbe(v);
+    assert.equal(r.ok, false, `字符串形 format_version=${JSON.stringify(v)} 必须拒绝（7-B 冻结）`);
+    assert.ok(r.errors.some((e) => /必须是正整数/.test(e)), JSON.stringify(r.errors));
+  }
   const noModUuid = validateAddonManifest(JSON.stringify({
     format_version: 2,
     header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
