@@ -1,9 +1,13 @@
 ---
 name: mc-datagen
 description: Minecraft Forge 数据生成器。GatherDataEvent、DataProvider、RecipeProvider、LootTableProvider、LanguageProvider。触发词：DataGen、DataGenerator、LootTables、Recipes、BlockStates、TagProvider、AdvancementProvider、LanguageProvider
+mappings: parchment
 ---
 
 # 数据生成器（Forge 1.18.2）
+
+> **本件命名口径**：下文代码里的 `DataGenerators` / `gatherData` / `ModItems` / `ModBlocks` / `ModRecipes` / `ModBlockTagsProvider` / `ModItemTagsProvider` / `ModRecipeProvider` / `ModLootTableProvider` / `ModItemModelsProvider` / `ModBlockStatesProvider` / `ModLanguageProvider`，以及注册常量 `MY_ITEM` / `MY_BLOCK` / `MY_BLOCK_ITEM` / `OTHER_ITEM`，都是**本 Skill 示例工程的自造名**（不是 Minecraft / Forge API，不需要语料出处）——换成你工程里的类名与常量名。
+> 确实在本档语料逐字命中的只有类名与覆盖方法名：`DataGenerator`、`GatherDataEvent#getExistingFileHelper`、`#includeClient` / `#includeServer`、`DataGenerator#addProvider`、`BlockStateProvider#registerStatesAndModels`、`ItemModelProvider` / `ModelProvider#registerModels`、`RecipeProvider#buildCraftingRecipes`、`LootTableProvider#getTables`、`TagsProvider#addTags`、`LanguageProvider#addTranslations`、`SoundDefinitionsProvider#registerSounds`、`AdvancementProvider#registerAdvancements`（页面 `data/forge_1.18.2/forge-docs/1.18.2/processed/datagen.md`）。**本档语料没有 datagen 的 models / recipes / loottables 子页面**，所以配方与模型示例里的成员名逐个标了 `TODO(未核实)`，不要当已核实签名抄。
 
 ## 快速开始
 
@@ -68,21 +72,23 @@ public class ModRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
-        ShapedRecipeBuilder.shaped(ModItems.MY_ITEM.get())
+        // TODO(未核实：Items.DIAMOND / Items.STICK / Items.GOLD_INGOT / Items.COBBLESTONE 未在 forge 1.18.2 语料命中，需 search_forge_docs 复核或反编译)
+        ShapedRecipeBuilder.shaped(ModItems.MY_ITEM.get()) // ModItems.MY_ITEM = 示例工程自造名
             .pattern(" X ")
             .pattern(" X ")
             .pattern(" Y ")
-            .define('X', Items.DIAMOND)
-            .define('Y', Items.STICK)
-            .unlockedBy("has_diamond", has(Items.DIAMOND))
+            .define('X', Items.DIAMOND) // 未核实: Items.DIAMOND
+            .define('Y', Items.STICK) // 未核实: Items.STICK
+            .unlockedBy("has_diamond", has(Items.DIAMOND)) // 未核实: Items.DIAMOND
             .save(consumer);
 
-        ShapelessRecipeBuilder.shapeless(ModItems.OTHER_ITEM.get())
-            .requires(Items.GOLD_INGOT, 3)
-            .requires(Items.DIAMOND)
-            .unlockedBy("has_gold", has(Items.GOLD_INGOT))
+        ShapelessRecipeBuilder.shapeless(ModItems.OTHER_ITEM.get()) // ModItems.OTHER_ITEM = 示例工程自造名
+            .requires(Items.GOLD_INGOT, 3) // 未核实: Items.GOLD_INGOT
+            .requires(Items.DIAMOND) // 未核实: Items.DIAMOND
+            .unlockedBy("has_gold", has(Items.GOLD_INGOT)) // 未核实: Items.GOLD_INGOT
             .save(consumer);
 
+        // 未核实: Ingredient.of / Items.COBBLESTONE / Items.STONE 三个成员名本档语料 0 命中
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
             .unlockedBy("has_cobblestone", has(Items.COBBLESTONE))
             .save(consumer);
@@ -93,17 +99,19 @@ public class ModRecipeProvider extends RecipeProvider {
 ## 方块状态生成
 
 `BlockStateProvider` 构造：`DataGenerator`、`modId`、`ExistingFileHelper`。
+本档语料只有 `datagen.md` 的 Provider 清单，**没有 models / blockstates 子页面**，下面三个成员名均无出处。
 
 ```java
-public class ModBlockStatesProvider extends BlockStateProvider {
+public class ModBlockStatesProvider extends BlockStateProvider { // ModBlockStatesProvider = 示例工程自造名
     public ModBlockStatesProvider(DataGenerator generator, ExistingFileHelper efh) {
         super(generator, MOD_ID, efh);
     }
 
     @Override
     protected void registerStatesAndModels() {
-        simpleBlock(ModBlocks.MY_BLOCK.get(),
-            models().cubeAll(ModBlocks.MY_BLOCK.getId().getPath(), modLoc("block/my_block"))
+        // TODO(未核实：simpleBlock / models().cubeAll / modLoc 未在 forge 1.18.2 语料命中，需 search_forge_docs 复核或反编译)
+        simpleBlock(ModBlocks.MY_BLOCK.get(), // 未核实: simpleBlock
+            models().cubeAll(ModBlocks.MY_BLOCK.getId().getPath(), modLoc("block/my_block")) // 未核实: cubeAll / modLoc
         );
     }
 }
@@ -112,14 +120,15 @@ public class ModBlockStatesProvider extends BlockStateProvider {
 ## 物品模型（来自方块）
 
 ```java
-public class ModItemModelsProvider extends ItemModelProvider {
+public class ModItemModelsProvider extends ItemModelProvider { // ModItemModelsProvider = 示例工程自造名
     public ModItemModelsProvider(DataGenerator generator, ExistingFileHelper helper) {
         super(generator, MOD_ID, helper);
     }
 
     @Override
     protected void registerModels() {
-        withExistingParent(ModItems.MY_BLOCK_ITEM.getId().getPath(), modLoc("block/my_block"));
+        // TODO(未核实：withExistingParent / modLoc 未在 forge 1.18.2 语料命中，需 search_forge_docs 复核或反编译)
+        withExistingParent(ModItems.MY_BLOCK_ITEM.getId().getPath(), modLoc("block/my_block")); // 未核实: withExistingParent / modLoc
     }
 }
 ```

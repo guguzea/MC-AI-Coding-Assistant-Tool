@@ -4,9 +4,29 @@ description: Fabric 1.21.10 mc-renderer。类名只来自本档核实表与 sear
 platform: fabric
 version: "1.21.10"
 docsTool: search_fabric_docs
+mappings: yarn
+mappings_alt: mojmap
 ---
 
 # mc-renderer（Fabric 1.21.10）
+
+### ⚠️ 映射口径：本档语料是 mojmap
+
+本件正文出现的下列名字是 **mojmap（Mojang 官方映射）/ 上游文档页写法**，本档 frontmatter 已声明 `mappings: yarn`，落笔须用右列。两套名不能混用。
+
+| mojmap 名 | Yarn 名 | 适用版本（13 档逐档 join 实测） | 依据 |
+| --- | --- | --- | --- |
+| `BlockEntityRendererProvider` | `BlockEntityRendererFactory` | 1.17.1–1.21.11 | join（`net.minecraft.client.render.block.entity.BlockEntityRendererFactory`） |
+| `BlockEntityRenderers` | `BlockEntityRendererFactories` | 1.17.1–1.21.11 | join（`net.minecraft.client.render.block.entity.BlockEntityRendererFactories`） |
+| `DefaultVertexFormat` | `VertexFormats` | 1.14.4–1.21.11 | join（`net.minecraft.client.render.VertexFormats`） |
+| `FormattedCharSequence` | `OrderedText` | 1.16.5–1.21.11 | join（`net.minecraft.text.OrderedText`） |
+| `GuiGraphics` | `DrawContext` | 1.20.1–1.21.11 | join（`net.minecraft.client.gui.DrawContext`） |
+| `PoseStack` | `MatrixStack` | 1.16.5–1.21.11 | join（`net.minecraft.client.util.math.MatrixStack`） |
+| `SubmitNodeCollector` | `OrderedRenderCommandQueue` | 1.21.10–1.21.11 | join（`net.minecraft.client.render.command.OrderedRenderCommandQueue`） |
+| `Tesselator` | `Tessellator` | 1.14.4–1.21.11 | join（`net.minecraft.client.render.Tessellator`） |
+
+- 上表只证**类名存在与包路径**，**不证**方法名/参数/返回值。逐签名以本档语料为准：`search_fabric_docs version=1.21.10`，或 `get_minecraft_source`（需 JDK 17+）/ IDE `./gradlew genSources`。
+- 两套同名的类（`ItemStack` / `BlockPos` 等）不在表内，直接写。`net.fabricmc.fabric.api.*`（Fabric API 自身不混淆）与示例工程自造类名也不在表内。
 
 > 本档为**薄档**（Fabric 1.21.10）。
 > 文档树核实：`data/fabric_1.21.10/fabric-docs/1.21.10/processed/` 含 `develop_rendering_basic-concepts`、`develop_blocks_block-entity-renderer`、`develop_rendering_gui-graphics`、`develop_rendering_hud`、`develop_rendering_world`、`develop_blocks_transparency-and-tinting`（**本版新增**）、`develop_items_item-appearance`。

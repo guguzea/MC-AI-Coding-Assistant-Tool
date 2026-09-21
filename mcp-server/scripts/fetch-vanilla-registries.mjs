@@ -224,41 +224,58 @@ async function main() {
 
   const existingManifest = path.join(outDir, "manifest.json");
   if (!force && fs.existsSync(existingManifest)) {
+    let fullDump = false;
     try {
       const m = JSON.parse(fs.readFileSync(existingManifest, "utf8"));
-      if (m.source && !String(m.source).includes("curated-minimal") && (m.counts?.blocks ?? 0) > 100) {
-        console.error(`existing full dump for ${version}; pass --force to rebuild`);
-      }
+      fullDump =
+        Boolean(m.source) && !String(m.source).includes("curated-minimal") && (m.counts?.blocks ?? 0) > 100;
     } catch {
       /* continue */
     }
-  }
-
-  // Remove old curated fixture files when forcing full rebuild
-  if (force) {
-    for (const f of fs.readdirSync(outDir)) {
-      if (f.endsWith(".json") || f.endsWith(".sqlite")) {
-        try {
-          fs.unlinkSync(path.join(outDir, f));
-        } catch {
-          /* ignore */
-        }
-      }
+    if (fullDump) {
+      // W4-8（2026-09-20）：此早退原先缺 return —— 日志说「别重建」，实现却继续往下跑。
+      console.error(`existing full dump for ${version}; pass --force to rebuild`);
+      return;
     }
   }
+
+  // W4-8（2026-09-20）：改为「先抓到 stage 目录、成功后再换入」。
+  // 原实现在抓取（252-259）之前就清空 outDir 的 json/sqlite（238-248），
+  // 一次网络失败 exit 1 会留下空目录（旧语料不可恢复）。
+  const stageDir = `${outDir}.stage-${process.pid}`;
+  fs.rmSync(stageDir, { recursive: true, force: true });
+  ensureDir(stageDir);
 
   let written;
   let sourceLabel;
   if (fromReports) {
     if (!fs.existsSync(fromReports)) throw new Error(`reports dir missing: ${fromReports}`);
-    written = importFromReports(fromReports, outDir);
+    written = importFromReports(fromReports, stageDir);
     sourceLabel = `reports:${fromReports}`;
   } else {
-    written = await importFromMinecraftData(version, outDir);
+    written = await importFromMinecraftData(version, stageDir);
     sourceLabel = "minecraft-data@master";
   }
 
-  if (!written.length) throw new Error("No registries written");
+  if (!written.length) {
+    fs.rmSync(stageDir, { recursive: true, force: true });
+    throw new Error("No registries written（原有语料保持不动，未做任何删除）");
+  }
+
+  // 换入：stage 已完整，此时才删旧的 json/sqlite，再 move 新件。
+  for (const f of fs.readdirSync(outDir)) {
+    if (f.endsWith(".json") || f.endsWith(".sqlite")) {
+      try {
+        fs.unlinkSync(path.join(outDir, f));
+      } catch {
+        /* ignore */
+      }
+    }
+  }
+  for (const f of fs.readdirSync(stageDir)) {
+    fs.renameSync(path.join(stageDir, f), path.join(outDir, f));
+  }
+  fs.rmSync(stageDir, { recursive: true, force: true });
   const manifest = writeManifest(outDir, version, sourceLabel, written);
   updateAttribution(version, sourceLabel);
 

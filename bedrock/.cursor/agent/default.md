@@ -38,3 +38,18 @@
 
 完整流程（从零建工程 / 完整新内容 / 分诊 / 发布）才调 `get_workflow_template`；改已有代码、补方法、查文档走规则 + Skill，不要先调工作流。
 - 写盘 / 拷贝文件 / Gradle 均须用户确认（人在环）。
+
+## 工具参数面（W4-6，2026-09-20 文档化）
+
+调用基岩工具前先看清参数名 —— 这两个工具**都不吃** `--project` 这种工程路径形：
+
+- `validate_addon_manifest`：吃 `manifestJson`（manifest.json 的**内容**，或配合 `projectPath` 由工具自己找包根），不是「传一个工程路径就自动全包校验」。
+- `analyze_bedrock_log`：三选一 `logPath`（content_log.txt 绝对路径）/ `logsDir`（含 `content_log*.txt` 的目录）/ `projectPath`（自动找 `logs/`、`behavior_packs/logs/`、`worlds/logs/`）；可选 `maxLines`（默认 400，封顶 4000）/ `maxBytes`（默认 512KB，封顶 2MB）。
+- 行格式：`[时间][级别][标签] 消息`；级别允许方括号或尖括号（`[Error]` / `<Error>`），时间戳允许 `YYYY-MM-DD HH:MM:SS`（毫秒用 `.` / `,` / `:` 分隔）或短 `HH:MM:SS`；时间戳与级别之间允许空格。
+- 真机 `content_log.txt` 样例仓内仍缺（`test-fixtures/bedrock-content-log.txt` 是按上述形**合成**的回归样例）⇒ 需要真机样例时请用户提供。
+- **BDS 真机取证（2026-09-20，官方 BDS 1.21.102.1 / Windows）**：`server.properties` 设 `content-log-file-enabled=true` 后，服务器会打印
+  「Content logging to disk is enabled. Writing log to: ContentLog<时间戳>」，但**实际不产出任何文件**
+  （4 次起服验证：服务器目录全域、`%TEMP%`、`%APPDATA%`、`%LOCALAPPDATA%` 都没有；预建 `logs/` 也一样）。
+  真机可得的内容错误只在**控制台**，行形是 `[YYYY-MM-DD HH:MM:SS:mmm LEVEL] msg`（级别与时间戳同处一方括号、无标签方括号），
+  明细以**制表符缩进**跟在下一行 ⇒ 把控制台输出原样存成 `.txt` 交给 `analyze_bedrock_log --logPath` 即可（工具已支持该行形 + 缩进续行归并）。
+  样例：`mcp-server/test-fixtures/bedrock-bds-console.txt`（Session ID 已脱敏）。

@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-19T12:42:29.190Z",
+  "built_at": "2026-09-20T17:29:06.108Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -415,24 +415,24 @@
       "version": "1.18.2",
       "source": "forge-docs",
       "path": "forge_1.18.2/forge-docs/1.18.2/semantic/db.sqlite",
-      "chunks": 359,
-      "embedded": 281,
-      "built_at": "2026-09-13T05:23:34.144Z",
+      "chunks": 472,
+      "embedded": 380,
+      "built_at": "2026-09-20T17:22:16.688Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "029250466656c504ec069ecdc6113aa9438eae631c8c32244584373bb6f448af"
+      "sha256": "b780c711a5da2c8d5c729be090324b1ccbe8c601e71fbfba62b3cd17e9ccb377"
     },
     {
       "platform": "forge",
       "version": "1.19.4",
       "source": "forge-docs",
       "path": "forge_1.19.4/forge-docs/1.19.4/semantic/db.sqlite",
-      "chunks": 584,
-      "embedded": 441,
-      "built_at": "2026-09-13T05:24:00.565Z",
+      "chunks": 720,
+      "embedded": 560,
+      "built_at": "2026-09-20T17:29:06.082Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "fbb19ea2b12fefbe5a8cbd0a81e19e363255e61d959841f31d2829aa96fc32e7"
+      "sha256": "598b76ccb318a1461f09c367fb3b6bc8683a85215ac00ff86e946bffaff7078d"
     },
     {
       "platform": "forge",

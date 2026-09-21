@@ -1,19 +1,15 @@
 {
   "total": 867,
-  "banner": 222,
-  "noPascal": 94,
+  "banner": 130,
+  "noPascal": 3,
   "bySkill": {
     "mc-advancement": {
       "banner": 13,
       "noPascal": 0
     },
     "mc-ai": {
-      "banner": 13,
-      "noPascal": 13
-    },
-    "mc-datapack": {
-      "banner": 13,
-      "noPascal": 13
+      "banner": 3,
+      "noPascal": 3
     },
     "mc-dimension": {
       "banner": 13,
@@ -23,10 +19,6 @@
       "banner": 13,
       "noPascal": 0
     },
-    "mc-enchantment": {
-      "banner": 13,
-      "noPascal": 13
-    },
     "mc-energy": {
       "banner": 13,
       "noPascal": 0
@@ -35,17 +27,17 @@
       "banner": 7,
       "noPascal": 0
     },
-    "mc-multiblock": {
-      "banner": 13,
-      "noPascal": 13
+    "mc-loottable": {
+      "banner": 10,
+      "noPascal": 0
     },
     "mc-potion": {
       "banner": 13,
       "noPascal": 0
     },
-    "mc-resourcepack": {
-      "banner": 13,
-      "noPascal": 13
+    "mc-renderer": {
+      "banner": 6,
+      "noPascal": 0
     },
     "mc-structure": {
       "banner": 13,
@@ -58,27 +50,7 @@
     "mc-weather": {
       "banner": 13,
       "noPascal": 0
-    },
-    "mc-command": {
-      "banner": 10,
-      "noPascal": 9
-    },
-    "mc-loottable": {
-      "banner": 10,
-      "noPascal": 0
-    },
-    "mc-model": {
-      "banner": 10,
-      "noPascal": 10
-    },
-    "mc-renderer": {
-      "banner": 6,
-      "noPascal": 0
-    },
-    "mc-worldgen": {
-      "banner": 10,
-      "noPascal": 10
     }
   },
-  "_comment": "骨架技能普查基线（口径见 assert-skill-skeleton-census.mjs 头注释）；只由 MC_SKILL_SKELETON_RELEDGER=1 重算，禁止手改数字；5-B 补正使计数只降不升，簇消失=补正完成"
+  "_comment": "骨架技能普查基线（口径见 assert-skill-skeleton-census.mjs 头注释）；只由 MC_SKILL_SKELETON_RELEDGER=1 重算，禁止手改数字；2026-09-20 item 4：按 **git HEAD 已提交树** 收紧（222/94 → 130/3）——不能用工作区在制品数字，否则 fresh clone 会因「基线比已提交内容更紧」而红；5-B 在制品（工作区 113/3）落地后可再降一次。只由 MC_SKILL_SKELETON_RELEDGER=1 重算，禁止手改数字。"
 }

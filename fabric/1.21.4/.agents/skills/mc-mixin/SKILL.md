@@ -4,6 +4,7 @@ description: Fabric 1.21.4 mc-mixin。类名只来自本档核实表与 search_f
 platform: fabric
 version: "1.21.4"
 docsTool: search_fabric_docs
+mappings: yarn
 ---
 
 # mc-mixin（Fabric 1.21.4）

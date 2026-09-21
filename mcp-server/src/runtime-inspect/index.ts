@@ -117,6 +117,34 @@ function readTail(abs: string, maxBytes: number, maxLines: number): { text: stri
   }
 }
 
+/**
+ * 崩溃报告按「保头」读取：崩溃指纹（`---- Minecraft Crash Report ----` / Mod List / loader 名）
+ * 全在头部，按尾部截断会把指纹整段丢掉 —— 与 crash_analyze 的「读取后从头截到 CRASH_ANALYZE_MAX」
+ * 口径统一。日志仍走 readTail（latest.log 的关键信息在尾部）。
+ */
+function readHead(abs: string, maxBytes: number): { text: string; truncated: boolean; bytes: number } {
+  const fd = openSync(abs, "r");
+  try {
+    const size = fstatSync(fd).size;
+    const len = Math.max(0, Math.min(size, maxBytes));
+    const buf = Buffer.alloc(len);
+    if (len > 0) {
+      let off = 0;
+      while (off < len) {
+        const n = readSync(fd, buf, off, len - off, off);
+        if (n <= 0) break;
+        off += n;
+      }
+    }
+    let text = buf.toString("utf8");
+    // 头部按字节截断可能切在多字节字符中间，去掉尾部替换符
+    if (size > len && text.charCodeAt(text.length - 1) === 0xfffd) text = text.slice(0, -1);
+    return { text, truncated: size > len, bytes: buf.length };
+  } finally {
+    closeSync(fd);
+  }
+}
+
 function boundedLogsDir(projectRoot: string, deadline: number): string | undefined {
   const root = resolve(projectRoot);
   for (const parts of REL_LOG_DIRS) {
@@ -237,9 +265,14 @@ export function inspectRuntime(query: InspectRuntimeQuery): Record<string, unkno
   let crashAnalysis: ReturnType<typeof analyzeCrash> | undefined;
   if (crashFile) {
     try {
-      const tail = readTail(crashFile, maxBytes, maxLines);
-      if (tail.truncated) warnings.push(`crash-report 已截断（尾部 ${maxLines} 行 / ${maxBytes} 字节上限）`);
-      let crashText = tail.text;
+      // W4-7（2026-09-20）：崩溃报告改保头读取（指纹在头部），与 crash_analyze 口径统一。
+      const head = readHead(crashFile, Math.min(maxBytes, CRASH_ANALYZE_MAX));
+      if (head.truncated) {
+        warnings.push(
+          `crash-report 已按头部截断（保头 ${Math.min(maxBytes, CRASH_ANALYZE_MAX)} 字节上限；指纹在头部，与 crash_analyze 口径一致）`,
+        );
+      }
+      let crashText = head.text;
       if (crashText.length > CRASH_ANALYZE_MAX) {
         crashText = crashText.slice(0, CRASH_ANALYZE_MAX);
         warnings.push(`crash-report 已截断至 ${CRASH_ANALYZE_MAX} 字符后送 analyzeCrash（分析上限，未提高到 2MB）`);

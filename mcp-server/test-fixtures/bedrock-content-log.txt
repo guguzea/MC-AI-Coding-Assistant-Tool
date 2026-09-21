@@ -1,0 +1,7 @@
+[2026-09-20 12:00:00.123][INFO][ContentLog] Content log started
+[2026-09-20 12:00:01:045]<Error>[Scripting] [Scripting][error] Script error: boom
+[12:00:02][WARNING][addon] Deprecated API usage
+[12:00:03]<Error>[Scripting] Missing dependency detected
+[12:00:04][ERROR][script] Script start failed
+[12:00:05] [INFO][ContentLog] space allowed before level
+this is not a content log line

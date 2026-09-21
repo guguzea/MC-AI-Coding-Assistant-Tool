@@ -152,6 +152,39 @@ function checkLogoFile(projectRoot: string, all: ProvidedMetadata[]): Array<{ mi
   return out;
 }
 
+/**
+ * W2-2④（2026-09-20）：`publishing.md` 的人工清单里混着平台专属项 ——
+ * Forge 族：`[[dependencies.*]]` 声明 / `reobfJar` / 「`logoFile` 若在 toml 声明」；
+ * Fabric/Quilt 族：「依赖声明（Fabric/Quilt）：`depends` / `suggests`」。
+ * 按工程实际元数据面过滤，避免给 Fabric 工程念 Forge 清单（反之亦然）。
+ * 中性项（产物路径 / changelog / 自测 / 资源尺寸）两边都保留。
+ */
+const MANUAL_FORGE_ONLY = /\[\[dependencies|reobfJar|reobf 后|mods\.toml|neoforge\.mods\.toml|\btoml\b/i;
+const MANUAL_JSON_ONLY = /depends|suggests|fabric\.mod\.json|quilt\.mod\.json|Fabric\/Quilt/i;
+
+function filterManualByPlatform(
+  manual: string[],
+  hasToml: boolean,
+  hasJson: boolean,
+): { kept: string[]; dropped: string[] } {
+  if (hasToml && hasJson) return { kept: manual, dropped: [] };
+  const dropped: string[] = [];
+  const kept = manual.filter((m) => {
+    const forgeOnly = MANUAL_FORGE_ONLY.test(m) && !MANUAL_JSON_ONLY.test(m);
+    const jsonOnly = MANUAL_JSON_ONLY.test(m) && !MANUAL_FORGE_ONLY.test(m);
+    if (hasJson && !hasToml && forgeOnly) {
+      dropped.push(m);
+      return false;
+    }
+    if (hasToml && !hasJson && jsonOnly) {
+      dropped.push(m);
+      return false;
+    }
+    return true;
+  });
+  return { kept, dropped };
+}
+
 export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult {
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -227,6 +260,7 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
   const checklist = loadPublishingChecklist();
   const fields: string[] = [];
   const missing: string[] = [];
+  let manual: string[] = checklist.manual;
   if (checklist.available) {
     for (const req of checklist.requirements) {
       const targets = metadataMatching(provided, req.file);
@@ -240,7 +274,10 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
         }
       }
     }
-    if (checklist.logoFileRule) {
+    // W2-2③（2026-09-20）：logoFile 只能从 toml 族声明里核（checkLogoFile 对 `.json` 直接 continue）。
+    // 纯 json 工程把 logoFile 计进 fields 属**幻影计数** —— 声称「已机核」，实际无从核。
+    const hasTomlMeta = provided.some((m) => !m.name.endsWith(".json"));
+    if (checklist.logoFileRule && hasTomlMeta) {
       if (!fields.includes("logoFile")) fields.push("logoFile");
       if (projectRoot) {
         for (const hit of checkLogoFile(projectRoot, provided)) {
@@ -258,8 +295,17 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
     if (jsonOnly && jsonReqs.length === 0) {
       warnings.push(
         "publishing.md 清单的可机核字段只点 mods.toml 族 ⇒ 本工程（纯 Fabric/Quilt 元数据）0 项被机核；" +
-          "publishing.manual 未按平台过滤、含 Forge 专属文案（[[dependencies.*]] / reobfJar / toml 声明）—— " +
-          "发布前按平台自行核对，不要把这份清单当全平台清单",
+          "人工清单已按平台过滤，但机核字段面的缺口仍在 —— 发布前按平台自行核对，不要把这份清单当全平台清单",
+      );
+    }
+    // W2-2④（2026-09-20）：manual[] 按工程元数据面过滤，并把过滤条数说破（不静默）。
+    const hasJsonMeta = provided.some((m) => m.name.endsWith(".json"));
+    const filteredManual = filterManualByPlatform(checklist.manual, hasTomlMeta, hasJsonMeta);
+    manual = filteredManual.kept;
+    if (filteredManual.dropped.length > 0) {
+      warnings.push(
+        `publishing.md 人工清单已按平台过滤 ${filteredManual.dropped.length} 条` +
+          `（本工程元数据面 = ${hasJsonMeta ? "json 族" : "toml 族"}，被过滤项属另一平台；需要全平台口径请直接读 publishing.md）`,
       );
     }
     checks.push(`community_knowledge publishing.md 清单（${fields.length} 项可机器核对）`);
@@ -288,7 +334,7 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
       available: checklist.available,
       fields,
       missing,
-      manual: checklist.manual,
+      manual,
       ...(checklist.reason ? { reason: checklist.reason } : {}),
     },
   };

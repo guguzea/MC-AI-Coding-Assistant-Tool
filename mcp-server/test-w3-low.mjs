@@ -363,6 +363,38 @@ function makeStoreZip(name, data, { lieCsize } = {}) {
   const bareCsv = convertMapping({ from: "mcp", to: "mojang", memberName: "getHealth", version: "1.14.4" });
   assert.equal(bareCsv.ambiguous, true, `F178 不得改坏 1.14.4 裸名 CSV 路径: ${JSON.stringify(bareCsv.notes)}`);
   console.log("F178 1.14.4 yarn 类查询分派: ok");
+
+  // ── W4-5（2026-09-20）：to=yarn 只在真 yarn-tiny 档可答；forge 档 named 列不得冒充 Yarn ──
+  // 一手实测 mappingEra：forge_1.12.2=forge-srg（↔ 1.14.4 fabric=yarn-tiny）。
+  const y1122 = convertMapping({ from: "mojang", to: "yarn", memberName: "getHealth", version: "1.12.2" });
+  assert.equal(y1122.found, false, `1.12.2 无 Yarn 数据，不得回 named 冒充: ${JSON.stringify(y1122)}`);
+  assert.equal(y1122.resultKind, "YARN_DATA_UNAVAILABLE", y1122.resultKind);
+  assert.equal(y1122.converted, null);
+  assert.equal(y1122.action?.code, "DATA_UNAVAILABLE", y1122.action?.code);
+
+  const y1352 = convertMapping({ from: "mojang", to: "yarn", memberName: "getHealth", version: "1.13.2" });
+  assert.equal(y1352.found, false, `1.13.2（tsrg）不得冒充 Yarn: ${JSON.stringify(y1352)}`);
+  assert.equal(y1352.resultKind, "YARN_DATA_UNAVAILABLE", y1352.resultKind);
+
+  const yFabric = convertMapping({
+    from: "obfuscated",
+    to: "yarn",
+    memberName: "er",
+    ownerClass: "net.minecraft.entity.LivingEntity",
+    version: "1.20.1",
+  });
+  assert.equal(yFabric.found, true, `yarn-tiny 档必须仍可答 to=yarn: ${JSON.stringify(yFabric)}`);
+  assert.equal(yFabric.converted, "getHealth");
+
+  const mcpToYarn = convertMapping({
+    from: "mcp",
+    to: "yarn",
+    memberName: "net.minecraft.entity.LivingEntity",
+    version: "1.21.1",
+  });
+  assert.equal(mcpToYarn.found, false, `1.21.1 from=mcp 类查询应被 F131 门拒: ${JSON.stringify(mcpToYarn)}`);
+  assert.equal(mcpToYarn.resultKind, "YARN_TINY_NO_MCP_LAYER", mcpToYarn.resultKind);
+  console.log("W4-5 to=yarn 真数据门（forge 档拒绝 / yarn-tiny 放行 / from=mcp 仍拒）: ok");
 }
 
 console.log("test-w3-low: ok");

@@ -1,6 +1,7 @@
 ---
 name: mc-datagen
 description: Minecraft Forge 数据生成器。GatherDataEvent、IDataProvider、RecipeProvider、LootTableProvider、LanguageProvider。触发词：DataGen、DataGenerator、LootTables、Recipes、BlockStates、TagProvider、AdvancementProvider、LanguageProvider
+mappings: mcp
 ---
 
 # 数据生成器（Forge 1.16.5）
@@ -16,6 +17,9 @@ description: Minecraft Forge 数据生成器。GatherDataEvent、IDataProvider�
 **不要** `PackOutput` / `getLookupProvider()` / `addProvider(true, ...)` / `RecipeCategory`。
 
 ## 主类注册
+
+> **示例工程自造名（不需语料出处，按你工程实际替换）**：`DataGenerators` 与其事件方法 `gatherData`、`ModBlockTagsProvider` / `ModItemTagsProvider` / `ModRecipeProvider` / `ModLootTableProvider` / `ModItemModelsProvider` / `ModBlockStatesProvider` / `ModLanguageProvider` / `ModRecipes`、注册类 `ModItems` / `ModBlocks` 及常量 `MY_ITEM` / `MY_BLOCK` / `OTHER_ITEM` / `MY_BLOCK_ITEM`。
+> 真正有本档语料出处的只有：`GatherDataEvent`、`DataGenerator`、`DataGenerator#addProvider`（`data/forge_1.16.5/forge-docs/1.16.5/processed/datagen_intro.md:29`）、`IDataProvider`（同文件 `:27`）、`ExistingFileHelper` 与 `GatherDataEvent#getExistingFileHelper()`（`datagen_modelproviders.md:11`）。
 
 ```java
 // net.minecraftforge.fml.event.lifecycle.GatherDataEvent
@@ -61,6 +65,13 @@ public class DataGenerators {
 
 ```java
 // datagen/ModRecipes.java
+// TODO(未核实：Items.DIAMOND 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：Items.STICK 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：Items.GOLD_INGOT 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：Items.COBBLESTONE 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：Ingredient.fromItems 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
+// 本段只有 RecipeProvider 与要覆盖的 #buildShapelessRecipes 有语料出处（datagen_intro.md:44）；
+// 构建器方法名与 vanilla 物品常量本档语料未收录 ⇒ 下面是结构壳，编译前须逐名核实，勿当已核实签名照抄。
 public class ModRecipeProvider extends RecipeProvider {
     public ModRecipeProvider(DataGenerator generator) {
         super(generator);
@@ -95,6 +106,11 @@ public class ModRecipeProvider extends RecipeProvider {
 `BlockStateProvider` 构造：`DataGenerator`、`modId`、`ExistingFileHelper`。
 
 ```java
+// TODO(未核实：simpleBlock 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：cubeAll 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：modLoc 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
+// 本档语料只背书 BlockStateProvider#registerStatesAndModels（datagen_intro.md:36）与可取的 #models() / #itemModels()
+// 实例（datagen_modelproviders.md:21）；具体建模 helper 名未收录 ⇒ 下面是结构壳，勿当已核实签名照抄。
 public class ModBlockStatesProvider extends BlockStateProvider {
     public ModBlockStatesProvider(DataGenerator generator, ExistingFileHelper efh) {
         super(generator, MOD_ID, efh);
@@ -112,6 +128,10 @@ public class ModBlockStatesProvider extends BlockStateProvider {
 ## 物品模型（来自方块）
 
 ```java
+// TODO(未核实：withExistingParent 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：modLoc 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
+// 本档语料只背书 ItemModelProvider 及要覆盖的 #registerModels / #generateModels
+// （datagen_intro.md:35、datagen_modelproviders.md:19）；建模 helper 名未收录 ⇒ 结构壳，须逐名核实。
 public class ModItemModelsProvider extends ItemModelProvider {
     public ModItemModelsProvider(DataGenerator generator, ExistingFileHelper helper) {
         super(generator, MOD_ID, helper);
@@ -161,7 +181,7 @@ public class ModLanguageProvider extends LanguageProvider {
 - ❌ `RecipeCategory` — 1.19.3+
 - ❌ 手改 `src/generated/resources/`
 - ❌ `FurnaceRecipe.Builder` / `setRegistryName` 当 DataGen 保存配方
-- ❌ `modLoc()` 与 `mcLoc()` 用反
+- ❌ `modLoc()` 与 `mcLoc()` 用反（本档语料对这两个名字逐字零命中 ⇒ 均未核实，见上文 `TODO(未核实)`，不得当已核实 API 照抄）
 - ❌ 标签 Provider 依赖顺序错误（先 BlockTags，再 ItemTags，再配方）
 - ❌ `ExistingFileHelper` 检查失败（引用的贴图不存在）
 

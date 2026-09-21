@@ -5,6 +5,13 @@ import { generateNetworkPacketDescription } from "../generators/index.js";
 export const WORKFLOW_HITL =
   "【人在环】模组开发不是确定性流水线。创意设计、版本兼容取舍、API 选择、性能权衡、调试策略由用户决定。写盘、运行 Gradle、拷贝 jar、上传发布须用户确认后执行；Agent 给步骤与草稿，不代跑这些高风险操作。";
 
+/**
+ * W5-3②（2026-09-20）：16 个工作流模板共用的「清单+确认」措辞单源。
+ * 改前同一句话在 16 个 body 里逐字硬编码重复（改一次措辞要改 16 处）；现改引常量，
+ * 渲染文本与改前**逐字相同**（纯去重，零行为变化）。
+ */
+export const WORKFLOW_HITL_STEPS = "（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）";
+
 /** LiteLoader / Rift / ModLoader / 基岩：禁止把现代 Forge/Fabric API 当骨架。 */
 export const WORKFLOW_ERA_GUARD =
   "N-A / era：LiteLoader / Rift / ModLoader 只用该档核实表，禁止 DeferredRegister、Forge biome_modifier、ForgeConfigSpec、Cloth Config、现代 GameTest、generate_datagen。基岩走 Script/JSON，不是 Java Mixin/GameTest。核不到则 stub + search_docs，禁止编造邻档类名。";
@@ -48,7 +55,8 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   },
   "mc-crash-triage": {
     title: "崩溃分诊",
-    body: `1. analyze_log / crash_analyze；可选 inspect_runtime（优先 logsDir，禁止全盘）
+    body: `${WORKFLOW_HITL}
+1. analyze_log / crash_analyze；可选 inspect_runtime（优先 logsDir，禁止全盘）
 2. search_community_docs 按 crashKind
 3. 先看 status / skipped，再看 action，不要只看 passed。
    STATUS_GATE: skipped → docs（LiteLoader/Rift/ModLoader/基岩）
@@ -115,7 +123,8 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   },
   "mc-localize-mod": {
     title: "模组汉化工作流",
-    body: `【原则】不调用外网机翻 API；localize_mod 只做 diff/草稿/抽 jar；中文由 Agent 填写。默认不写游戏目录。
+    body: `${WORKFLOW_HITL}
+【原则】不调用外网机翻 API；localize_mod 只做 diff/草稿/抽 jar；中文由 Agent 填写。默认不写游戏目录。
 社区短文：authored/localization-lang；新建骨架可用 generate_lang（须传 version）。
 
 1. 判定模式：
@@ -217,7 +226,8 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-publish": {
     title: "发布清单（人在环：不代上传）",
-    body: `对照 community_knowledge/authored/publishing.md。禁止调用 CurseForge / Modrinth 上传 API。
+    body: `${WORKFLOW_HITL}
+对照 community_knowledge/authored/publishing.md。禁止调用 CurseForge / Modrinth 上传 API。
 1. 元数据（按平台）：Java 版 mods.toml / neoforge.mods.toml / fabric.mod.json / quilt.mod.json；LiteLoader litemod.json；Rift riftmod.json；基岩 manifest.json——核对 id、version、license
 2. 产物：build/libs 正式 jar（排除 -sources、-javadoc、dev）
 3. changelog 与支持的 MC/loader 版本
@@ -226,7 +236,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-networking": {
     title: "网络通信清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-networking；规则 06-networking。
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-networking；规则 06-networking。
 1. 确认平台与精确 MC 版本。改已有代码不要调本工作流。
 2. 先 activate_platform_pack action=session（可 task=mc-networking），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。NeoForge 1.20.1 同 Forge SimpleChannel 形态；1.20.4 为 RegisterPayloadHandlerEvent（单数）；1.21.1–1.21.5 为 RegisterPayloadHandlersEvent + DirectionalPayloadHandler；1.21.8/1.21.11/26.1 为 RegisterClientPayloadHandlersEvent + ClientPacketDistributor.sendToServer。
 3. generate_network_packet：${generateNetworkPacketDescription()}
@@ -234,7 +244,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-capability": {
     title: "能力 / 附件清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-capability。
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-capability。
 1. 确认平台与精确 MC 版本。
 2. Forge：Capability + AttachCapabilitiesEvent。NeoForge 1.20.1 同 Forge Capability 形态；1.20.4+：Data Attachment，不是 Forge Capability。Fabric/Quilt：CCA（mc-cca），禁止生成 Forge Capability。
 3. generate_capability 的 platform 与 version 必填。
@@ -242,7 +252,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-recipe-data": {
     title: "配方 / 掉落 / 进度数据包清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-recipe / mc-loottable / mc-advancement；规则 07-datagen。
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-recipe / mc-loottable / mc-advancement；规则 07-datagen。
 1. 确认平台与精确 MC 版本。
 2. 配方/战利品/进度 JSON 路径按该档 data/<modid>/。
 3. generate_datagen 仅白名单版本（Forge 1.20.1 / 1.20.4 FinishedRecipe；NeoForge 1.20.1 改口 search_neoforge_docs，禁止默写 Forge import；NeoForge 1.20.4 / 1.20.6 仅 recipe——1.20.4 一参 PackOutput+RecipeOutput，1.20.6 两参 PackOutput+HolderLookup；1.21.0–1.21.4 为 GatherDataEvent+addProvider，1.21.5+ 为 GatherDataEvent.Client+createProvider，1.21.11/26.1 用 Identifier；Fabric 方法名按**映射**取（Yarn=generate(RecipeExporter) / Mojmap=buildRecipes，同类同名差异，不是版本差异，禁止同一文件混映射），26.1 Loom；Quilt 无足够 QSL 类名则 error）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
@@ -250,35 +260,36 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-audio-vfx": {
     title: "音效 / 粒子清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-sound / mc-particle。
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-sound / mc-particle。
 1. 确认平台与精确 MC 版本。
 2. sounds.json 与粒子 JSON 按该档 assets 路径；先 activate_platform_pack action=session 取规则后再写注册 API，禁止 Read 平台/<ver>/.cursor，禁止抄邻档。
 3. 无生成器模板时 search_*_docs 手动编写，参考 mc-sound / mc-particle。不要理解为游戏里做不了。`,
   },
   "mc-commands": {
     title: "命令清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-command。
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-command。
 1. 确认平台与精确 MC 版本。
 2. 先 activate_platform_pack action=session（可 skillNames=["mc-command"]），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。Brigadier / Commands / 权限来源以本版文档为准。
 3. 类名核 search_*_docs。LiteLoader/Rift/ModLoader 只用核实表，禁止 DeferredRegister。`,
   },
   "mc-dimension-structure": {
     title: "维度 / 结构清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-dimension / mc-structure。
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-dimension / mc-structure。
 1. 确认平台与精确 MC 版本。先 activate_platform_pack action=session（可 task=mc-worldgen），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。
 2. 结构：template pool / structure set 按该档 07；不要默认 Forge biome_modifier。
 3. generate_worldgen 须传 platform 与 version。类名核 search_*_docs。`,
   },
   "mc-access": {
     title: "AT / AW 访问变换清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。无独立 Skill；工具：validate_at / validate_aw。
+    body: `清单${WORKFLOW_HITL_STEPS}。无独立 Skill；工具：validate_at / validate_aw。
 1. 确认平台：Forge/NeoForge 用 Access Transformer（*_at.cfg）；Fabric/Quilt 用 Access Widener。
 2. validate_at / validate_aw：可传 projectPath 扫描；deep 字节码校验需已缓存客户端 jar。
 3. 未缓存返回 CACHE_MISS，不要自动下载。mixin 改目标可衔接 mixin_analyze。`,
   },
   "mc-bedrock-addon": {
     title: "基岩 Add-On 清单",
-    body: `清单（人在环：不代跑 Gradle / 不代跑流水线）。对应 bedrock 的 mc-addon-* Skill。禁止 Java query_api / Yarn / Mixin。
+    body: `${WORKFLOW_HITL}
+清单（不代跑 Gradle / 不代跑流水线）。对应 bedrock 的 mc-addon-* Skill。禁止 Java query_api / Yarn / Mixin。
 1. 包根 manifest.json（format_version + modules）。validate_addon_manifest。
 2. BP：行为实体/战利品等 JSON。generate_bp_entity 只吐文本。validate_bp_json。
 3. RP：纹理/模型/语言。不要抄 Java assets 路径当基岩 RP。
@@ -287,70 +298,71 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-fluid": {
     title: "流体工作流",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。
+    body: `清单${WORKFLOW_HITL_STEPS}。
 1. activate_platform_pack action=session（可 topics 02）。读本档 mc-fluid / 核实表。
 2. 类名必须 search_*_docs 且 version 写死本档。禁止默写 FluidType 邻档签名。
 3. 资源：fluid 贴图/still-flow JSON 按该时代路径。不要对 LiteLoader/Rift/ModLoader 调 generate_datagen。`,
   },
   "mc-enchant-potion": {
     title: "附魔与药水清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。
+    body: `清单${WORKFLOW_HITL_STEPS}。
 1. session 读 mc-enchantment / mc-potion / mc-effect。
 2. 注册与酿造以该档核实表 + search_*_docs 为准，禁止默写。
 3. 语言键 generate_lang（须 version）。`,
   },
   "mc-energy": {
     title: "能量系统清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。
+    body: `清单${WORKFLOW_HITL_STEPS}。
 1. session 读 mc-energy / mc-capability。Neo 用 Data Attachment，不是 Forge Capability。
 2. Fabric/Quilt 改口 CCA 或该档附件 API。禁止把 IFE 抄错加载器。
 3. 核不到则 search_*_docs，禁止默写 IEnergyStorage。`,
   },
   "mc-creative-tags": {
     title: "创造标签 / Item Group 清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。
+    body: `清单${WORKFLOW_HITL_STEPS}。
 1. 确认平台：Neo/Forge CreativeModeTab 或该档等价；Fabric ItemGroup；Quilt 可能走 QFAPI（以 qsl-verified 为准）。
 2. search_*_docs version 写死本档。禁止把 Fabric ItemGroup 写进 Forge。
 3. 数据包 tags 用 validate_datapack_json kind=tag。`,
   },
   "mc-kotlin": {
     title: "Kotlin 模组清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。
+    body: `清单${WORKFLOW_HITL_STEPS}。
 1. Forge/Neo：Kotlin for Forge（库 Skill mc-kotlin-for-forge）。Fabric/Quilt：fabric-language-kotlin（库 Skill mc-fabric-language-kotlin）。
 2. 不要混用 gradle.kts 记忆与 Java 入口。session 仍用本档 Java 规则 + 库 Skill。
 3. 只出依赖与入口清单；Gradle 由用户确认后执行。`,
   },
   "mc-villager": {
     title: "村民职业 / 交易清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-villager；规则 04-entity。
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-villager；规则 04-entity。
 1. 确认平台与精确 MC 版本。改已有代码不要调本工作流。
 2. 先 activate_platform_pack action=session（task=mc-villager），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。
 3. 职业/交易 API 以本档 search_*_docs + Skill 为准，禁止抄邻档 VillagerProfession 签名。`,
   },
   "mc-multiblock": {
     title: "多方块结构清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-multiblock；规则 02-block / 07-datagen。
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-multiblock；规则 02-block / 07-datagen。
 1. 确认平台与精确 MC 版本。
 2. 先 activate_platform_pack action=session（task=mc-multiblock）。结构匹配与方块实体以本档文档为准。
 3. 无生成器模板时 search_*_docs 手动编写，不要理解为游戏里做不了。`,
   },
   "mc-ai": {
     title: "实体 AI / Goal 清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-ai；规则 04-entity。
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-ai；规则 04-entity。
 1. 确认平台与精确 MC 版本。
 2. 先 activate_platform_pack action=session（task=mc-ai）。Goal / Brain 类名核 search_*_docs。
 3. 禁止把 1.12 AI 任务表抄进 1.20+。`,
   },
   "mc-jei": {
     title: "JEI/REI 兼容清单",
-    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。
+    body: `清单${WORKFLOW_HITL_STEPS}。
 1. 软依赖。session 可读 mc-compat-jei；库集成见 knowledge/libs 与 community lib-* 短文。
 2. 不要把 Fabric REI 当 Neo JEI。plugin 入口以该库文档为准。
 3. 不代跑游戏、不擅自拷 mods（路径与拷贝须用户确认）。`,
   },
   "mc-ci-publish-extra": {
     title: "CI 发布额外清单",
-    body: `清单（人在环：不代跑 CI、不代上传）。
+    body: `${WORKFLOW_HITL}
+清单（不代跑 CI、不代上传）。
 1. check_publish_ready：license/version、build/libs 像正式 jar，并给出 publishing.md 清单里可机器核的缺项（只 warning，不阻断）。
 2. 列出建议的 GitHub Actions 步骤名（setup-java、gradle build、upload 工件）——只出清单；可复制的 YAML 模板在 community_knowledge/patterns/examples/mod-ci-github-actions.md。
 3. 对照 community_knowledge/authored/publishing.md。不要调 Curse/Modrinth API。`,

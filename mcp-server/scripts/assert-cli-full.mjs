@@ -92,6 +92,10 @@ const DATA_BACKED = [
   ["analyze_porting_path", ["--projectPath", `${REPO_DIR}/forge/1.20.1/scaffold`]],
   ["get_method_params", ["--className", "Block", "--methodName", "getCodec", "--version", "1.20.1"]],
   ["analyze_mod_jar", ["--jarPath", `${PKG_DIR}/temp/s25a_pristine/gradle/wrapper/gradle-wrapper.jar`]],
+  // item 2（2026-09-20）：该工具原属 EXEMPT_DATA_GAP（「本机无基岩内容日志」）。现用仓内
+  // test-fixtures/bedrock-content-log.txt（覆盖方括号/尖括号级别 + 点/冒号毫秒）做**真实调用**，
+  // 把「未测」这条覆盖洞关掉；真机 content_log.txt 样例仍缺（另有 open 台账项）。
+  ["analyze_bedrock_log", ["--logPath", `${PKG_DIR}/test-fixtures/bedrock-content-log.txt`]],
 ];
 
 /** C 类：需网络/下载/缓存预热/自备 jar（逐条豁免原因）。 */
@@ -112,7 +116,7 @@ const EXEMPT_DATA_GAP = [
   ["query_registry @非 1.20.1/1.21.1", "本机仅 vanilla_1.20.1 / vanilla_1.21.1"],
   ["search_fabric_docs @fabric_1.20.1 正文", "该档 fabric-docs L0/L1/L2 为空树（2 B），需 --source fabric-wiki 或换 1.21.1"],
   ["search_neoforge_docs @1.20.1", "设计走 forge_1.20.1 兼容路径（非独立语料）"],
-  ["analyze_bedrock_log", "需真实 content_log.txt（logPath/logsDir/projectPath 三选一必填），本机无基岩内容日志"],
+  // item 2（2026-09-20）：analyze_bedrock_log 豁免已撤 —— 改用 test-fixtures/bedrock-content-log.txt 真跑（见 DATA_BACKED）。
 ];
 
 const budgetStart = Date.now();

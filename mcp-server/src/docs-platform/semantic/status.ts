@@ -13,6 +13,13 @@ import { REGISTRY_DB_CAP } from "../../registry/store.js";
 
 export type SemanticModeHint = "hybrid" | "fts5-only" | "l0-only";
 
+/**
+ * W2-3②（2026-09-20）：两条「缺库」warning 共用的主标记（单源）。
+ * 改前 `semanticWarnings(...)` 写「语义索引缺库：…」、`missingSemanticDbWarning(...)` 写「语义索引缺库，…」，
+ * 同一现象两种写法 ⇒ 措辞漂移、外部按前缀匹配会漏。现共用本常量；细节差异（带计数 vs 单点简述）各自保留并互相点名。
+ */
+const SEMANTIC_MISSING_PREFIX = "语义索引缺库：";
+
 // ── A-38：只读句柄 LRU + meta 结果 memo（诊断用计数，不改 inspectDb 返回形状）──────
 //
 // 旧实现每次 inspectDb 都 new DatabaseSync + prepare，diagnose_data_paths 一趟要对
@@ -409,7 +416,7 @@ export function buildSemanticWarnings(opts: {
       .map((s) => `${s.platform}_${s.version}/${s.source}`)
       .join(", ");
     warnings.push(
-      `语义索引缺库：${opts.present}/${opts.total} 个 db.sqlite 存在（缺 ${miss}）${extra ? `，例如 ${extra}` : ""}。缺库版本的 search_*_docs 回退 L0。补齐：在 mcp-server 执行 npm run build:semantic-index`,
+      `${SEMANTIC_MISSING_PREFIX}${opts.present}/${opts.total} 个 db.sqlite 存在（缺 ${miss}）${extra ? `，例如 ${extra}` : ""}。缺库版本的 search_*_docs 回退 L0。补齐：在 mcp-server 执行 npm run build:semantic-index`,
     );
   }
   if (!opts.modelsReady) {
@@ -436,7 +443,8 @@ export function semanticDbAbsent(
 
 export function missingSemanticDbWarning(missing: boolean): string | undefined {
   if (!missing) return undefined;
-  return "语义索引缺库，本次已回退 L0 关键词检索。详见 diagnose_data_paths.semantic.warnings；补齐可运行 npm run build:semantic-index";
+  // 与 semanticWarnings(...) 的带计数版共用 SEMANTIC_MISSING_PREFIX；本条是「单点简述」并点名明细出处。
+  return `${SEMANTIC_MISSING_PREFIX}本次已回退 L0 关键词检索（明细见 diagnose_data_paths.semantic.warnings）；补齐可运行 npm run build:semantic-index`;
 }
 
 /** search_docs 命中带 stale warning（不静默重建） */

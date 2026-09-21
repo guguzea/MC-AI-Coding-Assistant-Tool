@@ -44,6 +44,8 @@ export interface SearchResult {
   score?: number;
   /** primer 旁路命中 */
   source?: "primer" | "docs";
+  /** 逐字支撑位：查询标识符是否在该页正文逐字出现；缺席 = 未判定（≠ 语料没有） */
+  verbatim?: boolean;
 }
 
 export interface SummaryResult {
@@ -596,6 +598,22 @@ export class NeoForgeDocStore {
         forgeCompatible: isForgeCompatible,
       },
     };
+  }
+
+  /**
+   * verbatim 逐字支撑位专用：取该页 processed/*.md 原文（与 loadFullDoc 同一条读取路径）。
+   * primer 行 / 文件读不到 → undefined = **未判定**，不得读成「语料里没有这个名字」。
+   */
+  pageText(id: string, version: string): string | undefined {
+    try {
+      const l2 = this.loadIndex(version, "index-l2") as L2IndexEntry[];
+      if (!Array.isArray(l2)) return undefined;
+      const raw = this.findByFlexibleId(l2, id, version);
+      if (!raw?.processedFile) return undefined;
+      return this.loadFile(this.resolveVersionDir(version), raw.processedFile);
+    } catch {
+      return undefined;
+    }
   }
 
   private extractKeyBlocks(content: string): KeyBlock[] {

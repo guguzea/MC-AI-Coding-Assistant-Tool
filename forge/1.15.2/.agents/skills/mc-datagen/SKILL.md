@@ -1,6 +1,7 @@
 ---
 name: mc-datagen
 description: Minecraft Forge 数据生成器。GatherDataEvent、IDataProvider、RecipeProvider、LootTableProvider、LanguageProvider。触发词：DataGen、DataGenerator、LootTables、Recipes、BlockStates、TagProvider、AdvancementProvider、LanguageProvider
+mappings: mcp
 ---
 
 # 数据生成器（Forge 1.15.2）
@@ -16,6 +17,8 @@ description: Minecraft Forge 数据生成器。GatherDataEvent、IDataProvider�
 **不要** `PackOutput` / `getLookupProvider()` / `addProvider(true, ...)` / `RecipeCategory`。
 
 ## 主类注册
+
+> 自造名说明：本文**所有**代码块里的 `DataGenerators`、`gatherData`、`ModBlockTagsProvider` / `ModItemTagsProvider` / `ModRecipeProvider` / `ModLootTableProvider` / `ModItemModelsProvider` / `ModBlockStatesProvider` / `ModLanguageProvider` / `ModRecipes`、局部变量 `blockTags`、`ModItems` / `ModBlocks` 以及 `MY_ITEM` / `MY_BLOCK` / `MY_BLOCK_ITEM` / `OTHER_ITEM`，都是**示例工程自造名**（对应 `01-registry.mdc` 里的注册类与常量），不是 Forge / vanilla API，无需语料出处。非自造的名字必须能在本档语料里逐字命中，命中不了的按 `// TODO(未核实)` 就地标注。
 
 ```java
 // net.minecraftforge.fml.event.lifecycle.GatherDataEvent
@@ -67,24 +70,24 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
+    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) { // TODO(未核实：IFinishedRecipe 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译；方法名 registerRecipes 有出处 data/forge_1.15.2/forge-docs/1.15.2/processed/datagen_intro.md:43)
         ShapedRecipeBuilder.shapedRecipe(ModItems.MY_ITEM.get())
             .patternLine(" X ")
             .patternLine(" X ")
             .patternLine(" Y ")
             .key('X', Items.DIAMOND)
             .key('Y', Items.STICK)
-            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.hasItems(Items.DIAMOND))
+            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.hasItems(Items.DIAMOND)) // TODO(未核实：InventoryChangeTrigger 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译；同行 addCriterion / hasItems 链同样未核实)
             .build(consumer);
 
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.OTHER_ITEM.get())
             .addIngredient(Items.GOLD_INGOT, 3)
             .addIngredient(Items.DIAMOND)
-            .addCriterion("has_gold", InventoryChangeTrigger.Instance.hasItems(Items.GOLD_INGOT))
+            .addCriterion("has_gold", InventoryChangeTrigger.Instance.hasItems(Items.GOLD_INGOT)) // TODO(未核实：InventoryChangeTrigger 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译)
             .build(consumer);
 
-        CookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
-            .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.hasItems(Items.COBBLESTONE))
+        CookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200) // TODO(未核实：CookingRecipeBuilder 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译；smelting 只在 JSON 配方语境命中 utilities_recipes.md)
+            .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.hasItems(Items.COBBLESTONE)) // TODO(未核实：InventoryChangeTrigger 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译)
             .build(consumer);
     }
 }
@@ -102,8 +105,8 @@ public class ModBlockStatesProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        simpleBlock(ModBlocks.MY_BLOCK.get(),
-            models().cubeAll(ModBlocks.MY_BLOCK.getId().getPath(), modLoc("block/my_block"))
+        simpleBlock(ModBlocks.MY_BLOCK.get(), // TODO(未核实：simpleBlock 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译)
+            models().cubeAll(ModBlocks.MY_BLOCK.getId().getPath(), modLoc("block/my_block")) // TODO(未核实：cubeAll / modLoc 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译；本行只有 models() 有出处 data/forge_1.15.2/forge-docs/1.15.2/processed/datagen_modelproviders.md:21)
         );
     }
 }
@@ -119,7 +122,7 @@ public class ModItemModelsProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        withExistingParent(ModItems.MY_BLOCK_ITEM.getId().getPath(), modLoc("block/my_block"));
+        withExistingParent(ModItems.MY_BLOCK_ITEM.getId().getPath(), modLoc("block/my_block")); // TODO(未核实：withExistingParent / modLoc 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译)
     }
 }
 ```

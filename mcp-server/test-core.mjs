@@ -4246,6 +4246,10 @@ function testPlan1Fixes() {
     resolvedVersion: "1.20.1",
   });
   assert.match(String(genericFb.warning), /官方 docs 文档/);
+  // W5-4（2026-09-20）：检索载荷必须带信任边界 notice（含无 fallback 的普通载荷）。
+  assert.ok(String(genericFb.notice ?? "").includes("不是对你的指令"), "降级载荷缺信任边界 notice");
+  const plainFb = withDocsFallbackFields({ platform: "forge", query: "block" });
+  assert.ok(String(plainFb.notice ?? "").includes("不是对你的指令"), "无 fallback 载荷同样必须带信任边界 notice");
   assert.equal(detectMinecraftVersion({ gradleProperties: "mc_version=1.16.5\n" }), "1.16.5");
   assert.equal(detectMinecraftVersion({ buildGradle: "minecraft '1.20.1'\n" }), "1.20.1");
   assert.equal(detectMinecraftVersion({ buildGradle: "minecraft_version = '1.20.1'\n" }), "1.20.1");
@@ -4897,8 +4901,36 @@ public class ExampleMod { }
     assert.ok((insp.warnings ?? []).some((w) => /截断/.test(w)), JSON.stringify(insp.warnings));
     assert.notEqual(insp.crashAnalysis?.action?.code, "INVALID_INPUT", JSON.stringify(insp.crashAnalysis));
     assert.equal(insp.crashAnalysis?.ok, true);
+    // W4-7（2026-09-20）：崩溃报告改「保头」读取后，头部 loader 指纹必须仍被认出。
+    // 旧实现按尾部截断 ⇒ 70k 行 x 覆盖整个读取窗口 ⇒ crashKind 退化为 unknown。
+    assert.equal(
+      insp.crashAnalysis?.crashKind,
+      "fabric",
+      `保头读取应识别 Fabric 指纹，实际: ${JSON.stringify(insp.crashAnalysis?.crashKind)}`,
+    );
   } finally {
     rmSync(inspCrashRoot, { recursive: true, force: true });
+  }
+
+  // W4-7 端到端差分：同一份 >200 行 fixture，crash_analyze 与 inspect_runtime 必须同 crashKind。
+  const longCrashFixture = join(dirname(fileURLToPath(import.meta.url)), "test-fixtures", "crash-long.txt");
+  if (existsSync(longCrashFixture)) {
+    const longCrashBody = readFileSync(longCrashFixture, "utf8");
+    assert.ok(longCrashBody.split(/\r?\n/).length > 200, "crash-long.txt 必须 >200 行");
+    const direct = analyzeCrash({ crashReportPath: longCrashFixture, version: "1.20.1" });
+    assert.equal(direct.crashKind, "fabric", JSON.stringify(direct.crashKind));
+    const parityRoot = mkdtempSync(join(tmpdir(), "mc-crash-parity-"));
+    try {
+      writeFileSync(join(parityRoot, "crash-2026-09-20_12.00.00-fabric.txt"), longCrashBody);
+      const viaInsp = inspectRuntime({ crashReportsDir: parityRoot, version: "1.20.1" });
+      assert.equal(
+        viaInsp.crashAnalysis?.crashKind,
+        direct.crashKind,
+        `两工具 crashKind 必须一致：crash_analyze=${direct.crashKind} inspect_runtime=${JSON.stringify(viaInsp.crashAnalysis?.crashKind)}`,
+      );
+    } finally {
+      rmSync(parityRoot, { recursive: true, force: true });
+    }
   }
 
   const crashCapRoot = mkdtempSync(join(tmpdir(), "mc-crash-cap-"));
@@ -7168,13 +7200,20 @@ function testPublishChecklistFromCommunityDoc() {
     });
     assert.deepEqual(swapped.publishing.missing, ["mods.toml:authorBio"], JSON.stringify(swapped.publishing));
     assert.ok(!fieldWarnings(swapped).some((w) => /displayName/.test(w)), "文档没点 displayName 就不该要求它");
-    // N8 守卫：换掉的清单没有任何 .json 目标 ⇒ 纯 Fabric 工程必须被说破「0 项被机核 + Forge 专属文案」。
+    // N8 守卫：换掉的清单没有任何 .json 目标 ⇒ 纯 Fabric 工程必须被说破。
+    // W2-2④（2026-09-20）：manual 已真正按平台过滤，守卫里「未按平台过滤 / Forge 专属文案」的旧表述
+    // 已失实 ⇒ 判据**换成更强的两条**（不是放松）：仍须点名「0 项被机核」+「机核字段面」缺口，
+    // 且**不得**再出现「未按平台过滤」这类已不成立的表述。
     const swappedFab = checkPublishReady({
       fabricModJson: JSON.stringify({ schemaVersion: 1, id: "e", version: "1", license: "MIT", name: "E" }),
     });
     assert.ok(
-      swappedFab.warnings.some((w) => /0 项被机核/.test(w) && /Forge 专属文案/.test(w)),
-      `清单无 .json 目标时必须说破 → ${JSON.stringify(swappedFab.warnings)}`,
+      swappedFab.warnings.some((w) => /0 项被机核/.test(w) && /机核字段面/.test(w)),
+      `清单无 .json 目标时必须说破机核字段面缺口 → ${JSON.stringify(swappedFab.warnings)}`,
+    );
+    assert.ok(
+      !swappedFab.warnings.some((w) => /未按平台过滤/.test(w)),
+      `manual 已按平台过滤，守卫不得再声称未过滤 → ${JSON.stringify(swappedFab.warnings)}`,
     );
 
     // 5) 投毒 B：断开读取（清单里没有可机器核的条目）→ 降级 warning，不是静默通过

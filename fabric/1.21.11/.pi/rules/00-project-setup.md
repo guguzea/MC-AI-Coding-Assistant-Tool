@@ -58,11 +58,13 @@ fabric_api_version=0.141.6+1.21.11
 - `loader_version` 指 **Fabric Loader**（加载器本体，制品 `net.fabricmc:fabric-loader`）；`fabric_api_version` 指 **Fabric API**（制品 `net.fabricmc.fabric-api:fabric-api`）。两个版本号互不相关，别互相顶替，也别把 Loader 版本写进 `modApi` 依赖。
 - 数字口径（2026-09-04 实查 `maven.fabricmc.net`）：`0.19.3` 是本档 `scaffold/` 钉住的官方 example-mod（@ 8cd77ea）版本，maven 上 Loader 最新已是 `0.19.5`，想升就升；`fabric_api_version=0.141.6+1.21.11` 既是 scaffold 值也是 1.21.11 线最新构建（该制品全局 `<latest>` 已是 26.x 线的 `0.159.2+26.3`，**不要**抄进本档）；Yarn 的 1.21.11 最新 `build.6`。
 
-### Mappings 约束
+### Mappings 约束（本档讲解基线 = Yarn，Mojmap 作对照列）
 
-- **本档默认走官方 Mojmap**（`loom.officialMojangMappings()`）。Yarn 是 2025 年以前的默认选择，目前仍在退场 —— 官方移植页原话：「Note that Yarn is no longer officially supported by Fabric.」（`develop_porting_mappings_loom`）
-- 已有 Yarn 工程继续可用：`net.fabricmc:yarn:${yarn_mappings}:v2`；但**升 26.1 之前要先转 Mojmap**，该页开头的 warning 就是这个顺序（26.1 上 mappings 不受官方支持，先换映射再换 MC 依赖）。
-- **禁止**混用 Yarn 与 Mojmap 名。**26.1+ 必须 Mojmap**，不要把 Yarn 抄到去混淆档
+- **本档以 Yarn 为讲解基线**：`gradle.properties` 的 `yarn_mappings` + `build.gradle` 的 `mappings "net.fabricmc:yarn:${yarn_mappings}:v2"`。本档 `scaffold/build.gradle:21` 即此写法，`scaffold/gradle.properties` 注释明示「this scaffold's mixin/entity sources are Yarn-named」。维护既有模组、读本档 00–10 与 `knowledge/`、写 Skill 示例，一律按 Yarn 名落笔。
+- **Mojmap 是对照列，不是二选一的替代品**：本档抓取的上游文档页正文用 Mojang 名（页内 `GuiGraphics` / `PoseStack` / `ResourceLocation`），本档代码写 `DrawContext` / `MatrixStack` / `Identifier`。逐件对照写在各 Skill 正文的「映射口径」块里；数据来源 = `client.txt`（Mojang 官方映射）⋈ `data/fabric_1.21.11/mappings/yarn-mappings.sqlite` 的 obf 短名 join，本档 9686 对、obf 键零冲突。
+- **新项目想用 Mojmap 允许，但必须显式声明**：官方模板 `data/fabric_1.21.11/reference/1.21.11/build.gradle:8` 写的正是 `mappings loom.officialMojangMappings()`。⚠️ **这不是 Loom 的隐式默认**——mappings 一行无论如何都要写；`migrateMappings --mappings` 的默认值仍是 `net.fabricmc:yarn:<version>:v2`（同页「Other Configurations」）。所以「1.17 起 Loom 默认 Mojang 映射、不必再声明 yarn_mappings」这种说法**不要采信**。
+- **Yarn 在退场，但退场 ≠ 本档改教 mojmap**：官方移植页原话只有「Note that Yarn is no longer officially supported by Fabric.」（`develop_porting_mappings_loom`）。本档仍按 Yarn 讲解 + Mojmap 对照；**升 26.1 之前必须先转 Mojmap**（26.1 已去混淆、无 Yarn 层，`convert_mapping` 到 yarn 直接拒），该页开头的 warning 就是这个顺序。
+- **禁止**同一段代码里混用两套名。**26.1+ 必须 Mojmap**，不要把 Yarn 抄到去混淆档
 - Yarn 映射使用 `class_XXXXX` / `method_XXXXX` / `field_XXXXX` 表示未解析的成员
 
 ---

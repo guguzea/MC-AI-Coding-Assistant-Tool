@@ -1,0 +1,30 @@
+# 行尾策略（2026-09-20 裁定建立）
+#
+# 为什么是 eol=lf 而不是只写 text=auto：
+#   索引侧本来就 100% LF（i/crlf = 0），需要钉的是**落盘字节**。实测
+#   `* text=auto` 不带 eol= 时，checkout 在 core.autocrlf=false 的机器上**也**吐 CRLF
+#   （即把 CRLF 变成与机器无关的行为）；而 data/fabric_*/reference.provenance.json
+#   有 953 条按原始字节比对的 sha256 钉，LF 下 953/953 命中、CRLF 下只剩 4 条
+#   ⇒ 会打掉 assert-fabric-transcludes A3/A4。CI 全在 ubuntu 看不见这件事。
+# 复跑：temp/audit-20260918/{probe-smudge,probe-eol3,probe-eol4,probe-eol5}.mjs
+* text=auto eol=lf
+
+# Windows 批处理必须留 CRLF（LF 形 gradlew.bat 在 cmd 下 label/goto 有已知失效）
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 二进制显式钉死：不靠 git 的 NUL 启发式
+# （盘上有 87 个带 NUL 的 .json —— 故意**不给** .json 加 text 规则，让它继续走自动判定）
+*.sqlite binary
+*.db binary
+*.jar binary
+*.zip binary
+*.gz binary
+*.png binary
+*.ico binary
+*.vsix binary
+*.onnx binary
+*.bak binary
+*.class binary
+*.dll binary
+*.exe binary

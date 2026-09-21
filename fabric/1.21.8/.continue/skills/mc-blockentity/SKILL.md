@@ -4,6 +4,7 @@ description: Fabric 1.21.8 mc-blockentity。类名只来自本档核实表与 se
 platform: fabric
 version: "1.21.8"
 docsTool: search_fabric_docs
+mappings: yarn
 ---
 
 # mc-blockentity（Fabric 1.21.8）

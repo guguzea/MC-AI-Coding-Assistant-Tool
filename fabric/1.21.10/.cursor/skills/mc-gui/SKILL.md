@@ -4,6 +4,7 @@ description: Fabric 1.21.10 mc-gui。类名只来自本档核实表与 search_fa
 platform: fabric
 version: "1.21.10"
 docsTool: search_fabric_docs
+mappings: yarn
 ---
 
 # mc-gui（Fabric 1.21.10）

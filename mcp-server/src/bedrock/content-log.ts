@@ -34,9 +34,27 @@ const MAX_DIR_ENTRIES = 80;
 
 const REL_LOG_DIRS = [["logs"], ["behavior_packs", "logs"], ["worlds", "logs"]];
 
-/** Bedrock content_log 行：`[2024-05-01 12:00:00.123][INFO][tag] msg`（也接受无标签/短时间戳变体） */
+/**
+ * Bedrock content_log 行。覆盖形（W4-6，2026-09-20 收紧）：
+ *   `[2024-05-01 12:00:00.123][INFO][tag] msg`  长日期 + 毫秒（. 或 ,）
+ *   `[12:00:01][WARNING][addon] msg`            短时间戳
+ *   `[12:00:00:789]<Error>[Scripting] msg`      毫秒冒号形 + 尖括号级别
+ * 级别允许 `[LEVEL]` 或 `<LEVEL>`；tag 可选；时间戳与级别之间允许空格。
+ * 仍只有 5 个捕获组（两处外括号均为 (?: 非捕获），`[, , , level, tag, msg]` 取值语义不变。
+ */
 const CONTENT_LINE_RE =
-  /^\[(?:(\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:[.,]\d{3})?)|(\d{2}:\d{2}:\d{2}))\]\[([A-Za-z]+)\](?:\[([^\]]*)\])?\s*(.*)$/;
+  /^\[(?:(\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:[.,:]\d{1,3})?)|(\d{2}:\d{2}:\d{2}(?:[.,:]\d{1,3})?))\]\s*[\[<]([A-Za-z]+)[\]>]\s*(?:\[([^\]]*)\])?\s*(.*)$/;
+
+/**
+ * BDS 控制台/服务端日志行（2026-09-20 **真机**取样，`test-fixtures/bedrock-bds-console.txt`）：
+ * `[2026-09-20 22:12:03:504 ERROR] The following issues were found when loading packs:`
+ * —— 与客户端 content_log 文件不同：**级别与时间戳同处一方括号内**、无标签方括号。
+ * ⚠️ BDS 1.21.102.1 实测只把内容错误打到**控制台**：`content-log-file-enabled=true` 会打印
+ * 「Content logging to disk is enabled. Writing log to: ContentLog<ts>」但**不产出任何文件**
+ * （4 次起服 · 含预建 logs/ · G:\dbs 全域与 %TEMP%/APPDATA/LOCALAPPDATA 均无该文件）。
+ */
+const BDS_CONSOLE_LINE_RE =
+  /^\[(\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:[.,:]\d{1,3})?)\s+([A-Za-z]+)\]\s?(.*)$/;
 
 const SUSPICIOUS_ISSUES: Array<{ re: RegExp; label: string }> = [
   { re: /Missing dependenc|Mod[ _-]?script.*failed|Script start failed/i, label: "脚本/依赖问题" },
@@ -168,22 +186,49 @@ export function analyzeBedrockContentLog(
   const warnings: string[] = [];
   const unparsedLines: string[] = [];
   const issues: Array<{ label: string; sample: string }> = [];
+  // 续行归并（2026-09-20 真机取样）：BDS 把内容错误明细以制表符缩进跟在上一行之后，
+  // 那些行不是「坏行」，而是上一条的正文 ⇒ 追加到上一条，不进 unparsedLines。
+  let lastBucket: "errors" | "warnings" | null = null;
+  let lastIdx = -1;
   for (const line of text.split(/\r?\n/)) {
-    const m = CONTENT_LINE_RE.exec(line);
-    if (!m) {
-      if (line.trim() && line.trim() !== "=BEGIN=INFO=" && !line.trim().startsWith("Content log"))
-        unparsedLines.push(line.slice(0, 200));
+    const contentM = CONTENT_LINE_RE.exec(line);
+    const consoleM = contentM ? null : BDS_CONSOLE_LINE_RE.exec(line);
+    if (!contentM && !consoleM) {
+      const trimmed = line.trim();
+      // 空行 / 仅缩进行：既不记账，也**不打断**续行（真机样例里 header 与明细之间就有一行单制表符）。
+      if (trimmed === "") continue;
+      if (/^[ \t]+\S/.test(line) && lastBucket) {
+        const arr = lastBucket === "errors" ? errors : warnings;
+        if (arr[lastIdx]) arr[lastIdx] = `${arr[lastIdx]} ${trimmed}`.slice(0, 400);
+        continue;
+      }
+      lastBucket = null;
+      lastIdx = -1;
+      if (trimmed !== "=BEGIN=INFO=" && !trimmed.startsWith("Content log")) unparsedLines.push(line.slice(0, 200));
       continue;
     }
-    const [, , , level, tag, msg] = m;
+    // 客户端 content_log 形（`[ts][LEVEL][tag] msg`）优先；BDS 控制台形（`[ts LEVEL] msg`）兜底。
+    const level = contentM ? contentM[3] : consoleM![2];
+    const tag = contentM ? contentM[4] : undefined;
+    const msg = (contentM ? contentM[5] : consoleM![3]) ?? "";
     const lvl = (level || "LOG").toUpperCase();
     levelCounts[lvl] = (levelCounts[lvl] ?? 0) + 1;
     if (tag) tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
     const entry = `[${tag ?? "?"}] ${msg.trim().slice(0, 200)}`;
+    lastBucket = null;
+    lastIdx = -1;
     if (lvl === "ERROR") {
-      if (errors.length < 12) errors.push(entry);
+      if (errors.length < 12) {
+        errors.push(entry);
+        lastBucket = "errors";
+        lastIdx = errors.length - 1;
+      }
     } else if (lvl === "WARN" || lvl === "WARNING") {
-      if (warnings.length < 12) warnings.push(entry);
+      if (warnings.length < 12) {
+        warnings.push(entry);
+        lastBucket = "warnings";
+        lastIdx = warnings.length - 1;
+      }
     }
     for (const s of SUSPICIOUS_ISSUES) {
       if (s.re.test(msg) && !issues.some((x) => x.label === s.label)) {

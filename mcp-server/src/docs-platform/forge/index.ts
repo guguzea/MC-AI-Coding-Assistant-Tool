@@ -35,7 +35,7 @@ import {
   type DocPlatform,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, thinLoaderWikiWarning, type SearchResultLike } from "../search-utils.js";
+import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, thinLoaderWikiWarning, annotateVerbatim, type SearchResultLike } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticDbAbsent, semanticStaleSearchWarning } from "../semantic/status.js";
 import { SEARCH_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR } from "../platforms.js";
 import { ownGet } from "../../utils/own-record.js";
@@ -223,6 +223,12 @@ export const searchForgeDocsSchema = {
   - version: Minecraft/Forge 版本（必填）。仅同系列（任意 N.M.*）；跨主版本 VERSION_NOT_FOUND。请先 list_forge_versions。
   - tags: 可选标签过滤（小写无连字符，如 registry, event, capability, networking, datagen, sides, client, server）。
 
+
+verbatim 逐字支撑位（2026-09-20）：
+  - query 为**单个标识符形态**（类名 / 方法名 / FQCN / 资源路径；散文与 OR 分组不判）时，
+    每条命中带 verbatim 字段：true = 该名字在该页正文逐字出现；false = 读到正文且确认没有；**没有该字段 = 未判定**（薄档 / primer / porting 旁路 / 取不到正文），未判定不等于「语料没有」。
+  - 顶层 verbatim_summary{term,judged,hits}；hits=0 时结果仍可能相关，但**不构成该名字存在的证据**，需要签名请 get_*_doc_full 读正文，或留 // TODO(未核实)。
+  - 该位只做事后标注：命中集合、顺序与 total 与加它之前逐字相同，检索顺序（先语义搜索）不变。
 另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，
 适合在已知类名后精确查询某个方法的签名。`,
   inputSchema: z.object({
@@ -263,6 +269,10 @@ export async function searchForgeDocs(
           version: detailed.resolvedVersion,
           allowedIds: semanticAllowedIds(getForgeStore(), detailed.resolvedVersion, detailed.results),
         });
+    // verbatim 逐字支撑位：只事后标注，不改排序 / 召回
+    const vb = annotateVerbatim(results, args.query, (r) =>
+      getForgeStore().pageText(r.id, detailed.resolvedVersion),
+    );
     return {
       content: [
         {
@@ -285,11 +295,15 @@ export async function searchForgeDocs(
                 missingSemanticDbWarning(
                   semanticDbAbsent(resolveDataDir(), "forge", detailed.resolvedVersion, "forge-docs"),
                 ),
+                vb.warning,
               ),
               tags: args.tags,
               semantic: semanticHits !== null,
               total: results.length,
-              results,
+              ...(vb.term
+                ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
+                : {}),
+              results: vb.rows,
             }),
             null,
             2,
@@ -643,6 +657,12 @@ export const searchDocsSchema = {
   5. 永远不要一次性加载超过 2 个 full page，避免上下文溢出。
   6. ⚠️ 搜索失败时，使用精确术语（如类名、方法名、事件名）重新尝试。
 
+
+verbatim 逐字支撑位（2026-09-20）：
+  - query 为**单个标识符形态**（类名 / 方法名 / FQCN / 资源路径；散文与 OR 分组不判）时，
+    每条命中带 verbatim 字段：true = 该名字在该页正文逐字出现；false = 读到正文且确认没有；**没有该字段 = 未判定**（薄档 / primer / porting 旁路 / 取不到正文），未判定不等于「语料没有」。
+  - 顶层 verbatim_summary{term,judged,hits}；hits=0 时结果仍可能相关，但**不构成该名字存在的证据**，需要签名请 get_*_doc_full 读正文，或留 // TODO(未核实)。
+  - 该位只做事后标注：命中集合、顺序与 total 与加它之前逐字相同，检索顺序（先语义搜索）不变。
 ⚠️ platform 和 version 必须对应：
   - platform=forge / neoforge / fabric / quilt / liteloader / rift / modloader 时，version 必须是该平台已索引的版本
   - 基岩请用 search_bedrock_docs，不要用本工具的 platform=bedrock
@@ -801,6 +821,14 @@ export async function searchDocs(
       }
     }
     const loaderWikiWarn = thinLoaderWikiWarning(platform, finalResults);
+    // verbatim 逐字支撑位：通用口的 store 是鸭子类型联合，没有 pageText 的实现
+    // （薄档 / 旁路语料）一律「未判定」，不得报成 false。
+    const vb = annotateVerbatim(finalResults, args.query, (r) => {
+      const fn = (store as unknown as {
+        pageText?: (id: string, version: string) => string | undefined;
+      }).pageText;
+      return typeof fn === "function" ? fn.call(store, r.id, semVersion) : undefined;
+    });
     return {
       content: [
         {
@@ -829,6 +857,7 @@ export async function searchDocs(
                 ),
                 semanticStaleSearchWarning(resolveDataDir(), platform, resolvedVersion, docSource),
                 loaderWikiWarn,
+                vb.warning,
                 finalResults.length === 0 && /[\u4e00-\u9fff]/.test(String(args.query ?? ""))
                   ? "中文查询命中为空：可改英文关键词（如 register block）或先 list_doc_versions 确认档位。"
                   : undefined,
@@ -837,7 +866,10 @@ export async function searchDocs(
               tags: args.tags,
               semantic: semanticHits !== null,
               total: finalResults.length,
-              results: finalResults,
+              ...(vb.term
+                ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
+                : {}),
+              results: vb.rows,
               ...(platform === "neoforge" && neoResolution?.sourcePlatform === "forge"
                 ? {
                   forgeCompatible: true,

@@ -23,7 +23,8 @@
  *     A4 上游中介名（`class_\d+`/`field_\d+`/`method_\d+`）只许出现在代码语境（围栏内或行内反引号），
  *        出现在正文必须逐处在存量台账 `DEBT_INTERMEDIARY_BARE` 内（键 = 相对路径:行号|该行的目标名集合）；
  *     A5 尖括号泛型保真：同名 raw/processed 配对里，raw 中的 `Foo<...>` 记号必须都在 processed 存活；
- *        每条丢失都必须按树命中存量台账 `DEBT_ANGLE_LOSS`（今日为空 ⇒ 任何丢失即红，假根真根同规则）。
+ *        每条丢失都必须按树命中存量台账 `DEBT_ANGLE_LOSS`（2026-09-20 W1-3 打开 javadoc 配对后，
+ *        该台账首次非空 = 6 档 javadoc 共 416 处；「台账→实扫」的反向核数只在真根跑）。
  *  B. 台账层（只跑真数据根；`MC_SKILL_CORPUS_TEST_ROOT` 指到假根时整层跳过）
  *     逐档 `<<<` 处数/文件数、逐树结构类别（raw/proc 篇数 + identical/contentDiff/markerOnly/
  *     fmOnly/noTwin + processed 重名数 + 该树 `<<<` 处数）、中介名行命中数（总/围栏内/行内码）。**精确钉死**：多一处红、少一处也红
@@ -126,17 +127,17 @@ const LEDGER_TREES = {
   "forge_1.15.2/forge-docs/1.15.2": { raw: 40, proc: 40, identical: 0, contentDiff: 29, markerOnly: 0, fmOnly: 11, noTwin: 0, dup: 0, dir: 0 },
   "forge_1.16.5/forge-docs/1.16.5": { raw: 41, proc: 41, identical: 0, contentDiff: 29, markerOnly: 0, fmOnly: 12, noTwin: 0, dup: 0, dir: 0 },
   "forge_1.17.1/forge-docs/1.17.1": { raw: 41, proc: 41, identical: 0, contentDiff: 30, markerOnly: 0, fmOnly: 11, noTwin: 0, dup: 0, dir: 0 },
-  "forge_1.18.2/forge-docs/1.18.2": { raw: 33, proc: 33, identical: 0, contentDiff: 25, markerOnly: 0, fmOnly: 8, noTwin: 0, dup: 0, dir: 0 },
-  "forge_1.19.4/forge-docs/1.19.4": { raw: 39, proc: 39, identical: 0, contentDiff: 32, markerOnly: 0, fmOnly: 7, noTwin: 0, dup: 0, dir: 0 },
+  "forge_1.18.2/forge-docs/1.18.2": { raw: 41, proc: 41, identical: 0, contentDiff: 33, markerOnly: 0, fmOnly: 8, noTwin: 0, dup: 0, dir: 0 },
+  "forge_1.19.4/forge-docs/1.19.4": { raw: 48, proc: 48, identical: 0, contentDiff: 41, markerOnly: 0, fmOnly: 7, noTwin: 0, dup: 0, dir: 0 },
   "forge_1.20.1/forge-docs/1.20.1": { raw: 70, proc: 70, identical: 0, contentDiff: 63, markerOnly: 0, fmOnly: 7, noTwin: 0, dup: 0, dir: 0 },
   "forge_1.20.4/forge-docs/1.20.4": { raw: 70, proc: 70, identical: 0, contentDiff: 69, markerOnly: 0, fmOnly: 1, noTwin: 0, dup: 0, dir: 0 },
-  "forge_javadoc/1.10.2": { raw: 3254, proc: 3254, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 3254, dup: 0, dir: 0 },
-  "forge_javadoc/1.11.2": { raw: 3335, proc: 3335, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 3335, dup: 0, dir: 0 },
+  "forge_javadoc/1.10.2": { raw: 3254, proc: 3254, identical: 0, contentDiff: 27, markerOnly: 0, fmOnly: 3227, noTwin: 0, dup: 0, dir: 0 },
+  "forge_javadoc/1.11.2": { raw: 3335, proc: 3335, identical: 0, contentDiff: 28, markerOnly: 0, fmOnly: 3307, noTwin: 0, dup: 0, dir: 0 },
   // 2026-09-18：历史重名件成对删除（914 processed 孤儿 + 914 raw ` (2).md`），4567 → 3653（与索引引用一致）。
-  "forge_javadoc/1.12.2": { raw: 3653, proc: 3653, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 3653, dup: 0, dir: 0 },
-  "forge_javadoc/1.7.10": { raw: 2464, proc: 2464, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 2464, dup: 0, dir: 0 },
-  "forge_javadoc/1.8.9": { raw: 2837, proc: 2837, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 2837, dup: 0, dir: 0 },
-  "forge_javadoc/1.9.4": { raw: 3111, proc: 3111, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 3111, dup: 0, dir: 0 },
+  "forge_javadoc/1.12.2": { raw: 3653, proc: 3653, identical: 0, contentDiff: 29, markerOnly: 0, fmOnly: 3624, noTwin: 0, dup: 0, dir: 0 },
+  "forge_javadoc/1.7.10": { raw: 1888, proc: 1888, identical: 0, contentDiff: 7, markerOnly: 0, fmOnly: 1881, noTwin: 0, dup: 0, dir: 0 },
+  "forge_javadoc/1.8.9": { raw: 2837, proc: 2837, identical: 0, contentDiff: 23, markerOnly: 0, fmOnly: 2814, noTwin: 0, dup: 0, dir: 0 },
+  "forge_javadoc/1.9.4": { raw: 3111, proc: 3111, identical: 0, contentDiff: 24, markerOnly: 0, fmOnly: 3087, noTwin: 0, dup: 0, dir: 0 },
   "liteloader_1.10.2/liteloader-docs/1.10.2": { raw: 30, proc: 30, identical: 0, contentDiff: 30, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
   "liteloader_1.12.2/liteloader-docs/1.12.2": { raw: 31, proc: 31, identical: 0, contentDiff: 31, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
   "liteloader_1.8.9/liteloader-docs/1.8.9": { raw: 30, proc: 30, identical: 0, contentDiff: 30, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
@@ -152,7 +153,14 @@ const LEDGER_TREES = {
   "rift_1.13.2/rift-docs/1.13.2": { raw: 6, proc: 6, identical: 0, contentDiff: 6, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
 };
 // A5 存量债务：按树登记的泛型记号丢失数（今日为空；加工若吃掉签名才登记）
-const DEBT_ANGLE_LOSS = {};
+const DEBT_ANGLE_LOSS = {
+  "forge_javadoc/1.10.2": 98,
+  "forge_javadoc/1.11.2": 100,
+  "forge_javadoc/1.12.2": 89,
+  "forge_javadoc/1.7.10": 5,
+  "forge_javadoc/1.8.9": 31,
+  "forge_javadoc/1.9.4": 93,
+};
 // A4 存量债务：正文里的上游中介名（相对 data 根路径:行号|该处名字）
 //      S7 之后剩下的这些都是「上游正文跨版本残留、本版映射里没有」的 intermediary，逐条点名保留。
 const DEBT_INTERMEDIARY_BARE = [
@@ -275,17 +283,34 @@ function genericTokens(text) {
   return text.match(GENERIC_RE) ?? [];
 }
 
+/**
+ * 展平命名索引（javadoc 族）：raw 的「相对路径去扩展名 + 分隔符→_」↔ processed 的 basename。
+ * W1-3（2026-09-20）：旧兜底只拿 **basename** 去比，而 javadoc 的 raw 是原样嵌套
+ * （raw/net/minecraft/A.md ↔ processed/net_minecraft_A.md）⇒ 嵌套 raw 永不命中，
+ * 该族全树 noTwin = proc 全量（实测 18,654/20,414）。索引按 rawDir 缓存，一次扫描只建一次。
+ */
+const FLAT_TWIN_INDEX = new Map();
+function flatIndexFor(rawDir, rawFiles) {
+  const cached = FLAT_TWIN_INDEX.get(rawDir);
+  if (cached && cached.size === rawFiles.length) return cached;
+  const map = new Map();
+  for (const r of rawFiles) {
+    const rel = path.relative(rawDir, r).replace(/\.[^.]+$/, "");
+    const key = rel.replace(/[\\/]/g, "_");
+    if (!map.has(key)) map.set(key, r); // 重名保留先到者；processed 重名另有 A2 判据
+  }
+  FLAT_TWIN_INDEX.set(rawDir, map);
+  return map;
+}
+
 /** 同名 raw 配对：`.md`↔`.md`、wiki 的 `.md`↔`.txt`，再退到展平命名（javadoc）。 */
 function findTwin(relIn, rawDir, rawFiles) {
   const cand = [path.join(rawDir, relIn), path.join(rawDir, relIn.replace(/\.(md|mdx)$/, ".txt"))];
   for (const c of cand) if (fs.existsSync(c)) return c;
   const stem = path.basename(relIn).replace(/\.[^.]+$/, "");
-  return (
-    rawFiles.find((r) => {
-      const b = path.basename(r);
-      return b === stem || b.replace(/\.[^./]+$/, "").replace(/[\\/]/g, "_") === stem;
-    }) ?? null
-  );
+  const flat = flatIndexFor(rawDir, rawFiles);
+  if (flat.has(stem)) return flat.get(stem);
+  return rawFiles.find((r) => path.basename(r).replace(/\.[^./]+$/, "") === stem) ?? null;
 }
 
 const stat = {
@@ -445,8 +470,11 @@ for (const [tree, got] of Object.entries(stat.angleLoss)) {
     );
   }
 }
-for (const tree of Object.keys(DEBT_ANGLE_LOSS)) {
-  if (!stat.angleLoss[tree]) fail(`泛型丢失台账条目 ${tree} 已不在实扫结果里 ⇒ 清零是好事，但要显式改台账`);
+// 反向（台账→实扫）只在真数据根跑：假根扫不到真树的丢失，否则「干净假根」会因台账条目不在实扫里而红。
+if (LEDGER_MODE) {
+  for (const tree of Object.keys(DEBT_ANGLE_LOSS)) {
+    if (!stat.angleLoss[tree]) fail(`泛型丢失台账条目 ${tree} 已不在实扫结果里 ⇒ 清零是好事，但要显式改台账`);
+  }
 }
 
 // A8 内容级损坏签名：raw / processed 里出现控制字节或 U+FFFD ⇒ 该文件已不是文本。

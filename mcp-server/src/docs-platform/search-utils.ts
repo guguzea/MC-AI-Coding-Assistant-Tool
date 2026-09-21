@@ -9,7 +9,7 @@ import { readFileSync, statSync } from "fs";
 import { join } from "path";
 import { ownGet } from "../utils/own-record.js";
 import { escapeRegExp } from "../utils/regex.js";
-import { ActionCodes, actionable } from "../utils/actionable.js";
+import { ActionCodes, actionable, EXTERNAL_CONTENT_NOTICE } from "../utils/actionable.js";
 
 export interface ScoredDocHit {
   id: string;
@@ -601,6 +601,104 @@ export function stripScores<T extends { score: number }>(
   return rows.map(({ score: _s, ...rest }) => rest);
 }
 
+// ── verbatim 逐字支撑位（F-K1）─────────────────────────────────────────────
+//
+// 语义检索会按词干 / 标签 / 路径把页拉回来，所以「有命中」从来不等于「该名字在语料里」。
+// 本段只做**事后标注**：不改打分、不改召回、不改排序——命中行原样保留，
+// 额外挂一个 `verbatim` 布尔，让调用方能把「模糊匹配回来的相关页」和
+// 「正文里真的逐字出现该标识符的页」分开读。
+// 判不了的情况一律**不给字段**（薄档无 processed 正文、wiki / primer / porting 旁路、
+// 查询不是单个标识符形态）；缺席 ≠ false，false 才是「读了正文确认没有」。
+
+/**
+ * 只有「单个 ASCII 标识符 / 资源路径形态」的查询才值得下逐字判定：
+ * `GatherDataEvent`、`class:ItemGroup`、`net.minecraft.xx.Item`、`minecraft:registry`。
+ * 散文（`registry provider for items`）、OR 分组（`a | b`）、中文、纯小写普通词
+ * （`datagen` —— 那是词干与同义词的地盘，逐字缺席不代表没文档）都返回 null = 不判。
+ */
+export function identifierTermOf(query: string): string | null {
+  const q = String(query ?? "").trim().replace(/^(?:class|event|method):/i, "").trim();
+  if (!q || /[\s|]/.test(q) || /[\u4e00-\u9fff]/.test(q)) return null;
+  if (q.length < 3) return null;
+  const dotted = /^[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)+$/.test(q);
+  const simple = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(q);
+  const resPath = /^[a-z][a-z0-9_.-]*:[a-z][a-z0-9_./-]*$/.test(q);
+  if (!dotted && !simple && !resPath) return null;
+  if (!resPath && !/[A-Z]/.test(q)) return null;
+  return q;
+}
+
+function resPathLike(term: string): boolean {
+  return /^[a-z][a-z0-9_.-]*:[a-z][a-z0-9_./-]*$/.test(term);
+}
+
+/**
+ * 该标识符是否在正文里逐字出现（词形完整：`Item` 不算命中 `ItemStack`）。
+ * 边界只认字母数字下划线，所以 `Outer$Inner` 的两半各自都算逐字命中
+ * （本仓语料大量写成 `ForgeAdvancementProvider$AdvancementGenerator` 这种嵌套类名）。
+ */
+export function verbatimInText(text: string, term: string): boolean {
+  if (!text || !term) return false;
+  const candidates = resPathLike(term)
+    ? [term]
+    : term.includes(".")
+      ? [term, term.slice(term.lastIndexOf(".") + 1)]
+      : [term];
+  return candidates.some((c) => new RegExp(`(?<!\\w)${escapeRegExp(c)}(?!\\w)`).test(text));
+}
+
+export interface VerbatimAudit<T> {
+  /** 原行 + 可能的 `verbatim` 标注（未判定的行不带该键） */
+  rows: Array<T & { verbatim?: boolean }>;
+  /** null = 本次查询形态不适用逐字判定 */
+  term: string | null;
+  /** 真正读到正文并给出 true/false 的页数（分母） */
+  judged: number;
+  hits: number;
+  /** 仅在「判过且全为 false」时出现 */
+  warning?: string;
+}
+
+/**
+ * 给已排好序的命中列表挂逐字支撑位。
+ * `textOf` 返回该页 processed 正文；undefined / 抛错 = 该页未判定（不是「没有」）。
+ */
+export function annotateVerbatim<T extends { id: string }>(
+  rows: T[],
+  query: string,
+  textOf: (row: T) => string | undefined | null,
+): VerbatimAudit<T> {
+  const term = identifierTermOf(query);
+  if (!term || !Array.isArray(rows) || rows.length === 0) {
+    return { rows: rows ?? [], term, judged: 0, hits: 0 };
+  }
+  let judged = 0;
+  let hits = 0;
+  const out = rows.map((row) => {
+    let text: string | undefined | null;
+    try {
+      text = textOf(row);
+    } catch {
+      text = undefined;
+    }
+    if (typeof text !== "string" || text.length === 0) return { ...row };
+    judged++;
+    const ok = verbatimInText(text, term);
+    if (ok) hits++;
+    return { ...row, verbatim: ok };
+  });
+  return {
+    rows: out,
+    term,
+    judged,
+    hits,
+    warning:
+      judged > 0 && hits === 0
+        ? `逐字支撑位：\`${term}\` 在本次判定的 ${judged} 个命中页正文中均未逐字出现——这些页是按词干 / 标签 / 路径模糊匹配回来的，不构成该名字存在的证据。要确认请 get_*_doc_full 读正文；确认不了就留 // TODO(未核实)，禁止把它当本档实名 API。`
+        : undefined,
+  };
+}
+
 /** 语义检索命中（semanticSearch 结果）的最小结构 */
 export interface SemanticHitLike {
   docId: string;
@@ -630,6 +728,8 @@ export interface SearchResultLike {
   semanticScore?: number;
   /** Reciprocal Rank Fusion 分（仅融合后存在） */
   rrfScore?: number;
+  /** 逐字支撑位：查询标识符是否在该页 processed 正文逐字出现；缺席 = 未判定 */
+  verbatim?: boolean;
   matches?: Array<{ sectionHeading?: string; snippet: string; score: number }>;
 }
 
@@ -744,7 +844,12 @@ export function withDocsFallbackFields<T extends Record<string, unknown>>(payloa
   // ⇒ 那些命中拿不到 confidence / VERSION_FALLBACK（降级信息整段丢失）。字符串同样表示「降级」。
   const explicit =
     payload.fallback === true || (typeof payload.fallback === "string" && payload.fallback.length > 0);
-  if (!versionFallback && !wikiFallback && !explicit) return payload;
+  // W5-4：信任边界提示对**所有**检索载荷生效（不是只在降级时才附）。
+  // 注意：本函数也会收到**数组**载荷（getDocRelated 这类）—— 展开数组会把它变成普通对象，
+  // 破坏调用方的 Array.isArray 契约；数组不附 notice（JSON 化时也会丢）。
+  if (!versionFallback && !wikiFallback && !explicit) {
+    return (Array.isArray(payload) ? payload : { ...payload, notice: EXTERNAL_CONTENT_NOTICE }) as T;
+  }
   const requested = String(payload.requestedVersion ?? payload.version ?? "");
   const resolved = wikiFallback
     ? String(payload.sourceUsed ?? payload.source_version ?? `${docsPlatformLabel(payload).toLowerCase()}-wiki`)
@@ -764,6 +869,7 @@ export function withDocsFallbackFields<T extends Record<string, unknown>>(payloa
       : undefined;
   return {
     ...payload,
+    notice: EXTERNAL_CONTENT_NOTICE,
     // A-6 X：**不得**把载荷自带的字符串 fallback（quilt 同线改口 = `"quilt"`）覆写成 `true`
     // ——那是下游判「回退到哪个平台」的判别字段（test-assistant-gaps / test-core 都钉着它）。
     // 归一只对布尔形态生效：没有值 → true。

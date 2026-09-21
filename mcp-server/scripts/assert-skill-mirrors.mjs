@@ -344,6 +344,10 @@ const SKILL_FM_KEYS = new Set([
   "version",
   "dependencies",
   "mappings",
+  // 2026-09-20 用户裁定：本件除 mappings 基线外还含另一套映射的对照列 ⇒ 扁平加 mappings_alt。
+  // 只能扁平：嵌套 YAML 会被 catalog.ts 的 parseFrontmatterMap（扁平 /^([\w-]+):\s*(.*)$/）整行丢掉。
+  // 它与正文披露块/对照行的一致性由 assert-skill-mappings-key.mjs 钉，这里不放宽任何判定。
+  "mappings_alt",
   "docsTool",
   "platforms",
   "mcVersions",

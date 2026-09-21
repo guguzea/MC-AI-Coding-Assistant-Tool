@@ -1,0 +1,213 @@
+---- Minecraft Crash Report ----
+// Do not be sad, have a hug! <3
+
+Time: 2026-09-20 12:00:00
+Description: Rendering screen
+
+java.lang.RuntimeException: fixture crash for W4-7 parity test
+	at net.fabricmc.loader.impl.FabricLoaderImpl.invokeEntrypoints(FabricLoaderImpl.java:1)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:2)
+	at net.minecraft.client.main.Main.main(Main.java:3)
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+-- Head --
+	Thread: Render thread
+	Stacktrace:
+	at com.example.fixture.Frame0.step(Frame0.java:1)
+	at com.example.fixture.Frame1.step(Frame1.java:2)
+	at com.example.fixture.Frame2.step(Frame2.java:3)
+	at com.example.fixture.Frame3.step(Frame3.java:4)
+	at com.example.fixture.Frame4.step(Frame4.java:5)
+	at com.example.fixture.Frame5.step(Frame5.java:6)
+	at com.example.fixture.Frame6.step(Frame6.java:7)
+	at com.example.fixture.Frame7.step(Frame7.java:8)
+	at com.example.fixture.Frame8.step(Frame8.java:9)
+	at com.example.fixture.Frame9.step(Frame9.java:10)
+	at com.example.fixture.Frame10.step(Frame10.java:11)
+	at com.example.fixture.Frame11.step(Frame11.java:12)
+	at com.example.fixture.Frame12.step(Frame12.java:13)
+	at com.example.fixture.Frame13.step(Frame13.java:14)
+	at com.example.fixture.Frame14.step(Frame14.java:15)
+	at com.example.fixture.Frame15.step(Frame15.java:16)
+	at com.example.fixture.Frame16.step(Frame16.java:17)
+	at com.example.fixture.Frame17.step(Frame17.java:18)
+	at com.example.fixture.Frame18.step(Frame18.java:19)
+	at com.example.fixture.Frame19.step(Frame19.java:20)
+	at com.example.fixture.Frame20.step(Frame20.java:21)
+	at com.example.fixture.Frame21.step(Frame21.java:22)
+	at com.example.fixture.Frame22.step(Frame22.java:23)
+	at com.example.fixture.Frame23.step(Frame23.java:24)
+	at com.example.fixture.Frame24.step(Frame24.java:25)
+	at com.example.fixture.Frame25.step(Frame25.java:26)
+	at com.example.fixture.Frame26.step(Frame26.java:27)
+	at com.example.fixture.Frame27.step(Frame27.java:28)
+	at com.example.fixture.Frame28.step(Frame28.java:29)
+	at com.example.fixture.Frame29.step(Frame29.java:30)
+	at com.example.fixture.Frame30.step(Frame30.java:31)
+	at com.example.fixture.Frame31.step(Frame31.java:32)
+	at com.example.fixture.Frame32.step(Frame32.java:33)
+	at com.example.fixture.Frame33.step(Frame33.java:34)
+	at com.example.fixture.Frame34.step(Frame34.java:35)
+	at com.example.fixture.Frame35.step(Frame35.java:36)
+	at com.example.fixture.Frame36.step(Frame36.java:37)
+	at com.example.fixture.Frame37.step(Frame37.java:38)
+	at com.example.fixture.Frame38.step(Frame38.java:39)
+	at com.example.fixture.Frame39.step(Frame39.java:40)
+	at com.example.fixture.Frame40.step(Frame40.java:41)
+	at com.example.fixture.Frame41.step(Frame41.java:42)
+	at com.example.fixture.Frame42.step(Frame42.java:43)
+	at com.example.fixture.Frame43.step(Frame43.java:44)
+	at com.example.fixture.Frame44.step(Frame44.java:45)
+	at com.example.fixture.Frame45.step(Frame45.java:46)
+	at com.example.fixture.Frame46.step(Frame46.java:47)
+	at com.example.fixture.Frame47.step(Frame47.java:48)
+	at com.example.fixture.Frame48.step(Frame48.java:49)
+	at com.example.fixture.Frame49.step(Frame49.java:50)
+	at com.example.fixture.Frame50.step(Frame50.java:51)
+	at com.example.fixture.Frame51.step(Frame51.java:52)
+	at com.example.fixture.Frame52.step(Frame52.java:53)
+	at com.example.fixture.Frame53.step(Frame53.java:54)
+	at com.example.fixture.Frame54.step(Frame54.java:55)
+	at com.example.fixture.Frame55.step(Frame55.java:56)
+	at com.example.fixture.Frame56.step(Frame56.java:57)
+	at com.example.fixture.Frame57.step(Frame57.java:58)
+	at com.example.fixture.Frame58.step(Frame58.java:59)
+	at com.example.fixture.Frame59.step(Frame59.java:60)
+	at com.example.fixture.Frame60.step(Frame60.java:61)
+	at com.example.fixture.Frame61.step(Frame61.java:62)
+	at com.example.fixture.Frame62.step(Frame62.java:63)
+	at com.example.fixture.Frame63.step(Frame63.java:64)
+	at com.example.fixture.Frame64.step(Frame64.java:65)
+	at com.example.fixture.Frame65.step(Frame65.java:66)
+	at com.example.fixture.Frame66.step(Frame66.java:67)
+	at com.example.fixture.Frame67.step(Frame67.java:68)
+	at com.example.fixture.Frame68.step(Frame68.java:69)
+	at com.example.fixture.Frame69.step(Frame69.java:70)
+	at com.example.fixture.Frame70.step(Frame70.java:71)
+	at com.example.fixture.Frame71.step(Frame71.java:72)
+	at com.example.fixture.Frame72.step(Frame72.java:73)
+	at com.example.fixture.Frame73.step(Frame73.java:74)
+	at com.example.fixture.Frame74.step(Frame74.java:75)
+	at com.example.fixture.Frame75.step(Frame75.java:76)
+	at com.example.fixture.Frame76.step(Frame76.java:77)
+	at com.example.fixture.Frame77.step(Frame77.java:78)
+	at com.example.fixture.Frame78.step(Frame78.java:79)
+	at com.example.fixture.Frame79.step(Frame79.java:80)
+	at com.example.fixture.Frame80.step(Frame80.java:81)
+	at com.example.fixture.Frame81.step(Frame81.java:82)
+	at com.example.fixture.Frame82.step(Frame82.java:83)
+	at com.example.fixture.Frame83.step(Frame83.java:84)
+	at com.example.fixture.Frame84.step(Frame84.java:85)
+	at com.example.fixture.Frame85.step(Frame85.java:86)
+	at com.example.fixture.Frame86.step(Frame86.java:87)
+	at com.example.fixture.Frame87.step(Frame87.java:88)
+	at com.example.fixture.Frame88.step(Frame88.java:89)
+	at com.example.fixture.Frame89.step(Frame89.java:90)
+	at com.example.fixture.Frame90.step(Frame90.java:91)
+	at com.example.fixture.Frame91.step(Frame91.java:92)
+	at com.example.fixture.Frame92.step(Frame92.java:93)
+	at com.example.fixture.Frame93.step(Frame93.java:94)
+	at com.example.fixture.Frame94.step(Frame94.java:95)
+	at com.example.fixture.Frame95.step(Frame95.java:96)
+	at com.example.fixture.Frame96.step(Frame96.java:97)
+	at com.example.fixture.Frame97.step(Frame97.java:98)
+	at com.example.fixture.Frame98.step(Frame98.java:99)
+	at com.example.fixture.Frame99.step(Frame99.java:100)
+	at com.example.fixture.Frame100.step(Frame100.java:101)
+	at com.example.fixture.Frame101.step(Frame101.java:102)
+	at com.example.fixture.Frame102.step(Frame102.java:103)
+	at com.example.fixture.Frame103.step(Frame103.java:104)
+	at com.example.fixture.Frame104.step(Frame104.java:105)
+	at com.example.fixture.Frame105.step(Frame105.java:106)
+	at com.example.fixture.Frame106.step(Frame106.java:107)
+	at com.example.fixture.Frame107.step(Frame107.java:108)
+	at com.example.fixture.Frame108.step(Frame108.java:109)
+	at com.example.fixture.Frame109.step(Frame109.java:110)
+	at com.example.fixture.Frame110.step(Frame110.java:111)
+	at com.example.fixture.Frame111.step(Frame111.java:112)
+	at com.example.fixture.Frame112.step(Frame112.java:113)
+	at com.example.fixture.Frame113.step(Frame113.java:114)
+	at com.example.fixture.Frame114.step(Frame114.java:115)
+	at com.example.fixture.Frame115.step(Frame115.java:116)
+	at com.example.fixture.Frame116.step(Frame116.java:117)
+	at com.example.fixture.Frame117.step(Frame117.java:118)
+	at com.example.fixture.Frame118.step(Frame118.java:119)
+	at com.example.fixture.Frame119.step(Frame119.java:120)
+	at com.example.fixture.Frame120.step(Frame120.java:121)
+	at com.example.fixture.Frame121.step(Frame121.java:122)
+	at com.example.fixture.Frame122.step(Frame122.java:123)
+	at com.example.fixture.Frame123.step(Frame123.java:124)
+	at com.example.fixture.Frame124.step(Frame124.java:125)
+	at com.example.fixture.Frame125.step(Frame125.java:126)
+	at com.example.fixture.Frame126.step(Frame126.java:127)
+	at com.example.fixture.Frame127.step(Frame127.java:128)
+	at com.example.fixture.Frame128.step(Frame128.java:129)
+	at com.example.fixture.Frame129.step(Frame129.java:130)
+	at com.example.fixture.Frame130.step(Frame130.java:131)
+	at com.example.fixture.Frame131.step(Frame131.java:132)
+	at com.example.fixture.Frame132.step(Frame132.java:133)
+	at com.example.fixture.Frame133.step(Frame133.java:134)
+	at com.example.fixture.Frame134.step(Frame134.java:135)
+	at com.example.fixture.Frame135.step(Frame135.java:136)
+	at com.example.fixture.Frame136.step(Frame136.java:137)
+	at com.example.fixture.Frame137.step(Frame137.java:138)
+	at com.example.fixture.Frame138.step(Frame138.java:139)
+	at com.example.fixture.Frame139.step(Frame139.java:140)
+	at com.example.fixture.Frame140.step(Frame140.java:141)
+	at com.example.fixture.Frame141.step(Frame141.java:142)
+	at com.example.fixture.Frame142.step(Frame142.java:143)
+	at com.example.fixture.Frame143.step(Frame143.java:144)
+	at com.example.fixture.Frame144.step(Frame144.java:145)
+	at com.example.fixture.Frame145.step(Frame145.java:146)
+	at com.example.fixture.Frame146.step(Frame146.java:147)
+	at com.example.fixture.Frame147.step(Frame147.java:148)
+	at com.example.fixture.Frame148.step(Frame148.java:149)
+	at com.example.fixture.Frame149.step(Frame149.java:150)
+	at com.example.fixture.Frame150.step(Frame150.java:151)
+	at com.example.fixture.Frame151.step(Frame151.java:152)
+	at com.example.fixture.Frame152.step(Frame152.java:153)
+	at com.example.fixture.Frame153.step(Frame153.java:154)
+	at com.example.fixture.Frame154.step(Frame154.java:155)
+	at com.example.fixture.Frame155.step(Frame155.java:156)
+	at com.example.fixture.Frame156.step(Frame156.java:157)
+	at com.example.fixture.Frame157.step(Frame157.java:158)
+	at com.example.fixture.Frame158.step(Frame158.java:159)
+	at com.example.fixture.Frame159.step(Frame159.java:160)
+
+-- Affected level --
+	Level name: fixture-world
+	All players: 1 total; [LocalPlayer]
+
+-- System Details --
+	Minecraft Version: 1.20.1
+	Fabric Loader: 0.15.11
+	Fabric API: 0.92.2+1.20.1
+
+-- Mod List --
+	fixture-mod-0: 0.0.0
+	fixture-mod-1: 1.0.0
+	fixture-mod-2: 2.0.0
+	fixture-mod-3: 3.0.0
+	fixture-mod-4: 4.0.0
+	fixture-mod-5: 5.0.0
+	fixture-mod-6: 6.0.0
+	fixture-mod-7: 7.0.0
+	fixture-mod-8: 8.0.0
+	fixture-mod-9: 9.0.0
+	fixture-mod-10: 10.0.0
+	fixture-mod-11: 11.0.0
+	fixture-mod-12: 12.0.0
+	fixture-mod-13: 13.0.0
+	fixture-mod-14: 14.0.0
+	fixture-mod-15: 15.0.0
+	fixture-mod-16: 16.0.0
+	fixture-mod-17: 17.0.0
+	fixture-mod-18: 18.0.0
+	fixture-mod-19: 19.0.0
+
+-- Uptime --
+	JVM uptime: 12345 ms
+
+-- FML --
+	Fabric Loader: fabric-loader-0.15.11

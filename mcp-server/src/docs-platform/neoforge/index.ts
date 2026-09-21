@@ -30,7 +30,7 @@ import {
   versionNotFoundResult,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
+import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import {
   findPrimer,
@@ -176,7 +176,9 @@ export const searchNeoForgeDocsSchema = {
     "返回相关页面 ID 列表，每个结果包含标题、标签和相关性评分。" +
     "另合并 data/neoforge_primers（仅 loader=neoforge，命中带 source:primer）。" +
     "无独立主文档树的版本（如 1.20.5、本仓未入库的 26.2）会 warning，禁止把邻档 API 当本版。" +
-    "增强功能：支持标签过滤；自动去除 the/and/of 等停用词；按相关性排序。",
+    "增强功能：支持标签过滤；自动去除 the/and/of 等停用词；按相关性排序。" +
+    "verbatim 逐字支撑位：query 为单个标识符形态时，每条命中带 verbatim（true=该名字在该页正文逐字出现；false=读到正文且确认没有；无该字段=未判定，不等于语料没有），顶层带 verbatim_summary{term,judged,hits}；" +
+    "hits=0 只说明这些页是模糊相关，不构成该名字存在的证据（该位只事后标注，不改命中集合、顺序与 total）。",
   inputSchema: z.object({
     query: z.string().describe("搜索查询关键词"),
     version: z.string().describe("NeoForge 版本（必填）。请先 list_neoforge_versions"),
@@ -248,6 +250,10 @@ export async function searchNeoForgeDocs(args: {
       const seen = new Set(results.map((r) => r.id));
       results = [...primerHits.filter((p) => !seen.has(p.id)), ...results].slice(0, 20);
     }
+    // verbatim 逐字支撑位：只事后标注，不改排序 / 召回（primer 行无 processed 正文 → 未判定）
+    const vb = annotateVerbatim(results, args.query, (r) =>
+      s.pageText(r.id, detailed.resolvedVersion),
+    );
     return {
       content: [{
         type: "text",
@@ -273,6 +279,7 @@ export async function searchNeoForgeDocs(args: {
               forgeCompatible ? (resolution.sourceVersion ?? "1.20.1") : detailed.resolvedVersion,
               forgeCompatible ? "forge-docs" : "neoforge-docs",
             ),
+            vb.warning,
           ),
           forgeCompatible: forgeCompatible || undefined,
           source_version: resolutionSource,
@@ -282,7 +289,10 @@ export async function searchNeoForgeDocs(args: {
             : undefined,
           semantic: semanticHits !== null,
           total: results.length,
-          results,
+          ...(vb.term
+            ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
+            : {}),
+          results: vb.rows,
           ...(resolution.mainDocsMissing && neoMissingVersions
             ? { availableVersions: neoMissingVersions }
             : {}),

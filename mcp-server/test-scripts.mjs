@@ -1629,7 +1629,7 @@ public class ForeignHelper {
   assert.equal(runs.realRoot.status, 0, `G3 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
   assert.match(
     runs.realRoot.stdout,
-    /49 棵 raw\/processed 树[\s\S]*处字节已在盘上[\s\S]*泛型丢失 0 · 重名 0[\s\S]*目录层 \d+ 个目录（0 条目 0 \/ 非法名 0）/,
+    /49 棵 raw\/processed 树[\s\S]*处字节已在盘上[\s\S]*泛型丢失 \d+ · 重名 0[\s\S]*目录层 \d+ 个目录（0 条目 0 \/ 非法名 0）/,
     `真根少跑了层或台账口径变了：\n${runs.realRoot.stdout}`,
   );
   console.log(
@@ -1985,6 +1985,17 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-rule-internal-refs.mjs",
     // 2026-09-19 W5-2 裁定 5-B：骨架技能口径 2 普查棘轮（补正使计数只降不升）。
     "./scripts/assert-skill-skeleton-census.mjs",
+    // 2026-09-20 W5-3：工作流模板必须引 WORKFLOW_HITL 常量或含确认语义（5 个必备模板必须引常量）。
+    "./scripts/assert-workflow-hitl.mjs",
+    // 2026-09-20 W1-4：forge_javadoc 族盘上 ↔ index-l0 双向差（audit 的 docSubDirs 覆盖不到这一族）。
+    "./scripts/assert-javadoc-index-parity.mjs",
+    // 2026-09-20 W5-5 裁定：sm-120x.xml 保留跟踪 + 规则保留；scripts/_oneoff 保留不删。
+    "./scripts/assert-w55-hygiene-rulings.mjs",
+    // 2026-09-20 裁定③：含围栏代码的 Skill 源稿必须声明非空 mappings 键（F-I6 的长期闸）。
+    "./scripts/assert-skill-mappings-key.mjs",
+    // 2026-09-20 裁定（F-K1）：检索结果必须带 verbatim 逐字支撑位 —— 投毒名 judged>0/hits=0、
+    // 真实名 hits>0、散文不判、每个 true 行可独立直扫复现、且标注不得改变命中集合与顺序。
+    "./scripts/assert-verbatim-support.mjs",
   ]) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE], {
@@ -2006,6 +2017,16 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-forge-blockshape-family.mjs",
     "./scripts/assert-forge-1182-registry-consts.mjs",
     "./scripts/assert-rule-ledger.mjs",
+    // 2026-09-20 W5-3：人在环判据的自证（畸形模板文本必须当场红）。
+    "./scripts/assert-workflow-hitl.mjs",
+    // 2026-09-20 W1-4：javadoc 双向差判据的自证（畸形快照必须当场红）。
+    "./scripts/assert-javadoc-index-parity.mjs",
+    // 2026-09-20 W5-5：裁定钉的自证（规则被删必须当场红）。
+    "./scripts/assert-w55-hygiene-rulings.mjs",
+    // 2026-09-20 裁定③：mappings 键判据的自证（含围栏不声明 / alt 无披露块必须红）。
+    "./scripts/assert-skill-mappings-key.mjs",
+    // 2026-09-20 F-K1：verbatim 判据的自证（极性反转 / 子串放过 / 散文也判必须红）。
+    "./scripts/assert-verbatim-support.mjs",
   ]) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE, "--selftest"], {
@@ -2157,5 +2178,39 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   });
   assert.equal(fails.length, 0, "planClassWrites 回归：\n" + fails.join("\n"));
   console.log("  S9 javadoc 冲突计划: 4 组负例全过（同 URL 去重 / 异 URL 确定后缀 / 大小写共存 / import 不触发爬取）");
+}
+// ── #17 yarn 名存在性门（assert-skill-yarn-attest）：挂载 + 证明它真会红 ──────
+// 2026-09-20 用户裁定把 yarn-mappings.sqlite 升格为「类名存在性」合法来源并配门。
+// 独立脚本不会被测试链执行，所以这里挂四件事：门自带沙盒自检（投毒必红）、真清单
+// 必须绿（否则等于给仓库挂了个常红门）、清单指向不存在的文件要红、空清单要红。
+// 后两条证明挂载不是装饰：坏输入 / 零输入都不许静默放行。
+{
+  const GATE = fileURLToPath(new URL("./scripts/assert-skill-yarn-attest.mjs", import.meta.url));
+  const run = (args, env = {}) =>
+    spawnSync(process.execPath, [GATE, ...args], {
+      env: { ...process.env, ...env },
+      encoding: "utf8",
+      windowsHide: true,
+    });
+
+  mkdirSync(GATE_SCRATCH, { recursive: true });
+
+  const self = run(["--selftest"]);
+  assert.equal(self.status, 0, `yarn 名存在性门自检失败（含"投毒必红"用例）：\n${self.stdout}${self.stderr}`);
+
+  const real = run([]);
+  assert.equal(real.status, 0, `真清单上有标识符既无本档语料也无本档 yarn 映射：\n${real.stdout}${real.stderr}`);
+
+  const badList = jpath(GATE_SCRATCH, "yarn-attest-bad-list.txt");
+  writeFileSync(badList, "fabric/1.21.11/.cursor/skills/__no_such_skill__.md\n", "utf8");
+  const missing = run([], { MC_SKILL_YARN_ATTEST_LIST: badList });
+  assert.notEqual(missing.status, 0, "清单指向不存在的技能正文却仍然放行 ⇒ 门对坏输入无防御");
+
+  const emptyList = jpath(GATE_SCRATCH, "yarn-attest-empty.txt");
+  writeFileSync(emptyList, "# 只有注释\n", "utf8");
+  const empty = run([], { MC_SKILL_YARN_ATTEST_LIST: emptyList });
+  assert.notEqual(empty.status, 0, "零输入被当通过 ⇒ 清空清单就能让门静默失效");
+
+  console.log("  #17 yarn 名存在性门: 自检 / 真清单绿 / 坏清单红 / 空清单红 四项挂载生效");
 }
 console.log("script helper regression tests passed");

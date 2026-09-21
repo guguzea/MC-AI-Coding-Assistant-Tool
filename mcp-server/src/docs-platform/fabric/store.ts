@@ -51,6 +51,8 @@ export interface SearchResult {
   tags: string[];
   priority: string;
   sectionCount: number;
+  /** 逐字支撑位：查询标识符是否在该页正文逐字出现；缺席 = 未判定（≠ 语料没有） */
+  verbatim?: boolean;
 }
 
 export interface SummaryResult {
@@ -565,6 +567,24 @@ export class FabricDocStore {
   // 语义命中成员校验的口径：L0 全集，不是 L0 命中集
   getAllDocIds(version: string): string[] {
     return this.loadIndexL0(version).map((e) => e.id);
+  }
+
+  /**
+   * verbatim 逐字支撑位专用：取该页 processed/*.md 原文。
+   * 读不到（薄档 / wiki 与 porting 旁路 / 文件缺失）返回 undefined = **未判定**，
+   * 调用方禁止把它读成「语料里没有这个名字」。
+   */
+  pageText(entryId: string, version: string): string | undefined {
+    try {
+      const processedFile = this.processedFileFor(entryId);
+      const versionRoot = resolve(this.versionDataDir(version));
+      const resolved = resolve(versionRoot, processedFile);
+      const rel = relative(versionRoot, resolved);
+      if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(resolved)) return undefined;
+      return this.readProcessedFile(version, processedFile, entryId);
+    } catch {
+      return undefined;
+    }
   }
 
   private getOrBuildSymbolIndex(version: string): SymbolIndex | null {

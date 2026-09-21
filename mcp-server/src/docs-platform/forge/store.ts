@@ -38,6 +38,8 @@ export interface SearchResult {
   tags: string[];
   priority: string;
   sectionCount: number;
+  /** 逐字支撑位：查询标识符是否在该页正文逐字出现；缺席 = 未判定（≠ 语料没有） */
+  verbatim?: boolean;
 }
 
 export interface SummaryResult {
@@ -524,28 +526,47 @@ export class ForgeDocStore {
       throw new DocNotFoundError(id, version);
     }
 
-    const cacheKey = `${version}/${meta.processedFile}`;
-    const cached = this.fileCache.get(cacheKey);
-
-    let content: string;
-    if (cached && cached.expiry > Date.now()) {
-      content = cached.data;
-    } else {
-      const versionRoot = resolve(this.versionDataDir(version));
-      const filepath = resolve(versionRoot, meta.processedFile);
-      const rel = relative(versionRoot, filepath);
-      if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(filepath)) {
-        throw new DocNotFoundError(id, version);
-      }
-      content = readFileSync(filepath, "utf-8");
-      this.fileCache.set(cacheKey, {
-        data: content,
-        expiry: Date.now() + ForgeDocStore.CACHE_TTL,
-      });
-      trimOldest(this.fileCache, ForgeDocStore.FILE_CACHE_MAX);
-    }
+    const content = this.readProcessedCached(version, meta.processedFile, id);
 
     return this.buildResult(content, meta, highlightKey);
+  }
+
+  /** processed/*.md 读取 + TTL 缓存（loadFullDoc 与 verbatim 支撑位共用同一条路径）。 */
+  private readProcessedCached(version: string, processedFile: string, id: string): string {
+    const cacheKey = `${version}/${processedFile}`;
+    const cached = this.fileCache.get(cacheKey);
+    if (cached && cached.expiry > Date.now()) return cached.data;
+
+    const versionRoot = resolve(this.versionDataDir(version));
+    const filepath = resolve(versionRoot, processedFile);
+    const rel = relative(versionRoot, filepath);
+    if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(filepath)) {
+      throw new DocNotFoundError(id, version);
+    }
+    const content = readFileSync(filepath, "utf-8");
+    this.fileCache.set(cacheKey, {
+      data: content,
+      expiry: Date.now() + ForgeDocStore.CACHE_TTL,
+    });
+    trimOldest(this.fileCache, ForgeDocStore.FILE_CACHE_MAX);
+    return content;
+  }
+
+  /**
+   * verbatim 逐字支撑位专用：取该页 processed/*.md 原文。
+   * 读不到（无 L2 页 / 文件缺失 / 旁路语料）返回 undefined = **未判定**，
+   * 调用方禁止把它读成「语料里没有这个名字」。
+   */
+  pageText(id: string, version: string): string | undefined {
+    try {
+      const resolved = this.resolveVersion(version);
+      const l2 = this.loadIndexL2(resolved);
+      const meta = l2.find((e) => matchDocIndexId(e.id, id, resolved));
+      if (!meta?.processedFile) return undefined;
+      return this.readProcessedCached(resolved, meta.processedFile, id);
+    } catch {
+      return undefined;
+    }
   }
 
   // ── 内部 ──────────────────────────────────────────────────────────────

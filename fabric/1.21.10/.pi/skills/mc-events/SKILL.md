@@ -4,6 +4,7 @@ description: Fabric 1.21.10 mc-events。类名只来自本档核实表与 search
 platform: fabric
 version: "1.21.10"
 docsTool: search_fabric_docs
+mappings: yarn
 ---
 
 # mc-events（Fabric 1.21.10）

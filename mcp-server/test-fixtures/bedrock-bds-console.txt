@@ -1,0 +1,33 @@
+NO LOG FILE! - setting up server logging...
+[2026-09-20 22:11:47:780 INFO] Starting Server
+[2026-09-20 22:11:47:780 INFO] Version: 1.21.102.1
+[2026-09-20 22:11:47:780 INFO] Session ID: <redacted-session-id>
+[2026-09-20 22:11:47:780 INFO] Build ID: 36160545
+[2026-09-20 22:11:47:780 INFO] Branch: r/21_u10
+[2026-09-20 22:11:47:780 INFO] Commit ID: 468d0e14b95e8c003f79d1a82cdaa729522efab6
+[2026-09-20 22:11:47:780 INFO] Configuration: Publish
+[2026-09-20 22:11:47:780 INFO] Level Name: Bedrock level
+[2026-09-20 22:11:47:785 INFO] No CDN config file found for dedicated server
+[2026-09-20 22:11:47:785 INFO] Game mode: 0 Survival
+[2026-09-20 22:11:47:785 INFO] Difficulty: 1 EASY
+[2026-09-20 22:11:47:785 INFO] Content logging to console is enabled.
+[2026-09-20 22:12:03:504 ERROR] The following issues were found when loading packs:
+	
+		Provided '/modules/0/uuid' element is not a valid UUID in pack manifest.
+		Provided '/modules/0/type' element has an invalid value in pack manifest.
+[2026-09-20 22:12:03:505 INFO] Content logging to disk is enabled. Writing log to: ContentLog2026-09-20_22-12-03
+[2026-09-20 22:12:03:505 INFO] Opening level 'worlds/Bedrock level/db'
+[2026-09-20 22:12:47:936 INFO] [SERVER] Pack Stack - None
+[2026-09-20 22:14:16:273 INFO] IPv4 supported, port: 19132: Used for gameplay and LAN discovery
+[2026-09-20 22:14:16:273 INFO] IPv6 supported, port: 19133: Used for gameplay
+[2026-09-20 22:14:18:901 INFO] Server started.
+[2026-09-20 22:14:19:004 INFO] ================ TELEMETRY MESSAGE ===================
+[2026-09-20 22:14:19:004 INFO] Server Telemetry is currently not enabled. 
+[2026-09-20 22:14:19:004 INFO] Enabling this telemetry helps us improve the game.
+[2026-09-20 22:14:19:004 INFO] 
+[2026-09-20 22:14:19:004 INFO] To enable this feature, add the line 'emit-server-telemetry=true'
+[2026-09-20 22:14:19:004 INFO] to the server.properties file in the handheld/src-server directory
+[2026-09-20 22:14:19:004 INFO] ======================================================
+[2026-09-20 22:14:23:206 INFO] Server stop requested.
+[2026-09-20 22:14:23:389 INFO] Stopping server...
+Quit correctly

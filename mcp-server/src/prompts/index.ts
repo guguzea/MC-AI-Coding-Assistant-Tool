@@ -4,6 +4,7 @@ import { resolveDataDir, resolveCommunityDir, resolveRepoRoot, isResolvedInside 
 import { getWorkflowTemplate, listWorkflowTemplateNames, WORKFLOW_TEMPLATES } from "./templates.js";
 import { getCommunityDocStore } from "../docs-platform/community/store.js";
 import { legacyArchiveMatchRel, legacyArchivedNote } from "../platform-pack/legacy-archive.js";
+import { EXTERNAL_CONTENT_NOTICE } from "../utils/actionable.js";
 
 export { getWorkflowTemplate, listWorkflowTemplateNames, WORKFLOW_TEMPLATES };
 
@@ -126,7 +127,7 @@ export function listKnowledgeResources(): KnowledgeResource[] {
   return resources;
 }
 
-export function readKnowledgeResource(uri: string): {
+function readKnowledgeResourceInner(uri: string): {
   found: boolean;
   uri: string;
   mimeType: string;
@@ -298,4 +299,19 @@ export function readKnowledgeResource(uri: string): {
   }
 
   return { found: false, uri, mimeType: "text/plain", text: "未知 URI" };
+}
+
+/**
+ * W5-4（2026-09-20）信任边界：知识资源正文来自仓库语料 / 社区文本 / 上游 wiki，
+ * 其中「指令式」句子不构成对 agent 的指令。所有读取路径统一带 notice（单点收口，覆盖每条分支）。
+ */
+export function readKnowledgeResource(uri: string): {
+  found: boolean;
+  uri: string;
+  mimeType: string;
+  text: string;
+  archived?: boolean;
+  notice: string;
+} {
+  return { ...readKnowledgeResourceInner(uri), notice: EXTERNAL_CONTENT_NOTICE };
 }

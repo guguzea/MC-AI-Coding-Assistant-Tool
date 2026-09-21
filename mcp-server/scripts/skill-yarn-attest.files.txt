@@ -1,0 +1,38 @@
+# assert-skill-yarn-attest.mjs 的清单（台账）。一行一个「已补正文」的 Fabric 技能源稿（.cursor/skills）。
+# 只收 fabric/：本门的第二出处是 yarn-mappings.sqlite（data/forge_* 同名文件实为 forge-srg/tsrg/mcp-csv，见门头「时代真相」）。
+# Forge 档的补正文由 temp/audit-20260918/verify-fill-faithfulness.mjs（本档语料逐字）核，不进本台账。
+# 再生成口径：git status --porcelain 中 fabric/*/.cursor/skills/**.md 且正文不含「技能骨架」横幅 ⇒ 按字典序全部列入。
+# 顺序按字典序；新增补写的技能后重跑一次即可。
+fabric/1.14.4/.cursor/skills/mc-multiblock.md
+fabric/1.16.5/.cursor/skills/mc-multiblock.md
+fabric/1.17.1/.cursor/skills/mc-multiblock.md
+fabric/1.18.2/.cursor/skills/mc-multiblock.md
+fabric/1.19.4/.cursor/skills/mc-multiblock.md
+fabric/1.20.1/.cursor/skills/mc-multiblock.md
+fabric/1.20.4/.cursor/skills/mc-effect.md
+fabric/1.20.4/.cursor/skills/mc-model.md
+fabric/1.20.4/.cursor/skills/mc-multiblock.md
+fabric/1.20.4/.cursor/skills/mc-potion.md
+fabric/1.21.1/.cursor/skills/mc-effect.md
+fabric/1.21.1/.cursor/skills/mc-enchantment.md
+fabric/1.21.1/.cursor/skills/mc-model.md
+fabric/1.21.1/.cursor/skills/mc-multiblock.md
+fabric/1.21.1/.cursor/skills/mc-potion.md
+fabric/1.21.10/.cursor/skills/mc-advancement/SKILL.md
+fabric/1.21.10/.cursor/skills/mc-effect/SKILL.md
+fabric/1.21.10/.cursor/skills/mc-gametest/SKILL.md
+fabric/1.21.10/.cursor/skills/mc-potion/SKILL.md
+fabric/1.21.11/.cursor/skills/mc-advancement.md
+fabric/1.21.11/.cursor/skills/mc-ai.md
+fabric/1.21.11/.cursor/skills/mc-effect.md
+fabric/1.21.11/.cursor/skills/mc-enchantment.md
+fabric/1.21.11/.cursor/skills/mc-model.md
+fabric/1.21.11/.cursor/skills/mc-multiblock.md
+fabric/1.21.11/.cursor/skills/mc-potion.md
+fabric/1.21.3/.cursor/skills/mc-multiblock.md
+fabric/1.21.4/.cursor/skills/mc-effect/SKILL.md
+fabric/1.21.4/.cursor/skills/mc-gametest/SKILL.md
+fabric/1.21.4/.cursor/skills/mc-potion/SKILL.md
+fabric/1.21.8/.cursor/skills/mc-effect/SKILL.md
+fabric/1.21.8/.cursor/skills/mc-gametest/SKILL.md
+fabric/1.21.8/.cursor/skills/mc-potion/SKILL.md

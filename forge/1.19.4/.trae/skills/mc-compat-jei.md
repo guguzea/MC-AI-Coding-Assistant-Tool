@@ -4,6 +4,7 @@ description: JEI/EMI 兼容层（构件核验白名单）。触发词：JEI、EM
 platform: forge
 version: "1.19.4"
 dependencies: []
+mappings: parchment
 ---
 
 > ⚠️ 本档内容经对应版本官方构件逐类核验（2026-08，用 mcp-server 自家 zip 读取 + 字节码解析）：只列构件中真实存在的接口名；签名以官方 wiki（github.com/mezz/JustEnoughItems/wiki）与工程实际依赖为准，禁止默写。

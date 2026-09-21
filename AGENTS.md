@@ -209,6 +209,28 @@ id 'net.minecraftforge.gradle'
 - **Mojang / mojmap** — 官方可读名；FG6（1.20.x）MDK 默认通道 `official` 即此
 - **26.1+（去混淆）**：游戏 jar 已是 Mojang 名，**不再需要** Yarn / Intermediary remap；convert_mapping 拒绝 yarn；查文档用 search_neoforge_docs（默认 **26.1**）/ search_fabric_docs（先 `list_fabric_versions`，如 **26.1.2**）；**禁止**把 26.1 内容克隆成 26.2 冒充
 
+### Fabric ≤1.21.11：讲解基线 = Yarn，Mojmap 作对照列（2026-09-20 用户裁定①）
+
+不是「收敛到 mojmap」，也不是「只教 Yarn 不提 mojmap」：
+
+- **基线**：`fabric/<v>/scaffold` 与各档 `verified-api-<v>.md` 用 Yarn 名（1.21.4 / 1.21.8 / 1.21.10 三档核实表通篇 `CustomPayload.Id` / `PacketCodec`，0 个 mojmap 名）。维护老模组、写 Skill、答签名 → 一律按 Yarn 落笔。
+- **对照列**：上游 Fabric 文档页正文是 **mojmap 写法**（`GuiGraphics` / `PoseStack` / `ResourceLocation` / `StreamCodec`）。看到它们是**口径差异，不是另一套 API**；回本档代码要换名。逐件对照写在每件 Skill 正文的「`### ⚠️ 映射口径：本档语料是 mojmap`」块里。
+- **对照数据出处**：Mojang `client.txt` ⋈ `data/fabric_<v>/mappings/yarn-mappings.sqlite` 的 **obf 短名 join**（13 档 4 860–9 686 对，obf 键 0 冲突；跨档改名曲线与已知历史一致）。**整表不得提交**——`client.txt` 已被 `.gitignore` 排除，其文件头许可证「may not redistribute the mappings complete and unmodified」⇒ 只在本地按档现拉、只把**逐件用到的少数名字**写进 Skill。
+- ⚠️ **「Loom 新版本默认 mojmap、不必再声明 `yarn_mappings`」是错的**：mappings 一行必须显式写；官方模板用 `loom.officialMojangMappings()` 那是**显式改用 mojmap**，而 `migrateMappings --mappings` 的默认值反而是 `net.fabricmc:yarn:<version>:v2`（`develop_porting_mappings_loom` 「Other Configurations」）。
+- **闸**：含闭合围栏代码的 Skill 源稿必须声明非空 `mappings:` 键 —— `mcp-server/scripts/assert-skill-mappings-key.mjs`（挂在 `test-scripts.mjs` 默认门链）。键值与正文实名的一致性腿仍开账（台账 `skill-mappings-value-matches-code`）。
+
+### yarn-mappings.sqlite = 「类名存在性」合法来源（2026-09-20 用户裁定升格）
+
+`data/fabric_<ver>/mappings/yarn-mappings.sqlite` 过去只服务 `convert_mapping`，不算文档出处。现在**升格**为 Fabric/Quilt 档的第二出处，但边界就五条，越过即失效：
+
+1. **只证存在，不证用法**。它能回答「该版本 Yarn 里有没有 `GoalSelector` 这个名字」，回答不了「怎么调、参数是什么、返回什么」。签名/流程/为什么仍须 `search_fabric_docs` 或反编译源码（`get_minecraft_source`，需 JDK 17+）。**拿到 `found` 就当会写，是本门要拦的原罪。**
+2. **只含 vanilla 名，不含 Fabric API**。`net.fabricmc.fabric.api.*` 不在 Yarn 映射里 ⇒ Fabric API 类名仍只能走本档语料（`search_fabric_docs` / `get_fabric_doc_full`），查不到就留 `// TODO(未核实)`。
+3. **它能认出"不是本档 Yarn 名"，认不出"那是 mojmap 名"**。`MobEffect` / `Level` / `ServerLevel` / `ResourceLocation` 在 6 个 fabric 档的 sqlite 里 0 命中，而 Yarn 对应名（`StatusEffect` / `World` / `ServerWorld` / `Identifier`）都有类。但 sqlite 只会说"没这个名"，说不了名字的来源 ⇒ 门另持一张 `MOJMAP_ONLY` 名表（逐名实测得出）。
+4. **Fabric 语料本身就是 mojmap 写的**（2026-09-20 实测）：`data/fabric_<v>/reference/<v>/build.gradle` 钉 `mappings loom.officialMojangMappings()`（1.21.1 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 五档逐档读到；1.20.4 无该 build.gradle，但 `reference/**.java` 与 docs 正文同为 mojmap）。⇒ **「本档语料逐字命中」这条腿会替 mojmap 名背书**。抄语料进 Yarn 工程前必须换名并以 Yarn 源码核签名；Skill 正文引用 mojmap 原名时**必须**带「`### ⚠️ 映射口径：本档语料是 mojmap`」披露块并逐名点名，否则门红。
+5. **文件名里的 yarn 会骗人**：`data/forge_<ver>/mappings/yarn-mappings.sqlite` 实为 `forge-srg`（6 档）/ `tsrg`（1.13.2）/ `mcp-csv`（1.14.4、1.15.2）——`classes.named` 装的是 MCP `func_/field_` 名，`intermediary` 列与 `named` 逐行相同（无信息）；且 **1.14.4 / 1.15.2 的 classes/methods/fields 三表 0 行**，meta 却写 `methodCount:11445 / fieldCount:15133`（那些行只进了 `searge_*` 表）。⇒ 门读 `meta.mappingEra` 并要求三表真有行；**禁止**按文件名去 forge 档取 Yarn 名。
+
+执行：`node mcp-server/scripts/assert-skill-yarn-attest.mjs`（清单 = `mcp-server/scripts/skill-yarn-attest.files.txt`，只收 `fabric/` 已补正文的源稿）。Forge 档不走本门（那里没有 Yarn 名可查），改按「该标识符在本档 `data/forge_<ver>/**` 原文里逐字出现」核，查无即 `// TODO(未核实)`。判据四条：围栏代码块内标识符须「本档语料逐字命中」**或**「本档 yarn 映射命中」；负例行（同行带 禁止/未核实/零命中）不判红；命中 `MOJMAP_ONLY` 且本档映射查无的名字**必须**在披露块里点名。已挂在 `test-scripts.mjs` §#17，`--selftest` 有 10 组夹具含"投毒必红 / 语料替 mojmap 背书必红 / 披露后放行"，所以它不会退化成装饰。补正别人写的 Skill 时把该文件追加进清单即可。
+
 ### 物理端约束
 
 ```java
@@ -344,6 +366,7 @@ Decision: 选择注册方式
 完整对照表见根目录 `README.md`「工具边界」。调用前必须遵守：
 
 - **优先语义搜索；`query_*` 是兼容工具**：查 API/文档/机制，先用 `search_forge_docs` / `search_fabric_docs` / `search_neoforge_docs` / `search_docs`（语义索引按档在盘），`query_api` / `query_loader_api` 仅作兜底——它们的每次响应都带兼容警告，1.14.4/1.15.2 还会显式报告「api-index 为空」边界。
+- **检索命中 ≠ 该名字存在（verbatim 逐字支撑位，2026-09-20）**：上面那条**先语义搜索**的顺序不变；`search_*_docs` / `search_docs`（含 quilt 两腿）在查询是**单个标识符形态**（类名 / 方法名 / FQCN / 资源路径；散文与 `|` 分组不判）时，每条命中多带一个 `verbatim`——`true` = 该名字在该页正文**逐字**出现；`false` = 已读到该页正文且确认没有；**没有该字段 = 未判定**（薄档 / primer / porting 旁路 / 取不到正文），未判定**不等于**「语料里没有这个名字」。顶层另有 `verbatim_summary:{term,judged,hits}`，`hits:0` 时结果仍可能主题相关，但不构成该名字存在的证据：要签名就 `get_*_doc_full` 读正文，确认不了就留 `// TODO(未核实)`。该位只做事后标注，不改命中集合、顺序与 `total`（闸：`mcp-server/scripts/assert-verbatim-support.mjs`）。
 - **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外，或简名歧义（`Handler` 不会命中 `MouseHandler`）。1.12.2 **空壳**（`found:true` + 空 methods）与 26.1+ 零类不同；**1.14.4/1.15.2 是空索引档（该档 docs 语料与语义索引反而完整）**；Forge 特有类改 `query_loader_api` / `search_*_docs` 或反编译。
 - **`search_*_docs` 查 `constructor` 崩溃**：旧 bug（`Object.prototype`）；已修。改完 `mcp-server` 后必须 `npm run build` **并重载 MCP**，或用 `node mcp-server/dist/cli.js` 验证。
 - **平台工具不要混用**：`get_version_info` 仍仅 Forge。`diagnose_gradle` 覆盖 ForgeGradle + Loom + Neo/MDG；liteloader 插件走轻量模式；Rift / BaseMod / 基岩仍早退。`validate_project` 对 Fabric/Quilt/NeoForge 做真检查，LiteLoader/Rift/ModLoader/基岩 skipped。基岩用 `validate_addon_manifest`。

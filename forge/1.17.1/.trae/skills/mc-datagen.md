@@ -1,6 +1,7 @@
 ---
 name: mc-datagen
 description: Minecraft Forge 数据生成器。GatherDataEvent、DataProvider、RecipeProvider、LootTableProvider、LanguageProvider。触发词：DataGen、DataGenerator、LootTables、Recipes、BlockStates、TagProvider、AdvancementProvider、LanguageProvider
+mappings: official
 ---
 
 # 数据生成器（Forge 1.17.1）
@@ -16,6 +17,9 @@ description: Minecraft Forge 数据生成器。GatherDataEvent、DataProvider、
 **不要** `PackOutput` / `getLookupProvider()` / `addProvider(true, ...)` / `RecipeCategory`。
 
 ## 主类注册
+
+> **示例工程自造名（不需语料出处，按你工程实际替换）**：`DataGenerators` 与其事件方法 `gatherData`、`ModBlockTagsProvider` / `ModItemTagsProvider` / `ModRecipeProvider` / `ModLootTableProvider` / `ModItemModelsProvider` / `ModBlockStatesProvider` / `ModLanguageProvider` / `ModRecipes`、注册类 `ModItems` / `ModBlocks` 及常量 `MY_ITEM` / `MY_BLOCK` / `OTHER_ITEM` / `MY_BLOCK_ITEM`。
+> 真正有本档语料出处的只有：`GatherDataEvent`、`DataGenerator`、`DataGenerator#addProvider`（`data/forge_1.17.1/forge-docs/1.17.1/processed/datagen_intro.md:29`）、`DataProvider`（同文件 `:27`）、`ExistingFileHelper` 与 `GatherDataEvent#getExistingFileHelper()`（`datagen_modelproviders.md:11`）。
 
 ```java
 // net.minecraftforge.forge.event.lifecycle.GatherDataEvent
@@ -48,7 +52,7 @@ public class DataGenerators {
 |----------|----------|
 | 方块状态变体 | `BlockStateProvider#registerStatesAndModels` |
 | 方块/物品模型 | `ItemModelProvider#registerModels` |
-| 配方 | `RecipeProvider`（覆盖 **buildCraftingRecipes**） |
+| 配方 | `RecipeProvider`（覆盖 **buildCraftingRecipes**；⚠️ 本档语料 `datagen_intro.md:46` 逐字写的是 `#buildShapelessRecipes`，`buildCraftingRecipes` 语料零命中 ⇒ 哪个拼写适用于 1.17.1 未核实，须反编译或按你工程 IDE 实名核对，勿二选一照抄） |
 | 战利品表 | `LootTableProvider#getTables` |
 | 进度 | AdvancementProvider#registerAdvancements |
 | 语言 | `LanguageProvider#addTranslations` |
@@ -61,6 +65,14 @@ public class DataGenerators {
 
 ```java
 // datagen/ModRecipes.java
+// TODO(未核实：Items.DIAMOND 未在 forge 1.17.1 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：Items.STICK 未在 forge 1.17.1 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：Items.GOLD_INGOT 未在 forge 1.17.1 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：Items.COBBLESTONE 未在 forge 1.17.1 语料命中，需 search_forge_docs 复核或反编译)
+// 本档正处 MCP → mojmap 口径分叉档（mappings=official），成员拼写只按本档语料判：
+// 语料内没有任何 `Items.<常量>` 与 `Ingredient.*` 工厂方法 ⇒ 上面四个物品名与 `Ingredient.of` 一律未核实。
+// 本段唯一有出处的是 RecipeProvider 与要覆盖的 #buildShapelessRecipes（datagen_intro.md:46）
+// —— 下面整体是结构壳，编译前须逐名核实，勿当已核实签名照抄。
 public class ModRecipeProvider extends RecipeProvider {
     public ModRecipeProvider(DataGenerator generator) {
         super(generator);
@@ -95,6 +107,11 @@ public class ModRecipeProvider extends RecipeProvider {
 `BlockStateProvider` 构造：`DataGenerator`、`modId`、`ExistingFileHelper`。
 
 ```java
+// TODO(未核实：simpleBlock 未在 forge 1.17.1 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：cubeAll 未在 forge 1.17.1 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：modLoc 未在 forge 1.17.1 语料命中，需 search_forge_docs 复核或反编译)
+// 本档语料只背书 BlockStateProvider#registerStatesAndModels（datagen_intro.md:36）与可取的 #models() / #itemModels()
+// 实例（datagen_modelproviders.md:21）；具体建模 helper 名未收录 ⇒ 下面是结构壳，勿当已核实签名照抄。
 public class ModBlockStatesProvider extends BlockStateProvider {
     public ModBlockStatesProvider(DataGenerator generator, ExistingFileHelper efh) {
         super(generator, MOD_ID, efh);
@@ -112,6 +129,10 @@ public class ModBlockStatesProvider extends BlockStateProvider {
 ## 物品模型（来自方块）
 
 ```java
+// TODO(未核实：withExistingParent 未在 forge 1.17.1 语料命中，需 search_forge_docs 复核或反编译)
+// TODO(未核实：modLoc 未在 forge 1.17.1 语料命中，需 search_forge_docs 复核或反编译)
+// 本档语料只背书 ItemModelProvider 及要覆盖的 #registerModels / #generateModels
+// （datagen_intro.md:35、datagen_modelproviders.md:19）；建模 helper 名未收录 ⇒ 结构壳，须逐名核实。
 public class ModItemModelsProvider extends ItemModelProvider {
     public ModItemModelsProvider(DataGenerator generator, ExistingFileHelper helper) {
         super(generator, MOD_ID, helper);
@@ -161,7 +182,7 @@ public class ModLanguageProvider extends LanguageProvider {
 - ❌ `RecipeCategory` — 1.19.3+
 - ❌ 手改 `src/generated/resources/`
 - ❌ `FurnaceRecipe.Builder` / `setRegistryName` 当 DataGen 保存配方
-- ❌ `modLoc()` 与 `mcLoc()` 用反
+- ❌ `modLoc()` 与 `mcLoc()` 用反（本档语料对这两个名字逐字零命中 ⇒ 均未核实，见上文 `TODO(未核实)`，不得当已核实 API 照抄）
 - ❌ 标签 Provider 依赖顺序错误（先 BlockTags，再 ItemTags，再配方）
 - ❌ `ExistingFileHelper` 检查失败（引用的贴图不存在）
 

@@ -28,7 +28,7 @@ import {
   versionNotFoundResult,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import { knowledgeVersion } from "../../platform-pack/catalog.js";
 import {
@@ -387,6 +387,12 @@ export const searchFabricDocsSchema = {
   - 每条 results[].source 标出该页属于哪棵 corpus：fabric-docs 空树的版本（如 1.20.1）会兜底到
     fabric-wiki，此时取正文/摘要/相关页必须把该值回填给 get_fabric_doc_*，否则必然 DOC_NOT_FOUND。
 
+
+verbatim 逐字支撑位（2026-09-20）：
+  - query 为**单个标识符形态**（类名 / 方法名 / FQCN / 资源路径；散文与 OR 分组不判）时，
+    每条命中带 verbatim 字段：true = 该名字在该页正文逐字出现；false = 读到正文且确认没有；**没有该字段 = 未判定**（薄档 / primer / porting 旁路 / 取不到正文），未判定不等于「语料没有」。
+  - 顶层 verbatim_summary{term,judged,hits}；hits=0 时结果仍可能相关，但**不构成该名字存在的证据**，需要签名请 get_*_doc_full 读正文，或留 // TODO(未核实)。
+  - 该位只做事后标注：命中集合、顺序与 total 与加它之前逐字相同，检索顺序（先语义搜索）不变。
 Fabric 使用 Identifier 作为资源定位符，Registry.register() 注册物品/方块等，
 与 Forge 的 DeferredRegister 完全不同。`,
   inputSchema: z.object({
@@ -564,6 +570,20 @@ export async function searchFabricDocs(
       requested === "26.2"
         ? "无 fabric_26.2 主文档树；26.2 移植页是独立旁路（source=porting-extra），26.1.2 develop_porting_index 是到 26.1。"
         : undefined;
+    // verbatim 逐字支撑位：只事后标注，不改排序 / 召回。逐行按它自己的语料取正文，
+    // porting-extra 等没有 processed/*.md 的行保持「未判定」（不给字段）。
+    const fallbackSrc = usedWikiFallback
+      ? "fabric-wiki"
+      : resolvedSource === "all"
+        ? "fabric-docs"
+        : resolvedSource;
+    const vb = annotateVerbatim(results as Array<{ id: string }>, query, (r) => {
+      try {
+        return getStore(version, sourceById.get(r.id) ?? fallbackSrc).pageText(r.id, version);
+      } catch {
+        return undefined;
+      }
+    });
     const wikiInvolved = resolvedSource === "fabric-wiki" || resolvedSource === "all" || usedWikiFallback;
     const emptyDocsNote = docsEmpty
       ? "本档 fabric-docs 无版本化页（已清除现行站污染）。index 文件存在但 [] ≠ 可搜官方树；search_fabric_docs 默认改走 wiki。不要把 BuiltInRegistries 当旧档 API。"
@@ -606,9 +626,13 @@ export async function searchFabricDocs(
                 (results as unknown as Array<unknown>).length === 0 && /[\u4e00-\u9fff]/.test(String(args.query ?? ""))
                   ? "中文查询命中为空：文档正文为英文，改用英文关键词（如 register item）或按 id 直接取 get_fabric_doc_full。"
                   : undefined,
+                vb.warning,
               ),
               total: (results as unknown as Array<unknown>).length,
-              results: (results as Array<Record<string, unknown>>).map((r) =>
+              ...(vb.term
+                ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
+                : {}),
+              results: (vb.rows as Array<Record<string, unknown>>).map((r) =>
                 publishResultSource(
                   r,
                   sourceById,

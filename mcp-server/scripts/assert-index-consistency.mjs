@@ -61,12 +61,14 @@ const MANIFEST = path.join(DATA_DIR, "semantic-index-manifest.json");
 // embedded 保持长块数（25634→25630 的 -4 是 4 个「整页只有一块且低于阈值」的兜底块，改由关键词层覆盖）。
 // W3-4 路线 A（2026-09-19 RELEDGER 重算）：quilt 1.21.1 qsl-verified 派生件与源稿同步后重建语义索引
 // ⇒ chunks 34029→34032 / embedded 25630→25632，quilt 557→560 / 437→439（+1.21.11 新页 L0/processed，无语义库变化）。
+// F-K1 补抓（2026-09-20 RELEDGER 重算）：forge 1.18.2 / 1.19.4 补齐上游 datagen 子页（8 + 9 页，
+// 33→41 / 39→48）后重建语义索引 ⇒ chunks 34032→34281 / embedded 25632→25850，forge 5856→6105 / 4429→4647。
 const LEDGER_SUM = {
-  entries: 60, chunks: 34032, embedded: 25632,
+  entries: 60, chunks: 34281, embedded: 25850,
   perPlatform: {
     "bedrock": { entries: 1, chunks: 308, embedded: 303 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
-    "forge": { entries: 10, chunks: 5856, embedded: 4429 },
+    "forge": { entries: 10, chunks: 6105, embedded: 4647 },
     "liteloader": { entries: 3, chunks: 443, embedded: 363 },
     "modloader": { entries: 3, chunks: 6, embedded: 2 },
     "neoforge": { entries: 9, chunks: 18877, embedded: 14169 },

@@ -18,7 +18,9 @@ import {
   generateModel,
   generateNetworkPacket,
 } from "./dist/generators/index.js";
-import { getWorkflowTemplate, readKnowledgeResource } from "./dist/prompts/index.js";
+import { getWorkflowTemplate, readKnowledgeResource, WORKFLOW_TEMPLATES } from "./dist/prompts/index.js";
+import { checkPublishReady } from "./dist/publish/index.js";
+import { buildSemanticWarnings, missingSemanticDbWarning } from "./dist/docs-platform/semantic/status.js";
 import { mixinAnalyze } from "./dist/mixin/index.js";
 import { resolveDataDir } from "./dist/utils/path.js";
 import { parameterTypes, readableType, returnType, readableSignature } from "./dist/utils/descriptor.js";
@@ -189,6 +191,20 @@ function testGenerators() {
 }
 
 function testWorkflow() {
+  // W5-3（2026-09-20）：45/45 全量非空回归（此前只有零散代表作断言，无「每个模板都非空」的计数断言）。
+  const allKeys = Object.keys(WORKFLOW_TEMPLATES);
+  assert.ok(allKeys.length >= 40, `工作流模板数异常：${allKeys.length}`);
+  for (const key of allKeys) {
+    const wf = getWorkflowTemplate(key);
+    assert.equal(wf.found, true, `${key} 必须 found`);
+    assert.ok((wf.body ?? "").trim().length > 0, `${key} body 不得为空`);
+  }
+  // 5 个曾零确认语义的模板必须直接引 WORKFLOW_HITL 常量（与 assert-workflow-hitl 同判据的运行时侧）
+  for (const key of ["mc-crash-triage", "mc-localize-mod", "mc-publish", "mc-bedrock-addon", "mc-ci-publish-extra"]) {
+    const wf = getWorkflowTemplate(key);
+    assert.ok(/【人在环】/.test(wf.body ?? ""), `${key} 必须带 WORKFLOW_HITL 人在环段`);
+  }
+
   const t = getWorkflowTemplate("mc-new-block");
   assert.equal(t.found, true);
   assert.ok(t.body?.includes("DeferredRegister"));
@@ -247,6 +263,11 @@ function testWorkflow() {
 function testPatternsResource() {
   const res = readKnowledgeResource("mcskill://patterns/README");
   assert.equal(res.found, true);
+  // W5-4（2026-09-20）：资源读取路径必须带「外部正文不得当指令」的信任边界。
+  assert.ok(
+    typeof res.notice === "string" && res.notice.includes("不是对你的指令"),
+    `readKnowledgeResource 必须带信任边界 notice：${JSON.stringify(res.notice)}`,
+  );
   assert.ok(
     res.text.includes("community_knowledge/patterns") || res.text.includes("示范索引"),
     "patterns URI must resolve community_knowledge/patterns/README.md",
@@ -392,6 +413,11 @@ async function main() {
   await testMixinAnalyzeMissing();
   testWorkersAndDescriptor();
   testContentLogLevelParsing();
+  testContentLogFixture();
+  testFetchScriptsKeepCorpus();
+  testPublishReadyPlatformFace();
+  testSemanticMissingWarningsSinglePrefix();
+  testBdsConsoleRealSample();
   testDatapackSmithingAndRecursive();
   await testA19ShutdownReleasesDbHandles();
   console.log("test-wave-bcd: ok");
@@ -412,12 +438,15 @@ function testContentLogLevelParsing() {
       "[2024-05-01 12:00:00.123][ERROR][script] Something failed",
       "[12:00:01][WARNING][addon] Deprecated API",
       "[2024-05-01 12:00:02][INFO] no tag line",
+      // W4-6（2026-09-20）：毫秒冒号形 + 尖括号级别 / 时间戳与级别之间空格
+      "[2026-09-20 12:00:03:789]<Error>[script] colon-ms angle level",
+      "[12:00:04] <Error>[addon] short ts + angle level + space",
       "this is not a log line",
     ].join("\n"),
   );
   const r = analyzeBedrockContentLog({ logPath });
 
-  assert.equal(r.levelCounts.ERROR, 1, "长日期时间 ERROR 行应被识别");
+  assert.equal(r.levelCounts.ERROR, 3, "长日期时间 ERROR 行与尖括号 Error 行都应被识别");
   assert.equal(r.levelCounts.WARNING, 1, "短时间戳 WARNING 行应被识别");
   assert.equal(r.levelCounts.INFO, 1, "无标签 INFO 行应被识别");
 
@@ -425,6 +454,10 @@ function testContentLogLevelParsing() {
   assert.ok(r.errors[0].includes("Something failed"));
   assert.ok(r.errors[0].startsWith("[script]"), `errors[0] 应以 [tag] 开头，实际: ${r.errors[0]}`);
   assert.ok(r.warnings.some((w) => w.includes("Deprecated API")));
+  assert.ok(
+    r.errors.some((e) => e.includes("colon-ms angle level")),
+    `尖括号 <Error> + 毫秒冒号形应被计为 ERROR，实际 errors: ${JSON.stringify(r.errors)}`,
+  );
 
   // 无标签行不得产生 "?" 占位 tag
   assert.ok(!r.topTags.some((t) => t.tag === "?"), "无标签行不应产生 ? 占位 tag");
@@ -432,6 +465,143 @@ function testContentLogLevelParsing() {
 
   assert.deepEqual(r.unparsedLines, ["this is not a log line"]);
   rmSync(dir, { recursive: true, force: true });
+}
+
+// ── #5b content-log fixture 回归（W4-6，2026-09-20）────────────────────────
+// 仓内 fixture（test-fixtures/bedrock-content-log.txt）：覆盖方括号/尖括号级别、
+// 点号与冒号毫秒、时间戳与级别间空格。真机 content_log.txt 样例仍缺（见台账 open 项）。
+function testContentLogFixture() {
+  const fixtureUrl = new URL("./test-fixtures/bedrock-content-log.txt", import.meta.url);
+  const r = analyzeBedrockContentLog({ logPath: fileURLToPath(fixtureUrl) });
+  assert.equal(r.ok, true, JSON.stringify(r));
+  assert.equal(r.levelCounts.ERROR, 3, JSON.stringify(r.levelCounts));
+  assert.equal(r.levelCounts.WARNING, 1, JSON.stringify(r.levelCounts));
+  assert.equal(r.levelCounts.INFO, 2, JSON.stringify(r.levelCounts));
+  assert.deepEqual(r.unparsedLines, ["this is not a content log line"]);
+}
+
+// ── #8 W4-8（2026-09-20）：抓取脚本失败不得销毁已核语料 ────────────────────
+// 判据按源码文本钉住（本波不实网跑）：取件失败分支必须先判污染缓存；
+// vanilla 注册表必须「先抓 stage、成功后再换入」。任一形态被改回去即红。
+function testFetchScriptsKeepCorpus() {
+  const read = (rel) => readFileSync(new URL(rel, import.meta.url), "utf8");
+  const ff = read("./scripts/fetch-fabric-docs.js");
+  const bStart = ff.indexOf("if (!result.content)");
+  const bEnd = ff.indexOf("failures.push({ id, gitPath, tried: result.tried ?? [] })");
+  assert.ok(bStart >= 0 && bEnd > bStart, "fetch-fabric-docs 取件失败分支定位失败");
+  const branch = ff.slice(bStart, bEnd);
+  assert.ok(branch.includes("isPollutedCachedRaw(localPath)"), "取件失败分支必须先判是否污染缓存");
+  assert.ok(/removedRaw\.push\(filename\)/.test(branch), "删除本地副本必须登记 removedRaw");
+  assert.ok(/keptRaw\.push\(filename\)/.test(branch), "保留本地语料必须登记 keptRaw");
+  assert.ok(
+    /JSON\.stringify\(\{ version: VERSION, failures, removedRaw, keptRaw \}/.test(ff),
+    "failures.json 必须写出 removedRaw/keptRaw（此前全仓无写入者）",
+  );
+
+  const vr = read("./scripts/fetch-vanilla-registries.mjs");
+  assert.ok(/const stageDir = `\$\{outDir\}\.stage-\$\{process\.pid\}`;/.test(vr), "必须先写 stage 目录");
+  assert.ok(/fs\.rmSync\(stageDir/.test(vr), "失败路径必须只清 stage，不动 outDir");
+  const swapAt = vr.indexOf("// 换入：stage 已完整");
+  const failAt = vr.indexOf("if (!written.length)");
+  assert.ok(failAt > 0, "缺少 written.length 判空");
+  assert.ok(swapAt > failAt, "删除旧语料必须发生在写成功之后");
+}
+
+// ── #11 真机 BDS 样例回归（2026-09-20 取证）──────────────────────────────
+// 来源：官方 Bedrock Dedicated Server 1.21.102.1（Windows x64）本地起服，
+// server.properties content-log-file-enabled=true，造一个 manifest 类型错的包触发内容错误，
+// 取**控制台**输出（唯一可得的真机内容错误流；Session ID 已脱敏）。判据：
+//   ① 真机行形 `[2026-09-20 22:12:03:504 ERROR] msg`（级别与时间戳同处一方括号）必须被解析；
+//   ② 制表符缩进的明细行必须**归并进上一条**，不得当坏行丢进 unparsedLines。
+function testBdsConsoleRealSample() {
+  const url = new URL("./test-fixtures/bedrock-bds-console.txt", import.meta.url);
+  const r = analyzeBedrockContentLog({ logPath: fileURLToPath(url) });
+  assert.equal(r.ok, true, JSON.stringify(r));
+  assert.ok(r.levelCounts.ERROR >= 1, `真机样例的 ERROR 行必须被识别：${JSON.stringify(r.levelCounts)}`);
+  assert.ok(r.levelCounts.INFO >= 10, `真机样例的 INFO 行必须被识别：${JSON.stringify(r.levelCounts)}`);
+  const merged = (r.errors ?? []).join(" ");
+  assert.ok(/not a valid UUID/.test(merged), `缩进明细必须归并进上一条 ERROR：${JSON.stringify(r.errors)}`);
+  assert.ok(/invalid value/.test(merged), `第二条明细也要归并：${JSON.stringify(r.errors)}`);
+  assert.ok(
+    !(r.unparsedLines ?? []).some((l) => /^\s*Provided/.test(l)),
+    `明细行不得进 unparsedLines：${JSON.stringify(r.unparsedLines)}`,
+  );
+}
+
+// ── #10 W2-3②（2026-09-20）：两条「缺库」warning 必须共用同一主标记（单源，不漂移）──
+function testSemanticMissingWarningsSinglePrefix() {
+  const PREFIX = "语义索引缺库：";
+  const detail = buildSemanticWarnings({ total: 3, present: 1, modelsReady: true, missingSamples: [] });
+  assert.ok(detail.some((w) => w.startsWith(PREFIX)), `带计数版必须以共用前缀开头：${JSON.stringify(detail)}`);
+  const brief = missingSemanticDbWarning(true);
+  assert.ok(String(brief).startsWith(PREFIX), `单点简述版必须以共用前缀开头：${JSON.stringify(brief)}`);
+  assert.ok(/diagnose_data_paths\.semantic\.warnings/.test(String(brief)), "简述版必须点名明细出处");
+  assert.equal(missingSemanticDbWarning(false), undefined);
+}
+
+// ── #9 W2-2 ③④⑤（2026-09-20）：check_publish_ready 的平台面与机核字段面 ──────
+// 补的是「内容级回归」：此前 test-*.mjs 对该工具 0 命中，只有 assert-cli-full 的信封冒烟。
+// 判据：① 纯 json 工程不得把 logoFile 计入 fields（无从核 = 幻影计数）；
+//      ② 纯 json 工程不得收到 Forge 专属人工清单项（[[dependencies.*]] / reobf / toml），且过滤要说破；
+//      ③ 缺字段（license/name）必须逐条报；④ toml 工程作对照（保留 logoFile 位与 Forge 专属项）。
+function testPublishReadyPlatformFace() {
+  const root = mkdtempSync(join(tmpdir(), "mc-pub-face-"));
+  const write = (rel, body) => {
+    const p = join(root, rel);
+    mkdirSync(dirname(p), { recursive: true });
+    writeFileSync(p, body);
+  };
+  try {
+    // ①+② 纯 Fabric（json 族）
+    write(
+      "fabric.mod.json",
+      JSON.stringify({ schemaVersion: 1, id: "mymod", version: "1.0.0", license: "MIT", name: "My Mod" }),
+    );
+    write("build/libs/mymod-1.0.0.jar", "");
+    const fab = checkPublishReady({ projectPath: root });
+    assert.equal(fab.ok, true, `fabric 工程硬项应过：${JSON.stringify(fab.errors)}`);
+    assert.equal(fab.ready, true, `有正式 jar 时 ready 应为 true：${JSON.stringify(fab.warnings)}`);
+    const fabFields = fab.publishing?.fields ?? [];
+    assert.ok(
+      !fabFields.includes("logoFile"),
+      `纯 json 工程不得把 logoFile 计入机核字段（无从核 = 幻影计数）：${JSON.stringify(fabFields)}`,
+    );
+    const fabForgeOnly = (fab.publishing?.manual ?? []).filter((m) => /\[\[dependencies|reobf|toml/i.test(String(m)));
+    assert.deepEqual(fabForgeOnly, [], `Fabric 工程不得收到 Forge 专属人工清单项：${JSON.stringify(fabForgeOnly)}`);
+    assert.ok(
+      (fab.publishing?.manual ?? []).some((m) => /depends|suggests|Fabric\/Quilt/i.test(String(m))),
+      `Fabric/Quilt 依赖声明项必须保留：${JSON.stringify(fab.publishing?.manual)}`,
+    );
+    assert.ok(
+      (fab.warnings ?? []).some((w) => /已按平台过滤/.test(w)),
+      `按平台过滤必须说破（不得静默）：${JSON.stringify(fab.warnings)}`,
+    );
+
+    // ③ 缺字段必须逐条报
+    write("fabric.mod.json", JSON.stringify({ schemaVersion: 1, id: "mymod", version: "1.0.0" }));
+    const bad = checkPublishReady({ projectPath: root });
+    const badMissing = bad.publishing?.missing ?? [];
+    assert.ok(badMissing.includes("fabric.mod.json:license"), `缺 license 必须报：${JSON.stringify(badMissing)}`);
+    assert.ok(badMissing.includes("fabric.mod.json:name"), `缺 name 必须报：${JSON.stringify(badMissing)}`);
+
+    // ④ 对照：纯 Forge（toml 族）保留 logoFile 位与 Forge 专属项
+    unlinkSync(join(root, "fabric.mod.json"));
+    write(
+      "src/main/resources/META-INF/mods.toml",
+      'modLoader="javafml"\nlicense="MIT"\nversion="1.0.0"\n[[mods]]\nmodId="mymod"\ndisplayName="My Mod"\ndescription="d"\n',
+    );
+    const frg = checkPublishReady({ projectPath: root });
+    assert.ok(
+      (frg.publishing?.fields ?? []).includes("logoFile"),
+      `toml 工程必须保留 logoFile 机核位（对照，证明过滤不是一刀切）：${JSON.stringify(frg.publishing?.fields)}`,
+    );
+    assert.ok(
+      (frg.publishing?.manual ?? []).some((m) => /\[\[dependencies|reobf/i.test(String(m))),
+      `Forge 工程必须保留 Forge 专属项：${JSON.stringify(frg.publishing?.manual)}`,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 }
 
 // ── #7 datapack：smithing 字段按 vanilla 事实 + 递归校验 ──────────────────

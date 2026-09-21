@@ -197,6 +197,11 @@ function parseIndexName(name) {
   return null;
 }
 
+/**
+ * W1-4（2026-09-20）：本表只认 `<platform>_<ver>` 形，**覆盖不到 `forge_javadoc/<ver>`**（无版本前缀，
+ * parseIndexName 不解析）⇒ §J（processed ↔ index-l0）与 §S（语义层）对那一族从不执行。
+ * 该族的盘上↔索引双向差改由独立门 `assert-javadoc-index-parity.mjs` 承担（含 ORPHAN_DEBT 棘轮与 --selftest）。
+ */
 function docSubDirs(platform) {
   if (platform === "forge") return ["forge-docs", "extracted", "mappings"];
   if (platform === "fabric") return ["fabric-docs", "fabric-wiki", "mappings"];

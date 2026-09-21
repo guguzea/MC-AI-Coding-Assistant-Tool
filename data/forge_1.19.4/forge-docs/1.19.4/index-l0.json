@@ -1,5 +1,17 @@
 [
   {
+    "id": "1.19.4/datagen_server_advancements",
+    "version": "1.19.4",
+    "label": "Advancement Generation",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datagen/server/advancements/",
+    "tags": [
+      "datagen",
+      "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
     "id": "1.19.4/datagen",
     "version": "1.19.4",
     "label": "Data Generators",
@@ -10,6 +22,19 @@
     ],
     "priority": "⭐",
     "sectionCount": 3
+  },
+  {
+    "id": "1.19.4/datagen_server_datapackregistries",
+    "version": "1.19.4",
+    "label": "Datapack Registry Object Generation",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datagen/server/datapackregistries/",
+    "tags": [
+      "registry",
+      "datagen",
+      "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
   },
   {
     "id": "1.19.4/resources_server",
@@ -43,6 +68,43 @@
     "sectionCount": 6
   },
   {
+    "id": "1.19.4/datagen_server_glm",
+    "version": "1.19.4",
+    "label": "Global Loot Modifier Generation",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datagen/server/glm/",
+    "tags": [
+      "datagen",
+      "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.19.4/datagen_client_localization",
+    "version": "1.19.4",
+    "label": "Language Generation",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datagen/client/localization/",
+    "tags": [
+      "datagen",
+      "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.19.4/datagen_server_loottables",
+    "version": "1.19.4",
+    "label": "Loot Table Generation",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datagen/server/loottables/",
+    "tags": [
+      "datagen",
+      "loot",
+      "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
     "id": "1.19.4/concepts_lifecycle",
     "version": "1.19.4",
     "label": "Mod Lifecycle",
@@ -54,6 +116,18 @@
     "sectionCount": 5
   },
   {
+    "id": "1.19.4/datagen_client_modelproviders",
+    "version": "1.19.4",
+    "label": "Model Generation",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datagen/client/modelproviders/",
+    "tags": [
+      "datagen",
+      "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 8
+  },
+  {
     "id": "1.19.4/networking",
     "version": "1.19.4",
     "label": "Networking",
@@ -63,6 +137,19 @@
     ],
     "priority": "⭐",
     "sectionCount": 0
+  },
+  {
+    "id": "1.19.4/datagen_server_recipes",
+    "version": "1.19.4",
+    "label": "Recipe Generation",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datagen/server/recipes/",
+    "tags": [
+      "datagen",
+      "recipe",
+      "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4
   },
   {
     "id": "1.19.4/concepts_registries",
@@ -105,6 +192,31 @@
     ],
     "priority": "⭐",
     "sectionCount": 5
+  },
+  {
+    "id": "1.19.4/datagen_client_sounds",
+    "version": "1.19.4",
+    "label": "Sound Definition Generation",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datagen/client/sounds/",
+    "tags": [
+      "datagen",
+      "tag",
+      "sounds"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.19.4/datagen_server_tags",
+    "version": "1.19.4",
+    "label": "Tag Generation",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datagen/server/tags/",
+    "tags": [
+      "datagen",
+      "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
   },
   {
     "id": "1.19.4/datastorage_capabilities",

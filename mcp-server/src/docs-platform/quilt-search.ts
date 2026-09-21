@@ -13,7 +13,7 @@ import {
 } from "./platform-data.js";
 import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "./semantic/search.js";
-import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, type SearchResultLike } from "./search-utils.js";
+import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, type SearchResultLike } from "./search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "./semantic/status.js";
 import { filterFabricFallbackHits, isFabricExclusiveContent, isFabricExclusiveHit, isQslSpecificQuery } from "./quilt-fallback-filter.js";
 
@@ -227,6 +227,10 @@ export async function searchQuiltDocs(args: {
           allowedIds: semanticAllowedIds(store, detailedRes.resolvedVersion, results),
         });
       }
+      // verbatim 逐字支撑位：只事后标注，不改排序 / 召回
+      const vb = annotateVerbatim(results, args.query, (r) =>
+        store.pageText(r.id, detailedRes.resolvedVersion),
+      );
       return jsonOk({
         ok: true,
         query: args.query,
@@ -239,10 +243,14 @@ export async function searchQuiltDocs(args: {
           missingSemanticDbWarning(semanticHits === null),
           semanticStaleSearchWarning(dataRoot, "quilt", detailedRes.resolvedVersion, "quilt-docs"),
           QUILT_CURRENT_SITE_WARNING,
+          vb.warning,
         ),
         semantic: semanticHits !== null,
         total: results.length,
-        results,
+        ...(vb.term
+          ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
+          : {}),
+        results: vb.rows,
       });
     } catch (e) {
       if (isVersionNotFoundLike(e)) {
@@ -287,6 +295,10 @@ export async function searchQuiltDocs(args: {
       });
     }
     const filtered = filterFabricFallbackHits(results);
+    // verbatim 逐字支撑位：命中正文是 Fabric 的，所以按 Fabric 语料判逐字
+    const vb = annotateVerbatim(filtered.hits, args.query, (r) =>
+      fabricStore.pageText(r.id, fabricDetailed.resolvedVersion),
+    );
     const quiltDocDataPresent = hasPlatformDocData("quilt", dataRoot);
     return jsonOk({
       ok: true,
@@ -304,10 +316,14 @@ export async function searchQuiltDocs(args: {
         filtered.dropped > 0 ? `已丢弃 ${filtered.dropped} 条 Fabric 专属命中` : undefined,
         missingSemanticDbWarning(semanticHits === null),
         semanticStaleSearchWarning(resolveDataDir(), "fabric", fabricDetailed.resolvedVersion, "fabric-docs"),
+        vb.warning,
       ),
       semantic: semanticHits !== null,
       total: filtered.hits.length,
-      results: filtered.hits.map((h) => ({ ...h, sourcePlatform: "fabric" as const })),
+      ...(vb.term
+        ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
+        : {}),
+      results: vb.rows.map((h) => ({ ...h, sourcePlatform: "fabric" as const })),
     });
   } catch (e) {
     if (isVersionNotFoundLike(e)) {

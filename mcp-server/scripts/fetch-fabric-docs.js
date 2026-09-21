@@ -371,6 +371,10 @@ async function main() {
   let failed = 0;
   const failures = [];
   const provenanceLog = [];
+  // W4-8（2026-09-20）：本地语料的删除/保留必须留痕 —— failures.json 的 removedRaw/keptRaw
+  // 此前 7 个档带键但全仓无写入者（读方只 existsSync），现在由本脚本写出。
+  const removedRaw = [];
+  const keptRaw = [];
 
   for (const entry of urls) {
     const { id, gitPath } = entry;
@@ -399,8 +403,18 @@ async function main() {
       const result = await fetchPage(entry, BRANCH);
 
       if (!result.content) {
-        console.log(`⚠️  无版本化/归档源（已拒绝未版本化 main 与现行 VitePress）`);
-        deleteLocalDoc(filename);
+        // W4-8（2026-09-20）：取件失败 ≠ 上游没有这页。旧实现无条件 deleteLocalDoc，
+        // 一次网络抖动就会把已核的 raw + processed 双删。默认**保留**本地语料、只记账；
+        // 仅当本地确实是「污染缓存」（未版本化 main / 现行 VitePress / 盘损）时才删除。
+        const polluted = existsSync(localPath) && isPollutedCachedRaw(localPath);
+        if (polluted) {
+          console.log(`⚠️  无版本化/归档源且本地为污染缓存 ⇒ 删除本地副本（不保留）`);
+          deleteLocalDoc(filename);
+          removedRaw.push(filename);
+        } else {
+          console.log(`⚠️  无版本化/归档源 ⇒ 保留本地已核语料，仅记账（不删除）`);
+          if (existsSync(localPath)) keptRaw.push(filename);
+        }
         // gitPath 必须来自 official-templates.json toFetch.gitPath（或版本树发现的同一路径），禁止手写旧路径。
         failures.push({ id, gitPath, tried: result.tried ?? [] });
         failed++;
@@ -484,7 +498,11 @@ async function main() {
     writeMeta(meta);
     const versionDir = join(DATA_ROOT, `fabric_${VERSION}`, "fabric-docs", VERSION);
     ensureDir(versionDir);
-    writeFileSync(join(versionDir, "failures.json"), JSON.stringify({ version: VERSION, failures }, null, 2), "utf8");
+    writeFileSync(
+      join(versionDir, "failures.json"),
+      JSON.stringify({ version: VERSION, failures, removedRaw, keptRaw }, null, 2),
+      "utf8",
+    );
   }
 
   console.log(`\n完成：${success} 成功，${skipped} 跳过，${failed} 失败`);

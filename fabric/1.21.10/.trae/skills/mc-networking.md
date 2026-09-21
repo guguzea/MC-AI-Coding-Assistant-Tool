@@ -4,9 +4,25 @@ description: Fabric 1.21.10 mc-networking。类名只来自本档核实表与 se
 platform: fabric
 version: "1.21.10"
 docsTool: search_fabric_docs
+mappings: yarn
+mappings_alt: mojmap
 ---
 
 # mc-networking（Fabric 1.21.10）
+
+### ⚠️ 映射口径：本档语料是 mojmap
+
+本件正文出现的下列名字是 **mojmap（Mojang 官方映射）/ 上游文档页写法**，本档 frontmatter 已声明 `mappings: yarn`，落笔须用右列。两套名不能混用。
+
+| mojmap 名 | Yarn 名 | 适用版本（13 档逐档 join 实测） | 依据 |
+| --- | --- | --- | --- |
+| `CustomPacketPayload` | `CustomPayload` | 1.20.4–1.21.11 | join（`net.minecraft.network.packet.CustomPayload`） |
+| `ResourceLocation` | `Identifier` | 1.14.4–1.21.10 | join（`net.minecraft.util.Identifier`） |
+| `ServerPlayer` | `ServerPlayerEntity` | 1.14.4–1.21.11 | join（`net.minecraft.server.network.ServerPlayerEntity`） |
+| `StreamCodec` | `PacketCodec` | 1.21.1–1.21.11 | join（`net.minecraft.network.codec.PacketCodec`） |
+
+- 上表只证**类名存在与包路径**，**不证**方法名/参数/返回值。逐签名以本档语料为准：`search_fabric_docs version=1.21.10`，或 `get_minecraft_source`（需 JDK 17+）/ IDE `./gradlew genSources`。
+- 两套同名的类（`ItemStack` / `BlockPos` 等）不在表内，直接写。`net.fabricmc.fabric.api.*`（Fabric API 自身不混淆）与示例工程自造类名也不在表内。
 
 > 本档为**薄档**（Fabric 1.21.10）。
 > 文档树核实：`data/fabric_1.21.10/fabric-docs/1.21.10/processed/develop_networking.md`（id `develop-networking`）已入库。

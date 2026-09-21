@@ -19,6 +19,7 @@ npm run build
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
+- **薄档合法（2026-09-20 裁定）**：部分 `data/fabric_<ver>/mappings/` 按设计**只有 `yarn-mappings.sqlite` + `*-tiny.gz`、没有 `yarn-mappings.json`**（实测 `1.21.4` / `1.21.8` / `1.21.10` 三档同形）。`yarn-mappings.json` 是 legacy 中间产物、**不是运行时不变量**：sqlite 档可由 tiny 直建（见 `build-yarn-sqlite.mjs` 头注释与 `build-yarn-mappings.test.mjs` 的「薄档 json=null」用例）；`audit-data-consistency` 也只在 json 存在时才要求 sqlite 存在，反之不要求。⇒ 发现某档缺 json **不要**当漏建去补。
 - T2 反编译工具族：**默认零下载**，仅显式调用时按需下载到 `$MC_SKILL_CACHE`（Java 17+ 前置）
 
 完整分类、降级与**工具边界（避免误判）**见根目录 [README.md](../README.md)。常见误判：`query_api` 1.12.2 空壳 / 26.1+ 无索引；`diagnose_gradle` 覆盖 ForgeGradle+Loom+Neo/MDG；`validate_project` 对 Fabric/Quilt/NeoForge 真检查，LiteLoader/Rift/基岩 skipped；文档 `id` 必须来自搜索结果；`generate_*` 不写盘；改 dist 后须重载 MCP。

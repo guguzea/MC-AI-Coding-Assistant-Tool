@@ -402,6 +402,29 @@ export function convertMapping(query: MappingQuery): MappingResult {
     };
   }
 
+  // W4-5（2026-09-20）：to=yarn 只有在该档**确实**是 yarn-tiny（fabric 侧 Yarn 名）时才可答。
+  // 一手实测各档 mappingEra：forge_1.7.10=forge-srg / 1.12.2=forge-srg / 1.13.2=tsrg /
+  // 1.15.2=mcp-csv（classes=0 methods=0）；fabric_1.14.4=yarn-tiny。⇒ 这些 forge 档的
+  // named 列是 MCP/SRG 名，回 row.name_named 当 Yarn 名属「恒等式伪转换」。
+  if (to === "yarn" && era !== "yarn-tiny") {
+    return fail(query, {
+      mappingType: kind,
+      mappingEra: era,
+      resultKind: "YARN_DATA_UNAVAILABLE",
+      notes: [
+        `version=${version} 的映射库 mappingEra=${era ?? "(未知)"}，不是 yarn-tiny（Yarn 名）库；拒绝把该档 named 列冒充 Yarn 名返回。`,
+        "要 Yarn 名请用 fabric 1.14.4–1.21.x（yarn-tiny 档）；可读名请用 query_api / get_method_params。",
+      ],
+      action: actionable(
+        ActionCodes.DATA_UNAVAILABLE,
+        `无 Yarn 数据（version=${version}）`,
+        ["改用 query_api / get_method_params 取可读名", "或改用 fabric 档（yarn-tiny）查 Yarn 名"],
+        ["query_api", "convert_mapping"],
+      ),
+      schemaVersion,
+    });
+  }
+
   if ((from === "mcp" || from === "parchment") && (to === "mcp" || to === "parchment")) {
     return {
       found: true,
@@ -679,12 +702,15 @@ export function convertMapping(query: MappingQuery): MappingResult {
         });
       }
       const converted = outputFromFieldRow(looked.row, to);
+      // W4-5（2026-09-20）：era 与命中来源矛盾时不得报 confidence:high。
+      // 可复现形：1.14.4 era=yarn-tiny，命中却来自 forge 侧 mcp-csv 的 searge 表（source="csv"）。
+      const sourceConflictsEra = looked.source === "csv" && era === "yarn-tiny";
       return {
         found: true,
         original: memberName,
         converted,
         direction: `${from}→${to}`,
-        confidence: "high",
+        confidence: sourceConflictsEra ? "medium" : "high",
         mappingType: "field",
         memberKind: "field",
         fallbackUsed: false,
@@ -693,7 +719,12 @@ export function convertMapping(query: MappingQuery): MappingResult {
         named: looked.row.name_named,
         intermediary: looked.row.name_intermediary ?? undefined,
         source: looked.source,
-        notes: mojangHint.length ? [...(looked.notes ?? []), ...mojangHint] : looked.notes,
+        notes: [
+          ...(sourceConflictsEra
+            ? [`命中来源为 forge 侧 mcp-csv（source=csv），与 mappingEra=${era} 不一致 ⇒ 置信度降为 medium`]
+            : []),
+          ...(mojangHint.length ? [...(looked.notes ?? []), ...mojangHint] : (looked.notes ?? [])),
+        ],
         schemaVersion,
       };
     }
@@ -816,12 +847,14 @@ export function convertMapping(query: MappingQuery): MappingResult {
       }
       const converted = outputFromMethodRow(looked.row, to);
       const desc = looked.row.descriptor_named || descriptor || "";
+      // W4-5：同 field 路径 —— era（yarn-tiny）与 source（csv）矛盾时不得报 confidence:high。
+      const methodSourceConflictsEra = looked.source === "csv" && era === "yarn-tiny";
       return {
         found: true,
         original: memberName,
         converted,
         direction: `${from}→${to}`,
-        confidence: "high",
+        confidence: methodSourceConflictsEra ? "medium" : "high",
         mappingType: "method",
         memberKind: "method",
         fallbackUsed: false,
@@ -830,7 +863,12 @@ export function convertMapping(query: MappingQuery): MappingResult {
         named: looked.row.name_named,
         intermediary: looked.row.name_intermediary ?? undefined,
         source: looked.source,
-        notes: mojangHint.length ? [...(looked.notes ?? []), ...mojangHint] : looked.notes,
+        notes: [
+          ...(methodSourceConflictsEra
+            ? [`命中来源为 forge 侧 mcp-csv（source=csv），与 mappingEra=${era} 不一致 ⇒ 置信度降为 medium`]
+            : []),
+          ...(mojangHint.length ? [...(looked.notes ?? []), ...mojangHint] : (looked.notes ?? [])),
+        ],
         schemaVersion,
         ...(desc
           ? {
