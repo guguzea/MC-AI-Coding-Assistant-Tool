@@ -343,6 +343,21 @@
     ]
   },
   {
+    "id": "1.18.2/contributing",
+    "version": "1.18.2",
+    "label": "Contributing to This Documentation",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/contributing/",
+    "tags": [],
+    "firstParagraph": "> Important: Important Please use two spaces to indent, not tabs.",
+    "sections": [
+      {
+        "title": "Style Guide",
+        "level": 2,
+        "summary": "> Important: Important Please use two spaces to indent, not tabs. Titles should be capitalized in the standard titling format. For example,"
+      }
+    ]
+  },
+  {
     "id": "1.18.2/datagen",
     "version": "1.18.2",
     "label": "Data Generators",
@@ -650,6 +665,81 @@
         "title": "Attaching to a Level",
         "level": 2,
         "summary": "Any SavedData is loaded and/or attached to a level dynamically. As such, if one is never created on a level, then it will not exist."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/forgedev",
+    "version": "1.18.2",
+    "label": "Getting Started",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/forgedev/",
+    "tags": [],
+    "firstParagraph": "Like most major open source projects you will find, Forge is hosted on GitHub. If you have contributed to another project before, you will know this process already and can skip right ahead to the ...",
+    "sections": [
+      {
+        "title": "Forking and Cloning the Repository",
+        "level": 2,
+        "summary": "Like most major open source projects you will find, Forge is hosted on GitHub. If you have contributed to another project before, you will know this process already and can skip right ahead to the ..."
+      },
+      {
+        "title": "Setting Up the Environment",
+        "level": 2,
+        "summary": "Depending on your favorite IDE, there is a different set of recommended steps you have to follow to successfully set up a development environment."
+      },
+      {
+        "title": "Making Changes and Pull Requests",
+        "level": 2,
+        "summary": "Once you have set up your development environment, it is time to make some changes to Forge&rsquo;s codebase. There are, however, some pitfalls you have to avoid when editing the project&rsquo;s code."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/forgedev_prguidelines",
+    "version": "1.18.2",
+    "label": "Pull Request Guidelines",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/forgedev/prguidelines/",
+    "tags": [],
+    "firstParagraph": "At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft&rsquo;s code directly (like coremods do now), but they ran into conflicts with each other when t...",
+    "sections": [
+      {
+        "title": "What Exactly is Forge?",
+        "level": 2,
+        "summary": "At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft&rsquo;s code directly (like coremods do now), but they ran into conflicts with each other when t..."
+      },
+      {
+        "title": "Patches",
+        "level": 2,
+        "summary": "Patches are applied as direct changes to Minecraft&rsquo;s source code, and aim to be as minimal as possible."
+      },
+      {
+        "title": "Forge Code",
+        "level": 2,
+        "summary": "Aside from the patches, Forge code is just normal Java code. It can be event code, compatibility features, or anything else that is not directly editing Minecraft code."
+      },
+      {
+        "title": "Explain Yourself",
+        "level": 2,
+        "summary": "All Pull Requests need to answer the question: why is this necessary? Any code added to Forge needs to be maintained, and more code means more potential for bugs, so solid justification is needed f..."
+      },
+      {
+        "title": "Show that it Works",
+        "level": 2,
+        "summary": "The code you submit to Forge should work perfectly, and it is up to you to convince the reviewers that it does."
+      },
+      {
+        "title": "Breaking Changes in Forge",
+        "level": 2,
+        "summary": "Forge cannot make changes that break the mods that depend on it. This means that Pull Requests have to ensure that they do not break binary compatibility with previous Forge versions."
+      },
+      {
+        "title": "Be Patient, Civil, and Empathetic",
+        "level": 2,
+        "summary": "When submitting Pull Requests, you will often have to survive code review and make several changes before it is the best Pull Request possible."
+      },
+      {
+        "title": "Review",
+        "level": 2,
+        "summary": "If you do your best to understand the slow and perfectionistic nature of the Pull Request process, we will do our best to understand your point of view as well."
       }
     ]
   },
@@ -1045,10 +1135,112 @@
     ]
   },
   {
+    "id": "1.18.2/rendering_modelloaders_bakedmodel",
+    "version": "1.18.2",
+    "label": "`BakedModel",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/rendering/modelloaders/bakedmodel/",
+    "tags": [
+      "rendering"
+    ],
+    "firstParagraph": "",
+    "sections": []
+  },
+  {
+    "id": "1.18.2/rendering_modelloaders_itemoverrides",
+    "version": "1.18.2",
+    "label": "`ItemOverrides",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/rendering/modelloaders/itemoverrides/",
+    "tags": [
+      "item",
+      "rendering"
+    ],
+    "firstParagraph": "This class represents a vanilla item override, which holds several <code>ItemOverrides$PropertyMatcher for the properties on an item and a model to use in case those matchers are satisfied.",
+    "sections": [
+      {
+        "title": "`BakedOverride",
+        "level": 2,
+        "summary": "This class represents a vanilla item override, which holds several <code>ItemOverrides$PropertyMatcher for the properties on an item and a model to use in case those matchers are satisfied."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/rendering_modelloaders_perspective",
+    "version": "1.18.2",
+    "label": "Perspective",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/rendering/modelloaders/perspective/",
+    "tags": [
+      "rendering"
+    ],
+    "firstParagraph": "THIRDPERSONLEFTHAND/THIRDPERSONRIGHTHAND/FIRSTPERSONLEFTHAND/FIRSTPERSONRIGHTHAND - The first person values represent when the player is holding the item in their own hand.",
+    "sections": [
+      {
+        "title": "`TransformType",
+        "level": 2,
+        "summary": "<code>NONE` - Unused. THIRDPERSONLEFTHAND/THIRDPERSONRIGHTHAND/FIRSTPERSONLEFTHAND/FIRSTPERSONRIGHTHAND - The first person values represent when the player is holding the item in their own hand."
+      },
+      {
+        "title": "The Vanilla Way",
+        "level": 2,
+        "summary": "The vanilla way of handling perspective is through BakedModel#getTransforms. This method returns an ItemTransforms, which is a simple object that contains various ItemTransforms as public final fie..."
+      },
+      {
+        "title": "The Forge Way",
+        "level": 2,
+        "summary": "The Forge way of handling transforms is #handlePerspective, a method patched into BakedModel. It supersedes the #getTransforms method."
+      }
+    ]
+  },
+  {
     "id": "1.18.2/resources_client",
     "version": "1.18.2",
     "label": "Resource Packs",
     "url": "https://docs.readthedocs.net/en/1.18.x/resources/client/",
+    "tags": [],
+    "firstParagraph": "",
+    "sections": []
+  },
+  {
+    "id": "1.18.2/resources_client_models",
+    "version": "1.18.2",
+    "label": "Models",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/client/models/",
+    "tags": [],
+    "firstParagraph": "Models and textures are linked through ResourceLocations but are stored in the ModelManager using ModelResourceLocations.",
+    "sections": [
+      {
+        "title": "Model Files",
+        "level": 2,
+        "summary": "Models and textures are linked through ResourceLocations but are stored in the ModelManager using ModelResourceLocations."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/resources_client_models_itemproperties",
+    "version": "1.18.2",
+    "label": "Item Properties",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/client/models/itemproperties/",
+    "tags": [
+      "item"
+    ],
+    "firstParagraph": "ItemProperties#register is used to add a property to a certain item. The Item parameter is the item the property is being attached to (e.g. ExampleItems#APPLE).",
+    "sections": [
+      {
+        "title": "Adding Properties to Items",
+        "level": 2,
+        "summary": "ItemProperties#register is used to add a property to a certain item. The Item parameter is the item the property is being attached to (e.g. ExampleItems#APPLE)."
+      },
+      {
+        "title": "Using Overrides",
+        "level": 2,
+        "summary": "The format of an override can be seen on the wiki, and a good example can be found in model/item/bow.json. For reference, here is a hypothetical example of an item with an examplemod:power property."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/resources_client_models_tinting",
+    "version": "1.18.2",
+    "label": "Coloring Textures",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/client/models/tinting/",
     "tags": [],
     "firstParagraph": "",
     "sections": []
@@ -1061,5 +1253,267 @@
     "tags": [],
     "firstParagraph": "",
     "sections": []
+  },
+  {
+    "id": "1.18.2/resources_server_advancements",
+    "version": "1.18.2",
+    "label": "Advancements",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/advancements/",
+    "tags": [],
+    "firstParagraph": "To unlock an advancement, the specified criteria must be met. Criteria are tracked through triggers which execute when a certain action is performed: killing an entity, changing an inventory, bread...",
+    "sections": [
+      {
+        "title": "Advancement Criteria",
+        "level": 2,
+        "summary": "To unlock an advancement, the specified criteria must be met. Criteria are tracked through triggers which execute when a certain action is performed: killing an entity, changing an inventory, bread..."
+      },
+      {
+        "title": "Advancement Rewards",
+        "level": 2,
+        "summary": "When an advancement is completed, rewards may be given out. These can be a combination of experience points, loot tables, recipes for the recipe book, or a function) executed as a creative player."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/resources_server_conditional",
+    "version": "1.18.2",
+    "label": "Conditionally-Loaded Data",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/conditional/",
+    "tags": [],
+    "firstParagraph": "Currently, conditional loading is implemented for recipes and advancements. For any conditional recipe or advancement, a list of conditions to datum pair is loaded.",
+    "sections": [
+      {
+        "title": "Implementations",
+        "level": 2,
+        "summary": "Currently, conditional loading is implemented for recipes and advancements. For any conditional recipe or advancement, a list of conditions to datum pair is loaded."
+      },
+      {
+        "title": "Conditions",
+        "level": 2,
+        "summary": "Conditions are specified by setting type to the name of the condition as specified by IConditionSerializer#getID. Boolean conditions consist of no data and return the expected value of the condition."
+      },
+      {
+        "title": "Creating Custom Conditions",
+        "level": 2,
+        "summary": "Custom conditions can be created by implementing ICondition and its associated IConditionSerializer. Any condition only need to implement two methods:"
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/resources_server_glm",
+    "version": "1.18.2",
+    "label": "Global Loot Modifiers",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/glm/",
+    "tags": [],
+    "firstParagraph": "1. <li>Create a globallootmodifiers.json.- <li>This will tell Forge about your modifiers and works similar to tags. 2. <li>A serialized json representing your modifier.",
+    "sections": [
+      {
+        "title": "Registering a Global Loot Modifier",
+        "level": 2,
+        "summary": "You will need 4 things: 1. <li>Create a globallootmodifiers.json.- <li>This will tell Forge about your modifiers and works similar to tags. 2. <li>A serialized json representing your modifier."
+      },
+      {
+        "title": "The `global_loot_modifiers.json",
+        "level": 2,
+        "summary": "The <code>globallootmodifiers.json represents all loot modifiers to be loaded into the game. This file MUST be placed within data/forge/lootmodifiers/globalloot_modifiers.json`."
+      },
+      {
+        "title": "The Serialized JSON",
+        "level": 2,
+        "summary": "This file contains all of the potential variables related to your modifier, including the conditions that must be met prior to modifying any loot."
+      },
+      {
+        "title": "`IGlobalLootModifier",
+        "level": 2,
+        "summary": "To supply the functionality a global loot modifier specifies, a <code>IGlobalLootModifier` implementation must be specified."
+      },
+      {
+        "title": "`GlobalLootModifierSerializer",
+        "level": 2,
+        "summary": "The connector between the JSON and the <code>IGlobalLootModifier instance is the GlobalLootModifierSerializer<T> implementation, where T represents the type of the IGlobalLootModifier` to use."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/resources_server_loottables",
+    "version": "1.18.2",
+    "label": "Loot Tables",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/loottables/",
+    "tags": [
+      "loot"
+    ],
+    "firstParagraph": "Most loot tables within vanilla are data driven via JSON. This means that a mod is not necessary to create a new loot table, only a Data pack.",
+    "sections": [
+      {
+        "title": "Data-Driven Tables",
+        "level": 2,
+        "summary": "Most loot tables within vanilla are data driven via JSON. This means that a mod is not necessary to create a new loot table, only a Data pack."
+      },
+      {
+        "title": "Using a Loot Table",
+        "level": 2,
+        "summary": "A loot table is referenced by its ResourceLocation which points to data/<namespace>/loot_tables/<path>.json."
+      },
+      {
+        "title": "Additional Features",
+        "level": 2,
+        "summary": "Forge provides some additional behavior to loot tables for greater control of the system. <code>LootTableLoadEvent` is an event fired on the Forge event bus which is fired whenever a loot table is ..."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/resources_server_recipes",
+    "version": "1.18.2",
+    "label": "Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/recipes/",
+    "tags": [
+      "recipe"
+    ],
+    "firstParagraph": "Most recipe implementations within vanilla are data driven via JSON. This means that a mod is not necessary to create a new recipe, only a Data pack.",
+    "sections": [
+      {
+        "title": "Data-Driven Recipes",
+        "level": 2,
+        "summary": "Most recipe implementations within vanilla are data driven via JSON. This means that a mod is not necessary to create a new recipe, only a Data pack."
+      },
+      {
+        "title": "Recipe Manager",
+        "level": 2,
+        "summary": "Recipes are loaded and stored via the RecipeManager. Any operations relating to getting available recipe(s) are handled by this manager."
+      },
+      {
+        "title": "Additional Features",
+        "level": 2,
+        "summary": "Forge provides some additional behavior to the recipe schema and its implementations for greater control of the system."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/resources_server_recipes_custom",
+    "version": "1.18.2",
+    "label": "Custom Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/recipes/custom/",
+    "tags": [
+      "recipe"
+    ],
+    "firstParagraph": "The Recipe interface describes the recipe data and the execution logic. This includes matching the inputs and providing the associated result.",
+    "sections": [
+      {
+        "title": "Recipe",
+        "level": 2,
+        "summary": "The Recipe interface describes the recipe data and the execution logic. This includes matching the inputs and providing the associated result."
+      },
+      {
+        "title": "RecipeType",
+        "level": 2,
+        "summary": "RecipeType is responsible for defining the category or context the recipe will be used within. For example, if a recipe was going to be smelted in a furnace, it would have a type of RecipeType#SMEL..."
+      },
+      {
+        "title": "RecipeSerializer",
+        "level": 2,
+        "summary": "A RecipeSerializer is responsible for decoding JSONs and communicating across the network for an associated Recipe subtype."
+      },
+      {
+        "title": "Building the JSON",
+        "level": 2,
+        "summary": "Custom Recipe JSONs are stored in the same place as other recipes. The specified type should represent the registry name of the recipe serializer."
+      },
+      {
+        "title": "Non-Item Logic",
+        "level": 2,
+        "summary": "If items are not used as part of the input or result of a recipe, then the normal methods provided in RecipeManager will not be useful."
+      },
+      {
+        "title": "Data Generation",
+        "level": 2,
+        "summary": "All custom recipes, regardless of input or output data, can be created into a FinishedRecipe for data generation using the RecipeProvider."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/resources_server_recipes_incode",
+    "version": "1.18.2",
+    "label": "Non-Datapack Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/recipes/incode/",
+    "tags": [
+      "recipe"
+    ],
+    "firstParagraph": "Brewing is one of the few recipes that still exist in code. Brewing recipes are added as part of a bootstrap within PotionBrewing for their containers, container recipes, and potion mixes.",
+    "sections": [
+      {
+        "title": "Brewing Recipes",
+        "level": 2,
+        "summary": "Brewing is one of the few recipes that still exist in code. Brewing recipes are added as part of a bootstrap within PotionBrewing for their containers, container recipes, and potion mixes."
+      },
+      {
+        "title": "Anvil Recipes",
+        "level": 2,
+        "summary": "Anvils are responsible for taking a damaged input and given some material or a similar input, remove some of the damage on the input result. As such, its system is not easily data-driven."
+      },
+      {
+        "title": "Loom Recipes",
+        "level": 2,
+        "summary": "Looms are responsible for applying a dye and pattern (either from the loom or from an item) to a banner."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/resources_server_recipes_ingredients",
+    "version": "1.18.2",
+    "label": "Ingredients",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/recipes/ingredients/",
+    "tags": [
+      "recipe"
+    ],
+    "firstParagraph": "Custom ingredients can be specified by setting type to the name of the ingredient&rsquo;s serializer, with the exception of compound ingredients.",
+    "sections": [
+      {
+        "title": "Custom Ingredients",
+        "level": 2,
+        "summary": "Custom ingredients can be specified by setting type to the name of the ingredient&rsquo;s serializer, with the exception of compound ingredients."
+      },
+      {
+        "title": "Creating Custom Ingredients",
+        "level": 2,
+        "summary": "Custom ingredients can be created by implementing IIngredientSerializer for the created Ingredient subclass."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/resources_server_tags",
+    "version": "1.18.2",
+    "label": "Tags",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/tags/",
+    "tags": [
+      "tag"
+    ],
+    "firstParagraph": "Tags are declared in your mod&rsquo;s datapack. For example, a TagKey<Block> with a given identifier of modid:foo/tagname will reference a tag at /data/<modid>/tags/blocks/foo/tagname.json.",
+    "sections": [
+      {
+        "title": "Declaring Your Own Groupings",
+        "level": 2,
+        "summary": "Tags are declared in your mod&rsquo;s datapack. For example, a TagKey<Block> with a given identifier of modid:foo/tagname will reference a tag at /data/<modid>/tags/blocks/foo/tagname.json."
+      },
+      {
+        "title": "Using Tags In Code",
+        "level": 2,
+        "summary": "Tags for all registries are automatically sent from the server to any remote clients on login and reload."
+      },
+      {
+        "title": "Conventions",
+        "level": 2,
+        "summary": "There are several conventions that will help facilitate compatibility in the ecosystem: - <li>If there is a Vanilla tag that fits your block or item, add it to that tag. See the list of Vanilla tags."
+      },
+      {
+        "title": "Migration from OreDictionary",
+        "level": 2,
+        "summary": "- <li>For recipes, tags can be used directly in the vanilla recipe format (see below). - <li>For matching items in code, see the section above."
+      },
+      {
+        "title": "Using Tags in Recipes and Advancements",
+        "level": 2,
+        "summary": "Tags are directly supported by Vanilla. See the respective Vanilla wiki pages for recipes and advancements for usage details."
+      }
+    ]
   }
 ]

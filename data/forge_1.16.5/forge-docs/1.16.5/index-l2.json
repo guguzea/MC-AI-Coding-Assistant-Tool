@@ -41,6 +41,117 @@
     "processedFile": "processed/advanced_accesstransformers.md"
   },
   {
+    "id": "1.16.5/animation_armature",
+    "version": "1.16.5",
+    "label": "Armature Files",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/animation/armature/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "File Structure",
+        "level": 2,
+        "summary": "An example armature file, taken from the forge debug mod `` { \"joints\": { \"stick\": {\"2\": [1.0]}, \"cube\": {\"3\": [1."
+      },
+      {
+        "title": "Joints",
+        "level": 2,
+        "summary": "Each joint defines an object that animates together as a single unit in the animation. With Vanilla JSON models, this means that multiple elements can belong to the same joint."
+      },
+      {
+        "title": "Clips",
+        "level": 2,
+        "summary": "Clips are essentially instructions on how to use a value to animate some collection of joints. They also include events to fire at certain points."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 4,
+    "keySections": 1,
+    "file": "animation_armature.md",
+    "processedFile": "processed/animation_armature.md"
+  },
+  {
+    "id": "1.16.5/animation_asm",
+    "version": "1.16.5",
+    "label": "Animation State Machine Files",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/animation/asm/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Concepts",
+        "level": 2,
+        "summary": "The ASM contains parameters, clips, states, and transitions. The Animation State Machine can be in many different states. You define which states there are in the states section."
+      },
+      {
+        "title": "Code API",
+        "level": 2,
+        "summary": "> Warning: Warning The ASM code API can only be used client side. When storing ASMs in code, use the side-agnostic IAnimationStateMachine interface. ASMs can be loaded by calling ModelLoaderRegistry."
+      },
+      {
+        "title": "File Format",
+        "level": 2,
+        "summary": "The ASMs are stored in json files. The location does not matter, but they are usually placed in an asms folder."
+      },
+      {
+        "title": "Transitions",
+        "level": 2,
+        "summary": "The transitions section defines which states can go to what other states. A state can go to 0, 1, or many other states. To define a state as going to no other states, omit it from the section."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 11,
+    "keySections": 7,
+    "file": "animation_asm.md",
+    "processedFile": "processed/animation_asm.md"
+  },
+  {
+    "id": "1.16.5/animation_implementing",
+    "version": "1.16.5",
+    "label": "Using the API",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/animation/implementing/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Blocks",
+        "level": 2,
+        "summary": "Animations for blocks are done with the TileEntityRendererAnimation, which is a TileEntityRenderer. Because of this, having a TileEntity for your block is necessary."
+      },
+      {
+        "title": "Items",
+        "level": 2,
+        "summary": "Animations for items are done entirely using the capability system. Your item must provide the ANIMATION_CAPABILITY through an ICapabilityProvider."
+      },
+      {
+        "title": "Entities",
+        "level": 2,
+        "summary": "In order to animate an entity with the animation API, your entity&rsquo;s renderer must take an AnimationModelBase as its model."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 3,
+    "keySections": 1,
+    "file": "animation_implementing.md",
+    "processedFile": "processed/animation_implementing.md"
+  },
+  {
+    "id": "1.16.5/animation_intro",
+    "version": "1.16.5",
+    "label": "Intro to the Animation API",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/animation/intro/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Filesystem Structure Conventions",
+        "level": 2,
+        "summary": "ASM Files are normally stored in the asms/block for blocks or asms/item for items and so on. You specify where to load them from, so their location is really up to you."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 1,
+    "file": "animation_intro.md",
+    "processedFile": "processed/animation_intro.md"
+  },
+  {
     "id": "1.16.5/blocks_blocks",
     "version": "1.16.5",
     "label": "Blocks",
@@ -348,6 +459,42 @@
     "processedFile": "processed/concepts_sides.md"
   },
   {
+    "id": "1.16.5/conventions_loadstages",
+    "version": "1.16.5",
+    "label": "Loading Stages",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/conventions/loadstages/",
+    "tags": [
+      "tag"
+    ],
+    "sections": [
+      {
+        "title": "Setup",
+        "level": 2,
+        "summary": "FMLCommonSetupEvent is the first to fire early in the Minecraft starting process. Registry events are fired before this event, so you can expect all registry objects to be valid by the time this runs."
+      },
+      {
+        "title": "Sided Setup",
+        "level": 2,
+        "summary": "FMLClientSetupEvent and FMLDedicatedServerSetupEvent are fired after common setup, and are where physical, side-specific initialization should occur."
+      },
+      {
+        "title": "IMC Enqueue",
+        "level": 2,
+        "summary": "Here, mods should send messages to all other mods they are interested in integrating with, using InterModComms#sendTo."
+      },
+      {
+        "title": "IMC Process",
+        "level": 2,
+        "summary": "Here, mods should process all the messages they have received from other mods and set up integrations appropriately."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 2,
+    "file": "conventions_loadstages.md",
+    "processedFile": "processed/conventions_loadstages.md"
+  },
+  {
     "id": "1.16.5/conventions_locations",
     "version": "1.16.5",
     "label": "Locations",
@@ -629,6 +776,89 @@
     "processedFile": "processed/events_intro.md"
   },
   {
+    "id": "1.16.5/forgedev",
+    "version": "1.16.5",
+    "label": "Getting Started",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/forgedev/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Forking and Cloning the Repository",
+        "level": 2,
+        "summary": "Like most major open source projects you will find, Forge is hosted on GitHub. If you have contributed to another project before, you will know this process already and can skip right ahead to the ..."
+      },
+      {
+        "title": "Setting Up the Environment",
+        "level": 2,
+        "summary": "Depending on your favorite IDE, there is a different set of recommended steps you have to follow to successfully set up a development environment."
+      },
+      {
+        "title": "Making Changes and Pull Requests",
+        "level": 2,
+        "summary": "Once you have set up your development environment, it is time to make some changes to Forge&rsquo;s codebase. There are, however, some pitfalls you have to avoid when editing the project&rsquo;s code."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 6,
+    "file": "forgedev.md",
+    "processedFile": "processed/forgedev.md"
+  },
+  {
+    "id": "1.16.5/forgedev_prguidelines",
+    "version": "1.16.5",
+    "label": "Pull Request Guidelines",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/forgedev/prguidelines/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "What Exactly is Forge?",
+        "level": 2,
+        "summary": "At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft&rsquo;s code directly (like coremods do now), but they ran into conflicts with each other when t..."
+      },
+      {
+        "title": "Patches",
+        "level": 2,
+        "summary": "Patches are applied as direct changes to Minecraft&rsquo;s source code, and aim to be as minimal as possible."
+      },
+      {
+        "title": "Forge Code",
+        "level": 2,
+        "summary": "Aside from the patches, Forge code is just normal Java code. It can be event code, compatibility features, or anything else that is not directly editing Minecraft code."
+      },
+      {
+        "title": "Explain Yourself",
+        "level": 2,
+        "summary": "All Pull Requests need to answer the question: why is this necessary? Any code added to Forge needs to be maintained, and more code means more potential for bugs, so solid justification is needed f..."
+      },
+      {
+        "title": "Show that it Works",
+        "level": 2,
+        "summary": "The code you submit to Forge should work perfectly, and it is up to you to convince the reviewers that it does."
+      },
+      {
+        "title": "Breaking Changes in Forge",
+        "level": 2,
+        "summary": "Forge cannot make changes that break the mods that depend on it. This means that Pull Requests have to ensure that they do not break binary compatibility with previous Forge versions."
+      },
+      {
+        "title": "Be Patient, Civil, and Empathetic",
+        "level": 2,
+        "summary": "When submitting Pull Requests, you will often have to survive code review and make several changes before it is the best Pull Request possible."
+      },
+      {
+        "title": "Review",
+        "level": 2,
+        "summary": "If you do your best to understand the slow and perfectionistic nature of the Pull Request process, we will do our best to understand your point of view as well."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 3,
+    "file": "forgedev_prguidelines.md",
+    "processedFile": "processed/forgedev_prguidelines.md"
+  },
+  {
     "id": "1.16.5/gettingstarted",
     "version": "1.16.5",
     "label": "Getting Started with Forge",
@@ -846,6 +1076,84 @@
     "processedFile": "processed/legacy_porting.md"
   },
   {
+    "id": "1.16.5/models_advanced_ibakedmodel",
+    "version": "1.16.5",
+    "label": "`IBakedModel",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/models/advanced/ibakedmodel/",
+    "tags": [],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 5,
+    "file": "models_advanced_ibakedmodel.md",
+    "processedFile": "processed/models_advanced_ibakedmodel.md"
+  },
+  {
+    "id": "1.16.5/models_advanced_itemoverridelist",
+    "version": "1.16.5",
+    "label": "`ItemOverrideList",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/models/advanced/itemoverridelist/",
+    "tags": [
+      "item"
+    ],
+    "sections": [
+      {
+        "title": "`ItemOverride",
+        "level": 2,
+        "summary": "This class represents a vanilla item override, which holds several predicates for the properties on an item and a model to use in case those predicates are satisfied."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 0,
+    "file": "models_advanced_itemoverridelist.md",
+    "processedFile": "processed/models_advanced_itemoverridelist.md"
+  },
+  {
+    "id": "1.16.5/models_advanced_perspective",
+    "version": "1.16.5",
+    "label": "Perspective",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/models/advanced/perspective/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "`TransformType",
+        "level": 2,
+        "summary": "<code>NONE` - Unused. THIRDPERSONLEFTHAND/THIRDPERSONRIGHTHAND/FIRSTPERSONLEFTHAND/FIRSTPERSONRIGHTHAND - The first person values represent when the player is holding the item in their own hand."
+      },
+      {
+        "title": "The Vanilla Way",
+        "level": 2,
+        "summary": "The vanilla way of handling perspective is through IBakedModel#getTransforms. This method returns an ItemCameraTransforms, which is a simple object that contains various ItemTransformVec3fs as publ..."
+      },
+      {
+        "title": "The Forge Way",
+        "level": 2,
+        "summary": "The Forge way of handling transforms is #handlePerspective, a method patched into IBakedModel. It supersedes the ##getTransforms method."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 2,
+    "file": "models_advanced_perspective.md",
+    "processedFile": "processed/models_advanced_perspective.md"
+  },
+  {
+    "id": "1.16.5/models_blockstates_introduction",
+    "version": "1.16.5",
+    "label": "Introduction to Blockstate JSONs",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/models/blockstates/introduction/",
+    "tags": [
+      "block"
+    ],
+    "sections": [],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 3,
+    "keySections": 0,
+    "file": "models_blockstates_introduction.md",
+    "processedFile": "processed/models_blockstates_introduction.md"
+  },
+  {
     "id": "1.16.5/models_color",
     "version": "1.16.5",
     "label": "Coloring Textures",
@@ -1022,6 +1330,90 @@
     "processedFile": "processed/networking_simpleimpl.md"
   },
   {
+    "id": "1.16.5/primer_1_16_5",
+    "version": "1.16.5",
+    "label": "Minecraft 1.15.2 -> 1.16.5 Modding Migration Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.16.5/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "DataFixerUpper and Codecs",
+        "level": 2,
+        "summary": "In 1.16 Mojang updated their library DataFixerUpper (used to migrate old world data from older game versions to new versions) to include a new set of tools called Codecs."
+      },
+      {
+        "title": "Dynamic Registries",
+        "level": 2,
+        "summary": "In 1.16+ alot of registry objects became data driven. The DynamicRegistries manages the syncing of these data driven registries."
+      },
+      {
+        "title": "Registry Keys",
+        "level": 2,
+        "summary": "The RegistryKey is a new object introduced in 1.16 which is combination of a registry's ID and the object's registry name. It is a universally unique identifier for an object."
+      },
+      {
+        "title": "World Generation",
+        "level": 2,
+        "summary": "Most world generation objects have become data driven via the Minecraft Datapack system. While some objects still require code based objects, most world generation is now datapack based."
+      },
+      {
+        "title": "Dimensions/Worlds",
+        "level": 2,
+        "summary": "Dimensions are now data-driven and have significantly changed in its design. - Dimensions are now more of a set of extended settings for a World. It pairs a ChunkGenerator and DimensionType together."
+      },
+      {
+        "title": "Rendering",
+        "level": 2,
+        "summary": "Most rendering methods now include a MatrixStack in their parameters. GUIs are an exception in which some methods still use old RenderSystem and GlStateManager calls."
+      },
+      {
+        "title": "Item Properties",
+        "level": 2,
+        "summary": "These are now a static builder function you call during FMLClientSetupEvent. Use ItemProperties#register. The supplier in that method takes a LivingEntity, ClientWorld and ItemStack."
+      },
+      {
+        "title": "Command Registration",
+        "level": 2,
+        "summary": "Register your commands in Forge's RegisterCommandsEvent."
+      },
+      {
+        "title": "Reload Listener Registration",
+        "level": 2,
+        "summary": "Register your ReloadListener(s) in Forge's AddReloadListenerEvent event. This event fires when datapacks are reloaded. Datapacks will reload at least twice in total during the game's loading process."
+      },
+      {
+        "title": "Entity Attribute Creation and Modification",
+        "level": 2,
+        "summary": "Entity Attributes are no longer a method you inherit from the Entity class. Internally, it is now created by using a builder function to add attributes to the GlobalEntityTypeAttributes map."
+      },
+      {
+        "title": "Networking",
+        "level": 2,
+        "summary": "The introduction of data-driven registries has led to changes in the data the player receives The player is now sent its own set of registry data via a packet on login: - The client now stores its ..."
+      },
+      {
+        "title": "Miscellaneous",
+        "level": 2,
+        "summary": "There is now an Forge API hook that allows you to register multiple hitboxes for your entity, similar to the Ender Dragon. The Forge ChunkManager from older versions has been readded to Forge."
+      },
+      {
+        "title": "Forge API",
+        "level": 2,
+        "summary": "There has been a newly discovered bug in the @EventBusSubscriber annotation where the Mod ID that is firing the event is no longer known unless the class that this annotation is used on, also has a..."
+      },
+      {
+        "title": "References",
+        "level": 2,
+        "summary": "- SuperCoder7979's 1.16 RC primer (SuperCoder7979, Accessed 2021) - TelepathicGrunt's Structure Tutorial Mod (TelepathicGrunt, Accessed 2021) - Official Minecraft Forge Discord (MinecraftForge, Acc..."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 4,
+    "keySections": 15,
+    "file": "primer_1_16_5.md",
+    "processedFile": "processed/primer_1_16_5.md"
+  },
+  {
     "id": "1.16.5/rendering_ister",
     "version": "1.16.5",
     "label": "ItemStackTileEntityRenderer",
@@ -1041,6 +1433,30 @@
     "keySections": 1,
     "file": "rendering_ister.md",
     "processedFile": "processed/rendering_ister.md"
+  },
+  {
+    "id": "1.16.5/styleguide",
+    "version": "1.16.5",
+    "label": "Style Guide",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/styleguide/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Guide For Contributing to This Documentation",
+        "level": 2,
+        "summary": "This documentation is meant to be explanatory. Please explain how to do things, and break it down into reasonable chunks. We have a wiki elsewhere that can capture more comprehensive code examples."
+      },
+      {
+        "title": "Formatting",
+        "level": 2,
+        "summary": "> Important: Important Please use two spaces to indent, not tabs. Titles should be capitalized in the standard titling format. For example,"
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 2,
+    "file": "styleguide.md",
+    "processedFile": "processed/styleguide.md"
   },
   {
     "id": "1.16.5/tileentities_tesr",
@@ -1178,89 +1594,5 @@
     "keySections": 2,
     "file": "utilities_tags.md",
     "processedFile": "processed/utilities_tags.md"
-  },
-  {
-    "id": "1.16.5/primer_1_16_5",
-    "version": "1.16.5",
-    "label": "Minecraft 1.15.2 -> 1.16.5 Modding Migration Primer",
-    "url": "https://docs.neoforged.net/primer/docs/1.16.5/",
-    "tags": [],
-    "sections": [
-      {
-        "title": "DataFixerUpper and Codecs",
-        "level": 2,
-        "summary": "In 1.16 Mojang updated their library DataFixerUpper (used to migrate old world data from older game versions to new versions) to include a new set of tools called Codecs."
-      },
-      {
-        "title": "Dynamic Registries",
-        "level": 2,
-        "summary": "In 1.16+ alot of registry objects became data driven. The DynamicRegistries manages the syncing of these data driven registries."
-      },
-      {
-        "title": "Registry Keys",
-        "level": 2,
-        "summary": "The RegistryKey is a new object introduced in 1.16 which is combination of a registry's ID and the object's registry name. It is a universally unique identifier for an object."
-      },
-      {
-        "title": "World Generation",
-        "level": 2,
-        "summary": "Most world generation objects have become data driven via the Minecraft Datapack system. While some objects still require code based objects, most world generation is now datapack based."
-      },
-      {
-        "title": "Dimensions/Worlds",
-        "level": 2,
-        "summary": "Dimensions are now data-driven and have significantly changed in its design. - Dimensions are now more of a set of extended settings for a World. It pairs a ChunkGenerator and DimensionType together."
-      },
-      {
-        "title": "Rendering",
-        "level": 2,
-        "summary": "Most rendering methods now include a MatrixStack in their parameters. GUIs are an exception in which some methods still use old RenderSystem and GlStateManager calls."
-      },
-      {
-        "title": "Item Properties",
-        "level": 2,
-        "summary": "These are now a static builder function you call during FMLClientSetupEvent. Use ItemProperties#register. The supplier in that method takes a LivingEntity, ClientWorld and ItemStack."
-      },
-      {
-        "title": "Command Registration",
-        "level": 2,
-        "summary": "Register your commands in Forge's RegisterCommandsEvent."
-      },
-      {
-        "title": "Reload Listener Registration",
-        "level": 2,
-        "summary": "Register your ReloadListener(s) in Forge's AddReloadListenerEvent event. This event fires when datapacks are reloaded. Datapacks will reload at least twice in total during the game's loading process."
-      },
-      {
-        "title": "Entity Attribute Creation and Modification",
-        "level": 2,
-        "summary": "Entity Attributes are no longer a method you inherit from the Entity class. Internally, it is now created by using a builder function to add attributes to the GlobalEntityTypeAttributes map."
-      },
-      {
-        "title": "Networking",
-        "level": 2,
-        "summary": "The introduction of data-driven registries has led to changes in the data the player receives The player is now sent its own set of registry data via a packet on login: - The client now stores its ..."
-      },
-      {
-        "title": "Miscellaneous",
-        "level": 2,
-        "summary": "There is now an Forge API hook that allows you to register multiple hitboxes for your entity, similar to the Ender Dragon. The Forge ChunkManager from older versions has been readded to Forge."
-      },
-      {
-        "title": "Forge API",
-        "level": 2,
-        "summary": "There has been a newly discovered bug in the @EventBusSubscriber annotation where the Mod ID that is firing the event is no longer known unless the class that this annotation is used on, also has a..."
-      },
-      {
-        "title": "References",
-        "level": 2,
-        "summary": "- SuperCoder7979's 1.16 RC primer (SuperCoder7979, Accessed 2021) - TelepathicGrunt's Structure Tutorial Mod (TelepathicGrunt, Accessed 2021) - Official Minecraft Forge Discord (MinecraftForge, Acc..."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 4,
-    "keySections": 15,
-    "file": "primer_1_16_5.md",
-    "processedFile": "processed/primer_1_16_5.md"
   }
 ]

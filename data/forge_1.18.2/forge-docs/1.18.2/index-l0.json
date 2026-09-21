@@ -12,6 +12,44 @@
     "sectionCount": 1
   },
   {
+    "id": "1.18.2/resources_server_advancements",
+    "version": "1.18.2",
+    "label": "Advancements",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/advancements/",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.18.2/resources_client_models_tinting",
+    "version": "1.18.2",
+    "label": "Coloring Textures",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/client/models/tinting/",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.18.2/resources_server_conditional",
+    "version": "1.18.2",
+    "label": "Conditionally-Loaded Data",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/conditional/",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.18.2/resources_server_recipes_custom",
+    "version": "1.18.2",
+    "label": "Custom Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/recipes/custom/",
+    "tags": [
+      "recipe"
+    ],
+    "priority": "⭐",
+    "sectionCount": 6
+  },
+  {
     "id": "1.18.2/datagen",
     "version": "1.18.2",
     "label": "Data Generators",
@@ -67,6 +105,37 @@
     "sectionCount": 0
   },
   {
+    "id": "1.18.2/resources_server_glm",
+    "version": "1.18.2",
+    "label": "Global Loot Modifiers",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/glm/",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.18.2/resources_server_recipes_ingredients",
+    "version": "1.18.2",
+    "label": "Ingredients",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/recipes/ingredients/",
+    "tags": [
+      "recipe"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.18.2/resources_client_models_itemproperties",
+    "version": "1.18.2",
+    "label": "Item Properties",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/client/models/itemproperties/",
+    "tags": [
+      "item"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
     "id": "1.18.2/datagen_client_localization",
     "version": "1.18.2",
     "label": "Language Generation",
@@ -87,6 +156,17 @@
       "datagen",
       "loot",
       "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.18.2/resources_server_loottables",
+    "version": "1.18.2",
+    "label": "Loot Tables",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/loottables/",
+    "tags": [
+      "loot"
     ],
     "priority": "⭐",
     "sectionCount": 3
@@ -115,6 +195,15 @@
     "sectionCount": 8
   },
   {
+    "id": "1.18.2/resources_client_models",
+    "version": "1.18.2",
+    "label": "Models",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/client/models/",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
     "id": "1.18.2/networking",
     "version": "1.18.2",
     "label": "Networking",
@@ -124,6 +213,17 @@
     ],
     "priority": "⭐",
     "sectionCount": 0
+  },
+  {
+    "id": "1.18.2/resources_server_recipes_incode",
+    "version": "1.18.2",
+    "label": "Non-Datapack Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/recipes/incode/",
+    "tags": [
+      "recipe"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
   },
   {
     "id": "1.18.2/datagen_server_recipes",
@@ -137,6 +237,17 @@
     ],
     "priority": "⭐",
     "sectionCount": 4
+  },
+  {
+    "id": "1.18.2/resources_server_recipes",
+    "version": "1.18.2",
+    "label": "Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/recipes/",
+    "tags": [
+      "recipe"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
   },
   {
     "id": "1.18.2/concepts_registries",
@@ -206,6 +317,17 @@
     "sectionCount": 2
   },
   {
+    "id": "1.18.2/resources_server_tags",
+    "version": "1.18.2",
+    "label": "Tags",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/resources/server/tags/",
+    "tags": [
+      "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
     "id": "1.18.2/datastorage_capabilities",
     "version": "1.18.2",
     "label": "The Capability System",
@@ -215,6 +337,18 @@
     ],
     "priority": "⭐",
     "sectionCount": 9
+  },
+  {
+    "id": "1.18.2/rendering_modelloaders_itemoverrides",
+    "version": "1.18.2",
+    "label": "`ItemOverrides",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/rendering/modelloaders/itemoverrides/",
+    "tags": [
+      "item",
+      "rendering"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1
   },
   {
     "id": "1.18.2/blocks_states",
@@ -283,6 +417,17 @@
     "sectionCount": 2
   },
   {
+    "id": "1.18.2/rendering_modelloaders_bakedmodel",
+    "version": "1.18.2",
+    "label": "`BakedModel",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/rendering/modelloaders/bakedmodel/",
+    "tags": [
+      "rendering"
+    ],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
     "id": "1.18.2/advanced_accesstransformers",
     "version": "1.18.2",
     "label": "Access Transformers",
@@ -303,6 +448,15 @@
     ],
     "priority": "🟢",
     "sectionCount": 3
+  },
+  {
+    "id": "1.18.2/contributing",
+    "version": "1.18.2",
+    "label": "Contributing to This Documentation",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/contributing/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 1
   },
   {
     "id": "1.18.2/rendering_modelloaders",
@@ -354,6 +508,15 @@
     "sectionCount": 5
   },
   {
+    "id": "1.18.2/forgedev",
+    "version": "1.18.2",
+    "label": "Getting Started",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/forgedev/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
     "id": "1.18.2/gettingstarted",
     "version": "1.18.2",
     "label": "Getting Started with Forge",
@@ -383,6 +546,17 @@
     "sectionCount": 2
   },
   {
+    "id": "1.18.2/rendering_modelloaders_perspective",
+    "version": "1.18.2",
+    "label": "Perspective",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/rendering/modelloaders/perspective/",
+    "tags": [
+      "rendering"
+    ],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
     "id": "1.18.2/legacy_porting",
     "version": "1.18.2",
     "label": "Porting to Minecraft 1.18",
@@ -390,6 +564,15 @@
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
+  },
+  {
+    "id": "1.18.2/forgedev_prguidelines",
+    "version": "1.18.2",
+    "label": "Pull Request Guidelines",
+    "url": "https://docs.minecraftforge.net/en/1.18.x/forgedev/prguidelines/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 8
   },
   {
     "id": "1.18.2/concepts_resources",

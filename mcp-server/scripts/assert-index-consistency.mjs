@@ -63,12 +63,15 @@ const MANIFEST = path.join(DATA_DIR, "semantic-index-manifest.json");
 // ⇒ chunks 34029→34032 / embedded 25630→25632，quilt 557→560 / 437→439（+1.21.11 新页 L0/processed，无语义库变化）。
 // F-K1 补抓（2026-09-20 RELEDGER 重算）：forge 1.18.2 / 1.19.4 补齐上游 datagen 子页（8 + 9 页，
 // 33→41 / 39→48）后重建语义索引 ⇒ chunks 34032→34281 / embedded 25632→25850，forge 5856→6105 / 4429→4647。
+// 非 datagen 缺页补齐（2026-09-21 RELEDGER 重算）：forge 1.15.2–1.19.4 按上游 search_index 补 77 章
+// （含 1.18+ 的 resources/client|server/* 数据章节）后重建语义层
+// ⇒ chunks 34281→35134 / embedded 25850→26510，forge 6105→6958 / 4647→5307。
 const LEDGER_SUM = {
-  entries: 60, chunks: 34281, embedded: 25850,
+  entries: 60, chunks: 35134, embedded: 26510,
   perPlatform: {
     "bedrock": { entries: 1, chunks: 308, embedded: 303 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
-    "forge": { entries: 10, chunks: 6105, embedded: 4647 },
+    "forge": { entries: 10, chunks: 6958, embedded: 5307 },
     "liteloader": { entries: 3, chunks: 443, embedded: 363 },
     "modloader": { entries: 3, chunks: 6, embedded: 2 },
     "neoforge": { entries: 9, chunks: 18877, embedded: 14169 },

@@ -12,6 +12,44 @@
     "sectionCount": 2
   },
   {
+    "id": "1.19.4/resources_server_advancements",
+    "version": "1.19.4",
+    "label": "Advancements",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/server/advancements/",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.19.4/resources_client_models_tinting",
+    "version": "1.19.4",
+    "label": "Coloring Textures",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/client/models/tinting/",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.19.4/resources_server_conditional",
+    "version": "1.19.4",
+    "label": "Conditionally-Loaded Data",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/server/conditional/",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.19.4/resources_server_recipes_custom",
+    "version": "1.19.4",
+    "label": "Custom Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/server/recipes/custom/",
+    "tags": [
+      "recipe"
+    ],
+    "priority": "⭐",
+    "sectionCount": 6
+  },
+  {
     "id": "1.19.4/datagen",
     "version": "1.19.4",
     "label": "Data Generators",
@@ -80,6 +118,37 @@
     "sectionCount": 0
   },
   {
+    "id": "1.19.4/resources_server_glm",
+    "version": "1.19.4",
+    "label": "Global Loot Modifiers",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/server/glm/",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.19.4/resources_server_recipes_ingredients",
+    "version": "1.19.4",
+    "label": "Ingredients",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/server/recipes/ingredients/",
+    "tags": [
+      "recipe"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.19.4/resources_client_models_itemproperties",
+    "version": "1.19.4",
+    "label": "Item Properties",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/client/models/itemproperties/",
+    "tags": [
+      "item"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
     "id": "1.19.4/datagen_client_localization",
     "version": "1.19.4",
     "label": "Language Generation",
@@ -105,6 +174,17 @@
     "sectionCount": 2
   },
   {
+    "id": "1.19.4/resources_server_loottables",
+    "version": "1.19.4",
+    "label": "Loot Tables",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/server/loottables/",
+    "tags": [
+      "loot"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
     "id": "1.19.4/concepts_lifecycle",
     "version": "1.19.4",
     "label": "Mod Lifecycle",
@@ -128,6 +208,15 @@
     "sectionCount": 8
   },
   {
+    "id": "1.19.4/resources_client_models",
+    "version": "1.19.4",
+    "label": "Models",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/client/models/",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
     "id": "1.19.4/networking",
     "version": "1.19.4",
     "label": "Networking",
@@ -137,6 +226,17 @@
     ],
     "priority": "⭐",
     "sectionCount": 0
+  },
+  {
+    "id": "1.19.4/resources_server_recipes_incode",
+    "version": "1.19.4",
+    "label": "Non-Datapack Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/server/recipes/incode/",
+    "tags": [
+      "recipe"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
   },
   {
     "id": "1.19.4/datagen_server_recipes",
@@ -150,6 +250,17 @@
     ],
     "priority": "⭐",
     "sectionCount": 4
+  },
+  {
+    "id": "1.19.4/resources_server_recipes",
+    "version": "1.19.4",
+    "label": "Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/server/recipes/",
+    "tags": [
+      "recipe"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
   },
   {
     "id": "1.19.4/concepts_registries",
@@ -219,6 +330,17 @@
     "sectionCount": 2
   },
   {
+    "id": "1.19.4/resources_server_tags",
+    "version": "1.19.4",
+    "label": "Tags",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/server/tags/",
+    "tags": [
+      "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
     "id": "1.19.4/datastorage_capabilities",
     "version": "1.19.4",
     "label": "The Capability System",
@@ -228,6 +350,18 @@
     ],
     "priority": "⭐",
     "sectionCount": 9
+  },
+  {
+    "id": "1.19.4/rendering_modelloaders_itemoverrides",
+    "version": "1.19.4",
+    "label": "`ItemOverrides",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/rendering/modelloaders/itemoverrides/",
+    "tags": [
+      "item",
+      "rendering"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1
   },
   {
     "id": "1.19.4/blocks_states",
@@ -296,6 +430,17 @@
     "sectionCount": 3
   },
   {
+    "id": "1.19.4/rendering_modelloaders_bakedmodel",
+    "version": "1.19.4",
+    "label": "`BakedModel",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/rendering/modelloaders/bakedmodel/",
+    "tags": [
+      "rendering"
+    ],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
     "id": "1.19.4/advanced_accesstransformers",
     "version": "1.19.4",
     "label": "Access Transformers",
@@ -327,6 +472,15 @@
     "sectionCount": 3
   },
   {
+    "id": "1.19.4/contributing",
+    "version": "1.19.4",
+    "label": "Contributing to This Documentation",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/contributing/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 1
+  },
+  {
     "id": "1.19.4/rendering_modelloaders",
     "version": "1.19.4",
     "label": "Custom Model Loaders",
@@ -356,6 +510,17 @@
     "sectionCount": 0
   },
   {
+    "id": "1.19.4/rendering_modelextensions_facedata",
+    "version": "1.19.4",
+    "label": "Face Data",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/rendering/modelextensions/facedata/",
+    "tags": [
+      "rendering"
+    ],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
     "id": "1.19.4/misc_updatechecker",
     "version": "1.19.4",
     "label": "Forge Update Checker",
@@ -374,6 +539,15 @@
     ],
     "priority": "🟢",
     "sectionCount": 5
+  },
+  {
+    "id": "1.19.4/forgedev",
+    "version": "1.19.4",
+    "label": "Getting Started",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/forgedev/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
   },
   {
     "id": "1.19.4/gettingstarted",
@@ -434,6 +608,17 @@
     "sectionCount": 2
   },
   {
+    "id": "1.19.4/rendering_modelextensions_visibility",
+    "version": "1.19.4",
+    "label": "Part Visibility",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/rendering/modelextensions/visibility/",
+    "tags": [
+      "rendering"
+    ],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
     "id": "1.19.4/gameeffects_particles",
     "version": "1.19.4",
     "label": "Particles",
@@ -454,11 +639,42 @@
     "sectionCount": 0
   },
   {
+    "id": "1.19.4/forgedev_prguidelines",
+    "version": "1.19.4",
+    "label": "Pull Request Guidelines",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/forgedev/prguidelines/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 8
+  },
+  {
+    "id": "1.19.4/rendering_modelextensions_rendertypes",
+    "version": "1.19.4",
+    "label": "Render Types",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/rendering/modelextensions/rendertypes/",
+    "tags": [
+      "rendering"
+    ],
+    "priority": "🟢",
+    "sectionCount": 2
+  },
+  {
     "id": "1.19.4/concepts_resources",
     "version": "1.19.4",
     "label": "Resources",
     "url": "https://docs.readthedocs.net/en/1.19.x/concepts/resources/",
     "tags": [],
+    "priority": "🟢",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.19.4/rendering_modelextensions_transforms",
+    "version": "1.19.4",
+    "label": "Root Transforms",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/rendering/modelextensions/transforms/",
+    "tags": [
+      "rendering"
+    ],
     "priority": "🟢",
     "sectionCount": 1
   },
@@ -500,6 +716,17 @@
     "url": "https://docs.readthedocs.net/en/1.19.x/gettingstarted/structuring/",
     "tags": [
       "meta"
+    ],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.19.4/rendering_modelloaders_transform",
+    "version": "1.19.4",
+    "label": "Transform",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/rendering/modelloaders/transform/",
+    "tags": [
+      "rendering"
     ],
     "priority": "🟢",
     "sectionCount": 3

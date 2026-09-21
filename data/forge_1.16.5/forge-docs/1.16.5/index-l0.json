@@ -112,6 +112,17 @@
     "sectionCount": 9
   },
   {
+    "id": "1.16.5/models_advanced_itemoverridelist",
+    "version": "1.16.5",
+    "label": "`ItemOverrideList",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/models/advanced/itemoverridelist/",
+    "tags": [
+      "item"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1
+  },
+  {
     "id": "1.16.5/blocks_interaction",
     "version": "1.16.5",
     "label": "Block Interaction",
@@ -155,6 +166,17 @@
     ],
     "priority": "🟡",
     "sectionCount": 4
+  },
+  {
+    "id": "1.16.5/models_blockstates_introduction",
+    "version": "1.16.5",
+    "label": "Introduction to Blockstate JSONs",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/models/blockstates/introduction/",
+    "tags": [
+      "block"
+    ],
+    "priority": "🟡",
+    "sectionCount": 0
   },
   {
     "id": "1.16.5/items_items",
@@ -210,6 +232,15 @@
     "sectionCount": 2
   },
   {
+    "id": "1.16.5/models_advanced_ibakedmodel",
+    "version": "1.16.5",
+    "label": "`IBakedModel",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/models/advanced/ibakedmodel/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
     "id": "1.16.5/advanced_accesstransformers",
     "version": "1.16.5",
     "label": "Access Transformers",
@@ -219,6 +250,24 @@
     ],
     "priority": "🟢",
     "sectionCount": 5
+  },
+  {
+    "id": "1.16.5/animation_asm",
+    "version": "1.16.5",
+    "label": "Animation State Machine Files",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/animation/asm/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.16.5/animation_armature",
+    "version": "1.16.5",
+    "label": "Armature Files",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/animation/armature/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
   },
   {
     "id": "1.16.5/models_color",
@@ -266,6 +315,15 @@
     "sectionCount": 2
   },
   {
+    "id": "1.16.5/forgedev",
+    "version": "1.16.5",
+    "label": "Getting Started",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/forgedev/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
     "id": "1.16.5/gettingstarted",
     "version": "1.16.5",
     "label": "Getting Started with Forge",
@@ -293,6 +351,15 @@
     "sectionCount": 0
   },
   {
+    "id": "1.16.5/animation_intro",
+    "version": "1.16.5",
+    "label": "Intro to the Animation API",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/animation/intro/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 1
+  },
+  {
     "id": "1.16.5/models_overrides",
     "version": "1.16.5",
     "label": "Item Property Overrides",
@@ -311,6 +378,17 @@
     ],
     "priority": "🟢",
     "sectionCount": 1
+  },
+  {
+    "id": "1.16.5/conventions_loadstages",
+    "version": "1.16.5",
+    "label": "Loading Stages",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/conventions/loadstages/",
+    "tags": [
+      "tag"
+    ],
+    "priority": "🟢",
+    "sectionCount": 4
   },
   {
     "id": "1.16.5/conventions_locations",
@@ -362,6 +440,15 @@
     "sectionCount": 2
   },
   {
+    "id": "1.16.5/models_advanced_perspective",
+    "version": "1.16.5",
+    "label": "Perspective",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/models/advanced/perspective/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
     "id": "1.16.5/legacy_porting",
     "version": "1.16.5",
     "label": "Porting to Minecraft 1.16",
@@ -369,6 +456,15 @@
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
+  },
+  {
+    "id": "1.16.5/forgedev_prguidelines",
+    "version": "1.16.5",
+    "label": "Pull Request Guidelines",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/forgedev/prguidelines/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 8
   },
   {
     "id": "1.16.5/concepts_resources",
@@ -400,6 +496,24 @@
     ],
     "priority": "🟢",
     "sectionCount": 6
+  },
+  {
+    "id": "1.16.5/styleguide",
+    "version": "1.16.5",
+    "label": "Style Guide",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/styleguide/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.16.5/animation_implementing",
+    "version": "1.16.5",
+    "label": "Using the API",
+    "url": "https://docs.minecraftforge.net/en/1.16.x/animation/implementing/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
   },
   {
     "id": "1.16.5/conventions_versioning",

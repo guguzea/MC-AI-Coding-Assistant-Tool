@@ -37,6 +37,101 @@
     ]
   },
   {
+    "id": "1.17.1/animation_armature",
+    "version": "1.17.1",
+    "label": "Armature Files",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/animation/armature/",
+    "tags": [],
+    "firstParagraph": "An example armature file, taken from the forge debug mod `` { \"joints\": { \"stick\": {\"2\": [1.0]}, \"cube\": {\"3\": [1.",
+    "sections": [
+      {
+        "title": "File Structure",
+        "level": 2,
+        "summary": "An example armature file, taken from the forge debug mod `` { \"joints\": { \"stick\": {\"2\": [1.0]}, \"cube\": {\"3\": [1."
+      },
+      {
+        "title": "Joints",
+        "level": 2,
+        "summary": "Each joint defines an object that animates together as a single unit in the animation. With Vanilla JSON models, this means that multiple elements can belong to the same joint."
+      },
+      {
+        "title": "Clips",
+        "level": 2,
+        "summary": "Clips are essentially instructions on how to use a value to animate some collection of joints. They also include events to fire at certain points."
+      }
+    ]
+  },
+  {
+    "id": "1.17.1/animation_asm",
+    "version": "1.17.1",
+    "label": "Animation State Machine Files",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/animation/asm/",
+    "tags": [],
+    "firstParagraph": "The ASM contains parameters, clips, states, and transitions.",
+    "sections": [
+      {
+        "title": "Concepts",
+        "level": 2,
+        "summary": "The ASM contains parameters, clips, states, and transitions. The Animation State Machine can be in many different states. You define which states there are in the states section."
+      },
+      {
+        "title": "Code API",
+        "level": 2,
+        "summary": "> Warning: Warning The ASM code API can only be used client side. When storing ASMs in code, use the side-agnostic IAnimationStateMachine interface. ASMs can be loaded by calling ModelLoaderRegistry."
+      },
+      {
+        "title": "File Format",
+        "level": 2,
+        "summary": "The ASMs are stored in json files. The location does not matter, but they are usually placed in an asms folder."
+      },
+      {
+        "title": "Transitions",
+        "level": 2,
+        "summary": "The transitions section defines which states can go to what other states. A state can go to 0, 1, or many other states. To define a state as going to no other states, omit it from the section."
+      }
+    ]
+  },
+  {
+    "id": "1.17.1/animation_implementing",
+    "version": "1.17.1",
+    "label": "Using the API",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/animation/implementing/",
+    "tags": [],
+    "firstParagraph": "Animations for blocks are done with the TileEntityRendererAnimation, which is a TileEntityRenderer. Because of this, having a TileEntity for your block is necessary.",
+    "sections": [
+      {
+        "title": "Blocks",
+        "level": 2,
+        "summary": "Animations for blocks are done with the TileEntityRendererAnimation, which is a TileEntityRenderer. Because of this, having a TileEntity for your block is necessary."
+      },
+      {
+        "title": "Items",
+        "level": 2,
+        "summary": "Animations for items are done entirely using the capability system. Your item must provide the ANIMATION_CAPABILITY through an ICapabilityProvider."
+      },
+      {
+        "title": "Entities",
+        "level": 2,
+        "summary": "In order to animate an entity with the animation API, your entity&rsquo;s renderer must take an AnimationModelBase as its model."
+      }
+    ]
+  },
+  {
+    "id": "1.17.1/animation_intro",
+    "version": "1.17.1",
+    "label": "Intro to the Animation API",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/animation/intro/",
+    "tags": [],
+    "firstParagraph": "ASM Files are normally stored in the asms/block for blocks or asms/item for items and so on. You specify where to load them from, so their location is really up to you.",
+    "sections": [
+      {
+        "title": "Filesystem Structure Conventions",
+        "level": 2,
+        "summary": "ASM Files are normally stored in the asms/block for blocks or asms/item for items and so on. You specify where to load them from, so their location is really up to you."
+      }
+    ]
+  },
+  {
     "id": "1.17.1/blockentities_ber",
     "version": "1.17.1",
     "label": "BlockEntityRenderer",
@@ -364,6 +459,38 @@
     ]
   },
   {
+    "id": "1.17.1/conventions_loadstages",
+    "version": "1.17.1",
+    "label": "Loading Stages",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/conventions/loadstages/",
+    "tags": [
+      "tag"
+    ],
+    "firstParagraph": "FMLCommonSetupEvent is the first to fire early in the Minecraft starting process. Registry events are fired before this event, so you can expect all registry objects to be valid by the time this runs.",
+    "sections": [
+      {
+        "title": "Setup",
+        "level": 2,
+        "summary": "FMLCommonSetupEvent is the first to fire early in the Minecraft starting process. Registry events are fired before this event, so you can expect all registry objects to be valid by the time this runs."
+      },
+      {
+        "title": "Sided Setup",
+        "level": 2,
+        "summary": "FMLClientSetupEvent and FMLDedicatedServerSetupEvent are fired after common setup, and are where physical, side-specific initialization should occur."
+      },
+      {
+        "title": "IMC Enqueue",
+        "level": 2,
+        "summary": "Here, mods should send messages to all other mods they are interested in integrating with, using InterModComms#sendTo."
+      },
+      {
+        "title": "IMC Process",
+        "level": 2,
+        "summary": "Here, mods should process all the messages they have received from other mods and set up integrations appropriately."
+      }
+    ]
+  },
+  {
     "id": "1.17.1/conventions_locations",
     "version": "1.17.1",
     "label": "Locations",
@@ -619,6 +746,81 @@
     ]
   },
   {
+    "id": "1.17.1/forgedev",
+    "version": "1.17.1",
+    "label": "Getting Started",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/forgedev/",
+    "tags": [],
+    "firstParagraph": "Like most major open source projects you will find, Forge is hosted on GitHub. If you have contributed to another project before, you will know this process already and can skip right ahead to the ...",
+    "sections": [
+      {
+        "title": "Forking and Cloning the Repository",
+        "level": 2,
+        "summary": "Like most major open source projects you will find, Forge is hosted on GitHub. If you have contributed to another project before, you will know this process already and can skip right ahead to the ..."
+      },
+      {
+        "title": "Setting Up the Environment",
+        "level": 2,
+        "summary": "Depending on your favorite IDE, there is a different set of recommended steps you have to follow to successfully set up a development environment."
+      },
+      {
+        "title": "Making Changes and Pull Requests",
+        "level": 2,
+        "summary": "Once you have set up your development environment, it is time to make some changes to Forge&rsquo;s codebase. There are, however, some pitfalls you have to avoid when editing the project&rsquo;s code."
+      }
+    ]
+  },
+  {
+    "id": "1.17.1/forgedev_prguidelines",
+    "version": "1.17.1",
+    "label": "Pull Request Guidelines",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/forgedev/prguidelines/",
+    "tags": [],
+    "firstParagraph": "At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft&rsquo;s code directly (like coremods do now), but they ran into conflicts with each other when t...",
+    "sections": [
+      {
+        "title": "What Exactly is Forge?",
+        "level": 2,
+        "summary": "At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft&rsquo;s code directly (like coremods do now), but they ran into conflicts with each other when t..."
+      },
+      {
+        "title": "Patches",
+        "level": 2,
+        "summary": "Patches are applied as direct changes to Minecraft&rsquo;s source code, and aim to be as minimal as possible."
+      },
+      {
+        "title": "Forge Code",
+        "level": 2,
+        "summary": "Aside from the patches, Forge code is just normal Java code. It can be event code, compatibility features, or anything else that is not directly editing Minecraft code."
+      },
+      {
+        "title": "Explain Yourself",
+        "level": 2,
+        "summary": "All Pull Requests need to answer the question: why is this necessary? Any code added to Forge needs to be maintained, and more code means more potential for bugs, so solid justification is needed f..."
+      },
+      {
+        "title": "Show that it Works",
+        "level": 2,
+        "summary": "The code you submit to Forge should work perfectly, and it is up to you to convince the reviewers that it does."
+      },
+      {
+        "title": "Breaking Changes in Forge",
+        "level": 2,
+        "summary": "Forge cannot make changes that break the mods that depend on it. This means that Pull Requests have to ensure that they do not break binary compatibility with previous Forge versions."
+      },
+      {
+        "title": "Be Patient, Civil, and Empathetic",
+        "level": 2,
+        "summary": "When submitting Pull Requests, you will often have to survive code review and make several changes before it is the best Pull Request possible."
+      },
+      {
+        "title": "Review",
+        "level": 2,
+        "summary": "If you do your best to understand the slow and perfectionistic nature of the Pull Request process, we will do our best to understand your point of view as well."
+      }
+    ]
+  },
+  {
     "id": "1.17.1/gettingstarted",
     "version": "1.17.1",
     "label": "Getting Started with Forge",
@@ -804,6 +1006,68 @@
     "sections": []
   },
   {
+    "id": "1.17.1/models_advanced_bakedmodel",
+    "version": "1.17.1",
+    "label": "`BakedModel",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/models/advanced/bakedmodel/",
+    "tags": [],
+    "firstParagraph": "",
+    "sections": []
+  },
+  {
+    "id": "1.17.1/models_advanced_itemoverrides",
+    "version": "1.17.1",
+    "label": "`ItemOverrides",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/models/advanced/itemoverrides/",
+    "tags": [
+      "item"
+    ],
+    "firstParagraph": "This class represents a vanilla item override, which holds several predicates for the properties on an item and a model to use in case those predicates are satisfied.",
+    "sections": [
+      {
+        "title": "`ItemOverride",
+        "level": 2,
+        "summary": "This class represents a vanilla item override, which holds several predicates for the properties on an item and a model to use in case those predicates are satisfied."
+      }
+    ]
+  },
+  {
+    "id": "1.17.1/models_advanced_perspective",
+    "version": "1.17.1",
+    "label": "Perspective",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/models/advanced/perspective/",
+    "tags": [],
+    "firstParagraph": "THIRDPERSONLEFTHAND/THIRDPERSONRIGHTHAND/FIRSTPERSONLEFTHAND/FIRSTPERSONRIGHTHAND - The first person values represent when the player is holding the item in their own hand.",
+    "sections": [
+      {
+        "title": "`TransformType",
+        "level": 2,
+        "summary": "<code>NONE` - Unused. THIRDPERSONLEFTHAND/THIRDPERSONRIGHTHAND/FIRSTPERSONLEFTHAND/FIRSTPERSONRIGHTHAND - The first person values represent when the player is holding the item in their own hand."
+      },
+      {
+        "title": "The Vanilla Way",
+        "level": 2,
+        "summary": "The vanilla way of handling perspective is through BakedModel#getTransforms. This method returns an ItemTransforms, which is a simple object that contains various ItemTransforms as public final fie..."
+      },
+      {
+        "title": "The Forge Way",
+        "level": 2,
+        "summary": "The Forge way of handling transforms is #handlePerspective, a method patched into BakedModel. It supersedes the ##getTransforms method."
+      }
+    ]
+  },
+  {
+    "id": "1.17.1/models_blockstates_introduction",
+    "version": "1.17.1",
+    "label": "Introduction to Blockstate JSONs",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/models/blockstates/introduction/",
+    "tags": [
+      "block"
+    ],
+    "firstParagraph": "",
+    "sections": []
+  },
+  {
     "id": "1.17.1/models_color",
     "version": "1.17.1",
     "label": "Coloring Textures",
@@ -950,6 +1214,66 @@
     ]
   },
   {
+    "id": "1.17.1/primer_1_17",
+    "version": "1.17.1",
+    "label": "Minecraft 1.16.5 -> 1.17 Modding Migration Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.17/",
+    "tags": [],
+    "firstParagraph": "The /debug command now does nothing, and can be executed through F3 + L for at most 10 seconds",
+    "sections": [
+      {
+        "title": "Debug Profiler",
+        "level": 2,
+        "summary": "The /debug command now does nothing, and can be executed through F3 + L for at most 10 seconds It now provides a lot more detail besides tick profiling including system data, jvm data, game setting..."
+      },
+      {
+        "title": "Tile Entities",
+        "level": 2,
+        "summary": "The TileEntity is now named BlockEntity with Forge moving to using Mojang mapping names. TileEntityProvider is now called EntityBlock."
+      },
+      {
+        "title": "TileEntityRenderer",
+        "level": 2,
+        "summary": "In the Forge environment, you need to Subscribe to the EntityRenderersEvent event. - Call EntityRenderersEvent$RegisterRenderers#registerBlockEntityRenderer to register a BlockEntityRenderer - You ..."
+      },
+      {
+        "title": "Rendering",
+        "level": 2,
+        "summary": "Minecraft has moved to OpenGL 3.2 Core, which brings with it shader-based rendering. Any bind calls in RenderSystem should now move to using RenderSystem#setShaderTexture(0, resourceLocation) instead."
+      },
+      {
+        "title": "World Generation",
+        "level": 2,
+        "summary": "Most of the core foundations from 1.16 have remained mostly the same. The main changes relate to the technical foundations in preparations for 1.18 Caves and Cliffs generation."
+      },
+      {
+        "title": "Game Events",
+        "level": 2,
+        "summary": "In preparation for the 1.18 SculkSensor block which emits redstone triggered by nearby sound events, Mojang has now added their own “Event\" system."
+      },
+      {
+        "title": "Game Test Framework",
+        "level": 2,
+        "summary": "Mojang has recently exposed their game test framework, a set of tools which the Mojang developers use to simulate and test game mechanics. - Example usage: https://www.youtube.com/watch?v=vXaWOJTCYNg"
+      },
+      {
+        "title": "Forge API",
+        "level": 2,
+        "summary": "In 1.17 Forge fully migrated its codebase to Mojang’s Official Obfuscation Mappings. Previously, only methods and fields were migrated."
+      },
+      {
+        "title": "Potential Changes in Forge",
+        "level": 2,
+        "summary": "Fluids are getting a complete overhaul in 1.17. Previously, Fluids were limited to water-like behaviour only due to Mojang hardcoding their water references in many parts of the codebase."
+      },
+      {
+        "title": "References and Contributors",
+        "level": 2,
+        "summary": "- Gigaherz - various guides and documentation for the 1.17 systems - SizableShrimp - information about 1."
+      }
+    ]
+  },
+  {
     "id": "1.17.1/rendering_bewlr",
     "version": "1.17.1",
     "label": "BlockEntityWithoutLevelRenderer",
@@ -963,6 +1287,26 @@
         "title": "Using BlockEntityWithoutLevelRenderer",
         "level": 2,
         "summary": "BlockEntityWithoutLevelRenderer allows you to render your item using public void renderByItem(ItemStack itemStack, TransformType transformType, PoseStack poseStack, MultiBufferSource bufferSource, ..."
+      }
+    ]
+  },
+  {
+    "id": "1.17.1/styleguide",
+    "version": "1.17.1",
+    "label": "Style Guide",
+    "url": "https://docs.minecraftforge.net/en/1.17.x/styleguide/",
+    "tags": [],
+    "firstParagraph": "This documentation is meant to be explanatory. Please explain how to do things, and break it down into reasonable chunks. We have a wiki elsewhere that can capture more comprehensive code examples.",
+    "sections": [
+      {
+        "title": "Guide For Contributing to This Documentation",
+        "level": 2,
+        "summary": "This documentation is meant to be explanatory. Please explain how to do things, and break it down into reasonable chunks. We have a wiki elsewhere that can capture more comprehensive code examples."
+      },
+      {
+        "title": "Formatting",
+        "level": 2,
+        "summary": "> Important: Important Please use two spaces to indent, not tabs. Titles should be capitalized in the standard titling format. For example,"
       }
     ]
   },
@@ -1027,66 +1371,6 @@
         "title": "Using Tags in Recipes and Advancements",
         "level": 2,
         "summary": "Tags are directly supported by Vanilla. See the respective Vanilla wiki pages for recipes and advancements for usage details."
-      }
-    ]
-  },
-  {
-    "id": "1.17.1/primer_1_17",
-    "version": "1.17.1",
-    "label": "Minecraft 1.16.5 -> 1.17 Modding Migration Primer",
-    "url": "https://docs.neoforged.net/primer/docs/1.17/",
-    "tags": [],
-    "firstParagraph": "The /debug command now does nothing, and can be executed through F3 + L for at most 10 seconds",
-    "sections": [
-      {
-        "title": "Debug Profiler",
-        "level": 2,
-        "summary": "The /debug command now does nothing, and can be executed through F3 + L for at most 10 seconds It now provides a lot more detail besides tick profiling including system data, jvm data, game setting..."
-      },
-      {
-        "title": "Tile Entities",
-        "level": 2,
-        "summary": "The TileEntity is now named BlockEntity with Forge moving to using Mojang mapping names. TileEntityProvider is now called EntityBlock."
-      },
-      {
-        "title": "TileEntityRenderer",
-        "level": 2,
-        "summary": "In the Forge environment, you need to Subscribe to the EntityRenderersEvent event. - Call EntityRenderersEvent$RegisterRenderers#registerBlockEntityRenderer to register a BlockEntityRenderer - You ..."
-      },
-      {
-        "title": "Rendering",
-        "level": 2,
-        "summary": "Minecraft has moved to OpenGL 3.2 Core, which brings with it shader-based rendering. Any bind calls in RenderSystem should now move to using RenderSystem#setShaderTexture(0, resourceLocation) instead."
-      },
-      {
-        "title": "World Generation",
-        "level": 2,
-        "summary": "Most of the core foundations from 1.16 have remained mostly the same. The main changes relate to the technical foundations in preparations for 1.18 Caves and Cliffs generation."
-      },
-      {
-        "title": "Game Events",
-        "level": 2,
-        "summary": "In preparation for the 1.18 SculkSensor block which emits redstone triggered by nearby sound events, Mojang has now added their own “Event\" system."
-      },
-      {
-        "title": "Game Test Framework",
-        "level": 2,
-        "summary": "Mojang has recently exposed their game test framework, a set of tools which the Mojang developers use to simulate and test game mechanics. - Example usage: https://www.youtube.com/watch?v=vXaWOJTCYNg"
-      },
-      {
-        "title": "Forge API",
-        "level": 2,
-        "summary": "In 1.17 Forge fully migrated its codebase to Mojang’s Official Obfuscation Mappings. Previously, only methods and fields were migrated."
-      },
-      {
-        "title": "Potential Changes in Forge",
-        "level": 2,
-        "summary": "Fluids are getting a complete overhaul in 1.17. Previously, Fluids were limited to water-like behaviour only due to Mojang hardcoding their water references in many parts of the codebase."
-      },
-      {
-        "title": "References and Contributors",
-        "level": 2,
-        "summary": "- Gigaherz - various guides and documentation for the 1.17 systems - SizableShrimp - information about 1."
       }
     ]
   }
