@@ -82,7 +82,7 @@ IF inventory with multiple slots
 // 1. Define the Menu class
 public class MyMenu extends AbstractContainerMenu {
     public MyMenu(int windowId, Inventory inv, FriendlyByteBuf extraData) {
-        super(MY_MENU_TYPE.get(), windowId);
+        super(MyMenuTypes.MY_MENU.get(), windowId);
         // slot layout...
     }
 

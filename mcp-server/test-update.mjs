@@ -1058,6 +1058,41 @@ async function testHostAllowlistIsExactAndSingleSource() {
   assert.throws(() => httpMod.assertAllowedGithubUrl("http://github.com/a.zip"), /非 HTTPS/, "http 侧协议门必须先于 host 门");
 }
 
+/**
+ * W0-6（2026-09-21）：update-apply 锁的两条形状判据 ——
+ *   ① **原子占位**：`tryAcquireUpdateApplyLock()` 必须靠 mkdir 的原子性占位；占位后再次调用必须返回 null
+ *      （旧实现 `mkdirSync(..., { recursive: true })` 对已存在目录不抛错 ⇒ catch 成死代码、两个并发进程都能过闸）。
+ *   ② **只删自己的锁**：release 时若 owner.json 的 pid 不是本进程（锁已被接管），**不得**删除锁目录。
+ */
+async function testApplyLockAtomicAndOwner() {
+  const prevCache = process.env.MC_SKILL_CACHE;
+  const lockRoot = mkdtempSync(join(tmpdir(), "mc-w06-lock-"));
+  process.env.MC_SKILL_CACHE = lockRoot;
+  try {
+    const mod = await import(pathToFileURL(join(DIST, "update/apply-lock.js")).href);
+    const lockDir = dirLock.dirLockPathOf(lockRoot, "update-apply");
+    // ① 原子占位：首次拿到，第二次（目录已在）拿不到
+    const rel1 = mod.tryAcquireUpdateApplyLock();
+    assert.ok(typeof rel1 === "function", "W0-6①：首次应拿到锁（原子占位成功）");
+    assert.ok(existsSync(lockDir), "W0-6①：占位后锁目录必须存在");
+    assert.equal(mod.tryAcquireUpdateApplyLock(), null, "W0-6①：已被自己占位时必须返回 null（catch 不得是死代码）");
+    // ② owner 非本进程 ⇒ release 不得删除（不得删别人的活锁）
+    writeFileSync(join(lockDir, "owner.json"), JSON.stringify({ pid: process.pid + 1, at: Date.now() }));
+    rel1();
+    assert.ok(existsSync(lockDir), "W0-6②：owner 非本进程时 release 不得删除锁目录");
+    // ③ 正对照：owner 为自己时才真正释放
+    rmSync(lockDir, { recursive: true, force: true });
+    const rel2 = mod.tryAcquireUpdateApplyLock();
+    assert.ok(typeof rel2 === "function", "W0-6③：清掉后应能再次拿到锁");
+    rel2();
+    assert.equal(existsSync(lockDir), false, "W0-6③：owner 为自己时 release 必须真正释放");
+  } finally {
+    if (prevCache === undefined) delete process.env.MC_SKILL_CACHE;
+    else process.env.MC_SKILL_CACHE = prevCache;
+    rmSync(lockRoot, { recursive: true, force: true });
+  }
+}
+
 async function main() {
   testSemver();
   testZipLayout();
@@ -1080,6 +1115,7 @@ async function main() {
   await testDataDryRunOverwriteList();
   await testDataApplyWritesAndChecksumFail();
   await testDataApplyLocalAdditionsGate(); // W0-6：本地新增披露 + 显式确认
+  await testApplyLockAtomicAndOwner(); // W0-6①②：原子占位（catch 不得是死代码）+ 只删自己的锁
   await testChecksumMissingAsset();
   await testDataZipAndGithubDigest();
   await testTlsCertErrorDetect();

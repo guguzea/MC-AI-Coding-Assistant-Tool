@@ -406,6 +406,28 @@ export function convertMapping(query: MappingQuery): MappingResult {
   // 一手实测各档 mappingEra：forge_1.7.10=forge-srg / 1.12.2=forge-srg / 1.13.2=tsrg /
   // 1.15.2=mcp-csv（classes=0 methods=0）；fabric_1.14.4=yarn-tiny。⇒ 这些 forge 档的
   // named 列是 MCP/SRG 名，回 row.name_named 当 Yarn 名属「恒等式伪转换」。
+  // W4-5（2026-09-21，from 侧对称）：`from="yarn"` 只在该档**确实**是 yarn-tiny 时有意义 ——
+  // 非 yarn-tiny 档（1.12.2=forge-srg / 1.13.2=tsrg / 1.15.2=mcp-csv …）没有 Yarn 名列，
+  // 把用户的 Yarn 输入去比对 SRG/MCP 名会误命中并回 confidence:high。与 to 侧同判据拒答。
+  if (from === "yarn" && era !== "yarn-tiny") {
+    return fail(query, {
+      mappingType: kind,
+      mappingEra: era,
+      resultKind: "YARN_DATA_UNAVAILABLE",
+      notes: [
+        `version=${version} 的映射库 mappingEra=${era ?? "(未知)"}，不是 yarn-tiny（Yarn 名）库；没有 Yarn 名列可查，拒绝把 ${from} 输入当有效来源。`,
+        "要按 Yarn 名查询请用 fabric 1.14.4–1.21.x（yarn-tiny 档）；可读名请用 query_api / get_method_params。",
+      ],
+      action: actionable(
+        ActionCodes.DATA_UNAVAILABLE,
+        `无 Yarn 数据（version=${version}）`,
+        ["改用 query_api / get_method_params 取可读名", "或改用 fabric 档（yarn-tiny）按 Yarn 名查询"],
+        ["query_api", "convert_mapping"],
+      ),
+      schemaVersion,
+    });
+  }
+
   if (to === "yarn" && era !== "yarn-tiny") {
     return fail(query, {
       mappingType: kind,

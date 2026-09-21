@@ -8,8 +8,8 @@
  *
  * busy（别的进程正持有）时抛 DirLockBusyError，由调用方翻成 UPDATE_BUSY 信封。
  */
-import { existsSync, mkdirSync, rmSync, writeFileSync } from "fs";
-import { join } from "path";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
+import { dirname, join } from "path";
 import { acquireDirLock, dirLockPathOf } from "../utils/dir-lock.js";
 import { resolveCacheRoot } from "../utils/path.js";
 
@@ -61,8 +61,19 @@ export async function acquireUpdateApplyLock(timeoutMs = 600_000): Promise<() =>
 export function tryAcquireUpdateApplyLock(): (() => void) | null {
   const lockDir = dirLockPathOf(resolveCacheRoot(), LOCK_NAME);
   if (existsSync(lockDir)) return null;
+  // W0-6（2026-09-21）分两步，别把两件事混在一次 mkdir 里：
+  //   ① **父目录**必须先建好（这里必须 `recursive: true`；否则 cache 根下没有 locks/ 时，
+  //      下一步的非递归 mkdir 会因 **ENOENT** 失败 ⇒ 首次永远拿不到锁 —— 本波测试钉当场抓到过）；
+  //   ② **锁目录本身**用**非递归** mkdir：已存在时抛 EEXIST ⇒ 转成「抢不到、放弃」，
+  //      这才是「原子占位」的语义（POSIX mkdir 原子性）。
+  //      旧实现 `mkdirSync(lockDir, { recursive: true })` 对已存在目录静默成功 ⇒ catch 成死代码、TOCTOU 未消。
   try {
-    mkdirSync(lockDir, { recursive: true });
+    mkdirSync(dirname(lockDir), { recursive: true });
+  } catch {
+    /* 父目录都建不出来 ⇒ 下一步必然失败，走同一条「抢不到」路径 */
+  }
+  try {
+    mkdirSync(lockDir);
   } catch {
     return null; // 与并发取锁的极小窗口竞争：抢不到就放弃（不等待）
   }
@@ -73,7 +84,18 @@ export function tryAcquireUpdateApplyLock(): (() => void) | null {
   }
   return () => {
     try {
-      rmSync(lockDir, { recursive: true, force: true });
+      // W0-6（2026-09-21）：**只删自己的锁**。旧实现无条件 rmSync：若本进程的锁已被主路径按
+      // 陈旧接管、且新持有者已重新占位，无条件删除会删掉**别人的活锁**（TOCTOU 反向）。
+      // 读回 owner.json 比对同进程；读不到（写失败/已被接管删除）时交给主路径陈旧抢占。
+      let owner: { pid?: number } | null = null;
+      try {
+        owner = JSON.parse(readFileSync(join(lockDir, "owner.json"), "utf8")) as { pid?: number };
+      } catch {
+        owner = null;
+      }
+      if (!owner || owner.pid === process.pid || owner.pid === undefined) {
+        rmSync(lockDir, { recursive: true, force: true });
+      }
     } catch {
       /* 释放失败 = 残锁，交给主路径陈旧抢占 */
     }

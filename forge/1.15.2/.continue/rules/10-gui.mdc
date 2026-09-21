@@ -78,7 +78,7 @@ IF inventory with multiple slots
 // 1. Define the Container class
 public class MyContainer extends Container {
     public MyContainer(int windowId, PlayerInventory inv, IInteractionObject target) {
-        super(null, windowId);
+        super(MyContainers.MY_CONTAINER.get(), windowId);
         // slot layout...
     }
 

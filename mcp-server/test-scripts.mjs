@@ -1991,6 +1991,9 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-javadoc-index-parity.mjs",
     // 2026-09-20 W5-5 裁定：sm-120x.xml 保留跟踪 + 规则保留；scripts/_oneoff 保留不删。
     "./scripts/assert-w55-hygiene-rulings.mjs",
+    // 2026-09-21 W3-2：规则树 ```java 示例的「形状」门（MY_*.get() 近似名不一致 / super(null) /
+    // new 与同文件构造重载实参不符）—— 5 档 × 7 宿主曾共 35 个位点照抄编译不过，此前无门可判。
+    "./scripts/assert-rule-java-shapes.mjs",
     // 2026-09-20 裁定③：含围栏代码的 Skill 源稿必须声明非空 mappings 键（F-I6 的长期闸）。
     "./scripts/assert-skill-mappings-key.mjs",
     // 2026-09-20 裁定（F-K1）：检索结果必须带 verbatim 逐字支撑位 —— 投毒名 judged>0/hits=0、
@@ -2023,6 +2026,8 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-javadoc-index-parity.mjs",
     // 2026-09-20 W5-5：裁定钉的自证（规则被删必须当场红）。
     "./scripts/assert-w55-hygiene-rulings.mjs",
+    // 2026-09-21 W3-2：Java 形状判据的自证（未声明标识符 / super(null) / 构造实参不符必须当场红）。
+    "./scripts/assert-rule-java-shapes.mjs",
     // 2026-09-20 裁定③：mappings 键判据的自证（含围栏不声明 / alt 无披露块必须红）。
     "./scripts/assert-skill-mappings-key.mjs",
     // 2026-09-20 F-K1：verbatim 判据的自证（极性反转 / 子串放过 / 散文也判必须红）。

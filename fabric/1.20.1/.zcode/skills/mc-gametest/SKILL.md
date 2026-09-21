@@ -25,7 +25,7 @@ mappings: yarn
 - 本仓库**没有任何 1.20.1 游戏测试接法**：注解名、测试类约定、Fabric 侧 run 配置、与 `gradle test` 的关系——一律不默写。
 - 查证路径（按顺序）：
   1. `query_api`（约 1.16.5–1.20.4 覆盖范围内，1.20.1 可用）：按类名核 Vanilla 游戏测试相关类；`found:false` ≠ 不存在（索引覆盖/简名歧义）；
-  2. `search_docs` / `search_fabric_docs`（1.20.1）→ 预期 DOC_NOT_FOUND（树空）；命中其它版本即视同不可用，禁止当 1.20.1；
+  2. `search_docs` / `search_fabric_docs`（1.20.1）→ **实测不返回 DOC_NOT_FOUND**：本档 develop 树为空（`index-l0.json = []`），检索回退本档 fabric-wiki 并返回 `ok:true` + `wikiFallback:true` + `fabricDocsEmpty:true`（2026-09-21 实测 total=7）；命中的是 **wiki 正文**、不是 develop 文档 ⇒ 须读 `wikiFallback` / `fabricDocsEmpty` 字段再下结论，禁止按「文档树空」直接弃用；`get_fabric_doc_full` 取 develop 页才会 DOC_NOT_FOUND；
   3. `search_community_docs`（社区实务知识，不代表 API 规范）；
   4. 官方文档站 https://docs.fabricmc.net/develop/automatic-testing 站内版本切换——以是否真出现 1.20.1 为准；无则在引用时标注「非本版」。
 

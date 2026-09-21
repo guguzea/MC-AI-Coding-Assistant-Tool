@@ -22,6 +22,7 @@ import {
 import { resolvePlatformDataDir } from "./dist/docs-platform/store.js";
 import { NeoForgeDocStore } from "./dist/docs-platform/neoforge/store.js";
 import { assertWritablePath, ProjectPathError, isInsideReal, nativeReal } from "./dist/utils/project-sandbox.js";
+import { findCachedClientJar, resolveValidationJar } from "./dist/mixin/deep-validate.js";
 import { searchNeoForgeDocs, getNeoForgeDocSummary, getNeoForgeDocFull, getNeoForgeDocRelated } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen, parseNeo21Patch } from "./dist/datagen/index.js";
 import { generateLang, generateCapability, generateConfig, generateEntityRenderer, generateWorldgen, generateNetworkPacket, NETWORK_PACKET_PLATFORMS, generateNetworkPacketDescription } from "./dist/generators/index.js";
@@ -1323,7 +1324,13 @@ async function testDatagenAndMappingGates() {
   assert.equal(fake115.found, false, "1.15.2 yarn applyDamage must not be MCP");
   assert.equal(fake115.converted, null);
   assert.ok(
-    fake115.resultKind === "YARN_TINY_NO_MCP_LAYER" || fake115.resultKind === "csv-no-owner",
+    fake115.resultKind === "YARN_TINY_NO_MCP_LAYER" ||
+      fake115.resultKind === "csv-no-owner" ||
+      // W4-5（2026-09-21）：1.15.2 实测 getMappingEra=mcp-csv（yarn 库在 forge 侧、named 列是 SRG/MCP 名），
+      // 本档**没有 Yarn 名列** ⇒ 新增的 from=yarn 对称门在 CSV 路径之前拒答，码由 csv-no-owner
+      // 升级为 YARN_DATA_UNAVAILABLE（更准确：不是「CSV 缺 owner」，而是「本档根本没有 Yarn 名」）。
+      // 核心语义不变：found 必须为 false（Yarn 专名不得冒充 MCP）。
+      fake115.resultKind === "YARN_DATA_UNAVAILABLE",
     fake115.resultKind,
   );
   const yarnNamedCsv = convertMapping({
@@ -4647,6 +4654,44 @@ public class ExampleMod { }
 
   const cfgNoVer = generateConfig("my_mod", "neoforge");
   assert.equal(cfgNoVer.code, null);
+
+  // W2-1（2026-09-21）：时代**上界**哨兵 —— `1.99.9` 这类编造版本不得再回 ok:true + files
+  // （旧病：generate_model / generate_lang / generate_config 的 fabric 分支照单全收）。
+  const cfgEraBad = generateConfig("my_mod", "fabric", "1.99.9");
+  assert.equal(cfgEraBad.code, null, `W2-1: config 1.99.9 必须拒，实得 ${JSON.stringify(cfgEraBad).slice(0, 200)}`);
+  assert.ok(
+    (cfgEraBad.errors ?? []).some((e) => /未跟进 1\.99\.x/.test(e)),
+    `W2-1: 拒绝原因须点名未跟进代，实得 ${JSON.stringify(cfgEraBad.errors)}`,
+  );
+  const langEraBad = generateLang("my_mod", { "item.demo.x": "X" }, "1.99.9");
+  assert.equal(langEraBad.code, null, "W2-1: lang 1.99.9 必须拒");
+  assert.ok((langEraBad.errors ?? []).some((e) => /未跟进 1\.99\.x/.test(e)), JSON.stringify(langEraBad.errors));
+  const cfgEra26 = generateConfig("my_mod", "fabric", "26.1.2");
+  assert.ok(cfgEra26.code, `W2-1: 26.1.x 属于已核代，必须放行，实得 ${JSON.stringify(cfgEra26).slice(0, 160)}`);
+  const cfgEra26Bad = generateConfig("my_mod", "fabric", "26.99.9");
+  assert.equal(cfgEra26Bad.code, null, "W2-1: 26.99.9 同属编造代，必须拒");
+
+  // W4-1（2026-09-21）：缓存里**只有 mod jar**（无 vanilla 客户端 jar，如只有 mod-emi / mod-owo）时
+  // 必须返回 null ⇒ 上层报 CACHE_MISS；旧实现拿排序后的 mod jar 去做 validate_at 校验并报「类不存在」。
+  const w41Root = mkdtempSync(join(tmpdir(), "mc-w41-"));
+  const w41PrevCache = process.env.MC_SKILL_CACHE;
+  try {
+    mkdirSync(join(w41Root, "jars"), { recursive: true });
+    process.env.MC_SKILL_CACHE = w41Root;
+    writeFileSync(join(w41Root, "jars", "mod-emi-1.20.1.jar"), "");
+    assert.equal(findCachedClientJar("1.20.1"), null, "W4-1: 只有 mod jar 时必须返回 null（上层 CACHE_MISS）");
+    assert.equal(resolveValidationJar("1.20.1"), null, "W4-1: 无 vanilla jar ⇒ 不得回退 mod jar");
+    writeFileSync(join(w41Root, "jars", "minecraft-1.20.1-mojmap.jar"), "");
+    const w41Picked = findCachedClientJar("1.20.1");
+    assert.ok(
+      w41Picked && /minecraft-/.test(w41Picked.jarPath),
+      `W4-1: 有 vanilla jar 时必须优先选它，实得 ${JSON.stringify(w41Picked)}`,
+    );
+  } finally {
+    if (w41PrevCache === undefined) delete process.env.MC_SKILL_CACHE;
+    else process.env.MC_SKILL_CACHE = w41PrevCache;
+    rmSync(w41Root, { recursive: true, force: true });
+  }
 
   const rendNo = generateEntityRenderer("my_mod", "slime", "neoforge", "1.21.1");
   assert.equal(rendNo.code, null);

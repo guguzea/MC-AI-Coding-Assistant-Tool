@@ -14,6 +14,6 @@
 
 ```
 → 简单 Item/Block → Vanilla Registry.register（ModInitializer#onInitialize(ModContainer)）
-→ QSL 专属 → **先按 00-project-setup / AGENTS 给工程补 QSL 模块依赖**（本档 scaffold 依赖块没有 QSL 模块，直接写 QSL 编译不过；A-43 补）→ 再只使用 org.quiltmc.qsl.* 已核实 API；不清楚就拒绝臆造
+→ QSL 专属 → **本档不可生成**（本版本无 QSL/QFAPI 正式版构件，见本文件 :3 与 AGENTS.md 顶部横幅；已撤回旧指引（原教「先补 QSL 依赖、再用已核实 API」）——它与 :3「QSL API 非可编译、禁止生成」互斥）→ 改走 Vanilla Registry.register 或同版 Fabric API；确需 QSL 方法名须先 ingest_loader_api(自备 jar) 再 query_loader_api 逐签名复核，禁止凭记忆补
 → 禁止：把 Fabric Registry 教程改名交差
 ```

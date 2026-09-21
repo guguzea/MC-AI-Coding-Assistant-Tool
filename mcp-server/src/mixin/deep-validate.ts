@@ -118,6 +118,12 @@ export function findCachedClientJar(version: string): ResolvedValidationJar | nu
   // yarn 层 rank 0 压过 minecraft-*-mojmap.jar，导致 validate_at / deep 校验读到 mod jar。
   // 排序层级：vanilla 优先 → 映射层（yarn > mojmap > official）→ 版本整段精确。
   const isVanillaClientJar = (p: string): boolean => /^minecraft[-_.]/i.test(basename(p));
+  // W4-1（2026-09-21）：**必须存在 vanilla 客户端 jar**，否则不校验。
+  // 旧实现只把 isVanillaClientJar 当排序键：缓存里只有 mod jar（mod-emi / mod-owo / embedded-*）时，
+  // 排序退化成「mod jar 里最优先的那个」，于是拿 mod jar 去做 validate_at / deep 校验，报「类不存在」
+  // —— 真因是缓存缺 vanilla jar，应报 CACHE_MISS 而不是把脏结论当验证结果。
+  // 这里显式判：vanilla 组为空 ⇒ 返回 null ⇒ 上层走 cacheMissActionable（CACHE_MISS）。
+  if (!jars.some((j) => isVanillaClientJar(j.jarPath))) return null;
   const rank: Record<string, number> = { yarn: 0, mojmap: 1, official: 2, unknown: 3 };
   jars.sort((a, b) => {
     const vanillaDiff = Number(isVanillaClientJar(b.jarPath)) - Number(isVanillaClientJar(a.jarPath));

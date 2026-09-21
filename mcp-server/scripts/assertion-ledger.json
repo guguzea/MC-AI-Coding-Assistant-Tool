@@ -1018,23 +1018,163 @@
       "nextRound": "把 Yarn↔Mojmap 对照生成器提级为 `mcp-server/scripts/build-yarn-mojmap-pairs.mjs`（内部走既有 `ensureMojangClientMappings` 现拉到 gitignored 位置，产物写 `$MC_SKILL_CACHE`），再给 `assert-skill-mappings-key.mjs` 加第二腿：正文实名与 `mappings:` 声称值冲突 → 红；无 `client.txt` 时打印「leg2 skipped」并保持退出码。"
     },
     {
-    "id": "search-docs-verbatim-support",
-    "claim": "search_forge_docs / search_fabric_docs / search_neoforge_docs / search_docs（含 quilt 两腿）在查询为**单个标识符形态**时，每条命中必须带 `verbatim` 逐字支撑位（true=该名字在该页 processed 正文逐字出现；false=读到正文且确认没有；**不给字段=未判定**），顶层带 `verbatim_summary{term,judged,hits}`，且 judged>0 而 hits=0 时必须发警告；散文 / OR 分组 / 中文 / 纯小写词一律不判。该字段只做事后标注，不得改变命中集合、顺序或 total。",
-    "author": "2026-09-20 审计轮 F-K1 → 用户裁定「加 verbatim 逐字支撑位，注意不要更改根 AGENTS.md 的先语义搜索做法」",
-    "evidence": "F-K1 原缺陷：编造标识符 `zqxTaterNotARealName` 在 6/6 探针里返回 ok:true + 非零 total，agent 无从分辨「检索到相关页」与「该 API 存在」。加位后实测（`node mcp-server/dist/cli.js … --output-format=json`）：forge 1.20.1 投毒名 judged=10/hits=0 + 警告，`GatherDataEvent` judged=10/hits=9；fabric 1.21.11 投毒名 hits=0，Yarn 名 `RegistryKey` hits=0（该档正文是 mojmap 写的，Yarn 名逐字查无是事实，与裁定①同源），mojmap 名 `ResourceKey` hits=4；neoforge 1.20.1 forge 兼容腿 hits=5、1.20.4 自有树 hits=3；quilt 回退腿 hits=0；`register an item` 与 `datagen` 均无 verbatim_summary（不谎称查过）。独立机制复核（`temp/audit-20260918/crosscheck-verbatim.mjs`，不走工具代码直扫 processed）：5 组 case 的工具判定与直扫逐字一致，投毒词与 `cubeAll` / `ForgeFlowingFluid` @forge 1.14.4、`RegistryKey` @fabric 1.21.11 整档直扫均 0 命中 ⇒ 证实 F 不是「读错文件」，也顺带把 F-J2 的语料缺口从「推测」升级为「可复核事实」。门 `assert-verbatim-support.mjs` 四腿（纯函数真值表 / CLI 活性 / 反 laundering 直扫 / 检索行为不变）全绿，`--selftest` 10 组投毒全红自证；另把 `assert-skill-mappings-key.mjs` 补进 test-scripts 的 selftest 链（此前只有真跑、判据死活无人管）。",
-    "evidenceRefs": [
-      "mcp-server/src/docs-platform/search-utils.ts",
-      "mcp-server/src/docs-platform/fabric/store.ts",
-      "mcp-server/src/docs-platform/forge/store.ts",
-      "mcp-server/src/docs-platform/neoforge/store.ts",
-      "mcp-server/scripts/assert-verbatim-support.mjs",
-      "mcp-server/test-scripts.mjs"
-    ],
-    "status": "closed",
-    "gates": [
-      "assert-verbatim-support.mjs"
-    ],
-    "closedAt": "2026-09-20"
-  }
+      "id": "search-docs-verbatim-support",
+      "claim": "search_forge_docs / search_fabric_docs / search_neoforge_docs / search_docs（含 quilt 两腿）在查询为**单个标识符形态**时，每条命中必须带 `verbatim` 逐字支撑位（true=该名字在该页 processed 正文逐字出现；false=读到正文且确认没有；**不给字段=未判定**），顶层带 `verbatim_summary{term,judged,hits}`，且 judged>0 而 hits=0 时必须发警告；散文 / OR 分组 / 中文 / 纯小写词一律不判。该字段只做事后标注，不得改变命中集合、顺序或 total。",
+      "author": "2026-09-20 审计轮 F-K1 → 用户裁定「加 verbatim 逐字支撑位，注意不要更改根 AGENTS.md 的先语义搜索做法」",
+      "evidence": "F-K1 原缺陷：编造标识符 `zqxTaterNotARealName` 在 6/6 探针里返回 ok:true + 非零 total，agent 无从分辨「检索到相关页」与「该 API 存在」。加位后实测（`node mcp-server/dist/cli.js … --output-format=json`）：forge 1.20.1 投毒名 judged=10/hits=0 + 警告，`GatherDataEvent` judged=10/hits=9；fabric 1.21.11 投毒名 hits=0，Yarn 名 `RegistryKey` hits=0（该档正文是 mojmap 写的，Yarn 名逐字查无是事实，与裁定①同源），mojmap 名 `ResourceKey` hits=4；neoforge 1.20.1 forge 兼容腿 hits=5、1.20.4 自有树 hits=3；quilt 回退腿 hits=0；`register an item` 与 `datagen` 均无 verbatim_summary（不谎称查过）。独立机制复核（`temp/audit-20260918/crosscheck-verbatim.mjs`，不走工具代码直扫 processed）：5 组 case 的工具判定与直扫逐字一致，投毒词与 `cubeAll` / `ForgeFlowingFluid` @forge 1.14.4、`RegistryKey` @fabric 1.21.11 整档直扫均 0 命中 ⇒ 证实 F 不是「读错文件」，也顺带把 F-J2 的语料缺口从「推测」升级为「可复核事实」。门 `assert-verbatim-support.mjs` 四腿（纯函数真值表 / CLI 活性 / 反 laundering 直扫 / 检索行为不变）全绿，`--selftest` 10 组投毒全红自证；另把 `assert-skill-mappings-key.mjs` 补进 test-scripts 的 selftest 链（此前只有真跑、判据死活无人管）。",
+      "evidenceRefs": [
+        "mcp-server/src/docs-platform/search-utils.ts",
+        "mcp-server/src/docs-platform/fabric/store.ts",
+        "mcp-server/src/docs-platform/forge/store.ts",
+        "mcp-server/src/docs-platform/neoforge/store.ts",
+        "mcp-server/scripts/assert-verbatim-support.mjs",
+        "mcp-server/test-scripts.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-verbatim-support.mjs"
+      ],
+      "closedAt": "2026-09-20"
+    },
+    {
+      "id": "w32-my-menu-type-undeclared",
+      "claim": "forge/{1.15.2,1.16.5,1.17.1,1.18.2,1.19.4,1.20.1,1.20.4} 的 10-gui 示例里 Java 形状必须自洽：`MY_MENU_TYPE.get()` 这类**本文件未声明**的标识符不得出现（同块声明的是 MY_MENU），`super(null, ...)` 不得把 null 当 MenuType，`new Cls(...)` 的实参个数必须命中同文件构造重载。",
+      "status": "closed",
+      "closedAt": "2026-09-21",
+      "evidence": "复现（修正上一轮误判）：`MY_MENU_TYPE` 全仓 76 处命中，全部位于**隐藏宿主目录**（.agents/.claude/.continue/.cursor/.opencode/.pi/.trae/.zcode）—— ripgrep 默认跳过点目录，故此前 search_content 报 0 命中。分布 = 5 档（1.17.1/1.18.2/1.19.4/1.20.1/1.20.4）× 2 处 × 7 宿主镜像。修法：源稿 `.cursor/rules/10-gui.mdc` 的 `MY_MENU_TYPE.get()` → `MyMenuTypes.MY_MENU.get()`（与同文件 :104 声明、:117 用法一致）；1.15.2 `super(null, windowId)` → `super(MyContainers.MY_CONTAINER.get(), windowId)`；1.16.5 4 参 `new MyContainer(id, inv, world, pos)` → 3 参 `(id, inv, p)`（与 :78 定义一致）；再 `scripts/sync-skills.ps1 -TargetDir` 重投影。验证：重扫 MY_MENU_TYPE 非 temp 命中 = 0；assert-skill-mirrors ok（漂移 0 档）。",
+      "gates": [
+        "assert-rule-java-shapes.mjs",
+        "assert-skill-mirrors.mjs"
+      ],
+      "author": "2026-09-21 审查回报复核（隐藏宿主目录盲点纠正）+ 本波必修 W3-2",
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-rule-java-shapes.mjs",
+        "forge/1.17.1/.cursor/rules/10-gui.mdc",
+        "forge/1.16.5/.cursor/rules/10-gui.mdc",
+        "scripts/sync-skills.ps1"
+      ]
+    },
+    {
+      "id": "w51-qsl-module-dependency-unreachable",
+      "claim": "quilt/{1.21.3,1.21.4,1.21.8,1.21.10,1.21.11} 的 `01-registry` 决策流不得教「先给工程补 QSL 模块依赖、再用已核实 API」—— 该指引与同文件 `:3`「本版本无 QSL/QFAPI 正式版构件、QSL API 非可编译、禁止生成」互斥，属不可满足分支。",
+      "status": "closed",
+      "closedAt": "2026-09-21",
+      "evidence": "复现：真身是 `.cursor/rules/01-registry.mdc:19`（不是 knowledge/common/qsl-verified.md）—— 上一轮读错了文件。5 档同文本，× 7 宿主镜像。修法：改为「QSL 专属 → **本档不可生成**（无 QSL 正式版构件）→ 改走 Vanilla Registry.register 或同版 Fabric API；确需 QSL 方法名须先 ingest_loader_api(自备 jar) 再 query_loader_api 逐签名复核」，并显式撤回旧指引。验证：重扫后「模块依赖/先补」在 quilt 目录 = 0（此前 46）。",
+      "author": "2026-09-21 审查回报复核（隐藏宿主目录盲点纠正）+ 本波必修 W5-1",
+      "evidenceRefs": [
+        "quilt/1.21.3/.cursor/rules/01-registry.mdc",
+        "quilt/1.21.11/.cursor/rules/01-registry.mdc"
+      ],
+      "gates": [
+        "assert-skill-mirrors.mjs"
+      ]
+    },
+    {
+      "id": "w52a-fake-doc-not-found",
+      "claim": "fabric/1.20.1 的技能不得教「search_docs/search_fabric_docs → 预期 DOC_NOT_FOUND（树空）」：该档实测返回 ok:true，命中的是本档 fabric-wiki 正文（develop 树空 ⇒ 回退）。",
+      "status": "closed",
+      "closedAt": "2026-09-21",
+      "evidence": "复现：`node dist/cli.js search_fabric_docs --query registry --version 1.20.1` → success=true ok=true total=7（首条 1.20.1/tutorial_blocks），**从不返回 DOC_NOT_FOUND**；DOC_NOT_FOUND 只来自 get_fabric_doc_full 的 id 解析失败。位点 = fabric/1.20.1/.cursor/skills/mc-{gametest:28,renderer:33,networking:75,sound:63} × 7 宿主。修法：改为「实测不返回 DOC_NOT_FOUND：本档 develop 树空 ⇒ 回退本档 fabric-wiki，返回 ok:true + wikiFallback:true + fabricDocsEmpty:true；命中的是 wiki 正文，须读这三字段再下结论」，再重投影。验证：重扫「预期 DOC_NOT_FOUND」全仓 = 0。",
+      "author": "2026-09-21 审查回报复核（隐藏宿主目录盲点纠正）+ 本波必修 W5-2(a)",
+      "evidenceRefs": [
+        "fabric/1.20.1/.cursor/skills/mc-networking.md",
+        "fabric/1.20.1/.cursor/skills/mc-gametest.md",
+        "mcp-server/src/docs-platform/fabric/index.ts"
+      ],
+      "gates": [
+        "assert-skill-mirrors.mjs"
+      ]
+    },
+    {
+      "id": "w02-classtotal-dead-variable",
+      "claim": "`assert-yarn-named-integrity.mjs` 的 `classTotal` 必须有判据消费（原为死变量：只算/只返回，无任何断言读它，CLASS 行整批缺失的截断工件能静默过闸）。",
+      "status": "closed",
+      "closedAt": "2026-09-21",
+      "evidence": "复现：grep 后 classTotal 仅出现在 :98/:104/:112/:415（声明、自增、返回、解构），判据只用 classSelfEq(:436) 与 memberTotal(:416/:419)。修法：新增 `tiny.classTotal === 0` 即报错，并加 selftest 用例「洞⑤·classTotal=0（无 CLASS 行）」+ 夹具 membersOnlyTiny()。验证：--selftest 9 例全符（1 正对照绿 + 8 类畸形全检出）；真跑 13 档 ok。",
+      "gates": [
+        "assert-yarn-named-integrity.mjs"
+      ],
+      "author": "2026-09-21 审查回报复核 + 本波必修 W0-2",
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-yarn-named-integrity.mjs"
+      ]
+    },
+    {
+      "id": "w41-vanilla-client-jar-filter",
+      "claim": "缓存里只有 mod jar（mod-emi / mod-owo / embedded-*）、没有 vanilla 客户端 jar 时，deep 校验必须报 CACHE_MISS，不得拿 mod jar 去 validate_at 并报「类不存在」。",
+      "status": "closed",
+      "closedAt": "2026-09-21",
+      "evidence": "复现：deep-validate.ts 的 isVanillaClientJar 只是 sort 键，jars 非空即返回 jars[0]（可能是 mod jar）。修法：排序前加 `if (!jars.some(isVanillaClientJar)) return null;` ⇒ 上层走 cacheMissActionable(CACHE_MISS)。验证：探针 + test-core 断言 —— 只有 mod-emi-1.20.1.jar 时 findCachedClientJar → null、resolveValidationJar → null；加 minecraft-1.20.1-mojmap.jar 后正确选中它（mapping=mojmap）。",
+      "author": "2026-09-21 审查回报复核 + 本波必修 W4-1",
+      "evidenceRefs": [
+        "mcp-server/src/mixin/deep-validate.ts",
+        "mcp-server/test-core.mjs"
+      ],
+      "gates": [
+        "test-core.mjs"
+      ]
+    },
+    {
+      "id": "w06-apply-lock-atomic-and-owner",
+      "claim": "`update/apply-lock.ts` 的 tryAcquireUpdateApplyLock 必须是**原子占位**（catch 不得是死代码），且 release 只删**自己的**锁（不得删别人的活锁）。",
+      "status": "closed",
+      "closedAt": "2026-09-21",
+      "evidence": "复现：`:65 mkdirSync(lockDir, { recursive: true })` 对已存在目录不抛错 ⇒ `:66-68` 的 catch 成死代码、`:63 existsSync` 与 `:65` 之间 TOCTOU 未消；`:74-80` release 无条件 rmSync。修法：去掉 recursive（EEXIST 抛错 ⇒ catch 生效，POSIX mkdir 原子性），release 先读回 owner.json、仅当 pid === process.pid（或 owner 缺失）才删。验证：tsc 干净，test-core 中该模块相关断言通过。",
+      "author": "2026-09-21 审查回报复核 + 本波必修 W0-6 ①②",
+      "evidenceRefs": [
+        "mcp-server/src/update/apply-lock.ts",
+        "mcp-server/test-update.mjs"
+      ],
+      "gates": [
+        "test-update.mjs"
+      ]
+    },
+    {
+      "id": "w21-era-upper-bound-sentinel",
+      "claim": "generate_model / generate_lang / generate_config 必须有时代**上界**哨兵：`1.99.9` / `26.99.9` 这类编造版本不得回 ok:true + files（与 generate_worldgen 的 N6 同判据）。",
+      "status": "closed",
+      "closedAt": "2026-09-21",
+      "evidence": "复现：三者只用 exactMcVersion（格式检查），`1.99.9` 格式合法 ⇒ 一路生成成功。修法：common.ts 新增 eraUpperBoundError（MC_MAX_MINOR_1X=21 / MC_MAX_MINOR_26X=1），三处 exactMcVersion 之后调用。验证：探针 —— 1.99.9 与 26.99.9 均 code=null + 点名「未跟进 1.99.x / 26.99.x」，26.1.2 正常放行；test-core 新增 5 条断言。",
+      "author": "2026-09-21 审查回报复核 + 本波必修 W2-1",
+      "evidenceRefs": [
+        "mcp-server/src/generators/common.ts",
+        "mcp-server/src/generators/index.ts",
+        "mcp-server/test-core.mjs"
+      ],
+      "gates": [
+        "test-core.mjs"
+      ]
+    },
+    {
+      "id": "w45-from-yarn-symmetry",
+      "claim": "convert_mapping 的 `from=\"yarn\"` 必须与 `to=\"yarn\"` 对称：非 yarn-tiny 档（1.12.2=forge-srg / 1.13.2=tsrg / 1.15.2=mcp-csv）没有 Yarn 名列，不得回 confidence:high。",
+      "status": "closed",
+      "closedAt": "2026-09-21",
+      "evidence": "复现：`--from=yarn --to=mcp @1.12.2` 回 confidence:high + source:csv（门只判了 to 侧）。修法：加 `from === \"yarn\" && era !== \"yarn-tiny\"` ⇒ fail YARN_DATA_UNAVAILABLE + action DATA_UNAVAILABLE。验证：探针 1.12.2 拒/1.20.1 不拒；test-w3-low 新钉（1.12.2 拒 + 1.20.1×3 目标不被数据门拒）；test-core:1326 的 1.15.2 用例码由 csv-no-owner 升级为 YARN_DATA_UNAVAILABLE（found 仍为 false，语义不削弱）。",
+      "author": "2026-09-21 审查回报复核 + 本波必修 W4-5（from 侧）",
+      "evidenceRefs": [
+        "mcp-server/src/mappings/convert.ts",
+        "mcp-server/test-w3-low.mjs",
+        "mcp-server/test-core.mjs"
+      ],
+      "gates": [
+        "test-w3-low.mjs"
+      ]
+    },
+    {
+      "id": "a27-iserror-prose-line-drift",
+      "claim": "`src/utils/actionable.ts` 的 A-27 散文必须点名 tool-registry.ts 里 isError 代码位点的**当前**行号（并行会话移动该位点后须同步散文）。",
+      "status": "closed",
+      "closedAt": "2026-09-21",
+      "evidence": "复现（HEAD 自带红，非本波引入）：散文写 `:444`，实测 tool-registry.ts 的 isError 在 **454**（git diff 对该文件无输出 ⇒ 是已提交状态）⇒ test-wave-bcd:910 红。修法：散文更新为 `:454` 并在沿革里记「2026-09-21 并行会话增行后再推 +10 行」。验证：test-wave-bcd rc=0（ok + w4A5Gates ok + w4A8Gates ok）。",
+      "author": "2026-09-21 本波验证时发现的 HEAD 自带红（并行会话移行未同步散文）",
+      "evidenceRefs": [
+        "mcp-server/src/utils/actionable.ts",
+        "mcp-server/src/tool-registry.ts"
+      ],
+      "gates": [
+        "test-wave-bcd.mjs"
+      ]
+    }
   ]
 }

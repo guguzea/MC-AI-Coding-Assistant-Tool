@@ -60,7 +60,7 @@ IF 循环播放
 ## 查证路径
 
 1. `query_api`（1.20.1 在覆盖范围）：核 `SoundEvent` / `SoundEvents` / `SoundCategory` / `SoundInstance` 相关类；
-2. `search_docs` / `search_fabric_docs`（1.20.1）→ 预期 DOC_NOT_FOUND；
+2. `search_docs` / `search_fabric_docs`（1.20.1）→ **实测不返回 DOC_NOT_FOUND**（本档 develop 树空 ⇒ 回退本档 fabric-wiki，返回 `ok:true` + `wikiFallback:true` + `fabricDocsEmpty:true`，2026-09-21 实测 total=7）；命中的是 wiki 正文，须读 `wikiFallback` / `fabricDocsEmpty` 再下结论；
 3. `search_community_docs`（社区实务）。
 
 ## 常见错误

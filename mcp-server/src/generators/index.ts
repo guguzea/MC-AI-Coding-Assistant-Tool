@@ -1,4 +1,4 @@
-import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult, noNativeGeneratorError, docsToolForGeneratorPlatform, exactMcVersion } from "./common.js";
+import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult, noNativeGeneratorError, docsToolForGeneratorPlatform, exactMcVersion, eraUpperBoundError } from "./common.js";
 import { isMcVersionFamily } from "../utils/minecraft-version.js";
 
 function usesClientItemsModelPath(version: string): boolean {
@@ -23,6 +23,11 @@ export function generateModel(
   }
   if (!exactMcVersion(version)) {
     return { code: null, errors: [`version 必须是精确 MC 版本，收到 ${version}。` + noNativeGeneratorError("search_*_docs", "规则 02 / generate_model")] };
+  }
+  // W2-1（2026-09-21）：时代上界哨兵（1.99.9 这类编造版本不得回 ok:true + files）。
+  const eraErrModel = eraUpperBoundError(version);
+  if (eraErrModel) {
+    return { code: null, errors: [eraErrModel + noNativeGeneratorError("search_*_docs", "规则 02 / generate_model")] };
   }
   const mod = normalizeModIdentifier(modId);
   const block = normalizeModIdentifier(blockName);
@@ -100,6 +105,11 @@ export function generateLang(modId: string, entries: Record<string, string>, ver
   }
   if (!exactMcVersion(version)) {
     return { code: null, errors: [`version 必须是精确 MC 版本，收到 ${version}。` + noNativeGeneratorError("search_*_docs", "规则 07 / generate_lang")] };
+  }
+  // W2-1（2026-09-21）：时代上界哨兵（与 generate_model 同判据）。
+  const eraErrLang = eraUpperBoundError(version);
+  if (eraErrLang) {
+    return { code: null, errors: [eraErrLang + noNativeGeneratorError("search_*_docs", "规则 07 / generate_lang")] };
   }
   const mod = normalizeModIdentifier(modId);
   if (!mod) return { code: null, errors: ["无效 modId"] };
@@ -1267,6 +1277,11 @@ export function generateConfig(
   }
   if (!exactMcVersion(version)) {
     return { code: null, errors: [`version 必须是精确 MC 版本（1.x / 26.x），收到 ${version}。` + noNativeGeneratorError("search_*_docs", "规则 00 / mc-config Skill")] };
+  }
+  // W2-1（2026-09-21）：时代上界哨兵（与 generate_model / generate_lang 同判据）。
+  const eraErrConfig = eraUpperBoundError(version);
+  if (eraErrConfig) {
+    return { code: null, errors: [eraErrConfig + noNativeGeneratorError("search_*_docs", "规则 00 / mc-config Skill")] };
   }
   const mod = normalizeModIdentifier(modId);
   if (!mod) return { code: null, errors: ["无效 modId"] };

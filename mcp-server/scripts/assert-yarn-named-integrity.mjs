@@ -246,6 +246,8 @@ if (process.argv.includes("--selftest")) {
   };
   /** 只有 CLASS 行、没有任何成员行（memberTotal=0 ⇒ 洞②必须咬住；旧式 `? : 0` 会静默放行） */
   const classesOnlyTiny = () => [0, 1, 2].map((c) => cls(`C${c}`, `NamedC${c}`)).join("");
+  /** 只有成员行、**没有 CLASS 行**（classTotal=0 ⇒ W0-2 判据必须咬住；旧版该变量是死变量、静默放行） */
+  const membersOnlyTiny = () => [0, 1].map((c) => mem("METHOD", `C${c}`, `m${c}`, `named${c}`)).join("");
   /** 1 类有成员 + 40 类无成员（zero=40 > ceil(0×1.15)+30 ⇒ 判据④必须咬住） */
   const zeroBatchTiny = () => {
     let s = cls("C0", "NamedC0");
@@ -294,6 +296,7 @@ if (process.argv.includes("--selftest")) {
     ["正对照·健康档", (r) => (seed(r, healthyTiny()), baselineOf(0, 0)), 0],
     ["判据②·有损 v1（named==intermediary）", (r) => (seed(r, lossyTiny()), baselineOf(0, 0)), 1],
     ["洞②·memberTotal=0（空 member 列）", (r) => (seed(r, classesOnlyTiny()), baselineOf(0, 0)), 1],
+    ["洞⑤·classTotal=0（无 CLASS 行，W0-2 死变量收口）", (r) => (seed(r, membersOnlyTiny()), baselineOf(0, 0)), 1],
     ["判据④·零成员类批量超限", (r) => (seed(r, zeroBatchTiny()), baselineOf(0, 0)), 1],
     [
       "洞①·mappings/ 在却无 -tiny.gz",
@@ -420,6 +423,11 @@ for (const { pack, dir, tinyName } of packs) {
     errors.push(
       `${pack}: tiny 里 FIELD/METHOD 行数为 0（判据②无从计算、旧式写法会静默判成 0%）—— 工件被截断/换件？`,
     );
+  }
+  // W0-2（2026-09-21）：`classTotal` 此前只被计算/返回、**没有任何判据读它**（死变量）——
+  // 于是「CLASS 行整批缺失」的截断工件（classSelfEq=0）能静默过闸。显式要求 CLASS 行数 > 0。
+  if (tinyText !== null && tiny.classTotal === 0) {
+    errors.push(`${pack}: tiny 里 CLASS 行数为 0（W0-2：classTotal 死变量收口）—— 工件被截断/换件？`);
   }
   const base = BASELINE.member[pack];
   if (tinyText !== null) rows.push(`${pack} ${(ratio * 100).toFixed(2)}%`);

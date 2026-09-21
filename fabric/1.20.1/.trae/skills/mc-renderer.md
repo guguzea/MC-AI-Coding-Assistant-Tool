@@ -30,7 +30,7 @@ mappings: yarn
 
 1. `query_api`（1.20.1 在约 1.16.5–1.20.4 覆盖范围）：按类名核 Tessellator / BufferBuilder / VertexFormat / 矩阵栈类 / GUI 绘图类 / BER 相关类；`found:false` ≠ 不存在。
 2. `get_method_params`（可选）：查方法参数名。
-3. `search_docs` / `search_fabric_docs`（1.20.1）→ 预期 DOC_NOT_FOUND；命中其它版本即视同不可用。
+3. `search_docs` / `search_fabric_docs`（1.20.1）→ **实测不返回 DOC_NOT_FOUND**：本档 develop 树空 ⇒ 回退本档 fabric-wiki，返回 `ok:true` + `wikiFallback:true` + `fabricDocsEmpty:true`（2026-09-21 实测 total=7）；命中的是 wiki 正文，不是 develop 文档，须读 `wikiFallback` / `fabricDocsEmpty` 再下结论。
 4. `search_community_docs`（社区实务；`community_knowledge/AGENT_USAGE.md`：短文不替代官方 API 规范）。
 5. Satin 高级 shader：`knowledge/libs/fabric-only/mc-satin/SKILL.md`——**版本范围以其 frontmatter 为准**（本文档不代替库文判断）。
 

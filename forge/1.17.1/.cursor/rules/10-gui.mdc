@@ -78,7 +78,7 @@ IF inventory with multiple slots
 // 1. Define the Menu class
 public class MyMenu extends AbstractContainerMenu {
     public MyMenu(int windowId, Inventory inv, FriendlyByteBuf extraData) {
-        super(MY_MENU_TYPE.get(), windowId);
+        super(MyMenuTypes.MY_MENU.get(), windowId);
         // slot layout...
     }
 
@@ -130,7 +130,7 @@ private final ContainerData dataSlots = new ContainerData() {
 };
 
 // In Menu constructor
-super(MY_MENU_TYPE.get(), windowId); // A-43：AbstractContainerMenu 只有 (MenuType, int) 两个构造参数（原 5 参示例编译不过；与本文档 :81 的正解统一）
+super(MyMenuTypes.MY_MENU.get(), windowId); // A-43：AbstractContainerMenu 只有 (MenuType, int) 两个构造参数（原 5 参示例编译不过；与本文档 :81 的正解统一）
 this.addDataSlots(dataSlots); // A-43：不接线则客户端收不到同步（原版漏了这一步）
 
 // Set from server

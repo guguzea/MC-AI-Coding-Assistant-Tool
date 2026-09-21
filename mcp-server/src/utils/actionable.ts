@@ -20,8 +20,9 @@
  *    这类返回 **一律不置 isError**，MCP 层看到的是一次成功调用，模型必须去读 `action.nextSteps`。
  *
  * 2) **协议层失败：`isError: true`** —— 全仓库只有 **1 处**，在 `src/tool-registry.ts`：
- *    · `:444` `get_server_status` 的 `warmup=true` 但没传 version（VERSION_REQUIRED）。
- *      （行号 424→429→444：2026-09-18 Z-2「McpServer version 读 package.json」净 +15 行，A-27 门当场点名同步。）
+ *    · `:454` `get_server_status` 的 `warmup=true` 但没传 version（VERSION_REQUIRED）。
+ *      （行号 424→429→444→454：2026-09-18 Z-2「McpServer version 读 package.json」净 +15 行；
+ *       2026-09-21 并行会话在 tool-registry.ts 增行后再推 +10 行，A-27 门当场点名同步。）
  *    （2026-09-17 P2-2 收敛：communityDocError 的 2 处 isError 已降级为带内 `ok:false`，
  *    与全部文档工具错误路径同形；CLI 退出码不变——isToolFailure 先看 `ok===false`。）
  *    判据：**结果通道的前置条件在注册层就被拒**，才用 isError。

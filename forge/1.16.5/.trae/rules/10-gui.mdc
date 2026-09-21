@@ -140,7 +140,7 @@ public class MyBlock extends Block {
             NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new SimpleNamedContainerProvider(
-                    (id, inv, p) -> new MyContainer(id, inv, world, pos),
+                    (id, inv, p) -> new MyContainer(id, inv, p),
                     new StringTextComponent("My Container")
                 ),
                 pos

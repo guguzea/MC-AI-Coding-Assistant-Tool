@@ -394,7 +394,25 @@ function makeStoreZip(name, data, { lieCsize } = {}) {
   });
   assert.equal(mcpToYarn.found, false, `1.21.1 from=mcp 类查询应被 F131 门拒: ${JSON.stringify(mcpToYarn)}`);
   assert.equal(mcpToYarn.resultKind, "YARN_TINY_NO_MCP_LAYER", mcpToYarn.resultKind);
+
+  // ── W4-5 from 侧（2026-09-21）：非 yarn-tiny 档的 from=yarn 必须拒（与 to 侧对称）──
+  // 旧病：`--from=yarn --to=mcp` 在 1.12.2（forge-srg）仍回 confidence:"high" + source:"csv"，
+  // 因为门只判了 to 侧。现在两侧同判据。
+  const fromYarnBad = convertMapping({ from: "yarn", to: "mcp", memberName: "getHealth", version: "1.12.2" });
+  assert.equal(fromYarnBad.found, false, `1.12.2 无 Yarn 列，from=yarn 必须拒: ${JSON.stringify(fromYarnBad)}`);
+  assert.equal(fromYarnBad.resultKind, "YARN_DATA_UNAVAILABLE", fromYarnBad.resultKind);
+  assert.equal(fromYarnBad.action?.code, "DATA_UNAVAILABLE", fromYarnBad.action?.code);
+  for (const to of ["mojang", "intermediary", "mcp"]) {
+    const okSide = convertMapping({ from: "yarn", to, memberName: "getHealth", version: "1.20.1" });
+    assert.notEqual(
+      okSide.resultKind,
+      "YARN_DATA_UNAVAILABLE",
+      `1.20.1 是 yarn-tiny 档，from=yarn→${to} 不得被数据门拒: ${JSON.stringify(okSide)}`,
+    );
+    assert.notEqual(okSide.confidence, "high", `from=yarn 未命中时不得报 confidence:high（${to}）`);
+  }
   console.log("W4-5 to=yarn 真数据门（forge 档拒绝 / yarn-tiny 放行 / from=mcp 仍拒）: ok");
+  console.log("W4-5 from=yarn 对称门（1.12.2 拒 / 1.20.1 不被数据门拒）: ok");
 }
 
 console.log("test-w3-low: ok");
