@@ -2,7 +2,7 @@
 version: "1.18.2"
 forgeVersion: "40.2.14"
 chapter: "legacy/porting"
-source: "https://docs.readthedocs.net/en/1.18.x/legacy/porting/"
+source: "https://docs.minecraftforge.net/en/1.18.x/legacy/porting/"
 sourceType: mkdocs
 ---
 # Porting to Minecraft 1.18

@@ -4,7 +4,8 @@ Tags are generalized sets of objects in the game used for grouping related thing
 
 ## Declaring Your Own Groupings
 
-Tags are declared in your mod&rsquo;s [datapack](../). For example, a `TagKey<Block>` with a given identifier of `modid:foo/tagname` will reference a tag at `/data/<modid>/tags/blocks/foo/tagname.json`. Tags for `Block`s, `Item`s, `EntityType`s, `Fluid`s, and `GameEvent`s use the plural forms for their folder location while all other registries use the singular version (`EntityType` uses the folder `entity_types` while `Potion` would use the folder `potion`). Similarly, you may append to or override tags declared in other domains, such as Vanilla, by declaring your own JSONs. For example, to add your own mod&rsquo;s saplings to the Vanilla sapling tag, you would specify it in `/data/minecraft/tags/blocks/saplings.json`, and Vanilla will merge everything into one tag at reload, if the `replace` option is false. If `replace` is true, then all entries before the json specifying `replace` will be removed. Values listed that are not present will cause the tag to error unless the value is listed using an `id` string and `required` boolean set to false, as in the following example:
+Tags are declared in your mod’s [datapack](../). For example, a `TagKey<Block>` with a given identifier of `modid:foo/tagname` will reference a tag at `/data/<modid>/tags/blocks/foo/tagname.json`. Tags for `Block`s, `Item`s, `EntityType`s, `Fluid`s, and `GameEvent`s use the plural forms for their folder location while all other registries use the singular version (`EntityType` uses the folder `entity_types` while `Potion` would use the folder `potion`). Similarly, you may append to or override tags declared in other domains, such as Vanilla, by declaring your own JSONs. For example, to add your own mod’s saplings to the Vanilla sapling tag, you would specify it in `/data/minecraft/tags/blocks/saplings.json`, and Vanilla will merge everything into one tag at reload, if the `replace` option is false. If `replace` is true, then all entries before the json specifying `replace` will be removed. Values listed that are not present will cause the tag to error unless the value is listed using an `id` string and `required` boolean set to false, as in the following example:
+
 
 ```json
 {
@@ -19,6 +20,7 @@ Tags are declared in your mod&rsquo;s [datapack](../). For example, a `TagKey<Bl
   ]
 }
 ```
+
 
 See the [Vanilla wiki](https://minecraft.wiki/w/Tag#JSON_format) for a description of the base syntax.
 
@@ -60,25 +62,45 @@ Forge registry objects can grab their tag definition using either `ITagManager#g
 
 Tag-holding registry objects contain a method called `#is` in either their registry object or state-aware class to check whether the object belongs to a certain tag.
 
-As an example: ``` public static final TagKey<Item> myItemTag = ItemTags.create(new ResourceLocation("mymod", "myitemgroup")); public static final TagKey<Potion> myPotionTag = ForgeRegistries.POTIONS.tags().createTagKey(new ResourceLocation("mymod", "mypotiongroup")); public static final TagKey<VillagerType> myVillagerTypeTag = TagKey.create(Registry.VILLAGER_TYPE, new ResourceLocation("mymod", "myvillagertypegroup")); // In some method: ItemStack stack = /*...*/; boolean isInItemGroup = stack.is(myItemTag); Potion potion = /*...*/; boolean isInPotionGroup = ForgeRegistries.POTIONS.tags().getTag(myPotionTag).contains(potion); ResourceKey<VillagerType> villagerTypeKey = /*...*/; boolean isInVillagerTypeGroup = Registry.VILLAGER_TYPE.getHolder(villagerTypeKey).map(holder -> holder.is(myVillagerTypeTag)).orElse(false); ```
+As an example:
+
+```
+public static final TagKey<Item> myItemTag = ItemTags.create(new ResourceLocation("mymod", "myitemgroup"));
+
+public static final TagKey<Potion> myPotionTag = ForgeRegistries.POTIONS.tags().createTagKey(new ResourceLocation("mymod", "mypotiongroup"));
+
+public static final TagKey<VillagerType> myVillagerTypeTag = TagKey.create(Registry.VILLAGER_TYPE, new ResourceLocation("mymod", "myvillagertypegroup"));
+
+// In some method:
+
+ItemStack stack = /*...*/;
+boolean isInItemGroup = stack.is(myItemTag);
+
+Potion potion = /*...*/;
+boolean isInPotionGroup  = ForgeRegistries.POTIONS.tags().getTag(myPotionTag).contains(potion);
+
+ResourceKey<VillagerType> villagerTypeKey = /*...*/;
+boolean isInVillagerTypeGroup = Registry.VILLAGER_TYPE.getHolder(villagerTypeKey).map(holder -> holder.is(myVillagerTypeTag)).orElse(false);
+```
+
 
 ## Conventions
 
 There are several conventions that will help facilitate compatibility in the ecosystem:
 
-- <li>If there is a Vanilla tag that fits your block or item, add it to that tag. See the [list of Vanilla tags](https://minecraft.wiki/w/Tag#List_of_tags).
-- <li>If there is a Forge tag that fits your block or item, add it to that tag. The list of tags declared by Forge can be seen on [GitHub](https://github.com/MinecraftForge/MinecraftForge/tree/1.18.x/src/generated/resources/data/forge/tags).
-- <li>If there is a group of something you feel should be shared by the community, use the `forge` namespace instead of your mod id.
-- <li>Tag naming conventions should follow Vanilla conventions. In particular, item and block groupings are plural instead of singular (e.g. `minecraft:logs`, `minecraft:saplings`).
-- <li>Item tags should be sorted into subdirectories according to their type (e.g. `forge:ingots/iron`, `forge:nuggets/brass`, etc.).
+- If there is a Vanilla tag that fits your block or item, add it to that tag. See the [list of Vanilla tags](https://minecraft.wiki/w/Tag#List_of_tags).
+- If there is a Forge tag that fits your block or item, add it to that tag. The list of tags declared by Forge can be seen on [GitHub](https://github.com/MinecraftForge/MinecraftForge/tree/1.18.x/src/generated/resources/data/forge/tags).
+- If there is a group of something you feel should be shared by the community, use the `forge` namespace instead of your mod id.
+- Tag naming conventions should follow Vanilla conventions. In particular, item and block groupings are plural instead of singular (e.g. `minecraft:logs`, `minecraft:saplings`).
+- Item tags should be sorted into subdirectories according to their type (e.g. `forge:ingots/iron`, `forge:nuggets/brass`, etc.).
 
 ## Migration from OreDictionary
 
-- <li>For recipes, tags can be used directly in the vanilla recipe format (see below).
-- <li>For matching items in code, see the section above.
-- <li>If you are declaring a new type of item grouping, follow a couple naming conventions:
-- <li>Use `domain:type/material`. When the name is a common one that all modders should adopt, use the `forge` domain.
-- <li>For example, brass ingots should be registered under the `forge:ingots/brass` tag and cobalt nuggets under the `forge:nuggets/cobalt` tag.
+- For recipes, tags can be used directly in the vanilla recipe format (see below).
+- For matching items in code, see the section above.
+- If you are declaring a new type of item grouping, follow a couple naming conventions:
+- Use `domain:type/material`. When the name is a common one that all modders should adopt, use the `forge` domain.
+- For example, brass ingots should be registered under the `forge:ingots/brass` tag and cobalt nuggets under the `forge:nuggets/cobalt` tag.
 
 ## Using Tags in Recipes and Advancements
 

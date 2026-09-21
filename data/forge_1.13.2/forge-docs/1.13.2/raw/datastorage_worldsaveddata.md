@@ -2,7 +2,7 @@
 version: "1.13.2"
 forgeVersion: "25.0.55"
 chapter: "datastorage/worldsaveddata"
-source: "https://docs.readthedocs.net/en/1.13.x/datastorage/worldsaveddata/"
+source: "https://docs.minecraftforge.net/en/1.13.x/datastorage/worldsaveddata/"
 sourceType: mkdocs
 ---
 # World Saved Data
@@ -13,13 +13,14 @@ The World Saved Data system allows attaching data to worlds, either per dimensio
 
 The basis of the system is the `WorldSavedData` class. This class provides the basic methods used to manage the data:
 
-- <li>`writeToNBT`: Allows the implementation to write data to the world.
-- <li>`readFromNBT`: Allows the implementation to load previously saved data.
-- <li>`markDirty`: This method is not overridden by the implementation. Instead, it must be called after changing the data, to notify Minecraft that there are changes that need to be written. If not called, the existing data will be kept instead, and `writeToNBT` will not get called.
+- `writeToNBT`: Allows the implementation to write data to the world.
+- `readFromNBT`: Allows the implementation to load previously saved data.
+- `markDirty`: This method is not overridden by the implementation. Instead, it must be called after changing the data, to notify Minecraft that there are changes that need to be written. If not called, the existing data will be kept instead, and `writeToNBT` will not get called.
 
 An implementation will override this class, and instances of this implementation will be attached to the `World` objects, ready to store any required data.
 
 A basic skeleton may look like this:
+
 
 ```java
 public class ExampleWorldSavedData extends WorldSavedData {
@@ -37,6 +38,7 @@ public class ExampleWorldSavedData extends WorldSavedData {
 }
 ```
 
+
 ## Registration and Usage
 
 The WorldSavedData is loaded and/or attached to the world on demand. A good practice is to create a static get method that will load the data, and if not present, attach a new instance.
@@ -46,6 +48,7 @@ There are two ways to attach the data: per dimension, or globally. Global data w
 In code, these storage locations are represented by two instances of `MapStorage` present in the World object. The global data is obtained from `World#getMapStorage()`, while the per-world map is obtained from `World#getPerWorldStorage()`.
 
 The existing data can be obtained using `MapStorage#getOrLoadData`, and new data can be attached using `MapStorage#setData`.
+
 
 ```
 public static ExampleWorldSavedData get(World world) {

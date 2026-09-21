@@ -15,7 +15,7 @@ You can add extra data to the spawn packet Forge sends by implementing the follo
 
 ### IEntityAdditionalSpawnData
 
-If your entity has data that is needed on the client, but doesn&rsquo;t change over time, then it can be added to the entity spawn packet using this interface. `writeSpawnData()` and `readSpawnData()` control how the data should be en/decoded to/from the network buffer.
+If your entity has data that is needed on the client, but doesn’t change over time, then it can be added to the entity spawn packet using this interface. `writeSpawnData()` and `readSpawnData()` control how the data should be en/decoded to/from the network buffer.
 
 ## Dynamic Data
 
@@ -31,8 +31,8 @@ Firstly you need a `DataParameter<T>` for the data you wish to keep synchronized
 
 <!-- key:🔴 role:新手必读 (Warning) -->
 
-> **Warning**: Warning You should only create data parameters for your own entities, within that entity&rsquo;s class. Adding parameters to entities you do not control can cause the IDs used to send that data over the network to become desynchronized, causing difficult to debug crashes.
+> **Warning**: Warning You should only create data parameters for your own entities, within that entity’s class. Adding parameters to entities you do not control can cause the IDs used to send that data over the network to become desynchronized, causing difficult to debug crashes.
 
 Then, override `registerData()` and call `this.dataManager.register()` for each of your data parameters, passing the parameter and an initial value to use. Remember to always call `super.registerData()` first!
 
-You can then get and set these values via your entity&rsquo;s `dataManager` instance. Changes made will be synchronized to the client automatically.
+You can then get and set these values via your entity’s `dataManager` instance. Changes made will be synchronized to the client automatically.

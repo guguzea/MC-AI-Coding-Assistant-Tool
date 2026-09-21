@@ -29,6 +29,7 @@ There is no wrapper for adding additional potion containers or potion mixes simi
 Anvils are responsible for taking a damaged input and given some material or a similar input, remove some of the damage on the input result. As such, its system is not easily data-driven. However, as anvil recipes are an input with some number of materials equals some output when the user has the required experience levels, it can be modified to create a pseudo-recipe system via `AnvilUpdateEvent`. This takes in the input and materials and allows the modder to specify the output, experience level cost, and number of materials to use for the output. The event can also prevent any output by [canceling](../../../../concepts/events/#canceling) it.
 
 
+
 <!-- key:🟢 role:示例代码 -->
 
 ```
@@ -42,6 +43,7 @@ public void updateAnvil(AnvilUpdateEvent event) {
   }
 }
 ```
+
 
 The update event must be [attached](../../../../concepts/events/#creating-an-event-handler) to the Forge event bus.
 
@@ -58,6 +60,7 @@ Looms are responsible for applying a dye and pattern (either from the loom or fr
 > **Important**: Important BannerPatterns which return true for #hasPatternItem do not appear as an option in the loom. These patterns must have an accompanying BannerPatternItem to be used.
 
 
+
 <!-- key:🟢 role:示例代码 -->
 
 ```
@@ -69,6 +72,7 @@ public static final BannerPattern EXAMPLE_PATTERN = BannerPattern.create(
   false // The pattern is an option in the loom
 );
 ```
+
 
 
 <!-- key:🔴 role:新手必读 (Important) -->

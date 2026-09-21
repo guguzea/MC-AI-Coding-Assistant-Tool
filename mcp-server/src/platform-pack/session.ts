@@ -461,6 +461,10 @@ export function sessionPlatformPack(args: SessionArgs) {
       !draft && candidates.length
         ? `同系列已建档：${candidates.join(", ")}。请询问用户选哪一档，禁止静默折叠。`
         : undefined;
+    // 2026-09-21：文案必须打**解析后实际档**（inspectPack 已在 catalog.ts:413 经 knowledgeVersion 折叠，
+    // inspected.pack.minecraftVersion 才是被判定的那一档）。旧文案打请求档 ⇒ 若将来折叠目标档是 draft，
+    // agent 会看到「fabric 26.1.1 pack-status=draft」并去找一棵不存在的 26.1.1 树。
+    const resolvedVersion = inspected?.pack.minecraftVersion ?? minecraftVersion;
     return {
       ok: false,
       candidates: candidates.length ? candidates : undefined,
@@ -469,7 +473,7 @@ export function sessionPlatformPack(args: SessionArgs) {
         metaUnreadable
           ? `pack.meta.json 无法解析`
           : draft
-            ? `${platform} ${minecraftVersion} 规则包 pack-status=draft，禁止 session/write（PACK_NOT_FOUND）。ok≠已加载规则。`
+            ? `${platform} ${resolvedVersion} 规则包 pack-status=draft，禁止 session/write（PACK_NOT_FOUND）。ok≠已加载规则。`
             : `没有 ${platform} ${minecraftVersion} 的规则树，禁止读邻档 00–10。ok≠已加载规则。${ask ? ask : ""}`,
         packNotFoundNextSteps(platform, minecraftVersion, ask),
         packNotFoundRelatedTools(platform),

@@ -3,16 +3,16 @@
     "id": "1.21.11/qsl-qfapi",
     "version": "1.21.11",
     "label": "QSL and Quilted Fabric API",
-    "url": "https://wiki.quiltmc.org/en/concepts/qsl-qfapi",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/concepts/qsl-qfapi/en.md",
     "tags": [
       "qsl",
       "qfapi",
       "registry"
     ],
-    "firstParagraph": "QSL and QFAPI Overview This article explains the different standard libraries you might encounter when modding with Quilt. What is an API? An API (Application Programming Interface) provides an interf",
+    "firstParagraph": "This article explains the different standard libraries you might encounter when modding with Quilt.",
     "sections": [],
     "source": "quilt-docs",
-    "sha256": "d6829c89dec86b1e2c1b5bbf08df9b0475f63de35327c9c2b11f7b9507e20ebd"
+    "sha256": "5cabdb3ae7b9ce187cdeb0f7135c13421fd47a4b08fe26b4e6ef5d6c46290f25"
   },
   {
     "id": "1.21.11/quilt-mod-json",
@@ -26,7 +26,7 @@
     "firstParagraph": "This document acts as a Request for Comments (RFC) on the topic of how a Quilt mod's metadata should be formatted. Such changes are intended to provide added value for mod developers, library develope",
     "sections": [],
     "source": "quilt-docs",
-    "sha256": "b5059d79c46467e4ddf6a686875911f01b2e106bd91b9b794cdedd4e453be0c5"
+    "sha256": "c6cefcb770d74598496561c54010db8e315e25e604e588ccfdbd788f16e84799"
   },
   {
     "id": "1.21.11/qsl-readme",
@@ -39,6 +39,217 @@
     "firstParagraph": "![Java 17](https://img.shields.io/badge/language-Java%2017-9B599A.svg?style=flat-square) [![GitHub license](https://img.shields.io/github/license/QuiltMC/quilt-standard-libraries?style=flat-square)](h",
     "sections": [],
     "source": "quilt-docs",
-    "sha256": "2043cf5e67af0d516c09bccabff5d31131589b900ccd7b2c85c15e7db9e76754"
+    "sha256": "516ae079d0751b5804d07da786c8c9146a770c692cc4253485badf721b3df96a"
+  },
+  {
+    "id": "1.21.11/qsl-verified",
+    "version": "1.21.11",
+    "label": "QSL 已核实表（差异层）",
+    "url": "https://github.com/QuiltMC/quilt-standard-libraries",
+    "tags": [
+      "quilt",
+      "qsl",
+      "registry"
+    ],
+    "firstParagraph": "- search_docs({platform:\"quilt\", version:\"1.21.11\"})：`data/quilt_1.21.11` 已入库（quilt-docs/1.21.11 + L0–L2）。 - **禁止**编 `QuiltRegistry.register()`。 - **02–10 仍读** `fabric/1.21.11`。",
+    "sections": [],
+    "source": "quilt-docs"
+  },
+  {
+    "id": "1.21.11/wiki-getting-started",
+    "version": "1.21.11",
+    "label": "Getting Started with Quilt",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/introduction/getting-started/en.md",
+    "tags": [
+      "setup",
+      "loader"
+    ],
+    "firstParagraph": "In order to start modding Minecraft, you'll need to know a couple of things.",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "8de0c51b605602729bdec8005498750b0c7486f144095c71f4934befe00f49df"
+  },
+  {
+    "id": "1.21.11/wiki-setting-up",
+    "version": "1.21.11",
+    "label": "Setting Up a Development Environment",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/introduction/setting-up/en.md",
+    "tags": [
+      "setup",
+      "gradle",
+      "loom"
+    ],
+    "firstParagraph": "You'll need a couple of things before you can get started.",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "4fcc7b78102972d74f7f9825f9caace85c76d123cafcf5e134adaa81dfae5607"
+  },
+  {
+    "id": "1.21.11/wiki-first-item",
+    "version": "1.21.11",
+    "label": "Creating your First Item",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/items/first-item/en.md",
+    "tags": [
+      "item",
+      "registry"
+    ],
+    "firstParagraph": "<!-- This is migrated from the old wiki and modified to match 1.20, with some additions -->",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "07c4eec170398322ecc41542beb43cec446e3f0d05e2f4b2964bf4b97e156a69"
+  },
+  {
+    "id": "1.21.11/wiki-food",
+    "version": "1.21.11",
+    "label": "Adding Food",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/items/food/en.md",
+    "tags": [
+      "item",
+      "food"
+    ],
+    "firstParagraph": "This tutorial will assume that you already understand [Creating your First Item](first-item)",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "cfe5f67486f6eac47bbaeac072fd3f37fd925f4365eadef90092e64bfc06e07a"
+  },
+  {
+    "id": "1.21.11/wiki-armor",
+    "version": "1.21.11",
+    "label": "Adding an Armor Set",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/items/armor/en.md",
+    "tags": [
+      "item",
+      "armor"
+    ],
+    "firstParagraph": "This tutorial will assume that you already understand [Creating your First Item](first-item).",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "f6b2d50c5481483df7e9dbded8c02113862f94e37c5046099e9e85c60d39cc8f"
+  },
+  {
+    "id": "1.21.11/wiki-first-block",
+    "version": "1.21.11",
+    "label": "Adding a Simple Block",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/blocks/first-block/en.md",
+    "tags": [
+      "block",
+      "registry"
+    ],
+    "firstParagraph": "Creating a block is quite similar to [creating an item](../items/first-item), but now leveraging both the block _and_ item registries, as well as a more in-depth process for creating a model.",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "7c701eb7c44c9b1b54212e3928023861a79d430e88bebed7ddbd11fe8afb76c0"
+  },
+  {
+    "id": "1.21.11/wiki-sideness",
+    "version": "1.21.11",
+    "label": "Server-Side and Client-Side",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/concepts/sideness/en.md",
+    "tags": [
+      "sideness",
+      "client",
+      "server"
+    ],
+    "firstParagraph": "<!-- Including this since first-item links to this -->",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "813d75bd05e3136015871bedc5b67754da6809c94af041f7ebfdf2cf6666a260"
+  },
+  {
+    "id": "1.21.11/wiki-advanced-configuring",
+    "version": "1.21.11",
+    "label": "Advanced Configuring",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/configuration/advanced-configuring/en.md",
+    "tags": [
+      "config",
+      "qconfig"
+    ],
+    "firstParagraph": "Simple values are nice and all, but if you have a lot of them it can begin to get unwieldy. In this tutorial, we'll discuss how to organize your config and use processors to get the most out of it.",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "b357ea99cdc6bbc00c41a21ed1488bad76f48695a4518d6e1220bd627197a48a"
+  },
+  {
+    "id": "1.21.11/wiki-config-screen",
+    "version": "1.21.11",
+    "label": "Setting up a Config Screen",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/configuration/config-screen/en.md",
+    "tags": [
+      "config",
+      "gui"
+    ],
+    "firstParagraph": "this page will be filled out once QSL has automatic config screen generation in place! unless someone else wants to write it for spruceui or something. if so have fun!",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "015024eb68920c9e876d25c8310f11a4408771dc1da12746d4cd54f7971c913f"
+  },
+  {
+    "id": "1.21.11/wiki-configuration-getting-started",
+    "version": "1.21.11",
+    "label": "Getting Started with Quilt Config",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/configuration/getting-started/en.md",
+    "tags": [
+      "config",
+      "qconfig"
+    ],
+    "firstParagraph": "[Quilt Config](https://github.com/QuiltMC/quilt-config) is Quilt's powerful configuration API. It allows developers (that's you!) to easily set up values that can be changed by the user in order to ch",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "2a67badcbf338e307b8f3a529643d9e94d3e8252624ea5a8d0d8448561eb28f0"
+  },
+  {
+    "id": "1.21.11/wiki-metadata",
+    "version": "1.21.11",
+    "label": "Annotations and Metadata Reference",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/configuration/metadata/en.md",
+    "tags": [
+      "config",
+      "annotations"
+    ],
+    "firstParagraph": "Quilt Config is absolutely packed full of annotations, with each one allowing you to expand on the functionality of your config! This page serves as a reference, giving an overview of the functionalit",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "1ecef6b624c0621704954c80f4c6bb804d5a01abedafdd8748a42cad4cad5cff"
+  },
+  {
+    "id": "1.21.11/wiki-mappings",
+    "version": "1.21.11",
+    "label": "Customizing your Mappings",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/misc/mappings/en.md",
+    "tags": [
+      "mappings",
+      "yarn",
+      "intermediary"
+    ],
+    "firstParagraph": "Before a new Minecraft version jar is published to Mojang's servers, it goes through a process called _obfuscation_, where the human-readable class, field and method names are simplified to just a few",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "3ab63c7c9096ca37be9023006403990510afc2a32140c1847894d8e706dfb0cc"
+  },
+  {
+    "id": "1.21.11/wiki-world-types",
+    "version": "1.21.11",
+    "label": "Adding World Types",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/misc/world_types/en.md",
+    "tags": [
+      "worldgen"
+    ],
+    "firstParagraph": "If your mod completely overhauls Minecraft's worldgen, you'll likely want to create a custom worldtype to offer users the option to use your worldgen or vanilla Minecraft's world generation. Now, what",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "fbf6b9190e2261bfadb22c7ece9c0ff9c993ad7fbc9af856f41d786a8bc01e1c"
+  },
+  {
+    "id": "1.21.11/wiki-landing-page",
+    "version": "1.21.11",
+    "label": "Quilt Developer Wiki Landing",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/landing-page/en.md",
+    "tags": [
+      "index"
+    ],
+    "firstParagraph": "This site houses heavily work-in-progress documentation for developing with projects in the Quilt ecosystem. Check the sidebar to see what articles are currently available!",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "0c33cc1a49c7c9edd7a1e14f8ed3ed2a5b88f503ebe432ae927b755d6f6a5459"
   }
 ]

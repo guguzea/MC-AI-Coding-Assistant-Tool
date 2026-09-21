@@ -2,7 +2,7 @@
 version: "1.19.4"
 forgeVersion: "45.2.0"
 chapter: "legacy/porting"
-source: "https://docs.readthedocs.net/en/1.19.x/legacy/porting/"
+source: "https://docs.minecraftforge.net/en/1.19.x/legacy/porting/"
 sourceType: mkdocs
 ---
 # Porting to Minecraft 1.19

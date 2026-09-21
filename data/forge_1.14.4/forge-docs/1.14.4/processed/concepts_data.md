@@ -6,7 +6,7 @@ Therefore, there is little sense in having configurable recipes or mob drops. An
 
 ### Dev Environment
 
-In your project, you have a folder &ldquo;resources&rdquo; that has to contain a folder &ldquo;data&rdquo;. This folder will be your datapack. Your mod can have multiple data domains, since you can add or modify already existing datapacks, like vanilla&rsquo;s, forge&rsquo;s, or another mod&rsquo;s.
+In your project, you have a folder “resources” that has to contain a folder “data”. This folder will be your datapack. Your mod can have multiple data domains, since you can add or modify already existing datapacks, like vanilla’s, forge’s, or another mod’s.
 
 Additional reading: [Resource Locations](../resources/)
 

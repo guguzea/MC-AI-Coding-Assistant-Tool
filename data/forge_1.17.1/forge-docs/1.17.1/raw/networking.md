@@ -2,7 +2,7 @@
 version: "1.17.1"
 forgeVersion: "37.1.2"
 chapter: "networking"
-source: "https://docs.readthedocs.net/en/1.17.x/networking/"
+source: "https://docs.minecraftforge.net/en/1.17.x/networking/"
 sourceType: mkdocs
 ---
 # Networking

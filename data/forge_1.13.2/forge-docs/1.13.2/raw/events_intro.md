@@ -2,7 +2,7 @@
 version: "1.13.2"
 forgeVersion: "25.0.55"
 chapter: "events/intro"
-source: "https://docs.readthedocs.net/en/1.13.x/events/intro/"
+source: "https://docs.minecraftforge.net/en/1.13.x/events/intro/"
 sourceType: mkdocs
 ---
 # Events
@@ -17,13 +17,24 @@ An event handler is a class that contains one or more `public void` member metho
 
 ## Creating an Event Handler
 
-```java public class MyForgeEventHandler { @SubscribeEvent public void pickupItem(EntityItemPickupEvent event) { System.out.println("Item picked up!"); } } ``` This event handler listens for the `EntityItemPickupEvent`, which is, as the name states, posted to the event bus whenever an `Entity` picks up an item.
+
+```java
+public class MyForgeEventHandler {
+    @SubscribeEvent
+    public void pickupItem(EntityItemPickupEvent event) {
+        System.out.println("Item picked up!");
+    }
+}
+```
+
+This event handler listens for the `EntityItemPickupEvent`, which is, as the name states, posted to the event bus whenever an `Entity` picks up an item.
 
 To register this event handler, use `MinecraftForge.EVENT_BUS.register()` and pass it an instance of your event handler class.
 
 ### Static Event Handlers
 
-An event handler may also be static. The handling method is still annotated with `@SubscribeEvent` and the only difference from an instance handler is that it is also marked `static`. In order to register a static event handler, an instance of the class won&rsquo;t do, the `Class` itself has to be passed in. An example:
+An event handler may also be static. The handling method is still annotated with `@SubscribeEvent` and the only difference from an instance handler is that it is also marked `static`. In order to register a static event handler, an instance of the class won’t do, the `Class` itself has to be passed in. An example:
+
 
 ```java
 public class MyStaticForgeEventHandler {
@@ -34,17 +45,18 @@ public class MyStaticForgeEventHandler {
 }
 ```
 
+
 which must be registered like this: `MinecraftForge.EVENT_BUS.register(MyStaticForgeEventHandler.class)`.
 
 ### Automatically Registering Static Event Handlers
 
-A class may be annotated with the `@Mod.EventBusSubscriber` annotation. Such a class is automatically registered to `MinecraftForge.EVENT_BUS` when the `@Mod` class itself is constructed. This is essentially equivalent to adding `MinecraftForge.EVENT_BUS.register(AnnotatedClass.class);` at the end of the `@Mod` class&rsquo;s constructor.
+A class may be annotated with the `@Mod.EventBusSubscriber` annotation. Such a class is automatically registered to `MinecraftForge.EVENT_BUS` when the `@Mod` class itself is constructed. This is essentially equivalent to adding `MinecraftForge.EVENT_BUS.register(AnnotatedClass.class);` at the end of the `@Mod` class’s constructor.
 
 > **Note**: Note This does not register an instance of the class; it registers the class itself (i.e. the event handling methods must be static).
 
 ## Canceling
 
-If an event can be canceled, it will be marked with the `@Cancelable` annotation, and the method `Event#isCancelable()` will return `true`. The cancel state of a cancelable event may be modified by calling `Event#setCanceled(boolean canceled)`, wherin passing the boolean value `true` is interpreted as canceling the event, and passing the boolean value `false` is interpreted as &ldquo;un-canceling&rdquo; the event. However, if the event cannot be canceled (as defined by `Event#isCancelable()`), an `UnsupportedOperationException` will be thrown regardless of the passed boolean value, since the cancel state of a non-cancelable event event is considered immutable.
+If an event can be canceled, it will be marked with the `@Cancelable` annotation, and the method `Event#isCancelable()` will return `true`. The cancel state of a cancelable event may be modified by calling `Event#setCanceled(boolean canceled)`, wherin passing the boolean value `true` is interpreted as canceling the event, and passing the boolean value `false` is interpreted as “un-canceling” the event. However, if the event cannot be canceled (as defined by `Event#isCancelable()`), an `UnsupportedOperationException` will be thrown regardless of the passed boolean value, since the cancel state of a non-cancelable event event is considered immutable.
 
 > **Important**: Important Not all events can be canceled! Attempting to cancel an event that is not cancelable will result in an unchecked UnsupportedOperationException being thrown, which is expected to result in the game crashing! Always check that an event can be canceled using Event#isCancelable() before attempting to cancel it!
 
@@ -52,7 +64,7 @@ If an event can be canceled, it will be marked with the `@Cancelable` annotation
 
 Some events have an `Event.Result`, a result can be one of three things, `DENY` which stops the event, `DEFAULT` which uses the Vanilla behavior, and `ALLOW` which forces the action to take place, regardless if it would have originally. The result of an event can be set by calling `setResult` with an `Event.Result` on the event. Not all events have results, an event with a result will be annotated with `@HasResult`.
 
-> **Important**: Important Different events may use results in different ways, refer to the event&rsquo;s JavaDoc before using the result.
+> **Important**: Important Different events may use results in different ways, refer to the event’s JavaDoc before using the result.
 
 ## Priority
 

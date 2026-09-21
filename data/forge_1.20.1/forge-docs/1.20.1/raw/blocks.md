@@ -2,7 +2,7 @@
 version: "1.20.1"
 forgeVersion: "47.2.0"
 chapter: "blocks"
-source: "https://docs.readthedocs.net/en/1.20.1/blocks/"
+source: "https://docs.minecraftforge.net/en/1.20.1/blocks/"
 sourceType: mkdocs
 ---
 # Blocks
@@ -15,10 +15,10 @@ Blocks are, obviously, essential to the Minecraft world. They make up all of the
 
 For simple blocks, which need no special functionality (think cobblestone, wooden planks, etc.), a custom class is not necessary. You can create a block by instantiating the `Block` class with a `BlockBehaviour$Properties` object. This `BlockBehaviour$Properties` object can be made using `BlockBehaviour$Properties#of`, and it can be customized by calling its methods. For instance:
 
-- <li>`strength` - The hardness controls the time it takes to break the block. It is an arbitrary value. For reference, stone has a hardness of 1.5, and dirt 0.5. If the block should be unbreakable a hardness of -1.0 should be used, see the definition of `Blocks#BEDROCK` as an example. The resistance controls the explosion resistance of the block. For reference, stone has a resistance of 6.0, and dirt 0.5.
-- <li>`sound` - Controls the sound the block makes when it is punched, broken, or placed. Requires a `SoundType` argument, see the [sounds](../gameeffects/sounds/) page for more details.
-- <li>`lightLevel` - Controls the light emission of the block. Takes a function with a `BlockState` parameter that returns a value from zero to fifteen.
-- <li>`friction` - Controls how slippery the block is. For reference, ice has a slipperiness of 0.98.
+- `strength` - The hardness controls the time it takes to break the block. It is an arbitrary value. For reference, stone has a hardness of 1.5, and dirt 0.5. If the block should be unbreakable a hardness of -1.0 should be used, see the definition of `Blocks#BEDROCK` as an example. The resistance controls the explosion resistance of the block. For reference, stone has a resistance of 6.0, and dirt 0.5.
+- `sound` - Controls the sound the block makes when it is punched, broken, or placed. Requires a `SoundType` argument, see the [sounds](../gameeffects/sounds/) page for more details.
+- `lightLevel` - Controls the light emission of the block. Takes a function with a `BlockState` parameter that returns a value from zero to fifteen.
+- `friction` - Controls how slippery the block is. For reference, ice has a slipperiness of 0.98.
 
 All these methods are *chainable* which means you can call them in series. See the `Blocks` class for examples of this.
 
@@ -32,11 +32,11 @@ Of course, the above only allows for extremely basic blocks. If you want to add 
 
 Blocks must be [registered](../concepts/registries/#methods-for-registering) to function.
 
-> **Important**: Important A block in the level and a &ldquo;block&rdquo; in an inventory are very different things. A block in the level is represented by an BlockState, and its behavior defined by an instance of Block. Meanwhile, an item in an inventory is an ItemStack, controlled by an Item. As a bridge between the different worlds of Block and Item, there exists the class BlockItem. BlockItem is a subclass of Item that has a field block that holds a reference to the Block it represents. BlockItem defines some of the behavior of a &ldquo;block&rdquo; as an item, like how a right click places the block. It&rsquo;s possible to have a Block without an BlockItem. (E.g. minecraft:water exists a block, but not an item. It is therefore impossible to hold it in an inventory as one.) When a block is registered, only a block is registered. The block does not automatically have an BlockItem. To create a basic BlockItem for a block, one should set the registry name of the BlockItem to that of its Block. Custom subclasses of BlockItem may be used as well. Once an BlockItem has been registered for a block, Block#asItem can be used to retrieve it. Block#asItem will return Items#AIR if there is no BlockItem for the Block, so if you are not certain that there is an BlockItem for the Block you are using, check for if Block#asItem returns Items#AIR.
+> **Important**: Important A block in the level and a “block” in an inventory are very different things. A block in the level is represented by an BlockState, and its behavior defined by an instance of Block. Meanwhile, an item in an inventory is an ItemStack, controlled by an Item. As a bridge between the different worlds of Block and Item, there exists the class BlockItem. BlockItem is a subclass of Item that has a field block that holds a reference to the Block it represents. BlockItem defines some of the behavior of a “block” as an item, like how a right click places the block. It’s possible to have a Block without an BlockItem. (E.g. minecraft:water exists a block, but not an item. It is therefore impossible to hold it in an inventory as one.) When a block is registered, only a block is registered. The block does not automatically have an BlockItem. To create a basic BlockItem for a block, one should set the registry name of the BlockItem to that of its Block. Custom subclasses of BlockItem may be used as well. Once an BlockItem has been registered for a block, Block#asItem can be used to retrieve it. Block#asItem will return Items#AIR if there is no BlockItem for the Block, so if you are not certain that there is an BlockItem for the Block you are using, check for if Block#asItem returns Items#AIR.
 
 #### Optionally Registering Blocks
 
-In the past there have been several mods that have allowed users to disable blocks/items in a configuration file. However, you shouldn&rsquo;t do this. There is no limit on the amount of blocks that can be register, so register all blocks in your mod! If you want a block to be disabled through a configuration file, you should disable the crafting recipe. If you would like to disable the block in the creative tab, use a `FeatureFlag` when building the contents within [`BuildCreativeModeTabContentsEvent`](../items/#creative-tabs).
+In the past there have been several mods that have allowed users to disable blocks/items in a configuration file. However, you shouldn’t do this. There is no limit on the amount of blocks that can be register, so register all blocks in your mod! If you want a block to be disabled through a configuration file, you should disable the crafting recipe. If you would like to disable the block in the creative tab, use a `FeatureFlag` when building the contents within [`BuildCreativeModeTabContentsEvent`](../items/#creative-tabs).
 
 ## Further Reading
 

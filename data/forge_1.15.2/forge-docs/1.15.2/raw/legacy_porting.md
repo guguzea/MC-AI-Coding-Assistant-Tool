@@ -2,7 +2,7 @@
 version: "1.15.2"
 forgeVersion: "29.0.23"
 chapter: "legacy/porting"
-source: "https://docs.readthedocs.net/en/1.15.x/legacy/porting/"
+source: "https://docs.minecraftforge.net/en/1.15.x/legacy/porting/"
 sourceType: mkdocs
 ---
 # Porting to Minecraft 1.15

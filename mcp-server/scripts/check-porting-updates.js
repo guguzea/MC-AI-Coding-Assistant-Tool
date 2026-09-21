@@ -24,7 +24,7 @@
  */
 
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
 
 import { parseCliArgs, compareVersions, isUpdateAvailable } from "./_lib/args.js";
@@ -196,8 +196,10 @@ function main() {
 
 // Only auto-run when invoked directly (lets tests import this module safely).
 const invokedDirectly =
-  process.argv[1] &&
-  import.meta.url === `file:///${process.argv[1].replace(/\\/g, "/")}`;
+  // 本仓路径含非 ASCII（桌面）时 import.meta.url 是百分号编码的，裸拼 file:/// 永远不相等 ⇒
+  // 脚本静默不跑且退出 0（2026-09-21 实测：forge manifest 的 chapters 因此冻结在 9 月 4 日，
+  // 5 个共用此门的脚本同病）。pathToFileURL 才是双向可逆的写法。
+  Boolean(process.argv[1]) && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (invokedDirectly) {
   main();
 }

@@ -2,7 +2,7 @@
 version: "1.12.2"
 forgeVersion: "14.23.5.2858"
 chapter: "animation/intro"
-source: "https://docs.readthedocs.net/en/1.12.x/animation/intro/"
+source: "https://docs.minecraftforge.net/en/1.12.x/animation/intro/"
 sourceType: mkdocs
 ---
 # Intro to the Animation API

@@ -2,7 +2,7 @@
 version: "1.17.1"
 forgeVersion: "37.1.2"
 chapter: "conventions/locations"
-source: "https://docs.readthedocs.net/en/1.17.x/conventions/locations/"
+source: "https://docs.minecraftforge.net/en/1.17.x/conventions/locations/"
 sourceType: mkdocs
 ---
 # Locations

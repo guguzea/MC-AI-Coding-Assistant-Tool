@@ -6,11 +6,11 @@ The World Saved Data (WSD) system is an alternative to world capabilities that c
 
 Each WSD implementation must subtype the `WorldSavedData` class. There are three important methods to be aware of:
 
-- <li>`save`: Allows the implementation to write NBT data to the world.
-- <li>`load`: Allows the implementation to read previously saved NBT data.
-- <li>`setDirty`: A method that must be called after changing the data, to notify the game that there are changes that need to be written. If not called, `#save` will not get called and the existing data will persist.
+- `save`: Allows the implementation to write NBT data to the world.
+- `load`: Allows the implementation to read previously saved NBT data.
+- `setDirty`: A method that must be called after changing the data, to notify the game that there are changes that need to be written. If not called, `#save` will not get called and the existing data will persist.
 
-The constructor of the class also requires a `String`. This is the name of the `.dat` file stored within the `data` folder for the implemented world. For example, if a WSD was named &ldquo;example&rdquo; within the Nether, then a file would be created at `./<level_folder>/DIM-1/data/example.dat`.
+The constructor of the class also requires a `String`. This is the name of the `.dat` file stored within the `data` folder for the implemented world. For example, if a WSD was named “example” within the Nether, then a file would be created at `./<level_folder>/DIM-1/data/example.dat`.
 
 ## Attaching to a World
 

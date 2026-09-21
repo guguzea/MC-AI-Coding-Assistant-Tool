@@ -2,7 +2,7 @@
 version: "1.12.2"
 forgeVersion: "14.23.5.2858"
 chapter: "utilities/oredictionary"
-source: "https://docs.readthedocs.net/en/1.12.x/utilities/oredictionary/"
+source: "https://docs.minecraftforge.net/en/1.12.x/utilities/oredictionary/"
 sourceType: mkdocs
 ---
 # OreDictionary
@@ -39,6 +39,7 @@ Recipes that use the OreDictionary are created and registered in much the same w
 
 To make a recipe that can use OreDictionary entries, create an ingredient with `type` of `forge:ore_dict` in your recipe json, and specify the ore dictionary entry name in `ore` field:
 
+
 ```
 {
     "type": "forge:ore_dict",
@@ -46,9 +47,11 @@ To make a recipe that can use OreDictionary entries, create an ingredient with `
 }
 ```
 
+
 More information about recipe json may be found [here](../recipes/).
 
 Another use of the OreDictionary in crafting is the [WILDCARD_VALUE](#wildcard_value). Use by passing `32767` into `data` field of a regular item ingredient:
+
 
 ```
 {
@@ -56,6 +59,7 @@ Another use of the OreDictionary in crafting is the [WILDCARD_VALUE](#wildcard_v
     "data": 32767
 }
 ```
+
 
 > **Note**: Note The constant OreDictionary.WILDCARD_VALUE (32767) should only be used for the recipe input. Using WILDCARD_VALUE in the recipe output will only hardcode the damage of the output ItemStack.
 

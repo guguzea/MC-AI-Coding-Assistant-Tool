@@ -14,10 +14,10 @@ Basic items that need no special functionality (think sticks or sugar) do not ne
 Method | Description
 --- | ---
 `requiredFeatures` | Sets the required `FeatureFlag`s needed to see this item in the `CreativeModeTab` it is added to.
-`durability` | Sets the maximum damage value for this item. If it is over `0`, two item properties &ldquo;damaged&rdquo; and &ldquo;damage&rdquo; are added.
+`durability` | Sets the maximum damage value for this item. If it is over `0`, two item properties “damaged” and “damage” are added.
 `stacksTo` | Sets the maximum stack size. You cannot have an item that is both damageable and stackable.
 `setNoRepair` | Makes this item impossible to repair, even if it is damageable.
-`craftRemainder` | Sets this item&rsquo;s container item, the way that lava buckets give you back an empty bucket when they are used.
+`craftRemainder` | Sets this item’s container item, the way that lava buckets give you back an empty bucket when they are used.
 
 The above methods are chainable, meaning they `return this` to facilitate calling them in series.
 
@@ -28,6 +28,7 @@ Setting the properties of an item as above only works for simple items. If you w
 ## Creative Tabs
 
 An item can be added to a `CreativeModeTab` via `BuildCreativeModeTabContentsEvent` on the [mod event bus](../concepts/events/#mod-event-bus). An item(s) can be added without any additional configurations via `#accept`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -45,11 +46,13 @@ public void buildContents(BuildCreativeModeTabContentsEvent event) {
 }
 ```
 
+
 You can also enable or disable items being added through a `FeatureFlag` in the `FeatureFlagSet` or a boolean determining whether the player has permissions to see operator creative tabs.
 
 ### Custom Creative Tabs
 
-A custom `CreativeModeTab` must be [registered](../concepts/registries/#methods-for-registering). The builder can be created via `CreativeModeTab#builder`. The tab can set the title, icon, default items, and a number of other properties. In addition, Forge provides additional methods to customize the tab&rsquo;s image, label and slot colors, where the tab should be ordered, etc.
+A custom `CreativeModeTab` must be [registered](../concepts/registries/#methods-for-registering). The builder can be created via `CreativeModeTab#builder`. The tab can set the title, icon, default items, and a number of other properties. In addition, Forge provides additional methods to customize the tab’s image, label and slot colors, where the tab should be ordered, etc.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -70,6 +73,7 @@ public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = REGISTRAR.regi
   .build()
 );
 ```
+
 
 ## Registering an Item
 

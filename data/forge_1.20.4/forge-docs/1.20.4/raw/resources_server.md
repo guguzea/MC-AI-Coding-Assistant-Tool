@@ -1,9 +1,8 @@
-> 版本：1.20.4
 ---
 version: "1.20.4"
 forgeVersion: "49.0.0"
 chapter: "resources/server"
-source: "https://docs.readthedocs.net/en/1.20.x/resources/server/"
+source: "https://docs.minecraftforge.net/en/1.20.x/resources/server/"
 sourceType: mkdocs
 ---
 # Datapacks
@@ -12,6 +11,6 @@ In 1.13, Mojang added [datapacks](https://minecraft.wiki/w/Data_pack) to the bas
 
 ### Creating a Datapack
 
-Datapacks are stored within the `data` directory within your project&rsquo;s resources. Your mod can have multiple data domains, since you can add or modify already existing datapacks, like vanilla&rsquo;s, forge&rsquo;s, or another mod&rsquo;s. You can then follow the steps found [here](https://minecraft.wiki/w/Tutorials/Creating_a_data_pack) to create any datapack.
+Datapacks are stored within the `data` directory within your project’s resources. Your mod can have multiple data domains, since you can add or modify already existing datapacks, like vanilla’s, forge’s, or another mod’s. You can then follow the steps found [here](https://minecraft.wiki/w/Tutorials/Creating_a_data_pack) to create any datapack.
 
 Additional reading: [Resource Locations](../../concepts/resources/#ResourceLocation)

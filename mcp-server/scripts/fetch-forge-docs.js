@@ -10,9 +10,9 @@
  *   node scripts/fetch-forge-docs.js --dry-run
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from "fs";
 import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import { parseCliArgs } from "./_lib/args.js";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -23,54 +23,63 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = join(__dirname, "..", "..", "data");
 const MANIFEST_PATH = join(__dirname, "..", "..", "data", "forge-versions-manifest.json");
 
-// ── CLI ────────────────────────────────────────────────────────────────
+// ── CLI / manifest ───────────────────────────────────────────────────────
+// 只有直接执行才读 argv、载入 manifest、必要时 process.exit；
+// 测试侧 import 本模块是为了拿纯转换函数，import 不得产生退出或 stdout 噪声。
+const invokedDirectly =
+  Boolean(process.argv[1]) && import.meta.url === pathToFileURL(process.argv[1]).href;
 
-const args = process.argv.slice(2);
-const parsedArgs = parseCliArgs(args, {
-  allowBoolFlags: new Set(["--dry-run", "--force"]),
-});
-const dryRun = parsedArgs.flags["dry-run"] === true;
-const force = parsedArgs.flags.force === true;
-const targetVer = parsedArgs.flags.version;
-let targetSection = parsedArgs.flags.section;
-const sectionIndex = args.indexOf("--section");
-if (targetSection === true && sectionIndex >= 0) {
-  const value = args[sectionIndex + 1];
-  targetSection = value && !value.startsWith("--") ? value : undefined;
-}
-if (parsedArgs.flags.versionError) {
-  console.error("ERROR: --version requires a non-empty value");
-  process.exit(2);
-}
-if (args.includes("--section") && !targetSection) {
-  console.error("ERROR: --section requires a non-empty value");
-  process.exit(2);
-}
-
-// ── Manifest ─────────────────────────────────────────────────────────
-
+let dryRun = false;
+let force = false;
+let targetSection;
 let manifest;
-try {
-  manifest = JSON.parse(readFileSync(MANIFEST_PATH, "utf-8"));
-} catch (e) {
-  console.error("ERROR: Cannot load manifest. Run: node scripts/probe-forge-versions.js");
-  process.exit(1);
+let versions = [];
+
+function initRunConfig() {
+  const args = process.argv.slice(2);
+  const parsedArgs = parseCliArgs(args, {
+    allowBoolFlags: new Set(["--dry-run", "--force"]),
+  });
+  dryRun = parsedArgs.flags["dry-run"] === true;
+  force = parsedArgs.flags.force === true;
+  const targetVer = parsedArgs.flags.version;
+  targetSection = parsedArgs.flags.section;
+  const sectionIndex = args.indexOf("--section");
+  if (targetSection === true && sectionIndex >= 0) {
+    const value = args[sectionIndex + 1];
+    targetSection = value && !value.startsWith("--") ? value : undefined;
+  }
+  if (parsedArgs.flags.versionError) {
+    console.error("ERROR: --version requires a non-empty value");
+    process.exit(2);
+  }
+  if (args.includes("--section") && !targetSection) {
+    console.error("ERROR: --section requires a non-empty value");
+    process.exit(2);
+  }
+
+  try {
+    manifest = JSON.parse(readFileSync(MANIFEST_PATH, "utf-8"));
+  } catch (e) {
+    console.error("ERROR: Cannot load manifest. Run: node scripts/probe-forge-versions.js");
+    process.exit(1);
+  }
+
+  const KNOWN_VERSIONS = Object.keys(manifest.versions).filter(
+    v => manifest.versions[v]?.mkdocs?.available
+  );
+
+  versions = targetVer
+    ? (KNOWN_VERSIONS.includes(targetVer) ? [targetVer] : [])
+    : KNOWN_VERSIONS;
+
+  if (versions.length === 0) {
+    console.error(`ERROR: Version "${targetVer}" not found. Available: ${KNOWN_VERSIONS.join(", ") || "none"}`);
+    process.exit(1);
+  }
+
+  console.log(`Fetching versions: ${versions.join(", ")}\n`);
 }
-
-const KNOWN_VERSIONS = Object.keys(manifest.versions).filter(
-  v => manifest.versions[v]?.mkdocs?.available
-);
-
-const versions = targetVer
-  ? (KNOWN_VERSIONS.includes(targetVer) ? [targetVer] : [])
-  : KNOWN_VERSIONS;
-
-if (versions.length === 0) {
-  console.error(`ERROR: Version "${targetVer}" not found. Available: ${KNOWN_VERSIONS.join(", ") || "none"}`);
-  process.exit(1);
-}
-
-console.log(`Fetching versions: ${versions.join(", ")}\n`);
 
 // ── HTTP ───────────────────────────────────────────────────────────────
 
@@ -196,7 +205,8 @@ function extractMarkdown(html, baseUrl) {
   text = text.replace(/<script[\s\S]*?<\/script>/gi, "");
 
   text = htmlToMd(text);
-  text = text.replace(/\n{3,}/g, "\n\n").trim();
+  // 不再在这里折叠 \n{3,}：代码块已在 htmlToMd 内回填，这里再折会削掉块内空行
+  text = text.trim();
 
   return text;
 }
@@ -242,32 +252,81 @@ function detectLang(code) {
   return "";
 }
 
+/** 上游渲染常留 HTML 实体（&rsquo; / &mdash; / &#8217; …），旧表只解 6 个 ⇒ 实测 508 篇正文带残实体。 */
+const ENTITIES = [
+  [/&lt;/g, "<"], [/&gt;/g, ">"], [/&quot;/g, '"'], [/&#39;/g, "'"], [/&apos;/g, "'"],
+  [/&nbsp;/g, " "], [/&ndash;/g, "–"], [/&mdash;/g, "—"], [/&hellip;/g, "…"],
+  [/&rsquo;/g, "’"], [/&lsquo;/g, "‘"], [/&ldquo;/g, "“"], [/&rdquo;/g, "”"],
+  [/&trade;/g, "™"], [/&reg;/g, "®"], [/&copy;/g, "©"], [/&times;/g, "×"], [/&middot;/g, "·"],
+  [/&#(\d+);/g, (m, d) => String.fromCharCode(Number(d))],
+  [/&amp;/g, "&"],
+];
+
+function decodeEntities(s) {
+  let out = s;
+  for (const [re, to] of ENTITIES) out = out.replace(re, to);
+  return out;
+}
+
+/** 只删标签、不解实体。实体解码全篇只做一次（见 htmlToMd 末尾），否则「解码后再删」会把泛型吃掉。 */
+function stripOnly(html) {
+  return html.replace(/<[^>]+>/g, "").trim();
+}
+
 function stripTags(html) {
-  return html
-    .replace(/<[^>]+>/g, m => m.startsWith("</") ? "" : m)
-    .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ").trim();
+  // 旧实现「开标签原样返回、只删闭标签」⇒ 正文留下 <li> <code> <div> 残片（实测 376 篇），
+  // 上游写坏的行内 <code> 还会把反引号配对搅乱（189 篇行内围栏可疑）。
+  const inline = html
+    .replace(/<(code|var|kbd|samp)[^>]*>([\s\S]*?)<\/\1>/gi, "`$2`")
+    .replace(/<\/?(?:code|var|kbd|samp)\b[^>]*>/gi, "");
+  return stripOnly(inline);
+}
+
+/** 代码块先请进保险库：列表/段落的 `\s+ → " "` 折叠会把块内换行压成一行，
+ *  围栏随之被吞（实测同一页 26 个 <pre> 只吐 49 个围栏行，应为 52）。 */
+const PRE_TOKEN_HEAD = "\u0000MCDEV_PRE_";
+const PRE_TOKEN_RE = /\u0000MCDEV_PRE_(\d+)\u0000/g;
+const preToken = (i) => `${PRE_TOKEN_HEAD}${i}\u0000`;
+
+/** 列表项 / 段落的空白折叠：含代码块占位符时只并行内空白，保留换行结构。 */
+function flatten(fragment) {
+  const s = stripTags(fragment);
+  if (s.includes(PRE_TOKEN_HEAD)) {
+    return s.replace(/[ \t]+/g, " ").replace(/ ?\n ?/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+  }
+  return s.replace(/\s+/g, " ").trim();
 }
 
 function htmlToMd(html) {
+  const vault = [];
   let text = html;
+
+  // pre/code blocks —— 最先处理，之后只以占位符形式参与其余转换
+  text = text.replace(/<pre[^>]*>([\s\S]*?)<\/pre>/gi, (_, inner) => {
+    const code = inner.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, "$1");
+    const stripped = decodeEntities(stripOnly(code));
+    const lang = detectLang(stripped);
+    const body = stripped.trim();
+    // 上游会在代码块里演示 markdown 围栏本身；固定三反引号会让「块中块」提前闭合，
+    // 之后整页内容被吞进代码块（实测 21 篇未配对围栏全由此来）。围栏长度取内部最长串 +1。
+    let longest = 0;
+    for (const line of body.split("\n")) {
+      const m = /^\s*(`{3,})/.exec(line);
+      if (m && m[1].length > longest) longest = m[1].length;
+    }
+    const fence = "`".repeat(Math.max(3, longest + 1));
+    vault.push("\n" + fence + lang + "\n" + body + "\n" + fence + "\n");
+    return preToken(vault.length - 1);
+  });
 
   // h1-h6
   for (let i = 1; i <= 6; i++) {
     const re = new RegExp(`<h${i}(?:[^>]*)>([\\s\\S]*?)</h${i}>`, "gi");
     text = text.replace(re, (_, inner) => {
-      const cleaned = stripTags(inner).replace(/\s+/g, " ").trim();
+      const cleaned = flatten(inner);
       return "\n" + "#".repeat(i) + " " + cleaned + "\n";
     });
   }
-
-  // pre/code blocks
-  text = text.replace(/<pre[^>]*>([\s\S]*?)<\/pre>/gi, (_, inner) => {
-    const code = inner.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, "$1");
-    const stripped = stripTags(code);
-    const lang = detectLang(stripped);
-    return "\n```" + lang + "\n" + stripped.trim() + "\n```\n";
-  });
 
   // inline code
   text = text.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, "`$1`");
@@ -283,14 +342,14 @@ function htmlToMd(html) {
 
   // unordered lists
   text = text.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (_, inner) =>
-    inner.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, item => "- " + stripTags(item).replace(/\s+/g, " ").trim()).trim()
+    inner.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, item => "- " + flatten(item)).trim()
   );
 
   // ordered lists
   text = text.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (_, inner) => {
     let idx = 0;
     return inner.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, item =>
-      (++idx) + ". " + stripTags(item).replace(/\s+/g, " ").trim()
+      (++idx) + ". " + flatten(item)
     ).trim();
   });
 
@@ -317,13 +376,34 @@ function htmlToMd(html) {
   text = text.replace(/<br\s*\/?>/gi, "\n");
   text = text.replace(/<hr\s*\/?>/gi, "\n---\n");
   text = text.replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, (_, inner) =>
-    "\n" + stripTags(inner).replace(/\s+/g, " ").trim() + "\n"
+    "\n" + flatten(inner) + "\n"
   );
 
-  return stripTags(text);
+  // 收尾顺序：删标签 → 解实体（全篇仅此一次）→ 折叠空行 → 回填代码块保险库。
+  // 折叠必须排在回填之前：否则页内正文的空行折叠会顺手削掉代码块里的连续空行。
+  const out = decodeEntities(stripTags(text)).replace(/\n{3,}/g, "\n\n");
+  return out.replace(PRE_TOKEN_RE, (_, i) => vault[Number(i)] ?? "").trim();
 }
 
 // ── Fetch ────────────────────────────────────────────────────────────
+
+/**
+ * 带退避的落盘。本仓在 OneDrive 同步卷上，`writeFileSync` 偶发
+ * `UNKNOWN: unknown error, open`（errno -4094）——2026-09-21 一整轮重抓就是
+ * 被这一页掀掉的（后面两档没跑完）。一次抖动不该等于整轮失败，但真失败仍要冒泡计负。
+ */
+async function writePage(filePath, text) {
+  const delays = [200, 600, 1500];
+  for (let i = 0; ; i++) {
+    try {
+      writeFileSync(filePath, text, "utf-8");
+      return;
+    } catch (e) {
+      if (i >= delays.length) throw e;
+      await new Promise(r => setTimeout(r, delays[i]));
+    }
+  }
+}
 
 /**
  * 把 chapter 拼到 route 根 URL 上。
@@ -354,6 +434,7 @@ async function fetchChapter(mcVersion, chapter) {
 // ── Main ────────────────────────────────────────────────────────────
 
 async function main() {
+  let totalFailed = 0;
   for (const mcVer of versions) {
     const verInfo = manifest.versions[mcVer];
     if (!verInfo?.mkdocs?.available) {
@@ -391,22 +472,38 @@ async function main() {
       const filePath = join(versionDir, fileName);
 
       if (existsSync(filePath) && !force) {
-        process.stdout.write(`  SKIP ${chapter}\n`);
-        success++;
+        const bytes = statSync(filePath).size;
+        if (bytes < 100) {
+          // 空壳页旧实现计成 SKIP 成功 ⇒「抓到」与「抓到 0 字节」在台账里同形，缺页看不出来。
+          console.log(`  SHELL ${chapter} — 本地仅 ${bytes}B，视为未完成（加 --force 重抓）`);
+          failed++;
+        } else {
+          process.stdout.write(`  SKIP ${chapter}\n`);
+          success++;
+        }
         continue;
       }
 
       process.stdout.write(`  FETCH ${chapter}... `);
       const { ok, markdown, status, error } = await fetchChapter(mcVer, chapter);
 
-      if (ok && markdown && markdown.length > 200) {
+      const body = typeof markdown === "string" ? markdown.trim() : "";
+      if (ok && body) {
         const fm = ["---", `version: "${mcVer}"`, `forgeVersion: "${verInfo.forgeVersion}"`,
           `chapter: "${chapter}"`, `source: "${sourceUrl}"`, `sourceType: mkdocs`, "---", ""].join("\n");
-        writeFileSync(filePath, fm + markdown, "utf-8");
-        console.log(`OK ${(markdown.length / 1024).toFixed(1)}KB`);
+        try {
+          await writePage(filePath, fm + markdown);
+        } catch (writeError) {
+          console.log(`WRITEFAIL ${chapter}: ${writeError.code || writeError.message}`);
+          failed++;
+          continue;
+        }
+        // 上游确有极短的合法页（各档站点首页 ~300 字符，个别 stub 更短）：
+        // 旧门槛 `> 200` 让这类页永远进不来，还被报成 FAIL，与真失败同形。
+        console.log(body.length < 200 ? `OK SHORT ${body.length}B` : `OK ${(markdown.length / 1024).toFixed(1)}KB`);
         success++;
       } else {
-        console.log(`FAIL HTTP ${status} ${error || ""}`);
+        console.log(`FAIL HTTP ${status} ${error || (ok ? "空正文" : "")}`);
         failed++;
       }
 
@@ -414,13 +511,28 @@ async function main() {
     }
 
     console.log(`  RESULT: ${success} OK, ${failed} failed\n`);
+    totalFailed += failed;
   }
 
   if (dryRun) console.log("(dry-run, no files written)");
   else console.log("DONE!");
+
+  // 抓取失败必须影响退出码：旧实现把 FAIL 只打进 stdout，批量跑与 CI 永远看到 0，
+  // 缺页就是这么被咽下去的（2026-09-21 缺页普查的 Forge 29 页即此形态）。
+  if (totalFailed > 0) {
+    console.error(`FAILED: ${totalFailed} 页未落盘或为空壳`);
+    process.exitCode = 1;
+  }
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+// 只有直接 CLI 调用才真跑；测试侧 import 本模块是为了拿纯转换函数。
+// 用 pathToFileURL 而不是裸拼 file:/// —— 本仓路径含非 ASCII 时后者恒不相等（2026-09-21 五脚本静默不跑事故）。
+if (invokedDirectly) {
+  initRunConfig();
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}
+
+export { stripTags, htmlToMd, detectLang, extractMarkdown, convertAdmonitions };

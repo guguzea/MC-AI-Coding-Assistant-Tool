@@ -2,7 +2,7 @@
 version: "1.13.2"
 forgeVersion: "25.0.55"
 chapter: "utilities/recipes"
-source: "https://docs.readthedocs.net/en/1.13.x/utilities/recipes/"
+source: "https://docs.minecraftforge.net/en/1.13.x/utilities/recipes/"
 sourceType: mkdocs
 ---
 # Recipes
@@ -18,6 +18,7 @@ Forge will load all recipes which can be found within the `./assets/<modid>/reci
 ## The Recipe file
 
 A basic recipe file might look like the following example:
+
 
 ```
 {
@@ -50,7 +51,8 @@ A basic recipe file might look like the following example:
 }
 ```
 
-> **Note**: Note When you first obtain an ingredient to a vanilla recipe it will automatically unlock the recipe in the recipe book. To achieve the same effect, you have to use the Advancement system and create a new Advancement for each of your ingredients. The advancement has to exist. This doesn&rsquo;t mean it has to be visible in the advancement tree.
+
+> **Note**: Note When you first obtain an ingredient to a vanilla recipe it will automatically unlock the recipe in the recipe book. To achieve the same effect, you have to use the Advancement system and create a new Advancement for each of your ingredients. The advancement has to exist. This doesn’t mean it has to be visible in the advancement tree.
 
 ### Type
 
@@ -68,19 +70,20 @@ Within this section we will take a closer look on the differences between defini
 
 ### Shaped crafting
 
-Shaped recipes require the `pattern` and `key` keywords. A pattern defines the slot an item must appear in using placeholder characters. You can choose whatever character you want to be a placeholder for an item. Keys on the other hand define what items are to be used instead of the placeholders. A key is defined by a placeholder character and the item. Additional the type `forge:ore_dict` may be added. This defines the item beeing part of the [`OreDictionary`](../utilities/oredictionary.md) and can for example be used when it doesn&rsquo;t matter which copper ore is used to produce a copper ingot. In this case the `ore` tag has to be used instead of the `item` tag to define the item. There are [many more](https://minecraft.gamepedia.com/Recipe) of these types which can be used here and you can even register your own. The `data` tag is a optional and used to define the metadata of a block or item.
+Shaped recipes require the `pattern` and `key` keywords. A pattern defines the slot an item must appear in using placeholder characters. You can choose whatever character you want to be a placeholder for an item. Keys on the other hand define what items are to be used instead of the placeholders. A key is defined by a placeholder character and the item. Additional the type `forge:ore_dict` may be added. This defines the item beeing part of the [`OreDictionary`](../utilities/oredictionary.md) and can for example be used when it doesn’t matter which copper ore is used to produce a copper ingot. In this case the `ore` tag has to be used instead of the `item` tag to define the item. There are [many more](https://minecraft.gamepedia.com/Recipe) of these types which can be used here and you can even register your own. The `data` tag is a optional and used to define the metadata of a block or item.
 
 > **Important**: Important Any item which uses setHasSubtypes(true) requires the use of the data field. When it is not used within the ingredients or keys, it will mean any metadata of this item will be accepted, for example: Not defining the data of a sword means even a half broken sword will be accepted for the crafting recipe!
 
 ### Shapeless crafting
 
-A shapeless recipe doesn&rsquo;t make use of the `pattern` and `key` keywords.
+A shapeless recipe doesn’t make use of the `pattern` and `key` keywords.
 
-To define a shapeless recipe, you have to use the `ingredients` list. It defines which items have to be used for the crafting process and can also make use of the additional type `forge:ore_dict` and it&rsquo;s functionality as described above. There are [many more](https://minecraft.gamepedia.com/Recipe) of these types which can be used here and you can even register your own. It is even possible to define multiple instances of the same item which means multiple of these items have to be in place for the crafting recipe to take place.
+To define a shapeless recipe, you have to use the `ingredients` list. It defines which items have to be used for the crafting process and can also make use of the additional type `forge:ore_dict` and it’s functionality as described above. There are [many more](https://minecraft.gamepedia.com/Recipe) of these types which can be used here and you can even register your own. It is even possible to define multiple instances of the same item which means multiple of these items have to be in place for the crafting recipe to take place.
 
 > **Note**: Note While there is no limit on how many ingredients your recipe requires the vanilla crafting table does only allow 9 items to be placed for each crafting recipe.
 
 The following example shows how an ingredient list looks like within JSON.
+
 
 ```
 "ingredients": [
@@ -93,6 +96,7 @@ The following example shows how an ingredient list looks like within JSON.
         }
     ],
 ```
+
 
 ### Smelting
 
@@ -107,6 +111,7 @@ A pattern will be defined with the `pattern` list. Each string represents one ro
 ### Keys
 
 A key set is used in combination with patterns and contains keys whose name is the same as the placeholder character in the pattern list which it represents. One key may be defined to represent multiply items as it is the case for the wooden button. This means that the player can use one of the defined items for the crafting recipe, for example different types of wood.
+
 
 ```
 "key": {
@@ -123,17 +128,19 @@ A key set is used in combination with patterns and contains keys whose name is t
   }
 ```
 
+
 ### Results
 
 Every `recipe` has to have a result tag to define the output item.
 
-When crafting something, you can get out more than one item. This is achieved by defining the `count` number. If this is left out, meaning it doesn&rsquo;t exist within the result block, it defaults to 1. Negative values are not allowed here as an Itemstack cannot be smaller than 0. There is no option to use the `count` number anywhere else than for the result. The `data` field is a optional and used to define the metadata of a block or item. It defaults to 0 when it doesn&rsquo;t exist.
+When crafting something, you can get out more than one item. This is achieved by defining the `count` number. If this is left out, meaning it doesn’t exist within the result block, it defaults to 1. Negative values are not allowed here as an Itemstack cannot be smaller than 0. There is no option to use the `count` number anywhere else than for the result. The `data` field is a optional and used to define the metadata of a block or item. It defaults to 0 when it doesn’t exist.
 
 > **Note**: Note Any item which uses setHasSubtypes(true) requires the data field. In this case, it is not optional!
 
 ## Factories
 
-Factories can be used to allow defining recipes and ingredients of a custom type (class). To create your own factory, create a `_factories.json`. Within this file a type has to be defined, for example: `recipes`, `ingredients` or `conditions`. These types represent `IRecipeFactory`, `IIngredientFactory`, and `IConditionFactory`, respectively. The entry &ldquo;key&rdquo; must be a `name` which can be later used in your recipes, and the &ldquo;value&rdquo; is the fully qualified class name is a class you have to create which implements one of the above recipes. The class must have an empty constructor. For example:
+Factories can be used to allow defining recipes and ingredients of a custom type (class). To create your own factory, create a `_factories.json`. Within this file a type has to be defined, for example: `recipes`, `ingredients` or `conditions`. These types represent `IRecipeFactory`, `IIngredientFactory`, and `IConditionFactory`, respectively. The entry “key” must be a `name` which can be later used in your recipes, and the “value” is the fully qualified class name is a class you have to create which implements one of the above recipes. The class must have an empty constructor. For example:
+
 
 ```
 {
@@ -143,19 +150,32 @@ Factories can be used to allow defining recipes and ingredients of a custom type
 }
 ```
 
+
 > **Note**: Note There is no need to create a new _factories.json for each type you want to specify, they can all be defined in a single file.
 
 ### Conditional Recipes
 
 Conditional recipes can be created by making use of the factory system described above. For this you use the `conditions` type with the `IConditionFactory` from above and can later add the `conditions` type to your recipes:
 
-```xml { "conditions": [ { "type": "<modid>:<name>" } ] } ``` These conditions only apply to the recipe as a whole and not to ingredients. As an example, you might want to check if a mod is loaded using the already existing condition `forge:mod_loaded`, and `"modid": "<mod to check>"`.
+
+```xml
+{
+    "conditions": [
+        {
+            "type": "<modid>:<name>"
+        }
+    ]
+}
+```
+
+These conditions only apply to the recipe as a whole and not to ingredients. As an example, you might want to check if a mod is loaded using the already existing condition `forge:mod_loaded`, and `"modid": "<mod to check>"`.
 
 > **Note**: Note Conditions will only be checked once at startup!
 
 ## Constants
 
 It is possible to define constant values for your recipes. These values have to be defined within a `_constants.json` and can be used within any recipe of your mod by just writing `#<name>`. For filled buckets, you should use `fluid` instead of `data`. For example, this constant defines `#SADDLE` which represents the vanilla saddle item.
+
 
 ```
 [

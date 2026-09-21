@@ -1,0 +1,9 @@
+~~META:title=manual install~~
+
+Installing LiteLoader Manually with a third-party launcher
+==========================================================
+
+* [[1.6.4|Manual Installation for LiteLoader for 1.6.4]]
+* [[1.7.2|Manual Installation for LiteLoader for 1.7.2]]
+* [[1.7.10|Manual Installation for LiteLoader for 1.7.10]]
+

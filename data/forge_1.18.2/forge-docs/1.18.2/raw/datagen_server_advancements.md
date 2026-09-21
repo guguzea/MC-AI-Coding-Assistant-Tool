@@ -11,9 +11,9 @@ sourceType: mkdocs
 
 After implementation, the provider must be [added](../../#data-providers) to the `DataGenerator`.
 
-## `Advancement$Builder
+## `Advancement$Builder`
 
-<code>Advancement$Builder` is a convenience implementation for creating `Advancement`s to generate. It allows the definition of the parent advancement, the display information, the rewards when the advancement has been completed, and the requirements to unlock the advancement. Only the requirements need to be specified to create an `Advancement`.
+`Advancement$Builder` is a convenience implementation for creating `Advancement`s to generate. It allows the definition of the parent advancement, the display information, the rewards when the advancement has been completed, and the requirements to unlock the advancement. Only the requirements need to be specified to create an `Advancement`.
 
 Although not required, there are a number of methods that are important to know of:
 
@@ -26,6 +26,7 @@ Method | Description
 `requirements` | Specifies if the conditions must all return true or at least one must return true. An additional overload can be used to mix-and-match those operations.
 
 Once an `Advancement$Builder` is ready to be built, the `#save` method should be called which takes in the writer, the registry name of the advancement, and the file helper used to check whether the supplied parent exists.
+
 
 ```
 // In AdvancementProvider#registerAdvancements(writer, fileHelper)

@@ -11,9 +11,10 @@ Recipes are a way to transform some number of objects into other objects within 
 
 ## Data-Driven Recipes
 
-Most recipe implementations within vanilla are data driven via JSON. This means that a mod is not necessary to create a new recipe, only a [Data pack](https://minecraft.wiki/w/Data_pack). A full list on how to create and put these recipes within the mod&rsquo;s `resources` folder can be found on the [Minecraft Wiki](https://minecraft.wiki/w/Recipe).
+Most recipe implementations within vanilla are data driven via JSON. This means that a mod is not necessary to create a new recipe, only a [Data pack](https://minecraft.wiki/w/Data_pack). A full list on how to create and put these recipes within the mod’s `resources` folder can be found on the [Minecraft Wiki](https://minecraft.wiki/w/Recipe).
 
 A recipe can be obtained within the Recipe Book as a reward for completing an [advancement](../advancements/). Recipe advancements always have `minecraft:recipes/root` as their parent, to not to appear on the advancement screen. The default criteria to gain the recipe advancement is a check if the user has unlocked the recipe from using it once or receiving it through a command like `/recipe`:
+
 
 ```
 // Within some recipe advancement json
@@ -32,6 +33,7 @@ A recipe can be obtained within the Recipe Book as a reward for completing an [a
   ]
 ]
 ```
+
 
 Data-driven recipes and their unlocking advancement can be [generated](../../../datagen/server/recipes/) via `RecipeProvider`.
 
@@ -56,6 +58,7 @@ Forge provides some additional behavior to the recipe schema and its implementat
 
 Except for `minecraft:stonecutting` recipes, all vanilla recipe serializers expand the `result` tag to take in a full `ItemStack` as a `JsonObject` instead of just the item name and amount in some cases.
 
+
 ```
 // In some recipe JSON
 "result": {
@@ -69,6 +72,7 @@ Except for `minecraft:stonecutting` recipes, all vanilla recipe serializers expa
   }
 }
 ```
+
 
 > **Note**: Note The nbt tag can alternatively be a string containing a stringified NBT (or SNBT) for data which cannot be properly represented as a JSON object (such as IntArrayTags).
 

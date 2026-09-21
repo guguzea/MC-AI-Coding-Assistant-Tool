@@ -140,6 +140,30 @@ export function checkRuleText(rel, text) {
     }
   }
 
+  // 判据 D：`<Factory>.create(<Cls>::new)` 的方法引用必须与工厂的函数式接口契约相容 ——
+  // `IForgeContainerType.create` / `IForgeMenuType.create` 的第三参是 **PacketBuffer / FriendlyByteBuf**，
+  // 不是 `IInteractionObject` 之类。W3-2 最初只修了 `super(...)`，1.15.2 的构造第三参仍是
+  // `IInteractionObject` ⇒ 方法引用编译不过，而旧三类形状都抓不到。
+  for (const m of full.matchAll(/([A-Za-z_][A-Za-z0-9_]*)\s*\.\s*create\s*\(\s*([A-Z][A-Za-z0-9_]*)\s*::\s*new\s*\)/g)) {
+    const factory = m[1];
+    const cls = m[2];
+    if (!/^(?:I[A-Za-z]*Type|I[A-Za-z]*Factory)$/.test(factory)) continue;
+    const ctor = new RegExp(`public\\s+${cls}\\s*\\(([^)]*)\\)`).exec(full);
+    if (!ctor) continue;
+    const params = ctor[1]
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (params.length < 3) continue; // 2 参工厂（无 buf 的代）不在本判据内
+    const third = params[2].split(/\s+/)[0].replace(/<.*$/, "");
+    if (!/^(?:PacketBuffer|FriendlyByteBuf|RegistryFriendlyByteBuf)$/.test(third)) {
+      errs.push(
+        `${rel}: \`${factory}.create(${cls}::new)\` 的工厂契约第三参是 PacketBuffer/FriendlyByteBuf，` +
+          `但 \`${cls}\` 构造第三参是 \`${third}\` —— 方法引用与函数式接口签名不符（编译不过）`,
+      );
+    }
+  }
+
   return errs;
 }
 
@@ -167,6 +191,16 @@ const SELFTEST_CASES = [
   ["正对照：声明存在 ⇒ 绿", "```java\nclass A { A(int w){ super(MyMenuTypes.MY_MENU.get(), w); } }\n```\npublic static final RegistryObject<MenuType<A>> MY_MENU = MENUS.register(\"x\", () -> null);", 0],
   ["正对照：原版注册表 API 不误报", "```java\nvar b = BuiltInRegistries.BLOCK.get(id);\nvar g = Registry.get(Registries.ITEM, id);\n```\n", 0],
   ["正对照：占位符（本文件不声明）不误报", "```java\nvar x = MY_ITEM.get();\nvar y = MY_BLOCK.get();\nvar z = MY_TILE_ENTITY.get();\n```\n", 0],
+  [
+    "工厂契约第三参不符（1.15.2 原形）",
+    "```java\npublic class C extends Container { public C(int w, PlayerInventory i, IInteractionObject t) { super(null, w); } }\n```\n```java\nvar x = IForgeContainerType.create(C::new);\n```\n",
+    1,
+  ],
+  [
+    "正对照：工厂第三参 PacketBuffer ⇒ 绿",
+    "```java\npublic class C extends Container { public C(int w, PlayerInventory i, PacketBuffer b) {} }\n```\n```java\nvar x = IForgeContainerType.create(C::new);\n```\n",
+    0,
+  ],
 ];
 
 function runSelftest() {
@@ -207,6 +241,6 @@ if (process.argv.includes("--selftest")) {
     process.exit(1);
   }
   console.log(
-    `assert-rule-java-shapes: ok（源稿 rules ${scanned} 份：无 \`super(null,\` · 无未声明 MY_*.get() · new/定义实参一致）`,
+    `assert-rule-java-shapes: ok（源稿 rules ${scanned} 份：无 super(null,) · 无未声明 MY_*.get() · new/定义实参一致 · create(Cls::new) 第三参合契约）`,
   );
 }

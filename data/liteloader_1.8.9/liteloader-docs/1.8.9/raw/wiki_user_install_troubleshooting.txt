@@ -1,0 +1,14 @@
+~~META:title=troubleshooting~~
+
+Installation Troubleshooting
+============================
+
+If you are having trouble installing LiteLoader, check the following things:
+
+* Check that you have the **latest installer**, if you are unsure then re-download the installer from the [download page](http://www.liteloader.com/download).
+* Check that your **Java installation** (JRE) is up-to-date. If you get a message saying that the installer "cannot be started" or "cannot be launched", check that you have **Java 7 or later** installed.
+* Make sure you are using the **Official Mojang Launcher**. If you are using a third-party launcher then you should follow the appropriate steps in the [[user:install:trail:3rdparty|installation trail]] for third-party launchers. If you are using a "cracked" launcher, then you are on your own.
+* If you are using the **exe installer** on windows and are having difficulty, try using the **jar installer**.
+* If the installer will not launch and you are sure your Java installation is up-to-date, ensure that over-zealous anti-virus software isn't blocking the installation.
+
+If you are still having problems after having tried all of the above, then you should [[http://www.liteloader.com/discuss|post on the forum thread]]. Provide as much detail as possible and mention that you have already tried all the steps mentioned on this page.

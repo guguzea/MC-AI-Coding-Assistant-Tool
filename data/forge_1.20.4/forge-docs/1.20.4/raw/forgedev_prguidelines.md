@@ -1,16 +1,19 @@
-# Pull Request Guidelines
-
-> 来源：https://docs.minecraftforge.net/en/1.20.x/forgedev/prguidelines
-> 版本：1.20.4
+---
+version: "1.20.4"
+forgeVersion: "49.0.0"
+chapter: "forgedev/prguidelines"
+source: "https://docs.minecraftforge.net/en/1.20.x/forgedev/prguidelines/"
+sourceType: mkdocs
+---
 # Pull Request Guidelines
 
 Mods are built on top of Forge, but there are some things that Forge does not support, and that limits what mods can do. When modders run into something like that, they can make a change to Forge to support it, and submit that change as a Pull Request on Github.
 
-To make the best use of both your and the Forge team&rsquo;s time, it is recommended to follow some rough guidelines when preparing a Pull Request. The following points are the most important aspects to keep in mind when it comes to writing a good Pull Request.
+To make the best use of both your and the Forge team’s time, it is recommended to follow some rough guidelines when preparing a Pull Request. The following points are the most important aspects to keep in mind when it comes to writing a good Pull Request.
 
 ## What Exactly is Forge?
 
-At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft&rsquo;s code directly (like coremods do now), but they ran into conflicts with each other when they edited the same things. They also ran into issues when one mod changed behavior in ways that the other mods could not anticipate (like coremods do now), causing mysterious issues and lots of headaches.
+At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft’s code directly (like coremods do now), but they ran into conflicts with each other when they edited the same things. They also ran into issues when one mod changed behavior in ways that the other mods could not anticipate (like coremods do now), causing mysterious issues and lots of headaches.
 
 By using something like Forge, mods can centralize common changes and avoid conflicts. Forge also includes supporting structures for common mod features like Capabilities, Registries, and others that allow mods to work together better.
 
@@ -18,7 +21,7 @@ When writing a good Forge Pull Request, you also have to know what Forge is at a
 
 ## Patches
 
-Patches are applied as direct changes to Minecraft&rsquo;s source code, and aim to be as minimal as possible. Every time Minecraft code changes, all the Forge patches need to be looked over carefully and applied correctly to the new code. This means that large patches that change lots of things are difficult to maintain, so Forge aims to avoid those and keep patches as small as possible. In addition to making sure the code makes sense, reviews for patches will focus on minimizing the size.
+Patches are applied as direct changes to Minecraft’s source code, and aim to be as minimal as possible. Every time Minecraft code changes, all the Forge patches need to be looked over carefully and applied correctly to the new code. This means that large patches that change lots of things are difficult to maintain, so Forge aims to avoid those and keep patches as small as possible. In addition to making sure the code makes sense, reviews for patches will focus on minimizing the size.
 
 There are many strategies to make small patches, and reviews will often point out better methods to do things. Forge patches often insert a single line that fires an event or a code hook, which affects the code after it if the event meets some condition. This allows most of the code to exist outside of the patch, which keeps the patch small and simple.
 
@@ -69,4 +72,4 @@ Negativity will not help. Threatening to give up on your Pull Request and write 
 
 If you do your best to understand the slow and perfectionistic nature of the Pull Request process, we will do our best to understand your point of view as well.
 
-After your Pull Request has been reviewed and cleaned up to the best of everyone&rsquo;s ability, it will be marked for a final review by Lex, who has the final say on what is included in the project or not.
+After your Pull Request has been reviewed and cleaned up to the best of everyone’s ability, it will be marked for a final review by Lex, who has the final say on what is included in the project or not.

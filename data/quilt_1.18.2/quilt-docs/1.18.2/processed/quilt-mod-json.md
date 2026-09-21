@@ -1,5 +1,6 @@
 > 来源：https://raw.githubusercontent.com/QuiltMC/rfcs/main/specification/0002-quilt.mod.json.md
-> 抓取时间：2026-08-13T15:10:59.193Z
+> 抓取时间：2026-09-21T03:12:19.276Z
+> 警告：Quilt wiki / quilt.mod.json RFC 是未版本化现行页，不是该 MC 版本的历史快照。QSL README 才按 QuiltMC/quilt-standard-libraries/<maj.min> 抓取。
 
 # Summary
 This document acts as a Request for Comments (RFC) on the topic of how a Quilt mod's metadata should be formatted. Such changes are intended to provide added value for mod developers, library developers, and users alike.

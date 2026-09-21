@@ -77,7 +77,9 @@ IF inventory with multiple slots
 ```java
 // 1. Define the Container class
 public class MyContainer extends Container {
-    public MyContainer(int windowId, PlayerInventory inv, IInteractionObject target) {
+    // 工厂契约（IForgeContainerType.create(MyContainer::new)）的第三参是 PacketBuffer（IContainerFactory 签名），
+    // 不是 IInteractionObject —— 第三参类型不符则方法引用编译不过（W3-2 同族，2026-09-21 修）。
+    public MyContainer(int windowId, PlayerInventory inv, PacketBuffer data) {
         super(MyContainers.MY_CONTAINER.get(), windowId);
         // slot layout...
     }

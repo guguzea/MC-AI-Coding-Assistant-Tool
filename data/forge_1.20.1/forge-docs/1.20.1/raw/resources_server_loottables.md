@@ -1,15 +1,17 @@
-# Loot Tables
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/resources/server/loottables
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "resources/server/loottables"
+source: "https://docs.minecraftforge.net/en/1.20.1/resources/server/loottables/"
+sourceType: mkdocs
+---
 # Loot Tables
 
 Loot tables are logic files which dictate what should happen when various actions or scenarios occur. Although the vanilla system deals purely with item generation, the system can be expanded to perform any number of defined actions.
 
 ## Data-Driven Tables
 
-Most loot tables within vanilla are data driven via JSON. This means that a mod is not necessary to create a new loot table, only a [Data pack](https://minecraft.wiki/w/Data_pack). A full list on how to create and put these loot tables within the mod&rsquo;s `resources` folder can be found on the [Minecraft Wiki](https://minecraft.wiki/w/Loot_table).
+Most loot tables within vanilla are data driven via JSON. This means that a mod is not necessary to create a new loot table, only a [Data pack](https://minecraft.wiki/w/Data_pack). A full list on how to create and put these loot tables within the mod’s `resources` folder can be found on the [Minecraft Wiki](https://minecraft.wiki/w/Loot_table).
 
 ## Using a Loot Table
 
@@ -33,15 +35,16 @@ Method | Description
 
 Forge provides some additional behavior to loot tables for greater control of the system.
 
-### `LootTableLoadEvent
+### `LootTableLoadEvent`
 
-<code>LootTableLoadEvent` is an [event](../../../concepts/events/#creating-an-event-handler) fired on the Forge event bus which is fired whenever a loot table is loaded. If the event is canceled, then an empty loot table will be loaded instead.
+`LootTableLoadEvent` is an [event](../../../concepts/events/#creating-an-event-handler) fired on the Forge event bus which is fired whenever a loot table is loaded. If the event is canceled, then an empty loot table will be loaded instead.
 
-> **Important**: Important Do not modify a loot table&rsquo;s drops through this event. Those modifications should be done using global loot modifiers.
+> **Important**: Important Do not modify a loot table’s drops through this event. Those modifications should be done using global loot modifiers.
 
 ### Loot Pool Names
 
 Loot pools can be named using the `name` key. Any non-named loot pool will be the hash code of the pool prefixed by `custom#`.
+
 
 ```
 // For some loot pool
@@ -56,13 +59,14 @@ Loot pools can be named using the `name` key. Any non-named loot pool will be th
 }
 ```
 
+
 ### Looting Modifiers
 
 Loot tables are now affected by the `LootingLevelEvent`, on the Forge event bus, in addition to the looting enchantment.
 
 ### Additional Context Parameters
 
-Forge extends certain parameter sets to account for missing contexts which may be applicable. `LootContextParamSets#CHEST` now allows for a `LootContextParams#KILLER_ENTITY` as chest minecarts are entities which can be broken (or &lsquo;killed&rsquo;). `LootContextParamSets#FISHING` also allows for a `LootContextParams#KILLER_ENTITY` since the fishing hook is also an entity which is retracted (or &lsquo;killed&rsquo;) when the player retrieves it.
+Forge extends certain parameter sets to account for missing contexts which may be applicable. `LootContextParamSets#CHEST` now allows for a `LootContextParams#KILLER_ENTITY` as chest minecarts are entities which can be broken (or ‘killed’). `LootContextParamSets#FISHING` also allows for a `LootContextParams#KILLER_ENTITY` since the fishing hook is also an entity which is retracted (or ‘killed’) when the player retrieves it.
 
 ### Multiple Items on Smelting
 
@@ -71,6 +75,7 @@ When using the `SmeltItemFunction`, a smelted recipe will now return the actual 
 ### Loot Table Id Condition
 
 Forge adds an additional `LootItemCondition` which allows certain items to generate for a specific table. This is typically used within [global loot modifiers](../glm/).
+
 
 ```
 // In some loot pool or pool entry
@@ -85,9 +90,11 @@ Forge adds an additional `LootItemCondition` which allows certain items to gener
 }
 ```
 
+
 ### Can Tool Perform Action Condition
 
 Forge adds an additional `LootItemCondition` which checks whether the given `LootContextParams#TOOL` can perform the specified `ToolAction`.
+
 
 ```
 // In some loot pool or pool entry

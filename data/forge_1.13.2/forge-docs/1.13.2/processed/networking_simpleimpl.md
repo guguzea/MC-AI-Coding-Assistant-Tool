@@ -6,6 +6,7 @@ SimpleImpl is the name given to the packet system that revolves around the `Simp
 
 First you need to create your `SimpleChannel` object. We recommend that you do this in a separate class, possibly something like `ModidPacketHandler`. Create your `SimpleChannel` as a static field in this class, like so:
 
+
 ```
 private static final String PROTOCOL_VERSION = "1";
 public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
@@ -16,21 +17,25 @@ public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
 );
 ```
 
+
 The first argument is a name for the channel. The second argument is a `Supplier<String>` returning the current network protocol version. The third and fourth arguments respectively are `Predicate<String>` checking whether an incoming connection protocol version is network-compatible with the client or server, respectively. Here, we simply compare with the `PROTOCOL_VERSION` field directly, meaning that the client and server `PROTOCOL_VERSION`s must always match or FML will deny login.
 
 ## Registering Packets
 
 Next, we must declare the types of messages that we would like to send and receive. This is done using the `INSTANCE.registerMessage` method, which takes 5 parameters.
 
-- <li>The first parameter is the discriminator for the packet. This is a per-channel unique ID for the packet. We recommend you use a local variable to hold the ID, and then call registerMessage using `id++`. This will guarantee 100% unique IDs.
-- <li>The second parameter is the actual packet class `MSG`.
-- <li>The third parameter is a `BiConsumer<MSG, PacketBuffer>` responsible for encoding the message into the provided `PacketBuffer`
-- <li>The fourth parameter is a `Function
-` responsible for decoding the message from the provided `PacketBuffer` - <li>The final parameter is a `BiConsumer<MSG, Supplier<NetworkEvent.Context>>` responsible for handling the message itself <p>The last three parameters can be method references to either static or instance methods in Java. Remember that an instance method `MSG.encode(PacketBuffer)` still satisfies `BiConsumer<MSG, PacketBuffer>`, the `MSG` simply becomes the implicit first argument.
+- The first parameter is the discriminator for the packet. This is a per-channel unique ID for the packet. We recommend you use a local variable to hold the ID, and then call registerMessage using `id++`. This will guarantee 100% unique IDs.
+- The second parameter is the actual packet class `MSG`.
+- The third parameter is a `BiConsumer<MSG, PacketBuffer>` responsible for encoding the message into the provided `PacketBuffer`
+- The fourth parameter is a `Function<PacketBuffer, MSG>` responsible for decoding the message from the provided `PacketBuffer`
+- The final parameter is a `BiConsumer<MSG, Supplier<NetworkEvent.Context>>` responsible for handling the message itself
+
+The last three parameters can be method references to either static or instance methods in Java. Remember that an instance method `MSG.encode(PacketBuffer)` still satisfies `BiConsumer<MSG, PacketBuffer>`, the `MSG` simply becomes the implicit first argument.
 
 ## Handling Packets
 
 There are a couple things to highlight in a packet handler. A packet handler has both the message object and the network context available to it. The context allows access to the player that sent the packet (if on the server), and a way to enqueue threadsafe work.
+
 
 ```
 public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
@@ -42,6 +47,7 @@ public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().setPacketHandled(true);
 }
 ```
+
 
 Note the presence of `setPacketHandled`, which used to tell the network system that the packet has successfully completed handling.
 
@@ -56,7 +62,7 @@ Note the presence of `setPacketHandled`, which used to tell the network system t
 
 <!-- key:🔴 role:新手必读 (Warning) -->
 
-> **Warning**: Warning Be defensive when handling packets on the server. A client could attempt to exploit the packet handling by sending unexpected data. A common problem is vulnerability to arbitrary chunk generation. This typically happens when the server is trusting a block position sent by a client to access blocks and tile entities. When accessing blocks and tile entities in unloaded areas of the world, the server will either generate or load this area from disk, then promply write it to disk. This can be exploited to cause catastrophic damage to a server&rsquo;s performance and storage space without leaving a trace. To avoid this problem, a general rule of thumb is to only access blocks and tile entities if world.isBlockLoaded(pos) is true.
+> **Warning**: Warning Be defensive when handling packets on the server. A client could attempt to exploit the packet handling by sending unexpected data. A common problem is vulnerability to arbitrary chunk generation. This typically happens when the server is trusting a block position sent by a client to access blocks and tile entities. When accessing blocks and tile entities in unloaded areas of the world, the server will either generate or load this area from disk, then promply write it to disk. This can be exploited to cause catastrophic damage to a server’s performance and storage space without leaving a trace. To avoid this problem, a general rule of thumb is to only access blocks and tile entities if world.isBlockLoaded(pos) is true.
 
 ## Sending Packets
 
@@ -67,6 +73,7 @@ There is but one way to send a packet to the server. This is because there is on
 ### Sending to Clients
 
 Packets can be sent directly to a client using the `SimpleChannel`: `HANDLER.sendTo(MSG, entityPlayerMP.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT)`. However, this can be quite inconvenient. Forge has some convenience functions that can be used:
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -81,5 +88,6 @@ INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(chunk), new MyMessage());
 // Sending to all connected players
 INSTANCE.send(PacketDistributor.ALL.noArg(), new MyMessage());
 ```
+
 
 There are additional `PacketDistributor` types available, check the documentation on the `PacketDistributor` class for more details.

@@ -6,7 +6,7 @@
 
 ItemStackTileEntityRenderer allows you to render your item using `public void renderByItem(ItemStack itemStackIn, TransformType transformTypeIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn)`.
 
-In order to use an ISTER, the `Item` must first satisfy the condition that its model returns true for `IBakedModel#isCustomRenderer`. Once that returns true, the Item&rsquo;s ISTER will be accessed for rendering. If it does not have one, it will use the default `ItemStackTileEntityRenderer#instance`.
+In order to use an ISTER, the `Item` must first satisfy the condition that its model returns true for `IBakedModel#isCustomRenderer`. Once that returns true, the Item’s ISTER will be accessed for rendering. If it does not have one, it will use the default `ItemStackTileEntityRenderer#instance`.
 
 
 <!-- key:🟠 role:常见错误 -->

@@ -6,13 +6,28 @@
  *   node scripts/fetch-quilt-docs.js [--version=1.20.1] [--dry-run]
  */
 import { createHash } from "crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
+import { tmpdir } from "os";
+import { downloadWithFallback, failureNote } from "../../scripts/_lib/fetch-with-ua.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..", "..");
 const DATA = join(ROOT, "data");
+
+/**
+ * Quilt wiki 的正文改从上游仓库的 markdown 本体取（`QuiltMC/developer-wiki` 的 `wiki/<路径>/en.md`）。
+ * 原来抓 `wiki.quiltmc.org/<路径>` 的 HTML：该站是 SvelteKit 壳，`<main>` 服务端只有 ~287 字符，
+ * extractMainHtml 掉进 body 兜底后把整棵导航菜单 + 页脚版权灌进语料（2026-09-21 实测）。
+ * `concepts/qsl-qfapi` 保留原 id，避免孤儿化已入库的文件与索引条目。
+ */
+const WIKI_RAW = "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/";
+
+function wikiPage(id, path, label, tags) {
+  return { id, label, url: `${WIKI_RAW}${path}/en.md`, tags };
+}
+
 
 function qslReadmeUrl(mcVersion) {
   const [maj, min] = mcVersion.split(".");
@@ -22,12 +37,21 @@ function qslReadmeUrl(mcVersion) {
 
 function pagesFor(mcVersion) {
   return [
-    {
-      id: "qsl-qfapi",
-      label: "QSL and Quilted Fabric API",
-      url: "https://wiki.quiltmc.org/en/concepts/qsl-qfapi",
-      tags: ["qsl", "qfapi", "registry"],
-    },
+    wikiPage("qsl-qfapi", "concepts/qsl-qfapi", "QSL and Quilted Fabric API", ["qsl", "qfapi", "registry"]),
+    wikiPage("wiki-getting-started", "introduction/getting-started", "Getting Started with Quilt", ["setup", "loader"]),
+    wikiPage("wiki-setting-up", "introduction/setting-up", "Setting Up a Development Environment", ["setup", "gradle", "loom"]),
+    wikiPage("wiki-first-item", "items/first-item", "Creating your First Item", ["item", "registry"]),
+    wikiPage("wiki-food", "items/food", "Adding Food", ["item", "food"]),
+    wikiPage("wiki-armor", "items/armor", "Adding an Armor Set", ["item", "armor"]),
+    wikiPage("wiki-first-block", "blocks/first-block", "Adding a Simple Block", ["block", "registry"]),
+    wikiPage("wiki-sideness", "concepts/sideness", "Server-Side and Client-Side", ["sideness", "client", "server"]),
+    wikiPage("wiki-advanced-configuring", "configuration/advanced-configuring", "Advanced Configuring", ["config", "qconfig"]),
+    wikiPage("wiki-config-screen", "configuration/config-screen", "Setting up a Config Screen", ["config", "gui"]),
+    wikiPage("wiki-configuration-getting-started", "configuration/getting-started", "Getting Started with Quilt Config", ["config", "qconfig"]),
+    wikiPage("wiki-metadata", "configuration/metadata", "Annotations and Metadata Reference", ["config", "annotations"]),
+    wikiPage("wiki-mappings", "misc/mappings", "Customizing your Mappings", ["mappings", "yarn", "intermediary"]),
+    wikiPage("wiki-world-types", "misc/world_types", "Adding World Types", ["worldgen"]),
+    wikiPage("wiki-landing-page", "landing-page", "Quilt Developer Wiki Landing", ["index"]),
     {
       id: "quilt-mod-json",
       label: "quilt.mod.json",
@@ -51,22 +75,25 @@ const textCache = new Map();
 
 async function fetchText(url) {
   if (textCache.has(url)) return textCache.get(url);
-  let last;
-  for (let i = 0; i < 4; i++) {
-    try {
-      const res = await fetch(url, { redirect: "follow", headers: { "user-agent": "MC-skill-docs-fetch" } });
-      if (res.ok) {
-        const text = await res.text();
-        textCache.set(url, text);
-        return text;
-      }
-      last = new Error(`${res.status} ${url}`);
-    } catch (e) {
-      last = e;
-    }
-    await new Promise((r) => setTimeout(r, 1200 * (i + 1)));
+  // 本机 Node fetch 对 raw.githubusercontent 一律 TLS_VERIFY_FAILED（README「工具与网络边界」通道矩阵），
+  // 统一层先走 curl.exe --ssl-no-revoke、失败再退 fetch，且失败类别保持 TLS_*，不得写成 NOT_FOUND。
+  // minBytes=1：上游确有 ~110B 的合法短页（wiki/concepts/sideness），默认 1000 门槛会把它判成抓取失败。
+  const dest = join(tmpdir(), `mc-skill-quilt-${createHash("sha256").update(url).digest("hex").slice(0, 16)}.md`);
+  // 首条请求常撞冷连接（README 通道矩阵：实测一次 15s 零字节）。curl 腿一失败就退 Node fetch，
+  // 拿回来的却是 fetch 腿的 TLS_VERIFY_FAILED —— 类别被串台。所以整条链带退避重试，别一次就定罪。
+  let res;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    res = await downloadWithFallback({ url, dest, minBytes: 1, timeoutMs: 45_000 });
+    if (res.ok) break;
+    if (/NOT_FOUND|FORBIDDEN|RATE_LIMITED/.test(String(res.failureClass || ""))) break;
+    await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
   }
-  throw last;
+  if (!res.ok) throw new Error(`${res.failureClass || "FETCH_FAILED"} ${url} ${failureNote(res)}`);
+  const text = readFileSync(dest, "utf8");
+  rmSync(dest, { force: true });
+  if (!text.trim()) throw new Error(`EMPTY ${url}`);
+  textCache.set(url, text);
+  return text;
 }
 
 function extractMainHtml(html) {
@@ -203,6 +230,8 @@ async function main() {
   const verArg = argv.find((a) => a.startsWith("--version"));
   const version = verArg ? verArg.split("=")[1] || argv[argv.indexOf(verArg) + 1] : "1.20.1";
   const versions = version === "all" ? ["1.18.2", "1.19.4", "1.20.1", "1.20.4", "1.21.1", "1.21.11"] : [version];
+  // 缺页必须让调用方拿到非 0 退出码：旧实现只 console.warn，批量抓取脚本全绿收尾（同 F7 形态）。
+  const lost = [];
 
   for (const ver of versions) {
     const outDir = join(DATA, `quilt_${ver}`, "quilt-docs", ver);
@@ -244,6 +273,7 @@ async function main() {
         } else {
           console.warn(`skip ${page.id}: ${e.message ?? e}`);
           indexByStem.delete(page.id);
+          lost.push(`${ver}/${page.id}`);
         }
       }
     }
@@ -261,6 +291,11 @@ async function main() {
       writeIndexes(outDir, index);
       console.log(`wrote ${outDir} (${index.length} pages, l0/l1/l2)`);
     }
+  }
+
+  if (lost.length) {
+    console.error(`缺页 ${lost.length} 篇（无在盘旧文可留）：\n  ${lost.join("\n  ")}`);
+    process.exitCode = 1;
   }
 }
 

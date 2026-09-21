@@ -1,0 +1,5 @@
+~~META:title=installation trail~~
+
+*I'm using a third-party launcher*
+
+**Since you are using an unofficial launcher, you will need to [[user:install:manual:3rdparty|install LiteLoader manually]]**

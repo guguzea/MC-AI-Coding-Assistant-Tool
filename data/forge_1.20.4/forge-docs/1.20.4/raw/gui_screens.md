@@ -1,24 +1,23 @@
-> 版本：1.20.4
 ---
 version: "1.20.4"
 forgeVersion: "49.0.0"
 chapter: "gui/screens"
-source: "https://docs.readthedocs.net/en/1.20.x/gui/screens/"
+source: "https://docs.minecraftforge.net/en/1.20.x/gui/screens/"
 sourceType: mkdocs
 ---
 # Screens
 
 Screens are typically the base of all Graphical User Interfaces (GUIs) in Minecraft: taking in user input, verifying it on the server, and syncing the resulting action back to the client. They can be combined with [menus](../menus/) to create an communication network for inventory-like views, or they can be standalone which modders can handle through their own [network](../../networking/) implementations.
 
-Screens are made up of numerous parts, making it difficult to fully understand what a &lsquo;screen&rsquo; actually is in Minecraft. As such, this document will go over each of the screen&rsquo;s components and how it is applied before discussing the screen itself.
+Screens are made up of numerous parts, making it difficult to fully understand what a ‘screen’ actually is in Minecraft. As such, this document will go over each of the screen’s components and how it is applied before discussing the screen itself.
 
 ## Relative Coordinates
 
-Whenever anything is rendered, there needs to be some identifier which specifies where it will appear. With numerous abstractions, most of Minecraft&rsquo;s rendering calls takes in an x, y, and z value in a coordinate plane. X values increase from left to right, y from top to bottom, and z from far to near. However, the coordinates are not fixed to a specified range. They can change depending on the size of the screen and the scale at which is specified within the options. As such, extra care must be taken to make sure the values of the coordinates while rendering scale properly to the changeable screen size.
+Whenever anything is rendered, there needs to be some identifier which specifies where it will appear. With numerous abstractions, most of Minecraft’s rendering calls takes in an x, y, and z value in a coordinate plane. X values increase from left to right, y from top to bottom, and z from far to near. However, the coordinates are not fixed to a specified range. They can change depending on the size of the screen and the scale at which is specified within the options. As such, extra care must be taken to make sure the values of the coordinates while rendering scale properly to the changeable screen size.
 
 Information on how to relativize your coordinates will be within the [screen](#the-screen-subtype) section.
 
-> **Important**: Important If you choose to use fixed coordinates or incorrectly scale the screen, the rendered objects may look strange or misplaced. An easy way to check if you relativized your coordinates correctly is to click the &lsquo;Gui Scale&rsquo; button in your video settings. This value is used as the divisor to the width and height of your display when determining the scale at which a GUI should render.
+> **Important**: Important If you choose to use fixed coordinates or incorrectly scale the screen, the rendered objects may look strange or misplaced. An easy way to check if you relativized your coordinates correctly is to click the ‘Gui Scale’ button in your video settings. This value is used as the divisor to the width and height of your display when determining the scale at which a GUI should render.
 
 ## Gui Graphics
 
@@ -60,7 +59,7 @@ The z coordinate when rendering a texture is typically set to the blit offset. T
 
 `Renderable`s are essentially objects that are rendered. These include screens, buttons, chat boxes, lists, etc. `Renderable`s only have one method: `#render`. This takes in the `GuiGraphics` used to render things to the screen, the x and y positions of the mouse scaled to the relative screen size, and the tick delta (how many ticks have passed since the last frame).
 
-Some common renderables are screens and &lsquo;widgets&rsquo;: interactable elements which typically render on the screen such as `Button`, its subtype `ImageButton`, and `EditBox` which is used to input text on the screen.
+Some common renderables are screens and ‘widgets’: interactable elements which typically render on the screen such as `Button`, its subtype `ImageButton`, and `EditBox` which is used to input text on the screen.
 
 ## GuiEventListener
 
@@ -74,13 +73,13 @@ Event handlers hold children which are used to determine the interaction order o
 
 Dragging an element with the mouse, implemented via `#mouseClicked` and `#mouseReleased`, provides more precisely executed logic.
 
-Focusing allows for a specific child to be checked first and handled during an event&rsquo;s execution, such as during keyboard events or dragging the mouse. Focus is typically set through `#setFocused`. In addition, interactable children can be cycled using `#nextFocusPath`, selecting the child based upon the `FocusNavigationEvent` passed in.
+Focusing allows for a specific child to be checked first and handled during an event’s execution, such as during keyboard events or dragging the mouse. Focus is typically set through `#setFocused`. In addition, interactable children can be cycled using `#nextFocusPath`, selecting the child based upon the `FocusNavigationEvent` passed in.
 
 > **Note**: Note Screens implement ContainerEventHandler through AbstractContainerEventHandler, which adds in the setter and getter logic for dragging and focusing children.
 
 ## NarratableEntry
 
-`NarratableEntry`s are elements which can be spoken about through Minecraft&rsquo;s accessibility narration feature. Each element can provide different narration depending on what is hovered or selected, prioritized typically by focus, hovering, and then all other cases.
+`NarratableEntry`s are elements which can be spoken about through Minecraft’s accessibility narration feature. Each element can provide different narration depending on what is hovered or selected, prioritized typically by focus, hovering, and then all other cases.
 
 `NarratableEntry`s have three methods: one which determines the priority of the element (`#narrationPriority`), one which determines whether to speak the narration (`#isActive`), and finally one which supplies the narration to its associated output, spoken or read (`#updateNarration`).
 
@@ -92,12 +91,14 @@ With all of the above knowledge, a basic screen can be constructed. To make it e
 
 First, all screens take in a `Component` which represents the title of the screen. This component is typically drawn to the screen by one of its subtypes. It is only used in the base screen for the narration message.
 
+
 ```
 // In some Screen subclass
 public MyScreen(Component title) {
     super(title);
 }
 ```
+
 
 ### Initialization
 
@@ -113,6 +114,7 @@ Method | Description
 
 Typically, `#addRenderableWidget` will be used most often.
 
+
 ```
 // In some Screen subclass
 @Override
@@ -124,9 +126,11 @@ protected void init() {
 }
 ```
 
+
 ### Ticking Screens
 
 Screens also tick using the `#tick` method to perform some level of client side logic for rendering purposes. The most common example is the `EditBox` for the blinking cursor.
+
 
 ```
 // In some Screen subclass
@@ -138,6 +142,7 @@ public void tick() {
     this.editBox.tick();
 }
 ```
+
 
 ### Input Handling
 
@@ -152,6 +157,7 @@ The two most common things rendered within a screen that is typically not handle
 The background can be rendered using `#renderBackground`, with one method taking in a v Offset for the options background whenever a screen is rendered when the level behind it cannot be.
 
 Tooltips are rendered through `GuiGraphics#renderTooltip` or `GuiGraphics#renderComponentTooltip` which can take in the text components being rendered, an optional custom tooltip component, and the x / y relative coordinates on where the tooltip should be rendered on the screen.
+
 
 ```
 // In some Screen subclass
@@ -171,13 +177,15 @@ public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTi
 }
 ```
 
+
 ### Closing the Screen
 
 When a screen is closed, two methods handle the teardown: `#onClose` and `#removed`.
 
 `#onClose` is called whenever the user makes an input to close the current screen. This method is typically used as a callback to destroy and save any internal processes in the screen itself. This includes sending packets to the server.
 
-`#removed` is called just before the screen changes and is released to the garbage collector. This handles anything that hasn&rsquo;t been reset back to its initial state before the screen was opened.
+`#removed` is called just before the screen changes and is released to the garbage collector. This handles anything that hasn’t been reset back to its initial state before the screen was opened.
+
 
 ```
 // In some Screen subclass
@@ -199,9 +207,10 @@ public void removed() {
 ;}
 ```
 
-## `AbstractContainerScreen
 
-If a screen is directly attached to a [menu](../menus/), then an <code>AbstractContainerScreen` should be subclassed instead. An `AbstractContainerScreen` acts as the renderer and input handler of a menu and contains logic for syncing and interacting with slots. As such, only two methods typically need to be overridden or implemented to have a working container screen. Once again, to make it easier to understand, the components of a container screen will be mentioned in the order they are typically encountered.
+## `AbstractContainerScreen`
+
+If a screen is directly attached to a [menu](../menus/), then an `AbstractContainerScreen` should be subclassed instead. An `AbstractContainerScreen` acts as the renderer and input handler of a menu and contains logic for syncing and interacting with slots. As such, only two methods typically need to be overridden or implemented to have a working container screen. Once again, to make it easier to understand, the components of a container screen will be mentioned in the order they are typically encountered.
 
 An `AbstractContainerScreen` typically requires three parameters: the container menu being opened (represented by the generic `T`), the player inventory (only for the display name), and the title of the screen itself. Within here, a number of positioning fields can be set:
 
@@ -215,6 +224,7 @@ Field | Description
 `inventoryLabelY` | The relative y coordinate of where the player inventory name will be rendered.
 
 > **Important**: Important In a previous section, it mentioned that precomputed relative coordinates should be set in the #init method. This still remains true, as the values mentioned here are not precomputed coordinates but static values and relativized coordinates. The image values are static and non changing as they represent the background texture size. To make things easier when rendering, two additional values (leftPos and topPos) are precomputed in the #init method which marks the top left corner of where the background will be rendered. The label coordinates are relative to these values. The leftPos and topPos is also used as a convenient way to render the background as they already represent the position to pass into the #blit method.
+
 
 ```
 // In some AbstractContainerScreen subclass
@@ -231,6 +241,7 @@ public MyContainerScreen(MyMenu menu, Inventory playerInventory, Component title
 }
 ```
 
+
 ### Menu Access
 
 As the menu is passed into the screen, any values that were within the menu and synced (either through slots, data slots, or a custom system) can now be accessed through the `menu` field.
@@ -238,6 +249,7 @@ As the menu is passed into the screen, any values that were within the menu and 
 ### Container Tick
 
 Container screens tick within the `#tick` method when the player is alive and looking at the screen via `#containerTick`. This essentially takes the place of `#tick` within container screens, with its most common usage being to tick the recipe book.
+
 
 ```
 // In some AbstractContainerScreen subclass
@@ -249,11 +261,13 @@ protected void containerTick() {
 }
 ```
 
+
 ### Rendering the Container Screen
 
 The container screen is rendered across three methods: `#renderBg`, which renders the background textures, `#renderLabels`, which renders any text on top of the background, and `#render` which encompass the previous two methods in addition to providing a grayed out background and tooltips.
 
 Starting with `#render`, the most common override (and typically the only case) adds the background, calls the super to render the container screen, and finally renders the tooltips on top of it.
+
 
 ```
 // In some AbstractContainerScreen subclass
@@ -270,13 +284,32 @@ public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTi
 }
 ```
 
+
 Within the super, `#renderBg` is called to render the background of the screen. The most standard representation uses three method calls: two for setup and one to draw the background texture.
+
 
 ```
 // In some AbstractContainerScreen subclass
 
-// The location of the background texture (assets/<namespace>/
-) private static final ResourceLocation BACKGROUND_LOCATION = new ResourceLocation(MOD_ID, "textures/gui/container/my_container_screen.png"); @Override protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) { /* * Renders the background texture to the screen. 'leftPos' and * 'topPos' should already represent the top left corner of where * the texture should be rendered as it was precomputed from the * 'imageWidth' and 'imageHeight'. The two zeros represent the * integer u/v coordinates inside the 256 x 256 PNG file. */ graphics.blit(BACKGROUND_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight); } ``` <p>Finally, `#renderLabels` is called to render any text above the background, but below the tooltips. This simply calls uses the font to draw the associated components.
+// The location of the background texture (assets/<namespace>/<path>)
+private static final ResourceLocation BACKGROUND_LOCATION = new ResourceLocation(MOD_ID, "textures/gui/container/my_container_screen.png");
+
+@Override
+protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+    /*
+     * Renders the background texture to the screen. 'leftPos' and
+     * 'topPos' should already represent the top left corner of where
+     * the texture should be rendered as it was precomputed from the
+     * 'imageWidth' and 'imageHeight'. The two zeros represent the
+     * integer u/v coordinates inside the 256 x 256 PNG file.
+     */
+    graphics.blit(BACKGROUND_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+}
+```
+
+
+Finally, `#renderLabels` is called to render any text above the background, but below the tooltips. This simply calls uses the font to draw the associated components.
+
 
 ```
 // In some AbstractContainerScreen subclass
@@ -290,11 +323,13 @@ protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
 }
 ```
 
+
 > **Note**: Note When rendering the label, you do not need to specify the leftPos and topPos offset. Those have already been translated within the PoseStack so everything within this method is drawn relative to those coordinates.
 
 ## Registering an AbstractContainerScreen
 
 To use an `AbstractContainerScreen` with a menu, it needs to be registered. This can be done by calling `MenuScreens#register` within the `FMLClientSetupEvent` on the [**mod event bus**](../../concepts/events/#mod-event-bus).
+
 
 ```
 // Event is listened to on the mod event bus
@@ -306,5 +341,6 @@ private void clientSetup(FMLClientSetupEvent event) {
     );
 }
 ```
+
 
 > **Warning**: Warning MenuScreens#register is not thread-safe, so it needs to be called inside #enqueueWork provided by the parallel dispatch event.

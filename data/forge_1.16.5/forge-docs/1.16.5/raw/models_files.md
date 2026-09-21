@@ -2,12 +2,12 @@
 version: "1.16.5"
 forgeVersion: "36.2.34"
 chapter: "models/files"
-source: "https://docs.readthedocs.net/en/1.16.x/models/files/"
+source: "https://docs.minecraftforge.net/en/1.16.x/models/files/"
 sourceType: mkdocs
 ---
 # Model Files
 
-A &ldquo;model&rdquo; is simply a shape. It can be a simple cube, it can be several cubes, it can be a truncated icosidodecahedron, or anything in between. Most models you&rsquo;ll see will be in the vanilla JSON format. Models in other formats are loaded into `IModelGeometry`s by an `IModelLoader` at runtime. Forge provides default implementations for WaveFront OBJ files, buckets, composite models, models in different render layers, and a reimplementation of Vanilla&rsquo;s `builtin/generated` item model. Most things do not care about what loaded the model or what format it&rsquo;s in as they are all eventually represented by an `IBakedModel` in code.
+A “model” is simply a shape. It can be a simple cube, it can be several cubes, it can be a truncated icosidodecahedron, or anything in between. Most models you’ll see will be in the vanilla JSON format. Models in other formats are loaded into `IModelGeometry`s by an `IModelLoader` at runtime. Forge provides default implementations for WaveFront OBJ files, buckets, composite models, models in different render layers, and a reimplementation of Vanilla’s `builtin/generated` item model. Most things do not care about what loaded the model or what format it’s in as they are all eventually represented by an `IBakedModel` in code.
 
 When `ResourceLocation` refers to a model, the path is normally relative to `models` (e.g. `examplemod:block/block` → `assets/examplemod/models/block/block.json`).
 
@@ -19,7 +19,7 @@ Textures, like models, are contained within resource packs and are referred to w
 
 ## JSON Models
 
-Vanilla Minecraft&rsquo;s JSON model format is rather simple. It defines cuboid (cube/rectangular prism) elements and assigns textures to their faces. On the [wiki](https://minecraft.gamepedia.com/Model#Block_models), there is a definition of its format.
+Vanilla Minecraft’s JSON model format is rather simple. It defines cuboid (cube/rectangular prism) elements and assigns textures to their faces. On the [wiki](https://minecraft.gamepedia.com/Model#Block_models), there is a definition of its format.
 
 > **Note**: Note JSON models only support cuboid elements; there is no way to express a triangular wedge or anything like it. To have more complicated models, another format must be used.
 
@@ -28,6 +28,7 @@ When a `ResourceLocation` refers to the location of a JSON model, it is not suff
 ## WaveFront OBJ Models
 
 Forge adds a loader for the `.obj` file format. To use these models, the JSON must reference the `forge:obj` loader. This loader accepts any model location that is in a registered namespace and whose path ends in `.obj`. The `.mtl` file should be placed in the same location with the same name as the `.obj` to be used automatically. The `.mtl` file will probably have to be manually edited to change the paths pointing to textures defined within the JSON. Additionally, the V axis for textures may be flipped depending on the external program that created the model (i.e. V = 0 may be the bottom edge, not the top). This may be rectified in the modelling program itself or done in the model JSON like so:
+
 
 ```
 {

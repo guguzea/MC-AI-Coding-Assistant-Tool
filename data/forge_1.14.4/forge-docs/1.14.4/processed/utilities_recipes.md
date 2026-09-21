@@ -10,6 +10,7 @@ Forge will load all recipes which can be found within the `./data/<modid>/recipe
 
 A basic recipe file might look like the following example:
 
+
 ```
 {
     "type": "minecraft:crafting_shaped",
@@ -39,9 +40,10 @@ A basic recipe file might look like the following example:
 ```
 
 
+
 <!-- key:🔴 role:新手必读 (Note) -->
 
-> **Note**: Note When you first obtain an ingredient to a vanilla recipe it will automatically unlock the recipe in the recipe book. To achieve the same effect, you have to use the Advancement system and create a new Advancement for each of your ingredients. The advancement has to exist. This doesn&rsquo;t mean it has to be visible in the advancement tree.
+> **Note**: Note When you first obtain an ingredient to a vanilla recipe it will automatically unlock the recipe in the recipe book. To achieve the same effect, you have to use the Advancement system and create a new Advancement for each of your ingredients. The advancement has to exist. This doesn’t mean it has to be visible in the advancement tree.
 
 ### Type
 
@@ -61,7 +63,7 @@ Shaped recipes require the `pattern` and `key` keywords. A pattern defines the s
 
 ### Shapeless crafting
 
-A shapeless recipe doesn&rsquo;t make use of the `pattern` and `key` keywords.
+A shapeless recipe doesn’t make use of the `pattern` and `key` keywords.
 
 To define a shapeless recipe, you have to use the `ingredients` list. It defines which items have to be used for the crafting process. There are [many more](https://minecraft.gamepedia.com/Recipe) of these types which can be used here and you can even register your own. It is even possible to define multiple instances of the same item which means multiple of these items have to be in place for the crafting recipe to take place.
 
@@ -71,6 +73,7 @@ To define a shapeless recipe, you have to use the `ingredients` list. It defines
 > **Note**: Note While there is no limit on how many ingredients your recipe requires the vanilla crafting table does only allow 9 items to be placed for each crafting recipe.
 
 The following example shows how an ingredient list looks like within JSON.
+
 
 ```
 "ingredients": [
@@ -83,6 +86,7 @@ The following example shows how an ingredient list looks like within JSON.
     ],
 ```
 
+
 ## Recipe Elements
 
 ### Patterns
@@ -92,6 +96,7 @@ A pattern will be defined with the `pattern` list. Each string represents one ro
 ### Keys
 
 A key set is used in combination with patterns and contains keys whose name is the same as the placeholder character in the pattern list which it represents. One key may be defined to represent multiply items as it is the case for the wooden button. This means that the player can use one of the defined items for the crafting recipe, for example different types of wood.
+
 
 ```
 "key": {
@@ -106,8 +111,9 @@ A key set is used in combination with patterns and contains keys whose name is t
   }
 ```
 
+
 ### Results
 
 Every `recipe` has to have a result tag to define the output item.
 
-When crafting something, you can get out more than one item. This is achieved by defining the `count` number. If this is left out, meaning it doesn&rsquo;t exist within the result block, it defaults to 1. Negative values are not allowed here as an Itemstack cannot be smaller than 0. There is no option to use the `count` number anywhere else than for the result.
+When crafting something, you can get out more than one item. This is achieved by defining the `count` number. If this is left out, meaning it doesn’t exist within the result block, it defaults to 1. Negative values are not allowed here as an Itemstack cannot be smaller than 0. There is no option to use the `count` number anywhere else than for the result.

@@ -5,27 +5,28 @@ chapter: "rendering/modelloaders/itemoverrides"
 source: "https://docs.minecraftforge.net/en/1.18.x/rendering/modelloaders/itemoverrides/"
 sourceType: mkdocs
 ---
-# `ItemOverrides
+# `ItemOverrides`
 
-<code>ItemOverrides` provides a way for an [`BakedModel`](../bakedmodel/) to process the state of an `ItemStack` and return a new `BakedModel`; thereafter, the returned model replaces the old one. `ItemOverrides` represents an arbitrary function `(BakedModel, ItemStack, ClientLevel, LivingEntity, int)` → `BakedModel`, making it useful for dynamic models. In vanilla, it is used to implement item property overrides.
+`ItemOverrides` provides a way for an [`BakedModel`](../bakedmodel/) to process the state of an `ItemStack` and return a new `BakedModel`; thereafter, the returned model replaces the old one. `ItemOverrides` represents an arbitrary function `(BakedModel, ItemStack, ClientLevel, LivingEntity, int)` → `BakedModel`, making it useful for dynamic models. In vanilla, it is used to implement item property overrides.
 
-### `ItemOverrides()
+### `ItemOverrides()`
 
-Given a list of <code>ItemOverride`s, the constructor copies and bakes the list. The baked overrides may be accessed with `#getOverrides`.
+Given a list of `ItemOverride`s, the constructor copies and bakes the list. The baked overrides may be accessed with `#getOverrides`.
 
-### `resolve
+### `resolve`
 
-This takes an <code>BakedModel`, an `ItemStack`, a `ClientLevel`, a `LivingEntity`, and an `int` to produce another `BakedModel` to use for rendering. This is where models can handle the state of their items.
+This takes an `BakedModel`, an `ItemStack`, a `ClientLevel`, a `LivingEntity`, and an `int` to produce another `BakedModel` to use for rendering. This is where models can handle the state of their items.
 
 This should not mutate the level.
 
-### `getOverrides
+### `getOverrides`
 
-Returns an immutable list containing all the [<code>BakedOverride`](#bakedoverride)s used by this `ItemOverrides`. If none are applicable, this returns the empty list.
+Returns an immutable list containing all the [`BakedOverride`](#bakedoverride)s used by this `ItemOverrides`. If none are applicable, this returns the empty list.
 
-## `BakedOverride
+## `BakedOverride`
 
-This class represents a vanilla item override, which holds several <code>ItemOverrides$PropertyMatcher` for the properties on an item and a model to use in case those matchers are satisfied. They are the objects in the `overrides` array of a vanilla item JSON model:
+This class represents a vanilla item override, which holds several `ItemOverrides$PropertyMatcher` for the properties on an item and a model to use in case those matchers are satisfied. They are the objects in the `overrides` array of a vanilla item JSON model:
+
 
 ```
 {

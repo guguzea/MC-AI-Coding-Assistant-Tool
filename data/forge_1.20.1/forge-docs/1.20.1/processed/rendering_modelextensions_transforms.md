@@ -6,14 +6,26 @@ Custom model loaders may ignore this field entirely.
 
 The root transforms can be specified in two formats:
 
-1. A JSON object containing a singular `matrix` entry containing a raw transformation matrix in the form of a nested JSON array with the last row omitted (3*4 matrix, row major order). The matrix is the composition of the translation, left rotation, scale, right rotation and the transformation origin in that order. Example demonstrating the structure: ``` "transform": { "matrix": [ [ 0, 0, 0, 0 ], [ 0, 0, 0, 0 ], [ 0, 0, 0, 0 ] ] } ```
+1. A JSON object containing a singular `matrix` entry containing a raw transformation matrix in the form of a nested JSON array with the last row omitted (3*4 matrix, row major order). The matrix is the composition of the translation, left rotation, scale, right rotation and the transformation origin in that order. Example demonstrating the structure:
+
+```
+"transform": {
+    "matrix": [
+        [ 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0 ]
+    ]
+}
+```
+
 2. A JSON object containing any combination of the following optional entries:- `origin`: origin point used for the rotations and scaling - `translation`: relative translation - `rotation` or `left_rotation`: rotation around the translated origin to be applied before scaling - `scale`: scale relative to the translated origin - `right_rotation` or `post_rotation`: rotation around the translated origin to be applied after scaling
 
 ## Element-wise specification
 
 If the transformation is specified as a combination of the entries mentioned in option 4, these entries will be applied in the order of `translation`, `left_rotation`, `scale`, `right_rotation`. The transformation is moved to the specified origin as a last step.
 
-```json
+
+```
 {
     "transform": {
         "origin": "center",
@@ -23,6 +35,7 @@ If the transformation is specified as a combination of the entries mentioned in 
     // ...
 }
 ```
+
 
 The elements are expected to be defined as follows:
 

@@ -2,7 +2,7 @@
 version: "1.20.1"
 forgeVersion: "47.2.0"
 chapter: "networking/simpleimpl"
-source: "https://docs.readthedocs.net/en/1.20.1/networking/simpleimpl/"
+source: "https://docs.minecraftforge.net/en/1.20.1/networking/simpleimpl/"
 sourceType: mkdocs
 ---
 # SimpleImpl
@@ -12,6 +12,7 @@ SimpleImpl is the name given to the packet system that revolves around the `Simp
 ## Getting Started
 
 First you need to create your `SimpleChannel` object. We recommend that you do this in a separate class, possibly something like `ModidPacketHandler`. Create your `SimpleChannel` as a static field in this class, like so:
+
 
 ```
 private static final String PROTOCOL_VERSION = "1";
@@ -23,14 +24,15 @@ public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
 );
 ```
 
+
 The first argument is a name for the channel. The second argument is a `Supplier<String>` returning the current network protocol version. The third and fourth arguments respectively are `Predicate<String>` checking whether an incoming connection protocol version is network-compatible with the client or server, respectively. Here, we simply compare with the `PROTOCOL_VERSION` field directly, meaning that the client and server `PROTOCOL_VERSION`s must always match or FML will deny login.
 
 ## The Version Checker
 
-If your mod does not require the other side to have a specific network channel, or to be a Forge instance at all, you should take care that you properly define your version compatibility checkers (the `Predicate<String>` parameters) to handle additional &ldquo;meta-versions&rdquo; (defined in `NetworkRegistry`) that can be received by the version checker. These are:
+If your mod does not require the other side to have a specific network channel, or to be a Forge instance at all, you should take care that you properly define your version compatibility checkers (the `Predicate<String>` parameters) to handle additional “meta-versions” (defined in `NetworkRegistry`) that can be received by the version checker. These are:
 
-- <li>`ABSENT` - if this channel is missing on the other endpoint. Note that in this case, the endpoint is still a Forge endpoint, and may have other mods.
-- <li>`ACCEPTVANILLA` - if the endpoint is a vanilla (or non-Forge) endpoint.
+- `ABSENT` - if this channel is missing on the other endpoint. Note that in this case, the endpoint is still a Forge endpoint, and may have other mods.
+- `ACCEPTVANILLA` - if the endpoint is a vanilla (or non-Forge) endpoint.
 
 Returning `false` for both means that this channel must be present on the other endpoint. If you just copy the code above, this is what it does. Note that these values are also used during the list ping compatibility check, which is responsible for showing the green check / red cross in the multiplayer server select screen.
 
@@ -38,17 +40,18 @@ Returning `false` for both means that this channel must be present on the other 
 
 Next, we must declare the types of messages that we would like to send and receive. This is done using `INSTANCE#registerMessage`, which takes 5 parameters:
 
-- <li>The first parameter is the discriminator for the packet. This is a per-channel unique ID for the packet. We recommend you use a local variable to hold the ID, and then call registerMessage using `id++`. This will guarantee 100% unique IDs.
-- <li>The second parameter is the actual packet class `MSG`.
-- <li>The third parameter is a `BiConsumer<MSG, FriendlyByteBuf>` responsible for encoding the message into the provided `FriendlyByteBuf`.
-- <li>The fourth parameter is a `Function<FriendlyByteBuf, MSG>` responsible for decoding the message from the provided `FriendlyByteBuf`.
-- <li>The final parameter is a `BiConsumer<MSG, Supplier<NetworkEvent.Context>>` responsible for handling the message itself.
+- The first parameter is the discriminator for the packet. This is a per-channel unique ID for the packet. We recommend you use a local variable to hold the ID, and then call registerMessage using `id++`. This will guarantee 100% unique IDs.
+- The second parameter is the actual packet class `MSG`.
+- The third parameter is a `BiConsumer<MSG, FriendlyByteBuf>` responsible for encoding the message into the provided `FriendlyByteBuf`.
+- The fourth parameter is a `Function<FriendlyByteBuf, MSG>` responsible for decoding the message from the provided `FriendlyByteBuf`.
+- The final parameter is a `BiConsumer<MSG, Supplier<NetworkEvent.Context>>` responsible for handling the message itself.
 
 The last three parameters can be method references to either static or instance methods in Java. Remember that an instance method `MSG#encode(FriendlyByteBuf)` still satisfies `BiConsumer<MSG, FriendlyByteBuf>`; the `MSG` simply becomes the implicit first argument.
 
 ## Handling Packets
 
 There are a couple things to highlight in a packet handler. A packet handler has both the message object and the network context available to it. The context allows access to the player that sent the packet (if on the server), and a way to enqueue thread-safe work.
+
 
 ```
 public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
@@ -61,7 +64,9 @@ public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
 }
 ```
 
+
 Packets sent from the server to the client should be handled in another class and wrapped via `DistExecutor#unsafeRunWhenOn`.
+
 
 ```
 // In Packet class
@@ -79,11 +84,12 @@ public static void handlePacket(MyClientMessage msg, Supplier<NetworkEvent.Conte
 }
 ```
 
+
 Note the presence of `#setPacketHandled`, which is used to tell the network system that the packet has successfully completed handling.
 
 > **Warning**: Warning As of Minecraft 1.8 packets are by default handled on the network thread. That means that your handler can not interact with most game objects directly. Forge provides a convenient way to make your code execute on the main thread instead through the supplied NetworkEvent$Context. Simply call NetworkEvent$Context#enqueueWork(Runnable), which will call the given Runnable on the main thread at the next opportunity.
 
-> **Warning**: Warning Be defensive when handling packets on the server. A client could attempt to exploit the packet handling by sending unexpected data. A common problem is vulnerability to arbitrary chunk generation. This typically happens when the server is trusting a block position sent by a client to access blocks and block entities. When accessing blocks and block entities in unloaded areas of the level, the server will either generate or load this area from disk, then promptly write it to disk. This can be exploited to cause catastrophic damage to a server&rsquo;s performance and storage space without leaving a trace. To avoid this problem, a general rule of thumb is to only access blocks and block entities if Level#hasChunkAt is true.
+> **Warning**: Warning Be defensive when handling packets on the server. A client could attempt to exploit the packet handling by sending unexpected data. A common problem is vulnerability to arbitrary chunk generation. This typically happens when the server is trusting a block position sent by a client to access blocks and block entities. When accessing blocks and block entities in unloaded areas of the level, the server will either generate or load this area from disk, then promptly write it to disk. This can be exploited to cause catastrophic damage to a server’s performance and storage space without leaving a trace. To avoid this problem, a general rule of thumb is to only access blocks and block entities if Level#hasChunkAt is true.
 
 ## Sending Packets
 
@@ -95,6 +101,7 @@ There is but one way to send a packet to the server. This is because there is on
 
 Packets can be sent directly to a client using the `SimpleChannel`: `HANDLER.sendTo(new MyClientMessage(), serverPlayer.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT)`. However, this can be quite inconvenient. Forge has some convenience functions that can be used:
 
+
 ```
 // Send to one player
 INSTANCE.send(PacketDistributor.PLAYER.with(serverPlayer), new MyMessage());
@@ -105,5 +112,6 @@ INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(levelChunk), new MyMessage()
 // Send to all connected players
 INSTANCE.send(PacketDistributor.ALL.noArg(), new MyMessage());
 ```
+
 
 There are additional `PacketDistributor` types available; check the documentation on the `PacketDistributor` class for more details.

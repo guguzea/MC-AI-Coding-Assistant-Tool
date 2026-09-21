@@ -2,7 +2,7 @@
 
 Data generators are a way to programmatically generate the assets and data of mods. It allows the definition of the contents of these files in the code and their automatic generation, without worrying about the specifics.
 
-The data generator system is loaded by the main class `net.minecraft.data.Main`. Different command-line arguments can be passed to customize which mods&rsquo; data are gathered, what existing files are considered, etc. The class responsible for data generation is `net.minecraft.data.DataGenerator`.
+The data generator system is loaded by the main class `net.minecraft.data.Main`. Different command-line arguments can be passed to customize which mods’ data are gathered, what existing files are considered, etc. The class responsible for data generation is `net.minecraft.data.DataGenerator`.
 
 The default configurations in the MDK `build.gradle` adds the `runData` task for running the data generators.
 
@@ -10,17 +10,17 @@ The default configurations in the MDK `build.gradle` adds the `runData` task for
 
 The data generator can be configured to run 4 different data generations, which are configured from the command-line parameters, and can be checked from `GatherDataEvent#include***` methods.
 
-- <li>**Client Assets**<ul> <li>Generates client-only files in `assets`: block/item models, blockstate JSONs, language files, etc.
-- <li>**`--client`**, `includeClient()`
+- **Client Assets** Generates client-only files in `assets`: block/item models, blockstate JSONs, language files, etc.
+- **`--client`**, `includeClient()`
 
-<li>**Server Data**- <li>Generates server-only files in `data`: recipes, advancements, tags, etc.
-- <li>**`--server`**, `includeServer()`
+**Server Data**- Generates server-only files in `data`: recipes, advancements, tags, etc.
+- **`--server`**, `includeServer()`
 
-<li>**Development Tools**- <li>Runs some development tools: converting SNBT to NBT and vice-versa, etc.
-- <li>**`--dev`**, `includeDev()`
+**Development Tools**- Runs some development tools: converting SNBT to NBT and vice-versa, etc.
+- **`--dev`**, `includeDev()`
 
-<li>**Reports**- <li>Dumps all registered blocks, items, commands, etc.
-- <li>**`--reports`**, `includeReports()`
+**Reports**- Dumps all registered blocks, items, commands, etc.
+- **`--reports`**, `includeReports()`
 
 ## Data Providers
 
@@ -30,17 +30,17 @@ The `GatherDataEvent` is fired on the mod event bus when the data generator is b
 
 ### Client Assets
 
-- <li>`net.minecraftforge.common.data.LanguageProvider` - for language strings; override `#addTranslations`
-- <li>`ModelProvider<?>` - base class for all model providers<ul> <li>*These classes are under the `net.minecraftforge.client.model.generators` package*
-- <li>`ItemModelProvider` - for item models; override `#registerModels`
-- <li>`BlockStateProvider` - for blockstates and their block and item models; override `#registerStatesAndModels`
-- <li>`BlockModelProvider` - for block models; override `#registerModels`
+- `net.minecraftforge.common.data.LanguageProvider` - for language strings; override `#addTranslations`
+- `ModelProvider<?>` - base class for all model providers *These classes are under the `net.minecraftforge.client.model.generators` package*
+- `ItemModelProvider` - for item models; override `#registerModels`
+- `BlockStateProvider` - for blockstates and their block and item models; override `#registerStatesAndModels`
+- `BlockModelProvider` - for block models; override `#registerModels`
 
 ### Server Data
 
-- <li>`net.minecraftforge.common.data.GlobalLootModifierProvider` - for [global loot modifiers](../../items/globallootmodifiers/); override `#start`
-- <li>*These classes are under the `net.minecraft.data` package*
-- <li>`LootTableProvider` - for loot tables; override `#getTables`
-- <li>`RecipeProvider` - for recipes and their unlocking advancements; override `#buildShapelessRecipes`
-- <li>`TagsProvider` - for tags; override `#addTags`
-- <li>`AdvancementProvider` - for advancements; override `#registerAdvancements`
+- `net.minecraftforge.common.data.GlobalLootModifierProvider` - for [global loot modifiers](../../items/globallootmodifiers/); override `#start`
+- *These classes are under the `net.minecraft.data` package*
+- `LootTableProvider` - for loot tables; override `#getTables`
+- `RecipeProvider` - for recipes and their unlocking advancements; override `#buildShapelessRecipes`
+- `TagsProvider` - for tags; override `#addTags`
+- `AdvancementProvider` - for advancements; override `#registerAdvancements`

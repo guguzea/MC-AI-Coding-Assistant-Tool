@@ -29,6 +29,7 @@ There is no wrapper for adding additional potion containers or potion mixes simi
 
 Anvils are responsible for taking a damaged input and given some material or a similar input, remove some of the damage on the input result. As such, its system is not easily data-driven. However, as anvil recipes are an input with some number of materials equals some output when the user has the required experience levels, it can be modified to create a pseudo-recipe system via `AnvilUpdateEvent`. This takes in the input and materials and allows the modder to specify the output, experience level cost, and number of materials to use for the output. The event can also prevent any output by [canceling](../../../../concepts/events/#canceling) it.
 
+
 ```
 // Checks whether the left and right items are correct
 // When true, sets the output, level experience cost, and material amount
@@ -41,6 +42,7 @@ public void updateAnvil(AnvilUpdateEvent event) {
 }
 ```
 
+
 The update event must be [attached](../../../../concepts/events/#creating-an-event-handler) to the Forge event bus.
 
 ## Loom Recipes
@@ -48,6 +50,7 @@ The update event must be [attached](../../../../concepts/events/#creating-an-eve
 Looms are responsible for applying a dye and pattern (either from the loom or from an item) to a banner. While the banner and the dye must be a `BannerItem` or `DyeItem` respectively, custom patterns can be created and applied in the loom. Banner Patterns can be created by [registering](../../../../concepts/registries/#registries-that-arent-forge-registries) a `BannerPattern`.
 
 > **Important**: Important BannerPatterns which are in the minecraft:no_item_required tag appear as an option in the loom. Patterns not in this tag must have an accompanying BannerPatternItem to be used along with an associated tag.
+
 
 ```
 private static final DeferredRegister<BannerPattern> REGISTER = DeferredRegister.create(Registries.BANNER_PATTERN, "examplemod");

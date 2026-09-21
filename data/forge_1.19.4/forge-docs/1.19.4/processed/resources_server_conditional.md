@@ -6,6 +6,7 @@ There are times when modders may want to include data-driven objects using infor
 
 Currently, conditional loading is implemented for recipes and advancements. For any conditional recipe or advancement, a list of conditions to datum pair is loaded. If the conditions specified for a datum in the list is true, then that datum is returned. Otherwise, the datum is discarded.
 
+
 ```
 {
   // The type needs to be specified for recipes as they can have custom serializers
@@ -35,6 +36,7 @@ Currently, conditional loading is implemented for recipes and advancements. For 
 }
 ```
 
+
 Conditionally-loaded data additionally have wrappers for [data generation](../../../datagen/server/recipes/) through `ConditionalRecipe$Builder` and `ConditionalAdvancement$Builder`.
 
 ## Conditions
@@ -44,6 +46,7 @@ Conditions are specified by setting `type` to the name of the condition as speci
 ### True and False
 
 Boolean conditions consist of no data and return the expected value of the condition. They are represented by `forge:true` and `forge:false`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -56,9 +59,11 @@ Boolean conditions consist of no data and return the expected value of the condi
 }
 ```
 
+
 ### Not, And, and Or
 
 Boolean operator conditions consist of the condition(s) being operated upon and apply the following logic. They are represented by `forge:not`, `forge:and`, and `forge:or`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -73,6 +78,7 @@ Boolean operator conditions consist of the condition(s) being operated upon and 
   }
 }
 ```
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -93,12 +99,14 @@ Boolean operator conditions consist of the condition(s) being operated upon and 
 }
 ```
 
+
 ### Mod Loaded
 
 
 <!-- key:🟠 role:常见错误 -->
 
 `ModLoadedCondition` returns true whenever the specified mod with the given id is loaded in the current application. This is represented by `forge:mod_loaded`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -112,12 +120,14 @@ Boolean operator conditions consist of the condition(s) being operated upon and 
 }
 ```
 
+
 ### Item Exists
 
 
 <!-- key:🟠 role:常见错误 -->
 
 `ItemExistsCondition` returns true whenever the given item has been registered in the current application. This is represented by `forge:item_exists`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -131,12 +141,14 @@ Boolean operator conditions consist of the condition(s) being operated upon and 
 }
 ```
 
+
 ### Tag Empty
 
 
 <!-- key:🟠 role:常见错误 -->
 
 `TagEmptyCondition` returns true whenever the given item tag has no items within it. This is represented by `forge:tag_empty`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -149,6 +161,7 @@ Boolean operator conditions consist of the condition(s) being operated upon and 
   "tag": "examplemod:example_tag"
 }
 ```
+
 
 ## Creating Custom Conditions
 
@@ -186,6 +199,7 @@ write | Writes the given condition data to JSON.
 Afterwards, a static instance should be declared to hold the initialized serializer and then registered using `CraftingHelper#register` either during the `RegisterEvent` for `RecipeSerializer`s or during `FMLCommonSetupEvent`.
 
 
+
 <!-- key:🟢 role:示例代码 -->
 
 ```
@@ -199,6 +213,7 @@ public void registerSerializers(RegisterEvent event) {
   );
 }
 ```
+
 
 
 <!-- key:🔴 role:新手必读 (Important) -->

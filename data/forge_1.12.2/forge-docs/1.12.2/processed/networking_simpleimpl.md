@@ -6,9 +6,11 @@ SimpleImpl is the name given to the packet system that revolves around the `Simp
 
 First you need to create your `SimpleNetworkWrapper` object. We recommend that you do this in a separate class, possibly something like `ModidPacketHandler`. Create your `SimpleNetworkWrapper` as a static field in this class, like so:
 
+
 ```
 public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel("mymodid");
 ```
+
 
 Where `"mymodid"` is a short identifier for your packet channel, typically just your mod ID, unless that is unusually long.
 
@@ -18,7 +20,8 @@ Where `"mymodid"` is a short identifier for your packet channel, typically just 
 
 A packet is defined by using the `IMessage` interface. This interface defines 2 methods, `toBytes` and `fromBytes`. These methods, respectively, write and read the data in your packet to and from a `ByteBuf` object, which is an object used to hold a stream (array) of bytes which are sent through the network.
 
-For an example, let&rsquo;s define a small packet that is designed to send a single int over the network:
+For an example, let’s define a small packet that is designed to send a single int over the network:
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -45,9 +48,11 @@ public class MyMessage implements IMessage {
 }
 ```
 
+
 ### IMessageHandler
 
-Now, how can we use this packet? Well, first we must have a class that can *handle* this packet. This is created with the `IMessageHandler` interface. Say we wanted to use this integer we sent to give the player that many diamonds on the server. Let&rsquo;s make this handler:
+Now, how can we use this packet? Well, first we must have a class that can *handle* this packet. This is created with the `IMessageHandler` interface. Say we wanted to use this integer we sent to give the player that many diamonds on the server. Let’s make this handler:
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -74,7 +79,8 @@ public class MyMessageHandler implements IMessageHandler<MyMessage, IMessage> {
 }
 ```
 
-It is recommended (but not required) that for organization&rsquo;s sake, this class is an inner class to your MyMessage class. If this is done, note that the class must also be declared `static`.
+
+It is recommended (but not required) that for organization’s sake, this class is an inner class to your MyMessage class. If this is done, note that the class must also be declared `static`.
 
 
 <!-- key:🔴 role:新手必读 (Warning) -->
@@ -87,7 +93,7 @@ It is recommended (but not required) that for organization&rsquo;s sake, this cl
 
 <!-- key:🔴 role:新手必读 (Warning) -->
 
-> **Warning**: Warning Be defensive when handling packets on the server. A client could attempt to exploit the packet handling by sending unexpected data. A common problem is vulnerability to arbitrary chunk generation. This typically happens when the server is trusting a block position sent by a client to access blocks and tile entities. When accessing blocks and tile entities in unloaded areas of the world, the server will either generate or load this area from disk, then promply write it to disk. This can be exploited to cause catastrophic damage to a server&rsquo;s performance and storage space without leaving a trace. To avoid this problem, a general rule of thumb is to only access blocks and tile entities if world.isBlockLoaded(pos) is true.
+> **Warning**: Warning Be defensive when handling packets on the server. A client could attempt to exploit the packet handling by sending unexpected data. A common problem is vulnerability to arbitrary chunk generation. This typically happens when the server is trusting a block position sent by a client to access blocks and tile entities. When accessing blocks and tile entities in unloaded areas of the world, the server will either generate or load this area from disk, then promply write it to disk. This can be exploited to cause catastrophic damage to a server’s performance and storage space without leaving a trace. To avoid this problem, a general rule of thumb is to only access blocks and tile entities if world.isBlockLoaded(pos) is true.
 
 ## Registering Packets
 
@@ -95,14 +101,14 @@ So now we have a packet, and a handler for this packet. But the `SimpleNetworkWr
 
 This is quite a complex method, so lets break it down a bit.
 
-- <li>The first parameter is `messageHandler`, which is the class that handles your packet. This class must always have a default constructor, and should have type bound REQ that matches the next argument.
-- <li>The second parameter is `requestMessageType` which is the actual packet class. This class must also have a default constructor and match the REQ type bound of the previous param.
-- <li>The third parameter is the discriminator for the packet. This is a per-channel unique ID for the packet. We recommend you use a static variable to hold the ID, and then call registerMessage using `id++`. This will guarantee 100% unique IDs.
-- <li>The fourth and final parameter is the side that your packet will be ***received*** on. If you are planning to send the packet to both sides, it must be registered twice, once to each side. Discriminators can be the same between sides, but are not required to be.
+- The first parameter is `messageHandler`, which is the class that handles your packet. This class must always have a default constructor, and should have type bound REQ that matches the next argument.
+- The second parameter is `requestMessageType` which is the actual packet class. This class must also have a default constructor and match the REQ type bound of the previous param.
+- The third parameter is the discriminator for the packet. This is a per-channel unique ID for the packet. We recommend you use a static variable to hold the ID, and then call registerMessage using `id++`. This will guarantee 100% unique IDs.
+- The fourth and final parameter is the side that your packet will be ***received*** on. If you are planning to send the packet to both sides, it must be registered twice, once to each side. Discriminators can be the same between sides, but are not required to be.
 
 ## Using Packets
 
-When sending packets, make sure that there is a handler registered *on the receiving side* for said packet. If there is not, the packet will be sent across the network and then thrown away, resulting in a &ldquo;leaked&rdquo; packet. This is harmless other than needless network usage, but should still be fixed.
+When sending packets, make sure that there is a handler registered *on the receiving side* for said packet. If there is not, the packet will be sent across the network and then thrown away, resulting in a “leaked” packet. This is harmless other than needless network usage, but should still be fixed.
 
 ### Sending to the Server
 
@@ -112,14 +118,14 @@ There is but one way to send a packet to the server. This is because there is on
 
 There are four different methods of sending packets to clients:
 
-1. <li>`sendToAll` - Calling `INSTANCE.sendToAll` will send the packet once to every single player on the current server, no matter what location or dimension they are in.
-2. <li>`sendToDimension` - `INSTANCE.sendToDimension` takes two arguments, an `IMessage` and an integer. The integer is the dimension ID to send to, which can be gotten with `world.provider.getDimension()`. The packet will be sent to all players currently in the given dimension.
-3. <li>`sendToAllAround` - `INSTANCE.sendToAllAround` requires an `IMessage` and a `NetworkRegistry.TargetPoint` object. All players within the `TargetPoint` will have the packet sent to them. A TargetPoint requires a dimension (see #2), x/y/z coordinates, and a range. It represents a sphere with radius of range, centered at (x, y, z) in a world.
-4. <li>`sendTo` - `INSTANCE.sendTo` is is the option for sending packets to a single client. This requires an `IMessage` and an `EntityPlayerMP` to which to send the packet. Note that though this is not the more generic `EntityPlayer`, as long as you are on the server you can safely cast any `EntityPlayer` to `EntityPlayerMP`.
+1. `sendToAll` - Calling `INSTANCE.sendToAll` will send the packet once to every single player on the current server, no matter what location or dimension they are in.
+2. `sendToDimension` - `INSTANCE.sendToDimension` takes two arguments, an `IMessage` and an integer. The integer is the dimension ID to send to, which can be gotten with `world.provider.getDimension()`. The packet will be sent to all players currently in the given dimension.
+3. `sendToAllAround` - `INSTANCE.sendToAllAround` requires an `IMessage` and a `NetworkRegistry.TargetPoint` object. All players within the `TargetPoint` will have the packet sent to them. A TargetPoint requires a dimension (see #2), x/y/z coordinates, and a range. It represents a sphere with radius of range, centered at (x, y, z) in a world.
+4. `sendTo` - `INSTANCE.sendTo` is is the option for sending packets to a single client. This requires an `IMessage` and an `EntityPlayerMP` to which to send the packet. Note that though this is not the more generic `EntityPlayer`, as long as you are on the server you can safely cast any `EntityPlayer` to `EntityPlayerMP`.
 
 <!-- key:🟠 role:常见错误 -->
 
-5. <li>`sendToAllTracking` - Last but not least, there is also `INSTANCE.sendToAllTracking` which sends packets to all players on the server who are &ldquo;tracking&rdquo; the target. There are two variants of `sendToAllTracking`: one accepts a `TargetPoint`, and another one accepts an `Entity`. For the former, all clients that has the block located at `TargetPoint` loaded will receive the packet; for the latter, all clients that are within the tracking range of supplied `Entity` will receive the packet. Do note that `EntityPlayer`s will not track themselves, so this cannot replace the use of `sendTo`; if the `EntityPlayer` that is used as target also requires syncing, you need to call `sendTo` on that before calling the Entity version of `sendToAllTracking`.
+5. `sendToAllTracking` - Last but not least, there is also `INSTANCE.sendToAllTracking` which sends packets to all players on the server who are “tracking” the target. There are two variants of `sendToAllTracking`: one accepts a `TargetPoint`, and another one accepts an `Entity`. For the former, all clients that has the block located at `TargetPoint` loaded will receive the packet; for the latter, all clients that are within the tracking range of supplied `Entity` will receive the packet. Do note that `EntityPlayer`s will not track themselves, so this cannot replace the use of `sendTo`; if the `EntityPlayer` that is used as target also requires syncing, you need to call `sendTo` on that before calling the Entity version of `sendToAllTracking`.
 
 
 <!-- key:🔴 role:新手必读 (Note) -->

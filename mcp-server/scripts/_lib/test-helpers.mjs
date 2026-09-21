@@ -35,7 +35,10 @@ import {
   filterByVersion,
   javaVersionForJavadoc,
   buildManifest,
+  chaptersFromSearchIndex,
 } from "../probe-forge-versions.js";
+import { htmlToMd, stripTags } from "../fetch-forge-docs.js";
+import { splitClassUrl, parsePackageSummary } from "../fetch-forge-javadoc.js";
 import {
   CRITICAL_CLASSES_1_14,
   buildFieldEntries,
@@ -251,14 +254,46 @@ test("extractChapterPaths strips version prefix and asset links", () => {
 });
 
 test("buildManifest calls probe functions without network", async () => {
+  const fakeIndexOk = async () => ({ ok: true, url: "https://x/search/search_index.json", chapters: ["a", "index", "models/advanced/imodel"] });
   const m = await buildManifest({
     javadocVersions: [{ mcVersion: "1.10.2", forgeVersion: "x", url: "http://t" }],
     mkdocsVersions:  [{ mcVersion: "1.20.1", forgeVersion: "y", mkdocsRoute: "1.20.1", javaVersion: 17, mappings: "moj" }],
     probeJavadoc:    async () => ({ available: true,  packageCount: 5 }),
     probeMkDocs:     async () => ({ ok: true, content: '<a href="../x/y/">a</a>', finalUrl: "https://docs.readthedocs.net/en/1.20.1/gettingstarted/", baseUrl: "https://docs.readthedocs.net/en/1.20.1/gettingstarted/" }),
+    probeSearchIndex: fakeIndexOk,
   });
   assert.equal(m.versions["1.10.2"].javadoc.packageCount, 5);
   assert.equal(m.versions["1.20.1"].mkdocs.available, true);
+  // F1：期望清单必须取上游 search_index，导航表只是兜底
+  assert.equal(m.versions["1.20.1"].mkdocs.chaptersSource, "search_index");
+  assert.deepEqual(m.versions["1.20.1"].mkdocs.chapters, ["a", "index", "models/advanced/imodel"]);
+});
+
+test("buildManifest falls back to nav when search_index unreadable", async () => {
+  const m = await buildManifest({
+    javadocVersions: [],
+    mkdocsVersions:  [{ mcVersion: "1.20.1", forgeVersion: "y", mkdocsRoute: "1.20.1", javaVersion: 17, mappings: "moj" }],
+    probeMkDocs:     async () => ({ ok: true, content: '<a href="../forgedev/">a</a>', finalUrl: "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/", baseUrl: "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/" }),
+    probeSearchIndex: async () => ({ ok: false, reason: "HTTP 503" }),
+  });
+  assert.equal(m.versions["1.20.1"].mkdocs.chaptersSource, "nav");
+  assert.ok(m.versions["1.20.1"].mkdocs.chapters.includes("forgedev"), "导航兜底表应含 forgedev");
+});
+
+test("chaptersFromSearchIndex 归一：空 location→index、去锚点、解码 %2B、去尾斜杠、去重", () => {
+  const json = JSON.stringify({
+    docs: [
+      { location: "", title: "Home", text: "x" },
+      { location: "index/", title: "Home dup", text: "x" },
+      { location: "models/advanced/imodelstate%2Bpart/", title: "t", text: "x" },
+      { location: "concepts/registries/#get-a-registry", title: "t", text: "x" },
+      { location: "concepts/registries/", title: "t", text: "x" },
+      { location: "?q=1", title: "t", text: "x" },
+    ],
+  });
+  assert.deepEqual(chaptersFromSearchIndex(json), ["concepts/registries", "index", "models/advanced/imodelstate+part"]);
+  assert.throws(() => chaptersFromSearchIndex(JSON.stringify({ location: [] })), /docs/);
+  assert.throws(() => chaptersFromSearchIndex("{}"), /docs/);
 });
 
 // ── mcp-csv-extractor.js helpers ────────────────────────────────────────────
@@ -387,6 +422,158 @@ test("DiagnosticBag toString formats warnings, errors, infos", () => {
   assert.match(out, /⚠ w/);
   assert.match(out, /✗ e/);
   assert.match(out, /· i/);
+});
+
+// ── fetch-forge-docs.js 正文转换（C1：残留标签 / 残实体 / 围栏吞页）──────────
+// 判据来自 2026-09-21 的 raw-vs-processed 实测：实体 508 篇、残标签 376 篇、
+// 未配对围栏 21 篇、行内围栏可疑 189 篇。旧 stripTags「开标签原样留下、只删闭标签」
+// 且只解 6 个实体，所以这几条断言每一条都对应一类真实脏数据。
+
+test("stripTags removes opening tags, not just closing ones", () => {
+  const out = stripTags('<div class="admonition"><ul><li>alpha</li><li>beta</li></ul></div>');
+  assert.ok(!/<\//.test(out), `残留闭标签: ${out}`);
+  assert.ok(!/<[a-zA-Z]/.test(out), `残留开标签: ${out}`);
+  assert.ok(out.includes("alpha") && out.includes("beta"), `正文丢失: ${out}`);
+});
+
+test("stripTags turns inline code tags into backticks", () => {
+  assert.equal(stripTags("use <code>heldItem</code> here"), "use `heldItem` here");
+  // 上游写坏的行内 <code>（只有开标签）不得留下反引号半边 —— 189 篇的成因
+  const broken = stripTags("The next parameter, <code>heldItem`, is the `ItemStack");
+  assert.ok(!/<code>/.test(broken), broken);
+  assert.equal((broken.match(/`/g) || []).length % 2, 0, `反引号不配对: ${broken}`);
+});
+
+test("stripTags decodes nothing — decoding happens exactly once, at the end", () => {
+  // 各 handler 都调 stripTags；若它也解码，最终那次 stripTags 就会把
+  // 已解出来的 <Codec<? extends X>> 当标签吃掉（实测 codecs 页丢了 3 个围栏 + 泛型）
+  assert.equal(stripTags("player&rsquo;s &amp; List&lt;String&gt;"), "player&rsquo;s &amp; List&lt;String&gt;");
+});
+
+test("htmlToMd decodes the entities upstream actually leaves behind", () => {
+  const out = htmlToMd("<p>player&rsquo;s health &mdash; it&hellip; uses &#8217; &nbsp; &amp; more</p>");
+  assert.ok(out.includes("’"), out);
+  assert.ok(out.includes("—"), out);
+  assert.ok(out.includes("…"), out);
+  assert.ok(!/&#?\w+;/.test(out), `仍有未解实体: ${out}`);
+  assert.ok(out.includes(" & "), `&amp; 必须最后解: ${out}`);
+});
+
+test("htmlToMd keeps escaped generics in prose and in code blocks", () => {
+  // 先删后解 ⇒ &lt; 在删标签时还是实体，解出来就是活文本；反序则整段泛型消失
+  assert.equal(htmlToMd("<p>List&lt;String&gt; names</p>"), "List<String> names");
+  const code = htmlToMd("<pre><code>IForgeRegistry&lt;Codec&lt;? extends X&gt;&gt; DISPATCH</code></pre>");
+  assert.ok(code.includes("IForgeRegistry<Codec<? extends X>> DISPATCH"), `泛型被吃:\n${code}`);
+});
+
+test("htmlToMd keeps code blocks that sit inside list items", () => {
+  // 旧 ul/ol handler 对整项做 \\s+→" "，把围栏压成一行 ⇒ 26 个 <pre> 只吐 49 个围栏行
+  const md = htmlToMd(
+    "<ol><li>Declare it:<pre><code>public static final Codec&lt;Foo&gt; X = ...;</code></pre></li>" +
+    "<li>Then register.</li></ol>"
+  );
+  const fenceLines = md.split("\n").filter(l => /^\s*`{3,}/.test(l));
+  assert.equal(fenceLines.length, 2, `围栏被折叠:\n${md}`);
+  assert.ok(md.includes("public static final Codec<Foo> X = ...;"), md);
+  assert.ok(md.includes("Then register."), md);
+  assert.ok(!/```.*```/.test(md), `围栏没独占整行:\n${md}`);
+});
+
+test("htmlToMd keeps code fences paired when the block demonstrates markdown", () => {
+  const page = [
+    "<p>Docs use fences:</p>",
+    "<pre><code>```java",
+    "public class Foo {}",
+    "```</code></pre>",
+    "<p>After the block: <code>RegistryObject</code> matters.</p>",
+  ].join("\n");
+  const md = htmlToMd(page);
+  const fenceLines = md.split("\n").filter(l => /^\s*`{3,}/.test(l));
+  assert.equal(fenceLines.length % 2, 0, `围栏不配对:\n${md}`);
+  assert.ok(md.includes("````"), "块中块必须加宽到 4 反引号:\n" + md);
+  // 被吞掉的页尾必须还在正文里
+  assert.ok(md.includes("RegistryObject") && md.includes("After the block"), md);
+});
+
+test("htmlToMd keeps ordinary code blocks at three backticks", () => {
+  const md = htmlToMd("<pre><code>public class Bar {}\n</code></pre>");
+  assert.ok(md.includes("```java"), md);
+  assert.ok(!md.includes("````"), "无块中块时不得无故加宽:\n" + md);
+  assert.equal(md.split("\n").filter(l => /^\s*`{3,}/.test(l)).length, 2, md);
+});
+
+// ── fetch-forge-javadoc.js 落盘归属（C2 溯源抓出的错档缺陷）─────────────────
+// 症状：raw/net/minecraft/client/renderer/entity/Entity.md 的 source 指向
+// …/net/minecraft/entity/Entity.html —— 页被按 package-summary 的包落盘，
+// 于是索引里长出本不存在的 FQCN（6 档共 319 篇，且与正确那份逐字节重复）。
+
+const JB = "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/";
+
+test("splitClassUrl returns the full package, not just the last segment", () => {
+  assert.deepEqual(
+    splitClassUrl(JB + "net/minecraft/entity/Entity.html", JB),
+    { pkg: "net/minecraft/entity", file: "Entity" },
+  );
+  assert.deepEqual(
+    splitClassUrl(JB + "net/minecraft/block/Block.EnumOffsetType.html", JB),
+    { pkg: "net/minecraft/block", file: "Block.EnumOffsetType" },
+  );
+});
+
+test("splitClassUrl 认得 cpw 前档与锚点，认不出时交回 null 而不是错包", () => {
+  const b7 = "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/";
+  assert.deepEqual(
+    splitClassUrl(b7 + "cpw/mods/fml/common/Loader.html#field.summary", b7),
+    { pkg: "cpw/mods/fml/common", file: "Loader" },
+  );
+  // 无 baseUrl 时走 javadoc 根兜底
+  assert.deepEqual(
+    splitClassUrl("https://x/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/util/IStringSerializable.html"),
+    { pkg: "net/minecraft/util", file: "IStringSerializable" },
+  );
+  assert.equal(splitClassUrl("https://example.com/totally/unrelated/index.html", JB), null);
+});
+
+test("splitClassUrl 对非 javadoc 根不得凭空造包", () => {
+  // 「认不出就退回 summary 包」是判据：这里必须 null，不得把 https 主机名当包名
+  assert.equal(splitClassUrl("https://x/base/ibxm/IBXM.html"), null);
+});
+
+// ── parsePackageSummary：成员锚点不得被当成类页 ────────────────────────────
+// 盘上实证：raw/net/minecraftforge/client/event/GuiScreen.html#height.md 等
+// 同一个类页按成员锚点重复落了几十遍（1.10.2 / 1.11.2 / 1.12.2 各 20+ 篇）。
+
+test("parsePackageSummary 丢掉成员锚点，只收真正的类页", () => {
+  const summary = "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/client/event/package-summary.html";
+  const html = [
+    '<td><a href="../../../../net/minecraft/client/gui/GuiScreen.html" title="class in net.minecraft.client.gui">GuiScreen</a></td>',
+    '<a href="../../../../net/minecraft/client/gui/GuiScreen.html#height">height</a>',
+    '<a href="../../../../net/minecraft/client/gui/GuiScreen.html#drawScreen-int-int-float-">drawScreen</a>',
+    '<a href="package-summary.html">Package</a>',
+    '<a href="../../../../overview-summary.html">Overview</a>',
+    '<a href="../../../../help-doc.html">Help</a>',
+    '<a href="../../../net/minecraft/client/gui/screen/package-tree.html">Tree</a>',
+  ].join("\n");
+  const got = parsePackageSummary(html, summary);
+  assert.equal(got.length, 1, `应只剩 1 个真类页，实得 ${JSON.stringify(got)}`);
+  assert.equal(got[0].name, "GuiScreen");
+  assert.ok(!got[0].absUrl.includes("#"), `absUrl 还带锚点: ${got[0].absUrl}`);
+  assert.equal(
+    got[0].absUrl,
+    "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/gui/GuiScreen.html",
+  );
+});
+
+test("htmlToMd converts tables, links and headings without tag residue", () => {  const md = htmlToMd(
+    '<h2>Registry</h2><table><tr><th>Name</th><th>Kind</th></tr>' +
+    '<tr><td><code>Item</code></td><td>obj</td></tr></table>' +
+    '<p>See <a href="https://docs.minecraftforge.net/en/1.20.1/concepts/">concepts</a>.</p>'
+  );
+  assert.ok(md.startsWith("## Registry") || md.includes("\n## Registry"), md);
+  assert.match(md, /^Name\s*\|\s*Kind$/m);
+  assert.match(md, /^---\s*\|\s*---$/m);
+  assert.ok(md.includes("[concepts](https://docs.minecraftforge.net/en/1.20.1/concepts/)"), md);
+  assert.ok(!/<\/?(?:table|tr|td|th|h2|p)\b/.test(md), `残留标签:\n${md}`);
 });
 
 // The actual test definitions follow. We do not orchestrate the run from this

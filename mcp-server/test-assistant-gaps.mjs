@@ -434,12 +434,41 @@ function skillPath(ver, name) {
 }
 
 {
-  const { knowledgeVersion, frontmatterDescription } = await import("./dist/platform-pack/catalog.js");
+  const { knowledgeVersion, frontmatterDescription, listPacks } = await import("./dist/platform-pack/catalog.js");
   assert.equal(knowledgeVersion("fabric", "26.1"), "26.1.2");
   assert.equal(knowledgeVersion("fabric", "26.1.1"), "26.1.2");
   assert.equal(knowledgeVersion("fabric", "26.1.2"), "26.1.2");
   assert.equal(knowledgeVersion("fabric", "26.2"), "26.2");
   assert.equal(knowledgeVersion("fabric", "1.21.11"), "1.21.11");
+
+  // 2026-09-21：折叠对的不变量 —— knowledgeVersion 折叠到的**目标档必须是 ready**。
+  // 理由：draft 档的存在语义是「内容没核过、别注入」；折叠到 draft 等于给未核实内容发通行证，
+  // 正好绕过 session/write 的 draft 门（`session.ts:456`）。今天盘面 5 个 draft 都不是折叠目标
+  // （空集，两条判法等价），但这条不变量必须钉住：将来谁新增折叠规则又指向 draft 档，这里当场红。
+  // 这也把「拒绝文案打解析档」（session.ts 的 resolvedVersion）与「折叠目标必须 ready」两条残余一次收口。
+  {
+    const { packs, drafts } = listPacks();
+    const key = (p) => `${p.platform}/${p.minecraftVersion}`;
+    const draftKeys = new Set(drafts.map(key));
+    const FOLD_REQUESTS = [
+      ["neoforge", "26.1"],
+      ["neoforge", "26.1.2"],
+      ["fabric", "26.1"],
+      ["fabric", "26.1.1"],
+      ["fabric", "26.1.2"],
+    ];
+    for (const [plat, req] of FOLD_REQUESTS) {
+      const target = knowledgeVersion(plat, req);
+      assert.ok(
+        !draftKeys.has(`${plat}/${target}`),
+        `折叠不变量：${plat} ${req} 折叠到 ${target}，而该档是 draft —— 折叠不得指向 draft 档`,
+      );
+      assert.ok(
+        packs.some((p) => key(p) === `${plat}/${target}`),
+        `折叠不变量：${plat} ${target} 不在 ready 列表 ⇒ listPacks 与 knowledgeVersion 口径不一致`,
+      );
+    }
+  }
   const fm = frontmatterDescription(`---
 name: demo
 description: |

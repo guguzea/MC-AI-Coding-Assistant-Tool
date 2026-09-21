@@ -3,7 +3,7 @@
     "id": "1.19.4/qsl-qfapi",
     "version": "1.19.4",
     "label": "QSL and Quilted Fabric API",
-    "url": "https://wiki.quiltmc.org/en/concepts/qsl-qfapi",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/concepts/qsl-qfapi/en.md",
     "tags": [
       "qsl",
       "qfapi",
@@ -12,8 +12,8 @@
     "priority": "⭐",
     "sectionCount": 1,
     "source": "quilt-docs",
-    "fetchedAt": "2026-08-13T15:11:00.090Z",
-    "sha256": "d86914997302985b041005c72bb974ccc3ca574eb97f6445bc879dbbb1b14763"
+    "fetchedAt": "2026-09-21T03:12:19.673Z",
+    "sha256": "e706bcece174935043909fa8820d7e82f6d07c541cd73c4ccd1f8353bfa67797"
   },
   {
     "id": "1.19.4/quilt-mod-json",
@@ -27,8 +27,8 @@
     "priority": "⭐",
     "sectionCount": 1,
     "source": "quilt-docs",
-    "fetchedAt": "2026-08-13T15:11:00.508Z",
-    "sha256": "eee8a259181847cb42c497ec62e8daf2ad9253d061e2474e2d41634349f06e8f"
+    "fetchedAt": "2026-09-21T03:12:19.681Z",
+    "sha256": "7cef0010d0d543eccf5276ab002af010622a18c0e2a1975c0d0e99239eb1015b"
   },
   {
     "id": "1.19.4/qsl-readme",
@@ -41,8 +41,8 @@
     "priority": "⭐",
     "sectionCount": 1,
     "source": "quilt-docs",
-    "fetchedAt": "2026-08-13T15:11:00.904Z",
-    "sha256": "9efce96794fd0f8b1ea6fe1946571c1efdd55ae70f8e5b2dbc65e7cfadb13e7d"
+    "fetchedAt": "2026-09-21T03:12:20.062Z",
+    "sha256": "60ed4af574e06bcf61dd9dddee897bef9d3449655e80099af6e9f0b3270c4204"
   },
   {
     "id": "1.19.4/qsl-verified",
@@ -58,5 +58,216 @@
     "sectionCount": 1,
     "source": "quilt-docs",
     "fetchedAt": "2026-08-14T22:55:03.666Z"
+  },
+  {
+    "id": "1.19.4/wiki-getting-started",
+    "version": "1.19.4",
+    "label": "Getting Started with Quilt",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/introduction/getting-started/en.md",
+    "tags": [
+      "setup",
+      "loader"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.674Z",
+    "sha256": "0e2fb16c0f7c3d60e884d040a52fc3388c243aa3c0be78f62ba38934e34debbf"
+  },
+  {
+    "id": "1.19.4/wiki-setting-up",
+    "version": "1.19.4",
+    "label": "Setting Up a Development Environment",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/introduction/setting-up/en.md",
+    "tags": [
+      "setup",
+      "gradle",
+      "loom"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.675Z",
+    "sha256": "aa3dc013676e6fb522d94c219534274a3bf783610bfe2644fbf39b77db857f5f"
+  },
+  {
+    "id": "1.19.4/wiki-first-item",
+    "version": "1.19.4",
+    "label": "Creating your First Item",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/items/first-item/en.md",
+    "tags": [
+      "item",
+      "registry"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.675Z",
+    "sha256": "fbf2fd57b2abe0ab47088cc2ee41cf6700ff4a42f0049753f3e6388ee382c0e8"
+  },
+  {
+    "id": "1.19.4/wiki-food",
+    "version": "1.19.4",
+    "label": "Adding Food",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/items/food/en.md",
+    "tags": [
+      "item",
+      "food"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.676Z",
+    "sha256": "14a512ca70083eb0167b1ab894f5f9395af2e5f0040e75483f37e6684dec588b"
+  },
+  {
+    "id": "1.19.4/wiki-armor",
+    "version": "1.19.4",
+    "label": "Adding an Armor Set",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/items/armor/en.md",
+    "tags": [
+      "item",
+      "armor"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.676Z",
+    "sha256": "30022488ad3fde8db0e2a9108b57f2c8c7d0fb56797c8d13e49fd25914a461cf"
+  },
+  {
+    "id": "1.19.4/wiki-first-block",
+    "version": "1.19.4",
+    "label": "Adding a Simple Block",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/blocks/first-block/en.md",
+    "tags": [
+      "block",
+      "registry"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.677Z",
+    "sha256": "e5695a460c6bb5c5c20a5f6d20a99cdb621627262c9d53500de440e7f0e1ec50"
+  },
+  {
+    "id": "1.19.4/wiki-sideness",
+    "version": "1.19.4",
+    "label": "Server-Side and Client-Side",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/concepts/sideness/en.md",
+    "tags": [
+      "sideness",
+      "client",
+      "server"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.677Z",
+    "sha256": "22308deb1f26783459593fccce6d0006e199f0059a996f3d2a9baa2608a0234e"
+  },
+  {
+    "id": "1.19.4/wiki-advanced-configuring",
+    "version": "1.19.4",
+    "label": "Advanced Configuring",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/configuration/advanced-configuring/en.md",
+    "tags": [
+      "config",
+      "qconfig"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.678Z",
+    "sha256": "74ebbc64f779d03f15d2e86223efc3abf7eb932ff4d2808c49b12899cd3923c3"
+  },
+  {
+    "id": "1.19.4/wiki-config-screen",
+    "version": "1.19.4",
+    "label": "Setting up a Config Screen",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/configuration/config-screen/en.md",
+    "tags": [
+      "config",
+      "gui"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.678Z",
+    "sha256": "042e106b8f092d982fbf2eccc834e1aa5cd5df0d4cd30e9f183a27fcdc326fad"
+  },
+  {
+    "id": "1.19.4/wiki-configuration-getting-started",
+    "version": "1.19.4",
+    "label": "Getting Started with Quilt Config",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/configuration/getting-started/en.md",
+    "tags": [
+      "config",
+      "qconfig"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.679Z",
+    "sha256": "2843ab5c965878e1cd3eb1a4aae081f5e60d7866f8cc2a44bf0d89e51ec38cbd"
+  },
+  {
+    "id": "1.19.4/wiki-metadata",
+    "version": "1.19.4",
+    "label": "Annotations and Metadata Reference",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/configuration/metadata/en.md",
+    "tags": [
+      "config",
+      "annotations"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.679Z",
+    "sha256": "e90ad3cf1f6ffde2dc10c0d1b12d233c67a38fff7fb323e77534374c8da73a6f"
+  },
+  {
+    "id": "1.19.4/wiki-mappings",
+    "version": "1.19.4",
+    "label": "Customizing your Mappings",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/misc/mappings/en.md",
+    "tags": [
+      "mappings",
+      "yarn",
+      "intermediary"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.680Z",
+    "sha256": "2a01d2e7993734d416fa720ce7687eb45b6719a9604e7f6cef7fadfe385adc38"
+  },
+  {
+    "id": "1.19.4/wiki-world-types",
+    "version": "1.19.4",
+    "label": "Adding World Types",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/misc/world_types/en.md",
+    "tags": [
+      "worldgen"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.680Z",
+    "sha256": "3c4906b3f1cbc9fb8c850714c86d59cdd4fddbd26050b336ac9d58ea68a9b2ee"
+  },
+  {
+    "id": "1.19.4/wiki-landing-page",
+    "version": "1.19.4",
+    "label": "Quilt Developer Wiki Landing",
+    "url": "https://raw.githubusercontent.com/QuiltMC/developer-wiki/main/wiki/landing-page/en.md",
+    "tags": [
+      "index"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-09-21T03:12:19.681Z",
+    "sha256": "ca7dbcbbd56a611c194820e30894a4e46fb1d0019970958157804ccb6b4654d2"
   }
 ]

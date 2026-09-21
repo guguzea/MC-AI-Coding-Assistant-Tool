@@ -1,15 +1,18 @@
-# Tags
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/resources/server/tags
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "resources/server/tags"
+source: "https://docs.minecraftforge.net/en/1.20.1/resources/server/tags/"
+sourceType: mkdocs
+---
 # Tags
 
 Tags are generalized sets of objects in the game used for grouping related things together and providing fast membership checks.
 
 ## Declaring Your Own Groupings
 
-Tags are declared in your mod&rsquo;s [datapack](../). For example, a `TagKey<Block>` with a given identifier of `modid:foo/tagname` will reference a tag at `/data/<modid>/tags/blocks/foo/tagname.json`. Tags for `Block`s, `Item`s, `EntityType`s, `Fluid`s, and `GameEvent`s use the plural forms for their folder location while all other registries use the singular version (`EntityType` uses the folder `entity_types` while `Potion` would use the folder `potion`). Similarly, you may append to or override tags declared in other domains, such as Vanilla, by declaring your own JSONs. For example, to add your own mod&rsquo;s saplings to the Vanilla sapling tag, you would specify it in `/data/minecraft/tags/blocks/saplings.json`, and Vanilla will merge everything into one tag at reload, if the `replace` option is false. If `replace` is true, then all entries before the json specifying `replace` will be removed. Values listed that are not present will cause the tag to error unless the value is listed using an `id` string and `required` boolean set to false, as in the following example:
+Tags are declared in your mod’s [datapack](../). For example, a `TagKey<Block>` with a given identifier of `modid:foo/tagname` will reference a tag at `/data/<modid>/tags/blocks/foo/tagname.json`. Tags for `Block`s, `Item`s, `EntityType`s, `Fluid`s, and `GameEvent`s use the plural forms for their folder location while all other registries use the singular version (`EntityType` uses the folder `entity_types` while `Potion` would use the folder `potion`). Similarly, you may append to or override tags declared in other domains, such as Vanilla, by declaring your own JSONs. For example, to add your own mod’s saplings to the Vanilla sapling tag, you would specify it in `/data/minecraft/tags/blocks/saplings.json`, and Vanilla will merge everything into one tag at reload, if the `replace` option is false. If `replace` is true, then all entries before the json specifying `replace` will be removed. Values listed that are not present will cause the tag to error unless the value is listed using an `id` string and `required` boolean set to false, as in the following example:
+
 
 ```json
 {
@@ -24,6 +27,7 @@ Tags are declared in your mod&rsquo;s [datapack](../). For example, a `TagKey<Bl
   ]
 }
 ```
+
 
 See the [Vanilla wiki](https://minecraft.wiki/w/Tag#JSON_format) for a description of the base syntax.
 
@@ -62,7 +66,27 @@ Forge registry objects can grab their tag definition using either `ITagManager#g
 
 Tag-holding registry objects contain a method called `#is` in either their registry object or state-aware class to check whether the object belongs to a certain tag.
 
-As an example: ``` public static final TagKey<Item> myItemTag = ItemTags.create(new ResourceLocation("mymod", "myitemgroup")); public static final TagKey<Potion> myPotionTag = ForgeRegistries.POTIONS.tags().createTagKey(new ResourceLocation("mymod", "mypotiongroup")); public static final TagKey<VillagerType> myVillagerTypeTag = TagKey.create(Registries.VILLAGER_TYPE, new ResourceLocation("mymod", "myvillagertypegroup")); // In some method: ItemStack stack = /*...*/; boolean isInItemGroup = stack.is(myItemTag); Potion potion = /*...*/; boolean isInPotionGroup = ForgeRegistries.POTIONS.tags().getTag(myPotionTag).contains(potion); ResourceKey<VillagerType> villagerTypeKey = /*...*/; boolean isInVillagerTypeGroup = BuiltInRegistries.VILLAGER_TYPE.getHolder(villagerTypeKey).map(holder -> holder.is(myVillagerTypeTag)).orElse(false); ```
+As an example:
+
+```
+public static final TagKey<Item> myItemTag = ItemTags.create(new ResourceLocation("mymod", "myitemgroup"));
+
+public static final TagKey<Potion> myPotionTag = ForgeRegistries.POTIONS.tags().createTagKey(new ResourceLocation("mymod", "mypotiongroup"));
+
+public static final TagKey<VillagerType> myVillagerTypeTag = TagKey.create(Registries.VILLAGER_TYPE, new ResourceLocation("mymod", "myvillagertypegroup"));
+
+// In some method:
+
+ItemStack stack = /*...*/;
+boolean isInItemGroup = stack.is(myItemTag);
+
+Potion potion = /*...*/;
+boolean isInPotionGroup  = ForgeRegistries.POTIONS.tags().getTag(myPotionTag).contains(potion);
+
+ResourceKey<VillagerType> villagerTypeKey = /*...*/;
+boolean isInVillagerTypeGroup = BuiltInRegistries.VILLAGER_TYPE.getHolder(villagerTypeKey).map(holder -> holder.is(myVillagerTypeTag)).orElse(false);
+```
+
 
 ## Conventions
 

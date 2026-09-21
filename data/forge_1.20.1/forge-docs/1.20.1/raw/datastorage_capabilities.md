@@ -2,7 +2,7 @@
 version: "1.20.1"
 forgeVersion: "47.2.0"
 chapter: "datastorage/capabilities"
-source: "https://docs.readthedocs.net/en/1.20.1/datastorage/capabilities/"
+source: "https://docs.minecraftforge.net/en/1.20.1/datastorage/capabilities/"
 sourceType: mkdocs
 ---
 # The Capability System
@@ -29,9 +29,11 @@ As mentioned earlier, BlockEntities, Entities, and ItemStacks implement the capa
 
 In order to obtain a capability, you will need to refer it by its unique instance. In the case of the `IItemHandler`, this capability is primarily stored in `ForgeCapabilities#ITEM_HANDLER`, but it is possible to get other instance references by using `CapabilityManager#get`
 
+
 ```
 public static final Capability<IItemHandler> ITEM_HANDLER = CapabilityManager.get(new CapabilityToken<>(){});
 ```
+
 
 When called, `CapabilityManager#get` provides a non-null capability for your associated type. The anonymous `CapabilityToken` allows Forge to keep a soft dependency system while still having the necessary generic information to get the correct capability.
 
@@ -45,9 +47,10 @@ In order to expose a capability, you will first need an instance of the underlyi
 
 In the case of `IItemHandler`, the default implementation uses the `ItemStackHandler` class, which has an optional argument in the constructor, to specify a number of slots. However, relying on the existence of these default implementations should be avoided, as the purpose of the capability system is to prevent loading errors in contexts where the capability is not present, so instantiation should be protected behind a check testing if the capability has been registered (see the remarks about `CapabilityManager#get` in the previous section).
 
-Once you have your own instance of the capability interface, you will want to notify users of the capability system that you expose this capability and provide a `LazyOptional` of the interface reference. This is done by overriding the `#getCapability` method, and comparing the capability instance with the capability you are exposing. If your machine has different slots based on which side is being queried, you can test this with the `side` parameter. For Entities and ItemStacks, this parameter can be ignored, but it is still possible to have side as a context, such as different armor slots on a player (`Direction#UP` exposing the player&rsquo;s helmet slot), or about the surrounding blocks in the inventory (`Direction#WEST` exposing the input slot of a furnace). Do not forget to fall back to `super`, otherwise existing attached capabilities will stop working.
+Once you have your own instance of the capability interface, you will want to notify users of the capability system that you expose this capability and provide a `LazyOptional` of the interface reference. This is done by overriding the `#getCapability` method, and comparing the capability instance with the capability you are exposing. If your machine has different slots based on which side is being queried, you can test this with the `side` parameter. For Entities and ItemStacks, this parameter can be ignored, but it is still possible to have side as a context, such as different armor slots on a player (`Direction#UP` exposing the player’s helmet slot), or about the surrounding blocks in the inventory (`Direction#WEST` exposing the input slot of a furnace). Do not forget to fall back to `super`, otherwise existing attached capabilities will stop working.
 
-Capabilities must be invalidated at the end of the provider&rsquo;s lifecycle via `LazyOptional#invalidate`. For owned BlockEntities and Entities, the `LazyOptional` can be invalidated within `#invalidateCaps`. For non-owned providers, a runnable supplying the invalidation should be passed into `AttachCapabilitiesEvent#addListener`.
+Capabilities must be invalidated at the end of the provider’s lifecycle via `LazyOptional#invalidate`. For owned BlockEntities and Entities, the `LazyOptional` can be invalidated within `#invalidateCaps`. For non-owned providers, a runnable supplying the invalidation should be passed into `AttachCapabilitiesEvent#addListener`.
+
 
 ```
 // Somewhere in your BlockEntity subclass
@@ -72,7 +75,8 @@ public void invalidateCaps() {
 }
 ```
 
-> **Tip**: Tip If only one capability is exposed on a given object, you can use Capability#orEmpty as an alternative to the if/else statement. @Override public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) { return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, inventoryHandlerLazyOptional); }
+
+> **Tip**: Tip If only one capability is exposed on a given object, you can use Capability#orEmpty as an alternative to the if/else statement. @Override public  LazyOptional getCapability(Capability cap, Direction side) { return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, inventoryHandlerLazyOptional); }
 
 `Item`s are a special case since their capability providers are stored on an `ItemStack`. Instead, a provider should be attached through `Item#initCapabilities`. This should hold your capabilities for the lifecycle of the stack.
 
@@ -82,11 +86,11 @@ It is strongly suggested that direct checks in code are used to test for capabil
 
 As mentioned, attaching capabilities to existing providers, `Level`s, and `LevelChunk`s can be done using `AttachCapabilitiesEvent`. The same event is used for all objects that can provide capabilities. `AttachCapabilitiesEvent` has 5 valid generic types providing the following events:
 
-- <li>`AttachCapabilitiesEvent<Entity>`: Fires only for entities.
-- <li>`AttachCapabilitiesEvent<BlockEntity>`: Fires only for block entities.
-- <li>`AttachCapabilitiesEvent<ItemStack>`: Fires only for item stacks.
-- <li>`AttachCapabilitiesEvent<Level>`: Fires only for levels.
-- <li>`AttachCapabilitiesEvent<LevelChunk>`: Fires only for level chunks.
+- `AttachCapabilitiesEvent<Entity>`: Fires only for entities.
+- `AttachCapabilitiesEvent<BlockEntity>`: Fires only for block entities.
+- `AttachCapabilitiesEvent<ItemStack>`: Fires only for item stacks.
+- `AttachCapabilitiesEvent<Level>`: Fires only for levels.
+- `AttachCapabilitiesEvent<LevelChunk>`: Fires only for level chunks.
 
 The generic type cannot be more specific than the above types. For example: If you want to attach capabilities to `Player`, you have to subscribe to the `AttachCapabilitiesEvent<Entity>`, and then determine that the provided object is an `Player` before attaching the capability.
 
@@ -102,6 +106,7 @@ A capability can be registered using one of two ways: `RegisterCapabilitiesEvent
 
 A capability can be registered using `RegisterCapabilitiesEvent` by supplying the class of the capability type to the `#register` method. The event is [handled](../../concepts/events/#creating-an-event-handler) on the mod event bus.
 
+
 ```java
 @SubscribeEvent
 public void registerCaps(RegisterCapabilitiesEvent event) {
@@ -109,9 +114,11 @@ public void registerCaps(RegisterCapabilitiesEvent event) {
 }
 ```
 
+
 ### @AutoRegisterCapability
 
 A capability is registered using `@AutoRegisterCapability` by annotating the capability type.
+
 
 ```
 @AutoRegisterCapability
@@ -120,11 +127,13 @@ public interface IExampleCapability {
 }
 ```
 
+
 ## Persisting LevelChunk and BlockEntity capabilities
 
 Unlike Levels, Entities, and ItemStacks, LevelChunks and BlockEntities are only written to disk when they have been marked as dirty. A capability implementation with persistent state for a LevelChunk or a BlockEntity should therefore ensure that whenever its state changes, its owner is marked as dirty.
 
 `ItemStackHandler`, commonly used for inventories in BlockEntities, has an overridable method `void onContentsChanged(int slot)` designed to be used to mark the BlockEntity as dirty.
+
 
 ```java
 public class MyBlockEntity extends BlockEntity {
@@ -141,15 +150,16 @@ public class MyBlockEntity extends BlockEntity {
 }
 ```
 
+
 ## Synchronizing Data with Clients
 
 By default, capability data is not sent to clients. In order to change this, the mods have to manage their own synchronization code using packets.
 
 There are three different situations in which you may want to send synchronization packets, all of them optional:
 
-1. <li>When the entity spawns in the level, or the block is placed, you may want to share the initialization-assigned values with the clients.
-2. <li>When the stored data changes, you may want to notify some or all of the watching clients.
-3. <li>When a new client starts viewing the entity or block, you may want to notify it of the existing data.
+1. When the entity spawns in the level, or the block is placed, you may want to share the initialization-assigned values with the clients.
+2. When the stored data changes, you may want to notify some or all of the watching clients.
+3. When a new client starts viewing the entity or block, you may want to notify it of the existing data.
 
 Refer to the [Networking](../../networking/) page for more information on implementing network packets.
 

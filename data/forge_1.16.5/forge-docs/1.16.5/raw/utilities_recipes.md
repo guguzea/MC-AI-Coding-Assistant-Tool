@@ -2,7 +2,7 @@
 version: "1.16.5"
 forgeVersion: "36.2.34"
 chapter: "utilities/recipes"
-source: "https://docs.readthedocs.net/en/1.16.x/utilities/recipes/"
+source: "https://docs.minecraftforge.net/en/1.16.x/utilities/recipes/"
 sourceType: mkdocs
 ---
 # Recipes
@@ -16,6 +16,7 @@ Forge will load all recipes which can be found within the `./data/<modid>/recipe
 ## The Recipe file
 
 A basic recipe file might look like the following example:
+
 
 ```
 {
@@ -45,6 +46,7 @@ A basic recipe file might look like the following example:
 }
 ```
 
+
 > **Note**: Note When you first obtain an ingredient to a vanilla recipe, it will automatically unlock the recipe in the recipe book. To achieve the same effect, you have to use the advancement system and create a new advancement for each of your ingredients. The advancement has to exist. This does not mean it has to be visible in the advancement tree.
 
 ### Type
@@ -73,6 +75,7 @@ To define a shapeless recipe, you have to use the `ingredients` list. It defines
 
 The following example shows how an ingredient list looks like within JSON:
 
+
 ```
 "ingredients": [
         {
@@ -85,8 +88,9 @@ The following example shows how an ingredient list looks like within JSON:
     ...
 ```
 
+
 ### Results
 
 Every vanilla recipe has to have a `result` tag to define the output item.
 
-When crafting something, you can get out more than one item. This is achieved by defining the `count` number. If this is left out, meaning it doesn&rsquo;t exist within the result block, it defaults to 1. Negative values are not allowed here as an `ItemStack` cannot be smaller than 0. There is no option to use the `count` number anywhere else than for the result. Forge also added support for results to include NBT data via the `nbt` tag.
+When crafting something, you can get out more than one item. This is achieved by defining the `count` number. If this is left out, meaning it doesn’t exist within the result block, it defaults to 1. Negative values are not allowed here as an `ItemStack` cannot be smaller than 0. There is no option to use the `count` number anywhere else than for the result. Forge also added support for results to include NBT data via the `nbt` tag.

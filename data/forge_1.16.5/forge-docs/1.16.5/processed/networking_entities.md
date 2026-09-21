@@ -31,8 +31,8 @@ Firstly, you need a `DataParameter<T>` for the data you wish to keep synchronize
 
 <!-- key:🔴 role:新手必读 (Warning) -->
 
-> **Warning**: Warning You should only create data parameters for your own entities, within that entity&rsquo;s class. Adding parameters to entities you do not control can cause the IDs used to send that data over the network to become desynchronized, causing difficult to debug crashes.
+> **Warning**: Warning You should only create data parameters for your own entities, within that entity’s class. Adding parameters to entities you do not control can cause the IDs used to send that data over the network to become desynchronized, causing difficult to debug crashes.
 
 Then, override `Entity#defineSynchedData` and call `this.entityData.define(...)` for each of your data parameters, passing the parameter and an initial value to use. Remember to always call the `super` method first!
 
-You can then get and set these values via your entity&rsquo;s `entityData` instance. Changes made will be synchronized to the client automatically.
+You can then get and set these values via your entity’s `entityData` instance. Changes made will be synchronized to the client automatically.

@@ -9,11 +9,12 @@ sourceType: mkdocs
 
 [Loot tables](../../../resources/server/loottables/) can be generated for a mod by subclassing `LootTableProvider` with a few modifications. After implementation, the provider must be [added](../../#data-providers) to the `DataGenerator`.
 
-## The `LootTableProvider Subclass
+## The `LootTableProvider` Subclass
 
-<code>LootTableProvider` is simplified into two methods: `#getTables`, which collect the table builders, and `#validate`, which checks whether the generated loot tables are valid. Both of these methods need to be overridden to use `LootTableProvider`.
+`LootTableProvider` is simplified into two methods: `#getTables`, which collect the table builders, and `#validate`, which checks whether the generated loot tables are valid. Both of these methods need to be overridden to use `LootTableProvider`.
 
 `#validate` can be simplified to call `LootTables#validate` for every single table. It initially fails since it expects the tables defined within `BuiltInLootTables` to be generated as well.
+
 
 ```
 // In some LootTableProvider subclass
@@ -23,7 +24,9 @@ protected void validate(Map<ResourceLocation, LootTable> tables, ValidationConte
 }
 ```
 
+
 `#getTables` defines a list of factory methods for table builders for a given `LootContextParamSet`. Each table builder consumes a writer used to generate the given table for a specific name. To simplify understanding:
+
 
 ```
 // In some LootTableProvider subclass
@@ -47,9 +50,11 @@ getTables() {
 }
 ```
 
+
 ## Table Builders
 
 Each table builder has a method which takes in the writer to generate a table. This is typically done implementing a `Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>`.
+
 
 ```java
 public class ExampleLoot implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
@@ -65,17 +70,29 @@ public class ExampleLoot implements Consumer<BiConsumer<ResourceLocation, LootTa
 }
 ```
 
+
 The table can then be added to `LootTableProvider#getTables` for any available `LootContextParamSet`:
+
 
 ```
 // In some LootTableProvider subclass
 @Override
-protected List
->>, LootContextParamSet>> getTables() { return ImmutableList.of( Pair.of(ExampleLoot::new, LootContextParamSets.EMPTY) // Loot table builder for the 'empty' parameter set //... ); } ``` ### `BlockLoot and <code>EntityLoot Subclasses <p>For <code>LootContextParamSets#BLOCK` and `#ENTITY`, there are special types (`BlockLoot` and `EntityLoot` respectively) which provide additional helper methods for creating and validating that there are loot tables.
+protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
+  return ImmutableList.of(
+    Pair.of(ExampleLoot::new, LootContextParamSets.EMPTY) // Loot table builder for the 'empty' parameter set
+    //...
+  );
+}
+```
+
+
+### `BlockLoot` and `EntityLoot` Subclasses
+
+For `LootContextParamSets#BLOCK` and `#ENTITY`, there are special types (`BlockLoot` and `EntityLoot` respectively) which provide additional helper methods for creating and validating that there are loot tables.
 
 To use them, all registered objects must be supplied to either `BlockLoot#getKnownBlocks` and `EntityLoot#getKnownEntities` respectively. These methods are to make sure all objects within the iterable has a loot table.
 
-> **Tip**: Tip If DeferredRegister is being used to register a mod&rsquo;s objects, then the #getKnown* methods can be supplied the entries via DeferredRegister#getEntities: // In some BlockLoot subclass for some DeferredRegister BLOCK_REGISTRAR @Override protected Iterable<Block> getKnownBlocks() { return BLOCK_REGISTRAR.getEntries() // Get all registered entries .stream() // Stream the wrapped objects .flatMap(RegistryObject::stream) // Get the object if available ::iterator; // Create the iterable }
+> **Tip**: Tip If DeferredRegister is being used to register a mod’s objects, then the #getKnown* methods can be supplied the entries via DeferredRegister#getEntities: // In some BlockLoot subclass for some DeferredRegister BLOCK_REGISTRAR @Override protected Iterable getKnownBlocks() { return BLOCK_REGISTRAR.getEntries() // Get all registered entries .stream() // Stream the wrapped objects .flatMap(RegistryObject::stream) // Get the object if available ::iterator; // Create the iterable }
 
 ## Loot Table Builders
 

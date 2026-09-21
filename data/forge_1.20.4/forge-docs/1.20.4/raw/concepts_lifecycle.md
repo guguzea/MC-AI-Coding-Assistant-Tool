@@ -1,9 +1,8 @@
-> 版本：1.20.4
 ---
 version: "1.20.4"
 forgeVersion: "49.0.0"
 chapter: "concepts/lifecycle"
-source: "https://docs.readthedocs.net/en/1.20.x/concepts/lifecycle/"
+source: "https://docs.minecraftforge.net/en/1.20.x/concepts/lifecycle/"
 sourceType: mkdocs
 ---
 # Mod Lifecycle
@@ -11,6 +10,7 @@ sourceType: mkdocs
 During the mod loading process, the various lifecycle events are fired on the mod-specific event bus. Many actions are performed during these events, such as [registering objects](../registries/#methods-for-registering), preparing for [data generation](../../datagen/), or [communicating with other mods](./#intermodcomms).
 
 Event listeners should be registered either using `@EventBusSubscriber(bus = Bus.MOD)` or in the mod constructor:
+
 
 ```java
 @Mod.EventBusSubscriber(modid = "mymod", bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -29,7 +29,8 @@ public class MyMod {
 }
 ```
 
-> **Warning**: Warning Most of the lifecycle events are fired in parallel: all mods will concurrently receive the same event. Mods must take care to be thread-safe, like when calling other mods&rsquo; APIs or accessing vanilla systems. Defer code for later execution via ParallelDispatchEvent#enqueueWork.
+
+> **Warning**: Warning Most of the lifecycle events are fired in parallel: all mods will concurrently receive the same event. Mods must take care to be thread-safe, like when calling other mods’ APIs or accessing vanilla systems. Defer code for later execution via ParallelDispatchEvent#enqueueWork.
 
 ## Registry Events
 
@@ -43,7 +44,7 @@ The registry events are fired after the mod instance construction. There are thr
 
 ## Data Generation
 
-If the game is setup to run [data generators](../../datagen/), then the `GatherDataEvent` will be the last event to fire. This event is for registering mods&rsquo; data providers to their associated data generator. This event is also fired synchronously.
+If the game is setup to run [data generators](../../datagen/), then the `GatherDataEvent` will be the last event to fire. This event is for registering mods’ data providers to their associated data generator. This event is also fired synchronously.
 
 ## Common Setup
 

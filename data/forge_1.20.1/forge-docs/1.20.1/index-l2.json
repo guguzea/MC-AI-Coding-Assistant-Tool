@@ -3,7 +3,7 @@
     "id": "1.20.1/advanced_accesstransformers",
     "version": "1.20.1",
     "label": "Access Transformers",
-    "url": "https://docs.readthedocs.net/en/1.20.1/advanced/accesstransformers/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/advanced/accesstransformers/",
     "tags": [
       "advanced"
     ],
@@ -21,7 +21,7 @@
       {
         "title": "Access Modifiers",
         "level": 2,
-        "summary": "Access modifiers specify to what new member visibility the given target will be transformed to. In decreasing order of visibility: - <li>public - visible to all classes inside and outside its packa..."
+        "summary": "Access modifiers specify to what new member visibility the given target will be transformed to. In decreasing order of visibility: - public - visible to all classes inside and outside its package -..."
       },
       {
         "title": "Targets and Directives",
@@ -44,7 +44,7 @@
     "id": "1.20.1/blockentities",
     "version": "1.20.1",
     "label": "BlockEntities",
-    "url": "https://docs.readthedocs.net/en/1.20.1/blockentities/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blockentities/",
     "tags": [
       "block"
     ],
@@ -55,29 +55,29 @@
         "summary": "Block Entities are created and removed dynamically and as such are not registry objects on their own. In order to create a BlockEntity, you need to extend the BlockEntity class."
       },
       {
-        "title": "Creating a `BlockEntity",
+        "title": "Creating a `BlockEntity`",
         "level": 2,
-        "summary": "To create a <code>BlockEntity and attach it to a Block, the EntityBlock interface must be implemented on your Block subclass."
+        "summary": "To create a BlockEntity and attach it to a Block, the EntityBlock interface must be implemented on your Block subclass."
       },
       {
-        "title": "Storing Data within your `BlockEntity",
+        "title": "Storing Data within your `BlockEntity`",
         "level": 2,
-        "summary": "In order to save data, override the following two methods: `` BlockEntity#saveAdditional(CompoundTag tag) BlockEntity#load(CompoundTag tag) ` These methods are called whenever the <code>LevelChunk ..."
+        "summary": "In order to save data, override the following two methods: BlockEntity#load(CompoundTag tag) [CODE_BLOCK]"
       },
       {
-        "title": "Ticking `BlockEntities",
+        "title": "Ticking `BlockEntities`",
         "level": 2,
-        "summary": "If you need a ticking <code>BlockEntity, for example to keep track of the progress during a smelting process, another method must be implemented and overridden within EntityBlock: EntityBlock#getTi..."
+        "summary": "If you need a ticking BlockEntity, for example to keep track of the progress during a smelting process, another method must be implemented and overridden within EntityBlock: EntityBlock#getTicker(L..."
       },
       {
         "title": "Synchronizing the Data to the Client",
         "level": 2,
-        "summary": "There are three ways of syncing data to the client: synchronizing on chunk load, on block updates, and with a custom network message."
+        "summary": "There are three ways of syncing data to the client: synchronizing on chunk load, on block updates, and with a custom network message. For this you need to override"
       }
     ],
     "hasCodeBlocks": true,
     "codeBlockCount": 6,
-    "keySections": 12,
+    "keySections": 13,
     "file": "blockentities.md",
     "processedFile": "processed/blockentities.md"
   },
@@ -85,7 +85,7 @@
     "id": "1.20.1/blockentities_ber",
     "version": "1.20.1",
     "label": "BlockEntityRenderer",
-    "url": "https://docs.readthedocs.net/en/1.20.1/blockentities/ber/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blockentities/ber/",
     "tags": [
       "block"
     ],
@@ -93,7 +93,7 @@
       {
         "title": "Creating a BER",
         "level": 2,
-        "summary": "To create a BER, create a class that inherits from BlockEntityRenderer. It takes a generic argument specifying the block&rsquo;s BlockEntity class."
+        "summary": "To create a BER, create a class that inherits from BlockEntityRenderer. It takes a generic argument specifying the block’s BlockEntity class. The generic argument is used in the BER’s render method."
       },
       {
         "title": "Registering a BER",
@@ -111,7 +111,7 @@
     "id": "1.20.1/blocks",
     "version": "1.20.1",
     "label": "Blocks",
-    "url": "https://docs.readthedocs.net/en/1.20.1/blocks/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blocks/",
     "tags": [
       "block"
     ],
@@ -124,7 +124,7 @@
       {
         "title": "Registering a Block",
         "level": 2,
-        "summary": "Blocks must be registered to function. > Important: Important A block in the level and a &ldquo;block&rdquo; in an inventory are very different things."
+        "summary": "Blocks must be registered to function. > Important: Important A block in the level and a “block” in an inventory are very different things."
       },
       {
         "title": "Further Reading",
@@ -142,7 +142,7 @@
     "id": "1.20.1/blocks_states",
     "version": "1.20.1",
     "label": "Block States",
-    "url": "https://docs.readthedocs.net/en/1.20.1/blocks/states/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blocks/states/",
     "tags": [
       "block"
     ],
@@ -168,9 +168,9 @@
         "summary": "In your Block class, create or reference static final Property<?> objects for every property that your Block has. You are free to make your own Property<?"
       },
       {
-        "title": "Using `BlockState&rsquo;s",
+        "title": "Using `BlockState`’s",
         "level": 2,
-        "summary": "You can get the value of a property by calling <code>BlockState#getValue(Property<?>), passing it the property you want to get the value of."
+        "summary": "You can get the value of a property by calling BlockState#getValue(Property<?>), passing it the property you want to get the value of."
       }
     ],
     "hasCodeBlocks": true,
@@ -183,7 +183,7 @@
     "id": "1.20.1/concepts_events",
     "version": "1.20.1",
     "label": "Events",
-    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/events/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/events/",
     "tags": [
       "event"
     ],
@@ -229,7 +229,7 @@
     "id": "1.20.1/concepts_internationalization",
     "version": "1.20.1",
     "label": "Internationalization and Localization",
-    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/internationalization/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/internationalization/",
     "tags": [],
     "sections": [
       {
@@ -258,7 +258,7 @@
     "id": "1.20.1/concepts_lifecycle",
     "version": "1.20.1",
     "label": "Mod Lifecycle",
-    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/lifecycle/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/lifecycle/",
     "tags": [
       "lifecycle"
     ],
@@ -271,7 +271,7 @@
       {
         "title": "Data Generation",
         "level": 2,
-        "summary": "If the game is setup to run data generators, then the GatherDataEvent will be the last event to fire. This event is for registering mods&rsquo; data providers to their associated data generator."
+        "summary": "If the game is setup to run data generators, then the GatherDataEvent will be the last event to fire. This event is for registering mods’ data providers to their associated data generator."
       },
       {
         "title": "Common Setup",
@@ -299,7 +299,7 @@
     "id": "1.20.1/concepts_registries",
     "version": "1.20.1",
     "label": "Registries",
-    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/registries/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/registries/",
     "tags": [
       "registry"
     ],
@@ -335,13 +335,13 @@
     "id": "1.20.1/concepts_resources",
     "version": "1.20.1",
     "label": "Resources",
-    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/resources/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/resources/",
     "tags": [],
     "sections": [
       {
-        "title": "`ResourceLocation",
+        "title": "`ResourceLocation`",
         "level": 2,
-        "summary": "Minecraft identifies resources using <code>ResourceLocations. A ResourceLocation contains two parts: a namespace and a path."
+        "summary": "Minecraft identifies resources using ResourceLocations. A ResourceLocation contains two parts: a namespace and a path."
       }
     ],
     "hasCodeBlocks": false,
@@ -354,7 +354,7 @@
     "id": "1.20.1/concepts_sides",
     "version": "1.20.1",
     "label": "Sides in Minecraft",
-    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/sides/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/sides/",
     "tags": [
       "sides"
     ],
@@ -362,12 +362,12 @@
       {
         "title": "Different Kinds of Sides",
         "level": 2,
-        "summary": "When we say &ldquo;client&rdquo; or &ldquo;server&rdquo;, it usually follows with a fairly intuitive understanding of what part of the game we are talking about."
+        "summary": "When we say “client” or “server”, it usually follows with a fairly intuitive understanding of what part of the game we are talking about."
       },
       {
         "title": "Performing Side-Specific Operations",
         "level": 2,
-        "summary": "This boolean check will be your most used way to check sides. Querying this field on a <code>Level object establishes the logical side the level belongs to."
+        "summary": "This boolean check will be your most used way to check sides. Querying this field on a Level object establishes the logical side the level belongs to."
       },
       {
         "title": "Common Mistakes",
@@ -377,7 +377,7 @@
       {
         "title": "Writing One-Sided Mods",
         "level": 2,
-        "summary": "In recent versions, Minecraft Forge has removed a &ldquo;sidedness&rdquo; attribute from the mods.toml."
+        "summary": "In recent versions, Minecraft Forge has removed a “sidedness” attribute from the mods.toml. This means that your mods are expected to work whether they are loaded on the physical client or the phys..."
       }
     ],
     "hasCodeBlocks": true,
@@ -390,7 +390,7 @@
     "id": "1.20.1/contributing",
     "version": "1.20.1",
     "label": "Contributing to This Documentation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/contributing",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/contributing/",
     "tags": [],
     "sections": [
       {
@@ -409,7 +409,7 @@
     "id": "1.20.1/datagen",
     "version": "1.20.1",
     "label": "Data Generators",
-    "url": "https://docs.readthedocs.net/en/1.20.1/datagen/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/",
     "tags": [
       "datagen",
       "tag"
@@ -441,16 +441,16 @@
     "id": "1.20.1/datagen_client_localization",
     "version": "1.20.1",
     "label": "Language Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/localization",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/localization/",
     "tags": [
       "datagen",
       "tag"
     ],
     "sections": [
       {
-        "title": "`LanguageProvider",
+        "title": "`LanguageProvider`",
         "level": 2,
-        "summary": "Each language provider is simple a map of strings where each translation key is mapped to a localized name. A translation key mapping can be added using <code>#add."
+        "summary": "Each language provider is simple a map of strings where each translation key is mapped to a localized name. A translation key mapping can be added using #add."
       }
     ],
     "hasCodeBlocks": true,
@@ -463,7 +463,7 @@
     "id": "1.20.1/datagen_client_modelproviders",
     "version": "1.20.1",
     "label": "Model Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/modelproviders",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/modelproviders/",
     "tags": [
       "datagen",
       "tag"
@@ -520,7 +520,7 @@
     "id": "1.20.1/datagen_client_sounds",
     "version": "1.20.1",
     "label": "Sound Definition Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/sounds",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/sounds/",
     "tags": [
       "datagen",
       "tag",
@@ -543,21 +543,21 @@
     "id": "1.20.1/datagen_server_advancements",
     "version": "1.20.1",
     "label": "Advancement Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/advancements",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/advancements/",
     "tags": [
       "datagen",
       "tag"
     ],
     "sections": [
       {
-        "title": "`ForgeAdvancementProvider$AdvancementGenerator",
+        "title": "`ForgeAdvancementProvider$AdvancementGenerator`",
         "level": 2,
-        "summary": "A <code>ForgeAdvancementProvider$AdvancementGenerator is responsible for generating advancements, containing a method which takes in a registry lookup, the writer (Consumer<Advancement>`), and the ..."
+        "summary": "A ForgeAdvancementProvider$AdvancementGenerator is responsible for generating advancements, containing a method which takes in a registry lookup, the writer (Consumer<Advancement>), and the existin..."
       },
       {
-        "title": "`Advancement$Builder",
+        "title": "`Advancement$Builder`",
         "level": 2,
-        "summary": "<code>Advancement$Builder is a convenience implementation for creating Advancements to generate. It allows the definition of the parent advancement, the display information, the rewards when the ad..."
+        "summary": "Advancement$Builder is a convenience implementation for creating Advancements to generate. It allows the definition of the parent advancement, the display information, the rewards when the advancem..."
       }
     ],
     "hasCodeBlocks": true,
@@ -570,7 +570,7 @@
     "id": "1.20.1/datagen_server_datapackregistries",
     "version": "1.20.1",
     "label": "Datapack Registry Object Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/datapackregistries",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/datapackregistries/",
     "tags": [
       "registry",
       "datagen",
@@ -578,14 +578,14 @@
     ],
     "sections": [
       {
-        "title": "`RegistrySetBuilder",
+        "title": "`RegistrySetBuilder`",
         "level": 2,
-        "summary": "A <code>RegistrySetBuilder` is responsible for building all datapack registry objects to be used within the game."
+        "summary": "A RegistrySetBuilder is responsible for building all datapack registry objects to be used within the game."
       },
       {
-        "title": "Registering with `BootstapContext",
+        "title": "Registering with `BootstapContext`",
         "level": 2,
-        "summary": "The <code>#register method in the BootstapContext provided by the builder can be used to register objects."
+        "summary": "The #register method in the BootstapContext provided by the builder can be used to register objects. It takes in the ResourceKey representing the registry name of the object, the object to register..."
       }
     ],
     "hasCodeBlocks": true,
@@ -598,7 +598,7 @@
     "id": "1.20.1/datagen_server_glm",
     "version": "1.20.1",
     "label": "Global Loot Modifier Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/glm",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/glm/",
     "tags": [
       "datagen",
       "tag"
@@ -614,7 +614,7 @@
     "id": "1.20.1/datagen_server_loottables",
     "version": "1.20.1",
     "label": "Loot Table Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/loottables",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/loottables/",
     "tags": [
       "datagen",
       "loot",
@@ -622,9 +622,9 @@
     ],
     "sections": [
       {
-        "title": "`LootTableSubProvider",
+        "title": "`LootTableSubProvider`",
         "level": 2,
-        "summary": "Each <code>LootTableProvider$SubProviderEntry takes in a supplied LootTableSubProvider, which generates the loot table, for a given LootContextParamSet."
+        "summary": "Each LootTableProvider$SubProviderEntry takes in a supplied LootTableSubProvider, which generates the loot table, for a given LootContextParamSet."
       },
       {
         "title": "Loot Table Builders",
@@ -642,7 +642,7 @@
     "id": "1.20.1/datagen_server_recipes",
     "version": "1.20.1",
     "label": "Recipe Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/recipes",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/recipes/",
     "tags": [
       "datagen",
       "recipe",
@@ -650,14 +650,14 @@
     ],
     "sections": [
       {
-        "title": "`RecipeBuilder",
+        "title": "`RecipeBuilder`",
         "level": 2,
-        "summary": "<code>RecipeBuilder is a convenience implementation for creating FinishedRecipes to generate. It provides basic definitions for unlocking, grouping, saving, and getting the result of a recipe."
+        "summary": "RecipeBuilder is a convenience implementation for creating FinishedRecipes to generate. It provides basic definitions for unlocking, grouping, saving, and getting the result of a recipe."
       },
       {
-        "title": "Non-`RecipeBuilder Builders",
+        "title": "Non-`RecipeBuilder` Builders",
         "level": 2,
-        "summary": "Some recipe builders do not implement <code>RecipeBuilder` due to lacking features used by all previously mentioned recipes."
+        "summary": "Some recipe builders do not implement RecipeBuilder due to lacking features used by all previously mentioned recipes."
       },
       {
         "title": "Conditional Recipes",
@@ -680,16 +680,16 @@
     "id": "1.20.1/datagen_server_tags",
     "version": "1.20.1",
     "label": "Tag Generation",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/tags",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/tags/",
     "tags": [
       "datagen",
       "tag"
     ],
     "sections": [
       {
-        "title": "`TagsProvider",
+        "title": "`TagsProvider`",
         "level": 2,
-        "summary": "The tags provider has two methods used for generating tags: creating a tag with objects and other tags via <code>#tag, or using tags from other object types to generate the tag data via #getOrCreat..."
+        "summary": "The tags provider has two methods used for generating tags: creating a tag with objects and other tags via #tag, or using tags from other object types to generate the tag data via #getOrCreateRawBu..."
       },
       {
         "title": "Custom Tag Providers",
@@ -707,7 +707,7 @@
     "id": "1.20.1/datastorage_capabilities",
     "version": "1.20.1",
     "label": "The Capability System",
-    "url": "https://docs.readthedocs.net/en/1.20.1/datastorage/capabilities/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/capabilities/",
     "tags": [
       "capability"
     ],
@@ -763,7 +763,7 @@
     "id": "1.20.1/datastorage_codecs",
     "version": "1.20.1",
     "label": "Codecs",
-    "url": "https://docs.readthedocs.net/en/1.20.1/datastorage/codecs/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/codecs/",
     "tags": [],
     "sections": [
       {
@@ -784,7 +784,7 @@
     ],
     "hasCodeBlocks": true,
     "codeBlockCount": 26,
-    "keySections": 19,
+    "keySections": 25,
     "file": "datastorage_codecs.md",
     "processedFile": "processed/datastorage_codecs.md"
   },
@@ -792,13 +792,13 @@
     "id": "1.20.1/datastorage_saveddata",
     "version": "1.20.1",
     "label": "Saved Data",
-    "url": "https://docs.readthedocs.net/en/1.20.1/datastorage/saveddata/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/saveddata/",
     "tags": [],
     "sections": [
       {
         "title": "Declaration",
         "level": 2,
-        "summary": "Each SD implementation must subtype the SavedData class. There are two important methods to be aware of: - <li>save: Allows the implementation to write NBT data to the level."
+        "summary": "Each SD implementation must subtype the SavedData class. There are two important methods to be aware of: - save: Allows the implementation to write NBT data to the level."
       },
       {
         "title": "Attaching to a Level",
@@ -816,7 +816,7 @@
     "id": "1.20.1/forgedev",
     "version": "1.20.1",
     "label": "Getting Started",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/forgedev",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/forgedev/",
     "tags": [],
     "sections": [
       {
@@ -832,7 +832,7 @@
       {
         "title": "Making Changes and Pull Requests",
         "level": 2,
-        "summary": "Once you have set up your development environment, it is time to make some changes to Forge&rsquo;s codebase. There are, however, some pitfalls you have to avoid when editing the project&rsquo;s code."
+        "summary": "Once you have set up your development environment, it is time to make some changes to Forge’s codebase. There are, however, some pitfalls you have to avoid when editing the project’s code."
       }
     ],
     "hasCodeBlocks": false,
@@ -845,18 +845,18 @@
     "id": "1.20.1/forgedev_prguidelines",
     "version": "1.20.1",
     "label": "Pull Request Guidelines",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/forgedev/prguidelines",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/forgedev/prguidelines/",
     "tags": [],
     "sections": [
       {
         "title": "What Exactly is Forge?",
         "level": 2,
-        "summary": "At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft&rsquo;s code directly (like coremods do now), but they ran into conflicts with each other when t..."
+        "summary": "At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft’s code directly (like coremods do now), but they ran into conflicts with each other when they ed..."
       },
       {
         "title": "Patches",
         "level": 2,
-        "summary": "Patches are applied as direct changes to Minecraft&rsquo;s source code, and aim to be as minimal as possible."
+        "summary": "Patches are applied as direct changes to Minecraft’s source code, and aim to be as minimal as possible."
       },
       {
         "title": "Forge Code",
@@ -899,7 +899,7 @@
     "id": "1.20.1/gameeffects_particles",
     "version": "1.20.1",
     "label": "Particles",
-    "url": "https://docs.readthedocs.net/en/1.20.1/gameeffects/particles/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gameeffects/particles/",
     "tags": [
       "particles"
     ],
@@ -925,7 +925,7 @@
     "id": "1.20.1/gameeffects_sounds",
     "version": "1.20.1",
     "label": "Sounds",
-    "url": "https://docs.readthedocs.net/en/1.20.1/gameeffects/sounds/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gameeffects/sounds/",
     "tags": [
       "sounds"
     ],
@@ -936,9 +936,9 @@
         "summary": "Term | Description --- | --- Sound Events | Something that triggers a sound effect. Examples include minecraft:block.anvil.hit or botania:spreader_fire."
       },
       {
-        "title": "`sounds.json",
+        "title": "`sounds.json`",
         "level": 2,
-        "summary": "This JSON defines sound events, and defines which sound files they play, the subtitle, etc. Sound events are identified with <code>ResourceLocations. sounds."
+        "summary": "This JSON defines sound events, and defines which sound files they play, the subtitle, etc. Sound events are identified with ResourceLocations. sounds."
       },
       {
         "title": "Creating Sound Events",
@@ -961,18 +961,28 @@
     "id": "1.20.1/gettingstarted",
     "version": "1.20.1",
     "label": "Getting Started with Forge",
-    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/",
     "tags": [],
     "sections": [
       {
         "title": "Prerequisites",
         "level": 2,
-        "summary": "- <li> An installation of the Java 17 Development Kit (JDK) and 64-bit Java Virtual Machine (JVM). Forge recommends and officially supports Eclipse Temurin."
+        "summary": "- An installation of the Java 17 Development Kit (JDK) and 64-bit Java Virtual Machine (JVM). Forge recommends and officially supports Eclipse Temurin."
+      },
+      {
+        "title": "From Zero to Modding",
+        "level": 2,
+        "summary": "1. Download the Mod Developer Kit (MDK) from the Forge file site by clicking ‘Mdk’ followed by the ‘Skip’ button in the top right after waiting for a period of time."
+      },
+      {
+        "title": "Customizing Your Mod Information",
+        "level": 2,
+        "summary": "Edit the build.gradle file to customize how your mod is built (e.g., file name, artifact version, etc.). > Important: Important Do not edit the settings.gradle unless you know what you are doing."
       },
       {
         "title": "Building and Testing Your Mod",
         "level": 2,
-        "summary": "1. <li>To build your mod, run gradlew build. This will output a file in build/libs with the name [archivesBaseName]-[version].jar, by default."
+        "summary": "1. To build your mod, run gradlew build. This will output a file in build/libs with the name [archivesBaseName]-[version].jar, by default."
       }
     ],
     "hasCodeBlocks": true,
@@ -985,7 +995,7 @@
     "id": "1.20.1/gettingstarted_modfiles",
     "version": "1.20.1",
     "label": "Mod Files",
-    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/modfiles/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/modfiles/",
     "tags": [
       "meta"
     ],
@@ -993,7 +1003,7 @@
       {
         "title": "mods.toml",
         "level": 2,
-        "summary": "The mods.toml file defines the metadata of your mod(s). It also contains additional information that is displayed within the &lsquo;Mods&rsquo; menu and how your mod(s) should be loaded into the game."
+        "summary": "The mods.toml file defines the metadata of your mod(s). It also contains additional information that is displayed within the ‘Mods’ menu and how your mod(s) should be loaded into the game."
       },
       {
         "title": "Mod Entrypoints",
@@ -1011,7 +1021,7 @@
     "id": "1.20.1/gettingstarted_structuring",
     "version": "1.20.1",
     "label": "Structuring Your Mod",
-    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/structuring/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/structuring/",
     "tags": [
       "meta"
     ],
@@ -1029,7 +1039,7 @@
       {
         "title": "Choose One Method from Many",
         "level": 2,
-        "summary": "There are many methods for performing a certain task: registering an object, listening for events, etc."
+        "summary": "There are many methods for performing a certain task: registering an object, listening for events, etc. It’s generally recommended to be consistent by using a single method to accomplish a given task."
       }
     ],
     "hasCodeBlocks": true,
@@ -1042,7 +1052,7 @@
     "id": "1.20.1/gettingstarted_versioning",
     "version": "1.20.1",
     "label": "Versioning",
-    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/versioning/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/versioning/",
     "tags": [
       "meta"
     ],
@@ -1050,7 +1060,7 @@
       {
         "title": "Examples",
         "level": 2,
-        "summary": "Here is a list of examples that can increment the various variables. - <li>MCVERSION - <li>Always matches the Minecraft version the mod is for."
+        "summary": "Here is a list of examples that can increment the various variables. - MCVERSION - Always matches the Minecraft version the mod is for. - MAJORMOD - Removing items, blocks, block entities, etc."
       }
     ],
     "hasCodeBlocks": false,
@@ -1063,20 +1073,20 @@
     "id": "1.20.1/gui_menus",
     "version": "1.20.1",
     "label": "Menus",
-    "url": "https://docs.readthedocs.net/en/1.20.1/gui/menus/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gui/menus/",
     "tags": [
       "gui"
     ],
     "sections": [
       {
-        "title": "`MenuType",
+        "title": "`MenuType`",
         "level": 2,
         "summary": "Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the type of the menu."
       },
       {
-        "title": "`AbstractContainerMenu",
+        "title": "`AbstractContainerMenu`",
         "level": 2,
-        "summary": "All menus are extended from <code>AbstractContainerMenu. A menu takes in two parameters, the MenuType`, which represents the type of the menu itself, and the container id, which represents the uniq..."
+        "summary": "All menus are extended from AbstractContainerMenu. A menu takes in two parameters, the MenuType, which represents the type of the menu itself, and the container id, which represents the unique iden..."
       },
       {
         "title": "Opening a Menu",
@@ -1094,7 +1104,7 @@
     "id": "1.20.1/gui_screens",
     "version": "1.20.1",
     "label": "Screens",
-    "url": "https://docs.readthedocs.net/en/1.20.1/gui/screens/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gui/screens/",
     "tags": [
       "gui"
     ],
@@ -1122,7 +1132,7 @@
       {
         "title": "NarratableEntry",
         "level": 2,
-        "summary": "NarratableEntrys are elements which can be spoken about through Minecraft&rsquo;s accessibility narration feature."
+        "summary": "NarratableEntrys are elements which can be spoken about through Minecraft’s accessibility narration feature."
       },
       {
         "title": "The Screen Subtype",
@@ -1130,9 +1140,9 @@
         "summary": "With all of the above knowledge, a basic screen can be constructed. To make it easier to understand, the components of a screen will be mentioned in the order they are typically encountered."
       },
       {
-        "title": "`AbstractContainerScreen",
+        "title": "`AbstractContainerScreen`",
         "level": 2,
-        "summary": "If a screen is directly attached to a menu, then an <code>AbstractContainerScreen should be subclassed instead."
+        "summary": "If a screen is directly attached to a menu, then an AbstractContainerScreen should be subclassed instead."
       },
       {
         "title": "Registering an AbstractContainerScreen",
@@ -1142,15 +1152,28 @@
     ],
     "hasCodeBlocks": true,
     "codeBlockCount": 11,
-    "keySections": 21,
+    "keySections": 26,
     "file": "gui_screens.md",
     "processedFile": "processed/gui_screens.md"
+  },
+  {
+    "id": "1.20.1/index",
+    "version": "1.20.1",
+    "label": "MinecraftForge Documentation",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/",
+    "tags": [],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "index.md",
+    "processedFile": "processed/index.md"
   },
   {
     "id": "1.20.1/items",
     "version": "1.20.1",
     "label": "Items",
-    "url": "https://docs.readthedocs.net/en/1.20.1/items/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/items/",
     "tags": [
       "item"
     ],
@@ -1181,7 +1204,7 @@
     "id": "1.20.1/items_bewlr",
     "version": "1.20.1",
     "label": "BlockEntityWithoutLevelRenderer",
-    "url": "https://docs.readthedocs.net/en/1.20.1/items/bewlr/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/items/bewlr/",
     "tags": [
       "item"
     ],
@@ -1202,7 +1225,7 @@
     "id": "1.20.1/legacy",
     "version": "1.20.1",
     "label": "Documentation for Legacy Versions",
-    "url": "https://docs.readthedocs.net/en/1.20.1/legacy/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/legacy/",
     "tags": [],
     "sections": [],
     "hasCodeBlocks": false,
@@ -1215,7 +1238,7 @@
     "id": "1.20.1/legacy_porting",
     "version": "1.20.1",
     "label": "Porting to Minecraft 1.20",
-    "url": "https://docs.readthedocs.net/en/1.20.1/legacy/porting/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/legacy/porting/",
     "tags": [],
     "sections": [],
     "hasCodeBlocks": false,
@@ -1228,7 +1251,7 @@
     "id": "1.20.1/misc_config",
     "version": "1.20.1",
     "label": "Configuration",
-    "url": "https://docs.readthedocs.net/en/1.20.1/misc/config/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/config/",
     "tags": [
       "config"
     ],
@@ -1259,7 +1282,7 @@
     "id": "1.20.1/misc_debugprofiler",
     "version": "1.20.1",
     "label": "Debug Profiler",
-    "url": "https://docs.readthedocs.net/en/1.20.1/misc/debugprofiler/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/debugprofiler/",
     "tags": [],
     "sections": [
       {
@@ -1275,7 +1298,7 @@
       {
         "title": "Profiling your own code",
         "level": 2,
-        "summary": "The Debug Profiler has basic support for Entity and BlockEntity. If you would like to profile something else, you may need to manually create your sections like so: `` ProfilerFiller#push(yourSecti..."
+        "summary": "The Debug Profiler has basic support for Entity and BlockEntity. If you would like to profile something else, you may need to manually create your sections like so: You can obtain the ProfilerFille..."
       }
     ],
     "hasCodeBlocks": true,
@@ -1288,7 +1311,7 @@
     "id": "1.20.1/misc_gametest",
     "version": "1.20.1",
     "label": "Game Tests",
-    "url": "https://docs.readthedocs.net/en/1.20.1/misc/gametest/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/gametest/",
     "tags": [
       "tests"
     ],
@@ -1296,7 +1319,7 @@
       {
         "title": "Creating a Game Test",
         "level": 2,
-        "summary": "A standard Game Test follows three basic steps: 1. <li>A structure, or template, is loaded holding the scene on which the interaction or behavior is tested. 2."
+        "summary": "A standard Game Test follows three basic steps: 1. A structure, or template, is loaded holding the scene on which the interaction or behavior is tested. 2."
       },
       {
         "title": "Registering a Game Test",
@@ -1329,23 +1352,23 @@
     "id": "1.20.1/misc_keymappings",
     "version": "1.20.1",
     "label": "Key Mappings",
-    "url": "https://docs.readthedocs.net/en/1.20.1/misc/keymappings/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/keymappings/",
     "tags": [],
     "sections": [
       {
-        "title": "Registering a `KeyMapping",
+        "title": "Registering a `KeyMapping`",
         "level": 2,
-        "summary": "A <code>KeyMapping can be registered by listening to the RegisterKeyMappingsEvent on the mod event bus only on the physical client and calling #register`."
+        "summary": "A KeyMapping can be registered by listening to the RegisterKeyMappingsEvent on the mod event bus only on the physical client and calling #register."
       },
       {
-        "title": "Creating a `KeyMapping",
+        "title": "Creating a `KeyMapping`",
         "level": 2,
-        "summary": "A <code>KeyMapping can be created using it&rsquo;s constructor. The KeyMapping` takes in a translation key defining the name of the mapping, the default input of the mapping, and the translation ke..."
+        "summary": "A KeyMapping can be created using it’s constructor. The KeyMapping takes in a translation key defining the name of the mapping, the default input of the mapping, and the translation key defining th..."
       },
       {
-        "title": "Checking a `KeyMapping",
+        "title": "Checking a `KeyMapping`",
         "level": 2,
-        "summary": "A <code>KeyMapping` can be checked to see whether it has been clicked. Depending on when, the mapping can be used in a conditional to apply the associated logic."
+        "summary": "A KeyMapping can be checked to see whether it has been clicked. Depending on when, the mapping can be used in a conditional to apply the associated logic."
       }
     ],
     "hasCodeBlocks": true,
@@ -1358,7 +1381,7 @@
     "id": "1.20.1/misc_updatechecker",
     "version": "1.20.1",
     "label": "Forge Update Checker",
-    "url": "https://docs.readthedocs.net/en/1.20.1/misc/updatechecker/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/updatechecker/",
     "tags": [],
     "sections": [
       {
@@ -1370,6 +1393,11 @@
         "title": "Update JSON format",
         "level": 2,
         "summary": "The JSON itself has a relatively simple format as follows: This is fairly self-explanatory, but some notes:"
+      },
+      {
+        "title": "Retrieving Update Check Results",
+        "level": 2,
+        "summary": "You can retrieve the results of the Forge Update Checker using VersionChecker#getResult(IModInfo). You can obtain your IModInfo via ModContainer#getModInfo."
       }
     ],
     "hasCodeBlocks": true,
@@ -1382,7 +1410,7 @@
     "id": "1.20.1/networking",
     "version": "1.20.1",
     "label": "Networking",
-    "url": "https://docs.readthedocs.net/en/1.20.1/networking/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/networking/",
     "tags": [
       "networking"
     ],
@@ -1397,7 +1425,7 @@
     "id": "1.20.1/networking_entities",
     "version": "1.20.1",
     "label": "Entities",
-    "url": "https://docs.readthedocs.net/en/1.20.1/networking/entities/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/networking/entities/",
     "tags": [
       "networking"
     ],
@@ -1423,7 +1451,7 @@
     "id": "1.20.1/networking_simpleimpl",
     "version": "1.20.1",
     "label": "SimpleImpl",
-    "url": "https://docs.readthedocs.net/en/1.20.1/networking/simpleimpl/",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/networking/simpleimpl/",
     "tags": [
       "networking"
     ],
@@ -1441,7 +1469,7 @@
       {
         "title": "Registering Packets",
         "level": 2,
-        "summary": "Next, we must declare the types of messages that we would like to send and receive. This is done using INSTANCE#registerMessage, which takes 5 parameters: - <li>The first parameter is the discrimin..."
+        "summary": "Next, we must declare the types of messages that we would like to send and receive. This is done using INSTANCE#registerMessage, which takes 5 parameters: - The first parameter is the discriminator..."
       },
       {
         "title": "Handling Packets",
@@ -1459,570 +1487,6 @@
     "keySections": 5,
     "file": "networking_simpleimpl.md",
     "processedFile": "processed/networking_simpleimpl.md"
-  },
-  {
-    "id": "1.20.1/rendering_modelextensions_facedata",
-    "version": "1.20.1",
-    "label": "Face Data",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/facedata",
-    "tags": [
-      "rendering"
-    ],
-    "sections": [
-      {
-        "title": "Elements Model",
-        "level": 2,
-        "summary": "In vanilla &ldquo;elements&rdquo; models, the face data applies to the face it is specified in or all faces of the element it is specified in which don&rsquo;t have their own face data."
-      },
-      {
-        "title": "Generated Item Model",
-        "level": 2,
-        "summary": "In item models generated using the forge:item_layers loader, face data is specified for each texture layer and applies to all of the geometry (front/back facing quads and edge quads)."
-      },
-      {
-        "title": "Parameters",
-        "level": 2,
-        "summary": "Specifying a color value with the color entry will apply that color as a tint to the quads. Defaults to 0xFFFFFFFF (white, fully opaque)."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 2,
-    "keySections": 4,
-    "file": "rendering_modelextensions_facedata.md",
-    "processedFile": "processed/rendering_modelextensions_facedata.md"
-  },
-  {
-    "id": "1.20.1/rendering_modelextensions_rendertypes",
-    "version": "1.20.1",
-    "label": "Render Types",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/rendertypes",
-    "tags": [
-      "rendering"
-    ],
-    "sections": [
-      {
-        "title": "Vanilla Values",
-        "level": 2,
-        "summary": "The following options with the respective chunk and entity render type are supplied by Forge (NamedRenderTypeManager#preRegisterVanillaRenderTypes()): - minecraft:solid<ul> <li>Chunk render type: R..."
-      },
-      {
-        "title": "Custom Values",
-        "level": 2,
-        "summary": "Custom named render types to be specified in a model can be registered in the RegisterNamedRenderTypesEvent. This event is fired on the mod event bus."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 2,
-    "keySections": 3,
-    "file": "rendering_modelextensions_rendertypes.md",
-    "processedFile": "processed/rendering_modelextensions_rendertypes.md"
-  },
-  {
-    "id": "1.20.1/rendering_modelextensions_transforms",
-    "version": "1.20.1",
-    "label": "Root Transforms",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/transforms",
-    "tags": [
-      "rendering"
-    ],
-    "sections": [
-      {
-        "title": "Element-wise specification",
-        "level": 2,
-        "summary": "If the transformation is specified as a combination of the entries mentioned in option 4, these entries will be applied in the order of translation, leftrotation, scale, rightrotation."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 2,
-    "keySections": 0,
-    "file": "rendering_modelextensions_transforms.md",
-    "processedFile": "processed/rendering_modelextensions_transforms.md"
-  },
-  {
-    "id": "1.20.1/rendering_modelextensions_visibility",
-    "version": "1.20.1",
-    "label": "Part Visibility",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/visibility",
-    "tags": [
-      "rendering"
-    ],
-    "sections": [],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 1,
-    "keySections": 0,
-    "file": "rendering_modelextensions_visibility.md",
-    "processedFile": "processed/rendering_modelextensions_visibility.md"
-  },
-  {
-    "id": "1.20.1/rendering_modelloaders",
-    "version": "1.20.1",
-    "label": "Custom Model Loaders",
-    "url": "https://docs.readthedocs.net/en/1.20.1/rendering/modelloaders/",
-    "tags": [
-      "rendering"
-    ],
-    "sections": [
-      {
-        "title": "WaveFront OBJ Models",
-        "level": 2,
-        "summary": "Forge adds a loader for the .obj file format. To use these models, the JSON must reference the forge:obj loader."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 1,
-    "keySections": 2,
-    "file": "rendering_modelloaders.md",
-    "processedFile": "processed/rendering_modelloaders.md"
-  },
-  {
-    "id": "1.20.1/rendering_modelloaders_bakedmodel",
-    "version": "1.20.1",
-    "label": "`BakedModel",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/bakedmodel",
-    "tags": [
-      "rendering"
-    ],
-    "sections": [],
-    "hasCodeBlocks": false,
-    "codeBlockCount": 0,
-    "keySections": 7,
-    "file": "rendering_modelloaders_bakedmodel.md",
-    "processedFile": "processed/rendering_modelloaders_bakedmodel.md"
-  },
-  {
-    "id": "1.20.1/rendering_modelloaders_itemoverrides",
-    "version": "1.20.1",
-    "label": "`ItemOverrides",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/itemoverrides",
-    "tags": [
-      "item",
-      "rendering"
-    ],
-    "sections": [
-      {
-        "title": "`BakedOverride",
-        "level": 2,
-        "summary": "This class represents a vanilla item override, which holds several <code>ItemOverrides$PropertyMatcher for the properties on an item and a model to use in case those matchers are satisfied."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 1,
-    "keySections": 0,
-    "file": "rendering_modelloaders_itemoverrides.md",
-    "processedFile": "processed/rendering_modelloaders_itemoverrides.md"
-  },
-  {
-    "id": "1.20.1/rendering_modelloaders_transform",
-    "version": "1.20.1",
-    "label": "Transform",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/transform",
-    "tags": [
-      "rendering"
-    ],
-    "sections": [
-      {
-        "title": "`ItemDisplayContext",
-        "level": 2,
-        "summary": "<code>NONE - Used for the display entity by default when no context is set and by Forge when a Block&rsquo;s RenderShape is set to #ENTITYBLOCK_ANIMATED`."
-      },
-      {
-        "title": "The Vanilla Way",
-        "level": 2,
-        "summary": "The vanilla way of handling transform is through BakedModel#getTransforms. This method returns an ItemTransforms, which is a simple object that contains various ItemTransforms as public final fields."
-      },
-      {
-        "title": "The Forge Way",
-        "level": 2,
-        "summary": "The Forge way of handling transforms is #applyTransform, a method patched into BakedModel. It supersedes the #getTransforms method. #### `BakedModel#applyTransform"
-      }
-    ],
-    "hasCodeBlocks": false,
-    "codeBlockCount": 0,
-    "keySections": 2,
-    "file": "rendering_modelloaders_transform.md",
-    "processedFile": "processed/rendering_modelloaders_transform.md"
-  },
-  {
-    "id": "1.20.1/resources_client",
-    "version": "1.20.1",
-    "label": "Resource Packs",
-    "url": "https://docs.readthedocs.net/en/1.20.1/resources/client/",
-    "tags": [],
-    "sections": [],
-    "hasCodeBlocks": false,
-    "codeBlockCount": 0,
-    "keySections": 0,
-    "file": "resources_client.md",
-    "processedFile": "processed/resources_client.md"
-  },
-  {
-    "id": "1.20.1/resources_client_models",
-    "version": "1.20.1",
-    "label": "Models",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models",
-    "tags": [],
-    "sections": [
-      {
-        "title": "Model Files",
-        "level": 2,
-        "summary": "Models and textures are linked through ResourceLocations but are stored in the ModelManager using ModelResourceLocations."
-      }
-    ],
-    "hasCodeBlocks": false,
-    "codeBlockCount": 0,
-    "keySections": 2,
-    "file": "resources_client_models.md",
-    "processedFile": "processed/resources_client_models.md"
-  },
-  {
-    "id": "1.20.1/resources_client_models_itemproperties",
-    "version": "1.20.1",
-    "label": "Item Properties",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models/itemproperties",
-    "tags": [
-      "item"
-    ],
-    "sections": [
-      {
-        "title": "Adding Properties to Items",
-        "level": 2,
-        "summary": "ItemProperties#register is used to add a property to a certain item. The Item parameter is the item the property is being attached to (e.g. ExampleItems#APPLE)."
-      },
-      {
-        "title": "Using Overrides",
-        "level": 2,
-        "summary": "The format of an override can be seen on the wiki, and a good example can be found in model/item/bow.json. For reference, here is a hypothetical example of an item with an examplemod:power property."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 2,
-    "keySections": 4,
-    "file": "resources_client_models_itemproperties.md",
-    "processedFile": "processed/resources_client_models_itemproperties.md"
-  },
-  {
-    "id": "1.20.1/resources_client_models_tinting",
-    "version": "1.20.1",
-    "label": "Coloring Textures",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models/tinting",
-    "tags": [],
-    "sections": [],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 2,
-    "keySections": 3,
-    "file": "resources_client_models_tinting.md",
-    "processedFile": "processed/resources_client_models_tinting.md"
-  },
-  {
-    "id": "1.20.1/resources_server",
-    "version": "1.20.1",
-    "label": "Datapacks",
-    "url": "https://docs.readthedocs.net/en/1.20.1/resources/server/",
-    "tags": [],
-    "sections": [],
-    "hasCodeBlocks": false,
-    "codeBlockCount": 0,
-    "keySections": 0,
-    "file": "resources_server.md",
-    "processedFile": "processed/resources_server.md"
-  },
-  {
-    "id": "1.20.1/resources_server_advancements",
-    "version": "1.20.1",
-    "label": "Advancements",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/advancements",
-    "tags": [],
-    "sections": [
-      {
-        "title": "Advancement Criteria",
-        "level": 2,
-        "summary": "To unlock an advancement, the specified criteria must be met. Criteria are tracked through triggers which execute when a certain action is performed: killing an entity, changing an inventory, bread..."
-      },
-      {
-        "title": "Advancement Rewards",
-        "level": 2,
-        "summary": "When an advancement is completed, rewards may be given out. These can be a combination of experience points, loot tables, recipes for the recipe book, or a function) executed as a creative player."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 8,
-    "keySections": 11,
-    "file": "resources_server_advancements.md",
-    "processedFile": "processed/resources_server_advancements.md"
-  },
-  {
-    "id": "1.20.1/resources_server_conditional",
-    "version": "1.20.1",
-    "label": "Conditionally-Loaded Data",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/conditional",
-    "tags": [],
-    "sections": [
-      {
-        "title": "Implementations",
-        "level": 2,
-        "summary": "Currently, conditional loading is implemented for recipes and advancements. For any conditional recipe or advancement, a list of conditions to datum pair is loaded."
-      },
-      {
-        "title": "Conditions",
-        "level": 2,
-        "summary": "Conditions are specified by setting type to the name of the condition as specified by IConditionSerializer#getID. Boolean conditions consist of no data and return the expected value of the condition."
-      },
-      {
-        "title": "Creating Custom Conditions",
-        "level": 2,
-        "summary": "Custom conditions can be created by implementing ICondition and its associated IConditionSerializer. Any condition only need to implement two methods:"
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 8,
-    "keySections": 13,
-    "file": "resources_server_conditional.md",
-    "processedFile": "processed/resources_server_conditional.md"
-  },
-  {
-    "id": "1.20.1/resources_server_glm",
-    "version": "1.20.1",
-    "label": "Global Loot Modifiers",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/glm",
-    "tags": [],
-    "sections": [
-      {
-        "title": "Registering a Global Loot Modifier",
-        "level": 2,
-        "summary": "You will need 4 things: 1. Create a globallootmodifiers.json.- This will tell Forge about your modifiers and works similar to tags. 2. A serialized json representing your modifier."
-      },
-      {
-        "title": "The `global_loot_modifiers.json",
-        "level": 2,
-        "summary": "The <code>globallootmodifiers.json represents all loot modifiers to be loaded into the game. This file MUST be placed within data/forge/lootmodifiers/globalloot_modifiers.json`."
-      },
-      {
-        "title": "The Serialized JSON",
-        "level": 2,
-        "summary": "This file contains all of the potential variables related to your modifier, including the conditions that must be met prior to modifying any loot."
-      },
-      {
-        "title": "`IGlobalLootModifier",
-        "level": 2,
-        "summary": "To supply the functionality a global loot modifier specifies, a <code>IGlobalLootModifier` implementation must be specified."
-      },
-      {
-        "title": "The Loot Modifier Codec",
-        "level": 2,
-        "summary": "The connector between the JSON and the IGlobalLootModifier instance is a Codec<T>, where T represents the type of the IGlobalLootModifier to use."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 4,
-    "keySections": 8,
-    "file": "resources_server_glm.md",
-    "processedFile": "processed/resources_server_glm.md"
-  },
-  {
-    "id": "1.20.1/resources_server_loottables",
-    "version": "1.20.1",
-    "label": "Loot Tables",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/loottables",
-    "tags": [
-      "loot"
-    ],
-    "sections": [
-      {
-        "title": "Data-Driven Tables",
-        "level": 2,
-        "summary": "Most loot tables within vanilla are data driven via JSON. This means that a mod is not necessary to create a new loot table, only a Data pack."
-      },
-      {
-        "title": "Using a Loot Table",
-        "level": 2,
-        "summary": "A loot table is referenced by its ResourceLocation which points to data/<namespace>/loot_tables/<path>.json."
-      },
-      {
-        "title": "Additional Features",
-        "level": 2,
-        "summary": "Forge provides some additional behavior to loot tables for greater control of the system. <code>LootTableLoadEvent` is an event fired on the Forge event bus which is fired whenever a loot table is ..."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 3,
-    "keySections": 7,
-    "file": "resources_server_loottables.md",
-    "processedFile": "processed/resources_server_loottables.md"
-  },
-  {
-    "id": "1.20.1/resources_server_recipes",
-    "version": "1.20.1",
-    "label": "Recipes",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes",
-    "tags": [
-      "recipe"
-    ],
-    "sections": [
-      {
-        "title": "Data-Driven Recipes",
-        "level": 2,
-        "summary": "Most recipe implementations within vanilla are data driven via JSON. This means that a mod is not necessary to create a new recipe, only a Data pack."
-      },
-      {
-        "title": "Recipe Manager",
-        "level": 2,
-        "summary": "Recipes are loaded and stored via the RecipeManager. Any operations relating to getting available recipe(s) are handled by this manager."
-      },
-      {
-        "title": "Additional Features",
-        "level": 2,
-        "summary": "Forge provides some additional behavior to the recipe schema and its implementations for greater control of the system."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 2,
-    "keySections": 5,
-    "file": "resources_server_recipes.md",
-    "processedFile": "processed/resources_server_recipes.md"
-  },
-  {
-    "id": "1.20.1/resources_server_recipes_custom",
-    "version": "1.20.1",
-    "label": "Custom Recipes",
-    "url": "https://docs.readthedocs.net/en/1.20.1/resources/server/recipes/custom/",
-    "tags": [
-      "recipe"
-    ],
-    "sections": [
-      {
-        "title": "Recipe",
-        "level": 2,
-        "summary": "The Recipe interface describes the recipe data and the execution logic. This includes matching the inputs and providing the associated result."
-      },
-      {
-        "title": "RecipeType",
-        "level": 2,
-        "summary": "RecipeType is responsible for defining the category or context the recipe will be used within. For example, if a recipe was going to be smelted in a furnace, it would have a type of RecipeType#SMEL..."
-      },
-      {
-        "title": "RecipeSerializer",
-        "level": 2,
-        "summary": "A RecipeSerializer is responsible for decoding JSONs and communicating across the network for an associated Recipe subtype."
-      },
-      {
-        "title": "Building the JSON",
-        "level": 2,
-        "summary": "Custom Recipe JSONs are stored in the same place as other recipes. The specified type should represent the registry name of the recipe serializer."
-      },
-      {
-        "title": "Non-Item Logic",
-        "level": 2,
-        "summary": "If items are not used as part of the input or result of a recipe, then the normal methods provided in RecipeManager will not be useful."
-      },
-      {
-        "title": "Data Generation",
-        "level": 2,
-        "summary": "All custom recipes, regardless of input or output data, can be created into a FinishedRecipe for data generation using the RecipeProvider."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 5,
-    "keySections": 7,
-    "file": "resources_server_recipes_custom.md",
-    "processedFile": "processed/resources_server_recipes_custom.md"
-  },
-  {
-    "id": "1.20.1/resources_server_recipes_incode",
-    "version": "1.20.1",
-    "label": "Non-Datapack Recipes",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/incode",
-    "tags": [
-      "recipe"
-    ],
-    "sections": [
-      {
-        "title": "Brewing Recipes",
-        "level": 2,
-        "summary": "Brewing is one of the few recipes that still exist in code. Brewing recipes are added as part of a bootstrap within PotionBrewing for their containers, container recipes, and potion mixes."
-      },
-      {
-        "title": "Anvil Recipes",
-        "level": 2,
-        "summary": "Anvils are responsible for taking a damaged input and given some material or a similar input, remove some of the damage on the input result. As such, its system is not easily data-driven."
-      },
-      {
-        "title": "Loom Recipes",
-        "level": 2,
-        "summary": "Looms are responsible for applying a dye and pattern (either from the loom or from an item) to a banner."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 2,
-    "keySections": 4,
-    "file": "resources_server_recipes_incode.md",
-    "processedFile": "processed/resources_server_recipes_incode.md"
-  },
-  {
-    "id": "1.20.1/resources_server_recipes_ingredients",
-    "version": "1.20.1",
-    "label": "Ingredients",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/ingredients",
-    "tags": [
-      "recipe"
-    ],
-    "sections": [
-      {
-        "title": "Custom Ingredients",
-        "level": 2,
-        "summary": "Custom ingredients can be specified by setting type to the name of the ingredient&rsquo;s serializer, with the exception of compound ingredients."
-      },
-      {
-        "title": "Creating Custom Ingredients",
-        "level": 2,
-        "summary": "Custom ingredients can be created by implementing IIngredientSerializer for the created Ingredient subclass."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 6,
-    "keySections": 8,
-    "file": "resources_server_recipes_ingredients.md",
-    "processedFile": "processed/resources_server_recipes_ingredients.md"
-  },
-  {
-    "id": "1.20.1/resources_server_tags",
-    "version": "1.20.1",
-    "label": "Tags",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/tags",
-    "tags": [
-      "tag"
-    ],
-    "sections": [
-      {
-        "title": "Declaring Your Own Groupings",
-        "level": 2,
-        "summary": "Tags are declared in your mod&rsquo;s datapack. For example, a TagKey<Block> with a given identifier of modid:foo/tagname will reference a tag at /data/<modid>/tags/blocks/foo/tagname.json."
-      },
-      {
-        "title": "Using Tags In Code",
-        "level": 2,
-        "summary": "Tags for all registries are automatically sent from the server to any remote clients on login and reload."
-      },
-      {
-        "title": "Conventions",
-        "level": 2,
-        "summary": "There are several conventions that will help facilitate compatibility in the ecosystem: - If there is a Vanilla tag that fits your block or item, add it to that tag. See the list of Vanilla tags."
-      },
-      {
-        "title": "Migration from OreDictionary",
-        "level": 2,
-        "summary": "- For recipes, tags can be used directly in the vanilla recipe format (see below). - For matching items in code, see the section above."
-      },
-      {
-        "title": "Using Tags in Recipes and Advancements",
-        "level": 2,
-        "summary": "Tags are directly supported by Vanilla. See the respective Vanilla wiki pages for recipes and advancements for usage details."
-      }
-    ],
-    "hasCodeBlocks": true,
-    "codeBlockCount": 2,
-    "keySections": 1,
-    "file": "resources_server_tags.md",
-    "processedFile": "processed/resources_server_tags.md"
   },
   {
     "id": "1.20.1/primer_1_20",
@@ -2117,5 +1581,569 @@
     "keySections": 8,
     "file": "primer_1_20.md",
     "processedFile": "processed/primer_1_20.md"
+  },
+  {
+    "id": "1.20.1/rendering_modelextensions_facedata",
+    "version": "1.20.1",
+    "label": "Face Data",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/facedata/",
+    "tags": [
+      "rendering"
+    ],
+    "sections": [
+      {
+        "title": "Elements Model",
+        "level": 2,
+        "summary": "In vanilla “elements” models, the face data applies to the face it is specified in or all faces of the element it is specified in which don’t have their own face data."
+      },
+      {
+        "title": "Generated Item Model",
+        "level": 2,
+        "summary": "In item models generated using the forge:item_layers loader, face data is specified for each texture layer and applies to all of the geometry (front/back facing quads and edge quads)."
+      },
+      {
+        "title": "Parameters",
+        "level": 2,
+        "summary": "Specifying a color value with the color entry will apply that color as a tint to the quads. Defaults to 0xFFFFFFFF (white, fully opaque)."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 4,
+    "file": "rendering_modelextensions_facedata.md",
+    "processedFile": "processed/rendering_modelextensions_facedata.md"
+  },
+  {
+    "id": "1.20.1/rendering_modelextensions_rendertypes",
+    "version": "1.20.1",
+    "label": "Render Types",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/rendertypes/",
+    "tags": [
+      "rendering"
+    ],
+    "sections": [
+      {
+        "title": "Vanilla Values",
+        "level": 2,
+        "summary": "The following options with the respective chunk and entity render type are supplied by Forge (NamedRenderTypeManager#preRegisterVanillaRenderTypes()): - minecraft:solid Chunk render type: RenderTyp..."
+      },
+      {
+        "title": "Custom Values",
+        "level": 2,
+        "summary": "Custom named render types to be specified in a model can be registered in the RegisterNamedRenderTypesEvent. This event is fired on the mod event bus."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 3,
+    "file": "rendering_modelextensions_rendertypes.md",
+    "processedFile": "processed/rendering_modelextensions_rendertypes.md"
+  },
+  {
+    "id": "1.20.1/rendering_modelextensions_transforms",
+    "version": "1.20.1",
+    "label": "Root Transforms",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/transforms/",
+    "tags": [
+      "rendering"
+    ],
+    "sections": [
+      {
+        "title": "Element-wise specification",
+        "level": 2,
+        "summary": "If the transformation is specified as a combination of the entries mentioned in option 4, these entries will be applied in the order of translation, leftrotation, scale, rightrotation."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 0,
+    "file": "rendering_modelextensions_transforms.md",
+    "processedFile": "processed/rendering_modelextensions_transforms.md"
+  },
+  {
+    "id": "1.20.1/rendering_modelextensions_visibility",
+    "version": "1.20.1",
+    "label": "Part Visibility",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/visibility/",
+    "tags": [
+      "rendering"
+    ],
+    "sections": [],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 1,
+    "file": "rendering_modelextensions_visibility.md",
+    "processedFile": "processed/rendering_modelextensions_visibility.md"
+  },
+  {
+    "id": "1.20.1/rendering_modelloaders",
+    "version": "1.20.1",
+    "label": "Custom Model Loaders",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/",
+    "tags": [
+      "rendering"
+    ],
+    "sections": [
+      {
+        "title": "WaveFront OBJ Models",
+        "level": 2,
+        "summary": "Forge adds a loader for the .obj file format. To use these models, the JSON must reference the forge:obj loader."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 2,
+    "file": "rendering_modelloaders.md",
+    "processedFile": "processed/rendering_modelloaders.md"
+  },
+  {
+    "id": "1.20.1/rendering_modelloaders_bakedmodel",
+    "version": "1.20.1",
+    "label": "`BakedModel`",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/bakedmodel/",
+    "tags": [
+      "rendering"
+    ],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 7,
+    "file": "rendering_modelloaders_bakedmodel.md",
+    "processedFile": "processed/rendering_modelloaders_bakedmodel.md"
+  },
+  {
+    "id": "1.20.1/rendering_modelloaders_itemoverrides",
+    "version": "1.20.1",
+    "label": "`ItemOverrides`",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/itemoverrides/",
+    "tags": [
+      "item",
+      "rendering"
+    ],
+    "sections": [
+      {
+        "title": "`BakedOverride`",
+        "level": 2,
+        "summary": "This class represents a vanilla item override, which holds several ItemOverrides$PropertyMatcher for the properties on an item and a model to use in case those matchers are satisfied."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 0,
+    "file": "rendering_modelloaders_itemoverrides.md",
+    "processedFile": "processed/rendering_modelloaders_itemoverrides.md"
+  },
+  {
+    "id": "1.20.1/rendering_modelloaders_transform",
+    "version": "1.20.1",
+    "label": "Transform",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/transform/",
+    "tags": [
+      "rendering"
+    ],
+    "sections": [
+      {
+        "title": "`ItemDisplayContext`",
+        "level": 2,
+        "summary": "NONE - Used for the display entity by default when no context is set and by Forge when a Block’s RenderShape is set to #ENTITYBLOCK_ANIMATED."
+      },
+      {
+        "title": "The Vanilla Way",
+        "level": 2,
+        "summary": "The vanilla way of handling transform is through BakedModel#getTransforms. This method returns an ItemTransforms, which is a simple object that contains various ItemTransforms as public final fields."
+      },
+      {
+        "title": "The Forge Way",
+        "level": 2,
+        "summary": "The Forge way of handling transforms is #applyTransform, a method patched into BakedModel. It supersedes the #getTransforms method. #### BakedModel#applyTransform"
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 2,
+    "file": "rendering_modelloaders_transform.md",
+    "processedFile": "processed/rendering_modelloaders_transform.md"
+  },
+  {
+    "id": "1.20.1/resources_client",
+    "version": "1.20.1",
+    "label": "Resource Packs",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/",
+    "tags": [],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "resources_client.md",
+    "processedFile": "processed/resources_client.md"
+  },
+  {
+    "id": "1.20.1/resources_client_models",
+    "version": "1.20.1",
+    "label": "Models",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Model Files",
+        "level": 2,
+        "summary": "Models and textures are linked through ResourceLocations but are stored in the ModelManager using ModelResourceLocations."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 2,
+    "file": "resources_client_models.md",
+    "processedFile": "processed/resources_client_models.md"
+  },
+  {
+    "id": "1.20.1/resources_client_models_itemproperties",
+    "version": "1.20.1",
+    "label": "Item Properties",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models/itemproperties/",
+    "tags": [
+      "item"
+    ],
+    "sections": [
+      {
+        "title": "Adding Properties to Items",
+        "level": 2,
+        "summary": "ItemProperties#register is used to add a property to a certain item. The Item parameter is the item the property is being attached to (e.g. ExampleItems#APPLE)."
+      },
+      {
+        "title": "Using Overrides",
+        "level": 2,
+        "summary": "The format of an override can be seen on the wiki, and a good example can be found in model/item/bow.json. For reference, here is a hypothetical example of an item with an examplemod:power property."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 4,
+    "file": "resources_client_models_itemproperties.md",
+    "processedFile": "processed/resources_client_models_itemproperties.md"
+  },
+  {
+    "id": "1.20.1/resources_client_models_tinting",
+    "version": "1.20.1",
+    "label": "Coloring Textures",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models/tinting/",
+    "tags": [],
+    "sections": [],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 3,
+    "file": "resources_client_models_tinting.md",
+    "processedFile": "processed/resources_client_models_tinting.md"
+  },
+  {
+    "id": "1.20.1/resources_server",
+    "version": "1.20.1",
+    "label": "Datapacks",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/",
+    "tags": [],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "resources_server.md",
+    "processedFile": "processed/resources_server.md"
+  },
+  {
+    "id": "1.20.1/resources_server_advancements",
+    "version": "1.20.1",
+    "label": "Advancements",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/advancements/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Advancement Criteria",
+        "level": 2,
+        "summary": "To unlock an advancement, the specified criteria must be met. Criteria are tracked through triggers which execute when a certain action is performed: killing an entity, changing an inventory, bread..."
+      },
+      {
+        "title": "Advancement Rewards",
+        "level": 2,
+        "summary": "When an advancement is completed, rewards may be given out. These can be a combination of experience points, loot tables, recipes for the recipe book, or a function) executed as a creative player."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 8,
+    "keySections": 11,
+    "file": "resources_server_advancements.md",
+    "processedFile": "processed/resources_server_advancements.md"
+  },
+  {
+    "id": "1.20.1/resources_server_conditional",
+    "version": "1.20.1",
+    "label": "Conditionally-Loaded Data",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/conditional/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Implementations",
+        "level": 2,
+        "summary": "Currently, conditional loading is implemented for recipes and advancements. For any conditional recipe or advancement, a list of conditions to datum pair is loaded."
+      },
+      {
+        "title": "Conditions",
+        "level": 2,
+        "summary": "Conditions are specified by setting type to the name of the condition as specified by IConditionSerializer#getID. Boolean conditions consist of no data and return the expected value of the condition."
+      },
+      {
+        "title": "Creating Custom Conditions",
+        "level": 2,
+        "summary": "Custom conditions can be created by implementing ICondition and its associated IConditionSerializer. Any condition only need to implement two methods:"
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 8,
+    "keySections": 13,
+    "file": "resources_server_conditional.md",
+    "processedFile": "processed/resources_server_conditional.md"
+  },
+  {
+    "id": "1.20.1/resources_server_glm",
+    "version": "1.20.1",
+    "label": "Global Loot Modifiers",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/glm/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Registering a Global Loot Modifier",
+        "level": 2,
+        "summary": "You will need 4 things: 1. Create a globallootmodifiers.json.- This will tell Forge about your modifiers and works similar to tags. 2. A serialized json representing your modifier."
+      },
+      {
+        "title": "The `global_loot_modifiers.json`",
+        "level": 2,
+        "summary": "The globallootmodifiers.json represents all loot modifiers to be loaded into the game. This file MUST be placed within data/forge/lootmodifiers/globalloot_modifiers.json."
+      },
+      {
+        "title": "The Serialized JSON",
+        "level": 2,
+        "summary": "This file contains all of the potential variables related to your modifier, including the conditions that must be met prior to modifying any loot."
+      },
+      {
+        "title": "`IGlobalLootModifier`",
+        "level": 2,
+        "summary": "To supply the functionality a global loot modifier specifies, a IGlobalLootModifier implementation must be specified."
+      },
+      {
+        "title": "The Loot Modifier Codec",
+        "level": 2,
+        "summary": "The connector between the JSON and the IGlobalLootModifier instance is a Codec<T>, where T represents the type of the IGlobalLootModifier to use."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 4,
+    "keySections": 8,
+    "file": "resources_server_glm.md",
+    "processedFile": "processed/resources_server_glm.md"
+  },
+  {
+    "id": "1.20.1/resources_server_loottables",
+    "version": "1.20.1",
+    "label": "Loot Tables",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/loottables/",
+    "tags": [
+      "loot"
+    ],
+    "sections": [
+      {
+        "title": "Data-Driven Tables",
+        "level": 2,
+        "summary": "Most loot tables within vanilla are data driven via JSON. This means that a mod is not necessary to create a new loot table, only a Data pack."
+      },
+      {
+        "title": "Using a Loot Table",
+        "level": 2,
+        "summary": "A loot table is referenced by its ResourceLocation which points to data/<namespace>/loot_tables/<path>.json."
+      },
+      {
+        "title": "Additional Features",
+        "level": 2,
+        "summary": "Forge provides some additional behavior to loot tables for greater control of the system. LootTableLoadEvent is an event fired on the Forge event bus which is fired whenever a loot table is loaded."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 3,
+    "keySections": 7,
+    "file": "resources_server_loottables.md",
+    "processedFile": "processed/resources_server_loottables.md"
+  },
+  {
+    "id": "1.20.1/resources_server_recipes",
+    "version": "1.20.1",
+    "label": "Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/",
+    "tags": [
+      "recipe"
+    ],
+    "sections": [
+      {
+        "title": "Data-Driven Recipes",
+        "level": 2,
+        "summary": "Most recipe implementations within vanilla are data driven via JSON. This means that a mod is not necessary to create a new recipe, only a Data pack."
+      },
+      {
+        "title": "Recipe Manager",
+        "level": 2,
+        "summary": "Recipes are loaded and stored via the RecipeManager. Any operations relating to getting available recipe(s) are handled by this manager."
+      },
+      {
+        "title": "Additional Features",
+        "level": 2,
+        "summary": "Forge provides some additional behavior to the recipe schema and its implementations for greater control of the system."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 5,
+    "file": "resources_server_recipes.md",
+    "processedFile": "processed/resources_server_recipes.md"
+  },
+  {
+    "id": "1.20.1/resources_server_recipes_custom",
+    "version": "1.20.1",
+    "label": "Custom Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/custom/",
+    "tags": [
+      "recipe"
+    ],
+    "sections": [
+      {
+        "title": "Recipe",
+        "level": 2,
+        "summary": "The Recipe interface describes the recipe data and the execution logic. This includes matching the inputs and providing the associated result."
+      },
+      {
+        "title": "RecipeType",
+        "level": 2,
+        "summary": "RecipeType is responsible for defining the category or context the recipe will be used within. For example, if a recipe was going to be smelted in a furnace, it would have a type of RecipeType#SMEL..."
+      },
+      {
+        "title": "RecipeSerializer",
+        "level": 2,
+        "summary": "A RecipeSerializer is responsible for decoding JSONs and communicating across the network for an associated Recipe subtype."
+      },
+      {
+        "title": "Building the JSON",
+        "level": 2,
+        "summary": "Custom Recipe JSONs are stored in the same place as other recipes. The specified type should represent the registry name of the recipe serializer."
+      },
+      {
+        "title": "Non-Item Logic",
+        "level": 2,
+        "summary": "If items are not used as part of the input or result of a recipe, then the normal methods provided in RecipeManager will not be useful."
+      },
+      {
+        "title": "Data Generation",
+        "level": 2,
+        "summary": "All custom recipes, regardless of input or output data, can be created into a FinishedRecipe for data generation using the RecipeProvider."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 5,
+    "keySections": 7,
+    "file": "resources_server_recipes_custom.md",
+    "processedFile": "processed/resources_server_recipes_custom.md"
+  },
+  {
+    "id": "1.20.1/resources_server_recipes_incode",
+    "version": "1.20.1",
+    "label": "Non-Datapack Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/incode/",
+    "tags": [
+      "recipe"
+    ],
+    "sections": [
+      {
+        "title": "Brewing Recipes",
+        "level": 2,
+        "summary": "Brewing is one of the few recipes that still exist in code. Brewing recipes are added as part of a bootstrap within PotionBrewing for their containers, container recipes, and potion mixes."
+      },
+      {
+        "title": "Anvil Recipes",
+        "level": 2,
+        "summary": "Anvils are responsible for taking a damaged input and given some material or a similar input, remove some of the damage on the input result. As such, its system is not easily data-driven."
+      },
+      {
+        "title": "Loom Recipes",
+        "level": 2,
+        "summary": "Looms are responsible for applying a dye and pattern (either from the loom or from an item) to a banner."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 4,
+    "file": "resources_server_recipes_incode.md",
+    "processedFile": "processed/resources_server_recipes_incode.md"
+  },
+  {
+    "id": "1.20.1/resources_server_recipes_ingredients",
+    "version": "1.20.1",
+    "label": "Ingredients",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/ingredients/",
+    "tags": [
+      "recipe"
+    ],
+    "sections": [
+      {
+        "title": "Custom Ingredients",
+        "level": 2,
+        "summary": "Custom ingredients can be specified by setting type to the name of the ingredient’s serializer, with the exception of compound ingredients."
+      },
+      {
+        "title": "Creating Custom Ingredients",
+        "level": 2,
+        "summary": "Custom ingredients can be created by implementing IIngredientSerializer for the created Ingredient subclass."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 6,
+    "keySections": 8,
+    "file": "resources_server_recipes_ingredients.md",
+    "processedFile": "processed/resources_server_recipes_ingredients.md"
+  },
+  {
+    "id": "1.20.1/resources_server_tags",
+    "version": "1.20.1",
+    "label": "Tags",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/tags/",
+    "tags": [
+      "tag"
+    ],
+    "sections": [
+      {
+        "title": "Declaring Your Own Groupings",
+        "level": 2,
+        "summary": "Tags are declared in your mod’s datapack. For example, a TagKey<Block> with a given identifier of modid:foo/tagname will reference a tag at /data/<modid>/tags/blocks/foo/tagname.json."
+      },
+      {
+        "title": "Using Tags In Code",
+        "level": 2,
+        "summary": "Tags for all registries are automatically sent from the server to any remote clients on login and reload."
+      },
+      {
+        "title": "Conventions",
+        "level": 2,
+        "summary": "There are several conventions that will help facilitate compatibility in the ecosystem: - If there is a Vanilla tag that fits your block or item, add it to that tag. See the list of Vanilla tags."
+      },
+      {
+        "title": "Migration from OreDictionary",
+        "level": 2,
+        "summary": "- For recipes, tags can be used directly in the vanilla recipe format (see below). - For matching items in code, see the section above."
+      },
+      {
+        "title": "Using Tags in Recipes and Advancements",
+        "level": 2,
+        "summary": "Tags are directly supported by Vanilla. See the respective Vanilla wiki pages for recipes and advancements for usage details."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 1,
+    "file": "resources_server_tags.md",
+    "processedFile": "processed/resources_server_tags.md"
   }
 ]

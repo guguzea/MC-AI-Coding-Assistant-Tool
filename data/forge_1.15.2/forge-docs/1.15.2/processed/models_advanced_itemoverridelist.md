@@ -1,24 +1,25 @@
-# `ItemOverrideList
+# `ItemOverrideList`
 
-<code>ItemOverrideList` provides a way for an [`IBakedModel`](../ibakedmodel/) to process the state of an `ItemStack` and return a new `IBakedModel`; thereafter, the returned model replaces the old one. `ItemOverrideList` represents an arbitrary function `(IBakedModel, ItemStack, World, LivingEntity)` → `IBakedModel`, making it useful for dynamic models. In vanilla, it is used to implement item property overrides.
+`ItemOverrideList` provides a way for an [`IBakedModel`](../ibakedmodel/) to process the state of an `ItemStack` and return a new `IBakedModel`; thereafter, the returned model replaces the old one. `ItemOverrideList` represents an arbitrary function `(IBakedModel, ItemStack, World, LivingEntity)` → `IBakedModel`, making it useful for dynamic models. In vanilla, it is used to implement item property overrides.
 
-### `ItemOverrideList()
+### `ItemOverrideList()`
 
-Given a list of <code>ItemOverride`s, the constructor copies that list and stores the copy. The list may be accessed with `#getOverrides`.
+Given a list of `ItemOverride`s, the constructor copies that list and stores the copy. The list may be accessed with `#getOverrides`.
 
-### `getModelWithOverrides
+### `getModelWithOverrides`
 
-This takes an <code>IBakedModel`, an `ItemStack`, a `World`, and an `LivingEntity` to produce another `IBakedModel` to use for rendering. This is where models can handle the state of their items.
+This takes an `IBakedModel`, an `ItemStack`, a `World`, and an `LivingEntity` to produce another `IBakedModel` to use for rendering. This is where models can handle the state of their items.
 
 This should not mutate the world.
 
-### `getOverrides
+### `getOverrides`
 
-Returns an immutable list containing all the [<code>ItemOverride`](#itemoverride)s used by this `ItemOverrideList`. If none are applicable, this returns the empty list.
+Returns an immutable list containing all the [`ItemOverride`](#itemoverride)s used by this `ItemOverrideList`. If none are applicable, this returns the empty list.
 
-## `ItemOverride
+## `ItemOverride`
 
-This class represents a vanilla item override, which holds several predicates for the properties on an item and a model to use in case those predicates are satisfied. They are the objects in the <code>overrides` array of a vanilla item JSON model:
+This class represents a vanilla item override, which holds several predicates for the properties on an item and a model to use in case those predicates are satisfied. They are the objects in the `overrides` array of a vanilla item JSON model:
+
 
 ```
 {

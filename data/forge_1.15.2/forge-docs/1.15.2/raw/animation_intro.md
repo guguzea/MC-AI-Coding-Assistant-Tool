@@ -1,6 +1,6 @@
 ---
 version: "1.15.2"
-forgeVersion: "31.2.57"
+forgeVersion: "29.0.23"
 chapter: "animation/intro"
 source: "https://docs.minecraftforge.net/en/1.15.x/animation/intro/"
 sourceType: mkdocs

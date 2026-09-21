@@ -2,7 +2,7 @@
 version: "1.17.1"
 forgeVersion: "37.1.2"
 chapter: "datagen/modelproviders"
-source: "https://docs.readthedocs.net/en/1.17.x/datagen/modelproviders/"
+source: "https://docs.minecraftforge.net/en/1.17.x/datagen/modelproviders/"
 sourceType: mkdocs
 ---
 # Model Providers

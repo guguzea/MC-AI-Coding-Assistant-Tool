@@ -5,9 +5,10 @@
 
 A key mapping, or key binding, defines a particular action that should be tied to an input: mouse click, key press, etc. Each action defined by a key mapping can be checked whenever the client can take an input. Furthermore, each key mapping can be assigned to any input through the [Controls option menu](https://minecraft.wiki/w/Options#Controls).
 
-## Registering a `KeyMapping
+## Registering a `KeyMapping`
 
-A <code>KeyMapping` can be registered by listening to the `RegisterKeyMappingsEvent` on the [**mod event bus**](../../concepts/events/#mod-event-bus) only on the physical client and calling `#register`.
+A `KeyMapping` can be registered by listening to the `RegisterKeyMappingsEvent` on the [**mod event bus**](../../concepts/events/#mod-event-bus) only on the physical client and calling `#register`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -25,9 +26,10 @@ public void registerBindings(RegisterKeyMappingsEvent event) {
 }
 ```
 
-## Creating a `KeyMapping
 
-A <code>KeyMapping` can be created using it&rsquo;s constructor. The `KeyMapping` takes in a [translation key](../../concepts/internationalization/#translatablecontents) defining the name of the mapping, the default input of the mapping, and the [translation key](../../concepts/internationalization/#translatablecontents) defining the category the mapping will be put within in the [Controls option menu](https://minecraft.wiki/w/Options#Controls).
+## Creating a `KeyMapping`
+
+A `KeyMapping` can be created using it’s constructor. The `KeyMapping` takes in a [translation key](../../concepts/internationalization/#translatablecontents) defining the name of the mapping, the default input of the mapping, and the [translation key](../../concepts/internationalization/#translatablecontents) defining the category the mapping will be put within in the [Controls option menu](https://minecraft.wiki/w/Options#Controls).
 
 
 <!-- key:🔴 role:新手必读 (Tip) -->
@@ -47,6 +49,7 @@ Vanilla provides three types of inputs: `KEYSYM`, which defines a keyboard throu
 
 The integer is dependent on the type provided. All input codes are defined in `GLFW`: `KEYSYM` tokens are prefixed with `GLFW_KEY_*` while `MOUSE` codes are prefixed with `GLFW_MOUSE_*`.
 
+
 ```
 new KeyMapping(
   "key.examplemod.example1", // Will be localized using this translation key
@@ -57,20 +60,22 @@ new KeyMapping(
 ```
 
 
+
 <!-- key:🔴 role:新手必读 (Note) -->
 
 > **Note**: Note If the key mapping should not be mapped to a default, the input should be set to InputConstants#UNKNOWN. The vanilla constructor will require you to extract the input code via InputConstants$Key#getValue while the Forge constructor can be supplied the raw input field.
 
-### `IKeyConflictContext
+### `IKeyConflictContext`
 
 
 <!-- key:🟠 role:常见错误 -->
 
-Not all mappings are used in every context. Some mappings are only used in a GUI, while others are only used purely in game. To avoid mappings of the same key used in different contexts conflicting with each other, an <code>IKeyConflictContext` can be assigned.
+Not all mappings are used in every context. Some mappings are only used in a GUI, while others are only used purely in game. To avoid mappings of the same key used in different contexts conflicting with each other, an `IKeyConflictContext` can be assigned.
 
 Each conflict context contains two methods: `#isActive`, which defines if the mapping can be used in the current game state, and `#conflicts`, which defines whether the mapping conflicts with a key in the same or different conflict context.
 
 Currently, Forge defines three basic contexts through `KeyConflictContext`: `UNIVERSAL`, which is the default meaning the key can be used in every context, `GUI`, which means the mapping can only be used when a `Screen` is open, and `IN_GAME`, which means the mapping can only be used if a `Screen` is not open. New conflict contexts can be created by implementing `IKeyConflictContext`.
+
 
 ```
 new KeyMapping(
@@ -82,11 +87,13 @@ new KeyMapping(
 )
 ```
 
-### `KeyModifier
 
-Modders may not want mappings to have the same behavior if a modifier key is held at the same (e.g. <code>G` vs `CTRL + G`). To remedy this, Forge adds an additional parameter to the constructor to take in a `KeyModifier` which can apply control (`KeyModifier#CONTROL`), shift (`KeyModifier#SHIFT`), or alt (`KeyModifier#ALT`) to any input. `KeyModifier#NONE` is the default and will apply no modifier.
+### `KeyModifier`
+
+Modders may not want mappings to have the same behavior if a modifier key is held at the same (e.g. `G` vs `CTRL + G`). To remedy this, Forge adds an additional parameter to the constructor to take in a `KeyModifier` which can apply control (`KeyModifier#CONTROL`), shift (`KeyModifier#SHIFT`), or alt (`KeyModifier#ALT`) to any input. `KeyModifier#NONE` is the default and will apply no modifier.
 
 A modifier can be added in the [controls option menu](https://minecraft.wiki/w/Options#Controls) by holding down the modifier key and the associated input.
+
 
 ```
 new KeyMapping(
@@ -99,13 +106,15 @@ new KeyMapping(
 )
 ```
 
-## Checking a `KeyMapping
 
-A <code>KeyMapping` can be checked to see whether it has been clicked. Depending on when, the mapping can be used in a conditional to apply the associated logic.
+## Checking a `KeyMapping`
+
+A `KeyMapping` can be checked to see whether it has been clicked. Depending on when, the mapping can be used in a conditional to apply the associated logic.
 
 ### Within the Game
 
-Within the game, a mapping should be checked by listening to `ClientTickEvent` on the [**Forge event bus**](../../concepts/events/#creating-an-event-handler) and checking `KeyMapping#consumeClick` within a while loop. `#consumeClick` will return `true` only the number of times the input was performed and not already previously handled, so it won&rsquo;t infinitely stall the game.
+Within the game, a mapping should be checked by listening to `ClientTickEvent` on the [**Forge event bus**](../../concepts/events/#creating-an-event-handler) and checking `KeyMapping#consumeClick` within a while loop. `#consumeClick` will return `true` only the number of times the input was performed and not already previously handled, so it won’t infinitely stall the game.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -122,18 +131,20 @@ public void onClientTick(ClientTickEvent event) {
 ```
 
 
+
 <!-- key:🟠 role:常见错误 -->
 
 
 <!-- key:🔴 role:新手必读 (Warning) -->
 
-> **Warning**: Warning Do not use the InputEvents as an alternative to ClientTickEvent. There are separate events for keyboard and mouse inputs only, so they wouldn&rsquo;t handle any additional inputs.
+> **Warning**: Warning Do not use the InputEvents as an alternative to ClientTickEvent. There are separate events for keyboard and mouse inputs only, so they wouldn’t handle any additional inputs.
 
 ### Inside a GUI
 
 Within a GUI, a mapping can be checked within one of the `GuiEventListener` methods using `IForgeKeyMapping#isActiveAndMatches`. The most common methods which can be checked are `#keyPressed` and `#mouseClicked`.
 
 `#keyPressed` takes in the `GLFW` key token, the platform-specific scan code, and a bitfield of the held down modifiers. A key can be checked against a mapping by creating the input using `InputConstants#getKey`. The modifiers are already checked within the mapping methods itself.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -151,6 +162,7 @@ public boolean keyPressed(int key, int scancode, int mods) {
 ```
 
 
+
 <!-- key:🟠 role:常见错误 -->
 
 
@@ -158,7 +170,8 @@ public boolean keyPressed(int key, int scancode, int mods) {
 
 > **Note**: Note If you do not own the screen which you are trying to check a key for, you can listen to the Pre or Post events of ScreenEvent$KeyPressed on the Forge event bus instead.
 
-`#mouseClicked` takes in the mouse&rsquo;s x position, y position, and the button clicked. A mouse button can be checked against a mapping by creating the input using `InputConstants$Type#getOrCreate` with the `MOUSE` input.
+`#mouseClicked` takes in the mouse’s x position, y position, and the button clicked. A mouse button can be checked against a mapping by creating the input using `InputConstants$Type#getOrCreate` with the `MOUSE` input.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -174,6 +187,7 @@ public boolean mouseClicked(double x, double y, int button) {
   return super.mouseClicked(x, y, button);
 }
 ```
+
 
 
 <!-- key:🟠 role:常见错误 -->

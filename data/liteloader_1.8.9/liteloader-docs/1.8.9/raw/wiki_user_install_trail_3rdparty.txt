@@ -1,0 +1,8 @@
+~~META:title=installation trail~~
+
+*I'm using a third-party launcher*
+
+**Are you using MultiMC?**
+
+* [[user:install:multimc|Yes, I'm using MultiMC]]
+* [[unofficial|No, I'm using a different third-party launcher]]

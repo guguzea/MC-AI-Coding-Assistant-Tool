@@ -1175,6 +1175,99 @@
       "gates": [
         "test-wave-bcd.mjs"
       ]
+    },
+    {
+      "id": "forge-1152-factory-signature-third-arg",
+      "claim": "`forge/1.15.2` 的 10-gui 示例里 `MyContainer` 的构造第三参必须与 `IForgeContainerType.create(MyContainer::new)` 的函数式接口契约相容 —— `IContainerFactory` 第三参是 `PacketBuffer`，不是 `IInteractionObject`。",
+      "author": "2026-09-21 审查回报（第二轮，附实锤）+ 本波必修 1",
+      "evidence": "复现：`:80 public MyContainer(int windowId, PlayerInventory inv, IInteractionObject target)` 而 `:100 IForgeContainerType.create(MyContainer::new)` ⇒ 方法引用与工厂契约不符、照抄编译不过。上一轮只修了同文件的 `super(null, windowId)`，漏了签名本身。修法：第三参改 `PacketBuffer data` + 注释点明契约；同步重投影 7 宿主。验证：assert-rule-java-shapes 新增判据 D 后真跑 506 份源稿仍绿（修前该判据会红）。",
+      "evidenceRefs": [
+        "forge/1.15.2/.cursor/rules/10-gui.mdc",
+        "mcp-server/scripts/assert-rule-java-shapes.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-rule-java-shapes.mjs",
+        "assert-skill-mirrors.mjs"
+      ],
+      "closedAt": "2026-09-21"
+    },
+    {
+      "id": "rule-java-shapes-factory-contract-leg",
+      "claim": "`assert-rule-java-shapes.mjs` 必须覆盖「方法引用 ↔ 函数式接口」这一腿：`<Factory>.create(<Cls>::new)` 的工厂第三参契约是 PacketBuffer/FriendlyByteBuf，构造第三参不符即红。",
+      "author": "2026-09-21 审查回报（指出该腿缺失致 1.15.2 逃过闸）+ 本波必修 4",
+      "evidence": "背景：W3-2 最初的三类形状（未声明标识符 / super(null) / new 与定义实参不符）都抓不到 1.15.2 的签名问题 —— 它逃过了为 C2 那族建的闸。修法：新增判据 D（`/^(?:I[A-Za-z]*Type|I[A-Za-z]*Factory)$/` 的工厂 + `create(Cls::new)` + 同文件构造第三参白名单比对）。验证：selftest 8 例（新增「工厂契约第三参不符（1.15.2 原形）」必红 + 「第三参 PacketBuffer ⇒ 绿」正对照）；真跑 506 份源稿绿。",
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-rule-java-shapes.mjs",
+        "forge/1.15.2/.cursor/rules/10-gui.mdc"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-rule-java-shapes.mjs"
+      ],
+      "closedAt": "2026-09-21"
+    },
+    {
+      "id": "gradle-261-loom-no-remap",
+      "claim": "`diagnose_gradle` 的 26.1 分支必须只认**不带 `-remap`** 的 `net.fabricmc.fabric-loom`：26.1 已去混淆（官方连 `remapJar` 都改名 `jar`），`-remap` 只属 ≤1.21.11 的混淆时代。",
+      "author": "2026-09-21 审查回报（第二轮，附实锤）+ 本波必修 2",
+      "evidence": "复现：`gradle/index.ts:379` 的 `hasNewFabricPlugin` 正则把 `-remap` 列为可选，`:397 if (!quilt && !hasNewFabricPlugin)` 直接吃它 ⇒ 26.1 工程写 `-remap` 仍 status=passed，与同分支 `:398` 文案自相矛盾。一手证据：`fabric/26.1.2/scaffold/build.gradle:4` = `id \"net.fabricmc.fabric-loom\"`（无 remap）+ `fabric/26.1.2/.cursor/rules/00-project-setup.mdc:9`「Loom 插件 id 换成 net.fabricmc.fabric-loom」；而 `1.21.4/1.21.11` 才用 `-remap`。修法：26.1 分支改用严格正则 `hasStrict261Loom`，非 26.1 分支保持宽松。验证：test-core 新增两钉（26.1+`-remap` 必红 / 26.1+严格 id 不得判缺），原 `loom261`（旧 id）与 `loomRemap`（1.21.10）用例不受影响。",
+      "evidenceRefs": [
+        "mcp-server/src/gradle/index.ts",
+        "fabric/26.1.2/scaffold/build.gradle",
+        "fabric/26.1.2/.cursor/rules/00-project-setup.mdc",
+        "mcp-server/test-core.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "test-core.mjs"
+      ],
+      "closedAt": "2026-09-21"
+    },
+    {
+      "id": "w48-stage-dir-finally-cleanup",
+      "claim": "`fetch-vanilla-registries.mjs` 的 stage 目录必须有 finally 级清理：抓取抛异常 / 写入 0 件 / 换入中途失败都不得在 outDir 旁留 `.stage-<pid>` 残骸。",
+      "author": "2026-09-21 审查回报（第二轮）+ 本波必修 3（上一轮 W4-8 的遗留）",
+      "evidence": "复现：stage 段（:245-278）只在「written.length===0」这条路径上 rmSync，抓取抛异常那条不清理 ⇒ 每次失败留一个残骸。修法：把抓取 + 判空 + 换入整体包进 try/finally，finally 恒 rmSync(stageDir)。验证：test-wave-bcd 的 testFetchScriptsKeepCorpus 源码文本门（stage 先建 / 失败只清 stage / 换入在写成功之后）仍绿。",
+      "evidenceRefs": [
+        "mcp-server/scripts/fetch-vanilla-registries.mjs",
+        "mcp-server/test-wave-bcd.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "test-wave-bcd.mjs"
+      ],
+      "closedAt": "2026-09-21"
+    },
+    {
+      "id": "w52d-draft-resolved-version-and-fold-invariant",
+      "claim": "session/write 的 draft 拒绝文案必须打**解析后实际档**（inspectPack 已由 knowledgeVersion 折叠）；且折叠不变量「折叠目标档必须 ready」必须有断言钉住。",
+      "author": "2026-09-21 用户裁定 + 辅助 agent 复核（推翻「按请求档判定」的事实前提）+ 本波必修 5 的两处残余",
+      "evidence": "事实更正（亲验）：`catalog.ts:413` 已 `ver = knowledgeVersion(platform, mcVersion)`，`:417` 读的是**折叠后目录**的 pack.meta.json ⇒ `session.ts:456` 本来就按解析档判定；报告「按请求档判定」不成立。折叠确在（`knowledgeVersion:73-79`：neoforge 26.1.x→26.1 / fabric 26.1.x→26.1.2，test-assistant-gaps 逐条钉）。真实残余只有两处：① `session.ts:472` 文案打 `${minecraftVersion}`（请求档）⇒ 已改 `resolvedVersion = inspected?.pack.minecraftVersion ?? minecraftVersion`；② 无「折叠目标必须 ready」不变量 ⇒ 已在 test-assistant-gaps 新增断言（遍历 5 个折叠请求，目标档不得落在 drafts、且必须在 ready 列表）。裁定向 A（允许折叠到同系列 ready 档）被否：会正面推翻 AGENTS.md 空洞档段两处 + listSameSeriesCandidates/catalog.ts:435 注释 + session.ts:462 ask 文案 + ledger modloader-125-152-no-substitution 的「逐档人工升 ready」路径。今天盘面 5 个 draft（forge/1.21.1、liteloader/1.8.9、liteloader/1.10.2、modloader/1.2.5、modloader/1.5.2）都不是折叠目标 ⇒ 两条判法等价、语义一行未动。",
+      "evidenceRefs": [
+        "mcp-server/src/platform-pack/session.ts",
+        "mcp-server/src/platform-pack/catalog.ts",
+        "mcp-server/test-assistant-gaps.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "test-assistant-gaps.mjs"
+      ],
+      "closedAt": "2026-09-21"
+    },
+    {
+      "id": "w11-tautology-gate-r4",
+      "claim": "`assert-test-harness.mjs` 必须有恒真断言闸（R-4）：字面真值 / 字面量之间的恒真比较 / 同名自比 / 空测试函数体不得进入测试面；但必须放行 `x.indexOf(y) >= 0` 这类**存在性**断言。",
+      "author": "2026-09-21 审查回报（「恒真形状本身无闸，可以再退回去而全链不变红」）+ 本波必修 6",
+      "evidence": "复现：harness 原只有 R-1/R-2（harness 假绿）与 R-3（audit 未 await），确无恒真形状判据。扫面基线：`assert.ok(true)` 0 / 同名自比 0 / 字面量比较 0；`>= 0` 类 7 处**全是** `indexOf(...) >= 0` 的存在性断言（真判据）⇒ 判据必须排除它们。修法：新增 R-4 四类形态（字面真值 / 数字字面量比较 / 同名自比 / 空测试体），排除自身文件。验证：真跑绿（33 个含断言的测试文件已扫、0 命中）。",
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-test-harness.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-test-harness.mjs"
+      ],
+      "closedAt": "2026-09-21"
     }
   ]
 }

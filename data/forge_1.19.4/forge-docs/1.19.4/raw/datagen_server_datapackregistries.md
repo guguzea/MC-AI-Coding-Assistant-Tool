@@ -11,6 +11,7 @@ Datapack registry objects can be generated for a mod by constructing a new `Data
 
 > **Note**: Note DatapackBuiltinEntriesProvider is a Forge extension on top of RegistriesDatapackGenerator which properly handles referencing existing datapack registry objects without exploding the entry. So, this documentation will use DatapackBuiltinEntriesProvider.
 
+
 ```java
 // On the MOD event bus
 @SubscribeEvent
@@ -30,11 +31,13 @@ public void gatherData(GatherDataEvent event) {
 }
 ```
 
-## `RegistrySetBuilder
 
-A <code>RegistrySetBuilder` is responsible for building all datapack registry objects to be used within the game. The builder can add a new entry for a registry, which can then register objects to that registry.
+## `RegistrySetBuilder`
 
-First, a new instance of a `RegistrySetBuilder` can be initialized by calling the constructor. Then, the `#add` method (which takes in the `ResourceKey` of the registry, a `RegistryBootstrap` consumer containing the `BootstapContext` to register the objects, and an optional `Lifecycle` argument to indicate the registry&rsquo;s current lifecycle status) can be called to handle a specific registry for registration.
+A `RegistrySetBuilder` is responsible for building all datapack registry objects to be used within the game. The builder can add a new entry for a registry, which can then register objects to that registry.
+
+First, a new instance of a `RegistrySetBuilder` can be initialized by calling the constructor. Then, the `#add` method (which takes in the `ResourceKey` of the registry, a `RegistryBootstrap` consumer containing the `BootstapContext` to register the objects, and an optional `Lifecycle` argument to indicate the registry’s current lifecycle status) can be called to handle a specific registry for registration.
+
 
 ```
 new RegistrySetBuilder()
@@ -48,11 +51,13 @@ new RegistrySetBuilder()
   });
 ```
 
+
 > **Note**: Note Datapack registries created through Forge can also generate their objects using this builder by also passing in the associated ResourceKey.
 
-## Registering with `BootstapContext
+## Registering with `BootstapContext`
 
-The <code>#register` method in the `BootstapContext` provided by the builder can be used to register objects. It takes in the `ResourceKey` representing the registry name of the object, the object to register, and an optional `Lifecycle` argument to indicate the registry object&rsquo;s current lifecycle status.
+The `#register` method in the `BootstapContext` provided by the builder can be used to register objects. It takes in the `ResourceKey` representing the registry name of the object, the object to register, and an optional `Lifecycle` argument to indicate the registry object’s current lifecycle status.
+
 
 ```
 public static final ResourceKey<ConfiguredFeature<?, ?>> EXAMPLE_CONFIGURED_FEATURE = ResourceKey.create(
@@ -83,9 +88,11 @@ new RegistrySetBuilder()
   });
 ```
 
+
 ### Datapack Registry Object Lookup
 
 Sometimes datapack registry objects may want to use other datapack registry objects or tags containing datapack registry objects. In those cases, you can look up another datapack registry using `BootstapContext#lookup` to get a `HolderGetter`. From there, you can get a `Holder$Reference` to the datapack registry object or a `HolderSet$Named` for the tag via `#getOrThrow` by passing in the associated key.
+
 
 ```
 public static final ResourceKey<ConfiguredFeature<?, ?>> EXAMPLE_CONFIGURED_FEATURE = ResourceKey.create(

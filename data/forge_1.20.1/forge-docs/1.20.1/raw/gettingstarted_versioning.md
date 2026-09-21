@@ -2,35 +2,35 @@
 version: "1.20.1"
 forgeVersion: "47.2.0"
 chapter: "gettingstarted/versioning"
-source: "https://docs.readthedocs.net/en/1.20.1/gettingstarted/versioning/"
+source: "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/versioning/"
 sourceType: mkdocs
 ---
 # Versioning
 
 In general projects, [semantic versioning](https://semver.org/) is often used (which has the format `MAJOR.MINOR.PATCH`). However, in the case of modding it may be more beneficial to use the format `MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH` to be able to differentiate between world-breaking and API-breaking changes of a mod.
 
-> **Important**: Important Forge uses Maven version ranges to compare version strings, which is not fully compatible with the Semantic Versioning 2.0.0 spec, such as the &lsquo;prerelease&rsquo; tag.
+> **Important**: Important Forge uses Maven version ranges to compare version strings, which is not fully compatible with the Semantic Versioning 2.0.0 spec, such as the ‘prerelease’ tag.
 
 ## Examples
 
 Here is a list of examples that can increment the various variables.
 
-- <li>`MCVERSION`
-- <li>Always matches the Minecraft version the mod is for.
-- <li>`MAJORMOD`
-- <li>Removing items, blocks, block entities, etc.
-- <li>Changing or removing previously existing mechanics.
-- <li>Updating to a new Minecraft version.
-- <li>`MAJORAPI`
-- <li>Changing the order or variables of enums.
-- <li>Changing return types of methods.
-- <li>Removing public methods altogether.
-- <li>`MINOR`
-- <li>Adding items, blocks, block entities, etc.
-- <li>Adding new mechanics.
-- <li>Deprecating public methods. (This is not a `MAJORAPI` increment since it doesn&rsquo;t break an API.)
-- <li>`PATCH`
-- <li>Bugfixes.
+- `MCVERSION`
+- Always matches the Minecraft version the mod is for.
+- `MAJORMOD`
+- Removing items, blocks, block entities, etc.
+- Changing or removing previously existing mechanics.
+- Updating to a new Minecraft version.
+- `MAJORAPI`
+- Changing the order or variables of enums.
+- Changing return types of methods.
+- Removing public methods altogether.
+- `MINOR`
+- Adding items, blocks, block entities, etc.
+- Adding new mechanics.
+- Deprecating public methods. (This is not a `MAJORAPI` increment since it doesn’t break an API.)
+- `PATCH`
+- Bugfixes.
 
 When incrementing any variable, all lesser variables should reset to `0`. For instance, if `MINOR` would increment, `PATCH` would become `0`. If `MAJORMOD` would increment, all other variables would become `0`.
 
@@ -48,7 +48,7 @@ When dropping support for a Minecraft version, the last build for that version s
 
 ### Pre-releases
 
-It is also possible to prerelease work-in-progress features, which means new features are released that are not quite done yet. These can be seen as a sort of &ldquo;beta&rdquo;. These versions should be appended with `-betaX`, where `X` is the number of the prerelease. (This guide does not use `-pre` since, at the time of writing, it is not a valid alias for `-beta`.) Note that already released versions and versions before the initial release can not go into prerelease; variables (mostly `MINOR`, but `MAJORAPI` and `MAJORMOD` can also prerelease) should be updated accordingly before adding the `-beta` suffix. Versions before the initial release are simply work-in-progress builds.
+It is also possible to prerelease work-in-progress features, which means new features are released that are not quite done yet. These can be seen as a sort of “beta”. These versions should be appended with `-betaX`, where `X` is the number of the prerelease. (This guide does not use `-pre` since, at the time of writing, it is not a valid alias for `-beta`.) Note that already released versions and versions before the initial release can not go into prerelease; variables (mostly `MINOR`, but `MAJORAPI` and `MAJORMOD` can also prerelease) should be updated accordingly before adding the `-beta` suffix. Versions before the initial release are simply work-in-progress builds.
 
 ### Release Candidates
 

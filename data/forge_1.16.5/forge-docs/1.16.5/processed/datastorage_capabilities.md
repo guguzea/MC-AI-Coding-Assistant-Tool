@@ -23,12 +23,14 @@ As mentioned earlier, TileEntities, Entities, and ItemStacks implement the capab
 In order to obtain a capability, you will need to refer it by its unique instance. In the case of the `IItemHandler`, this capability is primarily stored in `CapabilityItemHandler#ITEM_HANDLER_CAPABILITY`, but it is possible to get other instance references by using the `@CapabilityInject` annotation.
 
 
+
 <!-- key:🟢 role:示例代码 -->
 
 ```
 @CapabilityInject(IItemHandler.class)
 static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY = null;
 ```
+
 
 
 <!-- key:🟠 role:常见错误 -->
@@ -51,9 +53,10 @@ The second method can be used to provide custom implementations. In the case of 
 
 <!-- key:🟠 role:常见错误 -->
 
-Once you have your own instance of the capability interface, you will want to notify users of the capability system that you expose this capability and provide a `LazyOptional` of the interface reference. This is done by overriding the `#getCapability` method, and comparing the capability instance with the capability you are exposing. If your machine has different slots based on which side is being queried, you can test this with the `side` parameter. For Entities and ItemStacks, this parameter can be ignored, but it is still possible to have side as a context, such as different armor slots on a player (`Direction#UP` exposing the player&rsquo;s helmet slot), or about the surrounding blocks in the inventory (`Direction#WEST` exposing the input slot of a furnace). Do not forget to fall back to `super`, otherwise existing attached capabilities will stop working.
+Once you have your own instance of the capability interface, you will want to notify users of the capability system that you expose this capability and provide a `LazyOptional` of the interface reference. This is done by overriding the `#getCapability` method, and comparing the capability instance with the capability you are exposing. If your machine has different slots based on which side is being queried, you can test this with the `side` parameter. For Entities and ItemStacks, this parameter can be ignored, but it is still possible to have side as a context, such as different armor slots on a player (`Direction#UP` exposing the player’s helmet slot), or about the surrounding blocks in the inventory (`Direction#WEST` exposing the input slot of a furnace). Do not forget to fall back to `super`, otherwise existing attached capabilities will stop working.
 
-Capabilities must be invalidated at the end of the provider&rsquo;s lifecycle via `LazyOptional#invalidate`. For owned TileEntities and Entities, the `LazyOptional` can be invalidated within `#invalidateCaps`. For non-owned providers, a runnable supplying the invalidation should be passed into `AttachCapabilitiesEvent#addListener`.
+Capabilities must be invalidated at the end of the provider’s lifecycle via `LazyOptional#invalidate`. For owned TileEntities and Entities, the `LazyOptional` can be invalidated within `#invalidateCaps`. For non-owned providers, a runnable supplying the invalidation should be passed into `AttachCapabilitiesEvent#addListener`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -81,6 +84,7 @@ public void invalidateCaps() {
 }
 ```
 
+
 `Item`s are a special case since their capability providers are stored on an `ItemStack`. Instead, a provider should be attached through `Item#initCapabilities`. This should hold your capabilities for the lifecycle of the stack.
 
 
@@ -92,11 +96,11 @@ It is strongly suggested that direct checks in code are used to test for capabil
 
 As mentioned, attaching capabilities to existing providers, `World`s, and `Chunk`s can be done using `AttachCapabilitiesEvent`. The same event is used for all objects that can provide capabilities. `AttachCapabilitiesEvent` has 5 valid generic types providing the following events:
 
-- <li>`AttachCapabilitiesEvent<Entity>`: Fires only for entities.
-- <li>`AttachCapabilitiesEvent<TileEntity>`: Fires only for tile entities.
-- <li>`AttachCapabilitiesEvent<ItemStack>`: Fires only for item stacks.
-- <li>`AttachCapabilitiesEvent<World>`: Fires only for worlds.
-- <li>`AttachCapabilitiesEvent<Chunk>`: Fires only for chunks.
+- `AttachCapabilitiesEvent<Entity>`: Fires only for entities.
+- `AttachCapabilitiesEvent<TileEntity>`: Fires only for tile entities.
+- `AttachCapabilitiesEvent<ItemStack>`: Fires only for item stacks.
+- `AttachCapabilitiesEvent<World>`: Fires only for worlds.
+- `AttachCapabilitiesEvent<Chunk>`: Fires only for chunks.
 
 The generic type cannot be more specific than the above types. For example: If you want to attach capabilities to `PlayerEntity`, you have to subscribe to the `AttachCapabilitiesEvent<Entity>`, and then determine that the provided object is an `PlayerEntity` before attaching the capability.
 
@@ -108,13 +112,16 @@ For information on how to implement `ICapabilityProvider`, refer to the [Exposin
 
 In general terms, a capability is declared and registered through a single method call to `CapabilityManager.INSTANCE.register(...)`. One possibility is to define a static `register()` method inside a dedicated class for the capability, but this is not required by the capability system. For the purpose of this documentation, we will be describing each part as a separate named class, although anonymous classes are an option.
 
+
 ```
 CapabilityManager.INSTANCE.register(<capability interface class>, <storage>, <default implementation factory>);
 ```
 
+
 The first parameter to this method is the type that describes the capability feature. In our example, this will be `IExampleCapability.class`.
 
 The second parameter is an instance of a class that implements `Capability$IStorage<T>`, where T is the same class we specified in the first parameter. This storage class will help manage saving and loading for the default implementation, and it can, optionally, also support other implementations. This is just a helper and does not save or load data without being called within `ICapabilitySerializable`.
+
 
 ```
 private static class Storage
@@ -132,7 +139,9 @@ private static class Storage
 }
 ```
 
+
 The last parameter is a callable factory that will return new instances of the default implementation.
+
 
 ```
 private static class Factory implements Callable<IExampleCapability> {
@@ -144,6 +153,7 @@ private static class Factory implements Callable<IExampleCapability> {
 }
 ```
 
+
 Finally, we will need the default implementation itself, to be able to instantiate it in the factory. Designing this class is up to you, but it should at least provide a basic skeleton that people can use to test the capability, if it is not a fully usable implementation itself.
 
 ## Persisting Chunk and TileEntity capabilities
@@ -154,6 +164,7 @@ Finally, we will need the default implementation itself, to be able to instantia
 Unlike Worlds, Entities, and ItemStacks, Chunks and TileEntities are only written to disk when they have been marked as dirty. A capability implementation with persistent state for a Chunk or a TileEntity should therefore ensure that whenever its state changes, its owner is marked as dirty.
 
 `ItemStackHandler`, commonly used for inventories in TileEntities, has an overridable method `void onContentsChanged(int slot)` designed to be used to mark the TileEntity as dirty.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -173,15 +184,16 @@ public class MyTileEntity extends TileEntity {
 }
 ```
 
+
 ## Synchronizing Data with Clients
 
 By default, capability data is not sent to clients. In order to change this, the mods have to manage their own synchronization code using packets.
 
 There are three different situations in which you may want to send synchronization packets, all of them optional:
 
-1. <li>When the entity spawns in the world, or the block is placed, you may want to share the initialization-assigned values with the clients.
-2. <li>When the stored data changes, you may want to notify some or all of the watching clients.
-3. <li>When a new client starts viewing the entity or block, you may want to notify it of the existing data.
+1. When the entity spawns in the world, or the block is placed, you may want to share the initialization-assigned values with the clients.
+2. When the stored data changes, you may want to notify some or all of the watching clients.
+3. When a new client starts viewing the entity or block, you may want to notify it of the existing data.
 
 Refer to the [Networking](../../networking/) page for more information on implementing network packets.
 
@@ -193,24 +205,24 @@ This can be done via `PlayerEvent$Clone` by reading the data from the original e
 
 ## Migrating from IExtendedEntityProperties
 
-Although the Capability system can do everything IEEPs (IExtendedEntityProperties) did and more, the two concepts don&rsquo;t fully match 1:1. This section will explain how to convert existing IEEPs into Capabilities.
+Although the Capability system can do everything IEEPs (IExtendedEntityProperties) did and more, the two concepts don’t fully match 1:1. This section will explain how to convert existing IEEPs into Capabilities.
 
 This is a quick list of IEEP concepts and their Capability equivalent:
 
-- <li>Property name/id (`String`): Capability key (`ResourceLocation`)
-- <li>Registration (`EntityConstructing`): Attaching (`AttachCapabilitiesEvent<Entity>`), the real registration of the `Capability` happens during `FMLCommonSetupEvent`.
-- <li>NBT read/write methods: Does not happen automatically. Attach an `ICapabilitySerializable` in the event and run the read/write methods from the `serializeNBT`/`deserializeNBT`.
+- Property name/id (`String`): Capability key (`ResourceLocation`)
+- Registration (`EntityConstructing`): Attaching (`AttachCapabilitiesEvent<Entity>`), the real registration of the `Capability` happens during `FMLCommonSetupEvent`.
+- NBT read/write methods: Does not happen automatically. Attach an `ICapabilitySerializable` in the event and run the read/write methods from the `serializeNBT`/`deserializeNBT`.
 
 Features you probably will not need (if the IEEP was for internal use only):
 
-- <li>The Capability system provides a default implementation concept, meant to simplify usage by third party consumers, but it doesn&rsquo;t really make much sense for an internal Capability designed to replace an IEEP. You can safely return `null` from the factory if the capability is for internal use only.
-- <li>The Capability system provides an `IStorage` system that can be used as a helper to read/write data from those default implementations.
+- The Capability system provides a default implementation concept, meant to simplify usage by third party consumers, but it doesn’t really make much sense for an internal Capability designed to replace an IEEP. You can safely return `null` from the factory if the capability is for internal use only.
+- The Capability system provides an `IStorage` system that can be used as a helper to read/write data from those default implementations.
 
 The following steps assume you have read the rest of the document and you understand the concepts of the capability system.
 
 Quick conversion guide:
 
-1. <li>Convert the IEEP key/id string into a `ResourceLocation` (which will use your MODID as a namespace).
-2. <li>In your handler class (not the class that implements your capability interface), create a field that will hold the Capability instance.
-3. <li>Change the `EntityConstructing` event to `AttachCapabilitiesEvent`, and instead of querying the IEEP, you will want to attach an `ICapabilityProvider` (probably `ICapabilitySerializable`, which allows saving/loading from NBT).
-4. <li>Create a registration method if you don&rsquo;t have one (you may have one where you registered your IEEP&rsquo;s event handlers) and in it, run the capability registration function.
+1. Convert the IEEP key/id string into a `ResourceLocation` (which will use your MODID as a namespace).
+2. In your handler class (not the class that implements your capability interface), create a field that will hold the Capability instance.
+3. Change the `EntityConstructing` event to `AttachCapabilitiesEvent`, and instead of querying the IEEP, you will want to attach an `ICapabilityProvider` (probably `ICapabilitySerializable`, which allows saving/loading from NBT).
+4. Create a registration method if you don’t have one (you may have one where you registered your IEEP’s event handlers) and in it, run the capability registration function.

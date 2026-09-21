@@ -2,9 +2,9 @@
 
 [Tags](../../../resources/server/tags/) can be generated for a mod by subclassing `TagsProvider` and implementing `#addTags`. After implementation, the provider must be [added](../../#data-providers) to the `DataGenerator`.
 
-## `TagsProvider
+## `TagsProvider`
 
-The tags provider has two methods used for generating tags: creating a tag with objects and other tags via <code>#tag`, or using tags from other object types to generate the tag data via `#getOrCreateRawBuilder`.
+The tags provider has two methods used for generating tags: creating a tag with objects and other tags via `#tag`, or using tags from other object types to generate the tag data via `#getOrCreateRawBuilder`.
 
 
 <!-- key:🔴 role:新手必读 (Note) -->
@@ -37,9 +37,10 @@ this.tag(EXAMPLE_TAG_2)
 ```
 
 
+
 <!-- key:🔴 role:新手必读 (Important) -->
 
-> **Important**: Important If the mod&rsquo;s tags softly depends on another mod&rsquo;s tags (the other mod may or may not be present at runtime), the other mods&rsquo; tags should be referenced using the optional methods.
+> **Important**: Important If the mod’s tags softly depends on another mod’s tags (the other mod may or may not be present at runtime), the other mods’ tags should be referenced using the optional methods.
 
 ### Existing Providers
 
@@ -55,9 +56,10 @@ Registry Object Type | Tag Provider
 `Biome` | `BiomeTagsProvider`
 `ConfiguredStructureFeature` | `ConfiguredStructureTagsProvider`
 
-#### `ItemTagsProvider#copy
+#### `ItemTagsProvider#copy`
 
-Blocks have item representations to obtain them in the inventory. As such, many of the block tags can also be an item tag. To easily generate item tags to have the same entries as block tags, the <code>#copy` method can be used which takes in the block tag to copy from and the item tag to copy to.
+Blocks have item representations to obtain them in the inventory. As such, many of the block tags can also be an item tag. To easily generate item tags to have the same entries as block tags, the `#copy` method can be used which takes in the block tag to copy from and the item tag to copy to.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -67,9 +69,11 @@ Blocks have item representations to obtain them in the inventory. As such, many 
 this.copy(EXAMPLE_BLOCK_TAG, EXAMPLE_ITEM_TAG);
 ```
 
+
 ## Custom Tag Providers
 
 A custom tag provider can be created via a `TagsProvider` subclass which takes in the `Registry` to generate tags for.
+
 
 ```
 public RecipeTypeTagsProvider(DataGenerator generator, ExistingFileHelper fileHelper) {
@@ -77,9 +81,11 @@ public RecipeTypeTagsProvider(DataGenerator generator, ExistingFileHelper fileHe
 }
 ```
 
+
 ### Forge Registry Tag Providers
 
 If a registry is wrapped by Forge or [created by a mod](../../../concepts/registries/#creating-custom-forge-registries), a provider can be created via a `ForgeRegistryTagsProvider` subclass instead:
+
 
 ```
 public MotiveTagsProvider(DataGenerator generator, ExistingFileHelper fileHelper) {

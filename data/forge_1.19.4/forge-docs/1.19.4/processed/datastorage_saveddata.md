@@ -6,8 +6,8 @@ The Saved Data (SD) system is an alternative to level capabilities that can atta
 
 Each SD implementation must subtype the `SavedData` class. There are two important methods to be aware of:
 
-- <li>`save`: Allows the implementation to write NBT data to the level.
-- <li>`setDirty`: A method that must be called after changing the data, to notify the game that there are changes that need to be written. If not called, `#save` will not get called and the existing data will persist.
+- `save`: Allows the implementation to write NBT data to the level.
+- `setDirty`: A method that must be called after changing the data, to notify the game that there are changes that need to be written. If not called, `#save` will not get called and the existing data will persist.
 
 ## Attaching to a Level
 
@@ -20,7 +20,8 @@ Any `SavedData` is loaded and/or attached to a level dynamically. As such, if on
 
 `DimensionDataStorage#computeIfAbsent` takes in three arguments: a function to load NBT data into a SD and return it, a supplier to construct a new instance of the SD, and the name of the `.dat` file stored within the `data` folder for the implemented level.
 
-For example, if a SD was named &ldquo;example&rdquo; within the Nether, then a file would be created at `./<level_folder>/DIM-1/data/example.dat` and would be implemented like so:
+For example, if a SD was named “example” within the Nether, then a file would be created at `./<level_folder>/DIM-1/data/example.dat` and would be implemented like so:
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -40,6 +41,7 @@ public ExampleSavedData load(CompoundTag tag) {
 // In some method within the class
 netherDataStorage.computeIfAbsent(this::load, this::create, "example");
 ```
+
 
 
 <!-- key:🟠 role:常见错误 -->

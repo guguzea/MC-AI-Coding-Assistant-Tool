@@ -2,16 +2,16 @@
 version: "1.19.4"
 forgeVersion: "45.2.0"
 chapter: "concepts/registries"
-source: "https://docs.readthedocs.net/en/1.19.x/concepts/registries/"
+source: "https://docs.minecraftforge.net/en/1.19.x/concepts/registries/"
 sourceType: mkdocs
 ---
 # Registries
 
 Registration is the process of taking the objects of a mod (such as items, blocks, sounds, etc.) and making them known to the game. Registering things is important, as without registration the game will simply not know about these objects, which will cause unexplainable behaviors and crashes.
 
-Most things that require registration in the game are handled by the Forge registries. A registry is an object similar to a map that assigns values to keys. Forge uses registries with [`ResourceLocation`](../resources/#resourcelocation) keys to register objects. This allows the `ResourceLocation` to act as the &ldquo;registry name&rdquo; for objects.
+Most things that require registration in the game are handled by the Forge registries. A registry is an object similar to a map that assigns values to keys. Forge uses registries with [`ResourceLocation`](../resources/#resourcelocation) keys to register objects. This allows the `ResourceLocation` to act as the “registry name” for objects.
 
-Every type of registrable object has its own registry. To see all registries wrapped by Forge, see the `ForgeRegistries` class. All registry names within a registry must be unique. However, names in different registries will not collide. For example, there&rsquo;s a `Block` registry, and an `Item` registry. A `Block` and an `Item` may be registered with the same name `example:thing` without colliding; however, if two different `Block`s or `Item`s were registered with the same exact name, the second object will override the first.
+Every type of registrable object has its own registry. To see all registries wrapped by Forge, see the `ForgeRegistries` class. All registry names within a registry must be unique. However, names in different registries will not collide. For example, there’s a `Block` registry, and an `Item` registry. A `Block` and an `Item` may be registered with the same name `example:thing` without colliding; however, if two different `Block`s or `Item`s were registered with the same exact name, the second object will override the first.
 
 ## Methods for Registering
 
@@ -23,6 +23,7 @@ There are two proper ways to register objects: the `DeferredRegister` class, and
 
 An example of a mod registering a custom block:
 
+
 ```
 private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
 
@@ -33,11 +34,13 @@ public ExampleMod() {
 }
 ```
 
-### `RegisterEvent
 
-<code>RegisterEvent` is the second way to register objects. This [event](../events/) is fired for each registry after the mod constructors and before the loading of configs. Objects are registered using `#register` by passing in the registry key, the name of the registry object, and the object itself. There is an additional `#register` overload which takes in a consumed helper to register an object with a given name. It is recommended to use this method to avoid unnecessary object creation.
+### `RegisterEvent`
+
+`RegisterEvent` is the second way to register objects. This [event](../events/) is fired for each registry after the mod constructors and before the loading of configs. Objects are registered using `#register` by passing in the registry key, the name of the registry object, and the object itself. There is an additional `#register` overload which takes in a consumed helper to register an object with a given name. It is recommended to use this method to avoid unnecessary object creation.
 
 Here is an example: (the event handler is registered on the *mod event bus*)
+
 
 ```java
 @SubscribeEvent
@@ -53,11 +56,13 @@ public void register(RegisterEvent event) {
 }
 ```
 
-### Registries that aren&rsquo;t Forge Registries
+
+### Registries that aren’t Forge Registries
 
 Not all registries are wrapped by Forge. These can be static registries, like `LootItemConditionType`, which are safe to use. There are also dynamic registries, like `ConfiguredFeature` and some other worldgen registries, which are typically represented in JSON. `DeferredRegister#create` has an overload which allows modders to specify the registry key of which vanilla registry to create a `RegistryObject` for. The registry method and attaching to the mod event bus is the same as other `DeferredRegister`s.
 
 > **Important**: Important Dynamic registry objects can only be registered through data files (e.g. JSON). They cannot be registered in-code.
+
 
 ```
 private static final DeferredRegister<LootItemConditionType> REGISTER = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, "examplemod");
@@ -65,7 +70,8 @@ private static final DeferredRegister<LootItemConditionType> REGISTER = Deferred
 public static final RegistryObject<LootItemConditionType> EXAMPLE_LOOT_ITEM_CONDITION_TYPE = REGISTER.register("example_loot_item_condition_type", () -> new LootItemConditionType(...));
 ```
 
-> **Note**: Note Some classes cannot by themselves be registered. Instead, *Type classes are registered, and used in the formers&rsquo; constructors. For example, BlockEntity has BlockEntityType, and Entity has EntityType. These *Type classes are factories that simply create the containing type on demand. These factories are created through the use of their *Type$Builder classes. An example: (REGISTER refers to a DeferredRegister<BlockEntityType>) public static final RegistryObject<BlockEntityType<ExampleBlockEntity>> EXAMPLE_BLOCK_ENTITY = REGISTER.register( "example_block_entity", () -> BlockEntityType.Builder.of(ExampleBlockEntity::new, EXAMPLE_BLOCK.get()).build(null) );
+
+> **Note**: Note Some classes cannot by themselves be registered. Instead, *Type classes are registered, and used in the formers’ constructors. For example, BlockEntity has BlockEntityType, and Entity has EntityType. These *Type classes are factories that simply create the containing type on demand. These factories are created through the use of their *Type$Builder classes. An example: (REGISTER refers to a DeferredRegister) public static final RegistryObject> EXAMPLE_BLOCK_ENTITY = REGISTER.register( "example_block_entity", () -> BlockEntityType.Builder.of(ExampleBlockEntity::new, EXAMPLE_BLOCK.get()).build(null) );
 
 ## Referencing Registered Objects
 
@@ -81,6 +87,7 @@ To get a `RegistryObject`, call `RegistryObject#create` with a `ResourceLocation
 
 An example of using `RegistryObject`:
 
+
 ```
 public static final RegistryObject<Item> BOW = RegistryObject.create(new ResourceLocation("minecraft:bow"), ForgeRegistries.ITEMS);
 
@@ -88,29 +95,31 @@ public static final RegistryObject<Item> BOW = RegistryObject.create(new Resourc
 public static final RegistryObject<ManaType> COFFEINUM = RegistryObject.create(new ResourceLocation("neomagicae", "coffeinum"), new ResourceLocation("neomagicae", "mana_type"), "neomagicae");
 ```
 
+
 ### Using @ObjectHolder
 
 Registered objects from registries can be injected into the `public static` fields by annotating classes or fields with `@ObjectHolder` and supplying enough information to construct a `ResourceLocation` to identify a specific object in a specific registry.
 
 The rules for `@ObjectHolder` are as follows:
 
-- <li>If the class is annotated with `@ObjectHolder`, its value will be the default namespace for all fields within if not explicitly defined
-- <li>If the class is annotated with `@Mod`, the modid will be the default namespace for all annotated fields within if not explicitly defined
-- <li>A field is considered for injection if:
-- <li>it has at least the modifiers `public static`;
-- <li>the **field** is annotated with `@ObjectHolder`, and:<ul> <li>the name value is explicitly defined; and
-- <li>the registry name value is explicitly defined
+- If the class is annotated with `@ObjectHolder`, its value will be the default namespace for all fields within if not explicitly defined
+- If the class is annotated with `@Mod`, the modid will be the default namespace for all annotated fields within if not explicitly defined
+- A field is considered for injection if:
+- it has at least the modifiers `public static`;
+- the **field** is annotated with `@ObjectHolder`, and: the name value is explicitly defined; and
+- the registry name value is explicitly defined
 
-<li>*A compile-time exception is thrown if a field does not have a corresponding registry or name.*
-<li>*An exception is thrown if the resulting `ResourceLocation` is incomplete or invalid (non-valid characters in path)*
-<li>If no other errors or exceptions occur, the field will be injected
-<li>If all of the above rules do not apply, no action will be taken (and a message may be logged)
+*A compile-time exception is thrown if a field does not have a corresponding registry or name.*
+*An exception is thrown if the resulting `ResourceLocation` is incomplete or invalid (non-valid characters in path)*
+If no other errors or exceptions occur, the field will be injected
+If all of the above rules do not apply, no action will be taken (and a message may be logged)
 
 `@ObjectHolder`-annotated fields are injected with their values after `RegisterEvent` is fired for their registry, along with the `RegistryObject`s.
 
 > **Note**: Note If the object does not exist in the registry when it is to be injected, a debug message will be logged and no value will be injected.
 
 As these rules are rather complicated, here are some examples:
+
 
 ```
 class Holder {
@@ -136,11 +145,12 @@ class Holder {
 }
 ```
 
+
 ## Creating Custom Forge Registries
 
 Custom registries can usually just be a simple map of key to value. This is a common style; however, it forces a hard dependency on the registry being present. It also requires that any data that needs to be synced between sides must be done manually. Custom Forge Registries provide a simple alternative for creating soft dependents along with better management and automatic syncing between sides (unless told otherwise). Since the objects also use a Forge registry, registration becomes standardized in the same way.
 
-Custom Forge Registries are created with the help of a `RegistryBuilder`, through either `NewRegistryEvent` or the `DeferredRegister`. The `RegistryBuilder` class takes various parameters (such as the registry&rsquo;s name, id range, and various callbacks for different events happening on the registry). New registries are registered to the `RegistryManager` after `NewRegistryEvent` finishes firing.
+Custom Forge Registries are created with the help of a `RegistryBuilder`, through either `NewRegistryEvent` or the `DeferredRegister`. The `RegistryBuilder` class takes various parameters (such as the registry’s name, id range, and various callbacks for different events happening on the registry). New registries are registered to the `RegistryManager` after `NewRegistryEvent` finishes firing.
 
 Any newly created registry should use its associated [registration method](#methods-for-registering) to register the associated objects.
 

@@ -7,11 +7,11 @@ sourceType: mkdocs
 ---
 # Transform
 
-When an [`BakedModel`](../bakedmodel/) is being rendered as an item, it can apply special handling depending on which transform it is being rendered in. &ldquo;Transform&rdquo; means in what context the model is being rendered. The possible transforms are represented in code by the `ItemDisplayContext` enum. There are two systems for handling transform: the deprecated vanilla system, constituted by `BakedModel#getTransforms`, `ItemTransforms`, and `ItemTransform`, and the Forge system, embodied by the method `IForgeBakedModel#applyTransform`. The vanilla code is patched to favor using `applyTransform` over the vanilla system whenever possible.
+When an [`BakedModel`](../bakedmodel/) is being rendered as an item, it can apply special handling depending on which transform it is being rendered in. “Transform” means in what context the model is being rendered. The possible transforms are represented in code by the `ItemDisplayContext` enum. There are two systems for handling transform: the deprecated vanilla system, constituted by `BakedModel#getTransforms`, `ItemTransforms`, and `ItemTransform`, and the Forge system, embodied by the method `IForgeBakedModel#applyTransform`. The vanilla code is patched to favor using `applyTransform` over the vanilla system whenever possible.
 
-## `ItemDisplayContext
+## `ItemDisplayContext`
 
-<code>NONE` - Used for the display entity by default when no context is set and by Forge when a `Block`&rsquo;s `RenderShape` is set to `#ENTITYBLOCK_ANIMATED`.
+`NONE` - Used for the display entity by default when no context is set and by Forge when a `Block`’s `RenderShape` is set to `#ENTITYBLOCK_ANIMATED`.
 
 `THIRD_PERSON_LEFT_HAND`/`THIRD_PERSON_RIGHT_HAND`/`FIRST_PERSON_LEFT_HAND`/`FIRST_PERSON_RIGHT_HAND` - The first person values represent when the player is holding the item in their own hand. The third person values represent when another player is holding the item and the client is looking at them in the 3rd person. Hands are self-explanatory.
 
@@ -33,6 +33,6 @@ The entire vanilla system for handling transforms is deprecated by Forge, and mo
 
 The Forge way of handling transforms is `#applyTransform`, a method patched into `BakedModel`. It supersedes the `#getTransforms` method.
 
-#### `BakedModel#applyTransform
+#### `BakedModel#applyTransform`
 
-Given a <code>ItemDisplayContext`, `PoseStack`, and a boolean to determine whether to apply the transform for the left hand, this method produces an `BakedModel` to be rendered. Because the returned `BakedModel` can be a totally new model, this method is more flexible than the vanilla method (e.g. a piece of paper that looks flat in hand but crumpled on the ground).
+Given a `ItemDisplayContext`, `PoseStack`, and a boolean to determine whether to apply the transform for the left hand, this method produces an `BakedModel` to be rendered. Because the returned `BakedModel` can be a totally new model, this method is more flexible than the vanilla method (e.g. a piece of paper that looks flat in hand but crumpled on the ground).

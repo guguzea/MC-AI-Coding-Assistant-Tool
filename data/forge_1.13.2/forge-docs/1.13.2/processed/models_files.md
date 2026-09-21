@@ -3,7 +3,7 @@
 
 <!-- key:🟠 role:常见错误 -->
 
-A &ldquo;model&rdquo; is simply a shape. It can be a simple cube, it can be several cubes, it can be a truncated icosidodecahedron, or anything in between. Most models you&rsquo;ll see will be in the vanilla JSON format. Models in other formats are loaded into `IModel`s by an `ICustomModelLoader` at runtime. Forge provides default implementations for WaveFront OBJ files and Blitz3D files. Most things do not care about what loaded the model or what format it&rsquo;s in as they all implement a common interface, `IModel`, in code.
+A “model” is simply a shape. It can be a simple cube, it can be several cubes, it can be a truncated icosidodecahedron, or anything in between. Most models you’ll see will be in the vanilla JSON format. Models in other formats are loaded into `IModel`s by an `ICustomModelLoader` at runtime. Forge provides default implementations for WaveFront OBJ files and Blitz3D files. Most things do not care about what loaded the model or what format it’s in as they all implement a common interface, `IModel`, in code.
 
 When `ResourceLocation` refers to a model, the path is normally relative to `models` (e.g. `examplemod:block/block` → `assets/examplemod/models/block/block`). A notable exception is within a [blockstate JSON](../blockstates/introduction/) (all 3 formats), where model paths are relative to `models/block` (e.g. `examplemod:block` → `assets/examplemod/models/block/block`).
 
@@ -18,7 +18,7 @@ Textures, like models, are contained within resource packs and are referred to w
 
 ## JSON Models
 
-Vanilla Minecraft&rsquo;s JSON model format is rather simple. It defines cuboid (cube/rectangular prism) elements, and assigns textures to their faces. On the [wiki](https://minecraft.gamepedia.com/Model#Block_models), there is a definition of its format.
+Vanilla Minecraft’s JSON model format is rather simple. It defines cuboid (cube/rectangular prism) elements, and assigns textures to their faces. On the [wiki](https://minecraft.gamepedia.com/Model#Block_models), there is a definition of its format.
 
 
 <!-- key:🔴 role:新手必读 (Note) -->
@@ -31,6 +31,7 @@ When a `ResourceLocation` refers to the location of a JSON model, it is not suff
 
 Forge adds a loader for the `.obj` file format. To use these models, the resource namespace must be registered through `OBJLoader.addDomain`. This loader accepts any model location that is in a registered namespace and whose path ends in `.obj`. The `.mtl` file should be placed next to the `.obj` and will automatically be used with the `.obj`. The `.mtl` file will probably have to be manually edited to change the paths pointing to textures into Minecraft `ResourceLocation`s. Additinally, the V axis for textures may be flipped depending on the external program that created the model (i.e. V = 0 may be the bottom edge, not the top). This may be rectified in the modelling program itself or done in a Forge blockstate JSON like so:
 
+
 ```
 {
   "__comment": "Add the following line on the same level as a 'model' declaration.",
@@ -38,6 +39,7 @@ Forge adds a loader for the `.obj` file format. To use these models, the resourc
   "model": "examplemod:model.obj"
 }
 ```
+
 
 ## Blitz3D Models
 

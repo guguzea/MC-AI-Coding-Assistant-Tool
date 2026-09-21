@@ -3,6 +3,7 @@
 [Loot tables](../../../resources/server/loottables/) can be generated for a mod by constructing a new `LootTableProvider` and providing `LootTableProvider$SubProviderEntry`s. The provider must be [added](../../#data-providers) to the `DataGenerator`.
 
 
+
 <!-- key:🟢 role:示例代码 -->
 
 ```java
@@ -23,9 +24,11 @@ public void gatherData(GatherDataEvent event) {
 }
 ```
 
-## `LootTableSubProvider
 
-Each <code>LootTableProvider$SubProviderEntry` takes in a supplied `LootTableSubProvider`, which generates the loot table, for a given `LootContextParamSet`. The `LootTableSubProvider` contains a method which takes in the writer (`BiConsumer<ResourceLocation, LootTable.Builder>`) to generate a table.
+## `LootTableSubProvider`
+
+Each `LootTableProvider$SubProviderEntry` takes in a supplied `LootTableSubProvider`, which generates the loot table, for a given `LootContextParamSet`. The `LootTableSubProvider` contains a method which takes in the writer (`BiConsumer<ResourceLocation, LootTable.Builder>`) to generate a table.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -44,7 +47,9 @@ public class ExampleSubProvider implements LootTableSubProvider {
 }
 ```
 
+
 The table can then be added to `LootTableProvider#getTables` for any available `LootContextParamSet`:
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -58,11 +63,13 @@ new LootTableProvider.SubProviderEntry(
 )
 ```
 
-### `BlockLootSubProvider and <code>EntityLootSubProvider Subclasses
 
-For <code>LootContextParamSets#BLOCK` and `#ENTITY`, there are special types (`BlockLootSubProvider` and `EntityLootSubProvider` respectively) which provide additional helper methods for creating and validating that there are loot tables.
+### `BlockLootSubProvider` and `EntityLootSubProvider` Subclasses
 
-The `BlockLootSubProvider`&rsquo;s constructor takes in a list of items, which are explosion resistant to determine whether the loot table can be generated if a block is exploded, and a `FeatureFlagSet`, which determines whether the block is enabled so that a loot table is generated for it.
+For `LootContextParamSets#BLOCK` and `#ENTITY`, there are special types (`BlockLootSubProvider` and `EntityLootSubProvider` respectively) which provide additional helper methods for creating and validating that there are loot tables.
+
+The `BlockLootSubProvider`’s constructor takes in a list of items, which are explosion resistant to determine whether the loot table can be generated if a block is exploded, and a `FeatureFlagSet`, which determines whether the block is enabled so that a loot table is generated for it.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -74,7 +81,9 @@ public MyBlockLootSubProvider() {
 }
 ```
 
-The `EntityLootSubProvider`&rsquo;s constructor takes in a `FeatureFlagSet`, which determines whether the entity type is enabled so that a loot table is generated for it.
+
+The `EntityLootSubProvider`’s constructor takes in a `FeatureFlagSet`, which determines whether the entity type is enabled so that a loot table is generated for it.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -86,14 +95,16 @@ public MyEntityLootSubProvider() {
 }
 ```
 
+
 To use them, all registered objects must be supplied to either `BlockLootSubProvider#getKnownBlocks` and `EntityLootSubProvider#getKnownEntityTypes` respectively. These methods are to make sure all objects within the iterable has a loot table.
 
 
 <!-- key:🔴 role:新手必读 (Tip) -->
 
-> **Tip**: Tip If DeferredRegister is being used to register a mod&rsquo;s objects, then the #getKnown* methods can be supplied the entries via DeferredRegister#getEntries: // In some BlockLootSubProvider subclass for some DeferredRegister BLOCK_REGISTRAR @Override protected Iterable<Block> getKnownBlocks() { return BLOCK_REGISTRAR.getEntries() // Get all registered entries .stream() // Stream the wrapped objects .flatMap(RegistryObject::stream) // Get the object if available ::iterator; // Create the iterable }
+> **Tip**: Tip If DeferredRegister is being used to register a mod’s objects, then the #getKnown* methods can be supplied the entries via DeferredRegister#getEntries: // In some BlockLootSubProvider subclass for some DeferredRegister BLOCK_REGISTRAR @Override protected Iterable getKnownBlocks() { return BLOCK_REGISTRAR.getEntries() // Get all registered entries .stream() // Stream the wrapped objects .flatMap(RegistryObject::stream) // Get the object if available ::iterator; // Create the iterable }
 
 The loot tables themselves can be added by implementing the `#generate` method.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -105,6 +116,7 @@ public void generate() {
   // Add loot tables here
 }
 ```
+
 
 ## Loot Table Builders
 

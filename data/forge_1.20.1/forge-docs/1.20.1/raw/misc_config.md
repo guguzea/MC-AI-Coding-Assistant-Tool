@@ -2,7 +2,7 @@
 version: "1.20.1"
 forgeVersion: "47.2.0"
 chapter: "misc/config"
-source: "https://docs.readthedocs.net/en/1.20.1/misc/config/"
+source: "https://docs.minecraftforge.net/en/1.20.1/misc/config/"
 sourceType: mkdocs
 ---
 # Configuration
@@ -18,7 +18,7 @@ Method | Description
 `build` | Creates the `ForgeConfigSpec`.
 `configure` | Creates a pair of the class holding the config values and the `ForgeConfigSpec`.
 
-> **Note**: Note ForgeConfigSpec$Builder#configure is typically used with a static block and a class that takes in ForgeConfigSpec$Builder as part of its constructor to attach and hold the values: // In some config class ExampleConfig(ForgeConfigSpec.Builder builder) { // Define values here in final fields } // Somewhere the constructor is accessible static { Pair<ExampleConfig, ForgeConfigSpec> pair = new ForgeConfigSpec.Builder() .configure(ExampleConfig::new); // Store pair values in some constant field }
+> **Note**: Note ForgeConfigSpec$Builder#configure is typically used with a static block and a class that takes in ForgeConfigSpec$Builder as part of its constructor to attach and hold the values: // In some config class ExampleConfig(ForgeConfigSpec.Builder builder) { // Define values here in final fields } // Somewhere the constructor is accessible static { Pair pair = new ForgeConfigSpec.Builder() .configure(ExampleConfig::new); // Store pair values in some constant field }
 
 Each config value can be supplied with additional context to provide additional behavior. Contexts must be defined before the config value is fully built:
 
@@ -34,13 +34,13 @@ Config values can be built with the provided contexts (if defined) using any of 
 
 All config value methods take in at least two components:
 
-- <li>A path representing the name of the variable: a `.` separated string representing the sections the config value is in
-- <li>The default value when no valid configuration is present
+- A path representing the name of the variable: a `.` separated string representing the sections the config value is in
+- The default value when no valid configuration is present
 
 The `ConfigValue` specific methods take in two additional components:
 
-- <li>A validator to make sure the deserialized object is valid
-- <li>A class representing the data type of the config value
+- A validator to make sure the deserialized object is valid
+- A class representing the data type of the config value
 
 ```
 // For some ForgeConfigSpec$Builder builder
@@ -48,55 +48,59 @@ ConfigValue<T> value = builder.comment("Comment")
   .define("config_value_name", defaultValue);
 ```
 
+
 The values themselves can be obtained using `ConfigValue#get`. The values are additionally cached to prevent multiple readings from files.
 
 #### Additional Config Value Types
 
-- <li>**Range Values**<ul> <li>Description: Value must be between the defined bounds
-- <li>Class Type: `Comparable<T>`
-- <li>Method Name: `#defineInRange`
-- <li>Additional Components:
-- <li>The minimum and maximum the config value may be
-- <li>A class representing the data type of the config value
+- **Range Values** Description: Value must be between the defined bounds
+- Class Type: `Comparable<T>`
+- Method Name: `#defineInRange`
+- Additional Components:
+- The minimum and maximum the config value may be
+- A class representing the data type of the config value
 
 > **Note**: Note DoubleValues, IntValues, and LongValues are range values which specify the class as Double, Integer, and Long respectively.
 
-- <li> 
-**Whitelisted Values** <ul> <li>Description: Value must be in supplied collection - <li>Class Type: `T` - <li>Method Name: `#defineInList` - <li>Additional Components: - <li>A collection of the allowed values the configuration can be <li> <p>**List Values**
+- **Whitelisted Values** Description: Value must be in supplied collection
+- Class Type: `T`
+- Method Name: `#defineInList`
+- Additional Components:
+- A collection of the allowed values the configuration can be
 
-- <li>Description: Value is a list of entries
-- <li>Class Type: `List<T>`
-- <li>Method Name: `#defineList`, `#defineListAllowEmpty` if list can be empty
-- <li>Additional Components:
-- <li>A validator to make sure a deserialized element from the list is valid
+**List Values**
 
-<li>
+- Description: Value is a list of entries
+- Class Type: `List<T>`
+- Method Name: `#defineList`, `#defineListAllowEmpty` if list can be empty
+- Additional Components:
+- A validator to make sure a deserialized element from the list is valid
 
 **Enum Values**
 
-- <li>Description: An enum value in the supplied collection
-- <li>Class Type: `Enum<T>`
-- <li>Method Name: `#defineEnum`
-- <li>Additional Components:
-- <li>A getter to convert a string or integer into an enum
-- <li>A collection of the allowed values the configuration can be
-
-<li>
+- Description: An enum value in the supplied collection
+- Class Type: `Enum<T>`
+- Method Name: `#defineEnum`
+- Additional Components:
+- A getter to convert a string or integer into an enum
+- A collection of the allowed values the configuration can be
 
 **Boolean Values**
 
-- <li>Description: A `boolean` value
-- <li>Class Type: `Boolean`
-- <li>Method Name: `#define`
+- Description: A `boolean` value
+- Class Type: `Boolean`
+- Method Name: `#define`
 
 ## Registering a Configuration
 
 Once a `ForgeConfigSpec` has been built, it must be registered to allow Forge to load, track, and sync the configuration settings as required. Configurations should be registered in the mod constructor via `ModLoadingContext#registerConfig`. A configuration can be registered with a given type representing the side the config belongs to, the `ForgeConfigSpec`, and optionally a specific file name for the configuration.
 
+
 ```
 // In the mod constructor with a ForgeConfigSpec CONFIG
 ModLoadingContext.get().registerConfig(Type.COMMON, CONFIG);
 ```
+
 
 Here is a list of the available configuration types:
 

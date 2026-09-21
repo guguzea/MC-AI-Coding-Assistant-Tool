@@ -17,12 +17,35 @@ After you have stopped the debugger, it will create a new file within the `debug
 
 At the top, it first tells you how long in milliseconds it was running and how many ticks ran in that time.
 
-Below that, you will find information similar to the snippet below: ```toml [00] levels - 96.70%/96.70% [01] | World Name - 99.76%/96.47% [02] | | tick - 99.31%/95.81% [03] | | | entities - 47.72%/45.72% [04] | | | | regular - 98.32%/44.95% [04] | | | | blockEntities - 0.90%/0.41% [05] | | | | | unspecified - 64.26%/0.26% [05] | | | | | minecraft:furnace - 33.35%/0.14% [05] | | | | | minecraft:chest - 2.39%/0.01% ``` Here is a small explanation of what each part means
+Below that, you will find information similar to the snippet below:
+
+```toml
+[00] levels - 96.70%/96.70%
+[01] |   World Name - 99.76%/96.47%
+[02] |   |   tick - 99.31%/95.81%
+[03] |   |   |   entities - 47.72%/45.72%
+[04] |   |   |   |   regular - 98.32%/44.95%
+[04] |   |   |   |   blockEntities - 0.90%/0.41%
+[05] |   |   |   |   |   unspecified - 64.26%/0.26%
+[05] |   |   |   |   |   minecraft:furnace - 33.35%/0.14%
+[05] |   |   |   |   |   minecraft:chest - 2.39%/0.01%
+```
+
+Here is a small explanation of what each part means
 
 [02] | tick | 99.31% | 95.81%
 --- | --- | --- | ---
-The Depth of the section | The Name of the Section | The percentage of time it took in relation to it&rsquo;s parent. For Layer 0, it is the percentage of the time a tick takes. For Layer 1, it is the percentage of the time its parent takes. | The second percentage tells you how much time it took from the entire tick.
+The Depth of the section | The Name of the Section | The percentage of time it took in relation to it’s parent. For Layer 0, it is the percentage of the time a tick takes. For Layer 1, it is the percentage of the time its parent takes. | The second percentage tells you how much time it took from the entire tick.
 
 ## Profiling your own code
 
-The Debug Profiler has basic support for `Entity` and `TileEntity`. If you would like to profile something else, you may need to manually create your sections like so: ``` IProfiler#push(yourSectionName : String); //The code you want to profile IProfiler#pop(); ``` You can obtain the `IProfiler` instance from a `World`, `MinecraftServer`, or `Minecraft` instance. Now you just need to search the results file for your section name.
+The Debug Profiler has basic support for `Entity` and `TileEntity`. If you would like to profile something else, you may need to manually create your sections like so:
+
+```
+IProfiler#push(yourSectionName : String);
+  //The code you want to profile
+  IProfiler#pop();
+```
+
+You can obtain the `IProfiler` instance from a `World`, `MinecraftServer`, or `Minecraft` instance.
+Now you just need to search the results file for your section name.

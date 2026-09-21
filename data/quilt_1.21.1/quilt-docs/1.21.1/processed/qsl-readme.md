@@ -1,5 +1,6 @@
 > 来源：https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/1.21/README.md
-> 抓取时间：2026-08-13T15:11:05.772Z
+> 抓取时间：2026-09-21T03:12:20.675Z
+> 警告：Quilt wiki / quilt.mod.json RFC 是未版本化现行页，不是该 MC 版本的历史快照。QSL README 才按 QuiltMC/quilt-standard-libraries/<maj.min> 抓取。
 
 # Quilt Standard Libraries (QSL)
 

@@ -3,7 +3,7 @@
     "id": "1.15.2/advanced_accesstransformers",
     "version": "1.15.2",
     "label": "Access Transformers",
-    "url": "https://docs.readthedocs.net/en/1.15.x/advanced/accesstransformers/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/advanced/accesstransformers/",
     "tags": [
       "advanced"
     ],
@@ -22,12 +22,12 @@
       {
         "title": "Access Modifiers",
         "level": 2,
-        "summary": "Access modifiers specify to what new member visibility the given target will be transformed to. In decreasing order of visibility: - <li>public - visible to all classes inside and outside its packa..."
+        "summary": "Access modifiers specify to what new member visibility the given target will be transformed to. In decreasing order of visibility: - public - visible to all classes inside and outside its package -..."
       },
       {
         "title": "Targets and Directives",
         "level": 2,
-        "summary": "<div class=\"admonition information\"> When using Access Transformers on Minecraft classes, the SRG name must be used for fields and methods."
+        "summary": "When using Access Transformers on Minecraft classes, the SRG name must be used for fields and methods."
       },
       {
         "title": "Examples",
@@ -42,12 +42,12 @@
     "label": "Armature Files",
     "url": "https://docs.minecraftforge.net/en/1.15.x/animation/armature/",
     "tags": [],
-    "firstParagraph": "An example armature file, taken from the forge debug mod `` { \"joints\": { \"stick\": {\"2\": [1.0]}, \"cube\": {\"3\": [1.",
+    "firstParagraph": "An example armature file, taken from the forge debug mod",
     "sections": [
       {
         "title": "File Structure",
         "level": 2,
-        "summary": "An example armature file, taken from the forge debug mod `` { \"joints\": { \"stick\": {\"2\": [1.0]}, \"cube\": {\"3\": [1."
+        "summary": "An example armature file, taken from the forge debug mod The file is organized in two sections, joints and clips."
       },
       {
         "title": "Joints",
@@ -57,7 +57,7 @@
       {
         "title": "Clips",
         "level": 2,
-        "summary": "Clips are essentially instructions on how to use a value to animate some collection of joints. They also include events to fire at certain points."
+        "summary": "Clips are essentially instructions on how to use a value to animate some collection of joints. They also include events to fire at certain points. They are formatted like this:"
       }
     ]
   },
@@ -82,7 +82,7 @@
       {
         "title": "File Format",
         "level": 2,
-        "summary": "The ASMs are stored in json files. The location does not matter, but they are usually placed in an asms folder."
+        "summary": "The ASMs are stored in json files. The location does not matter, but they are usually placed in an asms folder. First, a simple example:"
       },
       {
         "title": "Transitions",
@@ -112,7 +112,7 @@
       {
         "title": "Entities",
         "level": 2,
-        "summary": "In order to animate an entity with the animation API, your entity&rsquo;s renderer must take an AnimationModelBase as its model."
+        "summary": "In order to animate an entity with the animation API, your entity’s renderer must take an AnimationModelBase as its model."
       }
     ]
   },
@@ -135,7 +135,7 @@
     "id": "1.15.2/blocks_blocks",
     "version": "1.15.2",
     "label": "Blocks",
-    "url": "https://docs.readthedocs.net/en/1.15.x/blocks/blocks/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/blocks/blocks/",
     "tags": [
       "block"
     ],
@@ -149,7 +149,7 @@
       {
         "title": "Registering a Block",
         "level": 2,
-        "summary": "Blocks must be registered to function. > Important: Important A block in the world and a &ldquo;block&rdquo; in an inventory are very different things."
+        "summary": "Blocks must be registered to function. > Important: Important A block in the world and a “block” in an inventory are very different things."
       },
       {
         "title": "Further Reading",
@@ -162,21 +162,21 @@
     "id": "1.15.2/blocks_interaction",
     "version": "1.15.2",
     "label": "Block Interaction",
-    "url": "https://docs.readthedocs.net/en/1.15.x/blocks/interaction/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/blocks/interaction/",
     "tags": [
       "block"
     ],
-    "firstParagraph": "Since left clicking, or &ldquo;punching&rdquo;, a block does not generally result in any unique behavior, it is probably fair to say right clicking, or &ldquo;activation&rdquo;, is the most common ...",
+    "firstParagraph": "Since left clicking, or “punching”, a block does not generally result in any unique behavior, it is probably fair to say right clicking, or “activation”, is the most common method of interaction.",
     "sections": [
       {
         "title": "Player Right Click",
         "level": 2,
-        "summary": "Since left clicking, or &ldquo;punching&rdquo;, a block does not generally result in any unique behavior, it is probably fair to say right clicking, or &ldquo;activation&rdquo;, is the most common ..."
+        "summary": "Since left clicking, or “punching”, a block does not generally result in any unique behavior, it is probably fair to say right clicking, or “activation”, is the most common method of interaction."
       },
       {
-        "title": "`onBlockActivated",
+        "title": "`onBlockActivated`",
         "level": 2,
-        "summary": "This is the method that controls right click behavior. Type | Name | Description --- | --- | --- <code>BlockState | state` | The state of the block that was clicked World | worldIn | The world that..."
+        "summary": "This is the method that controls right click behavior. Type | Name | Description --- | --- | --- BlockState | state | The state of the block that was clicked World | worldIn | The world that the bl..."
       },
       {
         "title": "Block Placement",
@@ -184,9 +184,9 @@
         "summary": ""
       },
       {
-        "title": "`onBlockPlacedBy",
+        "title": "`onBlockPlacedBy`",
         "level": 2,
-        "summary": "Called by <code>BlockItem`s after a block is set in the world, to allow post-place logic. Type | Name | Description --- | --- | --- World | worldIn | The world that the block was placed in BlockPos..."
+        "summary": "Called by BlockItems after a block is set in the world, to allow post-place logic. Type | Name | Description --- | --- | --- World | worldIn | The world that the block was placed in BlockPos | pos ..."
       },
       {
         "title": "Player Break/Destroy",
@@ -194,14 +194,14 @@
         "summary": ""
       },
       {
-        "title": "`onBlockClicked",
+        "title": "`onBlockClicked`",
         "level": 2,
         "summary": "Called on a block when it is clicked by a player. > Note: Note This method is for when the player left-clicks on a block."
       },
       {
-        "title": "`onBlockHarvested",
+        "title": "`onBlockHarvested`",
         "level": 2,
-        "summary": "Called before the Block is set to air in the world. Called regardless of if the player&rsquo;s tool can actually collect this block."
+        "summary": "Called before the Block is set to air in the world. Called regardless of if the player’s tool can actually collect this block."
       },
       {
         "title": "Entity Collision",
@@ -209,9 +209,9 @@
         "summary": ""
       },
       {
-        "title": "`onEntityCollision",
+        "title": "`onEntityCollision`",
         "level": 2,
-        "summary": "This method is called whenever an entity collides with the block. Type | Name | Description --- | --- | --- <code>BlockState | state` | The state of the block that was collided with World | worldIn..."
+        "summary": "This method is called whenever an entity collides with the block. Type | Name | Description --- | --- | --- BlockState | state | The state of the block that was collided with World | worldIn | The ..."
       }
     ]
   },
@@ -219,7 +219,7 @@
     "id": "1.15.2/blocks_states",
     "version": "1.15.2",
     "label": "Block States",
-    "url": "https://docs.readthedocs.net/en/1.15.x/blocks/states/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/blocks/states/",
     "tags": [
       "block"
     ],
@@ -246,9 +246,9 @@
         "summary": "In your Block class, create or reference static final IProperty<?> objects for every property that your Block has. You are free to make your own IProperty<?"
       },
       {
-        "title": "Using `BlockState&rsquo;s",
+        "title": "Using `BlockState`’s",
         "level": 2,
-        "summary": "You can get the value of a property by calling <code>BlockState#get(IProperty<?>), passing it the property you want to get the value of."
+        "summary": "You can get the value of a property by calling BlockState#get(IProperty<?>), passing it the property you want to get the value of."
       }
     ]
   },
@@ -256,7 +256,7 @@
     "id": "1.15.2/concepts_data",
     "version": "1.15.2",
     "label": "Datapacks",
-    "url": "https://docs.readthedocs.net/en/1.15.x/concepts/data/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/concepts/data/",
     "tags": [],
     "firstParagraph": "",
     "sections": []
@@ -265,7 +265,7 @@
     "id": "1.15.2/concepts_internationalization",
     "version": "1.15.2",
     "label": "Internationalization and Localization",
-    "url": "https://docs.readthedocs.net/en/1.15.x/concepts/internationalization/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/concepts/internationalization/",
     "tags": [],
     "firstParagraph": "Language files are located by assets/[namespace]/lang/[locale].json (e.g. all US English translations provided by examplemod would be within assets/examplemod/lang/en_us.json).",
     "sections": [
@@ -290,7 +290,7 @@
     "id": "1.15.2/concepts_lifecycle",
     "version": "1.15.2",
     "label": "Mod Lifecycle",
-    "url": "https://docs.readthedocs.net/en/1.15.x/concepts/lifecycle/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/concepts/lifecycle/",
     "tags": [
       "lifecycle"
     ],
@@ -304,7 +304,7 @@
       {
         "title": "Data Generation",
         "level": 2,
-        "summary": "If the game is setup to run data generators, then the GatherDataEvent will be the last event to fire. This event is for registering mods&rsquo; data providers to their associated data generator."
+        "summary": "If the game is setup to run data generators, then the GatherDataEvent will be the last event to fire. This event is for registering mods’ data providers to their associated data generator."
       },
       {
         "title": "Common Setup",
@@ -327,7 +327,7 @@
     "id": "1.15.2/concepts_registries",
     "version": "1.15.2",
     "label": "Registries",
-    "url": "https://docs.readthedocs.net/en/1.15.x/concepts/registries/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/concepts/registries/",
     "tags": [
       "registry"
     ],
@@ -354,14 +354,14 @@
     "id": "1.15.2/concepts_resources",
     "version": "1.15.2",
     "label": "Resources",
-    "url": "https://docs.readthedocs.net/en/1.15.x/concepts/resources/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/concepts/resources/",
     "tags": [],
-    "firstParagraph": "Minecraft identifies resources using <code>ResourceLocations. A ResourceLocation contains two parts: a namespace and a path.",
+    "firstParagraph": "Minecraft identifies resources using ResourceLocations. A ResourceLocation contains two parts: a namespace and a path.",
     "sections": [
       {
-        "title": "`ResourceLocation",
+        "title": "`ResourceLocation`",
         "level": 2,
-        "summary": "Minecraft identifies resources using <code>ResourceLocations. A ResourceLocation contains two parts: a namespace and a path."
+        "summary": "Minecraft identifies resources using ResourceLocations. A ResourceLocation contains two parts: a namespace and a path."
       }
     ]
   },
@@ -369,21 +369,21 @@
     "id": "1.15.2/concepts_sides",
     "version": "1.15.2",
     "label": "Sides in Minecraft",
-    "url": "https://docs.readthedocs.net/en/1.15.x/concepts/sides/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/concepts/sides/",
     "tags": [
       "sides"
     ],
-    "firstParagraph": "When we say &ldquo;client&rdquo; or &ldquo;server&rdquo;, it usually follows with a fairly intuitive understanding of what part of the game we are talking about.",
+    "firstParagraph": "When we say “client” or “server”, it usually follows with a fairly intuitive understanding of what part of the game we are talking about.",
     "sections": [
       {
         "title": "Different Kinds of Sides",
         "level": 2,
-        "summary": "When we say &ldquo;client&rdquo; or &ldquo;server&rdquo;, it usually follows with a fairly intuitive understanding of what part of the game we are talking about."
+        "summary": "When we say “client” or “server”, it usually follows with a fairly intuitive understanding of what part of the game we are talking about."
       },
       {
         "title": "Performing Side-Specific Operations",
         "level": 2,
-        "summary": "This boolean check will be your most used way to check sides. Querying this field on a <code>World object establishes the logical side the world belongs to."
+        "summary": "This boolean check will be your most used way to check sides. Querying this field on a World object establishes the logical side the world belongs to."
       },
       {
         "title": "Common Mistakes",
@@ -393,7 +393,7 @@
       {
         "title": "Writing One-Sided Mods",
         "level": 2,
-        "summary": "In recent versions, Minecraft Forge has removed a &ldquo;sidedness&rdquo; attribute from the mods.toml."
+        "summary": "In recent versions, Minecraft Forge has removed a “sidedness” attribute from the mods.toml. This means that your mods are expected to work whether they are loaded on the physical client or the phys..."
       }
     ]
   },
@@ -433,7 +433,7 @@
     "id": "1.15.2/conventions_locations",
     "version": "1.15.2",
     "label": "Locations",
-    "url": "https://docs.readthedocs.net/en/1.15.x/conventions/locations/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/conventions/locations/",
     "tags": [],
     "firstParagraph": "",
     "sections": []
@@ -442,7 +442,7 @@
     "id": "1.15.2/conventions_versioning",
     "version": "1.15.2",
     "label": "Versioning",
-    "url": "https://docs.readthedocs.net/en/1.15.x/conventions/versioning/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/conventions/versioning/",
     "tags": [
       "meta"
     ],
@@ -451,7 +451,7 @@
       {
         "title": "Examples",
         "level": 2,
-        "summary": "Here is a list of examples that can increment the various variables. - <li>MCVERSION<ul> <li>Always matches the Minecraft version the mod is for."
+        "summary": "Here is a list of examples that can increment the various variables. - MCVERSION Always matches the Minecraft version the mod is for."
       }
     ]
   },
@@ -459,7 +459,7 @@
     "id": "1.15.2/datagen_intro",
     "version": "1.15.2",
     "label": "Data Generators",
-    "url": "https://docs.readthedocs.net/en/1.15.x/datagen/intro/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/datagen/intro/",
     "tags": [
       "datagen",
       "tag"
@@ -482,7 +482,7 @@
     "id": "1.15.2/datagen_modelproviders",
     "version": "1.15.2",
     "label": "Model Providers",
-    "url": "https://docs.readthedocs.net/en/1.15.x/datagen/modelproviders/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/datagen/modelproviders/",
     "tags": [
       "datagen",
       "tag"
@@ -505,7 +505,7 @@
     "id": "1.15.2/datastorage_capabilities",
     "version": "1.15.2",
     "label": "The Capability System",
-    "url": "https://docs.readthedocs.net/en/1.15.x/datastorage/capabilities/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/datastorage/capabilities/",
     "tags": [
       "capability"
     ],
@@ -554,7 +554,7 @@
       {
         "title": "Migrating from IExtendedEntityProperties",
         "level": 2,
-        "summary": "Although the Capability system can do everything IEEPs (IExtendedEntityProperties) did and more, the two concepts don&rsquo;t fully match 1:1."
+        "summary": "Although the Capability system can do everything IEEPs (IExtendedEntityProperties) did and more, the two concepts don’t fully match 1:1."
       }
     ]
   },
@@ -569,7 +569,7 @@
       {
         "title": "Declaration",
         "level": 2,
-        "summary": "The basis of the system is the WorldSavedData class. This class provides the basic methods used to manage the data: - <li>write: Allows the implementation to write data to the world."
+        "summary": "The basis of the system is the WorldSavedData class. This class provides the basic methods used to manage the data: - write: Allows the implementation to write data to the world."
       },
       {
         "title": "Registration and Usage",
@@ -582,7 +582,7 @@
     "id": "1.15.2/effects_particles",
     "version": "1.15.2",
     "label": "Particles",
-    "url": "https://docs.readthedocs.net/en/1.15.x/effects/particles/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/effects/particles/",
     "tags": [
       "particles"
     ],
@@ -614,7 +614,7 @@
     "id": "1.15.2/effects_sounds",
     "version": "1.15.2",
     "label": "Sounds",
-    "url": "https://docs.readthedocs.net/en/1.15.x/effects/sounds/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/effects/sounds/",
     "tags": [
       "sounds"
     ],
@@ -626,9 +626,9 @@
         "summary": "Term | Description --- | --- Sound Events | Something that triggers a sound effect. Examples include minecraft:block.anvil.hit or botania:spreader_fire."
       },
       {
-        "title": "`sounds.json",
+        "title": "`sounds.json`",
         "level": 2,
-        "summary": "This JSON defines sound events, and defines which sound files they play, the subtitle, etc. Sound events are identified with <code>ResourceLocations. sounds."
+        "summary": "This JSON defines sound events, and defines which sound files they play, the subtitle, etc. Sound events are identified with ResourceLocations. sounds."
       },
       {
         "title": "Creating Sound Events",
@@ -646,16 +646,16 @@
     "id": "1.15.2/events_intro",
     "version": "1.15.2",
     "label": "Events",
-    "url": "https://docs.readthedocs.net/en/1.15.x/events/intro/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/events/intro/",
     "tags": [
       "event"
     ],
-    "firstParagraph": "To register this event handler, use MinecraftForge.EVENT_BUS.register(...) and pass it an instance of the class the event handler is within.",
+    "firstParagraph": "This event handler listens for the EntityItemPickupEvent, which is, as the name states, posted to the event bus whenever an Entity picks up an item.",
     "sections": [
       {
         "title": "Creating an Event Handler",
         "level": 2,
-        "summary": "To register this event handler, use MinecraftForge.EVENT_BUS.register(...) and pass it an instance of the class the event handler is within."
+        "summary": "This event handler listens for the EntityItemPickupEvent, which is, as the name states, posted to the event bus whenever an Entity picks up an item. To register this event handler, use MinecraftForge."
       },
       {
         "title": "Canceling",
@@ -705,7 +705,7 @@
       {
         "title": "Making Changes and Pull Requests",
         "level": 2,
-        "summary": "Once you have set up your development environment, it is time to make some changes to Forge&rsquo;s codebase. There are, however, some pitfalls you have to avoid when editing the project&rsquo;s code."
+        "summary": "Once you have set up your development environment, it is time to make some changes to Forge’s codebase. There are, however, some pitfalls you have to avoid when editing the project’s code."
       }
     ]
   },
@@ -715,17 +715,17 @@
     "label": "Pull Request Guidelines",
     "url": "https://docs.minecraftforge.net/en/1.15.x/forgedev/prguidelines/",
     "tags": [],
-    "firstParagraph": "At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft&rsquo;s code directly (like coremods do now), but they ran into conflicts with each other when t...",
+    "firstParagraph": "At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft’s code directly (like coremods do now), but they ran into conflicts with each other when they ed...",
     "sections": [
       {
         "title": "What Exactly is Forge?",
         "level": 2,
-        "summary": "At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft&rsquo;s code directly (like coremods do now), but they ran into conflicts with each other when t..."
+        "summary": "At a high level, Forge is a mod compatibility layer on top of Minecraft. Early mods edited Minecraft’s code directly (like coremods do now), but they ran into conflicts with each other when they ed..."
       },
       {
         "title": "Patches",
         "level": 2,
-        "summary": "Patches are applied as direct changes to Minecraft&rsquo;s source code, and aim to be as minimal as possible."
+        "summary": "Patches are applied as direct changes to Minecraft’s source code, and aim to be as minimal as possible."
       },
       {
         "title": "Forge Code",
@@ -763,14 +763,14 @@
     "id": "1.15.2/gettingstarted",
     "version": "1.15.2",
     "label": "Getting Started with Forge",
-    "url": "https://docs.readthedocs.net/en/1.15.x/gettingstarted/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/gettingstarted/",
     "tags": [],
-    "firstParagraph": "1. <li>Obtain a Java 8 Development Kit (JDK) and a 64-bit Java Virtual Machine (JVM). Minecraft and MinecraftForge both compile against Java 8 and as such should be used for development.",
+    "firstParagraph": "1. Obtain a Java 8 Development Kit (JDK) and a 64-bit Java Virtual Machine (JVM). Minecraft and MinecraftForge both compile against Java 8 and as such should be used for development.",
     "sections": [
       {
         "title": "From Zero to Modding",
         "level": 2,
-        "summary": "1. <li>Obtain a Java 8 Development Kit (JDK) and a 64-bit Java Virtual Machine (JVM). Minecraft and MinecraftForge both compile against Java 8 and as such should be used for development."
+        "summary": "1. Obtain a Java 8 Development Kit (JDK) and a 64-bit Java Virtual Machine (JVM). Minecraft and MinecraftForge both compile against Java 8 and as such should be used for development."
       },
       {
         "title": "Customizing Your Mod Information",
@@ -780,7 +780,7 @@
       {
         "title": "Building and Testing Your Mod",
         "level": 2,
-        "summary": "1. <li>To build your mod, run gradlew build. This will output a file in build/libs with the name [archivesBaseName]-[version].jar."
+        "summary": "1. To build your mod, run gradlew build. This will output a file in build/libs with the name [archivesBaseName]-[version].jar."
       }
     ]
   },
@@ -788,7 +788,7 @@
     "id": "1.15.2/gettingstarted_autoupdate",
     "version": "1.15.2",
     "label": "Forge Update Checker",
-    "url": "https://docs.readthedocs.net/en/1.15.x/gettingstarted/autoupdate/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/gettingstarted/autoupdate/",
     "tags": [],
     "firstParagraph": "The first thing you want to do is specify the updateJSONURL parameter in your mods.toml file. The value of this parameter should be a valid URL pointing to an update JSON file.",
     "sections": [
@@ -801,6 +801,11 @@
         "title": "Update JSON format",
         "level": 2,
         "summary": "The JSON itself has a relatively simple format as follows: This is fairly self-explanatory, but some notes:"
+      },
+      {
+        "title": "Retrieving Update Check Results",
+        "level": 2,
+        "summary": "You can retrieve the results of the Forge Update Checker using VersionChecker#getResult(ModInfo). You can obtain your ModInfo via ModContainer#getModInfo."
       }
     ]
   },
@@ -808,7 +813,7 @@
     "id": "1.15.2/gettingstarted_debugprofiler",
     "version": "1.15.2",
     "label": "Debug Profiler",
-    "url": "https://docs.readthedocs.net/en/1.15.x/gettingstarted/debugprofiler/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/gettingstarted/debugprofiler/",
     "tags": [],
     "firstParagraph": "The Debug Profiler is very simple to use. It requires two commands: /debug start, which starts the profiling process, and /debug stop, which ends it.",
     "sections": [
@@ -820,12 +825,12 @@
       {
         "title": "Reading a Profiling result",
         "level": 2,
-        "summary": "At the top, it first tells you how long in milliseconds it was running and how many ticks ran in that time. Below that, you will find information similar to the snippet below: ``toml [00] levels - 96."
+        "summary": "At the top, it first tells you how long in milliseconds it was running and how many ticks ran in that time. Below that, you will find information similar to the snippet below:"
       },
       {
         "title": "Profiling your own code",
         "level": 2,
-        "summary": "The Debug Profiler has basic support for Entity and TileEntity. If you would like to profile something else, you may need to manually create your sections like so: `` IProfiler#startSection(yourSec..."
+        "summary": "The Debug Profiler has basic support for Entity and TileEntity. If you would like to profile something else, you may need to manually create your sections like so: You can obtain the IProfiler inst..."
       }
     ]
   },
@@ -833,21 +838,21 @@
     "id": "1.15.2/gettingstarted_structuring",
     "version": "1.15.2",
     "label": "Structuring Your Mod",
-    "url": "https://docs.readthedocs.net/en/1.15.x/gettingstarted/structuring/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/gettingstarted/structuring/",
     "tags": [
       "meta"
     ],
-    "firstParagraph": "Pick a unique package name. If you own a URL associated with your project, you can use it as your top level package. For example if you own &ldquo;example.com&rdquo;, you may use com.",
+    "firstParagraph": "Pick a unique package name. If you own a URL associated with your project, you can use it as your top level package. For example if you own “example.com”, you may use com.",
     "sections": [
       {
         "title": "Packaging",
         "level": 2,
-        "summary": "Pick a unique package name. If you own a URL associated with your project, you can use it as your top level package. For example if you own &ldquo;example.com&rdquo;, you may use com."
+        "summary": "Pick a unique package name. If you own a URL associated with your project, you can use it as your top level package. For example if you own “example.com”, you may use com."
       },
       {
-        "title": "The `mods.toml file",
+        "title": "The `mods.toml` file",
         "level": 2,
-        "summary": "This file defines the metadata of your mod. Its information may be viewed by users from the main screen of the game through the &lsquo;Mods&rsquo; button. A single info file can describe several mods."
+        "summary": "This file defines the metadata of your mod. Its information may be viewed by users from the main screen of the game through the ‘Mods’ button. A single info file can describe several mods. The mods."
       },
       {
         "title": "The Mod File",
@@ -855,9 +860,9 @@
         "summary": "Generally, we will start with a file named after your mod and put into your package. This is the entry point to your mod and will contain some special indicators marking it as such."
       },
       {
-        "title": "What is `@Mod?",
+        "title": "What is `@Mod`?",
         "level": 2,
-        "summary": "This is an annotation indicating to the Forge Mod Loader that the class is a Mod entry point. The <code>@Mod annotation&rsquo;s value should match a mod id in the src/main/resources/META-INF/mods."
+        "summary": "This is an annotation indicating to the Forge Mod Loader that the class is a Mod entry point. The @Mod annotation’s value should match a mod id in the src/main/resources/META-INF/mods.toml file."
       },
       {
         "title": "Keeping Your Code Clean Using Sub-packages",
@@ -872,10 +877,19 @@
     ]
   },
   {
+    "id": "1.15.2/index",
+    "version": "1.15.2",
+    "label": "MinecraftForge Documentation",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/",
+    "tags": [],
+    "firstParagraph": "",
+    "sections": []
+  },
+  {
     "id": "1.15.2/items_globallootmodifiers",
     "version": "1.15.2",
     "label": "Global Loot Modifiers",
-    "url": "https://docs.readthedocs.net/en/1.15.x/items/globallootmodifiers/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/items/globallootmodifiers/",
     "tags": [
       "item",
       "loot"
@@ -888,9 +902,9 @@
         "summary": "You will need 4 things: 1. Create a globallootmodifiers.json file at /data/forge/loot_modifiers/. This will tell Forge about your modifiers and works similar to tags. 2."
       },
       {
-        "title": "The `global_loot_modifiers.json",
+        "title": "The `global_loot_modifiers.json`",
         "level": 2,
-        "summary": "All you need to add here are the file names of your loot modifiers. The ResourceLocation specified points to <code>data/<namespace>/loot_modifiers/<path>.json`."
+        "summary": "All you need to add here are the file names of your loot modifiers. The ResourceLocation specified points to data/<namespace>/loot_modifiers/<path>.json."
       },
       {
         "title": "The Serialized JSON",
@@ -898,9 +912,9 @@
         "summary": "This file contains all of the potential variables related to your modifier, including the conditions that must be met prior to modifying any loot."
       },
       {
-        "title": "The `LootModifier Subclass and Serializer",
+        "title": "The `LootModifier` Subclass and Serializer",
         "level": 2,
-        "summary": "You will also need a class that extends <code>GlobalLootModifierSerializer<T> where T is your LootModifier` subclass in order to deserialize your json data file into operational code."
+        "summary": "You will also need a class that extends GlobalLootModifierSerializer<T> where T is your LootModifier subclass in order to deserialize your json data file into operational code."
       }
     ]
   },
@@ -908,7 +922,7 @@
     "id": "1.15.2/items_items",
     "version": "1.15.2",
     "label": "Items",
-    "url": "https://docs.readthedocs.net/en/1.15.x/items/items/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/items/items/",
     "tags": [
       "item"
     ],
@@ -930,7 +944,7 @@
     "id": "1.15.2/legacy",
     "version": "1.15.2",
     "label": "Documentation for Legacy Versions",
-    "url": "https://docs.readthedocs.net/en/1.15.x/legacy/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/legacy/",
     "tags": [],
     "firstParagraph": "",
     "sections": []
@@ -939,7 +953,7 @@
     "id": "1.15.2/legacy_porting",
     "version": "1.15.2",
     "label": "Porting to Minecraft 1.15",
-    "url": "https://docs.readthedocs.net/en/1.15.x/legacy/porting/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/legacy/porting/",
     "tags": [],
     "firstParagraph": "",
     "sections": []
@@ -947,7 +961,7 @@
   {
     "id": "1.15.2/models_advanced_ibakedmodel",
     "version": "1.15.2",
-    "label": "`IBakedModel",
+    "label": "`IBakedModel`",
     "url": "https://docs.minecraftforge.net/en/1.15.x/models/advanced/ibakedmodel/",
     "tags": [],
     "firstParagraph": "",
@@ -956,7 +970,7 @@
   {
     "id": "1.15.2/models_advanced_itemoverridelist",
     "version": "1.15.2",
-    "label": "`ItemOverrideList",
+    "label": "`ItemOverrideList`",
     "url": "https://docs.minecraftforge.net/en/1.15.x/models/advanced/itemoverridelist/",
     "tags": [
       "item"
@@ -964,7 +978,7 @@
     "firstParagraph": "This class represents a vanilla item override, which holds several predicates for the properties on an item and a model to use in case those predicates are satisfied.",
     "sections": [
       {
-        "title": "`ItemOverride",
+        "title": "`ItemOverride`",
         "level": 2,
         "summary": "This class represents a vanilla item override, which holds several predicates for the properties on an item and a model to use in case those predicates are satisfied."
       }
@@ -979,9 +993,9 @@
     "firstParagraph": "THIRDPERSONLEFTHAND/THIRDPERSONRIGHTHAND/FIRSTPERSONLEFTHAND/FIRSTPERSONRIGHTHAND - The first person values represent when the player is holding the item in their own hand.",
     "sections": [
       {
-        "title": "`TransformType",
+        "title": "`TransformType`",
         "level": 2,
-        "summary": "<code>NONE` - Unused. THIRDPERSONLEFTHAND/THIRDPERSONRIGHTHAND/FIRSTPERSONLEFTHAND/FIRSTPERSONRIGHTHAND - The first person values represent when the player is holding the item in their own hand."
+        "summary": "THIRDPERSONLEFTHAND/THIRDPERSONRIGHTHAND/FIRSTPERSONLEFTHAND/FIRSTPERSONRIGHTHAND - The first person values represent when the player is holding the item in their own hand."
       },
       {
         "title": "The Vanilla Way",
@@ -1010,7 +1024,7 @@
     "id": "1.15.2/models_color",
     "version": "1.15.2",
     "label": "Coloring Textures",
-    "url": "https://docs.readthedocs.net/en/1.15.x/models/color/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/models/color/",
     "tags": [],
     "firstParagraph": "",
     "sections": []
@@ -1019,7 +1033,7 @@
     "id": "1.15.2/models_files",
     "version": "1.15.2",
     "label": "Model Files",
-    "url": "https://docs.readthedocs.net/en/1.15.x/models/files/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/models/files/",
     "tags": [],
     "firstParagraph": "Textures, like models, are contained within resource packs and are referred to with ResourceLocations.",
     "sections": [
@@ -1031,7 +1045,7 @@
       {
         "title": "JSON Models",
         "level": 2,
-        "summary": "Vanilla Minecraft&rsquo;s JSON model format is rather simple. It defines cuboid (cube/rectangular prism) elements and assigns textures to their faces. On the wiki, there is a definition of its format."
+        "summary": "Vanilla Minecraft’s JSON model format is rather simple. It defines cuboid (cube/rectangular prism) elements and assigns textures to their faces. On the wiki, there is a definition of its format."
       },
       {
         "title": "WaveFront OBJ Models",
@@ -1044,7 +1058,7 @@
     "id": "1.15.2/models_introduction",
     "version": "1.15.2",
     "label": "Intro to Models",
-    "url": "https://docs.readthedocs.net/en/1.15.x/models/introduction/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/models/introduction/",
     "tags": [],
     "firstParagraph": "",
     "sections": []
@@ -1053,7 +1067,7 @@
     "id": "1.15.2/models_overrides",
     "version": "1.15.2",
     "label": "Item Property Overrides",
-    "url": "https://docs.readthedocs.net/en/1.15.x/models/overrides/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/models/overrides/",
     "tags": [],
     "firstParagraph": "Item#addPropertyOverride is used to add a property to an item. The ResourceLocation parameter is the name given to the property (e.g. new ResourceLocation(\"pull\")).",
     "sections": [
@@ -1073,7 +1087,7 @@
     "id": "1.15.2/networking",
     "version": "1.15.2",
     "label": "Networking",
-    "url": "https://docs.readthedocs.net/en/1.15.x/networking/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/networking/",
     "tags": [
       "networking"
     ],
@@ -1084,7 +1098,7 @@
     "id": "1.15.2/networking_entities",
     "version": "1.15.2",
     "label": "Entities",
-    "url": "https://docs.readthedocs.net/en/1.15.x/networking/entities/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/networking/entities/",
     "tags": [
       "networking"
     ],
@@ -1106,7 +1120,7 @@
     "id": "1.15.2/networking_overview",
     "version": "1.15.2",
     "label": "Overview",
-    "url": "https://docs.readthedocs.net/en/1.15.x/networking/overview/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/networking/overview/",
     "tags": [
       "networking"
     ],
@@ -1117,7 +1131,7 @@
     "id": "1.15.2/networking_simpleimpl",
     "version": "1.15.2",
     "label": "SimpleImpl",
-    "url": "https://docs.readthedocs.net/en/1.15.x/networking/simpleimpl/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/networking/simpleimpl/",
     "tags": [
       "networking"
     ],
@@ -1136,7 +1150,7 @@
       {
         "title": "Registering Packets",
         "level": 2,
-        "summary": "Next, we must declare the types of messages that we would like to send and receive. This is done using INSTANCE#registerMessage, which takes 5 parameters: - <li>The first parameter is the discrimin..."
+        "summary": "Next, we must declare the types of messages that we would like to send and receive. This is done using INSTANCE#registerMessage, which takes 5 parameters: - The first parameter is the discriminator..."
       },
       {
         "title": "Handling Packets",
@@ -1179,7 +1193,7 @@
     "id": "1.15.2/rendering_ister",
     "version": "1.15.2",
     "label": "ItemStackTileEntityRenderer",
-    "url": "https://docs.readthedocs.net/en/1.15.x/rendering/ister/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/rendering/ister/",
     "tags": [
       "rendering"
     ],
@@ -1216,14 +1230,14 @@
     "id": "1.15.2/tileentities_tesr",
     "version": "1.15.2",
     "label": "TileEntityRenderer",
-    "url": "https://docs.readthedocs.net/en/1.15.x/tileentities/tesr/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/tileentities/tesr/",
     "tags": [],
-    "firstParagraph": "To create a TER, create a class that inherits from TileEntityRenderer. It takes a generic argument specifying the block&rsquo;s TileEntity class.",
+    "firstParagraph": "To create a TER, create a class that inherits from TileEntityRenderer. It takes a generic argument specifying the block’s TileEntity class. The generic argument is used in the TER’s render method.",
     "sections": [
       {
         "title": "Creating a TER",
         "level": 2,
-        "summary": "To create a TER, create a class that inherits from TileEntityRenderer. It takes a generic argument specifying the block&rsquo;s TileEntity class."
+        "summary": "To create a TER, create a class that inherits from TileEntityRenderer. It takes a generic argument specifying the block’s TileEntity class. The generic argument is used in the TER’s render method."
       },
       {
         "title": "Registering a TER",
@@ -1236,36 +1250,36 @@
     "id": "1.15.2/tileentities_tileentity",
     "version": "1.15.2",
     "label": "TileEntities",
-    "url": "https://docs.readthedocs.net/en/1.15.x/tileentities/tileentity/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/tileentities/tileentity/",
     "tags": [
       "entity"
     ],
-    "firstParagraph": "In order to create a <code>TileEntity, you need to extend the TileEntity class. To register it, listen for the appropriate registry event and create a TileEntityType: `java @SubscribeEvent public s...",
+    "firstParagraph": "In order to create a TileEntity, you need to extend the TileEntity class. To register it, listen for the appropriate registry event and create a TileEntityType:",
     "sections": [
       {
-        "title": "Creating a `TileEntity",
+        "title": "Creating a `TileEntity`",
         "level": 2,
-        "summary": "In order to create a <code>TileEntity, you need to extend the TileEntity class. To register it, listen for the appropriate registry event and create a TileEntityType: `java @SubscribeEvent public s..."
+        "summary": "In order to create a TileEntity, you need to extend the TileEntity class. To register it, listen for the appropriate registry event and create a TileEntityType: In this example, factory is a functi..."
       },
       {
-        "title": "Attaching a `TileEntity to a <code>Block",
+        "title": "Attaching a `TileEntity` to a `Block`",
         "level": 2,
-        "summary": "To attach your new <code>TileEntity to a Block, you need to override 2 (two) methods within your Block subclass: ` IForgeBlock#hasTileEntity(BlockState state) IForgeBlock#createTileEntity(BlockStat..."
+        "summary": "To attach your new TileEntity to a Block, you need to override 2 (two) methods within your Block subclass: IForgeBlock#createTileEntity(BlockState state, IBlockReader world) [CODE_BLOCK]"
       },
       {
-        "title": "Storing Data within your `TileEntity",
+        "title": "Storing Data within your `TileEntity`",
         "level": 2,
-        "summary": "In order to save data, override the following two methods: `` TileEntity#write(CompoundNBT nbt) TileEntity#read(CompoundNBT nbt) ` These methods are called whenever the <code>Chunk containing the T..."
+        "summary": "In order to save data, override the following two methods: TileEntity#read(CompoundNBT nbt) [CODE_BLOCK]"
       },
       {
-        "title": "Ticking `TileEntities",
+        "title": "Ticking `TileEntities`",
         "level": 2,
-        "summary": "If you need a ticking <code>TileEntity, for example to keep track of the progress during a smelting process, you need to add the net.minecraft.tileentity."
+        "summary": "If you need a ticking TileEntity, for example to keep track of the progress during a smelting process, you need to add the net.minecraft.tileentity.ITickableTileEntity interface to your TileEntity."
       },
       {
         "title": "Synchronizing the Data to the Client",
         "level": 2,
-        "summary": "There are three ways of syncing data to the client: synchronizing on chunk load, on block updates, and with a custom network message."
+        "summary": "There are three ways of syncing data to the client: synchronizing on chunk load, on block updates, and with a custom network message. For this you need to override"
       }
     ]
   },
@@ -1273,7 +1287,7 @@
     "id": "1.15.2/utilities_recipes",
     "version": "1.15.2",
     "label": "Recipes",
-    "url": "https://docs.readthedocs.net/en/1.15.x/utilities/recipes/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/utilities/recipes/",
     "tags": [
       "recipe"
     ],
@@ -1300,16 +1314,16 @@
     "id": "1.15.2/utilities_tags",
     "version": "1.15.2",
     "label": "Tags",
-    "url": "https://docs.readthedocs.net/en/1.15.x/utilities/tags/",
+    "url": "https://docs.minecraftforge.net/en/1.15.x/utilities/tags/",
     "tags": [
       "tag"
     ],
-    "firstParagraph": "Tags are declared in your mod&rsquo;s datapack. For example, /data/<modid>/tags/blocks/foo/tagname.json will declare a Tag<Block> with ID modid:foo/tagname.",
+    "firstParagraph": "Tags are declared in your mod’s datapack. For example, /data/<modid>/tags/blocks/foo/tagname.json will declare a Tag<Block> with ID modid:foo/tagname.",
     "sections": [
       {
         "title": "Declaring Your Own Groupings",
         "level": 2,
-        "summary": "Tags are declared in your mod&rsquo;s datapack. For example, /data/<modid>/tags/blocks/foo/tagname.json will declare a Tag<Block> with ID modid:foo/tagname."
+        "summary": "Tags are declared in your mod’s datapack. For example, /data/<modid>/tags/blocks/foo/tagname.json will declare a Tag<Block> with ID modid:foo/tagname."
       },
       {
         "title": "Using Tags In Code",
@@ -1319,12 +1333,12 @@
       {
         "title": "Conventions",
         "level": 2,
-        "summary": "There are several conventions that will help facilitate compatibility in the ecosystem: - <li>If there is a Vanilla tag that fits your block or item, add it to that tag. See the list of Vanilla tags."
+        "summary": "There are several conventions that will help facilitate compatibility in the ecosystem: - If there is a Vanilla tag that fits your block or item, add it to that tag. See the list of Vanilla tags."
       },
       {
         "title": "Migration from OreDictionary",
         "level": 2,
-        "summary": "- <li>For recipes, tags can be used directly in the vanilla recipe format (see below). - <li>For matching items in code, see the section above."
+        "summary": "- For recipes, tags can be used directly in the vanilla recipe format (see below). - For matching items in code, see the section above."
       },
       {
         "title": "Using Tags in Recipes and Advancements",

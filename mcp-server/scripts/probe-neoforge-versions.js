@@ -16,7 +16,7 @@
 
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "fs";
 import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import { fetchPageHtml, isLikelyValidHtmlPage } from "./_lib/pipeline-helpers.mjs";
 import { resolveDataRoot } from "./_lib/data-root.js";
 
@@ -312,8 +312,10 @@ const targetVer = args.find(a => a.startsWith("--version="))?.split("=")[1];
 // Only the direct CLI invocation may print-and-exit or run the probe; an imported
 // module must never consume the host runner's argv (tests import this file).
 const invokedDirectly =
-  process.argv[1] &&
-  import.meta.url === `file:///${process.argv[1].replace(/\\/g, "/")}`;
+  // 本仓路径含非 ASCII（桌面）时 import.meta.url 是百分号编码的，裸拼 file:/// 永远不相等 ⇒
+  // 脚本静默不跑且退出 0（2026-09-21 实测：forge manifest 的 chapters 因此冻结在 9 月 4 日，
+  // 5 个共用此门的脚本同病）。pathToFileURL 才是双向可逆的写法。
+  Boolean(process.argv[1]) && import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (dryRun && invokedDirectly) {
   console.log("=== NeoForge Version Probe Dry Run ===");
@@ -458,20 +460,61 @@ async function probeVersion(cfg) {
   return { ...cfg, available: true, httpStatus: res.status, versionLabel, chapters };
 }
 
+/**
+ * 上游 primer 索引页是可独立枚举的清单（docs.neoforged.net 是 Docusaurus，没有 MkDocs 的 search_index.json）。
+ * 取不到就抛：退回 PRIMER_CONFIG 等于「只能发现你已经知道的页」—— 2026-09-21 实测该表比上游少 26.3，
+ * 且在盘 22 篇里有 12 篇连 manifest 条目都没有，当前链一次都刷不到，只会静默变陈。
+ */
+export async function discoverPrimerVersions() {
+  const res = await fetchHtml("https://docs.neoforged.net/primer/docs/");
+  if (!res.ok) {
+    throw new Error(`primer 索引页不可读：HTTP ${res.status ?? "—"} ${res.error || ""} ⇒ 拒绝退回 PRIMER_CONFIG 硬编码表`);
+  }
+  const hits = [...res.html.matchAll(/primer\/docs\/([^/"'\s#?]+)\//g)].map((m) => decodeURIComponent(m[1]));
+  const found = [...new Set(hits)].filter((v) => /^\d/.test(v));
+  if (found.length < 5) throw new Error(`primer 索引页只解析出 ${found.length} 个版本，疑似上游结构变更 ⇒ 拒绝按残表探测`);
+  return found;
+}
+
+/** MC 版本数值序：1.21.8 < 1.21.10 < 1.21.11 < 26.1。门侧复用同一把尺，禁止另写一份。 */
+export function compareMcVersions(a, b) {
+  const pa = String(a).split(".").map((n) => (/^\d+$/.test(n) ? Number(n) : -1));
+  const pb = String(b).split(".").map((n) => (/^\d+$/.test(n) ? Number(n) : -1));
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] ?? -1) - (pb[i] ?? -1);
+    if (d !== 0) return d;
+  }
+  return 0;
+}
+
 async function probePrimers() {
+  const discovered = await discoverPrimerVersions();
+  const known = new Map(PRIMER_CONFIG.map((c) => [c.version, c]));
+  // 并集：上游枚举 + 脚本已知配对，一个都不丢（丢一次就等于那篇 primer 从此刷不到）。
+  const versions = [...new Set([...discovered, ...known.keys()])].sort(compareMcVersions);
   const results = {};
-  for (const cfg of PRIMER_CONFIG) {
+  let unknown = 0;
+  for (const v of versions) {
+    const cfg = known.get(v) ?? { version: v, url: `https://docs.neoforged.net/primer/docs/${v}/`, from: null, to: v };
+    if (!known.has(v)) {
+      const i = versions.indexOf(v);
+      cfg.from = i > 0 ? versions[i - 1] : null;
+      unknown++;
+      console.log(`  Primer ${v}: 不在 PRIMER_CONFIG ⇒ 按索引页枚举探入，from 取数值序前一篇 ${cfg.from}`);
+    }
     const res = await fetchHtml(cfg.url);
-    results[cfg.version] = {
+    results[v] = {
       url: cfg.url,
       from: cfg.from,
-      to: cfg.to,
+      to: cfg.to ?? v,
       available: res.ok,
       httpStatus: res.status,
     };
-    console.log(`  Primer ${cfg.version}: HTTP ${res.status}`);
+    console.log(`  Primer ${v}: HTTP ${res.status}`);
     await new Promise(r => setTimeout(r, 300));
   }
+  const gone = PRIMER_CONFIG.filter((c) => !discovered.includes(c.version)).map((c) => c.version);
+  console.log(`  primer 枚举：上游 ${discovered.length} / 本次探测 ${versions.length}${unknown ? `（其中枚举新增 ${unknown}）` : ""}${gone.length ? ` / 表内已下线 ${gone.join(",")}` : ""}`);
   return results;
 }
 
@@ -612,7 +655,7 @@ async function main() {
   if (unavailableVersions.length > 0) {
     console.log(`Unavailable: ${unavailableVersions.map(([k]) => k).join(", ")}`);
   }
-  console.log(`Available primers: ${availablePrimers.length}/${PRIMER_CONFIG.length}`);
+  console.log(`Available primers: ${availablePrimers.length}/${Object.keys(primerResults).length}（本次探测集，非 PRIMER_CONFIG 硬编码表）`);
 
   writeFileSync(OUT_FILE, JSON.stringify(manifest, null, 2), "utf-8");
   console.log(`\nWritten: ${OUT_FILE}`);

@@ -6,7 +6,7 @@
 
 BlockEntityWithoutLevelRenderer allows you to render your item using `public void renderByItem(ItemStack itemStack, ItemDisplayContext ctx, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay)`.
 
-In order to use an BEWLR, the `Item` must first satisfy the condition that its model returns true for `BakedModel#isCustomRenderer`. If it does not have one, it will use the default `ItemRenderer#getBlockEntityRenderer`. Once that returns true, the Item&rsquo;s BEWLR will be accessed for rendering.
+In order to use an BEWLR, the `Item` must first satisfy the condition that its model returns true for `BakedModel#isCustomRenderer`. If it does not have one, it will use the default `ItemRenderer#getBlockEntityRenderer`. Once that returns true, the Item’s BEWLR will be accessed for rendering.
 
 
 <!-- key:🔴 role:新手必读 (Note) -->
@@ -14,6 +14,7 @@ In order to use an BEWLR, the `Item` must first satisfy the condition that its m
 > **Note**: Note Blocks also render using a BEWLR if Block#getRenderShape is set to RenderShape#ENTITYBLOCK_ANIMATED.
 
 To set the BEWLR for an Item, an anonymous instance of `IClientItemExtensions` must be consumed within `Item#initializeClient`. Within the anonymous instance, `IClientItemExtensions#getCustomRenderer` should be overridden to return the instance of your BEWLR:
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -31,6 +32,7 @@ public void initializeClient(Consumer<IClientItemExtensions> consumer) {
   });
 }
 ```
+
 
 
 <!-- key:🔴 role:新手必读 (Important) -->

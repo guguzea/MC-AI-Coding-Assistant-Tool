@@ -16,4 +16,4 @@ Forge provides a simple way to embed dependencies in a mod and have them extract
 
 The contained dependencies of a jar file are marked by the `ContainedDeps` manifest attribute. Its value should be a space separated list of the names of contained jar files that will be extracted. These jar files should be placed in `/META-INF/libraries/{entry}`.
 
-Forge will inspect the manifest of the contained jar to determine its Maven coordinate so that it may be archived. If a file `/META-INF/libraries/{entry}.meta` exists, Forge will read this as the jar&rsquo;s manifest instead. The dependency will be archived in the local repository according to its `Maven-Artifact` manifest attribute.
+Forge will inspect the manifest of the contained jar to determine its Maven coordinate so that it may be archived. If a file `/META-INF/libraries/{entry}.meta` exists, Forge will read this as the jar’s manifest instead. The dependency will be archived in the local repository according to its `Maven-Artifact` manifest attribute.

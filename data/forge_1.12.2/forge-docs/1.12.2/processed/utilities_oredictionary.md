@@ -38,6 +38,7 @@ Recipes that use the OreDictionary are created and registered in much the same w
 
 To make a recipe that can use OreDictionary entries, create an ingredient with `type` of `forge:ore_dict` in your recipe json, and specify the ore dictionary entry name in `ore` field:
 
+
 ```
 {
     "type": "forge:ore_dict",
@@ -45,9 +46,11 @@ To make a recipe that can use OreDictionary entries, create an ingredient with `
 }
 ```
 
+
 More information about recipe json may be found [here](../recipes/).
 
 Another use of the OreDictionary in crafting is the [WILDCARD_VALUE](#wildcard_value). Use by passing `32767` into `data` field of a regular item ingredient:
+
 
 ```
 {
@@ -55,6 +58,7 @@ Another use of the OreDictionary in crafting is the [WILDCARD_VALUE](#wildcard_v
     "data": 32767
 }
 ```
+
 
 
 <!-- key:🔴 role:新手必读 (Note) -->

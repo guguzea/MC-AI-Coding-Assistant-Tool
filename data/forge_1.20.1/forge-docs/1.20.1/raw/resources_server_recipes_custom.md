@@ -2,7 +2,7 @@
 version: "1.20.1"
 forgeVersion: "47.2.0"
 chapter: "resources/server/recipes/custom"
-source: "https://docs.readthedocs.net/en/1.20.1/resources/server/recipes/custom/"
+source: "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/custom/"
 sourceType: mkdocs
 ---
 # Custom Recipes
@@ -23,11 +23,13 @@ If the recipe has been chosen, it is then built using `#assemble` which may use 
 
 Most of the other methods are purely for integration with the recipe book.
 
+
 ```
 public record ExampleRecipe(Ingredient input, int data, ItemStack output) implements Recipe<Container> {
   // Implement methods here
 }
 ```
+
 
 > **Note**: Note While a record is used in the above example, it is not required to do so in your own implementation.
 
@@ -39,6 +41,7 @@ If none of the existing types match what context the recipe will be used within,
 
 The `RecipeType` instance must then be returned by `Recipe#getType` in the new recipe subtype.
 
+
 ```
 // For some RegistryObject<RecipeType> EXAMPLE_TYPE
 // In ExampleRecipe
@@ -47,6 +50,7 @@ public RecipeType<?> getType() {
   return EXAMPLE_TYPE.get();
 }
 ```
+
 
 ## RecipeSerializer
 
@@ -62,6 +66,7 @@ fromNetwork | Decodes a `Recipe` from the buffer sent from the server. The recip
 
 The `RecipeSerializer` instance must then be returned by `Recipe#getSerializer` in the new recipe subtype.
 
+
 ```
 // For some RegistryObject<RecipeSerializer> EXAMPLE_SERIALIZER
 // In ExampleRecipe
@@ -71,11 +76,13 @@ public RecipeSerializer<?> getSerializer() {
 }
 ```
 
+
 > **Tip**: Tip There are some useful methods to make reading and writing data for recipes easier. Ingredients can use #fromJson, #toNetwork, and #fromNetwork while ItemStacks can use CraftingHelper#getItemStack, FriendlyByteBuf#writeItem, and FriendlyByteBuf#readItem.
 
 ## Building the JSON
 
 Custom Recipe JSONs are stored in the same place as other [recipes](https://minecraft.wiki/w/Recipe#JSON_format). The specified `type` should represent the registry name of the **recipe serializer**. Any additional data is specified by the serializer during decoding.
+
 
 ```
 {
@@ -91,9 +98,11 @@ Custom Recipe JSONs are stored in the same place as other [recipes](https://mine
 }
 ```
 
+
 ## Non-Item Logic
 
-If items are not used as part of the input or result of a recipe, then the normal methods provided in [`RecipeManager`](../#recipe-manager) will not be useful. Instead, an additional method for testing a recipe&rsquo;s validity and/or supplying the result should be added to the custom `Recipe` instance. From there, all the recipes for that specific `RecipeType` can be obtained via `RecipeManager#getAllRecipesFor` and then checked and/or supplied the result using the newly implemented methods.
+If items are not used as part of the input or result of a recipe, then the normal methods provided in [`RecipeManager`](../#recipe-manager) will not be useful. Instead, an additional method for testing a recipe’s validity and/or supplying the result should be added to the custom `Recipe` instance. From there, all the recipes for that specific `RecipeType` can be obtained via `RecipeManager#getAllRecipesFor` and then checked and/or supplied the result using the newly implemented methods.
+
 
 ```
 // In some Recipe subimplementation ExampleRecipe
@@ -113,6 +122,7 @@ public Optional<ExampleRecipe> getRecipeFor(Level level, BlockPos pos) {
     .findFirst(); // Finds the first recipe whose inputs match
 }
 ```
+
 
 ## Data Generation
 

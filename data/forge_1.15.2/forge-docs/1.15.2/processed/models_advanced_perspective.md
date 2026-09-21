@@ -3,11 +3,11 @@
 
 <!-- key:🟠 role:常见错误 -->
 
-When an [`IBakedModel`](../ibakedmodel/) is being rendered as an item, it can apply special handling depending on which perspective it is being rendered in. &ldquo;Perspective&rdquo; means in what context the model is being rendered. The possible perspectives are represented in code by the `ItemCameraTransforms.TransformType` enum. There are two systems for handling perspective: the deprecated vanilla system, constituted by `IBakedModel::getItemCameraTransforms`, `ItemCameraTransforms`, and `ItemTransformVec3f`, and the Forge system, embodied by the method `IForgeBakedModel::handlePerspective`. The vanilla code is patched to favor using `handlePerspective` over the vanilla system whenever possible.
+When an [`IBakedModel`](../ibakedmodel/) is being rendered as an item, it can apply special handling depending on which perspective it is being rendered in. “Perspective” means in what context the model is being rendered. The possible perspectives are represented in code by the `ItemCameraTransforms.TransformType` enum. There are two systems for handling perspective: the deprecated vanilla system, constituted by `IBakedModel::getItemCameraTransforms`, `ItemCameraTransforms`, and `ItemTransformVec3f`, and the Forge system, embodied by the method `IForgeBakedModel::handlePerspective`. The vanilla code is patched to favor using `handlePerspective` over the vanilla system whenever possible.
 
-## `TransformType
+## `TransformType`
 
-<code>NONE` - Unused.
+`NONE` - Unused.
 
 `THIRD_PERSON_LEFT_HAND`/`THIRD_PERSON_RIGHT_HAND`/`FIRST_PERSON_LEFT_HAND`/`FIRST_PERSON_RIGHT_HAND` - The first person values represent when the player is holding the item in their own hand. The third person values represent when another player is holding the item and the client is looking at them in the 3rd person. Hands are self-explanatory.
 
@@ -32,20 +32,20 @@ The entire vanilla system for handling transforms is deprecated by Forge, and mo
 
 The Forge way of handling transforms is `handlePerspective`, a method patched into `IBakedModel`. It supersedes the `getItemCameraTransforms` method. Additionally, the class `PerspectiveMapWrapper` is a simple implementation of an `IBakedModel` with the method; it is a wrapper around other `IBakedModel`s, augmenting them with a `Map<TransformType, TransformationMatrix>` to handle perspective.
 
-#### `IBakedModel::handlePerspective
+#### `IBakedModel::handlePerspective`
 
-Given a <code>TransformType` and `MatrixStack`, this method produces an `IBakedModel` to be rendered. Because the returned `IBakedModel` can be a totally new model, this method is more flexible than the vanilla method (e.g. a piece of paper that looks flat in hand but crumpled on the ground).
+Given a `TransformType` and `MatrixStack`, this method produces an `IBakedModel` to be rendered. Because the returned `IBakedModel` can be a totally new model, this method is more flexible than the vanilla method (e.g. a piece of paper that looks flat in hand but crumpled on the ground).
 
-### `PerspectiveMapWrapper
+### `PerspectiveMapWrapper`
 
-A wrapper around other <code>IBakedModel`s, this class delegates to the wrapped model for all `IBakedModel` methods except `handlePerspective`, and utilizes a simple `Map<TransformType, TransformationMatrix>` for `handlePerspective`. However, the more interesting parts of this class are the static helper methods.
+A wrapper around other `IBakedModel`s, this class delegates to the wrapped model for all `IBakedModel` methods except `handlePerspective`, and utilizes a simple `Map<TransformType, TransformationMatrix>` for `handlePerspective`. However, the more interesting parts of this class are the static helper methods.
 
-#### `getTransforms and <code>getTransformsWithFallback
+#### `getTransforms` and `getTransformsWithFallback`
 
-Given an <code>ItemCameraTransforms` or an `IModelTransform`, this method will extract an `ImmutableMap<TransformType, TransformationMatrix>` from it. To extract this information from an `IModelTransform`, each `TransformType` is passed to `getPartTransformation`.
+Given an `ItemCameraTransforms` or an `IModelTransform`, this method will extract an `ImmutableMap<TransformType, TransformationMatrix>` from it. To extract this information from an `IModelTransform`, each `TransformType` is passed to `getPartTransformation`.
 
 This is how models should support custom perspective transforms through `IModelTransform`. `IUnbakedModel`s should use `getTransforms` in `bakeModel` and store the passed in perspective transforms in the `IBakedModel`. Then the `IBakedModel` can use these custom transforms in `handlePerspective`, composing them on top of its own.
 
-#### `handlePerspective
+#### `handlePerspective`
 
-Given either a map of transforms or an <code>IModelTransform`, an `IBakedModel`, a `TransformType`, and a `MatrixStack`, this finds the `IBakedModel` for the transform from the map or the `IModelTransform`, and then pairs it with the given model. To extract the transform from an `IModelTransform`, the `TransformType` is passed to `getPartTransformation`. This method is meant to be a simple implementation of `IBakedModel::handlePerspective`.
+Given either a map of transforms or an `IModelTransform`, an `IBakedModel`, a `TransformType`, and a `MatrixStack`, this finds the `IBakedModel` for the transform from the map or the `IModelTransform`, and then pairs it with the given model. To extract the transform from an `IModelTransform`, the `TransformType` is passed to `getPartTransformation`. This method is meant to be a simple implementation of `IBakedModel::handlePerspective`.

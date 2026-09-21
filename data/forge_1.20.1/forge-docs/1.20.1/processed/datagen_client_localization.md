@@ -3,6 +3,7 @@
 [Language files](../../../concepts/internationalization/) can be generated for a mod by subclassing `LanguageProvider` and implementing `#addTranslations`. Each `LanguageProvider` subclass created represents a separate [locale](https://minecraft.wiki/w/Language#Languages) (`en_us` represents American English, `es_es` represents Spanish, etc.). After implementation, the provider must be [added](../../#data-providers) to the `DataGenerator`.
 
 
+
 <!-- key:🟢 role:示例代码 -->
 
 ```java
@@ -18,9 +19,11 @@ public void gatherData(GatherDataEvent event) {
 }
 ```
 
-## `LanguageProvider
 
-Each language provider is simple a map of strings where each translation key is mapped to a localized name. A translation key mapping can be added using <code>#add`. Additionally, there are methods which use the translation key of a `Block`, `Item`, `ItemStack`, `Enchantment`, `MobEffect`, and `EntityType`.
+## `LanguageProvider`
+
+Each language provider is simple a map of strings where each translation key is mapped to a localized name. A translation key mapping can be added using `#add`. Additionally, there are methods which use the translation key of a `Block`, `Item`, `ItemStack`, `Enchantment`, `MobEffect`, and `EntityType`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -30,6 +33,7 @@ Each language provider is simple a map of strings where each translation key is 
 this.addBlock(EXAMPLE_BLOCK, "Example Block");
 this.add("object.examplemod.example_object", "Example Object");
 ```
+
 
 
 <!-- key:🔴 role:新手必读 (Tip) -->

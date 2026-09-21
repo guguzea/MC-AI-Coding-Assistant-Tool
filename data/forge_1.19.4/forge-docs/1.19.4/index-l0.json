@@ -53,7 +53,7 @@
     "id": "1.19.4/datagen",
     "version": "1.19.4",
     "label": "Data Generators",
-    "url": "https://docs.readthedocs.net/en/1.19.x/datagen/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datagen/",
     "tags": [
       "datagen",
       "tag"
@@ -78,7 +78,7 @@
     "id": "1.19.4/resources_server",
     "version": "1.19.4",
     "label": "Datapacks",
-    "url": "https://docs.readthedocs.net/en/1.19.x/resources/server/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/server/",
     "tags": [],
     "priority": "⭐",
     "sectionCount": 0
@@ -87,7 +87,7 @@
     "id": "1.19.4/networking_entities",
     "version": "1.19.4",
     "label": "Entities",
-    "url": "https://docs.readthedocs.net/en/1.19.x/networking/entities/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/networking/entities/",
     "tags": [
       "networking"
     ],
@@ -98,7 +98,7 @@
     "id": "1.19.4/concepts_events",
     "version": "1.19.4",
     "label": "Events",
-    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/events/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/concepts/events/",
     "tags": [
       "event"
     ],
@@ -188,7 +188,7 @@
     "id": "1.19.4/concepts_lifecycle",
     "version": "1.19.4",
     "label": "Mod Lifecycle",
-    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/lifecycle/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/concepts/lifecycle/",
     "tags": [
       "lifecycle"
     ],
@@ -220,7 +220,7 @@
     "id": "1.19.4/networking",
     "version": "1.19.4",
     "label": "Networking",
-    "url": "https://docs.readthedocs.net/en/1.19.x/networking/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/networking/",
     "tags": [
       "networking"
     ],
@@ -266,7 +266,7 @@
     "id": "1.19.4/concepts_registries",
     "version": "1.19.4",
     "label": "Registries",
-    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/registries/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/concepts/registries/",
     "tags": [
       "registry"
     ],
@@ -277,7 +277,7 @@
     "id": "1.19.4/resources_client",
     "version": "1.19.4",
     "label": "Resource Packs",
-    "url": "https://docs.readthedocs.net/en/1.19.x/resources/client/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/resources/client/",
     "tags": [],
     "priority": "⭐",
     "sectionCount": 0
@@ -286,7 +286,7 @@
     "id": "1.19.4/concepts_sides",
     "version": "1.19.4",
     "label": "Sides in Minecraft",
-    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/sides/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/concepts/sides/",
     "tags": [
       "sides"
     ],
@@ -297,7 +297,7 @@
     "id": "1.19.4/networking_simpleimpl",
     "version": "1.19.4",
     "label": "SimpleImpl",
-    "url": "https://docs.readthedocs.net/en/1.19.x/networking/simpleimpl/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/networking/simpleimpl/",
     "tags": [
       "networking"
     ],
@@ -344,7 +344,7 @@
     "id": "1.19.4/datastorage_capabilities",
     "version": "1.19.4",
     "label": "The Capability System",
-    "url": "https://docs.readthedocs.net/en/1.19.x/datastorage/capabilities/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datastorage/capabilities/",
     "tags": [
       "capability"
     ],
@@ -354,7 +354,7 @@
   {
     "id": "1.19.4/rendering_modelloaders_itemoverrides",
     "version": "1.19.4",
-    "label": "`ItemOverrides",
+    "label": "`ItemOverrides`",
     "url": "https://docs.minecraftforge.net/en/1.19.x/rendering/modelloaders/itemoverrides/",
     "tags": [
       "item",
@@ -367,7 +367,7 @@
     "id": "1.19.4/blocks_states",
     "version": "1.19.4",
     "label": "Block States",
-    "url": "https://docs.readthedocs.net/en/1.19.x/blocks/states/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/blocks/states/",
     "tags": [
       "block"
     ],
@@ -378,7 +378,7 @@
     "id": "1.19.4/blockentities",
     "version": "1.19.4",
     "label": "BlockEntities",
-    "url": "https://docs.readthedocs.net/en/1.19.x/blockentities/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/blockentities/",
     "tags": [
       "block"
     ],
@@ -389,7 +389,7 @@
     "id": "1.19.4/blockentities_ber",
     "version": "1.19.4",
     "label": "BlockEntityRenderer",
-    "url": "https://docs.readthedocs.net/en/1.19.x/blockentities/ber/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/blockentities/ber/",
     "tags": [
       "block"
     ],
@@ -400,7 +400,7 @@
     "id": "1.19.4/items_bewlr",
     "version": "1.19.4",
     "label": "BlockEntityWithoutLevelRenderer",
-    "url": "https://docs.readthedocs.net/en/1.19.x/items/bewlr/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/items/bewlr/",
     "tags": [
       "item"
     ],
@@ -411,7 +411,7 @@
     "id": "1.19.4/blocks",
     "version": "1.19.4",
     "label": "Blocks",
-    "url": "https://docs.readthedocs.net/en/1.19.x/blocks/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/blocks/",
     "tags": [
       "block"
     ],
@@ -422,7 +422,7 @@
     "id": "1.19.4/items",
     "version": "1.19.4",
     "label": "Items",
-    "url": "https://docs.readthedocs.net/en/1.19.x/items/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/items/",
     "tags": [
       "item"
     ],
@@ -432,7 +432,7 @@
   {
     "id": "1.19.4/rendering_modelloaders_bakedmodel",
     "version": "1.19.4",
-    "label": "`BakedModel",
+    "label": "`BakedModel`",
     "url": "https://docs.minecraftforge.net/en/1.19.x/rendering/modelloaders/bakedmodel/",
     "tags": [
       "rendering"
@@ -444,7 +444,7 @@
     "id": "1.19.4/advanced_accesstransformers",
     "version": "1.19.4",
     "label": "Access Transformers",
-    "url": "https://docs.readthedocs.net/en/1.19.x/advanced/accesstransformers/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/advanced/accesstransformers/",
     "tags": [
       "advanced"
     ],
@@ -455,7 +455,7 @@
     "id": "1.19.4/datastorage_codecs",
     "version": "1.19.4",
     "label": "Codecs",
-    "url": "https://docs.readthedocs.net/en/1.19.x/datastorage/codecs/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datastorage/codecs/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -464,7 +464,7 @@
     "id": "1.19.4/misc_config",
     "version": "1.19.4",
     "label": "Configuration",
-    "url": "https://docs.readthedocs.net/en/1.19.x/misc/config/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/misc/config/",
     "tags": [
       "config"
     ],
@@ -484,7 +484,7 @@
     "id": "1.19.4/rendering_modelloaders",
     "version": "1.19.4",
     "label": "Custom Model Loaders",
-    "url": "https://docs.readthedocs.net/en/1.19.x/rendering/modelloaders/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/rendering/modelloaders/",
     "tags": [
       "rendering"
     ],
@@ -495,7 +495,7 @@
     "id": "1.19.4/misc_debugprofiler",
     "version": "1.19.4",
     "label": "Debug Profiler",
-    "url": "https://docs.readthedocs.net/en/1.19.x/misc/debugprofiler/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/misc/debugprofiler/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -504,7 +504,7 @@
     "id": "1.19.4/legacy",
     "version": "1.19.4",
     "label": "Documentation for Legacy Versions",
-    "url": "https://docs.readthedocs.net/en/1.19.x/legacy/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/legacy/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
@@ -524,16 +524,16 @@
     "id": "1.19.4/misc_updatechecker",
     "version": "1.19.4",
     "label": "Forge Update Checker",
-    "url": "https://docs.readthedocs.net/en/1.19.x/misc/updatechecker/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/misc/updatechecker/",
     "tags": [],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.19.4/misc_gametest",
     "version": "1.19.4",
     "label": "Game Tests",
-    "url": "https://docs.readthedocs.net/en/1.19.x/misc/gametest/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/misc/gametest/",
     "tags": [
       "tests"
     ],
@@ -553,16 +553,16 @@
     "id": "1.19.4/gettingstarted",
     "version": "1.19.4",
     "label": "Getting Started with Forge",
-    "url": "https://docs.readthedocs.net/en/1.19.x/gettingstarted/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/gettingstarted/",
     "tags": [],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.19.4/concepts_internationalization",
     "version": "1.19.4",
     "label": "Internationalization and Localization",
-    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/internationalization/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/concepts/internationalization/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -571,7 +571,7 @@
     "id": "1.19.4/misc_keymappings",
     "version": "1.19.4",
     "label": "Key Mappings",
-    "url": "https://docs.readthedocs.net/en/1.19.x/misc/keymappings/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/misc/keymappings/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -580,7 +580,7 @@
     "id": "1.19.4/gui_menus",
     "version": "1.19.4",
     "label": "Menus",
-    "url": "https://docs.readthedocs.net/en/1.19.x/gui/menus/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/gui/menus/",
     "tags": [
       "gui"
     ],
@@ -597,10 +597,19 @@
     "sectionCount": 8
   },
   {
+    "id": "1.19.4/index",
+    "version": "1.19.4",
+    "label": "MinecraftForge Documentation",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
     "id": "1.19.4/gettingstarted_modfiles",
     "version": "1.19.4",
     "label": "Mod Files",
-    "url": "https://docs.readthedocs.net/en/1.19.x/gettingstarted/modfiles/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/gettingstarted/modfiles/",
     "tags": [
       "meta"
     ],
@@ -622,7 +631,7 @@
     "id": "1.19.4/gameeffects_particles",
     "version": "1.19.4",
     "label": "Particles",
-    "url": "https://docs.readthedocs.net/en/1.19.x/gameeffects/particles/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/gameeffects/particles/",
     "tags": [
       "particles"
     ],
@@ -633,7 +642,7 @@
     "id": "1.19.4/legacy_porting",
     "version": "1.19.4",
     "label": "Porting to Minecraft 1.19",
-    "url": "https://docs.readthedocs.net/en/1.19.x/legacy/porting/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/legacy/porting/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
@@ -662,7 +671,7 @@
     "id": "1.19.4/concepts_resources",
     "version": "1.19.4",
     "label": "Resources",
-    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/resources/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/concepts/resources/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 1
@@ -682,7 +691,7 @@
     "id": "1.19.4/datastorage_saveddata",
     "version": "1.19.4",
     "label": "Saved Data",
-    "url": "https://docs.readthedocs.net/en/1.19.x/datastorage/saveddata/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/datastorage/saveddata/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 2
@@ -691,7 +700,7 @@
     "id": "1.19.4/gui_screens",
     "version": "1.19.4",
     "label": "Screens",
-    "url": "https://docs.readthedocs.net/en/1.19.x/gui/screens/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/gui/screens/",
     "tags": [
       "gui"
     ],
@@ -702,7 +711,7 @@
     "id": "1.19.4/gameeffects_sounds",
     "version": "1.19.4",
     "label": "Sounds",
-    "url": "https://docs.readthedocs.net/en/1.19.x/gameeffects/sounds/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/gameeffects/sounds/",
     "tags": [
       "sounds"
     ],
@@ -713,7 +722,7 @@
     "id": "1.19.4/gettingstarted_structuring",
     "version": "1.19.4",
     "label": "Structuring Your Mod",
-    "url": "https://docs.readthedocs.net/en/1.19.x/gettingstarted/structuring/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/gettingstarted/structuring/",
     "tags": [
       "meta"
     ],
@@ -735,7 +744,7 @@
     "id": "1.19.4/gettingstarted_versioning",
     "version": "1.19.4",
     "label": "Versioning",
-    "url": "https://docs.readthedocs.net/en/1.19.x/gettingstarted/versioning/",
+    "url": "https://docs.minecraftforge.net/en/1.19.x/gettingstarted/versioning/",
     "tags": [
       "meta"
     ],

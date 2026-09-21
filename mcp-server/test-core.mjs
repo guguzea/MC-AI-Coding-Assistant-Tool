@@ -1600,6 +1600,27 @@ copyIdeResources = true
   assert.ok(loom261.errors.some((e) => /modImplementation/.test(e)));
   assert.ok(loom261.errors.some((e) => /25/.test(e)));
 
+  // 2026-09-21：26.1 已去混淆 ⇒ 只认**不带 `-remap`** 的 `net.fabricmc.fabric-loom`
+  //（一手：fabric/26.1.2/scaffold/build.gradle:4 + 00-project-setup.mdc:9）。
+  // 旧实现复用 hasNewFabricPlugin（其正则把 `-remap` 列为可选）⇒ 26.1 写 `-remap` 仍判 passed，
+  // 与同一分支里「26.1 必须使用 id net.fabricmc.fabric-loom」的文案自相矛盾。
+  const loom261Remap = diagnoseGradle({
+    buildGradle: `plugins { id "net.fabricmc.fabric-loom-remap" version "1.17-SNAPSHOT" }\n`,
+    gradleProperties: "minecraft_version=26.1.2\n",
+  });
+  assert.ok(
+    loom261Remap.errors.some((e) => /net\.fabricmc\.fabric-loom/.test(e)),
+    `26.1 用 -remap 必须判红: ${JSON.stringify(loom261Remap.errors)}`,
+  );
+  const loom261Strict = diagnoseGradle({
+    buildGradle: `plugins { id "net.fabricmc.fabric-loom" version "1.17-SNAPSHOT" }\n`,
+    gradleProperties: "minecraft_version=26.1.2\n",
+  });
+  assert.ok(
+    !loom261Strict.errors.some((e) => /net\.fabricmc\.fabric-loom/.test(e)),
+    `26.1 用无 -remap 的 id 不得判缺: ${JSON.stringify(loom261Strict.errors)}`,
+  );
+
   // W4-2：fabric/1.21.4~1.21.11 scaffold 用官方 remap 线插件 id `net.fabricmc.fabric-loom-remap`
   //（官方 Loom 文档划给 ≤1.21.11 混淆时代；本仓 4 档 scaffold 实钉）。旧正则只认无 -remap 形态
   // ⇒ 自家 scaffold 被 diagnose_gradle 判「缺少 Loom 插件 id」假红（旧 dist 实测 4 档）。

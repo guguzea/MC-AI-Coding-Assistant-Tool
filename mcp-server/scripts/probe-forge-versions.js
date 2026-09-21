@@ -15,7 +15,7 @@
  */
 
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
 
 import { parseCliArgs, compareVersions } from "./_lib/args.js";
@@ -94,7 +94,7 @@ export function buildJavadocEntry(version, probe) {
 /**
  * Build the manifest object for a single MkDocs probe result. Pure function.
  */
-export function buildMkDocsEntry(version, probe, chapters, baseUrl) {
+export function buildMkDocsEntry(version, probe, chapters, baseUrl, extra = {}) {
   const both = version.mcVersion === "1.12.2";
   return {
     docSource: both ? "both" : "mkdocs",
@@ -107,6 +107,9 @@ export function buildMkDocsEntry(version, probe, chapters, baseUrl) {
       available: !!probe.ok,
       chapterCount: chapters.length,
       chapters,
+      // 期望清单的来源必须写进台账：拿导航表当上游全集是 F1 的病根。
+      chaptersSource: extra.chaptersSource ?? "nav",
+      ...(extra.chaptersIndexUrl ? { chaptersIndexUrl: extra.chaptersIndexUrl } : {}),
       finalUrl: probe.finalUrl,
     },
     javadoc: null,
@@ -231,6 +234,52 @@ export function extractChapterPaths(navHtml, baseUrl) {
   return [...chapters].sort();
 }
 
+/**
+ * 从上游 MkDocs 的 `search_index.json` 正文推页面清单。纯函数，便于离线复测。
+ * 需要四处归一（2026-09-21 由缺页普查实测钉出）：站点首页的 `location` 是空串 ⇒ 合成 `index`；
+ * 去掉 `#锚点` 再去重；百分号解码（`imodelstate%2Bpart` ⇒ `imodelstate+part`）；去尾斜杠。
+ */
+export function chaptersFromSearchIndex(jsonText) {
+  const parsed = JSON.parse(String(jsonText));
+  const docs = Array.isArray(parsed?.docs) ? parsed.docs : null;
+  if (!docs) throw new Error("search_index 没有 docs 数组，疑似上游结构变更");
+  const set = new Set();
+  for (const d of docs) {
+    let loc = String(d?.location ?? "");
+    loc = loc.split("#")[0].split("?")[0];
+    try {
+      loc = decodeURIComponent(loc);
+    } catch {
+      /* 非法百分号序列：保持原样 */
+    }
+    loc = loc.replace(/^\/+/, "").replace(/\/+$/, "");
+    set.add(loc === "" ? "index" : loc);
+  }
+  return [...set].sort();
+}
+
+/**
+ * 上游页面全集的取法。`search_index.json` 与 `sitemap.xml` 在 10/10 条 route 上页集完全相等，
+ * 而**导航侧栏是可折叠的真子集**（实测漏 `animation/*`、`conventions/loadstages`、
+ * `datastorage/worldsaveddata`，还过报一条 404 死链）—— F1 的病根就是拿侧栏当期望清单，
+ * 于是「只能发现已经知道的页」，1.13.2 的 13 页 models/advanced/* 因此常年缺席。
+ */
+export async function defaultProbeSearchIndex(version, fetchImpl = defaultFetch) {
+  const route = version.mkdocsRoute;
+  const url = `https://docs.minecraftforge.net/en/${route}/search/search_index.json`;
+  try {
+    const res = await fetchImpl(url);
+    if (!res?.ok) return { ok: false, url, reason: `HTTP ${res?.status ?? "—"}` };
+    const body = res.content ?? res.body ?? res.text ?? "";
+    if (!/^\s*[{[]/.test(body)) return { ok: false, url, reason: "响应不是 JSON（可能是 SPA 外壳）" };
+    const chapters = chaptersFromSearchIndex(body);
+    if (chapters.length < 5) return { ok: false, url, reason: `只解析出 ${chapters.length} 页` };
+    return { ok: true, url, chapters };
+  } catch (e) {
+    return { ok: false, url, reason: String(e?.message ?? e).slice(0, 160) };
+  }
+}
+
 // ── 与既有 manifest 合并（单版本重跑不得清盘）───────────────────────────
 
 export function readPreviousManifest(file) {
@@ -277,6 +326,7 @@ export async function buildManifest({
   filterMc = null,
   probeJavadoc = defaultProbeJavadoc,
   probeMkDocs = defaultProbeMkDocs,
+  probeSearchIndex = defaultProbeSearchIndex,
 } = {}) {
   const manifest = {
     lastChecked: new Date().toISOString().slice(0, 10),
@@ -295,8 +345,30 @@ export async function buildManifest({
   for (const v of mvs) {
     const probe = await probeMkDocs(v);
     const baseUrl = probe.baseUrl;
-    const chapters = probe.ok ? extractChapterPaths(probe.content || "", probe.finalUrl || baseUrl) : [];
-    manifest.versions[v.mcVersion] = buildMkDocsEntry(v, probe, chapters, baseUrl);
+    const navChapters = probe.ok ? extractChapterPaths(probe.content || "", probe.finalUrl || baseUrl) : [];
+    // 期望清单优先取上游 search_index（页面全集）；导航表是可折叠子集，只能当兜底。
+    const idx = probe.ok ? await probeSearchIndex(v) : { ok: false, reason: "主探测未通过" };
+    let chapters = navChapters;
+    let chaptersSource = "nav";
+    if (idx.ok) {
+      chapters = idx.chapters;
+      chaptersSource = "search_index";
+      const missingFromNav = chapters.filter((c) => !navChapters.includes(c));
+      const extraInNav = navChapters.filter((c) => !chapters.includes(c));
+      if (missingFromNav.length || extraInNav.length) {
+        console.log(
+          `  ${v.mcVersion}: search_index ${chapters.length} 页 / 导航 ${navChapters.length} 页` +
+            ` ⇒ 导航漏 ${missingFromNav.length}（${missingFromNav.slice(0, 4).join(", ")}${missingFromNav.length > 4 ? "…" : ""}）` +
+            `、导航多 ${extraInNav.length}（${extraInNav.slice(0, 3).join(", ") || "—"}）`,
+        );
+      }
+    } else if (probe.ok) {
+      console.warn(`  ${v.mcVersion}: search_index 不可读（${idx.reason}）⇒ 退回导航表；本次 chapters 可能偏小`);
+    }
+    manifest.versions[v.mcVersion] = buildMkDocsEntry(v, probe, chapters, baseUrl, {
+      chaptersSource,
+      chaptersIndexUrl: idx.ok ? idx.url : undefined,
+    });
   }
   return manifest;
 }
@@ -326,8 +398,10 @@ async function main() {
 
 // Only auto-run when invoked directly (lets tests import this module safely).
 const invokedDirectly =
-  process.argv[1] &&
-  import.meta.url === `file:///${process.argv[1].replace(/\\/g, "/")}`;
+  // 本仓路径含非 ASCII（桌面）时 import.meta.url 是百分号编码的，裸拼 file:/// 永远不相等 ⇒
+  // 脚本静默不跑且退出 0（2026-09-21 实测：forge manifest 的 chapters 因此冻结在 9 月 4 日，
+  // 5 个共用此门的脚本同病）。pathToFileURL 才是双向可逆的写法。
+  Boolean(process.argv[1]) && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (invokedDirectly) {
   main().catch((err) => {
     console.error(err);

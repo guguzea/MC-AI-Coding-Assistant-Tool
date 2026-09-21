@@ -2,7 +2,7 @@
 version: "1.19.4"
 forgeVersion: "45.2.0"
 chapter: "gameeffects/particles"
-source: "https://docs.readthedocs.net/en/1.19.x/gameeffects/particles/"
+source: "https://docs.minecraftforge.net/en/1.19.x/gameeffects/particles/"
 sourceType: mkdocs
 ---
 # Particles
@@ -15,7 +15,7 @@ Particles are broken up between its [**client only**](../../concepts/sides/) imp
 
 Class | Side | Description
 --- | --- | ---
-ParticleType | BOTH | The registry object of a particle&rsquo;s type definition used to reference the particle on either side
+ParticleType | BOTH | The registry object of a particle’s type definition used to reference the particle on either side
 ParticleOptions | BOTH | A data holder used to sync information from the network or a command to the associated client(s)
 ParticleProvider | CLIENT | A factory registered by the `ParticleType` used to construct a `Particle` from the associated `ParticleOptions`.
 Particle | CLIENT | The renderable logic to display on the associated client(s)
@@ -66,7 +66,7 @@ Method | Description
 render | Renders the particle onto the screen.
 getRenderType | Gets the render type of the particle.
 
-A common subclass of `Particle` to render textures is `TextureSheetParticle`. While `#getRenderType` needs to be implemented, whatever the texture sprite is set will be rendered at the particle&rsquo;s location.
+A common subclass of `Particle` to render textures is `TextureSheetParticle`. While `#getRenderType` needs to be implemented, whatever the texture sprite is set will be rendered at the particle’s location.
 
 #### ParticleRenderType
 
@@ -97,6 +97,7 @@ There are three particle render types that cannot use the above method of regist
 
 To add a texture to a particle, a new JSON file must be added to `assets/<modid>/particles`. This is known as the `ParticleDescription`. The name of this file will represent the registry name of the `ParticleType` the factory is being attached to. Each particle JSON is an object. The object stores a single key `textures` which holds an array of `ResourceLocation`s. Any `<modid>:<path>` texture represented here will point to a texture at `assets/<modid>/textures/particle/<path>.png`.
 
+
 ```
 {
   "textures": [
@@ -110,6 +111,7 @@ To add a texture to a particle, a new JSON file must be added to `assets/<modid>
   ]
 }
 ```
+
 
 To reference a particle texture, the subtype of `TextureSheetParticle` should either take in an `SpriteSet` or a `TextureAtlasSprite` obtained from `SpriteSet`. `SpriteSet` holds a list of textures which refer to the sprites as defined by our `ParticleDescription`. `SpriteSet` has two methods, both of which grab a `TextureAtlasSprite` in different methods. The first method takes in two integers. The backing implementation allows the sprite to have a texture change as it ages. The second method takes in a `Random` instance to get a random texture from the sprite set. The sprite can be set within `TextureSheetParticle` by using one of the helper methods that takes in the `SpriteSet`: `#pickSprite` which uses the random method of picking a texture, and `#setSpriteFromAge` which uses the percentage method of two integers to pick the texture.
 

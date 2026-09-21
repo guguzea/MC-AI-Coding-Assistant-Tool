@@ -1,9 +1,8 @@
-> 版本：1.20.4
 ---
 version: "1.20.4"
 forgeVersion: "49.0.0"
 chapter: "legacy/porting"
-source: "https://docs.readthedocs.net/en/1.20.x/legacy/porting/"
+source: "https://docs.minecraftforge.net/en/1.20.x/legacy/porting/"
 sourceType: mkdocs
 ---
 # Porting to Minecraft 1.20

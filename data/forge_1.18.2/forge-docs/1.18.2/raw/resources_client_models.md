@@ -7,11 +7,11 @@ sourceType: mkdocs
 ---
 # Models
 
-The [model system](https://minecraft.wiki/w/Model#File_path) is Minecraft&rsquo;s way of giving blocks and items their shapes. Through the model system, blocks and items are mapped to their models, which define how they look. One of the main goals of the model system is to allow not only textures but the entire shape of a block/item to be changed by resource packs. Indeed, any mod that adds items or blocks also contains a mini-resource pack for their blocks and items.
+The [model system](https://minecraft.wiki/w/Model#File_path) is Minecraft’s way of giving blocks and items their shapes. Through the model system, blocks and items are mapped to their models, which define how they look. One of the main goals of the model system is to allow not only textures but the entire shape of a block/item to be changed by resource packs. Indeed, any mod that adds items or blocks also contains a mini-resource pack for their blocks and items.
 
 ## Model Files
 
-Models and textures are linked through [`ResourceLocation`](../../../concepts/resources/#resourcelocation)s but are stored in the `ModelManager` using `ModelResourceLocation`s. Models are referenced in different locations through the block or item&rsquo;s registry name depending on whether they are referencing [block states](https://minecraft.wiki/w/Model#Block_states) or [item models](https://minecraft.wiki/w/Model#Item_models). Blocks will have their `ModelResourceLocation` represent their registry name along with a stringified version of its current [`BlockState`](../../../blocks/states/) while items will use their registry name followed by `inventory`.
+Models and textures are linked through [`ResourceLocation`](../../../concepts/resources/#resourcelocation)s but are stored in the `ModelManager` using `ModelResourceLocation`s. Models are referenced in different locations through the block or item’s registry name depending on whether they are referencing [block states](https://minecraft.wiki/w/Model#Block_states) or [item models](https://minecraft.wiki/w/Model#Item_models). Blocks will have their `ModelResourceLocation` represent their registry name along with a stringified version of its current [`BlockState`](../../../blocks/states/) while items will use their registry name followed by `inventory`.
 
 > **Note**: Note JSON models only support cuboid elements; there is no way to express a triangular wedge or anything like it. To have more complicated models, another format must be used.
 

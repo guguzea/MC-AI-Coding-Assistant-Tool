@@ -9,13 +9,14 @@ sourceType: mkdocs
 
 Advancements are tasks that can be achieved by the player which may advance the progress of the game. Advancements can trigger based on any action the player may be directly involved in.
 
-All advancement implementations within vanilla are data driven via JSON. This means that a mod is not necessary to create a new advancement, only a [data pack](https://minecraft.wiki/w/Data_pack). A full list on how to create and put these advancements within the mod&rsquo;s `resources` can be found on the [Minecraft Wiki](https://minecraft.wiki/w/Advancement/JSON_format). Additionally, advancements can be [loaded conditionally and defaulted](../conditional/#implementations) depending on what information is present (mod loaded, item exists, etc.).
+All advancement implementations within vanilla are data driven via JSON. This means that a mod is not necessary to create a new advancement, only a [data pack](https://minecraft.wiki/w/Data_pack). A full list on how to create and put these advancements within the mod’s `resources` can be found on the [Minecraft Wiki](https://minecraft.wiki/w/Advancement/JSON_format). Additionally, advancements can be [loaded conditionally and defaulted](../conditional/#implementations) depending on what information is present (mod loaded, item exists, etc.).
 
 ## Advancement Criteria
 
 To unlock an advancement, the specified criteria must be met. Criteria are tracked through triggers which execute when a certain action is performed: killing an entity, changing an inventory, breading animals, etc. Any time an advancement is loaded into the game, the criteria defined are read and added as listeners to the trigger. Afterwards a trigger function is called (usually named `#trigger`) which checks all listeners as to whether the current state meets the conditions of the advancement criteria. The criteria listeners for the advancement are only removed once the advancement has been obtained by completing all requirements.
 
 Requirements are defined as an array of string arrays representing the name of the criteria specified on the advancement. An advancement is completed once one string array of criteria has been met:
+
 
 ```
 // In some advancement JSON
@@ -44,6 +45,7 @@ Requirements are defined as an array of string arrays representing the name of t
 ]
 ```
 
+
 A list of criteria triggers defined by vanilla can be found in `CriteriaTriggers`. Additionally, the JSON formats are defined on the [Minecraft Wiki](https://minecraft.wiki/w/Advancement/JSON_format#List_of_triggers).
 
 ### Custom Criteria Triggers
@@ -56,6 +58,7 @@ The `AbstractCriterionTriggerInstance` represents a single criteria defined in t
 
 Conditions are usually passed in through the constructor. The `AbstractCriterionTriggerInstance` super constructor requires the instance to define the registry name of the trigger and the conditions the player must meet as an `EntityPredicate$Composite`. The registry name of the trigger should be supplied to the super directly while the conditions of the player should be a constructor parameter.
 
+
 ```
 // Where ID is the registry name of the trigger
 public ExampleTriggerInstance(EntityPredicate.Composite player, ItemPredicate item) {
@@ -64,9 +67,11 @@ public ExampleTriggerInstance(EntityPredicate.Composite player, ItemPredicate it
 }
 ```
 
+
 > **Note**: Note Typically, trigger instances have a static constructor which allow these instances to be easily created for data generation. These static factory methods can also be statically imported instead of the class itself. public static ExampleTriggerInstance instance(EntityPredicate.Builder playerBuilder, ItemPredicate.Builder itemBuilder) { return new ExampleTriggerInstance(EntityPredicate.Composite.wrap(playerBuilder.build()), itemBuilder.build()); }
 
 Additionally, the `#serializeToJson` method should be overridden. The method should add the conditions of the instance to the other JSON data.
+
 
 ```
 @Override
@@ -77,7 +82,9 @@ public JsonObject serializeToJson(SerializationContext context) {
 }
 ```
 
+
 Finally, a method should be added which takes in the current data state and returns whether the user has met the necessary conditions. The conditions of the player are already checked through `SimpleCriterionTrigger#trigger(ServerPlayer, Predicate)`. Most trigger instances call this method `#matches`.
+
 
 ```
 // This method is unique for each instance and is as such not overridden
@@ -87,6 +94,7 @@ public boolean matches(ItemStack stack) {
 }
 ```
 
+
 ### SimpleCriterionTrigger
 
 The `SimpleCriterionTrigger<T>` subclass, where `T` is the type of the trigger instance, is responsible for specifying the registry name of the trigger, creating a trigger instance, and a method to check trigger instances and run attached listeners on success.
@@ -94,6 +102,7 @@ The `SimpleCriterionTrigger<T>` subclass, where `T` is the type of the trigger i
 The registry name of the trigger is supplied to `#getId`. This should match the registry name supplied to the trigger instance.
 
 A trigger instance is created via `#createInstance`. This method reads a criteria from JSON.
+
 
 ```
 @Override
@@ -103,7 +112,9 @@ public ExampleTriggerInstance createInstance(JsonObject json, EntityPredicate.Co
 }
 ```
 
+
 Finally, a method is defined to check all trigger instances and run the listeners if their condition is met. This method takes in the `ServerPlayer` and whatever other data defined by the matching method in the `AbstractCriterionTriggerInstance` subclass. This method should internally call `SimpleCriterionTrigger#trigger` to properly handle checking all listeners. Most trigger instances call this method `#trigger`.
+
 
 ```
 // This method is unique for each trigger and is as such not overridden
@@ -115,6 +126,7 @@ public void trigger(ServerPlayer player, ItemStack stack) {
 }
 ```
 
+
 Afterwards, an instance should be registered using `CriteriaTriggers#register` during `FMLCommonSetupEvent`.
 
 > **Important**: Important CriteriaTriggers#register must be enqueued to the synchronous work queue via FMLCommonSetupEvent#enqueueWork as the method is not thread-safe.
@@ -122,6 +134,7 @@ Afterwards, an instance should be registered using `CriteriaTriggers#register` d
 ### Calling the Trigger
 
 Whenever the action being checked is performed, the `#trigger` method defined by the `SimpleCriterionTrigger` subclass should be called.
+
 
 ```
 // In some piece of code where the action is being performed
@@ -132,9 +145,11 @@ public void performExampleAction(ServerPlayer player, ItemStack stack) {
 }
 ```
 
+
 ## Advancement Rewards
 
 When an advancement is completed, rewards may be given out. These can be a combination of experience points, loot tables, recipes for the recipe book, or a [function](https://minecraft.wiki/w/Function_(Java_Edition)) executed as a creative player.
+
 
 ```
 // In some advancement JSON

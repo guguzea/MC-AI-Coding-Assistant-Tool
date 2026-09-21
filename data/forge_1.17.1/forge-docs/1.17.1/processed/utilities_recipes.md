@@ -10,6 +10,7 @@ Forge will load all recipes which can be found within the `./data/<modid>/recipe
 
 A basic recipe file might look like the following example:
 
+
 ```
 {
     "type": "minecraft:crafting_shaped",
@@ -37,6 +38,7 @@ A basic recipe file might look like the following example:
     }
 }
 ```
+
 
 
 <!-- key:🔴 role:新手必读 (Note) -->
@@ -72,6 +74,7 @@ To define a shapeless recipe, you have to use the `ingredients` list. It defines
 
 The following example shows how an ingredient list looks like within JSON:
 
+
 ```
 "ingredients": [
         {
@@ -84,8 +87,9 @@ The following example shows how an ingredient list looks like within JSON:
     ...
 ```
 
+
 ### Results
 
 Every vanilla recipe has to have a `result` tag to define the output item.
 
-When crafting something, you can get out more than one item. This is achieved by defining the `count` number. If this is left out, meaning it doesn&rsquo;t exist within the result block, it defaults to 1. Negative values are not allowed here as an `ItemStack` cannot be smaller than 0. There is no option to use the `count` number anywhere else than for the result. Forge also added support for results to include NBT data via the `nbt` tag.
+When crafting something, you can get out more than one item. This is achieved by defining the `count` number. If this is left out, meaning it doesn’t exist within the result block, it defaults to 1. Negative values are not allowed here as an `ItemStack` cannot be smaller than 0. There is no option to use the `count` number anywhere else than for the result. Forge also added support for results to include NBT data via the `nbt` tag.

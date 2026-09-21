@@ -101,8 +101,9 @@ const {
   carryUnprobedVersions,
   classifyNeoLoaderVersion,
   withNeoLoaderFields,
+  compareMcVersions,
 } = await import("./scripts/probe-neoforge-versions.js");
-const { readFileSync } = await import("node:fs");
+const { readFileSync, readdirSync } = await import("node:fs");
 const NEO_MANIFEST = JSON.parse(
   readFileSync(new URL("../data/neoforge-versions-manifest.json", import.meta.url), "utf-8"),
 );
@@ -207,15 +208,33 @@ for (const v of Object.keys(NEO_MANIFEST.versions)) {
     neoDrift.push(`manifest 有 ${v} 而生成源没有 → 全量重跑会静默丢掉该条目`);
   }
 }
+// 2026-09-21（F1 修复配套）：probePrimers 不再只走 PRIMER_CONFIG，而是「上游 primer 索引页枚举 ∪ 表」。
+// 所以表外 primer 从「一律算漂移」变成「合法，但必须逐字段证明确实由枚举规则生成」——
+// 比旧断言更严：旧断言只挡"表里没有"，新断言还挡"有人手改了 manifest 里的 url/from/to"。
+const primerUrlFor = (v) => `https://docs.neoforged.net/primer/docs/${v}/`;
+const primerKeysSorted = Object.keys(NEO_MANIFEST.primers ?? {}).sort(compareMcVersions);
 for (const [v, p] of Object.entries(NEO_MANIFEST.primers ?? {})) {
   const cfg = NEO_PRIMERS.find((x) => x.version === v);
   if (!cfg) {
-    neoDrift.push(`manifest primer ${v} 不在 PRIMER_CONFIG → 全量重跑会丢掉`);
+    if (String(p.url) !== primerUrlFor(v)) {
+      neoDrift.push(`primer ${v} 不在 PRIMER_CONFIG，且 url=${p.url} 不符合上游枚举规则 ${primerUrlFor(v)}`);
+    }
+    const i = primerKeysSorted.indexOf(v);
+    const wantFrom = i > 0 ? primerKeysSorted[i - 1] : null;
+    if (String(p.from) !== String(wantFrom)) {
+      neoDrift.push(`primer ${v}.from=${p.from} ≠ 枚举数值序前一篇 ${wantFrom}`);
+    }
+    if (String(p.to) !== String(v)) neoDrift.push(`primer ${v}.to=${p.to} ≠ 版本名 ${v}`);
     continue;
   }
   for (const key of ["url", "from", "to"]) {
     if (String(cfg[key]) !== String(p[key])) neoDrift.push(`primer ${v}.${key}: 生成源 ${cfg[key]} ≠ 产物 ${p[key]}`);
   }
+}
+// 盘上 primer 文件必须在 manifest 里有登记，否则抓取链一次都刷不到（2026-09-21 实测曾漏 12 篇）。
+for (const f of readdirSync(new URL("../data/neoforge_primers/", import.meta.url)).filter((x) => x.endsWith(".md"))) {
+  const v = f.replace(/\.md$/, "");
+  if (!NEO_MANIFEST.primers?.[v]) neoDrift.push(`盘上 primer ${v} 不在 manifest.primers → 当前链刷新不到，只会静默变陈`);
 }
 assert.deepEqual(neoDrift, [], `probe-neoforge-versions 生成源与 manifest 漂移：\n  ${neoDrift.join("\n  ")}`);
 
@@ -1854,7 +1873,7 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     `真根少跑了层：\n${runs.realRoot.stdout}`,
   );
   console.log(
-    "  §S4 G4 索引自洽门: 干净假根=0 / 真根=0（60 库 · Σchunks 34029 · Σembedded 25630 · sha256 全对 · 2 纯FTS + 7 空库 + 5 计数虚报全在台账）；" +
+    "  §S4 G4 索引自洽门: 干净假根=0 / 真根=0（60 库 · Σchunks 36651 · Σembedded 27620 · sha256 全对 · 2 纯FTS + 7 空库 + 5 计数虚报全在台账）；" +
       "投毒 16 记全红并点名：库缺失·未登记·计数漂移·sha 过期·fts 不同源·向量层缺口·向量层不可证明·孤儿 chunk·空库·残留·路径错档·yarn 计数·缺索引·二进制钉本机路径·来源哈希缺失·台账层",
   );
 }
@@ -1999,6 +2018,9 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     // 2026-09-20 裁定（F-K1）：检索结果必须带 verbatim 逐字支撑位 —— 投毒名 judged>0/hits=0、
     // 真实名 hits>0、散文不判、每个 true 行可独立直扫复现、且标注不得改变命中集合与顺序。
     "./scripts/assert-verbatim-support.mjs",
+    // 2026-09-21 缺页普查（F1）：forge 语料的期望页面清单必须来自上游 search_index，缺页即红；
+    // 空清单 / 残表 / 导航来源 / 白名单外孤儿页都不得空转放行。
+    "./scripts/assert-upstream-chapters.mjs",
   ]) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE], {
@@ -2032,6 +2054,8 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-skill-mappings-key.mjs",
     // 2026-09-20 F-K1：verbatim 判据的自证（极性反转 / 子串放过 / 散文也判必须红）。
     "./scripts/assert-verbatim-support.mjs",
+    // 2026-09-21 F1：上游清单判据的自证（缺页 / 缺首页 / 空清单 / 残表 / 导航来源必须红）。
+    "./scripts/assert-upstream-chapters.mjs",
   ]) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE, "--selftest"], {

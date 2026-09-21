@@ -3,7 +3,7 @@
     "id": "1.14.4/datagen_intro",
     "version": "1.14.4",
     "label": "Data Generators",
-    "url": "https://docs.readthedocs.net/en/1.14.x/datagen/intro/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/datagen/intro/",
     "tags": [
       "datagen",
       "tag"
@@ -15,7 +15,7 @@
     "id": "1.14.4/networking_entities",
     "version": "1.14.4",
     "label": "Entities",
-    "url": "https://docs.readthedocs.net/en/1.14.x/networking/entities/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/networking/entities/",
     "tags": [
       "networking"
     ],
@@ -26,7 +26,7 @@
     "id": "1.14.4/events_intro",
     "version": "1.14.4",
     "label": "Events",
-    "url": "https://docs.readthedocs.net/en/1.14.x/events/intro/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/events/intro/",
     "tags": [
       "event"
     ],
@@ -37,7 +37,7 @@
     "id": "1.14.4/datagen_modelproviders",
     "version": "1.14.4",
     "label": "Model Providers",
-    "url": "https://docs.readthedocs.net/en/1.14.x/datagen/modelproviders/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/datagen/modelproviders/",
     "tags": [
       "datagen",
       "tag"
@@ -49,7 +49,7 @@
     "id": "1.14.4/networking",
     "version": "1.14.4",
     "label": "Networking",
-    "url": "https://docs.readthedocs.net/en/1.14.x/networking/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/networking/",
     "tags": [
       "networking"
     ],
@@ -60,7 +60,7 @@
     "id": "1.14.4/networking_overview",
     "version": "1.14.4",
     "label": "Overview",
-    "url": "https://docs.readthedocs.net/en/1.14.x/networking/overview/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/networking/overview/",
     "tags": [
       "networking"
     ],
@@ -71,7 +71,7 @@
     "id": "1.14.4/concepts_registries",
     "version": "1.14.4",
     "label": "Registries",
-    "url": "https://docs.readthedocs.net/en/1.14.x/concepts/registries/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/concepts/registries/",
     "tags": [
       "registry"
     ],
@@ -82,7 +82,7 @@
     "id": "1.14.4/concepts_sides",
     "version": "1.14.4",
     "label": "Sides in Minecraft",
-    "url": "https://docs.readthedocs.net/en/1.14.x/concepts/sides/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/concepts/sides/",
     "tags": [
       "sides"
     ],
@@ -93,7 +93,7 @@
     "id": "1.14.4/networking_simpleimpl",
     "version": "1.14.4",
     "label": "SimpleImpl",
-    "url": "https://docs.readthedocs.net/en/1.14.x/networking/simpleimpl/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/networking/simpleimpl/",
     "tags": [
       "networking"
     ],
@@ -104,7 +104,7 @@
     "id": "1.14.4/datastorage_capabilities",
     "version": "1.14.4",
     "label": "The Capability System",
-    "url": "https://docs.readthedocs.net/en/1.14.x/datastorage/capabilities/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/datastorage/capabilities/",
     "tags": [
       "capability"
     ],
@@ -112,10 +112,21 @@
     "sectionCount": 9
   },
   {
+    "id": "1.14.4/models_advanced_itemoverridelist",
+    "version": "1.14.4",
+    "label": "`ItemOverrideList`",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/models/advanced/itemoverridelist/",
+    "tags": [
+      "item"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1
+  },
+  {
     "id": "1.14.4/blocks_interaction",
     "version": "1.14.4",
     "label": "Block Interaction",
-    "url": "https://docs.readthedocs.net/en/1.14.x/blocks/interaction/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/blocks/interaction/",
     "tags": [
       "block"
     ],
@@ -126,7 +137,7 @@
     "id": "1.14.4/blocks_states",
     "version": "1.14.4",
     "label": "Block States",
-    "url": "https://docs.readthedocs.net/en/1.14.x/blocks/states/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/blocks/states/",
     "tags": [
       "block"
     ],
@@ -137,7 +148,7 @@
     "id": "1.14.4/blocks_blocks",
     "version": "1.14.4",
     "label": "Blocks",
-    "url": "https://docs.readthedocs.net/en/1.14.x/blocks/blocks/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/blocks/blocks/",
     "tags": [
       "block"
     ],
@@ -148,7 +159,7 @@
     "id": "1.14.4/items_globallootmodifiers",
     "version": "1.14.4",
     "label": "Global Loot Modifiers",
-    "url": "https://docs.readthedocs.net/en/1.14.x/items/globallootmodifiers/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/items/globallootmodifiers/",
     "tags": [
       "item",
       "loot"
@@ -157,12 +168,34 @@
     "sectionCount": 4
   },
   {
+    "id": "1.14.4/models_blockstates_introduction",
+    "version": "1.14.4",
+    "label": "Introduction to Blockstate JSONs",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/models/blockstates/introduction/",
+    "tags": [
+      "block"
+    ],
+    "priority": "🟡",
+    "sectionCount": 0
+  },
+  {
     "id": "1.14.4/items_items",
     "version": "1.14.4",
     "label": "Items",
-    "url": "https://docs.readthedocs.net/en/1.14.x/items/items/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/items/items/",
     "tags": [
       "item"
+    ],
+    "priority": "🟡",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.14.4/models_blockstates_forgeBlockstates",
+    "version": "1.14.4",
+    "label": "models_blockstates_forgeBlockstates",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/models/blockstates/forgeBlockstates/",
+    "tags": [
+      "block"
     ],
     "priority": "🟡",
     "sectionCount": 2
@@ -171,7 +204,7 @@
     "id": "1.14.4/utilities_recipes",
     "version": "1.14.4",
     "label": "Recipes",
-    "url": "https://docs.readthedocs.net/en/1.14.x/utilities/recipes/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/utilities/recipes/",
     "tags": [
       "recipe"
     ],
@@ -182,7 +215,7 @@
     "id": "1.14.4/utilities_tags",
     "version": "1.14.4",
     "label": "Tags",
-    "url": "https://docs.readthedocs.net/en/1.14.x/utilities/tags/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/utilities/tags/",
     "tags": [
       "tag"
     ],
@@ -193,7 +226,7 @@
     "id": "1.14.4/tileentities_tileentity",
     "version": "1.14.4",
     "label": "TileEntities",
-    "url": "https://docs.readthedocs.net/en/1.14.x/tileentities/tileentity/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/tileentities/tileentity/",
     "tags": [
       "entity"
     ],
@@ -204,10 +237,19 @@
     "id": "1.14.4/tileentities_tesr",
     "version": "1.14.4",
     "label": "TileEntityRenderer",
-    "url": "https://docs.readthedocs.net/en/1.14.x/tileentities/tesr/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/tileentities/tesr/",
     "tags": [],
     "priority": "🟡",
     "sectionCount": 3
+  },
+  {
+    "id": "1.14.4/models_advanced_ibakedmodel",
+    "version": "1.14.4",
+    "label": "`IBakedModel`",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/models/advanced/ibakedmodel/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
   },
   {
     "id": "1.14.4/primer_1_14",
@@ -222,7 +264,7 @@
     "id": "1.14.4/advanced_accesstransformers",
     "version": "1.14.4",
     "label": "Access Transformers",
-    "url": "https://docs.readthedocs.net/en/1.14.x/advanced/accesstransformers/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/advanced/accesstransformers/",
     "tags": [
       "advanced"
     ],
@@ -233,7 +275,7 @@
     "id": "1.14.4/animation_asm",
     "version": "1.14.4",
     "label": "Animation State Machine Files",
-    "url": "https://docs.readthedocs.net/en/1.14.x/animation/asm/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/animation/asm/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 4
@@ -242,7 +284,7 @@
     "id": "1.14.4/animation_armature",
     "version": "1.14.4",
     "label": "Armature Files",
-    "url": "https://docs.readthedocs.net/en/1.14.x/animation/armature/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/animation/armature/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -251,7 +293,7 @@
     "id": "1.14.4/models_color",
     "version": "1.14.4",
     "label": "Coloring Textures",
-    "url": "https://docs.readthedocs.net/en/1.14.x/models/color/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/models/color/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
@@ -260,7 +302,7 @@
     "id": "1.14.4/concepts_data",
     "version": "1.14.4",
     "label": "Datapacks",
-    "url": "https://docs.readthedocs.net/en/1.14.x/concepts/data/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/concepts/data/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
@@ -269,7 +311,7 @@
     "id": "1.14.4/gettingstarted_debugprofiler",
     "version": "1.14.4",
     "label": "Debug Profiler",
-    "url": "https://docs.readthedocs.net/en/1.14.x/gettingstarted/debugprofiler/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/gettingstarted/debugprofiler/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -278,7 +320,7 @@
     "id": "1.14.4/legacy",
     "version": "1.14.4",
     "label": "Documentation for Legacy Versions",
-    "url": "https://docs.readthedocs.net/en/1.14.x/legacy/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/legacy/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
@@ -287,16 +329,25 @@
     "id": "1.14.4/gettingstarted_autoupdate",
     "version": "1.14.4",
     "label": "Forge Update Checker",
-    "url": "https://docs.readthedocs.net/en/1.14.x/gettingstarted/autoupdate/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/gettingstarted/autoupdate/",
     "tags": [],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
+  },
+  {
+    "id": "1.14.4/forgedev",
+    "version": "1.14.4",
+    "label": "Getting Started",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/forgedev/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
   },
   {
     "id": "1.14.4/gettingstarted",
     "version": "1.14.4",
     "label": "Getting Started with Forge",
-    "url": "https://docs.readthedocs.net/en/1.14.x/gettingstarted/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/gettingstarted/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -305,7 +356,7 @@
     "id": "1.14.4/concepts_internationalization",
     "version": "1.14.4",
     "label": "Internationalization and localization",
-    "url": "https://docs.readthedocs.net/en/1.14.x/concepts/internationalization/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/concepts/internationalization/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -314,7 +365,7 @@
     "id": "1.14.4/models_introduction",
     "version": "1.14.4",
     "label": "Intro to Models",
-    "url": "https://docs.readthedocs.net/en/1.14.x/models/introduction/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/models/introduction/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
@@ -323,7 +374,7 @@
     "id": "1.14.4/animation_intro",
     "version": "1.14.4",
     "label": "Intro to the Animation API",
-    "url": "https://docs.readthedocs.net/en/1.14.x/animation/intro/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/animation/intro/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 1
@@ -332,7 +383,7 @@
     "id": "1.14.4/models_overrides",
     "version": "1.14.4",
     "label": "Item Property Overrides",
-    "url": "https://docs.readthedocs.net/en/1.14.x/models/overrides/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/models/overrides/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 2
@@ -341,7 +392,7 @@
     "id": "1.14.4/rendering_ister",
     "version": "1.14.4",
     "label": "ItemStackTileEntityRenderer",
-    "url": "https://docs.readthedocs.net/en/1.14.x/rendering/ister/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/rendering/ister/",
     "tags": [
       "rendering"
     ],
@@ -352,7 +403,7 @@
     "id": "1.14.4/conventions_loadstages",
     "version": "1.14.4",
     "label": "Loading Stages",
-    "url": "https://docs.readthedocs.net/en/1.14.x/conventions/loadstages/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/conventions/loadstages/",
     "tags": [
       "tag"
     ],
@@ -363,7 +414,16 @@
     "id": "1.14.4/conventions_locations",
     "version": "1.14.4",
     "label": "Locations",
-    "url": "https://docs.readthedocs.net/en/1.14.x/conventions/locations/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/conventions/locations/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.14.4/index",
+    "version": "1.14.4",
+    "label": "MinecraftForge Documentation",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
@@ -372,7 +432,7 @@
     "id": "1.14.4/models_files",
     "version": "1.14.4",
     "label": "Model Files",
-    "url": "https://docs.readthedocs.net/en/1.14.x/models/files/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/models/files/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 4
@@ -381,7 +441,7 @@
     "id": "1.14.4/effects_particles",
     "version": "1.14.4",
     "label": "Particles",
-    "url": "https://docs.readthedocs.net/en/1.14.x/effects/particles/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/effects/particles/",
     "tags": [
       "particles"
     ],
@@ -389,19 +449,37 @@
     "sectionCount": 4
   },
   {
+    "id": "1.14.4/models_advanced_perspective",
+    "version": "1.14.4",
+    "label": "Perspective",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/models/advanced/perspective/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
     "id": "1.14.4/legacy_porting1214",
     "version": "1.14.4",
     "label": "Porting from Minecraft 1.12 to Minecraft 1.13/1.14",
-    "url": "https://docs.readthedocs.net/en/1.14.x/legacy/porting1214/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/legacy/porting1214/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
   },
   {
+    "id": "1.14.4/forgedev_prguidelines",
+    "version": "1.14.4",
+    "label": "Pull Request Guidelines",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/forgedev/prguidelines/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 8
+  },
+  {
     "id": "1.14.4/concepts_resources",
     "version": "1.14.4",
     "label": "Resources",
-    "url": "https://docs.readthedocs.net/en/1.14.x/concepts/resources/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/concepts/resources/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 1
@@ -410,7 +488,7 @@
     "id": "1.14.4/effects_sounds",
     "version": "1.14.4",
     "label": "Sounds",
-    "url": "https://docs.readthedocs.net/en/1.14.x/effects/sounds/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/effects/sounds/",
     "tags": [
       "sounds"
     ],
@@ -421,7 +499,7 @@
     "id": "1.14.4/gettingstarted_structuring",
     "version": "1.14.4",
     "label": "Structuring Your Mod",
-    "url": "https://docs.readthedocs.net/en/1.14.x/gettingstarted/structuring/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/gettingstarted/structuring/",
     "tags": [
       "meta"
     ],
@@ -429,10 +507,19 @@
     "sectionCount": 6
   },
   {
+    "id": "1.14.4/styleguide",
+    "version": "1.14.4",
+    "label": "Style Guide",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/styleguide/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 2
+  },
+  {
     "id": "1.14.4/animation_implementing",
     "version": "1.14.4",
     "label": "Using the API",
-    "url": "https://docs.readthedocs.net/en/1.14.x/animation/implementing/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/animation/implementing/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -441,7 +528,7 @@
     "id": "1.14.4/conventions_versioning",
     "version": "1.14.4",
     "label": "Versioning",
-    "url": "https://docs.readthedocs.net/en/1.14.x/conventions/versioning/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/conventions/versioning/",
     "tags": [
       "meta"
     ],
@@ -452,7 +539,7 @@
     "id": "1.14.4/datastorage_worldsaveddata",
     "version": "1.14.4",
     "label": "World Saved Data",
-    "url": "https://docs.readthedocs.net/en/1.14.x/datastorage/worldsaveddata/",
+    "url": "https://docs.minecraftforge.net/en/1.14.x/datastorage/worldsaveddata/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 2

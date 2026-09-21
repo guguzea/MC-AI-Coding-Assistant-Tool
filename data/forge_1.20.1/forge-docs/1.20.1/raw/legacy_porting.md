@@ -2,7 +2,7 @@
 version: "1.20.1"
 forgeVersion: "47.2.0"
 chapter: "legacy/porting"
-source: "https://docs.readthedocs.net/en/1.20.1/legacy/porting/"
+source: "https://docs.minecraftforge.net/en/1.20.1/legacy/porting/"
 sourceType: mkdocs
 ---
 # Porting to Minecraft 1.20

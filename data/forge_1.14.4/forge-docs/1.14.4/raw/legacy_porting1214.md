@@ -2,7 +2,7 @@
 version: "1.14.4"
 forgeVersion: "26.0.21"
 chapter: "legacy/porting1214"
-source: "https://docs.readthedocs.net/en/1.14.x/legacy/porting1214/"
+source: "https://docs.minecraftforge.net/en/1.14.x/legacy/porting1214/"
 sourceType: mkdocs
 ---
 # Porting from Minecraft 1.12 to Minecraft 1.13/1.14

@@ -66,16 +66,25 @@ const MANIFEST = path.join(DATA_DIR, "semantic-index-manifest.json");
 // 非 datagen 缺页补齐（2026-09-21 RELEDGER 重算）：forge 1.15.2–1.19.4 按上游 search_index 补 77 章
 // （含 1.18+ 的 resources/client|server/* 数据章节）后重建语义层
 // ⇒ chunks 34281→35134 / embedded 25850→26510，forge 6105→6958 / 4647→5307。
+// W5-F（2026-09-21 缺页普查 → 补抓）：forge 1.13.2/1.14.4 补 22 页 + 8 档站点首页；
+// quilt 语料源从 wiki HTML 壳改成 QuiltMC/developer-wiki 的 markdown 本体，每档 4→18 页（×6 档）；
+// liteloader 种子补两页后爬出 33 页/档。⇒ chunks 35134→36610 / embedded 26510→27632，
+// 其中 quilt 560→1784 / 439→1349（增量最大项，就是那 14 页 ×6 档）。
+// C1（2026-09-21 正文转换修复 → 10 档 606 页全量重抓重理）：泛型不再被吃、列表里的代码块不再被压平、
+// 围栏配对与实体解码各归其位 ⇒ 块切分变了：chunks 36610→36651（+41），embedded 27632→27620（-12）。
+// 两者反向不是向量层缺口：重建日志记的口径是「<200 字短块仍进 chunks/chunks_fts，只不进 chunk_embeddings」，
+// 拆平的块变多必然带出更多短块；本轮该留痕为 436 页 / 1744 个短块。逐项归因未做，只钉总数。
+// ⇒ forge 平台 7189→7230 / 5498→5486。
 const LEDGER_SUM = {
-  entries: 60, chunks: 35134, embedded: 26510,
+  entries: 60, chunks: 36651, embedded: 27620,
   perPlatform: {
     "bedrock": { entries: 1, chunks: 308, embedded: 303 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
-    "forge": { entries: 10, chunks: 6958, embedded: 5307 },
-    "liteloader": { entries: 3, chunks: 443, embedded: 363 },
+    "forge": { entries: 10, chunks: 7230, embedded: 5486 },
+    "liteloader": { entries: 3, chunks: 464, embedded: 384 },
     "modloader": { entries: 3, chunks: 6, embedded: 2 },
     "neoforge": { entries: 9, chunks: 18877, embedded: 14169 },
-    "quilt": { entries: 6, chunks: 560, embedded: 439 },
+    "quilt": { entries: 6, chunks: 1784, embedded: 1349 },
     "rift": { entries: 1, chunks: 47, embedded: 29 },
   },
 };

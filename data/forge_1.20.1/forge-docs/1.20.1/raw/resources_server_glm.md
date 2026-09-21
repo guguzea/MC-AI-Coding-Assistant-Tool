@@ -1,11 +1,13 @@
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "resources/server/glm"
+source: "https://docs.minecraftforge.net/en/1.20.1/resources/server/glm/"
+sourceType: mkdocs
+---
 # Global Loot Modifiers
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/resources/server/glm
-> 版本：1.20.1
-
-# Global Loot Modifiers
-
-Global Loot Modifiers are a data-driven method of handling modification of harvested drops without the need to overwrite dozens to hundreds of vanilla loot tables or to handle effects that would require interactions with another mod&rsquo;s loot tables without knowing what mods may be loaded. Global Loot Modifiers are also stacking, rather than last-load-wins, similar to tags.
+Global Loot Modifiers are a data-driven method of handling modification of harvested drops without the need to overwrite dozens to hundreds of vanilla loot tables or to handle effects that would require interactions with another mod’s loot tables without knowing what mods may be loaded. Global Loot Modifiers are also stacking, rather than last-load-wins, similar to tags.
 
 ## Registering a Global Loot Modifier
 
@@ -16,17 +18,18 @@ You will need 4 things:
 3. A class that extends `IGlobalLootModifier`.- The operational code that makes your modifier work. Most modders can extend `LootModifier` as it supplies base functionality.
 4. Finally, a codec to encode and decode your operational class.- This is [registered](../../../concepts/registries/#methods-for-registering) as any other `IForgeRegistryEntry`.
 
-## The `global_loot_modifiers.json
+## The `global_loot_modifiers.json`
 
-The <code>global_loot_modifiers.json` represents all loot modifiers to be loaded into the game. This file **MUST** be placed within `data/forge/loot_modifiers/global_loot_modifiers.json`.
+The `global_loot_modifiers.json` represents all loot modifiers to be loaded into the game. This file **MUST** be placed within `data/forge/loot_modifiers/global_loot_modifiers.json`.
 
-> **Important**: Important global_loot_modifiers.json will only be read in the forge namespace. The file will be neglected if it is under the mod&rsquo;s namespace.
+> **Important**: Important global_loot_modifiers.json will only be read in the forge namespace. The file will be neglected if it is under the mod’s namespace.
 
-`entries` is an *…* of the modifiers that will be loaded. The [ResourceLocation](../../../concepts/resources/#ResourceLocation)s specified points to their associated entry within `data/<namespace>/loot_modifiers/<path>.json`. This is primarily relevant to data pack makers for resolving conflicts between modifiers from separate mods.
+`entries` is an *ordered list* of the modifiers that will be loaded. The [ResourceLocation](../../../concepts/resources/#ResourceLocation)s specified points to their associated entry within `data/<namespace>/loot_modifiers/<path>.json`. This is primarily relevant to data pack makers for resolving conflicts between modifiers from separate mods.
 
 `replace`, when `true`, changes the behavior from appending loot modifiers to the global list to replacing the global list entries entirely. Modders will want to use `false` for compatibility with other mod implementations. Datapack makers may want to specify their overrides with `true`.
 
-```json
+
+```
 {
   "replace": false, // Must be present
   "entries": [
@@ -37,6 +40,7 @@ The <code>global_loot_modifiers.json` represents all loot modifiers to be loaded
   ]
 }
 ```
+
 
 ## The Serialized JSON
 
@@ -49,6 +53,7 @@ This file contains all of the potential variables related to your modifier, incl
 > **Important**: Important Although conditions should represent what is needed for the modifier to activate, this is only the case if using the bundled Forge classes. If using LootModifier as a subclass, all conditions will be ANDed together and checked to see if the modifier should be applied.
 
 Any additional properties read by the serializer and defined by the modifier can also be specified.
+
 
 ```
 // Within data/examplemod/loot_modifiers/example_glm.json
@@ -64,9 +69,10 @@ Any additional properties read by the serializer and defined by the modifier can
 }
 ```
 
-## `IGlobalLootModifier
 
-To supply the functionality a global loot modifier specifies, a <code>IGlobalLootModifier` implementation must be specified. These are instances generated each time a serializer decodes the information from JSON and supplies it into this object.
+## `IGlobalLootModifier`
+
+To supply the functionality a global loot modifier specifies, a `IGlobalLootModifier` implementation must be specified. These are instances generated each time a serializer decodes the information from JSON and supplies it into this object.
 
 There are two methods that needs to be defined in order to create a new modifier: `#apply` and `#codec`. `#apply` takes in the current loot that will be generated along with the context information such as the currently level or additional defined parameters. It returns the list of drops to generate.
 
@@ -74,15 +80,16 @@ There are two methods that needs to be defined in order to create a new modifier
 
 `#codec` returns the registered [codec](#the-loot-modifier-codec) used to encode and decode the modifier to/from JSON.
 
-### The `LootModifier Subclass
+### The `LootModifier` Subclass
 
-<code>LootModifier` is an abstract implementation of `IGlobalLootModifier` to provide the base functionality which most modders can easily extend and implement. This expands upon the existing interface by defining the `#apply` method to check the conditions to determine whether or not to modify the generated loot.
+`LootModifier` is an abstract implementation of `IGlobalLootModifier` to provide the base functionality which most modders can easily extend and implement. This expands upon the existing interface by defining the `#apply` method to check the conditions to determine whether or not to modify the generated loot.
 
 There are two things of note within the subclass implementation: the constructor which must take in an array of `LootItemCondition`s and the `#doApply` method.
 
 The array of `LootItemCondition`s define the list of conditions that must be true before the loot can be modified. The supplied conditions are **ANDed** together, meaning that all conditions must be true.
 
 The `#doApply` method works the same as the `#apply` method except that it only executes once all conditions return true.
+
 
 ```java
 public class ExampleModifier extends LootModifier {
@@ -105,11 +112,13 @@ public class ExampleModifier extends LootModifier {
 }
 ```
 
+
 ## The Loot Modifier Codec
 
 The connector between the JSON and the `IGlobalLootModifier` instance is a [`Codec<T>`](../../../datastorage/codecs/), where `T` represents the type of the `IGlobalLootModifier` to use.
 
 For ease of convenience, a loot conditions codec has been provided for an easy addition to a record-like codec via `LootModifier#codecStart`. This is utilized for [data generation](../../../datagen/server/glm/) of the associated loot modifier.
+
 
 ```
 // For some DeferredRegister<Codec<? extends IGlobalLootModifier>> REGISTRAR
@@ -125,5 +134,6 @@ public static final RegistryObject<Codec<ExampleModifier>> = REGISTRAR.register(
   )
 );
 ```
+
 
 [Examples](https://github.com/MinecraftForge/MinecraftForge/blob/1.20.1/src/test/java/net/minecraftforge/debug/gameplay/loot/GlobalLootModifiersTest.java) can be found on the Forge Git repository, including silk touch and smelting effects.

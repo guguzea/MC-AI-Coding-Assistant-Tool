@@ -18,7 +18,7 @@
  * 空 route 且已有入库树时，--force 拒绝覆盖（防止 26.2 成为现行后把 26.1 树写成 26.2）。
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { fetchPageHtml, isLikelyValidHtmlPage, htmlTableToMarkdown } from "./_lib/pipeline-helpers.mjs";
@@ -567,6 +567,14 @@ async function main() {
       const outFile = join(rawDir, `${safeId}.md`);
 
       if (!force && existsSync(outFile)) {
+        const bytes = statSync(outFile).size;
+        if (bytes < 100) {
+          // 「文件在」不等于「抓到了」：空壳页过去计成 SKIP 成功，缺页就是这么咽下去的（同 forge 侧修复）。
+          console.log(`  SHELL ${page.href} — 本地仅 ${bytes}B，视为未完成（加 --force 重抓）`);
+          errorPages++;
+          totalPages++;
+          continue;
+        }
         console.log(`  SKIP  ${page.href} (exists)`);
         skippedPages++;
         totalPages++;
@@ -617,6 +625,13 @@ async function main() {
   console.log(`Fetched: ${fetchedPages}`);
   console.log(`Skipped: ${skippedPages}`);
   console.log(`Errors: ${errorPages}`);
+
+  // 失败必须影响退出码：旧实现 errorPages 只打印，`main().catch` 又抓不到它，
+  // 于是整条 neoforge 抓取链在批量作业里永远报"成功"（与 forge 侧同形缺陷）。
+  if (errorPages > 0) {
+    console.error(`FAILED: ${errorPages} 页未落盘或为空壳`);
+    process.exitCode = 1;
+  }
 }
 
 main().catch(err => {

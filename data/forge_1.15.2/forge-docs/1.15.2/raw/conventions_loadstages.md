@@ -1,6 +1,6 @@
 ---
 version: "1.15.2"
-forgeVersion: "31.2.57"
+forgeVersion: "29.0.23"
 chapter: "conventions/loadstages"
 source: "https://docs.minecraftforge.net/en/1.15.x/conventions/loadstages/"
 sourceType: mkdocs
@@ -8,6 +8,7 @@ sourceType: mkdocs
 # Loading Stages
 
 The Forge loading process has four main phases. All of these events shown are fired on the mod-specific eventbus, *not* the global Forge event bus `MinecraftForge#EVENT_BUS`. Event handlers should be [registered](../../events/intro/#creating-an-event-handler):
+
 
 ```java
 @Mod("mymod")
@@ -20,14 +21,15 @@ public class MyMod {
 }
 ```
 
-> **Warning**: Warning All four of the below events are called for all mods in parallel. That is, all mods will concurrently receive common setup, FML will wait for them all to finish, then all mods will concurrently receive sided setup, and so forth. Mods must take care to be thread safe, especially when calling other mods&rsquo; APIs and accessing Vanilla systems, which are not thread safe in general. This can be done using the DeferredWorkQueue class.
+
+> **Warning**: Warning All four of the below events are called for all mods in parallel. That is, all mods will concurrently receive common setup, FML will wait for them all to finish, then all mods will concurrently receive sided setup, and so forth. Mods must take care to be thread safe, especially when calling other mods’ APIs and accessing Vanilla systems, which are not thread safe in general. This can be done using the DeferredWorkQueue class.
 
 ## Setup
 
 `FMLCommonSetupEvent` is the first to fire early in the Minecraft starting process. [Registry events](../../concepts/registries/#registering-things) are fired before this event, so you can expect all registry objects to be valid by the time this runs. Common actions to perform in common setup are:
 
-- <li>Utilizing the common config data
-- <li>Registering [Capabilities](../../datastorage/capabilities/)
+- Utilizing the common config data
+- Registering [Capabilities](../../datastorage/capabilities/)
 
 ## Sided Setup
 

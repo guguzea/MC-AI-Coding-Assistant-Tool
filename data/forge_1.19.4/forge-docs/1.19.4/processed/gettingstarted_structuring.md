@@ -14,6 +14,7 @@ Structured mods are beneficial for maintenance, making contributions, and provid
 
 When structuring your mod, pick a unique, top-level package structure. Many programmers will use the same name for different classes, interfaces, etc. Java allows classes to have the same name as long as they are in different packages. As such, if two classes have the same package with the same name, only one would be loaded, most likely causing the game to crash.
 
+
 ```
 a.jar
   - com.example.ExampleClass
@@ -21,7 +22,9 @@ b.jar
   - com.example.ExampleClass // This class will not normally be loaded
 ```
 
+
 This is even more relevant when it comes to loading modules. If there are class files in two packages under the same name in separate modules, this will cause the mod loader **to crash on startup** since mod modules are exported to the game and other mods.
+
 
 ```
 module A
@@ -35,27 +38,28 @@ module B
     - class T
 ```
 
+
 As such, your top level package should be something that you own: a domain, email address, a subdomain of where your website, etc. It can even be your name or username as long as you can guarantee that it will be uniquely identifiable within the expected target.
 
 Type | Value | Top-Level Package
 --- | --- | ---
 Domain | example.com | `com.example`
 Subdomain | example.github.io | `io.github.example`
-Email | [[email&#160;protected]](/cdn-cgi/l/email-protection) | `com.gmail.example`
+Email | [[email protected]](/cdn-cgi/l/email-protection) | `com.gmail.example`
 
 
 <!-- key:🟠 role:常见错误 -->
 
-The next level package should then be your mod&rsquo;s id (e.g. `com.example.examplemod` where `examplemod` is the mod id). This will guarantee that, unless you have two mods with the same id (which should never be the case), your packages should not have any issues loading.
+The next level package should then be your mod’s id (e.g. `com.example.examplemod` where `examplemod` is the mod id). This will guarantee that, unless you have two mods with the same id (which should never be the case), your packages should not have any issues loading.
 
-You can find some additional naming conventions on [Oracle&rsquo;s tutorial page](https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html).
+You can find some additional naming conventions on [Oracle’s tutorial page](https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html).
 
 ### Sub-package Organization
 
-In addition to the top-level package, it is highly recommend to break your mod&rsquo;s classes between subpackages. There are two major methods on how to do so:
+In addition to the top-level package, it is highly recommend to break your mod’s classes between subpackages. There are two major methods on how to do so:
 
-- <li>**Group By Function**: Make subpackages for classes with a common purpose. For example, blocks can be under `block` or `blocks`, entities under `entity` or `entities`, etc. Mojang uses this structure with the singular version of the word.
-- <li>**Group By Logic**: Make subpackages for classes with a common logic. For example, if you were creating a new type of crafting table, you would put its block, menu, item, and more under `feature.crafting_table`.
+- **Group By Function**: Make subpackages for classes with a common purpose. For example, blocks can be under `block` or `blocks`, entities under `entity` or `entities`, etc. Mojang uses this structure with the singular version of the word.
+- **Group By Logic**: Make subpackages for classes with a common logic. For example, if you were creating a new type of crafting table, you would put its block, menu, item, and more under `feature.crafting_table`.
 
 #### Client, Server, and Data Packages
 
@@ -69,9 +73,9 @@ A common class naming scheme makes it easier to decipher the purpose of the clas
 
 Classes are commonly suffixed with its type, for example:
 
-- <li>An `Item` called `PowerRing` -> `PowerRingItem`.
-- <li>A `Block` called `NotDirt` -> `NotDirtBlock`.
-- <li>A menu for an `Oven` -> `OvenMenu`.
+- An `Item` called `PowerRing` -> `PowerRingItem`.
+- A `Block` called `NotDirt` -> `NotDirtBlock`.
+- A menu for an `Oven` -> `OvenMenu`.
 
 
 <!-- key:🔴 role:新手必读 (Note) -->
@@ -83,4 +87,4 @@ Classes are commonly suffixed with its type, for example:
 
 <!-- key:🟠 role:常见错误 -->
 
-There are many methods for performing a certain task: registering an object, listening for events, etc. It&rsquo;s generally recommended to be consistent by using a single method to accomplish a given task. While this does improve code formatting, it also avoid any weird interactions or redundancies that may occur (e.g. your event listener executing twice).
+There are many methods for performing a certain task: registering an object, listening for events, etc. It’s generally recommended to be consistent by using a single method to accomplish a given task. While this does improve code formatting, it also avoid any weird interactions or redundancies that may occur (e.g. your event listener executing twice).

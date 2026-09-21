@@ -2,7 +2,7 @@
 version: "1.16.5"
 forgeVersion: "36.2.34"
 chapter: "legacy/porting"
-source: "https://docs.readthedocs.net/en/1.16.x/legacy/porting/"
+source: "https://docs.minecraftforge.net/en/1.16.x/legacy/porting/"
 sourceType: mkdocs
 ---
 # Porting to Minecraft 1.16

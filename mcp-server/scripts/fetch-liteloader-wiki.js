@@ -61,6 +61,10 @@ const SEEDS = [
   "user:install:forge",
   "user:install:multimc",
   "user:install:manual",
+  // 2026-09-21 缺页普查：这两页在 DokuWiki `_pages` 枚举里存在，但不在上面任何页的出链里，
+  // 纯靠爬取永远到不了（上游站对不存在的页也回 200，所以也不能用状态码反推）。显式登记为种子。
+  "user:install:troubleshooting",
+  "user:install:manual:3rdparty",
 ];
 
 const ALLOWED = /^(dev|info|user)(:|$)/i;

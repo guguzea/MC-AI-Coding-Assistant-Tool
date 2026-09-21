@@ -2,7 +2,7 @@
 version: "1.16.5"
 forgeVersion: "36.2.34"
 chapter: "rendering/ister"
-source: "https://docs.readthedocs.net/en/1.16.x/rendering/ister/"
+source: "https://docs.minecraftforge.net/en/1.16.x/rendering/ister/"
 sourceType: mkdocs
 ---
 # ItemStackTileEntityRenderer
@@ -13,7 +13,7 @@ sourceType: mkdocs
 
 ItemStackTileEntityRenderer allows you to render your item using `public void renderByItem(ItemStack itemStackIn, TransformType transformTypeIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn)`.
 
-In order to use an ISTER, the `Item` must first satisfy the condition that its model returns true for `IBakedModel#isCustomRenderer`. Once that returns true, the Item&rsquo;s ISTER will be accessed for rendering. If it does not have one, it will use the default `ItemStackTileEntityRenderer#instance`.
+In order to use an ISTER, the `Item` must first satisfy the condition that its model returns true for `IBakedModel#isCustomRenderer`. Once that returns true, the Item’s ISTER will be accessed for rendering. If it does not have one, it will use the default `ItemStackTileEntityRenderer#instance`.
 
 To set the ISTER for an Item, use `Item$Properties#setISTER`. Each Item can only ever provide one ISTER, and the getter is final so that mods do not return new instances each frame.
 

@@ -6,13 +6,15 @@ This page will cover the basics of the most common types of interaction with blo
 
 ## Player Right Click
 
-Since left clicking, or &ldquo;punching&rdquo;, a block does not generally result in any unique behavior, it is probably fair to say right clicking, or &ldquo;activation&rdquo;, is *the* most common method of interaction. And thankfully, it is also one of the simplest to handle.
+Since left clicking, or “punching”, a block does not generally result in any unique behavior, it is probably fair to say right clicking, or “activation”, is *the* most common method of interaction. And thankfully, it is also one of the simplest to handle.
 
-## `use
+## `use`
+
 
 ```
 public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
 ```
+
 
 This is the method that controls right click behavior.
 
@@ -20,12 +22,12 @@ This is the method that controls right click behavior.
 
 Type | Name | Description
 --- | --- | ---
-<code>BlockState` | `state` | The state of the block that was clicked
+`BlockState` | `state` | The state of the block that was clicked
 `World` | `worldIn` | The world that the block was clicked in
 `BlockPos` | `pos` | The position of the block that was clicked
 `PlayerEntity` | `player` | The player who did the clicking
 `Hand` | `handIn` | The hand with which the player clicked
-`BlockRayTraceResult` | `hit` | Where on the block&rsquo;s bounds it was hit
+`BlockRayTraceResult` | `hit` | Where on the block’s bounds it was hit
 
 #### Return Value
 
@@ -53,7 +55,7 @@ One of the most common things to do on block activation is opening a GUI. Many b
 
 #### Activation
 
-Another common use for activation is, well, activation. This can be something like &ldquo;turning on&rdquo; a block, or triggering it to perform some action. For instance, a block could light up when activated. A vanilla example would be buttons or levers.
+Another common use for activation is, well, activation. This can be something like “turning on” a block, or triggering it to perform some action. For instance, a block could light up when activated. A vanilla example would be buttons or levers.
 
 
 <!-- key:🔴 role:新手必读 (Important) -->
@@ -62,13 +64,15 @@ Another common use for activation is, well, activation. This can be something li
 
 ## Block Placement
 
-## `setPlacedBy
+## `setPlacedBy`
+
 
 ```
 public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
 ```
 
-Called by <code>BlockItem`s after a block is set in the world, to allow post-place logic.
+
+Called by `BlockItem`s after a block is set in the world, to allow post-place logic.
 
 ### Parameters:
 
@@ -82,24 +86,26 @@ Type | Name | Description
 
 ## Player Break/Destroy
 
-## `attack
+## `attack`
+
 
 ```
 public void attack(BlockState state, World worldIn, BlockPos pos, PlayerEntity player)
 ```
+
 
 Called on a block when it is clicked by a player.
 
 
 <!-- key:🔴 role:新手必读 (Note) -->
 
-> **Note**: Note This method is for when the player left-clicks on a block. Don&rsquo;t get this confused with use, which is called when the player right-clicks.
+> **Note**: Note This method is for when the player left-clicks on a block. Don’t get this confused with use, which is called when the player right-clicks.
 
 ### Parameters:
 
 Type | Name | Description
 --- | --- | ---
-<code>BlockState` | `state` | The state of the block that was clicked
+`BlockState` | `state` | The state of the block that was clicked
 `World` | `worldIn` | The world that the block was clicked in
 `BlockPos` | `pos` | The position of the block that was clicked
 `PlayerEntity` | `player` | The player who did the clicking
@@ -110,19 +116,21 @@ This method is perfect for adding custom events when a player clicks on a block.
 
 By default, this method does nothing. `NoteBlock` overrides this method so when left-clicked, it plays a sound. `RedstoneOreBlock` on left-click emits a faint light and spawns particles around itself.
 
-## `playerWillDestroy
+## `playerWillDestroy`
+
 
 ```
 public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player)
 ```
 
-Called before the Block is set to air in the world. Called regardless of if the player&rsquo;s tool can actually collect this block.
+
+Called before the Block is set to air in the world. Called regardless of if the player’s tool can actually collect this block.
 
 ### Parameters:
 
 Type | Name | Description
 --- | --- | ---
-<code>World` | `worldIn` | The world that the block was destroyed
+`World` | `worldIn` | The world that the block was destroyed
 `BlockPos` | `pos` | The position of the block that was destroyed
 `BlockState` | `state` | The state of the block that was destroyed
 `PlayerEntity` | `player` | The player who harvested the block
@@ -131,17 +139,24 @@ Type | Name | Description
 
 This method is perfect for adding custom events as a result of a player destroying a block
 
-This method has important behavior in the `Block` class so be sure to call the super method. ``` super.playerWillDestroy(worldIn, pos, state, player); ```
+This method has important behavior in the `Block` class so be sure to call the super method.
 
-The `TNTBlock` overrides this method to cause it&rsquo;s explosion when a player destroys it if its `unstable` property is `true`. This method is used by extended pistons; since an extended piston is made up of two blocks. (the extended head and the base) The `PistonHeadBlock` makes use of this method to destroy the base block when the `PistonHeadBlock` is destroyed.
+```
+super.playerWillDestroy(worldIn, pos, state, player);
+```
+
+
+The `TNTBlock` overrides this method to cause it’s explosion when a player destroys it if its `unstable` property is `true`. This method is used by extended pistons; since an extended piston is made up of two blocks. (the extended head and the base) The `PistonHeadBlock` makes use of this method to destroy the base block when the `PistonHeadBlock` is destroyed.
 
 ## Entity Collision
 
-## `entityInside
+## `entityInside`
+
 
 ```
 public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn)
 ```
+
 
 
 <!-- key:🟠 role:常见错误 -->
@@ -152,7 +167,7 @@ This method is called whenever an entity collides with the block.
 
 Type | Name | Description
 --- | --- | ---
-<code>BlockState` | `state` | The state of the block that was collided with
+`BlockState` | `state` | The state of the block that was collided with
 `World` | `worldIn` | The world where the collided block is located
 `BlockPos` | `pos` | The position of the block that was collided with
 `Entity` | `entityIn` | The entity who collided with the block

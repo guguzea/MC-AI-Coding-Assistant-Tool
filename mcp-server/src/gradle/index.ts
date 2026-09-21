@@ -394,8 +394,16 @@ function diagnoseLoomGradle(buildGradle: string, gradleProperties: string | unde
   }
 
   if (is261) {
-    if (!quilt && !hasNewFabricPlugin) {
-      errors.push('26.1 必须使用 id "net.fabricmc.fabric-loom"，不要旧的 id "fabric-loom"');
+    // W2-x（2026-09-21）：26.1 已去混淆（官方连 `remapJar` 都改名 `jar`）⇒ 只认**不带 `-remap`** 的
+    // `net.fabricmc.fabric-loom`。一手证据：`fabric/26.1.2/scaffold/build.gradle:4`
+    // （`id "net.fabricmc.fabric-loom" version "1.17-SNAPSHOT"`）+ `fabric/26.1.2/.cursor/rules/00-project-setup.mdc:9`
+    // （「Loom 插件 id 换成 net.fabricmc.fabric-loom」）。旧实现复用 `hasNewFabricPlugin`（其正则把 `-remap`
+    // 列为可选）⇒ 26.1 工程写 `-remap` 仍判 passed，与下面那行文案**自相矛盾**。
+    const hasStrict261Loom = /id\s+['"]net\.fabricmc\.fabric-loom['"]/.test(buildGradle);
+    if (!quilt && !hasStrict261Loom) {
+      errors.push(
+        '26.1 必须使用 id "net.fabricmc.fabric-loom"（不要 `-remap`：26.1 已去混淆；也不要用旧 id "fabric-loom"）',
+      );
     }
     if (/modImplementation/.test(buildGradle)) {
       errors.push("26.1 禁止 modImplementation，改用 implementation / compileOnly / api");

@@ -248,34 +248,39 @@ async function main() {
 
   let written;
   let sourceLabel;
-  if (fromReports) {
-    if (!fs.existsSync(fromReports)) throw new Error(`reports dir missing: ${fromReports}`);
-    written = importFromReports(fromReports, stageDir);
-    sourceLabel = `reports:${fromReports}`;
-  } else {
-    written = await importFromMinecraftData(version, stageDir);
-    sourceLabel = "minecraft-data@master";
-  }
+  try {
+    if (fromReports) {
+      if (!fs.existsSync(fromReports)) throw new Error(`reports dir missing: ${fromReports}`);
+      written = importFromReports(fromReports, stageDir);
+      sourceLabel = `reports:${fromReports}`;
+    } else {
+      written = await importFromMinecraftData(version, stageDir);
+      sourceLabel = "minecraft-data@master";
+    }
 
-  if (!written.length) {
-    fs.rmSync(stageDir, { recursive: true, force: true });
-    throw new Error("No registries written（原有语料保持不动，未做任何删除）");
-  }
+    if (!written.length) {
+      throw new Error("No registries written（原有语料保持不动，未做任何删除）");
+    }
 
-  // 换入：stage 已完整，此时才删旧的 json/sqlite，再 move 新件。
-  for (const f of fs.readdirSync(outDir)) {
-    if (f.endsWith(".json") || f.endsWith(".sqlite")) {
-      try {
-        fs.unlinkSync(path.join(outDir, f));
-      } catch {
-        /* ignore */
+    // 换入：stage 已完整，此时才删旧的 json/sqlite，再 move 新件。
+    for (const f of fs.readdirSync(outDir)) {
+      if (f.endsWith(".json") || f.endsWith(".sqlite")) {
+        try {
+          fs.unlinkSync(path.join(outDir, f));
+        } catch {
+          /* ignore */
+        }
       }
     }
+    for (const f of fs.readdirSync(stageDir)) {
+      fs.renameSync(path.join(stageDir, f), path.join(outDir, f));
+    }
+  } finally {
+    // W4-8（2026-09-21）：stage 的**全生命周期**收在 finally 里 —— 抓取抛异常（网络/解析）、
+    // 写入 0 件、换入中途失败，任一路径都不得在 outDir 旁留下 `.stage-<pid>` 残骸。
+    // 旧实现只在「written.length===0」这一条路径上清理，抛异常那条会留残骸（报告实测）。
+    fs.rmSync(stageDir, { recursive: true, force: true });
   }
-  for (const f of fs.readdirSync(stageDir)) {
-    fs.renameSync(path.join(stageDir, f), path.join(outDir, f));
-  }
-  fs.rmSync(stageDir, { recursive: true, force: true });
   const manifest = writeManifest(outDir, version, sourceLabel, written);
   updateAttribution(version, sourceLabel);
 

@@ -158,6 +158,37 @@ for (const file of auditScripts) {
   auditFiles += 1;
 }
 
+/* ── R-4：恒真断言（tautology）不得进入测试面（W1-1，2026-09-21）───────────────
+ * 当年 5 处「恒真 / 死断言」能红，但**没有任何闸防止它们再退回去** —— 谁把
+ * `assert.ok(count >= 0)` 或 `assert.ok(true)` 写回来，全链仍然全绿。
+ * 本段只认**静态可判的恒真**：字面真值 / 字面量之间的比较 / 同名自比 / 空测试函数体。
+ * 明确**不碰** `x.indexOf(y) >= 0` 这类**存在性**断言 —— 那是真判据（indexOf 为 -1 即失败），
+ * 仓内现有 7 处全是这一形态，必须继续放行。
+ */
+const SELF = fileURLToPath(import.meta.url);
+const TAUTOLOGY = [
+  [/assert\.ok\s*\(\s*(?:true|!false)\s*[,)]/, "assert.ok(true)"],
+  [/assert\.ok\s*\(\s*\d+(?:\.\d+)?\s*(?:>=|<=|>|<)\s*\d+(?:\.\d+)?\s*[,)]/, "字面量之间的恒真比较"],
+  [/assert\.(?:equal|strictEqual)\s*\(\s*([A-Za-z_$][\w$.]*)\s*,\s*\1\s*[,)]/, "同名自比（x, x）"],
+  [/(?:async\s+)?function\s+test[A-Za-z0-9_]*\s*\([^)]*\)\s*\{\s*\}/, "空测试函数体（无断言）"],
+];
+let tautologyFiles = 0;
+for (const root of roots) {
+  for (const file of walk(root)) {
+    if (file === SELF) continue;
+    const text = fs.readFileSync(file, "utf8");
+    if (!/\bassert\.|function\s+test[A-Za-z0-9_]*\s*\(/.test(text)) continue;
+    tautologyFiles += 1;
+    text.split("\n").forEach((line, idx) => {
+      for (const [re, why] of TAUTOLOGY) {
+        if (re.test(line)) {
+          problems.push({ file, why: `第 ${idx + 1} 行：恒真断言（${why}）—— 断言必须能失败`, line: idx + 1 });
+        }
+      }
+    });
+  }
+}
+
 if (problems.length) {
   console.error("assert-test-harness: 发现「async 被同步吞掉」风险（R-1/R-2 harness 假绿 / R-3 audit 脚本未 await）：");
   for (const p of problems) console.error(`  ${path.relative(process.cwd(), p.file)} :: ${p.why}`);
@@ -166,3 +197,4 @@ if (problems.length) {
 }
 console.log(`assert-test-harness: ok (${harnesses} 个手搓 harness 已锁死 thenable 处理)`);
 console.log(`assert-test-harness: ok R-3 (${auditFiles} 个 audit 脚本 / ${asyncBindings} 个 async 导出绑定已核 await)`);
+console.log(`assert-test-harness: ok R-4 (${tautologyFiles} 个含断言的测试文件已扫恒真形态：字面真值 / 字面量比较 / 同名自比 / 空测试体)`);

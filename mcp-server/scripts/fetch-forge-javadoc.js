@@ -177,7 +177,7 @@ function parsePackageList(html) {
  * 标准化后：net/minecraft/block/ClassName.html
  * 拼接：javadocRoot + relPath
  */
-function parsePackageSummary(html, pkgSummaryUrl) {
+export function parsePackageSummary(html, pkgSummaryUrl) {
   const classes = [];
 
   // 提取所有 href 属性值
@@ -195,10 +195,14 @@ function parsePackageSummary(html, pkgSummaryUrl) {
     if (!href.includes('net/') && !href.includes('cpw/')) continue;
 
     // 用 URL 正确解析相对路径（避免手动 replace 的双重路径问题）
-    const absUrl = new URL(href, pkgSummaryUrl).href;
+    const parsedUrl = new URL(href, pkgSummaryUrl);
+    // 成员锚点不是类页：`GuiScreen.html#height` 曾被当成一个「类」抓下来，
+    // 于是同一个类页按成员链接重复落盘几十遍（1.10.2–1.12.2 各 20+ 篇，文件名里带 .html#）。
+    if (parsedUrl.hash || !parsedUrl.pathname.endsWith(".html")) continue;
+    const absUrl = parsedUrl.href;
 
     // 提取类名
-    const className = absUrl.split('/').pop().replace(/\.html$/, '');
+    const className = parsedUrl.pathname.split('/').pop().replace(/\.html$/, '');
     if (!/^[A-Z]/.test(className)) continue;
 
     classes.push({ name: className, absUrl });
@@ -269,13 +273,15 @@ export function planClassWrites(classes) {
 /**
  * 将 class 页面 HTML 转换为 Markdown。
  */
-function htmlToMarkdown(className, packageName, parsed, version, classUrl) {
+function htmlToMarkdown(className, packageName, parsed, version, classUrl, forgeBuild) {
   const lines = [];
   lines.push("---");
   lines.push(`title: "${className}"`);
   lines.push(`description: "${parsed.description.slice(0, 200).replace(/"/g, '\\"')}"`);
   lines.push(`package: "${packageName}"`);
   lines.push(`version: "${version}"`);
+  // build 号必须落在页面上：目录名只有 MC 版本，历史上一度无法核对这份正文出自哪一份 jar
+  if (forgeBuild) lines.push(`forgeBuild: "${forgeBuild}"`);
   lines.push(`source: "${classUrl}"`);
   lines.push(`sourceType: javadoc`);
   lines.push("---");
@@ -311,6 +317,27 @@ function htmlToMarkdown(className, packageName, parsed, version, classUrl) {
   return lines.join("\n");
 }
 
+/**
+ * 类页 URL → 它**真正**所在的包（相对 javadoc 根的完整路径，如 `net/minecraft/entity`）。
+ * package-summary 除了本包类表，还会列出跨包链接（继承自他包的类、Related 表）；
+ * 按 summary 的包落盘就会产出 `net/minecraft/client/renderer/entity/Entity.md` 这类
+ * 本不存在的 FQCN —— 2026-09-21 普查：6 档共 319 篇错档，且与正确那份逐字节重复。
+ * @param {string} absUrl @param {string} [baseUrl] javadoc 根（含 build 段，带尾斜杠）
+ * @returns {{pkg:string, file:string}|null}
+ */
+export function splitClassUrl(absUrl, baseUrl) {
+  let rel;
+  if (baseUrl && absUrl.startsWith(baseUrl)) {
+    rel = absUrl.slice(baseUrl.length);
+  } else {
+    const root = /^.*?\/javadoc\/forge\/[^/]+\//.exec(absUrl);
+    if (!root) return null;   // 认不出 javadoc 根就返回 null，让调用方退回 summary 的包
+    rel = absUrl.slice(root[0].length);
+  }
+  const m = /^(.+)\/([^/]+)\.html(?:[#?].*)?$/.exec(rel);
+  return m ? { pkg: m[1], file: m[2] } : null;
+}
+
 // ── 主流程 ─────────────────────────────────────────────────────────────
 
 async function fetchVersion(version, force) {
@@ -335,6 +362,9 @@ async function fetchVersion(version, force) {
 
   // 2. 遍历每个包，抓取 package-summary.html → 解析类列表
   let totalClasses = 0, fetched = 0, failed = 0;
+  /** 跨包重复：同一个类页在多个 package-summary 里被列出，只在它自己的包里落一次盘 */
+  const seenUrl = new Set();
+  let dupCrossPkg = 0;
   /** F123：本次抓取发现的大小写碰撞台账（有冲突才落盘） */
   const allConflicts = [];
   for (const pkg of packages) {
@@ -347,10 +377,6 @@ async function fetchVersion(version, force) {
     const classes = parsePackageSummary(pkgHtml, pkgSummaryUrl);
     totalClasses += classes.length;
     console.log(`${classes.length} 类`);
-
-    // 3. 抓取每个类的页面
-    const pkgDir = join(rawDir, pkg);
-    if (!existsSync(pkgDir)) mkdirSync(pkgDir, { recursive: true });
 
     // F123 根因侧：先算落盘计划（同 URL 去重 + 大小写碰撞改判），再按文件名写盘。
     const planned = classes.length;
@@ -366,6 +392,13 @@ async function fetchVersion(version, force) {
 
     for (const w of writes) {
       const classUrl = w.absUrl;
+      if (seenUrl.has(classUrl)) { dupCrossPkg++; continue; }
+      seenUrl.add(classUrl);
+      // 落盘位置按 URL 的包，不按 summary 的包 —— 后者会把跨包链接错档进本包目录
+      const at = splitClassUrl(classUrl, baseUrl);
+      const homePkg = at ? at.pkg : pkg;   // URL 解析不出来时退回 summary 包，不能静默丢页
+      const pkgDir = join(rawDir, homePkg);
+      if (!existsSync(pkgDir)) mkdirSync(pkgDir, { recursive: true });
       const filePath = join(pkgDir, w.fileName);
 
       if (existsSync(filePath) && !force) {
@@ -378,7 +411,7 @@ async function fetchVersion(version, force) {
       if (!clsOk) { console.log("❌"); await new Promise(r => setTimeout(r, 200)); continue; }
 
       const parsed = parseClassPage(classHtml);
-      const markdown = htmlToMarkdown(w.name, pkg, parsed, mcVer, classUrl);
+      const markdown = htmlToMarkdown(w.name, homePkg, parsed, mcVer, classUrl, forgeVer);
       writeFileSync(filePath, markdown, "utf-8");
       fetched++;
       console.log(`✅ (${parsed.methodSigs.length}m ${parsed.fields.length}f)`);
@@ -399,7 +432,7 @@ async function fetchVersion(version, force) {
     console.log(`  ⚠️ 大小写碰撞 ${allConflicts.length} 条 → ${reportPath}`);
   }
 
-  console.log(`  ✅ 完成：${totalClasses} 类 / ${fetched} 成功，${failed} 包失败`);
+  console.log(`  ✅ 完成：${totalClasses} 类 / ${fetched} 成功，${failed} 包失败，跨包重复已折叠 ${dupCrossPkg} 条`);
 }
 
 async function main() {

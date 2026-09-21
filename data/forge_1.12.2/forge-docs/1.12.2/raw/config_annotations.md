@@ -2,26 +2,26 @@
 version: "1.12.2"
 forgeVersion: "14.23.5.2858"
 chapter: "config/annotations"
-source: "https://docs.readthedocs.net/en/1.12.x/config/annotations/"
+source: "https://docs.minecraftforge.net/en/1.12.x/config/annotations/"
 sourceType: mkdocs
 ---
-# `@Config
+# `@Config`
 
-The <code>@Config` annotation is an alternative to `Configuration`.
+The `@Config` annotation is an alternative to `Configuration`.
 
 ## Table of Contents
 
-- <li>[Basics](#basics)
-- <li>[@Config Use](#config-use)
-- <li>[@Comment Use](#comment-use)
-- <li>[@Name Use](#name-use)
-- <li>[@RangeInt Use](#rangeint-use)
-- <li>[@RangeDouble Use](#rangedouble-use)
-- <li>[@LangKey Use](#langkey-use)
-- <li>[@RequiresMcRestart Use](#requiresmcrestart-use)
-- <li>[@RequiresWorldRestart Use](#requiresworldrestart-use)
-- <li>[Sub Categories](#sub-categories)
-- <li>[@Ignore](#ignore-use)
+- [Basics](#basics)
+- [@Config Use](#config-use)
+- [@Comment Use](#comment-use)
+- [@Name Use](#name-use)
+- [@RangeInt Use](#rangeint-use)
+- [@RangeDouble Use](#rangedouble-use)
+- [@LangKey Use](#langkey-use)
+- [@RequiresMcRestart Use](#requiresmcrestart-use)
+- [@RequiresWorldRestart Use](#requiresworldrestart-use)
+- [Sub Categories](#sub-categories)
+- [@Ignore](#ignore-use)
 
 ## Basics
 
@@ -58,7 +58,23 @@ value | `String[]`/`String` | N/A | The passed value will be converted to a `Str
 
 ### Example
 
-``` @Comment({ "You can add comments using this", "and if you supply an array it will be multi-line" }) public static boolean doTheThing = true; ``` This would produce the following config: ``` # You can add comments using this # and if you supply an array it will be multi-line B:doTheThing=true ```
+
+```
+@Comment({
+  "You can add comments using this",
+  "and if you supply an array it will be multi-line"
+})
+public static boolean doTheThing = true;
+```
+
+This would produce the following config:
+
+```
+# You can add comments using this
+# and if you supply an array it will be multi-line
+B:doTheThing=true
+```
+
 
 ## @Name Use
 
@@ -72,7 +88,18 @@ value | `String` | N/A
 
 ### Example
 
-``` @Name("FE/T for the thing") public static int thingFE = 50; ``` This will produce the following config: ``` I:"FE/T for the thing"=50 ```
+
+```
+@Name("FE/T for the thing")
+public static int thingFE = 50;
+```
+
+This will produce the following config:
+
+```
+I:"FE/T for the thing"=50
+```
+
 
 ## @RangeInt Use
 
@@ -87,13 +114,21 @@ max | `int` | `Integer.MAX_VALUE`
 
 ### Example
 
-``` @RangeInt(min = 0) public static int thingFECapped = 50; ``` This will produce the following config:
+
+```
+@RangeInt(min = 0) 
+public static int thingFECapped = 50;
+```
+
+This will produce the following config:
+
 
 ```
 # Min: 0
 # Max: 2147483647
 I:thingFECapped=50
 ```
+
 
 ## @RangeDouble Use
 
@@ -108,13 +143,26 @@ max | `double` | `Double.MAX_VALUE`
 
 ### Example
 
-``` @RangeDouble(min = 0, max = Math.PI) public static double chanceToDrop = 2; ``` This will produce the following config: ``` # Min: 0.0 # Max: 3.141592653589793 D:chanceToDrop=2.0 ```
+
+```
+@RangeDouble(min = 0, max = Math.PI) 
+public static double chanceToDrop = 2;
+```
+
+This will produce the following config:
+
+```
+# Min: 0.0
+# Max: 3.141592653589793
+D:chanceToDrop=2.0
+```
+
 
 > **Note**: Note There is not currently (in 1.12.2) a @RangedFloat or @RangedLong or any other variant of the Ranged values.
 
 ## @LangKey Use
 
-If you want to add translations for your configs in the mod options menu, add to the config&rsquo;s field `@LangKey`.
+If you want to add translations for your configs in the mod options menu, add to the config’s field `@LangKey`.
 
 This has 1 property:
 
@@ -128,7 +176,13 @@ You should include this annotation on a config that if changed, will require the
 
 ### Example
 
-``` @RequiresMcRestart public static boolean overlayEnabled = false; ``` This will make the game require a restart if the value is changed in the configs menu.
+
+```
+@RequiresMcRestart
+public static boolean overlayEnabled = false;
+```
+
+This will make the game require a restart if the value is changed in the configs menu.
 
 ## @RequiresWorldRestart Use
 
@@ -136,13 +190,41 @@ This will force the world to be restarted if the config is changed in the mod op
 
 ### Example
 
-``` @RequiresWorldRestart public static boolean someOtherworldlyThing = false; ``` This will force the world to be restarted if the config is changed in the mod options menu.
+
+```
+@RequiresWorldRestart
+public static boolean someOtherworldlyThing = false;
+```
+
+This will force the world to be restarted if the config is changed in the mod options menu.
 
 ## Sub Categories
 
-A Sub Category is a way to group certain (usually related) config options together, and should be used to help make navigating your config file easier. To create a Sub Category, you must make an object and add it as a static field in the parent category&rsquo;s class. The object&rsquo;s member fields will become configs in that Sub Category.
+A Sub Category is a way to group certain (usually related) config options together, and should be used to help make navigating your config file easier. To create a Sub Category, you must make an object and add it as a static field in the parent category’s class. The object’s member fields will become configs in that Sub Category.
 
-An example of how to setup a Sub Category: ``` @Config(modid = "modid") public class Configs { public static SubCategory subcat = new SubCategory(); private static class SubCategory { public boolean someBool; public int relatedInt; } } ``` In the config file, this will produce the following: ``` subcat { B:someBool=false I:relatedInt=0 } ```
+An example of how to setup a Sub Category:
+
+```
+@Config(modid = "modid")
+public class Configs {
+  public static SubCategory subcat = new SubCategory();
+
+  private static class SubCategory {
+    public boolean someBool; 
+    public int relatedInt;
+  }
+}
+```
+
+In the config file, this will produce the following:
+
+```
+subcat {
+  B:someBool=false
+  I:relatedInt=0
+}
+```
+
 
 ## @Ignore Use
 

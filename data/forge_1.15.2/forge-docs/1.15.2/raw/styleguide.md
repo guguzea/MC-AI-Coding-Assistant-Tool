@@ -1,6 +1,6 @@
 ---
 version: "1.15.2"
-forgeVersion: "31.2.57"
+forgeVersion: "29.0.23"
 chapter: "styleguide"
 source: "https://docs.minecraftforge.net/en/1.15.x/styleguide/"
 sourceType: mkdocs
@@ -13,7 +13,7 @@ This documentation is meant to be explanatory. Please explain how to do things, 
 
 Our audience is anyone who wants to understand how to build a mod using Forge.
 
-Please don&rsquo;t try to turn this documentation into a tutorial on Java Development - it is intended for people who understand how a Java class works, and other fundamental structures of Java.
+Please don’t try to turn this documentation into a tutorial on Java Development - it is intended for people who understand how a Java class works, and other fundamental structures of Java.
 
 ## Formatting
 
@@ -21,8 +21,8 @@ Please don&rsquo;t try to turn this documentation into a tutorial on Java Develo
 
 Titles should be capitalized in the standard titling format. For example,
 
-- <li>Guide For Contributing to This Documentation
-- <li>Building and Testing Your Mod
+- Guide For Contributing to This Documentation
+- Building and Testing Your Mod
 
 Essentially, capitalize everything but unimportant words.
 

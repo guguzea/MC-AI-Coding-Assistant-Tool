@@ -1,14 +1,13 @@
-> 版本：1.20.4
 ---
 version: "1.20.4"
 forgeVersion: "49.0.0"
 chapter: "datastorage/codecs"
-source: "https://docs.readthedocs.net/en/1.20.x/datastorage/codecs/"
+source: "https://docs.minecraftforge.net/en/1.20.x/datastorage/codecs/"
 sourceType: mkdocs
 ---
 # Codecs
 
-Codecs are a serialization tool from Mojang&rsquo;s [DataFixerUpper](https://github.com/Mojang/DataFixerUpper) used to describe how objects can be transformed between different formats, such as `JsonElement`s for JSON and `Tag`s for NBT.
+Codecs are a serialization tool from Mojang’s [DataFixerUpper](https://github.com/Mojang/DataFixerUpper) used to describe how objects can be transformed between different formats, such as `JsonElement`s for JSON and `Tag`s for NBT.
 
 ## Using Codecs
 
@@ -18,7 +17,8 @@ Codecs are primarily used to encode, or serialize, Java objects to some data for
 
 To determine what intermediate file format to encode and decode to, both `#encodeStart` and `#parse` require a `DynamicOps` instance to define the data within that format.
 
-The [DataFixerUpper](https://github.com/Mojang/DataFixerUpper) library contains `JsonOps` to codec JSON data stored in [`Gson`&rsquo;s](https://github.com/google/gson) `JsonElement` instances. `JsonOps` supports two versions of `JsonElement` serialization: `JsonOps#INSTANCE` which defines a standard JSON file, and `JsonOps#COMPRESSED` which allows data to be compressed into a single string.
+The [DataFixerUpper](https://github.com/Mojang/DataFixerUpper) library contains `JsonOps` to codec JSON data stored in [`Gson`’s](https://github.com/google/gson) `JsonElement` instances. `JsonOps` supports two versions of `JsonElement` serialization: `JsonOps#INSTANCE` which defines a standard JSON file, and `JsonOps#COMPRESSED` which allows data to be compressed into a single string.
+
 
 ```
 // Let exampleCodec represent a Codec<ExampleJavaObject>
@@ -36,7 +36,9 @@ exampleCodec.encodeStart(JsonOps.COMPRESSED, exampleObject);
 exampleCodec.parse(JsonOps.INSTANCE, exampleJson);
 ```
 
+
 Minecraft also provides `NbtOps` to codec NBT data stored in `Tag` instances. This can be referenced using `NbtOps#INSTANCE`.
+
 
 ```
 // Let exampleCodec represent a Codec<ExampleJavaObject>
@@ -50,9 +52,11 @@ exampleCodec.encodeStart(JsonOps.INSTANCE, exampleObject);
 exampleCodec.parse(JsonOps.INSTANCE, exampleNbt);
 ```
 
+
 #### Format Conversion
 
 `DynamicOps` can also be used separately to convert between two different encoded formats. This can be done using `#convertTo` and supplying the `DynamicOps` format and the encoded object to convert.
+
 
 ```
 // Convert Tag to JsonElement
@@ -60,11 +64,13 @@ exampleCodec.parse(JsonOps.INSTANCE, exampleNbt);
 JsonElement convertedJson = NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, exampleTag);
 ```
 
+
 ### DataResult
 
 Encoded or decoded data using codecs return a `DataResult` which holds the converted instance or some error data depending on whether the conversion was successful. When the conversion is successful, the `Optional` supplied by `#result` will contain the successfully converted object. If the conversion fails, the `Optional` supplied by `#error` will contain the `PartialResult`, which holds the error message and a partially converted object depending on the codec.
 
 Additionally, there are many methods on `DataResult` that can be used to transform the result or error into the desired format. For example, `#resultOrPartial` will return an `Optional` containing the result on success, and the partially converted object on failure. The method takes in a string consumer to determine how to report the error message if present.
+
 
 ```
 // Let exampleCodec represent a Codec<ExampleJavaObject>
@@ -79,6 +85,7 @@ result
   // If result or partial is present, do something
   .ifPresent(decodedObject -> /* Do something with decoded object */);
 ```
+
 
 ## Existing Codecs
 
@@ -124,6 +131,7 @@ Codecs can define objects through the use of records. Each record codec defines 
 
 `RecordCodecBuilder#create` takes in a function which defines an `Instance` and returns an application (`App`) of the object. A correlation can be drawn to creating a class *instance* and the constructors used to *apply* the class to the constructed object.
 
+
 ```
 // Some object to create a codec for
 public class SomeObject {
@@ -138,6 +146,7 @@ public class SomeObject {
 }
 ```
 
+
 #### Fields
 
 An `Instance` can define up to 16 fields using `#group`. Each field must be an application defining the instance the object is being made for and the type of the object. The simplest way to meet this requirement is by taking a `Codec`, setting the name of the field to decode from, and setting the getter used to encode the field.
@@ -145,6 +154,7 @@ An `Instance` can define up to 16 fields using `#group`. Each field must be an a
 A field can be created from a `Codec` using `#fieldOf`, if the field is required, or `#optionalFieldOf`, if the field is wrapped in an `Optional` or defaulted. Either method requires a string containing the name of the field in the encoded object. The getter used to encode the field can then be set using `#forGetter`, taking in a function which given the object, returns the field data.
 
 From there, the resulting product can be applied via `#apply` to define how the instance should construct the object for the application. For ease of convenience, the grouped fields should be listed in the same order they appear in the constructor such that the function can simply be a constructor method reference.
+
 
 ```
 public static final Codec<SomeObject> RECORD_CODEC = RecordCodecBuilder.create(instance -> // Given an instance
@@ -155,6 +165,7 @@ public static final Codec<SomeObject> RECORD_CODEC = RecordCodecBuilder.create(i
   ).apply(instance, SomeObject::new) // Define how to create the object
 );
 ```
+
 
 ```
 // Encoded SomeObject
@@ -172,9 +183,11 @@ public static final Codec<SomeObject> RECORD_CODEC = RecordCodecBuilder.create(i
 }
 ```
 
+
 ### Transformers
 
 Codecs can be transformed into equivalent, or partially equivalent, representations through mapping methods. Each mapping method takes in two functions: one to transform the current type into the new type, and one to transform the new type back to the current type. This is done through the `#xmap` function.
+
 
 ```
 // A class
@@ -192,6 +205,7 @@ public class ClassB {
 // Assume there is some codec A_CODEC
 public static final Codec<ClassB> B_CODEC = A_CODEC.xmap(ClassA::toB, ClassB::toA);
 ```
+
 
 If a type is partially equivalent, meaning that there are some restrictions during conversion, there are mapping functions which return a `DataResult` which can be used to return an error state whenever an exception or invalid state is reached.
 
@@ -218,6 +232,7 @@ public static final Codec<Integer> INT_CODEC = Codec.STRING.comapFlatMap(
 );
 ```
 
+
 ```
 // Will return 5
 "5"
@@ -226,13 +241,16 @@ public static final Codec<Integer> INT_CODEC = Codec.STRING.comapFlatMap(
 "value"
 ```
 
+
 #### Range Codecs
 
 Range codecs are an implementation of `#flatXMap` which returns an error `DataResult` if the value is not inclusively between the set minimum and maximum. The value is still provided as a partial result if outside the bounds. There are implementations for integers, floats, and doubles via `#intRange`, `#floatRange`, and `#doubleRange` respectively.
 
+
 ```
 public static final Codec<Integer> RANGE_CODEC = Codec.intRange(0, 4);
 ```
+
 
 ```
 // Will be valid, inside [0, 4]
@@ -242,22 +260,27 @@ public static final Codec<Integer> RANGE_CODEC = Codec.intRange(0, 4);
 5
 ```
 
+
 ### Defaults
 
 If the result of encoding or decoding fails, a default value can be supplied instead via `Codec#orElse` or `Codec#orElseGet`.
 
+
 ```
 public static final Codec<Integer> DEFAULT_CODEC = Codec.INT.orElse(0); // Can also be a supplied value via #orElseGet
 ```
+
 
 ```
 // Not an integer, defaults to 0
 "value"
 ```
 
+
 ### Unit
 
 A codec which supplies an in-code value and encodes to nothing can be represented using `Codec#unit`. This is useful if a codec uses a non-encodable entry within the data object.
+
 
 ```
 public static final Codec<IForgeRegistry<Block>> UNIT_CODEC = Codec.unit(
@@ -265,18 +288,22 @@ public static final Codec<IForgeRegistry<Block>> UNIT_CODEC = Codec.unit(
 );
 ```
 
+
 ```
 // Nothing here, will return block registry codec
 ```
+
 
 ### List
 
 A codec for a list of objects can be generated from an object codec via `Codec#listOf`.
 
+
 ```
 // BlockPos#CODEC is a Codec<BlockPos>
 public static final Codec<List<BlockPos>> LIST_CODEC = BlockPos.CODEC.listOf();
 ```
+
 
 ```
 // Encoded List<BlockPos>
@@ -287,16 +314,19 @@ public static final Codec<List<BlockPos>> LIST_CODEC = BlockPos.CODEC.listOf();
 ]
 ```
 
+
 List objects decoded using a list codec are stored in an **immutable** list. If a mutable list is needed, a [transformer](#transformer-codecs) should be applied to the list codec.
 
 ### Map
 
 A codec for a map of keys and value objects can be generated from two codecs via `Codec#unboundedMap`. Unbounded maps can specify any string-based or string-transformed value to be a key.
 
+
 ```
 // BlockPos#CODEC is a Codec<BlockPos>
 public static final Codec<Map<String, BlockPos>> MAP_CODEC = Codec.unboundedMap(Codec.STRING, BlockPos.CODEC);
 ```
+
 
 ```
 // Encoded Map<String, BlockPos>
@@ -306,6 +336,7 @@ public static final Codec<Map<String, BlockPos>> MAP_CODEC = Codec.unboundedMap(
   "key3": [7, 8, 9]  // key3 -> BlockPos(7, 8, 9)
 }
 ```
+
 
 Map objects decoded using a unbounded map codec are stored in an **immutable** map. If a mutable map is needed, a [transformer](#transformer-codecs) should be applied to the map codec.
 
@@ -317,11 +348,32 @@ A codec for pairs of objects can be generated from two codecs via `Codec#pair`.
 
 A pair codec decodes objects by first decoding the left object in the pair, then taking the remaining part of the encoded object and decodes the right object from that. As such, the codecs must either express something about the encoded object after decoding (such as [records](#records)), or they have to be augmented into a `MapCodec` and transformed into a regular codec via `#codec`. This can typically done by making the codec a [field](#fields) of some object.
 
+
 ```
-public static final Codec
-> PAIR_CODEC = Codec.pair( Codec.INT.fieldOf("left").codec(), Codec.STRING.fieldOf("right").codec() ); ``` ``` // Encoded Pair<Integer, String> { "left": 5, // fieldOf looks up 'left' key for left object "right": "value" // fieldOf looks up 'right' key for right object } ``` > **Tip**: Tip A map codec with a non-string key can be encoded/decoded using a list of key-value pairs applied with a transformer. ### Either <p>A codec for two different methods of encoding/decoding some object data can be generated from two codecs via `Codec#either`.
+public static final Codec<Pair<Integer, String>> PAIR_CODEC = Codec.pair(
+  Codec.INT.fieldOf("left").codec(),
+  Codec.STRING.fieldOf("right").codec()
+);
+```
+
+
+```
+// Encoded Pair<Integer, String>
+{
+  "left": 5,       // fieldOf looks up 'left' key for left object
+  "right": "value" // fieldOf looks up 'right' key for right object
+}
+```
+
+
+> **Tip**: Tip A map codec with a non-string key can be encoded/decoded using a list of key-value pairs applied with a transformer.
+
+### Either
+
+A codec for two different methods of encoding/decoding some object data can be generated from two codecs via `Codec#either`.
 
 An either codec attempts to decode the object using the first codec. If it fails, it attempts to decode using the second codec. If that also fails, then the `DataResult` will only contain the error from the second codec failure.
+
 
 ```
 public static final Codec<Either<Integer, String>> EITHER_CODEC = Codec.either(
@@ -329,6 +381,7 @@ public static final Codec<Either<Integer, String>> EITHER_CODEC = Codec.either(
   Codec.STRING
 );
 ```
+
 
 ```
 // Encoded Either$Left<Integer, String>
@@ -338,6 +391,7 @@ public static final Codec<Either<Integer, String>> EITHER_CODEC = Codec.either(
 "value"
 ```
 
+
 > **Tip**: Tip This can be used in conjunction with a transformer to get a specific object from two different methods of encoding.
 
 ### Dispatch
@@ -345,6 +399,7 @@ public static final Codec<Either<Integer, String>> EITHER_CODEC = Codec.either(
 Codecs can have subcodecs which can decode a particular object based upon some specified type via `Codec#dispatch`. This is typically used in registries which contain codecs, such as rule tests or block placers.
 
 A dispatch codec first attempts to get the encoded type from some string key (usually `type`). From there, the type is decoded, calling a getter for the specific codec used to decode the actual object. If the `DynamicOps` used to decode the object compresses its maps, or the object codec itself is not augmented into a `MapCodec` (such as records or fielded primitives), then the object needs to be stored within a `value` key. Otherwise, the object is decoded at the same level as the rest of the data.
+
 
 ```
 // Define our object
@@ -398,6 +453,7 @@ public static final Codec<ExampleObject> = DISPATCH.getCodec() // Gets Codec<Cod
     Function.identity() // Get the codec from the registry
   );
 ```
+
 
 ```
 // Simple object

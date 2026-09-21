@@ -29,6 +29,7 @@ There is no wrapper for adding additional potion containers or potion mixes simi
 
 Anvils are responsible for taking a damaged input and given some material or a similar input, remove some of the damage on the input result. As such, its system is not easily data-driven. However, as anvil recipes are an input with some number of materials equals some output when the user has the required experience levels, it can be modified to create a pseudo-recipe system via `AnvilUpdateEvent`. This takes in the input and materials and allows the modder to specify the output, experience level cost, and number of materials to use for the output. The event can also prevent any output by [canceling](../../../../concepts/events/#canceling) it.
 
+
 ```
 // Checks whether the left and right items are correct
 // When true, sets the output, level experience cost, and material amount
@@ -41,6 +42,7 @@ public void updateAnvil(AnvilUpdateEvent event) {
 }
 ```
 
+
 The update event must be [attached](../../../../concepts/events/#creating-an-event-handler) to the Forge event bus.
 
 ## Loom Recipes
@@ -48,6 +50,7 @@ The update event must be [attached](../../../../concepts/events/#creating-an-eve
 Looms are responsible for applying a dye and pattern (either from the loom or from an item) to a banner. While the banner and the dye must be a `BannerItem` or `DyeItem` respectively, custom patterns can be created and applied in the loom. Banner Patterns can be created by calling `BannerPattern#create` during mod construction.
 
 > **Important**: Important BannerPatterns which return true for #hasPatternItem do not appear as an option in the loom. These patterns must have an accompanying BannerPatternItem to be used.
+
 
 ```
 // In the main mod class
@@ -58,5 +61,6 @@ public static final BannerPattern EXAMPLE_PATTERN = BannerPattern.create(
   false // The pattern is an option in the loom
 );
 ```
+
 
 > **Important**: Important The enum name supplied to BannerPattern#create should be a valid identifier and prefixed with the mod id followed by an underscore _ (e.g. examplemod:example_pattern should be EXAMPLE_MOD_EXAMPLE_PATTERN).

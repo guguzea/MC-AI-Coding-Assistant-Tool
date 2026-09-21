@@ -2,22 +2,23 @@
 version: "1.19.4"
 forgeVersion: "45.2.0"
 chapter: "gui/menus"
-source: "https://docs.readthedocs.net/en/1.19.x/gui/menus/"
+source: "https://docs.minecraftforge.net/en/1.19.x/gui/menus/"
 sourceType: mkdocs
 ---
 # Menus
 
 Menus are one type of backend for Graphical User Interfaces, or GUIs; they handle the logic involved in interacting with some represented data holder. Menus themselves are not data holders. They are views which allow to user to indirectly modify the internal data holder state. As such, a data holder should not be directly coupled to any menu, instead passing in the data references to invoke and modify.
 
-## `MenuType
+## `MenuType`
 
-Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the *type* of the menu. For a menu, these are <code>MenuType`s.
+Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the *type* of the menu. For a menu, these are `MenuType`s.
 
 `MenuType`s must be [registered](../../concepts/registries/#methods-for-registering).
 
-### `MenuSupplier
+### `MenuSupplier`
 
-A <code>MenuType` is created by passing in a `MenuSupplier` and a `FeatureFlagSet` to its constructor. A `MenuSupplier` represents a function which takes in the id of the container and the inventory of the player viewing the menu, and returns a newly created [`AbstractContainerMenu`](#abstractcontainermenu).
+A `MenuType` is created by passing in a `MenuSupplier` and a `FeatureFlagSet` to its constructor. A `MenuSupplier` represents a function which takes in the id of the container and the inventory of the player viewing the menu, and returns a newly created [`AbstractContainerMenu`](#abstractcontainermenu).
+
 
 ```
 // For some DeferredRegister<MenuType<?>> REGISTER
@@ -30,13 +31,15 @@ public MyMenu(int containerId, Inventory playerInv) {
 }
 ```
 
+
 > **Note**: Note The container identifier is unique for an individual player. This means that the same container id on two different players will represent two different menus, even if they are viewing the same data holder.
 
 The `MenuSupplier` is usually responsible for creating a menu on the client with dummy data references used to store and interact with the synced information from the server data holder.
 
-### `IContainerFactory
+### `IContainerFactory`
 
-If additional information is needed on the client (e.g. the position of the data holder in the world), then the subclass <code>IContainerFactory` can be used instead. In addition to the container id and the player inventory, this also provides a `FriendlyByteBuf` which can store additional information that was sent from the server. A `MenuType` can be created using an `IContainerFactory` via `IForgeMenuType#create`.
+If additional information is needed on the client (e.g. the position of the data holder in the world), then the subclass `IContainerFactory` can be used instead. In addition to the container id and the player inventory, this also provides a `FriendlyByteBuf` which can store additional information that was sent from the server. A `MenuType` can be created using an `IContainerFactory` via `IForgeMenuType#create`.
+
 
 ```
 // For some DeferredRegister<MenuType<?>> REGISTER
@@ -50,13 +53,15 @@ public MyMenuExtra(int containerId, Inventory playerInv, FriendlyByteBuf extraDa
 }
 ```
 
-## `AbstractContainerMenu
 
-All menus are extended from <code>AbstractContainerMenu`. A menu takes in two parameters, the [`MenuType`](#menutype), which represents the type of the menu itself, and the container id, which represents the unique identifier of the menu for the current accessor.
+## `AbstractContainerMenu`
+
+All menus are extended from `AbstractContainerMenu`. A menu takes in two parameters, the [`MenuType`](#menutype), which represents the type of the menu itself, and the container id, which represents the unique identifier of the menu for the current accessor.
 
 > **Important**: Important The player can only have 100 unique menus open at once.
 
 Each menu should contain two constructors: one used to initialize the menu on the server and one used to initialize the menu on the client. The constructor used to initialize the menu on the client is the one supplied to the `MenuType`. Any fields that the server menu constructor contains should have some default for the client menu constructor.
+
 
 ```
 // Client menu constructor
@@ -70,13 +75,15 @@ public MyMenu(int containerId, Inventory playerInventory) {
 }
 ```
 
+
 Each menu implementation must implement two methods: `#stillValid` and [`#quickMoveStack`](#quickmovestack).
 
-### `#stillValid and <code>ContainerLevelAccess
+### `#stillValid` and `ContainerLevelAccess`
 
-<code>#stillValid` determines whether the menu should remain open for a given player. This is typically directed to the static `#stillValid` which takes in a `ContainerLevelAccess`, the player, and the `Block` this menu is attached to. The client menu must always return `true` for this method, which the static `#stillValid` does default to. This implementation checks whether the player is within eight blocks of where the data storage object is located.
+`#stillValid` determines whether the menu should remain open for a given player. This is typically directed to the static `#stillValid` which takes in a `ContainerLevelAccess`, the player, and the `Block` this menu is attached to. The client menu must always return `true` for this method, which the static `#stillValid` does default to. This implementation checks whether the player is within eight blocks of where the data storage object is located.
 
 A `ContainerLevelAccess` supplies the current level and location of the block within an enclosed scope. When constructing the menu on the server, a new access can be created by calling `ContainerLevelAccess#create`. The client menu constructor can pass in `ContainerLevelAccess#NULL`, which will do nothing.
+
 
 ```
 // Client menu constructor
@@ -96,6 +103,7 @@ public boolean stillValid(Player player) {
 }
 ```
 
+
 ### Data Synchronization
 
 Some data needs to be present on both the server and the client to display to the player. To do this, the menu implements a basic layer of data synchronization such that whenever the current data does not match the data last synced to the client. For players, this is checked every tick.
@@ -106,13 +114,14 @@ Minecraft supports two forms of data synchronization by default: `ItemStack`s vi
 
 A `SlotItemHandler` contains four parameters: the `IItemHandler` representing the inventory the stacks are within, the index of the stack this slot is specifically representing, and the x and y position of where the top-left position of the slot will render on the screen relative to `AbstractContainerScreen#leftPos` and `#topPos`. The client menu constructor should always supply an empty instance of an inventory of the same size.
 
-In most cases, any slots the menu contains is first added, followed by the player&rsquo;s inventory, and finally concluded with the player&rsquo;s hotbar. To access any individual `Slot` from the menu, the index must be calculated based upon the order of which slots were added.
+In most cases, any slots the menu contains is first added, followed by the player’s inventory, and finally concluded with the player’s hotbar. To access any individual `Slot` from the menu, the index must be calculated based upon the order of which slots were added.
 
 A `DataSlot` is an abstract class which should implement a getter and setter to reference the data stored in the data storage object. The client menu constructor should always supply a new instance via `DataSlot#standalone`.
 
 These, along with slots, should be recreated every time a new menu is initialized.
 
 > **Warning**: Warning Although a DataSlot stores an integer, it is effectively limited to a short (-32768 to 32767) because of how it sends the value across the network. The 16 high-order bits of the integer are ignored.
+
 
 ```
 // Assume we have an inventory from a data object of size 5
@@ -139,9 +148,11 @@ public MyMenuAccess(int containerId, Inventory playerInventory, IItemHandler dat
 }
 ```
 
-#### `ContainerData
 
-If multiple integers need to be synced to the client, a <code>ContainerData` can be used to reference the integers instead. This interface functions as an index lookup such that each index represents a different integer. `ContainerData`s can also be constructed in the data object itself if the `ContainerData` is added to the menu through `#addDataSlots`. The method creates a new `DataSlot` for the amount of data specified by the interface. The client menu constructor should always supply a new instance via `SimpleContainerData`.
+#### `ContainerData`
+
+If multiple integers need to be synced to the client, a `ContainerData` can be used to reference the integers instead. This interface functions as an index lookup such that each index represents a different integer. `ContainerData`s can also be constructed in the data object itself if the `ContainerData` is added to the menu through `#addDataSlots`. The method creates a new `DataSlot` for the amount of data specified by the interface. The client menu constructor should always supply a new instance via `SimpleContainerData`.
+
 
 ```
 // Assume we have a ContainerData of size 3
@@ -163,15 +174,17 @@ public MyMenuAccess(int containerId, Inventory playerInventory, ContainerData da
 }
 ```
 
+
 > **Warning**: Warning As ContainerData delegates to DataSlots, these are also limited to a short (-32768 to 32767).
 
-#### `#quickMoveStack
+#### `#quickMoveStack`
 
-<code>#quickMoveStack` is the second method that must be implemented by any menu. This method is called whenever a stack has been shift-clicked, or quick moved, out of its current slot until the stack has been fully moved out of its previous slot or there is no other place for the stack to go. The method returns a copy of the stack in the slot being quick moved.
+`#quickMoveStack` is the second method that must be implemented by any menu. This method is called whenever a stack has been shift-clicked, or quick moved, out of its current slot until the stack has been fully moved out of its previous slot or there is no other place for the stack to go. The method returns a copy of the stack in the slot being quick moved.
 
 Stacks are typically moved between slots using `#moveItemStackTo`, which moves the stack into the first available slot. It takes in the stack to be moved, the first slot index (inclusive) to try and move the stack to, the last slot index (exclusive), and whether to check the slots from first to last (when `false`) or from last to first (when `true`).
 
 Across Minecraft implementations, this method is fairly consistent in its logic:
+
 
 ```
 // Assume we have a data inventory of size 5
@@ -261,17 +274,19 @@ public ItemStack quickMoveStack(Player player, int quickMovedSlotIndex) {
 }
 ```
 
+
 ## Opening a Menu
 
 Once a menu type has been registered, the menu itself has been finished, and a [screen](../screens/) has been attached, a menu can then be opened by the player. Menus can be opened by calling `NetworkHooks#openScreen` on the logical server. The method takes in the player opening the menu, the `MenuProvider` of the server side menu, and optionally a `FriendlyByteBuf` if extra data needs to be synced to the client.
 
 > **Note**: Note NetworkHooks#openScreen with the FriendlyByteBuf parameter should only be used if a menu type was created using an IContainerFactory.
 
-#### `MenuProvider
+#### `MenuProvider`
 
-A <code>MenuProvider` is an interface that contains two methods: `#createMenu`, which creates the server instance of the menu, and `#getDisplayName`, which returns a component containing the title of the menu to pass to the [screen](../screens/). The `#createMenu` method contains three parameter: the container id of the menu, the inventory of the player who opened the menu, and the player who opened the menu.
+A `MenuProvider` is an interface that contains two methods: `#createMenu`, which creates the server instance of the menu, and `#getDisplayName`, which returns a component containing the title of the menu to pass to the [screen](../screens/). The `#createMenu` method contains three parameter: the container id of the menu, the inventory of the player who opened the menu, and the player who opened the menu.
 
 A `MenuProvider` can easily be created using `SimpleMenuProvider`, which takes in a method reference to create the server menu and the title of the menu.
+
 
 ```
 // In some implementation
@@ -280,6 +295,7 @@ NetworkHooks.openScreen(serverPlayer, new SimpleMenuProvider(
   Component.translatable("menu.title.examplemod.mymenu")
 ));
 ```
+
 
 ### Common Implementations
 
@@ -290,6 +306,7 @@ Menus are typically opened on a player interaction of some kind (e.g. when a blo
 Blocks typically implement a menu by overriding `BlockBehaviour#use`. If on the logical client, the interaction returns `InteractionResult#SUCCESS`. Otherwise, it opens the menu and returns `InteractionResult#CONSUME`.
 
 The `MenuProvider` should be implemented by overriding `BlockBehaviour#getMenuProvider`. Vanilla methods use this to view the menu in spectator mode.
+
 
 ```
 // In some Block subclass
@@ -307,11 +324,13 @@ public InteractionResult use(BlockState state, Level level, BlockPos pos, Player
 }
 ```
 
+
 > **Note**: Note This is the simplest way to implement the logic, not the only way. If you want the block to only open the menu under certain conditions, then some data will need to be synced to the client beforehand to return InteractionResult#PASS or #FAIL if the conditions are not met.
 
 #### Mob Implementation
 
 Mobs typically implement a menu by overriding `Mob#mobInteract`. This is done similarly to the block implementation with the only difference being that the `Mob` itself should implement `MenuProvider` to support spectator mode viewing.
+
 
 ```java
 public class MyMob extends Mob implements MenuProvider {
@@ -326,5 +345,6 @@ public class MyMob extends Mob implements MenuProvider {
   }
 }
 ```
+
 
 > **Note**: Note Once again, this is the simplest way to implement the logic, not the only way.

@@ -1,7 +1,10 @@
-# Conditionally-Loaded Data
-
-> 来源：https://docs.minecraftforge.net/en/1.20.x/resources/server/conditional
-> 版本：1.20.4
+---
+version: "1.20.4"
+forgeVersion: "49.0.0"
+chapter: "resources/server/conditional"
+source: "https://docs.minecraftforge.net/en/1.20.x/resources/server/conditional/"
+sourceType: mkdocs
+---
 # Conditionally-Loaded Data
 
 There are times when modders may want to include data-driven objects using information from another mod without having to explicitly make that mod a dependency. Other cases may be to swap out certain objects with other modded entries when they are present. This can be done through the conditional subsystem.
@@ -10,7 +13,8 @@ There are times when modders may want to include data-driven objects using infor
 
 Currently, conditional loading is implemented for recipes and advancements. For any conditional recipe or advancement, a list of conditions to datum pair is loaded. If the conditions specified for a datum in the list is true, then that datum is returned. Otherwise, the datum is discarded.
 
-```json
+
+```
 {
   // The type needs to be specified for recipes as they can have custom serializers
   // Advancements do not need this type
@@ -39,6 +43,7 @@ Currently, conditional loading is implemented for recipes and advancements. For 
 }
 ```
 
+
 Conditionally-loaded data additionally have wrappers for [data generation](../../../datagen/server/recipes/) through `ConditionalRecipe$Builder` and `ConditionalAdvancement$Builder`.
 
 ## Conditions
@@ -49,6 +54,7 @@ Conditions are specified by setting `type` to the name of the condition as speci
 
 Boolean conditions consist of no data and return the expected value of the condition. They are represented by `forge:true` and `forge:false`.
 
+
 ```
 // For some condition
 {
@@ -57,9 +63,11 @@ Boolean conditions consist of no data and return the expected value of the condi
 }
 ```
 
+
 ### Not, And, and Or
 
 Boolean operator conditions consist of the condition(s) being operated upon and apply the following logic. They are represented by `forge:not`, `forge:and`, and `forge:or`.
+
 
 ```
 // For some condition
@@ -71,6 +79,7 @@ Boolean operator conditions consist of the condition(s) being operated upon and 
   }
 }
 ```
+
 
 ```
 // For some condition
@@ -88,9 +97,11 @@ Boolean operator conditions consist of the condition(s) being operated upon and 
 }
 ```
 
+
 ### Mod Loaded
 
 `ModLoadedCondition` returns true whenever the specified mod with the given id is loaded in the current application. This is represented by `forge:mod_loaded`.
+
 
 ```
 // For some condition
@@ -101,9 +112,11 @@ Boolean operator conditions consist of the condition(s) being operated upon and 
 }
 ```
 
+
 ### Item Exists
 
 `ItemExistsCondition` returns true whenever the given item has been registered in the current application. This is represented by `forge:item_exists`.
+
 
 ```
 // For some condition
@@ -114,9 +127,11 @@ Boolean operator conditions consist of the condition(s) being operated upon and 
 }
 ```
 
+
 ### Tag Empty
 
 `TagEmptyCondition` returns true whenever the given item tag has no items within it. This is represented by `forge:tag_empty`.
+
 
 ```
 // For some condition
@@ -126,6 +141,7 @@ Boolean operator conditions consist of the condition(s) being operated upon and 
   "tag": "examplemod:example_tag"
 }
 ```
+
 
 ## Creating Custom Conditions
 
@@ -156,6 +172,7 @@ write | Writes the given condition data to JSON.
 
 Afterwards, a static instance should be declared to hold the initialized serializer and then registered using `CraftingHelper#register` either during the `RegisterEvent` for `RecipeSerializer`s or during `FMLCommonSetupEvent`.
 
+
 ```
 // In some serializer class
 public static final ExampleConditionSerializer INSTANCE = new ExampleConditionSerializer();
@@ -167,5 +184,6 @@ public void registerSerializers(RegisterEvent event) {
   );
 }
 ```
+
 
 > **Important**: Important If using FMLCommonSetupEvent to register a condition serializer, it must be enqueued to the synchronous work queue via FMLCommonSetupEvent#enqueueWork as CraftingHelper#register is not thread-safe.

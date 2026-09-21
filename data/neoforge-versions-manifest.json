@@ -1,5 +1,5 @@
 {
-  "lastChecked": "2026-08-10T15:16:48.629Z",
+  "lastChecked": "2026-09-21T03:38:22.722Z",
   "probeScript": "probe-neoforge-versions.js",
   "docBaseUrl": "https://docs.neoforged.net/docs/",
   "primerBaseUrl": "https://docs.neoforged.net/primer/docs/",
@@ -12,7 +12,6 @@
       "javaVersion": 25,
       "mappings": "mojmap-only",
       "route": "",
-      "unversionedCurrent": true,
       "docBase": "https://docs.neoforged.net/docs/",
       "testUrl": "https://docs.neoforged.net/docs/gettingstarted/",
       "available": true,
@@ -39,7 +38,8 @@
         }
       ],
       "type": "main-docs",
-      "priority": "high"
+      "priority": "high",
+      "unversionedCurrent": true
     },
     "1.21.11": {
       "version": "1.21.11",
@@ -372,17 +372,94 @@
     }
   },
   "primers": {
-    "26.2": {
-      "url": "https://docs.neoforged.net/primer/docs/26.2/",
-      "from": "26.1",
-      "to": "26.2",
+    "1.14": {
+      "url": "https://docs.neoforged.net/primer/docs/1.14/",
+      "from": "1.12",
+      "to": "1.14",
       "available": true,
       "httpStatus": 200
     },
-    "26.1": {
-      "url": "https://docs.neoforged.net/primer/docs/26.1/",
-      "from": "1.21.11",
-      "to": "26.1",
+    "1.15": {
+      "url": "https://docs.neoforged.net/primer/docs/1.15/",
+      "from": "1.14",
+      "to": "1.15",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.16.5": {
+      "url": "https://docs.neoforged.net/primer/docs/1.16.5/",
+      "from": "1.15.2",
+      "to": "1.16.5",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.17": {
+      "url": "https://docs.neoforged.net/primer/docs/1.17/",
+      "from": "1.16.5",
+      "to": "1.17",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.18": {
+      "url": "https://docs.neoforged.net/primer/docs/1.18/",
+      "from": "1.17.1",
+      "to": "1.18",
+      "available": false,
+      "httpStatus": 404
+    },
+    "1.19": {
+      "url": "https://docs.neoforged.net/primer/docs/1.19/",
+      "from": "1.18.2",
+      "to": "1.19",
+      "available": false,
+      "httpStatus": 404
+    },
+    "1.19.3": {
+      "url": "https://docs.neoforged.net/primer/docs/1.19.3/",
+      "from": "1.19.2",
+      "to": "1.19.3",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.19.4": {
+      "url": "https://docs.neoforged.net/primer/docs/1.19.4/",
+      "from": "1.19.3",
+      "to": "1.19.4",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.20": {
+      "url": "https://docs.neoforged.net/primer/docs/1.20/",
+      "from": "1.19.4",
+      "to": "1.20",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.20.2": {
+      "url": "https://docs.neoforged.net/primer/docs/1.20.2/",
+      "from": "1.20.1",
+      "to": "1.20.2",
+      "available": false,
+      "httpStatus": 404
+    },
+    "1.20.4": {
+      "url": "https://docs.neoforged.net/primer/docs/1.20.4/",
+      "from": "1.20.2",
+      "to": "1.20.4",
+      "available": false,
+      "httpStatus": 404
+    },
+    "1.20.5": {
+      "url": "https://docs.neoforged.net/primer/docs/1.20.5/",
+      "from": "1.20.4",
+      "to": "1.20.5",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.20.6": {
+      "url": "https://docs.neoforged.net/primer/docs/1.20.6/",
+      "from": "1.20.5",
+      "to": "1.20.6",
       "available": true,
       "httpStatus": 200
     },
@@ -390,6 +467,13 @@
       "url": "https://docs.neoforged.net/primer/docs/1.21/",
       "from": "1.20.6",
       "to": "1.21",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.21.1": {
+      "url": "https://docs.neoforged.net/primer/docs/1.21.1/",
+      "from": "1.21",
+      "to": "1.21.1",
       "available": true,
       "httpStatus": 200
     },
@@ -407,6 +491,13 @@
       "available": true,
       "httpStatus": 200
     },
+    "1.21.5": {
+      "url": "https://docs.neoforged.net/primer/docs/1.21.5/",
+      "from": "1.21.4",
+      "to": "1.21.5",
+      "available": true,
+      "httpStatus": 200
+    },
     "1.21.6": {
       "url": "https://docs.neoforged.net/primer/docs/1.21.6/",
       "from": "1.21.5",
@@ -418,6 +509,13 @@
       "url": "https://docs.neoforged.net/primer/docs/1.21.7/",
       "from": "1.21.6",
       "to": "1.21.7",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.21.8": {
+      "url": "https://docs.neoforged.net/primer/docs/1.21.8/",
+      "from": "1.21.7",
+      "to": "1.21.8",
       "available": true,
       "httpStatus": 200
     },
@@ -435,10 +533,31 @@
       "available": true,
       "httpStatus": 200
     },
-    "1.20.6": {
-      "url": "https://docs.neoforged.net/primer/docs/1.20.6/",
-      "from": "1.20.5",
-      "to": "1.20.6",
+    "1.21.11": {
+      "url": "https://docs.neoforged.net/primer/docs/1.21.11/",
+      "from": "1.21.10",
+      "to": "1.21.11",
+      "available": true,
+      "httpStatus": 200
+    },
+    "26.1": {
+      "url": "https://docs.neoforged.net/primer/docs/26.1/",
+      "from": "1.21.11",
+      "to": "26.1",
+      "available": true,
+      "httpStatus": 200
+    },
+    "26.2": {
+      "url": "https://docs.neoforged.net/primer/docs/26.2/",
+      "from": "26.1",
+      "to": "26.2",
+      "available": true,
+      "httpStatus": 200
+    },
+    "26.3": {
+      "url": "https://docs.neoforged.net/primer/docs/26.3/",
+      "from": "26.2",
+      "to": "26.3",
       "available": true,
       "httpStatus": 200
     }

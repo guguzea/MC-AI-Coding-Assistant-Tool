@@ -4,7 +4,7 @@
 
 ## Custom Ingredients
 
-Custom ingredients can be specified by setting `type` to the name of the [ingredient&rsquo;s serializer](#iingredientserializer), with the exception of [compound ingredients](#compoundingredient). When no type is specified, `type` defaults to the vanilla ingredient `minecraft:item`. Custom ingredients can also easily be used in [data generation](../../../../datagen/server/recipes/).
+Custom ingredients can be specified by setting `type` to the name of the [ingredient’s serializer](#iingredientserializer), with the exception of [compound ingredients](#compoundingredient). When no type is specified, `type` defaults to the vanilla ingredient `minecraft:item`. Custom ingredients can also easily be used in [data generation](../../../../datagen/server/recipes/).
 
 ### Forge Types
 
@@ -13,6 +13,7 @@ Forge provides a few additional `Ingredient` types for programmers to implement.
 #### CompoundIngredient
 
 Though they are functionally identical, Compound ingredients replaces the way one would implement a list of ingredients would in a recipe. They work as a set OR where the passed in stack must be within at least one of the supplied ingredients. This change was made to allow custom ingredients to work correctly within lists. As such, **no type** needs to be specified.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -31,9 +32,11 @@ Though they are functionally identical, Compound ingredients replaces the way on
 ]
 ```
 
+
 #### NBTIngredient
 
 `NBTIngredient`s compare the item, damage, and the share tags (as defined by `IForgeItem#getShareTag`) on an `ItemStack` for exact equivalency. This can be used by specifying the `type` as `forge:nbt`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -49,9 +52,11 @@ Though they are functionally identical, Compound ingredients replaces the way on
 }
 ```
 
+
 ### PartialNBTIngredient
 
 `PartialNBTIngredient`s are a looser version of [`NBTIngredient`](#nbtingredient) as they compare against a single or set of items and only keys specified within the share tag (as defined by `IForgeItem#getShareTag`). This can be used by specifying the `type` as `forge:partial_nbt`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -81,9 +86,11 @@ Though they are functionally identical, Compound ingredients replaces the way on
 }
 ```
 
+
 ### IntersectionIngredient
 
 `IntersectionIngredient`s work as a set AND where the passed in stack must match all supplied ingredients. There must be at least two ingredients supplied to this. This can be used by specifying the `type` as `forge:intersection`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -106,9 +113,11 @@ Though they are functionally identical, Compound ingredients replaces the way on
 }
 ```
 
+
 ### DifferenceIngredient
 
 `DifferenceIngredient`s work as a set subtraction (SUB) where the passed in stack must match the first ingredient but must not match the second ingredient. This can be used by specifying the `type` as `forge:difference`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -125,6 +134,7 @@ Though they are functionally identical, Compound ingredients replaces the way on
   }
 }
 ```
+
 
 ## Creating Custom Ingredients
 
@@ -143,7 +153,7 @@ Method | Description
 --- | ---
 getSerializer | Returns the [serializer](#iingredientserializer) used to read and write the ingredient.
 test | Returns true if the input is valid for this ingredient.
-isSimple | Returns false if the ingredient matches on the stack&rsquo;s tag. `AbstractIngredient` subclasses will need to define this behavior, while `Ingredient` subclasses return `true` by default.
+isSimple | Returns false if the ingredient matches on the stack’s tag. `AbstractIngredient` subclasses will need to define this behavior, while `Ingredient` subclasses return `true` by default.
 
 All other defined methods are left as an exercise to the reader to use as required for the ingredient subclass.
 
@@ -160,6 +170,7 @@ write | Writes an `Ingredient` to the network buffer.
 Additionally, `Ingredient` subclasses should implement `Ingredient#toJson` for use with [data generation](../../../../datagen/server/recipes/). `AbstractIngredient` subclasses make `#toJson` an abstract method requiring the method to be implemented.
 
 Afterwards, a static instance should be declared to hold the initialized serializer and then registered using `CraftingHelper#register` either during the `RegistryEvent$Register` for `RecipeSerializer`s or during `FMLCommonSetupEvent`. The `Ingredient` subclass return the static instance of the serializer in `Ingredient#getSerializer`.
+
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -179,6 +190,7 @@ public IIngredientSerializer<? extends Ingredient> getSerializer() {
   return INSTANCE;
 }
 ```
+
 
 
 <!-- key:🔴 role:新手必读 (Tip) -->

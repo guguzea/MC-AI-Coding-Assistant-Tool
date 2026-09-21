@@ -1,8 +1,8 @@
 # Item Property Overrides
 
-Item properties are a way for the &ldquo;properties&rdquo; of items to be exposed to the model system. An example is the bow, where the most important property is how far the bow has been pulled. This information is then used to choose a model for the bow, creating an animation for pulling it.
+Item properties are a way for the “properties” of items to be exposed to the model system. An example is the bow, where the most important property is how far the bow has been pulled. This information is then used to choose a model for the bow, creating an animation for pulling it.
 
-An item property assigns a certain `float` value to every `ItemStack` it is registered for, and vanilla item model definitions can use these values to define &ldquo;overrides&rdquo;, where an item defaults to a certain model, but if an override matches, it overrides the model and uses another. The format of item models, including overrides, can be found on the [wiki](https://minecraft.gamepedia.com/Model#Item_models). For example, bows use item properties to define their pull animation. Since the value of the property is a `float`, it increases continuously from 0 to 1. This allows resource packs to add as many models as they want for the bow pulling animation along that spectrum, instead of being stuck with four &ldquo;slots&rdquo; for their models in the animation. The same is true of the compass and clock.
+An item property assigns a certain `float` value to every `ItemStack` it is registered for, and vanilla item model definitions can use these values to define “overrides”, where an item defaults to a certain model, but if an override matches, it overrides the model and uses another. The format of item models, including overrides, can be found on the [wiki](https://minecraft.gamepedia.com/Model#Item_models). For example, bows use item properties to define their pull animation. Since the value of the property is a `float`, it increases continuously from 0 to 1. This allows resource packs to add as many models as they want for the bow pulling animation along that spectrum, instead of being stuck with four “slots” for their models in the animation. The same is true of the compass and clock.
 
 ## Adding Properties to Items
 
@@ -16,6 +16,7 @@ The format of an override can be seen on the [wiki](https://minecraft.gamepedia.
 <!-- key:🔴 role:新手必读 (Important) -->
 
 > **Important**: Important A predicate applies to all values greater than or equal to the given value.
+
 
 ```
 {
@@ -36,7 +37,9 @@ The format of an override can be seen on the [wiki](https://minecraft.gamepedia.
 }
 ```
 
-And here is a hypothetical snippet from the supporting code. (This does not have to be client-only; it will work on a server too. In vanilla, properties are registered in the item&rsquo;s constructor.)
+
+And here is a hypothetical snippet from the supporting code. (This does not have to be client-only; it will work on a server too. In vanilla, properties are registered in the item’s constructor.)
+
 
 ```
 item.addPropertyOverride(new IItemPropertyGetter() {

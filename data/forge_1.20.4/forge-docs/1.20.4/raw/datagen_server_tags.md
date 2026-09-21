@@ -1,10 +1,14 @@
-# Tag Providers
-
-> 来源：https://docs.minecraftforge.net/en/1.20.x/datagen/server/tags
-> 版本：1.20.4
+---
+version: "1.20.4"
+forgeVersion: "49.0.0"
+chapter: "datagen/server/tags"
+source: "https://docs.minecraftforge.net/en/1.20.x/datagen/server/tags/"
+sourceType: mkdocs
+---
 # Tag Generation
 
 [Tags](../../../resources/server/tags/) can be generated for a mod by subclassing `TagsProvider` and implementing `#addTags`. After implementation, the provider must be [added](../../#data-providers) to the `DataGenerator`.
+
 
 ```java
 // On the MOD event bus
@@ -24,9 +28,10 @@ public void gatherData(GatherDataEvent event) {
 }
 ```
 
-## `TagsProvider
 
-The tags provider has two methods used for generating tags: creating a tag with objects and other tags via <code>#tag`, or using tags from other object types to generate the tag data via `#getOrCreateRawBuilder`.
+## `TagsProvider`
+
+The tags provider has two methods used for generating tags: creating a tag with objects and other tags via `#tag`, or using tags from other object types to generate the tag data via `#getOrCreateRawBuilder`.
 
 > **Note**: Note Typically, a provider will not call #getOrCreateRawBuilder directly unless a registry contains a representation of objects from a different registry (blocks have item representations to obtain the blocks in the inventory).
 
@@ -52,7 +57,8 @@ this.tag(EXAMPLE_TAG_2)
   .remove(EXAMPLE_OBJECT) // Removes an object from this tag
 ```
 
-> **Important**: Important If the mod&rsquo;s tags softly depends on another mod&rsquo;s tags (the other mod may or may not be present at runtime), the other mods&rsquo; tags should be referenced using the optional methods.
+
+> **Important**: Important If the mod’s tags softly depends on another mod’s tags (the other mod may or may not be present at runtime), the other mods’ tags should be referenced using the optional methods.
 
 ### Existing Providers
 
@@ -78,18 +84,21 @@ Registry Object Type | Tag Provider
 
 * `BlockTagsProvider` is a Forge added `TagsProvider`.
 
-#### `ItemTagsProvider#copy
+#### `ItemTagsProvider#copy`
 
-Blocks have item representations to obtain them in the inventory. As such, many of the block tags can also be an item tag. To easily generate item tags to have the same entries as block tags, the <code>#copy` method can be used which takes in the block tag to copy from and the item tag to copy to.
+Blocks have item representations to obtain them in the inventory. As such, many of the block tags can also be an item tag. To easily generate item tags to have the same entries as block tags, the `#copy` method can be used which takes in the block tag to copy from and the item tag to copy to.
+
 
 ```
 //In ItemTagsProvider#addTags
 this.copy(EXAMPLE_BLOCK_TAG, EXAMPLE_ITEM_TAG);
 ```
 
+
 ## Custom Tag Providers
 
 A custom tag provider can be created via a `TagsProvider` subclass which takes in the registry key to generate tags for.
+
 
 ```
 public RecipeTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper fileHelper) {
@@ -97,9 +106,11 @@ public RecipeTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.
 }
 ```
 
+
 ### Intrinsic Holder Tags Providers
 
 One special type of `TagProvider`s are `IntrinsicHolderTagsProvider`s. When creating a tag using this provider via `#tag`, the object itself can be used to add itself to the tag via `#add`. To do so, a function is provided within the constructor to turn an object into its `ResourceKey`.
+
 
 ```
 // Subtype of `IntrinsicHolderTagsProvider`

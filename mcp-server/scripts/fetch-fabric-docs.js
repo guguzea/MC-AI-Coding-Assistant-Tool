@@ -141,6 +141,11 @@ function gitPathToFetchId(gitPath) {
 }
 
 let _mainTreePaths = null;
+// 上游修订钉：trees API 返回的根 tree sha（同 sha ⇒ 同内容）。只记 `branch: main` 的话，
+// 「本仓与上游逐档相等」就是一次性结论 —— 上游在 main 上继续增删页后，无人能发现（2026-09-21 缺页普查）。
+// 取不到时保持 null 并照写：那是「本次没有修订钉」的留痕，不是「上游没有变更」。
+let _mainTreeSha = null;
+let _mainTreeTruncated = false;
 
 async function listMainTreePaths() {
   if (_mainTreePaths) return _mainTreePaths;
@@ -160,6 +165,12 @@ async function listMainTreePaths() {
       return _mainTreePaths;
     }
     const data = JSON.parse(readFileSync(dest, "utf8"));
+    _mainTreeSha = data.sha ?? null;
+    _mainTreeTruncated = data.truncated === true;
+    if (_mainTreeTruncated) {
+      console.warn("[fetch-fabric-docs] trees 响应 truncated=true ⇒ 这份清单不完整，禁止据此断言「无缺页」");
+    }
+    if (!_mainTreeSha) console.warn("[fetch-fabric-docs] trees 响应没有 sha 字段，本次不写修订钉（meta.docs.sourceTreeSha=null）");
     _mainTreePaths = (data.tree ?? []).filter((t) => t.type === "blob").map((t) => t.path);
   } catch (e) {
     console.warn(`[fetch-fabric-docs] GitHub tree 失败：${e.message}，仅用 toFetch`);
@@ -491,6 +502,9 @@ async function main() {
     meta.meta.docs = {
       sourceRepo: `${FABRIC_GH.owner}/${FABRIC_GH.repo}`,
       branch: BRANCH,
+      // 修订钉：下次比对上游时先看这两个字段，再看页数（只有 branch 等于没有钉）。
+      sourceTreeSha: _mainTreeSha,
+      sourceTreeTruncated: _mainTreeTruncated,
       acceptedSources: ["github_raw_versioned", "github_archive"],
       pages: provenanceLog,
       failures,
