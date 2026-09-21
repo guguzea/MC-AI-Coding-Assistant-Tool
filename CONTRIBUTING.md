@@ -11,9 +11,16 @@
 | Forge 规则 / Skills | `forge/<version>/` | 多版本已完成（主推 1.20.1） | 扩展规则、Skill、scaffold |
 | Fabric 规则 / Skills | `fabric/<version>/` | 多版本已完成（主推 1.20.1 / 1.21.x） | 同上 + Fabric 专有 Skill |
 | NeoForge 规则 | `neoforge/` | 已完成（主推 1.20.4+） | 扩展规则与知识 |
+| Quilt 规则（QSL 差异） | `quilt/<version>/` | 只写 QSL 差异（02–10 读同版 fabric） | QSL 注册 / 事件 / 网络 |
+| LiteLoader / Rift / ModLoader | `liteloader/` `rift/` `modloader/` | 短规则树（主推 1.12.2 / 1.13.2 / 1.6.4） | 短规则、verify 表 |
+| 基岩 Add-On | `bedrock/` | 扁平目录（无版本档） | 规则、pack 校验、Script API |
+| 库模组 Skill 源稿 | `knowledge/libs/` | 按组维护（`all-platforms` / `fabric-only` / …） | 新库 Skill、版本映射 |
+| 社区实务知识 | `community_knowledge/` | 持续维护 | 发布 / 崩溃 / 软依赖 |
 | MCP Server | `mcp-server/` | 以 list-tools / 实际注册为准 | 新工具、脚本、测试 |
-| 离线数据 | `data/` | Forge / Fabric / NeoForge 多版本 | 抓取、索引、审计 |
-| 根文档 | `README.md` / `AUTO_SETUP.md` / `AGENTS.md` | 持续维护 | 修正与同步 |
+| 离线数据 | `data/` | 8 平台多版本（档面以 `ls data/` 为准） | 抓取、索引、审计 |
+| 根文档 | `README.md` / `AUTO_SETUP.md` / `AGENTS.md` / `CONTRIBUTING.md` | 持续维护 | 修正与同步 |
+
+哪个平台有哪几档、哪条是主推，**以根 `README.md`「平台说明」表为准**，本节不重述；核对用 `ls -d <平台>/*/` 与 `ls -d data/*/`。
 
 知识库与反模式通常位于 **各平台版本目录** 下的 `knowledge/`（不是仓库根目录）。
 
@@ -68,7 +75,7 @@ cd <平台>/<版本>
 
 ### 步骤 4：数据与总览
 
-1. 在 `data/` 下按约定建立 `forge_<ver>/`、`fabric_<ver>/` 或 `neoforge_<ver>/`
+1. 在 `data/` 下按 `<平台>_<版本>/` 约定建立目录（已建档的不止 Java 三平台：还有 `quilt_*` / `liteloader_*` / `modloader_*` / `rift_*` / `bedrock_stable` / `vanilla_*` 等；清单以 `ls data/` 为准）
 2. 用 `mcp-server/scripts/` 抓取并生成 L0/L1/L2 + processed
 3. 更新根 `README.md`「平台说明」与 `AGENTS.md` 路由
 4. `cd mcp-server && set MC_SKILL_DATA=<data绝对路径> && npm run audit:data`
@@ -158,10 +165,12 @@ fabric 档 `mappings/` 里的 `yarn-tiny-provenance.json` 记录 tiny named 列�
 | 方向 | 示例脚本 |
 |------|----------|
 | Forge 文档 | `fetch-forge-docs.js`、`process-forge-docs.js` |
-| Fabric Docs / Wiki / Meta / Mappings | `fetch-fabric-*.js`、`process-fabric-*.js`、`reindex-all-versions.js` |
+| Fabric Docs / Wiki / Meta / Mappings | `fetch-fabric-*.js`、`process-fabric-*.js` |
 | Parchment / API 提取 | `parchment-extractor.js` 等 |
 | Yarn SQLite | `npm run build:yarn-sqlite`（推荐；运行时禁止全量读 JSON） |
 | 一致性审计 | `npm run audit:data` |
+
+表内是示例不是全集；**脚本是否存在以磁盘为准**（`ls mcp-server/scripts/`）。
 
 ### 贡献注意
 
@@ -170,6 +179,7 @@ fabric 档 `mappings/` 里的 `yarn-tiny-provenance.json` 记录 tiny named 列�
 - **不要**假设 `mcp-server/data/` 是运行时路径；MCP 读取的是 `MC_SKILL_DATA` 指向的仓库根 `data/`
 - 大体积 `*.jar` / `*.zip` 的忽略规则见根 `.gitignore`；完整包走 Release artifact + `SHA256SUMS` + `data-manifest.json`
 - Redistribute `data/` 时附带 [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md)
+- **新增仓库顶层目录 / 顶层模块时**：交付汇报的「受管面」是根 `AGENTS.md` §交付汇报 里**手列的清单**（现为 8 个平台树 + `data/` / `knowledge/` / `community_knowledge/` / `mcp-server/` / `scripts/` / `agent-tools/` / `openspec/` / `ralphy-spec/` + 根 `*.md`）。**新目录落地必须同步补进那份清单**（清单以那份为准，本节不复述），否则改动它的那一轮会被判成主档、丢掉维护档的台账与门验证汇报。核对方法：把仓库顶层 `ls`（`Get-ChildItem -Directory`）结果与那份清单逐个比对。
 
 ---
 
@@ -223,7 +233,8 @@ processed 正文里的这两行都是**转引标记**，不是可执行代码；
   `assert-lib-ownership` / `lint-skill-verified-api` / `assert-scripts-parse` 这类）。2026-09-15 实测到
   这样一轮「抽跑」之后 `test-scripts.mjs` **本身是红的**（生产者 `scripts/build-api-summaries.mjs`
   被改写、harness 里的投毒锚点没跟着同步），而那一轮销账只登记了跑过的那 5 道门 ⇒ 台账上看不出链在冒烟。
-  第 8 步是门禁总入口（25 道 `assert-*` 串链 + G1–G4 全量 + 假根投毒），**它绿才叫「链上无已知红」**。
+  第 8 步是门禁总入口（`mcp-server/scripts/assert-*.mjs` 串链 + G1–G4 全量 + 假根投毒），**它绿才叫「链上无已知红」**。
+  道数不写死（会随迭代增长），以 `ls mcp-server/scripts/assert-*.mjs` 为准。
 - **harness 里硬钉的文本锚点与计数必须随批次同步，且只许「先对齐生产侧、再改 harness」**。
   `mcp-server/test-scripts.mjs` 用硬值做**第二道独立钉**（例：`已证实包根 47`、投毒替换用的源码原文片段），
   这是刻意的双机制，不是冗余。代价是生产侧改写法/改口径后 harness 会**当场断言失败**而非静默失效 ——
@@ -352,7 +363,7 @@ npm run smoke:release   # 可选
 ```
 feat(forge/1.20.1): 添加方块实体注册规则
 fix(mcp-server): 修正 Yarn sqlite 路径解析
-docs(AUTO_SETUP): 同步 79 工具与配置草稿流程
+docs(AUTO_SETUP): 同步工具清单与配置草稿流程
 chore(data): 忽略临时 plan 文件
 docs(fabric/1.21.1): 补充 mixin 反模式
 ```
