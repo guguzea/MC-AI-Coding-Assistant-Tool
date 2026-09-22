@@ -1,13 +1,17 @@
 # PlayerInteractEvent.EntityInteract
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract
+
+## Class signature
+
+```java
+public static class PlayerInteractEvent.EntityInteract extends PlayerInteractEvent
+```
+
 ## Constructors
 
-- `public EntityInteract( EntityPlayer player, EnumHand hand, Entity target)`
+- `EntityInteract(EntityPlayer player, EnumHand hand, Entity target)`
 
 ## Methods
 
-- `public Entity getTarget()`
-
-## Description
-
-This event is fired on both sides when the player right clicks an entity. It is responsible for all general entity interactions. This event is fired only if the result of the above PlayerInteractEvent
+- `Entity getTarget()`

@@ -8,9 +8,5 @@ public interface ICapabilityProvider
 
 ## Methods
 
-- `boolean hasCapability( Capability <?> capability, EnumFacing facing)`
-- `<T> T getCapability( Capability <T> capability, EnumFacing facing)`
-
-## Description
-
-Retrieves the handler for the capability requested on the specific side.
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.

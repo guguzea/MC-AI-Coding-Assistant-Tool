@@ -1,22 +1,32 @@
 ---
 title: "BlockWorkbench.InterfaceCraftingTable"
-description: ""
+description: "public static class BlockWorkbench.InterfaceCraftingTable extends java.lang.Object implements IInteractionObject"
 package: "net/minecraft/block"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/BlockWorkbench.InterfaceCraftingTable.html"
 sourceType: javadoc
 ---
 
 # BlockWorkbench.InterfaceCraftingTable
 
+**Inheritance:** java.lang.Object → net.minecraft.block.BlockWorkbench.InterfaceCraftingTable
+
+## Class signature
+
+```java
+public static class BlockWorkbench.InterfaceCraftingTable extends java.lang.Object implements IInteractionObject
+```
+
 ## Constructors
 
-- `public InterfaceCraftingTable( World worldIn, BlockPos pos)`
+- `InterfaceCraftingTable(World worldIn, BlockPos pos)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public ITextComponent getDisplayName()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `public java.lang.String getGuiID()`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `ITextComponent getDisplayName()`
+- `java.lang.String getGuiID()`
+- `java.lang.String getName()`
+- `boolean hasCustomName()`

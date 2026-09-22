@@ -1,13 +1,17 @@
 ---
 title: "ContextKeys"
-description: "Some default context keys, for easier compatibility"
+description: "public class ContextKeys extends java.lang.Object"
 package: "net/minecraftforge/server/permission/context"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/server/permission/context/ContextKeys.html"
 sourceType: javadoc
 ---
 
 # ContextKeys
+
+**Inheritance:** java.lang.Object → net.minecraftforge.server.permission.context.ContextKeys
 
 ## Class signature
 
@@ -17,8 +21,12 @@ public class ContextKeys extends java.lang.Object
 
 ## Constructors
 
-- `public ContextKeys()`
+- `ContextKeys()`
 
-## Description
+## Fields
 
-Some default context keys, for easier compatibility
+- `static ContextKey<AxisAlignedBB> AREA`
+- `static ContextKey<IBlockState> BLOCK_STATE`
+- `static ContextKey<EnumFacing> FACING`
+- `static ContextKey<BlockPos> POS` — BlockPos for interacting, breaking and other permissions
+- `static ContextKey<Entity> TARGET` — The entity can be anything that gets interacted with - a sheep when you try to dye it, skeleton that you attack, etc.

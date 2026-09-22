@@ -1,5 +1,7 @@
 # CommandSetPlayerTimeout
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.CommandSetPlayerTimeout
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class CommandSetPlayerTimeout extends CommandBase
 
 ## Constructors
 
-- `public CommandSetPlayerTimeout()`
+- `CommandSetPlayerTimeout()`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public int getRequiredPermissionLevel()`
-- `public java.lang.String getUsage( ICommandSender sender)`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.lang.String getName()`
+- `int getRequiredPermissionLevel()`
+- `java.lang.String getUsage(ICommandSender sender)`

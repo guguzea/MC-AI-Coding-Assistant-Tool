@@ -23,6 +23,7 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { fetchPageHtml, isLikelyValidHtmlPage, htmlTableToMarkdown } from "./_lib/pipeline-helpers.mjs";
 import { resolveDataRoot } from "./_lib/data-root.js";
+import { neoforgeRawName } from "./_lib/upstream-inventory.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // NP-6（2026-09-17）：数据根统一走 _lib/data-root.js（--data-root > MC_SKILL_DATA > <repo>/data）
@@ -36,6 +37,8 @@ const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
 const force = args.includes("--force");
 const noSitemap = args.includes("--no-sitemap");
+/** 只刷新上游清单快照（一次 sitemap 调用），不抓任何页面 —— 给 assert-upstream-chapters 接新档用。 */
+const inventoryOnly = args.includes("--inventory-only");
 const targetVer = args.find(a => a.startsWith("--version="))?.split("=")[1];
 
 // ── Manifest ─────────────────────────────────────────────────────────────────
@@ -379,7 +382,7 @@ function convertLists(text) {
 
 /** 与落盘文件名保持一致的转换，禁止另写一套（否则「已存在」判断会失配）。 */
 function safeIdOf(href) {
-  return String(href ?? "").replace(/\//g, "_").replace(/-/g, "_");
+  return neoforgeRawName(String(href ?? "")).replace(/\.md$/, "");
 }
 
 /** 最近一次 sitemap 发现的统计，供 dry-run 与摘要打印。 */
@@ -550,6 +553,29 @@ async function main() {
     const outVersionDir = join(OUT_DIR, `neoforge_${version}`, "neoforge-docs", version);
     const rawDir = join(outVersionDir, "raw");
     mkdirSync(rawDir, { recursive: true });
+
+    // 上游清单快照：给 assert-upstream-chapters 当「期望」用，避免拿本仓产物自证。
+    // 只在 sitemap 真跑通时写——chapters-only 降级写出来的快照就是 manifest 自己，等于没接上游。
+    if (!dryRun && sitemapStats.mode === "sitemap") {
+      writeFileSync(
+        join(outVersionDir, "upstream-sitemap.json"),
+        JSON.stringify({
+          platform: "neoforge",
+          version,
+          source: "sitemap",
+          sitemapUrl: `${DOCS_BASE}/sitemap.xml`,
+          route: cfg.route ?? "",
+          discoveredAt: new Date().toISOString(),
+          pageCount: pages.length,
+          pages: pages.map((p) => p.href),
+        }, null, 2) + "\n",
+        "utf-8",
+      );
+    }
+    if (inventoryOnly) {
+      console.log(`  --inventory-only：只写上游清单快照（${pages.length} 页，模式 ${sitemapStats.mode}），不抓页面`);
+      continue;
+    }
 
     // 精确增量：以 raw/ 实际文件为准（与下方 SKIP 判断同口径）
     if (dryRun) {

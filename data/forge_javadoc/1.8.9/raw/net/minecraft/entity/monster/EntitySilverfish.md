@@ -1,13 +1,17 @@
 ---
 title: "EntitySilverfish"
-description: "Called when the entity is attacked."
+description: "public class EntitySilverfish extends EntityMob"
 package: "net/minecraft/entity/monster"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/entity/monster/EntitySilverfish.html"
 sourceType: javadoc
 ---
 
 # EntitySilverfish
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntitySilverfish
 
 ## Class signature
 
@@ -15,28 +19,24 @@ sourceType: javadoc
 public class EntitySilverfish extends EntityMob
 ```
 
-## Constructors
-
-- `public EntitySilverfish( World worldIn)`
-
 ## Methods
 
-- `public double getYOffset()`
-- `public float getEyeHeight()`
 - `protected void applyEntityAttributes()`
-- `protected boolean canTriggerWalking()`
-- `protected java.lang.String getLivingSound()`
-- `protected java.lang.String getHurtSound()`
-- `protected java.lang.String getDeathSound()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
+- `boolean attackEntityFrom(DamageSource source, float amount)` — Called when the entity is attacked.
+- `protected boolean canTriggerWalking()` — returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to prevent them from trampling crops
+- `float getBlockPathWeight(BlockPos pos)`
+- `boolean getCanSpawnHere()` — Checks if the entity's current position is a valid location to spawn this entity.
+- `EnumCreatureAttribute getCreatureAttribute()` — Get this Entity's EnumCreatureAttribute
+- `protected java.lang.String getDeathSound()` — Returns the sound this mob makes on death.
 - `protected Item getDropItem()`
-- `public void onUpdate()`
-- `public float getBlockPathWeight( BlockPos pos)`
-- `protected boolean isValidLightLevel()`
-- `public boolean getCanSpawnHere()`
-- `public EnumCreatureAttribute getCreatureAttribute()`
+- `float getEyeHeight()`
+- `protected java.lang.String getHurtSound()` — Returns the sound this mob makes when it is hurt.
+- `protected java.lang.String getLivingSound()` — Returns the sound this mob makes while it's alive.
+- `double getYOffset()` — Returns the Y Offset of this entity.
+- `protected boolean isValidLightLevel()` — Checks to make sure the light is not too bright where the mob is spawning
+- `void onUpdate()` — Called to update the entity's position/logic.
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
 
-## Description
+## Fields
 
-Called when the entity is attacked.
+- `EntitySilverfish`

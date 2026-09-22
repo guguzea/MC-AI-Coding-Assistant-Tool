@@ -1,20 +1,34 @@
 ---
 title: "FunctionObject.CacheableFunction"
-description: ""
+description: "public static class FunctionObject.CacheableFunction extends java.lang.Object"
 package: "net/minecraft/command"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/command/FunctionObject.CacheableFunction.html"
 sourceType: javadoc
 ---
 
 # FunctionObject.CacheableFunction
 
+**Inheritance:** java.lang.Object → net.minecraft.command.FunctionObject.CacheableFunction
+
+## Class signature
+
+```java
+public static class FunctionObject.CacheableFunction extends java.lang.Object
+```
+
 ## Constructors
 
-- `public CacheableFunction( ResourceLocation idIn)`
-- `public CacheableFunction( FunctionObject functionIn)`
+- `CacheableFunction(FunctionObject functionIn)`
+- `CacheableFunction(ResourceLocation idIn)`
 
 ## Methods
 
-- `public FunctionObject get( FunctionManager functionManagerIn)`
-- `public java.lang.String toString()`
+- `FunctionObject get(FunctionManager functionManagerIn)`
+- `java.lang.String toString()`
+
+## Fields
+
+- `static FunctionObject.CacheableFunction EMPTY`

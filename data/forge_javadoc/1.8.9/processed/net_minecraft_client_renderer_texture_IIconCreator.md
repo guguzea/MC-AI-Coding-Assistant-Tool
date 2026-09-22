@@ -8,4 +8,4 @@ public interface IIconCreator
 
 ## Methods
 
-- `void registerSprites( TextureMap iconRegistry)`
+- `void registerSprites(TextureMap iconRegistry)`

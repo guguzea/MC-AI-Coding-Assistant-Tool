@@ -1,31 +1,35 @@
 ---
 title: "SPacketEffect"
-description: "public class SPacketEffect extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketEffect extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/network/play/server/SPacketEffect.html"
 sourceType: javadoc
 ---
 
 # SPacketEffect
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketEffect
+
 ## Class signature
 
 ```java
-public class SPacketEffect extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketEffect extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketEffect()`
-- `public SPacketEffect(int soundTypeIn, BlockPos soundPosIn, int soundDataIn, boolean serverWideIn)`
+- `SPacketEffect()`
+- `SPacketEffect(int soundTypeIn, BlockPos soundPosIn, int soundDataIn, boolean serverWideIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public boolean isSoundServerwide()`
-- `public int getSoundType()`
-- `public int getSoundData()`
-- `public BlockPos getSoundPos()`
+- `int getSoundData()`
+- `BlockPos getSoundPos()`
+- `int getSoundType()`
+- `boolean isSoundServerwide()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

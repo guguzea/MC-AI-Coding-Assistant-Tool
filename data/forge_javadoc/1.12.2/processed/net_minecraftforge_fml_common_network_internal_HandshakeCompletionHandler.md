@@ -1,16 +1,18 @@
 # HandshakeCompletionHandler
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.internal.HandshakeCompletionHandler
+
 ## Class signature
 
 ```java
-public class HandshakeCompletionHandler extends <any>
+public class HandshakeCompletionHandler extends<any>
 ```
 
 ## Constructors
 
-- `public HandshakeCompletionHandler()`
+- `HandshakeCompletionHandler()`
 
 ## Methods
 
-- `protected void channelRead0(ChannelHandlerContext ctx, FMLMessage.CompleteHandshake msg) throws java.lang.Exception`
-- `public void exceptionCaught(ChannelHandlerContext ctx, java.lang.Throwable cause) throws java.lang.Exception`
+- `protected void channelRead0(ChannelHandlerContext ctx, FMLMessage.CompleteHandshake msg)`
+- `void exceptionCaught(ChannelHandlerContext ctx, java.lang.Throwable cause)`

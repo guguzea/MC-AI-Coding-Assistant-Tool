@@ -1,5 +1,7 @@
 # MapItemRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.MapItemRenderer
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class MapItemRenderer extends java.lang.Object
 
 ## Constructors
 
-- `public MapItemRenderer( TextureManager textureManagerIn)`
+- `MapItemRenderer(TextureManager textureManagerIn)`
 
 ## Methods
 
-- `public void updateMapTexture( MapData mapdataIn)`
-- `public void renderMap( MapData mapdataIn, boolean p_148250_2_)`
-- `public void clearLoadedMaps()`
+- `void clearLoadedMaps()`
+- `void renderMap(MapData mapdataIn, boolean p_148250_2_)`
+- `void updateMapTexture(MapData mapdataIn)`

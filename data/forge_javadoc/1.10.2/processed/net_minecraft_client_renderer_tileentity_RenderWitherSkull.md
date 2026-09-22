@@ -1,16 +1,18 @@
 # RenderWitherSkull
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<EntityWitherSkull> → net.minecraft.client.renderer.tileentity.RenderWitherSkull
+
 ## Class signature
 
 ```java
-public class RenderWitherSkull extends Render < EntityWitherSkull >
+public class RenderWitherSkull extends Render<EntityWitherSkull>
 ```
-
-## Constructors
-
-- `public RenderWitherSkull( RenderManager renderManagerIn)`
 
 ## Methods
 
-- `public void doRender( EntityWitherSkull entity, double x, double y, double z, float entityYaw, float partialTicks)`
-- `protected ResourceLocation getEntityTexture( EntityWitherSkull entity)`
+- `void doRender(EntityWitherSkull entity, double x, double y, double z, float entityYaw, float partialTicks)`
+- `protected ResourceLocation getEntityTexture(EntityWitherSkull entity)`
+
+## Fields
+
+- `RenderWitherSkull`

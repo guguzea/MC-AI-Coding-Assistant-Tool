@@ -1,21 +1,19 @@
 # RenderVillager
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RendererLivingEntity<T> → net.minecraft.client.renderer.entity.RenderLiving<EntityVillager> → net.minecraft.client.renderer.entity.RenderVillager
+
 ## Class signature
 
 ```java
-public class RenderVillager extends RenderLiving < EntityVillager >
+public class RenderVillager extends RenderLiving<EntityVillager>
 ```
-
-## Constructors
-
-- `public RenderVillager( RenderManager renderManagerIn)`
 
 ## Methods
 
-- `public ModelVillager getMainModel()`
-- `protected ResourceLocation getEntityTexture( EntityVillager entity)`
-- `protected void preRenderCallback( EntityVillager entitylivingbaseIn, float partialTickTime)`
+- `protected ResourceLocation getEntityTexture(EntityVillager entity)` — Returns the location of an entity's texture.
+- `ModelVillager getMainModel()`
+- `protected void preRenderCallback(EntityVillager entitylivingbaseIn, float partialTickTime)` — Allows the render to do any OpenGL state modifications necessary before the model is rendered.
 
-## Description
+## Fields
 
-Returns the location of an entity's texture.
+- `RenderVillager`

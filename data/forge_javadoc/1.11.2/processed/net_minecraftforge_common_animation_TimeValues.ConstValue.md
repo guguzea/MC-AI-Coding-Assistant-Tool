@@ -1,11 +1,19 @@
 # TimeValues.ConstValue
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.animation.TimeValues.ConstValue
+
+## Class signature
+
+```java
+public static final class TimeValues.ConstValue extends java.lang.Object implements ITimeValue
+```
+
 ## Constructors
 
-- `public ConstValue(float output)`
+- `ConstValue(float output)`
 
 ## Methods
 
-- `public float apply(float input)`
-- `public int hashCode()`
-- `public boolean equals(java.lang.Object obj)`
+- `float apply(float input)`
+- `boolean equals(java.lang.Object obj)`
+- `int hashCode()`

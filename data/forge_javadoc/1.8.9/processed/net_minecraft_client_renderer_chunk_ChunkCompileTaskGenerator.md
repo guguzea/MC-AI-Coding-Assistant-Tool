@@ -1,5 +1,7 @@
 # ChunkCompileTaskGenerator
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.chunk.ChunkCompileTaskGenerator
+
 ## Class signature
 
 ```java
@@ -8,19 +10,19 @@ public class ChunkCompileTaskGenerator extends java.lang.Object
 
 ## Constructors
 
-- `public ChunkCompileTaskGenerator( RenderChunk renderChunkIn, ChunkCompileTaskGenerator.Type typeIn)`
+- `ChunkCompileTaskGenerator(RenderChunk renderChunkIn, ChunkCompileTaskGenerator.Type typeIn)`
 
 ## Methods
 
-- `public ChunkCompileTaskGenerator.Status getStatus()`
-- `public RenderChunk getRenderChunk()`
-- `public CompiledChunk getCompiledChunk()`
-- `public void setCompiledChunk( CompiledChunk compiledChunkIn)`
-- `public RegionRenderCacheBuilder getRegionRenderCacheBuilder()`
-- `public void setRegionRenderCacheBuilder( RegionRenderCacheBuilder regionRenderCacheBuilderIn)`
-- `public void setStatus( ChunkCompileTaskGenerator.Status statusIn)`
-- `public void finish()`
-- `public void addFinishRunnable(java.lang.Runnable p_178539_1_)`
-- `public java.util.concurrent.locks.ReentrantLock getLock()`
-- `public ChunkCompileTaskGenerator.Type getType()`
-- `public boolean isFinished()`
+- `void addFinishRunnable(java.lang.Runnable p_178539_1_)`
+- `void finish()`
+- `CompiledChunk getCompiledChunk()`
+- `java.util.concurrent.locks.ReentrantLock getLock()`
+- `RegionRenderCacheBuilder getRegionRenderCacheBuilder()`
+- `RenderChunk getRenderChunk()`
+- `ChunkCompileTaskGenerator.Status getStatus()`
+- `ChunkCompileTaskGenerator.Type getType()`
+- `boolean isFinished()`
+- `void setCompiledChunk(CompiledChunk compiledChunkIn)`
+- `void setRegionRenderCacheBuilder(RegionRenderCacheBuilder regionRenderCacheBuilderIn)`
+- `void setStatus(ChunkCompileTaskGenerator.Status statusIn)`

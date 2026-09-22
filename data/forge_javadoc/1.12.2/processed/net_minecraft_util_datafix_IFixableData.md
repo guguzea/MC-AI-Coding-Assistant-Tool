@@ -8,5 +8,5 @@ public interface IFixableData
 
 ## Methods
 
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
 - `int getFixVersion()`
-- `NBTTagCompound fixTagCompound( NBTTagCompound compound)`

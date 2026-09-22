@@ -1,19 +1,21 @@
 # PhaseHoldingPattern
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseHoldingPattern
+
 ## Class signature
 
 ```java
 public class PhaseHoldingPattern extends PhaseBase
 ```
 
-## Constructors
-
-- `public PhaseHoldingPattern( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public PhaseList < PhaseHoldingPattern > getType()`
-- `public void doLocalUpdate()`
-- `public void initPhase()`
-- `public Vec3d getTargetLocation()`
-- `public void onCrystalDestroyed( EntityEnderCrystal crystal, BlockPos pos, DamageSource dmgSrc, EntityPlayer plyr)`
+- `void doLocalUpdate()`
+- `Vec3d getTargetLocation()`
+- `PhaseList<PhaseHoldingPattern> getType()`
+- `void initPhase()`
+- `void onCrystalDestroyed(EntityEnderCrystal crystal, BlockPos pos, DamageSource dmgSrc, EntityPlayer plyr)`
+
+## Fields
+
+- `PhaseHoldingPattern`

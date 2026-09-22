@@ -1,21 +1,25 @@
 # GameSettings.Options
 
+**Inheritance:** java.lang.Object → java.lang.Enum<GameSettings.Options> → net.minecraft.client.settings.GameSettings.Options
+
+## Class signature
+
+```java
+public static enum GameSettings.Options extends java.lang.Enum<GameSettings.Options>
+```
+
 ## Methods
 
-- `public static GameSettings.Options [] values()`
-- `public static GameSettings.Options valueOf(java.lang.String name)`
-- `public static GameSettings.Options byOrdinal(int ordinal)`
-- `public boolean isFloat()`
-- `public boolean isBoolean()`
-- `public int getOrdinal()`
-- `public java.lang.String getTranslation()`
-- `public float getValueMin()`
-- `public float getValueMax()`
-- `public void setValueMax(float value)`
-- `public float normalizeValue(float value)`
-- `public float denormalizeValue(float value)`
-- `public float snapToStepClamp(float value)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static GameSettings.Options byOrdinal(int ordinal)`
+- `float denormalizeValue(float value)`
+- `int getOrdinal()`
+- `java.lang.String getTranslation()`
+- `float getValueMax()`
+- `float getValueMin()`
+- `boolean isBoolean()`
+- `boolean isFloat()`
+- `float normalizeValue(float value)`
+- `void setValueMax(float value)`
+- `float snapToStepClamp(float value)`
+- `static GameSettings.Options valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static GameSettings.Options [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

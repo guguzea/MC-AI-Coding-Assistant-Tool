@@ -1,32 +1,36 @@
 ---
 title: "SPacketSpawnExperienceOrb"
-description: "public class SPacketSpawnExperienceOrb extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketSpawnExperienceOrb extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/play/server/SPacketSpawnExperienceOrb.html"
 sourceType: javadoc
 ---
 
 # SPacketSpawnExperienceOrb
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketSpawnExperienceOrb
+
 ## Class signature
 
 ```java
-public class SPacketSpawnExperienceOrb extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketSpawnExperienceOrb extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketSpawnExperienceOrb()`
-- `public SPacketSpawnExperienceOrb( EntityXPOrb orb)`
+- `SPacketSpawnExperienceOrb()`
+- `SPacketSpawnExperienceOrb(EntityXPOrb orb)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getEntityID()`
-- `public double getX()`
-- `public double getY()`
-- `public double getZ()`
-- `public int getXPValue()`
+- `int getEntityID()`
+- `double getX()`
+- `int getXPValue()`
+- `double getY()`
+- `double getZ()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

@@ -1,26 +1,28 @@
 # EntityWitherSkeleton
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.AbstractSkeleton → net.minecraft.entity.monster.EntityWitherSkeleton
+
 ## Class signature
 
 ```java
 public class EntityWitherSkeleton extends AbstractSkeleton
 ```
 
-## Constructors
-
-- `public EntityWitherSkeleton( World worldIn)`
-
 ## Methods
 
-- `public static void registerFixesWitherSkeleton( DataFixer fixer)`
-- `@Nullable protected ResourceLocation getLootTable()`
+- `boolean attackEntityAsMob(Entity entityIn)`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
-- `protected SoundEvent getDeathSound()`
-- `public void onDeath( DamageSource cause)`
-- `protected void setEquipmentBasedOnDifficulty( DifficultyInstance difficulty)`
-- `protected void setEnchantmentBasedOnDifficulty( DifficultyInstance difficulty)`
-- `@Nullable public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)`
-- `public float getEyeHeight()`
-- `public boolean attackEntityAsMob( Entity entityIn)`
 - `protected EntityArrow getArrow(float p_190726_1_)`
+- `protected SoundEvent getDeathSound()`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `void onDeath(DamageSource cause)`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `static void registerFixesWitherSkeleton(DataFixer fixer)`
+- `protected void setEnchantmentBasedOnDifficulty(DifficultyInstance difficulty)`
+- `protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty)`
+
+## Fields
+
+- `EntityWitherSkeleton`

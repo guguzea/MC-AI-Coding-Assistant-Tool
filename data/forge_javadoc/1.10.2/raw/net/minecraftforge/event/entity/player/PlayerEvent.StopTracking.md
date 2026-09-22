@@ -1,22 +1,28 @@
 ---
 title: "PlayerEvent.StopTracking"
-description: "Fired when an Entity is stopped to be \"tracked\" by this player (the player no longer receives updates about this entity, e.g. motion)."
+description: "public static class PlayerEvent.StopTracking extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/entity/player/PlayerEvent.StopTracking.html"
 sourceType: javadoc
 ---
 
 # PlayerEvent.StopTracking
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.StopTracking
+
+## Class signature
+
+```java
+public static class PlayerEvent.StopTracking extends PlayerEvent
+```
+
 ## Constructors
 
-- `public StopTracking( EntityPlayer player, Entity target)`
+- `StopTracking(EntityPlayer player, Entity target)`
 
 ## Methods
 
-- `public Entity getTarget()`
-
-## Description
-
-Fired when an Entity is stopped to be "tracked" by this player (the player no longer receives updates about this entity, e.g. motion).
+- `Entity getTarget()` — The Entity no longer being tracked.

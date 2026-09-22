@@ -1,17 +1,19 @@
 # UserListBansEntry
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.UserListEntry<T> → net.minecraft.server.management.BanEntry<GameProfile> → net.minecraft.server.management.UserListBansEntry
+
 ## Class signature
 
 ```java
-public class UserListBansEntry extends BanEntry <GameProfile>
+public class UserListBansEntry extends BanEntry<GameProfile>
 ```
-
-## Constructors
-
-- `public UserListBansEntry(GameProfile profile)`
-- `public UserListBansEntry(GameProfile profile, java.util.Date startDate, java.lang.String banner, java.util.Date endDate, java.lang.String banReason)`
-- `public UserListBansEntry(JsonObject json)`
 
 ## Methods
 
 - `protected void onSerialization(JsonObject data)`
+
+## Fields
+
+- `UserListBansEntry`
+- `UserListBansEntry`
+- `UserListBansEntry`

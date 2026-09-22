@@ -3,11 +3,15 @@ title: "ModelShulker"
 description: "public class ModelShulker extends ModelBase"
 package: "net/minecraft/client/model"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/model/ModelShulker.html"
 sourceType: javadoc
 ---
 
 # ModelShulker
+
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelShulker
 
 ## Class signature
 
@@ -17,11 +21,15 @@ public class ModelShulker extends ModelBase
 
 ## Constructors
 
-- `public ModelShulker()`
+- `ModelShulker()`
 
 ## Methods
 
-- `public int getModelVersion()`
-- `public void setLivingAnimations( EntityLivingBase entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime)`
-- `public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
-- `public void render( Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `int getModelVersion()`
+- `void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime)`
+- `void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
+
+## Fields
+
+- `ModelRenderer head`

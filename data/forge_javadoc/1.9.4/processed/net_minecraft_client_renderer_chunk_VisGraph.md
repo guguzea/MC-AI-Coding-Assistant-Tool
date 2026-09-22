@@ -1,5 +1,7 @@
 # VisGraph
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.chunk.VisGraph
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class VisGraph extends java.lang.Object
 
 ## Constructors
 
-- `public VisGraph()`
+- `VisGraph()`
 
 ## Methods
 
-- `public void setOpaqueCube( BlockPos pos)`
-- `public SetVisibility computeVisibility()`
-- `public java.util.Set< EnumFacing > getVisibleFacings( BlockPos pos)`
+- `SetVisibility computeVisibility()`
+- `java.util.Set<EnumFacing> getVisibleFacings(BlockPos pos)`
+- `void setOpaqueCube(BlockPos pos)`

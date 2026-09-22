@@ -1,5 +1,7 @@
 # EntityAIAttackOnCollide
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIAttackOnCollide
+
 ## Class signature
 
 ```java
@@ -8,18 +10,18 @@ public class EntityAIAttackOnCollide extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIAttackOnCollide( EntityCreature creature, java.lang.Class<? extends Entity > targetClass, double speedIn, boolean useLongMemory)`
-- `public EntityAIAttackOnCollide( EntityCreature creature, double speedIn, boolean useLongMemory)`
+- `EntityAIAttackOnCollide(EntityCreature creature, java.lang.Class<? extends Entity> targetClass, double speedIn, boolean useLongMemory)`
+- `EntityAIAttackOnCollide(EntityCreature creature, double speedIn, boolean useLongMemory)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
-- `protected double func_179512_a( EntityLivingBase attackTarget)`
+- `boolean continueExecuting()` — Returns whether an in-progress EntityAIBase should continue executing
+- `protected double func_179512_a(EntityLivingBase attackTarget)`
+- `void resetTask()` — Resets the task
+- `boolean shouldExecute()` — Returns whether the EntityAIBase should begin execution.
+- `void startExecuting()` — Execute a one shot task or start executing a continuous task
+- `void updateTask()` — Updates the task
 
-## Description
+## Fields
 
-Returns whether an in-progress EntityAIBase should continue executing
+- `protected EntityCreature attacker`

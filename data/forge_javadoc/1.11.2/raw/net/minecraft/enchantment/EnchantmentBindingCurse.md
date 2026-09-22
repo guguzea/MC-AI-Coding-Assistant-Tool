@@ -3,11 +3,15 @@ title: "EnchantmentBindingCurse"
 description: "public class EnchantmentBindingCurse extends Enchantment"
 package: "net/minecraft/enchantment"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/enchantment/EnchantmentBindingCurse.html"
 sourceType: javadoc
 ---
 
 # EnchantmentBindingCurse
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Enchantment> → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentBindingCurse
 
 ## Class signature
 
@@ -15,14 +19,14 @@ sourceType: javadoc
 public class EnchantmentBindingCurse extends Enchantment
 ```
 
-## Constructors
-
-- `public EnchantmentBindingCurse( Enchantment.Rarity p_i47254_1_, EntityEquipmentSlot ... p_i47254_2_)`
-
 ## Methods
 
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int getMaxLevel()`
-- `public boolean isTreasureEnchantment()`
-- `public boolean isCurse()`
+- `int getMaxEnchantability(int enchantmentLevel)`
+- `int getMaxLevel()`
+- `int getMinEnchantability(int enchantmentLevel)`
+- `boolean isCurse()`
+- `boolean isTreasureEnchantment()`
+
+## Fields
+
+- `EnchantmentBindingCurse`

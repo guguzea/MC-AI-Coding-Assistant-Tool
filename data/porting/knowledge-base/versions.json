@@ -10,12 +10,30 @@
     },
     "breakingChangesRule": {
       "source": "data/neoforge_primers/*.md 的 '## ' 小节，剥离 U+200B 后逐字取标题；一条目 = 一小节。",
-      "excludedHeadings": ["Minor Migrations"],
+      "excludedHeadings": [
+        "Minor Migrations"
+      ],
       "severityMeaning": "unrated = 未经人工评级（不代表无风险）；fixType 固定 manual-review，因为要读正文小节才能定改法。",
       "legacy": "1.7.10…1.20.2 的 breakingChanges 为人工撰写，本 story 不改写、不重评级。",
       "consumerNote": "queryBreakingChanges 按 parseMinecraftVersion 的 min/max 区间收所有键的条目，所以跨多档的路线会拿到每档的小节清单。"
     },
-    "legacyUntaggedKeys": ["1.7.10", "1.8.9", "1.9.4", "1.10.2", "1.11.2", "1.12.2", "1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.2", "1.19.4", "1.20.1", "1.20.4", "1.20.2"],
+    "legacyUntaggedKeys": [
+      "1.7.10",
+      "1.8.9",
+      "1.9.4",
+      "1.10.2",
+      "1.11.2",
+      "1.12.2",
+      "1.14.4",
+      "1.15.2",
+      "1.16.5",
+      "1.17.1",
+      "1.18.2",
+      "1.19.4",
+      "1.20.1",
+      "1.20.4",
+      "1.20.2"
+    ],
     "kbKeysWithoutRuleTree": {
       "1.20.2": "老条目：该版本在本仓只有 Forge 文档档，无 <platform>/<ver> 规则树；跨加载器移植仍可用本条目的 loader 钉值。",
       "1.20.5": "无独立 1.20.5 规则树 / 文档树：NeoForge 把 1.20.5 与 1.20.6 并成同一档（manifest 1.20.6 行 versionLabel \"Version: 1.20.5 - 1.20.6\"），故 loader / mappings 不填。java 另由 primer 1.20.5 小节 \"Java 21\" 佐证。",
@@ -105,9 +123,46 @@
         "source": 25,
         "sourceFile": "src:javaForMcVersion",
         "kind": "divergent",
-        "note": "代码 javaForMcVersion 对 1.21.11 返回 25，而 manifest + 两棵规则档都是 21。KB 有键后 target.java 走 KB=21；代码侧待单独修（连带 test-core 里 javaForMcVersion 的钉值）。"
+        "note": "代码 javaForMcVersion 对 1.21.11 返回 25，而 manifest + 两棵规则档都是 21。KB 有键后 target.java 走 KB=21；代码侧待单独修（连带 test-core 里 javaForMcVersion 的钉值）。 ⚠️ 哪边对**未决**：source=25 正是 REPORT.md §5(c) 列为「不可证」的「26.x 上游 Java 25」那一条 —— 登记 divergent 表示「已知分歧、非已决」，不是把未决当已决；定论前不得据此改成 25。"
+      },
+      {
+        "key": "1.7.10",
+        "field": "java",
+        "kb": 8,
+        "source": 7,
+        "sourceFile": "data/forge-versions-manifest.json#versions['1.7.10'].javaVersion",
+        "kind": "divergent",
+        "note": "KB 取**运行时 Java**（porting 场景关心「用户工程要装哪个 JDK」⇒ 权威面 = KB）；manifest 的 javaVersion 是上游探针抽取的声明值（口径见 data/forge-versions-manifest.json 的 docSource/探针脚本），两面语义不同：这是**运行 Java vs 声明/编译目标**之别，不是同面值分歧。未统一。"
+      },
+      {
+        "key": "1.8.9",
+        "field": "java",
+        "kb": 8,
+        "source": 7,
+        "sourceFile": "data/forge-versions-manifest.json#versions['1.8.9'].javaVersion",
+        "kind": "divergent",
+        "note": "KB 取**运行时 Java**（porting 场景关心「用户工程要装哪个 JDK」⇒ 权威面 = KB）；manifest 的 javaVersion 是上游探针抽取的声明值（口径见 data/forge-versions-manifest.json 的 docSource/探针脚本），两面语义不同：这是**运行 Java vs 声明/编译目标**之别，不是同面值分歧。未统一。"
+      },
+      {
+        "key": "1.9.4",
+        "field": "java",
+        "kb": 8,
+        "source": 7,
+        "sourceFile": "data/forge-versions-manifest.json#versions['1.9.4'].javaVersion",
+        "kind": "divergent",
+        "note": "KB 取**运行时 Java**（porting 场景关心「用户工程要装哪个 JDK」⇒ 权威面 = KB）；manifest 的 javaVersion 是上游探针抽取的声明值（口径见 data/forge-versions-manifest.json 的 docSource/探针脚本），两面语义不同：这是**运行 Java vs 声明/编译目标**之别，不是同面值分歧。未统一。"
+      },
+      {
+        "key": "1.10.2",
+        "field": "java",
+        "kb": 8,
+        "source": 7,
+        "sourceFile": "data/forge-versions-manifest.json#versions['1.10.2'].javaVersion",
+        "kind": "divergent",
+        "note": "KB 取**运行时 Java**（porting 场景关心「用户工程要装哪个 JDK」⇒ 权威面 = KB）；manifest 的 javaVersion 是上游探针抽取的声明值（口径见 data/forge-versions-manifest.json 的 docSource/探针脚本），两面语义不同：这是**运行 Java vs 声明/编译目标**之别，不是同面值分歧。未统一。"
       }
-    ]
+    ],
+    "fieldSemantics": "`versions[k].forge` = **上游文档页 frontmatter 声明的 Forge 版本**（manifest 忠实抄录同一来源，故两处对账一致）；`versions[k].scaffoldForge` = 本仓 `<platform>/<ver>/scaffold/gradle.properties` 里 `forge_version` 的钉值（本包工程实际依赖）；`versions[k].mdkForge` = 官方 MDK / mdk-checksums 侧钉值。三者量的是**三件事**，不得折叠成一个数。同族：1.12.2 的 manifest=14.23.5.2858 亦为上游 frontmatter 值（KB 记 2859 末版 ⇒ 已按 divergent 在册）。"
   },
   "versions": {
     "1.7.10": {
@@ -115,7 +170,9 @@
       "neoforge": null,
       "fabric": null,
       "java": 8,
-      "mappings": ["mcp"],
+      "mappings": [
+        "mcp"
+      ],
       "docSource": "javadoc",
       "breakingChanges": []
     },
@@ -124,7 +181,9 @@
       "neoforge": null,
       "fabric": null,
       "java": 8,
-      "mappings": ["mcp"],
+      "mappings": [
+        "mcp"
+      ],
       "docSource": "javadoc",
       "breakingChanges": []
     },
@@ -133,7 +192,9 @@
       "neoforge": null,
       "fabric": null,
       "java": 8,
-      "mappings": ["mcp"],
+      "mappings": [
+        "mcp"
+      ],
       "docSource": "javadoc",
       "breakingChanges": []
     },
@@ -142,7 +203,9 @@
       "neoforge": null,
       "fabric": null,
       "java": 8,
-      "mappings": ["mcp"],
+      "mappings": [
+        "mcp"
+      ],
       "docSource": "javadoc",
       "breakingChanges": []
     },
@@ -151,7 +214,9 @@
       "neoforge": null,
       "fabric": null,
       "java": 8,
-      "mappings": ["mcp"],
+      "mappings": [
+        "mcp"
+      ],
       "docSource": "javadoc",
       "breakingChanges": []
     },
@@ -160,13 +225,18 @@
       "neoforge": null,
       "fabric": null,
       "java": 8,
-      "mappings": ["mcp"],
+      "mappings": [
+        "mcp"
+      ],
       "docSource": "javadoc",
       "breakingChanges": [
         {
           "domain": "meta",
           "description": "mcmod.info → mods.toml",
-          "affectedFiles": ["mcmod.info", "mods.toml"],
+          "affectedFiles": [
+            "mcmod.info",
+            "mods.toml"
+          ],
           "severity": "high",
           "fixType": "manual-edit"
         },
@@ -189,7 +259,9 @@
       "neoforge": null,
       "fabric": null,
       "java": 8,
-      "mappings": ["mcp"],
+      "mappings": [
+        "mcp"
+      ],
       "docSource": "mkdocs",
       "provenance": "verified",
       "sources": {
@@ -203,11 +275,13 @@
       "note": "本仓 primer 从 1.14 起，1.13.2 无 primer ⇒ breakingChanges 空不代表无风险；1.12.2→1.13.2 的结构差异见 data/forge-porting/breaking-changes/1.12.2-1.14.4.json，正文见 primer 1.14。Rift 唯一档也在 1.13.2。"
     },
     "1.14.4": {
-      "forge": "28.2.26",
+      "forge": "26.0.21",
       "neoforge": null,
       "fabric": null,
       "java": 8,
-      "mappings": ["mcp"],
+      "mappings": [
+        "mcp"
+      ],
       "docSource": "mkdocs",
       "breakingChanges": [
         {
@@ -228,23 +302,32 @@
           "severity": "medium",
           "fixType": "manual-review"
         }
-      ]
+      ],
+      "scaffoldForge": "28.2.26",
+      "mdkForge": "28.2.26"
     },
     "1.15.2": {
-      "forge": "31.2.57",
+      "forge": "29.0.23",
       "neoforge": null,
       "fabric": null,
       "java": 8,
-      "mappings": ["mcp"],
+      "mappings": [
+        "mcp"
+      ],
       "docSource": "mkdocs",
-      "breakingChanges": []
+      "breakingChanges": [],
+      "scaffoldForge": "31.2.50",
+      "mdkForge": "31.2.57"
     },
     "1.16.5": {
       "forge": "36.2.34",
       "neoforge": null,
       "fabric": null,
       "java": 8,
-      "mappings": ["mcp", "mojmaps"],
+      "mappings": [
+        "mcp",
+        "mojmaps"
+      ],
       "docSource": "mkdocs",
       "breakingChanges": [
         {
@@ -260,7 +343,9 @@
       "neoforge": null,
       "fabric": null,
       "java": 16,
-      "mappings": ["mojmaps"],
+      "mappings": [
+        "mojmaps"
+      ],
       "docSource": "mkdocs",
       "breakingChanges": [
         {
@@ -294,7 +379,10 @@
       "neoforge": null,
       "fabric": null,
       "java": 17,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
       "breakingChanges": [
         {
@@ -316,7 +404,10 @@
       "neoforge": null,
       "fabric": "0.14.21",
       "java": 17,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
       "breakingChanges": []
     },
@@ -325,16 +416,24 @@
       "neoforge": null,
       "fabric": "0.15.0",
       "java": 17,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
-      "breakingChanges": []
+      "breakingChanges": [],
+      "scaffoldForge": "47.4.10",
+      "mdkForge": "47.4.10"
     },
     "1.20.2": {
       "forge": null,
       "neoforge": "20.2.247",
       "fabric": "0.15.0",
       "java": 17,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
       "breakingChanges": [
         {
@@ -353,7 +452,10 @@
         {
           "domain": "mods-toml",
           "description": "modId=\"forge\" → modId=\"neoforge\"",
-          "affectedFiles": ["mods.toml", "neoforge.mods.toml"],
+          "affectedFiles": [
+            "mods.toml",
+            "neoforge.mods.toml"
+          ],
           "severity": "medium",
           "fixType": "manual-edit"
         },
@@ -370,7 +472,10 @@
       "neoforge": "20.4.237",
       "fabric": "0.15.7",
       "java": 17,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
       "note": "Forge 1.20.4 为最后官方版，后续转为 NeoForge。breakingChanges 为空（小幅升级）。",
       "breakingChanges": []
@@ -546,7 +651,10 @@
       "neoforge": "20.6.x",
       "fabric": null,
       "java": 21,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
       "provenance": "verified",
       "sources": {
@@ -701,7 +809,10 @@
       "neoforge": "21.1.113",
       "fabric": null,
       "java": 21,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
       "provenance": "verified",
       "sources": {
@@ -906,7 +1017,10 @@
       "neoforge": "21.3.x",
       "fabric": "0.16.9",
       "java": 21,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
       "provenance": "verified",
       "sources": {
@@ -983,7 +1097,10 @@
       "neoforge": "21.5.x",
       "fabric": null,
       "java": 21,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
       "provenance": "verified",
       "sources": {
@@ -1234,7 +1351,10 @@
       "neoforge": "21.8.x",
       "fabric": null,
       "java": 21,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
       "provenance": "verified",
       "sources": {
@@ -1359,7 +1479,10 @@
       "neoforge": "21.10.x",
       "fabric": null,
       "java": 21,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
       "provenance": "verified",
       "sources": {
@@ -1388,7 +1511,10 @@
       "neoforge": "21.11.x",
       "fabric": "0.16.9",
       "java": 21,
-      "mappings": ["mojmaps", "parchment"],
+      "mappings": [
+        "mojmaps",
+        "parchment"
+      ],
       "docSource": "mkdocs",
       "provenance": "verified",
       "sources": {
@@ -1490,7 +1616,9 @@
       "neoforge": "26.1.0.x",
       "fabric": null,
       "java": 25,
-      "mappings": ["mojmap-only"],
+      "mappings": [
+        "mojmap-only"
+      ],
       "docSource": "mkdocs",
       "provenance": "verified",
       "sources": {
@@ -1640,7 +1768,9 @@
       "neoforge": "26.2.0.x",
       "fabric": null,
       "java": 25,
-      "mappings": ["mojmap-only"],
+      "mappings": [
+        "mojmap-only"
+      ],
       "docSource": "mkdocs",
       "provenance": "verified",
       "sources": {

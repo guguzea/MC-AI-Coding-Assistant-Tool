@@ -1,5 +1,7 @@
 # PacketBuffer
 
+**Inheritance:** java.lang.Object → io.netty.buffer.ByteBuf → net.minecraft.network.PacketBuffer
+
 ## Class signature
 
 ```java
@@ -8,127 +10,180 @@ public class PacketBuffer extends io.netty.buffer.ByteBuf
 
 ## Constructors
 
-- `public PacketBuffer(io.netty.buffer.ByteBuf wrapped)`
+- `PacketBuffer(io.netty.buffer.ByteBuf wrapped)`
 
 ## Methods
 
-- `public static int getVarIntSize(int input)`
-- `public PacketBuffer writeByteArray(byte[] array)`
-- `public byte[] readByteArray()`
-- `public byte[] readByteArray(int maxLength)`
-- `public PacketBuffer writeVarIntArray(int[] array)`
-- `public int[] readVarIntArray()`
-- `public int[] readVarIntArray(int maxLength)`
-- `public PacketBuffer writeLongArray(long[] array)`
-- `public long[] readLongArray(@Nullable long[] array)`
-- `public long[] readLongArray(@Nullable long[] p_189423_1_, int p_189423_2_)`
-- `public BlockPos readBlockPos()`
-- `public PacketBuffer writeBlockPos( BlockPos pos)`
-- `public ITextComponent readTextComponent() throws java.io.IOException`
-- `public PacketBuffer writeTextComponent( ITextComponent component)`
-- `public <T extends java.lang.Enum<T>> T readEnumValue(java.lang.Class<T> enumClass)`
-- `public PacketBuffer writeEnumValue(java.lang.Enum<?> value)`
-- `public int readVarIntFromBuffer()`
-- `public long readVarLong()`
-- `public PacketBuffer writeUuid(java.util.UUID uuid)`
-- `public java.util.UUID readUuid()`
-- `public PacketBuffer writeVarIntToBuffer(int input)`
-- `public PacketBuffer writeVarLong(long value)`
-- `public PacketBuffer writeNBTTagCompoundToBuffer(@Nullable NBTTagCompound nbt)`
-- `@Nullable public NBTTagCompound readNBTTagCompoundFromBuffer() throws java.io.IOException`
-- `public PacketBuffer writeItemStackToBuffer(@Nullable ItemStack stack)`
-- `@Nullable public ItemStack readItemStackFromBuffer() throws java.io.IOException`
-- `public java.lang.String readStringFromBuffer(int maxLength)`
-- `public PacketBuffer writeString(java.lang.String string)`
-- `public int capacity()`
-- `public io.netty.buffer.ByteBuf capacity(int p_capacity_1_)`
-- `public int maxCapacity()`
-- `public io.netty.buffer.ByteBufAllocator alloc()`
-- `public java.nio.ByteOrder order()`
-- `public io.netty.buffer.ByteBuf order(java.nio.ByteOrder p_order_1_)`
-- `public io.netty.buffer.ByteBuf unwrap()`
-- `public boolean isDirect()`
-- `public int readerIndex()`
-- `public io.netty.buffer.ByteBuf readerIndex(int p_readerIndex_1_)`
-- `public int writerIndex()`
-- `public io.netty.buffer.ByteBuf writerIndex(int p_writerIndex_1_)`
-- `public io.netty.buffer.ByteBuf setIndex(int p_setIndex_1_, int p_setIndex_2_)`
-- `public int readableBytes()`
-- `public int writableBytes()`
-- `public int maxWritableBytes()`
-- `public boolean isReadable()`
-- `public boolean isReadable(int p_isReadable_1_)`
-- `public boolean isWritable()`
-- `public boolean isWritable(int p_isWritable_1_)`
-- `public io.netty.buffer.ByteBuf clear()`
-- `public io.netty.buffer.ByteBuf markReaderIndex()`
-- `public io.netty.buffer.ByteBuf resetReaderIndex()`
-- `public io.netty.buffer.ByteBuf markWriterIndex()`
-- `public io.netty.buffer.ByteBuf resetWriterIndex()`
-- `public io.netty.buffer.ByteBuf discardReadBytes()`
-- `public io.netty.buffer.ByteBuf discardSomeReadBytes()`
-- `public io.netty.buffer.ByteBuf ensureWritable(int p_ensureWritable_1_)`
-- `public int ensureWritable(int p_ensureWritable_1_, boolean p_ensureWritable_2_)`
-- `public boolean getBoolean(int p_getBoolean_1_)`
-- `public byte getByte(int p_getByte_1_)`
-- `public short getUnsignedByte(int p_getUnsignedByte_1_)`
-- `public short getShort(int p_getShort_1_)`
-- `public int getUnsignedShort(int p_getUnsignedShort_1_)`
-- `public int getMedium(int p_getMedium_1_)`
-- `public int getUnsignedMedium(int p_getUnsignedMedium_1_)`
-- `public int getInt(int p_getInt_1_)`
-- `public long getUnsignedInt(int p_getUnsignedInt_1_)`
-- `public long getLong(int p_getLong_1_)`
-- `public char getChar(int p_getChar_1_)`
-- `public float getFloat(int p_getFloat_1_)`
-- `public double getDouble(int p_getDouble_1_)`
-- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, io.netty.buffer.ByteBuf p_getBytes_2_)`
-- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, io.netty.buffer.ByteBuf p_getBytes_2_, int p_getBytes_3_)`
-- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, io.netty.buffer.ByteBuf p_getBytes_2_, int p_getBytes_3_, int p_getBytes_4_)`
-- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, byte[] p_getBytes_2_)`
-- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, byte[] p_getBytes_2_, int p_getBytes_3_, int p_getBytes_4_)`
-- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, java.nio.ByteBuffer p_getBytes_2_)`
-- `public io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, java.io.OutputStream p_getBytes_2_, int p_getBytes_3_) throws java.io.IOException`
-- `public int getBytes(int p_getBytes_1_, java.nio.channels.GatheringByteChannel p_getBytes_2_, int p_getBytes_3_) throws java.io.IOException`
-- `public io.netty.buffer.ByteBuf setBoolean(int p_setBoolean_1_, boolean p_setBoolean_2_)`
-- `public io.netty.buffer.ByteBuf setByte(int p_setByte_1_, int p_setByte_2_)`
-- `public io.netty.buffer.ByteBuf setShort(int p_setShort_1_, int p_setShort_2_)`
-- `public io.netty.buffer.ByteBuf setMedium(int p_setMedium_1_, int p_setMedium_2_)`
-- `public io.netty.buffer.ByteBuf setInt(int p_setInt_1_, int p_setInt_2_)`
-- `public io.netty.buffer.ByteBuf setLong(int p_setLong_1_, long p_setLong_2_)`
-- `public io.netty.buffer.ByteBuf setChar(int p_setChar_1_, int p_setChar_2_)`
-- `public io.netty.buffer.ByteBuf setFloat(int p_setFloat_1_, float p_setFloat_2_)`
-- `public io.netty.buffer.ByteBuf setDouble(int p_setDouble_1_, double p_setDouble_2_)`
-- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, io.netty.buffer.ByteBuf p_setBytes_2_)`
-- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, io.netty.buffer.ByteBuf p_setBytes_2_, int p_setBytes_3_)`
-- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, io.netty.buffer.ByteBuf p_setBytes_2_, int p_setBytes_3_, int p_setBytes_4_)`
-- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, byte[] p_setBytes_2_)`
-- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, byte[] p_setBytes_2_, int p_setBytes_3_, int p_setBytes_4_)`
-- `public io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, java.nio.ByteBuffer p_setBytes_2_)`
-- `public int setBytes(int p_setBytes_1_, java.io.InputStream p_setBytes_2_, int p_setBytes_3_) throws java.io.IOException`
-- `public int setBytes(int p_setBytes_1_, java.nio.channels.ScatteringByteChannel p_setBytes_2_, int p_setBytes_3_) throws java.io.IOException`
-- `public io.netty.buffer.ByteBuf setZero(int p_setZero_1_, int p_setZero_2_)`
-- `public boolean readBoolean()`
-- `public byte readByte()`
-- `public short readUnsignedByte()`
-- `public short readShort()`
-- `public int readUnsignedShort()`
-- `public int readMedium()`
-- `public int readUnsignedMedium()`
-- `public int readInt()`
-- `public long readUnsignedInt()`
-- `public long readLong()`
-- `public char readChar()`
-- `public float readFloat()`
-- `public double readDouble()`
-- `public io.netty.buffer.ByteBuf readBytes(int p_readBytes_1_)`
-- `public io.netty.buffer.ByteBuf readSlice(int p_readSlice_1_)`
-- `public io.netty.buffer.ByteBuf readBytes(io.netty.buffer.ByteBuf p_readBytes_1_)`
-- `public io.netty.buffer.ByteBuf readBytes(io.netty.buffer.ByteBuf p_readBytes_1_, int p_readBytes_2_)`
-- `public io.netty.buffer.ByteBuf readBytes(io.netty.buffer.ByteBuf p_readBytes_1_, int p_readBytes_2_, int p_readBytes_3_)`
-- `public io.netty.buffer.ByteBuf readBytes(byte[] p_readBytes_1_)`
-- `public io.netty.buffer.ByteBuf readBytes(byte[] p_readBytes_1_, int p_readBytes_2_, int p_readBytes_3_)`
-- `public io.netty.buffer.ByteBuf readBytes(java.nio.ByteBuffer p_readBytes_1_)`
-- `public io.netty.buffer.ByteBuf readBytes(java.io.OutputStream p_readBytes_1_, int p_readBytes_2_) throws java.io.IOException`
-- `public int readBytes(java.nio.channels.GatheringByteChannel p_readBytes_1_, int p_readBytes_2_) throws java.io.IOException`
-- `public io.netty.buffer.ByteBuf skipBytes(int p_skipBytes_1_)`
+- `io.netty.buffer.ByteBufAllocator alloc()`
+- `byte[] array()`
+- `int arrayOffset()`
+- `int bytesBefore(byte p_bytesBefore_1_)`
+- `int bytesBefore(int p_bytesBefore_1_, byte p_bytesBefore_2_)`
+- `int bytesBefore(int p_bytesBefore_1_, int p_bytesBefore_2_, byte p_bytesBefore_3_)`
+- `int capacity()`
+- `io.netty.buffer.ByteBuf capacity(int p_capacity_1_)`
+- `io.netty.buffer.ByteBuf clear()`
+- `int compareTo(io.netty.buffer.ByteBuf p_compareTo_1_)`
+- `io.netty.buffer.ByteBuf copy()`
+- `io.netty.buffer.ByteBuf copy(int p_copy_1_, int p_copy_2_)`
+- `io.netty.buffer.ByteBuf discardReadBytes()`
+- `io.netty.buffer.ByteBuf discardSomeReadBytes()`
+- `io.netty.buffer.ByteBuf duplicate()`
+- `io.netty.buffer.ByteBuf ensureWritable(int p_ensureWritable_1_)`
+- `int ensureWritable(int p_ensureWritable_1_, boolean p_ensureWritable_2_)`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `int forEachByte(io.netty.buffer.ByteBufProcessor p_forEachByte_1_)`
+- `int forEachByte(int p_forEachByte_1_, int p_forEachByte_2_, io.netty.buffer.ByteBufProcessor p_forEachByte_3_)`
+- `int forEachByteDesc(io.netty.buffer.ByteBufProcessor p_forEachByteDesc_1_)`
+- `int forEachByteDesc(int p_forEachByteDesc_1_, int p_forEachByteDesc_2_, io.netty.buffer.ByteBufProcessor p_forEachByteDesc_3_)`
+- `boolean getBoolean(int p_getBoolean_1_)`
+- `byte getByte(int p_getByte_1_)`
+- `io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, byte[] p_getBytes_2_)`
+- `io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, byte[] p_getBytes_2_, int p_getBytes_3_, int p_getBytes_4_)`
+- `io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, io.netty.buffer.ByteBuf p_getBytes_2_)`
+- `io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, java.nio.ByteBuffer p_getBytes_2_)`
+- `io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, io.netty.buffer.ByteBuf p_getBytes_2_, int p_getBytes_3_)`
+- `io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, io.netty.buffer.ByteBuf p_getBytes_2_, int p_getBytes_3_, int p_getBytes_4_)`
+- `int getBytes(int p_getBytes_1_, java.nio.channels.GatheringByteChannel p_getBytes_2_, int p_getBytes_3_)`
+- `io.netty.buffer.ByteBuf getBytes(int p_getBytes_1_, java.io.OutputStream p_getBytes_2_, int p_getBytes_3_)`
+- `char getChar(int p_getChar_1_)`
+- `double getDouble(int p_getDouble_1_)`
+- `float getFloat(int p_getFloat_1_)`
+- `int getInt(int p_getInt_1_)`
+- `long getLong(int p_getLong_1_)`
+- `int getMedium(int p_getMedium_1_)`
+- `short getShort(int p_getShort_1_)`
+- `short getUnsignedByte(int p_getUnsignedByte_1_)`
+- `long getUnsignedInt(int p_getUnsignedInt_1_)`
+- `int getUnsignedMedium(int p_getUnsignedMedium_1_)`
+- `int getUnsignedShort(int p_getUnsignedShort_1_)`
+- `static int getVarIntSize(int input)`
+- `boolean hasArray()`
+- `int hashCode()`
+- `boolean hasMemoryAddress()`
+- `int indexOf(int p_indexOf_1_, int p_indexOf_2_, byte p_indexOf_3_)`
+- `java.nio.ByteBuffer internalNioBuffer(int p_internalNioBuffer_1_, int p_internalNioBuffer_2_)`
+- `boolean isDirect()`
+- `boolean isReadable()`
+- `boolean isReadable(int p_isReadable_1_)`
+- `boolean isWritable()`
+- `boolean isWritable(int p_isWritable_1_)`
+- `io.netty.buffer.ByteBuf markReaderIndex()`
+- `io.netty.buffer.ByteBuf markWriterIndex()`
+- `int maxCapacity()`
+- `int maxWritableBytes()`
+- `long memoryAddress()`
+- `java.nio.ByteBuffer nioBuffer()`
+- `java.nio.ByteBuffer nioBuffer(int p_nioBuffer_1_, int p_nioBuffer_2_)`
+- `int nioBufferCount()`
+- `java.nio.ByteBuffer[] nioBuffers()`
+- `java.nio.ByteBuffer[] nioBuffers(int p_nioBuffers_1_, int p_nioBuffers_2_)`
+- `java.nio.ByteOrder order()`
+- `io.netty.buffer.ByteBuf order(java.nio.ByteOrder p_order_1_)`
+- `int readableBytes()`
+- `BlockPos readBlockPos()`
+- `boolean readBoolean()`
+- `byte readByte()`
+- `byte[] readByteArray()`
+- `byte[] readByteArray(int maxLength)`
+- `io.netty.buffer.ByteBuf readBytes(byte[] p_readBytes_1_)`
+- `io.netty.buffer.ByteBuf readBytes(byte[] p_readBytes_1_, int p_readBytes_2_, int p_readBytes_3_)`
+- `io.netty.buffer.ByteBuf readBytes(io.netty.buffer.ByteBuf p_readBytes_1_)`
+- `io.netty.buffer.ByteBuf readBytes(java.nio.ByteBuffer p_readBytes_1_)`
+- `io.netty.buffer.ByteBuf readBytes(io.netty.buffer.ByteBuf p_readBytes_1_, int p_readBytes_2_)`
+- `io.netty.buffer.ByteBuf readBytes(io.netty.buffer.ByteBuf p_readBytes_1_, int p_readBytes_2_, int p_readBytes_3_)`
+- `int readBytes(java.nio.channels.GatheringByteChannel p_readBytes_1_, int p_readBytes_2_)`
+- `io.netty.buffer.ByteBuf readBytes(int p_readBytes_1_)`
+- `io.netty.buffer.ByteBuf readBytes(java.io.OutputStream p_readBytes_1_, int p_readBytes_2_)`
+- `char readChar()`
+- `double readDouble()`
+- `<T extends java.lang.Enum<T>> T readEnumValue(java.lang.Class<T> enumClass)`
+- `int readerIndex()`
+- `io.netty.buffer.ByteBuf readerIndex(int p_readerIndex_1_)`
+- `float readFloat()`
+- `int readInt()`
+- `ItemStack readItemStackFromBuffer()`
+- `long readLong()`
+- `long[] readLongArray(long[] array)`
+- `long[] readLongArray(long[] p_189423_1_, int p_189423_2_)`
+- `int readMedium()`
+- `NBTTagCompound readNBTTagCompoundFromBuffer()`
+- `short readShort()`
+- `io.netty.buffer.ByteBuf readSlice(int p_readSlice_1_)`
+- `java.lang.String readStringFromBuffer(int maxLength)`
+- `ITextComponent readTextComponent()`
+- `short readUnsignedByte()`
+- `long readUnsignedInt()`
+- `int readUnsignedMedium()`
+- `int readUnsignedShort()`
+- `java.util.UUID readUuid()`
+- `int[] readVarIntArray()`
+- `int[] readVarIntArray(int maxLength)`
+- `int readVarIntFromBuffer()`
+- `long readVarLong()`
+- `int refCnt()`
+- `boolean release()`
+- `boolean release(int p_release_1_)`
+- `io.netty.buffer.ByteBuf resetReaderIndex()`
+- `io.netty.buffer.ByteBuf resetWriterIndex()`
+- `io.netty.buffer.ByteBuf retain()`
+- `io.netty.buffer.ByteBuf retain(int p_retain_1_)`
+- `io.netty.buffer.ByteBuf setBoolean(int p_setBoolean_1_, boolean p_setBoolean_2_)`
+- `io.netty.buffer.ByteBuf setByte(int p_setByte_1_, int p_setByte_2_)`
+- `io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, byte[] p_setBytes_2_)`
+- `io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, byte[] p_setBytes_2_, int p_setBytes_3_, int p_setBytes_4_)`
+- `io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, io.netty.buffer.ByteBuf p_setBytes_2_)`
+- `io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, java.nio.ByteBuffer p_setBytes_2_)`
+- `io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, io.netty.buffer.ByteBuf p_setBytes_2_, int p_setBytes_3_)`
+- `io.netty.buffer.ByteBuf setBytes(int p_setBytes_1_, io.netty.buffer.ByteBuf p_setBytes_2_, int p_setBytes_3_, int p_setBytes_4_)`
+- `int setBytes(int p_setBytes_1_, java.io.InputStream p_setBytes_2_, int p_setBytes_3_)`
+- `int setBytes(int p_setBytes_1_, java.nio.channels.ScatteringByteChannel p_setBytes_2_, int p_setBytes_3_)`
+- `io.netty.buffer.ByteBuf setChar(int p_setChar_1_, int p_setChar_2_)`
+- `io.netty.buffer.ByteBuf setDouble(int p_setDouble_1_, double p_setDouble_2_)`
+- `io.netty.buffer.ByteBuf setFloat(int p_setFloat_1_, float p_setFloat_2_)`
+- `io.netty.buffer.ByteBuf setIndex(int p_setIndex_1_, int p_setIndex_2_)`
+- `io.netty.buffer.ByteBuf setInt(int p_setInt_1_, int p_setInt_2_)`
+- `io.netty.buffer.ByteBuf setLong(int p_setLong_1_, long p_setLong_2_)`
+- `io.netty.buffer.ByteBuf setMedium(int p_setMedium_1_, int p_setMedium_2_)`
+- `io.netty.buffer.ByteBuf setShort(int p_setShort_1_, int p_setShort_2_)`
+- `io.netty.buffer.ByteBuf setZero(int p_setZero_1_, int p_setZero_2_)`
+- `io.netty.buffer.ByteBuf skipBytes(int p_skipBytes_1_)`
+- `io.netty.buffer.ByteBuf slice()`
+- `io.netty.buffer.ByteBuf slice(int p_slice_1_, int p_slice_2_)`
+- `java.lang.String toString()`
+- `java.lang.String toString(java.nio.charset.Charset p_toString_1_)`
+- `java.lang.String toString(int p_toString_1_, int p_toString_2_, java.nio.charset.Charset p_toString_3_)`
+- `io.netty.buffer.ByteBuf unwrap()`
+- `int writableBytes()`
+- `PacketBuffer writeBlockPos(BlockPos pos)`
+- `io.netty.buffer.ByteBuf writeBoolean(boolean p_writeBoolean_1_)`
+- `io.netty.buffer.ByteBuf writeByte(int p_writeByte_1_)`
+- `PacketBuffer writeByteArray(byte[] array)`
+- `io.netty.buffer.ByteBuf writeBytes(byte[] p_writeBytes_1_)`
+- `io.netty.buffer.ByteBuf writeBytes(byte[] p_writeBytes_1_, int p_writeBytes_2_, int p_writeBytes_3_)`
+- `io.netty.buffer.ByteBuf writeBytes(io.netty.buffer.ByteBuf p_writeBytes_1_)`
+- `io.netty.buffer.ByteBuf writeBytes(java.nio.ByteBuffer p_writeBytes_1_)`
+- `io.netty.buffer.ByteBuf writeBytes(io.netty.buffer.ByteBuf p_writeBytes_1_, int p_writeBytes_2_)`
+- `io.netty.buffer.ByteBuf writeBytes(io.netty.buffer.ByteBuf p_writeBytes_1_, int p_writeBytes_2_, int p_writeBytes_3_)`
+- `int writeBytes(java.io.InputStream p_writeBytes_1_, int p_writeBytes_2_)`
+- `int writeBytes(java.nio.channels.ScatteringByteChannel p_writeBytes_1_, int p_writeBytes_2_)`
+- `io.netty.buffer.ByteBuf writeChar(int p_writeChar_1_)`
+- `io.netty.buffer.ByteBuf writeDouble(double p_writeDouble_1_)`
+- `PacketBuffer writeEnumValue(java.lang.Enum<?> value)`
+- `io.netty.buffer.ByteBuf writeFloat(float p_writeFloat_1_)`
+- `io.netty.buffer.ByteBuf writeInt(int p_writeInt_1_)`
+- `PacketBuffer writeItemStackToBuffer(ItemStack stack)`
+- `io.netty.buffer.ByteBuf writeLong(long p_writeLong_1_)`
+- `PacketBuffer writeLongArray(long[] array)`
+- `io.netty.buffer.ByteBuf writeMedium(int p_writeMedium_1_)`
+- `PacketBuffer writeNBTTagCompoundToBuffer(NBTTagCompound nbt)`
+- `int writerIndex()`
+- `io.netty.buffer.ByteBuf writerIndex(int p_writerIndex_1_)`
+- `io.netty.buffer.ByteBuf writeShort(int p_writeShort_1_)`
+- `PacketBuffer writeString(java.lang.String string)`
+- `PacketBuffer writeTextComponent(ITextComponent component)`
+- `PacketBuffer writeUuid(java.util.UUID uuid)`
+- `PacketBuffer writeVarIntArray(int[] array)`
+- `PacketBuffer writeVarIntToBuffer(int input)`
+- `PacketBuffer writeVarLong(long value)`
+- `io.netty.buffer.ByteBuf writeZero(int p_writeZero_1_)`

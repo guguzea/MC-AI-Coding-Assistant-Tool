@@ -8,4 +8,4 @@ public interface ISpectatorMenuRecipient
 
 ## Methods
 
-- `void onSpectatorMenuClosed( SpectatorMenu menu)`
+- `void onSpectatorMenuClosed(SpectatorMenu menu)`

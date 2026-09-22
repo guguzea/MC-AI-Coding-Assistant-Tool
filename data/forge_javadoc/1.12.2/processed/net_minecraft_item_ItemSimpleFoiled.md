@@ -1,15 +1,17 @@
 # ItemSimpleFoiled
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemSimpleFoiled
+
 ## Class signature
 
 ```java
 public class ItemSimpleFoiled extends Item
 ```
 
-## Constructors
-
-- `public ItemSimpleFoiled()`
-
 ## Methods
 
-- `public boolean hasEffect( ItemStack stack)`
+- `boolean hasEffect(ItemStack stack)`
+
+## Fields
+
+- `ItemSimpleFoiled`

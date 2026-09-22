@@ -1,17 +1,19 @@
 # MaterialLiquid
 
+**Inheritance:** java.lang.Object → net.minecraft.block.material.Material → net.minecraft.block.material.MaterialLiquid
+
 ## Class signature
 
 ```java
 public class MaterialLiquid extends Material
 ```
 
-## Constructors
-
-- `public MaterialLiquid( MapColor color)`
-
 ## Methods
 
-- `public boolean isLiquid()`
-- `public boolean blocksMovement()`
-- `public boolean isSolid()`
+- `boolean blocksMovement()`
+- `boolean isLiquid()`
+- `boolean isSolid()`
+
+## Fields
+
+- `MaterialLiquid`

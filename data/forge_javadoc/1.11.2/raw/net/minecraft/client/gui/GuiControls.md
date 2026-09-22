@@ -3,11 +3,15 @@ title: "GuiControls"
 description: "public class GuiControls extends GuiScreen"
 package: "net/minecraft/client/gui"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/gui/GuiControls.html"
 sourceType: javadoc
 ---
 
 # GuiControls
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiControls
 
 ## Class signature
 
@@ -17,14 +21,20 @@ public class GuiControls extends GuiScreen
 
 ## Constructors
 
-- `public GuiControls( GuiScreen screen, GameSettings settings)`
+- `GuiControls(GuiScreen screen, GameSettings settings)`
 
 ## Methods
 
-- `public void initGui()`
-- `public void handleMouseInput() throws java.io.IOException`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws java.io.IOException`
+- `protected void actionPerformed(GuiButton button)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void handleMouseInput()`
+- `void initGui()`
+- `protected void keyTyped(char typedChar, int keyCode)`
+- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton)`
 - `protected void mouseReleased(int mouseX, int mouseY, int state)`
-- `protected void keyTyped(char typedChar, int keyCode) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+
+## Fields
+
+- `KeyBinding buttonId`
+- `protected java.lang.String screenTitle`
+- `long time`

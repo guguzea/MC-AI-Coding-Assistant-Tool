@@ -1,21 +1,19 @@
 # EntityDropParticleFX
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.client.particle.EntityFX → net.minecraft.client.particle.EntityDropParticleFX
+
 ## Class signature
 
 ```java
 public class EntityDropParticleFX extends EntityFX
 ```
 
-## Constructors
-
-- `protected EntityDropParticleFX( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, Material p_i1203_8_)`
-
 ## Methods
 
-- `public int getBrightnessForRender(float partialTicks)`
-- `public float getBrightness(float partialTicks)`
-- `public void onUpdate()`
+- `float getBrightness(float partialTicks)` — Gets how bright this entity is.
+- `int getBrightnessForRender(float partialTicks)`
+- `void onUpdate()` — Called to update the entity's position/logic.
 
-## Description
+## Fields
 
-Gets how bright this entity is.
+- `protected EntityDropParticleFX`

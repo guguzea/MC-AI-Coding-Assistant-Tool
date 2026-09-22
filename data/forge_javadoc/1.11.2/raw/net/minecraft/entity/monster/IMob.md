@@ -3,6 +3,8 @@ title: "IMob"
 description: "public interface IMob extends IAnimals"
 package: "net/minecraft/entity/monster"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/entity/monster/IMob.html"
 sourceType: javadoc
 ---
@@ -14,3 +16,8 @@ sourceType: javadoc
 ```java
 public interface IMob extends IAnimals
 ```
+
+## Fields
+
+- `static com.google.common.base.Predicate<Entity> MOB_SELECTOR`
+- `static com.google.common.base.Predicate<Entity> VISIBLE_MOB_SELECTOR`

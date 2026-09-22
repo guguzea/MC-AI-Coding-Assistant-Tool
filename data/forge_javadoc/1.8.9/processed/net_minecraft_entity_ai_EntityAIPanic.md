@@ -1,5 +1,7 @@
 # EntityAIPanic
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIPanic
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class EntityAIPanic extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIPanic( EntityCreature creature, double speedIn)`
+- `EntityAIPanic(EntityCreature creature, double speedIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
-- `public boolean continueExecuting()`
+- `boolean continueExecuting()` — Returns whether an in-progress EntityAIBase should continue executing
+- `boolean shouldExecute()` — Returns whether the EntityAIBase should begin execution.
+- `void startExecuting()` — Execute a one shot task or start executing a continuous task
 
-## Description
+## Fields
 
-Returns whether an in-progress EntityAIBase should continue executing
+- `protected double speed`

@@ -1,18 +1,30 @@
 # OBJModel.Group
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.obj.OBJModel.Group
+
+## Class signature
+
+```java
+public static class OBJModel.Group extends java.lang.Object implements IModelPart
+```
+
 ## Constructors
 
-- `public Group(java.lang.String name, @Nullable java.util.LinkedHashSet< OBJModel.Face > faces)`
+- `@Deprecated Group(java.lang.String name, java.util.LinkedHashSet<OBJModel.Face> faces)`
 
 ## Methods
 
-- `public java.util.LinkedHashSet< OBJModel.Face > applyTransform(com.google.common.base.Optional< TRSRTransformation > transform)`
-- `public java.lang.String getName()`
-- `public java.util.LinkedHashSet< OBJModel.Face > getFaces()`
-- `public void setFaces(java.util.LinkedHashSet< OBJModel.Face > faces)`
-- `public void addFace( OBJModel.Face face)`
-- `public void addFaces(java.util.List< OBJModel.Face > faces)`
+- `@Deprecated void addFace(OBJModel.Face face)`
+- `@Deprecated void addFaces(java.util.List<OBJModel.Face> faces)`
+- `@Deprecated java.util.LinkedHashSet<OBJModel.Face> applyTransform(com.google.common.base.Optional<TRSRTransformation> transform)`
+- `@Deprecated java.util.LinkedHashSet<OBJModel.Face> getFaces()`
+- `@Deprecated java.lang.String getName()`
+- `@Deprecated void setFaces(java.util.LinkedHashSet<OBJModel.Face> faces)`
 
-## Description
+## Fields
 
-Deprecated.
+- `static java.lang.String ALL`
+- `static java.lang.String ALL_EXCEPT`
+- `static java.lang.String DEFAULT_NAME`
+- `float[] maxUVBounds`
+- `float[] minUVBounds`

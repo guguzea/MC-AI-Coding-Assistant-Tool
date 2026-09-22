@@ -1,21 +1,19 @@
 # GuiBackupFailed
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraftforge.fml.client.GuiBackupFailed
+
 ## Class signature
 
 ```java
 public class GuiBackupFailed extends GuiScreen
 ```
 
-## Constructors
-
-- `public GuiBackupFailed( GuiScreen parent, java.io.File zipName)`
-
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton p_73875_1_)`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected void actionPerformed(GuiButton p_73875_1_)` — Called by the controls from the buttonList when activated.
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)` — Draws the screen and all the components in it.
+- `void initGui()` — Adds the buttons (and other controls) to the screen in question.
 
-## Description
+## Fields
 
-Called by the controls from the buttonList when activated.
+- `GuiBackupFailed`

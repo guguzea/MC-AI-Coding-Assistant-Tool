@@ -3,11 +3,15 @@ title: "StatBase"
 description: "public class StatBase extends java.lang.Object"
 package: "net/minecraft/stats"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/stats/StatBase.html"
 sourceType: javadoc
 ---
 
 # StatBase
+
+**Inheritance:** java.lang.Object → net.minecraft.stats.StatBase
 
 ## Class signature
 
@@ -17,17 +21,26 @@ public class StatBase extends java.lang.Object
 
 ## Constructors
 
-- `public StatBase(java.lang.String statIdIn, ITextComponent statNameIn, IStatType formatterIn)`
-- `public StatBase(java.lang.String statIdIn, ITextComponent statNameIn)`
+- `StatBase(java.lang.String statIdIn, ITextComponent statNameIn)`
+- `StatBase(java.lang.String statIdIn, ITextComponent statNameIn, IStatType formatterIn)`
 
 ## Methods
 
-- `public StatBase initIndependentStat()`
-- `public StatBase registerStat()`
-- `public java.lang.String format(int number)`
-- `public ITextComponent getStatName()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public java.lang.String toString()`
-- `public IScoreCriteria getCriteria()`
-- `public java.lang.Class<? extends IJsonSerializable > getSerializableClazz()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `java.lang.String format(int number)`
+- `IScoreCriteria getCriteria()`
+- `java.lang.Class<? extends IJsonSerializable> getSerializableClazz()`
+- `ITextComponent getStatName()`
+- `int hashCode()`
+- `StatBase initIndependentStat()`
+- `StatBase registerStat()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `static IStatType distanceStatType`
+- `static IStatType divideByTen`
+- `boolean isIndependent`
+- `static IStatType simpleStatType`
+- `java.lang.String statId`
+- `static IStatType timeStatType`

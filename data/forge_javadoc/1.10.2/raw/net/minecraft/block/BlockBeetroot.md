@@ -3,11 +3,15 @@ title: "BlockBeetroot"
 description: "public class BlockBeetroot extends BlockCrops"
 package: "net/minecraft/block"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/block/BlockBeetroot.html"
 sourceType: javadoc
 ---
 
 # BlockBeetroot
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBush → net.minecraft.block.BlockCrops → net.minecraft.block.BlockBeetroot
 
 ## Class signature
 
@@ -17,15 +21,19 @@ public class BlockBeetroot extends BlockCrops
 
 ## Constructors
 
-- `public BlockBeetroot()`
+- `BlockBeetroot()`
 
 ## Methods
 
-- `protected PropertyInteger getAgeProperty()`
-- `public int getMaxAge()`
-- `protected Item getSeed()`
-- `protected Item getCrop()`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `protected int getBonemealAgeIncrease( World worldIn)`
 - `protected BlockStateContainer createBlockState()`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
+- `protected PropertyInteger getAgeProperty()`
+- `protected int getBonemealAgeIncrease(World worldIn)`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `protected Item getCrop()`
+- `int getMaxAge()`
+- `protected Item getSeed()`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+
+## Fields
+
+- `static PropertyInteger BEETROOT_AGE`

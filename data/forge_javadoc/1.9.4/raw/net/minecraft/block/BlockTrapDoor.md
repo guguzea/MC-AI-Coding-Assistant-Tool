@@ -1,13 +1,17 @@
 ---
 title: "BlockTrapDoor"
-description: "Checks if a player or entity can use this block to 'climb' like a ladder."
+description: "public class BlockTrapDoor extends Block"
 package: "net/minecraft/block"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/BlockTrapDoor.html"
 sourceType: javadoc
 ---
 
 # BlockTrapDoor
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockTrapDoor
 
 ## Class signature
 
@@ -17,29 +21,37 @@ public class BlockTrapDoor extends Block
 
 ## Constructors
 
-- `protected BlockTrapDoor( Material materialIn)`
+- `BlockTrapDoor(Material materialIn)`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean isPassable( IBlockAccess worldIn, BlockPos pos)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `protected void playSound(@Nullable EntityPlayer player, World worldIn, BlockPos pos, boolean p_185731_4_)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `public IBlockState onBlockPlaced( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public boolean canPlaceBlockOnSide( World worldIn, BlockPos pos, EnumFacing side)`
-- `protected static EnumFacing getFacing(int meta)`
-- `protected static int getMetaForFacing( EnumFacing facing)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
+- `boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)`
 - `protected BlockStateContainer createBlockState()`
-- `public boolean isLadder( IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `protected static EnumFacing getFacing(int meta)`
+- `protected static int getMetaForFacing(EnumFacing facing)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isLadder(IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity)` — Checks if a player or entity can use this block to 'climb' like a ladder.
+- `boolean isOpaqueCube(IBlockState state)`
+- `boolean isPassable(IBlockAccess worldIn, BlockPos pos)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `protected void playSound(EntityPlayer player, World worldIn, BlockPos pos, boolean p_185731_4_)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
 
-## Description
+## Fields
 
-Checks if a player or entity can use this block to 'climb' like a ladder.
+- `protected static AxisAlignedBB BOTTOM_AABB`
+- `protected static AxisAlignedBB EAST_OPEN_AABB`
+- `static PropertyDirection FACING`
+- `static PropertyEnum<BlockTrapDoor.DoorHalf> HALF`
+- `protected static AxisAlignedBB NORTH_OPEN_AABB`
+- `static PropertyBool OPEN`
+- `protected static AxisAlignedBB SOUTH_OPEN_AABB`
+- `protected static AxisAlignedBB TOP_AABB`
+- `protected static AxisAlignedBB WEST_OPEN_AABB`

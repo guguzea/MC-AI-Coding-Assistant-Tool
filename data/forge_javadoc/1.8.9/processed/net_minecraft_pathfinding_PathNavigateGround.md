@@ -1,5 +1,7 @@
 # PathNavigateGround
 
+**Inheritance:** java.lang.Object → net.minecraft.pathfinding.PathNavigate → net.minecraft.pathfinding.PathNavigateGround
+
 ## Class signature
 
 ```java
@@ -8,24 +10,24 @@ public class PathNavigateGround extends PathNavigate
 
 ## Constructors
 
-- `public PathNavigateGround( EntityLiving entitylivingIn, World worldIn)`
+- `PathNavigateGround(EntityLiving entitylivingIn, World worldIn)`
 
 ## Methods
 
-- `protected PathFinder getPathFinder()`
-- `protected boolean canNavigate()`
+- `protected boolean canNavigate()` — If on ground or swimming and can swim
+- `boolean getAvoidsWater()`
+- `boolean getCanSwim()`
+- `boolean getEnterDoors()`
 - `protected Vec3 getEntityPosition()`
-- `protected void removeSunnyPath()`
-- `protected boolean isDirectPathBetweenPoints( Vec3 posVec31, Vec3 posVec32, int sizeX, int sizeY, int sizeZ)`
-- `public void setAvoidsWater(boolean avoidsWater)`
-- `public boolean getAvoidsWater()`
-- `public void setBreakDoors(boolean canBreakDoors)`
-- `public void setEnterDoors(boolean par1)`
-- `public boolean getEnterDoors()`
-- `public void setCanSwim(boolean canSwim)`
-- `public boolean getCanSwim()`
-- `public void setAvoidSun(boolean par1)`
+- `protected PathFinder getPathFinder()`
+- `protected boolean isDirectPathBetweenPoints(Vec3 posVec31, Vec3 posVec32, int sizeX, int sizeY, int sizeZ)` — Returns true when an entity of specified size could safely walk in a straight line between the two points.
+- `protected void removeSunnyPath()` — Trims path data from the end to the first sun covered block
+- `void setAvoidSun(boolean par1)`
+- `void setAvoidsWater(boolean avoidsWater)`
+- `void setBreakDoors(boolean canBreakDoors)`
+- `void setCanSwim(boolean canSwim)`
+- `void setEnterDoors(boolean par1)`
 
-## Description
+## Fields
 
-If on ground or swimming and can swim
+- `protected WalkNodeProcessor nodeProcessor`

@@ -1,16 +1,20 @@
 # BlockStone.EnumType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<BlockStone.EnumType> → net.minecraft.block.BlockStone.EnumType
+
+## Class signature
+
+```java
+public static enum BlockStone.EnumType extends java.lang.Enum<BlockStone.EnumType> implements IStringSerializable
+```
+
 ## Methods
 
-- `public static BlockStone.EnumType [] values()`
-- `public static BlockStone.EnumType valueOf(java.lang.String name)`
-- `public int getMetadata()`
-- `public MapColor func_181072_c()`
-- `public java.lang.String toString()`
-- `public static BlockStone.EnumType byMetadata(int meta)`
-- `public java.lang.String getName()`
-- `public java.lang.String getUnlocalizedName()`
-
-## Description
-
-Returns an EnumType for the BlockState from a metadata value.
+- `static BlockStone.EnumType byMetadata(int meta)` — Returns an EnumType for the BlockState from a metadata value.
+- `MapColor func_181072_c()`
+- `int getMetadata()` — Returns the EnumType's metadata value.
+- `java.lang.String getName()`
+- `java.lang.String getUnlocalizedName()`
+- `java.lang.String toString()`
+- `static BlockStone.EnumType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static BlockStone.EnumType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

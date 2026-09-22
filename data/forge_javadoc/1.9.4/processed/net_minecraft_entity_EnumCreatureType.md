@@ -1,20 +1,18 @@
 # EnumCreatureType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<EnumCreatureType> → net.minecraft.entity.EnumCreatureType
+
 ## Class signature
 
 ```java
-public enum EnumCreatureType extends java.lang.Enum< EnumCreatureType >
+public enum EnumCreatureType extends java.lang.Enum<EnumCreatureType>
 ```
 
 ## Methods
 
-- `public static EnumCreatureType [] values()`
-- `public static EnumCreatureType valueOf(java.lang.String name)`
-- `public java.lang.Class<? extends IAnimals > getCreatureClass()`
-- `public int getMaxNumberOfCreature()`
-- `public boolean getPeacefulCreature()`
-- `public boolean getAnimal()`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `boolean getAnimal()`
+- `java.lang.Class<? extends IAnimals> getCreatureClass()`
+- `int getMaxNumberOfCreature()`
+- `boolean getPeacefulCreature()`
+- `static EnumCreatureType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static EnumCreatureType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

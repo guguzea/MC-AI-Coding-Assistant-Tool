@@ -1,5 +1,7 @@
 # C0BPacketEntityAction
 
+**Inheritance:** java.lang.Object → net.minecraft.network.Packet → net.minecraft.network.play.client.C0BPacketEntityAction
+
 ## Class signature
 
 ```java
@@ -8,15 +10,15 @@ public class C0BPacketEntityAction extends Packet
 
 ## Constructors
 
-- `public C0BPacketEntityAction()`
-- `public C0BPacketEntityAction( Entity p_i45259_1_, int p_i45259_2_)`
-- `public C0BPacketEntityAction( Entity p_i45260_1_, int p_i45260_2_, int p_i45260_3_)`
+- `C0BPacketEntityAction()`
+- `C0BPacketEntityAction(Entity p_i45259_1_, int p_i45259_2_)`
+- `C0BPacketEntityAction(Entity p_i45260_1_, int p_i45260_2_, int p_i45260_3_)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer p_148837_1_) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer p_148840_1_) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer p_148833_1_)`
-- `public int func_149513_d()`
-- `public int func_149512_e()`
-- `public void processPacket( INetHandler p_148833_1_)`
+- `int func_149512_e()`
+- `int func_149513_d()`
+- `void processPacket(INetHandler p_148833_1_)`
+- `void processPacket(INetHandlerPlayServer p_148833_1_)`
+- `void readPacketData(PacketBuffer p_148837_1_)`
+- `void writePacketData(PacketBuffer p_148840_1_)`

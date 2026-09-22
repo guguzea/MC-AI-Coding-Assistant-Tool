@@ -1,20 +1,22 @@
 # CPacketCreativeInventoryAction
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketCreativeInventoryAction
+
 ## Class signature
 
 ```java
-public class CPacketCreativeInventoryAction extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketCreativeInventoryAction extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketCreativeInventoryAction()`
-- `public CPacketCreativeInventoryAction(int slotIdIn, ItemStack stackIn)`
+- `CPacketCreativeInventoryAction()`
+- `CPacketCreativeInventoryAction(int slotIdIn, ItemStack stackIn)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public int getSlotId()`
-- `public ItemStack getStack()`
+- `int getSlotId()`
+- `ItemStack getStack()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

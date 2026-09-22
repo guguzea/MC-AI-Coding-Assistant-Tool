@@ -1,9 +1,13 @@
 # ChunkDataEvent.Save
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.ChunkEvent → net.minecraftforge.event.world.ChunkDataEvent → net.minecraftforge.event.world.ChunkDataEvent.Save
+
+## Class signature
+
+```java
+public static class ChunkDataEvent.Save extends ChunkDataEvent
+```
+
 ## Constructors
 
-- `public Save( Chunk chunk, NBTTagCompound data)`
-
-## Description
-
-ChunkDataEvent.Save is fired when vanilla Minecraft attempts to save Chunk data. This event is fired during chunk saving in AnvilChunkLoader#saveChunk(World, Chunk). This event is not Cancelable . Thi
+- `Save(Chunk chunk, NBTTagCompound data)`

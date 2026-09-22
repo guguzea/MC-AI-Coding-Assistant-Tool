@@ -1,18 +1,20 @@
 # PhaseSittingAttacking
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseSittingBase → net.minecraft.entity.boss.dragon.phase.PhaseSittingAttacking
+
 ## Class signature
 
 ```java
 public class PhaseSittingAttacking extends PhaseSittingBase
 ```
 
-## Constructors
-
-- `public PhaseSittingAttacking( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public void doClientRenderEffects()`
-- `public void doLocalUpdate()`
-- `public void initPhase()`
-- `public PhaseList < PhaseSittingAttacking > getType()`
+- `void doClientRenderEffects()`
+- `void doLocalUpdate()`
+- `PhaseList<PhaseSittingAttacking> getType()`
+- `void initPhase()`
+
+## Fields
+
+- `PhaseSittingAttacking`

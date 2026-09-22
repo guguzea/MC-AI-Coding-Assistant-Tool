@@ -1,18 +1,20 @@
 # PathNavigateClimber
 
+**Inheritance:** java.lang.Object → net.minecraft.pathfinding.PathNavigate → net.minecraft.pathfinding.PathNavigateGround → net.minecraft.pathfinding.PathNavigateClimber
+
 ## Class signature
 
 ```java
 public class PathNavigateClimber extends PathNavigateGround
 ```
 
-## Constructors
-
-- `public PathNavigateClimber( EntityLiving entityLivingIn, World worldIn)`
-
 ## Methods
 
-- `public Path getPathToPos( BlockPos pos)`
-- `public Path getPathToEntityLiving( Entity entityIn)`
-- `public boolean tryMoveToEntityLiving( Entity entityIn, double speedIn)`
-- `public void onUpdateNavigation()`
+- `Path getPathToEntityLiving(Entity entityIn)`
+- `Path getPathToPos(BlockPos pos)`
+- `void onUpdateNavigation()`
+- `boolean tryMoveToEntityLiving(Entity entityIn, double speedIn)`
+
+## Fields
+
+- `PathNavigateClimber`

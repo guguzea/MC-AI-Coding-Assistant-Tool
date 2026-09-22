@@ -1,20 +1,30 @@
 ---
 title: "ParticleFirework.Starter"
-description: ""
+description: "public static class ParticleFirework.Starter extends Particle"
 package: "net/minecraft/client/particle"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/particle/ParticleFirework.Starter.html"
 sourceType: javadoc
 ---
 
 # ParticleFirework.Starter
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleFirework.Starter
 
-- `public Starter( World p_i46464_1_, double p_i46464_2_, double p_i46464_4_, double p_i46464_6_, double p_i46464_8_, double p_i46464_10_, double p_i46464_12_, ParticleManager p_i46464_14_, NBTTagCompound p_i46464_15_)`
+## Class signature
+
+```java
+public static class ParticleFirework.Starter extends Particle
+```
 
 ## Methods
 
-- `public void renderParticle( VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
-- `public void onUpdate()`
-- `public int getFXLayer()`
+- `int getFXLayer()`
+- `void onUpdate()`
+- `void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+
+## Fields
+
+- `Starter`

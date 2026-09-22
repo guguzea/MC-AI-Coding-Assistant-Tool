@@ -1,16 +1,18 @@
 # IngredientNBT
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.Ingredient → net.minecraftforge.common.crafting.IngredientNBT
+
 ## Class signature
 
 ```java
 public class IngredientNBT extends Ingredient
 ```
 
-## Constructors
-
-- `protected IngredientNBT( ItemStack stack)`
-
 ## Methods
 
-- `public boolean apply( ItemStack input)`
-- `public boolean isSimple()`
+- `boolean apply(ItemStack input)`
+- `boolean isSimple()`
+
+## Fields
+
+- `protected IngredientNBT`

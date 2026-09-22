@@ -1,13 +1,17 @@
 ---
 title: "MapItemRenderer"
-description: "Clears the currently loaded maps and removes their corresponding textures"
+description: "public class MapItemRenderer extends java.lang.Object"
 package: "net/minecraft/client/gui"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/gui/MapItemRenderer.html"
 sourceType: javadoc
 ---
 
 # MapItemRenderer
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.MapItemRenderer
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class MapItemRenderer extends java.lang.Object
 
 ## Constructors
 
-- `public MapItemRenderer( TextureManager textureManagerIn)`
+- `MapItemRenderer(TextureManager textureManagerIn)`
 
 ## Methods
 
-- `public void updateMapTexture( MapData mapdataIn)`
-- `public void renderMap( MapData mapdataIn, boolean p_148250_2_)`
-- `public void clearLoadedMaps()`
-
-## Description
-
-Clears the currently loaded maps and removes their corresponding textures
+- `void clearLoadedMaps()` — Clears the currently loaded maps and removes their corresponding textures
+- `void renderMap(MapData mapdataIn, boolean p_148250_2_)`
+- `void updateMapTexture(MapData mapdataIn)` — Updates a map texture

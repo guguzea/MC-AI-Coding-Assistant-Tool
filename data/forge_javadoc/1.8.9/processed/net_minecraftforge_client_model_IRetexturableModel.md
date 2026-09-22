@@ -8,8 +8,4 @@ public interface IRetexturableModel<M extends IRetexturableModel<M>> extends IMo
 
 ## Methods
 
-- `IModel retexture(<any> textures)`
-
-## Description
-
-Applies new textures to the model.
+- `IModel retexture(<any> textures)` — Applies new textures to the model.

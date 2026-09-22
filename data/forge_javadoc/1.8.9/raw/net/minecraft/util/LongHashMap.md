@@ -1,13 +1,17 @@
 ---
 title: "LongHashMap"
-description: "Add a key-value pair."
+description: "public class LongHashMap<V> extends java.lang.Object"
 package: "net/minecraft/util"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/util/LongHashMap.html"
 sourceType: javadoc
 ---
 
 # LongHashMap
+
+**Inheritance:** java.lang.Object → net.minecraft.util.LongHashMap<V>
 
 ## Class signature
 
@@ -17,16 +21,12 @@ public class LongHashMap<V> extends java.lang.Object
 
 ## Constructors
 
-- `public LongHashMap()`
+- `LongHashMap()`
 
 ## Methods
 
-- `public int getNumHashElements()`
-- `public V getValueByKey(long p_76164_1_)`
-- `public boolean containsItem(long p_76161_1_)`
-- `public void add(long p_76163_1_, V p_76163_3_)`
-- `public V remove(long p_76159_1_)`
-
-## Description
-
-Add a key-value pair.
+- `void add(long p_76163_1_, V p_76163_3_)` — Add a key-value pair.
+- `boolean containsItem(long p_76161_1_)`
+- `int getNumHashElements()`
+- `V getValueByKey(long p_76164_1_)` — get the value from the map given the key
+- `V remove(long p_76159_1_)` — calls the removeKey method and returns removed object

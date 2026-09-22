@@ -3,11 +3,15 @@ title: "VboRenderList"
 description: "public class VboRenderList extends ChunkRenderContainer"
 package: "net/minecraft/client/renderer"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/renderer/VboRenderList.html"
 sourceType: javadoc
 ---
 
 # VboRenderList
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.ChunkRenderContainer → net.minecraft.client.renderer.VboRenderList
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class VboRenderList extends ChunkRenderContainer
 ```
 
-## Constructors
-
-- `public VboRenderList()`
-
 ## Methods
 
-- `public void renderChunkLayer( BlockRenderLayer layer)`
+- `void renderChunkLayer(BlockRenderLayer layer)`
+
+## Fields
+
+- `VboRenderList`

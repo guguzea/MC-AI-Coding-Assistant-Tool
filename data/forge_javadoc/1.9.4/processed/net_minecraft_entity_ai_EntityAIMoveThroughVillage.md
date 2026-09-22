@@ -1,5 +1,7 @@
 # EntityAIMoveThroughVillage
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIMoveThroughVillage
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIMoveThroughVillage( EntityCreature theEntityIn, double movementSpeedIn, boolean isNocturnalIn)`
+- `EntityAIMoveThroughVillage(EntityCreature theEntityIn, double movementSpeedIn, boolean isNocturnalIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
+- `boolean continueExecuting()`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void startExecuting()`

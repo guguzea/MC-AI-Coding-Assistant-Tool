@@ -1,25 +1,35 @@
 ---
 title: "Stitcher.Holder"
-description: ""
+description: "public static class Stitcher.Holder extends java.lang.Object implements java.lang.Comparable<Stitcher.Holder>"
 package: "net/minecraft/client/renderer/texture"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/renderer/texture/Stitcher.Holder.html"
 sourceType: javadoc
 ---
 
 # Stitcher.Holder
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.texture.Stitcher.Holder
+
+## Class signature
+
+```java
+public static class Stitcher.Holder extends java.lang.Object implements java.lang.Comparable<Stitcher.Holder>
+```
+
 ## Constructors
 
-- `public Holder( TextureAtlasSprite theTextureIn, int mipmapLevelHolderIn)`
+- `Holder(TextureAtlasSprite theTextureIn, int mipmapLevelHolderIn)`
 
 ## Methods
 
-- `public TextureAtlasSprite getAtlasSprite()`
-- `public int getWidth()`
-- `public int getHeight()`
-- `public void rotate()`
-- `public boolean isRotated()`
-- `public void setNewDimension(int p_94196_1_)`
-- `public java.lang.String toString()`
-- `public int compareTo( Stitcher.Holder p_compareTo_1_)`
+- `int compareTo(Stitcher.Holder p_compareTo_1_)`
+- `TextureAtlasSprite getAtlasSprite()`
+- `int getHeight()`
+- `int getWidth()`
+- `boolean isRotated()`
+- `void rotate()`
+- `void setNewDimension(int p_94196_1_)`
+- `java.lang.String toString()`

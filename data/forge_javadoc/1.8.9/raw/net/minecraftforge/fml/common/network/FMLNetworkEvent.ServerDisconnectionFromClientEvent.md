@@ -1,18 +1,24 @@
 ---
 title: "FMLNetworkEvent.ServerDisconnectionFromClientEvent"
-description: "Fired at the server when a client disconnects."
+description: "public static class FMLNetworkEvent.ServerDisconnectionFromClientEvent extends FMLNetworkEvent<INetHandlerPlayServer>"
 package: "net/minecraftforge/fml/common/network"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/network/FMLNetworkEvent.ServerDisconnectionFromClientEvent.html"
 sourceType: javadoc
 ---
 
 # FMLNetworkEvent.ServerDisconnectionFromClientEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.network.FMLNetworkEvent<INetHandlerPlayServer> → net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerDisconnectionFromClientEvent
 
-- `public ServerDisconnectionFromClientEvent( NetworkManager manager)`
+## Class signature
 
-## Description
+```java
+public static class FMLNetworkEvent.ServerDisconnectionFromClientEvent extends FMLNetworkEvent<INetHandlerPlayServer>
+```
 
-Fired at the server when a client disconnects.
+## Fields
+
+- `ServerDisconnectionFromClientEvent`

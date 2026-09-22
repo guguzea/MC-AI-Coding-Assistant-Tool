@@ -3,11 +3,15 @@ title: "EntityLeashKnot"
 description: "public class EntityLeashKnot extends EntityHanging"
 package: "net/minecraft/entity"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/EntityLeashKnot.html"
 sourceType: javadoc
 ---
 
 # EntityLeashKnot
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityHanging → net.minecraft.entity.EntityLeashKnot
 
 ## Class signature
 
@@ -15,26 +19,26 @@ sourceType: javadoc
 public class EntityLeashKnot extends EntityHanging
 ```
 
-## Constructors
-
-- `public EntityLeashKnot( World worldIn)`
-- `public EntityLeashKnot( World worldIn, BlockPos hangingPositionIn)`
-
 ## Methods
 
-- `public void setPosition(double x, double y, double z)`
+- `static EntityLeashKnot createKnot(World worldIn, BlockPos fence)`
+- `float getEyeHeight()`
+- `int getHeightPixels()`
+- `static EntityLeashKnot getKnotForPosition(World worldIn, BlockPos pos)`
+- `int getWidthPixels()`
+- `boolean isInRangeToRenderDist(double distance)`
+- `void onBroken(Entity brokenEntity)`
+- `boolean onValidSurface()`
+- `void playPlaceSound()`
+- `boolean processInitialInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void setPosition(double x, double y, double z)`
 - `protected void updateBoundingBox()`
-- `public void updateFacingWithBoundingBox( EnumFacing facingDirectionIn)`
-- `public int getWidthPixels()`
-- `public int getHeightPixels()`
-- `public float getEyeHeight()`
-- `public boolean isInRangeToRenderDist(double distance)`
-- `public void onBroken( Entity brokenEntity)`
-- `public boolean writeToNBTOptional( NBTTagCompound compound)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean processInitialInteract( EntityPlayer player, EnumHand hand)`
-- `public boolean onValidSurface()`
-- `public static EntityLeashKnot createKnot( World worldIn, BlockPos fence)`
-- `public static EntityLeashKnot getKnotForPosition( World worldIn, BlockPos pos)`
-- `public void playPlaceSound()`
+- `void updateFacingWithBoundingBox(EnumFacing facingDirectionIn)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+- `boolean writeToNBTOptional(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityLeashKnot`
+- `EntityLeashKnot`

@@ -3,11 +3,15 @@ title: "NettyVarint21FrameDecoder"
 description: "public class NettyVarint21FrameDecoder extends io.netty.handler.codec.ByteToMessageDecoder"
 package: "net/minecraft/network"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/network/NettyVarint21FrameDecoder.html"
 sourceType: javadoc
 ---
 
 # NettyVarint21FrameDecoder
+
+**Inheritance:** java.lang.Object → io.netty.channel.ChannelHandlerAdapter → io.netty.channel.ChannelInboundHandlerAdapter → io.netty.handler.codec.ByteToMessageDecoder → net.minecraft.network.NettyVarint21FrameDecoder
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class NettyVarint21FrameDecoder extends io.netty.handler.codec.ByteToMess
 
 ## Constructors
 
-- `public NettyVarint21FrameDecoder()`
+- `NettyVarint21FrameDecoder()`
 
 ## Methods
 
-- `protected void decode(io.netty.channel.ChannelHandlerContext p_decode_1_, io.netty.buffer.ByteBuf p_decode_2_, java.util.List<java.lang.Object> p_decode_3_) throws java.lang.Exception`
+- `protected void decode(io.netty.channel.ChannelHandlerContext p_decode_1_, io.netty.buffer.ByteBuf p_decode_2_, java.util.List<java.lang.Object> p_decode_3_)`

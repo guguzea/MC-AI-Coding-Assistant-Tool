@@ -1,24 +1,22 @@
 # TileEntityCommandBlock
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityCommandBlock
+
 ## Class signature
 
 ```java
 public class TileEntityCommandBlock extends TileEntity
 ```
 
-## Constructors
-
-- `public TileEntityCommandBlock()`
-
 ## Methods
 
-- `public void writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public Packet getDescriptionPacket()`
-- `public boolean func_183000_F()`
-- `public CommandBlockLogic getCommandBlockLogic()`
-- `public CommandResultStats getCommandResultStats()`
+- `boolean func_183000_F()`
+- `CommandBlockLogic getCommandBlockLogic()`
+- `CommandResultStats getCommandResultStats()`
+- `Packet getDescriptionPacket()` — Allows for a specialized description packet to be created.
+- `void readFromNBT(NBTTagCompound compound)`
+- `void writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Allows for a specialized description packet to be created.
+- `TileEntityCommandBlock`

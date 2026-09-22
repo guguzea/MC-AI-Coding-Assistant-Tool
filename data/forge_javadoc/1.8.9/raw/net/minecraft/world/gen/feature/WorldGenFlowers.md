@@ -3,11 +3,15 @@ title: "WorldGenFlowers"
 description: "public class WorldGenFlowers extends WorldGenerator"
 package: "net/minecraft/world/gen/feature"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/gen/feature/WorldGenFlowers.html"
 sourceType: javadoc
 ---
 
 # WorldGenFlowers
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenFlowers
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class WorldGenFlowers extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenFlowers( BlockFlower p_i45632_1_, BlockFlower.EnumFlowerType p_i45632_2_)`
+- `WorldGenFlowers(BlockFlower p_i45632_1_, BlockFlower.EnumFlowerType p_i45632_2_)`
 
 ## Methods
 
-- `public void setGeneratedBlock( BlockFlower p_175914_1_, BlockFlower.EnumFlowerType p_175914_2_)`
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`
+- `void setGeneratedBlock(BlockFlower p_175914_1_, BlockFlower.EnumFlowerType p_175914_2_)`

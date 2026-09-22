@@ -1,5 +1,7 @@
 # IntHashMap
 
+**Inheritance:** java.lang.Object → net.minecraft.util.IntHashMap<V>
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class IntHashMap<V> extends java.lang.Object
 
 ## Constructors
 
-- `public IntHashMap()`
+- `IntHashMap()`
 
 ## Methods
 
-- `public V lookup(int hashEntry)`
-- `public boolean containsItem(int hashEntry)`
-- `public void addKey(int hashEntry, V valueEntry)`
-- `public V removeObject(int o)`
-- `public void clearMap()`
+- `void addKey(int hashEntry, V valueEntry)`
+- `void clearMap()`
+- `boolean containsItem(int hashEntry)`
+- `V lookup(int hashEntry)`
+- `V removeObject(int o)`

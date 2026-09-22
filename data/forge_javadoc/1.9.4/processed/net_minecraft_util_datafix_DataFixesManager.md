@@ -1,5 +1,7 @@
 # DataFixesManager
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.DataFixesManager
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class DataFixesManager extends java.lang.Object
 
 ## Constructors
 
-- `public DataFixesManager()`
+- `DataFixesManager()`
 
 ## Methods
 
-- `public static DataFixer createFixer()`
-- `public static NBTTagCompound processItemStack( IDataFixer fixer, NBTTagCompound compound, int version, java.lang.String key)`
-- `public static NBTTagCompound processInventory( IDataFixer fixer, NBTTagCompound compound, int version, java.lang.String key)`
+- `static DataFixer createFixer()`
+- `static NBTTagCompound processInventory(IDataFixer fixer, NBTTagCompound compound, int version, java.lang.String key)`
+- `static NBTTagCompound processItemStack(IDataFixer fixer, NBTTagCompound compound, int version, java.lang.String key)`

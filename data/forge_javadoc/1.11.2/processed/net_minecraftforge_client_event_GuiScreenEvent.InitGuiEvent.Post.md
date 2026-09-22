@@ -1,9 +1,13 @@
 # GuiScreenEvent.InitGuiEvent.Post
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent → net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post
+
+## Class signature
+
+```java
+public static class GuiScreenEvent.InitGuiEvent.Post extends GuiScreenEvent.InitGuiEvent
+```
+
 ## Constructors
 
-- `public Post( GuiScreen gui, java.util.List< GuiButton > buttonList)`
-
-## Description
-
-This event fires right after GuiScreen.initGui() . This is a good place to alter a GuiScreen's component layout if desired.
+- `Post(GuiScreen gui, java.util.List<GuiButton> buttonList)`

@@ -1,26 +1,28 @@
 # TileEntityDispenser
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityLockable → net.minecraft.tileentity.TileEntityLockableLoot → net.minecraft.tileentity.TileEntityDispenser
+
 ## Class signature
 
 ```java
 public class TileEntityDispenser extends TileEntityLockableLoot
 ```
 
-## Constructors
-
-- `public TileEntityDispenser()`
-
 ## Methods
 
-- `public int getSizeInventory()`
-- `public boolean isEmpty()`
-- `public int getDispenseSlot()`
-- `public int addItemStack( ItemStack stack)`
-- `public java.lang.String getName()`
-- `public static void registerFixes( DataFixer fixer)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public int getInventoryStackLimit()`
-- `public java.lang.String getGuiID()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `protected NonNullList < ItemStack > getItems()`
+- `int addItemStack(ItemStack stack)`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `int getDispenseSlot()`
+- `java.lang.String getGuiID()`
+- `int getInventoryStackLimit()`
+- `protected NonNullList<ItemStack> getItems()`
+- `java.lang.String getName()`
+- `int getSizeInventory()`
+- `boolean isEmpty()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `static void registerFixes(DataFixer fixer)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `TileEntityDispenser`

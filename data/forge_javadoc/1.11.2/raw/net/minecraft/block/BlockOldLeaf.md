@@ -1,13 +1,17 @@
 ---
 title: "BlockOldLeaf"
-description: "Performs the shear function on this object."
+description: "public class BlockOldLeaf extends BlockLeaves"
 package: "net/minecraft/block"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/BlockOldLeaf.html"
 sourceType: javadoc
 ---
 
 # BlockOldLeaf
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockLeaves → net.minecraft.block.BlockOldLeaf
 
 ## Class signature
 
@@ -17,22 +21,22 @@ public class BlockOldLeaf extends BlockLeaves
 
 ## Constructors
 
-- `public BlockOldLeaf()`
+- `BlockOldLeaf()`
 
 ## Methods
 
-- `protected void dropApple( World worldIn, BlockPos pos, IBlockState state, int chance)`
-- `protected int getSaplingDropChance( IBlockState state)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, NonNullList < ItemStack > list)`
-- `protected ItemStack getSilkTouchDrop( IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public BlockPlanks.EnumType getWoodType(int meta)`
 - `protected BlockStateContainer createBlockState()`
-- `public int damageDropped( IBlockState state)`
-- `public void harvestBlock( World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack)`
-- `public NonNullList < ItemStack > onSheared( ItemStack item, IBlockAccess world, BlockPos pos, int fortune)`
+- `int damageDropped(IBlockState state)`
+- `protected void dropApple(World worldIn, BlockPos pos, IBlockState state, int chance)`
+- `int getMetaFromState(IBlockState state)`
+- `protected int getSaplingDropChance(IBlockState state)`
+- `protected ItemStack getSilkTouchDrop(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)`
+- `BlockPlanks.EnumType getWoodType(int meta)`
+- `void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)`
+- `NonNullList<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)` — Performs the shear function on this object.
 
-## Description
+## Fields
 
-Performs the shear function on this object.
+- `static PropertyEnum<BlockPlanks.EnumType> VARIANT`

@@ -3,11 +3,15 @@ title: "EventSubscriptionTransformer"
 description: "public class EventSubscriptionTransformer extends java.lang.Object"
 package: "cpw/mods/fml/common/asm/transformers"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/asm/transformers/EventSubscriptionTransformer.html"
 sourceType: javadoc
 ---
 
 # EventSubscriptionTransformer
+
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.asm.transformers.EventSubscriptionTransformer
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class EventSubscriptionTransformer extends java.lang.Object
 
 ## Constructors
 
-- `public EventSubscriptionTransformer()`
+- `EventSubscriptionTransformer()`
 
 ## Methods
 
-- `public byte[] transform(java.lang.String name, java.lang.String transformedName, byte[] bytes)`
+- `byte[] transform(java.lang.String name, java.lang.String transformedName, byte[] bytes)`

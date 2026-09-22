@@ -1,13 +1,17 @@
 ---
 title: "GuiScrollingList"
-description: "Deprecated."
+description: "public abstract class GuiScrollingList extends java.lang.Object"
 package: "net/minecraftforge/fml/client"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/client/GuiScrollingList.html"
 sourceType: javadoc
 ---
 
 # GuiScrollingList
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.GuiScrollingList
 
 ## Class signature
 
@@ -17,32 +21,44 @@ public abstract class GuiScrollingList extends java.lang.Object
 
 ## Constructors
 
-- `public GuiScrollingList( Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight, int screenWidth, int screenHeight)`
+- `@Deprecated GuiScrollingList(Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight)`
+- `GuiScrollingList(Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight, int screenWidth, int screenHeight)`
 
 ## Methods
 
-- `@Deprecated public GuiScrollingList( Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight)`
-- `public void func_27258_a(boolean p_27258_1_)`
-- `@Deprecated protected void func_27259_a(boolean hasFooter, int footerHeight)`
-- `protected void setHeaderInfo(boolean hasHeader, int headerHeight)`
-- `protected abstract int getSize()`
-- `protected abstract void elementClicked(int index, boolean doubleClick)`
-- `protected abstract boolean isSelected(int index)`
-- `protected int getContentHeight()`
-- `protected abstract void drawBackground()`
-- `protected abstract void drawSlot(int slotIdx, int entryRight, int slotTop, int slotBuffer, Tessellator tess)`
-- `@Deprecated protected void func_27260_a(int entryRight, int relativeY, Tessellator tess)`
-- `protected void drawHeader(int entryRight, int relativeY, Tessellator tess)`
-- `@Deprecated protected void func_27255_a(int x, int y)`
+- `void actionPerformed(GuiButton button)`
 - `protected void clickHeader(int x, int y)`
-- `@Deprecated protected void func_27257_b(int mouseX, int mouseY)`
-- `protected void drawScreen(int mouseX, int mouseY)`
-- `public int func_27256_c(int x, int y)`
-- `public void registerScrollButtons(java.util.List buttons, int upActionID, int downActionID)`
-- `public void actionPerformed( GuiButton button)`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected abstract void drawBackground()`
 - `protected void drawGradientRect(int left, int top, int right, int bottom, int color1, int color2)`
+- `protected void drawHeader(int entryRight, int relativeY, Tessellator tess)` — Draw anything special on the screen.
+- `protected void drawScreen(int mouseX, int mouseY)` — Draw anything special on the screen.
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected abstract void drawSlot(int slotIdx, int entryRight, int slotTop, int slotBuffer, Tessellator tess)` — Draw anything special on the screen.
+- `protected abstract void elementClicked(int index, boolean doubleClick)`
+- `@Deprecated protected void func_27255_a(int x, int y)`
+- `int func_27256_c(int x, int y)`
+- `@Deprecated protected void func_27257_b(int mouseX, int mouseY)`
+- `void func_27258_a(boolean p_27258_1_)`
+- `@Deprecated protected void func_27259_a(boolean hasFooter, int footerHeight)`
+- `@Deprecated protected void func_27260_a(int entryRight, int relativeY, Tessellator tess)`
+- `protected int getContentHeight()`
+- `protected abstract int getSize()`
+- `protected abstract boolean isSelected(int index)`
+- `void registerScrollButtons(java.util.List buttons, int upActionID, int downActionID)`
+- `protected void setHeaderInfo(boolean hasHeader, int headerHeight)`
 
-## Description
+## Fields
 
-Deprecated.
+- `protected int bottom`
+- `protected boolean captureMouse`
+- `protected int left`
+- `protected int listHeight`
+- `protected int listWidth`
+- `protected int mouseX`
+- `protected int mouseY`
+- `protected int right`
+- `protected int screenHeight`
+- `protected int screenWidth`
+- `protected int selectedIndex`
+- `protected int slotHeight`
+- `protected int top`

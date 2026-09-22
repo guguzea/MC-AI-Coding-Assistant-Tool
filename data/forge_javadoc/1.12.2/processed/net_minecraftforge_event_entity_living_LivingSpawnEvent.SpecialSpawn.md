@@ -1,14 +1,18 @@
 # LivingSpawnEvent.SpecialSpawn
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingSpawnEvent → net.minecraftforge.event.entity.living.LivingSpawnEvent.SpecialSpawn
+
+## Class signature
+
+```java
+public static class LivingSpawnEvent.SpecialSpawn extends LivingSpawnEvent
+```
+
 ## Constructors
 
-- `public SpecialSpawn( EntityLiving entity, World world, float x, float y, float z, MobSpawnerBaseLogic spawner)`
+- `@Deprecated SpecialSpawn(EntityLiving entity, World world, float x, float y, float z)`
+- `SpecialSpawn(EntityLiving entity, World world, float x, float y, float z, MobSpawnerBaseLogic spawner)`
 
 ## Methods
 
-- `@Deprecated public SpecialSpawn( EntityLiving entity, World world, float x, float y, float z)`
-- `public MobSpawnerBaseLogic getSpawner()`
-
-## Description
-
-SpecialSpawn is fired when an Entity is to be spawned. This allows you to do special inializers in the new entity. This event is fired via the ForgeEventFactory.doSpecialSpawn(EntityLiving, World, flo
+- `MobSpawnerBaseLogic getSpawner()`

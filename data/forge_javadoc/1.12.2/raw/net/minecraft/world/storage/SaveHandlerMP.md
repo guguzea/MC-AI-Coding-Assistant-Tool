@@ -3,11 +3,15 @@ title: "SaveHandlerMP"
 description: "public class SaveHandlerMP extends java.lang.Object implements ISaveHandler"
 package: "net/minecraft/world/storage"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/storage/SaveHandlerMP.html"
 sourceType: javadoc
 ---
 
 # SaveHandlerMP
+
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.SaveHandlerMP
 
 ## Class signature
 
@@ -17,17 +21,17 @@ public class SaveHandlerMP extends java.lang.Object implements ISaveHandler
 
 ## Constructors
 
-- `public SaveHandlerMP()`
+- `SaveHandlerMP()`
 
 ## Methods
 
-- `public WorldInfo loadWorldInfo()`
-- `public void checkSessionLock() throws MinecraftException`
-- `public IChunkLoader getChunkLoader( WorldProvider provider)`
-- `public void saveWorldInfoWithPlayer( WorldInfo worldInformation, NBTTagCompound tagCompound)`
-- `public void saveWorldInfo( WorldInfo worldInformation)`
-- `public IPlayerFileData getPlayerNBTManager()`
-- `public void flush()`
-- `public java.io.File getMapFileFromName(java.lang.String mapName)`
-- `public java.io.File getWorldDirectory()`
-- `public TemplateManager getStructureTemplateManager()`
+- `void checkSessionLock()`
+- `void flush()`
+- `IChunkLoader getChunkLoader(WorldProvider provider)`
+- `java.io.File getMapFileFromName(java.lang.String mapName)`
+- `IPlayerFileData getPlayerNBTManager()`
+- `TemplateManager getStructureTemplateManager()`
+- `java.io.File getWorldDirectory()`
+- `WorldInfo loadWorldInfo()`
+- `void saveWorldInfo(WorldInfo worldInformation)`
+- `void saveWorldInfoWithPlayer(WorldInfo worldInformation, NBTTagCompound tagCompound)`

@@ -1,9 +1,17 @@
 # BrewedPotionTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.BrewedPotionTrigger.Instance
+
+## Class signature
+
+```java
+public static class BrewedPotionTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( PotionType potion)`
+- `Instance(PotionType potion)`
 
 ## Methods
 
-- `public boolean test( PotionType potion)`
+- `boolean test(PotionType potion)`

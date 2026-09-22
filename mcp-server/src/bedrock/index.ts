@@ -1,6 +1,8 @@
 /**
  * 基岩版 Add-On 文档 / 校验 / 生成（不是 Forge/Java 工具）。
  * search_bedrock_docs 每次带 docsStatus；滞后 Warning 不是拒绝令。
+ * 检索侧另带 `demotion`：`release-notes`（版本更新说明）体裁页**降权不删除**，
+ * 体裁判据在生产者 mcp-server/scripts/fetch-bedrock-docs.js 里。
  */
 import { existsSync, readFileSync } from "fs";
 import { randomUUID } from "crypto";
@@ -8,14 +10,23 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { z } from "zod";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { FabricDocStore } from "../docs-platform/fabric/store.js";
+import { FabricDocStore, DocNotFoundError } from "../docs-platform/fabric/store.js";
 import {
   hasPlatformDocData,
   platformDataMissingPayload,
 } from "../docs-platform/platform-data.js";
 import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "../docs-platform/semantic/search.js";
-import { joinSearchWarnings, mergeSemanticResults, semanticAllowedIds, type SearchResultLike } from "../docs-platform/search-utils.js";
+import {
+  joinSearchWarnings,
+  mergeSemanticResults,
+  normalizeTag,
+  RELATED_CACHE_TTL_MS,
+  ttlCacheGet,
+  ttlCacheSet,
+  type SearchResultLike,
+  type TtlCacheEntry,
+} from "../docs-platform/search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../docs-platform/semantic/status.js";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -44,9 +55,14 @@ export interface BedrockDocsStatus {
   scriptApiStable: string | null;
   scriptApiBeta: string | null;
   fetchedAt: string | null;
-  stale: boolean;
+  /**
+   * `true/false` 来自真探针（远端 canary 页 gitcommit sha ⇄ 本地 fingerprints.json）；
+   * `"unknown"` = 探针没测成（远端取不到，或本地指纹不全）——**禁止**在取不到时回落成 `false`。
+   */
+  stale: boolean | "unknown";
+  checkedAt?: string | null;
   warning?: string;
-  code?: "NOT_FETCHED" | "CORRUPT" | "STALE" | "OK";
+  code?: "NOT_FETCHED" | "CORRUPT" | "STALE" | "OK" | "PROBE_FAILED";
 }
 
 export function loadBedrockDocsStatus(dataRoot = resolveDataDir()): BedrockDocsStatus {
@@ -57,9 +73,9 @@ export function loadBedrockDocsStatus(dataRoot = resolveDataDir()): BedrockDocsS
     scriptApiStable: null,
     scriptApiBeta: null,
     fetchedAt: null,
-    stale: true,
-    warning: "未找到 data/bedrock-docs-status.json；基岩文档可能尚未抓取。",
-    code: "NOT_FETCHED",
+    stale: "unknown",
+    warning: "未找到 data/bedrock-docs-status.json；基岩文档可能尚未抓取，滞后状态无从判断。",
+    code: "PROBE_FAILED",
   };
   if (!existsSync(p)) return empty;
   try {
@@ -67,22 +83,28 @@ export function loadBedrockDocsStatus(dataRoot = resolveDataDir()): BedrockDocsS
     const fetchedAt = typeof raw.fetchedAt === "string" ? raw.fetchedAt : null;
     const fetchedMs = fetchedAt ? Date.parse(fetchedAt) : NaN;
     const ageStale = !Number.isFinite(fetchedMs) || Date.now() - fetchedMs > STALE_MS;
+    // 探针未测出结论（字段被写空 / 写成 "unknown"）⇒ 三态里的 unknown，不得默默 false
+    const probeMissing = !raw.remoteRevision || !raw.localRevision || raw.stale === "unknown";
     const revStale = Boolean(
       raw.remoteRevision && raw.localRevision && raw.remoteRevision !== raw.localRevision,
     );
-    const stale = ageStale || revStale;
-    const warning = stale
-      ? "此文档可能滞后于当前正式版（Script API 约两周一个 Beta）。滞后 Warning 不是拒绝令；默认仍只生成 stable。"
-      : undefined;
+    const stale: boolean | "unknown" = probeMissing ? "unknown" : revStale || ageStale;
+    const warning =
+      stale === "unknown"
+        ? "基岩文档滞后状态**未知**：revision 探针未取得结论（远端不可达或本地 fingerprints 不全）。不要把 unknown 读成「已是最新」；跑 `node mcp-server/scripts/fetch-bedrock-docs.js --probe` 复测。"
+        : stale
+          ? "此文档可能滞后于当前正式版（Script API 约两周一个 Beta）。滞后 Warning 不是拒绝令；默认仍只生成 stable。"
+          : undefined;
     return {
       localRevision: raw.localRevision ?? null,
       remoteRevision: raw.remoteRevision ?? null,
       scriptApiStable: raw.scriptApiStable ?? null,
       scriptApiBeta: raw.scriptApiBeta ?? null,
       fetchedAt,
+      checkedAt: typeof raw.checkedAt === "string" ? raw.checkedAt : null,
       stale,
       warning,
-      code: stale ? "STALE" : "OK",
+      code: stale === "unknown" ? "PROBE_FAILED" : stale ? "STALE" : "OK",
     };
   } catch {
     return { ...empty, warning: "bedrock-docs-status.json 损坏或无法解析", code: "CORRUPT" };
@@ -103,15 +125,216 @@ function withStatus<T extends Record<string, unknown>>(body: T): T & { docsStatu
   return { ...body, docsStatus, warning };
 }
 
-function getStore(version = "stable"): FabricDocStore {
-  return new FabricDocStore(resolveDataDir(), version, "bedrock-docs", "bedrock");
+/**
+ * 基岩正文有**两棵语料树**（2026-09-21 拆分）：
+ *  - `bedrock-docs` — Microsoft Learn 文档页（20 精选 + `documents/**`）
+ *  - `bedrock-scriptapi` — npm `@minecraft/server` index.d.ts 的逐声明摘录页（`scriptapi/**`，
+ *    id 仍为拆分前的 `stable/scriptapi/<Name>`，可回溯）
+ * 两棵树各自有 index-l0.json / processed/** / semantic/db.sqlite，检索与取页必须同时覆盖，
+ * **不得**出现「scriptapi 页拆走后查不到」。
+ */
+const BEDROCK_DOC_SOURCES = ["bedrock-docs", "bedrock-scriptapi"];
+
+function getStore(version = "stable", source = "bedrock-docs"): FabricDocStore {
+  return new FabricDocStore(resolveDataDir(), version, source, "bedrock");
 }
+
+/**
+ * 盘上真有该树 index-l0 的源才参与检索（部分数据安装 / 新树未抓取时另一棵树照常工作）。
+ * 两棵都没有时回 `["bedrock-docs"]`：让 store 抛它原本的 VersionNotFoundError，错误形态与拆分前一致。
+ */
+function bedrockSourcesWithData(version: string, dataRoot = resolveDataDir()): string[] {
+  const present = BEDROCK_DOC_SOURCES.filter((source) =>
+    existsSync(join(dataRoot, `bedrock_${version}`, source, version, "index-l0.json")),
+  );
+  return present.length > 0 ? present : ["bedrock-docs"];
+}
+
+/**
+ * 跨树取页助手：只有 DocNotFoundError（＝这个 id 确实不在这一棵树里）才换下一棵树；
+ * 其它异常（非法版本 / 坏索引）原样抛，不被第二棵树的结果掩盖。
+ */
+async function withBedrockStores<T>(
+  version: string,
+  fn: (store: FabricDocStore) => T | Promise<T>,
+): Promise<T> {
+  let lastErr: unknown;
+  for (const source of bedrockSourcesWithData(version)) {
+    try {
+      return await fn(getStore(version, source));
+    } catch (e) {
+      if (e instanceof DocNotFoundError) {
+        lastErr = e;
+        continue;
+      }
+      throw e;
+    }
+  }
+  throw lastErr;
+}
+
+/**
+ * 下面三条限流常量声明在本文件**第一个 schema 之前**：`searchBedrockDocsSchema` 在模块加载时
+ * 就求值（含 `.max(BEDROCK_RESULT_LIMIT_MAX)` 与 describe 里的插值），常量放后面会踩 TDZ。
+ *
+ * 对外 `total` 的口径：与降权改动前逐字相同（原本就是 mergeSemanticResults 的 limit=20）。
+ */
+const BEDROCK_RESULT_LIMIT = 20;
+/**
+ * 融合阶段的候选上限。**必须大于** {@link BEDROCK_RESULT_LIMIT}：
+ * 降权是把 release-notes 往后挪，若候选池只有 20，被挪下去的页就再也翻不回来 ——
+ * 那就成了事实上的拉黑。多取候选、降权后再截回窗口，被降权的页仍在结果里（在尾部）。
+ */
+const BEDROCK_MERGE_CANDIDATE_LIMIT = 60;
+
+/**
+ * 按调用放宽 `limit` 的硬上界 = 候选池上限。理由不是"怕 token"（那由调用方自己承担），而是
+ * **超过池大小就永远拿不到更多页** ⇒ 一个声称能给 200 的参数是在撒谎。取派生值而非新常量：
+ * 池加宽时窗口上界自动跟着加宽，不会出现「窗口调到 80 被 schema 拒，而池其实有 80」这种漂移。
+ */
+export const BEDROCK_RESULT_LIMIT_MAX = BEDROCK_MERGE_CANDIDATE_LIMIT;
+
+/**
+ * 默认窗口的对外可读别名：判据门要断言"未传 limit 时仍是 20"（放宽不得偷偷改默认口径），
+ * 但它不该自己抄一个 20 —— 从本文件取。
+ */
+export const BEDROCK_DEFAULT_RESULT_LIMIT = BEDROCK_RESULT_LIMIT;
 
 export const searchBedrockDocsSchema = z.object({
   query: z.string().describe("搜索关键词（Microsoft Learn Creator / Script API / pack manifest）"),
   version: z.string().optional().describe("文档树版本，默认 stable（不要用 Java 的 1.20.1 冒充）"),
-  tags: z.array(z.string()).optional(),
+  tags: z
+    .array(z.string())
+    .optional()
+    .describe(
+      "tag 过滤（子串、大小写/连字符不敏感）。体裁 tag `release-notes` = 该 31 页「版本更新说明」" +
+        "（documents/update<版本> ⇄ 标题 `<版本> Update Summary`），由生产者 " +
+        "mcp-server/scripts/fetch-bedrock-docs.js 的 isReleaseNotesPage 算进 index-l0.json。",
+    ),
+  /**
+   * 按调用放宽对外窗口（2026-09-22 用户裁定：`resultLimit` 是三个参数里唯一真影响观感的那个数，
+   * 但它是全局的 ⇒ 不动全局默认，给调用方一个逃生口）。只放宽**窗口**：排序、降权系数、候选池
+   * 口径一概不变，因此放宽后的结果集严格等于默认结果的「前缀 + 追加尾部」——可由
+   * `assert-bedrock-genre-demote.mjs` 的前缀稳定性判据反证。
+   * 上限 {@link BEDROCK_RESULT_LIMIT_MAX}；传值超过候选池时不会凭空多出页，池大小见 `demotion.candidates`。
+   */
+  limit: z
+    .number()
+    .int()
+    .min(1)
+    .max(BEDROCK_RESULT_LIMIT_MAX)
+    .optional()
+    .describe(
+      `对外结果条数，默认 ${BEDROCK_RESULT_LIMIT}（与未传该参数时逐字相同）；范围 1-${BEDROCK_RESULT_LIMIT_MAX}。` +
+        "只放宽窗口：排序与 release-notes 降权不变，被降权的页仍在尾部。要专门看更新说明优先用 " +
+        'tags=["release-notes"]（那是过滤，不是放宽窗口）。',
+    ),
 });
+
+/**
+ * 体裁 tag：**拼写必须与生产者一致**
+ * （`mcp-server/scripts/fetch-bedrock-docs.js` 的 `RELEASE_NOTES_TAG`）。
+ * 用户裁定（2026-09-22）：版本更新说明这类页**保留 + 打标 + 检索降权**，
+ * **不删页、不拉黑** —— 所以本文件里只有「排序惩罚」，没有任何过滤分支。
+ */
+export const BEDROCK_RELEASE_NOTES_TAG = "release-notes";
+/** 乘在排序键上的惩罚系数（1 = 不降权）。只改顺序，不改候选集。 */
+export const BEDROCK_RELEASE_NOTES_DEMOTE_FACTOR = 0.25;
+
+/** 降权后附加到结果行上的**可选**字段（不改动 id/label/url/tags/score/… 既有字段的类型与含义）。 */
+export interface BedrockDemotionFields {
+  /** 本行是否因 `release-notes` 体裁被降权（未降权的行**不带**该键） */
+  demoted?: boolean;
+  /** 降权依据的 tag（只可能等于 {@link BEDROCK_RELEASE_NOTES_TAG}） */
+  demoteReason?: string;
+  /** 实际用于排序的键 = base × 降权系数；`base` 见 {@link sortBaseOf}。给外部核对排序用 */
+  effectiveScore?: number;
+}
+
+/**
+ * 权威 tags 取自 **index-l0.json**，不取自结果行的 tags。
+ * 原因：语义通道的 tags 来自 `semantic/db.sqlite` 的 `docs.tags_json`，那是上一次建库时的镜像，
+ * 索引改了 tag 之后它必然滞后（实测该表 258 行与索引 1:1）。以行内 tags 判体会漏掉
+ * 「只从语义通道浮出」的 release-notes 页。缓存 TTL 与 related 缓存同口径。
+ */
+const genreTagCache = new Map<string, TtlCacheEntry<Map<string, string[]>>>();
+
+function bedrockGenreTagIndex(
+  version: string,
+  sources: string[],
+  dataRoot: string,
+): Map<string, string[]> {
+  const cacheKey = `${version}|${sources.join(",")}`;
+  const hit = ttlCacheGet(genreTagCache, cacheKey);
+  if (hit) return hit;
+  const map = new Map<string, string[]>();
+  for (const source of sources) {
+    const p = join(dataRoot, `bedrock_${version}`, source, version, "index-l0.json");
+    if (!existsSync(p)) continue;
+    try {
+      const parsed: unknown = JSON.parse(readFileSync(p, "utf8"));
+      if (!Array.isArray(parsed)) continue;
+      for (const e of parsed) {
+        const id = (e as { id?: unknown })?.id;
+        const tags = (e as { tags?: unknown })?.tags;
+        if (typeof id === "string" && Array.isArray(tags)) {
+          map.set(id, tags.filter((t): t is string => typeof t === "string"));
+        }
+      }
+    } catch {
+      /* 读不到就退回行内 tags（见 isBedrockReleaseNotesRow），不假装判得很准 */
+    }
+  }
+  ttlCacheSet(genreTagCache, cacheKey, map, 16, RELATED_CACHE_TTL_MS);
+  return map;
+}
+
+/** 判据**只看 tag**（不做标题 / 路径字符串匹配）；归一口径与 tags 过滤共用 {@link normalizeTag}。 */
+export function isBedrockReleaseNotesRow(
+  row: SearchResultLike,
+  tagIndex: ReadonlyMap<string, string[]>,
+): boolean {
+  const wanted = normalizeTag(BEDROCK_RELEASE_NOTES_TAG);
+  const tags = tagIndex.get(row.id) ?? row.tags ?? [];
+  return tags.some((t) => normalizeTag(t).includes(wanted));
+}
+
+/**
+ * 排序基准分：有融合分就用 `score`（有语义时 = RRF）；
+ * 无语义可用时（纯 L0 通道，store 出口 `stripScores` 会把 score 抹掉）退回**行序倒数**
+ * `(n - i) / n`，即把 L0 排名当成分数量级用。两种都只用于比较，**不回写 `score` 字段**。
+ */
+function sortBaseOf(row: SearchResultLike, index: number, total: number): number {
+  if (typeof row.score === "number") return row.score;
+  const n = Math.max(1, total);
+  return (n - index) / n;
+}
+
+/**
+ * release-notes 降权：**只重排，不过滤**。
+ * 排序键 = `sortBaseOf × (降权 ? 0.25 : 1)`，同分按原序（稳定），因此
+ * 「同等分值的普通页之后」成立，且非降权页之间的相对次序**完全不变**。
+ * 截断到 limit 发生在降权**之后**（候选池 60 > 输出 20），故降权不减少可达性。
+ */
+export function applyBedrockGenreDemotion(
+  rows: SearchResultLike[],
+  tagIndex: ReadonlyMap<string, string[]>,
+  limit = BEDROCK_RESULT_LIMIT,
+): Array<SearchResultLike & BedrockDemotionFields> {
+  const keyed = rows.map((row, i) => {
+    const demoted = isBedrockReleaseNotesRow(row, tagIndex);
+    const base = sortBaseOf(row, i, rows.length);
+    const eff = Number((demoted ? base * BEDROCK_RELEASE_NOTES_DEMOTE_FACTOR : base).toFixed(8));
+    return { row, i, demoted, eff };
+  });
+  keyed.sort((a, b) => b.eff - a.eff || a.i - b.i);
+  return keyed.slice(0, limit).map(({ row, demoted, eff }) =>
+    demoted
+      ? { ...row, demoted: true, demoteReason: BEDROCK_RELEASE_NOTES_TAG, effectiveScore: eff }
+      : { ...row, effectiveScore: eff },
+  );
+}
+
 
 export async function searchBedrockDocs(
   args: z.infer<typeof searchBedrockDocsSchema>,
@@ -127,37 +350,109 @@ export async function searchBedrockDocs(
       }),
     );
   }
-  const store = getStore(version);
-  const detailed = store.searchIndexDetailed(args.query, version, args.tags);
-  let results: SearchResultLike[] = detailed.results;
-  const semanticHits = await semanticSearch(
-    args.query,
-    "bedrock",
-    detailed.resolvedVersion,
-    "bedrock-docs",
-    dataRoot,
+  // 两棵语料树各自跑 L0 + 语义再合并（见 BEDROCK_DOC_SOURCES 的拆分说明）。
+  // 迁移窗口内（scriptapi 的 semantic/db.sqlite 还没重建）：scriptapi 页靠它自己的 L0 索引 +
+  // 旧文档树语义库里仍存留的 scriptapi chunks（成员校验用两棵树 id 全集放行）继续搜得到；
+  // 重建后两库各自命中。任何一种形态下返回字段与语义不变。
+  const sources = bedrockSourcesWithData(version, dataRoot);
+  let resolvedVersion = version;
+  const byId = new Map<string, SearchResultLike>();
+  for (const [i, source] of sources.entries()) {
+    const detailed = getStore(version, source).searchIndexDetailed(args.query, version, args.tags);
+    if (i === 0) resolvedVersion = detailed.resolvedVersion;
+    for (const r of detailed.results) if (!byId.has(r.id)) byId.set(r.id, r);
+  }
+  let results: SearchResultLike[] = [...byId.values()];
+  const semanticLists = await Promise.all(
+    sources.map((source) =>
+      semanticSearch(args.query, "bedrock", resolvedVersion, source, dataRoot),
+    ),
   );
-  if (semanticHits) {
-    results = mergeSemanticResults(results, semanticHits, {
+  const semanticAvailable = semanticLists.some((h) => h !== null);
+  // 按调用的窗口（未传 = BEDROCK_RESULT_LIMIT ⇒ 与改动前逐字相同）。候选池跟着放宽：
+  // 池必须 ≥ 窗口，否则"放宽 limit"拿不到更多页，只是把同一个池重新切一刀。
+  const resultLimit = args.limit ?? BEDROCK_RESULT_LIMIT;
+  const candidateLimit = Math.max(BEDROCK_MERGE_CANDIDATE_LIMIT, resultLimit);
+  let candidates = results;
+  if (semanticAvailable) {
+    const semanticHits = semanticLists.filter(
+      (h): h is NonNullable<typeof h> => h !== null,
+    ).flat();
+    // 成员白名单 = 两棵树 L0 全集的并集（拆分前单树 882 条时的等价口径）
+    const allowedIds = new Set<string>();
+    for (const source of sources) {
+      try {
+        for (const id of getStore(version, source).getAllDocIds(resolvedVersion)) allowedIds.add(id);
+      } catch {
+        /* 这一棵答不了全集 ⇒ 它的语义命中会被成员校验丢弃（宁缺毋滥，同 semanticAllowedIds 的保守口径） */
+      }
+    }
+    // 候选池放宽到 candidateLimit（≥ 窗口），降权后再截回窗口 ——
+    // 截断点必须在降权之后，否则「被降权」等于「被挤出结果」，与用户裁定的不删不拉黑冲突。
+    candidates = mergeSemanticResults(results, semanticHits, {
       tags: args.tags,
-      limit: 20,
-      version: detailed.resolvedVersion,
-      allowedIds: semanticAllowedIds(store, detailed.resolvedVersion, results),
+      limit: candidateLimit,
+      version: resolvedVersion,
+      allowedIds,
     });
   }
+  const tagIndex = bedrockGenreTagIndex(resolvedVersion, sources, dataRoot);
+  const demotedInCandidates = candidates.filter((r) => isBedrockReleaseNotesRow(r, tagIndex)).length;
+  const demotedRows = applyBedrockGenreDemotion(candidates, tagIndex, resultLimit);
+  results = demotedRows;
+  const demotedInResults = demotedRows.filter((r) => r.demoted === true).length;
+  const demotionDropped = Math.max(0, demotedInCandidates - demotedInResults);
   return jsonOk(
     withStatus({
       ok: true,
       query: args.query,
       version,
-      resolvedVersion: detailed.resolvedVersion,
+      resolvedVersion,
       platform: "bedrock",
-      semantic: semanticHits !== null,
+      semantic: semanticAvailable,
       total: results.length,
       results,
+      /** 可选附加字段（降权未触发时也在，便于核对排序）；已有字段类型与含义未变 */
+      demotion: {
+        tag: BEDROCK_RELEASE_NOTES_TAG,
+        factor: BEDROCK_RELEASE_NOTES_DEMOTE_FACTOR,
+        candidateLimit,
+        resultLimit,
+        /** 调用方显式传的窗口（未传 = null ⇒ 用默认 {@link BEDROCK_RESULT_LIMIT}）。便于核对"这条结果被放宽过" */
+        requestedLimit: args.limit ?? null,
+        /** 窗口上界（= 候选池上界）。超过它 schema 直接拒 */
+        limitMax: BEDROCK_RESULT_LIMIT_MAX,
+        candidates: candidates.length,
+        demotedInCandidates,
+        demotedInResults,
+        /**
+         * 因「降权 + 对外窗口」而没进结果集的 release-notes 页数（窗口改动前就是 20，未新增过滤）。
+         * 只用于披露：这些页**没有被过滤掉**，用 tags=["release-notes"] 或放宽 limit 即可取回。
+         */
+        demotedDropped: Math.max(0, demotedInCandidates - demotedInResults),
+        basis:
+          "排序键 = (score ?? L0 行序倒数) × (带 release-notes tag ? factor : 1)，同分保原序；" +
+          "判据只读 index-l0.json 的 tags，不读标题；只重排不过滤。",
+      },
       warning: joinSearchWarnings(
-        missingSemanticDbWarning(semanticHits === null),
-        semanticStaleSearchWarning(dataRoot, "bedrock", detailed.resolvedVersion, "bedrock-docs"),
+        missingSemanticDbWarning(semanticLists.length > 0 && !semanticAvailable),
+        ...sources.map((source) =>
+          semanticStaleSearchWarning(dataRoot, "bedrock", resolvedVersion, source),
+        ),
+        demotedInResults > 0
+          ? `本次结果含 ${demotedInResults}/${results.length} 条「版本更新说明」体裁页（tag=${BEDROCK_RELEASE_NOTES_TAG}），` +
+            `已按 ×${BEDROCK_RELEASE_NOTES_DEMOTE_FACTOR} 沉到同等分值普通页之后（未过滤，见各行 demoted/effectiveScore）；` +
+            `要看这一族页就显式传 tags=["${BEDROCK_RELEASE_NOTES_TAG}"]。`
+          : undefined,
+        demotionDropped > 0
+          ? `另有 ${demotionDropped} 条 ${BEDROCK_RELEASE_NOTES_TAG} 页命中在候选池（${candidates.length} 条）里、` +
+            `因降权后排到对外 ${resultLimit} 条窗口之外（默认窗口就是 ${BEDROCK_RESULT_LIMIT}，未新增过滤）。` +
+            `取回方式：tags=["${BEDROCK_RELEASE_NOTES_TAG}"]、把 limit 放宽到 ${Math.min(resultLimit + demotionDropped, BEDROCK_RESULT_LIMIT_MAX)} 以内，或把查询收紧到具体版本号。`
+          : undefined,
+        args.limit !== undefined && candidates.length < resultLimit
+          ? `本次 limit=${resultLimit} 比候选池（${candidates.length} 条）还宽 ⇒ 返回 ${results.length} 条不是被窗口切的，` +
+            `是检索层只交得出这些（每棵树 L0 10 + 语义 10，基岩两棵树）。要更多就去掉 tags 过滤或换措辞，调大 limit 拿不到额外页。`
+          : undefined,
       ),
     }),
   );
@@ -176,7 +471,7 @@ export async function getBedrockDocSummary(
     return jsonOk(withStatus({ ...platformDataMissingPayload("bedrock") }));
   }
   try {
-    const summary = getStore(version).loadSummary(args.id, version);
+    const summary = await withBedrockStores(version, (store) => store.loadSummary(args.id, version));
     return jsonOk(withStatus({ ok: true, platform: "bedrock", ...summary, version }));
   } catch (e) {
     return jsonOk(withStatus({
@@ -204,7 +499,9 @@ export async function getBedrockDocFull(
     return jsonOk(withStatus({ ...platformDataMissingPayload("bedrock") }));
   }
   try {
-    const full = await getStore(version).loadFullDoc(args.id, version, args.highlight_key !== false);
+    const full = await withBedrockStores(version, (store) =>
+      store.loadFullDoc(args.id, version, args.highlight_key !== false),
+    );
     return jsonOk(withStatus({ ok: true, platform: "bedrock", ...full, version }));
   } catch (e) {
     return jsonOk(withStatus({
@@ -232,7 +529,9 @@ export async function getBedrockDocRelated(
     return jsonOk(withStatus({ ...platformDataMissingPayload("bedrock") }));
   }
   try {
-    const related = getStore(version).getRelatedDocs(args.id, version, args.limit ?? 8);
+    const related = await withBedrockStores(version, (store) =>
+      store.getRelatedDocs(args.id, version, args.limit ?? 8),
+    );
     return jsonOk(withStatus({ ok: true, platform: "bedrock", version, related }));
   } catch (e) {
     return jsonOk(withStatus({

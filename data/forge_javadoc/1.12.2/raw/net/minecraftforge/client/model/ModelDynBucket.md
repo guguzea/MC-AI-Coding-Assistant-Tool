@@ -1,13 +1,17 @@
 ---
 title: "ModelDynBucket"
-description: "Deprecated. use ModelDynBucket(ResourceLocation, ResourceLocation, ResourceLocation, Fluid, boolean, boolean)"
+description: "public final class ModelDynBucket extends java.lang.Object implements IModel"
 package: "net/minecraftforge/client/model"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/client/model/ModelDynBucket.html"
 sourceType: javadoc
 ---
 
 # ModelDynBucket
+
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.ModelDynBucket
 
 ## Class signature
 
@@ -17,17 +21,18 @@ public final class ModelDynBucket extends java.lang.Object implements IModel
 
 ## Constructors
 
-- `public ModelDynBucket()`
-- `public ModelDynBucket( ResourceLocation baseLocation, ResourceLocation liquidLocation, ResourceLocation coverLocation, Fluid fluid, boolean flipGas, boolean tint)`
+- `ModelDynBucket()`
+- `@Deprecated ModelDynBucket(ResourceLocation baseLocation, ResourceLocation liquidLocation, ResourceLocation coverLocation, Fluid fluid, boolean flipGas)`
+- `ModelDynBucket(ResourceLocation baseLocation, ResourceLocation liquidLocation, ResourceLocation coverLocation, Fluid fluid, boolean flipGas, boolean tint)`
 
 ## Methods
 
-- `@Deprecated public ModelDynBucket( ResourceLocation baseLocation, ResourceLocation liquidLocation, ResourceLocation coverLocation, Fluid fluid, boolean flipGas)`
-- `public java.util.Collection< ResourceLocation > getTextures()`
-- `public IBakedModel bake( IModelState state, VertexFormat format, java.util.function.Function< ResourceLocation , TextureAtlasSprite > bakedTextureGetter)`
-- `public ModelDynBucket process(<any> customData)`
-- `public ModelDynBucket retexture(<any> textures)`
+- `IBakedModel bake(IModelState state, VertexFormat format, java.util.function.Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)`
+- `java.util.Collection<ResourceLocation> getTextures()`
+- `ModelDynBucket process(<any> customData)` — Sets the fluid in the model.
+- `ModelDynBucket retexture(<any> textures)` — Allows to use different textures for the model.
 
-## Description
+## Fields
 
-Deprecated. use ModelDynBucket(ResourceLocation, ResourceLocation, ResourceLocation, Fluid, boolean, boolean)
+- `static ModelResourceLocation LOCATION`
+- `static IModel MODEL`

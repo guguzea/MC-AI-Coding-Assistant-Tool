@@ -3,11 +3,15 @@ title: "Style"
 description: "public class Style extends java.lang.Object"
 package: "net/minecraft/util/text"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/util/text/Style.html"
 sourceType: javadoc
 ---
 
 # Style
+
+**Inheritance:** java.lang.Object → net.minecraft.util.text.Style
 
 ## Class signature
 
@@ -17,33 +21,33 @@ public class Style extends java.lang.Object
 
 ## Constructors
 
-- `public Style()`
+- `Style()`
 
 ## Methods
 
-- `public TextFormatting getColor()`
-- `public boolean getBold()`
-- `public boolean getItalic()`
-- `public boolean getStrikethrough()`
-- `public boolean getUnderlined()`
-- `public boolean getObfuscated()`
-- `public boolean isEmpty()`
-- `public ClickEvent getClickEvent()`
-- `public HoverEvent getHoverEvent()`
-- `public java.lang.String getInsertion()`
-- `public Style setColor( TextFormatting color)`
-- `public Style setBold(java.lang.Boolean boldIn)`
-- `public Style setItalic(java.lang.Boolean italic)`
-- `public Style setStrikethrough(java.lang.Boolean strikethrough)`
-- `public Style setUnderlined(java.lang.Boolean underlined)`
-- `public Style setObfuscated(java.lang.Boolean obfuscated)`
-- `public Style setClickEvent( ClickEvent event)`
-- `public Style setHoverEvent( HoverEvent event)`
-- `public Style setInsertion(java.lang.String insertion)`
-- `public Style setParentStyle( Style parent)`
-- `public java.lang.String getFormattingCode()`
-- `public java.lang.String toString()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public Style createShallowCopy()`
-- `public Style createDeepCopy()`
+- `Style createDeepCopy()`
+- `Style createShallowCopy()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `boolean getBold()`
+- `ClickEvent getClickEvent()`
+- `TextFormatting getColor()`
+- `java.lang.String getFormattingCode()`
+- `HoverEvent getHoverEvent()`
+- `java.lang.String getInsertion()`
+- `boolean getItalic()`
+- `boolean getObfuscated()`
+- `boolean getStrikethrough()`
+- `boolean getUnderlined()`
+- `int hashCode()`
+- `boolean isEmpty()`
+- `Style setBold(java.lang.Boolean boldIn)`
+- `Style setClickEvent(ClickEvent event)`
+- `Style setColor(TextFormatting color)`
+- `Style setHoverEvent(HoverEvent event)`
+- `Style setInsertion(java.lang.String insertion)`
+- `Style setItalic(java.lang.Boolean italic)`
+- `Style setObfuscated(java.lang.Boolean obfuscated)`
+- `Style setParentStyle(Style parent)`
+- `Style setStrikethrough(java.lang.Boolean strikethrough)`
+- `Style setUnderlined(java.lang.Boolean underlined)`
+- `java.lang.String toString()`

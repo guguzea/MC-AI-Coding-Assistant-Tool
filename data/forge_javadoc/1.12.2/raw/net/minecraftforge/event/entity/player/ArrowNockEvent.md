@@ -1,13 +1,17 @@
 ---
 title: "ArrowNockEvent"
-description: "ArrowNockEvent is fired when a player begins using a bow. This event is fired whenever a player begins using a bow in ItemBow.onItemRightClick(World, EntityPlayer, EnumHand) . This event is fired on t"
+description: "public class ArrowNockEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/player/ArrowNockEvent.html"
 sourceType: javadoc
 ---
 
 # ArrowNockEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.ArrowNockEvent
 
 ## Class signature
 
@@ -17,17 +21,13 @@ public class ArrowNockEvent extends PlayerEvent
 
 ## Constructors
 
-- `public ArrowNockEvent( EntityPlayer player, ItemStack item, EnumHand hand, World world, boolean hasAmmo)`
+- `ArrowNockEvent(EntityPlayer player, ItemStack item, EnumHand hand, World world, boolean hasAmmo)`
 
 ## Methods
 
-- `public ItemStack getBow()`
-- `public World getWorld()`
-- `public EnumHand getHand()`
-- `public boolean hasAmmo()`
-- `public ActionResult < ItemStack > getAction()`
-- `public void setAction( ActionResult < ItemStack > action)`
-
-## Description
-
-ArrowNockEvent is fired when a player begins using a bow. This event is fired whenever a player begins using a bow in ItemBow.onItemRightClick(World, EntityPlayer, EnumHand) . This event is fired on t
+- `ActionResult<ItemStack> getAction()`
+- `ItemStack getBow()`
+- `EnumHand getHand()`
+- `World getWorld()`
+- `boolean hasAmmo()`
+- `void setAction(ActionResult<ItemStack> action)`

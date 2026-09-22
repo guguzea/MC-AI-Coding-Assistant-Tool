@@ -1,16 +1,18 @@
 # BlockBookshelf
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBookshelf
+
 ## Class signature
 
 ```java
 public class BlockBookshelf extends Block
 ```
 
-## Constructors
-
-- `public BlockBookshelf()`
-
 ## Methods
 
-- `public int quantityDropped(java.util.Random random)`
-- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int quantityDropped(java.util.Random random)`
+
+## Fields
+
+- `BlockBookshelf`

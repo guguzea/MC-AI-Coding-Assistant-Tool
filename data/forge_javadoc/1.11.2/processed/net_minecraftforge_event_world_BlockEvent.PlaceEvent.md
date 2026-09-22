@@ -1,19 +1,23 @@
 # BlockEvent.PlaceEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.BlockEvent.PlaceEvent
+
+## Class signature
+
+```java
+public static class BlockEvent.PlaceEvent extends BlockEvent
+```
+
 ## Constructors
 
-- `public PlaceEvent(@Nonnull BlockSnapshot blockSnapshot, @Nonnull IBlockState placedAgainst, @Nonnull EntityPlayer player, @Nonnull EnumHand hand)`
+- `@Deprecated PlaceEvent(BlockSnapshot blockSnapshot, IBlockState placedAgainst, EntityPlayer player)`
+- `PlaceEvent(BlockSnapshot blockSnapshot, IBlockState placedAgainst, EntityPlayer player, EnumHand hand)`
 
 ## Methods
 
-- `@Deprecated public PlaceEvent( BlockSnapshot blockSnapshot, IBlockState placedAgainst, EntityPlayer player)`
-- `public EntityPlayer getPlayer()`
-- `@Nonnull @Deprecated public ItemStack getItemInHand()`
-- `public BlockSnapshot getBlockSnapshot()`
-- `public IBlockState getPlacedBlock()`
-- `public IBlockState getPlacedAgainst()`
-- `public EnumHand getHand()`
-
-## Description
-
-Called when a block is placed by a player. If a Block Place event is cancelled, the block will not be placed.
+- `BlockSnapshot getBlockSnapshot()`
+- `EnumHand getHand()`
+- `@Deprecated ItemStack getItemInHand()`
+- `IBlockState getPlacedAgainst()`
+- `IBlockState getPlacedBlock()`
+- `EntityPlayer getPlayer()`

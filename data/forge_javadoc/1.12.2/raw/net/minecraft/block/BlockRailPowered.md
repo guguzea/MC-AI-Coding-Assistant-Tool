@@ -3,11 +3,15 @@ title: "BlockRailPowered"
 description: "public class BlockRailPowered extends BlockRailBase"
 package: "net/minecraft/block"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/block/BlockRailPowered.html"
 sourceType: javadoc
 ---
 
 # BlockRailPowered
+
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockRailBase → net.minecraft.block.BlockRailPowered
 
 ## Class signature
 
@@ -17,17 +21,22 @@ public class BlockRailPowered extends BlockRailBase
 
 ## Constructors
 
-- `protected BlockRailPowered()`
-- `protected BlockRailPowered(boolean isActivator)`
+- `BlockRailPowered()`
+- `BlockRailPowered(boolean isActivator)`
 
 ## Methods
 
-- `protected boolean findPoweredRailSignal( World worldIn, BlockPos pos, IBlockState state, boolean p_176566_4_, int p_176566_5_)`
-- `protected boolean isSameRailWithPower( World worldIn, BlockPos pos, boolean p_176567_3_, int distance, BlockRailBase.EnumRailDirection p_176567_5_)`
-- `protected void updateState( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `public IProperty < BlockRailBase.EnumRailDirection > getShapeProperty()`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
 - `protected BlockStateContainer createBlockState()`
+- `protected boolean findPoweredRailSignal(World worldIn, BlockPos pos, IBlockState state, boolean p_176566_4_, int p_176566_5_)`
+- `int getMetaFromState(IBlockState state)`
+- `IProperty<BlockRailBase.EnumRailDirection> getShapeProperty()`
+- `IBlockState getStateFromMeta(int meta)`
+- `protected boolean isSameRailWithPower(World worldIn, BlockPos pos, boolean p_176567_3_, int distance, BlockRailBase.EnumRailDirection p_176567_5_)`
+- `protected void updateState(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
+
+## Fields
+
+- `static PropertyBool POWERED`
+- `static PropertyEnum<BlockRailBase.EnumRailDirection> SHAPE`

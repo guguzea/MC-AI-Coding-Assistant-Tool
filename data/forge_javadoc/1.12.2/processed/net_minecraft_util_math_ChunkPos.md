@@ -1,5 +1,7 @@
 # ChunkPos
 
+**Inheritance:** java.lang.Object → net.minecraft.util.math.ChunkPos
+
 ## Class signature
 
 ```java
@@ -8,18 +10,23 @@ public class ChunkPos extends java.lang.Object
 
 ## Constructors
 
-- `public ChunkPos(int x, int z)`
-- `public ChunkPos( BlockPos pos)`
+- `ChunkPos(BlockPos pos)`
+- `ChunkPos(int x, int z)`
 
 ## Methods
 
-- `public static long asLong(int x, int z)`
-- `public int hashCode()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public double getDistanceSq( Entity entityIn)`
-- `public int getXStart()`
-- `public int getZStart()`
-- `public int getXEnd()`
-- `public int getZEnd()`
-- `public BlockPos getBlock(int x, int y, int z)`
-- `public java.lang.String toString()`
+- `static long asLong(int x, int z)`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `BlockPos getBlock(int x, int y, int z)`
+- `double getDistanceSq(Entity entityIn)`
+- `int getXEnd()`
+- `int getXStart()`
+- `int getZEnd()`
+- `int getZStart()`
+- `int hashCode()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `int x`
+- `int z`

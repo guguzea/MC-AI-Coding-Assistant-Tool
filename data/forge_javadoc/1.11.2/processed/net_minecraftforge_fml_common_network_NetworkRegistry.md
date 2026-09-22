@@ -1,30 +1,37 @@
 # NetworkRegistry
 
+**Inheritance:** java.lang.Object → java.lang.Enum<NetworkRegistry> → net.minecraftforge.fml.common.network.NetworkRegistry
+
 ## Class signature
 
 ```java
-public enum NetworkRegistry extends java.lang.Enum< NetworkRegistry >
+public enum NetworkRegistry extends java.lang.Enum<NetworkRegistry>
 ```
 
 ## Methods
 
-- `public static NetworkRegistry [] values()`
-- `public static NetworkRegistry valueOf(java.lang.String name)`
-- `public java.util.EnumMap< Side , FMLEmbeddedChannel > newChannel(java.lang.String name, io.netty.channel.ChannelHandler... handlers)`
-- `public SimpleNetworkWrapper newSimpleChannel(java.lang.String name)`
-- `public FMLEventChannel newEventDrivenChannel(java.lang.String name)`
-- `public java.util.EnumMap< Side , FMLEmbeddedChannel > newChannel( ModContainer container, java.lang.String name, io.netty.channel.ChannelHandler... handlers)`
-- `public FMLEmbeddedChannel getChannel(java.lang.String name, Side source)`
-- `public void registerGuiHandler(java.lang.Object mod, IGuiHandler handler)`
-- `@Nullable public Container getRemoteGuiContainer( ModContainer mc, EntityPlayerMP player, int modGuiId, World world, int x, int y, int z)`
-- `@Nullable public java.lang.Object getLocalGuiContainer( ModContainer mc, EntityPlayer player, int modGuiId, World world, int x, int y, int z)`
-- `public boolean hasChannel(java.lang.String channelName, Side source)`
-- `public void register( ModContainer fmlModContainer, java.lang.Class<?> clazz, @Nullable java.lang.String remoteVersionRange, ASMDataTable asmHarvestedData)`
-- `public boolean isVanillaAccepted( Side from)`
-- `public java.util.Map< ModContainer , NetworkModHolder > registry()`
-- `public java.util.Set<java.lang.String> channelNamesFor( Side side)`
-- `public void fireNetworkHandshake( NetworkDispatcher networkDispatcher, Side origin)`
+- `java.util.Set<java.lang.String> channelNamesFor(Side side)` — All the valid channel names for a side
+- `void fireNetworkHandshake(NetworkDispatcher networkDispatcher, Side origin)` — INTERNAL fire a handshake to all channels
+- `FMLEmbeddedChannel getChannel(java.lang.String name, Side source)`
+- `java.lang.Object getLocalGuiContainer(ModContainer mc, EntityPlayer player, int modGuiId, World world, int x, int y, int z)` — INTERNAL method for accessing the Gui registry
+- `Container getRemoteGuiContainer(ModContainer mc, EntityPlayerMP player, int modGuiId, World world, int x, int y, int z)` — INTERNAL method for accessing the Gui registry
+- `boolean hasChannel(java.lang.String channelName, Side source)` — Is there a channel with this name on this side?
+- `boolean isVanillaAccepted(Side from)`
+- `java.util.EnumMap<Side, FMLEmbeddedChannel> newChannel(ModContainer container, java.lang.String name, io.netty.channel.ChannelHandler... handlers)` — INTERNAL Create a new channel pair with the specified name and channel handlers.
+- `java.util.EnumMap<Side, FMLEmbeddedChannel> newChannel(java.lang.String name, io.netty.channel.ChannelHandler... handlers)` — Create a new synchronous message channel pair based on netty.
+- `FMLEventChannel newEventDrivenChannel(java.lang.String name)` — Construct a new FMLEventChannel for the channel.
+- `SimpleNetworkWrapper newSimpleChannel(java.lang.String name)` — Construct a new SimpleNetworkWrapper for the channel.
+- `void register(ModContainer fmlModContainer, java.lang.Class<?> clazz, java.lang.String remoteVersionRange, ASMDataTable asmHarvestedData)` — INTERNAL method for registering a mod as a network capable thing
+- `void registerGuiHandler(java.lang.Object mod, IGuiHandler handler)` — Register an IGuiHandler for the supplied mod object.
+- `java.util.Map<ModContainer, NetworkModHolder> registry()`
+- `static NetworkRegistry valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static NetworkRegistry [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.
 
-## Description
+## Fields
 
-Represents a target point for the ALLROUNDPOINT target.
+- `static io.netty.util.AttributeKey<Side> CHANNEL_SOURCE`
+- `static io.netty.util.AttributeKey<java.lang.String> FML_CHANNEL` — Set in the ChannelHandlerContext
+- `static io.netty.util.AttributeKey<java.lang.Boolean> FML_MARKER`
+- `static byte FML_PROTOCOL`
+- `static io.netty.util.AttributeKey<ModContainer> MOD_CONTAINER`
+- `static io.netty.util.AttributeKey<INetHandler> NET_HANDLER`

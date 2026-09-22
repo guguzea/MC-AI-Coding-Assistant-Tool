@@ -1,17 +1,19 @@
 # WeightedRandomFishable
 
+**Inheritance:** java.lang.Object → net.minecraft.util.WeightedRandom.Item → net.minecraft.util.WeightedRandomFishable
+
 ## Class signature
 
 ```java
 public class WeightedRandomFishable extends WeightedRandom.Item
 ```
 
-## Constructors
-
-- `public WeightedRandomFishable( ItemStack returnStackIn, int itemWeightIn)`
-
 ## Methods
 
-- `public ItemStack getItemStack(java.util.Random random)`
-- `public WeightedRandomFishable setMaxDamagePercent(float maxDamagePercentIn)`
-- `public WeightedRandomFishable setEnchantable()`
+- `ItemStack getItemStack(java.util.Random random)`
+- `WeightedRandomFishable setEnchantable()`
+- `WeightedRandomFishable setMaxDamagePercent(float maxDamagePercentIn)`
+
+## Fields
+
+- `WeightedRandomFishable`

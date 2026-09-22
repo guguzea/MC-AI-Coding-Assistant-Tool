@@ -1,9 +1,18 @@
 # IModGuiFactory.RuntimeOptionCategoryElement
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.client.IModGuiFactory.RuntimeOptionCategoryElement
+
+## Class signature
+
+```java
+public static class IModGuiFactory.RuntimeOptionCategoryElement extends java.lang.Object
+```
+
 ## Constructors
 
-- `public RuntimeOptionCategoryElement(java.lang.String parent, java.lang.String child)`
+- `RuntimeOptionCategoryElement(java.lang.String parent, java.lang.String child)`
 
-## Description
+## Fields
 
-Represents an option category and entry in the runtime gui options list.
+- `java.lang.String child`
+- `java.lang.String parent`

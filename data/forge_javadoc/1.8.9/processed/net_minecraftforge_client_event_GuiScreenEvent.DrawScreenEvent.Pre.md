@@ -1,9 +1,13 @@
 # GuiScreenEvent.DrawScreenEvent.Pre
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent.Pre
 
-- `public Pre( GuiScreen gui, int mouseX, int mouseY, float renderPartialTicks)`
+## Class signature
 
-## Description
+```java
+public static class GuiScreenEvent.DrawScreenEvent.Pre extends GuiScreenEvent.DrawScreenEvent
+```
 
-This event fires just before GuiScreen.drawScreen() is called. Cancel this event to skip GuiScreen.drawScreen() .
+## Fields
+
+- `Pre`

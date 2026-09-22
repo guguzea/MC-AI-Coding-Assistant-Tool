@@ -1,29 +1,31 @@
 # AbstractChestHorse
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.AbstractHorse → net.minecraft.entity.passive.AbstractChestHorse
+
 ## Class signature
 
 ```java
 public abstract class AbstractChestHorse extends AbstractHorse
 ```
 
-## Constructors
-
-- `public AbstractChestHorse( World worldIn)`
-
 ## Methods
 
-- `protected void entityInit()`
 - `protected void applyEntityAttributes()`
-- `public boolean hasChest()`
-- `public void setChested(boolean chested)`
-- `protected int getInventorySize()`
-- `public double getMountedYOffset()`
+- `protected void entityInit()`
 - `protected SoundEvent getAngrySound()`
-- `public void onDeath( DamageSource cause)`
-- `public static void registerFixesAbstractChestHorse( DataFixer fixer, java.lang.Class<?> entityClass)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand)`
+- `int getInventoryColumns()`
+- `protected int getInventorySize()`
+- `double getMountedYOffset()`
+- `boolean hasChest()`
+- `void onDeath(DamageSource cause)`
 - `protected void playChestEquipSound()`
-- `public int getInventoryColumns()`
+- `boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesAbstractChestHorse(DataFixer fixer, java.lang.Class<?> entityClass)`
+- `boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
+- `void setChested(boolean chested)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `AbstractChestHorse`

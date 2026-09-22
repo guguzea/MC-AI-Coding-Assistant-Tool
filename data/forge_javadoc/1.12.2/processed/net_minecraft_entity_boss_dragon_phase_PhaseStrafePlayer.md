@@ -1,19 +1,21 @@
 # PhaseStrafePlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseStrafePlayer
+
 ## Class signature
 
 ```java
 public class PhaseStrafePlayer extends PhaseBase
 ```
 
-## Constructors
-
-- `public PhaseStrafePlayer( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public void doLocalUpdate()`
-- `public void initPhase()`
-- `public void setTarget( EntityLivingBase p_188686_1_)`
-- `public Vec3d getTargetLocation()`
-- `public PhaseList < PhaseStrafePlayer > getType()`
+- `void doLocalUpdate()`
+- `Vec3d getTargetLocation()`
+- `PhaseList<PhaseStrafePlayer> getType()`
+- `void initPhase()`
+- `void setTarget(EntityLivingBase p_188686_1_)`
+
+## Fields
+
+- `PhaseStrafePlayer`

@@ -1,19 +1,21 @@
 # EntityEnderPearl
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityThrowable → net.minecraft.entity.item.EntityEnderPearl
+
 ## Class signature
 
 ```java
 public class EntityEnderPearl extends EntityThrowable
 ```
 
-## Constructors
-
-- `public EntityEnderPearl( World worldIn)`
-- `public EntityEnderPearl( World worldIn, EntityLivingBase throwerIn)`
-- `public EntityEnderPearl( World worldIn, double x, double y, double z)`
-
 ## Methods
 
-- `public static void registerFixesEnderPearl( DataFixer fixer)`
-- `protected void onImpact( RayTraceResult result)`
-- `public void onUpdate()`
+- `protected void onImpact(RayTraceResult result)`
+- `void onUpdate()`
+- `static void registerFixesEnderPearl(DataFixer fixer)`
+
+## Fields
+
+- `EntityEnderPearl`
+- `EntityEnderPearl`
+- `EntityEnderPearl`

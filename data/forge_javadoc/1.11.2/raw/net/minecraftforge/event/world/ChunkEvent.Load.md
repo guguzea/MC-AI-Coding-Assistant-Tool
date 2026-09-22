@@ -1,18 +1,24 @@
 ---
 title: "ChunkEvent.Load"
-description: "ChunkEvent.Load is fired when vanilla Minecraft attempts to load a Chunk into the world. This event is fired during chunk loading in ChunkProviderClient.loadChunk(int, int) , Chunk.onChunkLoad(). This"
+description: "public static class ChunkEvent.Load extends ChunkEvent"
 package: "net/minecraftforge/event/world"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/world/ChunkEvent.Load.html"
 sourceType: javadoc
 ---
 
 # ChunkEvent.Load
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.ChunkEvent → net.minecraftforge.event.world.ChunkEvent.Load
+
+## Class signature
+
+```java
+public static class ChunkEvent.Load extends ChunkEvent
+```
+
 ## Constructors
 
-- `public Load( Chunk chunk)`
-
-## Description
-
-ChunkEvent.Load is fired when vanilla Minecraft attempts to load a Chunk into the world. This event is fired during chunk loading in ChunkProviderClient.loadChunk(int, int) , Chunk.onChunkLoad(). This
+- `Load(Chunk chunk)`

@@ -1,13 +1,17 @@
 ---
 title: "WorldChunkManagerHell"
-description: "checks given Chunk's Biomes against List of allowed ones"
+description: "public class WorldChunkManagerHell extends WorldChunkManager"
 package: "net/minecraft/world/biome"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/biome/WorldChunkManagerHell.html"
 sourceType: javadoc
 ---
 
 # WorldChunkManagerHell
+
+**Inheritance:** java.lang.Object → net.minecraft.world.biome.WorldChunkManager → net.minecraft.world.biome.WorldChunkManagerHell
 
 ## Class signature
 
@@ -15,20 +19,16 @@ sourceType: javadoc
 public class WorldChunkManagerHell extends WorldChunkManager
 ```
 
-## Constructors
-
-- `public WorldChunkManagerHell( BiomeGenBase p_i45374_1_, float p_i45374_2_)`
-
 ## Methods
 
-- `public BiomeGenBase getBiomeGenerator( BlockPos pos)`
-- `public BiomeGenBase [] getBiomesForGeneration( BiomeGenBase [] biomes, int x, int z, int width, int height)`
-- `public float[] getRainfall(float[] listToReuse, int x, int z, int width, int length)`
-- `public BiomeGenBase [] loadBlockGeneratorData( BiomeGenBase [] oldBiomeList, int x, int z, int width, int depth)`
-- `public BiomeGenBase [] getBiomeGenAt( BiomeGenBase [] listToReuse, int x, int z, int width, int length, boolean cacheFlag)`
-- `public BlockPos findBiomePosition(int x, int z, int range, java.util.List< BiomeGenBase > biomes, java.util.Random random)`
-- `public boolean areBiomesViable(int p_76940_1_, int p_76940_2_, int p_76940_3_, java.util.List< BiomeGenBase > p_76940_4_)`
+- `boolean areBiomesViable(int p_76940_1_, int p_76940_2_, int p_76940_3_, java.util.List<BiomeGenBase> p_76940_4_)` — checks given Chunk's Biomes against List of allowed ones
+- `BlockPos findBiomePosition(int x, int z, int range, java.util.List<BiomeGenBase> biomes, java.util.Random random)`
+- `BiomeGenBase [] getBiomeGenAt(BiomeGenBase [] listToReuse, int x, int z, int width, int length, boolean cacheFlag)` — Return a list of biomes for the specified blocks.
+- `BiomeGenBase getBiomeGenerator(BlockPos pos)` — Returns the biome generator
+- `BiomeGenBase [] getBiomesForGeneration(BiomeGenBase [] biomes, int x, int z, int width, int height)` — Returns an array of biomes for the location input.
+- `float[] getRainfall(float[] listToReuse, int x, int z, int width, int length)` — Returns a list of rainfall values for the specified blocks.
+- `BiomeGenBase [] loadBlockGeneratorData(BiomeGenBase [] oldBiomeList, int x, int z, int width, int depth)` — Returns biomes to use for the blocks and loads the other data like temperature and humidity onto the WorldChunkManager Args: oldBiomeList, x, z, width, depth
 
-## Description
+## Fields
 
-checks given Chunk's Biomes against List of allowed ones
+- `WorldChunkManagerHell`

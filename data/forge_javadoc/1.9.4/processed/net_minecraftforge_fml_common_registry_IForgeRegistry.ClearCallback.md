@@ -1,9 +1,11 @@
 # IForgeRegistry.ClearCallback
 
+## Class signature
+
+```java
+public static interface IForgeRegistry.ClearCallback<V>
+```
+
 ## Methods
 
-- `void onClear(java.util.Map< ResourceLocation ,?> slaveset)`
-
-## Description
-
-Callback fired when the registry is cleared. This is done before a registry is reloaded from client or server.
+- `void onClear(java.util.Map<ResourceLocation, ?> slaveset)`

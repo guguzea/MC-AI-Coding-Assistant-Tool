@@ -3,11 +3,15 @@ title: "TileEntityBanner"
 description: "public class TileEntityBanner extends TileEntity implements IWorldNameable"
 package: "net/minecraft/tileentity"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/tileentity/TileEntityBanner.html"
 sourceType: javadoc
 ---
 
 # TileEntityBanner
+
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityBanner
 
 ## Class signature
 
@@ -15,24 +19,24 @@ sourceType: javadoc
 public class TileEntityBanner extends TileEntity implements IWorldNameable
 ```
 
-## Constructors
-
-- `public TileEntityBanner()`
-
 ## Methods
 
-- `public void setItemValues( ItemStack stack, boolean p_175112_2_)`
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public ITextComponent getDisplayName()`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `@Nullable public SPacketUpdateTileEntity getUpdatePacket()`
-- `public NBTTagCompound getUpdateTag()`
-- `public static int getPatterns( ItemStack stack)`
-- `public java.util.List< BannerPattern > getPatternList()`
-- `public java.util.List< EnumDyeColor > getColorList()`
-- `public java.lang.String getPatternResourceLocation()`
-- `public static void removeBannerData( ItemStack stack)`
-- `public ItemStack getItem()`
-- `public static EnumDyeColor getColor( ItemStack p_190616_0_)`
+- `static EnumDyeColor getColor(ItemStack p_190616_0_)`
+- `java.util.List<EnumDyeColor> getColorList()`
+- `ITextComponent getDisplayName()`
+- `ItemStack getItem()`
+- `java.lang.String getName()`
+- `java.util.List<BannerPattern> getPatternList()`
+- `java.lang.String getPatternResourceLocation()`
+- `static int getPatterns(ItemStack stack)`
+- `SPacketUpdateTileEntity getUpdatePacket()`
+- `NBTTagCompound getUpdateTag()`
+- `boolean hasCustomName()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `static void removeBannerData(ItemStack stack)`
+- `void setItemValues(ItemStack stack, boolean p_175112_2_)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `TileEntityBanner`

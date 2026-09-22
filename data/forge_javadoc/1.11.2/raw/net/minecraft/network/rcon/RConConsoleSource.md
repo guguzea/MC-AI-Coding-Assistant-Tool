@@ -3,11 +3,15 @@ title: "RConConsoleSource"
 description: "public class RConConsoleSource extends java.lang.Object implements ICommandSender"
 package: "net/minecraft/network/rcon"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/network/rcon/RConConsoleSource.html"
 sourceType: javadoc
 ---
 
 # RConConsoleSource
+
+**Inheritance:** java.lang.Object → net.minecraft.network.rcon.RConConsoleSource
 
 ## Class signature
 
@@ -17,20 +21,20 @@ public class RConConsoleSource extends java.lang.Object implements ICommandSende
 
 ## Constructors
 
-- `public RConConsoleSource( MinecraftServer serverIn)`
+- `RConConsoleSource(MinecraftServer serverIn)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public ITextComponent getDisplayName()`
-- `public void sendMessage( ITextComponent component)`
-- `public boolean canUseCommand(int permLevel, java.lang.String commandName)`
-- `public BlockPos getPosition()`
-- `public Vec3d getPositionVector()`
-- `public World getEntityWorld()`
-- `public Entity getCommandSenderEntity()`
-- `public boolean sendCommandFeedback()`
-- `public void setCommandStat( CommandResultStats.Type type, int amount)`
-- `public MinecraftServer getServer()`
-- `public void resetLog()`
-- `public java.lang.String getLogContents()`
+- `boolean canUseCommand(int permLevel, java.lang.String commandName)`
+- `Entity getCommandSenderEntity()`
+- `ITextComponent getDisplayName()`
+- `World getEntityWorld()`
+- `java.lang.String getLogContents()`
+- `java.lang.String getName()`
+- `BlockPos getPosition()`
+- `Vec3d getPositionVector()`
+- `MinecraftServer getServer()`
+- `void resetLog()`
+- `boolean sendCommandFeedback()`
+- `void sendMessage(ITextComponent component)`
+- `void setCommandStat(CommandResultStats.Type type, int amount)`

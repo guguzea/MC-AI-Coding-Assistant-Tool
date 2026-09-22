@@ -1,5 +1,7 @@
 # CreativeCrafting
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.inventory.CreativeCrafting
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class CreativeCrafting extends java.lang.Object implements IContainerList
 
 ## Constructors
 
-- `public CreativeCrafting( Minecraft mc)`
+- `CreativeCrafting(Minecraft mc)`
 
 ## Methods
 
-- `public void sendAllContents( Container containerToSend, NonNullList < ItemStack > itemsList)`
-- `public void sendSlotContents( Container containerToSend, int slotInd, ItemStack stack)`
-- `public void sendWindowProperty( Container containerIn, int varToUpdate, int newValue)`
-- `public void sendAllWindowProperties( Container containerIn, IInventory inventory)`
+- `void sendAllContents(Container containerToSend, NonNullList<ItemStack> itemsList)`
+- `void sendAllWindowProperties(Container containerIn, IInventory inventory)`
+- `void sendSlotContents(Container containerToSend, int slotInd, ItemStack stack)`
+- `void sendWindowProperty(Container containerIn, int varToUpdate, int newValue)`

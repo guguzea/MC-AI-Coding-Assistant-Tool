@@ -1,5 +1,7 @@
 # BlockFarmland
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockFarmland
+
 ## Class signature
 
 ```java
@@ -8,23 +10,23 @@ public class BlockFarmland extends Block
 
 ## Constructors
 
-- `protected BlockFarmland()`
+- `BlockFarmland()`
 
 ## Methods
 
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isOpaqueCube()`
-- `public boolean isFullCube()`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public void onFallenUpon( World worldIn, BlockPos pos, Entity entityIn, float fallDistance)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public boolean shouldSideBeRendered( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public Item getItem( World worldIn, BlockPos pos)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockState createBlockState()`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItem(World worldIn, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)` — Block's chance to react to a living entity falling on it.
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Get the Item that this Block should drop when harvested.
+- `static PropertyInteger MOISTURE`

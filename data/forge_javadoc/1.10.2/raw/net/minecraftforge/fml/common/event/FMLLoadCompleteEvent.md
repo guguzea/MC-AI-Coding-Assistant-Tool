@@ -1,13 +1,17 @@
 ---
 title: "FMLLoadCompleteEvent"
-description: "This is a mostly internal event fired to mod containers that indicates that loading is complete. Mods should not in general override or otherwise attempt to implement this event."
+description: "public class FMLLoadCompleteEvent extends FMLStateEvent"
 package: "net/minecraftforge/fml/common/event"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/event/FMLLoadCompleteEvent.html"
 sourceType: javadoc
 ---
 
 # FMLLoadCompleteEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLStateEvent → net.minecraftforge.fml.common.event.FMLLoadCompleteEvent
 
 ## Class signature
 
@@ -17,12 +21,8 @@ public class FMLLoadCompleteEvent extends FMLStateEvent
 
 ## Constructors
 
-- `public FMLLoadCompleteEvent(java.lang.Object... data)`
+- `FMLLoadCompleteEvent(java.lang.Object... data)`
 
 ## Methods
 
-- `public LoaderState.ModState getModState()`
-
-## Description
-
-This is a mostly internal event fired to mod containers that indicates that loading is complete. Mods should not in general override or otherwise attempt to implement this event.
+- `LoaderState.ModState getModState()` — The current state of the mod

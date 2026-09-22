@@ -1,0 +1,81 @@
+> 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorjigsaws?view=minecraft-bedrock-stable
+> 抓取时间：2026-09-21T11:50:28.740Z
+> 警告：此文档可能滞后于当前正式版
+
+# Jigsaws
+
+ Jigsaws let you design modular, procedurally generated structures using template pools. Create collections of structure pieces, assign weights to control how frequently each piece appears, and generate assembled structures directly in your world.
+
+This is the same system that Minecraft vanilla uses to generate villages, trial chambers, and other world structures.
+
+## Generation settings
+
+Configure these settings in the Generate section of the Jigsaws panel:
+
+- Generation Depth : How many levels of recursion the jigsaw assembler uses. Range: 1–20 (default: 5 ). Higher values produce more complex structures.
+
+- Horizontal Size : The maximum horizontal extent (in blocks) for generation. Range: 16–1,024 (default: 164 ).
+
+- Lock Seed : When enabled, uses a consistent seed so the same inputs produce the same output.
+
+- Bypass Validation : Skips name validation checks during generation. A warning prompt appears the first time you enable this.
+
+- Starting Pool : Select which template pool the generator begins with.
+
+- Starting Target : An optional target identifier for the jigsaw connector to match.
+
+- Generate Preview : Click to assemble the jigsaw structure at the cursor location. The generation runs in a void world preview so you can inspect the result before committing.
+
+## Using Jigsaws
+
+### Managing collections
+
+- Open the Jigsaws panel from the action bar or from the View menu.
+
+- Use the Jigsaw Collection dropdown to select an existing collection, or click the + button to create a new one. Note The Jigsaw Collection is a named container that holds one or more template pools. Collection names must be alphanumeric (letters, numbers, underscores only). Collection names are case-insensitive — for example, "MyPool" and "mypool" are treated as the same name.
+
+- To delete a collection, click the trash icon next to the dropdown.
+
+### Creating template pools
+
+A template pool is a named set of one or more structure pieces with weighted probabilities. Pool names use namespace format (e.g., `mypack:village/houses`)and must be unique within a collection. Duplicate names will cause a validation error during generation. A pool element is a single structure piece within a template pool, consisting of a structure reference and a weight value.
+
+- Click Add Pool to create a new template pool. Enter a name in namespace:name format.
+
+- The pool appears in the collection tree. Expand it to see its structure pieces.
+
+### Adding structure pieces
+
+- Click the + button on a template pool folder to add a new piece.
+
+- For each piece, select a Structure from the dropdown (populated from structures in your project) and set a Weight (1–20). Note A piece's weight controls the likelihood that it's selected during generation.
+
+- You can remove pieces using the trash icon on each entry.
+
+Tip
+
+Changes to structure selection and weight are auto-saved. There is no manual save step for pool modifications.
+
+### Exporting the jigsaw(s)
+
+Click the Export button to export the jigsaw structures you create to your project's file system. The export location is displayed in the log by default.
+
+## Keyboard shortcuts
+
+For the full list of Editor shortcuts, see Editor Hotkeys .
+
+## Feedback
+
+ Was this page helpful?
+
+ Yes
+
+ No
+
+ No
+
+ Need help with this topic?
+
+ Want to try using Ask Learn to clarify or guide you through this topic?
+
+ Suggest a fix?

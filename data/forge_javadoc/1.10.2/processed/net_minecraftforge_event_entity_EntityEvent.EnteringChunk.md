@@ -1,20 +1,24 @@
 # EntityEvent.EnteringChunk
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.EntityEvent.EnteringChunk
+
+## Class signature
+
+```java
+public static class EntityEvent.EnteringChunk extends EntityEvent
+```
+
 ## Constructors
 
-- `public EnteringChunk( Entity entity, int newChunkX, int newChunkZ, int oldChunkX, int oldChunkZ)`
+- `EnteringChunk(Entity entity, int newChunkX, int newChunkZ, int oldChunkX, int oldChunkZ)`
 
 ## Methods
 
-- `public int getNewChunkX()`
-- `public void setNewChunkX(int newChunkX)`
-- `public int getNewChunkZ()`
-- `public void setNewChunkZ(int newChunkZ)`
-- `public int getOldChunkX()`
-- `public void setOldChunkX(int oldChunkX)`
-- `public int getOldChunkZ()`
-- `public void setOldChunkZ(int oldChunkZ)`
-
-## Description
-
-EnteringChunk is fired when an Entity enters a chunk. This event is fired whenever vanilla Minecraft determines that an entity is entering a chunk in Chunk.addEntity(net.minecraft.entity.Entity) This
+- `int getNewChunkX()`
+- `int getNewChunkZ()`
+- `int getOldChunkX()`
+- `int getOldChunkZ()`
+- `void setNewChunkX(int newChunkX)`
+- `void setNewChunkZ(int newChunkZ)`
+- `void setOldChunkX(int oldChunkX)`
+- `void setOldChunkZ(int oldChunkZ)`

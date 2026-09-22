@@ -1,9 +1,13 @@
 # DecorateBiomeEvent.Post
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.DecorateBiomeEvent → net.minecraftforge.event.terraingen.DecorateBiomeEvent.Post
 
-- `public Post( World world, java.util.Random rand, BlockPos pos)`
+## Class signature
 
-## Description
+```java
+public static class DecorateBiomeEvent.Post extends DecorateBiomeEvent
+```
 
-This event is fired after a chunk is decorated with a biome feature.
+## Fields
+
+- `Post`

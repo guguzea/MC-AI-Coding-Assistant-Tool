@@ -3,11 +3,15 @@ title: "DefaultResourcePack"
 description: "public class DefaultResourcePack extends java.lang.Object implements IResourcePack"
 package: "net/minecraft/client/resources"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/resources/DefaultResourcePack.html"
 sourceType: javadoc
 ---
 
 # DefaultResourcePack
+
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.DefaultResourcePack
 
 ## Class signature
 
@@ -17,14 +21,18 @@ public class DefaultResourcePack extends java.lang.Object implements IResourcePa
 
 ## Constructors
 
-- `public DefaultResourcePack( ResourceIndex resourceIndexIn)`
+- `DefaultResourcePack(ResourceIndex resourceIndexIn)`
 
 ## Methods
 
-- `public java.io.InputStream getInputStream( ResourceLocation location) throws java.io.IOException`
-- `public java.io.InputStream getInputStreamAssets( ResourceLocation location) throws java.io.IOException, java.io.FileNotFoundException`
-- `public boolean resourceExists( ResourceLocation location)`
-- `public java.util.Set<java.lang.String> getResourceDomains()`
-- `public <T extends IMetadataSection > T getPackMetadata( MetadataSerializer metadataSerializer, java.lang.String metadataSectionName) throws java.io.IOException`
-- `public java.awt.image.BufferedImage getPackImage() throws java.io.IOException`
-- `public java.lang.String getPackName()`
+- `java.io.InputStream getInputStream(ResourceLocation location)`
+- `java.io.InputStream getInputStreamAssets(ResourceLocation location)`
+- `java.awt.image.BufferedImage getPackImage()`
+- `<T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, java.lang.String metadataSectionName)`
+- `java.lang.String getPackName()`
+- `java.util.Set<java.lang.String> getResourceDomains()`
+- `boolean resourceExists(ResourceLocation location)`
+
+## Fields
+
+- `static java.util.Set<java.lang.String> DEFAULT_RESOURCE_DOMAINS`

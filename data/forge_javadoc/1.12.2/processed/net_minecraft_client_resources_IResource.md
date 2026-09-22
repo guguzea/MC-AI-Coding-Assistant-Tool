@@ -8,8 +8,8 @@ public interface IResource extends java.io.Closeable
 
 ## Methods
 
-- `ResourceLocation getResourceLocation()`
 - `java.io.InputStream getInputStream()`
-- `boolean hasMetadata()`
-- `<T extends IMetadataSection > T getMetadata(java.lang.String sectionName)`
+- `<T extends IMetadataSection> T getMetadata(java.lang.String sectionName)`
+- `ResourceLocation getResourceLocation()`
 - `java.lang.String getResourcePackName()`
+- `boolean hasMetadata()`

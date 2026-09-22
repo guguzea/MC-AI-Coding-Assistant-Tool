@@ -1,5 +1,7 @@
 # AbstractTexture
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.texture.AbstractTexture
+
 ## Class signature
 
 ```java
@@ -8,9 +10,13 @@ public abstract class AbstractTexture extends java.lang.Object implements ITextu
 
 ## Constructors
 
-- `public AbstractTexture()`
+- `AbstractTexture()`
 
 ## Methods
 
-- `public int getGlTextureId()`
-- `public void deleteGlTexture()`
+- `void deleteGlTexture()`
+- `int getGlTextureId()`
+
+## Fields
+
+- `protected int glTextureId`

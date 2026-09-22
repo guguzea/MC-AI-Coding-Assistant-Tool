@@ -3,11 +3,15 @@ title: "ItemMapBase"
 description: "public class ItemMapBase extends Item"
 package: "net/minecraft/item"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/item/ItemMapBase.html"
 sourceType: javadoc
 ---
 
 # ItemMapBase
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemMapBase
 
 ## Class signature
 
@@ -15,11 +19,11 @@ sourceType: javadoc
 public class ItemMapBase extends Item
 ```
 
-## Constructors
-
-- `public ItemMapBase()`
-
 ## Methods
 
-- `public boolean isMap()`
-- `@Nullable public Packet <?> createMapDataPacket( ItemStack stack, World worldIn, EntityPlayer player)`
+- `Packet<?> createMapDataPacket(ItemStack stack, World worldIn, EntityPlayer player)`
+- `boolean isMap()`
+
+## Fields
+
+- `ItemMapBase`

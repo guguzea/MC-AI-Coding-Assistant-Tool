@@ -1,45 +1,49 @@
 ---
 title: "SPacketSpawnObject"
-description: "public class SPacketSpawnObject extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketSpawnObject extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/play/server/SPacketSpawnObject.html"
 sourceType: javadoc
 ---
 
 # SPacketSpawnObject
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketSpawnObject
+
 ## Class signature
 
 ```java
-public class SPacketSpawnObject extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketSpawnObject extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketSpawnObject()`
-- `public SPacketSpawnObject( Entity entityIn, int typeIn)`
-- `public SPacketSpawnObject( Entity entityIn, int typeIn, int dataIn)`
-- `public SPacketSpawnObject( Entity entityIn, int typeIn, int dataIn, BlockPos pos)`
+- `SPacketSpawnObject()`
+- `SPacketSpawnObject(Entity entityIn, int typeIn)`
+- `SPacketSpawnObject(Entity entityIn, int typeIn, int dataIn)`
+- `SPacketSpawnObject(Entity entityIn, int typeIn, int dataIn, BlockPos pos)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getEntityID()`
-- `public void setSpeedX(int newSpeedX)`
-- `public java.util.UUID getUniqueId()`
-- `public void setSpeedY(int newSpeedY)`
-- `public double getX()`
-- `public void setSpeedZ(int newSpeedZ)`
-- `public double getY()`
-- `public double getZ()`
-- `public int getSpeedX()`
-- `public int getSpeedY()`
-- `public int getSpeedZ()`
-- `public int getPitch()`
-- `public int getYaw()`
-- `public int getType()`
-- `public int getData()`
-- `public void setData(int dataIn)`
+- `int getData()`
+- `int getEntityID()`
+- `int getPitch()`
+- `int getSpeedX()`
+- `int getSpeedY()`
+- `int getSpeedZ()`
+- `int getType()`
+- `java.util.UUID getUniqueId()`
+- `double getX()`
+- `double getY()`
+- `int getYaw()`
+- `double getZ()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void setData(int dataIn)`
+- `void setSpeedX(int newSpeedX)`
+- `void setSpeedY(int newSpeedY)`
+- `void setSpeedZ(int newSpeedZ)`
+- `void writePacketData(PacketBuffer buf)`

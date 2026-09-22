@@ -1,15 +1,19 @@
 # BlockRailBase.EnumRailDirection
 
+**Inheritance:** java.lang.Object → java.lang.Enum<BlockRailBase.EnumRailDirection> → net.minecraft.block.BlockRailBase.EnumRailDirection
+
+## Class signature
+
+```java
+public static enum BlockRailBase.EnumRailDirection extends java.lang.Enum<BlockRailBase.EnumRailDirection> implements IStringSerializable
+```
+
 ## Methods
 
-- `public static BlockRailBase.EnumRailDirection [] values()`
-- `public static BlockRailBase.EnumRailDirection valueOf(java.lang.String name)`
-- `public int getMetadata()`
-- `public java.lang.String toString()`
-- `public boolean isAscending()`
-- `public static BlockRailBase.EnumRailDirection byMetadata(int meta)`
-- `public java.lang.String getName()`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static BlockRailBase.EnumRailDirection byMetadata(int meta)`
+- `int getMetadata()`
+- `java.lang.String getName()`
+- `boolean isAscending()`
+- `java.lang.String toString()`
+- `static BlockRailBase.EnumRailDirection valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static BlockRailBase.EnumRailDirection [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

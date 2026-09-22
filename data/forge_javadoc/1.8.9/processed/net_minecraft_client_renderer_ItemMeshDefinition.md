@@ -8,4 +8,4 @@ public interface ItemMeshDefinition
 
 ## Methods
 
-- `ModelResourceLocation getModelLocation( ItemStack stack)`
+- `ModelResourceLocation getModelLocation(ItemStack stack)`

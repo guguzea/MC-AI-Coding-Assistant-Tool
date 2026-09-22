@@ -1,5 +1,7 @@
 # PlayerChunkMap
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.PlayerChunkMap
+
 ## Class signature
 
 ```java
@@ -8,21 +10,21 @@ public class PlayerChunkMap extends java.lang.Object
 
 ## Constructors
 
-- `public PlayerChunkMap( WorldServer serverWorld)`
+- `PlayerChunkMap(WorldServer serverWorld)`
 
 ## Methods
 
-- `public WorldServer getWorldServer()`
-- `public java.util.Iterator< Chunk > getChunkIterator()`
-- `public void tick()`
-- `public boolean contains(int chunkX, int chunkZ)`
-- `@Nullable public PlayerChunkMapEntry getEntry(int x, int z)`
-- `public void markBlockForUpdate( BlockPos pos)`
-- `public void addPlayer( EntityPlayerMP player)`
-- `public void removePlayer( EntityPlayerMP player)`
-- `public void updateMountedMovingPlayer( EntityPlayerMP player)`
-- `public boolean isPlayerWatchingChunk( EntityPlayerMP player, int chunkX, int chunkZ)`
-- `public void setPlayerViewRadius(int radius)`
-- `public static int getFurthestViewableBlock(int distance)`
-- `public void addEntry( PlayerChunkMapEntry entry)`
-- `public void removeEntry( PlayerChunkMapEntry entry)`
+- `void addEntry(PlayerChunkMapEntry entry)`
+- `void addPlayer(EntityPlayerMP player)`
+- `boolean contains(int chunkX, int chunkZ)`
+- `java.util.Iterator<Chunk> getChunkIterator()`
+- `PlayerChunkMapEntry getEntry(int x, int z)`
+- `static int getFurthestViewableBlock(int distance)`
+- `WorldServer getWorldServer()`
+- `boolean isPlayerWatchingChunk(EntityPlayerMP player, int chunkX, int chunkZ)`
+- `void markBlockForUpdate(BlockPos pos)`
+- `void removeEntry(PlayerChunkMapEntry entry)`
+- `void removePlayer(EntityPlayerMP player)`
+- `void setPlayerViewRadius(int radius)`
+- `void tick()`
+- `void updateMountedMovingPlayer(EntityPlayerMP player)`

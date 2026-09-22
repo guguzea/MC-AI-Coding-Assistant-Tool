@@ -3,11 +3,15 @@ title: "Attributes"
 description: "public class Attributes extends java.lang.Object"
 package: "net/minecraftforge/client/model"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/model/Attributes.html"
 sourceType: javadoc
 ---
 
 # Attributes
+
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.Attributes
 
 ## Class signature
 
@@ -17,8 +21,12 @@ public class Attributes extends java.lang.Object
 
 ## Constructors
 
-- `public Attributes()`
+- `Attributes()`
 
 ## Methods
 
-- `public static boolean moreSpecific( VertexFormat first, VertexFormat second)`
+- `static boolean moreSpecific(VertexFormat first, VertexFormat second)`
+
+## Fields
+
+- `static VertexFormat DEFAULT_BAKED_FORMAT`

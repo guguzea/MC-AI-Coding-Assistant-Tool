@@ -1,13 +1,17 @@
 ---
 title: "SaplingGrowTreeEvent"
-description: "SaplingGrowTreeEvent is fired when a sapling grows into a tree. This event is fired during sapling growth in BlockSapling#func_149878_d(World, BlockPos, Random). pos contains the coordinates of the gr"
+description: "public class SaplingGrowTreeEvent extends WorldEvent"
 package: "net/minecraftforge/event/terraingen"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/terraingen/SaplingGrowTreeEvent.html"
 sourceType: javadoc
 ---
 
 # SaplingGrowTreeEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.terraingen.SaplingGrowTreeEvent
 
 ## Class signature
 
@@ -17,8 +21,9 @@ public class SaplingGrowTreeEvent extends WorldEvent
 
 ## Constructors
 
-- `public SaplingGrowTreeEvent( World world, java.util.Random rand, BlockPos pos)`
+- `SaplingGrowTreeEvent(World world, java.util.Random rand, BlockPos pos)`
 
-## Description
+## Fields
 
-SaplingGrowTreeEvent is fired when a sapling grows into a tree. This event is fired during sapling growth in BlockSapling#func_149878_d(World, BlockPos, Random). pos contains the coordinates of the gr
+- `BlockPos pos`
+- `java.util.Random rand`

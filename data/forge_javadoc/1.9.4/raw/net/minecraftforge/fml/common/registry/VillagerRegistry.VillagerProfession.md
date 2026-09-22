@@ -1,20 +1,30 @@
 ---
 title: "VillagerRegistry.VillagerProfession"
-description: ""
+description: "public static class VillagerRegistry.VillagerProfession extends IForgeRegistryEntry.Impl<VillagerRegistry.VillagerProfession>"
 package: "net/minecraftforge/fml/common/registry"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/common/registry/VillagerRegistry.VillagerProfession.html"
 sourceType: javadoc
 ---
 
 # VillagerRegistry.VillagerProfession
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<VillagerRegistry.VillagerProfession> → net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfession
 
-- `public VillagerProfession(java.lang.String name, java.lang.String texture)`
+## Class signature
+
+```java
+public static class VillagerRegistry.VillagerProfession extends IForgeRegistryEntry.Impl<VillagerRegistry.VillagerProfession>
+```
 
 ## Methods
 
-- `public ResourceLocation getSkin()`
-- `public VillagerRegistry.VillagerCareer getCareer(int id)`
-- `public int getRandomCareer(java.util.Random rand)`
+- `VillagerRegistry.VillagerCareer getCareer(int id)`
+- `int getRandomCareer(java.util.Random rand)`
+- `ResourceLocation getSkin()`
+
+## Fields
+
+- `VillagerProfession`

@@ -1,5 +1,7 @@
 # PunchTreeStep
 
+**Inheritance:** java.lang.Object → net.minecraft.client.tutorial.PunchTreeStep
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class PunchTreeStep extends java.lang.Object implements ITutorialStep
 
 ## Constructors
 
-- `public PunchTreeStep( Tutorial tutorial)`
+- `PunchTreeStep(Tutorial tutorial)`
 
 ## Methods
 
-- `public void update()`
-- `public void onStop()`
-- `public void onHitBlock( WorldClient worldIn, BlockPos pos, IBlockState state, float diggingStage)`
-- `public void handleSetSlot( ItemStack stack)`
+- `void handleSetSlot(ItemStack stack)`
+- `void onHitBlock(WorldClient worldIn, BlockPos pos, IBlockState state, float diggingStage)`
+- `void onStop()`
+- `void update()`

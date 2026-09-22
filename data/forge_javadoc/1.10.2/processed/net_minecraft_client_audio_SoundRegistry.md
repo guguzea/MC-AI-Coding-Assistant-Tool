@@ -1,17 +1,19 @@
 # SoundRegistry
 
+**Inheritance:** java.lang.Object → net.minecraft.util.registry.RegistrySimple<ResourceLocation, SoundEventAccessor> → net.minecraft.client.audio.SoundRegistry
+
 ## Class signature
 
 ```java
-public class SoundRegistry extends RegistrySimple < ResourceLocation , SoundEventAccessor >
+public class SoundRegistry extends RegistrySimple<ResourceLocation, SoundEventAccessor>
 ```
-
-## Constructors
-
-- `public SoundRegistry()`
 
 ## Methods
 
-- `protected java.util.Map< ResourceLocation , SoundEventAccessor > createUnderlyingMap()`
-- `public void add( SoundEventAccessor accessor)`
-- `public void clearMap()`
+- `void add(SoundEventAccessor accessor)`
+- `void clearMap()`
+- `protected java.util.Map<ResourceLocation, SoundEventAccessor> createUnderlyingMap()`
+
+## Fields
+
+- `SoundRegistry`

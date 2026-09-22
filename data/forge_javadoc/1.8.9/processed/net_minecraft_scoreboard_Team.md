@@ -1,5 +1,7 @@
 # Team
 
+**Inheritance:** java.lang.Object → net.minecraft.scoreboard.Team
+
 ## Class signature
 
 ```java
@@ -8,19 +10,15 @@ public abstract class Team extends java.lang.Object
 
 ## Constructors
 
-- `public Team()`
+- `Team()`
 
 ## Methods
 
-- `public boolean isSameTeam( Team other)`
-- `public abstract java.lang.String getRegisteredName()`
-- `public abstract java.lang.String formatString(java.lang.String input)`
-- `public abstract boolean getSeeFriendlyInvisiblesEnabled()`
-- `public abstract boolean getAllowFriendlyFire()`
-- `public abstract Team.EnumVisible getNameTagVisibility()`
-- `public abstract java.util.Collection<java.lang.String> getMembershipCollection()`
-- `public abstract Team.EnumVisible getDeathMessageVisibility()`
-
-## Description
-
-Retrieve the name by which this team is registered in the scoreboard
+- `abstract java.lang.String formatString(java.lang.String input)`
+- `abstract boolean getAllowFriendlyFire()`
+- `abstract Team.EnumVisible getDeathMessageVisibility()`
+- `abstract java.util.Collection<java.lang.String> getMembershipCollection()`
+- `abstract Team.EnumVisible getNameTagVisibility()`
+- `abstract java.lang.String getRegisteredName()` — Retrieve the name by which this team is registered in the scoreboard
+- `abstract boolean getSeeFriendlyInvisiblesEnabled()`
+- `boolean isSameTeam(Team other)` — Same as ==

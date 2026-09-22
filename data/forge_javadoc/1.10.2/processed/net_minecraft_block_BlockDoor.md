@@ -1,5 +1,7 @@
 # BlockDoor
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockDoor
+
 ## Class signature
 
 ```java
@@ -8,35 +10,47 @@ public class BlockDoor extends Block
 
 ## Constructors
 
-- `protected BlockDoor( Material materialIn)`
+- `BlockDoor(Material materialIn)`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public java.lang.String getLocalizedName()`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isPassable( IBlockAccess worldIn, BlockPos pos)`
-- `public boolean isFullCube( IBlockState state)`
-- `public MapColor getMapColor( IBlockState state)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public void toggleDoor( World worldIn, BlockPos pos, boolean open)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public EnumPushReaction getMobilityFlag( IBlockState state)`
-- `public static int combineMetadata( IBlockAccess worldIn, BlockPos pos)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public void onBlockHarvested( World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `protected static int removeHalfBit(int meta)`
-- `public static boolean isOpen( IBlockAccess worldIn, BlockPos pos)`
-- `public static EnumFacing getFacing( IBlockAccess worldIn, BlockPos pos)`
-- `public static EnumFacing getFacing(int combinedMeta)`
-- `protected static boolean isOpen(int combinedMeta)`
-- `protected static boolean isTop(int meta)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `static int combineMetadata(IBlockAccess worldIn, BlockPos pos)`
 - `protected BlockStateContainer createBlockState()`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `static EnumFacing getFacing(IBlockAccess worldIn, BlockPos pos)`
+- `static EnumFacing getFacing(int combinedMeta)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `java.lang.String getLocalizedName()`
+- `MapColor getMapColor(IBlockState state)`
+- `int getMetaFromState(IBlockState state)`
+- `EnumPushReaction getMobilityFlag(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `static boolean isOpen(IBlockAccess worldIn, BlockPos pos)`
+- `protected static boolean isOpen(int combinedMeta)`
+- `boolean isPassable(IBlockAccess worldIn, BlockPos pos)`
+- `protected static boolean isTop(int meta)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
+- `protected static int removeHalfBit(int meta)`
+- `void toggleDoor(World worldIn, BlockPos pos, boolean open)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
+
+## Fields
+
+- `protected static AxisAlignedBB EAST_AABB`
+- `static PropertyDirection FACING`
+- `static PropertyEnum<BlockDoor.EnumDoorHalf> HALF`
+- `static PropertyEnum<BlockDoor.EnumHingePosition> HINGE`
+- `protected static AxisAlignedBB NORTH_AABB`
+- `static PropertyBool OPEN`
+- `static PropertyBool POWERED`
+- `protected static AxisAlignedBB SOUTH_AABB`
+- `protected static AxisAlignedBB WEST_AABB`

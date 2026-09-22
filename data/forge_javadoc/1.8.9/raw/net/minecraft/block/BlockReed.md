@@ -1,13 +1,17 @@
 ---
 title: "BlockReed"
-description: "Get the Item that this Block should drop when harvested."
+description: "public class BlockReed extends Block implements IPlantable"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockReed.html"
 sourceType: javadoc
 ---
 
 # BlockReed
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockReed
 
 ## Class signature
 
@@ -17,28 +21,28 @@ public class BlockReed extends Block implements IPlantable
 
 ## Constructors
 
-- `protected BlockReed()`
+- `BlockReed()`
 
 ## Methods
 
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `protected final boolean checkForDrop( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean canBlockStay( World worldIn, BlockPos pos)`
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public boolean isOpaqueCube()`
-- `public boolean isFullCube()`
-- `public Item getItem( World worldIn, BlockPos pos)`
-- `public int colorMultiplier( IBlockAccess worldIn, BlockPos pos, int renderPass)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public EnumWorldBlockLayer getBlockLayer()`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canBlockStay(World worldIn, BlockPos pos)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `protected boolean checkForDrop(World worldIn, BlockPos pos, IBlockState state)`
+- `int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)`
 - `protected BlockState createBlockState()`
-- `public EnumPlantType getPlantType( IBlockAccess world, BlockPos pos)`
-- `public IBlockState getPlant( IBlockAccess world, BlockPos pos)`
+- `EnumWorldBlockLayer getBlockLayer()`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItem(World worldIn, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IBlockState getPlant(IBlockAccess world, BlockPos pos)`
+- `EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)`
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Get the Item that this Block should drop when harvested.
+- `static PropertyInteger AGE`

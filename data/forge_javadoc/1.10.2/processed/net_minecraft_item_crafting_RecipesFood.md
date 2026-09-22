@@ -1,5 +1,7 @@
 # RecipesFood
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.RecipesFood
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class RecipesFood extends java.lang.Object
 
 ## Constructors
 
-- `public RecipesFood()`
+- `RecipesFood()`
 
 ## Methods
 
-- `public void addRecipes( CraftingManager manager)`
+- `void addRecipes(CraftingManager manager)`

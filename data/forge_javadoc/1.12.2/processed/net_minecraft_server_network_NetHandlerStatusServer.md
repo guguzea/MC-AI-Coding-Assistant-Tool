@@ -1,5 +1,7 @@
 # NetHandlerStatusServer
 
+**Inheritance:** java.lang.Object → net.minecraft.server.network.NetHandlerStatusServer
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class NetHandlerStatusServer extends java.lang.Object implements INetHand
 
 ## Constructors
 
-- `public NetHandlerStatusServer( MinecraftServer serverIn, NetworkManager netManager)`
+- `NetHandlerStatusServer(MinecraftServer serverIn, NetworkManager netManager)`
 
 ## Methods
 
-- `public void onDisconnect( ITextComponent reason)`
-- `public void processServerQuery( CPacketServerQuery packetIn)`
-- `public void processPing( CPacketPing packetIn)`
+- `void onDisconnect(ITextComponent reason)`
+- `void processPing(CPacketPing packetIn)`
+- `void processServerQuery(CPacketServerQuery packetIn)`

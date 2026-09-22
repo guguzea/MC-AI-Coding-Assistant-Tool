@@ -1,21 +1,19 @@
 # GuiCustomizeSkin
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiCustomizeSkin
+
 ## Class signature
 
 ```java
 public class GuiCustomizeSkin extends GuiScreen
 ```
 
-## Constructors
-
-- `public GuiCustomizeSkin( GuiScreen parentScreenIn)`
-
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected void actionPerformed(GuiButton button)` — Called by the controls from the buttonList when activated.
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)` — Draws the screen and all the components in it.
+- `void initGui()` — Adds the buttons (and other controls) to the screen in question.
 
-## Description
+## Fields
 
-Called by the controls from the buttonList when activated.
+- `GuiCustomizeSkin`

@@ -1,9 +1,17 @@
 # NetherTravelTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.NetherTravelTrigger.Instance
+
+## Class signature
+
+```java
+public static class NetherTravelTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( LocationPredicate enteredIn, LocationPredicate exitedIn, DistancePredicate distanceIn)`
+- `Instance(LocationPredicate enteredIn, LocationPredicate exitedIn, DistancePredicate distanceIn)`
 
 ## Methods
 
-- `public boolean test( WorldServer world, Vec3d enteredNetherPosition, double x, double y, double z)`
+- `boolean test(WorldServer world, Vec3d enteredNetherPosition, double x, double y, double z)`

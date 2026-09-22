@@ -1,23 +1,21 @@
 # BehaviorProjectileDispense
 
+**Inheritance:** java.lang.Object → net.minecraft.dispenser.BehaviorDefaultDispenseItem → net.minecraft.dispenser.BehaviorProjectileDispense
+
 ## Class signature
 
 ```java
 public abstract class BehaviorProjectileDispense extends BehaviorDefaultDispenseItem
 ```
 
-## Constructors
-
-- `public BehaviorProjectileDispense()`
-
 ## Methods
 
-- `public ItemStack dispenseStack( IBlockSource source, ItemStack stack)`
-- `protected void playDispenseSound( IBlockSource source)`
-- `protected abstract IProjectile getProjectileEntity( World worldIn, IPosition position)`
+- `ItemStack dispenseStack(IBlockSource source, ItemStack stack)` — Dispense the specified stack, play the dispense sound and spawn particles.
 - `protected float func_82498_a()`
 - `protected float func_82500_b()`
+- `protected abstract IProjectile getProjectileEntity(World worldIn, IPosition position)` — Return the projectile entity spawned by this dispense behavior.
+- `protected void playDispenseSound(IBlockSource source)` — Play the dispense sound from the specified block.
 
-## Description
+## Fields
 
-Dispense the specified stack, play the dispense sound and spawn particles.
+- `BehaviorProjectileDispense`

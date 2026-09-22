@@ -1,46 +1,48 @@
 # EntityWither
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.boss.EntityWither
+
 ## Class signature
 
 ```java
 public class EntityWither extends EntityMob implements IRangedAttackMob
 ```
 
-## Constructors
-
-- `public EntityWither( World worldIn)`
-
 ## Methods
 
-- `protected void initEntityAI()`
-- `protected void entityInit()`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
-- `protected SoundEvent getDeathSound()`
-- `public void onLivingUpdate()`
-- `protected void updateAITasks()`
-- `public static boolean canDestroyBlock( Block blockIn)`
-- `public void ignite()`
-- `public void setInWeb()`
-- `public void addTrackingPlayer( EntityPlayerMP player)`
-- `public void removeTrackingPlayer( EntityPlayerMP player)`
-- `public void attackEntityWithRangedAttack( EntityLivingBase target, float p_82196_2_)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)`
-- `protected void despawnEntity()`
-- `public int getBrightnessForRender(float partialTicks)`
-- `public void fall(float distance, float damageMultiplier)`
-- `public void addPotionEffect( PotionEffect potioneffectIn)`
+- `void addPotionEffect(PotionEffect potioneffectIn)`
+- `void addTrackingPlayer(EntityPlayerMP player)`
 - `protected void applyEntityAttributes()`
-- `public float getHeadYRotation(int p_82207_1_)`
-- `public float getHeadXRotation(int p_82210_1_)`
-- `public int getInvulTime()`
-- `public void setInvulTime(int time)`
-- `public int getWatchedTargetId(int head)`
-- `public void updateWatchedTargetId(int targetOffset, int newId)`
-- `public boolean isArmored()`
-- `public EnumCreatureAttribute getCreatureAttribute()`
-- `protected boolean canBeRidden( Entity entityIn)`
-- `public boolean isNonBoss()`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `void attackEntityWithRangedAttack(EntityLivingBase target, float p_82196_2_)`
+- `protected boolean canBeRidden(Entity entityIn)`
+- `static boolean canDestroyBlock(Block blockIn)`
+- `protected void despawnEntity()`
+- `protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)`
+- `protected void entityInit()`
+- `void fall(float distance, float damageMultiplier)`
+- `protected SoundEvent getAmbientSound()`
+- `int getBrightnessForRender(float partialTicks)`
+- `EnumCreatureAttribute getCreatureAttribute()`
+- `protected SoundEvent getDeathSound()`
+- `float getHeadXRotation(int p_82210_1_)`
+- `float getHeadYRotation(int p_82207_1_)`
+- `protected SoundEvent getHurtSound()`
+- `int getInvulTime()`
+- `int getWatchedTargetId(int head)`
+- `void ignite()`
+- `protected void initEntityAI()`
+- `boolean isArmored()`
+- `boolean isNonBoss()`
+- `void onLivingUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void removeTrackingPlayer(EntityPlayerMP player)`
+- `void setInvulTime(int time)`
+- `void setInWeb()`
+- `protected void updateAITasks()`
+- `void updateWatchedTargetId(int targetOffset, int newId)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityWither`

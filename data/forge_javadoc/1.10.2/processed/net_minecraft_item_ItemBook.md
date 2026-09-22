@@ -1,16 +1,18 @@
 # ItemBook
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemBook
+
 ## Class signature
 
 ```java
 public class ItemBook extends Item
 ```
 
-## Constructors
-
-- `public ItemBook()`
-
 ## Methods
 
-- `public boolean isItemTool( ItemStack stack)`
-- `public int getItemEnchantability()`
+- `int getItemEnchantability()`
+- `boolean isItemTool(ItemStack stack)`
+
+## Fields
+
+- `ItemBook`

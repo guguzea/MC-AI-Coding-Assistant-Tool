@@ -1,13 +1,17 @@
 ---
 title: "BlockRedFlower"
-description: "Get the Type of this flower (Yellow/Red)"
+description: "public class BlockRedFlower extends BlockFlower"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockRedFlower.html"
 sourceType: javadoc
 ---
 
 # BlockRedFlower
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockBush → net.minecraft.block.BlockFlower → net.minecraft.block.BlockRedFlower
 
 ## Class signature
 
@@ -15,14 +19,10 @@ sourceType: javadoc
 public class BlockRedFlower extends BlockFlower
 ```
 
-## Constructors
-
-- `public BlockRedFlower()`
-
 ## Methods
 
-- `public BlockFlower.EnumFlowerColor getBlockType()`
+- `BlockFlower.EnumFlowerColor getBlockType()` — Get the Type of this flower (Yellow/Red)
 
-## Description
+## Fields
 
-Get the Type of this flower (Yellow/Red)
+- `BlockRedFlower`

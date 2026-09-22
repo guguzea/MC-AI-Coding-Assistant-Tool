@@ -1,19 +1,29 @@
 ---
 title: "GlStateManager.LogicOp"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum GlStateManager.LogicOp extends java.lang.Enum<GlStateManager.LogicOp>"
 package: "net/minecraft/client/renderer"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/renderer/GlStateManager.LogicOp.html"
 sourceType: javadoc
 ---
 
 # GlStateManager.LogicOp
 
+**Inheritance:** java.lang.Object → java.lang.Enum<GlStateManager.LogicOp> → net.minecraft.client.renderer.GlStateManager.LogicOp
+
+## Class signature
+
+```java
+public static enum GlStateManager.LogicOp extends java.lang.Enum<GlStateManager.LogicOp>
+```
+
 ## Methods
 
-- `public static GlStateManager.LogicOp [] values()`
-- `public static GlStateManager.LogicOp valueOf(java.lang.String name)`
+- `static GlStateManager.LogicOp valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static GlStateManager.LogicOp [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.
 
-## Description
+## Fields
 
-Returns the enum constant of this type with the specified name.
+- `int opcode`

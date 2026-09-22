@@ -1,22 +1,20 @@
 # EntityMinecartEmpty
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityMinecart → net.minecraft.entity.item.EntityMinecartEmpty
+
 ## Class signature
 
 ```java
 public class EntityMinecartEmpty extends EntityMinecart
 ```
 
-## Constructors
-
-- `public EntityMinecartEmpty( World worldIn)`
-- `public EntityMinecartEmpty( World worldIn, double p_i1723_2_, double p_i1723_4_, double p_i1723_6_)`
-
 ## Methods
 
-- `public boolean interactFirst( EntityPlayer playerIn)`
-- `public void onActivatorRailPass(int x, int y, int z, boolean receivingPower)`
-- `public EntityMinecart.EnumMinecartType getMinecartType()`
+- `EntityMinecart.EnumMinecartType getMinecartType()`
+- `boolean interactFirst(EntityPlayer playerIn)` — First layer of player interaction
+- `void onActivatorRailPass(int x, int y, int z, boolean receivingPower)` — Called every tick the minecart is on an activator rail.
 
-## Description
+## Fields
 
-First layer of player interaction
+- `EntityMinecartEmpty`
+- `EntityMinecartEmpty`

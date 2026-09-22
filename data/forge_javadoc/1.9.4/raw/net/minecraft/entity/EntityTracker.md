@@ -1,13 +1,17 @@
 ---
 title: "EntityTracker"
-description: "Get all players tracking the given Entity."
+description: "public class EntityTracker extends java.lang.Object"
 package: "net/minecraft/entity"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/EntityTracker.html"
 sourceType: javadoc
 ---
 
 # EntityTracker
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.EntityTracker
 
 ## Class signature
 
@@ -17,25 +21,21 @@ public class EntityTracker extends java.lang.Object
 
 ## Constructors
 
-- `public EntityTracker( WorldServer theWorldIn)`
+- `EntityTracker(WorldServer theWorldIn)`
 
 ## Methods
 
-- `public static long getPositionLong(double value)`
-- `public static void updateServerPosition( Entity entityIn, double x, double y, double z)`
-- `public void trackEntity( Entity entityIn)`
-- `public void trackEntity( Entity entityIn, int trackingRange, int updateFrequency)`
-- `public void addEntityToTracker( Entity entityIn, int trackingRange, int updateFrequency, boolean sendVelocityUpdates)`
-- `public void untrackEntity( Entity entityIn)`
-- `public void updateTrackedEntities()`
-- `public void updateVisibility( EntityPlayerMP player)`
-- `public void sendToAllTrackingEntity( Entity entityIn, Packet <?> packetIn)`
-- `public java.util.Set<? extends EntityPlayer > getTrackingPlayers( Entity entity)`
-- `public void sendToTrackingAndSelf( Entity entityIn, Packet <?> packetIn)`
-- `public void removePlayerFromTrackers( EntityPlayerMP player)`
-- `public void sendLeashedEntitiesInChunk( EntityPlayerMP player, Chunk chunkIn)`
-- `public void setViewDistance(int p_187252_1_)`
-
-## Description
-
-Get all players tracking the given Entity.
+- `void addEntityToTracker(Entity entityIn, int trackingRange, int updateFrequency, boolean sendVelocityUpdates)`
+- `static long getPositionLong(double value)`
+- `java.util.Set<? extends EntityPlayer> getTrackingPlayers(Entity entity)` — Get all players tracking the given Entity.
+- `void removePlayerFromTrackers(EntityPlayerMP player)`
+- `void sendLeashedEntitiesInChunk(EntityPlayerMP player, Chunk chunkIn)`
+- `void sendToAllTrackingEntity(Entity entityIn, Packet<?> packetIn)`
+- `void sendToTrackingAndSelf(Entity entityIn, Packet<?> packetIn)`
+- `void setViewDistance(int p_187252_1_)`
+- `void trackEntity(Entity entityIn)`
+- `void trackEntity(Entity entityIn, int trackingRange, int updateFrequency)`
+- `void untrackEntity(Entity entityIn)`
+- `static void updateServerPosition(Entity entityIn, double x, double y, double z)`
+- `void updateTrackedEntities()`
+- `void updateVisibility(EntityPlayerMP player)`

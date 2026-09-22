@@ -1,5 +1,7 @@
 # VersionRange
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.versioning.VersionRange
+
 ## Class signature
 
 ```java
@@ -8,23 +10,19 @@ public class VersionRange extends java.lang.Object
 
 ## Methods
 
-- `public ArtifactVersion getRecommendedVersion()`
-- `public java.util.List< Restriction > getRestrictions()`
-- `public VersionRange cloneOf()`
-- `public static VersionRange newRange( ArtifactVersion version, java.util.List< Restriction > restrictions)`
-- `public static VersionRange createFromVersionSpec(java.lang.String spec) throws InvalidVersionSpecificationException`
-- `public static VersionRange createFromVersion(java.lang.String version, ArtifactVersion existing)`
-- `public VersionRange restrict( VersionRange restriction)`
-- `public java.lang.String toString()`
-- `public java.lang.String toStringFriendly()`
-- `public ArtifactVersion matchVersion(java.util.List< ArtifactVersion > versions)`
-- `public boolean containsVersion( ArtifactVersion version)`
-- `public boolean hasRestrictions()`
-- `public boolean equals(java.lang.Object obj)`
-- `public int hashCode()`
-- `public boolean isUnboundedAbove()`
-- `public java.lang.String getLowerBoundString()`
-
-## Description
-
-Construct a version range from a specification.
+- `VersionRange cloneOf()`
+- `boolean containsVersion(ArtifactVersion version)`
+- `static VersionRange createFromVersion(java.lang.String version, ArtifactVersion existing)`
+- `static VersionRange createFromVersionSpec(java.lang.String spec)` — Create a version range from a string representation Some spec examples are 1.0 Version 1.0 [1.0,2.0) Versions 1.0 (included) to 2.0 (not included) [1.0,2.0] Versions 1.0 to 2.0 (both included) [1.5,) Versions 1.5 and higher (,1.0],[1.2,) Versions up to 1.0 (included) and 1.2 or higher
+- `boolean equals(java.lang.Object obj)`
+- `java.lang.String getLowerBoundString()`
+- `ArtifactVersion getRecommendedVersion()`
+- `java.util.List<Restriction> getRestrictions()`
+- `int hashCode()`
+- `boolean hasRestrictions()`
+- `boolean isUnboundedAbove()`
+- `ArtifactVersion matchVersion(java.util.List<ArtifactVersion> versions)`
+- `static VersionRange newRange(ArtifactVersion version, java.util.List<Restriction> restrictions)` — Factory method, for custom versioning schemes
+- `VersionRange restrict(VersionRange restriction)` — Creates and returns a new VersionRange that is a restriction of this version range and the specified version range.
+- `java.lang.String toString()`
+- `java.lang.String toStringFriendly()`

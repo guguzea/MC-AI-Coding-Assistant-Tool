@@ -1,23 +1,29 @@
 ---
 title: "PlayerInteractEvent.EntityInteractSpecific"
-description: "This event is fired on both sides whenever a player right clicks an entity. \"Interact at\" is an interact where the local vector (which part of the entity you clicked) is known. The state of this eve"
+description: "public static class PlayerInteractEvent.EntityInteractSpecific extends PlayerInteractEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/player/PlayerInteractEvent.EntityInteractSpecific.html"
 sourceType: javadoc
 ---
 
 # PlayerInteractEvent.EntityInteractSpecific
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific
+
+## Class signature
+
+```java
+public static class PlayerInteractEvent.EntityInteractSpecific extends PlayerInteractEvent
+```
+
 ## Constructors
 
-- `public EntityInteractSpecific( EntityPlayer player, EnumHand hand, Entity target, Vec3d localPos)`
+- `EntityInteractSpecific(EntityPlayer player, EnumHand hand, Entity target, Vec3d localPos)`
 
 ## Methods
 
-- `public Vec3d getLocalPos()`
-- `public Entity getTarget()`
-
-## Description
-
-This event is fired on both sides whenever a player right clicks an entity. "Interact at" is an interact where the local vector (which part of the entity you clicked) is known. The state of this event
+- `Vec3d getLocalPos()` — Returns the local interaction position.
+- `Entity getTarget()`

@@ -1,20 +1,18 @@
 # RenderFireball
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<EntityFireball> → net.minecraft.client.renderer.entity.RenderFireball
+
 ## Class signature
 
 ```java
-public class RenderFireball extends Render < EntityFireball >
+public class RenderFireball extends Render<EntityFireball>
 ```
-
-## Constructors
-
-- `public RenderFireball( RenderManager renderManagerIn, float scaleIn)`
 
 ## Methods
 
-- `public void doRender( EntityFireball entity, double x, double y, double z, float entityYaw, float partialTicks)`
-- `protected ResourceLocation getEntityTexture( EntityFireball entity)`
+- `void doRender(EntityFireball entity, double x, double y, double z, float entityYaw, float partialTicks)` — Actually renders the given argument.
+- `protected ResourceLocation getEntityTexture(EntityFireball entity)` — Returns the location of an entity's texture.
 
-## Description
+## Fields
 
-Actually renders the given argument.
+- `RenderFireball`

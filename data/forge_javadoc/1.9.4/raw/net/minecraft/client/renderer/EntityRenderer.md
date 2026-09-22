@@ -3,11 +3,15 @@ title: "EntityRenderer"
 description: "public class EntityRenderer extends java.lang.Object implements IResourceManagerReloadListener"
 package: "net/minecraft/client/renderer"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/renderer/EntityRenderer.html"
 sourceType: javadoc
 ---
 
 # EntityRenderer
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.EntityRenderer
 
 ## Class signature
 
@@ -17,25 +21,32 @@ public class EntityRenderer extends java.lang.Object implements IResourceManager
 
 ## Constructors
 
-- `public EntityRenderer( Minecraft mcIn, IResourceManager resourceManagerIn)`
+- `EntityRenderer(Minecraft mcIn, IResourceManager resourceManagerIn)`
 
 ## Methods
 
-- `public boolean isShaderActive()`
-- `public void stopUseShader()`
-- `public void switchUseShader()`
-- `public void loadEntityShader( Entity entityIn)`
-- `public void loadShader( ResourceLocation resourceLocationIn)`
-- `public void onResourceManagerReload( IResourceManager resourceManager)`
-- `public void updateRenderer()`
-- `public ShaderGroup getShaderGroup()`
-- `public void updateShaderGroupSize(int width, int height)`
-- `public void getMouseOver(float partialTicks)`
-- `public void disableLightmap()`
-- `public void enableLightmap()`
-- `public void updateCameraAndRender(float partialTicks, long nanoTime)`
-- `public void renderStreamIndicator(float partialTicks)`
-- `public void renderWorld(float partialTicks, long finishTimeNano)`
+- `void disableLightmap()`
+- `void enableLightmap()`
+- `MapItemRenderer getMapItemRenderer()`
+- `void getMouseOver(float partialTicks)`
+- `ShaderGroup getShaderGroup()`
+- `boolean isShaderActive()`
+- `void loadEntityShader(Entity entityIn)`
+- `void loadShader(ResourceLocation resourceLocationIn)`
+- `void onResourceManagerReload(IResourceManager resourceManager)`
 - `protected void renderRainSnow(float partialTicks)`
-- `public void setupOverlayRendering()`
-- `public MapItemRenderer getMapItemRenderer()`
+- `void renderStreamIndicator(float partialTicks)`
+- `void renderWorld(float partialTicks, long finishTimeNano)`
+- `void setupOverlayRendering()`
+- `void stopUseShader()`
+- `void switchUseShader()`
+- `void updateCameraAndRender(float partialTicks, long nanoTime)`
+- `void updateRenderer()`
+- `void updateShaderGroupSize(int width, int height)`
+
+## Fields
+
+- `static boolean anaglyphEnable`
+- `static int anaglyphField`
+- `ItemRenderer itemRenderer`
+- `static int SHADER_COUNT`

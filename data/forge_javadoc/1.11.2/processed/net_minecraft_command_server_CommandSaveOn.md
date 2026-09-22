@@ -1,5 +1,7 @@
 # CommandSaveOn
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.server.CommandSaveOn
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class CommandSaveOn extends CommandBase
 
 ## Constructors
 
-- `public CommandSaveOn()`
+- `CommandSaveOn()`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public java.lang.String getUsage( ICommandSender sender)`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.lang.String getName()`
+- `java.lang.String getUsage(ICommandSender sender)`

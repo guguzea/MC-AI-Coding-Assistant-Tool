@@ -1,5 +1,7 @@
 # ModSortingException
 
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.lang.RuntimeException → cpw.mods.fml.common.toposort.ModSortingException
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class ModSortingException extends java.lang.RuntimeException
 
 ## Constructors
 
-- `public ModSortingException(java.lang.String string, T node, java.util.Set<T> visitedNodes)`
+- `ModSortingException(java.lang.String string, T node, java.util.Set<T> visitedNodes)`
 
 ## Methods
 
-- `public <T> ModSortingException.SortingExceptionData <T> getExceptionData()`
+- `<T> ModSortingException.SortingExceptionData<T> getExceptionData()`

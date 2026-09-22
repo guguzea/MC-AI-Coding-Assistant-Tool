@@ -1,23 +1,21 @@
 # UserListBans
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.UserList<GameProfile, UserListBansEntry> → net.minecraft.server.management.UserListBans
+
 ## Class signature
 
 ```java
-public class UserListBans extends UserList <GameProfile, UserListBansEntry >
+public class UserListBans extends UserList<GameProfile, UserListBansEntry>
 ```
-
-## Constructors
-
-- `public UserListBans(java.io.File bansFile)`
 
 ## Methods
 
-- `protected UserListEntry <GameProfile> createEntry(JsonObject entryData)`
-- `public boolean isBanned(GameProfile profile)`
-- `public java.lang.String[] getKeys()`
-- `protected java.lang.String getObjectKey(GameProfile obj)`
-- `public GameProfile isUsernameBanned(java.lang.String username)`
+- `protected UserListEntry<GameProfile> createEntry(JsonObject entryData)`
+- `java.lang.String[] getKeys()`
+- `protected java.lang.String getObjectKey(GameProfile obj)` — Gets the key value for the given object
+- `boolean isBanned(GameProfile profile)`
+- `GameProfile isUsernameBanned(java.lang.String username)`
 
-## Description
+## Fields
 
-Gets the key value for the given object
+- `UserListBans`

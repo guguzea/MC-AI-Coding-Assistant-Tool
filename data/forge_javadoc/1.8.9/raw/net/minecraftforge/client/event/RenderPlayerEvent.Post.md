@@ -1,22 +1,25 @@
 ---
 title: "RenderPlayerEvent.Post"
-description: "Deprecated."
+description: "public static class RenderPlayerEvent.Post extends RenderPlayerEvent"
 package: "net/minecraftforge/client/event"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/client/event/RenderPlayerEvent.Post.html"
 sourceType: javadoc
 ---
 
 # RenderPlayerEvent.Post
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent.Post
 
-- `public Post( EntityPlayer player, RenderPlayer renderer, float tick, double x, double y, double z)`
+## Class signature
 
-## Methods
+```java
+public static class RenderPlayerEvent.Post extends RenderPlayerEvent
+```
 
-- `@Deprecated public Post( EntityPlayer player, RenderPlayer renderer, float tick)`
+## Fields
 
-## Description
-
-Deprecated.
+- `Post`
+- `Post`

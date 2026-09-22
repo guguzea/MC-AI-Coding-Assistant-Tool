@@ -3,6 +3,8 @@ title: "API"
 description: "public @interface API"
 package: "cpw/mods/fml/common"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/API.html"
 sourceType: javadoc
 ---
@@ -17,6 +19,6 @@ public @interface API
 
 ## Elements
 
-- `public abstract java.lang.String owner`
-- `public abstract java.lang.String provides`
-- `public abstract java.lang.String apiVersion`
+- `java.lang.String apiVersion`
+- `java.lang.String owner`
+- `java.lang.String provides`

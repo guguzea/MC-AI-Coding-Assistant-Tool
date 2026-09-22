@@ -1,5 +1,7 @@
 # NetworkHandshakeEstablished
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.NetworkHandshakeEstablished
+
 ## Class signature
 
 ```java
@@ -8,8 +10,10 @@ public class NetworkHandshakeEstablished extends java.lang.Object
 
 ## Constructors
 
-- `public NetworkHandshakeEstablished( NetworkDispatcher dispatcher, INetHandler netHandler, Side origin)`
+- `NetworkHandshakeEstablished(NetworkDispatcher dispatcher, INetHandler netHandler, Side origin)`
 
-## Description
+## Fields
 
-This message is sent through all channels affected by a currently occurring handshake. It is guaranteed to be able to send a custom payload packet, however, interaction with minecraft and world state
+- `NetworkDispatcher dispatcher`
+- `INetHandler netHandler`
+- `Side side`

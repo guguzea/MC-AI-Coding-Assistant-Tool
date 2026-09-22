@@ -1,33 +1,39 @@
 ---
 title: "DummyConfigElement.DummyListElement"
-description: "This class provides a dummy array-type IConfigElement."
+description: "public static class DummyConfigElement.DummyListElement<T> extends DummyConfigElement<T>"
 package: "cpw/mods/fml/client/config"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/client/config/DummyConfigElement.DummyListElement.html"
 sourceType: javadoc
 ---
 
 # DummyConfigElement.DummyListElement
 
-## Constructors
+**Inheritance:** java.lang.Object → cpw.mods.fml.client.config.DummyConfigElement<T> → cpw.mods.fml.client.config.DummyConfigElement.DummyListElement<T>
 
-- `public DummyListElement(java.lang.String name, T [] defaultValues, ConfigGuiType type, java.lang.String langKey, boolean isListFixedLength, int maxListLength, java.util.regex.Pattern validStringPattern, T minValue, T maxValue)`
-- `public DummyListElement(java.lang.String name, T [] defaultValues, ConfigGuiType type, java.lang.String langKey)`
-- `public DummyListElement(java.lang.String name, T [] defaultValues, ConfigGuiType type, java.lang.String langKey, boolean isListFixedLength)`
-- `public DummyListElement(java.lang.String name, T [] defaultValues, ConfigGuiType type, java.lang.String langKey, int maxListLength)`
-- `public DummyListElement(java.lang.String name, T [] defaultValues, ConfigGuiType type, java.lang.String langKey, T minValue, T maxValue)`
-- `public DummyListElement(java.lang.String name, T [] defaultValues, ConfigGuiType type, java.lang.String langKey, boolean isListFixedLength, T minValue, T maxValue)`
-- `public DummyListElement(java.lang.String name, T [] defaultValues, ConfigGuiType type, java.lang.String langKey, int maxListLength, T minValue, T maxValue)`
-- `public DummyListElement(java.lang.String name, T [] defaultValues, ConfigGuiType type, java.lang.String langKey, boolean isListFixedLength, int maxListLength, T minValue, T maxValue)`
-- `public DummyListElement(java.lang.String name, T [] defaultValues, ConfigGuiType type, java.lang.String langKey, java.util.regex.Pattern validStringPattern)`
-- `public DummyListElement(java.lang.String name, T [] defaultValues, ConfigGuiType type, java.lang.String langKey, boolean isListFixedLength, java.util.regex.Pattern validStringPattern)`
-- `public DummyListElement(java.lang.String name, T [] defaultValues, ConfigGuiType type, java.lang.String langKey, int maxListLength, java.util.regex.Pattern validStringPattern)`
+## Class signature
+
+```java
+public static class DummyConfigElement.DummyListElement<T> extends DummyConfigElement<T>
+```
 
 ## Methods
 
-- `public DummyConfigElement.DummyListElement setCustomEditListEntryClass(java.lang.Class<? extends GuiEditArrayEntries.IArrayEntry > clazz)`
-- `public java.lang.Object getDefault()`
+- `java.lang.Object getDefault()` — [Property] Gets this property's default value.
+- `DummyConfigElement.DummyListElement setCustomEditListEntryClass(java.lang.Class<? extends GuiEditArrayEntries.IArrayEntry> clazz)`
 
-## Description
+## Fields
 
-This class provides a dummy array-type IConfigElement.
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`

@@ -1,17 +1,19 @@
 # EnchantmentArrowDamage
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Enchantment> → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentArrowDamage
+
 ## Class signature
 
 ```java
 public class EnchantmentArrowDamage extends Enchantment
 ```
 
-## Constructors
-
-- `public EnchantmentArrowDamage( Enchantment.Rarity rarityIn, EntityEquipmentSlot ... slots)`
-
 ## Methods
 
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int getMaxLevel()`
+- `int getMaxEnchantability(int enchantmentLevel)`
+- `int getMaxLevel()`
+- `int getMinEnchantability(int enchantmentLevel)`
+
+## Fields
+
+- `EnchantmentArrowDamage`

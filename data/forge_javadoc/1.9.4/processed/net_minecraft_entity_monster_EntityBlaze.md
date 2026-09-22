@@ -1,30 +1,32 @@
 # EntityBlaze
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityBlaze
+
 ## Class signature
 
 ```java
 public class EntityBlaze extends EntityMob
 ```
 
-## Constructors
-
-- `public EntityBlaze( World worldIn)`
-
 ## Methods
 
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
 - `protected void entityInit()`
+- `void fall(float distance, float damageMultiplier)`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
+- `float getBrightness(float partialTicks)`
+- `int getBrightnessForRender(float partialTicks)`
 - `protected SoundEvent getDeathSound()`
-- `public int getBrightnessForRender(float partialTicks)`
-- `public float getBrightness(float partialTicks)`
-- `public void onLivingUpdate()`
-- `protected void updateAITasks()`
-- `public void fall(float distance, float damageMultiplier)`
-- `public boolean isBurning()`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public boolean isCharged()`
-- `public void setOnFire(boolean onFire)`
+- `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `protected void initEntityAI()`
+- `boolean isBurning()`
+- `boolean isCharged()`
 - `protected boolean isValidLightLevel()`
+- `void onLivingUpdate()`
+- `void setOnFire(boolean onFire)`
+- `protected void updateAITasks()`
+
+## Fields
+
+- `EntityBlaze`

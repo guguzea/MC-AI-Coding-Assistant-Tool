@@ -1,15 +1,19 @@
 # PotionEvent.PotionRemoveEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.PotionEvent → net.minecraftforge.event.entity.living.PotionEvent.PotionRemoveEvent
 
-- `public PotionRemoveEvent( EntityLivingBase living, Potion potion)`
-- `public PotionRemoveEvent( EntityLivingBase living, PotionEffect effect)`
+## Class signature
+
+```java
+public static class PotionEvent.PotionRemoveEvent extends PotionEvent
+```
 
 ## Methods
 
-- `public Potion getPotion()`
-- `public PotionEffect getPotionEffect()`
+- `Potion getPotion()`
+- `PotionEffect getPotionEffect()` — Retuns the PotionEffect.
 
-## Description
+## Fields
 
-This Event is fired when a Potion is about to get removed from an Entity. This Event is Cancelable . This Event does not have a result.
+- `PotionRemoveEvent`
+- `PotionRemoveEvent`

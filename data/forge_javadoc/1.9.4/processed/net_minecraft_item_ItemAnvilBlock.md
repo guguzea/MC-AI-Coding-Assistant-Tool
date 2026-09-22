@@ -1,15 +1,17 @@
 # ItemAnvilBlock
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemBlock → net.minecraft.item.ItemMultiTexture → net.minecraft.item.ItemAnvilBlock
+
 ## Class signature
 
 ```java
 public class ItemAnvilBlock extends ItemMultiTexture
 ```
 
-## Constructors
-
-- `public ItemAnvilBlock( Block block)`
-
 ## Methods
 
-- `public int getMetadata(int damage)`
+- `int getMetadata(int damage)`
+
+## Fields
+
+- `ItemAnvilBlock`

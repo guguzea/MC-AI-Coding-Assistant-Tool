@@ -1,25 +1,27 @@
 # SPacketEntityTeleport
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketEntityTeleport
+
 ## Class signature
 
 ```java
-public class SPacketEntityTeleport extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketEntityTeleport extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketEntityTeleport()`
-- `public SPacketEntityTeleport( Entity entityIn)`
+- `SPacketEntityTeleport()`
+- `SPacketEntityTeleport(Entity entityIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getEntityId()`
-- `public double getX()`
-- `public double getY()`
-- `public double getZ()`
-- `public byte getYaw()`
-- `public byte getPitch()`
-- `public boolean getOnGround()`
+- `int getEntityId()`
+- `boolean getOnGround()`
+- `byte getPitch()`
+- `double getX()`
+- `double getY()`
+- `byte getYaw()`
+- `double getZ()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

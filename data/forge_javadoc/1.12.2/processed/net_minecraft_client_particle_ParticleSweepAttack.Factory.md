@@ -1,9 +1,17 @@
 # ParticleSweepAttack.Factory
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.ParticleSweepAttack.Factory
+
+## Class signature
+
+```java
+public static class ParticleSweepAttack.Factory extends java.lang.Object implements IParticleFactory
+```
+
 ## Constructors
 
-- `public Factory()`
+- `Factory()`
 
 ## Methods
 
-- `public Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)`
+- `Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)`

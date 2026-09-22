@@ -1,33 +1,33 @@
 ---
 title: "S0BPacketAnimation"
-description: "Passes this Packet on to the NetHandler for processing."
+description: "public class S0BPacketAnimation extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/network/play/server/S0BPacketAnimation.html"
 sourceType: javadoc
 ---
 
 # S0BPacketAnimation
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S0BPacketAnimation
+
 ## Class signature
 
 ```java
-public class S0BPacketAnimation extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class S0BPacketAnimation extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public S0BPacketAnimation()`
-- `public S0BPacketAnimation( Entity ent, int animationType)`
+- `S0BPacketAnimation()`
+- `S0BPacketAnimation(Entity ent, int animationType)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getEntityID()`
-- `public int getAnimationType()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `int getAnimationType()`
+- `int getEntityID()`
+- `void processPacket(INetHandlerPlayClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

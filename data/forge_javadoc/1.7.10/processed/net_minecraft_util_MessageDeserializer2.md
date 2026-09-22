@@ -1,5 +1,7 @@
 # MessageDeserializer2
 
+**Inheritance:** java.lang.Object → ByteToMessageDecoder → net.minecraft.util.MessageDeserializer2
+
 ## Class signature
 
 ```java
@@ -8,7 +10,7 @@ public class MessageDeserializer2 extends ByteToMessageDecoder
 
 ## Constructors
 
-- `public MessageDeserializer2()`
+- `MessageDeserializer2()`
 
 ## Methods
 

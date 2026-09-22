@@ -3,11 +3,15 @@ title: "ContainerWorkbench"
 description: "public class ContainerWorkbench extends Container"
 package: "net/minecraft/inventory"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/inventory/ContainerWorkbench.html"
 sourceType: javadoc
 ---
 
 # ContainerWorkbench
+
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Container → net.minecraft.inventory.ContainerWorkbench
 
 ## Class signature
 
@@ -17,12 +21,17 @@ public class ContainerWorkbench extends Container
 
 ## Constructors
 
-- `public ContainerWorkbench( InventoryPlayer playerInventory, World worldIn, BlockPos posIn)`
+- `ContainerWorkbench(InventoryPlayer playerInventory, World worldIn, BlockPos posIn)`
 
 ## Methods
 
-- `public void onCraftMatrixChanged( IInventory inventoryIn)`
-- `public void onContainerClosed( EntityPlayer playerIn)`
-- `public boolean canInteractWith( EntityPlayer playerIn)`
-- `public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
-- `public boolean canMergeSlot( ItemStack stack, Slot slotIn)`
+- `boolean canInteractWith(EntityPlayer playerIn)`
+- `boolean canMergeSlot(ItemStack stack, Slot slotIn)`
+- `void onContainerClosed(EntityPlayer playerIn)`
+- `void onCraftMatrixChanged(IInventory inventoryIn)`
+- `ItemStack transferStackInSlot(EntityPlayer playerIn, int index)`
+
+## Fields
+
+- `InventoryCrafting craftMatrix`
+- `IInventory craftResult`

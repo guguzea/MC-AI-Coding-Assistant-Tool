@@ -1,13 +1,17 @@
 ---
 title: "WorldServer"
-description: "Stores the recently processed (lighting) chunks"
+description: "public class WorldServer extends World implements IThreadListener"
 package: "net/minecraft/world"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/WorldServer.html"
 sourceType: javadoc
 ---
 
 # WorldServer
+
+**Inheritance:** java.lang.Object → net.minecraft.world.World → net.minecraft.world.WorldServer
 
 ## Class signature
 
@@ -17,67 +21,70 @@ public class WorldServer extends World implements IThreadListener
 
 ## Constructors
 
-- `public WorldServer( MinecraftServer server, ISaveHandler saveHandlerIn, WorldInfo info, int dimensionId, Profiler profilerIn)`
+- `WorldServer(MinecraftServer server, ISaveHandler saveHandlerIn, WorldInfo info, int dimensionId, Profiler profilerIn)`
 
 ## Methods
 
-- `public World init()`
-- `public void tick()`
-- `@Nullable public Biome.SpawnListEntry getSpawnListEntryForTypeAt( EnumCreatureType creatureType, BlockPos pos)`
-- `public boolean canCreatureTypeSpawnHere( EnumCreatureType creatureType, Biome.SpawnListEntry spawnListEntry, BlockPos pos)`
-- `public void updateAllPlayersSleepingFlag()`
-- `protected void wakeAllPlayers()`
-- `public boolean areAllPlayersAsleep()`
-- `public void setInitialSpawnLocation()`
-- `protected boolean isChunkLoaded(int x, int z, boolean allowEmpty)`
-- `protected void playerCheckLight()`
-- `protected void updateBlocks()`
-- `protected BlockPos adjustPosToNearbyEntity( BlockPos pos)`
-- `public boolean isBlockTickPending( BlockPos pos, Block blockType)`
-- `public boolean isUpdateScheduled( BlockPos pos, Block blk)`
-- `public void scheduleUpdate( BlockPos pos, Block blockIn, int delay)`
-- `public void updateBlockTick( BlockPos pos, Block blockIn, int delay, int priority)`
-- `public void scheduleBlockUpdate( BlockPos pos, Block blockIn, int delay, int priority)`
-- `public void updateEntities()`
-- `protected void tickPlayers()`
-- `public void resetUpdateEntityTick()`
-- `public boolean tickUpdates(boolean p_72955_1_)`
-- `@Nullable public java.util.List< NextTickListEntry > getPendingBlockUpdates( Chunk chunkIn, boolean p_72920_2_)`
-- `@Nullable public java.util.List< NextTickListEntry > getPendingBlockUpdates( StructureBoundingBox structureBB, boolean p_175712_2_)`
-- `public void updateEntityWithOptionalForce( Entity entityIn, boolean forceUpdate)`
-- `protected IChunkProvider createChunkProvider()`
-- `public boolean isBlockModifiable( EntityPlayer player, BlockPos pos)`
-- `public boolean canMineBlockBody( EntityPlayer player, BlockPos pos)`
-- `public void initialize( WorldSettings settings)`
+- `void addBlockEvent(BlockPos pos, Block blockIn, int eventID, int eventParam)`
+- `com.google.common.util.concurrent.ListenableFuture<java.lang.Object> addScheduledTask(java.lang.Runnable runnableToSchedule)`
+- `boolean addWeatherEffect(Entity entityIn)`
+- `protected BlockPos adjustPosToNearbyEntity(BlockPos pos)`
+- `boolean areAllPlayersAsleep()`
+- `boolean canCreatureTypeSpawnHere(EnumCreatureType creatureType, Biome.SpawnListEntry spawnListEntry, BlockPos pos)`
+- `boolean canMineBlockBody(EntityPlayer player, BlockPos pos)`
 - `protected void createBonusChest()`
-- `public BlockPos getSpawnCoordinate()`
-- `public void saveAllChunks(boolean p_73044_1_, @Nullable IProgressUpdate progressCallback) throws MinecraftException`
-- `public void saveChunkData()`
-- `protected void saveLevel() throws MinecraftException`
-- `public boolean spawnEntityInWorld( Entity entityIn)`
-- `public void loadEntities(java.util.Collection< Entity > entityCollection)`
-- `public void onEntityAdded( Entity entityIn)`
-- `public void onEntityRemoved( Entity entityIn)`
-- `public boolean addWeatherEffect( Entity entityIn)`
-- `public void setEntityState( Entity entityIn, byte state)`
-- `public ChunkProviderServer getChunkProvider()`
-- `public Explosion newExplosion(@Nullable Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)`
-- `public void addBlockEvent( BlockPos pos, Block blockIn, int eventID, int eventParam)`
-- `public void flush()`
+- `protected IChunkProvider createChunkProvider()`
+- `void flush()`
+- `ChunkProviderServer getChunkProvider()`
+- `java.io.File getChunkSaveLocation()`
+- `Teleporter getDefaultTeleporter()`
+- `Entity getEntityFromUuid(java.util.UUID uuid)`
+- `EntityTracker getEntityTracker()`
+- `MinecraftServer getMinecraftServer()`
+- `java.util.List<NextTickListEntry> getPendingBlockUpdates(Chunk chunkIn, boolean p_72920_2_)`
+- `java.util.List<NextTickListEntry> getPendingBlockUpdates(StructureBoundingBox structureBB, boolean p_175712_2_)`
+- `PlayerChunkMap getPlayerChunkMap()`
+- `BlockPos getSpawnCoordinate()`
+- `Biome.SpawnListEntry getSpawnListEntryForTypeAt(EnumCreatureType creatureType, BlockPos pos)`
+- `TemplateManager getStructureTemplateManager()`
+- `World init()`
+- `void initialize(WorldSettings settings)`
+- `boolean isBlockModifiable(EntityPlayer player, BlockPos pos)`
+- `boolean isBlockTickPending(BlockPos pos, Block blockType)`
+- `boolean isCallingFromMinecraftThread()`
+- `protected boolean isChunkLoaded(int x, int z, boolean allowEmpty)`
+- `boolean isUpdateScheduled(BlockPos pos, Block blk)`
+- `void loadEntities(java.util.Collection<Entity> entityCollection)`
+- `Explosion newExplosion(Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)`
+- `void onEntityAdded(Entity entityIn)`
+- `void onEntityRemoved(Entity entityIn)`
+- `protected void playerCheckLight()`
+- `void resetUpdateEntityTick()`
+- `void saveAllChunks(boolean p_73044_1_, IProgressUpdate progressCallback)`
+- `void saveChunkData()`
+- `protected void saveLevel()`
+- `void scheduleBlockUpdate(BlockPos pos, Block blockIn, int delay, int priority)`
+- `void scheduleUpdate(BlockPos pos, Block blockIn, int delay)`
+- `void setEntityState(Entity entityIn, byte state)`
+- `void setInitialSpawnLocation()`
+- `boolean spawnEntityInWorld(Entity entityIn)`
+- `void spawnParticle(EntityPlayerMP player, EnumParticleTypes particle, boolean longDistance, double x, double y, double z, int count, double xOffset, double yOffset, double zOffset, double speed, int... arguments)`
+- `void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)`
+- `void spawnParticle(EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)`
+- `void tick()`
+- `protected void tickPlayers()`
+- `boolean tickUpdates(boolean p_72955_1_)`
+- `void updateAllPlayersSleepingFlag()`
+- `protected void updateBlocks()`
+- `void updateBlockTick(BlockPos pos, Block blockIn, int delay, int priority)`
+- `void updateEntities()`
+- `void updateEntityWithOptionalForce(Entity entityIn, boolean forceUpdate)`
 - `protected void updateWeather()`
-- `@Nullable public MinecraftServer getMinecraftServer()`
-- `public EntityTracker getEntityTracker()`
-- `public PlayerChunkMap getPlayerChunkMap()`
-- `public Teleporter getDefaultTeleporter()`
-- `public TemplateManager getStructureTemplateManager()`
-- `public void spawnParticle( EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)`
-- `public void spawnParticle( EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)`
-- `public void spawnParticle( EntityPlayerMP player, EnumParticleTypes particle, boolean longDistance, double x, double y, double z, int count, double xOffset, double yOffset, double zOffset, double speed, int... arguments)`
-- `@Nullable public Entity getEntityFromUuid(java.util.UUID uuid)`
-- `public com.google.common.util.concurrent.ListenableFuture<java.lang.Object> addScheduledTask(java.lang.Runnable runnableToSchedule)`
-- `public boolean isCallingFromMinecraftThread()`
-- `public java.io.File getChunkSaveLocation()`
+- `protected void wakeAllPlayers()`
 
-## Description
+## Fields
 
-Stores the recently processed (lighting) chunks
+- `java.util.List<Teleporter> customTeleporters`
+- `boolean disableLevelSaving`
+- `protected java.util.Set<ChunkPos> doneChunks` — Stores the recently processed (lighting) chunks
+- `protected VillageSiege villageSiege`

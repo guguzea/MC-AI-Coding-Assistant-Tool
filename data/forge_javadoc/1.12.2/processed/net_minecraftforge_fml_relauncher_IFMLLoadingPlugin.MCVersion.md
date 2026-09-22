@@ -1,5 +1,11 @@
 # IFMLLoadingPlugin.MCVersion
 
-## Description
+## Class signature
 
-Use this to target a specific minecraft version for your coremod. It will refuse to load with an error if minecraft is not this exact version.
+```java
+public static @interface IFMLLoadingPlugin.MCVersion
+```
+
+## Elements
+
+- `java.lang.String value`

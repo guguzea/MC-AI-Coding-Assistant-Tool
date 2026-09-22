@@ -131,13 +131,18 @@ const LEDGER_TREES = {
   "forge_1.19.4/forge-docs/1.19.4": { raw: 71, proc: 71, identical: 0, contentDiff: 61, markerOnly: 0, fmOnly: 10, noTwin: 0, dup: 0, dir: 0 },
   "forge_1.20.1/forge-docs/1.20.1": { raw: 71, proc: 71, identical: 0, contentDiff: 61, markerOnly: 0, fmOnly: 10, noTwin: 0, dup: 0, dir: 0 },
   "forge_1.20.4/forge-docs/1.20.4": { raw: 70, proc: 70, identical: 0, contentDiff: 60, markerOnly: 0, fmOnly: 10, noTwin: 0, dup: 0, dir: 0 },
-  "forge_javadoc/1.10.2": { raw: 3254, proc: 3254, identical: 0, contentDiff: 27, markerOnly: 0, fmOnly: 3227, noTwin: 0, dup: 0, dir: 0 },
-  "forge_javadoc/1.11.2": { raw: 3335, proc: 3335, identical: 0, contentDiff: 28, markerOnly: 0, fmOnly: 3307, noTwin: 0, dup: 0, dir: 0 },
+  // 2026-09-22 c4 重抓 + `--prune-orphans --confirm`（删 319 对孤儿）后重签：
+  // raw == proc == 落盘计划数（1879/2807/3070/3182/3268/3554），`contentDiff` 全归 0 ——
+  // 原先每档 7–29 条"正文也不同"就是被删掉的那批错档/锚点件的镜像残留；
+  // fmOnly == raw 是该族固有形态（indexer 的 processed 镜像**不带 frontmatter**，不是转换丢内容）。
+  "forge_javadoc/1.10.2": { raw: 3182, proc: 3182, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 3182, noTwin: 0, dup: 0, dir: 0 },
+  "forge_javadoc/1.11.2": { raw: 3268, proc: 3268, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 3268, noTwin: 0, dup: 0, dir: 0 },
   // 2026-09-18：历史重名件成对删除（914 processed 孤儿 + 914 raw ` (2).md`），4567 → 3653（与索引引用一致）。
-  "forge_javadoc/1.12.2": { raw: 3653, proc: 3653, identical: 0, contentDiff: 29, markerOnly: 0, fmOnly: 3624, noTwin: 0, dup: 0, dir: 0 },
-  "forge_javadoc/1.7.10": { raw: 1888, proc: 1888, identical: 0, contentDiff: 7, markerOnly: 0, fmOnly: 1881, noTwin: 0, dup: 0, dir: 0 },
-  "forge_javadoc/1.8.9": { raw: 2837, proc: 2837, identical: 0, contentDiff: 23, markerOnly: 0, fmOnly: 2814, noTwin: 0, dup: 0, dir: 0 },
-  "forge_javadoc/1.9.4": { raw: 3111, proc: 3111, identical: 0, contentDiff: 24, markerOnly: 0, fmOnly: 3087, noTwin: 0, dup: 0, dir: 0 },
+  // 2026-09-22：c4 重抓后再降到 3554（= 本轮落盘计划数；319 对错档/锚点件按用户点头删除）。
+  "forge_javadoc/1.12.2": { raw: 3554, proc: 3554, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 3554, noTwin: 0, dup: 0, dir: 0 },
+  "forge_javadoc/1.7.10": { raw: 1879, proc: 1879, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 1879, noTwin: 0, dup: 0, dir: 0 },
+  "forge_javadoc/1.8.9": { raw: 2807, proc: 2807, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 2807, noTwin: 0, dup: 0, dir: 0 },
+  "forge_javadoc/1.9.4": { raw: 3070, proc: 3070, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 3070, noTwin: 0, dup: 0, dir: 0 },
   "liteloader_1.10.2/liteloader-docs/1.10.2": { raw: 34, proc: 34, identical: 0, contentDiff: 34, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
   "liteloader_1.12.2/liteloader-docs/1.12.2": { raw: 35, proc: 35, identical: 0, contentDiff: 35, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
   "liteloader_1.8.9/liteloader-docs/1.8.9": { raw: 34, proc: 34, identical: 0, contentDiff: 34, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
@@ -153,13 +158,19 @@ const LEDGER_TREES = {
   "rift_1.13.2/rift-docs/1.13.2": { raw: 6, proc: 6, identical: 0, contentDiff: 6, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
 };
 // A5 存量债务：按树登记的泛型记号丢失数（今日为空；加工若吃掉签名才登记）
+// 2026-09-22 c4 重抓后本族数字从 5–100 涨到 98–770 —— **不是转换吃掉了泛型**：
+// 该腿只在 raw ≠ processed 时才比对，而 indexer 的 processed 镜像**不带 frontmatter**；
+// 新抓取器把类签名写进 frontmatter 的 `description:`（HEAD 那版这里是散文，甚至是 "Deprecated."），
+// 于是同一份泛型在 raw 里出现两次、在 processed 里只剩正文那一次 ⇒ 计数差 = 每页一次签名。
+// 正文里的 `## Class signature` 围栏块与继承链仍原样带着这些尖括号（c4 全量比对 18078 页：
+// 泛型丢失 0 页、签名块丢失 0 页），所以这是**口径造成的重复计数**，按债登记而不是当缺陷修。
 const DEBT_ANGLE_LOSS = {
-  "forge_javadoc/1.10.2": 98,
-  "forge_javadoc/1.11.2": 100,
-  "forge_javadoc/1.12.2": 89,
-  "forge_javadoc/1.7.10": 5,
-  "forge_javadoc/1.8.9": 31,
-  "forge_javadoc/1.9.4": 93,
+  "forge_javadoc/1.10.2": 725,
+  "forge_javadoc/1.11.2": 737,
+  "forge_javadoc/1.12.2": 770,
+  "forge_javadoc/1.7.10": 98,
+  "forge_javadoc/1.8.9": 549,
+  "forge_javadoc/1.9.4": 698,
 };
 // A4 存量债务：正文里的上游中介名（相对 data 根路径:行号|该处名字）
 //      S7 之后剩下的这些都是「上游正文跨版本残留、本版映射里没有」的 intermediary，逐条点名保留。

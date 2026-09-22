@@ -1,18 +1,20 @@
 # MapGenNetherBridge
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.MapGenBase → net.minecraft.world.gen.structure.MapGenStructure → net.minecraft.world.gen.structure.MapGenNetherBridge
+
 ## Class signature
 
 ```java
 public class MapGenNetherBridge extends MapGenStructure
 ```
 
-## Constructors
-
-- `public MapGenNetherBridge()`
-
 ## Methods
 
-- `public java.lang.String getStructureName()`
-- `public java.util.List< BiomeGenBase.SpawnListEntry > getSpawnList()`
 - `protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)`
+- `java.util.List<BiomeGenBase.SpawnListEntry> getSpawnList()`
+- `java.lang.String getStructureName()`
 - `protected StructureStart getStructureStart(int chunkX, int chunkZ)`
+
+## Fields
+
+- `MapGenNetherBridge`

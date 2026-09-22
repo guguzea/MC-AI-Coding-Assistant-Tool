@@ -3,11 +3,15 @@ title: "BlockPortal"
 description: "public class BlockPortal extends BlockBreakable"
 package: "net/minecraft/block"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/BlockPortal.html"
 sourceType: javadoc
 ---
 
 # BlockPortal
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBreakable → net.minecraft.block.BlockPortal
 
 ## Class signature
 
@@ -17,25 +21,32 @@ public class BlockPortal extends BlockBreakable
 
 ## Constructors
 
-- `public BlockPortal()`
+- `BlockPortal()`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `@Nullable public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, World worldIn, BlockPos pos)`
-- `public static int getMetaForAxis( EnumFacing.Axis axis)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean trySpawnPortal( World worldIn, BlockPos pos)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `public boolean shouldSideBeRendered( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `public int quantityDropped(java.util.Random random)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
-- `@Nullable public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public void randomDisplayTick( IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
 - `protected BlockStateContainer createBlockState()`
-- `public BlockPattern.PatternHelper createPatternHelper( World worldIn, BlockPos p_181089_2_)`
+- `BlockPattern.PatternHelper createPatternHelper(World worldIn, BlockPos p_181089_2_)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `static int getMetaForAxis(EnumFacing.Axis axis)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `boolean isFullCube(IBlockState state)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
+- `int quantityDropped(java.util.Random random)`
+- `void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
+- `boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `boolean trySpawnPortal(World worldIn, BlockPos pos)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
+
+## Fields
+
+- `static PropertyEnum<EnumFacing.Axis> AXIS`
+- `protected static AxisAlignedBB X_AABB`
+- `protected static AxisAlignedBB Y_AABB`
+- `protected static AxisAlignedBB Z_AABB`

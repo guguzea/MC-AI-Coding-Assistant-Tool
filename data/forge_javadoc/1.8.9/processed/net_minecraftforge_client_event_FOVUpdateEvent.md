@@ -1,5 +1,7 @@
 # FOVUpdateEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.FOVUpdateEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,10 @@ public class FOVUpdateEvent extends Event
 
 ## Constructors
 
-- `public FOVUpdateEvent( EntityPlayer entity, float fov)`
+- `FOVUpdateEvent(EntityPlayer entity, float fov)`
 
-## Description
+## Fields
 
-Author: MachineMuse (Claire Semple) Created: 6:07 PM, 9/5/13
+- `EntityPlayer entity`
+- `float fov`
+- `float newfov`

@@ -1,9 +1,13 @@
 # DecorateBiomeEvent.Pre
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.DecorateBiomeEvent → net.minecraftforge.event.terraingen.DecorateBiomeEvent.Pre
 
-- `public Pre( World world, java.util.Random rand, BlockPos pos)`
+## Class signature
 
-## Description
+```java
+public static class DecorateBiomeEvent.Pre extends DecorateBiomeEvent
+```
 
-This event is fired before a chunk is decorated with a biome feature.
+## Fields
+
+- `Pre`

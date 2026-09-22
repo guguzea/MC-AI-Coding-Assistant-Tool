@@ -3,11 +3,15 @@ title: "ElytraSound"
 description: "public class ElytraSound extends MovingSound"
 package: "net/minecraft/client/audio"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/audio/ElytraSound.html"
 sourceType: javadoc
 ---
 
 # ElytraSound
+
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.PositionedSound → net.minecraft.client.audio.MovingSound → net.minecraft.client.audio.ElytraSound
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class ElytraSound extends MovingSound
 ```
 
-## Constructors
-
-- `public ElytraSound( EntityPlayerSP p_i47113_1_)`
-
 ## Methods
 
-- `public void update()`
+- `void update()`
+
+## Fields
+
+- `ElytraSound`

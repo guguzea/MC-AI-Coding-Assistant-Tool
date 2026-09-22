@@ -1,19 +1,17 @@
 # ItemSpade
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemTool → net.minecraft.item.ItemSpade
+
 ## Class signature
 
 ```java
 public class ItemSpade extends ItemTool
 ```
 
-## Constructors
-
-- `public ItemSpade( Item.ToolMaterial material)`
-
 ## Methods
 
-- `public boolean canHarvestBlock( Block blockIn)`
+- `boolean canHarvestBlock(Block blockIn)` — Check whether this Item can harvest the given Block
 
-## Description
+## Fields
 
-Check whether this Item can harvest the given Block
+- `ItemSpade`

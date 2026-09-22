@@ -1,19 +1,21 @@
 # SPacketEnableCompression
 
+**Inheritance:** java.lang.Object → net.minecraft.network.login.server.SPacketEnableCompression
+
 ## Class signature
 
 ```java
-public class SPacketEnableCompression extends java.lang.Object implements Packet < INetHandlerLoginClient >
+public class SPacketEnableCompression extends java.lang.Object implements Packet<INetHandlerLoginClient>
 ```
 
 ## Constructors
 
-- `public SPacketEnableCompression()`
-- `public SPacketEnableCompression(int thresholdIn)`
+- `SPacketEnableCompression()`
+- `SPacketEnableCompression(int thresholdIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerLoginClient handler)`
-- `public int getCompressionThreshold()`
+- `int getCompressionThreshold()`
+- `void processPacket(INetHandlerLoginClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

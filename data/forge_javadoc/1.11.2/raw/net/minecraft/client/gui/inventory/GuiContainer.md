@@ -1,13 +1,17 @@
 ---
 title: "GuiContainer"
-description: "Returns the slot that is currently displayed under the mouse."
+description: "public abstract class GuiContainer extends GuiScreen"
 package: "net/minecraft/client/gui/inventory"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/gui/inventory/GuiContainer.html"
 sourceType: javadoc
 ---
 
 # GuiContainer
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.inventory.GuiContainer
 
 ## Class signature
 
@@ -17,30 +21,37 @@ public abstract class GuiContainer extends GuiScreen
 
 ## Constructors
 
-- `public GuiContainer( Container inventorySlotsIn)`
+- `GuiContainer(Container inventorySlotsIn)`
 
 ## Methods
 
-- `public void initGui()`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)`
+- `protected boolean checkHotbarKeys(int keyCode)`
+- `boolean doesGuiPauseGame()`
 - `protected abstract void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)`
-- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws java.io.IOException`
+- `protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `int getGuiLeft()`
+- `int getGuiTop()`
+- `Slot getSlotUnderMouse()` — Returns the slot that is currently displayed under the mouse.
+- `int getXSize()`
+- `int getYSize()`
+- `protected void handleMouseClick(Slot slotIn, int slotId, int mouseButton, ClickType type)`
+- `void initGui()`
+- `protected boolean isPointInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY)`
+- `protected void keyTyped(char typedChar, int keyCode)`
+- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton)`
 - `protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)`
 - `protected void mouseReleased(int mouseX, int mouseY, int state)`
-- `protected boolean isPointInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY)`
-- `protected void handleMouseClick( Slot slotIn, int slotId, int mouseButton, ClickType type)`
-- `protected void keyTyped(char typedChar, int keyCode) throws java.io.IOException`
-- `protected boolean checkHotbarKeys(int keyCode)`
-- `public void onGuiClosed()`
-- `public boolean doesGuiPauseGame()`
-- `public void updateScreen()`
-- `@Nullable public Slot getSlotUnderMouse()`
-- `public int getGuiLeft()`
-- `public int getGuiTop()`
-- `public int getXSize()`
-- `public int getYSize()`
+- `void onGuiClosed()`
+- `void updateScreen()`
 
-## Description
+## Fields
 
-Returns the slot that is currently displayed under the mouse.
+- `protected boolean dragSplitting`
+- `protected java.util.Set<Slot> dragSplittingSlots`
+- `protected int guiLeft`
+- `protected int guiTop`
+- `static ResourceLocation INVENTORY_BACKGROUND`
+- `Container inventorySlots`
+- `protected int xSize`
+- `protected int ySize`

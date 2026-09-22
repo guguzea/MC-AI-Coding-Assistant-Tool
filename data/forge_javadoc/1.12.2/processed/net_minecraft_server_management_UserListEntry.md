@@ -1,5 +1,7 @@
 # UserListEntry
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.UserListEntry<T>
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class UserListEntry<T> extends java.lang.Object
 
 ## Constructors
 
-- `public UserListEntry( T valueIn)`
-- `protected UserListEntry( T valueIn, JsonObject json)`
+- `UserListEntry(T valueIn)`
+- `UserListEntry(T valueIn, JsonObject json)`
 
 ## Methods
 

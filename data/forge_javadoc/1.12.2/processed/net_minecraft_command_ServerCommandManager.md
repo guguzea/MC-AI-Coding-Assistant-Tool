@@ -1,5 +1,7 @@
 # ServerCommandManager
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandHandler → net.minecraft.command.ServerCommandManager
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class ServerCommandManager extends CommandHandler implements ICommandList
 
 ## Constructors
 
-- `public ServerCommandManager( MinecraftServer serverIn)`
+- `ServerCommandManager(MinecraftServer serverIn)`
 
 ## Methods
 
-- `public void notifyListener( ICommandSender sender, ICommand command, int flags, java.lang.String translationKey, java.lang.Object... translationArgs)`
 - `protected MinecraftServer getServer()`
+- `void notifyListener(ICommandSender sender, ICommand command, int flags, java.lang.String translationKey, java.lang.Object... translationArgs)`

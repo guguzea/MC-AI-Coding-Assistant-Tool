@@ -1,14 +1,29 @@
 # StructureVillagePieces.Start
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureVillagePieces.Village → net.minecraft.world.gen.structure.StructureVillagePieces.Well → net.minecraft.world.gen.structure.StructureVillagePieces.Start
+
+## Class signature
+
+```java
+public static class StructureVillagePieces.Start extends StructureVillagePieces.Well
+```
+
 ## Constructors
 
-- `public Start()`
-- `public Start( WorldChunkManager chunkManagerIn, int p_i2104_2_, java.util.Random rand, int p_i2104_4_, int p_i2104_5_, java.util.List< StructureVillagePieces.PieceWeight > p_i2104_6_, int p_i2104_7_)`
+- `Start()`
+- `Start(WorldChunkManager chunkManagerIn, int p_i2104_2_, java.util.Random rand, int p_i2104_4_, int p_i2104_5_, java.util.List<StructureVillagePieces.PieceWeight> p_i2104_6_, int p_i2104_7_)`
 
 ## Methods
 
-- `public WorldChunkManager getWorldChunkManager()`
+- `WorldChunkManager getWorldChunkManager()`
 
-## Description
+## Fields
 
-Boolean that determines if the village is in a desert or not.
+- `BiomeGenBase biome`
+- `java.util.List<StructureComponent> field_74930_j`
+- `java.util.List<StructureComponent> field_74932_i`
+- `boolean inDesert` — Boolean that determines if the village is in a desert or not.
+- `java.util.List<StructureVillagePieces.PieceWeight> structureVillageWeightedPieceList`
+- `StructureVillagePieces.PieceWeight structVillagePieceWeight`
+- `int terrainType` — World terrain type, 0 for normal, 1 for flap map
+- `WorldChunkManager worldChunkMngr`

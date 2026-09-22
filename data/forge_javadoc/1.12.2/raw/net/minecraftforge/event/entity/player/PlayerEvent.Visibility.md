@@ -1,23 +1,29 @@
 ---
 title: "PlayerEvent.Visibility"
-description: "Fired when the world checks if a player is near enough to be attacked by an entity. The resulting visibility modifier is multiplied by the one calculated by Minecraft (based on sneaking and more) and "
+description: "public static class PlayerEvent.Visibility extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/player/PlayerEvent.Visibility.html"
 sourceType: javadoc
 ---
 
 # PlayerEvent.Visibility
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.Visibility
+
+## Class signature
+
+```java
+public static class PlayerEvent.Visibility extends PlayerEvent
+```
+
 ## Constructors
 
-- `public Visibility( EntityPlayer player)`
+- `Visibility(EntityPlayer player)`
 
 ## Methods
 
-- `public void modifyVisibility(double mod)`
-- `public double getVisibilityModifier()`
-
-## Description
-
-Fired when the world checks if a player is near enough to be attacked by an entity. The resulting visibility modifier is multiplied by the one calculated by Minecraft (based on sneaking and more) and 
+- `double getVisibilityModifier()`
+- `void modifyVisibility(double mod)`

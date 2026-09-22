@@ -1,5 +1,7 @@
 # RecipesArmor
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.RecipesArmor
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class RecipesArmor extends java.lang.Object
 
 ## Constructors
 
-- `public RecipesArmor()`
+- `RecipesArmor()`
 
 ## Methods
 
-- `public void addRecipes( CraftingManager craftManager)`
-
-## Description
-
-Adds the armor recipes to the CraftingManager.
+- `void addRecipes(CraftingManager craftManager)` — Adds the armor recipes to the CraftingManager.

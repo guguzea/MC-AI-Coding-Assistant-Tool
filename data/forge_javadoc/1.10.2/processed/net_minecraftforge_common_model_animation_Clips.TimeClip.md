@@ -1,16 +1,20 @@
 # Clips.TimeClip
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.model.animation.Clips.TimeClip
+
+## Class signature
+
+```java
+public static final class Clips.TimeClip extends java.lang.Object implements IClip
+```
+
 ## Constructors
 
-- `public TimeClip( IClip childClip, ITimeValue time)`
+- `TimeClip(IClip childClip, ITimeValue time)`
 
 ## Methods
 
-- `public IJointClip apply( IJoint joint)`
-- `public java.lang.Iterable< Event > pastEvents(float lastPollTime, float time)`
-- `public int hashCode()`
-- `public boolean equals(java.lang.Object obj)`
-
-## Description
-
-Clip with custom parameterization of the time.
+- `IJointClip apply(IJoint joint)`
+- `boolean equals(java.lang.Object obj)`
+- `int hashCode()`
+- `java.lang.Iterable<Event> pastEvents(float lastPollTime, float time)`

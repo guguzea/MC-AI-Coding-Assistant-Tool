@@ -1,20 +1,22 @@
 # SPacketUnloadChunk
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketUnloadChunk
+
 ## Class signature
 
 ```java
-public class SPacketUnloadChunk extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketUnloadChunk extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketUnloadChunk()`
-- `public SPacketUnloadChunk(int xIn, int zIn)`
+- `SPacketUnloadChunk()`
+- `SPacketUnloadChunk(int xIn, int zIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getX()`
-- `public int getZ()`
+- `int getX()`
+- `int getZ()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

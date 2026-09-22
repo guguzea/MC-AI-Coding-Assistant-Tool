@@ -1,13 +1,17 @@
 ---
 title: "TileEntityPiston"
-description: "removes a piston's tile entity (and if the piston is moving, stops it)"
+description: "public class TileEntityPiston extends TileEntity implements ITickable"
 package: "net/minecraft/tileentity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/tileentity/TileEntityPiston.html"
 sourceType: javadoc
 ---
 
 # TileEntityPiston
+
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityPiston
 
 ## Class signature
 
@@ -15,27 +19,23 @@ sourceType: javadoc
 public class TileEntityPiston extends TileEntity implements ITickable
 ```
 
-## Constructors
-
-- `public TileEntityPiston()`
-- `public TileEntityPiston( IBlockState pistonStateIn, EnumFacing pistonFacingIn, boolean extendingIn, boolean shouldHeadBeRenderedIn)`
-
 ## Methods
 
-- `public IBlockState getPistonState()`
-- `public int getBlockMetadata()`
-- `public boolean isExtending()`
-- `public EnumFacing getFacing()`
-- `public boolean shouldPistonHeadBeRendered()`
-- `public float getProgress(float ticks)`
-- `public float getOffsetX(float ticks)`
-- `public float getOffsetY(float ticks)`
-- `public float getOffsetZ(float ticks)`
-- `public void clearPistonTileEntity()`
-- `public void update()`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public void writeToNBT( NBTTagCompound compound)`
+- `void clearPistonTileEntity()` — removes a piston's tile entity (and if the piston is moving, stops it)
+- `int getBlockMetadata()`
+- `EnumFacing getFacing()`
+- `float getOffsetX(float ticks)`
+- `float getOffsetY(float ticks)`
+- `float getOffsetZ(float ticks)`
+- `IBlockState getPistonState()`
+- `float getProgress(float ticks)` — Get interpolated progress value (between lastProgress and progress) given the fractional time between ticks as an argument
+- `boolean isExtending()` — Returns true if a piston is extending
+- `void readFromNBT(NBTTagCompound compound)`
+- `boolean shouldPistonHeadBeRendered()`
+- `void update()` — Like the old updateEntity(), except more generic.
+- `void writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-removes a piston's tile entity (and if the piston is moving, stops it)
+- `TileEntityPiston`
+- `TileEntityPiston`

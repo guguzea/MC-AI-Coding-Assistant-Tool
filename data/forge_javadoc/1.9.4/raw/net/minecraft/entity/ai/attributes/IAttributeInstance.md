@@ -3,6 +3,8 @@ title: "IAttributeInstance"
 description: "public interface IAttributeInstance"
 package: "net/minecraft/entity/ai/attributes"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/ai/attributes/IAttributeInstance.html"
 sourceType: javadoc
 ---
@@ -17,15 +19,15 @@ public interface IAttributeInstance
 
 ## Methods
 
+- `void applyModifier(AttributeModifier modifier)`
 - `IAttribute getAttribute()`
-- `double getBaseValue()`
-- `void setBaseValue(double baseValue)`
-- `java.util.Collection< AttributeModifier > getModifiersByOperation(int operation)`
-- `java.util.Collection< AttributeModifier > getModifiers()`
-- `boolean hasModifier( AttributeModifier modifier)`
-- `@Nullable AttributeModifier getModifier(java.util.UUID uuid)`
-- `void applyModifier( AttributeModifier modifier)`
-- `void removeModifier( AttributeModifier modifier)`
-- `void removeModifier(java.util.UUID p_188479_1_)`
-- `void removeAllModifiers()`
 - `double getAttributeValue()`
+- `double getBaseValue()`
+- `AttributeModifier getModifier(java.util.UUID uuid)`
+- `java.util.Collection<AttributeModifier> getModifiers()`
+- `java.util.Collection<AttributeModifier> getModifiersByOperation(int operation)`
+- `boolean hasModifier(AttributeModifier modifier)`
+- `void removeAllModifiers()`
+- `void removeModifier(AttributeModifier modifier)`
+- `void removeModifier(java.util.UUID p_188479_1_)`
+- `void setBaseValue(double baseValue)`

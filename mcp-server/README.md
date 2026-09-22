@@ -15,7 +15,7 @@ npm run build
 
 ## 能力概览
 
-- 共 **81** 个 MCP 工具：`src/tool-registry.ts` **46** + `src/wave/register.ts` **35**
+- 共 **82** 个 MCP 工具：`src/tool-registry.ts` **47** + `src/wave/register.ts` **35**
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
@@ -87,7 +87,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 ### 3. 验收
 
-重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **81**。不要只让用户「看设置页」。
+重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **82**。不要只让用户「看设置页」。
 
 ### 4. 环境变量
 
@@ -182,7 +182,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 全局 flag（不进工具 schema）：`--help`/`-h`、`--version`/`-V`（放在工具名之前、或整条命令没写工具名时打印 CLI 版本；`--version` 跟在工具名后面时是工具字段，而 `-V` 在那个位置会被当未知参数 exit 2）、`--json`（不改变工具输出，仅为兼容保留；只在交互式终端下影响 `--help` 的呈现）、`--compact`、`--fail-on-error`、`--quiet`、`--timeout <ms>`、`--project <dir>`、`--file field=path`、`--raw [field]`、`--output-format json`、`--stdin-json`。`--quiet`、`--timeout` 与 `--stdin-json` 与全部工具字段名零碰撞（连字符/大小写归一化后同样复检），所以它们不需要进 `FIELD_OWNED_GLOBALS`；将来任何工具新增 `timeout` / `quiet` / `stdinJson` 字段都会让该门转红。
 
-同名让位（字段优先）：目标工具 schema 里存在与全局 flag 同名的字段时，这个名字归**工具字段**所有，全局剥离让位。当前唯一一例是 `validate_bp_json` 的 `json`——`--json '<BP 全文>'`、`--json=<全文>`、`--json=@file`、`--file json=path` 都是传待校验内容，不是输出开关；该工具的 `--json` 缺值时按 schema 报校验错（exit 2 `validation`），而不是「未知/缺参」。这份冲突清单显式写在 `FIELD_OWNED_GLOBALS`，`test-cli-parse` 的枚举门断言它恒等于「81 工具 schema 字段名 ∩ 全局 flag 名」，将来新增同名字段而不改清单会让 CI 转红。
+同名让位（字段优先）：目标工具 schema 里存在与全局 flag 同名的字段时，这个名字归**工具字段**所有，全局剥离让位。当前唯一一例是 `validate_bp_json` 的 `json`——`--json '<BP 全文>'`、`--json=<全文>`、`--json=@file`、`--file json=path` 都是传待校验内容，不是输出开关；该工具的 `--json` 缺值时按 schema 报校验错（exit 2 `validation`），而不是「未知/缺参」。这份冲突清单显式写在 `FIELD_OWNED_GLOBALS`，`test-cli-parse` 的枚举门断言它恒等于「全部工具 schema 字段名 ∩ 全局 flag 名」，将来新增同名字段而不改清单会让 CI 转红。
 
 kebab-case 会转到 camelCase（`--dry-run`→`dryRun`、`--highlight-key`→`highlight_key`）；另有 `--name`→`memberName`、`--confirm`→`confirmed`、`--class`→`className` 等语义别名（仅当目标字段存在于该工具 schema 时）。只有分隔符/大小写之差的名字（`--allow-fallback`、`--allowFallback`、`--ALLOW_FALLBACK`→`allow_fallback`）由通用归一化接管，不再逐个写进别名表；归一化只在候选唯一时接受，命中多个则报歧义并列出候选写法。未知 flag **exit 2**，报错里带近似名和 `node mcp-server/dist/cli.js <工具> --help` 指针。
 

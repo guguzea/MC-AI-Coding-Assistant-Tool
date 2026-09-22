@@ -1,5 +1,7 @@
 # AreaContext
 
+**Inheritance:** java.lang.Object → net.minecraftforge.server.permission.context.Context → net.minecraftforge.server.permission.context.PlayerContext → net.minecraftforge.server.permission.context.AreaContext
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class AreaContext extends PlayerContext
 
 ## Constructors
 
-- `public AreaContext( EntityPlayer ep, AxisAlignedBB aabb)`
+- `AreaContext(EntityPlayer ep, AxisAlignedBB aabb)`
 
 ## Methods
 
-- `@Nullable public <T> T get( ContextKey <T> key)`
-- `protected boolean covers( ContextKey <?> key)`
+- `protected boolean covers(ContextKey<?> key)`
+- `<T> T get(ContextKey<T> key)`

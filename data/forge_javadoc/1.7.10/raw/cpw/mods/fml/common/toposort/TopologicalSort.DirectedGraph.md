@@ -1,26 +1,36 @@
 ---
 title: "TopologicalSort.DirectedGraph"
-description: ""
+description: "public static class TopologicalSort.DirectedGraph<T> extends java.lang.Object implements java.lang.Iterable<T>"
 package: "cpw/mods/fml/common/toposort"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/toposort/TopologicalSort.DirectedGraph.html"
 sourceType: javadoc
 ---
 
 # TopologicalSort.DirectedGraph
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.toposort.TopologicalSort.DirectedGraph<T>
+
+## Class signature
+
+```java
+public static class TopologicalSort.DirectedGraph<T> extends java.lang.Object implements java.lang.Iterable<T>
+```
+
 ## Constructors
 
-- `public DirectedGraph()`
+- `DirectedGraph()`
 
 ## Methods
 
-- `public boolean addNode( T node)`
-- `public void addEdge( T from, T to)`
-- `public void removeEdge( T from, T to)`
-- `public boolean edgeExists( T from, T to)`
-- `public java.util.Set< T > edgesFrom( T from)`
-- `public java.util.Iterator< T > iterator()`
-- `public int size()`
-- `public boolean isEmpty()`
-- `public java.lang.String toString()`
+- `void addEdge(T from, T to)`
+- `boolean addNode(T node)`
+- `boolean edgeExists(T from, T to)`
+- `java.util.Set<T> edgesFrom(T from)`
+- `boolean isEmpty()`
+- `java.util.Iterator<T> iterator()`
+- `void removeEdge(T from, T to)`
+- `int size()`
+- `java.lang.String toString()`

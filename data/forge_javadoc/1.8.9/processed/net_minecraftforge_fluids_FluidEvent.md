@@ -1,5 +1,7 @@
 # FluidEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fluids.FluidEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,14 @@ public class FluidEvent extends Event
 
 ## Constructors
 
-- `public FluidEvent( FluidStack fluid, World world, BlockPos pos)`
+- `FluidEvent(FluidStack fluid, World world, BlockPos pos)`
 
 ## Methods
 
-- `public static final void fireEvent( FluidEvent event)`
+- `static void fireEvent(FluidEvent event)` — A handy shortcut for firing the various fluid events.
 
-## Description
+## Fields
 
-Mods should fire this event when a fluid is IFluidTank.drain(int, boolean) from their tank.
+- `FluidStack fluid`
+- `BlockPos pos`
+- `World world`

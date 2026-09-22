@@ -1,5 +1,7 @@
 # PlayerWakeUpEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerWakeUpEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,10 @@ public class PlayerWakeUpEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerWakeUpEvent( EntityPlayer player, boolean wakeImmediatly, boolean updateWorld, boolean setSpawn)`
+- `PlayerWakeUpEvent(EntityPlayer player, boolean wakeImmediatly, boolean updateWorld, boolean setSpawn)`
 
-## Description
+## Fields
 
-This event is fired when the player is waking up. This is merely for purposes of listening for this to happen. There is nothing that can be manipulated with this event.
+- `boolean setSpawn` — Indicates if the player's sleep was considered successful.
+- `boolean updateWorld` — Indicates if the server should be notified of sleeping changes.
+- `boolean wakeImmediatly` — Used for the 'wake up animation'.

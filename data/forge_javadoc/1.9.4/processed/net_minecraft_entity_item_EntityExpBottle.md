@@ -1,18 +1,20 @@
 # EntityExpBottle
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityThrowable → net.minecraft.entity.item.EntityExpBottle
+
 ## Class signature
 
 ```java
 public class EntityExpBottle extends EntityThrowable
 ```
 
-## Constructors
-
-- `public EntityExpBottle( World worldIn)`
-- `public EntityExpBottle( World worldIn, EntityLivingBase throwerIn)`
-- `public EntityExpBottle( World worldIn, double x, double y, double z)`
-
 ## Methods
 
 - `protected float getGravityVelocity()`
-- `protected void onImpact( RayTraceResult result)`
+- `protected void onImpact(RayTraceResult result)`
+
+## Fields
+
+- `EntityExpBottle`
+- `EntityExpBottle`
+- `EntityExpBottle`

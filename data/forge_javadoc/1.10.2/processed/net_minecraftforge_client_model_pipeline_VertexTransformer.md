@@ -1,5 +1,7 @@
 # VertexTransformer
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.pipeline.VertexTransformer
+
 ## Class signature
 
 ```java
@@ -8,13 +10,17 @@ public class VertexTransformer extends java.lang.Object implements IVertexConsum
 
 ## Constructors
 
-- `public VertexTransformer( IVertexConsumer parent)`
+- `VertexTransformer(IVertexConsumer parent)`
 
 ## Methods
 
-- `public VertexFormat getVertexFormat()`
-- `public void setQuadTint(int tint)`
-- `public void setTexture( TextureAtlasSprite texture)`
-- `public void setQuadOrientation( EnumFacing orientation)`
-- `public void setApplyDiffuseLighting(boolean diffuse)`
-- `public void put(int element, float... data)`
+- `VertexFormat getVertexFormat()`
+- `void put(int element, float... data)`
+- `void setApplyDiffuseLighting(boolean diffuse)`
+- `void setQuadOrientation(EnumFacing orientation)`
+- `void setQuadTint(int tint)`
+- `void setTexture(TextureAtlasSprite texture)`
+
+## Fields
+
+- `protected IVertexConsumer parent`

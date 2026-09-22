@@ -1,20 +1,26 @@
 ---
 title: "BlockModelRenderer.EnumNeighborInfo"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum BlockModelRenderer.EnumNeighborInfo extends java.lang.Enum<BlockModelRenderer.EnumNeighborInfo>"
 package: "net/minecraft/client/renderer"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/renderer/BlockModelRenderer.EnumNeighborInfo.html"
 sourceType: javadoc
 ---
 
 # BlockModelRenderer.EnumNeighborInfo
 
+**Inheritance:** java.lang.Object → java.lang.Enum<BlockModelRenderer.EnumNeighborInfo> → net.minecraft.client.renderer.BlockModelRenderer.EnumNeighborInfo
+
+## Class signature
+
+```java
+public static enum BlockModelRenderer.EnumNeighborInfo extends java.lang.Enum<BlockModelRenderer.EnumNeighborInfo>
+```
+
 ## Methods
 
-- `public static BlockModelRenderer.EnumNeighborInfo [] values()`
-- `public static BlockModelRenderer.EnumNeighborInfo valueOf(java.lang.String name)`
-- `public static BlockModelRenderer.EnumNeighborInfo getNeighbourInfo( EnumFacing p_178273_0_)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static BlockModelRenderer.EnumNeighborInfo getNeighbourInfo(EnumFacing p_178273_0_)`
+- `static BlockModelRenderer.EnumNeighborInfo valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static BlockModelRenderer.EnumNeighborInfo [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

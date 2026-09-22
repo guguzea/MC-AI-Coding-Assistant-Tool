@@ -1,5 +1,7 @@
 # RegionFile
 
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.storage.RegionFile
+
 ## Class signature
 
 ```java
@@ -8,17 +10,13 @@ public class RegionFile extends java.lang.Object
 
 ## Constructors
 
-- `public RegionFile(java.io.File fileNameIn)`
+- `RegionFile(java.io.File fileNameIn)`
 
 ## Methods
 
-- `public boolean chunkExists(int x, int z)`
-- `public java.io.DataInputStream getChunkDataInputStream(int x, int z)`
-- `public java.io.DataOutputStream getChunkDataOutputStream(int x, int z)`
-- `protected void write(int x, int z, byte[] data, int length)`
-- `public boolean isChunkSaved(int x, int z)`
-- `public void close() throws java.io.IOException`
-
-## Description
-
-close this RegionFile and prevent further writes
+- `boolean chunkExists(int x, int z)`
+- `void close()` — close this RegionFile and prevent further writes
+- `java.io.DataInputStream getChunkDataInputStream(int x, int z)` — Returns an uncompressed chunk stream from the region file.
+- `java.io.DataOutputStream getChunkDataOutputStream(int x, int z)` — Returns an output stream used to write chunk data.
+- `boolean isChunkSaved(int x, int z)` — args: x, z, - true if chunk has been saved / converted
+- `protected void write(int x, int z, byte[] data, int length)` — args: x, z, data, length - write chunk data at (x, z) to disk

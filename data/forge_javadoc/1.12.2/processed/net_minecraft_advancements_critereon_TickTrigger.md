@@ -1,20 +1,26 @@
 # TickTrigger
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.TickTrigger
+
 ## Class signature
 
 ```java
-public class TickTrigger extends java.lang.Object implements ICriterionTrigger < TickTrigger.Instance >
+public class TickTrigger extends java.lang.Object implements ICriterionTrigger<TickTrigger.Instance>
 ```
 
 ## Constructors
 
-- `public TickTrigger()`
+- `TickTrigger()`
 
 ## Methods
 
-- `public ResourceLocation getId()`
-- `public void addListener( PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener < TickTrigger.Instance > listener)`
-- `public void removeListener( PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener < TickTrigger.Instance > listener)`
-- `public void removeAllListeners( PlayerAdvancements playerAdvancementsIn)`
-- `public TickTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)`
-- `public void trigger( EntityPlayerMP player)`
+- `void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<TickTrigger.Instance> listener)`
+- `TickTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)`
+- `ResourceLocation getId()`
+- `void removeAllListeners(PlayerAdvancements playerAdvancementsIn)`
+- `void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<TickTrigger.Instance> listener)`
+- `void trigger(EntityPlayerMP player)`
+
+## Fields
+
+- `static ResourceLocation ID`

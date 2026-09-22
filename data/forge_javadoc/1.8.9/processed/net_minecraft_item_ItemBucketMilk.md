@@ -1,22 +1,20 @@
 # ItemBucketMilk
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemBucketMilk
+
 ## Class signature
 
 ```java
 public class ItemBucketMilk extends Item
 ```
 
-## Constructors
-
-- `public ItemBucketMilk()`
-
 ## Methods
 
-- `public ItemStack onItemUseFinish( ItemStack stack, World worldIn, EntityPlayer playerIn)`
-- `public int getMaxItemUseDuration( ItemStack stack)`
-- `public EnumAction getItemUseAction( ItemStack stack)`
-- `public ItemStack onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)`
+- `EnumAction getItemUseAction(ItemStack stack)` — returns the action that specifies what animation to play when the items is being used
+- `int getMaxItemUseDuration(ItemStack stack)` — How long it takes to use or consume an item
+- `ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)` — Called whenever this item is equipped and the right mouse button is pressed.
+- `ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)` — Called when the player finishes using this Item (E.g. finishes eating.).
 
-## Description
+## Fields
 
-returns the action that specifies what animation to play when the items is being used
+- `ItemBucketMilk`

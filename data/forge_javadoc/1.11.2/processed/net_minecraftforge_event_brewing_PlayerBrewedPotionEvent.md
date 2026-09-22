@@ -1,5 +1,7 @@
 # PlayerBrewedPotionEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.brewing.PlayerBrewedPotionEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class PlayerBrewedPotionEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerBrewedPotionEvent( EntityPlayer player, @Nonnull ItemStack stack)`
+- `PlayerBrewedPotionEvent(EntityPlayer player, ItemStack stack)`
 
 ## Methods
 
-- `@Nonnull public ItemStack getStack()`
-
-## Description
-
-This event is called when a player picks up a potion from a brewing stand.
+- `ItemStack getStack()` — The ItemStack of the potion.

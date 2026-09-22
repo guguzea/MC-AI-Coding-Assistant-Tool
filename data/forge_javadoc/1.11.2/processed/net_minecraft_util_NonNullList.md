@@ -1,23 +1,25 @@
 # NonNullList
 
+**Inheritance:** java.lang.Object → java.util.AbstractCollection<E> → java.util.AbstractList<E> → net.minecraft.util.NonNullList<E>
+
 ## Class signature
 
 ```java
 public class NonNullList<E> extends java.util.AbstractList<E>
 ```
 
-## Constructors
-
-- `protected NonNullList()`
-- `protected NonNullList(java.util.List< E > delegateIn, @Nullable E listType)`
-
 ## Methods
 
-- `public static <E> NonNullList <E> create()`
-- `public static <E> NonNullList <E> withSize(int size, E fill)`
-- `@Nonnull public E get(int p_get_1_)`
-- `public E set(int p_set_1_, E p_set_2_)`
-- `public void add(int p_add_1_, E p_add_2_)`
-- `public E remove(int p_remove_1_)`
-- `public int size()`
-- `public void clear()`
+- `void add(int p_add_1_, E p_add_2_)`
+- `void clear()`
+- `static<E> NonNullList<E> create()`
+- `E get(int p_get_1_)`
+- `E remove(int p_remove_1_)`
+- `E set(int p_set_1_, E p_set_2_)`
+- `int size()`
+- `static<E> NonNullList<E> withSize(int size, E fill)`
+
+## Fields
+
+- `protected NonNullList`
+- `protected NonNullList`

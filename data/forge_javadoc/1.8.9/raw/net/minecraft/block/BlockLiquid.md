@@ -1,13 +1,17 @@
 ---
 title: "BlockLiquid"
-description: "Get the Item that this Block should drop when harvested."
+description: "public abstract class BlockLiquid extends Block"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockLiquid.html"
 sourceType: javadoc
 ---
 
 # BlockLiquid
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockLiquid
 
 ## Class signature
 
@@ -17,42 +21,42 @@ public abstract class BlockLiquid extends Block
 
 ## Constructors
 
-- `protected BlockLiquid( Material materialIn)`
+- `BlockLiquid(Material materialIn)`
 
 ## Methods
 
-- `public boolean isPassable( IBlockAccess worldIn, BlockPos pos)`
-- `public static float getLiquidHeightPercent(int meta)`
-- `public int colorMultiplier( IBlockAccess worldIn, BlockPos pos, int renderPass)`
-- `protected int getLevel( IBlockAccess worldIn, BlockPos pos)`
-- `protected int getEffectiveFlowDecay( IBlockAccess worldIn, BlockPos pos)`
-- `public boolean isFullCube()`
-- `public boolean isOpaqueCube()`
-- `public boolean canCollideCheck( IBlockState state, boolean hitIfLiquid)`
-- `public boolean isBlockSolid( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
-- `public boolean shouldSideBeRendered( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean func_176364_g( IBlockAccess blockAccess, BlockPos pos)`
-- `public int getRenderType()`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public int quantityDropped(java.util.Random random)`
-- `protected Vec3 getFlowVector( IBlockAccess worldIn, BlockPos pos)`
-- `public Vec3 modifyAcceleration( World worldIn, BlockPos pos, Entity entityIn, Vec3 motion)`
-- `public int tickRate( World worldIn)`
-- `public int getMixedBrightnessForBlock( IBlockAccess worldIn, BlockPos pos)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public EnumWorldBlockLayer getBlockLayer()`
-- `public void randomDisplayTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public static double getFlowDirection( IBlockAccess worldIn, BlockPos pos, Material materialIn)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public boolean checkForMixing( World worldIn, BlockPos pos, IBlockState state)`
-- `protected void triggerMixEffects( World worldIn, BlockPos pos)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canCollideCheck(IBlockState state, boolean hitIfLiquid)`
+- `boolean checkForMixing(World worldIn, BlockPos pos, IBlockState state)`
+- `int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)`
 - `protected BlockState createBlockState()`
-- `public static BlockDynamicLiquid getFlowingBlock( Material materialIn)`
-- `public static BlockStaticLiquid getStaticBlock( Material materialIn)`
+- `boolean func_176364_g(IBlockAccess blockAccess, BlockPos pos)`
+- `EnumWorldBlockLayer getBlockLayer()`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `protected int getEffectiveFlowDecay(IBlockAccess worldIn, BlockPos pos)`
+- `static double getFlowDirection(IBlockAccess worldIn, BlockPos pos, Material materialIn)`
+- `static BlockDynamicLiquid getFlowingBlock(Material materialIn)`
+- `protected Vec3 getFlowVector(IBlockAccess worldIn, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `protected int getLevel(IBlockAccess worldIn, BlockPos pos)`
+- `static float getLiquidHeightPercent(int meta)` — Returns the percentage of the liquid block that is air, based on the given flow decay of the liquid
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `int getMixedBrightnessForBlock(IBlockAccess worldIn, BlockPos pos)`
+- `int getRenderType()` — The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `static BlockStaticLiquid getStaticBlock(Material materialIn)`
+- `boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side)` — Whether this Block is solid on the given Side
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `boolean isPassable(IBlockAccess worldIn, BlockPos pos)`
+- `Vec3 modifyAcceleration(World worldIn, BlockPos pos, Entity entityIn, Vec3 motion)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `int quantityDropped(java.util.Random random)` — Returns the quantity of items to drop on block destruction.
+- `void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
+- `int tickRate(World worldIn)` — How many world ticks before ticking
+- `protected void triggerMixEffects(World worldIn, BlockPos pos)`
 
-## Description
+## Fields
 
-Get the Item that this Block should drop when harvested.
+- `static PropertyInteger LEVEL`

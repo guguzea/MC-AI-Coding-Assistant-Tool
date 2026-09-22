@@ -1,16 +1,18 @@
 # GuiOldSaveLoadConfirm
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiYesNo → net.minecraftforge.fml.client.GuiOldSaveLoadConfirm
+
 ## Class signature
 
 ```java
 public class GuiOldSaveLoadConfirm extends GuiYesNo implements GuiYesNoCallback
 ```
 
-## Constructors
-
-- `public GuiOldSaveLoadConfirm(java.lang.String dirName, java.lang.String saveName, GuiScreen parent)`
-
 ## Methods
 
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `protected void actionPerformed( GuiButton button)`
+- `protected void actionPerformed(GuiButton button)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+
+## Fields
+
+- `GuiOldSaveLoadConfirm`

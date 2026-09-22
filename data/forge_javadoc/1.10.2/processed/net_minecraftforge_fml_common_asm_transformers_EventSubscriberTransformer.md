@@ -1,5 +1,7 @@
 # EventSubscriberTransformer
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.asm.transformers.EventSubscriberTransformer
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class EventSubscriberTransformer extends java.lang.Object implements net.
 
 ## Constructors
 
-- `public EventSubscriberTransformer()`
+- `EventSubscriberTransformer()`
 
 ## Methods
 
-- `public byte[] transform(java.lang.String name, java.lang.String transformedName, byte[] basicClass)`
+- `byte[] transform(java.lang.String name, java.lang.String transformedName, byte[] basicClass)`

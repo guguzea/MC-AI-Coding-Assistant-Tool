@@ -8,5 +8,5 @@ public interface ISoundEventAccessor<T>
 
 ## Methods
 
-- `int getWeight()`
 - `T cloneEntry()`
+- `int getWeight()`

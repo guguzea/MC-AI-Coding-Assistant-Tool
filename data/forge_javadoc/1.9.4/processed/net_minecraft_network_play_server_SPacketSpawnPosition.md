@@ -1,19 +1,21 @@
 # SPacketSpawnPosition
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketSpawnPosition
+
 ## Class signature
 
 ```java
-public class SPacketSpawnPosition extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketSpawnPosition extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketSpawnPosition()`
-- `public SPacketSpawnPosition( BlockPos posIn)`
+- `SPacketSpawnPosition()`
+- `SPacketSpawnPosition(BlockPos posIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public BlockPos getSpawnPos()`
+- `BlockPos getSpawnPos()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

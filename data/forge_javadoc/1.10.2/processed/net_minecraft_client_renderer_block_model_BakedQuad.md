@@ -1,5 +1,7 @@
 # BakedQuad
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.BakedQuad
+
 ## Class signature
 
 ```java
@@ -8,20 +10,25 @@ public class BakedQuad extends java.lang.Object implements IVertexProducer
 
 ## Constructors
 
-- `public BakedQuad(int[] vertexDataIn, int tintIndexIn, EnumFacing faceIn, TextureAtlasSprite spriteIn, boolean applyDiffuseLighting, VertexFormat format)`
+- `@Deprecated BakedQuad(int[] vertexDataIn, int tintIndexIn, EnumFacing faceIn, TextureAtlasSprite spriteIn)`
+- `BakedQuad(int[] vertexDataIn, int tintIndexIn, EnumFacing faceIn, TextureAtlasSprite spriteIn, boolean applyDiffuseLighting, VertexFormat format)`
 
 ## Methods
 
-- `@Deprecated public BakedQuad(int[] vertexDataIn, int tintIndexIn, EnumFacing faceIn, TextureAtlasSprite spriteIn)`
-- `public TextureAtlasSprite getSprite()`
-- `public int[] getVertexData()`
-- `public boolean hasTintIndex()`
-- `public int getTintIndex()`
-- `public EnumFacing getFace()`
-- `public void pipe( IVertexConsumer consumer)`
-- `public VertexFormat getFormat()`
-- `public boolean shouldApplyDiffuseLighting()`
+- `EnumFacing getFace()`
+- `VertexFormat getFormat()`
+- `TextureAtlasSprite getSprite()`
+- `int getTintIndex()`
+- `int[] getVertexData()`
+- `boolean hasTintIndex()`
+- `void pipe(IVertexConsumer consumer)`
+- `boolean shouldApplyDiffuseLighting()`
 
-## Description
+## Fields
 
-Deprecated. Use constructor with the format argument.
+- `protected boolean applyDiffuseLighting`
+- `protected EnumFacing face`
+- `protected VertexFormat format`
+- `protected TextureAtlasSprite sprite`
+- `protected int tintIndex`
+- `protected int[] vertexData`

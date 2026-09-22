@@ -3,11 +3,15 @@ title: "ItemLeaves"
 description: "public class ItemLeaves extends ItemBlock"
 package: "net/minecraft/item"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/item/ItemLeaves.html"
 sourceType: javadoc
 ---
 
 # ItemLeaves
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemBlock → net.minecraft.item.ItemLeaves
 
 ## Class signature
 
@@ -15,11 +19,11 @@ sourceType: javadoc
 public class ItemLeaves extends ItemBlock
 ```
 
-## Constructors
-
-- `public ItemLeaves( BlockLeaves block)`
-
 ## Methods
 
-- `public int getMetadata(int damage)`
-- `public java.lang.String getUnlocalizedName( ItemStack stack)`
+- `int getMetadata(int damage)`
+- `java.lang.String getUnlocalizedName(ItemStack stack)`
+
+## Fields
+
+- `ItemLeaves`

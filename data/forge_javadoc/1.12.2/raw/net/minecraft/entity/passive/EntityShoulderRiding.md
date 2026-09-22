@@ -3,11 +3,15 @@ title: "EntityShoulderRiding"
 description: "public abstract class EntityShoulderRiding extends EntityTameable"
 package: "net/minecraft/entity/passive"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/passive/EntityShoulderRiding.html"
 sourceType: javadoc
 ---
 
 # EntityShoulderRiding
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityTameable → net.minecraft.entity.passive.EntityShoulderRiding
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public abstract class EntityShoulderRiding extends EntityTameable
 ```
 
-## Constructors
-
-- `public EntityShoulderRiding( World p_i47410_1_)`
-
 ## Methods
 
-- `public boolean setEntityOnShoulder( EntityPlayer p_191994_1_)`
-- `public void onUpdate()`
-- `public boolean canSitOnShoulder()`
+- `boolean canSitOnShoulder()`
+- `void onUpdate()`
+- `boolean setEntityOnShoulder(EntityPlayer p_191994_1_)`
+
+## Fields
+
+- `EntityShoulderRiding`

@@ -1,11 +1,13 @@
 # BiomeHell
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Biome> → net.minecraft.world.biome.Biome → net.minecraft.world.biome.BiomeHell
+
 ## Class signature
 
 ```java
 public class BiomeHell extends Biome
 ```
 
-## Constructors
+## Fields
 
-- `public BiomeHell( Biome.BiomeProperties properties)`
+- `BiomeHell`

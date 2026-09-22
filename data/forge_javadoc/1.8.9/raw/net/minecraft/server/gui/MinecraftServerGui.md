@@ -1,13 +1,17 @@
 ---
 title: "MinecraftServerGui"
-description: "Creates the server GUI and sets it visible for the user."
+description: "public class MinecraftServerGui extends javax.swing.JComponent"
 package: "net/minecraft/server/gui"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/server/gui/MinecraftServerGui.html"
 sourceType: javadoc
 ---
 
 # MinecraftServerGui
+
+**Inheritance:** java.lang.Object → java.awt.Component → java.awt.Container → javax.swing.JComponent → net.minecraft.server.gui.MinecraftServerGui
 
 ## Class signature
 
@@ -15,15 +19,11 @@ sourceType: javadoc
 public class MinecraftServerGui extends javax.swing.JComponent
 ```
 
-## Constructors
-
-- `public MinecraftServerGui( DedicatedServer serverIn)`
-
 ## Methods
 
-- `public static void createServerGui( DedicatedServer serverIn)`
-- `public void func_164247_a(javax.swing.JTextArea p_164247_1_, javax.swing.JScrollPane p_164247_2_, java.lang.String p_164247_3_)`
+- `static void createServerGui(DedicatedServer serverIn)` — Creates the server GUI and sets it visible for the user.
+- `void func_164247_a(javax.swing.JTextArea p_164247_1_, javax.swing.JScrollPane p_164247_2_, java.lang.String p_164247_3_)`
 
-## Description
+## Fields
 
-Creates the server GUI and sets it visible for the user.
+- `MinecraftServerGui`

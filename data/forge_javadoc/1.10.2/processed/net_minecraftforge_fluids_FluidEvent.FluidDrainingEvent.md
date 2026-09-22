@@ -1,14 +1,18 @@
 # FluidEvent.FluidDrainingEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fluids.FluidEvent → net.minecraftforge.fluids.FluidEvent.FluidDrainingEvent
+
+## Class signature
+
+```java
+public static class FluidEvent.FluidDrainingEvent extends FluidEvent
+```
+
 ## Constructors
 
-- `public FluidDrainingEvent( FluidStack fluid, World world, BlockPos pos, IFluidTank tank, int amount)`
+- `FluidDrainingEvent(FluidStack fluid, World world, BlockPos pos, IFluidTank tank, int amount)`
 
 ## Methods
 
-- `public IFluidTank getTank()`
-- `public int getAmount()`
-
-## Description
-
-Mods should fire this event when a fluid is IFluidTank.drain(int, boolean) from their tank.
+- `int getAmount()`
+- `IFluidTank getTank()`

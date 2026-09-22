@@ -1,20 +1,26 @@
 ---
 title: "BlockPurpurSlab.Variant"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum BlockPurpurSlab.Variant extends java.lang.Enum<BlockPurpurSlab.Variant> implements IStringSerializable"
 package: "net/minecraft/block"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/block/BlockPurpurSlab.Variant.html"
 sourceType: javadoc
 ---
 
 # BlockPurpurSlab.Variant
 
+**Inheritance:** java.lang.Object → java.lang.Enum<BlockPurpurSlab.Variant> → net.minecraft.block.BlockPurpurSlab.Variant
+
+## Class signature
+
+```java
+public static enum BlockPurpurSlab.Variant extends java.lang.Enum<BlockPurpurSlab.Variant> implements IStringSerializable
+```
+
 ## Methods
 
-- `public static BlockPurpurSlab.Variant [] values()`
-- `public static BlockPurpurSlab.Variant valueOf(java.lang.String name)`
-- `public java.lang.String getName()`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `java.lang.String getName()`
+- `static BlockPurpurSlab.Variant valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static BlockPurpurSlab.Variant [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

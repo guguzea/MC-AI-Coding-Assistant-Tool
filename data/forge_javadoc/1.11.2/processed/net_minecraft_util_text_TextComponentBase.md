@@ -1,5 +1,7 @@
 # TextComponentBase
 
+**Inheritance:** java.lang.Object → net.minecraft.util.text.TextComponentBase
+
 ## Class signature
 
 ```java
@@ -8,19 +10,23 @@ public abstract class TextComponentBase extends java.lang.Object implements ITex
 
 ## Constructors
 
-- `public TextComponentBase()`
+- `TextComponentBase()`
 
 ## Methods
 
-- `public ITextComponent appendSibling( ITextComponent component)`
-- `public java.util.List< ITextComponent > getSiblings()`
-- `public ITextComponent appendText(java.lang.String text)`
-- `public ITextComponent setStyle( Style style)`
-- `public Style getStyle()`
-- `public java.util.Iterator< ITextComponent > iterator()`
-- `public final java.lang.String getUnformattedText()`
-- `public final java.lang.String getFormattedText()`
-- `public static java.util.Iterator< ITextComponent > createDeepCopyIterator(java.lang.Iterable< ITextComponent > components)`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public java.lang.String toString()`
+- `ITextComponent appendSibling(ITextComponent component)`
+- `ITextComponent appendText(java.lang.String text)`
+- `static java.util.Iterator<ITextComponent> createDeepCopyIterator(java.lang.Iterable<ITextComponent> components)`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `java.lang.String getFormattedText()`
+- `java.util.List<ITextComponent> getSiblings()`
+- `Style getStyle()`
+- `java.lang.String getUnformattedText()`
+- `int hashCode()`
+- `java.util.Iterator<ITextComponent> iterator()`
+- `ITextComponent setStyle(Style style)`
+- `java.lang.String toString()`
+
+## Fields
+
+- `protected java.util.List<ITextComponent> siblings`

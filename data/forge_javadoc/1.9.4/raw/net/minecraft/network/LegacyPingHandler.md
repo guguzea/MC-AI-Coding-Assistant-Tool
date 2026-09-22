@@ -3,11 +3,15 @@ title: "LegacyPingHandler"
 description: "public class LegacyPingHandler extends io.netty.channel.ChannelInboundHandlerAdapter"
 package: "net/minecraft/network"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/LegacyPingHandler.html"
 sourceType: javadoc
 ---
 
 # LegacyPingHandler
+
+**Inheritance:** java.lang.Object → io.netty.channel.ChannelHandlerAdapter → io.netty.channel.ChannelInboundHandlerAdapter → net.minecraft.network.LegacyPingHandler
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class LegacyPingHandler extends io.netty.channel.ChannelInboundHandlerAda
 
 ## Constructors
 
-- `public LegacyPingHandler( NetworkSystem networkSystemIn)`
+- `LegacyPingHandler(NetworkSystem networkSystemIn)`
 
 ## Methods
 
-- `public void channelRead(io.netty.channel.ChannelHandlerContext p_channelRead_1_, java.lang.Object p_channelRead_2_) throws java.lang.Exception`
+- `void channelRead(io.netty.channel.ChannelHandlerContext p_channelRead_1_, java.lang.Object p_channelRead_2_)`

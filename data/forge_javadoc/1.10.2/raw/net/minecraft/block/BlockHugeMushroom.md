@@ -1,13 +1,17 @@
 ---
 title: "BlockHugeMushroom"
-description: "Rotate the block."
+description: "public class BlockHugeMushroom extends Block"
 package: "net/minecraft/block"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/block/BlockHugeMushroom.html"
 sourceType: javadoc
 ---
 
 # BlockHugeMushroom
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockHugeMushroom
 
 ## Class signature
 
@@ -17,22 +21,22 @@ public class BlockHugeMushroom extends Block
 
 ## Constructors
 
-- `public BlockHugeMushroom( Material materialIn, MapColor color, Block smallBlockIn)`
+- `BlockHugeMushroom(Material materialIn, MapColor color, Block smallBlockIn)`
 
 ## Methods
 
-- `public int quantityDropped(java.util.Random random)`
-- `public MapColor getMapColor( IBlockState state)`
-- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public IBlockState onBlockPlaced( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
 - `protected BlockStateContainer createBlockState()`
-- `public boolean rotateBlock( World world, BlockPos pos, EnumFacing axis)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `MapColor getMapColor(IBlockState state)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `int quantityDropped(java.util.Random random)`
+- `boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)` — Rotate the block.
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
 
-## Description
+## Fields
 
-Rotate the block.
+- `static PropertyEnum<BlockHugeMushroom.EnumType> VARIANT`

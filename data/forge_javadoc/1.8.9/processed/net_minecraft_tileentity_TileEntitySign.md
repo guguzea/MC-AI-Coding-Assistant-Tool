@@ -1,5 +1,7 @@
 # TileEntitySign
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntitySign
+
 ## Class signature
 
 ```java
@@ -8,21 +10,22 @@ public class TileEntitySign extends TileEntity
 
 ## Constructors
 
-- `public TileEntitySign()`
+- `TileEntitySign()`
 
 ## Methods
 
-- `public void writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public Packet getDescriptionPacket()`
-- `public boolean func_183000_F()`
-- `public boolean getIsEditable()`
-- `public void setEditable(boolean isEditableIn)`
-- `public void setPlayer( EntityPlayer playerIn)`
-- `public EntityPlayer getPlayer()`
-- `public boolean executeCommand( EntityPlayer playerIn)`
-- `public CommandResultStats getStats()`
+- `boolean executeCommand(EntityPlayer playerIn)`
+- `boolean func_183000_F()`
+- `Packet getDescriptionPacket()` — Allows for a specialized description packet to be created.
+- `boolean getIsEditable()`
+- `EntityPlayer getPlayer()`
+- `CommandResultStats getStats()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setEditable(boolean isEditableIn)` — Sets the sign's isEditable flag to the specified parameter.
+- `void setPlayer(EntityPlayer playerIn)`
+- `void writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-The index of the line currently being edited.
+- `int lineBeingEdited` — The index of the line currently being edited.
+- `IChatComponent [] signText`

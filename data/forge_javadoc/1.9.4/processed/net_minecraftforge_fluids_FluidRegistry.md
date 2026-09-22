@@ -1,5 +1,7 @@
 # FluidRegistry
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.FluidRegistry
+
 ## Class signature
 
 ```java
@@ -8,31 +10,32 @@ public abstract class FluidRegistry extends java.lang.Object
 
 ## Methods
 
-- `public static void initFluidIDs(com.google.common.collect.BiMap< Fluid ,java.lang.Integer> newfluidIDs, java.util.Set<java.lang.String> defaultNames)`
-- `public static boolean registerFluid( Fluid fluid)`
-- `public static boolean isFluidDefault( Fluid fluid)`
-- `public static boolean isFluidRegistered( Fluid fluid)`
-- `public static boolean isFluidRegistered(java.lang.String fluidName)`
-- `public static Fluid getFluid(java.lang.String fluidName)`
-- `@Deprecated public static Fluid getFluid(int fluidID)`
-- `@Deprecated public static int getFluidID( Fluid fluid)`
-- `@Deprecated public static int getFluidID(java.lang.String fluidName)`
-- `public static java.lang.String getFluidName( Fluid fluid)`
-- `public static java.lang.String getFluidName( FluidStack stack)`
-- `public static FluidStack getFluidStack(java.lang.String fluidName, int amount)`
-- `public static java.util.Map<java.lang.String, Fluid > getRegisteredFluids()`
-- `@Deprecated public static java.util.Map< Fluid ,java.lang.Integer> getRegisteredFluidIDs()`
-- `public static void enableUniversalBucket()`
-- `public static boolean isUniversalBucketEnabled()`
-- `public static boolean addBucketForFluid( Fluid fluid)`
-- `public static java.util.Set< Fluid > getBucketFluids()`
-- `public static Fluid lookupFluidForBlock( Block block)`
-- `public static int getMaxID()`
-- `public static java.lang.String getDefaultFluidName( Fluid key)`
-- `public static void loadFluidDefaults( NBTTagCompound tag)`
-- `public static void writeDefaultFluidList( NBTTagCompound forgeData)`
-- `public static void validateFluidRegistry()`
+- `static boolean addBucketForFluid(Fluid fluid)` — Registers a fluid with the universal bucket.
+- `static void enableUniversalBucket()` — Enables the universal bucket in forge.
+- `static java.util.Set<Fluid> getBucketFluids()` — All fluids registered with the universal bucket
+- `static java.lang.String getDefaultFluidName(Fluid key)`
+- `@Deprecated static Fluid getFluid(int fluidID)`
+- `static Fluid getFluid(java.lang.String fluidName)`
+- `@Deprecated static int getFluidID(Fluid fluid)`
+- `@Deprecated static int getFluidID(java.lang.String fluidName)`
+- `static java.lang.String getFluidName(Fluid fluid)`
+- `static java.lang.String getFluidName(FluidStack stack)`
+- `static FluidStack getFluidStack(java.lang.String fluidName, int amount)`
+- `static int getMaxID()`
+- `@Deprecated static java.util.Map<Fluid, java.lang.Integer> getRegisteredFluidIDs()`
+- `static java.util.Map<java.lang.String, Fluid> getRegisteredFluids()` — Returns a read-only map containing Fluid Names and their associated Fluids.
+- `static void initFluidIDs(com.google.common.collect.BiMap<Fluid, java.lang.Integer> newfluidIDs, java.util.Set<java.lang.String> defaultNames)` — Called by Forge to prepare the ID map for server -> client sync.
+- `static boolean isFluidDefault(Fluid fluid)` — Is the supplied fluid the current default fluid for it's name
+- `static boolean isFluidRegistered(Fluid fluid)` — Does the supplied fluid have an entry for it's name (whether or not the fluid itself is default)
+- `static boolean isFluidRegistered(java.lang.String fluidName)`
+- `static boolean isUniversalBucketEnabled()`
+- `static void loadFluidDefaults(NBTTagCompound tag)`
+- `static Fluid lookupFluidForBlock(Block block)`
+- `static boolean registerFluid(Fluid fluid)` — Register a new Fluid.
+- `static void validateFluidRegistry()`
+- `static void writeDefaultFluidList(NBTTagCompound forgeData)`
 
-## Description
+## Fields
 
-Handles Fluid registrations. Fluids MUST be registered in order to function.
+- `static Fluid LAVA`
+- `static Fluid WATER`

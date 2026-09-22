@@ -1,20 +1,22 @@
 # ItemWrittenBook
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemWrittenBook
+
 ## Class signature
 
 ```java
 public class ItemWrittenBook extends Item
 ```
 
-## Constructors
-
-- `public ItemWrittenBook()`
-
 ## Methods
 
-- `public static boolean validBookTagContents( NBTTagCompound nbt)`
-- `public static int getGeneration( ItemStack book)`
-- `public java.lang.String getItemStackDisplayName( ItemStack stack)`
-- `public void addInformation( ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
-- `public ActionResult < ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn)`
-- `public boolean hasEffect( ItemStack stack)`
+- `void addInformation(ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
+- `static int getGeneration(ItemStack book)`
+- `java.lang.String getItemStackDisplayName(ItemStack stack)`
+- `boolean hasEffect(ItemStack stack)`
+- `ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+- `static boolean validBookTagContents(NBTTagCompound nbt)`
+
+## Fields
+
+- `ItemWrittenBook`

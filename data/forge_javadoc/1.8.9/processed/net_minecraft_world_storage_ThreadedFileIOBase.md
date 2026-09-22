@@ -1,5 +1,7 @@
 # ThreadedFileIOBase
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.ThreadedFileIOBase
+
 ## Class signature
 
 ```java
@@ -8,11 +10,7 @@ public class ThreadedFileIOBase extends java.lang.Object implements java.lang.Ru
 
 ## Methods
 
-- `public static ThreadedFileIOBase getThreadedIOInstance()`
-- `public void run()`
-- `public void queueIO( IThreadedFileIO p_75735_1_)`
-- `public void waitForFinish() throws java.lang.InterruptedException`
-
-## Description
-
-Retrieves an instance of the threadedFileIOBase.
+- `static ThreadedFileIOBase getThreadedIOInstance()` — Retrieves an instance of the threadedFileIOBase.
+- `void queueIO(IThreadedFileIO p_75735_1_)` — threaded io
+- `void run()`
+- `void waitForFinish()`

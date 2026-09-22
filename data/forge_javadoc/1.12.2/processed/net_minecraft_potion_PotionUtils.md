@@ -1,5 +1,7 @@
 # PotionUtils
 
+**Inheritance:** java.lang.Object → net.minecraft.potion.PotionUtils
+
 ## Class signature
 
 ```java
@@ -8,21 +10,21 @@ public class PotionUtils extends java.lang.Object
 
 ## Constructors
 
-- `public PotionUtils()`
+- `PotionUtils()`
 
 ## Methods
 
-- `public static java.util.List< PotionEffect > getEffectsFromStack( ItemStack stack)`
-- `public static java.util.List< PotionEffect > mergeEffects( PotionType potionIn, java.util.Collection< PotionEffect > effects)`
-- `public static java.util.List< PotionEffect > getEffectsFromTag( NBTTagCompound tag)`
-- `public static java.util.List< PotionEffect > getFullEffectsFromItem( ItemStack itemIn)`
-- `public static java.util.List< PotionEffect > getFullEffectsFromTag( NBTTagCompound tag)`
-- `public static void addCustomPotionEffectToList( NBTTagCompound tag, java.util.List< PotionEffect > effectList)`
-- `public static int getColor( ItemStack p_190932_0_)`
-- `public static int getPotionColor( PotionType potionIn)`
-- `public static int getPotionColorFromEffectList(java.util.Collection< PotionEffect > effects)`
-- `public static PotionType getPotionFromItem( ItemStack itemIn)`
-- `public static PotionType getPotionTypeFromNBT( NBTTagCompound tag)`
-- `public static ItemStack addPotionToItemStack( ItemStack itemIn, PotionType potionIn)`
-- `public static ItemStack appendEffects( ItemStack itemIn, java.util.Collection< PotionEffect > effects)`
-- `public static void addPotionTooltip( ItemStack itemIn, java.util.List<java.lang.String> lores, float durationFactor)`
+- `static void addCustomPotionEffectToList(NBTTagCompound tag, java.util.List<PotionEffect> effectList)`
+- `static ItemStack addPotionToItemStack(ItemStack itemIn, PotionType potionIn)`
+- `static void addPotionTooltip(ItemStack itemIn, java.util.List<java.lang.String> lores, float durationFactor)`
+- `static ItemStack appendEffects(ItemStack itemIn, java.util.Collection<PotionEffect> effects)`
+- `static int getColor(ItemStack p_190932_0_)`
+- `static java.util.List<PotionEffect> getEffectsFromStack(ItemStack stack)`
+- `static java.util.List<PotionEffect> getEffectsFromTag(NBTTagCompound tag)`
+- `static java.util.List<PotionEffect> getFullEffectsFromItem(ItemStack itemIn)`
+- `static java.util.List<PotionEffect> getFullEffectsFromTag(NBTTagCompound tag)`
+- `static int getPotionColor(PotionType potionIn)`
+- `static int getPotionColorFromEffectList(java.util.Collection<PotionEffect> effects)`
+- `static PotionType getPotionFromItem(ItemStack itemIn)`
+- `static PotionType getPotionTypeFromNBT(NBTTagCompound tag)`
+- `static java.util.List<PotionEffect> mergeEffects(PotionType potionIn, java.util.Collection<PotionEffect> effects)`

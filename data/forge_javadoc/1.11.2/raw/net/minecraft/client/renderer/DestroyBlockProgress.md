@@ -3,11 +3,15 @@ title: "DestroyBlockProgress"
 description: "public class DestroyBlockProgress extends java.lang.Object"
 package: "net/minecraft/client/renderer"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/renderer/DestroyBlockProgress.html"
 sourceType: javadoc
 ---
 
 # DestroyBlockProgress
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.DestroyBlockProgress
 
 ## Class signature
 
@@ -17,12 +21,12 @@ public class DestroyBlockProgress extends java.lang.Object
 
 ## Constructors
 
-- `public DestroyBlockProgress(int miningPlayerEntIdIn, BlockPos positionIn)`
+- `DestroyBlockProgress(int miningPlayerEntIdIn, BlockPos positionIn)`
 
 ## Methods
 
-- `public BlockPos getPosition()`
-- `public void setPartialBlockDamage(int damage)`
-- `public int getPartialBlockDamage()`
-- `public void setCloudUpdateTick(int createdAtCloudUpdateTickIn)`
-- `public int getCreationCloudUpdateTick()`
+- `int getCreationCloudUpdateTick()`
+- `int getPartialBlockDamage()`
+- `BlockPos getPosition()`
+- `void setCloudUpdateTick(int createdAtCloudUpdateTickIn)`
+- `void setPartialBlockDamage(int damage)`

@@ -1,5 +1,7 @@
 # ChatComponentProcessor
 
+**Inheritance:** java.lang.Object → net.minecraft.util.ChatComponentProcessor
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class ChatComponentProcessor extends java.lang.Object
 
 ## Constructors
 
-- `public ChatComponentProcessor()`
+- `ChatComponentProcessor()`
 
 ## Methods
 
-- `public static IChatComponent processComponent( ICommandSender commandSender, IChatComponent component, Entity entityIn) throws CommandException`
+- `static IChatComponent processComponent(ICommandSender commandSender, IChatComponent component, Entity entityIn)`

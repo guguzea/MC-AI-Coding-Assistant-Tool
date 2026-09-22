@@ -1,5 +1,7 @@
 # VertexBufferConsumer
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.pipeline.VertexBufferConsumer
+
 ## Class signature
 
 ```java
@@ -8,17 +10,13 @@ public class VertexBufferConsumer extends java.lang.Object implements IVertexCon
 
 ## Constructors
 
-- `public VertexBufferConsumer( VertexBuffer renderer)`
+- `VertexBufferConsumer(VertexBuffer renderer)`
 
 ## Methods
 
-- `public VertexFormat getVertexFormat()`
-- `public void put(int e, float... data)`
-- `public void setOffset( BlockPos offset)`
-- `public void setQuadTint(int tint)`
-- `public void setQuadOrientation( EnumFacing orientation)`
-- `public void setApplyDiffuseLighting(boolean diffuse)`
-
-## Description
-
-Assumes VertexFormatElement is present in the VertexBuffer's vertex format.
+- `VertexFormat getVertexFormat()`
+- `void put(int e, float... data)`
+- `void setApplyDiffuseLighting(boolean diffuse)`
+- `void setOffset(BlockPos offset)`
+- `void setQuadOrientation(EnumFacing orientation)`
+- `void setQuadTint(int tint)`

@@ -1,45 +1,47 @@
 # EntityRabbit
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityRabbit
+
 ## Class signature
 
 ```java
 public class EntityRabbit extends EntityAnimal
 ```
 
-## Constructors
-
-- `public EntityRabbit( World worldIn)`
-
 ## Methods
 
-- `protected void initEntityAI()`
-- `protected float getJumpUpwardsMotion()`
-- `protected void jump()`
-- `public float setJumpCompletion(float p_175521_1_)`
-- `public void setMovementSpeed(double newSpeed)`
-- `public void setJumping(boolean jumping)`
-- `public void startJumping()`
-- `protected void entityInit()`
-- `public void updateAITasks()`
-- `public void spawnRunningParticles()`
-- `public void onLivingUpdate()`
 - `protected void applyEntityAttributes()`
-- `public static void registerFixesRabbit( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `protected SoundEvent getJumpSound()`
-- `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
-- `protected SoundEvent getDeathSound()`
-- `public boolean attackEntityAsMob( Entity entityIn)`
-- `public SoundCategory getSoundCategory()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public EntityRabbit createChild( EntityAgeable ageable)`
-- `public boolean isBreedingItem(@Nullable ItemStack stack)`
-- `public int getRabbitType()`
-- `public void setRabbitType(int rabbitTypeId)`
-- `@Nullable public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)`
+- `boolean attackEntityAsMob(Entity entityIn)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `EntityRabbit createChild(EntityAgeable ageable)`
 - `protected void createEatingParticles()`
-- `public void handleStatusUpdate(byte id)`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
+- `protected void entityInit()`
+- `protected SoundEvent getAmbientSound()`
+- `protected SoundEvent getDeathSound()`
+- `protected SoundEvent getHurtSound()`
+- `protected SoundEvent getJumpSound()`
+- `protected float getJumpUpwardsMotion()`
+- `protected ResourceLocation getLootTable()`
+- `int getRabbitType()`
+- `SoundCategory getSoundCategory()`
+- `void handleStatusUpdate(byte id)`
+- `protected void initEntityAI()`
+- `boolean isBreedingItem(ItemStack stack)`
+- `protected void jump()`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onLivingUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesRabbit(DataFixer fixer)`
+- `float setJumpCompletion(float p_175521_1_)`
+- `void setJumping(boolean jumping)`
+- `void setMovementSpeed(double newSpeed)`
+- `void setRabbitType(int rabbitTypeId)`
+- `void spawnRunningParticles()`
+- `void startJumping()`
+- `void updateAITasks()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityRabbit`

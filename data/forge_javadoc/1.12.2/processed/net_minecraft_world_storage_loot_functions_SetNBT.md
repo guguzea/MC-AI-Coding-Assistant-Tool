@@ -1,5 +1,7 @@
 # SetNBT
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction → net.minecraft.world.storage.loot.functions.SetNBT
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class SetNBT extends LootFunction
 
 ## Constructors
 
-- `public SetNBT( LootCondition [] conditionsIn, NBTTagCompound tagIn)`
+- `SetNBT(LootCondition [] conditionsIn, NBTTagCompound tagIn)`
 
 ## Methods
 
-- `public ItemStack apply( ItemStack stack, java.util.Random rand, LootContext context)`
+- `ItemStack apply(ItemStack stack, java.util.Random rand, LootContext context)`

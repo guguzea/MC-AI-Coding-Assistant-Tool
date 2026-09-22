@@ -1,5 +1,7 @@
 # MinecartUpdateEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.minecart.MinecartEvent → net.minecraftforge.event.entity.minecart.MinecartUpdateEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class MinecartUpdateEvent extends MinecartEvent
 
 ## Constructors
 
-- `public MinecartUpdateEvent( EntityMinecart minecart, BlockPos pos)`
+- `MinecartUpdateEvent(EntityMinecart minecart, BlockPos pos)`
 
-## Description
+## Fields
 
-MinecartUpdateEvent is fired when a minecart is updated. This event is fired whenever a minecart is updated in EntityMinecart#onUpdate(). pos contains the coordinate of the track the entity is on {if
+- `BlockPos pos`

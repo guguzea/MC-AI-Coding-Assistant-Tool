@@ -1,5 +1,7 @@
 # ChunkRenderContainer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.ChunkRenderContainer
+
 ## Class signature
 
 ```java
@@ -8,11 +10,16 @@ public abstract class ChunkRenderContainer extends java.lang.Object
 
 ## Constructors
 
-- `public ChunkRenderContainer()`
+- `ChunkRenderContainer()`
 
 ## Methods
 
-- `public void initialize(double viewEntityXIn, double viewEntityYIn, double viewEntityZIn)`
-- `public void preRenderChunk( RenderChunk renderChunkIn)`
-- `public void addRenderChunk( RenderChunk renderChunkIn, BlockRenderLayer layer)`
-- `public abstract void renderChunkLayer( BlockRenderLayer layer)`
+- `void addRenderChunk(RenderChunk renderChunkIn, BlockRenderLayer layer)`
+- `void initialize(double viewEntityXIn, double viewEntityYIn, double viewEntityZIn)`
+- `void preRenderChunk(RenderChunk renderChunkIn)`
+- `abstract void renderChunkLayer(BlockRenderLayer layer)`
+
+## Fields
+
+- `protected boolean initialized`
+- `protected java.util.List<RenderChunk> renderChunks`

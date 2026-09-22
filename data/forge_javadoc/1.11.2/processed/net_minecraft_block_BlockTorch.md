@@ -1,5 +1,7 @@
 # BlockTorch
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockTorch
+
 ## Class signature
 
 ```java
@@ -8,24 +10,33 @@ public class BlockTorch extends Block
 
 ## Constructors
 
-- `protected BlockTorch()`
+- `BlockTorch()`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `@Nullable public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public IBlockState getStateForPlacement( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
-- `protected boolean onNeighborChangeInternal( World worldIn, BlockPos pos, IBlockState state)`
-- `protected boolean checkForDrop( World worldIn, BlockPos pos, IBlockState state)`
-- `public void randomDisplayTick( IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `protected boolean checkForDrop(World worldIn, BlockPos pos, IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `IBlockState getStateFromMeta(int meta)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `protected boolean onNeighborChangeInternal(World worldIn, BlockPos pos, IBlockState state)`
+- `void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
+
+## Fields
+
+- `static PropertyDirection FACING`
+- `protected static AxisAlignedBB STANDING_AABB`
+- `protected static AxisAlignedBB TORCH_EAST_AABB`
+- `protected static AxisAlignedBB TORCH_NORTH_AABB`
+- `protected static AxisAlignedBB TORCH_SOUTH_AABB`
+- `protected static AxisAlignedBB TORCH_WEST_AABB`

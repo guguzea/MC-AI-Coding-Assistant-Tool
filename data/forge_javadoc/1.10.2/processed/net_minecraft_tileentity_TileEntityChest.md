@@ -1,50 +1,60 @@
 # TileEntityChest
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityLockable → net.minecraft.tileentity.TileEntityLockableLoot → net.minecraft.tileentity.TileEntityChest
+
 ## Class signature
 
 ```java
-public class TileEntityChest extends TileEntityLockableLoot implements ITickable , IInventory
+public class TileEntityChest extends TileEntityLockableLoot implements ITickable, IInventory
 ```
 
 ## Constructors
 
-- `public TileEntityChest()`
-- `public TileEntityChest( BlockChest.Type typeIn)`
+- `TileEntityChest()`
+- `TileEntityChest(BlockChest.Type typeIn)`
 
 ## Methods
 
-- `public int getSizeInventory()`
-- `@Nullable public ItemStack getStackInSlot(int index)`
-- `@Nullable public ItemStack decrStackSize(int index, int count)`
-- `@Nullable public ItemStack removeStackFromSlot(int index)`
-- `public void setInventorySlotContents(int index, @Nullable ItemStack stack)`
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public void setCustomName(java.lang.String name)`
-- `public static void registerFixesChest( DataFixer fixer)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public int getInventoryStackLimit()`
-- `public boolean isUseableByPlayer( EntityPlayer player)`
-- `public void updateContainingBlockInfo()`
-- `public void checkForAdjacentChests()`
-- `@Nullable protected TileEntityChest getAdjacentChest( EnumFacing side)`
-- `public void update()`
-- `public boolean receiveClientEvent(int id, int type)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public boolean isItemValidForSlot(int index, ItemStack stack)`
-- `public void invalidate()`
-- `public BlockChest.Type getChestType()`
-- `public java.lang.String getGuiID()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public int getFieldCount()`
-- `public void clear()`
-- `public <T> T getCapability( Capability <T> capability, EnumFacing facing)`
-- `public IItemHandler getSingleChestHandler()`
+- `void checkForAdjacentChests()`
+- `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `ItemStack decrStackSize(int index, int count)`
+- `protected TileEntityChest getAdjacentChest(EnumFacing side)`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `BlockChest.Type getChestType()`
+- `int getField(int id)`
+- `int getFieldCount()`
+- `java.lang.String getGuiID()`
+- `int getInventoryStackLimit()`
+- `java.lang.String getName()`
+- `IItemHandler getSingleChestHandler()`
+- `int getSizeInventory()`
+- `ItemStack getStackInSlot(int index)`
+- `boolean hasCustomName()`
+- `void invalidate()`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isUseableByPlayer(EntityPlayer player)`
+- `void openInventory(EntityPlayer player)`
+- `void readFromNBT(NBTTagCompound compound)`
+- `boolean receiveClientEvent(int id, int type)`
+- `static void registerFixesChest(DataFixer fixer)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void setCustomName(java.lang.String name)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`
+- `void update()`
+- `void updateContainingBlockInfo()`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Retrieves the handler for the capability requested on the specific side.
+- `boolean adjacentChestChecked`
+- `TileEntityChest adjacentChestXNeg`
+- `TileEntityChest adjacentChestXPos`
+- `TileEntityChest adjacentChestZNeg`
+- `TileEntityChest adjacentChestZPos`
+- `VanillaDoubleChestItemHandler doubleChestHandler`
+- `float lidAngle`
+- `int numPlayersUsing`
+- `float prevLidAngle`

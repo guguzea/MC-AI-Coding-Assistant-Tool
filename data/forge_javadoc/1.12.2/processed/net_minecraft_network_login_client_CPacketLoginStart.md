@@ -1,19 +1,21 @@
 # CPacketLoginStart
 
+**Inheritance:** java.lang.Object → net.minecraft.network.login.client.CPacketLoginStart
+
 ## Class signature
 
 ```java
-public class CPacketLoginStart extends java.lang.Object implements Packet < INetHandlerLoginServer >
+public class CPacketLoginStart extends java.lang.Object implements Packet<INetHandlerLoginServer>
 ```
 
 ## Constructors
 
-- `public CPacketLoginStart()`
-- `public CPacketLoginStart(GameProfile profileIn)`
+- `CPacketLoginStart()`
+- `CPacketLoginStart(GameProfile profileIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerLoginServer handler)`
-- `public GameProfile getProfile()`
+- `GameProfile getProfile()`
+- `void processPacket(INetHandlerLoginServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

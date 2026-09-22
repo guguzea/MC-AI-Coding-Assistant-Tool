@@ -1,5 +1,7 @@
 # BossInfoClient
 
+**Inheritance:** java.lang.Object → net.minecraft.world.BossInfo → net.minecraft.client.gui.BossInfoClient
+
 ## Class signature
 
 ```java
@@ -8,10 +10,15 @@ public class BossInfoClient extends BossInfo
 
 ## Constructors
 
-- `public BossInfoClient( SPacketUpdateBossInfo packetIn)`
+- `BossInfoClient(SPacketUpdateBossInfo packetIn)`
 
 ## Methods
 
-- `public void setPercent(float percentIn)`
-- `public float getPercent()`
-- `public void updateFromPacket( SPacketUpdateBossInfo packetIn)`
+- `float getPercent()`
+- `void setPercent(float percentIn)`
+- `void updateFromPacket(SPacketUpdateBossInfo packetIn)`
+
+## Fields
+
+- `protected long percentSetTime`
+- `protected float rawPercent`

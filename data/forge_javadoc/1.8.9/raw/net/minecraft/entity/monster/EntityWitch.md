@@ -1,13 +1,17 @@
 ---
 title: "EntityWitch"
-description: "Reduces damage, depending on potions"
+description: "public class EntityWitch extends EntityMob implements IRangedAttackMob"
 package: "net/minecraft/entity/monster"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/entity/monster/EntityWitch.html"
 sourceType: javadoc
 ---
 
 # EntityWitch
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityWitch
 
 ## Class signature
 
@@ -15,26 +19,22 @@ sourceType: javadoc
 public class EntityWitch extends EntityMob implements IRangedAttackMob
 ```
 
-## Constructors
-
-- `public EntityWitch( World worldIn)`
-
 ## Methods
 
-- `protected void entityInit()`
-- `protected java.lang.String getLivingSound()`
-- `protected java.lang.String getHurtSound()`
-- `protected java.lang.String getDeathSound()`
-- `public void setAggressive(boolean aggressive)`
-- `public boolean getAggressive()`
 - `protected void applyEntityAttributes()`
-- `public void onLivingUpdate()`
-- `public void handleStatusUpdate(byte id)`
-- `protected float applyPotionDamageCalculations( DamageSource source, float damage)`
-- `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)`
-- `public void attackEntityWithRangedAttack( EntityLivingBase p_82196_1_, float p_82196_2_)`
-- `public float getEyeHeight()`
+- `protected float applyPotionDamageCalculations(DamageSource source, float damage)` — Reduces damage, depending on potions
+- `void attackEntityWithRangedAttack(EntityLivingBase p_82196_1_, float p_82196_2_)` — Attack the specified entity using a ranged attack.
+- `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)` — Drop 0-2 items of this living's type
+- `protected void entityInit()`
+- `boolean getAggressive()` — Return whether this witch is aggressive at an entity.
+- `protected java.lang.String getDeathSound()` — Returns the sound this mob makes on death.
+- `float getEyeHeight()`
+- `protected java.lang.String getHurtSound()` — Returns the sound this mob makes when it is hurt.
+- `protected java.lang.String getLivingSound()` — Returns the sound this mob makes while it's alive.
+- `void handleStatusUpdate(byte id)`
+- `void onLivingUpdate()` — Called frequently so the entity can update its state every tick as required.
+- `void setAggressive(boolean aggressive)` — Set whether this witch is aggressive at an entity.
 
-## Description
+## Fields
 
-Reduces damage, depending on potions
+- `EntityWitch`

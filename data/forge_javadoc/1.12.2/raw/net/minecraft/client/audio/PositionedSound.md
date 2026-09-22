@@ -3,11 +3,15 @@ title: "PositionedSound"
 description: "public abstract class PositionedSound extends java.lang.Object implements ISound"
 package: "net/minecraft/client/audio"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/audio/PositionedSound.html"
 sourceType: javadoc
 ---
 
 # PositionedSound
+
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.PositionedSound
 
 ## Class signature
 
@@ -17,20 +21,34 @@ public abstract class PositionedSound extends java.lang.Object implements ISound
 
 ## Constructors
 
-- `protected PositionedSound( SoundEvent soundIn, SoundCategory categoryIn)`
-- `protected PositionedSound( ResourceLocation soundId, SoundCategory categoryIn)`
+- `PositionedSound(ResourceLocation soundId, SoundCategory categoryIn)`
+- `PositionedSound(SoundEvent soundIn, SoundCategory categoryIn)`
 
 ## Methods
 
-- `public ResourceLocation getSoundLocation()`
-- `public SoundEventAccessor createAccessor( SoundHandler handler)`
-- `public Sound getSound()`
-- `public SoundCategory getCategory()`
-- `public boolean canRepeat()`
-- `public int getRepeatDelay()`
-- `public float getVolume()`
-- `public float getPitch()`
-- `public float getXPosF()`
-- `public float getYPosF()`
-- `public float getZPosF()`
-- `public ISound.AttenuationType getAttenuationType()`
+- `boolean canRepeat()`
+- `SoundEventAccessor createAccessor(SoundHandler handler)`
+- `ISound.AttenuationType getAttenuationType()`
+- `SoundCategory getCategory()`
+- `float getPitch()`
+- `int getRepeatDelay()`
+- `Sound getSound()`
+- `ResourceLocation getSoundLocation()`
+- `float getVolume()`
+- `float getXPosF()`
+- `float getYPosF()`
+- `float getZPosF()`
+
+## Fields
+
+- `protected ISound.AttenuationType attenuationType`
+- `protected SoundCategory category`
+- `protected float pitch`
+- `protected ResourceLocation positionedSoundLocation`
+- `protected boolean repeat`
+- `protected int repeatDelay`
+- `protected Sound sound`
+- `protected float volume`
+- `protected float xPosF`
+- `protected float yPosF`
+- `protected float zPosF`

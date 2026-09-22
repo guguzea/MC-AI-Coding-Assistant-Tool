@@ -1,19 +1,21 @@
 # SlotMerchantResult
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Slot → net.minecraft.inventory.SlotMerchantResult
+
 ## Class signature
 
 ```java
 public class SlotMerchantResult extends Slot
 ```
 
-## Constructors
-
-- `public SlotMerchantResult( EntityPlayer player, IMerchant merchant, InventoryMerchant merchantInventory, int slotIndex, int xPosition, int yPosition)`
-
 ## Methods
 
-- `public boolean isItemValid(@Nullable ItemStack stack)`
-- `public ItemStack decrStackSize(int amount)`
-- `protected void onCrafting( ItemStack stack, int amount)`
-- `protected void onCrafting( ItemStack stack)`
-- `public void onPickupFromSlot( EntityPlayer playerIn, ItemStack stack)`
+- `ItemStack decrStackSize(int amount)`
+- `boolean isItemValid(ItemStack stack)`
+- `protected void onCrafting(ItemStack stack)`
+- `protected void onCrafting(ItemStack stack, int amount)`
+- `void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack)`
+
+## Fields
+
+- `SlotMerchantResult`

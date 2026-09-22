@@ -1,5 +1,7 @@
 # ItemStackDataLists
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.walkers.Filtered → net.minecraft.util.datafix.walkers.ItemStackDataLists
+
 ## Class signature
 
 ```java
@@ -8,4 +10,4 @@ public class ItemStackDataLists extends Filtered
 
 ## Constructors
 
-- `public ItemStackDataLists(java.lang.String id, java.lang.String... tags)`
+- `ItemStackDataLists(java.lang.String id, java.lang.String... tags)`

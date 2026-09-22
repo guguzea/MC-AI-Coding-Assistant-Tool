@@ -1,5 +1,7 @@
 # ChunkPrimer
 
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.ChunkPrimer
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class ChunkPrimer extends java.lang.Object
 
 ## Constructors
 
-- `public ChunkPrimer()`
+- `ChunkPrimer()`
 
 ## Methods
 
-- `public IBlockState getBlockState(int x, int y, int z)`
-- `public IBlockState getBlockState(int index)`
-- `public void setBlockState(int x, int y, int z, IBlockState state)`
-- `public void setBlockState(int index, IBlockState state)`
+- `IBlockState getBlockState(int index)`
+- `IBlockState getBlockState(int x, int y, int z)`
+- `void setBlockState(int index, IBlockState state)`
+- `void setBlockState(int x, int y, int z, IBlockState state)`

@@ -1,5 +1,7 @@
 # EntityPlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.player.EntityPlayer
+
 ## Class signature
 
 ```java
@@ -8,131 +10,180 @@ public abstract class EntityPlayer extends EntityLivingBase
 
 ## Constructors
 
-- `public EntityPlayer( World worldIn, GameProfile gameProfileIn)`
+- `EntityPlayer(World worldIn, GameProfile gameProfileIn)`
 
 ## Methods
 
+- `void addChatComponentMessage(IChatComponent chatComponent)`
+- `void addExhaustion(float p_71020_1_)` — increases exhaustion level by supplied amount
+- `void addExperience(int amount)` — Add experience points to player.
+- `void addExperienceLevel(int levels)` — Add experience levels to this player.
+- `void addMovementStat(double p_71000_1_, double p_71000_3_, double p_71000_5_)` — Adds a value to a movement statistic field - like run, walk, swin or climb.
+- `void addPrefix(IChatComponent prefix)` — Add a prefix to the player's username in chat
+- `void addScore(int p_85039_1_)` — Add to player's score
+- `void addStat(StatBase stat, int amount)` — Adds a value to a statistic field.
+- `void addSuffix(IChatComponent suffix)` — Add a suffix to the player's username in chat
+- `void addToPlayerScore(Entity entityIn, int amount)` — Adds a value to the player score.
 - `protected void applyEntityAttributes()`
-- `protected void entityInit()`
-- `public ItemStack getItemInUse()`
-- `public int getItemInUseCount()`
-- `public boolean isUsingItem()`
-- `public int getItemInUseDuration()`
-- `public void stopUsingItem()`
-- `public void clearItemInUse()`
-- `public boolean isBlocking()`
-- `public void onUpdate()`
-- `public int getMaxInPortalTime()`
-- `protected java.lang.String getSwimSound()`
-- `protected java.lang.String getSplashSound()`
-- `public int getPortalCooldown()`
-- `public void playSound(java.lang.String name, float volume, float pitch)`
-- `protected void updateItemUse( ItemStack itemStackIn, int p_71010_2_)`
-- `protected void onItemUseFinish()`
-- `public void handleStatusUpdate(byte id)`
-- `protected boolean isMovementBlocked()`
-- `public void closeScreen()`
-- `public void updateRidden()`
-- `public void preparePlayerToSpawn()`
-- `protected void updateEntityActionState()`
-- `public void onLivingUpdate()`
-- `public int getScore()`
-- `public void setScore(int p_85040_1_)`
-- `public void addScore(int p_85039_1_)`
-- `public void onDeath( DamageSource cause)`
-- `protected java.lang.String getHurtSound()`
-- `protected java.lang.String getDeathSound()`
-- `public void addToPlayerScore( Entity entityIn, int amount)`
-- `public EntityItem dropOneItem(boolean dropAll)`
-- `public EntityItem dropPlayerItemWithRandomChoice( ItemStack itemStackIn, boolean unused)`
-- `public EntityItem dropItem( ItemStack droppedItem, boolean dropAround, boolean traceItem)`
-- `public void joinEntityItemWithWorld( EntityItem itemIn)`
-- `@Deprecated public float getToolDigEfficiency( Block p_180471_1_)`
-- `public float getBreakSpeed( IBlockState state, BlockPos pos)`
-- `public boolean canHarvestBlock( Block blockToHarvest)`
-- `public void readEntityFromNBT( NBTTagCompound tagCompund)`
-- `public void writeEntityToNBT( NBTTagCompound tagCompound)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public boolean canAttackPlayer( EntityPlayer other)`
+- `boolean attackEntityFrom(DamageSource source, float amount)` — Called when the entity is attacked.
+- `void attackTargetEntityWithCurrentItem(Entity targetEntity)` — Attacks for the player the targeted entity with the currently equipped item.
+- `boolean canAttackPlayer(EntityPlayer other)`
+- `boolean canEat(boolean ignoreHunger)`
+- `boolean canHarvestBlock(Block blockToHarvest)` — Checks if the player has the ability to harvest a block (checks current inventory item for a tool if necessary)
+- `boolean canOpen(LockCode code)` — Check whether this player can open an inventory locked with the given LockCode.
+- `boolean canPlayerEdit(BlockPos p_175151_1_, EnumFacing p_175151_2_, ItemStack p_175151_3_)`
+- `protected boolean canTriggerWalking()` — returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to prevent them from trampling crops
+- `void clearItemInUse()`
+- `void clonePlayer(EntityPlayer oldPlayer, boolean respawnFromEnd)` — Copies the values from the given player into this player if boolean par2 is true.
+- `void closeScreen()` — set current crafting inventory back to the 2x2 square
 - `protected void damageArmor(float p_70675_1_)`
-- `public int getTotalArmorValue()`
-- `public float getArmorVisibility()`
-- `protected void damageEntity( DamageSource damageSrc, float damageAmount)`
-- `public void openEditSign( TileEntitySign signTile)`
-- `public void openEditCommandBlock( CommandBlockLogic cmdBlockLogic)`
-- `public void displayVillagerTradeGui( IMerchant villager)`
-- `public void displayGUIChest( IInventory chestInventory)`
-- `public void displayGUIHorse( EntityHorse horse, IInventory horseInventory)`
-- `public void displayGui( IInteractionObject guiOwner)`
-- `public void displayGUIBook( ItemStack bookStack)`
-- `public boolean interactWith( Entity targetEntity)`
-- `public ItemStack getCurrentEquippedItem()`
-- `public void destroyCurrentEquippedItem()`
-- `public double getYOffset()`
-- `public void attackTargetEntityWithCurrentItem( Entity targetEntity)`
-- `public void onCriticalHit( Entity entityHit)`
-- `public void onEnchantmentCritical( Entity entityHit)`
-- `public void respawnPlayer()`
-- `public void setDead()`
-- `public boolean isEntityInsideOpaqueBlock()`
-- `public boolean isUser()`
-- `public GameProfile getGameProfile()`
-- `public EntityPlayer.EnumStatus trySleep( BlockPos bedLocation)`
-- `public void wakeUpPlayer(boolean p_70999_1_, boolean updateWorldFlag, boolean setSpawn)`
-- `public static BlockPos getBedSpawnLocation( World worldIn, BlockPos bedLocation, boolean forceSpawn)`
-- `public float getBedOrientationInDegrees()`
-- `public boolean isPlayerSleeping()`
-- `public boolean isPlayerFullyAsleep()`
-- `public int getSleepTimer()`
-- `public void addChatComponentMessage( IChatComponent chatComponent)`
-- `public BlockPos getBedLocation()`
-- `@Deprecated public boolean isSpawnForced()`
-- `public void setSpawnPoint( BlockPos pos, boolean forced)`
-- `public void triggerAchievement( StatBase achievementIn)`
-- `public void addStat( StatBase stat, int amount)`
-- `public void func_175145_a( StatBase p_175145_1_)`
-- `public void jump()`
-- `public void moveEntityWithHeading(float strafe, float forward)`
-- `public float getAIMoveSpeed()`
-- `public void addMovementStat(double p_71000_1_, double p_71000_3_, double p_71000_5_)`
-- `public void fall(float distance, float damageMultiplier)`
-- `protected void resetHeight()`
+- `protected void damageEntity(DamageSource damageSrc, float damageAmount)` — Deals damage to the entity.
+- `void destroyCurrentEquippedItem()` — Destroys the currently equipped item from the player's inventory.
+- `void displayGui(IInteractionObject guiOwner)`
+- `void displayGUIBook(ItemStack bookStack)` — Displays the GUI for interacting with a book.
+- `void displayGUIChest(IInventory chestInventory)` — Displays the GUI for interacting with a chest inventory.
+- `void displayGUIHorse(EntityHorse horse, IInventory horseInventory)`
+- `void displayVillagerTradeGui(IMerchant villager)`
+- `EntityItem dropItem(ItemStack droppedItem, boolean dropAround, boolean traceItem)`
+- `EntityItem dropOneItem(boolean dropAll)` — Called when player presses the drop item key
+- `EntityItem dropPlayerItemWithRandomChoice(ItemStack itemStackIn, boolean unused)` — Args: itemstack, flag
+- `protected void entityInit()`
+- `void fall(float distance, float damageMultiplier)`
+- `void func_175145_a(StatBase p_175145_1_)`
+- `float getAbsorptionAmount()`
+- `float getAIMoveSpeed()` — the movespeed used for the new AI system
+- `boolean getAlwaysRenderNameTagForRender()`
+- `float getArmorVisibility()` — When searching for vulnerable players, if a player is invisible, the return value of this is the chance of seeing them anyway.
+- `BlockPos getBedLocation()`
+- `BlockPos getBedLocation(int dimension)` — A dimension aware version of getBedLocation.
+- `float getBedOrientationInDegrees()` — Returns the orientation of the bed in degrees.
+- `static BlockPos getBedSpawnLocation(World worldIn, BlockPos bedLocation, boolean forceSpawn)` — Return null if bed is invalid
+- `float getBreakSpeed(IBlockState state, BlockPos pos)`
+- `ItemStack getCurrentArmor(int slotIn)`
+- `ItemStack getCurrentEquippedItem()` — Returns the currently being used item by the player.
+- `protected java.lang.String getDeathSound()` — Returns the sound this mob makes on death.
+- `float getDefaultEyeHeight()` — Returns the default eye height of the player
+- `IChatComponent getDisplayName()` — Get the formatted ChatComponent that will be used for the sender's username in chat
+- `java.lang.String getDisplayNameString()` — Get the currently computed display name, cached for efficiency.
+- `ItemStack getEquipmentInSlot(int slotIn)` — 0: Tool in Hand; 1-4: Armor
+- `protected int getExperiencePoints(EntityPlayer player)` — Get the experience points the entity currently has.
+- `float getEyeHeight()`
 - `protected java.lang.String getFallSoundString(int damageValue)`
-- `public void onKillEntity( EntityLivingBase entityLivingIn)`
-- `public void setInWeb()`
-- `public ItemStack getCurrentArmor(int slotIn)`
-- `public void addExperience(int amount)`
-- `public int getXPSeed()`
-- `public void removeExperienceLevel(int levels)`
-- `public void addExperienceLevel(int levels)`
-- `public int xpBarCap()`
-- `public void addExhaustion(float p_71020_1_)`
-- `public FoodStats getFoodStats()`
-- `public boolean canEat(boolean ignoreHunger)`
-- `public boolean shouldHeal()`
-- `public void setItemInUse( ItemStack stack, int duration)`
-- `public boolean isAllowEdit()`
-- `public boolean canPlayerEdit( BlockPos p_175151_1_, EnumFacing p_175151_2_, ItemStack p_175151_3_)`
-- `protected int getExperiencePoints( EntityPlayer player)`
-- `protected boolean isPlayer()`
-- `public boolean getAlwaysRenderNameTagForRender()`
-- `public void clonePlayer( EntityPlayer oldPlayer, boolean respawnFromEnd)`
-- `protected boolean canTriggerWalking()`
-- `public void sendPlayerAbilities()`
-- `public void setGameType( WorldSettings.GameType gameType)`
-- `public java.lang.String getName()`
-- `public InventoryEnderChest getInventoryEnderChest()`
-- `public ItemStack getEquipmentInSlot(int slotIn)`
-- `public ItemStack getHeldItem()`
-- `public void setCurrentItemOrArmor(int slotIn, ItemStack stack)`
-- `public boolean isInvisibleToPlayer( EntityPlayer player)`
-- `public abstract boolean isSpectator()`
-- `public ItemStack [] getInventory()`
-- `public boolean isPushedByWater()`
-- `public Scoreboard getWorldScoreboard()`
-- `public Team getTeam()`
-- `public IChatComponent getDisplayName()`
+- `FoodStats getFoodStats()` — Returns the player's FoodStats object.
+- `GameProfile getGameProfile()` — Returns the GameProfile for this player
+- `ItemStack getHeldItem()` — Returns the item that this EntityLiving is holding, if any.
+- `protected java.lang.String getHurtSound()` — Returns the sound this mob makes when it is hurt.
+- `ItemStack [] getInventory()` — returns the inventory of this entity (only used in EntityPlayerMP it seems)
+- `InventoryEnderChest getInventoryEnderChest()` — Returns the InventoryEnderChest of this player.
+- `ItemStack getItemInUse()` — returns the ItemStack containing the itemInUse
+- `int getItemInUseCount()` — Returns the item in use count
+- `int getItemInUseDuration()` — gets the duration for how long the current itemInUse has been in use
+- `int getMaxInPortalTime()` — Return the amount of time this entity should stay in a portal before being transported.
+- `java.lang.String getName()` — Get the name of this object.
+- `static java.util.UUID getOfflineUUID(java.lang.String username)`
+- `int getPortalCooldown()` — Return the amount of cooldown before this entity can use a portal again.
+- `java.util.Collection<IChatComponent> getPrefixes()`
+- `int getScore()`
+- `int getSleepTimer()`
+- `protected java.lang.String getSplashSound()`
+- `java.util.Collection<IChatComponent> getSuffixes()`
+- `protected java.lang.String getSwimSound()`
+- `Team getTeam()`
+- `@Deprecated float getToolDigEfficiency(Block p_180471_1_)`
+- `int getTotalArmorValue()` — Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+- `static java.util.UUID getUUID(GameProfile profile)` — Gets a players UUID given their GameProfie
+- `Scoreboard getWorldScoreboard()`
+- `int getXPSeed()`
+- `double getYOffset()` — Returns the Y Offset of this entity.
+- `void handleStatusUpdate(byte id)`
+- `boolean hasReducedDebug()` — Whether the "reducedDebugInfo" option is active for this player.
+- `boolean interactWith(Entity targetEntity)`
+- `boolean isAllowEdit()`
+- `boolean isBlocking()`
+- `boolean isEntityInsideOpaqueBlock()` — Checks if this entity is inside of an opaque block
+- `boolean isInvisibleToPlayer(EntityPlayer player)` — Only used by renderer in EntityLivingBase subclasses.
+- `protected boolean isMovementBlocked()` — Dead and sleeping entities cannot move
+- `protected boolean isPlayer()` — Only use is to identify if class is an instance of player for experience dropping
+- `boolean isPlayerFullyAsleep()` — Returns whether or not the player is asleep and the screen has fully faded.
+- `boolean isPlayerSleeping()` — Returns whether player is sleeping or not
+- `boolean isPushedByWater()`
+- `@Deprecated boolean isSpawnForced()`
+- `boolean isSpawnForced(int dimension)` — A dimension aware version of isSpawnForced.
+- `abstract boolean isSpectator()` — Returns true if the player is in spectator mode.
+- `boolean isUser()` — returns true if this is an EntityPlayerSP, or the logged in player.
+- `boolean isUsingItem()` — Checks if the entity is currently using an item (e.g., bow, food, sword) by holding down the useItemButton
+- `boolean isWearing(EnumPlayerModelParts p_175148_1_)`
+- `void joinEntityItemWithWorld(EntityItem itemIn)` — Joins the passed in entity item with the world.
+- `void jump()` — Causes this entity to do an upwards motion (jumping).
+- `void moveEntityWithHeading(float strafe, float forward)` — Moves the entity based on the specified heading.
+- `void onCriticalHit(Entity entityHit)` — Called when the player performs a critical hit on the Entity.
+- `void onDeath(DamageSource cause)` — Called when the mob's health reaches 0.
+- `void onEnchantmentCritical(Entity entityHit)`
+- `protected void onItemUseFinish()` — Used for when item use count runs out, ie: eating completed
+- `void onKillEntity(EntityLivingBase entityLivingIn)` — This method gets called when the entity kills another one.
+- `void onLivingUpdate()` — Called frequently so the entity can update its state every tick as required.
+- `void onUpdate()` — Called to update the entity's position/logic.
+- `void openEditCommandBlock(CommandBlockLogic cmdBlockLogic)`
+- `void openEditSign(TileEntitySign signTile)`
+- `void openGui(java.lang.Object mod, int modGuiId, World world, int x, int y, int z)` — Opens a GUI with this player, uses FML's IGuiHandler system.
+- `void playSound(java.lang.String name, float volume, float pitch)`
+- `void preparePlayerToSpawn()` — Keeps moving the entity up so it isn't colliding with blocks and other requirements for this entity to be spawned (only actually used on players though its also on Entity)
+- `void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
+- `void refreshDisplayName()` — Force the displayed name to refresh
+- `void removeExperienceLevel(int levels)`
+- `boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
+- `protected void resetHeight()` — sets the players height back to normal after doing things like sleeping and dieing
+- `void respawnPlayer()`
+- `boolean sendCommandFeedback()` — Returns true if the command sender should be sent feedback about executed commands
+- `void sendPlayerAbilities()` — Sends the player's abilities to the server (if there is one).
+- `void setAbsorptionAmount(float amount)`
+- `void setCurrentItemOrArmor(int slotIn, ItemStack stack)` — Sets the held item, or an armor slot.
+- `void setDead()` — Will get destroyed next tick.
+- `void setGameType(WorldSettings.GameType gameType)` — Sets the player's game mode and sends it to them.
+- `void setInWeb()` — Sets the Entity inside a web block.
+- `void setItemInUse(ItemStack stack, int duration)` — sets the itemInUse when the use item button is clicked.
+- `void setReducedDebug(boolean reducedDebug)`
+- `void setScore(int p_85040_1_)` — Set player's score
+- `void setSpawnChunk(BlockPos pos, boolean forced, int dimension)` — A dimension aware version of setSpawnChunk.
+- `void setSpawnPoint(BlockPos pos, boolean forced)`
+- `boolean shouldHeal()` — Checks if the player's health is not full and not zero.
+- `void stopUsingItem()`
+- `void triggerAchievement(StatBase achievementIn)` — Will trigger the specified trigger.
+- `EntityPlayer.EnumStatus trySleep(BlockPos bedLocation)`
+- `protected void updateEntityActionState()`
+- `protected void updateItemUse(ItemStack itemStackIn, int p_71010_2_)` — Plays sounds and makes particles for item in use state
+- `void updateRidden()` — Handles updating while being ridden by an entity
+- `void wakeUpPlayer(boolean p_70999_1_, boolean updateWorldFlag, boolean setSpawn)` — Wake up the player if they're sleeping.
+- `void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
+- `int xpBarCap()` — This method returns the cap amount of experience that the experience bar can hold.
 
-## Description
+## Fields
 
-The player's capabilities.
+- `float cameraYaw`
+- `PlayerCapabilities capabilities` — The player's capabilities.
+- `double chasingPosX`
+- `double chasingPosY`
+- `double chasingPosZ`
+- `float experience` — The current amount of experience the player has within their Experience Bar.
+- `int experienceLevel` — The current experience level the player is on.
+- `int experienceTotal` — The total amount of experience the player has.
+- `float eyeHeight`
+- `EntityFishHook fishEntity` — An instance of a fishing rod's hook.
+- `protected int flyToggleTimer` — Used to tell if the player pressed jump twice.
+- `protected FoodStats foodStats` — The food object of the player, the general hunger logic.
+- `InventoryPlayer inventory` — Inventory of the player
+- `Container inventoryContainer` — The Container for the player's inventory (which opens when they press E)
+- `Container openContainer` — The Container the player has open.
+- `static java.lang.String PERSISTED_NBT_TAG`
+- `BlockPos playerLocation` — the current location of the player
+- `float prevCameraYaw`
+- `double prevChasingPosX`
+- `double prevChasingPosY`
+- `double prevChasingPosZ`
+- `float renderOffsetX`
+- `float renderOffsetY`
+- `float renderOffsetZ`
+- `protected boolean sleeping` — Boolean value indicating weather a player is sleeping or not
+- `protected float speedInAir`
+- `protected float speedOnGround`
+- `int xpCooldown` — Used by EntityPlayer to prevent too many xp orbs from getting absorbed at once.

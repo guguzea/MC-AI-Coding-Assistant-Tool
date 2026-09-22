@@ -1,5 +1,7 @@
 # BlockPrismarine
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockPrismarine
+
 ## Class signature
 
 ```java
@@ -8,14 +10,21 @@ public class BlockPrismarine extends Block
 
 ## Constructors
 
-- `public BlockPrismarine()`
+- `BlockPrismarine()`
 
 ## Methods
 
-- `public java.lang.String getLocalizedName()`
-- `public MapColor getMapColor( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public int damageDropped( IBlockState state)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public void getSubBlocks( CreativeTabs itemIn, NonNullList < ItemStack > items)`
+- `int damageDropped(IBlockState state)`
+- `java.lang.String getLocalizedName()`
+- `MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items)`
+
+## Fields
+
+- `static int BRICKS_META`
+- `static int DARK_META`
+- `static int ROUGH_META`
+- `static PropertyEnum<BlockPrismarine.EnumType> VARIANT`

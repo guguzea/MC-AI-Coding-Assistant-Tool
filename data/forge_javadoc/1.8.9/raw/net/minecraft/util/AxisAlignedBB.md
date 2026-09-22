@@ -1,13 +1,17 @@
 ---
 title: "AxisAlignedBB"
-description: "Adds the coordinates to the bounding box extending it if the point lies outside the current ranges."
+description: "public class AxisAlignedBB extends java.lang.Object"
 package: "net/minecraft/util"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/util/AxisAlignedBB.html"
 sourceType: javadoc
 ---
 
 # AxisAlignedBB
+
+**Inheritance:** java.lang.Object → net.minecraft.util.AxisAlignedBB
 
 ## Class signature
 
@@ -17,27 +21,32 @@ public class AxisAlignedBB extends java.lang.Object
 
 ## Constructors
 
-- `public AxisAlignedBB(double x1, double y1, double z1, double x2, double y2, double z2)`
-- `public AxisAlignedBB( BlockPos pos1, BlockPos pos2)`
+- `AxisAlignedBB(BlockPos pos1, BlockPos pos2)`
+- `AxisAlignedBB(double x1, double y1, double z1, double x2, double y2, double z2)`
 
 ## Methods
 
-- `public AxisAlignedBB addCoord(double x, double y, double z)`
-- `public AxisAlignedBB expand(double x, double y, double z)`
-- `public AxisAlignedBB union( AxisAlignedBB other)`
-- `public static AxisAlignedBB fromBounds(double x1, double y1, double z1, double x2, double y2, double z2)`
-- `public AxisAlignedBB offset(double x, double y, double z)`
-- `public double calculateXOffset( AxisAlignedBB other, double offsetX)`
-- `public double calculateYOffset( AxisAlignedBB other, double offsetY)`
-- `public double calculateZOffset( AxisAlignedBB other, double offsetZ)`
-- `public boolean intersectsWith( AxisAlignedBB other)`
-- `public boolean isVecInside( Vec3 vec)`
-- `public double getAverageEdgeLength()`
-- `public AxisAlignedBB contract(double x, double y, double z)`
-- `public MovingObjectPosition calculateIntercept( Vec3 vecA, Vec3 vecB)`
-- `public java.lang.String toString()`
-- `public boolean func_181656_b()`
+- `AxisAlignedBB addCoord(double x, double y, double z)` — Adds the coordinates to the bounding box extending it if the point lies outside the current ranges.
+- `MovingObjectPosition calculateIntercept(Vec3 vecA, Vec3 vecB)`
+- `double calculateXOffset(AxisAlignedBB other, double offsetX)` — if instance and the argument bounding boxes overlap in the Y and Z dimensions, calculate the offset between them in the X dimension.
+- `double calculateYOffset(AxisAlignedBB other, double offsetY)` — if instance and the argument bounding boxes overlap in the X and Z dimensions, calculate the offset between them in the Y dimension.
+- `double calculateZOffset(AxisAlignedBB other, double offsetZ)` — if instance and the argument bounding boxes overlap in the Y and X dimensions, calculate the offset between them in the Z dimension.
+- `AxisAlignedBB contract(double x, double y, double z)` — Returns a bounding box that is inset by the specified amounts
+- `AxisAlignedBB expand(double x, double y, double z)` — Returns a bounding box expanded by the specified vector (if negative numbers are given it will shrink).
+- `static AxisAlignedBB fromBounds(double x1, double y1, double z1, double x2, double y2, double z2)` — returns an AABB with corners x1, y1, z1 and x2, y2, z2
+- `boolean func_181656_b()`
+- `double getAverageEdgeLength()` — Returns the average length of the edges of the bounding box.
+- `boolean intersectsWith(AxisAlignedBB other)` — Returns whether the given bounding box intersects with this one.
+- `boolean isVecInside(Vec3 vec)` — Returns if the supplied Vec3D is completely inside the bounding box
+- `AxisAlignedBB offset(double x, double y, double z)` — Offsets the current bounding box by the specified coordinates.
+- `java.lang.String toString()`
+- `AxisAlignedBB union(AxisAlignedBB other)`
 
-## Description
+## Fields
 
-Adds the coordinates to the bounding box extending it if the point lies outside the current ranges.
+- `double maxX`
+- `double maxY`
+- `double maxZ`
+- `double minX`
+- `double minY`
+- `double minZ`

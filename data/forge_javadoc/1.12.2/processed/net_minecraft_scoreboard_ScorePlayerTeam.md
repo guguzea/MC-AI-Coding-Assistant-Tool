@@ -1,5 +1,7 @@
 # ScorePlayerTeam
 
+**Inheritance:** java.lang.Object → net.minecraft.scoreboard.Team → net.minecraft.scoreboard.ScorePlayerTeam
+
 ## Class signature
 
 ```java
@@ -8,31 +10,31 @@ public class ScorePlayerTeam extends Team
 
 ## Constructors
 
-- `public ScorePlayerTeam( Scoreboard scoreboardIn, java.lang.String name)`
+- `ScorePlayerTeam(Scoreboard scoreboardIn, java.lang.String name)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public java.lang.String getDisplayName()`
-- `public void setDisplayName(java.lang.String name)`
-- `public java.util.Collection<java.lang.String> getMembershipCollection()`
-- `public java.lang.String getPrefix()`
-- `public void setPrefix(java.lang.String prefix)`
-- `public java.lang.String getSuffix()`
-- `public void setSuffix(java.lang.String suffix)`
-- `public java.lang.String formatString(java.lang.String input)`
-- `public static java.lang.String formatPlayerName( Team teamIn, java.lang.String string)`
-- `public boolean getAllowFriendlyFire()`
-- `public void setAllowFriendlyFire(boolean friendlyFire)`
-- `public boolean getSeeFriendlyInvisiblesEnabled()`
-- `public void setSeeFriendlyInvisiblesEnabled(boolean friendlyInvisibles)`
-- `public Team.EnumVisible getNameTagVisibility()`
-- `public Team.EnumVisible getDeathMessageVisibility()`
-- `public void setNameTagVisibility( Team.EnumVisible visibility)`
-- `public void setDeathMessageVisibility( Team.EnumVisible visibility)`
-- `public Team.CollisionRule getCollisionRule()`
-- `public void setCollisionRule( Team.CollisionRule rule)`
-- `public int getFriendlyFlags()`
-- `public void setFriendlyFlags(int flags)`
-- `public void setColor( TextFormatting color)`
-- `public TextFormatting getColor()`
+- `static java.lang.String formatPlayerName(Team teamIn, java.lang.String string)`
+- `java.lang.String formatString(java.lang.String input)`
+- `boolean getAllowFriendlyFire()`
+- `Team.CollisionRule getCollisionRule()`
+- `TextFormatting getColor()`
+- `Team.EnumVisible getDeathMessageVisibility()`
+- `java.lang.String getDisplayName()`
+- `int getFriendlyFlags()`
+- `java.util.Collection<java.lang.String> getMembershipCollection()`
+- `java.lang.String getName()`
+- `Team.EnumVisible getNameTagVisibility()`
+- `java.lang.String getPrefix()`
+- `boolean getSeeFriendlyInvisiblesEnabled()`
+- `java.lang.String getSuffix()`
+- `void setAllowFriendlyFire(boolean friendlyFire)`
+- `void setCollisionRule(Team.CollisionRule rule)`
+- `void setColor(TextFormatting color)`
+- `void setDeathMessageVisibility(Team.EnumVisible visibility)`
+- `void setDisplayName(java.lang.String name)`
+- `void setFriendlyFlags(int flags)`
+- `void setNameTagVisibility(Team.EnumVisible visibility)`
+- `void setPrefix(java.lang.String prefix)`
+- `void setSeeFriendlyInvisiblesEnabled(boolean friendlyInvisibles)`
+- `void setSuffix(java.lang.String suffix)`

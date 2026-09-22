@@ -1,13 +1,17 @@
 ---
 title: "ItemExpireEvent"
-description: "Event that is fired when an EntityItem's age has reached its maximum lifespan. Canceling this event will prevent the EntityItem from being flagged as dead, thus staying it's removal from the world. If"
+description: "public class ItemExpireEvent extends ItemEvent"
 package: "net/minecraftforge/event/entity/item"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/item/ItemExpireEvent.html"
 sourceType: javadoc
 ---
 
 # ItemExpireEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.item.ItemEvent → net.minecraftforge.event.entity.item.ItemExpireEvent
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class ItemExpireEvent extends ItemEvent
 
 ## Constructors
 
-- `public ItemExpireEvent( EntityItem entityItem, int extraLife)`
+- `ItemExpireEvent(EntityItem entityItem, int extraLife)`
 
-## Description
+## Fields
 
-Event that is fired when an EntityItem's age has reached its maximum lifespan. Canceling this event will prevent the EntityItem from being flagged as dead, thus staying it's removal from the world. If
+- `int extraLife`

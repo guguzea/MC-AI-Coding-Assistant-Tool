@@ -11,7 +11,7 @@
       "CustomModLoadingErrorDisplayException"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/ExtendedServerListData",
@@ -25,7 +25,7 @@
       "ExtendedServerListData"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/FMLClientHandler",
@@ -39,7 +39,7 @@
       "FMLClientHandler"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/FMLConfigGuiFactory",
@@ -53,7 +53,7 @@
       "FMLConfigGuiFactory"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/FMLConfigGuiFactory.FMLConfigGuiScreen",
@@ -68,7 +68,7 @@
       "FMLConfigGuiFactory.FMLConfigGuiScreen"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/FMLFileResourcePack",
@@ -180,7 +180,7 @@
       "GuiIngameModOptions"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/GuiModList",
@@ -250,7 +250,7 @@
       "GuiNotification"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/GuiOldSaveLoadConfirm",
@@ -278,7 +278,7 @@
       "GuiScrollingList"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/GuiSlotModList",
@@ -334,7 +334,7 @@
       "IModGuiFactory"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/IModGuiFactory.RuntimeOptionCategoryElement",
@@ -348,7 +348,7 @@
       "IModGuiFactory.RuntimeOptionCategoryElement"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/IModGuiFactory.RuntimeOptionGuiHandler",
@@ -363,34 +363,6 @@
     ],
     "priority": "⭐",
     "sectionCount": 2
-  },
-  {
-    "id": "1.7.10/cpw/mods/fml/client/Loader",
-    "version": "1.7.10",
-    "label": "Loader",
-    "url": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/Loader.html",
-    "tags": [
-      "forge",
-      "fml",
-      "cpw_mods_fml_client",
-      "Loader"
-    ],
-    "priority": "⭐",
-    "sectionCount": 3
-  },
-  {
-    "id": "1.7.10/cpw/mods/fml/client/Minecraft",
-    "version": "1.7.10",
-    "label": "Minecraft",
-    "url": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/Minecraft.html",
-    "tags": [
-      "forge",
-      "fml",
-      "cpw_mods_fml_client",
-      "Minecraft"
-    ],
-    "priority": "⭐",
-    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/SplashProgress",
@@ -418,7 +390,7 @@
       "ConfigGuiType"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/DummyConfigElement",
@@ -474,7 +446,7 @@
       "GuiButtonExt"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiCheckBox",
@@ -488,7 +460,7 @@
       "GuiCheckBox"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiConfig",
@@ -530,7 +502,7 @@
       "GuiConfigEntries.ArrayEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiConfigEntries.BooleanEntry",
@@ -544,7 +516,7 @@
       "GuiConfigEntries.BooleanEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiConfigEntries.ButtonEntry",
@@ -558,7 +530,7 @@
       "GuiConfigEntries.ButtonEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiConfigEntries.CategoryEntry",
@@ -572,7 +544,7 @@
       "GuiConfigEntries.CategoryEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiConfigEntries.ChatColorEntry",
@@ -600,7 +572,7 @@
       "GuiConfigEntries.CycleValueEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiConfigEntries.DoubleEntry",
@@ -614,7 +586,7 @@
       "GuiConfigEntries.DoubleEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiConfigEntries.IConfigEntry",
@@ -642,7 +614,7 @@
       "GuiConfigEntries.IntegerEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiConfigEntries.ListEntryBase",
@@ -656,7 +628,7 @@
       "GuiConfigEntries.ListEntryBase"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiConfigEntries.NumberSliderEntry",
@@ -670,7 +642,7 @@
       "GuiConfigEntries.NumberSliderEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiConfigEntries.SelectValueEntry",
@@ -684,7 +656,7 @@
       "GuiConfigEntries.SelectValueEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiConfigEntries.StringEntry",
@@ -698,7 +670,7 @@
       "GuiConfigEntries.StringEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiEditArray",
@@ -740,7 +712,7 @@
       "GuiEditArrayEntries.BaseEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiEditArrayEntries.BooleanEntry",
@@ -754,7 +726,7 @@
       "GuiEditArrayEntries.BooleanEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiEditArrayEntries.DoubleEntry",
@@ -782,7 +754,7 @@
       "GuiEditArrayEntries.IArrayEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiEditArrayEntries.IntegerEntry",
@@ -796,7 +768,7 @@
       "GuiEditArrayEntries.IntegerEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiEditArrayEntries.StringEntry",
@@ -810,7 +782,7 @@
       "GuiEditArrayEntries.StringEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiMessageDialog",
@@ -866,7 +838,7 @@
       "GuiSelectStringEntries.EntryComparator"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiSelectStringEntries.IGuiSelectStringListEntry",
@@ -880,7 +852,7 @@
       "GuiSelectStringEntries.IGuiSelectStringListEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiSelectStringEntries.ListEntry",
@@ -894,7 +866,7 @@
       "GuiSelectStringEntries.ListEntry"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiSlider",
@@ -922,7 +894,7 @@
       "GuiSlider.ISlider"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/GuiUnicodeGlyphButton",
@@ -964,7 +936,7 @@
       "HoverChecker"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/config/IConfigElement",
@@ -978,7 +950,7 @@
       "IConfigElement"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/event/ConfigChangedEvent",
@@ -1038,7 +1010,7 @@
       "ClientRegistry"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/client/registry/ISimpleBlockRenderingHandler",
@@ -1068,7 +1040,7 @@
       "RenderingRegistry"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/API",
@@ -1096,7 +1068,7 @@
       "BukkitPluginRef"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/BukkitProxy",
@@ -1110,7 +1082,7 @@
       "BukkitProxy"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 1
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/CertificateHelper",
@@ -1152,7 +1124,7 @@
       "DummyModContainer"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/DuplicateModsFoundException",
@@ -1166,7 +1138,7 @@
       "DuplicateModsFoundException"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/EnhancedRuntimeException",
@@ -1180,7 +1152,7 @@
       "EnhancedRuntimeException"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/EnhancedRuntimeException.WrappedPrintStream",
@@ -1194,7 +1166,7 @@
       "EnhancedRuntimeException.WrappedPrintStream"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/FMLCommonHandler",
@@ -1208,7 +1180,7 @@
       "FMLCommonHandler"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/FMLContainer",
@@ -1222,7 +1194,7 @@
       "FMLContainer"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/FMLContainerHolder",
@@ -1264,7 +1236,7 @@
       "FMLModContainer"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/IASMHook",
@@ -1278,7 +1250,7 @@
       "IASMHook"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/ICrashCallable",
@@ -1363,7 +1335,7 @@
       "ILanguageAdapter.JavaAdapter"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/ILanguageAdapter.ScalaAdapter",
@@ -1377,7 +1349,7 @@
       "ILanguageAdapter.ScalaAdapter"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/IWorldGenerator",
@@ -1392,7 +1364,7 @@
       "IWorldGenerator"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/InjectedModContainer",
@@ -1462,7 +1434,7 @@
       "LoaderState"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/LoaderState.ModState",
@@ -1490,7 +1462,7 @@
       "MCPDummyContainer"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/MetadataCollection",
@@ -1518,7 +1490,7 @@
       "MetadataCollection.ArtifactVersionAdapter"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/MinecraftDummyContainer",
@@ -1546,7 +1518,7 @@
       "MissingModsException"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/Mod",
@@ -1560,7 +1532,7 @@
       "Mod"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/Mod.CustomProperty",
@@ -1574,7 +1546,7 @@
       "Mod.CustomProperty"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/Mod.EventHandler",
@@ -1603,7 +1575,7 @@
       "Mod.Instance"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/Mod.InstanceFactory",
@@ -1631,21 +1603,7 @@
       "Mod.Metadata"
     ],
     "priority": "⭐",
-    "sectionCount": 1
-  },
-  {
-    "id": "1.7.10/cpw/mods/fml/common/Mod.html#customProperties--",
-    "version": "1.7.10",
-    "label": "Mod.html#customProperties--",
-    "url": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/Mod.html#customProperties--",
-    "tags": [
-      "forge",
-      "fml",
-      "cpw_mods_fml_common",
-      "Mod.html#customProperties--"
-    ],
-    "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/ModAPIManager",
@@ -1659,7 +1617,7 @@
       "ModAPIManager"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/ModClassLoader",
@@ -1673,7 +1631,7 @@
       "ModClassLoader"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/ModContainer",
@@ -1715,7 +1673,7 @@
       "ModContainerFactory"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/ModMetadata",
@@ -1729,7 +1687,7 @@
       "ModMetadata"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/ObfuscationReflectionHelper",
@@ -1743,7 +1701,7 @@
       "ObfuscationReflectionHelper"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/Optional",
@@ -1757,7 +1715,7 @@
       "Optional"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 1
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/Optional.Interface",
@@ -1771,7 +1729,7 @@
       "Optional.Interface"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/Optional.InterfaceList",
@@ -1785,7 +1743,7 @@
       "Optional.InterfaceList"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/Optional.Method",
@@ -1799,7 +1757,7 @@
       "Optional.Method"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/ProgressManager",
@@ -1884,7 +1842,7 @@
       "StartupQuery"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/StartupQuery.AbortedException",
@@ -1912,7 +1870,7 @@
       "TracingPrintStream"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/WorldAccessContainer",
@@ -1940,7 +1898,7 @@
       "WrongMinecraftVersionException"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/ZipperUtil",
@@ -1954,7 +1912,7 @@
       "ZipperUtil"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/asm/FMLSanityChecker",
@@ -2138,7 +2096,7 @@
       "TerminalTransformer.ExitVisitor"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/asm/transformers/deobf/FMLDeobfuscatingRemapper",
@@ -2152,7 +2110,7 @@
       "FMLDeobfuscatingRemapper"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/asm/transformers/deobf/FMLRemappingAdapter",
@@ -2208,7 +2166,7 @@
       "ASMDataTable.ASMData"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/discovery/ContainerType",
@@ -2222,7 +2180,7 @@
       "ContainerType"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/discovery/DirectoryDiscoverer",
@@ -2250,7 +2208,7 @@
       "ITypeDiscoverer"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/discovery/JarDiscoverer",
@@ -2422,7 +2380,7 @@
       "FMLFingerprintViolationEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/event/FMLInitializationEvent",
@@ -2452,7 +2410,7 @@
       "FMLInterModComms"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/event/FMLInterModComms.IMCEvent",
@@ -2482,7 +2440,7 @@
       "FMLInterModComms.IMCMessage"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/event/FMLLoadCompleteEvent",
@@ -2527,7 +2485,7 @@
       "FMLMissingMappingsEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/event/FMLMissingMappingsEvent.Action",
@@ -2557,7 +2515,7 @@
       "FMLMissingMappingsEvent.MissingMapping"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/event/FMLModDisabledEvent",
@@ -2587,7 +2545,7 @@
       "FMLModIdMappingEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/event/FMLModIdMappingEvent.RemapTarget",
@@ -2634,7 +2592,7 @@
       "FMLPreInitializationEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/event/FMLServerAboutToStartEvent",
@@ -2769,7 +2727,7 @@
       "Event"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/eventhandler/Event.HasResult",
@@ -2814,7 +2772,7 @@
       "EventBus"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/eventhandler/EventPriority",
@@ -2829,7 +2787,7 @@
       "EventPriority"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/eventhandler/IEventExceptionHandler",
@@ -2844,7 +2802,7 @@
       "IEventExceptionHandler"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/eventhandler/IEventListener",
@@ -2917,7 +2875,7 @@
       "CollectionWrapperFactory"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/functions/GenericIterableFactory",
@@ -3003,7 +2961,7 @@
       "InputEvent.KeyInputEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/InputEvent.MouseInputEvent",
@@ -3018,7 +2976,7 @@
       "InputEvent.MouseInputEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/PlayerEvent",
@@ -3033,7 +2991,7 @@
       "PlayerEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/PlayerEvent.ItemCraftedEvent",
@@ -3049,7 +3007,7 @@
       "PlayerEvent.ItemCraftedEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/PlayerEvent.ItemPickupEvent",
@@ -3065,7 +3023,7 @@
       "PlayerEvent.ItemPickupEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/PlayerEvent.ItemSmeltedEvent",
@@ -3081,7 +3039,7 @@
       "PlayerEvent.ItemSmeltedEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/PlayerEvent.PlayerChangedDimensionEvent",
@@ -3096,7 +3054,7 @@
       "PlayerEvent.PlayerChangedDimensionEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/PlayerEvent.PlayerLoggedInEvent",
@@ -3111,7 +3069,7 @@
       "PlayerEvent.PlayerLoggedInEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/PlayerEvent.PlayerLoggedOutEvent",
@@ -3126,7 +3084,7 @@
       "PlayerEvent.PlayerLoggedOutEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/PlayerEvent.PlayerRespawnEvent",
@@ -3141,7 +3099,7 @@
       "PlayerEvent.PlayerRespawnEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/TickEvent",
@@ -3156,7 +3114,7 @@
       "TickEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/TickEvent.ClientTickEvent",
@@ -3171,7 +3129,7 @@
       "TickEvent.ClientTickEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/TickEvent.Phase",
@@ -3201,7 +3159,7 @@
       "TickEvent.PlayerTickEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/TickEvent.RenderTickEvent",
@@ -3216,7 +3174,7 @@
       "TickEvent.RenderTickEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/TickEvent.ServerTickEvent",
@@ -3231,7 +3189,7 @@
       "TickEvent.ServerTickEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/gameevent/TickEvent.Type",
@@ -3261,7 +3219,7 @@
       "TickEvent.WorldTickEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/launcher/FMLDeobfTweaker",
@@ -3289,7 +3247,7 @@
       "FMLInjectionAndSortingTweaker"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/launcher/FMLServerTweaker",
@@ -3345,7 +3303,7 @@
       "Yggdrasil"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/ByteBufUtils",
@@ -3360,7 +3318,7 @@
       "ByteBufUtils"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/FMLEmbeddedChannel",
@@ -3375,7 +3333,7 @@
       "FMLEmbeddedChannel"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/FMLEventChannel",
@@ -3390,7 +3348,7 @@
       "FMLEventChannel"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/FMLIndexedMessageToMessageCodec",
@@ -3437,7 +3395,7 @@
       "FMLNetworkEvent.ClientConnectedToServerEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/FMLNetworkEvent.ClientCustomPacketEvent",
@@ -3485,7 +3443,7 @@
       "FMLNetworkEvent.CustomNetworkEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/FMLNetworkEvent.CustomPacketEvent",
@@ -3501,7 +3459,7 @@
       "FMLNetworkEvent.CustomPacketEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/FMLNetworkEvent.CustomPacketRegistrationEvent",
@@ -3517,7 +3475,7 @@
       "FMLNetworkEvent.CustomPacketRegistrationEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/FMLNetworkEvent.ServerConnectionFromClientEvent",
@@ -3533,7 +3491,7 @@
       "FMLNetworkEvent.ServerConnectionFromClientEvent"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/FMLNetworkEvent.ServerCustomPacketEvent",
@@ -3595,7 +3553,7 @@
       "FMLOutboundHandler"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/FMLOutboundHandler.OutboundTarget",
@@ -3610,7 +3568,7 @@
       "FMLOutboundHandler.OutboundTarget"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/IGuiHandler",
@@ -3623,21 +3581,6 @@
       "network",
       "cpw_mods_fml_common_network",
       "IGuiHandler"
-    ],
-    "priority": "⭐",
-    "sectionCount": 3
-  },
-  {
-    "id": "1.7.10/cpw/mods/fml/common/network/INetHandler",
-    "version": "1.7.10",
-    "label": "INetHandler",
-    "url": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/network/INetHandler.html",
-    "tags": [
-      "forge",
-      "fml",
-      "network",
-      "cpw_mods_fml_common_network",
-      "INetHandler"
     ],
     "priority": "⭐",
     "sectionCount": 2
@@ -3670,7 +3613,7 @@
       "NetworkEventFiringHandler"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/NetworkHandshakeEstablished",
@@ -3715,7 +3658,7 @@
       "NetworkRegistry.TargetPoint"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/handshake/ChannelRegistrationHandler",
@@ -3775,7 +3718,7 @@
       "FMLHandshakeMessage.ClientHello"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/handshake/FMLHandshakeMessage.HandshakeAck",
@@ -3790,7 +3733,7 @@
       "FMLHandshakeMessage.HandshakeAck"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/handshake/FMLHandshakeMessage.HandshakeReset",
@@ -3805,7 +3748,7 @@
       "FMLHandshakeMessage.HandshakeReset"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/handshake/FMLHandshakeMessage.ModIdData",
@@ -3820,7 +3763,7 @@
       "FMLHandshakeMessage.ModIdData"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/handshake/FMLHandshakeMessage.ModList",
@@ -3835,7 +3778,7 @@
       "FMLHandshakeMessage.ModList"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/handshake/FMLHandshakeMessage.ServerHello",
@@ -3850,7 +3793,7 @@
       "FMLHandshakeMessage.ServerHello"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/handshake/HandshakeInjector",
@@ -3955,7 +3898,7 @@
       "FMLMessage.CompleteHandshake"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/internal/FMLMessage.EntityAdjustMessage",
@@ -3970,7 +3913,7 @@
       "FMLMessage.EntityAdjustMessage"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/internal/FMLMessage.EntityMessage",
@@ -3985,7 +3928,7 @@
       "FMLMessage.EntityMessage"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/internal/FMLMessage.EntitySpawnMessage",
@@ -4000,7 +3943,7 @@
       "FMLMessage.EntitySpawnMessage"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/internal/FMLMessage.OpenGui",
@@ -4016,7 +3959,7 @@
       "FMLMessage.OpenGui"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/internal/FMLNetworkHandler",
@@ -4031,7 +3974,7 @@
       "FMLNetworkHandler"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/internal/FMLProxyPacket",
@@ -4061,7 +4004,7 @@
       "FMLRuntimeCodec"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/internal/HandshakeCompletionHandler",
@@ -4121,7 +4064,7 @@
       "IMessage"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/simpleimpl/IMessageHandler",
@@ -4136,7 +4079,7 @@
       "IMessageHandler"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/network/simpleimpl/MessageContext",
@@ -4196,7 +4139,7 @@
       "SimpleNetworkWrapper"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/patcher/ClassPatch",
@@ -4210,7 +4153,7 @@
       "ClassPatch"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/patcher/ClassPatchManager",
@@ -4224,7 +4167,7 @@
       "ClassPatchManager"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/patcher/GenDiffSet",
@@ -4253,7 +4196,7 @@
       "EntityRegistry"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/ExistingSubstitutionException",
@@ -4313,7 +4256,7 @@
       "GameData.GameDataSnapshot"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/GameRegistry",
@@ -4328,7 +4271,7 @@
       "GameRegistry"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/GameRegistry.ItemStackHolder",
@@ -4344,7 +4287,7 @@
       "GameRegistry.ItemStackHolder"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/GameRegistry.ObjectHolder",
@@ -4359,7 +4302,7 @@
       "GameRegistry.ObjectHolder"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/GameRegistry.Type",
@@ -4389,7 +4332,7 @@
       "GameRegistry.UniqueIdentifier"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/IEntityAdditionalSpawnData",
@@ -4404,7 +4347,7 @@
       "IEntityAdditionalSpawnData"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/IThrowableEntity",
@@ -4420,7 +4363,7 @@
       "IThrowableEntity"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/IncompatibleSubstitutionException",
@@ -4451,7 +4394,7 @@
       "ItemStackHolderInjector"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/LanguageRegistry",
@@ -4464,21 +4407,6 @@
       "registry",
       "cpw_mods_fml_common_registry",
       "LanguageRegistry"
-    ],
-    "priority": "⭐",
-    "sectionCount": 4
-  },
-  {
-    "id": "1.7.10/cpw/mods/fml/common/registry/MerchantRecipeList",
-    "version": "1.7.10",
-    "label": "MerchantRecipeList",
-    "url": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/village/MerchantRecipeList.html",
-    "tags": [
-      "forge",
-      "fml",
-      "registry",
-      "cpw_mods_fml_common_registry",
-      "MerchantRecipeList"
     ],
     "priority": "⭐",
     "sectionCount": 3
@@ -4496,7 +4424,7 @@
       "ObjectHolderRegistry"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/RegistryDelegate",
@@ -4511,7 +4439,7 @@
       "RegistryDelegate"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/RegistryDelegate.Delegate",
@@ -4529,21 +4457,6 @@
     "sectionCount": 3
   },
   {
-    "id": "1.7.10/cpw/mods/fml/common/registry/StructureVillagePieces",
-    "version": "1.7.10",
-    "label": "StructureVillagePieces",
-    "url": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/world/gen/structure/StructureVillagePieces.html",
-    "tags": [
-      "forge",
-      "fml",
-      "registry",
-      "cpw_mods_fml_common_registry",
-      "StructureVillagePieces"
-    ],
-    "priority": "⭐",
-    "sectionCount": 3
-  },
-  {
     "id": "1.7.10/cpw/mods/fml/common/registry/VillagerRegistry",
     "version": "1.7.10",
     "label": "VillagerRegistry",
@@ -4556,7 +4469,7 @@
       "VillagerRegistry"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/registry/VillagerRegistry.IVillageCreationHandler",
@@ -4628,7 +4541,7 @@
       "TopologicalSort"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/toposort/TopologicalSort.DirectedGraph",
@@ -4642,7 +4555,7 @@
       "TopologicalSort.DirectedGraph"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/versioning/ArtifactVersion",
@@ -4656,7 +4569,7 @@
       "ArtifactVersion"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/versioning/ComparableVersion",
@@ -4670,7 +4583,7 @@
       "ComparableVersion"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/versioning/DefaultArtifactVersion",
@@ -4698,7 +4611,7 @@
       "InvalidVersionSpecificationException"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/versioning/Restriction",
@@ -4726,7 +4639,7 @@
       "VersionParser"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/common/versioning/VersionRange",
@@ -4740,7 +4653,7 @@
       "VersionRange"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/CoreModManager",
@@ -4768,7 +4681,7 @@
       "FMLCorePlugin"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/FMLInjectionData",
@@ -4782,7 +4695,7 @@
       "FMLInjectionData"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/FMLLaunchHandler",
@@ -4824,7 +4737,7 @@
       "FMLSecurityManager"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/FMLSecurityManager.ExitTrappedException",
@@ -4838,7 +4751,7 @@
       "FMLSecurityManager.ExitTrappedException"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/FileListHelper",
@@ -4866,7 +4779,7 @@
       "IFMLCallHook"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/IFMLLoadingPlugin",
@@ -4881,7 +4794,7 @@
       "IFMLLoadingPlugin"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/IFMLLoadingPlugin.DependsOn",
@@ -4911,7 +4824,7 @@
       "IFMLLoadingPlugin.MCVersion"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/IFMLLoadingPlugin.Name",
@@ -4926,7 +4839,7 @@
       "IFMLLoadingPlugin.Name"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/IFMLLoadingPlugin.SortingIndex",
@@ -4941,7 +4854,7 @@
       "IFMLLoadingPlugin.SortingIndex"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/IFMLLoadingPlugin.TransformerExclusions",
@@ -4956,7 +4869,7 @@
       "IFMLLoadingPlugin.TransformerExclusions"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/ModListHelper",
@@ -4970,7 +4883,7 @@
       "ModListHelper"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/ModListHelper.JsonModList",
@@ -4984,7 +4897,7 @@
       "ModListHelper.JsonModList"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/ReflectionHelper",
@@ -4998,7 +4911,7 @@
       "ReflectionHelper"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/ReflectionHelper.UnableToAccessFieldException",
@@ -5012,7 +4925,7 @@
       "ReflectionHelper.UnableToAccessFieldException"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/ReflectionHelper.UnableToFindClassException",
@@ -5026,7 +4939,7 @@
       "ReflectionHelper.UnableToFindClassException"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/ReflectionHelper.UnableToFindFieldException",
@@ -5040,7 +4953,7 @@
       "ReflectionHelper.UnableToFindFieldException"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/ReflectionHelper.UnableToFindMethodException",
@@ -5054,7 +4967,7 @@
       "ReflectionHelper.UnableToFindMethodException"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/ServerLaunchWrapper",
@@ -5083,7 +4996,7 @@
       "Side"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/relauncher/SideOnly",
@@ -5098,7 +5011,7 @@
       "SideOnly"
     ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/repackage/com/nothome/delta/ByteBufferSeekableSource",
@@ -5112,7 +5025,7 @@
       "ByteBufferSeekableSource"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/repackage/com/nothome/delta/Checksum",
@@ -5126,7 +5039,7 @@
       "Checksum"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/repackage/com/nothome/delta/DebugDiffWriter",
@@ -5140,7 +5053,7 @@
       "DebugDiffWriter"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/repackage/com/nothome/delta/Delta",
@@ -5168,7 +5081,7 @@
       "DiffWriter"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/repackage/com/nothome/delta/GDiffPatcher",
@@ -5182,7 +5095,7 @@
       "GDiffPatcher"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/repackage/com/nothome/delta/GDiffWriter",
@@ -5210,7 +5123,7 @@
       "PatchException"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/repackage/com/nothome/delta/RandomAccessFileSeekableSource",
@@ -5224,7 +5137,7 @@
       "RandomAccessFileSeekableSource"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/cpw/mods/fml/repackage/com/nothome/delta/SeekableSource",
@@ -5238,21 +5151,7 @@
       "SeekableSource"
     ],
     "priority": "⭐",
-    "sectionCount": 3
-  },
-  {
-    "id": "1.7.10/cpw/mods/fml/server/DedicatedServer",
-    "version": "1.7.10",
-    "label": "DedicatedServer",
-    "url": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/server/dedicated/DedicatedServer.html",
-    "tags": [
-      "forge",
-      "fml",
-      "cpw_mods_fml_server",
-      "DedicatedServer"
-    ],
-    "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/cpw/mods/fml/server/FMLServerHandler",
@@ -5266,35 +5165,7 @@
       "FMLServerHandler"
     ],
     "priority": "⭐",
-    "sectionCount": 3
-  },
-  {
-    "id": "1.7.10/cpw/mods/fml/server/FMLServerHandler.html#beginServerLoading-net.minecraft.server.MinecraftServer-",
-    "version": "1.7.10",
-    "label": "FMLServerHandler.html#beginServerLoading-net.minecraft.server.MinecraftServer-",
-    "url": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/server/FMLServerHandler.html#beginServerLoading-net.minecraft.server.MinecraftServer-",
-    "tags": [
-      "forge",
-      "fml",
-      "cpw_mods_fml_server",
-      "FMLServerHandler.html#beginServerLoading-net.minecraft.server.MinecraftServer-"
-    ],
-    "priority": "⭐",
-    "sectionCount": 3
-  },
-  {
-    "id": "1.7.10/cpw/mods/fml/server/Loader",
-    "version": "1.7.10",
-    "label": "Loader",
-    "url": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/Loader.html",
-    "tags": [
-      "forge",
-      "fml",
-      "cpw_mods_fml_server",
-      "Loader"
-    ],
-    "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/block/Block",
@@ -5308,7 +5179,7 @@
       "Block"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/Block.SoundType",
@@ -5322,7 +5193,7 @@
       "Block.SoundType"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockAir",
@@ -5350,7 +5221,7 @@
       "BlockAnvil"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockBasePressurePlate",
@@ -5392,7 +5263,7 @@
       "BlockBed"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockBookshelf",
@@ -5574,7 +5445,7 @@
       "BlockChest"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockClay",
@@ -5742,7 +5613,7 @@
       "BlockDirt"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockDispenser",
@@ -5756,7 +5627,7 @@
       "BlockDispenser"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockDoor",
@@ -5784,7 +5655,7 @@
       "BlockDoublePlant"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockDragonEgg",
@@ -5854,7 +5725,7 @@
       "BlockEndPortal"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockEndPortalFrame",
@@ -5910,7 +5781,7 @@
       "BlockFalling"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockFarmland",
@@ -5980,7 +5851,7 @@
       "BlockFlower"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockFlowerPot",
@@ -6163,7 +6034,7 @@
       "BlockJukebox.TileEntityJukebox"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockLadder",
@@ -6191,7 +6062,7 @@
       "BlockLeaves"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockLeavesBase",
@@ -6205,7 +6076,7 @@
       "BlockLeavesBase"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockLever",
@@ -6261,7 +6132,7 @@
       "BlockLog"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockMelon",
@@ -6359,7 +6230,7 @@
       "BlockNewLeaf"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockNewLog",
@@ -6373,7 +6244,7 @@
       "BlockNewLog"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockNote",
@@ -6415,7 +6286,7 @@
       "BlockOldLeaf"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockOldLog",
@@ -6429,7 +6300,7 @@
       "BlockOldLog"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockOre",
@@ -6527,7 +6398,7 @@
       "BlockPortal"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockPortal.Size",
@@ -6541,7 +6412,7 @@
       "BlockPortal.Size"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockPotato",
@@ -6625,7 +6496,7 @@
       "BlockQuartz"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockRail",
@@ -6653,7 +6524,7 @@
       "BlockRailBase"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockRailDetector",
@@ -6681,7 +6552,7 @@
       "BlockRailPowered"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockRedstoneComparator",
@@ -6709,7 +6580,7 @@
       "BlockRedstoneDiode"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockRedstoneLight",
@@ -6751,7 +6622,7 @@
       "BlockRedstoneRepeater"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockRedstoneTorch",
@@ -6807,7 +6678,7 @@
       "BlockRotatedPillar"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockSand",
@@ -6821,7 +6692,7 @@
       "BlockSand"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockSandStone",
@@ -6835,7 +6706,7 @@
       "BlockSandStone"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockSapling",
@@ -6849,7 +6720,7 @@
       "BlockSapling"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockSign",
@@ -6877,7 +6748,7 @@
       "BlockSilverfish"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockSkull",
@@ -6905,7 +6776,7 @@
       "BlockSlab"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockSnow",
@@ -7073,7 +6944,7 @@
       "BlockStoneBrick"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockStoneSlab",
@@ -7087,7 +6958,7 @@
       "BlockStoneSlab"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockTNT",
@@ -7199,7 +7070,7 @@
       "BlockWall"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockWeb",
@@ -7227,7 +7098,7 @@
       "BlockWood"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockWoodSlab",
@@ -7241,7 +7112,7 @@
       "BlockWoodSlab"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/BlockWorkbench",
@@ -7298,7 +7169,7 @@
       "MapColor"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/block/material/Material",
@@ -7312,7 +7183,7 @@
       "Material"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/block/material/MaterialLiquid",
@@ -7421,7 +7292,7 @@
       "Minecraft"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/audio/ISound",
@@ -7486,7 +7357,7 @@
       "MovingSound"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/audio/MovingSoundMinecart",
@@ -7551,7 +7422,7 @@
       "PositionedSound"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/audio/PositionedSoundRecord",
@@ -7577,7 +7448,7 @@
       "SoundCategory"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/client/audio/SoundEventAccessor",
@@ -7616,7 +7487,7 @@
       "SoundHandler"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/audio/SoundList",
@@ -7642,7 +7513,7 @@
       "SoundList.SoundEntry"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/audio/SoundList.SoundEntry.Type",
@@ -7681,7 +7552,7 @@
       "SoundManager"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/audio/SoundPoolEntry",
@@ -7721,7 +7592,7 @@
       "AbstractClientPlayer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/entity/EntityClientPlayerMP",
@@ -7735,7 +7606,7 @@
       "EntityClientPlayerMP"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/entity/EntityOtherPlayerMP",
@@ -7763,7 +7634,7 @@
       "EntityPlayerSP"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/ChatLine",
@@ -7792,7 +7663,7 @@
       "FontRenderer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/Gui",
@@ -7806,7 +7677,7 @@
       "Gui"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiButton",
@@ -7820,7 +7691,7 @@
       "GuiButton"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiButtonLanguage",
@@ -7862,7 +7733,7 @@
       "GuiChat"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiCommandBlock",
@@ -7905,7 +7776,7 @@
       "GuiControls"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiCreateFlatWorld",
@@ -7935,7 +7806,7 @@
       "GuiCreateWorld"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiDisconnected",
@@ -7977,7 +7848,7 @@
       "GuiEnchantment"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiErrorScreen",
@@ -8047,7 +7918,7 @@
       "GuiIngame"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiIngameMenu",
@@ -8089,7 +7960,7 @@
       "GuiLabel"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiLanguage",
@@ -8103,7 +7974,7 @@
       "GuiLanguage"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiListExtended",
@@ -8131,7 +8002,7 @@
       "GuiListExtended.IGuiListEntry"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiMainMenu",
@@ -8145,7 +8016,7 @@
       "GuiMainMenu"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiMemoryErrorScreen",
@@ -8229,7 +8100,7 @@
       "GuiOptionSlider"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiOptions",
@@ -8243,7 +8114,7 @@
       "GuiOptions"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiOptionsRowList",
@@ -8271,7 +8142,7 @@
       "GuiOptionsRowList.Row"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiPlayerInfo",
@@ -8285,7 +8156,7 @@
       "GuiPlayerInfo"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiRenameWorld",
@@ -8342,7 +8213,7 @@
       "GuiResourcePackList"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiResourcePackSelected",
@@ -8370,7 +8241,7 @@
       "GuiScreen"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiScreenAddServer",
@@ -8426,7 +8297,7 @@
       "GuiScreenOptionsSounds"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiScreenRealmsProxy",
@@ -8497,7 +8368,7 @@
       "GuiSelectWorld"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiShareToLan",
@@ -8539,7 +8410,7 @@
       "GuiSlot"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiSlotRealmsProxy",
@@ -8595,7 +8466,7 @@
       "GuiTextField"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiVideoSettings",
@@ -8609,7 +8480,7 @@
       "GuiVideoSettings"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiWinGame",
@@ -8637,7 +8508,7 @@
       "GuiYesNo"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/GuiYesNoCallback",
@@ -8665,7 +8536,7 @@
       "IProgressMeter"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/MapItemRenderer",
@@ -8723,7 +8594,7 @@
       "ServerListEntryLanDetected"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/ServerListEntryLanScan",
@@ -8793,7 +8664,7 @@
       "GuiAchievements"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/achievement/GuiStats",
@@ -8807,7 +8678,7 @@
       "GuiStats"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/inventory/CreativeCrafting",
@@ -8877,7 +8748,7 @@
       "GuiContainer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/inventory/GuiContainerCreative",
@@ -8919,7 +8790,7 @@
       "GuiDispenser"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/gui/inventory/GuiEditSign",
@@ -9071,7 +8942,7 @@
       "ModelBase"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelBat",
@@ -9097,7 +8968,7 @@
       "ModelBiped"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelBlaze",
@@ -9123,7 +8994,7 @@
       "ModelBoat"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelBook",
@@ -9136,7 +9007,7 @@
       "ModelBook"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelBox",
@@ -9149,7 +9020,7 @@
       "ModelBox"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelChest",
@@ -9162,7 +9033,7 @@
       "ModelChest"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelChicken",
@@ -9175,7 +9046,7 @@
       "ModelChicken"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelCow",
@@ -9201,7 +9072,7 @@
       "ModelCreeper"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelDragon",
@@ -9240,7 +9111,7 @@
       "ModelEnderman"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelGhast",
@@ -9279,7 +9150,7 @@
       "ModelIronGolem"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelLargeChest",
@@ -9305,7 +9176,7 @@
       "ModelLeashKnot"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelMagmaCube",
@@ -9331,7 +9202,7 @@
       "ModelMinecart"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelOcelot",
@@ -9370,7 +9241,7 @@
       "ModelQuadruped"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelRenderer",
@@ -9384,7 +9255,7 @@
       "ModelRenderer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelSheep1",
@@ -9423,7 +9294,7 @@
       "ModelSign"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelSilverfish",
@@ -9462,7 +9333,7 @@
       "ModelSkeletonHead"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelSlime",
@@ -9488,7 +9359,7 @@
       "ModelSnowMan"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelSpider",
@@ -9501,7 +9372,7 @@
       "ModelSpider"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelSquid",
@@ -9527,7 +9398,7 @@
       "ModelVillager"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelWitch",
@@ -9540,7 +9411,7 @@
       "ModelWitch"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelWither",
@@ -9566,7 +9437,7 @@
       "ModelWolf"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/ModelZombie",
@@ -9605,7 +9476,7 @@
       "PositionTextureVertex"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/model/TextureOffset",
@@ -9618,7 +9489,7 @@
       "TextureOffset"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/model/TexturedQuad",
@@ -9631,7 +9502,7 @@
       "TexturedQuad"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/multiplayer/ChunkProviderClient",
@@ -9696,7 +9567,7 @@
       "ServerData"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/multiplayer/ServerData.ServerResourceMode",
@@ -9776,7 +9647,7 @@
       "LanServerDetector.LanServer"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/network/LanServerDetector.LanServerList",
@@ -9790,7 +9661,7 @@
       "LanServerDetector.LanServerList"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/network/LanServerDetector.ThreadLanServerFind",
@@ -9804,7 +9675,7 @@
       "LanServerDetector.ThreadLanServerFind"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/network/NetHandlerHandshakeMemory",
@@ -9846,7 +9717,7 @@
       "NetHandlerPlayClient"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/network/OldServerPinger",
@@ -9874,7 +9745,7 @@
       "EffectRenderer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/particle/EntityAuraFX",
@@ -10030,7 +9901,7 @@
       "EntityFX"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/particle/EntityFireworkOverlayFX",
@@ -10304,7 +10175,7 @@
       "ActiveRenderInfo"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/DestroyBlockProgress",
@@ -10332,7 +10203,7 @@
       "EntityRenderer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/EntitySorter",
@@ -10459,7 +10330,7 @@
       "OpenGlHelper"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/RenderBlocks",
@@ -10473,7 +10344,7 @@
       "RenderBlocks"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/RenderGlobal",
@@ -10487,7 +10358,7 @@
       "RenderGlobal"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/RenderHelper",
@@ -10515,7 +10386,7 @@
       "RenderList"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/RenderSorter",
@@ -10557,7 +10428,7 @@
       "Tessellator"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/ThreadDownloadImageData",
@@ -10585,7 +10456,7 @@
       "WorldRenderer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/culling/ClippingHelper",
@@ -10599,7 +10470,7 @@
       "ClippingHelper"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/culling/ClippingHelperImpl",
@@ -10656,7 +10527,7 @@
       "Render"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/entity/RenderArrow",
@@ -10701,7 +10572,7 @@
       "RenderBiped"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/entity/RenderBlaze",
@@ -10731,7 +10602,7 @@
       "RenderBoat"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/entity/RenderCaveSpider",
@@ -10806,7 +10677,7 @@
       "RenderDragon"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/entity/RenderEnchantmentTable",
@@ -10972,7 +10843,7 @@
       "RenderItem"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/entity/RenderLeashKnot",
@@ -11047,7 +10918,7 @@
       "RenderManager"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/entity/RenderMinecart",
@@ -11062,7 +10933,7 @@
       "RenderMinecart"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/entity/RenderMinecartMobSpawner",
@@ -11152,7 +11023,7 @@
       "RenderPlayer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/entity/RenderSheep",
@@ -11317,7 +11188,7 @@
       "RenderVillager"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/entity/RenderWitch",
@@ -11392,7 +11263,7 @@
       "RenderZombie"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/entity/RendererLivingEntity",
@@ -11407,7 +11278,7 @@
       "RendererLivingEntity"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/texture/AbstractTexture",
@@ -11421,7 +11292,7 @@
       "AbstractTexture"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/texture/DynamicTexture",
@@ -11505,7 +11376,7 @@
       "LayeredTexture"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/texture/SimpleTexture",
@@ -11519,7 +11390,7 @@
       "SimpleTexture"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/texture/Stitcher",
@@ -11547,7 +11418,7 @@
       "Stitcher.Holder"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/texture/Stitcher.Slot",
@@ -11561,7 +11432,7 @@
       "Stitcher.Slot"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/texture/TextureAtlasSprite",
@@ -11575,7 +11446,7 @@
       "TextureAtlasSprite"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/texture/TextureClock",
@@ -11603,7 +11474,7 @@
       "TextureCompass"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/texture/TextureManager",
@@ -11631,7 +11502,7 @@
       "TextureMap"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/texture/TextureUtil",
@@ -11645,7 +11516,7 @@
       "TextureUtil"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/tileentity/RenderEndPortal",
@@ -11786,7 +11657,7 @@
       "TileEntityRendererChestHelper"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/tileentity/TileEntityRendererDispatcher",
@@ -11802,7 +11673,7 @@
       "TileEntityRendererDispatcher"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/tileentity/TileEntityRendererPiston",
@@ -11850,7 +11721,7 @@
       "TileEntitySkullRenderer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/renderer/tileentity/TileEntitySpecialRenderer",
@@ -11866,7 +11737,7 @@
       "TileEntitySpecialRenderer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/resources/AbstractResourcePack",
@@ -11879,7 +11750,7 @@
       "AbstractResourcePack"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/resources/DefaultResourcePack",
@@ -11892,7 +11763,7 @@
       "DefaultResourcePack"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/resources/FallbackResourceManager",
@@ -11905,7 +11776,7 @@
       "FallbackResourceManager"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/resources/FileResourcePack",
@@ -11918,7 +11789,7 @@
       "FileResourcePack"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/resources/FolderResourcePack",
@@ -12061,7 +11932,7 @@
       "LanguageManager"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/resources/Locale",
@@ -12113,7 +11984,7 @@
       "ResourcePackListEntry"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/resources/ResourcePackListEntryDefault",
@@ -12152,7 +12023,7 @@
       "ResourcePackRepository"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/resources/SimpleReloadableResourceManager",
@@ -12191,7 +12062,7 @@
       "SkinManager"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/resources/SkinManager.SkinAvailableCallback",
@@ -12204,7 +12075,7 @@
       "SkinManager.SkinAvailableCallback"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/client/resources/data/AnimationFrame",
@@ -12427,7 +12298,7 @@
       "GameSettings"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/settings/GameSettings.Options",
@@ -12466,7 +12337,7 @@
       "Framebuffer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/shader/Shader",
@@ -12479,7 +12350,7 @@
       "Shader"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/shader/ShaderDefault",
@@ -12596,7 +12467,7 @@
       "BroadcastController"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/stream/BroadcastController.BroadcastListener",
@@ -12609,7 +12480,7 @@
       "BroadcastController.BroadcastListener"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/client/stream/BroadcastController.BroadcastState",
@@ -12635,7 +12506,7 @@
       "ChatController"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/stream/ChatController.ChatListener",
@@ -12648,7 +12519,7 @@
       "ChatController.ChatListener"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/client/stream/ChatController.ChatState",
@@ -12700,7 +12571,7 @@
       "IngestServerTester"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/stream/IngestServerTester.IngestTestListener",
@@ -12713,7 +12584,7 @@
       "IngestServerTester.IngestTestListener"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/client/stream/IngestServerTester.IngestTestState",
@@ -12778,7 +12649,7 @@
       "TwitchStream"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/client/util/JsonBlendingMode",
@@ -12817,7 +12688,7 @@
       "JsonException.Entry"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/client/util/QuadComparator",
@@ -13233,7 +13104,7 @@
       "IEntitySelector"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/command/IEntitySelector.ArmoredMob",
@@ -13247,7 +13118,7 @@
       "IEntitySelector.ArmoredMob"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/command/NumberInvalidException",
@@ -13299,7 +13170,7 @@
       "ServerCommand"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/command/ServerCommandManager",
@@ -13364,7 +13235,7 @@
       "CommandBanIp"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/command/server/CommandBanPlayer",
@@ -13743,7 +13614,7 @@
       "CreativeTabs"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/dispenser/BehaviorDefaultDispenseItem",
@@ -13782,7 +13653,7 @@
       "IBehaviorDispenseItem"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/dispenser/IBlockSource",
@@ -13847,7 +13718,7 @@
       "PositionImpl"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/enchantment/Enchantment",
@@ -13860,7 +13731,7 @@
       "Enchantment"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/enchantment/EnchantmentArrowDamage",
@@ -13925,7 +13796,7 @@
       "EnchantmentDamage"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/enchantment/EnchantmentData",
@@ -13938,7 +13809,7 @@
       "EnchantmentData"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/enchantment/EnchantmentDigging",
@@ -14055,7 +13926,7 @@
       "EnchantmentProtection"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/enchantment/EnchantmentThorns",
@@ -14107,7 +13978,7 @@
       "EnumEnchantmentType"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/entity/DataWatcher",
@@ -14135,7 +14006,7 @@
       "DataWatcher.WatchableObject"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/entity/Entity",
@@ -14149,7 +14020,7 @@
       "Entity"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/Entity.EnumEntitySize",
@@ -14205,7 +14076,7 @@
       "EntityCreature"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/EntityFlying",
@@ -14233,7 +14104,7 @@
       "EntityHanging"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/EntityLeashKnot",
@@ -14261,7 +14132,7 @@
       "EntityList"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/EntityList.EntityEggInfo",
@@ -14275,7 +14146,7 @@
       "EntityList.EntityEggInfo"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/entity/EntityLiving",
@@ -14289,7 +14160,7 @@
       "EntityLiving"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/EntityLivingBase",
@@ -14303,7 +14174,7 @@
       "EntityLivingBase"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/EntityMinecartCommandBlock",
@@ -14346,7 +14217,7 @@
       "EntityTrackerEntry"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/EnumCreatureAttribute",
@@ -14360,7 +14231,7 @@
       "EnumCreatureAttribute"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/entity/EnumCreatureType",
@@ -14374,7 +14245,7 @@
       "EnumCreatureType"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/entity/IEntityLivingData",
@@ -14500,7 +14371,7 @@
       "SharedMonsterAttributes"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/ai/EntityAIArrowAttack",
@@ -14542,7 +14413,7 @@
       "EntityAIAvoidEntity"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/ai/EntityAIBase",
@@ -14640,7 +14511,7 @@
       "EntityAIDoorInteract"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/ai/EntityAIEatGrass",
@@ -14878,7 +14749,7 @@
       "EntityAINearestAttackableTarget.Sorter"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/entity/ai/EntityAIOcelotAttack",
@@ -15060,7 +14931,7 @@
       "EntityAITarget"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/ai/EntityAITargetNonTamed",
@@ -15088,7 +14959,7 @@
       "EntityAITasks"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/ai/EntityAITempt",
@@ -15158,7 +15029,7 @@
       "EntityAIWatchClosest"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/ai/EntityAIWatchClosest2",
@@ -15298,7 +15169,7 @@
       "BaseAttributeMap"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/ai/attributes/IAttribute",
@@ -15368,7 +15239,7 @@
       "ServersideAttributeMap"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/boss/BossStatus",
@@ -15382,7 +15253,7 @@
       "BossStatus"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/boss/EntityDragon",
@@ -15396,7 +15267,7 @@
       "EntityDragon"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/boss/EntityDragonPart",
@@ -15410,7 +15281,7 @@
       "EntityDragonPart"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/boss/EntityWither",
@@ -15452,7 +15323,7 @@
       "EntityLightningBolt"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/effect/EntityWeatherEffect",
@@ -15496,7 +15367,7 @@
       "EntityEnderCrystal"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/item/EntityEnderEye",
@@ -15557,7 +15428,7 @@
       "EntityFallingBlock"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/item/EntityFireworkRocket",
@@ -15587,7 +15458,7 @@
       "EntityItem"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/item/EntityItemFrame",
@@ -15677,7 +15548,7 @@
       "EntityMinecartFurnace"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/item/EntityMinecartHopper",
@@ -15722,7 +15593,7 @@
       "EntityPainting"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/item/EntityPainting.EnumArt",
@@ -15737,7 +15608,7 @@
       "EntityPainting.EnumArt"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/entity/item/EntityTNTPrimed",
@@ -15752,7 +15623,7 @@
       "EntityTNTPrimed"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/item/EntityXPOrb",
@@ -15767,7 +15638,7 @@
       "EntityXPOrb"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/monster/EntityBlaze",
@@ -15837,7 +15708,7 @@
       "EntityGhast"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/monster/EntityGiantZombie",
@@ -15963,7 +15834,7 @@
       "EntitySlime"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/monster/EntitySnowman",
@@ -16005,7 +15876,7 @@
       "EntitySpider.GroupData"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/monster/EntityWitch",
@@ -16033,7 +15904,7 @@
       "EntityZombie"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/monster/IMob",
@@ -16047,7 +15918,7 @@
       "IMob"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/entity/passive/EntityAmbientCreature",
@@ -16103,7 +15974,7 @@
       "EntityChicken"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/passive/EntityCow",
@@ -16131,7 +16002,7 @@
       "EntityHorse"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/passive/EntityHorse.GroupData",
@@ -16145,7 +16016,7 @@
       "EntityHorse.GroupData"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/entity/passive/EntityMooshroom",
@@ -16201,7 +16072,7 @@
       "EntitySheep"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/passive/EntitySquid",
@@ -16215,7 +16086,7 @@
       "EntitySquid"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/passive/EntityTameable",
@@ -16229,7 +16100,7 @@
       "EntityTameable"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/passive/EntityVillager",
@@ -16243,7 +16114,7 @@
       "EntityVillager"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/passive/EntityWaterMob",
@@ -16299,7 +16170,7 @@
       "EntityPlayer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/player/EntityPlayer.EnumChatVisibility",
@@ -16341,7 +16212,7 @@
       "EntityPlayerMP"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/player/InventoryPlayer",
@@ -16355,7 +16226,7 @@
       "InventoryPlayer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/player/PlayerCapabilities",
@@ -16369,7 +16240,7 @@
       "PlayerCapabilities"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/projectile/EntityArrow",
@@ -16383,7 +16254,7 @@
       "EntityArrow"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/projectile/EntityEgg",
@@ -16411,7 +16282,7 @@
       "EntityFireball"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/projectile/EntityFishHook",
@@ -16425,7 +16296,7 @@
       "EntityFishHook"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/projectile/EntityLargeFireball",
@@ -16439,7 +16310,7 @@
       "EntityLargeFireball"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/projectile/EntityPotion",
@@ -16496,7 +16367,7 @@
       "EntityThrowable"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/entity/projectile/EntityWitherSkull",
@@ -16579,7 +16450,7 @@
       "Blocks"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/init/Bootstrap",
@@ -16605,7 +16476,7 @@
       "Items"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/inventory/AnimalChest",
@@ -16631,7 +16502,7 @@
       "Container"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/inventory/ContainerBeacon",
@@ -16696,7 +16567,7 @@
       "ContainerEnchantment"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/inventory/ContainerFurnace",
@@ -16761,7 +16632,7 @@
       "ContainerPlayer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/inventory/ContainerRepair",
@@ -16774,7 +16645,7 @@
       "ContainerRepair"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/inventory/ContainerWorkbench",
@@ -16787,7 +16658,7 @@
       "ContainerWorkbench"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/inventory/ICrafting",
@@ -16931,7 +16802,7 @@
       "Slot"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/inventory/SlotCrafting",
@@ -16984,7 +16855,7 @@
       "EnumAction"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/item/EnumRarity",
@@ -17012,7 +16883,7 @@
       "Item"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/Item.ToolMaterial",
@@ -17069,7 +16940,7 @@
       "ItemArmor"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemArmor.ArmorMaterial",
@@ -17126,7 +16997,7 @@
       "ItemBlock"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemBlockWithMetadata",
@@ -17182,7 +17053,7 @@
       "ItemBow"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemBucket",
@@ -17308,7 +17179,7 @@
       "ItemDye"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemEditableBook",
@@ -17518,7 +17389,7 @@
       "ItemFood"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemGlassBottle",
@@ -17561,7 +17432,7 @@
       "ItemHoe"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemLead",
@@ -17645,7 +17516,7 @@
       "ItemMinecart"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemMonsterPlacer",
@@ -17673,7 +17544,7 @@
       "ItemMultiTexture"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemNameTag",
@@ -17745,7 +17616,7 @@
       "ItemRecord"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemRedstone",
@@ -17871,7 +17742,7 @@
       "ItemSkull"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemSlab",
@@ -17955,7 +17826,7 @@
       "ItemStack"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemSword",
@@ -17983,7 +17854,7 @@
       "ItemTool"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/ItemWritableBook",
@@ -18237,7 +18108,7 @@
       "ShapedRecipes"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/item/crafting/ShapelessRecipes",
@@ -18252,7 +18123,7 @@
       "ShapelessRecipes"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/nbt/CompressedStreamTools",
@@ -18291,7 +18162,7 @@
       "NBTBase"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/nbt/NBTBase.NBTPrimitive",
@@ -18304,7 +18175,7 @@
       "NBTBase.NBTPrimitive"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/nbt/NBTException",
@@ -18330,7 +18201,7 @@
       "NBTSizeTracker"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/nbt/NBTTagByte",
@@ -18513,7 +18384,7 @@
       "EnumConnectionState"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/network/INetHandler",
@@ -18541,7 +18412,7 @@
       "NetHandlerPlayServer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/network/NettyEncryptingDecoder",
@@ -18597,7 +18468,7 @@
       "NetworkManager"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/network/NetworkStatistics",
@@ -18625,7 +18496,7 @@
       "NetworkStatistics.PacketStat"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/NetworkSystem",
@@ -18639,7 +18510,7 @@
       "NetworkSystem"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/network/Packet",
@@ -18709,7 +18580,7 @@
       "ServerStatusResponse.MinecraftProtocolVersionIdentifier"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/ServerStatusResponse.MinecraftProtocolVersionIdentifier.Serializer",
@@ -18723,7 +18594,7 @@
       "ServerStatusResponse.MinecraftProtocolVersionIdentifier.Serializer"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/ServerStatusResponse.PlayerCountData",
@@ -18737,7 +18608,7 @@
       "ServerStatusResponse.PlayerCountData"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/ServerStatusResponse.PlayerCountData.Serializer",
@@ -18751,7 +18622,7 @@
       "ServerStatusResponse.PlayerCountData.Serializer"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/ServerStatusResponse.Serializer",
@@ -18765,7 +18636,7 @@
       "ServerStatusResponse.Serializer"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/handshake/INetHandlerHandshakeServer",
@@ -18991,7 +18862,7 @@
       "C03PacketPlayer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/network/play/client/C03PacketPlayer.C04PacketPlayerPosition",
@@ -19005,7 +18876,7 @@
       "C03PacketPlayer.C04PacketPlayerPosition"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/play/client/C03PacketPlayer.C05PacketPlayerLook",
@@ -19019,7 +18890,7 @@
       "C03PacketPlayer.C05PacketPlayerLook"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/play/client/C03PacketPlayer.C06PacketPlayerPosLook",
@@ -19033,7 +18904,7 @@
       "C03PacketPlayer.C06PacketPlayerPosLook"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/play/client/C07PacketPlayerDigging",
@@ -19583,7 +19454,7 @@
       "S14PacketEntity"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/network/play/server/S14PacketEntity.S15PacketEntityRelMove",
@@ -19598,7 +19469,7 @@
       "S14PacketEntity.S15PacketEntityRelMove"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/play/server/S14PacketEntity.S16PacketEntityLook",
@@ -19613,7 +19484,7 @@
       "S14PacketEntity.S16PacketEntityLook"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/play/server/S14PacketEntity.S17PacketEntityLookMove",
@@ -19628,7 +19499,7 @@
       "S14PacketEntity.S17PacketEntityLookMove"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/play/server/S18PacketEntityTeleport",
@@ -19782,7 +19653,7 @@
       "S21PacketChunkData.Extracted"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/network/play/server/S22PacketMultiBlockChange",
@@ -19810,7 +19681,7 @@
       "S23PacketBlockChange"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/network/play/server/S24PacketBlockAction",
@@ -19922,7 +19793,7 @@
       "S2BPacketChangeGameState"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/network/play/server/S2CPacketSpawnGlobalEntity",
@@ -20248,7 +20119,7 @@
       "RConConsoleSource"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/network/rcon/RConOutputStream",
@@ -20276,7 +20147,7 @@
       "RConThreadBase"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/network/rcon/RConThreadClient",
@@ -20332,7 +20203,7 @@
       "RConUtils"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/network/status/INetHandlerStatusClient",
@@ -20482,7 +20353,7 @@
       "PathPoint"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/potion/Potion",
@@ -20496,7 +20367,7 @@
       "Potion"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/potion/PotionAbsoption",
@@ -20574,7 +20445,7 @@
       "PotionHelper"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/profiler/IPlayerUsage",
@@ -20613,7 +20484,7 @@
       "Profiler"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/profiler/Profiler.Result",
@@ -20626,7 +20497,7 @@
       "Profiler.Result"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/realms/DisconnectedOnlineScreen",
@@ -20717,7 +20588,7 @@
       "RealmsEditBox"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/realms/RealmsLevelSummary",
@@ -20756,7 +20627,7 @@
       "RealmsScreen"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/realms/RealmsScrolledSelectionList",
@@ -20808,7 +20679,7 @@
       "RealmsSharedConstants"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/realms/RealmsSliderButton",
@@ -20821,7 +20692,7 @@
       "RealmsSliderButton"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/realms/RendererUtility",
@@ -20848,7 +20719,7 @@
       "ServerPing"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/realms/Tezzelator",
@@ -20861,7 +20732,7 @@
       "Tezzelator"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/scoreboard/IScoreObjectiveCriteria",
@@ -20874,7 +20745,7 @@
       "IScoreObjectiveCriteria"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/scoreboard/Score",
@@ -20887,7 +20758,7 @@
       "Score"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/scoreboard/ScoreDummyCriteria",
@@ -21004,7 +20875,7 @@
       "MinecraftServer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/server/ServerEula",
@@ -21043,7 +20914,7 @@
       "DedicatedServer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/server/dedicated/PropertyManager",
@@ -21151,7 +21022,7 @@
       "BanEntry"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/server/management/BanList",
@@ -21191,7 +21062,7 @@
       "ItemInWorldManager"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/server/management/LowerStringMap",
@@ -21243,7 +21114,7 @@
       "PlayerProfileCache"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/server/management/PreYggdrasilConverter",
@@ -21256,7 +21127,7 @@
       "PreYggdrasilConverter"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/server/management/ServerConfigurationManager",
@@ -21269,7 +21140,7 @@
       "ServerConfigurationManager"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/server/management/UserList",
@@ -21282,7 +21153,7 @@
       "UserList"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/server/management/UserListBans",
@@ -21401,7 +21272,7 @@
       "NetHandlerLoginServer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/server/network/NetHandlerStatusServer",
@@ -21428,7 +21299,7 @@
       "FMLRenderAccessLibrary"
     ],
     "priority": "🟢",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/stats/Achievement",
@@ -21441,7 +21312,7 @@
       "Achievement"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/stats/AchievementList",
@@ -21454,7 +21325,7 @@
       "AchievementList"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/stats/IStatStringFormat",
@@ -21506,7 +21377,7 @@
       "StatBase"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/stats/StatBasic",
@@ -21545,7 +21416,7 @@
       "StatFileWriter"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/stats/StatList",
@@ -21558,7 +21429,7 @@
       "StatList"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/stats/StatisticsFile",
@@ -21599,7 +21470,7 @@
       "MobSpawnerBaseLogic"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/tileentity/TileEntity",
@@ -21615,7 +21486,7 @@
       "TileEntity"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/tileentity/TileEntityBeacon",
@@ -21630,7 +21501,7 @@
       "TileEntityBeacon"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/tileentity/TileEntityBrewingStand",
@@ -21660,7 +21531,7 @@
       "TileEntityChest"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/tileentity/TileEntityCommandBlock",
@@ -21720,7 +21591,7 @@
       "TileEntityDispenser"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/tileentity/TileEntityDropper",
@@ -21750,7 +21621,7 @@
       "TileEntityEnchantmentTable"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/tileentity/TileEntityEndPortal",
@@ -21780,7 +21651,7 @@
       "TileEntityEnderChest"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/tileentity/TileEntityFlowerPot",
@@ -21810,7 +21681,7 @@
       "TileEntityFurnace"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/tileentity/TileEntityHopper",
@@ -21855,7 +21726,7 @@
       "TileEntityNote"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/tileentity/TileEntityPiston",
@@ -21885,7 +21756,7 @@
       "TileEntitySign"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/tileentity/TileEntitySkull",
@@ -21913,7 +21784,7 @@
       "AxisAlignedBB"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/ChatAllowedCharacters",
@@ -21926,7 +21797,7 @@
       "ChatAllowedCharacters"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/ChatComponentStyle",
@@ -21939,7 +21810,7 @@
       "ChatComponentStyle"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/ChatComponentText",
@@ -21965,7 +21836,7 @@
       "ChatComponentTranslation"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/ChatComponentTranslationFormatException",
@@ -22004,7 +21875,7 @@
       "ChatStyle.Serializer"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/util/ChunkCoordinates",
@@ -22017,7 +21888,7 @@
       "ChunkCoordinates"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/CombatEntry",
@@ -22069,7 +21940,7 @@
       "DamageSource"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/Direction",
@@ -22082,7 +21953,7 @@
       "Direction"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/EnchantmentNameParts",
@@ -22095,7 +21966,7 @@
       "EnchantmentNameParts"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/EntityDamageSource",
@@ -22108,7 +21979,7 @@
       "EntityDamageSource"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/EntityDamageSourceIndirect",
@@ -22134,7 +22005,7 @@
       "EnumChatFormatting"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/util/EnumFacing",
@@ -22147,7 +22018,7 @@
       "EnumFacing"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/util/EnumTypeAdapterFactory",
@@ -22173,7 +22044,7 @@
       "Facing"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/util/FoodStats",
@@ -22212,7 +22083,7 @@
       "HttpUtil.DownloadListener"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/util/IChatComponent",
@@ -22238,7 +22109,7 @@
       "IChatComponent.Serializer"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/util/IIcon",
@@ -22459,7 +22330,7 @@
       "MouseHelper"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/MovementInput",
@@ -22472,7 +22343,7 @@
       "MovementInput"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/MovementInputFromOptions",
@@ -22498,7 +22369,7 @@
       "MovingObjectPosition"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/MovingObjectPosition.MovingObjectType",
@@ -22524,7 +22395,7 @@
       "ObjectIntIdentityMap"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/RegistryDefaulted",
@@ -22550,7 +22421,7 @@
       "RegistryNamespaced"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/RegistryNamespacedDefaultedByKey",
@@ -22576,7 +22447,7 @@
       "RegistrySimple"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/ReportedException",
@@ -22707,7 +22578,7 @@
       "Timer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/Tuple",
@@ -22772,7 +22643,7 @@
       "Vec3"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/WeightedRandom",
@@ -22798,7 +22669,7 @@
       "WeightedRandom.Item"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/util/WeightedRandomChestContent",
@@ -22811,7 +22682,7 @@
       "WeightedRandomChestContent"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/util/WeightedRandomFishable",
@@ -22889,7 +22760,7 @@
       "VillageDoorInfo"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/village/VillageSiege",
@@ -22930,7 +22801,7 @@
       "ChunkCoordIntPair"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/ChunkPosition",
@@ -22944,7 +22815,7 @@
       "ChunkPosition"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/ColorizerFoliage",
@@ -22986,7 +22857,7 @@
       "EnumDifficulty"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/world/EnumSkyBlock",
@@ -23015,7 +22886,7 @@
       "Explosion"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/GameRules",
@@ -23085,7 +22956,7 @@
       "NextTickListEntry"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/SpawnerAnimals",
@@ -23127,7 +22998,7 @@
       "World"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/WorldManager",
@@ -23155,7 +23026,7 @@
       "WorldProvider"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/WorldProviderEnd",
@@ -23211,7 +23082,7 @@
       "WorldSavedData"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/WorldServer",
@@ -23225,7 +23096,7 @@
       "WorldServer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/WorldServerMulti",
@@ -23309,7 +23180,7 @@
       "BiomeDecorator"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/biome/BiomeEndDecorator",
@@ -23323,7 +23194,7 @@
       "BiomeEndDecorator"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/biome/BiomeGenBase",
@@ -23337,7 +23208,7 @@
       "BiomeGenBase"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/biome/BiomeGenBase.Height",
@@ -23351,7 +23222,7 @@
       "BiomeGenBase.Height"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/biome/BiomeGenBase.SpawnListEntry",
@@ -23365,7 +23236,7 @@
       "BiomeGenBase.SpawnListEntry"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/biome/BiomeGenBase.TempCategory",
@@ -23435,7 +23306,7 @@
       "BiomeGenForest"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/biome/BiomeGenHell",
@@ -23519,7 +23390,7 @@
       "BiomeGenMutated"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/biome/BiomeGenOcean",
@@ -23547,7 +23418,7 @@
       "BiomeGenPlains"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/biome/BiomeGenRiver",
@@ -23589,7 +23460,7 @@
       "BiomeGenSavanna.Mutated"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/biome/BiomeGenSnow",
@@ -23687,7 +23558,7 @@
       "Chunk"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/chunk/EmptyChunk",
@@ -23729,7 +23600,7 @@
       "NibbleArray"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/chunk/storage/AnvilChunkLoader",
@@ -23743,7 +23614,7 @@
       "AnvilChunkLoader"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/chunk/storage/AnvilSaveConverter",
@@ -23799,7 +23670,7 @@
       "ChunkLoader.AnvilConverterData"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/chunk/storage/ExtendedBlockStorage",
@@ -23841,7 +23712,7 @@
       "NibbleArrayReader"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/chunk/storage/RegionFile",
@@ -23897,7 +23768,7 @@
       "DemoWorldServer"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/ChunkProviderEnd",
@@ -23911,7 +23782,7 @@
       "ChunkProviderEnd"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/ChunkProviderFlat",
@@ -23939,7 +23810,7 @@
       "ChunkProviderGenerate"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/ChunkProviderHell",
@@ -23953,7 +23824,7 @@
       "ChunkProviderHell"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/ChunkProviderServer",
@@ -23967,7 +23838,7 @@
       "ChunkProviderServer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/FlatGeneratorInfo",
@@ -24009,7 +23880,7 @@
       "MapGenBase"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/MapGenCaves",
@@ -24079,7 +23950,7 @@
       "NoiseGeneratorImproved"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/NoiseGeneratorOctaves",
@@ -24121,7 +23992,7 @@
       "NoiseGeneratorSimplex"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/feature/WorldGenAbstractTree",
@@ -24286,7 +24157,7 @@
       "WorldGenDungeons"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/feature/WorldGenFire",
@@ -24391,7 +24262,7 @@
       "WorldGenHugeTrees"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/feature/WorldGenIcePath",
@@ -24750,7 +24621,7 @@
       "GenLayer"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/layer/GenLayerAddIsland",
@@ -25072,7 +24943,7 @@
       "ComponentScatteredFeaturePieces.DesertPyramid"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/ComponentScatteredFeaturePieces.JunglePyramid",
@@ -25086,7 +24957,7 @@
       "ComponentScatteredFeaturePieces.JunglePyramid"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/ComponentScatteredFeaturePieces.SwampHut",
@@ -25100,7 +24971,7 @@
       "ComponentScatteredFeaturePieces.SwampHut"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/MapGenMineshaft",
@@ -25142,7 +25013,7 @@
       "MapGenNetherBridge.Start"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/MapGenScatteredFeature",
@@ -25170,7 +25041,7 @@
       "MapGenScatteredFeature.Start"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/MapGenStronghold",
@@ -25184,7 +25055,7 @@
       "MapGenStronghold"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/MapGenStronghold.Start",
@@ -25198,7 +25069,7 @@
       "MapGenStronghold.Start"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/MapGenStructure",
@@ -25212,7 +25083,7 @@
       "MapGenStructure"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/MapGenStructureData",
@@ -25254,7 +25125,7 @@
       "MapGenVillage"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/MapGenVillage.Start",
@@ -25268,7 +25139,7 @@
       "MapGenVillage.Start"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureBoundingBox",
@@ -25282,7 +25153,7 @@
       "StructureBoundingBox"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureComponent",
@@ -25296,7 +25167,7 @@
       "StructureComponent"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureComponent.BlockSelector",
@@ -25310,7 +25181,7 @@
       "StructureComponent.BlockSelector"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureMineshaftPieces",
@@ -25324,7 +25195,7 @@
       "StructureMineshaftPieces"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureMineshaftPieces.Corridor",
@@ -25338,7 +25209,7 @@
       "StructureMineshaftPieces.Corridor"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureMineshaftPieces.Cross",
@@ -25352,7 +25223,7 @@
       "StructureMineshaftPieces.Cross"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureMineshaftPieces.Room",
@@ -25366,7 +25237,7 @@
       "StructureMineshaftPieces.Room"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureMineshaftPieces.Stairs",
@@ -25380,7 +25251,7 @@
       "StructureMineshaftPieces.Stairs"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureMineshaftStart",
@@ -25422,7 +25293,7 @@
       "StructureNetherBridgePieces.Corridor"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Corridor2",
@@ -25436,7 +25307,7 @@
       "StructureNetherBridgePieces.Corridor2"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Corridor3",
@@ -25450,7 +25321,7 @@
       "StructureNetherBridgePieces.Corridor3"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Corridor4",
@@ -25464,7 +25335,7 @@
       "StructureNetherBridgePieces.Corridor4"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Corridor5",
@@ -25478,7 +25349,7 @@
       "StructureNetherBridgePieces.Corridor5"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Crossing",
@@ -25492,7 +25363,7 @@
       "StructureNetherBridgePieces.Crossing"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Crossing2",
@@ -25506,7 +25377,7 @@
       "StructureNetherBridgePieces.Crossing2"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Crossing3",
@@ -25520,7 +25391,7 @@
       "StructureNetherBridgePieces.Crossing3"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.End",
@@ -25534,7 +25405,7 @@
       "StructureNetherBridgePieces.End"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Entrance",
@@ -25548,7 +25419,7 @@
       "StructureNetherBridgePieces.Entrance"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.NetherStalkRoom",
@@ -25562,7 +25433,7 @@
       "StructureNetherBridgePieces.NetherStalkRoom"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Stairs",
@@ -25576,7 +25447,7 @@
       "StructureNetherBridgePieces.Stairs"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Start",
@@ -25590,7 +25461,7 @@
       "StructureNetherBridgePieces.Start"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Straight",
@@ -25604,7 +25475,7 @@
       "StructureNetherBridgePieces.Straight"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureNetherBridgePieces.Throne",
@@ -25618,7 +25489,7 @@
       "StructureNetherBridgePieces.Throne"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStart",
@@ -25632,7 +25503,7 @@
       "StructureStart"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces",
@@ -25660,7 +25531,7 @@
       "StructureStrongholdPieces.ChestCorridor"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.Corridor",
@@ -25674,7 +25545,7 @@
       "StructureStrongholdPieces.Corridor"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.Crossing",
@@ -25688,7 +25559,7 @@
       "StructureStrongholdPieces.Crossing"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.LeftTurn",
@@ -25702,7 +25573,7 @@
       "StructureStrongholdPieces.LeftTurn"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.Library",
@@ -25716,7 +25587,7 @@
       "StructureStrongholdPieces.Library"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.PortalRoom",
@@ -25730,7 +25601,7 @@
       "StructureStrongholdPieces.PortalRoom"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.Prison",
@@ -25744,7 +25615,7 @@
       "StructureStrongholdPieces.Prison"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.RightTurn",
@@ -25758,7 +25629,7 @@
       "StructureStrongholdPieces.RightTurn"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.RoomCrossing",
@@ -25772,7 +25643,7 @@
       "StructureStrongholdPieces.RoomCrossing"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.Stairs",
@@ -25786,7 +25657,7 @@
       "StructureStrongholdPieces.Stairs"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.Stairs2",
@@ -25800,7 +25671,7 @@
       "StructureStrongholdPieces.Stairs2"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.StairsStraight",
@@ -25814,7 +25685,7 @@
       "StructureStrongholdPieces.StairsStraight"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.Straight",
@@ -25828,7 +25699,7 @@
       "StructureStrongholdPieces.Straight"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.Stronghold",
@@ -25842,7 +25713,7 @@
       "StructureStrongholdPieces.Stronghold"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureStrongholdPieces.Stronghold.Door",
@@ -25884,7 +25755,7 @@
       "StructureVillagePieces.Church"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.Field1",
@@ -25898,7 +25769,7 @@
       "StructureVillagePieces.Field1"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.Field2",
@@ -25912,7 +25783,7 @@
       "StructureVillagePieces.Field2"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.Hall",
@@ -25926,7 +25797,7 @@
       "StructureVillagePieces.Hall"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.House1",
@@ -25940,7 +25811,7 @@
       "StructureVillagePieces.House1"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.House2",
@@ -25954,7 +25825,7 @@
       "StructureVillagePieces.House2"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.House3",
@@ -25968,7 +25839,7 @@
       "StructureVillagePieces.House3"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.House4Garden",
@@ -25982,7 +25853,7 @@
       "StructureVillagePieces.House4Garden"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.Path",
@@ -25996,7 +25867,7 @@
       "StructureVillagePieces.Path"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.PieceWeight",
@@ -26010,7 +25881,7 @@
       "StructureVillagePieces.PieceWeight"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.Road",
@@ -26024,7 +25895,7 @@
       "StructureVillagePieces.Road"
     ],
     "priority": "🟢",
-    "sectionCount": 1
+    "sectionCount": 2
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.Start",
@@ -26038,7 +25909,7 @@
       "StructureVillagePieces.Start"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.Torch",
@@ -26052,7 +25923,7 @@
       "StructureVillagePieces.Torch"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.Village",
@@ -26066,7 +25937,7 @@
       "StructureVillagePieces.Village"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.Well",
@@ -26080,7 +25951,7 @@
       "StructureVillagePieces.Well"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/gen/structure/StructureVillagePieces.WoodHut",
@@ -26094,7 +25965,7 @@
       "StructureVillagePieces.WoodHut"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/storage/DerivedWorldInfo",
@@ -26178,7 +26049,7 @@
       "MapData"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/storage/MapStorage",
@@ -26220,7 +26091,7 @@
       "SaveFormatOld"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraft/world/storage/SaveHandler",
@@ -26262,7 +26133,7 @@
       "ThreadedFileIOBase"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraft/world/storage/WorldInfo",
@@ -26276,7 +26147,7 @@
       "WorldInfo"
     ],
     "priority": "🟢",
-    "sectionCount": 4
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraftforge/gradle/GradleStartCommon",
@@ -26290,7 +26161,7 @@
       "GradleStartCommon"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   },
   {
     "id": "1.7.10/net/minecraftforge/gradle/GradleStartCommon.AccessTransformerTransformer",
@@ -26304,7 +26175,7 @@
       "GradleStartCommon.AccessTransformerTransformer"
     ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 3
   },
   {
     "id": "1.7.10/net/minecraftforge/gradle/OldPropertyMapSerializer",
@@ -26346,6 +26217,6 @@
       "CoremodTweaker"
     ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 4
   }
 ]

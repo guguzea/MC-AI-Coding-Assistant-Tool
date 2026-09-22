@@ -1,17 +1,19 @@
 # GuiErrorBase
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiErrorScreen → net.minecraftforge.fml.client.GuiErrorBase
+
 ## Class signature
 
 ```java
 public class GuiErrorBase extends GuiErrorScreen
 ```
 
-## Constructors
-
-- `public GuiErrorBase()`
-
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button)`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected void actionPerformed(GuiButton button)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void initGui()`
+
+## Fields
+
+- `GuiErrorBase`

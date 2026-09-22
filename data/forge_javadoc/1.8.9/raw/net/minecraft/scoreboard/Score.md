@@ -1,13 +1,17 @@
 ---
 title: "Score"
-description: "Returns the name of the player this score belongs to"
+description: "public class Score extends java.lang.Object"
 package: "net/minecraft/scoreboard"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/scoreboard/Score.html"
 sourceType: javadoc
 ---
 
 # Score
+
+**Inheritance:** java.lang.Object → net.minecraft.scoreboard.Score
 
 ## Class signature
 
@@ -17,22 +21,22 @@ public class Score extends java.lang.Object
 
 ## Constructors
 
-- `public Score( Scoreboard theScoreboardIn, ScoreObjective theScoreObjectiveIn, java.lang.String scorePlayerNameIn)`
+- `Score(Scoreboard theScoreboardIn, ScoreObjective theScoreObjectiveIn, java.lang.String scorePlayerNameIn)`
 
 ## Methods
 
-- `public void increseScore(int amount)`
-- `public void decreaseScore(int amount)`
-- `public void func_96648_a()`
-- `public int getScorePoints()`
-- `public void setScorePoints(int points)`
-- `public ScoreObjective getObjective()`
-- `public java.lang.String getPlayerName()`
-- `public Scoreboard getScoreScoreboard()`
-- `public boolean isLocked()`
-- `public void setLocked(boolean locked)`
-- `public void func_96651_a(java.util.List< EntityPlayer > p_96651_1_)`
+- `void decreaseScore(int amount)`
+- `void func_96648_a()`
+- `void func_96651_a(java.util.List<EntityPlayer> p_96651_1_)`
+- `ScoreObjective getObjective()`
+- `java.lang.String getPlayerName()` — Returns the name of the player this score belongs to
+- `int getScorePoints()`
+- `Scoreboard getScoreScoreboard()`
+- `void increseScore(int amount)`
+- `boolean isLocked()`
+- `void setLocked(boolean locked)`
+- `void setScorePoints(int points)`
 
-## Description
+## Fields
 
-Returns the name of the player this score belongs to
+- `static java.util.Comparator<Score> scoreComparator`

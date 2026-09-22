@@ -1,13 +1,17 @@
 ---
 title: "ItemSoup"
-description: "Called when the player finishes using this Item (E.g. finishes eating.)."
+description: "public class ItemSoup extends ItemFood"
 package: "net/minecraft/item"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/item/ItemSoup.html"
 sourceType: javadoc
 ---
 
 # ItemSoup
+
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemFood → net.minecraft.item.ItemSoup
 
 ## Class signature
 
@@ -15,14 +19,10 @@ sourceType: javadoc
 public class ItemSoup extends ItemFood
 ```
 
-## Constructors
-
-- `public ItemSoup(int healAmount)`
-
 ## Methods
 
-- `public ItemStack onItemUseFinish( ItemStack stack, World worldIn, EntityPlayer playerIn)`
+- `ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)` — Called when the player finishes using this Item (E.g. finishes eating.).
 
-## Description
+## Fields
 
-Called when the player finishes using this Item (E.g. finishes eating.).
+- `ItemSoup`

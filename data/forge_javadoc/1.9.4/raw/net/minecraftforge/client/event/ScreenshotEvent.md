@@ -1,13 +1,17 @@
 ---
 title: "ScreenshotEvent"
-description: "This event is fired before and after a screenshot is taken This event is fired on the MinecraftForge.EVENT_BUS This event is Cancelable screenshotFile contains the file the screenshot will be/was save"
+description: "public class ScreenshotEvent extends Event"
 package: "net/minecraftforge/client/event"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/client/event/ScreenshotEvent.html"
 sourceType: javadoc
 ---
 
 # ScreenshotEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.ScreenshotEvent
 
 ## Class signature
 
@@ -17,17 +21,17 @@ public class ScreenshotEvent extends Event
 
 ## Constructors
 
-- `public ScreenshotEvent(java.awt.image.BufferedImage image, java.io.File screenshotFile)`
+- `ScreenshotEvent(java.awt.image.BufferedImage image, java.io.File screenshotFile)`
 
 ## Methods
 
-- `public java.awt.image.BufferedImage getImage()`
-- `public java.io.File getScreenshotFile()`
-- `public void setScreenshotFile(java.io.File screenshotFile)`
-- `public ITextComponent getResultMessage()`
-- `public void setResultMessage( ITextComponent resultMessage)`
-- `public ITextComponent getCancelMessage()`
+- `ITextComponent getCancelMessage()`
+- `java.awt.image.BufferedImage getImage()`
+- `ITextComponent getResultMessage()`
+- `java.io.File getScreenshotFile()`
+- `void setResultMessage(ITextComponent resultMessage)`
+- `void setScreenshotFile(java.io.File screenshotFile)`
 
-## Description
+## Fields
 
-This event is fired before and after a screenshot is taken This event is fired on the MinecraftForge.EVENT_BUS This event is Cancelable screenshotFile contains the file the screenshot will be/was save
+- `static ITextComponent DEFAULT_CANCEL_REASON`

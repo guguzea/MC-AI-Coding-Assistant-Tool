@@ -1,19 +1,21 @@
 # TextComponentSelector
 
+**Inheritance:** java.lang.Object → net.minecraft.util.text.TextComponentBase → net.minecraft.util.text.TextComponentSelector
+
 ## Class signature
 
 ```java
 public class TextComponentSelector extends TextComponentBase
 ```
 
-## Constructors
-
-- `public TextComponentSelector(java.lang.String selectorIn)`
-
 ## Methods
 
-- `public java.lang.String getSelector()`
-- `public java.lang.String getUnformattedComponentText()`
-- `public TextComponentSelector createCopy()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public java.lang.String toString()`
+- `TextComponentSelector createCopy()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `java.lang.String getSelector()`
+- `java.lang.String getUnformattedComponentText()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `TextComponentSelector`

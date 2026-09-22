@@ -1,16 +1,18 @@
 # RecipesMapExtending
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.ShapedRecipes → net.minecraft.item.crafting.RecipesMapExtending
+
 ## Class signature
 
 ```java
 public class RecipesMapExtending extends ShapedRecipes
 ```
 
-## Constructors
-
-- `public RecipesMapExtending()`
-
 ## Methods
 
-- `public boolean matches( InventoryCrafting p_77569_1_, World p_77569_2_)`
-- `public ItemStack getCraftingResult( InventoryCrafting p_77572_1_)`
+- `ItemStack getCraftingResult(InventoryCrafting p_77572_1_)`
+- `boolean matches(InventoryCrafting p_77569_1_, World p_77569_2_)`
+
+## Fields
+
+- `RecipesMapExtending`

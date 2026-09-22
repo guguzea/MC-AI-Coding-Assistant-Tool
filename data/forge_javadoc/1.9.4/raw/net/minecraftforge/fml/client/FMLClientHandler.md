@@ -1,13 +1,17 @@
 ---
 title: "FMLClientHandler"
-description: "Handles primary communication from hooked code into the system The FML entry point is beginMinecraftLoading(Minecraft, List, IReloadableResourceManager) called from Minecraft Obfuscated code should fo"
+description: "public class FMLClientHandler extends java.lang.Object implements IFMLSidedHandler"
 package: "net/minecraftforge/fml/client"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/client/FMLClientHandler.html"
 sourceType: javadoc
 ---
 
 # FMLClientHandler
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.FMLClientHandler
 
 ## Class signature
 
@@ -17,66 +21,62 @@ public class FMLClientHandler extends java.lang.Object implements IFMLSidedHandl
 
 ## Constructors
 
-- `public FMLClientHandler()`
+- `FMLClientHandler()`
 
 ## Methods
 
-- `public void beginMinecraftLoading( Minecraft minecraft, java.util.List< IResourcePack > resourcePackList, IReloadableResourceManager resourceManager)`
-- `public void haltGame(java.lang.String message, java.lang.Throwable t)`
-- `public void finishMinecraftLoading()`
-- `public void extendModList()`
-- `public void onInitializationComplete()`
-- `public Minecraft getClient()`
-- `public static FMLClientHandler instance()`
-- `public void displayGuiScreen( EntityPlayer player, GuiScreen gui)`
-- `public void addSpecialModEntries(java.util.ArrayList< ModContainer > mods)`
-- `public java.util.List<java.lang.String> getAdditionalBrandingInformation()`
-- `public Side getSide()`
-- `public boolean hasOptifine()`
-- `public void showGuiScreen(java.lang.Object clientGuiElement)`
-- `public void queryUser( StartupQuery query) throws java.lang.InterruptedException`
-- `public boolean handleLoadingScreen( ScaledResolution scaledResolution) throws java.io.IOException`
-- `public WorldClient getWorldClient()`
-- `public EntityPlayerSP getClientPlayerEntity()`
-- `public void beginServerLoading( MinecraftServer server)`
-- `public void finishServerLoading()`
-- `public java.io.File getSavesDirectory()`
-- `public MinecraftServer getServer()`
-- `public void displayMissingMods(java.lang.Object modMissingPacket)`
-- `public boolean isLoading()`
-- `public boolean shouldServerShouldBeKilledQuietly()`
-- `public boolean isGUIOpen(java.lang.Class<? extends GuiScreen > gui)`
-- `public void addModAsResource( ModContainer container)`
-- `public IResourcePack getResourcePackFor(java.lang.String modId)`
-- `public java.lang.String getCurrentLanguage()`
-- `public void serverStopped()`
-- `public INetHandler getClientPlayHandler()`
-- `public NetworkManager getClientToServerNetworkManager()`
-- `public void handleClientWorldClosing( WorldClient world)`
-- `public void startIntegratedServer(java.lang.String id, java.lang.String name, WorldSettings settings)`
-- `public java.io.File getSavesDir()`
-- `public void tryLoadExistingWorld( GuiWorldSelection selectWorldGUI, WorldSummary comparator)`
-- `public void showInGameModOptions( GuiIngameMenu guiIngameMenu)`
-- `public IModGuiFactory getGuiFactoryFor( ModContainer selectedMod)`
-- `public void setupServerList()`
-- `public void captureAdditionalData( ServerStatusResponse serverstatusresponse, com.google.gson.JsonObject jsonobject)`
-- `public void bindServerListData( ServerData data, ServerStatusResponse originalResponse)`
-- `public java.lang.String enhanceServerListEntry( ServerListEntryNormal serverListEntry, ServerData serverEntry, int x, int width, int y, int relativeMouseX, int relativeMouseY)`
-- `public java.lang.String fixDescription(java.lang.String description)`
-- `public void connectToServerAtStartup(java.lang.String host, int port)`
-- `public void connectToServer( GuiScreen guiMultiplayer, ServerData serverEntry)`
-- `public void connectToRealmsServer(java.lang.String host, int port)`
-- `public void setPlayClient( NetHandlerPlayClient netHandlerPlayClient)`
-- `public void fireNetRegistrationEvent( EventBus bus, NetworkManager manager, java.util.Set<java.lang.String> channelSet, java.lang.String channel, Side side)`
-- `public boolean shouldAllowPlayerLogins()`
-- `public void allowLogins()`
-- `public IThreadListener getWorldThread( INetHandler net)`
-- `public void trackMissingTexture( ResourceLocation resourceLocation)`
-- `public void trackBrokenTexture( ResourceLocation resourceLocation, java.lang.String error)`
-- `public void logMissingTextureErrors()`
-- `public void processWindowMessages()`
-- `public java.lang.String stripSpecialChars(java.lang.String message)`
-
-## Description
-
-Handles primary communication from hooked code into the system The FML entry point is beginMinecraftLoading(Minecraft, List, IReloadableResourceManager) called from Minecraft Obfuscated code should fo
+- `void addModAsResource(ModContainer container)`
+- `void addSpecialModEntries(java.util.ArrayList<ModContainer> mods)`
+- `void allowLogins()`
+- `void beginMinecraftLoading(Minecraft minecraft, java.util.List<IResourcePack> resourcePackList, IReloadableResourceManager resourceManager)` — Called to start the whole game off
+- `void beginServerLoading(MinecraftServer server)`
+- `void bindServerListData(ServerData data, ServerStatusResponse originalResponse)`
+- `void captureAdditionalData(ServerStatusResponse serverstatusresponse, com.google.gson.JsonObject jsonobject)`
+- `void connectToRealmsServer(java.lang.String host, int port)`
+- `void connectToServer(GuiScreen guiMultiplayer, ServerData serverEntry)`
+- `void connectToServerAtStartup(java.lang.String host, int port)`
+- `void displayGuiScreen(EntityPlayer player, GuiScreen gui)`
+- `void displayMissingMods(java.lang.Object modMissingPacket)`
+- `java.lang.String enhanceServerListEntry(ServerListEntryNormal serverListEntry, ServerData serverEntry, int x, int width, int y, int relativeMouseX, int relativeMouseY)`
+- `void extendModList()`
+- `void finishMinecraftLoading()` — Called a bit later on during initialization to finish loading mods Also initializes key bindings
+- `void finishServerLoading()`
+- `void fireNetRegistrationEvent(EventBus bus, NetworkManager manager, java.util.Set<java.lang.String> channelSet, java.lang.String channel, Side side)`
+- `java.lang.String fixDescription(java.lang.String description)`
+- `java.util.List<java.lang.String> getAdditionalBrandingInformation()`
+- `Minecraft getClient()` — Get the server instance
+- `EntityPlayerSP getClientPlayerEntity()`
+- `INetHandler getClientPlayHandler()`
+- `NetworkManager getClientToServerNetworkManager()`
+- `java.lang.String getCurrentLanguage()`
+- `IModGuiFactory getGuiFactoryFor(ModContainer selectedMod)`
+- `IResourcePack getResourcePackFor(java.lang.String modId)`
+- `java.io.File getSavesDir()`
+- `java.io.File getSavesDirectory()`
+- `MinecraftServer getServer()`
+- `Side getSide()`
+- `WorldClient getWorldClient()`
+- `IThreadListener getWorldThread(INetHandler net)`
+- `void haltGame(java.lang.String message, java.lang.Throwable t)`
+- `void handleClientWorldClosing(WorldClient world)`
+- `boolean handleLoadingScreen(ScaledResolution scaledResolution)`
+- `boolean hasOptifine()`
+- `static FMLClientHandler instance()`
+- `boolean isGUIOpen(java.lang.Class<? extends GuiScreen> gui)` — Is this GUI type open?
+- `boolean isLoading()` — If the client is in the midst of loading, we disable saving so that custom settings aren't wiped out
+- `void logMissingTextureErrors()`
+- `void onInitializationComplete()`
+- `void processWindowMessages()`
+- `void queryUser(StartupQuery query)`
+- `void serverStopped()`
+- `void setPlayClient(NetHandlerPlayClient netHandlerPlayClient)`
+- `void setupServerList()`
+- `boolean shouldAllowPlayerLogins()`
+- `boolean shouldServerShouldBeKilledQuietly()`
+- `void showGuiScreen(java.lang.Object clientGuiElement)`
+- `void showInGameModOptions(GuiIngameMenu guiIngameMenu)`
+- `void startIntegratedServer(java.lang.String id, java.lang.String name, WorldSettings settings)`
+- `java.lang.String stripSpecialChars(java.lang.String message)`
+- `void trackBrokenTexture(ResourceLocation resourceLocation, java.lang.String error)`
+- `void trackMissingTexture(ResourceLocation resourceLocation)`
+- `void tryLoadExistingWorld(GuiWorldSelection selectWorldGUI, WorldSummary comparator)`

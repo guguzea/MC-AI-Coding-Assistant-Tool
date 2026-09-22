@@ -1,5 +1,7 @@
 # C03PacketPlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.network.Packet → net.minecraft.network.play.client.C03PacketPlayer
+
 ## Class signature
 
 ```java
@@ -8,22 +10,34 @@ public class C03PacketPlayer extends Packet
 
 ## Constructors
 
-- `public C03PacketPlayer()`
-- `public C03PacketPlayer(boolean p_i45256_1_)`
+- `C03PacketPlayer()`
+- `C03PacketPlayer(boolean p_i45256_1_)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayServer p_148833_1_)`
-- `public void readPacketData( PacketBuffer p_148837_1_) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer p_148840_1_) throws java.io.IOException`
-- `public double func_149464_c()`
-- `public double func_149467_d()`
-- `public double func_149472_e()`
-- `public double func_149471_f()`
-- `public float func_149462_g()`
-- `public float func_149470_h()`
-- `public boolean func_149465_i()`
-- `public boolean func_149466_j()`
-- `public boolean func_149463_k()`
-- `public void func_149469_a(boolean p_149469_1_)`
-- `public void processPacket( INetHandler p_148833_1_)`
+- `float func_149462_g()`
+- `boolean func_149463_k()`
+- `double func_149464_c()`
+- `boolean func_149465_i()`
+- `boolean func_149466_j()`
+- `double func_149467_d()`
+- `void func_149469_a(boolean p_149469_1_)`
+- `float func_149470_h()`
+- `double func_149471_f()`
+- `double func_149472_e()`
+- `void processPacket(INetHandler p_148833_1_)`
+- `void processPacket(INetHandlerPlayServer p_148833_1_)`
+- `void readPacketData(PacketBuffer p_148837_1_)`
+- `void writePacketData(PacketBuffer p_148840_1_)`
+
+## Fields
+
+- `protected float field_149473_f`
+- `protected boolean field_149474_g`
+- `protected double field_149475_d`
+- `protected float field_149476_e`
+- `protected double field_149477_b`
+- `protected double field_149478_c`
+- `protected double field_149479_a`
+- `protected boolean field_149480_h`
+- `protected boolean field_149481_i`

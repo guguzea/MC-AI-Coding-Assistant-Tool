@@ -1,13 +1,17 @@
 ---
 title: "DamageSource"
-description: "returns EntityDamageSourceIndirect of an arrow"
+description: "public class DamageSource extends java.lang.Object"
 package: "net/minecraft/util"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/util/DamageSource.html"
 sourceType: javadoc
 ---
 
 # DamageSource
+
+**Inheritance:** java.lang.Object → net.minecraft.util.DamageSource
 
 ## Class signature
 
@@ -17,41 +21,56 @@ public class DamageSource extends java.lang.Object
 
 ## Constructors
 
-- `public DamageSource(java.lang.String damageTypeIn)`
+- `DamageSource(java.lang.String damageTypeIn)`
 
 ## Methods
 
-- `public static DamageSource causeMobDamage( EntityLivingBase mob)`
-- `public static DamageSource causePlayerDamage( EntityPlayer player)`
-- `public static DamageSource causeArrowDamage( EntityArrow arrow, Entity p_76353_1_)`
-- `public static DamageSource causeFireballDamage( EntityFireball fireball, Entity p_76362_1_)`
-- `public static DamageSource causeThrownDamage( Entity p_76356_0_, Entity p_76356_1_)`
-- `public static DamageSource causeIndirectMagicDamage( Entity p_76354_0_, Entity p_76354_1_)`
-- `public static DamageSource causeThornsDamage( Entity p_92087_0_)`
-- `public static DamageSource setExplosionSource( Explosion explosionIn)`
-- `public boolean isProjectile()`
-- `public DamageSource setProjectile()`
-- `public boolean isExplosion()`
-- `public DamageSource setExplosion()`
-- `public boolean isUnblockable()`
-- `public float getHungerDamage()`
-- `public boolean canHarmInCreative()`
-- `public boolean isDamageAbsolute()`
-- `public Entity getSourceOfDamage()`
-- `public Entity getEntity()`
-- `public DamageSource setDamageBypassesArmor()`
-- `public DamageSource setDamageAllowedInCreativeMode()`
-- `public DamageSource setDamageIsAbsolute()`
-- `public DamageSource setFireDamage()`
-- `public IChatComponent getDeathMessage( EntityLivingBase p_151519_1_)`
-- `public boolean isFireDamage()`
-- `public java.lang.String getDamageType()`
-- `public DamageSource setDifficultyScaled()`
-- `public boolean isDifficultyScaled()`
-- `public boolean isMagicDamage()`
-- `public DamageSource setMagicDamage()`
-- `public boolean isCreativePlayer()`
+- `boolean canHarmInCreative()`
+- `static DamageSource causeArrowDamage(EntityArrow arrow, Entity p_76353_1_)` — returns EntityDamageSourceIndirect of an arrow
+- `static DamageSource causeFireballDamage(EntityFireball fireball, Entity p_76362_1_)` — returns EntityDamageSourceIndirect of a fireball
+- `static DamageSource causeIndirectMagicDamage(Entity p_76354_0_, Entity p_76354_1_)`
+- `static DamageSource causeMobDamage(EntityLivingBase mob)`
+- `static DamageSource causePlayerDamage(EntityPlayer player)` — returns an EntityDamageSource of type player
+- `static DamageSource causeThornsDamage(Entity p_92087_0_)` — Returns the EntityDamageSource of the Thorns enchantment
+- `static DamageSource causeThrownDamage(Entity p_76356_0_, Entity p_76356_1_)`
+- `java.lang.String getDamageType()` — Return the name of damage type.
+- `IChatComponent getDeathMessage(EntityLivingBase p_151519_1_)` — Gets the death message that is displayed when the player dies
+- `Entity getEntity()`
+- `float getHungerDamage()` — How much satiate(food) is consumed by this DamageSource
+- `Entity getSourceOfDamage()`
+- `boolean isCreativePlayer()`
+- `boolean isDamageAbsolute()` — Whether or not the damage ignores modification by potion effects or enchantments.
+- `boolean isDifficultyScaled()` — Return whether this damage source will have its damage amount scaled based on the current difficulty.
+- `boolean isExplosion()`
+- `boolean isFireDamage()` — Returns true if the damage is fire based.
+- `boolean isMagicDamage()` — Returns true if the damage is magic based.
+- `boolean isProjectile()` — Returns true if the damage is projectile based.
+- `boolean isUnblockable()`
+- `DamageSource setDamageAllowedInCreativeMode()`
+- `DamageSource setDamageBypassesArmor()`
+- `DamageSource setDamageIsAbsolute()` — Sets a value indicating whether the damage is absolute (ignores modification by potion effects or enchantments), and also clears out hunger damage.
+- `DamageSource setDifficultyScaled()` — Set whether this damage source will have its damage amount scaled based on the current difficulty.
+- `DamageSource setExplosion()`
+- `static DamageSource setExplosionSource(Explosion explosionIn)`
+- `DamageSource setFireDamage()` — Define the damage type as fire based.
+- `DamageSource setMagicDamage()` — Define the damage type as magic based.
+- `DamageSource setProjectile()` — Define the damage type as projectile based.
 
-## Description
+## Fields
 
-returns EntityDamageSourceIndirect of an arrow
+- `static DamageSource anvil`
+- `static DamageSource cactus`
+- `java.lang.String damageType`
+- `static DamageSource drown`
+- `static DamageSource fall`
+- `static DamageSource fallingBlock`
+- `static DamageSource generic`
+- `static DamageSource inFire`
+- `static DamageSource inWall`
+- `static DamageSource lava`
+- `static DamageSource lightningBolt`
+- `static DamageSource magic`
+- `static DamageSource onFire`
+- `static DamageSource outOfWorld`
+- `static DamageSource starve`
+- `static DamageSource wither`

@@ -8,10 +8,6 @@ public interface RegistryDelegate<T>
 
 ## Methods
 
-- `T get()`
-- `java.lang.String name()`
-- `java.lang.Class< T > type()`
-
-## Description
-
-A registry delegate for holding references to items or blocks These should be safe to use in things like lists though aliased items and blocks will not have object identity with respect to their deleg
+- `T get()` — Get the referent pointed at by this delegate.
+- `java.lang.String name()` — Get the name of this delegate.
+- `java.lang.Class<T> type()` — Get the delegate type.

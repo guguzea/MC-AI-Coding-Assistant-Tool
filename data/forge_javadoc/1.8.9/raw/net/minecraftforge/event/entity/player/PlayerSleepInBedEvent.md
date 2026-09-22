@@ -1,13 +1,17 @@
 ---
 title: "PlayerSleepInBedEvent"
-description: "PlayerSleepInBedEvent is fired when a player sleeps in a bed. This event is fired whenever a player sleeps in a bed in EntityPlayer#sleepInBedAt(BlockPos). result contains whether the player is able t"
+description: "public class PlayerSleepInBedEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/player/PlayerSleepInBedEvent.html"
 sourceType: javadoc
 ---
 
 # PlayerSleepInBedEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerSleepInBedEvent
 
 ## Class signature
 
@@ -17,8 +21,9 @@ public class PlayerSleepInBedEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerSleepInBedEvent( EntityPlayer player, BlockPos pos)`
+- `PlayerSleepInBedEvent(EntityPlayer player, BlockPos pos)`
 
-## Description
+## Fields
 
-PlayerSleepInBedEvent is fired when a player sleeps in a bed. This event is fired whenever a player sleeps in a bed in EntityPlayer#sleepInBedAt(BlockPos). result contains whether the player is able t
+- `BlockPos pos`
+- `EntityPlayer.EnumStatus result`

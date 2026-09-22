@@ -3,11 +3,15 @@ title: "BlockPistonExtension"
 description: "public class BlockPistonExtension extends BlockDirectional"
 package: "net/minecraft/block"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/BlockPistonExtension.html"
 sourceType: javadoc
 ---
 
 # BlockPistonExtension
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockDirectional → net.minecraft.block.BlockPistonExtension
 
 ## Class signature
 
@@ -17,26 +21,49 @@ public class BlockPistonExtension extends BlockDirectional
 
 ## Constructors
 
-- `public BlockPistonExtension()`
+- `BlockPistonExtension()`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public void addCollisionBoxToList( IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List< AxisAlignedBB > collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_)`
-- `public boolean isFullyOpaque( IBlockState state)`
-- `public void onBlockHarvested( World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public boolean canPlaceBlockOnSide( World worldIn, BlockPos pos, EnumFacing side)`
-- `public int quantityDropped(java.util.Random random)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
-- `public boolean shouldSideBeRendered( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `@Nullable public static EnumFacing getFacing(int meta)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
+- `void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean p_185477_7_)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)`
 - `protected BlockStateContainer createBlockState()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `static EnumFacing getFacing(int meta)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isFullyOpaque(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
+- `int quantityDropped(java.util.Random random)`
+- `boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
+
+## Fields
+
+- `protected static AxisAlignedBB DOWN_ARM_AABB`
+- `protected static AxisAlignedBB EAST_ARM_AABB`
+- `protected static AxisAlignedBB NORTH_ARM_AABB`
+- `protected static AxisAlignedBB PISTON_EXTENSION_DOWN_AABB`
+- `protected static AxisAlignedBB PISTON_EXTENSION_EAST_AABB`
+- `protected static AxisAlignedBB PISTON_EXTENSION_NORTH_AABB`
+- `protected static AxisAlignedBB PISTON_EXTENSION_SOUTH_AABB`
+- `protected static AxisAlignedBB PISTON_EXTENSION_UP_AABB`
+- `protected static AxisAlignedBB PISTON_EXTENSION_WEST_AABB`
+- `static PropertyBool SHORT`
+- `protected static AxisAlignedBB SHORT_DOWN_ARM_AABB`
+- `protected static AxisAlignedBB SHORT_EAST_ARM_AABB`
+- `protected static AxisAlignedBB SHORT_NORTH_ARM_AABB`
+- `protected static AxisAlignedBB SHORT_SOUTH_ARM_AABB`
+- `protected static AxisAlignedBB SHORT_UP_ARM_AABB`
+- `protected static AxisAlignedBB SHORT_WEST_ARM_AABB`
+- `protected static AxisAlignedBB SOUTH_ARM_AABB`
+- `static PropertyEnum<BlockPistonExtension.EnumPistonType> TYPE`
+- `protected static AxisAlignedBB UP_ARM_AABB`
+- `protected static AxisAlignedBB WEST_ARM_AABB`

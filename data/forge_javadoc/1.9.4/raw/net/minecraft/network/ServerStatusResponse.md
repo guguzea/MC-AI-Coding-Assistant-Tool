@@ -1,13 +1,17 @@
 ---
 title: "ServerStatusResponse"
-description: "Returns this object as a Json string."
+description: "public class ServerStatusResponse extends java.lang.Object"
 package: "net/minecraft/network"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/ServerStatusResponse.html"
 sourceType: javadoc
 ---
 
 # ServerStatusResponse
+
+**Inheritance:** java.lang.Object → net.minecraft.network.ServerStatusResponse
 
 ## Class signature
 
@@ -17,21 +21,17 @@ public class ServerStatusResponse extends java.lang.Object
 
 ## Constructors
 
-- `public ServerStatusResponse()`
+- `ServerStatusResponse()`
 
 ## Methods
 
-- `public ITextComponent getServerDescription()`
-- `public void setServerDescription( ITextComponent descriptionIn)`
-- `public ServerStatusResponse.Players getPlayers()`
-- `public void setPlayers( ServerStatusResponse.Players playersIn)`
-- `public ServerStatusResponse.Version getVersion()`
-- `public void setVersion( ServerStatusResponse.Version versionIn)`
-- `public void setFavicon(java.lang.String faviconBlob)`
-- `public java.lang.String getFavicon()`
-- `public java.lang.String getJson()`
-- `public void invalidateJson()`
-
-## Description
-
-Returns this object as a Json string.
+- `java.lang.String getFavicon()`
+- `java.lang.String getJson()` — Returns this object as a Json string.
+- `ServerStatusResponse.Players getPlayers()`
+- `ITextComponent getServerDescription()`
+- `ServerStatusResponse.Version getVersion()`
+- `void invalidateJson()` — Invalidates the cached json, causing the next call to getJson to rebuild it.
+- `void setFavicon(java.lang.String faviconBlob)`
+- `void setPlayers(ServerStatusResponse.Players playersIn)`
+- `void setServerDescription(ITextComponent descriptionIn)`
+- `void setVersion(ServerStatusResponse.Version versionIn)`

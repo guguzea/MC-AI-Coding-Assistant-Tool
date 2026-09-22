@@ -1,24 +1,30 @@
 ---
 title: "PlayerEvent.NameFormat"
-description: "NameFormat is fired when a player's display name is retrieved. This event is fired whenever a player's name is retrieved in EntityPlayer.getDisplayName() or EntityPlayer.refreshDisplayName() . This ev"
+description: "public static class PlayerEvent.NameFormat extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/player/PlayerEvent.NameFormat.html"
 sourceType: javadoc
 ---
 
 # PlayerEvent.NameFormat
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.NameFormat
+
+## Class signature
+
+```java
+public static class PlayerEvent.NameFormat extends PlayerEvent
+```
+
 ## Constructors
 
-- `public NameFormat( EntityPlayer player, java.lang.String username)`
+- `NameFormat(EntityPlayer player, java.lang.String username)`
 
 ## Methods
 
-- `public java.lang.String getUsername()`
-- `public java.lang.String getDisplayname()`
-- `public void setDisplayname(java.lang.String displayname)`
-
-## Description
-
-NameFormat is fired when a player's display name is retrieved. This event is fired whenever a player's name is retrieved in EntityPlayer.getDisplayName() or EntityPlayer.refreshDisplayName() . This ev
+- `java.lang.String getDisplayname()`
+- `java.lang.String getUsername()`
+- `void setDisplayname(java.lang.String displayname)`

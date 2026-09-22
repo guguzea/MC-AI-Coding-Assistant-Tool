@@ -1,12 +1,20 @@
 # ServerStatusResponse.Players
 
+**Inheritance:** java.lang.Object → net.minecraft.network.ServerStatusResponse.Players
+
+## Class signature
+
+```java
+public static class ServerStatusResponse.Players extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Players(int maxOnlinePlayers, int onlinePlayers)`
+- `Players(int maxOnlinePlayers, int onlinePlayers)`
 
 ## Methods
 
-- `public int getMaxPlayers()`
-- `public int getOnlinePlayerCount()`
-- `public GameProfile[] getPlayers()`
-- `public void setPlayers(GameProfile[] playersIn)`
+- `int getMaxPlayers()`
+- `int getOnlinePlayerCount()`
+- `GameProfile[] getPlayers()`
+- `void setPlayers(GameProfile[] playersIn)`

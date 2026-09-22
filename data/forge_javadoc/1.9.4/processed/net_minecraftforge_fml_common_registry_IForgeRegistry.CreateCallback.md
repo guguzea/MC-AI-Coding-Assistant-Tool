@@ -1,9 +1,11 @@
 # IForgeRegistry.CreateCallback
 
+## Class signature
+
+```java
+public static interface IForgeRegistry.CreateCallback<V>
+```
+
 ## Methods
 
-- `void onCreate(java.util.Map< ResourceLocation ,?> slaveset)`
-
-## Description
-
-Callback fired when a registry instance is created. Populate slave maps here.
+- `void onCreate(java.util.Map<ResourceLocation, ?> slaveset)`

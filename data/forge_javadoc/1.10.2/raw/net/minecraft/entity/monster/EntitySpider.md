@@ -3,11 +3,15 @@ title: "EntitySpider"
 description: "public class EntitySpider extends EntityMob"
 package: "net/minecraft/entity/monster"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/entity/monster/EntitySpider.html"
 sourceType: javadoc
 ---
 
 # EntitySpider
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntitySpider
 
 ## Class signature
 
@@ -15,29 +19,29 @@ sourceType: javadoc
 public class EntitySpider extends EntityMob
 ```
 
-## Constructors
-
-- `public EntitySpider( World worldIn)`
-
 ## Methods
 
-- `public static void registerFixesSpider( DataFixer fixer)`
-- `protected void initEntityAI()`
-- `public double getMountedYOffset()`
-- `protected PathNavigate getNewNavigator( World worldIn)`
-- `protected void entityInit()`
-- `public void onUpdate()`
 - `protected void applyEntityAttributes()`
+- `protected void entityInit()`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
+- `EnumCreatureAttribute getCreatureAttribute()`
 - `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public boolean isOnLadder()`
-- `public void setInWeb()`
-- `public EnumCreatureAttribute getCreatureAttribute()`
-- `public boolean isPotionApplicable( PotionEffect potioneffectIn)`
-- `public boolean isBesideClimbableBlock()`
-- `public void setBesideClimbableBlock(boolean climbing)`
-- `@Nullable public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)`
-- `public float getEyeHeight()`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `double getMountedYOffset()`
+- `protected PathNavigate getNewNavigator(World worldIn)`
+- `protected void initEntityAI()`
+- `boolean isBesideClimbableBlock()`
+- `boolean isOnLadder()`
+- `boolean isPotionApplicable(PotionEffect potioneffectIn)`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onUpdate()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `static void registerFixesSpider(DataFixer fixer)`
+- `void setBesideClimbableBlock(boolean climbing)`
+- `void setInWeb()`
+
+## Fields
+
+- `EntitySpider`

@@ -3,11 +3,15 @@ title: "ListenerList"
 description: "public class ListenerList extends java.lang.Object"
 package: "cpw/mods/fml/common/eventhandler"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/eventhandler/ListenerList.html"
 sourceType: javadoc
 ---
 
 # ListenerList
+
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.eventhandler.ListenerList
 
 ## Class signature
 
@@ -17,16 +21,16 @@ public class ListenerList extends java.lang.Object
 
 ## Constructors
 
-- `public ListenerList()`
-- `public ListenerList( ListenerList parent)`
+- `ListenerList()`
+- `ListenerList(ListenerList parent)`
 
 ## Methods
 
-- `public static void resize(int max)`
-- `public void resizeLists(int max)`
-- `public static void clearBusID(int id)`
+- `static void clearBusID(int id)`
 - `protected cpw.mods.fml.common.eventhandler.ListenerList.ListenerListInst getInstance(int id)`
-- `public IEventListener [] getListeners(int id)`
-- `public void register(int id, EventPriority priority, IEventListener listener)`
-- `public void unregister(int id, IEventListener listener)`
-- `public static void unregisterAll(int id, IEventListener listener)`
+- `IEventListener [] getListeners(int id)`
+- `void register(int id, EventPriority priority, IEventListener listener)`
+- `static void resize(int max)`
+- `void resizeLists(int max)`
+- `void unregister(int id, IEventListener listener)`
+- `static void unregisterAll(int id, IEventListener listener)`

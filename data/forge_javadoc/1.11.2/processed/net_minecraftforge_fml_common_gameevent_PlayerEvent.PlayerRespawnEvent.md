@@ -1,13 +1,17 @@
 # PlayerEvent.PlayerRespawnEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.gameevent.PlayerEvent → net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent
 
-- `public PlayerRespawnEvent( EntityPlayer player, boolean endConquered)`
+## Class signature
+
+```java
+public static class PlayerEvent.PlayerRespawnEvent extends PlayerEvent
+```
 
 ## Methods
 
-- `public boolean isEndConquered()`
+- `boolean isEndConquered()` — Did this respawn event come from the player conquering the end?
 
-## Description
+## Fields
 
-Did this respawn event come from the player conquering the end?
+- `PlayerRespawnEvent`

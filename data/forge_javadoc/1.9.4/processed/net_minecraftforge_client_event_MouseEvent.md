@@ -1,5 +1,7 @@
 # MouseEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.MouseEvent
+
 ## Class signature
 
 ```java
@@ -8,19 +10,15 @@ public class MouseEvent extends Event
 
 ## Constructors
 
-- `public MouseEvent()`
+- `MouseEvent()`
 
 ## Methods
 
-- `public int getX()`
-- `public int getY()`
-- `public int getDx()`
-- `public int getDy()`
-- `public int getDwheel()`
-- `public int getButton()`
-- `public boolean isButtonstate()`
-- `public long getNanoseconds()`
-
-## Description
-
-Author: MachineMuse (Claire Semple) Created: 2:46 PM, 9/4/13
+- `int getButton()`
+- `int getDwheel()`
+- `int getDx()`
+- `int getDy()`
+- `long getNanoseconds()`
+- `int getX()`
+- `int getY()`
+- `boolean isButtonstate()`

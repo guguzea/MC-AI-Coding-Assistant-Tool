@@ -1,8 +1,10 @@
 ---
 title: "IFluidHandler"
-description: "Implement this interface as a capability which should handle fluids, generally storing them in one or more internal IFluidTank objects. A reference implementation is provided TileFluidHandler ."
+description: "public interface IFluidHandler"
 package: "net/minecraftforge/fluids/capability"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fluids/capability/IFluidHandler.html"
 sourceType: javadoc
 ---
@@ -17,11 +19,7 @@ public interface IFluidHandler
 
 ## Methods
 
-- `IFluidTankProperties [] getTankProperties()`
-- `int fill( FluidStack resource, boolean doFill)`
-- `@Nullable FluidStack drain( FluidStack resource, boolean doDrain)`
-- `@Nullable FluidStack drain(int maxDrain, boolean doDrain)`
-
-## Description
-
-Implement this interface as a capability which should handle fluids, generally storing them in one or more internal IFluidTank objects. A reference implementation is provided TileFluidHandler .
+- `FluidStack drain(FluidStack resource, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `FluidStack drain(int maxDrain, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `int fill(FluidStack resource, boolean doFill)` — Fills fluid into internal tanks, distribution is left entirely to the IFluidHandler.
+- `IFluidTankProperties [] getTankProperties()` — Returns an array of objects which represent the internal tanks.

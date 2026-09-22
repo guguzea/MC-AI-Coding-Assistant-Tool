@@ -1,15 +1,17 @@
 # EntityAITargetNonTamed
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAITarget → net.minecraft.entity.ai.EntityAINearestAttackableTarget → net.minecraft.entity.ai.EntityAITargetNonTamed
+
 ## Class signature
 
 ```java
 public class EntityAITargetNonTamed extends EntityAINearestAttackableTarget
 ```
 
-## Constructors
-
-- `public EntityAITargetNonTamed( EntityTameable p_i1666_1_, java.lang.Class p_i1666_2_, int p_i1666_3_, boolean p_i1666_4_)`
-
 ## Methods
 
-- `public boolean shouldExecute()`
+- `boolean shouldExecute()`
+
+## Fields
+
+- `EntityAITargetNonTamed`

@@ -3,11 +3,15 @@ title: "PlacementSettings"
 description: "public class PlacementSettings extends java.lang.Object"
 package: "net/minecraft/world/gen/structure/template"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/gen/structure/template/PlacementSettings.html"
 sourceType: javadoc
 ---
 
 # PlacementSettings
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.template.PlacementSettings
 
 ## Class signature
 
@@ -17,26 +21,26 @@ public class PlacementSettings extends java.lang.Object
 
 ## Constructors
 
-- `public PlacementSettings()`
+- `PlacementSettings()`
 
 ## Methods
 
-- `public PlacementSettings copy()`
-- `public PlacementSettings setMirror( Mirror mirrorIn)`
-- `public PlacementSettings setRotation( Rotation rotationIn)`
-- `public PlacementSettings setIgnoreEntities(boolean ignoreEntitiesIn)`
-- `public PlacementSettings setReplacedBlock( Block replacedBlockIn)`
-- `public PlacementSettings setChunk( ChunkPos chunkPosIn)`
-- `public PlacementSettings setBoundingBox( StructureBoundingBox boundingBoxIn)`
-- `public PlacementSettings setSeed(@Nullable java.lang.Long p_189949_1_)`
-- `public PlacementSettings setRandom(@Nullable java.util.Random p_189950_1_)`
-- `public PlacementSettings setIntegrity(float p_189946_1_)`
-- `public Mirror getMirror()`
-- `public PlacementSettings setIgnoreStructureBlock(boolean ignoreStructureBlockIn)`
-- `public Rotation getRotation()`
-- `public java.util.Random getRandom(@Nullable BlockPos p_189947_1_)`
-- `public float getIntegrity()`
-- `public boolean getIgnoreEntities()`
-- `@Nullable public Block getReplacedBlock()`
-- `@Nullable public StructureBoundingBox getBoundingBox()`
-- `public boolean getIgnoreStructureBlock()`
+- `PlacementSettings copy()`
+- `StructureBoundingBox getBoundingBox()`
+- `boolean getIgnoreEntities()`
+- `boolean getIgnoreStructureBlock()`
+- `float getIntegrity()`
+- `Mirror getMirror()`
+- `java.util.Random getRandom(BlockPos p_189947_1_)`
+- `Block getReplacedBlock()`
+- `Rotation getRotation()`
+- `PlacementSettings setBoundingBox(StructureBoundingBox boundingBoxIn)`
+- `PlacementSettings setChunk(ChunkPos chunkPosIn)`
+- `PlacementSettings setIgnoreEntities(boolean ignoreEntitiesIn)`
+- `PlacementSettings setIgnoreStructureBlock(boolean ignoreStructureBlockIn)`
+- `PlacementSettings setIntegrity(float p_189946_1_)`
+- `PlacementSettings setMirror(Mirror mirrorIn)`
+- `PlacementSettings setRandom(java.util.Random p_189950_1_)`
+- `PlacementSettings setReplacedBlock(Block replacedBlockIn)`
+- `PlacementSettings setRotation(Rotation rotationIn)`
+- `PlacementSettings setSeed(java.lang.Long p_189949_1_)`

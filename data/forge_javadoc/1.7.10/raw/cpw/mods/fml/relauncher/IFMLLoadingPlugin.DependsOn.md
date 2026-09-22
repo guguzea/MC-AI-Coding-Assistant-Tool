@@ -3,6 +3,8 @@ title: "IFMLLoadingPlugin.DependsOn"
 description: "public static @interface IFMLLoadingPlugin.DependsOn"
 package: "cpw/mods/fml/relauncher"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/relauncher/IFMLLoadingPlugin.DependsOn.html"
 sourceType: javadoc
 ---
@@ -17,4 +19,4 @@ public static @interface IFMLLoadingPlugin.DependsOn
 
 ## Elements
 
-- `public abstract java.lang.String[] value`
+- `java.lang.String[] value`

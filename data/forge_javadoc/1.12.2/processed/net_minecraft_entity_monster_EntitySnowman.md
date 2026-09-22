@@ -1,37 +1,35 @@
 # EntitySnowman
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityGolem → net.minecraft.entity.monster.EntitySnowman
+
 ## Class signature
 
 ```java
-public class EntitySnowman extends EntityGolem implements IRangedAttackMob , IShearable
+public class EntitySnowman extends EntityGolem implements IRangedAttackMob, IShearable
 ```
-
-## Constructors
-
-- `public EntitySnowman( World worldIn)`
 
 ## Methods
 
-- `public static void registerFixesSnowman( DataFixer fixer)`
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
+- `void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor)`
 - `protected void entityInit()`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void onLivingUpdate()`
-- `protected ResourceLocation getLootTable()`
-- `public void attackEntityWithRangedAttack( EntityLivingBase target, float distanceFactor)`
-- `public float getEyeHeight()`
-- `protected boolean processInteract( EntityPlayer player, EnumHand hand)`
-- `public boolean isPumpkinEquipped()`
-- `public void setPumpkinEquipped(boolean pumpkinEquipped)`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
 - `protected SoundEvent getDeathSound()`
-- `public boolean isShearable( ItemStack item, IBlockAccess world, BlockPos pos)`
-- `public java.util.List< ItemStack > onSheared( ItemStack item, IBlockAccess world, BlockPos pos, int fortune)`
-- `public void setSwingingArms(boolean swingingArms)`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
+- `protected ResourceLocation getLootTable()`
+- `protected void initEntityAI()`
+- `boolean isPumpkinEquipped()`
+- `boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)` — Checks if the object is currently shearable Example: Sheep return false when they have no wool
+- `void onLivingUpdate()`
+- `java.util.List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)` — Performs the shear function on this object.
+- `protected boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesSnowman(DataFixer fixer)`
+- `void setPumpkinEquipped(boolean pumpkinEquipped)`
+- `void setSwingingArms(boolean swingingArms)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Checks if the object is currently shearable Example: Sheep return false when they have no wool
+- `EntitySnowman`

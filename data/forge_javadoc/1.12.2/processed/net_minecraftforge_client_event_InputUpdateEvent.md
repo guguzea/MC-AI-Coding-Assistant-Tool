@@ -1,5 +1,7 @@
 # InputUpdateEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.client.event.InputUpdateEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class InputUpdateEvent extends PlayerEvent
 
 ## Constructors
 
-- `public InputUpdateEvent( EntityPlayer player, MovementInput movementInput)`
+- `InputUpdateEvent(EntityPlayer player, MovementInput movementInput)`
 
 ## Methods
 
-- `public MovementInput getMovementInput()`
-
-## Description
-
-This event is fired after player movement inputs are updated. Handlers can freely manipulate MovementInput to cancel movement.
+- `MovementInput getMovementInput()`

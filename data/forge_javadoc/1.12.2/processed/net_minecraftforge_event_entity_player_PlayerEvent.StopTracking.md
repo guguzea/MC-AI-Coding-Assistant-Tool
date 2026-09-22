@@ -1,13 +1,17 @@
 # PlayerEvent.StopTracking
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.StopTracking
+
+## Class signature
+
+```java
+public static class PlayerEvent.StopTracking extends PlayerEvent
+```
+
 ## Constructors
 
-- `public StopTracking( EntityPlayer player, Entity target)`
+- `StopTracking(EntityPlayer player, Entity target)`
 
 ## Methods
 
-- `public Entity getTarget()`
-
-## Description
-
-Fired when an Entity is stopped to be "tracked" by this player (the player no longer receives updates about this entity, e.g. motion).
+- `Entity getTarget()` — The Entity no longer being tracked.

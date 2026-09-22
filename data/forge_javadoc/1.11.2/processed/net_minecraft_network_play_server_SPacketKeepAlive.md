@@ -1,19 +1,21 @@
 # SPacketKeepAlive
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketKeepAlive
+
 ## Class signature
 
 ```java
-public class SPacketKeepAlive extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketKeepAlive extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketKeepAlive()`
-- `public SPacketKeepAlive(int idIn)`
+- `SPacketKeepAlive()`
+- `SPacketKeepAlive(int idIn)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public int getId()`
+- `int getId()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

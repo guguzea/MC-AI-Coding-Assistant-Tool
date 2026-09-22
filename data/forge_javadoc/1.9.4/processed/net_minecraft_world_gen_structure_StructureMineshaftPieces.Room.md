@@ -1,14 +1,22 @@
 # StructureMineshaftPieces.Room
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureMineshaftPieces.Room
 
-- `public Room()`
-- `public Room(int type, java.util.Random rand, int x, int z)`
+## Class signature
+
+```java
+public static class StructureMineshaftPieces.Room extends StructureComponent
+```
 
 ## Methods
 
-- `public void buildComponent( StructureComponent componentIn, java.util.List< StructureComponent > listIn, java.util.Random rand)`
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
-- `public void offset(int x, int y, int z)`
-- `protected void writeStructureToNBT( NBTTagCompound tagCompound)`
-- `protected void readStructureFromNBT( NBTTagCompound tagCompound)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `void buildComponent(StructureComponent componentIn, java.util.List<StructureComponent> listIn, java.util.Random rand)`
+- `void offset(int x, int y, int z)`
+- `protected void readStructureFromNBT(NBTTagCompound tagCompound)`
+- `protected void writeStructureToNBT(NBTTagCompound tagCompound)`
+
+## Fields
+
+- `Room`
+- `Room`

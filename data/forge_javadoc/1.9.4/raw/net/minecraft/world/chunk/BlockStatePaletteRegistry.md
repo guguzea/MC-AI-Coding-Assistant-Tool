@@ -3,11 +3,15 @@ title: "BlockStatePaletteRegistry"
 description: "public class BlockStatePaletteRegistry extends java.lang.Object implements IBlockStatePalette"
 package: "net/minecraft/world/chunk"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/world/chunk/BlockStatePaletteRegistry.html"
 sourceType: javadoc
 ---
 
 # BlockStatePaletteRegistry
+
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.BlockStatePaletteRegistry
 
 ## Class signature
 
@@ -17,12 +21,12 @@ public class BlockStatePaletteRegistry extends java.lang.Object implements IBloc
 
 ## Constructors
 
-- `public BlockStatePaletteRegistry()`
+- `BlockStatePaletteRegistry()`
 
 ## Methods
 
-- `public int idFor( IBlockState state)`
-- `public IBlockState getBlockState(int indexKey)`
-- `public void read( PacketBuffer buf)`
-- `public void write( PacketBuffer buf)`
-- `public int getSerializedState()`
+- `IBlockState getBlockState(int indexKey)`
+- `int getSerializedState()`
+- `int idFor(IBlockState state)`
+- `void read(PacketBuffer buf)`
+- `void write(PacketBuffer buf)`

@@ -1,18 +1,35 @@
 ---
 title: "GameConfiguration.FolderInformation"
-description: ""
+description: "public static class GameConfiguration.FolderInformation extends java.lang.Object"
 package: "net/minecraft/client/main"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/main/GameConfiguration.FolderInformation.html"
 sourceType: javadoc
 ---
 
 # GameConfiguration.FolderInformation
 
+**Inheritance:** java.lang.Object → net.minecraft.client.main.GameConfiguration.FolderInformation
+
+## Class signature
+
+```java
+public static class GameConfiguration.FolderInformation extends java.lang.Object
+```
+
 ## Constructors
 
-- `public FolderInformation(java.io.File mcDataDirIn, java.io.File resourcePacksDirIn, java.io.File assetsDirIn, @Nullable java.lang.String assetIndexIn)`
+- `FolderInformation(java.io.File mcDataDirIn, java.io.File resourcePacksDirIn, java.io.File assetsDirIn, java.lang.String assetIndexIn)`
 
 ## Methods
 
-- `public ResourceIndex getAssetsIndex()`
+- `ResourceIndex getAssetsIndex()`
+
+## Fields
+
+- `java.lang.String assetIndex`
+- `java.io.File assetsDir`
+- `java.io.File mcDataDir`
+- `java.io.File resourcePacksDir`

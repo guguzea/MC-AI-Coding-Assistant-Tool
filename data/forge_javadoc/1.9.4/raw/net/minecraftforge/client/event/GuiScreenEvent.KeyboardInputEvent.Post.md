@@ -1,18 +1,24 @@
 ---
 title: "GuiScreenEvent.KeyboardInputEvent.Post"
-description: "This event fires after GuiScreen.handleKeyboardInput() provided that the active screen has not been changed as a result of GuiScreen.handleKeyboardInput() ."
+description: "public static class GuiScreenEvent.KeyboardInputEvent.Post extends GuiScreenEvent.KeyboardInputEvent"
 package: "net/minecraftforge/client/event"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/client/event/GuiScreenEvent.KeyboardInputEvent.Post.html"
 sourceType: javadoc
 ---
 
 # GuiScreenEvent.KeyboardInputEvent.Post
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.KeyboardInputEvent → net.minecraftforge.client.event.GuiScreenEvent.KeyboardInputEvent.Post
+
+## Class signature
+
+```java
+public static class GuiScreenEvent.KeyboardInputEvent.Post extends GuiScreenEvent.KeyboardInputEvent
+```
+
 ## Constructors
 
-- `public Post( GuiScreen gui)`
-
-## Description
-
-This event fires after GuiScreen.handleKeyboardInput() provided that the active screen has not been changed as a result of GuiScreen.handleKeyboardInput() .
+- `Post(GuiScreen gui)`

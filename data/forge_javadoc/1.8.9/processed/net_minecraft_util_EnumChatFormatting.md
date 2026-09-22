@@ -1,25 +1,23 @@
 # EnumChatFormatting
 
+**Inheritance:** java.lang.Object → java.lang.Enum<EnumChatFormatting> → net.minecraft.util.EnumChatFormatting
+
 ## Class signature
 
 ```java
-public enum EnumChatFormatting extends java.lang.Enum< EnumChatFormatting >
+public enum EnumChatFormatting extends java.lang.Enum<EnumChatFormatting>
 ```
 
 ## Methods
 
-- `public static EnumChatFormatting [] values()`
-- `public static EnumChatFormatting valueOf(java.lang.String name)`
-- `public int getColorIndex()`
-- `public boolean isFancyStyling()`
-- `public boolean isColor()`
-- `public java.lang.String getFriendlyName()`
-- `public java.lang.String toString()`
-- `public static java.lang.String getTextWithoutFormattingCodes(java.lang.String text)`
-- `public static EnumChatFormatting getValueByName(java.lang.String friendlyName)`
-- `public static EnumChatFormatting func_175744_a(int p_175744_0_)`
-- `public static java.util.Collection<java.lang.String> getValidValues(boolean p_96296_0_, boolean p_96296_1_)`
-
-## Description
-
-Returns the numerical color index that represents this formatting
+- `static EnumChatFormatting func_175744_a(int p_175744_0_)`
+- `int getColorIndex()` — Returns the numerical color index that represents this formatting
+- `java.lang.String getFriendlyName()` — Gets the friendly name of this value.
+- `static java.lang.String getTextWithoutFormattingCodes(java.lang.String text)` — Returns a copy of the given string, with formatting codes stripped away.
+- `static java.util.Collection<java.lang.String> getValidValues(boolean p_96296_0_, boolean p_96296_1_)`
+- `static EnumChatFormatting getValueByName(java.lang.String friendlyName)` — Gets a value by its friendly name; null if the given name does not map to a defined value.
+- `boolean isColor()` — Checks if this is a color code.
+- `boolean isFancyStyling()` — False if this is just changing the color or resetting; true otherwise.
+- `java.lang.String toString()`
+- `static EnumChatFormatting valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static EnumChatFormatting [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

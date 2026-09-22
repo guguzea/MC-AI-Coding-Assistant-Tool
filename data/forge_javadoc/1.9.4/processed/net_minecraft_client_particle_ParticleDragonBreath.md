@@ -1,16 +1,18 @@
 # ParticleDragonBreath
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleDragonBreath
+
 ## Class signature
 
 ```java
 public class ParticleDragonBreath extends Particle
 ```
 
-## Constructors
-
-- `protected ParticleDragonBreath( World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)`
-
 ## Methods
 
-- `public void onUpdate()`
-- `public void renderParticle( VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+- `void onUpdate()`
+- `void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+
+## Fields
+
+- `protected ParticleDragonBreath`

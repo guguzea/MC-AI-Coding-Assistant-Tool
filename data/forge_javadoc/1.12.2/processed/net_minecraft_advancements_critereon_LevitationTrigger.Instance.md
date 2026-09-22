@@ -1,9 +1,17 @@
 # LevitationTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.LevitationTrigger.Instance
+
+## Class signature
+
+```java
+public static class LevitationTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( DistancePredicate distance, MinMaxBounds duration)`
+- `Instance(DistancePredicate distance, MinMaxBounds duration)`
 
 ## Methods
 
-- `public boolean test( EntityPlayerMP player, Vec3d startPos, int durationIn)`
+- `boolean test(EntityPlayerMP player, Vec3d startPos, int durationIn)`

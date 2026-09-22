@@ -1,9 +1,17 @@
 # EntityVillager.ListEnchantedBookForEmeralds
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.passive.EntityVillager.ListEnchantedBookForEmeralds
+
+## Class signature
+
+```java
+public static class EntityVillager.ListEnchantedBookForEmeralds extends java.lang.Object implements EntityVillager.ITradeList
+```
+
 ## Constructors
 
-- `public ListEnchantedBookForEmeralds()`
+- `ListEnchantedBookForEmeralds()`
 
 ## Methods
 
-- `public void modifyMerchantRecipeList( MerchantRecipeList recipeList, java.util.Random random)`
+- `void modifyMerchantRecipeList(MerchantRecipeList recipeList, java.util.Random random)`

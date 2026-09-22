@@ -1,13 +1,17 @@
 ---
 title: "PlayerInteractEvent"
-description: "PlayerInteractEvent is fired when a player interacts in some way. All subclasses are fired on MinecraftForge.EVENT_BUS . See the individual documentation on each subevent for more details."
+description: "public class PlayerInteractEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/player/PlayerInteractEvent.html"
 sourceType: javadoc
 ---
 
 # PlayerInteractEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent
 
 ## Class signature
 
@@ -17,15 +21,11 @@ public class PlayerInteractEvent extends PlayerEvent
 
 ## Methods
 
-- `public EnumHand getHand()`
-- `public ItemStack getItemStack()`
-- `public BlockPos getPos()`
-- `public EnumFacing getFace()`
-- `public World getWorld()`
-- `public Side getSide()`
-- `public EnumActionResult getCancellationResult()`
-- `public void setCancellationResult( EnumActionResult result)`
-
-## Description
-
-PlayerInteractEvent is fired when a player interacts in some way. All subclasses are fired on MinecraftForge.EVENT_BUS . See the individual documentation on each subevent for more details.
+- `EnumActionResult getCancellationResult()`
+- `EnumFacing getFace()`
+- `EnumHand getHand()`
+- `ItemStack getItemStack()`
+- `BlockPos getPos()` — If the interaction was on an entity, will be a BlockPos centered on the entity.
+- `Side getSide()`
+- `World getWorld()`
+- `void setCancellationResult(EnumActionResult result)` — Set the EnumActionResult that will be returned to vanilla if the event is cancelled, instead of calling the relevant method of the event.

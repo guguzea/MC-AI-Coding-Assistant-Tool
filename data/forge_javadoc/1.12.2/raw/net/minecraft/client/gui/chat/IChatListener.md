@@ -3,6 +3,8 @@ title: "IChatListener"
 description: "public interface IChatListener"
 package: "net/minecraft/client/gui/chat"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/gui/chat/IChatListener.html"
 sourceType: javadoc
 ---
@@ -17,4 +19,4 @@ public interface IChatListener
 
 ## Methods
 
-- `void say( ChatType chatTypeIn, ITextComponent message)`
+- `void say(ChatType chatTypeIn, ITextComponent message)`

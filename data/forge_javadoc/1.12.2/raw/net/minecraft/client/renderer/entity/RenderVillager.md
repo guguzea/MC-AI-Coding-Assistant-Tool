@@ -1,26 +1,30 @@
 ---
 title: "RenderVillager"
-description: "public class RenderVillager extends RenderLiving < EntityVillager >"
+description: "public class RenderVillager extends RenderLiving<EntityVillager>"
 package: "net/minecraft/client/renderer/entity"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/renderer/entity/RenderVillager.html"
 sourceType: javadoc
 ---
 
 # RenderVillager
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RenderLivingBase<T> → net.minecraft.client.renderer.entity.RenderLiving<EntityVillager> → net.minecraft.client.renderer.entity.RenderVillager
+
 ## Class signature
 
 ```java
-public class RenderVillager extends RenderLiving < EntityVillager >
+public class RenderVillager extends RenderLiving<EntityVillager>
 ```
-
-## Constructors
-
-- `public RenderVillager( RenderManager renderManagerIn)`
 
 ## Methods
 
-- `public ModelVillager getMainModel()`
-- `protected ResourceLocation getEntityTexture( EntityVillager entity)`
-- `protected void preRenderCallback( EntityVillager entitylivingbaseIn, float partialTickTime)`
+- `protected ResourceLocation getEntityTexture(EntityVillager entity)`
+- `ModelVillager getMainModel()`
+- `protected void preRenderCallback(EntityVillager entitylivingbaseIn, float partialTickTime)`
+
+## Fields
+
+- `RenderVillager`

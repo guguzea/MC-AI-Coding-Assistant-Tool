@@ -1,51 +1,58 @@
 # NetHandlerPlayServer
 
+**Inheritance:** java.lang.Object → net.minecraft.network.NetHandlerPlayServer
+
 ## Class signature
 
 ```java
-public class NetHandlerPlayServer extends java.lang.Object implements INetHandlerPlayServer , ITickable
+public class NetHandlerPlayServer extends java.lang.Object implements INetHandlerPlayServer, ITickable
 ```
 
 ## Constructors
 
-- `public NetHandlerPlayServer( MinecraftServer server, NetworkManager networkManagerIn, EntityPlayerMP playerIn)`
+- `NetHandlerPlayServer(MinecraftServer server, NetworkManager networkManagerIn, EntityPlayerMP playerIn)`
 
 ## Methods
 
-- `public void update()`
-- `public NetworkManager getNetworkManager()`
-- `public void disconnect( ITextComponent textComponent)`
-- `public void processInput( CPacketInput packetIn)`
-- `public void processVehicleMove( CPacketVehicleMove packetIn)`
-- `public void processConfirmTeleport( CPacketConfirmTeleport packetIn)`
-- `public void handleRecipeBookUpdate( CPacketRecipeInfo p_191984_1_)`
-- `public void handleSeenAdvancements( CPacketSeenAdvancements p_194027_1_)`
-- `public void processPlayer( CPacketPlayer packetIn)`
-- `public void setPlayerLocation(double x, double y, double z, float yaw, float pitch)`
-- `public void setPlayerLocation(double x, double y, double z, float yaw, float pitch, java.util.Set< SPacketPlayerPosLook.EnumFlags > relativeSet)`
-- `public void processPlayerDigging( CPacketPlayerDigging packetIn)`
-- `public void processTryUseItemOnBlock( CPacketPlayerTryUseItemOnBlock packetIn)`
-- `public void processTryUseItem( CPacketPlayerTryUseItem packetIn)`
-- `public void handleSpectate( CPacketSpectate packetIn)`
-- `public void handleResourcePackStatus( CPacketResourcePackStatus packetIn)`
-- `public void processSteerBoat( CPacketSteerBoat packetIn)`
-- `public void onDisconnect( ITextComponent reason)`
-- `public void sendPacket( Packet <?> packetIn)`
-- `public void processHeldItemChange( CPacketHeldItemChange packetIn)`
-- `public void processChatMessage( CPacketChatMessage packetIn)`
-- `public void handleAnimation( CPacketAnimation packetIn)`
-- `public void processEntityAction( CPacketEntityAction packetIn)`
-- `public void processUseEntity( CPacketUseEntity packetIn)`
-- `public void processClientStatus( CPacketClientStatus packetIn)`
-- `public void processCloseWindow( CPacketCloseWindow packetIn)`
-- `public void processClickWindow( CPacketClickWindow packetIn)`
-- `public void func_194308_a( CPacketPlaceRecipe p_194308_1_)`
-- `public void processEnchantItem( CPacketEnchantItem packetIn)`
-- `public void processCreativeInventoryAction( CPacketCreativeInventoryAction packetIn)`
-- `public void processConfirmTransaction( CPacketConfirmTransaction packetIn)`
-- `public void processUpdateSign( CPacketUpdateSign packetIn)`
-- `public void processKeepAlive( CPacketKeepAlive packetIn)`
-- `public void processPlayerAbilities( CPacketPlayerAbilities packetIn)`
-- `public void processTabComplete( CPacketTabComplete packetIn)`
-- `public void processClientSettings( CPacketClientSettings packetIn)`
-- `public void processCustomPayload( CPacketCustomPayload packetIn)`
+- `void disconnect(ITextComponent textComponent)`
+- `void func_194308_a(CPacketPlaceRecipe p_194308_1_)`
+- `NetworkManager getNetworkManager()`
+- `void handleAnimation(CPacketAnimation packetIn)`
+- `void handleRecipeBookUpdate(CPacketRecipeInfo p_191984_1_)`
+- `void handleResourcePackStatus(CPacketResourcePackStatus packetIn)`
+- `void handleSeenAdvancements(CPacketSeenAdvancements p_194027_1_)`
+- `void handleSpectate(CPacketSpectate packetIn)`
+- `void onDisconnect(ITextComponent reason)`
+- `void processChatMessage(CPacketChatMessage packetIn)`
+- `void processClickWindow(CPacketClickWindow packetIn)`
+- `void processClientSettings(CPacketClientSettings packetIn)`
+- `void processClientStatus(CPacketClientStatus packetIn)`
+- `void processCloseWindow(CPacketCloseWindow packetIn)`
+- `void processConfirmTeleport(CPacketConfirmTeleport packetIn)`
+- `void processConfirmTransaction(CPacketConfirmTransaction packetIn)`
+- `void processCreativeInventoryAction(CPacketCreativeInventoryAction packetIn)`
+- `void processCustomPayload(CPacketCustomPayload packetIn)`
+- `void processEnchantItem(CPacketEnchantItem packetIn)`
+- `void processEntityAction(CPacketEntityAction packetIn)`
+- `void processHeldItemChange(CPacketHeldItemChange packetIn)`
+- `void processInput(CPacketInput packetIn)`
+- `void processKeepAlive(CPacketKeepAlive packetIn)`
+- `void processPlayer(CPacketPlayer packetIn)`
+- `void processPlayerAbilities(CPacketPlayerAbilities packetIn)`
+- `void processPlayerDigging(CPacketPlayerDigging packetIn)`
+- `void processSteerBoat(CPacketSteerBoat packetIn)`
+- `void processTabComplete(CPacketTabComplete packetIn)`
+- `void processTryUseItem(CPacketPlayerTryUseItem packetIn)`
+- `void processTryUseItemOnBlock(CPacketPlayerTryUseItemOnBlock packetIn)`
+- `void processUpdateSign(CPacketUpdateSign packetIn)`
+- `void processUseEntity(CPacketUseEntity packetIn)`
+- `void processVehicleMove(CPacketVehicleMove packetIn)`
+- `void sendPacket(Packet<?> packetIn)`
+- `void setPlayerLocation(double x, double y, double z, float yaw, float pitch)`
+- `void setPlayerLocation(double x, double y, double z, float yaw, float pitch, java.util.Set<SPacketPlayerPosLook.EnumFlags> relativeSet)`
+- `void update()`
+
+## Fields
+
+- `NetworkManager netManager`
+- `EntityPlayerMP player`

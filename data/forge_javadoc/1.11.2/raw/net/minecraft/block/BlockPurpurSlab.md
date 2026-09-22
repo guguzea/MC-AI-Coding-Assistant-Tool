@@ -3,11 +3,15 @@ title: "BlockPurpurSlab"
 description: "public abstract class BlockPurpurSlab extends BlockSlab"
 package: "net/minecraft/block"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/BlockPurpurSlab.html"
 sourceType: javadoc
 ---
 
 # BlockPurpurSlab
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockSlab → net.minecraft.block.BlockPurpurSlab
 
 ## Class signature
 
@@ -17,15 +21,19 @@ public abstract class BlockPurpurSlab extends BlockSlab
 
 ## Constructors
 
-- `public BlockPurpurSlab()`
+- `BlockPurpurSlab()`
 
 ## Methods
 
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
-- `public java.lang.String getUnlocalizedName(int meta)`
-- `public IProperty <?> getVariantProperty()`
-- `public java.lang.Comparable<?> getTypeForItem( ItemStack stack)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `java.lang.Comparable<?> getTypeForItem(ItemStack stack)`
+- `java.lang.String getUnlocalizedName(int meta)`
+- `IProperty<?> getVariantProperty()`
+
+## Fields
+
+- `static PropertyEnum<BlockPurpurSlab.Variant> VARIANT`

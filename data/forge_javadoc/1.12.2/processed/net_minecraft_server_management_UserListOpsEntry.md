@@ -1,18 +1,20 @@
 # UserListOpsEntry
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.UserListEntry<GameProfile> → net.minecraft.server.management.UserListOpsEntry
+
 ## Class signature
 
 ```java
-public class UserListOpsEntry extends UserListEntry <GameProfile>
+public class UserListOpsEntry extends UserListEntry<GameProfile>
 ```
 
 ## Constructors
 
-- `public UserListOpsEntry(GameProfile player, int permissionLevelIn, boolean bypassesPlayerLimitIn)`
-- `public UserListOpsEntry(JsonObject p_i1150_1_)`
+- `UserListOpsEntry(GameProfile player, int permissionLevelIn, boolean bypassesPlayerLimitIn)`
+- `UserListOpsEntry(JsonObject p_i1150_1_)`
 
 ## Methods
 
-- `public int getPermissionLevel()`
-- `public boolean bypassesPlayerLimit()`
+- `boolean bypassesPlayerLimit()`
+- `int getPermissionLevel()`
 - `protected void onSerialization(JsonObject data)`

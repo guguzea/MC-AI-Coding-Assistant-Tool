@@ -1,5 +1,7 @@
 # MinecraftFormattingConverter
 
+**Inheritance:** java.lang.Object → LogEventPatternConverter → net.minecraftforge.server.terminalconsole.MinecraftFormattingConverter
+
 ## Class signature
 
 ```java
@@ -8,13 +10,13 @@ public class MinecraftFormattingConverter extends LogEventPatternConverter
 
 ## Constructors
 
-- `protected MinecraftFormattingConverter(java.util.List<PatternFormatter> formatters, boolean strip)`
+- `MinecraftFormattingConverter(java.util.List<PatternFormatter> formatters, boolean strip)`
 
 ## Methods
 
-- `public void format(LogEvent event, java.lang.StringBuilder toAppendTo)`
-- `public static MinecraftFormattingConverter newInstance(Configuration config, java.lang.String[] options)`
+- `void format(LogEvent event, java.lang.StringBuilder toAppendTo)`
+- `static MinecraftFormattingConverter newInstance(Configuration config, java.lang.String[] options)` — Gets a new instance of the MinecraftFormattingConverter with the specified options.
 
-## Description
+## Fields
 
-Replaces Minecraft formatting codes in the result of a pattern with appropriate ANSI escape codes. The implementation will only replace valid color codes using the section sign (§). The MinecraftForma
+- `static java.lang.String KEEP_FORMATTING_PROPERTY` — System property that allows disabling the replacement of Minecraft formatting codes entirely, keeping them in the console output.

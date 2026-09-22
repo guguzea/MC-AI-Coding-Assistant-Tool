@@ -1,18 +1,20 @@
 # WeightedSpawnerEntity
 
+**Inheritance:** java.lang.Object → net.minecraft.util.WeightedRandom.Item → net.minecraft.util.WeightedSpawnerEntity
+
 ## Class signature
 
 ```java
 public class WeightedSpawnerEntity extends WeightedRandom.Item
 ```
 
-## Constructors
-
-- `public WeightedSpawnerEntity()`
-- `public WeightedSpawnerEntity( NBTTagCompound nbtIn)`
-- `public WeightedSpawnerEntity(int itemWeightIn, NBTTagCompound nbtIn)`
-
 ## Methods
 
-- `public NBTTagCompound toCompoundTag()`
-- `public NBTTagCompound getNbt()`
+- `NBTTagCompound getNbt()`
+- `NBTTagCompound toCompoundTag()`
+
+## Fields
+
+- `WeightedSpawnerEntity`
+- `WeightedSpawnerEntity`
+- `WeightedSpawnerEntity`

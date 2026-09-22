@@ -1,5 +1,7 @@
 # Container
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Container
+
 ## Class signature
 
 ```java
@@ -8,39 +10,46 @@ public abstract class Container extends java.lang.Object
 
 ## Constructors
 
-- `public Container()`
+- `Container()`
 
 ## Methods
 
-- `protected Slot addSlotToContainer( Slot slotIn)`
-- `public void addListener( IContainerListener listener)`
-- `public java.util.List< ItemStack > getInventory()`
-- `public void removeListener( IContainerListener listener)`
-- `public void detectAndSendChanges()`
-- `public boolean enchantItem( EntityPlayer playerIn, int id)`
-- `@Nullable public Slot getSlotFromInventory( IInventory inv, int slotIn)`
-- `public Slot getSlot(int slotId)`
-- `@Nullable public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
-- `@Nullable public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player)`
-- `public boolean canMergeSlot( ItemStack stack, Slot slotIn)`
-- `protected void retrySlotClick(int slotId, int clickedButton, boolean mode, EntityPlayer playerIn)`
-- `public void onContainerClosed( EntityPlayer playerIn)`
-- `public void onCraftMatrixChanged( IInventory inventoryIn)`
-- `public void putStackInSlot(int slotID, ItemStack stack)`
-- `public void putStacksInSlots( ItemStack [] stack)`
-- `public void updateProgressBar(int id, int data)`
-- `public short getNextTransactionID( InventoryPlayer invPlayer)`
-- `public boolean getCanCraft( EntityPlayer player)`
-- `public void setCanCraft( EntityPlayer player, boolean canCraft)`
-- `public abstract boolean canInteractWith( EntityPlayer playerIn)`
-- `protected boolean mergeItemStack( ItemStack stack, int startIndex, int endIndex, boolean reverseDirection)`
-- `public static int extractDragMode(int eventButton)`
-- `public static int getDragEvent(int clickedButton)`
-- `public static int getQuickcraftMask(int p_94534_0_, int p_94534_1_)`
-- `public static boolean isValidDragMode(int dragModeIn, EntityPlayer player)`
+- `void addListener(IContainerListener listener)`
+- `protected Slot addSlotToContainer(Slot slotIn)`
+- `static int calcRedstone(TileEntity te)`
+- `static int calcRedstoneFromInventory(IInventory inv)`
+- `static boolean canAddItemToSlot(Slot slotIn, ItemStack stack, boolean stackSizeMatters)`
+- `boolean canDragIntoSlot(Slot slotIn)`
+- `abstract boolean canInteractWith(EntityPlayer playerIn)`
+- `boolean canMergeSlot(ItemStack stack, Slot slotIn)`
+- `static void computeStackSize(java.util.Set<Slot> dragSlotsIn, int dragModeIn, ItemStack stack, int slotStackSize)`
+- `void detectAndSendChanges()`
+- `boolean enchantItem(EntityPlayer playerIn, int id)`
+- `static int extractDragMode(int eventButton)`
+- `boolean getCanCraft(EntityPlayer player)`
+- `static int getDragEvent(int clickedButton)`
+- `java.util.List<ItemStack> getInventory()`
+- `short getNextTransactionID(InventoryPlayer invPlayer)`
+- `static int getQuickcraftMask(int p_94534_0_, int p_94534_1_)`
+- `Slot getSlot(int slotId)`
+- `Slot getSlotFromInventory(IInventory inv, int slotIn)`
+- `static boolean isValidDragMode(int dragModeIn, EntityPlayer player)`
+- `protected boolean mergeItemStack(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection)`
+- `void onContainerClosed(EntityPlayer playerIn)`
+- `void onCraftMatrixChanged(IInventory inventoryIn)`
+- `void putStackInSlot(int slotID, ItemStack stack)`
+- `void putStacksInSlots(ItemStack [] stack)`
+- `void removeListener(IContainerListener listener)`
 - `protected void resetDrag()`
-- `public static boolean canAddItemToSlot( Slot slotIn, ItemStack stack, boolean stackSizeMatters)`
-- `public static void computeStackSize(java.util.Set< Slot > dragSlotsIn, int dragModeIn, ItemStack stack, int slotStackSize)`
-- `public boolean canDragIntoSlot( Slot slotIn)`
-- `public static int calcRedstone(@Nullable TileEntity te)`
-- `public static int calcRedstoneFromInventory(@Nullable IInventory inv)`
+- `protected void retrySlotClick(int slotId, int clickedButton, boolean mode, EntityPlayer playerIn)`
+- `void setCanCraft(EntityPlayer player, boolean canCraft)`
+- `ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player)`
+- `ItemStack transferStackInSlot(EntityPlayer playerIn, int index)`
+- `void updateProgressBar(int id, int data)`
+
+## Fields
+
+- `java.util.List<ItemStack> inventoryItemStacks`
+- `java.util.List<Slot> inventorySlots`
+- `protected java.util.List<IContainerListener> listeners`
+- `int windowId`

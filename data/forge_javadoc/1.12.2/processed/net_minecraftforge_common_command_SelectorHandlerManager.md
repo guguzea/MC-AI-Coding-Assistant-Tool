@@ -1,5 +1,7 @@
 # SelectorHandlerManager
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.command.SelectorHandlerManager
+
 ## Class signature
 
 ```java
@@ -8,12 +10,13 @@ public class SelectorHandlerManager extends java.lang.Object
 
 ## Methods
 
-- `public static void register(java.lang.String prefix, SelectorHandler handler)`
-- `public static SelectorHandler getHandler(java.lang.String selectorStr)`
-- `public static <T extends Entity > java.util.List<T> matchEntities( ICommandSender sender, java.lang.String token, java.lang.Class<? extends T> targetClass) throws CommandException`
-- `public static boolean matchesMultiplePlayers(java.lang.String selectorStr) throws CommandException`
-- `public static boolean isSelector(java.lang.String selectorStr)`
+- `static SelectorHandler getHandler(java.lang.String selectorStr)` — Returns the best matching handler for the given string.
+- `static boolean isSelector(java.lang.String selectorStr)`
+- `static<T extends Entity> java.util.List<T> matchEntities(ICommandSender sender, java.lang.String token, java.lang.Class<? extends T> targetClass)`
+- `static boolean matchesMultiplePlayers(java.lang.String selectorStr)`
+- `static void register(java.lang.String prefix, SelectorHandler handler)` — Registers a new SelectorHandler for prefix .
 
-## Description
+## Fields
 
-Allows registration of custom selector types by assigning a SelectorHandler to a prefix This class handles calls to the EntitySelector methods matchEntities , matchesMultiplePlayers and isSelector . T
+- `static java.util.NavigableMap<java.lang.String, java.lang.String> registeringMods`
+- `static java.util.NavigableMap<java.lang.String, SelectorHandler> selectorHandlers`

@@ -1,35 +1,39 @@
 ---
 title: "WorldSummary"
-description: "public class WorldSummary extends java.lang.Object implements java.lang.Comparable< WorldSummary >"
+description: "public class WorldSummary extends java.lang.Object implements java.lang.Comparable<WorldSummary>"
 package: "net/minecraft/world/storage"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/storage/WorldSummary.html"
 sourceType: javadoc
 ---
 
 # WorldSummary
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.WorldSummary
+
 ## Class signature
 
 ```java
-public class WorldSummary extends java.lang.Object implements java.lang.Comparable< WorldSummary >
+public class WorldSummary extends java.lang.Object implements java.lang.Comparable<WorldSummary>
 ```
 
 ## Constructors
 
-- `public WorldSummary( WorldInfo info, java.lang.String fileNameIn, java.lang.String displayNameIn, long sizeOnDiskIn, boolean requiresConversionIn)`
+- `WorldSummary(WorldInfo info, java.lang.String fileNameIn, java.lang.String displayNameIn, long sizeOnDiskIn, boolean requiresConversionIn)`
 
 ## Methods
 
-- `public java.lang.String getFileName()`
-- `public java.lang.String getDisplayName()`
-- `public long getSizeOnDisk()`
-- `public boolean requiresConversion()`
-- `public long getLastTimePlayed()`
-- `public int compareTo( WorldSummary p_compareTo_1_)`
-- `public GameType getEnumGameType()`
-- `public boolean isHardcoreModeEnabled()`
-- `public boolean getCheatsEnabled()`
-- `public java.lang.String getVersionName()`
-- `public boolean markVersionInList()`
-- `public boolean askToOpenWorld()`
+- `boolean askToOpenWorld()`
+- `int compareTo(WorldSummary p_compareTo_1_)`
+- `boolean getCheatsEnabled()`
+- `java.lang.String getDisplayName()`
+- `GameType getEnumGameType()`
+- `java.lang.String getFileName()`
+- `long getLastTimePlayed()`
+- `long getSizeOnDisk()`
+- `java.lang.String getVersionName()`
+- `boolean isHardcoreModeEnabled()`
+- `boolean markVersionInList()`
+- `boolean requiresConversion()`

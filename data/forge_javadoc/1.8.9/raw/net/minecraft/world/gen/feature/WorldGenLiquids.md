@@ -3,11 +3,15 @@ title: "WorldGenLiquids"
 description: "public class WorldGenLiquids extends WorldGenerator"
 package: "net/minecraft/world/gen/feature"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/gen/feature/WorldGenLiquids.html"
 sourceType: javadoc
 ---
 
 # WorldGenLiquids
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenLiquids
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class WorldGenLiquids extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenLiquids( Block p_i45465_1_)`
+- `WorldGenLiquids(Block p_i45465_1_)`
 
 ## Methods
 
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`

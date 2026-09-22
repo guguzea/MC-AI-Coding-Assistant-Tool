@@ -1,5 +1,7 @@
 # FMLServerStartingEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLStateEvent → net.minecraftforge.fml.common.event.FMLServerStartingEvent
+
 ## Class signature
 
 ```java
@@ -8,14 +10,10 @@ public class FMLServerStartingEvent extends FMLStateEvent
 
 ## Constructors
 
-- `public FMLServerStartingEvent(java.lang.Object... data)`
+- `FMLServerStartingEvent(java.lang.Object... data)`
 
 ## Methods
 
-- `public LoaderState.ModState getModState()`
-- `public MinecraftServer getServer()`
-- `public void registerServerCommand( ICommand command)`
-
-## Description
-
-Called after FMLServerAboutToStartEvent and before FMLServerStartedEvent . This event allows for customizations of the server, such as loading custom commands, perhaps customizing recipes or other act
+- `LoaderState.ModState getModState()` — The current state of the mod
+- `MinecraftServer getServer()`
+- `void registerServerCommand(ICommand command)`

@@ -1,14 +1,18 @@
 # AttachCapabilitiesEvent.Item
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.eventhandler.GenericEvent<T> → net.minecraftforge.event.AttachCapabilitiesEvent<Item> → net.minecraftforge.event.AttachCapabilitiesEvent.Item
+
+## Class signature
+
+```java
+public static class AttachCapabilitiesEvent.Item extends AttachCapabilitiesEvent<Item>
+```
+
 ## Constructors
 
-- `public Item( Item item, ItemStack stack)`
+- `Item(Item item, ItemStack stack)`
 
 ## Methods
 
-- `@Deprecated public Item getItem()`
-- `public ItemStack getItemStack()`
-
-## Description
-
-A version of the parent event which is only fired for ItemStacks.
+- `@Deprecated Item getItem()`
+- `ItemStack getItemStack()`

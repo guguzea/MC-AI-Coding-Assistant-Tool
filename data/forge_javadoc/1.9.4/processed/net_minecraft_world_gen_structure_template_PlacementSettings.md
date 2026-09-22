@@ -1,5 +1,7 @@
 # PlacementSettings
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.template.PlacementSettings
+
 ## Class signature
 
 ```java
@@ -8,22 +10,22 @@ public class PlacementSettings extends java.lang.Object
 
 ## Constructors
 
-- `public PlacementSettings()`
-- `public PlacementSettings( Mirror mirrorIn, Rotation rotationIn, boolean ignoreEntitiesIn, @Nullable Block replacedBlockIn, @Nullable StructureBoundingBox boundingBoxIn)`
+- `PlacementSettings()`
+- `PlacementSettings(Mirror mirrorIn, Rotation rotationIn, boolean ignoreEntitiesIn, Block replacedBlockIn, StructureBoundingBox boundingBoxIn)`
 
 ## Methods
 
-- `public PlacementSettings copy()`
-- `public PlacementSettings setMirror( Mirror mirrorIn)`
-- `public PlacementSettings setRotation( Rotation rotationIn)`
-- `public PlacementSettings setIgnoreEntities(boolean ignoreEntitiesIn)`
-- `public PlacementSettings setReplacedBlock( Block replacedBlockIn)`
-- `public PlacementSettings setChunk( ChunkPos chunkPosIn)`
-- `public PlacementSettings setBoundingBox( StructureBoundingBox boundingBoxIn)`
-- `public Mirror getMirror()`
-- `public PlacementSettings setIgnoreStructureBlock(boolean ignoreStructureBlockIn)`
-- `public Rotation getRotation()`
-- `public boolean getIgnoreEntities()`
-- `public Block getReplacedBlock()`
-- `@Nullable public StructureBoundingBox getBoundingBox()`
-- `public boolean getIgnoreStructureBlock()`
+- `PlacementSettings copy()`
+- `StructureBoundingBox getBoundingBox()`
+- `boolean getIgnoreEntities()`
+- `boolean getIgnoreStructureBlock()`
+- `Mirror getMirror()`
+- `Block getReplacedBlock()`
+- `Rotation getRotation()`
+- `PlacementSettings setBoundingBox(StructureBoundingBox boundingBoxIn)`
+- `PlacementSettings setChunk(ChunkPos chunkPosIn)`
+- `PlacementSettings setIgnoreEntities(boolean ignoreEntitiesIn)`
+- `PlacementSettings setIgnoreStructureBlock(boolean ignoreStructureBlockIn)`
+- `PlacementSettings setMirror(Mirror mirrorIn)`
+- `PlacementSettings setReplacedBlock(Block replacedBlockIn)`
+- `PlacementSettings setRotation(Rotation rotationIn)`

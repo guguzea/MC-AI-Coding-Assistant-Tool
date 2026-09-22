@@ -1,20 +1,22 @@
 # EntityMinecartChest
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityMinecart → net.minecraft.entity.item.EntityMinecartContainer → net.minecraft.entity.item.EntityMinecartChest
+
 ## Class signature
 
 ```java
 public class EntityMinecartChest extends EntityMinecartContainer
 ```
 
-## Constructors
-
-- `public EntityMinecartChest( World p_i1714_1_)`
-- `public EntityMinecartChest( World p_i1715_1_, double p_i1715_2_, double p_i1715_4_, double p_i1715_6_)`
-
 ## Methods
 
-- `public void killMinecart( DamageSource p_94095_1_)`
-- `public int getSizeInventory()`
-- `public int getMinecartType()`
-- `public Block func_145817_o()`
-- `public int getDefaultDisplayTileOffset()`
+- `Block func_145817_o()`
+- `int getDefaultDisplayTileOffset()`
+- `int getMinecartType()`
+- `int getSizeInventory()`
+- `void killMinecart(DamageSource p_94095_1_)`
+
+## Fields
+
+- `EntityMinecartChest`
+- `EntityMinecartChest`

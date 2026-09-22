@@ -3,6 +3,8 @@ title: "IBehaviorDispenseItem"
 description: "public interface IBehaviorDispenseItem"
 package: "net/minecraft/dispenser"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/dispenser/IBehaviorDispenseItem.html"
 sourceType: javadoc
 ---
@@ -17,4 +19,8 @@ public interface IBehaviorDispenseItem
 
 ## Methods
 
-- `ItemStack dispense( IBlockSource source, ItemStack stack)`
+- `ItemStack dispense(IBlockSource source, ItemStack stack)`
+
+## Fields
+
+- `static IBehaviorDispenseItem DEFAULT_BEHAVIOR`

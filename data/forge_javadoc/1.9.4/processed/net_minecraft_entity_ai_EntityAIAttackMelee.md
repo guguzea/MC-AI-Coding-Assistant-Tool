@@ -1,5 +1,7 @@
 # EntityAIAttackMelee
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIAttackMelee
+
 ## Class signature
 
 ```java
@@ -8,13 +10,18 @@ public class EntityAIAttackMelee extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIAttackMelee( EntityCreature creature, double speedIn, boolean useLongMemory)`
+- `EntityAIAttackMelee(EntityCreature creature, double speedIn, boolean useLongMemory)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
-- `protected double getAttackReachSqr( EntityLivingBase attackTarget)`
+- `boolean continueExecuting()`
+- `protected double getAttackReachSqr(EntityLivingBase attackTarget)`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`
+
+## Fields
+
+- `protected EntityCreature attacker`
+- `protected int attackInterval`

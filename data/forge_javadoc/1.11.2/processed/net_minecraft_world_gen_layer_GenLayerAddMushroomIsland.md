@@ -1,15 +1,17 @@
 # GenLayerAddMushroomIsland
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.layer.GenLayer → net.minecraft.world.gen.layer.GenLayerAddMushroomIsland
+
 ## Class signature
 
 ```java
 public class GenLayerAddMushroomIsland extends GenLayer
 ```
 
-## Constructors
-
-- `public GenLayerAddMushroomIsland(long p_i2120_1_, GenLayer p_i2120_3_)`
-
 ## Methods
 
-- `public int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight)`
+- `int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight)`
+
+## Fields
+
+- `GenLayerAddMushroomIsland`

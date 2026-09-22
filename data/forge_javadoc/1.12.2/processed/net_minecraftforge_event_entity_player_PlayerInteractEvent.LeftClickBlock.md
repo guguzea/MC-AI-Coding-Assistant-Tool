@@ -1,18 +1,22 @@
 # PlayerInteractEvent.LeftClickBlock
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock
+
+## Class signature
+
+```java
+public static class PlayerInteractEvent.LeftClickBlock extends PlayerInteractEvent
+```
+
 ## Constructors
 
-- `public LeftClickBlock( EntityPlayer player, BlockPos pos, EnumFacing face, Vec3d hitVec)`
+- `LeftClickBlock(EntityPlayer player, BlockPos pos, EnumFacing face, Vec3d hitVec)`
 
 ## Methods
 
-- `public Vec3d getHitVec()`
-- `public Event.Result getUseBlock()`
-- `public Event.Result getUseItem()`
-- `public void setUseBlock( Event.Result triggerBlock)`
-- `public void setUseItem( Event.Result triggerItem)`
-- `public void setCanceled(boolean canceled)`
-
-## Description
-
-This event is fired when a player left clicks while targeting a block. This event controls which of Block.onBlockClicked(net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.enti
+- `Vec3d getHitVec()`
+- `Event.Result getUseBlock()`
+- `Event.Result getUseItem()`
+- `void setCanceled(boolean canceled)` — Sets the cancel state of this event.
+- `void setUseBlock(Event.Result triggerBlock)`
+- `void setUseItem(Event.Result triggerItem)`

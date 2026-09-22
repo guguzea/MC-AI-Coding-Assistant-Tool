@@ -1,5 +1,7 @@
 # RenderWorldLastEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderWorldLastEvent
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class RenderWorldLastEvent extends Event
 
 ## Constructors
 
-- `public RenderWorldLastEvent( RenderGlobal context, float partialTicks)`
+- `RenderWorldLastEvent(RenderGlobal context, float partialTicks)`
 
 ## Methods
 
-- `public RenderGlobal getContext()`
-- `public float getPartialTicks()`
+- `RenderGlobal getContext()`
+- `float getPartialTicks()`

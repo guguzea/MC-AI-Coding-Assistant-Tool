@@ -3,11 +3,15 @@ title: "BlockBush"
 description: "public class BlockBush extends Block implements IPlantable"
 package: "net/minecraft/block"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/BlockBush.html"
 sourceType: javadoc
 ---
 
 # BlockBush
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBush
 
 ## Class signature
 
@@ -17,22 +21,26 @@ public class BlockBush extends Block implements IPlantable
 
 ## Constructors
 
-- `protected BlockBush()`
-- `protected BlockBush( Material materialIn)`
-- `protected BlockBush( Material materialIn, MapColor mapColorIn)`
+- `BlockBush()`
+- `BlockBush(Material materialIn)`
+- `BlockBush(Material materialIn, MapColor mapColorIn)`
 
 ## Methods
 
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `protected boolean canSustainBush( IBlockState state)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `protected void checkAndDropBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean canBlockStay( World worldIn, BlockPos pos, IBlockState state)`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `@Nullable public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public EnumPlantType getPlantType( IBlockAccess world, BlockPos pos)`
-- `public IBlockState getPlant( IBlockAccess world, BlockPos pos)`
-- `public BlockRenderLayer getBlockLayer()`
+- `boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `protected boolean canSustainBush(IBlockState state)`
+- `protected void checkAndDropBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
+- `IBlockState getPlant(IBlockAccess world, BlockPos pos)`
+- `EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+
+## Fields
+
+- `protected static AxisAlignedBB BUSH_AABB`

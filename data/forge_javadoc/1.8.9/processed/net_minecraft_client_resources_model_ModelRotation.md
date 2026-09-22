@@ -1,24 +1,22 @@
 # ModelRotation
 
+**Inheritance:** java.lang.Object → java.lang.Enum<ModelRotation> → net.minecraft.client.resources.model.ModelRotation
+
 ## Class signature
 
 ```java
-public enum ModelRotation extends java.lang.Enum< ModelRotation > implements IModelState , ITransformation
+public enum ModelRotation extends java.lang.Enum<ModelRotation> implements IModelState, ITransformation
 ```
 
 ## Methods
 
-- `public static ModelRotation [] values()`
-- `public static ModelRotation valueOf(java.lang.String name)`
-- `public Matrix4f getMatrix4d()`
-- `public EnumFacing rotateFace( EnumFacing p_177523_1_)`
-- `public int rotateVertex( EnumFacing facing, int vertexIndex)`
-- `public static ModelRotation getModelRotation(int p_177524_0_, int p_177524_1_)`
-- `public <any> apply(<any> part)`
-- `public javax.vecmath.Matrix4f getMatrix()`
-- `public EnumFacing rotate( EnumFacing facing)`
-- `public int rotate( EnumFacing facing, int vertexIndex)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `<any> apply(<any> part)`
+- `javax.vecmath.Matrix4f getMatrix()`
+- `Matrix4f getMatrix4d()`
+- `static ModelRotation getModelRotation(int p_177524_0_, int p_177524_1_)`
+- `EnumFacing rotate(EnumFacing facing)`
+- `int rotate(EnumFacing facing, int vertexIndex)`
+- `EnumFacing rotateFace(EnumFacing p_177523_1_)`
+- `int rotateVertex(EnumFacing facing, int vertexIndex)`
+- `static ModelRotation valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static ModelRotation [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

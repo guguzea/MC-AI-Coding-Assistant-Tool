@@ -1,30 +1,34 @@
 ---
 title: "SPacketSetExperience"
-description: "public class SPacketSetExperience extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketSetExperience extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/play/server/SPacketSetExperience.html"
 sourceType: javadoc
 ---
 
 # SPacketSetExperience
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketSetExperience
+
 ## Class signature
 
 ```java
-public class SPacketSetExperience extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketSetExperience extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketSetExperience()`
-- `public SPacketSetExperience(float experienceBarIn, int totalExperienceIn, int levelIn)`
+- `SPacketSetExperience()`
+- `SPacketSetExperience(float experienceBarIn, int totalExperienceIn, int levelIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public float getExperienceBar()`
-- `public int getTotalExperience()`
-- `public int getLevel()`
+- `float getExperienceBar()`
+- `int getLevel()`
+- `int getTotalExperience()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

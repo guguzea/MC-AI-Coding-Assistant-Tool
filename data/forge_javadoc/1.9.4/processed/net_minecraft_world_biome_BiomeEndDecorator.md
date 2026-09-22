@@ -1,16 +1,18 @@
 # BiomeEndDecorator
 
+**Inheritance:** java.lang.Object → net.minecraft.world.biome.BiomeDecorator → net.minecraft.world.biome.BiomeEndDecorator
+
 ## Class signature
 
 ```java
 public class BiomeEndDecorator extends BiomeDecorator
 ```
 
-## Constructors
-
-- `public BiomeEndDecorator()`
-
 ## Methods
 
-- `protected void genDecorations( Biome biomeGenBaseIn, World worldIn, java.util.Random random)`
-- `public static WorldGenSpikes.EndSpike [] getSpikesForWorld( World p_185426_0_)`
+- `protected void genDecorations(Biome biomeGenBaseIn, World worldIn, java.util.Random random)`
+- `static WorldGenSpikes.EndSpike [] getSpikesForWorld(World p_185426_0_)`
+
+## Fields
+
+- `BiomeEndDecorator`

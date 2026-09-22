@@ -1,28 +1,32 @@
 ---
 title: "SoundEventAccessor"
-description: "public class SoundEventAccessor extends java.lang.Object implements ISoundEventAccessor < Sound >"
+description: "public class SoundEventAccessor extends java.lang.Object implements ISoundEventAccessor<Sound>"
 package: "net/minecraft/client/audio"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/audio/SoundEventAccessor.html"
 sourceType: javadoc
 ---
 
 # SoundEventAccessor
 
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.SoundEventAccessor
+
 ## Class signature
 
 ```java
-public class SoundEventAccessor extends java.lang.Object implements ISoundEventAccessor < Sound >
+public class SoundEventAccessor extends java.lang.Object implements ISoundEventAccessor<Sound>
 ```
 
 ## Constructors
 
-- `public SoundEventAccessor( ResourceLocation locationIn, @Nullable java.lang.String subtitleIn)`
+- `SoundEventAccessor(ResourceLocation locationIn, java.lang.String subtitleIn)`
 
 ## Methods
 
-- `public int getWeight()`
-- `public Sound cloneEntry()`
-- `public void addSound( ISoundEventAccessor < Sound > p_188715_1_)`
-- `public ResourceLocation getLocation()`
-- `@Nullable public ITextComponent getSubtitle()`
+- `void addSound(ISoundEventAccessor<Sound> p_188715_1_)`
+- `Sound cloneEntry()`
+- `ResourceLocation getLocation()`
+- `ITextComponent getSubtitle()`
+- `int getWeight()`

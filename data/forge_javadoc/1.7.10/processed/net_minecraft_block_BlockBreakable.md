@@ -1,17 +1,19 @@
 # BlockBreakable
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockBreakable
+
 ## Class signature
 
 ```java
 public class BlockBreakable extends Block
 ```
 
-## Constructors
-
-- `protected BlockBreakable(java.lang.String p_i45411_1_, Material p_i45411_2_, boolean p_i45411_3_)`
-
 ## Methods
 
-- `public boolean isOpaqueCube()`
-- `public boolean shouldSideBeRendered( IBlockAccess p_149646_1_, int p_149646_2_, int p_149646_3_, int p_149646_4_, int p_149646_5_)`
-- `public void registerBlockIcons( IIconRegister p_149651_1_)`
+- `boolean isOpaqueCube()`
+- `void registerBlockIcons(IIconRegister p_149651_1_)`
+- `boolean shouldSideBeRendered(IBlockAccess p_149646_1_, int p_149646_2_, int p_149646_3_, int p_149646_4_, int p_149646_5_)`
+
+## Fields
+
+- `protected BlockBreakable`

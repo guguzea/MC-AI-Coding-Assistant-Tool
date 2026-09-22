@@ -1,13 +1,17 @@
 ---
 title: "EntityItemPickupEvent"
-description: "This event is called when a player collides with a EntityItem on the ground."
+description: "public class EntityItemPickupEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/player/EntityItemPickupEvent.html"
 sourceType: javadoc
 ---
 
 # EntityItemPickupEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.EntityItemPickupEvent
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class EntityItemPickupEvent extends PlayerEvent
 
 ## Constructors
 
-- `public EntityItemPickupEvent( EntityPlayer player, EntityItem item)`
+- `EntityItemPickupEvent(EntityPlayer player, EntityItem item)`
 
-## Description
+## Fields
 
-This event is called when a player collides with a EntityItem on the ground.
+- `EntityItem item` — This event is called when a player collides with a EntityItem on the ground.

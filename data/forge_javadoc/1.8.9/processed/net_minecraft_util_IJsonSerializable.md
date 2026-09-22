@@ -9,8 +9,4 @@ public interface IJsonSerializable
 ## Methods
 
 - `void fromJson(JsonElement json)`
-- `JsonElement getSerializableElement()`
-
-## Description
-
-Gets the JsonElement that can be serialized.
+- `JsonElement getSerializableElement()` — Gets the JsonElement that can be serialized.

@@ -1,9 +1,17 @@
 # ConsumeItemTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.ConsumeItemTrigger.Instance
+
+## Class signature
+
+```java
+public static class ConsumeItemTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( ItemPredicate item)`
+- `Instance(ItemPredicate item)`
 
 ## Methods
 
-- `public boolean test( ItemStack item)`
+- `boolean test(ItemStack item)`

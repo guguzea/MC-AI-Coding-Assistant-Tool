@@ -1,5 +1,7 @@
 # EntityAIFollowParent
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIFollowParent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class EntityAIFollowParent extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIFollowParent( EntityAnimal p_i1626_1_, double p_i1626_2_)`
+- `EntityAIFollowParent(EntityAnimal p_i1626_1_, double p_i1626_2_)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

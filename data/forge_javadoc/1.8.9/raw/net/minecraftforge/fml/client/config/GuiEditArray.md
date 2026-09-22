@@ -1,13 +1,17 @@
 ---
 title: "GuiEditArray"
-description: "This class is the base screen used for editing an array-type property. It provides a list of array entries for the user to edit. This screen is invoked from a GuiConfig screen by controls that use the"
+description: "public class GuiEditArray extends GuiScreen"
 package: "net/minecraftforge/fml/client/config"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/client/config/GuiEditArray.html"
 sourceType: javadoc
 ---
 
 # GuiEditArray
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraftforge.fml.client.config.GuiEditArray
 
 ## Class signature
 
@@ -17,20 +21,34 @@ public class GuiEditArray extends GuiScreen
 
 ## Constructors
 
-- `public GuiEditArray( GuiScreen parentScreen, IConfigElement configElement, int slotIndex, java.lang.Object[] currentValues, boolean enabled)`
+- `GuiEditArray(GuiScreen parentScreen, IConfigElement configElement, int slotIndex, java.lang.Object[] currentValues, boolean enabled)`
 
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button)`
-- `public void handleMouseInput() throws java.io.IOException`
-- `protected void mouseClicked(int x, int y, int mouseEvent) throws java.io.IOException`
-- `protected void mouseReleased(int x, int y, int mouseEvent)`
-- `protected void keyTyped(char eventChar, int eventKey)`
-- `public void updateScreen()`
-- `public void drawScreen(int par1, int par2, float par3)`
-- `public void drawToolTip(java.util.List<java.lang.String> stringList, int x, int y)`
+- `protected void actionPerformed(GuiButton button)` — Called by the controls from the buttonList when activated.
+- `void drawScreen(int par1, int par2, float par3)` — Draws the screen and all the components in it.
+- `void drawToolTip(java.util.List<java.lang.String> stringList, int x, int y)`
+- `void handleMouseInput()` — Handles mouse input.
+- `void initGui()` — Adds the buttons (and other controls) to the screen in question.
+- `protected void keyTyped(char eventChar, int eventKey)` — Fired when a key is typed (except F11 which toggles full screen).
+- `protected void mouseClicked(int x, int y, int mouseEvent)` — Called when the mouse is clicked.
+- `protected void mouseReleased(int x, int y, int mouseEvent)` — Called when a mouse button is released.
+- `void updateScreen()` — Called from the main game loop to update the screen.
 
-## Description
+## Fields
 
-This class is the base screen used for editing an array-type property. It provides a list of array entries for the user to edit. This screen is invoked from a GuiConfig screen by controls that use the
+- `protected java.lang.Object[] beforeValues`
+- `protected GuiButtonExt btnDefault`
+- `protected GuiButtonExt btnDone`
+- `protected GuiButtonExt btnUndoChanges`
+- `protected IConfigElement configElement`
+- `protected java.lang.Object[] currentValues`
+- `protected boolean enabled`
+- `protected GuiEditArrayEntries entryList`
+- `protected GuiScreen parentScreen`
+- `protected int slotIndex`
+- `protected java.lang.String title`
+- `protected java.lang.String titleLine2`
+- `protected java.lang.String titleLine3`
+- `protected java.util.List<java.lang.String> toolTip`
+- `protected HoverChecker tooltipHoverChecker`

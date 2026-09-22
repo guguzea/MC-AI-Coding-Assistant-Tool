@@ -1,10 +1,18 @@
 # Advancement.Builder
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.Advancement.Builder
+
+## Class signature
+
+```java
+public static class Advancement.Builder extends java.lang.Object
+```
+
 ## Methods
 
-- `public boolean resolveParent(java.util.function.Function< ResourceLocation , Advancement > lookup)`
-- `public Advancement build( ResourceLocation id)`
-- `public void writeTo( PacketBuffer buf)`
-- `public java.lang.String toString()`
-- `public static Advancement.Builder deserialize(JsonObject json, JsonDeserializationContext context)`
-- `public static Advancement.Builder readFrom( PacketBuffer buf) throws java.io.IOException`
+- `Advancement build(ResourceLocation id)`
+- `static Advancement.Builder deserialize(JsonObject json, JsonDeserializationContext context)`
+- `static Advancement.Builder readFrom(PacketBuffer buf)`
+- `boolean resolveParent(java.util.function.Function<ResourceLocation, Advancement> lookup)`
+- `java.lang.String toString()`
+- `void writeTo(PacketBuffer buf)`

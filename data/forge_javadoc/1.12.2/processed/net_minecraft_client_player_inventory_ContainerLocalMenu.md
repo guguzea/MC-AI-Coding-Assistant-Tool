@@ -1,5 +1,7 @@
 # ContainerLocalMenu
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.InventoryBasic → net.minecraft.client.player.inventory.ContainerLocalMenu
+
 ## Class signature
 
 ```java
@@ -8,15 +10,15 @@ public class ContainerLocalMenu extends InventoryBasic implements ILockableConta
 
 ## Constructors
 
-- `public ContainerLocalMenu(java.lang.String id, ITextComponent title, int slotCount)`
+- `ContainerLocalMenu(java.lang.String id, ITextComponent title, int slotCount)`
 
 ## Methods
 
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public int getFieldCount()`
-- `public boolean isLocked()`
-- `public void setLockCode( LockCode code)`
-- `public LockCode getLockCode()`
-- `public java.lang.String getGuiID()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `int getField(int id)`
+- `int getFieldCount()`
+- `java.lang.String getGuiID()`
+- `LockCode getLockCode()`
+- `boolean isLocked()`
+- `void setField(int id, int value)`
+- `void setLockCode(LockCode code)`

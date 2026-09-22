@@ -1,21 +1,23 @@
 # EntityDragonFireball
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityFireball → net.minecraft.entity.projectile.EntityDragonFireball
+
 ## Class signature
 
 ```java
 public class EntityDragonFireball extends EntityFireball
 ```
 
-## Constructors
-
-- `public EntityDragonFireball( World worldIn)`
-- `public EntityDragonFireball( World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ)`
-- `public EntityDragonFireball( World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ)`
-
 ## Methods
 
-- `protected void onImpact( RayTraceResult result)`
-- `public boolean canBeCollidedWith()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeCollidedWith()`
 - `protected EnumParticleTypes getParticleType()`
 - `protected boolean isFireballFiery()`
+- `protected void onImpact(RayTraceResult result)`
+
+## Fields
+
+- `EntityDragonFireball`
+- `EntityDragonFireball`
+- `EntityDragonFireball`

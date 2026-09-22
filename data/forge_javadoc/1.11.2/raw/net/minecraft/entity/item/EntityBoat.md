@@ -3,11 +3,15 @@ title: "EntityBoat"
 description: "public class EntityBoat extends Entity"
 package: "net/minecraft/entity/item"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/entity/item/EntityBoat.html"
 sourceType: javadoc
 ---
 
 # EntityBoat
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityBoat
 
 ## Class signature
 
@@ -15,47 +19,47 @@ sourceType: javadoc
 public class EntityBoat extends Entity
 ```
 
-## Constructors
-
-- `public EntityBoat( World worldIn)`
-- `public EntityBoat( World worldIn, double x, double y, double z)`
-
 ## Methods
 
+- `void applyEntityCollision(Entity entityIn)`
+- `void applyOrientationToEntity(Entity entityToUpdate)`
+- `protected void applyYawToEntity(Entity entityToUpdate)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeCollidedWith()`
+- `boolean canBePushed()`
+- `protected boolean canFitPassenger(Entity passenger)`
 - `protected boolean canTriggerWalking()`
 - `protected void entityInit()`
-- `@Nullable public AxisAlignedBB getCollisionBox( Entity entityIn)`
-- `@Nullable public AxisAlignedBB getCollisionBoundingBox()`
-- `public boolean canBePushed()`
-- `public double getMountedYOffset()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public void applyEntityCollision( Entity entityIn)`
-- `public Item getItemBoat()`
-- `public void performHurtAnimation()`
-- `public boolean canBeCollidedWith()`
-- `public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
-- `public EnumFacing getAdjustedHorizontalFacing()`
-- `public void onUpdate()`
-- `public void setPaddleState(boolean p_184445_1_, boolean p_184445_2_)`
-- `public float getRowingTime(int p_184448_1_, float limbSwing)`
-- `public float getWaterLevelAbove()`
-- `public float getBoatGlide()`
-- `public void updatePassenger( Entity passenger)`
-- `protected void applyYawToEntity( Entity entityToUpdate)`
-- `public void applyOrientationToEntity( Entity entityToUpdate)`
-- `protected void writeEntityToNBT( NBTTagCompound compound)`
-- `protected void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean processInitialInteract( EntityPlayer player, EnumHand hand)`
+- `EnumFacing getAdjustedHorizontalFacing()`
+- `float getBoatGlide()`
+- `EntityBoat.Type getBoatType()`
+- `AxisAlignedBB getCollisionBoundingBox()`
+- `AxisAlignedBB getCollisionBox(Entity entityIn)`
+- `Entity getControllingPassenger()`
+- `float getDamageTaken()`
+- `int getForwardDirection()`
+- `Item getItemBoat()`
+- `double getMountedYOffset()`
+- `boolean getPaddleState(int p_184457_1_)`
+- `float getRowingTime(int p_184448_1_, float limbSwing)`
+- `int getTimeSinceHit()`
+- `float getWaterLevelAbove()`
+- `void onUpdate()`
+- `void performHurtAnimation()`
+- `boolean processInitialInteract(EntityPlayer player, EnumHand hand)`
+- `protected void readEntityFromNBT(NBTTagCompound compound)`
+- `void setBoatType(EntityBoat.Type boatType)`
+- `void setDamageTaken(float damageTaken)`
+- `void setForwardDirection(int forwardDirection)`
+- `void setPaddleState(boolean p_184445_1_, boolean p_184445_2_)`
+- `void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
+- `void setTimeSinceHit(int timeSinceHit)`
 - `protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)`
-- `public boolean getPaddleState(int p_184457_1_)`
-- `public void setDamageTaken(float damageTaken)`
-- `public float getDamageTaken()`
-- `public void setTimeSinceHit(int timeSinceHit)`
-- `public int getTimeSinceHit()`
-- `public void setForwardDirection(int forwardDirection)`
-- `public int getForwardDirection()`
-- `public void setBoatType( EntityBoat.Type boatType)`
-- `public EntityBoat.Type getBoatType()`
-- `protected boolean canFitPassenger( Entity passenger)`
-- `@Nullable public Entity getControllingPassenger()`
-- `public void updateInputs(boolean p_184442_1_, boolean p_184442_2_, boolean p_184442_3_, boolean p_184442_4_)`
+- `void updateInputs(boolean p_184442_1_, boolean p_184442_2_, boolean p_184442_3_, boolean p_184442_4_)`
+- `void updatePassenger(Entity passenger)`
+- `protected void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityBoat`
+- `EntityBoat`

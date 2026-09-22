@@ -1,17 +1,21 @@
 # RegistryEvent.MissingMappings
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.eventhandler.GenericEvent<T> → net.minecraftforge.event.RegistryEvent<T> → net.minecraftforge.event.RegistryEvent.MissingMappings<T>
+
+## Class signature
+
+```java
+public static class RegistryEvent.MissingMappings<T extends IForgeRegistryEntry<T>> extends RegistryEvent<T>
+```
+
 ## Constructors
 
-- `public MissingMappings( ResourceLocation name, IForgeRegistry < T > registry, java.util.Collection< RegistryEvent.MissingMappings.Mapping < T >> missed)`
+- `MissingMappings(ResourceLocation name, IForgeRegistry<T> registry, java.util.Collection<RegistryEvent.MissingMappings.Mapping<T>> missed)`
 
 ## Methods
 
-- `public void setModContainer( ModContainer mod)`
-- `public ResourceLocation getName()`
-- `public IForgeRegistry < T > getRegistry()`
-- `public <any> getMappings()`
-- `public <any> getAllMappings()`
-
-## Description
-
-Actions you can take with this missing mapping.
+- `<any> getAllMappings()`
+- `<any> getMappings()`
+- `ResourceLocation getName()`
+- `IForgeRegistry<T> getRegistry()`
+- `void setModContainer(ModContainer mod)`

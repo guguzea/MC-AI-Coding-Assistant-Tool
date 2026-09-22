@@ -1,8 +1,10 @@
 ---
 title: "IAnimationStateMachine"
-description: "State machine representing the model animation."
+description: "public interface IAnimationStateMachine"
 package: "net/minecraftforge/common/model/animation"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/common/model/animation/IAnimationStateMachine.html"
 sourceType: javadoc
 ---
@@ -17,11 +19,7 @@ public interface IAnimationStateMachine
 
 ## Methods
 
-- `org.apache.commons.lang3.tuple.Pair< IModelState ,java.lang.Iterable< Event >> apply(float time)`
-- `void transition(java.lang.String newState)`
-- `java.lang.String currentState()`
-- `void shouldHandleSpecialEvents(boolean value)`
-
-## Description
-
-State machine representing the model animation.
+- `org.apache.commons.lang3.tuple.Pair<IModelState, java.lang.Iterable<Event>> apply(float time)` — Sample the state and events at the current time.
+- `java.lang.String currentState()` — Get current state name.
+- `void shouldHandleSpecialEvents(boolean value)` — Set to true if the machine should handle special events that come from the clips (they start with '!').
+- `void transition(java.lang.String newState)` — Transition to a new state.

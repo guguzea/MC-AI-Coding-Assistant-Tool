@@ -1,12 +1,24 @@
 # LockCode
 
+**Inheritance:** java.lang.Object → net.minecraft.world.LockCode
+
+## Class signature
+
+```java
+public class LockCode extends java.lang.Object
+```
+
 ## Constructors
 
-- `public LockCode(java.lang.String code)`
+- `LockCode(java.lang.String code)`
 
 ## Methods
 
-- `public boolean isEmpty()`
-- `public java.lang.String getLock()`
-- `public void toNBT( NBTTagCompound nbt)`
-- `public static LockCode fromNBT( NBTTagCompound nbt)`
+- `static LockCode fromNBT(NBTTagCompound nbt)`
+- `java.lang.String getLock()`
+- `boolean isEmpty()`
+- `void toNBT(NBTTagCompound nbt)`
+
+## Fields
+
+- `static LockCode EMPTY_CODE`

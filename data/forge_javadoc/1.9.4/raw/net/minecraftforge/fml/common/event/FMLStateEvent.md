@@ -1,13 +1,17 @@
 ---
 title: "FMLStateEvent"
-description: "The parent of all mod-state changing events"
+description: "public abstract class FMLStateEvent extends FMLEvent"
 package: "net/minecraftforge/fml/common/event"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/common/event/FMLStateEvent.html"
 sourceType: javadoc
 ---
 
 # FMLStateEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLStateEvent
 
 ## Class signature
 
@@ -17,13 +21,9 @@ public abstract class FMLStateEvent extends FMLEvent
 
 ## Constructors
 
-- `public FMLStateEvent(java.lang.Object... data)`
+- `FMLStateEvent(java.lang.Object... data)`
 
 ## Methods
 
-- `public abstract LoaderState.ModState getModState()`
-- `public Side getSide()`
-
-## Description
-
-The parent of all mod-state changing events
+- `abstract LoaderState.ModState getModState()` — The current state of the mod
+- `Side getSide()` — The side we're loading on.

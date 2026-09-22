@@ -1,54 +1,56 @@
 # EntityWolf
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityTameable → net.minecraft.entity.passive.EntityWolf
+
 ## Class signature
 
 ```java
 public class EntityWolf extends EntityTameable
 ```
 
-## Constructors
-
-- `public EntityWolf( World worldIn)`
-
 ## Methods
 
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
-- `public void setAttackTarget( EntityLivingBase entitylivingbaseIn)`
-- `protected void updateAITasks()`
+- `boolean attackEntityAsMob(Entity entityIn)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeLeashedTo(EntityPlayer player)`
+- `boolean canMateWith(EntityAnimal otherAnimal)`
+- `EntityWolf createChild(EntityAgeable ageable)`
 - `protected void entityInit()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `public static void registerFixesWolf( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
+- `EnumDyeColor getCollarColor()`
 - `protected SoundEvent getDeathSound()`
-- `protected float getSoundVolume()`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
+- `float getInterestedAngle(float p_70917_1_)`
 - `protected ResourceLocation getLootTable()`
-- `public void onLivingUpdate()`
-- `public void onUpdate()`
-- `public boolean isWolfWet()`
-- `public float getShadingWhileWet(float p_70915_1_)`
-- `public float getShakeAngle(float p_70923_1_, float p_70923_2_)`
-- `public float getInterestedAngle(float p_70917_1_)`
-- `public float getEyeHeight()`
-- `public int getVerticalFaceSpeed()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public boolean attackEntityAsMob( Entity entityIn)`
-- `public void setTamed(boolean tamed)`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand)`
-- `public void handleStatusUpdate(byte id)`
-- `public float getTailRotation()`
-- `public boolean isBreedingItem( ItemStack stack)`
-- `public int getMaxSpawnedInChunk()`
-- `public boolean isAngry()`
-- `public void setAngry(boolean angry)`
-- `public EnumDyeColor getCollarColor()`
-- `public void setCollarColor( EnumDyeColor collarcolor)`
-- `public EntityWolf createChild( EntityAgeable ageable)`
-- `public void setBegging(boolean beg)`
-- `public boolean canMateWith( EntityAnimal otherAnimal)`
-- `public boolean isBegging()`
-- `public boolean shouldAttackEntity( EntityLivingBase target, EntityLivingBase owner)`
-- `public boolean canBeLeashedTo( EntityPlayer player)`
+- `int getMaxSpawnedInChunk()`
+- `float getShadingWhileWet(float p_70915_1_)`
+- `float getShakeAngle(float p_70923_1_, float p_70923_2_)`
+- `protected float getSoundVolume()`
+- `float getTailRotation()`
+- `int getVerticalFaceSpeed()`
+- `void handleStatusUpdate(byte id)`
+- `protected void initEntityAI()`
+- `boolean isAngry()`
+- `boolean isBegging()`
+- `boolean isBreedingItem(ItemStack stack)`
+- `boolean isWolfWet()`
+- `void onLivingUpdate()`
+- `void onUpdate()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesWolf(DataFixer fixer)`
+- `void setAngry(boolean angry)`
+- `void setAttackTarget(EntityLivingBase entitylivingbaseIn)`
+- `void setBegging(boolean beg)`
+- `void setCollarColor(EnumDyeColor collarcolor)`
+- `void setTamed(boolean tamed)`
+- `boolean shouldAttackEntity(EntityLivingBase target, EntityLivingBase owner)`
+- `protected void updateAITasks()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityWolf`

@@ -1,10 +1,24 @@
 # Profiler.Result
 
+**Inheritance:** java.lang.Object → net.minecraft.profiler.Profiler.Result
+
+## Class signature
+
+```java
+public static final class Profiler.Result extends java.lang.Object implements java.lang.Comparable<Profiler.Result>
+```
+
 ## Constructors
 
-- `public Result(java.lang.String profilerName, double usePercentage, double totalUsePercentage)`
+- `Result(java.lang.String profilerName, double usePercentage, double totalUsePercentage)`
 
 ## Methods
 
-- `public int compareTo( Profiler.Result p_compareTo_1_)`
-- `public int getColor()`
+- `int compareTo(Profiler.Result p_compareTo_1_)`
+- `int getColor()`
+
+## Fields
+
+- `java.lang.String profilerName`
+- `double totalUsePercentage`
+- `double usePercentage`

@@ -1,21 +1,27 @@
 ---
 title: "TimeValues.CommonTimeValueTypeAdapterFactory"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum TimeValues.CommonTimeValueTypeAdapterFactory extends java.lang.Enum<TimeValues.CommonTimeValueTypeAdapterFactory> implements com.google.gson.TypeAdapterFactory"
 package: "net/minecraftforge/common/animation"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/common/animation/TimeValues.CommonTimeValueTypeAdapterFactory.html"
 sourceType: javadoc
 ---
 
 # TimeValues.CommonTimeValueTypeAdapterFactory
 
+**Inheritance:** java.lang.Object → java.lang.Enum<TimeValues.CommonTimeValueTypeAdapterFactory> → net.minecraftforge.common.animation.TimeValues.CommonTimeValueTypeAdapterFactory
+
+## Class signature
+
+```java
+public static enum TimeValues.CommonTimeValueTypeAdapterFactory extends java.lang.Enum<TimeValues.CommonTimeValueTypeAdapterFactory> implements com.google.gson.TypeAdapterFactory
+```
+
 ## Methods
 
-- `public static TimeValues.CommonTimeValueTypeAdapterFactory [] values()`
-- `public static TimeValues.CommonTimeValueTypeAdapterFactory valueOf(java.lang.String name)`
-- `public void setValueResolver(@Nullable com.google.common.base.Function<java.lang.String, ITimeValue > valueResolver)`
-- `@Nullable public <T> com.google.gson.TypeAdapter<T> create(com.google.gson.Gson gson, com.google.gson.reflect.TypeToken<T> type)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `<T> com.google.gson.TypeAdapter<T> create(com.google.gson.Gson gson, com.google.gson.reflect.TypeToken<T> type)`
+- `void setValueResolver(com.google.common.base.Function<java.lang.String, ITimeValue> valueResolver)`
+- `static TimeValues.CommonTimeValueTypeAdapterFactory valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static TimeValues.CommonTimeValueTypeAdapterFactory [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

@@ -3,11 +3,15 @@ title: "EntityAreaEffectCloud"
 description: "public class EntityAreaEffectCloud extends Entity"
 package: "net/minecraft/entity"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/entity/EntityAreaEffectCloud.html"
 sourceType: javadoc
 ---
 
 # EntityAreaEffectCloud
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityAreaEffectCloud
 
 ## Class signature
 
@@ -15,37 +19,37 @@ sourceType: javadoc
 public class EntityAreaEffectCloud extends Entity
 ```
 
-## Constructors
-
-- `public EntityAreaEffectCloud( World worldIn)`
-- `public EntityAreaEffectCloud( World worldIn, double x, double y, double z)`
-
 ## Methods
 
+- `void addEffect(PotionEffect effect)`
 - `protected void entityInit()`
-- `public void setRadius(float radiusIn)`
-- `public float getRadius()`
-- `public void setPotion( PotionType potionIn)`
-- `public void addEffect( PotionEffect effect)`
-- `public int getColor()`
-- `public void setColor(int colorIn)`
-- `public EnumParticleTypes getParticle()`
-- `public void setParticle( EnumParticleTypes particleIn)`
-- `public int getParticleParam1()`
-- `public void setParticleParam1(int particleParam)`
-- `public int getParticleParam2()`
-- `public void setParticleParam2(int particleParam)`
+- `int getColor()`
+- `int getDuration()`
+- `EntityLivingBase getOwner()`
+- `EnumParticleTypes getParticle()`
+- `int getParticleParam1()`
+- `int getParticleParam2()`
+- `EnumPushReaction getPushReaction()`
+- `float getRadius()`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onUpdate()`
+- `protected void readEntityFromNBT(NBTTagCompound compound)`
+- `void setColor(int colorIn)`
+- `void setDuration(int durationIn)`
 - `protected void setIgnoreRadius(boolean ignoreRadius)`
-- `public boolean shouldIgnoreRadius()`
-- `public int getDuration()`
-- `public void setDuration(int durationIn)`
-- `public void onUpdate()`
-- `public void setRadiusOnUse(float radiusOnUseIn)`
-- `public void setRadiusPerTick(float radiusPerTickIn)`
-- `public void setWaitTime(int waitTimeIn)`
-- `public void setOwner(@Nullable EntityLivingBase ownerIn)`
-- `@Nullable public EntityLivingBase getOwner()`
-- `protected void readEntityFromNBT( NBTTagCompound compound)`
-- `protected void writeEntityToNBT( NBTTagCompound compound)`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public EnumPushReaction getPushReaction()`
+- `void setOwner(EntityLivingBase ownerIn)`
+- `void setParticle(EnumParticleTypes particleIn)`
+- `void setParticleParam1(int particleParam)`
+- `void setParticleParam2(int particleParam)`
+- `void setPotion(PotionType potionIn)`
+- `void setRadius(float radiusIn)`
+- `void setRadiusOnUse(float radiusOnUseIn)`
+- `void setRadiusPerTick(float radiusPerTickIn)`
+- `void setWaitTime(int waitTimeIn)`
+- `boolean shouldIgnoreRadius()`
+- `protected void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityAreaEffectCloud`
+- `EntityAreaEffectCloud`

@@ -1,5 +1,7 @@
 # EntityAILlamaFollowCaravan
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAILlamaFollowCaravan
+
 ## Class signature
 
 ```java
@@ -8,11 +10,15 @@ public class EntityAILlamaFollowCaravan extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAILlamaFollowCaravan( EntityLlama llamaIn, double speedModifierIn)`
+- `EntityAILlamaFollowCaravan(EntityLlama llamaIn, double speedModifierIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean shouldContinueExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `void resetTask()`
+- `boolean shouldContinueExecuting()`
+- `boolean shouldExecute()`
+- `void updateTask()`
+
+## Fields
+
+- `EntityLlama llama`

@@ -1,5 +1,7 @@
 # BlockEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,10 @@ public class BlockEvent extends Event
 
 ## Constructors
 
-- `public BlockEvent( World world, BlockPos pos, IBlockState state)`
+- `BlockEvent(World world, BlockPos pos, IBlockState state)`
 
-## Description
+## Fields
 
-Event that is fired when an Block is about to be broken by a player Canceling this event will prevent the Block from being broken.
+- `BlockPos pos`
+- `IBlockState state`
+- `World world`

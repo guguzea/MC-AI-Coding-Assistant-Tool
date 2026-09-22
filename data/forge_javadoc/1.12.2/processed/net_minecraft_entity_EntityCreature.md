@@ -1,5 +1,7 @@
 # EntityCreature
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature
+
 ## Class signature
 
 ```java
@@ -8,20 +10,25 @@ public abstract class EntityCreature extends EntityLiving
 
 ## Constructors
 
-- `public EntityCreature( World worldIn)`
+- `EntityCreature(World worldIn)`
 
 ## Methods
 
-- `public float getBlockPathWeight( BlockPos pos)`
-- `public boolean getCanSpawnHere()`
-- `public boolean hasPath()`
-- `public boolean isWithinHomeDistanceCurrentPosition()`
-- `public boolean isWithinHomeDistanceFromPosition( BlockPos pos)`
-- `public void setHomePosAndDistance( BlockPos pos, int distance)`
-- `public BlockPos getHomePosition()`
-- `public float getMaximumHomeDistance()`
-- `public void detachHome()`
-- `public boolean hasHome()`
-- `protected void updateLeashedState()`
+- `void detachHome()`
 - `protected double followLeashSpeed()`
+- `float getBlockPathWeight(BlockPos pos)`
+- `boolean getCanSpawnHere()`
+- `BlockPos getHomePosition()`
+- `float getMaximumHomeDistance()`
+- `boolean hasHome()`
+- `boolean hasPath()`
+- `boolean isWithinHomeDistanceCurrentPosition()`
+- `boolean isWithinHomeDistanceFromPosition(BlockPos pos)`
 - `protected void onLeashDistance(float p_142017_1_)`
+- `void setHomePosAndDistance(BlockPos pos, int distance)`
+- `protected void updateLeashedState()`
+
+## Fields
+
+- `static AttributeModifier FLEEING_SPEED_MODIFIER`
+- `static java.util.UUID FLEEING_SPEED_MODIFIER_UUID`

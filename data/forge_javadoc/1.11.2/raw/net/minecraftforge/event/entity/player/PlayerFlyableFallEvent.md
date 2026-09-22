@@ -1,13 +1,17 @@
 ---
 title: "PlayerFlyableFallEvent"
-description: "Occurs when a player falls, but is able to fly. Doesn't need to be cancelable, this is mainly for notification purposes."
+description: "public class PlayerFlyableFallEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/entity/player/PlayerFlyableFallEvent.html"
 sourceType: javadoc
 ---
 
 # PlayerFlyableFallEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerFlyableFallEvent
 
 ## Class signature
 
@@ -17,15 +21,11 @@ public class PlayerFlyableFallEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerFlyableFallEvent( EntityPlayer player, float distance, float multiplier)`
+- `PlayerFlyableFallEvent(EntityPlayer player, float distance, float multiplier)`
 
 ## Methods
 
-- `public float getDistance()`
-- `public void setDistance(float distance)`
-- `public float getMultiplier()`
-- `public void setMultiplier(float multiplier)`
-
-## Description
-
-Occurs when a player falls, but is able to fly. Doesn't need to be cancelable, this is mainly for notification purposes.
+- `float getDistance()`
+- `float getMultiplier()`
+- `void setDistance(float distance)`
+- `void setMultiplier(float multiplier)`

@@ -1,18 +1,20 @@
 # SPacketPong
 
+**Inheritance:** java.lang.Object → net.minecraft.network.status.server.SPacketPong
+
 ## Class signature
 
 ```java
-public class SPacketPong extends java.lang.Object implements Packet < INetHandlerStatusClient >
+public class SPacketPong extends java.lang.Object implements Packet<INetHandlerStatusClient>
 ```
 
 ## Constructors
 
-- `public SPacketPong()`
-- `public SPacketPong(long clientTimeIn)`
+- `SPacketPong()`
+- `SPacketPong(long clientTimeIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerStatusClient handler)`
+- `void processPacket(INetHandlerStatusClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

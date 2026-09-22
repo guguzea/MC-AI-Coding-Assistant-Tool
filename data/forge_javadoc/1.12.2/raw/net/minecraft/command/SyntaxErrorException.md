@@ -3,11 +3,15 @@ title: "SyntaxErrorException"
 description: "public class SyntaxErrorException extends CommandException"
 package: "net/minecraft/command"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/command/SyntaxErrorException.html"
 sourceType: javadoc
 ---
 
 # SyntaxErrorException
+
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → net.minecraft.command.CommandException → net.minecraft.command.SyntaxErrorException
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class SyntaxErrorException extends CommandException
 
 ## Constructors
 
-- `public SyntaxErrorException()`
-- `public SyntaxErrorException(java.lang.String message, java.lang.Object... replacements)`
+- `SyntaxErrorException()`
+- `SyntaxErrorException(java.lang.String message, java.lang.Object... replacements)`
 
 ## Methods
 
-- `public java.lang.Throwable fillInStackTrace()`
+- `java.lang.Throwable fillInStackTrace()`

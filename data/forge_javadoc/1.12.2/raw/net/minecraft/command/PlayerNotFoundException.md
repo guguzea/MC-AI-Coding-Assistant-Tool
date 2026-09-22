@@ -3,11 +3,15 @@ title: "PlayerNotFoundException"
 description: "public class PlayerNotFoundException extends CommandException"
 package: "net/minecraft/command"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/command/PlayerNotFoundException.html"
 sourceType: javadoc
 ---
 
 # PlayerNotFoundException
+
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → net.minecraft.command.CommandException → net.minecraft.command.PlayerNotFoundException
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class PlayerNotFoundException extends CommandException
 
 ## Constructors
 
-- `public PlayerNotFoundException(java.lang.String message)`
-- `public PlayerNotFoundException(java.lang.String message, java.lang.Object... replacements)`
+- `PlayerNotFoundException(java.lang.String message)`
+- `PlayerNotFoundException(java.lang.String message, java.lang.Object... replacements)`
 
 ## Methods
 
-- `public java.lang.Throwable fillInStackTrace()`
+- `java.lang.Throwable fillInStackTrace()`

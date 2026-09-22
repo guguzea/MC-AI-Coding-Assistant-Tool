@@ -1,5 +1,7 @@
 # FurnaceFuelBurnTimeEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent
+
 ## Class signature
 
 ```java
@@ -8,14 +10,10 @@ public class FurnaceFuelBurnTimeEvent extends Event
 
 ## Constructors
 
-- `public FurnaceFuelBurnTimeEvent( ItemStack itemStack, int burnTime)`
+- `FurnaceFuelBurnTimeEvent(ItemStack itemStack, int burnTime)`
 
 ## Methods
 
-- `public ItemStack getItemStack()`
-- `public void setBurnTime(int burnTime)`
-- `public int getBurnTime()`
-
-## Description
-
-FurnaceFuelBurnTimeEvent is fired when determining the fuel value for an ItemStack. To set the burn time of your own item, use Item.getItemBurnTime(ItemStack) instead. This event is fired from ForgeEv
+- `int getBurnTime()` — The resulting value of this event, the burn time for the ItemStack.
+- `ItemStack getItemStack()` — Get the ItemStack "fuel" in question.
+- `void setBurnTime(int burnTime)` — Set the burn time for the given ItemStack.

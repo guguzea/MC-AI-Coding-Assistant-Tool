@@ -1,20 +1,22 @@
 # TeleportToTeam
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.spectator.categories.TeleportToTeam
+
 ## Class signature
 
 ```java
-public class TeleportToTeam extends java.lang.Object implements ISpectatorMenuView , ISpectatorMenuObject
+public class TeleportToTeam extends java.lang.Object implements ISpectatorMenuView, ISpectatorMenuObject
 ```
 
 ## Constructors
 
-- `public TeleportToTeam()`
+- `TeleportToTeam()`
 
 ## Methods
 
-- `public java.util.List< ISpectatorMenuObject > getItems()`
-- `public ITextComponent getPrompt()`
-- `public void selectItem( SpectatorMenu menu)`
-- `public ITextComponent getSpectatorName()`
-- `public void renderIcon(float p_178663_1_, int alpha)`
-- `public boolean isEnabled()`
+- `java.util.List<ISpectatorMenuObject> getItems()`
+- `ITextComponent getPrompt()`
+- `ITextComponent getSpectatorName()`
+- `boolean isEnabled()`
+- `void renderIcon(float p_178663_1_, int alpha)`
+- `void selectItem(SpectatorMenu menu)`

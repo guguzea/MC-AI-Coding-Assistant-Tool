@@ -1,13 +1,17 @@
 ---
 title: "BlockChest"
-description: "0 : Normal chest, 1 : Trapped chest"
+description: "public class BlockChest extends BlockContainer"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockChest.html"
 sourceType: javadoc
 ---
 
 # BlockChest
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockContainer → net.minecraft.block.BlockChest
 
 ## Class signature
 
@@ -17,34 +21,35 @@ public class BlockChest extends BlockContainer
 
 ## Constructors
 
-- `protected BlockChest(int type)`
+- `BlockChest(int type)`
 
 ## Methods
 
-- `public boolean isOpaqueCube()`
-- `public boolean isFullCube()`
-- `public int getRenderType()`
-- `public void setBlockBoundsBasedOnState( IBlockAccess worldIn, BlockPos pos)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public IBlockState onBlockPlaced( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)`
-- `public IBlockState checkForSurroundingChests( World worldIn, BlockPos pos, IBlockState state)`
-- `public IBlockState correctFacing( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public ILockableContainer getLockableContainer( World worldIn, BlockPos pos)`
-- `public TileEntity createNewTileEntity( World worldIn, int meta)`
-- `public boolean canProvidePower()`
-- `public int getWeakPower( IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
-- `public int getStrongPower( IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
-- `public boolean hasComparatorInputOverride()`
-- `public int getComparatorInputOverride( World worldIn, BlockPos pos)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `boolean canProvidePower()` — Can this block provide power.
+- `IBlockState checkForSurroundingChests(World worldIn, BlockPos pos, IBlockState state)`
+- `IBlockState correctFacing(World worldIn, BlockPos pos, IBlockState state)`
 - `protected BlockState createBlockState()`
+- `TileEntity createNewTileEntity(World worldIn, int meta)` — Returns a new instance of a block's tile entity class.
+- `int getComparatorInputOverride(World worldIn, BlockPos pos)`
+- `ILockableContainer getLockableContainer(World worldIn, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `int getRenderType()` — The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `int getStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
+- `int getWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
+- `boolean hasComparatorInputOverride()`
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)` — Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the IBlockstate
+- `void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)` — Called by ItemBlocks after a block is set in the world, to allow post-place logic
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)`
 
-## Description
+## Fields
 
-0 : Normal chest, 1 : Trapped chest
+- `int chestType` — 0 : Normal chest, 1 : Trapped chest
+- `static PropertyDirection FACING`

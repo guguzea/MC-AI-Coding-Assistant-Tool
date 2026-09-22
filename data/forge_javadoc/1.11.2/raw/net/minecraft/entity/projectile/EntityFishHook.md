@@ -3,11 +3,15 @@ title: "EntityFishHook"
 description: "public class EntityFishHook extends Entity"
 package: "net/minecraft/entity/projectile"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/entity/projectile/EntityFishHook.html"
 sourceType: javadoc
 ---
 
 # EntityFishHook
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityFishHook
 
 ## Class signature
 
@@ -17,24 +21,28 @@ public class EntityFishHook extends Entity
 
 ## Constructors
 
-- `public EntityFishHook( World worldIn, EntityPlayer p_i47290_2_, double x, double y, double z)`
-- `public EntityFishHook( World worldIn, EntityPlayer fishingPlayer)`
+- `EntityFishHook(World worldIn, EntityPlayer fishingPlayer)`
+- `EntityFishHook(World worldIn, EntityPlayer p_i47290_2_, double x, double y, double z)`
 
 ## Methods
 
-- `public void func_191516_a(int p_191516_1_)`
-- `public void func_191517_b(int p_191517_1_)`
-- `protected void entityInit()`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public boolean isInRangeToRenderDist(double distance)`
-- `public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
-- `public void onUpdate()`
-- `protected boolean canBeHooked( Entity p_189739_1_)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public int handleHookRetraction()`
-- `public void handleStatusUpdate(byte id)`
 - `protected void bringInHookedEntity()`
+- `protected boolean canBeHooked(Entity p_189739_1_)`
 - `protected boolean canTriggerWalking()`
-- `public void setDead()`
-- `public EntityPlayer getAngler()`
+- `protected void entityInit()`
+- `void func_191516_a(int p_191516_1_)`
+- `void func_191517_b(int p_191517_1_)`
+- `EntityPlayer getAngler()`
+- `int handleHookRetraction()`
+- `void handleStatusUpdate(byte id)`
+- `boolean isInRangeToRenderDist(double distance)`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void setDead()`
+- `void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `Entity caughtEntity`

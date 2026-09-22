@@ -1,5 +1,7 @@
 # ModelLoaderRegistry
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.ModelLoaderRegistry
+
 ## Class signature
 
 ```java
@@ -8,17 +10,13 @@ public class ModelLoaderRegistry extends java.lang.Object
 
 ## Constructors
 
-- `public ModelLoaderRegistry()`
+- `ModelLoaderRegistry()`
 
 ## Methods
 
-- `public static void registerLoader( ICustomModelLoader loader)`
-- `public static boolean loaded( ResourceLocation location)`
-- `public static ResourceLocation getActualLocation( ResourceLocation location)`
-- `public static IModel getModel( ResourceLocation location) throws java.io.IOException`
-- `public static IModel getMissingModel()`
-- `public static void clearModelCache()`
-
-## Description
-
-Primary method to get IModel instances.
+- `static void clearModelCache()`
+- `static ResourceLocation getActualLocation(ResourceLocation location)`
+- `static IModel getMissingModel()`
+- `static IModel getModel(ResourceLocation location)` — Primary method to get IModel instances.
+- `static boolean loaded(ResourceLocation location)`
+- `static void registerLoader(ICustomModelLoader loader)`

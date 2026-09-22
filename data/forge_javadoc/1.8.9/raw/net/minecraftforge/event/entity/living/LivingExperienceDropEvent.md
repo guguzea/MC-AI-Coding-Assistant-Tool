@@ -1,13 +1,17 @@
 ---
 title: "LivingExperienceDropEvent"
-description: "Event for when an entity drops experience on its death, can be used to change the amount of experience points dropped or completely prevent dropping of experience by canceling the event."
+description: "public class LivingExperienceDropEvent extends LivingEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/living/LivingExperienceDropEvent.html"
 sourceType: javadoc
 ---
 
 # LivingExperienceDropEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingExperienceDropEvent
 
 ## Class signature
 
@@ -15,17 +19,13 @@ sourceType: javadoc
 public class LivingExperienceDropEvent extends LivingEvent
 ```
 
-## Constructors
-
-- `public LivingExperienceDropEvent( EntityLivingBase entity, EntityPlayer attackingPlayer, int originalExperience)`
-
 ## Methods
 
-- `public int getDroppedExperience()`
-- `public void setDroppedExperience(int droppedExperience)`
-- `public EntityPlayer getAttackingPlayer()`
-- `public int getOriginalExperience()`
+- `EntityPlayer getAttackingPlayer()`
+- `int getDroppedExperience()`
+- `int getOriginalExperience()`
+- `void setDroppedExperience(int droppedExperience)`
 
-## Description
+## Fields
 
-Event for when an entity drops experience on its death, can be used to change the amount of experience points dropped or completely prevent dropping of experience by canceling the event.
+- `LivingExperienceDropEvent`

@@ -1,29 +1,31 @@
 # TileEntityBanner
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityBanner
+
 ## Class signature
 
 ```java
 public class TileEntityBanner extends TileEntity
 ```
 
-## Constructors
-
-- `public TileEntityBanner()`
-
 ## Methods
 
-- `public void setItemValues( ItemStack stack)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public static void setBaseColorAndPatterns( NBTTagCompound compound, int baseColorIn, @Nullable NBTTagList patternsIn)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `@Nullable public SPacketUpdateTileEntity getUpdatePacket()`
-- `public NBTTagCompound getUpdateTag()`
-- `public int getBaseColor()`
-- `public static int getBaseColor( ItemStack stack)`
-- `public static int getPatterns( ItemStack stack)`
-- `public java.util.List< TileEntityBanner.EnumBannerPattern > getPatternList()`
-- `public NBTTagList getPatterns()`
-- `public java.util.List< EnumDyeColor > getColorList()`
-- `public java.lang.String getPatternResourceLocation()`
-- `public static void addBaseColorTag( ItemStack p_184248_0_, EnumDyeColor p_184248_1_)`
-- `public static void removeBannerData( ItemStack stack)`
+- `static void addBaseColorTag(ItemStack p_184248_0_, EnumDyeColor p_184248_1_)`
+- `int getBaseColor()`
+- `static int getBaseColor(ItemStack stack)`
+- `java.util.List<EnumDyeColor> getColorList()`
+- `java.util.List<TileEntityBanner.EnumBannerPattern> getPatternList()`
+- `java.lang.String getPatternResourceLocation()`
+- `NBTTagList getPatterns()`
+- `static int getPatterns(ItemStack stack)`
+- `SPacketUpdateTileEntity getUpdatePacket()`
+- `NBTTagCompound getUpdateTag()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `static void removeBannerData(ItemStack stack)`
+- `static void setBaseColorAndPatterns(NBTTagCompound compound, int baseColorIn, NBTTagList patternsIn)`
+- `void setItemValues(ItemStack stack)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `TileEntityBanner`

@@ -1,13 +1,21 @@
 # BlockAnvil.Anvil
 
+**Inheritance:** java.lang.Object → net.minecraft.block.BlockAnvil.Anvil
+
+## Class signature
+
+```java
+public static class BlockAnvil.Anvil extends java.lang.Object implements IInteractionObject
+```
+
 ## Constructors
 
-- `public Anvil( World worldIn, BlockPos pos)`
+- `Anvil(World worldIn, BlockPos pos)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public ITextComponent getDisplayName()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `public java.lang.String getGuiID()`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `ITextComponent getDisplayName()`
+- `java.lang.String getGuiID()`
+- `java.lang.String getName()`
+- `boolean hasCustomName()`

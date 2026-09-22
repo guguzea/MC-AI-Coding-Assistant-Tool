@@ -1,5 +1,7 @@
 # BlockStem
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockBush → net.minecraft.block.BlockStem
+
 ## Class signature
 
 ```java
@@ -8,30 +10,31 @@ public class BlockStem extends BlockBush implements IGrowable
 
 ## Constructors
 
-- `protected BlockStem( Block crop)`
+- `BlockStem(Block crop)`
 
 ## Methods
 
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `protected boolean canPlaceBlockOn( Block ground)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public void growStem( World worldIn, BlockPos pos, IBlockState state)`
-- `public int getRenderColor( IBlockState state)`
-- `public int colorMultiplier( IBlockAccess worldIn, BlockPos pos, int renderPass)`
-- `public void setBlockBoundsForItemRender()`
-- `public void setBlockBoundsBasedOnState( IBlockAccess worldIn, BlockPos pos)`
-- `public void dropBlockAsItemWithChance( World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
-- `public java.util.List< ItemStack > getDrops( IBlockAccess world, BlockPos pos, IBlockState state, int fortune)`
-- `protected Item getSeedItem()`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public boolean canGrow( World worldIn, BlockPos pos, IBlockState state, boolean isClient)`
-- `public boolean canUseBonemeal( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
-- `public Item getItem( World worldIn, BlockPos pos)`
-- `public void grow( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)` — Whether this IGrowable can grow
+- `protected boolean canPlaceBlockOn(Block ground)` — is the block grass, dirt or farmland
+- `boolean canUseBonemeal(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
+- `int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)`
 - `protected BlockState createBlockState()`
+- `void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)` — Spawns this Block's drops into the World as EntityItems.
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)` — Get the actual Block state of this Block at the given position.
+- `java.util.List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)` — This returns a complete list of items dropped from this block.
+- `Item getItem(World worldIn, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `int getRenderColor(IBlockState state)`
+- `protected Item getSeedItem()`
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `void grow(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
+- `void growStem(World worldIn, BlockPos pos, IBlockState state)`
+- `void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)`
+- `void setBlockBoundsForItemRender()` — Sets the block's bounds for rendering it as an item
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Whether this IGrowable can grow
+- `static PropertyInteger AGE`
+- `static PropertyDirection FACING`

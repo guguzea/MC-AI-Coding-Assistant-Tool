@@ -1,5 +1,7 @@
 # RenderChunk
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.chunk.RenderChunk
+
 ## Class signature
 
 ```java
@@ -8,30 +10,32 @@ public class RenderChunk extends java.lang.Object
 
 ## Constructors
 
-- `public RenderChunk( World worldIn, RenderGlobal renderGlobalIn, BlockPos blockPosIn, int indexIn)`
+- `RenderChunk(World worldIn, RenderGlobal renderGlobalIn, BlockPos blockPosIn, int indexIn)`
 
 ## Methods
 
-- `public boolean setFrameIndex(int frameIndexIn)`
-- `public VertexBuffer getVertexBufferByLayer(int layer)`
-- `public void setPosition( BlockPos pos)`
-- `public void resortTransparency(float x, float y, float z, ChunkCompileTaskGenerator generator)`
-- `public void rebuildChunk(float x, float y, float z, ChunkCompileTaskGenerator generator)`
+- `protected RegionRenderCache createRegionRenderCache(World world, BlockPos from, BlockPos to, int subtract)` — Creates a new RegionRenderCache instance.
+- `void deleteGlResources()`
 - `protected void finishCompileTask()`
-- `public java.util.concurrent.locks.ReentrantLock getLockCompileTask()`
-- `public ChunkCompileTaskGenerator makeCompileTaskChunk()`
-- `public ChunkCompileTaskGenerator makeCompileTaskTransparency()`
-- `public void multModelviewMatrix()`
-- `public CompiledChunk getCompiledChunk()`
-- `public void setCompiledChunk( CompiledChunk compiledChunkIn)`
-- `public void stopCompileTask()`
-- `public void deleteGlResources()`
-- `public BlockPos getPosition()`
-- `public void setNeedsUpdate(boolean needsUpdateIn)`
-- `public boolean isNeedsUpdate()`
-- `protected RegionRenderCache createRegionRenderCache( World world, BlockPos from, BlockPos to, int subtract)`
-- `public BlockPos getBlockPosOffset16( EnumFacing p_181701_1_)`
+- `BlockPos getBlockPosOffset16(EnumFacing p_181701_1_)`
+- `CompiledChunk getCompiledChunk()`
+- `java.util.concurrent.locks.ReentrantLock getLockCompileTask()`
+- `BlockPos getPosition()`
+- `VertexBuffer getVertexBufferByLayer(int layer)`
+- `boolean isNeedsUpdate()`
+- `ChunkCompileTaskGenerator makeCompileTaskChunk()`
+- `ChunkCompileTaskGenerator makeCompileTaskTransparency()`
+- `void multModelviewMatrix()`
+- `void rebuildChunk(float x, float y, float z, ChunkCompileTaskGenerator generator)`
+- `void resortTransparency(float x, float y, float z, ChunkCompileTaskGenerator generator)`
+- `void setCompiledChunk(CompiledChunk compiledChunkIn)`
+- `boolean setFrameIndex(int frameIndexIn)`
+- `void setNeedsUpdate(boolean needsUpdateIn)`
+- `void setPosition(BlockPos pos)`
+- `void stopCompileTask()`
 
-## Description
+## Fields
 
-Creates a new RegionRenderCache instance.
+- `AxisAlignedBB boundingBox`
+- `CompiledChunk compiledChunk`
+- `static int renderChunksUpdated`

@@ -1,40 +1,40 @@
 ---
 title: "S0CPacketSpawnPlayer"
-description: "Passes this Packet on to the NetHandler for processing."
+description: "public class S0CPacketSpawnPlayer extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/network/play/server/S0CPacketSpawnPlayer.html"
 sourceType: javadoc
 ---
 
 # S0CPacketSpawnPlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S0CPacketSpawnPlayer
+
 ## Class signature
 
 ```java
-public class S0CPacketSpawnPlayer extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class S0CPacketSpawnPlayer extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public S0CPacketSpawnPlayer()`
-- `public S0CPacketSpawnPlayer( EntityPlayer player)`
+- `S0CPacketSpawnPlayer()`
+- `S0CPacketSpawnPlayer(EntityPlayer player)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public java.util.List< DataWatcher.WatchableObject > func_148944_c()`
-- `public int getEntityID()`
-- `public java.util.UUID getPlayer()`
-- `public int getX()`
-- `public int getY()`
-- `public int getZ()`
-- `public byte getYaw()`
-- `public byte getPitch()`
-- `public int getCurrentItemID()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `java.util.List<DataWatcher.WatchableObject> func_148944_c()`
+- `int getCurrentItemID()`
+- `int getEntityID()`
+- `byte getPitch()`
+- `java.util.UUID getPlayer()`
+- `int getX()`
+- `int getY()`
+- `byte getYaw()`
+- `int getZ()`
+- `void processPacket(INetHandlerPlayClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

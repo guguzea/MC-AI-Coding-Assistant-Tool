@@ -8,5 +8,5 @@ public interface IEntityMultiPart
 
 ## Methods
 
+- `boolean attackEntityFromPart(EntityDragonPart dragonPart, DamageSource source, float damage)`
 - `World getWorld()`
-- `boolean attackEntityFromPart( EntityDragonPart dragonPart, DamageSource source, float damage)`

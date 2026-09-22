@@ -1,13 +1,17 @@
 ---
 title: "GetCollisionBoxesEvent"
-description: "This event is fired after Entity.pushOutOfBlocks(double, double, double) calls World.getCollisionBoxes(AxisAlignedBB) and before returning the list in World.getCollisionBoxes(Entity, AxisAlignedBB) en"
+description: "public class GetCollisionBoxesEvent extends WorldEvent"
 package: "net/minecraftforge/event/world"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/world/GetCollisionBoxesEvent.html"
 sourceType: javadoc
 ---
 
 # GetCollisionBoxesEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.GetCollisionBoxesEvent
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class GetCollisionBoxesEvent extends WorldEvent
 
 ## Constructors
 
-- `public GetCollisionBoxesEvent( World world, @Nullable Entity entity, AxisAlignedBB aabb, java.util.List< AxisAlignedBB > collisionBoxesList)`
+- `GetCollisionBoxesEvent(World world, Entity entity, AxisAlignedBB aabb, java.util.List<AxisAlignedBB> collisionBoxesList)`
 
 ## Methods
 
-- `public Entity getEntity()`
-- `public AxisAlignedBB getAabb()`
-- `public java.util.List< AxisAlignedBB > getCollisionBoxesList()`
-
-## Description
-
-This event is fired after Entity.pushOutOfBlocks(double, double, double) calls World.getCollisionBoxes(AxisAlignedBB) and before returning the list in World.getCollisionBoxes(Entity, AxisAlignedBB) en
+- `AxisAlignedBB getAabb()`
+- `java.util.List<AxisAlignedBB> getCollisionBoxesList()`
+- `Entity getEntity()`

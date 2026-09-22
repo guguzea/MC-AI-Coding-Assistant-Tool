@@ -1,13 +1,17 @@
 ---
 title: "OreGenEvent"
-description: "OreGenEvent is fired when an event involving ore generation occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. world contains the world "
+description: "public class OreGenEvent extends Event"
 package: "net/minecraftforge/event/terraingen"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/terraingen/OreGenEvent.html"
 sourceType: javadoc
 ---
 
 # OreGenEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.OreGenEvent
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class OreGenEvent extends Event
 
 ## Constructors
 
-- `public OreGenEvent( World world, java.util.Random rand, BlockPos pos)`
+- `OreGenEvent(World world, java.util.Random rand, BlockPos pos)`
 
 ## Methods
 
-- `public World getWorld()`
-- `public java.util.Random getRand()`
-- `public BlockPos getPos()`
-
-## Description
-
-OreGenEvent is fired when an event involving ore generation occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. world contains the world 
+- `BlockPos getPos()`
+- `java.util.Random getRand()`
+- `World getWorld()`

@@ -1,18 +1,33 @@
 ---
 title: "EntityVillager.ListEnchantedItemForEmeralds"
-description: ""
+description: "public static class EntityVillager.ListEnchantedItemForEmeralds extends java.lang.Object implements EntityVillager.ITradeList"
 package: "net/minecraft/entity/passive"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/passive/EntityVillager.ListEnchantedItemForEmeralds.html"
 sourceType: javadoc
 ---
 
 # EntityVillager.ListEnchantedItemForEmeralds
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.passive.EntityVillager.ListEnchantedItemForEmeralds
+
+## Class signature
+
+```java
+public static class EntityVillager.ListEnchantedItemForEmeralds extends java.lang.Object implements EntityVillager.ITradeList
+```
+
 ## Constructors
 
-- `public ListEnchantedItemForEmeralds( Item p_i45814_1_, EntityVillager.PriceInfo p_i45814_2_)`
+- `ListEnchantedItemForEmeralds(Item p_i45814_1_, EntityVillager.PriceInfo p_i45814_2_)`
 
 ## Methods
 
-- `public void addMerchantRecipe( IMerchant merchant, MerchantRecipeList recipeList, java.util.Random random)`
+- `void addMerchantRecipe(IMerchant merchant, MerchantRecipeList recipeList, java.util.Random random)`
+
+## Fields
+
+- `ItemStack enchantedItemStack`
+- `EntityVillager.PriceInfo priceInfo`

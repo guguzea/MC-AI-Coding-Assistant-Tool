@@ -1,5 +1,7 @@
 # HoverEvent
 
+**Inheritance:** java.lang.Object → net.minecraft.event.HoverEvent
+
 ## Class signature
 
 ```java
@@ -8,16 +10,12 @@ public class HoverEvent extends java.lang.Object
 
 ## Constructors
 
-- `public HoverEvent( HoverEvent.Action actionIn, IChatComponent valueIn)`
+- `HoverEvent(HoverEvent.Action actionIn, IChatComponent valueIn)`
 
 ## Methods
 
-- `public HoverEvent.Action getAction()`
-- `public IChatComponent getValue()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public java.lang.String toString()`
-- `public int hashCode()`
-
-## Description
-
-Gets the action to perform when this event is raised.
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `HoverEvent.Action getAction()` — Gets the action to perform when this event is raised.
+- `IChatComponent getValue()` — Gets the value to perform the action on when this event is raised.
+- `int hashCode()`
+- `java.lang.String toString()`

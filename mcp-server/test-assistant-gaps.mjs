@@ -1443,6 +1443,18 @@ description: |
         `${rel} 的 mergeSemanticResults 白名单口径不是 L0 全集：${line.trim()}`,
       );
     }
+    // 简写形 `allowedIds,` 也算一个点位：⑤ 拆树后基岩把两棵树的 L0 全集并进局部变量再传进去，
+    // 只认 `allowedIds:` 的话这一族会静默从台账里消失（实测点位 8→6，本条当场红 —— 红得对，
+    // 但红的是探针瞎，不是生产侧退化）。放行条件必须比"看见简写"更硬：该文件得真的用
+    // getAllDocIds(...) 全集喂这个集合，否则简写就成了绕过白名单口径的后门。
+    for (const line of text.split(/\r?\n/)) {
+      if (!/^\s*allowedIds,\s*$/.test(line)) continue;
+      mergeSites += 1;
+      assert.ok(
+        /getAllDocIds\(/.test(text),
+        `${rel} 用简写传 allowedIds，但文件里找不到 getAllDocIds(...) ⇒ 无法证明它是 L0 全集口径`,
+      );
+    }
   }
   assert.ok(mergeSites >= 7, `mergeSemanticResults 白名单点位只剩 ${mergeSites} 处（应有 ≥7 处）`);
 

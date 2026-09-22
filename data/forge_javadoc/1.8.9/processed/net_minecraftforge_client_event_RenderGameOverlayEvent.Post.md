@@ -1,13 +1,17 @@
 # RenderGameOverlayEvent.Post
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderGameOverlayEvent → net.minecraftforge.client.event.RenderGameOverlayEvent.Post
 
-- `public Post( RenderGameOverlayEvent parent, RenderGameOverlayEvent.ElementType type)`
+## Class signature
+
+```java
+public static class RenderGameOverlayEvent.Post extends RenderGameOverlayEvent
+```
 
 ## Methods
 
-- `public boolean isCancelable()`
+- `boolean isCancelable()` — Determine if this function is cancelable at all.
 
-## Description
+## Fields
 
-Determine if this function is cancelable at all.
+- `Post`

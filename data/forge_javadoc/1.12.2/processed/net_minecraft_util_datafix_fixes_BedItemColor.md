@@ -1,5 +1,7 @@
 # BedItemColor
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.BedItemColor
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class BedItemColor extends java.lang.Object implements IFixableData
 
 ## Constructors
 
-- `public BedItemColor()`
+- `BedItemColor()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

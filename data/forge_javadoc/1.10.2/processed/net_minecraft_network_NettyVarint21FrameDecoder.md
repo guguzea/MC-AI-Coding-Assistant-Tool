@@ -1,5 +1,7 @@
 # NettyVarint21FrameDecoder
 
+**Inheritance:** java.lang.Object → io.netty.channel.ChannelHandlerAdapter → io.netty.channel.ChannelInboundHandlerAdapter → io.netty.handler.codec.ByteToMessageDecoder → net.minecraft.network.NettyVarint21FrameDecoder
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class NettyVarint21FrameDecoder extends io.netty.handler.codec.ByteToMess
 
 ## Constructors
 
-- `public NettyVarint21FrameDecoder()`
+- `NettyVarint21FrameDecoder()`
 
 ## Methods
 
-- `protected void decode(io.netty.channel.ChannelHandlerContext p_decode_1_, io.netty.buffer.ByteBuf p_decode_2_, java.util.List<java.lang.Object> p_decode_3_) throws java.lang.Exception`
+- `protected void decode(io.netty.channel.ChannelHandlerContext p_decode_1_, io.netty.buffer.ByteBuf p_decode_2_, java.util.List<java.lang.Object> p_decode_3_)`

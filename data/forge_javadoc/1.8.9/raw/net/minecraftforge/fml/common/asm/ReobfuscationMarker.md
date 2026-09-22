@@ -1,14 +1,18 @@
 ---
 title: "ReobfuscationMarker"
-description: "Used to force certain classes to reobfuscate"
+description: "public @interface ReobfuscationMarker"
 package: "net/minecraftforge/fml/common/asm"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/asm/ReobfuscationMarker.html"
 sourceType: javadoc
 ---
 
 # ReobfuscationMarker
 
-## Description
+## Class signature
 
-Used to force certain classes to reobfuscate
+```java
+public @interface ReobfuscationMarker
+```

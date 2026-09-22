@@ -1,22 +1,32 @@
 ---
 title: "FMLHandshakeMessage.ServerHello"
-description: ""
+description: "public static class FMLHandshakeMessage.ServerHello extends FMLHandshakeMessage"
 package: "net/minecraftforge/fml/common/network/handshake"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/common/network/handshake/FMLHandshakeMessage.ServerHello.html"
 sourceType: javadoc
 ---
 
 # FMLHandshakeMessage.ServerHello
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage → net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage.ServerHello
+
+## Class signature
+
+```java
+public static class FMLHandshakeMessage.ServerHello extends FMLHandshakeMessage
+```
+
 ## Constructors
 
-- `public ServerHello()`
-- `public ServerHello(int overrideDim)`
+- `ServerHello()`
+- `ServerHello(int overrideDim)`
 
 ## Methods
 
-- `public void toBytes(ByteBuf buffer)`
-- `public void fromBytes(ByteBuf buffer)`
-- `public byte protocolVersion()`
-- `public int overrideDim()`
+- `void fromBytes(ByteBuf buffer)`
+- `int overrideDim()`
+- `byte protocolVersion()`
+- `void toBytes(ByteBuf buffer)`

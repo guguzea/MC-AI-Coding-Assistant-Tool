@@ -1,5 +1,7 @@
 # Block
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block
+
 ## Class signature
 
 ```java
@@ -8,132 +10,246 @@ public class Block extends java.lang.Object
 
 ## Constructors
 
-- `public Block( Material p_i46399_1_, MapColor p_i46399_2_)`
-- `public Block( Material materialIn)`
+- `Block(Material materialIn)`
+- `Block(Material p_i46399_1_, MapColor p_i46399_2_)`
 
 ## Methods
 
-- `public static int getIdFromBlock( Block blockIn)`
-- `public static int getStateId( IBlockState state)`
-- `public static Block getBlockById(int id)`
-- `public static IBlockState getStateById(int id)`
-- `public static Block getBlockFromItem( Item itemIn)`
-- `public static Block getBlockFromName(java.lang.String name)`
-- `public boolean isFullBlock()`
-- `public int getLightOpacity()`
-- `public boolean isTranslucent()`
-- `public int getLightValue()`
-- `public boolean getUseNeighborBrightness()`
-- `public Material getMaterial()`
-- `public MapColor getMapColor( IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public Block setStepSound( Block.SoundType sound)`
-- `public Block setLightOpacity(int opacity)`
-- `public Block setLightLevel(float value)`
-- `public Block setResistance(float resistance)`
-- `public boolean isBlockNormalCube()`
-- `public boolean isNormalCube()`
-- `public boolean isVisuallyOpaque()`
-- `public boolean isFullCube()`
-- `public boolean isPassable( IBlockAccess worldIn, BlockPos pos)`
-- `public int getRenderType()`
-- `public boolean isReplaceable( World worldIn, BlockPos pos)`
-- `public Block setHardness(float hardness)`
-- `public Block setBlockUnbreakable()`
-- `public float getBlockHardness( World worldIn, BlockPos pos)`
-- `public Block setTickRandomly(boolean shouldTick)`
-- `public boolean getTickRandomly()`
-- `@Deprecated public boolean hasTileEntity()`
-- `public final void setBlockBounds(float minX, float minY, float minZ, float maxX, float maxY, float maxZ)`
-- `public int getMixedBrightnessForBlock( IBlockAccess worldIn, BlockPos pos)`
-- `public boolean shouldSideBeRendered( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
-- `public boolean isBlockSolid( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
-- `public AxisAlignedBB getSelectedBoundingBox( World worldIn, BlockPos pos)`
-- `public void addCollisionBoxesToList( World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, java.util.List< AxisAlignedBB > list, Entity collidingEntity)`
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isOpaqueCube()`
-- `public boolean canCollideCheck( IBlockState state, boolean hitIfLiquid)`
-- `public boolean isCollidable()`
-- `public void randomTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random random)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public void randomDisplayTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public void onBlockDestroyedByPlayer( World worldIn, BlockPos pos, IBlockState state)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public int tickRate( World worldIn)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public int quantityDropped(java.util.Random random)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public float getPlayerRelativeBlockHardness( EntityPlayer playerIn, World worldIn, BlockPos pos)`
-- `public final void dropBlockAsItem( World worldIn, BlockPos pos, IBlockState state, int forture)`
-- `public void dropBlockAsItemWithChance( World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
-- `public static void spawnAsEntity( World worldIn, BlockPos pos, ItemStack stack)`
-- `public void dropXpOnBlockBreak( World worldIn, BlockPos pos, int amount)`
-- `public int damageDropped( IBlockState state)`
-- `public float getExplosionResistance( Entity exploder)`
-- `public MovingObjectPosition collisionRayTrace( World worldIn, BlockPos pos, Vec3 start, Vec3 end)`
-- `public void onBlockDestroyedByExplosion( World worldIn, BlockPos pos, Explosion explosionIn)`
-- `public boolean canReplace( World worldIn, BlockPos pos, EnumFacing side, ItemStack stack)`
-- `public EnumWorldBlockLayer getBlockLayer()`
-- `public boolean canPlaceBlockOnSide( World worldIn, BlockPos pos, EnumFacing side)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, Entity entityIn)`
-- `public IBlockState onBlockPlaced( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public void onBlockClicked( World worldIn, BlockPos pos, EntityPlayer playerIn)`
-- `public Vec3 modifyAcceleration( World worldIn, BlockPos pos, Entity entityIn, Vec3 motion)`
-- `public void setBlockBoundsBasedOnState( IBlockAccess worldIn, BlockPos pos)`
-- `public final double getBlockBoundsMinX()`
-- `public final double getBlockBoundsMaxX()`
-- `public final double getBlockBoundsMinY()`
-- `public final double getBlockBoundsMaxY()`
-- `public final double getBlockBoundsMinZ()`
-- `public final double getBlockBoundsMaxZ()`
-- `public int getBlockColor()`
-- `public int getRenderColor( IBlockState state)`
-- `public int colorMultiplier( IBlockAccess worldIn, BlockPos pos, int renderPass)`
-- `public int getWeakPower( IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
-- `public final int colorMultiplier( IBlockAccess worldIn, BlockPos pos)`
-- `public boolean canProvidePower()`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
-- `public int getStrongPower( IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
-- `public void setBlockBoundsForItemRender()`
-- `public void harvestBlock( World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)`
+- `void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, java.util.List<AxisAlignedBB> list, Entity collidingEntity)` — Add all collision boxes of this Block to the list that intersect with the given mask.
+- `boolean addDestroyEffects(World world, BlockPos pos, EffectRenderer effectRenderer)` — Spawn particles for when the block is destroyed.
+- `boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer)` — Spawn a digging particle effect in the world, this is a wrapper around EffectRenderer.addBlockHitEffects to allow the block more control over the particles.
+- `boolean addLandingEffects(WorldServer worldObj, BlockPos blockPosition, IBlockState iblockstate, EntityLivingBase entity, int numberOfParticles)` — Allows a block to override the standard EntityLivingBase.updateFallState particles, this is a server side method that spawns particles with WorldServer.spawnParticle
+- `void beginLeavesDecay(World world, BlockPos pos)` — Called when a leaf should start its decay process.
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canBeReplacedByLeaves(IBlockAccess world, BlockPos pos)` — Used during tree growth to determine if newly generated leaves can replace this block.
+- `boolean canCollideCheck(IBlockState state, boolean hitIfLiquid)`
+- `boolean canConnectRedstone(IBlockAccess world, BlockPos pos, EnumFacing side)` — Determine if this block can make a redstone connection on the side provided, Useful to control which sides are inputs and outputs for redstone wires.
+- `boolean canCreatureSpawn(IBlockAccess world, BlockPos pos, EntityLiving.SpawnPlacementType type)` — Determines if a specified mob type can spawn on this block, returning false will prevent any mob from spawning on the block.
+- `boolean canDropFromExplosion(Explosion explosionIn)` — Return whether this block can drop from an explosion.
+- `boolean canEntityDestroy(IBlockAccess world, BlockPos pos, Entity entity)` — Determines if this block is can be destroyed by the specified entities normal behavior.
+- `boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)` — Determines if the player can harvest this block, obtaining it's drops when the block is destroyed.
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)` — Check whether this Block can be placed on the given side
+- `boolean canPlaceTorchOnTop(IBlockAccess world, BlockPos pos)` — Determines if a torch can be placed on the top surface of this block.
+- `boolean canProvidePower()` — Can this block provide power.
+- `boolean canRenderInLayer(EnumWorldBlockLayer layer)` — Queries if this block should render in a given layer.
+- `boolean canReplace(World worldIn, BlockPos pos, EnumFacing side, ItemStack stack)`
 - `@Deprecated protected boolean canSilkHarvest()`
-- `protected ItemStack createStackedBlock( IBlockState state)`
-- `public int quantityDroppedWithBonus(int fortune, java.util.Random random)`
-- `public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)`
-- `public boolean func_181623_g()`
-- `public Block setUnlocalizedName(java.lang.String name)`
-- `public java.lang.String getLocalizedName()`
-- `public java.lang.String getUnlocalizedName()`
-- `public boolean onBlockEventReceived( World worldIn, BlockPos pos, IBlockState state, int eventID, int eventParam)`
-- `public boolean getEnableStats()`
-- `protected Block disableStats()`
-- `public int getMobilityFlag()`
-- `public float getAmbientOcclusionLightValue()`
-- `public void onFallenUpon( World worldIn, BlockPos pos, Entity entityIn, float fallDistance)`
-- `public void onLanded( World worldIn, Entity entityIn)`
-- `public Item getItem( World worldIn, BlockPos pos)`
-- `public int getDamageValue( World worldIn, BlockPos pos)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > list)`
-- `public Block setCreativeTab( CreativeTabs tab)`
-- `public void onBlockHarvested( World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
-- `public CreativeTabs getCreativeTabToDisplayOn()`
-- `public void fillWithRain( World worldIn, BlockPos pos)`
-- `public boolean isFlowerPot()`
-- `public boolean requiresUpdates()`
-- `public boolean canDropFromExplosion( Explosion explosionIn)`
-- `public boolean isAssociatedBlock( Block other)`
-- `public static boolean isEqualTo( Block blockIn, Block other)`
-- `public boolean hasComparatorInputOverride()`
-- `public int getComparatorInputOverride( World worldIn, BlockPos pos)`
-- `public IBlockState getStateForEntityRender( IBlockState state)`
+- `boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player)` — Return true from this function if the player with silk touch can harvest this block directly, and not it's normal drops.
+- `boolean canSustainLeaves(IBlockAccess world, BlockPos pos)` — Determines if this block can prevent leaves connected to it from decaying.
+- `boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)` — Determines if this block can support the passed in plant, allowing it to be planted and grow.
+- `protected java.util.List<ItemStack> captureDrops(boolean start)`
+- `MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end)` — Ray traces through the blocks collision from start vector to end vector returning a ray trace hit.
+- `int colorMultiplier(IBlockAccess worldIn, BlockPos pos)`
+- `int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)`
 - `protected BlockState createBlockState()`
-- `public BlockState getBlockState()`
+- `protected ItemStack createStackedBlock(IBlockState state)`
+- `TileEntity createTileEntity(World world, IBlockState state)` — Called throughout the code as a replacement for ITileEntityProvider.createNewTileEntity Return the same thing you would from that function.
+- `int damageDropped(IBlockState state)` — Gets the metadata of the item this Block can drop.
+- `protected Block disableStats()`
+- `boolean doesSideBlockRendering(IBlockAccess world, BlockPos pos, EnumFacing face)` — Check if the face of a block should block rendering.
+- `void dropBlockAsItem(World worldIn, BlockPos pos, IBlockState state, int forture)` — Spawn this Block's drops into the World as EntityItems
+- `void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)` — Spawns this Block's drops into the World as EntityItems.
+- `void dropXpOnBlockBreak(World worldIn, BlockPos pos, int amount)` — Spawns the given amount of experience into the World as XP orb entities
+- `void fillWithRain(World worldIn, BlockPos pos)` — Called similar to random ticks, but only when it is raining.
+- `boolean func_181623_g()`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)` — Get the actual Block state of this Block at the given position.
+- `float getAmbientOcclusionLightValue()` — Returns the default ambient occlusion value based on block opacity
+- `EnumFacing getBedDirection(IBlockAccess world, BlockPos pos)` — Returns the direction of the block.
+- `BlockPos getBedSpawnPosition(IBlockAccess world, BlockPos pos, EntityPlayer player)` — Returns the position that the player is moved to upon waking up, or respawning at the bed.
+- `double getBlockBoundsMaxX()` — returns the block bounderies maxX value
+- `double getBlockBoundsMaxY()` — returns the block bounderies maxY value
+- `double getBlockBoundsMaxZ()` — returns the block bounderies maxZ value
+- `double getBlockBoundsMinX()` — returns the block bounderies minX value
+- `double getBlockBoundsMinY()` — returns the block bounderies minY value
+- `double getBlockBoundsMinZ()` — returns the block bounderies minZ value
+- `static Block getBlockById(int id)`
+- `int getBlockColor()`
+- `static Block getBlockFromItem(Item itemIn)`
+- `static Block getBlockFromName(java.lang.String name)`
+- `float getBlockHardness(World worldIn, BlockPos pos)`
+- `EnumWorldBlockLayer getBlockLayer()`
+- `BlockState getBlockState()`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `int getComparatorInputOverride(World worldIn, BlockPos pos)`
+- `CreativeTabs getCreativeTabToDisplayOn()` — Returns the CreativeTab to display the given block on.
+- `int getDamageValue(World worldIn, BlockPos pos)`
+- `IBlockState getDefaultState()`
+- `java.util.List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)` — This returns a complete list of items dropped from this block.
+- `boolean getEnableStats()` — Return the state of blocks statistics flags - if the block is counted for mined and placed.
+- `float getEnchantPowerBonus(World world, BlockPos pos)` — Determines the amount of enchanting power this block can provide to an enchanting table.
+- `int getExpDrop(IBlockAccess world, BlockPos pos, int fortune)` — Gathers how much experience this block drops when broken.
+- `float getExplosionResistance(Entity exploder)` — Returns how much this block can resist explosions from the passed in entity.
+- `float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)` — Location sensitive version of getExplosionRestance
+- `IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)` — Can return IExtendedBlockState
+- `int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)` — Called when fire is updating on a neighbor block.
+- `int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)` — Chance that fire will spread and consume this block. 300 being a 100% chance, 0, being a 0% chance.
+- `int getHarvestLevel(IBlockState state)` — Queries the harvest level of this item stack for the specified tool class, Returns -1 if this tool is not of the specified type
+- `java.lang.String getHarvestTool(IBlockState state)` — Queries the class of tool required to harvest this block, if null is returned we assume that anything can harvest this block.
+- `static int getIdFromBlock(Block blockIn)`
+- `Item getItem(World worldIn, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `int getLightOpacity()`
+- `int getLightOpacity(IBlockAccess world, BlockPos pos)` — Location aware and overrideable version of the lightOpacity array, return the number to subtract from the light value when it passes through this block.
+- `int getLightValue()`
+- `int getLightValue(IBlockAccess world, BlockPos pos)` — Get a light value for the block at the specified coordinates, normal ranges are between 0 and 15
+- `java.lang.String getLocalizedName()` — Gets the localized name of this block.
+- `MapColor getMapColor(IBlockState state)` — Get the MapColor for this Block and the given BlockState
+- `Material getMaterial()` — Get a material of block
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `int getMixedBrightnessForBlock(IBlockAccess worldIn, BlockPos pos)`
+- `int getMobilityFlag()`
+- `Block.EnumOffsetType getOffsetType()` — Get the OffsetType for this Block.
+- `@Deprecated ItemStack getPickBlock(MovingObjectPosition target, World world, BlockPos pos)`
+- `ItemStack getPickBlock(MovingObjectPosition target, World world, BlockPos pos, EntityPlayer player)` — Called when a user uses the creative pick block button on this block
+- `float getPlayerRelativeBlockHardness(EntityPlayer playerIn, World worldIn, BlockPos pos)` — Get the hardness of this Block relative to the ability of the given player
+- `java.lang.String getRegistryName()` — A unique identifier for this block, if this block is registered in the game registry it will return that name.
+- `int getRenderColor(IBlockState state)`
+- `int getRenderType()` — The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
+- `AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)`
+- `static IBlockState getStateById(int id)` — Get a BlockState by it's ID (see getStateId)
+- `IBlockState getStateForEntityRender(IBlockState state)` — Possibly modify the given BlockState before rendering it on an Entity (Minecarts, Endermen, ...)
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `static int getStateId(IBlockState state)` — Get a unique ID for the given BlockState, containing both BlockID and metadata
+- `int getStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> list)` — returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+- `boolean getTickRandomly()` — Returns whether or not this block is of a type that needs random ticking.
+- `java.lang.String getUnlocalizedName()` — Returns the unlocalized name of the block with "tile." appended to the front.
+- `boolean getUseNeighborBrightness()` — Should block use the brightest neighbor light value as its own
+- `EnumFacing [] getValidRotations(World world, BlockPos pos)` — Get the rotations that can apply to the block at the specified coordinates.
+- `boolean getWeakChanges(IBlockAccess world, BlockPos pos)` — If this block should be notified of weak changes.
+- `int getWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
+- `void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)`
+- `boolean hasComparatorInputOverride()`
+- `@Deprecated boolean hasTileEntity()`
+- `boolean hasTileEntity(IBlockState state)` — Called throughout the code as a replacement for block instanceof BlockContainer Moving this to the Block base class allows for mods that wish to extend vanilla blocks, and also want to have a tile entity on that block, may.
+- `java.lang.Boolean isAABBInsideMaterial(World world, BlockPos pos, AxisAlignedBB boundingBox, Material materialIn)` — Called when boats or fishing hooks are inside the block to check if they are inside the material requested.
+- `boolean isAir(IBlockAccess world, BlockPos pos)` — Determines this block should be treated as an air block by the rest of the code.
+- `boolean isAssociatedBlock(Block other)`
+- `boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon)` — Determines if this block can be used as the base of a beacon.
+- `boolean isBed(IBlockAccess world, BlockPos pos, Entity player)` — Determines if this block is classified as a Bed, Allowing players to sleep in it, though the block has to specifically perform the sleeping functionality in it's activated event.
+- `boolean isBedFoot(IBlockAccess world, BlockPos pos)` — Determines if the current block is the foot half of the bed.
+- `boolean isBlockNormalCube()` — Indicate if a material is a normal solid opaque cube
+- `boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side)` — Whether this Block is solid on the given Side
+- `boolean isBurning(IBlockAccess world, BlockPos pos)` — Determines if this block should set fire and deal fire damage to entities coming into contact with it.
+- `boolean isCollidable()` — Returns if this block is collidable (only used by Fire).
+- `java.lang.Boolean isEntityInsideMaterial(World world, BlockPos blockpos, IBlockState iblockstate, Entity entity, double yToTest, Material materialIn, boolean testingHead)` — Called when the entity is inside this block, may be used to determined if the entity can breathing, display material overlays, or if the entity can swim inside a block.
+- `static boolean isEqualTo(Block blockIn, Block other)`
+- `boolean isFertile(World world, BlockPos pos)` — Checks if this soil is fertile, typically this means that growth rates of plants on this soil will be slightly sped up.
+- `boolean isFireSource(World world, BlockPos pos, EnumFacing side)` — Currently only called by fire when it is on top of this block.
+- `boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)` — Called when fire is updating, checks if a block face can catch fire.
+- `boolean isFlowerPot()` — Returns true only if block is flowerPot
+- `boolean isFoliage(IBlockAccess world, BlockPos pos)` — Used by getTopSolidOrLiquidBlock while placing biome decorations, villages, etc Also used to determine if the player can spawn on this block.
+- `boolean isFullBlock()`
+- `boolean isFullCube()`
+- `boolean isLadder(IBlockAccess world, BlockPos pos, EntityLivingBase entity)` — Checks if a player or entity can use this block to 'climb' like a ladder.
+- `boolean isLeaves(IBlockAccess world, BlockPos pos)` — Determines if this block is considered a leaf block, used to apply the leaf decay and generation system.
+- `boolean isNormalCube()` — Used for nearly all game logic (non-rendering) purposes.
+- `boolean isNormalCube(IBlockAccess world, BlockPos pos)` — Return true if the block is a normal, solid cube.
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `boolean isPassable(IBlockAccess worldIn, BlockPos pos)`
+- `boolean isReplaceable(World worldIn, BlockPos pos)` — Whether this Block can be replaced directly by other blocks (true for e.g. tall grass)
+- `boolean isReplaceableOreGen(World world, BlockPos pos, <any> target)` — Determines if the current block is replaceable by Ore veins during world generation.
+- `boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)` — Checks if the block is a solid face on the given side, used by placement logic.
+- `boolean isToolEffective(java.lang.String type, IBlockState state)` — Checks if the specified tool type is efficient on this block, meaning that it digs at full speed.
+- `boolean isTranslucent()` — Used in the renderer to apply ambient occlusion
+- `boolean isVisuallyOpaque()`
+- `boolean isWood(IBlockAccess world, BlockPos pos)`
+- `Vec3 modifyAcceleration(World worldIn, BlockPos pos, Entity entityIn, Vec3 motion)`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)`
+- `void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn)` — Called when this Block is destroyed by an Explosion
+- `void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)` — Called when a player destroys this Block
+- `boolean onBlockEventReceived(World worldIn, BlockPos pos, IBlockState state, int eventID, int eventParam)` — Called on both Client and Server when World#addBlockEvent is called
+- `void onBlockExploded(World world, BlockPos pos, Explosion explosion)` — Called when the block is destroyed by an explosion.
+- `void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
+- `IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)` — Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the IBlockstate
+- `void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)` — Called by ItemBlocks after a block is set in the world, to allow post-place logic
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn)` — Triggered whenever an entity collides with this block (enters into the block)
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)` — Called When an Entity Collided with the Block
+- `void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)` — Block's chance to react to a living entity falling on it.
+- `void onLanded(World worldIn, Entity entityIn)` — Called when an Entity lands on this Block.
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)` — Called when a tile entity on a side of this block changes is created or is destroyed.
+- `void onPlantGrow(World world, BlockPos pos, BlockPos source)` — Called when a plant grows on this block, only implemented for saplings using the WorldGen*Trees classes right now.
+- `int quantityDropped(IBlockState state, int fortune, java.util.Random random)` — State and fortune sensitive version, this replaces the old (int meta, Random rand) version in 1.1.
+- `int quantityDropped(java.util.Random random)` — Returns the quantity of items to drop on block destruction.
+- `int quantityDroppedWithBonus(int fortune, java.util.Random random)` — Get the quantity dropped based on the given fortune level
+- `void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `void randomTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random random)` — Called randomly when setTickRandomly is set to true (used by e.g. crops to grow, etc.)
+- `boolean recolorBlock(World world, BlockPos pos, EnumFacing side, EnumDyeColor color)` — Common way to recolor a block with an external tool
+- `static void registerBlocks()`
+- `boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)` — Called when a player removes a block.
+- `boolean requiresUpdates()`
+- `boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)` — Rotate the block.
+- `void setBedOccupied(IBlockAccess world, BlockPos pos, EntityPlayer player, boolean occupied)` — Called when a user either starts or stops sleeping in the bed.
+- `void setBlockBounds(float minX, float minY, float minZ, float maxX, float maxY, float maxZ)`
+- `void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)`
+- `void setBlockBoundsForItemRender()` — Sets the block's bounds for rendering it as an item
+- `Block setBlockUnbreakable()`
+- `Block setCreativeTab(CreativeTabs tab)`
+- `protected void setDefaultState(IBlockState state)`
+- `Block setHardness(float hardness)` — Sets how many hits it takes to break a block.
+- `void setHarvestLevel(java.lang.String toolClass, int level)` — Sets or removes the tool and level required to harvest this block.
+- `void setHarvestLevel(java.lang.String toolClass, int level, IBlockState state)` — Sets or removes the tool and level required to harvest this block.
+- `Block setLightLevel(float value)` — Sets the light value that the block emits.
+- `Block setLightOpacity(int opacity)` — Sets how much light is blocked going through this block.
+- `Block setRegistryName(ResourceLocation name)`
+- `Block setRegistryName(java.lang.String name)` — Sets a unique name for this Block.
+- `Block setRegistryName(java.lang.String modID, java.lang.String name)`
+- `Block setResistance(float resistance)` — Sets the the blocks resistance to explosions.
+- `Block setStepSound(Block.SoundType sound)` — Sets the footstep sound for the block.
+- `Block setTickRandomly(boolean shouldTick)` — Sets whether this block type will receive random update ticks
+- `Block setUnlocalizedName(java.lang.String name)`
+- `boolean shouldCheckWeakPower(IBlockAccess world, BlockPos pos, EnumFacing side)` — Called to determine whether to allow the a block to handle its own indirect power rather than using the default rules.
+- `boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
+- `static void spawnAsEntity(World worldIn, BlockPos pos, ItemStack stack)` — Spawns the given ItemStack as an EntityItem into the World at the given position
+- `int tickRate(World worldIn)` — How many world ticks before ticking
+- `java.lang.String toString()`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Deprecated.
+- `static ObjectIntIdentityMap<IBlockState> BLOCK_STATE_IDS`
+- `protected float blockHardness` — Indicates how many hits it takes to break a block.
+- `protected Material blockMaterial`
+- `float blockParticleGravity`
+- `static RegistryNamespacedDefaultedByKey<ResourceLocation, Block> blockRegistry`
+- `protected float blockResistance` — Indicates how much this block can resist explosions
+- `protected BlockState blockState`
+- `protected static java.lang.ThreadLocal<java.util.List<ItemStack>> capturedDrops`
+- `protected static java.lang.ThreadLocal<java.lang.Boolean> captureDrops`
+- `RegistryDelegate<Block> delegate`
+- `protected boolean enableStats`
+- `protected MapColor field_181083_K`
+- `protected boolean fullBlock`
+- `protected java.lang.ThreadLocal<EntityPlayer> harvesters`
+- `protected boolean isBlockContainer` — true if the Block contains a Tile Entity
+- `protected int lightOpacity` — How much light is subtracted for going through this block
+- `protected int lightValue` — Amount of light emitted
+- `protected double maxX`
+- `protected double maxY`
+- `protected double maxZ`
+- `protected double minX`
+- `protected double minY`
+- `protected double minZ`
+- `protected boolean needsRandomTick` — Flags whether or not this block is of a type that needs random ticking.
+- `protected static java.util.Random RANDOM`
+- `static Block.SoundType SLIME_SOUND`
+- `float slipperiness` — Determines how much velocity is maintained while moving on top of this block
+- `static Block.SoundType soundTypeAnvil`
+- `static Block.SoundType soundTypeCloth`
+- `static Block.SoundType soundTypeGlass`
+- `static Block.SoundType soundTypeGrass`
+- `static Block.SoundType soundTypeGravel` — the gravel sound type
+- `static Block.SoundType soundTypeLadder`
+- `static Block.SoundType soundTypeMetal`
+- `static Block.SoundType soundTypePiston`
+- `static Block.SoundType soundTypeSand`
+- `static Block.SoundType soundTypeSnow`
+- `static Block.SoundType soundTypeStone`
+- `static Block.SoundType soundTypeWood` — the wood sound type
+- `Block.SoundType stepSound` — Sound of stepping on the block
+- `protected boolean translucent`
+- `protected boolean useNeighborBrightness` — Flag if block should use the brightest neighbor light value as its own

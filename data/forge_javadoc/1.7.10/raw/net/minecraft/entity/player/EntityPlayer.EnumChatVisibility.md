@@ -1,22 +1,28 @@
 ---
 title: "EntityPlayer.EnumChatVisibility"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum EntityPlayer.EnumChatVisibility extends java.lang.Enum<EntityPlayer.EnumChatVisibility>"
 package: "net/minecraft/entity/player"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/entity/player/EntityPlayer.EnumChatVisibility.html"
 sourceType: javadoc
 ---
 
 # EntityPlayer.EnumChatVisibility
 
+**Inheritance:** java.lang.Object → java.lang.Enum<EntityPlayer.EnumChatVisibility> → net.minecraft.entity.player.EntityPlayer.EnumChatVisibility
+
+## Class signature
+
+```java
+public static enum EntityPlayer.EnumChatVisibility extends java.lang.Enum<EntityPlayer.EnumChatVisibility>
+```
+
 ## Methods
 
-- `public static EntityPlayer.EnumChatVisibility [] values()`
-- `public static EntityPlayer.EnumChatVisibility valueOf(java.lang.String name)`
-- `public int getChatVisibility()`
-- `public static EntityPlayer.EnumChatVisibility getEnumChatVisibility(int p_151426_0_)`
-- `public java.lang.String getResourceKey()`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `int getChatVisibility()`
+- `static EntityPlayer.EnumChatVisibility getEnumChatVisibility(int p_151426_0_)`
+- `java.lang.String getResourceKey()`
+- `static EntityPlayer.EnumChatVisibility valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static EntityPlayer.EnumChatVisibility [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

@@ -1,5 +1,7 @@
 # LanguageManager
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.LanguageManager
+
 ## Class signature
 
 ```java
@@ -8,14 +10,18 @@ public class LanguageManager extends java.lang.Object implements IResourceManage
 
 ## Constructors
 
-- `public LanguageManager( MetadataSerializer theMetadataSerializerIn, java.lang.String currentLanguageIn)`
+- `LanguageManager(MetadataSerializer theMetadataSerializerIn, java.lang.String currentLanguageIn)`
 
 ## Methods
 
-- `public void parseLanguageMetadata(java.util.List< IResourcePack > resourcesPacks)`
-- `public void onResourceManagerReload( IResourceManager resourceManager)`
-- `public boolean isCurrentLocaleUnicode()`
-- `public boolean isCurrentLanguageBidirectional()`
-- `public void setCurrentLanguage( Language currentLanguageIn)`
-- `public Language getCurrentLanguage()`
-- `public java.util.SortedSet< Language > getLanguages()`
+- `Language getCurrentLanguage()`
+- `java.util.SortedSet<Language> getLanguages()`
+- `boolean isCurrentLanguageBidirectional()`
+- `boolean isCurrentLocaleUnicode()`
+- `void onResourceManagerReload(IResourceManager resourceManager)`
+- `void parseLanguageMetadata(java.util.List<IResourcePack> resourcesPacks)`
+- `void setCurrentLanguage(Language currentLanguageIn)`
+
+## Fields
+
+- `protected static Locale CURRENT_LOCALE`

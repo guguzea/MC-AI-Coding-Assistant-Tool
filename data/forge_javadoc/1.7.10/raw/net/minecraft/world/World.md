@@ -3,11 +3,15 @@ title: "World"
 description: "public abstract class World extends java.lang.Object implements IBlockAccess"
 package: "net/minecraft/world"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/world/World.html"
 sourceType: javadoc
 ---
 
 # World
+
+**Inheritance:** java.lang.Object → net.minecraft.world.World
 
 ## Class signature
 
@@ -17,128 +21,231 @@ public abstract class World extends java.lang.Object implements IBlockAccess
 
 ## Constructors
 
-- `public World( ISaveHandler p_i45368_1_, java.lang.String p_i45368_2_, WorldProvider p_i45368_3_, WorldSettings p_i45368_4_, Profiler p_i45368_5_)`
-- `public World( ISaveHandler p_i45369_1_, java.lang.String p_i45369_2_, WorldSettings p_i45369_3_, WorldProvider p_i45369_4_, Profiler p_i45369_5_)`
+- `World(ISaveHandler p_i45368_1_, java.lang.String p_i45368_2_, WorldProvider p_i45368_3_, WorldSettings p_i45368_4_, Profiler p_i45368_5_)`
+- `World(ISaveHandler p_i45369_1_, java.lang.String p_i45369_2_, WorldSettings p_i45369_3_, WorldProvider p_i45369_4_, Profiler p_i45369_5_)`
 
 ## Methods
 
-- `public BiomeGenBase getBiomeGenForCoords(int p_72807_1_, int p_72807_2_)`
-- `public WorldChunkManager getWorldChunkManager()`
-- `protected abstract IChunkProvider createChunkProvider()`
-- `protected void initialize( WorldSettings p_72963_1_)`
-- `public void setSpawnLocation()`
-- `public Block getTopBlock(int p_147474_1_, int p_147474_2_)`
-- `public Block getBlock(int p_147439_1_, int p_147439_2_, int p_147439_3_)`
-- `public boolean isAirBlock(int p_147437_1_, int p_147437_2_, int p_147437_3_)`
-- `public boolean blockExists(int p_72899_1_, int p_72899_2_, int p_72899_3_)`
-- `public boolean doChunksNearChunkExist(int p_72873_1_, int p_72873_2_, int p_72873_3_, int p_72873_4_)`
-- `public boolean checkChunksExist(int p_72904_1_, int p_72904_2_, int p_72904_3_, int p_72904_4_, int p_72904_5_, int p_72904_6_)`
+- `void addBlockEvent(int p_147452_1_, int p_147452_2_, int p_147452_3_, Block p_147452_4_, int p_147452_5_, int p_147452_6_)`
+- `void addLoadedEntities(java.util.List p_72868_1_)`
+- `boolean addWeatherEffect(Entity p_72942_1_)`
+- `void addWorldAccess(IWorldAccess p_72954_1_)`
+- `CrashReportCategory addWorldInfoToCrashReport(CrashReport p_72914_1_)`
+- `boolean blockExists(int p_72899_1_, int p_72899_2_, int p_72899_3_)`
+- `void calculateInitialSkylight()`
+- `int calculateSkylightSubtracted(float p_72967_1_)`
+- `boolean canBlockFreeze(int p_72834_1_, int p_72834_2_, int p_72834_3_, boolean p_72834_4_)`
+- `boolean canBlockSeeTheSky(int p_72937_1_, int p_72937_2_, int p_72937_3_)`
+- `boolean canLightningStrikeAt(int p_72951_1_, int p_72951_2_, int p_72951_3_)`
+- `boolean canMineBlock(EntityPlayer p_72962_1_, int p_72962_2_, int p_72962_3_, int p_72962_4_)`
+- `boolean canPlaceEntityOnSide(Block p_147472_1_, int p_147472_2_, int p_147472_3_, int p_147472_4_, boolean p_147472_5_, int p_147472_6_, Entity p_147472_7_, ItemStack p_147472_8_)`
+- `boolean checkBlockCollision(AxisAlignedBB p_72829_1_)`
+- `boolean checkChunksExist(int p_72904_1_, int p_72904_2_, int p_72904_3_, int p_72904_4_, int p_72904_5_, int p_72904_6_)`
+- `boolean checkNoEntityCollision(AxisAlignedBB p_72855_1_)`
+- `boolean checkNoEntityCollision(AxisAlignedBB p_72917_1_, Entity p_72917_2_)`
+- `void checkSessionLock()`
 - `protected boolean chunkExists(int p_72916_1_, int p_72916_2_)`
-- `public Chunk getChunkFromBlockCoords(int p_72938_1_, int p_72938_2_)`
-- `public Chunk getChunkFromChunkCoords(int p_72964_1_, int p_72964_2_)`
-- `public boolean setBlock(int p_147465_1_, int p_147465_2_, int p_147465_3_, Block p_147465_4_, int p_147465_5_, int p_147465_6_)`
-- `public int getBlockMetadata(int p_72805_1_, int p_72805_2_, int p_72805_3_)`
-- `public boolean setBlockMetadataWithNotify(int p_72921_1_, int p_72921_2_, int p_72921_3_, int p_72921_4_, int p_72921_5_)`
-- `public boolean setBlockToAir(int p_147468_1_, int p_147468_2_, int p_147468_3_)`
-- `public boolean func_147480_a(int p_147480_1_, int p_147480_2_, int p_147480_3_, boolean p_147480_4_)`
-- `public boolean setBlock(int p_147449_1_, int p_147449_2_, int p_147449_3_, Block p_147449_4_)`
-- `public void markBlockForUpdate(int p_147471_1_, int p_147471_2_, int p_147471_3_)`
-- `public void notifyBlockChange(int p_147444_1_, int p_147444_2_, int p_147444_3_, Block p_147444_4_)`
-- `public void markBlocksDirtyVertical(int p_72975_1_, int p_72975_2_, int p_72975_3_, int p_72975_4_)`
-- `public void markBlockRangeForRenderUpdate(int p_147458_1_, int p_147458_2_, int p_147458_3_, int p_147458_4_, int p_147458_5_, int p_147458_6_)`
-- `public void notifyBlocksOfNeighborChange(int p_147459_1_, int p_147459_2_, int p_147459_3_, Block p_147459_4_)`
-- `public void notifyBlocksOfNeighborChange(int p_147441_1_, int p_147441_2_, int p_147441_3_, Block p_147441_4_, int p_147441_5_)`
-- `public void notifyBlockOfNeighborChange(int p_147460_1_, int p_147460_2_, int p_147460_3_, Block p_147460_4_)`
-- `public boolean isBlockTickScheduledThisTick(int p_147477_1_, int p_147477_2_, int p_147477_3_, Block p_147477_4_)`
-- `public boolean canBlockSeeTheSky(int p_72937_1_, int p_72937_2_, int p_72937_3_)`
-- `public int getFullBlockLightValue(int p_72883_1_, int p_72883_2_, int p_72883_3_)`
-- `public int getBlockLightValue(int p_72957_1_, int p_72957_2_, int p_72957_3_)`
-- `public int getBlockLightValue_do(int p_72849_1_, int p_72849_2_, int p_72849_3_, boolean p_72849_4_)`
-- `public int getHeightValue(int p_72976_1_, int p_72976_2_)`
-- `public int getChunkHeightMapMinimum(int p_82734_1_, int p_82734_2_)`
-- `public int getSkyBlockTypeBrightness( EnumSkyBlock p_72925_1_, int p_72925_2_, int p_72925_3_, int p_72925_4_)`
-- `public int getSavedLightValue( EnumSkyBlock p_72972_1_, int p_72972_2_, int p_72972_3_, int p_72972_4_)`
-- `public void setLightValue( EnumSkyBlock p_72915_1_, int p_72915_2_, int p_72915_3_, int p_72915_4_, int p_72915_5_)`
-- `public void func_147479_m(int p_147479_1_, int p_147479_2_, int p_147479_3_)`
-- `public int getLightBrightnessForSkyBlocks(int p_72802_1_, int p_72802_2_, int p_72802_3_, int p_72802_4_)`
-- `public float getLightBrightness(int p_72801_1_, int p_72801_2_, int p_72801_3_)`
-- `public boolean isDaytime()`
-- `public MovingObjectPosition rayTraceBlocks( Vec3 p_72933_1_, Vec3 p_72933_2_)`
-- `public MovingObjectPosition rayTraceBlocks( Vec3 p_72901_1_, Vec3 p_72901_2_, boolean p_72901_3_)`
-- `public MovingObjectPosition func_147447_a( Vec3 p_147447_1_, Vec3 p_147447_2_, boolean p_147447_3_, boolean p_147447_4_, boolean p_147447_5_)`
-- `public void playSoundAtEntity( Entity p_72956_1_, java.lang.String p_72956_2_, float p_72956_3_, float p_72956_4_)`
-- `public void playSoundToNearExcept( EntityPlayer p_85173_1_, java.lang.String p_85173_2_, float p_85173_3_, float p_85173_4_)`
-- `public void playSoundEffect(double p_72908_1_, double p_72908_3_, double p_72908_5_, java.lang.String p_72908_7_, float p_72908_8_, float p_72908_9_)`
-- `public void playSound(double p_72980_1_, double p_72980_3_, double p_72980_5_, java.lang.String p_72980_7_, float p_72980_8_, float p_72980_9_, boolean p_72980_10_)`
-- `public void playRecord(java.lang.String p_72934_1_, int p_72934_2_, int p_72934_3_, int p_72934_4_)`
-- `public void spawnParticle(java.lang.String p_72869_1_, double p_72869_2_, double p_72869_4_, double p_72869_6_, double p_72869_8_, double p_72869_10_, double p_72869_12_)`
-- `public boolean addWeatherEffect( Entity p_72942_1_)`
-- `public boolean spawnEntityInWorld( Entity p_72838_1_)`
-- `public void onEntityAdded( Entity p_72923_1_)`
-- `public void onEntityRemoved( Entity p_72847_1_)`
-- `public void removeEntity( Entity p_72900_1_)`
-- `public void removePlayerEntityDangerously( Entity p_72973_1_)`
-- `public void addWorldAccess( IWorldAccess p_72954_1_)`
-- `public java.util.List getCollidingBoundingBoxes( Entity p_72945_1_, AxisAlignedBB p_72945_2_)`
-- `public java.util.List func_147461_a( AxisAlignedBB p_147461_1_)`
-- `public int calculateSkylightSubtracted(float p_72967_1_)`
-- `public void removeWorldAccess( IWorldAccess p_72848_1_)`
-- `public float getSunBrightness(float p_72971_1_)`
-- `public Vec3 getSkyColor( Entity p_72833_1_, float p_72833_2_)`
-- `public float getCelestialAngle(float p_72826_1_)`
-- `public int getMoonPhase()`
-- `public float getCurrentMoonPhaseFactor()`
-- `public float getCelestialAngleRadians(float p_72929_1_)`
-- `public Vec3 getCloudColour(float p_72824_1_)`
-- `public Vec3 getFogColor(float p_72948_1_)`
-- `public int getPrecipitationHeight(int p_72874_1_, int p_72874_2_)`
-- `public int getTopSolidOrLiquidBlock(int p_72825_1_, int p_72825_2_)`
-- `public float getStarBrightness(float p_72880_1_)`
-- `public void scheduleBlockUpdate(int p_147464_1_, int p_147464_2_, int p_147464_3_, Block p_147464_4_, int p_147464_5_)`
-- `public void scheduleBlockUpdateWithPriority(int p_147454_1_, int p_147454_2_, int p_147454_3_, Block p_147454_4_, int p_147454_5_, int p_147454_6_)`
-- `public void func_147446_b(int p_147446_1_, int p_147446_2_, int p_147446_3_, Block p_147446_4_, int p_147446_5_, int p_147446_6_)`
-- `public void updateEntities()`
-- `public void func_147448_a(java.util.Collection p_147448_1_)`
-- `public void updateEntity( Entity p_72870_1_)`
-- `public void updateEntityWithOptionalForce( Entity p_72866_1_, boolean p_72866_2_)`
-- `public boolean checkNoEntityCollision( AxisAlignedBB p_72855_1_)`
-- `public boolean checkNoEntityCollision( AxisAlignedBB p_72917_1_, Entity p_72917_2_)`
-- `public boolean checkBlockCollision( AxisAlignedBB p_72829_1_)`
-- `public boolean isAnyLiquid( AxisAlignedBB p_72953_1_)`
-- `public boolean func_147470_e( AxisAlignedBB p_147470_1_)`
-- `public boolean handleMaterialAcceleration( AxisAlignedBB p_72918_1_, Material p_72918_2_, Entity p_72918_3_)`
-- `public boolean isMaterialInBB( AxisAlignedBB p_72875_1_, Material p_72875_2_)`
-- `public boolean isAABBInMaterial( AxisAlignedBB p_72830_1_, Material p_72830_2_)`
-- `public Explosion createExplosion( Entity p_72876_1_, double p_72876_2_, double p_72876_4_, double p_72876_6_, float p_72876_8_, boolean p_72876_9_)`
-- `public Explosion newExplosion( Entity p_72885_1_, double p_72885_2_, double p_72885_4_, double p_72885_6_, float p_72885_8_, boolean p_72885_9_, boolean p_72885_10_)`
-- `public float getBlockDensity( Vec3 p_72842_1_, AxisAlignedBB p_72842_2_)`
-- `public boolean extinguishFire( EntityPlayer p_72886_1_, int p_72886_2_, int p_72886_3_, int p_72886_4_, int p_72886_5_)`
-- `public java.lang.String getDebugLoadedEntities()`
-- `public java.lang.String getProviderName()`
-- `public TileEntity getTileEntity(int p_147438_1_, int p_147438_2_, int p_147438_3_)`
-- `public void setTileEntity(int p_147455_1_, int p_147455_2_, int p_147455_3_, TileEntity p_147455_4_)`
-- `public void removeTileEntity(int p_147475_1_, int p_147475_2_, int p_147475_3_)`
-- `public void func_147457_a( TileEntity p_147457_1_)`
-- `public boolean func_147469_q(int p_147469_1_, int p_147469_2_, int p_147469_3_)`
-- `public static boolean doesBlockHaveSolidTopSurface( IBlockAccess p_147466_0_, int p_147466_1_, int p_147466_2_, int p_147466_3_)`
-- `public boolean isBlockNormalCubeDefault(int p_147445_1_, int p_147445_2_, int p_147445_3_, boolean p_147445_4_)`
-- `public void calculateInitialSkylight()`
-- `public void setAllowedSpawnTypes(boolean p_72891_1_, boolean p_72891_2_)`
-- `public void tick()`
-- `protected void updateWeather()`
-- `protected void setActivePlayerChunksAndCheckLight()`
-- `protected abstract int func_152379_p()`
-- `protected void func_147467_a(int p_147467_1_, int p_147467_2_, Chunk p_147467_3_)`
+- `int countEntities(java.lang.Class p_72907_1_)`
+- `protected abstract IChunkProvider createChunkProvider()`
+- `Explosion createExplosion(Entity p_72876_1_, double p_72876_2_, double p_72876_4_, double p_72876_6_, float p_72876_8_, boolean p_72876_9_)`
+- `void destroyBlockInWorldPartially(int p_147443_1_, int p_147443_2_, int p_147443_3_, int p_147443_4_, int p_147443_5_)`
+- `boolean doChunksNearChunkExist(int p_72873_1_, int p_72873_2_, int p_72873_3_, int p_72873_4_)`
+- `static boolean doesBlockHaveSolidTopSurface(IBlockAccess p_147466_0_, int p_147466_1_, int p_147466_2_, int p_147466_3_)`
+- `boolean extendedLevelsInChunkCache()`
+- `boolean extinguishFire(EntityPlayer p_72886_1_, int p_72886_2_, int p_72886_3_, int p_72886_4_, int p_72886_5_)`
+- `ChunkPosition findClosestStructure(java.lang.String p_147440_1_, int p_147440_2_, int p_147440_3_, int p_147440_4_)`
+- `Entity findNearestEntityWithinAABB(java.lang.Class p_72857_1_, AxisAlignedBB p_72857_2_, Entity p_72857_3_)`
+- `void func_147446_b(int p_147446_1_, int p_147446_2_, int p_147446_3_, Block p_147446_4_, int p_147446_5_, int p_147446_6_)`
+- `MovingObjectPosition func_147447_a(Vec3 p_147447_1_, Vec3 p_147447_2_, boolean p_147447_3_, boolean p_147447_4_, boolean p_147447_5_)`
+- `void func_147448_a(java.util.Collection p_147448_1_)`
+- `void func_147450_X()`
+- `boolean func_147451_t(int p_147451_1_, int p_147451_2_, int p_147451_3_)`
+- `void func_147453_f(int p_147453_1_, int p_147453_2_, int p_147453_3_, Block p_147453_4_)`
 - `protected void func_147456_g()`
-- `public boolean isBlockFreezable(int p_72884_1_, int p_72884_2_, int p_72884_3_)`
-- `public boolean isBlockFreezableNaturally(int p_72850_1_, int p_72850_2_, int p_72850_3_)`
-- `public boolean canBlockFreeze(int p_72834_1_, int p_72834_2_, int p_72834_3_, boolean p_72834_4_)`
-- `public boolean func_147478_e(int p_147478_1_, int p_147478_2_, int p_147478_3_, boolean p_147478_4_)`
-- `public boolean func_147451_t(int p_147451_1_, int p_147451_2_, int p_147451_3_)`
-- `public boolean updateLightByType( EnumSkyBlock p_147463_1_, int p_147463_2_, int p_147463_3_, int p_147463_4_)`
-- `public boolean tickUpdates(boolean p_72955_1_)`
-- `public java.util.List getPendingBlockUpdates( Chunk p_72920_1_, boolean p_72920_2_)`
-- `public java.util.List getEntitiesWithinAABBExcludingEntity( Entity p_72839_1_, AxisAlignedBB p_72839_2_)`
-- `public java.util.List getEntitiesWithinAABBExcludingEntity( Entity p_94576_1_, AxisAlignedBB p_94576_2_, IEntitySelector p_94576_3_)`
-- `public java.util.List getEntitiesWithinAABB(java.lang.Class p_72872_1_, AxisAlignedBB p_72872_2_)`
-- `public java.util.List selectEntitiesWithinAABB(java.lang.Class p_82733_1_, AxisAlignedBB p_82733_2_, IEntitySelector p_82733_3_)`
+- `void func_147457_a(TileEntity p_147457_1_)`
+- `java.util.List func_147461_a(AxisAlignedBB p_147461_1_)`
+- `float func_147462_b(double p_147462_1_, double p_147462_3_, double p_147462_5_)`
+- `protected void func_147467_a(int p_147467_1_, int p_147467_2_, Chunk p_147467_3_)`
+- `boolean func_147469_q(int p_147469_1_, int p_147469_2_, int p_147469_3_)`
+- `boolean func_147470_e(AxisAlignedBB p_147470_1_)`
+- `float func_147473_B(int p_147473_1_, int p_147473_2_, int p_147473_3_)`
+- `boolean func_147478_e(int p_147478_1_, int p_147478_2_, int p_147478_3_, boolean p_147478_4_)`
+- `void func_147479_m(int p_147479_1_, int p_147479_2_, int p_147479_3_)`
+- `boolean func_147480_a(int p_147480_1_, int p_147480_2_, int p_147480_3_, boolean p_147480_4_)`
+- `EntityPlayer func_152378_a(java.util.UUID p_152378_1_)`
+- `protected abstract int func_152379_p()`
+- `void func_82738_a(long p_82738_1_)`
+- `int getActualHeight()`
+- `BiomeGenBase getBiomeGenForCoords(int p_72807_1_, int p_72807_2_)`
+- `Block getBlock(int p_147439_1_, int p_147439_2_, int p_147439_3_)`
+- `float getBlockDensity(Vec3 p_72842_1_, AxisAlignedBB p_72842_2_)`
+- `int getBlockLightValue_do(int p_72849_1_, int p_72849_2_, int p_72849_3_, boolean p_72849_4_)`
+- `int getBlockLightValue(int p_72957_1_, int p_72957_2_, int p_72957_3_)`
+- `int getBlockMetadata(int p_72805_1_, int p_72805_2_, int p_72805_3_)`
+- `int getBlockPowerInput(int p_94577_1_, int p_94577_2_, int p_94577_3_)`
+- `float getCelestialAngle(float p_72826_1_)`
+- `float getCelestialAngleRadians(float p_72929_1_)`
+- `Chunk getChunkFromBlockCoords(int p_72938_1_, int p_72938_2_)`
+- `Chunk getChunkFromChunkCoords(int p_72964_1_, int p_72964_2_)`
+- `int getChunkHeightMapMinimum(int p_82734_1_, int p_82734_2_)`
+- `IChunkProvider getChunkProvider()`
+- `EntityPlayer getClosestPlayer(double p_72977_1_, double p_72977_3_, double p_72977_5_, double p_72977_7_)`
+- `EntityPlayer getClosestPlayerToEntity(Entity p_72890_1_, double p_72890_2_)`
+- `EntityPlayer getClosestVulnerablePlayer(double p_72846_1_, double p_72846_3_, double p_72846_5_, double p_72846_7_)`
+- `EntityPlayer getClosestVulnerablePlayerToEntity(Entity p_72856_1_, double p_72856_2_)`
+- `Vec3 getCloudColour(float p_72824_1_)`
+- `java.util.List getCollidingBoundingBoxes(Entity p_72945_1_, AxisAlignedBB p_72945_2_)`
+- `java.util.Calendar getCurrentDate()`
+- `float getCurrentMoonPhaseFactor()`
+- `java.lang.String getDebugLoadedEntities()`
+- `java.util.List getEntitiesWithinAABB(java.lang.Class p_72872_1_, AxisAlignedBB p_72872_2_)`
+- `java.util.List getEntitiesWithinAABBExcludingEntity(Entity p_72839_1_, AxisAlignedBB p_72839_2_)`
+- `java.util.List getEntitiesWithinAABBExcludingEntity(Entity p_94576_1_, AxisAlignedBB p_94576_2_, IEntitySelector p_94576_3_)`
+- `abstract Entity getEntityByID(int p_73045_1_)`
+- `PathEntity getEntityPathToXYZ(Entity p_72844_1_, int p_72844_2_, int p_72844_3_, int p_72844_4_, float p_72844_5_, boolean p_72844_6_, boolean p_72844_7_, boolean p_72844_8_, boolean p_72844_9_)`
+- `Vec3 getFogColor(float p_72948_1_)`
+- `int getFullBlockLightValue(int p_72883_1_, int p_72883_2_, int p_72883_3_)`
+- `GameRules getGameRules()`
+- `int getHeight()`
+- `int getHeightValue(int p_72976_1_, int p_72976_2_)`
+- `double getHorizon()`
+- `int getIndirectPowerLevelTo(int p_72878_1_, int p_72878_2_, int p_72878_3_, int p_72878_4_)`
+- `boolean getIndirectPowerOutput(int p_94574_1_, int p_94574_2_, int p_94574_3_, int p_94574_4_)`
+- `float getLightBrightness(int p_72801_1_, int p_72801_2_, int p_72801_3_)`
+- `int getLightBrightnessForSkyBlocks(int p_72802_1_, int p_72802_2_, int p_72802_3_, int p_72802_4_)`
+- `java.util.List getLoadedEntityList()`
+- `int getMoonPhase()`
+- `PathEntity getPathEntityToEntity(Entity p_72865_1_, Entity p_72865_2_, float p_72865_3_, boolean p_72865_4_, boolean p_72865_5_, boolean p_72865_6_, boolean p_72865_7_)`
+- `java.util.List getPendingBlockUpdates(Chunk p_72920_1_, boolean p_72920_2_)`
+- `EntityPlayer getPlayerEntityByName(java.lang.String p_72924_1_)`
+- `int getPrecipitationHeight(int p_72874_1_, int p_72874_2_)`
+- `java.lang.String getProviderName()`
+- `float getRainStrength(float p_72867_1_)`
+- `int getSavedLightValue(EnumSkyBlock p_72972_1_, int p_72972_2_, int p_72972_3_, int p_72972_4_)`
+- `ISaveHandler getSaveHandler()`
+- `Scoreboard getScoreboard()`
+- `long getSeed()`
+- `int getSkyBlockTypeBrightness(EnumSkyBlock p_72925_1_, int p_72925_2_, int p_72925_3_, int p_72925_4_)`
+- `Vec3 getSkyColor(Entity p_72833_1_, float p_72833_2_)`
+- `ChunkCoordinates getSpawnPoint()`
+- `float getStarBrightness(float p_72880_1_)`
+- `int getStrongestIndirectPower(int p_94572_1_, int p_94572_2_, int p_94572_3_)`
+- `float getSunBrightness(float p_72971_1_)`
+- `TileEntity getTileEntity(int p_147438_1_, int p_147438_2_, int p_147438_3_)`
+- `Block getTopBlock(int p_147474_1_, int p_147474_2_)`
+- `int getTopSolidOrLiquidBlock(int p_72825_1_, int p_72825_2_)`
+- `long getTotalWorldTime()`
+- `int getUniqueDataId(java.lang.String p_72841_1_)`
+- `float getWeightedThunderStrength(float p_72819_1_)`
+- `WorldChunkManager getWorldChunkManager()`
+- `WorldInfo getWorldInfo()`
+- `long getWorldTime()`
+- `boolean handleMaterialAcceleration(AxisAlignedBB p_72918_1_, Material p_72918_2_, Entity p_72918_3_)`
+- `protected void initialize(WorldSettings p_72963_1_)`
+- `boolean isAABBInMaterial(AxisAlignedBB p_72830_1_, Material p_72830_2_)`
+- `boolean isAirBlock(int p_147437_1_, int p_147437_2_, int p_147437_3_)`
+- `boolean isAnyLiquid(AxisAlignedBB p_72953_1_)`
+- `boolean isBlockFreezable(int p_72884_1_, int p_72884_2_, int p_72884_3_)`
+- `boolean isBlockFreezableNaturally(int p_72850_1_, int p_72850_2_, int p_72850_3_)`
+- `boolean isBlockHighHumidity(int p_72958_1_, int p_72958_2_, int p_72958_3_)`
+- `boolean isBlockIndirectlyGettingPowered(int p_72864_1_, int p_72864_2_, int p_72864_3_)`
+- `boolean isBlockNormalCubeDefault(int p_147445_1_, int p_147445_2_, int p_147445_3_, boolean p_147445_4_)`
+- `int isBlockProvidingPowerTo(int p_72879_1_, int p_72879_2_, int p_72879_3_, int p_72879_4_)`
+- `boolean isBlockTickScheduledThisTick(int p_147477_1_, int p_147477_2_, int p_147477_3_, Block p_147477_4_)`
+- `boolean isDaytime()`
+- `boolean isMaterialInBB(AxisAlignedBB p_72875_1_, Material p_72875_2_)`
+- `boolean isRaining()`
+- `boolean isThundering()`
+- `void joinEntityInSurroundings(Entity p_72897_1_)`
+- `WorldSavedData loadItemData(java.lang.Class p_72943_1_, java.lang.String p_72943_2_)`
+- `void makeFireworks(double p_92088_1_, double p_92088_3_, double p_92088_5_, double p_92088_7_, double p_92088_9_, double p_92088_11_, NBTTagCompound p_92088_13_)`
+- `void markBlockForUpdate(int p_147471_1_, int p_147471_2_, int p_147471_3_)`
+- `void markBlockRangeForRenderUpdate(int p_147458_1_, int p_147458_2_, int p_147458_3_, int p_147458_4_, int p_147458_5_, int p_147458_6_)`
+- `void markBlocksDirtyVertical(int p_72975_1_, int p_72975_2_, int p_72975_3_, int p_72975_4_)`
+- `void markTileEntityChunkModified(int p_147476_1_, int p_147476_2_, int p_147476_3_, TileEntity p_147476_4_)`
+- `Explosion newExplosion(Entity p_72885_1_, double p_72885_2_, double p_72885_4_, double p_72885_6_, float p_72885_8_, boolean p_72885_9_, boolean p_72885_10_)`
+- `void notifyBlockChange(int p_147444_1_, int p_147444_2_, int p_147444_3_, Block p_147444_4_)`
+- `void notifyBlockOfNeighborChange(int p_147460_1_, int p_147460_2_, int p_147460_3_, Block p_147460_4_)`
+- `void notifyBlocksOfNeighborChange(int p_147459_1_, int p_147459_2_, int p_147459_3_, Block p_147459_4_)`
+- `void notifyBlocksOfNeighborChange(int p_147441_1_, int p_147441_2_, int p_147441_3_, Block p_147441_4_, int p_147441_5_)`
+- `void onEntityAdded(Entity p_72923_1_)`
+- `void onEntityRemoved(Entity p_72847_1_)`
+- `void playAuxSFX(int p_72926_1_, int p_72926_2_, int p_72926_3_, int p_72926_4_, int p_72926_5_)`
+- `void playAuxSFXAtEntity(EntityPlayer p_72889_1_, int p_72889_2_, int p_72889_3_, int p_72889_4_, int p_72889_5_, int p_72889_6_)`
+- `void playBroadcastSound(int p_82739_1_, int p_82739_2_, int p_82739_3_, int p_82739_4_, int p_82739_5_)`
+- `void playRecord(java.lang.String p_72934_1_, int p_72934_2_, int p_72934_3_, int p_72934_4_)`
+- `void playSound(double p_72980_1_, double p_72980_3_, double p_72980_5_, java.lang.String p_72980_7_, float p_72980_8_, float p_72980_9_, boolean p_72980_10_)`
+- `void playSoundAtEntity(Entity p_72956_1_, java.lang.String p_72956_2_, float p_72956_3_, float p_72956_4_)`
+- `void playSoundEffect(double p_72908_1_, double p_72908_3_, double p_72908_5_, java.lang.String p_72908_7_, float p_72908_8_, float p_72908_9_)`
+- `void playSoundToNearExcept(EntityPlayer p_85173_1_, java.lang.String p_85173_2_, float p_85173_3_, float p_85173_4_)`
+- `MovingObjectPosition rayTraceBlocks(Vec3 p_72933_1_, Vec3 p_72933_2_)`
+- `MovingObjectPosition rayTraceBlocks(Vec3 p_72901_1_, Vec3 p_72901_2_, boolean p_72901_3_)`
+- `void removeEntity(Entity p_72900_1_)`
+- `void removePlayerEntityDangerously(Entity p_72973_1_)`
+- `void removeTileEntity(int p_147475_1_, int p_147475_2_, int p_147475_3_)`
+- `void removeWorldAccess(IWorldAccess p_72848_1_)`
+- `void scheduleBlockUpdate(int p_147464_1_, int p_147464_2_, int p_147464_3_, Block p_147464_4_, int p_147464_5_)`
+- `void scheduleBlockUpdateWithPriority(int p_147454_1_, int p_147454_2_, int p_147454_3_, Block p_147454_4_, int p_147454_5_, int p_147454_6_)`
+- `java.util.List selectEntitiesWithinAABB(java.lang.Class p_82733_1_, AxisAlignedBB p_82733_2_, IEntitySelector p_82733_3_)`
+- `void sendQuittingDisconnectingPacket()`
+- `protected void setActivePlayerChunksAndCheckLight()`
+- `void setAllowedSpawnTypes(boolean p_72891_1_, boolean p_72891_2_)`
+- `boolean setBlock(int p_147449_1_, int p_147449_2_, int p_147449_3_, Block p_147449_4_)`
+- `boolean setBlock(int p_147465_1_, int p_147465_2_, int p_147465_3_, Block p_147465_4_, int p_147465_5_, int p_147465_6_)`
+- `boolean setBlockMetadataWithNotify(int p_72921_1_, int p_72921_2_, int p_72921_3_, int p_72921_4_, int p_72921_5_)`
+- `boolean setBlockToAir(int p_147468_1_, int p_147468_2_, int p_147468_3_)`
+- `void setEntityState(Entity p_72960_1_, byte p_72960_2_)`
+- `void setItemData(java.lang.String p_72823_1_, WorldSavedData p_72823_2_)`
+- `void setLightValue(EnumSkyBlock p_72915_1_, int p_72915_2_, int p_72915_3_, int p_72915_4_, int p_72915_5_)`
+- `void setRainStrength(float p_72894_1_)`
+- `java.util.Random setRandomSeed(int p_72843_1_, int p_72843_2_, int p_72843_3_)`
+- `void setSpawnLocation()`
+- `void setSpawnLocation(int p_72950_1_, int p_72950_2_, int p_72950_3_)`
+- `void setThunderStrength(float p_147442_1_)`
+- `void setTileEntity(int p_147455_1_, int p_147455_2_, int p_147455_3_, TileEntity p_147455_4_)`
+- `void setWorldTime(long p_72877_1_)`
+- `boolean spawnEntityInWorld(Entity p_72838_1_)`
+- `void spawnParticle(java.lang.String p_72869_1_, double p_72869_2_, double p_72869_4_, double p_72869_6_, double p_72869_8_, double p_72869_10_, double p_72869_12_)`
+- `void tick()`
+- `boolean tickUpdates(boolean p_72955_1_)`
+- `void unloadEntities(java.util.List p_72828_1_)`
+- `void updateAllPlayersSleepingFlag()`
+- `void updateEntities()`
+- `void updateEntity(Entity p_72870_1_)`
+- `void updateEntityWithOptionalForce(Entity p_72866_1_, boolean p_72866_2_)`
+- `boolean updateLightByType(EnumSkyBlock p_147463_1_, int p_147463_2_, int p_147463_3_, int p_147463_4_)`
+- `protected void updateWeather()`
+
+## Fields
+
+- `protected java.util.Set activeChunkSet`
+- `protected IChunkProvider chunkProvider`
+- `EnumDifficulty difficultySetting`
+- `protected int DIST_HASH_MAGIC`
+- `boolean findingSpawnPoint`
+- `boolean isRemote`
+- `int lastLightningBolt`
+- `java.util.List loadedEntityList`
+- `java.util.List loadedTileEntityList`
+- `MapStorage mapStorage`
+- `java.util.List playerEntities`
+- `float prevRainingStrength`
+- `float prevThunderingStrength`
+- `WorldProvider provider`
+- `float rainingStrength`
+- `java.util.Random rand`
+- `protected ISaveHandler saveHandler`
+- `boolean scheduledUpdatesAreImmediate`
+- `int skylightSubtracted`
+- `protected boolean spawnHostileMobs`
+- `protected boolean spawnPeacefulMobs`
+- `Profiler theProfiler`
+- `float thunderingStrength`
+- `protected java.util.List unloadedEntityList`
+- `protected int updateLCG`
+- `VillageCollection villageCollectionObj`
+- `protected VillageSiege villageSiegeObj`
+- `java.util.List weatherEffects`
+- `protected java.util.List worldAccesses`
+- `protected WorldInfo worldInfo`
+- `protected Scoreboard worldScoreboard`

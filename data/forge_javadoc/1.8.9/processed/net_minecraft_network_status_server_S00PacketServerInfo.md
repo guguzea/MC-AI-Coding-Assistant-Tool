@@ -1,23 +1,25 @@
 # S00PacketServerInfo
 
+**Inheritance:** java.lang.Object → net.minecraft.network.status.server.S00PacketServerInfo
+
 ## Class signature
 
 ```java
-public class S00PacketServerInfo extends java.lang.Object implements Packet < INetHandlerStatusClient >
+public class S00PacketServerInfo extends java.lang.Object implements Packet<INetHandlerStatusClient>
 ```
 
 ## Constructors
 
-- `public S00PacketServerInfo()`
-- `public S00PacketServerInfo( ServerStatusResponse responseIn)`
+- `S00PacketServerInfo()`
+- `S00PacketServerInfo(ServerStatusResponse responseIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerStatusClient handler)`
-- `public ServerStatusResponse getResponse()`
+- `ServerStatusResponse getResponse()`
+- `void processPacket(INetHandlerStatusClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.
 
-## Description
+## Fields
 
-Passes this Packet on to the NetHandler for processing.
+- `static Gson GSON`

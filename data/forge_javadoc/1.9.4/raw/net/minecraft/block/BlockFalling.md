@@ -3,11 +3,15 @@ title: "BlockFalling"
 description: "public class BlockFalling extends Block"
 package: "net/minecraft/block"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/BlockFalling.html"
 sourceType: javadoc
 ---
 
 # BlockFalling
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockFalling
 
 ## Class signature
 
@@ -17,15 +21,19 @@ public class BlockFalling extends Block
 
 ## Constructors
 
-- `public BlockFalling()`
-- `public BlockFalling( Material materialIn)`
+- `BlockFalling()`
+- `BlockFalling(Material materialIn)`
 
 ## Methods
 
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `protected void onStartFalling( EntityFallingBlock fallingEntity)`
-- `public int tickRate( World worldIn)`
-- `public static boolean canFallThrough( IBlockState state)`
-- `public void onEndFalling( World worldIn, BlockPos pos)`
+- `static boolean canFallThrough(IBlockState state)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onEndFalling(World worldIn, BlockPos pos)`
+- `protected void onStartFalling(EntityFallingBlock fallingEntity)`
+- `int tickRate(World worldIn)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+
+## Fields
+
+- `static boolean fallInstantly`

@@ -1,18 +1,28 @@
 ---
 title: "EnchantedItemTrigger.Instance"
-description: ""
+description: "public static class EnchantedItemTrigger.Instance extends AbstractCriterionInstance"
 package: "net/minecraft/advancements/critereon"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/advancements/critereon/EnchantedItemTrigger.Instance.html"
 sourceType: javadoc
 ---
 
 # EnchantedItemTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.EnchantedItemTrigger.Instance
+
+## Class signature
+
+```java
+public static class EnchantedItemTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( ItemPredicate item, MinMaxBounds levels)`
+- `Instance(ItemPredicate item, MinMaxBounds levels)`
 
 ## Methods
 
-- `public boolean test( ItemStack item, int levelsIn)`
+- `boolean test(ItemStack item, int levelsIn)`

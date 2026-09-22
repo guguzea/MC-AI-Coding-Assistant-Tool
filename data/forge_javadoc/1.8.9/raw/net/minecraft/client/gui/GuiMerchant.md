@@ -1,13 +1,17 @@
 ---
 title: "GuiMerchant"
-description: "Called by the controls from the buttonList when activated."
+description: "public class GuiMerchant extends GuiContainer"
 package: "net/minecraft/client/gui"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/gui/GuiMerchant.html"
 sourceType: javadoc
 ---
 
 # GuiMerchant
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.inventory.GuiContainer → net.minecraft.client.gui.GuiMerchant
 
 ## Class signature
 
@@ -15,20 +19,16 @@ sourceType: javadoc
 public class GuiMerchant extends GuiContainer
 ```
 
-## Constructors
-
-- `public GuiMerchant( InventoryPlayer p_i45500_1_, IMerchant p_i45500_2_, World worldIn)`
-
 ## Methods
 
-- `public void initGui()`
-- `protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)`
-- `public void updateScreen()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `public IMerchant getMerchant()`
+- `protected void actionPerformed(GuiButton button)` — Called by the controls from the buttonList when activated.
+- `protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)` — Args : renderPartialTicks, mouseX, mouseY
+- `protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)` — Draw the foreground layer for the GuiContainer (everything in front of the items).
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)` — Draws the screen and all the components in it.
+- `IMerchant getMerchant()`
+- `void initGui()` — Adds the buttons (and other controls) to the screen in question.
+- `void updateScreen()` — Called from the main game loop to update the screen.
 
-## Description
+## Fields
 
-Called by the controls from the buttonList when activated.
+- `GuiMerchant`

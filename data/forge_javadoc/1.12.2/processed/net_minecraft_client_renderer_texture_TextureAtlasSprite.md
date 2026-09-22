@@ -1,5 +1,7 @@
 # TextureAtlasSprite
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.texture.TextureAtlasSprite
+
 ## Class signature
 
 ```java
@@ -8,42 +10,50 @@ public class TextureAtlasSprite extends java.lang.Object
 
 ## Constructors
 
-- `protected TextureAtlasSprite(java.lang.String spriteName)`
+- `TextureAtlasSprite(java.lang.String spriteName)`
 
 ## Methods
 
-- `protected static TextureAtlasSprite makeAtlasSprite( ResourceLocation spriteResourceLocation)`
-- `public void initSprite(int inX, int inY, int originInX, int originInY, boolean rotatedIn)`
-- `public void copyFrom( TextureAtlasSprite atlasSpirit)`
-- `public int getOriginX()`
-- `public int getOriginY()`
-- `public int getIconWidth()`
-- `public int getIconHeight()`
-- `public float getMinU()`
-- `public float getMaxU()`
-- `public float getInterpolatedU(double u)`
-- `public float getUnInterpolatedU(float u)`
-- `public float getMinV()`
-- `public float getMaxV()`
-- `public float getInterpolatedV(double v)`
-- `public float getUnInterpolatedV(float p_188536_1_)`
-- `public java.lang.String getIconName()`
-- `public void updateAnimation()`
-- `public int[][] getFrameTextureData(int index)`
-- `public int getFrameCount()`
-- `public void setIconWidth(int newWidth)`
-- `public void setIconHeight(int newHeight)`
-- `public void loadSprite( PngSizeInfo sizeInfo, boolean p_188538_2_) throws java.io.IOException`
-- `public void loadSpriteFrames( IResource resource, int mipmaplevels) throws java.io.IOException`
-- `public void generateMipmaps(int level)`
-- `public void clearFramesTextureData()`
-- `public boolean hasAnimationMetadata()`
-- `public void setFramesTextureData(java.util.List<int[][]> newFramesTextureData)`
-- `public java.lang.String toString()`
-- `public boolean hasCustomLoader( IResourceManager manager, ResourceLocation location)`
-- `public boolean load( IResourceManager manager, ResourceLocation location, java.util.function.Function< ResourceLocation , TextureAtlasSprite > textureGetter)`
-- `public java.util.Collection< ResourceLocation > getDependencies()`
+- `void clearFramesTextureData()`
+- `void copyFrom(TextureAtlasSprite atlasSpirit)`
+- `void generateMipmaps(int level)`
+- `java.util.Collection<ResourceLocation> getDependencies()`
+- `int getFrameCount()`
+- `int[][] getFrameTextureData(int index)`
+- `int getIconHeight()`
+- `java.lang.String getIconName()`
+- `int getIconWidth()`
+- `float getInterpolatedU(double u)`
+- `float getInterpolatedV(double v)`
+- `float getMaxU()`
+- `float getMaxV()`
+- `float getMinU()`
+- `float getMinV()`
+- `int getOriginX()`
+- `int getOriginY()`
+- `float getUnInterpolatedU(float u)`
+- `float getUnInterpolatedV(float p_188536_1_)`
+- `boolean hasAnimationMetadata()`
+- `boolean hasCustomLoader(IResourceManager manager, ResourceLocation location)` — The result of this function determines is the below 'load' function is called, and the default vanilla loading code is bypassed completely.
+- `void initSprite(int inX, int inY, int originInX, int originInY, boolean rotatedIn)`
+- `boolean load(IResourceManager manager, ResourceLocation location, java.util.function.Function<ResourceLocation, TextureAtlasSprite> textureGetter)` — Load the specified resource as this sprite's data.
+- `void loadSprite(PngSizeInfo sizeInfo, boolean p_188538_2_)`
+- `void loadSpriteFrames(IResource resource, int mipmaplevels)`
+- `protected static TextureAtlasSprite makeAtlasSprite(ResourceLocation spriteResourceLocation)`
+- `void setFramesTextureData(java.util.List<int[][]> newFramesTextureData)`
+- `void setIconHeight(int newHeight)`
+- `void setIconWidth(int newWidth)`
+- `java.lang.String toString()`
+- `void updateAnimation()`
 
-## Description
+## Fields
 
-The result of this function determines is the below 'load' function is called, and the default vanilla loading code is bypassed completely.
+- `protected int frameCounter`
+- `protected java.util.List<int[][]> framesTextureData`
+- `protected int height`
+- `protected int[][] interpolatedFrameData`
+- `protected int originX`
+- `protected int originY`
+- `protected boolean rotated`
+- `protected int tickCounter`
+- `protected int width`

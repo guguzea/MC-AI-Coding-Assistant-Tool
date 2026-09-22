@@ -1,13 +1,17 @@
 ---
 title: "GuiScreenWorking"
-description: "Displays a string on the loading screen supposed to indicate what is being done currently."
+description: "public class GuiScreenWorking extends GuiScreen implements IProgressUpdate"
 package: "net/minecraft/client/gui"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/gui/GuiScreenWorking.html"
 sourceType: javadoc
 ---
 
 # GuiScreenWorking
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiScreenWorking
 
 ## Class signature
 
@@ -15,19 +19,15 @@ sourceType: javadoc
 public class GuiScreenWorking extends GuiScreen implements IProgressUpdate
 ```
 
-## Constructors
-
-- `public GuiScreenWorking()`
-
 ## Methods
 
-- `public void displaySavingString(java.lang.String message)`
-- `public void resetProgressAndMessage(java.lang.String message)`
-- `public void displayLoadingString(java.lang.String message)`
-- `public void setLoadingProgress(int progress)`
-- `public void setDoneWorking()`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void displayLoadingString(java.lang.String message)` — Displays a string on the loading screen supposed to indicate what is being done currently.
+- `void displaySavingString(java.lang.String message)` — Shows the 'Saving level' string.
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)` — Draws the screen and all the components in it.
+- `void resetProgressAndMessage(java.lang.String message)` — this string, followed by "working..." and then the "% complete" are the 3 lines shown.
+- `void setDoneWorking()`
+- `void setLoadingProgress(int progress)` — Updates the progress bar on the loading screen to the specified amount.
 
-## Description
+## Fields
 
-Displays a string on the loading screen supposed to indicate what is being done currently.
+- `GuiScreenWorking`

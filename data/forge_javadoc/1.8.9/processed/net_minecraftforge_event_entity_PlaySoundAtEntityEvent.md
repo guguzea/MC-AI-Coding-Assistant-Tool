@@ -1,5 +1,7 @@
 # PlaySoundAtEntityEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.PlaySoundAtEntityEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,12 @@ public class PlaySoundAtEntityEvent extends EntityEvent
 
 ## Constructors
 
-- `public PlaySoundAtEntityEvent( Entity entity, java.lang.String name, float volume, float pitch)`
+- `PlaySoundAtEntityEvent(Entity entity, java.lang.String name, float volume, float pitch)`
 
-## Description
+## Fields
 
-PlaySoundAtEntityEvent is fired a sound is to be played at an Entity This event is fired whenever a sound is set to be played at an Entity such as in EntityPlayerSP#playSound(String, float, float), Wo
+- `java.lang.String name`
+- `float newPitch`
+- `float newVolume`
+- `float pitch`
+- `float volume`

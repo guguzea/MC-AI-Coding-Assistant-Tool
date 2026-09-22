@@ -1,5 +1,7 @@
 # LivingSetAttackTargetEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class LivingSetAttackTargetEvent extends LivingEvent
 
 ## Constructors
 
-- `public LivingSetAttackTargetEvent( EntityLivingBase entity, EntityLivingBase target)`
+- `LivingSetAttackTargetEvent(EntityLivingBase entity, EntityLivingBase target)`
 
 ## Methods
 
-- `public EntityLivingBase getTarget()`
-
-## Description
-
-LivingSetAttackTargetEvent is fired when an Entity sets a target to attack. This event is fired whenever an Entity sets a target to attack in EntityLiving.setAttackTarget(EntityLivingBase) and EntityL
+- `EntityLivingBase getTarget()`

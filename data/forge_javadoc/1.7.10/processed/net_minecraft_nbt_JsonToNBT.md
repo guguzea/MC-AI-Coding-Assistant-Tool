@@ -1,5 +1,7 @@
 # JsonToNBT
 
+**Inheritance:** java.lang.Object → net.minecraft.nbt.JsonToNBT
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class JsonToNBT extends java.lang.Object
 
 ## Constructors
 
-- `public JsonToNBT()`
+- `JsonToNBT()`
 
 ## Methods
 
-- `public static NBTBase func_150315_a(java.lang.String p_150315_0_) throws NBTException`
+- `static NBTBase func_150315_a(java.lang.String p_150315_0_)`

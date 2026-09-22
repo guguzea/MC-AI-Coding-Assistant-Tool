@@ -1,5 +1,7 @@
 # LootingLevelEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LootingLevelEvent
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class LootingLevelEvent extends LivingEvent
 
 ## Constructors
 
-- `public LootingLevelEvent( EntityLivingBase entity, DamageSource damageSource, int lootingLevel)`
+- `LootingLevelEvent(EntityLivingBase entity, DamageSource damageSource, int lootingLevel)`
 
 ## Methods
 
-- `public DamageSource getDamageSource()`
-- `public int getLootingLevel()`
-- `public void setLootingLevel(int lootingLevel)`
+- `DamageSource getDamageSource()`
+- `int getLootingLevel()`
+- `void setLootingLevel(int lootingLevel)`

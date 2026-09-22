@@ -8,5 +8,5 @@ public interface INetHandlerStatusServer extends INetHandler
 
 ## Methods
 
-- `void processPing( C01PacketPing packetIn)`
-- `void processServerQuery( C00PacketServerQuery packetIn)`
+- `void processPing(C01PacketPing packetIn)`
+- `void processServerQuery(C00PacketServerQuery packetIn)`

@@ -1,18 +1,30 @@
 # StructureMineshaftPieces.Corridor
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureMineshaftPieces.Corridor
+
+## Class signature
+
+```java
+public static class StructureMineshaftPieces.Corridor extends StructureComponent
+```
+
 ## Constructors
 
-- `public Corridor()`
-- `public Corridor(int p_i47140_1_, java.util.Random p_i47140_2_, StructureBoundingBox p_i47140_3_, EnumFacing p_i47140_4_, MapGenMineshaft.Type p_i47140_5_)`
+- `Corridor()`
+- `Corridor(int p_i47140_1_, java.util.Random p_i47140_2_, StructureBoundingBox p_i47140_3_, EnumFacing p_i47140_4_, MapGenMineshaft.Type p_i47140_5_)`
 
 ## Methods
 
-- `protected void writeStructureToNBT( NBTTagCompound tagCompound)`
-- `protected void readStructureFromNBT( NBTTagCompound tagCompound)`
-- `public static StructureBoundingBox findCorridorSize(java.util.List< StructureComponent > p_175814_0_, java.util.Random rand, int x, int y, int z, EnumFacing facing)`
-- `public void buildComponent( StructureComponent componentIn, java.util.List< StructureComponent > listIn, java.util.Random rand)`
-- `protected boolean generateChest( World worldIn, StructureBoundingBox structurebb, java.util.Random randomIn, int x, int y, int z, ResourceLocation loot)`
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `void buildComponent(StructureComponent componentIn, java.util.List<StructureComponent> listIn, java.util.Random rand)`
+- `static StructureBoundingBox findCorridorSize(java.util.List<StructureComponent> p_175814_0_, java.util.Random rand, int x, int y, int z, EnumFacing facing)`
 - `protected IBlockState func_189917_F_()`
+- `protected boolean func_189918_a(World p_189918_1_, StructureBoundingBox p_189918_2_, int p_189918_3_, int p_189918_4_, int p_189918_5_, int p_189918_6_)`
 - `protected IBlockState func_189919_b()`
-- `protected boolean func_189918_a( World p_189918_1_, StructureBoundingBox p_189918_2_, int p_189918_3_, int p_189918_4_, int p_189918_5_, int p_189918_6_)`
+- `protected boolean generateChest(World worldIn, StructureBoundingBox structurebb, java.util.Random randomIn, int x, int y, int z, ResourceLocation loot)`
+- `protected void readStructureFromNBT(NBTTagCompound tagCompound)`
+- `protected void writeStructureToNBT(NBTTagCompound tagCompound)`
+
+## Fields
+
+- `protected MapGenMineshaft.Type mineShaftType`

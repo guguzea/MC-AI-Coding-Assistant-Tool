@@ -1,13 +1,17 @@
 ---
 title: "PlayerWakeUpEvent"
-description: "This event is fired when the player is waking up. This is merely for purposes of listening for this to happen. There is nothing that can be manipulated with this event."
+description: "public class PlayerWakeUpEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/entity/player/PlayerWakeUpEvent.html"
 sourceType: javadoc
 ---
 
 # PlayerWakeUpEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerWakeUpEvent
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class PlayerWakeUpEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerWakeUpEvent( EntityPlayer player, boolean wakeImmediately, boolean updateWorld, boolean setSpawn)`
+- `PlayerWakeUpEvent(EntityPlayer player, boolean wakeImmediately, boolean updateWorld, boolean setSpawn)`
 
 ## Methods
 
-- `public boolean wakeImmediately()`
-- `public boolean updateWorld()`
-- `public boolean shouldSetSpawn()`
-
-## Description
-
-This event is fired when the player is waking up. This is merely for purposes of listening for this to happen. There is nothing that can be manipulated with this event.
+- `boolean shouldSetSpawn()` — Indicates if the player's sleep was considered successful.
+- `boolean updateWorld()` — Indicates if the server should be notified of sleeping changes.
+- `boolean wakeImmediately()` — Used for the 'wake up animation'.

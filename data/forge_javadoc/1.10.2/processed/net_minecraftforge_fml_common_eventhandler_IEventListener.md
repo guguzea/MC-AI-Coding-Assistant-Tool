@@ -8,4 +8,4 @@ public interface IEventListener
 
 ## Methods
 
-- `void invoke( Event event)`
+- `void invoke(Event event)`

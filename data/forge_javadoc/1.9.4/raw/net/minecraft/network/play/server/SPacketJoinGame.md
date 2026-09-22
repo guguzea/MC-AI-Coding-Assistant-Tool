@@ -1,35 +1,39 @@
 ---
 title: "SPacketJoinGame"
-description: "public class SPacketJoinGame extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketJoinGame extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/play/server/SPacketJoinGame.html"
 sourceType: javadoc
 ---
 
 # SPacketJoinGame
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketJoinGame
+
 ## Class signature
 
 ```java
-public class SPacketJoinGame extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketJoinGame extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketJoinGame()`
-- `public SPacketJoinGame(int playerIdIn, WorldSettings.GameType gameTypeIn, boolean hardcoreModeIn, int dimensionIn, EnumDifficulty difficultyIn, int maxPlayersIn, WorldType worldTypeIn, boolean reducedDebugInfoIn)`
+- `SPacketJoinGame()`
+- `SPacketJoinGame(int playerIdIn, WorldSettings.GameType gameTypeIn, boolean hardcoreModeIn, int dimensionIn, EnumDifficulty difficultyIn, int maxPlayersIn, WorldType worldTypeIn, boolean reducedDebugInfoIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getPlayerId()`
-- `public boolean isHardcoreMode()`
-- `public WorldSettings.GameType getGameType()`
-- `public int getDimension()`
-- `public EnumDifficulty getDifficulty()`
-- `public int getMaxPlayers()`
-- `public WorldType getWorldType()`
-- `public boolean isReducedDebugInfo()`
+- `EnumDifficulty getDifficulty()`
+- `int getDimension()`
+- `WorldSettings.GameType getGameType()`
+- `int getMaxPlayers()`
+- `int getPlayerId()`
+- `WorldType getWorldType()`
+- `boolean isHardcoreMode()`
+- `boolean isReducedDebugInfo()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

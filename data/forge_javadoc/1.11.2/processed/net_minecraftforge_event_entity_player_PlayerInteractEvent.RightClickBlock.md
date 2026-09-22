@@ -1,18 +1,22 @@
 # PlayerInteractEvent.RightClickBlock
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock
+
+## Class signature
+
+```java
+public static class PlayerInteractEvent.RightClickBlock extends PlayerInteractEvent
+```
+
 ## Constructors
 
-- `public RightClickBlock( EntityPlayer player, EnumHand hand, BlockPos pos, EnumFacing face, Vec3d hitVec)`
+- `RightClickBlock(EntityPlayer player, EnumHand hand, BlockPos pos, EnumFacing face, Vec3d hitVec)`
 
 ## Methods
 
-- `public Vec3d getHitVec()`
-- `public Event.Result getUseBlock()`
-- `public Event.Result getUseItem()`
-- `public void setUseBlock( Event.Result triggerBlock)`
-- `public void setUseItem( Event.Result triggerItem)`
-- `public void setCanceled(boolean canceled)`
-
-## Description
-
-This event is fired on both sides whenever the player right clicks while targeting a block. This event controls which of Block.onBlockActivated(net.minecraft.world.World, net.minecraft.util.math.Block
+- `Vec3d getHitVec()`
+- `Event.Result getUseBlock()`
+- `Event.Result getUseItem()`
+- `void setCanceled(boolean canceled)` — Sets the state of this event, not all events are cancelable, and any attempt to cancel a event that can't be will result in a IllegalArgumentException.
+- `void setUseBlock(Event.Result triggerBlock)` — DENY: Block will never be used.
+- `void setUseItem(Event.Result triggerItem)` — DENY: The item will never be used.

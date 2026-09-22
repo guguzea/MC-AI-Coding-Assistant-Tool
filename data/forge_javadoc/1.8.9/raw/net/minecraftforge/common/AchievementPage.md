@@ -1,13 +1,17 @@
 ---
 title: "AchievementPage"
-description: "Will return an achievement page by its index on the list."
+description: "public class AchievementPage extends java.lang.Object"
 package: "net/minecraftforge/common"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/common/AchievementPage.html"
 sourceType: javadoc
 ---
 
 # AchievementPage
+
+**Inheritance:** java.lang.Object → net.minecraftforge.common.AchievementPage
 
 ## Class signature
 
@@ -17,19 +21,15 @@ public class AchievementPage extends java.lang.Object
 
 ## Constructors
 
-- `public AchievementPage(java.lang.String name, Achievement ... achievements)`
+- `AchievementPage(java.lang.String name, Achievement ... achievements)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public java.util.List< Achievement > getAchievements()`
-- `public static void registerAchievementPage( AchievementPage page)`
-- `public static AchievementPage getAchievementPage(int index)`
-- `public static AchievementPage getAchievementPage(java.lang.String name)`
-- `public static java.util.Set< AchievementPage > getAchievementPages()`
-- `public static boolean isAchievementInPages( Achievement achievement)`
-- `public static java.lang.String getTitle(int index)`
-
-## Description
-
-Will return an achievement page by its index on the list.
+- `static AchievementPage getAchievementPage(int index)` — Will return an achievement page by its index on the list.
+- `static AchievementPage getAchievementPage(java.lang.String name)` — Will return an achievement page by its name.
+- `static java.util.Set<AchievementPage> getAchievementPages()` — Will return the list of achievement pages.
+- `java.util.List<Achievement> getAchievements()`
+- `java.lang.String getName()`
+- `static java.lang.String getTitle(int index)`
+- `static boolean isAchievementInPages(Achievement achievement)` — Will return whether an achievement is in any page or not.
+- `static void registerAchievementPage(AchievementPage page)` — Registers an achievement page.

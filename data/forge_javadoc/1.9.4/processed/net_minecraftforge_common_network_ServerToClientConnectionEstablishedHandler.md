@@ -1,5 +1,7 @@
 # ServerToClientConnectionEstablishedHandler
 
+**Inheritance:** java.lang.Object → io.netty.channel.ChannelHandlerAdapter → io.netty.channel.ChannelInboundHandlerAdapter → net.minecraftforge.common.network.ServerToClientConnectionEstablishedHandler
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class ServerToClientConnectionEstablishedHandler extends io.netty.channel
 
 ## Constructors
 
-- `public ServerToClientConnectionEstablishedHandler()`
+- `ServerToClientConnectionEstablishedHandler()`
 
 ## Methods
 
-- `public void userEventTriggered(io.netty.channel.ChannelHandlerContext ctx, java.lang.Object evt) throws java.lang.Exception`
+- `void userEventTriggered(io.netty.channel.ChannelHandlerContext ctx, java.lang.Object evt)`

@@ -1,9 +1,13 @@
 # ChunkDataEvent.Load
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.ChunkEvent → net.minecraftforge.event.world.ChunkDataEvent → net.minecraftforge.event.world.ChunkDataEvent.Load
+
+## Class signature
+
+```java
+public static class ChunkDataEvent.Load extends ChunkDataEvent
+```
+
 ## Constructors
 
-- `public Load( Chunk chunk, NBTTagCompound data)`
-
-## Description
-
-ChunkDataEvent.Load is fired when vanilla Minecraft attempts to load Chunk data. This event is fired during chunk loading in ChunkIOProvider.syncCallback() . This event is not Cancelable . This event
+- `Load(Chunk chunk, NBTTagCompound data)`

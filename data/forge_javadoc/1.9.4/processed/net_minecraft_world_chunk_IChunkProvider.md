@@ -8,7 +8,7 @@ public interface IChunkProvider
 
 ## Methods
 
-- `@Nullable Chunk getLoadedChunk(int x, int z)`
+- `Chunk getLoadedChunk(int x, int z)`
+- `java.lang.String makeString()`
 - `Chunk provideChunk(int x, int z)`
 - `boolean unloadQueuedChunks()`
-- `java.lang.String makeString()`

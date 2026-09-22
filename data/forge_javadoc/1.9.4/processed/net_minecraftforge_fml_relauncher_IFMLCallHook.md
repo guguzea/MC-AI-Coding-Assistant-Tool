@@ -8,8 +8,4 @@ public interface IFMLCallHook extends java.util.concurrent.Callable<java.lang.Vo
 
 ## Methods
 
-- `void injectData(java.util.Map<java.lang.String,java.lang.Object> data)`
-
-## Description
-
-This call hook allows for code to execute at the very early stages of minecraft initialization. FML uses it to validate that there is a safe environment for further loading of FML.
+- `void injectData(java.util.Map<java.lang.String, java.lang.Object> data)` — Injected with data from the FML environment: "classLoader" : The FML Class Loader

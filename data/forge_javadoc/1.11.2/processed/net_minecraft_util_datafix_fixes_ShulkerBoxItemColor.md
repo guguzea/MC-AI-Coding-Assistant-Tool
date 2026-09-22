@@ -1,5 +1,7 @@
 # ShulkerBoxItemColor
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.ShulkerBoxItemColor
+
 ## Class signature
 
 ```java
@@ -8,9 +10,13 @@ public class ShulkerBoxItemColor extends java.lang.Object implements IFixableDat
 
 ## Constructors
 
-- `public ShulkerBoxItemColor()`
+- `ShulkerBoxItemColor()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`
+
+## Fields
+
+- `static java.lang.String[] NAMES_BY_COLOR`

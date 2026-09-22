@@ -1,23 +1,21 @@
 # GuiIngestServers
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.stream.GuiIngestServers
+
 ## Class signature
 
 ```java
 public class GuiIngestServers extends GuiScreen
 ```
 
-## Constructors
-
-- `public GuiIngestServers( GuiScreen p_i46312_1_)`
-
 ## Methods
 
-- `public void initGui()`
-- `public void handleMouseInput() throws java.io.IOException`
-- `public void onGuiClosed()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected void actionPerformed(GuiButton button)` — Called by the controls from the buttonList when activated.
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)` — Draws the screen and all the components in it.
+- `void handleMouseInput()` — Handles mouse input.
+- `void initGui()` — Adds the buttons (and other controls) to the screen in question.
+- `void onGuiClosed()` — Called when the screen is unloaded.
 
-## Description
+## Fields
 
-Called by the controls from the buttonList when activated.
+- `GuiIngestServers`

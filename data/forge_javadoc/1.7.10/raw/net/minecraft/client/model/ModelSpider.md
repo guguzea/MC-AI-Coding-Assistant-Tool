@@ -3,11 +3,15 @@ title: "ModelSpider"
 description: "public class ModelSpider extends ModelBase"
 package: "net/minecraft/client/model"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/model/ModelSpider.html"
 sourceType: javadoc
 ---
 
 # ModelSpider
+
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelSpider
 
 ## Class signature
 
@@ -17,9 +21,23 @@ public class ModelSpider extends ModelBase
 
 ## Constructors
 
-- `public ModelSpider()`
+- `ModelSpider()`
 
 ## Methods
 
-- `public void render( Entity p_78088_1_, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float p_78088_7_)`
-- `public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity p_78087_7_)`
+- `void render(Entity p_78088_1_, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float p_78088_7_)`
+- `void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity p_78087_7_)`
+
+## Fields
+
+- `ModelRenderer spiderBody`
+- `ModelRenderer spiderHead`
+- `ModelRenderer spiderLeg1`
+- `ModelRenderer spiderLeg2`
+- `ModelRenderer spiderLeg3`
+- `ModelRenderer spiderLeg4`
+- `ModelRenderer spiderLeg5`
+- `ModelRenderer spiderLeg6`
+- `ModelRenderer spiderLeg7`
+- `ModelRenderer spiderLeg8`
+- `ModelRenderer spiderNeck`

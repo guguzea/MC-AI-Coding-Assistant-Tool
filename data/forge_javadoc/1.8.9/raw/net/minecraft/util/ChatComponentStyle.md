@@ -1,13 +1,17 @@
 ---
 title: "ChatComponentStyle"
-description: "Appends the given component to the end of this one."
+description: "public abstract class ChatComponentStyle extends java.lang.Object implements IChatComponent"
 package: "net/minecraft/util"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/util/ChatComponentStyle.html"
 sourceType: javadoc
 ---
 
 # ChatComponentStyle
+
+**Inheritance:** java.lang.Object → net.minecraft.util.ChatComponentStyle
 
 ## Class signature
 
@@ -17,23 +21,23 @@ public abstract class ChatComponentStyle extends java.lang.Object implements ICh
 
 ## Constructors
 
-- `public ChatComponentStyle()`
+- `ChatComponentStyle()`
 
 ## Methods
 
-- `public IChatComponent appendSibling( IChatComponent component)`
-- `public java.util.List< IChatComponent > getSiblings()`
-- `public IChatComponent appendText(java.lang.String text)`
-- `public IChatComponent setChatStyle( ChatStyle style)`
-- `public ChatStyle getChatStyle()`
-- `public java.util.Iterator< IChatComponent > iterator()`
-- `public final java.lang.String getUnformattedText()`
-- `public final java.lang.String getFormattedText()`
-- `public static java.util.Iterator< IChatComponent > createDeepCopyIterator(java.lang.Iterable< IChatComponent > components)`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public java.lang.String toString()`
+- `IChatComponent appendSibling(IChatComponent component)` — Appends the given component to the end of this one.
+- `IChatComponent appendText(java.lang.String text)` — Appends the given text to the end of this component.
+- `static java.util.Iterator<IChatComponent> createDeepCopyIterator(java.lang.Iterable<IChatComponent> components)`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `ChatStyle getChatStyle()`
+- `java.lang.String getFormattedText()` — Gets the text of this component, with formatting codes added for rendering.
+- `java.util.List<IChatComponent> getSiblings()`
+- `java.lang.String getUnformattedText()` — Get the text of this component, and all child components , with all special formatting codes removed.
+- `int hashCode()`
+- `java.util.Iterator<IChatComponent> iterator()`
+- `IChatComponent setChatStyle(ChatStyle style)`
+- `java.lang.String toString()`
 
-## Description
+## Fields
 
-Appends the given component to the end of this one.
+- `protected java.util.List<IChatComponent> siblings`

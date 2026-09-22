@@ -1,5 +1,7 @@
 # FMLServerStoppingEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLStateEvent → net.minecraftforge.fml.common.event.FMLServerStoppingEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class FMLServerStoppingEvent extends FMLStateEvent
 
 ## Constructors
 
-- `public FMLServerStoppingEvent(java.lang.Object... data)`
+- `FMLServerStoppingEvent(java.lang.Object... data)`
 
 ## Methods
 
-- `public LoaderState.ModState getModState()`
-
-## Description
-
-Called when the server begins an orderly shutdown, before FMLServerStoppedEvent .
+- `LoaderState.ModState getModState()` — The current state of the mod

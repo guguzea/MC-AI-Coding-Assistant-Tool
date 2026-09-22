@@ -1,19 +1,21 @@
 # ItemFishFood
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemFood → net.minecraft.item.ItemFishFood
+
 ## Class signature
 
 ```java
 public class ItemFishFood extends ItemFood
 ```
 
-## Constructors
-
-- `public ItemFishFood(boolean cooked)`
-
 ## Methods
 
-- `public int getHealAmount( ItemStack stack)`
-- `public float getSaturationModifier( ItemStack stack)`
-- `protected void onFoodEaten( ItemStack stack, World worldIn, EntityPlayer player)`
-- `public void getSubItems( CreativeTabs tab, NonNullList < ItemStack > items)`
-- `public java.lang.String getUnlocalizedName( ItemStack stack)`
+- `int getHealAmount(ItemStack stack)`
+- `float getSaturationModifier(ItemStack stack)`
+- `void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)`
+- `java.lang.String getUnlocalizedName(ItemStack stack)`
+- `protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player)`
+
+## Fields
+
+- `ItemFishFood`

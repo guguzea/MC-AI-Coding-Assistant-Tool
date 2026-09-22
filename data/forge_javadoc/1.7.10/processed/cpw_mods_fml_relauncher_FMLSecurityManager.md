@@ -1,19 +1,17 @@
 # FMLSecurityManager
 
+**Inheritance:** java.lang.Object → java.lang.SecurityManager → cpw.mods.fml.relauncher.FMLSecurityManager
+
 ## Class signature
 
 ```java
 public class FMLSecurityManager extends java.lang.SecurityManager
 ```
 
-## Constructors
-
-- `public FMLSecurityManager()`
-
 ## Methods
 
-- `public void checkPermission(java.security.Permission perm)`
+- `void checkPermission(java.security.Permission perm)`
 
-## Description
+## Fields
 
-A custom security manager stopping certain events from happening unexpectedly.
+- `FMLSecurityManager`

@@ -1,16 +1,18 @@
 # LayerCreeperCharge
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.layers.LayerCreeperCharge
+
 ## Class signature
 
 ```java
-public class LayerCreeperCharge extends java.lang.Object implements LayerRenderer < EntityCreeper >
+public class LayerCreeperCharge extends java.lang.Object implements LayerRenderer<EntityCreeper>
 ```
 
 ## Constructors
 
-- `public LayerCreeperCharge( RenderCreeper creeperRendererIn)`
+- `LayerCreeperCharge(RenderCreeper creeperRendererIn)`
 
 ## Methods
 
-- `public void doRenderLayer( EntityCreeper entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)`
-- `public boolean shouldCombineTextures()`
+- `void doRenderLayer(EntityCreeper entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)`
+- `boolean shouldCombineTextures()`

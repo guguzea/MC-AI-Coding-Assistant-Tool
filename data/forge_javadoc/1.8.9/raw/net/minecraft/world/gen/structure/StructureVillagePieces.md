@@ -3,11 +3,15 @@ title: "StructureVillagePieces"
 description: "public class StructureVillagePieces extends java.lang.Object"
 package: "net/minecraft/world/gen/structure"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/gen/structure/StructureVillagePieces.html"
 sourceType: javadoc
 ---
 
 # StructureVillagePieces
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureVillagePieces
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class StructureVillagePieces extends java.lang.Object
 
 ## Constructors
 
-- `public StructureVillagePieces()`
+- `StructureVillagePieces()`
 
 ## Methods
 
-- `public static void registerVillagePieces()`
-- `public static java.util.List< StructureVillagePieces.PieceWeight > getStructureVillageWeightedPieceList(java.util.Random random, int p_75084_1_)`
+- `static java.util.List<StructureVillagePieces.PieceWeight> getStructureVillageWeightedPieceList(java.util.Random random, int p_75084_1_)`
+- `static void registerVillagePieces()`

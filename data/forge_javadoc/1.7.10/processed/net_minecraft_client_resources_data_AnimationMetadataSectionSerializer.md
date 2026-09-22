@@ -1,5 +1,7 @@
 # AnimationMetadataSectionSerializer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.data.BaseMetadataSectionSerializer → net.minecraft.client.resources.data.AnimationMetadataSectionSerializer
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class AnimationMetadataSectionSerializer extends BaseMetadataSectionSeria
 
 ## Constructors
 
-- `public AnimationMetadataSectionSerializer()`
+- `AnimationMetadataSectionSerializer()`
 
 ## Methods
 
-- `public AnimationMetadataSection deserialize(JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_)`
-- `public JsonElement serialize( AnimationMetadataSection p_serialize_1_, java.lang.reflect.Type p_serialize_2_, JsonSerializationContext p_serialize_3_)`
-- `public java.lang.String getSectionName()`
-- `public JsonElement serialize(java.lang.Object p_serialize_1_, java.lang.reflect.Type p_serialize_2_, JsonSerializationContext p_serialize_3_)`
+- `AnimationMetadataSection deserialize(JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_)`
+- `java.lang.String getSectionName()`
+- `JsonElement serialize(AnimationMetadataSection p_serialize_1_, java.lang.reflect.Type p_serialize_2_, JsonSerializationContext p_serialize_3_)`
+- `JsonElement serialize(java.lang.Object p_serialize_1_, java.lang.reflect.Type p_serialize_2_, JsonSerializationContext p_serialize_3_)`

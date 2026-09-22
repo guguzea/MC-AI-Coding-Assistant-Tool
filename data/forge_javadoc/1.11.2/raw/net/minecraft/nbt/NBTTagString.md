@@ -3,11 +3,15 @@ title: "NBTTagString"
 description: "public class NBTTagString extends NBTBase"
 package: "net/minecraft/nbt"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/nbt/NBTTagString.html"
 sourceType: javadoc
 ---
 
 # NBTTagString
+
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase → net.minecraft.nbt.NBTTagString
 
 ## Class signature
 
@@ -15,17 +19,17 @@ sourceType: javadoc
 public class NBTTagString extends NBTBase
 ```
 
-## Constructors
-
-- `public NBTTagString()`
-- `public NBTTagString(java.lang.String data)`
-
 ## Methods
 
-- `public byte getId()`
-- `public java.lang.String toString()`
-- `public NBTTagString copy()`
-- `public boolean hasNoTags()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public java.lang.String getString()`
+- `NBTTagString copy()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `byte getId()`
+- `java.lang.String getString()`
+- `int hashCode()`
+- `boolean hasNoTags()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `NBTTagString`
+- `NBTTagString`

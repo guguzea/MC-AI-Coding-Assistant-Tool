@@ -1,13 +1,17 @@
 ---
 title: "PlayerListComponent"
-description: "Like the old updateEntity(), except more generic."
+description: "public class PlayerListComponent extends javax.swing.JList implements ITickable"
 package: "net/minecraft/server/gui"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/server/gui/PlayerListComponent.html"
 sourceType: javadoc
 ---
 
 # PlayerListComponent
+
+**Inheritance:** java.lang.Object → java.awt.Component → java.awt.Container → javax.swing.JComponent → javax.swing.JList → net.minecraft.server.gui.PlayerListComponent
 
 ## Class signature
 
@@ -15,14 +19,10 @@ sourceType: javadoc
 public class PlayerListComponent extends javax.swing.JList implements ITickable
 ```
 
-## Constructors
-
-- `public PlayerListComponent( MinecraftServer server)`
-
 ## Methods
 
-- `public void update()`
+- `void update()` — Like the old updateEntity(), except more generic.
 
-## Description
+## Fields
 
-Like the old updateEntity(), except more generic.
+- `PlayerListComponent`

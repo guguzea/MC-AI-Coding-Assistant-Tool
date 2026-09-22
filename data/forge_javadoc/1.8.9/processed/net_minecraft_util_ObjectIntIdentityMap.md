@@ -1,18 +1,25 @@
 # ObjectIntIdentityMap
 
+**Inheritance:** java.lang.Object → net.minecraft.util.ObjectIntIdentityMap<T>
+
 ## Class signature
 
 ```java
-public class ObjectIntIdentityMap<T> extends java.lang.Object implements IObjectIntIterable <T>
+public class ObjectIntIdentityMap<T> extends java.lang.Object implements IObjectIntIterable<T>
 ```
 
 ## Constructors
 
-- `public ObjectIntIdentityMap()`
+- `ObjectIntIdentityMap()`
 
 ## Methods
 
-- `public void put( T key, int value)`
-- `public int get( T key)`
-- `public final T getByValue(int value)`
-- `public java.util.Iterator< T > iterator()`
+- `int get(T key)`
+- `T getByValue(int value)`
+- `java.util.Iterator<T> iterator()`
+- `void put(T key, int value)`
+
+## Fields
+
+- `protected java.util.IdentityHashMap<T, java.lang.Integer> identityMap`
+- `protected java.util.List<T> objectList`

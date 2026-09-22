@@ -1,13 +1,17 @@
 ---
 title: "ItemArmor"
-description: "Stores the armor type: 0 is helmet, 1 is plate, 2 is legs and 3 is boots"
+description: "public class ItemArmor extends Item"
 package: "net/minecraft/item"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/item/ItemArmor.html"
 sourceType: javadoc
 ---
 
 # ItemArmor
+
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemArmor
 
 ## Class signature
 
@@ -17,20 +21,23 @@ public class ItemArmor extends Item
 
 ## Constructors
 
-- `public ItemArmor( ItemArmor.ArmorMaterial material, int renderIndex, int armorType)`
+- `ItemArmor(ItemArmor.ArmorMaterial material, int renderIndex, int armorType)`
 
 ## Methods
 
-- `public int getColorFromItemStack( ItemStack stack, int renderPass)`
-- `public int getItemEnchantability()`
-- `public ItemArmor.ArmorMaterial getArmorMaterial()`
-- `public boolean hasColor( ItemStack stack)`
-- `public int getColor( ItemStack stack)`
-- `public void removeColor( ItemStack stack)`
-- `public void setColor( ItemStack stack, int color)`
-- `public boolean getIsRepairable( ItemStack toRepair, ItemStack repair)`
-- `public ItemStack onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)`
+- `ItemArmor.ArmorMaterial getArmorMaterial()` — Return the armor material for this armor item.
+- `int getColor(ItemStack stack)` — Return the color for the specified armor ItemStack.
+- `int getColorFromItemStack(ItemStack stack, int renderPass)`
+- `boolean getIsRepairable(ItemStack toRepair, ItemStack repair)` — Return whether this item is repairable in an anvil.
+- `int getItemEnchantability()` — Return the enchantability factor of the item, most of the time is based on material.
+- `boolean hasColor(ItemStack stack)` — Return whether the specified armor ItemStack has a color.
+- `ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)` — Called whenever this item is equipped and the right mouse button is pressed.
+- `void removeColor(ItemStack stack)` — Remove the color from the specified armor ItemStack.
+- `void setColor(ItemStack stack, int color)` — Sets the color of the specified armor ItemStack
 
-## Description
+## Fields
 
-Stores the armor type: 0 is helmet, 1 is plate, 2 is legs and 3 is boots
+- `int armorType` — Stores the armor type: 0 is helmet, 1 is plate, 2 is legs and 3 is boots
+- `int damageReduceAmount` — Holds the amount of damage that the armor reduces at full durability.
+- `static java.lang.String[] EMPTY_SLOT_NAMES`
+- `int renderIndex` — Used on RenderPlayer to select the correspondent armor to be rendered on the player: 0 is cloth, 1 is chain, 2 is iron, 3 is diamond and 4 is gold.

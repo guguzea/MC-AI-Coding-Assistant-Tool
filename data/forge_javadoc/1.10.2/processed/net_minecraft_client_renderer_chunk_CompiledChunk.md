@@ -1,5 +1,7 @@
 # CompiledChunk
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.chunk.CompiledChunk
+
 ## Class signature
 
 ```java
@@ -8,18 +10,22 @@ public class CompiledChunk extends java.lang.Object
 
 ## Constructors
 
-- `public CompiledChunk()`
+- `CompiledChunk()`
 
 ## Methods
 
-- `public boolean isEmpty()`
-- `protected void setLayerUsed( BlockRenderLayer layer)`
-- `public boolean isLayerEmpty( BlockRenderLayer layer)`
-- `public void setLayerStarted( BlockRenderLayer layer)`
-- `public boolean isLayerStarted( BlockRenderLayer layer)`
-- `public java.util.List< TileEntity > getTileEntities()`
-- `public void addTileEntity( TileEntity tileEntityIn)`
-- `public boolean isVisible( EnumFacing facing, EnumFacing facing2)`
-- `public void setVisibility( SetVisibility visibility)`
-- `public VertexBuffer.State getState()`
-- `public void setState( VertexBuffer.State stateIn)`
+- `void addTileEntity(TileEntity tileEntityIn)`
+- `VertexBuffer.State getState()`
+- `java.util.List<TileEntity> getTileEntities()`
+- `boolean isEmpty()`
+- `boolean isLayerEmpty(BlockRenderLayer layer)`
+- `boolean isLayerStarted(BlockRenderLayer layer)`
+- `boolean isVisible(EnumFacing facing, EnumFacing facing2)`
+- `void setLayerStarted(BlockRenderLayer layer)`
+- `protected void setLayerUsed(BlockRenderLayer layer)`
+- `void setState(VertexBuffer.State stateIn)`
+- `void setVisibility(SetVisibility visibility)`
+
+## Fields
+
+- `static CompiledChunk DUMMY`

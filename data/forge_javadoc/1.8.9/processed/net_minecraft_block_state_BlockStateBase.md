@@ -1,5 +1,7 @@
 # BlockStateBase
 
+**Inheritance:** java.lang.Object → net.minecraft.block.state.BlockStateBase
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public abstract class BlockStateBase extends java.lang.Object implements IBlockS
 
 ## Constructors
 
-- `public BlockStateBase()`
+- `BlockStateBase()`
 
 ## Methods
 
-- `public <T extends java.lang.Comparable<T>> IBlockState cycleProperty( IProperty <T> property)`
-- `protected static <T> T cyclePropertyValue(java.util.Collection<T> values, T currentValue)`
-- `public java.lang.String toString()`
-- `public <any> getPropertyValueTable()`
+- `<T extends java.lang.Comparable<T>> IBlockState cycleProperty(IProperty<T> property)`
+- `protected static<T> T cyclePropertyValue(java.util.Collection<T> values, T currentValue)`
+- `<any> getPropertyValueTable()`
+- `java.lang.String toString()`

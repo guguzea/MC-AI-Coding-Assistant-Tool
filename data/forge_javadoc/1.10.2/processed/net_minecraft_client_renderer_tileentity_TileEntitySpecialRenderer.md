@@ -1,23 +1,30 @@
 # TileEntitySpecialRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer<T>
+
 ## Class signature
 
 ```java
-public abstract class TileEntitySpecialRenderer<T extends TileEntity > extends java.lang.Object
+public abstract class TileEntitySpecialRenderer<T extends TileEntity> extends java.lang.Object
 ```
 
 ## Constructors
 
-- `public TileEntitySpecialRenderer()`
+- `TileEntitySpecialRenderer()`
 
 ## Methods
 
-- `public void renderTileEntityAt( T te, double x, double y, double z, float partialTicks, int destroyStage)`
-- `protected void setLightmapDisabled(boolean disabled)`
-- `protected void bindTexture( ResourceLocation location)`
+- `protected void bindTexture(ResourceLocation location)`
+- `protected void drawNameplate(T te, java.lang.String str, double x, double y, double z, int maxDistance)`
+- `FontRenderer getFontRenderer()`
 - `protected World getWorld()`
-- `public void setRendererDispatcher( TileEntityRendererDispatcher rendererDispatcherIn)`
-- `public FontRenderer getFontRenderer()`
-- `public boolean isGlobalRenderer( T te)`
-- `public void renderTileEntityFast( T te, double x, double y, double z, float partialTicks, int destroyStage, VertexBuffer buffer)`
-- `protected void drawNameplate( T te, java.lang.String str, double x, double y, double z, int maxDistance)`
+- `boolean isGlobalRenderer(T te)`
+- `void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage)`
+- `void renderTileEntityFast(T te, double x, double y, double z, float partialTicks, int destroyStage, VertexBuffer buffer)`
+- `protected void setLightmapDisabled(boolean disabled)`
+- `void setRendererDispatcher(TileEntityRendererDispatcher rendererDispatcherIn)`
+
+## Fields
+
+- `protected static ResourceLocation [] DESTROY_STAGES`
+- `protected TileEntityRendererDispatcher rendererDispatcher`

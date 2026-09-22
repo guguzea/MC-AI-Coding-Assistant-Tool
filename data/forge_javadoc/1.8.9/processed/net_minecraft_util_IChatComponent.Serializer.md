@@ -1,12 +1,20 @@
 # IChatComponent.Serializer
 
+**Inheritance:** java.lang.Object → net.minecraft.util.IChatComponent.Serializer
+
+## Class signature
+
+```java
+public static class IChatComponent.Serializer extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Serializer()`
+- `Serializer()`
 
 ## Methods
 
-- `public IChatComponent deserialize(JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException`
-- `public JsonElement serialize( IChatComponent p_serialize_1_, java.lang.reflect.Type p_serialize_2_, JsonSerializationContext p_serialize_3_)`
-- `public static java.lang.String componentToJson( IChatComponent component)`
-- `public static IChatComponent jsonToComponent(java.lang.String json)`
+- `static java.lang.String componentToJson(IChatComponent component)`
+- `IChatComponent deserialize(JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_)`
+- `static IChatComponent jsonToComponent(java.lang.String json)`
+- `JsonElement serialize(IChatComponent p_serialize_1_, java.lang.reflect.Type p_serialize_2_, JsonSerializationContext p_serialize_3_)`

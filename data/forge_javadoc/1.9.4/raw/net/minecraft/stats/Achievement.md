@@ -3,11 +3,15 @@ title: "Achievement"
 description: "public class Achievement extends StatBase"
 package: "net/minecraft/stats"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/stats/Achievement.html"
 sourceType: javadoc
 ---
 
 # Achievement
+
+**Inheritance:** java.lang.Object → net.minecraft.stats.StatBase → net.minecraft.stats.Achievement
 
 ## Class signature
 
@@ -17,18 +21,25 @@ public class Achievement extends StatBase
 
 ## Constructors
 
-- `public Achievement(java.lang.String statIdIn, java.lang.String unlocalizedName, int column, int row, Item itemIn, Achievement parent)`
-- `public Achievement(java.lang.String statIdIn, java.lang.String unlocalizedName, int column, int row, Block blockIn, Achievement parent)`
-- `public Achievement(java.lang.String statIdIn, java.lang.String unlocalizedName, int column, int row, ItemStack stack, Achievement parent)`
+- `Achievement(java.lang.String statIdIn, java.lang.String unlocalizedName, int column, int row, Block blockIn, Achievement parent)`
+- `Achievement(java.lang.String statIdIn, java.lang.String unlocalizedName, int column, int row, Item itemIn, Achievement parent)`
+- `Achievement(java.lang.String statIdIn, java.lang.String unlocalizedName, int column, int row, ItemStack stack, Achievement parent)`
 
 ## Methods
 
-- `public Achievement initIndependentStat()`
-- `public Achievement setSpecial()`
-- `public Achievement registerStat()`
-- `public boolean isAchievement()`
-- `public ITextComponent getStatName()`
-- `public Achievement setSerializableClazz(java.lang.Class<? extends IJsonSerializable > clazz)`
-- `public java.lang.String getDescription()`
-- `public Achievement setStatStringFormatter( IStatStringFormat statStringFormatterIn)`
-- `public boolean getSpecial()`
+- `java.lang.String getDescription()`
+- `boolean getSpecial()`
+- `ITextComponent getStatName()`
+- `Achievement initIndependentStat()`
+- `boolean isAchievement()`
+- `Achievement registerStat()`
+- `Achievement setSerializableClazz(java.lang.Class<? extends IJsonSerializable> clazz)`
+- `Achievement setSpecial()`
+- `Achievement setStatStringFormatter(IStatStringFormat statStringFormatterIn)`
+
+## Fields
+
+- `int displayColumn`
+- `int displayRow`
+- `Achievement parentAchievement`
+- `ItemStack theItemStack`

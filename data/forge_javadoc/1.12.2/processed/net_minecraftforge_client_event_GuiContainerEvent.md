@@ -1,5 +1,7 @@
 # GuiContainerEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiContainerEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class GuiContainerEvent extends Event
 
 ## Constructors
 
-- `public GuiContainerEvent( GuiContainer guiContainer)`
+- `GuiContainerEvent(GuiContainer guiContainer)`
 
 ## Methods
 
-- `public GuiContainer getGuiContainer()`
-
-## Description
-
-Event class for handling GuiContainer specific events.
+- `GuiContainer getGuiContainer()`

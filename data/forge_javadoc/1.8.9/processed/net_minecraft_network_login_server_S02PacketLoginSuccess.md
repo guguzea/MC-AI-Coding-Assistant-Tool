@@ -1,23 +1,21 @@
 # S02PacketLoginSuccess
 
+**Inheritance:** java.lang.Object → net.minecraft.network.login.server.S02PacketLoginSuccess
+
 ## Class signature
 
 ```java
-public class S02PacketLoginSuccess extends java.lang.Object implements Packet < INetHandlerLoginClient >
+public class S02PacketLoginSuccess extends java.lang.Object implements Packet<INetHandlerLoginClient>
 ```
 
 ## Constructors
 
-- `public S02PacketLoginSuccess()`
-- `public S02PacketLoginSuccess(GameProfile profileIn)`
+- `S02PacketLoginSuccess()`
+- `S02PacketLoginSuccess(GameProfile profileIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerLoginClient handler)`
-- `public GameProfile getProfile()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `GameProfile getProfile()`
+- `void processPacket(INetHandlerLoginClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

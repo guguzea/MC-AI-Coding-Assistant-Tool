@@ -1,33 +1,37 @@
 ---
 title: "CPacketUseEntity"
-description: "public class CPacketUseEntity extends java.lang.Object implements Packet < INetHandlerPlayServer >"
+description: "public class CPacketUseEntity extends java.lang.Object implements Packet<INetHandlerPlayServer>"
 package: "net/minecraft/network/play/client"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/network/play/client/CPacketUseEntity.html"
 sourceType: javadoc
 ---
 
 # CPacketUseEntity
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketUseEntity
+
 ## Class signature
 
 ```java
-public class CPacketUseEntity extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketUseEntity extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketUseEntity()`
-- `public CPacketUseEntity( Entity entityIn)`
-- `public CPacketUseEntity( Entity entityIn, EnumHand handIn)`
-- `public CPacketUseEntity( Entity entityIn, EnumHand handIn, Vec3d hitVecIn)`
+- `CPacketUseEntity()`
+- `CPacketUseEntity(Entity entityIn)`
+- `CPacketUseEntity(Entity entityIn, EnumHand handIn)`
+- `CPacketUseEntity(Entity entityIn, EnumHand handIn, Vec3d hitVecIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public Entity getEntityFromWorld( World worldIn)`
-- `public CPacketUseEntity.Action getAction()`
-- `public EnumHand getHand()`
-- `public Vec3d getHitVec()`
+- `CPacketUseEntity.Action getAction()`
+- `Entity getEntityFromWorld(World worldIn)`
+- `EnumHand getHand()`
+- `Vec3d getHitVec()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

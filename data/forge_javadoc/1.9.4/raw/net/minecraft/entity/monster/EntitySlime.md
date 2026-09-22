@@ -1,13 +1,17 @@
 ---
 title: "EntitySlime"
-description: "Called when the slime spawns particles on landing, see onUpdate."
+description: "public class EntitySlime extends EntityLiving implements IMob"
 package: "net/minecraft/entity/monster"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/monster/EntitySlime.html"
 sourceType: javadoc
 ---
 
 # EntitySlime
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.monster.EntitySlime
 
 ## Class signature
 
@@ -17,44 +21,46 @@ public class EntitySlime extends EntityLiving implements IMob
 
 ## Constructors
 
-- `public EntitySlime( World worldIn)`
+- `EntitySlime(World worldIn)`
 
 ## Methods
 
-- `protected void initEntityAI()`
-- `protected void entityInit()`
-- `protected void setSlimeSize(int size)`
-- `public int getSlimeSize()`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public boolean isSmallSlime()`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `protected EnumParticleTypes getParticleType()`
-- `public void onUpdate()`
 - `protected void alterSquishAmount()`
-- `protected int getJumpDelay()`
-- `protected EntitySlime createInstance()`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public void setDead()`
-- `public void applyEntityCollision( Entity entityIn)`
-- `public void onCollideWithPlayer( EntityPlayer entityIn)`
-- `protected void dealDamage( EntityLivingBase entityIn)`
-- `public float getEyeHeight()`
+- `void applyEntityCollision(Entity entityIn)`
 - `protected boolean canDamagePlayer()`
+- `protected EntitySlime createInstance()`
+- `protected void dealDamage(EntityLivingBase entityIn)`
+- `protected void entityInit()`
 - `protected int getAttackStrength()`
-- `protected SoundEvent getHurtSound()`
+- `boolean getCanSpawnHere()`
 - `protected SoundEvent getDeathSound()`
-- `protected SoundEvent getSquishSound()`
 - `protected Item getDropItem()`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public boolean getCanSpawnHere()`
-- `protected float getSoundVolume()`
-- `public int getVerticalFaceSpeed()`
-- `protected boolean makesSoundOnJump()`
-- `protected void jump()`
-- `@Nullable public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound()`
+- `protected int getJumpDelay()`
 - `protected SoundEvent getJumpSound()`
-- `protected boolean spawnCustomParticles()`
+- `protected ResourceLocation getLootTable()`
+- `protected EnumParticleTypes getParticleType()`
+- `int getSlimeSize()`
+- `protected float getSoundVolume()`
+- `protected SoundEvent getSquishSound()`
+- `int getVerticalFaceSpeed()`
+- `protected void initEntityAI()`
+- `boolean isSmallSlime()`
+- `protected void jump()`
+- `protected boolean makesSoundOnJump()`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onCollideWithPlayer(EntityPlayer entityIn)`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void setDead()`
+- `protected void setSlimeSize(int size)`
+- `protected boolean spawnCustomParticles()` — Called when the slime spawns particles on landing, see onUpdate.
+- `void writeEntityToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Called when the slime spawns particles on landing, see onUpdate.
+- `float prevSquishFactor`
+- `float squishAmount`
+- `float squishFactor`

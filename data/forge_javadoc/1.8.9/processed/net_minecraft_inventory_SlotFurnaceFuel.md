@@ -1,21 +1,19 @@
 # SlotFurnaceFuel
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Slot → net.minecraft.inventory.SlotFurnaceFuel
+
 ## Class signature
 
 ```java
 public class SlotFurnaceFuel extends Slot
 ```
 
-## Constructors
-
-- `public SlotFurnaceFuel( IInventory inventoryIn, int slotIndex, int xPosition, int yPosition)`
-
 ## Methods
 
-- `public boolean isItemValid( ItemStack stack)`
-- `public int getItemStackLimit( ItemStack stack)`
-- `public static boolean isBucket( ItemStack stack)`
+- `int getItemStackLimit(ItemStack stack)`
+- `static boolean isBucket(ItemStack stack)`
+- `boolean isItemValid(ItemStack stack)` — Check if the stack is a valid item for this slot.
 
-## Description
+## Fields
 
-Check if the stack is a valid item for this slot.
+- `SlotFurnaceFuel`

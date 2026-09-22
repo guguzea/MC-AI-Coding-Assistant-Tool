@@ -1,25 +1,23 @@
 # ItemRecord
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemRecord
+
 ## Class signature
 
 ```java
 public class ItemRecord extends Item
 ```
 
-## Constructors
-
-- `protected ItemRecord(java.lang.String p_i46742_1_, SoundEvent soundIn)`
-
 ## Methods
 
-- `public EnumActionResult onItemUse( EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `public void addInformation( ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
-- `public ResourceLocation getRecordResource(java.lang.String name)`
-- `public java.lang.String getRecordNameLocal()`
-- `public EnumRarity getRarity( ItemStack stack)`
-- `@Nullable public static ItemRecord getBySound( SoundEvent soundIn)`
-- `public SoundEvent getSound()`
+- `void addInformation(ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
+- `static ItemRecord getBySound(SoundEvent soundIn)`
+- `EnumRarity getRarity(ItemStack stack)`
+- `java.lang.String getRecordNameLocal()`
+- `ResourceLocation getRecordResource(java.lang.String name)` — Retrieves the resource location of the sound to play for this record.
+- `SoundEvent getSound()`
+- `EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
 
-## Description
+## Fields
 
-Retrieves the resource location of the sound to play for this record.
+- `protected ItemRecord`

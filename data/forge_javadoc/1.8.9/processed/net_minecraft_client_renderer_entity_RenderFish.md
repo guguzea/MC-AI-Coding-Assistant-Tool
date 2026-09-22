@@ -1,20 +1,18 @@
 # RenderFish
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<EntityFishHook> → net.minecraft.client.renderer.entity.RenderFish
+
 ## Class signature
 
 ```java
-public class RenderFish extends Render < EntityFishHook >
+public class RenderFish extends Render<EntityFishHook>
 ```
-
-## Constructors
-
-- `public RenderFish( RenderManager renderManagerIn)`
 
 ## Methods
 
-- `public void doRender( EntityFishHook entity, double x, double y, double z, float entityYaw, float partialTicks)`
-- `protected ResourceLocation getEntityTexture( EntityFishHook entity)`
+- `void doRender(EntityFishHook entity, double x, double y, double z, float entityYaw, float partialTicks)` — Actually renders the given argument.
+- `protected ResourceLocation getEntityTexture(EntityFishHook entity)` — Returns the location of an entity's texture.
 
-## Description
+## Fields
 
-Actually renders the given argument.
+- `RenderFish`

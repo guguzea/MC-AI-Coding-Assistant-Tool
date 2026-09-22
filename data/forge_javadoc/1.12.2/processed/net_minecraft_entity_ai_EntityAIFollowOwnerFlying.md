@@ -1,5 +1,7 @@
 # EntityAIFollowOwnerFlying
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIFollowOwner → net.minecraft.entity.ai.EntityAIFollowOwnerFlying
+
 ## Class signature
 
 ```java
@@ -8,7 +10,7 @@ public class EntityAIFollowOwnerFlying extends EntityAIFollowOwner
 
 ## Constructors
 
-- `public EntityAIFollowOwnerFlying( EntityTameable p_i47416_1_, double p_i47416_2_, float p_i47416_4_, float p_i47416_5_)`
+- `EntityAIFollowOwnerFlying(EntityTameable p_i47416_1_, double p_i47416_2_, float p_i47416_4_, float p_i47416_5_)`
 
 ## Methods
 

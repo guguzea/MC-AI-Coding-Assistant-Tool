@@ -1,5 +1,9 @@
 # StartupQuery.AbortedException
 
-## Description
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.lang.RuntimeException → net.minecraftforge.fml.common.StartupQuery.AbortedException
 
-Exception not being caught by the crash report generation logic.
+## Class signature
+
+```java
+public static class StartupQuery.AbortedException extends java.lang.RuntimeException
+```

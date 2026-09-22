@@ -1,5 +1,7 @@
 # EntitySenses
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntitySenses
+
 ## Class signature
 
 ```java
@@ -8,13 +10,9 @@ public class EntitySenses extends java.lang.Object
 
 ## Constructors
 
-- `public EntitySenses( EntityLiving entityObjIn)`
+- `EntitySenses(EntityLiving entityObjIn)`
 
 ## Methods
 
-- `public void clearSensingCache()`
-- `public boolean canSee( Entity entityIn)`
-
-## Description
-
-Checks, whether 'our' entity can see the entity given as argument (true) or not (false), caching the result.
+- `boolean canSee(Entity entityIn)` — Checks, whether 'our' entity can see the entity given as argument (true) or not (false), caching the result.
+- `void clearSensingCache()` — Clears canSeeCachePositive and canSeeCacheNegative.

@@ -3,6 +3,8 @@ title: "IInventory"
 description: "public interface IInventory extends IWorldNameable"
 package: "net/minecraft/inventory"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/inventory/IInventory.html"
 sourceType: javadoc
 ---
@@ -17,19 +19,19 @@ public interface IInventory extends IWorldNameable
 
 ## Methods
 
-- `int getSizeInventory()`
-- `boolean isEmpty()`
-- `ItemStack getStackInSlot(int index)`
-- `ItemStack decrStackSize(int index, int count)`
-- `ItemStack removeStackFromSlot(int index)`
-- `void setInventorySlotContents(int index, ItemStack stack)`
-- `int getInventoryStackLimit()`
-- `void markDirty()`
-- `boolean isUsableByPlayer( EntityPlayer player)`
-- `void openInventory( EntityPlayer player)`
-- `void closeInventory( EntityPlayer player)`
-- `boolean isItemValidForSlot(int index, ItemStack stack)`
-- `int getField(int id)`
-- `void setField(int id, int value)`
-- `int getFieldCount()`
 - `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `ItemStack decrStackSize(int index, int count)`
+- `int getField(int id)`
+- `int getFieldCount()`
+- `int getInventoryStackLimit()`
+- `int getSizeInventory()`
+- `ItemStack getStackInSlot(int index)`
+- `boolean isEmpty()`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isUsableByPlayer(EntityPlayer player)`
+- `void markDirty()`
+- `void openInventory(EntityPlayer player)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`

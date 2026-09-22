@@ -1,5 +1,7 @@
 # EntityViewRenderEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.EntityViewRenderEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,11 @@ public abstract class EntityViewRenderEvent extends Event
 
 ## Constructors
 
-- `public EntityViewRenderEvent( EntityRenderer renderer, Entity entity, Block block, double renderPartialTicks)`
+- `EntityViewRenderEvent(EntityRenderer renderer, Entity entity, Block block, double renderPartialTicks)`
 
-## Description
+## Fields
 
-Event that hooks into EntityRenderer, allowing any feature to customize visual attributes the player sees.
+- `Block block`
+- `Entity entity`
+- `EntityRenderer renderer`
+- `double renderPartialTicks`

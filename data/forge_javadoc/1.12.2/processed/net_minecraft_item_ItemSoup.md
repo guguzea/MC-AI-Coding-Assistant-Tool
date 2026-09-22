@@ -1,15 +1,17 @@
 # ItemSoup
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemFood → net.minecraft.item.ItemSoup
+
 ## Class signature
 
 ```java
 public class ItemSoup extends ItemFood
 ```
 
-## Constructors
-
-- `public ItemSoup(int healAmount)`
-
 ## Methods
 
-- `public ItemStack onItemUseFinish( ItemStack stack, World worldIn, EntityLivingBase entityLiving)`
+- `ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)`
+
+## Fields
+
+- `ItemSoup`

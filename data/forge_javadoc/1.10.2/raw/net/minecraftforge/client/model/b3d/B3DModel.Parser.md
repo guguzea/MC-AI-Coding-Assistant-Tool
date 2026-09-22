@@ -1,18 +1,28 @@
 ---
 title: "B3DModel.Parser"
-description: ""
+description: "public static class B3DModel.Parser extends java.lang.Object"
 package: "net/minecraftforge/client/model/b3d"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/client/model/b3d/B3DModel.Parser.html"
 sourceType: javadoc
 ---
 
 # B3DModel.Parser
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.b3d.B3DModel.Parser
+
+## Class signature
+
+```java
+public static class B3DModel.Parser extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Parser(java.io.InputStream in) throws java.io.IOException`
+- `Parser(java.io.InputStream in)`
 
 ## Methods
 
-- `public B3DModel parse() throws java.io.IOException`
+- `B3DModel parse()`

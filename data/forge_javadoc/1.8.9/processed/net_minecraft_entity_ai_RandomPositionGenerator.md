@@ -1,5 +1,7 @@
 # RandomPositionGenerator
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.RandomPositionGenerator
+
 ## Class signature
 
 ```java
@@ -8,14 +10,10 @@ public class RandomPositionGenerator extends java.lang.Object
 
 ## Constructors
 
-- `public RandomPositionGenerator()`
+- `RandomPositionGenerator()`
 
 ## Methods
 
-- `public static Vec3 findRandomTarget( EntityCreature entitycreatureIn, int xz, int y)`
-- `public static Vec3 findRandomTargetBlockTowards( EntityCreature entitycreatureIn, int xz, int y, Vec3 targetVec3)`
-- `public static Vec3 findRandomTargetBlockAwayFrom( EntityCreature entitycreatureIn, int xz, int y, Vec3 targetVec3)`
-
-## Description
-
-finds a random target within par1(x,z) and par2 (y) blocks
+- `static Vec3 findRandomTarget(EntityCreature entitycreatureIn, int xz, int y)` — finds a random target within par1(x,z) and par2 (y) blocks
+- `static Vec3 findRandomTargetBlockAwayFrom(EntityCreature entitycreatureIn, int xz, int y, Vec3 targetVec3)` — finds a random target within par1(x,z) and par2 (y) blocks in the reverse direction of the point par3
+- `static Vec3 findRandomTargetBlockTowards(EntityCreature entitycreatureIn, int xz, int y, Vec3 targetVec3)` — finds a random target within par1(x,z) and par2 (y) blocks in the direction of the point par3

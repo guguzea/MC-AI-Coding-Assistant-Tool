@@ -1,5 +1,7 @@
 # ForgeCommand
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraftforge.server.command.ForgeCommand
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class ForgeCommand extends CommandBase
 
 ## Constructors
 
-- `public ForgeCommand()`
+- `ForgeCommand()`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public java.lang.String getUsage( ICommandSender icommandsender)`
-- `public int getRequiredPermissionLevel()`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.lang.String getName()`
+- `int getRequiredPermissionLevel()`
+- `java.lang.String getUsage(ICommandSender icommandsender)`

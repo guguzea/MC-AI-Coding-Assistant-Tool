@@ -3,11 +3,15 @@ title: "BlockSourceImpl"
 description: "public class BlockSourceImpl extends java.lang.Object implements IBlockSource"
 package: "net/minecraft/block"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/block/BlockSourceImpl.html"
 sourceType: javadoc
 ---
 
 # BlockSourceImpl
+
+**Inheritance:** java.lang.Object → net.minecraft.block.BlockSourceImpl
 
 ## Class signature
 
@@ -17,14 +21,14 @@ public class BlockSourceImpl extends java.lang.Object implements IBlockSource
 
 ## Constructors
 
-- `public BlockSourceImpl( World worldIn, BlockPos posIn)`
+- `BlockSourceImpl(World worldIn, BlockPos posIn)`
 
 ## Methods
 
-- `public World getWorld()`
-- `public double getX()`
-- `public double getY()`
-- `public double getZ()`
-- `public BlockPos getBlockPos()`
-- `public IBlockState getBlockState()`
-- `public <T extends TileEntity > T getBlockTileEntity()`
+- `BlockPos getBlockPos()`
+- `IBlockState getBlockState()`
+- `<T extends TileEntity> T getBlockTileEntity()`
+- `World getWorld()`
+- `double getX()`
+- `double getY()`
+- `double getZ()`

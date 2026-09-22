@@ -1,5 +1,7 @@
 # IRenderHandler
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.IRenderHandler
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public abstract class IRenderHandler extends java.lang.Object
 
 ## Constructors
 
-- `public IRenderHandler()`
+- `IRenderHandler()`
 
 ## Methods
 
-- `public abstract void render(float partialTicks, WorldClient world, Minecraft mc)`
+- `abstract void render(float partialTicks, WorldClient world, Minecraft mc)`

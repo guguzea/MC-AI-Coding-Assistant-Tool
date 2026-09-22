@@ -1,16 +1,18 @@
 # BlockObsidian
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockObsidian
+
 ## Class signature
 
 ```java
 public class BlockObsidian extends Block
 ```
 
-## Constructors
-
-- `public BlockObsidian()`
-
 ## Methods
 
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public MapColor getMapColor( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+
+## Fields
+
+- `BlockObsidian`

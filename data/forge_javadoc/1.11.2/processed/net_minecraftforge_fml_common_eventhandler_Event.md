@@ -1,5 +1,7 @@
 # Event
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event
+
 ## Class signature
 
 ```java
@@ -8,21 +10,17 @@ public class Event extends java.lang.Object
 
 ## Constructors
 
-- `public Event()`
+- `Event()`
 
 ## Methods
 
-- `public boolean isCancelable()`
-- `public boolean isCanceled()`
-- `public void setCanceled(boolean cancel)`
-- `public boolean hasResult()`
-- `public Event.Result getResult()`
-- `public void setResult( Event.Result value)`
-- `protected void setup()`
-- `public ListenerList getListenerList()`
-- `@Nullable public EventPriority getPhase()`
-- `public void setPhase(@Nonnull EventPriority value)`
-
-## Description
-
-Base Event class that all other events are derived from
+- `ListenerList getListenerList()` — Returns a ListenerList object that contains all listeners that are registered to this event.
+- `EventPriority getPhase()`
+- `Event.Result getResult()` — Returns the value set as the result of this event
+- `boolean hasResult()` — Determines if this event expects a significant result value.
+- `boolean isCancelable()` — Determine if this function is cancelable at all.
+- `boolean isCanceled()` — Determine if this event is canceled and should stop executing.
+- `void setCanceled(boolean cancel)` — Sets the state of this event, not all events are cancelable, and any attempt to cancel a event that can't be will result in a IllegalArgumentException.
+- `void setPhase(EventPriority value)`
+- `void setResult(Event.Result value)` — Sets the result value for this event, not all events can have a result set, and any attempt to set a result for a event that isn't expecting it will result in a IllegalArgumentException.
+- `protected void setup()` — Called by the base constructor, this is used by ASM generated event classes to setup various functionality such as the listener list.

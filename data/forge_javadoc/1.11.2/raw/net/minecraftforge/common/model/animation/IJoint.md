@@ -1,8 +1,10 @@
 ---
 title: "IJoint"
-description: "Model part that's a part of the hierarchical skeleton."
+description: "public interface IJoint extends IModelPart"
 package: "net/minecraftforge/common/model/animation"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/common/model/animation/IJoint.html"
 sourceType: javadoc
 ---
@@ -18,8 +20,4 @@ public interface IJoint extends IModelPart
 ## Methods
 
 - `TRSRTransformation getInvBindPose()`
-- `com.google.common.base.Optional<? extends IJoint > getParent()`
-
-## Description
-
-Model part that's a part of the hierarchical skeleton.
+- `com.google.common.base.Optional<? extends IJoint> getParent()`

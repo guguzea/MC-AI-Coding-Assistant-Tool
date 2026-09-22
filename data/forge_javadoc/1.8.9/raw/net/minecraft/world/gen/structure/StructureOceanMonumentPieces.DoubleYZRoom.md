@@ -1,23 +1,29 @@
 ---
 title: "StructureOceanMonumentPieces.DoubleYZRoom"
-description: "second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at the end, it adds Fences..."
+description: "public static class StructureOceanMonumentPieces.DoubleYZRoom extends StructureOceanMonumentPieces.Piece"
 package: "net/minecraft/world/gen/structure"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/gen/structure/StructureOceanMonumentPieces.DoubleYZRoom.html"
 sourceType: javadoc
 ---
 
 # StructureOceanMonumentPieces.DoubleYZRoom
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureOceanMonumentPieces.Piece → net.minecraft.world.gen.structure.StructureOceanMonumentPieces.DoubleYZRoom
 
-- `public DoubleYZRoom()`
-- `public DoubleYZRoom( EnumFacing p_i45594_1_, net.minecraft.world.gen.structure.StructureOceanMonumentPieces.RoomDefinition p_i45594_2_, java.util.Random p_i45594_3_)`
+## Class signature
+
+```java
+public static class StructureOceanMonumentPieces.DoubleYZRoom extends StructureOceanMonumentPieces.Piece
+```
 
 ## Methods
 
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)` — second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at the end, it adds Fences...
 
-## Description
+## Fields
 
-second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at the end, it adds Fences...
+- `DoubleYZRoom`
+- `DoubleYZRoom`

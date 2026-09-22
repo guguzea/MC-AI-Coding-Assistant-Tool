@@ -3,11 +3,15 @@ title: "ParticleSnowShovel"
 description: "public class ParticleSnowShovel extends Particle"
 package: "net/minecraft/client/particle"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/particle/ParticleSnowShovel.html"
 sourceType: javadoc
 ---
 
 # ParticleSnowShovel
+
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleSnowShovel
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class ParticleSnowShovel extends Particle
 ```
 
-## Constructors
-
-- `protected ParticleSnowShovel( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn)`
-- `protected ParticleSnowShovel( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, float p_i1228_14_)`
-
 ## Methods
 
-- `public void renderParticle( VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
-- `public void onUpdate()`
+- `void onUpdate()`
+- `void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+
+## Fields
+
+- `protected ParticleSnowShovel`
+- `protected ParticleSnowShovel`

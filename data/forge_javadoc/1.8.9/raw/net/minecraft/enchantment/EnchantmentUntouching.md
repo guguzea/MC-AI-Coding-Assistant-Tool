@@ -1,13 +1,17 @@
 ---
 title: "EnchantmentUntouching"
-description: "Determines if this enchantment can be applied to a specific ItemStack."
+description: "public class EnchantmentUntouching extends Enchantment"
 package: "net/minecraft/enchantment"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/enchantment/EnchantmentUntouching.html"
 sourceType: javadoc
 ---
 
 # EnchantmentUntouching
+
+**Inheritance:** java.lang.Object → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentUntouching
 
 ## Class signature
 
@@ -15,18 +19,14 @@ sourceType: javadoc
 public class EnchantmentUntouching extends Enchantment
 ```
 
-## Constructors
-
-- `protected EnchantmentUntouching(int p_i45763_1_, ResourceLocation p_i45763_2_, int p_i45763_3_)`
-
 ## Methods
 
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int getMaxLevel()`
-- `public boolean canApplyTogether( Enchantment ench)`
-- `public boolean canApply( ItemStack stack)`
+- `boolean canApply(ItemStack stack)` — Determines if this enchantment can be applied to a specific ItemStack.
+- `boolean canApplyTogether(Enchantment ench)` — Determines if the enchantment passed can be applyied together with this enchantment.
+- `int getMaxEnchantability(int enchantmentLevel)` — Returns the maximum value of enchantability nedded on the enchantment level passed.
+- `int getMaxLevel()` — Returns the maximum level that the enchantment can have.
+- `int getMinEnchantability(int enchantmentLevel)` — Returns the minimal value of enchantability needed on the enchantment level passed.
 
-## Description
+## Fields
 
-Determines if this enchantment can be applied to a specific ItemStack.
+- `protected EnchantmentUntouching`

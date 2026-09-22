@@ -1,5 +1,7 @@
 # Checksum
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.repackage.com.nothome.delta.Checksum
+
 ## Class signature
 
 ```java
@@ -8,16 +10,12 @@ public class Checksum extends java.lang.Object
 
 ## Constructors
 
-- `public Checksum( SeekableSource source, int chunkSize) throws java.io.IOException`
+- `Checksum(SeekableSource source, int chunkSize)`
 
 ## Methods
 
-- `public static long queryChecksum(java.nio.ByteBuffer bb, int len)`
-- `public static long incrementChecksum(long checksum, byte out, byte in, int chunkSize)`
-- `public static char[] getSingleHash()`
-- `public int findChecksumIndex(long hashf)`
-- `public java.lang.String toString()`
-
-## Description
-
-Checksum computation class.
+- `int findChecksumIndex(long hashf)` — Finds the index of a checksum.
+- `static char[] getSingleHash()` — 256 random hash values.
+- `static long incrementChecksum(long checksum, byte out, byte in, int chunkSize)` — Increments a checksum.
+- `static long queryChecksum(java.nio.ByteBuffer bb, int len)` — Finds the checksum computed from the buffer.
+- `java.lang.String toString()` — Returns a debug String .

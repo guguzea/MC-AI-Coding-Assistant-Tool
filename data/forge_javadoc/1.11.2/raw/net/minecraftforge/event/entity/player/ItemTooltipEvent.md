@@ -1,13 +1,17 @@
 ---
 title: "ItemTooltipEvent"
-description: "This event is fired in ItemStack.getTooltip(EntityPlayer, boolean) , which in turn is called from it's respective GUIContainer."
+description: "public class ItemTooltipEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/entity/player/ItemTooltipEvent.html"
 sourceType: javadoc
 ---
 
 # ItemTooltipEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.ItemTooltipEvent
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class ItemTooltipEvent extends PlayerEvent
 
 ## Constructors
 
-- `public ItemTooltipEvent(@Nonnull ItemStack itemStack, EntityPlayer entityPlayer, java.util.List<java.lang.String> toolTip, boolean showAdvancedItemTooltips)`
+- `ItemTooltipEvent(ItemStack itemStack, EntityPlayer entityPlayer, java.util.List<java.lang.String> toolTip, boolean showAdvancedItemTooltips)`
 
 ## Methods
 
-- `public boolean isShowAdvancedItemTooltips()`
-- `@Nonnull public ItemStack getItemStack()`
-- `public java.util.List<java.lang.String> getToolTip()`
-
-## Description
-
-This event is fired in ItemStack.getTooltip(EntityPlayer, boolean) , which in turn is called from it's respective GUIContainer.
+- `ItemStack getItemStack()` — The ItemStack with the tooltip.
+- `java.util.List<java.lang.String> getToolTip()` — The ItemStack tooltip.
+- `boolean isShowAdvancedItemTooltips()` — Whether the advanced information on item tooltips is being shown, toggled by F3+H.

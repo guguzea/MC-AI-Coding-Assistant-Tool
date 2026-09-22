@@ -1,9 +1,13 @@
 # GuiScreenEvent.MouseInputEvent.Pre
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent → net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent.Pre
 
-- `public Pre( GuiScreen gui)`
+## Class signature
 
-## Description
+```java
+public static class GuiScreenEvent.MouseInputEvent.Pre extends GuiScreenEvent.MouseInputEvent
+```
 
-This event fires when mouse input is detected by a GuiScreen. Cancel this event to bypass GuiScreen.handleMouseInput() .
+## Fields
+
+- `Pre`

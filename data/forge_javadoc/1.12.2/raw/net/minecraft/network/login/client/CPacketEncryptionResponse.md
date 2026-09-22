@@ -1,29 +1,33 @@
 ---
 title: "CPacketEncryptionResponse"
-description: "public class CPacketEncryptionResponse extends java.lang.Object implements Packet < INetHandlerLoginServer >"
+description: "public class CPacketEncryptionResponse extends java.lang.Object implements Packet<INetHandlerLoginServer>"
 package: "net/minecraft/network/login/client"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/network/login/client/CPacketEncryptionResponse.html"
 sourceType: javadoc
 ---
 
 # CPacketEncryptionResponse
 
+**Inheritance:** java.lang.Object → net.minecraft.network.login.client.CPacketEncryptionResponse
+
 ## Class signature
 
 ```java
-public class CPacketEncryptionResponse extends java.lang.Object implements Packet < INetHandlerLoginServer >
+public class CPacketEncryptionResponse extends java.lang.Object implements Packet<INetHandlerLoginServer>
 ```
 
 ## Constructors
 
-- `public CPacketEncryptionResponse()`
-- `public CPacketEncryptionResponse(javax.crypto.SecretKey secret, java.security.PublicKey key, byte[] verifyToken)`
+- `CPacketEncryptionResponse()`
+- `CPacketEncryptionResponse(javax.crypto.SecretKey secret, java.security.PublicKey key, byte[] verifyToken)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerLoginServer handler)`
-- `public javax.crypto.SecretKey getSecretKey(java.security.PrivateKey key)`
-- `public byte[] getVerifyToken(java.security.PrivateKey key)`
+- `javax.crypto.SecretKey getSecretKey(java.security.PrivateKey key)`
+- `byte[] getVerifyToken(java.security.PrivateKey key)`
+- `void processPacket(INetHandlerLoginServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

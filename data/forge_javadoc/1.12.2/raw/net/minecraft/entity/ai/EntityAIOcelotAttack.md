@@ -3,11 +3,15 @@ title: "EntityAIOcelotAttack"
 description: "public class EntityAIOcelotAttack extends EntityAIBase"
 package: "net/minecraft/entity/ai"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/ai/EntityAIOcelotAttack.html"
 sourceType: javadoc
 ---
 
 # EntityAIOcelotAttack
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIOcelotAttack
 
 ## Class signature
 
@@ -17,11 +21,11 @@ public class EntityAIOcelotAttack extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIOcelotAttack( EntityLiving theEntityIn)`
+- `EntityAIOcelotAttack(EntityLiving theEntityIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean shouldContinueExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `void resetTask()`
+- `boolean shouldContinueExecuting()`
+- `boolean shouldExecute()`
+- `void updateTask()`

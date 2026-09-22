@@ -1,13 +1,17 @@
 ---
 title: "AttackEntityEvent"
-description: "AttackEntityEvent is fired when a player attacks an Entity. This event is fired whenever a player attacks an Entity in EntityPlayer.attackTargetEntityWithCurrentItem(Entity) . target contains the Enti"
+description: "public class AttackEntityEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/player/AttackEntityEvent.html"
 sourceType: javadoc
 ---
 
 # AttackEntityEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.AttackEntityEvent
 
 ## Class signature
 
@@ -17,12 +21,8 @@ public class AttackEntityEvent extends PlayerEvent
 
 ## Constructors
 
-- `public AttackEntityEvent( EntityPlayer player, Entity target)`
+- `AttackEntityEvent(EntityPlayer player, Entity target)`
 
 ## Methods
 
-- `public Entity getTarget()`
-
-## Description
-
-AttackEntityEvent is fired when a player attacks an Entity. This event is fired whenever a player attacks an Entity in EntityPlayer.attackTargetEntityWithCurrentItem(Entity) . target contains the Enti
+- `Entity getTarget()`

@@ -1,5 +1,7 @@
 # FMLPreInitializationEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLStateEvent → net.minecraftforge.fml.common.event.FMLPreInitializationEvent
+
 ## Class signature
 
 ```java
@@ -8,21 +10,17 @@ public class FMLPreInitializationEvent extends FMLStateEvent
 
 ## Constructors
 
-- `public FMLPreInitializationEvent(java.lang.Object... data)`
+- `FMLPreInitializationEvent(java.lang.Object... data)`
 
 ## Methods
 
-- `public LoaderState.ModState getModState()`
-- `public void applyModContainer( ModContainer activeContainer)`
-- `public java.io.File getSourceFile()`
-- `public ModMetadata getModMetadata()`
-- `public java.io.File getModConfigurationDirectory()`
-- `public java.io.File getSuggestedConfigurationFile()`
-- `public ASMDataTable getAsmData()`
-- `@Nullable public java.util.Properties getVersionProperties()`
-- `public org.apache.logging.log4j.Logger getModLog()`
-- `@Deprecated public java.security.cert.Certificate[] getFMLSigningCertificates()`
-
-## Description
-
-Called before FMLInitializationEvent during mod startup. This is the first of three commonly called events during mod initialization. Recommended activities: Setup your logging getModLog() Load any co
+- `void applyModContainer(ModContainer activeContainer)`
+- `ASMDataTable getAsmData()` — Get the ASMDataTable for this instance of Minecraft.
+- `@Deprecated java.security.cert.Certificate[] getFMLSigningCertificates()`
+- `java.io.File getModConfigurationDirectory()` — Get the main configuration directory for this minecraft instance
+- `org.apache.logging.log4j.Logger getModLog()` — Get a logger instance configured to write to the FML Log as a parent, identified by modid.
+- `ModMetadata getModMetadata()` — Get the ModMetadata for this mod
+- `LoaderState.ModState getModState()` — The current state of the mod
+- `java.io.File getSourceFile()` — Get the File the mod was loaded from
+- `java.io.File getSuggestedConfigurationFile()` — Get a suggested configuration file for this mod.
+- `java.util.Properties getVersionProperties()` — Get a version.properties file as a Properties object from the mod file.

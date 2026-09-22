@@ -1,13 +1,17 @@
 ---
 title: "PathNavigateClimber"
-description: "Returns the path to the given EntityLiving."
+description: "public class PathNavigateClimber extends PathNavigateGround"
 package: "net/minecraft/pathfinding"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/pathfinding/PathNavigateClimber.html"
 sourceType: javadoc
 ---
 
 # PathNavigateClimber
+
+**Inheritance:** java.lang.Object → net.minecraft.pathfinding.PathNavigate → net.minecraft.pathfinding.PathNavigateGround → net.minecraft.pathfinding.PathNavigateClimber
 
 ## Class signature
 
@@ -15,17 +19,13 @@ sourceType: javadoc
 public class PathNavigateClimber extends PathNavigateGround
 ```
 
-## Constructors
-
-- `public PathNavigateClimber( EntityLiving entityLivingIn, World worldIn)`
-
 ## Methods
 
-- `public PathEntity getPathToPos( BlockPos pos)`
-- `public PathEntity getPathToEntityLiving( Entity entityIn)`
-- `public boolean tryMoveToEntityLiving( Entity entityIn, double speedIn)`
-- `public void onUpdateNavigation()`
+- `PathEntity getPathToEntityLiving(Entity entityIn)` — Returns the path to the given EntityLiving.
+- `PathEntity getPathToPos(BlockPos pos)` — Returns path to given BlockPos
+- `void onUpdateNavigation()`
+- `boolean tryMoveToEntityLiving(Entity entityIn, double speedIn)` — Try to find and set a path to EntityLiving.
 
-## Description
+## Fields
 
-Returns the path to the given EntityLiving.
+- `PathNavigateClimber`

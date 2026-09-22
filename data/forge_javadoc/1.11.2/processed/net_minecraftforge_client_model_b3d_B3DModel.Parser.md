@@ -1,9 +1,17 @@
 # B3DModel.Parser
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.b3d.B3DModel.Parser
+
+## Class signature
+
+```java
+public static class B3DModel.Parser extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Parser(java.io.InputStream in) throws java.io.IOException`
+- `Parser(java.io.InputStream in)`
 
 ## Methods
 
-- `public B3DModel parse() throws java.io.IOException`
+- `B3DModel parse()`

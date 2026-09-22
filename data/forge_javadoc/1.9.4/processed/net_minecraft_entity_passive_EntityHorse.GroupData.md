@@ -1,5 +1,18 @@
 # EntityHorse.GroupData
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.passive.EntityHorse.GroupData
+
+## Class signature
+
+```java
+public static class EntityHorse.GroupData extends java.lang.Object implements IEntityLivingData
+```
+
 ## Constructors
 
-- `public GroupData( HorseType p_i46589_1_, int p_i46589_2_)`
+- `GroupData(HorseType p_i46589_1_, int p_i46589_2_)`
+
+## Fields
+
+- `HorseType horseType`
+- `int horseVariant`

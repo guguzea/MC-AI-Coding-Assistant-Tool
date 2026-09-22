@@ -1,16 +1,20 @@
 # BlockEvent.FluidPlaceBlockEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.BlockEvent.FluidPlaceBlockEvent
+
+## Class signature
+
+```java
+public static class BlockEvent.FluidPlaceBlockEvent extends BlockEvent
+```
+
 ## Constructors
 
-- `public FluidPlaceBlockEvent( World world, BlockPos pos, BlockPos liquidPos, IBlockState state)`
+- `FluidPlaceBlockEvent(World world, BlockPos pos, BlockPos liquidPos, IBlockState state)`
 
 ## Methods
 
-- `public BlockPos getLiquidPos()`
-- `public IBlockState getNewState()`
-- `public void setNewState( IBlockState state)`
-- `public IBlockState getOriginalState()`
-
-## Description
-
-Fired when a liquid places a block. Use setNewState(IBlockState) to change the result of a cobblestone generator or add variants of obsidian. Alternatively, you could execute arbitrary code when lava
+- `BlockPos getLiquidPos()`
+- `IBlockState getNewState()`
+- `IBlockState getOriginalState()`
+- `void setNewState(IBlockState state)`

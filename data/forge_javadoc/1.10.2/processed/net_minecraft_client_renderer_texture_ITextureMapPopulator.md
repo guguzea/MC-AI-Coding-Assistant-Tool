@@ -8,4 +8,4 @@ public interface ITextureMapPopulator
 
 ## Methods
 
-- `void registerSprites( TextureMap textureMapIn)`
+- `void registerSprites(TextureMap textureMapIn)`

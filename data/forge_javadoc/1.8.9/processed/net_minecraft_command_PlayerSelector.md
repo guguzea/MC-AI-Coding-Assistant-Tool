@@ -1,5 +1,7 @@
 # PlayerSelector
 
+**Inheritance:** java.lang.Object → net.minecraft.command.PlayerSelector
+
 ## Class signature
 
 ```java
@@ -8,19 +10,15 @@ public class PlayerSelector extends java.lang.Object
 
 ## Constructors
 
-- `public PlayerSelector()`
+- `PlayerSelector()`
 
 ## Methods
 
-- `public static EntityPlayerMP matchOnePlayer( ICommandSender sender, java.lang.String token)`
-- `public static <T extends Entity > T matchOneEntity( ICommandSender sender, java.lang.String token, java.lang.Class<? extends T> targetClass)`
-- `public static IChatComponent matchEntitiesToChatComponent( ICommandSender sender, java.lang.String token)`
-- `public static <T extends Entity > java.util.List<T> matchEntities( ICommandSender sender, java.lang.String token, java.lang.Class<? extends T> targetClass)`
-- `public static int func_179650_a(int p_179650_0_)`
-- `public static java.util.Map<java.lang.String,java.lang.Integer> func_96560_a(java.util.Map<java.lang.String,java.lang.String> p_96560_0_)`
-- `public static boolean matchesMultiplePlayers(java.lang.String p_82377_0_)`
-- `public static boolean hasArguments(java.lang.String p_82378_0_)`
-
-## Description
-
-Returns whether the given token has any arguments set.
+- `static int func_179650_a(int p_179650_0_)`
+- `static java.util.Map<java.lang.String, java.lang.Integer> func_96560_a(java.util.Map<java.lang.String, java.lang.String> p_96560_0_)`
+- `static boolean hasArguments(java.lang.String p_82378_0_)` — Returns whether the given token has any arguments set.
+- `static<T extends Entity> java.util.List<T> matchEntities(ICommandSender sender, java.lang.String token, java.lang.Class<? extends T> targetClass)`
+- `static IChatComponent matchEntitiesToChatComponent(ICommandSender sender, java.lang.String token)`
+- `static boolean matchesMultiplePlayers(java.lang.String p_82377_0_)` — Returns whether the given pattern can match more than one player.
+- `static<T extends Entity> T matchOneEntity(ICommandSender sender, java.lang.String token, java.lang.Class<? extends T> targetClass)`
+- `static EntityPlayerMP matchOnePlayer(ICommandSender sender, java.lang.String token)` — Returns the one player that matches the given at-token.

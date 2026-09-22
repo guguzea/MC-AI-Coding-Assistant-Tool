@@ -1,5 +1,7 @@
 # BlockPlanks
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockPlanks
+
 ## Class signature
 
 ```java
@@ -8,13 +10,17 @@ public class BlockPlanks extends Block
 
 ## Constructors
 
-- `public BlockPlanks()`
+- `BlockPlanks()`
 
 ## Methods
 
-- `public int damageDropped( IBlockState state)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > list)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public MapColor getMapColor( IBlockState state)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
+- `int damageDropped(IBlockState state)`
+- `MapColor getMapColor(IBlockState state)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> list)`
+
+## Fields
+
+- `static PropertyEnum<BlockPlanks.EnumType> VARIANT`

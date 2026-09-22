@@ -3,11 +3,15 @@ title: "Blocks"
 description: "public class Blocks extends java.lang.Object"
 package: "net/minecraft/init"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/init/Blocks.html"
 sourceType: javadoc
 ---
 
 # Blocks
+
+**Inheritance:** java.lang.Object → net.minecraft.init.Blocks
 
 ## Class signature
 
@@ -17,4 +21,205 @@ public class Blocks extends java.lang.Object
 
 ## Constructors
 
-- `public Blocks()`
+- `Blocks()`
+
+## Fields
+
+- `static Block acacia_door`
+- `static Block acacia_fence`
+- `static Block acacia_fence_gate`
+- `static Block acacia_stairs`
+- `static Block activator_rail`
+- `static Block air`
+- `static Block anvil`
+- `static Block barrier`
+- `static BlockBeacon beacon`
+- `static Block bed`
+- `static Block bedrock`
+- `static Block birch_door`
+- `static Block birch_fence`
+- `static Block birch_fence_gate`
+- `static Block birch_stairs`
+- `static Block bookshelf`
+- `static Block brewing_stand`
+- `static Block brick_block`
+- `static Block brick_stairs`
+- `static BlockBush brown_mushroom`
+- `static Block brown_mushroom_block`
+- `static BlockCactus cactus`
+- `static Block cake`
+- `static Block carpet`
+- `static Block carrots`
+- `static BlockCauldron cauldron`
+- `static BlockChest chest`
+- `static Block clay`
+- `static Block coal_block`
+- `static Block coal_ore`
+- `static Block cobblestone`
+- `static Block cobblestone_wall`
+- `static Block cocoa`
+- `static Block command_block`
+- `static Block crafting_table`
+- `static Block dark_oak_door`
+- `static Block dark_oak_fence`
+- `static Block dark_oak_fence_gate`
+- `static Block dark_oak_stairs`
+- `static BlockDaylightDetector daylight_detector`
+- `static BlockDaylightDetector daylight_detector_inverted`
+- `static BlockDeadBush deadbush`
+- `static Block detector_rail`
+- `static Block diamond_block`
+- `static Block diamond_ore`
+- `static Block dirt`
+- `static Block dispenser`
+- `static BlockDoublePlant double_plant`
+- `static BlockSlab double_stone_slab`
+- `static BlockSlab double_stone_slab2`
+- `static BlockSlab double_wooden_slab`
+- `static Block dragon_egg`
+- `static Block dropper`
+- `static Block emerald_block`
+- `static Block emerald_ore`
+- `static Block enchanting_table`
+- `static Block end_portal`
+- `static Block end_portal_frame`
+- `static Block end_stone`
+- `static Block ender_chest`
+- `static Block farmland`
+- `static BlockFire fire`
+- `static Block flower_pot`
+- `static BlockDynamicLiquid flowing_lava`
+- `static BlockDynamicLiquid flowing_water`
+- `static Block furnace`
+- `static Block glass`
+- `static Block glass_pane`
+- `static Block glowstone`
+- `static Block gold_block`
+- `static Block gold_ore`
+- `static Block golden_rail`
+- `static BlockGrass grass`
+- `static Block gravel`
+- `static Block hardened_clay`
+- `static Block hay_block`
+- `static Block heavy_weighted_pressure_plate`
+- `static BlockHopper hopper`
+- `static Block ice`
+- `static Block iron_bars`
+- `static Block iron_block`
+- `static Block iron_door`
+- `static Block iron_ore`
+- `static Block iron_trapdoor`
+- `static Block jukebox`
+- `static Block jungle_door`
+- `static Block jungle_fence`
+- `static Block jungle_fence_gate`
+- `static Block jungle_stairs`
+- `static Block ladder`
+- `static Block lapis_block`
+- `static Block lapis_ore`
+- `static BlockStaticLiquid lava`
+- `static BlockLeaves leaves`
+- `static BlockLeaves leaves2`
+- `static Block lever`
+- `static Block light_weighted_pressure_plate`
+- `static Block lit_furnace`
+- `static Block lit_pumpkin`
+- `static Block lit_redstone_lamp`
+- `static Block lit_redstone_ore`
+- `static Block log`
+- `static Block log2`
+- `static Block melon_block`
+- `static Block melon_stem`
+- `static Block mob_spawner`
+- `static Block monster_egg`
+- `static Block mossy_cobblestone`
+- `static BlockMycelium mycelium`
+- `static Block nether_brick`
+- `static Block nether_brick_fence`
+- `static Block nether_brick_stairs`
+- `static Block nether_wart`
+- `static Block netherrack`
+- `static Block noteblock`
+- `static Block oak_door`
+- `static Block oak_fence`
+- `static Block oak_fence_gate`
+- `static Block oak_stairs`
+- `static Block obsidian`
+- `static Block packed_ice`
+- `static BlockPistonBase piston`
+- `static BlockPistonMoving piston_extension`
+- `static BlockPistonExtension piston_head`
+- `static Block planks`
+- `static BlockPortal portal`
+- `static Block potatoes`
+- `static BlockRedstoneComparator powered_comparator`
+- `static BlockRedstoneRepeater powered_repeater`
+- `static Block prismarine`
+- `static Block pumpkin`
+- `static Block pumpkin_stem`
+- `static Block quartz_block`
+- `static Block quartz_ore`
+- `static Block quartz_stairs`
+- `static Block rail`
+- `static BlockFlower red_flower`
+- `static BlockBush red_mushroom`
+- `static Block red_mushroom_block`
+- `static Block red_sandstone`
+- `static Block red_sandstone_stairs`
+- `static Block redstone_block`
+- `static Block redstone_lamp`
+- `static Block redstone_ore`
+- `static Block redstone_torch`
+- `static BlockRedstoneWire redstone_wire`
+- `static BlockReed reeds`
+- `static BlockSand sand`
+- `static Block sandstone`
+- `static Block sandstone_stairs`
+- `static Block sapling`
+- `static Block sea_lantern`
+- `static BlockSkull skull`
+- `static Block slime_block`
+- `static Block snow`
+- `static Block snow_layer`
+- `static Block soul_sand`
+- `static Block sponge`
+- `static Block spruce_door`
+- `static Block spruce_fence`
+- `static Block spruce_fence_gate`
+- `static Block spruce_stairs`
+- `static BlockStainedGlass stained_glass`
+- `static BlockStainedGlassPane stained_glass_pane`
+- `static Block stained_hardened_clay`
+- `static Block standing_banner`
+- `static Block standing_sign`
+- `static BlockPistonBase sticky_piston`
+- `static Block stone`
+- `static Block stone_brick_stairs`
+- `static Block stone_button`
+- `static Block stone_pressure_plate`
+- `static BlockSlab stone_slab`
+- `static BlockSlab stone_slab2`
+- `static Block stone_stairs`
+- `static Block stonebrick`
+- `static BlockTallGrass tallgrass`
+- `static Block tnt`
+- `static Block torch`
+- `static Block trapdoor`
+- `static Block trapped_chest`
+- `static Block tripwire`
+- `static BlockTripWireHook tripwire_hook`
+- `static Block unlit_redstone_torch`
+- `static BlockRedstoneComparator unpowered_comparator`
+- `static BlockRedstoneRepeater unpowered_repeater`
+- `static Block vine`
+- `static Block wall_banner`
+- `static Block wall_sign`
+- `static BlockStaticLiquid water`
+- `static Block waterlily`
+- `static Block web`
+- `static Block wheat`
+- `static Block wooden_button`
+- `static Block wooden_pressure_plate`
+- `static BlockSlab wooden_slab`
+- `static Block wool`
+- `static BlockFlower yellow_flower`

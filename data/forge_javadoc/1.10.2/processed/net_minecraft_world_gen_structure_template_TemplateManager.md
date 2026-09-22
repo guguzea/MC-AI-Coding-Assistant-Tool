@@ -1,5 +1,7 @@
 # TemplateManager
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.template.TemplateManager
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class TemplateManager extends java.lang.Object
 
 ## Constructors
 
-- `public TemplateManager(java.lang.String basefolderIn)`
+- `TemplateManager(java.lang.String basefolderIn)`
 
 ## Methods
 
-- `public Template getTemplate(@Nullable MinecraftServer server, ResourceLocation id)`
-- `@Nullable public Template get(@Nullable MinecraftServer p_189942_1_, ResourceLocation p_189942_2_)`
-- `public boolean readTemplate( MinecraftServer server, ResourceLocation id)`
-- `public boolean writeTemplate(@Nullable MinecraftServer server, ResourceLocation id)`
-- `public void remove( ResourceLocation p_189941_1_)`
+- `Template get(MinecraftServer p_189942_1_, ResourceLocation p_189942_2_)`
+- `Template getTemplate(MinecraftServer server, ResourceLocation id)`
+- `boolean readTemplate(MinecraftServer server, ResourceLocation id)`
+- `void remove(ResourceLocation p_189941_1_)`
+- `boolean writeTemplate(MinecraftServer server, ResourceLocation id)`

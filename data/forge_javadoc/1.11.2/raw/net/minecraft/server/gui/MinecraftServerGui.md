@@ -3,11 +3,15 @@ title: "MinecraftServerGui"
 description: "public class MinecraftServerGui extends javax.swing.JComponent"
 package: "net/minecraft/server/gui"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/server/gui/MinecraftServerGui.html"
 sourceType: javadoc
 ---
 
 # MinecraftServerGui
+
+**Inheritance:** java.lang.Object → java.awt.Component → java.awt.Container → javax.swing.JComponent → net.minecraft.server.gui.MinecraftServerGui
 
 ## Class signature
 
@@ -15,11 +19,11 @@ sourceType: javadoc
 public class MinecraftServerGui extends javax.swing.JComponent
 ```
 
-## Constructors
-
-- `public MinecraftServerGui( DedicatedServer serverIn)`
-
 ## Methods
 
-- `public static void createServerGui( DedicatedServer serverIn)`
-- `public void appendLine(javax.swing.JTextArea textArea, javax.swing.JScrollPane scrollPane, java.lang.String line)`
+- `void appendLine(javax.swing.JTextArea textArea, javax.swing.JScrollPane scrollPane, java.lang.String line)`
+- `static void createServerGui(DedicatedServer serverIn)`
+
+## Fields
+
+- `MinecraftServerGui`

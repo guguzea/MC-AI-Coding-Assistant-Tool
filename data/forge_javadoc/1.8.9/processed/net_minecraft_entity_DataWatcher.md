@@ -1,5 +1,7 @@
 # DataWatcher
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.DataWatcher
+
 ## Class signature
 
 ```java
@@ -8,31 +10,27 @@ public class DataWatcher extends java.lang.Object
 
 ## Constructors
 
-- `public DataWatcher( Entity owner)`
+- `DataWatcher(Entity owner)`
 
 ## Methods
 
-- `public <T> void addObject(int id, T object)`
-- `public void addObjectByDataType(int id, int type)`
-- `public byte getWatchableObjectByte(int id)`
-- `public short getWatchableObjectShort(int id)`
-- `public int getWatchableObjectInt(int id)`
-- `public float getWatchableObjectFloat(int id)`
-- `public java.lang.String getWatchableObjectString(int id)`
-- `public ItemStack getWatchableObjectItemStack(int id)`
-- `public Rotations getWatchableObjectRotations(int id)`
-- `public <T> void updateObject(int id, T newData)`
-- `public void setObjectWatched(int id)`
-- `public boolean hasObjectChanged()`
-- `public static void writeWatchedListToPacketBuffer(java.util.List< DataWatcher.WatchableObject > objectsList, PacketBuffer buffer) throws java.io.IOException`
-- `public java.util.List< DataWatcher.WatchableObject > getChanged()`
-- `public void writeTo( PacketBuffer buffer) throws java.io.IOException`
-- `public java.util.List< DataWatcher.WatchableObject > getAllWatched()`
-- `public static java.util.List< DataWatcher.WatchableObject > readWatchedListFromPacketBuffer( PacketBuffer buffer) throws java.io.IOException`
-- `public void updateWatchedObjectsFromList(java.util.List< DataWatcher.WatchableObject > p_75687_1_)`
-- `public boolean getIsBlank()`
-- `public void func_111144_e()`
-
-## Description
-
-Add a new object for the DataWatcher to watch, using the specified data type.
+- `<T> void addObject(int id, T object)`
+- `void addObjectByDataType(int id, int type)` — Add a new object for the DataWatcher to watch, using the specified data type.
+- `void func_111144_e()`
+- `java.util.List<DataWatcher.WatchableObject> getAllWatched()`
+- `java.util.List<DataWatcher.WatchableObject> getChanged()`
+- `boolean getIsBlank()`
+- `byte getWatchableObjectByte(int id)` — gets the bytevalue of a watchable object
+- `float getWatchableObjectFloat(int id)`
+- `int getWatchableObjectInt(int id)` — gets a watchable object and returns it as a Integer
+- `ItemStack getWatchableObjectItemStack(int id)` — Get a watchable object as an ItemStack.
+- `Rotations getWatchableObjectRotations(int id)`
+- `short getWatchableObjectShort(int id)`
+- `java.lang.String getWatchableObjectString(int id)` — gets a watchable object and returns it as a String
+- `boolean hasObjectChanged()` — true if one or more object was changed
+- `static java.util.List<DataWatcher.WatchableObject> readWatchedListFromPacketBuffer(PacketBuffer buffer)`
+- `void setObjectWatched(int id)`
+- `<T> void updateObject(int id, T newData)`
+- `void updateWatchedObjectsFromList(java.util.List<DataWatcher.WatchableObject> p_75687_1_)`
+- `void writeTo(PacketBuffer buffer)`
+- `static void writeWatchedListToPacketBuffer(java.util.List<DataWatcher.WatchableObject> objectsList, PacketBuffer buffer)` — Writes the list of watched objects (entity attribute of type {byte, short, int, float, string, ItemStack, ChunkCoordinates}) to the specified PacketBuffer

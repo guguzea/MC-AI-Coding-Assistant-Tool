@@ -1,37 +1,39 @@
 # EntityIronGolem
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityGolem → net.minecraft.entity.monster.EntityIronGolem
+
 ## Class signature
 
 ```java
 public class EntityIronGolem extends EntityGolem
 ```
 
-## Constructors
-
-- `public EntityIronGolem( World p_i1694_1_)`
-
 ## Methods
 
-- `protected void entityInit()`
-- `public boolean isAIEnabled()`
-- `protected void updateAITick()`
 - `protected void applyEntityAttributes()`
+- `boolean attackEntityAsMob(Entity p_70652_1_)`
+- `boolean canAttackClass(java.lang.Class p_70686_1_)`
+- `protected void collideWithEntity(Entity p_82167_1_)`
 - `protected int decreaseAirSupply(int p_70682_1_)`
-- `protected void collideWithEntity( Entity p_82167_1_)`
-- `public void onLivingUpdate()`
-- `public boolean canAttackClass(java.lang.Class p_70686_1_)`
-- `public void writeEntityToNBT( NBTTagCompound p_70014_1_)`
-- `public void readEntityFromNBT( NBTTagCompound p_70037_1_)`
-- `public boolean attackEntityAsMob( Entity p_70652_1_)`
-- `public void handleHealthUpdate(byte p_70103_1_)`
-- `public Village getVillage()`
-- `public int getAttackTimer()`
-- `public void setHoldingRose(boolean p_70851_1_)`
-- `protected java.lang.String getHurtSound()`
-- `protected java.lang.String getDeathSound()`
-- `protected void func_145780_a(int p_145780_1_, int p_145780_2_, int p_145780_3_, Block p_145780_4_)`
 - `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)`
-- `public int getHoldRoseTick()`
-- `public boolean isPlayerCreated()`
-- `public void setPlayerCreated(boolean p_70849_1_)`
-- `public void onDeath( DamageSource p_70645_1_)`
+- `protected void entityInit()`
+- `protected void func_145780_a(int p_145780_1_, int p_145780_2_, int p_145780_3_, Block p_145780_4_)`
+- `int getAttackTimer()`
+- `protected java.lang.String getDeathSound()`
+- `int getHoldRoseTick()`
+- `protected java.lang.String getHurtSound()`
+- `Village getVillage()`
+- `void handleHealthUpdate(byte p_70103_1_)`
+- `boolean isAIEnabled()`
+- `boolean isPlayerCreated()`
+- `void onDeath(DamageSource p_70645_1_)`
+- `void onLivingUpdate()`
+- `void readEntityFromNBT(NBTTagCompound p_70037_1_)`
+- `void setHoldingRose(boolean p_70851_1_)`
+- `void setPlayerCreated(boolean p_70849_1_)`
+- `protected void updateAITick()`
+- `void writeEntityToNBT(NBTTagCompound p_70014_1_)`
+
+## Fields
+
+- `EntityIronGolem`

@@ -1,5 +1,7 @@
 # FMLStateEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLStateEvent
+
 ## Class signature
 
 ```java
@@ -8,13 +10,9 @@ public abstract class FMLStateEvent extends FMLEvent
 
 ## Constructors
 
-- `public FMLStateEvent(java.lang.Object... data)`
+- `FMLStateEvent(java.lang.Object... data)`
 
 ## Methods
 
-- `public abstract LoaderState.ModState getModState()`
-- `public Side getSide()`
-
-## Description
-
-The parent of all mod-state changing events
+- `abstract LoaderState.ModState getModState()` — The current state of the mod
+- `Side getSide()` — The side we're loading on.

@@ -1,13 +1,17 @@
 ---
 title: "PatchException"
-description: "Thrown when a patch is invalid."
+description: "public class PatchException extends java.io.IOException"
 package: "net/minecraftforge/fml/repackage/com/nothome/delta"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/repackage/com/nothome/delta/PatchException.html"
 sourceType: javadoc
 ---
 
 # PatchException
+
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.io.IOException → net.minecraftforge.fml.repackage.com.nothome.delta.PatchException
 
 ## Class signature
 
@@ -17,9 +21,5 @@ public class PatchException extends java.io.IOException
 
 ## Constructors
 
-- `public PatchException()`
-- `public PatchException(java.lang.String msg)`
-
-## Description
-
-Thrown when a patch is invalid.
+- `PatchException()`
+- `PatchException(java.lang.String msg)`

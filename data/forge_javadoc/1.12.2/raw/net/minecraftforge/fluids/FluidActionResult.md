@@ -1,13 +1,17 @@
 ---
 title: "FluidActionResult"
-description: "Holds the result of a fluid action from FluidUtil . Failed actions will always have isSuccess() == false and an empty ItemStack result. See FAILURE . Successful actions will always have isSuccess() =="
+description: "public class FluidActionResult extends java.lang.Object"
 package: "net/minecraftforge/fluids"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fluids/FluidActionResult.html"
 sourceType: javadoc
 ---
 
 # FluidActionResult
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.FluidActionResult
 
 ## Class signature
 
@@ -17,13 +21,15 @@ public class FluidActionResult extends java.lang.Object
 
 ## Constructors
 
-- `public FluidActionResult( ItemStack result)`
+- `FluidActionResult(ItemStack result)`
 
 ## Methods
 
-- `public boolean isSuccess()`
-- `public ItemStack getResult()`
+- `ItemStack getResult()`
+- `boolean isSuccess()`
 
-## Description
+## Fields
 
-Holds the result of a fluid action from FluidUtil . Failed actions will always have isSuccess() == false and an empty ItemStack result. See FAILURE . Successful actions will always have isSuccess() ==
+- `static FluidActionResult FAILURE`
+- `ItemStack result`
+- `boolean success`

@@ -1,5 +1,7 @@
 # ForgeBlockModelRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.BlockModelRenderer → net.minecraftforge.client.model.pipeline.ForgeBlockModelRenderer
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class ForgeBlockModelRenderer extends BlockModelRenderer
 
 ## Constructors
 
-- `public ForgeBlockModelRenderer()`
+- `ForgeBlockModelRenderer()`
 
 ## Methods
 
-- `public boolean renderModelStandard( IBlockAccess world, IBakedModel model, Block block, BlockPos pos, WorldRenderer wr, boolean checkSides)`
-- `public boolean renderModelAmbientOcclusion( IBlockAccess world, IBakedModel model, Block block, BlockPos pos, WorldRenderer wr, boolean checkSides)`
-- `public static boolean render( VertexLighterFlat lighter, IBlockAccess world, IBakedModel model, Block block, BlockPos pos, WorldRenderer wr, boolean checkSides)`
+- `static boolean render(VertexLighterFlat lighter, IBlockAccess world, IBakedModel model, Block block, BlockPos pos, WorldRenderer wr, boolean checkSides)`
+- `boolean renderModelAmbientOcclusion(IBlockAccess world, IBakedModel model, Block block, BlockPos pos, WorldRenderer wr, boolean checkSides)`
+- `boolean renderModelStandard(IBlockAccess world, IBakedModel model, Block block, BlockPos pos, WorldRenderer wr, boolean checkSides)`

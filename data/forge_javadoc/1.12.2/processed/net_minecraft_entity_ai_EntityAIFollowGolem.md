@@ -1,5 +1,7 @@
 # EntityAIFollowGolem
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIFollowGolem
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class EntityAIFollowGolem extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIFollowGolem( EntityVillager villagerIn)`
+- `EntityAIFollowGolem(EntityVillager villagerIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean shouldContinueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `void resetTask()`
+- `boolean shouldContinueExecuting()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

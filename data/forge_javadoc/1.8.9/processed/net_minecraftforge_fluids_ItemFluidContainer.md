@@ -1,5 +1,7 @@
 # ItemFluidContainer
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraftforge.fluids.ItemFluidContainer
+
 ## Class signature
 
 ```java
@@ -8,17 +10,17 @@ public class ItemFluidContainer extends Item implements IFluidContainerItem
 
 ## Constructors
 
-- `public ItemFluidContainer(int itemID)`
-- `public ItemFluidContainer(int itemID, int capacity)`
+- `ItemFluidContainer(int itemID)`
+- `ItemFluidContainer(int itemID, int capacity)`
 
 ## Methods
 
-- `public ItemFluidContainer setCapacity(int capacity)`
-- `public FluidStack getFluid( ItemStack container)`
-- `public int getCapacity( ItemStack container)`
-- `public int fill( ItemStack container, FluidStack resource, boolean doFill)`
-- `public FluidStack drain( ItemStack container, int maxDrain, boolean doDrain)`
+- `FluidStack drain(ItemStack container, int maxDrain, boolean doDrain)`
+- `int fill(ItemStack container, FluidStack resource, boolean doFill)`
+- `int getCapacity(ItemStack container)`
+- `FluidStack getFluid(ItemStack container)`
+- `ItemFluidContainer setCapacity(int capacity)`
 
-## Description
+## Fields
 
-Reference implementation of IFluidContainerItem . Use/extend this or implement your own.
+- `protected int capacity`

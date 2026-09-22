@@ -8,6 +8,6 @@ public interface IBossDisplayData
 
 ## Methods
 
-- `float getMaxHealth()`
-- `float getHealth()`
 - `IChatComponent func_145748_c_()`
+- `float getHealth()`
+- `float getMaxHealth()`

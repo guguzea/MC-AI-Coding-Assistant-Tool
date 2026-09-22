@@ -1,26 +1,24 @@
 # BlockOre
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockOre
+
 ## Class signature
 
 ```java
 public class BlockOre extends Block
 ```
 
-## Constructors
-
-- `public BlockOre()`
-- `public BlockOre( MapColor color)`
-
 ## Methods
 
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public int quantityDropped(java.util.Random random)`
-- `public int quantityDroppedWithBonus(int fortune, java.util.Random random)`
-- `public void dropBlockAsItemWithChance( World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
-- `public int getExpDrop( IBlockState state, IBlockAccess world, BlockPos pos, int fortune)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public int damageDropped( IBlockState state)`
+- `int damageDropped(IBlockState state)`
+- `void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
+- `int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune)` — Gathers how much experience this block drops when broken.
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int quantityDropped(java.util.Random random)`
+- `int quantityDroppedWithBonus(int fortune, java.util.Random random)`
 
-## Description
+## Fields
 
-Gathers how much experience this block drops when broken.
+- `BlockOre`
+- `BlockOre`

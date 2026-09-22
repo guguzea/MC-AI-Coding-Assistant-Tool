@@ -1,13 +1,17 @@
 ---
 title: "BlockCactus"
-description: "Convert the BlockState into the correct metadata value"
+description: "public class BlockCactus extends Block implements IPlantable"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockCactus.html"
 sourceType: javadoc
 ---
 
 # BlockCactus
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockCactus
 
 ## Class signature
 
@@ -17,26 +21,26 @@ public class BlockCactus extends Block implements IPlantable
 
 ## Constructors
 
-- `protected BlockCactus()`
+- `BlockCactus()`
 
 ## Methods
 
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public AxisAlignedBB getSelectedBoundingBox( World worldIn, BlockPos pos)`
-- `public boolean isFullCube()`
-- `public boolean isOpaqueCube()`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public boolean canBlockStay( World worldIn, BlockPos pos)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public EnumWorldBlockLayer getBlockLayer()`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canBlockStay(World worldIn, BlockPos pos)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
 - `protected BlockState createBlockState()`
-- `public EnumPlantType getPlantType( IBlockAccess world, BlockPos pos)`
-- `public IBlockState getPlant( IBlockAccess world, BlockPos pos)`
+- `EnumWorldBlockLayer getBlockLayer()`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IBlockState getPlant(IBlockAccess world, BlockPos pos)`
+- `EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)`
+- `AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)`
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)` — Called When an Entity Collided with the Block
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Convert the BlockState into the correct metadata value
+- `static PropertyInteger AGE`

@@ -1,34 +1,32 @@
 # S39PacketPlayerAbilities
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S39PacketPlayerAbilities
+
 ## Class signature
 
 ```java
-public class S39PacketPlayerAbilities extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class S39PacketPlayerAbilities extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public S39PacketPlayerAbilities()`
-- `public S39PacketPlayerAbilities( PlayerCapabilities capabilities)`
+- `S39PacketPlayerAbilities()`
+- `S39PacketPlayerAbilities(PlayerCapabilities capabilities)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public boolean isInvulnerable()`
-- `public void setInvulnerable(boolean isInvulnerable)`
-- `public boolean isFlying()`
-- `public void setFlying(boolean isFlying)`
-- `public boolean isAllowFlying()`
-- `public void setAllowFlying(boolean isAllowFlying)`
-- `public boolean isCreativeMode()`
-- `public void setCreativeMode(boolean isCreativeMode)`
-- `public float getFlySpeed()`
-- `public void setFlySpeed(float flySpeedIn)`
-- `public float getWalkSpeed()`
-- `public void setWalkSpeed(float walkSpeedIn)`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `float getFlySpeed()`
+- `float getWalkSpeed()`
+- `boolean isAllowFlying()`
+- `boolean isCreativeMode()`
+- `boolean isFlying()`
+- `boolean isInvulnerable()`
+- `void processPacket(INetHandlerPlayClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void setAllowFlying(boolean isAllowFlying)`
+- `void setCreativeMode(boolean isCreativeMode)`
+- `void setFlying(boolean isFlying)`
+- `void setFlySpeed(float flySpeedIn)`
+- `void setInvulnerable(boolean isInvulnerable)`
+- `void setWalkSpeed(float walkSpeedIn)`
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

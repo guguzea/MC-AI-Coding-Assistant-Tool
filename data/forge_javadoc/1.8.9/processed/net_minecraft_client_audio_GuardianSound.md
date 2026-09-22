@@ -1,19 +1,17 @@
 # GuardianSound
 
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.PositionedSound → net.minecraft.client.audio.MovingSound → net.minecraft.client.audio.GuardianSound
+
 ## Class signature
 
 ```java
 public class GuardianSound extends MovingSound
 ```
 
-## Constructors
-
-- `public GuardianSound( EntityGuardian guardian)`
-
 ## Methods
 
-- `public void update()`
+- `void update()` — Like the old updateEntity(), except more generic.
 
-## Description
+## Fields
 
-Like the old updateEntity(), except more generic.
+- `GuardianSound`

@@ -3,11 +3,15 @@ title: "EntityCaveSpider"
 description: "public class EntityCaveSpider extends EntitySpider"
 package: "net/minecraft/entity/monster"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/entity/monster/EntityCaveSpider.html"
 sourceType: javadoc
 ---
 
 # EntityCaveSpider
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntitySpider → net.minecraft.entity.monster.EntityCaveSpider
 
 ## Class signature
 
@@ -15,15 +19,15 @@ sourceType: javadoc
 public class EntityCaveSpider extends EntitySpider
 ```
 
-## Constructors
-
-- `public EntityCaveSpider( World worldIn)`
-
 ## Methods
 
-- `public static void registerFixesCaveSpider( DataFixer fixer)`
 - `protected void applyEntityAttributes()`
-- `public boolean attackEntityAsMob( Entity entityIn)`
-- `@Nullable public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)`
-- `public float getEyeHeight()`
-- `@Nullable protected ResourceLocation getLootTable()`
+- `boolean attackEntityAsMob(Entity entityIn)`
+- `float getEyeHeight()`
+- `protected ResourceLocation getLootTable()`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `static void registerFixesCaveSpider(DataFixer fixer)`
+
+## Fields
+
+- `EntityCaveSpider`

@@ -1,17 +1,19 @@
 # MaterialLogic
 
+**Inheritance:** java.lang.Object → net.minecraft.block.material.Material → net.minecraft.block.material.MaterialLogic
+
 ## Class signature
 
 ```java
 public class MaterialLogic extends Material
 ```
 
-## Constructors
-
-- `public MaterialLogic( MapColor color)`
-
 ## Methods
 
-- `public boolean isSolid()`
-- `public boolean blocksLight()`
-- `public boolean blocksMovement()`
+- `boolean blocksLight()`
+- `boolean blocksMovement()`
+- `boolean isSolid()`
+
+## Fields
+
+- `MaterialLogic`

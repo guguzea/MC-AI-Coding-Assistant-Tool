@@ -1,10 +1,18 @@
 # BiomeGenSavanna.Mutated
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.biome.BiomeGenBase → net.minecraft.world.biome.BiomeGenMutated → net.minecraft.world.biome.BiomeGenSavanna.Mutated
 
-- `public Mutated(int p_i45382_1_, BiomeGenBase p_i45382_2_)`
+## Class signature
+
+```java
+public static class BiomeGenSavanna.Mutated extends BiomeGenMutated
+```
 
 ## Methods
 
-- `public void genTerrainBlocks( World worldIn, java.util.Random rand, ChunkPrimer chunkPrimerIn, int p_180622_4_, int p_180622_5_, double p_180622_6_)`
-- `public void decorate( World worldIn, java.util.Random rand, BlockPos pos)`
+- `void decorate(World worldIn, java.util.Random rand, BlockPos pos)`
+- `void genTerrainBlocks(World worldIn, java.util.Random rand, ChunkPrimer chunkPrimerIn, int p_180622_4_, int p_180622_5_, double p_180622_6_)`
+
+## Fields
+
+- `Mutated`

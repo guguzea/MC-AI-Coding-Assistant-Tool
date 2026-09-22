@@ -1,13 +1,17 @@
 ---
 title: "Restriction"
-description: "Describes a restriction in versioning."
+description: "public class Restriction extends java.lang.Object"
 package: "net/minecraftforge/fml/common/versioning"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/common/versioning/Restriction.html"
 sourceType: javadoc
 ---
 
 # Restriction
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.versioning.Restriction
 
 ## Class signature
 
@@ -17,19 +21,19 @@ public class Restriction extends java.lang.Object
 
 ## Constructors
 
-- `public Restriction( ArtifactVersion lowerBound, boolean lowerBoundInclusive, ArtifactVersion upperBound, boolean upperBoundInclusive)`
+- `Restriction(ArtifactVersion lowerBound, boolean lowerBoundInclusive, ArtifactVersion upperBound, boolean upperBoundInclusive)`
 
 ## Methods
 
-- `public ArtifactVersion getLowerBound()`
-- `public boolean isLowerBoundInclusive()`
-- `public ArtifactVersion getUpperBound()`
-- `public boolean isUpperBoundInclusive()`
-- `public boolean containsVersion( ArtifactVersion version)`
-- `public int hashCode()`
-- `public boolean equals(java.lang.Object other)`
-- `public java.lang.String toString()`
+- `boolean containsVersion(ArtifactVersion version)`
+- `boolean equals(java.lang.Object other)`
+- `ArtifactVersion getLowerBound()`
+- `ArtifactVersion getUpperBound()`
+- `int hashCode()`
+- `boolean isLowerBoundInclusive()`
+- `boolean isUpperBoundInclusive()`
+- `java.lang.String toString()`
 
-## Description
+## Fields
 
-Describes a restriction in versioning.
+- `static Restriction EVERYTHING`

@@ -3,11 +3,15 @@ title: "JsonBlendingMode"
 description: "public class JsonBlendingMode extends java.lang.Object"
 package: "net/minecraft/client/util"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/util/JsonBlendingMode.html"
 sourceType: javadoc
 ---
 
 # JsonBlendingMode
+
+**Inheritance:** java.lang.Object → net.minecraft.client.util.JsonBlendingMode
 
 ## Class signature
 
@@ -17,14 +21,14 @@ public class JsonBlendingMode extends java.lang.Object
 
 ## Constructors
 
-- `public JsonBlendingMode()`
-- `public JsonBlendingMode(int srcFactor, int dstFactor, int blendFunctionIn)`
-- `public JsonBlendingMode(int p_i45086_1_, int p_i45086_2_, int p_i45086_3_, int p_i45086_4_, int p_i45086_5_)`
+- `JsonBlendingMode()`
+- `JsonBlendingMode(int srcFactor, int dstFactor, int blendFunctionIn)`
+- `JsonBlendingMode(int p_i45086_1_, int p_i45086_2_, int p_i45086_3_, int p_i45086_4_, int p_i45086_5_)`
 
 ## Methods
 
-- `public void apply()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public boolean isOpaque()`
-- `public static JsonBlendingMode parseBlendNode(com.google.gson.JsonObject json)`
+- `void apply()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `int hashCode()`
+- `boolean isOpaque()`
+- `static JsonBlendingMode parseBlendNode(com.google.gson.JsonObject json)`

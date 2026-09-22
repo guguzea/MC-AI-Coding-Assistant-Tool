@@ -1,5 +1,11 @@
 # Mod.Metadata
 
-## Description
+## Class signature
 
-Populate the annotated field with the mod's metadata.
+```java
+public static @interface Mod.Metadata
+```
+
+## Elements
+
+- `java.lang.String value` — The mod id specifying the metadata to load here

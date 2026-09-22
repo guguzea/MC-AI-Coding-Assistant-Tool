@@ -1,5 +1,7 @@
 # MissingModsException
 
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.lang.RuntimeException → net.minecraftforge.fml.common.EnhancedRuntimeException → net.minecraftforge.fml.common.MissingModsException
+
 ## Class signature
 
 ```java
@@ -8,18 +10,18 @@ public class MissingModsException extends EnhancedRuntimeException implements ID
 
 ## Constructors
 
-- `public MissingModsException(java.lang.String id, java.lang.String name)`
+- `@Deprecated MissingModsException(java.util.Set<ArtifactVersion> missingMods, java.lang.String id, java.lang.String name)`
+- `MissingModsException(java.lang.String id, java.lang.String name)`
 
 ## Methods
 
-- `@Deprecated public MissingModsException(java.util.Set< ArtifactVersion > missingMods, java.lang.String id, java.lang.String name)`
-- `public java.lang.String getMessage()`
-- `public void addMissingMod( ArtifactVersion acceptedVersion, ArtifactVersion currentVersion, boolean required)`
-- `public java.lang.String getModName()`
-- `public java.util.List< MissingModsException.MissingModInfo > getMissingModInfos()`
-- `protected void printStackTrace( EnhancedRuntimeException.WrappedPrintStream stream)`
-- `public GuiScreen createGui()`
+- `void addMissingMod(ArtifactVersion acceptedVersion, ArtifactVersion currentVersion, boolean required)`
+- `GuiScreen createGui()`
+- `java.lang.String getMessage()`
+- `java.util.List<MissingModsException.MissingModInfo> getMissingModInfos()`
+- `java.lang.String getModName()`
+- `protected void printStackTrace(EnhancedRuntimeException.WrappedPrintStream stream)`
 
-## Description
+## Fields
 
-Deprecated. use getMissingModInfos()
+- `java.util.Set<ArtifactVersion> missingMods` — Deprecated. use getMissingModInfos()

@@ -1,5 +1,7 @@
 # FluidHandlerFluidMap
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.capability.templates.FluidHandlerFluidMap
+
 ## Class signature
 
 ```java
@@ -8,17 +10,17 @@ public class FluidHandlerFluidMap extends java.lang.Object implements IFluidHand
 
 ## Constructors
 
-- `public FluidHandlerFluidMap()`
-- `public FluidHandlerFluidMap(java.util.Map< Fluid , IFluidHandler > handlers)`
+- `FluidHandlerFluidMap()`
+- `FluidHandlerFluidMap(java.util.Map<Fluid, IFluidHandler> handlers)`
 
 ## Methods
 
-- `public FluidHandlerFluidMap addHandler( Fluid fluid, IFluidHandler handler)`
-- `public IFluidTankProperties [] getTankProperties()`
-- `public int fill( FluidStack resource, boolean doFill)`
-- `public FluidStack drain( FluidStack resource, boolean doDrain)`
-- `public FluidStack drain(int maxDrain, boolean doDrain)`
+- `FluidHandlerFluidMap addHandler(Fluid fluid, IFluidHandler handler)`
+- `FluidStack drain(FluidStack resource, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `FluidStack drain(int maxDrain, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `int fill(FluidStack resource, boolean doFill)` — Fills fluid into internal tanks, distribution is left entirely to the IFluidHandler.
+- `IFluidTankProperties [] getTankProperties()` — Returns an array of objects which represent the internal tanks.
 
-## Description
+## Fields
 
-FluidHandlerFluidMap is a template class for concatenating multiple handlers into one, where each handler is associated with a different fluid.
+- `protected java.util.Map<Fluid, IFluidHandler> handlers`

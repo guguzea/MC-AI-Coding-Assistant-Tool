@@ -1,5 +1,7 @@
 # BlockRedstoneComparator
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockHorizontal → net.minecraft.block.BlockRedstoneDiode → net.minecraft.block.BlockRedstoneComparator
+
 ## Class signature
 
 ```java
@@ -8,36 +10,37 @@ public class BlockRedstoneComparator extends BlockRedstoneDiode implements ITile
 
 ## Constructors
 
-- `public BlockRedstoneComparator(boolean powered)`
+- `BlockRedstoneComparator(boolean powered)`
 
 ## Methods
 
-- `public java.lang.String getLocalizedName()`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `protected int getDelay( IBlockState state)`
-- `protected IBlockState getPoweredState( IBlockState unpoweredState)`
-- `protected IBlockState getUnpoweredState( IBlockState poweredState)`
-- `protected boolean isPowered( IBlockState state)`
-- `protected int getActiveSignal( IBlockAccess worldIn, BlockPos pos, IBlockState state)`
-- `protected boolean shouldBePowered( World worldIn, BlockPos pos, IBlockState state)`
-- `protected int calculateInputStrength( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `protected void updateState( World worldIn, BlockPos pos, IBlockState state)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean eventReceived( IBlockState state, World worldIn, BlockPos pos, int id, int param)`
-- `public TileEntity createNewTileEntity( World worldIn, int meta)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `protected int calculateInputStrength(World worldIn, BlockPos pos, IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
-- `public IBlockState getStateForPlacement( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public void onNeighborChange( IBlockAccess world, BlockPos pos, BlockPos neighbor)`
-- `public boolean getWeakChanges( IBlockAccess world, BlockPos pos)`
+- `TileEntity createNewTileEntity(World worldIn, int meta)`
+- `boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int id, int param)`
+- `protected int getActiveSignal(IBlockAccess worldIn, BlockPos pos, IBlockState state)`
+- `protected int getDelay(IBlockState state)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `java.lang.String getLocalizedName()`
+- `int getMetaFromState(IBlockState state)`
+- `protected IBlockState getPoweredState(IBlockState unpoweredState)`
+- `IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `IBlockState getStateFromMeta(int meta)`
+- `protected IBlockState getUnpoweredState(IBlockState poweredState)`
+- `boolean getWeakChanges(IBlockAccess world, BlockPos pos)` — If this block should be notified of weak changes.
+- `protected boolean isPowered(IBlockState state)`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)` — Called when a tile entity on a side of this block changes is created or is destroyed.
+- `protected boolean shouldBePowered(World worldIn, BlockPos pos, IBlockState state)`
+- `protected void updateState(World worldIn, BlockPos pos, IBlockState state)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
 
-## Description
+## Fields
 
-If this block should be notified of weak changes.
+- `static PropertyEnum<BlockRedstoneComparator.Mode> MODE`
+- `static PropertyBool POWERED`

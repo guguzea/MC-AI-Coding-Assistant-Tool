@@ -8,4 +8,4 @@ public interface IRenderChunkFactory
 
 ## Methods
 
-- `RenderChunk create( World worldIn, RenderGlobal p_189565_2_, int p_189565_3_)`
+- `RenderChunk create(World worldIn, RenderGlobal p_189565_2_, int p_189565_3_)`

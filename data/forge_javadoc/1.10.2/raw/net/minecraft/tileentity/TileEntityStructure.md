@@ -3,11 +3,15 @@ title: "TileEntityStructure"
 description: "public class TileEntityStructure extends TileEntity"
 package: "net/minecraft/tileentity"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/tileentity/TileEntityStructure.html"
 sourceType: javadoc
 ---
 
 # TileEntityStructure
+
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityStructure
 
 ## Class signature
 
@@ -15,51 +19,51 @@ sourceType: javadoc
 public class TileEntityStructure extends TileEntity
 ```
 
-## Constructors
-
-- `public TileEntityStructure()`
-
 ## Methods
 
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `@Nullable public SPacketUpdateTileEntity getUpdatePacket()`
-- `public NBTTagCompound getUpdateTag()`
-- `public boolean usedBy( EntityPlayer player)`
-- `public java.lang.String getName()`
-- `public void setName(java.lang.String nameIn)`
-- `public void createdBy( EntityLivingBase p_189720_1_)`
-- `public BlockPos getPosition()`
-- `public void setPosition( BlockPos posIn)`
-- `public BlockPos getStructureSize()`
-- `public void setSize( BlockPos sizeIn)`
-- `public Mirror getMirror()`
-- `public void setMirror( Mirror mirrorIn)`
-- `public void setRotation( Rotation rotationIn)`
-- `public void setMetadata(java.lang.String metadataIn)`
-- `public Rotation getRotation()`
-- `public java.lang.String getMetadata()`
-- `public TileEntityStructure.Mode getMode()`
-- `public void setMode( TileEntityStructure.Mode modeIn)`
-- `public void setIgnoresEntities(boolean ignoreEntitiesIn)`
-- `public void setIntegrity(float integrityIn)`
-- `public void setSeed(long seedIn)`
-- `public void nextMode()`
-- `public boolean ignoresEntities()`
-- `public float getIntegrity()`
-- `public long getSeed()`
-- `public boolean detectSize()`
-- `public void writeCoordinates(io.netty.buffer.ByteBuf buf)`
-- `public boolean save()`
-- `public boolean save(boolean p_189712_1_)`
-- `public boolean load()`
-- `public boolean load(boolean p_189714_1_)`
-- `public void unloadStructure()`
-- `public boolean isStructureLoadable()`
-- `public boolean isPowered()`
-- `public void setPowered(boolean poweredIn)`
-- `public boolean showsAir()`
-- `public void setShowAir(boolean showAirIn)`
-- `public boolean showsBoundingBox()`
-- `public void setShowBoundingBox(boolean showBoundingBoxIn)`
-- `@Nullable public ITextComponent getDisplayName()`
+- `void createdBy(EntityLivingBase p_189720_1_)`
+- `boolean detectSize()`
+- `ITextComponent getDisplayName()`
+- `float getIntegrity()`
+- `java.lang.String getMetadata()`
+- `Mirror getMirror()`
+- `TileEntityStructure.Mode getMode()`
+- `java.lang.String getName()`
+- `BlockPos getPosition()`
+- `Rotation getRotation()`
+- `long getSeed()`
+- `BlockPos getStructureSize()`
+- `SPacketUpdateTileEntity getUpdatePacket()`
+- `NBTTagCompound getUpdateTag()`
+- `boolean ignoresEntities()`
+- `boolean isPowered()`
+- `boolean isStructureLoadable()`
+- `boolean load()`
+- `boolean load(boolean p_189714_1_)`
+- `void nextMode()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `boolean save()`
+- `boolean save(boolean p_189712_1_)`
+- `void setIgnoresEntities(boolean ignoreEntitiesIn)`
+- `void setIntegrity(float integrityIn)`
+- `void setMetadata(java.lang.String metadataIn)`
+- `void setMirror(Mirror mirrorIn)`
+- `void setMode(TileEntityStructure.Mode modeIn)`
+- `void setName(java.lang.String nameIn)`
+- `void setPosition(BlockPos posIn)`
+- `void setPowered(boolean poweredIn)`
+- `void setRotation(Rotation rotationIn)`
+- `void setSeed(long seedIn)`
+- `void setShowAir(boolean showAirIn)`
+- `void setShowBoundingBox(boolean showBoundingBoxIn)`
+- `void setSize(BlockPos sizeIn)`
+- `boolean showsAir()`
+- `boolean showsBoundingBox()`
+- `void unloadStructure()`
+- `boolean usedBy(EntityPlayer player)`
+- `void writeCoordinates(io.netty.buffer.ByteBuf buf)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `TileEntityStructure`

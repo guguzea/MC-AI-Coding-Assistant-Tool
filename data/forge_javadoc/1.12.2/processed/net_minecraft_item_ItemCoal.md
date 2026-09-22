@@ -1,16 +1,18 @@
 # ItemCoal
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemCoal
+
 ## Class signature
 
 ```java
 public class ItemCoal extends Item
 ```
 
-## Constructors
-
-- `public ItemCoal()`
-
 ## Methods
 
-- `public java.lang.String getUnlocalizedName( ItemStack stack)`
-- `public void getSubItems( CreativeTabs tab, NonNullList < ItemStack > items)`
+- `void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)`
+- `java.lang.String getUnlocalizedName(ItemStack stack)`
+
+## Fields
+
+- `ItemCoal`

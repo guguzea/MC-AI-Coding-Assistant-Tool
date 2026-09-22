@@ -1,5 +1,7 @@
 # InventoryEnderChest
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.InventoryBasic → net.minecraft.inventory.InventoryEnderChest
+
 ## Class signature
 
 ```java
@@ -8,13 +10,13 @@ public class InventoryEnderChest extends InventoryBasic
 
 ## Constructors
 
-- `public InventoryEnderChest()`
+- `InventoryEnderChest()`
 
 ## Methods
 
-- `public void setChestTileEntity( TileEntityEnderChest chestTileEntity)`
-- `public void loadInventoryFromNBT( NBTTagList p_70486_1_)`
-- `public NBTTagList saveInventoryToNBT()`
-- `public boolean isUsableByPlayer( EntityPlayer player)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
+- `void closeInventory(EntityPlayer player)`
+- `boolean isUsableByPlayer(EntityPlayer player)`
+- `void loadInventoryFromNBT(NBTTagList p_70486_1_)`
+- `void openInventory(EntityPlayer player)`
+- `NBTTagList saveInventoryToNBT()`
+- `void setChestTileEntity(TileEntityEnderChest chestTileEntity)`

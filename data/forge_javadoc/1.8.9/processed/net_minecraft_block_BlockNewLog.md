@@ -1,5 +1,7 @@
 # BlockNewLog
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockRotatedPillar → net.minecraft.block.BlockLog → net.minecraft.block.BlockNewLog
+
 ## Class signature
 
 ```java
@@ -8,18 +10,18 @@ public class BlockNewLog extends BlockLog
 
 ## Constructors
 
-- `public BlockNewLog()`
+- `BlockNewLog()`
 
 ## Methods
 
-- `public MapColor getMapColor( IBlockState state)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > list)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockState createBlockState()`
-- `protected ItemStack createStackedBlock( IBlockState state)`
-- `public int damageDropped( IBlockState state)`
+- `protected ItemStack createStackedBlock(IBlockState state)`
+- `int damageDropped(IBlockState state)` — Gets the metadata of the item this Block can drop.
+- `MapColor getMapColor(IBlockState state)` — Get the MapColor for this Block and the given BlockState
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> list)` — returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
 
-## Description
+## Fields
 
-Gets the metadata of the item this Block can drop.
+- `static PropertyEnum<BlockPlanks.EnumType> VARIANT`

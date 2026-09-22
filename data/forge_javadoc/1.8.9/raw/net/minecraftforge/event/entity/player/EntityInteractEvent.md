@@ -1,13 +1,17 @@
 ---
 title: "EntityInteractEvent"
-description: "EntityInteractEvent is fired when a player interacts with an Entity. This event is fired whenever a player interacts with an Entity in EntityPlayer#interactWith(Entity). target contains the Entity the"
+description: "public class EntityInteractEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/player/EntityInteractEvent.html"
 sourceType: javadoc
 ---
 
 # EntityInteractEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.EntityInteractEvent
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class EntityInteractEvent extends PlayerEvent
 
 ## Constructors
 
-- `public EntityInteractEvent( EntityPlayer player, Entity target)`
+- `EntityInteractEvent(EntityPlayer player, Entity target)`
 
-## Description
+## Fields
 
-EntityInteractEvent is fired when a player interacts with an Entity. This event is fired whenever a player interacts with an Entity in EntityPlayer#interactWith(Entity). target contains the Entity the
+- `Entity target`

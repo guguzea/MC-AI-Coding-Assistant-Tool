@@ -1,5 +1,7 @@
 # CompressedStreamTools
 
+**Inheritance:** java.lang.Object → net.minecraft.nbt.CompressedStreamTools
+
 ## Class signature
 
 ```java
@@ -8,15 +10,15 @@ public class CompressedStreamTools extends java.lang.Object
 
 ## Constructors
 
-- `public CompressedStreamTools()`
+- `CompressedStreamTools()`
 
 ## Methods
 
-- `public static NBTTagCompound readCompressed(java.io.InputStream is) throws java.io.IOException`
-- `public static void writeCompressed( NBTTagCompound compound, java.io.OutputStream outputStream) throws java.io.IOException`
-- `public static void safeWrite( NBTTagCompound compound, java.io.File fileIn) throws java.io.IOException`
-- `public static NBTTagCompound read(java.io.DataInputStream inputStream) throws java.io.IOException`
-- `public static NBTTagCompound read(java.io.DataInput input, NBTSizeTracker accounter) throws java.io.IOException`
-- `public static void write( NBTTagCompound compound, java.io.DataOutput output) throws java.io.IOException`
-- `public static void write( NBTTagCompound compound, java.io.File fileIn) throws java.io.IOException`
-- `public static NBTTagCompound read(java.io.File fileIn) throws java.io.IOException`
+- `static NBTTagCompound read(java.io.DataInput input, NBTSizeTracker accounter)`
+- `static NBTTagCompound read(java.io.DataInputStream inputStream)`
+- `static NBTTagCompound read(java.io.File fileIn)`
+- `static NBTTagCompound readCompressed(java.io.InputStream is)`
+- `static void safeWrite(NBTTagCompound compound, java.io.File fileIn)`
+- `static void write(NBTTagCompound compound, java.io.DataOutput output)`
+- `static void write(NBTTagCompound compound, java.io.File fileIn)`
+- `static void writeCompressed(NBTTagCompound compound, java.io.OutputStream outputStream)`

@@ -3,6 +3,8 @@ title: "INetHandlerPlayServer"
 description: "public interface INetHandlerPlayServer extends INetHandler"
 package: "net/minecraft/network/play"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/play/INetHandlerPlayServer.html"
 sourceType: javadoc
 ---
@@ -17,30 +19,30 @@ public interface INetHandlerPlayServer extends INetHandler
 
 ## Methods
 
-- `void handleAnimation( CPacketAnimation packetIn)`
-- `void processChatMessage( CPacketChatMessage packetIn)`
-- `void processTabComplete( CPacketTabComplete packetIn)`
-- `void processClientStatus( CPacketClientStatus packetIn)`
-- `void processClientSettings( CPacketClientSettings packetIn)`
-- `void processConfirmTransaction( CPacketConfirmTransaction packetIn)`
-- `void processEnchantItem( CPacketEnchantItem packetIn)`
-- `void processClickWindow( CPacketClickWindow packetIn)`
-- `void processCloseWindow( CPacketCloseWindow packetIn)`
-- `void processCustomPayload( CPacketCustomPayload packetIn)`
-- `void processUseEntity( CPacketUseEntity packetIn)`
-- `void processKeepAlive( CPacketKeepAlive packetIn)`
-- `void processPlayer( CPacketPlayer packetIn)`
-- `void processPlayerAbilities( CPacketPlayerAbilities packetIn)`
-- `void processPlayerDigging( CPacketPlayerDigging packetIn)`
-- `void processEntityAction( CPacketEntityAction packetIn)`
-- `void processInput( CPacketInput packetIn)`
-- `void processHeldItemChange( CPacketHeldItemChange packetIn)`
-- `void processCreativeInventoryAction( CPacketCreativeInventoryAction packetIn)`
-- `void processUpdateSign( CPacketUpdateSign packetIn)`
-- `void processRightClickBlock( CPacketPlayerTryUseItemOnBlock packetIn)`
-- `void processPlayerBlockPlacement( CPacketPlayerTryUseItem packetIn)`
-- `void handleSpectate( CPacketSpectate packetIn)`
-- `void handleResourcePackStatus( CPacketResourcePackStatus packetIn)`
-- `void processSteerBoat( CPacketSteerBoat packetIn)`
-- `void processVehicleMove( CPacketVehicleMove packetIn)`
-- `void processConfirmTeleport( CPacketConfirmTeleport packetIn)`
+- `void handleAnimation(CPacketAnimation packetIn)`
+- `void handleResourcePackStatus(CPacketResourcePackStatus packetIn)`
+- `void handleSpectate(CPacketSpectate packetIn)`
+- `void processChatMessage(CPacketChatMessage packetIn)`
+- `void processClickWindow(CPacketClickWindow packetIn)`
+- `void processClientSettings(CPacketClientSettings packetIn)`
+- `void processClientStatus(CPacketClientStatus packetIn)`
+- `void processCloseWindow(CPacketCloseWindow packetIn)`
+- `void processConfirmTeleport(CPacketConfirmTeleport packetIn)`
+- `void processConfirmTransaction(CPacketConfirmTransaction packetIn)`
+- `void processCreativeInventoryAction(CPacketCreativeInventoryAction packetIn)`
+- `void processCustomPayload(CPacketCustomPayload packetIn)`
+- `void processEnchantItem(CPacketEnchantItem packetIn)`
+- `void processEntityAction(CPacketEntityAction packetIn)`
+- `void processHeldItemChange(CPacketHeldItemChange packetIn)`
+- `void processInput(CPacketInput packetIn)`
+- `void processKeepAlive(CPacketKeepAlive packetIn)`
+- `void processPlayer(CPacketPlayer packetIn)`
+- `void processPlayerAbilities(CPacketPlayerAbilities packetIn)`
+- `void processPlayerBlockPlacement(CPacketPlayerTryUseItem packetIn)`
+- `void processPlayerDigging(CPacketPlayerDigging packetIn)`
+- `void processRightClickBlock(CPacketPlayerTryUseItemOnBlock packetIn)`
+- `void processSteerBoat(CPacketSteerBoat packetIn)`
+- `void processTabComplete(CPacketTabComplete packetIn)`
+- `void processUpdateSign(CPacketUpdateSign packetIn)`
+- `void processUseEntity(CPacketUseEntity packetIn)`
+- `void processVehicleMove(CPacketVehicleMove packetIn)`

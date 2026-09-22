@@ -1,20 +1,22 @@
 # NBTPrimitive
 
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase → net.minecraft.nbt.NBTPrimitive
+
 ## Class signature
 
 ```java
 public abstract class NBTPrimitive extends NBTBase
 ```
 
-## Constructors
-
-- `public NBTPrimitive()`
-
 ## Methods
 
-- `public abstract long getLong()`
-- `public abstract int getInt()`
-- `public abstract short getShort()`
-- `public abstract byte getByte()`
-- `public abstract double getDouble()`
-- `public abstract float getFloat()`
+- `abstract byte getByte()`
+- `abstract double getDouble()`
+- `abstract float getFloat()`
+- `abstract int getInt()`
+- `abstract long getLong()`
+- `abstract short getShort()`
+
+## Fields
+
+- `NBTPrimitive`

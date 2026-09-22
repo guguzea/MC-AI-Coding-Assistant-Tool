@@ -3,11 +3,15 @@ title: "EntityShulker"
 description: "public class EntityShulker extends EntityGolem implements IMob"
 package: "net/minecraft/entity/monster"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/monster/EntityShulker.html"
 sourceType: javadoc
 ---
 
 # EntityShulker
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityGolem → net.minecraft.entity.monster.EntityShulker
 
 ## Class signature
 
@@ -17,46 +21,54 @@ public class EntityShulker extends EntityGolem implements IMob
 
 ## Constructors
 
-- `public EntityShulker( World worldIn)`
+- `EntityShulker(World worldIn)`
 
 ## Methods
 
-- `public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, IEntityLivingData livingdata)`
-- `protected void initEntityAI()`
-- `protected boolean canTriggerWalking()`
-- `public SoundCategory getSoundCategory()`
-- `protected SoundEvent getAmbientSound()`
-- `public void playLivingSound()`
-- `protected SoundEvent getDeathSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
-- `protected void entityInit()`
 - `protected void applyEntityAttributes()`
+- `void applyEntityCollision(Entity entityIn)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `protected boolean canTriggerWalking()`
 - `protected EntityBodyHelper createBodyHelper()`
-- `public static void registerFixesShulker( DataFixer fixer)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void onUpdate()`
-- `public void move( MoverType type, double x, double y, double z)`
-- `public void setPosition(double x, double y, double z)`
-- `protected boolean tryTeleportToNewPosition()`
-- `public void onLivingUpdate()`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public AxisAlignedBB getCollisionBoundingBox()`
-- `public EnumFacing getAttachmentFacing()`
-- `public BlockPos getAttachmentPos()`
-- `public void setAttachmentPos( BlockPos pos)`
-- `public int getPeekTick()`
-- `public void updateArmorModifier(int p_184691_1_)`
-- `public float getClientPeekAmount(float p_184688_1_)`
-- `public int getClientTeleportInterp()`
-- `public BlockPos getOldAttachPos()`
-- `public float getEyeHeight()`
-- `public int getVerticalFaceSpeed()`
-- `public int getHorizontalFaceSpeed()`
-- `public void applyEntityCollision( Entity entityIn)`
-- `public float getCollisionBorderSize()`
-- `public boolean isAttachedToBlock()`
+- `protected void entityInit()`
+- `protected SoundEvent getAmbientSound()`
+- `EnumFacing getAttachmentFacing()`
+- `BlockPos getAttachmentPos()`
+- `float getClientPeekAmount(float p_184688_1_)`
+- `int getClientTeleportInterp()`
+- `float getCollisionBorderSize()`
+- `AxisAlignedBB getCollisionBoundingBox()`
+- `EnumDyeColor getColor()`
+- `protected SoundEvent getDeathSound()`
+- `float getEyeHeight()`
+- `int getHorizontalFaceSpeed()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
 - `protected ResourceLocation getLootTable()`
-- `public EnumDyeColor getColor()`
+- `BlockPos getOldAttachPos()`
+- `int getPeekTick()`
+- `SoundCategory getSoundCategory()`
+- `int getVerticalFaceSpeed()`
+- `protected void initEntityAI()`
+- `boolean isAttachedToBlock()`
+- `void move(MoverType type, double x, double y, double z)`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onLivingUpdate()`
+- `void onUpdate()`
+- `void playLivingSound()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesShulker(DataFixer fixer)`
+- `void setAttachmentPos(BlockPos pos)`
+- `void setPosition(double x, double y, double z)`
+- `void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
+- `protected boolean tryTeleportToNewPosition()`
+- `void updateArmorModifier(int p_184691_1_)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `protected static DataParameter<<any>> ATTACHED_BLOCK_POS`
+- `protected static DataParameter<EnumFacing> ATTACHED_FACE`
+- `protected static DataParameter<java.lang.Byte> COLOR`
+- `static EnumDyeColor DEFAULT_COLOR`
+- `protected static DataParameter<java.lang.Byte> PEEK_TICK`

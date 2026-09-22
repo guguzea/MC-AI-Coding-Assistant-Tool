@@ -1,27 +1,29 @@
 # FluidBucketWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper
+
 ## Class signature
 
 ```java
-public class FluidBucketWrapper extends java.lang.Object implements IFluidHandler , ICapabilityProvider
+public class FluidBucketWrapper extends java.lang.Object implements IFluidHandler, ICapabilityProvider
 ```
 
 ## Constructors
 
-- `public FluidBucketWrapper( ItemStack container)`
+- `FluidBucketWrapper(ItemStack container)`
 
 ## Methods
 
-- `public boolean canFillFluidType( FluidStack fluid)`
-- `@Nullable public FluidStack getFluid()`
-- `protected void setFluid( Fluid fluid)`
-- `public IFluidTankProperties [] getTankProperties()`
-- `public int fill( FluidStack resource, boolean doFill)`
-- `@Nullable public FluidStack drain( FluidStack resource, boolean doDrain)`
-- `@Nullable public FluidStack drain(int maxDrain, boolean doDrain)`
-- `public boolean hasCapability( Capability <?> capability, EnumFacing facing)`
-- `public <T> T getCapability( Capability <T> capability, EnumFacing facing)`
+- `boolean canFillFluidType(FluidStack fluid)`
+- `FluidStack drain(FluidStack resource, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `FluidStack drain(int maxDrain, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `int fill(FluidStack resource, boolean doFill)` — Fills fluid into internal tanks, distribution is left entirely to the IFluidHandler.
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `FluidStack getFluid()`
+- `IFluidTankProperties [] getTankProperties()` — Returns an array of objects which represent the internal tanks.
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.
+- `protected void setFluid(Fluid fluid)`
 
-## Description
+## Fields
 
-Wrapper for vanilla and forge buckets. Swaps between empty bucket and filled bucket of the correct type.
+- `protected ItemStack container`

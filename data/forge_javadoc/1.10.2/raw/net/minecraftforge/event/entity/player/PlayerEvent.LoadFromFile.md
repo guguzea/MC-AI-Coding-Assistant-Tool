@@ -1,24 +1,30 @@
 ---
 title: "PlayerEvent.LoadFromFile"
-description: "The player is being loaded from the world save. Note that the player won't have been added to the world yet. Intended to allow mods to load an additional file from the players directory containing add"
+description: "public static class PlayerEvent.LoadFromFile extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/entity/player/PlayerEvent.LoadFromFile.html"
 sourceType: javadoc
 ---
 
 # PlayerEvent.LoadFromFile
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.LoadFromFile
+
+## Class signature
+
+```java
+public static class PlayerEvent.LoadFromFile extends PlayerEvent
+```
+
 ## Constructors
 
-- `public LoadFromFile( EntityPlayer player, java.io.File originDirectory, java.lang.String playerUUID)`
+- `LoadFromFile(EntityPlayer player, java.io.File originDirectory, java.lang.String playerUUID)`
 
 ## Methods
 
-- `public java.io.File getPlayerFile(java.lang.String suffix)`
-- `public java.io.File getPlayerDirectory()`
-- `public java.lang.String getPlayerUUID()`
-
-## Description
-
-The player is being loaded from the world save. Note that the player won't have been added to the world yet. Intended to allow mods to load an additional file from the players directory containing add
+- `java.io.File getPlayerDirectory()` — The directory where player data is being stored.
+- `java.io.File getPlayerFile(java.lang.String suffix)` — Construct and return a recommended file for the supplied suffix
+- `java.lang.String getPlayerUUID()` — The UUID is the standard for player related file storage.

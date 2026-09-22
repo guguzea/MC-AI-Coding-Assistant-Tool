@@ -3,11 +3,15 @@ title: "LootEntryEmpty"
 description: "public class LootEntryEmpty extends LootEntry"
 package: "net/minecraft/world/storage/loot"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/storage/loot/LootEntryEmpty.html"
 sourceType: javadoc
 ---
 
 # LootEntryEmpty
+
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.LootEntry → net.minecraft.world.storage.loot.LootEntryEmpty
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class LootEntryEmpty extends LootEntry
 ```
 
-## Constructors
-
-- `public LootEntryEmpty(int weightIn, int qualityIn, LootCondition [] conditionsIn, java.lang.String entryName)`
-
 ## Methods
 
-- `public void addLoot(java.util.Collection< ItemStack > stacks, java.util.Random rand, LootContext context)`
+- `void addLoot(java.util.Collection<ItemStack> stacks, java.util.Random rand, LootContext context)`
+- `static LootEntryEmpty deserialize(JsonObject object, JsonDeserializationContext deserializationContext, int weightIn, int qualityIn, LootCondition [] conditionsIn)`
 - `protected void serialize(JsonObject json, JsonSerializationContext context)`
-- `public static LootEntryEmpty deserialize(JsonObject object, JsonDeserializationContext deserializationContext, int weightIn, int qualityIn, LootCondition [] conditionsIn)`
+
+## Fields
+
+- `LootEntryEmpty`

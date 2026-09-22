@@ -1,13 +1,17 @@
 ---
 title: "MissingModsException"
-description: "Deprecated. use getMissingModInfos()"
+description: "public class MissingModsException extends EnhancedRuntimeException implements IDisplayableError"
 package: "net/minecraftforge/fml/common"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/common/MissingModsException.html"
 sourceType: javadoc
 ---
 
 # MissingModsException
+
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.lang.RuntimeException → net.minecraftforge.fml.common.EnhancedRuntimeException → net.minecraftforge.fml.common.MissingModsException
 
 ## Class signature
 
@@ -17,18 +21,18 @@ public class MissingModsException extends EnhancedRuntimeException implements ID
 
 ## Constructors
 
-- `public MissingModsException(java.lang.String id, java.lang.String name)`
+- `@Deprecated MissingModsException(java.util.Set<ArtifactVersion> missingMods, java.lang.String id, java.lang.String name)`
+- `MissingModsException(java.lang.String id, java.lang.String name)`
 
 ## Methods
 
-- `@Deprecated public MissingModsException(java.util.Set< ArtifactVersion > missingMods, java.lang.String id, java.lang.String name)`
-- `public java.lang.String getMessage()`
-- `public void addMissingMod( ArtifactVersion acceptedVersion, ArtifactVersion currentVersion, boolean required)`
-- `public java.lang.String getModName()`
-- `public java.util.List< MissingModsException.MissingModInfo > getMissingModInfos()`
-- `protected void printStackTrace( EnhancedRuntimeException.WrappedPrintStream stream)`
-- `public GuiScreen createGui()`
+- `void addMissingMod(ArtifactVersion acceptedVersion, ArtifactVersion currentVersion, boolean required)`
+- `GuiScreen createGui()`
+- `java.lang.String getMessage()`
+- `java.util.List<MissingModsException.MissingModInfo> getMissingModInfos()`
+- `java.lang.String getModName()`
+- `protected void printStackTrace(EnhancedRuntimeException.WrappedPrintStream stream)`
 
-## Description
+## Fields
 
-Deprecated. use getMissingModInfos()
+- `java.util.Set<ArtifactVersion> missingMods` — Deprecated. use getMissingModInfos()

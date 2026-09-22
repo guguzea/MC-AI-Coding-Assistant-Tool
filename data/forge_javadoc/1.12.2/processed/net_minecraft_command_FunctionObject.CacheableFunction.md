@@ -1,11 +1,23 @@
 # FunctionObject.CacheableFunction
 
+**Inheritance:** java.lang.Object → net.minecraft.command.FunctionObject.CacheableFunction
+
+## Class signature
+
+```java
+public static class FunctionObject.CacheableFunction extends java.lang.Object
+```
+
 ## Constructors
 
-- `public CacheableFunction( ResourceLocation idIn)`
-- `public CacheableFunction( FunctionObject functionIn)`
+- `CacheableFunction(FunctionObject functionIn)`
+- `CacheableFunction(ResourceLocation idIn)`
 
 ## Methods
 
-- `public FunctionObject get( FunctionManager functionManagerIn)`
-- `public java.lang.String toString()`
+- `FunctionObject get(FunctionManager functionManagerIn)`
+- `java.lang.String toString()`
+
+## Fields
+
+- `static FunctionObject.CacheableFunction EMPTY`

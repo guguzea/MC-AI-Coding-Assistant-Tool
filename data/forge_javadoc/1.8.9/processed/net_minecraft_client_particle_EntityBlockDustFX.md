@@ -1,11 +1,13 @@
 # EntityBlockDustFX
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.client.particle.EntityFX → net.minecraft.client.particle.EntityDiggingFX → net.minecraft.client.particle.EntityBlockDustFX
+
 ## Class signature
 
 ```java
 public class EntityBlockDustFX extends EntityDiggingFX
 ```
 
-## Constructors
+## Fields
 
-- `protected EntityBlockDustFX( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, IBlockState state)`
+- `protected EntityBlockDustFX`

@@ -1,12 +1,14 @@
 # ModelPig
 
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelQuadruped → net.minecraft.client.model.ModelPig
+
 ## Class signature
 
 ```java
 public class ModelPig extends ModelQuadruped
 ```
 
-## Constructors
+## Fields
 
-- `public ModelPig()`
-- `public ModelPig(float p_i1151_1_)`
+- `ModelPig`
+- `ModelPig`

@@ -1,13 +1,17 @@
 ---
 title: "PlayerInteractEvent"
-description: "PlayerInteractEvent is fired when a player interacts in some way. This event is fired whenever a player interacts in Minecraft#rightClickMouse(), NetHandlerPlayServer#processPlayerBlockPlacement(C08Pa"
+description: "public class PlayerInteractEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/player/PlayerInteractEvent.html"
 sourceType: javadoc
 ---
 
 # PlayerInteractEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent
 
 ## Class signature
 
@@ -17,13 +21,19 @@ public class PlayerInteractEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerInteractEvent( EntityPlayer player, PlayerInteractEvent.Action action, BlockPos pos, EnumFacing face, World world, Vec3 localPos)`
+- `@Deprecated PlayerInteractEvent(EntityPlayer player, PlayerInteractEvent.Action action, BlockPos pos, EnumFacing face, World world)`
+- `PlayerInteractEvent(EntityPlayer player, PlayerInteractEvent.Action action, BlockPos pos, EnumFacing face, World world, Vec3 localPos)`
 
 ## Methods
 
-- `@Deprecated public PlayerInteractEvent( EntityPlayer player, PlayerInteractEvent.Action action, BlockPos pos, EnumFacing face, World world)`
-- `public void setCanceled(boolean cancel)`
+- `void setCanceled(boolean cancel)` — Sets the state of this event, not all events are cancelable, and any attempt to cancel a event that can't be will result in a IllegalArgumentException.
 
-## Description
+## Fields
 
-PlayerInteractEvent is fired when a player interacts in some way. This event is fired whenever a player interacts in Minecraft#rightClickMouse(), NetHandlerPlayServer#processPlayerBlockPlacement(C08Pa
+- `PlayerInteractEvent.Action action`
+- `EnumFacing face`
+- `Vec3 localPos`
+- `BlockPos pos`
+- `Event.Result useBlock`
+- `Event.Result useItem`
+- `World world`

@@ -1,13 +1,17 @@
 ---
 title: "IntegratedServer"
-description: "Adds the server info, including from theWorldServer, to the crash report."
+description: "public class IntegratedServer extends MinecraftServer"
 package: "net/minecraft/server/integrated"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/server/integrated/IntegratedServer.html"
 sourceType: javadoc
 ---
 
 # IntegratedServer
+
+**Inheritance:** java.lang.Object → net.minecraft.server.MinecraftServer → net.minecraft.server.integrated.IntegratedServer
 
 ## Class signature
 
@@ -15,40 +19,36 @@ sourceType: javadoc
 public class IntegratedServer extends MinecraftServer
 ```
 
-## Constructors
-
-- `public IntegratedServer( Minecraft mcIn)`
-- `public IntegratedServer( Minecraft mcIn, java.lang.String folderName, java.lang.String worldName, WorldSettings settings)`
-
 ## Methods
 
+- `CrashReport addServerInfoToCrashReport(CrashReport report)` — Adds the server info, including from theWorldServer, to the crash report.
+- `void addServerStatsToSnooper(PlayerUsageSnooper playerSnooper)`
+- `boolean canStructuresSpawn()`
 - `protected ServerCommandManager createNewCommandManager()`
+- `protected void finalTick(CrashReport report)` — Called on exit from the main run() loop.
+- `java.io.File getDataDirectory()`
+- `EnumDifficulty getDifficulty()` — Get the server's difficulty
+- `WorldSettings.GameType getGameType()`
+- `int getOpPermissionLevel()`
+- `boolean getPublic()` — Returns true if this integrated server is open to LAN
+- `void initiateShutdown()` — Sets the serverRunning variable to false, in order to get the server to shut down.
+- `boolean isCommandBlockEnabled()` — Return whether command blocks are enabled.
+- `boolean isDedicatedServer()`
+- `boolean isHardcore()` — Defaults to false.
+- `boolean isSnooperEnabled()` — Returns whether snooping is enabled or not.
 - `protected void loadAllWorlds(java.lang.String p_71247_1_, java.lang.String p_71247_2_, long seed, WorldType type, java.lang.String p_71247_6_)`
-- `protected boolean startServer() throws java.io.IOException`
-- `public void tick()`
-- `public boolean canStructuresSpawn()`
-- `public WorldSettings.GameType getGameType()`
-- `public EnumDifficulty getDifficulty()`
-- `public boolean isHardcore()`
-- `public boolean shouldBroadcastRconToOps()`
-- `public boolean shouldBroadcastConsoleToOps()`
-- `public java.io.File getDataDirectory()`
-- `public boolean isDedicatedServer()`
-- `public boolean shouldUseNativeTransport()`
-- `protected void finalTick( CrashReport report)`
-- `public CrashReport addServerInfoToCrashReport( CrashReport report)`
-- `public void setDifficultyForAllWorlds( EnumDifficulty difficulty)`
-- `public void addServerStatsToSnooper( PlayerUsageSnooper playerSnooper)`
-- `public boolean isSnooperEnabled()`
-- `public java.lang.String shareToLAN( WorldSettings.GameType type, boolean allowCheats)`
-- `public void stopServer()`
-- `public void initiateShutdown()`
-- `public void setStaticInstance()`
-- `public boolean getPublic()`
-- `public void setGameType( WorldSettings.GameType gameMode)`
-- `public boolean isCommandBlockEnabled()`
-- `public int getOpPermissionLevel()`
+- `void setDifficultyForAllWorlds(EnumDifficulty difficulty)`
+- `void setGameType(WorldSettings.GameType gameMode)` — Sets the game type for all worlds.
+- `void setStaticInstance()`
+- `java.lang.String shareToLAN(WorldSettings.GameType type, boolean allowCheats)` — On dedicated does nothing.
+- `boolean shouldBroadcastConsoleToOps()` — Get if console command events should be broadcast to ops
+- `boolean shouldBroadcastRconToOps()` — Get if RCON command events should be broadcast to ops
+- `boolean shouldUseNativeTransport()` — Get if native transport should be used.
+- `protected boolean startServer()` — Initialises the server and starts it.
+- `void stopServer()` — Saves all necessary data as preparation for stopping the server.
+- `void tick()` — Main function called by run() every loop.
 
-## Description
+## Fields
 
-Adds the server info, including from theWorldServer, to the crash report.
+- `IntegratedServer`
+- `IntegratedServer`

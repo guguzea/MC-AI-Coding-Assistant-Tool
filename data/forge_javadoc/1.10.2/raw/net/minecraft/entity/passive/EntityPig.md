@@ -3,11 +3,15 @@ title: "EntityPig"
 description: "public class EntityPig extends EntityAnimal"
 package: "net/minecraft/entity/passive"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/entity/passive/EntityPig.html"
 sourceType: javadoc
 ---
 
 # EntityPig
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityPig
 
 ## Class signature
 
@@ -15,32 +19,32 @@ sourceType: javadoc
 public class EntityPig extends EntityAnimal
 ```
 
-## Constructors
-
-- `public EntityPig( World worldIn)`
-
 ## Methods
 
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
-- `@Nullable public Entity getControllingPassenger()`
-- `public boolean canBeSteered()`
-- `protected void entityInit()`
-- `public static void registerFixesPig( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
-- `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand, @Nullable ItemStack stack)`
+- `boolean boost()`
+- `boolean canBeSteered()`
+- `EntityPig createChild(EntityAgeable ageable)`
 - `protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier)`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public boolean getSaddled()`
-- `public void setSaddled(boolean saddled)`
-- `public void onStruckByLightning( EntityLightningBolt lightningBolt)`
-- `public void fall(float distance, float damageMultiplier)`
-- `public void moveEntityWithHeading(float strafe, float forward)`
-- `public boolean boost()`
-- `public EntityPig createChild( EntityAgeable ageable)`
-- `public boolean isBreedingItem(@Nullable ItemStack stack)`
+- `protected void entityInit()`
+- `void fall(float distance, float damageMultiplier)`
+- `protected SoundEvent getAmbientSound()`
+- `Entity getControllingPassenger()`
+- `protected SoundEvent getDeathSound()`
+- `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `boolean getSaddled()`
+- `protected void initEntityAI()`
+- `boolean isBreedingItem(ItemStack stack)`
+- `void moveEntityWithHeading(float strafe, float forward)`
+- `void onStruckByLightning(EntityLightningBolt lightningBolt)`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesPig(DataFixer fixer)`
+- `void setSaddled(boolean saddled)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityPig`

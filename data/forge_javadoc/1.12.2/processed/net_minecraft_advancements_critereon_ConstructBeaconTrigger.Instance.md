@@ -1,9 +1,17 @@
 # ConstructBeaconTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.ConstructBeaconTrigger.Instance
+
+## Class signature
+
+```java
+public static class ConstructBeaconTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( MinMaxBounds level)`
+- `Instance(MinMaxBounds level)`
 
 ## Methods
 
-- `public boolean test( TileEntityBeacon beacon)`
+- `boolean test(TileEntityBeacon beacon)`

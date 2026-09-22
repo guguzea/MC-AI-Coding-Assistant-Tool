@@ -1,15 +1,17 @@
 # ItemSign
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemSign
+
 ## Class signature
 
 ```java
 public class ItemSign extends Item
 ```
 
-## Constructors
-
-- `public ItemSign()`
-
 ## Methods
 
-- `public EnumActionResult onItemUse( EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+
+## Fields
+
+- `ItemSign`

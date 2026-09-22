@@ -1,13 +1,17 @@
 ---
 title: "ReportedException"
-description: "Gets the CrashReport wrapped by this exception."
+description: "public class ReportedException extends java.lang.RuntimeException"
 package: "net/minecraft/util"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/util/ReportedException.html"
 sourceType: javadoc
 ---
 
 # ReportedException
+
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.lang.RuntimeException → net.minecraft.util.ReportedException
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class ReportedException extends java.lang.RuntimeException
 
 ## Constructors
 
-- `public ReportedException( CrashReport report)`
+- `ReportedException(CrashReport report)`
 
 ## Methods
 
-- `public CrashReport getCrashReport()`
-- `public java.lang.Throwable getCause()`
-- `public java.lang.String getMessage()`
-
-## Description
-
-Gets the CrashReport wrapped by this exception.
+- `java.lang.Throwable getCause()`
+- `CrashReport getCrashReport()` — Gets the CrashReport wrapped by this exception.
+- `java.lang.String getMessage()`

@@ -3,11 +3,15 @@ title: "VertexTransformer"
 description: "public class VertexTransformer extends java.lang.Object implements IVertexConsumer"
 package: "net/minecraftforge/client/model/pipeline"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/model/pipeline/VertexTransformer.html"
 sourceType: javadoc
 ---
 
 # VertexTransformer
+
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.pipeline.VertexTransformer
 
 ## Class signature
 
@@ -17,13 +21,17 @@ public class VertexTransformer extends java.lang.Object implements IVertexConsum
 
 ## Constructors
 
-- `public VertexTransformer( IVertexConsumer parent)`
+- `VertexTransformer(IVertexConsumer parent)`
 
 ## Methods
 
-- `public VertexFormat getVertexFormat()`
-- `public void setQuadTint(int tint)`
-- `public void setTexture( TextureAtlasSprite texture)`
-- `public void setQuadOrientation( EnumFacing orientation)`
-- `public void setApplyDiffuseLighting(boolean diffuse)`
-- `public void put(int element, float... data)`
+- `VertexFormat getVertexFormat()`
+- `void put(int element, float... data)`
+- `void setApplyDiffuseLighting(boolean diffuse)`
+- `void setQuadOrientation(EnumFacing orientation)`
+- `void setQuadTint(int tint)`
+- `void setTexture(TextureAtlasSprite texture)`
+
+## Fields
+
+- `protected IVertexConsumer parent`

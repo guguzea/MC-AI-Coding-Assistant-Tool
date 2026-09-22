@@ -3,11 +3,15 @@ title: "AnvilSaveConverter"
 description: "public class AnvilSaveConverter extends SaveFormatOld"
 package: "net/minecraft/world/chunk/storage"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/chunk/storage/AnvilSaveConverter.html"
 sourceType: javadoc
 ---
 
 # AnvilSaveConverter
+
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.SaveFormatOld → net.minecraft.world.chunk.storage.AnvilSaveConverter
 
 ## Class signature
 
@@ -15,17 +19,17 @@ sourceType: javadoc
 public class AnvilSaveConverter extends SaveFormatOld
 ```
 
-## Constructors
-
-- `public AnvilSaveConverter(java.io.File dir, DataFixer dataFixerIn)`
-
 ## Methods
 
-- `public java.lang.String getName()`
-- `public java.util.List< WorldSummary > getSaveList() throws AnvilConverterException`
+- `boolean convertMapFormat(java.lang.String filename, IProgressUpdate progressCallback)`
+- `void flushCache()`
+- `java.lang.String getName()`
+- `java.util.List<WorldSummary> getSaveList()`
+- `ISaveHandler getSaveLoader(java.lang.String saveName, boolean storePlayerdata)`
 - `protected int getSaveVersion()`
-- `public void flushCache()`
-- `public ISaveHandler getSaveLoader(java.lang.String saveName, boolean storePlayerdata)`
-- `public boolean isConvertible(java.lang.String saveName)`
-- `public boolean isOldMapFormat(java.lang.String saveName)`
-- `public boolean convertMapFormat(java.lang.String filename, IProgressUpdate progressCallback)`
+- `boolean isConvertible(java.lang.String saveName)`
+- `boolean isOldMapFormat(java.lang.String saveName)`
+
+## Fields
+
+- `AnvilSaveConverter`

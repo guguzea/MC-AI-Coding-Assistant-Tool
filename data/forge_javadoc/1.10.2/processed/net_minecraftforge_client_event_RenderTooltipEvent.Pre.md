@@ -1,21 +1,25 @@
 # RenderTooltipEvent.Pre
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderTooltipEvent → net.minecraftforge.client.event.RenderTooltipEvent.Pre
 
-- `public Pre(@Nullable ItemStack stack, @Nonnull java.util.List<java.lang.String> lines, int x, int y, int screenWidth, int screenHeight, int maxWidth, @Nonnull FontRenderer fr)`
+## Class signature
+
+```java
+public static class RenderTooltipEvent.Pre extends RenderTooltipEvent
+```
 
 ## Methods
 
-- `public int getScreenWidth()`
-- `public void setScreenWidth(int screenWidth)`
-- `public int getScreenHeight()`
-- `public void setScreenHeight(int screenHeight)`
-- `public int getMaxWidth()`
-- `public void setMaxWidth(int maxWidth)`
-- `public void setFontRenderer(@Nonnull FontRenderer fr)`
-- `public void setX(int x)`
-- `public void setY(int y)`
+- `int getMaxWidth()`
+- `int getScreenHeight()`
+- `int getScreenWidth()`
+- `void setFontRenderer(FontRenderer fr)` — Sets the FontRenderer to be used to render text.
+- `void setMaxWidth(int maxWidth)` — Sets the max width of the tooltip.
+- `void setScreenHeight(int screenHeight)`
+- `void setScreenWidth(int screenWidth)`
+- `void setX(int x)` — Set the X origin of the tooltip.
+- `void setY(int y)` — Set the Y origin of the tooltip.
 
-## Description
+## Fields
 
-This event is fired before any tooltip calculations are done. It provides setters for all aspects of the tooltip, so the final render can be modified. This event is Cancelable .
+- `Pre`

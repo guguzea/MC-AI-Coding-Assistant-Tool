@@ -1,22 +1,20 @@
 # GuiCheckBox
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiButton → net.minecraftforge.fml.client.config.GuiCheckBox
+
 ## Class signature
 
 ```java
 public class GuiCheckBox extends GuiButton
 ```
 
-## Constructors
-
-- `public GuiCheckBox(int id, int xPos, int yPos, java.lang.String displayString, boolean isChecked)`
-
 ## Methods
 
-- `public void drawButton( Minecraft mc, int mouseX, int mouseY)`
-- `public boolean mousePressed( Minecraft mc, int mouseX, int mouseY)`
-- `public boolean isChecked()`
-- `public void setIsChecked(boolean isChecked)`
+- `void drawButton(Minecraft mc, int mouseX, int mouseY)` — Draws this button to the screen.
+- `boolean isChecked()`
+- `boolean mousePressed(Minecraft mc, int mouseX, int mouseY)` — Returns true if the mouse has been pressed on this control.
+- `void setIsChecked(boolean isChecked)`
 
-## Description
+## Fields
 
-This class provides a checkbox style control.
+- `GuiCheckBox`

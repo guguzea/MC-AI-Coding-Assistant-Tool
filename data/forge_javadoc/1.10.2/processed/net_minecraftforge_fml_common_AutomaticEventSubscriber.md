@@ -1,5 +1,7 @@
 # AutomaticEventSubscriber
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.AutomaticEventSubscriber
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class AutomaticEventSubscriber extends java.lang.Object
 
 ## Constructors
 
-- `public AutomaticEventSubscriber()`
+- `AutomaticEventSubscriber()`
 
 ## Methods
 
-- `public static void inject( ModContainer mod, ASMDataTable data, Side side)`
-
-## Description
-
-Automatic eventbus subscriber - reads Mod.EventBusSubscriber annotations and passes the class instances to the net.minecraftforge.common.MinecraftForge.EVENT_BUS
+- `static void inject(ModContainer mod, ASMDataTable data, Side side)`

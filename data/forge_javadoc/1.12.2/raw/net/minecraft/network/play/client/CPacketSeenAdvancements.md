@@ -1,31 +1,35 @@
 ---
 title: "CPacketSeenAdvancements"
-description: "public class CPacketSeenAdvancements extends java.lang.Object implements Packet < INetHandlerPlayServer >"
+description: "public class CPacketSeenAdvancements extends java.lang.Object implements Packet<INetHandlerPlayServer>"
 package: "net/minecraft/network/play/client"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/network/play/client/CPacketSeenAdvancements.html"
 sourceType: javadoc
 ---
 
 # CPacketSeenAdvancements
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketSeenAdvancements
+
 ## Class signature
 
 ```java
-public class CPacketSeenAdvancements extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketSeenAdvancements extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketSeenAdvancements()`
-- `public CPacketSeenAdvancements( CPacketSeenAdvancements.Action p_i47595_1_, ResourceLocation p_i47595_2_)`
+- `CPacketSeenAdvancements()`
+- `CPacketSeenAdvancements(CPacketSeenAdvancements.Action p_i47595_1_, ResourceLocation p_i47595_2_)`
 
 ## Methods
 
-- `public static CPacketSeenAdvancements openedTab( Advancement p_194163_0_)`
-- `public static CPacketSeenAdvancements closedScreen()`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public CPacketSeenAdvancements.Action getAction()`
-- `public ResourceLocation getTab()`
+- `static CPacketSeenAdvancements closedScreen()`
+- `CPacketSeenAdvancements.Action getAction()`
+- `ResourceLocation getTab()`
+- `static CPacketSeenAdvancements openedTab(Advancement p_194163_0_)`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

@@ -3,11 +3,15 @@ title: "ChunkRenderContainer"
 description: "public abstract class ChunkRenderContainer extends java.lang.Object"
 package: "net/minecraft/client/renderer"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/renderer/ChunkRenderContainer.html"
 sourceType: javadoc
 ---
 
 # ChunkRenderContainer
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.ChunkRenderContainer
 
 ## Class signature
 
@@ -17,11 +21,16 @@ public abstract class ChunkRenderContainer extends java.lang.Object
 
 ## Constructors
 
-- `public ChunkRenderContainer()`
+- `ChunkRenderContainer()`
 
 ## Methods
 
-- `public void initialize(double viewEntityXIn, double viewEntityYIn, double viewEntityZIn)`
-- `public void preRenderChunk( RenderChunk renderChunkIn)`
-- `public void addRenderChunk( RenderChunk renderChunkIn, BlockRenderLayer layer)`
-- `public abstract void renderChunkLayer( BlockRenderLayer layer)`
+- `void addRenderChunk(RenderChunk renderChunkIn, BlockRenderLayer layer)`
+- `void initialize(double viewEntityXIn, double viewEntityYIn, double viewEntityZIn)`
+- `void preRenderChunk(RenderChunk renderChunkIn)`
+- `abstract void renderChunkLayer(BlockRenderLayer layer)`
+
+## Fields
+
+- `protected boolean initialized`
+- `protected java.util.List<RenderChunk> renderChunks`

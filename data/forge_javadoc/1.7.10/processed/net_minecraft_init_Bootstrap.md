@@ -1,5 +1,7 @@
 # Bootstrap
 
+**Inheritance:** java.lang.Object → net.minecraft.init.Bootstrap
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class Bootstrap extends java.lang.Object
 
 ## Constructors
 
-- `public Bootstrap()`
+- `Bootstrap()`
 
 ## Methods
 
-- `public static void func_151354_b()`
+- `static void func_151354_b()`

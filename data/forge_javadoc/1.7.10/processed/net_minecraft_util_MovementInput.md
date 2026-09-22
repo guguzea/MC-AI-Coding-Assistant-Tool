@@ -1,5 +1,7 @@
 # MovementInput
 
+**Inheritance:** java.lang.Object → net.minecraft.util.MovementInput
+
 ## Class signature
 
 ```java
@@ -8,8 +10,15 @@ public class MovementInput extends java.lang.Object
 
 ## Constructors
 
-- `public MovementInput()`
+- `MovementInput()`
 
 ## Methods
 
-- `public void updatePlayerMoveState()`
+- `void updatePlayerMoveState()`
+
+## Fields
+
+- `boolean jump`
+- `float moveForward`
+- `float moveStrafe`
+- `boolean sneak`

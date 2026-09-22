@@ -1,18 +1,20 @@
 # ParticleBreaking
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleBreaking
+
 ## Class signature
 
 ```java
 public class ParticleBreaking extends Particle
 ```
 
-## Constructors
-
-- `protected ParticleBreaking( World worldIn, double posXIn, double posYIn, double posZIn, Item itemIn)`
-- `protected ParticleBreaking( World worldIn, double posXIn, double posYIn, double posZIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, Item itemIn, int meta)`
-- `protected ParticleBreaking( World worldIn, double posXIn, double posYIn, double posZIn, Item itemIn, int meta)`
-
 ## Methods
 
-- `public int getFXLayer()`
-- `public void renderParticle( BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+- `int getFXLayer()`
+- `void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+
+## Fields
+
+- `protected ParticleBreaking`
+- `protected ParticleBreaking`
+- `protected ParticleBreaking`

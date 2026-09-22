@@ -1,19 +1,21 @@
 # EnchantmentVanishingCurse
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Enchantment> → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentVanishingCurse
+
 ## Class signature
 
 ```java
 public class EnchantmentVanishingCurse extends Enchantment
 ```
 
-## Constructors
-
-- `public EnchantmentVanishingCurse( Enchantment.Rarity p_i47252_1_, EntityEquipmentSlot ... p_i47252_2_)`
-
 ## Methods
 
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int getMaxLevel()`
-- `public boolean isTreasureEnchantment()`
-- `public boolean isCurse()`
+- `int getMaxEnchantability(int enchantmentLevel)`
+- `int getMaxLevel()`
+- `int getMinEnchantability(int enchantmentLevel)`
+- `boolean isCurse()`
+- `boolean isTreasureEnchantment()`
+
+## Fields
+
+- `EnchantmentVanishingCurse`

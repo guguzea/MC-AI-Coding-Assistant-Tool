@@ -1,32 +1,34 @@
 # EntityPolarBear
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.monster.EntityPolarBear
+
 ## Class signature
 
 ```java
 public class EntityPolarBear extends EntityAnimal
 ```
 
-## Constructors
-
-- `public EntityPolarBear( World worldIn)`
-
 ## Methods
 
-- `public EntityAgeable createChild( EntityAgeable ageable)`
-- `public boolean isBreedingItem( ItemStack stack)`
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
-- `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
-- `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `protected void playWarningSound()`
-- `protected ResourceLocation getLootTable()`
+- `boolean attackEntityAsMob(Entity entityIn)`
+- `EntityAgeable createChild(EntityAgeable ageable)`
 - `protected void entityInit()`
-- `public void onUpdate()`
-- `public boolean attackEntityAsMob( Entity entityIn)`
-- `public boolean isStanding()`
-- `public void setStanding(boolean standing)`
-- `public float getStandingAnimationScale(float p_189795_1_)`
+- `protected SoundEvent getAmbientSound()`
+- `protected SoundEvent getDeathSound()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
+- `protected ResourceLocation getLootTable()`
+- `float getStandingAnimationScale(float p_189795_1_)`
 - `protected float getWaterSlowDown()`
-- `public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `protected void initEntityAI()`
+- `boolean isBreedingItem(ItemStack stack)`
+- `boolean isStanding()`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onUpdate()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `protected void playWarningSound()`
+- `void setStanding(boolean standing)`
+
+## Fields
+
+- `EntityPolarBear`

@@ -1,8 +1,10 @@
 ---
 title: "IBehaviorDispenseItem"
-description: "Dispenses the specified ItemStack from a dispenser."
+description: "public interface IBehaviorDispenseItem"
 package: "net/minecraft/dispenser"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/dispenser/IBehaviorDispenseItem.html"
 sourceType: javadoc
 ---
@@ -17,8 +19,8 @@ public interface IBehaviorDispenseItem
 
 ## Methods
 
-- `ItemStack dispense( IBlockSource source, ItemStack stack)`
+- `ItemStack dispense(IBlockSource source, ItemStack stack)` — Dispenses the specified ItemStack from a dispenser.
 
-## Description
+## Fields
 
-Dispenses the specified ItemStack from a dispenser.
+- `static IBehaviorDispenseItem itemDispenseBehaviorProvider`

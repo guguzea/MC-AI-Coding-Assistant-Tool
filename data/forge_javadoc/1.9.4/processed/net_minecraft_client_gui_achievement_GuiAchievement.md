@@ -1,18 +1,20 @@
 # GuiAchievement
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.achievement.GuiAchievement
+
 ## Class signature
 
 ```java
 public class GuiAchievement extends Gui
 ```
 
-## Constructors
-
-- `public GuiAchievement( Minecraft mc)`
-
 ## Methods
 
-- `public void displayAchievement( Achievement ach)`
-- `public void displayUnformattedAchievement( Achievement achievementIn)`
-- `public void updateAchievementWindow()`
-- `public void clearAchievements()`
+- `void clearAchievements()`
+- `void displayAchievement(Achievement ach)`
+- `void displayUnformattedAchievement(Achievement achievementIn)`
+- `void updateAchievementWindow()`
+
+## Fields
+
+- `GuiAchievement`

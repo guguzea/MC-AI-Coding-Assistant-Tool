@@ -1,50 +1,50 @@
 ---
 title: "S0EPacketSpawnObject"
-description: "Passes this Packet on to the NetHandler for processing."
+description: "public class S0EPacketSpawnObject extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/network/play/server/S0EPacketSpawnObject.html"
 sourceType: javadoc
 ---
 
 # S0EPacketSpawnObject
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S0EPacketSpawnObject
+
 ## Class signature
 
 ```java
-public class S0EPacketSpawnObject extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class S0EPacketSpawnObject extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public S0EPacketSpawnObject()`
-- `public S0EPacketSpawnObject( Entity entityIn, int typeIn)`
-- `public S0EPacketSpawnObject( Entity entityIn, int typeIn, int p_i45166_3_)`
+- `S0EPacketSpawnObject()`
+- `S0EPacketSpawnObject(Entity entityIn, int typeIn)`
+- `S0EPacketSpawnObject(Entity entityIn, int typeIn, int p_i45166_3_)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getEntityID()`
-- `public void setX(int newX)`
-- `public int getX()`
-- `public void setY(int newY)`
-- `public int getY()`
-- `public void setZ(int newZ)`
-- `public int getZ()`
-- `public void setSpeedX(int newSpeedX)`
-- `public int getSpeedX()`
-- `public void setSpeedY(int newSpeedY)`
-- `public int getSpeedY()`
-- `public void setSpeedZ(int newSpeedZ)`
-- `public int getSpeedZ()`
-- `public int getPitch()`
-- `public int getYaw()`
-- `public int getType()`
-- `public int func_149009_m()`
-- `public void func_149002_g(int p_149002_1_)`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `void func_149002_g(int p_149002_1_)`
+- `int func_149009_m()`
+- `int getEntityID()`
+- `int getPitch()`
+- `int getSpeedX()`
+- `int getSpeedY()`
+- `int getSpeedZ()`
+- `int getType()`
+- `int getX()`
+- `int getY()`
+- `int getYaw()`
+- `int getZ()`
+- `void processPacket(INetHandlerPlayClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void setSpeedX(int newSpeedX)`
+- `void setSpeedY(int newSpeedY)`
+- `void setSpeedZ(int newSpeedZ)`
+- `void setX(int newX)`
+- `void setY(int newY)`
+- `void setZ(int newZ)`
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

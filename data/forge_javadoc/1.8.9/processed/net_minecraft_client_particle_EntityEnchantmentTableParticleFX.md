@@ -1,21 +1,19 @@
 # EntityEnchantmentTableParticleFX
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.client.particle.EntityFX → net.minecraft.client.particle.EntityEnchantmentTableParticleFX
+
 ## Class signature
 
 ```java
 public class EntityEnchantmentTableParticleFX extends EntityFX
 ```
 
-## Constructors
-
-- `protected EntityEnchantmentTableParticleFX( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn)`
-
 ## Methods
 
-- `public int getBrightnessForRender(float partialTicks)`
-- `public float getBrightness(float partialTicks)`
-- `public void onUpdate()`
+- `float getBrightness(float partialTicks)` — Gets how bright this entity is.
+- `int getBrightnessForRender(float partialTicks)`
+- `void onUpdate()` — Called to update the entity's position/logic.
 
-## Description
+## Fields
 
-Gets how bright this entity is.
+- `protected EntityEnchantmentTableParticleFX`

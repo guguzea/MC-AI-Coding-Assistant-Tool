@@ -3,11 +3,15 @@ title: "PackMetadataSection"
 description: "public class PackMetadataSection extends java.lang.Object implements IMetadataSection"
 package: "net/minecraft/client/resources/data"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/resources/data/PackMetadataSection.html"
 sourceType: javadoc
 ---
 
 # PackMetadataSection
+
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.data.PackMetadataSection
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class PackMetadataSection extends java.lang.Object implements IMetadataSe
 
 ## Constructors
 
-- `public PackMetadataSection( ITextComponent packDescriptionIn, int packFormatIn)`
+- `PackMetadataSection(ITextComponent packDescriptionIn, int packFormatIn)`
 
 ## Methods
 
-- `public ITextComponent getPackDescription()`
-- `public int getPackFormat()`
+- `ITextComponent getPackDescription()`
+- `int getPackFormat()`

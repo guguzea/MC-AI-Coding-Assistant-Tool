@@ -1,11 +1,13 @@
 # ObjectiveStat
 
+**Inheritance:** java.lang.Object → net.minecraft.scoreboard.ScoreDummyCriteria → net.minecraft.stats.ObjectiveStat
+
 ## Class signature
 
 ```java
 public class ObjectiveStat extends ScoreDummyCriteria
 ```
 
-## Constructors
+## Fields
 
-- `public ObjectiveStat( StatBase p_i45483_1_)`
+- `ObjectiveStat`

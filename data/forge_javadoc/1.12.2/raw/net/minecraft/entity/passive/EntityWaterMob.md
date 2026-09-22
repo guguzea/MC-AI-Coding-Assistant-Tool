@@ -3,11 +3,15 @@ title: "EntityWaterMob"
 description: "public abstract class EntityWaterMob extends EntityLiving implements IAnimals"
 package: "net/minecraft/entity/passive"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/passive/EntityWaterMob.html"
 sourceType: javadoc
 ---
 
 # EntityWaterMob
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.passive.EntityWaterMob
 
 ## Class signature
 
@@ -15,17 +19,17 @@ sourceType: javadoc
 public abstract class EntityWaterMob extends EntityLiving implements IAnimals
 ```
 
-## Constructors
-
-- `public EntityWaterMob( World worldIn)`
-
 ## Methods
 
-- `public boolean canBreatheUnderwater()`
-- `public boolean getCanSpawnHere()`
-- `public boolean isNotColliding()`
-- `public int getTalkInterval()`
+- `boolean canBreatheUnderwater()`
 - `protected boolean canDespawn()`
-- `protected int getExperiencePoints( EntityPlayer player)`
-- `public void onEntityUpdate()`
-- `public boolean isPushedByWater()`
+- `boolean getCanSpawnHere()`
+- `protected int getExperiencePoints(EntityPlayer player)`
+- `int getTalkInterval()`
+- `boolean isNotColliding()`
+- `boolean isPushedByWater()`
+- `void onEntityUpdate()`
+
+## Fields
+
+- `EntityWaterMob`

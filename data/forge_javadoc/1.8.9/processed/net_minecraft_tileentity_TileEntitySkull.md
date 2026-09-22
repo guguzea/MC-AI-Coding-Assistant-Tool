@@ -1,28 +1,26 @@
 # TileEntitySkull
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntitySkull
+
 ## Class signature
 
 ```java
 public class TileEntitySkull extends TileEntity
 ```
 
-## Constructors
-
-- `public TileEntitySkull()`
-
 ## Methods
 
-- `public void writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public GameProfile getPlayerProfile()`
-- `public Packet getDescriptionPacket()`
-- `public void setType(int type)`
-- `public void setPlayerProfile(GameProfile playerProfile)`
-- `public static GameProfile updateGameprofile(GameProfile input)`
-- `public int getSkullType()`
-- `public int getSkullRotation()`
-- `public void setSkullRotation(int rotation)`
+- `Packet getDescriptionPacket()` — Allows for a specialized description packet to be created.
+- `GameProfile getPlayerProfile()`
+- `int getSkullRotation()`
+- `int getSkullType()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setPlayerProfile(GameProfile playerProfile)`
+- `void setSkullRotation(int rotation)`
+- `void setType(int type)`
+- `static GameProfile updateGameprofile(GameProfile input)`
+- `void writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Allows for a specialized description packet to be created.
+- `TileEntitySkull`

@@ -1,5 +1,7 @@
 # KeyBindingMap
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.settings.KeyBindingMap
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class KeyBindingMap extends java.lang.Object
 
 ## Constructors
 
-- `public KeyBindingMap()`
+- `KeyBindingMap()`
 
 ## Methods
 
-- `@Nullable public KeyBinding lookupActive(int keyCode)`
-- `public java.util.List< KeyBinding > lookupAll(int keyCode)`
-- `public void addKey(int keyCode, KeyBinding keyBinding)`
-- `public void removeKey( KeyBinding keyBinding)`
-- `public void clearMap()`
+- `void addKey(int keyCode, KeyBinding keyBinding)`
+- `void clearMap()`
+- `KeyBinding lookupActive(int keyCode)`
+- `java.util.List<KeyBinding> lookupAll(int keyCode)`
+- `void removeKey(KeyBinding keyBinding)`

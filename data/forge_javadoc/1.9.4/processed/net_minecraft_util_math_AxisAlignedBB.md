@@ -1,5 +1,7 @@
 # AxisAlignedBB
 
+**Inheritance:** java.lang.Object → net.minecraft.util.math.AxisAlignedBB
+
 ## Class signature
 
 ```java
@@ -8,32 +10,41 @@ public class AxisAlignedBB extends java.lang.Object
 
 ## Constructors
 
-- `public AxisAlignedBB(double x1, double y1, double z1, double x2, double y2, double z2)`
-- `public AxisAlignedBB( BlockPos pos)`
-- `public AxisAlignedBB( BlockPos pos1, BlockPos pos2)`
+- `AxisAlignedBB(BlockPos pos)`
+- `AxisAlignedBB(BlockPos pos1, BlockPos pos2)`
+- `AxisAlignedBB(double x1, double y1, double z1, double x2, double y2, double z2)`
 
 ## Methods
 
-- `public AxisAlignedBB setMaxY(double y2)`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public AxisAlignedBB addCoord(double x, double y, double z)`
-- `public AxisAlignedBB expand(double x, double y, double z)`
-- `public AxisAlignedBB expandXyz(double value)`
-- `public AxisAlignedBB union( AxisAlignedBB other)`
-- `public AxisAlignedBB offset(double x, double y, double z)`
-- `public AxisAlignedBB offset( BlockPos pos)`
-- `public double calculateXOffset( AxisAlignedBB other, double offsetX)`
-- `public double calculateYOffset( AxisAlignedBB other, double offsetY)`
-- `public double calculateZOffset( AxisAlignedBB other, double offsetZ)`
-- `public boolean intersectsWith( AxisAlignedBB other)`
-- `public boolean intersects(double x1, double y1, double z1, double x2, double y2, double z2)`
-- `public boolean isVecInside( Vec3d vec)`
-- `public double getAverageEdgeLength()`
-- `public AxisAlignedBB contract(double value)`
-- `@Nullable public RayTraceResult calculateIntercept( Vec3d vecA, Vec3d vecB)`
-- `public boolean intersectsWithYZ( Vec3d vec)`
-- `public boolean intersectsWithXZ( Vec3d vec)`
-- `public boolean intersectsWithXY( Vec3d vec)`
-- `public java.lang.String toString()`
-- `public boolean hasNaN()`
+- `AxisAlignedBB addCoord(double x, double y, double z)`
+- `RayTraceResult calculateIntercept(Vec3d vecA, Vec3d vecB)`
+- `double calculateXOffset(AxisAlignedBB other, double offsetX)`
+- `double calculateYOffset(AxisAlignedBB other, double offsetY)`
+- `double calculateZOffset(AxisAlignedBB other, double offsetZ)`
+- `AxisAlignedBB contract(double value)`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `AxisAlignedBB expand(double x, double y, double z)`
+- `AxisAlignedBB expandXyz(double value)`
+- `double getAverageEdgeLength()`
+- `int hashCode()`
+- `boolean hasNaN()`
+- `boolean intersects(double x1, double y1, double z1, double x2, double y2, double z2)`
+- `boolean intersectsWith(AxisAlignedBB other)`
+- `boolean intersectsWithXY(Vec3d vec)`
+- `boolean intersectsWithXZ(Vec3d vec)`
+- `boolean intersectsWithYZ(Vec3d vec)`
+- `boolean isVecInside(Vec3d vec)`
+- `AxisAlignedBB offset(BlockPos pos)`
+- `AxisAlignedBB offset(double x, double y, double z)`
+- `AxisAlignedBB setMaxY(double y2)`
+- `java.lang.String toString()`
+- `AxisAlignedBB union(AxisAlignedBB other)`
+
+## Fields
+
+- `double maxX`
+- `double maxY`
+- `double maxZ`
+- `double minX`
+- `double minY`
+- `double minZ`

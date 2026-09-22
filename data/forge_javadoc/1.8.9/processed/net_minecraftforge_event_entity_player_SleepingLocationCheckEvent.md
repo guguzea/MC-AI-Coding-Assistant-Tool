@@ -1,5 +1,7 @@
 # SleepingLocationCheckEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.SleepingLocationCheckEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class SleepingLocationCheckEvent extends PlayerEvent
 
 ## Constructors
 
-- `public SleepingLocationCheckEvent( EntityPlayer player, BlockPos sleepingLocation)`
+- `SleepingLocationCheckEvent(EntityPlayer player, BlockPos sleepingLocation)`
 
-## Description
+## Fields
 
-This event is fired when game checks, if sleeping player should be still considered "in bed". Failing this check will cause player to wake up. This event has a result. Event.HasResult setResult(ALLOW)
+- `BlockPos sleepingLocation`

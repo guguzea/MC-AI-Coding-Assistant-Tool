@@ -1,11 +1,13 @@
 # BakedQuadRetextured
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.BakedQuad → net.minecraft.client.renderer.block.model.BakedQuadRetextured
+
 ## Class signature
 
 ```java
 public class BakedQuadRetextured extends BakedQuad
 ```
 
-## Constructors
+## Fields
 
-- `public BakedQuadRetextured( BakedQuad quad, TextureAtlasSprite textureIn)`
+- `BakedQuadRetextured`

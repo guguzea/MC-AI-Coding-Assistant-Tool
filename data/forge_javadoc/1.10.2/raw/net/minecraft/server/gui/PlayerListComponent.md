@@ -3,11 +3,15 @@ title: "PlayerListComponent"
 description: "public class PlayerListComponent extends javax.swing.JList implements ITickable"
 package: "net/minecraft/server/gui"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/server/gui/PlayerListComponent.html"
 sourceType: javadoc
 ---
 
 # PlayerListComponent
+
+**Inheritance:** java.lang.Object → java.awt.Component → java.awt.Container → javax.swing.JComponent → javax.swing.JList → net.minecraft.server.gui.PlayerListComponent
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class PlayerListComponent extends javax.swing.JList implements ITickable
 ```
 
-## Constructors
-
-- `public PlayerListComponent( MinecraftServer server)`
-
 ## Methods
 
-- `public void update()`
+- `void update()`
+
+## Fields
+
+- `PlayerListComponent`

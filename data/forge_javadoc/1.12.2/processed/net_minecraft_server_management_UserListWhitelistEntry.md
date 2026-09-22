@@ -1,15 +1,17 @@
 # UserListWhitelistEntry
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.UserListEntry<GameProfile> → net.minecraft.server.management.UserListWhitelistEntry
+
 ## Class signature
 
 ```java
-public class UserListWhitelistEntry extends UserListEntry <GameProfile>
+public class UserListWhitelistEntry extends UserListEntry<GameProfile>
 ```
 
 ## Constructors
 
-- `public UserListWhitelistEntry(GameProfile profile)`
-- `public UserListWhitelistEntry(JsonObject json)`
+- `UserListWhitelistEntry(GameProfile profile)`
+- `UserListWhitelistEntry(JsonObject json)`
 
 ## Methods
 

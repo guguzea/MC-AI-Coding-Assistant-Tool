@@ -1,5 +1,7 @@
 # BlockNewLeaf
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockLeaves → net.minecraft.block.BlockNewLeaf
+
 ## Class signature
 
 ```java
@@ -8,22 +10,22 @@ public class BlockNewLeaf extends BlockLeaves
 
 ## Constructors
 
-- `public BlockNewLeaf()`
+- `BlockNewLeaf()`
 
 ## Methods
 
-- `protected void dropApple( World worldIn, BlockPos pos, IBlockState state, int chance)`
-- `public int damageDropped( IBlockState state)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, NonNullList < ItemStack > list)`
-- `protected ItemStack getSilkTouchDrop( IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public BlockPlanks.EnumType getWoodType(int meta)`
 - `protected BlockStateContainer createBlockState()`
-- `public void harvestBlock( World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack)`
-- `public NonNullList < ItemStack > onSheared( ItemStack item, IBlockAccess world, BlockPos pos, int fortune)`
+- `int damageDropped(IBlockState state)`
+- `protected void dropApple(World worldIn, BlockPos pos, IBlockState state, int chance)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `int getMetaFromState(IBlockState state)`
+- `protected ItemStack getSilkTouchDrop(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)`
+- `BlockPlanks.EnumType getWoodType(int meta)`
+- `void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)`
+- `NonNullList<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)` — Performs the shear function on this object.
 
-## Description
+## Fields
 
-Performs the shear function on this object.
+- `static PropertyEnum<BlockPlanks.EnumType> VARIANT`

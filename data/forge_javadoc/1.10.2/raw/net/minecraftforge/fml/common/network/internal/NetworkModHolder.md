@@ -3,11 +3,15 @@ title: "NetworkModHolder"
 description: "public class NetworkModHolder extends java.lang.Object"
 package: "net/minecraftforge/fml/common/network/internal"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/network/internal/NetworkModHolder.html"
 sourceType: javadoc
 ---
 
 # NetworkModHolder
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.internal.NetworkModHolder
 
 ## Class signature
 
@@ -17,17 +21,17 @@ public class NetworkModHolder extends java.lang.Object
 
 ## Constructors
 
-- `public NetworkModHolder( ModContainer container)`
-- `public NetworkModHolder( ModContainer container, NetworkModHolder.NetworkChecker checker)`
-- `public NetworkModHolder( ModContainer container, java.lang.Class<?> modClass, java.lang.String acceptableVersionRange, ASMDataTable table)`
+- `NetworkModHolder(ModContainer container)`
+- `NetworkModHolder(ModContainer container, java.lang.Class<?> modClass, java.lang.String acceptableVersionRange, ASMDataTable table)`
+- `NetworkModHolder(ModContainer container, NetworkModHolder.NetworkChecker checker)`
 
 ## Methods
 
-- `public boolean acceptVersion(java.lang.String version)`
-- `public boolean check(java.util.Map<java.lang.String,java.lang.String> data, Side side)`
-- `public int getLocalId()`
-- `public int getNetworkId()`
-- `public ModContainer getContainer()`
-- `public void setNetworkId(int value)`
-- `public void testVanillaAcceptance()`
-- `public boolean acceptsVanilla( Side from)`
+- `boolean acceptsVanilla(Side from)`
+- `boolean acceptVersion(java.lang.String version)`
+- `boolean check(java.util.Map<java.lang.String, java.lang.String> data, Side side)`
+- `ModContainer getContainer()`
+- `int getLocalId()`
+- `int getNetworkId()`
+- `void setNetworkId(int value)`
+- `void testVanillaAcceptance()`

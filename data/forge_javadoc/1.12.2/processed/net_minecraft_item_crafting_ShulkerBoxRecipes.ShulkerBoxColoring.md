@@ -1,14 +1,22 @@
 # ShulkerBoxRecipes.ShulkerBoxColoring
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> → net.minecraft.item.crafting.ShulkerBoxRecipes.ShulkerBoxColoring
 
-- `public ShulkerBoxColoring()`
+## Class signature
+
+```java
+public static class ShulkerBoxRecipes.ShulkerBoxColoring extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
+```
 
 ## Methods
 
-- `public boolean matches( InventoryCrafting inv, World worldIn)`
-- `public ItemStack getCraftingResult( InventoryCrafting inv)`
-- `public ItemStack getRecipeOutput()`
-- `public NonNullList < ItemStack > getRemainingItems( InventoryCrafting inv)`
-- `public boolean isDynamic()`
-- `public boolean canFit(int width, int height)`
+- `boolean canFit(int width, int height)`
+- `ItemStack getCraftingResult(InventoryCrafting inv)`
+- `ItemStack getRecipeOutput()`
+- `NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)`
+- `boolean isDynamic()`
+- `boolean matches(InventoryCrafting inv, World worldIn)`
+
+## Fields
+
+- `ShulkerBoxColoring`

@@ -1,18 +1,20 @@
 # CPacketResourcePackStatus
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketResourcePackStatus
+
 ## Class signature
 
 ```java
-public class CPacketResourcePackStatus extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketResourcePackStatus extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketResourcePackStatus()`
-- `public CPacketResourcePackStatus(java.lang.String hashIn, CPacketResourcePackStatus.Action actionIn)`
+- `CPacketResourcePackStatus()`
+- `CPacketResourcePackStatus(java.lang.String hashIn, CPacketResourcePackStatus.Action actionIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

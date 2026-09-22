@@ -1,13 +1,17 @@
 ---
 title: "RecipesArmor"
-description: "Adds the armor recipes to the CraftingManager."
+description: "public class RecipesArmor extends java.lang.Object"
 package: "net/minecraft/item/crafting"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/item/crafting/RecipesArmor.html"
 sourceType: javadoc
 ---
 
 # RecipesArmor
+
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.RecipesArmor
 
 ## Class signature
 
@@ -17,12 +21,8 @@ public class RecipesArmor extends java.lang.Object
 
 ## Constructors
 
-- `public RecipesArmor()`
+- `RecipesArmor()`
 
 ## Methods
 
-- `public void addRecipes( CraftingManager craftManager)`
-
-## Description
-
-Adds the armor recipes to the CraftingManager.
+- `void addRecipes(CraftingManager craftManager)` — Adds the armor recipes to the CraftingManager.

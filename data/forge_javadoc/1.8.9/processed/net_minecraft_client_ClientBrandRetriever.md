@@ -1,5 +1,7 @@
 # ClientBrandRetriever
 
+**Inheritance:** java.lang.Object → net.minecraft.client.ClientBrandRetriever
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class ClientBrandRetriever extends java.lang.Object
 
 ## Constructors
 
-- `public ClientBrandRetriever()`
+- `ClientBrandRetriever()`
 
 ## Methods
 
-- `public static java.lang.String getClientModName()`
+- `static java.lang.String getClientModName()`

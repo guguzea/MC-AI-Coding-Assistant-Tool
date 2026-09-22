@@ -1,22 +1,28 @@
 ---
 title: "Clips.IdentityClip"
-description: "Clip that does nothing."
+description: "public static enum Clips.IdentityClip extends java.lang.Enum<Clips.IdentityClip> implements IClip, IStringSerializable"
 package: "net/minecraftforge/common/model/animation"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/common/model/animation/Clips.IdentityClip.html"
 sourceType: javadoc
 ---
 
 # Clips.IdentityClip
 
+**Inheritance:** java.lang.Object → java.lang.Enum<Clips.IdentityClip> → net.minecraftforge.common.model.animation.Clips.IdentityClip
+
+## Class signature
+
+```java
+public static enum Clips.IdentityClip extends java.lang.Enum<Clips.IdentityClip> implements IClip, IStringSerializable
+```
+
 ## Methods
 
-- `public static Clips.IdentityClip [] values()`
-- `public static Clips.IdentityClip valueOf(java.lang.String name)`
-- `public IJointClip apply( IJoint joint)`
-- `public java.lang.Iterable< Event > pastEvents(float lastPollTime, float time)`
-- `public java.lang.String getName()`
-
-## Description
-
-Clip that does nothing.
+- `IJointClip apply(IJoint joint)`
+- `java.lang.String getName()`
+- `java.lang.Iterable<Event> pastEvents(float lastPollTime, float time)`
+- `static Clips.IdentityClip valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static Clips.IdentityClip [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

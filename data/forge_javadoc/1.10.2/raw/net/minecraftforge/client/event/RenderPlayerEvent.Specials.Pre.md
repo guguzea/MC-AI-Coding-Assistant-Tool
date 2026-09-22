@@ -1,23 +1,33 @@
 ---
 title: "RenderPlayerEvent.Specials.Pre"
-description: ""
+description: "public static class RenderPlayerEvent.Specials.Pre extends RenderPlayerEvent.Specials"
 package: "net/minecraftforge/client/event"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/client/event/RenderPlayerEvent.Specials.Pre.html"
 sourceType: javadoc
 ---
 
 # RenderPlayerEvent.Specials.Pre
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent.Specials → net.minecraftforge.client.event.RenderPlayerEvent.Specials.Pre
+
+## Class signature
+
+```java
+public static class RenderPlayerEvent.Specials.Pre extends RenderPlayerEvent.Specials
+```
+
 ## Constructors
 
-- `public Pre( EntityPlayer player, RenderPlayer renderer, float partialTicks)`
+- `Pre(EntityPlayer player, RenderPlayer renderer, float partialTicks)`
 
 ## Methods
 
-- `public boolean shouldRenderHelmet()`
-- `public void setRenderHelmet(boolean renderHelmet)`
-- `public boolean shouldRenderCape()`
-- `public void setRenderCape(boolean renderCape)`
-- `public boolean shouldRenderItem()`
-- `public void setRenderItem(boolean renderItem)`
+- `void setRenderCape(boolean renderCape)`
+- `void setRenderHelmet(boolean renderHelmet)`
+- `void setRenderItem(boolean renderItem)`
+- `boolean shouldRenderCape()`
+- `boolean shouldRenderHelmet()`
+- `boolean shouldRenderItem()`

@@ -1,15 +1,17 @@
 # ItemChorusFruit
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemFood → net.minecraft.item.ItemChorusFruit
+
 ## Class signature
 
 ```java
 public class ItemChorusFruit extends ItemFood
 ```
 
-## Constructors
-
-- `public ItemChorusFruit(int amount, float saturation)`
-
 ## Methods
 
-- `public ItemStack onItemUseFinish( ItemStack stack, World worldIn, EntityLivingBase entityLiving)`
+- `ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)`
+
+## Fields
+
+- `ItemChorusFruit`

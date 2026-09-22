@@ -1,5 +1,7 @@
 # EntityAIPanic
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIPanic
+
 ## Class signature
 
 ```java
@@ -8,10 +10,14 @@ public class EntityAIPanic extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIPanic( EntityCreature creature, double speedIn)`
+- `EntityAIPanic(EntityCreature creature, double speedIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
-- `public boolean continueExecuting()`
+- `boolean continueExecuting()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+
+## Fields
+
+- `protected double speed`

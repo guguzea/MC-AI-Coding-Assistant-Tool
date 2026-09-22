@@ -1,20 +1,18 @@
 # ContainerDispenser
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Container → net.minecraft.inventory.ContainerDispenser
+
 ## Class signature
 
 ```java
 public class ContainerDispenser extends Container
 ```
 
-## Constructors
-
-- `public ContainerDispenser( IInventory playerInventory, IInventory dispenserInventoryIn)`
-
 ## Methods
 
-- `public boolean canInteractWith( EntityPlayer playerIn)`
-- `public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
+- `boolean canInteractWith(EntityPlayer playerIn)`
+- `ItemStack transferStackInSlot(EntityPlayer playerIn, int index)` — Take a stack from the specified inventory slot.
 
-## Description
+## Fields
 
-Take a stack from the specified inventory slot.
+- `ContainerDispenser`

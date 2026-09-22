@@ -1,13 +1,17 @@
 ---
 title: "DungeonHooks"
-description: "Adds a mob to the possible list of creatures the spawner will create."
+description: "public class DungeonHooks extends java.lang.Object"
 package: "net/minecraftforge/common"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/common/DungeonHooks.html"
 sourceType: javadoc
 ---
 
 # DungeonHooks
+
+**Inheritance:** java.lang.Object → net.minecraftforge.common.DungeonHooks
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class DungeonHooks extends java.lang.Object
 
 ## Constructors
 
-- `public DungeonHooks()`
+- `DungeonHooks()`
 
 ## Methods
 
-- `public static float addDungeonMob(java.lang.String name, int rarity)`
-- `public static int removeDungeonMob(java.lang.String name)`
-- `public static java.lang.String getRandomDungeonMob(java.util.Random rand)`
-
-## Description
-
-Adds a mob to the possible list of creatures the spawner will create.
+- `static float addDungeonMob(java.lang.String name, int rarity)` — Adds a mob to the possible list of creatures the spawner will create.
+- `static java.lang.String getRandomDungeonMob(java.util.Random rand)` — Gets a random mob name from the list.
+- `static int removeDungeonMob(java.lang.String name)` — Will completely remove a Mob from the dungeon spawn list.

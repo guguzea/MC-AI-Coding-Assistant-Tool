@@ -1,6 +1,14 @@
 # MapGenNetherBridge.Start
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureStart → net.minecraft.world.gen.structure.MapGenNetherBridge.Start
 
-- `public Start()`
-- `public Start( World worldIn, java.util.Random random, int chunkX, int chunkZ)`
+## Class signature
+
+```java
+public static class MapGenNetherBridge.Start extends StructureStart
+```
+
+## Fields
+
+- `Start`
+- `Start`

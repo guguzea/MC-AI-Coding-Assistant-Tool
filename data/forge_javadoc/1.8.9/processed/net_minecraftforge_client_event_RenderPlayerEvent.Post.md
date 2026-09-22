@@ -1,13 +1,14 @@
 # RenderPlayerEvent.Post
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent.Post
 
-- `public Post( EntityPlayer player, RenderPlayer renderer, float tick, double x, double y, double z)`
+## Class signature
 
-## Methods
+```java
+public static class RenderPlayerEvent.Post extends RenderPlayerEvent
+```
 
-- `@Deprecated public Post( EntityPlayer player, RenderPlayer renderer, float tick)`
+## Fields
 
-## Description
-
-Deprecated.
+- `Post`
+- `Post`

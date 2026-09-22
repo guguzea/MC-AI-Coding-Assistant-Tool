@@ -8,8 +8,8 @@ public interface IBehaviorDispenseItem
 
 ## Methods
 
-- `ItemStack dispense( IBlockSource source, ItemStack stack)`
+- `ItemStack dispense(IBlockSource source, ItemStack stack)` — Dispenses the specified ItemStack from a dispenser.
 
-## Description
+## Fields
 
-Dispenses the specified ItemStack from a dispenser.
+- `static IBehaviorDispenseItem itemDispenseBehaviorProvider`

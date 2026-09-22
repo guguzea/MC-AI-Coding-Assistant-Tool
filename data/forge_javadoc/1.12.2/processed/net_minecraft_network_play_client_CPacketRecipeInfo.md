@@ -1,23 +1,25 @@
 # CPacketRecipeInfo
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketRecipeInfo
+
 ## Class signature
 
 ```java
-public class CPacketRecipeInfo extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketRecipeInfo extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketRecipeInfo()`
-- `public CPacketRecipeInfo( IRecipe p_i47518_1_)`
-- `public CPacketRecipeInfo(boolean p_i47424_1_, boolean p_i47424_2_)`
+- `CPacketRecipeInfo()`
+- `CPacketRecipeInfo(boolean p_i47424_1_, boolean p_i47424_2_)`
+- `CPacketRecipeInfo(IRecipe p_i47518_1_)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public CPacketRecipeInfo.Purpose getPurpose()`
-- `public IRecipe getRecipe()`
-- `public boolean isGuiOpen()`
-- `public boolean isFilteringCraftable()`
+- `CPacketRecipeInfo.Purpose getPurpose()`
+- `IRecipe getRecipe()`
+- `boolean isFilteringCraftable()`
+- `boolean isGuiOpen()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

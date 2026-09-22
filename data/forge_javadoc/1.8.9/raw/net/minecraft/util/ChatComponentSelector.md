@@ -1,13 +1,17 @@
 ---
 title: "ChatComponentSelector"
-description: "Creates a copy of this component."
+description: "public class ChatComponentSelector extends ChatComponentStyle"
 package: "net/minecraft/util"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/util/ChatComponentSelector.html"
 sourceType: javadoc
 ---
 
 # ChatComponentSelector
+
+**Inheritance:** java.lang.Object → net.minecraft.util.ChatComponentStyle → net.minecraft.util.ChatComponentSelector
 
 ## Class signature
 
@@ -15,18 +19,14 @@ sourceType: javadoc
 public class ChatComponentSelector extends ChatComponentStyle
 ```
 
-## Constructors
-
-- `public ChatComponentSelector(java.lang.String selectorIn)`
-
 ## Methods
 
-- `public java.lang.String getSelector()`
-- `public java.lang.String getUnformattedTextForChat()`
-- `public ChatComponentSelector createCopy()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public java.lang.String toString()`
+- `ChatComponentSelector createCopy()` — Creates a copy of this component.
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `java.lang.String getSelector()` — Gets the selector of this component, in plain text.
+- `java.lang.String getUnformattedTextForChat()` — Gets the text of this component, without any special formatting codes added, for chat.
+- `java.lang.String toString()`
 
-## Description
+## Fields
 
-Creates a copy of this component.
+- `ChatComponentSelector`

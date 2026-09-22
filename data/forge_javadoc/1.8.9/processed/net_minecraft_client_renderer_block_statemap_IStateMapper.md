@@ -8,4 +8,4 @@ public interface IStateMapper
 
 ## Methods
 
-- `java.util.Map< IBlockState , ModelResourceLocation > putStateModelLocations( Block blockIn)`
+- `java.util.Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)`

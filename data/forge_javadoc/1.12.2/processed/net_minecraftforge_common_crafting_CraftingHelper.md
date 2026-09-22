@@ -1,5 +1,7 @@
 # CraftingHelper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.crafting.CraftingHelper
+
 ## Class signature
 
 ```java
@@ -8,31 +10,34 @@ public class CraftingHelper extends java.lang.Object
 
 ## Constructors
 
-- `public CraftingHelper()`
+- `CraftingHelper()`
 
 ## Methods
 
-- `public static void register( ResourceLocation key, IConditionFactory factory)`
-- `public static void register( ResourceLocation key, IRecipeFactory factory)`
-- `public static void register( ResourceLocation key, IIngredientFactory factory)`
-- `public static Ingredient getIngredient(java.lang.Object obj)`
-- `public static Ingredient getIngredient(JsonElement json, JsonContext context)`
-- `public static ItemStack getItemStack(JsonObject json, JsonContext context)`
-- `public static ItemStack getItemStackBasic(JsonObject json, JsonContext context)`
-- `public static CraftingHelper.ShapedPrimer parseShaped(java.lang.Object... recipe)`
-- `public static boolean processConditions(JsonObject json, java.lang.String memberName, JsonContext context)`
-- `public static boolean processConditions(JsonArray conditions, JsonContext context)`
-- `public static java.util.function.BooleanSupplier getCondition(JsonObject json, JsonContext context)`
-- `public static IRecipe getRecipe(JsonObject json, JsonContext context)`
-- `public static void init()`
-- `public static void loadRecipes(boolean revertFrozen)`
-- `public static void loadFactories( ModContainer mod, java.lang.String base, CraftingHelper.FactoryLoader ... loaders)`
-- `@Deprecated public static boolean findFiles( ModContainer mod, java.lang.String base, java.util.function.Function<java.nio.file.Path,java.lang.Boolean> preprocessor, java.util.function.BiFunction<java.nio.file.Path,java.nio.file.Path,java.lang.Boolean> processor)`
-- `@Deprecated public static boolean findFiles( ModContainer mod, java.lang.String base, java.util.function.Function<java.nio.file.Path,java.lang.Boolean> preprocessor, java.util.function.BiFunction<java.nio.file.Path,java.nio.file.Path,java.lang.Boolean> processor, boolean defaultUnfoundRoot)`
-- `public static boolean findFiles( ModContainer mod, java.lang.String base, java.util.function.Function<java.nio.file.Path,java.lang.Boolean> preprocessor, java.util.function.BiFunction<java.nio.file.Path,java.nio.file.Path,java.lang.Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles)`
-- `public static JsonContext loadContext( ResourceLocation path) throws java.io.IOException`
-- `public static JsonContext loadContext( ResourceLocation path, ModContainer mod) throws java.io.IOException`
+- `@Deprecated static boolean findFiles(ModContainer mod, java.lang.String base, java.util.function.Function<java.nio.file.Path, java.lang.Boolean> preprocessor, java.util.function.BiFunction<java.nio.file.Path, java.nio.file.Path, java.lang.Boolean> processor)` — Deprecated. Use findFiles(ModContainer, String, Function, BiFunction, boolean, boolean) instead.
+- `@Deprecated static boolean findFiles(ModContainer mod, java.lang.String base, java.util.function.Function<java.nio.file.Path, java.lang.Boolean> preprocessor, java.util.function.BiFunction<java.nio.file.Path, java.nio.file.Path, java.lang.Boolean> processor, boolean defaultUnfoundRoot)` — Deprecated. Use findFiles(ModContainer, String, Function, BiFunction, boolean, boolean) instead.
+- `static boolean findFiles(ModContainer mod, java.lang.String base, java.util.function.Function<java.nio.file.Path, java.lang.Boolean> preprocessor, java.util.function.BiFunction<java.nio.file.Path, java.nio.file.Path, java.lang.Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles)`
+- `static java.util.function.BooleanSupplier getCondition(JsonObject json, JsonContext context)`
+- `static Ingredient getIngredient(JsonElement json, JsonContext context)`
+- `static Ingredient getIngredient(java.lang.Object obj)`
+- `static ItemStack getItemStack(JsonObject json, JsonContext context)`
+- `static ItemStack getItemStackBasic(JsonObject json, JsonContext context)`
+- `static IRecipe getRecipe(JsonObject json, JsonContext context)`
+- `static void init()`
+- `static JsonContext loadContext(ResourceLocation path)`
+- `static JsonContext loadContext(ResourceLocation path, ModContainer mod)`
+- `static void loadFactories(ModContainer mod, java.lang.String base, CraftingHelper.FactoryLoader ... loaders)`
+- `static void loadRecipes(boolean revertFrozen)`
+- `static CraftingHelper.ShapedPrimer parseShaped(java.lang.Object... recipe)`
+- `static boolean processConditions(JsonArray conditions, JsonContext context)`
+- `static boolean processConditions(JsonObject json, java.lang.String memberName, JsonContext context)`
+- `static void register(ResourceLocation key, IConditionFactory factory)`
+- `static void register(ResourceLocation key, IIngredientFactory factory)`
+- `static void register(ResourceLocation key, IRecipeFactory factory)`
 
-## Description
+## Fields
 
-Deprecated. Use findFiles(ModContainer, String, Function, BiFunction, boolean, boolean) instead.
+- `static CraftingHelper.FactoryLoader<IConditionFactory> CONDITIONS`
+- `static Gson GSON`
+- `static CraftingHelper.FactoryLoader<IIngredientFactory> INGREDIENTS`
+- `static CraftingHelper.FactoryLoader<IRecipeFactory> RECIPES`

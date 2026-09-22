@@ -8,4 +8,4 @@ public interface IFuelHandler
 
 ## Methods
 
-- `int getBurnTime( ItemStack fuel)`
+- `int getBurnTime(ItemStack fuel)`

@@ -1,0 +1,359 @@
+> 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/lightingcustomization?view=minecraft-bedrock-stable
+> 抓取时间：2026-09-21T11:50:11.199Z
+> 警告：此文档可能滞后于当前正式版
+
+# Light Sources
+
+The flip side of customizing materials in Minecraft: Bedrock Edition with texture maps is customizing the lighting in your world. You can use lighting JSON schemas to define the light from directional lights (celestial bodies), point lights (torches, lamps, and other light-emitting blocks), and various kinds of ambient light, for full control over your scenes.
+
+Three kinds of JSON files define lighting in Vibrant Visuals:
+
+- lighting/global.json defines directional lights, a global desaturation value for emissive lights, ambient lighting, and sky lighting. Biome-specific global lighting files should also be placed in this directory as of Bedrock Edition 1.21.90; see the note below.
+
+- local_lighting/local_lighting.json assigns light colors and light type to specific block types such as torches.
+
+- pbr/global.json sets default fallback values when texture set details isn't provided for a block, entity, particle, or item.
+
+Important
+
+As of Bedrock Edition 1.21.90, lighting/global.json will not override the built-in Vanilla pack per-biome lighting; to do that, create multiple lighting JSON files within the lighting/ directory and assign them specifically to different biomes. See Per-Biome Customization for more details.
+
+## Global lighting
+
+This covers the `"directional lights"`, `"emissive"`, `"ambient"`, and `"sky"` objects in lighting/global.json .
+
+### Directional lights
+
+The `"directional_lights"` object is split into the `"orbital"` section, which contains properties for the sun and moon, and the `"flash"` section, which contains properties for the End light flash. These properties affect how strong their respective light contributions are, what colors they cast on surfaces they illuminate, and the angle at which they cast shadows. (They also influence the color of the sky by way of atmospheric scattering calculations; see Atmospheric Effects for more.)
+
+The sun and the moon are assumed to be at opposite points in their orbit in the sky at all times. When both celestial bodies are visible, they both contribute light to the scene. The End flash is a celestial light that's exclusive to the End dimension, and has no real-world counterpart. It disappears and reappears at random locations, and the illuminance it contributes to the scene scales accordingly, appearing as a flash of light.
+
+The Vibrant Visuals pipeline handles illuminance values that correspond to real world values. For instance, the sun at noon on a clear day measures upwards of 100,000 lux, while the moon registers less than one. In the case of the End light flash, the value provided determines the maximum illuminance of the flashes it produces. Tone mapping and auto-exposure will appropriately rebalance drastic differences in light intensities.
+
+Color values can be expressed either as an array of three numerical values in the range of 0–255, or as a six-digit hexadecimal string like an HTML/CSS color specifier. These values can be individually key-framed when providing values for the sun and the moon; see Key Frame JSON Syntax for details.
+
+### Emissive light sources
+
+The `"emissive"` property allows for some control over how emissive light sources behave. This can be especially useful for fine-tuning emissive light sources for certain types of tone mapping.
+
+Currently, emissive light sources have only one property, `"desaturation"`. This is a factor from 0.0 to 1.0 that controls how much the albedo of a given pixel is desaturated when computing the color of emissive light. A value of 0.0 results in no desaturation, while a value of 1.0 results in full desaturation of the albedo color.
+
+### Ambient light
+
+The `"ambient"` object controls how surfaces are lit when there are no other sensible light sources available. Imagine a scene with no direct or indirect light sources, like a dark cavern with no torches or lava. Absent any light source, the player would be left in complete darkness. Another common case is when no indirect specular contribution is available. This often happens in underground scenes, where there is no exposure to the sky and when SSR can't be calculated for one reason or another. The ambient object allows packs to specify a minimum, fallback light source to provide for both cases.
+
+As with orbital lights, the `"color"` value can be expressed either as an array of three numerical values in the range of 0–255, or as a six-digit hexadecimal string.
+
+The `"illuminance"` value corresponds to the strength, in lux (lx), of the ambient light, and should be kept quite low in general. The allowed range for this value is 0.0 - 5.0.
+
+If not provided, a default color of `#FFFFFF` and illuminance of `0.02` will be used.
+
+As of version `1.26.0`, both `"color"` and `"illuminance"` can be specified using keyframes; see Key Frame JSON Syntax for details.
+
+### Sky
+
+The `"sky"` object controls some properties of the sky in terms of its contribution as a light source. The sky contributes significantly to indirect lighting, both diffuse (bouncing light from the sky) and specular (reflections of the sky and clouds).
+
+The sky's `"intensity"` value is a factor from 0.1 to 1.0 that controls how much sky light is factored into the indirect term for both diffuse and specular. A value of 1.0 causes the sky to contribute more to indirect light, and will result in shadows being less dark; a value of 0.1 will result in darker shadows, because less indirect light is contributed from the sky. The default value, if not provided, is 1.0.
+
+As of version `1.26.0`, `"intensity"` can be specified using keyframes; see Key Frame JSON Syntax for details.
+
+## Local lights
+
+The sun and moon's directional lighting can be considered "global lighting" because they impact everything in the scene. Additionally, any light contribution that is constrained to some limited area can be considered "local lighting".
+The `"local_lighting"` object alongside the light emission block component allows you to specify
+
+- Blocks that should be considered a local light
+
+- The type of local light those blocks should be (see below)
+
+- The color of light the block should emit
+
+### Static lights
+
+A static light is part of a simpler lighting system that is baked into the scene. These lights don't provide specular highlights or dynamic shadows and are fixed in space and in brightness. All light-emitting blocks you’re familiar with such as torches, glowstone, and lanterns already use static lighting, with a uniform light color.
+
+To change how far a static light can 'reach', in terms of blocks, refer to the documentation for light emission block components . Note that this light emission value is a separate concept from the "Emissive" value described in PBR or Texture Set documentation. Additionally, the light emission block component is used during gameplay (eg. mob spawning).
+
+The `light_color` of a static light value can be expressed either as an array of three numerical RGB values in the range of 0–255, or as a six-digit RGB hexadecimal string. Any light-emitting block without a `static_light` entry in local_lighting/local_lighting.json will instead use the standard Minecraft light color. All blocks, including standard Minecraft blocks, can have their `light_color` customized by adding an entry for that block in your pack's local_lighting/local_lighting.json .
+
+For best practice and performance, reuse the same colors across multiple blocks where possible. While there currently isn't a limit on the number of colors that can be used, having a few unique colors reused across multiple blocks can help with performance compared to every block having its own unique color.
+
+### Point lights
+
+A point light emits light from a singular point in space at the center of the block, thus the name "point" light. Like directional lights, they produce sophisticated lighting effects such as diffuse and specular highlights and dynamic shadows. This modeling works well for blocks such as torches, but isn't as good for conveying blocks with larger, discrete shapes, such as lava blocks or campfires.
+
+Blocks that emit light from a surface "area" rather than a single "point" should use a static light, the Emissive properties of Texture Sets, and lightEmission block components to control their light levels. You can always combine point lights and Emissive texture data in the same block to achieve your desired look.
+
+Point lights are an 'additive' lighting technique. When enabled, they don't disrupt the visuals or lighting provided by Emissive texture data or static lights. Feel free to experiment, but beware that point lights are considerably more resource-intensive than light produced by other means, so employ them with care.
+
+By default, the game will treat the following blocks as point lights. This functionality can't be changed. However, you can override their default color, or apply point lights to your custom blocks, if you include an entry for that block in your pack's local_lighting/local_lighting.json file:
+
+- minecraft:torch as #EFE39D
+
+- minecraft:redstone_torch as #FF0000
+
+- minecraft:end_rod as #FFFFFF
+
+- minecraft:lantern as #CE8133
+
+- minecraft:soul_lantern as #00FFFF
+
+- minecraft:soul_torch as #00FFFF
+
+- minecraft:candle as #EFE39D Includes all colored candle variants, and candled cakes
+
+- minecraft:sea_pickle as #FFFFFF
+
+- minecraft:copper_torch as #B8EF8D
+
+- minecraft:copper_lantern as #B8EF8D Includes all waxed, weather, and oxidized variants
+
+To change the strength of a point light, refer to the documentation for light emission block components . Note that this light emission value is a separate concept from the "Emissive" value described in PBR or Texture Set documentation.
+
+The `light_color` value can be expressed either as an array of three numerical RGB values in the range of 0–255, or as a six-digit RGB hexadecimal string.
+
+## PBR uniforms
+
+The `"pbr"` object complements the larger Texture Set functionality by acting as a default or fallback value when texture set detail isn't provided for particular blocks, entities, particles, or items. For example, if you provide texture sets for pigs and creepers, but no other entities, then when a cow is rendered in game, the `"global_metalness_emissive_roughness_subsurface"` value defined in pbr/global.json will be applied uniformly across the entire surface of the cow. This allows you to quickly provide a general art direction without having to author textures for every single game object initially, and iteratively add more detail to the blocks/entities as you see fit.
+
+Values can be expressed either as an array of three numerical values in the range of 0–255, or as a six-digit hexadecimal string.
+
+## Reflections
+
+Vibrant Visuals calculates reflections using image-based lighting (IBL) and screen-space reflections (SSR). The majority of surfaces will be able to convey convincing reflections, whether underground, above ground, or even in the Nether. Certain scenarios, such as reflecting off-screen objects or first-person mirrors, are still not possible. Also, with the exception of water, transparent geometry such as glass will not receive SSR.
+
+While you can't control reflection properties directly, you can make use of roughness and metalness parameters in texture sets to control how different materials elicit reflections. Default PBR values for blocks, actors, particles, and items defined in pbr/global.json will also impact this property for objects with no texture set.
+
+## Lighting JSON schemas
+
+File location: lighting/global.json
+
+ Schema Version
+ Updates
+
+ `1.26.0`
+ Added key framing support for sky and ambient parameters
+
+ `1.21.80`
+ Added support for controlling the End light flash
+
+ `1.21.70`
+ Added a new object for controlling the sky intensity
+
+ `1.21.60`
+ Changed the data type for sun and moon colors from RGBA to RGB
+
+ `1.21.40`
+ N/A
+
+```json
+{
+ string "format_version", // The 3-part schema version for parsing these lighting settings.
+ object "minecraft:lighting_settings"
+ {
+ object "description"
+ {
+ string "identifier" // The identifier for these lighting settings. The identifier must include a namespace.
+ },
+ object "directional_lights"
+ {
+ object "orbital" {
+ object "sun"
+ {
+ float "illuminance" : optkeyframe, // How bright the sun is, measured in lux (lx)
+ color "color" : optkeyframe // The RGB color that the sun contributes to direct surface lighting; supports RGB array or HEX string
+ },
+ object "moon"
+ {
+ float "illuminance" : optkeyframe, // How bright the moon is; measured in lux (lx)
+ color "color" : optkeyframe // The RGB color that the moon contributes to direct surface lighting; supports RGB array or HEX string
+ },
+ float "orbital_offset_degrees" : optkeyframe // The rotational offset of the sun and moon from their standard orbital axis; measured in degrees
+ },
+ object "flash" {
+ float "illuminance", // The peak brightness of the End flash, measured in lux (lx)
+ color "color" // The RGB color that the End flash contributes to surface lighting; supports RGB array or HEX string
+ }
+ },
+ object "emissive"
+ {
+ float "desaturation" // The amount of desaturation to apply to albedo color values during emissive light calculation; values range from [0.0, 1.0]
+ },
+ object "ambient"
+ {
+ float "illuminance" : optkeyframe, // How bright the ambient light is; measured in lux (lx)
+ color "color" : optkeyframe // The RGB color that the ambient light contributes to surface lighting; supports RGB array or HEX string
+ },
+ object "sky"
+ {
+ float "intensity" : optkeyframe // Scales how much energy the sky contributes to lighting; values range from [0.1, 1.0]
+ }
+ }
+}
+```
+
+File location: local_lighting/local_lighting.json
+
+ Schema Version
+ Updates
+
+ `1.21.120`
+ Renamed `point_lights/global.json` to `local_lighting/local_lighting.json`. Added support for additional `light_type` property
+
+ `1.21.40`
+ N/A
+
+```json
+{
+ string "format_version", // The 3-part schema version for parsing these point light settings.
+ object "minecraft:local_light_settings"
+ {
+ object "block identifier" // namespace-qualified block name eg. minecraft:torch
+ {
+ light_color: color, // Optional. Supports RGB array or HEX string
+ light_type: "static_light" or "point_light"
+ },
+ ...
+ }
+}
+```
+
+File location: pbr/global.json
+
+```json
+{
+ string "format_version", // The 3-part schema version for parsing these pbr fallback settings.
+ object "minecraft:pbr_fallback_settings"
+ {
+ object "blocks"
+ {
+ color "global_metalness_emissive_roughness_subsurface" // The default MERS value to use for blocks when not defined via textureset; supports RGBA array or HEX string
+ },
+ object "actors"
+ {
+ color "global_metalness_emissive_roughness_subsurface" // The default MERS value to use for actors/mobs when not defined via textureset; supports RGBA array or HEX string
+ },
+ object "particles"
+ {
+ color "global_metalness_emissive_roughness_subsurface" // The default MERS value to use for particles when not defined via textureset; supports RGBA array or HEX string
+ },
+ object "items"
+ {
+ color "global_metalness_emissive_roughness_subsurface" // The default MERS value to use for items when not defined via textureset; supports RGBA array or HEX string
+ }
+ }
+}
+```
+
+### lighting/global.json
+
+```json
+{
+ "format_version": "1.26.0",
+ "minecraft:lighting_settings": {
+ "description": {
+ "identifier": "my_pack:default_lighting"
+ },
+ "directional_lights": {
+ "orbital": {
+ "sun": {
+ "illuminance": {
+ "0.0": 109880.0,
+ "0.25": 20000.0,
+ "0.35": 400.0,
+ "0.5": 1.0,
+ "0.65": 400.0,
+ "0.75": 20000.0,
+ "1.0": 109880.0
+ },
+ "color": [ 255.0, 255.0, 255.0 ]
+ },
+ "moon": {
+ "illuminance": 0.27,
+ "color": "#ffffff"
+ },
+ "orbital_offset_degrees": 3.0
+ },
+ "flash": {
+ "illuminance": 5.0,
+ "color": [ 255.0, 255.0, 255.0 ]
+ }
+ },
+ "emissive": {
+ "desaturation": 0.1
+ },
+ "ambient": {
+ "illuminance": 0.02,
+ "color": "#ffffff"
+ },
+ "sky": {
+ "intensity": 1.0
+ }
+ }
+}
+```
+
+### point_lights/global.json [DEPRECATED]
+
+```json
+{
+ "format_version": "1.21.40",
+ "minecraft:minecraft:point_light_settings": {
+ "colors": {
+ "minecraft:soul_torch": "#FFFFFF"
+ }
+ }
+}
+```
+
+### local_lighting/local_lighting.json
+
+```json
+{
+ "format_version": "1.21.120",
+ "minecraft:local_light_settings": {
+ "minecraft:torch": {
+ "light_color": "#EFE39D",
+ "light_type": "point_light"
+ }
+ }
+}
+```
+
+### pbr/global.json
+
+```json
+{
+ "format_version": "1.21.40",
+ "minecraft:pbr_fallback_settings": {
+ "blocks": {
+ "global_metalness_emissive_roughness_subsurface": [0.0, 0.0, 255.0, 0.0]
+ },
+ "actors": {
+ "global_metalness_emissive_roughness_subsurface": [0.0, 0.0, 255.0, 0.0]
+ },
+ "particles": {
+ "global_metalness_emissive_roughness_subsurface": [0.0, 0.0, 255.0, 0.0]
+ },
+ "items": {
+ "global_metalness_emissive_roughness_subsurface": [0.0, 0.0, 255.0, 0.0]
+ }
+}
+```
+
+## Feedback
+
+ Was this page helpful?
+
+ Yes
+
+ No
+
+ No
+
+ Need help with this topic?
+
+ Want to try using Ask Learn to clarify or guide you through this topic?
+
+ Suggest a fix?

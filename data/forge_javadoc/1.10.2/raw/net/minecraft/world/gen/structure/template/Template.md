@@ -3,11 +3,15 @@ title: "Template"
 description: "public class Template extends java.lang.Object"
 package: "net/minecraft/world/gen/structure/template"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/gen/structure/template/Template.html"
 sourceType: javadoc
 ---
 
 # Template
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.template.Template
 
 ## Class signature
 
@@ -17,22 +21,22 @@ public class Template extends java.lang.Object
 
 ## Constructors
 
-- `public Template()`
+- `Template()`
 
 ## Methods
 
-- `public BlockPos getSize()`
-- `public void setAuthor(java.lang.String authorIn)`
-- `public java.lang.String getAuthor()`
-- `public void takeBlocksFromWorld( World worldIn, BlockPos startPos, BlockPos endPos, boolean takeEntities, @Nullable Block toIgnore)`
-- `public java.util.Map< BlockPos ,java.lang.String> getDataBlocks( BlockPos pos, PlacementSettings placementIn)`
-- `public BlockPos calculateConnectedPos( PlacementSettings placementIn, BlockPos p_186262_2_, PlacementSettings p_186262_3_, BlockPos p_186262_4_)`
-- `public static BlockPos transformedBlockPos( PlacementSettings placementIn, BlockPos p_186266_1_)`
-- `public void addBlocksToWorldChunk( World worldIn, BlockPos pos, PlacementSettings placementIn)`
-- `public void addBlocksToWorld( World worldIn, BlockPos pos, PlacementSettings placementIn)`
-- `public void addBlocksToWorld( World worldIn, BlockPos pos, PlacementSettings placementIn, int flags)`
-- `public void addBlocksToWorld( World p_189960_1_, BlockPos p_189960_2_, @Nullable ITemplateProcessor p_189960_3_, PlacementSettings p_189960_4_, int p_189960_5_)`
-- `public BlockPos transformedSize( Rotation rotationIn)`
-- `public BlockPos getZeroPositionWithTransform( BlockPos p_189961_1_, Mirror p_189961_2_, Rotation p_189961_3_)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound nbt)`
-- `public void read( NBTTagCompound compound)`
+- `void addBlocksToWorld(World p_189960_1_, BlockPos p_189960_2_, ITemplateProcessor p_189960_3_, PlacementSettings p_189960_4_, int p_189960_5_)`
+- `void addBlocksToWorld(World worldIn, BlockPos pos, PlacementSettings placementIn)`
+- `void addBlocksToWorld(World worldIn, BlockPos pos, PlacementSettings placementIn, int flags)`
+- `void addBlocksToWorldChunk(World worldIn, BlockPos pos, PlacementSettings placementIn)`
+- `BlockPos calculateConnectedPos(PlacementSettings placementIn, BlockPos p_186262_2_, PlacementSettings p_186262_3_, BlockPos p_186262_4_)`
+- `java.lang.String getAuthor()`
+- `java.util.Map<BlockPos, java.lang.String> getDataBlocks(BlockPos pos, PlacementSettings placementIn)`
+- `BlockPos getSize()`
+- `BlockPos getZeroPositionWithTransform(BlockPos p_189961_1_, Mirror p_189961_2_, Rotation p_189961_3_)`
+- `void read(NBTTagCompound compound)`
+- `void setAuthor(java.lang.String authorIn)`
+- `void takeBlocksFromWorld(World worldIn, BlockPos startPos, BlockPos endPos, boolean takeEntities, Block toIgnore)`
+- `static BlockPos transformedBlockPos(PlacementSettings placementIn, BlockPos p_186266_1_)`
+- `BlockPos transformedSize(Rotation rotationIn)`
+- `NBTTagCompound writeToNBT(NBTTagCompound nbt)`

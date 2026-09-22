@@ -1,13 +1,17 @@
 ---
 title: "GuiConfigEntries"
-description: "This class implements the scrolling list functionality of the config GUI screens. It also provides all the default control handlers for the various property types."
+description: "public class GuiConfigEntries extends GuiListExtended"
 package: "net/minecraftforge/fml/client/config"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/client/config/GuiConfigEntries.html"
 sourceType: javadoc
 ---
 
 # GuiConfigEntries
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.GuiSlot → net.minecraft.client.gui.GuiListExtended → net.minecraftforge.fml.client.config.GuiConfigEntries
 
 ## Class signature
 
@@ -17,27 +21,36 @@ public class GuiConfigEntries extends GuiListExtended
 
 ## Constructors
 
-- `public GuiConfigEntries( GuiConfig parent, Minecraft mc)`
+- `GuiConfigEntries(GuiConfig parent, Minecraft mc)`
 
 ## Methods
 
+- `boolean areAllEntriesDefault(boolean includeChildren)` — Returns true if all IConfigEntry objects on this screen are set to default.
+- `boolean areAnyEntriesEnabled(boolean includeChildren)` — Returns true if any IConfigEntry objects on this screen are enabled.
+- `void drawScreenPost(int mouseX, int mouseY, float partialTicks)` — Calls the drawToolTip() method for all IConfigEntry objects on this screen.
+- `GuiConfigEntries.IConfigEntry getListEntry(int index)` — Gets the IGuiListEntry object for the given index
+- `int getListWidth()` — Gets the width of the list
+- `int getScrollBarX()`
+- `int getSize()`
+- `boolean hasChangedEntry(boolean includeChildren)` — Returns true if any IConfigEntry objects on this screen are changed.
 - `protected void initGui()`
-- `public int getSize()`
-- `public GuiConfigEntries.IConfigEntry getListEntry(int index)`
-- `public int getScrollBarX()`
-- `public int getListWidth()`
-- `public void keyTyped(char eventChar, int eventKey)`
-- `public void updateScreen()`
-- `public void mouseClickedPassThru(int mouseX, int mouseY, int mouseEvent)`
-- `public void onGuiClosed()`
-- `public boolean saveConfigElements()`
-- `public boolean areAllEntriesDefault(boolean includeChildren)`
-- `public void setAllToDefault(boolean includeChildren)`
-- `public boolean hasChangedEntry(boolean includeChildren)`
-- `public boolean areAnyEntriesEnabled(boolean includeChildren)`
-- `public void undoAllChanges(boolean includeChildren)`
-- `public void drawScreenPost(int mouseX, int mouseY, float partialTicks)`
+- `void keyTyped(char eventChar, int eventKey)` — This method is a pass-through for IConfigEntry objects that require keystrokes.
+- `void mouseClickedPassThru(int mouseX, int mouseY, int mouseEvent)` — This method is a pass-through for IConfigEntry objects that contain GuiTextField elements.
+- `void onGuiClosed()` — This method is a pass-through for IConfigEntry objects that need to perform actions when the containing GUI is closed.
+- `boolean saveConfigElements()` — Saves all properties on this screen / child screens.
+- `void setAllToDefault(boolean includeChildren)` — Sets all IConfigEntry objects on this screen to default.
+- `void undoAllChanges(boolean includeChildren)` — Reverts changes to all IConfigEntry objects on this screen.
+- `void updateScreen()` — This method is a pass-through for IConfigEntry objects that contain GuiTextField elements.
 
-## Description
+## Fields
 
-This class implements the scrolling list functionality of the config GUI screens. It also provides all the default control handlers for the various property types.
+- `int controlWidth` — The width of the control.
+- `int controlX` — The x position where the control should be drawn.
+- `int labelX` — The x position where the label should be drawn.
+- `java.util.List<GuiConfigEntries.IConfigEntry> listEntries`
+- `int maxEntryRightBound` — The max x boundary of all IConfigEntry objects.
+- `int maxLabelTextWidth` — The max width of the label of all IConfigEntry objects.
+- `Minecraft mc`
+- `GuiConfig owningScreen`
+- `int resetX` — The minimum x position where the Undo/Default buttons will start
+- `int scrollBarX` — The x position of the scroll bar.

@@ -1,33 +1,35 @@
 # NBTTagList
 
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase → net.minecraft.nbt.NBTTagList
+
 ## Class signature
 
 ```java
-public class NBTTagList extends NBTBase implements java.lang.Iterable< NBTBase >
+public class NBTTagList extends NBTBase implements java.lang.Iterable<NBTBase>
 ```
-
-## Constructors
-
-- `public NBTTagList()`
 
 ## Methods
 
-- `public byte getId()`
-- `public java.lang.String toString()`
-- `public void appendTag( NBTBase nbt)`
-- `public void set(int idx, NBTBase nbt)`
-- `public NBTBase removeTag(int i)`
-- `public boolean hasNoTags()`
-- `public NBTTagCompound getCompoundTagAt(int i)`
-- `public int getIntAt(int p_186858_1_)`
-- `public int[] getIntArrayAt(int i)`
-- `public double getDoubleAt(int i)`
-- `public float getFloatAt(int i)`
-- `public java.lang.String getStringTagAt(int i)`
-- `public NBTBase get(int idx)`
-- `public int tagCount()`
-- `public NBTTagList copy()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public int getTagType()`
-- `public java.util.Iterator< NBTBase > iterator()`
+- `void appendTag(NBTBase nbt)`
+- `NBTTagList copy()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `NBTBase get(int idx)`
+- `NBTTagCompound getCompoundTagAt(int i)`
+- `double getDoubleAt(int i)`
+- `float getFloatAt(int i)`
+- `byte getId()`
+- `int[] getIntArrayAt(int i)`
+- `int getIntAt(int p_186858_1_)`
+- `java.lang.String getStringTagAt(int i)`
+- `int getTagType()`
+- `int hashCode()`
+- `boolean hasNoTags()`
+- `java.util.Iterator<NBTBase> iterator()`
+- `NBTBase removeTag(int i)`
+- `void set(int idx, NBTBase nbt)`
+- `int tagCount()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `NBTTagList`

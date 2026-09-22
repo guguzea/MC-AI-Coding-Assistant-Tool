@@ -1,9 +1,13 @@
 # GuiScreenEvent.InitGuiEvent.Pre
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent → net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Pre
 
-- `public Pre( GuiScreen gui, java.util.List< GuiButton > buttonList)`
+## Class signature
 
-## Description
+```java
+public static class GuiScreenEvent.InitGuiEvent.Pre extends GuiScreenEvent.InitGuiEvent
+```
 
-This event fires just after initializing GuiScreen.mc , GuiScreen.fontRendererObj , GuiScreen.width , and GuiScreen.height , and just before calling GuiScreen.buttonList.clear() and GuiScreen.initGui(
+## Fields
+
+- `Pre`

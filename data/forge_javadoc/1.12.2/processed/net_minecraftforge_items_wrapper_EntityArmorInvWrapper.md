@@ -1,15 +1,13 @@
 # EntityArmorInvWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.items.wrapper.EntityEquipmentInvWrapper → net.minecraftforge.items.wrapper.EntityArmorInvWrapper
+
 ## Class signature
 
 ```java
 public class EntityArmorInvWrapper extends EntityEquipmentInvWrapper
 ```
 
-## Constructors
+## Fields
 
-- `public EntityArmorInvWrapper( EntityLivingBase entity)`
-
-## Description
-
-Exposes the armor inventory of an EntityLivingBase as an IItemHandler using EntityLivingBase.getItemStackFromSlot(net.minecraft.inventory.EntityEquipmentSlot) and EntityLivingBase.setItemStackToSlot(n
+- `EntityArmorInvWrapper`

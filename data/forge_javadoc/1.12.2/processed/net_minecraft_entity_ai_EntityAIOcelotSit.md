@@ -1,19 +1,21 @@
 # EntityAIOcelotSit
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIMoveToBlock → net.minecraft.entity.ai.EntityAIOcelotSit
+
 ## Class signature
 
 ```java
 public class EntityAIOcelotSit extends EntityAIMoveToBlock
 ```
 
-## Constructors
-
-- `public EntityAIOcelotSit( EntityOcelot ocelotIn, double p_i45315_2_)`
-
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
-- `protected boolean shouldMoveTo( World worldIn, BlockPos pos)`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `protected boolean shouldMoveTo(World worldIn, BlockPos pos)`
+- `void startExecuting()`
+- `void updateTask()`
+
+## Fields
+
+- `EntityAIOcelotSit`

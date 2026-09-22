@@ -1,5 +1,7 @@
 # EntityAIRestrictSun
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIRestrictSun
+
 ## Class signature
 
 ```java
@@ -8,14 +10,10 @@ public class EntityAIRestrictSun extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIRestrictSun( EntityCreature p_i1652_1_)`
+- `EntityAIRestrictSun(EntityCreature p_i1652_1_)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
-- `public void resetTask()`
-
-## Description
-
-Resets the task
+- `void resetTask()` — Resets the task
+- `boolean shouldExecute()` — Returns whether the EntityAIBase should begin execution.
+- `void startExecuting()` — Execute a one shot task or start executing a continuous task

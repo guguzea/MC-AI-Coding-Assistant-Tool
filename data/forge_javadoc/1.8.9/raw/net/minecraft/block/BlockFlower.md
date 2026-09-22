@@ -1,13 +1,17 @@
 ---
 title: "BlockFlower"
-description: "Gets the metadata of the item this Block can drop."
+description: "public abstract class BlockFlower extends BlockBush"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockFlower.html"
 sourceType: javadoc
 ---
 
 # BlockFlower
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockBush → net.minecraft.block.BlockFlower
 
 ## Class signature
 
@@ -17,19 +21,19 @@ public abstract class BlockFlower extends BlockBush
 
 ## Constructors
 
-- `protected BlockFlower()`
+- `BlockFlower()`
 
 ## Methods
 
-- `public int damageDropped( IBlockState state)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > list)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public abstract BlockFlower.EnumFlowerColor getBlockType()`
-- `public IProperty < BlockFlower.EnumFlowerType > getTypeProperty()`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockState createBlockState()`
-- `public Block.EnumOffsetType getOffsetType()`
+- `int damageDropped(IBlockState state)` — Gets the metadata of the item this Block can drop.
+- `abstract BlockFlower.EnumFlowerColor getBlockType()` — Get the Type of this flower (Yellow/Red)
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `Block.EnumOffsetType getOffsetType()` — Get the OffsetType for this Block.
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> list)` — returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+- `IProperty<BlockFlower.EnumFlowerType> getTypeProperty()`
 
-## Description
+## Fields
 
-Gets the metadata of the item this Block can drop.
+- `protected PropertyEnum<BlockFlower.EnumFlowerType> type`

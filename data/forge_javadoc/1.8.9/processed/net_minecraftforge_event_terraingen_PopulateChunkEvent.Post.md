@@ -1,9 +1,13 @@
 # PopulateChunkEvent.Post
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.ChunkProviderEvent → net.minecraftforge.event.terraingen.PopulateChunkEvent → net.minecraftforge.event.terraingen.PopulateChunkEvent.Post
 
-- `public Post( IChunkProvider chunkProvider, World world, java.util.Random rand, int chunkX, int chunkZ, boolean hasVillageGenerated)`
+## Class signature
 
-## Description
+```java
+public static class PopulateChunkEvent.Post extends PopulateChunkEvent
+```
 
-PopulateChunkEvent.Post is fired just after a chunk is populated with a terrain feature. This event is fired just after terrain feature generation in ChunkProviderEnd#populate(IChunkProvider, int, int
+## Fields
+
+- `Post`

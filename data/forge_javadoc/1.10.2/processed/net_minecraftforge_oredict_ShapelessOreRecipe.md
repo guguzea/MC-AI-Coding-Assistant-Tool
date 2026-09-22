@@ -1,5 +1,7 @@
 # ShapelessOreRecipe
 
+**Inheritance:** java.lang.Object → net.minecraftforge.oredict.ShapelessOreRecipe
+
 ## Class signature
 
 ```java
@@ -8,19 +10,20 @@ public class ShapelessOreRecipe extends java.lang.Object implements IRecipe
 
 ## Constructors
 
-- `public ShapelessOreRecipe( Block result, java.lang.Object... recipe)`
-- `public ShapelessOreRecipe( Item result, java.lang.Object... recipe)`
-- `public ShapelessOreRecipe( ItemStack result, java.lang.Object... recipe)`
+- `ShapelessOreRecipe(Block result, java.lang.Object... recipe)`
+- `ShapelessOreRecipe(Item result, java.lang.Object... recipe)`
+- `ShapelessOreRecipe(ItemStack result, java.lang.Object... recipe)`
 
 ## Methods
 
-- `public int getRecipeSize()`
-- `public ItemStack getRecipeOutput()`
-- `public ItemStack getCraftingResult( InventoryCrafting var1)`
-- `public boolean matches( InventoryCrafting var1, World world)`
-- `public java.util.ArrayList<java.lang.Object> getInput()`
-- `public ItemStack [] getRemainingItems( InventoryCrafting inv)`
+- `ItemStack getCraftingResult(InventoryCrafting var1)`
+- `java.util.ArrayList<java.lang.Object> getInput()` — Returns the input for this recipe, any mod accessing this value should never manipulate the values in this array as it will effect the recipe itself.
+- `ItemStack getRecipeOutput()`
+- `int getRecipeSize()`
+- `ItemStack [] getRemainingItems(InventoryCrafting inv)`
+- `boolean matches(InventoryCrafting var1, World world)`
 
-## Description
+## Fields
 
-Returns the input for this recipe, any mod accessing this value should never manipulate the values in this array as it will effect the recipe itself.
+- `protected java.util.ArrayList<java.lang.Object> input`
+- `protected ItemStack output`

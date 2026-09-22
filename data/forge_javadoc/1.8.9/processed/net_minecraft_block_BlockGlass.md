@@ -1,22 +1,20 @@
 # BlockGlass
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockBreakable → net.minecraft.block.BlockGlass
+
 ## Class signature
 
 ```java
 public class BlockGlass extends BlockBreakable
 ```
 
-## Constructors
-
-- `public BlockGlass( Material materialIn, boolean ignoreSimilarity)`
-
 ## Methods
 
-- `public int quantityDropped(java.util.Random random)`
-- `public EnumWorldBlockLayer getBlockLayer()`
-- `public boolean isFullCube()`
 - `protected boolean canSilkHarvest()`
+- `EnumWorldBlockLayer getBlockLayer()`
+- `boolean isFullCube()`
+- `int quantityDropped(java.util.Random random)` — Returns the quantity of items to drop on block destruction.
 
-## Description
+## Fields
 
-Returns the quantity of items to drop on block destruction.
+- `BlockGlass`

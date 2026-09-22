@@ -1,18 +1,24 @@
 ---
 title: "PlayerUseItemEvent.Tick"
-description: "Fired every tick that a player is 'using' an item, see PlayerUseItemEvent.Start for info. Cancel the event, or set the duration or <= 0 to cause the player to stop using the item."
+description: "public static class PlayerUseItemEvent.Tick extends PlayerUseItemEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/player/PlayerUseItemEvent.Tick.html"
 sourceType: javadoc
 ---
 
 # PlayerUseItemEvent.Tick
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerUseItemEvent → net.minecraftforge.event.entity.player.PlayerUseItemEvent.Tick
 
-- `public Tick( EntityPlayer player, ItemStack item, int duration)`
+## Class signature
 
-## Description
+```java
+public static class PlayerUseItemEvent.Tick extends PlayerUseItemEvent
+```
 
-Fired every tick that a player is 'using' an item, see PlayerUseItemEvent.Start for info. Cancel the event, or set the duration or <= 0 to cause the player to stop using the item.
+## Fields
+
+- `Tick`

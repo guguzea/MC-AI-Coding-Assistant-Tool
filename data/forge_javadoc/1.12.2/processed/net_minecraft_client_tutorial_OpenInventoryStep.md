@@ -1,5 +1,7 @@
 # OpenInventoryStep
 
+**Inheritance:** java.lang.Object → net.minecraft.client.tutorial.OpenInventoryStep
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class OpenInventoryStep extends java.lang.Object implements ITutorialStep
 
 ## Constructors
 
-- `public OpenInventoryStep( Tutorial tutorial)`
+- `OpenInventoryStep(Tutorial tutorial)`
 
 ## Methods
 
-- `public void update()`
-- `public void onStop()`
-- `public void openInventory()`
+- `void onStop()`
+- `void openInventory()`
+- `void update()`

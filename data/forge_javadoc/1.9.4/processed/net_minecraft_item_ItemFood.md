@@ -1,5 +1,7 @@
 # ItemFood
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemFood
+
 ## Class signature
 
 ```java
@@ -8,18 +10,22 @@ public class ItemFood extends Item
 
 ## Constructors
 
-- `public ItemFood(int amount, float saturation, boolean isWolfFood)`
-- `public ItemFood(int amount, boolean isWolfFood)`
+- `ItemFood(int amount, boolean isWolfFood)`
+- `ItemFood(int amount, float saturation, boolean isWolfFood)`
 
 ## Methods
 
-- `@Nullable public ItemStack onItemUseFinish( ItemStack stack, World worldIn, EntityLivingBase entityLiving)`
-- `protected void onFoodEaten( ItemStack stack, World worldIn, EntityPlayer player)`
-- `public int getMaxItemUseDuration( ItemStack stack)`
-- `public EnumAction getItemUseAction( ItemStack stack)`
-- `public ActionResult < ItemStack > onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)`
-- `public int getHealAmount( ItemStack stack)`
-- `public float getSaturationModifier( ItemStack stack)`
-- `public boolean isWolfsFavoriteMeat()`
-- `public ItemFood setPotionEffect( PotionEffect p_185070_1_, float p_185070_2_)`
-- `public ItemFood setAlwaysEdible()`
+- `int getHealAmount(ItemStack stack)`
+- `EnumAction getItemUseAction(ItemStack stack)`
+- `int getMaxItemUseDuration(ItemStack stack)`
+- `float getSaturationModifier(ItemStack stack)`
+- `boolean isWolfsFavoriteMeat()`
+- `protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player)`
+- `ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)`
+- `ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)`
+- `ItemFood setAlwaysEdible()`
+- `ItemFood setPotionEffect(PotionEffect p_185070_1_, float p_185070_2_)`
+
+## Fields
+
+- `int itemUseDuration`

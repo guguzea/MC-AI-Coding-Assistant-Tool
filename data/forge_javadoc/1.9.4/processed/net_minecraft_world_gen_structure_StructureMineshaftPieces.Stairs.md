@@ -1,14 +1,22 @@
 # StructureMineshaftPieces.Stairs
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureMineshaftPieces.Stairs
 
-- `public Stairs()`
-- `public Stairs(int type, java.util.Random rand, StructureBoundingBox structurebb, EnumFacing facing)`
+## Class signature
+
+```java
+public static class StructureMineshaftPieces.Stairs extends StructureComponent
+```
 
 ## Methods
 
-- `protected void writeStructureToNBT( NBTTagCompound tagCompound)`
-- `protected void readStructureFromNBT( NBTTagCompound tagCompound)`
-- `public static StructureBoundingBox findStairs(java.util.List< StructureComponent > listIn, java.util.Random rand, int x, int y, int z, EnumFacing facing)`
-- `public void buildComponent( StructureComponent componentIn, java.util.List< StructureComponent > listIn, java.util.Random rand)`
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `void buildComponent(StructureComponent componentIn, java.util.List<StructureComponent> listIn, java.util.Random rand)`
+- `static StructureBoundingBox findStairs(java.util.List<StructureComponent> listIn, java.util.Random rand, int x, int y, int z, EnumFacing facing)`
+- `protected void readStructureFromNBT(NBTTagCompound tagCompound)`
+- `protected void writeStructureToNBT(NBTTagCompound tagCompound)`
+
+## Fields
+
+- `Stairs`
+- `Stairs`

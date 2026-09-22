@@ -1,5 +1,11 @@
 # GuiPageButtonList.GuiResponder
 
+## Class signature
+
+```java
+public static interface GuiPageButtonList.GuiResponder
+```
+
 ## Methods
 
 - `void setEntryValue(int id, boolean value)`

@@ -3,11 +3,15 @@ title: "ModelEvokerFangs"
 description: "public class ModelEvokerFangs extends ModelBase"
 package: "net/minecraft/client/model"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/model/ModelEvokerFangs.html"
 sourceType: javadoc
 ---
 
 # ModelEvokerFangs
+
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelEvokerFangs
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class ModelEvokerFangs extends ModelBase
 ```
 
-## Constructors
-
-- `public ModelEvokerFangs()`
-
 ## Methods
 
-- `public void render( Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+
+## Fields
+
+- `ModelEvokerFangs`

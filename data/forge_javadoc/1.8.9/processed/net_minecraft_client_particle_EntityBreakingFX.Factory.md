@@ -1,9 +1,17 @@
 # EntityBreakingFX.Factory
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.EntityBreakingFX.Factory
+
+## Class signature
+
+```java
+public static class EntityBreakingFX.Factory extends java.lang.Object implements IParticleFactory
+```
+
 ## Constructors
 
-- `public Factory()`
+- `Factory()`
 
 ## Methods
 
-- `public EntityFX getEntityFX(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)`
+- `EntityFX getEntityFX(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)`

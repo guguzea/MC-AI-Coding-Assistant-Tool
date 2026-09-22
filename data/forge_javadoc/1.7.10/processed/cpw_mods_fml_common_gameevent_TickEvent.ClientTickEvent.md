@@ -1,5 +1,13 @@
 # TickEvent.ClientTickEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.eventhandler.Event → cpw.mods.fml.common.gameevent.TickEvent → cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent
 
-- `public ClientTickEvent( TickEvent.Phase phase)`
+## Class signature
+
+```java
+public static class TickEvent.ClientTickEvent extends TickEvent
+```
+
+## Fields
+
+- `ClientTickEvent`

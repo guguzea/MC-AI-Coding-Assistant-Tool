@@ -3,11 +3,15 @@ title: "EntityMoveHelper"
 description: "public class EntityMoveHelper extends java.lang.Object"
 package: "net/minecraft/entity/ai"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/entity/ai/EntityMoveHelper.html"
 sourceType: javadoc
 ---
 
 # EntityMoveHelper
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityMoveHelper
 
 ## Class signature
 
@@ -17,17 +21,28 @@ public class EntityMoveHelper extends java.lang.Object
 
 ## Constructors
 
-- `public EntityMoveHelper( EntityLiving entitylivingIn)`
+- `EntityMoveHelper(EntityLiving entitylivingIn)`
 
 ## Methods
 
-- `public boolean isUpdating()`
-- `public double getSpeed()`
-- `public void setMoveTo(double x, double y, double z, double speedIn)`
-- `public void strafe(float forward, float strafe)`
-- `public void read( EntityMoveHelper that)`
-- `public void onUpdateMoveHelper()`
+- `double getSpeed()`
+- `double getX()`
+- `double getY()`
+- `double getZ()`
+- `boolean isUpdating()`
 - `protected float limitAngle(float p_75639_1_, float p_75639_2_, float p_75639_3_)`
-- `public double getX()`
-- `public double getY()`
-- `public double getZ()`
+- `void onUpdateMoveHelper()`
+- `void read(EntityMoveHelper that)`
+- `void setMoveTo(double x, double y, double z, double speedIn)`
+- `void strafe(float forward, float strafe)`
+
+## Fields
+
+- `EntityMoveHelper.Action action`
+- `protected EntityLiving entity`
+- `protected float moveForward`
+- `protected float moveStrafe`
+- `protected double posX`
+- `protected double posY`
+- `protected double posZ`
+- `protected double speed`

@@ -1,5 +1,7 @@
 # EntityVindicator
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityVindicator
+
 ## Class signature
 
 ```java
@@ -8,25 +10,29 @@ public class EntityVindicator extends EntityMob
 
 ## Constructors
 
-- `public EntityVindicator( World worldIn)`
+- `EntityVindicator(World worldIn)`
 
 ## Methods
 
-- `public static void registerFixesVindicator( DataFixer fixer)`
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
 - `protected void entityInit()`
-- `public EnumCreatureAttribute getCreatureAttribute()`
-- `protected ResourceLocation getLootTable()`
-- `public void setAggressive(boolean p_190636_1_)`
-- `public boolean isAggressive()`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `@Nullable public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)`
-- `protected void setEquipmentBasedOnDifficulty( DifficultyInstance difficulty)`
-- `protected void updateAITasks()`
-- `public boolean isOnSameTeam( Entity entityIn)`
-- `public void setCustomNameTag(java.lang.String name)`
 - `protected SoundEvent getAmbientSound()`
+- `EnumCreatureAttribute getCreatureAttribute()`
 - `protected SoundEvent getDeathSound()`
 - `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `protected void initEntityAI()`
+- `boolean isAggressive()`
+- `boolean isOnSameTeam(Entity entityIn)`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesVindicator(DataFixer fixer)`
+- `void setAggressive(boolean p_190636_1_)`
+- `void setCustomNameTag(java.lang.String name)`
+- `protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty)`
+- `protected void updateAITasks()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `protected static DataParameter<java.lang.Byte> DATA_FLAGS_ID`

@@ -1,18 +1,28 @@
 ---
 title: "IEntitySelector.ArmoredMob"
-description: ""
+description: "public static class IEntitySelector.ArmoredMob extends java.lang.Object implements IEntitySelector"
 package: "net/minecraft/command"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/command/IEntitySelector.ArmoredMob.html"
 sourceType: javadoc
 ---
 
 # IEntitySelector.ArmoredMob
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.command.IEntitySelector.ArmoredMob
 
-- `public ArmoredMob( ItemStack p_i1584_1_)`
+## Class signature
+
+```java
+public static class IEntitySelector.ArmoredMob extends java.lang.Object implements IEntitySelector
+```
 
 ## Methods
 
-- `public boolean isEntityApplicable( Entity p_82704_1_)`
+- `boolean isEntityApplicable(Entity p_82704_1_)`
+
+## Fields
+
+- `ArmoredMob`

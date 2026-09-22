@@ -1,5 +1,7 @@
 # BlockOldLeaf
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockLeavesBase → net.minecraft.block.BlockLeaves → net.minecraft.block.BlockOldLeaf
+
 ## Class signature
 
 ```java
@@ -8,24 +10,24 @@ public class BlockOldLeaf extends BlockLeaves
 
 ## Constructors
 
-- `public BlockOldLeaf()`
+- `BlockOldLeaf()`
 
 ## Methods
 
-- `public int getRenderColor( IBlockState state)`
-- `public int colorMultiplier( IBlockAccess worldIn, BlockPos pos, int renderPass)`
-- `protected void dropApple( World worldIn, BlockPos pos, IBlockState state, int chance)`
-- `protected int getSaplingDropChance( IBlockState state)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > list)`
-- `protected ItemStack createStackedBlock( IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public BlockPlanks.EnumType getWoodType(int meta)`
+- `int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)`
 - `protected BlockState createBlockState()`
-- `public int damageDropped( IBlockState state)`
-- `public void harvestBlock( World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)`
-- `public java.util.List< ItemStack > onSheared( ItemStack item, IBlockAccess world, BlockPos pos, int fortune)`
+- `protected ItemStack createStackedBlock(IBlockState state)`
+- `int damageDropped(IBlockState state)` — Gets the metadata of the item this Block can drop.
+- `protected void dropApple(World worldIn, BlockPos pos, IBlockState state, int chance)`
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `int getRenderColor(IBlockState state)`
+- `protected int getSaplingDropChance(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> list)` — returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+- `BlockPlanks.EnumType getWoodType(int meta)`
+- `void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)`
+- `java.util.List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)` — Performs the shear function on this object.
 
-## Description
+## Fields
 
-Gets the metadata of the item this Block can drop.
+- `static PropertyEnum<BlockPlanks.EnumType> VARIANT`

@@ -1,5 +1,7 @@
 # I18n
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.I18n
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class I18n extends java.lang.Object
 
 ## Constructors
 
-- `public I18n()`
+- `I18n()`
 
 ## Methods
 
-- `public static java.lang.String format(java.lang.String translateKey, java.lang.Object... parameters)`
-- `public static boolean hasKey(java.lang.String key)`
+- `static java.lang.String format(java.lang.String translateKey, java.lang.Object... parameters)`
+- `static boolean hasKey(java.lang.String key)`

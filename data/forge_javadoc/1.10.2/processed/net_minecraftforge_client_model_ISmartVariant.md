@@ -8,4 +8,4 @@ public interface ISmartVariant
 
 ## Methods
 
-- `IModel process( IModel base)`
+- `IModel process(IModel base)`

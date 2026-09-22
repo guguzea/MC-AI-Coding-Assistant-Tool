@@ -8,36 +8,32 @@ public interface IConfigElement
 
 ## Methods
 
-- `boolean isProperty()`
-- `java.lang.Class<? extends GuiConfigEntries.IConfigEntry > getConfigEntryClass()`
-- `java.lang.Class<? extends GuiEditArrayEntries.IArrayEntry > getArrayEntryClass()`
-- `java.lang.String getName()`
-- `java.lang.String getQualifiedName()`
-- `java.lang.String getLanguageKey()`
-- `java.lang.String getComment()`
-- `java.util.List< IConfigElement > getChildElements()`
-- `ConfigGuiType getType()`
-- `boolean isList()`
-- `boolean isListLengthFixed()`
-- `int getMaxListLength()`
-- `boolean isDefault()`
-- `java.lang.Object getDefault()`
-- `java.lang.Object[] getDefaults()`
-- `void setToDefault()`
-- `boolean requiresWorldRestart()`
-- `boolean showInGui()`
-- `boolean requiresMcRestart()`
-- `java.lang.Object get()`
-- `java.lang.Object[] getList()`
-- `void set(java.lang.Object value)`
-- `void set(java.lang.Object[] aVal)`
-- `java.lang.String[] getValidValues()`
-- `default java.lang.String[] getValidValuesDisplay()`
-- `java.lang.Object getMinValue()`
-- `java.lang.Object getMaxValue()`
-- `java.util.regex.Pattern getValidationPattern()`
+- `java.lang.Object get()` — [Property] Gets this property value.
+- `java.lang.Class<? extends GuiEditArrayEntries.IArrayEntry> getArrayEntryClass()` — This method returns a class that implements GuiEditArrayEntries.IArrayEntry .
+- `java.util.List<IConfigElement> getChildElements()` — [Category] Gets this category's child categories/properties.
+- `java.lang.String getComment()` — [Property, Category] Gets the comment for this object.
+- `java.lang.Class<? extends GuiConfigEntries.IConfigEntry> getConfigEntryClass()` — This method returns a class that implements GuiConfigEntries.IConfigEntry or null.
+- `java.lang.Object getDefault()` — [Property] Gets this property's default value.
+- `java.lang.Object[] getDefaults()` — [Property] Gets this property's default values.
+- `java.lang.String getLanguageKey()` — [Property, Category] Gets a language key for localization of config GUI entry names.
+- `java.lang.Object[] getList()` — [Property] Gets this property value as a list.
+- `int getMaxListLength()` — [Property] Gets the max length of this list property, or -1 if the length is unlimited.
+- `java.lang.Object getMaxValue()` — [Property] Gets this property's maximum value.
+- `java.lang.Object getMinValue()` — [Property] Gets this property's minimum value.
+- `java.lang.String getName()` — [Property, Category] Gets the name of this object.
+- `java.lang.String getQualifiedName()` — [Category] Gets the qualified name of this object.
+- `ConfigGuiType getType()` — [Property, Category] Gets the ConfigGuiType value corresponding to the type of this property object, or CONFIG_CATEGORY if this is a category object.
+- `java.util.regex.Pattern getValidationPattern()` — [Property] Gets a Pattern object used in String property input validation.
+- `java.lang.String[] getValidValues()` — [Property] Gets a String array of valid values for this property.
+- `default java.lang.String[] getValidValuesDisplay()` — [Property] Gets a String array of the versions of this property's valid values that will display in the config GUI.
 - `default boolean hasSlidingControl()`
-
-## Description
-
-This interface provides the information needed by GuiConfig and GuiConfigEntries to display config elements for editing.
+- `boolean isDefault()` — [Property] Is this property value equal to the default value?
+- `boolean isList()` — [Property] Is this property object a list?
+- `boolean isListLengthFixed()` — [Property] Does this list property have to remain a fixed length?
+- `boolean isProperty()` — [Property, Category] Is this object a property object?
+- `boolean requiresMcRestart()` — [Property, Category] Whether or not this element requires Minecraft to be restarted when changed.
+- `boolean requiresWorldRestart()` — [Property, Category] Whether or not this element is safe to modify while a world is running.
+- `void set(java.lang.Object value)` — [Property] Sets this property's value.
+- `void set(java.lang.Object[] aVal)` — [Property] Sets this property's value to the specified array.
+- `void setToDefault()` — [Property] Sets this property's value to the default value.
+- `boolean showInGui()` — [Property, Category] Whether or not this element should be allowed to show on config GUIs.

@@ -1,19 +1,21 @@
 # SPacketPlayerListHeaderFooter
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketPlayerListHeaderFooter
+
 ## Class signature
 
 ```java
-public class SPacketPlayerListHeaderFooter extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketPlayerListHeaderFooter extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketPlayerListHeaderFooter()`
+- `SPacketPlayerListHeaderFooter()`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public ITextComponent getHeader()`
-- `public ITextComponent getFooter()`
+- `ITextComponent getFooter()`
+- `ITextComponent getHeader()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

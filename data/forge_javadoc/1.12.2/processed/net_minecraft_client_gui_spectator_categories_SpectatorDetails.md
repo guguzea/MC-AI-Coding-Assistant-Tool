@@ -1,5 +1,7 @@
 # SpectatorDetails
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.spectator.categories.SpectatorDetails
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class SpectatorDetails extends java.lang.Object
 
 ## Constructors
 
-- `public SpectatorDetails( ISpectatorMenuView categoryIn, java.util.List< ISpectatorMenuObject > itemsIn, int selectedIndex)`
+- `SpectatorDetails(ISpectatorMenuView categoryIn, java.util.List<ISpectatorMenuObject> itemsIn, int selectedIndex)`
 
 ## Methods
 
-- `public ISpectatorMenuObject getObject(int index)`
-- `public int getSelectedSlot()`
+- `ISpectatorMenuObject getObject(int index)`
+- `int getSelectedSlot()`

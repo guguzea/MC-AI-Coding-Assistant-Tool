@@ -1,12 +1,20 @@
 # LanServerDetector.LanServerList
 
+**Inheritance:** java.lang.Object → net.minecraft.client.network.LanServerDetector.LanServerList
+
+## Class signature
+
+```java
+public static class LanServerDetector.LanServerList extends java.lang.Object
+```
+
 ## Constructors
 
-- `public LanServerList()`
+- `LanServerList()`
 
 ## Methods
 
-- `public boolean getWasUpdated()`
-- `public void setWasNotUpdated()`
-- `public java.util.List< LanServerInfo > getLanServers()`
-- `public void addServer(java.lang.String pingResponse, java.net.InetAddress ipAddress)`
+- `void addServer(java.lang.String pingResponse, java.net.InetAddress ipAddress)`
+- `java.util.List<LanServerInfo> getLanServers()`
+- `boolean getWasUpdated()`
+- `void setWasNotUpdated()`

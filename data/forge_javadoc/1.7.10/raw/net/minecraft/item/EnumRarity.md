@@ -1,25 +1,30 @@
 ---
 title: "EnumRarity"
-description: "Returns the enum constant of this type with the specified name."
+description: "public enum EnumRarity extends java.lang.Enum<EnumRarity>"
 package: "net/minecraft/item"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/item/EnumRarity.html"
 sourceType: javadoc
 ---
 
 # EnumRarity
 
+**Inheritance:** java.lang.Object → java.lang.Enum<EnumRarity> → net.minecraft.item.EnumRarity
+
 ## Class signature
 
 ```java
-public enum EnumRarity extends java.lang.Enum< EnumRarity >
+public enum EnumRarity extends java.lang.Enum<EnumRarity>
 ```
 
 ## Methods
 
-- `public static EnumRarity [] values()`
-- `public static EnumRarity valueOf(java.lang.String name)`
+- `static EnumRarity valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static EnumRarity [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.
 
-## Description
+## Fields
 
-Returns the enum constant of this type with the specified name.
+- `EnumChatFormatting rarityColor`
+- `java.lang.String rarityName`

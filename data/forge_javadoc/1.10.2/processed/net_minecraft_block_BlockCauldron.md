@@ -1,5 +1,7 @@
 # BlockCauldron
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockCauldron
+
 ## Class signature
 
 ```java
@@ -8,23 +10,32 @@ public class BlockCauldron extends Block
 
 ## Constructors
 
-- `public BlockCauldron()`
+- `BlockCauldron()`
 
 ## Methods
 
-- `public void addCollisionBoxToList( IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List< AxisAlignedBB > collidingBoxes, @Nullable Entity entityIn)`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public void setWaterLevel( World worldIn, BlockPos pos, IBlockState state, int level)`
-- `public void fillWithRain( World worldIn, BlockPos pos)`
-- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean hasComparatorInputOverride( IBlockState state)`
-- `public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List<AxisAlignedBB> collidingBoxes, Entity entityIn)`
 - `protected BlockStateContainer createBlockState()`
-- `public boolean isPassable( IBlockAccess worldIn, BlockPos pos)`
+- `void fillWithRain(World worldIn, BlockPos pos)`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `boolean hasComparatorInputOverride(IBlockState state)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `boolean isPassable(IBlockAccess worldIn, BlockPos pos)`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
+- `void setWaterLevel(World worldIn, BlockPos pos, IBlockState state, int level)`
+
+## Fields
+
+- `protected static AxisAlignedBB AABB_LEGS`
+- `protected static AxisAlignedBB AABB_WALL_EAST`
+- `protected static AxisAlignedBB AABB_WALL_NORTH`
+- `protected static AxisAlignedBB AABB_WALL_SOUTH`
+- `protected static AxisAlignedBB AABB_WALL_WEST`
+- `static PropertyInteger LEVEL`

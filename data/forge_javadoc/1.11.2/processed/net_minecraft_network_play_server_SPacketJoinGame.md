@@ -1,26 +1,28 @@
 # SPacketJoinGame
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketJoinGame
+
 ## Class signature
 
 ```java
-public class SPacketJoinGame extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketJoinGame extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketJoinGame()`
-- `public SPacketJoinGame(int playerIdIn, GameType gameTypeIn, boolean hardcoreModeIn, int dimensionIn, EnumDifficulty difficultyIn, int maxPlayersIn, WorldType worldTypeIn, boolean reducedDebugInfoIn)`
+- `SPacketJoinGame()`
+- `SPacketJoinGame(int playerIdIn, GameType gameTypeIn, boolean hardcoreModeIn, int dimensionIn, EnumDifficulty difficultyIn, int maxPlayersIn, WorldType worldTypeIn, boolean reducedDebugInfoIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getPlayerId()`
-- `public boolean isHardcoreMode()`
-- `public GameType getGameType()`
-- `public int getDimension()`
-- `public EnumDifficulty getDifficulty()`
-- `public int getMaxPlayers()`
-- `public WorldType getWorldType()`
-- `public boolean isReducedDebugInfo()`
+- `EnumDifficulty getDifficulty()`
+- `int getDimension()`
+- `GameType getGameType()`
+- `int getMaxPlayers()`
+- `int getPlayerId()`
+- `WorldType getWorldType()`
+- `boolean isHardcoreMode()`
+- `boolean isReducedDebugInfo()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

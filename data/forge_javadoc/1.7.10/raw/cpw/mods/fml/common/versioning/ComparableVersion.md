@@ -1,32 +1,32 @@
 ---
 title: "ComparableVersion"
-description: "Generic implementation of version comparison. Features: mixing of ' - ' (dash) and ' . ' (dot) separators, transition between characters and digits also constitutes a separator: 1.0alpha1 => [1, 0, al"
+description: "public class ComparableVersion extends java.lang.Object implements java.lang.Comparable<ComparableVersion>"
 package: "cpw/mods/fml/common/versioning"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/versioning/ComparableVersion.html"
 sourceType: javadoc
 ---
 
 # ComparableVersion
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.versioning.ComparableVersion
+
 ## Class signature
 
 ```java
-public class ComparableVersion extends java.lang.Object implements java.lang.Comparable< ComparableVersion >
+public class ComparableVersion extends java.lang.Object implements java.lang.Comparable<ComparableVersion>
 ```
 
 ## Constructors
 
-- `public ComparableVersion(java.lang.String version)`
+- `ComparableVersion(java.lang.String version)`
 
 ## Methods
 
-- `public final void parseVersion(java.lang.String version)`
-- `public int compareTo( ComparableVersion o)`
-- `public java.lang.String toString()`
-- `public boolean equals(java.lang.Object o)`
-- `public int hashCode()`
-
-## Description
-
-Generic implementation of version comparison. Features: mixing of ' - ' (dash) and ' . ' (dot) separators, transition between characters and digits also constitutes a separator: 1.0alpha1 => [1, 0, al
+- `int compareTo(ComparableVersion o)`
+- `boolean equals(java.lang.Object o)`
+- `int hashCode()`
+- `void parseVersion(java.lang.String version)`
+- `java.lang.String toString()`

@@ -1,5 +1,7 @@
 # PlayerControllerMP
 
+**Inheritance:** java.lang.Object → net.minecraft.client.multiplayer.PlayerControllerMP
+
 ## Class signature
 
 ```java
@@ -8,40 +10,40 @@ public class PlayerControllerMP extends java.lang.Object
 
 ## Constructors
 
-- `public PlayerControllerMP( Minecraft mcIn, NetHandlerPlayClient netHandler)`
+- `PlayerControllerMP(Minecraft mcIn, NetHandlerPlayClient netHandler)`
 
 ## Methods
 
-- `public static void clickBlockCreative( Minecraft mcIn, PlayerControllerMP playerController, BlockPos pos, EnumFacing facing)`
-- `public void setPlayerCapabilities( EntityPlayer player)`
-- `public boolean isSpectator()`
-- `public void setGameType( GameType type)`
-- `public void flipPlayer( EntityPlayer playerIn)`
-- `public boolean shouldDrawHUD()`
-- `public boolean onPlayerDestroyBlock( BlockPos pos)`
-- `public boolean clickBlock( BlockPos loc, EnumFacing face)`
-- `public void resetBlockRemoving()`
-- `public boolean onPlayerDamageBlock( BlockPos posBlock, EnumFacing directionFacing)`
-- `public float getBlockReachDistance()`
-- `public void updateController()`
-- `public EnumActionResult processRightClickBlock( EntityPlayerSP player, WorldClient worldIn, BlockPos pos, EnumFacing direction, Vec3d vec, EnumHand hand)`
-- `public EnumActionResult processRightClick( EntityPlayer player, World worldIn, EnumHand hand)`
-- `public EntityPlayerSP createPlayer( World p_192830_1_, StatisticsManager p_192830_2_, RecipeBook p_192830_3_)`
-- `public void attackEntity( EntityPlayer playerIn, Entity targetEntity)`
-- `public EnumActionResult interactWithEntity( EntityPlayer player, Entity target, EnumHand hand)`
-- `public EnumActionResult interactWithEntity( EntityPlayer player, Entity target, RayTraceResult ray, EnumHand hand)`
-- `public ItemStack windowClick(int windowId, int slotId, int mouseButton, ClickType type, EntityPlayer player)`
-- `public void func_194338_a(int p_194338_1_, IRecipe p_194338_2_, boolean p_194338_3_, EntityPlayer p_194338_4_)`
-- `public void sendEnchantPacket(int windowID, int button)`
-- `public void sendSlotPacket( ItemStack itemStackIn, int slotId)`
-- `public void sendPacketDropItem( ItemStack itemStackIn)`
-- `public void onStoppedUsingItem( EntityPlayer playerIn)`
-- `public boolean gameIsSurvivalOrAdventure()`
-- `public boolean isNotCreative()`
-- `public boolean isInCreativeMode()`
-- `public boolean extendedReach()`
-- `public boolean isRidingHorse()`
-- `public boolean isSpectatorMode()`
-- `public GameType getCurrentGameType()`
-- `public boolean getIsHittingBlock()`
-- `public void pickItem(int index)`
+- `void attackEntity(EntityPlayer playerIn, Entity targetEntity)`
+- `boolean clickBlock(BlockPos loc, EnumFacing face)`
+- `static void clickBlockCreative(Minecraft mcIn, PlayerControllerMP playerController, BlockPos pos, EnumFacing facing)`
+- `EntityPlayerSP createPlayer(World p_192830_1_, StatisticsManager p_192830_2_, RecipeBook p_192830_3_)`
+- `boolean extendedReach()`
+- `void flipPlayer(EntityPlayer playerIn)`
+- `void func_194338_a(int p_194338_1_, IRecipe p_194338_2_, boolean p_194338_3_, EntityPlayer p_194338_4_)`
+- `boolean gameIsSurvivalOrAdventure()`
+- `float getBlockReachDistance()`
+- `GameType getCurrentGameType()`
+- `boolean getIsHittingBlock()`
+- `EnumActionResult interactWithEntity(EntityPlayer player, Entity target, EnumHand hand)`
+- `EnumActionResult interactWithEntity(EntityPlayer player, Entity target, RayTraceResult ray, EnumHand hand)`
+- `boolean isInCreativeMode()`
+- `boolean isNotCreative()`
+- `boolean isRidingHorse()`
+- `boolean isSpectator()`
+- `boolean isSpectatorMode()`
+- `boolean onPlayerDamageBlock(BlockPos posBlock, EnumFacing directionFacing)`
+- `boolean onPlayerDestroyBlock(BlockPos pos)`
+- `void onStoppedUsingItem(EntityPlayer playerIn)`
+- `void pickItem(int index)`
+- `EnumActionResult processRightClick(EntityPlayer player, World worldIn, EnumHand hand)`
+- `EnumActionResult processRightClickBlock(EntityPlayerSP player, WorldClient worldIn, BlockPos pos, EnumFacing direction, Vec3d vec, EnumHand hand)`
+- `void resetBlockRemoving()`
+- `void sendEnchantPacket(int windowID, int button)`
+- `void sendPacketDropItem(ItemStack itemStackIn)`
+- `void sendSlotPacket(ItemStack itemStackIn, int slotId)`
+- `void setGameType(GameType type)`
+- `void setPlayerCapabilities(EntityPlayer player)`
+- `boolean shouldDrawHUD()`
+- `void updateController()`
+- `ItemStack windowClick(int windowId, int slotId, int mouseButton, ClickType type, EntityPlayer player)`

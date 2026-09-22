@@ -3,11 +3,15 @@ title: "InventoryPlayer"
 description: "public class InventoryPlayer extends java.lang.Object implements IInventory"
 package: "net/minecraft/entity/player"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/player/InventoryPlayer.html"
 sourceType: javadoc
 ---
 
 # InventoryPlayer
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.player.InventoryPlayer
 
 ## Class signature
 
@@ -17,56 +21,64 @@ public class InventoryPlayer extends java.lang.Object implements IInventory
 
 ## Constructors
 
-- `public InventoryPlayer( EntityPlayer playerIn)`
+- `InventoryPlayer(EntityPlayer playerIn)`
 
 ## Methods
 
-- `public ItemStack getCurrentItem()`
-- `public static int getHotbarSize()`
-- `public int getFirstEmptyStack()`
-- `public void setPickedItemStack( ItemStack stack)`
-- `public void pickItem(int index)`
-- `public static boolean isHotbar(int index)`
-- `public int getSlotFor( ItemStack stack)`
-- `public int findSlotMatchingUnusedItem( ItemStack p_194014_1_)`
-- `public int getBestHotbarSlot()`
-- `public void changeCurrentItem(int direction)`
-- `public int clearMatchingItems( Item itemIn, int metadataIn, int removeCount, NBTTagCompound itemNBT)`
-- `public int storeItemStack( ItemStack itemStackIn)`
-- `public void decrementAnimations()`
-- `public boolean addItemStackToInventory( ItemStack itemStackIn)`
-- `public boolean add(int p_191971_1_, ItemStack p_191971_2_)`
-- `public void placeItemBackInInventory( World p_191975_1_, ItemStack p_191975_2_)`
-- `public ItemStack decrStackSize(int index, int count)`
-- `public void deleteStack( ItemStack stack)`
-- `public ItemStack removeStackFromSlot(int index)`
-- `public void setInventorySlotContents(int index, ItemStack stack)`
-- `public float getDestroySpeed( IBlockState state)`
-- `public NBTTagList writeToNBT( NBTTagList nbtTagListIn)`
-- `public void readFromNBT( NBTTagList nbtTagListIn)`
-- `public int getSizeInventory()`
-- `public boolean isEmpty()`
-- `public ItemStack getStackInSlot(int index)`
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public ITextComponent getDisplayName()`
-- `public int getInventoryStackLimit()`
-- `public boolean canHarvestBlock( IBlockState state)`
-- `public ItemStack armorItemInSlot(int slotIn)`
-- `public void damageArmor(float damage)`
-- `public void dropAllItems()`
-- `public void markDirty()`
-- `public int getTimesChanged()`
-- `public void setItemStack( ItemStack itemStackIn)`
-- `public ItemStack getItemStack()`
-- `public boolean isUsableByPlayer( EntityPlayer player)`
-- `public boolean hasItemStack( ItemStack itemStackIn)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public boolean isItemValidForSlot(int index, ItemStack stack)`
-- `public void copyInventory( InventoryPlayer playerInventory)`
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public int getFieldCount()`
-- `public void clear()`
-- `public void fillStackedContents( RecipeItemHelper helper, boolean p_194016_2_)`
+- `boolean add(int p_191971_1_, ItemStack p_191971_2_)`
+- `boolean addItemStackToInventory(ItemStack itemStackIn)`
+- `ItemStack armorItemInSlot(int slotIn)`
+- `boolean canHarvestBlock(IBlockState state)`
+- `void changeCurrentItem(int direction)`
+- `void clear()`
+- `int clearMatchingItems(Item itemIn, int metadataIn, int removeCount, NBTTagCompound itemNBT)`
+- `void closeInventory(EntityPlayer player)`
+- `void copyInventory(InventoryPlayer playerInventory)`
+- `void damageArmor(float damage)`
+- `void decrementAnimations()`
+- `ItemStack decrStackSize(int index, int count)`
+- `void deleteStack(ItemStack stack)`
+- `void dropAllItems()`
+- `void fillStackedContents(RecipeItemHelper helper, boolean p_194016_2_)`
+- `int findSlotMatchingUnusedItem(ItemStack p_194014_1_)`
+- `int getBestHotbarSlot()`
+- `ItemStack getCurrentItem()`
+- `float getDestroySpeed(IBlockState state)`
+- `ITextComponent getDisplayName()`
+- `int getField(int id)`
+- `int getFieldCount()`
+- `int getFirstEmptyStack()`
+- `static int getHotbarSize()`
+- `int getInventoryStackLimit()`
+- `ItemStack getItemStack()`
+- `java.lang.String getName()`
+- `int getSizeInventory()`
+- `int getSlotFor(ItemStack stack)`
+- `ItemStack getStackInSlot(int index)`
+- `int getTimesChanged()`
+- `boolean hasCustomName()`
+- `boolean hasItemStack(ItemStack itemStackIn)`
+- `boolean isEmpty()`
+- `static boolean isHotbar(int index)`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isUsableByPlayer(EntityPlayer player)`
+- `void markDirty()`
+- `void openInventory(EntityPlayer player)`
+- `void pickItem(int index)`
+- `void placeItemBackInInventory(World p_191975_1_, ItemStack p_191975_2_)`
+- `void readFromNBT(NBTTagList nbtTagListIn)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`
+- `void setItemStack(ItemStack itemStackIn)`
+- `void setPickedItemStack(ItemStack stack)`
+- `int storeItemStack(ItemStack itemStackIn)`
+- `NBTTagList writeToNBT(NBTTagList nbtTagListIn)`
+
+## Fields
+
+- `NonNullList<ItemStack> armorInventory`
+- `int currentItem`
+- `NonNullList<ItemStack> mainInventory`
+- `NonNullList<ItemStack> offHandInventory`
+- `EntityPlayer player`

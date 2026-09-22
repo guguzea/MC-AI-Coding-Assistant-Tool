@@ -1,13 +1,17 @@
 ---
 title: "World"
-description: "Handles chunk operations and caching"
+description: "public abstract class World extends java.lang.Object implements IBlockAccess"
 package: "net/minecraft/world"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/World.html"
 sourceType: javadoc
 ---
 
 # World
+
+**Inheritance:** java.lang.Object → net.minecraft.world.World
 
 ## Class signature
 
@@ -17,131 +21,274 @@ public abstract class World extends java.lang.Object implements IBlockAccess
 
 ## Constructors
 
-- `protected World( ISaveHandler saveHandlerIn, WorldInfo info, WorldProvider providerIn, Profiler profilerIn, boolean client)`
+- `World(ISaveHandler saveHandlerIn, WorldInfo info, WorldProvider providerIn, Profiler profilerIn, boolean client)`
 
 ## Methods
 
-- `public World init()`
-- `public BiomeGenBase getBiomeGenForCoords( BlockPos pos)`
-- `public BiomeGenBase getBiomeGenForCoordsBody( BlockPos pos)`
-- `public WorldChunkManager getWorldChunkManager()`
-- `protected abstract IChunkProvider createChunkProvider()`
-- `public void initialize( WorldSettings settings)`
-- `public void setInitialSpawnLocation()`
-- `public Block getGroundAboveSeaLevel( BlockPos pos)`
-- `public boolean isAirBlock( BlockPos pos)`
-- `public boolean isBlockLoaded( BlockPos pos)`
-- `public boolean isBlockLoaded( BlockPos pos, boolean allowEmpty)`
-- `public boolean isAreaLoaded( BlockPos center, int radius)`
-- `public boolean isAreaLoaded( BlockPos center, int radius, boolean allowEmpty)`
-- `public boolean isAreaLoaded( BlockPos from, BlockPos to)`
-- `public boolean isAreaLoaded( BlockPos from, BlockPos to, boolean allowEmpty)`
-- `public boolean isAreaLoaded( StructureBoundingBox box)`
-- `public boolean isAreaLoaded( StructureBoundingBox box, boolean allowEmpty)`
+- `void addBlockEvent(BlockPos pos, Block blockIn, int eventID, int eventParam)`
+- `void addTileEntities(java.util.Collection<TileEntity> tileEntityCollection)`
+- `boolean addTileEntity(TileEntity tile)`
+- `boolean addWeatherEffect(Entity entityIn)` — adds a lightning bolt to the list of lightning bolts in this world.
+- `void addWorldAccess(IWorldAccess worldAccess)` — Adds a IWorldAccess to the list of worldAccesses
+- `CrashReportCategory addWorldInfoToCrashReport(CrashReport report)` — Adds some basic stats of the world to the given crash report.
+- `void calculateInitialSkylight()` — Called on construction of the World class to setup the initial skylight values
+- `protected void calculateInitialWeather()` — Called from World constructor to set rainingStrength and thunderingStrength
+- `void calculateInitialWeatherBody()`
+- `int calculateSkylightSubtracted(float p_72967_1_)` — Returns the amount of skylight subtracted for the current time
+- `boolean canBlockBePlaced(Block blockIn, BlockPos pos, boolean p_175716_3_, EnumFacing side, Entity entityIn, ItemStack itemStackIn)`
+- `boolean canBlockFreeze(BlockPos pos, boolean noWaterAdj)` — Checks to see if a given block is both water and cold enough to freeze.
+- `boolean canBlockFreezeBody(BlockPos pos, boolean noWaterAdj)`
+- `boolean canBlockFreezeNoWater(BlockPos pos)`
+- `boolean canBlockFreezeWater(BlockPos pos)`
+- `boolean canBlockSeeSky(BlockPos pos)`
+- `boolean canLightningStrike(BlockPos strikePosition)`
+- `boolean canMineBlockBody(EntityPlayer player, BlockPos pos)`
+- `boolean canSeeSky(BlockPos pos)`
+- `boolean canSnowAt(BlockPos pos, boolean checkLight)` — Checks to see if a given block can accumulate snow from it snowing
+- `boolean canSnowAtBody(BlockPos pos, boolean checkLight)`
+- `boolean checkBlockCollision(AxisAlignedBB bb)` — Returns true if there are any blocks in the region constrained by an AxisAlignedBB
+- `boolean checkLight(BlockPos pos)`
+- `boolean checkLightFor(EnumSkyBlock lightType, BlockPos pos)`
+- `boolean checkNoEntityCollision(AxisAlignedBB bb)` — Returns true if there are no solid, live entities in the specified AxisAlignedBB
+- `boolean checkNoEntityCollision(AxisAlignedBB bb, Entity entityIn)` — Returns true if there are no solid, live entities in the specified AxisAlignedBB, excluding the given entity
+- `void checkSessionLock()` — Checks whether the session lock file was modified by another process
+- `int countEntities(java.lang.Class<?> entityType)` — Counts how many entities of an entity class exist in the world.
+- `int countEntities(EnumCreatureType type, boolean forSpawnCount)` — Returns a count of entities that classify themselves as the specified creature type.
+- `protected abstract IChunkProvider createChunkProvider()` — Creates the chunk provider for this world.
+- `Explosion createExplosion(Entity entityIn, double x, double y, double z, float strength, boolean isSmoking)` — Creates an explosion.
+- `boolean destroyBlock(BlockPos pos, boolean dropBlock)` — Sets a block to air, but also plays the sound and particles and can spawn drops
+- `static boolean doesBlockHaveSolidTopSurface(IBlockAccess blockAccess, BlockPos pos)`
+- `Vec3 drawCloudsBody(float partialTicks)`
+- `boolean extendedLevelsInChunkCache()` — set by !
+- `boolean extinguishFire(EntityPlayer player, BlockPos pos, EnumFacing side)` — Attempts to extinguish a fire
+- `<T extends Entity> T findNearestEntityWithinAABB(java.lang.Class<? extends T> entityType, AxisAlignedBB aabb, T closestTo)`
+- `void forceBlockUpdateTick(Block blockType, BlockPos pos, java.util.Random random)`
+- `java.util.List<AxisAlignedBB> func_147461_a(AxisAlignedBB bb)`
+- `java.util.List<NextTickListEntry> func_175712_a(StructureBoundingBox structureBB, boolean p_175712_2_)`
+- `int getActualHeight()` — Returns current world height.
+- `BiomeGenBase getBiomeGenForCoords(BlockPos pos)`
+- `BiomeGenBase getBiomeGenForCoordsBody(BlockPos pos)`
+- `float getBlockDensity(Vec3 vec, AxisAlignedBB bb)` — Gets the percentage of real blocks within within a bounding box, along a specified vector.
+- `int getBlockLightOpacity(BlockPos pos)` — Readded as it was removed, very useful helper function
+- `IBlockState getBlockState(BlockPos pos)`
+- `float getCelestialAngle(float partialTicks)` — calls calculateCelestialAngle
+- `float getCelestialAngleRadians(float partialTicks)` — Return getCelestialAngle()*2*PI
+- `Chunk getChunkFromBlockCoords(BlockPos pos)`
+- `Chunk getChunkFromChunkCoords(int chunkX, int chunkZ)` — Returns back a chunk looked up by chunk coordinates Args: x, y
+- `IChunkProvider getChunkProvider()` — gets the world's chunk provider
+- `int getChunksLowestHorizon(int x, int z)` — Gets the lowest height of the chunk where sunlight directly reaches
+- `EntityPlayer getClosestPlayer(double x, double y, double z, double distance)` — Gets the closest player to the point within the specified distance (distance can be set to less than 0 to not limit the distance).
+- `EntityPlayer getClosestPlayerToEntity(Entity entityIn, double distance)` — Gets the closest player to the entity within the specified distance (if distance is less than 0 then ignored).
+- `Vec3 getCloudColour(float partialTicks)`
+- `java.util.List<AxisAlignedBB> getCollidingBoundingBoxes(Entity entityIn, AxisAlignedBB bb)`
+- `int getCombinedLight(BlockPos pos, int lightValue)`
+- `java.util.Calendar getCurrentDate()` — returns a calendar object containing the current date
+- `float getCurrentMoonPhaseFactor()` — gets the current fullness of the moon expressed as a float between 1.0 and 0.0, in steps of .25
+- `float getCurrentMoonPhaseFactorBody()`
+- `java.lang.String getDebugLoadedEntities()` — This string is 'All: (number of loaded entities)' Viewable by press ing F3
+- `EnumDifficulty getDifficulty()`
+- `DifficultyInstance getDifficultyForLocation(BlockPos pos)`
+- `<T extends Entity> java.util.List<T> getEntities(java.lang.Class<? extends T> entityType, <any> filter)`
+- `java.util.List<Entity> getEntitiesInAABBexcluding(Entity entityIn, AxisAlignedBB boundingBox, <any> predicate)`
+- `<T extends Entity> java.util.List<T> getEntitiesWithinAABB(java.lang.Class<? extends T> classEntity, AxisAlignedBB bb)`
+- `<T extends Entity> java.util.List<T> getEntitiesWithinAABB(java.lang.Class<? extends T> clazz, AxisAlignedBB aabb, <any> filter)`
+- `java.util.List<Entity> getEntitiesWithinAABBExcludingEntity(Entity entityIn, AxisAlignedBB bb)`
+- `Entity getEntityByID(int id)` — Returns the Entity with the given ID, or null if it doesn't exist in this World.
+- `Vec3 getFogColor(float partialTicks)` — Returns vector(ish) with R/G/B for fog
+- `GameRules getGameRules()` — Gets the GameRules instance.
+- `Block getGroundAboveSeaLevel(BlockPos pos)`
+- `int getHeight()` — Returns maximum world height.
+- `BlockPos getHeight(BlockPos pos)` — Returns the position at this x, z coordinate in the chunk with y set to the value from the height map.
+- `double getHorizon()` — Returns horizon height for use in rendering the sky.
+- `int getLastLightningBolt()`
+- `int getLight(BlockPos pos)`
+- `int getLight(BlockPos pos, boolean checkNeighbors)`
+- `float getLightBrightness(BlockPos pos)`
+- `int getLightFor(EnumSkyBlock type, BlockPos pos)`
+- `int getLightFromNeighbors(BlockPos pos)`
+- `int getLightFromNeighborsFor(EnumSkyBlock type, BlockPos pos)`
+- `java.util.List<Entity> getLoadedEntityList()`
+- `MapStorage getMapStorage()`
+- `int getMoonPhase()`
+- `java.util.List<NextTickListEntry> getPendingBlockUpdates(Chunk chunkIn, boolean p_72920_2_)`
+- `<any> getPersistentChunks()` — Get the persistent chunks for this world
+- `MapStorage getPerWorldStorage()`
+- `EntityPlayer getPlayerEntityByName(java.lang.String name)` — Find a player by name in this world.
+- `EntityPlayer getPlayerEntityByUUID(java.util.UUID uuid)`
+- `<T extends Entity> java.util.List<T> getPlayers(java.lang.Class<? extends T> playerType, <any> filter)`
+- `BlockPos getPrecipitationHeight(BlockPos pos)`
+- `java.lang.String getProviderName()` — Returns the name of the current chunk provider, by calling chunkprovider.makeString()
+- `float getRainStrength(float delta)` — Returns rain strength.
+- `int getRedstonePower(BlockPos pos, EnumFacing facing)`
+- `protected abstract int getRenderDistanceChunks()`
+- `ISaveHandler getSaveHandler()` — Returns this world's current save handler
+- `Scoreboard getScoreboard()`
+- `int getSeaLevel()`
+- `long getSeed()` — gets the random world seed
+- `Vec3 getSkyColor(Entity entityIn, float partialTicks)` — Calculates the color for the skybox
+- `Vec3 getSkyColorBody(Entity entityIn, float partialTicks)`
+- `int getSkylightSubtracted()`
+- `BlockPos getSpawnPoint()` — Gets the spawn point in the world
+- `float getStarBrightness(float partialTicks)` — How bright are stars in the sky
+- `float getStarBrightnessBody(float partialTicks)`
+- `BlockPos getStrongholdPos(java.lang.String name, BlockPos pos)`
+- `int getStrongPower(BlockPos pos)` — Returns the single highest strong power out of all directions using getStrongPower(BlockPos, EnumFacing)
+- `int getStrongPower(BlockPos pos, EnumFacing direction)`
+- `float getSunBrightness(float p_72971_1_)` — Returns the sun brightness - checks time of day, rain and thunder
+- `float getSunBrightnessBody(float p_72971_1_)`
+- `float getSunBrightnessFactor(float p_72967_1_)` — The current sun brightness factor for this dimension. 0.0f means no light at all, and 1.0f means maximum sunlight.
+- `float getThunderStrength(float delta)`
+- `TileEntity getTileEntity(BlockPos pos)`
+- `BlockPos getTopSolidOrLiquidBlock(BlockPos pos)` — Finds the highest block on the x and z coordinate that is solid or liquid, and returns its y coord.
+- `long getTotalWorldTime()`
+- `int getUniqueDataId(java.lang.String key)` — Returns an unique new data id from the MapStorage for the given prefix and saves the idCounts map to the 'idcounts' file.
+- `VillageCollection getVillageCollection()`
+- `WorldBorder getWorldBorder()`
+- `WorldChunkManager getWorldChunkManager()`
+- `WorldInfo getWorldInfo()` — Returns the world's WorldInfo object
+- `long getWorldTime()`
+- `WorldType getWorldType()`
+- `boolean handleMaterialAcceleration(AxisAlignedBB bb, Material materialIn, Entity entityIn)` — handles the acceleration of an object whilst in water.
+- `World init()`
+- `void initialize(WorldSettings settings)`
+- `boolean isAABBInMaterial(AxisAlignedBB bb, Material materialIn)` — checks if the given AABB is in the material given.
+- `boolean isAirBlock(BlockPos pos)` — Checks to see if an air block exists at the provided location.
+- `boolean isAnyLiquid(AxisAlignedBB bb)` — Returns if any of the blocks within the aabb are liquids.
+- `boolean isAnyPlayerWithinRangeAt(double x, double y, double z, double range)`
+- `boolean isAreaLoaded(BlockPos from, BlockPos to)`
+- `boolean isAreaLoaded(BlockPos from, BlockPos to, boolean allowEmpty)`
+- `boolean isAreaLoaded(BlockPos center, int radius)`
+- `boolean isAreaLoaded(BlockPos center, int radius, boolean allowEmpty)`
+- `boolean isAreaLoaded(StructureBoundingBox box)`
+- `boolean isAreaLoaded(StructureBoundingBox box, boolean allowEmpty)`
+- `boolean isBlockFullCube(BlockPos pos)`
+- `int isBlockIndirectlyGettingPowered(BlockPos pos)` — Checks if the specified block or its neighbors are powered by a neighboring block.
+- `boolean isBlockinHighHumidity(BlockPos pos)`
+- `boolean isBlockLoaded(BlockPos pos)`
+- `boolean isBlockLoaded(BlockPos pos, boolean allowEmpty)`
+- `boolean isBlockModifiable(EntityPlayer player, BlockPos pos)`
+- `boolean isBlockNormalCube(BlockPos pos, boolean _default)` — Checks if a block's material is opaque, and that it takes up a full cube
+- `boolean isBlockPowered(BlockPos pos)`
+- `boolean isBlockTickPending(BlockPos pos, Block blockType)`
 - `protected boolean isChunkLoaded(int x, int z, boolean allowEmpty)`
-- `public Chunk getChunkFromBlockCoords( BlockPos pos)`
-- `public Chunk getChunkFromChunkCoords(int chunkX, int chunkZ)`
-- `public boolean setBlockState( BlockPos pos, IBlockState newState, int flags)`
-- `public void markAndNotifyBlock( BlockPos pos, Chunk chunk, IBlockState old, IBlockState new_, int flags)`
-- `public boolean setBlockToAir( BlockPos pos)`
-- `public boolean destroyBlock( BlockPos pos, boolean dropBlock)`
-- `public boolean setBlockState( BlockPos pos, IBlockState state)`
-- `public void markBlockForUpdate( BlockPos pos)`
-- `public void notifyNeighborsRespectDebug( BlockPos pos, Block blockType)`
-- `public void markBlocksDirtyVertical(int x1, int z1, int x2, int z2)`
-- `public void markBlockRangeForRenderUpdate( BlockPos rangeMin, BlockPos rangeMax)`
-- `public void markBlockRangeForRenderUpdate(int x1, int y1, int z1, int x2, int y2, int z2)`
-- `public void notifyNeighborsOfStateChange( BlockPos pos, Block blockType)`
-- `public void notifyNeighborsOfStateExcept( BlockPos pos, Block blockType, EnumFacing skipSide)`
-- `public void notifyBlockOfStateChange( BlockPos pos, Block blockIn)`
-- `public boolean isBlockTickPending( BlockPos pos, Block blockType)`
-- `public boolean canSeeSky( BlockPos pos)`
-- `public boolean canBlockSeeSky( BlockPos pos)`
-- `public int getLight( BlockPos pos)`
-- `public int getLightFromNeighbors( BlockPos pos)`
-- `public int getLight( BlockPos pos, boolean checkNeighbors)`
-- `public BlockPos getHeight( BlockPos pos)`
-- `public int getChunksLowestHorizon(int x, int z)`
-- `public int getLightFor( EnumSkyBlock type, BlockPos pos)`
-- `public int getLightFromNeighborsFor( EnumSkyBlock type, BlockPos pos)`
-- `public void setLightFor( EnumSkyBlock type, BlockPos pos, int lightValue)`
-- `public void notifyLightSet( BlockPos pos)`
-- `public int getCombinedLight( BlockPos pos, int lightValue)`
-- `public float getLightBrightness( BlockPos pos)`
-- `public IBlockState getBlockState( BlockPos pos)`
-- `public boolean isDaytime()`
-- `public MovingObjectPosition rayTraceBlocks( Vec3 p_72933_1_, Vec3 p_72933_2_)`
-- `public MovingObjectPosition rayTraceBlocks( Vec3 start, Vec3 end, boolean stopOnLiquid)`
-- `public MovingObjectPosition rayTraceBlocks( Vec3 vec31, Vec3 vec32, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock)`
-- `public void playSoundAtEntity( Entity entityIn, java.lang.String name, float volume, float pitch)`
-- `public void playSoundToNearExcept( EntityPlayer player, java.lang.String name, float volume, float pitch)`
-- `public void playSoundEffect(double x, double y, double z, java.lang.String soundName, float volume, float pitch)`
-- `public void playSound(double x, double y, double z, java.lang.String soundName, float volume, float pitch, boolean distanceDelay)`
-- `public void playRecord( BlockPos pos, java.lang.String name)`
-- `public void spawnParticle( EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, double xOffset, double yOffset, double zOffset, int... p_175688_14_)`
-- `public void spawnParticle( EnumParticleTypes particleType, boolean p_175682_2_, double xCoord, double yCoord, double zCoord, double xOffset, double yOffset, double zOffset, int... p_175682_15_)`
-- `public boolean addWeatherEffect( Entity entityIn)`
-- `public boolean spawnEntityInWorld( Entity entityIn)`
-- `public void onEntityAdded( Entity entityIn)`
-- `public void onEntityRemoved( Entity entityIn)`
-- `public void removeEntity( Entity entityIn)`
-- `public void removePlayerEntityDangerously( Entity entityIn)`
-- `public void addWorldAccess( IWorldAccess worldAccess)`
-- `public java.util.List< AxisAlignedBB > getCollidingBoundingBoxes( Entity entityIn, AxisAlignedBB bb)`
-- `public boolean isInsideBorder( WorldBorder worldBorderIn, Entity entityIn)`
-- `public java.util.List< AxisAlignedBB > func_147461_a( AxisAlignedBB bb)`
-- `public int calculateSkylightSubtracted(float p_72967_1_)`
-- `public float getSunBrightnessFactor(float p_72967_1_)`
-- `public void removeWorldAccess( IWorldAccess worldAccess)`
-- `public float getSunBrightness(float p_72971_1_)`
-- `public float getSunBrightnessBody(float p_72971_1_)`
-- `public Vec3 getSkyColor( Entity entityIn, float partialTicks)`
-- `public Vec3 getSkyColorBody( Entity entityIn, float partialTicks)`
-- `public float getCelestialAngle(float partialTicks)`
-- `public int getMoonPhase()`
-- `public float getCurrentMoonPhaseFactor()`
-- `public float getCurrentMoonPhaseFactorBody()`
-- `public float getCelestialAngleRadians(float partialTicks)`
-- `public Vec3 getCloudColour(float partialTicks)`
-- `public Vec3 drawCloudsBody(float partialTicks)`
-- `public Vec3 getFogColor(float partialTicks)`
-- `public BlockPos getPrecipitationHeight( BlockPos pos)`
-- `public BlockPos getTopSolidOrLiquidBlock( BlockPos pos)`
-- `public float getStarBrightness(float partialTicks)`
-- `public float getStarBrightnessBody(float partialTicks)`
-- `public void scheduleUpdate( BlockPos pos, Block blockIn, int delay)`
-- `public void updateBlockTick( BlockPos pos, Block blockIn, int delay, int priority)`
-- `public void scheduleBlockUpdate( BlockPos pos, Block blockIn, int delay, int priority)`
-- `public void updateEntities()`
-- `public boolean addTileEntity( TileEntity tile)`
-- `public void addTileEntities(java.util.Collection< TileEntity > tileEntityCollection)`
-- `public void updateEntity( Entity ent)`
-- `public void updateEntityWithOptionalForce( Entity entityIn, boolean forceUpdate)`
-- `public boolean checkNoEntityCollision( AxisAlignedBB bb)`
-- `public boolean checkNoEntityCollision( AxisAlignedBB bb, Entity entityIn)`
-- `public boolean checkBlockCollision( AxisAlignedBB bb)`
-- `public boolean isAnyLiquid( AxisAlignedBB bb)`
-- `public boolean isFlammableWithin( AxisAlignedBB bb)`
-- `public boolean handleMaterialAcceleration( AxisAlignedBB bb, Material materialIn, Entity entityIn)`
-- `public boolean isMaterialInBB( AxisAlignedBB bb, Material materialIn)`
-- `public boolean isAABBInMaterial( AxisAlignedBB bb, Material materialIn)`
-- `public Explosion createExplosion( Entity entityIn, double x, double y, double z, float strength, boolean isSmoking)`
-- `public Explosion newExplosion( Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)`
-- `public float getBlockDensity( Vec3 vec, AxisAlignedBB bb)`
-- `public boolean extinguishFire( EntityPlayer player, BlockPos pos, EnumFacing side)`
-- `public java.lang.String getDebugLoadedEntities()`
-- `public java.lang.String getProviderName()`
-- `public TileEntity getTileEntity( BlockPos pos)`
-- `public void setTileEntity( BlockPos pos, TileEntity tileEntityIn)`
-- `public void removeTileEntity( BlockPos pos)`
-- `public void markTileEntityForRemoval( TileEntity tileEntityIn)`
-- `public boolean isBlockFullCube( BlockPos pos)`
-- `public static boolean doesBlockHaveSolidTopSurface( IBlockAccess blockAccess, BlockPos pos)`
-- `public boolean isBlockNormalCube( BlockPos pos, boolean _default)`
-- `public void calculateInitialSkylight()`
-- `public void setAllowedSpawnTypes(boolean hostile, boolean peaceful)`
-- `public void tick()`
+- `boolean isDaytime()` — Checks whether its daytime by seeing if the light subtracted from the skylight is less than 4
+- `boolean isFindingSpawnPoint()`
+- `boolean isFlammableWithin(AxisAlignedBB bb)`
+- `boolean isInsideBorder(WorldBorder worldBorderIn, Entity entityIn)`
+- `boolean isMaterialInBB(AxisAlignedBB bb, Material materialIn)` — Returns true if the given bounding box contains the given material
+- `boolean isRaining()` — Returns true if the current rain strength is greater than 0.2
+- `boolean isSidePowered(BlockPos pos, EnumFacing side)`
+- `boolean isSideSolid(BlockPos pos, EnumFacing side)` — Determine if the given block is considered solid on the specified side.
+- `boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default)` — Determine if the given block is considered solid on the specified side.
+- `boolean isSpawnChunk(int x, int z)` — Returns true if the chunk is located near the spawn point
+- `boolean isThundering()` — Returns true if the current thunder strength (weighted with the rain strength) is greater than 0.9
+- `void joinEntityInSurroundings(Entity entityIn)` — spwans an entity and loads surrounding chunks
+- `void loadEntities(java.util.Collection<Entity> entityCollection)`
+- `WorldSavedData loadItemData(java.lang.Class<? extends WorldSavedData> clazz, java.lang.String dataID)` — Loads an existing MapDataBase corresponding to the given String id from disk using the MapStorage, instantiating the given Class, or returns null if none such file exists. args: Class to instantiate, String dataid
+- `void makeFireworks(double x, double y, double z, double motionX, double motionY, double motionZ, NBTTagCompound compund)`
+- `void markAndNotifyBlock(BlockPos pos, Chunk chunk, IBlockState old, IBlockState new_, int flags)`
+- `void markBlockForUpdate(BlockPos pos)`
+- `void markBlockRangeForRenderUpdate(BlockPos rangeMin, BlockPos rangeMax)`
+- `void markBlockRangeForRenderUpdate(int x1, int y1, int z1, int x2, int y2, int z2)`
+- `void markBlocksDirtyVertical(int x1, int z1, int x2, int z2)` — marks a vertical line of blocks as dirty
+- `void markChunkDirty(BlockPos pos, TileEntity unusedTileEntity)`
+- `void markTileEntityForRemoval(TileEntity tileEntityIn)` — Adds the specified TileEntity to the pending removal list.
+- `Explosion newExplosion(Entity entityIn, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)` — returns a new explosion.
+- `void notifyBlockOfStateChange(BlockPos pos, Block blockIn)`
+- `void notifyLightSet(BlockPos pos)`
+- `void notifyNeighborsOfStateChange(BlockPos pos, Block blockType)`
+- `void notifyNeighborsOfStateExcept(BlockPos pos, Block blockType, EnumFacing skipSide)`
+- `void notifyNeighborsRespectDebug(BlockPos pos, Block blockType)`
+- `void onEntityAdded(Entity entityIn)`
+- `void onEntityRemoved(Entity entityIn)`
+- `void playAuxSFX(int p_175718_1_, BlockPos pos, int p_175718_3_)`
+- `void playAuxSFXAtEntity(EntityPlayer player, int sfxType, BlockPos pos, int p_180498_4_)`
+- `void playBroadcastSound(int p_175669_1_, BlockPos pos, int p_175669_3_)`
+- `protected void playMoodSoundAndCheckLight(int p_147467_1_, int p_147467_2_, Chunk chunkIn)`
+- `void playRecord(BlockPos pos, java.lang.String name)`
+- `void playSound(double x, double y, double z, java.lang.String soundName, float volume, float pitch, boolean distanceDelay)` — par8 is loudness, all pars passed to minecraftInstance.sndManager.playSound
+- `void playSoundAtEntity(Entity entityIn, java.lang.String name, float volume, float pitch)` — Plays a sound at the entity's position.
+- `void playSoundEffect(double x, double y, double z, java.lang.String soundName, float volume, float pitch)` — Play a sound effect.
+- `void playSoundToNearExcept(EntityPlayer player, java.lang.String name, float volume, float pitch)` — Plays sound to all near players except the player reference given
+- `MovingObjectPosition rayTraceBlocks(Vec3 p_72933_1_, Vec3 p_72933_2_)` — ray traces all blocks, including non-collideable ones
+- `MovingObjectPosition rayTraceBlocks(Vec3 start, Vec3 end, boolean stopOnLiquid)`
+- `MovingObjectPosition rayTraceBlocks(Vec3 vec31, Vec3 vec32, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock)` — Performs a raycast against all blocks in the world.
+- `void removeEntity(Entity entityIn)` — Schedule the entity for removal during the next tick.
+- `void removePlayerEntityDangerously(Entity entityIn)` — Do NOT use this method to remove normal entities- use normal removeEntity
+- `void removeTileEntity(BlockPos pos)`
+- `void removeWorldAccess(IWorldAccess worldAccess)` — Removes a worldAccess from the worldAccesses object
+- `void scheduleBlockUpdate(BlockPos pos, Block blockIn, int delay, int priority)`
+- `void scheduleUpdate(BlockPos pos, Block blockIn, int delay)`
+- `void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress)`
+- `void sendQuittingDisconnectingPacket()` — If on MP, sends a quitting packet.
+- `protected void setActivePlayerChunksAndCheckLight()`
+- `void setAllowedSpawnTypes(boolean hostile, boolean peaceful)` — first boolean for hostile mobs and second for peaceful mobs
+- `boolean setBlockState(BlockPos pos, IBlockState state)` — Convenience method to update the block on both the client and server
+- `boolean setBlockState(BlockPos pos, IBlockState newState, int flags)` — Sets the block state at a given location.
+- `boolean setBlockToAir(BlockPos pos)`
+- `void setEntityState(Entity entityIn, byte state)` — sends a Packet 38 (Entity Status) to all tracked players of that entity
+- `void setInitialSpawnLocation()` — Sets a new spawn location by finding an uncovered block at a random (x,z) location in the chunk.
+- `void setItemData(java.lang.String dataID, WorldSavedData worldSavedDataIn)` — Assigns the given String id to the given MapDataBase using the MapStorage, removing any existing ones of the same id.
+- `void setLastLightningBolt(int lastLightningBoltIn)`
+- `void setLightFor(EnumSkyBlock type, BlockPos pos, int lightValue)`
+- `void setRainStrength(float strength)` — Sets the strength of the rain.
+- `java.util.Random setRandomSeed(int p_72843_1_, int p_72843_2_, int p_72843_3_)` — puts the World Random seed to a specific state dependant on the inputs
+- `void setSeaLevel(int p_181544_1_)` — Warning this value may not be respected in all cases as it is still hardcoded in many places.
+- `void setSkylightSubtracted(int newSkylightSubtracted)`
+- `void setSpawnPoint(BlockPos pos)`
+- `void setThunderStrength(float strength)` — Sets the strength of the thunder.
+- `void setTileEntity(BlockPos pos, TileEntity tileEntityIn)`
+- `void setTotalWorldTime(long worldTime)`
+- `void setWorldTime(long time)` — Sets the world time.
+- `boolean spawnEntityInWorld(Entity entityIn)` — Called when an entity is spawned in the world.
+- `void spawnParticle(EnumParticleTypes particleType, boolean p_175682_2_, double xCoord, double yCoord, double zCoord, double xOffset, double yOffset, double zOffset, int... p_175682_15_)`
+- `void spawnParticle(EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, double xOffset, double yOffset, double zOffset, int... p_175688_14_)`
+- `void tick()` — Runs a single tick for the world
+- `boolean tickUpdates(boolean p_72955_1_)` — Runs through the list of updates to run and ticks them
+- `void unloadEntities(java.util.Collection<Entity> entityCollection)`
+- `void updateAllPlayersSleepingFlag()` — Updates the flag that indicates whether or not all players in the world are sleeping.
+- `protected void updateBlocks()`
+- `void updateBlockTick(BlockPos pos, Block blockIn, int delay, int priority)`
+- `void updateComparatorOutputLevel(BlockPos pos, Block blockIn)`
+- `void updateEntities()` — Updates (and cleans up) entities and tile entities
+- `void updateEntity(Entity ent)` — Will update the entity in the world if the chunk the entity is in is currently loaded.
+- `void updateEntityWithOptionalForce(Entity entityIn, boolean forceUpdate)` — Will update the entity in the world if the chunk the entity is in is currently loaded or its forced to update.
+- `protected void updateWeather()` — Updates all weather states.
+- `void updateWeatherBody()`
 
-## Description
+## Fields
 
-Handles chunk operations and caching
+- `protected java.util.Set<ChunkCoordIntPair> activeChunkSet`
+- `boolean captureBlockSnapshots`
+- `java.util.ArrayList<BlockSnapshot> capturedBlockSnapshots`
+- `protected IChunkProvider chunkProvider` — Handles chunk operations and caching
+- `protected int DIST_HASH_MAGIC` — magic number used to generate fast random numbers for 3d distribution within a chunk
+- `protected IntHashMap<Entity> entitiesById`
+- `protected boolean findingSpawnPoint` — if set, this flag forces a request to load a chunk to load the chunk rather than defaulting to the world's chunkprovider's dummy if possible
+- `boolean isRemote` — True if the world is a 'slave' client; changes will not be saved or propagated from this world.
+- `java.util.List<Entity> loadedEntityList`
+- `java.util.List<TileEntity> loadedTileEntityList`
+- `protected MapStorage mapStorage`
+- `static double MAX_ENTITY_RADIUS` — Used in the getEntitiesWithinAABB functions to expand the search area for entities.
+- `protected MapStorage perWorldStorage`
+- `java.util.List<EntityPlayer> playerEntities`
+- `float prevRainingStrength`
+- `float prevThunderingStrength`
+- `WorldProvider provider` — The WorldProvider instance that World uses.
+- `float rainingStrength`
+- `java.util.Random rand` — RNG for World.
+- `boolean restoringBlockSnapshots`
+- `protected ISaveHandler saveHandler`
+- `protected boolean scheduledUpdatesAreImmediate` — boolean; if true updates scheduled by scheduleBlockUpdate happen immediately
+- `protected boolean spawnHostileMobs` — indicates if enemies are spawned or not
+- `protected boolean spawnPeacefulMobs` — A flag indicating whether we should spawn peaceful mobs.
+- `Profiler theProfiler`
+- `float thunderingStrength`
+- `java.util.List<TileEntity> tickableTileEntities`
+- `protected java.util.List<Entity> unloadedEntityList`
+- `protected int updateLCG` — Contains the current Linear Congruential Generator seed for block updates.
+- `VillageCollection villageCollectionObj`
+- `java.util.List<Entity> weatherEffects`
+- `protected java.util.List<IWorldAccess> worldAccesses`
+- `protected WorldInfo worldInfo` — holds information about a world (size on disk, time, spawn point, seed, ...)
+- `protected Scoreboard worldScoreboard`

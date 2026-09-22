@@ -1,13 +1,17 @@
 ---
 title: "EnchantmentThorns"
-description: "Determines if this enchantment can be applied to a specific ItemStack."
+description: "public class EnchantmentThorns extends Enchantment"
 package: "net/minecraft/enchantment"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/enchantment/EnchantmentThorns.html"
 sourceType: javadoc
 ---
 
 # EnchantmentThorns
+
+**Inheritance:** java.lang.Object → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentThorns
 
 ## Class signature
 
@@ -15,20 +19,16 @@ sourceType: javadoc
 public class EnchantmentThorns extends Enchantment
 ```
 
-## Constructors
-
-- `public EnchantmentThorns(int p_i45764_1_, ResourceLocation p_i45764_2_, int p_i45764_3_)`
-
 ## Methods
 
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int getMaxLevel()`
-- `public boolean canApply( ItemStack stack)`
-- `public void onUserHurt( EntityLivingBase user, Entity attacker, int level)`
-- `public static boolean func_92094_a(int p_92094_0_, java.util.Random p_92094_1_)`
-- `public static int func_92095_b(int p_92095_0_, java.util.Random p_92095_1_)`
+- `boolean canApply(ItemStack stack)` — Determines if this enchantment can be applied to a specific ItemStack.
+- `static boolean func_92094_a(int p_92094_0_, java.util.Random p_92094_1_)`
+- `static int func_92095_b(int p_92095_0_, java.util.Random p_92095_1_)`
+- `int getMaxEnchantability(int enchantmentLevel)` — Returns the maximum value of enchantability nedded on the enchantment level passed.
+- `int getMaxLevel()` — Returns the maximum level that the enchantment can have.
+- `int getMinEnchantability(int enchantmentLevel)` — Returns the minimal value of enchantability needed on the enchantment level passed.
+- `void onUserHurt(EntityLivingBase user, Entity attacker, int level)` — Whenever an entity that has this enchantment on one of its associated items is damaged this method will be called.
 
-## Description
+## Fields
 
-Determines if this enchantment can be applied to a specific ItemStack.
+- `EnchantmentThorns`

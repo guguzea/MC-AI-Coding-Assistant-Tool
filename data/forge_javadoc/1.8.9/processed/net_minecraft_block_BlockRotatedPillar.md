@@ -1,5 +1,7 @@
 # BlockRotatedPillar
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockRotatedPillar
+
 ## Class signature
 
 ```java
@@ -8,13 +10,13 @@ public abstract class BlockRotatedPillar extends Block
 
 ## Constructors
 
-- `protected BlockRotatedPillar( Material materialIn)`
-- `protected BlockRotatedPillar( Material p_i46385_1_, MapColor p_i46385_2_)`
+- `BlockRotatedPillar(Material materialIn)`
+- `BlockRotatedPillar(Material p_i46385_1_, MapColor p_i46385_2_)`
 
 ## Methods
 
-- `public boolean rotateBlock( World world, BlockPos pos, EnumFacing axis)`
+- `boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)` — Rotate the block.
 
-## Description
+## Fields
 
-Rotate the block.
+- `static PropertyEnum<EnumFacing.Axis> AXIS`

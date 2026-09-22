@@ -1,13 +1,17 @@
 ---
 title: "BlockHardenedClay"
-description: "Get the MapColor for this Block and the given BlockState"
+description: "public class BlockHardenedClay extends Block"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockHardenedClay.html"
 sourceType: javadoc
 ---
 
 # BlockHardenedClay
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockHardenedClay
 
 ## Class signature
 
@@ -15,14 +19,10 @@ sourceType: javadoc
 public class BlockHardenedClay extends Block
 ```
 
-## Constructors
-
-- `public BlockHardenedClay()`
-
 ## Methods
 
-- `public MapColor getMapColor( IBlockState state)`
+- `MapColor getMapColor(IBlockState state)` — Get the MapColor for this Block and the given BlockState
 
-## Description
+## Fields
 
-Get the MapColor for this Block and the given BlockState
+- `BlockHardenedClay`

@@ -3,11 +3,15 @@ title: "EntityDamageSource"
 description: "public class EntityDamageSource extends DamageSource"
 package: "net/minecraft/util"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/util/EntityDamageSource.html"
 sourceType: javadoc
 ---
 
 # EntityDamageSource
+
+**Inheritance:** java.lang.Object → net.minecraft.util.DamageSource → net.minecraft.util.EntityDamageSource
 
 ## Class signature
 
@@ -17,13 +21,17 @@ public class EntityDamageSource extends DamageSource
 
 ## Constructors
 
-- `public EntityDamageSource(java.lang.String damageTypeIn, Entity damageSourceEntityIn)`
+- `EntityDamageSource(java.lang.String damageTypeIn, Entity damageSourceEntityIn)`
 
 ## Methods
 
-- `public EntityDamageSource setIsThornsDamage()`
-- `public boolean getIsThornsDamage()`
-- `@Nullable public Entity getEntity()`
-- `public ITextComponent getDeathMessage( EntityLivingBase entityLivingBaseIn)`
-- `public boolean isDifficultyScaled()`
-- `@Nullable public Vec3d getDamageLocation()`
+- `Vec3d getDamageLocation()`
+- `ITextComponent getDeathMessage(EntityLivingBase entityLivingBaseIn)`
+- `Entity getEntity()`
+- `boolean getIsThornsDamage()`
+- `boolean isDifficultyScaled()`
+- `EntityDamageSource setIsThornsDamage()`
+
+## Fields
+
+- `protected Entity damageSourceEntity`

@@ -1,19 +1,25 @@
 ---
 title: "SPacketUpdateScore.Action"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum SPacketUpdateScore.Action extends java.lang.Enum<SPacketUpdateScore.Action>"
 package: "net/minecraft/network/play/server"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/play/server/SPacketUpdateScore.Action.html"
 sourceType: javadoc
 ---
 
 # SPacketUpdateScore.Action
 
+**Inheritance:** java.lang.Object → java.lang.Enum<SPacketUpdateScore.Action> → net.minecraft.network.play.server.SPacketUpdateScore.Action
+
+## Class signature
+
+```java
+public static enum SPacketUpdateScore.Action extends java.lang.Enum<SPacketUpdateScore.Action>
+```
+
 ## Methods
 
-- `public static SPacketUpdateScore.Action [] values()`
-- `public static SPacketUpdateScore.Action valueOf(java.lang.String name)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static SPacketUpdateScore.Action valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static SPacketUpdateScore.Action [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

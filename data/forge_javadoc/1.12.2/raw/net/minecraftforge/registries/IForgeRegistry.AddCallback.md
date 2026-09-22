@@ -1,18 +1,22 @@
 ---
 title: "IForgeRegistry.AddCallback"
-description: "Callback fired when objects are added to the registry. This will fire when the registry is rebuilt on the client side from a server side synchronization, or when a world is loaded."
+description: "public static interface IForgeRegistry.AddCallback<V extends IForgeRegistryEntry<V>>"
 package: "net/minecraftforge/registries"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/registries/IForgeRegistry.AddCallback.html"
 sourceType: javadoc
 ---
 
 # IForgeRegistry.AddCallback
 
+## Class signature
+
+```java
+public static interface IForgeRegistry.AddCallback<V extends IForgeRegistryEntry<V>>
+```
+
 ## Methods
 
-- `void onAdd( IForgeRegistryInternal < V > owner, RegistryManager stage, int id, V obj, V oldObj)`
-
-## Description
-
-Callback fired when objects are added to the registry. This will fire when the registry is rebuilt on the client side from a server side synchronization, or when a world is loaded.
+- `void onAdd(IForgeRegistryInternal<V> owner, RegistryManager stage, int id, V obj, V oldObj)`

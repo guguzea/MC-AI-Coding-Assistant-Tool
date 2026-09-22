@@ -3,11 +3,15 @@ title: "AreaContext"
 description: "public class AreaContext extends PlayerContext"
 package: "net/minecraftforge/server/permission/context"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/server/permission/context/AreaContext.html"
 sourceType: javadoc
 ---
 
 # AreaContext
+
+**Inheritance:** java.lang.Object → net.minecraftforge.server.permission.context.Context → net.minecraftforge.server.permission.context.PlayerContext → net.minecraftforge.server.permission.context.AreaContext
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class AreaContext extends PlayerContext
 
 ## Constructors
 
-- `public AreaContext( EntityPlayer ep, AxisAlignedBB aabb)`
+- `AreaContext(EntityPlayer ep, AxisAlignedBB aabb)`
 
 ## Methods
 
-- `public <T> T get( ContextKey <T> key)`
-- `protected boolean covers( ContextKey <?> key)`
+- `protected boolean covers(ContextKey<?> key)`
+- `<T> T get(ContextKey<T> key)`

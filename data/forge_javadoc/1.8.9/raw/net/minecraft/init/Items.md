@@ -3,11 +3,15 @@ title: "Items"
 description: "public class Items extends java.lang.Object"
 package: "net/minecraft/init"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/init/Items.html"
 sourceType: javadoc
 ---
 
 # Items
+
+**Inheritance:** java.lang.Object → net.minecraft.init.Items
 
 ## Class signature
 
@@ -17,4 +21,194 @@ public class Items extends java.lang.Object
 
 ## Constructors
 
-- `public Items()`
+- `Items()`
+
+## Fields
+
+- `static Item acacia_door`
+- `static Item apple`
+- `static ItemArmorStand armor_stand`
+- `static Item arrow`
+- `static Item baked_potato`
+- `static Item banner`
+- `static Item bed`
+- `static Item beef`
+- `static Item birch_door`
+- `static Item blaze_powder`
+- `static Item blaze_rod`
+- `static Item boat`
+- `static Item bone`
+- `static Item book`
+- `static ItemBow bow`
+- `static Item bowl`
+- `static Item bread`
+- `static Item brewing_stand`
+- `static Item brick`
+- `static Item bucket`
+- `static Item cake`
+- `static Item carrot`
+- `static Item carrot_on_a_stick`
+- `static Item cauldron`
+- `static ItemArmor chainmail_boots`
+- `static ItemArmor chainmail_chestplate`
+- `static ItemArmor chainmail_helmet`
+- `static ItemArmor chainmail_leggings`
+- `static Item chest_minecart`
+- `static Item chicken`
+- `static Item clay_ball`
+- `static Item clock`
+- `static Item coal`
+- `static Item command_block_minecart`
+- `static Item comparator`
+- `static Item compass`
+- `static Item cooked_beef`
+- `static Item cooked_chicken`
+- `static Item cooked_fish`
+- `static Item cooked_mutton`
+- `static Item cooked_porkchop`
+- `static Item cooked_rabbit`
+- `static Item cookie`
+- `static Item dark_oak_door`
+- `static Item diamond`
+- `static Item diamond_axe`
+- `static ItemArmor diamond_boots`
+- `static ItemArmor diamond_chestplate`
+- `static ItemArmor diamond_helmet`
+- `static Item diamond_hoe`
+- `static Item diamond_horse_armor`
+- `static ItemArmor diamond_leggings`
+- `static Item diamond_pickaxe`
+- `static Item diamond_shovel`
+- `static Item diamond_sword`
+- `static Item dye`
+- `static Item egg`
+- `static Item emerald`
+- `static ItemEnchantedBook enchanted_book`
+- `static Item ender_eye`
+- `static Item ender_pearl`
+- `static Item experience_bottle`
+- `static Item feather`
+- `static Item fermented_spider_eye`
+- `static ItemMap filled_map`
+- `static Item fire_charge`
+- `static Item firework_charge`
+- `static Item fireworks`
+- `static Item fish`
+- `static ItemFishingRod fishing_rod`
+- `static Item flint`
+- `static Item flint_and_steel`
+- `static Item flower_pot`
+- `static Item furnace_minecart`
+- `static Item ghast_tear`
+- `static Item glass_bottle`
+- `static Item glowstone_dust`
+- `static Item gold_ingot`
+- `static Item gold_nugget`
+- `static Item golden_apple`
+- `static Item golden_axe`
+- `static ItemArmor golden_boots`
+- `static Item golden_carrot`
+- `static ItemArmor golden_chestplate`
+- `static ItemArmor golden_helmet`
+- `static Item golden_hoe`
+- `static Item golden_horse_armor`
+- `static ItemArmor golden_leggings`
+- `static Item golden_pickaxe`
+- `static Item golden_shovel`
+- `static Item golden_sword`
+- `static Item gunpowder`
+- `static Item hopper_minecart`
+- `static Item iron_axe`
+- `static ItemArmor iron_boots`
+- `static ItemArmor iron_chestplate`
+- `static Item iron_door`
+- `static ItemArmor iron_helmet`
+- `static Item iron_hoe`
+- `static Item iron_horse_armor`
+- `static Item iron_ingot`
+- `static ItemArmor iron_leggings`
+- `static Item iron_pickaxe`
+- `static Item iron_shovel`
+- `static Item iron_sword`
+- `static Item item_frame`
+- `static Item jungle_door`
+- `static Item lava_bucket`
+- `static Item lead`
+- `static Item leather`
+- `static ItemArmor leather_boots`
+- `static ItemArmor leather_chestplate`
+- `static ItemArmor leather_helmet`
+- `static ItemArmor leather_leggings`
+- `static Item magma_cream`
+- `static ItemEmptyMap map`
+- `static Item melon`
+- `static Item melon_seeds`
+- `static Item milk_bucket`
+- `static Item minecart`
+- `static Item mushroom_stew`
+- `static Item mutton`
+- `static Item name_tag`
+- `static Item nether_star`
+- `static Item nether_wart`
+- `static Item netherbrick`
+- `static Item oak_door`
+- `static Item painting`
+- `static Item paper`
+- `static Item poisonous_potato`
+- `static Item porkchop`
+- `static Item potato`
+- `static ItemPotion potionitem`
+- `static Item prismarine_crystals`
+- `static Item prismarine_shard`
+- `static Item pumpkin_pie`
+- `static Item pumpkin_seeds`
+- `static Item quartz`
+- `static Item rabbit`
+- `static Item rabbit_foot`
+- `static Item rabbit_hide`
+- `static Item rabbit_stew`
+- `static Item record_11`
+- `static Item record_13`
+- `static Item record_blocks`
+- `static Item record_cat`
+- `static Item record_chirp`
+- `static Item record_far`
+- `static Item record_mall`
+- `static Item record_mellohi`
+- `static Item record_stal`
+- `static Item record_strad`
+- `static Item record_wait`
+- `static Item record_ward`
+- `static Item redstone`
+- `static Item reeds`
+- `static Item repeater`
+- `static Item rotten_flesh`
+- `static Item saddle`
+- `static ItemShears shears`
+- `static Item sign`
+- `static Item skull`
+- `static Item slime_ball`
+- `static Item snowball`
+- `static Item spawn_egg`
+- `static Item speckled_melon`
+- `static Item spider_eye`
+- `static Item spruce_door`
+- `static Item stick`
+- `static Item stone_axe`
+- `static Item stone_hoe`
+- `static Item stone_pickaxe`
+- `static Item stone_shovel`
+- `static Item stone_sword`
+- `static Item string`
+- `static Item sugar`
+- `static Item tnt_minecart`
+- `static Item water_bucket`
+- `static Item wheat`
+- `static Item wheat_seeds`
+- `static Item wooden_axe`
+- `static Item wooden_hoe`
+- `static Item wooden_pickaxe`
+- `static Item wooden_shovel`
+- `static Item wooden_sword`
+- `static Item writable_book`
+- `static Item written_book`

@@ -3,11 +3,15 @@ title: "WeightedRandom"
 description: "public class WeightedRandom extends java.lang.Object"
 package: "net/minecraft/util"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/util/WeightedRandom.html"
 sourceType: javadoc
 ---
 
 # WeightedRandom
+
+**Inheritance:** java.lang.Object → net.minecraft.util.WeightedRandom
 
 ## Class signature
 
@@ -17,11 +21,11 @@ public class WeightedRandom extends java.lang.Object
 
 ## Constructors
 
-- `public WeightedRandom()`
+- `WeightedRandom()`
 
 ## Methods
 
-- `public static int getTotalWeight(java.util.List<? extends WeightedRandom.Item > collection)`
-- `public static <T extends WeightedRandom.Item > T getRandomItem(java.util.Random random, java.util.List<T> collection, int totalWeight)`
-- `public static <T extends WeightedRandom.Item > T getRandomItem(java.util.List<T> collection, int weight)`
-- `public static <T extends WeightedRandom.Item > T getRandomItem(java.util.Random random, java.util.List<T> collection)`
+- `static<T extends WeightedRandom.Item> T getRandomItem(java.util.List<T> collection, int weight)`
+- `static<T extends WeightedRandom.Item> T getRandomItem(java.util.Random random, java.util.List<T> collection)`
+- `static<T extends WeightedRandom.Item> T getRandomItem(java.util.Random random, java.util.List<T> collection, int totalWeight)`
+- `static int getTotalWeight(java.util.List<? extends WeightedRandom.Item> collection)`

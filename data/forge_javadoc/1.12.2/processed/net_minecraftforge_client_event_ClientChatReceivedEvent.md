@@ -1,5 +1,7 @@
 # ClientChatReceivedEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.ClientChatReceivedEvent
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class ClientChatReceivedEvent extends Event
 
 ## Constructors
 
-- `public ClientChatReceivedEvent( ChatType type, ITextComponent message)`
+- `ClientChatReceivedEvent(ChatType type, ITextComponent message)`
 
 ## Methods
 
-- `public ITextComponent getMessage()`
-- `public void setMessage( ITextComponent message)`
-- `public ChatType getType()`
+- `ITextComponent getMessage()`
+- `ChatType getType()`
+- `void setMessage(ITextComponent message)`

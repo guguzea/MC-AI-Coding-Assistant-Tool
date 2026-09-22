@@ -1,18 +1,30 @@
 # BlockState.StateImplementation
 
+**Inheritance:** java.lang.Object → net.minecraft.block.state.BlockStateBase → net.minecraft.block.state.BlockState.StateImplementation
+
+## Class signature
+
+```java
+public static class BlockState.StateImplementation extends BlockStateBase
+```
+
 ## Constructors
 
-- `protected StateImplementation( Block blockIn, <any> propertiesIn)`
-- `protected StateImplementation( Block blockIn, <any> propertiesIn, <any> propertyValueTable)`
+- `StateImplementation(Block blockIn, <any> propertiesIn)`
+- `StateImplementation(Block blockIn, <any> propertiesIn, <any> propertyValueTable)`
 
 ## Methods
 
-- `public java.util.Collection< IProperty > getPropertyNames()`
-- `public <T extends java.lang.Comparable<T>> T getValue( IProperty <T> property)`
-- `public <T extends java.lang.Comparable<T>,V extends T> IBlockState withProperty( IProperty <T> property, V value)`
-- `public <any> getProperties()`
-- `public Block getBlock()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public void buildPropertyValueTable(java.util.Map<java.util.Map< IProperty ,java.lang.Comparable>, BlockState.StateImplementation > map)`
-- `public <any> getPropertyValueTable()`
+- `void buildPropertyValueTable(java.util.Map<java.util.Map<IProperty, java.lang.Comparable>, BlockState.StateImplementation> map)`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `Block getBlock()`
+- `<any> getProperties()`
+- `java.util.Collection<IProperty> getPropertyNames()`
+- `<any> getPropertyValueTable()`
+- `<T extends java.lang.Comparable<T>> T getValue(IProperty<T> property)`
+- `int hashCode()`
+- `<T extends java.lang.Comparable<T>, V extends T> IBlockState withProperty(IProperty<T> property, V value)`
+
+## Fields
+
+- `protected<any> propertyValueTable`

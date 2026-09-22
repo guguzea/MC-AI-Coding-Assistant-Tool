@@ -1,23 +1,25 @@
 # DedicatedPlayerList
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.PlayerList → net.minecraft.server.dedicated.DedicatedPlayerList
+
 ## Class signature
 
 ```java
 public class DedicatedPlayerList extends PlayerList
 ```
 
-## Constructors
-
-- `public DedicatedPlayerList( DedicatedServer server)`
-
 ## Methods
 
-- `public void setWhiteListEnabled(boolean whitelistEnabled)`
-- `public void addOp(GameProfile profile)`
-- `public void removeOp(GameProfile profile)`
-- `public void removePlayerFromWhitelist(GameProfile profile)`
-- `public void addWhitelistedPlayer(GameProfile profile)`
-- `public void reloadWhitelist()`
-- `public boolean canJoin(GameProfile profile)`
-- `public DedicatedServer getServerInstance()`
-- `public boolean bypassesPlayerLimit(GameProfile profile)`
+- `void addOp(GameProfile profile)`
+- `void addWhitelistedPlayer(GameProfile profile)`
+- `boolean bypassesPlayerLimit(GameProfile profile)`
+- `boolean canJoin(GameProfile profile)`
+- `DedicatedServer getServerInstance()`
+- `void reloadWhitelist()`
+- `void removeOp(GameProfile profile)`
+- `void removePlayerFromWhitelist(GameProfile profile)`
+- `void setWhiteListEnabled(boolean whitelistEnabled)`
+
+## Fields
+
+- `DedicatedPlayerList`

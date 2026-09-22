@@ -1,13 +1,17 @@
 ---
 title: "AnvilUpdateEvent"
-description: "AnvilUpdateEvent is fired when a player places items in both the left and right slots of a anvil. If the event is canceled, vanilla behavior will not run, and the output will be set to null. If the ev"
+description: "public class AnvilUpdateEvent extends Event"
 package: "net/minecraftforge/event"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/AnvilUpdateEvent.html"
 sourceType: javadoc
 ---
 
 # AnvilUpdateEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.AnvilUpdateEvent
 
 ## Class signature
 
@@ -17,20 +21,16 @@ public class AnvilUpdateEvent extends Event
 
 ## Constructors
 
-- `public AnvilUpdateEvent(@Nonnull ItemStack left, @Nonnull ItemStack right, java.lang.String name, int cost)`
+- `AnvilUpdateEvent(ItemStack left, ItemStack right, java.lang.String name, int cost)`
 
 ## Methods
 
-- `@Nonnull public ItemStack getLeft()`
-- `@Nonnull public ItemStack getRight()`
-- `public java.lang.String getName()`
-- `@Nonnull public ItemStack getOutput()`
-- `public void setOutput(@Nonnull ItemStack output)`
-- `public int getCost()`
-- `public void setCost(int cost)`
-- `public int getMaterialCost()`
-- `public void setMaterialCost(int materialCost)`
-
-## Description
-
-AnvilUpdateEvent is fired when a player places items in both the left and right slots of a anvil. If the event is canceled, vanilla behavior will not run, and the output will be set to null. If the ev
+- `int getCost()`
+- `ItemStack getLeft()`
+- `int getMaterialCost()`
+- `java.lang.String getName()`
+- `ItemStack getOutput()`
+- `ItemStack getRight()`
+- `void setCost(int cost)`
+- `void setMaterialCost(int materialCost)`
+- `void setOutput(ItemStack output)`

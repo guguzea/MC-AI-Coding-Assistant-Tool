@@ -3,11 +3,15 @@ title: "AnimationFrame"
 description: "public class AnimationFrame extends java.lang.Object"
 package: "net/minecraft/client/resources/data"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/resources/data/AnimationFrame.html"
 sourceType: javadoc
 ---
 
 # AnimationFrame
+
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.data.AnimationFrame
 
 ## Class signature
 
@@ -17,11 +21,11 @@ public class AnimationFrame extends java.lang.Object
 
 ## Constructors
 
-- `public AnimationFrame(int p_i1307_1_)`
-- `public AnimationFrame(int p_i1308_1_, int p_i1308_2_)`
+- `AnimationFrame(int p_i1307_1_)`
+- `AnimationFrame(int p_i1308_1_, int p_i1308_2_)`
 
 ## Methods
 
-- `public boolean hasNoTime()`
-- `public int getFrameTime()`
-- `public int getFrameIndex()`
+- `int getFrameIndex()`
+- `int getFrameTime()`
+- `boolean hasNoTime()`

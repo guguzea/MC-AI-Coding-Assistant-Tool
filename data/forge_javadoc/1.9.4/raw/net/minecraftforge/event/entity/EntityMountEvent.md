@@ -1,13 +1,17 @@
 ---
 title: "EntityMountEvent"
-description: "This event gets fired whenever a entity mounts/dismounts another entity. entityBeingMounted can be null , be sure to check for that. This event is Cancelable . If this event is canceled, the entity do"
+description: "public class EntityMountEvent extends EntityEvent"
 package: "net/minecraftforge/event/entity"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/event/entity/EntityMountEvent.html"
 sourceType: javadoc
 ---
 
 # EntityMountEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.EntityMountEvent
 
 ## Class signature
 
@@ -17,16 +21,12 @@ public class EntityMountEvent extends EntityEvent
 
 ## Constructors
 
-- `public EntityMountEvent( Entity entityMounting, Entity entityBeingMounted, World entityWorld, boolean isMounting)`
+- `EntityMountEvent(Entity entityMounting, Entity entityBeingMounted, World entityWorld, boolean isMounting)`
 
 ## Methods
 
-- `public boolean isMounting()`
-- `public boolean isDismounting()`
-- `public Entity getEntityMounting()`
-- `public Entity getEntityBeingMounted()`
-- `public World getWorldObj()`
-
-## Description
-
-This event gets fired whenever a entity mounts/dismounts another entity. entityBeingMounted can be null , be sure to check for that. This event is Cancelable . If this event is canceled, the entity do
+- `Entity getEntityBeingMounted()`
+- `Entity getEntityMounting()`
+- `World getWorldObj()`
+- `boolean isDismounting()`
+- `boolean isMounting()`

@@ -3,11 +3,15 @@ title: "ModelVillager"
 description: "public class ModelVillager extends ModelBase"
 package: "net/minecraft/client/model"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/model/ModelVillager.html"
 sourceType: javadoc
 ---
 
 # ModelVillager
+
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelVillager
 
 ## Class signature
 
@@ -17,10 +21,19 @@ public class ModelVillager extends ModelBase
 
 ## Constructors
 
-- `public ModelVillager(float scale)`
-- `public ModelVillager(float scale, float p_i1164_2_, int width, int height)`
+- `ModelVillager(float scale)`
+- `ModelVillager(float scale, float p_i1164_2_, int width, int height)`
 
 ## Methods
 
-- `public void render( Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
-- `public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
+- `void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
+
+## Fields
+
+- `ModelRenderer leftVillagerLeg`
+- `ModelRenderer rightVillagerLeg`
+- `ModelRenderer villagerArms`
+- `ModelRenderer villagerBody`
+- `ModelRenderer villagerHead`
+- `ModelRenderer villagerNose`

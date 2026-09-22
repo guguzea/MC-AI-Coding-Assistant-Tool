@@ -1,31 +1,29 @@
 # UniversalBucket
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraftforge.fluids.UniversalBucket
+
 ## Class signature
 
 ```java
 public class UniversalBucket extends Item
 ```
 
-## Constructors
-
-- `public UniversalBucket()`
-- `public UniversalBucket(int capacity, @Nonnull ItemStack empty, boolean nbtSensitive)`
-
 ## Methods
 
-- `public boolean hasContainerItem(@Nonnull ItemStack stack)`
-- `@Nonnull public ItemStack getContainerItem(@Nonnull ItemStack itemStack)`
-- `public void getSubItems(@Nonnull Item itemIn, @Nullable CreativeTabs tab, @Nonnull NonNullList < ItemStack > subItems)`
-- `@Nonnull public java.lang.String getItemStackDisplayName(@Nonnull ItemStack stack)`
-- `@Nonnull public ActionResult < ItemStack > onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand)`
-- `public void onFillBucket( FillBucketEvent event)`
-- `@Nonnull public static ItemStack getFilledBucket(@Nonnull UniversalBucket item, Fluid fluid)`
-- `@Nullable public FluidStack getFluid(@Nonnull ItemStack container)`
-- `public int getCapacity()`
-- `@Nonnull public ItemStack getEmpty()`
-- `public boolean isNbtSensitive()`
-- `public ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, NBTTagCompound nbt)`
+- `int getCapacity()`
+- `ItemStack getContainerItem(ItemStack itemStack)` — ItemStack sensitive version of getContainerItem.
+- `ItemStack getEmpty()`
+- `static ItemStack getFilledBucket(UniversalBucket item, Fluid fluid)`
+- `FluidStack getFluid(ItemStack container)`
+- `java.lang.String getItemStackDisplayName(ItemStack stack)`
+- `void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)`
+- `boolean hasContainerItem(ItemStack stack)` — ItemStack sensitive version of hasContainerItem
+- `ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)` — Called from ItemStack.setItem, will hold extra data for the life of this ItemStack.
+- `boolean isNbtSensitive()`
+- `void onFillBucket(FillBucketEvent event)`
+- `ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)`
 
-## Description
+## Fields
 
-A universal bucket that can hold any liquid
+- `UniversalBucket`
+- `UniversalBucket`

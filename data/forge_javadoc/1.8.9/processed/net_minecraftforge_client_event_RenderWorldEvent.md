@@ -1,5 +1,7 @@
 # RenderWorldEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderWorldEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,10 @@ public abstract class RenderWorldEvent extends Event
 
 ## Constructors
 
-- `public RenderWorldEvent( WorldRenderer renderer, ChunkCache chunkCache, int pass)`
+- `RenderWorldEvent(WorldRenderer renderer, ChunkCache chunkCache, int pass)`
 
-## Description
+## Fields
 
-Fired after the tessellator is stopped, before the display list is ended.
+- `ChunkCache chunkCache`
+- `int pass`
+- `WorldRenderer renderer`

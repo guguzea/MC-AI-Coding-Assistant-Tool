@@ -1,5 +1,7 @@
 # ResourceIndex
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.ResourceIndex
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class ResourceIndex extends java.lang.Object
 
 ## Constructors
 
-- `protected ResourceIndex()`
-- `public ResourceIndex(java.io.File assetsFolder, java.lang.String indexName)`
+- `ResourceIndex()`
+- `ResourceIndex(java.io.File assetsFolder, java.lang.String indexName)`
 
 ## Methods
 
-- `@Nullable public java.io.File getFile( ResourceLocation location)`
-- `public boolean isFileExisting( ResourceLocation location)`
-- `public java.io.File getPackMcmeta()`
+- `java.io.File getFile(ResourceLocation location)`
+- `java.io.File getPackMcmeta()`
+- `boolean isFileExisting(ResourceLocation location)`

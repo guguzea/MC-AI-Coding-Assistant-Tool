@@ -1,17 +1,19 @@
 # ParticleItemPickup
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleItemPickup
+
 ## Class signature
 
 ```java
 public class ParticleItemPickup extends Particle
 ```
 
-## Constructors
-
-- `public ParticleItemPickup( World worldIn, Entity p_i1233_2_, Entity p_i1233_3_, float p_i1233_4_)`
-
 ## Methods
 
-- `public void renderParticle( VertexBuffer buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
-- `public void onUpdate()`
-- `public int getFXLayer()`
+- `int getFXLayer()`
+- `void onUpdate()`
+- `void renderParticle(VertexBuffer buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+
+## Fields
+
+- `ParticleItemPickup`

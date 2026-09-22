@@ -1,5 +1,7 @@
 # EntityAIFindEntityNearest
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIFindEntityNearest
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class EntityAIFindEntityNearest extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIFindEntityNearest( EntityLiving mobIn, java.lang.Class<? extends EntityLivingBase > p_i45884_2_)`
+- `EntityAIFindEntityNearest(EntityLiving mobIn, java.lang.Class<? extends EntityLivingBase> p_i45884_2_)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean shouldContinueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
 - `protected double getFollowRange()`
+- `void resetTask()`
+- `boolean shouldContinueExecuting()`
+- `boolean shouldExecute()`
+- `void startExecuting()`

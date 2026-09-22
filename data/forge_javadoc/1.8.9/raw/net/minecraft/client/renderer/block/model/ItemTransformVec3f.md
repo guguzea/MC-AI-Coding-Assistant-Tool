@@ -1,24 +1,37 @@
 ---
 title: "ItemTransformVec3f"
-description: "Deprecated."
+description: "public class ItemTransformVec3f extends java.lang.Object implements IModelState"
 package: "net/minecraft/client/renderer/block/model"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/renderer/block/model/ItemTransformVec3f.html"
 sourceType: javadoc
 ---
 
 # ItemTransformVec3f
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.ItemTransformVec3f
+
+## Class signature
+
+```java
+public class ItemTransformVec3f extends java.lang.Object implements IModelState
+```
+
 ## Constructors
 
-- `public ItemTransformVec3f(Vector3f rotation, Vector3f translation, Vector3f scale)`
+- `@Deprecated ItemTransformVec3f(Vector3f rotation, Vector3f translation, Vector3f scale)`
 
 ## Methods
 
-- `public <any> apply(<any> part)`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
+- `@Deprecated <any> apply(<any> part)`
+- `@Deprecated boolean equals(java.lang.Object p_equals_1_)`
+- `@Deprecated int hashCode()`
 
-## Description
+## Fields
 
-Deprecated.
+- `static ItemTransformVec3f DEFAULT`
+- `Vector3f rotation`
+- `Vector3f scale`
+- `Vector3f translation`

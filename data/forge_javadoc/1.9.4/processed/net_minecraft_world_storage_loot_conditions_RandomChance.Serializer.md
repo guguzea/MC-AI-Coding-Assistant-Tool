@@ -1,10 +1,18 @@
 # RandomChance.Serializer
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.conditions.LootCondition.Serializer<RandomChance> → net.minecraft.world.storage.loot.conditions.RandomChance.Serializer
+
+## Class signature
+
+```java
+public static class RandomChance.Serializer extends LootCondition.Serializer<RandomChance>
+```
+
 ## Constructors
 
-- `protected Serializer()`
+- `Serializer()`
 
 ## Methods
 
-- `public void serialize(com.google.gson.JsonObject json, RandomChance value, com.google.gson.JsonSerializationContext context)`
-- `public RandomChance deserialize(com.google.gson.JsonObject json, com.google.gson.JsonDeserializationContext context)`
+- `RandomChance deserialize(com.google.gson.JsonObject json, com.google.gson.JsonDeserializationContext context)`
+- `void serialize(com.google.gson.JsonObject json, RandomChance value, com.google.gson.JsonSerializationContext context)`

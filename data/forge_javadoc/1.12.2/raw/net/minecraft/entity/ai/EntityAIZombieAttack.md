@@ -3,11 +3,15 @@ title: "EntityAIZombieAttack"
 description: "public class EntityAIZombieAttack extends EntityAIAttackMelee"
 package: "net/minecraft/entity/ai"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/ai/EntityAIZombieAttack.html"
 sourceType: javadoc
 ---
 
 # EntityAIZombieAttack
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIAttackMelee → net.minecraft.entity.ai.EntityAIZombieAttack
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class EntityAIZombieAttack extends EntityAIAttackMelee
 ```
 
-## Constructors
-
-- `public EntityAIZombieAttack( EntityZombie zombieIn, double speedIn, boolean longMemoryIn)`
-
 ## Methods
 
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `void resetTask()`
+- `void startExecuting()`
+- `void updateTask()`
+
+## Fields
+
+- `EntityAIZombieAttack`

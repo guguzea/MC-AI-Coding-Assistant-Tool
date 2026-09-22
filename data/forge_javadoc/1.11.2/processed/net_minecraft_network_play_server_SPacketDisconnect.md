@@ -1,19 +1,21 @@
 # SPacketDisconnect
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketDisconnect
+
 ## Class signature
 
 ```java
-public class SPacketDisconnect extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketDisconnect extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketDisconnect()`
-- `public SPacketDisconnect( ITextComponent messageIn)`
+- `SPacketDisconnect()`
+- `SPacketDisconnect(ITextComponent messageIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public ITextComponent getReason()`
+- `ITextComponent getReason()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

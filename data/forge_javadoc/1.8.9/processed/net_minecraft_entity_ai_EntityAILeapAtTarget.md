@@ -1,5 +1,7 @@
 # EntityAILeapAtTarget
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAILeapAtTarget
+
 ## Class signature
 
 ```java
@@ -8,14 +10,10 @@ public class EntityAILeapAtTarget extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAILeapAtTarget( EntityLiving leapingEntity, float leapMotionYIn)`
+- `EntityAILeapAtTarget(EntityLiving leapingEntity, float leapMotionYIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-
-## Description
-
-Returns whether an in-progress EntityAIBase should continue executing
+- `boolean continueExecuting()` — Returns whether an in-progress EntityAIBase should continue executing
+- `boolean shouldExecute()` — Returns whether the EntityAIBase should begin execution.
+- `void startExecuting()` — Execute a one shot task or start executing a continuous task

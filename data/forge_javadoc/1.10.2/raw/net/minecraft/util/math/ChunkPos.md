@@ -3,11 +3,15 @@ title: "ChunkPos"
 description: "public class ChunkPos extends java.lang.Object"
 package: "net/minecraft/util/math"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/util/math/ChunkPos.html"
 sourceType: javadoc
 ---
 
 # ChunkPos
+
+**Inheritance:** java.lang.Object → net.minecraft.util.math.ChunkPos
 
 ## Class signature
 
@@ -17,21 +21,26 @@ public class ChunkPos extends java.lang.Object
 
 ## Constructors
 
-- `public ChunkPos(int x, int z)`
-- `public ChunkPos( BlockPos pos)`
+- `ChunkPos(BlockPos pos)`
+- `ChunkPos(int x, int z)`
 
 ## Methods
 
-- `public static long asLong(int x, int z)`
-- `public int hashCode()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public double getDistanceSq( Entity entityIn)`
-- `public int getCenterXPos()`
-- `public int getCenterZPosition()`
-- `public int getXStart()`
-- `public int getZStart()`
-- `public int getXEnd()`
-- `public int getZEnd()`
-- `public BlockPos getBlock(int x, int y, int z)`
-- `public BlockPos getCenterBlock(int y)`
-- `public java.lang.String toString()`
+- `static long asLong(int x, int z)`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `BlockPos getBlock(int x, int y, int z)`
+- `BlockPos getCenterBlock(int y)`
+- `int getCenterXPos()`
+- `int getCenterZPosition()`
+- `double getDistanceSq(Entity entityIn)`
+- `int getXEnd()`
+- `int getXStart()`
+- `int getZEnd()`
+- `int getZStart()`
+- `int hashCode()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `int chunkXPos`
+- `int chunkZPos`

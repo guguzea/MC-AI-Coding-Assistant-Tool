@@ -1,18 +1,24 @@
 ---
 title: "FMLNetworkEvent.ClientDisconnectionFromServerEvent"
-description: "Fired at the client when the client is disconnected from the server."
+description: "public static class FMLNetworkEvent.ClientDisconnectionFromServerEvent extends FMLNetworkEvent<INetHandlerPlayClient>"
 package: "cpw/mods/fml/common/network"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/network/FMLNetworkEvent.ClientDisconnectionFromServerEvent.html"
 sourceType: javadoc
 ---
 
 # FMLNetworkEvent.ClientDisconnectionFromServerEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.eventhandler.Event → cpw.mods.fml.common.network.FMLNetworkEvent<INetHandlerPlayClient> → cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent
 
-- `public ClientDisconnectionFromServerEvent( NetworkManager manager)`
+## Class signature
 
-## Description
+```java
+public static class FMLNetworkEvent.ClientDisconnectionFromServerEvent extends FMLNetworkEvent<INetHandlerPlayClient>
+```
 
-Fired at the client when the client is disconnected from the server.
+## Fields
+
+- `ClientDisconnectionFromServerEvent`

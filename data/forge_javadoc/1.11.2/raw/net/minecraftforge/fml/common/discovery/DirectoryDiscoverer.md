@@ -3,11 +3,15 @@ title: "DirectoryDiscoverer"
 description: "public class DirectoryDiscoverer extends java.lang.Object implements ITypeDiscoverer"
 package: "net/minecraftforge/fml/common/discovery"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/common/discovery/DirectoryDiscoverer.html"
 sourceType: javadoc
 ---
 
 # DirectoryDiscoverer
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.discovery.DirectoryDiscoverer
 
 ## Class signature
 
@@ -15,11 +19,11 @@ sourceType: javadoc
 public class DirectoryDiscoverer extends java.lang.Object implements ITypeDiscoverer
 ```
 
-## Constructors
-
-- `public DirectoryDiscoverer()`
-
 ## Methods
 
-- `public java.util.List< ModContainer > discover( ModCandidate candidate, ASMDataTable table)`
-- `public void exploreFileSystem(java.lang.String path, java.io.File modDir, java.util.List< ModContainer > harvestedMods, ModCandidate candidate, @Nullable MetadataCollection mc)`
+- `java.util.List<ModContainer> discover(ModCandidate candidate, ASMDataTable table)`
+- `void exploreFileSystem(java.lang.String path, java.io.File modDir, java.util.List<ModContainer> harvestedMods, ModCandidate candidate, MetadataCollection mc)`
+
+## Fields
+
+- `DirectoryDiscoverer`

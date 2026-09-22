@@ -1,9 +1,17 @@
 # LanServerDetector.ThreadLanServerFind
 
-## Constructors
+**Inheritance:** java.lang.Object → java.lang.Thread → net.minecraft.client.network.LanServerDetector.ThreadLanServerFind
 
-- `public ThreadLanServerFind( LanServerDetector.LanServerList p_i1320_1_) throws java.io.IOException`
+## Class signature
+
+```java
+public static class LanServerDetector.ThreadLanServerFind extends java.lang.Thread
+```
 
 ## Methods
 
-- `public void run()`
+- `void run()`
+
+## Fields
+
+- `ThreadLanServerFind`

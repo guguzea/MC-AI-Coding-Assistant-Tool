@@ -11,9 +11,18 @@
   ],
   "trees": {
     "bedrock_stable/bedrock-docs/stable": {
-      "files": 20,
+      "_note": "2026-09-22 ⑤ 拆树：Script API 逐声明页（624）移入 bedrock-scriptapi 独立树后，本树只剩 Learn 文档页。files 882→258 是本树真实篇数；medianFloor 360→3526 才是这次拆分的真正目的 —— 混树时两种体裁的中位数被逐声明短页拉到 360，厚度判据等于失效；分树后本树按自己 5876 的实测中位重签（0.6× 公式），灵敏度恢复约 10 倍。",
+      "files": 258,
       "allowedStubs": 0,
-      "medianFloor": 6794
+      "medianFloor": 3526
+    },
+    "bedrock_stable/bedrock-scriptapi/stable": {
+      "_note": "@minecraft/server d.ts 逐声明页（一声明一页）。2026-09-22 用户裁定③：本树厚度改由**判据⑥ p10Floor** 兜 —— median 对这种体裁不敏感（把最薄的一成刷成 60 字，中位照旧），实测（门自己的 measureTree 口径）files 624 / stub 0 / sectionless 7 / p10 123 / median 363 ⇒ p10Floor 取 RELEDGER 同口径 0.6×123=74。投毒证明：刷薄最薄 63 页（10.1%）后 median 那条腿不红、p10 这条红。2026-09-22 用户裁定④再接**判据⑦ members**：本树 Σ成员实测 2590（= 页内 `## Members（N）` 逐页求和，measureTree 现算）⇒ membersFloor 取同一 0.6 口径 = 1554；⑦a 的逐页自洽腿（自报 N == `### \\`x\\`` 小节数）不依赖地板、当场抓单页截断。这 2590 的可信度由专族门 assert-bedrock-scriptapi-members 挂在独立计数源（scriptapi-typed.json 的声明清单 ⇄ 页面四口径 ⇄ 每页 sha256）上，不是手抄数。",
+      "files": 624,
+      "allowedStubs": 0,
+      "medianFloor": 218,
+      "p10Floor": 74,
+      "membersFloor": 1554
     },
     "fabric_1.14.4/fabric-wiki/1.14.4": {
       "files": 7,

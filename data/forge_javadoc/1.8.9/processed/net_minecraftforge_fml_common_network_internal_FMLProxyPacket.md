@@ -1,34 +1,36 @@
 # FMLProxyPacket
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.internal.FMLProxyPacket
+
 ## Class signature
 
 ```java
-public class FMLProxyPacket extends java.lang.Object implements Packet < INetHandler >
+public class FMLProxyPacket extends java.lang.Object implements Packet<INetHandler>
 ```
 
 ## Constructors
 
-- `public FMLProxyPacket( S3FPacketCustomPayload original)`
-- `public FMLProxyPacket( C17PacketCustomPayload original)`
-- `public FMLProxyPacket( PacketBuffer payload, java.lang.String channel)`
+- `FMLProxyPacket(C17PacketCustomPayload original)`
+- `FMLProxyPacket(PacketBuffer payload, java.lang.String channel)`
+- `FMLProxyPacket(S3FPacketCustomPayload original)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer packetbuffer) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer packetbuffer) throws java.io.IOException`
-- `public void processPacket( INetHandler inethandler)`
-- `public java.lang.String channel()`
-- `public ByteBuf payload()`
-- `public INetHandler handler()`
-- `public Packet < INetHandlerPlayServer > toC17Packet()`
-- `public java.util.List< Packet < INetHandlerPlayClient >> toS3FPackets() throws java.io.IOException`
-- `public void setTarget( Side target)`
-- `public void setDispatcher( NetworkDispatcher networkDispatcher)`
-- `public NetworkManager getOrigin()`
-- `public NetworkDispatcher getDispatcher()`
-- `public Side getTarget()`
-- `public FMLProxyPacket copy()`
+- `java.lang.String channel()`
+- `FMLProxyPacket copy()`
+- `NetworkDispatcher getDispatcher()`
+- `NetworkManager getOrigin()`
+- `Side getTarget()`
+- `INetHandler handler()`
+- `ByteBuf payload()`
+- `void processPacket(INetHandler inethandler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer packetbuffer)` — Reads the raw packet data from the data stream.
+- `void setDispatcher(NetworkDispatcher networkDispatcher)`
+- `void setTarget(Side target)`
+- `Packet<INetHandlerPlayServer> toC17Packet()`
+- `java.util.List<Packet<INetHandlerPlayClient>> toS3FPackets()`
+- `void writePacketData(PacketBuffer packetbuffer)` — Writes the raw packet data to the data stream.
 
-## Description
+## Fields
 
-Passes this Packet on to the NetHandler for processing.
+- `static int MAX_LENGTH`

@@ -1,25 +1,29 @@
 ---
 title: "FontMetadataSectionSerializer"
-description: "public class FontMetadataSectionSerializer extends BaseMetadataSectionSerializer < FontMetadataSection >"
+description: "public class FontMetadataSectionSerializer extends BaseMetadataSectionSerializer<FontMetadataSection>"
 package: "net/minecraft/client/resources/data"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/resources/data/FontMetadataSectionSerializer.html"
 sourceType: javadoc
 ---
 
 # FontMetadataSectionSerializer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.data.BaseMetadataSectionSerializer<FontMetadataSection> → net.minecraft.client.resources.data.FontMetadataSectionSerializer
+
 ## Class signature
 
 ```java
-public class FontMetadataSectionSerializer extends BaseMetadataSectionSerializer < FontMetadataSection >
+public class FontMetadataSectionSerializer extends BaseMetadataSectionSerializer<FontMetadataSection>
 ```
 
 ## Constructors
 
-- `public FontMetadataSectionSerializer()`
+- `FontMetadataSectionSerializer()`
 
 ## Methods
 
-- `public FontMetadataSection deserialize(com.google.gson.JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, com.google.gson.JsonDeserializationContext p_deserialize_3_) throws com.google.gson.JsonParseException`
-- `public java.lang.String getSectionName()`
+- `FontMetadataSection deserialize(com.google.gson.JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, com.google.gson.JsonDeserializationContext p_deserialize_3_)`
+- `java.lang.String getSectionName()`

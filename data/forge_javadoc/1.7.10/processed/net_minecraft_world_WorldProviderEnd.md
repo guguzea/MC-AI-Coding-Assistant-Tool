@@ -1,28 +1,30 @@
 # WorldProviderEnd
 
+**Inheritance:** java.lang.Object → net.minecraft.world.WorldProvider → net.minecraft.world.WorldProviderEnd
+
 ## Class signature
 
 ```java
 public class WorldProviderEnd extends WorldProvider
 ```
 
-## Constructors
-
-- `public WorldProviderEnd()`
-
 ## Methods
 
-- `public void registerWorldChunkManager()`
-- `public IChunkProvider createChunkGenerator()`
-- `public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_)`
-- `public float[] calcSunriseSunsetColors(float p_76560_1_, float p_76560_2_)`
-- `public Vec3 getFogColor(float p_76562_1_, float p_76562_2_)`
-- `public boolean isSkyColored()`
-- `public boolean canRespawnHere()`
-- `public boolean isSurfaceWorld()`
-- `public float getCloudHeight()`
-- `public boolean canCoordinateBeSpawn(int p_76566_1_, int p_76566_2_)`
-- `public ChunkCoordinates getEntrancePortalLocation()`
-- `public int getAverageGroundLevel()`
-- `public boolean doesXZShowFog(int p_76568_1_, int p_76568_2_)`
-- `public java.lang.String getDimensionName()`
+- `float[] calcSunriseSunsetColors(float p_76560_1_, float p_76560_2_)`
+- `float calculateCelestialAngle(long p_76563_1_, float p_76563_3_)`
+- `boolean canCoordinateBeSpawn(int p_76566_1_, int p_76566_2_)`
+- `boolean canRespawnHere()`
+- `IChunkProvider createChunkGenerator()`
+- `boolean doesXZShowFog(int p_76568_1_, int p_76568_2_)`
+- `int getAverageGroundLevel()`
+- `float getCloudHeight()`
+- `java.lang.String getDimensionName()`
+- `ChunkCoordinates getEntrancePortalLocation()`
+- `Vec3 getFogColor(float p_76562_1_, float p_76562_2_)`
+- `boolean isSkyColored()`
+- `boolean isSurfaceWorld()`
+- `void registerWorldChunkManager()`
+
+## Fields
+
+- `WorldProviderEnd`

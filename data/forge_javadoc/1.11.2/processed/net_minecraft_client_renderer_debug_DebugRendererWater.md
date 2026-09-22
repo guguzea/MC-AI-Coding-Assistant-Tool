@@ -1,5 +1,7 @@
 # DebugRendererWater
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.debug.DebugRendererWater
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class DebugRendererWater extends java.lang.Object implements DebugRendere
 
 ## Constructors
 
-- `public DebugRendererWater( Minecraft minecraftIn)`
+- `DebugRendererWater(Minecraft minecraftIn)`
 
 ## Methods
 
-- `public void render(float partialTicks, long p_190060_2_)`
+- `void render(float partialTicks, long p_190060_2_)`

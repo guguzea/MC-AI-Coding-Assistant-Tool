@@ -1,8 +1,60 @@
 {
-  "localRevision": "d39844302af5",
-  "remoteRevision": "d39844302af5",
+  "localRevision": "d85d843c52a3",
+  "remoteRevision": "d85d843c52a3",
   "scriptApiStable": "2.9.0",
   "scriptApiBeta": "beta",
-  "fetchedAt": "2026-08-14T18:35:35.715Z",
-  "stale": false
+  "fetchedAt": "2026-09-21T11:54:45.724Z",
+  "stale": false,
+  "checkedAt": "2026-09-21T12:32:44.391Z",
+  "staleBasis": "canary 页 <meta name=gitcommit> 的上游 commit sha + updated_at 聚合短哈希；local 取自 fingerprints.json",
+  "probe": {
+    "canaryPages": 8,
+    "localJudged": 8,
+    "remoteJudged": 8,
+    "ok": true,
+    "failures": []
+  },
+  "corpus": {
+    "tocLeaves": 2814,
+    "documentsLeaves": 274,
+    "planned": 258,
+    "written": 1,
+    "reused": 257,
+    "failed": 0,
+    "shortPages": 1,
+    "indexEntries": 258
+  },
+  "scriptApiTyped": {
+    "pkg": "@minecraft/server",
+    "version": "2.9.0",
+    "versionBasis": "bedrock-docs-status.scriptApiStable（本字段由 fetch-bedrock-docs.js 维护，本脚本只读不写）",
+    "decls": 624,
+    "pages": 624,
+    "collisions": [
+      {
+        "name": "system",
+        "kind": "const",
+        "kept": "System.md",
+        "renamedTo": "system~1a327e.md",
+        "reason": "case-insensitive-name-collision"
+      },
+      {
+        "name": "world",
+        "kind": "const",
+        "kept": "World.md",
+        "renamedTo": "world~e2c9c8.md",
+        "reason": "case-insensitive-name-collision"
+      }
+    ],
+    "indexEntries": 624,
+    "prunedStaleIndexEntries": [],
+    "members": 2590,
+    "source": "unpkg",
+    "sourceBytes": 760872,
+    "sha256": "21abb5fe1b5d8a74e83c50267aa5eae4574699458c63114ca8be7a6c396ab9d2",
+    "npmLatest": "2.10.0",
+    "retrievedAt": "2026-09-21T16:26:05.911Z",
+    "rawNotStored": "index.d.ts 原文只落 mcp-server/scripts/_temp/（gitignore），仓库内不存原文，产物为逐声明摘录 + 出处",
+    "pinGateNote": "模板钉值由 mcp-server/scripts/assert-bedrock-script-api-pin.mjs 看守，本脚本不参与、不推进"
+  }
 }

@@ -1,16 +1,29 @@
 # ISpecialArmor.ArmorProperties
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.ISpecialArmor.ArmorProperties
+
+## Class signature
+
+```java
+public static class ISpecialArmor.ArmorProperties extends java.lang.Object implements java.lang.Comparable<ISpecialArmor.ArmorProperties>
+```
+
 ## Constructors
 
-- `public ArmorProperties(int priority, double ratio, int max)`
+- `ArmorProperties(int priority, double ratio, int max)`
 
 ## Methods
 
-- `public static float applyArmor( EntityLivingBase entity, NonNullList < ItemStack > inventory, DamageSource source, double damage)`
-- `public int compareTo( ISpecialArmor.ArmorProperties o)`
-- `public java.lang.String toString()`
-- `public ISpecialArmor.ArmorProperties copy()`
+- `static float applyArmor(EntityLivingBase entity, NonNullList<ItemStack> inventory, DamageSource source, double damage)` — Gathers and applies armor reduction to damage being dealt to a entity.
+- `int compareTo(ISpecialArmor.ArmorProperties o)`
+- `ISpecialArmor.ArmorProperties copy()`
+- `java.lang.String toString()`
 
-## Description
+## Fields
 
-Gathers and applies armor reduction to damage being dealt to a entity.
+- `int AbsorbMax`
+- `double AbsorbRatio`
+- `double Armor`
+- `int Priority`
+- `int Slot`
+- `double Toughness`

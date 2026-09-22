@@ -1,30 +1,34 @@
 ---
 title: "SPacketSetSlot"
-description: "public class SPacketSetSlot extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketSetSlot extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/network/play/server/SPacketSetSlot.html"
 sourceType: javadoc
 ---
 
 # SPacketSetSlot
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketSetSlot
+
 ## Class signature
 
 ```java
-public class SPacketSetSlot extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketSetSlot extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketSetSlot()`
-- `public SPacketSetSlot(int windowIdIn, int slotIn, ItemStack itemIn)`
+- `SPacketSetSlot()`
+- `SPacketSetSlot(int windowIdIn, int slotIn, ItemStack itemIn)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public int getWindowId()`
-- `public int getSlot()`
-- `public ItemStack getStack()`
+- `int getSlot()`
+- `ItemStack getStack()`
+- `int getWindowId()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

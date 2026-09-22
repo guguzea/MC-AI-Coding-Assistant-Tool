@@ -1,5 +1,7 @@
 # BlockFluidBase
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraftforge.fluids.BlockFluidBase
+
 ## Class signature
 
 ```java
@@ -8,52 +10,67 @@ public abstract class BlockFluidBase extends Block implements IFluidBlock
 
 ## Constructors
 
-- `public BlockFluidBase( Fluid fluid, Material material)`
+- `BlockFluidBase(Fluid fluid, Material material)`
 
 ## Methods
 
-- `@Nonnull protected BlockStateContainer createBlockState()`
-- `public int getMetaFromState(@Nonnull IBlockState state)`
-- `@Deprecated @Nonnull public IBlockState getStateFromMeta(int meta)`
-- `public BlockFluidBase setQuantaPerBlock(int quantaPerBlock)`
-- `public BlockFluidBase setDensity(int density)`
-- `public BlockFluidBase setTemperature(int temperature)`
-- `public BlockFluidBase setTickRate(int tickRate)`
-- `public BlockFluidBase setRenderLayer( BlockRenderLayer renderLayer)`
-- `public BlockFluidBase setMaxScaledLight(int maxScaledLight)`
-- `public boolean canDisplace( IBlockAccess world, BlockPos pos)`
-- `public boolean displaceIfPossible( World world, BlockPos pos)`
-- `public abstract int getQuantaValue( IBlockAccess world, BlockPos pos)`
-- `public abstract boolean canCollideCheck(@Nonnull IBlockState state, boolean fullHit)`
-- `public abstract int getMaxRenderHeightMeta()`
-- `public void onBlockAdded(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state)`
-- `public void neighborChanged(@Nonnull IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Block neighborBlock, @Nonnull BlockPos neighbourPos)`
-- `public boolean requiresUpdates()`
-- `public boolean isPassable(@Nonnull IBlockAccess world, @Nonnull BlockPos pos)`
-- `@Nonnull public Item getItemDropped(@Nonnull IBlockState state, @Nonnull java.util.Random rand, int fortune)`
-- `public int quantityDropped(@Nonnull java.util.Random par1Random)`
-- `public int tickRate(@Nonnull World world)`
-- `@Nonnull public Vec3d modifyAcceleration(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Entity entity, @Nonnull Vec3d vec)`
-- `public int getLightValue(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos)`
-- `public boolean isOpaqueCube(@Nonnull IBlockState state)`
-- `public boolean isFullCube(@Nonnull IBlockState state)`
-- `public int getPackedLightmapCoords(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos)`
-- `@Nonnull public BlockRenderLayer getBlockLayer()`
-- `public boolean shouldSideBeRendered(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EnumFacing side)`
-- `@Nonnull public IBlockState getExtendedState(@Nonnull IBlockState oldState, @Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos)`
-- `public static final int getDensity( IBlockAccess world, BlockPos pos)`
-- `public static final int getTemperature( IBlockAccess world, BlockPos pos)`
-- `public static double getFlowDirection( IBlockAccess world, BlockPos pos)`
-- `public final int getQuantaValueBelow( IBlockAccess world, BlockPos pos, int belowThis)`
-- `public final int getQuantaValueAbove( IBlockAccess world, BlockPos pos, int aboveThis)`
-- `public final float getQuantaPercentage( IBlockAccess world, BlockPos pos)`
-- `public float getFluidHeightAverage(float... flow)`
-- `public float getFluidHeightForRender( IBlockAccess world, BlockPos pos)`
-- `public Vec3d getFlowVector( IBlockAccess world, BlockPos pos)`
-- `public Fluid getFluid()`
-- `public float getFilledPercentage( World world, BlockPos pos)`
-- `public AxisAlignedBB getCollisionBoundingBox(@Nonnull IBlockState blockState, @Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos)`
+- `abstract boolean canCollideCheck(IBlockState state, boolean fullHit)`
+- `boolean canDisplace(IBlockAccess world, BlockPos pos)` — Returns true if the block at (pos) is displaceable.
+- `protected BlockStateContainer createBlockState()`
+- `boolean displaceIfPossible(World world, BlockPos pos)` — Attempt to displace the block at (pos), return true if it was displaced.
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
+- `static int getDensity(IBlockAccess world, BlockPos pos)`
+- `IBlockState getExtendedState(IBlockState oldState, IBlockAccess worldIn, BlockPos pos)` — Can return IExtendedBlockState
+- `float getFilledPercentage(World world, BlockPos pos)` — Returns the amount of a single block is filled.
+- `static double getFlowDirection(IBlockAccess world, BlockPos pos)`
+- `Vec3d getFlowVector(IBlockAccess world, BlockPos pos)`
+- `Fluid getFluid()` — Returns the Fluid associated with this Block.
+- `float getFluidHeightAverage(float... flow)`
+- `float getFluidHeightForRender(IBlockAccess world, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)` — Get a light value for the block at the specified coordinates, normal ranges are between 0 and 15
+- `abstract int getMaxRenderHeightMeta()`
+- `int getMetaFromState(IBlockState state)`
+- `int getPackedLightmapCoords(IBlockState state, IBlockAccess world, BlockPos pos)`
+- `float getQuantaPercentage(IBlockAccess world, BlockPos pos)`
+- `abstract int getQuantaValue(IBlockAccess world, BlockPos pos)`
+- `int getQuantaValueAbove(IBlockAccess world, BlockPos pos, int aboveThis)`
+- `int getQuantaValueBelow(IBlockAccess world, BlockPos pos, int belowThis)`
+- `@Deprecated IBlockState getStateFromMeta(int meta)`
+- `static int getTemperature(IBlockAccess world, BlockPos pos)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `boolean isPassable(IBlockAccess world, BlockPos pos)`
+- `Vec3d modifyAcceleration(World world, BlockPos pos, Entity entity, Vec3d vec)`
+- `void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos neighbourPos)`
+- `void onBlockAdded(World world, BlockPos pos, IBlockState state)`
+- `int quantityDropped(java.util.Random par1Random)`
+- `boolean requiresUpdates()`
+- `BlockFluidBase setDensity(int density)`
+- `BlockFluidBase setMaxScaledLight(int maxScaledLight)`
+- `BlockFluidBase setQuantaPerBlock(int quantaPerBlock)`
+- `BlockFluidBase setRenderLayer(BlockRenderLayer renderLayer)`
+- `BlockFluidBase setTemperature(int temperature)`
+- `BlockFluidBase setTickRate(int tickRate)`
+- `boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)`
+- `int tickRate(World world)`
 
-## Description
+## Fields
 
-This is a base implementation for Fluid blocks. It is highly recommended that you extend this class or one of the Forge-provided child classes.
+- `protected static java.util.Map<Block, java.lang.Boolean> defaultDisplacements`
+- `protected Fluid definedFluid` — This is the fluid used in the constructor.
+- `protected int density`
+- `protected int densityDir`
+- `protected java.util.Map<Block, java.lang.Boolean> displacements`
+- `static PropertyFloat FLOW_DIRECTION`
+- `static com.google.common.collect.ImmutableList<IUnlistedProperty<java.lang.Float>> FLUID_RENDER_PROPS`
+- `protected java.lang.String fluidName`
+- `static PropertyInteger LEVEL`
+- `static PropertyFloat [] LEVEL_CORNERS`
+- `protected int maxScaledLight`
+- `protected int quantaPerBlock`
+- `protected float quantaPerBlockFloat`
+- `protected BlockRenderLayer renderLayer`
+- `protected int temperature`
+- `protected int tickRate`

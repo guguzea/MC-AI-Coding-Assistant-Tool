@@ -1,13 +1,17 @@
 ---
 title: "GuiDupesFound"
-description: "Draws the screen and all the components in it."
+description: "public class GuiDupesFound extends GuiErrorScreen"
 package: "net/minecraftforge/fml/client"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/client/GuiDupesFound.html"
 sourceType: javadoc
 ---
 
 # GuiDupesFound
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiErrorScreen → net.minecraftforge.fml.client.GuiDupesFound
 
 ## Class signature
 
@@ -15,15 +19,11 @@ sourceType: javadoc
 public class GuiDupesFound extends GuiErrorScreen
 ```
 
-## Constructors
-
-- `public GuiDupesFound( DuplicateModsFoundException dupes)`
-
 ## Methods
 
-- `public void initGui()`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)` — Draws the screen and all the components in it.
+- `void initGui()` — Adds the buttons (and other controls) to the screen in question.
 
-## Description
+## Fields
 
-Draws the screen and all the components in it.
+- `GuiDupesFound`

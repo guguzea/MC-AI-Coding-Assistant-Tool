@@ -1,9 +1,17 @@
 # ChangeDimensionTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.ChangeDimensionTrigger.Instance
+
+## Class signature
+
+```java
+public static class ChangeDimensionTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( DimensionType from, DimensionType to)`
+- `Instance(DimensionType from, DimensionType to)`
 
 ## Methods
 
-- `public boolean test( DimensionType from, DimensionType to)`
+- `boolean test(DimensionType from, DimensionType to)`

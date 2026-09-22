@@ -1,56 +1,56 @@
 ---
 title: "TileEntityBrewingStand"
-description: "Retrieves the handler for the capability requested on the specific side."
+description: "public class TileEntityBrewingStand extends TileEntityLockable implements ITickable, ISidedInventory"
 package: "net/minecraft/tileentity"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/tileentity/TileEntityBrewingStand.html"
 sourceType: javadoc
 ---
 
 # TileEntityBrewingStand
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityLockable → net.minecraft.tileentity.TileEntityBrewingStand
+
 ## Class signature
 
 ```java
-public class TileEntityBrewingStand extends TileEntityLockable implements ITickable , ISidedInventory
+public class TileEntityBrewingStand extends TileEntityLockable implements ITickable, ISidedInventory
 ```
-
-## Constructors
-
-- `public TileEntityBrewingStand()`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public void setName(java.lang.String name)`
-- `public int getSizeInventory()`
-- `public boolean isEmpty()`
-- `public void update()`
-- `public boolean[] createFilledSlotsArray()`
-- `public static void registerFixesBrewingStand( DataFixer fixer)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public ItemStack getStackInSlot(int index)`
-- `public ItemStack decrStackSize(int index, int count)`
-- `public ItemStack removeStackFromSlot(int index)`
-- `public void setInventorySlotContents(int index, ItemStack stack)`
-- `public int getInventoryStackLimit()`
-- `public boolean isUsableByPlayer( EntityPlayer player)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public boolean isItemValidForSlot(int index, ItemStack stack)`
-- `public int[] getSlotsForFace( EnumFacing side)`
-- `public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)`
-- `public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)`
-- `public java.lang.String getGuiID()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public <T> T getCapability( Capability <T> capability, @Nullable EnumFacing facing)`
-- `public int getFieldCount()`
-- `public void clear()`
+- `boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)`
+- `boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)`
+- `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `boolean[] createFilledSlotsArray()`
+- `ItemStack decrStackSize(int index, int count)`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `int getField(int id)`
+- `int getFieldCount()`
+- `java.lang.String getGuiID()`
+- `int getInventoryStackLimit()`
+- `java.lang.String getName()`
+- `int getSizeInventory()`
+- `int[] getSlotsForFace(EnumFacing side)`
+- `ItemStack getStackInSlot(int index)`
+- `boolean hasCustomName()`
+- `boolean isEmpty()`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isUsableByPlayer(EntityPlayer player)`
+- `void openInventory(EntityPlayer player)`
+- `void readFromNBT(NBTTagCompound compound)`
+- `static void registerFixesBrewingStand(DataFixer fixer)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`
+- `void setName(java.lang.String name)`
+- `void update()`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Retrieves the handler for the capability requested on the specific side.
+- `TileEntityBrewingStand`

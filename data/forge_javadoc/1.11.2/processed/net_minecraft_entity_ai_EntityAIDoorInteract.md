@@ -1,5 +1,7 @@
 # EntityAIDoorInteract
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIDoorInteract
+
 ## Class signature
 
 ```java
@@ -8,11 +10,17 @@ public abstract class EntityAIDoorInteract extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIDoorInteract( EntityLiving entityIn)`
+- `EntityAIDoorInteract(EntityLiving entityIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`
+
+## Fields
+
+- `protected BlockDoor doorBlock`
+- `protected BlockPos doorPosition`
+- `protected EntityLiving theEntity`

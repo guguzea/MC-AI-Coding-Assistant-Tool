@@ -1,5 +1,7 @@
 # BlockStainedGlassPane
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockPane → net.minecraft.block.BlockStainedGlassPane
+
 ## Class signature
 
 ```java
@@ -8,18 +10,22 @@ public class BlockStainedGlassPane extends BlockPane
 
 ## Constructors
 
-- `public BlockStainedGlassPane()`
+- `BlockStainedGlassPane()`
 
 ## Methods
 
-- `public int damageDropped( IBlockState state)`
-- `public void getSubBlocks( CreativeTabs itemIn, NonNullList < ItemStack > items)`
-- `public MapColor getMapColor( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
+- `int damageDropped(IBlockState state)`
+- `BlockRenderLayer getBlockLayer()`
+- `MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
+
+## Fields
+
+- `static PropertyEnum<EnumDyeColor> COLOR`

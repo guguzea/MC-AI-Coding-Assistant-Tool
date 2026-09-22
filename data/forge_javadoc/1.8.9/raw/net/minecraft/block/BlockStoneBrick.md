@@ -1,13 +1,17 @@
 ---
 title: "BlockStoneBrick"
-description: "Gets the metadata of the item this Block can drop."
+description: "public class BlockStoneBrick extends Block"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockStoneBrick.html"
 sourceType: javadoc
 ---
 
 # BlockStoneBrick
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockStoneBrick
 
 ## Class signature
 
@@ -17,16 +21,20 @@ public class BlockStoneBrick extends Block
 
 ## Constructors
 
-- `public BlockStoneBrick()`
+- `BlockStoneBrick()`
 
 ## Methods
 
-- `public int damageDropped( IBlockState state)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > list)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockState createBlockState()`
+- `int damageDropped(IBlockState state)` — Gets the metadata of the item this Block can drop.
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> list)` — returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
 
-## Description
+## Fields
 
-Gets the metadata of the item this Block can drop.
+- `static int CHISELED_META`
+- `static int CRACKED_META`
+- `static int DEFAULT_META`
+- `static int MOSSY_META`
+- `static PropertyEnum<BlockStoneBrick.EnumType> VARIANT`

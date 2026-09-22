@@ -1,16 +1,24 @@
 # GuiConfigEntries.DoubleEntry
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.client.config.GuiConfigEntries.ListEntryBase → cpw.mods.fml.client.config.GuiConfigEntries.StringEntry → cpw.mods.fml.client.config.GuiConfigEntries.DoubleEntry
+
+## Class signature
+
+```java
+public static class GuiConfigEntries.DoubleEntry extends GuiConfigEntries.StringEntry
+```
+
 ## Constructors
 
-- `public DoubleEntry( GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement)`
+- `DoubleEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement)`
 
 ## Methods
 
-- `public void keyTyped(char eventChar, int eventKey)`
-- `public boolean isChanged()`
-- `public void undoChanges()`
-- `public boolean saveConfigElement()`
+- `boolean isChanged()` — Has the value of this entry changed?
+- `void keyTyped(char eventChar, int eventKey)` — Handles user keystrokes for any GuiTextField objects in this entry.
+- `boolean saveConfigElement()` — Handles saving any changes that have been made to this entry back to the underlying object.
+- `void undoChanges()` — Handles reverting any changes that have occurred to this entry.
 
-## Description
+## Fields
 
-DoubleEntry Provides a GuiTextField for user input. Input is restricted to ensure the value can be parsed using Double.parseDouble().
+- `protected double beforeValue`

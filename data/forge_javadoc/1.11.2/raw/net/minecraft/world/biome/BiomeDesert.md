@@ -3,11 +3,15 @@ title: "BiomeDesert"
 description: "public class BiomeDesert extends Biome"
 package: "net/minecraft/world/biome"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/biome/BiomeDesert.html"
 sourceType: javadoc
 ---
 
 # BiomeDesert
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Biome> → net.minecraft.world.biome.Biome → net.minecraft.world.biome.BiomeDesert
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class BiomeDesert extends Biome
 ```
 
-## Constructors
-
-- `public BiomeDesert( Biome.BiomeProperties properties)`
-
 ## Methods
 
-- `public void decorate( World worldIn, java.util.Random rand, BlockPos pos)`
+- `void decorate(World worldIn, java.util.Random rand, BlockPos pos)`
+
+## Fields
+
+- `BiomeDesert`

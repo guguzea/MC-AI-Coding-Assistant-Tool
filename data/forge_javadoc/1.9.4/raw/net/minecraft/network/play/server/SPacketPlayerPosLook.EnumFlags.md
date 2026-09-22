@@ -1,21 +1,27 @@
 ---
 title: "SPacketPlayerPosLook.EnumFlags"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum SPacketPlayerPosLook.EnumFlags extends java.lang.Enum<SPacketPlayerPosLook.EnumFlags>"
 package: "net/minecraft/network/play/server"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/play/server/SPacketPlayerPosLook.EnumFlags.html"
 sourceType: javadoc
 ---
 
 # SPacketPlayerPosLook.EnumFlags
 
+**Inheritance:** java.lang.Object → java.lang.Enum<SPacketPlayerPosLook.EnumFlags> → net.minecraft.network.play.server.SPacketPlayerPosLook.EnumFlags
+
+## Class signature
+
+```java
+public static enum SPacketPlayerPosLook.EnumFlags extends java.lang.Enum<SPacketPlayerPosLook.EnumFlags>
+```
+
 ## Methods
 
-- `public static SPacketPlayerPosLook.EnumFlags [] values()`
-- `public static SPacketPlayerPosLook.EnumFlags valueOf(java.lang.String name)`
-- `public static java.util.Set< SPacketPlayerPosLook.EnumFlags > unpack(int flags)`
-- `public static int pack(java.util.Set< SPacketPlayerPosLook.EnumFlags > flags)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static int pack(java.util.Set<SPacketPlayerPosLook.EnumFlags> flags)`
+- `static java.util.Set<SPacketPlayerPosLook.EnumFlags> unpack(int flags)`
+- `static SPacketPlayerPosLook.EnumFlags valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static SPacketPlayerPosLook.EnumFlags [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

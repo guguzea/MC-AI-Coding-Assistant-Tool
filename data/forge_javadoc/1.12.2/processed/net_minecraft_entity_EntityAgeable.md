@@ -1,5 +1,7 @@
 # EntityAgeable
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable
+
 ## Class signature
 
 ```java
@@ -8,24 +10,30 @@ public abstract class EntityAgeable extends EntityCreature
 
 ## Constructors
 
-- `public EntityAgeable( World worldIn)`
+- `EntityAgeable(World worldIn)`
 
 ## Methods
 
-- `public abstract EntityAgeable createChild( EntityAgeable ageable)`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand)`
-- `protected boolean holdingSpawnEggOfClass( ItemStack stack, java.lang.Class<? extends Entity > entityClass)`
+- `void addGrowth(int growth)`
+- `void ageUp(int growthSeconds, boolean updateForcedAge)`
+- `abstract EntityAgeable createChild(EntityAgeable ageable)`
 - `protected void entityInit()`
-- `public int getGrowingAge()`
-- `public void ageUp(int growthSeconds, boolean updateForcedAge)`
-- `public void addGrowth(int growth)`
-- `public void setGrowingAge(int age)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public void onLivingUpdate()`
+- `int getGrowingAge()`
+- `protected boolean holdingSpawnEggOfClass(ItemStack stack, java.lang.Class<? extends Entity> entityClass)`
+- `boolean isChild()`
+- `void notifyDataManagerChange(DataParameter<?> key)`
 - `protected void onGrowingAdult()`
-- `public boolean isChild()`
-- `public void setScaleForAge(boolean child)`
-- `protected final void setSize(float width, float height)`
-- `protected final void setScale(float scale)`
+- `void onLivingUpdate()`
+- `boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void setGrowingAge(int age)`
+- `protected void setScale(float scale)`
+- `void setScaleForAge(boolean child)`
+- `protected void setSize(float width, float height)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `protected int forcedAge`
+- `protected int forcedAgeTimer`
+- `protected int growingAge`

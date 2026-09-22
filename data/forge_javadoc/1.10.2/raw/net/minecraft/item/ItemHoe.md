@@ -3,11 +3,15 @@ title: "ItemHoe"
 description: "public class ItemHoe extends Item"
 package: "net/minecraft/item"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/item/ItemHoe.html"
 sourceType: javadoc
 ---
 
 # ItemHoe
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemHoe
 
 ## Class signature
 
@@ -17,13 +21,17 @@ public class ItemHoe extends Item
 
 ## Constructors
 
-- `public ItemHoe( Item.ToolMaterial material)`
+- `ItemHoe(Item.ToolMaterial material)`
 
 ## Methods
 
-- `public EnumActionResult onItemUse( ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `public boolean hitEntity( ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)`
-- `protected void setBlock( ItemStack stack, EntityPlayer player, World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isFull3D()`
-- `public java.lang.String getMaterialName()`
-- `public com.google.common.collect.Multimap<java.lang.String, AttributeModifier > getItemAttributeModifiers( EntityEquipmentSlot equipmentSlot)`
+- `com.google.common.collect.Multimap<java.lang.String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)`
+- `java.lang.String getMaterialName()`
+- `boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)`
+- `boolean isFull3D()`
+- `EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `protected void setBlock(ItemStack stack, EntityPlayer player, World worldIn, BlockPos pos, IBlockState state)`
+
+## Fields
+
+- `protected Item.ToolMaterial theToolMaterial`

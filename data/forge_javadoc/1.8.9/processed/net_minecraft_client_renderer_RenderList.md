@@ -1,15 +1,17 @@
 # RenderList
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.ChunkRenderContainer → net.minecraft.client.renderer.RenderList
+
 ## Class signature
 
 ```java
 public class RenderList extends ChunkRenderContainer
 ```
 
-## Constructors
-
-- `public RenderList()`
-
 ## Methods
 
-- `public void renderChunkLayer( EnumWorldBlockLayer layer)`
+- `void renderChunkLayer(EnumWorldBlockLayer layer)`
+
+## Fields
+
+- `RenderList`

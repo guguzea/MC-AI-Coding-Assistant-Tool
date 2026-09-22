@@ -1,5 +1,7 @@
 # MapGenBase
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.MapGenBase
+
 ## Class signature
 
 ```java
@@ -8,13 +10,15 @@ public class MapGenBase extends java.lang.Object
 
 ## Constructors
 
-- `public MapGenBase()`
+- `MapGenBase()`
 
 ## Methods
 
-- `public void generate( IChunkProvider chunkProviderIn, World worldIn, int x, int z, ChunkPrimer chunkPrimerIn)`
-- `protected void recursiveGenerate( World worldIn, int chunkX, int chunkZ, int p_180701_4_, int p_180701_5_, ChunkPrimer chunkPrimerIn)`
+- `void generate(IChunkProvider chunkProviderIn, World worldIn, int x, int z, ChunkPrimer chunkPrimerIn)`
+- `protected void recursiveGenerate(World worldIn, int chunkX, int chunkZ, int p_180701_4_, int p_180701_5_, ChunkPrimer chunkPrimerIn)` — Recursively called by generate()
 
-## Description
+## Fields
 
-The RNG used by the MapGen classes.
+- `protected java.util.Random rand` — The RNG used by the MapGen classes.
+- `protected int range` — The number of Chunks to gen-check in any given direction.
+- `protected World worldObj` — This world object.

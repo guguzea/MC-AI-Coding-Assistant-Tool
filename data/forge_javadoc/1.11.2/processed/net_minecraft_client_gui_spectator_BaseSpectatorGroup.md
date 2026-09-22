@@ -1,5 +1,7 @@
 # BaseSpectatorGroup
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.spectator.BaseSpectatorGroup
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class BaseSpectatorGroup extends java.lang.Object implements ISpectatorMe
 
 ## Constructors
 
-- `public BaseSpectatorGroup()`
+- `BaseSpectatorGroup()`
 
 ## Methods
 
-- `public java.util.List< ISpectatorMenuObject > getItems()`
-- `public ITextComponent getPrompt()`
+- `java.util.List<ISpectatorMenuObject> getItems()`
+- `ITextComponent getPrompt()`

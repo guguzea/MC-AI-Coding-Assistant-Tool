@@ -1,5 +1,7 @@
 # WorldGenEndPodium
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenEndPodium
+
 ## Class signature
 
 ```java
@@ -8,8 +10,13 @@ public class WorldGenEndPodium extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenEndPodium(boolean activePortalIn)`
+- `WorldGenEndPodium(boolean activePortalIn)`
 
 ## Methods
 
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`
+
+## Fields
+
+- `static BlockPos END_PODIUM_CHUNK_POS`
+- `static BlockPos END_PODIUM_LOCATION`

@@ -1,29 +1,35 @@
 ---
 title: "ZombieEvent.SummonAidEvent"
-description: "SummonAidEvent is fired when a Zombie Entity is summoned. This event is fired whenever a Zombie Entity is summoned in EntityZombie.attackEntityFrom(DamageSource, float) . This event is fired via the F"
+description: "public static class ZombieEvent.SummonAidEvent extends ZombieEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/entity/living/ZombieEvent.SummonAidEvent.html"
 sourceType: javadoc
 ---
 
 # ZombieEvent.SummonAidEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.ZombieEvent → net.minecraftforge.event.entity.living.ZombieEvent.SummonAidEvent
+
+## Class signature
+
+```java
+public static class ZombieEvent.SummonAidEvent extends ZombieEvent
+```
+
 ## Constructors
 
-- `public SummonAidEvent( EntityZombie entity, World world, int x, int y, int z, EntityLivingBase attacker, double summonChance)`
+- `SummonAidEvent(EntityZombie entity, World world, int x, int y, int z, EntityLivingBase attacker, double summonChance)`
 
 ## Methods
 
-- `public EntityZombie getCustomSummonedAid()`
-- `public void setCustomSummonedAid( EntityZombie customSummonedAid)`
-- `public World getWorld()`
-- `public int getX()`
-- `public int getY()`
-- `public int getZ()`
-- `public EntityLivingBase getAttacker()`
-- `public double getSummonChance()`
-
-## Description
-
-SummonAidEvent is fired when a Zombie Entity is summoned. This event is fired whenever a Zombie Entity is summoned in EntityZombie.attackEntityFrom(DamageSource, float) . This event is fired via the F
+- `EntityLivingBase getAttacker()`
+- `EntityZombie getCustomSummonedAid()` — Populate this field to have a custom zombie instead of a normal zombie summoned
+- `double getSummonChance()`
+- `World getWorld()`
+- `int getX()`
+- `int getY()`
+- `int getZ()`
+- `void setCustomSummonedAid(EntityZombie customSummonedAid)`

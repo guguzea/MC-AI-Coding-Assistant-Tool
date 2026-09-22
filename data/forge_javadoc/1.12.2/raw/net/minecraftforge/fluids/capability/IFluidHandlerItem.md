@@ -1,8 +1,10 @@
 ---
 title: "IFluidHandlerItem"
-description: "ItemStacks handled by an IFluidHandler may change, so this class allows users of the fluid handler to get the container after it has been used."
+description: "public interface IFluidHandlerItem extends IFluidHandler"
 package: "net/minecraftforge/fluids/capability"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fluids/capability/IFluidHandlerItem.html"
 sourceType: javadoc
 ---
@@ -17,8 +19,4 @@ public interface IFluidHandlerItem extends IFluidHandler
 
 ## Methods
 
-- `ItemStack getContainer()`
-
-## Description
-
-ItemStacks handled by an IFluidHandler may change, so this class allows users of the fluid handler to get the container after it has been used.
+- `ItemStack getContainer()` — Get the container currently acted on by this fluid handler.

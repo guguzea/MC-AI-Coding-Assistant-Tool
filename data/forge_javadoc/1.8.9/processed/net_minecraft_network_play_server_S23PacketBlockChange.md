@@ -1,24 +1,26 @@
 # S23PacketBlockChange
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S23PacketBlockChange
+
 ## Class signature
 
 ```java
-public class S23PacketBlockChange extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class S23PacketBlockChange extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public S23PacketBlockChange()`
-- `public S23PacketBlockChange( World worldIn, BlockPos blockPositionIn)`
+- `S23PacketBlockChange()`
+- `S23PacketBlockChange(World worldIn, BlockPos blockPositionIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public IBlockState getBlockState()`
-- `public BlockPos getBlockPosition()`
+- `BlockPos getBlockPosition()`
+- `IBlockState getBlockState()`
+- `void processPacket(INetHandlerPlayClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.
 
-## Description
+## Fields
 
-Passes this Packet on to the NetHandler for processing.
+- `IBlockState blockState`

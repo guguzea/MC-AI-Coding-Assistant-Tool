@@ -1,5 +1,7 @@
 # MerchantRecipe
 
+**Inheritance:** java.lang.Object → net.minecraft.village.MerchantRecipe
+
 ## Class signature
 
 ```java
@@ -8,24 +10,24 @@ public class MerchantRecipe extends java.lang.Object
 
 ## Constructors
 
-- `public MerchantRecipe( NBTTagCompound tagCompound)`
-- `public MerchantRecipe( ItemStack buy1, ItemStack buy2, ItemStack sell)`
-- `public MerchantRecipe( ItemStack buy1, ItemStack buy2, ItemStack sell, int toolUsesIn, int maxTradeUsesIn)`
-- `public MerchantRecipe( ItemStack buy1, ItemStack sell)`
-- `public MerchantRecipe( ItemStack buy1, Item sellItem)`
+- `MerchantRecipe(ItemStack buy1, Item sellItem)`
+- `MerchantRecipe(ItemStack buy1, ItemStack sell)`
+- `MerchantRecipe(ItemStack buy1, ItemStack buy2, ItemStack sell)`
+- `MerchantRecipe(ItemStack buy1, ItemStack buy2, ItemStack sell, int toolUsesIn, int maxTradeUsesIn)`
+- `MerchantRecipe(NBTTagCompound tagCompound)`
 
 ## Methods
 
-- `public ItemStack getItemToBuy()`
-- `public ItemStack getSecondItemToBuy()`
-- `public boolean hasSecondItemToBuy()`
-- `public ItemStack getItemToSell()`
-- `public int getToolUses()`
-- `public int getMaxTradeUses()`
-- `public void incrementToolUses()`
-- `public void increaseMaxTradeUses(int increment)`
-- `public boolean isRecipeDisabled()`
-- `public void compensateToolUses()`
-- `public boolean getRewardsExp()`
-- `public void readFromTags( NBTTagCompound tagCompound)`
-- `public NBTTagCompound writeToTags()`
+- `void compensateToolUses()`
+- `ItemStack getItemToBuy()`
+- `ItemStack getItemToSell()`
+- `int getMaxTradeUses()`
+- `boolean getRewardsExp()`
+- `ItemStack getSecondItemToBuy()`
+- `int getToolUses()`
+- `boolean hasSecondItemToBuy()`
+- `void increaseMaxTradeUses(int increment)`
+- `void incrementToolUses()`
+- `boolean isRecipeDisabled()`
+- `void readFromTags(NBTTagCompound tagCompound)`
+- `NBTTagCompound writeToTags()`

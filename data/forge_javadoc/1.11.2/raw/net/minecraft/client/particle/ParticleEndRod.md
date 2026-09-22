@@ -3,11 +3,15 @@ title: "ParticleEndRod"
 description: "public class ParticleEndRod extends ParticleSimpleAnimated"
 package: "net/minecraft/client/particle"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/particle/ParticleEndRod.html"
 sourceType: javadoc
 ---
 
 # ParticleEndRod
+
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleSimpleAnimated → net.minecraft.client.particle.ParticleEndRod
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class ParticleEndRod extends ParticleSimpleAnimated
 ```
 
-## Constructors
-
-- `public ParticleEndRod( World p_i46580_1_, double p_i46580_2_, double p_i46580_4_, double p_i46580_6_, double p_i46580_8_, double p_i46580_10_, double p_i46580_12_)`
-
 ## Methods
 
-- `public void move(double x, double y, double z)`
+- `void move(double x, double y, double z)`
+
+## Fields
+
+- `ParticleEndRod`

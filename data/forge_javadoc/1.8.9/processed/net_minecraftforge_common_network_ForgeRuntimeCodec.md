@@ -1,16 +1,18 @@
 # ForgeRuntimeCodec
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.FMLIndexedMessageToMessageCodec<ForgeMessage> → net.minecraftforge.common.network.ForgeRuntimeCodec
+
 ## Class signature
 
 ```java
-public class ForgeRuntimeCodec extends FMLIndexedMessageToMessageCodec < ForgeMessage >
+public class ForgeRuntimeCodec extends FMLIndexedMessageToMessageCodec<ForgeMessage>
 ```
-
-## Constructors
-
-- `public ForgeRuntimeCodec()`
 
 ## Methods
 
-- `public void encodeInto(ChannelHandlerContext ctx, ForgeMessage msg, ByteBuf target) throws java.lang.Exception`
-- `public void decodeInto(ChannelHandlerContext ctx, ByteBuf source, ForgeMessage msg)`
+- `void decodeInto(ChannelHandlerContext ctx, ByteBuf source, ForgeMessage msg)`
+- `void encodeInto(ChannelHandlerContext ctx, ForgeMessage msg, ByteBuf target)`
+
+## Fields
+
+- `ForgeRuntimeCodec`

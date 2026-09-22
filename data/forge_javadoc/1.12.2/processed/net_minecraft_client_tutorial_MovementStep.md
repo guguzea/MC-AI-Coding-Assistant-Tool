@@ -1,5 +1,7 @@
 # MovementStep
 
+**Inheritance:** java.lang.Object → net.minecraft.client.tutorial.MovementStep
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class MovementStep extends java.lang.Object implements ITutorialStep
 
 ## Constructors
 
-- `public MovementStep( Tutorial tutorial)`
+- `MovementStep(Tutorial tutorial)`
 
 ## Methods
 
-- `public void update()`
-- `public void onStop()`
-- `public void handleMovement( MovementInput input)`
-- `public void handleMouse( MouseHelper mouseHelperIn)`
+- `void handleMouse(MouseHelper mouseHelperIn)`
+- `void handleMovement(MovementInput input)`
+- `void onStop()`
+- `void update()`

@@ -1,16 +1,18 @@
 # ItemDoor
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemDoor
+
 ## Class signature
 
 ```java
 public class ItemDoor extends Item
 ```
 
-## Constructors
-
-- `public ItemDoor( Block block)`
-
 ## Methods
 
-- `public EnumActionResult onItemUse( ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `public static void placeDoor( World worldIn, BlockPos pos, EnumFacing facing, Block door, boolean isRightHinge)`
+- `EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `static void placeDoor(World worldIn, BlockPos pos, EnumFacing facing, Block door, boolean isRightHinge)`
+
+## Fields
+
+- `ItemDoor`

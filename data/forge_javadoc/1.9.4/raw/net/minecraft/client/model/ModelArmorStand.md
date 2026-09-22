@@ -3,11 +3,15 @@ title: "ModelArmorStand"
 description: "public class ModelArmorStand extends ModelArmorStandArmor"
 package: "net/minecraft/client/model"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/model/ModelArmorStand.html"
 sourceType: javadoc
 ---
 
 # ModelArmorStand
+
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelBiped → net.minecraft.client.model.ModelArmorStandArmor → net.minecraft.client.model.ModelArmorStand
 
 ## Class signature
 
@@ -17,11 +21,18 @@ public class ModelArmorStand extends ModelArmorStandArmor
 
 ## Constructors
 
-- `public ModelArmorStand()`
-- `public ModelArmorStand(float modelSize)`
+- `ModelArmorStand()`
+- `ModelArmorStand(float modelSize)`
 
 ## Methods
 
-- `public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
-- `public void render( Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
-- `public void postRenderArm(float scale, EnumHandSide side)`
+- `void postRenderArm(float scale, EnumHandSide side)`
+- `void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
+
+## Fields
+
+- `ModelRenderer standBase`
+- `ModelRenderer standLeftSide`
+- `ModelRenderer standRightSide`
+- `ModelRenderer standWaist`

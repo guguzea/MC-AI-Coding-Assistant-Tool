@@ -1,26 +1,28 @@
 # SPacketSpawnPlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketSpawnPlayer
+
 ## Class signature
 
 ```java
-public class SPacketSpawnPlayer extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketSpawnPlayer extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketSpawnPlayer()`
-- `public SPacketSpawnPlayer( EntityPlayer player)`
+- `SPacketSpawnPlayer()`
+- `SPacketSpawnPlayer(EntityPlayer player)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public java.util.List< EntityDataManager.DataEntry <?>> getDataManagerEntries()`
-- `public int getEntityID()`
-- `public java.util.UUID getUniqueId()`
-- `public double getX()`
-- `public double getY()`
-- `public double getZ()`
-- `public byte getYaw()`
-- `public byte getPitch()`
+- `java.util.List<EntityDataManager.DataEntry<?>> getDataManagerEntries()`
+- `int getEntityID()`
+- `byte getPitch()`
+- `java.util.UUID getUniqueId()`
+- `double getX()`
+- `double getY()`
+- `byte getYaw()`
+- `double getZ()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

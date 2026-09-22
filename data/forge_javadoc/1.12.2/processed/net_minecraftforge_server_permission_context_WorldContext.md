@@ -1,5 +1,7 @@
 # WorldContext
 
+**Inheritance:** java.lang.Object → net.minecraftforge.server.permission.context.Context → net.minecraftforge.server.permission.context.WorldContext
+
 ## Class signature
 
 ```java
@@ -8,13 +10,9 @@ public class WorldContext extends Context
 
 ## Constructors
 
-- `public WorldContext( World w)`
+- `WorldContext(World w)`
 
 ## Methods
 
-- `public World getWorld()`
-- `public EntityPlayer getPlayer()`
-
-## Description
-
-World from where permission is requested.
+- `EntityPlayer getPlayer()`
+- `World getWorld()` — World from where permission is requested.

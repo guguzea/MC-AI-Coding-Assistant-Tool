@@ -1,21 +1,31 @@
 ---
 title: "VillagerRegistry.VillagerCareer"
-description: ""
+description: "public static class VillagerRegistry.VillagerCareer extends java.lang.Object"
 package: "net/minecraftforge/fml/common/registry"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/registry/VillagerRegistry.VillagerCareer.html"
 sourceType: javadoc
 ---
 
 # VillagerRegistry.VillagerCareer
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerCareer
+
+## Class signature
+
+```java
+public static class VillagerRegistry.VillagerCareer extends java.lang.Object
+```
+
 ## Constructors
 
-- `public VillagerCareer( VillagerRegistry.VillagerProfession parent, java.lang.String name)`
+- `VillagerCareer(VillagerRegistry.VillagerProfession parent, java.lang.String name)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public VillagerRegistry.VillagerCareer addTrade(int level, EntityVillager.ITradeList ... trades)`
-- `public java.util.List< EntityVillager.ITradeList > getTrades(int level)`
-- `public boolean equals(java.lang.Object o)`
+- `VillagerRegistry.VillagerCareer addTrade(int level, EntityVillager.ITradeList ... trades)`
+- `boolean equals(java.lang.Object o)`
+- `java.lang.String getName()`
+- `java.util.List<EntityVillager.ITradeList> getTrades(int level)`

@@ -8,4 +8,4 @@ public static @interface Config.LangKey
 
 ## Elements
 
-- `public abstract java.lang.String value`
+- `java.lang.String value`

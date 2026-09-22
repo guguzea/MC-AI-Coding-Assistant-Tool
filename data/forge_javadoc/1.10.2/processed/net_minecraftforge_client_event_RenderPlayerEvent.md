@@ -1,5 +1,7 @@
 # RenderPlayerEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent
+
 ## Class signature
 
 ```java
@@ -8,16 +10,12 @@ public abstract class RenderPlayerEvent extends PlayerEvent
 
 ## Constructors
 
-- `public RenderPlayerEvent( EntityPlayer player, RenderPlayer renderer, float partialRenderTick, double x, double y, double z)`
+- `RenderPlayerEvent(EntityPlayer player, RenderPlayer renderer, float partialRenderTick, double x, double y, double z)`
 
 ## Methods
 
-- `public RenderPlayer getRenderer()`
-- `public float getPartialRenderTick()`
-- `public double getX()`
-- `public double getY()`
-- `public double getZ()`
-
-## Description
-
-Deprecated.
+- `float getPartialRenderTick()`
+- `RenderPlayer getRenderer()`
+- `double getX()`
+- `double getY()`
+- `double getZ()`

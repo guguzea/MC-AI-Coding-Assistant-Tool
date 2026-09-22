@@ -1,9 +1,18 @@
 # PlayerEvent.NameFormat
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.NameFormat
+
+## Class signature
+
+```java
+public static class PlayerEvent.NameFormat extends PlayerEvent
+```
+
 ## Constructors
 
-- `public NameFormat( EntityPlayer player, java.lang.String username)`
+- `NameFormat(EntityPlayer player, java.lang.String username)`
 
-## Description
+## Fields
 
-NameFormat is fired when a player's display name is retrieved. This event is fired whenever a player's name is retrieved in EntityPlayer#getDisplayName() or EntityPlayer#refreshDisplayName(). This eve
+- `java.lang.String displayname`
+- `java.lang.String username`

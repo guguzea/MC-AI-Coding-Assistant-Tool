@@ -1,18 +1,24 @@
 ---
 title: "WorldEvent.Load"
-description: "WorldEvent.Load is fired when Minecraft loads a world. This event is fired when a world is loaded in WorldClient#WorldClient(NetHandlerPlayClient, WorldSettings, int, EnumDifficulty, Profiler), Minecr"
+description: "public static class WorldEvent.Load extends WorldEvent"
 package: "net/minecraftforge/event/world"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/world/WorldEvent.Load.html"
 sourceType: javadoc
 ---
 
 # WorldEvent.Load
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.WorldEvent.Load
 
-- `public Load( World world)`
+## Class signature
 
-## Description
+```java
+public static class WorldEvent.Load extends WorldEvent
+```
 
-WorldEvent.Load is fired when Minecraft loads a world. This event is fired when a world is loaded in WorldClient#WorldClient(NetHandlerPlayClient, WorldSettings, int, EnumDifficulty, Profiler), Minecr
+## Fields
+
+- `Load`

@@ -1,11 +1,24 @@
 # GameRegistry.UniqueIdentifier
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier
+
+## Class signature
+
+```java
+public static final class GameRegistry.UniqueIdentifier extends java.lang.Object
+```
+
 ## Constructors
 
-- `public UniqueIdentifier(java.lang.String string)`
+- `UniqueIdentifier(java.lang.String string)`
 
 ## Methods
 
-- `public boolean equals(java.lang.Object obj)`
-- `public int hashCode()`
-- `public java.lang.String toString()`
+- `boolean equals(java.lang.Object obj)`
+- `int hashCode()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `java.lang.String modId`
+- `java.lang.String name`

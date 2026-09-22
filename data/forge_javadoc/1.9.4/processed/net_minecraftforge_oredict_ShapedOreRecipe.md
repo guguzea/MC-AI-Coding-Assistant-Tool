@@ -1,5 +1,7 @@
 # ShapedOreRecipe
 
+**Inheritance:** java.lang.Object → net.minecraftforge.oredict.ShapedOreRecipe
+
 ## Class signature
 
 ```java
@@ -8,21 +10,27 @@ public class ShapedOreRecipe extends java.lang.Object implements IRecipe
 
 ## Constructors
 
-- `public ShapedOreRecipe( Block result, java.lang.Object... recipe)`
-- `public ShapedOreRecipe( Item result, java.lang.Object... recipe)`
-- `public ShapedOreRecipe( ItemStack result, java.lang.Object... recipe)`
+- `ShapedOreRecipe(Block result, java.lang.Object... recipe)`
+- `ShapedOreRecipe(Item result, java.lang.Object... recipe)`
+- `ShapedOreRecipe(ItemStack result, java.lang.Object... recipe)`
 
 ## Methods
 
-- `public ItemStack getCraftingResult( InventoryCrafting var1)`
-- `public int getRecipeSize()`
-- `public ItemStack getRecipeOutput()`
-- `public boolean matches( InventoryCrafting inv, World world)`
-- `protected boolean checkMatch( InventoryCrafting inv, int startX, int startY, boolean mirror)`
-- `public ShapedOreRecipe setMirrored(boolean mirror)`
-- `public java.lang.Object[] getInput()`
-- `public ItemStack [] getRemainingItems( InventoryCrafting inv)`
+- `protected boolean checkMatch(InventoryCrafting inv, int startX, int startY, boolean mirror)`
+- `ItemStack getCraftingResult(InventoryCrafting var1)`
+- `java.lang.Object[] getInput()` — Returns the input for this recipe, any mod accessing this value should never manipulate the values in this array as it will effect the recipe itself.
+- `ItemStack getRecipeOutput()`
+- `int getRecipeSize()`
+- `ItemStack [] getRemainingItems(InventoryCrafting inv)`
+- `boolean matches(InventoryCrafting inv, World world)`
+- `ShapedOreRecipe setMirrored(boolean mirror)`
 
-## Description
+## Fields
 
-Returns the input for this recipe, any mod accessing this value should never manipulate the values in this array as it will effect the recipe itself.
+- `protected int height`
+- `protected java.lang.Object[] input`
+- `static int MAX_CRAFT_GRID_HEIGHT`
+- `static int MAX_CRAFT_GRID_WIDTH`
+- `protected boolean mirrored`
+- `protected ItemStack output`
+- `protected int width`

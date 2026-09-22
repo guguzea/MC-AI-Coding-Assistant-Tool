@@ -1,21 +1,19 @@
 # C00PacketServerQuery
 
+**Inheritance:** java.lang.Object → net.minecraft.network.status.client.C00PacketServerQuery
+
 ## Class signature
 
 ```java
-public class C00PacketServerQuery extends java.lang.Object implements Packet < INetHandlerStatusServer >
+public class C00PacketServerQuery extends java.lang.Object implements Packet<INetHandlerStatusServer>
 ```
 
 ## Constructors
 
-- `public C00PacketServerQuery()`
+- `C00PacketServerQuery()`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerStatusServer handler)`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `void processPacket(INetHandlerStatusServer handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

@@ -1,5 +1,7 @@
 # EntityAILookIdle
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAILookIdle
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class EntityAILookIdle extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAILookIdle( EntityLiving p_i1647_1_)`
+- `EntityAILookIdle(EntityLiving p_i1647_1_)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

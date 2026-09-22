@@ -1,15 +1,17 @@
 # RegistryDefaulted
 
+**Inheritance:** java.lang.Object → net.minecraft.util.registry.RegistrySimple<K, V> → net.minecraft.util.registry.RegistryDefaulted<K, V>
+
 ## Class signature
 
 ```java
-public class RegistryDefaulted<K,V> extends RegistrySimple <K,V>
+public class RegistryDefaulted<K, V> extends RegistrySimple<K, V>
 ```
-
-## Constructors
-
-- `public RegistryDefaulted( V defaultObjectIn)`
 
 ## Methods
 
-- `@Nonnull public V getObject(@Nullable K name)`
+- `V getObject(K name)`
+
+## Fields
+
+- `RegistryDefaulted`

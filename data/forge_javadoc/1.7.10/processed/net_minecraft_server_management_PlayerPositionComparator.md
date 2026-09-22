@@ -1,5 +1,7 @@
 # PlayerPositionComparator
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.PlayerPositionComparator
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class PlayerPositionComparator extends java.lang.Object implements java.u
 
 ## Constructors
 
-- `public PlayerPositionComparator( ChunkCoordinates p_i1499_1_)`
+- `PlayerPositionComparator(ChunkCoordinates p_i1499_1_)`
 
 ## Methods
 
-- `public int compare( EntityPlayerMP p_compare_1_, EntityPlayerMP p_compare_2_)`
-- `public int compare(java.lang.Object p_compare_1_, java.lang.Object p_compare_2_)`
+- `int compare(EntityPlayerMP p_compare_1_, EntityPlayerMP p_compare_2_)`
+- `int compare(java.lang.Object p_compare_1_, java.lang.Object p_compare_2_)`

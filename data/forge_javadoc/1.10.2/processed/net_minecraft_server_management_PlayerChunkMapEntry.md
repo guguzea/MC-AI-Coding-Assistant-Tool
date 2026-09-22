@@ -1,5 +1,7 @@
 # PlayerChunkMapEntry
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.PlayerChunkMapEntry
+
 ## Class signature
 
 ```java
@@ -8,23 +10,23 @@ public class PlayerChunkMapEntry extends java.lang.Object
 
 ## Constructors
 
-- `public PlayerChunkMapEntry( PlayerChunkMap mapIn, int chunkX, int chunkZ)`
+- `PlayerChunkMapEntry(PlayerChunkMap mapIn, int chunkX, int chunkZ)`
 
 ## Methods
 
-- `public ChunkPos getPos()`
-- `public void addPlayer( EntityPlayerMP player)`
-- `public void removePlayer( EntityPlayerMP player)`
-- `public boolean providePlayerChunk(boolean canGenerate)`
-- `public boolean sentToPlayers()`
-- `public void sendNearbySpecialEntities( EntityPlayerMP player)`
-- `public void updateChunkInhabitedTime()`
-- `public void blockChanged(int x, int y, int z)`
-- `public void sendPacket( Packet <?> packetIn)`
-- `public void update()`
-- `public boolean containsPlayer( EntityPlayerMP player)`
-- `public boolean hasPlayerMatching(com.google.common.base.Predicate< EntityPlayerMP > predicate)`
-- `public boolean hasPlayerMatchingInRange(double range, com.google.common.base.Predicate< EntityPlayerMP > predicate)`
-- `public boolean isSentToPlayers()`
-- `@Nullable public Chunk getChunk()`
-- `public double getClosestPlayerDistance()`
+- `void addPlayer(EntityPlayerMP player)`
+- `void blockChanged(int x, int y, int z)`
+- `boolean containsPlayer(EntityPlayerMP player)`
+- `Chunk getChunk()`
+- `double getClosestPlayerDistance()`
+- `ChunkPos getPos()`
+- `boolean hasPlayerMatching(com.google.common.base.Predicate<EntityPlayerMP> predicate)`
+- `boolean hasPlayerMatchingInRange(double range, com.google.common.base.Predicate<EntityPlayerMP> predicate)`
+- `boolean isSentToPlayers()`
+- `boolean providePlayerChunk(boolean canGenerate)`
+- `void removePlayer(EntityPlayerMP player)`
+- `void sendNearbySpecialEntities(EntityPlayerMP player)`
+- `void sendPacket(Packet<?> packetIn)`
+- `boolean sentToPlayers()`
+- `void update()`
+- `void updateChunkInhabitedTime()`

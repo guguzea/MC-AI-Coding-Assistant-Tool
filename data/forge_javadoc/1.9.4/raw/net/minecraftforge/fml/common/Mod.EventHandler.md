@@ -1,14 +1,18 @@
 ---
 title: "Mod.EventHandler"
-description: "Marks the associated method as handling an FML lifecycle event. The method must have a single parameter, one of the following types. This annotation replaces the multiple different annotations that pr"
+description: "public static @interface Mod.EventHandler"
 package: "net/minecraftforge/fml/common"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/common/Mod.EventHandler.html"
 sourceType: javadoc
 ---
 
 # Mod.EventHandler
 
-## Description
+## Class signature
 
-Marks the associated method as handling an FML lifecycle event. The method must have a single parameter, one of the following types. This annotation replaces the multiple different annotations that pr
+```java
+public static @interface Mod.EventHandler
+```

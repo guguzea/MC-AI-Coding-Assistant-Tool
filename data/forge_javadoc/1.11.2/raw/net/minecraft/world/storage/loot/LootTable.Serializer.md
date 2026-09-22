@@ -1,19 +1,29 @@
 ---
 title: "LootTable.Serializer"
-description: ""
+description: "public static class LootTable.Serializer extends java.lang.Object implements com.google.gson.JsonDeserializer<LootTable>, com.google.gson.JsonSerializer<LootTable>"
 package: "net/minecraft/world/storage/loot"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/storage/loot/LootTable.Serializer.html"
 sourceType: javadoc
 ---
 
 # LootTable.Serializer
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.LootTable.Serializer
+
+## Class signature
+
+```java
+public static class LootTable.Serializer extends java.lang.Object implements com.google.gson.JsonDeserializer<LootTable>, com.google.gson.JsonSerializer<LootTable>
+```
+
 ## Constructors
 
-- `public Serializer()`
+- `Serializer()`
 
 ## Methods
 
-- `public LootTable deserialize(com.google.gson.JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, com.google.gson.JsonDeserializationContext p_deserialize_3_) throws com.google.gson.JsonParseException`
-- `public com.google.gson.JsonElement serialize( LootTable p_serialize_1_, java.lang.reflect.Type p_serialize_2_, com.google.gson.JsonSerializationContext p_serialize_3_)`
+- `LootTable deserialize(com.google.gson.JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, com.google.gson.JsonDeserializationContext p_deserialize_3_)`
+- `com.google.gson.JsonElement serialize(LootTable p_serialize_1_, java.lang.reflect.Type p_serialize_2_, com.google.gson.JsonSerializationContext p_serialize_3_)`

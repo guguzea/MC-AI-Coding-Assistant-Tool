@@ -1,5 +1,7 @@
 # I18n
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.I18n
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class I18n extends java.lang.Object
 
 ## Constructors
 
-- `public I18n()`
+- `I18n()`
 
 ## Methods
 
-- `public static java.lang.String format(java.lang.String translateKey, java.lang.Object... parameters)`
-
-## Description
-
-format(a, b) is equivalent to String.format(translate(a), b).
+- `static java.lang.String format(java.lang.String translateKey, java.lang.Object... parameters)` — format(a, b) is equivalent to String.format(translate(a), b).

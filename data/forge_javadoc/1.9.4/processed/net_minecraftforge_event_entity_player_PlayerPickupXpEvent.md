@@ -1,5 +1,7 @@
 # PlayerPickupXpEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerPickupXpEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class PlayerPickupXpEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerPickupXpEvent( EntityPlayer player, EntityXPOrb orb)`
+- `PlayerPickupXpEvent(EntityPlayer player, EntityXPOrb orb)`
 
 ## Methods
 
-- `public EntityXPOrb getOrb()`
-
-## Description
-
-This event is called when a player collides with a EntityXPOrb on the ground. The event can be canceled, and no further processing will be done.
+- `EntityXPOrb getOrb()`

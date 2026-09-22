@@ -8,13 +8,13 @@ public interface ISaveHandler
 
 ## Methods
 
-- `WorldInfo loadWorldInfo()`
-- `void checkSessionLock() throws MinecraftException`
-- `IChunkLoader getChunkLoader( WorldProvider provider)`
-- `void saveWorldInfoWithPlayer( WorldInfo worldInformation, NBTTagCompound tagCompound)`
-- `void saveWorldInfo( WorldInfo worldInformation)`
-- `IPlayerFileData getPlayerNBTManager()`
+- `void checkSessionLock()`
 - `void flush()`
-- `java.io.File getWorldDirectory()`
+- `IChunkLoader getChunkLoader(WorldProvider provider)`
 - `java.io.File getMapFileFromName(java.lang.String mapName)`
+- `IPlayerFileData getPlayerNBTManager()`
 - `TemplateManager getStructureTemplateManager()`
+- `java.io.File getWorldDirectory()`
+- `WorldInfo loadWorldInfo()`
+- `void saveWorldInfo(WorldInfo worldInformation)`
+- `void saveWorldInfoWithPlayer(WorldInfo worldInformation, NBTTagCompound tagCompound)`

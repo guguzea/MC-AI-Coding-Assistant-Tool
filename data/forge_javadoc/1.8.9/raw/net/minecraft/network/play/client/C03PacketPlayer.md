@@ -1,40 +1,51 @@
 ---
 title: "C03PacketPlayer"
-description: "Passes this Packet on to the NetHandler for processing."
+description: "public class C03PacketPlayer extends java.lang.Object implements Packet<INetHandlerPlayServer>"
 package: "net/minecraft/network/play/client"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/network/play/client/C03PacketPlayer.html"
 sourceType: javadoc
 ---
 
 # C03PacketPlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.C03PacketPlayer
+
 ## Class signature
 
 ```java
-public class C03PacketPlayer extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class C03PacketPlayer extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public C03PacketPlayer()`
-- `public C03PacketPlayer(boolean isOnGround)`
+- `C03PacketPlayer()`
+- `C03PacketPlayer(boolean isOnGround)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public double getPositionX()`
-- `public double getPositionY()`
-- `public double getPositionZ()`
-- `public float getYaw()`
-- `public float getPitch()`
-- `public boolean isOnGround()`
-- `public boolean isMoving()`
-- `public boolean getRotating()`
-- `public void setMoving(boolean isMoving)`
+- `float getPitch()`
+- `double getPositionX()`
+- `double getPositionY()`
+- `double getPositionZ()`
+- `boolean getRotating()`
+- `float getYaw()`
+- `boolean isMoving()`
+- `boolean isOnGround()`
+- `void processPacket(INetHandlerPlayServer handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void setMoving(boolean isMoving)`
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.
 
-## Description
+## Fields
 
-Passes this Packet on to the NetHandler for processing.
+- `protected boolean moving`
+- `protected boolean onGround`
+- `protected float pitch`
+- `protected boolean rotating`
+- `protected double x`
+- `protected double y`
+- `protected float yaw`
+- `protected double z`

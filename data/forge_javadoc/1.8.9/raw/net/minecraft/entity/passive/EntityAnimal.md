@@ -1,13 +1,17 @@
 ---
 title: "EntityAnimal"
-description: "Called when the entity is attacked."
+description: "public abstract class EntityAnimal extends EntityAgeable implements IAnimals"
 package: "net/minecraft/entity/passive"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/entity/passive/EntityAnimal.html"
 sourceType: javadoc
 ---
 
 # EntityAnimal
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal
 
 ## Class signature
 
@@ -17,30 +21,30 @@ public abstract class EntityAnimal extends EntityAgeable implements IAnimals
 
 ## Constructors
 
-- `public EntityAnimal( World worldIn)`
+- `EntityAnimal(World worldIn)`
 
 ## Methods
 
+- `boolean attackEntityFrom(DamageSource source, float amount)` — Called when the entity is attacked.
+- `protected boolean canDespawn()` — Determines if an entity can be despawned, used on idle far away entities
+- `boolean canMateWith(EntityAnimal otherAnimal)` — Returns true if the mob is currently able to mate with the specified mob.
+- `protected void consumeItemFromStack(EntityPlayer player, ItemStack stack)` — Decreases ItemStack size by one
+- `float getBlockPathWeight(BlockPos pos)`
+- `boolean getCanSpawnHere()` — Checks if the entity's current position is a valid location to spawn this entity.
+- `protected int getExperiencePoints(EntityPlayer player)` — Get the experience points the entity currently has.
+- `EntityPlayer getPlayerInLove()`
+- `int getTalkInterval()` — Get number of ticks, at least during which the living entity will be silent.
+- `void handleStatusUpdate(byte id)`
+- `boolean interact(EntityPlayer player)` — Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+- `boolean isBreedingItem(ItemStack stack)` — Checks if the parameter is an item which this animal can be fed to breed it (wheat, carrots or seeds depending on the animal type)
+- `boolean isInLove()` — Returns if the entity is currently in 'love mode'.
+- `void onLivingUpdate()` — Called frequently so the entity can update its state every tick as required.
+- `void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
+- `void resetInLove()`
+- `void setInLove(EntityPlayer player)`
 - `protected void updateAITasks()`
-- `public void onLivingUpdate()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public float getBlockPathWeight( BlockPos pos)`
-- `public void writeEntityToNBT( NBTTagCompound tagCompound)`
-- `public void readEntityFromNBT( NBTTagCompound tagCompund)`
-- `public boolean getCanSpawnHere()`
-- `public int getTalkInterval()`
-- `protected boolean canDespawn()`
-- `protected int getExperiencePoints( EntityPlayer player)`
-- `public boolean isBreedingItem( ItemStack stack)`
-- `public boolean interact( EntityPlayer player)`
-- `protected void consumeItemFromStack( EntityPlayer player, ItemStack stack)`
-- `public void setInLove( EntityPlayer player)`
-- `public EntityPlayer getPlayerInLove()`
-- `public boolean isInLove()`
-- `public void resetInLove()`
-- `public boolean canMateWith( EntityAnimal otherAnimal)`
-- `public void handleStatusUpdate(byte id)`
+- `void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
 
-## Description
+## Fields
 
-Called when the entity is attacked.
+- `protected Block spawnableBlock`

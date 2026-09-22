@@ -1,5 +1,13 @@
 # RenderGameOverlayEvent.Pre
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderGameOverlayEvent → net.minecraftforge.client.event.RenderGameOverlayEvent.Pre
 
-- `public Pre( RenderGameOverlayEvent parent, RenderGameOverlayEvent.ElementType type)`
+## Class signature
+
+```java
+public static class RenderGameOverlayEvent.Pre extends RenderGameOverlayEvent
+```
+
+## Fields
+
+- `Pre`

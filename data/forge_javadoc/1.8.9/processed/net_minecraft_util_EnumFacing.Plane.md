@@ -1,14 +1,18 @@
 # EnumFacing.Plane
 
+**Inheritance:** java.lang.Object → java.lang.Enum<EnumFacing.Plane> → net.minecraft.util.EnumFacing.Plane
+
+## Class signature
+
+```java
+public static enum EnumFacing.Plane extends java.lang.Enum<EnumFacing.Plane> implements java.lang.Iterable<EnumFacing>
+```
+
 ## Methods
 
-- `public static EnumFacing.Plane [] values()`
-- `public static EnumFacing.Plane valueOf(java.lang.String name)`
-- `public EnumFacing [] facings()`
-- `public EnumFacing random(java.util.Random rand)`
-- `public boolean apply( EnumFacing p_apply_1_)`
-- `public java.util.Iterator< EnumFacing > iterator()`
-
-## Description
-
-All EnumFacing values for this Plane
+- `boolean apply(EnumFacing p_apply_1_)`
+- `EnumFacing [] facings()` — All EnumFacing values for this Plane
+- `java.util.Iterator<EnumFacing> iterator()`
+- `EnumFacing random(java.util.Random rand)` — Choose a random Facing from this Plane using the given Random
+- `static EnumFacing.Plane valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static EnumFacing.Plane [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

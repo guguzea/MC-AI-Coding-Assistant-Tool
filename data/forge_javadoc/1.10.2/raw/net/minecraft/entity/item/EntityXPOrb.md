@@ -3,11 +3,15 @@ title: "EntityXPOrb"
 description: "public class EntityXPOrb extends Entity"
 package: "net/minecraft/entity/item"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/entity/item/EntityXPOrb.html"
 sourceType: javadoc
 ---
 
 # EntityXPOrb
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityXPOrb
 
 ## Class signature
 
@@ -17,22 +21,29 @@ public class EntityXPOrb extends Entity
 
 ## Constructors
 
-- `public EntityXPOrb( World worldIn, double x, double y, double z, int expValue)`
-- `public EntityXPOrb( World worldIn)`
+- `EntityXPOrb(World worldIn)`
+- `EntityXPOrb(World worldIn, double x, double y, double z, int expValue)`
 
 ## Methods
 
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeAttackedWithItem()`
 - `protected boolean canTriggerWalking()`
-- `protected void entityInit()`
-- `public int getBrightnessForRender(float partialTicks)`
-- `public void onUpdate()`
-- `public boolean handleWaterMovement()`
 - `protected void dealFireDamage(int amount)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void onCollideWithPlayer( EntityPlayer entityIn)`
-- `public int getXpValue()`
-- `public int getTextureByXP()`
-- `public static int getXPSplit(int expValue)`
-- `public boolean canBeAttackedWithItem()`
+- `protected void entityInit()`
+- `int getBrightnessForRender(float partialTicks)`
+- `int getTextureByXP()`
+- `static int getXPSplit(int expValue)`
+- `int getXpValue()`
+- `boolean handleWaterMovement()`
+- `void onCollideWithPlayer(EntityPlayer entityIn)`
+- `void onUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `int delayBeforeCanPickup`
+- `int xpColor`
+- `int xpOrbAge`
+- `int xpValue`

@@ -1,18 +1,24 @@
 ---
 title: "ChunkWatchEvent.Watch"
-description: "ChunkWatchEvent.Watch is fired when an EntityPlayer begins watching a chunk. This event is fired when a chunk is added to the watched chunks of an EntityPlayer in EntityPlayerMP#onUpdate(). This event"
+description: "public static class ChunkWatchEvent.Watch extends ChunkWatchEvent"
 package: "net/minecraftforge/event/world"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/world/ChunkWatchEvent.Watch.html"
 sourceType: javadoc
 ---
 
 # ChunkWatchEvent.Watch
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.ChunkWatchEvent → net.minecraftforge.event.world.ChunkWatchEvent.Watch
 
-- `public Watch( ChunkCoordIntPair chunk, EntityPlayerMP player)`
+## Class signature
 
-## Description
+```java
+public static class ChunkWatchEvent.Watch extends ChunkWatchEvent
+```
 
-ChunkWatchEvent.Watch is fired when an EntityPlayer begins watching a chunk. This event is fired when a chunk is added to the watched chunks of an EntityPlayer in EntityPlayerMP#onUpdate(). This event
+## Fields
+
+- `Watch`

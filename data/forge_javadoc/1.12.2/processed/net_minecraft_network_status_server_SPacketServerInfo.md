@@ -1,19 +1,25 @@
 # SPacketServerInfo
 
+**Inheritance:** java.lang.Object → net.minecraft.network.status.server.SPacketServerInfo
+
 ## Class signature
 
 ```java
-public class SPacketServerInfo extends java.lang.Object implements Packet < INetHandlerStatusClient >
+public class SPacketServerInfo extends java.lang.Object implements Packet<INetHandlerStatusClient>
 ```
 
 ## Constructors
 
-- `public SPacketServerInfo()`
-- `public SPacketServerInfo( ServerStatusResponse responseIn)`
+- `SPacketServerInfo()`
+- `SPacketServerInfo(ServerStatusResponse responseIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerStatusClient handler)`
-- `public ServerStatusResponse getResponse()`
+- `ServerStatusResponse getResponse()`
+- `void processPacket(INetHandlerStatusClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`
+
+## Fields
+
+- `static Gson GSON`

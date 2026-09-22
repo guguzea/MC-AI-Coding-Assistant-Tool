@@ -1,22 +1,20 @@
 # GuiOptionsRowList
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.GuiSlot → net.minecraft.client.gui.GuiListExtended → net.minecraft.client.gui.GuiOptionsRowList
+
 ## Class signature
 
 ```java
 public class GuiOptionsRowList extends GuiListExtended
 ```
 
-## Constructors
-
-- `public GuiOptionsRowList( Minecraft mcIn, int p_i45015_2_, int p_i45015_3_, int p_i45015_4_, int p_i45015_5_, int p_i45015_6_, GameSettings.Options ... p_i45015_7_)`
-
 ## Methods
 
-- `public GuiOptionsRowList.Row getListEntry(int index)`
-- `protected int getSize()`
-- `public int getListWidth()`
+- `GuiOptionsRowList.Row getListEntry(int index)` — Gets the IGuiListEntry object for the given index
+- `int getListWidth()` — Gets the width of the list
 - `protected int getScrollBarX()`
+- `protected int getSize()`
 
-## Description
+## Fields
 
-Gets the IGuiListEntry object for the given index
+- `GuiOptionsRowList`

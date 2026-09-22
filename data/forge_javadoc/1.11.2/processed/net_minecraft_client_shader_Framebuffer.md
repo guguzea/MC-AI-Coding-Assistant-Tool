@@ -1,5 +1,7 @@
 # Framebuffer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.shader.Framebuffer
+
 ## Class signature
 
 ```java
@@ -8,26 +10,35 @@ public class Framebuffer extends java.lang.Object
 
 ## Constructors
 
-- `public Framebuffer(int width, int height, boolean useDepthIn)`
+- `Framebuffer(int width, int height, boolean useDepthIn)`
 
 ## Methods
 
-- `public void createBindFramebuffer(int width, int height)`
-- `public void deleteFramebuffer()`
-- `public void createFramebuffer(int width, int height)`
-- `public void setFramebufferFilter(int framebufferFilterIn)`
-- `public void checkFramebufferComplete()`
-- `public void bindFramebufferTexture()`
-- `public void unbindFramebufferTexture()`
-- `public void bindFramebuffer(boolean p_147610_1_)`
-- `public void unbindFramebuffer()`
-- `public void setFramebufferColor(float red, float green, float blue, float alpha)`
-- `public void framebufferRender(int width, int height)`
-- `public void framebufferRenderExt(int width, int height, boolean p_178038_3_)`
-- `public void framebufferClear()`
-- `public boolean enableStencil()`
-- `public boolean isStencilEnabled()`
+- `void bindFramebuffer(boolean p_147610_1_)`
+- `void bindFramebufferTexture()`
+- `void checkFramebufferComplete()`
+- `void createBindFramebuffer(int width, int height)`
+- `void createFramebuffer(int width, int height)`
+- `void deleteFramebuffer()`
+- `boolean enableStencil()` — Attempts to enabled 8 bits of stencil buffer on this FrameBuffer.
+- `void framebufferClear()`
+- `void framebufferRender(int width, int height)`
+- `void framebufferRenderExt(int width, int height, boolean p_178038_3_)`
+- `boolean isStencilEnabled()` — Returns wither or not this FBO has been successfully initialized with stencil bits.
+- `void setFramebufferColor(float red, float green, float blue, float alpha)`
+- `void setFramebufferFilter(int framebufferFilterIn)`
+- `void unbindFramebuffer()`
+- `void unbindFramebufferTexture()`
 
-## Description
+## Fields
 
-Attempts to enabled 8 bits of stencil buffer on this FrameBuffer.
+- `int depthBuffer`
+- `float[] framebufferColor`
+- `int framebufferFilter`
+- `int framebufferHeight`
+- `int framebufferObject`
+- `int framebufferTexture`
+- `int framebufferTextureHeight`
+- `int framebufferTextureWidth`
+- `int framebufferWidth`
+- `boolean useDepth`

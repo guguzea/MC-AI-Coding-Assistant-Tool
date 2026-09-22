@@ -8,4 +8,4 @@ public interface IContextSetter
 
 ## Methods
 
-- `default void setModContainer( ModContainer mod)`
+- `default void setModContainer(ModContainer mod)`

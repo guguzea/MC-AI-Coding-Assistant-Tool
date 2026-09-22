@@ -1,16 +1,18 @@
 # RenderEvoker
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RenderLivingBase<T> → net.minecraft.client.renderer.entity.RenderLiving<EntityMob> → net.minecraft.client.renderer.entity.RenderEvoker
+
 ## Class signature
 
 ```java
-public class RenderEvoker extends RenderLiving < EntityMob >
+public class RenderEvoker extends RenderLiving<EntityMob>
 ```
-
-## Constructors
-
-- `public RenderEvoker( RenderManager p_i47207_1_)`
 
 ## Methods
 
-- `protected ResourceLocation getEntityTexture( EntityMob entity)`
-- `protected void preRenderCallback( EntityMob entitylivingbaseIn, float partialTickTime)`
+- `protected ResourceLocation getEntityTexture(EntityMob entity)`
+- `protected void preRenderCallback(EntityMob entitylivingbaseIn, float partialTickTime)`
+
+## Fields
+
+- `RenderEvoker`

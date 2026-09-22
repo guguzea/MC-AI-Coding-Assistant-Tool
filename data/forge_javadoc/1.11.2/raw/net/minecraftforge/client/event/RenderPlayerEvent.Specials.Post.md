@@ -1,14 +1,24 @@
 ---
 title: "RenderPlayerEvent.Specials.Post"
-description: ""
+description: "public static class RenderPlayerEvent.Specials.Post extends RenderPlayerEvent.Specials"
 package: "net/minecraftforge/client/event"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/event/RenderPlayerEvent.Specials.Post.html"
 sourceType: javadoc
 ---
 
 # RenderPlayerEvent.Specials.Post
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent.Specials → net.minecraftforge.client.event.RenderPlayerEvent.Specials.Post
+
+## Class signature
+
+```java
+public static class RenderPlayerEvent.Specials.Post extends RenderPlayerEvent.Specials
+```
+
 ## Constructors
 
-- `public Post( EntityPlayer player, RenderPlayer renderer, float partialTicks)`
+- `Post(EntityPlayer player, RenderPlayer renderer, float partialTicks)`

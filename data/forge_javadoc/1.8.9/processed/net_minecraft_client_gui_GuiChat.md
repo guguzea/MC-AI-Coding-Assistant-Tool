@@ -1,5 +1,7 @@
 # GuiChat
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiChat
+
 ## Class signature
 
 ```java
@@ -8,24 +10,24 @@ public class GuiChat extends GuiScreen
 
 ## Constructors
 
-- `public GuiChat()`
-- `public GuiChat(java.lang.String defaultText)`
+- `GuiChat()`
+- `GuiChat(java.lang.String defaultText)`
 
 ## Methods
 
-- `public void initGui()`
-- `public void onGuiClosed()`
-- `public void updateScreen()`
-- `protected void keyTyped(char typedChar, int keyCode) throws java.io.IOException`
-- `public void handleMouseInput() throws java.io.IOException`
-- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws java.io.IOException`
-- `protected void setText(java.lang.String newChatText, boolean shouldOverwrite)`
-- `public void autocompletePlayerNames()`
-- `public void getSentHistory(int msgPos)`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `public void onAutocompleteResponse(java.lang.String[] p_146406_1_)`
-- `public boolean doesGuiPauseGame()`
+- `void autocompletePlayerNames()`
+- `boolean doesGuiPauseGame()` — Returns true if this GUI should pause the game when it is displayed in single-player
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)` — Draws the screen and all the components in it.
+- `void getSentHistory(int msgPos)` — input is relative and is applied directly to the sentHistoryCursor so -1 is the previous message, 1 is the next message from the current cursor position
+- `void handleMouseInput()` — Handles mouse input.
+- `void initGui()` — Adds the buttons (and other controls) to the screen in question.
+- `protected void keyTyped(char typedChar, int keyCode)` — Fired when a key is typed (except F11 which toggles full screen).
+- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton)` — Called when the mouse is clicked.
+- `void onAutocompleteResponse(java.lang.String[] p_146406_1_)`
+- `void onGuiClosed()` — Called when the screen is unloaded.
+- `protected void setText(java.lang.String newChatText, boolean shouldOverwrite)` — Sets the text of the chat
+- `void updateScreen()` — Called from the main game loop to update the screen.
 
-## Description
+## Fields
 
-Chat entry field
+- `protected GuiTextField inputField` — Chat entry field

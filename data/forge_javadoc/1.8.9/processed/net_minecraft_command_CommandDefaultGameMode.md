@@ -1,5 +1,7 @@
 # CommandDefaultGameMode
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.CommandGameMode → net.minecraft.command.CommandDefaultGameMode
+
 ## Class signature
 
 ```java
@@ -8,15 +10,11 @@ public class CommandDefaultGameMode extends CommandGameMode
 
 ## Constructors
 
-- `public CommandDefaultGameMode()`
+- `CommandDefaultGameMode()`
 
 ## Methods
 
-- `public java.lang.String getCommandName()`
-- `public java.lang.String getCommandUsage( ICommandSender sender)`
-- `public void processCommand( ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `protected void setGameType( WorldSettings.GameType p_71541_1_)`
-
-## Description
-
-Gets the name of the command
+- `java.lang.String getCommandName()` — Gets the name of the command
+- `java.lang.String getCommandUsage(ICommandSender sender)` — Gets the usage string for the command.
+- `void processCommand(ICommandSender sender, java.lang.String[] args)` — Callback when the command is invoked
+- `protected void setGameType(WorldSettings.GameType p_71541_1_)`

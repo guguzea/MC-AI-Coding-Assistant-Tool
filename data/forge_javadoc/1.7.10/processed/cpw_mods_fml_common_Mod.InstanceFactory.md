@@ -1,5 +1,7 @@
 # Mod.InstanceFactory
 
-## Description
+## Class signature
 
-Mod instance factory method. Should return an instance of the mod. Applies only to static methods on the same class as Mod .
+```java
+public static @interface Mod.InstanceFactory
+```

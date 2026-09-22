@@ -1,29 +1,38 @@
 ---
 title: "ObjectIntIdentityMap"
-description: "public class ObjectIntIdentityMap<T> extends java.lang.Object implements IObjectIntIterable <T>"
+description: "public class ObjectIntIdentityMap<T> extends java.lang.Object implements IObjectIntIterable<T>"
 package: "net/minecraft/util"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/util/ObjectIntIdentityMap.html"
 sourceType: javadoc
 ---
 
 # ObjectIntIdentityMap
 
+**Inheritance:** java.lang.Object → net.minecraft.util.ObjectIntIdentityMap<T>
+
 ## Class signature
 
 ```java
-public class ObjectIntIdentityMap<T> extends java.lang.Object implements IObjectIntIterable <T>
+public class ObjectIntIdentityMap<T> extends java.lang.Object implements IObjectIntIterable<T>
 ```
 
 ## Constructors
 
-- `public ObjectIntIdentityMap()`
-- `public ObjectIntIdentityMap(int expectedSize)`
+- `ObjectIntIdentityMap()`
+- `ObjectIntIdentityMap(int expectedSize)`
 
 ## Methods
 
-- `public void put( T key, int value)`
-- `public int get( T key)`
-- `@Nullable public final T getByValue(int value)`
-- `public java.util.Iterator< T > iterator()`
-- `public int size()`
+- `int get(T key)`
+- `T getByValue(int value)`
+- `java.util.Iterator<T> iterator()`
+- `void put(T key, int value)`
+- `int size()`
+
+## Fields
+
+- `protected java.util.IdentityHashMap<T, java.lang.Integer> identityMap`
+- `protected java.util.List<T> objectList`

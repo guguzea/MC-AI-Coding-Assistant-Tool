@@ -1,5 +1,7 @@
 # OverlayChatListener
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.chat.OverlayChatListener
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class OverlayChatListener extends java.lang.Object implements IChatListen
 
 ## Constructors
 
-- `public OverlayChatListener( Minecraft minecraftIn)`
+- `OverlayChatListener(Minecraft minecraftIn)`
 
 ## Methods
 
-- `public void say( ChatType chatTypeIn, ITextComponent message)`
+- `void say(ChatType chatTypeIn, ITextComponent message)`

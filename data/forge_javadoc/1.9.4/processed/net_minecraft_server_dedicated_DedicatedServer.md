@@ -1,5 +1,7 @@
 # DedicatedServer
 
+**Inheritance:** java.lang.Object → net.minecraft.server.MinecraftServer → net.minecraft.server.dedicated.DedicatedServer
+
 ## Class signature
 
 ```java
@@ -8,54 +10,59 @@ public class DedicatedServer extends MinecraftServer implements IServer
 
 ## Constructors
 
-- `public DedicatedServer(java.io.File anvilFileIn, DataFixer dataFixerIn, com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService authServiceIn, com.mojang.authlib.minecraft.MinecraftSessionService sessionServiceIn, com.mojang.authlib.GameProfileRepository profileRepoIn, PlayerProfileCache profileCacheIn)`
+- `DedicatedServer(java.io.File anvilFileIn, DataFixer dataFixerIn, com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService authServiceIn, com.mojang.authlib.minecraft.MinecraftSessionService sessionServiceIn, com.mojang.authlib.GameProfileRepository profileRepoIn, PlayerProfileCache profileCacheIn)`
 
 ## Methods
 
-- `protected boolean startServer() throws java.io.IOException`
-- `public java.lang.String loadResourcePackSHA()`
-- `public void setGameType( WorldSettings.GameType gameMode)`
-- `public boolean canStructuresSpawn()`
-- `public WorldSettings.GameType getGameType()`
-- `public EnumDifficulty getDifficulty()`
-- `public boolean isHardcore()`
-- `protected void finalTick( CrashReport report)`
-- `public CrashReport addServerInfoToCrashReport( CrashReport report)`
+- `void addChatMessage(ITextComponent message)`
+- `void addPendingCommand(java.lang.String input, ICommandSender sender)`
+- `CrashReport addServerInfoToCrashReport(CrashReport report)`
+- `void addServerStatsToSnooper(Snooper playerSnooper)`
+- `boolean allowSpawnMonsters()`
+- `boolean canStructuresSpawn()`
+- `protected boolean convertFiles()`
+- `void executePendingCommands()`
+- `protected void finalTick(CrashReport report)`
+- `boolean getAllowNether()`
+- `boolean getBooleanProperty(java.lang.String key, boolean defaultValue)`
+- `EnumDifficulty getDifficulty()`
+- `WorldSettings.GameType getGameType()`
+- `boolean getGuiEnabled()`
+- `java.lang.String getHostname()`
+- `int getIntProperty(java.lang.String key, int defaultValue)`
+- `long getMaxTickTime()`
+- `int getMaxWorldSize()`
+- `java.lang.String getMotd()`
+- `int getNetworkCompressionThreshold()`
+- `int getOpPermissionLevel()`
+- `DedicatedPlayerList getPlayerList()`
+- `java.lang.String getPlugins()`
+- `int getPort()`
+- `java.lang.String getSettingsFilename()`
+- `int getSpawnProtectionSize()`
+- `java.lang.String getStringProperty(java.lang.String key, java.lang.String defaultValue)`
+- `java.lang.String handleRConCommand(java.lang.String command)`
+- `boolean isAnnouncingPlayerAchievements()`
+- `boolean isBlockProtected(World worldIn, BlockPos pos, EntityPlayer playerIn)`
+- `boolean isCommandBlockEnabled()`
+- `boolean isDedicatedServer()`
+- `boolean isHardcore()`
+- `boolean isSnooperEnabled()`
+- `java.lang.String loadResourcePackSHA()`
+- `void saveProperties()`
+- `void setGameType(WorldSettings.GameType gameMode)`
+- `void setGuiEnabled()`
+- `void setPlayerIdleTimeout(int idleTimeout)`
+- `void setProperty(java.lang.String key, java.lang.Object value)`
+- `java.lang.String shareToLAN(WorldSettings.GameType type, boolean allowCheats)`
+- `boolean shouldBroadcastConsoleToOps()`
+- `boolean shouldBroadcastRconToOps()`
+- `boolean shouldUseNativeTransport()`
+- `protected boolean startServer()`
 - `protected void systemExitNow()`
-- `public void updateTimeLightAndEntities()`
-- `public boolean getAllowNether()`
-- `public boolean allowSpawnMonsters()`
-- `public void addServerStatsToSnooper( Snooper playerSnooper)`
-- `public boolean isSnooperEnabled()`
-- `public void addPendingCommand(java.lang.String input, ICommandSender sender)`
-- `public void executePendingCommands()`
-- `public boolean isDedicatedServer()`
-- `public boolean shouldUseNativeTransport()`
-- `public DedicatedPlayerList getPlayerList()`
-- `public int getIntProperty(java.lang.String key, int defaultValue)`
-- `public java.lang.String getStringProperty(java.lang.String key, java.lang.String defaultValue)`
-- `public boolean getBooleanProperty(java.lang.String key, boolean defaultValue)`
-- `public void setProperty(java.lang.String key, java.lang.Object value)`
-- `public void saveProperties()`
-- `public java.lang.String getSettingsFilename()`
-- `public java.lang.String getHostname()`
-- `public int getPort()`
-- `public java.lang.String getMotd()`
-- `public void setGuiEnabled()`
-- `public boolean getGuiEnabled()`
-- `public java.lang.String shareToLAN( WorldSettings.GameType type, boolean allowCheats)`
-- `public boolean isCommandBlockEnabled()`
-- `public int getSpawnProtectionSize()`
-- `public boolean isBlockProtected( World worldIn, BlockPos pos, EntityPlayer playerIn)`
-- `public int getOpPermissionLevel()`
-- `public void setPlayerIdleTimeout(int idleTimeout)`
-- `public boolean shouldBroadcastRconToOps()`
-- `public boolean shouldBroadcastConsoleToOps()`
-- `public boolean isAnnouncingPlayerAchievements()`
-- `public int getMaxWorldSize()`
-- `public int getNetworkCompressionThreshold()`
-- `public void addChatMessage( ITextComponent message)`
-- `protected boolean convertFiles() throws java.io.IOException`
-- `public long getMaxTickTime()`
-- `public java.lang.String getPlugins()`
-- `public java.lang.String handleRConCommand(java.lang.String command)`
+- `void updateTimeLightAndEntities()`
+
+## Fields
+
+- `static boolean allowPlayerLogins`
+- `java.util.List<PendingCommand> pendingCommandList`

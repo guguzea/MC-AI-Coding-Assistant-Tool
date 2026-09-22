@@ -1,15 +1,17 @@
 # BlockNetherrack
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockNetherrack
+
 ## Class signature
 
 ```java
 public class BlockNetherrack extends Block
 ```
 
-## Constructors
-
-- `public BlockNetherrack()`
-
 ## Methods
 
-- `public MapColor getMapColor( IBlockState state)`
+- `MapColor getMapColor(IBlockState state)`
+
+## Fields
+
+- `BlockNetherrack`

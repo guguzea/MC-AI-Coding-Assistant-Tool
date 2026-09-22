@@ -1,5 +1,7 @@
 # CommandPardonPlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.server.CommandPardonPlayer
+
 ## Class signature
 
 ```java
@@ -8,13 +10,13 @@ public class CommandPardonPlayer extends CommandBase
 
 ## Constructors
 
-- `public CommandPardonPlayer()`
+- `CommandPardonPlayer()`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public int getRequiredPermissionLevel()`
-- `public java.lang.String getUsage( ICommandSender sender)`
-- `public boolean checkPermission( MinecraftServer server, ICommandSender sender)`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `public java.util.List<java.lang.String> getTabCompletions( MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos targetPos)`
+- `boolean checkPermission(MinecraftServer server, ICommandSender sender)`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.lang.String getName()`
+- `int getRequiredPermissionLevel()`
+- `java.util.List<java.lang.String> getTabCompletions(MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos targetPos)`
+- `java.lang.String getUsage(ICommandSender sender)`

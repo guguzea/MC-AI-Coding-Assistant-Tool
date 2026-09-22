@@ -1,18 +1,20 @@
 # MapGenEndCity
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.MapGenBase → net.minecraft.world.gen.structure.MapGenStructure → net.minecraft.world.gen.structure.MapGenEndCity
+
 ## Class signature
 
 ```java
 public class MapGenEndCity extends MapGenStructure
 ```
 
-## Constructors
-
-- `public MapGenEndCity( ChunkGeneratorEnd p_i46665_1_)`
-
 ## Methods
 
-- `public java.lang.String getStructureName()`
 - `protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)`
+- `BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean findUnexplored)`
+- `java.lang.String getStructureName()`
 - `protected StructureStart getStructureStart(int chunkX, int chunkZ)`
-- `public BlockPos getNearestStructurePos( World worldIn, BlockPos pos, boolean findUnexplored)`
+
+## Fields
+
+- `MapGenEndCity`

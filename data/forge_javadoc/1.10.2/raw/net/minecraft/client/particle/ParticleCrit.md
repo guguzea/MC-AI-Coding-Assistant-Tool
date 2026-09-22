@@ -3,11 +3,15 @@ title: "ParticleCrit"
 description: "public class ParticleCrit extends Particle"
 package: "net/minecraft/client/particle"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/particle/ParticleCrit.html"
 sourceType: javadoc
 ---
 
 # ParticleCrit
+
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleCrit
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class ParticleCrit extends Particle
 ```
 
-## Constructors
-
-- `protected ParticleCrit( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double p_i46284_8_, double p_i46284_10_, double p_i46284_12_)`
-- `protected ParticleCrit( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double p_i46285_8_, double p_i46285_10_, double p_i46285_12_, float p_i46285_14_)`
-
 ## Methods
 
-- `public void renderParticle( VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
-- `public void onUpdate()`
+- `void onUpdate()`
+- `void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+
+## Fields
+
+- `protected ParticleCrit`
+- `protected ParticleCrit`

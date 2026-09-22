@@ -1,5 +1,7 @@
 # GuiUtils
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.config.GuiUtils
+
 ## Class signature
 
 ```java
@@ -8,19 +10,23 @@ public class GuiUtils extends java.lang.Object
 
 ## Constructors
 
-- `public GuiUtils()`
+- `GuiUtils()`
 
 ## Methods
 
-- `public static int getColorCode(char c, boolean isLighter)`
-- `public static void drawContinuousTexturedBox(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int borderSize, float zLevel)`
-- `public static void drawContinuousTexturedBox( ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int borderSize, float zLevel)`
-- `public static void drawContinuousTexturedBox( ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel)`
-- `public static void drawContinuousTexturedBox(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel)`
-- `public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height, float zLevel)`
-- `public static void drawHoveringText(java.util.List<java.lang.String> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer font)`
-- `public static void drawGradientRect(int zLevel, int left, int top, int right, int bottom, int startColor, int endColor)`
+- `static void drawContinuousTexturedBox(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int borderSize, float zLevel)` — Draws a textured box of any size (smallest size is borderSize * 2 square) based on a fixed size textured box with continuous borders and filler.
+- `static void drawContinuousTexturedBox(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel)` — Draws a textured box of any size (smallest size is borderSize * 2 square) based on a fixed size textured box with continuous borders and filler.
+- `static void drawContinuousTexturedBox(ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int borderSize, float zLevel)` — Draws a textured box of any size (smallest size is borderSize * 2 square) based on a fixed size textured box with continuous borders and filler.
+- `static void drawContinuousTexturedBox(ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel)` — Draws a textured box of any size (smallest size is borderSize * 2 square) based on a fixed size textured box with continuous borders and filler.
+- `static void drawGradientRect(int zLevel, int left, int top, int right, int bottom, int startColor, int endColor)`
+- `static void drawHoveringText(java.util.List<java.lang.String> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer font)` — Draws a tooltip box on the screen with text in it.
+- `static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height, float zLevel)`
+- `static int getColorCode(char c, boolean isLighter)`
 
-## Description
+## Fields
 
-This class provides several methods and constants used by the Config GUI classes.
+- `static int[] colorCodes`
+- `static java.lang.String INVALID`
+- `static java.lang.String RESET_CHAR`
+- `static java.lang.String UNDO_CHAR`
+- `static java.lang.String VALID`

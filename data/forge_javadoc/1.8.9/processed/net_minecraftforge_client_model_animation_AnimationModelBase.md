@@ -1,14 +1,18 @@
 # AnimationModelBase
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraftforge.client.model.animation.AnimationModelBase<T>
 
-- `public AnimationModelBase( IModel model, VertexLighterFlat lighter)`
+## Class signature
+
+```java
+public class AnimationModelBase<T extends Entity & IAnimationProvider> extends ModelBase implements IEventHandler<T>
+```
 
 ## Methods
 
-- `public void render( Entity entity, float limbSwing, float limbSwingSpeed, float timeAlive, float yawHead, float rotationPitch, float scale)`
-- `public void handleEvents( T instance, float time, java.lang.Iterable< Event > pastEvents)`
+- `@Deprecated void handleEvents(T instance, float time, java.lang.Iterable<Event> pastEvents)`
+- `@Deprecated void render(Entity entity, float limbSwing, float limbSwingSpeed, float timeAlive, float yawHead, float rotationPitch, float scale)`
 
-## Description
+## Fields
 
-Deprecated.
+- `AnimationModelBase`

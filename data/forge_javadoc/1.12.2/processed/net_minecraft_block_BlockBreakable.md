@@ -1,17 +1,19 @@
 # BlockBreakable
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBreakable
+
 ## Class signature
 
 ```java
 public class BlockBreakable extends Block
 ```
 
-## Constructors
-
-- `protected BlockBreakable( Material materialIn, boolean ignoreSimilarityIn)`
-- `protected BlockBreakable( Material materialIn, boolean ignoreSimilarityIn, MapColor mapColorIn)`
-
 ## Methods
 
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean shouldSideBeRendered( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+
+## Fields
+
+- `protected BlockBreakable`
+- `protected BlockBreakable`

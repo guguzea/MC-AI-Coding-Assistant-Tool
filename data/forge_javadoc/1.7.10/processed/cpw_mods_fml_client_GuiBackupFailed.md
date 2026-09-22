@@ -1,17 +1,19 @@
 # GuiBackupFailed
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → cpw.mods.fml.client.GuiBackupFailed
+
 ## Class signature
 
 ```java
 public class GuiBackupFailed extends GuiScreen
 ```
 
-## Constructors
-
-- `public GuiBackupFailed( GuiScreen parent, java.io.File zipName)`
-
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton p_73875_1_)`
-- `public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)`
+- `protected void actionPerformed(GuiButton p_73875_1_)`
+- `void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)`
+- `void initGui()`
+
+## Fields
+
+- `GuiBackupFailed`

@@ -1,5 +1,7 @@
 # BlockQuartz
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockQuartz
+
 ## Class signature
 
 ```java
@@ -8,21 +10,21 @@ public class BlockQuartz extends Block
 
 ## Constructors
 
-- `public BlockQuartz()`
+- `BlockQuartz()`
 
 ## Methods
 
-- `public IBlockState onBlockPlaced( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public int damageDropped( IBlockState state)`
-- `protected ItemStack createStackedBlock( IBlockState state)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > list)`
-- `public MapColor getMapColor( IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
 - `protected BlockStateContainer createBlockState()`
-- `public boolean rotateBlock( World world, BlockPos pos, EnumFacing axis)`
+- `protected ItemStack createStackedBlock(IBlockState state)`
+- `int damageDropped(IBlockState state)`
+- `MapColor getMapColor(IBlockState state)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> list)`
+- `IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)` — Rotate the block.
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
 
-## Description
+## Fields
 
-Rotate the block.
+- `static PropertyEnum<BlockQuartz.EnumType> VARIANT`

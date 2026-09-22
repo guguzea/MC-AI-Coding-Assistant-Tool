@@ -3,11 +3,15 @@ title: "EntityBodyHelper"
 description: "public class EntityBodyHelper extends java.lang.Object"
 package: "net/minecraft/entity"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/entity/EntityBodyHelper.html"
 sourceType: javadoc
 ---
 
 # EntityBodyHelper
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.EntityBodyHelper
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class EntityBodyHelper extends java.lang.Object
 
 ## Constructors
 
-- `public EntityBodyHelper( EntityLivingBase livingIn)`
+- `EntityBodyHelper(EntityLivingBase livingIn)`
 
 ## Methods
 
-- `public void updateRenderAngles()`
+- `void updateRenderAngles()`

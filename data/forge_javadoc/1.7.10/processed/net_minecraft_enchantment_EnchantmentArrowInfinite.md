@@ -1,17 +1,19 @@
 # EnchantmentArrowInfinite
 
+**Inheritance:** java.lang.Object → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentArrowInfinite
+
 ## Class signature
 
 ```java
 public class EnchantmentArrowInfinite extends Enchantment
 ```
 
-## Constructors
-
-- `public EnchantmentArrowInfinite(int p_i1921_1_, int p_i1921_2_)`
-
 ## Methods
 
-- `public int getMinEnchantability(int p_77321_1_)`
-- `public int getMaxEnchantability(int p_77317_1_)`
-- `public int getMaxLevel()`
+- `int getMaxEnchantability(int p_77317_1_)`
+- `int getMaxLevel()`
+- `int getMinEnchantability(int p_77321_1_)`
+
+## Fields
+
+- `EnchantmentArrowInfinite`

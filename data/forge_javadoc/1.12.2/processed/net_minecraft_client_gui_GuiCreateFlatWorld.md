@@ -1,21 +1,23 @@
 # GuiCreateFlatWorld
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiCreateFlatWorld
+
 ## Class signature
 
 ```java
 public class GuiCreateFlatWorld extends GuiScreen
 ```
 
-## Constructors
-
-- `public GuiCreateFlatWorld( GuiCreateWorld createWorldGuiIn, java.lang.String preset)`
-
 ## Methods
 
-- `public java.lang.String getPreset()`
-- `public void setPreset(java.lang.String preset)`
-- `public void initGui()`
-- `public void handleMouseInput() throws java.io.IOException`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void onLayersChanged()`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected void actionPerformed(GuiButton button)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `java.lang.String getPreset()`
+- `void handleMouseInput()`
+- `void initGui()`
+- `void onLayersChanged()`
+- `void setPreset(java.lang.String preset)`
+
+## Fields
+
+- `GuiCreateFlatWorld`

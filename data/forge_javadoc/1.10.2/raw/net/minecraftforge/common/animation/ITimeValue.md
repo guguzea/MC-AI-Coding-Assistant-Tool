@@ -1,8 +1,10 @@
 ---
 title: "ITimeValue"
-description: "Time-varying value associated with the animation. Return value should be constant with the respect to the input and reasonable context (current render frame). Simplest example is the input time itself"
+description: "public interface ITimeValue"
 package: "net/minecraftforge/common/animation"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/common/animation/ITimeValue.html"
 sourceType: javadoc
 ---
@@ -18,7 +20,3 @@ public interface ITimeValue
 ## Methods
 
 - `float apply(float input)`
-
-## Description
-
-Time-varying value associated with the animation. Return value should be constant with the respect to the input and reasonable context (current render frame). Simplest example is the input time itself

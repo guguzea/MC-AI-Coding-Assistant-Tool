@@ -354,6 +354,7 @@ Decision: 选择注册方式
 | `generate_addon_manifest` / `generate_bp_entity` | 只吐 JSON 文本，不写盘 |
 | `list_community_sources` / `search_community_docs` / `get_community_doc_*` | 社区实务知识库（发布/崩溃/软依赖；不替代官方文档） |
 | `analyze_porting_path` / `port_project` | 移植分析与脚手架动作 |
+| `query_upstream_releases` | 查**上游发布源**：某个加载器/映射/模组的版本到底存不存在、最新出到第几 build（`forge` / `neoforge` 走 maven-metadata，`fabric-loader` / `fabric-yarn` / `quilt-loader` / `parchment` 的端点按 MC 版本分列、**必带 `minecraftVersion`**，`modrinth` 走 `slug`）。**需联网**；TLS 失败自动回退 curl，不改系统证书库 |
 | `diagnose_data_paths` | 诊断数据目录与 `community_knowledge` 配置 |
 | `query_registry` / `mixin_analyze` / `audit_resources` / `validate_datapack_json` | Registry ID、Mixin、资源与数据包校验 |
 | `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` | 工作流全文（仅完整流程才调，改已有代码不要调；**人在环清单，不是无人值守流水线**；不代跑用户 Gradle / 不拷 jar / 不上传）与知识 URI |
@@ -375,6 +376,7 @@ Decision: 选择注册方式
 - **`search_*_docs` 查 `constructor` 崩溃**：旧 bug（`Object.prototype`）；已修。改完 `mcp-server` 后必须 `npm run build` **并重载 MCP**，或用 `node mcp-server/dist/cli.js` 验证。
 - **平台工具不要混用**：`get_version_info` 仍仅 Forge。`diagnose_gradle` 覆盖 ForgeGradle + Loom + Neo/MDG；liteloader 插件走轻量模式；Rift / BaseMod / 基岩仍早退。`validate_project` 对 Fabric/Quilt/NeoForge 做真检查，LiteLoader/Rift/ModLoader/基岩 skipped。基岩用 `validate_addon_manifest`。
 - **文档 fallback 仅限查询 API**，不代表规则树可用；命中邻近版时结果含 `fallback: true` 与 `source_version`。本版无树则 `PACK_NOT_FOUND`。
+- **「本仓没入库」≠「上游没有」**（`query_upstream_releases` 存在的理由）：`list_forge_versions` / `list_fabric_versions` / `list_neoforge_versions` / `list_doc_versions` 列的都是**本仓库已入库**的文档档位，不在清单只说明本仓没抓过。要回答「上游有没有该版本 / 最新到哪个 build」用 `query_upstream_releases`，并按三态读：`ok:false` ⇒ 没查到（网络/HTTP/解析），**禁止**据此断言上游没有；`ok:true` + `available:false` ⇒ 上游确实没有。`matchRule` 回显本次的版本归属规则（neoforge 尤其要记：MC `1.21.1` → 版本前缀 `21.1.`，不带前导 `1.`）。
 - **文档 `id` 只用搜索结果**，不要用网站 URL；全文一次 ≤ 2 页。
 - **社区短文不能当 API 规范**（`community_knowledge/AGENT_USAGE.md`）。
 - **人在环 / 写盘类默认 dryRun**（`port_project` / `mc_skill_update apply` / `activate_platform_pack write`）；`generate_*` 只吐文本。`get_workflow_template` 是清单不是流水线。Gradle、拷 jar、上传发布须用户确认后执行，不要当成漏实现的自动编排。
@@ -382,7 +384,7 @@ Decision: 选择注册方式
 - **正文里的 `<<< @/…` 与 `@[code …]` 是转引标记，不是可照抄的代码**：`get_doc_full` / `get_fabric_doc_full` 返回的正文已由 reader（`docs-platform/fabric/transclude.ts`）展开成围栏代码块，块尾带 `<!-- source: … -->`（实测 26.1.2 `develop_networking`：21 处展开、0 处裸标记）。若返回正文里**仍有裸标记行** ⇒ 该页取件目标未落盘，属缺陷：不要把标记贴给用户，也不要凭训练记忆补正文，改口 `query_loader_api` / 用户自备 jar 核实。
 - **「本档 docs 零命中」≠「该 API 不存在」**：官方文档的示例常写在 `<<< @/reference/...` include 内，`reference/` 是另一棵目录；检索按页面正文计。同理 `query_api` 的 `found:false` 只说明索引未覆盖。
 - **口径以 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §数据链口径为准**：标签读法（`[Label]` 是标签页标题、非数字花括号是选项、区段名先逐字再 `-`↔`_`）、计数器分母（`sites`/`expanded` 只算 `@[code`，`<<<` 走 `angleSites`）、台账与豁免规则、`packages` 归属与「不可当 import 依据」。
-- **验证纪律见 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §验证纪律**：改了 `mcp-server/scripts/**` 或 `scripts/**` 后，收口**必须**跑第 8 步（`cd mcp-server && node test-scripts.mjs`）——`npm test` 里抽跑几道门**不能**代替它；harness 里的硬钉锚点/计数只许「先对齐生产侧、再改 harness」，禁止靠删断言变绿；`npm test` 不得与语料抓取并发（4000 ms lag 门与磁盘负载耦合，会假红）。CLI 侧另有两档独立门：`npm run test:cli:quick`（`scripts/assert-cli-quick.mjs`，进默认门链）与 `npm run test:cli:full`（`scripts/assert-cli-full.mjs`，81 工具全量档，不默认跑；改动 CLI 入口/退出码/信封后应补跑）。
+- **验证纪律见 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §验证纪律**：改了 `mcp-server/scripts/**` 或 `scripts/**` 后，收口**必须**跑第 8 步（`cd mcp-server && node test-scripts.mjs`）——`npm test` 里抽跑几道门**不能**代替它；harness 里的硬钉锚点/计数只许「先对齐生产侧、再改 harness」，禁止靠删断言变绿；`npm test` 不得与语料抓取并发（4000 ms lag 门与磁盘负载耦合，会假红）。CLI 侧另有两档独立门：`npm run test:cli:quick`（`scripts/assert-cli-quick.mjs`，进默认门链）与 `npm run test:cli:full`（`scripts/assert-cli-full.mjs`，全量档（权威名单跑时现取），不默认跑；改动 CLI 入口/退出码/信封后应补跑）。
 
 ### 工具不可用排查（clone 后必读）
 
@@ -391,7 +393,7 @@ Decision: 选择注册方式
   cd mcp-server && npm ci && npm run build
   ```
   （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。配置宿主见 `AUTO_SETUP.md`：先识别 IDE/CLI，再按该宿主的文件与顶层键合并草稿，不要默认写 Cursor 的 `mcp.json`。）
-- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，81 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar` / `resolve_lib_skills`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。工具输出始终为 JSON；`--json` 不改变工具输出，仅为兼容保留；它只在交互式终端下影响 `--help` 的呈现（人读摘要 → 机器可读 schema），表达格式意图用 `--output-format json`（当前唯一合法值）。
+- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，82 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar` / `resolve_lib_skills`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。工具输出始终为 JSON；`--json` 不改变工具输出，仅为兼容保留；它只在交互式终端下影响 `--help` 的呈现（人读摘要 → 机器可读 schema），表达格式意图用 `--output-format json`（当前唯一合法值）。
 - **CLI 双入口（2026-09-17 提级）**：**工具线** = 上面的 `dist/cli.js`（与 MCP 同一份 `toolHandlers`）；**仓库线** = `node mcp-server/bin/mc-skill-scripts.mjs <lib|corpus|cloth|gate> <命令>`（薄壳转发 `scripts/` 与 `mcp-server/scripts/` 的既有脚本）。仓库线属**维护侧**作业（批量反编译、摘要重建、G1 门、注入标记回填），MCP 工具面不暴露；两者互不分叉；冒烟门 `assert-cli-smoke`（test-core §S16）。安装/链接 mcp-server 包后，两入口的 bin 名分别为 mc-skill 与 mc-skill-scripts。
 - **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`，然后**重载宿主 MCP**（只编 dist 不够， AI IDE 进程仍跑旧代码）。
 - **反编译工具报 `TOOLCHAIN_MISSING`**：需要 Java 17+（VineFlower/tiny-remapper）；安装 Temurin 17+ 后重启 MCP，或按返回指引操作。

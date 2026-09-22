@@ -1,5 +1,7 @@
 # ShapelessRecipes
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.ShapelessRecipes
+
 ## Class signature
 
 ```java
@@ -8,12 +10,16 @@ public class ShapelessRecipes extends java.lang.Object implements IRecipe
 
 ## Constructors
 
-- `public ShapelessRecipes( ItemStack output, java.util.List< ItemStack > inputList)`
+- `ShapelessRecipes(ItemStack output, java.util.List<ItemStack> inputList)`
 
 ## Methods
 
-- `public ItemStack getRecipeOutput()`
-- `public NonNullList < ItemStack > getRemainingItems( InventoryCrafting inv)`
-- `public boolean matches( InventoryCrafting inv, World worldIn)`
-- `public ItemStack getCraftingResult( InventoryCrafting inv)`
-- `public int getRecipeSize()`
+- `ItemStack getCraftingResult(InventoryCrafting inv)`
+- `ItemStack getRecipeOutput()`
+- `int getRecipeSize()`
+- `NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)`
+- `boolean matches(InventoryCrafting inv, World worldIn)`
+
+## Fields
+
+- `java.util.List<ItemStack> recipeItems`

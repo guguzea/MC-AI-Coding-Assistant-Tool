@@ -1,15 +1,19 @@
 # S14PacketEntity.S17PacketEntityLookMove
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S14PacketEntity → net.minecraft.network.play.server.S14PacketEntity.S17PacketEntityLookMove
 
-- `public S17PacketEntityLookMove()`
-- `public S17PacketEntityLookMove(int p_i45973_1_, byte p_i45973_2_, byte p_i45973_3_, byte p_i45973_4_, byte p_i45973_5_, byte p_i45973_6_, boolean p_i45973_7_)`
+## Class signature
+
+```java
+public static class S14PacketEntity.S17PacketEntityLookMove extends S14PacketEntity
+```
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.
 
-## Description
+## Fields
 
-Reads the raw packet data from the data stream.
+- `S17PacketEntityLookMove`
+- `S17PacketEntityLookMove`

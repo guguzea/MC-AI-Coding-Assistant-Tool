@@ -1,12 +1,14 @@
 # SoundEventAccessor
 
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.SoundEventAccessor
+
 ## Class signature
 
 ```java
-public class SoundEventAccessor extends java.lang.Object implements ISoundEventAccessor < SoundPoolEntry >
+public class SoundEventAccessor extends java.lang.Object implements ISoundEventAccessor<SoundPoolEntry>
 ```
 
 ## Methods
 
-- `public int getWeight()`
-- `public SoundPoolEntry cloneEntry()`
+- `SoundPoolEntry cloneEntry()`
+- `int getWeight()`

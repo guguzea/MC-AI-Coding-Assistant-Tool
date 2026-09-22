@@ -8,5 +8,5 @@ public interface ICamera
 
 ## Methods
 
-- `boolean isBoundingBoxInFrustum( AxisAlignedBB p_78546_1_)`
+- `boolean isBoundingBoxInFrustum(AxisAlignedBB p_78546_1_)`
 - `void setPosition(double xPositionIn, double yPositionIn, double zPositionIn)`

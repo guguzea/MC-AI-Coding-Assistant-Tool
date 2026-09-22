@@ -1,9 +1,18 @@
 # BiomeEvent.CreateDecorator
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.BiomeEvent → net.minecraftforge.event.terraingen.BiomeEvent.CreateDecorator
+
+## Class signature
+
+```java
+public static class BiomeEvent.CreateDecorator extends BiomeEvent
+```
+
 ## Constructors
 
-- `public CreateDecorator( BiomeGenBase biome, BiomeDecorator original)`
+- `CreateDecorator(BiomeGenBase biome, BiomeDecorator original)`
 
-## Description
+## Fields
 
-CreateDecorator is fired when a BiomeDecorator is created. This event is fired whenever a BiomeDecorator is created in DeferredBiomeDecorator#fireCreateEventAndReplace(BiomeGenBase). originalBiomeDeco
+- `BiomeDecorator newBiomeDecorator`
+- `BiomeDecorator originalBiomeDecorator`

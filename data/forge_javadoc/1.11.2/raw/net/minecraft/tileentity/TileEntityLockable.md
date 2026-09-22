@@ -1,13 +1,17 @@
 ---
 title: "TileEntityLockable"
-description: "Retrieves the handler for the capability requested on the specific side."
+description: "public abstract class TileEntityLockable extends TileEntity implements ILockableContainer"
 package: "net/minecraft/tileentity"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/tileentity/TileEntityLockable.html"
 sourceType: javadoc
 ---
 
 # TileEntityLockable
+
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityLockable
 
 ## Class signature
 
@@ -15,22 +19,18 @@ sourceType: javadoc
 public abstract class TileEntityLockable extends TileEntity implements ILockableContainer
 ```
 
-## Constructors
-
-- `public TileEntityLockable()`
-
 ## Methods
 
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public boolean isLocked()`
-- `public LockCode getLockCode()`
-- `public void setLockCode( LockCode code)`
-- `public ITextComponent getDisplayName()`
 - `protected IItemHandler createUnSidedHandler()`
-- `@Nullable public <T> T getCapability( Capability <T> capability, @Nullable EnumFacing facing)`
-- `public boolean hasCapability( Capability <?> capability, @Nullable EnumFacing facing)`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `ITextComponent getDisplayName()`
+- `LockCode getLockCode()`
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.
+- `boolean isLocked()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setLockCode(LockCode code)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Retrieves the handler for the capability requested on the specific side.
+- `TileEntityLockable`

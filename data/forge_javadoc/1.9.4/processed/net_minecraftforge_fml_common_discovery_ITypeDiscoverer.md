@@ -8,4 +8,8 @@ public interface ITypeDiscoverer
 
 ## Methods
 
-- `java.util.List< ModContainer > discover( ModCandidate candidate, ASMDataTable table)`
+- `java.util.List<ModContainer> discover(ModCandidate candidate, ASMDataTable table)`
+
+## Fields
+
+- `static java.util.regex.Pattern classFile`

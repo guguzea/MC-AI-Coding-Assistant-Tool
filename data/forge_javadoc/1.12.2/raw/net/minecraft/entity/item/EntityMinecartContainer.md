@@ -1,60 +1,65 @@
 ---
 title: "EntityMinecartContainer"
-description: "Retrieves the handler for the capability requested on the specific side."
+description: "public abstract class EntityMinecartContainer extends EntityMinecart implements ILockableContainer, ILootContainer"
 package: "net/minecraft/entity/item"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/item/EntityMinecartContainer.html"
 sourceType: javadoc
 ---
 
 # EntityMinecartContainer
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityMinecart → net.minecraft.entity.item.EntityMinecartContainer
+
 ## Class signature
 
 ```java
-public abstract class EntityMinecartContainer extends EntityMinecart implements ILockableContainer , ILootContainer
+public abstract class EntityMinecartContainer extends EntityMinecart implements ILockableContainer, ILootContainer
 ```
 
 ## Constructors
 
-- `public EntityMinecartContainer( World worldIn)`
-- `public EntityMinecartContainer( World worldIn, double x, double y, double z)`
+- `EntityMinecartContainer(World worldIn)`
+- `EntityMinecartContainer(World worldIn, double x, double y, double z)`
 
 ## Methods
 
-- `public void killMinecart( DamageSource source)`
-- `public boolean isEmpty()`
-- `public ItemStack getStackInSlot(int index)`
-- `public ItemStack decrStackSize(int index, int count)`
-- `public ItemStack removeStackFromSlot(int index)`
-- `public void setInventorySlotContents(int index, ItemStack stack)`
-- `public void markDirty()`
-- `public boolean isUsableByPlayer( EntityPlayer player)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public boolean isItemValidForSlot(int index, ItemStack stack)`
-- `public int getInventoryStackLimit()`
-- `public Entity changeDimension(int dimensionIn, ITeleporter teleporter)`
-- `public void setDead()`
-- `public void setDropItemsWhenDead(boolean dropWhenDead)`
-- `public static void addDataFixers( DataFixer p_190574_0_, java.lang.Class<?> p_190574_1_)`
-- `protected void writeEntityToNBT( NBTTagCompound compound)`
-- `protected void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean processInitialInteract( EntityPlayer player, EnumHand hand)`
+- `static void addDataFixers(DataFixer p_190574_0_, java.lang.Class<?> p_190574_1_)`
+- `void addLoot(EntityPlayer player)`
 - `protected void applyDrag()`
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public int getFieldCount()`
-- `public boolean isLocked()`
-- `public void setLockCode( LockCode code)`
-- `public LockCode getLockCode()`
-- `public void addLoot( EntityPlayer player)`
-- `public <T> T getCapability( Capability <T> capability, EnumFacing facing)`
-- `public boolean hasCapability( Capability <?> capability, EnumFacing facing)`
-- `public void clear()`
-- `public void setLootTable( ResourceLocation lootTableIn, long lootTableSeedIn)`
-- `public ResourceLocation getLootTable()`
+- `Entity changeDimension(int dimensionIn, ITeleporter teleporter)`
+- `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `ItemStack decrStackSize(int index, int count)`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `int getField(int id)`
+- `int getFieldCount()`
+- `int getInventoryStackLimit()`
+- `LockCode getLockCode()`
+- `ResourceLocation getLootTable()`
+- `ItemStack getStackInSlot(int index)`
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.
+- `boolean isEmpty()`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isLocked()`
+- `boolean isUsableByPlayer(EntityPlayer player)`
+- `void killMinecart(DamageSource source)`
+- `void markDirty()`
+- `void openInventory(EntityPlayer player)`
+- `boolean processInitialInteract(EntityPlayer player, EnumHand hand)`
+- `protected void readEntityFromNBT(NBTTagCompound compound)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void setDead()`
+- `void setDropItemsWhenDead(boolean dropWhenDead)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`
+- `void setLockCode(LockCode code)`
+- `void setLootTable(ResourceLocation lootTableIn, long lootTableSeedIn)`
+- `protected void writeEntityToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Retrieves the handler for the capability requested on the specific side.
+- `boolean dropContentsWhenDead`
+- `IItemHandler itemHandler`

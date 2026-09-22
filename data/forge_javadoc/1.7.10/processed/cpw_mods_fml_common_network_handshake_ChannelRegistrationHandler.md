@@ -1,16 +1,18 @@
 # ChannelRegistrationHandler
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.network.handshake.ChannelRegistrationHandler
+
 ## Class signature
 
 ```java
-public class ChannelRegistrationHandler extends <any>
+public class ChannelRegistrationHandler extends<any>
 ```
 
 ## Constructors
 
-- `public ChannelRegistrationHandler()`
+- `ChannelRegistrationHandler()`
 
 ## Methods
 
-- `protected void channelRead0(ChannelHandlerContext ctx, FMLProxyPacket msg) throws java.lang.Exception`
-- `public void exceptionCaught(ChannelHandlerContext ctx, java.lang.Throwable cause) throws java.lang.Exception`
+- `protected void channelRead0(ChannelHandlerContext ctx, FMLProxyPacket msg)`
+- `void exceptionCaught(ChannelHandlerContext ctx, java.lang.Throwable cause)`

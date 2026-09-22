@@ -1,5 +1,7 @@
 # EntityMountEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.EntityMountEvent
+
 ## Class signature
 
 ```java
@@ -8,13 +10,15 @@ public class EntityMountEvent extends EntityEvent
 
 ## Constructors
 
-- `public EntityMountEvent( Entity entityMounting, Entity entityBeingMounted, World entityWorld, boolean isMounting)`
+- `EntityMountEvent(Entity entityMounting, Entity entityBeingMounted, World entityWorld, boolean isMounting)`
 
 ## Methods
 
-- `public boolean isMounting()`
-- `public boolean isDismounting()`
+- `boolean isDismounting()`
+- `boolean isMounting()`
 
-## Description
+## Fields
 
-This event gets fired whenever a entity mounts/dismounts another entity. entityBeingMounted can be null , be sure to check for that. This event is Cancelable . If this event is canceled, the entity do
+- `Entity entityBeingMounted`
+- `Entity entityMounting`
+- `World worldObj`

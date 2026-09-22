@@ -1,5 +1,7 @@
 # RedundantChanceTags
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.RedundantChanceTags
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class RedundantChanceTags extends java.lang.Object implements IFixableDat
 
 ## Constructors
 
-- `public RedundantChanceTags()`
+- `RedundantChanceTags()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

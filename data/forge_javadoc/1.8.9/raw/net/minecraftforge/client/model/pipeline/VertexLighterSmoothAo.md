@@ -3,11 +3,15 @@ title: "VertexLighterSmoothAo"
 description: "public class VertexLighterSmoothAo extends VertexLighterFlat"
 package: "net/minecraftforge/client/model/pipeline"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/client/model/pipeline/VertexLighterSmoothAo.html"
 sourceType: javadoc
 ---
 
 # VertexLighterSmoothAo
+
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.pipeline.QuadGatheringTransformer → net.minecraftforge.client.model.pipeline.VertexLighterFlat → net.minecraftforge.client.model.pipeline.VertexLighterSmoothAo
 
 ## Class signature
 
@@ -15,14 +19,14 @@ sourceType: javadoc
 public class VertexLighterSmoothAo extends VertexLighterFlat
 ```
 
-## Constructors
-
-- `public VertexLighterSmoothAo()`
-
 ## Methods
 
-- `protected void updateLightmap(float[] normal, float[] lightmap, float x, float y, float z)`
-- `protected void updateColor(float[] normal, float[] color, float x, float y, float z, float tint, int multiplier)`
 - `protected float calcLightmap(float[][][][] light, float x, float y, float z)`
 - `protected float getAo(float x, float y, float z)`
-- `public void updateBlockInfo()`
+- `void updateBlockInfo()`
+- `protected void updateColor(float[] normal, float[] color, float x, float y, float z, float tint, int multiplier)`
+- `protected void updateLightmap(float[] normal, float[] lightmap, float x, float y, float z)`
+
+## Fields
+
+- `VertexLighterSmoothAo`

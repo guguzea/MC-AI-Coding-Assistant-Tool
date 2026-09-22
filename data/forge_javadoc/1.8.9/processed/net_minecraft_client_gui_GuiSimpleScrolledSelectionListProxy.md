@@ -1,30 +1,28 @@
 # GuiSimpleScrolledSelectionListProxy
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.GuiSlot → net.minecraft.client.gui.GuiSimpleScrolledSelectionListProxy
+
 ## Class signature
 
 ```java
 public class GuiSimpleScrolledSelectionListProxy extends GuiSlot
 ```
 
-## Constructors
-
-- `public GuiSimpleScrolledSelectionListProxy( RealmsSimpleScrolledSelectionList p_i45525_1_, int widthIn, int heightIn, int topIn, int bottomIn, int slotHeightIn)`
-
 ## Methods
 
-- `protected int getSize()`
-- `protected void elementClicked(int slotIndex, boolean isDoubleClick, int mouseX, int mouseY)`
-- `protected boolean isSelected(int slotIndex)`
 - `protected void drawBackground()`
+- `void drawScreen(int mouseXIn, int mouseYIn, float p_148128_3_)`
 - `protected void drawSlot(int entryID, int p_180791_2_, int p_180791_3_, int p_180791_4_, int mouseXIn, int mouseYIn)`
-- `public int getWidth()`
-- `public int getMouseY()`
-- `public int getMouseX()`
-- `protected int getContentHeight()`
+- `protected void elementClicked(int slotIndex, boolean isDoubleClick, int mouseX, int mouseY)` — The element in the slot that was clicked, boolean for whether it was double clicked or not
+- `protected int getContentHeight()` — Return the height of the content being scrolled
+- `int getMouseX()`
+- `int getMouseY()`
 - `protected int getScrollBarX()`
-- `public void handleMouseInput()`
-- `public void drawScreen(int mouseXIn, int mouseYIn, float p_148128_3_)`
+- `protected int getSize()`
+- `int getWidth()`
+- `void handleMouseInput()`
+- `protected boolean isSelected(int slotIndex)` — Returns true if the element passed in is currently selected
 
-## Description
+## Fields
 
-The element in the slot that was clicked, boolean for whether it was double clicked or not
+- `GuiSimpleScrolledSelectionListProxy`

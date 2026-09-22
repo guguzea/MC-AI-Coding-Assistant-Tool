@@ -1,21 +1,19 @@
 # BlockStaticLiquid
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockLiquid → net.minecraft.block.BlockStaticLiquid
+
 ## Class signature
 
 ```java
 public class BlockStaticLiquid extends BlockLiquid
 ```
 
-## Constructors
-
-- `protected BlockStaticLiquid( Material materialIn)`
-
 ## Methods
 
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `protected boolean isSurroundingBlockFlammable( World worldIn, BlockPos pos)`
+- `protected boolean isSurroundingBlockFlammable(World worldIn, BlockPos pos)`
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Called when a neighboring block changes.
+- `protected BlockStaticLiquid`

@@ -3,5 +3,5 @@
 ## Class signature
 
 ```java
-public interface ITickableTextureObject extends ITextureObject , ITickable
+public interface ITickableTextureObject extends ITextureObject, ITickable
 ```

@@ -3,6 +3,8 @@ title: "IPlayerFileData"
 description: "public interface IPlayerFileData"
 package: "net/minecraft/world/storage"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/storage/IPlayerFileData.html"
 sourceType: javadoc
 ---
@@ -17,6 +19,6 @@ public interface IPlayerFileData
 
 ## Methods
 
-- `void writePlayerData( EntityPlayer player)`
-- `NBTTagCompound readPlayerData( EntityPlayer player)`
 - `java.lang.String[] getAvailablePlayerDat()`
+- `NBTTagCompound readPlayerData(EntityPlayer player)`
+- `void writePlayerData(EntityPlayer player)`

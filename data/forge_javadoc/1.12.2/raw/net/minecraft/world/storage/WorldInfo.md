@@ -1,13 +1,17 @@
 ---
 title: "WorldInfo"
-description: "Deprecated."
+description: "public class WorldInfo extends java.lang.Object"
 package: "net/minecraft/world/storage"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/storage/WorldInfo.html"
 sourceType: javadoc
 ---
 
 # WorldInfo
+
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.WorldInfo
 
 ## Class signature
 
@@ -17,92 +21,92 @@ public class WorldInfo extends java.lang.Object
 
 ## Constructors
 
-- `protected WorldInfo()`
-- `public WorldInfo( NBTTagCompound nbt)`
-- `public WorldInfo( WorldSettings settings, java.lang.String name)`
-- `public WorldInfo( WorldInfo worldInformation)`
+- `WorldInfo()`
+- `WorldInfo(NBTTagCompound nbt)`
+- `WorldInfo(WorldInfo worldInformation)`
+- `WorldInfo(WorldSettings settings, java.lang.String name)`
 
 ## Methods
 
-- `public static void registerFixes( DataFixer fixer)`
-- `public void populateFromWorldSettings( WorldSettings settings)`
-- `public NBTTagCompound cloneNBTCompound( NBTTagCompound nbt)`
-- `public long getSeed()`
-- `public int getSpawnX()`
-- `public int getSpawnY()`
-- `public int getSpawnZ()`
-- `public long getWorldTotalTime()`
-- `public long getWorldTime()`
-- `public long getSizeOnDisk()`
-- `public NBTTagCompound getPlayerNBTTagCompound()`
-- `public void setSpawnX(int x)`
-- `public void setSpawnY(int y)`
-- `public void setWorldTotalTime(long time)`
-- `public void setSpawnZ(int z)`
-- `public void setWorldTime(long time)`
-- `public void setSpawn( BlockPos spawnPoint)`
-- `public java.lang.String getWorldName()`
-- `public void setWorldName(java.lang.String worldName)`
-- `public int getSaveVersion()`
-- `public void setSaveVersion(int version)`
-- `public long getLastTimePlayed()`
-- `public int getCleanWeatherTime()`
-- `public void setCleanWeatherTime(int cleanWeatherTimeIn)`
-- `public boolean isThundering()`
-- `public void setThundering(boolean thunderingIn)`
-- `public int getThunderTime()`
-- `public void setThunderTime(int time)`
-- `public boolean isRaining()`
-- `public void setRaining(boolean isRaining)`
-- `public int getRainTime()`
-- `public void setRainTime(int time)`
-- `public GameType getGameType()`
-- `public boolean isMapFeaturesEnabled()`
-- `public void setMapFeaturesEnabled(boolean enabled)`
-- `public void setGameType( GameType type)`
-- `public boolean isHardcoreModeEnabled()`
-- `public void setHardcore(boolean hardcoreIn)`
-- `public WorldType getTerrainType()`
-- `public void setTerrainType( WorldType type)`
-- `public java.lang.String getGeneratorOptions()`
-- `public boolean areCommandsAllowed()`
-- `public void setAllowCommands(boolean allow)`
-- `public boolean isInitialized()`
-- `public void setServerInitialized(boolean initializedIn)`
-- `public GameRules getGameRulesInstance()`
-- `public double getBorderCenterX()`
-- `public double getBorderCenterZ()`
-- `public double getBorderSize()`
-- `public void setBorderSize(double size)`
-- `public long getBorderLerpTime()`
-- `public void setBorderLerpTime(long time)`
-- `public double getBorderLerpTarget()`
-- `public void setBorderLerpTarget(double lerpSize)`
-- `public void getBorderCenterZ(double posZ)`
-- `public void getBorderCenterX(double posX)`
-- `public double getBorderSafeZone()`
-- `public void setBorderSafeZone(double amount)`
-- `public double getBorderDamagePerBlock()`
-- `public void setBorderDamagePerBlock(double damage)`
-- `public int getBorderWarningDistance()`
-- `public int getBorderWarningTime()`
-- `public void setBorderWarningDistance(int amountOfBlocks)`
-- `public void setBorderWarningTime(int ticks)`
-- `public EnumDifficulty getDifficulty()`
-- `public void setDifficulty( EnumDifficulty newDifficulty)`
-- `public boolean isDifficultyLocked()`
-- `public void setDifficultyLocked(boolean locked)`
-- `public void addToCrashReport( CrashReportCategory category)`
-- `public void setAdditionalProperties(java.util.Map<java.lang.String, NBTBase > additionalProperties)`
-- `public NBTBase getAdditionalProperty(java.lang.String additionalProperty)`
-- `@Deprecated public NBTTagCompound getDimensionData( DimensionType dimensionIn)`
-- `public NBTTagCompound getDimensionData(int dimensionIn)`
-- `@Deprecated public void setDimensionData( DimensionType dimensionIn, NBTTagCompound compound)`
-- `public void setDimensionData(int dimensionID, NBTTagCompound compound)`
-- `public int getVersionId()`
-- `public boolean isVersionSnapshot()`
-- `public java.lang.String getVersionName()`
+- `void addToCrashReport(CrashReportCategory category)`
+- `boolean areCommandsAllowed()`
+- `NBTTagCompound cloneNBTCompound(NBTTagCompound nbt)`
+- `NBTBase getAdditionalProperty(java.lang.String additionalProperty)`
+- `double getBorderCenterX()`
+- `void getBorderCenterX(double posX)`
+- `double getBorderCenterZ()`
+- `void getBorderCenterZ(double posZ)`
+- `double getBorderDamagePerBlock()`
+- `double getBorderLerpTarget()`
+- `long getBorderLerpTime()`
+- `double getBorderSafeZone()`
+- `double getBorderSize()`
+- `int getBorderWarningDistance()`
+- `int getBorderWarningTime()`
+- `int getCleanWeatherTime()`
+- `EnumDifficulty getDifficulty()`
+- `@Deprecated NBTTagCompound getDimensionData(DimensionType dimensionIn)`
+- `NBTTagCompound getDimensionData(int dimensionIn)`
+- `GameRules getGameRulesInstance()`
+- `GameType getGameType()`
+- `java.lang.String getGeneratorOptions()`
+- `long getLastTimePlayed()`
+- `NBTTagCompound getPlayerNBTTagCompound()`
+- `int getRainTime()`
+- `int getSaveVersion()`
+- `long getSeed()`
+- `long getSizeOnDisk()`
+- `int getSpawnX()`
+- `int getSpawnY()`
+- `int getSpawnZ()`
+- `WorldType getTerrainType()`
+- `int getThunderTime()`
+- `int getVersionId()`
+- `java.lang.String getVersionName()`
+- `java.lang.String getWorldName()`
+- `long getWorldTime()`
+- `long getWorldTotalTime()`
+- `boolean isDifficultyLocked()`
+- `boolean isHardcoreModeEnabled()`
+- `boolean isInitialized()`
+- `boolean isMapFeaturesEnabled()`
+- `boolean isRaining()`
+- `boolean isThundering()`
+- `boolean isVersionSnapshot()`
+- `void populateFromWorldSettings(WorldSettings settings)`
+- `static void registerFixes(DataFixer fixer)`
+- `void setAdditionalProperties(java.util.Map<java.lang.String, NBTBase> additionalProperties)` — Allow access to additional mod specific world based properties Used by FML to store mod list associated with a world, and maybe an id map Used by Forge to store the dimensions available to a world
+- `void setAllowCommands(boolean allow)`
+- `void setBorderDamagePerBlock(double damage)`
+- `void setBorderLerpTarget(double lerpSize)`
+- `void setBorderLerpTime(long time)`
+- `void setBorderSafeZone(double amount)`
+- `void setBorderSize(double size)`
+- `void setBorderWarningDistance(int amountOfBlocks)`
+- `void setBorderWarningTime(int ticks)`
+- `void setCleanWeatherTime(int cleanWeatherTimeIn)`
+- `void setDifficulty(EnumDifficulty newDifficulty)`
+- `void setDifficultyLocked(boolean locked)`
+- `@Deprecated void setDimensionData(DimensionType dimensionIn, NBTTagCompound compound)`
+- `void setDimensionData(int dimensionID, NBTTagCompound compound)`
+- `void setGameType(GameType type)`
+- `void setHardcore(boolean hardcoreIn)`
+- `void setMapFeaturesEnabled(boolean enabled)`
+- `void setRaining(boolean isRaining)`
+- `void setRainTime(int time)`
+- `void setSaveVersion(int version)`
+- `void setServerInitialized(boolean initializedIn)`
+- `void setSpawn(BlockPos spawnPoint)`
+- `void setSpawnX(int x)`
+- `void setSpawnY(int y)`
+- `void setSpawnZ(int z)`
+- `void setTerrainType(WorldType type)`
+- `void setThundering(boolean thunderingIn)`
+- `void setThunderTime(int time)`
+- `void setWorldName(java.lang.String worldName)`
+- `void setWorldTime(long time)`
+- `void setWorldTotalTime(long time)`
 
-## Description
+## Fields
 
-Deprecated.
+- `static EnumDifficulty DEFAULT_DIFFICULTY`

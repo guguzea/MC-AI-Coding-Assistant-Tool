@@ -1,5 +1,7 @@
 # BlockStructure
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockContainer → net.minecraft.block.BlockStructure
+
 ## Class signature
 
 ```java
@@ -8,18 +10,22 @@ public class BlockStructure extends BlockContainer
 
 ## Constructors
 
-- `public BlockStructure()`
+- `BlockStructure()`
 
 ## Methods
 
-- `public TileEntity createNewTileEntity( World worldIn, int meta)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)`
-- `@Nullable public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public int quantityDropped(java.util.Random random)`
-- `public EnumBlockRenderType getRenderType( IBlockState state)`
-- `public IBlockState onBlockPlaced( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `TileEntity createNewTileEntity(World worldIn, int meta)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `int getMetaFromState(IBlockState state)`
+- `EnumBlockRenderType getRenderType(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)`
+- `int quantityDropped(java.util.Random random)`
+
+## Fields
+
+- `static PropertyEnum<TileEntityStructure.Mode> MODE`

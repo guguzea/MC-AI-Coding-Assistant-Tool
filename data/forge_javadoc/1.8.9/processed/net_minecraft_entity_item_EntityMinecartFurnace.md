@@ -1,5 +1,7 @@
 # EntityMinecartFurnace
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityMinecart → net.minecraft.entity.item.EntityMinecartFurnace
+
 ## Class signature
 
 ```java
@@ -8,25 +10,26 @@ public class EntityMinecartFurnace extends EntityMinecart
 
 ## Constructors
 
-- `public EntityMinecartFurnace( World worldIn)`
-- `public EntityMinecartFurnace( World worldIn, double p_i1719_2_, double p_i1719_4_, double p_i1719_6_)`
+- `EntityMinecartFurnace(World worldIn)`
+- `EntityMinecartFurnace(World worldIn, double p_i1719_2_, double p_i1719_4_, double p_i1719_6_)`
 
 ## Methods
 
-- `public EntityMinecart.EnumMinecartType getMinecartType()`
-- `protected void entityInit()`
-- `public void onUpdate()`
-- `protected double getMaximumSpeed()`
-- `public void killMinecart( DamageSource p_94095_1_)`
-- `protected void func_180460_a( BlockPos p_180460_1_, IBlockState p_180460_2_)`
 - `protected void applyDrag()`
-- `public boolean interactFirst( EntityPlayer playerIn)`
-- `protected void writeEntityToNBT( NBTTagCompound tagCompound)`
-- `protected void readEntityFromNBT( NBTTagCompound tagCompund)`
+- `protected void entityInit()`
+- `protected void func_180460_a(BlockPos p_180460_1_, IBlockState p_180460_2_)`
+- `IBlockState getDefaultDisplayTile()`
+- `protected double getMaximumSpeed()` — Get's the maximum speed for a minecart
+- `EntityMinecart.EnumMinecartType getMinecartType()`
+- `boolean interactFirst(EntityPlayer playerIn)` — First layer of player interaction
 - `protected boolean isMinecartPowered()`
+- `void killMinecart(DamageSource p_94095_1_)`
+- `void onUpdate()` — Called to update the entity's position/logic.
+- `protected void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
 - `protected void setMinecartPowered(boolean p_94107_1_)`
-- `public IBlockState getDefaultDisplayTile()`
+- `protected void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
 
-## Description
+## Fields
 
-Get's the maximum speed for a minecart
+- `double pushX`
+- `double pushZ`

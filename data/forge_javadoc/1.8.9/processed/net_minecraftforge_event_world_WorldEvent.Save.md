@@ -1,9 +1,13 @@
 # WorldEvent.Save
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.WorldEvent.Save
 
-- `public Save( World world)`
+## Class signature
 
-## Description
+```java
+public static class WorldEvent.Save extends WorldEvent
+```
 
-WorldEvent.Save is fired when Minecraft saves a world. This event is fired when a world is saved in WorldServer#saveAllChunks(boolean, IProgressUpdate), ForgeInternalHandler#onDimensionSave(Save). Thi
+## Fields
+
+- `Save`

@@ -1,5 +1,7 @@
 # FMLInterModComms
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.event.FMLInterModComms
+
 ## Class signature
 
 ```java
@@ -8,18 +10,14 @@ public class FMLInterModComms extends java.lang.Object
 
 ## Constructors
 
-- `public FMLInterModComms()`
+- `FMLInterModComms()`
 
 ## Methods
 
-- `public static boolean sendMessage(java.lang.String modId, java.lang.String key, NBTTagCompound value)`
-- `public static boolean sendMessage(java.lang.String modId, java.lang.String key, ItemStack value)`
-- `public static boolean sendMessage(java.lang.String modId, java.lang.String key, java.lang.String value)`
-- `public static void sendRuntimeMessage(java.lang.Object sourceMod, java.lang.String modId, java.lang.String key, NBTTagCompound value)`
-- `public static void sendRuntimeMessage(java.lang.Object sourceMod, java.lang.String modId, java.lang.String key, ItemStack value)`
-- `public static void sendRuntimeMessage(java.lang.Object sourceMod, java.lang.String modId, java.lang.String key, java.lang.String value)`
-- `public static <any> fetchRuntimeMessages(java.lang.Object forMod)`
-
-## Description
-
-Simple intermod communications to receive simple messages directed at you from other mods
+- `static<any> fetchRuntimeMessages(java.lang.Object forMod)` — Retrieve any pending runtime messages for the mod
+- `static boolean sendMessage(java.lang.String modId, java.lang.String key, ItemStack value)`
+- `static boolean sendMessage(java.lang.String modId, java.lang.String key, NBTTagCompound value)`
+- `static boolean sendMessage(java.lang.String modId, java.lang.String key, java.lang.String value)`
+- `static void sendRuntimeMessage(java.lang.Object sourceMod, java.lang.String modId, java.lang.String key, ItemStack value)`
+- `static void sendRuntimeMessage(java.lang.Object sourceMod, java.lang.String modId, java.lang.String key, NBTTagCompound value)`
+- `static void sendRuntimeMessage(java.lang.Object sourceMod, java.lang.String modId, java.lang.String key, java.lang.String value)`

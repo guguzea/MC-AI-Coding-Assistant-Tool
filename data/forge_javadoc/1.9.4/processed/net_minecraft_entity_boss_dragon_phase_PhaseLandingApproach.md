@@ -1,18 +1,20 @@
 # PhaseLandingApproach
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseLandingApproach
+
 ## Class signature
 
 ```java
 public class PhaseLandingApproach extends PhaseBase
 ```
 
-## Constructors
-
-- `public PhaseLandingApproach( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public PhaseList < PhaseLandingApproach > getPhaseList()`
-- `public void initPhase()`
-- `public void doLocalUpdate()`
-- `@Nullable public Vec3d getTargetLocation()`
+- `void doLocalUpdate()`
+- `PhaseList<PhaseLandingApproach> getPhaseList()`
+- `Vec3d getTargetLocation()`
+- `void initPhase()`
+
+## Fields
+
+- `PhaseLandingApproach`

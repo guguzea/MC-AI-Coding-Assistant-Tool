@@ -1,15 +1,17 @@
 # BiomeGenDesert
 
+**Inheritance:** java.lang.Object → net.minecraft.world.biome.BiomeGenBase → net.minecraft.world.biome.BiomeGenDesert
+
 ## Class signature
 
 ```java
 public class BiomeGenDesert extends BiomeGenBase
 ```
 
-## Constructors
-
-- `public BiomeGenDesert(int p_i1977_1_)`
-
 ## Methods
 
-- `public void decorate( World worldIn, java.util.Random rand, BlockPos pos)`
+- `void decorate(World worldIn, java.util.Random rand, BlockPos pos)`
+
+## Fields
+
+- `BiomeGenDesert`

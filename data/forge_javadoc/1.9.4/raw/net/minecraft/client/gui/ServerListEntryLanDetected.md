@@ -3,11 +3,15 @@ title: "ServerListEntryLanDetected"
 description: "public class ServerListEntryLanDetected extends java.lang.Object implements GuiListExtended.IGuiListEntry"
 package: "net/minecraft/client/gui"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/gui/ServerListEntryLanDetected.html"
 sourceType: javadoc
 ---
 
 # ServerListEntryLanDetected
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.ServerListEntryLanDetected
 
 ## Class signature
 
@@ -17,12 +21,17 @@ public class ServerListEntryLanDetected extends java.lang.Object implements GuiL
 
 ## Constructors
 
-- `protected ServerListEntryLanDetected( GuiMultiplayer screenIn, LanServerDetector.LanServer serverDataIn)`
+- `ServerListEntryLanDetected(GuiMultiplayer screenIn, LanServerDetector.LanServer serverDataIn)`
 
 ## Methods
 
-- `public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected)`
-- `public boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY)`
-- `public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_)`
-- `public void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY)`
-- `public LanServerDetector.LanServer getLanServer()`
+- `void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected)`
+- `LanServerDetector.LanServer getLanServer()`
+- `boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY)`
+- `void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY)`
+- `void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_)`
+
+## Fields
+
+- `protected Minecraft mc`
+- `protected LanServerDetector.LanServer serverData`

@@ -1,9 +1,17 @@
 # B3DClip.NodeClip
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.b3d.B3DClip.NodeClip
+
+## Class signature
+
+```java
+protected static class B3DClip.NodeClip extends java.lang.Object implements IJointClip
+```
+
 ## Constructors
 
-- `public NodeClip( B3DModel.Node <?> node)`
+- `NodeClip(B3DModel.Node<?> node)`
 
 ## Methods
 
-- `public TRSRTransformation apply(float time)`
+- `TRSRTransformation apply(float time)`

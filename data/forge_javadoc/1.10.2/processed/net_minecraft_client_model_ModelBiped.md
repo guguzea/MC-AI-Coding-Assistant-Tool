@@ -1,5 +1,7 @@
 # ModelBiped
 
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelBiped
+
 ## Class signature
 
 ```java
@@ -8,16 +10,29 @@ public class ModelBiped extends ModelBase
 
 ## Constructors
 
-- `public ModelBiped()`
-- `public ModelBiped(float modelSize)`
-- `public ModelBiped(float modelSize, float p_i1149_2_, int textureWidthIn, int textureHeightIn)`
+- `ModelBiped()`
+- `ModelBiped(float modelSize)`
+- `ModelBiped(float modelSize, float p_i1149_2_, int textureWidthIn, int textureHeightIn)`
 
 ## Methods
 
-- `public void render( Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
-- `public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
-- `public void setModelAttributes( ModelBase model)`
-- `public void setInvisible(boolean invisible)`
-- `public void postRenderArm(float scale, EnumHandSide side)`
-- `protected ModelRenderer getArmForSide( EnumHandSide side)`
-- `protected EnumHandSide getMainHand( Entity entityIn)`
+- `protected ModelRenderer getArmForSide(EnumHandSide side)`
+- `protected EnumHandSide getMainHand(Entity entityIn)`
+- `void postRenderArm(float scale, EnumHandSide side)`
+- `void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `void setInvisible(boolean invisible)`
+- `void setModelAttributes(ModelBase model)`
+- `void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
+
+## Fields
+
+- `ModelRenderer bipedBody`
+- `ModelRenderer bipedHead`
+- `ModelRenderer bipedHeadwear`
+- `ModelRenderer bipedLeftArm`
+- `ModelRenderer bipedLeftLeg`
+- `ModelRenderer bipedRightArm`
+- `ModelRenderer bipedRightLeg`
+- `boolean isSneak`
+- `ModelBiped.ArmPose leftArmPose`
+- `ModelBiped.ArmPose rightArmPose`

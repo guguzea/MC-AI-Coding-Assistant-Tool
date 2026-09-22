@@ -1,5 +1,7 @@
 # EntityAITradePlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAITradePlayer
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class EntityAITradePlayer extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAITradePlayer( EntityVillager villagerIn)`
+- `EntityAITradePlayer(EntityVillager villagerIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
-- `public void resetTask()`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void startExecuting()`

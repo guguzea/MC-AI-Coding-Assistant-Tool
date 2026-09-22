@@ -1,5 +1,7 @@
 # AnimationMetadataSection
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.data.AnimationMetadataSection
+
 ## Class signature
 
 ```java
@@ -8,16 +10,16 @@ public class AnimationMetadataSection extends java.lang.Object implements IMetad
 
 ## Constructors
 
-- `public AnimationMetadataSection(java.util.List< AnimationFrame > animationFramesIn, int frameWidthIn, int frameHeightIn, int frameTimeIn, boolean interpolateIn)`
+- `AnimationMetadataSection(java.util.List<AnimationFrame> animationFramesIn, int frameWidthIn, int frameHeightIn, int frameTimeIn, boolean interpolateIn)`
 
 ## Methods
 
-- `public int getFrameHeight()`
-- `public int getFrameWidth()`
-- `public int getFrameCount()`
-- `public int getFrameTime()`
-- `public boolean isInterpolate()`
-- `public int getFrameTimeSingle(int frame)`
-- `public boolean frameHasTime(int frame)`
-- `public int getFrameIndex(int frame)`
-- `public java.util.Set<java.lang.Integer> getFrameIndexSet()`
+- `boolean frameHasTime(int frame)`
+- `int getFrameCount()`
+- `int getFrameHeight()`
+- `int getFrameIndex(int frame)`
+- `java.util.Set<java.lang.Integer> getFrameIndexSet()`
+- `int getFrameTime()`
+- `int getFrameTimeSingle(int frame)`
+- `int getFrameWidth()`
+- `boolean isInterpolate()`

@@ -1,63 +1,65 @@
 # EntityVillager
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityVillager
+
 ## Class signature
 
 ```java
-public class EntityVillager extends EntityAgeable implements IMerchant , INpc
+public class EntityVillager extends EntityAgeable implements IMerchant, INpc
 ```
-
-## Constructors
-
-- `public EntityVillager( World worldIn)`
-- `public EntityVillager( World worldIn, int professionId)`
 
 ## Methods
 
-- `protected void initEntityAI()`
-- `protected void onGrowingAdult()`
 - `protected void applyEntityAttributes()`
-- `protected void updateAITasks()`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand, @Nullable ItemStack stack)`
-- `protected void entityInit()`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
+- `boolean canAbondonItems()`
+- `boolean canBeLeashedTo(EntityPlayer player)`
 - `protected boolean canDespawn()`
+- `EntityVillager createChild(EntityAgeable ageable)`
+- `protected void entityInit()`
+- `static EntityVillager.ITradeList [][][][] GET_TRADES_DONT_USE()`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
+- `EntityPlayer getCustomer()`
 - `protected SoundEvent getDeathSound()`
-- `public void setProfession(int professionId)`
-- `public int getProfession()`
-- `public void setProfession( VillagerRegistry.VillagerProfession prof)`
-- `public VillagerRegistry.VillagerProfession getProfessionForge()`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public boolean isMating()`
-- `public void setMating(boolean mating)`
-- `public void setPlaying(boolean playing)`
-- `public boolean isPlaying()`
-- `public void setRevengeTarget(@Nullable EntityLivingBase livingBase)`
-- `public void onDeath( DamageSource cause)`
-- `public void setCustomer( EntityPlayer player)`
-- `public EntityPlayer getCustomer()`
-- `public boolean isTrading()`
-- `public boolean getIsWillingToMate(boolean updateFirst)`
-- `public void setIsWillingToMate(boolean willingToTrade)`
-- `public void useRecipe( MerchantRecipe recipe)`
-- `public void verifySellingItem( ItemStack stack)`
-- `public MerchantRecipeList getRecipes( EntityPlayer player)`
-- `public void setRecipes( MerchantRecipeList recipeList)`
-- `public ITextComponent getDisplayName()`
-- `public float getEyeHeight()`
-- `public void handleStatusUpdate(byte id)`
-- `@Nullable public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)`
-- `public void setLookingForHome()`
-- `public EntityVillager createChild( EntityAgeable ageable)`
-- `public boolean canBeLeashedTo( EntityPlayer player)`
-- `public void onStruckByLightning( EntityLightningBolt lightningBolt)`
-- `public InventoryBasic getVillagerInventory()`
-- `protected void updateEquipmentIfNeeded( EntityItem itemEntity)`
-- `public boolean hasEnoughFoodToBreed()`
-- `public boolean canAbondonItems()`
-- `public boolean wantsMoreFood()`
-- `public boolean isFarmItemInInventory()`
-- `public boolean replaceItemInInventory(int inventorySlot, @Nullable ItemStack itemStackIn)`
-- `public static EntityVillager.ITradeList [][][][] GET_TRADES_DONT_USE()`
+- `ITextComponent getDisplayName()`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound()`
+- `boolean getIsWillingToMate(boolean updateFirst)`
+- `int getProfession()`
+- `VillagerRegistry.VillagerProfession getProfessionForge()`
+- `MerchantRecipeList getRecipes(EntityPlayer player)`
+- `InventoryBasic getVillagerInventory()`
+- `void handleStatusUpdate(byte id)`
+- `boolean hasEnoughFoodToBreed()`
+- `protected void initEntityAI()`
+- `boolean isFarmItemInInventory()`
+- `boolean isMating()`
+- `boolean isPlaying()`
+- `boolean isTrading()`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onDeath(DamageSource cause)`
+- `protected void onGrowingAdult()`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onStruckByLightning(EntityLightningBolt lightningBolt)`
+- `boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
+- `void setCustomer(EntityPlayer player)`
+- `void setIsWillingToMate(boolean willingToTrade)`
+- `void setLookingForHome()`
+- `void setMating(boolean mating)`
+- `void setPlaying(boolean playing)`
+- `void setProfession(int professionId)`
+- `void setProfession(VillagerRegistry.VillagerProfession prof)`
+- `void setRecipes(MerchantRecipeList recipeList)`
+- `void setRevengeTarget(EntityLivingBase livingBase)`
+- `protected void updateAITasks()`
+- `protected void updateEquipmentIfNeeded(EntityItem itemEntity)`
+- `void useRecipe(MerchantRecipe recipe)`
+- `void verifySellingItem(ItemStack stack)`
+- `boolean wantsMoreFood()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityVillager`
+- `EntityVillager`

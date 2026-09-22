@@ -1,9 +1,13 @@
 # GuiScreenEvent.InitGuiEvent.Pre
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent → net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Pre
+
+## Class signature
+
+```java
+public static class GuiScreenEvent.InitGuiEvent.Pre extends GuiScreenEvent.InitGuiEvent
+```
+
 ## Constructors
 
-- `public Pre( GuiScreen gui, java.util.List< GuiButton > buttonList)`
-
-## Description
-
-This event fires just after initializing GuiScreen.mc , GuiScreen.fontRendererObj , GuiScreen.width , and GuiScreen.height . If canceled the following lines are skipped in GuiScreen.setWorldAndResolut
+- `Pre(GuiScreen gui, java.util.List<GuiButton> buttonList)`

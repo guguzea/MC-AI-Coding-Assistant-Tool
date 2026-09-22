@@ -3,11 +3,15 @@ title: "InventoryCraftResult"
 description: "public class InventoryCraftResult extends java.lang.Object implements IInventory"
 package: "net/minecraft/inventory"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/inventory/InventoryCraftResult.html"
 sourceType: javadoc
 ---
 
 # InventoryCraftResult
+
+**Inheritance:** java.lang.Object → net.minecraft.inventory.InventoryCraftResult
 
 ## Class signature
 
@@ -17,28 +21,28 @@ public class InventoryCraftResult extends java.lang.Object implements IInventory
 
 ## Constructors
 
-- `public InventoryCraftResult()`
+- `InventoryCraftResult()`
 
 ## Methods
 
-- `public int getSizeInventory()`
-- `public boolean isEmpty()`
-- `public ItemStack getStackInSlot(int index)`
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public ITextComponent getDisplayName()`
-- `public ItemStack decrStackSize(int index, int count)`
-- `public ItemStack removeStackFromSlot(int index)`
-- `public void setInventorySlotContents(int index, ItemStack stack)`
-- `public int getInventoryStackLimit()`
-- `public void markDirty()`
-- `public boolean isUsableByPlayer( EntityPlayer player)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public boolean isItemValidForSlot(int index, ItemStack stack)`
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public int getFieldCount()`
-- `public void clear()`
-- `public void setRecipeUsed( IRecipe p_193056_1_)`
-- `public IRecipe getRecipeUsed()`
+- `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `ItemStack decrStackSize(int index, int count)`
+- `ITextComponent getDisplayName()`
+- `int getField(int id)`
+- `int getFieldCount()`
+- `int getInventoryStackLimit()`
+- `java.lang.String getName()`
+- `IRecipe getRecipeUsed()`
+- `int getSizeInventory()`
+- `ItemStack getStackInSlot(int index)`
+- `boolean hasCustomName()`
+- `boolean isEmpty()`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isUsableByPlayer(EntityPlayer player)`
+- `void markDirty()`
+- `void openInventory(EntityPlayer player)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`
+- `void setRecipeUsed(IRecipe p_193056_1_)`

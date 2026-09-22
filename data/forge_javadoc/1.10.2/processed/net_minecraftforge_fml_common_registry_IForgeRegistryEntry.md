@@ -8,10 +8,6 @@ public interface IForgeRegistryEntry<V>
 
 ## Methods
 
-- `V setRegistryName( ResourceLocation name)`
-- `ResourceLocation getRegistryName()`
-- `java.lang.Class<? super V > getRegistryType()`
-
-## Description
-
-A unique identifier for this entry, if this entry is registered already it will return it's official registry name.
+- `ResourceLocation getRegistryName()` — A unique identifier for this entry, if this entry is registered already it will return it's official registry name.
+- `java.lang.Class<? super V> getRegistryType()`
+- `V setRegistryName(ResourceLocation name)` — Sets a unique name for this Item.

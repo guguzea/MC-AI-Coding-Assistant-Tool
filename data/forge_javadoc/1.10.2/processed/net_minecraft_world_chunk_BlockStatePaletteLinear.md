@@ -1,5 +1,7 @@
 # BlockStatePaletteLinear
 
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.BlockStatePaletteLinear
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class BlockStatePaletteLinear extends java.lang.Object implements IBlockS
 
 ## Constructors
 
-- `public BlockStatePaletteLinear(int p_i47088_1_, net.minecraft.world.chunk.IBlockStatePaletteResizer p_i47088_2_)`
+- `BlockStatePaletteLinear(int p_i47088_1_, net.minecraft.world.chunk.IBlockStatePaletteResizer p_i47088_2_)`
 
 ## Methods
 
-- `public int idFor( IBlockState state)`
-- `@Nullable public IBlockState getBlockState(int indexKey)`
-- `public void read( PacketBuffer buf)`
-- `public void write( PacketBuffer buf)`
-- `public int getSerializedState()`
+- `IBlockState getBlockState(int indexKey)`
+- `int getSerializedState()`
+- `int idFor(IBlockState state)`
+- `void read(PacketBuffer buf)`
+- `void write(PacketBuffer buf)`

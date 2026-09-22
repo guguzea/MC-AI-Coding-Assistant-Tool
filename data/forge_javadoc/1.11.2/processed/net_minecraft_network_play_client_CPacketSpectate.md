@@ -1,19 +1,21 @@
 # CPacketSpectate
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketSpectate
+
 ## Class signature
 
 ```java
-public class CPacketSpectate extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketSpectate extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketSpectate()`
-- `public CPacketSpectate(java.util.UUID uniqueIdIn)`
+- `CPacketSpectate()`
+- `CPacketSpectate(java.util.UUID uniqueIdIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `@Nullable public Entity getEntity( WorldServer worldIn)`
+- `Entity getEntity(WorldServer worldIn)`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

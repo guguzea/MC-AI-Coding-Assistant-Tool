@@ -1,21 +1,19 @@
 # RenderItemFrame
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<EntityItemFrame> → net.minecraft.client.renderer.tileentity.RenderItemFrame
+
 ## Class signature
 
 ```java
-public class RenderItemFrame extends Render < EntityItemFrame >
+public class RenderItemFrame extends Render<EntityItemFrame>
 ```
-
-## Constructors
-
-- `public RenderItemFrame( RenderManager renderManagerIn, RenderItem itemRendererIn)`
 
 ## Methods
 
-- `public void doRender( EntityItemFrame entity, double x, double y, double z, float entityYaw, float partialTicks)`
-- `protected ResourceLocation getEntityTexture( EntityItemFrame entity)`
-- `protected void renderName( EntityItemFrame entity, double x, double y, double z)`
+- `void doRender(EntityItemFrame entity, double x, double y, double z, float entityYaw, float partialTicks)` — Actually renders the given argument.
+- `protected ResourceLocation getEntityTexture(EntityItemFrame entity)` — Returns the location of an entity's texture.
+- `protected void renderName(EntityItemFrame entity, double x, double y, double z)`
 
-## Description
+## Fields
 
-Actually renders the given argument.
+- `RenderItemFrame`

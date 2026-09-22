@@ -1,13 +1,17 @@
 # AttachCapabilitiesEvent.World
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.eventhandler.GenericEvent<T> → net.minecraftforge.event.AttachCapabilitiesEvent<World> → net.minecraftforge.event.AttachCapabilitiesEvent.World
+
+## Class signature
+
+```java
+public static class AttachCapabilitiesEvent.World extends AttachCapabilitiesEvent<World>
+```
+
 ## Constructors
 
-- `public World( World world)`
+- `@Deprecated World(World world)`
 
 ## Methods
 
-- `public World getWorld()`
-
-## Description
-
-Deprecated.
+- `@Deprecated World getWorld()`

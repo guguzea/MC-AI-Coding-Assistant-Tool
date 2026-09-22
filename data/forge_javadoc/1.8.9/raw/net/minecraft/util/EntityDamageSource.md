@@ -1,13 +1,17 @@
 ---
 title: "EntityDamageSource"
-description: "Gets the death message that is displayed when the player dies"
+description: "public class EntityDamageSource extends DamageSource"
 package: "net/minecraft/util"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/util/EntityDamageSource.html"
 sourceType: javadoc
 ---
 
 # EntityDamageSource
+
+**Inheritance:** java.lang.Object → net.minecraft.util.DamageSource → net.minecraft.util.EntityDamageSource
 
 ## Class signature
 
@@ -17,16 +21,16 @@ public class EntityDamageSource extends DamageSource
 
 ## Constructors
 
-- `public EntityDamageSource(java.lang.String p_i1567_1_, Entity damageSourceEntityIn)`
+- `EntityDamageSource(java.lang.String p_i1567_1_, Entity damageSourceEntityIn)`
 
 ## Methods
 
-- `public EntityDamageSource setIsThornsDamage()`
-- `public boolean getIsThornsDamage()`
-- `public Entity getEntity()`
-- `public IChatComponent getDeathMessage( EntityLivingBase p_151519_1_)`
-- `public boolean isDifficultyScaled()`
+- `IChatComponent getDeathMessage(EntityLivingBase p_151519_1_)` — Gets the death message that is displayed when the player dies
+- `Entity getEntity()`
+- `boolean getIsThornsDamage()`
+- `boolean isDifficultyScaled()` — Return whether this damage source will have its damage amount scaled based on the current difficulty.
+- `EntityDamageSource setIsThornsDamage()` — Sets this EntityDamageSource as originating from Thorns armor
 
-## Description
+## Fields
 
-Gets the death message that is displayed when the player dies
+- `protected Entity damageSourceEntity`

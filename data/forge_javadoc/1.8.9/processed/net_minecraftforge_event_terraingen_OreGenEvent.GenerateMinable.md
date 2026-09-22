@@ -1,9 +1,18 @@
 # OreGenEvent.GenerateMinable
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.OreGenEvent → net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable
+
+## Class signature
+
+```java
+public static class OreGenEvent.GenerateMinable extends OreGenEvent
+```
+
 ## Constructors
 
-- `public GenerateMinable( World world, java.util.Random rand, WorldGenerator generator, BlockPos pos, OreGenEvent.GenerateMinable.EventType type)`
+- `GenerateMinable(World world, java.util.Random rand, WorldGenerator generator, BlockPos pos, OreGenEvent.GenerateMinable.EventType type)`
 
-## Description
+## Fields
 
-GenerateMinable is fired when a mineable block is generated in a chunk. This event is fired just after ore generation in BiomeDecorator#generateOres(). type contains the enum value for the Ore attempt
+- `WorldGenerator generator`
+- `OreGenEvent.GenerateMinable.EventType type`

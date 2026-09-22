@@ -3,11 +3,15 @@ title: "EntityTippedArrow"
 description: "public class EntityTippedArrow extends EntityArrow"
 package: "net/minecraft/entity/projectile"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/entity/projectile/EntityTippedArrow.html"
 sourceType: javadoc
 ---
 
 # EntityTippedArrow
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityArrow → net.minecraft.entity.projectile.EntityTippedArrow
 
 ## Class signature
 
@@ -15,22 +19,22 @@ sourceType: javadoc
 public class EntityTippedArrow extends EntityArrow
 ```
 
-## Constructors
-
-- `public EntityTippedArrow( World worldIn)`
-- `public EntityTippedArrow( World worldIn, double x, double y, double z)`
-- `public EntityTippedArrow( World worldIn, EntityLivingBase shooter)`
-
 ## Methods
 
-- `public void setPotionEffect( ItemStack stack)`
-- `public void addEffect( PotionEffect effect)`
+- `void addEffect(PotionEffect effect)`
+- `protected void arrowHit(EntityLivingBase living)`
 - `protected void entityInit()`
-- `public void onUpdate()`
-- `public int getColor()`
-- `public static void registerFixesTippedArrow( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `protected void arrowHit( EntityLivingBase living)`
 - `protected ItemStack getArrowStack()`
-- `public void handleStatusUpdate(byte id)`
+- `int getColor()`
+- `void handleStatusUpdate(byte id)`
+- `void onUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesTippedArrow(DataFixer fixer)`
+- `void setPotionEffect(ItemStack stack)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityTippedArrow`
+- `EntityTippedArrow`
+- `EntityTippedArrow`

@@ -8,4 +8,4 @@ public interface ISmartVariant
 
 ## Methods
 
-- `IModel process( IModel base, ModelLoader loader)`
+- `IModel process(IModel base, ModelLoader loader)`

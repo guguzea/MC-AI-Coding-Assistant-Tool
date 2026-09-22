@@ -3,11 +3,15 @@ title: "IntHashMap"
 description: "public class IntHashMap<V> extends java.lang.Object"
 package: "net/minecraft/util"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/util/IntHashMap.html"
 sourceType: javadoc
 ---
 
 # IntHashMap
+
+**Inheritance:** java.lang.Object → net.minecraft.util.IntHashMap<V>
 
 ## Class signature
 
@@ -17,12 +21,12 @@ public class IntHashMap<V> extends java.lang.Object
 
 ## Constructors
 
-- `public IntHashMap()`
+- `IntHashMap()`
 
 ## Methods
 
-- `@Nullable public V lookup(int hashEntry)`
-- `public boolean containsItem(int hashEntry)`
-- `public void addKey(int hashEntry, V valueEntry)`
-- `@Nullable public V removeObject(int p_76049_1_)`
-- `public void clearMap()`
+- `void addKey(int hashEntry, V valueEntry)`
+- `void clearMap()`
+- `boolean containsItem(int hashEntry)`
+- `V lookup(int hashEntry)`
+- `V removeObject(int p_76049_1_)`

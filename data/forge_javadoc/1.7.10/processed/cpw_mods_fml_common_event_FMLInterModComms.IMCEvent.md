@@ -1,14 +1,18 @@
 # FMLInterModComms.IMCEvent
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.event.FMLEvent → cpw.mods.fml.common.event.FMLInterModComms.IMCEvent
+
+## Class signature
+
+```java
+public static class FMLInterModComms.IMCEvent extends FMLEvent
+```
+
 ## Constructors
 
-- `public IMCEvent()`
+- `IMCEvent()`
 
 ## Methods
 
-- `public void applyModContainer( ModContainer activeContainer)`
-- `public <any> getMessages()`
-
-## Description
-
-Subscribe to this event to receive your messages (they are sent between Init and PostInit )
+- `void applyModContainer(ModContainer activeContainer)`
+- `<any> getMessages()`

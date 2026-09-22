@@ -3,11 +3,15 @@ title: "GuiConnecting"
 description: "public class GuiConnecting extends GuiScreen"
 package: "net/minecraft/client/multiplayer"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/multiplayer/GuiConnecting.html"
 sourceType: javadoc
 ---
 
 # GuiConnecting
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.multiplayer.GuiConnecting
 
 ## Class signature
 
@@ -15,15 +19,15 @@ sourceType: javadoc
 public class GuiConnecting extends GuiScreen
 ```
 
-## Constructors
-
-- `public GuiConnecting( GuiScreen parent, Minecraft mcIn, ServerData serverDataIn)`
-- `public GuiConnecting( GuiScreen parent, Minecraft mcIn, java.lang.String hostName, int port)`
-
 ## Methods
 
-- `public void updateScreen()`
-- `protected void keyTyped(char typedChar, int keyCode) throws java.io.IOException`
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected void actionPerformed(GuiButton button)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void initGui()`
+- `protected void keyTyped(char typedChar, int keyCode)`
+- `void updateScreen()`
+
+## Fields
+
+- `GuiConnecting`
+- `GuiConnecting`

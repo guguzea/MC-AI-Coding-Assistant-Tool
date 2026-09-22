@@ -1,17 +1,19 @@
 # BlockSnowBlock
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockSnowBlock
+
 ## Class signature
 
 ```java
 public class BlockSnowBlock extends Block
 ```
 
-## Constructors
-
-- `protected BlockSnowBlock()`
-
 ## Methods
 
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public int quantityDropped(java.util.Random random)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int quantityDropped(java.util.Random random)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+
+## Fields
+
+- `protected BlockSnowBlock`

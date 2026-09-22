@@ -1,24 +1,28 @@
 ---
 title: "TileEntityEndPortalRenderer"
-description: "public class TileEntityEndPortalRenderer extends TileEntitySpecialRenderer < TileEntityEndPortal >"
+description: "public class TileEntityEndPortalRenderer extends TileEntitySpecialRenderer<TileEntityEndPortal>"
 package: "net/minecraft/client/renderer/tileentity"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/renderer/tileentity/TileEntityEndPortalRenderer.html"
 sourceType: javadoc
 ---
 
 # TileEntityEndPortalRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer<TileEntityEndPortal> → net.minecraft.client.renderer.tileentity.TileEntityEndPortalRenderer
+
 ## Class signature
 
 ```java
-public class TileEntityEndPortalRenderer extends TileEntitySpecialRenderer < TileEntityEndPortal >
+public class TileEntityEndPortalRenderer extends TileEntitySpecialRenderer<TileEntityEndPortal>
 ```
-
-## Constructors
-
-- `public TileEntityEndPortalRenderer()`
 
 ## Methods
 
-- `public void renderTileEntityAt( TileEntityEndPortal te, double x, double y, double z, float partialTicks, int destroyStage)`
+- `void renderTileEntityAt(TileEntityEndPortal te, double x, double y, double z, float partialTicks, int destroyStage)`
+
+## Fields
+
+- `TileEntityEndPortalRenderer`

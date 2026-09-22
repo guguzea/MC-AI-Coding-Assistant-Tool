@@ -1,5 +1,7 @@
 # WoodlandMansion
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.MapGenBase → net.minecraft.world.gen.structure.MapGenStructure → net.minecraft.world.gen.structure.WoodlandMansion
+
 ## Class signature
 
 ```java
@@ -8,11 +10,15 @@ public class WoodlandMansion extends MapGenStructure
 
 ## Constructors
 
-- `public WoodlandMansion( ChunkGeneratorOverworld providerIn)`
+- `WoodlandMansion(ChunkGeneratorOverworld providerIn)`
 
 ## Methods
 
-- `public java.lang.String getStructureName()`
 - `protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)`
-- `public BlockPos getNearestStructurePos( World worldIn, BlockPos pos, boolean findUnexplored)`
+- `BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean findUnexplored)`
+- `java.lang.String getStructureName()`
 - `protected StructureStart getStructureStart(int chunkX, int chunkZ)`
+
+## Fields
+
+- `static java.util.List<Biome> ALLOWED_BIOMES`

@@ -1,19 +1,29 @@
 ---
 title: "SetNBT.Serializer"
-description: ""
+description: "public static class SetNBT.Serializer extends LootFunction.Serializer<SetNBT>"
 package: "net/minecraft/world/storage/loot/functions"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/storage/loot/functions/SetNBT.Serializer.html"
 sourceType: javadoc
 ---
 
 # SetNBT.Serializer
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction.Serializer<SetNBT> → net.minecraft.world.storage.loot.functions.SetNBT.Serializer
+
+## Class signature
+
+```java
+public static class SetNBT.Serializer extends LootFunction.Serializer<SetNBT>
+```
+
 ## Constructors
 
-- `public Serializer()`
+- `Serializer()`
 
 ## Methods
 
-- `public void serialize(JsonObject object, SetNBT functionClazz, JsonSerializationContext serializationContext)`
-- `public SetNBT deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootCondition [] conditionsIn)`
+- `SetNBT deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootCondition [] conditionsIn)`
+- `void serialize(JsonObject object, SetNBT functionClazz, JsonSerializationContext serializationContext)`

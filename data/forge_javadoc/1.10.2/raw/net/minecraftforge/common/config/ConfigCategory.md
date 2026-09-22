@@ -1,68 +1,72 @@
 ---
 title: "ConfigCategory"
-description: "Gets whether or not this ConfigCategory requires Minecraft to be restarted when changed."
+description: "public class ConfigCategory extends java.lang.Object implements java.util.Map<java.lang.String, Property>"
 package: "net/minecraftforge/common/config"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/common/config/ConfigCategory.html"
 sourceType: javadoc
 ---
 
 # ConfigCategory
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.config.ConfigCategory
+
 ## Class signature
 
 ```java
-public class ConfigCategory extends java.lang.Object implements java.util.Map<java.lang.String, Property >
+public class ConfigCategory extends java.lang.Object implements java.util.Map<java.lang.String, Property>
 ```
 
 ## Constructors
 
-- `public ConfigCategory(java.lang.String name)`
-- `public ConfigCategory(java.lang.String name, ConfigCategory parent)`
+- `ConfigCategory(java.lang.String name)`
+- `ConfigCategory(java.lang.String name, ConfigCategory parent)`
 
 ## Methods
 
-- `public boolean equals(java.lang.Object obj)`
-- `public java.lang.String getName()`
-- `public java.lang.String getQualifiedName()`
-- `public static java.lang.String getQualifiedName(java.lang.String name, ConfigCategory parent)`
-- `public ConfigCategory getFirstParent()`
-- `public boolean isChild()`
-- `public java.util.Map<java.lang.String, Property > getValues()`
-- `public java.util.List< Property > getOrderedValues()`
-- `public ConfigCategory setConfigEntryClass(java.lang.Class<? extends GuiConfigEntries.IConfigEntry > clazz)`
-- `public java.lang.Class<? extends GuiConfigEntries.IConfigEntry > getConfigEntryClass()`
-- `public ConfigCategory setLanguageKey(java.lang.String languagekey)`
-- `public java.lang.String getLanguagekey()`
-- `public void setComment(java.lang.String comment)`
-- `public java.lang.String getComment()`
-- `public ConfigCategory setRequiresWorldRestart(boolean requiresWorldRestart)`
-- `public boolean requiresWorldRestart()`
-- `public ConfigCategory setShowInGui(boolean showInGui)`
-- `public boolean showInGui()`
-- `public ConfigCategory setRequiresMcRestart(boolean requiresMcRestart)`
-- `public boolean requiresMcRestart()`
-- `public ConfigCategory setPropertyOrder(java.util.List<java.lang.String> propertyOrder)`
-- `public java.util.List<java.lang.String> getPropertyOrder()`
-- `public boolean containsKey(java.lang.String key)`
-- `public Property get(java.lang.String key)`
-- `public void write(java.io.BufferedWriter out, int indent) throws java.io.IOException`
-- `public boolean hasChanged()`
-- `public int size()`
-- `public boolean isEmpty()`
-- `public boolean containsKey(java.lang.Object key)`
-- `public boolean containsValue(java.lang.Object value)`
-- `public Property get(java.lang.Object key)`
-- `public Property put(java.lang.String key, Property value)`
-- `public Property remove(java.lang.Object key)`
-- `public void putAll(java.util.Map<? extends java.lang.String,? extends Property > m)`
-- `public void clear()`
-- `public java.util.Set<java.lang.String> keySet()`
-- `public java.util.Collection< Property > values()`
-- `public java.util.Set<java.util.Map.Entry<java.lang.String, Property >> entrySet()`
-- `public java.util.Set< ConfigCategory > getChildren()`
-- `public void removeChild( ConfigCategory child)`
+- `void clear()`
+- `boolean containsKey(java.lang.Object key)`
+- `boolean containsKey(java.lang.String key)`
+- `boolean containsValue(java.lang.Object value)`
+- `java.util.Set<java.util.Map.Entry<java.lang.String, Property>> entrySet()`
+- `boolean equals(java.lang.Object obj)`
+- `Property get(java.lang.Object key)`
+- `Property get(java.lang.String key)`
+- `java.util.Set<ConfigCategory> getChildren()`
+- `java.lang.String getComment()`
+- `java.lang.Class<? extends GuiConfigEntries.IConfigEntry> getConfigEntryClass()`
+- `ConfigCategory getFirstParent()`
+- `java.lang.String getLanguagekey()`
+- `java.lang.String getName()`
+- `java.util.List<Property> getOrderedValues()`
+- `java.util.List<java.lang.String> getPropertyOrder()`
+- `java.lang.String getQualifiedName()`
+- `static java.lang.String getQualifiedName(java.lang.String name, ConfigCategory parent)`
+- `java.util.Map<java.lang.String, Property> getValues()`
+- `boolean hasChanged()`
+- `boolean isChild()`
+- `boolean isEmpty()`
+- `java.util.Set<java.lang.String> keySet()`
+- `Property put(java.lang.String key, Property value)`
+- `void putAll(java.util.Map<? extends java.lang.String, ? extends Property> m)`
+- `Property remove(java.lang.Object key)`
+- `void removeChild(ConfigCategory child)`
+- `boolean requiresMcRestart()` — Gets whether or not this ConfigCategory requires Minecraft to be restarted when changed.
+- `boolean requiresWorldRestart()` — Returns whether or not this category is able to be edited while a world is running using the in-game Mod Options screen as well as the Mods list screen, or only from the Mods list screen.
+- `void setComment(java.lang.String comment)`
+- `ConfigCategory setConfigEntryClass(java.lang.Class<? extends GuiConfigEntries.IConfigEntry> clazz)`
+- `ConfigCategory setLanguageKey(java.lang.String languagekey)`
+- `ConfigCategory setPropertyOrder(java.util.List<java.lang.String> propertyOrder)`
+- `ConfigCategory setRequiresMcRestart(boolean requiresMcRestart)` — Sets whether or not this ConfigCategory requires Minecraft to be restarted when changed.
+- `ConfigCategory setRequiresWorldRestart(boolean requiresWorldRestart)` — Sets the flag for whether or not this category can be edited while a world is running.
+- `ConfigCategory setShowInGui(boolean showInGui)` — Sets whether or not this ConfigCategory should be allowed to show on config GUIs.
+- `boolean showInGui()` — Gets whether or not this ConfigCategory should be allowed to show on config GUIs.
+- `int size()`
+- `java.util.Collection<Property> values()`
+- `void write(java.io.BufferedWriter out, int indent)`
 
-## Description
+## Fields
 
-Gets whether or not this ConfigCategory requires Minecraft to be restarted when changed.
+- `ConfigCategory parent`

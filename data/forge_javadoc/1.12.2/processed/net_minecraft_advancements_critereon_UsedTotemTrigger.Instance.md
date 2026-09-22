@@ -1,9 +1,17 @@
 # UsedTotemTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.UsedTotemTrigger.Instance
+
+## Class signature
+
+```java
+public static class UsedTotemTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( ItemPredicate item)`
+- `Instance(ItemPredicate item)`
 
 ## Methods
 
-- `public boolean test( ItemStack item)`
+- `boolean test(ItemStack item)`

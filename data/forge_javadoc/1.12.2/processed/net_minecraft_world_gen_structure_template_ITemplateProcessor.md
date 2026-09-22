@@ -8,4 +8,4 @@ public interface ITemplateProcessor
 
 ## Methods
 
-- `Template.BlockInfo processBlock( World worldIn, BlockPos pos, Template.BlockInfo blockInfoIn)`
+- `Template.BlockInfo processBlock(World worldIn, BlockPos pos, Template.BlockInfo blockInfoIn)`

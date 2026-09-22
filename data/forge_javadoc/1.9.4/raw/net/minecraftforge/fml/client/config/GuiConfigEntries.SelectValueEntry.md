@@ -1,31 +1,43 @@
 ---
 title: "GuiConfigEntries.SelectValueEntry"
-description: "SelectValueEntry Provides a GuiButton with the current value as the displayString. Accepts a Map of selectable values with the signature where the key is the Object to be selected and the value is the"
+description: "public static class GuiConfigEntries.SelectValueEntry extends GuiConfigEntries.ButtonEntry"
 package: "net/minecraftforge/fml/client/config"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/client/config/GuiConfigEntries.SelectValueEntry.html"
 sourceType: javadoc
 ---
 
 # GuiConfigEntries.SelectValueEntry
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.config.GuiConfigEntries.ListEntryBase → net.minecraftforge.fml.client.config.GuiConfigEntries.ButtonEntry → net.minecraftforge.fml.client.config.GuiConfigEntries.SelectValueEntry
+
+## Class signature
+
+```java
+public static class GuiConfigEntries.SelectValueEntry extends GuiConfigEntries.ButtonEntry
+```
+
 ## Constructors
 
-- `public SelectValueEntry( GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement, java.util.Map<java.lang.Object,java.lang.String> selectableValues)`
+- `SelectValueEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement, java.util.Map<java.lang.Object, java.lang.String> selectableValues)`
 
 ## Methods
 
-- `public void updateValueButtonText()`
-- `public void valueButtonPressed(int slotIndex)`
-- `public void setValueFromChildScreen(java.lang.Object newValue)`
-- `public boolean isDefault()`
-- `public void setToDefault()`
-- `public boolean isChanged()`
-- `public void undoChanges()`
-- `public boolean saveConfigElement()`
-- `public java.lang.String getCurrentValue()`
-- `public java.lang.String[] getCurrentValues()`
+- `java.lang.String getCurrentValue()` — Gets the current value of this entry.
+- `java.lang.String[] getCurrentValues()` — Gets the current values of this list entry.
+- `boolean isChanged()` — Has the value of this entry changed?
+- `boolean isDefault()` — Is this entry's value equal to the default value?
+- `boolean saveConfigElement()` — Handles saving any changes that have been made to this entry back to the underlying object.
+- `void setToDefault()` — Sets this entry's value to the default value.
+- `void setValueFromChildScreen(java.lang.Object newValue)`
+- `void undoChanges()` — Handles reverting any changes that have occurred to this entry.
+- `void updateValueButtonText()` — Updates the displayString of the value button.
+- `void valueButtonPressed(int slotIndex)` — Called when the value button has been clicked.
 
-## Description
+## Fields
 
-SelectValueEntry Provides a GuiButton with the current value as the displayString. Accepts a Map of selectable values with the signature where the key is the Object to be selected and the value is the
+- `protected java.lang.String beforeValue`
+- `protected java.lang.Object currentValue`
+- `protected java.util.Map<java.lang.Object, java.lang.String> selectableValues`

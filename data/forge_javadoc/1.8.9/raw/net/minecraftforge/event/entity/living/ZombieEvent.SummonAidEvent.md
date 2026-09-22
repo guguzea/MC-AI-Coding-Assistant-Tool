@@ -1,18 +1,34 @@
 ---
 title: "ZombieEvent.SummonAidEvent"
-description: "SummonAidEvent is fired when a Zombie Entity is summoned. This event is fired whenever a Zombie Entity is summoned in EntityZombie#attackEntityFrom(DamageSource, float). This event is fired via the Fo"
+description: "public static class ZombieEvent.SummonAidEvent extends ZombieEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/living/ZombieEvent.SummonAidEvent.html"
 sourceType: javadoc
 ---
 
 # ZombieEvent.SummonAidEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.ZombieEvent → net.minecraftforge.event.entity.living.ZombieEvent.SummonAidEvent
+
+## Class signature
+
+```java
+public static class ZombieEvent.SummonAidEvent extends ZombieEvent
+```
+
 ## Constructors
 
-- `public SummonAidEvent( EntityZombie entity, World world, int x, int y, int z, EntityLivingBase attacker, double summonChance)`
+- `SummonAidEvent(EntityZombie entity, World world, int x, int y, int z, EntityLivingBase attacker, double summonChance)`
 
-## Description
+## Fields
 
-SummonAidEvent is fired when a Zombie Entity is summoned. This event is fired whenever a Zombie Entity is summoned in EntityZombie#attackEntityFrom(DamageSource, float). This event is fired via the Fo
+- `EntityLivingBase attacker`
+- `EntityZombie customSummonedAid` — Populate this field to have a custom zombie instead of a normal zombie summoned
+- `double summonChance`
+- `World world`
+- `int x`
+- `int y`
+- `int z`

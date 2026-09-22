@@ -1,5 +1,7 @@
 # CommandTreeBase
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraftforge.server.command.CommandTreeBase
+
 ## Class signature
 
 ```java
@@ -8,18 +10,14 @@ public abstract class CommandTreeBase extends CommandBase
 
 ## Constructors
 
-- `public CommandTreeBase()`
+- `CommandTreeBase()`
 
 ## Methods
 
-- `public void addSubcommand( ICommand c)`
-- `public java.util.Collection< ICommand > getSubCommands()`
-- `public java.util.Map<java.lang.String, ICommand > getCommandMap()`
-- `public java.util.List< ICommand > getSortedCommandList()`
-- `public java.util.List<java.lang.String> getTabCompletionOptions( MinecraftServer server, ICommandSender sender, java.lang.String[] args, @Nullable BlockPos pos)`
-- `public boolean isUsernameIndex(java.lang.String[] args, int index)`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
-
-## Description
-
-Base class for commands that has subcommands. E.g. /team settings set [value] settings is subcommand of team and set is subcommand of settings
+- `void addSubcommand(ICommand c)`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.util.Map<java.lang.String, ICommand> getCommandMap()`
+- `java.util.List<ICommand> getSortedCommandList()`
+- `java.util.Collection<ICommand> getSubCommands()`
+- `java.util.List<java.lang.String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos pos)`
+- `boolean isUsernameIndex(java.lang.String[] args, int index)`

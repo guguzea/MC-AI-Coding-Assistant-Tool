@@ -1,5 +1,7 @@
 # EntitySquid
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.passive.EntityWaterMob → net.minecraft.entity.passive.EntitySquid
+
 ## Class signature
 
 ```java
@@ -8,23 +10,34 @@ public class EntitySquid extends EntityWaterMob
 
 ## Constructors
 
-- `public EntitySquid( World worldIn)`
+- `EntitySquid(World worldIn)`
 
 ## Methods
 
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
-- `public float getEyeHeight()`
-- `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
-- `protected SoundEvent getDeathSound()`
-- `protected float getSoundVolume()`
 - `protected boolean canTriggerWalking()`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public boolean isInWater()`
-- `public void onLivingUpdate()`
-- `public void moveEntityWithHeading(float strafe, float forward)`
-- `public boolean getCanSpawnHere()`
-- `public void handleStatusUpdate(byte id)`
-- `public void setMovementVector(float randomMotionVecXIn, float randomMotionVecYIn, float randomMotionVecZIn)`
-- `public boolean hasMovementVector()`
+- `protected SoundEvent getAmbientSound()`
+- `boolean getCanSpawnHere()`
+- `protected SoundEvent getDeathSound()`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `protected float getSoundVolume()`
+- `void handleStatusUpdate(byte id)`
+- `boolean hasMovementVector()`
+- `protected void initEntityAI()`
+- `boolean isInWater()`
+- `void moveEntityWithHeading(float strafe, float forward)`
+- `void onLivingUpdate()`
+- `void setMovementVector(float randomMotionVecXIn, float randomMotionVecYIn, float randomMotionVecZIn)`
+
+## Fields
+
+- `float lastTentacleAngle`
+- `float prevSquidPitch`
+- `float prevSquidRotation`
+- `float prevSquidYaw`
+- `float squidPitch`
+- `float squidRotation`
+- `float squidYaw`
+- `float tentacleAngle`

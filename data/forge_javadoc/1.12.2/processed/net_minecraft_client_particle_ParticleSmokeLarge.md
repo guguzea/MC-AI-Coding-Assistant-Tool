@@ -1,11 +1,13 @@
 # ParticleSmokeLarge
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleSmokeNormal → net.minecraft.client.particle.ParticleSmokeLarge
+
 ## Class signature
 
 ```java
 public class ParticleSmokeLarge extends ParticleSmokeNormal
 ```
 
-## Constructors
+## Fields
 
-- `protected ParticleSmokeLarge( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double p_i1201_8_, double p_i1201_10_, double p_i1201_12_)`
+- `protected ParticleSmokeLarge`

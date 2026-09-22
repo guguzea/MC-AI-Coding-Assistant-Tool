@@ -1,5 +1,7 @@
 # EntityLookHelper
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityLookHelper
+
 ## Class signature
 
 ```java
@@ -8,18 +10,14 @@ public class EntityLookHelper extends java.lang.Object
 
 ## Constructors
 
-- `public EntityLookHelper( EntityLiving entitylivingIn)`
+- `EntityLookHelper(EntityLiving entitylivingIn)`
 
 ## Methods
 
-- `public void setLookPositionWithEntity( Entity entityIn, float deltaYaw, float deltaPitch)`
-- `public void setLookPosition(double x, double y, double z, float deltaYaw, float deltaPitch)`
-- `public void onUpdateLook()`
-- `public boolean getIsLooking()`
-- `public double getLookPosX()`
-- `public double getLookPosY()`
-- `public double getLookPosZ()`
-
-## Description
-
-Updates look
+- `boolean getIsLooking()`
+- `double getLookPosX()`
+- `double getLookPosY()`
+- `double getLookPosZ()`
+- `void onUpdateLook()` — Updates look
+- `void setLookPosition(double x, double y, double z, float deltaYaw, float deltaPitch)` — Sets position to look at
+- `void setLookPositionWithEntity(Entity entityIn, float deltaYaw, float deltaPitch)` — Sets position to look at using entity

@@ -1,5 +1,7 @@
 # EntityMoveHelper
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityMoveHelper
+
 ## Class signature
 
 ```java
@@ -8,19 +10,24 @@ public class EntityMoveHelper extends java.lang.Object
 
 ## Constructors
 
-- `public EntityMoveHelper( EntityLiving entitylivingIn)`
+- `EntityMoveHelper(EntityLiving entitylivingIn)`
 
 ## Methods
 
-- `public boolean isUpdating()`
-- `public double getSpeed()`
-- `public void setMoveTo(double x, double y, double z, double speedIn)`
-- `public void onUpdateMoveHelper()`
-- `protected float limitAngle(float p_75639_1_, float p_75639_2_, float p_75639_3_)`
-- `public double getX()`
-- `public double getY()`
-- `public double getZ()`
+- `double getSpeed()`
+- `double getX()`
+- `double getY()`
+- `double getZ()`
+- `boolean isUpdating()`
+- `protected float limitAngle(float p_75639_1_, float p_75639_2_, float p_75639_3_)` — Limits the given angle to a upper and lower limit.
+- `void onUpdateMoveHelper()`
+- `void setMoveTo(double x, double y, double z, double speedIn)` — Sets the speed and location to move to
 
-## Description
+## Fields
 
-The EntityLiving that is being moved
+- `protected EntityLiving entity` — The EntityLiving that is being moved
+- `protected double posX`
+- `protected double posY`
+- `protected double posZ`
+- `protected double speed` — The speed at which the entity should move
+- `protected boolean update`

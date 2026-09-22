@@ -8,4 +8,4 @@ public interface IItemColor
 
 ## Methods
 
-- `int getColorFromItemstack( ItemStack stack, int tintIndex)`
+- `int getColorFromItemstack(ItemStack stack, int tintIndex)`

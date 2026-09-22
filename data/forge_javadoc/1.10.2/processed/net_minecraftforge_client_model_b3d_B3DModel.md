@@ -1,5 +1,7 @@
 # B3DModel
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.b3d.B3DModel
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class B3DModel extends java.lang.Object
 
 ## Constructors
 
-- `public B3DModel(java.util.List< B3DModel.Texture > textures, java.util.List< B3DModel.Brush > brushes, B3DModel.Node <?> root, com.google.common.collect.ImmutableMap<java.lang.String, B3DModel.Node < B3DModel.Mesh >> meshes)`
+- `B3DModel(java.util.List<B3DModel.Texture> textures, java.util.List<B3DModel.Brush> brushes, B3DModel.Node<?> root, com.google.common.collect.ImmutableMap<java.lang.String, B3DModel.Node<B3DModel.Mesh>> meshes)`
 
 ## Methods
 
-- `public java.util.List< B3DModel.Texture > getTextures()`
-- `public java.util.List< B3DModel.Brush > getBrushes()`
-- `public B3DModel.Node <?> getRoot()`
-- `public com.google.common.collect.ImmutableMap<java.lang.String, B3DModel.Node < B3DModel.Mesh >> getMeshes()`
+- `java.util.List<B3DModel.Brush> getBrushes()`
+- `com.google.common.collect.ImmutableMap<java.lang.String, B3DModel.Node<B3DModel.Mesh>> getMeshes()`
+- `B3DModel.Node<?> getRoot()`
+- `java.util.List<B3DModel.Texture> getTextures()`

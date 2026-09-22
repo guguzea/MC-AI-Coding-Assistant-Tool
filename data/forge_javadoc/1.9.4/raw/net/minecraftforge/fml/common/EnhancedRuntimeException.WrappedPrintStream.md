@@ -1,18 +1,28 @@
 ---
 title: "EnhancedRuntimeException.WrappedPrintStream"
-description: ""
+description: "public abstract static class EnhancedRuntimeException.WrappedPrintStream extends java.lang.Object"
 package: "net/minecraftforge/fml/common"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/common/EnhancedRuntimeException.WrappedPrintStream.html"
 sourceType: javadoc
 ---
 
 # EnhancedRuntimeException.WrappedPrintStream
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.EnhancedRuntimeException.WrappedPrintStream
+
+## Class signature
+
+```java
+public abstract static class EnhancedRuntimeException.WrappedPrintStream extends java.lang.Object
+```
+
 ## Constructors
 
-- `public WrappedPrintStream()`
+- `WrappedPrintStream()`
 
 ## Methods
 
-- `public abstract void println(java.lang.String line)`
+- `abstract void println(java.lang.String line)`

@@ -3,11 +3,15 @@ title: "BiomeOcean"
 description: "public class BiomeOcean extends Biome"
 package: "net/minecraft/world/biome"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/biome/BiomeOcean.html"
 sourceType: javadoc
 ---
 
 # BiomeOcean
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Biome> → net.minecraft.world.biome.Biome → net.minecraft.world.biome.BiomeOcean
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class BiomeOcean extends Biome
 ```
 
-## Constructors
-
-- `public BiomeOcean( Biome.BiomeProperties properties)`
-
 ## Methods
 
-- `public Biome.TempCategory getTempCategory()`
+- `Biome.TempCategory getTempCategory()`
+
+## Fields
+
+- `BiomeOcean`

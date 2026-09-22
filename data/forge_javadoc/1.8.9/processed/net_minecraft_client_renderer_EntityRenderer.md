@@ -1,5 +1,7 @@
 # EntityRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.EntityRenderer
+
 ## Class signature
 
 ```java
@@ -8,30 +10,33 @@ public class EntityRenderer extends java.lang.Object implements IResourceManager
 
 ## Constructors
 
-- `public EntityRenderer( Minecraft mcIn, IResourceManager resourceManagerIn)`
+- `EntityRenderer(Minecraft mcIn, IResourceManager resourceManagerIn)`
 
 ## Methods
 
-- `public boolean isShaderActive()`
-- `public void stopUseShader()`
-- `public void switchUseShader()`
-- `public void loadEntityShader( Entity entityIn)`
-- `public void activateNextShader()`
-- `public void loadShader( ResourceLocation resourceLocationIn)`
-- `public void onResourceManagerReload( IResourceManager resourceManager)`
-- `public void updateRenderer()`
-- `public ShaderGroup getShaderGroup()`
-- `public void updateShaderGroupSize(int width, int height)`
-- `public void getMouseOver(float partialTicks)`
-- `public void disableLightmap()`
-- `public void enableLightmap()`
-- `public void updateCameraAndRender(float p_181560_1_, long p_181560_2_)`
-- `public void renderStreamIndicator(float partialTicks)`
-- `public void renderWorld(float partialTicks, long finishTimeNano)`
-- `protected void renderRainSnow(float partialTicks)`
-- `public void setupOverlayRendering()`
-- `public MapItemRenderer getMapItemRenderer()`
+- `void activateNextShader()`
+- `void disableLightmap()`
+- `void enableLightmap()`
+- `MapItemRenderer getMapItemRenderer()`
+- `void getMouseOver(float partialTicks)` — Finds what block or object the mouse is over at the specified partial tick time.
+- `ShaderGroup getShaderGroup()`
+- `boolean isShaderActive()`
+- `void loadEntityShader(Entity entityIn)` — What shader to use when spectating this entity
+- `void loadShader(ResourceLocation resourceLocationIn)`
+- `void onResourceManagerReload(IResourceManager resourceManager)`
+- `protected void renderRainSnow(float partialTicks)` — Render rain and snow
+- `void renderStreamIndicator(float partialTicks)`
+- `void renderWorld(float partialTicks, long finishTimeNano)`
+- `void setupOverlayRendering()` — Setup orthogonal projection for rendering GUI screen overlays
+- `void stopUseShader()`
+- `void switchUseShader()`
+- `void updateCameraAndRender(float p_181560_1_, long p_181560_2_)`
+- `void updateRenderer()` — Updates the entity renderer
+- `void updateShaderGroupSize(int width, int height)`
 
-## Description
+## Fields
 
-Anaglyph field (0=R, 1=GB)
+- `static boolean anaglyphEnable`
+- `static int anaglyphField` — Anaglyph field (0=R, 1=GB)
+- `ItemRenderer itemRenderer`
+- `static int shaderCount`

@@ -3,11 +3,15 @@ title: "TupleIntJsonSerializable"
 description: "public class TupleIntJsonSerializable extends java.lang.Object"
 package: "net/minecraft/util"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/util/TupleIntJsonSerializable.html"
 sourceType: javadoc
 ---
 
 # TupleIntJsonSerializable
+
+**Inheritance:** java.lang.Object → net.minecraft.util.TupleIntJsonSerializable
 
 ## Class signature
 
@@ -17,11 +21,11 @@ public class TupleIntJsonSerializable extends java.lang.Object
 
 ## Constructors
 
-- `public TupleIntJsonSerializable()`
+- `TupleIntJsonSerializable()`
 
 ## Methods
 
-- `public int getIntegerValue()`
-- `public void setIntegerValue(int integerValueIn)`
-- `public <T extends IJsonSerializable > T getJsonSerializableValue()`
-- `public void setJsonSerializableValue( IJsonSerializable jsonSerializableValueIn)`
+- `int getIntegerValue()`
+- `<T extends IJsonSerializable> T getJsonSerializableValue()`
+- `void setIntegerValue(int integerValueIn)`
+- `void setJsonSerializableValue(IJsonSerializable jsonSerializableValueIn)`

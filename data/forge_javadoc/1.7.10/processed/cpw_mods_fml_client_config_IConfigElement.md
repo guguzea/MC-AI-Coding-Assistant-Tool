@@ -8,34 +8,30 @@ public interface IConfigElement<T>
 
 ## Methods
 
-- `boolean isProperty()`
-- `java.lang.Class<? extends GuiConfigEntries.IConfigEntry > getConfigEntryClass()`
-- `java.lang.Class<? extends GuiEditArrayEntries.IArrayEntry > getArrayEntryClass()`
-- `java.lang.String getName()`
-- `java.lang.String getQualifiedName()`
-- `java.lang.String getLanguageKey()`
-- `java.lang.String getComment()`
-- `java.util.List< IConfigElement > getChildElements()`
-- `ConfigGuiType getType()`
-- `boolean isList()`
-- `boolean isListLengthFixed()`
-- `int getMaxListLength()`
-- `boolean isDefault()`
-- `java.lang.Object getDefault()`
-- `java.lang.Object[] getDefaults()`
-- `void setToDefault()`
-- `boolean requiresWorldRestart()`
-- `boolean showInGui()`
-- `boolean requiresMcRestart()`
-- `java.lang.Object get()`
-- `java.lang.Object[] getList()`
-- `void set( T value)`
-- `void set( T [] aVal)`
-- `java.lang.String[] getValidValues()`
-- `T getMinValue()`
-- `T getMaxValue()`
-- `java.util.regex.Pattern getValidationPattern()`
-
-## Description
-
-This interface provides the information needed by GuiConfig and GuiConfigEntries to display config elements for editing.
+- `java.lang.Object get()` — [Property] Gets this property value.
+- `java.lang.Class<? extends GuiEditArrayEntries.IArrayEntry> getArrayEntryClass()` — This method returns a class that implements IArrayEntry .
+- `java.util.List<IConfigElement> getChildElements()` — [Category] Gets this category's child categories/properties.
+- `java.lang.String getComment()` — [Property, Category] Gets the comment for this object.
+- `java.lang.Class<? extends GuiConfigEntries.IConfigEntry> getConfigEntryClass()` — This method returns a class that implements IConfigEntry or null.
+- `java.lang.Object getDefault()` — [Property] Gets this property's default value.
+- `java.lang.Object[] getDefaults()` — [Property] Gets this property's default values.
+- `java.lang.String getLanguageKey()` — [Property, Category] Gets a language key for localization of config GUI entry names.
+- `java.lang.Object[] getList()` — [Property] Gets this property value as a list.
+- `int getMaxListLength()` — [Property] Gets the max length of this list property, or -1 if the length is unlimited.
+- `T getMaxValue()` — [Property] Gets this property's maximum value.
+- `T getMinValue()` — [Property] Gets this property's minimum value.
+- `java.lang.String getName()` — [Property, Category] Gets the name of this object.
+- `java.lang.String getQualifiedName()` — [Category] Gets the qualified name of this object.
+- `ConfigGuiType getType()` — [Property, Category] Gets the ConfigGuiType value corresponding to the type of this property object, or CONFIG_CATEGORY if this is a category object.
+- `java.util.regex.Pattern getValidationPattern()` — [Property] Gets a Pattern object used in String property input validation.
+- `java.lang.String[] getValidValues()` — [Property] Gets a String array of valid values for this property.
+- `boolean isDefault()` — [Property] Is this property value equal to the default value?
+- `boolean isList()` — [Property] Is this property object a list?
+- `boolean isListLengthFixed()` — [Property] Does this list property have to remain a fixed length?
+- `boolean isProperty()` — Gets the value of the property property.
+- `boolean requiresMcRestart()` — [Property, Category] Whether or not this element requires Minecraft to be restarted when changed.
+- `boolean requiresWorldRestart()` — [Property, Category] Whether or not this element is safe to modify while a world is running.
+- `void set(T value)` — [Property] Sets this property's value.
+- `void set(T [] aVal)` — [Property] Sets this property's value to the specified array.
+- `void setToDefault()` — [Property] Sets this property's value to the default value.
+- `boolean showInGui()` — [Property, Category] Whether or not this element should be allowed to show on config GUIs.

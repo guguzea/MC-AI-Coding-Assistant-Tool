@@ -1,15 +1,17 @@
 # StatsComponent
 
+**Inheritance:** java.lang.Object → java.awt.Component → java.awt.Container → javax.swing.JComponent → net.minecraft.server.gui.StatsComponent
+
 ## Class signature
 
 ```java
 public class StatsComponent extends javax.swing.JComponent
 ```
 
-## Constructors
-
-- `public StatsComponent( MinecraftServer serverIn)`
-
 ## Methods
 
-- `public void paint(java.awt.Graphics p_paint_1_)`
+- `void paint(java.awt.Graphics p_paint_1_)`
+
+## Fields
+
+- `StatsComponent`

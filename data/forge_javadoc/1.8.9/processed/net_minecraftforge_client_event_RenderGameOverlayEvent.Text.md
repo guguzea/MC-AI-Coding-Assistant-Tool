@@ -1,5 +1,18 @@
 # RenderGameOverlayEvent.Text
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderGameOverlayEvent → net.minecraftforge.client.event.RenderGameOverlayEvent.Pre → net.minecraftforge.client.event.RenderGameOverlayEvent.Text
+
+## Class signature
+
+```java
+public static class RenderGameOverlayEvent.Text extends RenderGameOverlayEvent.Pre
+```
+
 ## Constructors
 
-- `public Text( RenderGameOverlayEvent parent, java.util.ArrayList<java.lang.String> left, java.util.ArrayList<java.lang.String> right)`
+- `Text(RenderGameOverlayEvent parent, java.util.ArrayList<java.lang.String> left, java.util.ArrayList<java.lang.String> right)`
+
+## Fields
+
+- `java.util.ArrayList<java.lang.String> left`
+- `java.util.ArrayList<java.lang.String> right`

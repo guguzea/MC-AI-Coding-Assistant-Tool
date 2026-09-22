@@ -8,4 +8,4 @@ public interface IPerspectiveAwareModel extends IFlexibleBakedModel
 
 ## Methods
 
-- `<any> handlePerspective( ItemCameraTransforms.TransformType cameraTransformType)`
+- `<any> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)`

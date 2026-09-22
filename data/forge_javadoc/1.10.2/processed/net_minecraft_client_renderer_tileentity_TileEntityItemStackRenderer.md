@@ -1,5 +1,7 @@
 # TileEntityItemStackRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer
+
 ## Class signature
 
 ```java
@@ -8,8 +10,12 @@ public class TileEntityItemStackRenderer extends java.lang.Object
 
 ## Constructors
 
-- `public TileEntityItemStackRenderer()`
+- `TileEntityItemStackRenderer()`
 
 ## Methods
 
-- `public void renderByItem( ItemStack itemStackIn)`
+- `void renderByItem(ItemStack itemStackIn)`
+
+## Fields
+
+- `static TileEntityItemStackRenderer instance`

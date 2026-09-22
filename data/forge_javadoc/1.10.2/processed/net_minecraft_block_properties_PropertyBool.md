@@ -1,20 +1,22 @@
 # PropertyBool
 
+**Inheritance:** java.lang.Object → net.minecraft.block.properties.PropertyHelper<java.lang.Boolean> → net.minecraft.block.properties.PropertyBool
+
 ## Class signature
 
 ```java
-public class PropertyBool extends PropertyHelper <java.lang.Boolean>
+public class PropertyBool extends PropertyHelper<java.lang.Boolean>
 ```
 
 ## Constructors
 
-- `protected PropertyBool(java.lang.String name)`
+- `PropertyBool(java.lang.String name)`
 
 ## Methods
 
-- `public java.util.Collection<java.lang.Boolean> getAllowedValues()`
-- `public static PropertyBool create(java.lang.String name)`
-- `public com.google.common.base.Optional<java.lang.Boolean> parseValue(java.lang.String value)`
-- `public java.lang.String getName(java.lang.Boolean value)`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
+- `static PropertyBool create(java.lang.String name)`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `java.util.Collection<java.lang.Boolean> getAllowedValues()`
+- `java.lang.String getName(java.lang.Boolean value)`
+- `int hashCode()`
+- `com.google.common.base.Optional<java.lang.Boolean> parseValue(java.lang.String value)`

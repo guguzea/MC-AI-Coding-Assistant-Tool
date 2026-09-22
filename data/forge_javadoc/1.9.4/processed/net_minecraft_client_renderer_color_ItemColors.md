@@ -1,5 +1,7 @@
 # ItemColors
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.color.ItemColors
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class ItemColors extends java.lang.Object
 
 ## Constructors
 
-- `public ItemColors()`
+- `ItemColors()`
 
 ## Methods
 
-- `public static ItemColors init( BlockColors p_186729_0_)`
-- `public int getColorFromItemstack( ItemStack stack, int tintIndex)`
-- `public void registerItemColorHandler( IItemColor itemColor, Block ... blocksIn)`
-- `public void registerItemColorHandler( IItemColor itemColor, Item ... itemsIn)`
+- `int getColorFromItemstack(ItemStack stack, int tintIndex)`
+- `static ItemColors init(BlockColors p_186729_0_)`
+- `void registerItemColorHandler(IItemColor itemColor, Block ... blocksIn)`
+- `void registerItemColorHandler(IItemColor itemColor, Item ... itemsIn)`

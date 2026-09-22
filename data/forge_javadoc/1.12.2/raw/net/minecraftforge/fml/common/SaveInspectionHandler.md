@@ -1,14 +1,18 @@
 ---
 title: "SaveInspectionHandler"
-description: "A method annotated with this on the Mod will be called whenever a local save is listed in the save games list."
+description: "public @interface SaveInspectionHandler"
 package: "net/minecraftforge/fml/common"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/common/SaveInspectionHandler.html"
 sourceType: javadoc
 ---
 
 # SaveInspectionHandler
 
-## Description
+## Class signature
 
-A method annotated with this on the Mod will be called whenever a local save is listed in the save games list.
+```java
+public @interface SaveInspectionHandler
+```

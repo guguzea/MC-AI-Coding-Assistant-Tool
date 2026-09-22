@@ -3,11 +3,15 @@ title: "GuiFlatPresets"
 description: "public class GuiFlatPresets extends GuiScreen"
 package: "net/minecraft/client/gui"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/gui/GuiFlatPresets.html"
 sourceType: javadoc
 ---
 
 # GuiFlatPresets
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiFlatPresets
 
 ## Class signature
 
@@ -15,18 +19,18 @@ sourceType: javadoc
 public class GuiFlatPresets extends GuiScreen
 ```
 
-## Constructors
-
-- `public GuiFlatPresets( GuiCreateFlatWorld p_i46318_1_)`
-
 ## Methods
 
-- `public void initGui()`
-- `public void handleMouseInput() throws java.io.IOException`
-- `public void onGuiClosed()`
-- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws java.io.IOException`
-- `protected void keyTyped(char typedChar, int keyCode) throws java.io.IOException`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `public void updateScreen()`
-- `public void updateButtonValidity()`
+- `protected void actionPerformed(GuiButton button)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void handleMouseInput()`
+- `void initGui()`
+- `protected void keyTyped(char typedChar, int keyCode)`
+- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton)`
+- `void onGuiClosed()`
+- `void updateButtonValidity()`
+- `void updateScreen()`
+
+## Fields
+
+- `GuiFlatPresets`

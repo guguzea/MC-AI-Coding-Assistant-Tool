@@ -1,19 +1,21 @@
 # CPacketHeldItemChange
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketHeldItemChange
+
 ## Class signature
 
 ```java
-public class CPacketHeldItemChange extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketHeldItemChange extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketHeldItemChange()`
-- `public CPacketHeldItemChange(int slotIdIn)`
+- `CPacketHeldItemChange()`
+- `CPacketHeldItemChange(int slotIdIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public int getSlotId()`
+- `int getSlotId()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

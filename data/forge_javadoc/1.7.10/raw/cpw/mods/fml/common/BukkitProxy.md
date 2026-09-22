@@ -1,8 +1,10 @@
 ---
 title: "BukkitProxy"
-description: "A marker interface for retrieving a proxy to a bukkit plugin. Fields associated with BukkitPluginRef annotations should declare this type and cast down if the target is available (not null)"
+description: "public interface BukkitProxy"
 package: "cpw/mods/fml/common"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/BukkitProxy.html"
 sourceType: javadoc
 ---
@@ -14,7 +16,3 @@ sourceType: javadoc
 ```java
 public interface BukkitProxy
 ```
-
-## Description
-
-A marker interface for retrieving a proxy to a bukkit plugin. Fields associated with BukkitPluginRef annotations should declare this type and cast down if the target is available (not null)

@@ -1,12 +1,24 @@
 # GuiEditArrayEntries.BooleanEntry
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.config.GuiEditArrayEntries.BaseEntry → net.minecraftforge.fml.client.config.GuiEditArrayEntries.BooleanEntry
+
+## Class signature
+
+```java
+public static class GuiEditArrayEntries.BooleanEntry extends GuiEditArrayEntries.BaseEntry
+```
+
 ## Constructors
 
-- `public BooleanEntry( GuiEditArray owningScreen, GuiEditArrayEntries owningEntryList, IConfigElement configElement, boolean value)`
+- `BooleanEntry(GuiEditArray owningScreen, GuiEditArrayEntries owningEntryList, IConfigElement configElement, boolean value)`
 
 ## Methods
 
-- `public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected)`
-- `public boolean mousePressed(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)`
-- `public void mouseReleased(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)`
-- `public java.lang.Object getValue()`
+- `void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected)`
+- `java.lang.Object getValue()`
+- `boolean mousePressed(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)`
+- `void mouseReleased(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)`
+
+## Fields
+
+- `protected GuiButtonExt btnValue`

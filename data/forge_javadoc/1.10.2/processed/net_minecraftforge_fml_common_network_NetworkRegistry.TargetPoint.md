@@ -1,9 +1,21 @@
 # NetworkRegistry.TargetPoint
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint
+
+## Class signature
+
+```java
+public static class NetworkRegistry.TargetPoint extends java.lang.Object
+```
+
 ## Constructors
 
-- `public TargetPoint(int dimension, double x, double y, double z, double range)`
+- `TargetPoint(int dimension, double x, double y, double z, double range)`
 
-## Description
+## Fields
 
-Represents a target point for the ALLROUNDPOINT target.
+- `int dimension`
+- `double range`
+- `double x`
+- `double y`
+- `double z`

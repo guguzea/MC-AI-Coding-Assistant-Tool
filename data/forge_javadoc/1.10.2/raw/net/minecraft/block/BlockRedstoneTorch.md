@@ -3,11 +3,15 @@ title: "BlockRedstoneTorch"
 description: "public class BlockRedstoneTorch extends BlockTorch"
 package: "net/minecraft/block"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/block/BlockRedstoneTorch.html"
 sourceType: javadoc
 ---
 
 # BlockRedstoneTorch
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockTorch → net.minecraft.block.BlockRedstoneTorch
 
 ## Class signature
 
@@ -15,22 +19,22 @@ sourceType: javadoc
 public class BlockRedstoneTorch extends BlockTorch
 ```
 
-## Constructors
-
-- `protected BlockRedstoneTorch(boolean isOn)`
-
 ## Methods
 
-- `public int tickRate( World worldIn)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public int getWeakPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `public void randomTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random random)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `public int getStrongPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public boolean canProvidePower( IBlockState state)`
-- `public void randomDisplayTick( IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isAssociatedBlock( Block other)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canProvidePower(IBlockState state)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `boolean isAssociatedBlock(Block other)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
+- `void randomTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random random)`
+- `int tickRate(World worldIn)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+
+## Fields
+
+- `protected BlockRedstoneTorch`

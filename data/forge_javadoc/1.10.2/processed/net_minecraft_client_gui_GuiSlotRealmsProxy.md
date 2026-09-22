@@ -1,25 +1,27 @@
 # GuiSlotRealmsProxy
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.GuiSlot → net.minecraft.client.gui.GuiSlotRealmsProxy
+
 ## Class signature
 
 ```java
 public class GuiSlotRealmsProxy extends GuiSlot
 ```
 
-## Constructors
-
-- `public GuiSlotRealmsProxy( RealmsScrolledSelectionList selectionListIn, int widthIn, int heightIn, int topIn, int bottomIn, int slotHeightIn)`
-
 ## Methods
 
-- `protected int getSize()`
-- `protected void elementClicked(int slotIndex, boolean isDoubleClick, int mouseX, int mouseY)`
-- `protected boolean isSelected(int slotIndex)`
 - `protected void drawBackground()`
 - `protected void drawSlot(int entryID, int insideLeft, int yPos, int insideSlotHeight, int mouseXIn, int mouseYIn)`
-- `public int getWidth()`
-- `public int getMouseY()`
-- `public int getMouseX()`
+- `protected void elementClicked(int slotIndex, boolean isDoubleClick, int mouseX, int mouseY)`
 - `protected int getContentHeight()`
+- `int getMouseX()`
+- `int getMouseY()`
 - `protected int getScrollBarX()`
-- `public void handleMouseInput()`
+- `protected int getSize()`
+- `int getWidth()`
+- `void handleMouseInput()`
+- `protected boolean isSelected(int slotIndex)`
+
+## Fields
+
+- `GuiSlotRealmsProxy`

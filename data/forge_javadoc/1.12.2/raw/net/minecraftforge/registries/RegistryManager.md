@@ -3,11 +3,15 @@ title: "RegistryManager"
 description: "public class RegistryManager extends java.lang.Object"
 package: "net/minecraftforge/registries"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/registries/RegistryManager.html"
 sourceType: javadoc
 ---
 
 # RegistryManager
+
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.RegistryManager
 
 ## Class signature
 
@@ -17,15 +21,21 @@ public class RegistryManager extends java.lang.Object
 
 ## Constructors
 
-- `public RegistryManager(java.lang.String name)`
+- `RegistryManager(java.lang.String name)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public <V extends IForgeRegistryEntry <V>> java.lang.Class<V> getSuperType( ResourceLocation key)`
-- `public <V extends IForgeRegistryEntry <V>> ForgeRegistry <V> getRegistry( ResourceLocation key)`
-- `public <V extends IForgeRegistryEntry <V>> IForgeRegistry <V> getRegistry(java.lang.Class<V> cls)`
-- `public <V extends IForgeRegistryEntry <V>> ResourceLocation getName( IForgeRegistry <V> reg)`
-- `public <V extends IForgeRegistryEntry <V>> ForgeRegistry <V> getRegistry( ResourceLocation key, RegistryManager other)`
-- `public java.util.Map< ResourceLocation , ForgeRegistry.Snapshot > takeSnapshot(boolean savingToDisc)`
-- `public void clean()`
+- `void clean()`
+- `java.lang.String getName()`
+- `<V extends IForgeRegistryEntry<V>> ResourceLocation getName(IForgeRegistry<V> reg)`
+- `<V extends IForgeRegistryEntry<V>> IForgeRegistry<V> getRegistry(java.lang.Class<V> cls)`
+- `<V extends IForgeRegistryEntry<V>> ForgeRegistry<V> getRegistry(ResourceLocation key)`
+- `<V extends IForgeRegistryEntry<V>> ForgeRegistry<V> getRegistry(ResourceLocation key, RegistryManager other)`
+- `<V extends IForgeRegistryEntry<V>> java.lang.Class<V> getSuperType(ResourceLocation key)`
+- `java.util.Map<ResourceLocation, ForgeRegistry.Snapshot> takeSnapshot(boolean savingToDisc)`
+
+## Fields
+
+- `static RegistryManager ACTIVE`
+- `static RegistryManager FROZEN`
+- `static RegistryManager VANILLA`

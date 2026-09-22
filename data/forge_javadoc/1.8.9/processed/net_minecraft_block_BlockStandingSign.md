@@ -1,5 +1,7 @@
 # BlockStandingSign
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockContainer → net.minecraft.block.BlockSign → net.minecraft.block.BlockStandingSign
+
 ## Class signature
 
 ```java
@@ -8,15 +10,15 @@ public class BlockStandingSign extends BlockSign
 
 ## Constructors
 
-- `public BlockStandingSign()`
+- `BlockStandingSign()`
 
 ## Methods
 
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockState createBlockState()`
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
 
-## Description
+## Fields
 
-Convert the BlockState into the correct metadata value
+- `static PropertyInteger ROTATION`

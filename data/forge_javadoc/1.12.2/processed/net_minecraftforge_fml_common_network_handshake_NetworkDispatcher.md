@@ -1,46 +1,51 @@
 # NetworkDispatcher
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.handshake.NetworkDispatcher
+
 ## Class signature
 
 ```java
-public class NetworkDispatcher extends <any>
+public class NetworkDispatcher extends<any>
 ```
 
 ## Constructors
 
-- `public NetworkDispatcher( NetworkManager manager)`
-- `public NetworkDispatcher( NetworkManager manager, PlayerList scm)`
+- `NetworkDispatcher(NetworkManager manager)`
+- `NetworkDispatcher(NetworkManager manager, PlayerList scm)`
 
 ## Methods
 
-- `public static NetworkDispatcher get( NetworkManager manager)`
-- `public static NetworkDispatcher allocAndSet( NetworkManager manager)`
-- `public static NetworkDispatcher allocAndSet( NetworkManager manager, PlayerList scm)`
-- `public void serverToClientHandshake( EntityPlayerMP player)`
-- `protected void setModList(java.util.Map<java.lang.String,java.lang.String> modList)`
-- `public void clientToServerHandshake()`
-- `protected void channelRead0(ChannelHandlerContext ctx, Packet <?> msg) throws java.lang.Exception`
-- `public INetHandler getNetHandler()`
-- `public java.util.Map<java.lang.String,java.lang.String> getModList()`
-- `public void userEventTriggered(ChannelHandlerContext ctx, java.lang.Object evt) throws java.lang.Exception`
-- `public void sendProxy( FMLProxyPacket msg)`
-- `public void rejectHandshake(java.lang.String result)`
-- `public void bind(ChannelHandlerContext ctx, java.net.SocketAddress localAddress, ChannelPromise promise) throws java.lang.Exception`
-- `public void connect(ChannelHandlerContext ctx, java.net.SocketAddress remoteAddress, java.net.SocketAddress localAddress, ChannelPromise promise) throws java.lang.Exception`
-- `public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws java.lang.Exception`
-- `public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws java.lang.Exception`
-- `@Deprecated public void deregister(ChannelHandlerContext ctx, ChannelPromise promise) throws java.lang.Exception`
-- `public void read(ChannelHandlerContext ctx) throws java.lang.Exception`
-- `public void write(ChannelHandlerContext ctx, java.lang.Object msg, ChannelPromise promise) throws java.lang.Exception`
-- `public void flush(ChannelHandlerContext ctx) throws java.lang.Exception`
-- `public void completeHandshake( Side target)`
-- `public void completeClientHandshake()`
-- `public void abortClientHandshake(java.lang.String type)`
-- `public void exceptionCaught(ChannelHandlerContext ctx, java.lang.Throwable cause) throws java.lang.Exception`
-- `public void setOverrideDimension(int overrideDim)`
-- `public int getOverrideDimension( SPacketJoinGame packetIn)`
-- `public NetworkDispatcher.ConnectionType getConnectionType()`
+- `void abortClientHandshake(java.lang.String type)`
+- `static NetworkDispatcher allocAndSet(NetworkManager manager)`
+- `static NetworkDispatcher allocAndSet(NetworkManager manager, PlayerList scm)`
+- `void bind(ChannelHandlerContext ctx, java.net.SocketAddress localAddress, ChannelPromise promise)`
+- `protected void channelRead0(ChannelHandlerContext ctx, Packet<?> msg)`
+- `void clientToServerHandshake()`
+- `void close(ChannelHandlerContext ctx, ChannelPromise promise)`
+- `void completeClientHandshake()`
+- `void completeHandshake(Side target)`
+- `void connect(ChannelHandlerContext ctx, java.net.SocketAddress remoteAddress, java.net.SocketAddress localAddress, ChannelPromise promise)`
+- `@Deprecated void deregister(ChannelHandlerContext ctx, ChannelPromise promise)`
+- `void disconnect(ChannelHandlerContext ctx, ChannelPromise promise)`
+- `void exceptionCaught(ChannelHandlerContext ctx, java.lang.Throwable cause)`
+- `void flush(ChannelHandlerContext ctx)`
+- `static NetworkDispatcher get(NetworkManager manager)`
+- `NetworkDispatcher.ConnectionType getConnectionType()`
+- `java.util.Map<java.lang.String, java.lang.String> getModList()` — The mod list returned by this method is in no way reliable because it is provided by the client
+- `INetHandler getNetHandler()`
+- `int getOverrideDimension(SPacketJoinGame packetIn)`
+- `void read(ChannelHandlerContext ctx)`
+- `void rejectHandshake(java.lang.String result)`
+- `void sendProxy(FMLProxyPacket msg)`
+- `void serverToClientHandshake(EntityPlayerMP player)`
+- `protected void setModList(java.util.Map<java.lang.String, java.lang.String> modList)`
+- `void setOverrideDimension(int overrideDim)`
+- `void userEventTriggered(ChannelHandlerContext ctx, java.lang.Object evt)`
+- `void write(ChannelHandlerContext ctx, java.lang.Object msg, ChannelPromise promise)`
 
-## Description
+## Fields
 
-Deprecated.
+- `static<any> FML_DISPATCHER`
+- `static<any> FML_GAMEDATA_SNAPSHOT`
+- `static<any> IS_LOCAL`
+- `NetworkManager manager`

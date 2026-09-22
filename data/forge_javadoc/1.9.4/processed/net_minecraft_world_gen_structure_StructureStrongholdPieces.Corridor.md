@@ -1,13 +1,21 @@
 # StructureStrongholdPieces.Corridor
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureStrongholdPieces.Stronghold → net.minecraft.world.gen.structure.StructureStrongholdPieces.Corridor
 
-- `public Corridor()`
-- `public Corridor(int p_i45581_1_, java.util.Random p_i45581_2_, StructureBoundingBox p_i45581_3_, EnumFacing p_i45581_4_)`
+## Class signature
+
+```java
+public static class StructureStrongholdPieces.Corridor extends StructureStrongholdPieces.Stronghold
+```
 
 ## Methods
 
-- `protected void writeStructureToNBT( NBTTagCompound tagCompound)`
-- `protected void readStructureFromNBT( NBTTagCompound tagCompound)`
-- `public static StructureBoundingBox findPieceBox(java.util.List< StructureComponent > p_175869_0_, java.util.Random p_175869_1_, int p_175869_2_, int p_175869_3_, int p_175869_4_, EnumFacing p_175869_5_)`
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `static StructureBoundingBox findPieceBox(java.util.List<StructureComponent> p_175869_0_, java.util.Random p_175869_1_, int p_175869_2_, int p_175869_3_, int p_175869_4_, EnumFacing p_175869_5_)`
+- `protected void readStructureFromNBT(NBTTagCompound tagCompound)`
+- `protected void writeStructureToNBT(NBTTagCompound tagCompound)`
+
+## Fields
+
+- `Corridor`
+- `Corridor`

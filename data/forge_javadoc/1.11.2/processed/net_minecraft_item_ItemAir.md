@@ -1,17 +1,19 @@
 # ItemAir
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemAir
+
 ## Class signature
 
 ```java
 public class ItemAir extends Item
 ```
 
-## Constructors
-
-- `public ItemAir( Block blockIn)`
-
 ## Methods
 
-- `public java.lang.String getUnlocalizedName( ItemStack stack)`
-- `public java.lang.String getUnlocalizedName()`
-- `public void addInformation( ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
+- `void addInformation(ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
+- `java.lang.String getUnlocalizedName()`
+- `java.lang.String getUnlocalizedName(ItemStack stack)`
+
+## Fields
+
+- `ItemAir`

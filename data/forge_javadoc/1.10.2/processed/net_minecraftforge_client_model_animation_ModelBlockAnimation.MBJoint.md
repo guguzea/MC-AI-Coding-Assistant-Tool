@@ -1,11 +1,19 @@
 # ModelBlockAnimation.MBJoint
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.animation.ModelBlockAnimation.MBJoint
+
+## Class signature
+
+```java
+protected static class ModelBlockAnimation.MBJoint extends java.lang.Object implements IJoint
+```
+
 ## Constructors
 
-- `public MBJoint(java.lang.String name, BlockPart part)`
+- `MBJoint(java.lang.String name, BlockPart part)`
 
 ## Methods
 
-- `public TRSRTransformation getInvBindPose()`
-- `public com.google.common.base.Optional<? extends IJoint > getParent()`
-- `public java.lang.String getName()`
+- `TRSRTransformation getInvBindPose()`
+- `java.lang.String getName()`
+- `com.google.common.base.Optional<? extends IJoint> getParent()`

@@ -1,18 +1,24 @@
 ---
 title: "WorldEvent.Unload"
-description: "WorldEvent.Unload is fired when Minecraft unloads a world. This event is fired when a world is unloaded in Minecraft.loadWorld(WorldClient, String) , MinecraftServer.stopServer() , DimensionManager#un"
+description: "public static class WorldEvent.Unload extends WorldEvent"
 package: "net/minecraftforge/event/world"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/world/WorldEvent.Unload.html"
 sourceType: javadoc
 ---
 
 # WorldEvent.Unload
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.WorldEvent.Unload
+
+## Class signature
+
+```java
+public static class WorldEvent.Unload extends WorldEvent
+```
+
 ## Constructors
 
-- `public Unload( World world)`
-
-## Description
-
-WorldEvent.Unload is fired when Minecraft unloads a world. This event is fired when a world is unloaded in Minecraft.loadWorld(WorldClient, String) , MinecraftServer.stopServer() , DimensionManager#un
+- `Unload(World world)`

@@ -1,14 +1,24 @@
 ---
 title: "FMLMessage.OpenGui"
-description: ""
+description: "public static class FMLMessage.OpenGui extends FMLMessage"
 package: "net/minecraftforge/fml/common/network/internal"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/network/internal/FMLMessage.OpenGui.html"
 sourceType: javadoc
 ---
 
 # FMLMessage.OpenGui
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.internal.FMLMessage → net.minecraftforge.fml.common.network.internal.FMLMessage.OpenGui
+
+## Class signature
+
+```java
+public static class FMLMessage.OpenGui extends FMLMessage
+```
+
 ## Constructors
 
-- `public OpenGui()`
+- `OpenGui()`

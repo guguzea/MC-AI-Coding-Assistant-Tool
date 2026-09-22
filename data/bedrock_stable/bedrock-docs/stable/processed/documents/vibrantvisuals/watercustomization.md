@@ -1,0 +1,181 @@
+> 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/watercustomization?view=minecraft-bedrock-stable
+> 抓取时间：2026-09-21T11:50:12.024Z
+> 警告：此文档可能滞后于当前正式版
+
+# Water Effects
+
+Vibrant Visuals dramatically enhances the look of water in Minecraft: Bedrock Edition. You get many of the new features simply by enabling Vibrant Visuals in Minecraft's settings, but you can customize the behavior of water blocks through resource packs. Use the Editor to experiment with different water characteristics and help build your JSON schemas.
+
+## Particle concentrations
+
+The composition of particles in a body of water determines its color and how light behaves as it travels through the water. We've boiled them down to three concentrations in mg/L. Use these values to simulate crystal clear lakes, deep oceans, or muddy rivers:
+
+- CDOM (Chromophoric Dissolved Organic Matter): High concentrations produce yellow to yellow-brown colors, due to CDOM strongly absorbing blue wavelengths. Open oceans typically have little to no CDOM, and thus retain a blue appearance; fresh water sources, like rivers, tend to have higher concentrations.
+
+- Chlorophyll: High concentrations produce green colors, due to chlorophyll strongly absorbing blue and red wavelengths. Sources of chlorophyll, such as phytoplankton, exist in practically every type of body of water, though concentrations widely vary.
+
+- Suspended sediment: High concentrations produce red to red-brown colors, due to suspended sediment strongly absorbing blue and green wavelengths. Suspended sediment, like clay and silt, tend to be concentrated in rivers and can indicate recent floods or sources of pollution.
+
+## Waves
+
+Waves are an optional effect that can be used to complement water surface animations to make your water appear more realistic. You can blend them with existing water texture animations, or replace them entirely. The waves in Vibrant Visuals are purely an image-based effect—waves don't actually move the vertices of the water surface, so the water surface geometry will remain unchanged.
+
+There are a variety of ways to customize waves to convey different types of water:
+
+- Depth: Determines how much waves displace the water surface. Larger values will result in deeper waves, whereas smaller values will produce shallower waves.
+
+- Direction Increment: An angle, in degrees, that controls how much the heading changes between each octave.
+
+- Frequency: Determines how many waves there are per water block. Can also be thought of as the size of the waves. Larger values will create more tightly packed waves, whereas smaller values will spread waves out over a wider area.
+
+- Frequency Scaling: Specifies how much wave frequency changes between octaves. A value of 1 will result in no change between octaves. Values higher than 1 will cause frequencies to increase while values less than 1 will cause frequencies to decrease.
+
+- Mix: Controls how much each octave is blended into the neighboring octave.
+
+- Pull: Controls how much smaller waves are pulled into larger waves. A value of 0 results in no pull. Values larger than 0 will pull waves in a standard concave fashion, whereas values less than 0 will pull waves in a convex fashion, resulting in more pillowing waves as opposed to cresting waves.
+
+- Sample Width: Controls the overall resolution of the fractal effect. A value of 1 represents the lowest resolution, resulting in smoother waves, while values less than 1 produce more chaotic waves.
+
+- Shape: Adjusts the core shape of waves. A value of 1 results in a pure sine wave, whereas values larger than 1 will produce sharper waves.
+
+- Speed: Determines the movement speed of the first wave and the starting value of the Speed Scaling parameter.
+
+- Speed Scaling: Controls how much faster each subsequent octave moves. A value of 1 will result in no change between octaves. Values higher than 1 will cause speeds to increase while values less than 1 will cause speeds to decrease.
+
+## Caustics
+
+Caustics make bodies of water more realistic by projecting light rays on underwater surfaces. These rays then scatter and dance as the surface of the water moves. This effect is enabled by default, but can be selectively disabled in given water configurations.
+
+The following parameters can be used to control the appearance of caustics:
+
+- Enabled: Whether or not caustics is rendered. If false , all other parameters for caustics are ignored. By default, this value is true .
+
+- Frame Length: The number of seconds to spend on a single frame of animation in the caustics sprite sheet texture. A larger value will result in a slower animation, while smaller values will result in a faster animation. The number of frames is automatically determined by the game based on the width and height of the supplied caustics texture, where # of frames = height / width.
+
+- Power: Controls how bright the caustics effect appears. A larger value will increase the brightness/intensity.
+
+- Scale: Controls the size of the caustics texture when it is projected on the world. This value scales inversely in that, a larger value means that the texture will appear smaller, repeating/tiling more, whereas a smaller value will cause the texture to appear bigger, covering a larger area of the world.
+
+- Texture: Specifies a texture to use for the caustics animation. If this value is not supplied by a resource pack, then the game will automatically provide a built-in texture with 64 frames of animation. Any texture must adhere to the following rules: All frames of animation must be contained in the single texture.
+
+- Animation frames must be laid out vertically, not horizontally.
+
+- Each individual frame of animation must have the same resolution as every other frame of animation in a given caustics texture.
+
+- Each individual frame of animation must square in dimensions.
+
+- The game will infer the number of frames in the animation based on the width and height of the overall texture, where # of frames = height / width.
+
+- Like any other resource pack texture, the caustics texture should be located under the " textures " directory in the root of your pack, and must be declared in " textures_list.json ".
+
+## Biome water color inclusion
+
+Version `1.26.0` introduces a new parameter to Vibrant Visuals water schemas that helps close the gap between non-Vibrant and Vibrant water. That parameter is a single factor from 0-1 called "`biome_water_color_contribution`", and it controls how much the `surface_color` value defined in *.client_biome.json files will be mixed into the base color of the water in Vibrant Visuals.
+
+Say you have an ocean biome where the "`surface_color`" value, in your biome's JSON under the "`minecraft:water_appearance`" object, is set to "`#1787D4`". When you go to an ocean in non-Vibrant Visuals modes, the color of the water will be "`#1787D4`". However, by default, this color is not utilized in ocean water when in Vibrant Visuals mode. That is because the color of water in Vibrant Visuals is derived primarily from the values defined in "`particle_concentrations`". By using "`biome_water_color_contribution`", packs can tint the water prior to when the "`particle_concentrations`" are applied. Think of this as if the color defined in "`surface_color`" is a colored dye dropped into otherwise crystal-clear water. Then, the concentrations of CDOM, chlorophyll, and sediment further alter the appearance of the water.
+
+A value of 0 "`biome_water_color_contribution`" will result in no contribution from the "`surface_color`", while a value of 1 will result in maximum contribution of the color.
+
+## Schema
+
+Water configurations are JSON files located in water/water.json in a resource pack. They follow this format:
+
+```json
+{
+ string "format_version", // The 3-part schema version for parsing these water settings.
+ object "minecraft:water_settings"
+ {
+ object "description"
+ {
+ string "identifier" // The identifier for these water settings. The identifier must include a namespace.
+ },
+ object "particle_concentrations" : opt
+ {
+ float "cdom" : opt, // Concentration of chromophoric dissolved organic matter in mg/L; higher concentrations produce more yellow/yellow-brown colors
+ float "chlorophyll" : opt, // Concentration of chlorophyll in mg/L; higher concentrations produce more green colors
+ float "suspended_sediment" : opt // Concentration of suspended sediment in mg/L; higher concentrations produce more red/red-brown colors
+ },
+ object "waves" : opt
+ {
+ bool "enabled" : opt, // Whether or not waves are on or off
+ float "depth" : opt, // Controls the amount of wave displacement
+ float "direction_increment" : opt, // Controls how much the heading changes between each octave
+ float "frequency" : opt, // Controls the size of individual waves; higher values create more tightly packed waves
+ float "frequency_scaling" : opt, // Controls how much frequencies change in subsequent octaves
+ float "mix" : opt, // Controls how much each octave will blend into the neighboring octave
+ int "octaves" : opt, // Determines how many layers of waves to simulate; high values result in more complex waves
+ float "pull" : opt, // Controls how much smaller waves are pulled into larger ones
+ float "sampleWidth" : opt, // Controls the resolutions of the fractal effect; higher values result in smoother waves
+ float "shape" : opt, // Adjusts the shape of the wave
+ float "speed" : opt, // Controls the starting speed of the first waves
+ float "speed_scaling" : opt // Controls how much faster/slower subsequent octaves move
+ },
+ object "caustics" : opt
+ {
+ bool "enabled" : opt, // Whether or not caustics are on or off
+ float "frame_length" : opt, // How many seconds to spend on each frame of animation in the caustics texture
+ int "power" : opt, // Controls how bright the caustics effect appears
+ float "scale" : opt, // Controls how size of the repetition of the caustics texture
+ string "texture" : opt // Resource location to a texture for controlling the shape of the caustics; if not used, a built-in Minecraft texture will be supplied automatically
+ },
+ float "biome_water_color_contribution" : opt // Controls the contribution of surface_color water colors defined in *.client_biome.json files
+ }
+}
+```
+
+Learn more about customizing and applying color grading settings in your pack across different biomes in Per-Biome Customization .
+
+The following example JSON can be used as a starting point for an ocean:
+
+```json
+{
+ "format_version": "1.26.0",
+ "minecraft:water_settings": {
+ "description": {
+ "identifier": "my_pack:default_water"
+ },
+ "particle_concentrations": {
+ "chlorophyll": 0.5,
+ "suspended_sediment": 0.5,
+ "cdom": 1
+ },
+ "waves": {
+ "enabled": true,
+ "depth": 1,
+ "direction_increment": 80.0,
+ "frequency": 1,
+ "frequency_scaling": 1.2,
+ "mix": 0.2,
+ "octaves": 28,
+ "pull": 0.38,
+ "sampleWidth": 0.01,
+ "shape": 1.5,
+ "speed": 2,
+ "speed_scaling": 1.03
+ },
+ "caustics": {
+ "enabled": true,
+ "frame_length": 0.05,
+ "power": 2,
+ "scale": 0.5
+ },
+ "biome_water_color_contribution": 0.2
+ }
+}
+```
+
+## Feedback
+
+ Was this page helpful?
+
+ Yes
+
+ No
+
+ No
+
+ Need help with this topic?
+
+ Want to try using Ask Learn to clarify or guide you through this topic?
+
+ Suggest a fix?

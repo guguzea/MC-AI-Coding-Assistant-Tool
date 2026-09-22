@@ -1,13 +1,17 @@
 ---
 title: "GuiKeyBindingList"
-description: "Gets the IGuiListEntry object for the given index"
+description: "public class GuiKeyBindingList extends GuiListExtended"
 package: "net/minecraft/client/gui"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/gui/GuiKeyBindingList.html"
 sourceType: javadoc
 ---
 
 # GuiKeyBindingList
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.GuiSlot → net.minecraft.client.gui.GuiListExtended → net.minecraft.client.gui.GuiKeyBindingList
 
 ## Class signature
 
@@ -15,17 +19,13 @@ sourceType: javadoc
 public class GuiKeyBindingList extends GuiListExtended
 ```
 
-## Constructors
-
-- `public GuiKeyBindingList( GuiControls controls, Minecraft mcIn)`
-
 ## Methods
 
-- `protected int getSize()`
-- `public GuiListExtended.IGuiListEntry getListEntry(int index)`
+- `GuiListExtended.IGuiListEntry getListEntry(int index)` — Gets the IGuiListEntry object for the given index
+- `int getListWidth()` — Gets the width of the list
 - `protected int getScrollBarX()`
-- `public int getListWidth()`
+- `protected int getSize()`
 
-## Description
+## Fields
 
-Gets the IGuiListEntry object for the given index
+- `GuiKeyBindingList`

@@ -1,24 +1,30 @@
 ---
 title: "BlockPrismarine.EnumType"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum BlockPrismarine.EnumType extends java.lang.Enum<BlockPrismarine.EnumType> implements IStringSerializable"
 package: "net/minecraft/block"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/block/BlockPrismarine.EnumType.html"
 sourceType: javadoc
 ---
 
 # BlockPrismarine.EnumType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<BlockPrismarine.EnumType> → net.minecraft.block.BlockPrismarine.EnumType
+
+## Class signature
+
+```java
+public static enum BlockPrismarine.EnumType extends java.lang.Enum<BlockPrismarine.EnumType> implements IStringSerializable
+```
+
 ## Methods
 
-- `public static BlockPrismarine.EnumType [] values()`
-- `public static BlockPrismarine.EnumType valueOf(java.lang.String name)`
-- `public int getMetadata()`
-- `public java.lang.String toString()`
-- `public static BlockPrismarine.EnumType byMetadata(int meta)`
-- `public java.lang.String getName()`
-- `public java.lang.String getUnlocalizedName()`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static BlockPrismarine.EnumType byMetadata(int meta)`
+- `int getMetadata()`
+- `java.lang.String getName()`
+- `java.lang.String getUnlocalizedName()`
+- `java.lang.String toString()`
+- `static BlockPrismarine.EnumType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static BlockPrismarine.EnumType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

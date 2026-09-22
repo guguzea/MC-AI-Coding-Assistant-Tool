@@ -3,11 +3,15 @@ title: "ForgeInternalHandler"
 description: "public class ForgeInternalHandler extends java.lang.Object"
 package: "net/minecraftforge/common"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/common/ForgeInternalHandler.html"
 sourceType: javadoc
 ---
 
 # ForgeInternalHandler
+
+**Inheritance:** java.lang.Object → net.minecraftforge.common.ForgeInternalHandler
 
 ## Class signature
 
@@ -17,14 +21,14 @@ public class ForgeInternalHandler extends java.lang.Object
 
 ## Constructors
 
-- `public ForgeInternalHandler()`
+- `ForgeInternalHandler()`
 
 ## Methods
 
-- `public void onEntityJoinWorld( EntityJoinWorldEvent event)`
-- `public void onDimensionLoad( WorldEvent.Load event)`
-- `public void onDimensionSave( WorldEvent.Save event)`
-- `public void onDimensionUnload( WorldEvent.Unload event)`
-- `public void onServerTick( TickEvent.ServerTickEvent event)`
-- `public void checkSettings( TickEvent.ClientTickEvent event)`
-- `public void onChunkUnload( ChunkEvent.Unload event)`
+- `void checkSettings(TickEvent.ClientTickEvent event)`
+- `void onChunkUnload(ChunkEvent.Unload event)`
+- `void onDimensionLoad(WorldEvent.Load event)`
+- `void onDimensionSave(WorldEvent.Save event)`
+- `void onDimensionUnload(WorldEvent.Unload event)`
+- `void onEntityJoinWorld(EntityJoinWorldEvent event)`
+- `void onServerTick(TickEvent.ServerTickEvent event)`

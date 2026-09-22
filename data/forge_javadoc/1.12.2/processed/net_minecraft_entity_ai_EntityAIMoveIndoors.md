@@ -1,5 +1,7 @@
 # EntityAIMoveIndoors
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIMoveIndoors
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class EntityAIMoveIndoors extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIMoveIndoors( EntityCreature entityIn)`
+- `EntityAIMoveIndoors(EntityCreature entityIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean shouldContinueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
+- `void resetTask()`
+- `boolean shouldContinueExecuting()`
+- `boolean shouldExecute()`
+- `void startExecuting()`

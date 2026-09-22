@@ -1,26 +1,28 @@
 # EntityWitherSkull
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityFireball → net.minecraft.entity.projectile.EntityWitherSkull
+
 ## Class signature
 
 ```java
 public class EntityWitherSkull extends EntityFireball
 ```
 
-## Constructors
-
-- `public EntityWitherSkull( World worldIn)`
-- `public EntityWitherSkull( World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ)`
-- `public EntityWitherSkull( World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ)`
-
 ## Methods
 
-- `protected float getMotionFactor()`
-- `public boolean isBurning()`
-- `public float getExplosionResistance( Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn)`
-- `protected void onImpact( RayTraceResult result)`
-- `public boolean canBeCollidedWith()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeCollidedWith()`
 - `protected void entityInit()`
-- `public boolean isInvulnerable()`
-- `public void setInvulnerable(boolean invulnerable)`
+- `float getExplosionResistance(Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn)`
+- `protected float getMotionFactor()`
+- `boolean isBurning()`
 - `protected boolean isFireballFiery()`
+- `boolean isInvulnerable()`
+- `protected void onImpact(RayTraceResult result)`
+- `void setInvulnerable(boolean invulnerable)`
+
+## Fields
+
+- `EntityWitherSkull`
+- `EntityWitherSkull`
+- `EntityWitherSkull`

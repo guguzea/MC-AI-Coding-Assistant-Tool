@@ -1,5 +1,7 @@
 # DebugRendererPathfinding
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.debug.DebugRendererPathfinding
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class DebugRendererPathfinding extends java.lang.Object implements DebugR
 
 ## Constructors
 
-- `public DebugRendererPathfinding( Minecraft minecraftIn)`
+- `DebugRendererPathfinding(Minecraft minecraftIn)`
 
 ## Methods
 
-- `public void addPath(int eid, Path pathIn, float distance)`
-- `public void render(float partialTicks, long finishTimeNano)`
-- `public void renderPathLine(float finishTimeNano, Path pathIn)`
+- `void addPath(int eid, Path pathIn, float distance)`
+- `void render(float partialTicks, long finishTimeNano)`
+- `void renderPathLine(float finishTimeNano, Path pathIn)`

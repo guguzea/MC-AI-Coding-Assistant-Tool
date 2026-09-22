@@ -1,9 +1,17 @@
 # VillagerTradeTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.VillagerTradeTrigger.Instance
+
+## Class signature
+
+```java
+public static class VillagerTradeTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( EntityPredicate villager, ItemPredicate item)`
+- `Instance(EntityPredicate villager, ItemPredicate item)`
 
 ## Methods
 
-- `public boolean test( EntityPlayerMP player, EntityVillager villager, ItemStack item)`
+- `boolean test(EntityPlayerMP player, EntityVillager villager, ItemStack item)`

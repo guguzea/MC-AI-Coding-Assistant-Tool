@@ -1,40 +1,42 @@
 # EmptyChunk
 
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.Chunk → net.minecraft.world.chunk.EmptyChunk
+
 ## Class signature
 
 ```java
 public class EmptyChunk extends Chunk
 ```
 
-## Constructors
-
-- `public EmptyChunk( World worldIn, int x, int z)`
-
 ## Methods
 
-- `public boolean isAtLocation(int x, int z)`
-- `public int getHeightValue(int x, int z)`
-- `public void generateHeightMap()`
-- `public void generateSkylightMap()`
-- `public IBlockState getBlockState( BlockPos pos)`
-- `public int getBlockLightOpacity( BlockPos pos)`
-- `public int getLightFor( EnumSkyBlock type, BlockPos pos)`
-- `public void setLightFor( EnumSkyBlock type, BlockPos pos, int value)`
-- `public int getLightSubtracted( BlockPos pos, int amount)`
-- `public void addEntity( Entity entityIn)`
-- `public void removeEntity( Entity entityIn)`
-- `public void removeEntityAtIndex( Entity entityIn, int index)`
-- `public boolean canSeeSky( BlockPos pos)`
-- `public TileEntity getTileEntity( BlockPos pos, Chunk.EnumCreateEntityType p_177424_2_)`
-- `public void addTileEntity( TileEntity tileEntityIn)`
-- `public void addTileEntity( BlockPos pos, TileEntity tileEntityIn)`
-- `public void removeTileEntity( BlockPos pos)`
-- `public void onLoad()`
-- `public void onUnload()`
-- `public void markDirty()`
-- `public void getEntitiesWithinAABBForEntity( Entity entityIn, AxisAlignedBB aabb, java.util.List< Entity > listToFill, <any> filter)`
-- `public <T extends Entity > void getEntitiesOfTypeWithinAABB(java.lang.Class<? extends T> entityClass, AxisAlignedBB aabb, java.util.List<T> listToFill, <any> filter)`
-- `public boolean needsSaving(boolean p_76601_1_)`
-- `public java.util.Random getRandomWithSeed(long seed)`
-- `public boolean isEmpty()`
-- `public boolean isEmptyBetween(int startY, int endY)`
+- `void addEntity(Entity entityIn)`
+- `void addTileEntity(BlockPos pos, TileEntity tileEntityIn)`
+- `void addTileEntity(TileEntity tileEntityIn)`
+- `boolean canSeeSky(BlockPos pos)`
+- `void generateHeightMap()`
+- `void generateSkylightMap()`
+- `int getBlockLightOpacity(BlockPos pos)`
+- `IBlockState getBlockState(BlockPos pos)`
+- `<T extends Entity> void getEntitiesOfTypeWithinAABB(java.lang.Class<? extends T> entityClass, AxisAlignedBB aabb, java.util.List<T> listToFill, <any> filter)`
+- `void getEntitiesWithinAABBForEntity(Entity entityIn, AxisAlignedBB aabb, java.util.List<Entity> listToFill, <any> filter)`
+- `int getHeightValue(int x, int z)`
+- `int getLightFor(EnumSkyBlock type, BlockPos pos)`
+- `int getLightSubtracted(BlockPos pos, int amount)`
+- `java.util.Random getRandomWithSeed(long seed)`
+- `TileEntity getTileEntity(BlockPos pos, Chunk.EnumCreateEntityType p_177424_2_)`
+- `boolean isAtLocation(int x, int z)`
+- `boolean isEmpty()`
+- `boolean isEmptyBetween(int startY, int endY)`
+- `void markDirty()`
+- `boolean needsSaving(boolean p_76601_1_)`
+- `void onLoad()`
+- `void onUnload()`
+- `void removeEntity(Entity entityIn)`
+- `void removeEntityAtIndex(Entity entityIn, int index)`
+- `void removeTileEntity(BlockPos pos)`
+- `void setLightFor(EnumSkyBlock type, BlockPos pos, int value)`
+
+## Fields
+
+- `EmptyChunk`

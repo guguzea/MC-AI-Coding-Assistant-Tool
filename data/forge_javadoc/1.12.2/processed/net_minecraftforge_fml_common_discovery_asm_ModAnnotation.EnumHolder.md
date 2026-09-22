@@ -1,10 +1,18 @@
 # ModAnnotation.EnumHolder
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.discovery.asm.ModAnnotation.EnumHolder
+
+## Class signature
+
+```java
+public static class ModAnnotation.EnumHolder extends java.lang.Object
+```
+
 ## Constructors
 
-- `public EnumHolder(java.lang.String desc, java.lang.String value)`
+- `EnumHolder(java.lang.String desc, java.lang.String value)`
 
 ## Methods
 
-- `public java.lang.String getDesc()`
-- `public java.lang.String getValue()`
+- `java.lang.String getDesc()`
+- `java.lang.String getValue()`

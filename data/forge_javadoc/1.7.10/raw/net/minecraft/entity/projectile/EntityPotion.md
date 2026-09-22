@@ -3,11 +3,15 @@ title: "EntityPotion"
 description: "public class EntityPotion extends EntityThrowable"
 package: "net/minecraft/entity/projectile"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/entity/projectile/EntityPotion.html"
 sourceType: javadoc
 ---
 
 # EntityPotion
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityThrowable → net.minecraft.entity.projectile.EntityPotion
 
 ## Class signature
 
@@ -15,21 +19,21 @@ sourceType: javadoc
 public class EntityPotion extends EntityThrowable
 ```
 
-## Constructors
-
-- `public EntityPotion( World p_i1788_1_)`
-- `public EntityPotion( World p_i1789_1_, EntityLivingBase p_i1789_2_, int p_i1789_3_)`
-- `public EntityPotion( World p_i1790_1_, EntityLivingBase p_i1790_2_, ItemStack p_i1790_3_)`
-- `public EntityPotion( World p_i1791_1_, double p_i1791_2_, double p_i1791_4_, double p_i1791_6_, int p_i1791_8_)`
-- `public EntityPotion( World p_i1792_1_, double p_i1792_2_, double p_i1792_4_, double p_i1792_6_, ItemStack p_i1792_8_)`
-
 ## Methods
 
-- `protected float getGravityVelocity()`
 - `protected float func_70182_d()`
 - `protected float func_70183_g()`
-- `public void setPotionDamage(int p_82340_1_)`
-- `public int getPotionDamage()`
-- `protected void onImpact( MovingObjectPosition p_70184_1_)`
-- `public void readEntityFromNBT( NBTTagCompound p_70037_1_)`
-- `public void writeEntityToNBT( NBTTagCompound p_70014_1_)`
+- `protected float getGravityVelocity()`
+- `int getPotionDamage()`
+- `protected void onImpact(MovingObjectPosition p_70184_1_)`
+- `void readEntityFromNBT(NBTTagCompound p_70037_1_)`
+- `void setPotionDamage(int p_82340_1_)`
+- `void writeEntityToNBT(NBTTagCompound p_70014_1_)`
+
+## Fields
+
+- `EntityPotion`
+- `EntityPotion`
+- `EntityPotion`
+- `EntityPotion`
+- `EntityPotion`

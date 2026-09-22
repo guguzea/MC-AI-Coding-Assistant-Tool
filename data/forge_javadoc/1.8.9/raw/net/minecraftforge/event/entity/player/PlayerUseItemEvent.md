@@ -1,13 +1,17 @@
 ---
 title: "PlayerUseItemEvent"
-description: "Fired after an item has fully finished being used."
+description: "public abstract class PlayerUseItemEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/player/PlayerUseItemEvent.html"
 sourceType: javadoc
 ---
 
 # PlayerUseItemEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerUseItemEvent
 
 ## Class signature
 
@@ -15,6 +19,7 @@ sourceType: javadoc
 public abstract class PlayerUseItemEvent extends PlayerEvent
 ```
 
-## Description
+## Fields
 
-Fired after an item has fully finished being used.
+- `int duration`
+- `ItemStack item`

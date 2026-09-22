@@ -1,9 +1,19 @@
 # WorldEvent.PotentialSpawns
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.WorldEvent.PotentialSpawns
+
+## Class signature
+
+```java
+public static class WorldEvent.PotentialSpawns extends WorldEvent
+```
+
 ## Constructors
 
-- `public PotentialSpawns( World world, EnumCreatureType type, BlockPos pos, java.util.List< BiomeGenBase.SpawnListEntry > oldList)`
+- `PotentialSpawns(World world, EnumCreatureType type, BlockPos pos, java.util.List<BiomeGenBase.SpawnListEntry> oldList)`
 
-## Description
+## Fields
 
-Called by WorldServer to gather a list of all possible entities that can spawn at the specified location. If an entry is added to the list, it needs to be a globally unique instance. The event is call
+- `java.util.List<BiomeGenBase.SpawnListEntry> list`
+- `BlockPos pos`
+- `EnumCreatureType type`

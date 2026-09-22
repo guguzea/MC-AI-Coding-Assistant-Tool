@@ -1,5 +1,7 @@
 # ModNameFunction
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.functions.ModNameFunction
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class ModNameFunction extends java.lang.Object
 
 ## Constructors
 
-- `public ModNameFunction()`
+- `ModNameFunction()`
 
 ## Methods
 
-- `public java.lang.String apply( ModContainer input)`
+- `java.lang.String apply(ModContainer input)`

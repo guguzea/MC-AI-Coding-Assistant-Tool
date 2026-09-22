@@ -1,23 +1,26 @@
 # ModelFluid
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.ModelFluid
+
 ## Class signature
 
 ```java
-public class ModelFluid extends java.lang.Object implements IModelCustomData < ModelFluid >
+public class ModelFluid extends java.lang.Object implements IModelCustomData<ModelFluid>
 ```
 
 ## Constructors
 
-- `public ModelFluid( Fluid fluid)`
+- `ModelFluid(Fluid fluid)`
 
 ## Methods
 
-- `public java.util.Collection< ResourceLocation > getDependencies()`
-- `public java.util.Collection< ResourceLocation > getTextures()`
-- `public IFlexibleBakedModel bake( IModelState state, VertexFormat format, <any> bakedTextureGetter)`
-- `public IModelState getDefaultState()`
-- `public IModel process(<any> customData)`
+- `IFlexibleBakedModel bake(IModelState state, VertexFormat format, <any> bakedTextureGetter)`
+- `IModelState getDefaultState()`
+- `java.util.Collection<ResourceLocation> getDependencies()`
+- `java.util.Collection<ResourceLocation> getTextures()`
+- `IModel process(<any> customData)` — Allows the model to process custom data from the variant definition.
 
-## Description
+## Fields
 
-Allows the model to process custom data from the variant definition.
+- `static ModelFluid lavaModel`
+- `static ModelFluid waterModel`

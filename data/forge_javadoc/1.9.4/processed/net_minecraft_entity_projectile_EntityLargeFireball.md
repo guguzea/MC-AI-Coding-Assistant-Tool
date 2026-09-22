@@ -1,5 +1,7 @@
 # EntityLargeFireball
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityFireball → net.minecraft.entity.projectile.EntityLargeFireball
+
 ## Class signature
 
 ```java
@@ -8,12 +10,16 @@ public class EntityLargeFireball extends EntityFireball
 
 ## Constructors
 
-- `public EntityLargeFireball( World worldIn)`
-- `public EntityLargeFireball( World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ)`
-- `public EntityLargeFireball( World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ)`
+- `EntityLargeFireball(World worldIn)`
+- `EntityLargeFireball(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ)`
+- `EntityLargeFireball(World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ)`
 
 ## Methods
 
-- `protected void onImpact( RayTraceResult result)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
+- `protected void onImpact(RayTraceResult result)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `int explosionPower`

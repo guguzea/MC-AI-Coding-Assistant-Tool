@@ -1,5 +1,7 @@
 # DebugRendererSolidFace
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.debug.DebugRendererSolidFace
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class DebugRendererSolidFace extends java.lang.Object implements DebugRen
 
 ## Constructors
 
-- `public DebugRendererSolidFace( Minecraft minecraftIn)`
+- `DebugRendererSolidFace(Minecraft minecraftIn)`
 
 ## Methods
 
-- `public void render(float partialTicks, long finishTimeNano)`
+- `void render(float partialTicks, long finishTimeNano)`

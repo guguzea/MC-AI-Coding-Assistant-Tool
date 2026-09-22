@@ -8,4 +8,4 @@ public interface IRangedAttackMob
 
 ## Methods
 
-- `void attackEntityWithRangedAttack( EntityLivingBase target, float distanceFactor)`
+- `void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor)`

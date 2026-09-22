@@ -1,5 +1,7 @@
 # EntityAIWander
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIWander
+
 ## Class signature
 
 ```java
@@ -8,14 +10,24 @@ public class EntityAIWander extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIWander( EntityCreature creatureIn, double speedIn)`
-- `public EntityAIWander( EntityCreature creatureIn, double speedIn, int chance)`
+- `EntityAIWander(EntityCreature creatureIn, double speedIn)`
+- `EntityAIWander(EntityCreature creatureIn, double speedIn, int chance)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
 - `protected Vec3d getPosition()`
-- `public boolean shouldContinueExecuting()`
-- `public void startExecuting()`
-- `public void makeUpdate()`
-- `public void setExecutionChance(int newchance)`
+- `void makeUpdate()`
+- `void setExecutionChance(int newchance)`
+- `boolean shouldContinueExecuting()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+
+## Fields
+
+- `protected EntityCreature entity`
+- `protected int executionChance`
+- `protected boolean mustUpdate`
+- `protected double speed`
+- `protected double x`
+- `protected double y`
+- `protected double z`

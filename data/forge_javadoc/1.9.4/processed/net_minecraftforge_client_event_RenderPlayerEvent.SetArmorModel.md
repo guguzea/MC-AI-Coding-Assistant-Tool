@@ -1,16 +1,20 @@
 # RenderPlayerEvent.SetArmorModel
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent.SetArmorModel
+
+## Class signature
+
+```java
+public static class RenderPlayerEvent.SetArmorModel extends RenderPlayerEvent
+```
+
 ## Constructors
 
-- `public SetArmorModel( EntityPlayer player, RenderPlayer renderer, int slot, float partialTick, ItemStack stack)`
+- `@Deprecated SetArmorModel(EntityPlayer player, RenderPlayer renderer, int slot, float partialTick, ItemStack stack)`
 
 ## Methods
 
-- `public int getResultValue()`
-- `public void setResult(int result)`
-- `public int getSlot()`
-- `public ItemStack getStack()`
-
-## Description
-
-Deprecated.
+- `@Deprecated int getResultValue()`
+- `@Deprecated int getSlot()`
+- `@Deprecated ItemStack getStack()`
+- `@Deprecated void setResult(int result)`

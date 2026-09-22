@@ -3,11 +3,15 @@ title: "MovingSound"
 description: "public abstract class MovingSound extends PositionedSound implements ITickableSound"
 package: "net/minecraft/client/audio"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/audio/MovingSound.html"
 sourceType: javadoc
 ---
 
 # MovingSound
+
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.PositionedSound → net.minecraft.client.audio.MovingSound
 
 ## Class signature
 
@@ -17,8 +21,12 @@ public abstract class MovingSound extends PositionedSound implements ITickableSo
 
 ## Constructors
 
-- `protected MovingSound( ResourceLocation location)`
+- `MovingSound(ResourceLocation location)`
 
 ## Methods
 
-- `public boolean isDonePlaying()`
+- `boolean isDonePlaying()`
+
+## Fields
+
+- `protected boolean donePlaying`

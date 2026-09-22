@@ -1,5 +1,7 @@
 # ForgeClientHandler
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.ForgeClientHandler
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class ForgeClientHandler extends java.lang.Object
 
 ## Constructors
 
-- `public ForgeClientHandler()`
+- `ForgeClientHandler()`
 
 ## Methods
 
-- `public static void registerModels( ModelRegistryEvent event)`
-- `public static void registerItemHandlers( ColorHandlerEvent.Item event)`
+- `static void registerItemHandlers(ColorHandlerEvent.Item event)`
+- `static void registerModels(ModelRegistryEvent event)`

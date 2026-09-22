@@ -1,38 +1,40 @@
 # EntityCreeper
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityCreeper
+
 ## Class signature
 
 ```java
 public class EntityCreeper extends EntityMob
 ```
 
-## Constructors
-
-- `public EntityCreeper( World worldIn)`
-
 ## Methods
 
-- `protected void initEntityAI()`
+- `boolean ableToCauseSkullDrop()`
 - `protected void applyEntityAttributes()`
-- `public int getMaxFallHeight()`
-- `public void fall(float distance, float damageMultiplier)`
+- `boolean attackEntityAsMob(Entity entityIn)`
 - `protected void entityInit()`
-- `public static void registerFixesCreeper( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void onUpdate()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
+- `void fall(float distance, float damageMultiplier)`
+- `float getCreeperFlashIntensity(float p_70831_1_)`
+- `int getCreeperState()`
 - `protected SoundEvent getDeathSound()`
-- `public void onDeath( DamageSource cause)`
-- `public boolean attackEntityAsMob( Entity entityIn)`
-- `public boolean getPowered()`
-- `public float getCreeperFlashIntensity(float p_70831_1_)`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
 - `protected ResourceLocation getLootTable()`
-- `public int getCreeperState()`
-- `public void setCreeperState(int state)`
-- `public void onStruckByLightning( EntityLightningBolt lightningBolt)`
-- `protected boolean processInteract( EntityPlayer player, EnumHand hand)`
-- `public boolean hasIgnited()`
-- `public void ignite()`
-- `public boolean ableToCauseSkullDrop()`
-- `public void incrementDroppedSkulls()`
+- `int getMaxFallHeight()`
+- `boolean getPowered()`
+- `boolean hasIgnited()`
+- `void ignite()`
+- `void incrementDroppedSkulls()`
+- `protected void initEntityAI()`
+- `void onDeath(DamageSource cause)`
+- `void onStruckByLightning(EntityLightningBolt lightningBolt)`
+- `void onUpdate()`
+- `protected boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesCreeper(DataFixer fixer)`
+- `void setCreeperState(int state)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityCreeper`

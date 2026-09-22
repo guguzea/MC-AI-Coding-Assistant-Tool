@@ -1,5 +1,7 @@
 # Tessellator
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.Tessellator
+
 ## Class signature
 
 ```java
@@ -8,14 +10,10 @@ public class Tessellator extends java.lang.Object
 
 ## Constructors
 
-- `public Tessellator(int bufferSize)`
+- `Tessellator(int bufferSize)`
 
 ## Methods
 
-- `public static Tessellator getInstance()`
-- `public void draw()`
-- `public WorldRenderer getWorldRenderer()`
-
-## Description
-
-Draws the data set up in this tessellator and resets the state to prepare for new drawing.
+- `void draw()` — Draws the data set up in this tessellator and resets the state to prepare for new drawing.
+- `static Tessellator getInstance()`
+- `WorldRenderer getWorldRenderer()`

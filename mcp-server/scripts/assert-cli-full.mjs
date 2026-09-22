@@ -1,10 +1,10 @@
 /**
  * assert-cli-full：CLI 全量档（审计补齐，2026-09-17；sweep81 C-4 改口径）——
- * 81 个工具**逐个走入口契约探针**（`--help` + 无参），另有 OFFLINE+DATA_BACKED 子集**真实调用**
- * （分母 = 该子集长度，实测 47；**不是 81**）。
+ * 全部工具**逐个走入口契约探针**（`--help` + 无参），另有 OFFLINE+DATA_BACKED 子集**真实调用**
+ * （分母 = 该子集长度，实测 47；**不是全量工具数** —— 权威名单跑时由 list-tools --names-only 现取）。
  *
  * 口径（用户 review B4 写死）：
- *  - 「入口契约探针」= `<工具> --help`（全量 81，断言 exit 0）+ 无参探针（断言 exit ∈ {0,1,2}
+ *  - 「入口契约探针」= `<工具> --help`（全量，断言 exit 0）+ 无参探针（断言 exit ∈ {0,1,2}
  *    且 stdout 为 JSON 信封、stderr 无异常栈）——**单列计数，不算"真跑"**；
  *  - 「真实调用」= A 类（离线安全，逐条建议参数）全量 + B 类抽样（data/ 本机具备）= 实测 47 项；
  *    **C-4：退出码与信封 `success` 必须一致**（rc=1 不再与 rc=0 一视同仁；
@@ -108,6 +108,8 @@ const EXEMPT_NETWORK = [
   ["validate_at", "jar 定位依赖 $MC_SKILL_CACHE 预热的 remapped 客户端 jar（未预热 CACHE_MISS）"],
   ["validate_aw", "同 validate_at（同一 jar 缓存门）"],
   ["inspect_runtime", "需真实 logsDir/crashReportsDir（本机无游戏运行日志，探针覆盖）"],
+  // 2026-09-21（A2/P0-1）：新增工具里唯一走外网的 —— 真实调用要打 7 家上游，不进全量档。
+  ["query_upstream_releases", "真实 fetch maven/meta.fabricmc/meta.quiltmc/modrinth（离线只能走参数校验分支，探针已覆盖）"],
 ];
 
 /** B 类缺口豁免（本机 data/ 缺该版本档，真实调用不可用）。 */

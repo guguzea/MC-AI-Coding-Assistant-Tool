@@ -1,25 +1,31 @@
 ---
 title: "WorldTypeEvent.InitBiomeGens"
-description: "InitBiomeGens is fired when vanilla Minecraft attempts to initialize the biome providers. This event is fired just during biome provider initialization in BiomeProvider.BiomeProvider(long, WorldType, "
+description: "public static class WorldTypeEvent.InitBiomeGens extends WorldTypeEvent"
 package: "net/minecraftforge/event/terraingen"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/terraingen/WorldTypeEvent.InitBiomeGens.html"
 sourceType: javadoc
 ---
 
 # WorldTypeEvent.InitBiomeGens
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.WorldTypeEvent → net.minecraftforge.event.terraingen.WorldTypeEvent.InitBiomeGens
+
+## Class signature
+
+```java
+public static class WorldTypeEvent.InitBiomeGens extends WorldTypeEvent
+```
+
 ## Constructors
 
-- `public InitBiomeGens( WorldType worldType, long seed, GenLayer [] original)`
+- `InitBiomeGens(WorldType worldType, long seed, GenLayer [] original)`
 
 ## Methods
 
-- `public long getSeed()`
-- `public GenLayer [] getOriginalBiomeGens()`
-- `public GenLayer [] getNewBiomeGens()`
-- `public void setNewBiomeGens( GenLayer [] newBiomeGens)`
-
-## Description
-
-InitBiomeGens is fired when vanilla Minecraft attempts to initialize the biome providers. This event is fired just during biome provider initialization in BiomeProvider.BiomeProvider(long, WorldType, 
+- `GenLayer [] getNewBiomeGens()`
+- `GenLayer [] getOriginalBiomeGens()`
+- `long getSeed()`
+- `void setNewBiomeGens(GenLayer [] newBiomeGens)`

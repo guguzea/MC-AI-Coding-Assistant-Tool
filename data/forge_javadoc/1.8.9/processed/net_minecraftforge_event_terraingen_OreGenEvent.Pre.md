@@ -1,9 +1,13 @@
 # OreGenEvent.Pre
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.OreGenEvent → net.minecraftforge.event.terraingen.OreGenEvent.Pre
 
-- `public Pre( World world, java.util.Random rand, BlockPos pos)`
+## Class signature
 
-## Description
+```java
+public static class OreGenEvent.Pre extends OreGenEvent
+```
 
-OreGenEvent.Pre is fired just before a chunk is populated with ores. This event is fired just before ore generation in BiomeDecorator#generateOres(). This event is not Cancelable . This event does not
+## Fields
+
+- `Pre`

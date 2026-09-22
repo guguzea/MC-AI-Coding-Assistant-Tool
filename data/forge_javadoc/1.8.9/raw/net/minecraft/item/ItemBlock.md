@@ -1,13 +1,17 @@
 ---
 title: "ItemBlock"
-description: "gets the CreativeTab this item is displayed on"
+description: "public class ItemBlock extends Item"
 package: "net/minecraft/item"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/item/ItemBlock.html"
 sourceType: javadoc
 ---
 
 # ItemBlock
+
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemBlock
 
 ## Class signature
 
@@ -17,21 +21,21 @@ public class ItemBlock extends Item
 
 ## Constructors
 
-- `public ItemBlock( Block block)`
+- `ItemBlock(Block block)`
 
 ## Methods
 
-- `public ItemBlock setUnlocalizedName(java.lang.String unlocalizedName)`
-- `public boolean onItemUse( ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public static boolean setTileEntityNBT( World worldIn, EntityPlayer pos, BlockPos stack, ItemStack p_179224_3_)`
-- `public boolean canPlaceBlockOnSide( World worldIn, BlockPos pos, EnumFacing side, EntityPlayer player, ItemStack stack)`
-- `public java.lang.String getUnlocalizedName( ItemStack stack)`
-- `public java.lang.String getUnlocalizedName()`
-- `public CreativeTabs getCreativeTab()`
-- `public void getSubItems( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > subItems)`
-- `public Block getBlock()`
-- `public boolean placeBlockAt( ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState)`
+- `boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side, EntityPlayer player, ItemStack stack)`
+- `Block getBlock()`
+- `CreativeTabs getCreativeTab()` — gets the CreativeTab this item is displayed on
+- `void getSubItems(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> subItems)` — returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
+- `java.lang.String getUnlocalizedName()` — Returns the unlocalized name of this item.
+- `java.lang.String getUnlocalizedName(ItemStack stack)` — Returns the unlocalized name of this item.
+- `boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)` — Called when a Block is right-clicked with this Item
+- `boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState)` — Called to actually place the block, after the location is determined and all permission checks have been made.
+- `static boolean setTileEntityNBT(World worldIn, EntityPlayer pos, BlockPos stack, ItemStack p_179224_3_)`
+- `ItemBlock setUnlocalizedName(java.lang.String unlocalizedName)` — Sets the unlocalized name of this item to the string passed as the parameter, prefixed by "item."
 
-## Description
+## Fields
 
-gets the CreativeTab this item is displayed on
+- `Block block`

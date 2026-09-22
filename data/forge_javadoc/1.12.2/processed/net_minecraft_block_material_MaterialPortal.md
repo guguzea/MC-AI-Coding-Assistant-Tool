@@ -1,17 +1,19 @@
 # MaterialPortal
 
+**Inheritance:** java.lang.Object → net.minecraft.block.material.Material → net.minecraft.block.material.MaterialPortal
+
 ## Class signature
 
 ```java
 public class MaterialPortal extends Material
 ```
 
-## Constructors
-
-- `public MaterialPortal( MapColor color)`
-
 ## Methods
 
-- `public boolean isSolid()`
-- `public boolean blocksLight()`
-- `public boolean blocksMovement()`
+- `boolean blocksLight()`
+- `boolean blocksMovement()`
+- `boolean isSolid()`
+
+## Fields
+
+- `MaterialPortal`

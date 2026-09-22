@@ -1,9 +1,13 @@
 # FluidEvent.FluidMotionEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fluids.FluidEvent → net.minecraftforge.fluids.FluidEvent.FluidMotionEvent
+
+## Class signature
+
+```java
+public static class FluidEvent.FluidMotionEvent extends FluidEvent
+```
+
 ## Constructors
 
-- `public FluidMotionEvent( FluidStack fluid, World world, BlockPos pos)`
-
-## Description
-
-Mods should fire this event when they move fluids around.
+- `FluidMotionEvent(FluidStack fluid, World world, BlockPos pos)`

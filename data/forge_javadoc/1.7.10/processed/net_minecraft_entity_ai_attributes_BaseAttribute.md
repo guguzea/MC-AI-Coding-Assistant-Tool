@@ -1,5 +1,7 @@
 # BaseAttribute
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.attributes.BaseAttribute
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public abstract class BaseAttribute extends java.lang.Object implements IAttribu
 
 ## Constructors
 
-- `protected BaseAttribute(java.lang.String p_i1607_1_, double p_i1607_2_)`
+- `BaseAttribute(java.lang.String p_i1607_1_, double p_i1607_2_)`
 
 ## Methods
 
-- `public java.lang.String getAttributeUnlocalizedName()`
-- `public double getDefaultValue()`
-- `public boolean getShouldWatch()`
-- `public BaseAttribute setShouldWatch(boolean p_111112_1_)`
-- `public int hashCode()`
+- `java.lang.String getAttributeUnlocalizedName()`
+- `double getDefaultValue()`
+- `boolean getShouldWatch()`
+- `int hashCode()`
+- `BaseAttribute setShouldWatch(boolean p_111112_1_)`

@@ -1,11 +1,19 @@
 # CPacketPlayer.Rotation
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketPlayer → net.minecraft.network.play.client.CPacketPlayer.Rotation
 
-- `public Rotation()`
-- `public Rotation(float yawIn, float pitchIn, boolean onGroundIn)`
+## Class signature
+
+```java
+public static class CPacketPlayer.Rotation extends CPacketPlayer
+```
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`
+
+## Fields
+
+- `Rotation`
+- `Rotation`

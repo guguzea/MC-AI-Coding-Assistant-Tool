@@ -3,11 +3,15 @@ title: "NullStream"
 description: "public class NullStream extends java.lang.Object implements IStream"
 package: "net/minecraft/client/stream"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/stream/NullStream.html"
 sourceType: javadoc
 ---
 
 # NullStream
+
+**Inheritance:** java.lang.Object → net.minecraft.client.stream.NullStream
 
 ## Class signature
 
@@ -17,37 +21,37 @@ public class NullStream extends java.lang.Object implements IStream
 
 ## Constructors
 
-- `public NullStream(java.lang.Throwable p_i1006_1_)`
+- `NullStream(java.lang.Throwable p_i1006_1_)`
 
 ## Methods
 
-- `public void func_152923_i()`
-- `public void func_152935_j()`
-- `public void func_152922_k()`
-- `public boolean func_152936_l()`
-- `public boolean func_152924_m()`
-- `public boolean func_152934_n()`
-- `public void func_152911_a( Metadata p_152911_1_, long p_152911_2_)`
-- `public boolean func_152919_o()`
-- `public void func_152931_p()`
-- `public void func_152916_q()`
-- `public void func_152933_r()`
-- `public void func_152915_s()`
-- `public void func_152930_t()`
-- `public void func_152914_u()`
-- `public IngestServer[] func_152925_v()`
-- `public void func_152909_x()`
-- `public IngestServerTester func_152932_y()`
-- `public boolean func_152908_z()`
-- `public int func_152920_A()`
-- `public boolean func_152927_B()`
-- `public java.lang.String func_152921_C()`
-- `public ChatUserInfo func_152926_a(java.lang.String p_152926_1_)`
-- `public void func_152917_b(java.lang.String p_152917_1_)`
-- `public boolean func_152928_D()`
-- `public ErrorCode func_152912_E()`
-- `public boolean func_152913_F()`
-- `public void func_152910_a(boolean p_152910_1_)`
-- `public boolean func_152929_G()`
-- `public IStream.AuthFailureReason func_152918_H()`
-- `public java.lang.Throwable func_152937_a()`
+- `boolean func_152908_z()`
+- `void func_152909_x()`
+- `void func_152910_a(boolean p_152910_1_)`
+- `void func_152911_a(Metadata p_152911_1_, long p_152911_2_)`
+- `ErrorCode func_152912_E()`
+- `boolean func_152913_F()`
+- `void func_152914_u()`
+- `void func_152915_s()`
+- `void func_152916_q()`
+- `void func_152917_b(java.lang.String p_152917_1_)`
+- `IStream.AuthFailureReason func_152918_H()`
+- `boolean func_152919_o()`
+- `int func_152920_A()`
+- `java.lang.String func_152921_C()`
+- `void func_152922_k()`
+- `void func_152923_i()`
+- `boolean func_152924_m()`
+- `IngestServer[] func_152925_v()`
+- `ChatUserInfo func_152926_a(java.lang.String p_152926_1_)`
+- `boolean func_152927_B()`
+- `boolean func_152928_D()`
+- `boolean func_152929_G()`
+- `void func_152930_t()`
+- `void func_152931_p()`
+- `IngestServerTester func_152932_y()`
+- `void func_152933_r()`
+- `boolean func_152934_n()`
+- `void func_152935_j()`
+- `boolean func_152936_l()`
+- `java.lang.Throwable func_152937_a()`

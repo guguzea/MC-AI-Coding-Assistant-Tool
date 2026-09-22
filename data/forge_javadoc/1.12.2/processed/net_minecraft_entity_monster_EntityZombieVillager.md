@@ -1,43 +1,41 @@
 # EntityZombieVillager
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityZombie → net.minecraft.entity.monster.EntityZombieVillager
+
 ## Class signature
 
 ```java
 public class EntityZombieVillager extends EntityZombie
 ```
 
-## Constructors
-
-- `public EntityZombieVillager( World worldIn)`
-
 ## Methods
 
-- `protected void entityInit()`
-- `public void setProfession(int profession)`
-- `@Deprecated public int getProfession()`
-- `public static void registerFixesZombieVillager( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, IEntityLivingData livingdata)`
-- `public void onUpdate()`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand)`
 - `protected boolean canDespawn()`
-- `public boolean isConverting()`
-- `protected void startConverting(java.util.UUID conversionStarterIn, int conversionTimeIn)`
-- `public void handleStatusUpdate(byte id)`
+- `protected void entityInit()`
 - `protected void finishConversion()`
+- `SoundEvent getAmbientSound()`
 - `protected int getConversionProgress()`
-- `protected float getSoundPitch()`
-- `public SoundEvent getAmbientSound()`
-- `public SoundEvent getHurtSound( DamageSource damageSourceIn)`
-- `public SoundEvent getDeathSound()`
-- `public SoundEvent getStepSound()`
+- `SoundEvent getDeathSound()`
+- `VillagerRegistry.VillagerProfession getForgeProfession()`
+- `SoundEvent getHurtSound(DamageSource damageSourceIn)`
 - `protected ResourceLocation getLootTable()`
+- `@Deprecated int getProfession()`
 - `protected ItemStack getSkullDrop()`
-- `public void setForgeProfession( VillagerRegistry.VillagerProfession prof)`
-- `public VillagerRegistry.VillagerProfession getForgeProfession()`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
+- `protected float getSoundPitch()`
+- `SoundEvent getStepSound()`
+- `void handleStatusUpdate(byte id)`
+- `boolean isConverting()`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onUpdate()`
+- `boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesZombieVillager(DataFixer fixer)`
+- `void setForgeProfession(VillagerRegistry.VillagerProfession prof)`
+- `void setProfession(int profession)`
+- `protected void startConverting(java.util.UUID conversionStarterIn, int conversionTimeIn)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Deprecated.
+- `EntityZombieVillager`

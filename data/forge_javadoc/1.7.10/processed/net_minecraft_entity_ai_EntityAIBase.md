@@ -1,5 +1,7 @@
 # EntityAIBase
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase
+
 ## Class signature
 
 ```java
@@ -8,15 +10,15 @@ public abstract class EntityAIBase extends java.lang.Object
 
 ## Constructors
 
-- `public EntityAIBase()`
+- `EntityAIBase()`
 
 ## Methods
 
-- `public abstract boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public boolean isInterruptible()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
-- `public void setMutexBits(int p_75248_1_)`
-- `public int getMutexBits()`
+- `boolean continueExecuting()`
+- `int getMutexBits()`
+- `boolean isInterruptible()`
+- `void resetTask()`
+- `void setMutexBits(int p_75248_1_)`
+- `abstract boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

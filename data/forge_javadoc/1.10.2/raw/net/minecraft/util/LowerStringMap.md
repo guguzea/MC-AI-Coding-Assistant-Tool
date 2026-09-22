@@ -1,35 +1,39 @@
 ---
 title: "LowerStringMap"
-description: "public class LowerStringMap<V> extends java.lang.Object implements java.util.Map<java.lang.String,V>"
+description: "public class LowerStringMap<V> extends java.lang.Object implements java.util.Map<java.lang.String, V>"
 package: "net/minecraft/util"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/util/LowerStringMap.html"
 sourceType: javadoc
 ---
 
 # LowerStringMap
 
+**Inheritance:** java.lang.Object → net.minecraft.util.LowerStringMap<V>
+
 ## Class signature
 
 ```java
-public class LowerStringMap<V> extends java.lang.Object implements java.util.Map<java.lang.String,V>
+public class LowerStringMap<V> extends java.lang.Object implements java.util.Map<java.lang.String, V>
 ```
 
 ## Constructors
 
-- `public LowerStringMap()`
+- `LowerStringMap()`
 
 ## Methods
 
-- `public int size()`
-- `public boolean isEmpty()`
-- `public boolean containsKey(java.lang.Object p_containsKey_1_)`
-- `public boolean containsValue(java.lang.Object p_containsValue_1_)`
-- `public V get(java.lang.Object p_get_1_)`
-- `public V put(java.lang.String p_put_1_, V p_put_2_)`
-- `public V remove(java.lang.Object p_remove_1_)`
-- `public void putAll(java.util.Map<? extends java.lang.String,? extends V > p_putAll_1_)`
-- `public void clear()`
-- `public java.util.Set<java.lang.String> keySet()`
-- `public java.util.Collection< V > values()`
-- `public java.util.Set<java.util.Map.Entry<java.lang.String, V >> entrySet()`
+- `void clear()`
+- `boolean containsKey(java.lang.Object p_containsKey_1_)`
+- `boolean containsValue(java.lang.Object p_containsValue_1_)`
+- `java.util.Set<java.util.Map.Entry<java.lang.String, V>> entrySet()`
+- `V get(java.lang.Object p_get_1_)`
+- `boolean isEmpty()`
+- `java.util.Set<java.lang.String> keySet()`
+- `V put(java.lang.String p_put_1_, V p_put_2_)`
+- `void putAll(java.util.Map<? extends java.lang.String, ? extends V> p_putAll_1_)`
+- `V remove(java.lang.Object p_remove_1_)`
+- `int size()`
+- `java.util.Collection<V> values()`

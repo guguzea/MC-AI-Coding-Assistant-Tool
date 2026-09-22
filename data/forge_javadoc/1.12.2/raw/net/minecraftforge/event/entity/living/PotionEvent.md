@@ -1,13 +1,17 @@
 ---
 title: "PotionEvent"
-description: "This Event and its subevents gets fired from EntityLivingBase on the MinecraftForge#EVENT_BUS ."
+description: "public class PotionEvent extends LivingEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/living/PotionEvent.html"
 sourceType: javadoc
 ---
 
 # PotionEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.PotionEvent
 
 ## Class signature
 
@@ -17,12 +21,12 @@ public class PotionEvent extends LivingEvent
 
 ## Constructors
 
-- `public PotionEvent( EntityLivingBase living, PotionEffect effect)`
+- `PotionEvent(EntityLivingBase living, PotionEffect effect)`
 
 ## Methods
 
-- `public PotionEffect getPotionEffect()`
+- `PotionEffect getPotionEffect()` — Retuns the PotionEffect.
 
-## Description
+## Fields
 
-This Event and its subevents gets fired from EntityLivingBase on the MinecraftForge#EVENT_BUS .
+- `protected PotionEffect effect`

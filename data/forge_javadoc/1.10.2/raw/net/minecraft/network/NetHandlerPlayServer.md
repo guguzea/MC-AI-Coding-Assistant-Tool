@@ -1,57 +1,66 @@
 ---
 title: "NetHandlerPlayServer"
-description: "public class NetHandlerPlayServer extends java.lang.Object implements INetHandlerPlayServer , ITickable"
+description: "public class NetHandlerPlayServer extends java.lang.Object implements INetHandlerPlayServer, ITickable"
 package: "net/minecraft/network"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/network/NetHandlerPlayServer.html"
 sourceType: javadoc
 ---
 
 # NetHandlerPlayServer
 
+**Inheritance:** java.lang.Object → net.minecraft.network.NetHandlerPlayServer
+
 ## Class signature
 
 ```java
-public class NetHandlerPlayServer extends java.lang.Object implements INetHandlerPlayServer , ITickable
+public class NetHandlerPlayServer extends java.lang.Object implements INetHandlerPlayServer, ITickable
 ```
 
 ## Constructors
 
-- `public NetHandlerPlayServer( MinecraftServer server, NetworkManager networkManagerIn, EntityPlayerMP playerIn)`
+- `NetHandlerPlayServer(MinecraftServer server, NetworkManager networkManagerIn, EntityPlayerMP playerIn)`
 
 ## Methods
 
-- `public void update()`
-- `public NetworkManager getNetworkManager()`
-- `public void kickPlayerFromServer(java.lang.String reason)`
-- `public void processInput( CPacketInput packetIn)`
-- `public void processVehicleMove( CPacketVehicleMove packetIn)`
-- `public void processConfirmTeleport( CPacketConfirmTeleport packetIn)`
-- `public void processPlayer( CPacketPlayer packetIn)`
-- `public void setPlayerLocation(double x, double y, double z, float yaw, float pitch)`
-- `public void setPlayerLocation(double x, double y, double z, float yaw, float pitch, java.util.Set< SPacketPlayerPosLook.EnumFlags > relativeSet)`
-- `public void processPlayerDigging( CPacketPlayerDigging packetIn)`
-- `public void processRightClickBlock( CPacketPlayerTryUseItemOnBlock packetIn)`
-- `public void processPlayerBlockPlacement( CPacketPlayerTryUseItem packetIn)`
-- `public void handleSpectate( CPacketSpectate packetIn)`
-- `public void handleResourcePackStatus( CPacketResourcePackStatus packetIn)`
-- `public void processSteerBoat( CPacketSteerBoat packetIn)`
-- `public void onDisconnect( ITextComponent reason)`
-- `public void sendPacket( Packet <?> packetIn)`
-- `public void processHeldItemChange( CPacketHeldItemChange packetIn)`
-- `public void processChatMessage( CPacketChatMessage packetIn)`
-- `public void handleAnimation( CPacketAnimation packetIn)`
-- `public void processEntityAction( CPacketEntityAction packetIn)`
-- `public void processUseEntity( CPacketUseEntity packetIn)`
-- `public void processClientStatus( CPacketClientStatus packetIn)`
-- `public void processCloseWindow( CPacketCloseWindow packetIn)`
-- `public void processClickWindow( CPacketClickWindow packetIn)`
-- `public void processEnchantItem( CPacketEnchantItem packetIn)`
-- `public void processCreativeInventoryAction( CPacketCreativeInventoryAction packetIn)`
-- `public void processConfirmTransaction( CPacketConfirmTransaction packetIn)`
-- `public void processUpdateSign( CPacketUpdateSign packetIn)`
-- `public void processKeepAlive( CPacketKeepAlive packetIn)`
-- `public void processPlayerAbilities( CPacketPlayerAbilities packetIn)`
-- `public void processTabComplete( CPacketTabComplete packetIn)`
-- `public void processClientSettings( CPacketClientSettings packetIn)`
-- `public void processCustomPayload( CPacketCustomPayload packetIn)`
+- `NetworkManager getNetworkManager()`
+- `void handleAnimation(CPacketAnimation packetIn)`
+- `void handleResourcePackStatus(CPacketResourcePackStatus packetIn)`
+- `void handleSpectate(CPacketSpectate packetIn)`
+- `void kickPlayerFromServer(java.lang.String reason)`
+- `void onDisconnect(ITextComponent reason)`
+- `void processChatMessage(CPacketChatMessage packetIn)`
+- `void processClickWindow(CPacketClickWindow packetIn)`
+- `void processClientSettings(CPacketClientSettings packetIn)`
+- `void processClientStatus(CPacketClientStatus packetIn)`
+- `void processCloseWindow(CPacketCloseWindow packetIn)`
+- `void processConfirmTeleport(CPacketConfirmTeleport packetIn)`
+- `void processConfirmTransaction(CPacketConfirmTransaction packetIn)`
+- `void processCreativeInventoryAction(CPacketCreativeInventoryAction packetIn)`
+- `void processCustomPayload(CPacketCustomPayload packetIn)`
+- `void processEnchantItem(CPacketEnchantItem packetIn)`
+- `void processEntityAction(CPacketEntityAction packetIn)`
+- `void processHeldItemChange(CPacketHeldItemChange packetIn)`
+- `void processInput(CPacketInput packetIn)`
+- `void processKeepAlive(CPacketKeepAlive packetIn)`
+- `void processPlayer(CPacketPlayer packetIn)`
+- `void processPlayerAbilities(CPacketPlayerAbilities packetIn)`
+- `void processPlayerBlockPlacement(CPacketPlayerTryUseItem packetIn)`
+- `void processPlayerDigging(CPacketPlayerDigging packetIn)`
+- `void processRightClickBlock(CPacketPlayerTryUseItemOnBlock packetIn)`
+- `void processSteerBoat(CPacketSteerBoat packetIn)`
+- `void processTabComplete(CPacketTabComplete packetIn)`
+- `void processUpdateSign(CPacketUpdateSign packetIn)`
+- `void processUseEntity(CPacketUseEntity packetIn)`
+- `void processVehicleMove(CPacketVehicleMove packetIn)`
+- `void sendPacket(Packet<?> packetIn)`
+- `void setPlayerLocation(double x, double y, double z, float yaw, float pitch)`
+- `void setPlayerLocation(double x, double y, double z, float yaw, float pitch, java.util.Set<SPacketPlayerPosLook.EnumFlags> relativeSet)`
+- `void update()`
+
+## Fields
+
+- `NetworkManager netManager`
+- `EntityPlayerMP playerEntity`

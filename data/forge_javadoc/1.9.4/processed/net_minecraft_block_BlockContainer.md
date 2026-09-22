@@ -1,20 +1,22 @@
 # BlockContainer
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockContainer
+
 ## Class signature
 
 ```java
 public abstract class BlockContainer extends Block implements ITileEntityProvider
 ```
 
-## Constructors
-
-- `protected BlockContainer( Material materialIn)`
-- `protected BlockContainer( Material materialIn, MapColor color)`
-
 ## Methods
 
-- `protected boolean isInvalidNeighbor( World worldIn, BlockPos pos, EnumFacing facing)`
-- `protected boolean hasInvalidNeighbor( World worldIn, BlockPos pos)`
-- `public EnumBlockRenderType getRenderType( IBlockState state)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean eventReceived( IBlockState state, World worldIn, BlockPos pos, int id, int param)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int id, int param)`
+- `EnumBlockRenderType getRenderType(IBlockState state)`
+- `protected boolean hasInvalidNeighbor(World worldIn, BlockPos pos)`
+- `protected boolean isInvalidNeighbor(World worldIn, BlockPos pos, EnumFacing facing)`
+
+## Fields
+
+- `protected BlockContainer`
+- `protected BlockContainer`

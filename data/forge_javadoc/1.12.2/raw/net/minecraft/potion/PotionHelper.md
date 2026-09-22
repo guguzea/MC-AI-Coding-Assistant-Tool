@@ -3,11 +3,15 @@ title: "PotionHelper"
 description: "public class PotionHelper extends java.lang.Object"
 package: "net/minecraft/potion"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/potion/PotionHelper.html"
 sourceType: javadoc
 ---
 
 # PotionHelper
+
+**Inheritance:** java.lang.Object → net.minecraft.potion.PotionHelper
 
 ## Class signature
 
@@ -17,19 +21,19 @@ public class PotionHelper extends java.lang.Object
 
 ## Constructors
 
-- `public PotionHelper()`
+- `PotionHelper()`
 
 ## Methods
 
-- `public static boolean isReagent( ItemStack stack)`
-- `protected static boolean isItemConversionReagent( ItemStack stack)`
-- `protected static boolean isTypeConversionReagent( ItemStack stack)`
-- `public static boolean hasConversions( ItemStack input, ItemStack reagent)`
-- `protected static boolean hasItemConversions( ItemStack input, ItemStack reagent)`
-- `protected static boolean hasTypeConversions( ItemStack input, ItemStack reagent)`
-- `public static ItemStack doReaction( ItemStack reagent, ItemStack potionIn)`
-- `public static void init()`
-- `public static void addContainerRecipe( ItemPotion p_193355_0_, Item p_193355_1_, ItemPotion p_193355_2_)`
-- `public static void addContainer( ItemPotion p_193354_0_)`
-- `public static void addMix( PotionType p_193357_0_, Item p_193357_1_, PotionType p_193357_2_)`
-- `public static void addMix( PotionType p_193356_0_, Ingredient p_193356_1_, PotionType p_193356_2_)`
+- `static void addContainer(ItemPotion p_193354_0_)`
+- `static void addContainerRecipe(ItemPotion p_193355_0_, Item p_193355_1_, ItemPotion p_193355_2_)`
+- `static void addMix(PotionType p_193356_0_, Ingredient p_193356_1_, PotionType p_193356_2_)`
+- `static void addMix(PotionType p_193357_0_, Item p_193357_1_, PotionType p_193357_2_)`
+- `static ItemStack doReaction(ItemStack reagent, ItemStack potionIn)`
+- `static boolean hasConversions(ItemStack input, ItemStack reagent)`
+- `protected static boolean hasItemConversions(ItemStack input, ItemStack reagent)`
+- `protected static boolean hasTypeConversions(ItemStack input, ItemStack reagent)`
+- `static void init()`
+- `protected static boolean isItemConversionReagent(ItemStack stack)`
+- `static boolean isReagent(ItemStack stack)`
+- `protected static boolean isTypeConversionReagent(ItemStack stack)`

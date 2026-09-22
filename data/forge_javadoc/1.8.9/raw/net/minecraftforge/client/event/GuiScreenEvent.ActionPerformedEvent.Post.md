@@ -1,18 +1,24 @@
 ---
 title: "GuiScreenEvent.ActionPerformedEvent.Post"
-description: "This event fires after GuiScreen.actionPerformed() provided that the active screen has not been changed as a result of GuiScreen.actionPerformed() ."
+description: "public static class GuiScreenEvent.ActionPerformedEvent.Post extends GuiScreenEvent.ActionPerformedEvent"
 package: "net/minecraftforge/client/event"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/client/event/GuiScreenEvent.ActionPerformedEvent.Post.html"
 sourceType: javadoc
 ---
 
 # GuiScreenEvent.ActionPerformedEvent.Post
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent → net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent.Post
 
-- `public Post( GuiScreen gui, GuiButton button, java.util.List< GuiButton > buttonList)`
+## Class signature
 
-## Description
+```java
+public static class GuiScreenEvent.ActionPerformedEvent.Post extends GuiScreenEvent.ActionPerformedEvent
+```
 
-This event fires after GuiScreen.actionPerformed() provided that the active screen has not been changed as a result of GuiScreen.actionPerformed() .
+## Fields
+
+- `Post`

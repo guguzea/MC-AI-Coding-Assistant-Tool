@@ -1,25 +1,25 @@
 ---
 title: "VanillaResourceType"
-description: "An enum of all IResourceType s used by the Vanilla game. These should be used if handling vanilla-related resources."
+description: "public enum VanillaResourceType extends java.lang.Enum<VanillaResourceType> implements IResourceType"
 package: "net/minecraftforge/client/resource"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/client/resource/VanillaResourceType.html"
 sourceType: javadoc
 ---
 
 # VanillaResourceType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<VanillaResourceType> → net.minecraftforge.client.resource.VanillaResourceType
+
 ## Class signature
 
 ```java
-public enum VanillaResourceType extends java.lang.Enum< VanillaResourceType > implements IResourceType
+public enum VanillaResourceType extends java.lang.Enum<VanillaResourceType> implements IResourceType
 ```
 
 ## Methods
 
-- `public static VanillaResourceType [] values()`
-- `public static VanillaResourceType valueOf(java.lang.String name)`
-
-## Description
-
-An enum of all IResourceType s used by the Vanilla game. These should be used if handling vanilla-related resources.
+- `static VanillaResourceType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static VanillaResourceType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

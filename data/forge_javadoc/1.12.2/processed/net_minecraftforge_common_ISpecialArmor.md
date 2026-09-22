@@ -8,11 +8,7 @@ public interface ISpecialArmor
 
 ## Methods
 
-- `ISpecialArmor.ArmorProperties getProperties( EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot)`
-- `int getArmorDisplay( EntityPlayer player, ItemStack armor, int slot)`
-- `void damageArmor( EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot)`
-- `default boolean handleUnblockableDamage( EntityLivingBase entity, ItemStack armor, DamageSource source, double damage, int slot)`
-
-## Description
-
-This interface is to be implemented by ItemArmor classes. It will allow to modify computation of damage and health loss. Computation will be called before the actual armor computation, which can then
+- `void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot)` — Applies damage to the ItemStack.
+- `int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot)` — Get the displayed effective armor.
+- `ISpecialArmor.ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot)` — Retrieves the modifiers to be used when calculating armor damage.
+- `default boolean handleUnblockableDamage(EntityLivingBase entity, ItemStack armor, DamageSource source, double damage, int slot)` — Simple check to see if the armor should interact with "Unblockable" damage sources.

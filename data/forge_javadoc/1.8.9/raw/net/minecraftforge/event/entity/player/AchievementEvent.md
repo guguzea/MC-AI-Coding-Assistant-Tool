@@ -1,13 +1,17 @@
 ---
 title: "AchievementEvent"
-description: "When the player receives an achievement. If canceled the player will not receive anything."
+description: "public class AchievementEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/player/AchievementEvent.html"
 sourceType: javadoc
 ---
 
 # AchievementEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.AchievementEvent
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class AchievementEvent extends PlayerEvent
 
 ## Constructors
 
-- `public AchievementEvent( EntityPlayer player, Achievement achievement)`
+- `AchievementEvent(EntityPlayer player, Achievement achievement)`
 
-## Description
+## Fields
 
-When the player receives an achievement. If canceled the player will not receive anything.
+- `Achievement achievement`

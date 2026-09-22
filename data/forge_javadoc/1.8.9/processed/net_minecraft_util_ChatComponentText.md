@@ -1,23 +1,21 @@
 # ChatComponentText
 
+**Inheritance:** java.lang.Object → net.minecraft.util.ChatComponentStyle → net.minecraft.util.ChatComponentText
+
 ## Class signature
 
 ```java
 public class ChatComponentText extends ChatComponentStyle
 ```
 
-## Constructors
-
-- `public ChatComponentText(java.lang.String msg)`
-
 ## Methods
 
-- `public java.lang.String getChatComponentText_TextValue()`
-- `public java.lang.String getUnformattedTextForChat()`
-- `public ChatComponentText createCopy()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public java.lang.String toString()`
+- `ChatComponentText createCopy()` — Creates a copy of this component.
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `java.lang.String getChatComponentText_TextValue()` — Gets the text value of this ChatComponentText.
+- `java.lang.String getUnformattedTextForChat()` — Gets the text of this component, without any special formatting codes added, for chat.
+- `java.lang.String toString()`
 
-## Description
+## Fields
 
-Creates a copy of this component.
+- `ChatComponentText`

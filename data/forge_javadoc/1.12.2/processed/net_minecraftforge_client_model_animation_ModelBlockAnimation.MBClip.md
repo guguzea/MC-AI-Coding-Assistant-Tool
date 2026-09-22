@@ -1,10 +1,18 @@
 # ModelBlockAnimation.MBClip
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.animation.ModelBlockAnimation.MBClip
+
+## Class signature
+
+```java
+protected static class ModelBlockAnimation.MBClip extends java.lang.Object implements IClip
+```
+
 ## Constructors
 
-- `public MBClip(boolean loop, <any> clips, <any> events)`
+- `MBClip(boolean loop, <any> clips, <any> events)`
 
 ## Methods
 
-- `public IJointClip apply( IJoint joint)`
-- `public java.lang.Iterable< Event > pastEvents(float lastPollTime, float time)`
+- `IJointClip apply(IJoint joint)`
+- `java.lang.Iterable<Event> pastEvents(float lastPollTime, float time)`

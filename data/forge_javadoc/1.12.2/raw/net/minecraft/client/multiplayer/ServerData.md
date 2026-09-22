@@ -3,11 +3,15 @@ title: "ServerData"
 description: "public class ServerData extends java.lang.Object"
 package: "net/minecraft/client/multiplayer"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/multiplayer/ServerData.html"
 sourceType: javadoc
 ---
 
 # ServerData
+
+**Inheritance:** java.lang.Object → net.minecraft.client.multiplayer.ServerData
 
 ## Class signature
 
@@ -17,15 +21,27 @@ public class ServerData extends java.lang.Object
 
 ## Constructors
 
-- `public ServerData(java.lang.String name, java.lang.String ip, boolean isLan)`
+- `ServerData(java.lang.String name, java.lang.String ip, boolean isLan)`
 
 ## Methods
 
-- `public NBTTagCompound getNBTCompound()`
-- `public ServerData.ServerResourceMode getResourceMode()`
-- `public void setResourceMode( ServerData.ServerResourceMode mode)`
-- `public static ServerData getServerDataFromNBTCompound( NBTTagCompound nbtCompound)`
-- `public java.lang.String getBase64EncodedIconData()`
-- `public void setBase64EncodedIconData(java.lang.String icon)`
-- `public boolean isOnLAN()`
-- `public void copyFrom( ServerData serverDataIn)`
+- `void copyFrom(ServerData serverDataIn)`
+- `java.lang.String getBase64EncodedIconData()`
+- `NBTTagCompound getNBTCompound()`
+- `ServerData.ServerResourceMode getResourceMode()`
+- `static ServerData getServerDataFromNBTCompound(NBTTagCompound nbtCompound)`
+- `boolean isOnLAN()`
+- `void setBase64EncodedIconData(java.lang.String icon)`
+- `void setResourceMode(ServerData.ServerResourceMode mode)`
+
+## Fields
+
+- `java.lang.String gameVersion`
+- `boolean pinged`
+- `long pingToServer`
+- `java.lang.String playerList`
+- `java.lang.String populationInfo`
+- `java.lang.String serverIP`
+- `java.lang.String serverMOTD`
+- `java.lang.String serverName`
+- `int version`

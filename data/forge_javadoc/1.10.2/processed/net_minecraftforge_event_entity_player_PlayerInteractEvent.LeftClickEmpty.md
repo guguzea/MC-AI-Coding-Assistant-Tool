@@ -1,9 +1,13 @@
 # PlayerInteractEvent.LeftClickEmpty
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickEmpty
+
+## Class signature
+
+```java
+public static class PlayerInteractEvent.LeftClickEmpty extends PlayerInteractEvent
+```
+
 ## Constructors
 
-- `public LeftClickEmpty( EntityPlayer player, ItemStack stack)`
-
-## Description
-
-This event is fired on the client side when the player left clicks empty space with any ItemStack. The server is not aware of when the client left clicks empty space, you will need to tell the server
+- `LeftClickEmpty(EntityPlayer player, ItemStack stack)`

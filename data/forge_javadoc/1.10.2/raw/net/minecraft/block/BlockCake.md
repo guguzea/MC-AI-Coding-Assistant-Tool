@@ -3,11 +3,15 @@ title: "BlockCake"
 description: "public class BlockCake extends Block"
 package: "net/minecraft/block"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/block/BlockCake.html"
 sourceType: javadoc
 ---
 
 # BlockCake
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockCake
 
 ## Class signature
 
@@ -17,23 +21,28 @@ public class BlockCake extends Block
 
 ## Constructors
 
-- `protected BlockCake()`
+- `BlockCake()`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public AxisAlignedBB getSelectedBoundingBox( IBlockState state, World worldIn, BlockPos pos)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `public int quantityDropped(java.util.Random random)`
-- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
 - `protected BlockStateContainer createBlockState()`
-- `public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos)`
-- `public boolean hasComparatorInputOverride( IBlockState state)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getMetaFromState(IBlockState state)`
+- `AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos)`
+- `IBlockState getStateFromMeta(int meta)`
+- `boolean hasComparatorInputOverride(IBlockState state)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `int quantityDropped(java.util.Random random)`
+
+## Fields
+
+- `static PropertyInteger BITES`
+- `protected static AxisAlignedBB [] CAKE_AABB`

@@ -1,13 +1,21 @@
 # FMLHandshakeMessage.ServerHello
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.network.handshake.FMLHandshakeMessage → cpw.mods.fml.common.network.handshake.FMLHandshakeMessage.ServerHello
+
+## Class signature
+
+```java
+public static class FMLHandshakeMessage.ServerHello extends FMLHandshakeMessage
+```
+
 ## Constructors
 
-- `public ServerHello()`
-- `public ServerHello(int overrideDim)`
+- `ServerHello()`
+- `ServerHello(int overrideDim)`
 
 ## Methods
 
-- `public void toBytes(ByteBuf buffer)`
-- `public void fromBytes(ByteBuf buffer)`
-- `public byte protocolVersion()`
-- `public int overrideDim()`
+- `void fromBytes(ByteBuf buffer)`
+- `int overrideDim()`
+- `byte protocolVersion()`
+- `void toBytes(ByteBuf buffer)`

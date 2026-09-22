@@ -1,19 +1,29 @@
 ---
 title: "FluidRegistry.FluidRegisterEvent"
-description: ""
+description: "public static class FluidRegistry.FluidRegisterEvent extends Event"
 package: "net/minecraftforge/fluids"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fluids/FluidRegistry.FluidRegisterEvent.html"
 sourceType: javadoc
 ---
 
 # FluidRegistry.FluidRegisterEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fluids.FluidRegistry.FluidRegisterEvent
+
+## Class signature
+
+```java
+public static class FluidRegistry.FluidRegisterEvent extends Event
+```
+
 ## Constructors
 
-- `public FluidRegisterEvent(java.lang.String fluidName, int fluidID)`
+- `FluidRegisterEvent(java.lang.String fluidName, int fluidID)`
 
 ## Methods
 
-- `public java.lang.String getFluidName()`
-- `public int getFluidID()`
+- `int getFluidID()`
+- `java.lang.String getFluidName()`

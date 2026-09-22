@@ -1,16 +1,24 @@
 # Biome.BiomeProperties
 
+**Inheritance:** java.lang.Object → net.minecraft.world.biome.Biome.BiomeProperties
+
+## Class signature
+
+```java
+public static class Biome.BiomeProperties extends java.lang.Object
+```
+
 ## Constructors
 
-- `public BiomeProperties(java.lang.String nameIn)`
+- `BiomeProperties(java.lang.String nameIn)`
 
 ## Methods
 
-- `public Biome.BiomeProperties setTemperature(float temperatureIn)`
-- `public Biome.BiomeProperties setRainfall(float rainfallIn)`
-- `public Biome.BiomeProperties setBaseHeight(float baseHeightIn)`
-- `public Biome.BiomeProperties setHeightVariation(float heightVariationIn)`
-- `public Biome.BiomeProperties setRainDisabled()`
-- `public Biome.BiomeProperties setSnowEnabled()`
-- `public Biome.BiomeProperties setWaterColor(int waterColorIn)`
-- `public Biome.BiomeProperties setBaseBiome(java.lang.String nameIn)`
+- `Biome.BiomeProperties setBaseBiome(java.lang.String nameIn)`
+- `Biome.BiomeProperties setBaseHeight(float baseHeightIn)`
+- `Biome.BiomeProperties setHeightVariation(float heightVariationIn)`
+- `Biome.BiomeProperties setRainDisabled()`
+- `Biome.BiomeProperties setRainfall(float rainfallIn)`
+- `Biome.BiomeProperties setSnowEnabled()`
+- `Biome.BiomeProperties setTemperature(float temperatureIn)`
+- `Biome.BiomeProperties setWaterColor(int waterColorIn)`

@@ -1,21 +1,19 @@
 # JsonSerializableSet
 
+**Inheritance:** java.lang.Object → net.minecraft.util.JsonSerializableSet
+
 ## Class signature
 
 ```java
-public class JsonSerializableSet extends <any> implements IJsonSerializable
+public class JsonSerializableSet extends<any> implements IJsonSerializable
 ```
 
 ## Constructors
 
-- `public JsonSerializableSet()`
+- `JsonSerializableSet()`
 
 ## Methods
 
-- `public void fromJson(JsonElement json)`
-- `public JsonElement getSerializableElement()`
 - `protected java.util.Set<java.lang.String> delegate()`
-
-## Description
-
-Gets the JsonElement that can be serialized.
+- `void fromJson(JsonElement json)`
+- `JsonElement getSerializableElement()` — Gets the JsonElement that can be serialized.

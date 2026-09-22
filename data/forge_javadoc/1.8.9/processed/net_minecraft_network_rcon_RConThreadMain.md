@@ -1,20 +1,18 @@
 # RConThreadMain
 
+**Inheritance:** java.lang.Object → net.minecraft.network.rcon.RConThreadBase → net.minecraft.network.rcon.RConThreadMain
+
 ## Class signature
 
 ```java
 public class RConThreadMain extends RConThreadBase
 ```
 
-## Constructors
-
-- `public RConThreadMain( IServer p_i1538_1_)`
-
 ## Methods
 
-- `public void run()`
-- `public void startThread()`
+- `void run()`
+- `void startThread()` — Creates a new Thread object from this class and starts running
 
-## Description
+## Fields
 
-Creates a new Thread object from this class and starts running
+- `RConThreadMain`

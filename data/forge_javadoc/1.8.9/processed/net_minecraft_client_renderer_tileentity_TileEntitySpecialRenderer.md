@@ -1,21 +1,28 @@
 # TileEntitySpecialRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer<T>
+
 ## Class signature
 
 ```java
-public abstract class TileEntitySpecialRenderer<T extends TileEntity > extends java.lang.Object
+public abstract class TileEntitySpecialRenderer<T extends TileEntity> extends java.lang.Object
 ```
 
 ## Constructors
 
-- `public TileEntitySpecialRenderer()`
+- `TileEntitySpecialRenderer()`
 
 ## Methods
 
-- `public abstract void renderTileEntityAt( T te, double x, double y, double z, float partialTicks, int destroyStage)`
-- `protected void bindTexture( ResourceLocation location)`
+- `protected void bindTexture(ResourceLocation location)`
+- `boolean func_181055_a()`
+- `FontRenderer getFontRenderer()`
 - `protected World getWorld()`
-- `public void setRendererDispatcher( TileEntityRendererDispatcher rendererDispatcherIn)`
-- `public FontRenderer getFontRenderer()`
-- `public boolean func_181055_a()`
-- `public void renderTileEntityFast( T te, double x, double y, double z, float partialTicks, int destroyStage, WorldRenderer worldRenderer)`
+- `abstract void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage)`
+- `void renderTileEntityFast(T te, double x, double y, double z, float partialTicks, int destroyStage, WorldRenderer worldRenderer)`
+- `void setRendererDispatcher(TileEntityRendererDispatcher rendererDispatcherIn)`
+
+## Fields
+
+- `protected static ResourceLocation [] DESTROY_STAGES`
+- `protected TileEntityRendererDispatcher rendererDispatcher`

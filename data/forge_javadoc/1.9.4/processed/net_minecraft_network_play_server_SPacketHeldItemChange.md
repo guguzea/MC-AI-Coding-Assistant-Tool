@@ -1,19 +1,21 @@
 # SPacketHeldItemChange
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketHeldItemChange
+
 ## Class signature
 
 ```java
-public class SPacketHeldItemChange extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketHeldItemChange extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketHeldItemChange()`
-- `public SPacketHeldItemChange(int hotbarIndexIn)`
+- `SPacketHeldItemChange()`
+- `SPacketHeldItemChange(int hotbarIndexIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getHeldItemHotbarIndex()`
+- `int getHeldItemHotbarIndex()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

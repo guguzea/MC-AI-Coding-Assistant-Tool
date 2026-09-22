@@ -8,8 +8,8 @@ public interface IProgressUpdate
 
 ## Methods
 
+- `void displayLoadingString(java.lang.String message)`
 - `void displaySavingString(java.lang.String message)`
 - `void resetProgressAndMessage(java.lang.String message)`
-- `void displayLoadingString(java.lang.String message)`
-- `void setLoadingProgress(int progress)`
 - `void setDoneWorking()`
+- `void setLoadingProgress(int progress)`

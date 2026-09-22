@@ -1,9 +1,13 @@
 # RenderWorldEvent.Post
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderWorldEvent → net.minecraftforge.client.event.RenderWorldEvent.Post
 
-- `public Post( WorldRenderer renderer, ChunkCache chunkCache, int pass)`
+## Class signature
 
-## Description
+```java
+public static class RenderWorldEvent.Post extends RenderWorldEvent
+```
 
-Fired after the tessellator is stopped, before the display list is ended.
+## Fields
+
+- `Post`

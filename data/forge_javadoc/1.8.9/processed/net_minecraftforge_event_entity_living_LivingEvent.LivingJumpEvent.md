@@ -1,9 +1,13 @@
 # LivingEvent.LivingJumpEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent
 
-- `public LivingJumpEvent( EntityLivingBase e)`
+## Class signature
 
-## Description
+```java
+public static class LivingEvent.LivingJumpEvent extends LivingEvent
+```
 
-LivingJumpEvent is fired when an Entity jumps. This event is fired whenever an Entity jumps in EntityLivingBase#jump(), EntityMagmaCube#jump(), and EntityHorse#jump(). This event is fired via the Forg
+## Fields
+
+- `LivingJumpEvent`

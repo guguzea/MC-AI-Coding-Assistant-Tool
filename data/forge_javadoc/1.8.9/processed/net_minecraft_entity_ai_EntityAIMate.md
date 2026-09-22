@@ -1,5 +1,7 @@
 # EntityAIMate
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIMate
+
 ## Class signature
 
 ```java
@@ -8,15 +10,11 @@ public class EntityAIMate extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIMate( EntityAnimal animal, double speedIn)`
+- `EntityAIMate(EntityAnimal animal, double speedIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
-
-## Description
-
-Returns whether an in-progress EntityAIBase should continue executing
+- `boolean continueExecuting()` — Returns whether an in-progress EntityAIBase should continue executing
+- `void resetTask()` — Resets the task
+- `boolean shouldExecute()` — Returns whether the EntityAIBase should begin execution.
+- `void updateTask()` — Updates the task

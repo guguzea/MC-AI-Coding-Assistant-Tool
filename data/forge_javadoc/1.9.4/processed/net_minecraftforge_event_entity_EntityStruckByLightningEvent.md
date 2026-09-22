@@ -1,5 +1,7 @@
 # EntityStruckByLightningEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.EntityStruckByLightningEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class EntityStruckByLightningEvent extends EntityEvent
 
 ## Constructors
 
-- `public EntityStruckByLightningEvent( Entity entity, EntityLightningBolt lightning)`
+- `EntityStruckByLightningEvent(Entity entity, EntityLightningBolt lightning)`
 
 ## Methods
 
-- `public EntityLightningBolt getLightning()`
-
-## Description
-
-EntityStruckByLightningEvent is fired when an Entity is about to be struck by lightening. This event is fired whenever an EntityLightningBolt is updated to strike an Entity in EntityLightningBolt#onUp
+- `EntityLightningBolt getLightning()`

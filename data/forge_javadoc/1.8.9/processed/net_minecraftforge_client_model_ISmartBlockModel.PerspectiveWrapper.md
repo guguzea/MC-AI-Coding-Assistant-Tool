@@ -1,9 +1,21 @@
 # ISmartBlockModel.PerspectiveWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.ISmartBlockModel.Wrapper → net.minecraftforge.client.model.ISmartBlockModel.PerspectiveWrapper
+
+## Class signature
+
+```java
+public abstract static class ISmartBlockModel.PerspectiveWrapper extends ISmartBlockModel.Wrapper implements IPerspectiveAwareModel
+```
+
 ## Constructors
 
-- `public PerspectiveWrapper( IPerspectiveAwareModel parent)`
+- `PerspectiveWrapper(IPerspectiveAwareModel parent)`
 
 ## Methods
 
-- `public <any> handlePerspective( ItemCameraTransforms.TransformType type)`
+- `<any> handlePerspective(ItemCameraTransforms.TransformType type)`
+
+## Fields
+
+- `protected IPerspectiveAwareModel parent`

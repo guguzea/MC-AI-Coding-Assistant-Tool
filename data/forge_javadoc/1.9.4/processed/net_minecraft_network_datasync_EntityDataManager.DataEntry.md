@@ -1,13 +1,21 @@
 # EntityDataManager.DataEntry
 
+**Inheritance:** java.lang.Object → net.minecraft.network.datasync.EntityDataManager.DataEntry<T>
+
+## Class signature
+
+```java
+public static class EntityDataManager.DataEntry<T> extends java.lang.Object
+```
+
 ## Constructors
 
-- `public DataEntry( DataParameter < T > keyIn, T valueIn)`
+- `DataEntry(DataParameter<T> keyIn, T valueIn)`
 
 ## Methods
 
-- `public DataParameter < T > getKey()`
-- `public void setValue( T valueIn)`
-- `public T getValue()`
-- `public boolean isDirty()`
-- `public void setDirty(boolean dirtyIn)`
+- `DataParameter<T> getKey()`
+- `T getValue()`
+- `boolean isDirty()`
+- `void setDirty(boolean dirtyIn)`
+- `void setValue(T valueIn)`

@@ -1,30 +1,40 @@
 ---
 title: "GuiConfigEntries.ButtonEntry"
-description: "ButtonEntry Provides a basic GuiButton entry to be used as a base for other entries that require a button for the value."
+description: "public abstract static class GuiConfigEntries.ButtonEntry extends GuiConfigEntries.ListEntryBase"
 package: "net/minecraftforge/fml/client/config"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/client/config/GuiConfigEntries.ButtonEntry.html"
 sourceType: javadoc
 ---
 
 # GuiConfigEntries.ButtonEntry
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.config.GuiConfigEntries.ListEntryBase → net.minecraftforge.fml.client.config.GuiConfigEntries.ButtonEntry
+
+## Class signature
+
+```java
+public abstract static class GuiConfigEntries.ButtonEntry extends GuiConfigEntries.ListEntryBase
+```
+
 ## Constructors
 
-- `public ButtonEntry( GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement)`
-- `public ButtonEntry( GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement, GuiButtonExt button)`
+- `ButtonEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement)`
+- `ButtonEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement, GuiButtonExt button)`
 
 ## Methods
 
-- `public abstract void updateValueButtonText()`
-- `public abstract void valueButtonPressed(int slotIndex)`
-- `public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected)`
-- `public boolean mousePressed(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)`
-- `public void mouseReleased(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)`
-- `public void keyTyped(char eventChar, int eventKey)`
-- `public void updateCursorCounter()`
-- `public void mouseClicked(int x, int y, int mouseEvent)`
+- `void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected)`
+- `void keyTyped(char eventChar, int eventKey)` — Handles user keystrokes for any GuiTextField objects in this entry.
+- `void mouseClicked(int x, int y, int mouseEvent)` — Call GuiTextField.mouseClicked() for and GuiTextField objects in this entry.
+- `boolean mousePressed(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)` — Returns true if the mouse has been pressed on this control.
+- `void mouseReleased(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)` — Fired when the mouse button is released.
+- `void updateCursorCounter()` — Call GuiTextField.updateCursorCounter() for any GuiTextField objects in this entry.
+- `abstract void updateValueButtonText()` — Updates the displayString of the value button.
+- `abstract void valueButtonPressed(int slotIndex)` — Called when the value button has been clicked.
 
-## Description
+## Fields
 
-ButtonEntry Provides a basic GuiButton entry to be used as a base for other entries that require a button for the value.
+- `protected GuiButtonExt btnValue`

@@ -1,5 +1,7 @@
 # TileEntitySign
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntitySign
+
 ## Class signature
 
 ```java
@@ -8,19 +10,24 @@ public class TileEntitySign extends TileEntity
 
 ## Constructors
 
-- `public TileEntitySign()`
+- `TileEntitySign()`
 
 ## Methods
 
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `protected void setWorldCreate( World worldIn)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public SPacketUpdateTileEntity getUpdatePacket()`
-- `public NBTTagCompound getUpdateTag()`
-- `public boolean onlyOpsCanSetNbt()`
-- `public boolean getIsEditable()`
-- `public void setEditable(boolean isEditableIn)`
-- `public void setPlayer( EntityPlayer playerIn)`
-- `public EntityPlayer getPlayer()`
-- `public boolean executeCommand( EntityPlayer playerIn)`
-- `public CommandResultStats getStats()`
+- `boolean executeCommand(EntityPlayer playerIn)`
+- `boolean getIsEditable()`
+- `EntityPlayer getPlayer()`
+- `CommandResultStats getStats()`
+- `SPacketUpdateTileEntity getUpdatePacket()`
+- `NBTTagCompound getUpdateTag()`
+- `boolean onlyOpsCanSetNbt()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setEditable(boolean isEditableIn)`
+- `void setPlayer(EntityPlayer playerIn)`
+- `protected void setWorldCreate(World worldIn)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `int lineBeingEdited`
+- `ITextComponent [] signText`

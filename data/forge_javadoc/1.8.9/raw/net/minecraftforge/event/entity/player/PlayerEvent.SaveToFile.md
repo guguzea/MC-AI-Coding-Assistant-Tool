@@ -1,22 +1,33 @@
 ---
 title: "PlayerEvent.SaveToFile"
-description: "The player is being saved to the world store. Note that the player may be in the process of logging out or otherwise departing from the world. Don't assume it's association with the world. This allows"
+description: "public static class PlayerEvent.SaveToFile extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/player/PlayerEvent.SaveToFile.html"
 sourceType: javadoc
 ---
 
 # PlayerEvent.SaveToFile
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.SaveToFile
+
+## Class signature
+
+```java
+public static class PlayerEvent.SaveToFile extends PlayerEvent
+```
+
 ## Constructors
 
-- `public SaveToFile( EntityPlayer player, java.io.File originDirectory, java.lang.String playerUUID)`
+- `SaveToFile(EntityPlayer player, java.io.File originDirectory, java.lang.String playerUUID)`
 
 ## Methods
 
-- `public java.io.File getPlayerFile(java.lang.String suffix)`
+- `java.io.File getPlayerFile(java.lang.String suffix)` — Construct and return a recommended file for the supplied suffix
 
-## Description
+## Fields
 
-The player is being saved to the world store. Note that the player may be in the process of logging out or otherwise departing from the world. Don't assume it's association with the world. This allows
+- `java.io.File playerDirectory` — The directory where player data is being stored.
+- `java.lang.String playerUUID` — The UUID is the standard for player related file storage.

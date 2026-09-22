@@ -1,13 +1,17 @@
 ---
 title: "InvWrapper"
-description: "Extracts an ItemStack from the given slot."
+description: "public class InvWrapper extends java.lang.Object implements IItemHandlerModifiable"
 package: "net/minecraftforge/items/wrapper"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/items/wrapper/InvWrapper.html"
 sourceType: javadoc
 ---
 
 # InvWrapper
+
+**Inheritance:** java.lang.Object → net.minecraftforge.items.wrapper.InvWrapper
 
 ## Class signature
 
@@ -17,21 +21,17 @@ public class InvWrapper extends java.lang.Object implements IItemHandlerModifiab
 
 ## Constructors
 
-- `public InvWrapper( IInventory inv)`
+- `InvWrapper(IInventory inv)`
 
 ## Methods
 
-- `public boolean equals(java.lang.Object o)`
-- `public int hashCode()`
-- `public int getSlots()`
-- `public ItemStack getStackInSlot(int slot)`
-- `public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)`
-- `public ItemStack extractItem(int slot, int amount, boolean simulate)`
-- `public void setStackInSlot(int slot, ItemStack stack)`
-- `public int getSlotLimit(int slot)`
-- `public boolean isItemValid(int slot, ItemStack stack)`
-- `public IInventory getInv()`
-
-## Description
-
-Extracts an ItemStack from the given slot.
+- `boolean equals(java.lang.Object o)`
+- `ItemStack extractItem(int slot, int amount, boolean simulate)` — Extracts an ItemStack from the given slot.
+- `IInventory getInv()`
+- `int getSlotLimit(int slot)` — Retrieves the maximum stack size allowed to exist in the given slot.
+- `int getSlots()` — Returns the number of slots available
+- `ItemStack getStackInSlot(int slot)` — Returns the ItemStack in a given slot.
+- `int hashCode()`
+- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)` — Inserts an ItemStack into the given slot and return the remainder.
+- `boolean isItemValid(int slot, ItemStack stack)` — This function re-implements the vanilla function IInventory.isItemValidForSlot(int, ItemStack) .
+- `void setStackInSlot(int slot, ItemStack stack)` — Overrides the stack in the given slot.

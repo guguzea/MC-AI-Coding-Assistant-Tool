@@ -1,13 +1,17 @@
 # FMLNetworkEvent.ServerCustomPacketEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.network.FMLNetworkEvent<S> → net.minecraftforge.fml.common.network.FMLNetworkEvent.CustomPacketEvent<INetHandlerPlayServer> → net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent
+
+## Class signature
+
+```java
+public static class FMLNetworkEvent.ServerCustomPacketEvent extends FMLNetworkEvent.CustomPacketEvent<INetHandlerPlayServer>
+```
+
 ## Constructors
 
-- `public ServerCustomPacketEvent( NetworkManager manager, FMLProxyPacket packet)`
+- `ServerCustomPacketEvent(NetworkManager manager, FMLProxyPacket packet)`
 
 ## Methods
 
-- `public Side side()`
-
-## Description
-
-Fired when a custom packet is received at the server for the channel
+- `Side side()`

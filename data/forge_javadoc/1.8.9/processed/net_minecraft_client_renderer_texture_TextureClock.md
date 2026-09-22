@@ -1,15 +1,17 @@
 # TextureClock
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.texture.TextureAtlasSprite → net.minecraft.client.renderer.texture.TextureClock
+
 ## Class signature
 
 ```java
 public class TextureClock extends TextureAtlasSprite
 ```
 
-## Constructors
-
-- `public TextureClock(java.lang.String iconName)`
-
 ## Methods
 
-- `public void updateAnimation()`
+- `void updateAnimation()`
+
+## Fields
+
+- `TextureClock`

@@ -1,5 +1,7 @@
 # StatFileWriter
 
+**Inheritance:** java.lang.Object → net.minecraft.stats.StatFileWriter
+
 ## Class signature
 
 ```java
@@ -8,19 +10,19 @@ public class StatFileWriter extends java.lang.Object
 
 ## Constructors
 
-- `public StatFileWriter()`
+- `StatFileWriter()`
 
 ## Methods
 
-- `public boolean hasAchievementUnlocked( Achievement achievementIn)`
-- `public boolean canUnlockAchievement( Achievement achievementIn)`
-- `public void increaseStat( EntityPlayer player, StatBase stat, int amount)`
-- `public int func_150874_c( Achievement p_150874_1_)`
-- `public void unlockAchievement( EntityPlayer playerIn, StatBase statIn, int p_150873_3_)`
-- `public int readStat( StatBase stat)`
-- `public <T extends IJsonSerializable > T func_150870_b( StatBase p_150870_1_)`
-- `public <T extends IJsonSerializable > T func_150872_a( StatBase p_150872_1_, T p_150872_2_)`
+- `boolean canUnlockAchievement(Achievement achievementIn)` — Returns true if the parent has been unlocked, or there is no parent
+- `<T extends IJsonSerializable> T func_150870_b(StatBase p_150870_1_)`
+- `<T extends IJsonSerializable> T func_150872_a(StatBase p_150872_1_, T p_150872_2_)`
+- `int func_150874_c(Achievement p_150874_1_)`
+- `boolean hasAchievementUnlocked(Achievement achievementIn)` — Returns true if the achievement has been unlocked.
+- `void increaseStat(EntityPlayer player, StatBase stat, int amount)`
+- `int readStat(StatBase stat)` — Reads the given stat and returns its value as an int.
+- `void unlockAchievement(EntityPlayer playerIn, StatBase statIn, int p_150873_3_)` — Triggers the logging of an achievement and attempts to announce to server
 
-## Description
+## Fields
 
-Returns true if the parent has been unlocked, or there is no parent
+- `protected java.util.Map<StatBase, TupleIntJsonSerializable> statsData`

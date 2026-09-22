@@ -3,11 +3,15 @@ title: "ChunkCompileTaskGenerator"
 description: "public class ChunkCompileTaskGenerator extends java.lang.Object"
 package: "net/minecraft/client/renderer/chunk"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/renderer/chunk/ChunkCompileTaskGenerator.html"
 sourceType: javadoc
 ---
 
 # ChunkCompileTaskGenerator
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.chunk.ChunkCompileTaskGenerator
 
 ## Class signature
 
@@ -17,19 +21,19 @@ public class ChunkCompileTaskGenerator extends java.lang.Object
 
 ## Constructors
 
-- `public ChunkCompileTaskGenerator( RenderChunk renderChunkIn, ChunkCompileTaskGenerator.Type typeIn)`
+- `ChunkCompileTaskGenerator(RenderChunk renderChunkIn, ChunkCompileTaskGenerator.Type typeIn)`
 
 ## Methods
 
-- `public ChunkCompileTaskGenerator.Status getStatus()`
-- `public RenderChunk getRenderChunk()`
-- `public CompiledChunk getCompiledChunk()`
-- `public void setCompiledChunk( CompiledChunk compiledChunkIn)`
-- `public RegionRenderCacheBuilder getRegionRenderCacheBuilder()`
-- `public void setRegionRenderCacheBuilder( RegionRenderCacheBuilder regionRenderCacheBuilderIn)`
-- `public void setStatus( ChunkCompileTaskGenerator.Status statusIn)`
-- `public void finish()`
-- `public void addFinishRunnable(java.lang.Runnable p_178539_1_)`
-- `public java.util.concurrent.locks.ReentrantLock getLock()`
-- `public ChunkCompileTaskGenerator.Type getType()`
-- `public boolean isFinished()`
+- `void addFinishRunnable(java.lang.Runnable p_178539_1_)`
+- `void finish()`
+- `CompiledChunk getCompiledChunk()`
+- `java.util.concurrent.locks.ReentrantLock getLock()`
+- `RegionRenderCacheBuilder getRegionRenderCacheBuilder()`
+- `RenderChunk getRenderChunk()`
+- `ChunkCompileTaskGenerator.Status getStatus()`
+- `ChunkCompileTaskGenerator.Type getType()`
+- `boolean isFinished()`
+- `void setCompiledChunk(CompiledChunk compiledChunkIn)`
+- `void setRegionRenderCacheBuilder(RegionRenderCacheBuilder regionRenderCacheBuilderIn)`
+- `void setStatus(ChunkCompileTaskGenerator.Status statusIn)`

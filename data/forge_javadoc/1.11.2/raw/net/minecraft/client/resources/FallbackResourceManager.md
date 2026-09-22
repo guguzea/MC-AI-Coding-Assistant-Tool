@@ -3,11 +3,15 @@ title: "FallbackResourceManager"
 description: "public class FallbackResourceManager extends java.lang.Object implements IResourceManager"
 package: "net/minecraft/client/resources"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/resources/FallbackResourceManager.html"
 sourceType: javadoc
 ---
 
 # FallbackResourceManager
+
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.FallbackResourceManager
 
 ## Class signature
 
@@ -17,12 +21,16 @@ public class FallbackResourceManager extends java.lang.Object implements IResour
 
 ## Constructors
 
-- `public FallbackResourceManager( MetadataSerializer frmMetadataSerializerIn)`
+- `FallbackResourceManager(MetadataSerializer frmMetadataSerializerIn)`
 
 ## Methods
 
-- `public void addResourcePack( IResourcePack resourcePack)`
-- `public java.util.Set<java.lang.String> getResourceDomains()`
-- `public IResource getResource( ResourceLocation location) throws java.io.IOException`
-- `protected java.io.InputStream getInputStream( ResourceLocation location, IResourcePack resourcePack) throws java.io.IOException`
-- `public java.util.List< IResource > getAllResources( ResourceLocation location) throws java.io.IOException`
+- `void addResourcePack(IResourcePack resourcePack)`
+- `java.util.List<IResource> getAllResources(ResourceLocation location)`
+- `protected java.io.InputStream getInputStream(ResourceLocation location, IResourcePack resourcePack)`
+- `IResource getResource(ResourceLocation location)`
+- `java.util.Set<java.lang.String> getResourceDomains()`
+
+## Fields
+
+- `protected java.util.List<IResourcePack> resourcePacks`

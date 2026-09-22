@@ -1,0 +1,68 @@
+> 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorcustomdimensions?view=minecraft-bedrock-stable
+> 抓取时间：2026-09-21T11:50:30.951Z
+> 警告：此文档可能滞后于当前正式版
+
+# Custom Dimensions
+
+The Custom Dimensions manager lets you create and navigate between dimensions in your Editor project. In addition to the standard Minecraft dimensions (Overworld, Nether, and The End), you can use the Action Bar to create your own custom dimensions for building separate areas within a single project.
+
+## Creating a new dimension
+
+You can add a new dimension to your world with these steps:
+
+- Click Add New Dimension in the Custom Dimensions panel.
+
+- In the dialog that appears, enter a name in namespace:name format. Note Dimension names must use lowercase letters, numbers, and underscores only. The minecraft: namespace is reserved and can't be used for custom dimensions. Duplicate names are not allowed.
+
+- Click Confirm to create the dimension. You'll automatically be teleported to the new dimension after creation. Warning You can't delete a dimension from your world once you add it.
+
+- Click a dimension in the panel list to teleport to it, or use the Dimensions submenu in the menu bar to teleport from anywhere. Tip The teleport to player feature in the navigation panel respects the target player's dimension, teleporting you across dimensions if needed.
+
+## Viewing available dimensions
+
+Once you've created your custom dimension(s), you can use the Editor to instantly teleport to and from the standard dimensions:
+
+- Open the Custom Dimensions panel from the Action Bar or from the World Options menu.
+
+- The panel lists all available dimensions in two groups: Standard Minecraft : Overworld, Nether, and The End, each with a dimension-specific icon.
+
+- Custom dimensions : Grouped by namespace in collapsible sections.
+
+Tip
+
+Custom dimensions also appear in the Dimensions submenu under World Options in the menu bar, grouped by namespace.
+
+- Click any dimension in the list to instantly teleport to it.
+
+## Naming rules
+
+ Rule
+ Detail
+
+ Format
+ `namespace:name` (e.g., `mypack:sky_realm`)
+
+ Allowed characters
+ Lowercase letters (`a-z`), numbers (`0-9`), underscores (`_`)
+
+ Reserved namespace
+ `minecraft:` can't be used
+
+ Uniqueness
+ Each dimension name must be unique within the project
+
+## Feedback
+
+ Was this page helpful?
+
+ Yes
+
+ No
+
+ No
+
+ Need help with this topic?
+
+ Want to try using Ask Learn to clarify or guide you through this topic?
+
+ Suggest a fix?

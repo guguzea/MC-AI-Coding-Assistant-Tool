@@ -1,10 +1,18 @@
 # ServerStatusResponse.Version
 
+**Inheritance:** java.lang.Object → net.minecraft.network.ServerStatusResponse.Version
+
+## Class signature
+
+```java
+public static class ServerStatusResponse.Version extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Version(java.lang.String nameIn, int protocolIn)`
+- `Version(java.lang.String nameIn, int protocolIn)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public int getProtocol()`
+- `java.lang.String getName()`
+- `int getProtocol()`

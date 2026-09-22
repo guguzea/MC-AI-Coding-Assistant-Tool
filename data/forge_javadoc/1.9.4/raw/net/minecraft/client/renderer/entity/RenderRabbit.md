@@ -1,24 +1,28 @@
 ---
 title: "RenderRabbit"
-description: "public class RenderRabbit extends RenderLiving < EntityRabbit >"
+description: "public class RenderRabbit extends RenderLiving<EntityRabbit>"
 package: "net/minecraft/client/renderer/entity"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/renderer/entity/RenderRabbit.html"
 sourceType: javadoc
 ---
 
 # RenderRabbit
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RenderLivingBase<T> → net.minecraft.client.renderer.entity.RenderLiving<EntityRabbit> → net.minecraft.client.renderer.entity.RenderRabbit
+
 ## Class signature
 
 ```java
-public class RenderRabbit extends RenderLiving < EntityRabbit >
+public class RenderRabbit extends RenderLiving<EntityRabbit>
 ```
-
-## Constructors
-
-- `public RenderRabbit( RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)`
 
 ## Methods
 
-- `protected ResourceLocation getEntityTexture( EntityRabbit entity)`
+- `protected ResourceLocation getEntityTexture(EntityRabbit entity)`
+
+## Fields
+
+- `RenderRabbit`

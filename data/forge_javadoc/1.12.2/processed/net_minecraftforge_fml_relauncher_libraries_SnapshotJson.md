@@ -1,26 +1,29 @@
 # SnapshotJson
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.relauncher.libraries.SnapshotJson
+
 ## Class signature
 
 ```java
-public class SnapshotJson extends java.lang.Object implements java.lang.Comparable< SnapshotJson >
+public class SnapshotJson extends java.lang.Object implements java.lang.Comparable<SnapshotJson>
 ```
 
 ## Constructors
 
-- `public SnapshotJson()`
+- `SnapshotJson()`
 
 ## Methods
 
-- `public static SnapshotJson create(java.io.File target)`
-- `public java.lang.String getLatest()`
-- `public void add( SnapshotJson.Entry data)`
-- `public void merge( SnapshotJson o)`
-- `public boolean remove(java.lang.String timestamp)`
-- `public java.lang.String updateLatest()`
-- `public void write(java.io.File target) throws java.io.IOException`
-- `public int compareTo( SnapshotJson o)`
+- `void add(SnapshotJson.Entry data)`
+- `int compareTo(SnapshotJson o)`
+- `static SnapshotJson create(java.io.File target)`
+- `java.lang.String getLatest()`
+- `void merge(SnapshotJson o)`
+- `boolean remove(java.lang.String timestamp)`
+- `java.lang.String updateLatest()`
+- `void write(java.io.File target)`
 
-## Description
+## Fields
 
-This is different from the standard maven snapshot metadata. Because none of that data is exposed to us as a user of gradle/maven/whatever. So we JUST use the timestamp. { "latest": "yyyyMMdd.hhmmss",
+- `static java.lang.String META_JSON_FILE`
+- `static java.text.DateFormat TIMESTAMP`

@@ -1,5 +1,7 @@
 # BlockPortal
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockBreakable → net.minecraft.block.BlockPortal
+
 ## Class signature
 
 ```java
@@ -8,28 +10,28 @@ public class BlockPortal extends BlockBreakable
 
 ## Constructors
 
-- `public BlockPortal()`
+- `BlockPortal()`
 
 ## Methods
 
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public void setBlockBoundsBasedOnState( IBlockAccess worldIn, BlockPos pos)`
-- `public static int getMetaForAxis( EnumFacing.Axis axis)`
-- `public boolean isFullCube()`
-- `public boolean func_176548_d( World worldIn, BlockPos p_176548_2_)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public boolean shouldSideBeRendered( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
-- `public int quantityDropped(java.util.Random random)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public EnumWorldBlockLayer getBlockLayer()`
-- `public void randomDisplayTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public Item getItem( World worldIn, BlockPos pos)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockState createBlockState()`
-- `public BlockPattern.PatternHelper func_181089_f( World p_181089_1_, BlockPos p_181089_2_)`
+- `boolean func_176548_d(World worldIn, BlockPos p_176548_2_)`
+- `BlockPattern.PatternHelper func_181089_f(World p_181089_1_, BlockPos p_181089_2_)`
+- `EnumWorldBlockLayer getBlockLayer()`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItem(World worldIn, BlockPos pos)`
+- `static int getMetaForAxis(EnumFacing.Axis axis)`
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `boolean isFullCube()`
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)` — Called When an Entity Collided with the Block
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `int quantityDropped(java.util.Random random)` — Returns the quantity of items to drop on block destruction.
+- `void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)`
+- `boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Convert the BlockState into the correct metadata value
+- `static PropertyEnum<EnumFacing.Axis> AXIS`

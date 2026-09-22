@@ -1,5 +1,7 @@
 # BlockCrops
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBush → net.minecraft.block.BlockCrops
+
 ## Class signature
 
 ```java
@@ -8,35 +10,35 @@ public class BlockCrops extends BlockBush implements IGrowable
 
 ## Constructors
 
-- `protected BlockCrops()`
+- `BlockCrops()`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `protected boolean canSustainBush( IBlockState state)`
-- `protected PropertyInteger getAgeProperty()`
-- `public int getMaxAge()`
-- `protected int getAge( IBlockState state)`
-- `public IBlockState withAge(int age)`
-- `public boolean isMaxAge( IBlockState state)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public void grow( World worldIn, BlockPos pos, IBlockState state)`
-- `protected int getBonemealAgeIncrease( World worldIn)`
-- `protected static float getGrowthChance( Block blockIn, World worldIn, BlockPos pos)`
-- `public boolean canBlockStay( World worldIn, BlockPos pos, IBlockState state)`
-- `protected Item getSeed()`
-- `protected Item getCrop()`
-- `public java.util.List< ItemStack > getDrops( IBlockAccess world, BlockPos pos, IBlockState state, int fortune)`
-- `public void dropBlockAsItemWithChance( World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean canGrow( World worldIn, BlockPos pos, IBlockState state, boolean isClient)`
-- `public boolean canUseBonemeal( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
-- `public void grow( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)`
+- `protected boolean canSustainBush(IBlockState state)`
+- `boolean canUseBonemeal(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
+- `void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
+- `protected int getAge(IBlockState state)`
+- `protected PropertyInteger getAgeProperty()`
+- `protected int getBonemealAgeIncrease(World worldIn)`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `protected Item getCrop()`
+- `java.util.List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)` — This returns a complete list of items dropped from this block.
+- `protected static float getGrowthChance(Block blockIn, World worldIn, BlockPos pos)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getMaxAge()`
+- `int getMetaFromState(IBlockState state)`
+- `protected Item getSeed()`
+- `IBlockState getStateFromMeta(int meta)`
+- `void grow(World worldIn, BlockPos pos, IBlockState state)`
+- `void grow(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
+- `boolean isMaxAge(IBlockState state)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `IBlockState withAge(int age)`
 
-## Description
+## Fields
 
-This returns a complete list of items dropped from this block.
+- `static PropertyInteger AGE`

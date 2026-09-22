@@ -3,11 +3,15 @@ title: "ContainerEnchantment"
 description: "public class ContainerEnchantment extends Container"
 package: "net/minecraft/inventory"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/inventory/ContainerEnchantment.html"
 sourceType: javadoc
 ---
 
 # ContainerEnchantment
+
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Container → net.minecraft.inventory.ContainerEnchantment
 
 ## Class signature
 
@@ -17,18 +21,26 @@ public class ContainerEnchantment extends Container
 
 ## Constructors
 
-- `public ContainerEnchantment( InventoryPlayer playerInv, World worldIn)`
-- `public ContainerEnchantment( InventoryPlayer playerInv, World worldIn, BlockPos pos)`
+- `ContainerEnchantment(InventoryPlayer playerInv, World worldIn)`
+- `ContainerEnchantment(InventoryPlayer playerInv, World worldIn, BlockPos pos)`
 
 ## Methods
 
-- `protected void broadcastData( IContainerListener crafting)`
-- `public void addListener( IContainerListener listener)`
-- `public void detectAndSendChanges()`
-- `public void updateProgressBar(int id, int data)`
-- `public void onCraftMatrixChanged( IInventory inventoryIn)`
-- `public boolean enchantItem( EntityPlayer playerIn, int id)`
-- `public int getLapisAmount()`
-- `public void onContainerClosed( EntityPlayer playerIn)`
-- `public boolean canInteractWith( EntityPlayer playerIn)`
-- `@Nullable public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
+- `void addListener(IContainerListener listener)`
+- `protected void broadcastData(IContainerListener crafting)`
+- `boolean canInteractWith(EntityPlayer playerIn)`
+- `void detectAndSendChanges()`
+- `boolean enchantItem(EntityPlayer playerIn, int id)`
+- `int getLapisAmount()`
+- `void onContainerClosed(EntityPlayer playerIn)`
+- `void onCraftMatrixChanged(IInventory inventoryIn)`
+- `ItemStack transferStackInSlot(EntityPlayer playerIn, int index)`
+- `void updateProgressBar(int id, int data)`
+
+## Fields
+
+- `int[] enchantClue`
+- `int[] enchantLevels`
+- `IInventory tableInventory`
+- `int[] worldClue`
+- `int xpSeed`

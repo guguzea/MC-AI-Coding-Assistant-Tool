@@ -1,9 +1,19 @@
 # Constants.AttributeModifierOperation
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.util.Constants.AttributeModifierOperation
+
+## Class signature
+
+```java
+public static class Constants.AttributeModifierOperation extends java.lang.Object
+```
+
 ## Constructors
 
-- `public AttributeModifierOperation()`
+- `AttributeModifierOperation()`
 
-## Description
+## Fields
 
-The operation used for Attribute modifier operations, AttributeModifier(String, double, int) Can be found at ModifiableAttributeInstance.computeValue() The total value starts with the base value. Orde
+- `static int ADD` — The modifier value is added onto the total value
+- `static int ADD_MULTIPLE` — The modifier value is multiplied by the original base value then added onto the total value
+- `static int MULTIPLY` — The total value is multiplied by 1 + the modifier value

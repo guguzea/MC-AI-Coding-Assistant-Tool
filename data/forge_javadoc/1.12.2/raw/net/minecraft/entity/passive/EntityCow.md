@@ -3,11 +3,15 @@ title: "EntityCow"
 description: "public class EntityCow extends EntityAnimal"
 package: "net/minecraft/entity/passive"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/passive/EntityCow.html"
 sourceType: javadoc
 ---
 
 # EntityCow
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityCow
 
 ## Class signature
 
@@ -15,21 +19,21 @@ sourceType: javadoc
 public class EntityCow extends EntityAnimal
 ```
 
-## Constructors
-
-- `public EntityCow( World worldIn)`
-
 ## Methods
 
-- `public static void registerFixesCow( DataFixer fixer)`
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
+- `EntityCow createChild(EntityAgeable ageable)`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
 - `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `protected float getSoundVolume()`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
 - `protected ResourceLocation getLootTable()`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand)`
-- `public EntityCow createChild( EntityAgeable ageable)`
-- `public float getEyeHeight()`
+- `protected float getSoundVolume()`
+- `protected void initEntityAI()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `static void registerFixesCow(DataFixer fixer)`
+
+## Fields
+
+- `EntityCow`

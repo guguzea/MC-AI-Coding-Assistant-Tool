@@ -1,5 +1,7 @@
 # ModelFluid
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.ModelFluid
+
 ## Class signature
 
 ```java
@@ -8,14 +10,15 @@ public final class ModelFluid extends java.lang.Object implements IModel
 
 ## Constructors
 
-- `public ModelFluid( Fluid fluid)`
+- `ModelFluid(Fluid fluid)`
 
 ## Methods
 
-- `public java.util.Collection< ResourceLocation > getTextures()`
-- `public IBakedModel bake( IModelState state, VertexFormat format, java.util.function.Function< ResourceLocation , TextureAtlasSprite > bakedTextureGetter)`
-- `public ModelFluid process(<any> customData)`
+- `IBakedModel bake(IModelState state, VertexFormat format, java.util.function.Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)`
+- `java.util.Collection<ResourceLocation> getTextures()`
+- `ModelFluid process(<any> customData)` — Allows the model to process custom data from the variant definition.
 
-## Description
+## Fields
 
-Allows the model to process custom data from the variant definition.
+- `static ModelFluid LAVA`
+- `static ModelFluid WATER`

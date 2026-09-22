@@ -1,13 +1,17 @@
 ---
 title: "FluidTank"
-description: "Reference implementation of IFluidTank . Use/extend this or implement your own."
+description: "public class FluidTank extends java.lang.Object implements IFluidTank"
 package: "net/minecraftforge/fluids"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fluids/FluidTank.html"
 sourceType: javadoc
 ---
 
 # FluidTank
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.FluidTank
 
 ## Class signature
 
@@ -17,23 +21,25 @@ public class FluidTank extends java.lang.Object implements IFluidTank
 
 ## Constructors
 
-- `public FluidTank(int capacity)`
-- `public FluidTank( FluidStack stack, int capacity)`
-- `public FluidTank( Fluid fluid, int amount, int capacity)`
+- `FluidTank(Fluid fluid, int amount, int capacity)`
+- `FluidTank(FluidStack stack, int capacity)`
+- `FluidTank(int capacity)`
 
 ## Methods
 
-- `public FluidTank readFromNBT( NBTTagCompound nbt)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound nbt)`
-- `public void setFluid( FluidStack fluid)`
-- `public void setCapacity(int capacity)`
-- `public FluidStack getFluid()`
-- `public int getFluidAmount()`
-- `public int getCapacity()`
-- `public FluidTankInfo getInfo()`
-- `public int fill( FluidStack resource, boolean doFill)`
-- `public FluidStack drain(int maxDrain, boolean doDrain)`
+- `FluidStack drain(int maxDrain, boolean doDrain)`
+- `int fill(FluidStack resource, boolean doFill)`
+- `int getCapacity()`
+- `FluidStack getFluid()`
+- `int getFluidAmount()`
+- `FluidTankInfo getInfo()` — Returns a wrapper object FluidTankInfo containing the capacity of the tank and the FluidStack it holds.
+- `FluidTank readFromNBT(NBTTagCompound nbt)`
+- `void setCapacity(int capacity)`
+- `void setFluid(FluidStack fluid)`
+- `NBTTagCompound writeToNBT(NBTTagCompound nbt)`
 
-## Description
+## Fields
 
-Reference implementation of IFluidTank . Use/extend this or implement your own.
+- `protected int capacity`
+- `protected FluidStack fluid`
+- `protected TileEntity tile`

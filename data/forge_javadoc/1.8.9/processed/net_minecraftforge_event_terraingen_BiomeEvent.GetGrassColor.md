@@ -1,9 +1,13 @@
 # BiomeEvent.GetGrassColor
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.BiomeEvent → net.minecraftforge.event.terraingen.BiomeEvent.BiomeColor → net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor
 
-- `public GetGrassColor( BiomeGenBase biome, int original)`
+## Class signature
 
-## Description
+```java
+public static class BiomeEvent.GetGrassColor extends BiomeEvent.BiomeColor
+```
 
-This event is fired when a biome is queried for its grass color.
+## Fields
+
+- `GetGrassColor`

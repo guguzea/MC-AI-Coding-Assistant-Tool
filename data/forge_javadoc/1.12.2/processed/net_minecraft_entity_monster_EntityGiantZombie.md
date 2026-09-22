@@ -1,19 +1,21 @@
 # EntityGiantZombie
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityGiantZombie
+
 ## Class signature
 
 ```java
 public class EntityGiantZombie extends EntityMob
 ```
 
-## Constructors
-
-- `public EntityGiantZombie( World worldIn)`
-
 ## Methods
 
-- `public static void registerFixesGiantZombie( DataFixer fixer)`
-- `public float getEyeHeight()`
 - `protected void applyEntityAttributes()`
-- `public float getBlockPathWeight( BlockPos pos)`
+- `float getBlockPathWeight(BlockPos pos)`
+- `float getEyeHeight()`
 - `protected ResourceLocation getLootTable()`
+- `static void registerFixesGiantZombie(DataFixer fixer)`
+
+## Fields
+
+- `EntityGiantZombie`

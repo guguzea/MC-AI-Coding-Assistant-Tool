@@ -1,5 +1,7 @@
 # RecipeItemHelper
 
+**Inheritance:** java.lang.Object → net.minecraft.client.util.RecipeItemHelper
+
 ## Class signature
 
 ```java
@@ -8,18 +10,22 @@ public class RecipeItemHelper extends java.lang.Object
 
 ## Constructors
 
-- `public RecipeItemHelper()`
+- `RecipeItemHelper()`
 
 ## Methods
 
-- `public void accountStack( ItemStack stack)`
-- `public void accountStack( ItemStack stack, int forceCount)`
-- `public static int pack( ItemStack stack)`
-- `public boolean containsItem(int p_194120_1_)`
-- `public int tryTake(int p_194122_1_, int maximum)`
-- `public boolean canCraft( IRecipe recipe, IntList p_194116_2_)`
-- `public boolean canCraft( IRecipe recipe, IntList p_194118_2_, int p_194118_3_)`
-- `public int getBiggestCraftableStack( IRecipe recipe, IntList p_194114_2_)`
-- `public int getBiggestCraftableStack( IRecipe recipe, int p_194121_2_, IntList p_194121_3_)`
-- `public static ItemStack unpack(int p_194115_0_)`
-- `public void clear()`
+- `void accountStack(ItemStack stack)`
+- `void accountStack(ItemStack stack, int forceCount)`
+- `boolean canCraft(IRecipe recipe, IntList p_194116_2_)`
+- `boolean canCraft(IRecipe recipe, IntList p_194118_2_, int p_194118_3_)`
+- `void clear()`
+- `boolean containsItem(int p_194120_1_)`
+- `int getBiggestCraftableStack(IRecipe recipe, int p_194121_2_, IntList p_194121_3_)`
+- `int getBiggestCraftableStack(IRecipe recipe, IntList p_194114_2_)`
+- `static int pack(ItemStack stack)`
+- `int tryTake(int p_194122_1_, int maximum)`
+- `static ItemStack unpack(int p_194115_0_)`
+
+## Fields
+
+- `Int2IntMap itemToCount`

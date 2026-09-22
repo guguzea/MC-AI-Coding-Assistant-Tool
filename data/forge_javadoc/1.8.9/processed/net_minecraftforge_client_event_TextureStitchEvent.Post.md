@@ -1,9 +1,13 @@
 # TextureStitchEvent.Post
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.TextureStitchEvent → net.minecraftforge.client.event.TextureStitchEvent.Post
 
-- `public Post( TextureMap map)`
+## Class signature
 
-## Description
+```java
+public static class TextureStitchEvent.Post extends TextureStitchEvent
+```
 
-This event is fired once the texture map has loaded all textures and stitched them together. All Icons should have there locations defined by the time this is fired.
+## Fields
+
+- `Post`

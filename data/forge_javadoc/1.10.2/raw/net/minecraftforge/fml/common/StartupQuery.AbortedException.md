@@ -1,14 +1,20 @@
 ---
 title: "StartupQuery.AbortedException"
-description: "Exception not being caught by the crash report generation logic."
+description: "public static class StartupQuery.AbortedException extends java.lang.RuntimeException"
 package: "net/minecraftforge/fml/common"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/StartupQuery.AbortedException.html"
 sourceType: javadoc
 ---
 
 # StartupQuery.AbortedException
 
-## Description
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.lang.RuntimeException → net.minecraftforge.fml.common.StartupQuery.AbortedException
 
-Exception not being caught by the crash report generation logic.
+## Class signature
+
+```java
+public static class StartupQuery.AbortedException extends java.lang.RuntimeException
+```

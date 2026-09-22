@@ -1,5 +1,7 @@
 # VertexLighterFlat
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.pipeline.QuadGatheringTransformer → net.minecraftforge.client.model.pipeline.VertexLighterFlat
+
 ## Class signature
 
 ```java
@@ -8,23 +10,33 @@ public class VertexLighterFlat extends QuadGatheringTransformer
 
 ## Constructors
 
-- `public VertexLighterFlat( BlockColors colors)`
+- `VertexLighterFlat(BlockColors colors)`
 
 ## Methods
 
-- `public void setParent( IVertexConsumer parent)`
-- `public void setVertexFormat( VertexFormat format)`
-- `protected void processQuad()`
 - `protected void applyAnaglyph(float[] color)`
-- `protected void updateLightmap(float[] normal, float[] lightmap, float x, float y, float z)`
+- `protected void processQuad()`
+- `void resetBlockInfo()`
+- `void setApplyDiffuseLighting(boolean diffuse)`
+- `void setBlockPos(BlockPos blockPos)`
+- `void setParent(IVertexConsumer parent)`
+- `void setQuadCulled()`
+- `void setQuadOrientation(EnumFacing orientation)`
+- `void setQuadTint(int tint)`
+- `void setState(IBlockState state)`
+- `void setTexture(TextureAtlasSprite texture)`
+- `void setVertexFormat(VertexFormat format)`
+- `void setWorld(IBlockAccess world)`
+- `void updateBlockInfo()`
 - `protected void updateColor(float[] normal, float[] color, float x, float y, float z, float tint, int multiplier)`
-- `public void setQuadTint(int tint)`
-- `public void setQuadOrientation( EnumFacing orientation)`
-- `public void setQuadCulled()`
-- `public void setTexture( TextureAtlasSprite texture)`
-- `public void setApplyDiffuseLighting(boolean diffuse)`
-- `public void setWorld( IBlockAccess world)`
-- `public void setState( IBlockState state)`
-- `public void setBlockPos( BlockPos blockPos)`
-- `public void resetBlockInfo()`
-- `public void updateBlockInfo()`
+- `protected void updateLightmap(float[] normal, float[] lightmap, float x, float y, float z)`
+
+## Fields
+
+- `protected VertexFormat baseFormat`
+- `protected BlockInfo blockInfo`
+- `protected int colorIndex`
+- `protected int lightmapIndex`
+- `protected static VertexFormatElement NORMAL_4F`
+- `protected int normalIndex`
+- `protected int posIndex`

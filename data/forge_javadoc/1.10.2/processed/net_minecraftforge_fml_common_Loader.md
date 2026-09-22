@@ -1,5 +1,7 @@
 # Loader
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.Loader
+
 ## Class signature
 
 ```java
@@ -8,45 +10,46 @@ public class Loader extends java.lang.Object
 
 ## Methods
 
-- `public static Loader instance()`
-- `public static void injectData(java.lang.Object... data)`
-- `public java.util.List< ModContainer > getModList()`
-- `public void setupTestHarness( ModContainer dummycontainer)`
-- `public void loadMods(java.util.List<java.lang.String> injectedModContainers)`
-- `public void preinitializeMods()`
-- `public static boolean isModLoaded(java.lang.String modname)`
-- `public java.io.File getConfigDir()`
-- `public java.lang.String getCrashInformation()`
-- `public java.lang.String getFMLVersionString()`
-- `public ModClassLoader getModClassLoader()`
-- `public void computeDependencies(java.lang.String dependencyString, java.util.Set< ArtifactVersion > requirements, java.util.List< ArtifactVersion > dependencies, java.util.List< ArtifactVersion > dependants)`
-- `public java.util.Map<java.lang.String, ModContainer > getIndexedModList()`
-- `public void initializeMods()`
-- `public ICrashCallable getCallableCrashInformation()`
-- `public java.util.List< ModContainer > getActiveModList()`
-- `public LoaderState.ModState getModState( ModContainer selectedMod)`
-- `public java.lang.String getMCVersionString()`
-- `public boolean serverStarting(java.lang.Object server)`
-- `public void serverStarted()`
-- `public void serverStopping()`
-- `public com.google.common.collect.BiMap< ModContainer ,java.lang.Object> getModObjectList()`
-- `public com.google.common.collect.BiMap<java.lang.Object, ModContainer > getReversedModObjectList()`
-- `public ModContainer activeModContainer()`
-- `public boolean isInState( LoaderState state)`
-- `public MinecraftDummyContainer getMinecraftModContainer()`
-- `public boolean hasReachedState( LoaderState state)`
-- `public java.lang.String getMCPVersionString()`
-- `public void serverStopped()`
-- `public boolean serverAboutToStart(java.lang.Object server)`
-- `public java.util.Map<java.lang.String,java.lang.String> getFMLBrandingProperties()`
-- `public java.util.Map<java.lang.String,java.lang.String> getCustomModProperties(java.lang.String modId)`
-- `public java.util.List<java.lang.String> fireMissingMappingEvent(java.util.Map< ResourceLocation ,java.lang.Integer> missingBlocks, java.util.Map< ResourceLocation ,java.lang.Integer> missingItems, boolean isLocalWorld, java.util.Map< ResourceLocation ,java.lang.Integer[]> remapBlocks, java.util.Map< ResourceLocation ,java.lang.Integer[]> remapItems)`
-- `public void fireRemapEvent(java.util.Map< ResourceLocation ,java.lang.Integer[]> remapBlocks, java.util.Map< ResourceLocation ,java.lang.Integer[]> remapItems, boolean isFreezing)`
-- `public void runtimeDisableMod(java.lang.String modId)`
-- `public void loadingComplete()`
-- `public final LoaderState getLoaderState()`
-- `public void setActiveModContainer( ModContainer container)`
+- `ModContainer activeModContainer()`
+- `void computeDependencies(java.lang.String dependencyString, java.util.Set<ArtifactVersion> requirements, java.util.List<ArtifactVersion> dependencies, java.util.List<ArtifactVersion> dependants)`
+- `java.util.List<java.lang.String> fireMissingMappingEvent(java.util.Map<ResourceLocation, java.lang.Integer> missingBlocks, java.util.Map<ResourceLocation, java.lang.Integer> missingItems, boolean isLocalWorld, java.util.Map<ResourceLocation, java.lang.Integer[]> remapBlocks, java.util.Map<ResourceLocation, java.lang.Integer[]> remapItems)` — Fire a FMLMissingMappingsEvent to let mods determine how blocks/items defined in the world save, but missing from the runtime, are to be handled.
+- `void fireRemapEvent(java.util.Map<ResourceLocation, java.lang.Integer[]> remapBlocks, java.util.Map<ResourceLocation, java.lang.Integer[]> remapItems, boolean isFreezing)`
+- `java.util.List<ModContainer> getActiveModList()`
+- `ICrashCallable getCallableCrashInformation()`
+- `java.io.File getConfigDir()`
+- `java.lang.String getCrashInformation()`
+- `java.util.Map<java.lang.String, java.lang.String> getCustomModProperties(java.lang.String modId)`
+- `java.util.Map<java.lang.String, java.lang.String> getFMLBrandingProperties()`
+- `java.lang.String getFMLVersionString()`
+- `java.util.Map<java.lang.String, ModContainer> getIndexedModList()`
+- `LoaderState getLoaderState()`
+- `java.lang.String getMCPVersionString()`
+- `java.lang.String getMCVersionString()`
+- `MinecraftDummyContainer getMinecraftModContainer()`
+- `ModClassLoader getModClassLoader()`
+- `java.util.List<ModContainer> getModList()`
+- `com.google.common.collect.BiMap<ModContainer, java.lang.Object> getModObjectList()`
+- `LoaderState.ModState getModState(ModContainer selectedMod)`
+- `com.google.common.collect.BiMap<java.lang.Object, ModContainer> getReversedModObjectList()`
+- `boolean hasReachedState(LoaderState state)`
+- `void initializeMods()`
+- `static void injectData(java.lang.Object... data)`
+- `static Loader instance()`
+- `boolean isInState(LoaderState state)`
+- `static boolean isModLoaded(java.lang.String modname)` — Query if we know of a mod named modname
+- `void loadingComplete()`
+- `void loadMods(java.util.List<java.lang.String> injectedModContainers)` — Called from the hook to start mod loading.
+- `void preinitializeMods()`
+- `void runtimeDisableMod(java.lang.String modId)`
+- `boolean serverAboutToStart(java.lang.Object server)`
+- `void serverStarted()`
+- `boolean serverStarting(java.lang.Object server)`
+- `void serverStopped()`
+- `void serverStopping()`
+- `void setActiveModContainer(ModContainer container)`
+- `void setupTestHarness(ModContainer dummycontainer)` — Used to setup a testharness with a single dummy mod instance for use with various testing hooks
 
-## Description
+## Fields
 
-The loader class performs the actual loading of the mod code from disk. There are several LoaderState s to mod loading, triggered in two different stages from the FML handler code's hooks into the min
+- `boolean java8`
+- `static java.lang.String MC_VERSION`

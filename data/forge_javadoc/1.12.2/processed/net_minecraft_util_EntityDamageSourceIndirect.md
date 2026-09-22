@@ -1,17 +1,19 @@
 # EntityDamageSourceIndirect
 
+**Inheritance:** java.lang.Object → net.minecraft.util.DamageSource → net.minecraft.util.EntityDamageSource → net.minecraft.util.EntityDamageSourceIndirect
+
 ## Class signature
 
 ```java
 public class EntityDamageSourceIndirect extends EntityDamageSource
 ```
 
-## Constructors
-
-- `public EntityDamageSourceIndirect(java.lang.String damageTypeIn, Entity source, Entity indirectEntityIn)`
-
 ## Methods
 
-- `public Entity getImmediateSource()`
-- `public Entity getTrueSource()`
-- `public ITextComponent getDeathMessage( EntityLivingBase entityLivingBaseIn)`
+- `ITextComponent getDeathMessage(EntityLivingBase entityLivingBaseIn)`
+- `Entity getImmediateSource()`
+- `Entity getTrueSource()`
+
+## Fields
+
+- `EntityDamageSourceIndirect`

@@ -1,5 +1,7 @@
 # ChestRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.ChestRenderer
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class ChestRenderer extends java.lang.Object
 
 ## Constructors
 
-- `public ChestRenderer()`
+- `ChestRenderer()`
 
 ## Methods
 
-- `public void renderChestBrightness( Block p_178175_1_, float color)`
+- `void renderChestBrightness(Block p_178175_1_, float color)`

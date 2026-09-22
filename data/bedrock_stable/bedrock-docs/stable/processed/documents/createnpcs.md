@@ -1,0 +1,135 @@
+> 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/createnpcs?view=minecraft-bedrock-stable
+> 抓取时间：2026-09-21T11:50:03.660Z
+> 警告：此文档可能滞后于当前正式版
+
+# Create a Custom NPC
+
+Non-Player Characters (NPCs) are characters in Minecraft that are not controlled by the player. NPCs can perform commands and deliver dialog when players interact with them, making them excellent tools for creating narrative and gameplay experiences.
+
+In this tutorial, you will learn the following:
+
+- How to create an NPC.
+
+- How to change NPC skins.
+
+- How to add commands to an NPC.
+
+- How to add buttons to an NPC.
+
+## Prequisites
+
+To create NPCs, start in a world with the following settings:
+
+- Creative mode
+
+- Cheats enabled
+
+- Operator permissions
+
+Later, to interact with your custom NPCs, you will need to switch from Creative mode to either Survival mode or Adventure mode.
+
+## Spawn an NPC
+
+To obtain a custom NPC, follow these instructions:
+
+- Get an NPC spawn egg from the creative menu or by using the command /give @p spawn_egg 1 51 .
+
+- Right-click to place an NPC on your desired block. If you misplace an NPC, you can left-click to despawn them.
+
+- Right-click the NPC to open the NPC interface.
+
+- Enter a name for your NPC. Names are limited to 32 characters. You can use color codes to change the color of the name text.
+
+The NPC editor has a built in dialog feature to give players more information about the commands they will execute or to deliver story details.
+
+This dialog box has a limit of 307 characters before the text goes off the screen. You can also use color codes to change the color of the text.
+
+You can use behavior packs and commands to create a more advanced dialogue system for your custom NPCs. See NPC Dialogue Command for more information.
+
+## Change NPC skins
+
+You can choose from a list of skins to customize the appearance of your NPC.
+
+To change an NPC's skin, follow these instructions:
+
+- Right-click the NPC you want to edit.
+
+- In the Appearance section, click the skin that you want to use for your NPC. You can use the left and right arrow buttons to see more skins.
+
+## Add commands to an NPC
+
+You can add commands to an NPC that the NPC will execute after a player closes their dialog window. Unlike a Command Block , a single NPC can execute multiple commands.
+
+To add commands to an NPC, follow these instructions:
+
+- Right-click the NPC you want to edit.
+
+- Click Advanced Settings .
+
+- Enter the Command you want to execute. Make sure you only enter one command in this field.
+
+- If you want to add more commands, click the Add Command button and enter the commands you want to enter.
+
+Your NPC will execute these commands in order whenever a player interacts with them and closes their dialog box. There is more information about commands in the Introduction to Commands article .
+
+## Advanced Command Settings
+
+There are settings to customize the way commands work with NPCs.
+
+### Button Mode
+
+If Button Mode is toggled on, a text box appears where you can enter text that will appear on a button. This command will only run if the button is pressed.
+
+For example, we could use a combination of the command `/give @p gold_ingot` and a button labelled `Money?` When players click the `Money?` button, they receive one gold ingot into their inventory.
+
+### On Enter
+
+If On Enter is toggled, then the command will run when players initiate a conversation with the NPC.
+
+In this case, with On Enter toggled on and the command `/give @p gold_ingot`, players would receive one gold ingot in their inventory when the dialogue box opens on dialogue initiation with the NPC.
+
+### On Exit
+
+If On Exit is toggled, then the command will trigger when the player ends and interaction and closes the NPC dialogue.
+
+In this case, with On Exit toggled on and the command `/give @p gold_ingot`, players would receive one gold ingot in their inventory when the dialogue box closes and the NPC interaction ends.
+
+## Add buttons to an NPC
+
+You can also add buttons to an NPC. If you use the Button Mode setting, an NPC command will be displayed as a button in the NPC's dialog box. Players who interact with that NPC can click the appropriate button to execute that command.
+
+To add buttons to an NPC, follow these instructions:
+
+- Right-click the NPC you want to edit.
+
+- Click Advanced Settings .
+
+- Enter the Command you want to execute. Make sure you only enter one command in this field.
+
+- Activate Button Mode and enter the button text in the new field.
+
+- If you want to add more buttons, click the Add Command button and repeat this process.
+
+Once you have added your button commands, your NPC will display the command buttons in order after their dialog when players interact with them.
+
+## What's Next?
+
+With the NPC created and the first dialogue box has been created, you can learn how to create branching dialogue boxes to design your own custom narrative driven content.
+
+ NPC Dialogue Command
+
+## Feedback
+
+ Was this page helpful?
+
+ Yes
+
+ No
+
+ No
+
+ Need help with this topic?
+
+ Want to try using Ask Learn to clarify or guide you through this topic?
+
+ Suggest a fix?

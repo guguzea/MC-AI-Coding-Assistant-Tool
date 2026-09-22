@@ -1,18 +1,24 @@
 ---
 title: "LivingSpawnEvent.CheckSpawn"
-description: "Fires before mob spawn events. Result is significant: DEFAULT: use vanilla spawn rules ALLOW: allow the spawn DENY: deny the spawn"
+description: "public static class LivingSpawnEvent.CheckSpawn extends LivingSpawnEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/entity/living/LivingSpawnEvent.CheckSpawn.html"
 sourceType: javadoc
 ---
 
 # LivingSpawnEvent.CheckSpawn
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingSpawnEvent → net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn
+
+## Class signature
+
+```java
+public static class LivingSpawnEvent.CheckSpawn extends LivingSpawnEvent
+```
+
 ## Constructors
 
-- `public CheckSpawn( EntityLiving entity, World world, float x, float y, float z)`
-
-## Description
-
-Fires before mob spawn events. Result is significant: DEFAULT: use vanilla spawn rules ALLOW: allow the spawn DENY: deny the spawn
+- `CheckSpawn(EntityLiving entity, World world, float x, float y, float z)`

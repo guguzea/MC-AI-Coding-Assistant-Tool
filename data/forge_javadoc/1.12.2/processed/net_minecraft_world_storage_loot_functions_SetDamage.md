@@ -1,5 +1,7 @@
 # SetDamage
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction → net.minecraft.world.storage.loot.functions.SetDamage
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class SetDamage extends LootFunction
 
 ## Constructors
 
-- `public SetDamage( LootCondition [] conditionsIn, RandomValueRange damageRangeIn)`
+- `SetDamage(LootCondition [] conditionsIn, RandomValueRange damageRangeIn)`
 
 ## Methods
 
-- `public ItemStack apply( ItemStack stack, java.util.Random rand, LootContext context)`
+- `ItemStack apply(ItemStack stack, java.util.Random rand, LootContext context)`

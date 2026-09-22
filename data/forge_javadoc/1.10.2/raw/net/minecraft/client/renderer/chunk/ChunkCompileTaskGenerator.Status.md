@@ -1,19 +1,25 @@
 ---
 title: "ChunkCompileTaskGenerator.Status"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum ChunkCompileTaskGenerator.Status extends java.lang.Enum<ChunkCompileTaskGenerator.Status>"
 package: "net/minecraft/client/renderer/chunk"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/renderer/chunk/ChunkCompileTaskGenerator.Status.html"
 sourceType: javadoc
 ---
 
 # ChunkCompileTaskGenerator.Status
 
+**Inheritance:** java.lang.Object → java.lang.Enum<ChunkCompileTaskGenerator.Status> → net.minecraft.client.renderer.chunk.ChunkCompileTaskGenerator.Status
+
+## Class signature
+
+```java
+public static enum ChunkCompileTaskGenerator.Status extends java.lang.Enum<ChunkCompileTaskGenerator.Status>
+```
+
 ## Methods
 
-- `public static ChunkCompileTaskGenerator.Status [] values()`
-- `public static ChunkCompileTaskGenerator.Status valueOf(java.lang.String name)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static ChunkCompileTaskGenerator.Status valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static ChunkCompileTaskGenerator.Status [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

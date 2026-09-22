@@ -3,11 +3,15 @@ title: "BlockFalling"
 description: "public class BlockFalling extends Block"
 package: "net/minecraft/block"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/block/BlockFalling.html"
 sourceType: javadoc
 ---
 
 # BlockFalling
+
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockFalling
 
 ## Class signature
 
@@ -17,18 +21,22 @@ public class BlockFalling extends Block
 
 ## Constructors
 
-- `public BlockFalling()`
-- `public BlockFalling( Material materialIn)`
+- `BlockFalling()`
+- `BlockFalling(Material materialIn)`
 
 ## Methods
 
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `protected void onStartFalling( EntityFallingBlock fallingEntity)`
-- `public int tickRate( World worldIn)`
-- `public static boolean canFallThrough( IBlockState state)`
-- `public void onEndFalling( World worldIn, BlockPos pos, IBlockState p_176502_3_, IBlockState p_176502_4_)`
-- `public void onBroken( World worldIn, BlockPos pos)`
-- `public void randomDisplayTick( IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
-- `public int getDustColor( IBlockState state)`
+- `static boolean canFallThrough(IBlockState state)`
+- `int getDustColor(IBlockState state)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onBroken(World worldIn, BlockPos pos)`
+- `void onEndFalling(World worldIn, BlockPos pos, IBlockState p_176502_3_, IBlockState p_176502_4_)`
+- `protected void onStartFalling(EntityFallingBlock fallingEntity)`
+- `void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
+- `int tickRate(World worldIn)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+
+## Fields
+
+- `static boolean fallInstantly`

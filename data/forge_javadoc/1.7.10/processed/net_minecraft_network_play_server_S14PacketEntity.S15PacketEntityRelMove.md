@@ -1,13 +1,21 @@
 # S14PacketEntity.S15PacketEntityRelMove
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.network.Packet → net.minecraft.network.play.server.S14PacketEntity → net.minecraft.network.play.server.S14PacketEntity.S15PacketEntityRelMove
 
-- `public S15PacketEntityRelMove()`
-- `public S15PacketEntityRelMove(int p_i45203_1_, byte p_i45203_2_, byte p_i45203_3_, byte p_i45203_4_)`
+## Class signature
+
+```java
+public static class S14PacketEntity.S15PacketEntityRelMove extends S14PacketEntity
+```
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer p_148837_1_) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer p_148840_1_) throws java.io.IOException`
-- `public java.lang.String serialize()`
-- `public void processPacket( INetHandler p_148833_1_)`
+- `void processPacket(INetHandler p_148833_1_)`
+- `void readPacketData(PacketBuffer p_148837_1_)`
+- `java.lang.String serialize()`
+- `void writePacketData(PacketBuffer p_148840_1_)`
+
+## Fields
+
+- `S15PacketEntityRelMove`
+- `S15PacketEntityRelMove`

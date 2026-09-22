@@ -3,11 +3,15 @@ title: "EntityPainting"
 description: "public class EntityPainting extends EntityHanging"
 package: "net/minecraft/entity/item"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/item/EntityPainting.html"
 sourceType: javadoc
 ---
 
 # EntityPainting
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityHanging → net.minecraft.entity.item.EntityPainting
 
 ## Class signature
 
@@ -17,17 +21,21 @@ public class EntityPainting extends EntityHanging
 
 ## Constructors
 
-- `public EntityPainting( World worldIn)`
-- `public EntityPainting( World worldIn, BlockPos pos, EnumFacing facing)`
-- `public EntityPainting( World worldIn, BlockPos pos, EnumFacing facing, java.lang.String title)`
+- `EntityPainting(World worldIn)`
+- `EntityPainting(World worldIn, BlockPos pos, EnumFacing facing)`
+- `EntityPainting(World worldIn, BlockPos pos, EnumFacing facing, java.lang.String title)`
 
 ## Methods
 
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public int getWidthPixels()`
-- `public int getHeightPixels()`
-- `public void onBroken(@Nullable Entity brokenEntity)`
-- `public void playPlaceSound()`
-- `public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch)`
-- `public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
+- `int getHeightPixels()`
+- `int getWidthPixels()`
+- `void onBroken(Entity brokenEntity)`
+- `void playPlaceSound()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void setLocationAndAngles(double x, double y, double z, float yaw, float pitch)`
+- `void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityPainting.EnumArt art`

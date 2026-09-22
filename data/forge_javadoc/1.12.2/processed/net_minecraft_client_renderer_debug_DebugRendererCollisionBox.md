@@ -1,5 +1,7 @@
 # DebugRendererCollisionBox
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.debug.DebugRendererCollisionBox
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class DebugRendererCollisionBox extends java.lang.Object implements Debug
 
 ## Constructors
 
-- `public DebugRendererCollisionBox( Minecraft minecraftIn)`
+- `DebugRendererCollisionBox(Minecraft minecraftIn)`
 
 ## Methods
 
-- `public void render(float partialTicks, long finishTimeNano)`
+- `void render(float partialTicks, long finishTimeNano)`

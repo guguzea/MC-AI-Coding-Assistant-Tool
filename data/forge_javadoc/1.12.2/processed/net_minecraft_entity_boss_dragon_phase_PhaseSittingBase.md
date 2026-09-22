@@ -1,16 +1,18 @@
 # PhaseSittingBase
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseSittingBase
+
 ## Class signature
 
 ```java
 public abstract class PhaseSittingBase extends PhaseBase
 ```
 
-## Constructors
-
-- `public PhaseSittingBase( EntityDragon p_i46794_1_)`
-
 ## Methods
 
-- `public boolean getIsStationary()`
-- `public float getAdjustedDamage( MultiPartEntityPart pt, DamageSource src, float damage)`
+- `float getAdjustedDamage(MultiPartEntityPart pt, DamageSource src, float damage)`
+- `boolean getIsStationary()`
+
+## Fields
+
+- `PhaseSittingBase`

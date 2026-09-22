@@ -1,9 +1,13 @@
 # FluidEvent.FluidSpilledEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fluids.FluidEvent → net.minecraftforge.fluids.FluidEvent.FluidSpilledEvent
+
+## Class signature
+
+```java
+public static class FluidEvent.FluidSpilledEvent extends FluidEvent
+```
+
 ## Constructors
 
-- `public FluidSpilledEvent( FluidStack fluid, World world, BlockPos pos)`
-
-## Description
-
-Mods should fire this event when a fluid "spills", for example, if a block containing fluid is broken.
+- `FluidSpilledEvent(FluidStack fluid, World world, BlockPos pos)`

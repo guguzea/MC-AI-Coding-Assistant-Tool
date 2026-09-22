@@ -3,11 +3,15 @@ title: "ChunkProviderClient"
 description: "public class ChunkProviderClient extends java.lang.Object implements IChunkProvider"
 package: "net/minecraft/client/multiplayer"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/multiplayer/ChunkProviderClient.html"
 sourceType: javadoc
 ---
 
 # ChunkProviderClient
+
+**Inheritance:** java.lang.Object → net.minecraft.client.multiplayer.ChunkProviderClient
 
 ## Class signature
 
@@ -17,14 +21,14 @@ public class ChunkProviderClient extends java.lang.Object implements IChunkProvi
 
 ## Constructors
 
-- `public ChunkProviderClient( World worldIn)`
+- `ChunkProviderClient(World worldIn)`
 
 ## Methods
 
-- `public void unloadChunk(int x, int z)`
-- `@Nullable public Chunk getLoadedChunk(int x, int z)`
-- `public Chunk loadChunk(int chunkX, int chunkZ)`
-- `public Chunk provideChunk(int x, int z)`
-- `public boolean tick()`
-- `public java.lang.String makeString()`
-- `public boolean isChunkGeneratedAt(int p_191062_1_, int p_191062_2_)`
+- `Chunk getLoadedChunk(int x, int z)`
+- `boolean isChunkGeneratedAt(int p_191062_1_, int p_191062_2_)`
+- `Chunk loadChunk(int chunkX, int chunkZ)`
+- `java.lang.String makeString()`
+- `Chunk provideChunk(int x, int z)`
+- `boolean tick()`
+- `void unloadChunk(int x, int z)`

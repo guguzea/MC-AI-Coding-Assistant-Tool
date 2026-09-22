@@ -1,5 +1,7 @@
 # EntityAITasks
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAITasks
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class EntityAITasks extends java.lang.Object
 
 ## Constructors
 
-- `public EntityAITasks( Profiler profilerIn)`
+- `EntityAITasks(Profiler profilerIn)`
 
 ## Methods
 
-- `public void addTask(int priority, EntityAIBase task)`
-- `public void removeTask( EntityAIBase task)`
-- `public void onUpdateTasks()`
+- `void addTask(int priority, EntityAIBase task)` — Add a now AITask.
+- `void onUpdateTasks()`
+- `void removeTask(EntityAIBase task)` — removes the indicated task from the entity's AI tasks.
 
-## Description
+## Fields
 
-Add a now AITask.
+- `java.util.List<EntityAITasks.EntityAITaskEntry> taskEntries`

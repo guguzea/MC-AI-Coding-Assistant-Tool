@@ -1,20 +1,18 @@
 # ItemBook
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemBook
+
 ## Class signature
 
 ```java
 public class ItemBook extends Item
 ```
 
-## Constructors
-
-- `public ItemBook()`
-
 ## Methods
 
-- `public boolean isItemTool( ItemStack stack)`
-- `public int getItemEnchantability()`
+- `int getItemEnchantability()` — Return the enchantability factor of the item, most of the time is based on material.
+- `boolean isItemTool(ItemStack stack)` — Checks isDamagable and if it cannot be stacked
 
-## Description
+## Fields
 
-Return the enchantability factor of the item, most of the time is based on material.
+- `ItemBook`

@@ -3,11 +3,15 @@ title: "CommandBanIp"
 description: "public class CommandBanIp extends CommandBase"
 package: "net/minecraft/command/server"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/command/server/CommandBanIp.html"
 sourceType: javadoc
 ---
 
 # CommandBanIp
+
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.server.CommandBanIp
 
 ## Class signature
 
@@ -17,14 +21,18 @@ public class CommandBanIp extends CommandBase
 
 ## Constructors
 
-- `public CommandBanIp()`
+- `CommandBanIp()`
 
 ## Methods
 
-- `public java.lang.String getCommandName()`
-- `public int getRequiredPermissionLevel()`
-- `public boolean checkPermission( MinecraftServer server, ICommandSender sender)`
-- `public java.lang.String getCommandUsage( ICommandSender sender)`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `public java.util.List<java.lang.String> getTabCompletionOptions( MinecraftServer server, ICommandSender sender, java.lang.String[] args, @Nullable BlockPos pos)`
-- `protected void banIp( MinecraftServer server, ICommandSender sender, java.lang.String ipAddress, @Nullable java.lang.String banReason)`
+- `protected void banIp(MinecraftServer server, ICommandSender sender, java.lang.String ipAddress, java.lang.String banReason)`
+- `boolean checkPermission(MinecraftServer server, ICommandSender sender)`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.lang.String getCommandName()`
+- `java.lang.String getCommandUsage(ICommandSender sender)`
+- `int getRequiredPermissionLevel()`
+- `java.util.List<java.lang.String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos pos)`
+
+## Fields
+
+- `static java.util.regex.Pattern IP_PATTERN`

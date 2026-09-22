@@ -1,5 +1,7 @@
 # SimpleModelState
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.SimpleModelState
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public final class SimpleModelState extends java.lang.Object implements IModelSt
 
 ## Constructors
 
-- `public SimpleModelState(<any> map)`
-- `public SimpleModelState(<any> map, java.util.Optional< TRSRTransformation > def)`
+- `SimpleModelState(<any> map)`
+- `SimpleModelState(<any> map, java.util.Optional<TRSRTransformation> def)`
 
 ## Methods
 
-- `public java.util.Optional< TRSRTransformation > apply(java.util.Optional<? extends IModelPart > part)`
+- `java.util.Optional<TRSRTransformation> apply(java.util.Optional<? extends IModelPart> part)`

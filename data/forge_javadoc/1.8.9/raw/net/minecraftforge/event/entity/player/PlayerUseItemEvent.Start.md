@@ -1,18 +1,24 @@
 ---
 title: "PlayerUseItemEvent.Start"
-description: "Fired when a player starts 'using' an item, typically when they hold right mouse. Examples: Drawing a bow Eating Food Drinking Potions/Milk Guarding with a sword Cancel the event, or set the duration "
+description: "public static class PlayerUseItemEvent.Start extends PlayerUseItemEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/player/PlayerUseItemEvent.Start.html"
 sourceType: javadoc
 ---
 
 # PlayerUseItemEvent.Start
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerUseItemEvent → net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start
 
-- `public Start( EntityPlayer player, ItemStack item, int duration)`
+## Class signature
 
-## Description
+```java
+public static class PlayerUseItemEvent.Start extends PlayerUseItemEvent
+```
 
-Fired when a player starts 'using' an item, typically when they hold right mouse. Examples: Drawing a bow Eating Food Drinking Potions/Milk Guarding with a sword Cancel the event, or set the duration 
+## Fields
+
+- `Start`

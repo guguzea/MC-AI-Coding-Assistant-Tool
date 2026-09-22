@@ -14,6 +14,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from "fs
 import { join, dirname } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { parseCliArgs } from "./_lib/args.js";
+import { forgeRawName } from "./_lib/upstream-inventory.mjs";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
@@ -468,7 +469,7 @@ async function main() {
         continue;
       }
 
-      const fileName = chapter.replace(/\//g, "_") + ".md";
+      const fileName = forgeRawName(chapter);
       const filePath = join(versionDir, fileName);
 
       if (existsSync(filePath) && !force) {

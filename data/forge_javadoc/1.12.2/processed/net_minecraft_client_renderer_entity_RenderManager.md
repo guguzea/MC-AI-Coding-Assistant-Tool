@@ -1,5 +1,7 @@
 # RenderManager
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.RenderManager
+
 ## Class signature
 
 ```java
@@ -8,26 +10,40 @@ public class RenderManager extends java.lang.Object
 
 ## Constructors
 
-- `public RenderManager( TextureManager renderEngineIn, RenderItem itemRendererIn)`
+- `RenderManager(TextureManager renderEngineIn, RenderItem itemRendererIn)`
 
 ## Methods
 
-- `public java.util.Map<java.lang.String, RenderPlayer > getSkinMap()`
-- `public void setRenderPosition(double renderPosXIn, double renderPosYIn, double renderPosZIn)`
-- `public <T extends Entity > Render <T> getEntityClassRenderObject(java.lang.Class<? extends Entity > entityClass)`
-- `public <T extends Entity > Render <T> getEntityRenderObject( Entity entityIn)`
-- `public void cacheActiveRenderInfo( World worldIn, FontRenderer textRendererIn, Entity livingPlayerIn, Entity pointedEntityIn, GameSettings optionsIn, float partialTicks)`
-- `public void setPlayerViewY(float playerViewYIn)`
-- `public boolean isRenderShadow()`
-- `public void setRenderShadow(boolean renderShadowIn)`
-- `public void setDebugBoundingBox(boolean debugBoundingBoxIn)`
-- `public boolean isDebugBoundingBox()`
-- `public boolean isRenderMultipass( Entity p_188390_1_)`
-- `public boolean shouldRender( Entity entityIn, ICamera camera, double camX, double camY, double camZ)`
-- `public void renderEntityStatic( Entity entityIn, float partialTicks, boolean p_188388_3_)`
-- `public void renderEntity( Entity entityIn, double x, double y, double z, float yaw, float partialTicks, boolean p_188391_10_)`
-- `public void renderMultipass( Entity p_188389_1_, float p_188389_2_)`
-- `public void setWorld( World worldIn)`
-- `public double getDistanceToCamera(double x, double y, double z)`
-- `public FontRenderer getFontRenderer()`
-- `public void setRenderOutlines(boolean renderOutlinesIn)`
+- `void cacheActiveRenderInfo(World worldIn, FontRenderer textRendererIn, Entity livingPlayerIn, Entity pointedEntityIn, GameSettings optionsIn, float partialTicks)`
+- `double getDistanceToCamera(double x, double y, double z)`
+- `<T extends Entity> Render<T> getEntityClassRenderObject(java.lang.Class<? extends Entity> entityClass)`
+- `<T extends Entity> Render<T> getEntityRenderObject(Entity entityIn)`
+- `FontRenderer getFontRenderer()`
+- `java.util.Map<java.lang.String, RenderPlayer> getSkinMap()`
+- `boolean isDebugBoundingBox()`
+- `boolean isRenderMultipass(Entity p_188390_1_)`
+- `boolean isRenderShadow()`
+- `void renderEntity(Entity entityIn, double x, double y, double z, float yaw, float partialTicks, boolean p_188391_10_)`
+- `void renderEntityStatic(Entity entityIn, float partialTicks, boolean p_188388_3_)`
+- `void renderMultipass(Entity p_188389_1_, float p_188389_2_)`
+- `void setDebugBoundingBox(boolean debugBoundingBoxIn)`
+- `void setPlayerViewY(float playerViewYIn)`
+- `void setRenderOutlines(boolean renderOutlinesIn)`
+- `void setRenderPosition(double renderPosXIn, double renderPosYIn, double renderPosZIn)`
+- `void setRenderShadow(boolean renderShadowIn)`
+- `void setWorld(World worldIn)`
+- `boolean shouldRender(Entity entityIn, ICamera camera, double camX, double camY, double camZ)`
+
+## Fields
+
+- `java.util.Map<java.lang.Class<? extends Entity>, Render<? extends Entity>> entityRenderMap`
+- `GameSettings options`
+- `float playerViewX`
+- `float playerViewY`
+- `Entity pointedEntity`
+- `TextureManager renderEngine`
+- `Entity renderViewEntity`
+- `double viewerPosX`
+- `double viewerPosY`
+- `double viewerPosZ`
+- `World world`

@@ -1,5 +1,7 @@
 # CraftPlanksStep
 
+**Inheritance:** java.lang.Object → net.minecraft.client.tutorial.CraftPlanksStep
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class CraftPlanksStep extends java.lang.Object implements ITutorialStep
 
 ## Constructors
 
-- `public CraftPlanksStep( Tutorial tutorial)`
+- `CraftPlanksStep(Tutorial tutorial)`
 
 ## Methods
 
-- `public void update()`
-- `public void onStop()`
-- `public void handleSetSlot( ItemStack stack)`
-- `public static boolean didPlayerCraftedPlanks( EntityPlayerSP player)`
+- `static boolean didPlayerCraftedPlanks(EntityPlayerSP player)`
+- `void handleSetSlot(ItemStack stack)`
+- `void onStop()`
+- `void update()`

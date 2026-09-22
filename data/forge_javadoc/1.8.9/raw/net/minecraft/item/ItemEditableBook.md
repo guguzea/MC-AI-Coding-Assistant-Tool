@@ -1,13 +1,17 @@
 ---
 title: "ItemEditableBook"
-description: "allows items to add custom lines of information to the mouseover description"
+description: "public class ItemEditableBook extends Item"
 package: "net/minecraft/item"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/item/ItemEditableBook.html"
 sourceType: javadoc
 ---
 
 # ItemEditableBook
+
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemEditableBook
 
 ## Class signature
 
@@ -15,19 +19,15 @@ sourceType: javadoc
 public class ItemEditableBook extends Item
 ```
 
-## Constructors
-
-- `public ItemEditableBook()`
-
 ## Methods
 
-- `public static boolean validBookTagContents( NBTTagCompound nbt)`
-- `public static int getGeneration( ItemStack book)`
-- `public java.lang.String getItemStackDisplayName( ItemStack stack)`
-- `public void addInformation( ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
-- `public ItemStack onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)`
-- `public boolean hasEffect( ItemStack stack)`
+- `void addInformation(ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)` — allows items to add custom lines of information to the mouseover description
+- `static int getGeneration(ItemStack book)` — Gets the generation of the book (how many times it has been cloned)
+- `java.lang.String getItemStackDisplayName(ItemStack stack)`
+- `boolean hasEffect(ItemStack stack)`
+- `ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)` — Called whenever this item is equipped and the right mouse button is pressed.
+- `static boolean validBookTagContents(NBTTagCompound nbt)`
 
-## Description
+## Fields
 
-allows items to add custom lines of information to the mouseover description
+- `ItemEditableBook`

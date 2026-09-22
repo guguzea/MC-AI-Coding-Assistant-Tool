@@ -1,9 +1,19 @@
 # EntityViewRenderEvent.CameraSetup
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.EntityViewRenderEvent → net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup
+
+## Class signature
+
+```java
+public static class EntityViewRenderEvent.CameraSetup extends EntityViewRenderEvent
+```
+
 ## Constructors
 
-- `public CameraSetup( EntityRenderer renderer, Entity entity, Block block, double renderPartialTicks, float yaw, float pitch, float roll)`
+- `CameraSetup(EntityRenderer renderer, Entity entity, Block block, double renderPartialTicks, float yaw, float pitch, float roll)`
 
-## Description
+## Fields
 
-Event that allows mods to alter the angles of the player's camera. Mainly useful for applying roll.
+- `float pitch`
+- `float roll`
+- `float yaw`

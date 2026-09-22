@@ -1,13 +1,17 @@
 ---
 title: "EntityJoinWorldEvent"
-description: "EntityJoinWorldEvent is fired when an Entity joins the world. This event is fired whenever an Entity is added to the world in World.loadEntities(Collection) , WorldServer.loadEntities(Collection) Worl"
+description: "public class EntityJoinWorldEvent extends EntityEvent"
 package: "net/minecraftforge/event/entity"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/EntityJoinWorldEvent.html"
 sourceType: javadoc
 ---
 
 # EntityJoinWorldEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.EntityJoinWorldEvent
 
 ## Class signature
 
@@ -17,12 +21,8 @@ public class EntityJoinWorldEvent extends EntityEvent
 
 ## Constructors
 
-- `public EntityJoinWorldEvent( Entity entity, World world)`
+- `EntityJoinWorldEvent(Entity entity, World world)`
 
 ## Methods
 
-- `public World getWorld()`
-
-## Description
-
-EntityJoinWorldEvent is fired when an Entity joins the world. This event is fired whenever an Entity is added to the world in World.loadEntities(Collection) , WorldServer.loadEntities(Collection) Worl
+- `World getWorld()`

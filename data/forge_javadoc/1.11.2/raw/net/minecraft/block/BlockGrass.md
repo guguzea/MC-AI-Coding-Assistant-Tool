@@ -3,11 +3,15 @@ title: "BlockGrass"
 description: "public class BlockGrass extends Block implements IGrowable"
 package: "net/minecraft/block"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/BlockGrass.html"
 sourceType: javadoc
 ---
 
 # BlockGrass
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockGrass
 
 ## Class signature
 
@@ -17,16 +21,20 @@ public class BlockGrass extends Block implements IGrowable
 
 ## Constructors
 
-- `protected BlockGrass()`
+- `BlockGrass()`
 
 ## Methods
 
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public boolean canGrow( World worldIn, BlockPos pos, IBlockState state, boolean isClient)`
-- `public boolean canUseBonemeal( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
-- `public void grow( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)`
+- `boolean canUseBonemeal(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `BlockRenderLayer getBlockLayer()`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getMetaFromState(IBlockState state)`
+- `void grow(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+
+## Fields
+
+- `static PropertyBool SNOWY`

@@ -1,5 +1,7 @@
 # PlaySoundEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.sound.SoundEvent → net.minecraftforge.client.event.sound.PlaySoundEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,11 @@ public class PlaySoundEvent extends SoundEvent
 
 ## Constructors
 
-- `public PlaySoundEvent( SoundManager manager, ISound sound, SoundCategory category)`
+- `PlaySoundEvent(SoundManager manager, ISound sound, SoundCategory category)`
 
-## Description
+## Fields
 
-Raised when the SoundManager tries to play a normal sound. If you return null from this function it will prevent the sound from being played, you can return a different entry if you want to change the
+- `SoundCategory category`
+- `java.lang.String name`
+- `ISound result`
+- `ISound sound`

@@ -3,11 +3,15 @@ title: "ModifiableAttributeInstance"
 description: "public class ModifiableAttributeInstance extends java.lang.Object implements IAttributeInstance"
 package: "net/minecraft/entity/ai/attributes"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/entity/ai/attributes/ModifiableAttributeInstance.html"
 sourceType: javadoc
 ---
 
 # ModifiableAttributeInstance
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.attributes.ModifiableAttributeInstance
 
 ## Class signature
 
@@ -17,17 +21,17 @@ public class ModifiableAttributeInstance extends java.lang.Object implements IAt
 
 ## Constructors
 
-- `public ModifiableAttributeInstance( BaseAttributeMap p_i1608_1_, IAttribute p_i1608_2_)`
+- `ModifiableAttributeInstance(BaseAttributeMap p_i1608_1_, IAttribute p_i1608_2_)`
 
 ## Methods
 
-- `public IAttribute getAttribute()`
-- `public double getBaseValue()`
-- `public void setBaseValue(double p_111128_1_)`
-- `public java.util.Collection getModifiersByOperation(int p_111130_1_)`
-- `public java.util.Collection func_111122_c()`
-- `public AttributeModifier getModifier(java.util.UUID p_111127_1_)`
-- `public void applyModifier( AttributeModifier p_111121_1_)`
-- `public void removeModifier( AttributeModifier p_111124_1_)`
-- `public void removeAllModifiers()`
-- `public double getAttributeValue()`
+- `void applyModifier(AttributeModifier p_111121_1_)`
+- `java.util.Collection func_111122_c()`
+- `IAttribute getAttribute()`
+- `double getAttributeValue()`
+- `double getBaseValue()`
+- `AttributeModifier getModifier(java.util.UUID p_111127_1_)`
+- `java.util.Collection getModifiersByOperation(int p_111130_1_)`
+- `void removeAllModifiers()`
+- `void removeModifier(AttributeModifier p_111124_1_)`
+- `void setBaseValue(double p_111128_1_)`

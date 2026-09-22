@@ -1,13 +1,21 @@
 # FMLHandshakeMessage.ServerHello
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage → net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage.ServerHello
+
+## Class signature
+
+```java
+public static class FMLHandshakeMessage.ServerHello extends FMLHandshakeMessage
+```
+
 ## Constructors
 
-- `public ServerHello()`
-- `public ServerHello(int overrideDim)`
+- `ServerHello()`
+- `ServerHello(int overrideDim)`
 
 ## Methods
 
-- `public void toBytes(io.netty.buffer.ByteBuf buffer)`
-- `public void fromBytes(io.netty.buffer.ByteBuf buffer)`
-- `public byte protocolVersion()`
-- `public int overrideDim()`
+- `void fromBytes(io.netty.buffer.ByteBuf buffer)`
+- `int overrideDim()`
+- `byte protocolVersion()`
+- `void toBytes(io.netty.buffer.ByteBuf buffer)`

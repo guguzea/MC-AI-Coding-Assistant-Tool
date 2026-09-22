@@ -1,5 +1,7 @@
 # FMLOutboundHandler
 
+**Inheritance:** java.lang.Object → ChannelOutboundHandlerAdapter → net.minecraftforge.fml.common.network.FMLOutboundHandler
+
 ## Class signature
 
 ```java
@@ -8,8 +10,13 @@ public class FMLOutboundHandler extends ChannelOutboundHandlerAdapter
 
 ## Constructors
 
-- `public FMLOutboundHandler()`
+- `FMLOutboundHandler()`
 
 ## Methods
 
-- `public void write(ChannelHandlerContext ctx, java.lang.Object msg, ChannelPromise promise) throws java.lang.Exception`
+- `void write(ChannelHandlerContext ctx, java.lang.Object msg, ChannelPromise promise)`
+
+## Fields
+
+- `static<any> FML_MESSAGETARGET`
+- `static<any> FML_MESSAGETARGETARGS`

@@ -1,12 +1,16 @@
 # JsonUtils.ImmutableMapTypeAdapter
 
+**Inheritance:** java.lang.Object → java.lang.Enum<JsonUtils.ImmutableMapTypeAdapter> → net.minecraftforge.common.util.JsonUtils.ImmutableMapTypeAdapter
+
+## Class signature
+
+```java
+public static enum JsonUtils.ImmutableMapTypeAdapter extends java.lang.Enum<JsonUtils.ImmutableMapTypeAdapter> implements com.google.gson.JsonDeserializer<com.google.common.collect.ImmutableMap<java.lang.String, ?>>, com.google.gson.JsonSerializer<com.google.common.collect.ImmutableMap<java.lang.String, ?>>
+```
+
 ## Methods
 
-- `public static JsonUtils.ImmutableMapTypeAdapter [] values()`
-- `public static JsonUtils.ImmutableMapTypeAdapter valueOf(java.lang.String name)`
-- `public com.google.common.collect.ImmutableMap<java.lang.String,?> deserialize(com.google.gson.JsonElement json, java.lang.reflect.Type type, com.google.gson.JsonDeserializationContext context) throws com.google.gson.JsonParseException`
-- `public com.google.gson.JsonElement serialize(com.google.common.collect.ImmutableMap<java.lang.String,?> src, java.lang.reflect.Type type, com.google.gson.JsonSerializationContext context)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `com.google.common.collect.ImmutableMap<java.lang.String, ?> deserialize(com.google.gson.JsonElement json, java.lang.reflect.Type type, com.google.gson.JsonDeserializationContext context)`
+- `com.google.gson.JsonElement serialize(com.google.common.collect.ImmutableMap<java.lang.String, ?> src, java.lang.reflect.Type type, com.google.gson.JsonSerializationContext context)`
+- `static JsonUtils.ImmutableMapTypeAdapter valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static JsonUtils.ImmutableMapTypeAdapter [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

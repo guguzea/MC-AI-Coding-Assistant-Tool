@@ -1,31 +1,35 @@
 ---
 title: "SPacketRespawn"
-description: "public class SPacketRespawn extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketRespawn extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/network/play/server/SPacketRespawn.html"
 sourceType: javadoc
 ---
 
 # SPacketRespawn
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketRespawn
+
 ## Class signature
 
 ```java
-public class SPacketRespawn extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketRespawn extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketRespawn()`
-- `public SPacketRespawn(int dimensionIdIn, EnumDifficulty difficultyIn, WorldType worldTypeIn, GameType gameModeIn)`
+- `SPacketRespawn()`
+- `SPacketRespawn(int dimensionIdIn, EnumDifficulty difficultyIn, WorldType worldTypeIn, GameType gameModeIn)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public int getDimensionID()`
-- `public EnumDifficulty getDifficulty()`
-- `public GameType getGameType()`
-- `public WorldType getWorldType()`
+- `EnumDifficulty getDifficulty()`
+- `int getDimensionID()`
+- `GameType getGameType()`
+- `WorldType getWorldType()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

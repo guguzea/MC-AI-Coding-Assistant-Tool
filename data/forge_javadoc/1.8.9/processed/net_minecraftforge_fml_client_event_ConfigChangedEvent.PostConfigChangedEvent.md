@@ -1,9 +1,13 @@
 # ConfigChangedEvent.PostConfigChangedEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.client.event.ConfigChangedEvent → net.minecraftforge.fml.client.event.ConfigChangedEvent.PostConfigChangedEvent
 
-- `public PostConfigChangedEvent(java.lang.String modID, java.lang.String configID, boolean isWorldRunning, boolean requiresMcRestart)`
+## Class signature
 
-## Description
+```java
+public static class ConfigChangedEvent.PostConfigChangedEvent extends ConfigChangedEvent
+```
 
-This event is provided for mods to consume if they want to be able to check if other mods' configs have been changed. This event only fires if the OnConfigChangedEvent result is not DENY.
+## Fields
+
+- `PostConfigChangedEvent`

@@ -1,18 +1,20 @@
 # TileEntityComparator
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityComparator
+
 ## Class signature
 
 ```java
 public class TileEntityComparator extends TileEntity
 ```
 
-## Constructors
-
-- `public TileEntityComparator()`
-
 ## Methods
 
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public int getOutputSignal()`
-- `public void setOutputSignal(int outputSignalIn)`
+- `int getOutputSignal()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setOutputSignal(int outputSignalIn)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `TileEntityComparator`

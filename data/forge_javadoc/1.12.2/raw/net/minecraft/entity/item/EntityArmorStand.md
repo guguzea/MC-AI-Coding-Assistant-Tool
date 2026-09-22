@@ -3,11 +3,15 @@ title: "EntityArmorStand"
 description: "public class EntityArmorStand extends EntityLivingBase"
 package: "net/minecraft/entity/item"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/item/EntityArmorStand.html"
 sourceType: javadoc
 ---
 
 # EntityArmorStand
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.item.EntityArmorStand
 
 ## Class signature
 
@@ -17,65 +21,76 @@ public class EntityArmorStand extends EntityLivingBase
 
 ## Constructors
 
-- `public EntityArmorStand( World worldIn)`
-- `public EntityArmorStand( World worldIn, double posX, double posY, double posZ)`
+- `EntityArmorStand(World worldIn)`
+- `EntityArmorStand(World worldIn, double posX, double posY, double posZ)`
 
 ## Methods
 
-- `protected final void setSize(float width, float height)`
-- `public boolean isServerWorld()`
-- `protected void entityInit()`
-- `public java.lang.Iterable< ItemStack > getHeldEquipment()`
-- `public java.lang.Iterable< ItemStack > getArmorInventoryList()`
-- `public ItemStack getItemStackFromSlot( EntityEquipmentSlot slotIn)`
-- `public void setItemStackToSlot( EntityEquipmentSlot slotIn, ItemStack stack)`
-- `public boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
-- `public static void registerFixesArmorStand( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean canBePushed()`
-- `protected void collideWithEntity( Entity entityIn)`
+- `EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand)`
+- `boolean attackable()`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeCollidedWith()`
+- `boolean canBeHitWithPotion()`
+- `boolean canBePushed()`
+- `protected void collideWithEntity(Entity entityIn)`
 - `protected void collideWithNearbyEntities()`
-- `public EnumActionResult applyPlayerInteraction( EntityPlayer player, Vec3d vec, EnumHand hand)`
-- `protected EntityEquipmentSlot getClickedSlot( Vec3d p_190772_1_)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public void handleStatusUpdate(byte id)`
-- `public boolean isInRangeToRenderDist(double distance)`
-- `protected float updateDistance(float p_110146_1_, float p_110146_2_)`
-- `public float getEyeHeight()`
-- `public double getYOffset()`
-- `public void travel(float strafe, float vertical, float forward)`
-- `public void setRenderYawOffset(float offset)`
-- `public void setRotationYawHead(float rotation)`
-- `public void onUpdate()`
-- `protected void updatePotionMetadata()`
-- `public void setInvisible(boolean invisible)`
-- `public boolean isChild()`
-- `public void onKillCommand()`
-- `public boolean isImmuneToExplosions()`
-- `public EnumPushReaction getPushReaction()`
-- `public boolean isSmall()`
-- `public boolean getShowArms()`
-- `public boolean hasNoBasePlate()`
-- `public boolean hasMarker()`
-- `public void setHeadRotation( Rotations vec)`
-- `public void setBodyRotation( Rotations vec)`
-- `public void setLeftArmRotation( Rotations vec)`
-- `public void setRightArmRotation( Rotations vec)`
-- `public void setLeftLegRotation( Rotations vec)`
-- `public void setRightLegRotation( Rotations vec)`
-- `public Rotations getHeadRotation()`
-- `public Rotations getBodyRotation()`
-- `public Rotations getLeftArmRotation()`
-- `public Rotations getRightArmRotation()`
-- `public Rotations getLeftLegRotation()`
-- `public Rotations getRightLegRotation()`
-- `public boolean canBeCollidedWith()`
-- `public EnumHandSide getPrimaryHand()`
-- `protected SoundEvent getFallSound(int heightIn)`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
+- `protected void entityInit()`
+- `java.lang.Iterable<ItemStack> getArmorInventoryList()`
+- `Rotations getBodyRotation()`
+- `protected EntityEquipmentSlot getClickedSlot(Vec3d p_190772_1_)`
 - `protected SoundEvent getDeathSound()`
-- `public void onStruckByLightning( EntityLightningBolt lightningBolt)`
-- `public boolean canBeHitWithPotion()`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public boolean attackable()`
+- `float getEyeHeight()`
+- `protected SoundEvent getFallSound(int heightIn)`
+- `Rotations getHeadRotation()`
+- `java.lang.Iterable<ItemStack> getHeldEquipment()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
+- `ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)`
+- `Rotations getLeftArmRotation()`
+- `Rotations getLeftLegRotation()`
+- `EnumHandSide getPrimaryHand()`
+- `EnumPushReaction getPushReaction()`
+- `Rotations getRightArmRotation()`
+- `Rotations getRightLegRotation()`
+- `boolean getShowArms()`
+- `double getYOffset()`
+- `void handleStatusUpdate(byte id)`
+- `boolean hasMarker()`
+- `boolean hasNoBasePlate()`
+- `boolean isChild()`
+- `boolean isImmuneToExplosions()`
+- `boolean isInRangeToRenderDist(double distance)`
+- `boolean isServerWorld()`
+- `boolean isSmall()`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onKillCommand()`
+- `void onStruckByLightning(EntityLightningBolt lightningBolt)`
+- `void onUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesArmorStand(DataFixer fixer)`
+- `boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
+- `void setBodyRotation(Rotations vec)`
+- `void setHeadRotation(Rotations vec)`
+- `void setInvisible(boolean invisible)`
+- `void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)`
+- `void setLeftArmRotation(Rotations vec)`
+- `void setLeftLegRotation(Rotations vec)`
+- `void setRenderYawOffset(float offset)`
+- `void setRightArmRotation(Rotations vec)`
+- `void setRightLegRotation(Rotations vec)`
+- `void setRotationYawHead(float rotation)`
+- `protected void setSize(float width, float height)`
+- `void travel(float strafe, float vertical, float forward)`
+- `protected float updateDistance(float p_110146_1_, float p_110146_2_)`
+- `protected void updatePotionMetadata()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `static DataParameter<Rotations> BODY_ROTATION`
+- `static DataParameter<Rotations> HEAD_ROTATION`
+- `static DataParameter<Rotations> LEFT_ARM_ROTATION`
+- `static DataParameter<Rotations> LEFT_LEG_ROTATION`
+- `long punchCooldown`
+- `static DataParameter<Rotations> RIGHT_ARM_ROTATION`
+- `static DataParameter<Rotations> RIGHT_LEG_ROTATION`
+- `static DataParameter<java.lang.Byte> STATUS`

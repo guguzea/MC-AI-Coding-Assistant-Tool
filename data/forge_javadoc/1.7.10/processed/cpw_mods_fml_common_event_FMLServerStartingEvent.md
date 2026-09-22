@@ -1,5 +1,7 @@
 # FMLServerStartingEvent
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.event.FMLEvent → cpw.mods.fml.common.event.FMLStateEvent → cpw.mods.fml.common.event.FMLServerStartingEvent
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class FMLServerStartingEvent extends FMLStateEvent
 
 ## Constructors
 
-- `public FMLServerStartingEvent(java.lang.Object... data)`
+- `FMLServerStartingEvent(java.lang.Object... data)`
 
 ## Methods
 
-- `public LoaderState.ModState getModState()`
-- `public MinecraftServer getServer()`
-- `public void registerServerCommand( ICommand command)`
+- `LoaderState.ModState getModState()`
+- `MinecraftServer getServer()`
+- `void registerServerCommand(ICommand command)`

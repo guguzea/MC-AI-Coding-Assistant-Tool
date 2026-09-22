@@ -3,11 +3,15 @@ title: "ModelQuadruped"
 description: "public class ModelQuadruped extends ModelBase"
 package: "net/minecraft/client/model"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/model/ModelQuadruped.html"
 sourceType: javadoc
 ---
 
 # ModelQuadruped
+
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelQuadruped
 
 ## Class signature
 
@@ -17,9 +21,20 @@ public class ModelQuadruped extends ModelBase
 
 ## Constructors
 
-- `public ModelQuadruped(int height, float scale)`
+- `ModelQuadruped(int height, float scale)`
 
 ## Methods
 
-- `public void render( Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
-- `public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
+- `void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
+
+## Fields
+
+- `ModelRenderer body`
+- `protected float childYOffset`
+- `protected float childZOffset`
+- `ModelRenderer head`
+- `ModelRenderer leg1`
+- `ModelRenderer leg2`
+- `ModelRenderer leg3`
+- `ModelRenderer leg4`

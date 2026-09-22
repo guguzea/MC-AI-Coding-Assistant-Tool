@@ -1,5 +1,7 @@
 # MinecartInteractEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.minecart.MinecartEvent → net.minecraftforge.event.entity.minecart.MinecartInteractEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class MinecartInteractEvent extends MinecartEvent
 
 ## Constructors
 
-- `public MinecartInteractEvent( EntityMinecart minecart, EntityPlayer player)`
+- `MinecartInteractEvent(EntityMinecart minecart, EntityPlayer player)`
 
-## Description
+## Fields
 
-MinecartInteractEvent is fired when a player interacts with a minecart. This event is fired whenever a player interacts with a minecart in EntityMinecartContainer#interactFirst(EntityPlayer), EntityMi
+- `EntityPlayer player`

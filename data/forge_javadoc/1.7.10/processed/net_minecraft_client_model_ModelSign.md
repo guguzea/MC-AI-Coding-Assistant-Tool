@@ -1,5 +1,7 @@
 # ModelSign
 
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelSign
+
 ## Class signature
 
 ```java
@@ -8,8 +10,13 @@ public class ModelSign extends ModelBase
 
 ## Constructors
 
-- `public ModelSign()`
+- `ModelSign()`
 
 ## Methods
 
-- `public void renderSign()`
+- `void renderSign()`
+
+## Fields
+
+- `ModelRenderer signBoard`
+- `ModelRenderer signStick`

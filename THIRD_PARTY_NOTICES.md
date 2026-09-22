@@ -32,6 +32,43 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
 - Typical local paths: `data/forge_*/forge-docs/`
 - License: follow upstream Forge / documentation terms
 
+### Legacy Forge Javadoc（`data/forge_javadoc/<mcVersion>/`，1.7.10–1.12.2）— **第三方镜像，非官方**
+
+- Actual host: **https://skmedix.github.io/ForgeJavaDocs/** （社区维护的 Javadoc 存档镜像，非 MinecraftForge 官方发布物）
+- Per-page provenance: 每页 frontmatter 带 `source:`（含完整构建号，如 `…/forge/1.12.2-14.23.5.2859/…`）、`forgeBuild:` 与生产者标记 `fetchedWith:`
+- Fetcher: `mcp-server/scripts/fetch-forge-javadoc.js`（构建号钉在该文件的 `JAVADOC_VERSIONS` 表）
+- 含义：类名与方法签名以 Mojang/Forge 游戏内容为事实来源，但**页面排版与 javadoc 注释出自该镜像**；需要官方一手 Javadoc 时请回到 `docs.minecraftforge.net`，本仓库只提供离线检索。
+- License: follow upstream Forge terms for the API content; mirror page chrome follows the mirror's own publication
+
+## Minecraft Bedrock creator documentation（`data/bedrock_stable/`）
+
+- Source: **Microsoft Learn — Minecraft docs**（`https://learn.microsoft.com/en-us/minecraft/creator/`），由 `mcp-server/scripts/fetch-bedrock-docs.js` 按该站 `toc.json` 页清单抓取
+- Per-page provenance: 每页头部三行引用头（来源 URL / 抓取时间 / 滞后警告）+ `data/bedrock_stable/bedrock-docs/stable/fingerprints.json`（上游 `gitcommit` 40 位 sha 与 `updated_at`）+ `bedrock-docs-status.json`（`localRevision` / `remoteRevision` / `stale` 三态）
+- License / terms: Microsoft documentation license（见 https://learn.microsoft.com/en-us/legal/terminology 与页面页脚条款）；本仓库只存文本摘录用于离线开发辅助
+- Trademark: Minecraft / Bedrock 均为 Mojang Synergies AB 商标，本项目与 Microsoft / Mojang 无关联
+
+## `@minecraft/server` TypeScript 声明摘录（`data/bedrock_stable/bedrock-scriptapi/stable/processed/scriptapi/`）
+
+- Source: **npm 包 `@minecraft/server` 的 `index.d.ts`**（版本取自 `bedrock-docs-status.scriptApiStable`，本轮为 2.9.0），由 `mcp-server/scripts/fetch-bedrock-script-api.mjs` 解析为「一声明一页」
+- Tree: 这一族自 2026-09-21 起**独立成第二棵基岩语料树** `bedrock-scriptapi/`，不再混在 Learn 文档树 `bedrock-docs/` 的 `processed/scriptapi/` 下 —— 两种体裁（教程页 vs 逐声明页）正文厚度差一个数量级，混树时厚度地板只能签到两者交集，等于没有地板；`search_bedrock_docs` / `get_bedrock_doc_*` 同时读两棵树并按 id 去重（两树 id 前缀不同，实测零重叠）
+- Retrieval: unpkg → jsdelivr → registry tarball（`scripts/_lib/fetch-with-ua.mjs`，curl 优先）；`sha256` / `integrity` / `unpackedSize` 记在 `scriptapi-typed.json` 与 `bedrock-docs-status.json`
+- **源文件原文不入库**：`index.d.ts` 全文只落被 gitignore 的 `mcp-server/scripts/_temp/`；仓库内产物为逐声明摘录 + 出处头（`find data -name '*.d.ts'` 实测 0 命中）
+- Copyright: 源文件头为 **Microsoft Corporation** 版权声明；每个产物页头部保留该声明片段并标注「出处：npm @minecraft/server@<ver> 的 index.d.ts（TypeScript 声明解析，不是 Learn HTML 转储）」
+- License: follow the package's published license（以该 npm 版本自带声明为准）
+
+## Quilt 开发者文档与规范（`data/quilt_*/`）
+
+- Source: **https://github.com/QuiltMC/developer-wiki**（取 `wiki/<路径>/en.md` 的 markdown 本体）、`QuiltMC/quilt-standard-libraries` 各分支 README、`QuiltMC/rfcs` 的 `specification/0002-quilt.mod.json.md`
+- Fetcher: `mcp-server/scripts/fetch-quilt-docs.js`（经 `raw.githubusercontent.com`）
+- 说明：正文源已从 `wiki.quiltmc.org` 的 HTML 换成上游仓库 markdown —— 该站是 SvelteKit 壳，服务端 HTML 只有数百字符，旧抓取器落入 `body` 兜底后会把整棵导航菜单灌进语料
+- License: follow QuiltMC terms（各仓库自述 license；QSL 各模块另按分支 README）
+
+## LiteLoader wiki（`data/liteloader_*/`）
+
+- Source: **https://www.liteloader.com/explore/docs/**（MediaWiki，正文经 `_export/raw` 取 wikitext）
+- Fetcher: `mcp-server/scripts/fetch-liteloader-wiki.js`
+- License: follow LiteLoader project terms（该 wiki 的页面授权以其自述为准）
+
 ## Fabric documentation and Wiki extracts
 
 - Fabric Docs: https://github.com/FabricMC/fabric-docs

@@ -3,11 +3,15 @@ title: "RandomChanceWithLooting"
 description: "public class RandomChanceWithLooting extends java.lang.Object implements LootCondition"
 package: "net/minecraft/world/storage/loot/conditions"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/storage/loot/conditions/RandomChanceWithLooting.html"
 sourceType: javadoc
 ---
 
 # RandomChanceWithLooting
+
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.conditions.RandomChanceWithLooting
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class RandomChanceWithLooting extends java.lang.Object implements LootCon
 
 ## Constructors
 
-- `public RandomChanceWithLooting(float chanceIn, float lootingMultiplierIn)`
+- `RandomChanceWithLooting(float chanceIn, float lootingMultiplierIn)`
 
 ## Methods
 
-- `public boolean testCondition(java.util.Random rand, LootContext context)`
+- `boolean testCondition(java.util.Random rand, LootContext context)`

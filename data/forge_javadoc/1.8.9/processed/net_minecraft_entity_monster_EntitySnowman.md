@@ -1,24 +1,22 @@
 # EntitySnowman
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityGolem → net.minecraft.entity.monster.EntitySnowman
+
 ## Class signature
 
 ```java
 public class EntitySnowman extends EntityGolem implements IRangedAttackMob
 ```
 
-## Constructors
-
-- `public EntitySnowman( World worldIn)`
-
 ## Methods
 
 - `protected void applyEntityAttributes()`
-- `public void onLivingUpdate()`
+- `void attackEntityWithRangedAttack(EntityLivingBase p_82196_1_, float p_82196_2_)` — Attack the specified entity using a ranged attack.
+- `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)` — Drop 0-2 items of this living's type
 - `protected Item getDropItem()`
-- `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)`
-- `public void attackEntityWithRangedAttack( EntityLivingBase p_82196_1_, float p_82196_2_)`
-- `public float getEyeHeight()`
+- `float getEyeHeight()`
+- `void onLivingUpdate()` — Called frequently so the entity can update its state every tick as required.
 
-## Description
+## Fields
 
-Attack the specified entity using a ranged attack.
+- `EntitySnowman`

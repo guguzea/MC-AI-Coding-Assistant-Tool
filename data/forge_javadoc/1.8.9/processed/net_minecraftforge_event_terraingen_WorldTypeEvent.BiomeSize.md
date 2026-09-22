@@ -1,9 +1,18 @@
 # WorldTypeEvent.BiomeSize
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.WorldTypeEvent → net.minecraftforge.event.terraingen.WorldTypeEvent.BiomeSize
+
+## Class signature
+
+```java
+public static class WorldTypeEvent.BiomeSize extends WorldTypeEvent
+```
+
 ## Constructors
 
-- `public BiomeSize( WorldType worldType, int original)`
+- `BiomeSize(WorldType worldType, int original)`
 
-## Description
+## Fields
 
-BiomeSize is fired when vanilla Minecraft attempts to generate biomes. This event is fired during biome generation in GenLayer#initializeAllBiomeGenerators(long, WorldType). originalSize the original
+- `int newSize`
+- `int originalSize`

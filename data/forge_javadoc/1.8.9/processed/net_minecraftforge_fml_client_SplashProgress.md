@@ -1,5 +1,7 @@
 # SplashProgress
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.SplashProgress
+
 ## Class signature
 
 ```java
@@ -8,19 +10,15 @@ public class SplashProgress extends java.lang.Object
 
 ## Constructors
 
-- `public SplashProgress()`
+- `SplashProgress()`
 
 ## Methods
 
-- `public static void start()`
-- `public static int getMaxTextureSize()`
-- `@Deprecated public static void pause()`
-- `@Deprecated public static void resume()`
-- `public static void finish()`
-- `public static void drawVanillaScreen( TextureManager renderEngine) throws LWJGLException`
-- `public static void clearVanillaResources( TextureManager renderEngine, ResourceLocation mojangLogo)`
-- `public static void checkGLError(java.lang.String where)`
-
-## Description
-
-Not a fully fleshed out API, may change in future MC versions. However feel free to use and suggest additions.
+- `static void checkGLError(java.lang.String where)`
+- `static void clearVanillaResources(TextureManager renderEngine, ResourceLocation mojangLogo)`
+- `static void drawVanillaScreen(TextureManager renderEngine)`
+- `static void finish()`
+- `static int getMaxTextureSize()`
+- `@Deprecated static void pause()` — Deprecated. not a stable API, will break, don't use this yet
+- `@Deprecated static void resume()` — Deprecated. not a stable API, will break, don't use this yet
+- `static void start()`

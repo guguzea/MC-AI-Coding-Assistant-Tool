@@ -1,5 +1,7 @@
 # Variant
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.Variant
+
 ## Class signature
 
 ```java
@@ -8,20 +10,16 @@ public class Variant extends java.lang.Object implements ISmartVariant
 
 ## Constructors
 
-- `public Variant( ResourceLocation modelLocationIn, ModelRotation rotationIn, boolean uvLockIn, int weightIn)`
+- `Variant(ResourceLocation modelLocationIn, ModelRotation rotationIn, boolean uvLockIn, int weightIn)`
 
 ## Methods
 
-- `public ResourceLocation getModelLocation()`
-- `@Deprecated public ModelRotation getRotation()`
-- `public IModelState getState()`
-- `public boolean isUvLock()`
-- `public int getWeight()`
-- `public java.lang.String toString()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public IModel process( IModel base)`
-
-## Description
-
-Deprecated.
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `ResourceLocation getModelLocation()`
+- `@Deprecated ModelRotation getRotation()`
+- `IModelState getState()`
+- `int getWeight()`
+- `int hashCode()`
+- `boolean isUvLock()`
+- `IModel process(IModel base)`
+- `java.lang.String toString()`

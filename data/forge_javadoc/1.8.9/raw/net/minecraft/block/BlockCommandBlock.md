@@ -1,13 +1,17 @@
 ---
 title: "BlockCommandBlock"
-description: "Returns a new instance of a block's tile entity class."
+description: "public class BlockCommandBlock extends BlockContainer"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockCommandBlock.html"
 sourceType: javadoc
 ---
 
 # BlockCommandBlock
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockContainer → net.minecraft.block.BlockCommandBlock
 
 ## Class signature
 
@@ -17,25 +21,25 @@ public class BlockCommandBlock extends BlockContainer
 
 ## Constructors
 
-- `public BlockCommandBlock()`
+- `BlockCommandBlock()`
 
 ## Methods
 
-- `public TileEntity createNewTileEntity( World worldIn, int meta)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public int tickRate( World worldIn)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public boolean hasComparatorInputOverride()`
-- `public int getComparatorInputOverride( World worldIn, BlockPos pos)`
-- `public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)`
-- `public int quantityDropped(java.util.Random random)`
-- `public int getRenderType()`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockState createBlockState()`
-- `public IBlockState onBlockPlaced( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `TileEntity createNewTileEntity(World worldIn, int meta)` — Returns a new instance of a block's tile entity class.
+- `int getComparatorInputOverride(World worldIn, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `int getRenderType()` — The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `boolean hasComparatorInputOverride()`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)` — Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the IBlockstate
+- `void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)` — Called by ItemBlocks after a block is set in the world, to allow post-place logic
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `int quantityDropped(java.util.Random random)` — Returns the quantity of items to drop on block destruction.
+- `int tickRate(World worldIn)` — How many world ticks before ticking
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Returns a new instance of a block's tile entity class.
+- `static PropertyBool TRIGGERED`

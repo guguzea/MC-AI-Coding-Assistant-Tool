@@ -1,13 +1,17 @@
 # BlockEvent.MultiPlaceEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent → net.minecraftforge.event.world.BlockEvent.PlaceEvent → net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent
+
+## Class signature
+
+```java
+public static class BlockEvent.MultiPlaceEvent extends BlockEvent.PlaceEvent
+```
+
 ## Constructors
 
-- `public MultiPlaceEvent(java.util.List< BlockSnapshot > blockSnapshots, IBlockState placedAgainst, EntityPlayer player, EnumHand hand)`
+- `MultiPlaceEvent(java.util.List<BlockSnapshot> blockSnapshots, IBlockState placedAgainst, EntityPlayer player, EnumHand hand)`
 
 ## Methods
 
-- `public java.util.List< BlockSnapshot > getReplacedBlockSnapshots()`
-
-## Description
-
-Fired when a single block placement action of a player triggers the creation of multiple blocks(e.g. placing a bed block). The block returned by BlockEvent.state and its related methods is the block w
+- `java.util.List<BlockSnapshot> getReplacedBlockSnapshots()` — Gets a list of BlockSnapshots for all blocks which were replaced by the placement of the new blocks.

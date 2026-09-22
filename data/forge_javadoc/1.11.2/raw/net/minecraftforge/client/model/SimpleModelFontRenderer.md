@@ -3,11 +3,15 @@ title: "SimpleModelFontRenderer"
 description: "public abstract class SimpleModelFontRenderer extends FontRenderer"
 package: "net/minecraftforge/client/model"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/model/SimpleModelFontRenderer.html"
 sourceType: javadoc
 ---
 
 # SimpleModelFontRenderer
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.FontRenderer → net.minecraftforge.client.model.SimpleModelFontRenderer
 
 ## Class signature
 
@@ -15,18 +19,18 @@ sourceType: javadoc
 public abstract class SimpleModelFontRenderer extends FontRenderer
 ```
 
-## Constructors
-
-- `public SimpleModelFontRenderer( GameSettings settings, ResourceLocation font, TextureManager manager, boolean isUnicode, javax.vecmath.Matrix4f matrix, VertexFormat format)`
-
 ## Methods
 
-- `public void setSprite( TextureAtlasSprite sprite)`
-- `public void setFillBlanks(boolean fillBlanks)`
-- `protected float renderDefaultChar(int pos, boolean italic)`
-- `public void onResourceManagerReload( IResourceManager resourceManager)`
-- `protected abstract float renderUnicodeChar(char c, boolean italic)`
+- `com.google.common.collect.ImmutableList<BakedQuad> build()`
 - `protected void doDraw(float shift)`
+- `void enableAlpha()`
+- `void onResourceManagerReload(IResourceManager resourceManager)`
+- `protected float renderDefaultChar(int pos, boolean italic)`
+- `protected abstract float renderUnicodeChar(char c, boolean italic)`
 - `protected void setColor(float r, float g, float b, float a)`
-- `public void enableAlpha()`
-- `public com.google.common.collect.ImmutableList< BakedQuad > build()`
+- `void setFillBlanks(boolean fillBlanks)`
+- `void setSprite(TextureAtlasSprite sprite)`
+
+## Fields
+
+- `SimpleModelFontRenderer`

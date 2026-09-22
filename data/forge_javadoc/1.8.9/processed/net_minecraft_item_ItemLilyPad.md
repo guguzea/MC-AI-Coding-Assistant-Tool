@@ -1,20 +1,18 @@
 # ItemLilyPad
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemBlock → net.minecraft.item.ItemColored → net.minecraft.item.ItemLilyPad
+
 ## Class signature
 
 ```java
 public class ItemLilyPad extends ItemColored
 ```
 
-## Constructors
-
-- `public ItemLilyPad( Block block)`
-
 ## Methods
 
-- `public ItemStack onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)`
-- `public int getColorFromItemStack( ItemStack stack, int renderPass)`
+- `int getColorFromItemStack(ItemStack stack, int renderPass)`
+- `ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)` — Called whenever this item is equipped and the right mouse button is pressed.
 
-## Description
+## Fields
 
-Called whenever this item is equipped and the right mouse button is pressed.
+- `ItemLilyPad`

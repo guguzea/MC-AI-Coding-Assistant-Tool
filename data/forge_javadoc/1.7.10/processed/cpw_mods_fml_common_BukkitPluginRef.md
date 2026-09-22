@@ -1,5 +1,11 @@
 # BukkitPluginRef
 
-## Description
+## Class signature
 
-Declare a variable to be populated by a Bukkit Plugin proxy instance if the bukkit coremod is available. It can only be applied to field typed as BukkitProxy Generally it should be used in conjunction
+```java
+public @interface BukkitPluginRef
+```
+
+## Elements
+
+- `java.lang.String value` — A reference (possibly version specific) to a Bukkit Plugin by name, using the name@versionbound specification.

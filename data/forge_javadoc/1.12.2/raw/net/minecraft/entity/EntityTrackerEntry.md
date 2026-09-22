@@ -3,11 +3,15 @@ title: "EntityTrackerEntry"
 description: "public class EntityTrackerEntry extends java.lang.Object"
 package: "net/minecraft/entity"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/EntityTrackerEntry.html"
 sourceType: javadoc
 ---
 
 # EntityTrackerEntry
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.EntityTrackerEntry
 
 ## Class signature
 
@@ -17,21 +21,27 @@ public class EntityTrackerEntry extends java.lang.Object
 
 ## Constructors
 
-- `public EntityTrackerEntry( Entity entityIn, int rangeIn, int maxRangeIn, int updateFrequencyIn, boolean sendVelocityUpdatesIn)`
+- `EntityTrackerEntry(Entity entityIn, int rangeIn, int maxRangeIn, int updateFrequencyIn, boolean sendVelocityUpdatesIn)`
 
 ## Methods
 
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public void updatePlayerList(java.util.List< EntityPlayer > players)`
-- `public void sendPacketToTrackedPlayers( Packet <?> packetIn)`
-- `public void sendToTrackingAndSelf( Packet <?> packetIn)`
-- `public void sendDestroyEntityPacketToTrackedPlayers()`
-- `public void removeFromTrackedPlayers( EntityPlayerMP playerMP)`
-- `public void updatePlayerEntity( EntityPlayerMP playerMP)`
-- `public boolean isVisibleTo( EntityPlayerMP playerMP)`
-- `public void updatePlayerEntities(java.util.List< EntityPlayer > players)`
-- `public void removeTrackedPlayerSymmetric( EntityPlayerMP playerMP)`
-- `public Entity getTrackedEntity()`
-- `public void setMaxRange(int maxRangeIn)`
-- `public void resetPlayerVisibility()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `Entity getTrackedEntity()`
+- `int hashCode()`
+- `boolean isVisibleTo(EntityPlayerMP playerMP)`
+- `void removeFromTrackedPlayers(EntityPlayerMP playerMP)`
+- `void removeTrackedPlayerSymmetric(EntityPlayerMP playerMP)`
+- `void resetPlayerVisibility()`
+- `void sendDestroyEntityPacketToTrackedPlayers()`
+- `void sendPacketToTrackedPlayers(Packet<?> packetIn)`
+- `void sendToTrackingAndSelf(Packet<?> packetIn)`
+- `void setMaxRange(int maxRangeIn)`
+- `void updatePlayerEntities(java.util.List<EntityPlayer> players)`
+- `void updatePlayerEntity(EntityPlayerMP playerMP)`
+- `void updatePlayerList(java.util.List<EntityPlayer> players)`
+
+## Fields
+
+- `boolean playerEntitiesUpdated`
+- `java.util.Set<EntityPlayerMP> trackingPlayers`
+- `int updateCounter`

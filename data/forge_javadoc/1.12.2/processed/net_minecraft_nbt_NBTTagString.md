@@ -1,23 +1,25 @@
 # NBTTagString
 
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase → net.minecraft.nbt.NBTTagString
+
 ## Class signature
 
 ```java
 public class NBTTagString extends NBTBase
 ```
 
-## Constructors
-
-- `public NBTTagString()`
-- `public NBTTagString(java.lang.String data)`
-
 ## Methods
 
-- `public byte getId()`
-- `public java.lang.String toString()`
-- `public NBTTagString copy()`
-- `public boolean hasNoTags()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public java.lang.String getString()`
-- `public static java.lang.String quoteAndEscape(java.lang.String p_193588_0_)`
+- `NBTTagString copy()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `byte getId()`
+- `java.lang.String getString()`
+- `int hashCode()`
+- `boolean hasNoTags()`
+- `static java.lang.String quoteAndEscape(java.lang.String p_193588_0_)`
+- `java.lang.String toString()`
+
+## Fields
+
+- `NBTTagString`
+- `NBTTagString`

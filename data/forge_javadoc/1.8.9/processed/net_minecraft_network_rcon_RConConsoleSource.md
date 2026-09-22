@@ -1,5 +1,7 @@
 # RConConsoleSource
 
+**Inheritance:** java.lang.Object → net.minecraft.network.rcon.RConConsoleSource
+
 ## Class signature
 
 ```java
@@ -8,24 +10,20 @@ public class RConConsoleSource extends java.lang.Object implements ICommandSende
 
 ## Constructors
 
-- `public RConConsoleSource()`
+- `RConConsoleSource()`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public IChatComponent getDisplayName()`
-- `public void addChatMessage( IChatComponent component)`
-- `public boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)`
-- `public BlockPos getPosition()`
-- `public Vec3 getPositionVector()`
-- `public World getEntityWorld()`
-- `public Entity getCommandSenderEntity()`
-- `public boolean sendCommandFeedback()`
-- `public void setCommandStat( CommandResultStats.Type type, int amount)`
-- `public static RConConsoleSource getInstance()`
-- `public void resetLog()`
-- `public java.lang.String getLogContents()`
-
-## Description
-
-Send a chat message to the CommandSender
+- `void addChatMessage(IChatComponent component)` — Send a chat message to the CommandSender
+- `boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)` — Returns true if the CommandSender is allowed to execute the command, false if not
+- `Entity getCommandSenderEntity()` — Returns the entity associated with the command sender.
+- `IChatComponent getDisplayName()` — Get the formatted ChatComponent that will be used for the sender's username in chat
+- `World getEntityWorld()` — Get the world, if available.
+- `static RConConsoleSource getInstance()`
+- `java.lang.String getLogContents()` — Gets the contents of the RCon log
+- `java.lang.String getName()` — Get the name of this object.
+- `BlockPos getPosition()` — Get the position in the world.
+- `Vec3 getPositionVector()` — Get the position vector.
+- `void resetLog()` — Clears the RCon log
+- `boolean sendCommandFeedback()` — Returns true if the command sender should be sent feedback about executed commands
+- `void setCommandStat(CommandResultStats.Type type, int amount)`

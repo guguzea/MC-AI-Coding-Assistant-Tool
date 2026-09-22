@@ -1,5 +1,7 @@
 # Fluid
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.Fluid
+
 ## Class signature
 
 ```java
@@ -8,71 +10,84 @@ public class Fluid extends java.lang.Object
 
 ## Constructors
 
-- `public Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing, java.awt.Color color)`
-- `public Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing, ResourceLocation overlay, java.awt.Color color)`
-- `public Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing, int color)`
-- `public Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing, ResourceLocation overlay, int color)`
-- `public Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing)`
-- `public Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing, ResourceLocation overlay)`
+- `Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing)`
+- `Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing, java.awt.Color color)`
+- `Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing, int color)`
+- `Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing, ResourceLocation overlay)`
+- `Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing, ResourceLocation overlay, java.awt.Color color)`
+- `Fluid(java.lang.String fluidName, ResourceLocation still, ResourceLocation flowing, ResourceLocation overlay, int color)`
 
 ## Methods
 
-- `public Fluid setUnlocalizedName(java.lang.String unlocalizedName)`
-- `public Fluid setBlock( Block block)`
-- `public Fluid setLuminosity(int luminosity)`
-- `public Fluid setDensity(int density)`
-- `public Fluid setTemperature(int temperature)`
-- `public Fluid setViscosity(int viscosity)`
-- `public Fluid setGaseous(boolean isGaseous)`
-- `public Fluid setRarity( EnumRarity rarity)`
-- `public Fluid setFillSound( SoundEvent fillSound)`
-- `public Fluid setEmptySound( SoundEvent emptySound)`
-- `public Fluid setColor(java.awt.Color color)`
-- `public Fluid setColor(int color)`
-- `public final java.lang.String getName()`
-- `public final Block getBlock()`
-- `public final boolean canBePlacedInWorld()`
-- `public final boolean isLighterThanAir()`
-- `public boolean doesVaporize( FluidStack fluidStack)`
-- `public void vaporize( EntityPlayer player, World worldIn, BlockPos pos, FluidStack fluidStack)`
-- `public java.lang.String getLocalizedName( FluidStack stack)`
-- `public java.lang.String getUnlocalizedName( FluidStack stack)`
-- `public java.lang.String getUnlocalizedName()`
-- `public final int getLuminosity()`
-- `public final int getDensity()`
-- `public final int getTemperature()`
-- `public final int getViscosity()`
-- `public final boolean isGaseous()`
-- `public EnumRarity getRarity()`
-- `public int getColor()`
-- `public ResourceLocation getStill()`
-- `public ResourceLocation getFlowing()`
-- `public ResourceLocation getOverlay()`
-- `public SoundEvent getFillSound()`
-- `public SoundEvent getEmptySound()`
-- `public int getLuminosity( FluidStack stack)`
-- `public int getDensity( FluidStack stack)`
-- `public int getTemperature( FluidStack stack)`
-- `public int getViscosity( FluidStack stack)`
-- `public boolean isGaseous( FluidStack stack)`
-- `public EnumRarity getRarity( FluidStack stack)`
-- `public int getColor( FluidStack stack)`
-- `public ResourceLocation getStill( FluidStack stack)`
-- `public ResourceLocation getFlowing( FluidStack stack)`
-- `public SoundEvent getFillSound( FluidStack stack)`
-- `public SoundEvent getEmptySound( FluidStack stack)`
-- `public int getLuminosity( World world, BlockPos pos)`
-- `public int getDensity( World world, BlockPos pos)`
-- `public int getTemperature( World world, BlockPos pos)`
-- `public int getViscosity( World world, BlockPos pos)`
-- `public boolean isGaseous( World world, BlockPos pos)`
-- `public EnumRarity getRarity( World world, BlockPos pos)`
-- `public int getColor( World world, BlockPos pos)`
-- `public ResourceLocation getStill( World world, BlockPos pos)`
-- `public ResourceLocation getFlowing( World world, BlockPos pos)`
-- `public SoundEvent getFillSound( World world, BlockPos pos)`
-- `public SoundEvent getEmptySound( World world, BlockPos pos)`
+- `boolean canBePlacedInWorld()`
+- `boolean doesVaporize(FluidStack fluidStack)` — Determines if this fluid should vaporize in dimensions where water vaporizes when placed.
+- `Block getBlock()`
+- `int getColor()`
+- `int getColor(FluidStack stack)`
+- `int getColor(World world, BlockPos pos)`
+- `int getDensity()`
+- `int getDensity(FluidStack stack)`
+- `int getDensity(World world, BlockPos pos)`
+- `SoundEvent getEmptySound()`
+- `SoundEvent getEmptySound(FluidStack stack)`
+- `SoundEvent getEmptySound(World world, BlockPos pos)`
+- `SoundEvent getFillSound()`
+- `SoundEvent getFillSound(FluidStack stack)`
+- `SoundEvent getFillSound(World world, BlockPos pos)`
+- `ResourceLocation getFlowing()`
+- `ResourceLocation getFlowing(FluidStack stack)`
+- `ResourceLocation getFlowing(World world, BlockPos pos)`
+- `java.lang.String getLocalizedName(FluidStack stack)` — Returns the localized name of this fluid.
+- `int getLuminosity()`
+- `int getLuminosity(FluidStack stack)`
+- `int getLuminosity(World world, BlockPos pos)`
+- `java.lang.String getName()`
+- `ResourceLocation getOverlay()`
+- `EnumRarity getRarity()`
+- `EnumRarity getRarity(FluidStack stack)`
+- `EnumRarity getRarity(World world, BlockPos pos)`
+- `ResourceLocation getStill()`
+- `ResourceLocation getStill(FluidStack stack)`
+- `ResourceLocation getStill(World world, BlockPos pos)`
+- `int getTemperature()`
+- `int getTemperature(FluidStack stack)`
+- `int getTemperature(World world, BlockPos pos)`
+- `java.lang.String getUnlocalizedName()` — Returns the unlocalized name of this fluid.
+- `java.lang.String getUnlocalizedName(FluidStack stack)` — A FluidStack sensitive version of getUnlocalizedName
+- `int getViscosity()`
+- `int getViscosity(FluidStack stack)`
+- `int getViscosity(World world, BlockPos pos)`
+- `boolean isGaseous()`
+- `boolean isGaseous(FluidStack stack)`
+- `boolean isGaseous(World world, BlockPos pos)`
+- `boolean isLighterThanAir()`
+- `Fluid setBlock(Block block)`
+- `Fluid setColor(java.awt.Color color)`
+- `Fluid setColor(int color)`
+- `Fluid setDensity(int density)`
+- `Fluid setEmptySound(SoundEvent emptySound)`
+- `Fluid setFillSound(SoundEvent fillSound)`
+- `Fluid setGaseous(boolean isGaseous)`
+- `Fluid setLuminosity(int luminosity)`
+- `Fluid setRarity(EnumRarity rarity)`
+- `Fluid setTemperature(int temperature)`
+- `Fluid setUnlocalizedName(java.lang.String unlocalizedName)`
+- `Fluid setViscosity(int viscosity)`
+- `void vaporize(EntityPlayer player, World worldIn, BlockPos pos, FluidStack fluidStack)` — Called instead of placing the fluid block if WorldProvider.doesWaterVaporize() and doesVaporize(FluidStack) are true.
 
-## Description
+## Fields
 
-Minecraft Forge Fluid Implementation This class is a fluid (liquid or gas) equivalent to "Item." It describes the nature of a fluid and contains its general properties. These properties do not have in
+- `protected Block block` — If there is a Block implementation of the Fluid, the Block is linked here.
+- `static int BUCKET_VOLUME`
+- `protected int color` — Color used by universal bucket and the ModelFluid baked model.
+- `protected int density` — Density of the fluid - completely arbitrary; negative density indicates that the fluid is lighter than air.
+- `protected ResourceLocation flowing`
+- `protected java.lang.String fluidName` — The unique identification name for this fluid.
+- `protected boolean isGaseous` — This indicates if the fluid is gaseous.
+- `protected int luminosity` — The light level emitted by this fluid.
+- `protected ResourceLocation overlay`
+- `protected EnumRarity rarity` — The rarity of the fluid.
+- `protected ResourceLocation still`
+- `protected int temperature` — Temperature of the fluid - completely arbitrary; higher temperature indicates that the fluid is hotter than air.
+- `protected java.lang.String unlocalizedName` — The unlocalized name of this fluid.
+- `protected int viscosity` — Viscosity ("thickness") of the fluid - completely arbitrary; negative values are not permissible.

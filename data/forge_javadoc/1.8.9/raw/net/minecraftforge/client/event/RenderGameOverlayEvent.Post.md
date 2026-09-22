@@ -1,22 +1,28 @@
 ---
 title: "RenderGameOverlayEvent.Post"
-description: "Determine if this function is cancelable at all."
+description: "public static class RenderGameOverlayEvent.Post extends RenderGameOverlayEvent"
 package: "net/minecraftforge/client/event"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/client/event/RenderGameOverlayEvent.Post.html"
 sourceType: javadoc
 ---
 
 # RenderGameOverlayEvent.Post
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderGameOverlayEvent → net.minecraftforge.client.event.RenderGameOverlayEvent.Post
 
-- `public Post( RenderGameOverlayEvent parent, RenderGameOverlayEvent.ElementType type)`
+## Class signature
+
+```java
+public static class RenderGameOverlayEvent.Post extends RenderGameOverlayEvent
+```
 
 ## Methods
 
-- `public boolean isCancelable()`
+- `boolean isCancelable()` — Determine if this function is cancelable at all.
 
-## Description
+## Fields
 
-Determine if this function is cancelable at all.
+- `Post`

@@ -1,17 +1,19 @@
 # MaterialTransparent
 
+**Inheritance:** java.lang.Object → net.minecraft.block.material.Material → net.minecraft.block.material.MaterialTransparent
+
 ## Class signature
 
 ```java
 public class MaterialTransparent extends Material
 ```
 
-## Constructors
-
-- `public MaterialTransparent( MapColor color)`
-
 ## Methods
 
-- `public boolean isSolid()`
-- `public boolean blocksLight()`
-- `public boolean blocksMovement()`
+- `boolean blocksLight()`
+- `boolean blocksMovement()`
+- `boolean isSolid()`
+
+## Fields
+
+- `MaterialTransparent`

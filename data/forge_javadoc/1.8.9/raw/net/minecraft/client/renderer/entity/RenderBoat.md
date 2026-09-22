@@ -1,29 +1,33 @@
 ---
 title: "RenderBoat"
-description: "instance of ModelBoat for rendering"
+description: "public class RenderBoat extends Render<EntityBoat>"
 package: "net/minecraft/client/renderer/entity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/renderer/entity/RenderBoat.html"
 sourceType: javadoc
 ---
 
 # RenderBoat
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<EntityBoat> → net.minecraft.client.renderer.entity.RenderBoat
+
 ## Class signature
 
 ```java
-public class RenderBoat extends Render < EntityBoat >
+public class RenderBoat extends Render<EntityBoat>
 ```
 
 ## Constructors
 
-- `public RenderBoat( RenderManager renderManagerIn)`
+- `RenderBoat(RenderManager renderManagerIn)`
 
 ## Methods
 
-- `public void doRender( EntityBoat entity, double x, double y, double z, float entityYaw, float partialTicks)`
-- `protected ResourceLocation getEntityTexture( EntityBoat entity)`
+- `void doRender(EntityBoat entity, double x, double y, double z, float entityYaw, float partialTicks)` — Actually renders the given argument.
+- `protected ResourceLocation getEntityTexture(EntityBoat entity)` — Returns the location of an entity's texture.
 
-## Description
+## Fields
 
-instance of ModelBoat for rendering
+- `protected ModelBase modelBoat` — instance of ModelBoat for rendering

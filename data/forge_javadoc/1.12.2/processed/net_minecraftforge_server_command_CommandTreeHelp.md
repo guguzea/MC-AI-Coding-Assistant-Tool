@@ -1,5 +1,7 @@
 # CommandTreeHelp
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraftforge.server.command.CommandTreeBase → net.minecraftforge.server.command.CommandTreeHelp
+
 ## Class signature
 
 ```java
@@ -8,15 +10,11 @@ public class CommandTreeHelp extends CommandTreeBase
 
 ## Constructors
 
-- `public CommandTreeHelp( CommandTreeBase parent)`
+- `CommandTreeHelp(CommandTreeBase parent)`
 
 ## Methods
 
-- `public int getRequiredPermissionLevel()`
-- `public java.lang.String getName()`
-- `public java.lang.String getUsage( ICommandSender sender)`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
-
-## Description
-
-Add help for parent and all its children. Must be added to parent after all other commands.
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.lang.String getName()`
+- `int getRequiredPermissionLevel()`
+- `java.lang.String getUsage(ICommandSender sender)`

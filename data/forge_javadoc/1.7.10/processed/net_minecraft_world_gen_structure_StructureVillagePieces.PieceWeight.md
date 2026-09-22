@@ -1,10 +1,25 @@
 # StructureVillagePieces.PieceWeight
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureVillagePieces.PieceWeight
+
+## Class signature
+
+```java
+public static class StructureVillagePieces.PieceWeight extends java.lang.Object
+```
+
 ## Constructors
 
-- `public PieceWeight(java.lang.Class p_i2098_1_, int p_i2098_2_, int p_i2098_3_)`
+- `PieceWeight(java.lang.Class p_i2098_1_, int p_i2098_2_, int p_i2098_3_)`
 
 ## Methods
 
-- `public boolean canSpawnMoreVillagePiecesOfType(int p_75085_1_)`
-- `public boolean canSpawnMoreVillagePieces()`
+- `boolean canSpawnMoreVillagePieces()`
+- `boolean canSpawnMoreVillagePiecesOfType(int p_75085_1_)`
+
+## Fields
+
+- `java.lang.Class villagePieceClass`
+- `int villagePiecesLimit`
+- `int villagePiecesSpawned`
+- `int villagePieceWeight`

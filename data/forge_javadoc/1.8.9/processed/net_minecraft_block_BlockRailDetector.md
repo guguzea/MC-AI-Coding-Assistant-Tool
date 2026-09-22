@@ -1,5 +1,7 @@
 # BlockRailDetector
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockRailBase → net.minecraft.block.BlockRailDetector
+
 ## Class signature
 
 ```java
@@ -8,26 +10,27 @@ public class BlockRailDetector extends BlockRailBase
 
 ## Constructors
 
-- `public BlockRailDetector()`
+- `BlockRailDetector()`
 
 ## Methods
 
-- `public int tickRate( World worldIn)`
-- `public boolean canProvidePower()`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
-- `public void randomTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random random)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public int getWeakPower( IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
-- `public int getStrongPower( IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public IProperty < BlockRailBase.EnumRailDirection > getShapeProperty()`
-- `public boolean hasComparatorInputOverride()`
-- `public int getComparatorInputOverride( World worldIn, BlockPos pos)`
-- `protected <T extends EntityMinecart > java.util.List<T> findMinecarts( World worldIn, BlockPos pos, java.lang.Class<T> clazz, <any>... filter)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canProvidePower()` — Can this block provide power.
 - `protected BlockState createBlockState()`
+- `protected<T extends EntityMinecart> java.util.List<T> findMinecarts(World worldIn, BlockPos pos, java.lang.Class<T> clazz, <any>... filter)`
+- `int getComparatorInputOverride(World worldIn, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IProperty<BlockRailBase.EnumRailDirection> getShapeProperty()`
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `int getStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
+- `int getWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
+- `boolean hasComparatorInputOverride()`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)` — Called When an Entity Collided with the Block
+- `void randomTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random random)` — Called randomly when setTickRandomly is set to true (used by e.g. crops to grow, etc.)
+- `int tickRate(World worldIn)` — How many world ticks before ticking
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Can this block provide power.
+- `static PropertyBool POWERED`
+- `static PropertyEnum<BlockRailBase.EnumRailDirection> SHAPE`

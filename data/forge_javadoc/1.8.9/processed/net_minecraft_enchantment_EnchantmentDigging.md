@@ -1,22 +1,20 @@
 # EnchantmentDigging
 
+**Inheritance:** java.lang.Object → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentDigging
+
 ## Class signature
 
 ```java
 public class EnchantmentDigging extends Enchantment
 ```
 
-## Constructors
-
-- `protected EnchantmentDigging(int enchID, ResourceLocation enchName, int enchWeight)`
-
 ## Methods
 
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int getMaxLevel()`
-- `public boolean canApply( ItemStack stack)`
+- `boolean canApply(ItemStack stack)` — Determines if this enchantment can be applied to a specific ItemStack.
+- `int getMaxEnchantability(int enchantmentLevel)` — Returns the maximum value of enchantability nedded on the enchantment level passed.
+- `int getMaxLevel()` — Returns the maximum level that the enchantment can have.
+- `int getMinEnchantability(int enchantmentLevel)` — Returns the minimal value of enchantability needed on the enchantment level passed.
 
-## Description
+## Fields
 
-Determines if this enchantment can be applied to a specific ItemStack.
+- `protected EnchantmentDigging`

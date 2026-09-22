@@ -3,11 +3,15 @@ title: "DefaultArtifactVersion"
 description: "public class DefaultArtifactVersion extends java.lang.Object implements ArtifactVersion"
 package: "net/minecraftforge/fml/common/versioning"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/versioning/DefaultArtifactVersion.html"
 sourceType: javadoc
 ---
 
 # DefaultArtifactVersion
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.versioning.DefaultArtifactVersion
 
 ## Class signature
 
@@ -17,18 +21,18 @@ public class DefaultArtifactVersion extends java.lang.Object implements Artifact
 
 ## Constructors
 
-- `public DefaultArtifactVersion(java.lang.String versionNumber)`
-- `public DefaultArtifactVersion(java.lang.String label, VersionRange range)`
-- `public DefaultArtifactVersion(java.lang.String label, java.lang.String version)`
-- `public DefaultArtifactVersion(java.lang.String string, boolean unbounded)`
+- `DefaultArtifactVersion(java.lang.String versionNumber)`
+- `DefaultArtifactVersion(java.lang.String string, boolean unbounded)`
+- `DefaultArtifactVersion(java.lang.String label, java.lang.String version)`
+- `DefaultArtifactVersion(java.lang.String label, VersionRange range)`
 
 ## Methods
 
-- `public boolean equals(java.lang.Object obj)`
-- `public int compareTo( ArtifactVersion o)`
-- `public java.lang.String getLabel()`
-- `public boolean containsVersion( ArtifactVersion source)`
-- `public java.lang.String getVersionString()`
-- `public java.lang.String getRangeString()`
-- `public java.lang.String toString()`
-- `public VersionRange getRange()`
+- `int compareTo(ArtifactVersion o)`
+- `boolean containsVersion(ArtifactVersion source)`
+- `boolean equals(java.lang.Object obj)`
+- `java.lang.String getLabel()`
+- `VersionRange getRange()`
+- `java.lang.String getRangeString()`
+- `java.lang.String getVersionString()`
+- `java.lang.String toString()`

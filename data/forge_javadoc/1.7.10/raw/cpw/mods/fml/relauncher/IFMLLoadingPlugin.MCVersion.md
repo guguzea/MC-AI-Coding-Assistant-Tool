@@ -1,14 +1,22 @@
 ---
 title: "IFMLLoadingPlugin.MCVersion"
-description: "Use this to target a specific minecraft version for your coremod. It will refuse to load with an error if minecraft is not this exact version."
+description: "public static @interface IFMLLoadingPlugin.MCVersion"
 package: "cpw/mods/fml/relauncher"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/relauncher/IFMLLoadingPlugin.MCVersion.html"
 sourceType: javadoc
 ---
 
 # IFMLLoadingPlugin.MCVersion
 
-## Description
+## Class signature
 
-Use this to target a specific minecraft version for your coremod. It will refuse to load with an error if minecraft is not this exact version.
+```java
+public static @interface IFMLLoadingPlugin.MCVersion
+```
+
+## Elements
+
+- `java.lang.String value`

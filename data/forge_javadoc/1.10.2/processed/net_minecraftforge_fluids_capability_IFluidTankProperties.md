@@ -8,13 +8,9 @@ public interface IFluidTankProperties
 
 ## Methods
 
-- `@Nullable FluidStack getContents()`
+- `boolean canDrain()` — Returns true if the tank can be drained at any time (even if it is currently empty).
+- `boolean canDrainFluidType(FluidStack fluidStack)` — Returns true if the tank can drain out this a specific of fluid.
+- `boolean canFill()` — Returns true if the tank can be filled at any time (even if it is currently full).
+- `boolean canFillFluidType(FluidStack fluidStack)` — Returns true if the tank can be filled with a specific type of fluid.
 - `int getCapacity()`
-- `boolean canFill()`
-- `boolean canDrain()`
-- `boolean canFillFluidType( FluidStack fluidStack)`
-- `boolean canDrainFluidType( FluidStack fluidStack)`
-
-## Description
-
-Simplified Read-only Information about the internals of an IFluidHandler . This is useful for displaying information, and as hints for interacting with it. These properties are constant and do not dep
+- `FluidStack getContents()`

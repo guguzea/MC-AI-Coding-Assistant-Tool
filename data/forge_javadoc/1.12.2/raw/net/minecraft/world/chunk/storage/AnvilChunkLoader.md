@@ -1,47 +1,51 @@
 ---
 title: "AnvilChunkLoader"
-description: "Deprecated."
+description: "public class AnvilChunkLoader extends java.lang.Object implements IChunkLoader, IThreadedFileIO"
 package: "net/minecraft/world/chunk/storage"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/chunk/storage/AnvilChunkLoader.html"
 sourceType: javadoc
 ---
 
 # AnvilChunkLoader
 
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.storage.AnvilChunkLoader
+
 ## Class signature
 
 ```java
-public class AnvilChunkLoader extends java.lang.Object implements IChunkLoader , IThreadedFileIO
+public class AnvilChunkLoader extends java.lang.Object implements IChunkLoader, IThreadedFileIO
 ```
 
 ## Constructors
 
-- `public AnvilChunkLoader(java.io.File chunkSaveLocationIn, DataFixer dataFixerIn)`
+- `AnvilChunkLoader(java.io.File chunkSaveLocationIn, DataFixer dataFixerIn)`
 
 ## Methods
 
-- `@Deprecated public boolean chunkExists( World world, int x, int z)`
-- `public Chunk loadChunk( World worldIn, int x, int z) throws java.io.IOException`
-- `public java.lang.Object[] loadChunk__Async( World worldIn, int x, int z) throws java.io.IOException`
-- `public boolean isChunkGeneratedAt(int x, int z)`
-- `protected Chunk checkedReadChunkFromNBT( World worldIn, int x, int z, NBTTagCompound compound)`
-- `protected java.lang.Object[] checkedReadChunkFromNBT__Async( World worldIn, int x, int z, NBTTagCompound compound)`
-- `public void saveChunk( World worldIn, Chunk chunkIn) throws MinecraftException , java.io.IOException`
-- `protected void addChunkToPending( ChunkPos pos, NBTTagCompound compound)`
-- `public boolean writeNextIO()`
-- `public void saveExtraChunkData( World worldIn, Chunk chunkIn) throws java.io.IOException`
-- `public void chunkTick()`
-- `public void flush()`
-- `public static void registerFixes( DataFixer fixer)`
-- `public void loadEntities( World worldIn, NBTTagCompound compound, Chunk chunk)`
-- `public static Entity readChunkEntity( NBTTagCompound compound, World worldIn, Chunk chunkIn)`
-- `public static Entity readWorldEntityPos( NBTTagCompound compound, World worldIn, double x, double y, double z, boolean attemptSpawn)`
-- `protected static Entity createEntityFromNBT( NBTTagCompound compound, World worldIn)`
-- `public static void spawnEntity( Entity entityIn, World worldIn)`
-- `public static Entity readWorldEntity( NBTTagCompound compound, World worldIn, boolean p_186051_2_)`
-- `public int getPendingSaveCount()`
+- `protected void addChunkToPending(ChunkPos pos, NBTTagCompound compound)`
+- `protected java.lang.Object[] checkedReadChunkFromNBT__Async(World worldIn, int x, int z, NBTTagCompound compound)`
+- `protected Chunk checkedReadChunkFromNBT(World worldIn, int x, int z, NBTTagCompound compound)`
+- `@Deprecated boolean chunkExists(World world, int x, int z)`
+- `void chunkTick()`
+- `protected static Entity createEntityFromNBT(NBTTagCompound compound, World worldIn)`
+- `void flush()`
+- `int getPendingSaveCount()`
+- `boolean isChunkGeneratedAt(int x, int z)`
+- `java.lang.Object[] loadChunk__Async(World worldIn, int x, int z)`
+- `Chunk loadChunk(World worldIn, int x, int z)`
+- `void loadEntities(World worldIn, NBTTagCompound compound, Chunk chunk)`
+- `static Entity readChunkEntity(NBTTagCompound compound, World worldIn, Chunk chunkIn)`
+- `static Entity readWorldEntity(NBTTagCompound compound, World worldIn, boolean p_186051_2_)`
+- `static Entity readWorldEntityPos(NBTTagCompound compound, World worldIn, double x, double y, double z, boolean attemptSpawn)`
+- `static void registerFixes(DataFixer fixer)`
+- `void saveChunk(World worldIn, Chunk chunkIn)`
+- `void saveExtraChunkData(World worldIn, Chunk chunkIn)`
+- `static void spawnEntity(Entity entityIn, World worldIn)`
+- `boolean writeNextIO()`
 
-## Description
+## Fields
 
-Deprecated.
+- `java.io.File chunkSaveLocation`

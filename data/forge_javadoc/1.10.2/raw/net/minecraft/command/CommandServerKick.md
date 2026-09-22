@@ -3,11 +3,15 @@ title: "CommandServerKick"
 description: "public class CommandServerKick extends CommandBase"
 package: "net/minecraft/command"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/command/CommandServerKick.html"
 sourceType: javadoc
 ---
 
 # CommandServerKick
+
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.CommandServerKick
 
 ## Class signature
 
@@ -17,12 +21,12 @@ public class CommandServerKick extends CommandBase
 
 ## Constructors
 
-- `public CommandServerKick()`
+- `CommandServerKick()`
 
 ## Methods
 
-- `public java.lang.String getCommandName()`
-- `public int getRequiredPermissionLevel()`
-- `public java.lang.String getCommandUsage( ICommandSender sender)`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `public java.util.List<java.lang.String> getTabCompletionOptions( MinecraftServer server, ICommandSender sender, java.lang.String[] args, @Nullable BlockPos pos)`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.lang.String getCommandName()`
+- `java.lang.String getCommandUsage(ICommandSender sender)`
+- `int getRequiredPermissionLevel()`
+- `java.util.List<java.lang.String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos pos)`

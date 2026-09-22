@@ -1,5 +1,7 @@
 # EntityHasProperty
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.conditions.EntityHasProperty
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class EntityHasProperty extends java.lang.Object implements LootCondition
 
 ## Constructors
 
-- `public EntityHasProperty( EntityProperty [] propertiesIn, LootContext.EntityTarget targetIn)`
+- `EntityHasProperty(EntityProperty [] propertiesIn, LootContext.EntityTarget targetIn)`
 
 ## Methods
 
-- `public boolean testCondition(java.util.Random rand, LootContext context)`
+- `boolean testCondition(java.util.Random rand, LootContext context)`

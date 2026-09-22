@@ -1,68 +1,96 @@
 ---
 title: "Biome"
-description: "Weighted random holder class used to hold possible flowers that can spawn in this biome when bonemeal is used on grass."
+description: "public abstract class Biome extends IForgeRegistryEntry.Impl<Biome>"
 package: "net/minecraft/world/biome"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/biome/Biome.html"
 sourceType: javadoc
 ---
 
 # Biome
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Biome> → net.minecraft.world.biome.Biome
+
 ## Class signature
 
 ```java
-public abstract class Biome extends IForgeRegistryEntry.Impl < Biome >
+public abstract class Biome extends IForgeRegistryEntry.Impl<Biome>
 ```
 
 ## Constructors
 
-- `public Biome( Biome.BiomeProperties properties)`
+- `Biome(Biome.BiomeProperties properties)`
 
 ## Methods
 
-- `public static int getIdForBiome( Biome biome)`
-- `@Nullable public static Biome getBiomeForId(int id)`
-- `@Nullable public static Biome getMutationForBiome( Biome biome)`
-- `public BiomeDecorator createBiomeDecorator()`
-- `public boolean isMutation()`
-- `public WorldGenAbstractTree genBigTreeChance(java.util.Random rand)`
-- `public WorldGenerator getRandomWorldGenForGrass(java.util.Random rand)`
-- `public BlockFlower.EnumFlowerType pickRandomFlower(java.util.Random rand, BlockPos pos)`
-- `public int getSkyColorByTemp(float currentTemperature)`
-- `public java.util.List< Biome.SpawnListEntry > getSpawnableList( EnumCreatureType creatureType)`
-- `public boolean getEnableSnow()`
-- `public boolean canRain()`
-- `public boolean isHighHumidity()`
-- `public float getSpawningChance()`
-- `public final float getFloatTemperature( BlockPos pos)`
-- `public void decorate( World worldIn, java.util.Random rand, BlockPos pos)`
-- `public void genTerrainBlocks( World worldIn, java.util.Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal)`
-- `public int getGrassColorAtPos( BlockPos pos)`
-- `public final void generateBiomeTerrain( World worldIn, java.util.Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal)`
-- `public int getFoliageColorAtPos( BlockPos pos)`
-- `public java.lang.Class<? extends Biome > getBiomeClass()`
-- `public Biome.TempCategory getTempCategory()`
-- `@Nullable public static Biome getBiome(int id)`
-- `public static Biome getBiome(int biomeId, Biome fallback)`
-- `public boolean ignorePlayerSpawnSuitability()`
-- `public final float getBaseHeight()`
-- `public final float getRainfall()`
-- `public final java.lang.String getBiomeName()`
-- `public final float getHeightVariation()`
-- `public final float getTemperature()`
-- `public final int getWaterColor()`
-- `public final boolean isSnowyBiome()`
-- `public BiomeDecorator getModdedBiomeDecorator( BiomeDecorator original)`
-- `public int getWaterColorMultiplier()`
-- `public int getModdedBiomeGrassColor(int original)`
-- `public int getModdedBiomeFoliageColor(int original)`
-- `public void addDefaultFlowers()`
-- `public void addFlower( IBlockState state, int weight)`
-- `public void plantFlower( World world, java.util.Random rand, BlockPos pos)`
-- `public static void registerBiomes()`
-- `public static void registerBiome(int id, java.lang.String name, Biome biome)`
+- `void addDefaultFlowers()` — Adds the default flowers, as of 1.7, it is 2 yellow, and 1 red.
+- `void addFlower(IBlockState state, int weight)` — Register a new plant to be planted when bonemeal is used on grass.
+- `boolean canRain()`
+- `BiomeDecorator createBiomeDecorator()`
+- `void decorate(World worldIn, java.util.Random rand, BlockPos pos)`
+- `WorldGenAbstractTree genBigTreeChance(java.util.Random rand)`
+- `void generateBiomeTerrain(World worldIn, java.util.Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal)`
+- `void genTerrainBlocks(World worldIn, java.util.Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal)`
+- `float getBaseHeight()`
+- `static Biome getBiome(int id)`
+- `static Biome getBiome(int biomeId, Biome fallback)`
+- `java.lang.Class<? extends Biome> getBiomeClass()`
+- `static Biome getBiomeForId(int id)`
+- `java.lang.String getBiomeName()`
+- `boolean getEnableSnow()`
+- `float getFloatTemperature(BlockPos pos)`
+- `int getFoliageColorAtPos(BlockPos pos)`
+- `int getGrassColorAtPos(BlockPos pos)`
+- `float getHeightVariation()`
+- `static int getIdForBiome(Biome biome)`
+- `BiomeDecorator getModdedBiomeDecorator(BiomeDecorator original)`
+- `int getModdedBiomeFoliageColor(int original)`
+- `int getModdedBiomeGrassColor(int original)`
+- `static Biome getMutationForBiome(Biome biome)`
+- `float getRainfall()`
+- `WorldGenerator getRandomWorldGenForGrass(java.util.Random rand)`
+- `int getSkyColorByTemp(float currentTemperature)`
+- `java.util.List<Biome.SpawnListEntry> getSpawnableList(EnumCreatureType creatureType)`
+- `float getSpawningChance()`
+- `Biome.TempCategory getTempCategory()`
+- `float getTemperature()`
+- `int getWaterColor()`
+- `int getWaterColorMultiplier()`
+- `boolean ignorePlayerSpawnSuitability()`
+- `boolean isHighHumidity()`
+- `boolean isMutation()`
+- `boolean isSnowyBiome()`
+- `BlockFlower.EnumFlowerType pickRandomFlower(java.util.Random rand, BlockPos pos)`
+- `void plantFlower(World world, java.util.Random rand, BlockPos pos)`
+- `static void registerBiome(int id, java.lang.String name, Biome biome)`
+- `static void registerBiomes()`
 
-## Description
+## Fields
 
-Weighted random holder class used to hold possible flowers that can spawn in this biome when bonemeal is used on grass.
+- `protected static IBlockState AIR`
+- `protected static IBlockState BEDROCK`
+- `protected static WorldGenBigTree BIG_TREE_FEATURE`
+- `protected static WorldGenDoublePlant DOUBLE_PLANT_GENERATOR`
+- `static java.util.Set<Biome> EXPLORATION_BIOMES_LIST`
+- `IBlockState fillerBlock`
+- `protected java.util.List<Biome.FlowerEntry> flowers`
+- `protected static NoiseGeneratorPerlin GRASS_COLOR_NOISE`
+- `protected static IBlockState GRAVEL`
+- `protected static IBlockState ICE`
+- `static ObjectIntIdentityMap<Biome> MUTATION_TO_BASE_ID_MAP`
+- `protected static IBlockState RED_SANDSTONE`
+- `static RegistryNamespaced<ResourceLocation, Biome> REGISTRY`
+- `protected static IBlockState SANDSTONE`
+- `protected java.util.List<Biome.SpawnListEntry> spawnableCaveCreatureList`
+- `protected java.util.List<Biome.SpawnListEntry> spawnableCreatureList`
+- `protected java.util.List<Biome.SpawnListEntry> spawnableMonsterList`
+- `protected java.util.List<Biome.SpawnListEntry> spawnableWaterCreatureList`
+- `protected static IBlockState STONE`
+- `protected static WorldGenSwamp SWAMP_FEATURE`
+- `protected static NoiseGeneratorPerlin TEMPERATURE_NOISE`
+- `BiomeDecorator theBiomeDecorator`
+- `IBlockState topBlock`
+- `protected static WorldGenTrees TREE_FEATURE`
+- `protected static IBlockState WATER`

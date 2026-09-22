@@ -1,25 +1,29 @@
 # B3DLoader.Wrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.b3d.B3DLoader.PartWrapper<B3DModel.Mesh> → net.minecraftforge.client.model.b3d.B3DLoader.Wrapper
+
+## Class signature
+
+```java
+public static class B3DLoader.Wrapper extends B3DLoader.PartWrapper<B3DModel.Mesh> implements IRetexturableModel<B3DLoader.Wrapper>, IModelCustomData<B3DLoader.Wrapper>
+```
+
 ## Constructors
 
-- `public Wrapper( ResourceLocation location, java.util.List< B3DModel.Texture > textures, B3DModel.Node < B3DModel.Mesh > mesh)`
-- `public Wrapper( ResourceLocation location, <any> textures, B3DModel.Node < B3DModel.Mesh > mesh)`
-- `public Wrapper( ResourceLocation location, <any> meshes, java.util.List< B3DModel.Texture > textures, B3DModel.Node < B3DModel.Mesh > mesh)`
-- `public Wrapper( ResourceLocation location, <any> meshes, <any> textures, B3DModel.Node < B3DModel.Mesh > mesh)`
+- `@Deprecated Wrapper(ResourceLocation location, <any> meshes, <any> textures, B3DModel.Node<B3DModel.Mesh> mesh)`
+- `@Deprecated Wrapper(ResourceLocation location, <any> textures, B3DModel.Node<B3DModel.Mesh> mesh)`
+- `@Deprecated Wrapper(ResourceLocation location, <any> meshes, java.util.List<B3DModel.Texture> textures, B3DModel.Node<B3DModel.Mesh> mesh)`
+- `@Deprecated Wrapper(ResourceLocation location, java.util.List<B3DModel.Texture> textures, B3DModel.Node<B3DModel.Mesh> mesh)`
 
 ## Methods
 
-- `public java.util.Collection< ResourceLocation > getDependencies()`
-- `public java.util.Collection< ResourceLocation > getTextures()`
-- `public IFlexibleBakedModel bake( IModelState state, VertexFormat format, <any> bakedTextureGetter)`
-- `public ResourceLocation getLocation()`
-- `public <any> getTextureMap()`
-- `public int hashCode()`
-- `public boolean equals(java.lang.Object obj)`
-- `public IModel retexture(<any> textures)`
-- `public IModel process(<any> customData)`
-- `public IModelState getDefaultState()`
-
-## Description
-
-Deprecated. Use ModelWrapper, this will be removed in 1.9
+- `@Deprecated IFlexibleBakedModel bake(IModelState state, VertexFormat format, <any> bakedTextureGetter)`
+- `@Deprecated boolean equals(java.lang.Object obj)`
+- `@Deprecated IModelState getDefaultState()`
+- `@Deprecated java.util.Collection<ResourceLocation> getDependencies()`
+- `@Deprecated ResourceLocation getLocation()`
+- `@Deprecated <any> getTextureMap()`
+- `@Deprecated java.util.Collection<ResourceLocation> getTextures()`
+- `@Deprecated int hashCode()`
+- `@Deprecated IModel process(<any> customData)`
+- `@Deprecated IModel retexture(<any> textures)`

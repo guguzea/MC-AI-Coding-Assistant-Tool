@@ -1,5 +1,7 @@
 # BlockStoneSlab
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockSlab → net.minecraft.block.BlockStoneSlab
+
 ## Class signature
 
 ```java
@@ -8,18 +10,23 @@ public abstract class BlockStoneSlab extends BlockSlab
 
 ## Constructors
 
-- `public BlockStoneSlab()`
+- `BlockStoneSlab()`
 
 ## Methods
 
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public java.lang.String getUnlocalizedName(int meta)`
-- `public IProperty <?> getVariantProperty()`
-- `public java.lang.Comparable<?> getTypeForItem( ItemStack stack)`
-- `public void getSubBlocks( CreativeTabs itemIn, NonNullList < ItemStack > items)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
-- `public int damageDropped( IBlockState state)`
-- `public MapColor getMapColor( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `int damageDropped(IBlockState state)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items)`
+- `java.lang.Comparable<?> getTypeForItem(ItemStack stack)`
+- `java.lang.String getUnlocalizedName(int meta)`
+- `IProperty<?> getVariantProperty()`
+
+## Fields
+
+- `static PropertyBool SEAMLESS`
+- `static PropertyEnum<BlockStoneSlab.EnumType> VARIANT`

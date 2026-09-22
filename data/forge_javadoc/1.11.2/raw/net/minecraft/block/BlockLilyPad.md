@@ -3,11 +3,15 @@ title: "BlockLilyPad"
 description: "public class BlockLilyPad extends BlockBush"
 package: "net/minecraft/block"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/BlockLilyPad.html"
 sourceType: javadoc
 ---
 
 # BlockLilyPad
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBush → net.minecraft.block.BlockLilyPad
 
 ## Class signature
 
@@ -17,13 +21,17 @@ public class BlockLilyPad extends BlockBush
 
 ## Constructors
 
-- `protected BlockLilyPad()`
+- `BlockLilyPad()`
 
 ## Methods
 
-- `public void addCollisionBoxToList( IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List< AxisAlignedBB > collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `protected boolean canSustainBush( IBlockState state)`
-- `public boolean canBlockStay( World worldIn, BlockPos pos, IBlockState state)`
-- `public int getMetaFromState( IBlockState state)`
+- `void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean p_185477_7_)`
+- `boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)`
+- `protected boolean canSustainBush(IBlockState state)`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)`
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
+
+## Fields
+
+- `protected static AxisAlignedBB LILY_PAD_AABB`

@@ -1,14 +1,18 @@
 # RenderTooltipEvent.Post
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderTooltipEvent → net.minecraftforge.client.event.RenderTooltipEvent.Post
 
-- `public Post( ItemStack stack, java.util.List<java.lang.String> textLines, int x, int y, FontRenderer fr, int width, int height)`
+## Class signature
+
+```java
+protected abstract static class RenderTooltipEvent.Post extends RenderTooltipEvent
+```
 
 ## Methods
 
-- `public int getWidth()`
-- `public int getHeight()`
+- `int getHeight()`
+- `int getWidth()`
 
-## Description
+## Fields
 
-Events inheriting from this class are fired at different stages during the tooltip rendering. Do not use this event directly, use one of its subclasses: RenderTooltipEvent.PostBackground RenderTooltip
+- `Post`

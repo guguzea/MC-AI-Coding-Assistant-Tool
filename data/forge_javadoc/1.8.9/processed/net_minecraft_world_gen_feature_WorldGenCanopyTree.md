@@ -1,5 +1,7 @@
 # WorldGenCanopyTree
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenAbstractTree → net.minecraft.world.gen.feature.WorldGenCanopyTree
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class WorldGenCanopyTree extends WorldGenAbstractTree
 
 ## Constructors
 
-- `public WorldGenCanopyTree(boolean p_i45461_1_)`
+- `WorldGenCanopyTree(boolean p_i45461_1_)`
 
 ## Methods
 
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`

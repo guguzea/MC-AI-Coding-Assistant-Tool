@@ -3,11 +3,15 @@ title: "ParticleFlame"
 description: "public class ParticleFlame extends Particle"
 package: "net/minecraft/client/particle"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/particle/ParticleFlame.html"
 sourceType: javadoc
 ---
 
 # ParticleFlame
+
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleFlame
 
 ## Class signature
 
@@ -15,13 +19,13 @@ sourceType: javadoc
 public class ParticleFlame extends Particle
 ```
 
-## Constructors
-
-- `protected ParticleFlame( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn)`
-
 ## Methods
 
-- `public void moveEntity(double x, double y, double z)`
-- `public void renderParticle( VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
-- `public int getBrightnessForRender(float p_189214_1_)`
-- `public void onUpdate()`
+- `int getBrightnessForRender(float p_189214_1_)`
+- `void moveEntity(double x, double y, double z)`
+- `void onUpdate()`
+- `void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+
+## Fields
+
+- `protected ParticleFlame`

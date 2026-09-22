@@ -1,15 +1,25 @@
 ---
 title: "JsonException.Entry"
-description: ""
+description: "public static class JsonException.Entry extends java.lang.Object"
 package: "net/minecraft/client/util"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/util/JsonException.Entry.html"
 sourceType: javadoc
 ---
 
 # JsonException.Entry
 
+**Inheritance:** java.lang.Object → net.minecraft.client.util.JsonException.Entry
+
+## Class signature
+
+```java
+public static class JsonException.Entry extends java.lang.Object
+```
+
 ## Methods
 
-- `public java.lang.String getJsonKeys()`
-- `public java.lang.String toString()`
+- `java.lang.String getJsonKeys()`
+- `java.lang.String toString()`

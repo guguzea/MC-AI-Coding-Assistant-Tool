@@ -1,13 +1,17 @@
 ---
 title: "EntityViewRenderEvent"
-description: "Event that hooks into EntityRenderer, allowing any feature to customize visual attributes the player sees."
+description: "public abstract class EntityViewRenderEvent extends Event"
 package: "net/minecraftforge/client/event"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/client/event/EntityViewRenderEvent.html"
 sourceType: javadoc
 ---
 
 # EntityViewRenderEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.EntityViewRenderEvent
 
 ## Class signature
 
@@ -17,15 +21,11 @@ public abstract class EntityViewRenderEvent extends Event
 
 ## Constructors
 
-- `public EntityViewRenderEvent( EntityRenderer renderer, Entity entity, IBlockState state, double renderPartialTicks)`
+- `EntityViewRenderEvent(EntityRenderer renderer, Entity entity, IBlockState state, double renderPartialTicks)`
 
 ## Methods
 
-- `public EntityRenderer getRenderer()`
-- `public Entity getEntity()`
-- `public IBlockState getState()`
-- `public double getRenderPartialTicks()`
-
-## Description
-
-Event that hooks into EntityRenderer, allowing any feature to customize visual attributes the player sees.
+- `Entity getEntity()`
+- `EntityRenderer getRenderer()`
+- `double getRenderPartialTicks()`
+- `IBlockState getState()`

@@ -1,13 +1,17 @@
 ---
 title: "ServerChatEvent"
-description: "ServerChatEvent is fired whenever a C01PacketChatMessage is processed. This event is fired via ForgeHooks#onServerChatEvent(net.minecraft.network.NetHandlerPlayServer, String, ChatComponentTranslation"
+description: "public class ServerChatEvent extends Event"
 package: "net/minecraftforge/event"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/ServerChatEvent.html"
 sourceType: javadoc
 ---
 
 # ServerChatEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.ServerChatEvent
 
 ## Class signature
 
@@ -17,13 +21,16 @@ public class ServerChatEvent extends Event
 
 ## Constructors
 
-- `public ServerChatEvent( EntityPlayerMP player, java.lang.String message, ChatComponentTranslation component)`
+- `ServerChatEvent(EntityPlayerMP player, java.lang.String message, ChatComponentTranslation component)`
 
 ## Methods
 
-- `public void setComponent( IChatComponent e)`
-- `public IChatComponent getComponent()`
+- `IChatComponent getComponent()`
+- `void setComponent(IChatComponent e)`
 
-## Description
+## Fields
 
-ServerChatEvent is fired whenever a C01PacketChatMessage is processed. This event is fired via ForgeHooks#onServerChatEvent(net.minecraft.network.NetHandlerPlayServer, String, ChatComponentTranslation
+- `ChatComponentTranslation component`
+- `java.lang.String message`
+- `EntityPlayerMP player`
+- `java.lang.String username`

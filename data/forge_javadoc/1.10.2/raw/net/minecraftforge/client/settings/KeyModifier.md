@@ -1,32 +1,36 @@
 ---
 title: "KeyModifier"
-description: "Deprecated. use isActive(IKeyConflictContext)"
+description: "public enum KeyModifier extends java.lang.Enum<KeyModifier>"
 package: "net/minecraftforge/client/settings"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/client/settings/KeyModifier.html"
 sourceType: javadoc
 ---
 
 # KeyModifier
 
+**Inheritance:** java.lang.Object → java.lang.Enum<KeyModifier> → net.minecraftforge.client.settings.KeyModifier
+
 ## Class signature
 
 ```java
-public enum KeyModifier extends java.lang.Enum< KeyModifier >
+public enum KeyModifier extends java.lang.Enum<KeyModifier>
 ```
 
 ## Methods
 
-- `public static KeyModifier [] values()`
-- `public static KeyModifier valueOf(java.lang.String name)`
-- `public static KeyModifier getActiveModifier()`
-- `public static boolean isKeyCodeModifier(int keyCode)`
-- `public static KeyModifier valueFromString(java.lang.String stringValue)`
-- `public abstract boolean matches(int keyCode)`
-- `@Deprecated public abstract boolean isActive()`
-- `public abstract boolean isActive(@Nullable IKeyConflictContext conflictContext)`
-- `public abstract java.lang.String getLocalizedComboName(int keyCode)`
+- `static KeyModifier getActiveModifier()`
+- `abstract java.lang.String getLocalizedComboName(int keyCode)`
+- `@Deprecated abstract boolean isActive()` — Deprecated. use isActive(IKeyConflictContext)
+- `abstract boolean isActive(IKeyConflictContext conflictContext)`
+- `static boolean isKeyCodeModifier(int keyCode)`
+- `abstract boolean matches(int keyCode)`
+- `static KeyModifier valueFromString(java.lang.String stringValue)`
+- `static KeyModifier valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static KeyModifier [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.
 
-## Description
+## Fields
 
-Deprecated. use isActive(IKeyConflictContext)
+- `static KeyModifier [] MODIFIER_VALUES`

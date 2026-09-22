@@ -1,21 +1,19 @@
 # MaterialLogic
 
+**Inheritance:** java.lang.Object → net.minecraft.block.material.Material → net.minecraft.block.material.MaterialLogic
+
 ## Class signature
 
 ```java
 public class MaterialLogic extends Material
 ```
 
-## Constructors
-
-- `public MaterialLogic( MapColor color)`
-
 ## Methods
 
-- `public boolean isSolid()`
-- `public boolean blocksLight()`
-- `public boolean blocksMovement()`
+- `boolean blocksLight()` — Will prevent grass from growing on dirt underneath and kill any grass below it if it returns true
+- `boolean blocksMovement()` — Returns if this material is considered solid or not
+- `boolean isSolid()` — Returns true if the block is a considered solid.
 
-## Description
+## Fields
 
-Will prevent grass from growing on dirt underneath and kill any grass below it if it returns true
+- `MaterialLogic`

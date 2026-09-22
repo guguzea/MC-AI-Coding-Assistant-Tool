@@ -1,20 +1,30 @@
 ---
 title: "GuiPageButtonList.GuiListEntry"
-description: ""
+description: "public static class GuiPageButtonList.GuiListEntry extends java.lang.Object"
 package: "net/minecraft/client/gui"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/gui/GuiPageButtonList.GuiListEntry.html"
 sourceType: javadoc
 ---
 
 # GuiPageButtonList.GuiListEntry
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.GuiPageButtonList.GuiListEntry
+
+## Class signature
+
+```java
+public static class GuiPageButtonList.GuiListEntry extends java.lang.Object
+```
+
 ## Constructors
 
-- `public GuiListEntry(int p_i45531_1_, java.lang.String p_i45531_2_, boolean p_i45531_3_)`
+- `GuiListEntry(int p_i45531_1_, java.lang.String p_i45531_2_, boolean p_i45531_3_)`
 
 ## Methods
 
-- `public int getId()`
-- `public java.lang.String getCaption()`
-- `public boolean shouldStartVisible()`
+- `java.lang.String getCaption()`
+- `int getId()`
+- `boolean shouldStartVisible()`

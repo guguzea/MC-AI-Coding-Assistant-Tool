@@ -1,13 +1,21 @@
 ---
 title: "GuiListExtended.IGuiListEntry"
-description: ""
+description: "public static interface GuiListExtended.IGuiListEntry"
 package: "net/minecraft/client/gui"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/gui/GuiListExtended.IGuiListEntry.html"
 sourceType: javadoc
 ---
 
 # GuiListExtended.IGuiListEntry
+
+## Class signature
+
+```java
+public static interface GuiListExtended.IGuiListEntry
+```
 
 ## Methods
 

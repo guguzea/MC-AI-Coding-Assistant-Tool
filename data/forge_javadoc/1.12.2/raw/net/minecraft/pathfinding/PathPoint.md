@@ -3,11 +3,15 @@ title: "PathPoint"
 description: "public class PathPoint extends java.lang.Object"
 package: "net/minecraft/pathfinding"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/pathfinding/PathPoint.html"
 sourceType: javadoc
 ---
 
 # PathPoint
+
+**Inheritance:** java.lang.Object → net.minecraft.pathfinding.PathPoint
 
 ## Class signature
 
@@ -17,17 +21,33 @@ public class PathPoint extends java.lang.Object
 
 ## Constructors
 
-- `public PathPoint(int x, int y, int z)`
+- `PathPoint(int x, int y, int z)`
 
 ## Methods
 
-- `public PathPoint cloneMove(int x, int y, int z)`
-- `public static int makeHash(int x, int y, int z)`
-- `public float distanceTo( PathPoint pathpointIn)`
-- `public float distanceToSquared( PathPoint pathpointIn)`
-- `public float distanceManhattan( PathPoint p_186281_1_)`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public boolean isAssigned()`
-- `public java.lang.String toString()`
-- `public static PathPoint createFromBuffer( PacketBuffer buf)`
+- `PathPoint cloneMove(int x, int y, int z)`
+- `static PathPoint createFromBuffer(PacketBuffer buf)`
+- `float distanceManhattan(PathPoint p_186281_1_)`
+- `float distanceTo(PathPoint pathpointIn)`
+- `float distanceToSquared(PathPoint pathpointIn)`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `int hashCode()`
+- `boolean isAssigned()`
+- `static int makeHash(int x, int y, int z)`
+- `java.lang.String toString()`
+
+## Fields
+
+- `float cost`
+- `float costMalus`
+- `float distanceFromOrigin`
+- `float distanceToNext`
+- `float distanceToTarget`
+- `int index`
+- `PathNodeType nodeType`
+- `PathPoint previous`
+- `float totalPathDistance`
+- `boolean visited`
+- `int x`
+- `int y`
+- `int z`

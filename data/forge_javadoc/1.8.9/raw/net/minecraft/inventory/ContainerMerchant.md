@@ -1,13 +1,17 @@
 ---
 title: "ContainerMerchant"
-description: "Looks for changes made in the container, sends them to every listener."
+description: "public class ContainerMerchant extends Container"
 package: "net/minecraft/inventory"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/inventory/ContainerMerchant.html"
 sourceType: javadoc
 ---
 
 # ContainerMerchant
+
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Container → net.minecraft.inventory.ContainerMerchant
 
 ## Class signature
 
@@ -15,22 +19,18 @@ sourceType: javadoc
 public class ContainerMerchant extends Container
 ```
 
-## Constructors
-
-- `public ContainerMerchant( InventoryPlayer playerInventory, IMerchant merchant, World worldIn)`
-
 ## Methods
 
-- `public InventoryMerchant getMerchantInventory()`
-- `public void onCraftGuiOpened( ICrafting listener)`
-- `public void detectAndSendChanges()`
-- `public void onCraftMatrixChanged( IInventory inventoryIn)`
-- `public void setCurrentRecipeIndex(int currentRecipeIndex)`
-- `public void updateProgressBar(int id, int data)`
-- `public boolean canInteractWith( EntityPlayer playerIn)`
-- `public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
-- `public void onContainerClosed( EntityPlayer playerIn)`
+- `boolean canInteractWith(EntityPlayer playerIn)`
+- `void detectAndSendChanges()` — Looks for changes made in the container, sends them to every listener.
+- `InventoryMerchant getMerchantInventory()`
+- `void onContainerClosed(EntityPlayer playerIn)` — Called when the container is closed.
+- `void onCraftGuiOpened(ICrafting listener)`
+- `void onCraftMatrixChanged(IInventory inventoryIn)` — Callback for when the crafting matrix is changed.
+- `void setCurrentRecipeIndex(int currentRecipeIndex)`
+- `ItemStack transferStackInSlot(EntityPlayer playerIn, int index)` — Take a stack from the specified inventory slot.
+- `void updateProgressBar(int id, int data)`
 
-## Description
+## Fields
 
-Looks for changes made in the container, sends them to every listener.
+- `ContainerMerchant`

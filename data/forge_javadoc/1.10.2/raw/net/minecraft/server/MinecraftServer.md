@@ -1,143 +1,179 @@
 ---
 title: "MinecraftServer"
-description: "public abstract class MinecraftServer extends java.lang.Object implements java.lang.Runnable, ICommandSender , IThreadListener , ISnooperInfo"
+description: "public abstract class MinecraftServer extends java.lang.Object implements java.lang.Runnable, ICommandSender, IThreadListener, ISnooperInfo"
 package: "net/minecraft/server"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/server/MinecraftServer.html"
 sourceType: javadoc
 ---
 
 # MinecraftServer
 
+**Inheritance:** java.lang.Object → net.minecraft.server.MinecraftServer
+
 ## Class signature
 
 ```java
-public abstract class MinecraftServer extends java.lang.Object implements java.lang.Runnable, ICommandSender , IThreadListener , ISnooperInfo
+public abstract class MinecraftServer extends java.lang.Object implements java.lang.Runnable, ICommandSender, IThreadListener, ISnooperInfo
 ```
 
 ## Constructors
 
-- `public MinecraftServer(java.io.File anvilFileIn, java.net.Proxy proxyIn, DataFixer dataFixerIn, com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService authServiceIn, com.mojang.authlib.minecraft.MinecraftSessionService sessionServiceIn, com.mojang.authlib.GameProfileRepository profileRepoIn, PlayerProfileCache profileCacheIn)`
+- `MinecraftServer(java.io.File anvilFileIn, java.net.Proxy proxyIn, DataFixer dataFixerIn, com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService authServiceIn, com.mojang.authlib.minecraft.MinecraftSessionService sessionServiceIn, com.mojang.authlib.GameProfileRepository profileRepoIn, PlayerProfileCache profileCacheIn)`
 
 ## Methods
 
-- `public ServerCommandManager createNewCommandManager()`
-- `public abstract boolean startServer() throws java.io.IOException`
-- `public void convertMapIfNeeded(java.lang.String worldNameIn)`
-- `protected void setUserMessage(java.lang.String message)`
-- `public java.lang.String getUserMessage()`
-- `public void loadAllWorlds(java.lang.String saveName, java.lang.String worldNameIn, long seed, WorldType type, java.lang.String generatorOptions)`
-- `public void initialWorldChunkLoad()`
-- `public void setResourcePackFromWorld(java.lang.String worldNameIn, ISaveHandler saveHandlerIn)`
-- `public abstract boolean canStructuresSpawn()`
-- `public abstract GameType getGameType()`
-- `public abstract EnumDifficulty getDifficulty()`
-- `public abstract boolean isHardcore()`
-- `public abstract int getOpPermissionLevel()`
-- `public abstract boolean shouldBroadcastRconToOps()`
-- `public abstract boolean shouldBroadcastConsoleToOps()`
-- `protected void outputPercentRemaining(java.lang.String message, int percent)`
+- `void addChatMessage(ITextComponent component)`
+- `com.google.common.util.concurrent.ListenableFuture<java.lang.Object> addScheduledTask(java.lang.Runnable runnableToSchedule)`
+- `CrashReport addServerInfoToCrashReport(CrashReport report)`
+- `void addServerStatsToSnooper(Snooper playerSnooper)`
+- `void addServerTypeToSnooper(Snooper playerSnooper)`
+- `boolean allowSpawnMonsters()`
+- `void applyServerIconToResponse(ServerStatusResponse response)`
+- `<V> com.google.common.util.concurrent.ListenableFuture<V> callFromMainThread(java.util.concurrent.Callable<V> callable)`
+- `boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)`
+- `void canCreateBonusChest(boolean enable)`
+- `abstract boolean canStructuresSpawn()`
 - `protected void clearCurrentTask()`
-- `public void saveAllWorlds(boolean isSilent)`
-- `public void stopServer()`
-- `public boolean isServerRunning()`
-- `public void initiateShutdown()`
-- `public void run()`
-- `public void applyServerIconToResponse( ServerStatusResponse response)`
-- `public boolean isWorldIconSet()`
-- `public java.io.File getWorldIconFile()`
-- `public java.io.File getDataDirectory()`
-- `public void finalTick( CrashReport report)`
-- `public void systemExitNow()`
-- `public void tick()`
-- `public void updateTimeLightAndEntities()`
-- `public boolean getAllowNether()`
-- `public void startServerThread()`
-- `public java.io.File getFile(java.lang.String fileName)`
-- `public void logWarning(java.lang.String msg)`
-- `public WorldServer worldServerForDimension(int dimension)`
-- `public java.lang.String getMinecraftVersion()`
-- `public int getCurrentPlayerCount()`
-- `public int getMaxPlayers()`
-- `public java.lang.String[] getAllUsernames()`
-- `public com.mojang.authlib.GameProfile[] getGameProfiles()`
-- `public java.lang.String getServerModName()`
-- `public CrashReport addServerInfoToCrashReport( CrashReport report)`
-- `public java.util.List<java.lang.String> getTabCompletions( ICommandSender sender, java.lang.String input, @Nullable BlockPos pos, boolean hasTargetBlock)`
-- `public boolean isAnvilFileSet()`
-- `public java.lang.String getName()`
-- `public void addChatMessage( ITextComponent component)`
-- `public boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)`
-- `public ICommandManager getCommandManager()`
-- `public java.security.KeyPair getKeyPair()`
-- `public java.lang.String getServerOwner()`
-- `public void setServerOwner(java.lang.String owner)`
-- `public boolean isSinglePlayer()`
-- `public java.lang.String getFolderName()`
-- `public void setFolderName(java.lang.String name)`
-- `public void setWorldName(java.lang.String worldNameIn)`
-- `public java.lang.String getWorldName()`
-- `public void setKeyPair(java.security.KeyPair keyPair)`
-- `public void setDifficultyForAllWorlds( EnumDifficulty difficulty)`
-- `public boolean allowSpawnMonsters()`
-- `public boolean isDemo()`
-- `public void setDemo(boolean demo)`
-- `public void canCreateBonusChest(boolean enable)`
-- `public ISaveFormat getActiveAnvilConverter()`
-- `public java.lang.String getResourcePackUrl()`
-- `public java.lang.String getResourcePackHash()`
-- `public void setResourcePack(java.lang.String url, java.lang.String hash)`
-- `public void addServerStatsToSnooper( Snooper playerSnooper)`
-- `public void addServerTypeToSnooper( Snooper playerSnooper)`
-- `public boolean isSnooperEnabled()`
-- `public abstract boolean isDedicatedServer()`
-- `public boolean isServerInOnlineMode()`
-- `public void setOnlineMode(boolean online)`
-- `public boolean getCanSpawnAnimals()`
-- `public void setCanSpawnAnimals(boolean spawnAnimals)`
-- `public boolean getCanSpawnNPCs()`
-- `public abstract boolean shouldUseNativeTransport()`
-- `public void setCanSpawnNPCs(boolean spawnNpcs)`
-- `public boolean isPVPEnabled()`
-- `public void setAllowPvp(boolean allowPvp)`
-- `public boolean isFlightAllowed()`
-- `public void setAllowFlight(boolean allow)`
-- `public abstract boolean isCommandBlockEnabled()`
-- `public java.lang.String getMOTD()`
-- `public void setMOTD(java.lang.String motdIn)`
-- `public int getBuildLimit()`
-- `public void setBuildLimit(int maxBuildHeight)`
-- `public boolean isServerStopped()`
-- `public PlayerList getPlayerList()`
-- `public void setPlayerList( PlayerList list)`
-- `public void setGameType( GameType gameMode)`
-- `public NetworkSystem getNetworkSystem()`
-- `public boolean serverIsInRunLoop()`
-- `public boolean getGuiEnabled()`
-- `public abstract java.lang.String shareToLAN( GameType type, boolean allowCheats)`
-- `public int getTickCounter()`
-- `public void enableProfiling()`
-- `public Snooper getPlayerUsageSnooper()`
-- `public BlockPos getPosition()`
-- `public Vec3d getPositionVector()`
-- `public World getEntityWorld()`
-- `public Entity getCommandSenderEntity()`
-- `public boolean isBlockProtected( World worldIn, BlockPos pos, EntityPlayer playerIn)`
-- `public boolean getForceGamemode()`
-- `public java.net.Proxy getServerProxy()`
-- `public static long getCurrentTimeMillis()`
-- `public int getMaxPlayerIdleMinutes()`
-- `public void setPlayerIdleTimeout(int idleTimeout)`
-- `public ITextComponent getDisplayName()`
-- `public boolean isAnnouncingPlayerAchievements()`
-- `public com.mojang.authlib.minecraft.MinecraftSessionService getMinecraftSessionService()`
-- `public com.mojang.authlib.GameProfileRepository getGameProfileRepository()`
-- `public PlayerProfileCache getPlayerProfileCache()`
-- `public ServerStatusResponse getServerStatusResponse()`
-- `public void refreshStatusNextTick()`
-- `@Nullable public Entity getEntityFromUuid(java.util.UUID uuid)`
-- `public boolean sendCommandFeedback()`
-- `public void setCommandStat( CommandResultStats.Type type, int amount)`
-- `public MinecraftServer getServer()`
-- `public int getMaxWorldSize()`
-- `public <V> com.google.common.util.concurrent.ListenableFuture<V> callFromMainThread(java.util.concurrent.Callable<V> callable)`
+- `void convertMapIfNeeded(java.lang.String worldNameIn)`
+- `ServerCommandManager createNewCommandManager()`
+- `void enableProfiling()`
+- `void finalTick(CrashReport report)`
+- `ISaveFormat getActiveAnvilConverter()`
+- `boolean getAllowNether()`
+- `java.lang.String[] getAllUsernames()`
+- `int getBuildLimit()`
+- `boolean getCanSpawnAnimals()`
+- `boolean getCanSpawnNPCs()`
+- `ICommandManager getCommandManager()`
+- `Entity getCommandSenderEntity()`
+- `int getCurrentPlayerCount()`
+- `long getCurrentTime()`
+- `static long getCurrentTimeMillis()`
+- `java.io.File getDataDirectory()`
+- `DataFixer getDataFixer()`
+- `abstract EnumDifficulty getDifficulty()`
+- `ITextComponent getDisplayName()`
+- `Entity getEntityFromUuid(java.util.UUID uuid)`
+- `World getEntityWorld()`
+- `java.io.File getFile(java.lang.String fileName)`
+- `java.lang.String getFolderName()`
+- `boolean getForceGamemode()`
+- `com.mojang.authlib.GameProfileRepository getGameProfileRepository()`
+- `com.mojang.authlib.GameProfile[] getGameProfiles()`
+- `abstract GameType getGameType()`
+- `boolean getGuiEnabled()`
+- `java.security.KeyPair getKeyPair()`
+- `int getMaxPlayerIdleMinutes()`
+- `int getMaxPlayers()`
+- `int getMaxWorldSize()`
+- `com.mojang.authlib.minecraft.MinecraftSessionService getMinecraftSessionService()`
+- `java.lang.String getMinecraftVersion()`
+- `java.lang.String getMOTD()`
+- `java.lang.String getName()`
+- `int getNetworkCompressionThreshold()`
+- `NetworkSystem getNetworkSystem()`
+- `abstract int getOpPermissionLevel()`
+- `PlayerList getPlayerList()`
+- `PlayerProfileCache getPlayerProfileCache()`
+- `Snooper getPlayerUsageSnooper()`
+- `BlockPos getPosition()`
+- `Vec3d getPositionVector()`
+- `java.lang.String getResourcePackHash()`
+- `java.lang.String getResourcePackUrl()`
+- `MinecraftServer getServer()`
+- `java.lang.String getServerHostname()`
+- `java.lang.String getServerModName()`
+- `java.lang.String getServerOwner()`
+- `int getServerPort()`
+- `java.net.Proxy getServerProxy()`
+- `ServerStatusResponse getServerStatusResponse()`
+- `java.lang.Thread getServerThread()`
+- `int getSpawnProtectionSize()`
+- `int getSpawnRadius(WorldServer worldIn)`
+- `java.util.List<java.lang.String> getTabCompletions(ICommandSender sender, java.lang.String input, BlockPos pos, boolean hasTargetBlock)`
+- `int getTickCounter()`
+- `java.lang.String getUserMessage()`
+- `java.io.File getWorldIconFile()`
+- `java.lang.String getWorldName()`
+- `void initialWorldChunkLoad()`
+- `void initiateShutdown()`
+- `boolean isAnnouncingPlayerAchievements()`
+- `boolean isAnvilFileSet()`
+- `boolean isBlockProtected(World worldIn, BlockPos pos, EntityPlayer playerIn)`
+- `boolean isCallingFromMinecraftThread()`
+- `abstract boolean isCommandBlockEnabled()`
+- `boolean isDebuggingEnabled()`
+- `abstract boolean isDedicatedServer()`
+- `boolean isDemo()`
+- `boolean isFlightAllowed()`
+- `abstract boolean isHardcore()`
+- `boolean isPVPEnabled()`
+- `boolean isServerInOnlineMode()`
+- `boolean isServerRunning()`
+- `boolean isServerStopped()`
+- `boolean isSinglePlayer()`
+- `boolean isSnooperEnabled()`
+- `boolean isWorldIconSet()`
+- `void loadAllWorlds(java.lang.String saveName, java.lang.String worldNameIn, long seed, WorldType type, java.lang.String generatorOptions)`
+- `void logDebug(java.lang.String msg)`
+- `void logInfo(java.lang.String msg)`
+- `void logSevere(java.lang.String msg)`
+- `void logWarning(java.lang.String msg)`
+- `static void main(java.lang.String[] p_main_0_)`
+- `protected void outputPercentRemaining(java.lang.String message, int percent)`
+- `void refreshStatusNextTick()`
+- `void registerTickable(ITickable tickable)`
+- `void run()`
+- `void saveAllWorlds(boolean isSilent)`
+- `boolean sendCommandFeedback()`
+- `boolean serverIsInRunLoop()`
+- `void setAllowFlight(boolean allow)`
+- `void setAllowPvp(boolean allowPvp)`
+- `void setBuildLimit(int maxBuildHeight)`
+- `void setCanSpawnAnimals(boolean spawnAnimals)`
+- `void setCanSpawnNPCs(boolean spawnNpcs)`
+- `void setCommandStat(CommandResultStats.Type type, int amount)`
+- `void setDemo(boolean demo)`
+- `void setDifficultyForAllWorlds(EnumDifficulty difficulty)`
+- `void setFolderName(java.lang.String name)`
+- `void setForceGamemode(boolean force)`
+- `void setGameType(GameType gameMode)`
+- `void setHostname(java.lang.String host)`
+- `void setKeyPair(java.security.KeyPair keyPair)`
+- `void setMOTD(java.lang.String motdIn)`
+- `void setOnlineMode(boolean online)`
+- `void setPlayerIdleTimeout(int idleTimeout)`
+- `void setPlayerList(PlayerList list)`
+- `void setResourcePack(java.lang.String url, java.lang.String hash)`
+- `void setResourcePackFromWorld(java.lang.String worldNameIn, ISaveHandler saveHandlerIn)`
+- `void setServerOwner(java.lang.String owner)`
+- `void setServerPort(int port)`
+- `protected void setUserMessage(java.lang.String message)`
+- `void setWorldName(java.lang.String worldNameIn)`
+- `abstract java.lang.String shareToLAN(GameType type, boolean allowCheats)`
+- `abstract boolean shouldBroadcastConsoleToOps()`
+- `abstract boolean shouldBroadcastRconToOps()`
+- `abstract boolean shouldUseNativeTransport()`
+- `abstract boolean startServer()`
+- `void startServerThread()`
+- `void stopServer()`
+- `void systemExitNow()`
+- `void tick()`
+- `void updateTimeLightAndEntities()`
+- `WorldServer worldServerForDimension(int dimension)`
+
+## Fields
+
+- `ICommandManager commandManager`
+- `java.lang.String currentTask`
+- `java.util.Queue<java.util.concurrent.FutureTask<?>> futureTaskQueue`
+- `int percentDone`
+- `protected java.net.Proxy serverProxy`
+- `Profiler theProfiler`
+- `long[] tickTimeArray`
+- `static java.io.File USER_CACHE_FILE`
+- `WorldServer [] worldServers`
+- `java.util.Hashtable<java.lang.Integer, long[]> worldTickTimes`

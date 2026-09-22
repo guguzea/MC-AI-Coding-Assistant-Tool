@@ -1,13 +1,17 @@
 ---
 title: "GuiSelectString"
-description: "This class provides a screen that allows the user to select a value from a list."
+description: "public class GuiSelectString extends GuiScreen"
 package: "cpw/mods/fml/client/config"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/client/config/GuiSelectString.html"
 sourceType: javadoc
 ---
 
 # GuiSelectString
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → cpw.mods.fml.client.config.GuiSelectString
 
 ## Class signature
 
@@ -17,16 +21,23 @@ public class GuiSelectString extends GuiScreen
 
 ## Constructors
 
-- `public GuiSelectString( GuiScreen parentScreen, IConfigElement configElement, int slotIndex, java.util.Map<java.lang.Object,java.lang.String> selectableValues, java.lang.Object currentValue, boolean enabled)`
+- `GuiSelectString(GuiScreen parentScreen, IConfigElement configElement, int slotIndex, java.util.Map<java.lang.Object, java.lang.String> selectableValues, java.lang.Object currentValue, boolean enabled)`
 
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button)`
+- `protected void actionPerformed(GuiButton button)`
+- `void drawScreen(int par1, int par2, float par3)`
+- `void drawToolTip(java.util.List stringList, int x, int y)`
+- `void initGui()`
 - `protected void mouseMovedOrUp(int x, int y, int mouseEvent)`
-- `public void drawScreen(int par1, int par2, float par3)`
-- `public void drawToolTip(java.util.List stringList, int x, int y)`
 
-## Description
+## Fields
 
-This class provides a screen that allows the user to select a value from a list.
+- `java.lang.Object beforeValue`
+- `protected IConfigElement configElement`
+- `java.lang.Object currentValue`
+- `protected boolean enabled`
+- `protected GuiScreen parentScreen`
+- `protected int slotIndex`
+- `protected java.lang.String titleLine2`
+- `protected java.lang.String titleLine3`

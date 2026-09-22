@@ -1,18 +1,20 @@
 # ThreadDownloadImageData
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.texture.AbstractTexture → net.minecraft.client.renderer.texture.SimpleTexture → net.minecraft.client.renderer.ThreadDownloadImageData
+
 ## Class signature
 
 ```java
 public class ThreadDownloadImageData extends SimpleTexture
 ```
 
-## Constructors
-
-- `public ThreadDownloadImageData(@Nullable java.io.File cacheFileIn, java.lang.String imageUrlIn, ResourceLocation textureResourceLocation, @Nullable IImageBuffer imageBufferIn)`
-
 ## Methods
 
-- `public int getGlTextureId()`
-- `public void setBufferedImage(java.awt.image.BufferedImage bufferedImageIn)`
-- `public void loadTexture( IResourceManager resourceManager) throws java.io.IOException`
+- `int getGlTextureId()`
+- `void loadTexture(IResourceManager resourceManager)`
 - `protected void loadTextureFromServer()`
+- `void setBufferedImage(java.awt.image.BufferedImage bufferedImageIn)`
+
+## Fields
+
+- `ThreadDownloadImageData`

@@ -1,13 +1,17 @@
 ---
 title: "WalkNodeProcessor"
-description: "Returns given entity's position as PathPoint"
+description: "public class WalkNodeProcessor extends NodeProcessor"
 package: "net/minecraft/world/pathfinder"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/pathfinder/WalkNodeProcessor.html"
 sourceType: javadoc
 ---
 
 # WalkNodeProcessor
+
+**Inheritance:** java.lang.Object → net.minecraft.world.pathfinder.NodeProcessor → net.minecraft.world.pathfinder.WalkNodeProcessor
 
 ## Class signature
 
@@ -15,26 +19,22 @@ sourceType: javadoc
 public class WalkNodeProcessor extends NodeProcessor
 ```
 
-## Constructors
-
-- `public WalkNodeProcessor()`
-
 ## Methods
 
-- `public void initProcessor( IBlockAccess iblockaccessIn, Entity entityIn)`
-- `public void postProcess()`
-- `public PathPoint getPathPointTo( Entity entityIn)`
-- `public PathPoint getPathPointToCoords( Entity entityIn, double x, double y, double target)`
-- `public int findPathOptions( PathPoint [] pathOptions, Entity entityIn, PathPoint currentPoint, PathPoint targetPoint, float maxDistance)`
-- `public static int func_176170_a( IBlockAccess blockaccessIn, Entity entityIn, int x, int y, int z, int sizeX, int sizeY, int sizeZ, boolean avoidWater, boolean breakDoors, boolean enterDoors)`
-- `public void setEnterDoors(boolean canEnterDoorsIn)`
-- `public void setBreakDoors(boolean canBreakDoorsIn)`
-- `public void setAvoidsWater(boolean avoidsWaterIn)`
-- `public void setCanSwim(boolean canSwimIn)`
-- `public boolean getEnterDoors()`
-- `public boolean getCanSwim()`
-- `public boolean getAvoidsWater()`
+- `int findPathOptions(PathPoint [] pathOptions, Entity entityIn, PathPoint currentPoint, PathPoint targetPoint, float maxDistance)`
+- `static int func_176170_a(IBlockAccess blockaccessIn, Entity entityIn, int x, int y, int z, int sizeX, int sizeY, int sizeZ, boolean avoidWater, boolean breakDoors, boolean enterDoors)`
+- `boolean getAvoidsWater()`
+- `boolean getCanSwim()`
+- `boolean getEnterDoors()`
+- `PathPoint getPathPointTo(Entity entityIn)` — Returns given entity's position as PathPoint
+- `PathPoint getPathPointToCoords(Entity entityIn, double x, double y, double target)` — Returns PathPoint for given coordinates
+- `void initProcessor(IBlockAccess iblockaccessIn, Entity entityIn)`
+- `void postProcess()` — This method is called when all nodes have been processed and PathEntity is created.
+- `void setAvoidsWater(boolean avoidsWaterIn)`
+- `void setBreakDoors(boolean canBreakDoorsIn)`
+- `void setCanSwim(boolean canSwimIn)`
+- `void setEnterDoors(boolean canEnterDoorsIn)`
 
-## Description
+## Fields
 
-Returns given entity's position as PathPoint
+- `WalkNodeProcessor`

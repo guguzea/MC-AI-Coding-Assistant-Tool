@@ -1,13 +1,17 @@
 ---
 title: "EntityRegistry"
-description: "Add a spawn entry for the supplied entity in the supplied Biome list"
+description: "public class EntityRegistry extends java.lang.Object"
 package: "net/minecraftforge/fml/common/registry"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/common/registry/EntityRegistry.html"
 sourceType: javadoc
 ---
 
 # EntityRegistry
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.EntityRegistry
 
 ## Class signature
 
@@ -17,19 +21,15 @@ public class EntityRegistry extends java.lang.Object
 
 ## Methods
 
-- `public static EntityRegistry instance()`
-- `public static void registerModEntity( ResourceLocation registryName, java.lang.Class<? extends Entity > entityClass, java.lang.String entityName, int id, java.lang.Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)`
-- `public static void registerModEntity( ResourceLocation registryName, java.lang.Class<? extends Entity > entityClass, java.lang.String entityName, int id, java.lang.Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates, int eggPrimary, int eggSecondary)`
-- `public static void registerEgg( ResourceLocation name, int primary, int secondary)`
-- `public static void addSpawn(java.lang.Class<? extends EntityLiving > entityClass, int weightedProb, int min, int max, EnumCreatureType typeOfCreature, Biome ... biomes)`
-- `public static void addSpawn(java.lang.String entityName, int weightedProb, int min, int max, EnumCreatureType typeOfCreature, Biome ... biomes)`
-- `public static void removeSpawn(java.lang.Class<? extends EntityLiving > entityClass, EnumCreatureType typeOfCreature, Biome ... biomes)`
-- `public static void removeSpawn(java.lang.String entityName, EnumCreatureType typeOfCreature, Biome ... biomes)`
-- `@Nullable public EntityRegistry.EntityRegistration lookupModSpawn(java.lang.Class<? extends Entity > clazz, boolean keepLooking)`
-- `@Nullable public EntityRegistry.EntityRegistration lookupModSpawn( ModContainer mc, int modEntityId)`
-- `public boolean tryTrackingEntity( EntityTracker entityTracker, Entity entity)`
-- `@Nullable public static EntityEntry getEntry(java.lang.Class<? extends Entity > entry)`
-
-## Description
-
-Add a spawn entry for the supplied entity in the supplied Biome list
+- `static void addSpawn(java.lang.Class<? extends EntityLiving> entityClass, int weightedProb, int min, int max, EnumCreatureType typeOfCreature, Biome ... biomes)` — Add a spawn entry for the supplied entity in the supplied Biome list
+- `static void addSpawn(java.lang.String entityName, int weightedProb, int min, int max, EnumCreatureType typeOfCreature, Biome ... biomes)` — Add a spawn entry for the supplied entity in the supplied Biome list
+- `static EntityEntry getEntry(java.lang.Class<? extends Entity> entry)`
+- `static EntityRegistry instance()`
+- `EntityRegistry.EntityRegistration lookupModSpawn(java.lang.Class<? extends Entity> clazz, boolean keepLooking)`
+- `EntityRegistry.EntityRegistration lookupModSpawn(ModContainer mc, int modEntityId)`
+- `static void registerEgg(ResourceLocation name, int primary, int secondary)` — Registers a spawn egg for the specified entity class.
+- `static void registerModEntity(ResourceLocation registryName, java.lang.Class<? extends Entity> entityClass, java.lang.String entityName, int id, java.lang.Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)` — Register the mod entity type with FML
+- `static void registerModEntity(ResourceLocation registryName, java.lang.Class<? extends Entity> entityClass, java.lang.String entityName, int id, java.lang.Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates, int eggPrimary, int eggSecondary)` — Register the mod entity type with FML This will also register a spawn egg.
+- `static void removeSpawn(java.lang.Class<? extends EntityLiving> entityClass, EnumCreatureType typeOfCreature, Biome ... biomes)` — Remove the spawn entry for the supplied entity
+- `static void removeSpawn(java.lang.String entityName, EnumCreatureType typeOfCreature, Biome ... biomes)` — Remove the spawn entry for the supplied entity
+- `boolean tryTrackingEntity(EntityTracker entityTracker, Entity entity)`

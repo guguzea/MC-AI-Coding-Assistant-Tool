@@ -1,5 +1,7 @@
 # TextureCompass
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.texture.TextureAtlasSprite → net.minecraft.client.renderer.texture.TextureCompass
+
 ## Class signature
 
 ```java
@@ -8,13 +10,15 @@ public class TextureCompass extends TextureAtlasSprite
 
 ## Constructors
 
-- `public TextureCompass(java.lang.String iconName)`
+- `TextureCompass(java.lang.String iconName)`
 
 ## Methods
 
-- `public void updateAnimation()`
-- `public void updateCompass( World worldIn, double p_94241_2_, double p_94241_4_, double p_94241_6_, boolean p_94241_8_, boolean p_94241_9_)`
+- `void updateAnimation()`
+- `void updateCompass(World worldIn, double p_94241_2_, double p_94241_4_, double p_94241_6_, boolean p_94241_8_, boolean p_94241_9_)` — Updates the compass based on the given x,z coords and camera direction
 
-## Description
+## Fields
 
-Speed and direction of compass rotation
+- `double angleDelta` — Speed and direction of compass rotation
+- `double currentAngle` — Current compass heading in radians
+- `static java.lang.String field_176608_l`

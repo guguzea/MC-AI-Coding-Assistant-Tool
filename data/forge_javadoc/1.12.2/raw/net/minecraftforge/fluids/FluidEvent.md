@@ -1,13 +1,17 @@
 ---
 title: "FluidEvent"
-description: "Mods should fire this event when a fluid is IFluidTank.drain(int, boolean) from their tank."
+description: "public class FluidEvent extends Event"
 package: "net/minecraftforge/fluids"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fluids/FluidEvent.html"
 sourceType: javadoc
 ---
 
 # FluidEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fluids.FluidEvent
 
 ## Class signature
 
@@ -17,15 +21,11 @@ public class FluidEvent extends Event
 
 ## Constructors
 
-- `public FluidEvent( FluidStack fluid, World world, BlockPos pos)`
+- `FluidEvent(FluidStack fluid, World world, BlockPos pos)`
 
 ## Methods
 
-- `public FluidStack getFluid()`
-- `public World getWorld()`
-- `public BlockPos getPos()`
-- `public static final void fireEvent( FluidEvent event)`
-
-## Description
-
-Mods should fire this event when a fluid is IFluidTank.drain(int, boolean) from their tank.
+- `static void fireEvent(FluidEvent event)` — A handy shortcut for firing the various fluid events.
+- `FluidStack getFluid()`
+- `BlockPos getPos()`
+- `World getWorld()`

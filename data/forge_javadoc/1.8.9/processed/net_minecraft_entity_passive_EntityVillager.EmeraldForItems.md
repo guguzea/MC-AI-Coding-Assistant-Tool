@@ -1,13 +1,22 @@
 # EntityVillager.EmeraldForItems
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.passive.EntityVillager.EmeraldForItems
+
+## Class signature
+
+```java
+public static class EntityVillager.EmeraldForItems extends java.lang.Object implements EntityVillager.ITradeList
+```
+
 ## Constructors
 
-- `public EmeraldForItems( Item itemIn, EntityVillager.PriceInfo priceIn)`
+- `EmeraldForItems(Item itemIn, EntityVillager.PriceInfo priceIn)`
 
 ## Methods
 
-- `public void modifyMerchantRecipeList( MerchantRecipeList recipeList, java.util.Random random)`
+- `void modifyMerchantRecipeList(MerchantRecipeList recipeList, java.util.Random random)` — Affects the given MerchantRecipeList to possibly add or remove MerchantRecipes.
 
-## Description
+## Fields
 
-Affects the given MerchantRecipeList to possibly add or remove MerchantRecipes.
+- `EntityVillager.PriceInfo price`
+- `Item sellItem`

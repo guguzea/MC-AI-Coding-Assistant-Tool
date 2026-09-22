@@ -1,5 +1,7 @@
 # StructureNetherBridgePieces
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureNetherBridgePieces
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class StructureNetherBridgePieces extends java.lang.Object
 
 ## Constructors
 
-- `public StructureNetherBridgePieces()`
+- `StructureNetherBridgePieces()`
 
 ## Methods
 
-- `public static void registerNetherFortressPieces()`
+- `static void registerNetherFortressPieces()`

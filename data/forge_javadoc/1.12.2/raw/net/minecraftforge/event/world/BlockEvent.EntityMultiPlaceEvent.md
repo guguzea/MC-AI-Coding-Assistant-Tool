@@ -1,22 +1,28 @@
 ---
 title: "BlockEvent.EntityMultiPlaceEvent"
-description: "Fired when a single block placement triggers the creation of multiple blocks(e.g. placing a bed block). The block returned by BlockEvent.state and its related methods is the block where the placed blo"
+description: "public static class BlockEvent.EntityMultiPlaceEvent extends BlockEvent.EntityPlaceEvent"
 package: "net/minecraftforge/event/world"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/world/BlockEvent.EntityMultiPlaceEvent.html"
 sourceType: javadoc
 ---
 
 # BlockEvent.EntityMultiPlaceEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent → net.minecraftforge.event.world.BlockEvent.EntityMultiPlaceEvent
+
+## Class signature
+
+```java
+public static class BlockEvent.EntityMultiPlaceEvent extends BlockEvent.EntityPlaceEvent
+```
+
 ## Constructors
 
-- `public EntityMultiPlaceEvent(java.util.List< BlockSnapshot > blockSnapshots, IBlockState placedAgainst, Entity entity)`
+- `EntityMultiPlaceEvent(java.util.List<BlockSnapshot> blockSnapshots, IBlockState placedAgainst, Entity entity)`
 
 ## Methods
 
-- `public java.util.List< BlockSnapshot > getReplacedBlockSnapshots()`
-
-## Description
-
-Fired when a single block placement triggers the creation of multiple blocks(e.g. placing a bed block). The block returned by BlockEvent.state and its related methods is the block where the placed blo
+- `java.util.List<BlockSnapshot> getReplacedBlockSnapshots()` — Gets a list of BlockSnapshots for all blocks which were replaced by the placement of the new blocks.

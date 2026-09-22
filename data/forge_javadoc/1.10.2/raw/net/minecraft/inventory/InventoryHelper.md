@@ -3,11 +3,15 @@ title: "InventoryHelper"
 description: "public class InventoryHelper extends java.lang.Object"
 package: "net/minecraft/inventory"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/inventory/InventoryHelper.html"
 sourceType: javadoc
 ---
 
 # InventoryHelper
+
+**Inheritance:** java.lang.Object → net.minecraft.inventory.InventoryHelper
 
 ## Class signature
 
@@ -17,10 +21,10 @@ public class InventoryHelper extends java.lang.Object
 
 ## Constructors
 
-- `public InventoryHelper()`
+- `InventoryHelper()`
 
 ## Methods
 
-- `public static void dropInventoryItems( World worldIn, BlockPos pos, IInventory inventory)`
-- `public static void dropInventoryItems( World worldIn, Entity entityAt, IInventory inventory)`
-- `public static void spawnItemStack( World worldIn, double x, double y, double z, ItemStack stack)`
+- `static void dropInventoryItems(World worldIn, BlockPos pos, IInventory inventory)`
+- `static void dropInventoryItems(World worldIn, Entity entityAt, IInventory inventory)`
+- `static void spawnItemStack(World worldIn, double x, double y, double z, ItemStack stack)`

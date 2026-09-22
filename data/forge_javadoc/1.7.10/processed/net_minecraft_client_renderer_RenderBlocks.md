@@ -1,5 +1,7 @@
 # RenderBlocks
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.RenderBlocks
+
 ## Class signature
 
 ```java
@@ -8,97 +10,180 @@ public class RenderBlocks extends java.lang.Object
 
 ## Constructors
 
-- `public RenderBlocks( IBlockAccess p_i1251_1_)`
-- `public RenderBlocks()`
+- `RenderBlocks()`
+- `RenderBlocks(IBlockAccess p_i1251_1_)`
 
 ## Methods
 
-- `public void setOverrideBlockTexture( IIcon p_147757_1_)`
-- `public void clearOverrideBlockTexture()`
-- `public boolean hasOverrideBlockTexture()`
-- `public void setRenderFromInside(boolean p_147786_1_)`
-- `public void setRenderAllFaces(boolean p_147753_1_)`
-- `public void setRenderBounds(double p_147782_1_, double p_147782_3_, double p_147782_5_, double p_147782_7_, double p_147782_9_, double p_147782_11_)`
-- `public void setRenderBoundsFromBlock( Block p_147775_1_)`
-- `public void overrideBlockBounds(double p_147770_1_, double p_147770_3_, double p_147770_5_, double p_147770_7_, double p_147770_9_, double p_147770_11_)`
-- `public void unlockBlockBounds()`
-- `public void renderBlockUsingTexture( Block p_147792_1_, int p_147792_2_, int p_147792_3_, int p_147792_4_, IIcon p_147792_5_)`
-- `public void renderBlockAllFaces( Block p_147769_1_, int p_147769_2_, int p_147769_3_, int p_147769_4_)`
-- `public boolean renderBlockByRenderType( Block p_147805_1_, int p_147805_2_, int p_147805_3_, int p_147805_4_)`
-- `public boolean renderBlockEndPortalFrame( BlockEndPortalFrame p_147743_1_, int p_147743_2_, int p_147743_3_, int p_147743_4_)`
-- `public boolean renderBlockBed( Block p_147773_1_, int p_147773_2_, int p_147773_3_, int p_147773_4_)`
-- `public boolean renderBlockBrewingStand( BlockBrewingStand p_147741_1_, int p_147741_2_, int p_147741_3_, int p_147741_4_)`
-- `public boolean renderBlockCauldron( BlockCauldron p_147785_1_, int p_147785_2_, int p_147785_3_, int p_147785_4_)`
-- `public boolean renderBlockFlowerpot( BlockFlowerPot p_147752_1_, int p_147752_2_, int p_147752_3_, int p_147752_4_)`
-- `public boolean renderBlockAnvil( BlockAnvil p_147725_1_, int p_147725_2_, int p_147725_3_, int p_147725_4_)`
-- `public boolean renderBlockAnvilMetadata( BlockAnvil p_147780_1_, int p_147780_2_, int p_147780_3_, int p_147780_4_, int p_147780_5_)`
-- `public boolean renderBlockAnvilOrient( BlockAnvil p_147728_1_, int p_147728_2_, int p_147728_3_, int p_147728_4_, int p_147728_5_, boolean p_147728_6_)`
-- `public float renderBlockAnvilRotate( BlockAnvil p_147737_1_, int p_147737_2_, int p_147737_3_, int p_147737_4_, int p_147737_5_, float p_147737_6_, float p_147737_7_, float p_147737_8_, float p_147737_9_, boolean p_147737_10_, boolean p_147737_11_, int p_147737_12_)`
-- `public boolean renderBlockTorch( Block p_147791_1_, int p_147791_2_, int p_147791_3_, int p_147791_4_)`
-- `public boolean renderBlockRepeater( BlockRedstoneRepeater p_147759_1_, int p_147759_2_, int p_147759_3_, int p_147759_4_)`
-- `public boolean renderBlockRedstoneComparator( BlockRedstoneComparator p_147781_1_, int p_147781_2_, int p_147781_3_, int p_147781_4_)`
-- `public boolean renderBlockRedstoneDiode( BlockRedstoneDiode p_147748_1_, int p_147748_2_, int p_147748_3_, int p_147748_4_)`
-- `public void renderBlockRedstoneDiodeMetadata( BlockRedstoneDiode p_147732_1_, int p_147732_2_, int p_147732_3_, int p_147732_4_, int p_147732_5_)`
-- `public void renderPistonBaseAllFaces( Block p_147804_1_, int p_147804_2_, int p_147804_3_, int p_147804_4_)`
-- `public boolean renderPistonBase( Block p_147731_1_, int p_147731_2_, int p_147731_3_, int p_147731_4_, boolean p_147731_5_)`
-- `public void renderPistonRodUD(double p_147763_1_, double p_147763_3_, double p_147763_5_, double p_147763_7_, double p_147763_9_, double p_147763_11_, float p_147763_13_, double p_147763_14_)`
-- `public void renderPistonRodSN(double p_147789_1_, double p_147789_3_, double p_147789_5_, double p_147789_7_, double p_147789_9_, double p_147789_11_, float p_147789_13_, double p_147789_14_)`
-- `public void renderPistonRodEW(double p_147738_1_, double p_147738_3_, double p_147738_5_, double p_147738_7_, double p_147738_9_, double p_147738_11_, float p_147738_13_, double p_147738_14_)`
-- `public void renderPistonExtensionAllFaces( Block p_147750_1_, int p_147750_2_, int p_147750_3_, int p_147750_4_, boolean p_147750_5_)`
-- `public boolean renderPistonExtension( Block p_147809_1_, int p_147809_2_, int p_147809_3_, int p_147809_4_, boolean p_147809_5_)`
-- `public boolean renderBlockLever( Block p_147790_1_, int p_147790_2_, int p_147790_3_, int p_147790_4_)`
-- `public boolean renderBlockTripWireSource( Block p_147723_1_, int p_147723_2_, int p_147723_3_, int p_147723_4_)`
-- `public boolean renderBlockTripWire( Block p_147756_1_, int p_147756_2_, int p_147756_3_, int p_147756_4_)`
-- `public boolean renderBlockFire( BlockFire p_147801_1_, int p_147801_2_, int p_147801_3_, int p_147801_4_)`
-- `public boolean renderBlockRedstoneWire( Block p_147788_1_, int p_147788_2_, int p_147788_3_, int p_147788_4_)`
-- `public boolean renderBlockMinecartTrack( BlockRailBase p_147766_1_, int p_147766_2_, int p_147766_3_, int p_147766_4_)`
-- `public boolean renderBlockLadder( Block p_147794_1_, int p_147794_2_, int p_147794_3_, int p_147794_4_)`
-- `public boolean renderBlockVine( Block p_147726_1_, int p_147726_2_, int p_147726_3_, int p_147726_4_)`
-- `public boolean renderBlockStainedGlassPane( Block p_147733_1_, int p_147733_2_, int p_147733_3_, int p_147733_4_)`
-- `public boolean renderBlockPane( BlockPane p_147767_1_, int p_147767_2_, int p_147767_3_, int p_147767_4_)`
-- `public boolean renderCrossedSquares( Block p_147746_1_, int p_147746_2_, int p_147746_3_, int p_147746_4_)`
-- `public boolean renderBlockDoublePlant( BlockDoublePlant p_147774_1_, int p_147774_2_, int p_147774_3_, int p_147774_4_)`
-- `public boolean renderBlockStem( Block p_147724_1_, int p_147724_2_, int p_147724_3_, int p_147724_4_)`
-- `public boolean renderBlockCrops( Block p_147796_1_, int p_147796_2_, int p_147796_3_, int p_147796_4_)`
-- `public void renderTorchAtAngle( Block p_147747_1_, double p_147747_2_, double p_147747_4_, double p_147747_6_, double p_147747_8_, double p_147747_10_, int p_147747_12_)`
-- `public void drawCrossedSquares( IIcon p_147765_1_, double p_147765_2_, double p_147765_4_, double p_147765_6_, float p_147765_8_)`
-- `public void renderBlockStemSmall( Block p_147730_1_, int p_147730_2_, double p_147730_3_, double p_147730_5_, double p_147730_7_, double p_147730_9_)`
-- `public boolean renderBlockLilyPad( Block p_147783_1_, int p_147783_2_, int p_147783_3_, int p_147783_4_)`
-- `public void renderBlockStemBig( BlockStem p_147740_1_, int p_147740_2_, int p_147740_3_, double p_147740_4_, double p_147740_6_, double p_147740_8_, double p_147740_10_)`
-- `public void renderBlockCropsImpl( Block p_147795_1_, int p_147795_2_, double p_147795_3_, double p_147795_5_, double p_147795_7_)`
-- `public boolean renderBlockLiquid( Block p_147721_1_, int p_147721_2_, int p_147721_3_, int p_147721_4_)`
-- `public float getLiquidHeight(int p_147729_1_, int p_147729_2_, int p_147729_3_, Material p_147729_4_)`
-- `public void renderBlockSandFalling( Block p_147749_1_, World p_147749_2_, int p_147749_3_, int p_147749_4_, int p_147749_5_, int p_147749_6_)`
-- `public boolean renderStandardBlock( Block p_147784_1_, int p_147784_2_, int p_147784_3_, int p_147784_4_)`
-- `public boolean renderBlockLog( Block p_147742_1_, int p_147742_2_, int p_147742_3_, int p_147742_4_)`
-- `public boolean renderBlockQuartz( Block p_147779_1_, int p_147779_2_, int p_147779_3_, int p_147779_4_)`
-- `public boolean renderStandardBlockWithAmbientOcclusion( Block p_147751_1_, int p_147751_2_, int p_147751_3_, int p_147751_4_, float p_147751_5_, float p_147751_6_, float p_147751_7_)`
-- `public boolean renderStandardBlockWithAmbientOcclusionPartial( Block p_147808_1_, int p_147808_2_, int p_147808_3_, int p_147808_4_, float p_147808_5_, float p_147808_6_, float p_147808_7_)`
-- `public int getAoBrightness(int p_147778_1_, int p_147778_2_, int p_147778_3_, int p_147778_4_)`
-- `public int mixAoBrightness(int p_147727_1_, int p_147727_2_, int p_147727_3_, int p_147727_4_, double p_147727_5_, double p_147727_7_, double p_147727_9_, double p_147727_11_)`
-- `public boolean renderStandardBlockWithColorMultiplier( Block p_147736_1_, int p_147736_2_, int p_147736_3_, int p_147736_4_, float p_147736_5_, float p_147736_6_, float p_147736_7_)`
-- `public boolean renderBlockCocoa( BlockCocoa p_147772_1_, int p_147772_2_, int p_147772_3_, int p_147772_4_)`
-- `public boolean renderBlockBeacon( BlockBeacon p_147797_1_, int p_147797_2_, int p_147797_3_, int p_147797_4_)`
-- `public boolean renderBlockCactus( Block p_147755_1_, int p_147755_2_, int p_147755_3_, int p_147755_4_)`
-- `public boolean renderBlockCactusImpl( Block p_147754_1_, int p_147754_2_, int p_147754_3_, int p_147754_4_, float p_147754_5_, float p_147754_6_, float p_147754_7_)`
-- `public boolean renderBlockFence( BlockFence p_147735_1_, int p_147735_2_, int p_147735_3_, int p_147735_4_)`
-- `public boolean renderBlockWall( BlockWall p_147807_1_, int p_147807_2_, int p_147807_3_, int p_147807_4_)`
-- `public boolean renderBlockDragonEgg( BlockDragonEgg p_147802_1_, int p_147802_2_, int p_147802_3_, int p_147802_4_)`
-- `public boolean renderBlockFenceGate( BlockFenceGate p_147776_1_, int p_147776_2_, int p_147776_3_, int p_147776_4_)`
-- `public boolean renderBlockHopper( BlockHopper p_147803_1_, int p_147803_2_, int p_147803_3_, int p_147803_4_)`
-- `public boolean renderBlockHopperMetadata( BlockHopper p_147799_1_, int p_147799_2_, int p_147799_3_, int p_147799_4_, int p_147799_5_, boolean p_147799_6_)`
-- `public boolean renderBlockStairs( BlockStairs p_147722_1_, int p_147722_2_, int p_147722_3_, int p_147722_4_)`
-- `public boolean renderBlockDoor( Block p_147760_1_, int p_147760_2_, int p_147760_3_, int p_147760_4_)`
-- `public void renderFaceYNeg( Block p_147768_1_, double p_147768_2_, double p_147768_4_, double p_147768_6_, IIcon p_147768_8_)`
-- `public void renderFaceYPos( Block p_147806_1_, double p_147806_2_, double p_147806_4_, double p_147806_6_, IIcon p_147806_8_)`
-- `public void renderFaceZNeg( Block p_147761_1_, double p_147761_2_, double p_147761_4_, double p_147761_6_, IIcon p_147761_8_)`
-- `public void renderFaceZPos( Block p_147734_1_, double p_147734_2_, double p_147734_4_, double p_147734_6_, IIcon p_147734_8_)`
-- `public void renderFaceXNeg( Block p_147798_1_, double p_147798_2_, double p_147798_4_, double p_147798_6_, IIcon p_147798_8_)`
-- `public void renderFaceXPos( Block p_147764_1_, double p_147764_2_, double p_147764_4_, double p_147764_6_, IIcon p_147764_8_)`
-- `public void renderBlockAsItem( Block p_147800_1_, int p_147800_2_, float p_147800_3_)`
-- `public static boolean renderItemIn3d(int p_147739_0_)`
-- `public IIcon getBlockIcon( Block p_147793_1_, IBlockAccess p_147793_2_, int p_147793_3_, int p_147793_4_, int p_147793_5_, int p_147793_6_)`
-- `public IIcon getBlockIconFromSideAndMetadata( Block p_147787_1_, int p_147787_2_, int p_147787_3_)`
-- `public IIcon getBlockIconFromSide( Block p_147777_1_, int p_147777_2_)`
-- `public IIcon getBlockIcon( Block p_147745_1_)`
-- `public IIcon getIconSafe( IIcon p_147758_1_)`
+- `void clearOverrideBlockTexture()`
+- `void drawCrossedSquares(IIcon p_147765_1_, double p_147765_2_, double p_147765_4_, double p_147765_6_, float p_147765_8_)`
+- `int getAoBrightness(int p_147778_1_, int p_147778_2_, int p_147778_3_, int p_147778_4_)`
+- `IIcon getBlockIcon(Block p_147745_1_)`
+- `IIcon getBlockIcon(Block p_147793_1_, IBlockAccess p_147793_2_, int p_147793_3_, int p_147793_4_, int p_147793_5_, int p_147793_6_)`
+- `IIcon getBlockIconFromSide(Block p_147777_1_, int p_147777_2_)`
+- `IIcon getBlockIconFromSideAndMetadata(Block p_147787_1_, int p_147787_2_, int p_147787_3_)`
+- `IIcon getIconSafe(IIcon p_147758_1_)`
+- `float getLiquidHeight(int p_147729_1_, int p_147729_2_, int p_147729_3_, Material p_147729_4_)`
+- `boolean hasOverrideBlockTexture()`
+- `int mixAoBrightness(int p_147727_1_, int p_147727_2_, int p_147727_3_, int p_147727_4_, double p_147727_5_, double p_147727_7_, double p_147727_9_, double p_147727_11_)`
+- `void overrideBlockBounds(double p_147770_1_, double p_147770_3_, double p_147770_5_, double p_147770_7_, double p_147770_9_, double p_147770_11_)`
+- `void renderBlockAllFaces(Block p_147769_1_, int p_147769_2_, int p_147769_3_, int p_147769_4_)`
+- `boolean renderBlockAnvil(BlockAnvil p_147725_1_, int p_147725_2_, int p_147725_3_, int p_147725_4_)`
+- `boolean renderBlockAnvilMetadata(BlockAnvil p_147780_1_, int p_147780_2_, int p_147780_3_, int p_147780_4_, int p_147780_5_)`
+- `boolean renderBlockAnvilOrient(BlockAnvil p_147728_1_, int p_147728_2_, int p_147728_3_, int p_147728_4_, int p_147728_5_, boolean p_147728_6_)`
+- `float renderBlockAnvilRotate(BlockAnvil p_147737_1_, int p_147737_2_, int p_147737_3_, int p_147737_4_, int p_147737_5_, float p_147737_6_, float p_147737_7_, float p_147737_8_, float p_147737_9_, boolean p_147737_10_, boolean p_147737_11_, int p_147737_12_)`
+- `void renderBlockAsItem(Block p_147800_1_, int p_147800_2_, float p_147800_3_)`
+- `boolean renderBlockBeacon(BlockBeacon p_147797_1_, int p_147797_2_, int p_147797_3_, int p_147797_4_)`
+- `boolean renderBlockBed(Block p_147773_1_, int p_147773_2_, int p_147773_3_, int p_147773_4_)`
+- `boolean renderBlockBrewingStand(BlockBrewingStand p_147741_1_, int p_147741_2_, int p_147741_3_, int p_147741_4_)`
+- `boolean renderBlockByRenderType(Block p_147805_1_, int p_147805_2_, int p_147805_3_, int p_147805_4_)`
+- `boolean renderBlockCactus(Block p_147755_1_, int p_147755_2_, int p_147755_3_, int p_147755_4_)`
+- `boolean renderBlockCactusImpl(Block p_147754_1_, int p_147754_2_, int p_147754_3_, int p_147754_4_, float p_147754_5_, float p_147754_6_, float p_147754_7_)`
+- `boolean renderBlockCauldron(BlockCauldron p_147785_1_, int p_147785_2_, int p_147785_3_, int p_147785_4_)`
+- `boolean renderBlockCocoa(BlockCocoa p_147772_1_, int p_147772_2_, int p_147772_3_, int p_147772_4_)`
+- `boolean renderBlockCrops(Block p_147796_1_, int p_147796_2_, int p_147796_3_, int p_147796_4_)`
+- `void renderBlockCropsImpl(Block p_147795_1_, int p_147795_2_, double p_147795_3_, double p_147795_5_, double p_147795_7_)`
+- `boolean renderBlockDoor(Block p_147760_1_, int p_147760_2_, int p_147760_3_, int p_147760_4_)`
+- `boolean renderBlockDoublePlant(BlockDoublePlant p_147774_1_, int p_147774_2_, int p_147774_3_, int p_147774_4_)`
+- `boolean renderBlockDragonEgg(BlockDragonEgg p_147802_1_, int p_147802_2_, int p_147802_3_, int p_147802_4_)`
+- `boolean renderBlockEndPortalFrame(BlockEndPortalFrame p_147743_1_, int p_147743_2_, int p_147743_3_, int p_147743_4_)`
+- `boolean renderBlockFence(BlockFence p_147735_1_, int p_147735_2_, int p_147735_3_, int p_147735_4_)`
+- `boolean renderBlockFenceGate(BlockFenceGate p_147776_1_, int p_147776_2_, int p_147776_3_, int p_147776_4_)`
+- `boolean renderBlockFire(BlockFire p_147801_1_, int p_147801_2_, int p_147801_3_, int p_147801_4_)`
+- `boolean renderBlockFlowerpot(BlockFlowerPot p_147752_1_, int p_147752_2_, int p_147752_3_, int p_147752_4_)`
+- `boolean renderBlockHopper(BlockHopper p_147803_1_, int p_147803_2_, int p_147803_3_, int p_147803_4_)`
+- `boolean renderBlockHopperMetadata(BlockHopper p_147799_1_, int p_147799_2_, int p_147799_3_, int p_147799_4_, int p_147799_5_, boolean p_147799_6_)`
+- `boolean renderBlockLadder(Block p_147794_1_, int p_147794_2_, int p_147794_3_, int p_147794_4_)`
+- `boolean renderBlockLever(Block p_147790_1_, int p_147790_2_, int p_147790_3_, int p_147790_4_)`
+- `boolean renderBlockLilyPad(Block p_147783_1_, int p_147783_2_, int p_147783_3_, int p_147783_4_)`
+- `boolean renderBlockLiquid(Block p_147721_1_, int p_147721_2_, int p_147721_3_, int p_147721_4_)`
+- `boolean renderBlockLog(Block p_147742_1_, int p_147742_2_, int p_147742_3_, int p_147742_4_)`
+- `boolean renderBlockMinecartTrack(BlockRailBase p_147766_1_, int p_147766_2_, int p_147766_3_, int p_147766_4_)`
+- `boolean renderBlockPane(BlockPane p_147767_1_, int p_147767_2_, int p_147767_3_, int p_147767_4_)`
+- `boolean renderBlockQuartz(Block p_147779_1_, int p_147779_2_, int p_147779_3_, int p_147779_4_)`
+- `boolean renderBlockRedstoneComparator(BlockRedstoneComparator p_147781_1_, int p_147781_2_, int p_147781_3_, int p_147781_4_)`
+- `boolean renderBlockRedstoneDiode(BlockRedstoneDiode p_147748_1_, int p_147748_2_, int p_147748_3_, int p_147748_4_)`
+- `void renderBlockRedstoneDiodeMetadata(BlockRedstoneDiode p_147732_1_, int p_147732_2_, int p_147732_3_, int p_147732_4_, int p_147732_5_)`
+- `boolean renderBlockRedstoneWire(Block p_147788_1_, int p_147788_2_, int p_147788_3_, int p_147788_4_)`
+- `boolean renderBlockRepeater(BlockRedstoneRepeater p_147759_1_, int p_147759_2_, int p_147759_3_, int p_147759_4_)`
+- `void renderBlockSandFalling(Block p_147749_1_, World p_147749_2_, int p_147749_3_, int p_147749_4_, int p_147749_5_, int p_147749_6_)`
+- `boolean renderBlockStainedGlassPane(Block p_147733_1_, int p_147733_2_, int p_147733_3_, int p_147733_4_)`
+- `boolean renderBlockStairs(BlockStairs p_147722_1_, int p_147722_2_, int p_147722_3_, int p_147722_4_)`
+- `boolean renderBlockStem(Block p_147724_1_, int p_147724_2_, int p_147724_3_, int p_147724_4_)`
+- `void renderBlockStemBig(BlockStem p_147740_1_, int p_147740_2_, int p_147740_3_, double p_147740_4_, double p_147740_6_, double p_147740_8_, double p_147740_10_)`
+- `void renderBlockStemSmall(Block p_147730_1_, int p_147730_2_, double p_147730_3_, double p_147730_5_, double p_147730_7_, double p_147730_9_)`
+- `boolean renderBlockTorch(Block p_147791_1_, int p_147791_2_, int p_147791_3_, int p_147791_4_)`
+- `boolean renderBlockTripWire(Block p_147756_1_, int p_147756_2_, int p_147756_3_, int p_147756_4_)`
+- `boolean renderBlockTripWireSource(Block p_147723_1_, int p_147723_2_, int p_147723_3_, int p_147723_4_)`
+- `void renderBlockUsingTexture(Block p_147792_1_, int p_147792_2_, int p_147792_3_, int p_147792_4_, IIcon p_147792_5_)`
+- `boolean renderBlockVine(Block p_147726_1_, int p_147726_2_, int p_147726_3_, int p_147726_4_)`
+- `boolean renderBlockWall(BlockWall p_147807_1_, int p_147807_2_, int p_147807_3_, int p_147807_4_)`
+- `boolean renderCrossedSquares(Block p_147746_1_, int p_147746_2_, int p_147746_3_, int p_147746_4_)`
+- `void renderFaceXNeg(Block p_147798_1_, double p_147798_2_, double p_147798_4_, double p_147798_6_, IIcon p_147798_8_)`
+- `void renderFaceXPos(Block p_147764_1_, double p_147764_2_, double p_147764_4_, double p_147764_6_, IIcon p_147764_8_)`
+- `void renderFaceYNeg(Block p_147768_1_, double p_147768_2_, double p_147768_4_, double p_147768_6_, IIcon p_147768_8_)`
+- `void renderFaceYPos(Block p_147806_1_, double p_147806_2_, double p_147806_4_, double p_147806_6_, IIcon p_147806_8_)`
+- `void renderFaceZNeg(Block p_147761_1_, double p_147761_2_, double p_147761_4_, double p_147761_6_, IIcon p_147761_8_)`
+- `void renderFaceZPos(Block p_147734_1_, double p_147734_2_, double p_147734_4_, double p_147734_6_, IIcon p_147734_8_)`
+- `static boolean renderItemIn3d(int p_147739_0_)`
+- `boolean renderPistonBase(Block p_147731_1_, int p_147731_2_, int p_147731_3_, int p_147731_4_, boolean p_147731_5_)`
+- `void renderPistonBaseAllFaces(Block p_147804_1_, int p_147804_2_, int p_147804_3_, int p_147804_4_)`
+- `boolean renderPistonExtension(Block p_147809_1_, int p_147809_2_, int p_147809_3_, int p_147809_4_, boolean p_147809_5_)`
+- `void renderPistonExtensionAllFaces(Block p_147750_1_, int p_147750_2_, int p_147750_3_, int p_147750_4_, boolean p_147750_5_)`
+- `void renderPistonRodEW(double p_147738_1_, double p_147738_3_, double p_147738_5_, double p_147738_7_, double p_147738_9_, double p_147738_11_, float p_147738_13_, double p_147738_14_)`
+- `void renderPistonRodSN(double p_147789_1_, double p_147789_3_, double p_147789_5_, double p_147789_7_, double p_147789_9_, double p_147789_11_, float p_147789_13_, double p_147789_14_)`
+- `void renderPistonRodUD(double p_147763_1_, double p_147763_3_, double p_147763_5_, double p_147763_7_, double p_147763_9_, double p_147763_11_, float p_147763_13_, double p_147763_14_)`
+- `boolean renderStandardBlock(Block p_147784_1_, int p_147784_2_, int p_147784_3_, int p_147784_4_)`
+- `boolean renderStandardBlockWithAmbientOcclusion(Block p_147751_1_, int p_147751_2_, int p_147751_3_, int p_147751_4_, float p_147751_5_, float p_147751_6_, float p_147751_7_)`
+- `boolean renderStandardBlockWithAmbientOcclusionPartial(Block p_147808_1_, int p_147808_2_, int p_147808_3_, int p_147808_4_, float p_147808_5_, float p_147808_6_, float p_147808_7_)`
+- `boolean renderStandardBlockWithColorMultiplier(Block p_147736_1_, int p_147736_2_, int p_147736_3_, int p_147736_4_, float p_147736_5_, float p_147736_6_, float p_147736_7_)`
+- `void renderTorchAtAngle(Block p_147747_1_, double p_147747_2_, double p_147747_4_, double p_147747_6_, double p_147747_8_, double p_147747_10_, int p_147747_12_)`
+- `void setOverrideBlockTexture(IIcon p_147757_1_)`
+- `void setRenderAllFaces(boolean p_147753_1_)`
+- `void setRenderBounds(double p_147782_1_, double p_147782_3_, double p_147782_5_, double p_147782_7_, double p_147782_9_, double p_147782_11_)`
+- `void setRenderBoundsFromBlock(Block p_147775_1_)`
+- `void setRenderFromInside(boolean p_147786_1_)`
+- `void unlockBlockBounds()`
+
+## Fields
+
+- `int aoBrightnessXYNN`
+- `int aoBrightnessXYNP`
+- `int aoBrightnessXYPN`
+- `int aoBrightnessXYPP`
+- `int aoBrightnessXYZNNN`
+- `int aoBrightnessXYZNNP`
+- `int aoBrightnessXYZNPN`
+- `int aoBrightnessXYZNPP`
+- `int aoBrightnessXYZPNN`
+- `int aoBrightnessXYZPNP`
+- `int aoBrightnessXYZPPN`
+- `int aoBrightnessXYZPPP`
+- `int aoBrightnessXZNN`
+- `int aoBrightnessXZNP`
+- `int aoBrightnessXZPN`
+- `int aoBrightnessXZPP`
+- `int aoBrightnessYZNN`
+- `int aoBrightnessYZNP`
+- `int aoBrightnessYZPN`
+- `int aoBrightnessYZPP`
+- `float aoLightValueScratchXYNN`
+- `float aoLightValueScratchXYNP`
+- `float aoLightValueScratchXYPN`
+- `float aoLightValueScratchXYPP`
+- `float aoLightValueScratchXYZNNN`
+- `float aoLightValueScratchXYZNNP`
+- `float aoLightValueScratchXYZNPN`
+- `float aoLightValueScratchXYZNPP`
+- `float aoLightValueScratchXYZPNN`
+- `float aoLightValueScratchXYZPNP`
+- `float aoLightValueScratchXYZPPN`
+- `float aoLightValueScratchXYZPPP`
+- `float aoLightValueScratchXZNN`
+- `float aoLightValueScratchXZNP`
+- `float aoLightValueScratchXZPN`
+- `float aoLightValueScratchXZPP`
+- `float aoLightValueScratchYZNN`
+- `float aoLightValueScratchYZNP`
+- `float aoLightValueScratchYZPN`
+- `float aoLightValueScratchYZPP`
+- `IBlockAccess blockAccess`
+- `int brightnessBottomLeft`
+- `int brightnessBottomRight`
+- `int brightnessTopLeft`
+- `int brightnessTopRight`
+- `float colorBlueBottomLeft`
+- `float colorBlueBottomRight`
+- `float colorBlueTopLeft`
+- `float colorBlueTopRight`
+- `float colorGreenBottomLeft`
+- `float colorGreenBottomRight`
+- `float colorGreenTopLeft`
+- `float colorGreenTopRight`
+- `float colorRedBottomLeft`
+- `float colorRedBottomRight`
+- `float colorRedTopLeft`
+- `float colorRedTopRight`
+- `boolean enableAO`
+- `static boolean fancyGrass`
+- `boolean field_152631_f`
+- `boolean flipTexture`
+- `boolean lockBlockBounds`
+- `Minecraft minecraftRB`
+- `IIcon overrideBlockTexture`
+- `boolean partialRenderBounds`
+- `boolean renderAllFaces`
+- `boolean renderFromInside`
+- `double renderMaxX`
+- `double renderMaxY`
+- `double renderMaxZ`
+- `double renderMinX`
+- `double renderMinY`
+- `double renderMinZ`
+- `boolean useInventoryTint`
+- `int uvRotateBottom`
+- `int uvRotateEast`
+- `int uvRotateNorth`
+- `int uvRotateSouth`
+- `int uvRotateTop`
+- `int uvRotateWest`

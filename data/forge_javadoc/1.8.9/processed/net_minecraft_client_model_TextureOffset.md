@@ -1,5 +1,7 @@
 # TextureOffset
 
+**Inheritance:** java.lang.Object → net.minecraft.client.model.TextureOffset
+
 ## Class signature
 
 ```java
@@ -8,8 +10,9 @@ public class TextureOffset extends java.lang.Object
 
 ## Constructors
 
-- `public TextureOffset(int textureOffsetXIn, int textureOffsetYIn)`
+- `TextureOffset(int textureOffsetXIn, int textureOffsetYIn)`
 
-## Description
+## Fields
 
-The x coordinate offset of the texture
+- `int textureOffsetX` — The x coordinate offset of the texture
+- `int textureOffsetY` — The y coordinate offset of the texture

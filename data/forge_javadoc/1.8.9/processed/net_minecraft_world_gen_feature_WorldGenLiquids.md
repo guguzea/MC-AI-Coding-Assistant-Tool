@@ -1,5 +1,7 @@
 # WorldGenLiquids
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenLiquids
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class WorldGenLiquids extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenLiquids( Block p_i45465_1_)`
+- `WorldGenLiquids(Block p_i45465_1_)`
 
 ## Methods
 
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`

@@ -1,9 +1,13 @@
 # PlayerUseItemEvent.Stop
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerUseItemEvent → net.minecraftforge.event.entity.player.PlayerUseItemEvent.Stop
 
-- `public Stop( EntityPlayer player, ItemStack item, int duration)`
+## Class signature
 
-## Description
+```java
+public static class PlayerUseItemEvent.Stop extends PlayerUseItemEvent
+```
 
-Fired when a player stops using an item without the use duration timing out. Example: Stop eating 1/2 way through Stop defending with sword Stop drawing bow. This case would fire the arrow Duration on
+## Fields
+
+- `Stop`

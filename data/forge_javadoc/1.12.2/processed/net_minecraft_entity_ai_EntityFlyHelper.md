@@ -1,15 +1,17 @@
 # EntityFlyHelper
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityMoveHelper → net.minecraft.entity.ai.EntityFlyHelper
+
 ## Class signature
 
 ```java
 public class EntityFlyHelper extends EntityMoveHelper
 ```
 
-## Constructors
-
-- `public EntityFlyHelper( EntityLiving p_i47418_1_)`
-
 ## Methods
 
-- `public void onUpdateMoveHelper()`
+- `void onUpdateMoveHelper()`
+
+## Fields
+
+- `EntityFlyHelper`

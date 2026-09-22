@@ -1,5 +1,7 @@
 # BlockSponge
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockSponge
+
 ## Class signature
 
 ```java
@@ -8,17 +10,21 @@ public class BlockSponge extends Block
 
 ## Constructors
 
-- `protected BlockSponge()`
+- `BlockSponge()`
 
 ## Methods
 
-- `public java.lang.String getLocalizedName()`
-- `public int damageDropped( IBlockState state)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
-- `protected void tryAbsorb( World worldIn, BlockPos pos, IBlockState state)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, NonNullList < ItemStack > list)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
-- `public void randomDisplayTick( IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
+- `int damageDropped(IBlockState state)`
+- `java.lang.String getLocalizedName()`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
+- `protected void tryAbsorb(World worldIn, BlockPos pos, IBlockState state)`
+
+## Fields
+
+- `static PropertyBool WET`

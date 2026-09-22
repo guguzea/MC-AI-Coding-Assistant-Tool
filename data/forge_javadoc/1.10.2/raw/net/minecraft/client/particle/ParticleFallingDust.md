@@ -3,11 +3,15 @@ title: "ParticleFallingDust"
 description: "public class ParticleFallingDust extends Particle"
 package: "net/minecraft/client/particle"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/particle/ParticleFallingDust.html"
 sourceType: javadoc
 ---
 
 # ParticleFallingDust
+
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleFallingDust
 
 ## Class signature
 
@@ -15,11 +19,11 @@ sourceType: javadoc
 public class ParticleFallingDust extends Particle
 ```
 
-## Constructors
-
-- `protected ParticleFallingDust( World p_i47135_1_, double p_i47135_2_, double p_i47135_4_, double p_i47135_6_, float p_i47135_8_, float p_i47135_9_, float p_i47135_10_)`
-
 ## Methods
 
-- `public void renderParticle( VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
-- `public void onUpdate()`
+- `void onUpdate()`
+- `void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+
+## Fields
+
+- `protected ParticleFallingDust`

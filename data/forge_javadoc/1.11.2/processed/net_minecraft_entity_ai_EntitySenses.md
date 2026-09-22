@@ -1,5 +1,7 @@
 # EntitySenses
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntitySenses
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class EntitySenses extends java.lang.Object
 
 ## Constructors
 
-- `public EntitySenses( EntityLiving entityObjIn)`
+- `EntitySenses(EntityLiving entityObjIn)`
 
 ## Methods
 
-- `public void clearSensingCache()`
-- `public boolean canSee( Entity entityIn)`
+- `boolean canSee(Entity entityIn)`
+- `void clearSensingCache()`

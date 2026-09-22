@@ -1,13 +1,17 @@
 ---
 title: "BlockLeavesBase"
-description: "Used to determine ambient occlusion and culling when rebuilding chunks for render"
+description: "public class BlockLeavesBase extends Block"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockLeavesBase.html"
 sourceType: javadoc
 ---
 
 # BlockLeavesBase
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockLeavesBase
 
 ## Class signature
 
@@ -17,13 +21,13 @@ public class BlockLeavesBase extends Block
 
 ## Constructors
 
-- `protected BlockLeavesBase( Material materialIn, boolean fancyGraphics)`
+- `BlockLeavesBase(Material materialIn, boolean fancyGraphics)`
 
 ## Methods
 
-- `public boolean isOpaqueCube()`
-- `public boolean shouldSideBeRendered( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
 
-## Description
+## Fields
 
-Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `protected boolean fancyGraphics`

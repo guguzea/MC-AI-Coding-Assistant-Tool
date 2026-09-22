@@ -1,13 +1,17 @@
 ---
 title: "TileEntityMobSpawner"
-description: "Allows for a specialized description packet to be created."
+description: "public class TileEntityMobSpawner extends TileEntity implements ITickable"
 package: "net/minecraft/tileentity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/tileentity/TileEntityMobSpawner.html"
 sourceType: javadoc
 ---
 
 # TileEntityMobSpawner
+
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityMobSpawner
 
 ## Class signature
 
@@ -15,20 +19,16 @@ sourceType: javadoc
 public class TileEntityMobSpawner extends TileEntity implements ITickable
 ```
 
-## Constructors
-
-- `public TileEntityMobSpawner()`
-
 ## Methods
 
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public void writeToNBT( NBTTagCompound compound)`
-- `public void update()`
-- `public Packet getDescriptionPacket()`
-- `public boolean receiveClientEvent(int id, int type)`
-- `public boolean func_183000_F()`
-- `public MobSpawnerBaseLogic getSpawnerBaseLogic()`
+- `boolean func_183000_F()`
+- `Packet getDescriptionPacket()` — Allows for a specialized description packet to be created.
+- `MobSpawnerBaseLogic getSpawnerBaseLogic()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `boolean receiveClientEvent(int id, int type)`
+- `void update()` — Like the old updateEntity(), except more generic.
+- `void writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Allows for a specialized description packet to be created.
+- `TileEntityMobSpawner`

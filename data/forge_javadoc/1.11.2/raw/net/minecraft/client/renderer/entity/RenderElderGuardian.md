@@ -3,11 +3,15 @@ title: "RenderElderGuardian"
 description: "public class RenderElderGuardian extends RenderGuardian"
 package: "net/minecraft/client/renderer/entity"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/renderer/entity/RenderElderGuardian.html"
 sourceType: javadoc
 ---
 
 # RenderElderGuardian
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RenderLivingBase<T> → net.minecraft.client.renderer.entity.RenderLiving<EntityGuardian> → net.minecraft.client.renderer.entity.RenderGuardian → net.minecraft.client.renderer.entity.RenderElderGuardian
 
 ## Class signature
 
@@ -15,11 +19,11 @@ sourceType: javadoc
 public class RenderElderGuardian extends RenderGuardian
 ```
 
-## Constructors
-
-- `public RenderElderGuardian( RenderManager p_i47209_1_)`
-
 ## Methods
 
-- `protected void preRenderCallback( EntityGuardian entitylivingbaseIn, float partialTickTime)`
-- `protected ResourceLocation getEntityTexture( EntityGuardian entity)`
+- `protected ResourceLocation getEntityTexture(EntityGuardian entity)`
+- `protected void preRenderCallback(EntityGuardian entitylivingbaseIn, float partialTickTime)`
+
+## Fields
+
+- `RenderElderGuardian`

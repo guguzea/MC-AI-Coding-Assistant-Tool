@@ -1,11 +1,19 @@
 # TileEntityBeacon.BeamSegment
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntityBeacon.BeamSegment
+
+## Class signature
+
+```java
+public static class TileEntityBeacon.BeamSegment extends java.lang.Object
+```
+
 ## Constructors
 
-- `public BeamSegment(float[] colorsIn)`
+- `BeamSegment(float[] colorsIn)`
 
 ## Methods
 
+- `float[] getColors()`
+- `int getHeight()`
 - `protected void incrementHeight()`
-- `public float[] getColors()`
-- `public int getHeight()`

@@ -1,12 +1,16 @@
 # BlockPistonExtension.EnumPistonType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<BlockPistonExtension.EnumPistonType> → net.minecraft.block.BlockPistonExtension.EnumPistonType
+
+## Class signature
+
+```java
+public static enum BlockPistonExtension.EnumPistonType extends java.lang.Enum<BlockPistonExtension.EnumPistonType> implements IStringSerializable
+```
+
 ## Methods
 
-- `public static BlockPistonExtension.EnumPistonType [] values()`
-- `public static BlockPistonExtension.EnumPistonType valueOf(java.lang.String name)`
-- `public java.lang.String toString()`
-- `public java.lang.String getName()`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `java.lang.String getName()`
+- `java.lang.String toString()`
+- `static BlockPistonExtension.EnumPistonType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static BlockPistonExtension.EnumPistonType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

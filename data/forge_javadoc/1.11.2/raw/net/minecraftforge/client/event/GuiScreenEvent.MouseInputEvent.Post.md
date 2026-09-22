@@ -1,18 +1,24 @@
 ---
 title: "GuiScreenEvent.MouseInputEvent.Post"
-description: "This event fires after GuiScreen.handleMouseInput() provided that the active screen has not been changed as a result of GuiScreen.handleMouseInput() and the GuiScreen.mouseHandled flag has not been se"
+description: "public static class GuiScreenEvent.MouseInputEvent.Post extends GuiScreenEvent.MouseInputEvent"
 package: "net/minecraftforge/client/event"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/event/GuiScreenEvent.MouseInputEvent.Post.html"
 sourceType: javadoc
 ---
 
 # GuiScreenEvent.MouseInputEvent.Post
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent → net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent.Post
+
+## Class signature
+
+```java
+public static class GuiScreenEvent.MouseInputEvent.Post extends GuiScreenEvent.MouseInputEvent
+```
+
 ## Constructors
 
-- `public Post( GuiScreen gui)`
-
-## Description
-
-This event fires after GuiScreen.handleMouseInput() provided that the active screen has not been changed as a result of GuiScreen.handleMouseInput() and the GuiScreen.mouseHandled flag has not been se
+- `Post(GuiScreen gui)`

@@ -1,5 +1,7 @@
 # ProgressManager
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.ProgressManager
+
 ## Class signature
 
 ```java
@@ -8,16 +10,12 @@ public class ProgressManager extends java.lang.Object
 
 ## Constructors
 
-- `public ProgressManager()`
+- `ProgressManager()`
 
 ## Methods
 
-- `public static ProgressManager.ProgressBar push(java.lang.String title, int steps)`
-- `public static ProgressManager.ProgressBar push(java.lang.String title, int steps, boolean timeEachStep)`
-- `public static boolean isDisplayVSyncForced()`
-- `public static void pop( ProgressManager.ProgressBar bar)`
-- `public static java.util.Iterator< ProgressManager.ProgressBar > barIterator()`
-
-## Description
-
-Not a fully fleshed out API, may change in future MC versions. However feel free to use and suggest additions.
+- `static java.util.Iterator<ProgressManager.ProgressBar> barIterator()`
+- `static boolean isDisplayVSyncForced()`
+- `static void pop(ProgressManager.ProgressBar bar)` — Not a fully fleshed out API, may change in future MC versions.
+- `static ProgressManager.ProgressBar push(java.lang.String title, int steps)` — Not a fully fleshed out API, may change in future MC versions.
+- `static ProgressManager.ProgressBar push(java.lang.String title, int steps, boolean timeEachStep)` — Not a fully fleshed out API, may change in future MC versions.

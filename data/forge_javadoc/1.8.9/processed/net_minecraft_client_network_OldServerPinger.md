@@ -1,5 +1,7 @@
 # OldServerPinger
 
+**Inheritance:** java.lang.Object → net.minecraft.client.network.OldServerPinger
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class OldServerPinger extends java.lang.Object
 
 ## Constructors
 
-- `public OldServerPinger()`
+- `OldServerPinger()`
 
 ## Methods
 
-- `public void ping( ServerData server) throws java.net.UnknownHostException`
-- `public void pingPendingNetworks()`
-- `public void clearPendingNetworks()`
+- `void clearPendingNetworks()`
+- `void ping(ServerData server)`
+- `void pingPendingNetworks()`

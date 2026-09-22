@@ -1,13 +1,17 @@
 ---
 title: "ShapedOreRecipe"
-description: "Returns the input for this recipe, any mod accessing this value should never manipulate the values in this array as it will effect the recipe itself."
+description: "public class ShapedOreRecipe extends java.lang.Object implements IRecipe"
 package: "net/minecraftforge/oredict"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/oredict/ShapedOreRecipe.html"
 sourceType: javadoc
 ---
 
 # ShapedOreRecipe
+
+**Inheritance:** java.lang.Object → net.minecraftforge.oredict.ShapedOreRecipe
 
 ## Class signature
 
@@ -17,23 +21,29 @@ public class ShapedOreRecipe extends java.lang.Object implements IRecipe
 
 ## Constructors
 
-- `public ShapedOreRecipe( Block result, java.lang.Object... recipe)`
-- `public ShapedOreRecipe( Item result, java.lang.Object... recipe)`
-- `public ShapedOreRecipe(@Nonnull ItemStack result, java.lang.Object... recipe)`
+- `ShapedOreRecipe(Block result, java.lang.Object... recipe)`
+- `ShapedOreRecipe(Item result, java.lang.Object... recipe)`
+- `ShapedOreRecipe(ItemStack result, java.lang.Object... recipe)`
 
 ## Methods
 
-- `@Nonnull public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1)`
-- `public int getRecipeSize()`
-- `@Nonnull public ItemStack getRecipeOutput()`
-- `public boolean matches( InventoryCrafting inv, World world)`
-- `protected boolean checkMatch( InventoryCrafting inv, int startX, int startY, boolean mirror)`
-- `public ShapedOreRecipe setMirrored(boolean mirror)`
-- `public java.lang.Object[] getInput()`
-- `public NonNullList < ItemStack > getRemainingItems( InventoryCrafting inv)`
-- `public int getWidth()`
-- `public int getHeight()`
+- `protected boolean checkMatch(InventoryCrafting inv, int startX, int startY, boolean mirror)`
+- `ItemStack getCraftingResult(InventoryCrafting var1)`
+- `int getHeight()`
+- `java.lang.Object[] getInput()` — Returns the input for this recipe, any mod accessing this value should never manipulate the values in this array as it will effect the recipe itself.
+- `ItemStack getRecipeOutput()`
+- `int getRecipeSize()`
+- `NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)`
+- `int getWidth()`
+- `boolean matches(InventoryCrafting inv, World world)`
+- `ShapedOreRecipe setMirrored(boolean mirror)`
 
-## Description
+## Fields
 
-Returns the input for this recipe, any mod accessing this value should never manipulate the values in this array as it will effect the recipe itself.
+- `protected int height`
+- `protected java.lang.Object[] input`
+- `static int MAX_CRAFT_GRID_HEIGHT`
+- `static int MAX_CRAFT_GRID_WIDTH`
+- `protected boolean mirrored`
+- `protected ItemStack output`
+- `protected int width`

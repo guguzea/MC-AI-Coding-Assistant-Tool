@@ -8,5 +8,5 @@ public interface INetHandlerLoginServer extends INetHandler
 
 ## Methods
 
-- `void processLoginStart( CPacketLoginStart packetIn)`
-- `void processEncryptionResponse( CPacketEncryptionResponse packetIn)`
+- `void processEncryptionResponse(CPacketEncryptionResponse packetIn)`
+- `void processLoginStart(CPacketLoginStart packetIn)`

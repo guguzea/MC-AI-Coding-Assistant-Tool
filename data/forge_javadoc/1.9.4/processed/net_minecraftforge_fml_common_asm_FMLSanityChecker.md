@@ -1,5 +1,7 @@
 # FMLSanityChecker
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.asm.FMLSanityChecker
+
 ## Class signature
 
 ```java
@@ -8,13 +10,13 @@ public class FMLSanityChecker extends java.lang.Object implements IFMLCallHook
 
 ## Constructors
 
-- `public FMLSanityChecker()`
+- `FMLSanityChecker()`
 
 ## Methods
 
-- `public java.lang.Void call() throws java.lang.Exception`
-- `public void injectData(java.util.Map<java.lang.String,java.lang.Object> data)`
+- `java.lang.Void call()`
+- `void injectData(java.util.Map<java.lang.String, java.lang.Object> data)` — Injected with data from the FML environment: "classLoader" : The FML Class Loader
 
-## Description
+## Fields
 
-Injected with data from the FML environment: "classLoader" : The FML Class Loader
+- `static java.io.File fmlLocation`

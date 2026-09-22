@@ -1,5 +1,7 @@
 # DebugRendererNeighborsUpdate
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.debug.DebugRendererNeighborsUpdate
+
 ## Class signature
 
 ```java
@@ -8,5 +10,5 @@ public class DebugRendererNeighborsUpdate extends java.lang.Object implements De
 
 ## Methods
 
-- `public void addUpdate(long worldTime, BlockPos pos)`
-- `public void render(float partialTicks, long finishTimeNano)`
+- `void addUpdate(long worldTime, BlockPos pos)`
+- `void render(float partialTicks, long finishTimeNano)`

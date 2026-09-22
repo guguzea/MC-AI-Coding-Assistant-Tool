@@ -1,9 +1,17 @@
 # EnhancedRuntimeException.WrappedPrintStream
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.EnhancedRuntimeException.WrappedPrintStream
+
+## Class signature
+
+```java
+public abstract static class EnhancedRuntimeException.WrappedPrintStream extends java.lang.Object
+```
+
 ## Constructors
 
-- `public WrappedPrintStream()`
+- `WrappedPrintStream()`
 
 ## Methods
 
-- `public abstract void println(java.lang.String line)`
+- `abstract void println(java.lang.String line)`

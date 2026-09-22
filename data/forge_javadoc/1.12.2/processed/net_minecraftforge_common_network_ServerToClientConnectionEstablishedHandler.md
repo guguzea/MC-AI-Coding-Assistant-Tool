@@ -1,5 +1,7 @@
 # ServerToClientConnectionEstablishedHandler
 
+**Inheritance:** java.lang.Object → ChannelInboundHandlerAdapter → net.minecraftforge.common.network.ServerToClientConnectionEstablishedHandler
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class ServerToClientConnectionEstablishedHandler extends ChannelInboundHa
 
 ## Constructors
 
-- `public ServerToClientConnectionEstablishedHandler()`
+- `ServerToClientConnectionEstablishedHandler()`
 
 ## Methods
 
-- `public void userEventTriggered(ChannelHandlerContext ctx, java.lang.Object evt) throws java.lang.Exception`
+- `void userEventTriggered(ChannelHandlerContext ctx, java.lang.Object evt)`

@@ -1,18 +1,20 @@
 # BlockSlime
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBreakable → net.minecraft.block.BlockSlime
+
 ## Class signature
 
 ```java
 public class BlockSlime extends BlockBreakable
 ```
 
-## Constructors
-
-- `public BlockSlime()`
-
 ## Methods
 
-- `public BlockRenderLayer getBlockLayer()`
-- `public void onFallenUpon( World worldIn, BlockPos pos, Entity entityIn, float fallDistance)`
-- `public void onLanded( World worldIn, Entity entityIn)`
-- `public void onEntityWalk( World worldIn, BlockPos pos, Entity entityIn)`
+- `BlockRenderLayer getBlockLayer()`
+- `void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn)`
+- `void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)`
+- `void onLanded(World worldIn, Entity entityIn)`
+
+## Fields
+
+- `BlockSlime`

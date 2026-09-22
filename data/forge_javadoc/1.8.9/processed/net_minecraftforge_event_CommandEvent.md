@@ -1,5 +1,7 @@
 # CommandEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.CommandEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,11 @@ public class CommandEvent extends Event
 
 ## Constructors
 
-- `public CommandEvent( ICommand command, ICommandSender sender, java.lang.String[] parameters)`
+- `CommandEvent(ICommand command, ICommandSender sender, java.lang.String[] parameters)`
 
-## Description
+## Fields
 
-CommandEvent is fired whenever a command is scheduled to be executed. This event is fired during the invocation of CommandHandler#executeCommand(ICommandSender, String) and ClientCommandHandler#execut
+- `ICommand command`
+- `java.lang.Throwable exception`
+- `java.lang.String[] parameters`
+- `ICommandSender sender`

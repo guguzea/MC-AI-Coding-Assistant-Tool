@@ -1,5 +1,7 @@
 # HorseSaddle
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.HorseSaddle
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class HorseSaddle extends java.lang.Object implements IFixableData
 
 ## Constructors
 
-- `public HorseSaddle()`
+- `HorseSaddle()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

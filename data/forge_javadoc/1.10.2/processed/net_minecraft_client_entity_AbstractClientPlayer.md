@@ -1,5 +1,7 @@
 # AbstractClientPlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.player.EntityPlayer → net.minecraft.client.entity.AbstractClientPlayer
+
 ## Class signature
 
 ```java
@@ -8,20 +10,26 @@ public abstract class AbstractClientPlayer extends EntityPlayer
 
 ## Constructors
 
-- `public AbstractClientPlayer( World worldIn, com.mojang.authlib.GameProfile playerProfile)`
+- `AbstractClientPlayer(World worldIn, com.mojang.authlib.GameProfile playerProfile)`
 
 ## Methods
 
-- `public boolean isSpectator()`
-- `public boolean isCreative()`
-- `public boolean hasPlayerInfo()`
-- `@Nullable protected NetworkPlayerInfo getPlayerInfo()`
-- `public boolean hasSkin()`
-- `public ResourceLocation getLocationSkin()`
-- `@Nullable public ResourceLocation getLocationCape()`
-- `public boolean isPlayerInfoSet()`
-- `@Nullable public ResourceLocation getLocationElytra()`
-- `public static ThreadDownloadImageData getDownloadImageSkin( ResourceLocation resourceLocationIn, java.lang.String username)`
-- `public static ResourceLocation getLocationSkin(java.lang.String username)`
-- `public java.lang.String getSkinType()`
-- `public float getFovModifier()`
+- `static ThreadDownloadImageData getDownloadImageSkin(ResourceLocation resourceLocationIn, java.lang.String username)`
+- `float getFovModifier()`
+- `ResourceLocation getLocationCape()`
+- `ResourceLocation getLocationElytra()`
+- `ResourceLocation getLocationSkin()`
+- `static ResourceLocation getLocationSkin(java.lang.String username)`
+- `protected NetworkPlayerInfo getPlayerInfo()`
+- `java.lang.String getSkinType()`
+- `boolean hasPlayerInfo()`
+- `boolean hasSkin()`
+- `boolean isCreative()`
+- `boolean isPlayerInfoSet()`
+- `boolean isSpectator()`
+
+## Fields
+
+- `float rotateElytraX`
+- `float rotateElytraY`
+- `float rotateElytraZ`

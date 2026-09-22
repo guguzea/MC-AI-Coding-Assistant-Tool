@@ -1,18 +1,20 @@
 # EntityAIHurtByTarget
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAITarget → net.minecraft.entity.ai.EntityAIHurtByTarget
+
 ## Class signature
 
 ```java
 public class EntityAIHurtByTarget extends EntityAITarget
 ```
 
-## Constructors
-
-- `public EntityAIHurtByTarget( EntityCreature creatureIn, boolean entityCallsForHelpIn, java.lang.Class<?>... targetClassesIn)`
-
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
 - `protected void alertOthers()`
-- `protected void setEntityAttackTarget( EntityCreature creatureIn, EntityLivingBase entityLivingBaseIn)`
+- `protected void setEntityAttackTarget(EntityCreature creatureIn, EntityLivingBase entityLivingBaseIn)`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+
+## Fields
+
+- `EntityAIHurtByTarget`

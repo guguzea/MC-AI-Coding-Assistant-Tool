@@ -3,11 +3,15 @@ title: "ContainerMerchant"
 description: "public class ContainerMerchant extends Container"
 package: "net/minecraft/inventory"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/inventory/ContainerMerchant.html"
 sourceType: javadoc
 ---
 
 # ContainerMerchant
+
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Container → net.minecraft.inventory.ContainerMerchant
 
 ## Class signature
 
@@ -15,15 +19,15 @@ sourceType: javadoc
 public class ContainerMerchant extends Container
 ```
 
-## Constructors
-
-- `public ContainerMerchant( InventoryPlayer playerInventory, IMerchant merchant, World worldIn)`
-
 ## Methods
 
-- `public InventoryMerchant getMerchantInventory()`
-- `public void onCraftMatrixChanged( IInventory inventoryIn)`
-- `public void setCurrentRecipeIndex(int currentRecipeIndex)`
-- `public boolean canInteractWith( EntityPlayer playerIn)`
-- `public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
-- `public void onContainerClosed( EntityPlayer playerIn)`
+- `boolean canInteractWith(EntityPlayer playerIn)`
+- `InventoryMerchant getMerchantInventory()`
+- `void onContainerClosed(EntityPlayer playerIn)`
+- `void onCraftMatrixChanged(IInventory inventoryIn)`
+- `void setCurrentRecipeIndex(int currentRecipeIndex)`
+- `ItemStack transferStackInSlot(EntityPlayer playerIn, int index)`
+
+## Fields
+
+- `ContainerMerchant`

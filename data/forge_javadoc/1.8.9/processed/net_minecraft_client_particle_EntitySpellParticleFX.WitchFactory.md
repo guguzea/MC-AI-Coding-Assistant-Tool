@@ -1,9 +1,17 @@
 # EntitySpellParticleFX.WitchFactory
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.EntitySpellParticleFX.WitchFactory
+
+## Class signature
+
+```java
+public static class EntitySpellParticleFX.WitchFactory extends java.lang.Object implements IParticleFactory
+```
+
 ## Constructors
 
-- `public WitchFactory()`
+- `WitchFactory()`
 
 ## Methods
 
-- `public EntityFX getEntityFX(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)`
+- `EntityFX getEntityFX(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)`

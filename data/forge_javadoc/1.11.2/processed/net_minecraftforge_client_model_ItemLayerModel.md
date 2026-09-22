@@ -1,5 +1,7 @@
 # ItemLayerModel
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.ItemLayerModel
+
 ## Class signature
 
 ```java
@@ -8,19 +10,19 @@ public final class ItemLayerModel extends java.lang.Object implements IRetextura
 
 ## Constructors
 
-- `public ItemLayerModel(com.google.common.collect.ImmutableList< ResourceLocation > textures)`
-- `public ItemLayerModel(com.google.common.collect.ImmutableList< ResourceLocation > textures, ItemOverrideList overrides)`
-- `public ItemLayerModel( ModelBlock model)`
+- `ItemLayerModel(com.google.common.collect.ImmutableList<ResourceLocation> textures)`
+- `ItemLayerModel(com.google.common.collect.ImmutableList<ResourceLocation> textures, ItemOverrideList overrides)`
+- `ItemLayerModel(ModelBlock model)`
 
 ## Methods
 
-- `public java.util.Collection< ResourceLocation > getDependencies()`
-- `public java.util.Collection< ResourceLocation > getTextures()`
-- `public IModelState getDefaultState()`
-- `public ItemLayerModel retexture(com.google.common.collect.ImmutableMap<java.lang.String,java.lang.String> textures)`
-- `public IBakedModel bake( IModelState state, VertexFormat format, com.google.common.base.Function< ResourceLocation , TextureAtlasSprite > bakedTextureGetter)`
-- `public static com.google.common.collect.ImmutableList< BakedQuad > getQuadsForSprite(int tint, TextureAtlasSprite sprite, VertexFormat format, com.google.common.base.Optional< TRSRTransformation > transform)`
+- `IBakedModel bake(IModelState state, VertexFormat format, com.google.common.base.Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)`
+- `IModelState getDefaultState()`
+- `java.util.Collection<ResourceLocation> getDependencies()`
+- `static com.google.common.collect.ImmutableList<BakedQuad> getQuadsForSprite(int tint, TextureAtlasSprite sprite, VertexFormat format, com.google.common.base.Optional<TRSRTransformation> transform)`
+- `java.util.Collection<ResourceLocation> getTextures()`
+- `ItemLayerModel retexture(com.google.common.collect.ImmutableMap<java.lang.String, java.lang.String> textures)` — Applies new textures to the model.
 
-## Description
+## Fields
 
-Applies new textures to the model.
+- `static ItemLayerModel INSTANCE`

@@ -1,20 +1,24 @@
 # IFlexibleBakedModel.Wrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.IFlexibleBakedModel.Wrapper
+
+## Class signature
+
+```java
+public static class IFlexibleBakedModel.Wrapper extends java.lang.Object implements IFlexibleBakedModel
+```
+
 ## Constructors
 
-- `public Wrapper( IBakedModel parent, VertexFormat format)`
+- `Wrapper(IBakedModel parent, VertexFormat format)`
 
 ## Methods
 
-- `public java.util.List< BakedQuad > getFaceQuads( EnumFacing side)`
-- `public java.util.List< BakedQuad > getGeneralQuads()`
-- `public boolean isAmbientOcclusion()`
-- `public boolean isGui3d()`
-- `public boolean isBuiltInRenderer()`
-- `public TextureAtlasSprite getParticleTexture()`
-- `@Deprecated public ItemCameraTransforms getItemCameraTransforms()`
-- `public VertexFormat getFormat()`
-
-## Description
-
-Deprecated.
+- `java.util.List<BakedQuad> getFaceQuads(EnumFacing side)`
+- `VertexFormat getFormat()`
+- `java.util.List<BakedQuad> getGeneralQuads()`
+- `@Deprecated ItemCameraTransforms getItemCameraTransforms()`
+- `TextureAtlasSprite getParticleTexture()`
+- `boolean isAmbientOcclusion()`
+- `boolean isBuiltInRenderer()`
+- `boolean isGui3d()`

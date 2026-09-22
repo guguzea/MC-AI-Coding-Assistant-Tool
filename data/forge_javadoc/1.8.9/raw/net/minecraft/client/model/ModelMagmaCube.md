@@ -1,13 +1,17 @@
 ---
 title: "ModelMagmaCube"
-description: "Sets the models various rotation angles then renders the model."
+description: "public class ModelMagmaCube extends ModelBase"
 package: "net/minecraft/client/model"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/model/ModelMagmaCube.html"
 sourceType: javadoc
 ---
 
 # ModelMagmaCube
+
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelMagmaCube
 
 ## Class signature
 
@@ -15,15 +19,11 @@ sourceType: javadoc
 public class ModelMagmaCube extends ModelBase
 ```
 
-## Constructors
-
-- `public ModelMagmaCube()`
-
 ## Methods
 
-- `public void setLivingAnimations( EntityLivingBase entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime)`
-- `public void render( Entity entityIn, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale)`
+- `void render(Entity entityIn, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale)` — Sets the models various rotation angles then renders the model.
+- `void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime)` — Used for easily adding entity-dependent animations.
 
-## Description
+## Fields
 
-Sets the models various rotation angles then renders the model.
+- `ModelMagmaCube`

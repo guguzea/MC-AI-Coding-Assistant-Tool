@@ -1,38 +1,40 @@
 # BlockTallGrass
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockBush → net.minecraft.block.BlockTallGrass
+
 ## Class signature
 
 ```java
-public class BlockTallGrass extends BlockBush implements IGrowable , IShearable
+public class BlockTallGrass extends BlockBush implements IGrowable, IShearable
 ```
 
 ## Constructors
 
-- `protected BlockTallGrass()`
+- `BlockTallGrass()`
 
 ## Methods
 
-- `public int getBlockColor()`
-- `public boolean canBlockStay( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isReplaceable( World worldIn, BlockPos pos)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public int quantityDroppedWithBonus(int fortune, java.util.Random random)`
-- `public void harvestBlock( World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)`
-- `public int getRenderColor( IBlockState state)`
-- `public int colorMultiplier( IBlockAccess worldIn, BlockPos pos, int renderPass)`
-- `public int getDamageValue( World worldIn, BlockPos pos)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > list)`
-- `public boolean canGrow( World worldIn, BlockPos pos, IBlockState state, boolean isClient)`
-- `public boolean canUseBonemeal( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
-- `public void grow( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)` — Whether this IGrowable can grow
+- `boolean canUseBonemeal(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
+- `int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)`
 - `protected BlockState createBlockState()`
-- `public Block.EnumOffsetType getOffsetType()`
-- `public boolean isShearable( ItemStack item, IBlockAccess world, BlockPos pos)`
-- `public java.util.List< ItemStack > onSheared( ItemStack item, IBlockAccess world, BlockPos pos, int fortune)`
-- `public java.util.List< ItemStack > getDrops( IBlockAccess world, BlockPos pos, IBlockState state, int fortune)`
+- `int getBlockColor()`
+- `int getDamageValue(World worldIn, BlockPos pos)`
+- `java.util.List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)` — This returns a complete list of items dropped from this block.
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `Block.EnumOffsetType getOffsetType()` — Get the OffsetType for this Block.
+- `int getRenderColor(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> list)` — returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+- `void grow(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
+- `void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)`
+- `boolean isReplaceable(World worldIn, BlockPos pos)` — Whether this Block can be replaced directly by other blocks (true for e.g. tall grass)
+- `boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)` — Checks if the object is currently shearable Example: Sheep return false when they have no wool
+- `java.util.List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)` — Performs the shear function on this object.
+- `int quantityDroppedWithBonus(int fortune, java.util.Random random)` — Get the quantity dropped based on the given fortune level
 
-## Description
+## Fields
 
-Whether this IGrowable can grow
+- `static PropertyEnum<BlockTallGrass.EnumType> TYPE`

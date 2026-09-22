@@ -1,8 +1,10 @@
 ---
 title: "IContext"
-description: "Use BlockPosContext or PlayerContext when possible"
+description: "public interface IContext"
 package: "net/minecraftforge/server/permission/context"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/server/permission/context/IContext.html"
 sourceType: javadoc
 ---
@@ -17,11 +19,7 @@ public interface IContext
 
 ## Methods
 
-- `@Nullable World getWorld()`
-- `@Nullable EntityPlayer getPlayer()`
-- `@Nullable <T> T get( ContextKey <T> key)`
-- `boolean has( ContextKey <?> key)`
-
-## Description
-
-Use BlockPosContext or PlayerContext when possible
+- `<T> T get(ContextKey<T> key)`
+- `EntityPlayer getPlayer()`
+- `World getWorld()` — World from where permission is requested.
+- `boolean has(ContextKey<?> key)`

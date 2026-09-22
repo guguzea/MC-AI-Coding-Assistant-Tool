@@ -3,11 +3,15 @@ title: "BlockNetherrack"
 description: "public class BlockNetherrack extends Block"
 package: "net/minecraft/block"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/BlockNetherrack.html"
 sourceType: javadoc
 ---
 
 # BlockNetherrack
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockNetherrack
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class BlockNetherrack extends Block
 ```
 
-## Constructors
-
-- `public BlockNetherrack()`
-
 ## Methods
 
-- `public MapColor getMapColor( IBlockState state)`
+- `MapColor getMapColor(IBlockState state)`
+
+## Fields
+
+- `BlockNetherrack`

@@ -3,11 +3,15 @@ title: "BlockTripWire"
 description: "public class BlockTripWire extends Block"
 package: "net/minecraft/block"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/block/BlockTripWire.html"
 sourceType: javadoc
 ---
 
 # BlockTripWire
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockTripWire
 
 ## Class signature
 
@@ -17,27 +21,39 @@ public class BlockTripWire extends Block
 
 ## Constructors
 
-- `public BlockTripWire()`
+- `BlockTripWire()`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `@Nullable public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, World worldIn, BlockPos pos)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public BlockRenderLayer getBlockLayer()`
-- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public void onBlockHarvested( World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
-- `public void randomTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random random)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public static boolean isConnectedTo( IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing direction)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `static boolean isConnectedTo(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing direction)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
+- `void randomTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random random)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
+
+## Fields
+
+- `protected static AxisAlignedBB AABB`
+- `static PropertyBool ATTACHED`
+- `static PropertyBool DISARMED`
+- `static PropertyBool EAST`
+- `static PropertyBool NORTH`
+- `static PropertyBool POWERED`
+- `static PropertyBool SOUTH`
+- `protected static AxisAlignedBB TRIP_WRITE_ATTACHED_AABB`
+- `static PropertyBool WEST`

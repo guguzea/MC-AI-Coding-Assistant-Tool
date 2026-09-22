@@ -1,13 +1,17 @@
 # FluidHandlerItemStackSimple.Consumable
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.capability.templates.FluidHandlerItemStackSimple → net.minecraftforge.fluids.capability.templates.FluidHandlerItemStackSimple.Consumable
 
-- `public Consumable( ItemStack container, int capacity)`
+## Class signature
+
+```java
+public static class FluidHandlerItemStackSimple.Consumable extends FluidHandlerItemStackSimple
+```
 
 ## Methods
 
-- `protected void setContainerToEmpty()`
+- `protected void setContainerToEmpty()` — Override this method for special handling.
 
-## Description
+## Fields
 
-Destroys the container item when it's emptied.
+- `Consumable`

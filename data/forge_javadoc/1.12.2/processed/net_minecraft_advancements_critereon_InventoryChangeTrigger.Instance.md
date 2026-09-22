@@ -1,9 +1,17 @@
 # InventoryChangeTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.InventoryChangeTrigger.Instance
+
+## Class signature
+
+```java
+public static class InventoryChangeTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( MinMaxBounds occupied, MinMaxBounds full, MinMaxBounds empty, ItemPredicate [] items)`
+- `Instance(MinMaxBounds occupied, MinMaxBounds full, MinMaxBounds empty, ItemPredicate [] items)`
 
 ## Methods
 
-- `public boolean test( InventoryPlayer inventory)`
+- `boolean test(InventoryPlayer inventory)`

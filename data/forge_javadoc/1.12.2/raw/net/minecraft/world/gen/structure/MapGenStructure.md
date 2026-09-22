@@ -3,11 +3,15 @@ title: "MapGenStructure"
 description: "public abstract class MapGenStructure extends MapGenBase"
 package: "net/minecraft/world/gen/structure"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/gen/structure/MapGenStructure.html"
 sourceType: javadoc
 ---
 
 # MapGenStructure
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.MapGenBase → net.minecraft.world.gen.structure.MapGenStructure
 
 ## Class signature
 
@@ -17,18 +21,22 @@ public abstract class MapGenStructure extends MapGenBase
 
 ## Constructors
 
-- `public MapGenStructure()`
+- `MapGenStructure()`
 
 ## Methods
 
-- `public abstract java.lang.String getStructureName()`
-- `protected final void recursiveGenerate( World worldIn, int chunkX, int chunkZ, int originalX, int originalZ, ChunkPrimer chunkPrimerIn)`
-- `public boolean generateStructure( World worldIn, java.util.Random randomIn, ChunkPos chunkCoord)`
-- `public boolean isInsideStructure( BlockPos pos)`
-- `protected StructureStart getStructureAt( BlockPos pos)`
-- `public boolean isPositionInStructure( World worldIn, BlockPos pos)`
-- `public abstract BlockPos getNearestStructurePos( World worldIn, BlockPos pos, boolean findUnexplored)`
-- `protected void initializeStructureData( World worldIn)`
 - `protected abstract boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)`
+- `protected static BlockPos findNearestStructurePosBySpacing(World worldIn, MapGenStructure p_191069_1_, BlockPos p_191069_2_, int p_191069_3_, int p_191069_4_, int p_191069_5_, boolean p_191069_6_, int p_191069_7_, boolean findUnexplored)`
+- `boolean generateStructure(World worldIn, java.util.Random randomIn, ChunkPos chunkCoord)`
+- `abstract BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean findUnexplored)`
+- `protected StructureStart getStructureAt(BlockPos pos)`
+- `abstract java.lang.String getStructureName()`
 - `protected abstract StructureStart getStructureStart(int chunkX, int chunkZ)`
-- `protected static BlockPos findNearestStructurePosBySpacing( World worldIn, MapGenStructure p_191069_1_, BlockPos p_191069_2_, int p_191069_3_, int p_191069_4_, int p_191069_5_, boolean p_191069_6_, int p_191069_7_, boolean findUnexplored)`
+- `protected void initializeStructureData(World worldIn)`
+- `boolean isInsideStructure(BlockPos pos)`
+- `boolean isPositionInStructure(World worldIn, BlockPos pos)`
+- `protected void recursiveGenerate(World worldIn, int chunkX, int chunkZ, int originalX, int originalZ, ChunkPrimer chunkPrimerIn)`
+
+## Fields
+
+- `protected<any> structureMap`

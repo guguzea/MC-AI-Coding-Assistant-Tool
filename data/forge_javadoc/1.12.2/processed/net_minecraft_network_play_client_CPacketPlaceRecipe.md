@@ -1,21 +1,23 @@
 # CPacketPlaceRecipe
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketPlaceRecipe
+
 ## Class signature
 
 ```java
-public class CPacketPlaceRecipe extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketPlaceRecipe extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketPlaceRecipe()`
-- `public CPacketPlaceRecipe(int p_i47614_1_, IRecipe p_i47614_2_, boolean p_i47614_3_)`
+- `CPacketPlaceRecipe()`
+- `CPacketPlaceRecipe(int p_i47614_1_, IRecipe p_i47614_2_, boolean p_i47614_3_)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public int func_194318_a()`
-- `public IRecipe func_194317_b()`
-- `public boolean func_194319_c()`
+- `IRecipe func_194317_b()`
+- `int func_194318_a()`
+- `boolean func_194319_c()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

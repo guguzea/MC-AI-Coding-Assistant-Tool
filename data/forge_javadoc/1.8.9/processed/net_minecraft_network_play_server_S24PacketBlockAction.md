@@ -1,26 +1,24 @@
 # S24PacketBlockAction
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S24PacketBlockAction
+
 ## Class signature
 
 ```java
-public class S24PacketBlockAction extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class S24PacketBlockAction extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public S24PacketBlockAction()`
-- `public S24PacketBlockAction( BlockPos blockPositionIn, Block blockIn, int instrumentIn, int pitchIn)`
+- `S24PacketBlockAction()`
+- `S24PacketBlockAction(BlockPos blockPositionIn, Block blockIn, int instrumentIn, int pitchIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public BlockPos getBlockPosition()`
-- `public int getData1()`
-- `public int getData2()`
-- `public Block getBlockType()`
-
-## Description
-
-instrument data for noteblocks
+- `BlockPos getBlockPosition()`
+- `Block getBlockType()`
+- `int getData1()` — instrument data for noteblocks
+- `int getData2()` — pitch data for noteblocks
+- `void processPacket(INetHandlerPlayClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

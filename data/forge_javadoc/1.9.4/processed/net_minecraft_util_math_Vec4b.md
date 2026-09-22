@@ -1,5 +1,7 @@
 # Vec4b
 
+**Inheritance:** java.lang.Object → net.minecraft.util.math.Vec4b
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class Vec4b extends java.lang.Object
 
 ## Constructors
 
-- `public Vec4b(byte typeIn, byte xIn, byte yIn, byte rotationIn)`
-- `public Vec4b( Vec4b vec)`
+- `Vec4b(byte typeIn, byte xIn, byte yIn, byte rotationIn)`
+- `Vec4b(Vec4b vec)`
 
 ## Methods
 
-- `public byte getType()`
-- `public byte getX()`
-- `public byte getY()`
-- `public byte getRotation()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `byte getRotation()`
+- `byte getType()`
+- `byte getX()`
+- `byte getY()`
+- `int hashCode()`

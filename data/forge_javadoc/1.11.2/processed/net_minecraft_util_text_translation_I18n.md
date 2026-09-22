@@ -1,17 +1,21 @@
 # I18n
 
+**Inheritance:** java.lang.Object → net.minecraft.util.text.translation.I18n
+
+## Class signature
+
+```java
+public class I18n extends java.lang.Object
+```
+
 ## Constructors
 
-- `public I18n()`
+- `@Deprecated I18n()`
 
 ## Methods
 
-- `@Deprecated public static java.lang.String translateToLocal(java.lang.String key)`
-- `@Deprecated public static java.lang.String translateToLocalFormatted(java.lang.String key, java.lang.Object... format)`
-- `@Deprecated public static java.lang.String translateToFallback(java.lang.String key)`
-- `@Deprecated public static boolean canTranslate(java.lang.String key)`
-- `public static long getLastTranslationUpdateTimeInMilliseconds()`
-
-## Description
-
-Deprecated.
+- `@Deprecated static boolean canTranslate(java.lang.String key)`
+- `@Deprecated static long getLastTranslationUpdateTimeInMilliseconds()`
+- `@Deprecated static java.lang.String translateToFallback(java.lang.String key)`
+- `@Deprecated static java.lang.String translateToLocal(java.lang.String key)`
+- `@Deprecated static java.lang.String translateToLocalFormatted(java.lang.String key, java.lang.Object... format)`

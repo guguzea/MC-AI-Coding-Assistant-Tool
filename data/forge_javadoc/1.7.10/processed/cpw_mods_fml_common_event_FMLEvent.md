@@ -1,5 +1,7 @@
 # FMLEvent
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.event.FMLEvent
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class FMLEvent extends java.lang.Object
 
 ## Constructors
 
-- `public FMLEvent()`
+- `FMLEvent()`
 
 ## Methods
 
-- `public final java.lang.String getEventType()`
-- `public final java.lang.String description()`
-- `public void applyModContainer( ModContainer activeContainer)`
+- `void applyModContainer(ModContainer activeContainer)`
+- `java.lang.String description()`
+- `java.lang.String getEventType()`

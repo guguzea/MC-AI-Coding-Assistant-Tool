@@ -3,11 +3,15 @@ title: "NumberInvalidException"
 description: "public class NumberInvalidException extends CommandException"
 package: "net/minecraft/command"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/command/NumberInvalidException.html"
 sourceType: javadoc
 ---
 
 # NumberInvalidException
+
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → net.minecraft.command.CommandException → net.minecraft.command.NumberInvalidException
 
 ## Class signature
 
@@ -17,5 +21,5 @@ public class NumberInvalidException extends CommandException
 
 ## Constructors
 
-- `public NumberInvalidException()`
-- `public NumberInvalidException(java.lang.String message, java.lang.Object... replacements)`
+- `NumberInvalidException()`
+- `NumberInvalidException(java.lang.String message, java.lang.Object... replacements)`

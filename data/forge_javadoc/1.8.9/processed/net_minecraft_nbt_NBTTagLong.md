@@ -1,29 +1,27 @@
 # NBTTagLong
 
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase → net.minecraft.nbt.NBTBase.NBTPrimitive → net.minecraft.nbt.NBTTagLong
+
 ## Class signature
 
 ```java
 public class NBTTagLong extends NBTBase.NBTPrimitive
 ```
 
-## Constructors
-
-- `public NBTTagLong(long data)`
-
 ## Methods
 
-- `public byte getId()`
-- `public java.lang.String toString()`
-- `public NBTBase copy()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public long getLong()`
-- `public int getInt()`
-- `public short getShort()`
-- `public byte getByte()`
-- `public double getDouble()`
-- `public float getFloat()`
+- `NBTBase copy()` — Creates a clone of the tag.
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `byte getByte()`
+- `double getDouble()`
+- `float getFloat()`
+- `byte getId()` — Gets the type byte for the tag.
+- `int getInt()`
+- `long getLong()`
+- `short getShort()`
+- `int hashCode()`
+- `java.lang.String toString()`
 
-## Description
+## Fields
 
-Creates a clone of the tag.
+- `NBTTagLong`

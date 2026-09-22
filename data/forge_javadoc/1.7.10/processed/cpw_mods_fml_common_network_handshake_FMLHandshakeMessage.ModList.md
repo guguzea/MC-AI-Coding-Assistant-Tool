@@ -1,15 +1,23 @@
 # FMLHandshakeMessage.ModList
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.network.handshake.FMLHandshakeMessage → cpw.mods.fml.common.network.handshake.FMLHandshakeMessage.ModList
+
+## Class signature
+
+```java
+public static class FMLHandshakeMessage.ModList extends FMLHandshakeMessage
+```
+
 ## Constructors
 
-- `public ModList()`
-- `public ModList(java.util.List< ModContainer > modList)`
+- `ModList()`
+- `ModList(java.util.List<ModContainer> modList)`
 
 ## Methods
 
-- `public void toBytes(ByteBuf buffer)`
-- `public void fromBytes(ByteBuf buffer)`
-- `public java.lang.String modListAsString()`
-- `public int modListSize()`
-- `public java.util.Map<java.lang.String,java.lang.String> modList()`
-- `public java.lang.String toString(java.lang.Class<? extends java.lang.Enum<?>> side)`
+- `void fromBytes(ByteBuf buffer)`
+- `java.util.Map<java.lang.String, java.lang.String> modList()`
+- `java.lang.String modListAsString()`
+- `int modListSize()`
+- `void toBytes(ByteBuf buffer)`
+- `java.lang.String toString(java.lang.Class<? extends java.lang.Enum<?>> side)`

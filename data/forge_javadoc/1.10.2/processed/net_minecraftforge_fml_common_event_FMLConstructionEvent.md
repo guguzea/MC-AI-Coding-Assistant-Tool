@@ -1,5 +1,7 @@
 # FMLConstructionEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLStateEvent → net.minecraftforge.fml.common.event.FMLConstructionEvent
+
 ## Class signature
 
 ```java
@@ -8,15 +10,11 @@ public class FMLConstructionEvent extends FMLStateEvent
 
 ## Constructors
 
-- `public FMLConstructionEvent(java.lang.Object... eventData)`
+- `FMLConstructionEvent(java.lang.Object... eventData)`
 
 ## Methods
 
-- `public ModClassLoader getModClassLoader()`
-- `public LoaderState.ModState getModState()`
-- `public ASMDataTable getASMHarvestedData()`
-- `public com.google.common.collect.ListMultimap<java.lang.String,java.lang.String> getReverseDependencies()`
-
-## Description
-
-An internal FML event used to signal the construction of mods. Should not be used by mods.
+- `ASMDataTable getASMHarvestedData()`
+- `ModClassLoader getModClassLoader()`
+- `LoaderState.ModState getModState()` — The current state of the mod
+- `com.google.common.collect.ListMultimap<java.lang.String, java.lang.String> getReverseDependencies()`

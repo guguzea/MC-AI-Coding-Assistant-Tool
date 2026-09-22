@@ -1,14 +1,18 @@
 # StructureOceanMonumentPieces.Penthouse
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureOceanMonumentPieces.Piece → net.minecraft.world.gen.structure.StructureOceanMonumentPieces.Penthouse
 
-- `public Penthouse()`
-- `public Penthouse( EnumFacing p_i45591_1_, StructureBoundingBox p_i45591_2_)`
+## Class signature
+
+```java
+public static class StructureOceanMonumentPieces.Penthouse extends StructureOceanMonumentPieces.Piece
+```
 
 ## Methods
 
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)` — second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at the end, it adds Fences...
 
-## Description
+## Fields
 
-second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at the end, it adds Fences...
+- `Penthouse`
+- `Penthouse`

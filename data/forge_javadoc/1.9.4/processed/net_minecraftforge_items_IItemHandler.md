@@ -8,11 +8,7 @@ public interface IItemHandler
 
 ## Methods
 
-- `int getSlots()`
-- `ItemStack getStackInSlot(int slot)`
-- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)`
-- `ItemStack extractItem(int slot, int amount, boolean simulate)`
-
-## Description
-
-Extracts an ItemStack from the given slot.
+- `ItemStack extractItem(int slot, int amount, boolean simulate)` — Extracts an ItemStack from the given slot.
+- `int getSlots()` — Returns the number of slots available
+- `ItemStack getStackInSlot(int slot)` — Returns the ItemStack in a given slot.
+- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)` — Inserts an ItemStack into the given slot and return the remainder.

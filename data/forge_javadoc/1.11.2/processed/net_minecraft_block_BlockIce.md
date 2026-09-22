@@ -1,20 +1,22 @@
 # BlockIce
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBreakable → net.minecraft.block.BlockIce
+
 ## Class signature
 
 ```java
 public class BlockIce extends BlockBreakable
 ```
 
-## Constructors
-
-- `public BlockIce()`
-
 ## Methods
 
-- `public BlockRenderLayer getBlockLayer()`
-- `public void harvestBlock( World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack)`
-- `public int quantityDropped(java.util.Random random)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `protected void turnIntoWater( World worldIn, BlockPos pos)`
-- `public EnumPushReaction getMobilityFlag( IBlockState state)`
+- `BlockRenderLayer getBlockLayer()`
+- `EnumPushReaction getMobilityFlag(IBlockState state)`
+- `void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)`
+- `int quantityDropped(java.util.Random random)`
+- `protected void turnIntoWater(World worldIn, BlockPos pos)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+
+## Fields
+
+- `BlockIce`

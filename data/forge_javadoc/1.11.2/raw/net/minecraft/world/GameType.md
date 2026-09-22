@@ -1,35 +1,35 @@
 ---
 title: "GameType"
-description: "Returns the enum constant of this type with the specified name."
+description: "public enum GameType extends java.lang.Enum<GameType>"
 package: "net/minecraft/world"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/GameType.html"
 sourceType: javadoc
 ---
 
 # GameType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<GameType> → net.minecraft.world.GameType
+
 ## Class signature
 
 ```java
-public enum GameType extends java.lang.Enum< GameType >
+public enum GameType extends java.lang.Enum<GameType>
 ```
 
 ## Methods
 
-- `public static GameType [] values()`
-- `public static GameType valueOf(java.lang.String name)`
-- `public int getID()`
-- `public java.lang.String getName()`
-- `public void configurePlayerCapabilities( PlayerCapabilities capabilities)`
-- `public boolean isAdventure()`
-- `public boolean isCreative()`
-- `public boolean isSurvivalOrAdventure()`
-- `public static GameType getByID(int idIn)`
-- `public static GameType parseGameTypeWithDefault(int targetId, GameType fallback)`
-- `public static GameType getByName(java.lang.String gamemodeName)`
-- `public static GameType parseGameTypeWithDefault(java.lang.String targetName, GameType fallback)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `void configurePlayerCapabilities(PlayerCapabilities capabilities)`
+- `static GameType getByID(int idIn)`
+- `static GameType getByName(java.lang.String gamemodeName)`
+- `int getID()`
+- `java.lang.String getName()`
+- `boolean isAdventure()`
+- `boolean isCreative()`
+- `boolean isSurvivalOrAdventure()`
+- `static GameType parseGameTypeWithDefault(int targetId, GameType fallback)`
+- `static GameType parseGameTypeWithDefault(java.lang.String targetName, GameType fallback)`
+- `static GameType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static GameType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

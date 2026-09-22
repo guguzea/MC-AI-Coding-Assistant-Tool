@@ -3,11 +3,15 @@ title: "EntityIronGolem"
 description: "public class EntityIronGolem extends EntityGolem"
 package: "net/minecraft/entity/monster"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/monster/EntityIronGolem.html"
 sourceType: javadoc
 ---
 
 # EntityIronGolem
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityGolem → net.minecraft.entity.monster.EntityIronGolem
 
 ## Class signature
 
@@ -17,31 +21,35 @@ public class EntityIronGolem extends EntityGolem
 
 ## Constructors
 
-- `public EntityIronGolem( World worldIn)`
+- `EntityIronGolem(World worldIn)`
 
 ## Methods
 
-- `protected void initEntityAI()`
-- `protected void entityInit()`
-- `protected void updateAITasks()`
 - `protected void applyEntityAttributes()`
+- `boolean attackEntityAsMob(Entity entityIn)`
+- `boolean canAttackClass(java.lang.Class<? extends EntityLivingBase> cls)`
+- `protected void collideWithEntity(Entity entityIn)`
 - `protected int decreaseAirSupply(int air)`
-- `protected void collideWithEntity( Entity entityIn)`
-- `public void onLivingUpdate()`
-- `public boolean canAttackClass(java.lang.Class<? extends EntityLivingBase > cls)`
-- `public static void registerFixesIronGolem( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean attackEntityAsMob( Entity entityIn)`
-- `public void handleStatusUpdate(byte id)`
-- `public Village getVillage()`
-- `public int getAttackTimer()`
-- `public void setHoldingRose(boolean p_70851_1_)`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
+- `protected void entityInit()`
+- `int getAttackTimer()`
 - `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
+- `int getHoldRoseTick()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
 - `protected ResourceLocation getLootTable()`
-- `public int getHoldRoseTick()`
-- `public boolean isPlayerCreated()`
-- `public void setPlayerCreated(boolean playerCreated)`
-- `public void onDeath( DamageSource cause)`
+- `Village getVillage()`
+- `void handleStatusUpdate(byte id)`
+- `protected void initEntityAI()`
+- `boolean isPlayerCreated()`
+- `void onDeath(DamageSource cause)`
+- `void onLivingUpdate()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesIronGolem(DataFixer fixer)`
+- `void setHoldingRose(boolean p_70851_1_)`
+- `void setPlayerCreated(boolean playerCreated)`
+- `protected void updateAITasks()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `protected static DataParameter<java.lang.Byte> PLAYER_CREATED`

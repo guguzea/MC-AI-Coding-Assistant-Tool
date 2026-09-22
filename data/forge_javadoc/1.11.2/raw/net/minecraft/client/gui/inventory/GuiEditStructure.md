@@ -3,11 +3,15 @@ title: "GuiEditStructure"
 description: "public class GuiEditStructure extends GuiScreen"
 package: "net/minecraft/client/gui/inventory"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/gui/inventory/GuiEditStructure.html"
 sourceType: javadoc
 ---
 
 # GuiEditStructure
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.inventory.GuiEditStructure
 
 ## Class signature
 
@@ -17,15 +21,19 @@ public class GuiEditStructure extends GuiScreen
 
 ## Constructors
 
-- `public GuiEditStructure( TileEntityStructure p_i47142_1_)`
+- `GuiEditStructure(TileEntityStructure p_i47142_1_)`
 
 ## Methods
 
-- `public void updateScreen()`
-- `public void initGui()`
-- `public void onGuiClosed()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `protected void keyTyped(char typedChar, int keyCode) throws java.io.IOException`
-- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `public boolean doesGuiPauseGame()`
+- `protected void actionPerformed(GuiButton button)`
+- `boolean doesGuiPauseGame()`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void initGui()`
+- `protected void keyTyped(char typedChar, int keyCode)`
+- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton)`
+- `void onGuiClosed()`
+- `void updateScreen()`
+
+## Fields
+
+- `static int[] LEGAL_KEY_CODES`

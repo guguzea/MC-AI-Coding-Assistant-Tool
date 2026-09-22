@@ -1,26 +1,26 @@
 ---
 title: "EventPriority"
-description: "Returns the enum constant of this type with the specified name."
+description: "public enum EventPriority extends java.lang.Enum<EventPriority> implements IEventListener"
 package: "net/minecraftforge/fml/common/eventhandler"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/common/eventhandler/EventPriority.html"
 sourceType: javadoc
 ---
 
 # EventPriority
 
+**Inheritance:** java.lang.Object → java.lang.Enum<EventPriority> → net.minecraftforge.fml.common.eventhandler.EventPriority
+
 ## Class signature
 
 ```java
-public enum EventPriority extends java.lang.Enum< EventPriority > implements IEventListener
+public enum EventPriority extends java.lang.Enum<EventPriority> implements IEventListener
 ```
 
 ## Methods
 
-- `public static EventPriority [] values()`
-- `public static EventPriority valueOf(java.lang.String name)`
-- `public void invoke( Event event)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `void invoke(Event event)`
+- `static EventPriority valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static EventPriority [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

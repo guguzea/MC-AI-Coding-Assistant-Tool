@@ -1,16 +1,18 @@
 # PropertyDirection
 
+**Inheritance:** java.lang.Object → net.minecraft.block.properties.PropertyHelper<T> → net.minecraft.block.properties.PropertyEnum<EnumFacing> → net.minecraft.block.properties.PropertyDirection
+
 ## Class signature
 
 ```java
-public class PropertyDirection extends PropertyEnum < EnumFacing >
+public class PropertyDirection extends PropertyEnum<EnumFacing>
 ```
 
 ## Constructors
 
-- `protected PropertyDirection(java.lang.String name, java.util.Collection< EnumFacing > values)`
+- `PropertyDirection(java.lang.String name, java.util.Collection<EnumFacing> values)`
 
 ## Methods
 
-- `public static PropertyDirection create(java.lang.String name)`
-- `public static PropertyDirection create(java.lang.String name, <any> filter)`
+- `static PropertyDirection create(java.lang.String name)`
+- `static PropertyDirection create(java.lang.String name, <any> filter)`

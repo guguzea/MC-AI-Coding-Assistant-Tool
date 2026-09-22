@@ -1,13 +1,17 @@
 ---
 title: "ShapelessOreRecipe"
-description: "Returns the input for this recipe, any mod accessing this value should never manipulate the values in this array as it will effect the recipe itself."
+description: "public class ShapelessOreRecipe extends java.lang.Object implements IRecipe"
 package: "net/minecraftforge/oredict"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/oredict/ShapelessOreRecipe.html"
 sourceType: javadoc
 ---
 
 # ShapelessOreRecipe
+
+**Inheritance:** java.lang.Object → net.minecraftforge.oredict.ShapelessOreRecipe
 
 ## Class signature
 
@@ -17,19 +21,20 @@ public class ShapelessOreRecipe extends java.lang.Object implements IRecipe
 
 ## Constructors
 
-- `public ShapelessOreRecipe( Block result, java.lang.Object... recipe)`
-- `public ShapelessOreRecipe( Item result, java.lang.Object... recipe)`
-- `public ShapelessOreRecipe(@Nonnull ItemStack result, java.lang.Object... recipe)`
+- `ShapelessOreRecipe(Block result, java.lang.Object... recipe)`
+- `ShapelessOreRecipe(Item result, java.lang.Object... recipe)`
+- `ShapelessOreRecipe(ItemStack result, java.lang.Object... recipe)`
 
 ## Methods
 
-- `public int getRecipeSize()`
-- `@Nonnull public ItemStack getRecipeOutput()`
-- `@Nonnull public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1)`
-- `public boolean matches( InventoryCrafting var1, World world)`
-- `public NonNullList <java.lang.Object> getInput()`
-- `@Nonnull public NonNullList < ItemStack > getRemainingItems( InventoryCrafting inv)`
+- `ItemStack getCraftingResult(InventoryCrafting var1)`
+- `NonNullList<java.lang.Object> getInput()` — Returns the input for this recipe, any mod accessing this value should never manipulate the values in this array as it will effect the recipe itself.
+- `ItemStack getRecipeOutput()`
+- `int getRecipeSize()`
+- `NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)`
+- `boolean matches(InventoryCrafting var1, World world)`
 
-## Description
+## Fields
 
-Returns the input for this recipe, any mod accessing this value should never manipulate the values in this array as it will effect the recipe itself.
+- `protected NonNullList<java.lang.Object> input`
+- `protected ItemStack output`

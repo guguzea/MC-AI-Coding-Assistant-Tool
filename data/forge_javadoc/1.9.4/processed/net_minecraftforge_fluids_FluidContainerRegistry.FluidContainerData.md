@@ -1,14 +1,24 @@
 # FluidContainerRegistry.FluidContainerData
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData
+
+## Class signature
+
+```java
+public static class FluidContainerRegistry.FluidContainerData extends java.lang.Object
+```
+
 ## Constructors
 
-- `public FluidContainerData( FluidStack stack, ItemStack filledContainer, ItemStack emptyContainer)`
-- `public FluidContainerData( FluidStack stack, ItemStack filledContainer, ItemStack emptyContainer, boolean nullEmpty)`
+- `FluidContainerData(FluidStack stack, ItemStack filledContainer, ItemStack emptyContainer)`
+- `FluidContainerData(FluidStack stack, ItemStack filledContainer, ItemStack emptyContainer, boolean nullEmpty)`
 
 ## Methods
 
-- `public FluidContainerRegistry.FluidContainerData copy()`
+- `FluidContainerRegistry.FluidContainerData copy()`
 
-## Description
+## Fields
 
-Wrapper class for the registry entries. Ensures that none of the attempted registrations contain null references unless permitted.
+- `ItemStack emptyContainer`
+- `ItemStack filledContainer`
+- `FluidStack fluid`

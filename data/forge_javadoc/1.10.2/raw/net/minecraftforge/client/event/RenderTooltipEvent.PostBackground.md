@@ -1,18 +1,24 @@
 ---
 title: "RenderTooltipEvent.PostBackground"
-description: "This event is fired directly after the tooltip background is drawn, but before any text is drawn."
+description: "public static class RenderTooltipEvent.PostBackground extends RenderTooltipEvent.Post"
 package: "net/minecraftforge/client/event"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/client/event/RenderTooltipEvent.PostBackground.html"
 sourceType: javadoc
 ---
 
 # RenderTooltipEvent.PostBackground
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderTooltipEvent → net.minecraftforge.client.event.RenderTooltipEvent.Post → net.minecraftforge.client.event.RenderTooltipEvent.PostBackground
 
-- `public PostBackground(@Nullable ItemStack stack, @Nonnull java.util.List<java.lang.String> textLines, int x, int y, @Nonnull FontRenderer fr, int width, int height)`
+## Class signature
 
-## Description
+```java
+public static class RenderTooltipEvent.PostBackground extends RenderTooltipEvent.Post
+```
 
-This event is fired directly after the tooltip background is drawn, but before any text is drawn.
+## Fields
+
+- `PostBackground`

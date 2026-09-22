@@ -1,5 +1,7 @@
 # FluidStack
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.FluidStack
+
 ## Class signature
 
 ```java
@@ -8,26 +10,27 @@ public class FluidStack extends java.lang.Object
 
 ## Constructors
 
-- `public FluidStack( Fluid fluid, int amount)`
-- `public FluidStack( Fluid fluid, int amount, NBTTagCompound nbt)`
-- `public FluidStack( FluidStack stack, int amount)`
+- `FluidStack(Fluid fluid, int amount)`
+- `FluidStack(Fluid fluid, int amount, NBTTagCompound nbt)`
+- `FluidStack(FluidStack stack, int amount)`
 
 ## Methods
 
-- `@Nullable public static FluidStack loadFluidStackFromNBT( NBTTagCompound nbt)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound nbt)`
-- `public final Fluid getFluid()`
-- `public java.lang.String getLocalizedName()`
-- `public java.lang.String getUnlocalizedName()`
-- `public FluidStack copy()`
-- `public boolean isFluidEqual(@Nullable FluidStack other)`
-- `public static boolean areFluidStackTagsEqual(@Nullable FluidStack stack1, @Nullable FluidStack stack2)`
-- `public boolean containsFluid(@Nullable FluidStack other)`
-- `public boolean isFluidStackIdentical( FluidStack other)`
-- `public boolean isFluidEqual( ItemStack other)`
-- `public final int hashCode()`
-- `public final boolean equals(java.lang.Object o)`
+- `static boolean areFluidStackTagsEqual(FluidStack stack1, FluidStack stack2)` — Determines if the NBT Tags are equal.
+- `boolean containsFluid(FluidStack other)` — Determines if the Fluids are equal and this stack is larger.
+- `FluidStack copy()`
+- `boolean equals(java.lang.Object o)` — Default equality comparison for a FluidStack.
+- `Fluid getFluid()`
+- `java.lang.String getLocalizedName()`
+- `java.lang.String getUnlocalizedName()`
+- `int hashCode()`
+- `boolean isFluidEqual(FluidStack other)` — Determines if the FluidIDs and NBT Tags are equal.
+- `boolean isFluidEqual(ItemStack other)` — Determines if the FluidIDs and NBT Tags are equal compared to a registered container ItemStack.
+- `boolean isFluidStackIdentical(FluidStack other)` — Determines if the FluidIDs, Amounts, and NBT Tags are all equal.
+- `static FluidStack loadFluidStackFromNBT(NBTTagCompound nbt)` — This provides a safe method for retrieving a FluidStack - if the Fluid is invalid, the stack will return as null.
+- `NBTTagCompound writeToNBT(NBTTagCompound nbt)`
 
-## Description
+## Fields
 
-ItemStack substitute for Fluids. NOTE: Equality is based on the Fluid, not the amount. Use isFluidStackIdentical(FluidStack) to determine if FluidID, Amount and NBT Tag are all equal.
+- `int amount`
+- `NBTTagCompound tag`

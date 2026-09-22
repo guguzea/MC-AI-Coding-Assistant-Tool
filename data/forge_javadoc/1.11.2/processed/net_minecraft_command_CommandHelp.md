@@ -1,5 +1,7 @@
 # CommandHelp
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.CommandHelp
+
 ## Class signature
 
 ```java
@@ -8,15 +10,15 @@ public class CommandHelp extends CommandBase
 
 ## Constructors
 
-- `public CommandHelp()`
+- `CommandHelp()`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public int getRequiredPermissionLevel()`
-- `public java.lang.String getUsage( ICommandSender sender)`
-- `public java.util.List<java.lang.String> getAliases()`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `protected java.util.List< ICommand > getSortedPossibleCommands( ICommandSender sender, MinecraftServer server)`
-- `protected java.util.Map<java.lang.String, ICommand > getCommandMap( MinecraftServer server)`
-- `public java.util.List<java.lang.String> getTabCompletions( MinecraftServer server, ICommandSender sender, java.lang.String[] args, @Nullable BlockPos targetPos)`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.util.List<java.lang.String> getAliases()`
+- `protected java.util.Map<java.lang.String, ICommand> getCommandMap(MinecraftServer server)`
+- `java.lang.String getName()`
+- `int getRequiredPermissionLevel()`
+- `protected java.util.List<ICommand> getSortedPossibleCommands(ICommandSender sender, MinecraftServer server)`
+- `java.util.List<java.lang.String> getTabCompletions(MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos targetPos)`
+- `java.lang.String getUsage(ICommandSender sender)`

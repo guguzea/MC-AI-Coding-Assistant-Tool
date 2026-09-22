@@ -1,22 +1,28 @@
 ---
 title: "FluidHandlerItemStack.Consumable"
-description: "Destroys the container item when it's emptied."
+description: "public static class FluidHandlerItemStack.Consumable extends FluidHandlerItemStack"
 package: "net/minecraftforge/fluids/capability/templates"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fluids/capability/templates/FluidHandlerItemStack.Consumable.html"
 sourceType: javadoc
 ---
 
 # FluidHandlerItemStack.Consumable
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack → net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack.Consumable
 
-- `public Consumable( ItemStack container, int capacity)`
+## Class signature
+
+```java
+public static class FluidHandlerItemStack.Consumable extends FluidHandlerItemStack
+```
 
 ## Methods
 
-- `protected void setContainerToEmpty()`
+- `protected void setContainerToEmpty()` — Override this method for special handling.
 
-## Description
+## Fields
 
-Destroys the container item when it's emptied.
+- `Consumable`

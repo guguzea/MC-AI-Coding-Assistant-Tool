@@ -3,11 +3,15 @@ title: "BlockEventData"
 description: "public class BlockEventData extends java.lang.Object"
 package: "net/minecraft/block"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/BlockEventData.html"
 sourceType: javadoc
 ---
 
 # BlockEventData
+
+**Inheritance:** java.lang.Object → net.minecraft.block.BlockEventData
 
 ## Class signature
 
@@ -17,13 +21,13 @@ public class BlockEventData extends java.lang.Object
 
 ## Constructors
 
-- `public BlockEventData( BlockPos pos, Block blockType, int eventId, int p_i45756_4_)`
+- `BlockEventData(BlockPos pos, Block blockType, int eventId, int p_i45756_4_)`
 
 ## Methods
 
-- `public BlockPos getPosition()`
-- `public int getEventID()`
-- `public int getEventParameter()`
-- `public Block getBlock()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public java.lang.String toString()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `Block getBlock()`
+- `int getEventID()`
+- `int getEventParameter()`
+- `BlockPos getPosition()`
+- `java.lang.String toString()`

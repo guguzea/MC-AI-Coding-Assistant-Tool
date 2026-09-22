@@ -1,5 +1,7 @@
 # MessageSerializer2
 
+**Inheritance:** java.lang.Object → MessageToByteEncoder → net.minecraft.util.MessageSerializer2
+
 ## Class signature
 
 ```java
@@ -8,7 +10,7 @@ public class MessageSerializer2 extends MessageToByteEncoder
 
 ## Constructors
 
-- `public MessageSerializer2()`
+- `MessageSerializer2()`
 
 ## Methods
 

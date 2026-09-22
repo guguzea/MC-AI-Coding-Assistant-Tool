@@ -1,9 +1,17 @@
 # EffectsChangedTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.EffectsChangedTrigger.Instance
+
+## Class signature
+
+```java
+public static class EffectsChangedTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( MobEffectsPredicate effects)`
+- `Instance(MobEffectsPredicate effects)`
 
 ## Methods
 
-- `public boolean test( EntityPlayerMP player)`
+- `boolean test(EntityPlayerMP player)`

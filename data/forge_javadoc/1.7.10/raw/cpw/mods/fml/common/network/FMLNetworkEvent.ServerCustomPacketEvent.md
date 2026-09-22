@@ -1,22 +1,28 @@
 ---
 title: "FMLNetworkEvent.ServerCustomPacketEvent"
-description: "Fired when a custom packet is received at the server for the channel"
+description: "public static class FMLNetworkEvent.ServerCustomPacketEvent extends FMLNetworkEvent.CustomPacketEvent<INetHandlerPlayServer>"
 package: "cpw/mods/fml/common/network"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/network/FMLNetworkEvent.ServerCustomPacketEvent.html"
 sourceType: javadoc
 ---
 
 # FMLNetworkEvent.ServerCustomPacketEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.eventhandler.Event → cpw.mods.fml.common.network.FMLNetworkEvent<S> → cpw.mods.fml.common.network.FMLNetworkEvent.CustomPacketEvent<INetHandlerPlayServer> → cpw.mods.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent
 
-- `public ServerCustomPacketEvent( NetworkManager manager, FMLProxyPacket packet)`
+## Class signature
+
+```java
+public static class FMLNetworkEvent.ServerCustomPacketEvent extends FMLNetworkEvent.CustomPacketEvent<INetHandlerPlayServer>
+```
 
 ## Methods
 
-- `public Side side()`
+- `Side side()`
 
-## Description
+## Fields
 
-Fired when a custom packet is received at the server for the channel
+- `ServerCustomPacketEvent`

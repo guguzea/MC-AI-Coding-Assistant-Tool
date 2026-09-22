@@ -1,17 +1,21 @@
 # PlayerEvent.BreakSpeed
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed
+
+## Class signature
+
+```java
+public static class PlayerEvent.BreakSpeed extends PlayerEvent
+```
+
 ## Constructors
 
-- `public BreakSpeed( EntityPlayer player, IBlockState state, float original, BlockPos pos)`
+- `BreakSpeed(EntityPlayer player, IBlockState state, float original, BlockPos pos)`
 
 ## Methods
 
-- `public IBlockState getState()`
-- `public float getOriginalSpeed()`
-- `public float getNewSpeed()`
-- `public void setNewSpeed(float newSpeed)`
-- `public BlockPos getPos()`
-
-## Description
-
-BreakSpeed is fired when a player attempts to harvest a block. This event is fired whenever a player attempts to harvest a block in EntityPlayer#canHarvestBlock(Block). This event is fired via the For
+- `float getNewSpeed()`
+- `float getOriginalSpeed()`
+- `BlockPos getPos()`
+- `IBlockState getState()`
+- `void setNewSpeed(float newSpeed)`

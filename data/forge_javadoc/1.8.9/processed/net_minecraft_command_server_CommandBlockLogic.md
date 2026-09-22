@@ -1,5 +1,7 @@
 # CommandBlockLogic
 
+**Inheritance:** java.lang.Object → net.minecraft.command.server.CommandBlockLogic
+
 ## Class signature
 
 ```java
@@ -8,33 +10,29 @@ public abstract class CommandBlockLogic extends java.lang.Object implements ICom
 
 ## Constructors
 
-- `public CommandBlockLogic()`
+- `CommandBlockLogic()`
 
 ## Methods
 
-- `public int getSuccessCount()`
-- `public IChatComponent getLastOutput()`
-- `public void writeDataToNBT( NBTTagCompound tagCompound)`
-- `public void readDataFromNBT( NBTTagCompound nbt)`
-- `public boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)`
-- `public void setCommand(java.lang.String command)`
-- `public java.lang.String getCommand()`
-- `public void trigger( World worldIn)`
-- `public java.lang.String getName()`
-- `public IChatComponent getDisplayName()`
-- `public void setName(java.lang.String p_145754_1_)`
-- `public void addChatMessage( IChatComponent component)`
-- `public boolean sendCommandFeedback()`
-- `public void setCommandStat( CommandResultStats.Type type, int amount)`
-- `public abstract void updateCommand()`
-- `public abstract int func_145751_f()`
-- `public abstract void func_145757_a(ByteBuf p_145757_1_)`
-- `public void setLastOutput( IChatComponent lastOutputMessage)`
-- `public void setTrackOutput(boolean shouldTrackOutput)`
-- `public boolean shouldTrackOutput()`
-- `public boolean tryOpenEditCommandBlock( EntityPlayer playerIn)`
-- `public CommandResultStats getCommandResultStats()`
-
-## Description
-
-Send a chat message to the CommandSender
+- `void addChatMessage(IChatComponent component)` — Send a chat message to the CommandSender
+- `boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)` — Returns true if the CommandSender is allowed to execute the command, false if not
+- `abstract int func_145751_f()`
+- `abstract void func_145757_a(ByteBuf p_145757_1_)`
+- `java.lang.String getCommand()` — Returns the command of the command block.
+- `CommandResultStats getCommandResultStats()`
+- `IChatComponent getDisplayName()` — Get the formatted ChatComponent that will be used for the sender's username in chat
+- `IChatComponent getLastOutput()` — Returns the lastOutput.
+- `java.lang.String getName()` — Get the name of this object.
+- `int getSuccessCount()` — returns the successCount int.
+- `void readDataFromNBT(NBTTagCompound nbt)` — Reads NBT formatting and stored data into variables.
+- `boolean sendCommandFeedback()` — Returns true if the command sender should be sent feedback about executed commands
+- `void setCommand(java.lang.String command)` — Sets the command.
+- `void setCommandStat(CommandResultStats.Type type, int amount)`
+- `void setLastOutput(IChatComponent lastOutputMessage)`
+- `void setName(java.lang.String p_145754_1_)`
+- `void setTrackOutput(boolean shouldTrackOutput)`
+- `boolean shouldTrackOutput()`
+- `void trigger(World worldIn)`
+- `boolean tryOpenEditCommandBlock(EntityPlayer playerIn)`
+- `abstract void updateCommand()`
+- `void writeDataToNBT(NBTTagCompound tagCompound)` — Stores data to NBT format.

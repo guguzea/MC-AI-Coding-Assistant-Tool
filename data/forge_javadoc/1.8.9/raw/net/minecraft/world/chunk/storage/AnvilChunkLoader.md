@@ -1,39 +1,43 @@
 ---
 title: "AnvilChunkLoader"
-description: "Save directory for chunks using the Anvil format"
+description: "public class AnvilChunkLoader extends java.lang.Object implements IChunkLoader, IThreadedFileIO"
 package: "net/minecraft/world/chunk/storage"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/chunk/storage/AnvilChunkLoader.html"
 sourceType: javadoc
 ---
 
 # AnvilChunkLoader
 
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.storage.AnvilChunkLoader
+
 ## Class signature
 
 ```java
-public class AnvilChunkLoader extends java.lang.Object implements IChunkLoader , IThreadedFileIO
+public class AnvilChunkLoader extends java.lang.Object implements IChunkLoader, IThreadedFileIO
 ```
 
 ## Constructors
 
-- `public AnvilChunkLoader(java.io.File chunkSaveLocationIn)`
+- `AnvilChunkLoader(java.io.File chunkSaveLocationIn)`
 
 ## Methods
 
-- `public boolean chunkExists( World world, int x, int z)`
-- `public Chunk loadChunk( World worldIn, int x, int z) throws java.io.IOException`
-- `public java.lang.Object[] loadChunk__Async( World worldIn, int x, int z) throws java.io.IOException`
-- `protected Chunk checkedReadChunkFromNBT( World worldIn, int x, int z, NBTTagCompound p_75822_4_)`
-- `protected java.lang.Object[] checkedReadChunkFromNBT__Async( World worldIn, int x, int z, NBTTagCompound p_75822_4_)`
-- `public void saveChunk( World worldIn, Chunk chunkIn) throws MinecraftException , java.io.IOException`
-- `protected void addChunkToPending( ChunkCoordIntPair p_75824_1_, NBTTagCompound p_75824_2_)`
-- `public boolean writeNextIO()`
-- `public void saveExtraChunkData( World worldIn, Chunk chunkIn) throws java.io.IOException`
-- `public void chunkTick()`
-- `public void saveExtraData()`
-- `public void loadEntities( World worldIn, NBTTagCompound p_75823_2_, Chunk chunk)`
+- `protected void addChunkToPending(ChunkCoordIntPair p_75824_1_, NBTTagCompound p_75824_2_)`
+- `protected java.lang.Object[] checkedReadChunkFromNBT__Async(World worldIn, int x, int z, NBTTagCompound p_75822_4_)`
+- `protected Chunk checkedReadChunkFromNBT(World worldIn, int x, int z, NBTTagCompound p_75822_4_)` — Wraps readChunkFromNBT.
+- `boolean chunkExists(World world, int x, int z)`
+- `void chunkTick()` — Called every World.tick()
+- `java.lang.Object[] loadChunk__Async(World worldIn, int x, int z)`
+- `Chunk loadChunk(World worldIn, int x, int z)` — Loads the specified(XZ) chunk into the specified world.
+- `void loadEntities(World worldIn, NBTTagCompound p_75823_2_, Chunk chunk)`
+- `void saveChunk(World worldIn, Chunk chunkIn)`
+- `void saveExtraChunkData(World worldIn, Chunk chunkIn)` — Save extra data associated with this Chunk not normally saved during autosave, only during chunk unload.
+- `void saveExtraData()` — Save extra data not associated with any Chunk.
+- `boolean writeNextIO()` — Returns a boolean stating if the write was unsuccessful.
 
-## Description
+## Fields
 
-Save directory for chunks using the Anvil format
+- `java.io.File chunkSaveLocation` — Save directory for chunks using the Anvil format

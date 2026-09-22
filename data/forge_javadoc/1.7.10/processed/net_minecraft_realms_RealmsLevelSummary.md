@@ -1,5 +1,7 @@
 # RealmsLevelSummary
 
+**Inheritance:** java.lang.Object → net.minecraft.realms.RealmsLevelSummary
+
 ## Class signature
 
 ```java
@@ -8,18 +10,18 @@ public class RealmsLevelSummary extends java.lang.Object implements java.lang.Co
 
 ## Constructors
 
-- `public RealmsLevelSummary( SaveFormatComparator p_i1109_1_)`
+- `RealmsLevelSummary(SaveFormatComparator p_i1109_1_)`
 
 ## Methods
 
-- `public int getGameMode()`
-- `public java.lang.String getLevelId()`
-- `public boolean hasCheats()`
-- `public boolean isHardcore()`
-- `public boolean isRequiresConversion()`
-- `public java.lang.String getLevelName()`
-- `public long getLastPlayed()`
-- `public int compareTo( SaveFormatComparator p_compareTo_1_)`
-- `public long getSizeOnDisk()`
-- `public int compareTo( RealmsLevelSummary p_compareTo_1_)`
-- `public int compareTo(java.lang.Object p_compareTo_1_)`
+- `int compareTo(java.lang.Object p_compareTo_1_)`
+- `int compareTo(RealmsLevelSummary p_compareTo_1_)`
+- `int compareTo(SaveFormatComparator p_compareTo_1_)`
+- `int getGameMode()`
+- `long getLastPlayed()`
+- `java.lang.String getLevelId()`
+- `java.lang.String getLevelName()`
+- `long getSizeOnDisk()`
+- `boolean hasCheats()`
+- `boolean isHardcore()`
+- `boolean isRequiresConversion()`

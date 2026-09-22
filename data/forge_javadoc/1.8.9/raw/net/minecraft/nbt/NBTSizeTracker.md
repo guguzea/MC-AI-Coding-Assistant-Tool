@@ -1,13 +1,17 @@
 ---
 title: "NBTSizeTracker"
-description: "Tracks the reading of the given amount of bits(!)"
+description: "public class NBTSizeTracker extends java.lang.Object"
 package: "net/minecraft/nbt"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/nbt/NBTSizeTracker.html"
 sourceType: javadoc
 ---
 
 # NBTSizeTracker
+
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTSizeTracker
 
 ## Class signature
 
@@ -17,13 +21,13 @@ public class NBTSizeTracker extends java.lang.Object
 
 ## Constructors
 
-- `public NBTSizeTracker(long max)`
+- `NBTSizeTracker(long max)`
 
 ## Methods
 
-- `public void read(long bits)`
-- `public static void readUTF( NBTSizeTracker tracker, java.lang.String data)`
+- `void read(long bits)` — Tracks the reading of the given amount of bits(!)
+- `static void readUTF(NBTSizeTracker tracker, java.lang.String data)`
 
-## Description
+## Fields
 
-Tracks the reading of the given amount of bits(!)
+- `static NBTSizeTracker INFINITE`

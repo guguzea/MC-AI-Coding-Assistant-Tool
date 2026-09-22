@@ -1,9 +1,13 @@
 # EntityEvent.EntityConstructing
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.EntityEvent.EntityConstructing
+
+## Class signature
+
+```java
+public static class EntityEvent.EntityConstructing extends EntityEvent
+```
+
 ## Constructors
 
-- `public EntityConstructing( Entity entity)`
-
-## Description
-
-EntityConstructing is fired when an Entity is being created. This event is fired within the constructor of the Entity. This event is not Cancelable . This event does not have a result. HasResult This
+- `EntityConstructing(Entity entity)`

@@ -8,13 +8,9 @@ public interface IEnergyStorage
 
 ## Methods
 
-- `int receiveEnergy(int maxReceive, boolean simulate)`
-- `int extractEnergy(int maxExtract, boolean simulate)`
-- `int getEnergyStored()`
-- `int getMaxEnergyStored()`
-- `boolean canExtract()`
-- `boolean canReceive()`
-
-## Description
-
-An energy storage is the unit of interaction with Energy inventories. A reference implementation can be found at EnergyStorage . Derived from the Redstone Flux power system designed by King Lemming an
+- `boolean canExtract()` — Returns if this storage can have energy extracted.
+- `boolean canReceive()` — Used to determine if this storage can receive energy.
+- `int extractEnergy(int maxExtract, boolean simulate)` — Removes energy from the storage.
+- `int getEnergyStored()` — Returns the amount of energy currently stored.
+- `int getMaxEnergyStored()` — Returns the maximum amount of energy that can be stored.
+- `int receiveEnergy(int maxReceive, boolean simulate)` — Adds energy to the storage.

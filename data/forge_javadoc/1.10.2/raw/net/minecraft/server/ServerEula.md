@@ -3,11 +3,15 @@ title: "ServerEula"
 description: "public class ServerEula extends java.lang.Object"
 package: "net/minecraft/server"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/server/ServerEula.html"
 sourceType: javadoc
 ---
 
 # ServerEula
+
+**Inheritance:** java.lang.Object → net.minecraft.server.ServerEula
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class ServerEula extends java.lang.Object
 
 ## Constructors
 
-- `public ServerEula(java.io.File eulaFile)`
+- `ServerEula(java.io.File eulaFile)`
 
 ## Methods
 
-- `public boolean hasAcceptedEULA()`
-- `public void createEULAFile()`
+- `void createEULAFile()`
+- `boolean hasAcceptedEULA()`

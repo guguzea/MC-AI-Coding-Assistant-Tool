@@ -8,4 +8,4 @@ public interface IRecipeFactory
 
 ## Methods
 
-- `IRecipe parse( JsonContext context, JsonObject json)`
+- `IRecipe parse(JsonContext context, JsonObject json)`

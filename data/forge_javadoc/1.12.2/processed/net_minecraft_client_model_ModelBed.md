@@ -1,5 +1,7 @@
 # ModelBed
 
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelBed
+
 ## Class signature
 
 ```java
@@ -8,10 +10,16 @@ public class ModelBed extends ModelBase
 
 ## Constructors
 
-- `public ModelBed()`
+- `ModelBed()`
 
 ## Methods
 
-- `public int getModelVersion()`
-- `public void render()`
-- `public void preparePiece(boolean p_193769_1_)`
+- `int getModelVersion()`
+- `void preparePiece(boolean p_193769_1_)`
+- `void render()`
+
+## Fields
+
+- `ModelRenderer footPiece`
+- `ModelRenderer headPiece`
+- `ModelRenderer [] legs`

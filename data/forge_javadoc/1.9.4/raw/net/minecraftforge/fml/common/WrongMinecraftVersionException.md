@@ -3,11 +3,15 @@ title: "WrongMinecraftVersionException"
 description: "public class WrongMinecraftVersionException extends EnhancedRuntimeException"
 package: "net/minecraftforge/fml/common"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/common/WrongMinecraftVersionException.html"
 sourceType: javadoc
 ---
 
 # WrongMinecraftVersionException
+
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.lang.RuntimeException → net.minecraftforge.fml.common.EnhancedRuntimeException → net.minecraftforge.fml.common.WrongMinecraftVersionException
 
 ## Class signature
 
@@ -17,8 +21,12 @@ public class WrongMinecraftVersionException extends EnhancedRuntimeException
 
 ## Constructors
 
-- `public WrongMinecraftVersionException( ModContainer mod, java.lang.String mcver)`
+- `WrongMinecraftVersionException(ModContainer mod, java.lang.String mcver)`
 
 ## Methods
 
-- `protected void printStackTrace( EnhancedRuntimeException.WrappedPrintStream stream)`
+- `protected void printStackTrace(EnhancedRuntimeException.WrappedPrintStream stream)`
+
+## Fields
+
+- `ModContainer mod`

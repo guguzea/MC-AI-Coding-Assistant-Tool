@@ -8,13 +8,9 @@ public interface IItemHandler
 
 ## Methods
 
-- `int getSlots()`
-- `ItemStack getStackInSlot(int slot)`
-- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)`
-- `ItemStack extractItem(int slot, int amount, boolean simulate)`
-- `int getSlotLimit(int slot)`
-- `default boolean isItemValid(int slot, ItemStack stack)`
-
-## Description
-
-Extracts an ItemStack from the given slot.
+- `ItemStack extractItem(int slot, int amount, boolean simulate)` — Extracts an ItemStack from the given slot.
+- `int getSlotLimit(int slot)` — Retrieves the maximum stack size allowed to exist in the given slot.
+- `int getSlots()` — Returns the number of slots available
+- `ItemStack getStackInSlot(int slot)` — Returns the ItemStack in a given slot.
+- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)` — Inserts an ItemStack into the given slot and return the remainder.
+- `default boolean isItemValid(int slot, ItemStack stack)` — This function re-implements the vanilla function IInventory.isItemValidForSlot(int, ItemStack) .

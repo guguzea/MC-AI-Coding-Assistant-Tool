@@ -8,5 +8,5 @@ public interface IPlantable
 
 ## Methods
 
-- `EnumPlantType getPlantType( IBlockAccess world, BlockPos pos)`
-- `IBlockState getPlant( IBlockAccess world, BlockPos pos)`
+- `IBlockState getPlant(IBlockAccess world, BlockPos pos)`
+- `EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)`

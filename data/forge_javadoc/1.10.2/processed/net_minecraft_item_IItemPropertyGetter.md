@@ -8,4 +8,4 @@ public interface IItemPropertyGetter
 
 ## Methods
 
-- `float apply( ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entityIn)`
+- `float apply(ItemStack stack, World worldIn, EntityLivingBase entityIn)`

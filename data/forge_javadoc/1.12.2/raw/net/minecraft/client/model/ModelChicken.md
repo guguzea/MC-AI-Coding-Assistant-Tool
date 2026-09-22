@@ -3,11 +3,15 @@ title: "ModelChicken"
 description: "public class ModelChicken extends ModelBase"
 package: "net/minecraft/client/model"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/model/ModelChicken.html"
 sourceType: javadoc
 ---
 
 # ModelChicken
+
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelChicken
 
 ## Class signature
 
@@ -17,9 +21,20 @@ public class ModelChicken extends ModelBase
 
 ## Constructors
 
-- `public ModelChicken()`
+- `ModelChicken()`
 
 ## Methods
 
-- `public void render( Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
-- `public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
+- `void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
+
+## Fields
+
+- `ModelRenderer bill`
+- `ModelRenderer body`
+- `ModelRenderer chin`
+- `ModelRenderer head`
+- `ModelRenderer leftLeg`
+- `ModelRenderer leftWing`
+- `ModelRenderer rightLeg`
+- `ModelRenderer rightWing`

@@ -1,13 +1,17 @@
 # WorldEvent.CreateSpawnPosition
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.WorldEvent.CreateSpawnPosition
+
+## Class signature
+
+```java
+public static class WorldEvent.CreateSpawnPosition extends WorldEvent
+```
+
 ## Constructors
 
-- `public CreateSpawnPosition( World world, WorldSettings settings)`
+- `CreateSpawnPosition(World world, WorldSettings settings)`
 
 ## Methods
 
-- `public WorldSettings getSettings()`
-
-## Description
-
-Called by WorldServer when it attempts to create a spawnpoint for a dimension. Canceling the event will prevent the vanilla code from running.
+- `WorldSettings getSettings()`

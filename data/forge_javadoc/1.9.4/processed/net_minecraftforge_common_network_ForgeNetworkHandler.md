@@ -1,5 +1,7 @@
 # ForgeNetworkHandler
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.network.ForgeNetworkHandler
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class ForgeNetworkHandler extends java.lang.Object
 
 ## Constructors
 
-- `public ForgeNetworkHandler()`
+- `ForgeNetworkHandler()`
 
 ## Methods
 
-- `public static void registerChannel( ForgeModContainer forgeModContainer, Side side)`
+- `static void registerChannel(ForgeModContainer forgeModContainer, Side side)`

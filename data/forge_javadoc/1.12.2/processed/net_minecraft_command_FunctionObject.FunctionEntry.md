@@ -1,10 +1,18 @@
 # FunctionObject.FunctionEntry
 
+**Inheritance:** java.lang.Object → net.minecraft.command.FunctionObject.FunctionEntry
+
+## Class signature
+
+```java
+public static class FunctionObject.FunctionEntry extends java.lang.Object implements FunctionObject.Entry
+```
+
 ## Constructors
 
-- `public FunctionEntry( FunctionObject functionIn)`
+- `FunctionEntry(FunctionObject functionIn)`
 
 ## Methods
 
-- `public void execute( FunctionManager functionManagerIn, ICommandSender sender, java.util.ArrayDeque< FunctionManager.QueuedCommand > commandQueue, int maxCommandChainLength)`
-- `public java.lang.String toString()`
+- `void execute(FunctionManager functionManagerIn, ICommandSender sender, java.util.ArrayDeque<FunctionManager.QueuedCommand> commandQueue, int maxCommandChainLength)`
+- `java.lang.String toString()`

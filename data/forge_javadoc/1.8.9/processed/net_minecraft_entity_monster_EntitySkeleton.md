@@ -1,43 +1,41 @@
 # EntitySkeleton
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntitySkeleton
+
 ## Class signature
 
 ```java
 public class EntitySkeleton extends EntityMob implements IRangedAttackMob
 ```
 
-## Constructors
-
-- `public EntitySkeleton( World worldIn)`
-
 ## Methods
 
+- `protected void addRandomDrop()` — Causes this Entity to drop a random item.
 - `protected void applyEntityAttributes()`
+- `boolean attackEntityAsMob(Entity entityIn)`
+- `void attackEntityWithRangedAttack(EntityLivingBase p_82196_1_, float p_82196_2_)` — Attack the specified entity using a ranged attack.
+- `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)` — Drop 0-2 items of this living's type
 - `protected void entityInit()`
-- `protected java.lang.String getLivingSound()`
-- `protected java.lang.String getHurtSound()`
-- `protected java.lang.String getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `public boolean attackEntityAsMob( Entity entityIn)`
-- `public EnumCreatureAttribute getCreatureAttribute()`
-- `public void onLivingUpdate()`
-- `public void updateRidden()`
-- `public void onDeath( DamageSource cause)`
+- `EnumCreatureAttribute getCreatureAttribute()` — Get this Entity's EnumCreatureAttribute
+- `protected java.lang.String getDeathSound()` — Returns the sound this mob makes on death.
 - `protected Item getDropItem()`
-- `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)`
-- `protected void addRandomDrop()`
-- `protected void setEquipmentBasedOnDifficulty( DifficultyInstance difficulty)`
-- `public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, IEntityLivingData livingdata)`
-- `public void setCombatTask()`
-- `public void attackEntityWithRangedAttack( EntityLivingBase p_82196_1_, float p_82196_2_)`
-- `public int getSkeletonType()`
-- `public void setSkeletonType(int p_82201_1_)`
-- `public void readEntityFromNBT( NBTTagCompound tagCompund)`
-- `public void writeEntityToNBT( NBTTagCompound tagCompound)`
-- `public void setCurrentItemOrArmor(int slotIn, ItemStack stack)`
-- `public float getEyeHeight()`
-- `public double getYOffset()`
+- `float getEyeHeight()`
+- `protected java.lang.String getHurtSound()` — Returns the sound this mob makes when it is hurt.
+- `protected java.lang.String getLivingSound()` — Returns the sound this mob makes while it's alive.
+- `int getSkeletonType()` — Return this skeleton's type.
+- `double getYOffset()` — Returns the Y Offset of this entity.
+- `void onDeath(DamageSource cause)` — Called when the mob's health reaches 0.
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)` — Called only once on an entity when first time spawned, via egg, mob spawner, natural spawning etc, but not called when entity is reloaded from nbt.
+- `void onLivingUpdate()` — Called frequently so the entity can update its state every tick as required.
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
+- `void setCombatTask()` — sets this entity's combat AI.
+- `void setCurrentItemOrArmor(int slotIn, ItemStack stack)` — Sets the held item, or an armor slot.
+- `protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty)` — Gives armor or weapon for entity based on given DifficultyInstance
+- `void setSkeletonType(int p_82201_1_)` — Set this skeleton's type.
+- `void updateRidden()` — Handles updating while being ridden by an entity
+- `void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
 
-## Description
+## Fields
 
-Causes this Entity to drop a random item.
+- `EntitySkeleton`

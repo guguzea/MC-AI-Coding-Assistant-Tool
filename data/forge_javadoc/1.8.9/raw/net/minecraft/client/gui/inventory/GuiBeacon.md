@@ -1,13 +1,17 @@
 ---
 title: "GuiBeacon"
-description: "Called by the controls from the buttonList when activated."
+description: "public class GuiBeacon extends GuiContainer"
 package: "net/minecraft/client/gui/inventory"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/gui/inventory/GuiBeacon.html"
 sourceType: javadoc
 ---
 
 # GuiBeacon
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.inventory.GuiContainer → net.minecraft.client.gui.inventory.GuiBeacon
 
 ## Class signature
 
@@ -15,18 +19,14 @@ sourceType: javadoc
 public class GuiBeacon extends GuiContainer
 ```
 
-## Constructors
-
-- `public GuiBeacon( InventoryPlayer playerInventory, IInventory tileBeaconIn)`
-
 ## Methods
 
-- `public void initGui()`
-- `public void updateScreen()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)`
-- `protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)`
+- `protected void actionPerformed(GuiButton button)` — Called by the controls from the buttonList when activated.
+- `protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)` — Args : renderPartialTicks, mouseX, mouseY
+- `protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)` — Draw the foreground layer for the GuiContainer (everything in front of the items).
+- `void initGui()` — Adds the buttons (and other controls) to the screen in question.
+- `void updateScreen()` — Called from the main game loop to update the screen.
 
-## Description
+## Fields
 
-Called by the controls from the buttonList when activated.
+- `GuiBeacon`

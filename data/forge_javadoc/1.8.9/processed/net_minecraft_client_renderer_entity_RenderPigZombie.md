@@ -1,19 +1,17 @@
 # RenderPigZombie
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RendererLivingEntity<T> → net.minecraft.client.renderer.entity.RenderLiving<T> → net.minecraft.client.renderer.entity.RenderBiped<EntityPigZombie> → net.minecraft.client.renderer.entity.RenderPigZombie
+
 ## Class signature
 
 ```java
-public class RenderPigZombie extends RenderBiped < EntityPigZombie >
+public class RenderPigZombie extends RenderBiped<EntityPigZombie>
 ```
-
-## Constructors
-
-- `public RenderPigZombie( RenderManager renderManagerIn)`
 
 ## Methods
 
-- `protected ResourceLocation getEntityTexture( EntityPigZombie entity)`
+- `protected ResourceLocation getEntityTexture(EntityPigZombie entity)` — Returns the location of an entity's texture.
 
-## Description
+## Fields
 
-Returns the location of an entity's texture.
+- `RenderPigZombie`

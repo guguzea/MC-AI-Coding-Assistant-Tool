@@ -1,20 +1,22 @@
 # PhaseSittingFlaming
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseSittingBase → net.minecraft.entity.boss.dragon.phase.PhaseSittingFlaming
+
 ## Class signature
 
 ```java
 public class PhaseSittingFlaming extends PhaseSittingBase
 ```
 
-## Constructors
-
-- `public PhaseSittingFlaming( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public void doClientRenderEffects()`
-- `public void doLocalUpdate()`
-- `public void initPhase()`
-- `public void removeAreaEffect()`
-- `public PhaseList < PhaseSittingFlaming > getType()`
-- `public void resetFlameCount()`
+- `void doClientRenderEffects()`
+- `void doLocalUpdate()`
+- `PhaseList<PhaseSittingFlaming> getType()`
+- `void initPhase()`
+- `void removeAreaEffect()`
+- `void resetFlameCount()`
+
+## Fields
+
+- `PhaseSittingFlaming`

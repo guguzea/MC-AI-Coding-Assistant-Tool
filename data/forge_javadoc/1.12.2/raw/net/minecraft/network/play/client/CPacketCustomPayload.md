@@ -1,29 +1,33 @@
 ---
 title: "CPacketCustomPayload"
-description: "public class CPacketCustomPayload extends java.lang.Object implements Packet < INetHandlerPlayServer >"
+description: "public class CPacketCustomPayload extends java.lang.Object implements Packet<INetHandlerPlayServer>"
 package: "net/minecraft/network/play/client"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/network/play/client/CPacketCustomPayload.html"
 sourceType: javadoc
 ---
 
 # CPacketCustomPayload
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketCustomPayload
+
 ## Class signature
 
 ```java
-public class CPacketCustomPayload extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketCustomPayload extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketCustomPayload()`
-- `public CPacketCustomPayload(java.lang.String channelIn, PacketBuffer bufIn)`
+- `CPacketCustomPayload()`
+- `CPacketCustomPayload(java.lang.String channelIn, PacketBuffer bufIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public java.lang.String getChannelName()`
-- `public PacketBuffer getBufferData()`
+- `PacketBuffer getBufferData()`
+- `java.lang.String getChannelName()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

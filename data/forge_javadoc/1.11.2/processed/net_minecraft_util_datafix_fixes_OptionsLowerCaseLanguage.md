@@ -1,5 +1,7 @@
 # OptionsLowerCaseLanguage
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.OptionsLowerCaseLanguage
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class OptionsLowerCaseLanguage extends java.lang.Object implements IFixab
 
 ## Constructors
 
-- `public OptionsLowerCaseLanguage()`
+- `OptionsLowerCaseLanguage()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

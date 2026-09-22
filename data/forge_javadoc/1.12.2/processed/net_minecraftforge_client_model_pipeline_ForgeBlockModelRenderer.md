@@ -1,5 +1,7 @@
 # ForgeBlockModelRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.BlockModelRenderer → net.minecraftforge.client.model.pipeline.ForgeBlockModelRenderer
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class ForgeBlockModelRenderer extends BlockModelRenderer
 
 ## Constructors
 
-- `public ForgeBlockModelRenderer( BlockColors colors)`
+- `ForgeBlockModelRenderer(BlockColors colors)`
 
 ## Methods
 
-- `public boolean renderModelFlat( IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos, BufferBuilder buffer, boolean checkSides, long rand)`
-- `public boolean renderModelSmooth( IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos, BufferBuilder buffer, boolean checkSides, long rand)`
-- `public static boolean render( VertexLighterFlat lighter, IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos, BufferBuilder wr, boolean checkSides, long rand)`
+- `static boolean render(VertexLighterFlat lighter, IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos, BufferBuilder wr, boolean checkSides, long rand)`
+- `boolean renderModelFlat(IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos, BufferBuilder buffer, boolean checkSides, long rand)`
+- `boolean renderModelSmooth(IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos, BufferBuilder buffer, boolean checkSides, long rand)`

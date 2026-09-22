@@ -3,6 +3,8 @@ title: "IDataWalker"
 description: "public interface IDataWalker"
 package: "net/minecraft/util/datafix"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/util/datafix/IDataWalker.html"
 sourceType: javadoc
 ---
@@ -17,4 +19,4 @@ public interface IDataWalker
 
 ## Methods
 
-- `NBTTagCompound process( IDataFixer fixer, NBTTagCompound compound, int versionIn)`
+- `NBTTagCompound process(IDataFixer fixer, NBTTagCompound compound, int versionIn)`

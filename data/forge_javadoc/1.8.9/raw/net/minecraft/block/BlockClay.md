@@ -1,13 +1,17 @@
 ---
 title: "BlockClay"
-description: "Get the Item that this Block should drop when harvested."
+description: "public class BlockClay extends Block"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockClay.html"
 sourceType: javadoc
 ---
 
 # BlockClay
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockClay
 
 ## Class signature
 
@@ -15,15 +19,11 @@ sourceType: javadoc
 public class BlockClay extends Block
 ```
 
-## Constructors
-
-- `public BlockClay()`
-
 ## Methods
 
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public int quantityDropped(java.util.Random random)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `int quantityDropped(java.util.Random random)` — Returns the quantity of items to drop on block destruction.
 
-## Description
+## Fields
 
-Get the Item that this Block should drop when harvested.
+- `BlockClay`

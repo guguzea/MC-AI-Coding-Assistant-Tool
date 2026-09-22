@@ -3,11 +3,15 @@ title: "ChunkLoader"
 description: "public class ChunkLoader extends java.lang.Object"
 package: "net/minecraft/world/chunk/storage"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/chunk/storage/ChunkLoader.html"
 sourceType: javadoc
 ---
 
 # ChunkLoader
+
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.storage.ChunkLoader
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class ChunkLoader extends java.lang.Object
 
 ## Constructors
 
-- `public ChunkLoader()`
+- `ChunkLoader()`
 
 ## Methods
 
-- `public static ChunkLoader.AnvilConverterData load( NBTTagCompound nbt)`
-- `public static void convertToAnvilFormat( ChunkLoader.AnvilConverterData converterData, NBTTagCompound compound, BiomeProvider provider)`
+- `static void convertToAnvilFormat(ChunkLoader.AnvilConverterData converterData, NBTTagCompound compound, BiomeProvider provider)`
+- `static ChunkLoader.AnvilConverterData load(NBTTagCompound nbt)`

@@ -3,11 +3,15 @@ title: "PotionHealthBoost"
 description: "public class PotionHealthBoost extends Potion"
 package: "net/minecraft/potion"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/potion/PotionHealthBoost.html"
 sourceType: javadoc
 ---
 
 # PotionHealthBoost
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Potion> → net.minecraft.potion.Potion → net.minecraft.potion.PotionHealthBoost
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class PotionHealthBoost extends Potion
 ```
 
-## Constructors
-
-- `public PotionHealthBoost(boolean isBadEffectIn, int liquidColorIn)`
-
 ## Methods
 
-- `public void removeAttributesModifiersFromEntity( EntityLivingBase entityLivingBaseIn, AbstractAttributeMap attributeMapIn, int amplifier)`
+- `void removeAttributesModifiersFromEntity(EntityLivingBase entityLivingBaseIn, AbstractAttributeMap attributeMapIn, int amplifier)`
+
+## Fields
+
+- `PotionHealthBoost`

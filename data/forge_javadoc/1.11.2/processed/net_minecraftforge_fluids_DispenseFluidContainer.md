@@ -1,16 +1,14 @@
 # DispenseFluidContainer
 
+**Inheritance:** java.lang.Object → net.minecraft.dispenser.BehaviorDefaultDispenseItem → net.minecraftforge.fluids.DispenseFluidContainer
+
 ## Class signature
 
 ```java
 public class DispenseFluidContainer extends BehaviorDefaultDispenseItem
 ```
 
-## Methods
+## Fields
 
-- `public static DispenseFluidContainer getInstance()`
-- `@Nonnull public ItemStack dispenseStack(@Nonnull IBlockSource source, @Nonnull ItemStack stack)`
-
-## Description
-
-Fills or drains a fluid container item using a Dispenser.
+- `ItemStack dispenseStack`
+- `static DispenseFluidContainer getInstance`

@@ -1,5 +1,7 @@
 # ForgeCommand
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraftforge.server.command.ForgeCommand
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class ForgeCommand extends CommandBase
 
 ## Constructors
 
-- `public ForgeCommand()`
+- `ForgeCommand()`
 
 ## Methods
 
-- `public java.lang.String getCommandName()`
-- `public java.lang.String getCommandUsage( ICommandSender icommandsender)`
-- `public int getRequiredPermissionLevel()`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `public java.util.List<java.lang.String> getTabCompletionOptions( MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos pos)`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.lang.String getCommandName()`
+- `java.lang.String getCommandUsage(ICommandSender icommandsender)`
+- `int getRequiredPermissionLevel()`
+- `java.util.List<java.lang.String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos pos)`

@@ -1,5 +1,7 @@
 # BlockModelShapes
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.BlockModelShapes
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class BlockModelShapes extends java.lang.Object
 
 ## Constructors
 
-- `public BlockModelShapes( ModelManager manager)`
+- `BlockModelShapes(ModelManager manager)`
 
 ## Methods
 
-- `public BlockStateMapper getBlockStateMapper()`
-- `public TextureAtlasSprite getTexture( IBlockState state)`
-- `public IBakedModel getModelForState( IBlockState state)`
-- `public ModelManager getModelManager()`
-- `public void reloadModels()`
-- `public void registerBlockWithStateMapper( Block assoc, IStateMapper stateMapper)`
-- `public void registerBuiltInBlocks( Block ... builtIns)`
+- `BlockStateMapper getBlockStateMapper()`
+- `IBakedModel getModelForState(IBlockState state)`
+- `ModelManager getModelManager()`
+- `TextureAtlasSprite getTexture(IBlockState state)`
+- `void registerBlockWithStateMapper(Block assoc, IStateMapper stateMapper)`
+- `void registerBuiltInBlocks(Block ... builtIns)`
+- `void reloadModels()`

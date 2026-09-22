@@ -1,5 +1,7 @@
 # WorldGenGlowStone1
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenGlowStone1
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class WorldGenGlowStone1 extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenGlowStone1()`
+- `WorldGenGlowStone1()`
 
 ## Methods
 
-- `public boolean generate( World p_76484_1_, java.util.Random p_76484_2_, int p_76484_3_, int p_76484_4_, int p_76484_5_)`
+- `boolean generate(World p_76484_1_, java.util.Random p_76484_2_, int p_76484_3_, int p_76484_4_, int p_76484_5_)`

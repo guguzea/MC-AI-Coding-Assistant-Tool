@@ -1,5 +1,7 @@
 # PacketLoggingHandler
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.PacketLoggingHandler
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class PacketLoggingHandler extends java.lang.Object
 
 ## Constructors
 
-- `public PacketLoggingHandler()`
+- `PacketLoggingHandler()`
 
 ## Methods
 
-- `public static void register( NetworkManager manager)`
+- `static void register(NetworkManager manager)`

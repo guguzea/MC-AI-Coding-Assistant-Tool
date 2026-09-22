@@ -1,13 +1,17 @@
 ---
 title: "BabyEntitySpawnEvent"
-description: "BabyEntitySpawnEvent is fired just before a baby entity is about to be spawned. Parents will have disengaged their relationship. @Cancelable It is possible to change the child completely by using setC"
+description: "public class BabyEntitySpawnEvent extends Event"
 package: "net/minecraftforge/event/entity/living"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/entity/living/BabyEntitySpawnEvent.html"
 sourceType: javadoc
 ---
 
 # BabyEntitySpawnEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.living.BabyEntitySpawnEvent
 
 ## Class signature
 
@@ -17,16 +21,12 @@ public class BabyEntitySpawnEvent extends Event
 
 ## Constructors
 
-- `public BabyEntitySpawnEvent( EntityLiving parentA, EntityLiving parentB, @Nullable EntityAgeable proposedChild)`
+- `BabyEntitySpawnEvent(EntityLiving parentA, EntityLiving parentB, EntityAgeable proposedChild)`
 
 ## Methods
 
-- `public EntityLiving getParentA()`
-- `public EntityLiving getParentB()`
-- `@Nullable public EntityPlayer getCausedByPlayer()`
-- `@Nullable public EntityAgeable getChild()`
-- `public void setChild( EntityAgeable proposedChild)`
-
-## Description
-
-BabyEntitySpawnEvent is fired just before a baby entity is about to be spawned. Parents will have disengaged their relationship. @Cancelable It is possible to change the child completely by using setC
+- `EntityPlayer getCausedByPlayer()`
+- `EntityAgeable getChild()`
+- `EntityLiving getParentA()`
+- `EntityLiving getParentB()`
+- `void setChild(EntityAgeable proposedChild)`

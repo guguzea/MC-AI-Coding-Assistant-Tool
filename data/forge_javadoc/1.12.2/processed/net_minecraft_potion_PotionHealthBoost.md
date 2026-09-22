@@ -1,15 +1,17 @@
 # PotionHealthBoost
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Potion> → net.minecraft.potion.Potion → net.minecraft.potion.PotionHealthBoost
+
 ## Class signature
 
 ```java
 public class PotionHealthBoost extends Potion
 ```
 
-## Constructors
-
-- `public PotionHealthBoost(boolean isBadEffectIn, int liquidColorIn)`
-
 ## Methods
 
-- `public void removeAttributesModifiersFromEntity( EntityLivingBase entityLivingBaseIn, AbstractAttributeMap attributeMapIn, int amplifier)`
+- `void removeAttributesModifiersFromEntity(EntityLivingBase entityLivingBaseIn, AbstractAttributeMap attributeMapIn, int amplifier)`
+
+## Fields
+
+- `PotionHealthBoost`

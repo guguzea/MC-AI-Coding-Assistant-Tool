@@ -1,22 +1,28 @@
 ---
 title: "HoverEvent.Action"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum HoverEvent.Action extends java.lang.Enum<HoverEvent.Action>"
 package: "net/minecraft/util/text/event"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/util/text/event/HoverEvent.Action.html"
 sourceType: javadoc
 ---
 
 # HoverEvent.Action
 
+**Inheritance:** java.lang.Object → java.lang.Enum<HoverEvent.Action> → net.minecraft.util.text.event.HoverEvent.Action
+
+## Class signature
+
+```java
+public static enum HoverEvent.Action extends java.lang.Enum<HoverEvent.Action>
+```
+
 ## Methods
 
-- `public static HoverEvent.Action [] values()`
-- `public static HoverEvent.Action valueOf(java.lang.String name)`
-- `public boolean shouldAllowInChat()`
-- `public java.lang.String getCanonicalName()`
-- `public static HoverEvent.Action getValueByCanonicalName(java.lang.String canonicalNameIn)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `java.lang.String getCanonicalName()`
+- `static HoverEvent.Action getValueByCanonicalName(java.lang.String canonicalNameIn)`
+- `boolean shouldAllowInChat()`
+- `static HoverEvent.Action valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static HoverEvent.Action [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

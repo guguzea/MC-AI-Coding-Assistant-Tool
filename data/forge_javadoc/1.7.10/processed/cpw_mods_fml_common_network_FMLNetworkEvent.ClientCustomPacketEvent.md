@@ -1,13 +1,17 @@
 # FMLNetworkEvent.ClientCustomPacketEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.eventhandler.Event → cpw.mods.fml.common.network.FMLNetworkEvent<S> → cpw.mods.fml.common.network.FMLNetworkEvent.CustomPacketEvent<INetHandlerPlayClient> → cpw.mods.fml.common.network.FMLNetworkEvent.ClientCustomPacketEvent
 
-- `public ClientCustomPacketEvent( NetworkManager manager, FMLProxyPacket packet)`
+## Class signature
+
+```java
+public static class FMLNetworkEvent.ClientCustomPacketEvent extends FMLNetworkEvent.CustomPacketEvent<INetHandlerPlayClient>
+```
 
 ## Methods
 
-- `public Side side()`
+- `Side side()`
 
-## Description
+## Fields
 
-Fired when a custom packet is received on the client for the channel
+- `ClientCustomPacketEvent`

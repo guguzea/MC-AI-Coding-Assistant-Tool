@@ -1,5 +1,7 @@
 # CommandMessage
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.server.CommandMessage
+
 ## Class signature
 
 ```java
@@ -8,18 +10,14 @@ public class CommandMessage extends CommandBase
 
 ## Constructors
 
-- `public CommandMessage()`
+- `CommandMessage()`
 
 ## Methods
 
-- `public java.util.List<java.lang.String> getCommandAliases()`
-- `public java.lang.String getCommandName()`
-- `public int getRequiredPermissionLevel()`
-- `public java.lang.String getCommandUsage( ICommandSender sender)`
-- `public void processCommand( ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `public java.util.List<java.lang.String> addTabCompletionOptions( ICommandSender sender, java.lang.String[] args, BlockPos pos)`
-- `public boolean isUsernameIndex(java.lang.String[] args, int index)`
-
-## Description
-
-Gets the name of the command
+- `java.util.List<java.lang.String> addTabCompletionOptions(ICommandSender sender, java.lang.String[] args, BlockPos pos)`
+- `java.util.List<java.lang.String> getCommandAliases()`
+- `java.lang.String getCommandName()` — Gets the name of the command
+- `java.lang.String getCommandUsage(ICommandSender sender)` — Gets the usage string for the command.
+- `int getRequiredPermissionLevel()` — Return the required permission level for this command.
+- `boolean isUsernameIndex(java.lang.String[] args, int index)` — Return whether the specified command parameter index is a username parameter.
+- `void processCommand(ICommandSender sender, java.lang.String[] args)` — Callback when the command is invoked

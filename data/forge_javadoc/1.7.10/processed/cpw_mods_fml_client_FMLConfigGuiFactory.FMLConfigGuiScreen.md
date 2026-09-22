@@ -1,5 +1,13 @@
 # FMLConfigGuiFactory.FMLConfigGuiScreen
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → cpw.mods.fml.client.config.GuiConfig → cpw.mods.fml.client.FMLConfigGuiFactory.FMLConfigGuiScreen
 
-- `public FMLConfigGuiScreen( GuiScreen parent)`
+## Class signature
+
+```java
+public static class FMLConfigGuiFactory.FMLConfigGuiScreen extends GuiConfig
+```
+
+## Fields
+
+- `FMLConfigGuiScreen`

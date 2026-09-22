@@ -1,18 +1,20 @@
 # EntityAIOpenDoor
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIDoorInteract → net.minecraft.entity.ai.EntityAIOpenDoor
+
 ## Class signature
 
 ```java
 public class EntityAIOpenDoor extends EntityAIDoorInteract
 ```
 
-## Constructors
-
-- `public EntityAIOpenDoor( EntityLiving p_i1644_1_, boolean p_i1644_2_)`
-
 ## Methods
 
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `void resetTask()`
+- `void startExecuting()`
+- `void updateTask()`
+
+## Fields
+
+- `EntityAIOpenDoor`

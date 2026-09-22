@@ -1,22 +1,32 @@
 ---
 title: "B3DModel.Animation"
-description: ""
+description: "public static class B3DModel.Animation extends java.lang.Object"
 package: "net/minecraftforge/client/model/b3d"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/model/b3d/B3DModel.Animation.html"
 sourceType: javadoc
 ---
 
 # B3DModel.Animation
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.b3d.B3DModel.Animation
+
+## Class signature
+
+```java
+public static class B3DModel.Animation extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Animation(int flags, int frames, float fps, com.google.common.collect.ImmutableTable<java.lang.Integer, B3DModel.Node <?>, B3DModel.Key > keys)`
+- `Animation(int flags, int frames, float fps, com.google.common.collect.ImmutableTable<java.lang.Integer, B3DModel.Node<?>, B3DModel.Key> keys)`
 
 ## Methods
 
-- `public int getFlags()`
-- `public int getFrames()`
-- `public float getFps()`
-- `public com.google.common.collect.ImmutableTable<java.lang.Integer, B3DModel.Node <?>, B3DModel.Key > getKeys()`
-- `public java.lang.String toString()`
+- `int getFlags()`
+- `float getFps()`
+- `int getFrames()`
+- `com.google.common.collect.ImmutableTable<java.lang.Integer, B3DModel.Node<?>, B3DModel.Key> getKeys()`
+- `java.lang.String toString()`

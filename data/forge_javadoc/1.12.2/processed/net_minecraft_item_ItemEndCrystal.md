@@ -1,16 +1,18 @@
 # ItemEndCrystal
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemEndCrystal
+
 ## Class signature
 
 ```java
 public class ItemEndCrystal extends Item
 ```
 
-## Constructors
-
-- `public ItemEndCrystal()`
-
 ## Methods
 
-- `public EnumActionResult onItemUse( EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `public boolean hasEffect( ItemStack stack)`
+- `boolean hasEffect(ItemStack stack)`
+- `EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+
+## Fields
+
+- `ItemEndCrystal`

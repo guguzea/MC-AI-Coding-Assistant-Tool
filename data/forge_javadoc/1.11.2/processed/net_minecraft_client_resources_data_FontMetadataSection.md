@@ -1,5 +1,7 @@
 # FontMetadataSection
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.data.FontMetadataSection
+
 ## Class signature
 
 ```java
@@ -8,4 +10,4 @@ public class FontMetadataSection extends java.lang.Object implements IMetadataSe
 
 ## Constructors
 
-- `public FontMetadataSection(float[] charWidthsIn, float[] charLeftsIn, float[] charSpacingsIn)`
+- `FontMetadataSection(float[] charWidthsIn, float[] charLeftsIn, float[] charSpacingsIn)`

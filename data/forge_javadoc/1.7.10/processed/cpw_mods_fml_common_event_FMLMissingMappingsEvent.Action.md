@@ -1,10 +1,14 @@
 # FMLMissingMappingsEvent.Action
 
+**Inheritance:** java.lang.Object → java.lang.Enum<FMLMissingMappingsEvent.Action> → cpw.mods.fml.common.event.FMLMissingMappingsEvent.Action
+
+## Class signature
+
+```java
+public static enum FMLMissingMappingsEvent.Action extends java.lang.Enum<FMLMissingMappingsEvent.Action>
+```
+
 ## Methods
 
-- `public static FMLMissingMappingsEvent.Action [] values()`
-- `public static FMLMissingMappingsEvent.Action valueOf(java.lang.String name)`
-
-## Description
-
-Actions you can take with this missing mapping. IGNORE means this missing mapping will be ignored. WARN means this missing mapping will generate a warning. FAIL means this missing mapping will prevent
+- `static FMLMissingMappingsEvent.Action valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static FMLMissingMappingsEvent.Action [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

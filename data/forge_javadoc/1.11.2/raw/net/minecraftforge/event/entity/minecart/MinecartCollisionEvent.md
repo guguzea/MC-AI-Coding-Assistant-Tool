@@ -1,13 +1,17 @@
 ---
 title: "MinecartCollisionEvent"
-description: "MinecartCollisionEvent is fired when a minecart collides with an Entity. This event is fired whenever a minecraft collides in EntityMinecart.applyEntityCollision(Entity) . collider contains the Entity"
+description: "public class MinecartCollisionEvent extends MinecartEvent"
 package: "net/minecraftforge/event/entity/minecart"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/entity/minecart/MinecartCollisionEvent.html"
 sourceType: javadoc
 ---
 
 # MinecartCollisionEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.minecart.MinecartEvent → net.minecraftforge.event.entity.minecart.MinecartCollisionEvent
 
 ## Class signature
 
@@ -17,12 +21,8 @@ public class MinecartCollisionEvent extends MinecartEvent
 
 ## Constructors
 
-- `public MinecartCollisionEvent( EntityMinecart minecart, Entity collider)`
+- `MinecartCollisionEvent(EntityMinecart minecart, Entity collider)`
 
 ## Methods
 
-- `public Entity getCollider()`
-
-## Description
-
-MinecartCollisionEvent is fired when a minecart collides with an Entity. This event is fired whenever a minecraft collides in EntityMinecart.applyEntityCollision(Entity) . collider contains the Entity
+- `Entity getCollider()`

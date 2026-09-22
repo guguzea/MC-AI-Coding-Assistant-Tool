@@ -1,5 +1,7 @@
 # EntityAIFollowOwner
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIFollowOwner
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class EntityAIFollowOwner extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIFollowOwner( EntityTameable thePetIn, double followSpeedIn, float minDistIn, float maxDistIn)`
+- `EntityAIFollowOwner(EntityTameable thePetIn, double followSpeedIn, float minDistIn, float maxDistIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

@@ -1,21 +1,31 @@
 ---
 title: "StructureVillagePieces.Church"
-description: ""
+description: "public static class StructureVillagePieces.Church extends StructureVillagePieces.Village"
 package: "net/minecraft/world/gen/structure"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/world/gen/structure/StructureVillagePieces.Church.html"
 sourceType: javadoc
 ---
 
 # StructureVillagePieces.Church
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureVillagePieces.Village → net.minecraft.world.gen.structure.StructureVillagePieces.Church
 
-- `public Church()`
-- `public Church( StructureVillagePieces.Start start, int type, java.util.Random rand, StructureBoundingBox p_i45564_4_, EnumFacing facing)`
+## Class signature
+
+```java
+public static class StructureVillagePieces.Church extends StructureVillagePieces.Village
+```
 
 ## Methods
 
-- `public static StructureVillagePieces.Church createPiece( StructureVillagePieces.Start start, java.util.List< StructureComponent > p_175854_1_, java.util.Random rand, int p_175854_3_, int p_175854_4_, int p_175854_5_, EnumFacing facing, int p_175854_7_)`
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
 - `protected int chooseProfession(int villagersSpawnedIn, int currentVillagerProfession)`
+- `static StructureVillagePieces.Church createPiece(StructureVillagePieces.Start start, java.util.List<StructureComponent> p_175854_1_, java.util.Random rand, int p_175854_3_, int p_175854_4_, int p_175854_5_, EnumFacing facing, int p_175854_7_)`
+
+## Fields
+
+- `Church`
+- `Church`

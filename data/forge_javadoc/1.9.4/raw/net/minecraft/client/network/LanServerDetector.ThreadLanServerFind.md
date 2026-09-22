@@ -1,18 +1,28 @@
 ---
 title: "LanServerDetector.ThreadLanServerFind"
-description: ""
+description: "public static class LanServerDetector.ThreadLanServerFind extends java.lang.Thread"
 package: "net/minecraft/client/network"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/network/LanServerDetector.ThreadLanServerFind.html"
 sourceType: javadoc
 ---
 
 # LanServerDetector.ThreadLanServerFind
 
-## Constructors
+**Inheritance:** java.lang.Object → java.lang.Thread → net.minecraft.client.network.LanServerDetector.ThreadLanServerFind
 
-- `public ThreadLanServerFind( LanServerDetector.LanServerList list) throws java.io.IOException`
+## Class signature
+
+```java
+public static class LanServerDetector.ThreadLanServerFind extends java.lang.Thread
+```
 
 ## Methods
 
-- `public void run()`
+- `void run()`
+
+## Fields
+
+- `ThreadLanServerFind`

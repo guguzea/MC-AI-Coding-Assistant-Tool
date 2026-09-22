@@ -3,11 +3,15 @@ title: "EnchantRandomly"
 description: "public class EnchantRandomly extends LootFunction"
 package: "net/minecraft/world/storage/loot/functions"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/storage/loot/functions/EnchantRandomly.html"
 sourceType: javadoc
 ---
 
 # EnchantRandomly
+
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction → net.minecraft.world.storage.loot.functions.EnchantRandomly
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class EnchantRandomly extends LootFunction
 
 ## Constructors
 
-- `public EnchantRandomly( LootCondition [] conditionsIn, java.util.List< Enchantment > enchantmentsIn)`
+- `EnchantRandomly(LootCondition [] conditionsIn, java.util.List<Enchantment> enchantmentsIn)`
 
 ## Methods
 
-- `public ItemStack apply( ItemStack stack, java.util.Random rand, LootContext context)`
+- `ItemStack apply(ItemStack stack, java.util.Random rand, LootContext context)`

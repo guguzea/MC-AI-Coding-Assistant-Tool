@@ -1,5 +1,7 @@
 # PlayerProfileCache
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.PlayerProfileCache
+
 ## Class signature
 
 ```java
@@ -8,14 +10,19 @@ public class PlayerProfileCache extends java.lang.Object
 
 ## Constructors
 
-- `public PlayerProfileCache(GameProfileRepository profileRepoIn, java.io.File usercacheFileIn)`
+- `PlayerProfileCache(GameProfileRepository profileRepoIn, java.io.File usercacheFileIn)`
 
 ## Methods
 
-- `public static void setOnlineMode(boolean onlineModeIn)`
-- `public void addEntry(GameProfile gameProfile)`
-- `public GameProfile getGameProfileForUsername(java.lang.String username)`
-- `public java.lang.String[] getUsernames()`
-- `public GameProfile getProfileByUUID(java.util.UUID uuid)`
-- `public void load()`
-- `public void save()`
+- `void addEntry(GameProfile gameProfile)`
+- `GameProfile getGameProfileForUsername(java.lang.String username)`
+- `GameProfile getProfileByUUID(java.util.UUID uuid)`
+- `java.lang.String[] getUsernames()`
+- `void load()`
+- `void save()`
+- `static void setOnlineMode(boolean onlineModeIn)`
+
+## Fields
+
+- `static java.text.SimpleDateFormat DATE_FORMAT`
+- `protected Gson gson`

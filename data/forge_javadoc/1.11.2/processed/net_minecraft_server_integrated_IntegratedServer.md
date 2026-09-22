@@ -1,41 +1,43 @@
 # IntegratedServer
 
+**Inheritance:** java.lang.Object → net.minecraft.server.MinecraftServer → net.minecraft.server.integrated.IntegratedServer
+
 ## Class signature
 
 ```java
 public class IntegratedServer extends MinecraftServer
 ```
 
-## Constructors
-
-- `public IntegratedServer( Minecraft clientIn, java.lang.String folderNameIn, java.lang.String worldNameIn, WorldSettings worldSettingsIn, com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService authServiceIn, com.mojang.authlib.minecraft.MinecraftSessionService sessionServiceIn, com.mojang.authlib.GameProfileRepository profileRepoIn, PlayerProfileCache profileCacheIn)`
-
 ## Methods
 
-- `public ServerCommandManager createCommandManager()`
-- `public void loadAllWorlds(java.lang.String saveName, java.lang.String worldNameIn, long seed, WorldType type, java.lang.String generatorOptions)`
-- `public boolean init() throws java.io.IOException`
-- `public void tick()`
-- `public boolean canStructuresSpawn()`
-- `public GameType getGameType()`
-- `public EnumDifficulty getDifficulty()`
-- `public boolean isHardcore()`
-- `public boolean shouldBroadcastRconToOps()`
-- `public boolean shouldBroadcastConsoleToOps()`
-- `public void saveAllWorlds(boolean isSilent)`
-- `public java.io.File getDataDirectory()`
-- `public boolean isDedicatedServer()`
-- `public boolean shouldUseNativeTransport()`
-- `public void finalTick( CrashReport report)`
-- `public CrashReport addServerInfoToCrashReport( CrashReport report)`
-- `public void setDifficultyForAllWorlds( EnumDifficulty difficulty)`
-- `public void addServerStatsToSnooper( Snooper playerSnooper)`
-- `public boolean isSnooperEnabled()`
-- `public java.lang.String shareToLAN( GameType type, boolean allowCheats)`
-- `public void stopServer()`
-- `public void initiateShutdown()`
-- `public boolean getPublic()`
-- `public void setGameType( GameType gameMode)`
-- `public boolean isCommandBlockEnabled()`
-- `public int getOpPermissionLevel()`
-- `public void reloadLootTables()`
+- `CrashReport addServerInfoToCrashReport(CrashReport report)`
+- `void addServerStatsToSnooper(Snooper playerSnooper)`
+- `boolean canStructuresSpawn()`
+- `ServerCommandManager createCommandManager()`
+- `void finalTick(CrashReport report)`
+- `java.io.File getDataDirectory()`
+- `EnumDifficulty getDifficulty()`
+- `GameType getGameType()`
+- `int getOpPermissionLevel()`
+- `boolean getPublic()`
+- `boolean init()`
+- `void initiateShutdown()`
+- `boolean isCommandBlockEnabled()`
+- `boolean isDedicatedServer()`
+- `boolean isHardcore()`
+- `boolean isSnooperEnabled()`
+- `void loadAllWorlds(java.lang.String saveName, java.lang.String worldNameIn, long seed, WorldType type, java.lang.String generatorOptions)`
+- `void reloadLootTables()`
+- `void saveAllWorlds(boolean isSilent)`
+- `void setDifficultyForAllWorlds(EnumDifficulty difficulty)`
+- `void setGameType(GameType gameMode)`
+- `java.lang.String shareToLAN(GameType type, boolean allowCheats)`
+- `boolean shouldBroadcastConsoleToOps()`
+- `boolean shouldBroadcastRconToOps()`
+- `boolean shouldUseNativeTransport()`
+- `void stopServer()`
+- `void tick()`
+
+## Fields
+
+- `IntegratedServer`

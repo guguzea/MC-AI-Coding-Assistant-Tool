@@ -1,5 +1,7 @@
 # CommandWorldBorder
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.CommandWorldBorder
+
 ## Class signature
 
 ```java
@@ -8,17 +10,13 @@ public class CommandWorldBorder extends CommandBase
 
 ## Constructors
 
-- `public CommandWorldBorder()`
+- `CommandWorldBorder()`
 
 ## Methods
 
-- `public java.lang.String getCommandName()`
-- `public int getRequiredPermissionLevel()`
-- `public java.lang.String getCommandUsage( ICommandSender sender)`
-- `public void processCommand( ICommandSender sender, java.lang.String[] args) throws CommandException`
+- `java.util.List<java.lang.String> addTabCompletionOptions(ICommandSender sender, java.lang.String[] args, BlockPos pos)`
+- `java.lang.String getCommandName()` — Gets the name of the command
+- `java.lang.String getCommandUsage(ICommandSender sender)` — Gets the usage string for the command.
+- `int getRequiredPermissionLevel()` — Return the required permission level for this command.
 - `protected WorldBorder getWorldBorder()`
-- `public java.util.List<java.lang.String> addTabCompletionOptions( ICommandSender sender, java.lang.String[] args, BlockPos pos)`
-
-## Description
-
-Gets the name of the command
+- `void processCommand(ICommandSender sender, java.lang.String[] args)` — Callback when the command is invoked

@@ -1,18 +1,24 @@
 ---
 title: "RenderTooltipEvent.PostText"
-description: "This event is fired directly after the tooltip text is drawn, but before the GL state is reset."
+description: "public static class RenderTooltipEvent.PostText extends RenderTooltipEvent.Post"
 package: "net/minecraftforge/client/event"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/event/RenderTooltipEvent.PostText.html"
 sourceType: javadoc
 ---
 
 # RenderTooltipEvent.PostText
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderTooltipEvent → net.minecraftforge.client.event.RenderTooltipEvent.Post → net.minecraftforge.client.event.RenderTooltipEvent.PostText
 
-- `public PostText(@Nonnull ItemStack stack, @Nonnull java.util.List<java.lang.String> textLines, int x, int y, @Nonnull FontRenderer fr, int width, int height)`
+## Class signature
 
-## Description
+```java
+public static class RenderTooltipEvent.PostText extends RenderTooltipEvent.Post
+```
 
-This event is fired directly after the tooltip text is drawn, but before the GL state is reset.
+## Fields
+
+- `PostText`

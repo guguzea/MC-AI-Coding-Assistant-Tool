@@ -1,18 +1,20 @@
 # GuiScreenDemo
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiScreenDemo
+
 ## Class signature
 
 ```java
 public class GuiScreenDemo extends GuiScreen
 ```
 
-## Constructors
-
-- `public GuiScreenDemo()`
-
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void drawDefaultBackground()`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected void actionPerformed(GuiButton button)`
+- `void drawDefaultBackground()`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void initGui()`
+
+## Fields
+
+- `GuiScreenDemo`

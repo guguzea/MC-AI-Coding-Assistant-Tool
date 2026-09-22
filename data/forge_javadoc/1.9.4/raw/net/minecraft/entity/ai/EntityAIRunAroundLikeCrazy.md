@@ -3,11 +3,15 @@ title: "EntityAIRunAroundLikeCrazy"
 description: "public class EntityAIRunAroundLikeCrazy extends EntityAIBase"
 package: "net/minecraft/entity/ai"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/ai/EntityAIRunAroundLikeCrazy.html"
 sourceType: javadoc
 ---
 
 # EntityAIRunAroundLikeCrazy
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIRunAroundLikeCrazy
 
 ## Class signature
 
@@ -17,11 +21,11 @@ public class EntityAIRunAroundLikeCrazy extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIRunAroundLikeCrazy( EntityHorse horse, double speedIn)`
+- `EntityAIRunAroundLikeCrazy(EntityHorse horse, double speedIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
-- `public boolean continueExecuting()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

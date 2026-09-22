@@ -1,5 +1,7 @@
 # WorldGenIceSpike
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenIceSpike
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class WorldGenIceSpike extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenIceSpike()`
+- `WorldGenIceSpike()`
 
 ## Methods
 
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`

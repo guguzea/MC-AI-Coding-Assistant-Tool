@@ -1,11 +1,13 @@
 # EntityAIWatchClosest2
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIWatchClosest → net.minecraft.entity.ai.EntityAIWatchClosest2
+
 ## Class signature
 
 ```java
 public class EntityAIWatchClosest2 extends EntityAIWatchClosest
 ```
 
-## Constructors
+## Fields
 
-- `public EntityAIWatchClosest2( EntityLiving entitylivingIn, java.lang.Class<? extends Entity > watchTargetClass, float maxDistance, float chanceIn)`
+- `EntityAIWatchClosest2`

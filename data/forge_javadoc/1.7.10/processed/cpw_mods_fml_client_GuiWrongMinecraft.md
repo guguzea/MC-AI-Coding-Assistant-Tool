@@ -1,16 +1,18 @@
 # GuiWrongMinecraft
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiErrorScreen → cpw.mods.fml.client.GuiWrongMinecraft
+
 ## Class signature
 
 ```java
 public class GuiWrongMinecraft extends GuiErrorScreen
 ```
 
-## Constructors
-
-- `public GuiWrongMinecraft( WrongMinecraftVersionException wrongMC)`
-
 ## Methods
 
-- `public void initGui()`
-- `public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)`
+- `void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)`
+- `void initGui()`
+
+## Fields
+
+- `GuiWrongMinecraft`

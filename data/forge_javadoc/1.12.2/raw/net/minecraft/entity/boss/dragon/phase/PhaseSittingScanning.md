@@ -3,11 +3,15 @@ title: "PhaseSittingScanning"
 description: "public class PhaseSittingScanning extends PhaseSittingBase"
 package: "net/minecraft/entity/boss/dragon/phase"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/boss/dragon/phase/PhaseSittingScanning.html"
 sourceType: javadoc
 ---
 
 # PhaseSittingScanning
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseSittingBase → net.minecraft.entity.boss.dragon.phase.PhaseSittingScanning
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class PhaseSittingScanning extends PhaseSittingBase
 ```
 
-## Constructors
-
-- `public PhaseSittingScanning( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public void doLocalUpdate()`
-- `public void initPhase()`
-- `public PhaseList < PhaseSittingScanning > getType()`
+- `void doLocalUpdate()`
+- `PhaseList<PhaseSittingScanning> getType()`
+- `void initPhase()`
+
+## Fields
+
+- `PhaseSittingScanning`

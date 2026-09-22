@@ -1,13 +1,17 @@
 ---
 title: "DedicatedPlayerList"
-description: "Either does nothing, or calls readWhiteList."
+description: "public class DedicatedPlayerList extends ServerConfigurationManager"
 package: "net/minecraft/server/dedicated"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/server/dedicated/DedicatedPlayerList.html"
 sourceType: javadoc
 ---
 
 # DedicatedPlayerList
+
+**Inheritance:** java.lang.Object → net.minecraft.server.management.ServerConfigurationManager → net.minecraft.server.dedicated.DedicatedPlayerList
 
 ## Class signature
 
@@ -15,22 +19,18 @@ sourceType: javadoc
 public class DedicatedPlayerList extends ServerConfigurationManager
 ```
 
-## Constructors
-
-- `public DedicatedPlayerList( DedicatedServer server)`
-
 ## Methods
 
-- `public void setWhiteListEnabled(boolean whitelistEnabled)`
-- `public void addOp(GameProfile profile)`
-- `public void removeOp(GameProfile profile)`
-- `public void removePlayerFromWhitelist(GameProfile profile)`
-- `public void addWhitelistedPlayer(GameProfile profile)`
-- `public void loadWhiteList()`
-- `public boolean canJoin(GameProfile profile)`
-- `public DedicatedServer getServerInstance()`
-- `public boolean func_183023_f(GameProfile p_183023_1_)`
+- `void addOp(GameProfile profile)`
+- `void addWhitelistedPlayer(GameProfile profile)`
+- `boolean canJoin(GameProfile profile)`
+- `boolean func_183023_f(GameProfile p_183023_1_)`
+- `DedicatedServer getServerInstance()`
+- `void loadWhiteList()` — Either does nothing, or calls readWhiteList.
+- `void removeOp(GameProfile profile)`
+- `void removePlayerFromWhitelist(GameProfile profile)`
+- `void setWhiteListEnabled(boolean whitelistEnabled)`
 
-## Description
+## Fields
 
-Either does nothing, or calls readWhiteList.
+- `DedicatedPlayerList`

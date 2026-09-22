@@ -1,20 +1,18 @@
 # BlockSoulSand
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockSoulSand
+
 ## Class signature
 
 ```java
 public class BlockSoulSand extends Block
 ```
 
-## Constructors
-
-- `public BlockSoulSand()`
-
 ## Methods
 
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)` — Called When an Entity Collided with the Block
 
-## Description
+## Fields
 
-Called When an Entity Collided with the Block
+- `BlockSoulSand`

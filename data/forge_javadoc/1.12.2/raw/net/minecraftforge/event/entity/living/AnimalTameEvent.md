@@ -1,13 +1,17 @@
 ---
 title: "AnimalTameEvent"
-description: "This event is fired when an EntityAnimal is tamed. It is fired via ForgeEventFactory.onAnimalTame(EntityAnimal, EntityPlayer) . Forge fires this event for applicable vanilla animals, mods need to fire"
+description: "public class AnimalTameEvent extends LivingEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/living/AnimalTameEvent.html"
 sourceType: javadoc
 ---
 
 # AnimalTameEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.AnimalTameEvent
 
 ## Class signature
 
@@ -17,13 +21,9 @@ public class AnimalTameEvent extends LivingEvent
 
 ## Constructors
 
-- `public AnimalTameEvent( EntityAnimal animal, EntityPlayer tamer)`
+- `AnimalTameEvent(EntityAnimal animal, EntityPlayer tamer)`
 
 ## Methods
 
-- `public EntityAnimal getAnimal()`
-- `public EntityPlayer getTamer()`
-
-## Description
-
-This event is fired when an EntityAnimal is tamed. It is fired via ForgeEventFactory.onAnimalTame(EntityAnimal, EntityPlayer) . Forge fires this event for applicable vanilla animals, mods need to fire
+- `EntityAnimal getAnimal()`
+- `EntityPlayer getTamer()`

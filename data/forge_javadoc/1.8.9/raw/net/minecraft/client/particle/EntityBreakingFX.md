@@ -1,13 +1,17 @@
 ---
 title: "EntityBreakingFX"
-description: "Renders the particle"
+description: "public class EntityBreakingFX extends EntityFX"
 package: "net/minecraft/client/particle"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/particle/EntityBreakingFX.html"
 sourceType: javadoc
 ---
 
 # EntityBreakingFX
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.client.particle.EntityFX → net.minecraft.client.particle.EntityBreakingFX
 
 ## Class signature
 
@@ -15,17 +19,13 @@ sourceType: javadoc
 public class EntityBreakingFX extends EntityFX
 ```
 
-## Constructors
-
-- `protected EntityBreakingFX( World worldIn, double posXIn, double posYIn, double posZIn, Item p_i1195_8_)`
-- `protected EntityBreakingFX( World worldIn, double posXIn, double posYIn, double posZIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, Item p_i1197_14_, int p_i1197_15_)`
-- `protected EntityBreakingFX( World worldIn, double posXIn, double posYIn, double posZIn, Item p_i1196_8_, int p_i1196_9_)`
-
 ## Methods
 
-- `public int getFXLayer()`
-- `public void renderParticle( WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)`
+- `int getFXLayer()`
+- `void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)` — Renders the particle
 
-## Description
+## Fields
 
-Renders the particle
+- `protected EntityBreakingFX`
+- `protected EntityBreakingFX`
+- `protected EntityBreakingFX`

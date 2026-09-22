@@ -1,5 +1,7 @@
 # S00PacketDisconnect
 
+**Inheritance:** java.lang.Object → net.minecraft.network.Packet → net.minecraft.network.login.server.S00PacketDisconnect
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class S00PacketDisconnect extends Packet
 
 ## Constructors
 
-- `public S00PacketDisconnect()`
-- `public S00PacketDisconnect( IChatComponent p_i45269_1_)`
+- `S00PacketDisconnect()`
+- `S00PacketDisconnect(IChatComponent p_i45269_1_)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer p_148837_1_) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer p_148840_1_) throws java.io.IOException`
-- `public void processPacket( INetHandlerLoginClient p_148833_1_)`
-- `public boolean hasPriority()`
-- `public void processPacket( INetHandler p_148833_1_)`
-- `public IChatComponent func_149603_c()`
+- `IChatComponent func_149603_c()`
+- `boolean hasPriority()`
+- `void processPacket(INetHandler p_148833_1_)`
+- `void processPacket(INetHandlerLoginClient p_148833_1_)`
+- `void readPacketData(PacketBuffer p_148837_1_)`
+- `void writePacketData(PacketBuffer p_148840_1_)`

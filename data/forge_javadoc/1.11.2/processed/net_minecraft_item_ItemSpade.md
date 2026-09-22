@@ -1,16 +1,18 @@
 # ItemSpade
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemTool → net.minecraft.item.ItemSpade
+
 ## Class signature
 
 ```java
 public class ItemSpade extends ItemTool
 ```
 
-## Constructors
-
-- `public ItemSpade( Item.ToolMaterial material)`
-
 ## Methods
 
-- `public boolean canHarvestBlock( IBlockState blockIn)`
-- `public EnumActionResult onItemUse( EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `boolean canHarvestBlock(IBlockState blockIn)`
+- `EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+
+## Fields
+
+- `ItemSpade`

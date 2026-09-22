@@ -1,25 +1,27 @@
 # RegistryNamespacedDefaultedByKey
 
+**Inheritance:** java.lang.Object → net.minecraft.util.registry.RegistrySimple<K, V> → net.minecraft.util.registry.RegistryNamespaced<K, V> → net.minecraft.util.registry.RegistryNamespacedDefaultedByKey<K, V>
+
 ## Class signature
 
 ```java
-public class RegistryNamespacedDefaultedByKey<K,V> extends RegistryNamespaced <K,V>
+public class RegistryNamespacedDefaultedByKey<K, V> extends RegistryNamespaced<K, V>
 ```
-
-## Constructors
-
-- `public RegistryNamespacedDefaultedByKey( K defaultValueKeyIn)`
 
 ## Methods
 
-- `public void register(int id, K key, V value)`
-- `public void validateKey()`
-- `public int getIDForObject( V value)`
-- `@Nonnull public K getNameForObject( V value)`
-- `@Nonnull public V getObject(@Nullable K name)`
-- `@Nonnull public V getObjectById(int id)`
-- `@Nonnull public V getRandomObject(java.util.Random random)`
-- `public int getIDForObjectBypass(@Nullable V bypass)`
-- `@Nullable public K getNameForObjectBypass( V value)`
-- `@Nullable public V getObjectBypass( K name)`
-- `@Nullable public V getObjectByIdBypass(int id)`
+- `int getIDForObject(V value)`
+- `int getIDForObjectBypass(V bypass)`
+- `K getNameForObject(V value)`
+- `K getNameForObjectBypass(V value)`
+- `V getObject(K name)`
+- `V getObjectById(int id)`
+- `V getObjectByIdBypass(int id)`
+- `V getObjectBypass(K name)`
+- `V getRandomObject(java.util.Random random)`
+- `void register(int id, K key, V value)`
+- `void validateKey()`
+
+## Fields
+
+- `RegistryNamespacedDefaultedByKey`

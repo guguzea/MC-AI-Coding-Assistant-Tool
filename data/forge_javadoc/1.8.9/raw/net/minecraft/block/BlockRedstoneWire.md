@@ -1,13 +1,17 @@
 ---
 title: "BlockRedstoneWire"
-description: "Can this block provide power."
+description: "public class BlockRedstoneWire extends Block"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockRedstoneWire.html"
 sourceType: javadoc
 ---
 
 # BlockRedstoneWire
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockRedstoneWire
 
 ## Class signature
 
@@ -17,31 +21,35 @@ public class BlockRedstoneWire extends Block
 
 ## Constructors
 
-- `public BlockRedstoneWire()`
+- `BlockRedstoneWire()`
 
 ## Methods
 
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isOpaqueCube()`
-- `public boolean isFullCube()`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public int colorMultiplier( IBlockAccess worldIn, BlockPos pos, int renderPass)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public int getStrongPower( IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
-- `public int getWeakPower( IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
-- `protected static boolean canRestoneConnect( IBlockAccess world, BlockPos pos, EnumFacing side)`
-- `public boolean canProvidePower()`
-- `public void randomDisplayTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public Item getItem( World worldIn, BlockPos pos)`
-- `public EnumWorldBlockLayer getBlockLayer()`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `boolean canProvidePower()` — Can this block provide power.
+- `protected static boolean canRestoneConnect(IBlockAccess world, BlockPos pos, EnumFacing side)`
+- `int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)`
 - `protected BlockState createBlockState()`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)` — Get the actual Block state of this Block at the given position.
+- `EnumWorldBlockLayer getBlockLayer()`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItem(World worldIn, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `int getStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
+- `int getWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Can this block provide power.
+- `static PropertyEnum<net.minecraft.block.BlockRedstoneWire.EnumAttachPosition> EAST`
+- `static PropertyEnum<net.minecraft.block.BlockRedstoneWire.EnumAttachPosition> NORTH`
+- `static PropertyInteger POWER`
+- `static PropertyEnum<net.minecraft.block.BlockRedstoneWire.EnumAttachPosition> SOUTH`
+- `static PropertyEnum<net.minecraft.block.BlockRedstoneWire.EnumAttachPosition> WEST`

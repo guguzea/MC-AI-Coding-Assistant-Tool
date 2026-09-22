@@ -9,7 +9,7 @@ public interface IChunkProvider
 ## Methods
 
 - `Chunk getLoadedChunk(int x, int z)`
+- `boolean isChunkGeneratedAt(int x, int z)`
+- `java.lang.String makeString()`
 - `Chunk provideChunk(int x, int z)`
 - `boolean tick()`
-- `java.lang.String makeString()`
-- `boolean isChunkGeneratedAt(int x, int z)`

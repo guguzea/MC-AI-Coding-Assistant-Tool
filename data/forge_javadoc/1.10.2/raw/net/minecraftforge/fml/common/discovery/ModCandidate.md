@@ -3,11 +3,15 @@ title: "ModCandidate"
 description: "public class ModCandidate extends java.lang.Object"
 package: "net/minecraftforge/fml/common/discovery"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/discovery/ModCandidate.html"
 sourceType: javadoc
 ---
 
 # ModCandidate
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.discovery.ModCandidate
 
 ## Class signature
 
@@ -17,21 +21,21 @@ public class ModCandidate extends java.lang.Object
 
 ## Constructors
 
-- `public ModCandidate(java.io.File classPathRoot, java.io.File modContainer, ContainerType sourceType)`
-- `public ModCandidate(java.io.File classPathRoot, java.io.File modContainer, ContainerType sourceType, boolean isMinecraft, boolean classpath)`
+- `ModCandidate(java.io.File classPathRoot, java.io.File modContainer, ContainerType sourceType)`
+- `ModCandidate(java.io.File classPathRoot, java.io.File modContainer, ContainerType sourceType, boolean isMinecraft, boolean classpath)`
 
 ## Methods
 
-- `public java.io.File getClassPathRoot()`
-- `public java.io.File getModContainer()`
-- `public ContainerType getSourceType()`
-- `public java.util.List< ModContainer > explore( ASMDataTable table)`
-- `public void addClassEntry(java.lang.String name)`
-- `public boolean isClasspath()`
-- `public void rememberBaseModType(java.lang.String className)`
-- `public java.util.List<java.lang.String> getRememberedBaseMods()`
-- `public boolean isMinecraftJar()`
-- `public void rememberModCandidateType( ASMModParser modParser)`
-- `public java.util.Set<java.lang.String> getClassList()`
-- `public java.util.List< ModContainer > getContainedMods()`
-- `public java.util.List<java.lang.String> getContainedPackages()`
+- `void addClassEntry(java.lang.String name)`
+- `java.util.List<ModContainer> explore(ASMDataTable table)`
+- `java.util.Set<java.lang.String> getClassList()`
+- `java.io.File getClassPathRoot()`
+- `java.util.List<ModContainer> getContainedMods()`
+- `java.util.List<java.lang.String> getContainedPackages()`
+- `java.io.File getModContainer()`
+- `java.util.List<java.lang.String> getRememberedBaseMods()`
+- `ContainerType getSourceType()`
+- `boolean isClasspath()`
+- `boolean isMinecraftJar()`
+- `void rememberBaseModType(java.lang.String className)`
+- `void rememberModCandidateType(ASMModParser modParser)`

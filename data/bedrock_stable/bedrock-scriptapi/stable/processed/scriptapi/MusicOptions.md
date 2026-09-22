@@ -1,0 +1,48 @@
+> 来源：https://unpkg.com/@minecraft/server@2.9.0/index.d.ts
+> 抓取时间：2026-09-21T16:26:07.685Z
+> 警告：此文档可能滞后于当前正式版
+> 出处：npm @minecraft/server@2.9.0 的 index.d.ts（TypeScript 声明解析，不是 Learn HTML 转储）
+> 版权：源文件头为 Microsoft Corporation 版权声明；本页只保留该声明片段并标出处
+> 模块版本：2.9.0｜unpkg
+
+
+# MusicOptions (interface)
+
+```ts
+export interface MusicOptions {
+```
+
+Additional configuration options for {@link
+World.playMusic}/{@link World.queueMusic} methods.
+
+## Members（3）
+
+### `fade`
+```ts
+fade?: number;
+```
+
+@remarks
+Specifies a fade overlap for music at the end of play.
+
+/
+
+### `loop`
+```ts
+loop?: boolean;
+```
+
+@remarks
+If set to true, this music track will play repeatedly.
+
+/
+
+### `volume`
+```ts
+volume?: number;
+```
+
+@remarks
+Relative volume level of the music.
+
+/

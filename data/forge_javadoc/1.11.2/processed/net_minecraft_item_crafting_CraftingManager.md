@@ -1,5 +1,7 @@
 # CraftingManager
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.CraftingManager
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class CraftingManager extends java.lang.Object
 
 ## Methods
 
-- `public static CraftingManager getInstance()`
-- `public ShapedRecipes addRecipe( ItemStack stack, java.lang.Object... recipeComponents)`
-- `public void addShapelessRecipe( ItemStack stack, java.lang.Object... recipeComponents)`
-- `public void addRecipe( IRecipe recipe)`
-- `public ItemStack findMatchingRecipe( InventoryCrafting craftMatrix, World worldIn)`
-- `public NonNullList < ItemStack > getRemainingItems( InventoryCrafting craftMatrix, World worldIn)`
-- `public java.util.List< IRecipe > getRecipeList()`
+- `void addRecipe(IRecipe recipe)`
+- `ShapedRecipes addRecipe(ItemStack stack, java.lang.Object... recipeComponents)`
+- `void addShapelessRecipe(ItemStack stack, java.lang.Object... recipeComponents)`
+- `ItemStack findMatchingRecipe(InventoryCrafting craftMatrix, World worldIn)`
+- `static CraftingManager getInstance()`
+- `java.util.List<IRecipe> getRecipeList()`
+- `NonNullList<ItemStack> getRemainingItems(InventoryCrafting craftMatrix, World worldIn)`

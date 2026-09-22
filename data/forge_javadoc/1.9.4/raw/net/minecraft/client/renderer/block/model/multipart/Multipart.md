@@ -3,11 +3,15 @@ title: "Multipart"
 description: "public class Multipart extends java.lang.Object"
 package: "net/minecraft/client/renderer/block/model/multipart"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/renderer/block/model/multipart/Multipart.html"
 sourceType: javadoc
 ---
 
 # Multipart
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.multipart.Multipart
 
 ## Class signature
 
@@ -17,13 +21,13 @@ public class Multipart extends java.lang.Object
 
 ## Constructors
 
-- `public Multipart(java.util.List< Selector > selectorsIn)`
+- `Multipart(java.util.List<Selector> selectorsIn)`
 
 ## Methods
 
-- `public java.util.List< Selector > getSelectors()`
-- `public java.util.Set< VariantList > getVariants()`
-- `public void setStateContainer( BlockStateContainer stateContainerIn)`
-- `public BlockStateContainer getStateContainer()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `java.util.List<Selector> getSelectors()`
+- `BlockStateContainer getStateContainer()`
+- `java.util.Set<VariantList> getVariants()`
+- `int hashCode()`
+- `void setStateContainer(BlockStateContainer stateContainerIn)`

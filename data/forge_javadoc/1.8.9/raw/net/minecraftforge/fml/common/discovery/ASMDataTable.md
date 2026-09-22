@@ -3,11 +3,15 @@ title: "ASMDataTable"
 description: "public class ASMDataTable extends java.lang.Object"
 package: "net/minecraftforge/fml/common/discovery"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/discovery/ASMDataTable.html"
 sourceType: javadoc
 ---
 
 # ASMDataTable
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.discovery.ASMDataTable
 
 ## Class signature
 
@@ -17,13 +21,13 @@ public class ASMDataTable extends java.lang.Object
 
 ## Constructors
 
-- `public ASMDataTable()`
+- `ASMDataTable()`
 
 ## Methods
 
-- `public <any> getAnnotationsFor( ModContainer container)`
-- `public java.util.Set< ASMDataTable.ASMData > getAll(java.lang.String annotation)`
-- `public void addASMData( ModCandidate candidate, java.lang.String annotation, java.lang.String className, java.lang.String objectName, java.util.Map<java.lang.String,java.lang.Object> annotationInfo)`
-- `public void addContainer( ModContainer container)`
-- `public void registerPackage( ModCandidate modCandidate, java.lang.String pkg)`
-- `public java.util.Set< ModCandidate > getCandidatesFor(java.lang.String pkg)`
+- `void addASMData(ModCandidate candidate, java.lang.String annotation, java.lang.String className, java.lang.String objectName, java.util.Map<java.lang.String, java.lang.Object> annotationInfo)`
+- `void addContainer(ModContainer container)`
+- `java.util.Set<ASMDataTable.ASMData> getAll(java.lang.String annotation)`
+- `<any> getAnnotationsFor(ModContainer container)`
+- `java.util.Set<ModCandidate> getCandidatesFor(java.lang.String pkg)`
+- `void registerPackage(ModCandidate modCandidate, java.lang.String pkg)`

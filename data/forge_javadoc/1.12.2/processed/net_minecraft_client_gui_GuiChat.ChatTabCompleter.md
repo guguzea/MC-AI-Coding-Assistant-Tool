@@ -1,10 +1,18 @@
 # GuiChat.ChatTabCompleter
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.util.TabCompleter → net.minecraft.client.gui.GuiChat.ChatTabCompleter
 
-- `public ChatTabCompleter( GuiTextField p_i46749_1_)`
+## Class signature
+
+```java
+public static class GuiChat.ChatTabCompleter extends TabCompleter
+```
 
 ## Methods
 
-- `public void complete()`
-- `public BlockPos getTargetBlockPos()`
+- `void complete()`
+- `BlockPos getTargetBlockPos()`
+
+## Fields
+
+- `ChatTabCompleter`

@@ -1,22 +1,28 @@
 ---
 title: "ForgeGuiFactory.ForgeConfigGui.ModIDEntry"
-description: "This custom list entry provides a Mod ID selector. The control is a button that opens a list of values to select from. This entry also overrides onGuiClosed() to run code to save the data to a new Con"
+description: "public static class ForgeGuiFactory.ForgeConfigGui.ModIDEntry extends GuiConfigEntries.SelectValueEntry"
 package: "net/minecraftforge/client/gui"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/client/gui/ForgeGuiFactory.ForgeConfigGui.ModIDEntry.html"
 sourceType: javadoc
 ---
 
 # ForgeGuiFactory.ForgeConfigGui.ModIDEntry
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.config.GuiConfigEntries.ListEntryBase → net.minecraftforge.fml.client.config.GuiConfigEntries.ButtonEntry → net.minecraftforge.fml.client.config.GuiConfigEntries.SelectValueEntry → net.minecraftforge.client.gui.ForgeGuiFactory.ForgeConfigGui.ModIDEntry
 
-- `public ModIDEntry( GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)`
+## Class signature
+
+```java
+public static class ForgeGuiFactory.ForgeConfigGui.ModIDEntry extends GuiConfigEntries.SelectValueEntry
+```
 
 ## Methods
 
-- `public void onGuiClosed()`
+- `void onGuiClosed()` — By overriding onGuiClosed() for this entry we can perform additional actions when the user is done such as saving a new ConfigCategory object to the Configuration object.
 
-## Description
+## Fields
 
-This custom list entry provides a Mod ID selector. The control is a button that opens a list of values to select from. This entry also overrides onGuiClosed() to run code to save the data to a new Con
+- `ModIDEntry`

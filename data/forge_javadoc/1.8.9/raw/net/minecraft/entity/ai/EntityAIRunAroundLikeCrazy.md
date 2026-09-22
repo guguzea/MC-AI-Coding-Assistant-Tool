@@ -1,13 +1,17 @@
 ---
 title: "EntityAIRunAroundLikeCrazy"
-description: "Returns whether an in-progress EntityAIBase should continue executing"
+description: "public class EntityAIRunAroundLikeCrazy extends EntityAIBase"
 package: "net/minecraft/entity/ai"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/entity/ai/EntityAIRunAroundLikeCrazy.html"
 sourceType: javadoc
 ---
 
 # EntityAIRunAroundLikeCrazy
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIRunAroundLikeCrazy
 
 ## Class signature
 
@@ -17,15 +21,11 @@ public class EntityAIRunAroundLikeCrazy extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIRunAroundLikeCrazy( EntityHorse horse, double speedIn)`
+- `EntityAIRunAroundLikeCrazy(EntityHorse horse, double speedIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
-- `public boolean continueExecuting()`
-- `public void updateTask()`
-
-## Description
-
-Returns whether an in-progress EntityAIBase should continue executing
+- `boolean continueExecuting()` — Returns whether an in-progress EntityAIBase should continue executing
+- `boolean shouldExecute()` — Returns whether the EntityAIBase should begin execution.
+- `void startExecuting()` — Execute a one shot task or start executing a continuous task
+- `void updateTask()` — Updates the task

@@ -1,9 +1,18 @@
 # BiomeEvent.BiomeColor
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.BiomeEvent → net.minecraftforge.event.terraingen.BiomeEvent.BiomeColor
+
+## Class signature
+
+```java
+public static class BiomeEvent.BiomeColor extends BiomeEvent
+```
+
 ## Constructors
 
-- `public BiomeColor( BiomeGenBase biome, int original)`
+- `BiomeColor(BiomeGenBase biome, int original)`
 
-## Description
+## Fields
 
-BiomeColor is fired whenever an event involving biome colors occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. All children of this eve
+- `int newColor`
+- `int originalColor`

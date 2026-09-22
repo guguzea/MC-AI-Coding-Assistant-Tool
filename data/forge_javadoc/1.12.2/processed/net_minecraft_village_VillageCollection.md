@@ -1,23 +1,25 @@
 # VillageCollection
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.WorldSavedData → net.minecraft.village.VillageCollection
+
 ## Class signature
 
 ```java
 public class VillageCollection extends WorldSavedData
 ```
 
-## Constructors
-
-- `public VillageCollection(java.lang.String name)`
-- `public VillageCollection( World worldIn)`
-
 ## Methods
 
-- `public void setWorldsForAll( World worldIn)`
-- `public void addToVillagerPositionList( BlockPos pos)`
-- `public void tick()`
-- `public java.util.List< Village > getVillageList()`
-- `public Village getNearestVillage( BlockPos doorBlock, int radius)`
-- `public void readFromNBT( NBTTagCompound nbt)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public static java.lang.String fileNameForProvider( WorldProvider provider)`
+- `void addToVillagerPositionList(BlockPos pos)`
+- `static java.lang.String fileNameForProvider(WorldProvider provider)`
+- `Village getNearestVillage(BlockPos doorBlock, int radius)`
+- `java.util.List<Village> getVillageList()`
+- `void readFromNBT(NBTTagCompound nbt)`
+- `void setWorldsForAll(World worldIn)`
+- `void tick()`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `VillageCollection`
+- `VillageCollection`

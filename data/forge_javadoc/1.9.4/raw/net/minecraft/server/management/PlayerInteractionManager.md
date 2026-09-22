@@ -3,11 +3,15 @@ title: "PlayerInteractionManager"
 description: "public class PlayerInteractionManager extends java.lang.Object"
 package: "net/minecraft/server/management"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/server/management/PlayerInteractionManager.html"
 sourceType: javadoc
 ---
 
 # PlayerInteractionManager
+
+**Inheritance:** java.lang.Object → net.minecraft.server.management.PlayerInteractionManager
 
 ## Class signature
 
@@ -17,22 +21,27 @@ public class PlayerInteractionManager extends java.lang.Object
 
 ## Constructors
 
-- `public PlayerInteractionManager( World worldIn)`
+- `PlayerInteractionManager(World worldIn)`
 
 ## Methods
 
-- `public void setGameType( WorldSettings.GameType type)`
-- `public WorldSettings.GameType getGameType()`
-- `public boolean survivalOrAdventure()`
-- `public boolean isCreative()`
-- `public void initializeGameType( WorldSettings.GameType type)`
-- `public void updateBlockRemoving()`
-- `public void onBlockClicked( BlockPos pos, EnumFacing side)`
-- `public void blockRemoving( BlockPos pos)`
-- `public void cancelDestroyingBlock()`
-- `public boolean tryHarvestBlock( BlockPos pos)`
-- `public EnumActionResult processRightClick( EntityPlayer player, World worldIn, ItemStack stack, EnumHand hand)`
-- `public EnumActionResult processRightClickBlock( EntityPlayer player, World worldIn, @Nullable ItemStack stack, EnumHand hand, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `public void setWorld( WorldServer serverWorld)`
-- `public double getBlockReachDistance()`
-- `public void setBlockReachDistance(double distance)`
+- `void blockRemoving(BlockPos pos)`
+- `void cancelDestroyingBlock()`
+- `double getBlockReachDistance()`
+- `WorldSettings.GameType getGameType()`
+- `void initializeGameType(WorldSettings.GameType type)`
+- `boolean isCreative()`
+- `void onBlockClicked(BlockPos pos, EnumFacing side)`
+- `EnumActionResult processRightClick(EntityPlayer player, World worldIn, ItemStack stack, EnumHand hand)`
+- `EnumActionResult processRightClickBlock(EntityPlayer player, World worldIn, ItemStack stack, EnumHand hand, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `void setBlockReachDistance(double distance)`
+- `void setGameType(WorldSettings.GameType type)`
+- `void setWorld(WorldServer serverWorld)`
+- `boolean survivalOrAdventure()`
+- `boolean tryHarvestBlock(BlockPos pos)`
+- `void updateBlockRemoving()`
+
+## Fields
+
+- `World theWorld`
+- `EntityPlayerMP thisPlayerMP`

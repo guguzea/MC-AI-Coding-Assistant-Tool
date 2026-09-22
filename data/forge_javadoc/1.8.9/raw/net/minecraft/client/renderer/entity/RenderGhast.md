@@ -1,29 +1,29 @@
 ---
 title: "RenderGhast"
-description: "Returns the location of an entity's texture."
+description: "public class RenderGhast extends RenderLiving<EntityGhast>"
 package: "net/minecraft/client/renderer/entity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/renderer/entity/RenderGhast.html"
 sourceType: javadoc
 ---
 
 # RenderGhast
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RendererLivingEntity<T> → net.minecraft.client.renderer.entity.RenderLiving<EntityGhast> → net.minecraft.client.renderer.entity.RenderGhast
+
 ## Class signature
 
 ```java
-public class RenderGhast extends RenderLiving < EntityGhast >
+public class RenderGhast extends RenderLiving<EntityGhast>
 ```
-
-## Constructors
-
-- `public RenderGhast( RenderManager renderManagerIn)`
 
 ## Methods
 
-- `protected ResourceLocation getEntityTexture( EntityGhast entity)`
-- `protected void preRenderCallback( EntityGhast entitylivingbaseIn, float partialTickTime)`
+- `protected ResourceLocation getEntityTexture(EntityGhast entity)` — Returns the location of an entity's texture.
+- `protected void preRenderCallback(EntityGhast entitylivingbaseIn, float partialTickTime)` — Allows the render to do any OpenGL state modifications necessary before the model is rendered.
 
-## Description
+## Fields
 
-Returns the location of an entity's texture.
+- `RenderGhast`

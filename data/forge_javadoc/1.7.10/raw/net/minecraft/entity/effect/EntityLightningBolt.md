@@ -3,11 +3,15 @@ title: "EntityLightningBolt"
 description: "public class EntityLightningBolt extends EntityWeatherEffect"
 package: "net/minecraft/entity/effect"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/entity/effect/EntityLightningBolt.html"
 sourceType: javadoc
 ---
 
 # EntityLightningBolt
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.effect.EntityWeatherEffect → net.minecraft.entity.effect.EntityLightningBolt
 
 ## Class signature
 
@@ -17,11 +21,15 @@ public class EntityLightningBolt extends EntityWeatherEffect
 
 ## Constructors
 
-- `public EntityLightningBolt( World p_i1703_1_, double p_i1703_2_, double p_i1703_4_, double p_i1703_6_)`
+- `EntityLightningBolt(World p_i1703_1_, double p_i1703_2_, double p_i1703_4_, double p_i1703_6_)`
 
 ## Methods
 
-- `public void onUpdate()`
 - `protected void entityInit()`
-- `protected void readEntityFromNBT( NBTTagCompound p_70037_1_)`
-- `protected void writeEntityToNBT( NBTTagCompound p_70014_1_)`
+- `void onUpdate()`
+- `protected void readEntityFromNBT(NBTTagCompound p_70037_1_)`
+- `protected void writeEntityToNBT(NBTTagCompound p_70014_1_)`
+
+## Fields
+
+- `long boltVertex`

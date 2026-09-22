@@ -1,20 +1,18 @@
 # RenderChicken
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RendererLivingEntity<T> → net.minecraft.client.renderer.entity.RenderLiving<EntityChicken> → net.minecraft.client.renderer.entity.RenderChicken
+
 ## Class signature
 
 ```java
-public class RenderChicken extends RenderLiving < EntityChicken >
+public class RenderChicken extends RenderLiving<EntityChicken>
 ```
-
-## Constructors
-
-- `public RenderChicken( RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)`
 
 ## Methods
 
-- `protected ResourceLocation getEntityTexture( EntityChicken entity)`
-- `protected float handleRotationFloat( EntityChicken livingBase, float partialTicks)`
+- `protected ResourceLocation getEntityTexture(EntityChicken entity)` — Returns the location of an entity's texture.
+- `protected float handleRotationFloat(EntityChicken livingBase, float partialTicks)` — Defines what float the third param in setRotationAngles of ModelBase is
 
-## Description
+## Fields
 
-Returns the location of an entity's texture.
+- `RenderChicken`

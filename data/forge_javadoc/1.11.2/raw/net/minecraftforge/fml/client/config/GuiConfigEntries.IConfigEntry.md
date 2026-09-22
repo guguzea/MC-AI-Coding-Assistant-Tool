@@ -1,34 +1,38 @@
 ---
 title: "GuiConfigEntries.IConfigEntry"
-description: "Provides an interface for defining GuiConfigEntry.listEntry objects."
+description: "public static interface GuiConfigEntries.IConfigEntry extends GuiListExtended.IGuiListEntry"
 package: "net/minecraftforge/fml/client/config"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/client/config/GuiConfigEntries.IConfigEntry.html"
 sourceType: javadoc
 ---
 
 # GuiConfigEntries.IConfigEntry
 
+## Class signature
+
+```java
+public static interface GuiConfigEntries.IConfigEntry extends GuiListExtended.IGuiListEntry
+```
+
 ## Methods
 
-- `IConfigElement getConfigElement()`
-- `java.lang.String getName()`
-- `java.lang.Object getCurrentValue()`
-- `java.lang.Object[] getCurrentValues()`
-- `boolean enabled()`
-- `void keyTyped(char eventChar, int eventKey)`
-- `void updateCursorCounter()`
-- `void mouseClicked(int x, int y, int mouseEvent)`
-- `boolean isDefault()`
-- `void setToDefault()`
-- `void undoChanges()`
-- `boolean isChanged()`
-- `boolean saveConfigElement()`
-- `void drawToolTip(int mouseX, int mouseY)`
-- `int getLabelWidth()`
-- `int getEntryRightBound()`
-- `void onGuiClosed()`
-
-## Description
-
-Provides an interface for defining GuiConfigEntry.listEntry objects.
+- `void drawToolTip(int mouseX, int mouseY)` — Handles drawing any tooltips that apply to this entry.
+- `boolean enabled()` — Is this list entry enabled?
+- `IConfigElement getConfigElement()` — Gets the IConfigElement object owned by this entry.
+- `java.lang.Object getCurrentValue()` — Gets the current value of this entry.
+- `java.lang.Object[] getCurrentValues()` — Gets the current values of this list entry.
+- `int getEntryRightBound()` — Gets this entry's right-hand x boundary.
+- `int getLabelWidth()` — Gets this entry's label width.
+- `java.lang.String getName()` — Gets the name of the ConfigElement owned by this entry.
+- `boolean isChanged()` — Has the value of this entry changed?
+- `boolean isDefault()` — Is this entry's value equal to the default value?
+- `void keyTyped(char eventChar, int eventKey)` — Handles user keystrokes for any GuiTextField objects in this entry.
+- `void mouseClicked(int x, int y, int mouseEvent)` — Call GuiTextField.mouseClicked(int, int, int) for and GuiTextField objects in this entry.
+- `void onGuiClosed()` — This method is called when the parent GUI is closed.
+- `boolean saveConfigElement()` — Handles saving any changes that have been made to this entry back to the underlying object.
+- `void setToDefault()` — Sets this entry's value to the default value.
+- `void undoChanges()` — Handles reverting any changes that have occurred to this entry.
+- `void updateCursorCounter()` — Call GuiTextField.updateCursorCounter() for any GuiTextField objects in this entry.

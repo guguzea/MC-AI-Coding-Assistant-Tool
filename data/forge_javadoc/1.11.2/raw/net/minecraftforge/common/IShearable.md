@@ -1,8 +1,10 @@
 ---
 title: "IShearable"
-description: "This allows for mods to create there own Shear-like items and have them interact with Blocks/Entities without extra work. Also, if your block/entity supports the Shears, this allows you to support mod"
+description: "public interface IShearable"
 package: "net/minecraftforge/common"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/common/IShearable.html"
 sourceType: javadoc
 ---
@@ -17,9 +19,5 @@ public interface IShearable
 
 ## Methods
 
-- `boolean isShearable(@Nonnull ItemStack item, IBlockAccess world, BlockPos pos)`
-- `java.util.List< ItemStack > onSheared(@Nonnull ItemStack item, IBlockAccess world, BlockPos pos, int fortune)`
-
-## Description
-
-This allows for mods to create there own Shear-like items and have them interact with Blocks/Entities without extra work. Also, if your block/entity supports the Shears, this allows you to support mod
+- `boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)` — Checks if the object is currently shearable Example: Sheep return false when they have no wool
+- `java.util.List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)` — Performs the shear function on this object.

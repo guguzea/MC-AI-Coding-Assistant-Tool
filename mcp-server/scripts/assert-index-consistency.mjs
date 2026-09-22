@@ -75,10 +75,21 @@ const MANIFEST = path.join(DATA_DIR, "semantic-index-manifest.json");
 // 两者反向不是向量层缺口：重建日志记的口径是「<200 字短块仍进 chunks/chunks_fts，只不进 chunk_embeddings」，
 // 拆平的块变多必然带出更多短块；本轮该留痕为 436 页 / 1744 个短块。逐项归因未做，只钉总数。
 // ⇒ forge 平台 7189→7230 / 5498→5486。
+// A3 收口（2026-09-21 基岩 B 批 → 语义索引页发现改递归）：旧构建器只扫 `processed/` 顶层，
+// 基岩新页在 `processed/documents/**`（238）与 `processed/scriptapi/**`（624）里，于是它报
+// 「20 docs / 308 chunks」并以 rc=0 收工 —— 覆盖欠账 44 倍，且没有任何一处把 db 的 docs 数与同树
+// index-l0 的条数对比。实测其余 59 棵树 flat==deep，所以只有 bedrock 一项变：
+// 308→14932 chunks / 303→4457 embedded（882 页全入库；短块占多数是 scriptapi「一页一声明」体裁，
+// <200 字的块仍进 chunks/chunks_fts，只不进向量层）。重建日志：882/882 页入库、命中方式 version/rel=882。
+// （上一句里的 `processed/scriptapi/**` 已过期：⑤ 2026-09-22 把那 624 页拆进独立树
+//   `data/bedrock_stable/bedrock-scriptapi/stable/`，bedrock-docs 树现 258 页；口径见下面 LEDGER_SUM 的 ⑤ 注。）
 const LEDGER_SUM = {
-  entries: 60, chunks: 36651, embedded: 27620,
+  // ⑤（2026-09-22 基岩 Script API 拆树）：bedrock 平台从 1 个语义库变 2 个（bedrock-docs 258 页 +
+  // bedrock-scriptapi 624 页），顶层 entries 60→61；**chunks/embedded 完全守恒**
+  // （5054+9878=14932、3291+1166=4457，与拆树前的单树逐字相等）⇒ 拆树不动向量总量，只动分母。
+  entries: 61, chunks: 51275, embedded: 31774,
   perPlatform: {
-    "bedrock": { entries: 1, chunks: 308, embedded: 303 },
+    "bedrock": { entries: 2, chunks: 14932, embedded: 4457 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
     "forge": { entries: 10, chunks: 7230, embedded: 5486 },
     "liteloader": { entries: 3, chunks: 464, embedded: 384 },

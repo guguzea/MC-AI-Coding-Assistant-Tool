@@ -1,5 +1,7 @@
 # BlockRailDetector
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockRailBase → net.minecraft.block.BlockRailDetector
+
 ## Class signature
 
 ```java
@@ -8,25 +10,30 @@ public class BlockRailDetector extends BlockRailBase
 
 ## Constructors
 
-- `public BlockRailDetector()`
+- `BlockRailDetector()`
 
 ## Methods
 
-- `public int tickRate( World worldIn)`
-- `public boolean canProvidePower( IBlockState state)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
-- `public void randomTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random random)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public int getWeakPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `public int getStrongPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `protected void updateConnectedRails( World worldIn, BlockPos pos, IBlockState state, boolean powered)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public IProperty < BlockRailBase.EnumRailDirection > getShapeProperty()`
-- `public boolean hasComparatorInputOverride( IBlockState state)`
-- `public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos)`
-- `protected <T extends EntityMinecart > java.util.List<T> findMinecarts( World worldIn, BlockPos pos, java.lang.Class<T> clazz, <any>... filter)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
+- `boolean canProvidePower(IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
+- `protected<T extends EntityMinecart> java.util.List<T> findMinecarts(World worldIn, BlockPos pos, java.lang.Class<T> clazz, <any>... filter)`
+- `int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)`
+- `IProperty<BlockRailBase.EnumRailDirection> getShapeProperty()`
+- `IBlockState getStateFromMeta(int meta)`
+- `int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `boolean hasComparatorInputOverride(IBlockState state)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
+- `void randomTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random random)`
+- `int tickRate(World worldIn)`
+- `protected void updateConnectedRails(World worldIn, BlockPos pos, IBlockState state, boolean powered)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
+
+## Fields
+
+- `static PropertyBool POWERED`
+- `static PropertyEnum<BlockRailBase.EnumRailDirection> SHAPE`

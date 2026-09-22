@@ -1,9 +1,13 @@
 # BiomeEvent.GetWaterColor
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.BiomeEvent → net.minecraftforge.event.terraingen.BiomeEvent.BiomeColor → net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor
 
-- `public GetWaterColor( BiomeGenBase biome, int original)`
+## Class signature
 
-## Description
+```java
+public static class BiomeEvent.GetWaterColor extends BiomeEvent.BiomeColor
+```
 
-This event is fired when a biome is queried for its water color.
+## Fields
+
+- `GetWaterColor`

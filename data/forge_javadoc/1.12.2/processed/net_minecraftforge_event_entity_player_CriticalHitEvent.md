@@ -1,5 +1,7 @@
 # CriticalHitEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.CriticalHitEvent
+
 ## Class signature
 
 ```java
@@ -8,16 +10,12 @@ public class CriticalHitEvent extends PlayerEvent
 
 ## Constructors
 
-- `public CriticalHitEvent( EntityPlayer player, Entity target, float damageModifier, boolean vanillaCritical)`
+- `CriticalHitEvent(EntityPlayer player, Entity target, float damageModifier, boolean vanillaCritical)`
 
 ## Methods
 
-- `public Entity getTarget()`
-- `public void setDamageModifier(float mod)`
-- `public float getDamageModifier()`
-- `public float getOldDamageModifier()`
-- `public boolean isVanillaCritical()`
-
-## Description
-
-This event is fired whenever a player attacks an Entity in EntityPlayer#attackTargetEntityWithCurrentItem(Entity). This event is not Cancelable . This event has a result. Event.HasResult DEFAULT: mean
+- `float getDamageModifier()` — The damage modifier for the hit.
+- `float getOldDamageModifier()` — The orignal damage modifier for the hit wthout any changes.
+- `Entity getTarget()` — The Entity that was damaged by the player.
+- `boolean isVanillaCritical()` — Returns true if this hit was critical by vanilla
+- `void setDamageModifier(float mod)` — This set the damage multiplier for the hit.

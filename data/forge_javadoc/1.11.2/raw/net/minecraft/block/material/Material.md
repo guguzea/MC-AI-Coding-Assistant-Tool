@@ -3,11 +3,15 @@ title: "Material"
 description: "public class Material extends java.lang.Object"
 package: "net/minecraft/block/material"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/material/Material.html"
 sourceType: javadoc
 ---
 
 # Material
+
+**Inheritance:** java.lang.Object → net.minecraft.block.material.Material
 
 ## Class signature
 
@@ -17,23 +21,62 @@ public class Material extends java.lang.Object
 
 ## Constructors
 
-- `public Material( MapColor color)`
+- `Material(MapColor color)`
 
 ## Methods
 
-- `public boolean isLiquid()`
-- `public boolean isSolid()`
-- `public boolean blocksLight()`
-- `public boolean blocksMovement()`
-- `protected Material setRequiresTool()`
-- `protected Material setBurning()`
-- `public boolean getCanBurn()`
-- `public Material setReplaceable()`
-- `public boolean isReplaceable()`
-- `public boolean isOpaque()`
-- `public boolean isToolNotRequired()`
-- `public EnumPushReaction getMobilityFlag()`
-- `protected Material setNoPushMobility()`
-- `protected Material setImmovableMobility()`
+- `boolean blocksLight()`
+- `boolean blocksMovement()`
+- `boolean getCanBurn()`
+- `MapColor getMaterialMapColor()`
+- `EnumPushReaction getMobilityFlag()`
+- `boolean isLiquid()`
+- `boolean isOpaque()`
+- `boolean isReplaceable()`
+- `boolean isSolid()`
+- `boolean isToolNotRequired()`
 - `protected Material setAdventureModeExempt()`
-- `public MapColor getMaterialMapColor()`
+- `protected Material setBurning()`
+- `protected Material setImmovableMobility()`
+- `protected Material setNoPushMobility()`
+- `Material setReplaceable()`
+- `protected Material setRequiresTool()`
+
+## Fields
+
+- `static Material AIR`
+- `static Material ANVIL`
+- `static Material BARRIER`
+- `static Material CACTUS`
+- `static Material CAKE`
+- `static Material CARPET`
+- `static Material CIRCUITS`
+- `static Material CLAY`
+- `static Material CLOTH`
+- `static Material CORAL`
+- `static Material CRAFTED_SNOW`
+- `static Material DRAGON_EGG`
+- `static Material FIRE`
+- `static Material GLASS`
+- `static Material GOURD`
+- `static Material GRASS`
+- `static Material GROUND`
+- `static Material ICE`
+- `static Material IRON`
+- `static Material LAVA`
+- `static Material LEAVES`
+- `static Material PACKED_ICE`
+- `static Material PISTON`
+- `static Material PLANTS`
+- `static Material PORTAL`
+- `static Material REDSTONE_LIGHT`
+- `static Material ROCK`
+- `static Material SAND`
+- `static Material SNOW`
+- `static Material SPONGE`
+- `static Material STRUCTURE_VOID`
+- `static Material TNT`
+- `static Material VINE`
+- `static Material WATER`
+- `static Material WEB`
+- `static Material WOOD`

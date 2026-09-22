@@ -1,17 +1,19 @@
 # BlockCarrot
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBush → net.minecraft.block.BlockCrops → net.minecraft.block.BlockCarrot
+
 ## Class signature
 
 ```java
 public class BlockCarrot extends BlockCrops
 ```
 
-## Constructors
-
-- `public BlockCarrot()`
-
 ## Methods
 
-- `protected Item getSeed()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
 - `protected Item getCrop()`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
+- `protected Item getSeed()`
+
+## Fields
+
+- `BlockCarrot`

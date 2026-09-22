@@ -1,13 +1,17 @@
 ---
 title: "ItemFood"
-description: "Number of ticks to run while 'EnumAction'ing until result."
+description: "public class ItemFood extends Item"
 package: "net/minecraft/item"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/item/ItemFood.html"
 sourceType: javadoc
 ---
 
 # ItemFood
+
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemFood
 
 ## Class signature
 
@@ -17,22 +21,22 @@ public class ItemFood extends Item
 
 ## Constructors
 
-- `public ItemFood(int amount, float saturation, boolean isWolfFood)`
-- `public ItemFood(int amount, boolean isWolfFood)`
+- `ItemFood(int amount, boolean isWolfFood)`
+- `ItemFood(int amount, float saturation, boolean isWolfFood)`
 
 ## Methods
 
-- `public ItemStack onItemUseFinish( ItemStack stack, World worldIn, EntityPlayer playerIn)`
-- `protected void onFoodEaten( ItemStack stack, World worldIn, EntityPlayer player)`
-- `public int getMaxItemUseDuration( ItemStack stack)`
-- `public EnumAction getItemUseAction( ItemStack stack)`
-- `public ItemStack onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)`
-- `public int getHealAmount( ItemStack stack)`
-- `public float getSaturationModifier( ItemStack stack)`
-- `public boolean isWolfsFavoriteMeat()`
-- `public ItemFood setPotionEffect(int id, int duration, int amplifier, float probability)`
-- `public ItemFood setAlwaysEdible()`
+- `int getHealAmount(ItemStack stack)`
+- `EnumAction getItemUseAction(ItemStack stack)` — returns the action that specifies what animation to play when the items is being used
+- `int getMaxItemUseDuration(ItemStack stack)` — How long it takes to use or consume an item
+- `float getSaturationModifier(ItemStack stack)`
+- `boolean isWolfsFavoriteMeat()` — Whether wolves like this food (true for raw and cooked porkchop).
+- `protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player)`
+- `ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)` — Called whenever this item is equipped and the right mouse button is pressed.
+- `ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)` — Called when the player finishes using this Item (E.g. finishes eating.).
+- `ItemFood setAlwaysEdible()` — Set the field 'alwaysEdible' to true, and make the food edible even if the player don't need to eat.
+- `ItemFood setPotionEffect(int id, int duration, int amplifier, float probability)` — sets a potion effect on the item.
 
-## Description
+## Fields
 
-Number of ticks to run while 'EnumAction'ing until result.
+- `int itemUseDuration` — Number of ticks to run while 'EnumAction'ing until result.

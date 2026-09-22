@@ -1,8 +1,10 @@
 ---
 title: "IMessage"
-description: "Implement this interface for each message you wish to define."
+description: "public interface IMessage"
 package: "net/minecraftforge/fml/common/network/simpleimpl"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/network/simpleimpl/IMessage.html"
 sourceType: javadoc
 ---
@@ -17,9 +19,5 @@ public interface IMessage
 
 ## Methods
 
-- `void fromBytes(ByteBuf buf)`
-- `void toBytes(ByteBuf buf)`
-
-## Description
-
-Implement this interface for each message you wish to define.
+- `void fromBytes(ByteBuf buf)` — Convert from the supplied buffer into your specific message type
+- `void toBytes(ByteBuf buf)` — Deconstruct your message into the supplied byte buffer

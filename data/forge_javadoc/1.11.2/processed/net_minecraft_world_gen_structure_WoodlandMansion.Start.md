@@ -1,11 +1,19 @@
 # WoodlandMansion.Start
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureStart → net.minecraft.world.gen.structure.WoodlandMansion.Start
 
-- `public Start()`
-- `public Start( World p_i47235_1_, ChunkProviderOverworld p_i47235_2_, java.util.Random p_i47235_3_, int p_i47235_4_, int p_i47235_5_)`
+## Class signature
+
+```java
+public static class WoodlandMansion.Start extends StructureStart
+```
 
 ## Methods
 
-- `public void generateStructure( World worldIn, java.util.Random rand, StructureBoundingBox structurebb)`
-- `public boolean isSizeableStructure()`
+- `void generateStructure(World worldIn, java.util.Random rand, StructureBoundingBox structurebb)`
+- `boolean isSizeableStructure()`
+
+## Fields
+
+- `Start`
+- `Start`

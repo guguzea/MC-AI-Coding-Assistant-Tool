@@ -1,5 +1,7 @@
 # GetCollisionBoxesEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.GetCollisionBoxesEvent
+
 ## Class signature
 
 ```java
@@ -8,14 +10,10 @@ public class GetCollisionBoxesEvent extends WorldEvent
 
 ## Constructors
 
-- `public GetCollisionBoxesEvent( World world, Entity entity, AxisAlignedBB aabb, java.util.List< AxisAlignedBB > collisionBoxesList)`
+- `GetCollisionBoxesEvent(World world, Entity entity, AxisAlignedBB aabb, java.util.List<AxisAlignedBB> collisionBoxesList)`
 
 ## Methods
 
-- `public Entity getEntity()`
-- `public AxisAlignedBB getAabb()`
-- `public java.util.List< AxisAlignedBB > getCollisionBoxesList()`
-
-## Description
-
-This event is fired during World.collidesWithAnyBlock(AxisAlignedBB) and before returning the list in World.getCollisionBoxes(Entity, AxisAlignedBB) entity contains the entity passed in the World.getC
+- `AxisAlignedBB getAabb()`
+- `java.util.List<AxisAlignedBB> getCollisionBoxesList()`
+- `Entity getEntity()`

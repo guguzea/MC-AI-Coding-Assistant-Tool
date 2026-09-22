@@ -1,27 +1,33 @@
 ---
 title: "StructureOceanMonument.StartMonument"
-description: "Keeps iterating Structure Pieces and spawning them until the checks tell it to stop"
+description: "public static class StructureOceanMonument.StartMonument extends StructureStart"
 package: "net/minecraft/world/gen/structure"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/gen/structure/StructureOceanMonument.StartMonument.html"
 sourceType: javadoc
 ---
 
 # StructureOceanMonument.StartMonument
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureStart → net.minecraft.world.gen.structure.StructureOceanMonument.StartMonument
 
-- `public StartMonument()`
-- `public StartMonument( World worldIn, java.util.Random p_i45607_2_, int p_i45607_3_, int p_i45607_4_)`
+## Class signature
+
+```java
+public static class StructureOceanMonument.StartMonument extends StructureStart
+```
 
 ## Methods
 
-- `public void generateStructure( World worldIn, java.util.Random rand, StructureBoundingBox structurebb)`
-- `public boolean func_175788_a( ChunkCoordIntPair pair)`
-- `public void func_175787_b( ChunkCoordIntPair pair)`
-- `public void writeToNBT( NBTTagCompound tagCompound)`
-- `public void readFromNBT( NBTTagCompound tagCompound)`
+- `void func_175787_b(ChunkCoordIntPair pair)`
+- `boolean func_175788_a(ChunkCoordIntPair pair)`
+- `void generateStructure(World worldIn, java.util.Random rand, StructureBoundingBox structurebb)` — Keeps iterating Structure Pieces and spawning them until the checks tell it to stop
+- `void readFromNBT(NBTTagCompound tagCompound)`
+- `void writeToNBT(NBTTagCompound tagCompound)`
 
-## Description
+## Fields
 
-Keeps iterating Structure Pieces and spawning them until the checks tell it to stop
+- `StartMonument`
+- `StartMonument`

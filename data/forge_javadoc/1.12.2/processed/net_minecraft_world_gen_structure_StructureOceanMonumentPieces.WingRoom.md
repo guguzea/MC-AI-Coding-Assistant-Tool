@@ -1,10 +1,18 @@
 # StructureOceanMonumentPieces.WingRoom
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureOceanMonumentPieces.Piece → net.minecraft.world.gen.structure.StructureOceanMonumentPieces.WingRoom
 
-- `public WingRoom()`
-- `public WingRoom( EnumFacing p_i45585_1_, StructureBoundingBox p_i45585_2_, int p_i45585_3_)`
+## Class signature
+
+```java
+public static class StructureOceanMonumentPieces.WingRoom extends StructureOceanMonumentPieces.Piece
+```
 
 ## Methods
 
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+
+## Fields
+
+- `WingRoom`
+- `WingRoom`

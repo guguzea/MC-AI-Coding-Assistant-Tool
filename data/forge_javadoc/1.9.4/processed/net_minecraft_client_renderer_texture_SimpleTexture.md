@@ -1,5 +1,7 @@
 # SimpleTexture
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.texture.AbstractTexture → net.minecraft.client.renderer.texture.SimpleTexture
+
 ## Class signature
 
 ```java
@@ -8,8 +10,12 @@ public class SimpleTexture extends AbstractTexture
 
 ## Constructors
 
-- `public SimpleTexture( ResourceLocation textureResourceLocation)`
+- `SimpleTexture(ResourceLocation textureResourceLocation)`
 
 ## Methods
 
-- `public void loadTexture( IResourceManager resourceManager) throws java.io.IOException`
+- `void loadTexture(IResourceManager resourceManager)`
+
+## Fields
+
+- `protected ResourceLocation textureLocation`

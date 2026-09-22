@@ -1,14 +1,18 @@
 # NoteBlockEvent.Change
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.NoteBlockEvent → net.minecraftforge.event.world.NoteBlockEvent.Change
+
+## Class signature
+
+```java
+public static class NoteBlockEvent.Change extends NoteBlockEvent
+```
+
 ## Constructors
 
-- `public Change( World world, BlockPos pos, IBlockState state, int oldNote, int newNote)`
+- `Change(World world, BlockPos pos, IBlockState state, int oldNote, int newNote)`
 
 ## Methods
 
-- `public NoteBlockEvent.Note getOldNote()`
-- `public NoteBlockEvent.Octave getOldOctave()`
-
-## Description
-
-Fired when a Noteblock is changed. You can adjust the note it will change to via NoteBlockEvent.setNote(Note, Octave) . Canceling this event will not change the note and also stop the Noteblock from p
+- `NoteBlockEvent.Note getOldNote()`
+- `NoteBlockEvent.Octave getOldOctave()`

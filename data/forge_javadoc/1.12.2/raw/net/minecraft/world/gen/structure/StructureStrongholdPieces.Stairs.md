@@ -1,24 +1,34 @@
 ---
 title: "StructureStrongholdPieces.Stairs"
-description: ""
+description: "public static class StructureStrongholdPieces.Stairs extends StructureStrongholdPieces.Stronghold"
 package: "net/minecraft/world/gen/structure"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/gen/structure/StructureStrongholdPieces.Stairs.html"
 sourceType: javadoc
 ---
 
 # StructureStrongholdPieces.Stairs
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureStrongholdPieces.Stronghold → net.minecraft.world.gen.structure.StructureStrongholdPieces.Stairs
 
-- `public Stairs()`
-- `public Stairs(int p_i2081_1_, java.util.Random p_i2081_2_, int p_i2081_3_, int p_i2081_4_)`
-- `public Stairs(int p_i45574_1_, java.util.Random p_i45574_2_, StructureBoundingBox p_i45574_3_, EnumFacing p_i45574_4_)`
+## Class signature
+
+```java
+public static class StructureStrongholdPieces.Stairs extends StructureStrongholdPieces.Stronghold
+```
 
 ## Methods
 
-- `protected void writeStructureToNBT( NBTTagCompound tagCompound)`
-- `protected void readStructureFromNBT( NBTTagCompound tagCompound, TemplateManager p_143011_2_)`
-- `public void buildComponent( StructureComponent componentIn, java.util.List< StructureComponent > listIn, java.util.Random rand)`
-- `public static StructureStrongholdPieces.Stairs createPiece(java.util.List< StructureComponent > p_175863_0_, java.util.Random p_175863_1_, int p_175863_2_, int p_175863_3_, int p_175863_4_, EnumFacing p_175863_5_, int p_175863_6_)`
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `void buildComponent(StructureComponent componentIn, java.util.List<StructureComponent> listIn, java.util.Random rand)`
+- `static StructureStrongholdPieces.Stairs createPiece(java.util.List<StructureComponent> p_175863_0_, java.util.Random p_175863_1_, int p_175863_2_, int p_175863_3_, int p_175863_4_, EnumFacing p_175863_5_, int p_175863_6_)`
+- `protected void readStructureFromNBT(NBTTagCompound tagCompound, TemplateManager p_143011_2_)`
+- `protected void writeStructureToNBT(NBTTagCompound tagCompound)`
+
+## Fields
+
+- `Stairs`
+- `Stairs`
+- `Stairs`

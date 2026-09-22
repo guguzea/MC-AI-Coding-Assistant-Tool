@@ -1,9 +1,17 @@
 # RecipeUnlockedTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.RecipeUnlockedTrigger.Instance
+
+## Class signature
+
+```java
+public static class RecipeUnlockedTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( IRecipe recipe)`
+- `Instance(IRecipe recipe)`
 
 ## Methods
 
-- `public boolean test( IRecipe recipe)`
+- `boolean test(IRecipe recipe)`

@@ -1,13 +1,17 @@
 ---
 title: "ZipperUtil"
-description: "Copied from http://stackoverflow.com/questions/1399126/java-util-zip-recreating-directory-structure because the code looked very tidy and neat. Thanks, McDowell!"
+description: "public class ZipperUtil extends java.lang.Object"
 package: "cpw/mods/fml/common"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/ZipperUtil.html"
 sourceType: javadoc
 ---
 
 # ZipperUtil
+
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.ZipperUtil
 
 ## Class signature
 
@@ -17,15 +21,11 @@ public class ZipperUtil extends java.lang.Object
 
 ## Constructors
 
-- `public ZipperUtil()`
+- `ZipperUtil()`
 
 ## Methods
 
-- `public static void zip(java.io.File directory, java.io.File zipfile) throws java.io.IOException`
-- `public static void backupWorld() throws java.io.IOException`
-- `@Deprecated public static void backupWorld(java.lang.String dirName, java.lang.String saveName) throws java.io.IOException`
-- `public static void backupWorld(java.lang.String dirName) throws java.io.IOException`
-
-## Description
-
-Copied from http://stackoverflow.com/questions/1399126/java-util-zip-recreating-directory-structure because the code looked very tidy and neat. Thanks, McDowell!
+- `static void backupWorld()`
+- `static void backupWorld(java.lang.String dirName)`
+- `@Deprecated static void backupWorld(java.lang.String dirName, java.lang.String saveName)`
+- `static void zip(java.io.File directory, java.io.File zipfile)`

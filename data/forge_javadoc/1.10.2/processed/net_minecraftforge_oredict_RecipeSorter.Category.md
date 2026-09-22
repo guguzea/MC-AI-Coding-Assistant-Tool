@@ -1,10 +1,14 @@
 # RecipeSorter.Category
 
+**Inheritance:** java.lang.Object → java.lang.Enum<RecipeSorter.Category> → net.minecraftforge.oredict.RecipeSorter.Category
+
+## Class signature
+
+```java
+public static enum RecipeSorter.Category extends java.lang.Enum<RecipeSorter.Category>
+```
+
 ## Methods
 
-- `public static RecipeSorter.Category [] values()`
-- `public static RecipeSorter.Category valueOf(java.lang.String name)`
-
-## Description
-
-Do not use UNKNOWN - it is for recipe types with no clear driver
+- `static RecipeSorter.Category valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static RecipeSorter.Category [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

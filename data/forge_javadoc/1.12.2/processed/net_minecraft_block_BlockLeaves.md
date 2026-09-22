@@ -1,5 +1,7 @@
 # BlockLeaves
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockLeaves
+
 ## Class signature
 
 ```java
@@ -8,29 +10,31 @@ public abstract class BlockLeaves extends Block implements IShearable
 
 ## Constructors
 
-- `public BlockLeaves()`
+- `BlockLeaves()`
 
 ## Methods
 
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public void randomDisplayTick( IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
-- `public int quantityDropped(java.util.Random random)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public void dropBlockAsItemWithChance( World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
-- `protected void dropApple( World worldIn, BlockPos pos, IBlockState state, int chance)`
-- `protected int getSaplingDropChance( IBlockState state)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public void setGraphicsLevel(boolean fancy)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public boolean causesSuffocation( IBlockState state)`
-- `public abstract BlockPlanks.EnumType getWoodType(int meta)`
-- `public boolean isShearable( ItemStack item, IBlockAccess world, BlockPos pos)`
-- `public boolean isLeaves( IBlockState state, IBlockAccess world, BlockPos pos)`
-- `public void beginLeavesDecay( IBlockState state, World world, BlockPos pos)`
-- `public void getDrops( NonNullList < ItemStack > drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)`
-- `public boolean shouldSideBeRendered( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `void beginLeavesDecay(IBlockState state, World world, BlockPos pos)` — Called when a leaf should start its decay process.
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean causesSuffocation(IBlockState state)`
+- `protected void dropApple(World worldIn, BlockPos pos, IBlockState state, int chance)`
+- `void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
+- `BlockRenderLayer getBlockLayer()`
+- `void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)` — This gets a complete list of items dropped from this block.
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `protected int getSaplingDropChance(IBlockState state)`
+- `abstract BlockPlanks.EnumType getWoodType(int meta)`
+- `boolean isLeaves(IBlockState state, IBlockAccess world, BlockPos pos)` — Determines if this block is considered a leaf block, used to apply the leaf decay and generation system.
+- `boolean isOpaqueCube(IBlockState state)`
+- `boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)` — Checks if the object is currently shearable Example: Sheep return false when they have no wool
+- `int quantityDropped(java.util.Random random)`
+- `void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
+- `void setGraphicsLevel(boolean fancy)`
+- `boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Called when a leaf should start its decay process.
+- `static PropertyBool CHECK_DECAY`
+- `static PropertyBool DECAYABLE`
+- `protected boolean leavesFancy`

@@ -1,10 +1,18 @@
 # LightUtil.ItemConsumer
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.pipeline.VertexTransformer → net.minecraftforge.client.model.pipeline.LightUtil.ItemConsumer
 
-- `public ItemConsumer( IVertexConsumer parent)`
+## Class signature
+
+```java
+public static class LightUtil.ItemConsumer extends VertexTransformer
+```
 
 ## Methods
 
-- `public void setAuxColor(float... auxColor)`
-- `public void put(int element, float... data)`
+- `void put(int element, float... data)`
+- `void setAuxColor(float... auxColor)`
+
+## Fields
+
+- `ItemConsumer`

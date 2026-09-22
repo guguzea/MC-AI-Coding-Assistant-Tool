@@ -1,13 +1,17 @@
 ---
 title: "LivingAttackEvent"
-description: "LivingAttackEvent is fired when a living Entity is attacked. This event is fired whenever an Entity is attacked in EntityLivingBase#attackEntityFrom(DamageSource, float) and EntityPlayer#attackEntityF"
+description: "public class LivingAttackEvent extends LivingEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/living/LivingAttackEvent.html"
 sourceType: javadoc
 ---
 
 # LivingAttackEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingAttackEvent
 
 ## Class signature
 
@@ -17,8 +21,9 @@ public class LivingAttackEvent extends LivingEvent
 
 ## Constructors
 
-- `public LivingAttackEvent( EntityLivingBase entity, DamageSource source, float ammount)`
+- `LivingAttackEvent(EntityLivingBase entity, DamageSource source, float ammount)`
 
-## Description
+## Fields
 
-LivingAttackEvent is fired when a living Entity is attacked. This event is fired whenever an Entity is attacked in EntityLivingBase#attackEntityFrom(DamageSource, float) and EntityPlayer#attackEntityF
+- `float ammount`
+- `DamageSource source`

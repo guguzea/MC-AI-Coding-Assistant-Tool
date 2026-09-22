@@ -1,13 +1,17 @@
 ---
 title: "WorldSettings"
-description: "Returns true if Commands (cheats) are allowed."
+description: "public final class WorldSettings extends java.lang.Object"
 package: "net/minecraft/world"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/WorldSettings.html"
 sourceType: javadoc
 ---
 
 # WorldSettings
+
+**Inheritance:** java.lang.Object → net.minecraft.world.WorldSettings
 
 ## Class signature
 
@@ -17,24 +21,20 @@ public final class WorldSettings extends java.lang.Object
 
 ## Constructors
 
-- `public WorldSettings(long seedIn, WorldSettings.GameType gameType, boolean enableMapFeatures, boolean hardcoreMode, WorldType worldTypeIn)`
-- `public WorldSettings( WorldInfo info)`
+- `WorldSettings(long seedIn, WorldSettings.GameType gameType, boolean enableMapFeatures, boolean hardcoreMode, WorldType worldTypeIn)`
+- `WorldSettings(WorldInfo info)`
 
 ## Methods
 
-- `public WorldSettings enableBonusChest()`
-- `public WorldSettings setWorldName(java.lang.String name)`
-- `public WorldSettings enableCommands()`
-- `public boolean isBonusChestEnabled()`
-- `public long getSeed()`
-- `public WorldSettings.GameType getGameType()`
-- `public boolean getHardcoreEnabled()`
-- `public boolean isMapFeaturesEnabled()`
-- `public WorldType getTerrainType()`
-- `public boolean areCommandsAllowed()`
-- `public static WorldSettings.GameType getGameTypeById(int id)`
-- `public java.lang.String getWorldName()`
-
-## Description
-
-Returns true if Commands (cheats) are allowed.
+- `boolean areCommandsAllowed()` — Returns true if Commands (cheats) are allowed.
+- `WorldSettings enableBonusChest()` — Enables the bonus chest.
+- `WorldSettings enableCommands()` — Enables Commands (cheats).
+- `WorldSettings.GameType getGameType()` — Gets the game type.
+- `static WorldSettings.GameType getGameTypeById(int id)` — Gets the GameType by ID
+- `boolean getHardcoreEnabled()` — Returns true if hardcore mode is enabled, otherwise false
+- `long getSeed()` — Returns the seed for the world.
+- `WorldType getTerrainType()`
+- `java.lang.String getWorldName()`
+- `boolean isBonusChestEnabled()` — Returns true if the Bonus Chest is enabled.
+- `boolean isMapFeaturesEnabled()` — Get whether the map features (e.g. strongholds) generation is enabled or disabled.
+- `WorldSettings setWorldName(java.lang.String name)`

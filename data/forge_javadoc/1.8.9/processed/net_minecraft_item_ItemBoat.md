@@ -1,19 +1,17 @@
 # ItemBoat
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemBoat
+
 ## Class signature
 
 ```java
 public class ItemBoat extends Item
 ```
 
-## Constructors
-
-- `public ItemBoat()`
-
 ## Methods
 
-- `public ItemStack onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)`
+- `ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)` — Called whenever this item is equipped and the right mouse button is pressed.
 
-## Description
+## Fields
 
-Called whenever this item is equipped and the right mouse button is pressed.
+- `ItemBoat`

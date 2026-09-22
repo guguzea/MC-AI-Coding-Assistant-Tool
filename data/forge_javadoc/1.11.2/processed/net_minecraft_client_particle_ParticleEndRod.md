@@ -1,15 +1,17 @@
 # ParticleEndRod
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleSimpleAnimated → net.minecraft.client.particle.ParticleEndRod
+
 ## Class signature
 
 ```java
 public class ParticleEndRod extends ParticleSimpleAnimated
 ```
 
-## Constructors
-
-- `public ParticleEndRod( World p_i46580_1_, double p_i46580_2_, double p_i46580_4_, double p_i46580_6_, double p_i46580_8_, double p_i46580_10_, double p_i46580_12_)`
-
 ## Methods
 
-- `public void move(double x, double y, double z)`
+- `void move(double x, double y, double z)`
+
+## Fields
+
+- `ParticleEndRod`

@@ -1,27 +1,25 @@
 # S11PacketSpawnExperienceOrb
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S11PacketSpawnExperienceOrb
+
 ## Class signature
 
 ```java
-public class S11PacketSpawnExperienceOrb extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class S11PacketSpawnExperienceOrb extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public S11PacketSpawnExperienceOrb()`
-- `public S11PacketSpawnExperienceOrb( EntityXPOrb xpOrb)`
+- `S11PacketSpawnExperienceOrb()`
+- `S11PacketSpawnExperienceOrb(EntityXPOrb xpOrb)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getEntityID()`
-- `public int getX()`
-- `public int getY()`
-- `public int getZ()`
-- `public int getXPValue()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `int getEntityID()`
+- `int getX()`
+- `int getXPValue()`
+- `int getY()`
+- `int getZ()`
+- `void processPacket(INetHandlerPlayClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

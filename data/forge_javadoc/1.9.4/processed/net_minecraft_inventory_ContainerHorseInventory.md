@@ -1,17 +1,19 @@
 # ContainerHorseInventory
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Container → net.minecraft.inventory.ContainerHorseInventory
+
 ## Class signature
 
 ```java
 public class ContainerHorseInventory extends Container
 ```
 
-## Constructors
-
-- `public ContainerHorseInventory( IInventory playerInventory, IInventory horseInventoryIn, EntityHorse horse, EntityPlayer player)`
-
 ## Methods
 
-- `public boolean canInteractWith( EntityPlayer playerIn)`
-- `@Nullable public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
-- `public void onContainerClosed( EntityPlayer playerIn)`
+- `boolean canInteractWith(EntityPlayer playerIn)`
+- `void onContainerClosed(EntityPlayer playerIn)`
+- `ItemStack transferStackInSlot(EntityPlayer playerIn, int index)`
+
+## Fields
+
+- `ContainerHorseInventory`

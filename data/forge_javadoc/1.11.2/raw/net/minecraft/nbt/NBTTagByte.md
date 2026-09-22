@@ -3,11 +3,15 @@ title: "NBTTagByte"
 description: "public class NBTTagByte extends NBTPrimitive"
 package: "net/minecraft/nbt"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/nbt/NBTTagByte.html"
 sourceType: javadoc
 ---
 
 # NBTTagByte
+
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase → net.minecraft.nbt.NBTPrimitive → net.minecraft.nbt.NBTTagByte
 
 ## Class signature
 
@@ -15,20 +19,20 @@ sourceType: javadoc
 public class NBTTagByte extends NBTPrimitive
 ```
 
-## Constructors
-
-- `public NBTTagByte(byte data)`
-
 ## Methods
 
-- `public byte getId()`
-- `public java.lang.String toString()`
-- `public NBTTagByte copy()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public long getLong()`
-- `public int getInt()`
-- `public short getShort()`
-- `public byte getByte()`
-- `public double getDouble()`
-- `public float getFloat()`
+- `NBTTagByte copy()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `byte getByte()`
+- `double getDouble()`
+- `float getFloat()`
+- `byte getId()`
+- `int getInt()`
+- `long getLong()`
+- `short getShort()`
+- `int hashCode()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `NBTTagByte`

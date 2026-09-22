@@ -1,19 +1,21 @@
 # ResourcePackListEntryFound
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.ResourcePackListEntry → net.minecraft.client.resources.ResourcePackListEntryFound
+
 ## Class signature
 
 ```java
 public class ResourcePackListEntryFound extends ResourcePackListEntry
 ```
 
-## Constructors
-
-- `public ResourcePackListEntryFound( GuiScreenResourcePacks resourcePacksGUIIn, ResourcePackRepository.Entry entry)`
-
 ## Methods
 
 - `protected void bindResourcePackIcon()`
-- `protected int getResourcePackFormat()`
 - `protected java.lang.String getResourcePackDescription()`
+- `ResourcePackRepository.Entry getResourcePackEntry()`
+- `protected int getResourcePackFormat()`
 - `protected java.lang.String getResourcePackName()`
-- `public ResourcePackRepository.Entry getResourcePackEntry()`
+
+## Fields
+
+- `ResourcePackListEntryFound`

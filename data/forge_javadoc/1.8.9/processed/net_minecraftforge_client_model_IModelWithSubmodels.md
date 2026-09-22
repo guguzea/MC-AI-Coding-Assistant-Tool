@@ -10,7 +10,3 @@ public interface IModelWithSubmodels<M extends IModelWithSubmodels<M>> extends I
 
 - `M setDefaultSubmodelEnabled(boolean value)`
 - `M setSubmodelsEnabled(<any> submodelNames, boolean show)`
-
-## Description
-
-Created by rainwarrior on 2/2/16.

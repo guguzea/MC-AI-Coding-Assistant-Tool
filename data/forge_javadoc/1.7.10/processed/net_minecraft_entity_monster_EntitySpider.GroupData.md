@@ -1,9 +1,21 @@
 # EntitySpider.GroupData
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.monster.EntitySpider.GroupData
+
+## Class signature
+
+```java
+public static class EntitySpider.GroupData extends java.lang.Object implements IEntityLivingData
+```
+
 ## Constructors
 
-- `public GroupData()`
+- `GroupData()`
 
 ## Methods
 
-- `public void func_111104_a(java.util.Random p_111104_1_)`
+- `void func_111104_a(java.util.Random p_111104_1_)`
+
+## Fields
+
+- `int field_111105_a`

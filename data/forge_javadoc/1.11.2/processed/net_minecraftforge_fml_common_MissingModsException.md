@@ -1,5 +1,7 @@
 # MissingModsException
 
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.lang.RuntimeException → net.minecraftforge.fml.common.EnhancedRuntimeException → net.minecraftforge.fml.common.MissingModsException
+
 ## Class signature
 
 ```java
@@ -8,9 +10,13 @@ public class MissingModsException extends EnhancedRuntimeException
 
 ## Constructors
 
-- `public MissingModsException(java.util.Set< ArtifactVersion > missingMods, java.lang.String id, java.lang.String name)`
+- `MissingModsException(java.util.Set<ArtifactVersion> missingMods, java.lang.String id, java.lang.String name)`
 
 ## Methods
 
-- `public java.lang.String getModName()`
-- `protected void printStackTrace( EnhancedRuntimeException.WrappedPrintStream stream)`
+- `java.lang.String getModName()`
+- `protected void printStackTrace(EnhancedRuntimeException.WrappedPrintStream stream)`
+
+## Fields
+
+- `java.util.Set<ArtifactVersion> missingMods`

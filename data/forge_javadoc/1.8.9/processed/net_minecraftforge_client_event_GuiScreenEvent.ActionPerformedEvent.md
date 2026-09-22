@@ -1,9 +1,18 @@
 # GuiScreenEvent.ActionPerformedEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent
+
+## Class signature
+
+```java
+public static class GuiScreenEvent.ActionPerformedEvent extends GuiScreenEvent
+```
+
 ## Constructors
 
-- `public ActionPerformedEvent( GuiScreen gui, GuiButton button, java.util.List< GuiButton > buttonList)`
+- `ActionPerformedEvent(GuiScreen gui, GuiButton button, java.util.List<GuiButton> buttonList)`
 
-## Description
+## Fields
 
-This event fires after GuiScreen.actionPerformed() provided that the active screen has not been changed as a result of GuiScreen.actionPerformed() .
+- `GuiButton button` — The button that was clicked.
+- `java.util.List<GuiButton> buttonList` — A COPY of the buttonList field from the GuiScreen referenced by gui .

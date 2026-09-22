@@ -8,5 +8,5 @@ public interface IEntityOwnable
 
 ## Methods
 
-- `java.util.UUID getOwnerId()`
 - `Entity getOwner()`
+- `java.util.UUID getOwnerId()`

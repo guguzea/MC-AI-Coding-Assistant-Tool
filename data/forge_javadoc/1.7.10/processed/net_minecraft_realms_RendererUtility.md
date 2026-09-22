@@ -1,5 +1,7 @@
 # RendererUtility
 
+**Inheritance:** java.lang.Object → net.minecraft.realms.RendererUtility
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class RendererUtility extends java.lang.Object
 
 ## Constructors
 
-- `public RendererUtility()`
+- `RendererUtility()`
 
 ## Methods
 
-- `public static void render( RealmsButton p_render_0_, int p_render_1_, int p_render_2_)`
+- `static void render(RealmsButton p_render_0_, int p_render_1_, int p_render_2_)`

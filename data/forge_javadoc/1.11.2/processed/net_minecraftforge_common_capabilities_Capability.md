@@ -1,5 +1,7 @@
 # Capability
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.capabilities.Capability<T>
+
 ## Class signature
 
 ```java
@@ -8,13 +10,9 @@ public class Capability<T> extends java.lang.Object
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public Capability.IStorage < T > getStorage()`
-- `public void readNBT( T instance, EnumFacing side, NBTBase nbt)`
-- `@Nullable public NBTBase writeNBT( T instance, EnumFacing side)`
-- `@Nullable public T getDefaultInstance()`
-- `public <R> R cast( T instance)`
-
-## Description
-
-This is the core holder object Capabilities. Each capability will have ONE instance of this class, and it will the the one passed into the ICapabilityProvider functions. The CapabilityManager is in ch
+- `<R> R cast(T instance)` — Use this inside ICapabilityProvider.getCapability to avoid unchecked cast warnings.
+- `T getDefaultInstance()` — A NEW instance of the default implementation.
+- `java.lang.String getName()`
+- `Capability.IStorage<T> getStorage()`
+- `void readNBT(T instance, EnumFacing side, NBTBase nbt)` — Quick access to the IStorage's readNBT.
+- `NBTBase writeNBT(T instance, EnumFacing side)` — Quick access to the IStorage's writeNBT.

@@ -1,20 +1,22 @@
 # SPacketTimeUpdate
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketTimeUpdate
+
 ## Class signature
 
 ```java
-public class SPacketTimeUpdate extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketTimeUpdate extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketTimeUpdate()`
-- `public SPacketTimeUpdate(long totalWorldTimeIn, long worldTimeIn, boolean p_i46902_5_)`
+- `SPacketTimeUpdate()`
+- `SPacketTimeUpdate(long totalWorldTimeIn, long worldTimeIn, boolean p_i46902_5_)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public long getTotalWorldTime()`
-- `public long getWorldTime()`
+- `long getTotalWorldTime()`
+- `long getWorldTime()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

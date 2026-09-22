@@ -1,16 +1,18 @@
 # DeferredBiomeDecorator
 
+**Inheritance:** java.lang.Object → net.minecraft.world.biome.BiomeDecorator → net.minecraftforge.event.terraingen.DeferredBiomeDecorator
+
 ## Class signature
 
 ```java
 public class DeferredBiomeDecorator extends BiomeDecorator
 ```
 
-## Constructors
-
-- `public DeferredBiomeDecorator( BiomeDecorator wrappedOriginal)`
-
 ## Methods
 
-- `public void decorate( World par1World, java.util.Random par2Random, BiomeGenBase biome, BlockPos pos)`
-- `public void fireCreateEventAndReplace( BiomeGenBase biome)`
+- `void decorate(World par1World, java.util.Random par2Random, BiomeGenBase biome, BlockPos pos)`
+- `void fireCreateEventAndReplace(BiomeGenBase biome)`
+
+## Fields
+
+- `DeferredBiomeDecorator`

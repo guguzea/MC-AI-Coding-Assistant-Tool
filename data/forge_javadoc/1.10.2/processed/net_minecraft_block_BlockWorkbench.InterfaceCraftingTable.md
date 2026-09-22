@@ -1,13 +1,21 @@
 # BlockWorkbench.InterfaceCraftingTable
 
+**Inheritance:** java.lang.Object → net.minecraft.block.BlockWorkbench.InterfaceCraftingTable
+
+## Class signature
+
+```java
+public static class BlockWorkbench.InterfaceCraftingTable extends java.lang.Object implements IInteractionObject
+```
+
 ## Constructors
 
-- `public InterfaceCraftingTable( World worldIn, BlockPos pos)`
+- `InterfaceCraftingTable(World worldIn, BlockPos pos)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public ITextComponent getDisplayName()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `public java.lang.String getGuiID()`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `ITextComponent getDisplayName()`
+- `java.lang.String getGuiID()`
+- `java.lang.String getName()`
+- `boolean hasCustomName()`

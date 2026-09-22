@@ -1,5 +1,7 @@
 # BossInfoLerping
 
+**Inheritance:** java.lang.Object → net.minecraft.world.BossInfo → net.minecraft.world.BossInfoLerping
+
 ## Class signature
 
 ```java
@@ -8,10 +10,15 @@ public class BossInfoLerping extends BossInfo
 
 ## Constructors
 
-- `public BossInfoLerping( SPacketUpdateBossInfo packetIn)`
+- `BossInfoLerping(SPacketUpdateBossInfo packetIn)`
 
 ## Methods
 
-- `public void setPercent(float percentIn)`
-- `public float getPercent()`
-- `public void updateFromPacket( SPacketUpdateBossInfo packetIn)`
+- `float getPercent()`
+- `void setPercent(float percentIn)`
+- `void updateFromPacket(SPacketUpdateBossInfo packetIn)`
+
+## Fields
+
+- `protected long percentSetTime`
+- `protected float rawPercent`

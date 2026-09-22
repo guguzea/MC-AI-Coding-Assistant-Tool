@@ -1,49 +1,47 @@
 # FMLModContainer
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.FMLModContainer
+
 ## Class signature
 
 ```java
 public class FMLModContainer extends java.lang.Object implements ModContainer
 ```
 
-## Constructors
-
-- `public FMLModContainer(java.lang.String className, ModCandidate container, java.util.Map<java.lang.String,java.lang.Object> modDescriptor)`
-
 ## Methods
 
-- `public java.lang.String getModId()`
-- `public java.lang.String getName()`
-- `public java.lang.String getVersion()`
-- `public java.io.File getSource()`
-- `public ModMetadata getMetadata()`
-- `public void bindMetadata( MetadataCollection mc)`
-- `public java.util.Properties searchForVersionProperties()`
-- `public void setEnabledState(boolean enabled)`
-- `public java.util.Set< ArtifactVersion > getRequirements()`
-- `public java.util.List< ArtifactVersion > getDependencies()`
-- `public java.util.List< ArtifactVersion > getDependants()`
-- `public java.lang.String getSortingRules()`
-- `public boolean matches(java.lang.Object mod)`
-- `public java.lang.Object getMod()`
-- `public boolean registerBus(EventBus bus, LoadController controller)`
-- `public void constructMod( FMLConstructionEvent event)`
-- `public void handleModStateEvent( FMLEvent event)`
-- `public ArtifactVersion getProcessedVersion()`
-- `public boolean isImmutable()`
-- `public java.lang.String getDisplayVersion()`
-- `public VersionRange acceptableMinecraftVersionRange()`
-- `public java.security.cert.Certificate getSigningCertificate()`
-- `public java.lang.String toString()`
-- `public java.util.Map<java.lang.String,java.lang.String> getCustomModProperties()`
-- `public java.lang.Class<?> getCustomResourcePackClass()`
-- `public java.util.Map<java.lang.String,java.lang.String> getSharedModDescriptor()`
-- `public ModContainer.Disableable canBeDisabled()`
-- `public java.lang.String getGuiClassName()`
-- `public java.util.List<java.lang.String> getOwnedPackages()`
-- `public boolean shouldLoadInEnvironment()`
-- `public java.net.URL getUpdateUrl()`
+- `VersionRange acceptableMinecraftVersionRange()`
+- `void bindMetadata(MetadataCollection mc)` — Attach this mod to it's metadata from the supplied metadata collection
+- `ModContainer.Disableable canBeDisabled()`
+- `void constructMod(FMLConstructionEvent event)`
+- `java.util.Map<java.lang.String, java.lang.String> getCustomModProperties()`
+- `java.lang.Class<?> getCustomResourcePackClass()`
+- `java.util.List<ArtifactVersion> getDependants()` — A list of modids that should be loaded after this one.
+- `java.util.List<ArtifactVersion> getDependencies()` — A list of modids that should be loaded prior to this one.
+- `java.lang.String getDisplayVersion()`
+- `java.lang.String getGuiClassName()`
+- `ModMetadata getMetadata()` — The metadata for this mod
+- `java.lang.Object getMod()` — Get the actual mod object
+- `java.lang.String getModId()` — The globally unique modid for this mod
+- `java.lang.String getName()` — A human readable name
+- `java.util.List<java.lang.String> getOwnedPackages()`
+- `ArtifactVersion getProcessedVersion()`
+- `java.util.Set<ArtifactVersion> getRequirements()` — A list of the modids that this mod requires loaded prior to loading
+- `java.util.Map<java.lang.String, java.lang.String> getSharedModDescriptor()`
+- `java.security.cert.Certificate getSigningCertificate()`
+- `java.lang.String getSortingRules()` — A representative string encapsulating the sorting preferences for this mod
+- `java.io.File getSource()` — The location on the file system which this mod came from
+- `java.net.URL getUpdateUrl()`
+- `java.lang.String getVersion()` — A human readable version identifier
+- `void handleModStateEvent(FMLEvent event)`
+- `boolean isImmutable()`
+- `boolean matches(java.lang.Object mod)` — Does this mod match the supplied mod
+- `boolean registerBus(EventBus bus, LoadController controller)` — Register the event bus for the mod and the controller for error handling Returns if this bus was successfully registered - disabled mods and other mods that don't need real events should return false and avoid further processing
+- `java.util.Properties searchForVersionProperties()`
+- `void setEnabledState(boolean enabled)` — Set the enabled/disabled state of this mod
+- `boolean shouldLoadInEnvironment()`
+- `java.lang.String toString()`
 
-## Description
+## Fields
 
-Attach this mod to it's metadata from the supplied metadata collection
+- `FMLModContainer`

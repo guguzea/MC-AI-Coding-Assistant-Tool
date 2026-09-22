@@ -1,13 +1,17 @@
 ---
 title: "ItemBucket"
-description: "Called whenever this item is equipped and the right mouse button is pressed."
+description: "public class ItemBucket extends Item"
 package: "net/minecraft/item"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/item/ItemBucket.html"
 sourceType: javadoc
 ---
 
 # ItemBucket
+
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemBucket
 
 ## Class signature
 
@@ -15,15 +19,11 @@ sourceType: javadoc
 public class ItemBucket extends Item
 ```
 
-## Constructors
-
-- `public ItemBucket( Block containedBlock)`
-
 ## Methods
 
-- `public ItemStack onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)`
-- `public boolean tryPlaceContainedLiquid( World worldIn, BlockPos pos)`
+- `ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)` — Called whenever this item is equipped and the right mouse button is pressed.
+- `boolean tryPlaceContainedLiquid(World worldIn, BlockPos pos)`
 
-## Description
+## Fields
 
-Called whenever this item is equipped and the right mouse button is pressed.
+- `ItemBucket`

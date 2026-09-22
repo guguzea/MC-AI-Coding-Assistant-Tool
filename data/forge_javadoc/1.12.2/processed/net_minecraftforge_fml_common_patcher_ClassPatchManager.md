@@ -1,5 +1,7 @@
 # ClassPatchManager
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.patcher.ClassPatchManager
+
 ## Class signature
 
 ```java
@@ -8,6 +10,12 @@ public class ClassPatchManager extends java.lang.Object
 
 ## Methods
 
-- `public byte[] getPatchedResource(java.lang.String name, java.lang.String mappedName, LaunchClassLoader loader) throws java.io.IOException`
-- `public byte[] applyPatch(java.lang.String name, java.lang.String mappedName, byte[] inputData)`
-- `public void setup( Side side)`
+- `byte[] applyPatch(java.lang.String name, java.lang.String mappedName, byte[] inputData)`
+- `byte[] getPatchedResource(java.lang.String name, java.lang.String mappedName, LaunchClassLoader loader)`
+- `void setup(Side side)`
+
+## Fields
+
+- `static boolean DEBUG`
+- `static boolean dumpPatched`
+- `static ClassPatchManager INSTANCE`

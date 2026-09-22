@@ -1,5 +1,7 @@
 # TextComponentUtils
 
+**Inheritance:** java.lang.Object → net.minecraft.util.text.TextComponentUtils
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class TextComponentUtils extends java.lang.Object
 
 ## Constructors
 
-- `public TextComponentUtils()`
+- `TextComponentUtils()`
 
 ## Methods
 
-- `public static ITextComponent processComponent( ICommandSender commandSender, ITextComponent component, Entity entityIn) throws CommandException`
+- `static ITextComponent processComponent(ICommandSender commandSender, ITextComponent component, Entity entityIn)`

@@ -1,20 +1,22 @@
 # CompoundIngredient
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.Ingredient → net.minecraftforge.common.crafting.CompoundIngredient
+
 ## Class signature
 
 ```java
 public class CompoundIngredient extends Ingredient
 ```
 
-## Constructors
-
-- `protected CompoundIngredient(java.util.Collection< Ingredient > children)`
-
 ## Methods
 
-- `public ItemStack [] getMatchingStacks()`
-- `public IntList getValidItemStacksPacked()`
-- `public boolean apply( ItemStack target)`
+- `boolean apply(ItemStack target)`
+- `java.util.Collection<Ingredient> getChildren()`
+- `ItemStack [] getMatchingStacks()`
+- `IntList getValidItemStacksPacked()`
 - `protected void invalidate()`
-- `public boolean isSimple()`
-- `public java.util.Collection< Ingredient > getChildren()`
+- `boolean isSimple()`
+
+## Fields
+
+- `protected CompoundIngredient`

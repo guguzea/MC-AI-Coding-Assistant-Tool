@@ -1,5 +1,7 @@
 # ItemHoe
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemHoe
+
 ## Class signature
 
 ```java
@@ -8,13 +10,17 @@ public class ItemHoe extends Item
 
 ## Constructors
 
-- `public ItemHoe( Item.ToolMaterial material)`
+- `ItemHoe(Item.ToolMaterial material)`
 
 ## Methods
 
-- `public EnumActionResult onItemUse( EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `public boolean hitEntity( ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)`
-- `protected void setBlock( ItemStack stack, EntityPlayer player, World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isFull3D()`
-- `public java.lang.String getMaterialName()`
-- `public com.google.common.collect.Multimap<java.lang.String, AttributeModifier > getItemAttributeModifiers( EntityEquipmentSlot equipmentSlot)`
+- `com.google.common.collect.Multimap<java.lang.String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)`
+- `java.lang.String getMaterialName()`
+- `boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)`
+- `boolean isFull3D()`
+- `EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `protected void setBlock(ItemStack stack, EntityPlayer player, World worldIn, BlockPos pos, IBlockState state)`
+
+## Fields
+
+- `protected Item.ToolMaterial theToolMaterial`

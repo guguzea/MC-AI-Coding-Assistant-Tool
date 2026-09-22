@@ -1,5 +1,7 @@
 # EntityAIOcelotAttack
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIOcelotAttack
+
 ## Class signature
 
 ```java
@@ -8,15 +10,11 @@ public class EntityAIOcelotAttack extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIOcelotAttack( EntityLiving theEntityIn)`
+- `EntityAIOcelotAttack(EntityLiving theEntityIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
-
-## Description
-
-Returns whether an in-progress EntityAIBase should continue executing
+- `boolean continueExecuting()` — Returns whether an in-progress EntityAIBase should continue executing
+- `void resetTask()` — Resets the task
+- `boolean shouldExecute()` — Returns whether the EntityAIBase should begin execution.
+- `void updateTask()` — Updates the task

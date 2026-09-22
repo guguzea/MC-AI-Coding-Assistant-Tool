@@ -1,8 +1,10 @@
 ---
 title: "IMessageHandler"
-description: "A message handler based on IMessage . Implement and override #onMessage(IMessage) to process your packet. Supply the class to SimpleNetworkWrapper#registerMessage(Class, Class, byte, net.minecraftforg"
+description: "public interface IMessageHandler<REQ extends IMessage, REPLY extends IMessage>"
 package: "net/minecraftforge/fml/common/network/simpleimpl"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/network/simpleimpl/IMessageHandler.html"
 sourceType: javadoc
 ---
@@ -12,13 +14,9 @@ sourceType: javadoc
 ## Class signature
 
 ```java
-public interface IMessageHandler<REQ extends IMessage ,REPLY extends IMessage >
+public interface IMessageHandler<REQ extends IMessage, REPLY extends IMessage>
 ```
 
 ## Methods
 
-- `REPLY onMessage( REQ message, MessageContext ctx)`
-
-## Description
-
-A message handler based on IMessage . Implement and override #onMessage(IMessage) to process your packet. Supply the class to SimpleNetworkWrapper#registerMessage(Class, Class, byte, net.minecraftforg
+- `REPLY onMessage(REQ message, MessageContext ctx)` — Called when a message is received of the appropriate type.

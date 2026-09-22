@@ -1,13 +1,17 @@
 ---
 title: "EnchantmentKnockback"
-description: "Returns the maximum value of enchantability nedded on the enchantment level passed."
+description: "public class EnchantmentKnockback extends Enchantment"
 package: "net/minecraft/enchantment"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/enchantment/EnchantmentKnockback.html"
 sourceType: javadoc
 ---
 
 # EnchantmentKnockback
+
+**Inheritance:** java.lang.Object → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentKnockback
 
 ## Class signature
 
@@ -15,16 +19,12 @@ sourceType: javadoc
 public class EnchantmentKnockback extends Enchantment
 ```
 
-## Constructors
-
-- `protected EnchantmentKnockback(int p_i45768_1_, ResourceLocation p_i45768_2_, int p_i45768_3_)`
-
 ## Methods
 
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int getMaxLevel()`
+- `int getMaxEnchantability(int enchantmentLevel)` — Returns the maximum value of enchantability nedded on the enchantment level passed.
+- `int getMaxLevel()` — Returns the maximum level that the enchantment can have.
+- `int getMinEnchantability(int enchantmentLevel)` — Returns the minimal value of enchantability needed on the enchantment level passed.
 
-## Description
+## Fields
 
-Returns the maximum value of enchantability nedded on the enchantment level passed.
+- `protected EnchantmentKnockback`

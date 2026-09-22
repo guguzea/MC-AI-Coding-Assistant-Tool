@@ -1,13 +1,17 @@
 ---
 title: "BlockCocoa"
-description: "This gets a complete list of items dropped from this block."
+description: "public class BlockCocoa extends BlockHorizontal implements IGrowable"
 package: "net/minecraft/block"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/block/BlockCocoa.html"
 sourceType: javadoc
 ---
 
 # BlockCocoa
+
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockHorizontal → net.minecraft.block.BlockCocoa
 
 ## Class signature
 
@@ -17,32 +21,36 @@ public class BlockCocoa extends BlockHorizontal implements IGrowable
 
 ## Constructors
 
-- `public BlockCocoa()`
+- `BlockCocoa()`
 
 ## Methods
 
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public boolean canBlockStay( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
-- `public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)`
-- `public IBlockState getStateForPlacement( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
-- `public void dropBlockAsItemWithChance( World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
-- `public void getDrops( NonNullList < ItemStack > drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean canGrow( World worldIn, BlockPos pos, IBlockState state, boolean isClient)`
-- `public boolean canUseBonemeal( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
-- `public void grow( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)`
+- `boolean canUseBonemeal(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
-- `public BlockFaceShape getBlockFaceShape( IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)`
+- `void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
+- `BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)` — This gets a complete list of items dropped from this block.
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void grow(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
 
-## Description
+## Fields
 
-This gets a complete list of items dropped from this block.
+- `static PropertyInteger AGE`
+- `protected static AxisAlignedBB [] COCOA_EAST_AABB`
+- `protected static AxisAlignedBB [] COCOA_NORTH_AABB`
+- `protected static AxisAlignedBB [] COCOA_SOUTH_AABB`
+- `protected static AxisAlignedBB [] COCOA_WEST_AABB`

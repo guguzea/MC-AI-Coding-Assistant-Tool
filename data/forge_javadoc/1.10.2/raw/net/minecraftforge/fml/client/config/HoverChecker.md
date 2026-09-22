@@ -1,13 +1,17 @@
 ---
 title: "HoverChecker"
-description: "This class implements an easy way to check if the mouse has hovered within a certain region of the screen for a given period of time. The region can be defined manually or by supplying a GuiButton obj"
+description: "public class HoverChecker extends java.lang.Object"
 package: "net/minecraftforge/fml/client/config"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/client/config/HoverChecker.html"
 sourceType: javadoc
 ---
 
 # HoverChecker
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.config.HoverChecker
 
 ## Class signature
 
@@ -17,16 +21,12 @@ public class HoverChecker extends java.lang.Object
 
 ## Constructors
 
-- `public HoverChecker(int top, int bottom, int left, int right, int threshold)`
-- `public HoverChecker( GuiButton button, int threshold)`
+- `HoverChecker(GuiButton button, int threshold)`
+- `HoverChecker(int top, int bottom, int left, int right, int threshold)`
 
 ## Methods
 
-- `public void updateBounds(int top, int bottom, int left, int right)`
-- `public boolean checkHover(int mouseX, int mouseY)`
-- `public boolean checkHover(int mouseX, int mouseY, boolean canHover)`
-- `public void resetHoverTimer()`
-
-## Description
-
-This class implements an easy way to check if the mouse has hovered within a certain region of the screen for a given period of time. The region can be defined manually or by supplying a GuiButton obj
+- `boolean checkHover(int mouseX, int mouseY)` — Checks if the mouse is in the hover region.
+- `boolean checkHover(int mouseX, int mouseY, boolean canHover)` — Checks if the mouse is in the hover region.
+- `void resetHoverTimer()` — Manually resets the hover timer.
+- `void updateBounds(int top, int bottom, int left, int right)` — Call this method if the intended region has changed such as if the region must follow a scrolling list.

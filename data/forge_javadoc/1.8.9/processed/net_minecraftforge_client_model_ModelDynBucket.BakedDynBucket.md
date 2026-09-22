@@ -1,10 +1,18 @@
 # ModelDynBucket.BakedDynBucket
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.ItemLayerModel.BakedModel → net.minecraftforge.client.model.ModelDynBucket.BakedDynBucket
+
+## Class signature
+
+```java
+protected static class ModelDynBucket.BakedDynBucket extends ItemLayerModel.BakedModel implements ISmartItemModel, IPerspectiveAwareModel
+```
+
 ## Constructors
 
-- `public BakedDynBucket( ModelDynBucket parent, <any> quads, TextureAtlasSprite particle, VertexFormat format, <any> transforms, java.util.Map<java.lang.String, IFlexibleBakedModel > cache)`
+- `BakedDynBucket(ModelDynBucket parent, <any> quads, TextureAtlasSprite particle, VertexFormat format, <any> transforms, java.util.Map<java.lang.String, IFlexibleBakedModel> cache)`
 
 ## Methods
 
-- `public IBakedModel handleItemState( ItemStack stack)`
-- `public <any> handlePerspective( ItemCameraTransforms.TransformType cameraTransformType)`
+- `IBakedModel handleItemState(ItemStack stack)`
+- `<any> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)`

@@ -1,13 +1,17 @@
 ---
 title: "GuiSelectStringEntries"
-description: "This class implements the scrolling list functionality of the GuiSelectString screen."
+description: "public class GuiSelectStringEntries extends GuiListExtended"
 package: "net/minecraftforge/fml/client/config"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/client/config/GuiSelectStringEntries.html"
 sourceType: javadoc
 ---
 
 # GuiSelectStringEntries
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.GuiSlot → net.minecraft.client.gui.GuiListExtended → net.minecraftforge.fml.client.config.GuiSelectStringEntries
 
 ## Class signature
 
@@ -17,20 +21,26 @@ public class GuiSelectStringEntries extends GuiListExtended
 
 ## Constructors
 
-- `public GuiSelectStringEntries( GuiSelectString owningScreen, Minecraft mc, IConfigElement configElement, java.util.Map<java.lang.Object,java.lang.String> selectableValues)`
+- `GuiSelectStringEntries(GuiSelectString owningScreen, Minecraft mc, IConfigElement configElement, java.util.Map<java.lang.Object, java.lang.String> selectableValues)`
 
 ## Methods
 
-- `protected void elementClicked(int index, boolean doubleClick, int mouseX, int mouseY)`
-- `protected boolean isSelected(int index)`
+- `protected void elementClicked(int index, boolean doubleClick, int mouseX, int mouseY)` — The element in the slot that was clicked, boolean for whether it was double clicked or not
+- `GuiSelectStringEntries.IGuiSelectStringListEntry getListEntry(int index)` — Gets the IGuiListEntry object for the given index
+- `int getListWidth()` — Gets the width of the list
 - `protected int getScrollBarX()`
-- `public int getListWidth()`
-- `public GuiSelectStringEntries.IGuiSelectStringListEntry getListEntry(int index)`
 - `protected int getSize()`
-- `public boolean isChanged()`
-- `public boolean isDefault()`
-- `public void saveChanges()`
+- `boolean isChanged()`
+- `boolean isDefault()`
+- `protected boolean isSelected(int index)` — Returns true if the element passed in is currently selected
+- `void saveChanges()`
 
-## Description
+## Fields
 
-This class implements the scrolling list functionality of the GuiSelectString screen.
+- `IConfigElement configElement`
+- `java.util.List<GuiSelectStringEntries.IGuiSelectStringListEntry> listEntries`
+- `int maxEntryWidth`
+- `Minecraft mc`
+- `GuiSelectString owningScreen`
+- `java.util.Map<java.lang.Object, java.lang.String> selectableValues`
+- `int selectedIndex`

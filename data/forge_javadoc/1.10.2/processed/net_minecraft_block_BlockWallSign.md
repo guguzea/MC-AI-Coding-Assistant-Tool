@@ -1,5 +1,7 @@
 # BlockWallSign
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockContainer → net.minecraft.block.BlockSign → net.minecraft.block.BlockWallSign
+
 ## Class signature
 
 ```java
@@ -8,14 +10,22 @@ public class BlockWallSign extends BlockSign
 
 ## Constructors
 
-- `public BlockWallSign()`
+- `BlockWallSign()`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
 - `protected BlockStateContainer createBlockState()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
+
+## Fields
+
+- `static PropertyDirection FACING`
+- `protected static AxisAlignedBB SIGN_EAST_AABB`
+- `protected static AxisAlignedBB SIGN_NORTH_AABB`
+- `protected static AxisAlignedBB SIGN_SOUTH_AABB`
+- `protected static AxisAlignedBB SIGN_WEST_AABB`

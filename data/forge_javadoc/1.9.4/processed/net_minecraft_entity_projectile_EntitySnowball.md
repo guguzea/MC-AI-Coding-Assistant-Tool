@@ -1,17 +1,19 @@
 # EntitySnowball
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityThrowable → net.minecraft.entity.projectile.EntitySnowball
+
 ## Class signature
 
 ```java
 public class EntitySnowball extends EntityThrowable
 ```
 
-## Constructors
-
-- `public EntitySnowball( World worldIn)`
-- `public EntitySnowball( World worldIn, EntityLivingBase throwerIn)`
-- `public EntitySnowball( World worldIn, double x, double y, double z)`
-
 ## Methods
 
-- `protected void onImpact( RayTraceResult result)`
+- `protected void onImpact(RayTraceResult result)`
+
+## Fields
+
+- `EntitySnowball`
+- `EntitySnowball`
+- `EntitySnowball`

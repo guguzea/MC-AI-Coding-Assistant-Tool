@@ -1,19 +1,27 @@
 # ItemFluidContainer
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraftforge.fluids.ItemFluidContainer
+
+## Class signature
+
+```java
+public class ItemFluidContainer extends Item implements IFluidContainerItem
+```
+
 ## Constructors
 
-- `public ItemFluidContainer(int itemID)`
-- `public ItemFluidContainer(int itemID, int capacity)`
+- `@Deprecated ItemFluidContainer(int itemID)`
+- `@Deprecated ItemFluidContainer(int itemID, int capacity)`
 
 ## Methods
 
-- `public ItemFluidContainer setCapacity(int capacity)`
-- `public FluidStack getFluid( ItemStack container)`
-- `public int getCapacity( ItemStack container)`
-- `public int fill( ItemStack container, FluidStack resource, boolean doFill)`
-- `public FluidStack drain( ItemStack container, int maxDrain, boolean doDrain)`
-- `public ICapabilityProvider initCapabilities( ItemStack stack, NBTTagCompound nbt)`
+- `@Deprecated FluidStack drain(ItemStack container, int maxDrain, boolean doDrain)`
+- `@Deprecated int fill(ItemStack container, FluidStack resource, boolean doFill)`
+- `@Deprecated int getCapacity(ItemStack container)`
+- `@Deprecated FluidStack getFluid(ItemStack container)`
+- `@Deprecated ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)`
+- `@Deprecated ItemFluidContainer setCapacity(int capacity)`
 
-## Description
+## Fields
 
-Deprecated. See ItemFluidContainer
+- `protected int capacity`

@@ -3,11 +3,15 @@ title: "ThreadDownloadImageData"
 description: "public class ThreadDownloadImageData extends SimpleTexture"
 package: "net/minecraft/client/renderer"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/renderer/ThreadDownloadImageData.html"
 sourceType: javadoc
 ---
 
 # ThreadDownloadImageData
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.texture.AbstractTexture → net.minecraft.client.renderer.texture.SimpleTexture → net.minecraft.client.renderer.ThreadDownloadImageData
 
 ## Class signature
 
@@ -15,13 +19,13 @@ sourceType: javadoc
 public class ThreadDownloadImageData extends SimpleTexture
 ```
 
-## Constructors
-
-- `public ThreadDownloadImageData(@Nullable java.io.File cacheFileIn, java.lang.String imageUrlIn, ResourceLocation textureResourceLocation, @Nullable IImageBuffer imageBufferIn)`
-
 ## Methods
 
-- `public int getGlTextureId()`
-- `public void setBufferedImage(java.awt.image.BufferedImage bufferedImageIn)`
-- `public void loadTexture( IResourceManager resourceManager) throws java.io.IOException`
+- `int getGlTextureId()`
+- `void loadTexture(IResourceManager resourceManager)`
 - `protected void loadTextureFromServer()`
+- `void setBufferedImage(java.awt.image.BufferedImage bufferedImageIn)`
+
+## Fields
+
+- `ThreadDownloadImageData`

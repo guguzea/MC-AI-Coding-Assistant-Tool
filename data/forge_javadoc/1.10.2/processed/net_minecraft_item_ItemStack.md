@@ -1,97 +1,101 @@
 # ItemStack
 
+**Inheritance:** java.lang.Object → net.minecraft.item.ItemStack
+
 ## Class signature
 
 ```java
-public final class ItemStack extends java.lang.Object implements ICapabilitySerializable < NBTTagCompound >
+public final class ItemStack extends java.lang.Object implements ICapabilitySerializable<NBTTagCompound>
 ```
 
 ## Constructors
 
-- `public ItemStack( Block blockIn)`
-- `public ItemStack( Block blockIn, int amount)`
-- `public ItemStack( Block blockIn, int amount, int meta)`
-- `public ItemStack( Item itemIn)`
-- `public ItemStack( Item itemIn, int amount)`
-- `public ItemStack( Item itemIn, int amount, int meta)`
-- `public ItemStack( Item itemIn, int amount, int meta, NBTTagCompound capNBT)`
+- `ItemStack(Block blockIn)`
+- `ItemStack(Block blockIn, int amount)`
+- `ItemStack(Block blockIn, int amount, int meta)`
+- `ItemStack(Item itemIn)`
+- `ItemStack(Item itemIn, int amount)`
+- `ItemStack(Item itemIn, int amount, int meta)`
+- `ItemStack(Item itemIn, int amount, int meta, NBTTagCompound capNBT)`
 
 ## Methods
 
-- `public static ItemStack loadItemStackFromNBT( NBTTagCompound nbt)`
-- `public static void registerFixes( DataFixer fixer)`
-- `public ItemStack splitStack(int amount)`
-- `public Item getItem()`
-- `public EnumActionResult onItemUse( EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public float getStrVsBlock( IBlockState blockIn)`
-- `public ActionResult < ItemStack > useItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand hand)`
-- `@Nullable public ItemStack onItemUseFinish( World worldIn, EntityLivingBase entityLiving)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound nbt)`
-- `public void readFromNBT( NBTTagCompound nbt)`
-- `public int getMaxStackSize()`
-- `public boolean isStackable()`
-- `public boolean isItemStackDamageable()`
-- `public boolean getHasSubtypes()`
-- `public boolean isItemDamaged()`
-- `public int getItemDamage()`
-- `public int getMetadata()`
-- `public void setItemDamage(int meta)`
-- `public int getMaxDamage()`
-- `public boolean attemptDamageItem(int amount, java.util.Random rand)`
-- `public void damageItem(int amount, EntityLivingBase entityIn)`
-- `public void hitEntity( EntityLivingBase entityIn, EntityPlayer playerIn)`
-- `public void onBlockDestroyed( World worldIn, IBlockState blockIn, BlockPos pos, EntityPlayer playerIn)`
-- `public boolean canHarvestBlock( IBlockState blockIn)`
-- `public boolean interactWithEntity( EntityPlayer playerIn, EntityLivingBase entityIn, EnumHand hand)`
-- `public ItemStack copy()`
-- `public static boolean areItemStackTagsEqual(@Nullable ItemStack stackA, @Nullable ItemStack stackB)`
-- `public static boolean areItemStacksEqual(@Nullable ItemStack stackA, @Nullable ItemStack stackB)`
-- `public static boolean areItemsEqual(@Nullable ItemStack stackA, @Nullable ItemStack stackB)`
-- `public static boolean areItemsEqualIgnoreDurability(@Nullable ItemStack stackA, @Nullable ItemStack stackB)`
-- `public boolean isItemEqual(@Nullable ItemStack other)`
-- `public boolean isItemEqualIgnoreDurability(@Nullable ItemStack stack)`
-- `public java.lang.String getUnlocalizedName()`
-- `public static ItemStack copyItemStack( ItemStack stack)`
-- `public java.lang.String toString()`
-- `public void updateAnimation( World worldIn, Entity entityIn, int inventorySlot, boolean isCurrentItem)`
-- `public void onCrafting( World worldIn, EntityPlayer playerIn, int amount)`
-- `public int getMaxItemUseDuration()`
-- `public EnumAction getItemUseAction()`
-- `public void onPlayerStoppedUsing( World worldIn, EntityLivingBase entityLiving, int timeLeft)`
-- `public boolean hasTagCompound()`
-- `@Nullable public NBTTagCompound getTagCompound()`
-- `public NBTTagCompound getSubCompound(java.lang.String key, boolean create)`
-- `public NBTTagList getEnchantmentTagList()`
-- `public void setTagCompound( NBTTagCompound nbt)`
-- `public java.lang.String getDisplayName()`
-- `public ItemStack setStackDisplayName(java.lang.String displayName)`
-- `public void clearCustomName()`
-- `public boolean hasDisplayName()`
-- `public java.util.List<java.lang.String> getTooltip( EntityPlayer playerIn, boolean advanced)`
-- `public boolean hasEffect()`
-- `public EnumRarity getRarity()`
-- `public boolean isItemEnchantable()`
-- `public void addEnchantment( Enchantment ench, int level)`
-- `public boolean isItemEnchanted()`
-- `public void setTagInfo(java.lang.String key, NBTBase value)`
-- `public boolean canEditBlocks()`
-- `public boolean isOnItemFrame()`
-- `public void setItemFrame( EntityItemFrame frame)`
-- `@Nullable public EntityItemFrame getItemFrame()`
-- `public int getRepairCost()`
-- `public void setRepairCost(int cost)`
-- `public com.google.common.collect.Multimap<java.lang.String, AttributeModifier > getAttributeModifiers( EntityEquipmentSlot equipmentSlot)`
-- `public void addAttributeModifier(java.lang.String attributeName, AttributeModifier modifier, EntityEquipmentSlot equipmentSlot)`
-- `@Deprecated public void setItem( Item newItem)`
-- `public ITextComponent getTextComponent()`
-- `public boolean canDestroy( Block blockIn)`
-- `public boolean canPlaceOn( Block blockIn)`
-- `public boolean hasCapability( Capability <?> capability, EnumFacing facing)`
-- `public <T> T getCapability( Capability <T> capability, EnumFacing facing)`
-- `public void deserializeNBT( NBTTagCompound nbt)`
-- `public NBTTagCompound serializeNBT()`
-- `public boolean areCapsCompatible( ItemStack other)`
+- `void addAttributeModifier(java.lang.String attributeName, AttributeModifier modifier, EntityEquipmentSlot equipmentSlot)`
+- `void addEnchantment(Enchantment ench, int level)`
+- `boolean areCapsCompatible(ItemStack other)`
+- `static boolean areItemsEqual(ItemStack stackA, ItemStack stackB)`
+- `static boolean areItemsEqualIgnoreDurability(ItemStack stackA, ItemStack stackB)`
+- `static boolean areItemStacksEqual(ItemStack stackA, ItemStack stackB)`
+- `static boolean areItemStackTagsEqual(ItemStack stackA, ItemStack stackB)`
+- `boolean attemptDamageItem(int amount, java.util.Random rand)`
+- `boolean canDestroy(Block blockIn)`
+- `boolean canEditBlocks()`
+- `boolean canHarvestBlock(IBlockState blockIn)`
+- `boolean canPlaceOn(Block blockIn)`
+- `void clearCustomName()`
+- `ItemStack copy()`
+- `static ItemStack copyItemStack(ItemStack stack)`
+- `void damageItem(int amount, EntityLivingBase entityIn)`
+- `void deserializeNBT(NBTTagCompound nbt)`
+- `com.google.common.collect.Multimap<java.lang.String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot equipmentSlot)`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `java.lang.String getDisplayName()`
+- `NBTTagList getEnchantmentTagList()`
+- `boolean getHasSubtypes()`
+- `Item getItem()`
+- `int getItemDamage()`
+- `EntityItemFrame getItemFrame()`
+- `EnumAction getItemUseAction()`
+- `int getMaxDamage()`
+- `int getMaxItemUseDuration()`
+- `int getMaxStackSize()`
+- `int getMetadata()`
+- `EnumRarity getRarity()`
+- `int getRepairCost()`
+- `float getStrVsBlock(IBlockState blockIn)`
+- `NBTTagCompound getSubCompound(java.lang.String key, boolean create)`
+- `NBTTagCompound getTagCompound()`
+- `ITextComponent getTextComponent()`
+- `java.util.List<java.lang.String> getTooltip(EntityPlayer playerIn, boolean advanced)`
+- `java.lang.String getUnlocalizedName()`
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.
+- `boolean hasDisplayName()`
+- `boolean hasEffect()`
+- `boolean hasTagCompound()`
+- `void hitEntity(EntityLivingBase entityIn, EntityPlayer playerIn)`
+- `boolean interactWithEntity(EntityPlayer playerIn, EntityLivingBase entityIn, EnumHand hand)`
+- `boolean isItemDamaged()`
+- `boolean isItemEnchantable()`
+- `boolean isItemEnchanted()`
+- `boolean isItemEqual(ItemStack other)`
+- `boolean isItemEqualIgnoreDurability(ItemStack stack)`
+- `boolean isItemStackDamageable()`
+- `boolean isOnItemFrame()`
+- `boolean isStackable()`
+- `static ItemStack loadItemStackFromNBT(NBTTagCompound nbt)`
+- `void onBlockDestroyed(World worldIn, IBlockState blockIn, BlockPos pos, EntityPlayer playerIn)`
+- `void onCrafting(World worldIn, EntityPlayer playerIn, int amount)`
+- `EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `ItemStack onItemUseFinish(World worldIn, EntityLivingBase entityLiving)`
+- `void onPlayerStoppedUsing(World worldIn, EntityLivingBase entityLiving, int timeLeft)`
+- `void readFromNBT(NBTTagCompound nbt)`
+- `static void registerFixes(DataFixer fixer)`
+- `NBTTagCompound serializeNBT()`
+- `@Deprecated void setItem(Item newItem)`
+- `void setItemDamage(int meta)`
+- `void setItemFrame(EntityItemFrame frame)`
+- `void setRepairCost(int cost)`
+- `ItemStack setStackDisplayName(java.lang.String displayName)`
+- `void setTagCompound(NBTTagCompound nbt)`
+- `void setTagInfo(java.lang.String key, NBTBase value)`
+- `ItemStack splitStack(int amount)`
+- `java.lang.String toString()`
+- `void updateAnimation(World worldIn, Entity entityIn, int inventorySlot, boolean isCurrentItem)`
+- `ActionResult<ItemStack> useItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand)`
+- `NBTTagCompound writeToNBT(NBTTagCompound nbt)`
 
-## Description
+## Fields
 
-Retrieves the handler for the capability requested on the specific side.
+- `int animationsToGo`
+- `static java.text.DecimalFormat DECIMALFORMAT`
+- `int stackSize`

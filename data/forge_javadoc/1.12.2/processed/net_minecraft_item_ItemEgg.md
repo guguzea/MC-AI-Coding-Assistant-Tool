@@ -1,15 +1,17 @@
 # ItemEgg
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemEgg
+
 ## Class signature
 
 ```java
 public class ItemEgg extends Item
 ```
 
-## Constructors
-
-- `public ItemEgg()`
-
 ## Methods
 
-- `public ActionResult < ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+- `ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+
+## Fields
+
+- `ItemEgg`

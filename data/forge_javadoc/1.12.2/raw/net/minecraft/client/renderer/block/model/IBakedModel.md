@@ -1,8 +1,10 @@
 ---
 title: "IBakedModel"
-description: "Deprecated."
+description: "public interface IBakedModel"
 package: "net/minecraft/client/renderer/block/model"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/renderer/block/model/IBakedModel.html"
 sourceType: javadoc
 ---
@@ -17,16 +19,12 @@ public interface IBakedModel
 
 ## Methods
 
-- `java.util.List< BakedQuad > getQuads( IBlockState state, EnumFacing side, long rand)`
-- `boolean isAmbientOcclusion()`
-- `boolean isGui3d()`
-- `boolean isBuiltInRenderer()`
-- `TextureAtlasSprite getParticleTexture()`
 - `@Deprecated default ItemCameraTransforms getItemCameraTransforms()`
 - `ItemOverrideList getOverrides()`
-- `default boolean isAmbientOcclusion( IBlockState state)`
-- `default <any> handlePerspective( ItemCameraTransforms.TransformType cameraTransformType)`
-
-## Description
-
-Deprecated.
+- `TextureAtlasSprite getParticleTexture()`
+- `java.util.List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)`
+- `default<any> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)`
+- `boolean isAmbientOcclusion()`
+- `default boolean isAmbientOcclusion(IBlockState state)`
+- `boolean isBuiltInRenderer()`
+- `boolean isGui3d()`

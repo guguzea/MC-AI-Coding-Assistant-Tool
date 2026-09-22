@@ -1,19 +1,21 @@
 # MapGenStructureData
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.WorldSavedData → net.minecraft.world.gen.structure.MapGenStructureData
+
 ## Class signature
 
 ```java
 public class MapGenStructureData extends WorldSavedData
 ```
 
-## Constructors
-
-- `public MapGenStructureData(java.lang.String name)`
-
 ## Methods
 
-- `public void readFromNBT( NBTTagCompound nbt)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public void writeInstance( NBTTagCompound tagCompoundIn, int chunkX, int chunkZ)`
-- `public static java.lang.String formatChunkCoords(int chunkX, int chunkZ)`
-- `public NBTTagCompound getTagCompound()`
+- `static java.lang.String formatChunkCoords(int chunkX, int chunkZ)`
+- `NBTTagCompound getTagCompound()`
+- `void readFromNBT(NBTTagCompound nbt)`
+- `void writeInstance(NBTTagCompound tagCompoundIn, int chunkX, int chunkZ)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `MapGenStructureData`

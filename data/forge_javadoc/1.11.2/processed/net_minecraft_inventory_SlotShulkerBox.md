@@ -1,15 +1,17 @@
 # SlotShulkerBox
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Slot → net.minecraft.inventory.SlotShulkerBox
+
 ## Class signature
 
 ```java
 public class SlotShulkerBox extends Slot
 ```
 
-## Constructors
-
-- `public SlotShulkerBox( IInventory p_i47265_1_, int slotIndexIn, int xPosition, int yPosition)`
-
 ## Methods
 
-- `public boolean isItemValid( ItemStack stack)`
+- `boolean isItemValid(ItemStack stack)`
+
+## Fields
+
+- `SlotShulkerBox`

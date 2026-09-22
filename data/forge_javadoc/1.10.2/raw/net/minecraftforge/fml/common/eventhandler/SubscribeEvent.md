@@ -3,6 +3,8 @@ title: "SubscribeEvent"
 description: "public @interface SubscribeEvent"
 package: "net/minecraftforge/fml/common/eventhandler"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/eventhandler/SubscribeEvent.html"
 sourceType: javadoc
 ---
@@ -17,5 +19,5 @@ public @interface SubscribeEvent
 
 ## Elements
 
-- `public abstract EventPriority priority`
-- `public abstract boolean receiveCanceled`
+- `EventPriority priority`
+- `boolean receiveCanceled`

@@ -1,5 +1,18 @@
 # PlayerEvent.PlayerChangedDimensionEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.gameevent.PlayerEvent → net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent
+
+## Class signature
+
+```java
+public static class PlayerEvent.PlayerChangedDimensionEvent extends PlayerEvent
+```
+
 ## Constructors
 
-- `public PlayerChangedDimensionEvent( EntityPlayer player, int fromDim, int toDim)`
+- `PlayerChangedDimensionEvent(EntityPlayer player, int fromDim, int toDim)`
+
+## Fields
+
+- `int fromDim`
+- `int toDim`

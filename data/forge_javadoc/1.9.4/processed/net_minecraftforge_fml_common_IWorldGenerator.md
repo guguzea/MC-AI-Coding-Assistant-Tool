@@ -8,8 +8,4 @@ public interface IWorldGenerator
 
 ## Methods
 
-- `void generate(java.util.Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)`
-
-## Description
-
-This is called back during world generation.
+- `void generate(java.util.Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)` — Generate some world

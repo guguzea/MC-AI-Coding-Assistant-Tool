@@ -8,10 +8,6 @@ public interface IExtendedEntityProperties
 
 ## Methods
 
-- `void saveNBTData( NBTTagCompound compound)`
-- `void loadNBTData( NBTTagCompound compound)`
-- `void init( Entity entity, World world)`
-
-## Description
-
-Allows for custom entity data and logic to be hooked to existing entity classes.
+- `void init(Entity entity, World world)` — Used to initialize the extended properties with the entity that this is attached to, as well as the world object.
+- `void loadNBTData(NBTTagCompound compound)` — Called when the entity that this class is attached to is loaded.
+- `void saveNBTData(NBTTagCompound compound)` — Called when the entity that this class is attached to is saved.

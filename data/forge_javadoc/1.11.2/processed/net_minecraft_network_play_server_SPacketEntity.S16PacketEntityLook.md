@@ -1,11 +1,19 @@
 # SPacketEntity.S16PacketEntityLook
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketEntity → net.minecraft.network.play.server.SPacketEntity.S16PacketEntityLook
 
-- `public S16PacketEntityLook()`
-- `public S16PacketEntityLook(int entityIdIn, byte yawIn, byte pitchIn, boolean onGroundIn)`
+## Class signature
+
+```java
+public static class SPacketEntity.S16PacketEntityLook extends SPacketEntity
+```
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`
+
+## Fields
+
+- `S16PacketEntityLook`
+- `S16PacketEntityLook`

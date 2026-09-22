@@ -3,11 +3,15 @@ title: "ListedRenderChunk"
 description: "public class ListedRenderChunk extends RenderChunk"
 package: "net/minecraft/client/renderer/chunk"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/renderer/chunk/ListedRenderChunk.html"
 sourceType: javadoc
 ---
 
 # ListedRenderChunk
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.chunk.RenderChunk → net.minecraft.client.renderer.chunk.ListedRenderChunk
 
 ## Class signature
 
@@ -15,11 +19,11 @@ sourceType: javadoc
 public class ListedRenderChunk extends RenderChunk
 ```
 
-## Constructors
-
-- `public ListedRenderChunk( World p_i47121_1_, RenderGlobal p_i47121_2_, int p_i47121_3_)`
-
 ## Methods
 
-- `public int getDisplayList( BlockRenderLayer layer, CompiledChunk p_178600_2_)`
-- `public void deleteGlResources()`
+- `void deleteGlResources()`
+- `int getDisplayList(BlockRenderLayer layer, CompiledChunk p_178600_2_)`
+
+## Fields
+
+- `ListedRenderChunk`

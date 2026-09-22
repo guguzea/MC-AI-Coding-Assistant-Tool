@@ -1,5 +1,7 @@
 # ServerHangWatchdog
 
+**Inheritance:** java.lang.Object → net.minecraft.server.dedicated.ServerHangWatchdog
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class ServerHangWatchdog extends java.lang.Object implements java.lang.Ru
 
 ## Constructors
 
-- `public ServerHangWatchdog( DedicatedServer server)`
+- `ServerHangWatchdog(DedicatedServer server)`
 
 ## Methods
 
-- `public void run()`
+- `void run()`

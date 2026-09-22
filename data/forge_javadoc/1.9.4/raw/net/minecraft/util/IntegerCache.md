@@ -3,11 +3,15 @@ title: "IntegerCache"
 description: "public class IntegerCache extends java.lang.Object"
 package: "net/minecraft/util"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/util/IntegerCache.html"
 sourceType: javadoc
 ---
 
 # IntegerCache
+
+**Inheritance:** java.lang.Object → net.minecraft.util.IntegerCache
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class IntegerCache extends java.lang.Object
 
 ## Constructors
 
-- `public IntegerCache()`
+- `IntegerCache()`
 
 ## Methods
 
-- `public static java.lang.Integer getInteger(int value)`
+- `static java.lang.Integer getInteger(int value)`

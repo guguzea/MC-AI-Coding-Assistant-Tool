@@ -1,27 +1,29 @@
 # EntityFireworkRocket
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityFireworkRocket
+
 ## Class signature
 
 ```java
 public class EntityFireworkRocket extends Entity
 ```
 
-## Constructors
-
-- `public EntityFireworkRocket( World worldIn)`
-- `public EntityFireworkRocket( World worldIn, double x, double y, double z, ItemStack givenItem)`
-- `public EntityFireworkRocket( World p_i47367_1_, ItemStack p_i47367_2_, EntityLivingBase p_i47367_3_)`
-
 ## Methods
 
+- `boolean canBeAttackedWithItem()`
 - `protected void entityInit()`
-- `public boolean isInRangeToRenderDist(double distance)`
-- `public boolean isInRangeToRender3d(double x, double y, double z)`
-- `public void setVelocity(double x, double y, double z)`
-- `public void onUpdate()`
-- `public boolean func_191511_j()`
-- `public void handleStatusUpdate(byte id)`
-- `public static void registerFixesFireworkRocket( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean canBeAttackedWithItem()`
+- `boolean func_191511_j()`
+- `void handleStatusUpdate(byte id)`
+- `boolean isInRangeToRender3d(double x, double y, double z)`
+- `boolean isInRangeToRenderDist(double distance)`
+- `void onUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesFireworkRocket(DataFixer fixer)`
+- `void setVelocity(double x, double y, double z)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityFireworkRocket`
+- `EntityFireworkRocket`
+- `EntityFireworkRocket`

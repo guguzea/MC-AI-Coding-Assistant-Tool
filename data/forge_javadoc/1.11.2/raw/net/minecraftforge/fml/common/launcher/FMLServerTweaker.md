@@ -3,11 +3,15 @@ title: "FMLServerTweaker"
 description: "public class FMLServerTweaker extends FMLTweaker"
 package: "net/minecraftforge/fml/common/launcher"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/common/launcher/FMLServerTweaker.html"
 sourceType: javadoc
 ---
 
 # FMLServerTweaker
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.launcher.FMLTweaker → net.minecraftforge.fml.common.launcher.FMLServerTweaker
 
 ## Class signature
 
@@ -17,10 +21,10 @@ public class FMLServerTweaker extends FMLTweaker
 
 ## Constructors
 
-- `public FMLServerTweaker()`
+- `FMLServerTweaker()`
 
 ## Methods
 
-- `public void acceptOptions(java.util.List<java.lang.String> args, java.io.File gameDir, java.io.File assetsDir, java.lang.String profile)`
-- `public java.lang.String getLaunchTarget()`
-- `public void injectIntoClassLoader(net.minecraft.launchwrapper.LaunchClassLoader classLoader)`
+- `void acceptOptions(java.util.List<java.lang.String> args, java.io.File gameDir, java.io.File assetsDir, java.lang.String profile)`
+- `java.lang.String getLaunchTarget()`
+- `void injectIntoClassLoader(net.minecraft.launchwrapper.LaunchClassLoader classLoader)`

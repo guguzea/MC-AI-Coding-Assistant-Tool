@@ -3,11 +3,15 @@ title: "GuiCustomModLoadingErrorScreen"
 description: "public class GuiCustomModLoadingErrorScreen extends GuiErrorScreen"
 package: "cpw/mods/fml/client"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/client/GuiCustomModLoadingErrorScreen.html"
 sourceType: javadoc
 ---
 
 # GuiCustomModLoadingErrorScreen
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiErrorScreen → cpw.mods.fml.client.GuiCustomModLoadingErrorScreen
 
 ## Class signature
 
@@ -15,11 +19,11 @@ sourceType: javadoc
 public class GuiCustomModLoadingErrorScreen extends GuiErrorScreen
 ```
 
-## Constructors
-
-- `public GuiCustomModLoadingErrorScreen( CustomModLoadingErrorDisplayException customException)`
-
 ## Methods
 
-- `public void initGui()`
-- `public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)`
+- `void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)`
+- `void initGui()`
+
+## Fields
+
+- `GuiCustomModLoadingErrorScreen`

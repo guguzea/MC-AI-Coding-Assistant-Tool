@@ -1,23 +1,29 @@
 # BakedModelWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.BakedModelWrapper<T>
+
 ## Class signature
 
 ```java
-public abstract class BakedModelWrapper<T extends IBakedModel > extends java.lang.Object implements IBakedModel
+public abstract class BakedModelWrapper<T extends IBakedModel> extends java.lang.Object implements IBakedModel
 ```
 
 ## Constructors
 
-- `public BakedModelWrapper( T originalModel)`
+- `BakedModelWrapper(T originalModel)`
 
 ## Methods
 
-- `public java.util.List< BakedQuad > getQuads( IBlockState state, EnumFacing side, long rand)`
-- `public boolean isAmbientOcclusion()`
-- `public boolean isAmbientOcclusion( IBlockState state)`
-- `public boolean isGui3d()`
-- `public boolean isBuiltInRenderer()`
-- `public TextureAtlasSprite getParticleTexture()`
-- `public ItemCameraTransforms getItemCameraTransforms()`
-- `public ItemOverrideList getOverrides()`
-- `public <any> handlePerspective( ItemCameraTransforms.TransformType cameraTransformType)`
+- `ItemCameraTransforms getItemCameraTransforms()`
+- `ItemOverrideList getOverrides()`
+- `TextureAtlasSprite getParticleTexture()`
+- `java.util.List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)`
+- `<any> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)`
+- `boolean isAmbientOcclusion()`
+- `boolean isAmbientOcclusion(IBlockState state)`
+- `boolean isBuiltInRenderer()`
+- `boolean isGui3d()`
+
+## Fields
+
+- `protected T originalModel`

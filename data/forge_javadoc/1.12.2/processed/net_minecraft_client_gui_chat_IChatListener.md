@@ -8,4 +8,4 @@ public interface IChatListener
 
 ## Methods
 
-- `void say( ChatType chatTypeIn, ITextComponent message)`
+- `void say(ChatType chatTypeIn, ITextComponent message)`

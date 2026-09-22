@@ -1,13 +1,17 @@
 # VertexFormatElement.EnumType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<VertexFormatElement.EnumType> → net.minecraft.client.renderer.vertex.VertexFormatElement.EnumType
+
+## Class signature
+
+```java
+public static enum VertexFormatElement.EnumType extends java.lang.Enum<VertexFormatElement.EnumType>
+```
+
 ## Methods
 
-- `public static VertexFormatElement.EnumType [] values()`
-- `public static VertexFormatElement.EnumType valueOf(java.lang.String name)`
-- `public int getSize()`
-- `public java.lang.String getDisplayName()`
-- `public int getGlConstant()`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `java.lang.String getDisplayName()`
+- `int getGlConstant()`
+- `int getSize()`
+- `static VertexFormatElement.EnumType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static VertexFormatElement.EnumType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

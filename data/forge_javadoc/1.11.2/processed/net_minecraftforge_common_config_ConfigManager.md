@@ -1,5 +1,7 @@
 # ConfigManager
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.config.ConfigManager
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class ConfigManager extends java.lang.Object
 
 ## Constructors
 
-- `public ConfigManager()`
+- `ConfigManager()`
 
 ## Methods
 
-- `public static void loadData( ASMDataTable data)`
-- `public static void load(java.lang.String modid, Config.Type type)`
+- `static void load(java.lang.String modid, Config.Type type)`
+- `static void loadData(ASMDataTable data)`

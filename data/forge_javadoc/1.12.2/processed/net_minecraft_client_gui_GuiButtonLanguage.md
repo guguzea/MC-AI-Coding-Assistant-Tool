@@ -1,15 +1,17 @@
 # GuiButtonLanguage
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiButton → net.minecraft.client.gui.GuiButtonLanguage
+
 ## Class signature
 
 ```java
 public class GuiButtonLanguage extends GuiButton
 ```
 
-## Constructors
-
-- `public GuiButtonLanguage(int buttonID, int xPos, int yPos)`
-
 ## Methods
 
-- `public void drawButton( Minecraft mc, int mouseX, int mouseY, float partialTicks)`
+- `void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)`
+
+## Fields
+
+- `GuiButtonLanguage`

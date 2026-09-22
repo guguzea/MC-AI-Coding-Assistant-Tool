@@ -1,5 +1,7 @@
 # EntityJumpHelper
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityJumpHelper
+
 ## Class signature
 
 ```java
@@ -8,13 +10,13 @@ public class EntityJumpHelper extends java.lang.Object
 
 ## Constructors
 
-- `public EntityJumpHelper( EntityLiving entityIn)`
+- `EntityJumpHelper(EntityLiving entityIn)`
 
 ## Methods
 
-- `public void setJumping()`
-- `public void doJump()`
+- `void doJump()` — Called to actually make the entity jump if isJumping is true.
+- `void setJumping()`
 
-## Description
+## Fields
 
-Called to actually make the entity jump if isJumping is true.
+- `protected boolean isJumping`

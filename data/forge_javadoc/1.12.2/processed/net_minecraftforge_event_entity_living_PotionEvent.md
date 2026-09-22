@@ -1,5 +1,7 @@
 # PotionEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.PotionEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class PotionEvent extends LivingEvent
 
 ## Constructors
 
-- `public PotionEvent( EntityLivingBase living, PotionEffect effect)`
+- `PotionEvent(EntityLivingBase living, PotionEffect effect)`
 
 ## Methods
 
-- `public PotionEffect getPotionEffect()`
+- `PotionEffect getPotionEffect()` — Retuns the PotionEffect.
 
-## Description
+## Fields
 
-This Event and its subevents gets fired from EntityLivingBase on the MinecraftForge#EVENT_BUS .
+- `protected PotionEffect effect`

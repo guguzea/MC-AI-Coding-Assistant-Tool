@@ -1,19 +1,17 @@
 # BlockYellowFlower
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockBush → net.minecraft.block.BlockFlower → net.minecraft.block.BlockYellowFlower
+
 ## Class signature
 
 ```java
 public class BlockYellowFlower extends BlockFlower
 ```
 
-## Constructors
-
-- `public BlockYellowFlower()`
-
 ## Methods
 
-- `public BlockFlower.EnumFlowerColor getBlockType()`
+- `BlockFlower.EnumFlowerColor getBlockType()` — Get the Type of this flower (Yellow/Red)
 
-## Description
+## Fields
 
-Get the Type of this flower (Yellow/Red)
+- `BlockYellowFlower`

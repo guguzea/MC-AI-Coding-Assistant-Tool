@@ -1,9 +1,17 @@
 # EntitySelectors.ArmoredMob
 
+**Inheritance:** java.lang.Object → net.minecraft.util.EntitySelectors.ArmoredMob
+
+## Class signature
+
+```java
+public static class EntitySelectors.ArmoredMob extends java.lang.Object
+```
+
 ## Constructors
 
-- `public ArmoredMob( ItemStack armor)`
+- `ArmoredMob(ItemStack armor)`
 
 ## Methods
 
-- `public boolean apply( Entity p_apply_1_)`
+- `boolean apply(Entity p_apply_1_)`

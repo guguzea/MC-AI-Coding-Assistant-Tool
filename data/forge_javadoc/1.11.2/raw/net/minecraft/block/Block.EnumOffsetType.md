@@ -1,19 +1,25 @@
 ---
 title: "Block.EnumOffsetType"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum Block.EnumOffsetType extends java.lang.Enum<Block.EnumOffsetType>"
 package: "net/minecraft/block"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/Block.EnumOffsetType.html"
 sourceType: javadoc
 ---
 
 # Block.EnumOffsetType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<Block.EnumOffsetType> → net.minecraft.block.Block.EnumOffsetType
+
+## Class signature
+
+```java
+public static enum Block.EnumOffsetType extends java.lang.Enum<Block.EnumOffsetType>
+```
+
 ## Methods
 
-- `public static Block.EnumOffsetType [] values()`
-- `public static Block.EnumOffsetType valueOf(java.lang.String name)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static Block.EnumOffsetType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static Block.EnumOffsetType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

@@ -1,5 +1,7 @@
 # CapabilityItemHandler
 
+**Inheritance:** java.lang.Object → net.minecraftforge.items.CapabilityItemHandler
+
 ## Class signature
 
 ```java
@@ -8,8 +10,12 @@ public class CapabilityItemHandler extends java.lang.Object
 
 ## Constructors
 
-- `public CapabilityItemHandler()`
+- `CapabilityItemHandler()`
 
 ## Methods
 
-- `public static void register()`
+- `static void register()`
+
+## Fields
+
+- `static Capability<IItemHandler> ITEM_HANDLER_CAPABILITY`

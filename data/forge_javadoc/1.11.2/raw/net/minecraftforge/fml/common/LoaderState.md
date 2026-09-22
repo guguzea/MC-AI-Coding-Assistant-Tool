@@ -1,30 +1,30 @@
 ---
 title: "LoaderState"
-description: "The state enum used to help track state progression for the loader"
+description: "public enum LoaderState extends java.lang.Enum<LoaderState>"
 package: "net/minecraftforge/fml/common"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/common/LoaderState.html"
 sourceType: javadoc
 ---
 
 # LoaderState
 
+**Inheritance:** java.lang.Object → java.lang.Enum<LoaderState> → net.minecraftforge.fml.common.LoaderState
+
 ## Class signature
 
 ```java
-public enum LoaderState extends java.lang.Enum< LoaderState >
+public enum LoaderState extends java.lang.Enum<LoaderState>
 ```
 
 ## Methods
 
-- `public static LoaderState [] values()`
-- `public static LoaderState valueOf(java.lang.String name)`
-- `public LoaderState transition(boolean errored)`
-- `public boolean hasEvent()`
-- `public FMLStateEvent getEvent(java.lang.Object... eventData)`
-- `public LoaderState requiredState()`
-- `public java.lang.String getPrettyName()`
-
-## Description
-
-The state enum used to help track state progression for the loader
+- `FMLStateEvent getEvent(java.lang.Object... eventData)`
+- `java.lang.String getPrettyName()`
+- `boolean hasEvent()`
+- `LoaderState requiredState()`
+- `LoaderState transition(boolean errored)`
+- `static LoaderState valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static LoaderState [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

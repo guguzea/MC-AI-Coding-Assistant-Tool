@@ -1,9 +1,17 @@
 # Biome.FlowerEntry
 
+**Inheritance:** java.lang.Object → net.minecraft.util.WeightedRandom.Item → net.minecraft.world.biome.Biome.FlowerEntry
+
+## Class signature
+
+```java
+public static class Biome.FlowerEntry extends WeightedRandom.Item
+```
+
 ## Constructors
 
-- `public FlowerEntry( IBlockState state, int weight)`
+- `FlowerEntry(IBlockState state, int weight)`
 
-## Description
+## Fields
 
-Weighted random holder class used to hold possible flowers that can spawn in this biome when bonemeal is used on grass.
+- `IBlockState state`

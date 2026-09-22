@@ -1,15 +1,17 @@
 # TileEntityDaylightDetector
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityDaylightDetector
+
 ## Class signature
 
 ```java
 public class TileEntityDaylightDetector extends TileEntity
 ```
 
-## Constructors
-
-- `public TileEntityDaylightDetector()`
-
 ## Methods
 
-- `public void updateEntity()`
+- `void updateEntity()`
+
+## Fields
+
+- `TileEntityDaylightDetector`

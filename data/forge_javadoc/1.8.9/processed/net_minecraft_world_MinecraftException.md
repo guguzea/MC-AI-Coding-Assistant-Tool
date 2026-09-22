@@ -1,5 +1,7 @@
 # MinecraftException
 
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → net.minecraft.world.MinecraftException
+
 ## Class signature
 
 ```java
@@ -8,4 +10,4 @@ public class MinecraftException extends java.lang.Exception
 
 ## Constructors
 
-- `public MinecraftException(java.lang.String msg)`
+- `MinecraftException(java.lang.String msg)`

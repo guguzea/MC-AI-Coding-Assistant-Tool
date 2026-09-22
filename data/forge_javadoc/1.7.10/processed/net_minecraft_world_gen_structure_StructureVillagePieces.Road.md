@@ -1,6 +1,14 @@
 # StructureVillagePieces.Road
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureVillagePieces.Village → net.minecraft.world.gen.structure.StructureVillagePieces.Road
 
-- `public Road()`
-- `protected Road( StructureVillagePieces.Start p_i2108_1_, int p_i2108_2_)`
+## Class signature
+
+```java
+public abstract static class StructureVillagePieces.Road extends StructureVillagePieces.Village
+```
+
+## Fields
+
+- `Road`
+- `protected Road`

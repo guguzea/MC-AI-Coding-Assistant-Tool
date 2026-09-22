@@ -1,5 +1,7 @@
 # LivingDropsEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingDropsEvent
+
 ## Class signature
 
 ```java
@@ -8,15 +10,11 @@ public class LivingDropsEvent extends LivingEvent
 
 ## Constructors
 
-- `public LivingDropsEvent( EntityLivingBase entity, DamageSource source, java.util.List< EntityItem > drops, int lootingLevel, boolean recentlyHit)`
+- `LivingDropsEvent(EntityLivingBase entity, DamageSource source, java.util.List<EntityItem> drops, int lootingLevel, boolean recentlyHit)`
 
 ## Methods
 
-- `public DamageSource getSource()`
-- `public java.util.List< EntityItem > getDrops()`
-- `public int getLootingLevel()`
-- `public boolean isRecentlyHit()`
-
-## Description
-
-LivingDropsEvent is fired when an Entity's death causes dropped items to appear. This event is fired whenever an Entity dies and drops items in EntityLivingBase#onDeath(DamageSource). This event is fi
+- `java.util.List<EntityItem> getDrops()`
+- `int getLootingLevel()`
+- `DamageSource getSource()`
+- `boolean isRecentlyHit()`

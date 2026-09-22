@@ -1,52 +1,52 @@
 ---
 title: "PotionEffect"
-description: "Adds the given stack to the list of curative items for this PotionEffect"
+description: "public class PotionEffect extends java.lang.Object implements java.lang.Comparable<PotionEffect>"
 package: "net/minecraft/potion"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/potion/PotionEffect.html"
 sourceType: javadoc
 ---
 
 # PotionEffect
 
+**Inheritance:** java.lang.Object → net.minecraft.potion.PotionEffect
+
 ## Class signature
 
 ```java
-public class PotionEffect extends java.lang.Object implements java.lang.Comparable< PotionEffect >
+public class PotionEffect extends java.lang.Object implements java.lang.Comparable<PotionEffect>
 ```
 
 ## Constructors
 
-- `public PotionEffect( Potion potionIn)`
-- `public PotionEffect( Potion potionIn, int durationIn)`
-- `public PotionEffect( Potion potionIn, int durationIn, int amplifierIn)`
-- `public PotionEffect( Potion potionIn, int durationIn, int amplifierIn, boolean ambientIn, boolean showParticlesIn)`
-- `public PotionEffect( PotionEffect other)`
+- `PotionEffect(Potion potionIn)`
+- `PotionEffect(PotionEffect other)`
+- `PotionEffect(Potion potionIn, int durationIn)`
+- `PotionEffect(Potion potionIn, int durationIn, int amplifierIn)`
+- `PotionEffect(Potion potionIn, int durationIn, int amplifierIn, boolean ambientIn, boolean showParticlesIn)`
 
 ## Methods
 
-- `public void combine( PotionEffect other)`
-- `public Potion getPotion()`
-- `public int getDuration()`
-- `public int getAmplifier()`
-- `public boolean getIsAmbient()`
-- `public boolean doesShowParticles()`
-- `public boolean onUpdate( EntityLivingBase entityIn)`
-- `public void performEffect( EntityLivingBase entityIn)`
-- `public java.lang.String getEffectName()`
-- `public java.lang.String toString()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public NBTTagCompound writeCustomPotionEffectToNBT( NBTTagCompound nbt)`
-- `public static PotionEffect readCustomPotionEffectFromNBT( NBTTagCompound nbt)`
-- `public void setPotionDurationMax(boolean maxDuration)`
-- `public int compareTo( PotionEffect p_compareTo_1_)`
-- `public boolean getIsPotionDurationMax()`
-- `public java.util.List< ItemStack > getCurativeItems()`
-- `public boolean isCurativeItem( ItemStack stack)`
-- `public void setCurativeItems(java.util.List< ItemStack > curativeItems)`
-- `public void addCurativeItem( ItemStack stack)`
-
-## Description
-
-Adds the given stack to the list of curative items for this PotionEffect
+- `void addCurativeItem(ItemStack stack)` — Adds the given stack to the list of curative items for this PotionEffect
+- `void combine(PotionEffect other)`
+- `int compareTo(PotionEffect p_compareTo_1_)`
+- `boolean doesShowParticles()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `int getAmplifier()`
+- `java.util.List<ItemStack> getCurativeItems()` — Returns a list of curative items for the potion effect By default, this list is initialized using Potion.getCurativeItems()
+- `int getDuration()`
+- `java.lang.String getEffectName()`
+- `boolean getIsAmbient()`
+- `boolean getIsPotionDurationMax()`
+- `Potion getPotion()`
+- `int hashCode()`
+- `boolean isCurativeItem(ItemStack stack)` — Checks the given ItemStack to see if it is in the list of curative items for the potion effect
+- `boolean onUpdate(EntityLivingBase entityIn)`
+- `void performEffect(EntityLivingBase entityIn)`
+- `static PotionEffect readCustomPotionEffectFromNBT(NBTTagCompound nbt)`
+- `void setCurativeItems(java.util.List<ItemStack> curativeItems)` — Sets the list of curative items for this potion effect, overwriting any already present
+- `void setPotionDurationMax(boolean maxDuration)`
+- `java.lang.String toString()`
+- `NBTTagCompound writeCustomPotionEffectToNBT(NBTTagCompound nbt)`

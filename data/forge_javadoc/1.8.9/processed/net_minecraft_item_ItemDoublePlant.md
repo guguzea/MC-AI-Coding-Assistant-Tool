@@ -1,15 +1,17 @@
 # ItemDoublePlant
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemBlock → net.minecraft.item.ItemMultiTexture → net.minecraft.item.ItemDoublePlant
+
 ## Class signature
 
 ```java
 public class ItemDoublePlant extends ItemMultiTexture
 ```
 
-## Constructors
-
-- `public ItemDoublePlant( Block block, Block block2, <any> nameFunction)`
-
 ## Methods
 
-- `public int getColorFromItemStack( ItemStack stack, int renderPass)`
+- `int getColorFromItemStack(ItemStack stack, int renderPass)`
+
+## Fields
+
+- `ItemDoublePlant`

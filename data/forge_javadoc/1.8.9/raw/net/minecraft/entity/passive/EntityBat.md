@@ -1,13 +1,17 @@
 ---
 title: "EntityBat"
-description: "Called when the entity is attacked."
+description: "public class EntityBat extends EntityAmbientCreature"
 package: "net/minecraft/entity/passive"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/entity/passive/EntityBat.html"
 sourceType: javadoc
 ---
 
 # EntityBat
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.passive.EntityAmbientCreature → net.minecraft.entity.passive.EntityBat
 
 ## Class signature
 
@@ -15,36 +19,32 @@ sourceType: javadoc
 public class EntityBat extends EntityAmbientCreature
 ```
 
-## Constructors
-
-- `public EntityBat( World worldIn)`
-
 ## Methods
 
-- `protected void entityInit()`
-- `protected float getSoundVolume()`
-- `protected float getSoundPitch()`
-- `protected java.lang.String getLivingSound()`
-- `protected java.lang.String getHurtSound()`
-- `protected java.lang.String getDeathSound()`
-- `public boolean canBePushed()`
-- `protected void collideWithEntity( Entity p_82167_1_)`
-- `protected void collideWithNearbyEntities()`
 - `protected void applyEntityAttributes()`
-- `public boolean getIsBatHanging()`
-- `public void setIsBatHanging(boolean isHanging)`
-- `public void onUpdate()`
+- `boolean attackEntityFrom(DamageSource source, float amount)` — Called when the entity is attacked.
+- `boolean canBePushed()` — Returns true if this entity should push and be pushed by other entities when colliding.
+- `protected boolean canTriggerWalking()` — returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to prevent them from trampling crops
+- `protected void collideWithEntity(Entity p_82167_1_)`
+- `protected void collideWithNearbyEntities()`
+- `boolean doesEntityNotTriggerPressurePlate()` — Return whether this entity should NOT trigger a pressure plate or a tripwire.
+- `protected void entityInit()`
+- `void fall(float distance, float damageMultiplier)`
+- `boolean getCanSpawnHere()` — Checks if the entity's current position is a valid location to spawn this entity.
+- `protected java.lang.String getDeathSound()` — Returns the sound this mob makes on death.
+- `float getEyeHeight()`
+- `protected java.lang.String getHurtSound()` — Returns the sound this mob makes when it is hurt.
+- `boolean getIsBatHanging()`
+- `protected java.lang.String getLivingSound()` — Returns the sound this mob makes while it's alive.
+- `protected float getSoundPitch()` — Gets the pitch of living sounds in living entities.
+- `protected float getSoundVolume()` — Returns the volume for the sounds this mob makes.
+- `void onUpdate()` — Called to update the entity's position/logic.
+- `void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
+- `void setIsBatHanging(boolean isHanging)`
 - `protected void updateAITasks()`
-- `protected boolean canTriggerWalking()`
-- `public void fall(float distance, float damageMultiplier)`
 - `protected void updateFallState(double y, boolean onGroundIn, Block blockIn, BlockPos pos)`
-- `public boolean doesEntityNotTriggerPressurePlate()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public void readEntityFromNBT( NBTTagCompound tagCompund)`
-- `public void writeEntityToNBT( NBTTagCompound tagCompound)`
-- `public boolean getCanSpawnHere()`
-- `public float getEyeHeight()`
+- `void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
 
-## Description
+## Fields
 
-Called when the entity is attacked.
+- `EntityBat`

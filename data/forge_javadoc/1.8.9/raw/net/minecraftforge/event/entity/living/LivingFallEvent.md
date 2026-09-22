@@ -1,13 +1,17 @@
 ---
 title: "LivingFallEvent"
-description: "LivingFallEvent is fired when an Entity is set to be falling. This event is fired whenever an Entity is set to fall in EntityLivingBase#fall(float). This event is fired via the ForgeHooks#onLivingFall"
+description: "public class LivingFallEvent extends LivingEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/living/LivingFallEvent.html"
 sourceType: javadoc
 ---
 
 # LivingFallEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingFallEvent
 
 ## Class signature
 
@@ -17,8 +21,9 @@ public class LivingFallEvent extends LivingEvent
 
 ## Constructors
 
-- `public LivingFallEvent( EntityLivingBase entity, float distance, float damageMultiplier)`
+- `LivingFallEvent(EntityLivingBase entity, float distance, float damageMultiplier)`
 
-## Description
+## Fields
 
-LivingFallEvent is fired when an Entity is set to be falling. This event is fired whenever an Entity is set to fall in EntityLivingBase#fall(float). This event is fired via the ForgeHooks#onLivingFall
+- `float damageMultiplier`
+- `float distance`

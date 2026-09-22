@@ -3,11 +3,15 @@ title: "NettyCompressionDecoder"
 description: "public class NettyCompressionDecoder extends ByteToMessageDecoder"
 package: "net/minecraft/network"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/network/NettyCompressionDecoder.html"
 sourceType: javadoc
 ---
 
 # NettyCompressionDecoder
+
+**Inheritance:** java.lang.Object → ByteToMessageDecoder → net.minecraft.network.NettyCompressionDecoder
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class NettyCompressionDecoder extends ByteToMessageDecoder
 
 ## Constructors
 
-- `public NettyCompressionDecoder(int thresholdIn)`
+- `NettyCompressionDecoder(int thresholdIn)`
 
 ## Methods
 
-- `protected void decode(ChannelHandlerContext p_decode_1_, ByteBuf p_decode_2_, java.util.List<java.lang.Object> p_decode_3_) throws java.util.zip.DataFormatException, java.lang.Exception`
-- `public void setCompressionThreshold(int thresholdIn)`
+- `protected void decode(ChannelHandlerContext p_decode_1_, ByteBuf p_decode_2_, java.util.List<java.lang.Object> p_decode_3_)`
+- `void setCompressionThreshold(int thresholdIn)`

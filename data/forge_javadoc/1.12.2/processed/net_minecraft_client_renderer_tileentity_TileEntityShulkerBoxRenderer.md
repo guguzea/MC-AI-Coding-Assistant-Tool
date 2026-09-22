@@ -1,15 +1,17 @@
 # TileEntityShulkerBoxRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer<TileEntityShulkerBox> → net.minecraft.client.renderer.tileentity.TileEntityShulkerBoxRenderer
+
 ## Class signature
 
 ```java
-public class TileEntityShulkerBoxRenderer extends TileEntitySpecialRenderer < TileEntityShulkerBox >
+public class TileEntityShulkerBoxRenderer extends TileEntitySpecialRenderer<TileEntityShulkerBox>
 ```
-
-## Constructors
-
-- `public TileEntityShulkerBoxRenderer( ModelShulker modelIn)`
 
 ## Methods
 
-- `public void render( TileEntityShulkerBox te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)`
+- `void render(TileEntityShulkerBox te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)`
+
+## Fields
+
+- `TileEntityShulkerBoxRenderer`

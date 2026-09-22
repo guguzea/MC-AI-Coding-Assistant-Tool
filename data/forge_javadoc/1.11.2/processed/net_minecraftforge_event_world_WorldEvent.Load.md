@@ -1,9 +1,13 @@
 # WorldEvent.Load
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.WorldEvent.Load
+
+## Class signature
+
+```java
+public static class WorldEvent.Load extends WorldEvent
+```
+
 ## Constructors
 
-- `public Load( World world)`
-
-## Description
-
-WorldEvent.Load is fired when Minecraft loads a world. This event is fired when a world is loaded in WorldClient.WorldClient(NetHandlerPlayClient, WorldSettings, int, EnumDifficulty, Profiler) , Minec
+- `Load(World world)`

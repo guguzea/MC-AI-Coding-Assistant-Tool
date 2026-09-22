@@ -1,13 +1,17 @@
 ---
 title: "FluidTankInfo"
-description: "Wrapper class used to encapsulate information about an IFluidTank."
+description: "public final class FluidTankInfo extends java.lang.Object"
 package: "net/minecraftforge/fluids"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fluids/FluidTankInfo.html"
 sourceType: javadoc
 ---
 
 # FluidTankInfo
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.FluidTankInfo
 
 ## Class signature
 
@@ -17,9 +21,10 @@ public final class FluidTankInfo extends java.lang.Object
 
 ## Constructors
 
-- `public FluidTankInfo(@Nullable FluidStack fluid, int capacity)`
-- `public FluidTankInfo( IFluidTank tank)`
+- `FluidTankInfo(FluidStack fluid, int capacity)`
+- `FluidTankInfo(IFluidTank tank)`
 
-## Description
+## Fields
 
-Wrapper class used to encapsulate information about an IFluidTank.
+- `int capacity`
+- `FluidStack fluid`

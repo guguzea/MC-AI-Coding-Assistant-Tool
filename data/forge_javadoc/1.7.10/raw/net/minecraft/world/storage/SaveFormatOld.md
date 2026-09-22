@@ -3,11 +3,15 @@ title: "SaveFormatOld"
 description: "public class SaveFormatOld extends java.lang.Object implements ISaveFormat"
 package: "net/minecraft/world/storage"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/world/storage/SaveFormatOld.html"
 sourceType: javadoc
 ---
 
 # SaveFormatOld
+
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.SaveFormatOld
 
 ## Class signature
 
@@ -17,20 +21,24 @@ public class SaveFormatOld extends java.lang.Object implements ISaveFormat
 
 ## Constructors
 
-- `public SaveFormatOld(java.io.File p_i2147_1_)`
+- `SaveFormatOld(java.io.File p_i2147_1_)`
 
 ## Methods
 
-- `public java.lang.String func_154333_a()`
-- `public java.util.List getSaveList() throws AnvilConverterException`
-- `public void flushCache()`
-- `public WorldInfo getWorldInfo(java.lang.String p_75803_1_)`
-- `public void renameWorld(java.lang.String p_75806_1_, java.lang.String p_75806_2_)`
-- `public boolean func_154335_d(java.lang.String p_154335_1_)`
-- `public boolean deleteWorldDirectory(java.lang.String p_75802_1_)`
+- `boolean canLoadWorld(java.lang.String p_90033_1_)`
+- `boolean convertMapFormat(java.lang.String p_75805_1_, IProgressUpdate p_75805_2_)`
 - `protected static boolean deleteFiles(java.io.File[] p_75807_0_)`
-- `public ISaveHandler getSaveLoader(java.lang.String p_75804_1_, boolean p_75804_2_)`
-- `public boolean func_154334_a(java.lang.String p_154334_1_)`
-- `public boolean isOldMapFormat(java.lang.String p_75801_1_)`
-- `public boolean convertMapFormat(java.lang.String p_75805_1_, IProgressUpdate p_75805_2_)`
-- `public boolean canLoadWorld(java.lang.String p_90033_1_)`
+- `boolean deleteWorldDirectory(java.lang.String p_75802_1_)`
+- `void flushCache()`
+- `java.lang.String func_154333_a()`
+- `boolean func_154334_a(java.lang.String p_154334_1_)`
+- `boolean func_154335_d(java.lang.String p_154335_1_)`
+- `java.util.List getSaveList()`
+- `ISaveHandler getSaveLoader(java.lang.String p_75804_1_, boolean p_75804_2_)`
+- `WorldInfo getWorldInfo(java.lang.String p_75803_1_)`
+- `boolean isOldMapFormat(java.lang.String p_75801_1_)`
+- `void renameWorld(java.lang.String p_75806_1_, java.lang.String p_75806_2_)`
+
+## Fields
+
+- `java.io.File savesDirectory`

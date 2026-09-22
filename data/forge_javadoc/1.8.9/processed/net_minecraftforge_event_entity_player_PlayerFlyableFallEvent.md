@@ -1,5 +1,7 @@
 # PlayerFlyableFallEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerFlyableFallEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,9 @@ public class PlayerFlyableFallEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerFlyableFallEvent( EntityPlayer player, float distance, float multiplier)`
+- `PlayerFlyableFallEvent(EntityPlayer player, float distance, float multiplier)`
 
-## Description
+## Fields
 
-Occurs when a player falls, but is able to fly. Doesn't need to be cancelable, this is mainly for notification purposes.
+- `float distance`
+- `float multipler`

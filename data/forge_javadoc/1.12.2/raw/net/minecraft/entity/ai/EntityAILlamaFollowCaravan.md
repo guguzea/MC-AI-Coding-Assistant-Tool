@@ -3,11 +3,15 @@ title: "EntityAILlamaFollowCaravan"
 description: "public class EntityAILlamaFollowCaravan extends EntityAIBase"
 package: "net/minecraft/entity/ai"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/ai/EntityAILlamaFollowCaravan.html"
 sourceType: javadoc
 ---
 
 # EntityAILlamaFollowCaravan
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAILlamaFollowCaravan
 
 ## Class signature
 
@@ -17,11 +21,15 @@ public class EntityAILlamaFollowCaravan extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAILlamaFollowCaravan( EntityLlama llamaIn, double speedModifierIn)`
+- `EntityAILlamaFollowCaravan(EntityLlama llamaIn, double speedModifierIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean shouldContinueExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `void resetTask()`
+- `boolean shouldContinueExecuting()`
+- `boolean shouldExecute()`
+- `void updateTask()`
+
+## Fields
+
+- `EntityLlama llama`

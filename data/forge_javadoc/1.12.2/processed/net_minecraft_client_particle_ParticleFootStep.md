@@ -1,17 +1,19 @@
 # ParticleFootStep
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleFootStep
+
 ## Class signature
 
 ```java
 public class ParticleFootStep extends Particle
 ```
 
-## Constructors
-
-- `protected ParticleFootStep( TextureManager currentFootStepsIn, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn)`
-
 ## Methods
 
-- `public void renderParticle( BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
-- `public void onUpdate()`
-- `public int getFXLayer()`
+- `int getFXLayer()`
+- `void onUpdate()`
+- `void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+
+## Fields
+
+- `protected ParticleFootStep`

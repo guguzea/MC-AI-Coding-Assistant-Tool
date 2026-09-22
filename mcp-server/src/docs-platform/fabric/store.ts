@@ -673,6 +673,25 @@ export class FabricDocStore {
       .slice(0, limit)
       .map(({ overlap: _o, ...rest }) => rest as unknown as SearchResult);
 
+    // 2026-09-21：L2 关键词路径**空结果时回落 L0 tags 路径** —— 两条信号互补：
+    // L2 看 sections 的 title/summary 关键词（细），L0 看 tags（粗但稳）。语料里节数很少的页
+    // （例如 quilt 的 `qsl-qfapi`：sectionCount=1 ⇒ sectionKws 稀疏）在 L2 下交集为 0，
+    // 旧实现直接返回空数组，于是 `get_doc_related` 对「明明有同类页（qsl-readme / qsl-verified）」
+    // 的 id 也报空（test-core 的「qsl-qfapi 关联必须含 QSL 条目」断言即此形态；
+    // 触发条件是 l1/l2 索引补齐后从 L0 路径切到 L2 路径）。
+    // 仅当 L0 里确实有该 id 且能算出非空交集时才回落（否则保持 L2 结论，不伪造关联）。
+    if (results.length === 0 && this.indexFileExists(version, "index-l0.json")) {
+      try {
+        const thin = this.getRelatedDocsFromL0(id, version, limit);
+        if (thin.length > 0) {
+          ttlCacheSet(this.relatedCache, cacheKey, thin, 256, FabricDocStore.CACHE_TTL);
+          return thin;
+        }
+      } catch {
+        /* L0 里没有这个 id（瘦档 / 索引层不一致）⇒ 保持 L2 的空结果 */
+      }
+    }
+
     ttlCacheSet(this.relatedCache, cacheKey, results, 256, FabricDocStore.CACHE_TTL);
     return results;
   }

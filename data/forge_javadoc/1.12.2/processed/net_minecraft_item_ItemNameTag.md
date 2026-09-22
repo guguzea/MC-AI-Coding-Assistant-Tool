@@ -1,15 +1,17 @@
 # ItemNameTag
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemNameTag
+
 ## Class signature
 
 ```java
 public class ItemNameTag extends Item
 ```
 
-## Constructors
-
-- `public ItemNameTag()`
-
 ## Methods
 
-- `public boolean itemInteractionForEntity( ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand)`
+- `boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand)`
+
+## Fields
+
+- `ItemNameTag`

@@ -1,15 +1,17 @@
 # ParticleSuspend
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleSuspend
+
 ## Class signature
 
 ```java
 public class ParticleSuspend extends Particle
 ```
 
-## Constructors
-
-- `protected ParticleSuspend( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn)`
-
 ## Methods
 
-- `public void onUpdate()`
+- `void onUpdate()`
+
+## Fields
+
+- `protected ParticleSuspend`

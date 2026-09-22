@@ -1,21 +1,27 @@
 ---
 title: "BlockDoublePlant.EnumBlockHalf"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum BlockDoublePlant.EnumBlockHalf extends java.lang.Enum<BlockDoublePlant.EnumBlockHalf> implements IStringSerializable"
 package: "net/minecraft/block"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/BlockDoublePlant.EnumBlockHalf.html"
 sourceType: javadoc
 ---
 
 # BlockDoublePlant.EnumBlockHalf
 
+**Inheritance:** java.lang.Object → java.lang.Enum<BlockDoublePlant.EnumBlockHalf> → net.minecraft.block.BlockDoublePlant.EnumBlockHalf
+
+## Class signature
+
+```java
+public static enum BlockDoublePlant.EnumBlockHalf extends java.lang.Enum<BlockDoublePlant.EnumBlockHalf> implements IStringSerializable
+```
+
 ## Methods
 
-- `public static BlockDoublePlant.EnumBlockHalf [] values()`
-- `public static BlockDoublePlant.EnumBlockHalf valueOf(java.lang.String name)`
-- `public java.lang.String toString()`
-- `public java.lang.String getName()`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `java.lang.String getName()`
+- `java.lang.String toString()`
+- `static BlockDoublePlant.EnumBlockHalf valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static BlockDoublePlant.EnumBlockHalf [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

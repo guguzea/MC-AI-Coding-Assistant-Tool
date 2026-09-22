@@ -1,5 +1,17 @@
 # FluidContainerRegistry.FluidContainerRegisterEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerRegisterEvent
+
+## Class signature
+
+```java
+public static class FluidContainerRegistry.FluidContainerRegisterEvent extends Event
+```
+
 ## Constructors
 
-- `public FluidContainerRegisterEvent( FluidContainerRegistry.FluidContainerData data)`
+- `FluidContainerRegisterEvent(FluidContainerRegistry.FluidContainerData data)`
+
+## Fields
+
+- `FluidContainerRegistry.FluidContainerData data`

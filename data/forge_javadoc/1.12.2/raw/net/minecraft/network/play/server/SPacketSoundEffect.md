@@ -1,34 +1,38 @@
 ---
 title: "SPacketSoundEffect"
-description: "public class SPacketSoundEffect extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketSoundEffect extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/network/play/server/SPacketSoundEffect.html"
 sourceType: javadoc
 ---
 
 # SPacketSoundEffect
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketSoundEffect
+
 ## Class signature
 
 ```java
-public class SPacketSoundEffect extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketSoundEffect extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketSoundEffect()`
-- `public SPacketSoundEffect( SoundEvent soundIn, SoundCategory categoryIn, double xIn, double yIn, double zIn, float volumeIn, float pitchIn)`
+- `SPacketSoundEffect()`
+- `SPacketSoundEffect(SoundEvent soundIn, SoundCategory categoryIn, double xIn, double yIn, double zIn, float volumeIn, float pitchIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public SoundEvent getSound()`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public SoundCategory getCategory()`
-- `public double getX()`
-- `public double getY()`
-- `public double getZ()`
-- `public float getVolume()`
-- `public float getPitch()`
+- `SoundCategory getCategory()`
+- `float getPitch()`
+- `SoundEvent getSound()`
+- `float getVolume()`
+- `double getX()`
+- `double getY()`
+- `double getZ()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

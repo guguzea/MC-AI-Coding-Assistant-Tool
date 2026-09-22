@@ -1,13 +1,17 @@
 ---
 title: "BlockFlowerPot"
-description: "This gets a complete list of items dropped from this block."
+description: "public class BlockFlowerPot extends BlockContainer"
 package: "net/minecraft/block"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/block/BlockFlowerPot.html"
 sourceType: javadoc
 ---
 
 # BlockFlowerPot
+
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockContainer → net.minecraft.block.BlockFlowerPot
 
 ## Class signature
 
@@ -17,32 +21,34 @@ public class BlockFlowerPot extends BlockContainer
 
 ## Constructors
 
-- `public BlockFlowerPot()`
+- `BlockFlowerPot()`
 
 ## Methods
 
-- `public java.lang.String getLocalizedName()`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public EnumBlockRenderType getRenderType( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public void onBlockHarvested( World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public TileEntity createNewTileEntity( World worldIn, int meta)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
 - `protected BlockStateContainer createBlockState()`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public BlockFaceShape getBlockFaceShape( IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)`
-- `public void getDrops( NonNullList < ItemStack > drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)`
-- `public boolean removedByPlayer( IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)`
-- `public void harvestBlock( World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack tool)`
+- `TileEntity createNewTileEntity(World worldIn, int meta)`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)` — This gets a complete list of items dropped from this block.
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `java.lang.String getLocalizedName()`
+- `int getMetaFromState(IBlockState state)`
+- `EnumBlockRenderType getRenderType(IBlockState state)`
+- `void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack tool)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
+- `boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)` — Called when a player removes a block.
 
-## Description
+## Fields
 
-This gets a complete list of items dropped from this block.
+- `static PropertyEnum<BlockFlowerPot.EnumFlowerType> CONTENTS`
+- `protected static AxisAlignedBB FLOWER_POT_AABB`
+- `static PropertyInteger LEGACY_DATA`

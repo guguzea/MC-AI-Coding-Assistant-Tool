@@ -1,5 +1,7 @@
 # ChunkRenderWorker
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.chunk.ChunkRenderWorker
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class ChunkRenderWorker extends java.lang.Object implements java.lang.Run
 
 ## Constructors
 
-- `public ChunkRenderWorker( ChunkRenderDispatcher p_i46201_1_)`
-- `public ChunkRenderWorker( ChunkRenderDispatcher chunkRenderDispatcherIn, RegionRenderCacheBuilder regionRenderCacheBuilderIn)`
+- `ChunkRenderWorker(ChunkRenderDispatcher p_i46201_1_)`
+- `ChunkRenderWorker(ChunkRenderDispatcher chunkRenderDispatcherIn, RegionRenderCacheBuilder regionRenderCacheBuilderIn)`
 
 ## Methods
 
-- `public void run()`
-- `protected void processTask( ChunkCompileTaskGenerator generator) throws java.lang.InterruptedException`
+- `protected void processTask(ChunkCompileTaskGenerator generator)`
+- `void run()`

@@ -1,16 +1,18 @@
 # StatBasic
 
+**Inheritance:** java.lang.Object → net.minecraft.stats.StatBase → net.minecraft.stats.StatBasic
+
 ## Class signature
 
 ```java
 public class StatBasic extends StatBase
 ```
 
-## Constructors
-
-- `public StatBasic(java.lang.String statIdIn, ITextComponent statNameIn, IStatType typeIn)`
-- `public StatBasic(java.lang.String statIdIn, ITextComponent statNameIn)`
-
 ## Methods
 
-- `public StatBase registerStat()`
+- `StatBase registerStat()`
+
+## Fields
+
+- `StatBasic`
+- `StatBasic`

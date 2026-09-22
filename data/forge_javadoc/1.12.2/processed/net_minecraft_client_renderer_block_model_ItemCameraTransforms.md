@@ -1,20 +1,42 @@
 # ItemCameraTransforms
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.ItemCameraTransforms
+
 ## Class signature
 
 ```java
 public class ItemCameraTransforms extends java.lang.Object
 ```
 
+## Constructors
+
+- `@Deprecated ItemCameraTransforms(ItemCameraTransforms transforms)`
+- `@Deprecated ItemCameraTransforms(ItemTransformVec3f thirdperson_leftIn, ItemTransformVec3f thirdperson_rightIn, ItemTransformVec3f firstperson_leftIn, ItemTransformVec3f firstperson_rightIn, ItemTransformVec3f headIn, ItemTransformVec3f guiIn, ItemTransformVec3f groundIn, ItemTransformVec3f fixedIn)`
+
 ## Methods
 
-- `@Deprecated public ItemCameraTransforms( ItemCameraTransforms transforms)`
-- `@Deprecated public ItemCameraTransforms( ItemTransformVec3f thirdperson_leftIn, ItemTransformVec3f thirdperson_rightIn, ItemTransformVec3f firstperson_leftIn, ItemTransformVec3f firstperson_rightIn, ItemTransformVec3f headIn, ItemTransformVec3f guiIn, ItemTransformVec3f groundIn, ItemTransformVec3f fixedIn)`
-- `public void applyTransform( ItemCameraTransforms.TransformType type)`
-- `public static void applyTransformSide( ItemTransformVec3f vec, boolean leftHand)`
-- `@Deprecated public ItemTransformVec3f getTransform( ItemCameraTransforms.TransformType type)`
-- `public boolean hasCustomTransform( ItemCameraTransforms.TransformType type)`
+- `void applyTransform(ItemCameraTransforms.TransformType type)`
+- `static void applyTransformSide(ItemTransformVec3f vec, boolean leftHand)`
+- `@Deprecated ItemTransformVec3f getTransform(ItemCameraTransforms.TransformType type)`
+- `boolean hasCustomTransform(ItemCameraTransforms.TransformType type)`
 
-## Description
+## Fields
 
-Deprecated.
+- `static ItemCameraTransforms DEFAULT`
+- `ItemTransformVec3f firstperson_left`
+- `ItemTransformVec3f firstperson_right`
+- `ItemTransformVec3f fixed`
+- `ItemTransformVec3f ground`
+- `ItemTransformVec3f gui`
+- `ItemTransformVec3f head`
+- `static float offsetRotationX`
+- `static float offsetRotationY`
+- `static float offsetRotationZ`
+- `static float offsetScaleX`
+- `static float offsetScaleY`
+- `static float offsetScaleZ`
+- `static float offsetTranslateX`
+- `static float offsetTranslateY`
+- `static float offsetTranslateZ`
+- `ItemTransformVec3f thirdperson_left`
+- `ItemTransformVec3f thirdperson_right`

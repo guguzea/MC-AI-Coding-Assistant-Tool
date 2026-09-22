@@ -1,11 +1,13 @@
 # RConThreadClient
 
+**Inheritance:** java.lang.Object → net.minecraft.network.rcon.RConThreadBase → net.minecraft.network.rcon.RConThreadClient
+
 ## Class signature
 
 ```java
 public class RConThreadClient extends RConThreadBase
 ```
 
-## Methods
+## Fields
 
-- `public void run()`
+- `void run`

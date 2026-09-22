@@ -1,5 +1,7 @@
 # AbstractCriterionInstance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class AbstractCriterionInstance extends java.lang.Object implements ICrit
 
 ## Constructors
 
-- `public AbstractCriterionInstance( ResourceLocation criterionIn)`
+- `AbstractCriterionInstance(ResourceLocation criterionIn)`
 
 ## Methods
 
-- `public ResourceLocation getId()`
-- `public java.lang.String toString()`
+- `ResourceLocation getId()`
+- `java.lang.String toString()`

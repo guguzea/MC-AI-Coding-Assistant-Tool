@@ -1,5 +1,7 @@
 # NarratorChatListener
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.chat.NarratorChatListener
+
 ## Class signature
 
 ```java
@@ -8,11 +10,15 @@ public class NarratorChatListener extends java.lang.Object implements IChatListe
 
 ## Constructors
 
-- `public NarratorChatListener()`
+- `NarratorChatListener()`
 
 ## Methods
 
-- `public void say( ChatType chatTypeIn, ITextComponent message)`
-- `public void announceMode(int p_193641_1_)`
-- `public boolean isActive()`
-- `public void clear()`
+- `void announceMode(int p_193641_1_)`
+- `void clear()`
+- `boolean isActive()`
+- `void say(ChatType chatTypeIn, ITextComponent message)`
+
+## Fields
+
+- `static NarratorChatListener INSTANCE`

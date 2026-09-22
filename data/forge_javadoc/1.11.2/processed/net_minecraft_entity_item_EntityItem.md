@@ -1,5 +1,7 @@
 # EntityItem
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityItem
+
 ## Class signature
 
 ```java
@@ -8,41 +10,42 @@ public class EntityItem extends Entity
 
 ## Constructors
 
-- `public EntityItem( World worldIn, double x, double y, double z)`
-- `public EntityItem( World worldIn, double x, double y, double z, ItemStack stack)`
-- `public EntityItem( World worldIn)`
+- `EntityItem(World worldIn)`
+- `EntityItem(World worldIn, double x, double y, double z)`
+- `EntityItem(World worldIn, double x, double y, double z, ItemStack stack)`
 
 ## Methods
 
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeAttackedWithItem()`
+- `boolean cannotPickup()`
 - `protected boolean canTriggerWalking()`
-- `protected void entityInit()`
-- `public void onUpdate()`
-- `public void setAgeToCreativeDespawnTime()`
-- `public boolean handleWaterMovement()`
+- `Entity changeDimension(int dimensionIn)`
 - `protected void dealFireDamage(int amount)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public static void registerFixesItem( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void onCollideWithPlayer( EntityPlayer entityIn)`
-- `public java.lang.String getName()`
-- `public boolean canBeAttackedWithItem()`
-- `@Nullable public Entity changeDimension(int dimensionIn)`
-- `public ItemStack getEntityItem()`
-- `public void setEntityItemStack( ItemStack stack)`
-- `public java.lang.String getOwner()`
-- `public void setOwner(java.lang.String owner)`
-- `public java.lang.String getThrower()`
-- `public void setThrower(java.lang.String thrower)`
-- `public int getAge()`
-- `public void setDefaultPickupDelay()`
-- `public void setNoPickupDelay()`
-- `public void setInfinitePickupDelay()`
-- `public void setPickupDelay(int ticks)`
-- `public boolean cannotPickup()`
-- `public void setNoDespawn()`
-- `public void makeFakeItem()`
+- `protected void entityInit()`
+- `int getAge()`
+- `ItemStack getEntityItem()`
+- `java.lang.String getName()`
+- `java.lang.String getOwner()`
+- `java.lang.String getThrower()`
+- `boolean handleWaterMovement()`
+- `void makeFakeItem()`
+- `void onCollideWithPlayer(EntityPlayer entityIn)`
+- `void onUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesItem(DataFixer fixer)`
+- `void setAgeToCreativeDespawnTime()`
+- `void setDefaultPickupDelay()`
+- `void setEntityItemStack(ItemStack stack)`
+- `void setInfinitePickupDelay()`
+- `void setNoDespawn()`
+- `void setNoPickupDelay()`
+- `void setOwner(java.lang.String owner)`
+- `void setPickupDelay(int ticks)`
+- `void setThrower(java.lang.String thrower)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-The maximum age of this EntityItem.
+- `float hoverStart`
+- `int lifespan` — The maximum age of this EntityItem.

@@ -1,5 +1,7 @@
 # EntityAIAttackRangedBow
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIAttackRangedBow
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class EntityAIAttackRangedBow extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIAttackRangedBow( EntitySkeleton skeleton, double speedAmplifier, int delay, float maxDistance)`
+- `EntityAIAttackRangedBow(EntitySkeleton skeleton, double speedAmplifier, int delay, float maxDistance)`
 
 ## Methods
 
-- `public void setAttackCooldown(int p_189428_1_)`
-- `public boolean shouldExecute()`
+- `boolean continueExecuting()`
 - `protected boolean isBowInMainhand()`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `void resetTask()`
+- `void setAttackCooldown(int p_189428_1_)`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

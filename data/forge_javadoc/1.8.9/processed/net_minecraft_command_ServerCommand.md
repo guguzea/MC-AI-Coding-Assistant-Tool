@@ -1,5 +1,7 @@
 # ServerCommand
 
+**Inheritance:** java.lang.Object → net.minecraft.command.ServerCommand
+
 ## Class signature
 
 ```java
@@ -8,8 +10,9 @@ public class ServerCommand extends java.lang.Object
 
 ## Constructors
 
-- `public ServerCommand(java.lang.String input, ICommandSender sender)`
+- `ServerCommand(java.lang.String input, ICommandSender sender)`
 
-## Description
+## Fields
 
-The command string.
+- `java.lang.String command` — The command string.
+- `ICommandSender sender`

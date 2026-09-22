@@ -1,22 +1,24 @@
 # SPacketScoreboardObjective
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketScoreboardObjective
+
 ## Class signature
 
 ```java
-public class SPacketScoreboardObjective extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketScoreboardObjective extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketScoreboardObjective()`
-- `public SPacketScoreboardObjective( ScoreObjective objective, int actionIn)`
+- `SPacketScoreboardObjective()`
+- `SPacketScoreboardObjective(ScoreObjective objective, int actionIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public java.lang.String getObjectiveName()`
-- `public java.lang.String getObjectiveValue()`
-- `public int getAction()`
-- `public IScoreCriteria.EnumRenderType getRenderType()`
+- `int getAction()`
+- `java.lang.String getObjectiveName()`
+- `java.lang.String getObjectiveValue()`
+- `IScoreCriteria.EnumRenderType getRenderType()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

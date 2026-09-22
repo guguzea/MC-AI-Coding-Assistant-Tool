@@ -3,11 +3,15 @@ title: "GuiDownloadTerrain"
 description: "public class GuiDownloadTerrain extends GuiScreen"
 package: "net/minecraft/client/gui"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/gui/GuiDownloadTerrain.html"
 sourceType: javadoc
 ---
 
 # GuiDownloadTerrain
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiDownloadTerrain
 
 ## Class signature
 
@@ -15,14 +19,14 @@ sourceType: javadoc
 public class GuiDownloadTerrain extends GuiScreen
 ```
 
-## Constructors
-
-- `public GuiDownloadTerrain( NetHandlerPlayClient netHandler)`
-
 ## Methods
 
-- `protected void keyTyped(char typedChar, int keyCode) throws java.io.IOException`
-- `public void initGui()`
-- `public void updateScreen()`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `public boolean doesGuiPauseGame()`
+- `boolean doesGuiPauseGame()`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void initGui()`
+- `protected void keyTyped(char typedChar, int keyCode)`
+- `void updateScreen()`
+
+## Fields
+
+- `GuiDownloadTerrain`

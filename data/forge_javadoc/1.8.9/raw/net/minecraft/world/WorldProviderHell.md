@@ -1,13 +1,17 @@
 ---
 title: "WorldProviderHell"
-description: "Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)"
+description: "public class WorldProviderHell extends WorldProvider"
 package: "net/minecraft/world"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/WorldProviderHell.html"
 sourceType: javadoc
 ---
 
 # WorldProviderHell
+
+**Inheritance:** java.lang.Object → net.minecraft.world.WorldProvider → net.minecraft.world.WorldProviderHell
 
 ## Class signature
 
@@ -15,25 +19,21 @@ sourceType: javadoc
 public class WorldProviderHell extends WorldProvider
 ```
 
-## Constructors
-
-- `public WorldProviderHell()`
-
 ## Methods
 
-- `public void registerWorldChunkManager()`
-- `public Vec3 getFogColor(float p_76562_1_, float p_76562_2_)`
-- `protected void generateLightBrightnessTable()`
-- `public IChunkProvider createChunkGenerator()`
-- `public boolean isSurfaceWorld()`
-- `public boolean canCoordinateBeSpawn(int x, int z)`
-- `public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_)`
-- `public boolean canRespawnHere()`
-- `public boolean doesXZShowFog(int x, int z)`
-- `public java.lang.String getDimensionName()`
-- `public java.lang.String getInternalNameSuffix()`
-- `public WorldBorder getWorldBorder()`
+- `float calculateCelestialAngle(long p_76563_1_, float p_76563_3_)` — Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
+- `boolean canCoordinateBeSpawn(int x, int z)` — Will check if the x, z position specified is alright to be set as the map spawn point
+- `boolean canRespawnHere()` — True if the player can respawn in this dimension (true = overworld, false = nether).
+- `IChunkProvider createChunkGenerator()` — Returns a new chunk provider which generates chunks for this world
+- `boolean doesXZShowFog(int x, int z)` — Returns true if the given X,Z coordinate should show environmental fog.
+- `protected void generateLightBrightnessTable()` — Creates the light to brightness table
+- `java.lang.String getDimensionName()` — Returns the dimension's name, e.g.
+- `Vec3 getFogColor(float p_76562_1_, float p_76562_2_)` — Return Vec3D with biome specific fog color
+- `java.lang.String getInternalNameSuffix()`
+- `WorldBorder getWorldBorder()`
+- `boolean isSurfaceWorld()` — Returns 'true' if in the "main surface world", but 'false' if in the Nether or End dimensions.
+- `void registerWorldChunkManager()` — creates a new world chunk manager for WorldProvider
 
-## Description
+## Fields
 
-Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
+- `WorldProviderHell`

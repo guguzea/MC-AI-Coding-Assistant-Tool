@@ -1,19 +1,29 @@
 ---
 title: "BakedItemModel.BakedGuiItemModel"
-description: ""
+description: "public static class BakedItemModel.BakedGuiItemModel<T extends BakedItemModel> extends BakedModelWrapper<T>"
 package: "net/minecraftforge/client/model"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/client/model/BakedItemModel.BakedGuiItemModel.html"
 sourceType: javadoc
 ---
 
 # BakedItemModel.BakedGuiItemModel
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.BakedModelWrapper<T> → net.minecraftforge.client.model.BakedItemModel.BakedGuiItemModel<T>
 
-- `public BakedGuiItemModel( T originalModel)`
+## Class signature
+
+```java
+public static class BakedItemModel.BakedGuiItemModel<T extends BakedItemModel> extends BakedModelWrapper<T>
+```
 
 ## Methods
 
-- `public java.util.List< BakedQuad > getQuads( IBlockState state, EnumFacing side, long rand)`
-- `public <any> handlePerspective( ItemCameraTransforms.TransformType type)`
+- `java.util.List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)`
+- `<any> handlePerspective(ItemCameraTransforms.TransformType type)`
+
+## Fields
+
+- `BakedGuiItemModel`

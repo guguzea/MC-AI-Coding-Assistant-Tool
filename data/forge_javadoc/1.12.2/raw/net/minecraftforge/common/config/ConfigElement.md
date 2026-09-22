@@ -1,13 +1,17 @@
 ---
 title: "ConfigElement"
-description: "This class bridges the gap between the FML config GUI classes and the Forge Configuration classes."
+description: "public class ConfigElement extends java.lang.Object implements IConfigElement"
 package: "net/minecraftforge/common/config"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/common/config/ConfigElement.html"
 sourceType: javadoc
 ---
 
 # ConfigElement
+
+**Inheritance:** java.lang.Object → net.minecraftforge.common.config.ConfigElement
 
 ## Class signature
 
@@ -17,44 +21,40 @@ public class ConfigElement extends java.lang.Object implements IConfigElement
 
 ## Constructors
 
-- `public ConfigElement( ConfigCategory category)`
-- `public ConfigElement( Property prop)`
+- `ConfigElement(ConfigCategory category)`
+- `ConfigElement(Property prop)`
 
 ## Methods
 
-- `public ConfigElement listCategoriesFirst(boolean categoriesFirst)`
-- `public java.util.List< IConfigElement > getChildElements()`
-- `public java.lang.String getName()`
-- `public boolean isProperty()`
-- `public java.lang.Class<? extends GuiConfigEntries.IConfigEntry > getConfigEntryClass()`
-- `public java.lang.Class<? extends GuiEditArrayEntries.IArrayEntry > getArrayEntryClass()`
-- `public java.lang.String getQualifiedName()`
-- `public ConfigGuiType getType()`
-- `public static ConfigGuiType getType( Property prop)`
-- `public boolean isList()`
-- `public boolean isListLengthFixed()`
-- `public int getMaxListLength()`
-- `public java.lang.String getComment()`
-- `public boolean isDefault()`
-- `public void setToDefault()`
-- `public boolean requiresWorldRestart()`
-- `public boolean showInGui()`
-- `public boolean requiresMcRestart()`
-- `public java.lang.String[] getValidValues()`
-- `public java.lang.String[] getValidValuesDisplay()`
-- `public java.lang.String getLanguageKey()`
-- `public java.lang.Object getDefault()`
-- `public java.lang.Object[] getDefaults()`
-- `public java.util.regex.Pattern getValidationPattern()`
-- `public java.lang.Object get()`
-- `public java.lang.Object[] getList()`
-- `public void set(java.lang.Object value)`
-- `public void set(java.lang.Object[] aVal)`
-- `public java.lang.Object getMinValue()`
-- `public java.lang.Object getMaxValue()`
-- `public boolean hasSlidingControl()`
-- `public static IConfigElement from(java.lang.Class<?> configClass)`
-
-## Description
-
-This class bridges the gap between the FML config GUI classes and the Forge Configuration classes.
+- `static IConfigElement from(java.lang.Class<?> configClass)` — Provides a ConfigElement derived from the annotation-based config system
+- `java.lang.Object get()` — [Property] Gets this property value.
+- `java.lang.Class<? extends GuiEditArrayEntries.IArrayEntry> getArrayEntryClass()` — This method returns a class that implements GuiEditArrayEntries.IArrayEntry .
+- `java.util.List<IConfigElement> getChildElements()` — [Category] Gets this category's child categories/properties.
+- `java.lang.String getComment()` — [Property, Category] Gets the comment for this object.
+- `java.lang.Class<? extends GuiConfigEntries.IConfigEntry> getConfigEntryClass()` — This method returns a class that implements GuiConfigEntries.IConfigEntry or null.
+- `java.lang.Object getDefault()` — [Property] Gets this property's default value.
+- `java.lang.Object[] getDefaults()` — [Property] Gets this property's default values.
+- `java.lang.String getLanguageKey()` — [Property, Category] Gets a language key for localization of config GUI entry names.
+- `java.lang.Object[] getList()` — [Property] Gets this property value as a list.
+- `int getMaxListLength()` — [Property] Gets the max length of this list property, or -1 if the length is unlimited.
+- `java.lang.Object getMaxValue()` — [Property] Gets this property's maximum value.
+- `java.lang.Object getMinValue()` — [Property] Gets this property's minimum value.
+- `java.lang.String getName()` — [Property, Category] Gets the name of this object.
+- `java.lang.String getQualifiedName()` — [Category] Gets the qualified name of this object.
+- `ConfigGuiType getType()` — [Property, Category] Gets the ConfigGuiType value corresponding to the type of this property object, or CONFIG_CATEGORY if this is a category object.
+- `static ConfigGuiType getType(Property prop)`
+- `java.util.regex.Pattern getValidationPattern()` — [Property] Gets a Pattern object used in String property input validation.
+- `java.lang.String[] getValidValues()` — [Property] Gets a String array of valid values for this property.
+- `java.lang.String[] getValidValuesDisplay()` — [Property] Gets a String array of the versions of this property's valid values that will display in the config GUI.
+- `boolean hasSlidingControl()`
+- `boolean isDefault()` — [Property] Is this property value equal to the default value?
+- `boolean isList()` — [Property] Is this property object a list?
+- `boolean isListLengthFixed()` — [Property] Does this list property have to remain a fixed length?
+- `boolean isProperty()` — [Property, Category] Is this object a property object?
+- `ConfigElement listCategoriesFirst(boolean categoriesFirst)`
+- `boolean requiresMcRestart()` — [Property, Category] Whether or not this element requires Minecraft to be restarted when changed.
+- `boolean requiresWorldRestart()` — [Property, Category] Whether or not this element is safe to modify while a world is running.
+- `void set(java.lang.Object value)` — [Property] Sets this property's value.
+- `void set(java.lang.Object[] aVal)` — [Property] Sets this property's value to the specified array.
+- `void setToDefault()` — [Property] Sets this property's value to the default value.
+- `boolean showInGui()` — [Property, Category] Whether or not this element should be allowed to show on config GUIs.

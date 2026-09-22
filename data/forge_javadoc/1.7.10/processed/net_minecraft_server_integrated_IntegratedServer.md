@@ -1,35 +1,37 @@
 # IntegratedServer
 
+**Inheritance:** java.lang.Object → net.minecraft.server.MinecraftServer → net.minecraft.server.integrated.IntegratedServer
+
 ## Class signature
 
 ```java
 public class IntegratedServer extends MinecraftServer
 ```
 
-## Constructors
-
-- `public IntegratedServer( Minecraft p_i1317_1_, java.lang.String p_i1317_2_, java.lang.String p_i1317_3_, WorldSettings p_i1317_4_)`
-
 ## Methods
 
-- `protected void loadAllWorlds(java.lang.String p_71247_1_, java.lang.String p_71247_2_, long p_71247_3_, WorldType p_71247_5_, java.lang.String p_71247_6_)`
-- `protected boolean startServer() throws java.io.IOException`
-- `public void tick()`
-- `public boolean canStructuresSpawn()`
-- `public WorldSettings.GameType getGameType()`
-- `public EnumDifficulty func_147135_j()`
-- `public boolean isHardcore()`
-- `public boolean func_152363_m()`
+- `CrashReport addServerInfoToCrashReport(CrashReport p_71230_1_)`
+- `void addServerStatsToSnooper(PlayerUsageSnooper p_70000_1_)`
+- `boolean canStructuresSpawn()`
+- `protected void finalTick(CrashReport p_71228_1_)`
+- `EnumDifficulty func_147135_j()`
+- `boolean func_152363_m()`
 - `protected java.io.File getDataDirectory()`
-- `public boolean isDedicatedServer()`
-- `protected void finalTick( CrashReport p_71228_1_)`
-- `public CrashReport addServerInfoToCrashReport( CrashReport p_71230_1_)`
-- `public void addServerStatsToSnooper( PlayerUsageSnooper p_70000_1_)`
-- `public boolean isSnooperEnabled()`
-- `public java.lang.String shareToLAN( WorldSettings.GameType p_71206_1_, boolean p_71206_2_)`
-- `public void stopServer()`
-- `public void initiateShutdown()`
-- `public boolean getPublic()`
-- `public void setGameType( WorldSettings.GameType p_71235_1_)`
-- `public boolean isCommandBlockEnabled()`
-- `public int getOpPermissionLevel()`
+- `WorldSettings.GameType getGameType()`
+- `int getOpPermissionLevel()`
+- `boolean getPublic()`
+- `void initiateShutdown()`
+- `boolean isCommandBlockEnabled()`
+- `boolean isDedicatedServer()`
+- `boolean isHardcore()`
+- `boolean isSnooperEnabled()`
+- `protected void loadAllWorlds(java.lang.String p_71247_1_, java.lang.String p_71247_2_, long p_71247_3_, WorldType p_71247_5_, java.lang.String p_71247_6_)`
+- `void setGameType(WorldSettings.GameType p_71235_1_)`
+- `java.lang.String shareToLAN(WorldSettings.GameType p_71206_1_, boolean p_71206_2_)`
+- `protected boolean startServer()`
+- `void stopServer()`
+- `void tick()`
+
+## Fields
+
+- `IntegratedServer`

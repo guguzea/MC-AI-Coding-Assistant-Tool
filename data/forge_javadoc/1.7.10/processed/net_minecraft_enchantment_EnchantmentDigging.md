@@ -1,18 +1,20 @@
 # EnchantmentDigging
 
+**Inheritance:** java.lang.Object → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentDigging
+
 ## Class signature
 
 ```java
 public class EnchantmentDigging extends Enchantment
 ```
 
-## Constructors
-
-- `protected EnchantmentDigging(int p_i1925_1_, int p_i1925_2_)`
-
 ## Methods
 
-- `public int getMinEnchantability(int p_77321_1_)`
-- `public int getMaxEnchantability(int p_77317_1_)`
-- `public int getMaxLevel()`
-- `public boolean canApply( ItemStack p_92089_1_)`
+- `boolean canApply(ItemStack p_92089_1_)`
+- `int getMaxEnchantability(int p_77317_1_)`
+- `int getMaxLevel()`
+- `int getMinEnchantability(int p_77321_1_)`
+
+## Fields
+
+- `protected EnchantmentDigging`

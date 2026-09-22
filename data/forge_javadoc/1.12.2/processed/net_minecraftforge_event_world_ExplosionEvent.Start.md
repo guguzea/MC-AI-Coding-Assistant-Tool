@@ -1,9 +1,13 @@
 # ExplosionEvent.Start
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.ExplosionEvent → net.minecraftforge.event.world.ExplosionEvent.Start
+
+## Class signature
+
+```java
+public static class ExplosionEvent.Start extends ExplosionEvent
+```
+
 ## Constructors
 
-- `public Start( World world, Explosion explosion)`
-
-## Description
-
-ExplosionEvent.Start is fired before the explosion actually occurs. Canceling this event will stop the explosion. This event is Cancelable . This event does not use HasResult . This event is fired on
+- `Start(World world, Explosion explosion)`

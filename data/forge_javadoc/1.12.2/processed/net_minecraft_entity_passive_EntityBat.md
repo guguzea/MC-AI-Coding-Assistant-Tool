@@ -1,39 +1,41 @@
 # EntityBat
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.passive.EntityAmbientCreature → net.minecraft.entity.passive.EntityBat
+
 ## Class signature
 
 ```java
 public class EntityBat extends EntityAmbientCreature
 ```
 
-## Constructors
-
-- `public EntityBat( World worldIn)`
-
 ## Methods
 
-- `protected void entityInit()`
-- `protected float getSoundVolume()`
-- `protected float getSoundPitch()`
-- `public SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
-- `protected SoundEvent getDeathSound()`
-- `public boolean canBePushed()`
-- `protected void collideWithEntity( Entity entityIn)`
-- `protected void collideWithNearbyEntities()`
 - `protected void applyEntityAttributes()`
-- `public boolean getIsBatHanging()`
-- `public void setIsBatHanging(boolean isHanging)`
-- `public void onUpdate()`
-- `protected void updateAITasks()`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBePushed()`
 - `protected boolean canTriggerWalking()`
-- `public void fall(float distance, float damageMultiplier)`
-- `protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)`
-- `public boolean doesEntityNotTriggerPressurePlate()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public static void registerFixesBat( DataFixer fixer)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public boolean getCanSpawnHere()`
-- `public float getEyeHeight()`
+- `protected void collideWithEntity(Entity entityIn)`
+- `protected void collideWithNearbyEntities()`
+- `boolean doesEntityNotTriggerPressurePlate()`
+- `protected void entityInit()`
+- `void fall(float distance, float damageMultiplier)`
+- `SoundEvent getAmbientSound()`
+- `boolean getCanSpawnHere()`
+- `protected SoundEvent getDeathSound()`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
+- `boolean getIsBatHanging()`
 - `protected ResourceLocation getLootTable()`
+- `protected float getSoundPitch()`
+- `protected float getSoundVolume()`
+- `void onUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesBat(DataFixer fixer)`
+- `void setIsBatHanging(boolean isHanging)`
+- `protected void updateAITasks()`
+- `protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityBat`

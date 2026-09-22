@@ -1,19 +1,21 @@
 # CPacketPlayerTryUseItem
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketPlayerTryUseItem
+
 ## Class signature
 
 ```java
-public class CPacketPlayerTryUseItem extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketPlayerTryUseItem extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketPlayerTryUseItem()`
-- `public CPacketPlayerTryUseItem( EnumHand handIn)`
+- `CPacketPlayerTryUseItem()`
+- `CPacketPlayerTryUseItem(EnumHand handIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public EnumHand getHand()`
+- `EnumHand getHand()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

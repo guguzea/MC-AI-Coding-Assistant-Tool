@@ -1,15 +1,17 @@
 # JarDiscoverer
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.discovery.JarDiscoverer
+
 ## Class signature
 
 ```java
 public class JarDiscoverer extends java.lang.Object implements ITypeDiscoverer
 ```
 
-## Constructors
-
-- `public JarDiscoverer()`
-
 ## Methods
 
-- `public java.util.List< ModContainer > discover( ModCandidate candidate, ASMDataTable table)`
+- `java.util.List<ModContainer> discover(ModCandidate candidate, ASMDataTable table)`
+
+## Fields
+
+- `JarDiscoverer`

@@ -8,11 +8,7 @@ public interface IContext
 
 ## Methods
 
-- `World getWorld()`
+- `<T> T get(ContextKey<T> key)`
 - `EntityPlayer getPlayer()`
-- `<T> T get( ContextKey <T> key)`
-- `boolean has( ContextKey <?> key)`
-
-## Description
-
-Use BlockPosContext or PlayerContext when possible
+- `World getWorld()` — World from where permission is requested.
+- `boolean has(ContextKey<?> key)`

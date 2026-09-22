@@ -1,13 +1,17 @@
 ---
 title: "GuiConfirmOpenLink"
-description: "Called by the controls from the buttonList when activated."
+description: "public class GuiConfirmOpenLink extends GuiYesNo"
 package: "net/minecraft/client/gui"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/gui/GuiConfirmOpenLink.html"
 sourceType: javadoc
 ---
 
 # GuiConfirmOpenLink
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiYesNo → net.minecraft.client.gui.GuiConfirmOpenLink
 
 ## Class signature
 
@@ -15,18 +19,14 @@ sourceType: javadoc
 public class GuiConfirmOpenLink extends GuiYesNo
 ```
 
-## Constructors
-
-- `public GuiConfirmOpenLink( GuiYesNoCallback p_i1084_1_, java.lang.String linkTextIn, int p_i1084_3_, boolean p_i1084_4_)`
-
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void copyLinkToClipboard()`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `public void disableSecurityWarning()`
+- `protected void actionPerformed(GuiButton button)` — Called by the controls from the buttonList when activated.
+- `void copyLinkToClipboard()` — Copies the link to the system clipboard.
+- `void disableSecurityWarning()`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)` — Draws the screen and all the components in it.
+- `void initGui()` — Adds the buttons (and other controls) to the screen in question.
 
-## Description
+## Fields
 
-Called by the controls from the buttonList when activated.
+- `GuiConfirmOpenLink`

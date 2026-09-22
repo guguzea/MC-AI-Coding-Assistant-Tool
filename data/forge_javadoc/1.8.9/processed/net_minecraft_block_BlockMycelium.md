@@ -1,5 +1,7 @@
 # BlockMycelium
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockMycelium
+
 ## Class signature
 
 ```java
@@ -8,17 +10,17 @@ public class BlockMycelium extends Block
 
 ## Constructors
 
-- `protected BlockMycelium()`
+- `BlockMycelium()`
 
 ## Methods
 
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public void randomDisplayTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockState createBlockState()`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)` — Get the actual Block state of this Block at the given position.
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Get the actual Block state of this Block at the given position.
+- `static PropertyBool SNOWY`

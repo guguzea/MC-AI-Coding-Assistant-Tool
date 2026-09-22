@@ -3,11 +3,15 @@ title: "EntityNoteFX"
 description: "public class EntityNoteFX extends EntityFX"
 package: "net/minecraft/client/particle"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/particle/EntityNoteFX.html"
 sourceType: javadoc
 ---
 
 # EntityNoteFX
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.client.particle.EntityFX → net.minecraft.client.particle.EntityNoteFX
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class EntityNoteFX extends EntityFX
 ```
 
-## Constructors
-
-- `public EntityNoteFX( World p_i1216_1_, double p_i1216_2_, double p_i1216_4_, double p_i1216_6_, double p_i1216_8_, double p_i1216_10_, double p_i1216_12_)`
-- `public EntityNoteFX( World p_i1217_1_, double p_i1217_2_, double p_i1217_4_, double p_i1217_6_, double p_i1217_8_, double p_i1217_10_, double p_i1217_12_, float p_i1217_14_)`
-
 ## Methods
 
-- `public void renderParticle( Tessellator p_70539_1_, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)`
-- `public void onUpdate()`
+- `void onUpdate()`
+- `void renderParticle(Tessellator p_70539_1_, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)`
+
+## Fields
+
+- `EntityNoteFX`
+- `EntityNoteFX`

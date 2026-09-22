@@ -1,5 +1,11 @@
 # IFMLLoadingPlugin.SortingIndex
 
-## Description
+## Class signature
 
-A simple sorting index, interleaved with other tweakers from other sources, as well as FML
+```java
+public static @interface IFMLLoadingPlugin.SortingIndex
+```
+
+## Elements
+
+- `int value`

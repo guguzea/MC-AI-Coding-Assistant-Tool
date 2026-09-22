@@ -1,5 +1,7 @@
 # LootingEnchantBonus
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction → net.minecraft.world.storage.loot.functions.LootingEnchantBonus
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class LootingEnchantBonus extends LootFunction
 
 ## Constructors
 
-- `public LootingEnchantBonus( LootCondition [] p_i47145_1_, RandomValueRange p_i47145_2_, int p_i47145_3_)`
+- `LootingEnchantBonus(LootCondition [] p_i47145_1_, RandomValueRange p_i47145_2_, int p_i47145_3_)`
 
 ## Methods
 
-- `public ItemStack apply( ItemStack stack, java.util.Random rand, LootContext context)`
+- `ItemStack apply(ItemStack stack, java.util.Random rand, LootContext context)`

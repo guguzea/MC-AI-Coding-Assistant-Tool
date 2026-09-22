@@ -1,11 +1,13 @@
 # ParticleSplash
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleRain → net.minecraft.client.particle.ParticleSplash
+
 ## Class signature
 
 ```java
 public class ParticleSplash extends ParticleRain
 ```
 
-## Constructors
+## Fields
 
-- `protected ParticleSplash( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn)`
+- `protected ParticleSplash`

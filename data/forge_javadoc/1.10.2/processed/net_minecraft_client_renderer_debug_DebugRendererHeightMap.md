@@ -1,5 +1,7 @@
 # DebugRendererHeightMap
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.debug.DebugRendererHeightMap
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class DebugRendererHeightMap extends java.lang.Object implements DebugRen
 
 ## Constructors
 
-- `public DebugRendererHeightMap( Minecraft minecraftIn)`
+- `DebugRendererHeightMap(Minecraft minecraftIn)`
 
 ## Methods
 
-- `public void render(float p_190060_1_, long p_190060_2_)`
+- `void render(float p_190060_1_, long p_190060_2_)`

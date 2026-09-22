@@ -3,11 +3,15 @@ title: "PhaseChargingPlayer"
 description: "public class PhaseChargingPlayer extends PhaseBase"
 package: "net/minecraft/entity/boss/dragon/phase"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/boss/dragon/phase/PhaseChargingPlayer.html"
 sourceType: javadoc
 ---
 
 # PhaseChargingPlayer
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseChargingPlayer
 
 ## Class signature
 
@@ -15,15 +19,15 @@ sourceType: javadoc
 public class PhaseChargingPlayer extends PhaseBase
 ```
 
-## Constructors
-
-- `public PhaseChargingPlayer( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public void doLocalUpdate()`
-- `public void initPhase()`
-- `public void setTarget( Vec3d p_188668_1_)`
-- `public float getMaxRiseOrFall()`
-- `@Nullable public Vec3d getTargetLocation()`
-- `public PhaseList < PhaseChargingPlayer > getPhaseList()`
+- `void doLocalUpdate()`
+- `float getMaxRiseOrFall()`
+- `PhaseList<PhaseChargingPlayer> getPhaseList()`
+- `Vec3d getTargetLocation()`
+- `void initPhase()`
+- `void setTarget(Vec3d p_188668_1_)`
+
+## Fields
+
+- `PhaseChargingPlayer`

@@ -1,13 +1,17 @@
 ---
 title: "GuiUnicodeGlyphButton"
-description: "This class provides a button that shows a string glyph at the beginning. The glyph can be scaled using the glyphScale parameter."
+description: "public class GuiUnicodeGlyphButton extends GuiButtonExt"
 package: "cpw/mods/fml/client/config"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/client/config/GuiUnicodeGlyphButton.html"
 sourceType: javadoc
 ---
 
 # GuiUnicodeGlyphButton
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiButton → cpw.mods.fml.client.config.GuiButtonExt → cpw.mods.fml.client.config.GuiUnicodeGlyphButton
 
 ## Class signature
 
@@ -17,12 +21,13 @@ public class GuiUnicodeGlyphButton extends GuiButtonExt
 
 ## Constructors
 
-- `public GuiUnicodeGlyphButton(int id, int xPos, int yPos, int width, int height, java.lang.String displayString, java.lang.String glyph, float glyphScale)`
+- `GuiUnicodeGlyphButton(int id, int xPos, int yPos, int width, int height, java.lang.String displayString, java.lang.String glyph, float glyphScale)`
 
 ## Methods
 
-- `public void drawButton( Minecraft mc, int mouseX, int mouseY)`
+- `void drawButton(Minecraft mc, int mouseX, int mouseY)` — Draws this button to the screen.
 
-## Description
+## Fields
 
-This class provides a button that shows a string glyph at the beginning. The glyph can be scaled using the glyphScale parameter.
+- `java.lang.String glyph`
+- `float glyphScale`

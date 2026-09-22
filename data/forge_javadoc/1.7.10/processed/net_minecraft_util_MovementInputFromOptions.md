@@ -1,15 +1,17 @@
 # MovementInputFromOptions
 
+**Inheritance:** java.lang.Object → net.minecraft.util.MovementInput → net.minecraft.util.MovementInputFromOptions
+
 ## Class signature
 
 ```java
 public class MovementInputFromOptions extends MovementInput
 ```
 
-## Constructors
-
-- `public MovementInputFromOptions( GameSettings p_i1237_1_)`
-
 ## Methods
 
-- `public void updatePlayerMoveState()`
+- `void updatePlayerMoveState()`
+
+## Fields
+
+- `MovementInputFromOptions`

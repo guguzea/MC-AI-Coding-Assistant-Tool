@@ -1,13 +1,17 @@
 ---
 title: "BlockLadder"
-description: "Convert the BlockState into the correct metadata value"
+description: "public class BlockLadder extends Block"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockLadder.html"
 sourceType: javadoc
 ---
 
 # BlockLadder
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockLadder
 
 ## Class signature
 
@@ -17,25 +21,25 @@ public class BlockLadder extends Block
 
 ## Constructors
 
-- `protected BlockLadder()`
+- `BlockLadder()`
 
 ## Methods
 
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public void setBlockBoundsBasedOnState( IBlockAccess worldIn, BlockPos pos)`
-- `public AxisAlignedBB getSelectedBoundingBox( World worldIn, BlockPos pos)`
-- `public boolean isOpaqueCube()`
-- `public boolean isFullCube()`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public IBlockState onBlockPlaced( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `protected boolean canBlockStay( World worldIn, BlockPos pos, EnumFacing facing)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public EnumWorldBlockLayer getBlockLayer()`
-- `public int getMetaFromState( IBlockState state)`
+- `protected boolean canBlockStay(World worldIn, BlockPos pos, EnumFacing facing)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
 - `protected BlockState createBlockState()`
-- `public boolean isLadder( IBlockAccess world, BlockPos pos, EntityLivingBase entity)`
+- `EnumWorldBlockLayer getBlockLayer()`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)`
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `boolean isFullCube()`
+- `boolean isLadder(IBlockAccess world, BlockPos pos, EntityLivingBase entity)` — Checks if a player or entity can use this block to 'climb' like a ladder.
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)` — Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the IBlockstate
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)`
 
-## Description
+## Fields
 
-Convert the BlockState into the correct metadata value
+- `static PropertyDirection FACING`

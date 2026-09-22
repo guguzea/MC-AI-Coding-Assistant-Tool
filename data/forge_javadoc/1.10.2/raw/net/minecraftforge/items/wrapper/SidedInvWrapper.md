@@ -1,13 +1,17 @@
 ---
 title: "SidedInvWrapper"
-description: "Extracts an ItemStack from the given slot."
+description: "public class SidedInvWrapper extends java.lang.Object implements IItemHandlerModifiable"
 package: "net/minecraftforge/items/wrapper"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/items/wrapper/SidedInvWrapper.html"
 sourceType: javadoc
 ---
 
 # SidedInvWrapper
+
+**Inheritance:** java.lang.Object → net.minecraftforge.items.wrapper.SidedInvWrapper
 
 ## Class signature
 
@@ -17,19 +21,20 @@ public class SidedInvWrapper extends java.lang.Object implements IItemHandlerMod
 
 ## Constructors
 
-- `public SidedInvWrapper( ISidedInventory inv, EnumFacing side)`
+- `SidedInvWrapper(ISidedInventory inv, EnumFacing side)`
 
 ## Methods
 
-- `public static int getSlot( ISidedInventory inv, int slot, EnumFacing side)`
-- `public boolean equals(java.lang.Object o)`
-- `public int hashCode()`
-- `public int getSlots()`
-- `public ItemStack getStackInSlot(int slot)`
-- `public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)`
-- `public void setStackInSlot(int slot, ItemStack stack)`
-- `public ItemStack extractItem(int slot, int amount, boolean simulate)`
+- `boolean equals(java.lang.Object o)`
+- `ItemStack extractItem(int slot, int amount, boolean simulate)` — Extracts an ItemStack from the given slot.
+- `static int getSlot(ISidedInventory inv, int slot, EnumFacing side)`
+- `int getSlots()` — Returns the number of slots available
+- `ItemStack getStackInSlot(int slot)` — Returns the ItemStack in a given slot.
+- `int hashCode()`
+- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)` — Inserts an ItemStack into the given slot and return the remainder.
+- `void setStackInSlot(int slot, ItemStack stack)` — Overrides the stack in the given slot.
 
-## Description
+## Fields
 
-Extracts an ItemStack from the given slot.
+- `protected ISidedInventory inv`
+- `protected EnumFacing side`

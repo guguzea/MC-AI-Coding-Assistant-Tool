@@ -1,5 +1,7 @@
 # ClientCommandHandler
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandHandler → net.minecraftforge.client.ClientCommandHandler
+
 ## Class signature
 
 ```java
@@ -8,14 +10,15 @@ public class ClientCommandHandler extends CommandHandler
 
 ## Constructors
 
-- `public ClientCommandHandler()`
+- `ClientCommandHandler()`
 
 ## Methods
 
-- `public int executeCommand( ICommandSender sender, java.lang.String message)`
-- `public void autoComplete(java.lang.String leftOfCursor)`
+- `void autoComplete(java.lang.String leftOfCursor)`
+- `int executeCommand(ICommandSender sender, java.lang.String message)`
 - `protected MinecraftServer getServer()`
 
-## Description
+## Fields
 
-The class that handles client-side chat commands. You should register any commands that you want handled on the client with this command handler. If there is a command with the same name registered bo
+- `static ClientCommandHandler instance`
+- `java.lang.String[] latestAutoComplete`

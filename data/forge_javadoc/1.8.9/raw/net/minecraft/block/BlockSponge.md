@@ -1,13 +1,17 @@
 ---
 title: "BlockSponge"
-description: "Gets the metadata of the item this Block can drop."
+description: "public class BlockSponge extends Block"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockSponge.html"
 sourceType: javadoc
 ---
 
 # BlockSponge
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockSponge
 
 ## Class signature
 
@@ -17,21 +21,21 @@ public class BlockSponge extends Block
 
 ## Constructors
 
-- `protected BlockSponge()`
+- `BlockSponge()`
 
 ## Methods
 
-- `public java.lang.String getLocalizedName()`
-- `public int damageDropped( IBlockState state)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `protected void tryAbsorb( World worldIn, BlockPos pos, IBlockState state)`
-- `public void getSubBlocks( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > list)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockState createBlockState()`
-- `public void randomDisplayTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `int damageDropped(IBlockState state)` — Gets the metadata of the item this Block can drop.
+- `java.lang.String getLocalizedName()` — Gets the localized name of this block.
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `void getSubBlocks(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> list)` — returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `protected void tryAbsorb(World worldIn, BlockPos pos, IBlockState state)`
 
-## Description
+## Fields
 
-Gets the metadata of the item this Block can drop.
+- `static PropertyBool WET`

@@ -1,20 +1,30 @@
 ---
 title: "CPacketPlayer.Rotation"
-description: ""
+description: "public static class CPacketPlayer.Rotation extends CPacketPlayer"
 package: "net/minecraft/network/play/client"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/network/play/client/CPacketPlayer.Rotation.html"
 sourceType: javadoc
 ---
 
 # CPacketPlayer.Rotation
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketPlayer → net.minecraft.network.play.client.CPacketPlayer.Rotation
 
-- `public Rotation()`
-- `public Rotation(float yawIn, float pitchIn, boolean onGroundIn)`
+## Class signature
+
+```java
+public static class CPacketPlayer.Rotation extends CPacketPlayer
+```
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`
+
+## Fields
+
+- `Rotation`
+- `Rotation`

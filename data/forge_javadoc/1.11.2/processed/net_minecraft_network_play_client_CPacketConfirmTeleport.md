@@ -1,19 +1,21 @@
 # CPacketConfirmTeleport
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketConfirmTeleport
+
 ## Class signature
 
 ```java
-public class CPacketConfirmTeleport extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketConfirmTeleport extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketConfirmTeleport()`
-- `public CPacketConfirmTeleport(int teleportIdIn)`
+- `CPacketConfirmTeleport()`
+- `CPacketConfirmTeleport(int teleportIdIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public int getTeleportId()`
+- `int getTeleportId()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

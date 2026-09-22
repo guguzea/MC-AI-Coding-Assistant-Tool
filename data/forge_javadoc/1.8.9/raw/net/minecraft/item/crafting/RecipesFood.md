@@ -1,13 +1,17 @@
 ---
 title: "RecipesFood"
-description: "Adds the food recipes to the CraftingManager."
+description: "public class RecipesFood extends java.lang.Object"
 package: "net/minecraft/item/crafting"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/item/crafting/RecipesFood.html"
 sourceType: javadoc
 ---
 
 # RecipesFood
+
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.RecipesFood
 
 ## Class signature
 
@@ -17,12 +21,8 @@ public class RecipesFood extends java.lang.Object
 
 ## Constructors
 
-- `public RecipesFood()`
+- `RecipesFood()`
 
 ## Methods
 
-- `public void addRecipes( CraftingManager p_77608_1_)`
-
-## Description
-
-Adds the food recipes to the CraftingManager.
+- `void addRecipes(CraftingManager p_77608_1_)` — Adds the food recipes to the CraftingManager.

@@ -1,5 +1,7 @@
 # ReobfuscationMarker
 
-## Description
+## Class signature
 
-Used to force certain classes to reobfuscate
+```java
+public @interface ReobfuscationMarker
+```

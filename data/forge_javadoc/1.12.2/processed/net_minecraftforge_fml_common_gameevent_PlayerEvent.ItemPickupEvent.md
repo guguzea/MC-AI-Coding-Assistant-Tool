@@ -1,14 +1,22 @@
 # PlayerEvent.ItemPickupEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.gameevent.PlayerEvent → net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent
+
+## Class signature
+
+```java
+public static class PlayerEvent.ItemPickupEvent extends PlayerEvent
+```
+
 ## Constructors
 
-- `public ItemPickupEvent( EntityPlayer player, EntityItem entPickedUp, ItemStack stack)`
+- `ItemPickupEvent(EntityPlayer player, EntityItem entPickedUp, ItemStack stack)`
 
 ## Methods
 
-- `public ItemStack getStack()`
-- `public EntityItem getOriginalEntity()`
+- `EntityItem getOriginalEntity()`
+- `ItemStack getStack()`
 
-## Description
+## Fields
 
-Deprecated.
+- `EntityItem pickedUp`

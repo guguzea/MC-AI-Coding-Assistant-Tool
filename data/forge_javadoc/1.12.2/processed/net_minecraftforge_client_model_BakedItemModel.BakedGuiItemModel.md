@@ -1,10 +1,18 @@
 # BakedItemModel.BakedGuiItemModel
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.BakedModelWrapper<T> → net.minecraftforge.client.model.BakedItemModel.BakedGuiItemModel<T>
 
-- `public BakedGuiItemModel( T originalModel)`
+## Class signature
+
+```java
+public static class BakedItemModel.BakedGuiItemModel<T extends BakedItemModel> extends BakedModelWrapper<T>
+```
 
 ## Methods
 
-- `public java.util.List< BakedQuad > getQuads( IBlockState state, EnumFacing side, long rand)`
-- `public <any> handlePerspective( ItemCameraTransforms.TransformType type)`
+- `java.util.List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)`
+- `<any> handlePerspective(ItemCameraTransforms.TransformType type)`
+
+## Fields
+
+- `BakedGuiItemModel`

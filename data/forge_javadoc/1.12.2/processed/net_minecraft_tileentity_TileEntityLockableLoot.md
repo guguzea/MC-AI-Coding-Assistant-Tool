@@ -1,5 +1,7 @@
 # TileEntityLockableLoot
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityLockable → net.minecraft.tileentity.TileEntityLockableLoot
+
 ## Class signature
 
 ```java
@@ -8,27 +10,33 @@ public abstract class TileEntityLockableLoot extends TileEntityLockable implemen
 
 ## Constructors
 
-- `public TileEntityLockableLoot()`
+- `TileEntityLockableLoot()`
 
 ## Methods
 
-- `protected boolean checkLootAndRead( NBTTagCompound compound)`
-- `protected boolean checkLootAndWrite( NBTTagCompound compound)`
-- `public void fillWithLoot( EntityPlayer player)`
-- `public ResourceLocation getLootTable()`
-- `public void setLootTable( ResourceLocation p_189404_1_, long p_189404_2_)`
-- `public boolean hasCustomName()`
-- `public void setCustomName(java.lang.String p_190575_1_)`
-- `public ItemStack getStackInSlot(int index)`
-- `public ItemStack decrStackSize(int index, int count)`
-- `public ItemStack removeStackFromSlot(int index)`
-- `public void setInventorySlotContents(int index, ItemStack stack)`
-- `public boolean isUsableByPlayer( EntityPlayer player)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public boolean isItemValidForSlot(int index, ItemStack stack)`
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public int getFieldCount()`
-- `public void clear()`
-- `protected abstract NonNullList < ItemStack > getItems()`
+- `protected boolean checkLootAndRead(NBTTagCompound compound)`
+- `protected boolean checkLootAndWrite(NBTTagCompound compound)`
+- `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `ItemStack decrStackSize(int index, int count)`
+- `void fillWithLoot(EntityPlayer player)`
+- `int getField(int id)`
+- `int getFieldCount()`
+- `protected abstract NonNullList<ItemStack> getItems()`
+- `ResourceLocation getLootTable()`
+- `ItemStack getStackInSlot(int index)`
+- `boolean hasCustomName()`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isUsableByPlayer(EntityPlayer player)`
+- `void openInventory(EntityPlayer player)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void setCustomName(java.lang.String p_190575_1_)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`
+- `void setLootTable(ResourceLocation p_189404_1_, long p_189404_2_)`
+
+## Fields
+
+- `protected java.lang.String customName`
+- `protected ResourceLocation lootTable`
+- `protected long lootTableSeed`

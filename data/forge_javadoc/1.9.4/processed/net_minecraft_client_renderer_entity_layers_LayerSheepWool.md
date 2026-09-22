@@ -1,16 +1,18 @@
 # LayerSheepWool
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.layers.LayerSheepWool
+
 ## Class signature
 
 ```java
-public class LayerSheepWool extends java.lang.Object implements LayerRenderer < EntitySheep >
+public class LayerSheepWool extends java.lang.Object implements LayerRenderer<EntitySheep>
 ```
 
 ## Constructors
 
-- `public LayerSheepWool( RenderSheep sheepRendererIn)`
+- `LayerSheepWool(RenderSheep sheepRendererIn)`
 
 ## Methods
 
-- `public void doRenderLayer( EntitySheep entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
-- `public boolean shouldCombineTextures()`
+- `void doRenderLayer(EntitySheep entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `boolean shouldCombineTextures()`

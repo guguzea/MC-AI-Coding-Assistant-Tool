@@ -1,5 +1,7 @@
 # LivingHurtEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingHurtEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,9 @@ public class LivingHurtEvent extends LivingEvent
 
 ## Constructors
 
-- `public LivingHurtEvent( EntityLivingBase entity, DamageSource source, float ammount)`
+- `LivingHurtEvent(EntityLivingBase entity, DamageSource source, float ammount)`
 
-## Description
+## Fields
 
-LivingHurtEvent is fired when an Entity is set to be hurt. This event is fired whenever an Entity is hurt in EntityLivingBase#damageEntity(DamageSource, float) and EntityPlayer#damageEntity(DamageSour
+- `float ammount`
+- `DamageSource source`

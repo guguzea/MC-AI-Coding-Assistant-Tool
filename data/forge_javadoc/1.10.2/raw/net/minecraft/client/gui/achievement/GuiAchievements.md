@@ -3,11 +3,15 @@ title: "GuiAchievements"
 description: "public class GuiAchievements extends GuiScreen implements IProgressMeter"
 package: "net/minecraft/client/gui/achievement"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/gui/achievement/GuiAchievements.html"
 sourceType: javadoc
 ---
 
 # GuiAchievements
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.achievement.GuiAchievements
 
 ## Class signature
 
@@ -17,16 +21,31 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter
 
 ## Constructors
 
-- `public GuiAchievements( GuiScreen parentScreenIn, StatisticsManager statFileWriterIn)`
+- `GuiAchievements(GuiScreen parentScreenIn, StatisticsManager statFileWriterIn)`
 
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `protected void keyTyped(char typedChar, int keyCode) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `public void doneLoading()`
-- `public void updateScreen()`
-- `protected void drawTitle()`
+- `protected void actionPerformed(GuiButton button)`
+- `boolean doesGuiPauseGame()`
+- `void doneLoading()`
 - `protected void drawAchievementScreen(int p_146552_1_, int p_146552_2_, float p_146552_3_)`
-- `public boolean doesGuiPauseGame()`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected void drawTitle()`
+- `void initGui()`
+- `protected void keyTyped(char typedChar, int keyCode)`
+- `void updateScreen()`
+
+## Fields
+
+- `protected int imageHeight`
+- `protected int imageWidth`
+- `protected GuiScreen parentScreen`
+- `protected int xLastScroll`
+- `protected double xScrollO`
+- `protected double xScrollP`
+- `protected double xScrollTarget`
+- `protected int yLastScroll`
+- `protected double yScrollO`
+- `protected double yScrollP`
+- `protected double yScrollTarget`
+- `protected float zoom`

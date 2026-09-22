@@ -1,13 +1,17 @@
 ---
 title: "ChunkCache"
-description: "set by !"
+description: "public class ChunkCache extends java.lang.Object implements IBlockAccess"
 package: "net/minecraft/world"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/ChunkCache.html"
 sourceType: javadoc
 ---
 
 # ChunkCache
+
+**Inheritance:** java.lang.Object → net.minecraft.world.ChunkCache
 
 ## Class signature
 
@@ -17,21 +21,25 @@ public class ChunkCache extends java.lang.Object implements IBlockAccess
 
 ## Constructors
 
-- `public ChunkCache( World worldIn, BlockPos posFromIn, BlockPos posToIn, int subIn)`
+- `ChunkCache(World worldIn, BlockPos posFromIn, BlockPos posToIn, int subIn)`
 
 ## Methods
 
-- `public boolean extendedLevelsInChunkCache()`
-- `public TileEntity getTileEntity( BlockPos pos)`
-- `public int getCombinedLight( BlockPos pos, int lightValue)`
-- `public IBlockState getBlockState( BlockPos pos)`
-- `public BiomeGenBase getBiomeGenForCoords( BlockPos pos)`
-- `public boolean isAirBlock( BlockPos pos)`
-- `public int getLightFor( EnumSkyBlock p_175628_1_, BlockPos pos)`
-- `public int getStrongPower( BlockPos pos, EnumFacing direction)`
-- `public WorldType getWorldType()`
-- `public boolean isSideSolid( BlockPos pos, EnumFacing side, boolean _default)`
+- `boolean extendedLevelsInChunkCache()` — set by !
+- `BiomeGenBase getBiomeGenForCoords(BlockPos pos)`
+- `IBlockState getBlockState(BlockPos pos)`
+- `int getCombinedLight(BlockPos pos, int lightValue)`
+- `int getLightFor(EnumSkyBlock p_175628_1_, BlockPos pos)`
+- `int getStrongPower(BlockPos pos, EnumFacing direction)`
+- `TileEntity getTileEntity(BlockPos pos)`
+- `WorldType getWorldType()`
+- `boolean isAirBlock(BlockPos pos)` — Checks to see if an air block exists at the provided location.
+- `boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default)` — FORGE: isSideSolid, pulled up from World
 
-## Description
+## Fields
 
-set by !
+- `protected Chunk [][] chunkArray`
+- `protected int chunkX`
+- `protected int chunkZ`
+- `protected boolean hasExtendedLevels` — set by !
+- `protected World worldObj` — Reference to the World object.

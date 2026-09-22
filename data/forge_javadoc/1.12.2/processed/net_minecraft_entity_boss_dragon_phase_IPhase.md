@@ -8,14 +8,14 @@ public interface IPhase
 
 ## Methods
 
-- `boolean getIsStationary()`
 - `void doClientRenderEffects()`
 - `void doLocalUpdate()`
-- `void onCrystalDestroyed( EntityEnderCrystal crystal, BlockPos pos, DamageSource dmgSrc, EntityPlayer plyr)`
-- `void initPhase()`
-- `void removeAreaEffect()`
+- `float getAdjustedDamage(MultiPartEntityPart pt, DamageSource src, float damage)`
+- `boolean getIsStationary()`
 - `float getMaxRiseOrFall()`
-- `float getYawFactor()`
-- `PhaseList <? extends IPhase > getType()`
 - `Vec3d getTargetLocation()`
-- `float getAdjustedDamage( MultiPartEntityPart pt, DamageSource src, float damage)`
+- `PhaseList<? extends IPhase> getType()`
+- `float getYawFactor()`
+- `void initPhase()`
+- `void onCrystalDestroyed(EntityEnderCrystal crystal, BlockPos pos, DamageSource dmgSrc, EntityPlayer plyr)`
+- `void removeAreaEffect()`

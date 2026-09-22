@@ -1,19 +1,17 @@
 # EntityRainFX
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.client.particle.EntityFX → net.minecraft.client.particle.EntityRainFX
+
 ## Class signature
 
 ```java
 public class EntityRainFX extends EntityFX
 ```
 
-## Constructors
-
-- `protected EntityRainFX( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn)`
-
 ## Methods
 
-- `public void onUpdate()`
+- `void onUpdate()` — Called to update the entity's position/logic.
 
-## Description
+## Fields
 
-Called to update the entity's position/logic.
+- `protected EntityRainFX`

@@ -3,11 +3,15 @@ title: "WorldGenSpikes"
 description: "public class WorldGenSpikes extends WorldGenerator"
 package: "net/minecraft/world/gen/feature"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/world/gen/feature/WorldGenSpikes.html"
 sourceType: javadoc
 ---
 
 # WorldGenSpikes
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenSpikes
 
 ## Class signature
 
@@ -17,11 +21,11 @@ public class WorldGenSpikes extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenSpikes()`
+- `WorldGenSpikes()`
 
 ## Methods
 
-- `public void setSpike( WorldGenSpikes.EndSpike p_186143_1_)`
-- `public void setCrystalInvulnerable(boolean p_186144_1_)`
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
-- `public void setBeamTarget(@Nullable BlockPos pos)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`
+- `void setBeamTarget(BlockPos pos)`
+- `void setCrystalInvulnerable(boolean p_186144_1_)`
+- `void setSpike(WorldGenSpikes.EndSpike p_186143_1_)`

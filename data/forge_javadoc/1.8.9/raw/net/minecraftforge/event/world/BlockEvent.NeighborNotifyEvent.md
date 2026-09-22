@@ -1,22 +1,28 @@
 ---
 title: "BlockEvent.NeighborNotifyEvent"
-description: "Fired when a physics update occurs on a block. This event acts as a way for mods to detect physics updates, in the same way a BUD switch does. This event is only called on the server."
+description: "public static class BlockEvent.NeighborNotifyEvent extends BlockEvent"
 package: "net/minecraftforge/event/world"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/world/BlockEvent.NeighborNotifyEvent.html"
 sourceType: javadoc
 ---
 
 # BlockEvent.NeighborNotifyEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.BlockEvent.NeighborNotifyEvent
 
-- `public NeighborNotifyEvent( World world, BlockPos pos, IBlockState state, java.util.EnumSet< EnumFacing > notifiedSides)`
+## Class signature
+
+```java
+public static class BlockEvent.NeighborNotifyEvent extends BlockEvent
+```
 
 ## Methods
 
-- `public java.util.EnumSet< EnumFacing > getNotifiedSides()`
+- `java.util.EnumSet<EnumFacing> getNotifiedSides()` — Gets a list of directions from the base block that updates will occur upon.
 
-## Description
+## Fields
 
-Fired when a physics update occurs on a block. This event acts as a way for mods to detect physics updates, in the same way a BUD switch does. This event is only called on the server.
+- `NeighborNotifyEvent`

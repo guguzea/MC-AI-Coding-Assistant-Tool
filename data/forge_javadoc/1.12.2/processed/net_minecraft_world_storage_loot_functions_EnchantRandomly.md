@@ -1,5 +1,7 @@
 # EnchantRandomly
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction → net.minecraft.world.storage.loot.functions.EnchantRandomly
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class EnchantRandomly extends LootFunction
 
 ## Constructors
 
-- `public EnchantRandomly( LootCondition [] conditionsIn, java.util.List< Enchantment > enchantmentsIn)`
+- `EnchantRandomly(LootCondition [] conditionsIn, java.util.List<Enchantment> enchantmentsIn)`
 
 ## Methods
 
-- `public ItemStack apply( ItemStack stack, java.util.Random rand, LootContext context)`
+- `ItemStack apply(ItemStack stack, java.util.Random rand, LootContext context)`

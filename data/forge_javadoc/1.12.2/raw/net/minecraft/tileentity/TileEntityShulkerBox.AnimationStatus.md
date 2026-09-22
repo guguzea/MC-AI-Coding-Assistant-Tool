@@ -1,19 +1,25 @@
 ---
 title: "TileEntityShulkerBox.AnimationStatus"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum TileEntityShulkerBox.AnimationStatus extends java.lang.Enum<TileEntityShulkerBox.AnimationStatus>"
 package: "net/minecraft/tileentity"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/tileentity/TileEntityShulkerBox.AnimationStatus.html"
 sourceType: javadoc
 ---
 
 # TileEntityShulkerBox.AnimationStatus
 
+**Inheritance:** java.lang.Object → java.lang.Enum<TileEntityShulkerBox.AnimationStatus> → net.minecraft.tileentity.TileEntityShulkerBox.AnimationStatus
+
+## Class signature
+
+```java
+public static enum TileEntityShulkerBox.AnimationStatus extends java.lang.Enum<TileEntityShulkerBox.AnimationStatus>
+```
+
 ## Methods
 
-- `public static TileEntityShulkerBox.AnimationStatus [] values()`
-- `public static TileEntityShulkerBox.AnimationStatus valueOf(java.lang.String name)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static TileEntityShulkerBox.AnimationStatus valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static TileEntityShulkerBox.AnimationStatus [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

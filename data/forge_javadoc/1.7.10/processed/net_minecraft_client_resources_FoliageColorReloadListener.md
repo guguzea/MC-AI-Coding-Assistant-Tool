@@ -1,5 +1,7 @@
 # FoliageColorReloadListener
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.FoliageColorReloadListener
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class FoliageColorReloadListener extends java.lang.Object implements IRes
 
 ## Constructors
 
-- `public FoliageColorReloadListener()`
+- `FoliageColorReloadListener()`
 
 ## Methods
 
-- `public void onResourceManagerReload( IResourceManager p_110549_1_)`
+- `void onResourceManagerReload(IResourceManager p_110549_1_)`

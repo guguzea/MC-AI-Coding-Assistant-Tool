@@ -3,11 +3,15 @@ title: "ModSorter"
 description: "public class ModSorter extends java.lang.Object"
 package: "net/minecraftforge/fml/common/toposort"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/toposort/ModSorter.html"
 sourceType: javadoc
 ---
 
 # ModSorter
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.toposort.ModSorter
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class ModSorter extends java.lang.Object
 
 ## Constructors
 
-- `public ModSorter(java.util.List< ModContainer > modList, java.util.Map<java.lang.String, ModContainer > nameLookup)`
+- `ModSorter(java.util.List<ModContainer> modList, java.util.Map<java.lang.String, ModContainer> nameLookup)`
 
 ## Methods
 
-- `public java.util.List< ModContainer > sort()`
+- `java.util.List<ModContainer> sort()`

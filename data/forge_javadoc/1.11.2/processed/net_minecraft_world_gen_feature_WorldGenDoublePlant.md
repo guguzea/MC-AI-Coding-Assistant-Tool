@@ -1,5 +1,7 @@
 # WorldGenDoublePlant
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenDoublePlant
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class WorldGenDoublePlant extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenDoublePlant()`
+- `WorldGenDoublePlant()`
 
 ## Methods
 
-- `public void setPlantType( BlockDoublePlant.EnumPlantType plantTypeIn)`
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`
+- `void setPlantType(BlockDoublePlant.EnumPlantType plantTypeIn)`

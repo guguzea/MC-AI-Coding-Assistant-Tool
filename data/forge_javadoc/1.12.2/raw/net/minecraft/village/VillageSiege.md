@@ -3,11 +3,15 @@ title: "VillageSiege"
 description: "public class VillageSiege extends java.lang.Object"
 package: "net/minecraft/village"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/village/VillageSiege.html"
 sourceType: javadoc
 ---
 
 # VillageSiege
+
+**Inheritance:** java.lang.Object → net.minecraft.village.VillageSiege
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class VillageSiege extends java.lang.Object
 
 ## Constructors
 
-- `public VillageSiege( World worldIn)`
+- `VillageSiege(World worldIn)`
 
 ## Methods
 
-- `public void tick()`
+- `void tick()`

@@ -8,4 +8,4 @@ public interface INetHandler
 
 ## Methods
 
-- `void onDisconnect( ITextComponent reason)`
+- `void onDisconnect(ITextComponent reason)`

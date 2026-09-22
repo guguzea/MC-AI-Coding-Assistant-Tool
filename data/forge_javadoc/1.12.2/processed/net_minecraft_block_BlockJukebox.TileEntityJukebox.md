@@ -1,12 +1,20 @@
 # BlockJukebox.TileEntityJukebox
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.block.BlockJukebox.TileEntityJukebox
 
-- `public TileEntityJukebox()`
+## Class signature
+
+```java
+public static class BlockJukebox.TileEntityJukebox extends TileEntity
+```
 
 ## Methods
 
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public ItemStack getRecord()`
-- `public void setRecord( ItemStack recordStack)`
+- `ItemStack getRecord()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setRecord(ItemStack recordStack)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `TileEntityJukebox`

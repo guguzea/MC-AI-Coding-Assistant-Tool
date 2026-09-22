@@ -1,13 +1,17 @@
 ---
 title: "DispenseFluidContainer"
-description: "Fills or drains a fluid container item using a Dispenser."
+description: "public class DispenseFluidContainer extends BehaviorDefaultDispenseItem"
 package: "net/minecraftforge/fluids"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fluids/DispenseFluidContainer.html"
 sourceType: javadoc
 ---
 
 # DispenseFluidContainer
+
+**Inheritance:** java.lang.Object → net.minecraft.dispenser.BehaviorDefaultDispenseItem → net.minecraftforge.fluids.DispenseFluidContainer
 
 ## Class signature
 
@@ -15,11 +19,7 @@ sourceType: javadoc
 public class DispenseFluidContainer extends BehaviorDefaultDispenseItem
 ```
 
-## Methods
+## Fields
 
-- `public static DispenseFluidContainer getInstance()`
-- `@Nonnull public ItemStack dispenseStack(@Nonnull IBlockSource source, @Nonnull ItemStack stack)`
-
-## Description
-
-Fills or drains a fluid container item using a Dispenser.
+- `ItemStack dispenseStack`
+- `static DispenseFluidContainer getInstance`

@@ -1,16 +1,18 @@
 # GenLayerRiverMix
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.layer.GenLayer → net.minecraft.world.gen.layer.GenLayerRiverMix
+
 ## Class signature
 
 ```java
 public class GenLayerRiverMix extends GenLayer
 ```
 
-## Constructors
-
-- `public GenLayerRiverMix(long p_i2129_1_, GenLayer p_i2129_3_, GenLayer p_i2129_4_)`
-
 ## Methods
 
-- `public void initWorldGenSeed(long seed)`
-- `public int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight)`
+- `int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight)`
+- `void initWorldGenSeed(long seed)`
+
+## Fields
+
+- `GenLayerRiverMix`

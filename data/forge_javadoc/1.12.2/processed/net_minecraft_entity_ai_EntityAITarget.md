@@ -1,5 +1,7 @@
 # EntityAITarget
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAITarget
+
 ## Class signature
 
 ```java
@@ -8,15 +10,22 @@ public abstract class EntityAITarget extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAITarget( EntityCreature creature, boolean checkSight)`
-- `public EntityAITarget( EntityCreature creature, boolean checkSight, boolean onlyNearby)`
+- `EntityAITarget(EntityCreature creature, boolean checkSight)`
+- `EntityAITarget(EntityCreature creature, boolean checkSight, boolean onlyNearby)`
 
 ## Methods
 
-- `public boolean shouldContinueExecuting()`
 - `protected double getTargetDistance()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public static boolean isSuitableTarget( EntityLiving attacker, EntityLivingBase target, boolean includeInvincibles, boolean checkSight)`
-- `protected boolean isSuitableTarget( EntityLivingBase target, boolean includeInvincibles)`
-- `public EntityAITarget setUnseenMemoryTicks(int p_190882_1_)`
+- `protected boolean isSuitableTarget(EntityLivingBase target, boolean includeInvincibles)`
+- `static boolean isSuitableTarget(EntityLiving attacker, EntityLivingBase target, boolean includeInvincibles, boolean checkSight)`
+- `void resetTask()`
+- `EntityAITarget setUnseenMemoryTicks(int p_190882_1_)`
+- `boolean shouldContinueExecuting()`
+- `void startExecuting()`
+
+## Fields
+
+- `protected boolean shouldCheckSight`
+- `protected EntityLivingBase target`
+- `protected EntityCreature taskOwner`
+- `protected int unseenMemoryTicks`

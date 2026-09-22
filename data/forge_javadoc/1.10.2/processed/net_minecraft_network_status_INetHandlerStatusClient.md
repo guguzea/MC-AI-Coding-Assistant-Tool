@@ -8,5 +8,5 @@ public interface INetHandlerStatusClient extends INetHandler
 
 ## Methods
 
-- `void handleServerInfo( SPacketServerInfo packetIn)`
-- `void handlePong( SPacketPong packetIn)`
+- `void handlePong(SPacketPong packetIn)`
+- `void handleServerInfo(SPacketServerInfo packetIn)`

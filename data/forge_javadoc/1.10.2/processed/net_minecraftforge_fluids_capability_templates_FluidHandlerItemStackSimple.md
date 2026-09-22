@@ -1,29 +1,33 @@
 # FluidHandlerItemStackSimple
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.capability.templates.FluidHandlerItemStackSimple
+
 ## Class signature
 
 ```java
-public class FluidHandlerItemStackSimple extends java.lang.Object implements IFluidHandler , ICapabilityProvider
+public class FluidHandlerItemStackSimple extends java.lang.Object implements IFluidHandler, ICapabilityProvider
 ```
 
 ## Constructors
 
-- `public FluidHandlerItemStackSimple( ItemStack container, int capacity)`
+- `FluidHandlerItemStackSimple(ItemStack container, int capacity)`
 
 ## Methods
 
-- `@Nullable public FluidStack getFluid()`
-- `protected void setFluid( FluidStack fluid)`
-- `public IFluidTankProperties [] getTankProperties()`
-- `public int fill( FluidStack resource, boolean doFill)`
-- `public FluidStack drain( FluidStack resource, boolean doDrain)`
-- `public FluidStack drain(int maxDrain, boolean doDrain)`
-- `public boolean canFillFluidType( FluidStack fluid)`
-- `public boolean canDrainFluidType( FluidStack fluid)`
-- `protected void setContainerToEmpty()`
-- `public boolean hasCapability( Capability <?> capability, EnumFacing facing)`
-- `public <T> T getCapability( Capability <T> capability, EnumFacing facing)`
+- `boolean canDrainFluidType(FluidStack fluid)`
+- `boolean canFillFluidType(FluidStack fluid)`
+- `FluidStack drain(FluidStack resource, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `FluidStack drain(int maxDrain, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `int fill(FluidStack resource, boolean doFill)` — Fills fluid into internal tanks, distribution is left entirely to the IFluidHandler.
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `FluidStack getFluid()`
+- `IFluidTankProperties [] getTankProperties()` — Returns an array of objects which represent the internal tanks.
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.
+- `protected void setContainerToEmpty()` — Override this method for special handling.
+- `protected void setFluid(FluidStack fluid)`
 
-## Description
+## Fields
 
-FluidHandlerItemStackSimple is a template capability provider for ItemStacks. Data is stored directly in the vanilla NBT, in the same way as the old deprecated ItemFluidContainer . This implementation
+- `protected int capacity`
+- `protected ItemStack container`
+- `static java.lang.String FLUID_NBT_KEY`

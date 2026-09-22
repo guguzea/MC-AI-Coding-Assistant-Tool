@@ -8,8 +8,4 @@ public interface IStatType
 
 ## Methods
 
-- `java.lang.String format(int p_75843_1_)`
-
-## Description
-
-Formats a given stat for human consumption.
+- `java.lang.String format(int p_75843_1_)` — Formats a given stat for human consumption.

@@ -1,5 +1,7 @@
 # PlayerDestroyItemEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerDestroyItemEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class PlayerDestroyItemEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerDestroyItemEvent( EntityPlayer player, ItemStack original)`
+- `PlayerDestroyItemEvent(EntityPlayer player, ItemStack original)`
 
-## Description
+## Fields
 
-PlayerDestroyItemEvent is fired when a player destroys an item. This event is fired whenever a player destroys an item in PlayerControllerMP#onPlayerRightClick(EntityPlayer, World, ItemStack, int, int
+- `ItemStack original`

@@ -1,23 +1,33 @@
 ---
 title: "PlayerEvent.ItemPickupEvent"
-description: "Deprecated."
+description: "public static class PlayerEvent.ItemPickupEvent extends PlayerEvent"
 package: "net/minecraftforge/fml/common/gameevent"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/common/gameevent/PlayerEvent.ItemPickupEvent.html"
 sourceType: javadoc
 ---
 
 # PlayerEvent.ItemPickupEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.gameevent.PlayerEvent → net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent
+
+## Class signature
+
+```java
+public static class PlayerEvent.ItemPickupEvent extends PlayerEvent
+```
+
 ## Constructors
 
-- `public ItemPickupEvent( EntityPlayer player, EntityItem entPickedUp, ItemStack stack)`
+- `ItemPickupEvent(EntityPlayer player, EntityItem entPickedUp, ItemStack stack)`
 
 ## Methods
 
-- `public ItemStack getStack()`
-- `public EntityItem getOriginalEntity()`
+- `EntityItem getOriginalEntity()`
+- `ItemStack getStack()`
 
-## Description
+## Fields
 
-Deprecated.
+- `EntityItem pickedUp`

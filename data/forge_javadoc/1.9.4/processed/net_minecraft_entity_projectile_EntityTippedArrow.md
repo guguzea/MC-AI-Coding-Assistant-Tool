@@ -1,26 +1,28 @@
 # EntityTippedArrow
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityArrow → net.minecraft.entity.projectile.EntityTippedArrow
+
 ## Class signature
 
 ```java
 public class EntityTippedArrow extends EntityArrow
 ```
 
-## Constructors
-
-- `public EntityTippedArrow( World worldIn)`
-- `public EntityTippedArrow( World worldIn, double x, double y, double z)`
-- `public EntityTippedArrow( World worldIn, EntityLivingBase shooter)`
-
 ## Methods
 
-- `public void setPotionEffect( ItemStack stack)`
-- `public void addEffect( PotionEffect effect)`
+- `void addEffect(PotionEffect effect)`
+- `protected void arrowHit(EntityLivingBase living)`
 - `protected void entityInit()`
-- `public void onUpdate()`
-- `public int getColor()`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `protected void arrowHit( EntityLivingBase living)`
 - `protected ItemStack getArrowStack()`
-- `public void handleStatusUpdate(byte id)`
+- `int getColor()`
+- `void handleStatusUpdate(byte id)`
+- `void onUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void setPotionEffect(ItemStack stack)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityTippedArrow`
+- `EntityTippedArrow`
+- `EntityTippedArrow`

@@ -11,7 +11,7 @@
  *    实测口径（**一律排除本文件自身**：合同散文里就写着 `ok: false` 字面量，计入即自指；
  *    `test-wave-bcd.mjs` 的 A-27 门按同一口径当场复算，数字脱节就翻红）：
  *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **312** 行 / **47** 个文件（按行计）；
- *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **322** 处 / **50** 个文件。
+ *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **326** 处 / **51** 个文件。
  *    该口径数的是**字面量位点**，同时涵盖工具带内 envelope 与模块内 helper 判别联合两类
  *    （如 `src/mdk/index.ts` 的 `assertNoZipSlip`、`src/decompile/services/mod-decompile.ts` 的 `resolveModIdSegment`）；两类都不置 isError。
  *    语义 = “工具正常执行完了，但结论是否定/不完整/需要人决策”：
@@ -20,9 +20,10 @@
  *    这类返回 **一律不置 isError**，MCP 层看到的是一次成功调用，模型必须去读 `action.nextSteps`。
  *
  * 2) **协议层失败：`isError: true`** —— 全仓库只有 **1 处**，在 `src/tool-registry.ts`：
- *    · `:454` `get_server_status` 的 `warmup=true` 但没传 version（VERSION_REQUIRED）。
- *      （行号 424→429→444→454：2026-09-18 Z-2「McpServer version 读 package.json」净 +15 行；
- *       2026-09-21 并行会话在 tool-registry.ts 增行后再推 +10 行，A-27 门当场点名同步。）
+ *    · `:516` `get_server_status` 的 `warmup=true` 但没传 version（VERSION_REQUIRED）。
+ *      （行号 424→429→444→454→**516**：2026-09-18 Z-2「McpServer version 读 package.json」净 +15 行；
+ *       2026-09-21 并行会话先 +10，同日 A2 新增 `query_upstream_releases`（schema 常量 + 注册块）再 +62，
+ *       门两次当场点名同步 —— 这条位点是纯行号锚，任何在 tool-registry.ts 上方增行的改动都要跟着改这里。）
  *    （2026-09-17 P2-2 收敛：communityDocError 的 2 处 isError 已降级为带内 `ok:false`，
  *    与全部文档工具错误路径同形；CLI 退出码不变——isToolFailure 先看 `ok===false`。）
  *    判据：**结果通道的前置条件在注册层就被拒**，才用 isError。

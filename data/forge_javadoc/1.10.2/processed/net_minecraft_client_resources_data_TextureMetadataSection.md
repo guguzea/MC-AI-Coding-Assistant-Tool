@@ -1,5 +1,7 @@
 # TextureMetadataSection
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.data.TextureMetadataSection
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class TextureMetadataSection extends java.lang.Object implements IMetadat
 
 ## Constructors
 
-- `public TextureMetadataSection(boolean textureBlurIn, boolean textureClampIn)`
+- `TextureMetadataSection(boolean textureBlurIn, boolean textureClampIn)`
 
 ## Methods
 
-- `public boolean getTextureBlur()`
-- `public boolean getTextureClamp()`
+- `boolean getTextureBlur()`
+- `boolean getTextureClamp()`

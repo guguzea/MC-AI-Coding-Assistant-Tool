@@ -1,5 +1,7 @@
 # ItemPredicate
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.ItemPredicate
+
 ## Class signature
 
 ```java
@@ -8,11 +10,15 @@ public class ItemPredicate extends java.lang.Object
 
 ## Constructors
 
-- `public ItemPredicate()`
-- `public ItemPredicate( Item item, java.lang.Integer data, MinMaxBounds count, MinMaxBounds durability, EnchantmentPredicate [] enchantments, PotionType potion, NBTPredicate nbt)`
+- `ItemPredicate()`
+- `ItemPredicate(Item item, java.lang.Integer data, MinMaxBounds count, MinMaxBounds durability, EnchantmentPredicate [] enchantments, PotionType potion, NBTPredicate nbt)`
 
 ## Methods
 
-- `public boolean test( ItemStack item)`
-- `public static ItemPredicate deserialize(JsonElement element)`
-- `public static ItemPredicate [] deserializeArray(JsonElement element)`
+- `static ItemPredicate deserialize(JsonElement element)`
+- `static ItemPredicate [] deserializeArray(JsonElement element)`
+- `boolean test(ItemStack item)`
+
+## Fields
+
+- `static ItemPredicate ANY`

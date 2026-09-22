@@ -1,5 +1,7 @@
 # MultiPartEntityPart
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.MultiPartEntityPart
+
 ## Class signature
 
 ```java
@@ -8,13 +10,18 @@ public class MultiPartEntityPart extends Entity
 
 ## Constructors
 
-- `public MultiPartEntityPart( IEntityMultiPart parent, java.lang.String partName, float width, float height)`
+- `MultiPartEntityPart(IEntityMultiPart parent, java.lang.String partName, float width, float height)`
 
 ## Methods
 
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeCollidedWith()`
 - `protected void entityInit()`
-- `protected void readEntityFromNBT( NBTTagCompound compound)`
-- `protected void writeEntityToNBT( NBTTagCompound compound)`
-- `public boolean canBeCollidedWith()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public boolean isEntityEqual( Entity entityIn)`
+- `boolean isEntityEqual(Entity entityIn)`
+- `protected void readEntityFromNBT(NBTTagCompound compound)`
+- `protected void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `IEntityMultiPart parent`
+- `java.lang.String partName`

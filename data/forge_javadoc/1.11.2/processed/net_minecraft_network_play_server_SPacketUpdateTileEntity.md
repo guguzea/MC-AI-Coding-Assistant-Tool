@@ -1,21 +1,23 @@
 # SPacketUpdateTileEntity
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketUpdateTileEntity
+
 ## Class signature
 
 ```java
-public class SPacketUpdateTileEntity extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketUpdateTileEntity extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketUpdateTileEntity()`
-- `public SPacketUpdateTileEntity( BlockPos blockPosIn, int tileEntityTypeIn, NBTTagCompound compoundIn)`
+- `SPacketUpdateTileEntity()`
+- `SPacketUpdateTileEntity(BlockPos blockPosIn, int tileEntityTypeIn, NBTTagCompound compoundIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public BlockPos getPos()`
-- `public int getTileEntityType()`
-- `public NBTTagCompound getNbtCompound()`
+- `NBTTagCompound getNbtCompound()`
+- `BlockPos getPos()`
+- `int getTileEntityType()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

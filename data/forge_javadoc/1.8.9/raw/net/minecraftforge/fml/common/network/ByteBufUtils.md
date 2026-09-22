@@ -1,13 +1,17 @@
 ---
 title: "ByteBufUtils"
-description: "Utilities for interacting with ByteBuf ."
+description: "public class ByteBufUtils extends java.lang.Object"
 package: "net/minecraftforge/fml/common/network"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/common/network/ByteBufUtils.html"
 sourceType: javadoc
 ---
 
 # ByteBufUtils
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.ByteBufUtils
 
 ## Class signature
 
@@ -17,23 +21,19 @@ public class ByteBufUtils extends java.lang.Object
 
 ## Constructors
 
-- `public ByteBufUtils()`
+- `ByteBufUtils()`
 
 ## Methods
 
-- `public static int varIntByteCount(int toCount)`
-- `public static int readVarInt(ByteBuf buf, int maxSize)`
-- `public static int readVarShort(ByteBuf buf)`
-- `public static void writeVarShort(ByteBuf buf, int toWrite)`
-- `public static void writeVarInt(ByteBuf to, int toWrite, int maxSize)`
-- `public static java.lang.String readUTF8String(ByteBuf from)`
-- `public static void writeUTF8String(ByteBuf to, java.lang.String string)`
-- `public static void writeItemStack(ByteBuf to, ItemStack stack)`
-- `public static ItemStack readItemStack(ByteBuf from)`
-- `public static void writeTag(ByteBuf to, NBTTagCompound tag)`
-- `public static NBTTagCompound readTag(ByteBuf from)`
-- `public static java.lang.String getContentDump(ByteBuf buffer)`
-
-## Description
-
-Utilities for interacting with ByteBuf .
+- `static java.lang.String getContentDump(ByteBuf buffer)`
+- `static ItemStack readItemStack(ByteBuf from)` — Read an ItemStack from the byte buffer provided.
+- `static NBTTagCompound readTag(ByteBuf from)` — Read an NBTTagCompound from the byte buffer.
+- `static java.lang.String readUTF8String(ByteBuf from)` — Read a UTF8 string from the byte buffer.
+- `static int readVarInt(ByteBuf buf, int maxSize)` — Read a varint from the supplied buffer.
+- `static int readVarShort(ByteBuf buf)` — An extended length short.
+- `static int varIntByteCount(int toCount)` — The number of bytes to write the supplied int using the 7 bit varint encoding.
+- `static void writeItemStack(ByteBuf to, ItemStack stack)` — Write an ItemStack using minecraft compatible encoding.
+- `static void writeTag(ByteBuf to, NBTTagCompound tag)` — Write an NBTTagCompound to the byte buffer.
+- `static void writeUTF8String(ByteBuf to, java.lang.String string)` — Write a String with UTF8 byte encoding to the buffer.
+- `static void writeVarInt(ByteBuf to, int toWrite, int maxSize)` — Write an integer to the buffer using variable length encoding.
+- `static void writeVarShort(ByteBuf buf, int toWrite)`

@@ -3,11 +3,15 @@ title: "SlotFurnaceFuel"
 description: "public class SlotFurnaceFuel extends Slot"
 package: "net/minecraft/inventory"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/inventory/SlotFurnaceFuel.html"
 sourceType: javadoc
 ---
 
 # SlotFurnaceFuel
+
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Slot → net.minecraft.inventory.SlotFurnaceFuel
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class SlotFurnaceFuel extends Slot
 ```
 
-## Constructors
-
-- `public SlotFurnaceFuel( IInventory inventoryIn, int slotIndex, int xPosition, int yPosition)`
-
 ## Methods
 
-- `public boolean isItemValid(@Nullable ItemStack stack)`
-- `public int getItemStackLimit( ItemStack stack)`
-- `public static boolean isBucket( ItemStack stack)`
+- `int getItemStackLimit(ItemStack stack)`
+- `static boolean isBucket(ItemStack stack)`
+- `boolean isItemValid(ItemStack stack)`
+
+## Fields
+
+- `SlotFurnaceFuel`

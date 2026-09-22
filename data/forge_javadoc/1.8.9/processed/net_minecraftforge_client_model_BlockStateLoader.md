@@ -1,5 +1,7 @@
 # BlockStateLoader
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.BlockStateLoader
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class BlockStateLoader extends java.lang.Object
 
 ## Constructors
 
-- `public BlockStateLoader()`
+- `BlockStateLoader()`
 
 ## Methods
 
-- `public static ModelBlockDefinition load(java.io.Reader reader, Gson vanillaGSON)`
-
-## Description
-
-Loads a BlockStates json file.
+- `static ModelBlockDefinition load(java.io.Reader reader, Gson vanillaGSON)` — Loads a BlockStates json file.

@@ -1,18 +1,29 @@
 ---
 title: "BiomeEvent.BiomeColor"
-description: "BiomeColor is fired whenever an event involving biome colors occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. All children of this eve"
+description: "public static class BiomeEvent.BiomeColor extends BiomeEvent"
 package: "net/minecraftforge/event/terraingen"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/terraingen/BiomeEvent.BiomeColor.html"
 sourceType: javadoc
 ---
 
 # BiomeEvent.BiomeColor
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.BiomeEvent → net.minecraftforge.event.terraingen.BiomeEvent.BiomeColor
+
+## Class signature
+
+```java
+public static class BiomeEvent.BiomeColor extends BiomeEvent
+```
+
 ## Constructors
 
-- `public BiomeColor( BiomeGenBase biome, int original)`
+- `BiomeColor(BiomeGenBase biome, int original)`
 
-## Description
+## Fields
 
-BiomeColor is fired whenever an event involving biome colors occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. All children of this eve
+- `int newColor`
+- `int originalColor`

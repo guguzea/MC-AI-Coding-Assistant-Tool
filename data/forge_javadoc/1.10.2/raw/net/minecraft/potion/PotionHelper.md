@@ -3,11 +3,15 @@ title: "PotionHelper"
 description: "public class PotionHelper extends java.lang.Object"
 package: "net/minecraft/potion"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/potion/PotionHelper.html"
 sourceType: javadoc
 ---
 
 # PotionHelper
+
+**Inheritance:** java.lang.Object → net.minecraft.potion.PotionHelper
 
 ## Class signature
 
@@ -17,18 +21,18 @@ public class PotionHelper extends java.lang.Object
 
 ## Constructors
 
-- `public PotionHelper()`
+- `PotionHelper()`
 
 ## Methods
 
-- `public static boolean isReagent( ItemStack stack)`
-- `protected static boolean isItemConversionReagent( ItemStack stack)`
-- `protected static boolean isTypeConversionReagent( ItemStack stack)`
-- `public static boolean hasConversions( ItemStack input, ItemStack reagent)`
-- `protected static boolean hasItemConversions( ItemStack p_185206_0_, ItemStack p_185206_1_)`
-- `protected static boolean hasTypeConversions( ItemStack p_185209_0_, ItemStack p_185209_1_)`
-- `@Nullable public static ItemStack doReaction( ItemStack reagent, @Nullable ItemStack potionIn)`
-- `public static void init()`
-- `public static void registerPotionItemConversion( ItemPotion p_185201_0_, PotionHelper.ItemPredicateInstance p_185201_1_, ItemPotion p_185201_2_)`
-- `public static void registerPotionItem( PotionHelper.ItemPredicateInstance p_185202_0_)`
-- `public static void registerPotionTypeConversion( PotionType input, com.google.common.base.Predicate< ItemStack > reagentPredicate, PotionType output)`
+- `static ItemStack doReaction(ItemStack reagent, ItemStack potionIn)`
+- `static boolean hasConversions(ItemStack input, ItemStack reagent)`
+- `protected static boolean hasItemConversions(ItemStack p_185206_0_, ItemStack p_185206_1_)`
+- `protected static boolean hasTypeConversions(ItemStack p_185209_0_, ItemStack p_185209_1_)`
+- `static void init()`
+- `protected static boolean isItemConversionReagent(ItemStack stack)`
+- `static boolean isReagent(ItemStack stack)`
+- `protected static boolean isTypeConversionReagent(ItemStack stack)`
+- `static void registerPotionItem(PotionHelper.ItemPredicateInstance p_185202_0_)`
+- `static void registerPotionItemConversion(ItemPotion p_185201_0_, PotionHelper.ItemPredicateInstance p_185201_1_, ItemPotion p_185201_2_)`
+- `static void registerPotionTypeConversion(PotionType input, com.google.common.base.Predicate<ItemStack> reagentPredicate, PotionType output)`

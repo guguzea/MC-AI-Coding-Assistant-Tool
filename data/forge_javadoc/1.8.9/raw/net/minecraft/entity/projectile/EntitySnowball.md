@@ -1,13 +1,17 @@
 ---
 title: "EntitySnowball"
-description: "Called when this EntityThrowable hits a block or entity."
+description: "public class EntitySnowball extends EntityThrowable"
 package: "net/minecraft/entity/projectile"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/entity/projectile/EntitySnowball.html"
 sourceType: javadoc
 ---
 
 # EntitySnowball
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityThrowable → net.minecraft.entity.projectile.EntitySnowball
 
 ## Class signature
 
@@ -15,16 +19,12 @@ sourceType: javadoc
 public class EntitySnowball extends EntityThrowable
 ```
 
-## Constructors
-
-- `public EntitySnowball( World worldIn)`
-- `public EntitySnowball( World worldIn, EntityLivingBase throwerIn)`
-- `public EntitySnowball( World worldIn, double x, double y, double z)`
-
 ## Methods
 
-- `protected void onImpact( MovingObjectPosition p_70184_1_)`
+- `protected void onImpact(MovingObjectPosition p_70184_1_)` — Called when this EntityThrowable hits a block or entity.
 
-## Description
+## Fields
 
-Called when this EntityThrowable hits a block or entity.
+- `EntitySnowball`
+- `EntitySnowball`
+- `EntitySnowball`

@@ -1,16 +1,18 @@
 # ScoreCriteriaHealth
 
+**Inheritance:** java.lang.Object → net.minecraft.scoreboard.ScoreCriteria → net.minecraft.scoreboard.ScoreCriteriaHealth
+
 ## Class signature
 
 ```java
 public class ScoreCriteriaHealth extends ScoreCriteria
 ```
 
-## Constructors
-
-- `public ScoreCriteriaHealth(java.lang.String name)`
-
 ## Methods
 
-- `public boolean isReadOnly()`
-- `public IScoreCriteria.EnumRenderType getRenderType()`
+- `IScoreCriteria.EnumRenderType getRenderType()`
+- `boolean isReadOnly()`
+
+## Fields
+
+- `ScoreCriteriaHealth`

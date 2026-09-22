@@ -3,11 +3,15 @@ title: "AttributeMap"
 description: "public class AttributeMap extends AbstractAttributeMap"
 package: "net/minecraft/entity/ai/attributes"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/ai/attributes/AttributeMap.html"
 sourceType: javadoc
 ---
 
 # AttributeMap
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.attributes.AbstractAttributeMap → net.minecraft.entity.ai.attributes.AttributeMap
 
 ## Class signature
 
@@ -17,14 +21,18 @@ public class AttributeMap extends AbstractAttributeMap
 
 ## Constructors
 
-- `public AttributeMap()`
+- `AttributeMap()`
 
 ## Methods
 
-- `public ModifiableAttributeInstance getAttributeInstance( IAttribute attribute)`
-- `public ModifiableAttributeInstance getAttributeInstanceByName(java.lang.String attributeName)`
-- `public IAttributeInstance registerAttribute( IAttribute attribute)`
-- `protected IAttributeInstance createInstance( IAttribute attribute)`
-- `public void onAttributeModified( IAttributeInstance instance)`
-- `public java.util.Set< IAttributeInstance > getDirtyInstances()`
-- `public java.util.Collection< IAttributeInstance > getWatchedAttributes()`
+- `protected IAttributeInstance createInstance(IAttribute attribute)`
+- `ModifiableAttributeInstance getAttributeInstance(IAttribute attribute)`
+- `ModifiableAttributeInstance getAttributeInstanceByName(java.lang.String attributeName)`
+- `java.util.Set<IAttributeInstance> getDirtyInstances()`
+- `java.util.Collection<IAttributeInstance> getWatchedAttributes()`
+- `void onAttributeModified(IAttributeInstance instance)`
+- `IAttributeInstance registerAttribute(IAttribute attribute)`
+
+## Fields
+
+- `protected java.util.Map<java.lang.String, IAttributeInstance> instancesByName`

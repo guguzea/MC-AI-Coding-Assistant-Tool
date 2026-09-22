@@ -1,13 +1,17 @@
 ---
 title: "VanillaBrewingRecipe"
-description: "Used in BrewingRecipeRegistry to maintain the vanilla behaviour. Most of the code was simply adapted from net.minecraft.tileentity.TileEntityBrewingStand"
+description: "public class VanillaBrewingRecipe extends java.lang.Object implements IBrewingRecipe"
 package: "net/minecraftforge/common/brewing"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/common/brewing/VanillaBrewingRecipe.html"
 sourceType: javadoc
 ---
 
 # VanillaBrewingRecipe
+
+**Inheritance:** java.lang.Object → net.minecraftforge.common.brewing.VanillaBrewingRecipe
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class VanillaBrewingRecipe extends java.lang.Object implements IBrewingRe
 
 ## Constructors
 
-- `public VanillaBrewingRecipe()`
+- `VanillaBrewingRecipe()`
 
 ## Methods
 
-- `public boolean isInput( ItemStack stack)`
-- `public boolean isIngredient( ItemStack stack)`
-- `public ItemStack getOutput( ItemStack input, ItemStack ingredient)`
-
-## Description
-
-Used in BrewingRecipeRegistry to maintain the vanilla behaviour. Most of the code was simply adapted from net.minecraft.tileentity.TileEntityBrewingStand
+- `ItemStack getOutput(ItemStack input, ItemStack ingredient)` — Code copied from TileEntityBrewingStand.brewPotions() It brews the potion by doing the bit-shifting magic and then checking if the new PotionEffect list is different to the old one, or if the new potion is a splash potion when the old one wasn't.
+- `boolean isIngredient(ItemStack stack)` — Code adapted from TileEntityBrewingStand.isItemValidForSlot(int index, ItemStack stack)
+- `boolean isInput(ItemStack stack)` — Code adapted from TileEntityBrewingStand.isItemValidForSlot(int index, ItemStack stack)

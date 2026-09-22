@@ -1,5 +1,7 @@
 # RenderSpecificHandEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderSpecificHandEvent
+
 ## Class signature
 
 ```java
@@ -8,17 +10,13 @@ public class RenderSpecificHandEvent extends Event
 
 ## Constructors
 
-- `public RenderSpecificHandEvent( EnumHand hand, float partialTicks, float interpolatedPitch, float swingProgress, float equipProgress, ItemStack stack)`
+- `RenderSpecificHandEvent(EnumHand hand, float partialTicks, float interpolatedPitch, float swingProgress, float equipProgress, ItemStack stack)`
 
 ## Methods
 
-- `public EnumHand getHand()`
-- `public float getPartialTicks()`
-- `public float getInterpolatedPitch()`
-- `public float getSwingProgress()`
-- `public float getEquipProgress()`
-- `public ItemStack getItemStack()`
-
-## Description
-
-This event is fired on the MinecraftForge.EVENT_BUS whenever a hand is rendered in first person. Canceling the event causes the hand to not render. TODO This may get merged in 11 with RenderHandEvent
+- `float getEquipProgress()`
+- `EnumHand getHand()`
+- `float getInterpolatedPitch()`
+- `ItemStack getItemStack()`
+- `float getPartialTicks()`
+- `float getSwingProgress()`

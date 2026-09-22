@@ -1,5 +1,7 @@
 # BlockRail
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockRailBase → net.minecraft.block.BlockRail
+
 ## Class signature
 
 ```java
@@ -8,16 +10,16 @@ public class BlockRail extends BlockRailBase
 
 ## Constructors
 
-- `protected BlockRail()`
+- `BlockRail()`
 
 ## Methods
 
-- `protected void onNeighborChangedInternal( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public IProperty < BlockRailBase.EnumRailDirection > getShapeProperty()`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockState createBlockState()`
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IProperty<BlockRailBase.EnumRailDirection> getShapeProperty()`
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `protected void onNeighborChangedInternal(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
 
-## Description
+## Fields
 
-Convert the BlockState into the correct metadata value
+- `static PropertyEnum<BlockRailBase.EnumRailDirection> SHAPE`

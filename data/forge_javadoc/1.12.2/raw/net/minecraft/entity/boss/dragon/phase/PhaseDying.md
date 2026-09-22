@@ -3,11 +3,15 @@ title: "PhaseDying"
 description: "public class PhaseDying extends PhaseBase"
 package: "net/minecraft/entity/boss/dragon/phase"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/boss/dragon/phase/PhaseDying.html"
 sourceType: javadoc
 ---
 
 # PhaseDying
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseDying
 
 ## Class signature
 
@@ -15,15 +19,15 @@ sourceType: javadoc
 public class PhaseDying extends PhaseBase
 ```
 
-## Constructors
-
-- `public PhaseDying( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public void doClientRenderEffects()`
-- `public void doLocalUpdate()`
-- `public void initPhase()`
-- `public float getMaxRiseOrFall()`
-- `public Vec3d getTargetLocation()`
-- `public PhaseList < PhaseDying > getType()`
+- `void doClientRenderEffects()`
+- `void doLocalUpdate()`
+- `float getMaxRiseOrFall()`
+- `Vec3d getTargetLocation()`
+- `PhaseList<PhaseDying> getType()`
+- `void initPhase()`
+
+## Fields
+
+- `PhaseDying`

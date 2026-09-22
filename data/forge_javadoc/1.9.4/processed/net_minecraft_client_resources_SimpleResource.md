@@ -1,22 +1,24 @@
 # SimpleResource
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.SimpleResource
+
 ## Class signature
 
 ```java
-public class SimpleResource extends java.lang.Object implements IResource , java.io.Closeable
+public class SimpleResource extends java.lang.Object implements IResource, java.io.Closeable
 ```
 
 ## Constructors
 
-- `public SimpleResource(java.lang.String resourcePackNameIn, ResourceLocation srResourceLocationIn, java.io.InputStream resourceInputStreamIn, java.io.InputStream mcmetaInputStreamIn, MetadataSerializer srMetadataSerializerIn)`
+- `SimpleResource(java.lang.String resourcePackNameIn, ResourceLocation srResourceLocationIn, java.io.InputStream resourceInputStreamIn, java.io.InputStream mcmetaInputStreamIn, MetadataSerializer srMetadataSerializerIn)`
 
 ## Methods
 
-- `public ResourceLocation getResourceLocation()`
-- `public java.io.InputStream getInputStream()`
-- `public boolean hasMetadata()`
-- `@Nullable public <T extends IMetadataSection > T getMetadata(java.lang.String sectionName)`
-- `public java.lang.String getResourcePackName()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public void close() throws java.io.IOException`
+- `void close()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `java.io.InputStream getInputStream()`
+- `<T extends IMetadataSection> T getMetadata(java.lang.String sectionName)`
+- `ResourceLocation getResourceLocation()`
+- `java.lang.String getResourcePackName()`
+- `int hashCode()`
+- `boolean hasMetadata()`

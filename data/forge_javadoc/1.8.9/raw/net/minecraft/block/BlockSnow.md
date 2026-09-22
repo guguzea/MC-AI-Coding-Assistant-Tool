@@ -1,13 +1,17 @@
 ---
 title: "BlockSnow"
-description: "Get the Item that this Block should drop when harvested."
+description: "public class BlockSnow extends Block"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockSnow.html"
 sourceType: javadoc
 ---
 
 # BlockSnow
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockSnow
 
 ## Class signature
 
@@ -17,30 +21,30 @@ public class BlockSnow extends Block
 
 ## Constructors
 
-- `protected BlockSnow()`
+- `BlockSnow()`
 
 ## Methods
 
-- `public boolean isPassable( IBlockAccess worldIn, BlockPos pos)`
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isOpaqueCube()`
-- `public boolean isFullCube()`
-- `public void setBlockBoundsForItemRender()`
-- `public void setBlockBoundsBasedOnState( IBlockAccess worldIn, BlockPos pos)`
-- `protected void getBoundsForLayers(int p_150154_1_)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public void harvestBlock( World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public int quantityDropped(java.util.Random random)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public boolean shouldSideBeRendered( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public boolean isReplaceable( World worldIn, BlockPos pos)`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
 - `protected BlockState createBlockState()`
-- `public int quantityDropped( IBlockState state, int fortune, java.util.Random random)`
+- `protected void getBoundsForLayers(int p_150154_1_)`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)`
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `boolean isPassable(IBlockAccess worldIn, BlockPos pos)`
+- `boolean isReplaceable(World worldIn, BlockPos pos)` — Whether this Block can be replaced directly by other blocks (true for e.g. tall grass)
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `int quantityDropped(IBlockState state, int fortune, java.util.Random random)` — State and fortune sensitive version, this replaces the old (int meta, Random rand) version in 1.1.
+- `int quantityDropped(java.util.Random random)` — Returns the quantity of items to drop on block destruction.
+- `void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)`
+- `void setBlockBoundsForItemRender()` — Sets the block's bounds for rendering it as an item
+- `boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Get the Item that this Block should drop when harvested.
+- `static PropertyInteger LAYERS`

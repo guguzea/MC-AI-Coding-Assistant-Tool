@@ -3,6 +3,8 @@ title: "IResource"
 description: "public interface IResource"
 package: "net/minecraft/client/resources"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/resources/IResource.html"
 sourceType: javadoc
 ---
@@ -18,5 +20,5 @@ public interface IResource
 ## Methods
 
 - `java.io.InputStream getInputStream()`
-- `boolean hasMetadata()`
 - `IMetadataSection getMetadata(java.lang.String p_110526_1_)`
+- `boolean hasMetadata()`

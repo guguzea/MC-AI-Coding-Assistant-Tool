@@ -1,15 +1,17 @@
 # ParticleExplosion
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleExplosion
+
 ## Class signature
 
 ```java
 public class ParticleExplosion extends Particle
 ```
 
-## Constructors
-
-- `protected ParticleExplosion( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn)`
-
 ## Methods
 
-- `public void onUpdate()`
+- `void onUpdate()`
+
+## Fields
+
+- `protected ParticleExplosion`

@@ -1,25 +1,29 @@
 ---
 title: "EnumSkyBlock"
-description: "Returns the enum constant of this type with the specified name."
+description: "public enum EnumSkyBlock extends java.lang.Enum<EnumSkyBlock>"
 package: "net/minecraft/world"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/EnumSkyBlock.html"
 sourceType: javadoc
 ---
 
 # EnumSkyBlock
 
+**Inheritance:** java.lang.Object → java.lang.Enum<EnumSkyBlock> → net.minecraft.world.EnumSkyBlock
+
 ## Class signature
 
 ```java
-public enum EnumSkyBlock extends java.lang.Enum< EnumSkyBlock >
+public enum EnumSkyBlock extends java.lang.Enum<EnumSkyBlock>
 ```
 
 ## Methods
 
-- `public static EnumSkyBlock [] values()`
-- `public static EnumSkyBlock valueOf(java.lang.String name)`
+- `static EnumSkyBlock valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static EnumSkyBlock [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.
 
-## Description
+## Fields
 
-Returns the enum constant of this type with the specified name.
+- `int defaultLightValue`

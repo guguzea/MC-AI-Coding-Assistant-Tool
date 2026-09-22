@@ -1,5 +1,13 @@
 # RenderLivingEvent.Pre
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderLivingEvent<T> → net.minecraftforge.client.event.RenderLivingEvent.Pre<T>
 
-- `public Pre( EntityLivingBase entity, RendererLivingEntity < T > renderer, double x, double y, double z)`
+## Class signature
+
+```java
+public static class RenderLivingEvent.Pre<T extends EntityLivingBase> extends RenderLivingEvent<T>
+```
+
+## Fields
+
+- `Pre`

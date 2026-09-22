@@ -1,13 +1,17 @@
 ---
 title: "FMLEmbeddedChannel"
-description: "Utility wrapper around EmbeddedChannel . Provides some convenience methods associated with the specific needs of FML network handling."
+description: "public class FMLEmbeddedChannel extends io.netty.channel.embedded.EmbeddedChannel"
 package: "net/minecraftforge/fml/common/network"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/network/FMLEmbeddedChannel.html"
 sourceType: javadoc
 ---
 
 # FMLEmbeddedChannel
+
+**Inheritance:** java.lang.Object → io.netty.util.DefaultAttributeMap → io.netty.channel.AbstractChannel → io.netty.channel.embedded.EmbeddedChannel → net.minecraftforge.fml.common.network.FMLEmbeddedChannel
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class FMLEmbeddedChannel extends io.netty.channel.embedded.EmbeddedChanne
 
 ## Constructors
 
-- `public FMLEmbeddedChannel(java.lang.String channelName, Side source, io.netty.channel.ChannelHandler... handlers)`
-- `public FMLEmbeddedChannel( ModContainer container, java.lang.String channelName, Side source, io.netty.channel.ChannelHandler... handlers)`
+- `FMLEmbeddedChannel(ModContainer container, java.lang.String channelName, Side source, io.netty.channel.ChannelHandler... handlers)`
+- `FMLEmbeddedChannel(java.lang.String channelName, Side source, io.netty.channel.ChannelHandler... handlers)`
 
 ## Methods
 
-- `public Packet <?> generatePacketFrom(java.lang.Object object)`
-- `public java.lang.String findChannelHandlerNameForType(java.lang.Class<? extends io.netty.channel.ChannelHandler> type)`
-
-## Description
-
-Utility wrapper around EmbeddedChannel . Provides some convenience methods associated with the specific needs of FML network handling.
+- `java.lang.String findChannelHandlerNameForType(java.lang.Class<? extends io.netty.channel.ChannelHandler> type)`
+- `Packet<?> generatePacketFrom(java.lang.Object object)` — Utility method to generate a regular packet from a custom packet.

@@ -1,5 +1,7 @@
 # CommandPlaySound
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.CommandPlaySound
+
 ## Class signature
 
 ```java
@@ -8,13 +10,13 @@ public class CommandPlaySound extends CommandBase
 
 ## Constructors
 
-- `public CommandPlaySound()`
+- `CommandPlaySound()`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public int getRequiredPermissionLevel()`
-- `public java.lang.String getUsage( ICommandSender sender)`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `public java.util.List<java.lang.String> getTabCompletions( MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos targetPos)`
-- `public boolean isUsernameIndex(java.lang.String[] args, int index)`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.lang.String getName()`
+- `int getRequiredPermissionLevel()`
+- `java.util.List<java.lang.String> getTabCompletions(MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos targetPos)`
+- `java.lang.String getUsage(ICommandSender sender)`
+- `boolean isUsernameIndex(java.lang.String[] args, int index)`

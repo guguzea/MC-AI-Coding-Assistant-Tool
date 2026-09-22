@@ -3,11 +3,15 @@ title: "BlockChorusPlant"
 description: "public class BlockChorusPlant extends Block"
 package: "net/minecraft/block"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/block/BlockChorusPlant.html"
 sourceType: javadoc
 ---
 
 # BlockChorusPlant
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockChorusPlant
 
 ## Class signature
 
@@ -17,23 +21,32 @@ public class BlockChorusPlant extends Block
 
 ## Constructors
 
-- `protected BlockChorusPlant()`
+- `BlockChorusPlant()`
 
 ## Methods
 
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public void addCollisionBoxToList( IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List< AxisAlignedBB > collidingBoxes, @Nullable Entity entityIn)`
-- `public int getMetaFromState( IBlockState state)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public int quantityDropped(java.util.Random random)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `public boolean canSurviveAt( World wordIn, BlockPos pos)`
+- `void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List<AxisAlignedBB> collidingBoxes, Entity entityIn)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `boolean canSurviveAt(World wordIn, BlockPos pos)`
 - `protected BlockStateContainer createBlockState()`
-- `public boolean isPassable( IBlockAccess worldIn, BlockPos pos)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public boolean shouldSideBeRendered( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getMetaFromState(IBlockState state)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `boolean isPassable(IBlockAccess worldIn, BlockPos pos)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `int quantityDropped(java.util.Random random)`
+- `boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+
+## Fields
+
+- `static PropertyBool DOWN`
+- `static PropertyBool EAST`
+- `static PropertyBool NORTH`
+- `static PropertyBool SOUTH`
+- `static PropertyBool UP`
+- `static PropertyBool WEST`

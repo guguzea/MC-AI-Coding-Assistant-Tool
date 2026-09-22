@@ -1,5 +1,7 @@
 # BlockState
 
+**Inheritance:** java.lang.Object → net.minecraft.block.state.BlockState
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class BlockState extends java.lang.Object
 
 ## Constructors
 
-- `public BlockState( Block blockIn, IProperty ... properties)`
-- `protected BlockState( Block blockIn, IProperty [] properties, <any> unlistedProperties)`
+- `BlockState(Block blockIn, IProperty ... properties)`
+- `BlockState(Block blockIn, IProperty [] properties, <any> unlistedProperties)`
 
 ## Methods
 
-- `protected BlockState.StateImplementation createState( Block block, <any> properties, <any> unlistedProperties)`
-- `public <any> getValidStates()`
-- `public IBlockState getBaseState()`
-- `public Block getBlock()`
-- `public java.util.Collection< IProperty > getProperties()`
-- `public java.lang.String toString()`
+- `protected BlockState.StateImplementation createState(Block block, <any> properties, <any> unlistedProperties)`
+- `IBlockState getBaseState()`
+- `Block getBlock()`
+- `java.util.Collection<IProperty> getProperties()`
+- `<any> getValidStates()`
+- `java.lang.String toString()`

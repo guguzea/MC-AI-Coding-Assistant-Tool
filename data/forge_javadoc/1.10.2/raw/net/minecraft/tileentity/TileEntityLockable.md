@@ -1,36 +1,36 @@
 ---
 title: "TileEntityLockable"
-description: "Retrieves the handler for the capability requested on the specific side."
+description: "public abstract class TileEntityLockable extends TileEntity implements IInteractionObject, ILockableContainer"
 package: "net/minecraft/tileentity"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/tileentity/TileEntityLockable.html"
 sourceType: javadoc
 ---
 
 # TileEntityLockable
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityLockable
+
 ## Class signature
 
 ```java
-public abstract class TileEntityLockable extends TileEntity implements IInteractionObject , ILockableContainer
+public abstract class TileEntityLockable extends TileEntity implements IInteractionObject, ILockableContainer
 ```
-
-## Constructors
-
-- `public TileEntityLockable()`
 
 ## Methods
 
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public boolean isLocked()`
-- `public LockCode getLockCode()`
-- `public void setLockCode( LockCode code)`
-- `public ITextComponent getDisplayName()`
 - `protected IItemHandler createUnSidedHandler()`
-- `public <T> T getCapability( Capability <T> capability, EnumFacing facing)`
-- `public boolean hasCapability( Capability <?> capability, EnumFacing facing)`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `ITextComponent getDisplayName()`
+- `LockCode getLockCode()`
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.
+- `boolean isLocked()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setLockCode(LockCode code)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Retrieves the handler for the capability requested on the specific side.
+- `TileEntityLockable`

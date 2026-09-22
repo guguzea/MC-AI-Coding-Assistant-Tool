@@ -1,5 +1,7 @@
 # RegionRenderCacheBuilder
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.RegionRenderCacheBuilder
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class RegionRenderCacheBuilder extends java.lang.Object
 
 ## Constructors
 
-- `public RegionRenderCacheBuilder()`
+- `RegionRenderCacheBuilder()`
 
 ## Methods
 
-- `public WorldRenderer getWorldRendererByLayer( EnumWorldBlockLayer layer)`
-- `public WorldRenderer getWorldRendererByLayerId(int id)`
+- `WorldRenderer getWorldRendererByLayer(EnumWorldBlockLayer layer)`
+- `WorldRenderer getWorldRendererByLayerId(int id)`

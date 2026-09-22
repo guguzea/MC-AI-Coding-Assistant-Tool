@@ -1,13 +1,17 @@
 ---
 title: "WeightedRandomChestContent"
-description: "The maximum stack size of generated item."
+description: "public class WeightedRandomChestContent extends WeightedRandom.Item"
 package: "net/minecraft/util"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/util/WeightedRandomChestContent.html"
 sourceType: javadoc
 ---
 
 # WeightedRandomChestContent
+
+**Inheritance:** java.lang.Object → net.minecraft.util.WeightedRandom.Item → net.minecraft.util.WeightedRandomChestContent
 
 ## Class signature
 
@@ -17,16 +21,18 @@ public class WeightedRandomChestContent extends WeightedRandom.Item
 
 ## Constructors
 
-- `public WeightedRandomChestContent( Item p_i45311_1_, int p_i45311_2_, int minimumChance, int maximumChance, int itemWeightIn)`
-- `public WeightedRandomChestContent( ItemStack stack, int minimumChance, int maximumChance, int itemWeightIn)`
+- `WeightedRandomChestContent(Item p_i45311_1_, int p_i45311_2_, int minimumChance, int maximumChance, int itemWeightIn)`
+- `WeightedRandomChestContent(ItemStack stack, int minimumChance, int maximumChance, int itemWeightIn)`
 
 ## Methods
 
-- `public static void generateChestContents(java.util.Random random, java.util.List< WeightedRandomChestContent > listIn, IInventory inv, int max)`
-- `protected ItemStack [] generateChestContent(java.util.Random random, IInventory newInventory)`
-- `public static void generateDispenserContents(java.util.Random random, java.util.List< WeightedRandomChestContent > listIn, TileEntityDispenser dispenser, int max)`
-- `public static java.util.List< WeightedRandomChestContent > func_177629_a(java.util.List< WeightedRandomChestContent > p_177629_0_, WeightedRandomChestContent ... p_177629_1_)`
+- `static java.util.List<WeightedRandomChestContent> func_177629_a(java.util.List<WeightedRandomChestContent> p_177629_0_, WeightedRandomChestContent ... p_177629_1_)`
+- `protected ItemStack [] generateChestContent(java.util.Random random, IInventory newInventory)` — Allow a mod to submit a custom implementation that can delegate item stack generation beyond simple stack lookup
+- `static void generateChestContents(java.util.Random random, java.util.List<WeightedRandomChestContent> listIn, IInventory inv, int max)`
+- `static void generateDispenserContents(java.util.Random random, java.util.List<WeightedRandomChestContent> listIn, TileEntityDispenser dispenser, int max)`
 
-## Description
+## Fields
 
-The maximum stack size of generated item.
+- `int maxStackSize` — The maximum stack size of generated item.
+- `int minStackSize` — The minimum stack size of generated item.
+- `ItemStack theItemId` — The Item/Block ID to generate in the Chest.

@@ -1,5 +1,7 @@
 # BlockRedSandstone
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockRedSandstone
+
 ## Class signature
 
 ```java
@@ -8,12 +10,16 @@ public class BlockRedSandstone extends Block
 
 ## Constructors
 
-- `public BlockRedSandstone()`
+- `BlockRedSandstone()`
 
 ## Methods
 
-- `public int damageDropped( IBlockState state)`
-- `public void getSubBlocks( CreativeTabs itemIn, NonNullList < ItemStack > items)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
+- `int damageDropped(IBlockState state)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items)`
+
+## Fields
+
+- `static PropertyEnum<BlockRedSandstone.EnumType> TYPE`

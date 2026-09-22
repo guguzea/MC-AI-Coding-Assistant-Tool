@@ -1,5 +1,7 @@
 # ContainerHorseChest
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.InventoryBasic → net.minecraft.inventory.ContainerHorseChest
+
 ## Class signature
 
 ```java
@@ -8,5 +10,5 @@ public class ContainerHorseChest extends InventoryBasic
 
 ## Constructors
 
-- `public ContainerHorseChest(java.lang.String inventoryTitle, int slotCount)`
-- `public ContainerHorseChest( ITextComponent inventoryTitle, int slotCount)`
+- `ContainerHorseChest(ITextComponent inventoryTitle, int slotCount)`
+- `ContainerHorseChest(java.lang.String inventoryTitle, int slotCount)`

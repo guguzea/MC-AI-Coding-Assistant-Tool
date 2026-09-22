@@ -1,13 +1,17 @@
 ---
 title: "BlockDropper"
-description: "Returns a new instance of a block's tile entity class."
+description: "public class BlockDropper extends BlockDispenser"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockDropper.html"
 sourceType: javadoc
 ---
 
 # BlockDropper
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockContainer → net.minecraft.block.BlockDispenser → net.minecraft.block.BlockDropper
 
 ## Class signature
 
@@ -15,16 +19,12 @@ sourceType: javadoc
 public class BlockDropper extends BlockDispenser
 ```
 
-## Constructors
-
-- `public BlockDropper()`
-
 ## Methods
 
-- `protected IBehaviorDispenseItem getBehavior( ItemStack stack)`
-- `public TileEntity createNewTileEntity( World worldIn, int meta)`
-- `protected void dispense( World worldIn, BlockPos pos)`
+- `TileEntity createNewTileEntity(World worldIn, int meta)` — Returns a new instance of a block's tile entity class.
+- `protected void dispense(World worldIn, BlockPos pos)`
+- `protected IBehaviorDispenseItem getBehavior(ItemStack stack)`
 
-## Description
+## Fields
 
-Returns a new instance of a block's tile entity class.
+- `BlockDropper`

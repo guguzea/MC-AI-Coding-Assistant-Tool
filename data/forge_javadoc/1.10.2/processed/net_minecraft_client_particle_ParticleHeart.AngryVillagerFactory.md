@@ -1,9 +1,17 @@
 # ParticleHeart.AngryVillagerFactory
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.ParticleHeart.AngryVillagerFactory
+
+## Class signature
+
+```java
+public static class ParticleHeart.AngryVillagerFactory extends java.lang.Object implements IParticleFactory
+```
+
 ## Constructors
 
-- `public AngryVillagerFactory()`
+- `AngryVillagerFactory()`
 
 ## Methods
 
-- `public Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)`
+- `Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)`

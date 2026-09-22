@@ -1,5 +1,7 @@
 # AnimationFrame
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.data.AnimationFrame
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class AnimationFrame extends java.lang.Object
 
 ## Constructors
 
-- `public AnimationFrame(int p_i1307_1_)`
-- `public AnimationFrame(int p_i1308_1_, int p_i1308_2_)`
+- `AnimationFrame(int p_i1307_1_)`
+- `AnimationFrame(int p_i1308_1_, int p_i1308_2_)`
 
 ## Methods
 
-- `public boolean hasNoTime()`
-- `public int getFrameTime()`
-- `public int getFrameIndex()`
+- `int getFrameIndex()`
+- `int getFrameTime()`
+- `boolean hasNoTime()`

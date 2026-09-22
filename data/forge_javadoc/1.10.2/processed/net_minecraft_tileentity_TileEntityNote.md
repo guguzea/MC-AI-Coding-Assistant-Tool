@@ -1,5 +1,7 @@
 # TileEntityNote
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityNote
+
 ## Class signature
 
 ```java
@@ -8,11 +10,16 @@ public class TileEntityNote extends TileEntity
 
 ## Constructors
 
-- `public TileEntityNote()`
+- `TileEntityNote()`
 
 ## Methods
 
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public void changePitch()`
-- `public void triggerNote( World worldIn, BlockPos posIn)`
+- `void changePitch()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void triggerNote(World worldIn, BlockPos posIn)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `byte note`
+- `boolean previousRedstoneState`

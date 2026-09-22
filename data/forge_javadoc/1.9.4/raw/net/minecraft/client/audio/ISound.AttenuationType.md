@@ -1,20 +1,26 @@
 ---
 title: "ISound.AttenuationType"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum ISound.AttenuationType extends java.lang.Enum<ISound.AttenuationType>"
 package: "net/minecraft/client/audio"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/audio/ISound.AttenuationType.html"
 sourceType: javadoc
 ---
 
 # ISound.AttenuationType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<ISound.AttenuationType> → net.minecraft.client.audio.ISound.AttenuationType
+
+## Class signature
+
+```java
+public static enum ISound.AttenuationType extends java.lang.Enum<ISound.AttenuationType>
+```
+
 ## Methods
 
-- `public static ISound.AttenuationType [] values()`
-- `public static ISound.AttenuationType valueOf(java.lang.String name)`
-- `public int getTypeInt()`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `int getTypeInt()`
+- `static ISound.AttenuationType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static ISound.AttenuationType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

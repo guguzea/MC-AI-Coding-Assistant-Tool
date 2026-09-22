@@ -1,5 +1,7 @@
 # ExplosionEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.ExplosionEvent
+
 ## Class signature
 
 ```java
@@ -8,13 +10,9 @@ public class ExplosionEvent extends Event
 
 ## Constructors
 
-- `public ExplosionEvent( World world, Explosion explosion)`
+- `ExplosionEvent(World world, Explosion explosion)`
 
 ## Methods
 
-- `public World getWorld()`
-- `public Explosion getExplosion()`
-
-## Description
-
-ExplosionEvent triggers when an explosion happens in the world. ExplosionEvent.Start is fired before the explosion actually occurs. ExplosionEvent.Detonate is fired once the explosion has a list of af
+- `Explosion getExplosion()`
+- `World getWorld()`

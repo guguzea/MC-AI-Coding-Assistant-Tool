@@ -3,11 +3,15 @@ title: "BlockRedstoneWire"
 description: "public class BlockRedstoneWire extends Block"
 package: "net/minecraft/block"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/BlockRedstoneWire.html"
 sourceType: javadoc
 ---
 
 # BlockRedstoneWire
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockRedstoneWire
 
 ## Class signature
 
@@ -17,31 +21,40 @@ public class BlockRedstoneWire extends Block
 
 ## Constructors
 
-- `public BlockRedstoneWire()`
+- `BlockRedstoneWire()`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `@Nullable public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, World worldIn, BlockPos pos)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public int getStrongPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `public int getWeakPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `protected static boolean canConnectUpwardsTo( IBlockAccess worldIn, BlockPos pos)`
-- `protected static boolean canConnectTo( IBlockState blockState, @Nullable EnumFacing side, IBlockAccess world, BlockPos pos)`
-- `public boolean canProvidePower( IBlockState state)`
-- `public static int colorMultiplier(int p_176337_0_)`
-- `public void randomDisplayTick( IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `protected static boolean canConnectTo(IBlockState blockState, EnumFacing side, IBlockAccess world, BlockPos pos)`
+- `protected static boolean canConnectUpwardsTo(IBlockAccess worldIn, BlockPos pos)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `boolean canProvidePower(IBlockState state)`
+- `static int colorMultiplier(int p_176337_0_)`
 - `protected BlockStateContainer createBlockState()`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
+
+## Fields
+
+- `static PropertyEnum<net.minecraft.block.BlockRedstoneWire.EnumAttachPosition> EAST`
+- `static PropertyEnum<net.minecraft.block.BlockRedstoneWire.EnumAttachPosition> NORTH`
+- `static PropertyInteger POWER`
+- `protected static AxisAlignedBB [] REDSTONE_WIRE_AABB`
+- `static PropertyEnum<net.minecraft.block.BlockRedstoneWire.EnumAttachPosition> SOUTH`
+- `static PropertyEnum<net.minecraft.block.BlockRedstoneWire.EnumAttachPosition> WEST`

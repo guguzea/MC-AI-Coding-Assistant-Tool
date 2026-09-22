@@ -8,9 +8,5 @@ public interface ISelectiveResourceReloadListener extends IResourceManagerReload
 
 ## Methods
 
-- `default void onResourceManagerReload( IResourceManager resourceManager)`
-- `void onResourceManagerReload( IResourceManager resourceManager, java.util.function.Predicate< IResourceType > resourcePredicate)`
-
-## Description
-
-A version of onResourceManager that selectively chooses IResourceType s to reload.
+- `default void onResourceManagerReload(IResourceManager resourceManager)`
+- `void onResourceManagerReload(IResourceManager resourceManager, java.util.function.Predicate<IResourceType> resourcePredicate)` — A version of onResourceManager that selectively chooses IResourceType s to reload.

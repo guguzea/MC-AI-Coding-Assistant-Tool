@@ -1,9 +1,13 @@
 # PotionBrewEvent.Pre
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.brewing.PotionBrewEvent → net.minecraftforge.event.brewing.PotionBrewEvent.Pre
+
+## Class signature
+
+```java
+public static class PotionBrewEvent.Pre extends PotionBrewEvent
+```
+
 ## Constructors
 
-- `public Pre( NonNullList < ItemStack > stacks)`
-
-## Description
-
-PotionBrewEvent.Pre is fired before vanilla brewing takes place. All changes made to the event's array will be made to the TileEntity if the event is canceled. The event is fired during the TileEntity
+- `Pre(NonNullList<ItemStack> stacks)`

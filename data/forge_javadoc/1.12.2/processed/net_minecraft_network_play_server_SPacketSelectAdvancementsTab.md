@@ -1,19 +1,21 @@
 # SPacketSelectAdvancementsTab
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketSelectAdvancementsTab
+
 ## Class signature
 
 ```java
-public class SPacketSelectAdvancementsTab extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketSelectAdvancementsTab extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketSelectAdvancementsTab()`
-- `public SPacketSelectAdvancementsTab( ResourceLocation p_i47596_1_)`
+- `SPacketSelectAdvancementsTab()`
+- `SPacketSelectAdvancementsTab(ResourceLocation p_i47596_1_)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public ResourceLocation getTab()`
+- `ResourceLocation getTab()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

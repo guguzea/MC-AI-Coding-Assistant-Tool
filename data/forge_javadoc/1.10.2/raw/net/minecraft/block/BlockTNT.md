@@ -3,11 +3,15 @@ title: "BlockTNT"
 description: "public class BlockTNT extends Block"
 package: "net/minecraft/block"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/block/BlockTNT.html"
 sourceType: javadoc
 ---
 
 # BlockTNT
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockTNT
 
 ## Class signature
 
@@ -17,18 +21,22 @@ public class BlockTNT extends Block
 
 ## Constructors
 
-- `public BlockTNT()`
+- `BlockTNT()`
 
 ## Methods
 
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `public void onBlockDestroyedByExplosion( World worldIn, BlockPos pos, Explosion explosionIn)`
-- `public void onBlockDestroyedByPlayer( World worldIn, BlockPos pos, IBlockState state)`
-- `public void explode( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase igniter)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
-- `public boolean canDropFromExplosion( Explosion explosionIn)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canDropFromExplosion(Explosion explosionIn)`
 - `protected BlockStateContainer createBlockState()`
+- `void explode(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase igniter)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn)`
+- `void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)`
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
+
+## Fields
+
+- `static PropertyBool EXPLODE`

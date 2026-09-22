@@ -1,15 +1,23 @@
 # BlockPos.PooledMutableBlockPos
 
-## Methods
+**Inheritance:** java.lang.Object → net.minecraft.util.math.Vec3i → net.minecraft.util.math.BlockPos → net.minecraft.util.math.BlockPos.MutableBlockPos → net.minecraft.util.math.BlockPos.PooledMutableBlockPos
 
-- `public static BlockPos.PooledMutableBlockPos retain()`
-- `public static BlockPos.PooledMutableBlockPos retain(double xIn, double yIn, double zIn)`
-- `public static BlockPos.PooledMutableBlockPos retain( Vec3i vec)`
-- `public static BlockPos.PooledMutableBlockPos retain(int xIn, int yIn, int zIn)`
-- `public void release()`
-- `public BlockPos.PooledMutableBlockPos setPos(int xIn, int yIn, int zIn)`
-- `public BlockPos.PooledMutableBlockPos setPos( Entity entityIn)`
-- `public BlockPos.PooledMutableBlockPos setPos(double xIn, double yIn, double zIn)`
-- `public BlockPos.PooledMutableBlockPos setPos( Vec3i vec)`
-- `public BlockPos.PooledMutableBlockPos move( EnumFacing facing)`
-- `public BlockPos.PooledMutableBlockPos move( EnumFacing facing, int n)`
+## Class signature
+
+```java
+public static final class BlockPos.PooledMutableBlockPos extends BlockPos.MutableBlockPos
+```
+
+## Fields
+
+- `BlockPos.PooledMutableBlockPos move`
+- `BlockPos.PooledMutableBlockPos move`
+- `void release`
+- `static BlockPos.PooledMutableBlockPos retain`
+- `static BlockPos.PooledMutableBlockPos retain`
+- `static BlockPos.PooledMutableBlockPos retain`
+- `static BlockPos.PooledMutableBlockPos retain`
+- `BlockPos.PooledMutableBlockPos setPos`
+- `BlockPos.PooledMutableBlockPos setPos`
+- `BlockPos.PooledMutableBlockPos setPos`
+- `BlockPos.PooledMutableBlockPos setPos`

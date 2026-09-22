@@ -1,5 +1,7 @@
 # LootFunctionManager
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunctionManager
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class LootFunctionManager extends java.lang.Object
 
 ## Constructors
 
-- `public LootFunctionManager()`
+- `LootFunctionManager()`
 
 ## Methods
 
-- `public static <T extends LootFunction > void registerFunction( LootFunction.Serializer <? extends T> serializer)`
-- `public static LootFunction.Serializer <?> getSerializerForName( ResourceLocation location)`
-- `public static <T extends LootFunction > LootFunction.Serializer <T> getSerializerFor(T functionClass)`
+- `static<T extends LootFunction> LootFunction.Serializer<T> getSerializerFor(T functionClass)`
+- `static LootFunction.Serializer<?> getSerializerForName(ResourceLocation location)`
+- `static<T extends LootFunction> void registerFunction(LootFunction.Serializer<? extends T> serializer)`

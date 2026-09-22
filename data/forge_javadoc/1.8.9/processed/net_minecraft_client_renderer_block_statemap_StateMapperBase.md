@@ -1,5 +1,7 @@
 # StateMapperBase
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.statemap.StateMapperBase
+
 ## Class signature
 
 ```java
@@ -8,10 +10,14 @@ public abstract class StateMapperBase extends java.lang.Object implements IState
 
 ## Constructors
 
-- `public StateMapperBase()`
+- `StateMapperBase()`
 
 ## Methods
 
-- `public java.lang.String getPropertyString(java.util.Map< IProperty ,java.lang.Comparable> p_178131_1_)`
-- `public java.util.Map< IBlockState , ModelResourceLocation > putStateModelLocations( Block blockIn)`
-- `protected abstract ModelResourceLocation getModelResourceLocation( IBlockState state)`
+- `protected abstract ModelResourceLocation getModelResourceLocation(IBlockState state)`
+- `java.lang.String getPropertyString(java.util.Map<IProperty, java.lang.Comparable> p_178131_1_)`
+- `java.util.Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)`
+
+## Fields
+
+- `protected java.util.Map<IBlockState, ModelResourceLocation> mapStateModelLocations`

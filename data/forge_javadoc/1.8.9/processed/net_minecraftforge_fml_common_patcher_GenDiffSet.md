@@ -1,5 +1,7 @@
 # GenDiffSet
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.patcher.GenDiffSet
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class GenDiffSet extends java.lang.Object
 
 ## Constructors
 
-- `public GenDiffSet()`
+- `GenDiffSet()`
 
 ## Methods
 
-- `public static void main(java.lang.String[] args) throws java.io.IOException`
+- `static void main(java.lang.String[] args)`

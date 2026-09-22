@@ -1,18 +1,28 @@
 ---
 title: "ParticleFirework.Overlay"
-description: ""
+description: "public static class ParticleFirework.Overlay extends Particle"
 package: "net/minecraft/client/particle"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/particle/ParticleFirework.Overlay.html"
 sourceType: javadoc
 ---
 
 # ParticleFirework.Overlay
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleFirework.Overlay
 
-- `protected Overlay( World p_i46466_1_, double p_i46466_2_, double p_i46466_4_, double p_i46466_6_)`
+## Class signature
+
+```java
+public static class ParticleFirework.Overlay extends Particle
+```
 
 ## Methods
 
-- `public void renderParticle( BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+- `void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+
+## Fields
+
+- `protected Overlay`

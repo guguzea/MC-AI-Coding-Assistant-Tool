@@ -1,43 +1,47 @@
 ---
 title: "ItemStackHandler"
-description: "Extracts an ItemStack from the given slot."
+description: "public class ItemStackHandler extends java.lang.Object implements IItemHandler, IItemHandlerModifiable, INBTSerializable<NBTTagCompound>"
 package: "net/minecraftforge/items"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/items/ItemStackHandler.html"
 sourceType: javadoc
 ---
 
 # ItemStackHandler
 
+**Inheritance:** java.lang.Object → net.minecraftforge.items.ItemStackHandler
+
 ## Class signature
 
 ```java
-public class ItemStackHandler extends java.lang.Object implements IItemHandler , IItemHandlerModifiable , INBTSerializable < NBTTagCompound >
+public class ItemStackHandler extends java.lang.Object implements IItemHandler, IItemHandlerModifiable, INBTSerializable<NBTTagCompound>
 ```
 
 ## Constructors
 
-- `public ItemStackHandler()`
-- `public ItemStackHandler(int size)`
-- `public ItemStackHandler( NonNullList < ItemStack > stacks)`
+- `ItemStackHandler()`
+- `ItemStackHandler(int size)`
+- `ItemStackHandler(NonNullList<ItemStack> stacks)`
 
 ## Methods
 
-- `public void setSize(int size)`
-- `public void setStackInSlot(int slot, ItemStack stack)`
-- `public int getSlots()`
-- `public ItemStack getStackInSlot(int slot)`
-- `public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)`
-- `public ItemStack extractItem(int slot, int amount, boolean simulate)`
-- `public int getSlotLimit(int slot)`
+- `void deserializeNBT(NBTTagCompound nbt)`
+- `ItemStack extractItem(int slot, int amount, boolean simulate)` — Extracts an ItemStack from the given slot.
+- `int getSlotLimit(int slot)` — Retrieves the maximum stack size allowed to exist in the given slot.
+- `int getSlots()` — Returns the number of slots available
+- `ItemStack getStackInSlot(int slot)` — Returns the ItemStack in a given slot.
 - `protected int getStackLimit(int slot, ItemStack stack)`
-- `public boolean isItemValid(int slot, ItemStack stack)`
-- `public NBTTagCompound serializeNBT()`
-- `public void deserializeNBT( NBTTagCompound nbt)`
-- `protected void validateSlotIndex(int slot)`
-- `protected void onLoad()`
+- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)` — Inserts an ItemStack into the given slot and return the remainder.
+- `boolean isItemValid(int slot, ItemStack stack)` — This function re-implements the vanilla function IInventory.isItemValidForSlot(int, ItemStack) .
 - `protected void onContentsChanged(int slot)`
+- `protected void onLoad()`
+- `NBTTagCompound serializeNBT()`
+- `void setSize(int size)`
+- `void setStackInSlot(int slot, ItemStack stack)` — Overrides the stack in the given slot.
+- `protected void validateSlotIndex(int slot)`
 
-## Description
+## Fields
 
-Extracts an ItemStack from the given slot.
+- `protected NonNullList<ItemStack> stacks`

@@ -3,11 +3,15 @@ title: "EntitySnowman"
 description: "public class EntitySnowman extends EntityGolem implements IRangedAttackMob"
 package: "net/minecraft/entity/monster"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/entity/monster/EntitySnowman.html"
 sourceType: javadoc
 ---
 
 # EntitySnowman
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityGolem → net.minecraft.entity.monster.EntitySnowman
 
 ## Class signature
 
@@ -15,25 +19,25 @@ sourceType: javadoc
 public class EntitySnowman extends EntityGolem implements IRangedAttackMob
 ```
 
-## Constructors
-
-- `public EntitySnowman( World worldIn)`
-
 ## Methods
 
-- `public static void registerFixesSnowman( DataFixer fixer)`
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
+- `void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor)`
 - `protected void entityInit()`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void onLivingUpdate()`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public void attackEntityWithRangedAttack( EntityLivingBase target, float distanceFactor)`
-- `public float getEyeHeight()`
-- `protected boolean processInteract( EntityPlayer player, EnumHand hand)`
-- `public boolean isPumpkinEquipped()`
-- `public void setPumpkinEquipped(boolean pumpkinEquipped)`
-- `@Nullable protected SoundEvent getAmbientSound()`
-- `@Nullable protected SoundEvent getHurtSound()`
-- `@Nullable protected SoundEvent getDeathSound()`
+- `protected SoundEvent getAmbientSound()`
+- `protected SoundEvent getDeathSound()`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `protected void initEntityAI()`
+- `boolean isPumpkinEquipped()`
+- `void onLivingUpdate()`
+- `protected boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesSnowman(DataFixer fixer)`
+- `void setPumpkinEquipped(boolean pumpkinEquipped)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntitySnowman`

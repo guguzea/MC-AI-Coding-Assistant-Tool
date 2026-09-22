@@ -1,13 +1,17 @@
 ---
 title: "ClientChatEvent"
-description: "ClientChatEvent is fired whenever the client is about to send a chat message or command to the server. This event is fired via ForgeEventFactory.onClientSendMessage(String) , which is executed by GuiS"
+description: "public class ClientChatEvent extends Event"
 package: "net/minecraftforge/client/event"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/client/event/ClientChatEvent.html"
 sourceType: javadoc
 ---
 
 # ClientChatEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.ClientChatEvent
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class ClientChatEvent extends Event
 
 ## Constructors
 
-- `public ClientChatEvent(java.lang.String message)`
+- `ClientChatEvent(java.lang.String message)`
 
 ## Methods
 
-- `public java.lang.String getMessage()`
-- `public void setMessage(java.lang.String message)`
-- `public java.lang.String getOriginalMessage()`
-
-## Description
-
-ClientChatEvent is fired whenever the client is about to send a chat message or command to the server. This event is fired via ForgeEventFactory.onClientSendMessage(String) , which is executed by GuiS
+- `java.lang.String getMessage()`
+- `java.lang.String getOriginalMessage()`
+- `void setMessage(java.lang.String message)`

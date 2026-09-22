@@ -1,5 +1,7 @@
 # ModFixs
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.util.ModFixs
+
 ## Class signature
 
 ```java
@@ -8,5 +10,5 @@ public class ModFixs extends java.lang.Object
 
 ## Methods
 
-- `public java.util.List< IFixableData > getFixes( IFixType type)`
-- `public void registerFix( IFixType type, IFixableData fixer)`
+- `java.util.List<IFixableData> getFixes(IFixType type)`
+- `void registerFix(IFixType type, IFixableData fixer)`

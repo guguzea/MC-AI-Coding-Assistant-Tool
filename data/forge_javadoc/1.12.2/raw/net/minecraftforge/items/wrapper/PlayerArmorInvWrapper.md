@@ -1,13 +1,17 @@
 ---
 title: "PlayerArmorInvWrapper"
-description: "Inserts an ItemStack into the given slot and return the remainder."
+description: "public class PlayerArmorInvWrapper extends RangedWrapper"
 package: "net/minecraftforge/items/wrapper"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/items/wrapper/PlayerArmorInvWrapper.html"
 sourceType: javadoc
 ---
 
 # PlayerArmorInvWrapper
+
+**Inheritance:** java.lang.Object → net.minecraftforge.items.wrapper.RangedWrapper → net.minecraftforge.items.wrapper.PlayerArmorInvWrapper
 
 ## Class signature
 
@@ -17,13 +21,9 @@ public class PlayerArmorInvWrapper extends RangedWrapper
 
 ## Constructors
 
-- `public PlayerArmorInvWrapper( InventoryPlayer inv)`
+- `PlayerArmorInvWrapper(InventoryPlayer inv)`
 
 ## Methods
 
-- `public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)`
-- `public InventoryPlayer getInventoryPlayer()`
-
-## Description
-
-Inserts an ItemStack into the given slot and return the remainder.
+- `InventoryPlayer getInventoryPlayer()`
+- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)` — Inserts an ItemStack into the given slot and return the remainder.

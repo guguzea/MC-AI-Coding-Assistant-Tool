@@ -1,9 +1,13 @@
 # PlayBackgroundMusicEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.sound.SoundEvent → net.minecraftforge.client.event.sound.SoundResultEvent → net.minecraftforge.client.event.sound.PlayBackgroundMusicEvent
 
-- `public PlayBackgroundMusicEvent( SoundManager manager, SoundPoolEntry entry)`
+## Class signature
 
-## Description
+```java
+public class PlayBackgroundMusicEvent extends SoundResultEvent
+```
 
-Deprecated.
+## Fields
+
+- `PlayBackgroundMusicEvent`

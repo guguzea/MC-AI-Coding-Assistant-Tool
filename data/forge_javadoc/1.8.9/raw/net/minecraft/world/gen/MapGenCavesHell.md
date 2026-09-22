@@ -1,13 +1,17 @@
 ---
 title: "MapGenCavesHell"
-description: "Recursively called by generate()"
+description: "public class MapGenCavesHell extends MapGenBase"
 package: "net/minecraft/world/gen"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/gen/MapGenCavesHell.html"
 sourceType: javadoc
 ---
 
 # MapGenCavesHell
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.MapGenBase → net.minecraft.world.gen.MapGenCavesHell
 
 ## Class signature
 
@@ -15,16 +19,12 @@ sourceType: javadoc
 public class MapGenCavesHell extends MapGenBase
 ```
 
-## Constructors
-
-- `public MapGenCavesHell()`
-
 ## Methods
 
-- `protected void func_180705_a(long p_180705_1_, int p_180705_3_, int p_180705_4_, ChunkPrimer p_180705_5_, double p_180705_6_, double p_180705_8_, double p_180705_10_)`
 - `protected void func_180704_a(long p_180704_1_, int p_180704_3_, int p_180704_4_, ChunkPrimer p_180704_5_, double p_180704_6_, double p_180704_8_, double p_180704_10_, float p_180704_12_, float p_180704_13_, float p_180704_14_, int p_180704_15_, int p_180704_16_, double p_180704_17_)`
-- `protected void recursiveGenerate( World worldIn, int chunkX, int chunkZ, int p_180701_4_, int p_180701_5_, ChunkPrimer chunkPrimerIn)`
+- `protected void func_180705_a(long p_180705_1_, int p_180705_3_, int p_180705_4_, ChunkPrimer p_180705_5_, double p_180705_6_, double p_180705_8_, double p_180705_10_)`
+- `protected void recursiveGenerate(World worldIn, int chunkX, int chunkZ, int p_180701_4_, int p_180701_5_, ChunkPrimer chunkPrimerIn)` — Recursively called by generate()
 
-## Description
+## Fields
 
-Recursively called by generate()
+- `MapGenCavesHell`

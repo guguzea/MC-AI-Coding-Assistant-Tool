@@ -1,5 +1,7 @@
 # B3DLoader
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.b3d.B3DLoader
+
 ## Class signature
 
 ```java
@@ -8,15 +10,15 @@ public class B3DLoader extends java.lang.Object implements ICustomModelLoader
 
 ## Constructors
 
-- `public B3DLoader()`
+- `B3DLoader()`
 
 ## Methods
 
-- `public void addDomain(java.lang.String domain)`
-- `public void onResourceManagerReload( IResourceManager manager)`
-- `public boolean accepts( ResourceLocation modelLocation)`
-- `public IModel loadModel( ResourceLocation modelLocation) throws java.io.IOException`
+- `boolean accepts(ResourceLocation modelLocation)`
+- `void addDomain(java.lang.String domain)`
+- `IModel loadModel(ResourceLocation modelLocation)`
+- `void onResourceManagerReload(IResourceManager manager)`
 
-## Description
+## Fields
 
-Deprecated. Use json or IModelCustomData.process
+- `static B3DLoader instance`

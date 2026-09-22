@@ -8,14 +8,14 @@ public interface ICommandSender
 
 ## Methods
 
-- `java.lang.String getName()`
-- `ITextComponent getDisplayName()`
-- `void addChatMessage( ITextComponent component)`
+- `void addChatMessage(ITextComponent component)`
 - `boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)`
+- `Entity getCommandSenderEntity()`
+- `ITextComponent getDisplayName()`
+- `World getEntityWorld()`
+- `java.lang.String getName()`
 - `BlockPos getPosition()`
 - `Vec3d getPositionVector()`
-- `World getEntityWorld()`
-- `@Nullable Entity getCommandSenderEntity()`
+- `MinecraftServer getServer()`
 - `boolean sendCommandFeedback()`
-- `void setCommandStat( CommandResultStats.Type type, int amount)`
-- `@Nullable MinecraftServer getServer()`
+- `void setCommandStat(CommandResultStats.Type type, int amount)`

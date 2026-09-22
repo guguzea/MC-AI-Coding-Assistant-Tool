@@ -1,9 +1,13 @@
 # PlayerInteractEvent.RightClickEmpty
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickEmpty
+
+## Class signature
+
+```java
+public static class PlayerInteractEvent.RightClickEmpty extends PlayerInteractEvent
+```
+
 ## Constructors
 
-- `public RightClickEmpty( EntityPlayer player, EnumHand hand)`
-
-## Description
-
-This event is fired on the client side when the player right clicks empty space with an empty hand. The server is not aware of when the client right clicks empty space with an empty hand, you will nee
+- `RightClickEmpty(EntityPlayer player, EnumHand hand)`

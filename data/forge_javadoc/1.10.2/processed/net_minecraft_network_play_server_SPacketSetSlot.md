@@ -1,21 +1,23 @@
 # SPacketSetSlot
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketSetSlot
+
 ## Class signature
 
 ```java
-public class SPacketSetSlot extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketSetSlot extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketSetSlot()`
-- `public SPacketSetSlot(int windowIdIn, int slotIn, @Nullable ItemStack itemIn)`
+- `SPacketSetSlot()`
+- `SPacketSetSlot(int windowIdIn, int slotIn, ItemStack itemIn)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public int getWindowId()`
-- `public int getSlot()`
-- `@Nullable public ItemStack getStack()`
+- `int getSlot()`
+- `ItemStack getStack()`
+- `int getWindowId()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

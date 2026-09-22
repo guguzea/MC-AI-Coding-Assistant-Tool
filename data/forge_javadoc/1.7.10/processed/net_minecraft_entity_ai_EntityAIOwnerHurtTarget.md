@@ -1,16 +1,18 @@
 # EntityAIOwnerHurtTarget
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAITarget → net.minecraft.entity.ai.EntityAIOwnerHurtTarget
+
 ## Class signature
 
 ```java
 public class EntityAIOwnerHurtTarget extends EntityAITarget
 ```
 
-## Constructors
-
-- `public EntityAIOwnerHurtTarget( EntityTameable p_i1668_1_)`
-
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+
+## Fields
+
+- `EntityAIOwnerHurtTarget`

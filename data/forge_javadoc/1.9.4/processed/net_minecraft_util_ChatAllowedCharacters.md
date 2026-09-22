@@ -1,5 +1,7 @@
 # ChatAllowedCharacters
 
+**Inheritance:** java.lang.Object → net.minecraft.util.ChatAllowedCharacters
+
 ## Class signature
 
 ```java
@@ -8,9 +10,14 @@ public class ChatAllowedCharacters extends java.lang.Object
 
 ## Constructors
 
-- `public ChatAllowedCharacters()`
+- `ChatAllowedCharacters()`
 
 ## Methods
 
-- `public static boolean isAllowedCharacter(char character)`
-- `public static java.lang.String filterAllowedCharacters(java.lang.String input)`
+- `static java.lang.String filterAllowedCharacters(java.lang.String input)`
+- `static boolean isAllowedCharacter(char character)`
+
+## Fields
+
+- `static char[] ILLEGAL_FILE_CHARACTERS`
+- `static io.netty.util.ResourceLeakDetector.Level NETTY_LEAK_DETECTION`

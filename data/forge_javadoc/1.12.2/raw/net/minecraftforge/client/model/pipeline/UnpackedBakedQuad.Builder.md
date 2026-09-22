@@ -1,25 +1,35 @@
 ---
 title: "UnpackedBakedQuad.Builder"
-description: ""
+description: "public static class UnpackedBakedQuad.Builder extends java.lang.Object implements IVertexConsumer"
 package: "net/minecraftforge/client/model/pipeline"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/client/model/pipeline/UnpackedBakedQuad.Builder.html"
 sourceType: javadoc
 ---
 
 # UnpackedBakedQuad.Builder
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.pipeline.UnpackedBakedQuad.Builder
+
+## Class signature
+
+```java
+public static class UnpackedBakedQuad.Builder extends java.lang.Object implements IVertexConsumer
+```
+
 ## Constructors
 
-- `public Builder( VertexFormat format)`
+- `Builder(VertexFormat format)`
 
 ## Methods
 
-- `public VertexFormat getVertexFormat()`
-- `public void setContractUVs(boolean value)`
-- `public void setQuadTint(int tint)`
-- `public void setQuadOrientation( EnumFacing orientation)`
-- `public void setTexture( TextureAtlasSprite texture)`
-- `public void setApplyDiffuseLighting(boolean diffuse)`
-- `public void put(int element, float... data)`
-- `public UnpackedBakedQuad build()`
+- `UnpackedBakedQuad build()`
+- `VertexFormat getVertexFormat()`
+- `void put(int element, float... data)`
+- `void setApplyDiffuseLighting(boolean diffuse)`
+- `void setContractUVs(boolean value)`
+- `void setQuadOrientation(EnumFacing orientation)`
+- `void setQuadTint(int tint)`
+- `void setTexture(TextureAtlasSprite texture)`

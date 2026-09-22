@@ -1,5 +1,7 @@
 # ZombieSplit
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.ZombieSplit
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class ZombieSplit extends java.lang.Object implements IFixableData
 
 ## Constructors
 
-- `public ZombieSplit()`
+- `ZombieSplit()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

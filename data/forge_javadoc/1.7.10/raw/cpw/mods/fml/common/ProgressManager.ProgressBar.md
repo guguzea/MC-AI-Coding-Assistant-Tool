@@ -1,24 +1,30 @@
 ---
 title: "ProgressManager.ProgressBar"
-description: "Deprecated. not a stable API, will break, don't use this yet"
+description: "public static class ProgressManager.ProgressBar extends java.lang.Object"
 package: "cpw/mods/fml/common"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/ProgressManager.ProgressBar.html"
 sourceType: javadoc
 ---
 
 # ProgressManager.ProgressBar
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.ProgressManager.ProgressBar
+
+## Class signature
+
+```java
+public static class ProgressManager.ProgressBar extends java.lang.Object
+```
+
 ## Methods
 
-- `public void step(java.lang.Class<?> classToName, java.lang.String... extra)`
-- `public void step(java.lang.String message)`
-- `public java.lang.String getTitle()`
-- `public int getSteps()`
-- `public int getStep()`
-- `public java.lang.String getMessage()`
-- `public void timeEachStep()`
-
-## Description
-
-Deprecated. not a stable API, will break, don't use this yet
+- `@Deprecated java.lang.String getMessage()`
+- `@Deprecated int getStep()`
+- `@Deprecated int getSteps()`
+- `@Deprecated java.lang.String getTitle()`
+- `@Deprecated void step(java.lang.Class<?> classToName, java.lang.String... extra)`
+- `@Deprecated void step(java.lang.String message)`
+- `@Deprecated void timeEachStep()`

@@ -3,11 +3,15 @@ title: "RConThreadClient"
 description: "public class RConThreadClient extends RConThreadBase"
 package: "net/minecraft/network/rcon"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/network/rcon/RConThreadClient.html"
 sourceType: javadoc
 ---
 
 # RConThreadClient
+
+**Inheritance:** java.lang.Object → net.minecraft.network.rcon.RConThreadBase → net.minecraft.network.rcon.RConThreadClient
 
 ## Class signature
 
@@ -15,6 +19,6 @@ sourceType: javadoc
 public class RConThreadClient extends RConThreadBase
 ```
 
-## Methods
+## Fields
 
-- `public void run()`
+- `void run`

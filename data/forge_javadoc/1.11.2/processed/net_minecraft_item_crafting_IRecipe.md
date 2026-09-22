@@ -8,8 +8,8 @@ public interface IRecipe
 
 ## Methods
 
-- `boolean matches( InventoryCrafting inv, World worldIn)`
-- `ItemStack getCraftingResult( InventoryCrafting inv)`
-- `int getRecipeSize()`
+- `ItemStack getCraftingResult(InventoryCrafting inv)`
 - `ItemStack getRecipeOutput()`
-- `NonNullList < ItemStack > getRemainingItems( InventoryCrafting inv)`
+- `int getRecipeSize()`
+- `NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)`
+- `boolean matches(InventoryCrafting inv, World worldIn)`

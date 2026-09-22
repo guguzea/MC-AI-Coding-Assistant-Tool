@@ -1,5 +1,7 @@
 # MusicTicker
 
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.MusicTicker
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class MusicTicker extends java.lang.Object implements ITickable
 
 ## Constructors
 
-- `public MusicTicker( Minecraft mcIn)`
+- `MusicTicker(Minecraft mcIn)`
 
 ## Methods
 
-- `public void update()`
-- `public void playMusic( MusicTicker.MusicType requestedMusicType)`
+- `void playMusic(MusicTicker.MusicType requestedMusicType)`
+- `void update()`

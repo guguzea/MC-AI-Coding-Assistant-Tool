@@ -1,5 +1,7 @@
 # SetCount
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction → net.minecraft.world.storage.loot.functions.SetCount
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class SetCount extends LootFunction
 
 ## Constructors
 
-- `public SetCount( LootCondition [] conditionsIn, RandomValueRange countRangeIn)`
+- `SetCount(LootCondition [] conditionsIn, RandomValueRange countRangeIn)`
 
 ## Methods
 
-- `public ItemStack apply( ItemStack stack, java.util.Random rand, LootContext context)`
+- `ItemStack apply(ItemStack stack, java.util.Random rand, LootContext context)`

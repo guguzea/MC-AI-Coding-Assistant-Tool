@@ -1,8 +1,10 @@
 ---
 title: "IAnimatedModel"
-description: "IModel that has animation data."
+description: "public interface IAnimatedModel extends IModel"
 package: "net/minecraftforge/client/model/animation"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/model/animation/IAnimatedModel.html"
 sourceType: javadoc
 ---
@@ -17,8 +19,4 @@ public interface IAnimatedModel extends IModel
 
 ## Methods
 
-- `com.google.common.base.Optional<? extends IClip > getClip(java.lang.String name)`
-
-## Description
-
-IModel that has animation data.
+- `com.google.common.base.Optional<? extends IClip> getClip(java.lang.String name)`

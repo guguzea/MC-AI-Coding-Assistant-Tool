@@ -1,24 +1,30 @@
 ---
 title: "PlayerEvent.HarvestCheck"
-description: "HarvestCheck is fired when a player attempts to harvest a block. This event is fired whenever a player attempts to harvest a block in EntityPlayer.canHarvestBlock(IBlockState) . This event is fired vi"
+description: "public static class PlayerEvent.HarvestCheck extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/entity/player/PlayerEvent.HarvestCheck.html"
 sourceType: javadoc
 ---
 
 # PlayerEvent.HarvestCheck
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.HarvestCheck
+
+## Class signature
+
+```java
+public static class PlayerEvent.HarvestCheck extends PlayerEvent
+```
+
 ## Constructors
 
-- `public HarvestCheck( EntityPlayer player, IBlockState state, boolean success)`
+- `HarvestCheck(EntityPlayer player, IBlockState state, boolean success)`
 
 ## Methods
 
-- `public IBlockState getTargetBlock()`
-- `public boolean canHarvest()`
-- `public void setCanHarvest(boolean success)`
-
-## Description
-
-HarvestCheck is fired when a player attempts to harvest a block. This event is fired whenever a player attempts to harvest a block in EntityPlayer.canHarvestBlock(IBlockState) . This event is fired vi
+- `boolean canHarvest()`
+- `IBlockState getTargetBlock()`
+- `void setCanHarvest(boolean success)`

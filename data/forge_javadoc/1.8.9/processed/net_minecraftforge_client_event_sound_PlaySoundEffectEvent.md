@@ -1,9 +1,13 @@
 # PlaySoundEffectEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.sound.SoundEvent → net.minecraftforge.client.event.sound.SoundResultEvent → net.minecraftforge.client.event.sound.PlaySoundEffectEvent
 
-- `public PlaySoundEffectEvent( SoundManager manager, SoundPoolEntry source, java.lang.String name, float volume, float pitch)`
+## Class signature
 
-## Description
+```java
+public class PlaySoundEffectEvent extends SoundResultEvent
+```
 
-Deprecated.
+## Fields
+
+- `PlaySoundEffectEvent`

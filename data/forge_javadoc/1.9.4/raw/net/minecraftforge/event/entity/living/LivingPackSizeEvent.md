@@ -1,13 +1,17 @@
 ---
 title: "LivingPackSizeEvent"
-description: "This event is fired when the spawning system determines the maximum amount of the selected entity that can spawn at the same time."
+description: "public class LivingPackSizeEvent extends LivingEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/event/entity/living/LivingPackSizeEvent.html"
 sourceType: javadoc
 ---
 
 # LivingPackSizeEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingPackSizeEvent
 
 ## Class signature
 
@@ -17,13 +21,9 @@ public class LivingPackSizeEvent extends LivingEvent
 
 ## Constructors
 
-- `public LivingPackSizeEvent( EntityLiving entity)`
+- `LivingPackSizeEvent(EntityLiving entity)`
 
 ## Methods
 
-- `public int getMaxPackSize()`
-- `public void setMaxPackSize(int maxPackSize)`
-
-## Description
-
-This event is fired when the spawning system determines the maximum amount of the selected entity that can spawn at the same time.
+- `int getMaxPackSize()` — This event is fired when the spawning system determines the maximum amount of the selected entity that can spawn at the same time.
+- `void setMaxPackSize(int maxPackSize)`

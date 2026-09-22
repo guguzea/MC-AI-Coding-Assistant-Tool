@@ -1,5 +1,7 @@
 # FMLServerStartedEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLStateEvent → net.minecraftforge.fml.common.event.FMLServerStartedEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class FMLServerStartedEvent extends FMLStateEvent
 
 ## Constructors
 
-- `public FMLServerStartedEvent(java.lang.Object... data)`
+- `FMLServerStartedEvent(java.lang.Object... data)`
 
 ## Methods
 
-- `public LoaderState.ModState getModState()`
-
-## Description
-
-Called after FMLServerStartingEvent when the server is available and ready to play.
+- `LoaderState.ModState getModState()` — The current state of the mod

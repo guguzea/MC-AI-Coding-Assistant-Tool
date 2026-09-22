@@ -1,23 +1,25 @@
 # TileEntityMobSpawner
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityMobSpawner
+
 ## Class signature
 
 ```java
 public class TileEntityMobSpawner extends TileEntity implements ITickable
 ```
 
-## Constructors
-
-- `public TileEntityMobSpawner()`
-
 ## Methods
 
-- `public static void registerFixesMobSpawner( DataFixer fixer)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public void update()`
-- `@Nullable public SPacketUpdateTileEntity getUpdatePacket()`
-- `public NBTTagCompound getUpdateTag()`
-- `public boolean receiveClientEvent(int id, int type)`
-- `public boolean onlyOpsCanSetNbt()`
-- `public MobSpawnerBaseLogic getSpawnerBaseLogic()`
+- `MobSpawnerBaseLogic getSpawnerBaseLogic()`
+- `SPacketUpdateTileEntity getUpdatePacket()`
+- `NBTTagCompound getUpdateTag()`
+- `boolean onlyOpsCanSetNbt()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `boolean receiveClientEvent(int id, int type)`
+- `static void registerFixesMobSpawner(DataFixer fixer)`
+- `void update()`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `TileEntityMobSpawner`

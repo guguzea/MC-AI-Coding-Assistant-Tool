@@ -1,5 +1,7 @@
 # SoundPoolEntry
 
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.SoundPoolEntry
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class SoundPoolEntry extends java.lang.Object
 
 ## Constructors
 
-- `public SoundPoolEntry( ResourceLocation locationIn, double pitchIn, double volumeIn, boolean streamingSoundIn)`
-- `public SoundPoolEntry( SoundPoolEntry locationIn)`
+- `SoundPoolEntry(ResourceLocation locationIn, double pitchIn, double volumeIn, boolean streamingSoundIn)`
+- `SoundPoolEntry(SoundPoolEntry locationIn)`
 
 ## Methods
 
-- `public ResourceLocation getSoundPoolEntryLocation()`
-- `public double getPitch()`
-- `public void setPitch(double pitchIn)`
-- `public double getVolume()`
-- `public void setVolume(double volumeIn)`
-- `public boolean isStreamingSound()`
+- `double getPitch()`
+- `ResourceLocation getSoundPoolEntryLocation()`
+- `double getVolume()`
+- `boolean isStreamingSound()`
+- `void setPitch(double pitchIn)`
+- `void setVolume(double volumeIn)`

@@ -1,5 +1,7 @@
 # NormalChatListener
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.chat.NormalChatListener
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class NormalChatListener extends java.lang.Object implements IChatListene
 
 ## Constructors
 
-- `public NormalChatListener( Minecraft p_i47393_1_)`
+- `NormalChatListener(Minecraft p_i47393_1_)`
 
 ## Methods
 
-- `public void say( ChatType chatTypeIn, ITextComponent message)`
+- `void say(ChatType chatTypeIn, ITextComponent message)`

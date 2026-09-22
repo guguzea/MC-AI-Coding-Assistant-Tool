@@ -1,13 +1,17 @@
 ---
 title: "SplashProgress"
-description: "Not a fully fleshed out API, may change in future MC versions. However feel free to use and suggest additions."
+description: "public class SplashProgress extends java.lang.Object"
 package: "net/minecraftforge/fml/client"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/client/SplashProgress.html"
 sourceType: javadoc
 ---
 
 # SplashProgress
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.SplashProgress
 
 ## Class signature
 
@@ -17,19 +21,15 @@ public class SplashProgress extends java.lang.Object
 
 ## Constructors
 
-- `public SplashProgress()`
+- `SplashProgress()`
 
 ## Methods
 
-- `public static void start()`
-- `public static int getMaxTextureSize()`
-- `@Deprecated public static void pause()`
-- `@Deprecated public static void resume()`
-- `public static void finish()`
-- `public static void drawVanillaScreen( TextureManager renderEngine) throws org.lwjgl.LWJGLException`
-- `public static void clearVanillaResources( TextureManager renderEngine, ResourceLocation mojangLogo)`
-- `public static void checkGLError(java.lang.String where)`
-
-## Description
-
-Not a fully fleshed out API, may change in future MC versions. However feel free to use and suggest additions.
+- `static void checkGLError(java.lang.String where)`
+- `static void clearVanillaResources(TextureManager renderEngine, ResourceLocation mojangLogo)`
+- `static void drawVanillaScreen(TextureManager renderEngine)`
+- `static void finish()`
+- `static int getMaxTextureSize()`
+- `@Deprecated static void pause()` — Deprecated. not a stable API, will break, don't use this yet
+- `@Deprecated static void resume()` — Deprecated. not a stable API, will break, don't use this yet
+- `static void start()`

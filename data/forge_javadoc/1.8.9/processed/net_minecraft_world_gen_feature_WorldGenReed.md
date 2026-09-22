@@ -1,5 +1,7 @@
 # WorldGenReed
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenReed
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class WorldGenReed extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenReed()`
+- `WorldGenReed()`
 
 ## Methods
 
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`

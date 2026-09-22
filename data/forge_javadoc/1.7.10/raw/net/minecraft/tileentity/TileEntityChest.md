@@ -3,11 +3,15 @@ title: "TileEntityChest"
 description: "public class TileEntityChest extends TileEntity implements IInventory"
 package: "net/minecraft/tileentity"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/tileentity/TileEntityChest.html"
 sourceType: javadoc
 ---
 
 # TileEntityChest
+
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityChest
 
 ## Class signature
 
@@ -17,29 +21,40 @@ public class TileEntityChest extends TileEntity implements IInventory
 
 ## Constructors
 
-- `public TileEntityChest()`
-- `public TileEntityChest(int p_i2350_1_)`
+- `TileEntityChest()`
+- `TileEntityChest(int p_i2350_1_)`
 
 ## Methods
 
-- `public int getSizeInventory()`
-- `public ItemStack getStackInSlot(int p_70301_1_)`
-- `public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_)`
-- `public ItemStack getStackInSlotOnClosing(int p_70304_1_)`
-- `public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_)`
-- `public java.lang.String getInventoryName()`
-- `public boolean hasCustomInventoryName()`
-- `public void func_145976_a(java.lang.String p_145976_1_)`
-- `public void readFromNBT( NBTTagCompound p_145839_1_)`
-- `public void writeToNBT( NBTTagCompound p_145841_1_)`
-- `public int getInventoryStackLimit()`
-- `public boolean isUseableByPlayer( EntityPlayer p_70300_1_)`
-- `public void updateContainingBlockInfo()`
-- `public void checkForAdjacentChests()`
-- `public void updateEntity()`
-- `public boolean receiveClientEvent(int p_145842_1_, int p_145842_2_)`
-- `public void openInventory()`
-- `public void closeInventory()`
-- `public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_)`
-- `public void invalidate()`
-- `public int func_145980_j()`
+- `void checkForAdjacentChests()`
+- `void closeInventory()`
+- `ItemStack decrStackSize(int p_70298_1_, int p_70298_2_)`
+- `void func_145976_a(java.lang.String p_145976_1_)`
+- `int func_145980_j()`
+- `java.lang.String getInventoryName()`
+- `int getInventoryStackLimit()`
+- `int getSizeInventory()`
+- `ItemStack getStackInSlot(int p_70301_1_)`
+- `ItemStack getStackInSlotOnClosing(int p_70304_1_)`
+- `boolean hasCustomInventoryName()`
+- `void invalidate()`
+- `boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_)`
+- `boolean isUseableByPlayer(EntityPlayer p_70300_1_)`
+- `void openInventory()`
+- `void readFromNBT(NBTTagCompound p_145839_1_)`
+- `boolean receiveClientEvent(int p_145842_1_, int p_145842_2_)`
+- `void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_)`
+- `void updateContainingBlockInfo()`
+- `void updateEntity()`
+- `void writeToNBT(NBTTagCompound p_145841_1_)`
+
+## Fields
+
+- `boolean adjacentChestChecked`
+- `TileEntityChest adjacentChestXNeg`
+- `TileEntityChest adjacentChestXPos`
+- `TileEntityChest adjacentChestZNeg`
+- `TileEntityChest adjacentChestZPos`
+- `float lidAngle`
+- `int numPlayersUsing`
+- `float prevLidAngle`

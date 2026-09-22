@@ -1,13 +1,17 @@
 ---
 title: "BlockSnapshot"
-description: "Represents a captured snapshot of a block which will not change automatically. Unlike Block, which only one object can exist per coordinate, BlockSnapshot can exist multiple times for any given Block."
+description: "public class BlockSnapshot extends java.lang.Object"
 package: "net/minecraftforge/common/util"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/common/util/BlockSnapshot.html"
 sourceType: javadoc
 ---
 
 # BlockSnapshot
+
+**Inheritance:** java.lang.Object → net.minecraftforge.common.util.BlockSnapshot
 
 ## Class signature
 
@@ -17,38 +21,34 @@ public class BlockSnapshot extends java.lang.Object
 
 ## Constructors
 
-- `public BlockSnapshot( World world, BlockPos pos, IBlockState state)`
-- `public BlockSnapshot( World world, BlockPos pos, IBlockState state, NBTTagCompound nbt)`
-- `public BlockSnapshot( World world, BlockPos pos, IBlockState state, int flag)`
-- `public BlockSnapshot(int dimension, BlockPos pos, ResourceLocation registryName, int meta, int flag, NBTTagCompound nbt)`
+- `BlockSnapshot(int dimension, BlockPos pos, ResourceLocation registryName, int meta, int flag, NBTTagCompound nbt)`
+- `@Deprecated BlockSnapshot(int dimension, BlockPos pos, java.lang.String modId, java.lang.String blockName, int meta, int flag, NBTTagCompound nbt)`
+- `BlockSnapshot(World world, BlockPos pos, IBlockState state)`
+- `BlockSnapshot(World world, BlockPos pos, IBlockState state, int flag)`
+- `BlockSnapshot(World world, BlockPos pos, IBlockState state, NBTTagCompound nbt)`
 
 ## Methods
 
-- `@Deprecated public BlockSnapshot(int dimension, BlockPos pos, java.lang.String modId, java.lang.String blockName, int meta, int flag, NBTTagCompound nbt)`
-- `public static BlockSnapshot getBlockSnapshot( World world, BlockPos pos)`
-- `public static BlockSnapshot getBlockSnapshot( World world, BlockPos pos, int flag)`
-- `public static BlockSnapshot readFromNBT( NBTTagCompound tag)`
-- `public IBlockState getCurrentBlock()`
-- `public World getWorld()`
-- `public IBlockState getReplacedBlock()`
-- `public TileEntity getTileEntity()`
-- `public boolean restore()`
-- `public boolean restore(boolean force)`
-- `public boolean restore(boolean force, boolean notifyNeighbors)`
-- `public boolean restoreToLocation( World world, BlockPos pos, boolean force, boolean notifyNeighbors)`
-- `public void writeToNBT( NBTTagCompound compound)`
-- `public boolean equals(java.lang.Object obj)`
-- `public int hashCode()`
-- `public BlockPos getPos()`
-- `public int getDimId()`
-- `public void setReplacedBlock( IBlockState replacedBlock)`
-- `public int getFlag()`
-- `public void setFlag(int flag)`
-- `public NBTTagCompound getNbt()`
-- `public void setWorld( World world)`
-- `public ResourceLocation getRegistryName()`
-- `public int getMeta()`
-
-## Description
-
-Represents a captured snapshot of a block which will not change automatically. Unlike Block, which only one object can exist per coordinate, BlockSnapshot can exist multiple times for any given Block.
+- `boolean equals(java.lang.Object obj)`
+- `static BlockSnapshot getBlockSnapshot(World world, BlockPos pos)`
+- `static BlockSnapshot getBlockSnapshot(World world, BlockPos pos, int flag)`
+- `IBlockState getCurrentBlock()`
+- `int getDimId()`
+- `int getFlag()`
+- `int getMeta()`
+- `NBTTagCompound getNbt()`
+- `BlockPos getPos()`
+- `ResourceLocation getRegistryName()`
+- `IBlockState getReplacedBlock()`
+- `TileEntity getTileEntity()`
+- `World getWorld()`
+- `int hashCode()`
+- `static BlockSnapshot readFromNBT(NBTTagCompound tag)`
+- `boolean restore()`
+- `boolean restore(boolean force)`
+- `boolean restore(boolean force, boolean notifyNeighbors)`
+- `boolean restoreToLocation(World world, BlockPos pos, boolean force, boolean notifyNeighbors)`
+- `void setFlag(int flag)`
+- `void setReplacedBlock(IBlockState replacedBlock)`
+- `void setWorld(World world)`
+- `void writeToNBT(NBTTagCompound compound)`

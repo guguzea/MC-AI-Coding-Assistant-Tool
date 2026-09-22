@@ -1,5 +1,7 @@
 # ChunkGeneratorHell
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.ChunkGeneratorHell
+
 ## Class signature
 
 ```java
@@ -8,16 +10,27 @@ public class ChunkGeneratorHell extends java.lang.Object implements IChunkGenera
 
 ## Constructors
 
-- `public ChunkGeneratorHell( World worldIn, boolean p_i45637_2_, long seed)`
+- `ChunkGeneratorHell(World worldIn, boolean p_i45637_2_, long seed)`
 
 ## Methods
 
-- `public void prepareHeights(int p_185936_1_, int p_185936_2_, ChunkPrimer primer)`
-- `public void buildSurfaces(int p_185937_1_, int p_185937_2_, ChunkPrimer primer)`
-- `public Chunk generateChunk(int x, int z)`
-- `public void populate(int x, int z)`
-- `public boolean generateStructures( Chunk chunkIn, int x, int z)`
-- `public java.util.List< Biome.SpawnListEntry > getPossibleCreatures( EnumCreatureType creatureType, BlockPos pos)`
-- `public BlockPos getNearestStructurePos( World worldIn, java.lang.String structureName, BlockPos position, boolean findUnexplored)`
-- `public boolean isInsideStructure( World worldIn, java.lang.String structureName, BlockPos pos)`
-- `public void recreateStructures( Chunk chunkIn, int x, int z)`
+- `void buildSurfaces(int p_185937_1_, int p_185937_2_, ChunkPrimer primer)`
+- `Chunk generateChunk(int x, int z)`
+- `boolean generateStructures(Chunk chunkIn, int x, int z)`
+- `BlockPos getNearestStructurePos(World worldIn, java.lang.String structureName, BlockPos position, boolean findUnexplored)`
+- `java.util.List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)`
+- `boolean isInsideStructure(World worldIn, java.lang.String structureName, BlockPos pos)`
+- `void populate(int x, int z)`
+- `void prepareHeights(int p_185936_1_, int p_185936_2_, ChunkPrimer primer)`
+- `void recreateStructures(Chunk chunkIn, int x, int z)`
+
+## Fields
+
+- `protected static IBlockState AIR`
+- `protected static IBlockState BEDROCK`
+- `NoiseGeneratorOctaves depthNoise`
+- `protected static IBlockState GRAVEL`
+- `protected static IBlockState LAVA`
+- `protected static IBlockState NETHERRACK`
+- `NoiseGeneratorOctaves scaleNoise`
+- `protected static IBlockState SOUL_SAND`

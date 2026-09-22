@@ -3,11 +3,15 @@ title: "EntityShulkerBullet"
 description: "public class EntityShulkerBullet extends Entity"
 package: "net/minecraft/entity/projectile"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/projectile/EntityShulkerBullet.html"
 sourceType: javadoc
 ---
 
 # EntityShulkerBullet
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityShulkerBullet
 
 ## Class signature
 
@@ -15,23 +19,23 @@ sourceType: javadoc
 public class EntityShulkerBullet extends Entity
 ```
 
-## Constructors
-
-- `public EntityShulkerBullet( World worldIn)`
-- `public EntityShulkerBullet( World worldIn, double x, double y, double z, double motionXIn, double motionYIn, double motionZIn)`
-- `public EntityShulkerBullet( World worldIn, EntityLivingBase ownerIn, Entity targetIn, EnumFacing.Axis p_i46772_4_)`
-
 ## Methods
 
-- `public SoundCategory getSoundCategory()`
-- `protected void writeEntityToNBT( NBTTagCompound compound)`
-- `protected void readEntityFromNBT( NBTTagCompound compound)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `protected void bulletHit(RayTraceResult result)`
+- `boolean canBeCollidedWith()`
 - `protected void entityInit()`
-- `public void onUpdate()`
-- `public boolean isBurning()`
-- `public boolean isInRangeToRenderDist(double distance)`
-- `public float getBrightness(float partialTicks)`
-- `public int getBrightnessForRender(float partialTicks)`
-- `protected void bulletHit( RayTraceResult result)`
-- `public boolean canBeCollidedWith()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
+- `float getBrightness(float partialTicks)`
+- `int getBrightnessForRender(float partialTicks)`
+- `SoundCategory getSoundCategory()`
+- `boolean isBurning()`
+- `boolean isInRangeToRenderDist(double distance)`
+- `void onUpdate()`
+- `protected void readEntityFromNBT(NBTTagCompound compound)`
+- `protected void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityShulkerBullet`
+- `EntityShulkerBullet`
+- `EntityShulkerBullet`

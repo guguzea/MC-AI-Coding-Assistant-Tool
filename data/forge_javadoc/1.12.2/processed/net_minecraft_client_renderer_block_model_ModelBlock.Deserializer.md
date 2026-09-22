@@ -1,12 +1,20 @@
 # ModelBlock.Deserializer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.ModelBlock.Deserializer
+
+## Class signature
+
+```java
+public static class ModelBlock.Deserializer extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Deserializer()`
+- `Deserializer()`
 
 ## Methods
 
-- `public ModelBlock deserialize(JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException`
-- `protected java.util.List< ItemOverride > getItemOverrides(JsonDeserializationContext deserializationContext, JsonObject object)`
+- `ModelBlock deserialize(JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_)`
 - `protected boolean getAmbientOcclusionEnabled(JsonObject object)`
-- `protected java.util.List< BlockPart > getModelElements(JsonDeserializationContext deserializationContext, JsonObject object)`
+- `protected java.util.List<ItemOverride> getItemOverrides(JsonDeserializationContext deserializationContext, JsonObject object)`
+- `protected java.util.List<BlockPart> getModelElements(JsonDeserializationContext deserializationContext, JsonObject object)`

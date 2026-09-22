@@ -1,0 +1,12 @@
+{
+  "platform": "fabric",
+  "version": "1.16.5",
+  "source": "github_trees",
+  "repo": "FabricMC/fabric-docs",
+  "branch": "main",
+  "treeSha": "53dd9650e7ecb3566b03bfe260556407b5ff4267",
+  "truncated": false,
+  "discoveredAt": "2026-09-21T11:57:16.780Z",
+  "pageCount": 0,
+  "pages": []
+}

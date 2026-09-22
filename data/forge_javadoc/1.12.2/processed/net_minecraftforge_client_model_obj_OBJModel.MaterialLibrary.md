@@ -1,15 +1,23 @@
 # OBJModel.MaterialLibrary
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.obj.OBJModel.MaterialLibrary
+
+## Class signature
+
+```java
+public static class OBJModel.MaterialLibrary extends java.lang.Object
+```
+
 ## Constructors
 
-- `public MaterialLibrary()`
+- `MaterialLibrary()`
 
 ## Methods
 
-- `public OBJModel.MaterialLibrary makeLibWithReplacements(<any> replacements)`
-- `public java.util.Map<java.lang.String, OBJModel.Group > getGroups()`
-- `public java.util.List< OBJModel.Group > getGroupsContainingFace( OBJModel.Face f)`
-- `public void changeMaterialColor(java.lang.String name, int color)`
-- `public OBJModel.Material getMaterial(java.lang.String name)`
-- `public <any> getMaterialNames()`
-- `public void parseMaterials( IResourceManager manager, java.lang.String path, ResourceLocation from) throws java.io.IOException`
+- `void changeMaterialColor(java.lang.String name, int color)`
+- `java.util.Map<java.lang.String, OBJModel.Group> getGroups()`
+- `java.util.List<OBJModel.Group> getGroupsContainingFace(OBJModel.Face f)`
+- `OBJModel.Material getMaterial(java.lang.String name)`
+- `<any> getMaterialNames()`
+- `OBJModel.MaterialLibrary makeLibWithReplacements(<any> replacements)`
+- `void parseMaterials(IResourceManager manager, java.lang.String path, ResourceLocation from)`

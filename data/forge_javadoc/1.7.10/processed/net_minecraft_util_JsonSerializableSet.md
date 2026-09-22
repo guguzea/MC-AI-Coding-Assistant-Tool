@@ -1,5 +1,7 @@
 # JsonSerializableSet
 
+**Inheritance:** java.lang.Object → ForwardingSet → net.minecraft.util.JsonSerializableSet
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class JsonSerializableSet extends ForwardingSet implements IJsonSerializa
 
 ## Constructors
 
-- `public JsonSerializableSet()`
+- `JsonSerializableSet()`
 
 ## Methods
 
-- `public void func_152753_a(JsonElement p_152753_1_)`
-- `public JsonElement getSerializableElement()`
 - `protected java.util.Set delegate()`
+- `void func_152753_a(JsonElement p_152753_1_)`
+- `JsonElement getSerializableElement()`

@@ -1,5 +1,7 @@
 # InvalidVersionSpecificationException
 
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → cpw.mods.fml.common.versioning.InvalidVersionSpecificationException
+
 ## Class signature
 
 ```java
@@ -8,8 +10,4 @@ public class InvalidVersionSpecificationException extends java.lang.Exception
 
 ## Constructors
 
-- `public InvalidVersionSpecificationException(java.lang.String message)`
-
-## Description
-
-Occurs when a version is invalid.
+- `InvalidVersionSpecificationException(java.lang.String message)`

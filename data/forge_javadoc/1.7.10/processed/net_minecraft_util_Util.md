@@ -1,5 +1,7 @@
 # Util
 
+**Inheritance:** java.lang.Object → net.minecraft.util.Util
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class Util extends java.lang.Object
 
 ## Constructors
 
-- `public Util()`
+- `Util()`
 
 ## Methods
 
-- `public static Util.EnumOS getOSType()`
+- `static Util.EnumOS getOSType()`

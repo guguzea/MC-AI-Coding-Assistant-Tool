@@ -1,14 +1,18 @@
 # GuiScreenEvent.InitGuiEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent
+
+## Class signature
+
+```java
+public static class GuiScreenEvent.InitGuiEvent extends GuiScreenEvent
+```
+
 ## Constructors
 
-- `public InitGuiEvent( GuiScreen gui, java.util.List< GuiButton > buttonList)`
+- `InitGuiEvent(GuiScreen gui, java.util.List<GuiButton> buttonList)`
 
 ## Methods
 
-- `public java.util.List< GuiButton > getButtonList()`
-- `public void setButtonList(java.util.List< GuiButton > buttonList)`
-
-## Description
-
-This event fires right after GuiScreen.initGui() .
+- `java.util.List<GuiButton> getButtonList()` — The buttonList field from the GuiScreen object referenced by gui .
+- `void setButtonList(java.util.List<GuiButton> buttonList)`

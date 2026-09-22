@@ -1,27 +1,29 @@
 # ScoreboardSaveData
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.WorldSavedData → net.minecraft.scoreboard.ScoreboardSaveData
+
 ## Class signature
 
 ```java
 public class ScoreboardSaveData extends WorldSavedData
 ```
 
-## Constructors
-
-- `public ScoreboardSaveData()`
-- `public ScoreboardSaveData(java.lang.String name)`
-
 ## Methods
 
-- `public void setScoreboard( Scoreboard scoreboardIn)`
-- `public void readFromNBT( NBTTagCompound nbt)`
-- `protected void readTeams( NBTTagList tagList)`
-- `protected void loadTeamPlayers( ScorePlayerTeam playerTeam, NBTTagList tagList)`
-- `protected void readDisplayConfig( NBTTagCompound compound)`
-- `protected void readObjectives( NBTTagList nbt)`
-- `protected void readScores( NBTTagList nbt)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `protected NBTTagList teamsToNbt()`
-- `protected void fillInDisplaySlots( NBTTagCompound compound)`
+- `protected void fillInDisplaySlots(NBTTagCompound compound)`
+- `protected void loadTeamPlayers(ScorePlayerTeam playerTeam, NBTTagList tagList)`
 - `protected NBTTagList objectivesToNbt()`
+- `protected void readDisplayConfig(NBTTagCompound compound)`
+- `void readFromNBT(NBTTagCompound nbt)`
+- `protected void readObjectives(NBTTagList nbt)`
+- `protected void readScores(NBTTagList nbt)`
+- `protected void readTeams(NBTTagList tagList)`
 - `protected NBTTagList scoresToNbt()`
+- `void setScoreboard(Scoreboard scoreboardIn)`
+- `protected NBTTagList teamsToNbt()`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `ScoreboardSaveData`
+- `ScoreboardSaveData`

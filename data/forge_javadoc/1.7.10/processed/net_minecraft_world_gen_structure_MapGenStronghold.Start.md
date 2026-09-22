@@ -1,6 +1,14 @@
 # MapGenStronghold.Start
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureStart → net.minecraft.world.gen.structure.MapGenStronghold.Start
 
-- `public Start()`
-- `public Start( World p_i2067_1_, java.util.Random p_i2067_2_, int p_i2067_3_, int p_i2067_4_)`
+## Class signature
+
+```java
+public static class MapGenStronghold.Start extends StructureStart
+```
+
+## Fields
+
+- `Start`
+- `Start`

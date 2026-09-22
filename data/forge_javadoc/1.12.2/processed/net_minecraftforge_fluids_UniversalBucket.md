@@ -1,32 +1,30 @@
 # UniversalBucket
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraftforge.fluids.UniversalBucket
+
 ## Class signature
 
 ```java
 public class UniversalBucket extends Item
 ```
 
-## Constructors
-
-- `public UniversalBucket()`
-- `public UniversalBucket(int capacity, ItemStack empty, boolean nbtSensitive)`
-
 ## Methods
 
-- `public boolean hasContainerItem( ItemStack stack)`
-- `public ItemStack getContainerItem( ItemStack itemStack)`
-- `public void getSubItems( CreativeTabs tab, NonNullList < ItemStack > subItems)`
-- `public java.lang.String getItemStackDisplayName( ItemStack stack)`
-- `public ActionResult < ItemStack > onItemRightClick( World world, EntityPlayer player, EnumHand hand)`
-- `public void onFillBucket( FillBucketEvent event)`
-- `@Deprecated public static ItemStack getFilledBucket( UniversalBucket item, Fluid fluid)`
-- `public FluidStack getFluid( ItemStack container)`
-- `public int getCapacity()`
-- `public ItemStack getEmpty()`
-- `public boolean isNbtSensitive()`
-- `public java.lang.String getCreatorModId( ItemStack itemStack)`
-- `public ICapabilityProvider initCapabilities( ItemStack stack, NBTTagCompound nbt)`
+- `int getCapacity()`
+- `ItemStack getContainerItem(ItemStack itemStack)` — ItemStack sensitive version of getContainerItem.
+- `java.lang.String getCreatorModId(ItemStack itemStack)` — Called to get the Mod ID of the mod that *created* the ItemStack, instead of the real Mod ID that *registered* it.
+- `ItemStack getEmpty()`
+- `@Deprecated static ItemStack getFilledBucket(UniversalBucket item, Fluid fluid)` — Deprecated. use the NBT-sensitive version FluidUtil.getFilledBucket(FluidStack)
+- `FluidStack getFluid(ItemStack container)`
+- `java.lang.String getItemStackDisplayName(ItemStack stack)`
+- `void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)`
+- `boolean hasContainerItem(ItemStack stack)` — ItemStack sensitive version of hasContainerItem
+- `ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)` — Called from ItemStack.setItem, will hold extra data for the life of this ItemStack.
+- `boolean isNbtSensitive()`
+- `void onFillBucket(FillBucketEvent event)`
+- `ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)`
 
-## Description
+## Fields
 
-A universal bucket that can hold any liquid
+- `UniversalBucket`
+- `UniversalBucket`

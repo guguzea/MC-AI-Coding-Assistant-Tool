@@ -1,19 +1,17 @@
 # VanillaHopperItemHandler
 
+**Inheritance:** java.lang.Object → net.minecraftforge.items.wrapper.InvWrapper → net.minecraftforge.items.VanillaHopperItemHandler
+
 ## Class signature
 
 ```java
 public class VanillaHopperItemHandler extends InvWrapper
 ```
 
-## Constructors
-
-- `public VanillaHopperItemHandler( TileEntityHopper hopper)`
-
 ## Methods
 
-- `public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)`
+- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)` — Inserts an ItemStack into the given slot and return the remainder.
 
-## Description
+## Fields
 
-Inserts an ItemStack into the given slot and return the remainder.
+- `VanillaHopperItemHandler`

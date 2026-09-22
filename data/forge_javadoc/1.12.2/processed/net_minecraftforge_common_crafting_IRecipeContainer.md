@@ -8,9 +8,5 @@ public interface IRecipeContainer
 
 ## Methods
 
-- `InventoryCraftResult getCraftResult()`
-- `InventoryCrafting getCraftMatrix()`
-
-## Description
-
-This interface is to be implemented on Container objects. For GUIs with recipe books, this allows their containers to have recipe completion and ghost recipes in their craft matrices.
+- `InventoryCrafting getCraftMatrix()` — The crafting matrix of your container, where ingredients go for crafting.
+- `InventoryCraftResult getCraftResult()` — The crafting result slot of your container, where you take out the crafted item.

@@ -1,5 +1,7 @@
 # ChunkGenWorker
 
+**Inheritance:** java.lang.Object → net.minecraftforge.server.command.ChunkGenWorker
+
 ## Class signature
 
 ```java
@@ -8,16 +10,17 @@ public class ChunkGenWorker extends java.lang.Object implements WorldWorkerManag
 
 ## Constructors
 
-- `public ChunkGenWorker( ICommandSender listener, BlockPos start, int total, int dim, int interval)`
+- `ChunkGenWorker(ICommandSender listener, BlockPos start, int total, int dim, int interval)`
 
 ## Methods
 
-- `protected java.util.Queue< BlockPos > buildQueue()`
-- `@Deprecated public TextComponentTranslation getStartMessage()`
-- `public TextComponentBase getStartMessage( ICommandSender sender)`
-- `public boolean hasWork()`
-- `public boolean doWork()`
+- `protected java.util.Queue<BlockPos> buildQueue()`
+- `boolean doWork()` — Perform a task, returning true from this will have the manager call this function again this tick if there is time left.
+- `@Deprecated TextComponentTranslation getStartMessage()`
+- `TextComponentBase getStartMessage(ICommandSender sender)`
+- `boolean hasWork()`
 
-## Description
+## Fields
 
-Perform a task, returning true from this will have the manager call this function again this tick if there is time left.
+- `protected BlockPos start`
+- `protected int total`

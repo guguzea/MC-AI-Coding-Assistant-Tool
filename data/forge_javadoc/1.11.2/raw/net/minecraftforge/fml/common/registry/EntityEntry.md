@@ -1,29 +1,33 @@
 ---
 title: "EntityEntry"
-description: "public class EntityEntry extends IForgeRegistryEntry.Impl < EntityEntry >"
+description: "public class EntityEntry extends IForgeRegistryEntry.Impl<EntityEntry>"
 package: "net/minecraftforge/fml/common/registry"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/common/registry/EntityEntry.html"
 sourceType: javadoc
 ---
 
 # EntityEntry
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<EntityEntry> → net.minecraftforge.fml.common.registry.EntityEntry
+
 ## Class signature
 
 ```java
-public class EntityEntry extends IForgeRegistryEntry.Impl < EntityEntry >
+public class EntityEntry extends IForgeRegistryEntry.Impl<EntityEntry>
 ```
-
-## Constructors
-
-- `public EntityEntry(java.lang.Class<? extends Entity > cls, java.lang.String name)`
 
 ## Methods
 
+- `EntityList.EntityEggInfo getEgg()`
+- `java.lang.Class<? extends Entity> getEntityClass()`
+- `java.lang.String getName()`
 - `protected void init()`
-- `public java.lang.Class<? extends Entity > getEntityClass()`
-- `public java.lang.String getName()`
-- `public EntityList.EntityEggInfo getEgg()`
-- `public void setEgg( EntityList.EntityEggInfo egg)`
-- `public Entity newInstance( World world)`
+- `Entity newInstance(World world)`
+- `void setEgg(EntityList.EntityEggInfo egg)`
+
+## Fields
+
+- `EntityEntry`

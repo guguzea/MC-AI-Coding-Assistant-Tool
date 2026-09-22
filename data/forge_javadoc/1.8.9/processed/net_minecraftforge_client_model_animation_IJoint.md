@@ -10,7 +10,3 @@ public interface IJoint extends IModelPart
 
 - `TRSRTransformation getInvBindPose()`
 - `<any> getParent()`
-
-## Description
-
-Model part that's a part of the hierarchical skeleton.

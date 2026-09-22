@@ -1,13 +1,17 @@
 ---
 title: "ItemInWorldManager"
-description: "The world object that this object is connected to."
+description: "public class ItemInWorldManager extends java.lang.Object"
 package: "net/minecraft/server/management"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/server/management/ItemInWorldManager.html"
 sourceType: javadoc
 ---
 
 # ItemInWorldManager
+
+**Inheritance:** java.lang.Object → net.minecraft.server.management.ItemInWorldManager
 
 ## Class signature
 
@@ -17,26 +21,27 @@ public class ItemInWorldManager extends java.lang.Object
 
 ## Constructors
 
-- `public ItemInWorldManager( World worldIn)`
+- `ItemInWorldManager(World worldIn)`
 
 ## Methods
 
-- `public void setGameType( WorldSettings.GameType type)`
-- `public WorldSettings.GameType getGameType()`
-- `public boolean survivalOrAdventure()`
-- `public boolean isCreative()`
-- `public void initializeGameType( WorldSettings.GameType type)`
-- `public void updateBlockRemoving()`
-- `public void onBlockClicked( BlockPos pos, EnumFacing side)`
-- `public void blockRemoving( BlockPos pos)`
-- `public void cancelDestroyingBlock()`
-- `public boolean tryHarvestBlock( BlockPos pos)`
-- `public boolean tryUseItem( EntityPlayer player, World worldIn, ItemStack stack)`
-- `public boolean activateBlockOrUseItem( EntityPlayer player, World worldIn, ItemStack stack, BlockPos pos, EnumFacing side, float offsetX, float offsetY, float offsetZ)`
-- `public void setWorld( WorldServer serverWorld)`
-- `public double getBlockReachDistance()`
-- `public void setBlockReachDistance(double distance)`
+- `boolean activateBlockOrUseItem(EntityPlayer player, World worldIn, ItemStack stack, BlockPos pos, EnumFacing side, float offsetX, float offsetY, float offsetZ)` — Activate the clicked on block, otherwise use the held item.
+- `void blockRemoving(BlockPos pos)`
+- `void cancelDestroyingBlock()` — Stops the block breaking process
+- `double getBlockReachDistance()`
+- `WorldSettings.GameType getGameType()`
+- `void initializeGameType(WorldSettings.GameType type)` — if the gameType is currently NOT_SET then change it to par1
+- `boolean isCreative()` — Get if we are in creative game mode.
+- `void onBlockClicked(BlockPos pos, EnumFacing side)` — If not creative, it calls sendBlockBreakProgress until the block is broken first. tryHarvestBlock can also be the result of this call.
+- `void setBlockReachDistance(double distance)`
+- `void setGameType(WorldSettings.GameType type)`
+- `void setWorld(WorldServer serverWorld)` — Sets the world instance.
+- `boolean survivalOrAdventure()`
+- `boolean tryHarvestBlock(BlockPos pos)` — Attempts to harvest a block
+- `boolean tryUseItem(EntityPlayer player, World worldIn, ItemStack stack)` — Attempts to right-click use an item by the given EntityPlayer in the given World
+- `void updateBlockRemoving()`
 
-## Description
+## Fields
 
-The world object that this object is connected to.
+- `World theWorld` — The world object that this object is connected to.
+- `EntityPlayerMP thisPlayerMP` — The EntityPlayerMP object that this object is connected to.

@@ -1,18 +1,27 @@
 # FluidContainerItemWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.capability.wrappers.FluidContainerItemWrapper
+
+## Class signature
+
+```java
+public class FluidContainerItemWrapper extends java.lang.Object implements IFluidHandler, ICapabilityProvider
+```
+
 ## Constructors
 
-- `public FluidContainerItemWrapper( IFluidContainerItem handler, ItemStack container)`
+- `@Deprecated FluidContainerItemWrapper(IFluidContainerItem handler, ItemStack container)`
 
 ## Methods
 
-- `public FluidTankProperties [] getTankProperties()`
-- `public int fill( FluidStack resource, boolean doFill)`
-- `public FluidStack drain( FluidStack resource, boolean doDrain)`
-- `public FluidStack drain(int maxDrain, boolean doDrain)`
-- `public boolean hasCapability( Capability <?> capability, EnumFacing facing)`
-- `public <T> T getCapability( Capability <T> capability, EnumFacing facing)`
+- `@Deprecated FluidStack drain(FluidStack resource, boolean doDrain)`
+- `@Deprecated FluidStack drain(int maxDrain, boolean doDrain)`
+- `@Deprecated int fill(FluidStack resource, boolean doFill)`
+- `@Deprecated <T> T getCapability(Capability<T> capability, EnumFacing facing)`
+- `@Deprecated FluidTankProperties [] getTankProperties()`
+- `@Deprecated boolean hasCapability(Capability<?> capability, EnumFacing facing)`
 
-## Description
+## Fields
 
-Deprecated. will be removed along with IFluidContainerItem
+- `protected ItemStack container`
+- `protected IFluidContainerItem handler`

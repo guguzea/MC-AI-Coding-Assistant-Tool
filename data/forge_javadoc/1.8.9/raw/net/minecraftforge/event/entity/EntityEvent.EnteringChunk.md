@@ -1,18 +1,31 @@
 ---
 title: "EntityEvent.EnteringChunk"
-description: "EnteringChunk is fired when an Entity enters a chunk. This event is fired whenever vanilla Minecraft determines that an entity is entering a chunk in Chunk#addEntity(net.minecraft.entity.Entity) This "
+description: "public static class EntityEvent.EnteringChunk extends EntityEvent"
 package: "net/minecraftforge/event/entity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/EntityEvent.EnteringChunk.html"
 sourceType: javadoc
 ---
 
 # EntityEvent.EnteringChunk
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.EntityEvent.EnteringChunk
+
+## Class signature
+
+```java
+public static class EntityEvent.EnteringChunk extends EntityEvent
+```
+
 ## Constructors
 
-- `public EnteringChunk( Entity entity, int newChunkX, int newChunkZ, int oldChunkX, int oldChunkZ)`
+- `EnteringChunk(Entity entity, int newChunkX, int newChunkZ, int oldChunkX, int oldChunkZ)`
 
-## Description
+## Fields
 
-EnteringChunk is fired when an Entity enters a chunk. This event is fired whenever vanilla Minecraft determines that an entity is entering a chunk in Chunk#addEntity(net.minecraft.entity.Entity) This 
+- `int newChunkX`
+- `int newChunkZ`
+- `int oldChunkX`
+- `int oldChunkZ`

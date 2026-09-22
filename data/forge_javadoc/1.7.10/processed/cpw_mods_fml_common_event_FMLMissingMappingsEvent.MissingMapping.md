@@ -1,21 +1,31 @@
 # FMLMissingMappingsEvent.MissingMapping
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping
+
+## Class signature
+
+```java
+public static class FMLMissingMappingsEvent.MissingMapping extends java.lang.Object
+```
+
 ## Constructors
 
-- `public MissingMapping(java.lang.String name, int id)`
+- `MissingMapping(java.lang.String name, int id)`
 
 ## Methods
 
-- `@Deprecated public void setAction( FMLMissingMappingsEvent.Action target)`
-- `public void ignore()`
-- `public void warn()`
-- `public void fail()`
-- `public void remap( Block target)`
-- `public void remap( Item target)`
-- `public void skipItemBlock()`
-- `public FMLMissingMappingsEvent.Action getAction()`
-- `public java.lang.Object getTarget()`
+- `void fail()` — Prevent the world from loading due to the missing item.
+- `FMLMissingMappingsEvent.Action getAction()`
+- `java.lang.Object getTarget()`
+- `void ignore()` — Ignore the missing item.
+- `void remap(Block target)` — Remap the missing item to the specified Block.
+- `void remap(Item target)` — Remap the missing item to the specified Item.
+- `@Deprecated void setAction(FMLMissingMappingsEvent.Action target)` — Deprecated. use ignore(), warn(), fail() or remap() instead
+- `void skipItemBlock()`
+- `void warn()` — Warn the user about the missing item.
 
-## Description
+## Fields
 
-Prevent the world from loading due to the missing item.
+- `int id`
+- `java.lang.String name`
+- `GameRegistry.Type type`

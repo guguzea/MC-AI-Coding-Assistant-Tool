@@ -1,23 +1,21 @@
 # EntitySmallFireball
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityFireball → net.minecraft.entity.projectile.EntitySmallFireball
+
 ## Class signature
 
 ```java
 public class EntitySmallFireball extends EntityFireball
 ```
 
-## Constructors
-
-- `public EntitySmallFireball( World worldIn)`
-- `public EntitySmallFireball( World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ)`
-- `public EntitySmallFireball( World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ)`
-
 ## Methods
 
-- `protected void onImpact( MovingObjectPosition movingObject)`
-- `public boolean canBeCollidedWith()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
+- `boolean attackEntityFrom(DamageSource source, float amount)` — Called when the entity is attacked.
+- `boolean canBeCollidedWith()` — Returns true if other Entities should be prevented from moving through this Entity.
+- `protected void onImpact(MovingObjectPosition movingObject)` — Called when this EntityFireball hits a block or entity.
 
-## Description
+## Fields
 
-Called when the entity is attacked.
+- `EntitySmallFireball`
+- `EntitySmallFireball`
+- `EntitySmallFireball`

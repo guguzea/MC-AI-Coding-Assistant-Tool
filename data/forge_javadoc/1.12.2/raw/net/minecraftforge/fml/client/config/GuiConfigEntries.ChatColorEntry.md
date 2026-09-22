@@ -1,19 +1,25 @@
 ---
 title: "GuiConfigEntries.ChatColorEntry"
-description: "ChatColorEntry Provides a GuiButton that cycles through the list of chat color codes."
+description: "public static class GuiConfigEntries.ChatColorEntry extends GuiConfigEntries.CycleValueEntry"
 package: "net/minecraftforge/fml/client/config"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/client/config/GuiConfigEntries.ChatColorEntry.html"
 sourceType: javadoc
 ---
 
 # GuiConfigEntries.ChatColorEntry
 
-## Methods
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.config.GuiConfigEntries.ListEntryBase → net.minecraftforge.fml.client.config.GuiConfigEntries.ButtonEntry → net.minecraftforge.fml.client.config.GuiConfigEntries.CycleValueEntry → net.minecraftforge.fml.client.config.GuiConfigEntries.ChatColorEntry
 
-- `public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float partial)`
-- `public void updateValueButtonText()`
+## Class signature
 
-## Description
+```java
+public static class GuiConfigEntries.ChatColorEntry extends GuiConfigEntries.CycleValueEntry
+```
 
-ChatColorEntry Provides a GuiButton that cycles through the list of chat color codes.
+## Fields
+
+- `void drawEntry`
+- `void updateValueButtonText` — Updates the displayString of the value button.

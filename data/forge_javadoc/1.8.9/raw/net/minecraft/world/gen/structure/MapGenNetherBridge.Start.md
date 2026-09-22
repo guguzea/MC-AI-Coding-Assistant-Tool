@@ -1,15 +1,25 @@
 ---
 title: "MapGenNetherBridge.Start"
-description: ""
+description: "public static class MapGenNetherBridge.Start extends StructureStart"
 package: "net/minecraft/world/gen/structure"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/gen/structure/MapGenNetherBridge.Start.html"
 sourceType: javadoc
 ---
 
 # MapGenNetherBridge.Start
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureStart → net.minecraft.world.gen.structure.MapGenNetherBridge.Start
 
-- `public Start()`
-- `public Start( World worldIn, java.util.Random p_i2040_2_, int p_i2040_3_, int p_i2040_4_)`
+## Class signature
+
+```java
+public static class MapGenNetherBridge.Start extends StructureStart
+```
+
+## Fields
+
+- `Start`
+- `Start`

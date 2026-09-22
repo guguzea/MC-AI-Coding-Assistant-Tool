@@ -1,5 +1,7 @@
 # BlockWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.capability.templates.VoidFluidHandler → net.minecraftforge.fluids.capability.wrappers.BlockWrapper
+
 ## Class signature
 
 ```java
@@ -8,12 +10,14 @@ public class BlockWrapper extends VoidFluidHandler
 
 ## Constructors
 
-- `public BlockWrapper( Block block, World world, BlockPos blockPos)`
+- `BlockWrapper(Block block, World world, BlockPos blockPos)`
 
 ## Methods
 
-- `public int fill( FluidStack resource, boolean doFill)`
+- `int fill(FluidStack resource, boolean doFill)` — Fills fluid into internal tanks, distribution is left entirely to the IFluidHandler.
 
-## Description
+## Fields
 
-Wrapper around any block, only accounts for fluid placement, otherwise the block acts a void. If the block in question inherits from the default Vanilla or Forge implementations, consider using BlockL
+- `protected Block block`
+- `protected BlockPos blockPos`
+- `protected World world`

@@ -3,11 +3,15 @@ title: "EntityChicken"
 description: "public class EntityChicken extends EntityAnimal"
 package: "net/minecraft/entity/passive"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/passive/EntityChicken.html"
 sourceType: javadoc
 ---
 
 # EntityChicken
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityChicken
 
 ## Class signature
 
@@ -17,27 +21,37 @@ public class EntityChicken extends EntityAnimal
 
 ## Constructors
 
-- `public EntityChicken( World worldIn)`
+- `EntityChicken(World worldIn)`
 
 ## Methods
 
-- `protected void initEntityAI()`
-- `public float getEyeHeight()`
 - `protected void applyEntityAttributes()`
-- `public void onLivingUpdate()`
-- `public void fall(float distance, float damageMultiplier)`
-- `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
-- `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `protected ResourceLocation getLootTable()`
-- `public EntityChicken createChild( EntityAgeable ageable)`
-- `public boolean isBreedingItem( ItemStack stack)`
-- `protected int getExperiencePoints( EntityPlayer player)`
-- `public static void registerFixesChicken( DataFixer fixer)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
 - `protected boolean canDespawn()`
-- `public void updatePassenger( Entity passenger)`
-- `public boolean isChickenJockey()`
-- `public void setChickenJockey(boolean jockey)`
+- `EntityChicken createChild(EntityAgeable ageable)`
+- `void fall(float distance, float damageMultiplier)`
+- `protected SoundEvent getAmbientSound()`
+- `protected SoundEvent getDeathSound()`
+- `protected int getExperiencePoints(EntityPlayer player)`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
+- `protected ResourceLocation getLootTable()`
+- `protected void initEntityAI()`
+- `boolean isBreedingItem(ItemStack stack)`
+- `boolean isChickenJockey()`
+- `void onLivingUpdate()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesChicken(DataFixer fixer)`
+- `void setChickenJockey(boolean jockey)`
+- `void updatePassenger(Entity passenger)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `boolean chickenJockey`
+- `float destPos`
+- `float oFlap`
+- `float oFlapSpeed`
+- `int timeUntilNextEgg`
+- `float wingRotation`
+- `float wingRotDelta`

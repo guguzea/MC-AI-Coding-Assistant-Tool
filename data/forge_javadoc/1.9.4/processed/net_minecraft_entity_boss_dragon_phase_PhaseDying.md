@@ -1,20 +1,22 @@
 # PhaseDying
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseDying
+
 ## Class signature
 
 ```java
 public class PhaseDying extends PhaseBase
 ```
 
-## Constructors
-
-- `public PhaseDying( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public void doClientRenderEffects()`
-- `public void doLocalUpdate()`
-- `public void initPhase()`
-- `public float getMaxRiseOrFall()`
-- `@Nullable public Vec3d getTargetLocation()`
-- `public PhaseList < PhaseDying > getPhaseList()`
+- `void doClientRenderEffects()`
+- `void doLocalUpdate()`
+- `float getMaxRiseOrFall()`
+- `PhaseList<PhaseDying> getPhaseList()`
+- `Vec3d getTargetLocation()`
+- `void initPhase()`
+
+## Fields
+
+- `PhaseDying`

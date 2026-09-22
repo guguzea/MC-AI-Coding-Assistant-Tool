@@ -1,147 +1,337 @@
 ---
 title: "Entity"
-description: "If a rider of this entity can interact with this entity."
+description: "public abstract class Entity extends java.lang.Object implements ICommandSender, ICapabilitySerializable<NBTTagCompound>"
 package: "net/minecraft/entity"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/entity/Entity.html"
 sourceType: javadoc
 ---
 
 # Entity
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity
+
 ## Class signature
 
 ```java
-public abstract class Entity extends java.lang.Object implements ICommandSender , ICapabilitySerializable < NBTTagCompound >
+public abstract class Entity extends java.lang.Object implements ICommandSender, ICapabilitySerializable<NBTTagCompound>
 ```
 
 ## Constructors
 
-- `public Entity( World worldIn)`
+- `Entity(World worldIn)`
 
 ## Methods
 
-- `public int getEntityId()`
-- `public void setEntityId(int id)`
-- `public java.util.Set<java.lang.String> getTags()`
-- `public boolean addTag(java.lang.String tag)`
-- `public boolean removeTag(java.lang.String tag)`
-- `public void onKillCommand()`
-- `protected abstract void entityInit()`
-- `public EntityDataManager getDataManager()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `protected void preparePlayerToSpawn()`
-- `public void setDead()`
-- `public void setDropItemsWhenDead(boolean dropWhenDead)`
-- `protected void setSize(float width, float height)`
-- `protected void setRotation(float yaw, float pitch)`
-- `public void setPosition(double x, double y, double z)`
-- `public void turn(float yaw, float pitch)`
-- `public void onUpdate()`
-- `public void onEntityUpdate()`
-- `protected void decrementTimeUntilPortal()`
-- `public int getMaxInPortalTime()`
-- `protected void setOnFireFromLava()`
-- `public void setFire(int seconds)`
-- `public void extinguish()`
-- `protected void kill()`
-- `public boolean isOffsetPositionInLiquid(double x, double y, double z)`
-- `public void move( MoverType type, double x, double y, double z)`
-- `public void resetPositionToBB()`
-- `protected SoundEvent getSwimSound()`
-- `protected SoundEvent getSplashSound()`
-- `protected void doBlockCollisions()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `public void playSound( SoundEvent soundIn, float volume, float pitch)`
-- `public boolean isSilent()`
-- `public void setSilent(boolean isSilent)`
-- `public boolean hasNoGravity()`
-- `public void setNoGravity(boolean noGravity)`
+- `void addEntityCrashInfo(CrashReportCategory category)`
+- `protected void addPassenger(Entity passenger)`
+- `boolean addTag(java.lang.String tag)`
+- `void addToPlayerScore(Entity entityIn, int amount)`
+- `void addTrackingPlayer(EntityPlayerMP player)`
+- `void addVelocity(double x, double y, double z)`
+- `protected void applyEnchantments(EntityLivingBase entityLivingBaseIn, Entity entityIn)`
+- `void applyEntityCollision(Entity entityIn)`
+- `void applyOrientationToEntity(Entity entityToUpdate)`
+- `EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand stack)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeAttackedWithItem()`
+- `boolean canBeCollidedWith()`
+- `boolean canBePushed()`
+- `protected boolean canBeRidden(Entity entityIn)`
+- `protected boolean canFitPassenger(Entity passenger)`
+- `boolean canPassengerSteer()`
+- `boolean canRenderOnFire()`
+- `boolean canRiderInteract()` — If a rider of this entity can interact with this entity.
+- `boolean canTrample(World world, Block block, BlockPos pos, float fallDistance)` — Checks if this Entity can trample a Block .
 - `protected boolean canTriggerWalking()`
-- `protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)`
-- `@Nullable public AxisAlignedBB getCollisionBoundingBox()`
-- `protected void dealFireDamage(int amount)`
-- `public final boolean isImmuneToFire()`
-- `public void fall(float distance, float damageMultiplier)`
-- `public boolean isWet()`
-- `public boolean isInWater()`
-- `public boolean handleWaterMovement()`
-- `protected void resetHeight()`
-- `public void spawnRunningParticles()`
+- `boolean canUseCommand(int permLevel, java.lang.String commandName)`
+- `Entity changeDimension(int dimensionIn)`
+- `void copyLocationAndAnglesFrom(Entity entityIn)`
 - `protected void createRunningParticles()`
-- `public boolean isInsideOfMaterial( Material materialIn)`
-- `public boolean isInLava()`
-- `public void moveRelative(float strafe, float forward, float friction)`
-- `public int getBrightnessForRender(float partialTicks)`
-- `public float getBrightness(float partialTicks)`
-- `public void setWorld( World worldIn)`
-- `public void setPositionAndRotation(double x, double y, double z, float yaw, float pitch)`
-- `public void moveToBlockPosAndAngles( BlockPos pos, float rotationYawIn, float rotationPitchIn)`
-- `public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch)`
-- `public float getDistanceToEntity( Entity entityIn)`
-- `public double getDistanceSq(double x, double y, double z)`
-- `public double getDistanceSq( BlockPos pos)`
-- `public double getDistanceSqToCenter( BlockPos pos)`
-- `public double getDistance(double x, double y, double z)`
-- `public double getDistanceSqToEntity( Entity entityIn)`
-- `public void onCollideWithPlayer( EntityPlayer entityIn)`
-- `public void applyEntityCollision( Entity entityIn)`
-- `public void addVelocity(double x, double y, double z)`
-- `protected void setBeenAttacked()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public Vec3d getLook(float partialTicks)`
-- `protected final Vec3d getVectorForRotation(float pitch, float yaw)`
-- `public Vec3d getPositionEyes(float partialTicks)`
-- `@Nullable public RayTraceResult rayTrace(double blockReachDistance, float partialTicks)`
-- `public boolean canBeCollidedWith()`
-- `public boolean canBePushed()`
-- `public void addToPlayerScore( Entity entityIn, int amount)`
-- `public boolean isInRangeToRender3d(double x, double y, double z)`
-- `public boolean isInRangeToRenderDist(double distance)`
-- `public boolean writeToNBTAtomically( NBTTagCompound compound)`
-- `public boolean writeToNBTOptional( NBTTagCompound compound)`
-- `public static void registerFixes( DataFixer fixer)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `protected boolean shouldSetPosAfterLoading()`
-- `@Nullable protected final java.lang.String getEntityString()`
-- `protected abstract void readEntityFromNBT( NBTTagCompound compound)`
-- `protected abstract void writeEntityToNBT( NBTTagCompound compound)`
+- `protected void dealFireDamage(int amount)`
+- `protected void decrementTimeUntilPortal()`
+- `void deserializeNBT(NBTTagCompound nbt)`
+- `void dismountRidingEntity()`
+- `protected void doBlockCollisions()`
+- `boolean doesEntityNotTriggerPressurePlate()`
+- `EntityItem dropItem(Item itemIn, int size)`
+- `EntityItem dropItemWithOffset(Item itemIn, int size, float offsetY)`
+- `EntityItem entityDropItem(ItemStack stack, float offsetY)`
+- `protected abstract void entityInit()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `void extinguish()`
+- `void fall(float distance, float damageMultiplier)`
+- `EnumFacing getAdjustedHorizontalFacing()`
+- `int getAir()`
+- `boolean getAlwaysRenderNameTag()`
+- `boolean getAlwaysRenderNameTagForRender()`
+- `java.lang.Iterable<ItemStack> getArmorInventoryList()`
+- `float getBrightness(float partialTicks)`
+- `int getBrightnessForRender(float partialTicks)`
+- `java.lang.String getCachedUniqueIdString()`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `float getCollisionBorderSize()`
+- `AxisAlignedBB getCollisionBoundingBox()`
+- `AxisAlignedBB getCollisionBox(Entity entityIn)`
+- `Entity getCommandSenderEntity()`
+- `CommandResultStats getCommandStats()`
+- `Entity getControllingPassenger()`
+- `java.lang.String getCustomNameTag()`
+- `EntityDataManager getDataManager()`
+- `ITextComponent getDisplayName()`
+- `double getDistance(double x, double y, double z)`
+- `double getDistanceSq(BlockPos pos)`
+- `double getDistanceSq(double x, double y, double z)`
+- `double getDistanceSqToCenter(BlockPos pos)`
+- `double getDistanceSqToEntity(Entity entityIn)`
+- `float getDistanceToEntity(Entity entityIn)`
+- `AxisAlignedBB getEntityBoundingBox()`
+- `NBTTagCompound getEntityData()` — Returns a NBTTagCompound that can be used to store custom data for this entity.
+- `int getEntityId()`
+- `protected java.lang.String getEntityString()`
+- `World getEntityWorld()`
+- `java.lang.Iterable<ItemStack> getEquipmentAndArmor()`
+- `float getExplosionResistance(Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn)`
+- `float getEyeHeight()`
+- `protected int getFireImmuneTicks()`
+- `protected boolean getFlag(int flag)`
+- `Vec3d getForward()`
+- `java.lang.Iterable<ItemStack> getHeldEquipment()`
+- `EnumFacing getHorizontalFacing()`
+- `protected HoverEvent getHoverEvent()`
+- `boolean getIsInvulnerable()`
+- `Vec3d getLastPortalVec()`
+- `Vec3d getLook(float partialTicks)`
+- `Vec3d getLookVec()`
+- `Entity getLowestRidingEntity()`
+- `int getMaxFallHeight()`
+- `int getMaxInPortalTime()`
+- `float getMirroredYaw(Mirror transformMirror)`
+- `double getMountedYOffset()`
+- `java.lang.String getName()`
+- `Entity [] getParts()`
+- `java.util.List<Entity> getPassengers()`
+- `java.util.UUID getPersistentID()`
+- `ItemStack getPickedResult(RayTraceResult target)` — Called when a user uses the creative pick block button on this entity.
+- `Vec2f getPitchYaw()`
+- `int getPortalCooldown()`
+- `BlockPos getPosition()`
+- `Vec3d getPositionEyes(float partialTicks)`
+- `Vec3d getPositionVector()`
+- `EnumPushReaction getPushReaction()`
+- `java.util.Collection<Entity> getRecursivePassengers()`
+- `<T extends Entity> java.util.Collection<T> getRecursivePassengersByType(java.lang.Class<T> entityClass)`
+- `AxisAlignedBB getRenderBoundingBox()`
+- `static double getRenderDistanceWeight()`
+- `Entity getRidingEntity()`
+- `float getRotatedYaw(Rotation transformRotation)`
+- `float getRotationYawHead()`
+- `MinecraftServer getServer()`
+- `SoundCategory getSoundCategory()`
+- `protected SoundEvent getSplashSound()`
+- `protected SoundEvent getSwimSound()`
+- `java.util.Set<java.lang.String> getTags()`
+- `Team getTeam()`
+- `EnumFacing getTeleportDirection()`
+- `java.util.UUID getUniqueID()`
+- `protected Vec3d getVectorForRotation(float pitch, float yaw)`
+- `double getYOffset()`
+- `void handleStatusUpdate(byte id)`
+- `boolean handleWaterMovement()`
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.
+- `boolean hasCustomName()`
+- `int hashCode()`
+- `boolean hasNoGravity()`
+- `boolean hitByEntity(Entity entityIn)`
+- `boolean ignoreItemEntityData()`
+- `boolean isBeingRidden()`
+- `boolean isBurning()`
+- `boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount)` — Returns true if the entity is of the @link{EnumCreatureType} provided
+- `boolean isEntityAlive()`
+- `boolean isEntityEqual(Entity entityIn)`
+- `boolean isEntityInsideOpaqueBlock()`
+- `boolean isEntityInvulnerable(DamageSource source)`
+- `boolean isGlowing()`
+- `boolean isImmuneToExplosions()`
+- `boolean isImmuneToFire()`
+- `boolean isInLava()`
+- `boolean isInRangeToRender3d(double x, double y, double z)`
+- `boolean isInRangeToRenderDist(double distance)`
+- `boolean isInsideOfMaterial(Material materialIn)`
+- `boolean isInvisible()`
+- `boolean isInvisibleToPlayer(EntityPlayer player)`
+- `boolean isInWater()`
+- `boolean isNonBoss()`
+- `boolean isOffsetPositionInLiquid(double x, double y, double z)`
+- `boolean isOnSameTeam(Entity entityIn)`
+- `boolean isOnScoreboardTeam(Team teamIn)`
+- `boolean isOutsideBorder()`
+- `boolean isPassenger(Entity entityIn)`
+- `boolean isPushedByWater()`
+- `boolean isRiding()`
+- `boolean isRidingOrBeingRiddenBy(Entity entityIn)`
+- `boolean isRidingSameEntity(Entity entityIn)`
+- `boolean isSilent()`
+- `boolean isSneaking()`
+- `boolean isSpectatedByPlayer(EntityPlayerMP player)`
+- `boolean isSprinting()`
+- `boolean isWet()`
+- `protected void kill()`
+- `void move(MoverType type, double x, double y, double z)`
+- `void moveRelative(float strafe, float forward, float friction)`
+- `void moveToBlockPosAndAngles(BlockPos pos, float rotationYawIn, float rotationPitchIn)`
 - `protected NBTTagList newDoubleNBTList(double... numbers)`
 - `protected NBTTagList newFloatNBTList(float... numbers)`
-- `@Nullable public EntityItem dropItem( Item itemIn, int size)`
-- `@Nullable public EntityItem dropItemWithOffset( Item itemIn, int size, float offsetY)`
-- `@Nullable public EntityItem entityDropItem( ItemStack stack, float offsetY)`
-- `public boolean isEntityAlive()`
-- `public boolean isEntityInsideOpaqueBlock()`
-- `public boolean processInitialInteract( EntityPlayer player, EnumHand hand)`
-- `@Nullable public AxisAlignedBB getCollisionBox( Entity entityIn)`
-- `public void updateRidden()`
-- `public void updatePassenger( Entity passenger)`
-- `public void applyOrientationToEntity( Entity entityToUpdate)`
-- `public double getYOffset()`
-- `public double getMountedYOffset()`
-- `public boolean startRiding( Entity entityIn)`
-- `public boolean startRiding( Entity entityIn, boolean force)`
-- `protected boolean canBeRidden( Entity entityIn)`
-- `public void removePassengers()`
-- `public void dismountRidingEntity()`
-- `protected void addPassenger( Entity passenger)`
-- `protected void removePassenger( Entity passenger)`
-- `protected boolean canFitPassenger( Entity passenger)`
-- `public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
-- `public float getCollisionBorderSize()`
-- `public Vec3d getLookVec()`
-- `public Vec2f getPitchYaw()`
-- `public Vec3d getForward()`
-- `public void setPortal( BlockPos pos)`
-- `public int getPortalCooldown()`
-- `public void setVelocity(double x, double y, double z)`
-- `public void handleStatusUpdate(byte id)`
-- `public void performHurtAnimation()`
-- `public java.lang.Iterable< ItemStack > getHeldEquipment()`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onCollideWithPlayer(EntityPlayer entityIn)`
+- `void onEntityUpdate()`
+- `void onKillCommand()`
+- `void onKillEntity(EntityLivingBase entityLivingIn)`
+- `void onStruckByLightning(EntityLightningBolt lightningBolt)`
+- `void onUpdate()`
+- `void performHurtAnimation()`
+- `void playSound(SoundEvent soundIn, float volume, float pitch)`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `protected void preparePlayerToSpawn()`
+- `boolean processInitialInteract(EntityPlayer player, EnumHand hand)`
+- `protected boolean pushOutOfBlocks(double x, double y, double z)`
+- `RayTraceResult rayTrace(double blockReachDistance, float partialTicks)`
+- `protected abstract void readEntityFromNBT(NBTTagCompound compound)`
+- `void readFromNBT(NBTTagCompound compound)`
+- `static void registerFixes(DataFixer fixer)`
+- `protected void removePassenger(Entity passenger)`
+- `void removePassengers()`
+- `boolean removeTag(java.lang.String tag)`
+- `void removeTrackingPlayer(EntityPlayerMP player)`
+- `boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
+- `void resetEntityId()` — Reset the entity ID to a new value.
+- `protected void resetHeight()`
+- `void resetPositionToBB()`
+- `boolean sendCommandFeedback()`
+- `void sendMessage(ITextComponent component)`
+- `NBTTagCompound serializeNBT()`
+- `void setAir(int air)`
+- `void setAlwaysRenderNameTag(boolean alwaysRenderNameTag)`
+- `protected void setBeenAttacked()`
+- `void setCommandStat(CommandResultStats.Type type, int amount)`
+- `void setCommandStats(Entity entityIn)`
+- `void setCustomNameTag(java.lang.String name)`
+- `void setDead()`
+- `void setDropItemsWhenDead(boolean dropWhenDead)`
+- `void setEntityBoundingBox(AxisAlignedBB bb)`
+- `void setEntityId(int id)`
+- `void setEntityInvulnerable(boolean isInvulnerable)`
+- `void setFire(int seconds)`
+- `protected void setFlag(int flag, boolean set)`
+- `void setGlowing(boolean glowingIn)`
+- `void setInvisible(boolean invisible)`
+- `void setInWeb()`
+- `void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)`
+- `void setLocationAndAngles(double x, double y, double z, float yaw, float pitch)`
+- `void setNoGravity(boolean noGravity)`
+- `protected void setOnFireFromLava()`
+- `void setOutsideBorder(boolean outsideBorder)`
+- `void setPortal(BlockPos pos)`
+- `void setPosition(double x, double y, double z)`
+- `void setPositionAndRotation(double x, double y, double z, float yaw, float pitch)`
+- `void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
+- `void setPositionAndUpdate(double x, double y, double z)`
+- `boolean setPositionNonDirty()`
+- `static void setRenderDistanceWeight(double renderDistWeight)`
+- `void setRenderYawOffset(float offset)`
+- `protected void setRotation(float yaw, float pitch)`
+- `void setRotationYawHead(float rotation)`
+- `void setSilent(boolean isSilent)`
+- `protected void setSize(float width, float height)`
+- `void setSneaking(boolean sneaking)`
+- `void setSprinting(boolean sprinting)`
+- `void setUniqueId(java.util.UUID uniqueIdIn)`
+- `void setVelocity(double x, double y, double z)`
+- `void setWorld(World worldIn)`
+- `boolean shouldDismountInWater(Entity rider)` — If the rider should be dismounted from the entity when the entity goes under water
+- `boolean shouldRenderInPass(int pass)`
+- `boolean shouldRiderSit()` — Used in model rendering to determine if the entity riding this entity should be in the 'sitting' position.
+- `protected boolean shouldSetPosAfterLoading()`
+- `void spawnRunningParticles()`
+- `boolean startRiding(Entity entityIn)`
+- `boolean startRiding(Entity entityIn, boolean force)`
+- `java.lang.String toString()`
+- `void turn(float yaw, float pitch)`
+- `protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)`
+- `void updatePassenger(Entity passenger)`
+- `void updateRidden()`
+- `boolean verifyExplosion(Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn, float p_174816_5_)`
+- `protected abstract void writeEntityToNBT(NBTTagCompound compound)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+- `boolean writeToNBTAtomically(NBTTagCompound compound)`
+- `boolean writeToNBTOptional(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-If a rider of this entity can interact with this entity.
+- `boolean addedToChunk`
+- `protected java.lang.String cachedUniqueIdString`
+- `java.util.ArrayList<EntityItem> capturedDrops`
+- `boolean captureDrops`
+- `int chunkCoordX`
+- `int chunkCoordY`
+- `int chunkCoordZ`
+- `protected EntityDataManager dataManager`
+- `int dimension`
+- `float distanceWalkedModified`
+- `float distanceWalkedOnStepModified`
+- `float entityCollisionReduction`
+- `protected java.util.UUID entityUniqueID`
+- `float fallDistance`
+- `protected boolean firstUpdate`
+- `protected static DataParameter<java.lang.Byte> FLAGS`
+- `boolean forceSpawn`
+- `protected boolean glowing`
+- `float height`
+- `int hurtResistantTime`
+- `boolean ignoreFrustumCheck`
+- `protected boolean inPortal`
+- `protected boolean inWater`
+- `boolean isAirBorne`
+- `boolean isCollided`
+- `boolean isCollidedHorizontally`
+- `boolean isCollidedVertically`
+- `boolean isDead`
+- `protected boolean isImmuneToFire`
+- `protected boolean isInWeb`
+- `protected BlockPos lastPortalPos`
+- `protected Vec3d lastPortalVec`
+- `double lastTickPosX`
+- `double lastTickPosY`
+- `double lastTickPosZ`
+- `double motionX`
+- `double motionY`
+- `double motionZ`
+- `boolean noClip`
+- `boolean onGround`
+- `protected int portalCounter`
+- `double posX`
+- `double posY`
+- `double posZ`
+- `float prevDistanceWalkedModified`
+- `boolean preventEntitySpawning`
+- `double prevPosX`
+- `double prevPosY`
+- `double prevPosZ`
+- `float prevRotationPitch`
+- `float prevRotationYaw`
+- `protected java.util.Random rand`
+- `protected int rideCooldown`
+- `float rotationPitch`
+- `float rotationYaw`
+- `long serverPosX`
+- `long serverPosY`
+- `long serverPosZ`
+- `float stepHeight`
+- `protected EnumFacing teleportDirection`
+- `int ticksExisted`
+- `int timeUntilPortal`
+- `boolean velocityChanged`
+- `float width`
+- `World world`

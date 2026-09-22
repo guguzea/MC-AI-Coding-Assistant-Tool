@@ -1,29 +1,39 @@
 ---
 title: "ForgeBlockStateV1.Variant"
-description: "Gets a list containing the single variant of each part."
+description: "public static class ForgeBlockStateV1.Variant extends java.lang.Object"
 package: "net/minecraftforge/client/model"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/client/model/ForgeBlockStateV1.Variant.html"
 sourceType: javadoc
 ---
 
 # ForgeBlockStateV1.Variant
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.ForgeBlockStateV1.Variant
+
+## Class signature
+
+```java
+public static class ForgeBlockStateV1.Variant extends java.lang.Object
+```
+
 ## Methods
 
 - `protected BlockStateLoader.SubModel asGenericSubModel()`
-- `public com.google.common.collect.ImmutableMap<java.lang.String, BlockStateLoader.SubModel > getOnlyPartsVariant()`
-- `public com.google.common.base.Optional<java.lang.Boolean> getSmooth()`
-- `public com.google.common.base.Optional<java.lang.Boolean> getGui3d()`
-- `public ResourceLocation getModel()`
-- `public boolean isModelSet()`
-- `public com.google.common.base.Optional< IModelState > getState()`
-- `public com.google.common.base.Optional<java.lang.Boolean> getUvLock()`
-- `public com.google.common.base.Optional<java.lang.Integer> getWeight()`
-- `public com.google.common.collect.ImmutableMap<java.lang.String,java.lang.String> getTextures()`
-- `public com.google.common.collect.ImmutableMap<java.lang.String,java.util.List< ForgeBlockStateV1.Variant >> getSubmodels()`
-- `public com.google.common.collect.ImmutableMap<java.lang.String,java.lang.String> getCustomData()`
+- `com.google.common.collect.ImmutableMap<java.lang.String, java.lang.String> getCustomData()`
+- `com.google.common.base.Optional<java.lang.Boolean> getGui3d()`
+- `ResourceLocation getModel()`
+- `com.google.common.collect.ImmutableMap<java.lang.String, BlockStateLoader.SubModel> getOnlyPartsVariant()` — Gets a list containing the single variant of each part.
+- `com.google.common.base.Optional<java.lang.Boolean> getSmooth()`
+- `com.google.common.base.Optional<IModelState> getState()`
+- `com.google.common.collect.ImmutableMap<java.lang.String, java.util.List<ForgeBlockStateV1.Variant>> getSubmodels()`
+- `com.google.common.collect.ImmutableMap<java.lang.String, java.lang.String> getTextures()`
+- `com.google.common.base.Optional<java.lang.Boolean> getUvLock()`
+- `com.google.common.base.Optional<java.lang.Integer> getWeight()`
+- `boolean isModelSet()`
 
-## Description
+## Fields
 
-Gets a list containing the single variant of each part.
+- `static java.lang.Object SET_VALUE`

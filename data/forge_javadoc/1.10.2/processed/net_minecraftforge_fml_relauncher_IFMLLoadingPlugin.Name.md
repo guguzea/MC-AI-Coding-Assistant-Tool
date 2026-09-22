@@ -1,5 +1,11 @@
 # IFMLLoadingPlugin.Name
 
-## Description
+## Class signature
 
-Name this coremod something other than the "short class name"
+```java
+public static @interface IFMLLoadingPlugin.Name
+```
+
+## Elements
+
+- `java.lang.String value`

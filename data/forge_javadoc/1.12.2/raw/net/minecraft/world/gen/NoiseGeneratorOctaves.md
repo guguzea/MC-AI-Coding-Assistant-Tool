@@ -3,11 +3,15 @@ title: "NoiseGeneratorOctaves"
 description: "public class NoiseGeneratorOctaves extends NoiseGenerator"
 package: "net/minecraft/world/gen"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/gen/NoiseGeneratorOctaves.html"
 sourceType: javadoc
 ---
 
 # NoiseGeneratorOctaves
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.NoiseGenerator → net.minecraft.world.gen.NoiseGeneratorOctaves
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class NoiseGeneratorOctaves extends NoiseGenerator
 
 ## Constructors
 
-- `public NoiseGeneratorOctaves(java.util.Random seed, int octavesIn)`
+- `NoiseGeneratorOctaves(java.util.Random seed, int octavesIn)`
 
 ## Methods
 
-- `public double[] generateNoiseOctaves(double[] noiseArray, int xOffset, int yOffset, int zOffset, int xSize, int ySize, int zSize, double xScale, double yScale, double zScale)`
-- `public double[] generateNoiseOctaves(double[] noiseArray, int xOffset, int zOffset, int xSize, int zSize, double xScale, double zScale, double p_76305_10_)`
+- `double[] generateNoiseOctaves(double[] noiseArray, int xOffset, int zOffset, int xSize, int zSize, double xScale, double zScale, double p_76305_10_)`
+- `double[] generateNoiseOctaves(double[] noiseArray, int xOffset, int yOffset, int zOffset, int xSize, int ySize, int zSize, double xScale, double yScale, double zScale)`

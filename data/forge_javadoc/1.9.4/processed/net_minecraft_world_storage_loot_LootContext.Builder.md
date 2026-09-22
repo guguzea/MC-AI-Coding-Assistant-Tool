@@ -1,13 +1,21 @@
 # LootContext.Builder
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.LootContext.Builder
+
+## Class signature
+
+```java
+public static class LootContext.Builder extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Builder( WorldServer worldIn)`
+- `Builder(WorldServer worldIn)`
 
 ## Methods
 
-- `public LootContext.Builder withLuck(float luckIn)`
-- `public LootContext.Builder withLootedEntity( Entity entityIn)`
-- `public LootContext.Builder withPlayer( EntityPlayer playerIn)`
-- `public LootContext.Builder withDamageSource( DamageSource dmgSource)`
-- `public LootContext build()`
+- `LootContext build()`
+- `LootContext.Builder withDamageSource(DamageSource dmgSource)`
+- `LootContext.Builder withLootedEntity(Entity entityIn)`
+- `LootContext.Builder withLuck(float luckIn)`
+- `LootContext.Builder withPlayer(EntityPlayer playerIn)`

@@ -1,10 +1,12 @@
 # IRenderContextHandler
 
+## Class signature
+
+```java
+public interface IRenderContextHandler
+```
+
 ## Methods
 
-- `void beforeRenderContext()`
-- `void afterRenderContext()`
-
-## Description
-
-Deprecated. TODO remove in 1.13. This has never been used
+- `@Deprecated void afterRenderContext()`
+- `@Deprecated void beforeRenderContext()`

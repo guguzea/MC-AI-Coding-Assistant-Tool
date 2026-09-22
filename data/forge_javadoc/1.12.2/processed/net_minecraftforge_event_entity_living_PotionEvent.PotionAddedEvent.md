@@ -1,14 +1,18 @@
 # PotionEvent.PotionAddedEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.PotionEvent → net.minecraftforge.event.entity.living.PotionEvent.PotionAddedEvent
 
-- `public PotionAddedEvent( EntityLivingBase living, PotionEffect oldEffect, PotionEffect newEffect)`
+## Class signature
+
+```java
+public static class PotionEvent.PotionAddedEvent extends PotionEvent
+```
 
 ## Methods
 
-- `public PotionEffect getPotionEffect()`
-- `public PotionEffect getOldPotionEffect()`
+- `PotionEffect getOldPotionEffect()`
+- `PotionEffect getPotionEffect()` — Retuns the PotionEffect.
 
-## Description
+## Fields
 
-This Event is fired when a new Potion is added to the Entity. This is also fired if the Entity already has this effect but with different duration/level. This Event is not Cancelable This Event does n
+- `PotionAddedEvent`

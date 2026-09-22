@@ -3,11 +3,15 @@ title: "ItemSnow"
 description: "public class ItemSnow extends ItemBlock"
 package: "net/minecraft/item"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/item/ItemSnow.html"
 sourceType: javadoc
 ---
 
 # ItemSnow
+
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemBlock → net.minecraft.item.ItemSnow
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class ItemSnow extends ItemBlock
 ```
 
-## Constructors
-
-- `public ItemSnow( Block block)`
-
 ## Methods
 
-- `public EnumActionResult onItemUse( EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `public int getMetadata(int damage)`
-- `public boolean canPlaceBlockOnSide( World world, BlockPos pos, EnumFacing side, EntityPlayer player, ItemStack stack)`
+- `boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side, EntityPlayer player, ItemStack stack)`
+- `int getMetadata(int damage)`
+- `EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+
+## Fields
+
+- `ItemSnow`

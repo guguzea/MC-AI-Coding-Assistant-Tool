@@ -1,17 +1,19 @@
 # RenderGiantZombie
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RenderLivingBase<T> → net.minecraft.client.renderer.entity.RenderLiving<EntityGiantZombie> → net.minecraft.client.renderer.entity.RenderGiantZombie
+
 ## Class signature
 
 ```java
-public class RenderGiantZombie extends RenderLiving < EntityGiantZombie >
+public class RenderGiantZombie extends RenderLiving<EntityGiantZombie>
 ```
-
-## Constructors
-
-- `public RenderGiantZombie( RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn, float scaleIn)`
 
 ## Methods
 
-- `public void transformHeldFull3DItemLayer()`
-- `protected void preRenderCallback( EntityGiantZombie entitylivingbaseIn, float partialTickTime)`
-- `protected ResourceLocation getEntityTexture( EntityGiantZombie entity)`
+- `protected ResourceLocation getEntityTexture(EntityGiantZombie entity)`
+- `protected void preRenderCallback(EntityGiantZombie entitylivingbaseIn, float partialTickTime)`
+- `void transformHeldFull3DItemLayer()`
+
+## Fields
+
+- `RenderGiantZombie`

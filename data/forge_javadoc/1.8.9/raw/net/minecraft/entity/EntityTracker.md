@@ -1,13 +1,17 @@
 ---
 title: "EntityTracker"
-description: "Args : Entity, trackingRange, updateFrequency, sendVelocityUpdates"
+description: "public class EntityTracker extends java.lang.Object"
 package: "net/minecraft/entity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/entity/EntityTracker.html"
 sourceType: javadoc
 ---
 
 # EntityTracker
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.EntityTracker
 
 ## Class signature
 
@@ -17,22 +21,18 @@ public class EntityTracker extends java.lang.Object
 
 ## Constructors
 
-- `public EntityTracker( WorldServer theWorldIn)`
+- `EntityTracker(WorldServer theWorldIn)`
 
 ## Methods
 
-- `public void trackEntity( Entity p_72786_1_)`
-- `public void trackEntity( Entity entityIn, int trackingRange, int updateFrequency)`
-- `public void addEntityToTracker( Entity entityIn, int trackingRange, int updateFrequency, boolean sendVelocityUpdates)`
-- `public void untrackEntity( Entity entityIn)`
-- `public void updateTrackedEntities()`
-- `public void func_180245_a( EntityPlayerMP p_180245_1_)`
-- `public void sendToAllTrackingEntity( Entity entityIn, Packet p_151247_2_)`
-- `public void func_151248_b( Entity entityIn, Packet p_151248_2_)`
-- `public void removePlayerFromTrackers( EntityPlayerMP p_72787_1_)`
-- `public void func_85172_a( EntityPlayerMP p_85172_1_, Chunk p_85172_2_)`
-- `public java.util.Set<? extends EntityPlayer > getTrackingPlayers( Entity entity)`
-
-## Description
-
-Args : Entity, trackingRange, updateFrequency, sendVelocityUpdates
+- `void addEntityToTracker(Entity entityIn, int trackingRange, int updateFrequency, boolean sendVelocityUpdates)` — Args : Entity, trackingRange, updateFrequency, sendVelocityUpdates
+- `void func_151248_b(Entity entityIn, Packet p_151248_2_)`
+- `void func_180245_a(EntityPlayerMP p_180245_1_)`
+- `void func_85172_a(EntityPlayerMP p_85172_1_, Chunk p_85172_2_)`
+- `java.util.Set<? extends EntityPlayer> getTrackingPlayers(Entity entity)` — Get all players tracking the given Entity.
+- `void removePlayerFromTrackers(EntityPlayerMP p_72787_1_)`
+- `void sendToAllTrackingEntity(Entity entityIn, Packet p_151247_2_)`
+- `void trackEntity(Entity p_72786_1_)`
+- `void trackEntity(Entity entityIn, int trackingRange, int updateFrequency)`
+- `void untrackEntity(Entity entityIn)`
+- `void updateTrackedEntities()`

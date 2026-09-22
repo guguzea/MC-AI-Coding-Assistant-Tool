@@ -3,11 +3,15 @@ title: "GenDiffSet"
 description: "public class GenDiffSet extends java.lang.Object"
 package: "cpw/mods/fml/common/patcher"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/patcher/GenDiffSet.html"
 sourceType: javadoc
 ---
 
 # GenDiffSet
+
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.patcher.GenDiffSet
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class GenDiffSet extends java.lang.Object
 
 ## Constructors
 
-- `public GenDiffSet()`
+- `GenDiffSet()`
 
 ## Methods
 
-- `public static void main(java.lang.String[] args) throws java.io.IOException`
+- `static void main(java.lang.String[] args)`

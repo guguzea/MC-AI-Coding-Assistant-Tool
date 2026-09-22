@@ -3,11 +3,15 @@ title: "BuiltInModel"
 description: "public class BuiltInModel extends java.lang.Object implements IBakedModel"
 package: "net/minecraft/client/renderer/block/model"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/renderer/block/model/BuiltInModel.html"
 sourceType: javadoc
 ---
 
 # BuiltInModel
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.BuiltInModel
 
 ## Class signature
 
@@ -17,14 +21,14 @@ public class BuiltInModel extends java.lang.Object implements IBakedModel
 
 ## Constructors
 
-- `public BuiltInModel( ItemCameraTransforms p_i46537_1_, ItemOverrideList p_i46537_2_)`
+- `BuiltInModel(ItemCameraTransforms p_i46537_1_, ItemOverrideList p_i46537_2_)`
 
 ## Methods
 
-- `public java.util.List< BakedQuad > getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)`
-- `public boolean isAmbientOcclusion()`
-- `public boolean isGui3d()`
-- `public boolean isBuiltInRenderer()`
-- `public TextureAtlasSprite getParticleTexture()`
-- `public ItemCameraTransforms getItemCameraTransforms()`
-- `public ItemOverrideList getOverrides()`
+- `ItemCameraTransforms getItemCameraTransforms()`
+- `ItemOverrideList getOverrides()`
+- `TextureAtlasSprite getParticleTexture()`
+- `java.util.List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)`
+- `boolean isAmbientOcclusion()`
+- `boolean isBuiltInRenderer()`
+- `boolean isGui3d()`

@@ -1,42 +1,44 @@
 # EntityOcelot
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityTameable → net.minecraft.entity.passive.EntityOcelot
+
 ## Class signature
 
 ```java
 public class EntityOcelot extends EntityTameable
 ```
 
-## Constructors
-
-- `public EntityOcelot( World worldIn)`
-
 ## Methods
 
-- `protected void initEntityAI()`
-- `protected void entityInit()`
-- `public void updateAITasks()`
-- `protected boolean canDespawn()`
 - `protected void applyEntityAttributes()`
-- `public void fall(float distance, float damageMultiplier)`
-- `public static void registerFixesOcelot( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `@Nullable protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
+- `boolean attackEntityAsMob(Entity entityIn)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `protected boolean canDespawn()`
+- `boolean canMateWith(EntityAnimal otherAnimal)`
+- `EntityOcelot createChild(EntityAgeable ageable)`
+- `protected void entityInit()`
+- `void fall(float distance, float damageMultiplier)`
+- `protected SoundEvent getAmbientSound()`
+- `boolean getCanSpawnHere()`
 - `protected SoundEvent getDeathSound()`
+- `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `java.lang.String getName()`
 - `protected float getSoundVolume()`
-- `public boolean attackEntityAsMob( Entity entityIn)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand, @Nullable ItemStack stack)`
-- `public EntityOcelot createChild( EntityAgeable ageable)`
-- `public boolean isBreedingItem(@Nullable ItemStack stack)`
-- `public boolean canMateWith( EntityAnimal otherAnimal)`
-- `public int getTameSkin()`
-- `public void setTameSkin(int skinId)`
-- `public boolean getCanSpawnHere()`
-- `public boolean isNotColliding()`
-- `public java.lang.String getName()`
-- `public void setTamed(boolean tamed)`
+- `int getTameSkin()`
+- `protected void initEntityAI()`
+- `boolean isBreedingItem(ItemStack stack)`
+- `boolean isNotColliding()`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesOcelot(DataFixer fixer)`
+- `void setTamed(boolean tamed)`
+- `void setTameSkin(int skinId)`
 - `protected void setupTamedAI()`
-- `@Nullable public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)`
+- `void updateAITasks()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityOcelot`

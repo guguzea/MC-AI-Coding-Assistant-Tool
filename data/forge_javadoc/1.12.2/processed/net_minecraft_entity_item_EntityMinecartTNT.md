@@ -1,32 +1,34 @@
 # EntityMinecartTNT
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityMinecart → net.minecraft.entity.item.EntityMinecartTNT
+
 ## Class signature
 
 ```java
 public class EntityMinecartTNT extends EntityMinecart
 ```
 
-## Constructors
-
-- `public EntityMinecartTNT( World worldIn)`
-- `public EntityMinecartTNT( World worldIn, double x, double y, double z)`
-
 ## Methods
 
-- `public static void registerFixesMinecartTNT( DataFixer fixer)`
-- `public EntityMinecart.Type getType()`
-- `public IBlockState getDefaultDisplayTile()`
-- `public void onUpdate()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public void killMinecart( DamageSource source)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canExplosionDestroyBlock(Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn, float p_174816_5_)`
 - `protected void explodeCart(double p_94103_1_)`
-- `public void fall(float distance, float damageMultiplier)`
-- `public void onActivatorRailPass(int x, int y, int z, boolean receivingPower)`
-- `public void handleStatusUpdate(byte id)`
-- `public void ignite()`
-- `public int getFuseTicks()`
-- `public boolean isIgnited()`
-- `public float getExplosionResistance( Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn)`
-- `public boolean canExplosionDestroyBlock( Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn, float p_174816_5_)`
-- `protected void readEntityFromNBT( NBTTagCompound compound)`
-- `protected void writeEntityToNBT( NBTTagCompound compound)`
+- `void fall(float distance, float damageMultiplier)`
+- `IBlockState getDefaultDisplayTile()`
+- `float getExplosionResistance(Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn)`
+- `int getFuseTicks()`
+- `EntityMinecart.Type getType()`
+- `void handleStatusUpdate(byte id)`
+- `void ignite()`
+- `boolean isIgnited()`
+- `void killMinecart(DamageSource source)`
+- `void onActivatorRailPass(int x, int y, int z, boolean receivingPower)`
+- `void onUpdate()`
+- `protected void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesMinecartTNT(DataFixer fixer)`
+- `protected void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityMinecartTNT`
+- `EntityMinecartTNT`

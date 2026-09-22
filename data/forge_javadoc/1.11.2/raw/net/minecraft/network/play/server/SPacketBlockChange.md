@@ -1,29 +1,37 @@
 ---
 title: "SPacketBlockChange"
-description: "public class SPacketBlockChange extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketBlockChange extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/network/play/server/SPacketBlockChange.html"
 sourceType: javadoc
 ---
 
 # SPacketBlockChange
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketBlockChange
+
 ## Class signature
 
 ```java
-public class SPacketBlockChange extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketBlockChange extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketBlockChange()`
-- `public SPacketBlockChange( World worldIn, BlockPos posIn)`
+- `SPacketBlockChange()`
+- `SPacketBlockChange(World worldIn, BlockPos posIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public IBlockState getBlockState()`
-- `public BlockPos getBlockPosition()`
+- `BlockPos getBlockPosition()`
+- `IBlockState getBlockState()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`
+
+## Fields
+
+- `IBlockState blockState`

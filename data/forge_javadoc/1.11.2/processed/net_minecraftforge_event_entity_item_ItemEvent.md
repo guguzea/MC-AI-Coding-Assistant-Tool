@@ -1,5 +1,7 @@
 # ItemEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.item.ItemEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class ItemEvent extends EntityEvent
 
 ## Constructors
 
-- `public ItemEvent( EntityItem itemEntity)`
+- `ItemEvent(EntityItem itemEntity)`
 
 ## Methods
 
-- `public EntityItem getEntityItem()`
-
-## Description
-
-Base class for all EntityItem events. Contains a reference to the EntityItem of interest. For most EntityItem events, there's little to no additional useful data from the firing method that isn't alre
+- `EntityItem getEntityItem()` — The relevant EntityItem for this event, already cast for you.

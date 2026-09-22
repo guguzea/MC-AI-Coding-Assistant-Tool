@@ -1,5 +1,7 @@
 # PotionBrewEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.brewing.PotionBrewEvent
+
 ## Class signature
 
 ```java
@@ -8,14 +10,10 @@ public class PotionBrewEvent extends Event
 
 ## Constructors
 
-- `protected PotionBrewEvent( ItemStack [] stacks)`
+- `PotionBrewEvent(ItemStack [] stacks)`
 
 ## Methods
 
-- `public ItemStack getItem(int index)`
-- `public void setItem(int index, ItemStack stack)`
-- `public int getLength()`
-
-## Description
-
-PotionBrewEvent.Post is fired when a potion is brewed in the brewing stand.
+- `ItemStack getItem(int index)`
+- `int getLength()`
+- `void setItem(int index, ItemStack stack)`

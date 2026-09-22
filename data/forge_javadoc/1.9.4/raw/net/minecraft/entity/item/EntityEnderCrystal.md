@@ -3,11 +3,15 @@ title: "EntityEnderCrystal"
 description: "public class EntityEnderCrystal extends Entity"
 package: "net/minecraft/entity/item"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/item/EntityEnderCrystal.html"
 sourceType: javadoc
 ---
 
 # EntityEnderCrystal
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityEnderCrystal
 
 ## Class signature
 
@@ -17,21 +21,25 @@ public class EntityEnderCrystal extends Entity
 
 ## Constructors
 
-- `public EntityEnderCrystal( World worldIn)`
-- `public EntityEnderCrystal( World worldIn, double x, double y, double z)`
+- `EntityEnderCrystal(World worldIn)`
+- `EntityEnderCrystal(World worldIn, double x, double y, double z)`
 
 ## Methods
 
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeCollidedWith()`
 - `protected boolean canTriggerWalking()`
 - `protected void entityInit()`
-- `public void onUpdate()`
-- `protected void writeEntityToNBT( NBTTagCompound compound)`
-- `protected void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean canBeCollidedWith()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public void onKillCommand()`
-- `public void setBeamTarget(@Nullable BlockPos beamTarget)`
-- `@Nullable public BlockPos getBeamTarget()`
-- `public void setShowBottom(boolean showBottom)`
-- `public boolean shouldShowBottom()`
-- `public boolean isInRangeToRenderDist(double distance)`
+- `BlockPos getBeamTarget()`
+- `boolean isInRangeToRenderDist(double distance)`
+- `void onKillCommand()`
+- `void onUpdate()`
+- `protected void readEntityFromNBT(NBTTagCompound compound)`
+- `void setBeamTarget(BlockPos beamTarget)`
+- `void setShowBottom(boolean showBottom)`
+- `boolean shouldShowBottom()`
+- `protected void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `int innerRotation`

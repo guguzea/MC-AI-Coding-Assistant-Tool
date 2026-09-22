@@ -1,40 +1,38 @@
 # EntityCreeper
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityCreeper
+
 ## Class signature
 
 ```java
 public class EntityCreeper extends EntityMob
 ```
 
-## Constructors
-
-- `public EntityCreeper( World worldIn)`
-
 ## Methods
 
 - `protected void applyEntityAttributes()`
-- `public int getMaxFallHeight()`
-- `public void fall(float distance, float damageMultiplier)`
+- `boolean attackEntityAsMob(Entity entityIn)`
 - `protected void entityInit()`
-- `public void writeEntityToNBT( NBTTagCompound tagCompound)`
-- `public void readEntityFromNBT( NBTTagCompound tagCompund)`
-- `public void onUpdate()`
-- `protected java.lang.String getHurtSound()`
-- `protected java.lang.String getDeathSound()`
-- `public void onDeath( DamageSource cause)`
-- `public boolean attackEntityAsMob( Entity entityIn)`
-- `public boolean getPowered()`
-- `public float getCreeperFlashIntensity(float p_70831_1_)`
+- `void fall(float distance, float damageMultiplier)`
+- `void func_175493_co()`
+- `float getCreeperFlashIntensity(float p_70831_1_)` — Params: (Float)Render tick.
+- `int getCreeperState()` — Returns the current state of creeper, -1 is idle, 1 is 'in fuse'
+- `protected java.lang.String getDeathSound()` — Returns the sound this mob makes on death.
 - `protected Item getDropItem()`
-- `public int getCreeperState()`
-- `public void setCreeperState(int state)`
-- `public void onStruckByLightning( EntityLightningBolt lightningBolt)`
-- `protected boolean interact( EntityPlayer player)`
-- `public boolean hasIgnited()`
-- `public void ignite()`
-- `public boolean isAIEnabled()`
-- `public void func_175493_co()`
+- `protected java.lang.String getHurtSound()` — Returns the sound this mob makes when it is hurt.
+- `int getMaxFallHeight()` — The maximum height from where the entity is alowed to jump (used in pathfinder)
+- `boolean getPowered()` — Returns true if the creeper is powered by a lightning bolt.
+- `boolean hasIgnited()`
+- `void ignite()`
+- `protected boolean interact(EntityPlayer player)` — Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+- `boolean isAIEnabled()` — Returns true if the newer Entity AI code should be run
+- `void onDeath(DamageSource cause)` — Called when the mob's health reaches 0.
+- `void onStruckByLightning(EntityLightningBolt lightningBolt)` — Called when a lightning bolt hits the entity.
+- `void onUpdate()` — Called to update the entity's position/logic.
+- `void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
+- `void setCreeperState(int state)` — Sets the state of creeper, -1 to idle and 1 to be 'in fuse'
+- `void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
 
-## Description
+## Fields
 
-Params: (Float)Render tick.
+- `EntityCreeper`

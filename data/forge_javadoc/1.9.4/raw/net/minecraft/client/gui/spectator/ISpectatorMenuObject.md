@@ -3,6 +3,8 @@ title: "ISpectatorMenuObject"
 description: "public interface ISpectatorMenuObject"
 package: "net/minecraft/client/gui/spectator"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/gui/spectator/ISpectatorMenuObject.html"
 sourceType: javadoc
 ---
@@ -17,7 +19,7 @@ public interface ISpectatorMenuObject
 
 ## Methods
 
-- `void selectItem( SpectatorMenu menu)`
 - `ITextComponent getSpectatorName()`
-- `void renderIcon(float p_178663_1_, int alpha)`
 - `boolean isEnabled()`
+- `void renderIcon(float p_178663_1_, int alpha)`
+- `void selectItem(SpectatorMenu menu)`

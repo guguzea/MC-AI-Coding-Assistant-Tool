@@ -1,21 +1,31 @@
 ---
 title: "BlockJukebox.TileEntityJukebox"
-description: ""
+description: "public static class BlockJukebox.TileEntityJukebox extends TileEntity"
 package: "net/minecraft/block"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/block/BlockJukebox.TileEntityJukebox.html"
 sourceType: javadoc
 ---
 
 # BlockJukebox.TileEntityJukebox
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.block.BlockJukebox.TileEntityJukebox
 
-- `public TileEntityJukebox()`
+## Class signature
+
+```java
+public static class BlockJukebox.TileEntityJukebox extends TileEntity
+```
 
 ## Methods
 
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public ItemStack getRecord()`
-- `public void setRecord( ItemStack recordStack)`
+- `ItemStack getRecord()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setRecord(ItemStack recordStack)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `TileEntityJukebox`

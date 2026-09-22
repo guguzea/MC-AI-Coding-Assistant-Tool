@@ -1,5 +1,7 @@
 # PlayerEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class PlayerEvent extends LivingEvent
 
 ## Constructors
 
-- `public PlayerEvent( EntityPlayer player)`
+- `PlayerEvent(EntityPlayer player)`
 
-## Description
+## Fields
 
-PlayerEvent is fired whenever an event involving Living entities occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. All children of this
+- `EntityPlayer entityPlayer`

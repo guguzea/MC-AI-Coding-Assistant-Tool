@@ -1,5 +1,7 @@
 # PlacementSettings
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.template.PlacementSettings
+
 ## Class signature
 
 ```java
@@ -8,26 +10,26 @@ public class PlacementSettings extends java.lang.Object
 
 ## Constructors
 
-- `public PlacementSettings()`
+- `PlacementSettings()`
 
 ## Methods
 
-- `public PlacementSettings copy()`
-- `public PlacementSettings setMirror( Mirror mirrorIn)`
-- `public PlacementSettings setRotation( Rotation rotationIn)`
-- `public PlacementSettings setIgnoreEntities(boolean ignoreEntitiesIn)`
-- `public PlacementSettings setReplacedBlock( Block replacedBlockIn)`
-- `public PlacementSettings setChunk( ChunkPos chunkPosIn)`
-- `public PlacementSettings setBoundingBox( StructureBoundingBox boundingBoxIn)`
-- `public PlacementSettings setSeed(java.lang.Long seedIn)`
-- `public PlacementSettings setRandom(java.util.Random randomIn)`
-- `public PlacementSettings setIntegrity(float integrityIn)`
-- `public Mirror getMirror()`
-- `public PlacementSettings setIgnoreStructureBlock(boolean ignoreStructureBlockIn)`
-- `public Rotation getRotation()`
-- `public java.util.Random getRandom( BlockPos seed)`
-- `public float getIntegrity()`
-- `public boolean getIgnoreEntities()`
-- `public Block getReplacedBlock()`
-- `public StructureBoundingBox getBoundingBox()`
-- `public boolean getIgnoreStructureBlock()`
+- `PlacementSettings copy()`
+- `StructureBoundingBox getBoundingBox()`
+- `boolean getIgnoreEntities()`
+- `boolean getIgnoreStructureBlock()`
+- `float getIntegrity()`
+- `Mirror getMirror()`
+- `java.util.Random getRandom(BlockPos seed)`
+- `Block getReplacedBlock()`
+- `Rotation getRotation()`
+- `PlacementSettings setBoundingBox(StructureBoundingBox boundingBoxIn)`
+- `PlacementSettings setChunk(ChunkPos chunkPosIn)`
+- `PlacementSettings setIgnoreEntities(boolean ignoreEntitiesIn)`
+- `PlacementSettings setIgnoreStructureBlock(boolean ignoreStructureBlockIn)`
+- `PlacementSettings setIntegrity(float integrityIn)`
+- `PlacementSettings setMirror(Mirror mirrorIn)`
+- `PlacementSettings setRandom(java.util.Random randomIn)`
+- `PlacementSettings setReplacedBlock(Block replacedBlockIn)`
+- `PlacementSettings setRotation(Rotation rotationIn)`
+- `PlacementSettings setSeed(java.lang.Long seedIn)`

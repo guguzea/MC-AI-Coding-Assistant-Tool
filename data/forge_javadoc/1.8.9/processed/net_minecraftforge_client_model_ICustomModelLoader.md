@@ -8,5 +8,5 @@ public interface ICustomModelLoader extends IResourceManagerReloadListener
 
 ## Methods
 
-- `boolean accepts( ResourceLocation modelLocation)`
-- `IModel loadModel( ResourceLocation modelLocation) throws java.io.IOException`
+- `boolean accepts(ResourceLocation modelLocation)`
+- `IModel loadModel(ResourceLocation modelLocation)`

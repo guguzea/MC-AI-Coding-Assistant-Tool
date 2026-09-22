@@ -1,13 +1,17 @@
 ---
 title: "LivingFallEvent"
-description: "LivingFallEvent is fired when an Entity is set to be falling. This event is fired whenever an Entity is set to fall in EntityLivingBase.fall(float, float) . This event is fired via the ForgeHooks.onLi"
+description: "public class LivingFallEvent extends LivingEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/entity/living/LivingFallEvent.html"
 sourceType: javadoc
 ---
 
 # LivingFallEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingFallEvent
 
 ## Class signature
 
@@ -17,15 +21,11 @@ public class LivingFallEvent extends LivingEvent
 
 ## Constructors
 
-- `public LivingFallEvent( EntityLivingBase entity, float distance, float damageMultiplier)`
+- `LivingFallEvent(EntityLivingBase entity, float distance, float damageMultiplier)`
 
 ## Methods
 
-- `public float getDistance()`
-- `public void setDistance(float distance)`
-- `public float getDamageMultiplier()`
-- `public void setDamageMultiplier(float damageMultiplier)`
-
-## Description
-
-LivingFallEvent is fired when an Entity is set to be falling. This event is fired whenever an Entity is set to fall in EntityLivingBase.fall(float, float) . This event is fired via the ForgeHooks.onLi
+- `float getDamageMultiplier()`
+- `float getDistance()`
+- `void setDamageMultiplier(float damageMultiplier)`
+- `void setDistance(float distance)`

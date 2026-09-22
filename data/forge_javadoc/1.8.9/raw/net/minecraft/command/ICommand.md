@@ -1,8 +1,10 @@
 ---
 title: "ICommand"
-description: "Returns true if the given command sender is allowed to use this command."
+description: "public interface ICommand extends java.lang.Comparable<ICommand>"
 package: "net/minecraft/command"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/command/ICommand.html"
 sourceType: javadoc
 ---
@@ -12,19 +14,15 @@ sourceType: javadoc
 ## Class signature
 
 ```java
-public interface ICommand extends java.lang.Comparable< ICommand >
+public interface ICommand extends java.lang.Comparable<ICommand>
 ```
 
 ## Methods
 
-- `java.lang.String getCommandName()`
-- `java.lang.String getCommandUsage( ICommandSender sender)`
+- `java.util.List<java.lang.String> addTabCompletionOptions(ICommandSender sender, java.lang.String[] args, BlockPos pos)`
+- `boolean canCommandSenderUseCommand(ICommandSender sender)` — Returns true if the given command sender is allowed to use this command.
 - `java.util.List<java.lang.String> getCommandAliases()`
-- `void processCommand( ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `boolean canCommandSenderUseCommand( ICommandSender sender)`
-- `java.util.List<java.lang.String> addTabCompletionOptions( ICommandSender sender, java.lang.String[] args, BlockPos pos)`
-- `boolean isUsernameIndex(java.lang.String[] args, int index)`
-
-## Description
-
-Returns true if the given command sender is allowed to use this command.
+- `java.lang.String getCommandName()` — Gets the name of the command
+- `java.lang.String getCommandUsage(ICommandSender sender)` — Gets the usage string for the command.
+- `boolean isUsernameIndex(java.lang.String[] args, int index)` — Return whether the specified command parameter index is a username parameter.
+- `void processCommand(ICommandSender sender, java.lang.String[] args)` — Callback when the command is invoked

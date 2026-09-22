@@ -1,5 +1,7 @@
 # EntityAICreeperSwell
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAICreeperSwell
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class EntityAICreeperSwell extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAICreeperSwell( EntityCreeper p_i1655_1_)`
+- `EntityAICreeperSwell(EntityCreeper p_i1655_1_)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

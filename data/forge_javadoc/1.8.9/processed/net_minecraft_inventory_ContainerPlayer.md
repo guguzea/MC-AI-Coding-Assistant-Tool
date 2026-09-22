@@ -1,5 +1,7 @@
 # ContainerPlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Container → net.minecraft.inventory.ContainerPlayer
+
 ## Class signature
 
 ```java
@@ -8,16 +10,18 @@ public class ContainerPlayer extends Container
 
 ## Constructors
 
-- `public ContainerPlayer( InventoryPlayer playerInventory, boolean localWorld, EntityPlayer player)`
+- `ContainerPlayer(InventoryPlayer playerInventory, boolean localWorld, EntityPlayer player)`
 
 ## Methods
 
-- `public void onCraftMatrixChanged( IInventory inventoryIn)`
-- `public void onContainerClosed( EntityPlayer playerIn)`
-- `public boolean canInteractWith( EntityPlayer playerIn)`
-- `public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
-- `public boolean canMergeSlot( ItemStack stack, Slot p_94530_2_)`
+- `boolean canInteractWith(EntityPlayer playerIn)`
+- `boolean canMergeSlot(ItemStack stack, Slot p_94530_2_)` — Called to determine if the current slot is valid for the stack merging (double-click) code.
+- `void onContainerClosed(EntityPlayer playerIn)` — Called when the container is closed.
+- `void onCraftMatrixChanged(IInventory inventoryIn)` — Callback for when the crafting matrix is changed.
+- `ItemStack transferStackInSlot(EntityPlayer playerIn, int index)` — Take a stack from the specified inventory slot.
 
-## Description
+## Fields
 
-The crafting matrix inventory.
+- `InventoryCrafting craftMatrix` — The crafting matrix inventory.
+- `IInventory craftResult`
+- `boolean isLocalWorld` — Determines if inventory manipulation should be handled.

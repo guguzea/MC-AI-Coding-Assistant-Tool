@@ -1,34 +1,34 @@
 ---
 title: "C14PacketTabComplete"
-description: "Passes this Packet on to the NetHandler for processing."
+description: "public class C14PacketTabComplete extends java.lang.Object implements Packet<INetHandlerPlayServer>"
 package: "net/minecraft/network/play/client"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/network/play/client/C14PacketTabComplete.html"
 sourceType: javadoc
 ---
 
 # C14PacketTabComplete
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.C14PacketTabComplete
+
 ## Class signature
 
 ```java
-public class C14PacketTabComplete extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class C14PacketTabComplete extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public C14PacketTabComplete()`
-- `public C14PacketTabComplete(java.lang.String msg)`
-- `public C14PacketTabComplete(java.lang.String msg, BlockPos target)`
+- `C14PacketTabComplete()`
+- `C14PacketTabComplete(java.lang.String msg)`
+- `C14PacketTabComplete(java.lang.String msg, BlockPos target)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public java.lang.String getMessage()`
-- `public BlockPos getTargetBlock()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `java.lang.String getMessage()`
+- `BlockPos getTargetBlock()`
+- `void processPacket(INetHandlerPlayServer handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

@@ -1,21 +1,23 @@
 # EnchantmentThorns
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Enchantment> → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentThorns
+
 ## Class signature
 
 ```java
 public class EnchantmentThorns extends Enchantment
 ```
 
-## Constructors
-
-- `public EnchantmentThorns( Enchantment.Rarity rarityIn, EntityEquipmentSlot ... slots)`
-
 ## Methods
 
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int getMaxLevel()`
-- `public boolean canApply( ItemStack stack)`
-- `public void onUserHurt( EntityLivingBase user, Entity attacker, int level)`
-- `public static boolean shouldHit(int level, java.util.Random rnd)`
-- `public static int getDamage(int level, java.util.Random rnd)`
+- `boolean canApply(ItemStack stack)`
+- `static int getDamage(int level, java.util.Random rnd)`
+- `int getMaxEnchantability(int enchantmentLevel)`
+- `int getMaxLevel()`
+- `int getMinEnchantability(int enchantmentLevel)`
+- `void onUserHurt(EntityLivingBase user, Entity attacker, int level)`
+- `static boolean shouldHit(int level, java.util.Random rnd)`
+
+## Fields
+
+- `EnchantmentThorns`

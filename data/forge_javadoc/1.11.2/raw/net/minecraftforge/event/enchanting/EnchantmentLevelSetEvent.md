@@ -1,13 +1,17 @@
 ---
 title: "EnchantmentLevelSetEvent"
-description: "Fired when the enchantment level is set for each of the three potential enchantments in the enchanting table. The level is set to the vanilla value and can be modified by this event handler. The encha"
+description: "public class EnchantmentLevelSetEvent extends Event"
 package: "net/minecraftforge/event/enchanting"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/enchanting/EnchantmentLevelSetEvent.html"
 sourceType: javadoc
 ---
 
 # EnchantmentLevelSetEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent
 
 ## Class signature
 
@@ -17,19 +21,15 @@ public class EnchantmentLevelSetEvent extends Event
 
 ## Constructors
 
-- `public EnchantmentLevelSetEvent( World world, BlockPos pos, int enchantRow, int power, @Nonnull ItemStack itemStack, int level)`
+- `EnchantmentLevelSetEvent(World world, BlockPos pos, int enchantRow, int power, ItemStack itemStack, int level)`
 
 ## Methods
 
-- `public World getWorld()`
-- `public BlockPos getPos()`
-- `public int getEnchantRow()`
-- `public int getPower()`
-- `@Nonnull public ItemStack getItem()`
-- `public int getOriginalLevel()`
-- `public int getLevel()`
-- `public void setLevel(int level)`
-
-## Description
-
-Fired when the enchantment level is set for each of the three potential enchantments in the enchanting table. The level is set to the vanilla value and can be modified by this event handler. The encha
+- `int getEnchantRow()` — Get the row for which the enchantment level is being set
+- `ItemStack getItem()` — Get the item being enchanted
+- `int getLevel()` — Get the level of the enchantment for this row (0-30)
+- `int getOriginalLevel()` — Get the original level of the enchantment for this row (0-30)
+- `BlockPos getPos()` — Get the pos of the enchantment table
+- `int getPower()` — Get the power (# of bookshelves) for the enchanting table
+- `World getWorld()` — Get the world object
+- `void setLevel(int level)` — Set the new level of the enchantment (0-30)

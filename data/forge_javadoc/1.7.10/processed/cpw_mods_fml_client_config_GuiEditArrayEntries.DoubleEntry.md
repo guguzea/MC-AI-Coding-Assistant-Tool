@@ -1,14 +1,18 @@
 # GuiEditArrayEntries.DoubleEntry
 
-## Constructors
+**Inheritance:** java.lang.Object → cpw.mods.fml.client.config.GuiEditArrayEntries.BaseEntry → cpw.mods.fml.client.config.GuiEditArrayEntries.StringEntry → cpw.mods.fml.client.config.GuiEditArrayEntries.DoubleEntry
 
-- `public DoubleEntry( GuiEditArray owningScreen, GuiEditArrayEntries owningEntryList, IConfigElement configElement, java.lang.Double value)`
+## Class signature
+
+```java
+public static class GuiEditArrayEntries.DoubleEntry extends GuiEditArrayEntries.StringEntry
+```
 
 ## Methods
 
-- `public void keyTyped(char eventChar, int eventKey)`
-- `public java.lang.Double getValue()`
+- `java.lang.Double getValue()`
+- `void keyTyped(char eventChar, int eventKey)`
 
-## Description
+## Fields
 
-IGuiListEntry Inner Classes
+- `DoubleEntry`

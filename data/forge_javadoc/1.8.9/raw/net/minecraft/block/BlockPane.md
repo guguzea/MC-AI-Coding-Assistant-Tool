@@ -1,13 +1,17 @@
 ---
 title: "BlockPane"
-description: "Add all collision boxes of this Block to the list that intersect with the given mask."
+description: "public class BlockPane extends Block"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockPane.html"
 sourceType: javadoc
 ---
 
 # BlockPane
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockPane
 
 ## Class signature
 
@@ -17,25 +21,28 @@ public class BlockPane extends Block
 
 ## Constructors
 
-- `protected BlockPane( Material materialIn, boolean canDrop)`
+- `BlockPane(Material materialIn, boolean canDrop)`
 
 ## Methods
 
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public boolean isOpaqueCube()`
-- `public boolean isFullCube()`
-- `public boolean shouldSideBeRendered( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
-- `public void addCollisionBoxesToList( World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, java.util.List< AxisAlignedBB > list, Entity collidingEntity)`
-- `public void setBlockBoundsForItemRender()`
-- `public void setBlockBoundsBasedOnState( IBlockAccess worldIn, BlockPos pos)`
-- `public final boolean canPaneConnectToBlock( Block blockIn)`
+- `void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, java.util.List<AxisAlignedBB> list, Entity collidingEntity)` — Add all collision boxes of this Block to the list that intersect with the given mask.
+- `boolean canPaneConnectTo(IBlockAccess world, BlockPos pos, EnumFacing dir)`
+- `boolean canPaneConnectToBlock(Block blockIn)`
 - `protected boolean canSilkHarvest()`
-- `public EnumWorldBlockLayer getBlockLayer()`
-- `public int getMetaFromState( IBlockState state)`
 - `protected BlockState createBlockState()`
-- `public boolean canPaneConnectTo( IBlockAccess world, BlockPos pos, EnumFacing dir)`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)` — Get the actual Block state of this Block at the given position.
+- `EnumWorldBlockLayer getBlockLayer()`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)`
+- `void setBlockBoundsForItemRender()` — Sets the block's bounds for rendering it as an item
+- `boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
 
-## Description
+## Fields
 
-Add all collision boxes of this Block to the list that intersect with the given mask.
+- `static PropertyBool EAST`
+- `static PropertyBool NORTH`
+- `static PropertyBool SOUTH`
+- `static PropertyBool WEST`

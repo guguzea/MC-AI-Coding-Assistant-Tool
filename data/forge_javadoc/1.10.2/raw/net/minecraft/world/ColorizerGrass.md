@@ -3,11 +3,15 @@ title: "ColorizerGrass"
 description: "public class ColorizerGrass extends java.lang.Object"
 package: "net/minecraft/world"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/ColorizerGrass.html"
 sourceType: javadoc
 ---
 
 # ColorizerGrass
+
+**Inheritance:** java.lang.Object → net.minecraft.world.ColorizerGrass
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class ColorizerGrass extends java.lang.Object
 
 ## Constructors
 
-- `public ColorizerGrass()`
+- `ColorizerGrass()`
 
 ## Methods
 
-- `public static void setGrassBiomeColorizer(int[] grassBufferIn)`
-- `public static int getGrassColor(double temperature, double humidity)`
+- `static int getGrassColor(double temperature, double humidity)`
+- `static void setGrassBiomeColorizer(int[] grassBufferIn)`

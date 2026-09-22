@@ -1,24 +1,30 @@
 ---
 title: "PotionEvent.PotionRemoveEvent"
-description: "This Event is fired when a Potion is about to get removed from an Entity. This Event is Cancelable . This Event does not have a result."
+description: "public static class PotionEvent.PotionRemoveEvent extends PotionEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/living/PotionEvent.PotionRemoveEvent.html"
 sourceType: javadoc
 ---
 
 # PotionEvent.PotionRemoveEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.PotionEvent → net.minecraftforge.event.entity.living.PotionEvent.PotionRemoveEvent
 
-- `public PotionRemoveEvent( EntityLivingBase living, Potion potion)`
-- `public PotionRemoveEvent( EntityLivingBase living, PotionEffect effect)`
+## Class signature
+
+```java
+public static class PotionEvent.PotionRemoveEvent extends PotionEvent
+```
 
 ## Methods
 
-- `public Potion getPotion()`
-- `public PotionEffect getPotionEffect()`
+- `Potion getPotion()`
+- `PotionEffect getPotionEffect()` — Retuns the PotionEffect.
 
-## Description
+## Fields
 
-This Event is fired when a Potion is about to get removed from an Entity. This Event is Cancelable . This Event does not have a result.
+- `PotionRemoveEvent`
+- `PotionRemoveEvent`

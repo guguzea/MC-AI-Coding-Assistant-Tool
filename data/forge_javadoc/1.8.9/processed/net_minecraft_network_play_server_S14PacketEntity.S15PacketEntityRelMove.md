@@ -1,15 +1,19 @@
 # S14PacketEntity.S15PacketEntityRelMove
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S14PacketEntity → net.minecraft.network.play.server.S14PacketEntity.S15PacketEntityRelMove
 
-- `public S15PacketEntityRelMove()`
-- `public S15PacketEntityRelMove(int entityIdIn, byte x, byte y, byte z, boolean onGroundIn)`
+## Class signature
+
+```java
+public static class S14PacketEntity.S15PacketEntityRelMove extends S14PacketEntity
+```
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.
 
-## Description
+## Fields
 
-Reads the raw packet data from the data stream.
+- `S15PacketEntityRelMove`
+- `S15PacketEntityRelMove`

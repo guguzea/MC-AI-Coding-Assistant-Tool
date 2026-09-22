@@ -1,25 +1,23 @@
 # S1FPacketSetExperience
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S1FPacketSetExperience
+
 ## Class signature
 
 ```java
-public class S1FPacketSetExperience extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class S1FPacketSetExperience extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public S1FPacketSetExperience()`
-- `public S1FPacketSetExperience(float p_i45222_1_, int totalExperienceIn, int levelIn)`
+- `S1FPacketSetExperience()`
+- `S1FPacketSetExperience(float p_i45222_1_, int totalExperienceIn, int levelIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public float func_149397_c()`
-- `public int getTotalExperience()`
-- `public int getLevel()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `float func_149397_c()`
+- `int getLevel()`
+- `int getTotalExperience()`
+- `void processPacket(INetHandlerPlayClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

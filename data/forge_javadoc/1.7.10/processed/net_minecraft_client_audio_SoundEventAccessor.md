@@ -1,5 +1,7 @@
 # SoundEventAccessor
 
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.SoundEventAccessor
+
 ## Class signature
 
 ```java
@@ -8,5 +10,5 @@ public class SoundEventAccessor extends java.lang.Object implements ISoundEventA
 
 ## Methods
 
-- `public int func_148721_a()`
-- `public SoundPoolEntry func_148720_g()`
+- `SoundPoolEntry func_148720_g()`
+- `int func_148721_a()`

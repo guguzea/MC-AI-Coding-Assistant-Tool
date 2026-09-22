@@ -1,32 +1,36 @@
 ---
 title: "SPacketSpawnGlobalEntity"
-description: "public class SPacketSpawnGlobalEntity extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketSpawnGlobalEntity extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/network/play/server/SPacketSpawnGlobalEntity.html"
 sourceType: javadoc
 ---
 
 # SPacketSpawnGlobalEntity
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketSpawnGlobalEntity
+
 ## Class signature
 
 ```java
-public class SPacketSpawnGlobalEntity extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketSpawnGlobalEntity extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketSpawnGlobalEntity()`
-- `public SPacketSpawnGlobalEntity( Entity entityIn)`
+- `SPacketSpawnGlobalEntity()`
+- `SPacketSpawnGlobalEntity(Entity entityIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getEntityId()`
-- `public double getX()`
-- `public double getY()`
-- `public double getZ()`
-- `public int getType()`
+- `int getEntityId()`
+- `int getType()`
+- `double getX()`
+- `double getY()`
+- `double getZ()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

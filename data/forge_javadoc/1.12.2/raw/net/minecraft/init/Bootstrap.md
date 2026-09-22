@@ -3,11 +3,15 @@ title: "Bootstrap"
 description: "public class Bootstrap extends java.lang.Object"
 package: "net/minecraft/init"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/init/Bootstrap.html"
 sourceType: javadoc
 ---
 
 # Bootstrap
+
+**Inheritance:** java.lang.Object → net.minecraft.init.Bootstrap
 
 ## Class signature
 
@@ -17,10 +21,15 @@ public class Bootstrap extends java.lang.Object
 
 ## Constructors
 
-- `public Bootstrap()`
+- `Bootstrap()`
 
 ## Methods
 
-- `public static boolean isRegistered()`
-- `public static void register()`
-- `public static void printToSYSOUT(java.lang.String message)`
+- `static boolean isRegistered()`
+- `static void printToSYSOUT(java.lang.String message)`
+- `static void register()`
+
+## Fields
+
+- `static boolean hasErrored`
+- `static java.io.PrintStream SYSOUT`

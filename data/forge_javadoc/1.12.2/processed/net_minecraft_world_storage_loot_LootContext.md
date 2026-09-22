@@ -1,5 +1,7 @@
 # LootContext
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.LootContext
+
 ## Class signature
 
 ```java
@@ -8,17 +10,17 @@ public class LootContext extends java.lang.Object
 
 ## Constructors
 
-- `public LootContext(float luckIn, WorldServer worldIn, LootTableManager lootTableManagerIn, Entity lootedEntityIn, EntityPlayer playerIn, DamageSource damageSourceIn)`
+- `LootContext(float luckIn, WorldServer worldIn, LootTableManager lootTableManagerIn, Entity lootedEntityIn, EntityPlayer playerIn, DamageSource damageSourceIn)`
 
 ## Methods
 
-- `public Entity getLootedEntity()`
-- `public Entity getKillerPlayer()`
-- `public Entity getKiller()`
-- `public boolean addLootTable( LootTable lootTableIn)`
-- `public void removeLootTable( LootTable lootTableIn)`
-- `public LootTableManager getLootTableManager()`
-- `public float getLuck()`
-- `public Entity getEntity( LootContext.EntityTarget target)`
-- `public WorldServer getWorld()`
-- `public int getLootingModifier()`
+- `boolean addLootTable(LootTable lootTableIn)`
+- `Entity getEntity(LootContext.EntityTarget target)`
+- `Entity getKiller()`
+- `Entity getKillerPlayer()`
+- `Entity getLootedEntity()`
+- `int getLootingModifier()`
+- `LootTableManager getLootTableManager()`
+- `float getLuck()`
+- `WorldServer getWorld()`
+- `void removeLootTable(LootTable lootTableIn)`

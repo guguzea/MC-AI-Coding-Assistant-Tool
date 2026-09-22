@@ -1,25 +1,23 @@
 # TileEntityFlowerPot
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityFlowerPot
+
 ## Class signature
 
 ```java
 public class TileEntityFlowerPot extends TileEntity
 ```
 
-## Constructors
-
-- `public TileEntityFlowerPot()`
-- `public TileEntityFlowerPot( Item potItem, int potData)`
-
 ## Methods
 
-- `public void writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public Packet getDescriptionPacket()`
-- `public void setFlowerPotData( Item potItem, int potData)`
-- `public Item getFlowerPotItem()`
-- `public int getFlowerPotData()`
+- `Packet getDescriptionPacket()` — Allows for a specialized description packet to be created.
+- `int getFlowerPotData()`
+- `Item getFlowerPotItem()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setFlowerPotData(Item potItem, int potData)`
+- `void writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Allows for a specialized description packet to be created.
+- `TileEntityFlowerPot`
+- `TileEntityFlowerPot`

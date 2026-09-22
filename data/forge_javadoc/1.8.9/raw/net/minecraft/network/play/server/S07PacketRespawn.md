@@ -1,35 +1,35 @@
 ---
 title: "S07PacketRespawn"
-description: "Passes this Packet on to the NetHandler for processing."
+description: "public class S07PacketRespawn extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/network/play/server/S07PacketRespawn.html"
 sourceType: javadoc
 ---
 
 # S07PacketRespawn
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S07PacketRespawn
+
 ## Class signature
 
 ```java
-public class S07PacketRespawn extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class S07PacketRespawn extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public S07PacketRespawn()`
-- `public S07PacketRespawn(int dimensionIDIn, EnumDifficulty difficultyIn, WorldType worldTypeIn, WorldSettings.GameType gameTypeIn)`
+- `S07PacketRespawn()`
+- `S07PacketRespawn(int dimensionIDIn, EnumDifficulty difficultyIn, WorldType worldTypeIn, WorldSettings.GameType gameTypeIn)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public int getDimensionID()`
-- `public EnumDifficulty getDifficulty()`
-- `public WorldSettings.GameType getGameType()`
-- `public WorldType getWorldType()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `EnumDifficulty getDifficulty()`
+- `int getDimensionID()`
+- `WorldSettings.GameType getGameType()`
+- `WorldType getWorldType()`
+- `void processPacket(INetHandlerPlayClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

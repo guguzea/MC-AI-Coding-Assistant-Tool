@@ -8,8 +8,4 @@ public interface IFluidHandlerItem extends IFluidHandler
 
 ## Methods
 
-- `@Nonnull ItemStack getContainer()`
-
-## Description
-
-ItemStacks handled by an IFluidHandler may change, so this class allows users of the fluid handler to get the container after it has been used.
+- `ItemStack getContainer()` — Get the container currently acted on by this fluid handler.

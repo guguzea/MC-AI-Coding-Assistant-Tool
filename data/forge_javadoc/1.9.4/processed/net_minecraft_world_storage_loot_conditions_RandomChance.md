@@ -1,5 +1,7 @@
 # RandomChance
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.conditions.RandomChance
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class RandomChance extends java.lang.Object implements LootCondition
 
 ## Constructors
 
-- `public RandomChance(float chanceIn)`
+- `RandomChance(float chanceIn)`
 
 ## Methods
 
-- `public boolean testCondition(java.util.Random rand, LootContext context)`
+- `boolean testCondition(java.util.Random rand, LootContext context)`

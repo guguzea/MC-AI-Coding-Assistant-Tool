@@ -1,5 +1,7 @@
 # VertexFormat
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.vertex.VertexFormat
+
 ## Class signature
 
 ```java
@@ -8,25 +10,25 @@ public class VertexFormat extends java.lang.Object
 
 ## Constructors
 
-- `public VertexFormat( VertexFormat vertexFormatIn)`
-- `public VertexFormat()`
+- `VertexFormat()`
+- `VertexFormat(VertexFormat vertexFormatIn)`
 
 ## Methods
 
-- `public void clear()`
-- `public VertexFormat addElement( VertexFormatElement element)`
-- `public boolean hasNormal()`
-- `public int getNormalOffset()`
-- `public boolean hasColor()`
-- `public int getColorOffset()`
-- `public boolean hasUvOffset(int id)`
-- `public int getUvOffsetById(int id)`
-- `public java.lang.String toString()`
-- `public int getIntegerSize()`
-- `public int getNextOffset()`
-- `public java.util.List< VertexFormatElement > getElements()`
-- `public int getElementCount()`
-- `public VertexFormatElement getElement(int index)`
-- `public int getOffset(int index)`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
+- `VertexFormat addElement(VertexFormatElement element)`
+- `void clear()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `int getColorOffset()`
+- `VertexFormatElement getElement(int index)`
+- `int getElementCount()`
+- `java.util.List<VertexFormatElement> getElements()`
+- `int getIntegerSize()`
+- `int getNextOffset()`
+- `int getNormalOffset()`
+- `int getOffset(int index)`
+- `int getUvOffsetById(int id)`
+- `boolean hasColor()`
+- `int hashCode()`
+- `boolean hasNormal()`
+- `boolean hasUvOffset(int id)`
+- `java.lang.String toString()`

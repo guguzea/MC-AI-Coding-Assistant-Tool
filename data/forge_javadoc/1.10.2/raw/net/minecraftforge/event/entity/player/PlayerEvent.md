@@ -1,13 +1,17 @@
 ---
 title: "PlayerEvent"
-description: "PlayerEvent is fired whenever an event involving Living entities occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. All children of this"
+description: "public class PlayerEvent extends LivingEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/entity/player/PlayerEvent.html"
 sourceType: javadoc
 ---
 
 # PlayerEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent
 
 ## Class signature
 
@@ -17,12 +21,8 @@ public class PlayerEvent extends LivingEvent
 
 ## Constructors
 
-- `public PlayerEvent( EntityPlayer player)`
+- `PlayerEvent(EntityPlayer player)`
 
 ## Methods
 
-- `public EntityPlayer getEntityPlayer()`
-
-## Description
-
-PlayerEvent is fired whenever an event involving Living entities occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. All children of this
+- `EntityPlayer getEntityPlayer()`

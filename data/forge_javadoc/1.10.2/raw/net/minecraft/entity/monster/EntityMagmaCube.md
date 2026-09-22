@@ -3,11 +3,15 @@ title: "EntityMagmaCube"
 description: "public class EntityMagmaCube extends EntitySlime"
 package: "net/minecraft/entity/monster"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/entity/monster/EntityMagmaCube.html"
 sourceType: javadoc
 ---
 
 # EntityMagmaCube
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.monster.EntitySlime → net.minecraft.entity.monster.EntityMagmaCube
 
 ## Class signature
 
@@ -15,31 +19,31 @@ sourceType: javadoc
 public class EntityMagmaCube extends EntitySlime
 ```
 
-## Constructors
-
-- `public EntityMagmaCube( World worldIn)`
-
 ## Methods
 
-- `public static void registerFixesMagmaCube( DataFixer fixer)`
-- `protected void applyEntityAttributes()`
-- `public boolean getCanSpawnHere()`
-- `public boolean isNotColliding()`
-- `protected void setSlimeSize(int size)`
-- `public int getBrightnessForRender(float partialTicks)`
-- `public float getBrightness(float partialTicks)`
-- `protected EnumParticleTypes getParticleType()`
-- `protected EntitySlime createInstance()`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public boolean isBurning()`
-- `protected int getJumpDelay()`
 - `protected void alterSquishAmount()`
-- `protected void jump()`
-- `protected void handleJumpLava()`
-- `public void fall(float distance, float damageMultiplier)`
+- `protected void applyEntityAttributes()`
 - `protected boolean canDamagePlayer()`
+- `protected EntitySlime createInstance()`
+- `void fall(float distance, float damageMultiplier)`
 - `protected int getAttackStrength()`
-- `protected SoundEvent getHurtSound()`
+- `float getBrightness(float partialTicks)`
+- `int getBrightnessForRender(float partialTicks)`
+- `boolean getCanSpawnHere()`
 - `protected SoundEvent getDeathSound()`
-- `protected SoundEvent getSquishSound()`
+- `protected SoundEvent getHurtSound()`
+- `protected int getJumpDelay()`
 - `protected SoundEvent getJumpSound()`
+- `protected ResourceLocation getLootTable()`
+- `protected EnumParticleTypes getParticleType()`
+- `protected SoundEvent getSquishSound()`
+- `protected void handleJumpLava()`
+- `boolean isBurning()`
+- `boolean isNotColliding()`
+- `protected void jump()`
+- `static void registerFixesMagmaCube(DataFixer fixer)`
+- `protected void setSlimeSize(int size)`
+
+## Fields
+
+- `EntityMagmaCube`

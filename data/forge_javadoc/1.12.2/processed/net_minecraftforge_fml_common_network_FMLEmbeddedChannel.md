@@ -1,5 +1,7 @@
 # FMLEmbeddedChannel
 
+**Inheritance:** java.lang.Object → EmbeddedChannel → net.minecraftforge.fml.common.network.FMLEmbeddedChannel
+
 ## Class signature
 
 ```java
@@ -8,15 +10,11 @@ public class FMLEmbeddedChannel extends EmbeddedChannel
 
 ## Constructors
 
-- `public FMLEmbeddedChannel(java.lang.String channelName, Side source, ChannelHandler... handlers)`
-- `public FMLEmbeddedChannel( ModContainer container, java.lang.String channelName, Side source, ChannelHandler... handlers)`
+- `FMLEmbeddedChannel(ModContainer container, java.lang.String channelName, Side source, ChannelHandler... handlers)`
+- `FMLEmbeddedChannel(java.lang.String channelName, Side source, ChannelHandler... handlers)`
 
 ## Methods
 
-- `public Packet <?> generatePacketFrom(java.lang.Object object)`
-- `public java.lang.String findChannelHandlerNameForType(java.lang.Class<? extends ChannelHandler> type)`
-- `public void cleanAttributes()`
-
-## Description
-
-Utility wrapper around EmbeddedChannel . Provides some convenience methods associated with the specific needs of FML network handling.
+- `void cleanAttributes()`
+- `java.lang.String findChannelHandlerNameForType(java.lang.Class<? extends ChannelHandler> type)`
+- `Packet<?> generatePacketFrom(java.lang.Object object)` — Utility method to generate a regular packet from a custom packet.

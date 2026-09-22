@@ -8,6 +8,6 @@ public interface IPlayerFileData
 
 ## Methods
 
-- `void writePlayerData( EntityPlayer player)`
-- `NBTTagCompound readPlayerData( EntityPlayer player)`
 - `java.lang.String[] getAvailablePlayerDat()`
+- `NBTTagCompound readPlayerData(EntityPlayer player)`
+- `void writePlayerData(EntityPlayer player)`

@@ -3,11 +3,15 @@ title: "PathNavigate"
 description: "public class PathNavigate extends java.lang.Object"
 package: "net/minecraft/pathfinding"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/pathfinding/PathNavigate.html"
 sourceType: javadoc
 ---
 
 # PathNavigate
+
+**Inheritance:** java.lang.Object → net.minecraft.pathfinding.PathNavigate
 
 ## Class signature
 
@@ -17,25 +21,25 @@ public class PathNavigate extends java.lang.Object
 
 ## Constructors
 
-- `public PathNavigate( EntityLiving p_i1671_1_, World p_i1671_2_)`
+- `PathNavigate(EntityLiving p_i1671_1_, World p_i1671_2_)`
 
 ## Methods
 
-- `public void setAvoidsWater(boolean p_75491_1_)`
-- `public boolean getAvoidsWater()`
-- `public void setBreakDoors(boolean p_75498_1_)`
-- `public void setEnterDoors(boolean p_75490_1_)`
-- `public boolean getCanBreakDoors()`
-- `public void setAvoidSun(boolean p_75504_1_)`
-- `public void setSpeed(double p_75489_1_)`
-- `public void setCanSwim(boolean p_75495_1_)`
-- `public float getPathSearchRange()`
-- `public PathEntity getPathToXYZ(double p_75488_1_, double p_75488_3_, double p_75488_5_)`
-- `public boolean tryMoveToXYZ(double p_75492_1_, double p_75492_3_, double p_75492_5_, double p_75492_7_)`
-- `public PathEntity getPathToEntityLiving( Entity p_75494_1_)`
-- `public boolean tryMoveToEntityLiving( Entity p_75497_1_, double p_75497_2_)`
-- `public boolean setPath( PathEntity p_75484_1_, double p_75484_2_)`
-- `public PathEntity getPath()`
-- `public void onUpdateNavigation()`
-- `public boolean noPath()`
-- `public void clearPathEntity()`
+- `void clearPathEntity()`
+- `boolean getAvoidsWater()`
+- `boolean getCanBreakDoors()`
+- `PathEntity getPath()`
+- `float getPathSearchRange()`
+- `PathEntity getPathToEntityLiving(Entity p_75494_1_)`
+- `PathEntity getPathToXYZ(double p_75488_1_, double p_75488_3_, double p_75488_5_)`
+- `boolean noPath()`
+- `void onUpdateNavigation()`
+- `void setAvoidSun(boolean p_75504_1_)`
+- `void setAvoidsWater(boolean p_75491_1_)`
+- `void setBreakDoors(boolean p_75498_1_)`
+- `void setCanSwim(boolean p_75495_1_)`
+- `void setEnterDoors(boolean p_75490_1_)`
+- `boolean setPath(PathEntity p_75484_1_, double p_75484_2_)`
+- `void setSpeed(double p_75489_1_)`
+- `boolean tryMoveToEntityLiving(Entity p_75497_1_, double p_75497_2_)`
+- `boolean tryMoveToXYZ(double p_75492_1_, double p_75492_3_, double p_75492_5_, double p_75492_7_)`

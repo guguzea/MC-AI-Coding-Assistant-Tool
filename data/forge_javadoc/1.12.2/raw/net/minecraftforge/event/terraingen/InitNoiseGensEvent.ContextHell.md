@@ -1,22 +1,32 @@
 ---
 title: "InitNoiseGensEvent.ContextHell"
-description: ""
+description: "public static class InitNoiseGensEvent.ContextHell extends InitNoiseGensEvent.Context"
 package: "net/minecraftforge/event/terraingen"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/terraingen/InitNoiseGensEvent.ContextHell.html"
 sourceType: javadoc
 ---
 
 # InitNoiseGensEvent.ContextHell
 
+**Inheritance:** java.lang.Object → net.minecraftforge.event.terraingen.InitNoiseGensEvent.Context → net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextHell
+
+## Class signature
+
+```java
+public static class InitNoiseGensEvent.ContextHell extends InitNoiseGensEvent.Context
+```
+
 ## Constructors
 
-- `public ContextHell( NoiseGeneratorOctaves lperlin1, NoiseGeneratorOctaves lperlin2, NoiseGeneratorOctaves perlin, NoiseGeneratorOctaves perlin2, NoiseGeneratorOctaves perlin3, NoiseGeneratorOctaves scale, NoiseGeneratorOctaves depth)`
+- `ContextHell(NoiseGeneratorOctaves lperlin1, NoiseGeneratorOctaves lperlin2, NoiseGeneratorOctaves perlin, NoiseGeneratorOctaves perlin2, NoiseGeneratorOctaves perlin3, NoiseGeneratorOctaves scale, NoiseGeneratorOctaves depth)`
 
 ## Methods
 
-- `public InitNoiseGensEvent.ContextHell clone()`
-- `public NoiseGeneratorOctaves getPerlin2()`
-- `public NoiseGeneratorOctaves getPerlin3()`
-- `public void getPerlin2( NoiseGeneratorOctaves value)`
-- `public void getPerlin3( NoiseGeneratorOctaves value)`
+- `InitNoiseGensEvent.ContextHell clone()`
+- `NoiseGeneratorOctaves getPerlin2()`
+- `void getPerlin2(NoiseGeneratorOctaves value)`
+- `NoiseGeneratorOctaves getPerlin3()`
+- `void getPerlin3(NoiseGeneratorOctaves value)`

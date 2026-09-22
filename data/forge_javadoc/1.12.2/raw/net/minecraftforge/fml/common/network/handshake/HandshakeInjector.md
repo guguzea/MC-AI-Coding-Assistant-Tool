@@ -3,11 +3,15 @@ title: "HandshakeInjector"
 description: "public class HandshakeInjector extends ChannelOutboundHandlerAdapter"
 package: "net/minecraftforge/fml/common/network/handshake"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/common/network/handshake/HandshakeInjector.html"
 sourceType: javadoc
 ---
 
 # HandshakeInjector
+
+**Inheritance:** java.lang.Object → ChannelOutboundHandlerAdapter → net.minecraftforge.fml.common.network.handshake.HandshakeInjector
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class HandshakeInjector extends ChannelOutboundHandlerAdapter
 
 ## Constructors
 
-- `public HandshakeInjector( NetworkDispatcher networkDispatcher)`
+- `HandshakeInjector(NetworkDispatcher networkDispatcher)`
 
 ## Methods
 
-- `public void write(ChannelHandlerContext ctx, java.lang.Object msg, ChannelPromise promise) throws java.lang.Exception`
+- `void write(ChannelHandlerContext ctx, java.lang.Object msg, ChannelPromise promise)`

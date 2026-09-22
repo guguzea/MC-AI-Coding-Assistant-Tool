@@ -1,25 +1,31 @@
 ---
 title: "WorldTypeEvent.InitBiomeGens"
-description: "InitBiomeGens is fired when vanilla Minecraft attempts to initialize the biome generators. This event is fired just during biome generator initialization in WorldChunkManager#WorldChunkManager(long, W"
+description: "public static class WorldTypeEvent.InitBiomeGens extends WorldTypeEvent"
 package: "net/minecraftforge/event/terraingen"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/event/terraingen/WorldTypeEvent.InitBiomeGens.html"
 sourceType: javadoc
 ---
 
 # WorldTypeEvent.InitBiomeGens
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.WorldTypeEvent → net.minecraftforge.event.terraingen.WorldTypeEvent.InitBiomeGens
+
+## Class signature
+
+```java
+public static class WorldTypeEvent.InitBiomeGens extends WorldTypeEvent
+```
+
 ## Constructors
 
-- `public InitBiomeGens( WorldType worldType, long seed, GenLayer [] original)`
+- `InitBiomeGens(WorldType worldType, long seed, GenLayer [] original)`
 
 ## Methods
 
-- `public long getSeed()`
-- `public GenLayer [] getOriginalBiomeGens()`
-- `public GenLayer [] getNewBiomeGens()`
-- `public void setNewBiomeGens( GenLayer [] newBiomeGens)`
-
-## Description
-
-InitBiomeGens is fired when vanilla Minecraft attempts to initialize the biome generators. This event is fired just during biome generator initialization in WorldChunkManager#WorldChunkManager(long, W
+- `GenLayer [] getNewBiomeGens()`
+- `GenLayer [] getOriginalBiomeGens()`
+- `long getSeed()`
+- `void setNewBiomeGens(GenLayer [] newBiomeGens)`

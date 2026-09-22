@@ -1,11 +1,14 @@
 # FMLNetworkEvent
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.eventhandler.Event → cpw.mods.fml.common.network.FMLNetworkEvent<T>
+
 ## Class signature
 
 ```java
-public class FMLNetworkEvent<T extends INetHandler > extends Event
+public class FMLNetworkEvent<T extends INetHandler> extends Event
 ```
 
-## Description
+## Fields
 
-Fired at the client when a client connects to a server
+- `T handler`
+- `NetworkManager manager`

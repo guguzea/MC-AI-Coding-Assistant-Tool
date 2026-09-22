@@ -1,32 +1,30 @@
 # BlockBush
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockBush
+
 ## Class signature
 
 ```java
 public class BlockBush extends Block implements IPlantable
 ```
 
-## Constructors
-
-- `protected BlockBush()`
-- `protected BlockBush( Material materialIn)`
-- `protected BlockBush( Material p_i46452_1_, MapColor p_i46452_2_)`
-
 ## Methods
 
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `protected boolean canPlaceBlockOn( Block ground)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `protected void checkAndDropBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean canBlockStay( World worldIn, BlockPos pos, IBlockState state)`
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isOpaqueCube()`
-- `public boolean isFullCube()`
-- `public EnumWorldBlockLayer getBlockLayer()`
-- `public EnumPlantType getPlantType( IBlockAccess world, BlockPos pos)`
-- `public IBlockState getPlant( IBlockAccess world, BlockPos pos)`
+- `boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `protected boolean canPlaceBlockOn(Block ground)` — is the block grass, dirt or farmland
+- `protected void checkAndDropBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `EnumWorldBlockLayer getBlockLayer()`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `IBlockState getPlant(IBlockAccess world, BlockPos pos)`
+- `EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)`
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-is the block grass, dirt or farmland
+- `protected BlockBush`
+- `protected BlockBush`
+- `protected BlockBush`

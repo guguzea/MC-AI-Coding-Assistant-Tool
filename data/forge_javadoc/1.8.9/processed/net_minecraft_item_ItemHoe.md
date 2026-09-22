@@ -1,5 +1,7 @@
 # ItemHoe
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemHoe
+
 ## Class signature
 
 ```java
@@ -8,15 +10,15 @@ public class ItemHoe extends Item
 
 ## Constructors
 
-- `public ItemHoe( Item.ToolMaterial material)`
+- `ItemHoe(Item.ToolMaterial material)`
 
 ## Methods
 
-- `public boolean onItemUse( ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `protected boolean useHoe( ItemStack stack, EntityPlayer player, World worldIn, BlockPos target, IBlockState newState)`
-- `public boolean isFull3D()`
-- `public java.lang.String getMaterialName()`
+- `java.lang.String getMaterialName()` — Returns the name of the material this tool is made from as it is declared in EnumToolMaterial (meaning diamond would return "EMERALD")
+- `boolean isFull3D()` — Returns True is the item is renderer in full 3D when hold.
+- `boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)` — Called when a Block is right-clicked with this Item
+- `protected boolean useHoe(ItemStack stack, EntityPlayer player, World worldIn, BlockPos target, IBlockState newState)`
 
-## Description
+## Fields
 
-Returns the name of the material this tool is made from as it is declared in EnumToolMaterial (meaning diamond would return "EMERALD")
+- `protected Item.ToolMaterial theToolMaterial`

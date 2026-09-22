@@ -1,34 +1,36 @@
 # EntityItemFrame
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityHanging → net.minecraft.entity.item.EntityItemFrame
+
 ## Class signature
 
 ```java
 public class EntityItemFrame extends EntityHanging
 ```
 
-## Constructors
-
-- `public EntityItemFrame( World worldIn)`
-- `public EntityItemFrame( World worldIn, BlockPos p_i45852_2_, EnumFacing p_i45852_3_)`
-
 ## Methods
 
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `void dropItemOrSelf(Entity entityIn, boolean p_146065_2_)`
 - `protected void entityInit()`
-- `public float getCollisionBorderSize()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public int getWidthPixels()`
-- `public int getHeightPixels()`
-- `public boolean isInRangeToRenderDist(double distance)`
-- `public void onBroken( Entity brokenEntity)`
-- `public void playPlaceSound()`
-- `public void dropItemOrSelf( Entity entityIn, boolean p_146065_2_)`
-- `public ItemStack getDisplayedItem()`
-- `public void setDisplayedItem( ItemStack stack)`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public int getRotation()`
-- `public void setItemRotation(int rotationIn)`
-- `public static void registerFixesItemFrame( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean processInitialInteract( EntityPlayer player, EnumHand hand)`
-- `public int getAnalogOutput()`
+- `int getAnalogOutput()`
+- `float getCollisionBorderSize()`
+- `ItemStack getDisplayedItem()`
+- `int getHeightPixels()`
+- `int getRotation()`
+- `int getWidthPixels()`
+- `boolean isInRangeToRenderDist(double distance)`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onBroken(Entity brokenEntity)`
+- `void playPlaceSound()`
+- `boolean processInitialInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesItemFrame(DataFixer fixer)`
+- `void setDisplayedItem(ItemStack stack)`
+- `void setItemRotation(int rotationIn)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityItemFrame`
+- `EntityItemFrame`

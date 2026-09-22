@@ -3,11 +3,15 @@ title: "AnvilSaveHandler"
 description: "public class AnvilSaveHandler extends SaveHandler"
 package: "net/minecraft/world/chunk/storage"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/chunk/storage/AnvilSaveHandler.html"
 sourceType: javadoc
 ---
 
 # AnvilSaveHandler
+
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.SaveHandler → net.minecraft.world.chunk.storage.AnvilSaveHandler
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class AnvilSaveHandler extends SaveHandler
 ```
 
-## Constructors
-
-- `public AnvilSaveHandler(java.io.File p_i46650_1_, java.lang.String saveDirectoryName, boolean p_i46650_3_, DataFixer dataFixerIn)`
-
 ## Methods
 
-- `public IChunkLoader getChunkLoader( WorldProvider provider)`
-- `public void saveWorldInfoWithPlayer( WorldInfo worldInformation, @Nullable NBTTagCompound tagCompound)`
-- `public void flush()`
+- `void flush()`
+- `IChunkLoader getChunkLoader(WorldProvider provider)`
+- `void saveWorldInfoWithPlayer(WorldInfo worldInformation, NBTTagCompound tagCompound)`
+
+## Fields
+
+- `AnvilSaveHandler`

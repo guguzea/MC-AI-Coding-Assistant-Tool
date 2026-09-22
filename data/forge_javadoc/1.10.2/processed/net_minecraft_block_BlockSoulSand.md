@@ -1,5 +1,7 @@
 # BlockSoulSand
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockSoulSand
+
 ## Class signature
 
 ```java
@@ -8,9 +10,13 @@ public class BlockSoulSand extends Block
 
 ## Constructors
 
-- `public BlockSoulSand()`
+- `BlockSoulSand()`
 
 ## Methods
 
-- `@Nullable public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, World worldIn, BlockPos pos)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)`
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
+
+## Fields
+
+- `protected static AxisAlignedBB SOUL_SAND_AABB`

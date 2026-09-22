@@ -1,13 +1,17 @@
 ---
 title: "UniversalBucket"
-description: "A universal bucket that can hold any liquid"
+description: "public class UniversalBucket extends Item implements IFluidContainerItem"
 package: "net/minecraftforge/fluids"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fluids/UniversalBucket.html"
 sourceType: javadoc
 ---
 
 # UniversalBucket
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraftforge.fluids.UniversalBucket
 
 ## Class signature
 
@@ -15,27 +19,23 @@ sourceType: javadoc
 public class UniversalBucket extends Item implements IFluidContainerItem
 ```
 
-## Constructors
-
-- `public UniversalBucket()`
-- `public UniversalBucket(int capacity, ItemStack empty, boolean nbtSensitive)`
-
 ## Methods
 
-- `public void getSubItems( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > subItems)`
-- `public java.lang.String getItemStackDisplayName( ItemStack stack)`
-- `public ActionResult < ItemStack > onItemRightClick( ItemStack itemstack, World world, EntityPlayer player, EnumHand hand)`
-- `@Deprecated public boolean tryPlaceFluid( Block block, World worldIn, BlockPos pos)`
-- `public void onFillBucket( FillBucketEvent event)`
-- `public static ItemStack getFilledBucket( UniversalBucket item, Fluid fluid)`
-- `public FluidStack getFluid( ItemStack container)`
-- `public int getCapacity( ItemStack container)`
-- `public int fill( ItemStack container, FluidStack resource, boolean doFill)`
-- `public FluidStack drain( ItemStack container, int maxDrain, boolean doDrain)`
-- `public int getCapacity()`
-- `public ItemStack getEmpty()`
-- `public boolean isNbtSensitive()`
+- `FluidStack drain(ItemStack container, int maxDrain, boolean doDrain)`
+- `int fill(ItemStack container, FluidStack resource, boolean doFill)`
+- `int getCapacity()`
+- `int getCapacity(ItemStack container)`
+- `ItemStack getEmpty()`
+- `static ItemStack getFilledBucket(UniversalBucket item, Fluid fluid)`
+- `FluidStack getFluid(ItemStack container)`
+- `java.lang.String getItemStackDisplayName(ItemStack stack)`
+- `void getSubItems(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> subItems)`
+- `boolean isNbtSensitive()`
+- `void onFillBucket(FillBucketEvent event)`
+- `ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer player, EnumHand hand)`
+- `@Deprecated boolean tryPlaceFluid(Block block, World worldIn, BlockPos pos)`
 
-## Description
+## Fields
 
-A universal bucket that can hold any liquid
+- `UniversalBucket`
+- `UniversalBucket`

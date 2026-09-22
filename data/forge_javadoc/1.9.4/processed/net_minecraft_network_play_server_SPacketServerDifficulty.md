@@ -1,20 +1,22 @@
 # SPacketServerDifficulty
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketServerDifficulty
+
 ## Class signature
 
 ```java
-public class SPacketServerDifficulty extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketServerDifficulty extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketServerDifficulty()`
-- `public SPacketServerDifficulty( EnumDifficulty difficultyIn, boolean difficultyLockedIn)`
+- `SPacketServerDifficulty()`
+- `SPacketServerDifficulty(EnumDifficulty difficultyIn, boolean difficultyLockedIn)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public boolean isDifficultyLocked()`
-- `public EnumDifficulty getDifficulty()`
+- `EnumDifficulty getDifficulty()`
+- `boolean isDifficultyLocked()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

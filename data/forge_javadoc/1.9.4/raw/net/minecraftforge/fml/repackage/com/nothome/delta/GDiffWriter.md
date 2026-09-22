@@ -1,13 +1,17 @@
 ---
 title: "GDiffWriter"
-description: "Outputs a diff following the GDIFF file specification available at http://www.w3.org/TR/NOTE-gdiff-19970901.html."
+description: "public class GDiffWriter extends java.lang.Object implements DiffWriter"
 package: "net/minecraftforge/fml/repackage/com/nothome/delta"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/repackage/com/nothome/delta/GDiffWriter.html"
 sourceType: javadoc
 ---
 
 # GDiffWriter
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.repackage.com.nothome.delta.GDiffWriter
 
 ## Class signature
 
@@ -17,16 +21,27 @@ public class GDiffWriter extends java.lang.Object implements DiffWriter
 
 ## Constructors
 
-- `public GDiffWriter(java.io.DataOutputStream os) throws java.io.IOException`
-- `public GDiffWriter(java.io.OutputStream output) throws java.io.IOException`
+- `GDiffWriter(java.io.DataOutputStream os)`
+- `GDiffWriter(java.io.OutputStream output)`
 
 ## Methods
 
-- `public void addCopy(long offset, int length) throws java.io.IOException`
-- `public void addData(byte b) throws java.io.IOException`
-- `public void flush() throws java.io.IOException`
-- `public void close() throws java.io.IOException`
+- `void addCopy(long offset, int length)` — Add a GDIFF copy instruction.
+- `void addData(byte b)` — Adds a data byte.
+- `void close()` — Writes the final EOF byte, closes the underlying stream.
+- `void flush()` — Flushes accumulated data bytes, if any.
 
-## Description
+## Fields
 
-Outputs a diff following the GDIFF file specification available at http://www.w3.org/TR/NOTE-gdiff-19970901.html.
+- `static int CHUNK_SIZE` — Max length of a chunk.
+- `static int COPY_INT_INT`
+- `static int COPY_INT_UBYTE`
+- `static int COPY_INT_USHORT`
+- `static int COPY_LONG_INT`
+- `static int COPY_USHORT_INT`
+- `static int COPY_USHORT_UBYTE`
+- `static int COPY_USHORT_USHORT`
+- `static int DATA_INT`
+- `static int DATA_MAX` — Max length for single length data encode.
+- `static int DATA_USHORT`
+- `static byte EOF`

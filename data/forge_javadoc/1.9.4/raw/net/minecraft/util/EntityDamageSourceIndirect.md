@@ -3,11 +3,15 @@ title: "EntityDamageSourceIndirect"
 description: "public class EntityDamageSourceIndirect extends EntityDamageSource"
 package: "net/minecraft/util"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/util/EntityDamageSourceIndirect.html"
 sourceType: javadoc
 ---
 
 # EntityDamageSourceIndirect
+
+**Inheritance:** java.lang.Object → net.minecraft.util.DamageSource → net.minecraft.util.EntityDamageSource → net.minecraft.util.EntityDamageSourceIndirect
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class EntityDamageSourceIndirect extends EntityDamageSource
 ```
 
-## Constructors
-
-- `public EntityDamageSourceIndirect(java.lang.String damageTypeIn, Entity source, @Nullable Entity indirectEntityIn)`
-
 ## Methods
 
-- `@Nullable public Entity getSourceOfDamage()`
-- `@Nullable public Entity getEntity()`
-- `public ITextComponent getDeathMessage( EntityLivingBase entityLivingBaseIn)`
+- `ITextComponent getDeathMessage(EntityLivingBase entityLivingBaseIn)`
+- `Entity getEntity()`
+- `Entity getSourceOfDamage()`
+
+## Fields
+
+- `EntityDamageSourceIndirect`

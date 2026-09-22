@@ -3,11 +3,15 @@ title: "BlockBrewingStand"
 description: "public class BlockBrewingStand extends BlockContainer"
 package: "net/minecraft/block"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/block/BlockBrewingStand.html"
 sourceType: javadoc
 ---
 
 # BlockBrewingStand
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockContainer → net.minecraft.block.BlockBrewingStand
 
 ## Class signature
 
@@ -17,26 +21,32 @@ public class BlockBrewingStand extends BlockContainer
 
 ## Constructors
 
-- `public BlockBrewingStand()`
+- `BlockBrewingStand()`
 
 ## Methods
 
-- `public java.lang.String getLocalizedName()`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public EnumBlockRenderType getRenderType( IBlockState state)`
-- `public TileEntity createNewTileEntity( World worldIn, int meta)`
-- `public boolean isFullCube( IBlockState state)`
-- `public void addCollisionBoxToList( IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List< AxisAlignedBB > collidingBoxes, @Nullable Entity entityIn)`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)`
-- `public void randomDisplayTick( IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `@Nullable public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public ItemStack getItem( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean hasComparatorInputOverride( IBlockState state)`
-- `public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List<AxisAlignedBB> collidingBoxes, Entity entityIn)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
 - `protected BlockStateContainer createBlockState()`
+- `TileEntity createNewTileEntity(World worldIn, int meta)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)`
+- `ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `java.lang.String getLocalizedName()`
+- `int getMetaFromState(IBlockState state)`
+- `EnumBlockRenderType getRenderType(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)`
+- `boolean hasComparatorInputOverride(IBlockState state)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)`
+- `void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, java.util.Random rand)`
+
+## Fields
+
+- `protected static AxisAlignedBB BASE_AABB`
+- `static PropertyBool [] HAS_BOTTLE`
+- `protected static AxisAlignedBB STICK_AABB`

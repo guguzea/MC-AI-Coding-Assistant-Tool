@@ -3,11 +3,15 @@ title: "SimpleResource"
 description: "public class SimpleResource extends java.lang.Object implements IResource"
 package: "net/minecraft/client/resources"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/resources/SimpleResource.html"
 sourceType: javadoc
 ---
 
 # SimpleResource
+
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.SimpleResource
 
 ## Class signature
 
@@ -17,14 +21,14 @@ public class SimpleResource extends java.lang.Object implements IResource
 
 ## Constructors
 
-- `public SimpleResource(java.lang.String resourcePackNameIn, ResourceLocation srResourceLocationIn, java.io.InputStream resourceInputStreamIn, java.io.InputStream mcmetaInputStreamIn, IMetadataSerializer srMetadataSerializerIn)`
+- `SimpleResource(java.lang.String resourcePackNameIn, ResourceLocation srResourceLocationIn, java.io.InputStream resourceInputStreamIn, java.io.InputStream mcmetaInputStreamIn, IMetadataSerializer srMetadataSerializerIn)`
 
 ## Methods
 
-- `public ResourceLocation getResourceLocation()`
-- `public java.io.InputStream getInputStream()`
-- `public boolean hasMetadata()`
-- `public <T extends IMetadataSection > T getMetadata(java.lang.String p_110526_1_)`
-- `public java.lang.String getResourcePackName()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `java.io.InputStream getInputStream()`
+- `<T extends IMetadataSection> T getMetadata(java.lang.String p_110526_1_)`
+- `ResourceLocation getResourceLocation()`
+- `java.lang.String getResourcePackName()`
+- `int hashCode()`
+- `boolean hasMetadata()`

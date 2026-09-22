@@ -1,5 +1,7 @@
 # RandomAccessFileSeekableSource
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.repackage.com.nothome.delta.RandomAccessFileSeekableSource
+
 ## Class signature
 
 ```java
@@ -8,16 +10,12 @@ public class RandomAccessFileSeekableSource extends java.lang.Object implements 
 
 ## Constructors
 
-- `public RandomAccessFileSeekableSource(java.io.RandomAccessFile raf)`
+- `RandomAccessFileSeekableSource(java.io.RandomAccessFile raf)`
 
 ## Methods
 
-- `public void seek(long pos) throws java.io.IOException`
-- `public int read(byte[] b, int off, int len) throws java.io.IOException`
-- `public long length() throws java.io.IOException`
-- `public void close() throws java.io.IOException`
-- `public int read(java.nio.ByteBuffer bb) throws java.io.IOException`
-
-## Description
-
-Wraps a random access file.
+- `void close()`
+- `long length()`
+- `int read(byte[] b, int off, int len)`
+- `int read(java.nio.ByteBuffer bb)` — Reads up to Buffer.remaining() bytes from the source, returning the number of bytes read, or -1 if no bytes were read and EOF was reached.
+- `void seek(long pos)` — Sets the position for the next SeekableSource.read(ByteBuffer) .

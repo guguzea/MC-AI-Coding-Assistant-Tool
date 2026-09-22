@@ -1,10 +1,18 @@
 # MapModelState.Wrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.MapModelState.Wrapper
+
+## Class signature
+
+```java
+public static class MapModelState.Wrapper extends java.lang.Object implements IModelPart
+```
+
 ## Constructors
 
-- `public Wrapper(java.lang.Object obj)`
+- `Wrapper(java.lang.Object obj)`
 
 ## Methods
 
-- `public int hashCode()`
-- `public boolean equals(java.lang.Object obj)`
+- `boolean equals(java.lang.Object obj)`
+- `int hashCode()`

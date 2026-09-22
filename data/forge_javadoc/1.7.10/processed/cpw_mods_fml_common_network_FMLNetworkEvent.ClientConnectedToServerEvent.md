@@ -1,9 +1,18 @@
 # FMLNetworkEvent.ClientConnectedToServerEvent
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.eventhandler.Event → cpw.mods.fml.common.network.FMLNetworkEvent<INetHandlerPlayClient> → cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent
+
+## Class signature
+
+```java
+public static class FMLNetworkEvent.ClientConnectedToServerEvent extends FMLNetworkEvent<INetHandlerPlayClient>
+```
+
 ## Constructors
 
-- `public ClientConnectedToServerEvent( NetworkManager manager, java.lang.String connectionType)`
+- `ClientConnectedToServerEvent(NetworkManager manager, java.lang.String connectionType)`
 
-## Description
+## Fields
 
-Fired at the client when a client connects to a server
+- `java.lang.String connectionType`
+- `boolean isLocal`

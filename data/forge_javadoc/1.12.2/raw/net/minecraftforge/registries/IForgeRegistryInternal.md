@@ -1,8 +1,10 @@
 ---
 title: "IForgeRegistryInternal"
-description: "public interface IForgeRegistryInternal<V extends IForgeRegistryEntry <V>> extends IForgeRegistry <V>"
+description: "public interface IForgeRegistryInternal<V extends IForgeRegistryEntry<V>> extends IForgeRegistry<V>"
 package: "net/minecraftforge/registries"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/registries/IForgeRegistryInternal.html"
 sourceType: javadoc
 ---
@@ -12,9 +14,9 @@ sourceType: javadoc
 ## Class signature
 
 ```java
-public interface IForgeRegistryInternal<V extends IForgeRegistryEntry <V>> extends IForgeRegistry <V>
+public interface IForgeRegistryInternal<V extends IForgeRegistryEntry<V>> extends IForgeRegistry<V>
 ```
 
 ## Methods
 
-- `void setSlaveMap( ResourceLocation name, java.lang.Object obj)`
+- `void setSlaveMap(ResourceLocation name, java.lang.Object obj)`

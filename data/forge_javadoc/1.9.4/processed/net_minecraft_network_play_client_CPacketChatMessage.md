@@ -1,19 +1,21 @@
 # CPacketChatMessage
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketChatMessage
+
 ## Class signature
 
 ```java
-public class CPacketChatMessage extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketChatMessage extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketChatMessage()`
-- `public CPacketChatMessage(java.lang.String messageIn)`
+- `CPacketChatMessage()`
+- `CPacketChatMessage(java.lang.String messageIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public java.lang.String getMessage()`
+- `java.lang.String getMessage()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

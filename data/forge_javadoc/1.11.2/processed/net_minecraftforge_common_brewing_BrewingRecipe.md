@@ -1,19 +1,17 @@
 # BrewingRecipe
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.brewing.AbstractBrewingRecipe<ItemStack> → net.minecraftforge.common.brewing.BrewingRecipe
+
 ## Class signature
 
 ```java
-public class BrewingRecipe extends AbstractBrewingRecipe < ItemStack >
+public class BrewingRecipe extends AbstractBrewingRecipe<ItemStack>
 ```
 
 ## Constructors
 
-- `public BrewingRecipe(@Nonnull ItemStack input, @Nonnull ItemStack ingredient, @Nonnull ItemStack output)`
+- `BrewingRecipe(ItemStack input, ItemStack ingredient, ItemStack output)`
 
 ## Methods
 
-- `public boolean isIngredient(@Nonnull ItemStack stack)`
-
-## Description
-
-Returns true if the passed ItemStack is an ingredient for this recipe.
+- `boolean isIngredient(ItemStack stack)` — Returns true if the passed ItemStack is an ingredient for this recipe.

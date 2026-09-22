@@ -1,9 +1,17 @@
 # ShieldRecipes.Decoration
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.ShieldRecipes.Decoration
+
+## Class signature
+
+```java
+public static class ShieldRecipes.Decoration extends java.lang.Object implements IRecipe
+```
+
 ## Methods
 
-- `public boolean matches( InventoryCrafting inv, World worldIn)`
-- `@Nullable public ItemStack getCraftingResult( InventoryCrafting inv)`
-- `public int getRecipeSize()`
-- `@Nullable public ItemStack getRecipeOutput()`
-- `public ItemStack [] getRemainingItems( InventoryCrafting inv)`
+- `ItemStack getCraftingResult(InventoryCrafting inv)`
+- `ItemStack getRecipeOutput()`
+- `int getRecipeSize()`
+- `ItemStack [] getRemainingItems(InventoryCrafting inv)`
+- `boolean matches(InventoryCrafting inv, World worldIn)`

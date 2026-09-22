@@ -1,147 +1,289 @@
 ---
 title: "Entity"
-description: "Has this entity been added to the chunk its within"
+description: "public abstract class Entity extends java.lang.Object implements ICommandSender, ICapabilitySerializable<NBTTagCompound>"
 package: "net/minecraft/entity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/entity/Entity.html"
 sourceType: javadoc
 ---
 
 # Entity
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity
+
 ## Class signature
 
 ```java
-public abstract class Entity extends java.lang.Object implements ICommandSender , ICapabilitySerializable < NBTTagCompound >
+public abstract class Entity extends java.lang.Object implements ICommandSender, ICapabilitySerializable<NBTTagCompound>
 ```
 
 ## Constructors
 
-- `public Entity( World worldIn)`
+- `Entity(World worldIn)`
 
 ## Methods
 
-- `public int getEntityId()`
-- `public void setEntityId(int id)`
-- `public void onKillCommand()`
-- `protected abstract void entityInit()`
-- `public DataWatcher getDataWatcher()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `protected void preparePlayerToSpawn()`
-- `public void setDead()`
-- `protected void setSize(float width, float height)`
-- `protected void setRotation(float yaw, float pitch)`
-- `public void setPosition(double x, double y, double z)`
-- `public void setAngles(float yaw, float pitch)`
-- `public void onUpdate()`
-- `public void onEntityUpdate()`
-- `public int getMaxInPortalTime()`
-- `protected void setOnFireFromLava()`
-- `public void setFire(int seconds)`
-- `public void extinguish()`
-- `protected void kill()`
-- `public boolean isOffsetPositionInLiquid(double x, double y, double z)`
-- `public void moveEntity(double x, double y, double z)`
-- `protected java.lang.String getSwimSound()`
-- `protected void doBlockCollisions()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `public void playSound(java.lang.String name, float volume, float pitch)`
-- `public boolean isSilent()`
-- `public void setSilent(boolean isSilent)`
-- `protected boolean canTriggerWalking()`
-- `protected void updateFallState(double y, boolean onGroundIn, Block blockIn, BlockPos pos)`
-- `public AxisAlignedBB getCollisionBoundingBox()`
-- `protected void dealFireDamage(int amount)`
-- `public final boolean isImmuneToFire()`
-- `public void fall(float distance, float damageMultiplier)`
-- `public boolean isWet()`
-- `public boolean isInWater()`
-- `public boolean handleWaterMovement()`
-- `protected void resetHeight()`
-- `public void spawnRunningParticles()`
+- `void addChatMessage(IChatComponent component)` — Send a chat message to the CommandSender
+- `void addEntityCrashInfo(CrashReportCategory category)`
+- `void addToPlayerScore(Entity entityIn, int amount)` — Adds a value to the player score.
+- `void addVelocity(double x, double y, double z)` — Adds to the current velocity of the entity.
+- `protected void applyEnchantments(EntityLivingBase entityLivingBaseIn, Entity entityIn)`
+- `void applyEntityCollision(Entity entityIn)` — Applies a velocity to each of the entities pushing them away from each other.
+- `boolean attackEntityFrom(DamageSource source, float amount)` — Called when the entity is attacked.
+- `boolean canAttackWithItem()` — If returns false, the item will not inflict any damage against entities.
+- `boolean canBeCollidedWith()` — Returns true if other Entities should be prevented from moving through this Entity.
+- `boolean canBePushed()` — Returns true if this entity should push and be pushed by other entities when colliding.
+- `boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)` — Returns true if the CommandSender is allowed to execute the command, false if not
+- `boolean canRenderOnFire()` — Return whether this entity should be rendered as on fire.
+- `boolean canRiderInteract()` — If a rider of this entity can interact with this entity.
+- `protected boolean canTriggerWalking()` — returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to prevent them from trampling crops
+- `void clientUpdateEntityNBT(NBTTagCompound compound)` — Called when client receives entity's NBTTagCompound from server.
+- `void copyDataFromOld(Entity entityIn)` — Prepares this entity in new dimension by copying NBT data from entity in old dimension
+- `void copyLocationAndAnglesFrom(Entity entityIn)` — Sets this entity's location and angles to the location and angles of the passed in entity.
 - `protected void createRunningParticles()`
+- `protected void dealFireDamage(int amount)` — Will deal the specified amount of damage to the entity if the entity isn't immune to fire damage.
+- `void deserializeNBT(NBTTagCompound nbt)`
+- `protected void doBlockCollisions()`
+- `boolean doesEntityNotTriggerPressurePlate()` — Return whether this entity should NOT trigger a pressure plate or a tripwire.
+- `EntityItem dropItem(Item itemIn, int size)`
+- `EntityItem dropItemWithOffset(Item itemIn, int size, float offsetY)`
+- `EntityItem entityDropItem(ItemStack itemStackIn, float offsetY)` — Drops an item at the position of the entity.
+- `protected abstract void entityInit()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `void extinguish()` — Removes fire from entity.
+- `void fall(float distance, float damageMultiplier)`
+- `void func_174817_o(Entity entityIn)`
+- `EnumFacing func_181012_aH()`
+- `void func_181013_g(float p_181013_1_)`
+- `Vec3 func_181014_aG()`
+- `int getAir()`
+- `boolean getAlwaysRenderNameTag()`
+- `boolean getAlwaysRenderNameTagForRender()`
+- `float getBrightness(float partialTicks)` — Gets how bright this entity is.
+- `int getBrightnessForRender(float partialTicks)`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `float getCollisionBorderSize()`
+- `AxisAlignedBB getCollisionBoundingBox()` — Returns the collision bounding box for this entity
+- `AxisAlignedBB getCollisionBox(Entity entityIn)` — Returns a boundingBox used to collide the entity with other entities and blocks.
+- `Entity getCommandSenderEntity()` — Returns the entity associated with the command sender.
+- `CommandResultStats getCommandStats()`
+- `java.lang.String getCustomNameTag()`
+- `DataWatcher getDataWatcher()`
+- `IChatComponent getDisplayName()` — Get the formatted ChatComponent that will be used for the sender's username in chat
+- `double getDistance(double x, double y, double z)` — Gets the distance to the position.
+- `double getDistanceSq(BlockPos pos)`
+- `double getDistanceSq(double x, double y, double z)` — Gets the squared distance to the position.
+- `double getDistanceSqToCenter(BlockPos pos)`
+- `double getDistanceSqToEntity(Entity entityIn)` — Returns the squared distance to the entity.
+- `float getDistanceToEntity(Entity entityIn)` — Returns the distance to the entity.
+- `AxisAlignedBB getEntityBoundingBox()`
+- `NBTTagCompound getEntityData()` — Returns a NBTTagCompound that can be used to store custom data for this entity.
+- `int getEntityId()`
+- `protected java.lang.String getEntityString()` — Returns the string that identifies this Entity's class
+- `World getEntityWorld()` — Get the world, if available.
+- `float getExplosionResistance(Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn)` — Explosion resistance of a block relative to this entity
+- `IExtendedEntityProperties getExtendedProperties(java.lang.String identifier)` — Gets the extended properties identified by the passed in key
+- `float getEyeHeight()`
+- `protected boolean getFlag(int flag)` — Returns true if the flag is active for the entity.
+- `EnumFacing getHorizontalFacing()`
+- `protected HoverEvent getHoverEvent()`
+- `ItemStack [] getInventory()` — returns the inventory of this entity (only used in EntityPlayerMP it seems)
+- `Vec3 getLook(float partialTicks)` — interpolated look vector
+- `Vec3 getLookVec()` — returns a (normalized) vector of where this entity is looking
+- `int getMaxFallHeight()` — The maximum height from where the entity is alowed to jump (used in pathfinder)
+- `int getMaxInPortalTime()` — Return the amount of time this entity should stay in a portal before being transported.
+- `double getMountedYOffset()` — Returns the Y offset from the entity's position for any entity riding this one.
+- `java.lang.String getName()` — Get the name of this object.
+- `NBTTagCompound getNBTTagCompound()`
+- `Entity [] getParts()` — Return the Entity parts making up this Entity (currently only for dragons)
+- `java.util.UUID getPersistentID()`
+- `ItemStack getPickedResult(MovingObjectPosition target)` — Called when a user uses the creative pick block button on this entity.
+- `int getPortalCooldown()` — Return the amount of cooldown before this entity can use a portal again.
+- `BlockPos getPosition()` — Get the position in the world.
+- `Vec3 getPositionEyes(float partialTicks)`
+- `Vec3 getPositionVector()` — Get the position vector.
+- `float getRotationYawHead()`
 - `protected java.lang.String getSplashSound()`
-- `public boolean isInsideOfMaterial( Material materialIn)`
-- `public boolean isInLava()`
-- `public void moveFlying(float strafe, float forward, float friction)`
-- `public int getBrightnessForRender(float partialTicks)`
-- `public float getBrightness(float partialTicks)`
-- `public void setWorld( World worldIn)`
-- `public void setPositionAndRotation(double x, double y, double z, float yaw, float pitch)`
-- `public void moveToBlockPosAndAngles( BlockPos pos, float rotationYawIn, float rotationPitchIn)`
-- `public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch)`
-- `public float getDistanceToEntity( Entity entityIn)`
-- `public double getDistanceSq(double x, double y, double z)`
-- `public double getDistanceSq( BlockPos pos)`
-- `public double getDistanceSqToCenter( BlockPos pos)`
-- `public double getDistance(double x, double y, double z)`
-- `public double getDistanceSqToEntity( Entity entityIn)`
-- `public void onCollideWithPlayer( EntityPlayer entityIn)`
-- `public void applyEntityCollision( Entity entityIn)`
-- `public void addVelocity(double x, double y, double z)`
-- `protected void setBeenAttacked()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public Vec3 getLook(float partialTicks)`
-- `protected final Vec3 getVectorForRotation(float pitch, float yaw)`
-- `public Vec3 getPositionEyes(float partialTicks)`
-- `public MovingObjectPosition rayTrace(double blockReachDistance, float partialTicks)`
-- `public boolean canBeCollidedWith()`
-- `public boolean canBePushed()`
-- `public void addToPlayerScore( Entity entityIn, int amount)`
-- `public boolean isInRangeToRender3d(double x, double y, double z)`
-- `public boolean isInRangeToRenderDist(double distance)`
-- `public boolean writeMountToNBT( NBTTagCompound tagCompund)`
-- `public boolean writeToNBTOptional( NBTTagCompound tagCompund)`
-- `public void writeToNBT( NBTTagCompound tagCompund)`
-- `public void readFromNBT( NBTTagCompound tagCompund)`
+- `protected java.lang.String getSwimSound()`
+- `java.util.UUID getUniqueID()`
+- `protected Vec3 getVectorForRotation(float pitch, float yaw)` — Creates a Vec3 using the pitch and yaw of the entities rotation.
+- `double getYOffset()` — Returns the Y Offset of this entity.
+- `void handleStatusUpdate(byte id)`
+- `boolean handleWaterMovement()` — Returns if this entity is in water and will end up adding the waters velocity to the entity
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.
+- `boolean hasCustomName()` — Returns true if this thing is named
+- `int hashCode()`
+- `boolean hitByEntity(Entity entityIn)` — Called when a player attacks an entity.
+- `boolean interactAt(EntityPlayer player, Vec3 targetVec3)` — New version of interactWith that includes vector information on where precisely the player targeted.
+- `boolean interactFirst(EntityPlayer playerIn)` — First layer of player interaction
+- `boolean isBurning()` — Returns true if the entity is on fire.
+- `boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount)` — Returns true if the entity is of the @link{EnumCreatureType} provided
+- `boolean isEating()`
+- `boolean isEntityAlive()` — Checks whether target entity is alive.
+- `boolean isEntityEqual(Entity entityIn)` — Returns true if Entity argument is equal to this Entity
+- `boolean isEntityInsideOpaqueBlock()` — Checks if this entity is inside of an opaque block
+- `boolean isEntityInvulnerable(DamageSource source)`
+- `boolean isImmuneToExplosions()`
+- `boolean isImmuneToFire()`
+- `boolean isInLava()`
+- `boolean isInRangeToRender3d(double x, double y, double z)`
+- `boolean isInRangeToRenderDist(double distance)` — Checks if the entity is in range to render by using the past in distance and comparing it to its average edge length * 64 * renderDistanceWeight Args: distance
+- `boolean isInsideOfMaterial(Material materialIn)` — Checks if the current block the entity is within of the specified material type
+- `boolean isInvisible()`
+- `boolean isInvisibleToPlayer(EntityPlayer player)` — Only used by renderer in EntityLivingBase subclasses.
+- `boolean isInWater()` — Checks if this entity is inside water (if inWater field is true as a result of handleWaterMovement() returning true)
+- `boolean isOffsetPositionInLiquid(double x, double y, double z)` — Checks if the offset position from the entity's current position is inside of liquid.
+- `boolean isOutsideBorder()`
+- `boolean isPushedByWater()`
+- `boolean isRiding()` — Returns true if the entity is riding another entity, used by render to rotate the legs to be in 'sit' position for players.
+- `boolean isSilent()`
+- `boolean isSneaking()` — Returns if this entity is sneaking.
+- `boolean isSpectatedByPlayer(EntityPlayerMP player)`
+- `boolean isSprinting()` — Get if the Entity is sprinting.
+- `boolean isWet()` — Checks if this entity is either in water or on an open air block in rain (used in wolves).
+- `protected void kill()` — sets the dead flag.
+- `void mountEntity(Entity entityIn)` — Called when a player mounts an entity. e.g. mounts a pig, mounts a boat.
+- `void moveEntity(double x, double y, double z)` — Tries to moves the entity by the passed in displacement.
+- `void moveFlying(float strafe, float forward, float friction)` — Used in both water and by flying objects
+- `void moveToBlockPosAndAngles(BlockPos pos, float rotationYawIn, float rotationPitchIn)`
+- `protected NBTTagList newDoubleNBTList(double... numbers)` — creates a NBT list from the array of doubles passed to this function
+- `protected NBTTagList newFloatNBTList(float... numbers)` — Returns a new NBTTagList filled with the specified floats
+- `void onChunkLoad()`
+- `void onCollideWithPlayer(EntityPlayer entityIn)` — Called by a player entity when they collide with an entity
+- `void onDataWatcherUpdate(int dataID)`
+- `void onEntityUpdate()` — Gets called every tick from main Entity class
+- `void onKillCommand()` — Called by the /kill command.
+- `void onKillEntity(EntityLivingBase entityLivingIn)` — This method gets called when the entity kills another one.
+- `void onStruckByLightning(EntityLightningBolt lightningBolt)` — Called when a lightning bolt hits the entity.
+- `void onUpdate()` — Called to update the entity's position/logic.
+- `void performHurtAnimation()` — Setups the entity to do the hurt animation.
+- `void playSound(java.lang.String name, float volume, float pitch)`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `protected void preparePlayerToSpawn()` — Keeps moving the entity up so it isn't colliding with blocks and other requirements for this entity to be spawned (only actually used on players though its also on Entity)
+- `protected boolean pushOutOfBlocks(double x, double y, double z)`
+- `MovingObjectPosition rayTrace(double blockReachDistance, float partialTicks)`
+- `protected abstract void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
+- `void readFromNBT(NBTTagCompound tagCompund)` — Reads the entity from NBT (calls an abstract helper method to read specialized data)
+- `java.lang.String registerExtendedProperties(java.lang.String identifier, IExtendedEntityProperties properties)` — Register the instance of IExtendedProperties into the entity's collection.
+- `boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
+- `void resetEntityId()` — Reset the entity ID to a new value.
+- `protected void resetHeight()` — sets the players height back to normal after doing things like sleeping and dieing
+- `boolean sendCommandFeedback()` — Returns true if the command sender should be sent feedback about executed commands
+- `NBTTagCompound serializeNBT()`
+- `void setAir(int air)`
+- `void setAlwaysRenderNameTag(boolean alwaysRenderNameTag)`
+- `void setAngles(float yaw, float pitch)` — Adds 15% to the entity's yaw and subtracts 15% from the pitch.
+- `protected void setBeenAttacked()` — Sets that this entity has been attacked.
+- `void setCommandStat(CommandResultStats.Type type, int amount)`
+- `void setCurrentItemOrArmor(int slotIn, ItemStack stack)` — Sets the held item, or an armor slot.
+- `void setCustomNameTag(java.lang.String name)` — Sets the custom name tag for this entity
+- `void setDead()` — Will get destroyed next tick.
+- `void setEating(boolean eating)`
+- `void setEntityBoundingBox(AxisAlignedBB bb)`
+- `void setEntityId(int id)`
+- `void setFire(int seconds)` — Sets entity to burn for x amount of seconds, cannot lower amount of existing fire.
+- `protected void setFlag(int flag, boolean set)` — Enable or disable a entity flag, see getEntityFlag to read the know flags.
+- `void setInvisible(boolean invisible)`
+- `void setInWeb()` — Sets the Entity inside a web block.
+- `void setLocationAndAngles(double x, double y, double z, float yaw, float pitch)` — Sets the location and Yaw/Pitch of an entity in the world
+- `protected void setOnFireFromLava()` — Called whenever the entity is walking inside of lava.
+- `void setOutsideBorder(boolean outsideBorder)`
+- `void setPortal(BlockPos p_181015_1_)` — Marks the entity as being inside a portal, activating teleportation logic in onEntityUpdate() in the following tick(s).
+- `void setPosition(double x, double y, double z)` — Sets the x,y,z of the entity from the given parameters.
+- `void setPositionAndRotation(double x, double y, double z, float yaw, float pitch)` — Sets the entity's position and rotation.
+- `void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean p_180426_10_)`
+- `void setPositionAndUpdate(double x, double y, double z)` — Sets the position of the entity and updates the 'last' variables
+- `protected void setRotation(float yaw, float pitch)` — Sets the rotation of the entity.
+- `void setRotationYawHead(float rotation)` — Sets the head's yaw rotation of the entity.
+- `void setSilent(boolean isSilent)` — When set to true the entity will not play sounds.
+- `protected void setSize(float width, float height)` — Sets the width and height of the entity.
+- `void setSneaking(boolean sneaking)` — Sets the sneaking flag.
+- `void setSprinting(boolean sprinting)` — Set sprinting switch for Entity.
+- `void setVelocity(double x, double y, double z)` — Sets the velocity to the args.
+- `void setWorld(World worldIn)` — Sets the reference to the World object.
+- `boolean shouldDismountInWater(Entity rider)` — If the rider should be dismounted from the entity when the entity goes under water
+- `boolean shouldRenderInPass(int pass)`
+- `boolean shouldRiderSit()` — Used in model rendering to determine if the entity riding this entity should be in the 'sitting' position.
 - `protected boolean shouldSetPosAfterLoading()`
-- `protected final java.lang.String getEntityString()`
-- `protected abstract void readEntityFromNBT( NBTTagCompound tagCompund)`
-- `protected abstract void writeEntityToNBT( NBTTagCompound tagCompound)`
-- `public void onChunkLoad()`
-- `protected NBTTagList newDoubleNBTList(double... numbers)`
-- `protected NBTTagList newFloatNBTList(float... numbers)`
-- `public EntityItem dropItem( Item itemIn, int size)`
-- `public EntityItem dropItemWithOffset( Item itemIn, int size, float offsetY)`
-- `public EntityItem entityDropItem( ItemStack itemStackIn, float offsetY)`
-- `public boolean isEntityAlive()`
-- `public boolean isEntityInsideOpaqueBlock()`
-- `public boolean interactFirst( EntityPlayer playerIn)`
-- `public AxisAlignedBB getCollisionBox( Entity entityIn)`
-- `public void updateRidden()`
-- `public void updateRiderPosition()`
-- `public double getYOffset()`
-- `public double getMountedYOffset()`
-- `public void mountEntity( Entity entityIn)`
-- `public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean p_180426_10_)`
-- `public float getCollisionBorderSize()`
-- `public Vec3 getLookVec()`
-- `public void setPortal( BlockPos p_181015_1_)`
-- `public int getPortalCooldown()`
-- `public void setVelocity(double x, double y, double z)`
-- `public void handleStatusUpdate(byte id)`
-- `public void performHurtAnimation()`
-- `public ItemStack [] getInventory()`
-- `public void setCurrentItemOrArmor(int slotIn, ItemStack stack)`
-- `public boolean isBurning()`
-- `public boolean isRiding()`
-- `public boolean isSneaking()`
-- `public void setSneaking(boolean sneaking)`
-- `public boolean isSprinting()`
-- `public void setSprinting(boolean sprinting)`
-- `public boolean isInvisible()`
-- `public boolean isInvisibleToPlayer( EntityPlayer player)`
-- `public void setInvisible(boolean invisible)`
-- `public boolean isEating()`
-- `public void setEating(boolean eating)`
-- `protected boolean getFlag(int flag)`
-- `protected void setFlag(int flag, boolean set)`
-- `public int getAir()`
-- `public void setAir(int air)`
-- `public void onStruckByLightning( EntityLightningBolt lightningBolt)`
-- `public void onKillEntity( EntityLivingBase entityLivingIn)`
+- `void spawnRunningParticles()` — Attempts to create sprinting particles if the entity is sprinting and not in water.
+- `java.lang.String toString()`
+- `void travelToDimension(int dimensionId)` — Teleports the entity to another dimension.
+- `protected void updateFallState(double y, boolean onGroundIn, Block blockIn, BlockPos pos)`
+- `void updateRidden()` — Handles updating while being ridden by an entity
+- `void updateRiderPosition()`
+- `boolean verifyExplosion(Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn, float p_174816_5_)`
+- `protected abstract void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
+- `boolean writeMountToNBT(NBTTagCompound tagCompund)` — Like writeToNBTOptional but does not check if the entity is ridden.
+- `void writeToNBT(NBTTagCompound tagCompund)` — Save the entity to NBT (calls an abstract helper method to write extra data)
+- `boolean writeToNBTOptional(NBTTagCompound tagCompund)` — Either write this entity to the NBT tag given and return true, or return false without doing anything.
 
-## Description
+## Fields
 
-Has this entity been added to the chunk its within
+- `boolean addedToChunk` — Has this entity been added to the chunk its within
+- `java.util.ArrayList<EntityItem> capturedDrops`
+- `boolean captureDrops`
+- `int chunkCoordX`
+- `int chunkCoordY`
+- `int chunkCoordZ`
+- `protected DataWatcher dataWatcher`
+- `int dimension` — Which dimension the player is in (-1 = the Nether, 0 = normal world)
+- `float distanceWalkedModified` — The distance walked multiplied by 0.6
+- `float distanceWalkedOnStepModified`
+- `float entityCollisionReduction` — Reduces the velocity applied by entity collisions by the specified percent.
+- `protected java.util.UUID entityUniqueID`
+- `protected java.util.HashMap<java.lang.String, IExtendedEntityProperties> extendedProperties`
+- `float fallDistance`
+- `protected BlockPos field_181016_an`
+- `protected Vec3 field_181017_ao`
+- `protected EnumFacing field_181018_ap`
+- `int fireResistance` — The amount of ticks you have to stand inside of fire before be set on fire
+- `protected boolean firstUpdate`
+- `boolean forceSpawn`
+- `float height` — How high this entity is considered to be
+- `int hurtResistantTime` — Remaining time an entity will be "immune" to further damage after being hurt.
+- `boolean ignoreFrustumCheck` — Render entity even if it is outside the camera frustum.
+- `protected boolean inPortal` — Whether the entity is inside a Portal
+- `protected boolean inWater` — Whether this entity is currently inside of water (if it handles water movement that is)
+- `boolean isAirBorne`
+- `boolean isCollided` — True if after a move this entity has collided with something either vertically or horizontally
+- `boolean isCollidedHorizontally` — True if after a move this entity has collided with something on X- or Z-axis
+- `boolean isCollidedVertically` — True if after a move this entity has collided with something on Y-axis
+- `boolean isDead` — gets set by setEntityDead, so this must be the flag whether an Entity is dead (inactive may be better term)
+- `protected boolean isImmuneToFire`
+- `protected boolean isInWeb`
+- `double lastTickPosX` — The entity's X coordinate at the previous tick, used to calculate position during rendering routines
+- `double lastTickPosY` — The entity's Y coordinate at the previous tick, used to calculate position during rendering routines
+- `double lastTickPosZ` — The entity's Z coordinate at the previous tick, used to calculate position during rendering routines
+- `double motionX` — Entity motion X
+- `double motionY` — Entity motion Y
+- `double motionZ` — Entity motion Z
+- `boolean noClip` — Whether this entity won't clip with collision or not (make note it won't disable gravity)
+- `boolean onGround`
+- `protected int portalCounter`
+- `double posX` — Entity position X
+- `double posY` — Entity position Y
+- `double posZ` — Entity position Z
+- `float prevDistanceWalkedModified` — The previous ticks distance walked multiplied by 0.6
+- `boolean preventEntitySpawning` — Blocks entities from spawning when they do their AABB check to make sure the spot is clear of entities that can prevent spawning.
+- `double prevPosX`
+- `double prevPosY`
+- `double prevPosZ`
+- `float prevRotationPitch`
+- `float prevRotationYaw`
+- `protected java.util.Random rand`
+- `double renderDistanceWeight`
+- `Entity riddenByEntity` — The entity that is riding this entity
+- `Entity ridingEntity` — The entity we are currently riding
+- `float rotationPitch` — Entity rotation Pitch
+- `float rotationYaw` — Entity rotation Yaw
+- `int serverPosX`
+- `int serverPosY`
+- `int serverPosZ`
+- `float stepHeight` — How high this entity can step up when running into a block to try to get over it (currently make note the entity will always step up this amount and not just the amount needed)
+- `int ticksExisted` — How many ticks has this entity had ran since being alive
+- `int timeUntilPortal`
+- `boolean velocityChanged`
+- `float width` — How wide this entity is considered to be
+- `World worldObj` — Reference to the World object.

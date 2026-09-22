@@ -1,22 +1,24 @@
 # SPacketEffect
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketEffect
+
 ## Class signature
 
 ```java
-public class SPacketEffect extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketEffect extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketEffect()`
-- `public SPacketEffect(int soundTypeIn, BlockPos soundPosIn, int soundDataIn, boolean serverWideIn)`
+- `SPacketEffect()`
+- `SPacketEffect(int soundTypeIn, BlockPos soundPosIn, int soundDataIn, boolean serverWideIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public boolean isSoundServerwide()`
-- `public int getSoundType()`
-- `public int getSoundData()`
-- `public BlockPos getSoundPos()`
+- `int getSoundData()`
+- `BlockPos getSoundPos()`
+- `int getSoundType()`
+- `boolean isSoundServerwide()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

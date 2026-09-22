@@ -1,5 +1,7 @@
 # CreativeSettings
 
+**Inheritance:** java.lang.Object → net.minecraft.client.settings.CreativeSettings
+
 ## Class signature
 
 ```java
@@ -8,10 +10,14 @@ public class CreativeSettings extends java.lang.Object
 
 ## Constructors
 
-- `public CreativeSettings( Minecraft minecraftIn, java.io.File dataDir)`
+- `CreativeSettings(Minecraft minecraftIn, java.io.File dataDir)`
 
 ## Methods
 
-- `public void read()`
-- `public void write()`
-- `public HotbarSnapshot getHotbarSnapshot(int p_192563_1_)`
+- `HotbarSnapshot getHotbarSnapshot(int p_192563_1_)`
+- `void read()`
+- `void write()`
+
+## Fields
+
+- `protected Minecraft minecraft`

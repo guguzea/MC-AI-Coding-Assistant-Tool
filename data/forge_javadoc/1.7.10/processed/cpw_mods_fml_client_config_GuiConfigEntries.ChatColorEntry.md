@@ -1,10 +1,14 @@
 # GuiConfigEntries.ChatColorEntry
 
-## Methods
+**Inheritance:** java.lang.Object → cpw.mods.fml.client.config.GuiConfigEntries.ListEntryBase → cpw.mods.fml.client.config.GuiConfigEntries.ButtonEntry → cpw.mods.fml.client.config.GuiConfigEntries.CycleValueEntry → cpw.mods.fml.client.config.GuiConfigEntries.ChatColorEntry
 
-- `public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, Tessellator tessellator, int mouseX, int mouseY, boolean isSelected)`
-- `public void updateValueButtonText()`
+## Class signature
 
-## Description
+```java
+public static class GuiConfigEntries.ChatColorEntry extends GuiConfigEntries.CycleValueEntry
+```
 
-ChatColorEntry Provides a GuiButton that cycles through the list of chat color codes.
+## Fields
+
+- `void drawEntry`
+- `void updateValueButtonText` — Updates the displayString of the value button.

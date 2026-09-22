@@ -1,16 +1,18 @@
 # GuiConfirmation
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → cpw.mods.fml.client.GuiNotification → cpw.mods.fml.client.GuiConfirmation
+
 ## Class signature
 
 ```java
 public class GuiConfirmation extends GuiNotification
 ```
 
-## Constructors
-
-- `public GuiConfirmation( StartupQuery query)`
-
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button)`
+- `protected void actionPerformed(GuiButton button)`
+- `void initGui()`
+
+## Fields
+
+- `GuiConfirmation`

@@ -1,5 +1,7 @@
 # WorldVertexBufferUploader
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.WorldVertexBufferUploader
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class WorldVertexBufferUploader extends java.lang.Object
 
 ## Constructors
 
-- `public WorldVertexBufferUploader()`
+- `WorldVertexBufferUploader()`
 
 ## Methods
 
-- `public void draw( WorldRenderer p_181679_1_)`
+- `void draw(WorldRenderer p_181679_1_)`

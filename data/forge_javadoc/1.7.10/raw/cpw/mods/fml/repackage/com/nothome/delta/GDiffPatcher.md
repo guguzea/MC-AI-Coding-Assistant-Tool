@@ -1,13 +1,17 @@
 ---
 title: "GDiffPatcher"
-description: "This class patches an input file with a GDIFF patch file. The patch file follows the GDIFF file specification available at http://www.w3.org/TR/NOTE-gdiff-19970901.html ."
+description: "public class GDiffPatcher extends java.lang.Object"
 package: "cpw/mods/fml/repackage/com/nothome/delta"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/repackage/com/nothome/delta/GDiffPatcher.html"
 sourceType: javadoc
 ---
 
 # GDiffPatcher
+
+**Inheritance:** java.lang.Object → cpw.mods.fml.repackage.com.nothome.delta.GDiffPatcher
 
 ## Class signature
 
@@ -17,16 +21,12 @@ public class GDiffPatcher extends java.lang.Object
 
 ## Constructors
 
-- `public GDiffPatcher()`
+- `GDiffPatcher()`
 
 ## Methods
 
-- `public void patch(java.io.File sourceFile, java.io.File patchFile, java.io.File outputFile) throws java.io.IOException`
-- `public void patch(byte[] source, java.io.InputStream patch, java.io.OutputStream output) throws java.io.IOException`
-- `public byte[] patch(byte[] source, byte[] patch) throws java.io.IOException`
-- `public void patch( SeekableSource source, java.io.InputStream patch, java.io.OutputStream out) throws java.io.IOException`
-- `public static void main(java.lang.String[] argv)`
-
-## Description
-
-This class patches an input file with a GDIFF patch file. The patch file follows the GDIFF file specification available at http://www.w3.org/TR/NOTE-gdiff-19970901.html .
+- `static void main(java.lang.String[] argv)` — Simple command line tool to patch a file.
+- `byte[] patch(byte[] source, byte[] patch)` — Patches in memory, returning the patch result.
+- `void patch(byte[] source, java.io.InputStream patch, java.io.OutputStream output)` — Patches to an output stream.
+- `void patch(java.io.File sourceFile, java.io.File patchFile, java.io.File outputFile)` — Patches to an output file.
+- `void patch(SeekableSource source, java.io.InputStream patch, java.io.OutputStream out)` — Patches to an output stream.

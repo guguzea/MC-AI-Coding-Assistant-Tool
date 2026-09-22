@@ -1,15 +1,17 @@
 # ItemBoat
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemBoat
+
 ## Class signature
 
 ```java
 public class ItemBoat extends Item
 ```
 
-## Constructors
-
-- `public ItemBoat( EntityBoat.Type typeIn)`
-
 ## Methods
 
-- `public ActionResult < ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+- `ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+
+## Fields
+
+- `ItemBoat`

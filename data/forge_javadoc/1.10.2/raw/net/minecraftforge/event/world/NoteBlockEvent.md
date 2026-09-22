@@ -1,13 +1,17 @@
 ---
 title: "NoteBlockEvent"
-description: "Base class for Noteblock Events"
+description: "public class NoteBlockEvent extends BlockEvent"
 package: "net/minecraftforge/event/world"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/world/NoteBlockEvent.html"
 sourceType: javadoc
 ---
 
 # NoteBlockEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.NoteBlockEvent
 
 ## Class signature
 
@@ -17,15 +21,11 @@ public class NoteBlockEvent extends BlockEvent
 
 ## Constructors
 
-- `protected NoteBlockEvent( World world, BlockPos pos, IBlockState state, int note)`
+- `NoteBlockEvent(World world, BlockPos pos, IBlockState state, int note)`
 
 ## Methods
 
-- `public NoteBlockEvent.Note getNote()`
-- `public NoteBlockEvent.Octave getOctave()`
-- `public int getVanillaNoteId()`
-- `public void setNote( NoteBlockEvent.Note note, NoteBlockEvent.Octave octave)`
-
-## Description
-
-Base class for Noteblock Events
+- `NoteBlockEvent.Note getNote()` — Get the Note the Noteblock is tuned to
+- `NoteBlockEvent.Octave getOctave()` — Get the Octave of the note this Noteblock is tuned to
+- `int getVanillaNoteId()` — get the vanilla note-id, which contains information about both Note and Octave.
+- `void setNote(NoteBlockEvent.Note note, NoteBlockEvent.Octave octave)` — Set Note and Octave for this event.

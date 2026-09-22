@@ -1,13 +1,17 @@
 ---
 title: "MinecartEvent"
-description: "MinecartEvent is fired whenever an event involving minecart entities occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. minecart contain"
+description: "public class MinecartEvent extends EntityEvent"
 package: "net/minecraftforge/event/entity/minecart"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/minecart/MinecartEvent.html"
 sourceType: javadoc
 ---
 
 # MinecartEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.minecart.MinecartEvent
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class MinecartEvent extends EntityEvent
 
 ## Constructors
 
-- `public MinecartEvent( EntityMinecart minecart)`
+- `MinecartEvent(EntityMinecart minecart)`
 
-## Description
+## Fields
 
-MinecartEvent is fired whenever an event involving minecart entities occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. minecart contain
+- `EntityMinecart minecart`

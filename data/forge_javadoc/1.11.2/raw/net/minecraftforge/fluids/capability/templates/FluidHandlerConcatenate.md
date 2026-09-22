@@ -1,13 +1,17 @@
 ---
 title: "FluidHandlerConcatenate"
-description: "FluidHandlerConcatenate is a template class for concatenating multiple handlers into one. If each tank is restricted to exactly one type of fluid, then use FluidHandlerFluidMap as it is more efficient"
+description: "public class FluidHandlerConcatenate extends java.lang.Object implements IFluidHandler"
 package: "net/minecraftforge/fluids/capability/templates"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fluids/capability/templates/FluidHandlerConcatenate.html"
 sourceType: javadoc
 ---
 
 # FluidHandlerConcatenate
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.capability.templates.FluidHandlerConcatenate
 
 ## Class signature
 
@@ -17,16 +21,16 @@ public class FluidHandlerConcatenate extends java.lang.Object implements IFluidH
 
 ## Constructors
 
-- `public FluidHandlerConcatenate( IFluidHandler ... subHandlers)`
-- `public FluidHandlerConcatenate(java.util.Collection< IFluidHandler > subHandlers)`
+- `FluidHandlerConcatenate(java.util.Collection<IFluidHandler> subHandlers)`
+- `FluidHandlerConcatenate(IFluidHandler ... subHandlers)`
 
 ## Methods
 
-- `public IFluidTankProperties [] getTankProperties()`
-- `public int fill( FluidStack resource, boolean doFill)`
-- `public FluidStack drain( FluidStack resource, boolean doDrain)`
-- `public FluidStack drain(int maxDrain, boolean doDrain)`
+- `FluidStack drain(FluidStack resource, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `FluidStack drain(int maxDrain, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `int fill(FluidStack resource, boolean doFill)` — Fills fluid into internal tanks, distribution is left entirely to the IFluidHandler.
+- `IFluidTankProperties [] getTankProperties()` — Returns an array of objects which represent the internal tanks.
 
-## Description
+## Fields
 
-FluidHandlerConcatenate is a template class for concatenating multiple handlers into one. If each tank is restricted to exactly one type of fluid, then use FluidHandlerFluidMap as it is more efficient
+- `protected IFluidHandler [] subHandlers`

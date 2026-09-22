@@ -1,5 +1,7 @@
 # FluidTankInfo
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.FluidTankInfo
+
 ## Class signature
 
 ```java
@@ -8,9 +10,10 @@ public final class FluidTankInfo extends java.lang.Object
 
 ## Constructors
 
-- `public FluidTankInfo(@Nullable FluidStack fluid, int capacity)`
-- `public FluidTankInfo( IFluidTank tank)`
+- `FluidTankInfo(FluidStack fluid, int capacity)`
+- `FluidTankInfo(IFluidTank tank)`
 
-## Description
+## Fields
 
-Wrapper class used to encapsulate information about an IFluidTank.
+- `int capacity`
+- `FluidStack fluid`

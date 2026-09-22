@@ -1,5 +1,7 @@
 # Rotations
 
+**Inheritance:** java.lang.Object → net.minecraft.util.math.Rotations
+
 ## Class signature
 
 ```java
@@ -8,13 +10,19 @@ public class Rotations extends java.lang.Object
 
 ## Constructors
 
-- `public Rotations(float x, float y, float z)`
-- `public Rotations( NBTTagList nbt)`
+- `Rotations(float x, float y, float z)`
+- `Rotations(NBTTagList nbt)`
 
 ## Methods
 
-- `public NBTTagList writeToNBT()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public float getX()`
-- `public float getY()`
-- `public float getZ()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `float getX()`
+- `float getY()`
+- `float getZ()`
+- `NBTTagList writeToNBT()`
+
+## Fields
+
+- `protected float x`
+- `protected float y`
+- `protected float z`

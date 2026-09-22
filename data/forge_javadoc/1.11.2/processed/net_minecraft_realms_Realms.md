@@ -1,5 +1,7 @@
 # Realms
 
+**Inheritance:** java.lang.Object → net.minecraft.realms.Realms
+
 ## Class signature
 
 ```java
@@ -8,28 +10,28 @@ public class Realms extends java.lang.Object
 
 ## Constructors
 
-- `public Realms()`
+- `Realms()`
 
 ## Methods
 
-- `public static boolean isTouchScreen()`
-- `public static java.net.Proxy getProxy()`
-- `public static java.lang.String sessionId()`
-- `public static java.lang.String userName()`
-- `public static long currentTimeMillis()`
-- `public static java.lang.String getSessionId()`
-- `public static java.lang.String getUUID()`
-- `public static java.lang.String getName()`
-- `public static java.lang.String uuidToName(java.lang.String p_uuidToName_0_)`
-- `public static void setScreen( RealmsScreen p_setScreen_0_)`
-- `public static java.lang.String getGameDirectoryPath()`
-- `public static int survivalId()`
-- `public static int creativeId()`
-- `public static int adventureId()`
-- `public static int spectatorId()`
-- `public static void setConnectedToRealms(boolean p_setConnectedToRealms_0_)`
-- `public static com.google.common.util.concurrent.ListenableFuture<java.lang.Object> downloadResourcePack(java.lang.String p_downloadResourcePack_0_, java.lang.String p_downloadResourcePack_1_)`
-- `public static void clearResourcePack()`
-- `public static boolean getRealmsNotificationsEnabled()`
-- `public static boolean inTitleScreen()`
-- `public static void deletePlayerTag(java.io.File p_deletePlayerTag_0_)`
+- `static int adventureId()`
+- `static void clearResourcePack()`
+- `static int creativeId()`
+- `static long currentTimeMillis()`
+- `static void deletePlayerTag(java.io.File p_deletePlayerTag_0_)`
+- `static com.google.common.util.concurrent.ListenableFuture<java.lang.Object> downloadResourcePack(java.lang.String p_downloadResourcePack_0_, java.lang.String p_downloadResourcePack_1_)`
+- `static java.lang.String getGameDirectoryPath()`
+- `static java.lang.String getName()`
+- `static java.net.Proxy getProxy()`
+- `static boolean getRealmsNotificationsEnabled()`
+- `static java.lang.String getSessionId()`
+- `static java.lang.String getUUID()`
+- `static boolean inTitleScreen()`
+- `static boolean isTouchScreen()`
+- `static java.lang.String sessionId()`
+- `static void setConnectedToRealms(boolean p_setConnectedToRealms_0_)`
+- `static void setScreen(RealmsScreen p_setScreen_0_)`
+- `static int spectatorId()`
+- `static int survivalId()`
+- `static java.lang.String userName()`
+- `static java.lang.String uuidToName(java.lang.String p_uuidToName_0_)`

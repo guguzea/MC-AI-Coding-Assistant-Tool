@@ -3,11 +3,15 @@ title: "ChunkProviderClient"
 description: "public class ChunkProviderClient extends java.lang.Object implements IChunkProvider"
 package: "net/minecraft/client/multiplayer"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/multiplayer/ChunkProviderClient.html"
 sourceType: javadoc
 ---
 
 # ChunkProviderClient
+
+**Inheritance:** java.lang.Object → net.minecraft.client.multiplayer.ChunkProviderClient
 
 ## Class signature
 
@@ -17,13 +21,13 @@ public class ChunkProviderClient extends java.lang.Object implements IChunkProvi
 
 ## Constructors
 
-- `public ChunkProviderClient( World worldIn)`
+- `ChunkProviderClient(World worldIn)`
 
 ## Methods
 
-- `public void unloadChunk(int x, int z)`
-- `@Nullable public Chunk getLoadedChunk(int x, int z)`
-- `public Chunk loadChunk(int chunkX, int chunkZ)`
-- `public Chunk provideChunk(int x, int z)`
-- `public boolean unloadQueuedChunks()`
-- `public java.lang.String makeString()`
+- `Chunk getLoadedChunk(int x, int z)`
+- `Chunk loadChunk(int chunkX, int chunkZ)`
+- `java.lang.String makeString()`
+- `Chunk provideChunk(int x, int z)`
+- `void unloadChunk(int x, int z)`
+- `boolean unloadQueuedChunks()`

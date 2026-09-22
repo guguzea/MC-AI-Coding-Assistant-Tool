@@ -1,10 +1,16 @@
 # GuiEditArrayEntries.IArrayEntry
 
+## Class signature
+
+```java
+public static interface GuiEditArrayEntries.IArrayEntry extends GuiListExtended.IGuiListEntry
+```
+
 ## Methods
 
-- `void keyTyped(char eventChar, int eventKey)`
-- `void updateCursorCounter()`
-- `void mouseClicked(int x, int y, int mouseEvent)`
 - `void drawToolTip(int mouseX, int mouseY)`
-- `boolean isValueSavable()`
 - `java.lang.Object getValue()`
+- `boolean isValueSavable()`
+- `void keyTyped(char eventChar, int eventKey)`
+- `void mouseClicked(int x, int y, int mouseEvent)`
+- `void updateCursorCounter()`

@@ -3,11 +3,15 @@ title: "LootingLevelEvent"
 description: "public class LootingLevelEvent extends LivingEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/living/LootingLevelEvent.html"
 sourceType: javadoc
 ---
 
 # LootingLevelEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LootingLevelEvent
 
 ## Class signature
 
@@ -17,10 +21,10 @@ public class LootingLevelEvent extends LivingEvent
 
 ## Constructors
 
-- `public LootingLevelEvent( EntityLivingBase entity, DamageSource damageSource, int lootingLevel)`
+- `LootingLevelEvent(EntityLivingBase entity, DamageSource damageSource, int lootingLevel)`
 
 ## Methods
 
-- `public DamageSource getDamageSource()`
-- `public int getLootingLevel()`
-- `public void setLootingLevel(int lootingLevel)`
+- `DamageSource getDamageSource()`
+- `int getLootingLevel()`
+- `void setLootingLevel(int lootingLevel)`

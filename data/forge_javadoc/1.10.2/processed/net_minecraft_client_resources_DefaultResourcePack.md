@@ -1,5 +1,7 @@
 # DefaultResourcePack
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.DefaultResourcePack
+
 ## Class signature
 
 ```java
@@ -8,14 +10,18 @@ public class DefaultResourcePack extends java.lang.Object implements IResourcePa
 
 ## Constructors
 
-- `public DefaultResourcePack( ResourceIndex resourceIndexIn)`
+- `DefaultResourcePack(ResourceIndex resourceIndexIn)`
 
 ## Methods
 
-- `public java.io.InputStream getInputStream( ResourceLocation location) throws java.io.IOException`
-- `@Nullable public java.io.InputStream getInputStreamAssets( ResourceLocation location) throws java.io.IOException, java.io.FileNotFoundException`
-- `public boolean resourceExists( ResourceLocation location)`
-- `public java.util.Set<java.lang.String> getResourceDomains()`
-- `public <T extends IMetadataSection > T getPackMetadata( MetadataSerializer metadataSerializer, java.lang.String metadataSectionName) throws java.io.IOException`
-- `public java.awt.image.BufferedImage getPackImage() throws java.io.IOException`
-- `public java.lang.String getPackName()`
+- `java.io.InputStream getInputStream(ResourceLocation location)`
+- `java.io.InputStream getInputStreamAssets(ResourceLocation location)`
+- `java.awt.image.BufferedImage getPackImage()`
+- `<T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, java.lang.String metadataSectionName)`
+- `java.lang.String getPackName()`
+- `java.util.Set<java.lang.String> getResourceDomains()`
+- `boolean resourceExists(ResourceLocation location)`
+
+## Fields
+
+- `static java.util.Set<java.lang.String> DEFAULT_RESOURCE_DOMAINS`

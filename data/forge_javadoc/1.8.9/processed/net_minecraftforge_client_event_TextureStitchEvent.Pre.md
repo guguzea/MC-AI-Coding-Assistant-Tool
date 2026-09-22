@@ -1,9 +1,13 @@
 # TextureStitchEvent.Pre
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.TextureStitchEvent → net.minecraftforge.client.event.TextureStitchEvent.Pre
 
-- `public Pre( TextureMap map)`
+## Class signature
 
-## Description
+```java
+public static class TextureStitchEvent.Pre extends TextureStitchEvent
+```
 
-Fired when the TextureMap is told to refresh it's stitched texture. Called after the Stitched list is cleared, but before any blocks or items add themselves to the list.
+## Fields
+
+- `Pre`

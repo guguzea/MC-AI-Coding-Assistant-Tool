@@ -1,5 +1,7 @@
 # ItemMultiTexture
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemBlock → net.minecraft.item.ItemMultiTexture
+
 ## Class signature
 
 ```java
@@ -8,13 +10,14 @@ public class ItemMultiTexture extends ItemBlock
 
 ## Constructors
 
-- `public ItemMultiTexture( Block block, Block block2, <any> nameFunction)`
+- `ItemMultiTexture(Block block, Block block2, <any> nameFunction)`
 
 ## Methods
 
-- `public int getMetadata(int damage)`
-- `public java.lang.String getUnlocalizedName( ItemStack stack)`
+- `int getMetadata(int damage)` — Converts the given ItemStack damage value into a metadata value to be placed in the world when this Item is placed as a Block (mostly used with ItemBlocks).
+- `java.lang.String getUnlocalizedName(ItemStack stack)` — Returns the unlocalized name of this item.
 
-## Description
+## Fields
 
-Converts the given ItemStack damage value into a metadata value to be placed in the world when this Item is placed as a Block (mostly used with ItemBlocks).
+- `protected<any> nameFunction`
+- `protected Block theBlock`

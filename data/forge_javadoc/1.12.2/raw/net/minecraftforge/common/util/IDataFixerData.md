@@ -3,6 +3,8 @@ title: "IDataFixerData"
 description: "public interface IDataFixerData extends IDataFixer"
 package: "net/minecraftforge/common/util"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/common/util/IDataFixerData.html"
 sourceType: javadoc
 ---

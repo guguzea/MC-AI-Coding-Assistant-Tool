@@ -1,20 +1,22 @@
 # SPacketRemoveEntityEffect
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketRemoveEntityEffect
+
 ## Class signature
 
 ```java
-public class SPacketRemoveEntityEffect extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketRemoveEntityEffect extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketRemoveEntityEffect()`
-- `public SPacketRemoveEntityEffect(int entityIdIn, Potion potionIn)`
+- `SPacketRemoveEntityEffect()`
+- `SPacketRemoveEntityEffect(int entityIdIn, Potion potionIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `@Nullable public Entity getEntity( World worldIn)`
-- `@Nullable public Potion getPotion()`
+- `Entity getEntity(World worldIn)`
+- `Potion getPotion()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

@@ -1,20 +1,26 @@
 ---
 title: "EntityLiving.SpawnPlacementType"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum EntityLiving.SpawnPlacementType extends java.lang.Enum<EntityLiving.SpawnPlacementType>"
 package: "net/minecraft/entity"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/EntityLiving.SpawnPlacementType.html"
 sourceType: javadoc
 ---
 
 # EntityLiving.SpawnPlacementType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<EntityLiving.SpawnPlacementType> → net.minecraft.entity.EntityLiving.SpawnPlacementType
+
+## Class signature
+
+```java
+public static enum EntityLiving.SpawnPlacementType extends java.lang.Enum<EntityLiving.SpawnPlacementType>
+```
+
 ## Methods
 
-- `public static EntityLiving.SpawnPlacementType [] values()`
-- `public static EntityLiving.SpawnPlacementType valueOf(java.lang.String name)`
-- `public boolean canSpawnAt( World world, BlockPos pos)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `boolean canSpawnAt(World world, BlockPos pos)`
+- `static EntityLiving.SpawnPlacementType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static EntityLiving.SpawnPlacementType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

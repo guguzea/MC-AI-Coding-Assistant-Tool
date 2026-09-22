@@ -1,5 +1,7 @@
 # GuiScreenEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class GuiScreenEvent extends Event
 
 ## Constructors
 
-- `public GuiScreenEvent( GuiScreen gui)`
+- `GuiScreenEvent(GuiScreen gui)`
 
 ## Methods
 
-- `public GuiScreen getGui()`
-
-## Description
-
-Event classes for GuiScreen events.
+- `GuiScreen getGui()` — The GuiScreen object generating this event.

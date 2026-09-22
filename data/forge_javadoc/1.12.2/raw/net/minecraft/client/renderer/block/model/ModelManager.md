@@ -3,11 +3,15 @@ title: "ModelManager"
 description: "public class ModelManager extends java.lang.Object implements IResourceManagerReloadListener"
 package: "net/minecraft/client/renderer/block/model"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/renderer/block/model/ModelManager.html"
 sourceType: javadoc
 ---
 
 # ModelManager
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.ModelManager
 
 ## Class signature
 
@@ -17,12 +21,12 @@ public class ModelManager extends java.lang.Object implements IResourceManagerRe
 
 ## Constructors
 
-- `public ModelManager( TextureMap textures)`
+- `ModelManager(TextureMap textures)`
 
 ## Methods
 
-- `public void onResourceManagerReload( IResourceManager resourceManager)`
-- `public IBakedModel getModel( ModelResourceLocation modelLocation)`
-- `public IBakedModel getMissingModel()`
-- `public TextureMap getTextureMap()`
-- `public BlockModelShapes getBlockModelShapes()`
+- `BlockModelShapes getBlockModelShapes()`
+- `IBakedModel getMissingModel()`
+- `IBakedModel getModel(ModelResourceLocation modelLocation)`
+- `TextureMap getTextureMap()`
+- `void onResourceManagerReload(IResourceManager resourceManager)`

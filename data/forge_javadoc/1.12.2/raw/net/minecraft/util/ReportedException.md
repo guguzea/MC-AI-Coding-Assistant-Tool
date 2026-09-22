@@ -3,11 +3,15 @@ title: "ReportedException"
 description: "public class ReportedException extends java.lang.RuntimeException"
 package: "net/minecraft/util"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/util/ReportedException.html"
 sourceType: javadoc
 ---
 
 # ReportedException
+
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.lang.RuntimeException → net.minecraft.util.ReportedException
 
 ## Class signature
 
@@ -17,10 +21,10 @@ public class ReportedException extends java.lang.RuntimeException
 
 ## Constructors
 
-- `public ReportedException( CrashReport report)`
+- `ReportedException(CrashReport report)`
 
 ## Methods
 
-- `public CrashReport getCrashReport()`
-- `public java.lang.Throwable getCause()`
-- `public java.lang.String getMessage()`
+- `java.lang.Throwable getCause()`
+- `CrashReport getCrashReport()`
+- `java.lang.String getMessage()`

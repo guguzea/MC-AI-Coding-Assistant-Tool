@@ -1,19 +1,21 @@
 # ParticleSimpleAnimated
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleSimpleAnimated
+
 ## Class signature
 
 ```java
 public class ParticleSimpleAnimated extends Particle
 ```
 
-## Constructors
-
-- `public ParticleSimpleAnimated( World worldIn, double x, double y, double z, int textureIdxIn, int numFrames, float yAccelIn)`
-
 ## Methods
 
-- `public void setColor(int p_187146_1_)`
-- `public void setColorFade(int rgb)`
-- `public boolean isTransparent()`
-- `public void onUpdate()`
-- `public int getBrightnessForRender(float p_189214_1_)`
+- `int getBrightnessForRender(float p_189214_1_)`
+- `boolean isTransparent()`
+- `void onUpdate()`
+- `void setColor(int p_187146_1_)`
+- `void setColorFade(int rgb)`
+
+## Fields
+
+- `ParticleSimpleAnimated`

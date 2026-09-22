@@ -1,9 +1,18 @@
 # EntityViewRenderEvent.RenderFogEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.EntityViewRenderEvent → net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent
+
+## Class signature
+
+```java
+public static class EntityViewRenderEvent.RenderFogEvent extends EntityViewRenderEvent
+```
+
 ## Constructors
 
-- `public RenderFogEvent( EntityRenderer renderer, Entity entity, Block block, double renderPartialTicks, int fogMode, float farPlaneDistance)`
+- `RenderFogEvent(EntityRenderer renderer, Entity entity, Block block, double renderPartialTicks, int fogMode, float farPlaneDistance)`
 
-## Description
+## Fields
 
-Event that allows any feature to customize the rendering of fog.
+- `float farPlaneDistance`
+- `int fogMode`

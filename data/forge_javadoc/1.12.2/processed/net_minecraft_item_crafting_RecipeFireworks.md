@@ -1,20 +1,22 @@
 # RecipeFireworks
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> → net.minecraft.item.crafting.RecipeFireworks
+
 ## Class signature
 
 ```java
-public class RecipeFireworks extends IForgeRegistryEntry.Impl < IRecipe > implements IRecipe
+public class RecipeFireworks extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
 ```
-
-## Constructors
-
-- `public RecipeFireworks()`
 
 ## Methods
 
-- `public boolean matches( InventoryCrafting inv, World worldIn)`
-- `public ItemStack getCraftingResult( InventoryCrafting inv)`
-- `public ItemStack getRecipeOutput()`
-- `public NonNullList < ItemStack > getRemainingItems( InventoryCrafting inv)`
-- `public boolean isDynamic()`
-- `public boolean canFit(int width, int height)`
+- `boolean canFit(int width, int height)`
+- `ItemStack getCraftingResult(InventoryCrafting inv)`
+- `ItemStack getRecipeOutput()`
+- `NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)`
+- `boolean isDynamic()`
+- `boolean matches(InventoryCrafting inv, World worldIn)`
+
+## Fields
+
+- `RecipeFireworks`

@@ -1,5 +1,7 @@
 # PlayerCapabilities
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.player.PlayerCapabilities
+
 ## Class signature
 
 ```java
@@ -8,13 +10,21 @@ public class PlayerCapabilities extends java.lang.Object
 
 ## Constructors
 
-- `public PlayerCapabilities()`
+- `PlayerCapabilities()`
 
 ## Methods
 
-- `public void writeCapabilitiesToNBT( NBTTagCompound tagCompound)`
-- `public void readCapabilitiesFromNBT( NBTTagCompound tagCompound)`
-- `public float getFlySpeed()`
-- `public void setFlySpeed(float speed)`
-- `public float getWalkSpeed()`
-- `public void setPlayerWalkSpeed(float speed)`
+- `float getFlySpeed()`
+- `float getWalkSpeed()`
+- `void readCapabilitiesFromNBT(NBTTagCompound tagCompound)`
+- `void setFlySpeed(float speed)`
+- `void setPlayerWalkSpeed(float speed)`
+- `void writeCapabilitiesToNBT(NBTTagCompound tagCompound)`
+
+## Fields
+
+- `boolean allowEdit`
+- `boolean allowFlying`
+- `boolean disableDamage`
+- `boolean isCreativeMode`
+- `boolean isFlying`

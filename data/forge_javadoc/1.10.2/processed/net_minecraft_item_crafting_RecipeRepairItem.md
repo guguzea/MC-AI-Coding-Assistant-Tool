@@ -1,5 +1,7 @@
 # RecipeRepairItem
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.RecipeRepairItem
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class RecipeRepairItem extends java.lang.Object implements IRecipe
 
 ## Constructors
 
-- `public RecipeRepairItem()`
+- `RecipeRepairItem()`
 
 ## Methods
 
-- `public boolean matches( InventoryCrafting inv, World worldIn)`
-- `@Nullable public ItemStack getCraftingResult( InventoryCrafting inv)`
-- `public int getRecipeSize()`
-- `@Nullable public ItemStack getRecipeOutput()`
-- `public ItemStack [] getRemainingItems( InventoryCrafting inv)`
+- `ItemStack getCraftingResult(InventoryCrafting inv)`
+- `ItemStack getRecipeOutput()`
+- `int getRecipeSize()`
+- `ItemStack [] getRemainingItems(InventoryCrafting inv)`
+- `boolean matches(InventoryCrafting inv, World worldIn)`

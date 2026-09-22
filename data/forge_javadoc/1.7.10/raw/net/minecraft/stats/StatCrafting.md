@@ -3,11 +3,15 @@ title: "StatCrafting"
 description: "public class StatCrafting extends StatBase"
 package: "net/minecraft/stats"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/stats/StatCrafting.html"
 sourceType: javadoc
 ---
 
 # StatCrafting
+
+**Inheritance:** java.lang.Object → net.minecraft.stats.StatBase → net.minecraft.stats.StatCrafting
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class StatCrafting extends StatBase
 ```
 
-## Constructors
-
-- `public StatCrafting(java.lang.String p_i45305_1_, IChatComponent p_i45305_2_, Item p_i45305_3_)`
-
 ## Methods
 
-- `public Item func_150959_a()`
+- `Item func_150959_a()`
+
+## Fields
+
+- `StatCrafting`

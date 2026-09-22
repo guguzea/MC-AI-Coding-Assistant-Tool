@@ -1,17 +1,19 @@
 # EnchantmentFishingSpeed
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Enchantment> → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentFishingSpeed
+
 ## Class signature
 
 ```java
 public class EnchantmentFishingSpeed extends Enchantment
 ```
 
-## Constructors
-
-- `protected EnchantmentFishingSpeed( Enchantment.Rarity rarityIn, EnumEnchantmentType typeIn, EntityEquipmentSlot ... slots)`
-
 ## Methods
 
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int getMaxLevel()`
+- `int getMaxEnchantability(int enchantmentLevel)`
+- `int getMaxLevel()`
+- `int getMinEnchantability(int enchantmentLevel)`
+
+## Fields
+
+- `protected EnchantmentFishingSpeed`

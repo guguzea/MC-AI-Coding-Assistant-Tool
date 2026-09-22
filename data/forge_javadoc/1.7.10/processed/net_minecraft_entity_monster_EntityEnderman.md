@@ -1,35 +1,37 @@
 # EntityEnderman
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityEnderman
+
 ## Class signature
 
 ```java
 public class EntityEnderman extends EntityMob
 ```
 
-## Constructors
-
-- `public EntityEnderman( World p_i1734_1_)`
-
 ## Methods
 
 - `protected void applyEntityAttributes()`
+- `boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_)`
+- `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)`
 - `protected void entityInit()`
-- `public void writeEntityToNBT( NBTTagCompound p_70014_1_)`
-- `public void readEntityFromNBT( NBTTagCompound p_70037_1_)`
 - `protected Entity findPlayerToAttack()`
-- `public void onLivingUpdate()`
-- `protected boolean teleportRandomly()`
-- `protected boolean teleportToEntity( Entity p_70816_1_)`
-- `protected boolean teleportTo(double p_70825_1_, double p_70825_3_, double p_70825_5_)`
-- `protected java.lang.String getLivingSound()`
-- `protected java.lang.String getHurtSound()`
+- `Block func_146080_bZ()`
+- `void func_146081_a(Block p_146081_1_)`
+- `int getCarryingData()`
 - `protected java.lang.String getDeathSound()`
 - `protected Item getDropItem()`
-- `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)`
-- `public void func_146081_a( Block p_146081_1_)`
-- `public Block func_146080_bZ()`
-- `public void setCarryingData(int p_70817_1_)`
-- `public int getCarryingData()`
-- `public boolean attackEntityFrom( DamageSource p_70097_1_, float p_70097_2_)`
-- `public boolean isScreaming()`
-- `public void setScreaming(boolean p_70819_1_)`
+- `protected java.lang.String getHurtSound()`
+- `protected java.lang.String getLivingSound()`
+- `boolean isScreaming()`
+- `void onLivingUpdate()`
+- `void readEntityFromNBT(NBTTagCompound p_70037_1_)`
+- `void setCarryingData(int p_70817_1_)`
+- `void setScreaming(boolean p_70819_1_)`
+- `protected boolean teleportRandomly()`
+- `protected boolean teleportTo(double p_70825_1_, double p_70825_3_, double p_70825_5_)`
+- `protected boolean teleportToEntity(Entity p_70816_1_)`
+- `void writeEntityToNBT(NBTTagCompound p_70014_1_)`
+
+## Fields
+
+- `EntityEnderman`

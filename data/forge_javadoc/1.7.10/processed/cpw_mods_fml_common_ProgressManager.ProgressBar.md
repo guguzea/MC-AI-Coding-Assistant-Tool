@@ -1,15 +1,19 @@
 # ProgressManager.ProgressBar
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.ProgressManager.ProgressBar
+
+## Class signature
+
+```java
+public static class ProgressManager.ProgressBar extends java.lang.Object
+```
+
 ## Methods
 
-- `public void step(java.lang.Class<?> classToName, java.lang.String... extra)`
-- `public void step(java.lang.String message)`
-- `public java.lang.String getTitle()`
-- `public int getSteps()`
-- `public int getStep()`
-- `public java.lang.String getMessage()`
-- `public void timeEachStep()`
-
-## Description
-
-Deprecated. not a stable API, will break, don't use this yet
+- `@Deprecated java.lang.String getMessage()`
+- `@Deprecated int getStep()`
+- `@Deprecated int getSteps()`
+- `@Deprecated java.lang.String getTitle()`
+- `@Deprecated void step(java.lang.Class<?> classToName, java.lang.String... extra)`
+- `@Deprecated void step(java.lang.String message)`
+- `@Deprecated void timeEachStep()`

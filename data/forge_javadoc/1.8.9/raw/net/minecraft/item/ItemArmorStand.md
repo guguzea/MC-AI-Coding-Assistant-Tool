@@ -1,13 +1,17 @@
 ---
 title: "ItemArmorStand"
-description: "Called when a Block is right-clicked with this Item"
+description: "public class ItemArmorStand extends Item"
 package: "net/minecraft/item"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/item/ItemArmorStand.html"
 sourceType: javadoc
 ---
 
 # ItemArmorStand
+
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemArmorStand
 
 ## Class signature
 
@@ -15,14 +19,10 @@ sourceType: javadoc
 public class ItemArmorStand extends Item
 ```
 
-## Constructors
-
-- `public ItemArmorStand()`
-
 ## Methods
 
-- `public boolean onItemUse( ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)` — Called when a Block is right-clicked with this Item
 
-## Description
+## Fields
 
-Called when a Block is right-clicked with this Item
+- `ItemArmorStand`

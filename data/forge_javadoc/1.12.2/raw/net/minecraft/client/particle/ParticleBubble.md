@@ -3,11 +3,15 @@ title: "ParticleBubble"
 description: "public class ParticleBubble extends Particle"
 package: "net/minecraft/client/particle"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/particle/ParticleBubble.html"
 sourceType: javadoc
 ---
 
 # ParticleBubble
+
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleBubble
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class ParticleBubble extends Particle
 ```
 
-## Constructors
-
-- `protected ParticleBubble( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn)`
-
 ## Methods
 
-- `public void onUpdate()`
+- `void onUpdate()`
+
+## Fields
+
+- `protected ParticleBubble`

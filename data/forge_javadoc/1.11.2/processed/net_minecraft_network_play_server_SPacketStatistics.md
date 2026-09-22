@@ -1,19 +1,21 @@
 # SPacketStatistics
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketStatistics
+
 ## Class signature
 
 ```java
-public class SPacketStatistics extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketStatistics extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketStatistics()`
-- `public SPacketStatistics(java.util.Map< StatBase ,java.lang.Integer> statisticMapIn)`
+- `SPacketStatistics()`
+- `SPacketStatistics(java.util.Map<StatBase, java.lang.Integer> statisticMapIn)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public java.util.Map< StatBase ,java.lang.Integer> getStatisticMap()`
+- `java.util.Map<StatBase, java.lang.Integer> getStatisticMap()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

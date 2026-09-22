@@ -1,9 +1,17 @@
 # RecipesBanners.RecipeDuplicatePattern
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.RecipesBanners.RecipeDuplicatePattern
+
+## Class signature
+
+```java
+public static class RecipesBanners.RecipeDuplicatePattern extends java.lang.Object implements IRecipe
+```
+
 ## Methods
 
-- `public boolean matches( InventoryCrafting inv, World worldIn)`
-- `public ItemStack getCraftingResult( InventoryCrafting inv)`
-- `public int getRecipeSize()`
-- `public ItemStack getRecipeOutput()`
-- `public NonNullList < ItemStack > getRemainingItems( InventoryCrafting inv)`
+- `ItemStack getCraftingResult(InventoryCrafting inv)`
+- `ItemStack getRecipeOutput()`
+- `int getRecipeSize()`
+- `NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)`
+- `boolean matches(InventoryCrafting inv, World worldIn)`

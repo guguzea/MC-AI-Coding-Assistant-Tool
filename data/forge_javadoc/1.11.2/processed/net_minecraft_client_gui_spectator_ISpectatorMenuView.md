@@ -8,5 +8,5 @@ public interface ISpectatorMenuView
 
 ## Methods
 
-- `java.util.List< ISpectatorMenuObject > getItems()`
+- `java.util.List<ISpectatorMenuObject> getItems()`
 - `ITextComponent getPrompt()`

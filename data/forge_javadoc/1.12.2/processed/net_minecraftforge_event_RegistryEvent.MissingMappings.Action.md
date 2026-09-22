@@ -1,10 +1,14 @@
 # RegistryEvent.MissingMappings.Action
 
+**Inheritance:** java.lang.Object → java.lang.Enum<RegistryEvent.MissingMappings.Action> → net.minecraftforge.event.RegistryEvent.MissingMappings.Action
+
+## Class signature
+
+```java
+public static enum RegistryEvent.MissingMappings.Action extends java.lang.Enum<RegistryEvent.MissingMappings.Action>
+```
+
 ## Methods
 
-- `public static RegistryEvent.MissingMappings.Action [] values()`
-- `public static RegistryEvent.MissingMappings.Action valueOf(java.lang.String name)`
-
-## Description
-
-Actions you can take with this missing mapping. IGNORE means this missing mapping will be ignored. WARN means this missing mapping will generate a warning. FAIL means this missing mapping will prevent
+- `static RegistryEvent.MissingMappings.Action valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static RegistryEvent.MissingMappings.Action [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

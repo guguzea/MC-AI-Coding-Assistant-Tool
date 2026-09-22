@@ -3,11 +3,15 @@ title: "EntityBat"
 description: "public class EntityBat extends EntityAmbientCreature"
 package: "net/minecraft/entity/passive"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/entity/passive/EntityBat.html"
 sourceType: javadoc
 ---
 
 # EntityBat
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.passive.EntityAmbientCreature → net.minecraft.entity.passive.EntityBat
 
 ## Class signature
 
@@ -15,32 +19,32 @@ sourceType: javadoc
 public class EntityBat extends EntityAmbientCreature
 ```
 
-## Constructors
-
-- `public EntityBat( World p_i1680_1_)`
-
 ## Methods
 
-- `protected void entityInit()`
-- `protected float getSoundVolume()`
-- `protected float getSoundPitch()`
-- `protected java.lang.String getLivingSound()`
-- `protected java.lang.String getHurtSound()`
-- `protected java.lang.String getDeathSound()`
-- `public boolean canBePushed()`
-- `protected void collideWithEntity( Entity p_82167_1_)`
-- `protected void collideWithNearbyEntities()`
 - `protected void applyEntityAttributes()`
-- `public boolean getIsBatHanging()`
-- `public void setIsBatHanging(boolean p_82236_1_)`
-- `protected boolean isAIEnabled()`
-- `public void onUpdate()`
-- `protected void updateAITasks()`
+- `boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_)`
+- `boolean canBePushed()`
 - `protected boolean canTriggerWalking()`
+- `protected void collideWithEntity(Entity p_82167_1_)`
+- `protected void collideWithNearbyEntities()`
+- `boolean doesEntityNotTriggerPressurePlate()`
+- `protected void entityInit()`
 - `protected void fall(float p_70069_1_)`
+- `boolean getCanSpawnHere()`
+- `protected java.lang.String getDeathSound()`
+- `protected java.lang.String getHurtSound()`
+- `boolean getIsBatHanging()`
+- `protected java.lang.String getLivingSound()`
+- `protected float getSoundPitch()`
+- `protected float getSoundVolume()`
+- `protected boolean isAIEnabled()`
+- `void onUpdate()`
+- `void readEntityFromNBT(NBTTagCompound p_70037_1_)`
+- `void setIsBatHanging(boolean p_82236_1_)`
+- `protected void updateAITasks()`
 - `protected void updateFallState(double p_70064_1_, boolean p_70064_3_)`
-- `public boolean doesEntityNotTriggerPressurePlate()`
-- `public boolean attackEntityFrom( DamageSource p_70097_1_, float p_70097_2_)`
-- `public void readEntityFromNBT( NBTTagCompound p_70037_1_)`
-- `public void writeEntityToNBT( NBTTagCompound p_70014_1_)`
-- `public boolean getCanSpawnHere()`
+- `void writeEntityToNBT(NBTTagCompound p_70014_1_)`
+
+## Fields
+
+- `EntityBat`

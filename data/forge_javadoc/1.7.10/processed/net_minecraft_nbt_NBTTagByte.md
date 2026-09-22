@@ -1,25 +1,27 @@
 # NBTTagByte
 
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase → net.minecraft.nbt.NBTBase.NBTPrimitive → net.minecraft.nbt.NBTTagByte
+
 ## Class signature
 
 ```java
 public class NBTTagByte extends NBTBase.NBTPrimitive
 ```
 
-## Constructors
-
-- `public NBTTagByte(byte p_i45129_1_)`
-
 ## Methods
 
-- `public byte getId()`
-- `public java.lang.String toString()`
-- `public NBTBase copy()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public long func_150291_c()`
-- `public int func_150287_d()`
-- `public short func_150289_e()`
-- `public byte func_150290_f()`
-- `public double func_150286_g()`
-- `public float func_150288_h()`
+- `NBTBase copy()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `double func_150286_g()`
+- `int func_150287_d()`
+- `float func_150288_h()`
+- `short func_150289_e()`
+- `byte func_150290_f()`
+- `long func_150291_c()`
+- `byte getId()`
+- `int hashCode()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `NBTTagByte`

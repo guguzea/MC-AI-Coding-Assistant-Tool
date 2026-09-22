@@ -1,5 +1,7 @@
 # NetHandlerLoginClient
 
+**Inheritance:** java.lang.Object → net.minecraft.client.network.NetHandlerLoginClient
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class NetHandlerLoginClient extends java.lang.Object implements INetHandl
 
 ## Constructors
 
-- `public NetHandlerLoginClient( NetworkManager networkManagerIn, Minecraft mcIn, GuiScreen previousScreenIn)`
+- `NetHandlerLoginClient(NetworkManager networkManagerIn, Minecraft mcIn, GuiScreen previousScreenIn)`
 
 ## Methods
 
-- `public void handleEncryptionRequest( SPacketEncryptionRequest packetIn)`
-- `public void handleLoginSuccess( SPacketLoginSuccess packetIn)`
-- `public void onDisconnect( ITextComponent reason)`
-- `public void handleDisconnect( SPacketDisconnect packetIn)`
-- `public void handleEnableCompression( SPacketEnableCompression packetIn)`
+- `void handleDisconnect(SPacketDisconnect packetIn)`
+- `void handleEnableCompression(SPacketEnableCompression packetIn)`
+- `void handleEncryptionRequest(SPacketEncryptionRequest packetIn)`
+- `void handleLoginSuccess(SPacketLoginSuccess packetIn)`
+- `void onDisconnect(ITextComponent reason)`

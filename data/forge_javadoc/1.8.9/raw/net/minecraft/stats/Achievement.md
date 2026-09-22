@@ -1,13 +1,17 @@
 ---
 title: "Achievement"
-description: "Is the column (related to center of achievement gui, in 24 pixels unit) that the achievement will be displayed."
+description: "public class Achievement extends StatBase"
 package: "net/minecraft/stats"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/stats/Achievement.html"
 sourceType: javadoc
 ---
 
 # Achievement
+
+**Inheritance:** java.lang.Object → net.minecraft.stats.StatBase → net.minecraft.stats.Achievement
 
 ## Class signature
 
@@ -17,22 +21,25 @@ public class Achievement extends StatBase
 
 ## Constructors
 
-- `public Achievement(java.lang.String p_i46327_1_, java.lang.String p_i46327_2_, int column, int row, Item p_i46327_5_, Achievement parent)`
-- `public Achievement(java.lang.String p_i45301_1_, java.lang.String p_i45301_2_, int column, int row, Block p_i45301_5_, Achievement parent)`
-- `public Achievement(java.lang.String p_i45302_1_, java.lang.String p_i45302_2_, int column, int row, ItemStack p_i45302_5_, Achievement parent)`
+- `Achievement(java.lang.String p_i45301_1_, java.lang.String p_i45301_2_, int column, int row, Block p_i45301_5_, Achievement parent)`
+- `Achievement(java.lang.String p_i46327_1_, java.lang.String p_i46327_2_, int column, int row, Item p_i46327_5_, Achievement parent)`
+- `Achievement(java.lang.String p_i45302_1_, java.lang.String p_i45302_2_, int column, int row, ItemStack p_i45302_5_, Achievement parent)`
 
 ## Methods
 
-- `public Achievement initIndependentStat()`
-- `public Achievement setSpecial()`
-- `public Achievement registerStat()`
-- `public boolean isAchievement()`
-- `public IChatComponent getStatName()`
-- `public Achievement func_150953_b(java.lang.Class<? extends IJsonSerializable > p_150953_1_)`
-- `public java.lang.String getDescription()`
-- `public Achievement setStatStringFormatter( IStatStringFormat p_75988_1_)`
-- `public boolean getSpecial()`
+- `Achievement func_150953_b(java.lang.Class<? extends IJsonSerializable> p_150953_1_)`
+- `java.lang.String getDescription()` — Returns the fully description of the achievement - ready to be displayed on screen.
+- `boolean getSpecial()` — Special achievements have a 'spiked' (on normal texture pack) frame, special achievements are the hardest ones to achieve.
+- `IChatComponent getStatName()`
+- `Achievement initIndependentStat()` — Initializes the current stat as independent (i.e., lacking prerequisites for being updated) and returns the current instance.
+- `boolean isAchievement()` — Returns whether or not the StatBase-derived class is a statistic (running counter) or an achievement (one-shot).
+- `Achievement registerStat()` — Register the stat into StatList.
+- `Achievement setSpecial()` — Special achievements have a 'spiked' (on normal texture pack) frame, special achievements are the hardest ones to achieve.
+- `Achievement setStatStringFormatter(IStatStringFormat p_75988_1_)` — Defines a string formatter for the achievement.
 
-## Description
+## Fields
 
-Is the column (related to center of achievement gui, in 24 pixels unit) that the achievement will be displayed.
+- `int displayColumn` — Is the column (related to center of achievement gui, in 24 pixels unit) that the achievement will be displayed.
+- `int displayRow` — Is the row (related to center of achievement gui, in 24 pixels unit) that the achievement will be displayed.
+- `Achievement parentAchievement` — Holds the parent achievement, that must be taken before this achievement is avaiable.
+- `ItemStack theItemStack` — Holds the ItemStack that will be used to draw the achievement into the GUI.

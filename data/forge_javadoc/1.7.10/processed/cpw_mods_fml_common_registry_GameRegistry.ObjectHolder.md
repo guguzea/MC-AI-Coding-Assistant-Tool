@@ -1,5 +1,11 @@
 # GameRegistry.ObjectHolder
 
-## Description
+## Class signature
 
-This will cause runtime injection of public static final fields to occur at various points where mod blocks and items could be subject to change. This allows for dynamic substitution to occur.
+```java
+public static @interface GameRegistry.ObjectHolder
+```
+
+## Elements
+
+- `java.lang.String value` — If used on a class, this represents a modid only.

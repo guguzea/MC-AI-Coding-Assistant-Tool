@@ -1,13 +1,17 @@
 ---
 title: "CommandEntityData"
-description: "Gets the name of the command"
+description: "public class CommandEntityData extends CommandBase"
 package: "net/minecraft/command"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/command/CommandEntityData.html"
 sourceType: javadoc
 ---
 
 # CommandEntityData
+
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.CommandEntityData
 
 ## Class signature
 
@@ -17,16 +21,12 @@ public class CommandEntityData extends CommandBase
 
 ## Constructors
 
-- `public CommandEntityData()`
+- `CommandEntityData()`
 
 ## Methods
 
-- `public java.lang.String getCommandName()`
-- `public int getRequiredPermissionLevel()`
-- `public java.lang.String getCommandUsage( ICommandSender sender)`
-- `public void processCommand( ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `public boolean isUsernameIndex(java.lang.String[] args, int index)`
-
-## Description
-
-Gets the name of the command
+- `java.lang.String getCommandName()` — Gets the name of the command
+- `java.lang.String getCommandUsage(ICommandSender sender)` — Gets the usage string for the command.
+- `int getRequiredPermissionLevel()` — Return the required permission level for this command.
+- `boolean isUsernameIndex(java.lang.String[] args, int index)` — Return whether the specified command parameter index is a username parameter.
+- `void processCommand(ICommandSender sender, java.lang.String[] args)` — Callback when the command is invoked

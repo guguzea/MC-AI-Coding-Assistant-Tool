@@ -1,131 +1,142 @@
 ---
 title: "Item"
-description: "Checks whether an item can be enchanted with a certain enchantment."
+description: "public class Item extends IForgeRegistryEntry.Impl<Item>"
 package: "net/minecraft/item"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/item/Item.html"
 sourceType: javadoc
 ---
 
 # Item
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item
+
 ## Class signature
 
 ```java
-public class Item extends IForgeRegistryEntry.Impl < Item >
+public class Item extends IForgeRegistryEntry.Impl<Item>
 ```
 
 ## Constructors
 
-- `public Item()`
+- `Item()`
 
 ## Methods
 
-- `public static int getIdFromItem( Item itemIn)`
-- `public static Item getItemById(int id)`
-- `public static Item getItemFromBlock( Block blockIn)`
-- `@Nullable public static Item getByNameOrId(java.lang.String id)`
-- `public ItemStack getDefaultInstance()`
-- `public final void addPropertyOverride( ResourceLocation key, IItemPropertyGetter getter)`
-- `@Nullable public IItemPropertyGetter getPropertyGetter( ResourceLocation key)`
-- `public boolean updateItemStackNBT( NBTTagCompound nbt)`
-- `public boolean hasCustomProperties()`
-- `public Item setMaxStackSize(int maxStackSize)`
-- `public EnumActionResult onItemUse( EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `public float getStrVsBlock( ItemStack stack, IBlockState state)`
-- `public ActionResult < ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn)`
-- `public ItemStack onItemUseFinish( ItemStack stack, World worldIn, EntityLivingBase entityLiving)`
-- `@Deprecated public int getItemStackLimit()`
-- `public int getMetadata(int damage)`
-- `public boolean getHasSubtypes()`
-- `public Item setHasSubtypes(boolean hasSubtypes)`
-- `@Deprecated public int getMaxDamage()`
-- `public Item setMaxDamage(int maxDamageIn)`
-- `public boolean isDamageable()`
-- `public boolean hitEntity( ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)`
-- `public boolean onBlockDestroyed( ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)`
-- `public boolean canHarvestBlock( IBlockState blockIn)`
-- `public boolean itemInteractionForEntity( ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand)`
-- `public Item setFull3D()`
-- `public boolean isFull3D()`
-- `public boolean shouldRotateAroundWhenRendering()`
-- `public Item setUnlocalizedName(java.lang.String unlocalizedName)`
-- `public java.lang.String getUnlocalizedNameInefficiently( ItemStack stack)`
-- `public java.lang.String getUnlocalizedName()`
-- `public java.lang.String getUnlocalizedName( ItemStack stack)`
-- `public Item setContainerItem( Item containerItem)`
-- `public boolean getShareTag()`
-- `@Nullable public Item getContainerItem()`
-- `@Deprecated public boolean hasContainerItem()`
-- `public void onUpdate( ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)`
-- `public void onCreated( ItemStack stack, World worldIn, EntityPlayer playerIn)`
-- `public boolean isMap()`
-- `public EnumAction getItemUseAction( ItemStack stack)`
-- `public int getMaxItemUseDuration( ItemStack stack)`
-- `public void onPlayerStoppedUsing( ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft)`
-- `public void addInformation( ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
-- `public java.lang.String getItemStackDisplayName( ItemStack stack)`
-- `public boolean hasEffect( ItemStack stack)`
-- `public EnumRarity getRarity( ItemStack stack)`
-- `public boolean isEnchantable( ItemStack stack)`
-- `protected RayTraceResult rayTrace( World worldIn, EntityPlayer playerIn, boolean useLiquids)`
-- `public int getItemEnchantability()`
-- `public void getSubItems( Item itemIn, CreativeTabs tab, NonNullList < ItemStack > subItems)`
-- `public Item setCreativeTab( CreativeTabs tab)`
-- `@Nullable public CreativeTabs getCreativeTab()`
-- `public boolean canItemEditBlocks()`
-- `public boolean getIsRepairable( ItemStack toRepair, ItemStack repair)`
-- `@Deprecated public com.google.common.collect.Multimap<java.lang.String, AttributeModifier > getItemAttributeModifiers( EntityEquipmentSlot equipmentSlot)`
-- `public com.google.common.collect.Multimap<java.lang.String, AttributeModifier > getAttributeModifiers( EntityEquipmentSlot slot, ItemStack stack)`
-- `public boolean onDroppedByPlayer( ItemStack item, EntityPlayer player)`
-- `public java.lang.String getHighlightTip( ItemStack item, java.lang.String displayName)`
-- `public EnumActionResult onItemUseFirst( EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)`
-- `public boolean isRepairable()`
-- `public Item setNoRepair()`
-- `@Nullable public NBTTagCompound getNBTShareTag( ItemStack stack)`
-- `public boolean onBlockStartBreak( ItemStack itemstack, BlockPos pos, EntityPlayer player)`
-- `public void onUsingTick( ItemStack stack, EntityLivingBase player, int count)`
-- `public boolean onLeftClickEntity( ItemStack stack, EntityPlayer player, Entity entity)`
-- `public ItemStack getContainerItem( ItemStack itemStack)`
-- `public boolean hasContainerItem( ItemStack stack)`
-- `public int getEntityLifespan( ItemStack itemStack, World world)`
-- `public boolean hasCustomEntity( ItemStack stack)`
-- `@Nullable public Entity createEntity( World world, Entity location, ItemStack itemstack)`
-- `public boolean onEntityItemUpdate( EntityItem entityItem)`
-- `public CreativeTabs [] getCreativeTabs()`
-- `public float getSmeltingExperience( ItemStack item)`
-- `public boolean doesSneakBypassUse( ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)`
-- `public void onArmorTick( World world, EntityPlayer player, ItemStack itemStack)`
-- `public boolean isValidArmor( ItemStack stack, EntityEquipmentSlot armorType, Entity entity)`
-- `public boolean isBookEnchantable( ItemStack stack, ItemStack book)`
-- `@Nullable public java.lang.String getArmorTexture( ItemStack stack, Entity entity, EntityEquipmentSlot slot, java.lang.String type)`
-- `@Nullable public FontRenderer getFontRenderer( ItemStack stack)`
-- `@Nullable public ModelBiped getArmorModel( EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default)`
-- `public boolean onEntitySwing( EntityLivingBase entityLiving, ItemStack stack)`
-- `public void renderHelmetOverlay( ItemStack stack, EntityPlayer player, ScaledResolution resolution, float partialTicks)`
-- `public int getDamage( ItemStack stack)`
-- `public int getMetadata( ItemStack stack)`
-- `public boolean showDurabilityBar( ItemStack stack)`
-- `public double getDurabilityForDisplay( ItemStack stack)`
-- `public int getRGBDurabilityForDisplay( ItemStack stack)`
-- `public int getMaxDamage( ItemStack stack)`
-- `public boolean isDamaged( ItemStack stack)`
-- `public void setDamage( ItemStack stack, int damage)`
-- `public boolean canHarvestBlock( IBlockState state, ItemStack stack)`
-- `public int getItemStackLimit( ItemStack stack)`
-- `public void setHarvestLevel(java.lang.String toolClass, int level)`
-- `public java.util.Set<java.lang.String> getToolClasses( ItemStack stack)`
-- `public int getHarvestLevel( ItemStack stack, java.lang.String toolClass, @Nullable EntityPlayer player, @Nullable IBlockState blockState)`
-- `public int getItemEnchantability( ItemStack stack)`
-- `public boolean canApplyAtEnchantingTable( ItemStack stack, Enchantment enchantment)`
-- `public boolean isBeaconPayment( ItemStack stack)`
-- `public boolean shouldCauseReequipAnimation( ItemStack oldStack, ItemStack newStack, boolean slotChanged)`
-- `public boolean shouldCauseBlockBreakReset( ItemStack oldStack, ItemStack newStack)`
-- `@Nullable public ICapabilityProvider initCapabilities( ItemStack stack, @Nullable NBTTagCompound nbt)`
-- `public com.google.common.collect.ImmutableMap<java.lang.String, ITimeValue > getAnimationParameters( ItemStack stack, World world, EntityLivingBase entity)`
-- `public static void registerItems()`
-- `protected static void registerItemBlock( Block blockIn, Item itemIn)`
+- `void addInformation(ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
+- `void addPropertyOverride(ResourceLocation key, IItemPropertyGetter getter)`
+- `boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)` — Checks whether an item can be enchanted with a certain enchantment.
+- `boolean canHarvestBlock(IBlockState blockIn)`
+- `boolean canHarvestBlock(IBlockState state, ItemStack stack)` — ItemStack sensitive version of canHarvestBlock(IBlockState)
+- `boolean canItemEditBlocks()`
+- `Entity createEntity(World world, Entity location, ItemStack itemstack)` — This function should return a new entity to replace the dropped item.
+- `boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)` — Should this item, when held, allow sneak-clicks to pass through to the underlying block?
+- `com.google.common.collect.ImmutableMap<java.lang.String, ITimeValue> getAnimationParameters(ItemStack stack, World world, EntityLivingBase entity)`
+- `ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default)` — Override this method to have an item handle its own armor rendering.
+- `java.lang.String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, java.lang.String type)` — Called by RenderBiped and RenderPlayer to determine the armor texture that should be use for the currently equipped item.
+- `com.google.common.collect.Multimap<java.lang.String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)` — ItemStack sensitive version of getItemAttributeModifiers
+- `static Item getByNameOrId(java.lang.String id)`
+- `Item getContainerItem()`
+- `ItemStack getContainerItem(ItemStack itemStack)` — ItemStack sensitive version of getContainerItem.
+- `CreativeTabs getCreativeTab()`
+- `CreativeTabs [] getCreativeTabs()` — Gets a list of tabs that items belonging to this class can display on, combined properly with getSubItems allows for a single item to span many sub-items across many tabs.
+- `int getDamage(ItemStack stack)` — Return the itemDamage represented by this ItemStack.
+- `ItemStack getDefaultInstance()`
+- `double getDurabilityForDisplay(ItemStack stack)` — Queries the percentage of the 'Durability' bar that should be drawn.
+- `int getEntityLifespan(ItemStack itemStack, World world)` — Retrieves the normal 'lifespan' of this item when it is dropped on the ground as a EntityItem.
+- `FontRenderer getFontRenderer(ItemStack stack)` — Returns the font renderer used to render tooltips and overlays for this item.
+- `int getHarvestLevel(ItemStack stack, java.lang.String toolClass, EntityPlayer player, IBlockState blockState)` — Queries the harvest level of this item stack for the specified tool class, Returns -1 if this tool is not of the specified type
+- `boolean getHasSubtypes()`
+- `java.lang.String getHighlightTip(ItemStack item, java.lang.String displayName)` — Allow the item one last chance to modify its name used for the tool highlight useful for adding something extra that can't be removed by a user in the displayed name, such as a mode of operation.
+- `static int getIdFromItem(Item itemIn)`
+- `boolean getIsRepairable(ItemStack toRepair, ItemStack repair)`
+- `@Deprecated com.google.common.collect.Multimap<java.lang.String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)`
+- `static Item getItemById(int id)`
+- `int getItemEnchantability()`
+- `int getItemEnchantability(ItemStack stack)` — ItemStack sensitive version of getItemEnchantability
+- `static Item getItemFromBlock(Block blockIn)`
+- `java.lang.String getItemStackDisplayName(ItemStack stack)`
+- `@Deprecated int getItemStackLimit()`
+- `int getItemStackLimit(ItemStack stack)` — Gets the maximum number of items that this stack should be able to hold.
+- `EnumAction getItemUseAction(ItemStack stack)`
+- `@Deprecated int getMaxDamage()`
+- `int getMaxDamage(ItemStack stack)` — Return the maxDamage for this ItemStack.
+- `int getMaxItemUseDuration(ItemStack stack)`
+- `int getMetadata(int damage)`
+- `int getMetadata(ItemStack stack)` — This used to be 'display damage' but its really just 'aux' data in the ItemStack, usually shares the same variable as damage.
+- `NBTTagCompound getNBTShareTag(ItemStack stack)` — Override this method to change the NBT data being sent to the client.
+- `IItemPropertyGetter getPropertyGetter(ResourceLocation key)`
+- `EnumRarity getRarity(ItemStack stack)`
+- `int getRGBDurabilityForDisplay(ItemStack stack)` — Returns the packed int RGB value used to render the durability bar in the GUI.
+- `boolean getShareTag()`
+- `float getSmeltingExperience(ItemStack item)` — Determines the base experience for a player when they remove this item from a furnace slot.
+- `float getStrVsBlock(ItemStack stack, IBlockState state)`
+- `void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)`
+- `java.util.Set<java.lang.String> getToolClasses(ItemStack stack)`
+- `java.lang.String getUnlocalizedName()`
+- `java.lang.String getUnlocalizedName(ItemStack stack)`
+- `java.lang.String getUnlocalizedNameInefficiently(ItemStack stack)`
+- `@Deprecated boolean hasContainerItem()`
+- `boolean hasContainerItem(ItemStack stack)` — ItemStack sensitive version of hasContainerItem
+- `boolean hasCustomEntity(ItemStack stack)` — Determines if this Item has a special entity for when they are in the world.
+- `boolean hasCustomProperties()`
+- `boolean hasEffect(ItemStack stack)`
+- `boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)`
+- `ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)` — Called from ItemStack.setItem, will hold extra data for the life of this ItemStack.
+- `boolean isBeaconPayment(ItemStack stack)` — Whether this Item can be used as a payment to activate the vanilla beacon.
+- `boolean isBookEnchantable(ItemStack stack, ItemStack book)` — Allow or forbid the specific book/item combination as an anvil enchant
+- `boolean isDamageable()`
+- `boolean isDamaged(ItemStack stack)` — Return if this itemstack is damaged.
+- `boolean isEnchantable(ItemStack stack)`
+- `boolean isFull3D()`
+- `boolean isMap()`
+- `boolean isRepairable()` — Called by CraftingManager to determine if an item is reparable.
+- `boolean isValidArmor(ItemStack stack, EntityEquipmentSlot armorType, Entity entity)` — Determines if the specific ItemStack can be placed in the specified armor slot.
+- `boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand)`
+- `void onArmorTick(World world, EntityPlayer player, ItemStack itemStack)` — Called to tick armor in the armor slot.
+- `boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)`
+- `boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, EntityPlayer player)` — Called before a block is broken.
+- `void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)`
+- `boolean onDroppedByPlayer(ItemStack item, EntityPlayer player)` — Called when a player drops the item into the world, returning false from this will prevent the item from being removed from the players inventory and spawning in the world
+- `boolean onEntityItemUpdate(EntityItem entityItem)` — Called by the default implemetation of EntityItem's onUpdate method, allowing for cleaner control over the update of the item without having to write a subclass.
+- `boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack)` — Called when a entity tries to play the 'swing' animation.
+- `ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+- `EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)`
+- `EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)` — This is called when the item is used, before the block is activated.
+- `boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)` — Called when the player Left Clicks (attacks) an entity.
+- `void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft)`
+- `void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)`
+- `void onUsingTick(ItemStack stack, EntityLivingBase player, int count)` — Called each tick while using an item.
+- `protected RayTraceResult rayTrace(World worldIn, EntityPlayer playerIn, boolean useLiquids)`
+- `protected static void registerItemBlock(Block blockIn, Item itemIn)`
+- `static void registerItems()`
+- `void renderHelmetOverlay(ItemStack stack, EntityPlayer player, ScaledResolution resolution, float partialTicks)` — Called when the client starts rendering the HUD, for whatever item the player currently has as a helmet.
+- `Item setContainerItem(Item containerItem)`
+- `Item setCreativeTab(CreativeTabs tab)`
+- `void setDamage(ItemStack stack, int damage)` — Set the damage for this itemstack.
+- `Item setFull3D()`
+- `void setHarvestLevel(java.lang.String toolClass, int level)` — Sets or removes the harvest level for the specified tool class.
+- `Item setHasSubtypes(boolean hasSubtypes)`
+- `Item setMaxDamage(int maxDamageIn)`
+- `Item setMaxStackSize(int maxStackSize)`
+- `Item setNoRepair()` — Call to disable repair recipes.
+- `Item setUnlocalizedName(java.lang.String unlocalizedName)`
+- `boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack)` — Called when the player is mining a block and the item in his hand changes.
+- `boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)` — Determine if the player switching between these two item stacks
+- `boolean shouldRotateAroundWhenRendering()`
+- `boolean showDurabilityBar(ItemStack stack)` — Determines if the durability bar should be rendered for this item.
+- `boolean updateItemStackNBT(NBTTagCompound nbt)`
 
-## Description
+## Fields
 
-Checks whether an item can be enchanted with a certain enchantment.
+- `protected static java.util.UUID ATTACK_DAMAGE_MODIFIER`
+- `protected static java.util.UUID ATTACK_SPEED_MODIFIER`
+- `protected boolean bFull3D`
+- `protected boolean canRepair`
+- `protected boolean hasSubtypes`
+- `protected static java.util.Random itemRand`
+- `protected int maxStackSize`
+- `static RegistryNamespaced<ResourceLocation, Item> REGISTRY`

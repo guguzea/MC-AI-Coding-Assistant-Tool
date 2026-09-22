@@ -1,13 +1,17 @@
 ---
 title: "Material"
-description: "The material for crafted snow."
+description: "public class Material extends java.lang.Object"
 package: "net/minecraft/block/material"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/material/Material.html"
 sourceType: javadoc
 ---
 
 # Material
+
+**Inheritance:** java.lang.Object → net.minecraft.block.material.Material
 
 ## Class signature
 
@@ -17,27 +21,61 @@ public class Material extends java.lang.Object
 
 ## Constructors
 
-- `public Material( MapColor color)`
+- `Material(MapColor color)`
 
 ## Methods
 
-- `public boolean isLiquid()`
-- `public boolean isSolid()`
-- `public boolean blocksLight()`
-- `public boolean blocksMovement()`
-- `protected Material setRequiresTool()`
-- `protected Material setBurning()`
-- `public boolean getCanBurn()`
-- `public Material setReplaceable()`
-- `public boolean isReplaceable()`
-- `public boolean isOpaque()`
-- `public boolean isToolNotRequired()`
-- `public int getMaterialMobility()`
-- `protected Material setNoPushMobility()`
-- `protected Material setImmovableMobility()`
+- `boolean blocksLight()` — Will prevent grass from growing on dirt underneath and kill any grass below it if it returns true
+- `boolean blocksMovement()` — Returns if this material is considered solid or not
+- `boolean getCanBurn()` — Returns if the block can burn or not.
+- `MapColor getMaterialMapColor()` — Retrieves the color index of the block.
+- `int getMaterialMobility()` — Returns the mobility information of the material, 0 = free, 1 = can't push but can move over, 2 = total immobility and stop pistons.
+- `boolean isLiquid()` — Returns if blocks of these materials are liquids.
+- `boolean isOpaque()` — Indicate if the material is opaque
+- `boolean isReplaceable()` — Returns whether the material can be replaced by other blocks when placed - eg snow, vines and tall grass.
+- `boolean isSolid()` — Returns true if the block is a considered solid.
+- `boolean isToolNotRequired()` — Returns true if the material can be harvested without a tool (or with the wrong tool)
 - `protected Material setAdventureModeExempt()`
-- `public MapColor getMaterialMapColor()`
+- `protected Material setBurning()` — Set the canBurn bool to True and return the current object.
+- `protected Material setImmovableMobility()` — This type of material can't be pushed, and pistons are blocked to move.
+- `protected Material setNoPushMobility()` — This type of material can't be pushed, but pistons can move over it.
+- `Material setReplaceable()` — Sets replaceable to true.
+- `protected Material setRequiresTool()` — Makes blocks with this material require the correct tool to be harvested.
 
-## Description
+## Fields
 
-The material for crafted snow.
+- `static Material air`
+- `static Material anvil`
+- `static Material barrier`
+- `static Material cactus`
+- `static Material cake`
+- `static Material carpet`
+- `static Material circuits`
+- `static Material clay`
+- `static Material cloth`
+- `static Material coral`
+- `static Material craftedSnow` — The material for crafted snow.
+- `static Material dragonEgg`
+- `static Material fire`
+- `static Material glass`
+- `static Material gourd`
+- `static Material grass`
+- `static Material ground`
+- `static Material ice`
+- `static Material iron`
+- `static Material lava`
+- `static Material leaves`
+- `static Material packedIce`
+- `static Material piston` — Pistons' material.
+- `static Material plants`
+- `static Material portal`
+- `static Material redstoneLight`
+- `static Material rock`
+- `static Material sand`
+- `static Material snow`
+- `static Material sponge`
+- `static Material tnt`
+- `static Material vine`
+- `static Material water`
+- `static Material web`
+- `static Material wood`

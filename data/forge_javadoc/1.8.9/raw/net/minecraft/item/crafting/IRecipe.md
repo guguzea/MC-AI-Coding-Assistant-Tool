@@ -1,8 +1,10 @@
 ---
 title: "IRecipe"
-description: "Returns an Item that is the result of this recipe"
+description: "public interface IRecipe"
 package: "net/minecraft/item/crafting"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/item/crafting/IRecipe.html"
 sourceType: javadoc
 ---
@@ -17,12 +19,8 @@ public interface IRecipe
 
 ## Methods
 
-- `boolean matches( InventoryCrafting inv, World worldIn)`
-- `ItemStack getCraftingResult( InventoryCrafting inv)`
-- `int getRecipeSize()`
+- `ItemStack getCraftingResult(InventoryCrafting inv)` — Returns an Item that is the result of this recipe
 - `ItemStack getRecipeOutput()`
-- `ItemStack [] getRemainingItems( InventoryCrafting inv)`
-
-## Description
-
-Returns an Item that is the result of this recipe
+- `int getRecipeSize()` — Returns the size of the recipe area
+- `ItemStack [] getRemainingItems(InventoryCrafting inv)`
+- `boolean matches(InventoryCrafting inv, World worldIn)` — Used to check if a recipe matches current crafting inventory

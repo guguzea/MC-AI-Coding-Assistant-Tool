@@ -8,4 +8,4 @@ public interface IVertexProducer
 
 ## Methods
 
-- `void pipe( IVertexConsumer consumer)`
+- `void pipe(IVertexConsumer consumer)`

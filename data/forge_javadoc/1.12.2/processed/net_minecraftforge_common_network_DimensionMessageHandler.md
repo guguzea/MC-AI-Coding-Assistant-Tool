@@ -1,16 +1,18 @@
 # DimensionMessageHandler
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.network.DimensionMessageHandler
+
 ## Class signature
 
 ```java
-public class DimensionMessageHandler extends <any>
+public class DimensionMessageHandler extends<any>
 ```
 
 ## Constructors
 
-- `public DimensionMessageHandler()`
+- `DimensionMessageHandler()`
 
 ## Methods
 
-- `protected void channelRead0(ChannelHandlerContext ctx, ForgeMessage.DimensionRegisterMessage msg) throws java.lang.Exception`
-- `public void exceptionCaught(ChannelHandlerContext ctx, java.lang.Throwable cause) throws java.lang.Exception`
+- `protected void channelRead0(ChannelHandlerContext ctx, ForgeMessage.DimensionRegisterMessage msg)`
+- `void exceptionCaught(ChannelHandlerContext ctx, java.lang.Throwable cause)`

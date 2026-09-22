@@ -300,7 +300,11 @@ export function buildSymbolIndex(
   };
 }
 
-function normalizeTag(t: string): string {
+/**
+ * tag 归一口径（大小写不敏感 + 去连字符）。**导出给平台侧复用**：
+ * 任何按 tag 做的过滤 / 降权都必须走这里，否则 `release-notes` 与 `ReleaseNotes` 会被判成两个词。
+ */
+export function normalizeTag(t: string): string {
   return t.toLowerCase().replace(/-/g, "");
 }
 

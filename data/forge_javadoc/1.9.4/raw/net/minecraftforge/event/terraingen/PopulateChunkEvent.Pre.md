@@ -1,18 +1,24 @@
 ---
 title: "PopulateChunkEvent.Pre"
-description: "PopulateChunkEvent.Pre is fired just before a chunk is populated a terrain feature. This event is fired just before terrain feature generation in ChunkProviderEnd#populate(IChunkProvider, int, int), C"
+description: "public static class PopulateChunkEvent.Pre extends PopulateChunkEvent"
 package: "net/minecraftforge/event/terraingen"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/event/terraingen/PopulateChunkEvent.Pre.html"
 sourceType: javadoc
 ---
 
 # PopulateChunkEvent.Pre
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.ChunkGeneratorEvent → net.minecraftforge.event.terraingen.PopulateChunkEvent → net.minecraftforge.event.terraingen.PopulateChunkEvent.Pre
+
+## Class signature
+
+```java
+public static class PopulateChunkEvent.Pre extends PopulateChunkEvent
+```
+
 ## Constructors
 
-- `public Pre( IChunkGenerator gen, World world, java.util.Random rand, int chunkX, int chunkZ, boolean hasVillageGenerated)`
-
-## Description
-
-PopulateChunkEvent.Pre is fired just before a chunk is populated a terrain feature. This event is fired just before terrain feature generation in ChunkProviderEnd#populate(IChunkProvider, int, int), C
+- `Pre(IChunkGenerator gen, World world, java.util.Random rand, int chunkX, int chunkZ, boolean hasVillageGenerated)`

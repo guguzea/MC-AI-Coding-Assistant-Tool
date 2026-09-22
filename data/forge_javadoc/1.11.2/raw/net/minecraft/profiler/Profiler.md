@@ -3,11 +3,15 @@ title: "Profiler"
 description: "public class Profiler extends java.lang.Object"
 package: "net/minecraft/profiler"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/profiler/Profiler.html"
 sourceType: javadoc
 ---
 
 # Profiler
+
+**Inheritance:** java.lang.Object → net.minecraft.profiler.Profiler
 
 ## Class signature
 
@@ -17,13 +21,17 @@ public class Profiler extends java.lang.Object
 
 ## Constructors
 
-- `public Profiler()`
+- `Profiler()`
 
 ## Methods
 
-- `public void clearProfiling()`
-- `public void startSection(java.lang.String name)`
-- `public void endSection()`
-- `public java.util.List< Profiler.Result > getProfilingData(java.lang.String profilerName)`
-- `public void endStartSection(java.lang.String name)`
-- `public java.lang.String getNameOfLastSection()`
+- `void clearProfiling()`
+- `void endSection()`
+- `void endStartSection(java.lang.String name)`
+- `java.lang.String getNameOfLastSection()`
+- `java.util.List<Profiler.Result> getProfilingData(java.lang.String profilerName)`
+- `void startSection(java.lang.String name)`
+
+## Fields
+
+- `boolean profilingEnabled`

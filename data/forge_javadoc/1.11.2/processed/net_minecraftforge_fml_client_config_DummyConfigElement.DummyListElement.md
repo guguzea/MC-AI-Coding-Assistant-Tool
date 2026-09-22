@@ -1,24 +1,28 @@
 # DummyConfigElement.DummyListElement
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.config.DummyConfigElement → net.minecraftforge.fml.client.config.DummyConfigElement.DummyListElement
 
-- `public DummyListElement(java.lang.String name, java.lang.Object[] defaultValues, ConfigGuiType type, java.lang.String langKey, boolean isListFixedLength, int maxListLength, @Nullable java.util.regex.Pattern validStringPattern, @Nullable java.lang.Object minValue, @Nullable java.lang.Object maxValue)`
-- `public DummyListElement(java.lang.String name, java.lang.Object[] defaultValues, ConfigGuiType type, java.lang.String langKey)`
-- `public DummyListElement(java.lang.String name, java.lang.Object[] defaultValues, ConfigGuiType type, java.lang.String langKey, boolean isListFixedLength)`
-- `public DummyListElement(java.lang.String name, java.lang.Object[] defaultValues, ConfigGuiType type, java.lang.String langKey, int maxListLength)`
-- `public DummyListElement(java.lang.String name, java.lang.Object[] defaultValues, ConfigGuiType type, java.lang.String langKey, java.lang.Object minValue, java.lang.Object maxValue)`
-- `public DummyListElement(java.lang.String name, java.lang.Object[] defaultValues, ConfigGuiType type, java.lang.String langKey, boolean isListFixedLength, java.lang.Object minValue, java.lang.Object maxValue)`
-- `public DummyListElement(java.lang.String name, java.lang.Object[] defaultValues, ConfigGuiType type, java.lang.String langKey, int maxListLength, java.lang.Object minValue, java.lang.Object maxValue)`
-- `public DummyListElement(java.lang.String name, java.lang.Object[] defaultValues, ConfigGuiType type, java.lang.String langKey, boolean isListFixedLength, int maxListLength, java.lang.Object minValue, java.lang.Object maxValue)`
-- `public DummyListElement(java.lang.String name, java.lang.Object[] defaultValues, ConfigGuiType type, java.lang.String langKey, java.util.regex.Pattern validStringPattern)`
-- `public DummyListElement(java.lang.String name, java.lang.Object[] defaultValues, ConfigGuiType type, java.lang.String langKey, boolean isListFixedLength, java.util.regex.Pattern validStringPattern)`
-- `public DummyListElement(java.lang.String name, java.lang.Object[] defaultValues, ConfigGuiType type, java.lang.String langKey, int maxListLength, java.util.regex.Pattern validStringPattern)`
+## Class signature
+
+```java
+public static class DummyConfigElement.DummyListElement extends DummyConfigElement
+```
 
 ## Methods
 
-- `public DummyConfigElement.DummyListElement setCustomEditListEntryClass(java.lang.Class<? extends GuiEditArrayEntries.IArrayEntry > clazz)`
-- `public java.lang.Object getDefault()`
+- `java.lang.Object getDefault()` — [Property] Gets this property's default value.
+- `DummyConfigElement.DummyListElement setCustomEditListEntryClass(java.lang.Class<? extends GuiEditArrayEntries.IArrayEntry> clazz)`
 
-## Description
+## Fields
 
-This class provides a dummy array-type IConfigElement.
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`
+- `DummyListElement`

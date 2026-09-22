@@ -3,11 +3,15 @@ title: "NetHandlerPlayClient"
 description: "public class NetHandlerPlayClient extends java.lang.Object implements INetHandlerPlayClient"
 package: "net/minecraft/client/network"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/network/NetHandlerPlayClient.html"
 sourceType: javadoc
 ---
 
 # NetHandlerPlayClient
+
+**Inheritance:** java.lang.Object → net.minecraft.client.network.NetHandlerPlayClient
 
 ## Class signature
 
@@ -17,75 +21,81 @@ public class NetHandlerPlayClient extends java.lang.Object implements INetHandle
 
 ## Constructors
 
-- `public NetHandlerPlayClient( Minecraft p_i45061_1_, GuiScreen p_i45061_2_, NetworkManager p_i45061_3_)`
+- `NetHandlerPlayClient(Minecraft p_i45061_1_, GuiScreen p_i45061_2_, NetworkManager p_i45061_3_)`
 
 ## Methods
 
-- `public void cleanup()`
-- `public void onNetworkTick()`
-- `public void handleJoinGame( S01PacketJoinGame p_147282_1_)`
-- `public void handleSpawnObject( S0EPacketSpawnObject p_147235_1_)`
-- `public void handleSpawnExperienceOrb( S11PacketSpawnExperienceOrb p_147286_1_)`
-- `public void handleSpawnGlobalEntity( S2CPacketSpawnGlobalEntity p_147292_1_)`
-- `public void handleSpawnPainting( S10PacketSpawnPainting p_147288_1_)`
-- `public void handleEntityVelocity( S12PacketEntityVelocity p_147244_1_)`
-- `public void handleEntityMetadata( S1CPacketEntityMetadata p_147284_1_)`
-- `public void handleSpawnPlayer( S0CPacketSpawnPlayer p_147237_1_)`
-- `public void handleEntityTeleport( S18PacketEntityTeleport p_147275_1_)`
-- `public void handleHeldItemChange( S09PacketHeldItemChange p_147257_1_)`
-- `public void handleEntityMovement( S14PacketEntity p_147259_1_)`
-- `public void handleEntityHeadLook( S19PacketEntityHeadLook p_147267_1_)`
-- `public void handleDestroyEntities( S13PacketDestroyEntities p_147238_1_)`
-- `public void handlePlayerPosLook( S08PacketPlayerPosLook p_147258_1_)`
-- `public void handleMultiBlockChange( S22PacketMultiBlockChange p_147287_1_)`
-- `public void handleChunkData( S21PacketChunkData p_147263_1_)`
-- `public void handleBlockChange( S23PacketBlockChange p_147234_1_)`
-- `public void handleDisconnect( S40PacketDisconnect p_147253_1_)`
-- `public void onDisconnect( IChatComponent p_147231_1_)`
-- `public void addToSendQueue( Packet p_147297_1_)`
-- `public void handleCollectItem( S0DPacketCollectItem p_147246_1_)`
-- `public void handleChat( S02PacketChat p_147251_1_)`
-- `public void handleAnimation( S0BPacketAnimation p_147279_1_)`
-- `public void handleUseBed( S0APacketUseBed p_147278_1_)`
-- `public void handleSpawnMob( S0FPacketSpawnMob p_147281_1_)`
-- `public void handleTimeUpdate( S03PacketTimeUpdate p_147285_1_)`
-- `public void handleSpawnPosition( S05PacketSpawnPosition p_147271_1_)`
-- `public void handleEntityAttach( S1BPacketEntityAttach p_147243_1_)`
-- `public void handleEntityStatus( S19PacketEntityStatus p_147236_1_)`
-- `public void handleUpdateHealth( S06PacketUpdateHealth p_147249_1_)`
-- `public void handleSetExperience( S1FPacketSetExperience p_147295_1_)`
-- `public void handleRespawn( S07PacketRespawn p_147280_1_)`
-- `public void handleExplosion( S27PacketExplosion p_147283_1_)`
-- `public void handleOpenWindow( S2DPacketOpenWindow p_147265_1_)`
-- `public void handleSetSlot( S2FPacketSetSlot p_147266_1_)`
-- `public void handleConfirmTransaction( S32PacketConfirmTransaction p_147239_1_)`
-- `public void handleWindowItems( S30PacketWindowItems p_147241_1_)`
-- `public void handleSignEditorOpen( S36PacketSignEditorOpen p_147268_1_)`
-- `public void handleUpdateSign( S33PacketUpdateSign p_147248_1_)`
-- `public void handleUpdateTileEntity( S35PacketUpdateTileEntity p_147273_1_)`
-- `public void handleWindowProperty( S31PacketWindowProperty p_147245_1_)`
-- `public void handleEntityEquipment( S04PacketEntityEquipment p_147242_1_)`
-- `public void handleCloseWindow( S2EPacketCloseWindow p_147276_1_)`
-- `public void handleBlockAction( S24PacketBlockAction p_147261_1_)`
-- `public void handleBlockBreakAnim( S25PacketBlockBreakAnim p_147294_1_)`
-- `public void handleMapChunkBulk( S26PacketMapChunkBulk p_147269_1_)`
-- `public void handleChangeGameState( S2BPacketChangeGameState p_147252_1_)`
-- `public void handleMaps( S34PacketMaps p_147264_1_)`
-- `public void handleEffect( S28PacketEffect p_147277_1_)`
-- `public void handleStatistics( S37PacketStatistics p_147293_1_)`
-- `public void handleEntityEffect( S1DPacketEntityEffect p_147260_1_)`
-- `public void handleRemoveEntityEffect( S1EPacketRemoveEntityEffect p_147262_1_)`
-- `public void handlePlayerListItem( S38PacketPlayerListItem p_147256_1_)`
-- `public void handleKeepAlive( S00PacketKeepAlive p_147272_1_)`
-- `public void onConnectionStateTransition( EnumConnectionState p_147232_1_, EnumConnectionState p_147232_2_)`
-- `public void handlePlayerAbilities( S39PacketPlayerAbilities p_147270_1_)`
-- `public void handleTabComplete( S3APacketTabComplete p_147274_1_)`
-- `public void handleSoundEffect( S29PacketSoundEffect p_147255_1_)`
-- `public void handleCustomPayload( S3FPacketCustomPayload p_147240_1_)`
-- `public void handleScoreboardObjective( S3BPacketScoreboardObjective p_147291_1_)`
-- `public void handleUpdateScore( S3CPacketUpdateScore p_147250_1_)`
-- `public void handleDisplayScoreboard( S3DPacketDisplayScoreboard p_147254_1_)`
-- `public void handleTeams( S3EPacketTeams p_147247_1_)`
-- `public void handleParticles( S2APacketParticles p_147289_1_)`
-- `public void handleEntityProperties( S20PacketEntityProperties p_147290_1_)`
-- `public NetworkManager getNetworkManager()`
+- `void addToSendQueue(Packet p_147297_1_)`
+- `void cleanup()`
+- `NetworkManager getNetworkManager()`
+- `void handleAnimation(S0BPacketAnimation p_147279_1_)`
+- `void handleBlockAction(S24PacketBlockAction p_147261_1_)`
+- `void handleBlockBreakAnim(S25PacketBlockBreakAnim p_147294_1_)`
+- `void handleBlockChange(S23PacketBlockChange p_147234_1_)`
+- `void handleChangeGameState(S2BPacketChangeGameState p_147252_1_)`
+- `void handleChat(S02PacketChat p_147251_1_)`
+- `void handleChunkData(S21PacketChunkData p_147263_1_)`
+- `void handleCloseWindow(S2EPacketCloseWindow p_147276_1_)`
+- `void handleCollectItem(S0DPacketCollectItem p_147246_1_)`
+- `void handleConfirmTransaction(S32PacketConfirmTransaction p_147239_1_)`
+- `void handleCustomPayload(S3FPacketCustomPayload p_147240_1_)`
+- `void handleDestroyEntities(S13PacketDestroyEntities p_147238_1_)`
+- `void handleDisconnect(S40PacketDisconnect p_147253_1_)`
+- `void handleDisplayScoreboard(S3DPacketDisplayScoreboard p_147254_1_)`
+- `void handleEffect(S28PacketEffect p_147277_1_)`
+- `void handleEntityAttach(S1BPacketEntityAttach p_147243_1_)`
+- `void handleEntityEffect(S1DPacketEntityEffect p_147260_1_)`
+- `void handleEntityEquipment(S04PacketEntityEquipment p_147242_1_)`
+- `void handleEntityHeadLook(S19PacketEntityHeadLook p_147267_1_)`
+- `void handleEntityMetadata(S1CPacketEntityMetadata p_147284_1_)`
+- `void handleEntityMovement(S14PacketEntity p_147259_1_)`
+- `void handleEntityProperties(S20PacketEntityProperties p_147290_1_)`
+- `void handleEntityStatus(S19PacketEntityStatus p_147236_1_)`
+- `void handleEntityTeleport(S18PacketEntityTeleport p_147275_1_)`
+- `void handleEntityVelocity(S12PacketEntityVelocity p_147244_1_)`
+- `void handleExplosion(S27PacketExplosion p_147283_1_)`
+- `void handleHeldItemChange(S09PacketHeldItemChange p_147257_1_)`
+- `void handleJoinGame(S01PacketJoinGame p_147282_1_)`
+- `void handleKeepAlive(S00PacketKeepAlive p_147272_1_)`
+- `void handleMapChunkBulk(S26PacketMapChunkBulk p_147269_1_)`
+- `void handleMaps(S34PacketMaps p_147264_1_)`
+- `void handleMultiBlockChange(S22PacketMultiBlockChange p_147287_1_)`
+- `void handleOpenWindow(S2DPacketOpenWindow p_147265_1_)`
+- `void handleParticles(S2APacketParticles p_147289_1_)`
+- `void handlePlayerAbilities(S39PacketPlayerAbilities p_147270_1_)`
+- `void handlePlayerListItem(S38PacketPlayerListItem p_147256_1_)`
+- `void handlePlayerPosLook(S08PacketPlayerPosLook p_147258_1_)`
+- `void handleRemoveEntityEffect(S1EPacketRemoveEntityEffect p_147262_1_)`
+- `void handleRespawn(S07PacketRespawn p_147280_1_)`
+- `void handleScoreboardObjective(S3BPacketScoreboardObjective p_147291_1_)`
+- `void handleSetExperience(S1FPacketSetExperience p_147295_1_)`
+- `void handleSetSlot(S2FPacketSetSlot p_147266_1_)`
+- `void handleSignEditorOpen(S36PacketSignEditorOpen p_147268_1_)`
+- `void handleSoundEffect(S29PacketSoundEffect p_147255_1_)`
+- `void handleSpawnExperienceOrb(S11PacketSpawnExperienceOrb p_147286_1_)`
+- `void handleSpawnGlobalEntity(S2CPacketSpawnGlobalEntity p_147292_1_)`
+- `void handleSpawnMob(S0FPacketSpawnMob p_147281_1_)`
+- `void handleSpawnObject(S0EPacketSpawnObject p_147235_1_)`
+- `void handleSpawnPainting(S10PacketSpawnPainting p_147288_1_)`
+- `void handleSpawnPlayer(S0CPacketSpawnPlayer p_147237_1_)`
+- `void handleSpawnPosition(S05PacketSpawnPosition p_147271_1_)`
+- `void handleStatistics(S37PacketStatistics p_147293_1_)`
+- `void handleTabComplete(S3APacketTabComplete p_147274_1_)`
+- `void handleTeams(S3EPacketTeams p_147247_1_)`
+- `void handleTimeUpdate(S03PacketTimeUpdate p_147285_1_)`
+- `void handleUpdateHealth(S06PacketUpdateHealth p_147249_1_)`
+- `void handleUpdateScore(S3CPacketUpdateScore p_147250_1_)`
+- `void handleUpdateSign(S33PacketUpdateSign p_147248_1_)`
+- `void handleUpdateTileEntity(S35PacketUpdateTileEntity p_147273_1_)`
+- `void handleUseBed(S0APacketUseBed p_147278_1_)`
+- `void handleWindowItems(S30PacketWindowItems p_147241_1_)`
+- `void handleWindowProperty(S31PacketWindowProperty p_147245_1_)`
+- `void onConnectionStateTransition(EnumConnectionState p_147232_1_, EnumConnectionState p_147232_2_)`
+- `void onDisconnect(IChatComponent p_147231_1_)`
+- `void onNetworkTick()`
+
+## Fields
+
+- `int currentServerMaxPlayers`
+- `MapStorage mapStorageOrigin`
+- `java.util.List playerInfoList`

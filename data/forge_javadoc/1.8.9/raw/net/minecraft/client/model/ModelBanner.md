@@ -1,13 +1,17 @@
 ---
 title: "ModelBanner"
-description: "Renders the banner model in."
+description: "public class ModelBanner extends ModelBase"
 package: "net/minecraft/client/model"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/model/ModelBanner.html"
 sourceType: javadoc
 ---
 
 # ModelBanner
+
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelBanner
 
 ## Class signature
 
@@ -17,12 +21,14 @@ public class ModelBanner extends ModelBase
 
 ## Constructors
 
-- `public ModelBanner()`
+- `ModelBanner()`
 
 ## Methods
 
-- `public void renderBanner()`
+- `void renderBanner()` — Renders the banner model in.
 
-## Description
+## Fields
 
-Renders the banner model in.
+- `ModelRenderer bannerSlate`
+- `ModelRenderer bannerStand`
+- `ModelRenderer bannerTop`

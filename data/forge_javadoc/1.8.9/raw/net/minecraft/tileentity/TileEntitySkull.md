@@ -1,13 +1,17 @@
 ---
 title: "TileEntitySkull"
-description: "Allows for a specialized description packet to be created."
+description: "public class TileEntitySkull extends TileEntity"
 package: "net/minecraft/tileentity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/tileentity/TileEntitySkull.html"
 sourceType: javadoc
 ---
 
 # TileEntitySkull
+
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntitySkull
 
 ## Class signature
 
@@ -15,23 +19,19 @@ sourceType: javadoc
 public class TileEntitySkull extends TileEntity
 ```
 
-## Constructors
-
-- `public TileEntitySkull()`
-
 ## Methods
 
-- `public void writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public GameProfile getPlayerProfile()`
-- `public Packet getDescriptionPacket()`
-- `public void setType(int type)`
-- `public void setPlayerProfile(GameProfile playerProfile)`
-- `public static GameProfile updateGameprofile(GameProfile input)`
-- `public int getSkullType()`
-- `public int getSkullRotation()`
-- `public void setSkullRotation(int rotation)`
+- `Packet getDescriptionPacket()` — Allows for a specialized description packet to be created.
+- `GameProfile getPlayerProfile()`
+- `int getSkullRotation()`
+- `int getSkullType()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setPlayerProfile(GameProfile playerProfile)`
+- `void setSkullRotation(int rotation)`
+- `void setType(int type)`
+- `static GameProfile updateGameprofile(GameProfile input)`
+- `void writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Allows for a specialized description packet to be created.
+- `TileEntitySkull`

@@ -1,5 +1,7 @@
 # PotionItems
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.PotionItems
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class PotionItems extends java.lang.Object implements IFixableData
 
 ## Constructors
 
-- `public PotionItems()`
+- `PotionItems()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

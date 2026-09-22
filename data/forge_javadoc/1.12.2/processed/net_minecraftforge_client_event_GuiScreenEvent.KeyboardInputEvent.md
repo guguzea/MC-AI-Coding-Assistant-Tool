@@ -1,9 +1,13 @@
 # GuiScreenEvent.KeyboardInputEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.KeyboardInputEvent
+
+## Class signature
+
+```java
+public static class GuiScreenEvent.KeyboardInputEvent extends GuiScreenEvent
+```
+
 ## Constructors
 
-- `public KeyboardInputEvent( GuiScreen gui)`
-
-## Description
-
-This event fires after GuiScreen.handleKeyboardInput() provided that the active screen has not been changed as a result of GuiScreen.handleKeyboardInput() and the GuiScreen.keyHandled flag has not bee
+- `KeyboardInputEvent(GuiScreen gui)`

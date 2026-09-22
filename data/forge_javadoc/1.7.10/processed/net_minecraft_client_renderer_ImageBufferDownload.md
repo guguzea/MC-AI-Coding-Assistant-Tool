@@ -1,5 +1,7 @@
 # ImageBufferDownload
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.ImageBufferDownload
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class ImageBufferDownload extends java.lang.Object implements IImageBuffe
 
 ## Constructors
 
-- `public ImageBufferDownload()`
+- `ImageBufferDownload()`
 
 ## Methods
 
-- `public java.awt.image.BufferedImage parseUserSkin(java.awt.image.BufferedImage p_78432_1_)`
-- `public void func_152634_a()`
+- `void func_152634_a()`
+- `java.awt.image.BufferedImage parseUserSkin(java.awt.image.BufferedImage p_78432_1_)`

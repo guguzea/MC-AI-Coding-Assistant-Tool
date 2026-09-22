@@ -1,15 +1,17 @@
 # MovingSoundMinecart
 
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.PositionedSound → net.minecraft.client.audio.MovingSound → net.minecraft.client.audio.MovingSoundMinecart
+
 ## Class signature
 
 ```java
 public class MovingSoundMinecart extends MovingSound
 ```
 
-## Constructors
-
-- `public MovingSoundMinecart( EntityMinecart p_i45105_1_)`
-
 ## Methods
 
-- `public void update()`
+- `void update()`
+
+## Fields
+
+- `MovingSoundMinecart`

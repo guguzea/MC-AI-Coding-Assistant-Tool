@@ -1,42 +1,46 @@
 # Enchantment
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Enchantment> → net.minecraft.enchantment.Enchantment
+
 ## Class signature
 
 ```java
-public abstract class Enchantment extends IForgeRegistryEntry.Impl < Enchantment >
+public abstract class Enchantment extends IForgeRegistryEntry.Impl<Enchantment>
 ```
 
 ## Constructors
 
-- `protected Enchantment( Enchantment.Rarity rarityIn, EnumEnchantmentType typeIn, EntityEquipmentSlot [] slots)`
+- `Enchantment(Enchantment.Rarity rarityIn, EnumEnchantmentType typeIn, EntityEquipmentSlot [] slots)`
 
 ## Methods
 
-- `@Nullable public static Enchantment getEnchantmentByID(int id)`
-- `public static int getEnchantmentID( Enchantment enchantmentIn)`
-- `@Nullable public static Enchantment getEnchantmentByLocation(java.lang.String location)`
-- `public java.util.List< ItemStack > getEntityEquipment( EntityLivingBase entityIn)`
-- `public Enchantment.Rarity getRarity()`
-- `public int getMinLevel()`
-- `public int getMaxLevel()`
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int calcModifierDamage(int level, DamageSource source)`
-- `public float calcDamageByCreature(int level, EnumCreatureAttribute creatureType)`
-- `public final boolean func_191560_c( Enchantment p_191560_1_)`
-- `protected boolean canApplyTogether( Enchantment ench)`
-- `public Enchantment setName(java.lang.String enchName)`
-- `public java.lang.String getName()`
-- `public java.lang.String getTranslatedName(int level)`
-- `public boolean canApply( ItemStack stack)`
-- `public void onEntityDamaged( EntityLivingBase user, Entity target, int level)`
-- `public void onUserHurt( EntityLivingBase user, Entity attacker, int level)`
-- `public boolean isTreasureEnchantment()`
-- `public boolean isCurse()`
-- `public boolean canApplyAtEnchantingTable( ItemStack stack)`
-- `public boolean isAllowedOnBooks()`
-- `public static void registerEnchantments()`
+- `float calcDamageByCreature(int level, EnumCreatureAttribute creatureType)`
+- `int calcModifierDamage(int level, DamageSource source)`
+- `boolean canApply(ItemStack stack)`
+- `boolean canApplyAtEnchantingTable(ItemStack stack)` — This applies specifically to applying at the enchanting table.
+- `protected boolean canApplyTogether(Enchantment ench)`
+- `boolean func_191560_c(Enchantment p_191560_1_)`
+- `static Enchantment getEnchantmentByID(int id)`
+- `static Enchantment getEnchantmentByLocation(java.lang.String location)`
+- `static int getEnchantmentID(Enchantment enchantmentIn)`
+- `java.util.List<ItemStack> getEntityEquipment(EntityLivingBase entityIn)`
+- `int getMaxEnchantability(int enchantmentLevel)`
+- `int getMaxLevel()`
+- `int getMinEnchantability(int enchantmentLevel)`
+- `int getMinLevel()`
+- `java.lang.String getName()`
+- `Enchantment.Rarity getRarity()`
+- `java.lang.String getTranslatedName(int level)`
+- `boolean isAllowedOnBooks()` — Is this enchantment allowed to be enchanted on books via Enchantment Table
+- `boolean isCurse()`
+- `boolean isTreasureEnchantment()`
+- `void onEntityDamaged(EntityLivingBase user, Entity target, int level)`
+- `void onUserHurt(EntityLivingBase user, Entity attacker, int level)`
+- `static void registerEnchantments()`
+- `Enchantment setName(java.lang.String enchName)`
 
-## Description
+## Fields
 
-This applies specifically to applying at the enchanting table.
+- `protected java.lang.String name`
+- `static RegistryNamespaced<ResourceLocation, Enchantment> REGISTRY`
+- `EnumEnchantmentType type`

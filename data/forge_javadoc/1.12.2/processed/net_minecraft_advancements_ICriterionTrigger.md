@@ -3,13 +3,13 @@
 ## Class signature
 
 ```java
-public interface ICriterionTrigger<T extends ICriterionInstance >
+public interface ICriterionTrigger<T extends ICriterionInstance>
 ```
 
 ## Methods
 
-- `ResourceLocation getId()`
-- `void addListener( PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener < T > listener)`
-- `void removeListener( PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener < T > listener)`
-- `void removeAllListeners( PlayerAdvancements playerAdvancementsIn)`
+- `void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<T> listener)`
 - `T deserializeInstance(JsonObject json, JsonDeserializationContext context)`
+- `ResourceLocation getId()`
+- `void removeAllListeners(PlayerAdvancements playerAdvancementsIn)`
+- `void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<T> listener)`

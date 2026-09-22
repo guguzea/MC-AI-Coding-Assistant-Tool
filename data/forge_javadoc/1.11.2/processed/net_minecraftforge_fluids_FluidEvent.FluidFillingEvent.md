@@ -1,14 +1,18 @@
 # FluidEvent.FluidFillingEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fluids.FluidEvent → net.minecraftforge.fluids.FluidEvent.FluidFillingEvent
+
+## Class signature
+
+```java
+public static class FluidEvent.FluidFillingEvent extends FluidEvent
+```
+
 ## Constructors
 
-- `public FluidFillingEvent( FluidStack fluid, World world, BlockPos pos, IFluidTank tank, int amount)`
+- `FluidFillingEvent(FluidStack fluid, World world, BlockPos pos, IFluidTank tank, int amount)`
 
 ## Methods
 
-- `public IFluidTank getTank()`
-- `public int getAmount()`
-
-## Description
-
-Mods should fire this event when a fluid is IFluidTank.fill(FluidStack, boolean) their tank implementation. FluidTank does.
+- `int getAmount()`
+- `IFluidTank getTank()`

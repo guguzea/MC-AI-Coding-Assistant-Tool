@@ -3,11 +3,15 @@ title: "EntityEgg"
 description: "public class EntityEgg extends EntityThrowable"
 package: "net/minecraft/entity/projectile"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/entity/projectile/EntityEgg.html"
 sourceType: javadoc
 ---
 
 # EntityEgg
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityThrowable → net.minecraft.entity.projectile.EntityEgg
 
 ## Class signature
 
@@ -15,13 +19,13 @@ sourceType: javadoc
 public class EntityEgg extends EntityThrowable
 ```
 
-## Constructors
-
-- `public EntityEgg( World worldIn)`
-- `public EntityEgg( World worldIn, EntityLivingBase throwerIn)`
-- `public EntityEgg( World worldIn, double x, double y, double z)`
-
 ## Methods
 
-- `public static void registerFixesEgg( DataFixer fixer)`
-- `protected void onImpact( RayTraceResult result)`
+- `protected void onImpact(RayTraceResult result)`
+- `static void registerFixesEgg(DataFixer fixer)`
+
+## Fields
+
+- `EntityEgg`
+- `EntityEgg`
+- `EntityEgg`

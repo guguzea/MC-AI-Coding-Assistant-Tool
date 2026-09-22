@@ -1,17 +1,19 @@
 # ItemCarrotOnAStick
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemCarrotOnAStick
+
 ## Class signature
 
 ```java
 public class ItemCarrotOnAStick extends Item
 ```
 
-## Constructors
-
-- `public ItemCarrotOnAStick()`
-
 ## Methods
 
-- `public boolean isFull3D()`
-- `public boolean shouldRotateAroundWhenRendering()`
-- `public ActionResult < ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+- `boolean isFull3D()`
+- `ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+- `boolean shouldRotateAroundWhenRendering()`
+
+## Fields
+
+- `ItemCarrotOnAStick`

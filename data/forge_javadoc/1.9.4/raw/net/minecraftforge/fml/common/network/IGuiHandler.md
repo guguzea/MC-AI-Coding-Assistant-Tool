@@ -1,8 +1,10 @@
 ---
 title: "IGuiHandler"
-description: "Returns a Container to be displayed to the user."
+description: "public interface IGuiHandler"
 package: "net/minecraftforge/fml/common/network"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/common/network/IGuiHandler.html"
 sourceType: javadoc
 ---
@@ -17,9 +19,5 @@ public interface IGuiHandler
 
 ## Methods
 
-- `java.lang.Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)`
-- `java.lang.Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)`
-
-## Description
-
-Returns a Container to be displayed to the user.
+- `java.lang.Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)` — Returns a Container to be displayed to the user.
+- `java.lang.Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)` — Returns a Server side Container to be displayed to the user.

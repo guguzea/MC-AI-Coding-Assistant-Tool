@@ -8,4 +8,4 @@ public interface IDataFixer
 
 ## Methods
 
-- `NBTTagCompound process( IFixType type, NBTTagCompound compound, int versionIn)`
+- `NBTTagCompound process(IFixType type, NBTTagCompound compound, int versionIn)`

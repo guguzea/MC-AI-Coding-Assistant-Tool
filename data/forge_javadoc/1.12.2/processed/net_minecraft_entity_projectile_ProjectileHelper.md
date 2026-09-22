@@ -1,5 +1,7 @@
 # ProjectileHelper
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.projectile.ProjectileHelper
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public final class ProjectileHelper extends java.lang.Object
 
 ## Constructors
 
-- `public ProjectileHelper()`
+- `ProjectileHelper()`
 
 ## Methods
 
-- `public static RayTraceResult forwardsRaycast( Entity projectile, boolean includeEntities, boolean ignoreExcludedEntity, Entity excludedEntity)`
-- `public static final void rotateTowardsMovement( Entity projectile, float rotationSpeed)`
+- `static RayTraceResult forwardsRaycast(Entity projectile, boolean includeEntities, boolean ignoreExcludedEntity, Entity excludedEntity)`
+- `static void rotateTowardsMovement(Entity projectile, float rotationSpeed)`

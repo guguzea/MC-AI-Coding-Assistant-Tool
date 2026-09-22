@@ -1,5 +1,7 @@
 # EntityAIOcelotAttack
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIOcelotAttack
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class EntityAIOcelotAttack extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIOcelotAttack( EntityLiving theEntityIn)`
+- `EntityAIOcelotAttack(EntityLiving theEntityIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void updateTask()`

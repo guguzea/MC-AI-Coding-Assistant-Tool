@@ -1,5 +1,7 @@
 # SyntaxErrorException
 
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → net.minecraft.command.CommandException → net.minecraft.command.SyntaxErrorException
+
 ## Class signature
 
 ```java
@@ -8,5 +10,5 @@ public class SyntaxErrorException extends CommandException
 
 ## Constructors
 
-- `public SyntaxErrorException()`
-- `public SyntaxErrorException(java.lang.String message, java.lang.Object... replacements)`
+- `SyntaxErrorException()`
+- `SyntaxErrorException(java.lang.String message, java.lang.Object... replacements)`

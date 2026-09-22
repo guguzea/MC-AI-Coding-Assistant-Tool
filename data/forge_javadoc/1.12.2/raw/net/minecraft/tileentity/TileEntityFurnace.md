@@ -1,61 +1,61 @@
 ---
 title: "TileEntityFurnace"
-description: "Retrieves the handler for the capability requested on the specific side."
+description: "public class TileEntityFurnace extends TileEntityLockable implements ITickable, ISidedInventory"
 package: "net/minecraft/tileentity"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/tileentity/TileEntityFurnace.html"
 sourceType: javadoc
 ---
 
 # TileEntityFurnace
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityLockable → net.minecraft.tileentity.TileEntityFurnace
+
 ## Class signature
 
 ```java
-public class TileEntityFurnace extends TileEntityLockable implements ITickable , ISidedInventory
+public class TileEntityFurnace extends TileEntityLockable implements ITickable, ISidedInventory
 ```
-
-## Constructors
-
-- `public TileEntityFurnace()`
 
 ## Methods
 
-- `public int getSizeInventory()`
-- `public boolean isEmpty()`
-- `public ItemStack getStackInSlot(int index)`
-- `public ItemStack decrStackSize(int index, int count)`
-- `public ItemStack removeStackFromSlot(int index)`
-- `public void setInventorySlotContents(int index, ItemStack stack)`
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public void setCustomInventoryName(java.lang.String p_145951_1_)`
-- `public static void registerFixesFurnace( DataFixer fixer)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public int getInventoryStackLimit()`
-- `public boolean isBurning()`
-- `public static boolean isBurning( IInventory inventory)`
-- `public void update()`
-- `public int getCookTime( ItemStack stack)`
-- `public void smeltItem()`
-- `public static int getItemBurnTime( ItemStack stack)`
-- `public static boolean isItemFuel( ItemStack stack)`
-- `public boolean isUsableByPlayer( EntityPlayer player)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public boolean isItemValidForSlot(int index, ItemStack stack)`
-- `public int[] getSlotsForFace( EnumFacing side)`
-- `public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)`
-- `public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)`
-- `public java.lang.String getGuiID()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public int getFieldCount()`
-- `public void clear()`
-- `public <T> T getCapability( Capability <T> capability, EnumFacing facing)`
+- `boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)`
+- `boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)`
+- `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `ItemStack decrStackSize(int index, int count)`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `int getCookTime(ItemStack stack)`
+- `int getField(int id)`
+- `int getFieldCount()`
+- `java.lang.String getGuiID()`
+- `int getInventoryStackLimit()`
+- `static int getItemBurnTime(ItemStack stack)`
+- `java.lang.String getName()`
+- `int getSizeInventory()`
+- `int[] getSlotsForFace(EnumFacing side)`
+- `ItemStack getStackInSlot(int index)`
+- `boolean hasCustomName()`
+- `boolean isBurning()`
+- `static boolean isBurning(IInventory inventory)`
+- `boolean isEmpty()`
+- `static boolean isItemFuel(ItemStack stack)`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isUsableByPlayer(EntityPlayer player)`
+- `void openInventory(EntityPlayer player)`
+- `void readFromNBT(NBTTagCompound compound)`
+- `static void registerFixesFurnace(DataFixer fixer)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void setCustomInventoryName(java.lang.String p_145951_1_)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`
+- `void smeltItem()`
+- `void update()`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Retrieves the handler for the capability requested on the specific side.
+- `TileEntityFurnace`

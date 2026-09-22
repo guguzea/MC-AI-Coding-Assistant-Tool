@@ -1,5 +1,7 @@
 # OBJLoader
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.obj.OBJLoader
+
 ## Class signature
 
 ```java
@@ -8,11 +10,15 @@ public class OBJLoader extends java.lang.Object implements ICustomModelLoader
 
 ## Constructors
 
-- `public OBJLoader()`
+- `OBJLoader()`
 
 ## Methods
 
-- `public void addDomain(java.lang.String domain)`
-- `public void onResourceManagerReload( IResourceManager resourceManager)`
-- `public boolean accepts( ResourceLocation modelLocation)`
-- `public IModel loadModel( ResourceLocation modelLocation) throws java.io.IOException`
+- `boolean accepts(ResourceLocation modelLocation)`
+- `void addDomain(java.lang.String domain)`
+- `IModel loadModel(ResourceLocation modelLocation)`
+- `void onResourceManagerReload(IResourceManager resourceManager)`
+
+## Fields
+
+- `static OBJLoader instance`

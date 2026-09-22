@@ -1,5 +1,7 @@
 # RecipeBook
 
+**Inheritance:** java.lang.Object → net.minecraft.stats.RecipeBook
+
 ## Class signature
 
 ```java
@@ -8,23 +10,26 @@ public class RecipeBook extends java.lang.Object
 
 ## Constructors
 
-- `public RecipeBook()`
+- `RecipeBook()`
 
 ## Methods
 
-- `public void copyFrom( RecipeBook that)`
-- `public void unlock( IRecipe recipe)`
-- `public boolean isUnlocked( IRecipe recipe)`
-- `public void lock( IRecipe recipe)`
-- `@Deprecated protected static int getRecipeId( IRecipe recipe)`
-- `public boolean isNew( IRecipe recipe)`
-- `public void markSeen( IRecipe recipe)`
-- `public void markNew( IRecipe recipe)`
-- `public boolean isGuiOpen()`
-- `public void setGuiOpen(boolean open)`
-- `public boolean isFilteringCraftable()`
-- `public void setFilteringCraftable(boolean shouldFilter)`
+- `void copyFrom(RecipeBook that)`
+- `@Deprecated protected static int getRecipeId(IRecipe recipe)`
+- `boolean isFilteringCraftable()`
+- `boolean isGuiOpen()`
+- `boolean isNew(IRecipe recipe)`
+- `boolean isUnlocked(IRecipe recipe)`
+- `void lock(IRecipe recipe)`
+- `void markNew(IRecipe recipe)`
+- `void markSeen(IRecipe recipe)`
+- `void setFilteringCraftable(boolean shouldFilter)`
+- `void setGuiOpen(boolean open)`
+- `void unlock(IRecipe recipe)`
 
-## Description
+## Fields
 
-Deprecated.
+- `protected boolean isFilteringCraftable`
+- `protected boolean isGuiOpen`
+- `protected java.util.BitSet newRecipes`
+- `protected java.util.BitSet recipes`

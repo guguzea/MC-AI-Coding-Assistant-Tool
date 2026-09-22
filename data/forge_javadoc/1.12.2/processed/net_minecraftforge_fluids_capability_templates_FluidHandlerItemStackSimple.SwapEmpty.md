@@ -1,13 +1,21 @@
 # FluidHandlerItemStackSimple.SwapEmpty
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.capability.templates.FluidHandlerItemStackSimple → net.minecraftforge.fluids.capability.templates.FluidHandlerItemStackSimple.SwapEmpty
+
+## Class signature
+
+```java
+public static class FluidHandlerItemStackSimple.SwapEmpty extends FluidHandlerItemStackSimple
+```
+
 ## Constructors
 
-- `public SwapEmpty( ItemStack container, ItemStack emptyContainer, int capacity)`
+- `SwapEmpty(ItemStack container, ItemStack emptyContainer, int capacity)`
 
 ## Methods
 
-- `protected void setContainerToEmpty()`
+- `protected void setContainerToEmpty()` — Override this method for special handling.
 
-## Description
+## Fields
 
-Swaps the container item for a different one when it's emptied.
+- `protected ItemStack emptyContainer`

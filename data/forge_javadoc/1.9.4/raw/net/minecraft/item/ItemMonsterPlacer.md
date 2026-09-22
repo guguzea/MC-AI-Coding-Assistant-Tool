@@ -3,11 +3,15 @@ title: "ItemMonsterPlacer"
 description: "public class ItemMonsterPlacer extends Item"
 package: "net/minecraft/item"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/item/ItemMonsterPlacer.html"
 sourceType: javadoc
 ---
 
 # ItemMonsterPlacer
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemMonsterPlacer
 
 ## Class signature
 
@@ -15,17 +19,17 @@ sourceType: javadoc
 public class ItemMonsterPlacer extends Item
 ```
 
-## Constructors
-
-- `public ItemMonsterPlacer()`
-
 ## Methods
 
-- `public java.lang.String getItemStackDisplayName( ItemStack stack)`
-- `public EnumActionResult onItemUse( ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `public static void applyItemEntityDataToEntity( World entityWorld, @Nullable EntityPlayer player, ItemStack stack, @Nullable Entity targetEntity)`
-- `public ActionResult < ItemStack > onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)`
-- `@Nullable public static Entity spawnCreature( World worldIn, @Nullable java.lang.String entityID, double x, double y, double z)`
-- `public void getSubItems( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > subItems)`
-- `public static void applyEntityIdToItemStack( ItemStack stack, java.lang.String entityId)`
-- `@Nullable public static java.lang.String getEntityIdFromItem( ItemStack stack)`
+- `static void applyEntityIdToItemStack(ItemStack stack, java.lang.String entityId)`
+- `static void applyItemEntityDataToEntity(World entityWorld, EntityPlayer player, ItemStack stack, Entity targetEntity)`
+- `static java.lang.String getEntityIdFromItem(ItemStack stack)`
+- `java.lang.String getItemStackDisplayName(ItemStack stack)`
+- `void getSubItems(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> subItems)`
+- `ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)`
+- `EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `static Entity spawnCreature(World worldIn, java.lang.String entityID, double x, double y, double z)`
+
+## Fields
+
+- `ItemMonsterPlacer`

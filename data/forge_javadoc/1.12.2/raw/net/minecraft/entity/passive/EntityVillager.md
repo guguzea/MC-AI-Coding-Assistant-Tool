@@ -1,81 +1,81 @@
 ---
 title: "EntityVillager"
-description: "Deprecated."
+description: "public class EntityVillager extends EntityAgeable implements INpc, IMerchant"
 package: "net/minecraft/entity/passive"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/passive/EntityVillager.html"
 sourceType: javadoc
 ---
 
 # EntityVillager
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityVillager
+
 ## Class signature
 
 ```java
-public class EntityVillager extends EntityAgeable implements INpc , IMerchant
+public class EntityVillager extends EntityAgeable implements INpc, IMerchant
 ```
-
-## Constructors
-
-- `public EntityVillager( World worldIn)`
-- `public EntityVillager( World worldIn, int professionId)`
 
 ## Methods
 
-- `protected void initEntityAI()`
-- `protected void onGrowingAdult()`
 - `protected void applyEntityAttributes()`
-- `protected void updateAITasks()`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand)`
-- `protected void entityInit()`
-- `public static void registerFixesVillager( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
+- `boolean canAbondonItems()`
+- `boolean canBeLeashedTo(EntityPlayer player)`
 - `protected boolean canDespawn()`
+- `EntityVillager createChild(EntityAgeable ageable)`
+- `protected void entityInit()`
+- `IEntityLivingData finalizeMobSpawn(DifficultyInstance p_190672_1_, IEntityLivingData p_190672_2_, boolean p_190672_3_)`
+- `@Deprecated static EntityVillager.ITradeList [][][][] GET_TRADES_DONT_USE()`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
+- `EntityPlayer getCustomer()`
 - `protected SoundEvent getDeathSound()`
+- `ITextComponent getDisplayName()`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
+- `boolean getIsWillingToMate(boolean updateFirst)`
 - `protected ResourceLocation getLootTable()`
-- `public void setProfession(int professionId)`
-- `@Deprecated public int getProfession()`
-- `public void setProfession( VillagerRegistry.VillagerProfession prof)`
-- `public VillagerRegistry.VillagerProfession getProfessionForge()`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public boolean isMating()`
-- `public void setMating(boolean mating)`
-- `public void setPlaying(boolean playing)`
-- `public boolean isPlaying()`
-- `public void setRevengeTarget( EntityLivingBase livingBase)`
-- `public void onDeath( DamageSource cause)`
-- `public void setCustomer( EntityPlayer player)`
-- `public EntityPlayer getCustomer()`
-- `public boolean isTrading()`
-- `public boolean getIsWillingToMate(boolean updateFirst)`
-- `public void setIsWillingToMate(boolean isWillingToMate)`
-- `public void useRecipe( MerchantRecipe recipe)`
-- `public void verifySellingItem( ItemStack stack)`
-- `public MerchantRecipeList getRecipes( EntityPlayer player)`
-- `public void setRecipes( MerchantRecipeList recipeList)`
-- `public World getWorld()`
-- `public BlockPos getPos()`
-- `public ITextComponent getDisplayName()`
-- `public float getEyeHeight()`
-- `public void handleStatusUpdate(byte id)`
-- `public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, IEntityLivingData livingdata)`
-- `public IEntityLivingData finalizeMobSpawn( DifficultyInstance p_190672_1_, IEntityLivingData p_190672_2_, boolean p_190672_3_)`
-- `public void setLookingForHome()`
-- `public EntityVillager createChild( EntityAgeable ageable)`
-- `public boolean canBeLeashedTo( EntityPlayer player)`
-- `public void onStruckByLightning( EntityLightningBolt lightningBolt)`
-- `public InventoryBasic getVillagerInventory()`
-- `protected void updateEquipmentIfNeeded( EntityItem itemEntity)`
-- `public boolean hasEnoughFoodToBreed()`
-- `public boolean canAbondonItems()`
-- `public boolean wantsMoreFood()`
-- `public boolean isFarmItemInInventory()`
-- `public boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
-- `@Deprecated public static EntityVillager.ITradeList [][][][] GET_TRADES_DONT_USE()`
+- `BlockPos getPos()`
+- `@Deprecated int getProfession()`
+- `VillagerRegistry.VillagerProfession getProfessionForge()`
+- `MerchantRecipeList getRecipes(EntityPlayer player)`
+- `InventoryBasic getVillagerInventory()`
+- `World getWorld()`
+- `void handleStatusUpdate(byte id)`
+- `boolean hasEnoughFoodToBreed()`
+- `protected void initEntityAI()`
+- `boolean isFarmItemInInventory()`
+- `boolean isMating()`
+- `boolean isPlaying()`
+- `boolean isTrading()`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onDeath(DamageSource cause)`
+- `protected void onGrowingAdult()`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onStruckByLightning(EntityLightningBolt lightningBolt)`
+- `boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesVillager(DataFixer fixer)`
+- `boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
+- `void setCustomer(EntityPlayer player)`
+- `void setIsWillingToMate(boolean isWillingToMate)`
+- `void setLookingForHome()`
+- `void setMating(boolean mating)`
+- `void setPlaying(boolean playing)`
+- `void setProfession(int professionId)`
+- `void setProfession(VillagerRegistry.VillagerProfession prof)`
+- `void setRecipes(MerchantRecipeList recipeList)`
+- `void setRevengeTarget(EntityLivingBase livingBase)`
+- `protected void updateAITasks()`
+- `protected void updateEquipmentIfNeeded(EntityItem itemEntity)`
+- `void useRecipe(MerchantRecipe recipe)`
+- `void verifySellingItem(ItemStack stack)`
+- `boolean wantsMoreFood()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Deprecated.
+- `EntityVillager`
+- `EntityVillager`

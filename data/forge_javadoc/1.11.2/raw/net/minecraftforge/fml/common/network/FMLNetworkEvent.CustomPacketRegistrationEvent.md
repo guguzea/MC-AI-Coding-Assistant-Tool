@@ -1,24 +1,30 @@
 ---
 title: "FMLNetworkEvent.CustomPacketRegistrationEvent"
-description: "Fired when the REGISTER/UNREGISTER for custom channels is received."
+description: "public static class FMLNetworkEvent.CustomPacketRegistrationEvent<S extends INetHandler> extends FMLNetworkEvent<S>"
 package: "net/minecraftforge/fml/common/network"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/common/network/FMLNetworkEvent.CustomPacketRegistrationEvent.html"
 sourceType: javadoc
 ---
 
 # FMLNetworkEvent.CustomPacketRegistrationEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.network.FMLNetworkEvent<S> → net.minecraftforge.fml.common.network.FMLNetworkEvent.CustomPacketRegistrationEvent<S>
+
+## Class signature
+
+```java
+public static class FMLNetworkEvent.CustomPacketRegistrationEvent<S extends INetHandler> extends FMLNetworkEvent<S>
+```
+
 ## Constructors
 
-- `public CustomPacketRegistrationEvent( NetworkManager manager, java.util.Set<java.lang.String> registrations, java.lang.String operation, Side side, java.lang.Class< S > type)`
+- `CustomPacketRegistrationEvent(NetworkManager manager, java.util.Set<java.lang.String> registrations, java.lang.String operation, Side side, java.lang.Class<S> type)`
 
 ## Methods
 
-- `public com.google.common.collect.ImmutableSet<java.lang.String> getRegistrations()`
-- `public java.lang.String getOperation()`
-- `public Side getSide()`
-
-## Description
-
-Fired when the REGISTER/UNREGISTER for custom channels is received.
+- `java.lang.String getOperation()`
+- `com.google.common.collect.ImmutableSet<java.lang.String> getRegistrations()`
+- `Side getSide()`

@@ -1,5 +1,7 @@
 # CombinedInvWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.items.wrapper.CombinedInvWrapper
+
 ## Class signature
 
 ```java
@@ -8,21 +10,23 @@ public class CombinedInvWrapper extends java.lang.Object implements IItemHandler
 
 ## Constructors
 
-- `public CombinedInvWrapper( IItemHandlerModifiable ... itemHandler)`
+- `CombinedInvWrapper(IItemHandlerModifiable ... itemHandler)`
 
 ## Methods
 
-- `protected int getIndexForSlot(int slot)`
+- `ItemStack extractItem(int slot, int amount, boolean simulate)` — Extracts an ItemStack from the given slot.
 - `protected IItemHandlerModifiable getHandlerFromIndex(int index)`
+- `protected int getIndexForSlot(int slot)`
 - `protected int getSlotFromIndex(int slot, int index)`
-- `public void setStackInSlot(int slot, ItemStack stack)`
-- `public int getSlots()`
-- `public ItemStack getStackInSlot(int slot)`
-- `public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)`
-- `public ItemStack extractItem(int slot, int amount, boolean simulate)`
-- `public int getSlotLimit(int slot)`
-- `public boolean isItemValid(int slot, ItemStack stack)`
+- `int getSlotLimit(int slot)` — Retrieves the maximum stack size allowed to exist in the given slot.
+- `int getSlots()` — Returns the number of slots available
+- `ItemStack getStackInSlot(int slot)` — Returns the ItemStack in a given slot.
+- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)` — Inserts an ItemStack into the given slot and return the remainder.
+- `boolean isItemValid(int slot, ItemStack stack)` — This function re-implements the vanilla function IInventory.isItemValidForSlot(int, ItemStack) .
+- `void setStackInSlot(int slot, ItemStack stack)` — Overrides the stack in the given slot.
 
-## Description
+## Fields
 
-Extracts an ItemStack from the given slot.
+- `protected int[] baseIndex`
+- `protected IItemHandlerModifiable [] itemHandler`
+- `protected int slotCount`

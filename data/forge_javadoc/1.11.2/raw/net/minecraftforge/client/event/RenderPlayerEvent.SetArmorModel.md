@@ -1,25 +1,31 @@
 ---
 title: "RenderPlayerEvent.SetArmorModel"
-description: "Deprecated."
+description: "public static class RenderPlayerEvent.SetArmorModel extends RenderPlayerEvent"
 package: "net/minecraftforge/client/event"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/event/RenderPlayerEvent.SetArmorModel.html"
 sourceType: javadoc
 ---
 
 # RenderPlayerEvent.SetArmorModel
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent → net.minecraftforge.client.event.RenderPlayerEvent.SetArmorModel
+
+## Class signature
+
+```java
+public static class RenderPlayerEvent.SetArmorModel extends RenderPlayerEvent
+```
+
 ## Constructors
 
-- `public SetArmorModel( EntityPlayer player, RenderPlayer renderer, int slot, float partialTick, @Nonnull ItemStack stack)`
+- `@Deprecated SetArmorModel(EntityPlayer player, RenderPlayer renderer, int slot, float partialTick, ItemStack stack)`
 
 ## Methods
 
-- `public int getResultValue()`
-- `public void setResult(int result)`
-- `public int getSlot()`
-- `@Nonnull public ItemStack getStack()`
-
-## Description
-
-Deprecated.
+- `@Deprecated int getResultValue()`
+- `@Deprecated int getSlot()`
+- `@Deprecated ItemStack getStack()`
+- `@Deprecated void setResult(int result)`

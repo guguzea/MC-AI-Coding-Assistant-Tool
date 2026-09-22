@@ -1,5 +1,7 @@
 # FMLFingerprintViolationEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent
+
 ## Class signature
 
 ```java
@@ -8,15 +10,11 @@ public class FMLFingerprintViolationEvent extends FMLEvent
 
 ## Constructors
 
-- `public FMLFingerprintViolationEvent(boolean isDirectory, java.io.File source, <any> fingerprints, java.lang.String expectedFingerprint)`
+- `FMLFingerprintViolationEvent(boolean isDirectory, java.io.File source, <any> fingerprints, java.lang.String expectedFingerprint)`
 
 ## Methods
 
-- `public boolean isDirectory()`
-- `public java.util.Set<java.lang.String> getFingerprints()`
-- `public java.io.File getSource()`
-- `public java.lang.String getExpectedFingerprint()`
-
-## Description
-
-A special event used when the Mod.certificateFingerprint() doesn't match the certificate loaded from the JAR file. You could use this to log a warning that the code that is running might not be yours,
+- `java.lang.String getExpectedFingerprint()`
+- `java.util.Set<java.lang.String> getFingerprints()`
+- `java.io.File getSource()`
+- `boolean isDirectory()`

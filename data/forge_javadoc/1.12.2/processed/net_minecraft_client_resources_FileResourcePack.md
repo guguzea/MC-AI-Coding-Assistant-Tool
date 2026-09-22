@@ -1,5 +1,7 @@
 # FileResourcePack
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.AbstractResourcePack → net.minecraft.client.resources.FileResourcePack
+
 ## Class signature
 
 ```java
@@ -8,12 +10,16 @@ public class FileResourcePack extends AbstractResourcePack implements java.io.Cl
 
 ## Constructors
 
-- `public FileResourcePack(java.io.File resourcePackFileIn)`
+- `FileResourcePack(java.io.File resourcePackFileIn)`
 
 ## Methods
 
-- `protected java.io.InputStream getInputStreamByName(java.lang.String name) throws java.io.IOException`
-- `public boolean hasResourceName(java.lang.String name)`
-- `public java.util.Set<java.lang.String> getResourceDomains()`
-- `protected void finalize() throws java.lang.Throwable`
-- `public void close() throws java.io.IOException`
+- `void close()`
+- `protected void finalize()`
+- `protected java.io.InputStream getInputStreamByName(java.lang.String name)`
+- `java.util.Set<java.lang.String> getResourceDomains()`
+- `boolean hasResourceName(java.lang.String name)`
+
+## Fields
+
+- `static Splitter ENTRY_NAME_SPLITTER`

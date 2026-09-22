@@ -3,11 +3,15 @@ title: "PlayerProfileCache"
 description: "public class PlayerProfileCache extends java.lang.Object"
 package: "net/minecraft/server/management"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/server/management/PlayerProfileCache.html"
 sourceType: javadoc
 ---
 
 # PlayerProfileCache
+
+**Inheritance:** java.lang.Object → net.minecraft.server.management.PlayerProfileCache
 
 ## Class signature
 
@@ -17,14 +21,19 @@ public class PlayerProfileCache extends java.lang.Object
 
 ## Constructors
 
-- `public PlayerProfileCache(com.mojang.authlib.GameProfileRepository profileRepoIn, java.io.File usercacheFileIn)`
+- `PlayerProfileCache(com.mojang.authlib.GameProfileRepository profileRepoIn, java.io.File usercacheFileIn)`
 
 ## Methods
 
-- `public static void setOnlineMode(boolean onlineModeIn)`
-- `public void addEntry(com.mojang.authlib.GameProfile gameProfile)`
-- `@Nullable public com.mojang.authlib.GameProfile getGameProfileForUsername(java.lang.String username)`
-- `public java.lang.String[] getUsernames()`
-- `@Nullable public com.mojang.authlib.GameProfile getProfileByUUID(java.util.UUID uuid)`
-- `public void load()`
-- `public void save()`
+- `void addEntry(com.mojang.authlib.GameProfile gameProfile)`
+- `com.mojang.authlib.GameProfile getGameProfileForUsername(java.lang.String username)`
+- `com.mojang.authlib.GameProfile getProfileByUUID(java.util.UUID uuid)`
+- `java.lang.String[] getUsernames()`
+- `void load()`
+- `void save()`
+- `static void setOnlineMode(boolean onlineModeIn)`
+
+## Fields
+
+- `static java.text.SimpleDateFormat DATE_FORMAT`
+- `protected com.google.gson.Gson gson`

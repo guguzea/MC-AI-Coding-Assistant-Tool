@@ -1,13 +1,17 @@
 ---
 title: "OredictItemPredicate"
-description: "An ItemPredicate that matches oredicts."
+description: "public class OredictItemPredicate extends ItemPredicate"
 package: "net/minecraftforge/advancements/critereon"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/advancements/critereon/OredictItemPredicate.html"
 sourceType: javadoc
 ---
 
 # OredictItemPredicate
+
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.ItemPredicate → net.minecraftforge.advancements.critereon.OredictItemPredicate
 
 ## Class signature
 
@@ -15,15 +19,11 @@ sourceType: javadoc
 public class OredictItemPredicate extends ItemPredicate
 ```
 
-## Constructors
-
-- `public OredictItemPredicate(java.lang.String ore)`
-- `public OredictItemPredicate(JsonObject jsonObject)`
-
 ## Methods
 
-- `public boolean test( ItemStack stack)`
+- `boolean test(ItemStack stack)`
 
-## Description
+## Fields
 
-An ItemPredicate that matches oredicts.
+- `OredictItemPredicate`
+- `OredictItemPredicate`

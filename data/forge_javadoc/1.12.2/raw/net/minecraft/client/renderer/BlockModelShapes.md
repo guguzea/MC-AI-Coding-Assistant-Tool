@@ -3,11 +3,15 @@ title: "BlockModelShapes"
 description: "public class BlockModelShapes extends java.lang.Object"
 package: "net/minecraft/client/renderer"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/renderer/BlockModelShapes.html"
 sourceType: javadoc
 ---
 
 # BlockModelShapes
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.BlockModelShapes
 
 ## Class signature
 
@@ -17,14 +21,14 @@ public class BlockModelShapes extends java.lang.Object
 
 ## Constructors
 
-- `public BlockModelShapes( ModelManager manager)`
+- `BlockModelShapes(ModelManager manager)`
 
 ## Methods
 
-- `public BlockStateMapper getBlockStateMapper()`
-- `public TextureAtlasSprite getTexture( IBlockState state)`
-- `public IBakedModel getModelForState( IBlockState state)`
-- `public ModelManager getModelManager()`
-- `public void reloadModels()`
-- `public void registerBlockWithStateMapper( Block assoc, IStateMapper stateMapper)`
-- `public void registerBuiltInBlocks( Block ... builtIns)`
+- `BlockStateMapper getBlockStateMapper()`
+- `IBakedModel getModelForState(IBlockState state)`
+- `ModelManager getModelManager()`
+- `TextureAtlasSprite getTexture(IBlockState state)`
+- `void registerBlockWithStateMapper(Block assoc, IStateMapper stateMapper)`
+- `void registerBuiltInBlocks(Block ... builtIns)`
+- `void reloadModels()`

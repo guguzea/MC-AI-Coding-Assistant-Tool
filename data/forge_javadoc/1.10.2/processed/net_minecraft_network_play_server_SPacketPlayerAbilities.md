@@ -1,30 +1,32 @@
 # SPacketPlayerAbilities
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketPlayerAbilities
+
 ## Class signature
 
 ```java
-public class SPacketPlayerAbilities extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketPlayerAbilities extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketPlayerAbilities()`
-- `public SPacketPlayerAbilities( PlayerCapabilities capabilities)`
+- `SPacketPlayerAbilities()`
+- `SPacketPlayerAbilities(PlayerCapabilities capabilities)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public boolean isInvulnerable()`
-- `public void setInvulnerable(boolean isInvulnerable)`
-- `public boolean isFlying()`
-- `public void setFlying(boolean isFlying)`
-- `public boolean isAllowFlying()`
-- `public void setAllowFlying(boolean isAllowFlying)`
-- `public boolean isCreativeMode()`
-- `public void setCreativeMode(boolean isCreativeMode)`
-- `public float getFlySpeed()`
-- `public void setFlySpeed(float flySpeedIn)`
-- `public float getWalkSpeed()`
-- `public void setWalkSpeed(float walkSpeedIn)`
+- `float getFlySpeed()`
+- `float getWalkSpeed()`
+- `boolean isAllowFlying()`
+- `boolean isCreativeMode()`
+- `boolean isFlying()`
+- `boolean isInvulnerable()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void setAllowFlying(boolean isAllowFlying)`
+- `void setCreativeMode(boolean isCreativeMode)`
+- `void setFlying(boolean isFlying)`
+- `void setFlySpeed(float flySpeedIn)`
+- `void setInvulnerable(boolean isInvulnerable)`
+- `void setWalkSpeed(float walkSpeedIn)`
+- `void writePacketData(PacketBuffer buf)`

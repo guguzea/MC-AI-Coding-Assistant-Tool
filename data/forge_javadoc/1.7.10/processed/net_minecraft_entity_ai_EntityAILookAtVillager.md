@@ -1,5 +1,7 @@
 # EntityAILookAtVillager
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAILookAtVillager
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class EntityAILookAtVillager extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAILookAtVillager( EntityIronGolem p_i1643_1_)`
+- `EntityAILookAtVillager(EntityIronGolem p_i1643_1_)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

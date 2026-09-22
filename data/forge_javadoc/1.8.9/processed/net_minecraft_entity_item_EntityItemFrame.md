@@ -1,35 +1,33 @@
 # EntityItemFrame
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityHanging → net.minecraft.entity.item.EntityItemFrame
+
 ## Class signature
 
 ```java
 public class EntityItemFrame extends EntityHanging
 ```
 
-## Constructors
-
-- `public EntityItemFrame( World worldIn)`
-- `public EntityItemFrame( World worldIn, BlockPos p_i45852_2_, EnumFacing p_i45852_3_)`
-
 ## Methods
 
+- `boolean attackEntityFrom(DamageSource source, float amount)` — Called when the entity is attacked.
+- `void dropItemOrSelf(Entity p_146065_1_, boolean p_146065_2_)`
 - `protected void entityInit()`
-- `public float getCollisionBorderSize()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public int getWidthPixels()`
-- `public int getHeightPixels()`
-- `public boolean isInRangeToRenderDist(double distance)`
-- `public void onBroken( Entity brokenEntity)`
-- `public void dropItemOrSelf( Entity p_146065_1_, boolean p_146065_2_)`
-- `public ItemStack getDisplayedItem()`
-- `public void setDisplayedItem( ItemStack p_82334_1_)`
-- `public int getRotation()`
-- `public void setItemRotation(int p_82336_1_)`
-- `public void writeEntityToNBT( NBTTagCompound tagCompound)`
-- `public void readEntityFromNBT( NBTTagCompound tagCompund)`
-- `public boolean interactFirst( EntityPlayer playerIn)`
-- `public int func_174866_q()`
+- `int func_174866_q()`
+- `float getCollisionBorderSize()`
+- `ItemStack getDisplayedItem()`
+- `int getHeightPixels()`
+- `int getRotation()` — Return the rotation of the item currently on this frame.
+- `int getWidthPixels()`
+- `boolean interactFirst(EntityPlayer playerIn)` — First layer of player interaction
+- `boolean isInRangeToRenderDist(double distance)` — Checks if the entity is in range to render by using the past in distance and comparing it to its average edge length * 64 * renderDistanceWeight Args: distance
+- `void onBroken(Entity brokenEntity)` — Called when this entity is broken.
+- `void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
+- `void setDisplayedItem(ItemStack p_82334_1_)`
+- `void setItemRotation(int p_82336_1_)`
+- `void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
 
-## Description
+## Fields
 
-Called when the entity is attacked.
+- `EntityItemFrame`
+- `EntityItemFrame`

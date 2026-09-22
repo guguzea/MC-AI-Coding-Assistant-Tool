@@ -1,5 +1,7 @@
 # DebugRendererChunkBorder
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.debug.DebugRendererChunkBorder
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class DebugRendererChunkBorder extends java.lang.Object implements DebugR
 
 ## Constructors
 
-- `public DebugRendererChunkBorder( Minecraft minecraftIn)`
+- `DebugRendererChunkBorder(Minecraft minecraftIn)`
 
 ## Methods
 
-- `public void render(float partialTicks, long p_190060_2_)`
+- `void render(float partialTicks, long p_190060_2_)`

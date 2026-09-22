@@ -1,5 +1,7 @@
 # LivingPackSizeEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingPackSizeEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class LivingPackSizeEvent extends LivingEvent
 
 ## Constructors
 
-- `public LivingPackSizeEvent( EntityLiving entity)`
+- `LivingPackSizeEvent(EntityLiving entity)`
 
-## Description
+## Fields
 
-This event is fired when the spawning system determines the maximum amount of the selected entity that can spawn at the same time.
+- `int maxPackSize` — This event is fired when the spawning system determines the maximum amount of the selected entity that can spawn at the same time.

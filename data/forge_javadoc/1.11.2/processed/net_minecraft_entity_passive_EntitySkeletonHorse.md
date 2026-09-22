@@ -1,28 +1,30 @@
 # EntitySkeletonHorse
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.AbstractHorse → net.minecraft.entity.passive.EntitySkeletonHorse
+
 ## Class signature
 
 ```java
 public class EntitySkeletonHorse extends AbstractHorse
 ```
 
-## Constructors
-
-- `public EntitySkeletonHorse( World worldIn)`
-
 ## Methods
 
 - `protected void applyEntityAttributes()`
 - `protected SoundEvent getAmbientSound()`
+- `EnumCreatureAttribute getCreatureAttribute()`
 - `protected SoundEvent getDeathSound()`
 - `protected SoundEvent getHurtSound()`
-- `public EnumCreatureAttribute getCreatureAttribute()`
-- `public double getMountedYOffset()`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public void onLivingUpdate()`
-- `public static void registerFixesSkeletonHorse( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean isTrap()`
-- `public void setTrap(boolean trap)`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand)`
+- `protected ResourceLocation getLootTable()`
+- `double getMountedYOffset()`
+- `boolean isTrap()`
+- `void onLivingUpdate()`
+- `boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesSkeletonHorse(DataFixer fixer)`
+- `void setTrap(boolean trap)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntitySkeletonHorse`

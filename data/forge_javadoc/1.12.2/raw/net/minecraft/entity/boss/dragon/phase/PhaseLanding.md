@@ -3,11 +3,15 @@ title: "PhaseLanding"
 description: "public class PhaseLanding extends PhaseBase"
 package: "net/minecraft/entity/boss/dragon/phase"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/boss/dragon/phase/PhaseLanding.html"
 sourceType: javadoc
 ---
 
 # PhaseLanding
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseLanding
 
 ## Class signature
 
@@ -15,16 +19,16 @@ sourceType: javadoc
 public class PhaseLanding extends PhaseBase
 ```
 
-## Constructors
-
-- `public PhaseLanding( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public void doClientRenderEffects()`
-- `public void doLocalUpdate()`
-- `public float getMaxRiseOrFall()`
-- `public float getYawFactor()`
-- `public void initPhase()`
-- `public Vec3d getTargetLocation()`
-- `public PhaseList < PhaseLanding > getType()`
+- `void doClientRenderEffects()`
+- `void doLocalUpdate()`
+- `float getMaxRiseOrFall()`
+- `Vec3d getTargetLocation()`
+- `PhaseList<PhaseLanding> getType()`
+- `float getYawFactor()`
+- `void initPhase()`
+
+## Fields
+
+- `PhaseLanding`

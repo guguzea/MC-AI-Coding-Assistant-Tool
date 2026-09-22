@@ -1,17 +1,19 @@
 # EntityAIZombieAttack
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIAttackMelee → net.minecraft.entity.ai.EntityAIZombieAttack
+
 ## Class signature
 
 ```java
 public class EntityAIZombieAttack extends EntityAIAttackMelee
 ```
 
-## Constructors
-
-- `public EntityAIZombieAttack( EntityZombie zombieIn, double speedIn, boolean longMemoryIn)`
-
 ## Methods
 
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `void resetTask()`
+- `void startExecuting()`
+- `void updateTask()`
+
+## Fields
+
+- `EntityAIZombieAttack`

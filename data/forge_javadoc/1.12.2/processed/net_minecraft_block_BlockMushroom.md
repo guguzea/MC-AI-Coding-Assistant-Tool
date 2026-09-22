@@ -1,5 +1,7 @@
 # BlockMushroom
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBush → net.minecraft.block.BlockMushroom
+
 ## Class signature
 
 ```java
@@ -8,16 +10,20 @@ public class BlockMushroom extends BlockBush implements IGrowable
 
 ## Constructors
 
-- `protected BlockMushroom()`
+- `BlockMushroom()`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `protected boolean canSustainBush( IBlockState state)`
-- `public boolean canBlockStay( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean generateBigMushroom( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public boolean canGrow( World worldIn, BlockPos pos, IBlockState state, boolean isClient)`
-- `public boolean canUseBonemeal( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
-- `public void grow( World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
+- `boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `protected boolean canSustainBush(IBlockState state)`
+- `boolean canUseBonemeal(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
+- `boolean generateBigMushroom(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `void grow(World worldIn, java.util.Random rand, BlockPos pos, IBlockState state)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+
+## Fields
+
+- `protected static AxisAlignedBB MUSHROOM_AABB`

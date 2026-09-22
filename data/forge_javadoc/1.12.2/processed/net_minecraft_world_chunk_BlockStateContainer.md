@@ -1,5 +1,7 @@
 # BlockStateContainer
 
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.BlockStateContainer
+
 ## Class signature
 
 ```java
@@ -8,17 +10,23 @@ public class BlockStateContainer extends java.lang.Object
 
 ## Constructors
 
-- `public BlockStateContainer()`
+- `BlockStateContainer()`
 
 ## Methods
 
-- `public int onResize(int bits, IBlockState state)`
-- `public void set(int x, int y, int z, IBlockState state)`
-- `protected void set(int index, IBlockState state)`
-- `public IBlockState get(int x, int y, int z)`
 - `protected IBlockState get(int index)`
-- `public void read( PacketBuffer buf)`
-- `public void write( PacketBuffer buf)`
-- `public NibbleArray getDataForNBT(byte[] blockIds, NibbleArray data)`
-- `public void setDataFromNBT(byte[] blockIds, NibbleArray data, NibbleArray blockIdExtension)`
-- `public int getSerializedSize()`
+- `IBlockState get(int x, int y, int z)`
+- `NibbleArray getDataForNBT(byte[] blockIds, NibbleArray data)`
+- `int getSerializedSize()`
+- `int onResize(int bits, IBlockState state)`
+- `void read(PacketBuffer buf)`
+- `protected void set(int index, IBlockState state)`
+- `void set(int x, int y, int z, IBlockState state)`
+- `void setDataFromNBT(byte[] blockIds, NibbleArray data, NibbleArray blockIdExtension)`
+- `void write(PacketBuffer buf)`
+
+## Fields
+
+- `protected static IBlockState AIR_BLOCK_STATE`
+- `protected IBlockStatePalette palette`
+- `protected BitArray storage`

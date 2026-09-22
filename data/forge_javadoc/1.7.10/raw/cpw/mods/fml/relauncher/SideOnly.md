@@ -1,14 +1,22 @@
 ---
 title: "SideOnly"
-description: "Marks the associated element as being only available on a certain Side . This is generally meant for internal Forge and FML use only and should only be used on mod classes when other more common mecha"
+description: "public @interface SideOnly"
 package: "cpw/mods/fml/relauncher"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/relauncher/SideOnly.html"
 sourceType: javadoc
 ---
 
 # SideOnly
 
-## Description
+## Class signature
 
-Marks the associated element as being only available on a certain Side . This is generally meant for internal Forge and FML use only and should only be used on mod classes when other more common mecha
+```java
+public @interface SideOnly
+```
+
+## Elements
+
+- `Side value`

@@ -1,14 +1,18 @@
 # FMLInterModComms.IMCEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent
+
+## Class signature
+
+```java
+public static class FMLInterModComms.IMCEvent extends FMLEvent
+```
+
 ## Constructors
 
-- `public IMCEvent()`
+- `IMCEvent()`
 
 ## Methods
 
-- `public void applyModContainer( ModContainer activeContainer)`
-- `public com.google.common.collect.ImmutableList< FMLInterModComms.IMCMessage > getMessages()`
-
-## Description
-
-Subscribe to this event to receive your messages (they are sent between FMLInitializationEvent and FMLPostInitializationEvent )
+- `void applyModContainer(ModContainer activeContainer)`
+- `com.google.common.collect.ImmutableList<FMLInterModComms.IMCMessage> getMessages()`

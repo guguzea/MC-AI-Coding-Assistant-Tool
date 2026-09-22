@@ -1,32 +1,34 @@
 # EntitySilverfish
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntitySilverfish
+
 ## Class signature
 
 ```java
 public class EntitySilverfish extends EntityMob
 ```
 
-## Constructors
-
-- `public EntitySilverfish( World worldIn)`
-
 ## Methods
 
-- `public static void registerFixesSilverfish( DataFixer fixer)`
-- `protected void initEntityAI()`
-- `public double getYOffset()`
-- `public float getEyeHeight()`
 - `protected void applyEntityAttributes()`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
 - `protected boolean canTriggerWalking()`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
+- `float getBlockPathWeight(BlockPos pos)`
+- `boolean getCanSpawnHere()`
+- `EnumCreatureAttribute getCreatureAttribute()`
 - `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
 - `protected ResourceLocation getLootTable()`
-- `public void onUpdate()`
-- `public void setRenderYawOffset(float offset)`
-- `public float getBlockPathWeight( BlockPos pos)`
+- `double getYOffset()`
+- `protected void initEntityAI()`
 - `protected boolean isValidLightLevel()`
-- `public boolean getCanSpawnHere()`
-- `public EnumCreatureAttribute getCreatureAttribute()`
+- `void onUpdate()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `static void registerFixesSilverfish(DataFixer fixer)`
+- `void setRenderYawOffset(float offset)`
+
+## Fields
+
+- `EntitySilverfish`

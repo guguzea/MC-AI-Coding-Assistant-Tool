@@ -1,18 +1,20 @@
 # PhaseTakeoff
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseTakeoff
+
 ## Class signature
 
 ```java
 public class PhaseTakeoff extends PhaseBase
 ```
 
-## Constructors
-
-- `public PhaseTakeoff( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public void doLocalUpdate()`
-- `public void initPhase()`
-- `public Vec3d getTargetLocation()`
-- `public PhaseList < PhaseTakeoff > getType()`
+- `void doLocalUpdate()`
+- `Vec3d getTargetLocation()`
+- `PhaseList<PhaseTakeoff> getType()`
+- `void initPhase()`
+
+## Fields
+
+- `PhaseTakeoff`

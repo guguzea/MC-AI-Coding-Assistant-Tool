@@ -1,26 +1,24 @@
 # C0CPacketInput
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.C0CPacketInput
+
 ## Class signature
 
 ```java
-public class C0CPacketInput extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class C0CPacketInput extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public C0CPacketInput()`
-- `public C0CPacketInput(float strafeSpeed, float forwardSpeed, boolean jumping, boolean sneaking)`
+- `C0CPacketInput()`
+- `C0CPacketInput(float strafeSpeed, float forwardSpeed, boolean jumping, boolean sneaking)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public float getStrafeSpeed()`
-- `public float getForwardSpeed()`
-- `public boolean isJumping()`
-- `public boolean isSneaking()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `float getForwardSpeed()`
+- `float getStrafeSpeed()`
+- `boolean isJumping()`
+- `boolean isSneaking()`
+- `void processPacket(INetHandlerPlayServer handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

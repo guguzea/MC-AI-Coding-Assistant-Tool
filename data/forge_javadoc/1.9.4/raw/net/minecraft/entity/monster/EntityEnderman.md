@@ -3,11 +3,15 @@ title: "EntityEnderman"
 description: "public class EntityEnderman extends EntityMob"
 package: "net/minecraft/entity/monster"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/monster/EntityEnderman.html"
 sourceType: javadoc
 ---
 
 # EntityEnderman
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityEnderman
 
 ## Class signature
 
@@ -15,33 +19,33 @@ sourceType: javadoc
 public class EntityEnderman extends EntityMob
 ```
 
-## Constructors
-
-- `public EntityEnderman( World worldIn)`
-
 ## Methods
 
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
-- `public void setAttackTarget(@Nullable EntityLivingBase entitylivingbaseIn)`
-- `protected void entityInit()`
-- `public void playEndermanSound()`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public float getEyeHeight()`
-- `public void onLivingUpdate()`
-- `protected void updateAITasks()`
-- `protected boolean teleportRandomly()`
-- `protected boolean teleportToEntity( Entity p_70816_1_)`
-- `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
-- `protected SoundEvent getDeathSound()`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
 - `protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier)`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public void setHeldBlockState(@Nullable IBlockState state)`
-- `@Nullable public IBlockState getHeldBlockState()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public static void setCarriable( Block block, boolean canCarry)`
-- `public static boolean getCarriable( Block block)`
-- `public boolean isScreaming()`
+- `protected void entityInit()`
+- `protected SoundEvent getAmbientSound()`
+- `static boolean getCarriable(Block block)`
+- `protected SoundEvent getDeathSound()`
+- `float getEyeHeight()`
+- `IBlockState getHeldBlockState()`
+- `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `protected void initEntityAI()`
+- `boolean isScreaming()`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onLivingUpdate()`
+- `void playEndermanSound()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void setAttackTarget(EntityLivingBase entitylivingbaseIn)`
+- `static void setCarriable(Block block, boolean canCarry)`
+- `void setHeldBlockState(IBlockState state)`
+- `protected boolean teleportRandomly()`
+- `protected boolean teleportToEntity(Entity p_70816_1_)`
+- `protected void updateAITasks()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityEnderman`

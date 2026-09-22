@@ -1,13 +1,17 @@
 ---
 title: "MinecraftForgeClient"
-description: "Release the stencil bit for other use"
+description: "public class MinecraftForgeClient extends java.lang.Object"
 package: "net/minecraftforge/client"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/client/MinecraftForgeClient.html"
 sourceType: javadoc
 ---
 
 # MinecraftForgeClient
+
+**Inheritance:** java.lang.Object → net.minecraftforge.client.MinecraftForgeClient
 
 ## Class signature
 
@@ -17,17 +21,13 @@ public class MinecraftForgeClient extends java.lang.Object
 
 ## Constructors
 
-- `public MinecraftForgeClient()`
+- `MinecraftForgeClient()`
 
 ## Methods
 
-- `public static int getRenderPass()`
-- `public static BlockRenderLayer getRenderLayer()`
-- `public static int reserveStencilBit()`
-- `public static void releaseStencilBit(int bit)`
-- `public static void onRebuildChunk( World world, BlockPos position, ChunkCache cache)`
-- `public static ChunkCache getRegionRenderCache( World world, BlockPos pos)`
-
-## Description
-
-Release the stencil bit for other use
+- `static ChunkCache getRegionRenderCache(World world, BlockPos pos)`
+- `static BlockRenderLayer getRenderLayer()`
+- `static int getRenderPass()`
+- `static void onRebuildChunk(World world, BlockPos position, ChunkCache cache)`
+- `static void releaseStencilBit(int bit)` — Release the stencil bit for other use
+- `static int reserveStencilBit()` — Reserve a stencil bit for use in rendering Note: you must check the Framebuffer you are working with to determine if stencil bits are enabled on it before use.

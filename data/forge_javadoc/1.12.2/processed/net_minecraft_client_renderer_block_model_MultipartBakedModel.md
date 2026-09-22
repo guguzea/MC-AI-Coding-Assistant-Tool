@@ -1,5 +1,7 @@
 # MultipartBakedModel
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.MultipartBakedModel
+
 ## Class signature
 
 ```java
@@ -8,14 +10,22 @@ public class MultipartBakedModel extends java.lang.Object implements IBakedModel
 
 ## Constructors
 
-- `public MultipartBakedModel(java.util.Map<<any>, IBakedModel > selectorsIn)`
+- `MultipartBakedModel(java.util.Map<<any>, IBakedModel> selectorsIn)`
 
 ## Methods
 
-- `public java.util.List< BakedQuad > getQuads( IBlockState state, EnumFacing side, long rand)`
-- `public boolean isAmbientOcclusion()`
-- `public boolean isGui3d()`
-- `public boolean isBuiltInRenderer()`
-- `public TextureAtlasSprite getParticleTexture()`
-- `public ItemCameraTransforms getItemCameraTransforms()`
-- `public ItemOverrideList getOverrides()`
+- `ItemCameraTransforms getItemCameraTransforms()`
+- `ItemOverrideList getOverrides()`
+- `TextureAtlasSprite getParticleTexture()`
+- `java.util.List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)`
+- `boolean isAmbientOcclusion()`
+- `boolean isBuiltInRenderer()`
+- `boolean isGui3d()`
+
+## Fields
+
+- `protected boolean ambientOcclusion`
+- `protected ItemCameraTransforms cameraTransforms`
+- `protected boolean gui3D`
+- `protected ItemOverrideList overrides`
+- `protected TextureAtlasSprite particleTexture`

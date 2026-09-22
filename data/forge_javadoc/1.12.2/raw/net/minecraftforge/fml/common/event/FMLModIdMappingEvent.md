@@ -1,13 +1,17 @@
 ---
 title: "FMLModIdMappingEvent"
-description: "Called whenever the ID mapping might have changed. If you register for this event, you will be called back whenever the client or server loads an ID set. This includes both when the ID maps are loaded"
+description: "public class FMLModIdMappingEvent extends FMLEvent"
 package: "net/minecraftforge/fml/common/event"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/common/event/FMLModIdMappingEvent.html"
 sourceType: javadoc
 ---
 
 # FMLModIdMappingEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLModIdMappingEvent
 
 ## Class signature
 
@@ -17,13 +21,13 @@ public class FMLModIdMappingEvent extends FMLEvent
 
 ## Constructors
 
-- `public FMLModIdMappingEvent(java.util.Map< ResourceLocation ,java.util.Map< ResourceLocation ,java.lang.Integer[]>> remaps, boolean isFrozen)`
+- `FMLModIdMappingEvent(java.util.Map<ResourceLocation, java.util.Map<ResourceLocation, java.lang.Integer[]>> remaps, boolean isFrozen)`
 
 ## Methods
 
-- `public <any> getRegistries()`
-- `public <any> getRemaps( ResourceLocation registry)`
+- `<any> getRegistries()`
+- `<any> getRemaps(ResourceLocation registry)`
 
-## Description
+## Fields
 
-Called whenever the ID mapping might have changed. If you register for this event, you will be called back whenever the client or server loads an ID set. This includes both when the ID maps are loaded
+- `boolean isFrozen`

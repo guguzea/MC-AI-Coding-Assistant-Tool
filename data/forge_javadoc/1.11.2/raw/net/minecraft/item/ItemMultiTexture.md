@@ -3,11 +3,15 @@ title: "ItemMultiTexture"
 description: "public class ItemMultiTexture extends ItemBlock"
 package: "net/minecraft/item"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/item/ItemMultiTexture.html"
 sourceType: javadoc
 ---
 
 # ItemMultiTexture
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemBlock → net.minecraft.item.ItemMultiTexture
 
 ## Class signature
 
@@ -17,10 +21,15 @@ public class ItemMultiTexture extends ItemBlock
 
 ## Constructors
 
-- `public ItemMultiTexture( Block p_i47262_1_, Block p_i47262_2_, ItemMultiTexture.Mapper p_i47262_3_)`
-- `public ItemMultiTexture( Block block, Block block2, java.lang.String[] namesByMeta)`
+- `ItemMultiTexture(Block p_i47262_1_, Block p_i47262_2_, ItemMultiTexture.Mapper p_i47262_3_)`
+- `ItemMultiTexture(Block block, Block block2, java.lang.String[] namesByMeta)`
 
 ## Methods
 
-- `public int getMetadata(int damage)`
-- `public java.lang.String getUnlocalizedName( ItemStack stack)`
+- `int getMetadata(int damage)`
+- `java.lang.String getUnlocalizedName(ItemStack stack)`
+
+## Fields
+
+- `protected ItemMultiTexture.Mapper nameFunction`
+- `protected Block theBlock`

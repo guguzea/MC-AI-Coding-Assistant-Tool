@@ -1,5 +1,7 @@
 # SetMetadata
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction → net.minecraft.world.storage.loot.functions.SetMetadata
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class SetMetadata extends LootFunction
 
 ## Constructors
 
-- `public SetMetadata( LootCondition [] conditionsIn, RandomValueRange metaRangeIn)`
+- `SetMetadata(LootCondition [] conditionsIn, RandomValueRange metaRangeIn)`
 
 ## Methods
 
-- `public ItemStack apply( ItemStack stack, java.util.Random rand, LootContext context)`
+- `ItemStack apply(ItemStack stack, java.util.Random rand, LootContext context)`

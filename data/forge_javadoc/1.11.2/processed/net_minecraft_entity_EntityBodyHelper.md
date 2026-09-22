@@ -1,5 +1,7 @@
 # EntityBodyHelper
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.EntityBodyHelper
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class EntityBodyHelper extends java.lang.Object
 
 ## Constructors
 
-- `public EntityBodyHelper( EntityLivingBase livingIn)`
+- `EntityBodyHelper(EntityLivingBase livingIn)`
 
 ## Methods
 
-- `public void updateRenderAngles()`
+- `void updateRenderAngles()`

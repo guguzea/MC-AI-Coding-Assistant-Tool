@@ -1,16 +1,18 @@
 # BlockCompressedPowered
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockCompressedPowered
+
 ## Class signature
 
 ```java
 public class BlockCompressedPowered extends Block
 ```
 
-## Constructors
-
-- `public BlockCompressedPowered( Material materialIn, MapColor color)`
-
 ## Methods
 
-- `public boolean canProvidePower( IBlockState state)`
-- `public int getWeakPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `boolean canProvidePower(IBlockState state)`
+- `int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+
+## Fields
+
+- `BlockCompressedPowered`

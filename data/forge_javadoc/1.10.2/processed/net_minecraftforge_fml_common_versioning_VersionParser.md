@@ -1,5 +1,7 @@
 # VersionParser
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.versioning.VersionParser
+
 ## Class signature
 
 ```java
@@ -8,14 +10,10 @@ public class VersionParser extends java.lang.Object
 
 ## Constructors
 
-- `public VersionParser()`
+- `VersionParser()`
 
 ## Methods
 
-- `public static ArtifactVersion parseVersionReference(java.lang.String labelledRef)`
-- `public static boolean satisfies( ArtifactVersion target, ArtifactVersion source)`
-- `public static VersionRange parseRange(java.lang.String range)`
-
-## Description
-
-Parses version strings according to the specification here: http://docs.codehaus.org/display/MAVEN/Versioning and allows for comparison of versions based on that document. Bounded version specificatio
+- `static VersionRange parseRange(java.lang.String range)`
+- `static ArtifactVersion parseVersionReference(java.lang.String labelledRef)`
+- `static boolean satisfies(ArtifactVersion target, ArtifactVersion source)`

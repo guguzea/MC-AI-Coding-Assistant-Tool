@@ -1,5 +1,7 @@
 # EntityPlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.player.EntityPlayer
+
 ## Class signature
 
 ```java
@@ -8,131 +10,195 @@ public abstract class EntityPlayer extends EntityLivingBase
 
 ## Constructors
 
-- `public EntityPlayer( World worldIn, com.mojang.authlib.GameProfile gameProfileIn)`
+- `EntityPlayer(World worldIn, com.mojang.authlib.GameProfile gameProfileIn)`
 
 ## Methods
 
-- `protected CooldownTracker createCooldownTracker()`
+- `void addExhaustion(float exhaustion)`
+- `void addExperience(int amount)`
+- `void addExperienceLevel(int levels)`
+- `void addMovementStat(double p_71000_1_, double p_71000_3_, double p_71000_5_)`
+- `void addPrefix(ITextComponent prefix)` — Add a prefix to the player's username in chat
+- `void addScore(int scoreIn)`
+- `void addStat(StatBase stat)`
+- `void addStat(StatBase stat, int amount)`
+- `void addSuffix(ITextComponent suffix)` — Add a suffix to the player's username in chat
+- `void addToPlayerScore(Entity entityIn, int amount)`
 - `protected void applyEntityAttributes()`
-- `protected void entityInit()`
-- `public void onUpdate()`
-- `protected void updateSize()`
-- `public int getMaxInPortalTime()`
-- `protected SoundEvent getSwimSound()`
-- `protected SoundEvent getSplashSound()`
-- `public int getPortalCooldown()`
-- `public void playSound( SoundEvent soundIn, float volume, float pitch)`
-- `public SoundCategory getSoundCategory()`
-- `protected int getFireImmuneTicks()`
-- `public void handleStatusUpdate(byte id)`
-- `protected boolean isMovementBlocked()`
-- `public void closeScreen()`
-- `public void updateRidden()`
-- `public void preparePlayerToSpawn()`
-- `protected void updateEntityActionState()`
-- `public void onLivingUpdate()`
-- `public int getScore()`
-- `public void setScore(int scoreIn)`
-- `public void addScore(int scoreIn)`
-- `public void onDeath( DamageSource cause)`
-- `protected void destroyVanishingCursedItems()`
-- `protected SoundEvent getHurtSound()`
-- `protected SoundEvent getDeathSound()`
-- `public void addToPlayerScore( Entity entityIn, int amount)`
-- `@Nullable public EntityItem dropItem(boolean dropAll)`
-- `@Nullable public EntityItem dropItem( ItemStack itemStackIn, boolean unused)`
-- `@Nullable public EntityItem dropItem( ItemStack droppedItem, boolean dropAround, boolean traceItem)`
-- `public ItemStack dropItemAndGetStack( EntityItem p_184816_1_)`
-- `@Deprecated public float getDigSpeed( IBlockState state)`
-- `public float getDigSpeed( IBlockState state, BlockPos pos)`
-- `public boolean canHarvestBlock( IBlockState state)`
-- `public static void registerFixesPlayer( DataFixer fixer)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `protected void blockUsingShield( EntityLivingBase p_190629_1_)`
-- `public boolean canAttackPlayer( EntityPlayer other)`
-- `protected void damageArmor(float damage)`
-- `protected void damageShield(float damage)`
-- `public float getArmorVisibility()`
-- `protected void damageEntity( DamageSource damageSrc, float damageAmount)`
-- `public void openEditSign( TileEntitySign signTile)`
-- `public void displayGuiEditCommandCart( CommandBlockBaseLogic commandBlock)`
-- `public void displayGuiCommandBlock( TileEntityCommandBlock commandBlock)`
-- `public void openEditStructure( TileEntityStructure structure)`
-- `public void displayVillagerTradeGui( IMerchant villager)`
-- `public void displayGUIChest( IInventory chestInventory)`
-- `public void openGuiHorseInventory( AbstractHorse horse, IInventory inventoryIn)`
-- `public void displayGui( IInteractionObject guiOwner)`
-- `public void openBook( ItemStack stack, EnumHand hand)`
-- `public EnumActionResult interactOn( Entity p_190775_1_, EnumHand p_190775_2_)`
-- `public double getYOffset()`
-- `public void dismountRidingEntity()`
-- `public void attackTargetEntityWithCurrentItem( Entity targetEntity)`
-- `public void disableShield(boolean p_190777_1_)`
-- `public void onCriticalHit( Entity entityHit)`
-- `public void onEnchantmentCritical( Entity entityHit)`
-- `public void spawnSweepParticles()`
-- `public void respawnPlayer()`
-- `public void setDead()`
-- `public boolean isEntityInsideOpaqueBlock()`
-- `public boolean isUser()`
-- `public com.mojang.authlib.GameProfile getGameProfile()`
-- `public EntityPlayer.SleepResult trySleep( BlockPos bedLocation)`
-- `public void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn)`
-- `@Nullable public static BlockPos getBedSpawnLocation( World worldIn, BlockPos bedLocation, boolean forceSpawn)`
-- `public float getBedOrientationInDegrees()`
-- `public boolean isPlayerSleeping()`
-- `public boolean isPlayerFullyAsleep()`
-- `public int getSleepTimer()`
-- `public void sendStatusMessage( ITextComponent chatComponent, boolean actionBar)`
-- `public BlockPos getBedLocation()`
-- `@Deprecated public boolean isSpawnForced()`
-- `public void setSpawnPoint( BlockPos pos, boolean forced)`
-- `public boolean hasAchievement( Achievement achievementIn)`
-- `public void addStat( StatBase stat)`
-- `public void addStat( StatBase stat, int amount)`
-- `public void takeStat( StatBase stat)`
-- `public void jump()`
-- `public void moveEntityWithHeading(float strafe, float forward)`
-- `public float getAIMoveSpeed()`
-- `public void addMovementStat(double p_71000_1_, double p_71000_3_, double p_71000_5_)`
-- `public void fall(float distance, float damageMultiplier)`
-- `protected void resetHeight()`
-- `protected SoundEvent getFallSound(int heightIn)`
-- `public void onKillEntity( EntityLivingBase entityLivingIn)`
-- `public void setInWeb()`
-- `public void addExperience(int amount)`
-- `public int getXPSeed()`
-- `public void removeExperienceLevel(int levels)`
-- `public void addExperienceLevel(int levels)`
-- `public int xpBarCap()`
-- `public void addExhaustion(float exhaustion)`
-- `public FoodStats getFoodStats()`
-- `public boolean canEat(boolean ignoreHunger)`
-- `public boolean shouldHeal()`
-- `public boolean isAllowEdit()`
-- `public boolean canPlayerEdit( BlockPos pos, EnumFacing facing, ItemStack stack)`
-- `protected int getExperiencePoints( EntityPlayer player)`
-- `protected boolean isPlayer()`
-- `public boolean getAlwaysRenderNameTagForRender()`
-- `public void clonePlayer( EntityPlayer oldPlayer, boolean respawnFromEnd)`
+- `void applyEntityCollision(Entity entityIn)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `void attackTargetEntityWithCurrentItem(Entity targetEntity)`
+- `protected void blockUsingShield(EntityLivingBase p_190629_1_)`
+- `boolean canAttackPlayer(EntityPlayer other)`
+- `boolean canEat(boolean ignoreHunger)`
+- `boolean canHarvestBlock(IBlockState state)`
+- `boolean canOpen(LockCode code)`
+- `boolean canPlayerEdit(BlockPos pos, EnumFacing facing, ItemStack stack)`
 - `protected boolean canTriggerWalking()`
-- `public void sendPlayerAbilities()`
-- `public void setGameType( GameType gameType)`
-- `public java.lang.String getName()`
-- `public InventoryEnderChest getInventoryEnderChest()`
-- `public ItemStack getItemStackFromSlot( EntityEquipmentSlot slotIn)`
-- `public void setItemStackToSlot( EntityEquipmentSlot slotIn, ItemStack stack)`
-- `public boolean func_191521_c( ItemStack p_191521_1_)`
-- `public java.lang.Iterable< ItemStack > getHeldEquipment()`
-- `public java.lang.Iterable< ItemStack > getArmorInventoryList()`
-- `public boolean isInvisibleToPlayer( EntityPlayer player)`
-- `public abstract boolean isSpectator()`
-- `public abstract boolean isCreative()`
-- `public boolean isPushedByWater()`
-- `public Scoreboard getWorldScoreboard()`
+- `boolean canUseCommandBlock()`
+- `void clonePlayer(EntityPlayer oldPlayer, boolean respawnFromEnd)`
+- `void closeScreen()`
+- `protected CooldownTracker createCooldownTracker()`
+- `protected void damageArmor(float damage)`
+- `protected void damageEntity(DamageSource damageSrc, float damageAmount)`
+- `protected void damageShield(float damage)`
+- `protected void destroyVanishingCursedItems()`
+- `void disableShield(boolean p_190777_1_)`
+- `void dismountRidingEntity()`
+- `void displayGui(IInteractionObject guiOwner)`
+- `void displayGUIChest(IInventory chestInventory)`
+- `void displayGuiCommandBlock(TileEntityCommandBlock commandBlock)`
+- `void displayGuiEditCommandCart(CommandBlockBaseLogic commandBlock)`
+- `void displayVillagerTradeGui(IMerchant villager)`
+- `EntityItem dropItem(boolean dropAll)`
+- `EntityItem dropItem(ItemStack itemStackIn, boolean unused)`
+- `EntityItem dropItem(ItemStack droppedItem, boolean dropAround, boolean traceItem)`
+- `ItemStack dropItemAndGetStack(EntityItem p_184816_1_)`
+- `protected void entityInit()`
+- `void fall(float distance, float damageMultiplier)`
+- `boolean func_191521_c(ItemStack p_191521_1_)`
+- `float getAbsorptionAmount()`
+- `float getAIMoveSpeed()`
+- `boolean getAlwaysRenderNameTagForRender()`
+- `java.lang.Iterable<ItemStack> getArmorInventoryList()`
+- `float getArmorVisibility()`
+- `BlockPos getBedLocation()`
+- `BlockPos getBedLocation(int dimension)` — A dimension aware version of getBedLocation.
+- `float getBedOrientationInDegrees()`
+- `static BlockPos getBedSpawnLocation(World worldIn, BlockPos bedLocation, boolean forceSpawn)`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `float getCooldownPeriod()`
+- `CooldownTracker getCooldownTracker()`
+- `float getCooledAttackStrength(float adjustTicks)`
+- `protected SoundEvent getDeathSound()`
+- `float getDefaultEyeHeight()` — Returns the default eye height of the player
+- `@Deprecated float getDigSpeed(IBlockState state)`
+- `float getDigSpeed(IBlockState state, BlockPos pos)`
+- `ITextComponent getDisplayName()`
+- `java.lang.String getDisplayNameString()` — Get the currently computed display name, cached for efficiency.
+- `protected int getExperiencePoints(EntityPlayer player)`
+- `float getEyeHeight()`
+- `protected SoundEvent getFallSound(int heightIn)`
+- `protected int getFireImmuneTicks()`
+- `FoodStats getFoodStats()`
+- `com.mojang.authlib.GameProfile getGameProfile()`
+- `java.lang.Iterable<ItemStack> getHeldEquipment()`
+- `protected SoundEvent getHurtSound()`
+- `InventoryEnderChest getInventoryEnderChest()`
+- `ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)`
+- `float getLuck()`
+- `int getMaxInPortalTime()`
+- `java.lang.String getName()`
+- `static java.util.UUID getOfflineUUID(java.lang.String username)`
+- `int getPortalCooldown()`
+- `java.util.Collection<ITextComponent> getPrefixes()`
+- `EnumHandSide getPrimaryHand()`
+- `int getScore()`
+- `int getSleepTimer()`
+- `SoundCategory getSoundCategory()`
+- `protected SoundEvent getSplashSound()`
+- `java.util.Collection<ITextComponent> getSuffixes()`
+- `protected SoundEvent getSwimSound()`
+- `Team getTeam()`
+- `static java.util.UUID getUUID(com.mojang.authlib.GameProfile profile)`
+- `Scoreboard getWorldScoreboard()`
+- `int getXPSeed()`
+- `double getYOffset()`
+- `void handleStatusUpdate(byte id)`
+- `boolean hasAchievement(Achievement achievementIn)`
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.
+- `boolean hasReducedDebug()`
+- `EnumActionResult interactOn(Entity p_190775_1_, EnumHand p_190775_2_)`
+- `boolean isAllowEdit()`
+- `abstract boolean isCreative()`
+- `boolean isEntityInsideOpaqueBlock()`
+- `boolean isInvisibleToPlayer(EntityPlayer player)`
+- `protected boolean isMovementBlocked()`
+- `protected boolean isPlayer()`
+- `boolean isPlayerFullyAsleep()`
+- `boolean isPlayerSleeping()`
+- `boolean isPushedByWater()`
+- `@Deprecated boolean isSpawnForced()`
+- `boolean isSpawnForced(int dimension)` — A dimension aware version of isSpawnForced.
+- `abstract boolean isSpectator()`
+- `boolean isUser()`
+- `boolean isWearing(EnumPlayerModelParts part)`
+- `void jump()`
+- `void moveEntityWithHeading(float strafe, float forward)`
+- `void onCriticalHit(Entity entityHit)`
+- `void onDeath(DamageSource cause)`
+- `void onEnchantmentCritical(Entity entityHit)`
+- `void onKillEntity(EntityLivingBase entityLivingIn)`
+- `void onLivingUpdate()`
+- `void onUpdate()`
+- `void openBook(ItemStack stack, EnumHand hand)`
+- `void openEditSign(TileEntitySign signTile)`
+- `void openEditStructure(TileEntityStructure structure)`
+- `void openGui(java.lang.Object mod, int modGuiId, World world, int x, int y, int z)` — Opens a GUI with this player, uses FML's IGuiHandler system.
+- `void openGuiHorseInventory(AbstractHorse horse, IInventory inventoryIn)`
+- `void playSound(SoundEvent soundIn, float volume, float pitch)`
+- `void preparePlayerToSpawn()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void refreshDisplayName()` — Force the displayed name to refresh
+- `static void registerFixesPlayer(DataFixer fixer)`
+- `void removeExperienceLevel(int levels)`
+- `boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
+- `void resetCooldown()`
+- `protected void resetHeight()`
+- `void respawnPlayer()`
+- `boolean sendCommandFeedback()`
+- `void sendPlayerAbilities()`
+- `void sendStatusMessage(ITextComponent chatComponent, boolean actionBar)`
+- `void setAbsorptionAmount(float amount)`
+- `void setDead()`
+- `void setGameType(GameType gameType)`
+- `void setInWeb()`
+- `void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)`
+- `void setPrimaryHand(EnumHandSide hand)`
+- `void setReducedDebug(boolean reducedDebug)`
+- `void setScore(int scoreIn)`
+- `void setSpawnChunk(BlockPos pos, boolean forced, int dimension)` — A dimension aware version of setSpawnChunk.
+- `void setSpawnPoint(BlockPos pos, boolean forced)`
+- `boolean shouldHeal()`
+- `void spawnSweepParticles()`
+- `void takeStat(StatBase stat)`
+- `EntityPlayer.SleepResult trySleep(BlockPos bedLocation)`
+- `protected void updateEntityActionState()`
+- `void updateRidden()`
+- `protected void updateSize()`
+- `void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+- `int xpBarCap()`
 
-## Description
+## Fields
 
-Add a prefix to the player's username in chat
+- `BlockPos bedLocation`
+- `float cameraYaw`
+- `PlayerCapabilities capabilities`
+- `double chasingPosX`
+- `double chasingPosY`
+- `double chasingPosZ`
+- `float experience`
+- `int experienceLevel`
+- `int experienceTotal`
+- `float eyeHeight`
+- `EntityFishHook fishEntity`
+- `protected int flyToggleTimer`
+- `protected FoodStats foodStats`
+- `InventoryPlayer inventory`
+- `Container inventoryContainer`
+- `protected static DataParameter<java.lang.Byte> MAIN_HAND`
+- `Container openContainer`
+- `static java.lang.String PERSISTED_NBT_TAG`
+- `protected static DataParameter<java.lang.Byte> PLAYER_MODEL_FLAG`
+- `float prevCameraYaw`
+- `double prevChasingPosX`
+- `double prevChasingPosY`
+- `double prevChasingPosZ`
+- `float renderOffsetX`
+- `float renderOffsetY`
+- `float renderOffsetZ`
+- `protected boolean sleeping`
+- `protected float speedInAir`
+- `protected float speedOnGround`
+- `int xpCooldown`

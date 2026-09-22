@@ -1,5 +1,7 @@
 # HoverChecker
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.client.config.HoverChecker
+
 ## Class signature
 
 ```java
@@ -8,16 +10,12 @@ public class HoverChecker extends java.lang.Object
 
 ## Constructors
 
-- `public HoverChecker(int top, int bottom, int left, int right, int threshold)`
-- `public HoverChecker( GuiButton button, int threshold)`
+- `HoverChecker(GuiButton button, int threshold)`
+- `HoverChecker(int top, int bottom, int left, int right, int threshold)`
 
 ## Methods
 
-- `public void updateBounds(int top, int bottom, int left, int right)`
-- `public boolean checkHover(int mouseX, int mouseY)`
-- `public boolean checkHover(int mouseX, int mouseY, boolean canHover)`
-- `public void resetHoverTimer()`
-
-## Description
-
-This class implements an easy way to check if the mouse has hovered within a certain region of the screen for a given period of time. The region can be defined manually or by supplying a GuiButton obj
+- `boolean checkHover(int mouseX, int mouseY)` — Checks if the mouse is in the hover region.
+- `boolean checkHover(int mouseX, int mouseY, boolean canHover)` — Checks if the mouse is in the hover region.
+- `void resetHoverTimer()` — Manually resets the hover timer.
+- `void updateBounds(int top, int bottom, int left, int right)` — Call this method if the intended region has changed such as if the region must follow a scrolling list.

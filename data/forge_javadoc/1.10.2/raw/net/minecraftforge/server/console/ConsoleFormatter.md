@@ -1,24 +1,28 @@
 ---
 title: "ConsoleFormatter"
-description: "public final class ConsoleFormatter extends java.lang.Object implements com.google.common.base.Function<java.lang.String,java.lang.String>"
+description: "public final class ConsoleFormatter extends java.lang.Object implements com.google.common.base.Function<java.lang.String, java.lang.String>"
 package: "net/minecraftforge/server/console"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/server/console/ConsoleFormatter.html"
 sourceType: javadoc
 ---
 
 # ConsoleFormatter
 
+**Inheritance:** java.lang.Object → net.minecraftforge.server.console.ConsoleFormatter
+
 ## Class signature
 
 ```java
-public final class ConsoleFormatter extends java.lang.Object implements com.google.common.base.Function<java.lang.String,java.lang.String>
+public final class ConsoleFormatter extends java.lang.Object implements com.google.common.base.Function<java.lang.String, java.lang.String>
 ```
 
 ## Constructors
 
-- `public ConsoleFormatter()`
+- `ConsoleFormatter()`
 
 ## Methods
 
-- `public java.lang.String apply(java.lang.String text)`
+- `java.lang.String apply(java.lang.String text)`

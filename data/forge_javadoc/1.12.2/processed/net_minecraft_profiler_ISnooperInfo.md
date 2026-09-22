@@ -8,6 +8,6 @@ public interface ISnooperInfo
 
 ## Methods
 
-- `void addServerStatsToSnooper( Snooper playerSnooper)`
-- `void addServerTypeToSnooper( Snooper playerSnooper)`
+- `void addServerStatsToSnooper(Snooper playerSnooper)`
+- `void addServerTypeToSnooper(Snooper playerSnooper)`
 - `boolean isSnooperEnabled()`

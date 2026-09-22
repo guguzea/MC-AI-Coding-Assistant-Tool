@@ -1,5 +1,7 @@
 # RConConsoleSource
 
+**Inheritance:** java.lang.Object → net.minecraft.network.rcon.RConConsoleSource
+
 ## Class signature
 
 ```java
@@ -8,20 +10,20 @@ public class RConConsoleSource extends java.lang.Object implements ICommandSende
 
 ## Constructors
 
-- `public RConConsoleSource( MinecraftServer serverIn)`
+- `RConConsoleSource(MinecraftServer serverIn)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public ITextComponent getDisplayName()`
-- `public void addChatMessage( ITextComponent component)`
-- `public boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)`
-- `public BlockPos getPosition()`
-- `public Vec3d getPositionVector()`
-- `public World getEntityWorld()`
-- `public Entity getCommandSenderEntity()`
-- `public boolean sendCommandFeedback()`
-- `public void setCommandStat( CommandResultStats.Type type, int amount)`
-- `public MinecraftServer getServer()`
-- `public void resetLog()`
-- `public java.lang.String getLogContents()`
+- `void addChatMessage(ITextComponent component)`
+- `boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)`
+- `Entity getCommandSenderEntity()`
+- `ITextComponent getDisplayName()`
+- `World getEntityWorld()`
+- `java.lang.String getLogContents()`
+- `java.lang.String getName()`
+- `BlockPos getPosition()`
+- `Vec3d getPositionVector()`
+- `MinecraftServer getServer()`
+- `void resetLog()`
+- `boolean sendCommandFeedback()`
+- `void setCommandStat(CommandResultStats.Type type, int amount)`

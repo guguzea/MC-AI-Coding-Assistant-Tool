@@ -1,13 +1,17 @@
 ---
 title: "EntityMobGriefingEvent"
-description: "EntityMobGriefingEvent is fired when mob griefing is about to occur and allows an event listener to specify whether it should or not. This event is fired when ever the mobGriefing game rule is checked"
+description: "public class EntityMobGriefingEvent extends EntityEvent"
 package: "net/minecraftforge/event/entity"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/EntityMobGriefingEvent.html"
 sourceType: javadoc
 ---
 
 # EntityMobGriefingEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.EntityMobGriefingEvent
 
 ## Class signature
 
@@ -17,8 +21,4 @@ public class EntityMobGriefingEvent extends EntityEvent
 
 ## Constructors
 
-- `public EntityMobGriefingEvent( Entity entity)`
-
-## Description
-
-EntityMobGriefingEvent is fired when mob griefing is about to occur and allows an event listener to specify whether it should or not. This event is fired when ever the mobGriefing game rule is checked
+- `EntityMobGriefingEvent(Entity entity)`

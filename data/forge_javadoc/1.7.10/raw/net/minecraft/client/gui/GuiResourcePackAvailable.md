@@ -3,11 +3,15 @@ title: "GuiResourcePackAvailable"
 description: "public class GuiResourcePackAvailable extends GuiResourcePackList"
 package: "net/minecraft/client/gui"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/gui/GuiResourcePackAvailable.html"
 sourceType: javadoc
 ---
 
 # GuiResourcePackAvailable
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.GuiSlot → net.minecraft.client.gui.GuiListExtended → net.minecraft.client.gui.GuiResourcePackList → net.minecraft.client.gui.GuiResourcePackAvailable
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class GuiResourcePackAvailable extends GuiResourcePackList
 ```
 
-## Constructors
-
-- `public GuiResourcePackAvailable( Minecraft p_i45054_1_, int p_i45054_2_, int p_i45054_3_, java.util.List p_i45054_4_)`
-
 ## Methods
 
 - `protected java.lang.String func_148202_k()`
+
+## Fields
+
+- `GuiResourcePackAvailable`

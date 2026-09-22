@@ -3,11 +3,15 @@ title: "NBTTagCompound"
 description: "public class NBTTagCompound extends NBTBase"
 package: "net/minecraft/nbt"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/nbt/NBTTagCompound.html"
 sourceType: javadoc
 ---
 
 # NBTTagCompound
+
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase → net.minecraft.nbt.NBTTagCompound
 
 ## Class signature
 
@@ -15,49 +19,49 @@ sourceType: javadoc
 public class NBTTagCompound extends NBTBase
 ```
 
-## Constructors
-
-- `public NBTTagCompound()`
-
 ## Methods
 
-- `public java.util.Set<java.lang.String> getKeySet()`
-- `public byte getId()`
-- `public int getSize()`
-- `public void setTag(java.lang.String key, NBTBase value)`
-- `public void setByte(java.lang.String key, byte value)`
-- `public void setShort(java.lang.String key, short value)`
-- `public void setInteger(java.lang.String key, int value)`
-- `public void setLong(java.lang.String key, long value)`
-- `public void setUniqueId(java.lang.String key, java.util.UUID value)`
-- `@Nullable public java.util.UUID getUniqueId(java.lang.String key)`
-- `public boolean hasUniqueId(java.lang.String key)`
-- `public void setFloat(java.lang.String key, float value)`
-- `public void setDouble(java.lang.String key, double value)`
-- `public void setString(java.lang.String key, java.lang.String value)`
-- `public void setByteArray(java.lang.String key, byte[] value)`
-- `public void setIntArray(java.lang.String key, int[] value)`
-- `public void setBoolean(java.lang.String key, boolean value)`
-- `public NBTBase getTag(java.lang.String key)`
-- `public byte getTagId(java.lang.String key)`
-- `public boolean hasKey(java.lang.String key)`
-- `public boolean hasKey(java.lang.String key, int type)`
-- `public byte getByte(java.lang.String key)`
-- `public short getShort(java.lang.String key)`
-- `public int getInteger(java.lang.String key)`
-- `public long getLong(java.lang.String key)`
-- `public float getFloat(java.lang.String key)`
-- `public double getDouble(java.lang.String key)`
-- `public java.lang.String getString(java.lang.String key)`
-- `public byte[] getByteArray(java.lang.String key)`
-- `public int[] getIntArray(java.lang.String key)`
-- `public NBTTagCompound getCompoundTag(java.lang.String key)`
-- `public NBTTagList getTagList(java.lang.String key, int type)`
-- `public boolean getBoolean(java.lang.String key)`
-- `public void removeTag(java.lang.String key)`
-- `public java.lang.String toString()`
-- `public boolean hasNoTags()`
-- `public NBTTagCompound copy()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public void merge( NBTTagCompound other)`
+- `NBTTagCompound copy()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `boolean getBoolean(java.lang.String key)`
+- `byte getByte(java.lang.String key)`
+- `byte[] getByteArray(java.lang.String key)`
+- `NBTTagCompound getCompoundTag(java.lang.String key)`
+- `double getDouble(java.lang.String key)`
+- `float getFloat(java.lang.String key)`
+- `byte getId()`
+- `int[] getIntArray(java.lang.String key)`
+- `int getInteger(java.lang.String key)`
+- `java.util.Set<java.lang.String> getKeySet()`
+- `long getLong(java.lang.String key)`
+- `short getShort(java.lang.String key)`
+- `int getSize()`
+- `java.lang.String getString(java.lang.String key)`
+- `NBTBase getTag(java.lang.String key)`
+- `byte getTagId(java.lang.String key)`
+- `NBTTagList getTagList(java.lang.String key, int type)`
+- `java.util.UUID getUniqueId(java.lang.String key)`
+- `int hashCode()`
+- `boolean hasKey(java.lang.String key)`
+- `boolean hasKey(java.lang.String key, int type)`
+- `boolean hasNoTags()`
+- `boolean hasUniqueId(java.lang.String key)`
+- `void merge(NBTTagCompound other)`
+- `void removeTag(java.lang.String key)`
+- `void setBoolean(java.lang.String key, boolean value)`
+- `void setByte(java.lang.String key, byte value)`
+- `void setByteArray(java.lang.String key, byte[] value)`
+- `void setDouble(java.lang.String key, double value)`
+- `void setFloat(java.lang.String key, float value)`
+- `void setIntArray(java.lang.String key, int[] value)`
+- `void setInteger(java.lang.String key, int value)`
+- `void setLong(java.lang.String key, long value)`
+- `void setShort(java.lang.String key, short value)`
+- `void setString(java.lang.String key, java.lang.String value)`
+- `void setTag(java.lang.String key, NBTBase value)`
+- `void setUniqueId(java.lang.String key, java.util.UUID value)`
+- `java.lang.String toString()`
+
+## Fields
+
+- `NBTTagCompound`

@@ -1,5 +1,7 @@
 # ItemTooltipEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.ItemTooltipEvent
+
 ## Class signature
 
 ```java
@@ -8,15 +10,11 @@ public class ItemTooltipEvent extends PlayerEvent
 
 ## Constructors
 
-- `public ItemTooltipEvent( ItemStack itemStack, EntityPlayer entityPlayer, java.util.List<java.lang.String> toolTip, ITooltipFlag flags)`
+- `ItemTooltipEvent(ItemStack itemStack, EntityPlayer entityPlayer, java.util.List<java.lang.String> toolTip, ITooltipFlag flags)`
 
 ## Methods
 
-- `public ITooltipFlag getFlags()`
-- `public ItemStack getItemStack()`
-- `public java.util.List<java.lang.String> getToolTip()`
-- `public EntityPlayer getEntityPlayer()`
-
-## Description
-
-This event is fired in ItemStack.getTooltip(EntityPlayer, ITooltipFlag) , which in turn is called from it's respective GUIContainer.
+- `EntityPlayer getEntityPlayer()` — This event is fired with a null player during startup when populating search trees for tooltips.
+- `ITooltipFlag getFlags()` — Use to determine if the advanced information on item tooltips is being shown, toggled by F3+H.
+- `ItemStack getItemStack()` — The ItemStack with the tooltip.
+- `java.util.List<java.lang.String> getToolTip()` — The ItemStack tooltip.

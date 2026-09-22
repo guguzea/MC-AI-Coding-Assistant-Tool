@@ -3,11 +3,15 @@ title: "FMLFileResourcePack"
 description: "public class FMLFileResourcePack extends FileResourcePack implements FMLContainerHolder"
 package: "cpw/mods/fml/client"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/client/FMLFileResourcePack.html"
 sourceType: javadoc
 ---
 
 # FMLFileResourcePack
+
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.AbstractResourcePack → net.minecraft.client.resources.FileResourcePack → cpw.mods.fml.client.FMLFileResourcePack
 
 ## Class signature
 
@@ -15,13 +19,13 @@ sourceType: javadoc
 public class FMLFileResourcePack extends FileResourcePack implements FMLContainerHolder
 ```
 
-## Constructors
-
-- `public FMLFileResourcePack( ModContainer container)`
-
 ## Methods
 
-- `public java.lang.String getPackName()`
-- `protected java.io.InputStream getInputStreamByName(java.lang.String resourceName) throws java.io.IOException`
-- `public java.awt.image.BufferedImage getPackImage() throws java.io.IOException`
-- `public ModContainer getFMLContainer()`
+- `ModContainer getFMLContainer()`
+- `protected java.io.InputStream getInputStreamByName(java.lang.String resourceName)`
+- `java.awt.image.BufferedImage getPackImage()`
+- `java.lang.String getPackName()`
+
+## Fields
+
+- `FMLFileResourcePack`

@@ -1,16 +1,18 @@
 # ItemSplashPotion
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemPotion → net.minecraft.item.ItemSplashPotion
+
 ## Class signature
 
 ```java
 public class ItemSplashPotion extends ItemPotion
 ```
 
-## Constructors
-
-- `public ItemSplashPotion()`
-
 ## Methods
 
-- `public java.lang.String getItemStackDisplayName( ItemStack stack)`
-- `public ActionResult < ItemStack > onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)`
+- `java.lang.String getItemStackDisplayName(ItemStack stack)`
+- `ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)`
+
+## Fields
+
+- `ItemSplashPotion`

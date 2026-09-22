@@ -1,5 +1,7 @@
 # MovementInput
 
+**Inheritance:** java.lang.Object → net.minecraft.util.MovementInput
+
 ## Class signature
 
 ```java
@@ -8,12 +10,15 @@ public class MovementInput extends java.lang.Object
 
 ## Constructors
 
-- `public MovementInput()`
+- `MovementInput()`
 
 ## Methods
 
-- `public void updatePlayerMoveState()`
+- `void updatePlayerMoveState()`
 
-## Description
+## Fields
 
-The speed at which the player is moving forward.
+- `boolean jump`
+- `float moveForward` — The speed at which the player is moving forward.
+- `float moveStrafe` — The speed at which the player is strafing.
+- `boolean sneak`

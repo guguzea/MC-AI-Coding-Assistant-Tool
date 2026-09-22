@@ -1,5 +1,7 @@
 # PlayerArmorInvWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.items.wrapper.InvWrapper → net.minecraftforge.items.wrapper.PlayerArmorInvWrapper
+
 ## Class signature
 
 ```java
@@ -8,16 +10,17 @@ public class PlayerArmorInvWrapper extends InvWrapper
 
 ## Constructors
 
-- `public PlayerArmorInvWrapper( InventoryPlayer inv)`
+- `PlayerArmorInvWrapper(InventoryPlayer inv)`
 
 ## Methods
 
-- `public int getSlots()`
-- `public ItemStack getStackInSlot(int slot)`
-- `public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)`
-- `public void setStackInSlot(int slot, ItemStack stack)`
-- `public ItemStack extractItem(int slot, int amount, boolean simulate)`
+- `ItemStack extractItem(int slot, int amount, boolean simulate)` — Extracts an ItemStack from the given slot.
+- `int getSlots()` — Returns the number of slots available
+- `ItemStack getStackInSlot(int slot)` — Returns the ItemStack in a given slot.
+- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)` — Inserts an ItemStack into the given slot and return the remainder.
+- `void setStackInSlot(int slot, ItemStack stack)` — Overrides the stack in the given slot.
 
-## Description
+## Fields
 
-Extracts an ItemStack from the given slot.
+- `InventoryPlayer inventoryPlayer`
+- `int offset`

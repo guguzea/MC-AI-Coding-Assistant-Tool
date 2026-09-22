@@ -1,5 +1,7 @@
 # TextureStitchEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.TextureStitchEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class TextureStitchEvent extends Event
 
 ## Constructors
 
-- `public TextureStitchEvent( TextureMap map)`
+- `TextureStitchEvent(TextureMap map)`
 
 ## Methods
 
-- `public TextureMap getMap()`
-
-## Description
-
-This event is fired once the texture map has loaded all textures and stitched them together.
+- `TextureMap getMap()`

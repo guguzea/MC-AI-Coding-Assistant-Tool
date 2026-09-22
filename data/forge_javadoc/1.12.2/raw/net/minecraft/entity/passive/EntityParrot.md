@@ -3,11 +3,15 @@ title: "EntityParrot"
 description: "public class EntityParrot extends EntityShoulderRiding implements EntityFlying"
 package: "net/minecraft/entity/passive"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/passive/EntityParrot.html"
 sourceType: javadoc
 ---
 
 # EntityParrot
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityTameable → net.minecraft.entity.passive.EntityShoulderRiding → net.minecraft.entity.passive.EntityParrot
 
 ## Class signature
 
@@ -17,43 +21,51 @@ public class EntityParrot extends EntityShoulderRiding implements EntityFlying
 
 ## Constructors
 
-- `public EntityParrot( World worldIn)`
+- `EntityParrot(World worldIn)`
 
 ## Methods
 
-- `public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, IEntityLivingData livingdata)`
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
-- `protected PathNavigate createNavigator( World worldIn)`
-- `public float getEyeHeight()`
-- `public void onLivingUpdate()`
-- `public void setPartying( BlockPos pos, boolean p_191987_2_)`
-- `public boolean isPartying()`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand)`
-- `public boolean isBreedingItem( ItemStack stack)`
-- `public boolean getCanSpawnHere()`
-- `public void fall(float distance, float damageMultiplier)`
-- `protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)`
-- `public boolean canMateWith( EntityAnimal otherAnimal)`
-- `public EntityAgeable createChild( EntityAgeable ageable)`
-- `public static void playAmbientSound( World worldIn, Entity p_192005_1_)`
-- `public boolean attackEntityAsMob( Entity entityIn)`
-- `public SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
-- `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `protected float playFlySound(float p_191954_1_)`
-- `protected boolean makeFlySound()`
-- `protected float getSoundPitch()`
-- `public SoundCategory getSoundCategory()`
-- `public boolean canBePushed()`
-- `protected void collideWithEntity( Entity entityIn)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public int getVariant()`
-- `public void setVariant(int p_191997_1_)`
+- `boolean attackEntityAsMob(Entity entityIn)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBePushed()`
+- `boolean canMateWith(EntityAnimal otherAnimal)`
+- `protected void collideWithEntity(Entity entityIn)`
+- `EntityAgeable createChild(EntityAgeable ageable)`
+- `protected PathNavigate createNavigator(World worldIn)`
 - `protected void entityInit()`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
+- `void fall(float distance, float damageMultiplier)`
+- `SoundEvent getAmbientSound()`
+- `boolean getCanSpawnHere()`
+- `protected SoundEvent getDeathSound()`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
 - `protected ResourceLocation getLootTable()`
-- `public boolean isFlying()`
-- `public static void registerMimicSound(java.lang.Class<? extends Entity > cls, SoundEvent sound)`
+- `SoundCategory getSoundCategory()`
+- `protected float getSoundPitch()`
+- `int getVariant()`
+- `protected void initEntityAI()`
+- `boolean isBreedingItem(ItemStack stack)`
+- `boolean isFlying()`
+- `boolean isPartying()`
+- `protected boolean makeFlySound()`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onLivingUpdate()`
+- `static void playAmbientSound(World worldIn, Entity p_192005_1_)`
+- `protected float playFlySound(float p_191954_1_)`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerMimicSound(java.lang.Class<? extends Entity> cls, SoundEvent sound)`
+- `void setPartying(BlockPos pos, boolean p_191987_2_)`
+- `void setVariant(int p_191997_1_)`
+- `protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `float flap`
+- `float flapping`
+- `float flapSpeed`
+- `float oFlap`
+- `float oFlapSpeed`

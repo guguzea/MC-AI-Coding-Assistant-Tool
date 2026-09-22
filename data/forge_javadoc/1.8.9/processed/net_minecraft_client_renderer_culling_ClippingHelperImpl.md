@@ -1,20 +1,18 @@
 # ClippingHelperImpl
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.culling.ClippingHelper → net.minecraft.client.renderer.culling.ClippingHelperImpl
+
 ## Class signature
 
 ```java
 public class ClippingHelperImpl extends ClippingHelper
 ```
 
-## Constructors
-
-- `public ClippingHelperImpl()`
-
 ## Methods
 
-- `public static ClippingHelper getInstance()`
-- `public void init()`
+- `static ClippingHelper getInstance()` — Initialises the ClippingHelper object then returns an instance of it.
+- `void init()`
 
-## Description
+## Fields
 
-Initialises the ClippingHelper object then returns an instance of it.
+- `ClippingHelperImpl`

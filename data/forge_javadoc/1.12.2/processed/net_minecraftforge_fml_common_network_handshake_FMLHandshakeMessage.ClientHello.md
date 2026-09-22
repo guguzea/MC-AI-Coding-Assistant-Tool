@@ -1,11 +1,19 @@
 # FMLHandshakeMessage.ClientHello
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage → net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage.ClientHello
+
+## Class signature
+
+```java
+public static class FMLHandshakeMessage.ClientHello extends FMLHandshakeMessage
+```
+
 ## Constructors
 
-- `public ClientHello()`
+- `ClientHello()`
 
 ## Methods
 
-- `public void toBytes(ByteBuf buffer)`
-- `public void fromBytes(ByteBuf buffer)`
-- `public byte protocolVersion()`
+- `void fromBytes(ByteBuf buffer)`
+- `byte protocolVersion()`
+- `void toBytes(ByteBuf buffer)`

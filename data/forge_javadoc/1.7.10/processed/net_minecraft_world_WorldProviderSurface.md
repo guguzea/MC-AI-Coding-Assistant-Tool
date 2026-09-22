@@ -1,15 +1,17 @@
 # WorldProviderSurface
 
+**Inheritance:** java.lang.Object → net.minecraft.world.WorldProvider → net.minecraft.world.WorldProviderSurface
+
 ## Class signature
 
 ```java
 public class WorldProviderSurface extends WorldProvider
 ```
 
-## Constructors
-
-- `public WorldProviderSurface()`
-
 ## Methods
 
-- `public java.lang.String getDimensionName()`
+- `java.lang.String getDimensionName()`
+
+## Fields
+
+- `WorldProviderSurface`

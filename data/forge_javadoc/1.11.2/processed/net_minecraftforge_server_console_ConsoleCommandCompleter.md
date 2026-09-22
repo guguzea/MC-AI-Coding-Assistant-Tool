@@ -1,5 +1,7 @@
 # ConsoleCommandCompleter
 
+**Inheritance:** java.lang.Object → net.minecraftforge.server.console.ConsoleCommandCompleter
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public final class ConsoleCommandCompleter extends java.lang.Object implements j
 
 ## Constructors
 
-- `public ConsoleCommandCompleter( DedicatedServer server)`
+- `ConsoleCommandCompleter(DedicatedServer server)`
 
 ## Methods
 
-- `public int complete(java.lang.String buffer, int cursor, java.util.List<java.lang.CharSequence> candidates)`
+- `int complete(java.lang.String buffer, int cursor, java.util.List<java.lang.CharSequence> candidates)`

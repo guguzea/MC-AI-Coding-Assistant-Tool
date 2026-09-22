@@ -3,11 +3,15 @@ title: "GuardianSound"
 description: "public class GuardianSound extends MovingSound"
 package: "net/minecraft/client/audio"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/audio/GuardianSound.html"
 sourceType: javadoc
 ---
 
 # GuardianSound
+
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.PositionedSound → net.minecraft.client.audio.MovingSound → net.minecraft.client.audio.GuardianSound
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class GuardianSound extends MovingSound
 ```
 
-## Constructors
-
-- `public GuardianSound( EntityGuardian guardian)`
-
 ## Methods
 
-- `public void update()`
+- `void update()`
+
+## Fields
+
+- `GuardianSound`

@@ -1,5 +1,7 @@
 # StatBase
 
+**Inheritance:** java.lang.Object → net.minecraft.stats.StatBase
+
 ## Class signature
 
 ```java
@@ -8,24 +10,29 @@ public class StatBase extends java.lang.Object
 
 ## Constructors
 
-- `public StatBase(java.lang.String statIdIn, IChatComponent statNameIn, IStatType typeIn)`
-- `public StatBase(java.lang.String statIdIn, IChatComponent statNameIn)`
+- `StatBase(java.lang.String statIdIn, IChatComponent statNameIn)`
+- `StatBase(java.lang.String statIdIn, IChatComponent statNameIn, IStatType typeIn)`
 
 ## Methods
 
-- `public StatBase initIndependentStat()`
-- `public StatBase registerStat()`
-- `public boolean isAchievement()`
-- `public java.lang.String format(int p_75968_1_)`
-- `public IChatComponent getStatName()`
-- `public IChatComponent func_150955_j()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public java.lang.String toString()`
-- `public IScoreObjectiveCriteria func_150952_k()`
-- `public java.lang.Class<? extends IJsonSerializable > func_150954_l()`
-- `public StatBase func_150953_b(java.lang.Class<? extends IJsonSerializable > p_150953_1_)`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `java.lang.String format(int p_75968_1_)`
+- `IScoreObjectiveCriteria func_150952_k()`
+- `StatBase func_150953_b(java.lang.Class<? extends IJsonSerializable> p_150953_1_)`
+- `java.lang.Class<? extends IJsonSerializable> func_150954_l()`
+- `IChatComponent func_150955_j()`
+- `IChatComponent getStatName()`
+- `int hashCode()`
+- `StatBase initIndependentStat()` — Initializes the current stat as independent (i.e., lacking prerequisites for being updated) and returns the current instance.
+- `boolean isAchievement()` — Returns whether or not the StatBase-derived class is a statistic (running counter) or an achievement (one-shot).
+- `StatBase registerStat()` — Register the stat into StatList.
+- `java.lang.String toString()`
 
-## Description
+## Fields
 
-The Stat ID
+- `static IStatType distanceStatType`
+- `static IStatType field_111202_k`
+- `boolean isIndependent`
+- `static IStatType simpleStatType`
+- `java.lang.String statId` — The Stat ID
+- `static IStatType timeStatType`

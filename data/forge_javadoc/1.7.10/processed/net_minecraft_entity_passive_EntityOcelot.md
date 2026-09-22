@@ -1,39 +1,41 @@
 # EntityOcelot
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityTameable → net.minecraft.entity.passive.EntityOcelot
+
 ## Class signature
 
 ```java
 public class EntityOcelot extends EntityTameable
 ```
 
-## Constructors
-
-- `public EntityOcelot( World p_i1688_1_)`
-
 ## Methods
 
-- `protected void entityInit()`
-- `public void updateAITick()`
-- `protected boolean canDespawn()`
-- `public boolean isAIEnabled()`
 - `protected void applyEntityAttributes()`
-- `protected void fall(float p_70069_1_)`
-- `public void writeEntityToNBT( NBTTagCompound p_70014_1_)`
-- `public void readEntityFromNBT( NBTTagCompound p_70037_1_)`
-- `protected java.lang.String getLivingSound()`
-- `protected java.lang.String getHurtSound()`
-- `protected java.lang.String getDeathSound()`
-- `protected float getSoundVolume()`
-- `protected Item getDropItem()`
-- `public boolean attackEntityAsMob( Entity p_70652_1_)`
-- `public boolean attackEntityFrom( DamageSource p_70097_1_, float p_70097_2_)`
+- `boolean attackEntityAsMob(Entity p_70652_1_)`
+- `boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_)`
+- `protected boolean canDespawn()`
+- `boolean canMateWith(EntityAnimal p_70878_1_)`
+- `EntityOcelot createChild(EntityAgeable p_90011_1_)`
 - `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)`
-- `public boolean interact( EntityPlayer p_70085_1_)`
-- `public EntityOcelot createChild( EntityAgeable p_90011_1_)`
-- `public boolean isBreedingItem( ItemStack p_70877_1_)`
-- `public boolean canMateWith( EntityAnimal p_70878_1_)`
-- `public int getTameSkin()`
-- `public void setTameSkin(int p_70912_1_)`
-- `public boolean getCanSpawnHere()`
-- `public java.lang.String getCommandSenderName()`
-- `public IEntityLivingData onSpawnWithEgg( IEntityLivingData p_110161_1_)`
+- `protected void entityInit()`
+- `protected void fall(float p_70069_1_)`
+- `boolean getCanSpawnHere()`
+- `java.lang.String getCommandSenderName()`
+- `protected java.lang.String getDeathSound()`
+- `protected Item getDropItem()`
+- `protected java.lang.String getHurtSound()`
+- `protected java.lang.String getLivingSound()`
+- `protected float getSoundVolume()`
+- `int getTameSkin()`
+- `boolean interact(EntityPlayer p_70085_1_)`
+- `boolean isAIEnabled()`
+- `boolean isBreedingItem(ItemStack p_70877_1_)`
+- `IEntityLivingData onSpawnWithEgg(IEntityLivingData p_110161_1_)`
+- `void readEntityFromNBT(NBTTagCompound p_70037_1_)`
+- `void setTameSkin(int p_70912_1_)`
+- `void updateAITick()`
+- `void writeEntityToNBT(NBTTagCompound p_70014_1_)`
+
+## Fields
+
+- `EntityOcelot`

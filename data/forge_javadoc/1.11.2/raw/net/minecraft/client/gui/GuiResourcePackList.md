@@ -3,11 +3,15 @@ title: "GuiResourcePackList"
 description: "public abstract class GuiResourcePackList extends GuiListExtended"
 package: "net/minecraft/client/gui"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/gui/GuiResourcePackList.html"
 sourceType: javadoc
 ---
 
 # GuiResourcePackList
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.GuiSlot → net.minecraft.client.gui.GuiListExtended → net.minecraft.client.gui.GuiResourcePackList
 
 ## Class signature
 
@@ -17,14 +21,19 @@ public abstract class GuiResourcePackList extends GuiListExtended
 
 ## Constructors
 
-- `public GuiResourcePackList( Minecraft mcIn, int p_i45055_2_, int p_i45055_3_, java.util.List< ResourcePackListEntry > p_i45055_4_)`
+- `GuiResourcePackList(Minecraft mcIn, int p_i45055_2_, int p_i45055_3_, java.util.List<ResourcePackListEntry> p_i45055_4_)`
 
 ## Methods
 
 - `protected void drawListHeader(int insideLeft, int insideTop, Tessellator tessellatorIn)`
+- `java.util.List<ResourcePackListEntry> getList()`
+- `ResourcePackListEntry getListEntry(int index)`
 - `protected abstract java.lang.String getListHeader()`
-- `public java.util.List< ResourcePackListEntry > getList()`
-- `protected int getSize()`
-- `public ResourcePackListEntry getListEntry(int index)`
-- `public int getListWidth()`
+- `int getListWidth()`
 - `protected int getScrollBarX()`
+- `protected int getSize()`
+
+## Fields
+
+- `protected Minecraft mc`
+- `protected java.util.List<ResourcePackListEntry> resourcePackEntries`

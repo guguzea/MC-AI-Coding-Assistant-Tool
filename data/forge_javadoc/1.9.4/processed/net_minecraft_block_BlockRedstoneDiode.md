@@ -1,5 +1,7 @@
 # BlockRedstoneDiode
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockHorizontal → net.minecraft.block.BlockRedstoneDiode
+
 ## Class signature
 
 ```java
@@ -8,42 +10,47 @@ public abstract class BlockRedstoneDiode extends BlockHorizontal
 
 ## Constructors
 
-- `protected BlockRedstoneDiode(boolean powered)`
+- `BlockRedstoneDiode(boolean powered)`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public boolean canBlockStay( World worldIn, BlockPos pos)`
-- `public void randomTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random random)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public boolean shouldSideBeRendered( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `protected boolean isPowered( IBlockState state)`
-- `public int getStrongPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `public int getWeakPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `protected void updateState( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isLocked( IBlockAccess worldIn, BlockPos pos, IBlockState state)`
-- `protected boolean shouldBePowered( World worldIn, BlockPos pos, IBlockState state)`
-- `protected int calculateInputStrength( World worldIn, BlockPos pos, IBlockState state)`
-- `protected int getPowerOnSides( IBlockAccess worldIn, BlockPos pos, IBlockState state)`
-- `protected int getPowerOnSide( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
-- `public boolean canProvidePower( IBlockState state)`
-- `public IBlockState onBlockPlaced( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `protected void notifyNeighbors( World worldIn, BlockPos pos, IBlockState state)`
-- `public void onBlockDestroyedByPlayer( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `protected boolean isAlternateInput( IBlockState state)`
-- `protected int getActiveSignal( IBlockAccess worldIn, BlockPos pos, IBlockState state)`
-- `public static boolean isDiode( IBlockState state)`
-- `public boolean isSameDiode( IBlockState state)`
-- `public boolean isFacingTowardsRepeater( World worldIn, BlockPos pos, IBlockState state)`
-- `protected int getTickDelay( IBlockState state)`
-- `protected abstract int getDelay( IBlockState state)`
-- `protected abstract IBlockState getPoweredState( IBlockState unpoweredState)`
-- `protected abstract IBlockState getUnpoweredState( IBlockState poweredState)`
-- `public boolean isAssociatedBlock( Block other)`
-- `public BlockRenderLayer getBlockLayer()`
+- `protected int calculateInputStrength(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canBlockStay(World worldIn, BlockPos pos)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `boolean canProvidePower(IBlockState state)`
+- `protected int getActiveSignal(IBlockAccess worldIn, BlockPos pos, IBlockState state)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `protected abstract int getDelay(IBlockState state)`
+- `protected abstract IBlockState getPoweredState(IBlockState unpoweredState)`
+- `protected int getPowerOnSide(IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
+- `protected int getPowerOnSides(IBlockAccess worldIn, BlockPos pos, IBlockState state)`
+- `int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `protected int getTickDelay(IBlockState state)`
+- `protected abstract IBlockState getUnpoweredState(IBlockState poweredState)`
+- `int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `protected boolean isAlternateInput(IBlockState state)`
+- `boolean isAssociatedBlock(Block other)`
+- `static boolean isDiode(IBlockState state)`
+- `boolean isFacingTowardsRepeater(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isLocked(IBlockAccess worldIn, BlockPos pos, IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `protected boolean isPowered(IBlockState state)`
+- `boolean isSameDiode(IBlockState state)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
+- `protected void notifyNeighbors(World worldIn, BlockPos pos, IBlockState state)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)`
+- `IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)`
+- `void randomTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random random)`
+- `protected boolean shouldBePowered(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `protected void updateState(World worldIn, BlockPos pos, IBlockState state)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+
+## Fields
+
+- `protected boolean isRepeaterPowered`
+- `protected static AxisAlignedBB REDSTONE_DIODE_AABB`

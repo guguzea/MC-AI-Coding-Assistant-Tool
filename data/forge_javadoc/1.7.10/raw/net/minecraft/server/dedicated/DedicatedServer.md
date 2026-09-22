@@ -3,11 +3,15 @@ title: "DedicatedServer"
 description: "public class DedicatedServer extends MinecraftServer implements IServer"
 package: "net/minecraft/server/dedicated"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/server/dedicated/DedicatedServer.html"
 sourceType: javadoc
 ---
 
 # DedicatedServer
+
+**Inheritance:** java.lang.Object → net.minecraft.server.MinecraftServer → net.minecraft.server.dedicated.DedicatedServer
 
 ## Class signature
 
@@ -17,41 +21,46 @@ public class DedicatedServer extends MinecraftServer implements IServer
 
 ## Constructors
 
-- `public DedicatedServer(java.io.File p_i1508_1_)`
+- `DedicatedServer(java.io.File p_i1508_1_)`
 
 ## Methods
 
-- `protected boolean startServer() throws java.io.IOException`
-- `public boolean canStructuresSpawn()`
-- `public WorldSettings.GameType getGameType()`
-- `public EnumDifficulty func_147135_j()`
-- `public boolean isHardcore()`
-- `protected void finalTick( CrashReport p_71228_1_)`
-- `public CrashReport addServerInfoToCrashReport( CrashReport p_71230_1_)`
+- `void addPendingCommand(java.lang.String p_71331_1_, ICommandSender p_71331_2_)`
+- `CrashReport addServerInfoToCrashReport(CrashReport p_71230_1_)`
+- `void addServerStatsToSnooper(PlayerUsageSnooper p_70000_1_)`
+- `boolean allowSpawnMonsters()`
+- `boolean canStructuresSpawn()`
+- `void executePendingCommands()`
+- `protected void finalTick(CrashReport p_71228_1_)`
+- `void func_143006_e(int p_143006_1_)`
+- `EnumDifficulty func_147135_j()`
+- `boolean func_147136_ar()`
+- `boolean func_152363_m()`
+- `protected boolean func_152368_aE()`
+- `boolean getAllowNether()`
+- `boolean getBooleanProperty(java.lang.String p_71332_1_, boolean p_71332_2_)`
+- `DedicatedPlayerList getConfigurationManager()`
+- `WorldSettings.GameType getGameType()`
+- `boolean getGuiEnabled()`
+- `int getIntProperty(java.lang.String p_71327_1_, int p_71327_2_)`
+- `int getOpPermissionLevel()`
+- `java.lang.String getSettingsFilename()`
+- `int getSpawnProtectionSize()`
+- `java.lang.String getStringProperty(java.lang.String p_71330_1_, java.lang.String p_71330_2_)`
+- `boolean isBlockProtected(World p_96290_1_, int p_96290_2_, int p_96290_3_, int p_96290_4_, EntityPlayer p_96290_5_)`
+- `boolean isCommandBlockEnabled()`
+- `boolean isDedicatedServer()`
+- `boolean isHardcore()`
+- `boolean isSnooperEnabled()`
+- `void saveProperties()`
+- `void setGuiEnabled()`
+- `void setProperty(java.lang.String p_71328_1_, java.lang.Object p_71328_2_)`
+- `java.lang.String shareToLAN(WorldSettings.GameType p_71206_1_, boolean p_71206_2_)`
+- `protected boolean startServer()`
 - `protected void systemExitNow()`
-- `public void updateTimeLightAndEntities()`
-- `public boolean getAllowNether()`
-- `public boolean allowSpawnMonsters()`
-- `public void addServerStatsToSnooper( PlayerUsageSnooper p_70000_1_)`
-- `public boolean isSnooperEnabled()`
-- `public void addPendingCommand(java.lang.String p_71331_1_, ICommandSender p_71331_2_)`
-- `public void executePendingCommands()`
-- `public boolean isDedicatedServer()`
-- `public DedicatedPlayerList getConfigurationManager()`
-- `public int getIntProperty(java.lang.String p_71327_1_, int p_71327_2_)`
-- `public java.lang.String getStringProperty(java.lang.String p_71330_1_, java.lang.String p_71330_2_)`
-- `public boolean getBooleanProperty(java.lang.String p_71332_1_, boolean p_71332_2_)`
-- `public void setProperty(java.lang.String p_71328_1_, java.lang.Object p_71328_2_)`
-- `public void saveProperties()`
-- `public java.lang.String getSettingsFilename()`
-- `public void setGuiEnabled()`
-- `public boolean getGuiEnabled()`
-- `public java.lang.String shareToLAN( WorldSettings.GameType p_71206_1_, boolean p_71206_2_)`
-- `public boolean isCommandBlockEnabled()`
-- `public int getSpawnProtectionSize()`
-- `public boolean isBlockProtected( World p_96290_1_, int p_96290_2_, int p_96290_3_, int p_96290_4_, EntityPlayer p_96290_5_)`
-- `public int getOpPermissionLevel()`
-- `public void func_143006_e(int p_143006_1_)`
-- `public boolean func_152363_m()`
-- `public boolean func_147136_ar()`
-- `protected boolean func_152368_aE() throws java.io.IOException`
+- `void updateTimeLightAndEntities()`
+
+## Fields
+
+- `static boolean allowPlayerLogins`
+- `java.util.List pendingCommandList`

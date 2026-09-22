@@ -1,24 +1,34 @@
 ---
 title: "BlockPortal.Size"
-description: ""
+description: "public static class BlockPortal.Size extends java.lang.Object"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockPortal.Size.html"
 sourceType: javadoc
 ---
 
 # BlockPortal.Size
 
+**Inheritance:** java.lang.Object → net.minecraft.block.BlockPortal.Size
+
+## Class signature
+
+```java
+public static class BlockPortal.Size extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Size( World worldIn, BlockPos p_i45694_2_, EnumFacing.Axis p_i45694_3_)`
+- `Size(World worldIn, BlockPos p_i45694_2_, EnumFacing.Axis p_i45694_3_)`
 
 ## Methods
 
-- `protected int func_180120_a( BlockPos p_180120_1_, EnumFacing p_180120_2_)`
-- `public int func_181100_a()`
-- `public int func_181101_b()`
+- `protected boolean func_150857_a(Block p_150857_1_)`
 - `protected int func_150858_a()`
-- `protected boolean func_150857_a( Block p_150857_1_)`
-- `public boolean func_150860_b()`
-- `public void func_150859_c()`
+- `void func_150859_c()`
+- `boolean func_150860_b()`
+- `protected int func_180120_a(BlockPos p_180120_1_, EnumFacing p_180120_2_)`
+- `int func_181100_a()`
+- `int func_181101_b()`

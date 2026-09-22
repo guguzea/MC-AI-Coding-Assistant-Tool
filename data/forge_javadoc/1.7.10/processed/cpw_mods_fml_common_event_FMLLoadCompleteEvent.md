@@ -1,5 +1,7 @@
 # FMLLoadCompleteEvent
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.event.FMLEvent → cpw.mods.fml.common.event.FMLStateEvent → cpw.mods.fml.common.event.FMLLoadCompleteEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class FMLLoadCompleteEvent extends FMLStateEvent
 
 ## Constructors
 
-- `public FMLLoadCompleteEvent(java.lang.Object... data)`
+- `FMLLoadCompleteEvent(java.lang.Object... data)`
 
 ## Methods
 
-- `public LoaderState.ModState getModState()`
+- `LoaderState.ModState getModState()`

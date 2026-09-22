@@ -32,7 +32,7 @@
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from "fs";
 import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -428,10 +428,25 @@ function processVersion(version) {
 
 // ── 主 ────────────────────────────────────────────────────────────────
 
-console.log(`Generating indices for forge_javadoc (${dryRun ? "DRY RUN" : "live"})...\n`);
-
-for (const v of VERSIONS) {
-  processVersion(v);
+function runAll() {
+  console.log(`Generating indices for forge_javadoc (${dryRun ? "DRY RUN" : "live"})...\n`);
+  for (const v of VERSIONS) {
+    processVersion(v);
+  }
+  console.log("\nDone!");
 }
 
-console.log("\nDone!");
+// 直跑守卫：本文件顶部就 `process.argv.slice(2)` + 走盘 + **写 index-l0/1/2.json**。
+// 没有这层守卫时，任何测试 `import` 它都等于在测试进程里重建六档索引（还会覆盖刚写好、
+// 尚未跑过一致性判据的盘上产物）。与 fetch-forge-javadoc.js 同口径。
+const invokedDirectly =
+  !!process.argv[1] &&
+  import.meta.url.toLowerCase() === pathToFileURL(process.argv[1]).href.toLowerCase();
+if (invokedDirectly) {
+  try {
+    runAll();
+  } catch (e) {
+    console.error("❌ 索引重建中断：", e?.stack ?? e);
+    process.exitCode = 1;
+  }
+}

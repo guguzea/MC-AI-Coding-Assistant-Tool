@@ -1,20 +1,22 @@
 # SPacketUseBed
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketUseBed
+
 ## Class signature
 
 ```java
-public class SPacketUseBed extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketUseBed extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketUseBed()`
-- `public SPacketUseBed( EntityPlayer player, BlockPos posIn)`
+- `SPacketUseBed()`
+- `SPacketUseBed(EntityPlayer player, BlockPos posIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public EntityPlayer getPlayer( World worldIn)`
-- `public BlockPos getBedPosition()`
+- `BlockPos getBedPosition()`
+- `EntityPlayer getPlayer(World worldIn)`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

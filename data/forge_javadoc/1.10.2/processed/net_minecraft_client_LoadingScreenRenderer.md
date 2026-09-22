@@ -1,5 +1,7 @@
 # LoadingScreenRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.LoadingScreenRenderer
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class LoadingScreenRenderer extends java.lang.Object implements IProgress
 
 ## Constructors
 
-- `public LoadingScreenRenderer( Minecraft mcIn)`
+- `LoadingScreenRenderer(Minecraft mcIn)`
 
 ## Methods
 
-- `public void resetProgressAndMessage(java.lang.String message)`
-- `public void displaySavingString(java.lang.String message)`
-- `public void displayLoadingString(java.lang.String message)`
-- `public void setLoadingProgress(int progress)`
-- `public void setDoneWorking()`
+- `void displayLoadingString(java.lang.String message)`
+- `void displaySavingString(java.lang.String message)`
+- `void resetProgressAndMessage(java.lang.String message)`
+- `void setDoneWorking()`
+- `void setLoadingProgress(int progress)`

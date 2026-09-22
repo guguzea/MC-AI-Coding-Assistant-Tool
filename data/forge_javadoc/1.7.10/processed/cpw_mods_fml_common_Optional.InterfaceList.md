@@ -1,5 +1,11 @@
 # Optional.InterfaceList
 
-## Description
+## Class signature
 
-Mark a list of interfaces as removable
+```java
+public static @interface Optional.InterfaceList
+```
+
+## Elements
+
+- `Optional.Interface [] value` — Mark a list of interfaces for optional removal.

@@ -1,13 +1,17 @@
 ---
 title: "LivingSpawnEvent"
-description: "LivingSpawnEvent is fired for any events associated with Living Enttnies spawn status. If a method utilizes this Event as its parameter, the method will receive every child event of this class. world "
+description: "public class LivingSpawnEvent extends LivingEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/entity/living/LivingSpawnEvent.html"
 sourceType: javadoc
 ---
 
 # LivingSpawnEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingSpawnEvent
 
 ## Class signature
 
@@ -17,15 +21,11 @@ public class LivingSpawnEvent extends LivingEvent
 
 ## Constructors
 
-- `public LivingSpawnEvent( EntityLiving entity, World world, float x, float y, float z)`
+- `LivingSpawnEvent(EntityLiving entity, World world, float x, float y, float z)`
 
 ## Methods
 
-- `public World getWorld()`
-- `public float getX()`
-- `public float getY()`
-- `public float getZ()`
-
-## Description
-
-LivingSpawnEvent is fired for any events associated with Living Enttnies spawn status. If a method utilizes this Event as its parameter, the method will receive every child event of this class. world 
+- `World getWorld()`
+- `float getX()`
+- `float getY()`
+- `float getZ()`

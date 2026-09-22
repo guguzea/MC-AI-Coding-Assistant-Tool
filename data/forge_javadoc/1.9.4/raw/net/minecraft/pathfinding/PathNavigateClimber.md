@@ -3,11 +3,15 @@ title: "PathNavigateClimber"
 description: "public class PathNavigateClimber extends PathNavigateGround"
 package: "net/minecraft/pathfinding"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/pathfinding/PathNavigateClimber.html"
 sourceType: javadoc
 ---
 
 # PathNavigateClimber
+
+**Inheritance:** java.lang.Object → net.minecraft.pathfinding.PathNavigate → net.minecraft.pathfinding.PathNavigateGround → net.minecraft.pathfinding.PathNavigateClimber
 
 ## Class signature
 
@@ -15,13 +19,13 @@ sourceType: javadoc
 public class PathNavigateClimber extends PathNavigateGround
 ```
 
-## Constructors
-
-- `public PathNavigateClimber( EntityLiving entityLivingIn, World worldIn)`
-
 ## Methods
 
-- `public Path getPathToPos( BlockPos pos)`
-- `public Path getPathToEntityLiving( Entity entityIn)`
-- `public boolean tryMoveToEntityLiving( Entity entityIn, double speedIn)`
-- `public void onUpdateNavigation()`
+- `Path getPathToEntityLiving(Entity entityIn)`
+- `Path getPathToPos(BlockPos pos)`
+- `void onUpdateNavigation()`
+- `boolean tryMoveToEntityLiving(Entity entityIn, double speedIn)`
+
+## Fields
+
+- `PathNavigateClimber`

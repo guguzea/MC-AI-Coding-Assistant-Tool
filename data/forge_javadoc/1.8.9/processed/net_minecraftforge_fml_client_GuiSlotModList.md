@@ -1,24 +1,22 @@
 # GuiSlotModList
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.GuiScrollingList → net.minecraftforge.fml.client.GuiSlotModList
+
 ## Class signature
 
 ```java
 public class GuiSlotModList extends GuiScrollingList
 ```
 
-## Constructors
-
-- `public GuiSlotModList( GuiModList parent, java.util.ArrayList< ModContainer > mods, int listWidth)`
-
 ## Methods
 
-- `protected int getSize()`
-- `protected void elementClicked(int index, boolean doubleClick)`
-- `protected boolean isSelected(int index)`
 - `protected void drawBackground()`
+- `protected void drawSlot(int idx, int right, int top, int height, Tessellator tess)` — Draw anything special on the screen.
+- `protected void elementClicked(int index, boolean doubleClick)`
 - `protected int getContentHeight()`
-- `protected void drawSlot(int idx, int right, int top, int height, Tessellator tess)`
+- `protected int getSize()`
+- `protected boolean isSelected(int index)`
 
-## Description
+## Fields
 
-Draw anything special on the screen.
+- `GuiSlotModList`

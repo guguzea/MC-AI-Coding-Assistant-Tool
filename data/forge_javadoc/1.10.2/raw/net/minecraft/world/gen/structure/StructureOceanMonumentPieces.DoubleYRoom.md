@@ -1,19 +1,29 @@
 ---
 title: "StructureOceanMonumentPieces.DoubleYRoom"
-description: ""
+description: "public static class StructureOceanMonumentPieces.DoubleYRoom extends StructureOceanMonumentPieces.Piece"
 package: "net/minecraft/world/gen/structure"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/gen/structure/StructureOceanMonumentPieces.DoubleYRoom.html"
 sourceType: javadoc
 ---
 
 # StructureOceanMonumentPieces.DoubleYRoom
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureOceanMonumentPieces.Piece → net.minecraft.world.gen.structure.StructureOceanMonumentPieces.DoubleYRoom
 
-- `public DoubleYRoom()`
-- `public DoubleYRoom( EnumFacing p_i45595_1_, net.minecraft.world.gen.structure.StructureOceanMonumentPieces.RoomDefinition p_i45595_2_, java.util.Random p_i45595_3_)`
+## Class signature
+
+```java
+public static class StructureOceanMonumentPieces.DoubleYRoom extends StructureOceanMonumentPieces.Piece
+```
 
 ## Methods
 
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+
+## Fields
+
+- `DoubleYRoom`
+- `DoubleYRoom`

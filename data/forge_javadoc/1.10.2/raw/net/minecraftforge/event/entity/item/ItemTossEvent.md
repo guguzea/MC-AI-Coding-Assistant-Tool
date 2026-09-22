@@ -1,13 +1,17 @@
 ---
 title: "ItemTossEvent"
-description: "Event that is fired whenever a player tosses (Q) an item or drag-n-drops a stack of items outside the inventory GUI screens. Canceling the event will stop the items from entering the world, but will n"
+description: "public class ItemTossEvent extends ItemEvent"
 package: "net/minecraftforge/event/entity/item"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/entity/item/ItemTossEvent.html"
 sourceType: javadoc
 ---
 
 # ItemTossEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.item.ItemEvent → net.minecraftforge.event.entity.item.ItemTossEvent
 
 ## Class signature
 
@@ -17,12 +21,8 @@ public class ItemTossEvent extends ItemEvent
 
 ## Constructors
 
-- `public ItemTossEvent( EntityItem entityItem, EntityPlayer player)`
+- `ItemTossEvent(EntityItem entityItem, EntityPlayer player)`
 
 ## Methods
 
-- `public EntityPlayer getPlayer()`
-
-## Description
-
-Event that is fired whenever a player tosses (Q) an item or drag-n-drops a stack of items outside the inventory GUI screens. Canceling the event will stop the items from entering the world, but will n
+- `EntityPlayer getPlayer()` — The player tossing the item.

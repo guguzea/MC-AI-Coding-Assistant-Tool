@@ -1,28 +1,32 @@
 ---
 title: "CPacketChatMessage"
-description: "public class CPacketChatMessage extends java.lang.Object implements Packet < INetHandlerPlayServer >"
+description: "public class CPacketChatMessage extends java.lang.Object implements Packet<INetHandlerPlayServer>"
 package: "net/minecraft/network/play/client"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/network/play/client/CPacketChatMessage.html"
 sourceType: javadoc
 ---
 
 # CPacketChatMessage
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketChatMessage
+
 ## Class signature
 
 ```java
-public class CPacketChatMessage extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketChatMessage extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketChatMessage()`
-- `public CPacketChatMessage(java.lang.String messageIn)`
+- `CPacketChatMessage()`
+- `CPacketChatMessage(java.lang.String messageIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public java.lang.String getMessage()`
+- `java.lang.String getMessage()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

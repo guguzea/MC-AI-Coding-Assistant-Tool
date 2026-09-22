@@ -1,28 +1,32 @@
 ---
 title: "UserListWhitelist"
-description: "public class UserListWhitelist extends UserList <GameProfile, UserListWhitelistEntry >"
+description: "public class UserListWhitelist extends UserList<GameProfile, UserListWhitelistEntry>"
 package: "net/minecraft/server/management"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/server/management/UserListWhitelist.html"
 sourceType: javadoc
 ---
 
 # UserListWhitelist
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.UserList<GameProfile, UserListWhitelistEntry> → net.minecraft.server.management.UserListWhitelist
+
 ## Class signature
 
 ```java
-public class UserListWhitelist extends UserList <GameProfile, UserListWhitelistEntry >
+public class UserListWhitelist extends UserList<GameProfile, UserListWhitelistEntry>
 ```
-
-## Constructors
-
-- `public UserListWhitelist(java.io.File p_i1132_1_)`
 
 ## Methods
 
-- `protected UserListEntry <GameProfile> createEntry(JsonObject entryData)`
-- `public java.lang.String[] getKeys()`
-- `public boolean isWhitelisted(GameProfile profile)`
+- `protected UserListEntry<GameProfile> createEntry(JsonObject entryData)`
+- `GameProfile getByName(java.lang.String profileName)`
+- `java.lang.String[] getKeys()`
 - `protected java.lang.String getObjectKey(GameProfile obj)`
-- `public GameProfile getByName(java.lang.String profileName)`
+- `boolean isWhitelisted(GameProfile profile)`
+
+## Fields
+
+- `UserListWhitelist`

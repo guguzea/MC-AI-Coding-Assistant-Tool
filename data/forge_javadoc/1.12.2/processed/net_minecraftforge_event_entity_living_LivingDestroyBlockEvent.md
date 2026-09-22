@@ -1,5 +1,7 @@
 # LivingDestroyBlockEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingDestroyBlockEvent
+
 ## Class signature
 
 ```java
@@ -8,13 +10,9 @@ public class LivingDestroyBlockEvent extends LivingEvent
 
 ## Constructors
 
-- `public LivingDestroyBlockEvent( EntityLivingBase entity, BlockPos pos, IBlockState state)`
+- `LivingDestroyBlockEvent(EntityLivingBase entity, BlockPos pos, IBlockState state)`
 
 ## Methods
 
-- `public IBlockState getState()`
-- `public BlockPos getPos()`
-
-## Description
-
-Fired when the ender dragon or wither attempts to destroy a block and when ever a zombie attempts to break a door. Basically a event version of Block.canEntityDestroy(IBlockState, IBlockAccess, BlockP
+- `BlockPos getPos()`
+- `IBlockState getState()`

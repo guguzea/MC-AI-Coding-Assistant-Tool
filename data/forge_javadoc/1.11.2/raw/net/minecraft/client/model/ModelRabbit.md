@@ -3,11 +3,15 @@ title: "ModelRabbit"
 description: "public class ModelRabbit extends ModelBase"
 package: "net/minecraft/client/model"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/model/ModelRabbit.html"
 sourceType: javadoc
 ---
 
 # ModelRabbit
+
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelRabbit
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class ModelRabbit extends ModelBase
 ```
 
-## Constructors
-
-- `public ModelRabbit()`
-
 ## Methods
 
-- `public void render( Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
-- `public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
-- `public void setLivingAnimations( EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime)`
+- `void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime)`
+- `void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
+
+## Fields
+
+- `ModelRabbit`

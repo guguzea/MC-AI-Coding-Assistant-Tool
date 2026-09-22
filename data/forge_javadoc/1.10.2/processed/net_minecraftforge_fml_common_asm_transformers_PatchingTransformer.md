@@ -1,5 +1,7 @@
 # PatchingTransformer
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.asm.transformers.PatchingTransformer
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class PatchingTransformer extends java.lang.Object implements net.minecra
 
 ## Constructors
 
-- `public PatchingTransformer()`
+- `PatchingTransformer()`
 
 ## Methods
 
-- `public byte[] transform(java.lang.String name, java.lang.String transformedName, byte[] bytes)`
+- `byte[] transform(java.lang.String name, java.lang.String transformedName, byte[] bytes)`

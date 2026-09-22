@@ -1,18 +1,34 @@
 ---
 title: "ChunkProviderEvent.InitNoiseField"
-description: "This event is fired before a chunks terrain noise field is initialized. You can set the result to DENY to substitute your own noise field."
+description: "public static class ChunkProviderEvent.InitNoiseField extends ChunkProviderEvent"
 package: "net/minecraftforge/event/terraingen"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/terraingen/ChunkProviderEvent.InitNoiseField.html"
 sourceType: javadoc
 ---
 
 # ChunkProviderEvent.InitNoiseField
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.ChunkProviderEvent → net.minecraftforge.event.terraingen.ChunkProviderEvent.InitNoiseField
+
+## Class signature
+
+```java
+public static class ChunkProviderEvent.InitNoiseField extends ChunkProviderEvent
+```
+
 ## Constructors
 
-- `public InitNoiseField( IChunkProvider chunkProvider, double[] noisefield, int posX, int posY, int posZ, int sizeX, int sizeY, int sizeZ)`
+- `InitNoiseField(IChunkProvider chunkProvider, double[] noisefield, int posX, int posY, int posZ, int sizeX, int sizeY, int sizeZ)`
 
-## Description
+## Fields
 
-This event is fired before a chunks terrain noise field is initialized. You can set the result to DENY to substitute your own noise field.
+- `double[] noisefield`
+- `int posX`
+- `int posY`
+- `int posZ`
+- `int sizeX`
+- `int sizeY`
+- `int sizeZ`

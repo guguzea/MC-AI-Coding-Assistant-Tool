@@ -78,6 +78,7 @@ import { diagnoseDataPaths, resolveDataDir } from "./utils/path.js";
 import { probeJava } from "./decompile/java/java-process.js";
 import { getSemanticIndexStatus } from "./docs-platform/semantic/status.js";
 import { analyzePortingPath, portProject } from "./porting/index.js";
+import { queryUpstreamReleases } from "./upstream/releases.js";
 import { registerWaveExtensions, waveToolSchemas } from "./wave/register.js";
 import {
   searchBedrockDocs,
@@ -225,6 +226,51 @@ export const portProjectSchema = z.object({
   neoforgeVersion: z.string().optional().describe("init_architectury 写入 gradle.properties 的 neoforge_version；缺省则拒绝"),
 });
 
+export const queryUpstreamReleasesSchema = z.object({
+  source: z
+    .enum(["forge", "neoforge", "fabric-loader", "fabric-yarn", "quilt-loader", "parchment", "modrinth"])
+    .describe("上游发布源。forge 走 maven-metadata.xml（全量，可选按 MC 过滤）；neoforge 同（注意 NeoForge 编号去掉前导 1.：MC 1.21.1 → 21.1.x）；fabric-loader / fabric-yarn / quilt-loader / parchment 的端点按 MC 版本分列，**必须带 minecraftVersion**；modrinth 走 project slug 查任意第三方模组/库"),
+  minecraftVersion: z
+    .string()
+    .min(1)
+    .optional()
+    .describe('Minecraft 版本，如 "1.20.1"。fabric-loader / fabric-yarn / quilt-loader / parchment 必填（后两者按 artifact 名分列）；forge / neoforge / modrinth 可选（传了就只回该 MC 的版本，不传回全表）'),
+  slug: z.string().optional().describe("modrinth 专用：project slug（小写字母数字与连字符，如 fabric-api）。其它源忽略。CLI 侧故意不叫 project —— --project 在本仓 CLI 是 projectPath 的保留别名，会被吞掉"),
+  limit: z.number().int().min(1).max(200).optional().default(12).describe("最多回几条（按版本号降序取前 N），默认 12；total 始终是过滤后的总条数"),
+});
+
+/**
+ * P0-2 分层输出：仓库首个 outputSchema。text 仍是完整 JSON（CLI 的 unwrapHandlerResult
+ * 与 isToolFailure 靠它），structuredContent 给宿主同构对象 —— 省 token 靠
+ * releases 截断到 limit + total/truncated/latest 把「截断」这件事说破，不是靠少给字段。
+ */
+export const queryUpstreamReleasesOutputSchema = z.object({
+  ok: z.boolean(),
+  source: z.enum(["forge", "neoforge", "fabric-loader", "fabric-yarn", "quilt-loader", "parchment", "modrinth"]),
+  url: z.string(),
+  minecraftVersion: z.string().optional(),
+  available: z.boolean(),
+  total: z.number().int().min(0),
+  releases: z.array(
+    z.object({
+      version: z.string(),
+      maven: z.string().optional(),
+      timestamp: z.string().optional(),
+      stable: z.boolean().optional(),
+      gameVersions: z.array(z.string()).optional(),
+      loaders: z.array(z.string()).optional(),
+    }),
+  ),
+  latest: z.string().optional(),
+  truncated: z.boolean().optional(),
+  matchRule: z.string().optional(),
+  httpStatus: z.number().int().optional(),
+  via: z.enum(["fetch", "curl"]).optional(),
+  redirectedTo: z.string().optional(),
+  error: z.object({ code: z.string(), message: z.string(), hint: z.string().optional() }).optional(),
+  fetchedAt: z.string(),
+});
+
 function communityDocError(e: unknown): CallToolResult {
   if (e instanceof CommunityDocNotFoundError) {
     return {
@@ -322,6 +368,22 @@ const VALIDATE_PROJECT_DESC =
 const LIST_DOC_VERSIONS_DESC =
   "返回指定平台的可用文档版本列表。" +
   "platform 参数指定平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader），必填。基岩请用 search_bedrock_docs。";
+
+/**
+ * P0-1 上游可用性（2026-09-21 mcmap / mappings.dev / Linkie 审计里唯一值得吸收的能力）。
+ * 描述必须把「本仓已入库」与「上游有没有」分开说，否则 agent 会拿 list_*_versions 的
+ * 缺席当否定证据 —— 那正是本仓 VERSION_NOT_FOUND 载荷反复澄清的那个误读。
+ */
+const QUERY_UPSTREAM_RELEASES_DESC =
+  "查上游发布源「某个加载器/映射/模组的哪个版本到底存在吗、最新出到第几 build」。" +
+  "source 七选一：forge / neoforge（maven-metadata.xml，全量可查）、fabric-loader / fabric-yarn / quilt-loader / parchment（端点按 MC 版本分列，**必须带 minecraftVersion**；parchment 的 artifact 名是 parchment-<mc>，版本串本身是日期）、modrinth（需 slug，查任意第三方模组/库）。" +
+  "【与 list_*_versions 的区别】那些列的是**本仓库已入库**的文档档位，不在清单 ≠ 上游没有；要回答「上游有没有 1.20.1 的 Forge 47.4.x」「yarn 对 1.21.4 出到第几 build」用本工具。" +
+  "【三态必读】ok:false ⇒ 没查到（网络/HTTP/解析失败，原因在 error），不得据此断言上游没有；" +
+  "ok:true + available:false ⇒ 上游确实没有该版本（404 或按 matchRule 过滤后 0 条）。" +
+  "matchRule 回显本次用的版本归属规则（如 neoforge：MC 1.21.1 → 前缀 21.1.），核对判据用。" +
+  "releases 按版本号降序、截断到 limit（默认 12），total 是过滤后总条数、truncated 说明是否被截。正式版排在同号的 nightly / beta 之前。" +
+  "【边界】要联网；Node TLS 失败时自动回退 curl.exe --ssl-no-revoke，不改系统证书库或代理。入口与重定向落点都过主机白名单（parchment 的托管后端 ldtteam.jfrog.io 已显式登记），落点不在白名单 ⇒ 不读正文并报 URL_REJECTED。" +
+  "不返回依赖坐标写法与 API 说明，那些仍走 search_*_docs / diagnose_gradle。";
 
 /**
  * verbatim 逐字支撑位口径（四个检索工具共用；实现在 docs-platform/search-utils.ts 的 annotateVerbatim）。
@@ -996,6 +1058,30 @@ server.registerTool(
   }
 );
 
+// ── 18b. 上游版本可用性查询（P0-1；仓库首个带 outputSchema 的工具）────────────
+server.registerTool(
+  "query_upstream_releases",
+  {
+    title: "Query Upstream Release Availability",
+    description: QUERY_UPSTREAM_RELEASES_DESC,
+    inputSchema: queryUpstreamReleasesSchema,
+    outputSchema: queryUpstreamReleasesOutputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    const result = await queryUpstreamReleases({
+      source: args.source,
+      minecraftVersion: args.minecraftVersion,
+      slug: args.slug,
+      limit: args.limit,
+    });
+    return {
+      content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+      // SDK 把 structuredContent 声明成带索引签名的 {[k:string]: unknown}，具名 interface 不满足它
+      structuredContent: { ...result },
+    };
+  }
+);
+
 // ── 诊断工具（可选，高级排障用）──────────────────────────────────────────────
 
 server.registerTool(
@@ -1227,6 +1313,7 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "diagnose_data_paths", description: "诊断数据目录配置（高级排障用）。返回各平台数据目录的可用性状态。诊断 MC_SKILL_DATA / MC_SKILL_COMMUNITY 解析结果，以及 forge/fabric/neoforge/quilt/liteloader/rift/modloader/bedrock/community 是 found / empty / not_found。", inputSchema: diagnoseDataPathsSchema },
   { name: "analyze_porting_path", description: ANALYZE_PORTING_PATH_DESC, inputSchema: analyzePortingPathSchema },
   { name: "port_project", description: PORT_PROJECT_DESC, inputSchema: portProjectSchema },
+  { name: "query_upstream_releases", description: QUERY_UPSTREAM_RELEASES_DESC, inputSchema: queryUpstreamReleasesSchema },
   { name: "search_bedrock_docs", description: "搜索基岩版 Microsoft Learn Creator 文档（hybrid L0+语义）。每次返回 docsStatus 滞后标记。不是 search_forge_docs。", inputSchema: searchBedrockDocsSchema },
   { name: "get_bedrock_doc_summary", description: "基岩文档 L1 摘要。带 docsStatus。不是 get_forge_doc_summary。", inputSchema: getBedrockDocSummarySchema },
   { name: "get_bedrock_doc_full", description: "基岩文档全文。一次 ≤ 2 页。带 docsStatus。", inputSchema: getBedrockDocFullSchema },

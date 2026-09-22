@@ -3,11 +3,15 @@ title: "PhaseLandingApproach"
 description: "public class PhaseLandingApproach extends PhaseBase"
 package: "net/minecraft/entity/boss/dragon/phase"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/entity/boss/dragon/phase/PhaseLandingApproach.html"
 sourceType: javadoc
 ---
 
 # PhaseLandingApproach
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseLandingApproach
 
 ## Class signature
 
@@ -15,13 +19,13 @@ sourceType: javadoc
 public class PhaseLandingApproach extends PhaseBase
 ```
 
-## Constructors
-
-- `public PhaseLandingApproach( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public PhaseList < PhaseLandingApproach > getPhaseList()`
-- `public void initPhase()`
-- `public void doLocalUpdate()`
-- `@Nullable public Vec3d getTargetLocation()`
+- `void doLocalUpdate()`
+- `PhaseList<PhaseLandingApproach> getPhaseList()`
+- `Vec3d getTargetLocation()`
+- `void initPhase()`
+
+## Fields
+
+- `PhaseLandingApproach`

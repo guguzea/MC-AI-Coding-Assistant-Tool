@@ -1,16 +1,20 @@
 # TimeValues.VariableValue
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.animation.TimeValues.VariableValue
+
+## Class signature
+
+```java
+public static final class TimeValues.VariableValue extends java.lang.Object implements ITimeValue
+```
+
 ## Constructors
 
-- `public VariableValue(float initialValue)`
+- `VariableValue(float initialValue)`
 
 ## Methods
 
-- `public void setValue(float newValue)`
-- `public float apply(float input)`
-- `public int hashCode()`
-- `public boolean equals(java.lang.Object obj)`
-
-## Description
-
-Simple value holder.
+- `float apply(float input)`
+- `boolean equals(java.lang.Object obj)`
+- `int hashCode()`
+- `void setValue(float newValue)`

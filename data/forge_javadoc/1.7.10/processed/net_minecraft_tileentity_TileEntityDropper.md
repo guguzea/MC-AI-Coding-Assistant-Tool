@@ -1,15 +1,17 @@
 # TileEntityDropper
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityDispenser → net.minecraft.tileentity.TileEntityDropper
+
 ## Class signature
 
 ```java
 public class TileEntityDropper extends TileEntityDispenser
 ```
 
-## Constructors
-
-- `public TileEntityDropper()`
-
 ## Methods
 
-- `public java.lang.String getInventoryName()`
+- `java.lang.String getInventoryName()`
+
+## Fields
+
+- `TileEntityDropper`

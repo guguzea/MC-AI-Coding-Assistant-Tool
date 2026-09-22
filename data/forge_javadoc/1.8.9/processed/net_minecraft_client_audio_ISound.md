@@ -8,12 +8,12 @@ public interface ISound
 
 ## Methods
 
-- `ResourceLocation getSoundLocation()`
 - `boolean canRepeat()`
-- `int getRepeatDelay()`
-- `float getVolume()`
+- `ISound.AttenuationType getAttenuationType()`
 - `float getPitch()`
+- `int getRepeatDelay()`
+- `ResourceLocation getSoundLocation()`
+- `float getVolume()`
 - `float getXPosF()`
 - `float getYPosF()`
 - `float getZPosF()`
-- `ISound.AttenuationType getAttenuationType()`

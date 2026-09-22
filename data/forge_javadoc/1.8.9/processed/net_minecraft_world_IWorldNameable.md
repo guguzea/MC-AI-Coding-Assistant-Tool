@@ -8,10 +8,6 @@ public interface IWorldNameable
 
 ## Methods
 
-- `java.lang.String getName()`
-- `boolean hasCustomName()`
-- `IChatComponent getDisplayName()`
-
-## Description
-
-Get the formatted ChatComponent that will be used for the sender's username in chat
+- `IChatComponent getDisplayName()` — Get the formatted ChatComponent that will be used for the sender's username in chat
+- `java.lang.String getName()` — Get the name of this object.
+- `boolean hasCustomName()` — Returns true if this thing is named

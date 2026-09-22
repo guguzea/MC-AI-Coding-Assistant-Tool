@@ -3,11 +3,15 @@ title: "EntityLargeExplodeFX"
 description: "public class EntityLargeExplodeFX extends EntityFX"
 package: "net/minecraft/client/particle"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/particle/EntityLargeExplodeFX.html"
 sourceType: javadoc
 ---
 
 # EntityLargeExplodeFX
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.client.particle.EntityFX → net.minecraft.client.particle.EntityLargeExplodeFX
 
 ## Class signature
 
@@ -15,13 +19,13 @@ sourceType: javadoc
 public class EntityLargeExplodeFX extends EntityFX
 ```
 
-## Constructors
-
-- `public EntityLargeExplodeFX( TextureManager p_i1213_1_, World p_i1213_2_, double p_i1213_3_, double p_i1213_5_, double p_i1213_7_, double p_i1213_9_, double p_i1213_11_, double p_i1213_13_)`
-
 ## Methods
 
-- `public void renderParticle( Tessellator p_70539_1_, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)`
-- `public int getBrightnessForRender(float p_70070_1_)`
-- `public void onUpdate()`
-- `public int getFXLayer()`
+- `int getBrightnessForRender(float p_70070_1_)`
+- `int getFXLayer()`
+- `void onUpdate()`
+- `void renderParticle(Tessellator p_70539_1_, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)`
+
+## Fields
+
+- `EntityLargeExplodeFX`

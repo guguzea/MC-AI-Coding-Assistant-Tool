@@ -1,18 +1,24 @@
 ---
 title: "PlayerInteractEvent.RightClickItem"
-description: "This event is fired on both sides before the player triggers Item.onItemRightClick(net.minecraft.item.ItemStack, net.minecraft.world.World, net.minecraft.entity.player.EntityPlayer, net.minecraft.util"
+description: "public static class PlayerInteractEvent.RightClickItem extends PlayerInteractEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/entity/player/PlayerInteractEvent.RightClickItem.html"
 sourceType: javadoc
 ---
 
 # PlayerInteractEvent.RightClickItem
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent → net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem
+
+## Class signature
+
+```java
+public static class PlayerInteractEvent.RightClickItem extends PlayerInteractEvent
+```
+
 ## Constructors
 
-- `public RightClickItem( EntityPlayer player, EnumHand hand, ItemStack stack)`
-
-## Description
-
-This event is fired on both sides before the player triggers Item.onItemRightClick(net.minecraft.item.ItemStack, net.minecraft.world.World, net.minecraft.entity.player.EntityPlayer, net.minecraft.util
+- `RightClickItem(EntityPlayer player, EnumHand hand, ItemStack stack)`

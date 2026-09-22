@@ -3,11 +3,15 @@ title: "ContainerChest"
 description: "public class ContainerChest extends Container"
 package: "net/minecraft/inventory"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/inventory/ContainerChest.html"
 sourceType: javadoc
 ---
 
 # ContainerChest
+
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Container → net.minecraft.inventory.ContainerChest
 
 ## Class signature
 
@@ -15,13 +19,13 @@ sourceType: javadoc
 public class ContainerChest extends Container
 ```
 
-## Constructors
-
-- `public ContainerChest( IInventory playerInventory, IInventory chestInventory, EntityPlayer player)`
-
 ## Methods
 
-- `public boolean canInteractWith( EntityPlayer playerIn)`
-- `public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
-- `public void onContainerClosed( EntityPlayer playerIn)`
-- `public IInventory getLowerChestInventory()`
+- `boolean canInteractWith(EntityPlayer playerIn)`
+- `IInventory getLowerChestInventory()`
+- `void onContainerClosed(EntityPlayer playerIn)`
+- `ItemStack transferStackInSlot(EntityPlayer playerIn, int index)`
+
+## Fields
+
+- `ContainerChest`

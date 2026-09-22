@@ -1,13 +1,17 @@
 ---
 title: "BiomeGenJungle"
-description: "Gets a WorldGen appropriate for this biome."
+description: "public class BiomeGenJungle extends BiomeGenBase"
 package: "net/minecraft/world/biome"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/biome/BiomeGenJungle.html"
 sourceType: javadoc
 ---
 
 # BiomeGenJungle
+
+**Inheritance:** java.lang.Object → net.minecraft.world.biome.BiomeGenBase → net.minecraft.world.biome.BiomeGenJungle
 
 ## Class signature
 
@@ -15,16 +19,12 @@ sourceType: javadoc
 public class BiomeGenJungle extends BiomeGenBase
 ```
 
-## Constructors
-
-- `public BiomeGenJungle(int p_i45379_1_, boolean p_i45379_2_)`
-
 ## Methods
 
-- `public WorldGenAbstractTree genBigTreeChance(java.util.Random rand)`
-- `public WorldGenerator getRandomWorldGenForGrass(java.util.Random rand)`
-- `public void decorate( World worldIn, java.util.Random rand, BlockPos pos)`
+- `void decorate(World worldIn, java.util.Random rand, BlockPos pos)`
+- `WorldGenAbstractTree genBigTreeChance(java.util.Random rand)`
+- `WorldGenerator getRandomWorldGenForGrass(java.util.Random rand)` — Gets a WorldGen appropriate for this biome.
 
-## Description
+## Fields
 
-Gets a WorldGen appropriate for this biome.
+- `BiomeGenJungle`

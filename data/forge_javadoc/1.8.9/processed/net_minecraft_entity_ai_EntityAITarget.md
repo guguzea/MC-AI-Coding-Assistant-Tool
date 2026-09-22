@@ -1,5 +1,7 @@
 # EntityAITarget
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAITarget
+
 ## Class signature
 
 ```java
@@ -8,18 +10,19 @@ public abstract class EntityAITarget extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAITarget( EntityCreature creature, boolean checkSight)`
-- `public EntityAITarget( EntityCreature creature, boolean checkSight, boolean onlyNearby)`
+- `EntityAITarget(EntityCreature creature, boolean checkSight)`
+- `EntityAITarget(EntityCreature creature, boolean checkSight, boolean onlyNearby)`
 
 ## Methods
 
-- `public boolean continueExecuting()`
+- `boolean continueExecuting()` — Returns whether an in-progress EntityAIBase should continue executing
 - `protected double getTargetDistance()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public static boolean isSuitableTarget( EntityLiving attacker, EntityLivingBase target, boolean includeInvincibles, boolean checkSight)`
-- `protected boolean isSuitableTarget( EntityLivingBase target, boolean includeInvincibles)`
+- `protected boolean isSuitableTarget(EntityLivingBase target, boolean includeInvincibles)` — A method used to see if an entity is a suitable target through a number of checks.
+- `static boolean isSuitableTarget(EntityLiving attacker, EntityLivingBase target, boolean includeInvincibles, boolean checkSight)` — A static method used to see if an entity is a suitable target through a number of checks.
+- `void resetTask()` — Resets the task
+- `void startExecuting()` — Execute a one shot task or start executing a continuous task
 
-## Description
+## Fields
 
-If true, EntityAI targets must be able to be seen (cannot be blocked by walls) to be suitable targets.
+- `protected boolean shouldCheckSight` — If true, EntityAI targets must be able to be seen (cannot be blocked by walls) to be suitable targets.
+- `protected EntityCreature taskOwner` — The entity that this task belongs to

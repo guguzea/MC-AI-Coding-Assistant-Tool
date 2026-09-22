@@ -1,5 +1,7 @@
 # VertexBuffer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.vertex.VertexBuffer
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class VertexBuffer extends java.lang.Object
 
 ## Constructors
 
-- `public VertexBuffer( VertexFormat vertexFormatIn)`
+- `VertexBuffer(VertexFormat vertexFormatIn)`
 
 ## Methods
 
-- `public void bindBuffer()`
-- `public void bufferData(java.nio.ByteBuffer data)`
-- `public void drawArrays(int mode)`
-- `public void unbindBuffer()`
-- `public void deleteGlBuffers()`
+- `void bindBuffer()`
+- `void bufferData(java.nio.ByteBuffer data)`
+- `void deleteGlBuffers()`
+- `void drawArrays(int mode)`
+- `void unbindBuffer()`

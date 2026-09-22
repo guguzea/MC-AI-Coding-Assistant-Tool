@@ -8,11 +8,11 @@ public interface IBlockSource extends ILocatableSource
 
 ## Methods
 
-- `double getX()`
-- `double getY()`
-- `double getZ()`
-- `int getXInt()`
-- `int getYInt()`
-- `int getZInt()`
 - `int getBlockMetadata()`
 - `TileEntity getBlockTileEntity()`
+- `double getX()`
+- `int getXInt()`
+- `double getY()`
+- `int getYInt()`
+- `double getZ()`
+- `int getZInt()`

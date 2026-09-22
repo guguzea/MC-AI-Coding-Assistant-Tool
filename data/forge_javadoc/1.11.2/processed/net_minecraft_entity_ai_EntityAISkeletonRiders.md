@@ -1,5 +1,7 @@
 # EntityAISkeletonRiders
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAISkeletonRiders
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class EntityAISkeletonRiders extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAISkeletonRiders( EntitySkeletonHorse horseIn)`
+- `EntityAISkeletonRiders(EntitySkeletonHorse horseIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void updateTask()`
+- `boolean shouldExecute()`
+- `void updateTask()`

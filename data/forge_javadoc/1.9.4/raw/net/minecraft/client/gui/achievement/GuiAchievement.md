@@ -3,11 +3,15 @@ title: "GuiAchievement"
 description: "public class GuiAchievement extends Gui"
 package: "net/minecraft/client/gui/achievement"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/gui/achievement/GuiAchievement.html"
 sourceType: javadoc
 ---
 
 # GuiAchievement
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.achievement.GuiAchievement
 
 ## Class signature
 
@@ -15,13 +19,13 @@ sourceType: javadoc
 public class GuiAchievement extends Gui
 ```
 
-## Constructors
-
-- `public GuiAchievement( Minecraft mc)`
-
 ## Methods
 
-- `public void displayAchievement( Achievement ach)`
-- `public void displayUnformattedAchievement( Achievement achievementIn)`
-- `public void updateAchievementWindow()`
-- `public void clearAchievements()`
+- `void clearAchievements()`
+- `void displayAchievement(Achievement ach)`
+- `void displayUnformattedAchievement(Achievement achievementIn)`
+- `void updateAchievementWindow()`
+
+## Fields
+
+- `GuiAchievement`

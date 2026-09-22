@@ -1,14 +1,18 @@
 # GuiContainerEvent.DrawForeground
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiContainerEvent → net.minecraftforge.client.event.GuiContainerEvent.DrawForeground
+
+## Class signature
+
+```java
+public static class GuiContainerEvent.DrawForeground extends GuiContainerEvent
+```
+
 ## Constructors
 
-- `public DrawForeground( GuiContainer guiContainer, int mouseX, int mouseY)`
+- `DrawForeground(GuiContainer guiContainer, int mouseX, int mouseY)`
 
 ## Methods
 
-- `public int getMouseX()`
-- `public int getMouseY()`
-
-## Description
-
-This event is fired directly after the GuiContainer has draw any foreground elements, But before the "dragged" stack, and before any tooltips. This is useful for any slot / item specific overlays. Thi
+- `int getMouseX()`
+- `int getMouseY()`

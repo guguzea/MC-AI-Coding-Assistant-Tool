@@ -1,5 +1,7 @@
 # GuiTextField
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiTextField
+
 ## Class signature
 
 ```java
@@ -8,43 +10,50 @@ public class GuiTextField extends Gui
 
 ## Constructors
 
-- `public GuiTextField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width, int par6Height)`
+- `GuiTextField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width, int par6Height)`
 
 ## Methods
 
-- `public void setGuiResponder( GuiPageButtonList.GuiResponder guiResponderIn)`
-- `public void updateCursorCounter()`
-- `public void setText(java.lang.String textIn)`
-- `public java.lang.String getText()`
-- `public java.lang.String getSelectedText()`
-- `public void setValidator(com.google.common.base.Predicate<java.lang.String> theValidator)`
-- `public void writeText(java.lang.String textToWrite)`
-- `public void deleteWords(int num)`
-- `public void deleteFromCursor(int num)`
-- `public int getId()`
-- `public int getNthWordFromCursor(int numWords)`
-- `public int getNthWordFromPos(int n, int pos)`
-- `public int getNthWordFromPosWS(int n, int pos, boolean skipWs)`
-- `public void moveCursorBy(int num)`
-- `public void setCursorPosition(int pos)`
-- `public void setCursorPositionZero()`
-- `public void setCursorPositionEnd()`
-- `public boolean textboxKeyTyped(char typedChar, int keyCode)`
-- `public void mouseClicked(int mouseX, int mouseY, int mouseButton)`
-- `public void drawTextBox()`
-- `public void setMaxStringLength(int length)`
-- `public int getMaxStringLength()`
-- `public int getCursorPosition()`
-- `public boolean getEnableBackgroundDrawing()`
-- `public void setEnableBackgroundDrawing(boolean enableBackgroundDrawingIn)`
-- `public void setTextColor(int color)`
-- `public void setDisabledTextColour(int color)`
-- `public void setFocused(boolean isFocusedIn)`
-- `public boolean isFocused()`
-- `public void setEnabled(boolean enabled)`
-- `public int getSelectionEnd()`
-- `public int getWidth()`
-- `public void setSelectionPos(int position)`
-- `public void setCanLoseFocus(boolean canLoseFocusIn)`
-- `public boolean getVisible()`
-- `public void setVisible(boolean isVisible)`
+- `void deleteFromCursor(int num)`
+- `void deleteWords(int num)`
+- `void drawTextBox()`
+- `int getCursorPosition()`
+- `boolean getEnableBackgroundDrawing()`
+- `int getId()`
+- `int getMaxStringLength()`
+- `int getNthWordFromCursor(int numWords)`
+- `int getNthWordFromPos(int n, int pos)`
+- `int getNthWordFromPosWS(int n, int pos, boolean skipWs)`
+- `java.lang.String getSelectedText()`
+- `int getSelectionEnd()`
+- `java.lang.String getText()`
+- `boolean getVisible()`
+- `int getWidth()`
+- `boolean isFocused()`
+- `void mouseClicked(int mouseX, int mouseY, int mouseButton)`
+- `void moveCursorBy(int num)`
+- `void setCanLoseFocus(boolean canLoseFocusIn)`
+- `void setCursorPosition(int pos)`
+- `void setCursorPositionEnd()`
+- `void setCursorPositionZero()`
+- `void setDisabledTextColour(int color)`
+- `void setEnableBackgroundDrawing(boolean enableBackgroundDrawingIn)`
+- `void setEnabled(boolean enabled)`
+- `void setFocused(boolean isFocusedIn)`
+- `void setGuiResponder(GuiPageButtonList.GuiResponder guiResponderIn)`
+- `void setMaxStringLength(int length)`
+- `void setSelectionPos(int position)`
+- `void setText(java.lang.String textIn)`
+- `void setTextColor(int color)`
+- `void setValidator(com.google.common.base.Predicate<java.lang.String> theValidator)`
+- `void setVisible(boolean isVisible)`
+- `boolean textboxKeyTyped(char typedChar, int keyCode)`
+- `void updateCursorCounter()`
+- `void writeText(java.lang.String textToWrite)`
+
+## Fields
+
+- `int height`
+- `int width`
+- `int xPosition`
+- `int yPosition`

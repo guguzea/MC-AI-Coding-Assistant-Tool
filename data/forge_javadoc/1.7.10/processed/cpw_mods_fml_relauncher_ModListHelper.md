@@ -1,5 +1,7 @@
 # ModListHelper
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.relauncher.ModListHelper
+
 ## Class signature
 
 ```java
@@ -8,4 +10,8 @@ public class ModListHelper extends java.lang.Object
 
 ## Constructors
 
-- `public ModListHelper()`
+- `ModListHelper()`
+
+## Fields
+
+- `static java.util.Map<java.lang.String, java.io.File> additionalMods`

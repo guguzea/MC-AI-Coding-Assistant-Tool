@@ -1,5 +1,7 @@
 # EntityAIBeg
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIBeg
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class EntityAIBeg extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIBeg( EntityWolf wolf, float minDistance)`
+- `EntityAIBeg(EntityWolf wolf, float minDistance)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean shouldContinueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `void resetTask()`
+- `boolean shouldContinueExecuting()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

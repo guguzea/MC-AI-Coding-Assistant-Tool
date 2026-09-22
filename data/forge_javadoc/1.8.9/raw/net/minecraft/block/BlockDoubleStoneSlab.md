@@ -3,11 +3,15 @@ title: "BlockDoubleStoneSlab"
 description: "public class BlockDoubleStoneSlab extends BlockStoneSlab"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockDoubleStoneSlab.html"
 sourceType: javadoc
 ---
 
 # BlockDoubleStoneSlab
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockSlab → net.minecraft.block.BlockStoneSlab → net.minecraft.block.BlockDoubleStoneSlab
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class BlockDoubleStoneSlab extends BlockStoneSlab
 ```
 
-## Constructors
-
-- `public BlockDoubleStoneSlab()`
-
 ## Methods
 
-- `public boolean isDouble()`
+- `boolean isDouble()`
+
+## Fields
+
+- `BlockDoubleStoneSlab`

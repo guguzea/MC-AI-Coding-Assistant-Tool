@@ -1,10 +1,14 @@
 # NoteBlockEvent.Octave
 
+**Inheritance:** java.lang.Object → java.lang.Enum<NoteBlockEvent.Octave> → net.minecraftforge.event.world.NoteBlockEvent.Octave
+
+## Class signature
+
+```java
+public static enum NoteBlockEvent.Octave extends java.lang.Enum<NoteBlockEvent.Octave>
+```
+
 ## Methods
 
-- `public static NoteBlockEvent.Octave [] values()`
-- `public static NoteBlockEvent.Octave valueOf(java.lang.String name)`
-
-## Description
-
-Describes the Octave of a Note being played by a Noteblock. Together with NoteBlockEvent.Note it fully describes the note.
+- `static NoteBlockEvent.Octave valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static NoteBlockEvent.Octave [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

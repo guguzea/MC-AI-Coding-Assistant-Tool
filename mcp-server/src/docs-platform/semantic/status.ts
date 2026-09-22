@@ -357,7 +357,9 @@ export function listSemanticDbPresence(dataRoot: string): Array<{
     liteloader_: ["liteloader-docs"],
     rift_: ["rift-docs"],
     modloader_: ["modloader-docs"],
-    bedrock_: ["bedrock-docs"],
+    // 基岩两棵语料树（2026-09-21 拆分：Learn 文档页 + npm d.ts 逐声明页），与
+    // scripts/_lib/build-semantic-index.mjs 的 SOURCES.bedrock 同步。
+    bedrock_: ["bedrock-docs", "bedrock-scriptapi"],
   };
   let entries: string[] = [];
   try {

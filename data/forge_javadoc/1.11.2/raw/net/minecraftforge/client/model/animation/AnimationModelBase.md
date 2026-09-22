@@ -1,23 +1,29 @@
 ---
 title: "AnimationModelBase"
-description: "Deprecated."
+description: "public class AnimationModelBase<T extends Entity> extends ModelBase implements IEventHandler<T>"
 package: "net/minecraftforge/client/model/animation"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/model/animation/AnimationModelBase.html"
 sourceType: javadoc
 ---
 
 # AnimationModelBase
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraftforge.client.model.animation.AnimationModelBase<T>
 
-- `public AnimationModelBase( ResourceLocation modelLocation, VertexLighterFlat lighter)`
+## Class signature
+
+```java
+public class AnimationModelBase<T extends Entity> extends ModelBase implements IEventHandler<T>
+```
 
 ## Methods
 
-- `public void render( Entity entity, float limbSwing, float limbSwingSpeed, float timeAlive, float yawHead, float rotationPitch, float scale)`
-- `public void handleEvents( T instance, float time, java.lang.Iterable< Event > pastEvents)`
+- `@Deprecated void handleEvents(T instance, float time, java.lang.Iterable<Event> pastEvents)`
+- `@Deprecated void render(Entity entity, float limbSwing, float limbSwingSpeed, float timeAlive, float yawHead, float rotationPitch, float scale)`
 
-## Description
+## Fields
 
-Deprecated.
+- `AnimationModelBase`

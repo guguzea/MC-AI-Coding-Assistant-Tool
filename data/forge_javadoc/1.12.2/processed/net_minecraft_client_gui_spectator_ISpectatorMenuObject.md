@@ -8,7 +8,7 @@ public interface ISpectatorMenuObject
 
 ## Methods
 
-- `void selectItem( SpectatorMenu menu)`
 - `ITextComponent getSpectatorName()`
-- `void renderIcon(float brightness, int alpha)`
 - `boolean isEnabled()`
+- `void renderIcon(float brightness, int alpha)`
+- `void selectItem(SpectatorMenu menu)`

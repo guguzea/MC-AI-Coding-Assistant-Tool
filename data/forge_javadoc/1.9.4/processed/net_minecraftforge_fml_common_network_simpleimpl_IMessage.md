@@ -8,9 +8,5 @@ public interface IMessage
 
 ## Methods
 
-- `void fromBytes(io.netty.buffer.ByteBuf buf)`
-- `void toBytes(io.netty.buffer.ByteBuf buf)`
-
-## Description
-
-Implement this interface for each message you wish to define.
+- `void fromBytes(io.netty.buffer.ByteBuf buf)` — Convert from the supplied buffer into your specific message type
+- `void toBytes(io.netty.buffer.ByteBuf buf)` — Deconstruct your message into the supplied byte buffer

@@ -1,9 +1,13 @@
 # ConfigChangedEvent.OnConfigChangedEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.client.event.ConfigChangedEvent → net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent
 
-- `public OnConfigChangedEvent(java.lang.String modID, java.lang.String configID, boolean isWorldRunning, boolean requiresMcRestart)`
+## Class signature
 
-## Description
+```java
+public static class ConfigChangedEvent.OnConfigChangedEvent extends ConfigChangedEvent
+```
 
-This event is intended to be consumed by the mod whose config has been changed. It fires when the Done button has been clicked on a GuiConfig screen and the following conditions are met: - at least on
+## Fields
+
+- `OnConfigChangedEvent`

@@ -1,18 +1,24 @@
 ---
 title: "LivingEntityUseItemEvent.Tick"
-description: "Fired every tick that a player is 'using' an item, see LivingEntityUseItemEvent.Start for info. Cancel the event, or set the duration or <= 0 to cause the player to stop using the item."
+description: "public static class LivingEntityUseItemEvent.Tick extends LivingEntityUseItemEvent"
 package: "net/minecraftforge/event/entity/living"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/entity/living/LivingEntityUseItemEvent.Tick.html"
 sourceType: javadoc
 ---
 
 # LivingEntityUseItemEvent.Tick
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingEntityUseItemEvent → net.minecraftforge.event.entity.living.LivingEntityUseItemEvent.Tick
+
+## Class signature
+
+```java
+public static class LivingEntityUseItemEvent.Tick extends LivingEntityUseItemEvent
+```
+
 ## Constructors
 
-- `public Tick( EntityLivingBase entity, @Nonnull ItemStack item, int duration)`
-
-## Description
-
-Fired every tick that a player is 'using' an item, see LivingEntityUseItemEvent.Start for info. Cancel the event, or set the duration or <= 0 to cause the player to stop using the item.
+- `Tick(EntityLivingBase entity, ItemStack item, int duration)`

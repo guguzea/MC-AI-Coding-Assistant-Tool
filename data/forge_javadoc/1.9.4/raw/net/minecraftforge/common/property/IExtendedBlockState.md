@@ -3,6 +3,8 @@ title: "IExtendedBlockState"
 description: "public interface IExtendedBlockState extends IBlockState"
 package: "net/minecraftforge/common/property"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/common/property/IExtendedBlockState.html"
 sourceType: javadoc
 ---
@@ -17,8 +19,8 @@ public interface IExtendedBlockState extends IBlockState
 
 ## Methods
 
-- `java.util.Collection< IUnlistedProperty <?>> getUnlistedNames()`
-- `<V> V getValue( IUnlistedProperty <V> property)`
-- `<V> IExtendedBlockState withProperty( IUnlistedProperty <V> property, V value)`
-- `com.google.common.collect.ImmutableMap< IUnlistedProperty <?>,com.google.common.base.Optional<?>> getUnlistedProperties()`
 - `IBlockState getClean()`
+- `java.util.Collection<IUnlistedProperty<?>> getUnlistedNames()`
+- `com.google.common.collect.ImmutableMap<IUnlistedProperty<?>, com.google.common.base.Optional<?>> getUnlistedProperties()`
+- `<V> V getValue(IUnlistedProperty<V> property)`
+- `<V> IExtendedBlockState withProperty(IUnlistedProperty<V> property, V value)`

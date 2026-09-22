@@ -3,11 +3,15 @@ title: "ExtendedBlockStorage"
 description: "public class ExtendedBlockStorage extends java.lang.Object"
 package: "net/minecraft/world/chunk/storage"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/chunk/storage/ExtendedBlockStorage.html"
 sourceType: javadoc
 ---
 
 # ExtendedBlockStorage
+
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.storage.ExtendedBlockStorage
 
 ## Class signature
 
@@ -17,22 +21,22 @@ public class ExtendedBlockStorage extends java.lang.Object
 
 ## Constructors
 
-- `public ExtendedBlockStorage(int y, boolean storeSkylight)`
+- `ExtendedBlockStorage(int y, boolean storeSkylight)`
 
 ## Methods
 
-- `public IBlockState get(int x, int y, int z)`
-- `public void set(int x, int y, int z, IBlockState state)`
-- `public boolean isEmpty()`
-- `public boolean needsRandomTick()`
-- `public int getYLocation()`
-- `public void setSkyLight(int x, int y, int z, int value)`
-- `public int getSkyLight(int x, int y, int z)`
-- `public void setBlockLight(int x, int y, int z, int value)`
-- `public int getBlockLight(int x, int y, int z)`
-- `public void recalculateRefCounts()`
-- `public BlockStateContainer getData()`
-- `public NibbleArray getBlockLight()`
-- `public NibbleArray getSkyLight()`
-- `public void setBlockLight( NibbleArray newBlocklightArray)`
-- `public void setSkyLight( NibbleArray newSkylightArray)`
+- `IBlockState get(int x, int y, int z)`
+- `NibbleArray getBlockLight()`
+- `int getBlockLight(int x, int y, int z)`
+- `BlockStateContainer getData()`
+- `NibbleArray getSkyLight()`
+- `int getSkyLight(int x, int y, int z)`
+- `int getYLocation()`
+- `boolean isEmpty()`
+- `boolean needsRandomTick()`
+- `void recalculateRefCounts()`
+- `void set(int x, int y, int z, IBlockState state)`
+- `void setBlockLight(int x, int y, int z, int value)`
+- `void setBlockLight(NibbleArray newBlocklightArray)`
+- `void setSkyLight(int x, int y, int z, int value)`
+- `void setSkyLight(NibbleArray newSkylightArray)`

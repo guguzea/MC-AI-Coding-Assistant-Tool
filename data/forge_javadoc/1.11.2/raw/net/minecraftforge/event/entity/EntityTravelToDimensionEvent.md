@@ -1,13 +1,17 @@
 ---
 title: "EntityTravelToDimensionEvent"
-description: "EntityTravelToDimensionEvent is fired before an Entity travels to a dimension. dimension contains the id of the dimension the entity is traveling to. This event is Cancelable . If this event is cancel"
+description: "public class EntityTravelToDimensionEvent extends EntityEvent"
 package: "net/minecraftforge/event/entity"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/entity/EntityTravelToDimensionEvent.html"
 sourceType: javadoc
 ---
 
 # EntityTravelToDimensionEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.EntityTravelToDimensionEvent
 
 ## Class signature
 
@@ -17,12 +21,8 @@ public class EntityTravelToDimensionEvent extends EntityEvent
 
 ## Constructors
 
-- `public EntityTravelToDimensionEvent( Entity entity, int dimension)`
+- `EntityTravelToDimensionEvent(Entity entity, int dimension)`
 
 ## Methods
 
-- `public int getDimension()`
-
-## Description
-
-EntityTravelToDimensionEvent is fired before an Entity travels to a dimension. dimension contains the id of the dimension the entity is traveling to. This event is Cancelable . If this event is cancel
+- `int getDimension()`

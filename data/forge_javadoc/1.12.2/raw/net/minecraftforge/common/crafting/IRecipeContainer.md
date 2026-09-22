@@ -1,8 +1,10 @@
 ---
 title: "IRecipeContainer"
-description: "This interface is to be implemented on Container objects. For GUIs with recipe books, this allows their containers to have recipe completion and ghost recipes in their craft matrices."
+description: "public interface IRecipeContainer"
 package: "net/minecraftforge/common/crafting"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/common/crafting/IRecipeContainer.html"
 sourceType: javadoc
 ---
@@ -17,9 +19,5 @@ public interface IRecipeContainer
 
 ## Methods
 
-- `InventoryCraftResult getCraftResult()`
-- `InventoryCrafting getCraftMatrix()`
-
-## Description
-
-This interface is to be implemented on Container objects. For GUIs with recipe books, this allows their containers to have recipe completion and ghost recipes in their craft matrices.
+- `InventoryCrafting getCraftMatrix()` — The crafting matrix of your container, where ingredients go for crafting.
+- `InventoryCraftResult getCraftResult()` — The crafting result slot of your container, where you take out the crafted item.

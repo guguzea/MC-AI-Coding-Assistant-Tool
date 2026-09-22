@@ -1,5 +1,7 @@
 # PngSizeInfo
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.texture.PngSizeInfo
+
 ## Class signature
 
 ```java
@@ -8,8 +10,13 @@ public class PngSizeInfo extends java.lang.Object
 
 ## Constructors
 
-- `public PngSizeInfo(java.io.InputStream stream) throws java.io.IOException`
+- `PngSizeInfo(java.io.InputStream stream)`
 
 ## Methods
 
-- `public static PngSizeInfo makeFromResource( IResource resource) throws java.io.IOException`
+- `static PngSizeInfo makeFromResource(IResource resource)`
+
+## Fields
+
+- `int pngHeight`
+- `int pngWidth`

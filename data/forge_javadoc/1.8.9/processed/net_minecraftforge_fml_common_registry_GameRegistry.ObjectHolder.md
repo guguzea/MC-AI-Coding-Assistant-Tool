@@ -1,5 +1,11 @@
 # GameRegistry.ObjectHolder
 
-## Description
+## Class signature
 
-ObjectHolder can be used to automatically populate public static final fields with entries from the registry. These values can then be referred within mod code directly.
+```java
+public static @interface GameRegistry.ObjectHolder
+```
+
+## Elements
+
+- `java.lang.String value` — If used on a class, this represents a modid only.

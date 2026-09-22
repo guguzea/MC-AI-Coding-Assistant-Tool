@@ -1,15 +1,17 @@
 # ItemBlockSpecial
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemBlockSpecial
+
 ## Class signature
 
 ```java
 public class ItemBlockSpecial extends Item
 ```
 
-## Constructors
-
-- `public ItemBlockSpecial( Block block)`
-
 ## Methods
 
-- `public EnumActionResult onItemUse( ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+
+## Fields
+
+- `ItemBlockSpecial`

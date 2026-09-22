@@ -1,22 +1,28 @@
 ---
 title: "ItemLayerModel.Loader"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum ItemLayerModel.Loader extends java.lang.Enum<ItemLayerModel.Loader> implements ICustomModelLoader"
 package: "net/minecraftforge/client/model"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/client/model/ItemLayerModel.Loader.html"
 sourceType: javadoc
 ---
 
 # ItemLayerModel.Loader
 
+**Inheritance:** java.lang.Object → java.lang.Enum<ItemLayerModel.Loader> → net.minecraftforge.client.model.ItemLayerModel.Loader
+
+## Class signature
+
+```java
+public static enum ItemLayerModel.Loader extends java.lang.Enum<ItemLayerModel.Loader> implements ICustomModelLoader
+```
+
 ## Methods
 
-- `public static ItemLayerModel.Loader [] values()`
-- `public static ItemLayerModel.Loader valueOf(java.lang.String name)`
-- `public void onResourceManagerReload( IResourceManager resourceManager)`
-- `public boolean accepts( ResourceLocation modelLocation)`
-- `public IModel loadModel( ResourceLocation modelLocation)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `boolean accepts(ResourceLocation modelLocation)`
+- `IModel loadModel(ResourceLocation modelLocation)`
+- `void onResourceManagerReload(IResourceManager resourceManager)`
+- `static ItemLayerModel.Loader valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static ItemLayerModel.Loader [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

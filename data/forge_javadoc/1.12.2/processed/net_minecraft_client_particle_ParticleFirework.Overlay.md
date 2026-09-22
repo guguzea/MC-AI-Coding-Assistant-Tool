@@ -1,9 +1,17 @@
 # ParticleFirework.Overlay
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleFirework.Overlay
 
-- `protected Overlay( World p_i46466_1_, double p_i46466_2_, double p_i46466_4_, double p_i46466_6_)`
+## Class signature
+
+```java
+public static class ParticleFirework.Overlay extends Particle
+```
 
 ## Methods
 
-- `public void renderParticle( BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+- `void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)`
+
+## Fields
+
+- `protected Overlay`

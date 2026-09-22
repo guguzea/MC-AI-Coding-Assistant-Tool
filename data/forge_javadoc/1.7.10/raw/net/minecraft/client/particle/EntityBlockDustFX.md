@@ -3,11 +3,15 @@ title: "EntityBlockDustFX"
 description: "public class EntityBlockDustFX extends EntityDiggingFX"
 package: "net/minecraft/client/particle"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/particle/EntityBlockDustFX.html"
 sourceType: javadoc
 ---
 
 # EntityBlockDustFX
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.client.particle.EntityFX → net.minecraft.client.particle.EntityDiggingFX → net.minecraft.client.particle.EntityBlockDustFX
 
 ## Class signature
 
@@ -15,6 +19,6 @@ sourceType: javadoc
 public class EntityBlockDustFX extends EntityDiggingFX
 ```
 
-## Constructors
+## Fields
 
-- `public EntityBlockDustFX( World p_i45072_1_, double p_i45072_2_, double p_i45072_4_, double p_i45072_6_, double p_i45072_8_, double p_i45072_10_, double p_i45072_12_, Block p_i45072_14_, int p_i45072_15_)`
+- `EntityBlockDustFX`

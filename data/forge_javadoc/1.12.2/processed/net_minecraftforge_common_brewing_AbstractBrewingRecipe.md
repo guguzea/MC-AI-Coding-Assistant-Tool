@@ -1,5 +1,7 @@
 # AbstractBrewingRecipe
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.brewing.AbstractBrewingRecipe<T>
+
 ## Class signature
 
 ```java
@@ -8,16 +10,12 @@ public abstract class AbstractBrewingRecipe<T> extends java.lang.Object implemen
 
 ## Constructors
 
-- `protected AbstractBrewingRecipe( ItemStack input, T ingredient, ItemStack output)`
+- `AbstractBrewingRecipe(ItemStack input, T ingredient, ItemStack output)`
 
 ## Methods
 
-- `public boolean isInput( ItemStack stack)`
-- `public ItemStack getOutput( ItemStack input, ItemStack ingredient)`
-- `public ItemStack getInput()`
-- `public T getIngredient()`
-- `public ItemStack getOutput()`
-
-## Description
-
-Returns the output when the passed input is brewed with the passed ingredient.
+- `T getIngredient()`
+- `ItemStack getInput()`
+- `ItemStack getOutput()`
+- `ItemStack getOutput(ItemStack input, ItemStack ingredient)` — Returns the output when the passed input is brewed with the passed ingredient.
+- `boolean isInput(ItemStack stack)` — Returns true is the passed ItemStack is an input for this recipe.

@@ -1,20 +1,22 @@
 # PhaseHover
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseHover
+
 ## Class signature
 
 ```java
 public class PhaseHover extends PhaseBase
 ```
 
-## Constructors
-
-- `public PhaseHover( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public void doLocalUpdate()`
-- `public boolean getIsStationary()`
-- `public void initPhase()`
-- `public float getMaxRiseOrFall()`
-- `public Vec3d getTargetLocation()`
-- `public PhaseList < PhaseHover > getType()`
+- `void doLocalUpdate()`
+- `boolean getIsStationary()`
+- `float getMaxRiseOrFall()`
+- `Vec3d getTargetLocation()`
+- `PhaseList<PhaseHover> getType()`
+- `void initPhase()`
+
+## Fields
+
+- `PhaseHover`

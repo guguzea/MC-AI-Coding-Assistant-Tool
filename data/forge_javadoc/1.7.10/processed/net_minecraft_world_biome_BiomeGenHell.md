@@ -1,11 +1,13 @@
 # BiomeGenHell
 
+**Inheritance:** java.lang.Object → net.minecraft.world.biome.BiomeGenBase → net.minecraft.world.biome.BiomeGenHell
+
 ## Class signature
 
 ```java
 public class BiomeGenHell extends BiomeGenBase
 ```
 
-## Constructors
+## Fields
 
-- `public BiomeGenHell(int p_i1981_1_)`
+- `BiomeGenHell`

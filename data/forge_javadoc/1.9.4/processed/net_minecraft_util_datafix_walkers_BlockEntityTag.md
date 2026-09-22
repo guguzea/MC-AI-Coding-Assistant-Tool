@@ -1,5 +1,7 @@
 # BlockEntityTag
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.walkers.BlockEntityTag
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class BlockEntityTag extends java.lang.Object implements IDataWalker
 
 ## Constructors
 
-- `public BlockEntityTag()`
+- `BlockEntityTag()`
 
 ## Methods
 
-- `public NBTTagCompound process( IDataFixer fixer, NBTTagCompound compound, int versionIn)`
+- `NBTTagCompound process(IDataFixer fixer, NBTTagCompound compound, int versionIn)`

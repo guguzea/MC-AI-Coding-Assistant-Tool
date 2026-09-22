@@ -1,14 +1,18 @@
 # EntityEvent.CanUpdate
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.EntityEvent.CanUpdate
+
+## Class signature
+
+```java
+public static class EntityEvent.CanUpdate extends EntityEvent
+```
+
 ## Constructors
 
-- `public CanUpdate( Entity entity)`
+- `CanUpdate(Entity entity)`
 
 ## Methods
 
-- `public boolean getCanUpdate()`
-- `public void setCanUpdate(boolean canUpdate)`
-
-## Description
-
-CanUpdate is fired when an Entity is being created. This event is fired whenever vanilla Minecraft determines that an entity cannot update in World#updateEntityWithOptionalForce(net.minecraft.entity.E
+- `boolean getCanUpdate()`
+- `void setCanUpdate(boolean canUpdate)`

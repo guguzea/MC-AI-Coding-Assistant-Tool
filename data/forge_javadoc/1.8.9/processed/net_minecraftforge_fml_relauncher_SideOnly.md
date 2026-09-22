@@ -8,4 +8,4 @@ public @interface SideOnly
 
 ## Elements
 
-- `public abstract Side value`
+- `Side value`

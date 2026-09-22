@@ -1,5 +1,7 @@
 # ExtendedBlockStorage
 
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.storage.ExtendedBlockStorage
+
 ## Class signature
 
 ```java
@@ -8,29 +10,25 @@ public class ExtendedBlockStorage extends java.lang.Object
 
 ## Constructors
 
-- `public ExtendedBlockStorage(int y, boolean storeSkylight)`
+- `ExtendedBlockStorage(int y, boolean storeSkylight)`
 
 ## Methods
 
-- `public IBlockState get(int x, int y, int z)`
-- `public void set(int x, int y, int z, IBlockState state)`
-- `public Block getBlockByExtId(int x, int y, int z)`
-- `public int getExtBlockMetadata(int x, int y, int z)`
-- `public boolean isEmpty()`
-- `public boolean getNeedsRandomTick()`
-- `public int getYLocation()`
-- `public void setExtSkylightValue(int x, int y, int z, int value)`
-- `public int getExtSkylightValue(int x, int y, int z)`
-- `public void setExtBlocklightValue(int x, int y, int z, int value)`
-- `public int getExtBlocklightValue(int x, int y, int z)`
-- `public void removeInvalidBlocks()`
-- `public char[] getData()`
-- `public void setData(char[] dataArray)`
-- `public NibbleArray getBlocklightArray()`
-- `public NibbleArray getSkylightArray()`
-- `public void setBlocklightArray( NibbleArray newBlocklightArray)`
-- `public void setSkylightArray( NibbleArray newSkylightArray)`
-
-## Description
-
-Returns the block for a location in a chunk, with the extended ID merged from a byte array and a NibbleArray to form a full 12-bit block ID.
+- `IBlockState get(int x, int y, int z)`
+- `Block getBlockByExtId(int x, int y, int z)` — Returns the block for a location in a chunk, with the extended ID merged from a byte array and a NibbleArray to form a full 12-bit block ID.
+- `NibbleArray getBlocklightArray()` — Returns the NibbleArray instance containing Block-light data.
+- `char[] getData()`
+- `int getExtBlocklightValue(int x, int y, int z)` — Gets the saved Block-light value in the extended block storage structure.
+- `int getExtBlockMetadata(int x, int y, int z)` — Returns the metadata associated with the block at the given coordinates in this ExtendedBlockStorage.
+- `int getExtSkylightValue(int x, int y, int z)` — Gets the saved Sky-light value in the extended block storage structure.
+- `boolean getNeedsRandomTick()` — Returns whether or not this block storage's Chunk will require random ticking, used to avoid looping through random block ticks when there are no blocks that would randomly tick.
+- `NibbleArray getSkylightArray()` — Returns the NibbleArray instance containing Sky-light data.
+- `int getYLocation()` — Returns the Y location of this ExtendedBlockStorage.
+- `boolean isEmpty()` — Returns whether or not this block storage's Chunk is fully empty, based on its internal reference count.
+- `void removeInvalidBlocks()`
+- `void set(int x, int y, int z, IBlockState state)`
+- `void setBlocklightArray(NibbleArray newBlocklightArray)` — Sets the NibbleArray instance used for Block-light values in this particular storage block.
+- `void setData(char[] dataArray)`
+- `void setExtBlocklightValue(int x, int y, int z, int value)` — Sets the saved Block-light value in the extended block storage structure.
+- `void setExtSkylightValue(int x, int y, int z, int value)` — Sets the saved Sky-light value in the extended block storage structure.
+- `void setSkylightArray(NibbleArray newSkylightArray)` — Sets the NibbleArray instance used for Sky-light values in this particular storage block.

@@ -1,5 +1,7 @@
 # EntityArmorAndHeld
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.EntityArmorAndHeld
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class EntityArmorAndHeld extends java.lang.Object implements IFixableData
 
 ## Constructors
 
-- `public EntityArmorAndHeld()`
+- `EntityArmorAndHeld()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

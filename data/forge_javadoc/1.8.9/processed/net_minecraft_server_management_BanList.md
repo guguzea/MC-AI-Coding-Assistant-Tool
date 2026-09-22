@@ -1,17 +1,19 @@
 # BanList
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.UserList<java.lang.String, IPBanEntry> → net.minecraft.server.management.BanList
+
 ## Class signature
 
 ```java
-public class BanList extends UserList <java.lang.String, IPBanEntry >
+public class BanList extends UserList<java.lang.String, IPBanEntry>
 ```
-
-## Constructors
-
-- `public BanList(java.io.File bansFile)`
 
 ## Methods
 
-- `protected UserListEntry <java.lang.String> createEntry(JsonObject entryData)`
-- `public boolean isBanned(java.net.SocketAddress address)`
-- `public IPBanEntry getBanEntry(java.net.SocketAddress address)`
+- `protected UserListEntry<java.lang.String> createEntry(JsonObject entryData)`
+- `IPBanEntry getBanEntry(java.net.SocketAddress address)`
+- `boolean isBanned(java.net.SocketAddress address)`
+
+## Fields
+
+- `BanList`

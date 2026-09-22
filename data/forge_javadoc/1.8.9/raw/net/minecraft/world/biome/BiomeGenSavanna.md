@@ -3,11 +3,15 @@ title: "BiomeGenSavanna"
 description: "public class BiomeGenSavanna extends BiomeGenBase"
 package: "net/minecraft/world/biome"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/biome/BiomeGenSavanna.html"
 sourceType: javadoc
 ---
 
 # BiomeGenSavanna
+
+**Inheritance:** java.lang.Object → net.minecraft.world.biome.BiomeGenBase → net.minecraft.world.biome.BiomeGenSavanna
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class BiomeGenSavanna extends BiomeGenBase
 ```
 
-## Constructors
-
-- `public BiomeGenSavanna(int p_i45383_1_)`
-
 ## Methods
 
-- `public WorldGenAbstractTree genBigTreeChance(java.util.Random rand)`
-- `public BiomeGenBase createMutatedBiome(int p_180277_1_)`
-- `public void decorate( World worldIn, java.util.Random rand, BlockPos pos)`
+- `BiomeGenBase createMutatedBiome(int p_180277_1_)`
+- `void decorate(World worldIn, java.util.Random rand, BlockPos pos)`
+- `WorldGenAbstractTree genBigTreeChance(java.util.Random rand)`
+
+## Fields
+
+- `BiomeGenSavanna`

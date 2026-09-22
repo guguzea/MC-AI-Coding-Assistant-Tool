@@ -1,5 +1,7 @@
 # NBTBase
 
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase
+
 ## Class signature
 
 ```java
@@ -8,16 +10,20 @@ public abstract class NBTBase extends java.lang.Object
 
 ## Constructors
 
-- `public NBTBase()`
+- `NBTBase()`
 
 ## Methods
 
-- `public abstract java.lang.String toString()`
-- `public abstract byte getId()`
+- `abstract NBTBase copy()`
 - `protected static NBTBase createNewByType(byte id)`
-- `public static java.lang.String getTagTypeName(int p_193581_0_)`
-- `public abstract NBTBase copy()`
-- `public boolean hasNoTags()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `abstract byte getId()`
 - `protected java.lang.String getString()`
+- `static java.lang.String getTagTypeName(int p_193581_0_)`
+- `int hashCode()`
+- `boolean hasNoTags()`
+- `abstract java.lang.String toString()`
+
+## Fields
+
+- `static java.lang.String[] NBT_TYPES`

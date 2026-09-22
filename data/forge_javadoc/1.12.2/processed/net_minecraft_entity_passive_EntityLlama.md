@@ -1,59 +1,61 @@
 # EntityLlama
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.AbstractHorse → net.minecraft.entity.passive.AbstractChestHorse → net.minecraft.entity.passive.EntityLlama
+
 ## Class signature
 
 ```java
 public class EntityLlama extends AbstractChestHorse implements IRangedAttackMob
 ```
 
-## Constructors
-
-- `public EntityLlama( World worldIn)`
-
 ## Methods
 
-- `public int getStrength()`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
+- `void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor)`
+- `boolean canBeSaddled()`
+- `boolean canBeSteered()`
+- `boolean canEatGrass()`
+- `boolean canMateWith(EntityAnimal otherAnimal)`
+- `EntityLlama createChild(EntityAgeable ageable)`
 - `protected void entityInit()`
-- `public int getVariant()`
-- `public void setVariant(int variantIn)`
-- `protected int getInventorySize()`
-- `public void updatePassenger( Entity passenger)`
-- `public double getMountedYOffset()`
-- `public boolean canBeSteered()`
-- `protected boolean handleEating( EntityPlayer player, ItemStack stack)`
-- `protected boolean isMovementBlocked()`
-- `public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, IEntityLivingData livingdata)`
-- `public boolean hasColor()`
-- `protected SoundEvent getAngrySound()`
-- `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
-- `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `protected void playChestEquipSound()`
-- `public void makeMad()`
-- `protected ResourceLocation getLootTable()`
-- `public int getInventoryColumns()`
-- `public boolean wearsArmor()`
-- `public boolean isArmor( ItemStack stack)`
-- `public boolean canBeSaddled()`
-- `public void onInventoryChanged( IInventory invBasic)`
-- `protected void updateHorseSlots()`
-- `public EnumDyeColor getColor()`
-- `public int getMaxTemper()`
-- `public boolean canMateWith( EntityAnimal otherAnimal)`
-- `public EntityLlama createChild( EntityAgeable ageable)`
-- `public void fall(float distance, float damageMultiplier)`
-- `public void leaveCaravan()`
-- `public void joinCaravan( EntityLlama caravanHeadIn)`
-- `public boolean hasCaravanTrail()`
-- `public boolean inCaravan()`
-- `public EntityLlama getCaravanHead()`
+- `void fall(float distance, float damageMultiplier)`
 - `protected double followLeashSpeed()`
 - `protected void followMother()`
-- `public boolean canEatGrass()`
-- `public void attackEntityWithRangedAttack( EntityLivingBase target, float distanceFactor)`
-- `public void setSwingingArms(boolean swingingArms)`
+- `protected SoundEvent getAmbientSound()`
+- `protected SoundEvent getAngrySound()`
+- `EntityLlama getCaravanHead()`
+- `EnumDyeColor getColor()`
+- `protected SoundEvent getDeathSound()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
+- `int getInventoryColumns()`
+- `protected int getInventorySize()`
+- `protected ResourceLocation getLootTable()`
+- `int getMaxTemper()`
+- `double getMountedYOffset()`
+- `int getStrength()`
+- `int getVariant()`
+- `protected boolean handleEating(EntityPlayer player, ItemStack stack)`
+- `boolean hasCaravanTrail()`
+- `boolean hasColor()`
+- `boolean inCaravan()`
+- `protected void initEntityAI()`
+- `boolean isArmor(ItemStack stack)`
+- `protected boolean isMovementBlocked()`
+- `void joinCaravan(EntityLlama caravanHeadIn)`
+- `void leaveCaravan()`
+- `void makeMad()`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onInventoryChanged(IInventory invBasic)`
+- `protected void playChestEquipSound()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void setSwingingArms(boolean swingingArms)`
+- `void setVariant(int variantIn)`
+- `protected void updateHorseSlots()`
+- `void updatePassenger(Entity passenger)`
+- `boolean wearsArmor()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityLlama`

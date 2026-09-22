@@ -1,36 +1,40 @@
 ---
 title: "SPacketUpdateBossInfo"
-description: "public class SPacketUpdateBossInfo extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketUpdateBossInfo extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/network/play/server/SPacketUpdateBossInfo.html"
 sourceType: javadoc
 ---
 
 # SPacketUpdateBossInfo
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketUpdateBossInfo
+
 ## Class signature
 
 ```java
-public class SPacketUpdateBossInfo extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketUpdateBossInfo extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketUpdateBossInfo()`
-- `public SPacketUpdateBossInfo( SPacketUpdateBossInfo.Operation operationIn, BossInfo data)`
+- `SPacketUpdateBossInfo()`
+- `SPacketUpdateBossInfo(SPacketUpdateBossInfo.Operation operationIn, BossInfo data)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public java.util.UUID getUniqueId()`
-- `public SPacketUpdateBossInfo.Operation getOperation()`
-- `public ITextComponent getName()`
-- `public float getPercent()`
-- `public BossInfo.Color getColor()`
-- `public BossInfo.Overlay getOverlay()`
-- `public boolean shouldDarkenSky()`
-- `public boolean shouldPlayEndBossMusic()`
-- `public boolean shouldCreateFog()`
+- `BossInfo.Color getColor()`
+- `ITextComponent getName()`
+- `SPacketUpdateBossInfo.Operation getOperation()`
+- `BossInfo.Overlay getOverlay()`
+- `float getPercent()`
+- `java.util.UUID getUniqueId()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `boolean shouldCreateFog()`
+- `boolean shouldDarkenSky()`
+- `boolean shouldPlayEndBossMusic()`
+- `void writePacketData(PacketBuffer buf)`

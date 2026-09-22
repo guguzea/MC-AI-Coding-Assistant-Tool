@@ -1,22 +1,28 @@
 ---
 title: "ForgeGuiFactory.ForgeConfigGui.ClientEntry"
-description: "This custom list entry provides the Client only Settings entry on the Minecraft Forge Configuration screen. It extends the base Category entry class and defines the IConfigElement objects that will be"
+description: "public static class ForgeGuiFactory.ForgeConfigGui.ClientEntry extends GuiConfigEntries.CategoryEntry"
 package: "net/minecraftforge/client/gui"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/client/gui/ForgeGuiFactory.ForgeConfigGui.ClientEntry.html"
 sourceType: javadoc
 ---
 
 # ForgeGuiFactory.ForgeConfigGui.ClientEntry
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.config.GuiConfigEntries.ListEntryBase → net.minecraftforge.fml.client.config.GuiConfigEntries.CategoryEntry → net.minecraftforge.client.gui.ForgeGuiFactory.ForgeConfigGui.ClientEntry
 
-- `public ClientEntry( GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)`
+## Class signature
+
+```java
+public static class ForgeGuiFactory.ForgeConfigGui.ClientEntry extends GuiConfigEntries.CategoryEntry
+```
 
 ## Methods
 
-- `protected GuiScreen buildChildScreen()`
+- `protected GuiScreen buildChildScreen()` — This method is called in the constructor and is used to set the childScreen field.
 
-## Description
+## Fields
 
-This custom list entry provides the Client only Settings entry on the Minecraft Forge Configuration screen. It extends the base Category entry class and defines the IConfigElement objects that will be
+- `ClientEntry`

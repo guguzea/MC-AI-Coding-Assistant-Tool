@@ -1,9 +1,17 @@
 # ParticleWaterWake.Factory
 
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.ParticleWaterWake.Factory
+
+## Class signature
+
+```java
+public static class ParticleWaterWake.Factory extends java.lang.Object implements IParticleFactory
+```
+
 ## Constructors
 
-- `public Factory()`
+- `Factory()`
 
 ## Methods
 
-- `public Particle getEntityFX(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)`
+- `Particle getEntityFX(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)`

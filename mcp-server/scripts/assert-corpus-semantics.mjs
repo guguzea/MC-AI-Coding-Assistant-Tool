@@ -14,6 +14,15 @@
  *   ③ `stub ≤ 基线 allowedStubs`（**ratchet：只许降**，超即红）。
  *   ④ 有 ≥5 篇的树：`median ≥ 基线 medianFloor`（生成基线时取 0.6×实测中位，且不低于 100）。
  *   ⑤ 全局：`Σstub ≤ 基线 totalStubBudget`（ratchet）。
+ *   ⑥ 按树 opt-in 的 `p10Floor`：`p10 ≥ 地板`（2026-09-22 用户裁定③）。存在的理由 = ④ 的盲区：
+ *      「一页一声明」体裁（bedrock-scriptapi 624 页）中位数天然是"中等那页"，把最薄的一成刷成
+ *      60 字也惊不动 median；p10 盯的就是从尾部开始塌。基线钉了 p10Floor 而统计没算 p10 ⇒ 该判据红（不许空转）。
+ *   ⑦ 按树 opt-in 的 `membersFloor`：`Σ成员条数 ≥ 地板` + **逐页自洽**（2026-09-22 用户裁定④）。
+ *      计数口径 = 页内 `## Members（N）` 自报的 N 逐页求和，并要求它等于该页 `### \`x\`` 小节数 ——
+ *      「一页一声明」族（scriptapi）光看厚度不够：截断掉半截成员列表的页，正文照样有几百字。
+ *      N 与实际小节数不等 ⇒ 当场红（不依赖地板，抓的是单页截断）；Σ 地板抓的是整树掉页。
+ *      稳定计数源 = 生产者留在树上的 `scriptapi-typed.json`（它自己解析 npm d.ts 的成员清单），
+ *      三方对账由 `assert-bedrock-scriptapi-members.mjs` 负责；本判据只读语料，不读那份 JSON。
  *
  * 诚实边界（明写，不夸大）：
  *   · `sectionless`（无 `## ` 小节）**只打印、不判红** —— 2026-09-18 **逐族定性完成**
@@ -88,6 +97,9 @@ export function measureTree(tree, dir) {
   let stub = 0;
   let thin = 0;
   let sectionless = 0;
+  let members = 0;
+  let memberMismatch = 0;
+  const memberMismatchFiles = [];
   for (const f of files) {
     let text = '';
     try {
@@ -95,9 +107,10 @@ export function measureTree(tree, dir) {
     } catch {
       continue;
     }
+    const body = stripFrontmatter(text);
     const bc = countBodyChars(text);
     bodies.push(bc);
-    const hasSections = /^##\s/m.test(stripFrontmatter(text));
+    const hasSections = /^##\s/m.test(body);
     if (!hasSections) sectionless++;
     if (bc < STUB_MIN) {
       if (hasSections) thin++;
@@ -106,10 +119,33 @@ export function measureTree(tree, dir) {
         stubFiles.push(path.relative(dir, f).split(path.sep).join('/'));
       }
     }
+    // 判据⑦的口径：生产者自报的成员条数（`## Members（N）`）与该页实际成员小节数必须相等。
+    // 两样都没有的页（绝大多数族）在此恒等 0==0，不贡献任何计数 ⇒ 不会给别的族凭空加判据。
+    const mn = /^##\s*Members（(\d+)）/m.exec(body);
+    if (mn) members += Number(mn[1]);
+    const h3 = (body.match(/^### `[^`]+`$/gm) || []).length;
+    if (mn && Number(mn[1]) !== h3) {
+      memberMismatch++;
+      if (memberMismatchFiles.length < 5) {
+        memberMismatchFiles.push(`${path.relative(dir, f).split(path.sep).join('/')}: 自报 ${mn[1]} 实际 ${h3}`);
+      }
+    }
   }
   bodies.sort((a, b) => a - b);
   const q = (p) => (bodies.length ? bodies[Math.min(bodies.length - 1, Math.floor(bodies.length * p))] : 0);
-  return { tree, files: files.length, stub, thin, sectionless, stubFiles, p10: q(0.1), median: q(0.5) };
+  return {
+    tree,
+    files: files.length,
+    stub,
+    thin,
+    sectionless,
+    stubFiles,
+    p10: q(0.1),
+    median: q(0.5),
+    members,
+    memberMismatch,
+    memberMismatchFiles,
+  };
 }
 
 /** 纯函数：逐树判定（真跑与 --selftest 共用）。 */
@@ -136,6 +172,32 @@ export function judgeTrees(stats, baseline) {
     const floor = Math.max(GLOBAL_MEDIAN_FLOOR, typeof b.medianFloor === 'number' ? b.medianFloor : 0);
     if (s.files >= 5 && s.median < floor) {
       problems.push(`${s.tree}: 正文中位 ${s.median} < 地板 ${floor}（整树变薄/回退为桩）`);
+    }
+    // 判据⑥（2026-09-22 用户裁定③）：p10 地板。median 对「一页一声明」这类体裁不敏感 ——
+    // scriptapi 624 页把最薄的一成刷成 60 字，中位仍然好看。钉 p10 才抓得住"从尾部开始塌"。
+    // 与 medianFloor 一样是**按树 opt-in**（不给全局地板：多数树的 p10 天然就低，加了只会假红）。
+    if (typeof b.p10Floor === 'number') {
+      if (typeof s.p10 !== 'number') {
+        problems.push(`${s.tree}: 基线钉了 p10Floor=${b.p10Floor} 但统计里没有 p10 ⇒ 这条判据在空转（scanTree 被改了？）`);
+      } else if (s.files >= 5 && s.p10 < b.p10Floor) {
+        problems.push(`${s.tree}: 正文 p10 ${s.p10} < 地板 ${b.p10Floor}（最薄的一成先塌，median 未动也拦得住）`);
+      }
+    }
+    // 判据⑦（2026-09-22 用户裁定④）：成员条数。两条独立腿 ——
+    //   ⑦a 逐页自洽：页自报 `## Members（N）` 必须等于该页 `### \`x\`` 小节数（抓单页截断，不依赖地板）；
+    //   ⑦b Σ 地板：整树成员总条数 ≥ 基线 `membersFloor`（抓成片掉页；按树 opt-in，同 ⑥ 的口径 0.6×）。
+    // 只盯厚度的 ④⑥ 看不见这种缺陷：删掉一半成员列表的页正文仍有几百字，中位和 p10 照旧。
+    if (typeof s.members === 'number' && s.memberMismatch > 0) {
+      problems.push(
+        `${s.tree}: ${s.memberMismatch} 页的成员自报条数与实际成员小节数不等（正文被截断/手改过）：${(s.memberMismatchFiles ?? []).join(' · ')}`,
+      );
+    }
+    if (typeof b.membersFloor === 'number') {
+      if (typeof s.members !== 'number') {
+        problems.push(`${s.tree}: 基线钉了 membersFloor=${b.membersFloor} 但统计里没有 members ⇒ 这条判据在空转（measureTree 被改了？）`);
+      } else if (s.members < b.membersFloor) {
+        problems.push(`${s.tree}: Σ成员 ${s.members} < 地板 ${b.membersFloor}（成员列表成片消失，p10/median 未必动）`);
+      }
     }
     // 具名 residue（可选层）：允许留下的真·空页必须**逐条具名**，且条目过期（文件已不是空页）即红。
     if (residueEnabled) {
@@ -243,6 +305,56 @@ function selftest() {
       },
       false,
     ],
+    [
+      // 判据⑥：p10 地板（2026-09-22 用户裁定③）。三例钉住"尾塌而 median 不动"这个 median 抓不到的形状。
+      'p10 达标（应绿）',
+      [{ tree: 'a/good/1', files: 624, stub: 0, median: 363, p10: 123 }],
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110 } } },
+      true,
+    ],
+    [
+      'p10 掉一半而 median 未动（最薄的一成先塌 ⇒ 必红）',
+      [{ tree: 'a/good/1', files: 624, stub: 0, median: 363, p10: 61 }],
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110 } } },
+      false,
+    ],
+    [
+      '基线钉了 p10Floor 但统计没算 p10（判据空转 ⇒ 必红）',
+      [{ tree: 'a/good/1', files: 624, stub: 0, median: 363 }],
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110 } } },
+      false,
+    ],
+    [
+      // 判据⑦：成员条数（2026-09-22 用户裁定④）。p10/median 都达标的树，成员照样能成片丢 —— 这三例
+      // 各自只让 ⑦ 的一条腿红，另两条腿保持绿，证明它不是前两条的重述。
+      '成员 Σ 与逐页自洽都达标（应绿）',
+      [{ tree: 'a/good/1', files: 624, stub: 0, median: 363, p10: 123, members: 2590, memberMismatch: 0 }],
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, membersFloor: 1554 } } },
+      true,
+    ],
+    [
+      'Σ成员掉到地板以下（成员列表成片消失 ⇒ 必红）',
+      [{ tree: 'a/good/1', files: 624, stub: 0, median: 363, p10: 123, members: 900, memberMismatch: 0 }],
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, membersFloor: 1554 } } },
+      false,
+    ],
+    [
+      '单页截断（自报 12 实际 5，Σ 仍在地板上 ⇒ ⑦a 必红而 ④⑥ 全绿）',
+      [
+        {
+          tree: 'a/good/1', files: 624, stub: 0, median: 363, p10: 123, members: 2590,
+          memberMismatch: 1, memberMismatchFiles: ['scriptapi/AABB.md: 自报 12 实际 5'],
+        },
+      ],
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, membersFloor: 1554 } } },
+      false,
+    ],
+    [
+      '基线钉了 membersFloor 但统计没算 members（判据空转 ⇒ 必红）',
+      [{ tree: 'a/good/1', files: 624, stub: 0, median: 363, p10: 123 }],
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, membersFloor: 1554 } } },
+      false,
+    ],
   ];
   let missed = 0;
   for (const [name, stats, b, wantGreen] of cases) {
@@ -284,10 +396,17 @@ if (process.argv.includes('--selftest')) {
   if (RELEDGER) {
     const next = { totalStubBudget: stats.reduce((a, s) => a + s.stub, 0), trees: {} };
     for (const s of stats) {
+      const prev = baseline.trees[s.tree] ?? {};
       next.trees[s.tree] = {
         files: s.files,
         allowedStubs: s.stub,
         medianFloor: s.files < 5 ? 0 : Math.max(GLOBAL_MEDIAN_FLOOR, Math.round(s.median * 0.6)),
+        // p10Floor 是**按树 opt-in**（判据⑥）：只沿用"基线里本来就钉了"的那些，按同一 0.6 口径重算。
+        // 不给全部树自动加上 —— 多数树的 p10 天然就低（一页一声明 / 表格体例），全量加只会把这条判据变成噪声源。
+        ...(typeof prev.p10Floor === 'number' ? { p10Floor: Math.max(1, Math.round(s.p10 * 0.6)) } : {}),
+        // membersFloor 同口径按树 opt-in（判据⑦b）：只有「一页一声明」这类带成员计数的族该钉；
+        // 钉法取 0.6×Σ实测 —— 总成员数是**派生量**（由页内 `## Members（N）` 现算），不是抄来的常量。
+        ...(typeof prev.membersFloor === 'number' ? { membersFloor: Math.max(1, Math.round(s.members * 0.6)) } : {}),
       };
     }
     console.log('[RELEDGER] 重算基线（只打印，不写盘；确认后手工替换 corpus-semantics-baseline.json）：');
@@ -297,9 +416,11 @@ if (process.argv.includes('--selftest')) {
   const totalStub = stats.reduce((a, s) => a + s.stub, 0);
   const totalFiles = stats.reduce((a, s) => a + s.files, 0);
   if (INFO) {
-    console.log('tree | files | stub(真·空页) | thin(薄但有结构) | sectionless | p10 | median');
+    console.log('tree | files | stub(真·空页) | thin(薄但有结构) | sectionless | p10 | median | Σ成员(页自报) | 成员不自洽页');
     for (const s of stats) {
-      console.log(`${s.tree} | ${s.files} | ${s.stub} | ${s.thin} | ${s.sectionless} | ${s.p10} | ${s.median}`);
+      console.log(
+        `${s.tree} | ${s.files} | ${s.stub} | ${s.thin} | ${s.sectionless} | ${s.p10} | ${s.median} | ${s.members} | ${s.memberMismatch}`,
+      );
     }
   }
   if (problems.length > 0) {

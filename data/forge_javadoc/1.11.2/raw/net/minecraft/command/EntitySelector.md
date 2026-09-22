@@ -3,11 +3,15 @@ title: "EntitySelector"
 description: "public class EntitySelector extends java.lang.Object"
 package: "net/minecraft/command"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/command/EntitySelector.html"
 sourceType: javadoc
 ---
 
 # EntitySelector
+
+**Inheritance:** java.lang.Object → net.minecraft.command.EntitySelector
 
 ## Class signature
 
@@ -17,14 +21,14 @@ public class EntitySelector extends java.lang.Object
 
 ## Constructors
 
-- `public EntitySelector()`
+- `EntitySelector()`
 
 ## Methods
 
-- `@Nullable public static EntityPlayerMP matchOnePlayer( ICommandSender sender, java.lang.String token) throws CommandException`
-- `@Nullable public static <T extends Entity > T matchOneEntity( ICommandSender sender, java.lang.String token, java.lang.Class<? extends T> targetClass) throws CommandException`
-- `@Nullable public static ITextComponent matchEntitiesToTextComponent( ICommandSender sender, java.lang.String token) throws CommandException`
-- `public static <T extends Entity > java.util.List<T> matchEntities( ICommandSender sender, java.lang.String token, java.lang.Class<? extends T> targetClass) throws CommandException`
-- `public static java.util.Map<java.lang.String,java.lang.Integer> getScoreMap(java.util.Map<java.lang.String,java.lang.String> params)`
-- `public static boolean matchesMultiplePlayers(java.lang.String selectorStr) throws CommandException`
-- `public static boolean isSelector(java.lang.String selectorStr)`
+- `static java.util.Map<java.lang.String, java.lang.Integer> getScoreMap(java.util.Map<java.lang.String, java.lang.String> params)`
+- `static boolean isSelector(java.lang.String selectorStr)`
+- `static<T extends Entity> java.util.List<T> matchEntities(ICommandSender sender, java.lang.String token, java.lang.Class<? extends T> targetClass)`
+- `static ITextComponent matchEntitiesToTextComponent(ICommandSender sender, java.lang.String token)`
+- `static boolean matchesMultiplePlayers(java.lang.String selectorStr)`
+- `static<T extends Entity> T matchOneEntity(ICommandSender sender, java.lang.String token, java.lang.Class<? extends T> targetClass)`
+- `static EntityPlayerMP matchOnePlayer(ICommandSender sender, java.lang.String token)`

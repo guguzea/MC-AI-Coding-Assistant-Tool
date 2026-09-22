@@ -1,21 +1,23 @@
 # NBTTagByteArray
 
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase → net.minecraft.nbt.NBTTagByteArray
+
 ## Class signature
 
 ```java
 public class NBTTagByteArray extends NBTBase
 ```
 
-## Constructors
-
-- `public NBTTagByteArray(byte[] data)`
-- `public NBTTagByteArray(java.util.List<java.lang.Byte> p_i47529_1_)`
-
 ## Methods
 
-- `public byte getId()`
-- `public java.lang.String toString()`
-- `public NBTBase copy()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public byte[] getByteArray()`
+- `NBTBase copy()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `byte[] getByteArray()`
+- `byte getId()`
+- `int hashCode()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `NBTTagByteArray`
+- `NBTTagByteArray`

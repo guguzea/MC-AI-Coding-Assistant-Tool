@@ -8,8 +8,8 @@ public interface IAttribute
 
 ## Methods
 
-- `java.lang.String getName()`
 - `double clampValue(double value)`
 - `double getDefaultValue()`
-- `boolean getShouldWatch()`
+- `java.lang.String getName()`
 - `IAttribute getParent()`
+- `boolean getShouldWatch()`

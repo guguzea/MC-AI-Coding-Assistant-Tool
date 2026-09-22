@@ -1,5 +1,7 @@
 # StructureMineshaftPieces
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureMineshaftPieces
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class StructureMineshaftPieces extends java.lang.Object
 
 ## Constructors
 
-- `public StructureMineshaftPieces()`
+- `StructureMineshaftPieces()`
 
 ## Methods
 
-- `public static void registerStructurePieces()`
+- `static void registerStructurePieces()`

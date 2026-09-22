@@ -1,9 +1,13 @@
 # OreGenEvent.Post
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.OreGenEvent → net.minecraftforge.event.terraingen.OreGenEvent.Post
+
+## Class signature
+
+```java
+public static class OreGenEvent.Post extends OreGenEvent
+```
+
 ## Constructors
 
-- `public Post( World world, java.util.Random rand, BlockPos pos)`
-
-## Description
-
-OreGenEvent.Post is fired just after a chunk is populated with ores. This event is fired just after ore generation in BiomeDecorator#generateOres(). This event is not Cancelable . This event does not
+- `Post(World world, java.util.Random rand, BlockPos pos)`

@@ -3,11 +3,15 @@ title: "NodeProcessor"
 description: "public abstract class NodeProcessor extends java.lang.Object"
 package: "net/minecraft/pathfinding"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/pathfinding/NodeProcessor.html"
 sourceType: javadoc
 ---
 
 # NodeProcessor
+
+**Inheritance:** java.lang.Object → net.minecraft.pathfinding.NodeProcessor
 
 ## Class signature
 
@@ -17,21 +21,33 @@ public abstract class NodeProcessor extends java.lang.Object
 
 ## Constructors
 
-- `public NodeProcessor()`
+- `NodeProcessor()`
 
 ## Methods
 
-- `public void initProcessor( IBlockAccess sourceIn, EntityLiving mob)`
-- `public void postProcess()`
+- `abstract int findPathOptions(PathPoint [] pathOptions, PathPoint currentPoint, PathPoint targetPoint, float maxDistance)`
+- `boolean getCanBreakDoors()`
+- `boolean getCanEnterDoors()`
+- `boolean getCanSwim()`
+- `abstract PathNodeType getPathNodeType(IBlockAccess x, int y, int z, int p_186330_4_)`
+- `abstract PathNodeType getPathNodeType(IBlockAccess blockaccessIn, int x, int y, int z, EntityLiving entitylivingIn, int xSize, int ySize, int zSize, boolean canBreakDoorsIn, boolean canEnterDoorsIn)`
+- `abstract PathPoint getPathPointToCoords(double x, double y, double z)`
+- `abstract PathPoint getStart()`
+- `void initProcessor(IBlockAccess sourceIn, EntityLiving mob)`
 - `protected PathPoint openPoint(int x, int y, int z)`
-- `public abstract PathPoint getStart()`
-- `public abstract PathPoint getPathPointToCoords(double x, double y, double z)`
-- `public abstract int findPathOptions( PathPoint [] pathOptions, PathPoint currentPoint, PathPoint targetPoint, float maxDistance)`
-- `public abstract PathNodeType getPathNodeType( IBlockAccess blockaccessIn, int x, int y, int z, EntityLiving entitylivingIn, int xSize, int ySize, int zSize, boolean canBreakDoorsIn, boolean canEnterDoorsIn)`
-- `public abstract PathNodeType getPathNodeType( IBlockAccess x, int y, int z, int p_186330_4_)`
-- `public void setCanEnterDoors(boolean canEnterDoorsIn)`
-- `public void setCanBreakDoors(boolean canBreakDoorsIn)`
-- `public void setCanSwim(boolean canSwimIn)`
-- `public boolean getCanEnterDoors()`
-- `public boolean getCanBreakDoors()`
-- `public boolean getCanSwim()`
+- `void postProcess()`
+- `void setCanBreakDoors(boolean canBreakDoorsIn)`
+- `void setCanEnterDoors(boolean canEnterDoorsIn)`
+- `void setCanSwim(boolean canSwimIn)`
+
+## Fields
+
+- `protected IBlockAccess blockaccess`
+- `protected boolean canBreakDoors`
+- `protected boolean canEnterDoors`
+- `protected boolean canSwim`
+- `protected EntityLiving entity`
+- `protected int entitySizeX`
+- `protected int entitySizeY`
+- `protected int entitySizeZ`
+- `protected IntHashMap<PathPoint> pointMap`

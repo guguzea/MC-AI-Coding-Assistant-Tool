@@ -1,23 +1,21 @@
 # ContainerBrewingStand
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Container → net.minecraft.inventory.ContainerBrewingStand
+
 ## Class signature
 
 ```java
 public class ContainerBrewingStand extends Container
 ```
 
-## Constructors
-
-- `public ContainerBrewingStand( InventoryPlayer playerInventory, IInventory tileBrewingStandIn)`
-
 ## Methods
 
-- `public void onCraftGuiOpened( ICrafting listener)`
-- `public void detectAndSendChanges()`
-- `public void updateProgressBar(int id, int data)`
-- `public boolean canInteractWith( EntityPlayer playerIn)`
-- `public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
+- `boolean canInteractWith(EntityPlayer playerIn)`
+- `void detectAndSendChanges()` — Looks for changes made in the container, sends them to every listener.
+- `void onCraftGuiOpened(ICrafting listener)`
+- `ItemStack transferStackInSlot(EntityPlayer playerIn, int index)` — Take a stack from the specified inventory slot.
+- `void updateProgressBar(int id, int data)`
 
-## Description
+## Fields
 
-Looks for changes made in the container, sends them to every listener.
+- `ContainerBrewingStand`

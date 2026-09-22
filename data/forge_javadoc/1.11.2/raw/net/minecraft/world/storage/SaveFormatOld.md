@@ -3,11 +3,15 @@ title: "SaveFormatOld"
 description: "public class SaveFormatOld extends java.lang.Object implements ISaveFormat"
 package: "net/minecraft/world/storage"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/storage/SaveFormatOld.html"
 sourceType: javadoc
 ---
 
 # SaveFormatOld
+
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.SaveFormatOld
 
 ## Class signature
 
@@ -17,23 +21,28 @@ public class SaveFormatOld extends java.lang.Object implements ISaveFormat
 
 ## Constructors
 
-- `public SaveFormatOld(java.io.File savesDirectoryIn, DataFixer dataFixerIn)`
+- `SaveFormatOld(java.io.File savesDirectoryIn, DataFixer dataFixerIn)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public java.util.List< WorldSummary > getSaveList() throws AnvilConverterException`
-- `public void flushCache()`
-- `@Nullable public WorldInfo getWorldInfo(java.lang.String saveName)`
-- `@Nullable public static WorldInfo getWorldData(java.io.File p_186353_0_, DataFixer dataFixerIn)`
-- `public static WorldInfo loadAndFix(java.io.File file, DataFixer fixer, SaveHandler save)`
-- `public void renameWorld(java.lang.String dirName, java.lang.String newName)`
-- `public ISaveHandler getSaveLoader(java.lang.String saveName, boolean storePlayerdata)`
-- `public boolean isNewLevelIdAcceptable(java.lang.String saveName)`
-- `public boolean deleteWorldDirectory(java.lang.String saveName)`
+- `boolean canLoadWorld(java.lang.String saveName)`
+- `boolean convertMapFormat(java.lang.String filename, IProgressUpdate progressCallback)`
 - `protected static boolean deleteFiles(java.io.File[] files)`
-- `public boolean isConvertible(java.lang.String saveName)`
-- `public boolean isOldMapFormat(java.lang.String saveName)`
-- `public boolean convertMapFormat(java.lang.String filename, IProgressUpdate progressCallback)`
-- `public boolean canLoadWorld(java.lang.String saveName)`
-- `public java.io.File getFile(java.lang.String p_186352_1_, java.lang.String p_186352_2_)`
+- `boolean deleteWorldDirectory(java.lang.String saveName)`
+- `void flushCache()`
+- `java.io.File getFile(java.lang.String p_186352_1_, java.lang.String p_186352_2_)`
+- `java.lang.String getName()`
+- `java.util.List<WorldSummary> getSaveList()`
+- `ISaveHandler getSaveLoader(java.lang.String saveName, boolean storePlayerdata)`
+- `static WorldInfo getWorldData(java.io.File p_186353_0_, DataFixer dataFixerIn)`
+- `WorldInfo getWorldInfo(java.lang.String saveName)`
+- `boolean isConvertible(java.lang.String saveName)`
+- `boolean isNewLevelIdAcceptable(java.lang.String saveName)`
+- `boolean isOldMapFormat(java.lang.String saveName)`
+- `static WorldInfo loadAndFix(java.io.File file, DataFixer fixer, SaveHandler save)`
+- `void renameWorld(java.lang.String dirName, java.lang.String newName)`
+
+## Fields
+
+- `protected DataFixer dataFixer`
+- `java.io.File savesDirectory`

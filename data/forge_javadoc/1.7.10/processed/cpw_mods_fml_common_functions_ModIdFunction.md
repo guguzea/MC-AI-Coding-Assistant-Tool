@@ -1,5 +1,7 @@
 # ModIdFunction
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.functions.ModIdFunction
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public final class ModIdFunction extends java.lang.Object
 
 ## Constructors
 
-- `public ModIdFunction()`
+- `ModIdFunction()`
 
 ## Methods
 
-- `public java.lang.String apply( ModContainer container)`
+- `java.lang.String apply(ModContainer container)`

@@ -1,5 +1,7 @@
 # EntityAISit
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAISit
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class EntityAISit extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAISit( EntityTameable entityIn)`
+- `EntityAISit(EntityTameable entityIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void setSitting(boolean sitting)`
+- `void resetTask()`
+- `void setSitting(boolean sitting)`
+- `boolean shouldExecute()`
+- `void startExecuting()`

@@ -42,6 +42,7 @@ import { fileURLToPath } from "url";
 // （UNABLE_TO_VERIFY_LEAF_SIGNATURE）→ 取件一律走仓内 curl 优先漏斗。
 import { downloadWithFallback } from "../../scripts/_lib/fetch-with-ua.mjs";
 import { resolveDataRoot } from "./_lib/data-root.js";
+import { upstreamDevelopPaths } from "./_lib/upstream-inventory.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // 从 mcp-server/scripts/ 向上 2 层到 MC_skill 根目录
@@ -97,9 +98,13 @@ if (!VERSION) {
 const BRANCH = CLI.kv.get("branch") ?? "main";
 const FORCE = CLI.flags.has("force");
 const DRY_RUN = CLI.flags.has("dry-run");
+/** 只刷新上游清单快照（一次 trees 调用），不抓任何页面 —— 给 assert-upstream-chapters 接新档用。 */
+const INVENTORY_ONLY = CLI.flags.has("inventory-only");
 
 const FABRIC_DIR = join(DATA_ROOT, `fabric_${VERSION}`, "fabric-docs", VERSION, "raw");
 const META_PATH = join(DATA_ROOT, `fabric_${VERSION}`, "meta.json");
+// 本次上游清单（GitHub trees 过滤后），main() 末尾写进 upstream-tree.json 给门当期望值
+let _upstreamDevelopPaths = [];
 
 // Fabric Docs GitHub 仓库元信息
 const FABRIC_GH = {
@@ -151,52 +156,94 @@ async function listMainTreePaths() {
   if (_mainTreePaths) return _mainTreePaths;
   const url = `https://api.github.com/repos/${FABRIC_GH.owner}/${FABRIC_GH.repo}/git/trees/${BRANCH}?recursive=1`;
   const dest = join(tmpdir(), `mc-skill-fabric-tree-${process.pid}-${Date.now()}.json`);
-  try {
-    const res = await downloadWithFallback({
-      url,
-      dest,
-      timeoutMs: 30000,
-      minBytes: 1,
-      headers: { Accept: "application/vnd.github+json" },
-    });
-    if (!res.ok) {
-      console.warn(`[fetch-fabric-docs] GitHub tree HTTP ${res.status ?? 0}，仅用 toFetch`);
-      _mainTreePaths = [];
-      return _mainTreePaths;
-    }
-    const data = JSON.parse(readFileSync(dest, "utf8"));
-    _mainTreeSha = data.sha ?? null;
-    _mainTreeTruncated = data.truncated === true;
-    if (_mainTreeTruncated) {
-      console.warn("[fetch-fabric-docs] trees 响应 truncated=true ⇒ 这份清单不完整，禁止据此断言「无缺页」");
-    }
-    if (!_mainTreeSha) console.warn("[fetch-fabric-docs] trees 响应没有 sha 字段，本次不写修订钉（meta.docs.sourceTreeSha=null）");
-    _mainTreePaths = (data.tree ?? []).filter((t) => t.type === "blob").map((t) => t.path);
-  } catch (e) {
-    console.warn(`[fetch-fabric-docs] GitHub tree 失败：${e.message}，仅用 toFetch`);
-    _mainTreePaths = [];
-  } finally {
+  // 这份 recursive trees 响应实测 2.7–3.2MB，本机整段下载耗时可达 ~118s（curl 实测）：
+  // 旧值 30s 会把「慢」当成「没有」，静默产出 0 页清单 —— 上游清单探测超时必须按实测留量。
+  const TREE_TIMEOUT_MS = 240_000;
+  const attempts = 3;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    if (attempt > 1) await new Promise((r) => setTimeout(r, 2000 * attempt));
     try {
-      unlinkSync(dest);
-    } catch {
-      // 漏斗失败时已自行删掉 dest
+      const res = await downloadWithFallback({
+        url,
+        dest,
+        timeoutMs: TREE_TIMEOUT_MS,
+        minBytes: 1,
+        headers: { Accept: "application/vnd.github+json" },
+      });
+      if (!res.ok) {
+        console.warn(`[fetch-fabric-docs] GitHub tree HTTP ${res.status ?? 0}（第 ${attempt}/${attempts} 次）`);
+        continue;
+      }
+      const data = JSON.parse(readFileSync(dest, "utf8"));
+      _mainTreeSha = data.sha ?? null;
+      _mainTreeTruncated = data.truncated === true;
+      if (_mainTreeTruncated) {
+        console.warn("[fetch-fabric-docs] trees 响应 truncated=true ⇒ 这份清单不完整，禁止据此断言「无缺页」");
+      }
+      if (!_mainTreeSha) console.warn("[fetch-fabric-docs] trees 响应没有 sha 字段，本次不写修订钉（meta.docs.sourceTreeSha=null）");
+      _mainTreePaths = (data.tree ?? []).filter((t) => t.type === "blob").map((t) => t.path);
+      return _mainTreePaths;
+    } catch (e) {
+      console.warn(`[fetch-fabric-docs] GitHub tree 失败（第 ${attempt}/${attempts} 次）：${e.message}`);
+    } finally {
+      try {
+        unlinkSync(dest);
+      } catch {
+        // 漏斗失败时已自行删掉 dest
+      }
     }
   }
+  console.warn(`[fetch-fabric-docs] trees 三次都没拿到 ⇒ 本次没有上游清单，仅用 toFetch`);
+  _mainTreePaths = [];
   return _mainTreePaths;
+}
+
+// 上游清单快照：assert-upstream-chapters 的「期望」只能来自这里，不能来自本仓产物。
+// truncated / 取不到清单时**照写**（pageCount 可能为 0 + truncated 标记），
+// 由门去判「这份清单能不能用来断言无缺页」——抓取器不替门下结论。
+function writeUpstreamSnapshot() {
+  const versionDir = join(DATA_ROOT, `fabric_${VERSION}`, "fabric-docs", VERSION);
+  ensureDir(versionDir);
+  const snapPath = join(versionDir, "upstream-tree.json");
+  const probeFailed = _mainTreeSha === null;
+  if (probeFailed) {
+    // 探针失败不是「上游没有这页」：拿不到清单就绝不覆盖已有快照（否则一次限流
+    // 会把「上游确实没有文档树」写成假事实，门会据此放行 0 页档案）。
+    let prior = null;
+    try { prior = JSON.parse(readFileSync(snapPath, "utf8")); } catch { prior = null; }
+    if (prior && prior.treeSha) {
+      console.warn(`[fetch-fabric-docs] trees 探针失败，保留既有快照（treeSha=${prior.treeSha.slice(0, 12)}…），本次不写`);
+      return { versionDir, pageCount: prior.pageCount ?? 0, keptPrior: true };
+    }
+  }
+  writeFileSync(
+    snapPath,
+    JSON.stringify({
+      platform: "fabric",
+      version: VERSION,
+      // 探针失败时换一个门不认的来源名 ⇒ 门必红，而不是把 0 页当成「上游确实没有」
+      source: probeFailed ? "github_trees_probe_failed" : "github_trees",
+      repo: `${FABRIC_GH.owner}/${FABRIC_GH.repo}`,
+      branch: BRANCH,
+      treeSha: _mainTreeSha,
+      truncated: _mainTreeTruncated,
+      discoveredAt: new Date().toISOString(),
+      pageCount: _upstreamDevelopPaths.length,
+      pages: _upstreamDevelopPaths,
+    }, null, 2) + "\n",
+    "utf8",
+  );
+  return { versionDir, pageCount: _upstreamDevelopPaths.length };
 }
 
 async function loadUrlList() {
   const templates = JSON.parse(readFileSync(TEMPLATES_PATH, "utf8"));
   const toFetch = (templates.toFetch ?? []).filter((e) => e.gitPath);
   const tree = await listMainTreePaths();
-  const prefix = `versions/${VERSION}/`;
+  _upstreamDevelopPaths = upstreamDevelopPaths(tree, VERSION);
   const byPath = new Map();
   for (const e of toFetch) byPath.set(e.gitPath, { ...e });
-  for (const p of tree) {
-    if (!p.startsWith(prefix) || !p.endsWith(".md")) continue;
-    const gitPath = p.slice(prefix.length);
-    if (!gitPath.startsWith("develop/")) continue;
-    if (/(^|\/)(players|translated)\//.test(gitPath)) continue;
+  for (const gitPath of _upstreamDevelopPaths) {
     if (byPath.has(gitPath)) continue;
     byPath.set(gitPath, {
       id: gitPathToFetchId(gitPath),
@@ -370,6 +417,20 @@ async function main() {
   const meta = readMeta();
   const now = new Date().toISOString().split("T")[0];
 
+  if (INVENTORY_ONLY) {
+    if (DRY_RUN) {
+      console.log(`[fetch-fabric-docs] --inventory-only --dry-run：上游 develop 清单 ${_upstreamDevelopPaths.length} 页，不写盘`);
+      return;
+    }
+    const { pageCount } = writeUpstreamSnapshot();
+    console.log(`[fetch-fabric-docs] --inventory-only：上游清单快照 ${pageCount} 页（treeSha=${_mainTreeSha ?? "null"}），未抓取任何页面`);
+    if (_mainTreeSha === null) {
+      console.error("FAILED: trees 探针没拿到清单（限流 / 网络），本次快照不可信 ⇒ 退出码非 0，请重跑");
+      process.exitCode = 1;
+    }
+    return;
+  }
+
   console.log(`[fetch-fabric-docs] 版本: ${VERSION}`);
   console.log(`[fetch-fabric-docs] 分支: ${BRANCH}`);
   console.log(`[fetch-fabric-docs] 目标目录: ${FABRIC_DIR}`);
@@ -510,8 +571,7 @@ async function main() {
       failures,
     };
     writeMeta(meta);
-    const versionDir = join(DATA_ROOT, `fabric_${VERSION}`, "fabric-docs", VERSION);
-    ensureDir(versionDir);
+    const { versionDir } = writeUpstreamSnapshot();
     writeFileSync(
       join(versionDir, "failures.json"),
       JSON.stringify({ version: VERSION, failures, removedRaw, keptRaw }, null, 2),

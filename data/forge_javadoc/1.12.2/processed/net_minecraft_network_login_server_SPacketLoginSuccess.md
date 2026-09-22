@@ -1,19 +1,21 @@
 # SPacketLoginSuccess
 
+**Inheritance:** java.lang.Object → net.minecraft.network.login.server.SPacketLoginSuccess
+
 ## Class signature
 
 ```java
-public class SPacketLoginSuccess extends java.lang.Object implements Packet < INetHandlerLoginClient >
+public class SPacketLoginSuccess extends java.lang.Object implements Packet<INetHandlerLoginClient>
 ```
 
 ## Constructors
 
-- `public SPacketLoginSuccess()`
-- `public SPacketLoginSuccess(GameProfile profileIn)`
+- `SPacketLoginSuccess()`
+- `SPacketLoginSuccess(GameProfile profileIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerLoginClient handler)`
-- `public GameProfile getProfile()`
+- `GameProfile getProfile()`
+- `void processPacket(INetHandlerLoginClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

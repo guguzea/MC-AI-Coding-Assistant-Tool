@@ -1,12 +1,20 @@
 # MapGenEndCity.Start
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureStart → net.minecraft.world.gen.structure.MapGenEndCity.Start
 
-- `public Start()`
-- `public Start( World worldIn, ChunkProviderEnd chunkProvider, java.util.Random random, int chunkX, int chunkZ)`
+## Class signature
+
+```java
+public static class MapGenEndCity.Start extends StructureStart
+```
 
 ## Methods
 
-- `public boolean isSizeableStructure()`
-- `public void writeToNBT( NBTTagCompound tagCompound)`
-- `public void readFromNBT( NBTTagCompound tagCompound)`
+- `boolean isSizeableStructure()`
+- `void readFromNBT(NBTTagCompound tagCompound)`
+- `void writeToNBT(NBTTagCompound tagCompound)`
+
+## Fields
+
+- `Start`
+- `Start`

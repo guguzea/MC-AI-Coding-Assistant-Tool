@@ -1,5 +1,7 @@
 # EntityHealth
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.EntityHealth
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class EntityHealth extends java.lang.Object implements IFixableData
 
 ## Constructors
 
-- `public EntityHealth()`
+- `EntityHealth()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

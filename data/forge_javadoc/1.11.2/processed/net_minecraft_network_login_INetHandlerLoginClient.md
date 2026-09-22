@@ -8,7 +8,7 @@ public interface INetHandlerLoginClient extends INetHandler
 
 ## Methods
 
-- `void handleEncryptionRequest( SPacketEncryptionRequest packetIn)`
-- `void handleLoginSuccess( SPacketLoginSuccess packetIn)`
-- `void handleDisconnect( SPacketDisconnect packetIn)`
-- `void handleEnableCompression( SPacketEnableCompression packetIn)`
+- `void handleDisconnect(SPacketDisconnect packetIn)`
+- `void handleEnableCompression(SPacketEnableCompression packetIn)`
+- `void handleEncryptionRequest(SPacketEncryptionRequest packetIn)`
+- `void handleLoginSuccess(SPacketLoginSuccess packetIn)`

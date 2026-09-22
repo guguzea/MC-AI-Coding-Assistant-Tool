@@ -1,10 +1,18 @@
 # ModelBlockAnimation.MBJointWeight
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.animation.ModelBlockAnimation.MBJointWeight
+
+## Class signature
+
+```java
+protected static class ModelBlockAnimation.MBJointWeight extends java.lang.Object
+```
+
 ## Constructors
 
-- `public MBJointWeight(java.lang.String name, com.google.common.collect.ImmutableMap<java.lang.Integer,float[]> weights)`
+- `MBJointWeight(java.lang.String name, com.google.common.collect.ImmutableMap<java.lang.Integer, float[]> weights)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public com.google.common.collect.ImmutableMap<java.lang.Integer,float[]> getWeights()`
+- `java.lang.String getName()`
+- `com.google.common.collect.ImmutableMap<java.lang.Integer, float[]> getWeights()`

@@ -3,11 +3,15 @@ title: "NetHandlerPlayClient"
 description: "public class NetHandlerPlayClient extends java.lang.Object implements INetHandlerPlayClient"
 package: "net/minecraft/client/network"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/network/NetHandlerPlayClient.html"
 sourceType: javadoc
 ---
 
 # NetHandlerPlayClient
+
+**Inheritance:** java.lang.Object → net.minecraft.client.network.NetHandlerPlayClient
 
 ## Class signature
 
@@ -17,88 +21,92 @@ public class NetHandlerPlayClient extends java.lang.Object implements INetHandle
 
 ## Constructors
 
-- `public NetHandlerPlayClient( Minecraft mcIn, GuiScreen p_i46300_2_, NetworkManager networkManagerIn, com.mojang.authlib.GameProfile profileIn)`
+- `NetHandlerPlayClient(Minecraft mcIn, GuiScreen p_i46300_2_, NetworkManager networkManagerIn, com.mojang.authlib.GameProfile profileIn)`
 
 ## Methods
 
-- `public void cleanup()`
-- `public void handleJoinGame( SPacketJoinGame packetIn)`
-- `public void handleSpawnObject( SPacketSpawnObject packetIn)`
-- `public void handleSpawnExperienceOrb( SPacketSpawnExperienceOrb packetIn)`
-- `public void handleSpawnGlobalEntity( SPacketSpawnGlobalEntity packetIn)`
-- `public void handleSpawnPainting( SPacketSpawnPainting packetIn)`
-- `public void handleEntityVelocity( SPacketEntityVelocity packetIn)`
-- `public void handleEntityMetadata( SPacketEntityMetadata packetIn)`
-- `public void handleSpawnPlayer( SPacketSpawnPlayer packetIn)`
-- `public void handleEntityTeleport( SPacketEntityTeleport packetIn)`
-- `public void handleHeldItemChange( SPacketHeldItemChange packetIn)`
-- `public void handleEntityMovement( SPacketEntity packetIn)`
-- `public void handleEntityHeadLook( SPacketEntityHeadLook packetIn)`
-- `public void handleDestroyEntities( SPacketDestroyEntities packetIn)`
-- `public void handlePlayerPosLook( SPacketPlayerPosLook packetIn)`
-- `public void handleMultiBlockChange( SPacketMultiBlockChange packetIn)`
-- `public void handleChunkData( SPacketChunkData packetIn)`
-- `public void processChunkUnload( SPacketUnloadChunk packetIn)`
-- `public void handleBlockChange( SPacketBlockChange packetIn)`
-- `public void handleDisconnect( SPacketDisconnect packetIn)`
-- `public void onDisconnect( ITextComponent reason)`
-- `public void sendPacket( Packet <?> packetIn)`
-- `public void handleCollectItem( SPacketCollectItem packetIn)`
-- `public void handleChat( SPacketChat packetIn)`
-- `public void handleAnimation( SPacketAnimation packetIn)`
-- `public void handleUseBed( SPacketUseBed packetIn)`
-- `public void handleSpawnMob( SPacketSpawnMob packetIn)`
-- `public void handleTimeUpdate( SPacketTimeUpdate packetIn)`
-- `public void handleSpawnPosition( SPacketSpawnPosition packetIn)`
-- `public void handleSetPassengers( SPacketSetPassengers packetIn)`
-- `public void handleEntityAttach( SPacketEntityAttach packetIn)`
-- `public void handleEntityStatus( SPacketEntityStatus packetIn)`
-- `public void handleUpdateHealth( SPacketUpdateHealth packetIn)`
-- `public void handleSetExperience( SPacketSetExperience packetIn)`
-- `public void handleRespawn( SPacketRespawn packetIn)`
-- `public void handleExplosion( SPacketExplosion packetIn)`
-- `public void handleOpenWindow( SPacketOpenWindow packetIn)`
-- `public void handleSetSlot( SPacketSetSlot packetIn)`
-- `public void handleConfirmTransaction( SPacketConfirmTransaction packetIn)`
-- `public void handleWindowItems( SPacketWindowItems packetIn)`
-- `public void handleSignEditorOpen( SPacketSignEditorOpen packetIn)`
-- `public void handleUpdateTileEntity( SPacketUpdateTileEntity packetIn)`
-- `public void handleWindowProperty( SPacketWindowProperty packetIn)`
-- `public void handleEntityEquipment( SPacketEntityEquipment packetIn)`
-- `public void handleCloseWindow( SPacketCloseWindow packetIn)`
-- `public void handleBlockAction( SPacketBlockAction packetIn)`
-- `public void handleBlockBreakAnim( SPacketBlockBreakAnim packetIn)`
-- `public void handleChangeGameState( SPacketChangeGameState packetIn)`
-- `public void handleMaps( SPacketMaps packetIn)`
-- `public void handleEffect( SPacketEffect packetIn)`
-- `public void handleStatistics( SPacketStatistics packetIn)`
-- `public void handleEntityEffect( SPacketEntityEffect packetIn)`
-- `public void handleCombatEvent( SPacketCombatEvent packetIn)`
-- `public void handleServerDifficulty( SPacketServerDifficulty packetIn)`
-- `public void handleCamera( SPacketCamera packetIn)`
-- `public void handleWorldBorder( SPacketWorldBorder packetIn)`
-- `public void handleTitle( SPacketTitle packetIn)`
-- `public void handlePlayerListHeaderFooter( SPacketPlayerListHeaderFooter packetIn)`
-- `public void handleRemoveEntityEffect( SPacketRemoveEntityEffect packetIn)`
-- `public void handlePlayerListItem( SPacketPlayerListItem packetIn)`
-- `public void handleKeepAlive( SPacketKeepAlive packetIn)`
-- `public void handlePlayerAbilities( SPacketPlayerAbilities packetIn)`
-- `public void handleTabComplete( SPacketTabComplete packetIn)`
-- `public void handleSoundEffect( SPacketSoundEffect packetIn)`
-- `public void handleCustomSound( SPacketCustomSound packetIn)`
-- `public void handleResourcePack( SPacketResourcePackSend packetIn)`
-- `public void handleUpdateEntityNBT( SPacketUpdateBossInfo packetIn)`
-- `public void handleCooldown( SPacketCooldown packetIn)`
-- `public void handleMoveVehicle( SPacketMoveVehicle packetIn)`
-- `public void handleCustomPayload( SPacketCustomPayload packetIn)`
-- `public void handleScoreboardObjective( SPacketScoreboardObjective packetIn)`
-- `public void handleUpdateScore( SPacketUpdateScore packetIn)`
-- `public void handleDisplayObjective( SPacketDisplayObjective packetIn)`
-- `public void handleTeams( SPacketTeams packetIn)`
-- `public void handleParticles( SPacketParticles packetIn)`
-- `public void handleEntityProperties( SPacketEntityProperties packetIn)`
-- `public NetworkManager getNetworkManager()`
-- `public java.util.Collection< NetworkPlayerInfo > getPlayerInfoMap()`
-- `public NetworkPlayerInfo getPlayerInfo(java.util.UUID uniqueId)`
-- `@Nullable public NetworkPlayerInfo getPlayerInfo(java.lang.String name)`
-- `public com.mojang.authlib.GameProfile getGameProfile()`
+- `void cleanup()`
+- `com.mojang.authlib.GameProfile getGameProfile()`
+- `NetworkManager getNetworkManager()`
+- `NetworkPlayerInfo getPlayerInfo(java.lang.String name)`
+- `NetworkPlayerInfo getPlayerInfo(java.util.UUID uniqueId)`
+- `java.util.Collection<NetworkPlayerInfo> getPlayerInfoMap()`
+- `void handleAnimation(SPacketAnimation packetIn)`
+- `void handleBlockAction(SPacketBlockAction packetIn)`
+- `void handleBlockBreakAnim(SPacketBlockBreakAnim packetIn)`
+- `void handleBlockChange(SPacketBlockChange packetIn)`
+- `void handleCamera(SPacketCamera packetIn)`
+- `void handleChangeGameState(SPacketChangeGameState packetIn)`
+- `void handleChat(SPacketChat packetIn)`
+- `void handleChunkData(SPacketChunkData packetIn)`
+- `void handleCloseWindow(SPacketCloseWindow packetIn)`
+- `void handleCollectItem(SPacketCollectItem packetIn)`
+- `void handleCombatEvent(SPacketCombatEvent packetIn)`
+- `void handleConfirmTransaction(SPacketConfirmTransaction packetIn)`
+- `void handleCooldown(SPacketCooldown packetIn)`
+- `void handleCustomPayload(SPacketCustomPayload packetIn)`
+- `void handleCustomSound(SPacketCustomSound packetIn)`
+- `void handleDestroyEntities(SPacketDestroyEntities packetIn)`
+- `void handleDisconnect(SPacketDisconnect packetIn)`
+- `void handleDisplayObjective(SPacketDisplayObjective packetIn)`
+- `void handleEffect(SPacketEffect packetIn)`
+- `void handleEntityAttach(SPacketEntityAttach packetIn)`
+- `void handleEntityEffect(SPacketEntityEffect packetIn)`
+- `void handleEntityEquipment(SPacketEntityEquipment packetIn)`
+- `void handleEntityHeadLook(SPacketEntityHeadLook packetIn)`
+- `void handleEntityMetadata(SPacketEntityMetadata packetIn)`
+- `void handleEntityMovement(SPacketEntity packetIn)`
+- `void handleEntityProperties(SPacketEntityProperties packetIn)`
+- `void handleEntityStatus(SPacketEntityStatus packetIn)`
+- `void handleEntityTeleport(SPacketEntityTeleport packetIn)`
+- `void handleEntityVelocity(SPacketEntityVelocity packetIn)`
+- `void handleExplosion(SPacketExplosion packetIn)`
+- `void handleHeldItemChange(SPacketHeldItemChange packetIn)`
+- `void handleJoinGame(SPacketJoinGame packetIn)`
+- `void handleKeepAlive(SPacketKeepAlive packetIn)`
+- `void handleMaps(SPacketMaps packetIn)`
+- `void handleMoveVehicle(SPacketMoveVehicle packetIn)`
+- `void handleMultiBlockChange(SPacketMultiBlockChange packetIn)`
+- `void handleOpenWindow(SPacketOpenWindow packetIn)`
+- `void handleParticles(SPacketParticles packetIn)`
+- `void handlePlayerAbilities(SPacketPlayerAbilities packetIn)`
+- `void handlePlayerListHeaderFooter(SPacketPlayerListHeaderFooter packetIn)`
+- `void handlePlayerListItem(SPacketPlayerListItem packetIn)`
+- `void handlePlayerPosLook(SPacketPlayerPosLook packetIn)`
+- `void handleRemoveEntityEffect(SPacketRemoveEntityEffect packetIn)`
+- `void handleResourcePack(SPacketResourcePackSend packetIn)`
+- `void handleRespawn(SPacketRespawn packetIn)`
+- `void handleScoreboardObjective(SPacketScoreboardObjective packetIn)`
+- `void handleServerDifficulty(SPacketServerDifficulty packetIn)`
+- `void handleSetExperience(SPacketSetExperience packetIn)`
+- `void handleSetPassengers(SPacketSetPassengers packetIn)`
+- `void handleSetSlot(SPacketSetSlot packetIn)`
+- `void handleSignEditorOpen(SPacketSignEditorOpen packetIn)`
+- `void handleSoundEffect(SPacketSoundEffect packetIn)`
+- `void handleSpawnExperienceOrb(SPacketSpawnExperienceOrb packetIn)`
+- `void handleSpawnGlobalEntity(SPacketSpawnGlobalEntity packetIn)`
+- `void handleSpawnMob(SPacketSpawnMob packetIn)`
+- `void handleSpawnObject(SPacketSpawnObject packetIn)`
+- `void handleSpawnPainting(SPacketSpawnPainting packetIn)`
+- `void handleSpawnPlayer(SPacketSpawnPlayer packetIn)`
+- `void handleSpawnPosition(SPacketSpawnPosition packetIn)`
+- `void handleStatistics(SPacketStatistics packetIn)`
+- `void handleTabComplete(SPacketTabComplete packetIn)`
+- `void handleTeams(SPacketTeams packetIn)`
+- `void handleTimeUpdate(SPacketTimeUpdate packetIn)`
+- `void handleTitle(SPacketTitle packetIn)`
+- `void handleUpdateEntityNBT(SPacketUpdateBossInfo packetIn)`
+- `void handleUpdateHealth(SPacketUpdateHealth packetIn)`
+- `void handleUpdateScore(SPacketUpdateScore packetIn)`
+- `void handleUpdateTileEntity(SPacketUpdateTileEntity packetIn)`
+- `void handleUseBed(SPacketUseBed packetIn)`
+- `void handleWindowItems(SPacketWindowItems packetIn)`
+- `void handleWindowProperty(SPacketWindowProperty packetIn)`
+- `void handleWorldBorder(SPacketWorldBorder packetIn)`
+- `void onDisconnect(ITextComponent reason)`
+- `void processChunkUnload(SPacketUnloadChunk packetIn)`
+- `void sendPacket(Packet<?> packetIn)`
+
+## Fields
+
+- `int currentServerMaxPlayers`

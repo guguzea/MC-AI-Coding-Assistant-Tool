@@ -3,11 +3,15 @@ title: "GenLayerRemoveTooMuchOcean"
 description: "public class GenLayerRemoveTooMuchOcean extends GenLayer"
 package: "net/minecraft/world/gen/layer"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/gen/layer/GenLayerRemoveTooMuchOcean.html"
 sourceType: javadoc
 ---
 
 # GenLayerRemoveTooMuchOcean
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.layer.GenLayer → net.minecraft.world.gen.layer.GenLayerRemoveTooMuchOcean
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class GenLayerRemoveTooMuchOcean extends GenLayer
 ```
 
-## Constructors
-
-- `public GenLayerRemoveTooMuchOcean(long p_i45480_1_, GenLayer p_i45480_3_)`
-
 ## Methods
 
-- `public int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight)`
+- `int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight)`
+
+## Fields
+
+- `GenLayerRemoveTooMuchOcean`

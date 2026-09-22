@@ -3,11 +3,15 @@ title: "NetHandlerStatusServer"
 description: "public class NetHandlerStatusServer extends java.lang.Object implements INetHandlerStatusServer"
 package: "net/minecraft/server/network"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/server/network/NetHandlerStatusServer.html"
 sourceType: javadoc
 ---
 
 # NetHandlerStatusServer
+
+**Inheritance:** java.lang.Object → net.minecraft.server.network.NetHandlerStatusServer
 
 ## Class signature
 
@@ -17,10 +21,10 @@ public class NetHandlerStatusServer extends java.lang.Object implements INetHand
 
 ## Constructors
 
-- `public NetHandlerStatusServer( MinecraftServer serverIn, NetworkManager netManager)`
+- `NetHandlerStatusServer(MinecraftServer serverIn, NetworkManager netManager)`
 
 ## Methods
 
-- `public void onDisconnect( ITextComponent reason)`
-- `public void processServerQuery( CPacketServerQuery packetIn)`
-- `public void processPing( CPacketPing packetIn)`
+- `void onDisconnect(ITextComponent reason)`
+- `void processPing(CPacketPing packetIn)`
+- `void processServerQuery(CPacketServerQuery packetIn)`

@@ -1,5 +1,7 @@
 # NBTSizeTracker
 
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTSizeTracker
+
 ## Class signature
 
 ```java
@@ -8,9 +10,13 @@ public class NBTSizeTracker extends java.lang.Object
 
 ## Constructors
 
-- `public NBTSizeTracker(long max)`
+- `NBTSizeTracker(long max)`
 
 ## Methods
 
-- `public void read(long bits)`
-- `public static void readUTF( NBTSizeTracker tracker, java.lang.String data)`
+- `void read(long bits)`
+- `static void readUTF(NBTSizeTracker tracker, java.lang.String data)`
+
+## Fields
+
+- `static NBTSizeTracker INFINITE`

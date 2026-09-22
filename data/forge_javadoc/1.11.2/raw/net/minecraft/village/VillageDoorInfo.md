@@ -3,11 +3,15 @@ title: "VillageDoorInfo"
 description: "public class VillageDoorInfo extends java.lang.Object"
 package: "net/minecraft/village"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/village/VillageDoorInfo.html"
 sourceType: javadoc
 ---
 
 # VillageDoorInfo
+
+**Inheritance:** java.lang.Object → net.minecraft.village.VillageDoorInfo
 
 ## Class signature
 
@@ -17,24 +21,24 @@ public class VillageDoorInfo extends java.lang.Object
 
 ## Constructors
 
-- `public VillageDoorInfo( BlockPos pos, int deltaX, int deltaZ, int timestamp)`
-- `public VillageDoorInfo( BlockPos pos, EnumFacing facing, int timestamp)`
+- `VillageDoorInfo(BlockPos pos, EnumFacing facing, int timestamp)`
+- `VillageDoorInfo(BlockPos pos, int deltaX, int deltaZ, int timestamp)`
 
 ## Methods
 
-- `public int getDistanceSquared(int x, int y, int z)`
-- `public int getDistanceToDoorBlockSq( BlockPos pos)`
-- `public int getDistanceToInsideBlockSq( BlockPos pos)`
-- `public boolean isInsideSide( BlockPos pos)`
-- `public void resetDoorOpeningRestrictionCounter()`
-- `public void incrementDoorOpeningRestrictionCounter()`
-- `public int getDoorOpeningRestrictionCounter()`
-- `public BlockPos getDoorBlockPos()`
-- `public BlockPos getInsideBlockPos()`
-- `public int getInsideOffsetX()`
-- `public int getInsideOffsetZ()`
-- `public int getInsidePosY()`
-- `public void setLastActivityTimestamp(int timestamp)`
-- `public boolean getIsDetachedFromVillageFlag()`
-- `public void setIsDetachedFromVillageFlag(boolean detached)`
-- `public EnumFacing getInsideDirection()`
+- `int getDistanceSquared(int x, int y, int z)`
+- `int getDistanceToDoorBlockSq(BlockPos pos)`
+- `int getDistanceToInsideBlockSq(BlockPos pos)`
+- `BlockPos getDoorBlockPos()`
+- `int getDoorOpeningRestrictionCounter()`
+- `BlockPos getInsideBlockPos()`
+- `EnumFacing getInsideDirection()`
+- `int getInsideOffsetX()`
+- `int getInsideOffsetZ()`
+- `int getInsidePosY()`
+- `boolean getIsDetachedFromVillageFlag()`
+- `void incrementDoorOpeningRestrictionCounter()`
+- `boolean isInsideSide(BlockPos pos)`
+- `void resetDoorOpeningRestrictionCounter()`
+- `void setIsDetachedFromVillageFlag(boolean detached)`
+- `void setLastActivityTimestamp(int timestamp)`

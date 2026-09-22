@@ -1,9 +1,20 @@
 # ChunkProviderEvent.ReplaceBiomeBlocks
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.ChunkProviderEvent → net.minecraftforge.event.terraingen.ChunkProviderEvent.ReplaceBiomeBlocks
+
+## Class signature
+
+```java
+public static class ChunkProviderEvent.ReplaceBiomeBlocks extends ChunkProviderEvent
+```
+
 ## Constructors
 
-- `public ReplaceBiomeBlocks( IChunkProvider chunkProvider, int x, int z, ChunkPrimer primer, World world)`
+- `ReplaceBiomeBlocks(IChunkProvider chunkProvider, int x, int z, ChunkPrimer primer, World world)`
 
-## Description
+## Fields
 
-This event is fired when a chunks blocks are replaced by a biomes top and filler blocks. You can set the result to DENY to prevent the default replacement.
+- `ChunkPrimer primer`
+- `World world`
+- `int x`
+- `int z`

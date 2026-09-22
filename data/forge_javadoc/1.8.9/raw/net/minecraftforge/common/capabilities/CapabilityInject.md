@@ -1,14 +1,22 @@
 ---
 title: "CapabilityInject"
-description: "When placed on a FIELD, the field will be set to an instance of Capability once that capability is registered. That field must be static and be able to hold a instance of 'Capability' Example:"
+description: "public @interface CapabilityInject"
 package: "net/minecraftforge/common/capabilities"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/common/capabilities/CapabilityInject.html"
 sourceType: javadoc
 ---
 
 # CapabilityInject
 
-## Description
+## Class signature
 
-When placed on a FIELD, the field will be set to an instance of Capability once that capability is registered. That field must be static and be able to hold a instance of 'Capability' Example:
+```java
+public @interface CapabilityInject
+```
+
+## Elements
+
+- `java.lang.Class<?> value` — The capability interface to listen for registration.

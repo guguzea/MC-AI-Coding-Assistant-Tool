@@ -1,5 +1,7 @@
 # LootTable
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.LootTable
+
 ## Class signature
 
 ```java
@@ -8,14 +10,18 @@ public class LootTable extends java.lang.Object
 
 ## Constructors
 
-- `public LootTable( LootPool [] poolsIn)`
+- `LootTable(LootPool [] poolsIn)`
 
 ## Methods
 
-- `public java.util.List< ItemStack > generateLootForPools(java.util.Random rand, LootContext context)`
-- `public void fillInventory( IInventory inventory, java.util.Random rand, LootContext context)`
-- `public void freeze()`
-- `public boolean isFrozen()`
-- `public LootPool getPool(java.lang.String name)`
-- `public LootPool removePool(java.lang.String name)`
-- `public void addPool( LootPool pool)`
+- `void addPool(LootPool pool)`
+- `void fillInventory(IInventory inventory, java.util.Random rand, LootContext context)`
+- `void freeze()`
+- `java.util.List<ItemStack> generateLootForPools(java.util.Random rand, LootContext context)`
+- `LootPool getPool(java.lang.String name)`
+- `boolean isFrozen()`
+- `LootPool removePool(java.lang.String name)`
+
+## Fields
+
+- `static LootTable EMPTY_LOOT_TABLE`

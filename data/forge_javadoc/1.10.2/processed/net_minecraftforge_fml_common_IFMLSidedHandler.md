@@ -8,27 +8,27 @@ public interface IFMLSidedHandler
 
 ## Methods
 
-- `java.util.List<java.lang.String> getAdditionalBrandingInformation()`
-- `Side getSide()`
-- `void haltGame(java.lang.String message, java.lang.Throwable exception)`
-- `void showGuiScreen(java.lang.Object clientGuiElement)`
-- `void queryUser( StartupQuery query) throws java.lang.InterruptedException`
-- `void beginServerLoading( MinecraftServer server)`
+- `void addModAsResource(ModContainer container)`
+- `void allowLogins()`
+- `void beginServerLoading(MinecraftServer server)`
 - `void finishServerLoading()`
+- `void fireNetRegistrationEvent(EventBus bus, NetworkManager manager, java.util.Set<java.lang.String> channelSet, java.lang.String channel, Side side)`
+- `void fireSidedRegistryEvents()`
+- `java.util.List<java.lang.String> getAdditionalBrandingInformation()`
+- `INetHandler getClientPlayHandler()`
+- `NetworkManager getClientToServerNetworkManager()`
+- `java.lang.String getCurrentLanguage()`
 - `java.io.File getSavesDirectory()`
 - `MinecraftServer getServer()`
-- `boolean shouldServerShouldBeKilledQuietly()`
-- `void addModAsResource( ModContainer container)`
-- `java.lang.String getCurrentLanguage()`
-- `void serverStopped()`
-- `NetworkManager getClientToServerNetworkManager()`
-- `INetHandler getClientPlayHandler()`
-- `void fireNetRegistrationEvent( EventBus bus, NetworkManager manager, java.util.Set<java.lang.String> channelSet, java.lang.String channel, Side side)`
-- `boolean shouldAllowPlayerLogins()`
-- `void allowLogins()`
-- `IThreadListener getWorldThread( INetHandler net)`
-- `void processWindowMessages()`
-- `java.lang.String stripSpecialChars(java.lang.String message)`
-- `void reloadRenderers()`
-- `void fireSidedRegistryEvents()`
+- `Side getSide()`
+- `IThreadListener getWorldThread(INetHandler net)`
+- `void haltGame(java.lang.String message, java.lang.Throwable exception)`
 - `boolean isDisplayVSyncForced()`
+- `void processWindowMessages()`
+- `void queryUser(StartupQuery query)`
+- `void reloadRenderers()`
+- `void serverStopped()`
+- `boolean shouldAllowPlayerLogins()`
+- `boolean shouldServerShouldBeKilledQuietly()`
+- `void showGuiScreen(java.lang.Object clientGuiElement)`
+- `java.lang.String stripSpecialChars(java.lang.String message)`

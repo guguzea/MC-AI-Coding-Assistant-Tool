@@ -1,34 +1,38 @@
 ---
 title: "SPacketCustomSound"
-description: "public class SPacketCustomSound extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketCustomSound extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/network/play/server/SPacketCustomSound.html"
 sourceType: javadoc
 ---
 
 # SPacketCustomSound
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketCustomSound
+
 ## Class signature
 
 ```java
-public class SPacketCustomSound extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketCustomSound extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketCustomSound()`
-- `public SPacketCustomSound(java.lang.String soundNameIn, SoundCategory categoryIn, double xIn, double yIn, double zIn, float volumeIn, float pitchIn)`
+- `SPacketCustomSound()`
+- `SPacketCustomSound(java.lang.String soundNameIn, SoundCategory categoryIn, double xIn, double yIn, double zIn, float volumeIn, float pitchIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public java.lang.String getSoundName()`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public SoundCategory getCategory()`
-- `public double getX()`
-- `public double getY()`
-- `public double getZ()`
-- `public float getVolume()`
-- `public float getPitch()`
+- `SoundCategory getCategory()`
+- `float getPitch()`
+- `java.lang.String getSoundName()`
+- `float getVolume()`
+- `double getX()`
+- `double getY()`
+- `double getZ()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

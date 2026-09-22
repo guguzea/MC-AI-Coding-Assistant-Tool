@@ -1,9 +1,17 @@
 # KilledTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.KilledTrigger.Instance
+
+## Class signature
+
+```java
+public static class KilledTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( ResourceLocation criterionIn, EntityPredicate entity, DamageSourcePredicate killingBlow)`
+- `Instance(ResourceLocation criterionIn, EntityPredicate entity, DamageSourcePredicate killingBlow)`
 
 ## Methods
 
-- `public boolean test( EntityPlayerMP player, Entity entity, DamageSource source)`
+- `boolean test(EntityPlayerMP player, Entity entity, DamageSource source)`

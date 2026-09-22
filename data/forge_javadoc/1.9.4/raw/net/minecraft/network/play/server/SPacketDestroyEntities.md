@@ -1,28 +1,32 @@
 ---
 title: "SPacketDestroyEntities"
-description: "public class SPacketDestroyEntities extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketDestroyEntities extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/play/server/SPacketDestroyEntities.html"
 sourceType: javadoc
 ---
 
 # SPacketDestroyEntities
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketDestroyEntities
+
 ## Class signature
 
 ```java
-public class SPacketDestroyEntities extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketDestroyEntities extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketDestroyEntities()`
-- `public SPacketDestroyEntities(int... entityIdsIn)`
+- `SPacketDestroyEntities()`
+- `SPacketDestroyEntities(int... entityIdsIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int[] getEntityIDs()`
+- `int[] getEntityIDs()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

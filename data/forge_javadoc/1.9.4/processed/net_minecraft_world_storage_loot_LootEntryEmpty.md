@@ -1,17 +1,19 @@
 # LootEntryEmpty
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.LootEntry → net.minecraft.world.storage.loot.LootEntryEmpty
+
 ## Class signature
 
 ```java
 public class LootEntryEmpty extends LootEntry
 ```
 
-## Constructors
-
-- `public LootEntryEmpty(int weightIn, int qualityIn, LootCondition [] conditionsIn, java.lang.String entryName)`
-
 ## Methods
 
-- `public void addLoot(java.util.Collection< ItemStack > stacks, java.util.Random rand, LootContext context)`
+- `void addLoot(java.util.Collection<ItemStack> stacks, java.util.Random rand, LootContext context)`
+- `static LootEntryEmpty deserialize(com.google.gson.JsonObject object, com.google.gson.JsonDeserializationContext deserializationContext, int weightIn, int qualityIn, LootCondition [] conditionsIn)`
 - `protected void serialize(com.google.gson.JsonObject json, com.google.gson.JsonSerializationContext context)`
-- `public static LootEntryEmpty deserialize(com.google.gson.JsonObject object, com.google.gson.JsonDeserializationContext deserializationContext, int weightIn, int qualityIn, LootCondition [] conditionsIn)`
+
+## Fields
+
+- `LootEntryEmpty`

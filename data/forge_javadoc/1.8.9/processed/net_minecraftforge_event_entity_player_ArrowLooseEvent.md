@@ -1,5 +1,7 @@
 # ArrowLooseEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.ArrowLooseEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,9 @@ public class ArrowLooseEvent extends PlayerEvent
 
 ## Constructors
 
-- `public ArrowLooseEvent( EntityPlayer player, ItemStack bow, int charge)`
+- `ArrowLooseEvent(EntityPlayer player, ItemStack bow, int charge)`
 
-## Description
+## Fields
 
-ArrowLooseEvent is fired when a player stops using a bow. This event is fired whenever a player stops using a bow in ItemBow#onPlayerStoppedUsing(ItemStack, World, EntityPlayer, int). bow contains the
+- `ItemStack bow`
+- `int charge`

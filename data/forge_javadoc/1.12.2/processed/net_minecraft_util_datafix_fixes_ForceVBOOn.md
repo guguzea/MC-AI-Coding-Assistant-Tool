@@ -1,5 +1,7 @@
 # ForceVBOOn
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.ForceVBOOn
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class ForceVBOOn extends java.lang.Object implements IFixableData
 
 ## Constructors
 
-- `public ForceVBOOn()`
+- `ForceVBOOn()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

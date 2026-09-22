@@ -1,5 +1,7 @@
 # FMLServerTweaker
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.launcher.FMLTweaker → cpw.mods.fml.common.launcher.FMLServerTweaker
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class FMLServerTweaker extends FMLTweaker
 
 ## Constructors
 
-- `public FMLServerTweaker()`
+- `FMLServerTweaker()`
 
 ## Methods
 
-- `public java.lang.String getLaunchTarget()`
-- `public void injectIntoClassLoader(LaunchClassLoader classLoader)`
+- `java.lang.String getLaunchTarget()`
+- `void injectIntoClassLoader(LaunchClassLoader classLoader)`

@@ -1,5 +1,7 @@
 # WorldRendererConsumer
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.pipeline.WorldRendererConsumer
+
 ## Class signature
 
 ```java
@@ -8,17 +10,13 @@ public class WorldRendererConsumer extends java.lang.Object implements IVertexCo
 
 ## Constructors
 
-- `public WorldRendererConsumer( WorldRenderer renderer)`
+- `WorldRendererConsumer(WorldRenderer renderer)`
 
 ## Methods
 
-- `public VertexFormat getVertexFormat()`
-- `public void put(int e, float... data)`
-- `public void setOffset( BlockPos offset)`
-- `public void setQuadTint(int tint)`
-- `public void setQuadOrientation( EnumFacing orientation)`
-- `public void setQuadColored()`
-
-## Description
-
-Assumes VertexFormatElement is present in the WorlRenderer's vertex format.
+- `VertexFormat getVertexFormat()`
+- `void put(int e, float... data)`
+- `void setOffset(BlockPos offset)`
+- `void setQuadColored()`
+- `void setQuadOrientation(EnumFacing orientation)`
+- `void setQuadTint(int tint)`

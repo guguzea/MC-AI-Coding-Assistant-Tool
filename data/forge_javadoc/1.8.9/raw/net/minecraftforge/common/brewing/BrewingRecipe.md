@@ -1,28 +1,28 @@
 ---
 title: "BrewingRecipe"
-description: "Returns true if the passed ItemStack is an ingredient for this recipe."
+description: "public class BrewingRecipe extends AbstractBrewingRecipe<ItemStack>"
 package: "net/minecraftforge/common/brewing"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/common/brewing/BrewingRecipe.html"
 sourceType: javadoc
 ---
 
 # BrewingRecipe
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.brewing.AbstractBrewingRecipe<ItemStack> → net.minecraftforge.common.brewing.BrewingRecipe
+
 ## Class signature
 
 ```java
-public class BrewingRecipe extends AbstractBrewingRecipe < ItemStack >
+public class BrewingRecipe extends AbstractBrewingRecipe<ItemStack>
 ```
-
-## Constructors
-
-- `public BrewingRecipe( ItemStack input, ItemStack ingredient, ItemStack output)`
 
 ## Methods
 
-- `public boolean isIngredient( ItemStack stack)`
+- `boolean isIngredient(ItemStack stack)` — Returns true if the passed ItemStack is an ingredient for this recipe.
 
-## Description
+## Fields
 
-Returns true if the passed ItemStack is an ingredient for this recipe.
+- `BrewingRecipe`

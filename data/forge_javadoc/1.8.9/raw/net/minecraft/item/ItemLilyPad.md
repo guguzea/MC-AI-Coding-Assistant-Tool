@@ -1,13 +1,17 @@
 ---
 title: "ItemLilyPad"
-description: "Called whenever this item is equipped and the right mouse button is pressed."
+description: "public class ItemLilyPad extends ItemColored"
 package: "net/minecraft/item"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/item/ItemLilyPad.html"
 sourceType: javadoc
 ---
 
 # ItemLilyPad
+
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemBlock → net.minecraft.item.ItemColored → net.minecraft.item.ItemLilyPad
 
 ## Class signature
 
@@ -15,15 +19,11 @@ sourceType: javadoc
 public class ItemLilyPad extends ItemColored
 ```
 
-## Constructors
-
-- `public ItemLilyPad( Block block)`
-
 ## Methods
 
-- `public ItemStack onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)`
-- `public int getColorFromItemStack( ItemStack stack, int renderPass)`
+- `int getColorFromItemStack(ItemStack stack, int renderPass)`
+- `ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)` — Called whenever this item is equipped and the right mouse button is pressed.
 
-## Description
+## Fields
 
-Called whenever this item is equipped and the right mouse button is pressed.
+- `ItemLilyPad`

@@ -1,18 +1,16 @@
 # ItemStackHolderInjector
 
+**Inheritance:** java.lang.Object → java.lang.Enum<ItemStackHolderInjector> → net.minecraftforge.fml.common.registry.ItemStackHolderInjector
+
 ## Class signature
 
 ```java
-public enum ItemStackHolderInjector extends java.lang.Enum< ItemStackHolderInjector >
+public enum ItemStackHolderInjector extends java.lang.Enum<ItemStackHolderInjector>
 ```
 
 ## Methods
 
-- `public static ItemStackHolderInjector [] values()`
-- `public static ItemStackHolderInjector valueOf(java.lang.String name)`
-- `public void inject()`
-- `public void findHolders( ASMDataTable table)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `void findHolders(ASMDataTable table)`
+- `void inject()`
+- `static ItemStackHolderInjector valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static ItemStackHolderInjector [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

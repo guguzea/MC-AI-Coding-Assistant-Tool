@@ -3,11 +3,15 @@ title: "PlayerList"
 description: "public abstract class PlayerList extends java.lang.Object"
 package: "net/minecraft/server/management"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/server/management/PlayerList.html"
 sourceType: javadoc
 ---
 
 # PlayerList
+
+**Inheritance:** java.lang.Object → net.minecraft.server.management.PlayerList
 
 ## Class signature
 
@@ -17,71 +21,79 @@ public abstract class PlayerList extends java.lang.Object
 
 ## Constructors
 
-- `public PlayerList( MinecraftServer server)`
+- `PlayerList(MinecraftServer server)`
 
 ## Methods
 
-- `public void initializeConnectionToPlayer( NetworkManager netManager, EntityPlayerMP playerIn, NetHandlerPlayServer nethandlerplayserver)`
-- `protected void sendScoreboard( ServerScoreboard scoreboardIn, EntityPlayerMP playerIn)`
-- `public void setPlayerManager( WorldServer [] worldServers)`
-- `public void preparePlayer( EntityPlayerMP playerIn, WorldServer worldIn)`
-- `public int getEntityViewDistance()`
-- `public NBTTagCompound readPlayerDataFromFile( EntityPlayerMP playerIn)`
-- `public NBTTagCompound getPlayerNBT( EntityPlayerMP player)`
-- `protected void writePlayerData( EntityPlayerMP playerIn)`
-- `public void playerLoggedIn( EntityPlayerMP playerIn)`
-- `public void serverUpdateMountedMovingPlayer( EntityPlayerMP playerIn)`
-- `public void playerLoggedOut( EntityPlayerMP playerIn)`
-- `public java.lang.String allowUserToConnect(java.net.SocketAddress address, com.mojang.authlib.GameProfile profile)`
-- `public EntityPlayerMP createPlayerForUser(com.mojang.authlib.GameProfile profile)`
-- `public EntityPlayerMP recreatePlayerEntity( EntityPlayerMP playerIn, int dimension, boolean conqueredEnd)`
-- `public void updatePermissionLevel( EntityPlayerMP player)`
-- `public void changePlayerDimension( EntityPlayerMP player, int dimensionIn)`
-- `public void transferPlayerToDimension( EntityPlayerMP player, int dimensionIn, Teleporter teleporter)`
-- `public void transferEntityToWorld( Entity entityIn, int lastDimension, WorldServer oldWorldIn, WorldServer toWorldIn)`
-- `public void transferEntityToWorld( Entity entityIn, int lastDimension, WorldServer oldWorldIn, WorldServer toWorldIn, Teleporter teleporter)`
-- `public void onTick()`
-- `public void sendPacketToAllPlayers( Packet <?> packetIn)`
-- `public void sendPacketToAllPlayersInDimension( Packet <?> packetIn, int dimension)`
-- `public void sendMessageToAllTeamMembers( EntityPlayer player, ITextComponent message)`
-- `public void sendMessageToTeamOrAllPlayers( EntityPlayer player, ITextComponent message)`
-- `public java.lang.String getFormattedListOfPlayers(boolean includeUUIDs)`
-- `public java.lang.String[] getAllUsernames()`
-- `public com.mojang.authlib.GameProfile[] getAllProfiles()`
-- `public UserListBans getBannedPlayers()`
-- `public UserListIPBans getBannedIPs()`
-- `public void addOp(com.mojang.authlib.GameProfile profile)`
-- `public void removeOp(com.mojang.authlib.GameProfile profile)`
-- `public boolean canJoin(com.mojang.authlib.GameProfile profile)`
-- `public boolean canSendCommands(com.mojang.authlib.GameProfile profile)`
-- `@Nullable public EntityPlayerMP getPlayerByUsername(java.lang.String username)`
-- `public void sendToAllNearExcept(@Nullable EntityPlayer except, double x, double y, double z, double radius, int dimension, Packet <?> packetIn)`
-- `public void saveAllPlayerData()`
-- `public void addWhitelistedPlayer(com.mojang.authlib.GameProfile profile)`
-- `public void removePlayerFromWhitelist(com.mojang.authlib.GameProfile profile)`
-- `public UserListWhitelist getWhitelistedPlayers()`
-- `public java.lang.String[] getWhitelistedPlayerNames()`
-- `public UserListOps getOppedPlayers()`
-- `public java.lang.String[] getOppedPlayerNames()`
-- `public void reloadWhitelist()`
-- `public void updateTimeAndWeatherForPlayer( EntityPlayerMP playerIn, WorldServer worldIn)`
-- `public void syncPlayerInventory( EntityPlayerMP playerIn)`
-- `public int getCurrentPlayerCount()`
-- `public int getMaxPlayers()`
-- `public java.lang.String[] getAvailablePlayerDat()`
-- `public void setWhiteListEnabled(boolean whitelistEnabled)`
-- `public java.util.List< EntityPlayerMP > getPlayersMatchingAddress(java.lang.String address)`
-- `public int getViewDistance()`
-- `public MinecraftServer getServerInstance()`
-- `public NBTTagCompound getHostPlayerData()`
-- `public void setGameType( GameType gameModeIn)`
-- `public void setCommandsAllowedForAll(boolean p_72387_1_)`
-- `public void removeAllPlayers()`
-- `public void sendChatMsgImpl( ITextComponent component, boolean isSystem)`
-- `public void sendChatMsg( ITextComponent component)`
-- `public StatisticsManagerServer getPlayerStatsFile( EntityPlayer playerIn)`
-- `public void setViewDistance(int distance)`
-- `public java.util.List< EntityPlayerMP > getPlayerList()`
-- `public EntityPlayerMP getPlayerByUUID(java.util.UUID playerUUID)`
-- `public boolean bypassesPlayerLimit(com.mojang.authlib.GameProfile profile)`
-- `public boolean isWhiteListEnabled()`
+- `void addOp(com.mojang.authlib.GameProfile profile)`
+- `void addWhitelistedPlayer(com.mojang.authlib.GameProfile profile)`
+- `java.lang.String allowUserToConnect(java.net.SocketAddress address, com.mojang.authlib.GameProfile profile)`
+- `boolean bypassesPlayerLimit(com.mojang.authlib.GameProfile profile)`
+- `boolean canJoin(com.mojang.authlib.GameProfile profile)`
+- `boolean canSendCommands(com.mojang.authlib.GameProfile profile)`
+- `void changePlayerDimension(EntityPlayerMP player, int dimensionIn)`
+- `EntityPlayerMP createPlayerForUser(com.mojang.authlib.GameProfile profile)`
+- `com.mojang.authlib.GameProfile[] getAllProfiles()`
+- `java.lang.String[] getAllUsernames()`
+- `java.lang.String[] getAvailablePlayerDat()`
+- `UserListIPBans getBannedIPs()`
+- `UserListBans getBannedPlayers()`
+- `int getCurrentPlayerCount()`
+- `int getEntityViewDistance()`
+- `java.lang.String getFormattedListOfPlayers(boolean includeUUIDs)`
+- `NBTTagCompound getHostPlayerData()`
+- `int getMaxPlayers()`
+- `java.lang.String[] getOppedPlayerNames()`
+- `UserListOps getOppedPlayers()`
+- `EntityPlayerMP getPlayerByUsername(java.lang.String username)`
+- `EntityPlayerMP getPlayerByUUID(java.util.UUID playerUUID)`
+- `java.util.List<EntityPlayerMP> getPlayerList()`
+- `NBTTagCompound getPlayerNBT(EntityPlayerMP player)`
+- `java.util.List<EntityPlayerMP> getPlayersMatchingAddress(java.lang.String address)`
+- `StatisticsManagerServer getPlayerStatsFile(EntityPlayer playerIn)`
+- `MinecraftServer getServerInstance()`
+- `int getViewDistance()`
+- `java.lang.String[] getWhitelistedPlayerNames()`
+- `UserListWhitelist getWhitelistedPlayers()`
+- `void initializeConnectionToPlayer(NetworkManager netManager, EntityPlayerMP playerIn, NetHandlerPlayServer nethandlerplayserver)`
+- `boolean isWhiteListEnabled()`
+- `void onTick()`
+- `void playerLoggedIn(EntityPlayerMP playerIn)`
+- `void playerLoggedOut(EntityPlayerMP playerIn)`
+- `void preparePlayer(EntityPlayerMP playerIn, WorldServer worldIn)`
+- `NBTTagCompound readPlayerDataFromFile(EntityPlayerMP playerIn)`
+- `EntityPlayerMP recreatePlayerEntity(EntityPlayerMP playerIn, int dimension, boolean conqueredEnd)`
+- `void reloadWhitelist()`
+- `void removeAllPlayers()`
+- `void removeOp(com.mojang.authlib.GameProfile profile)`
+- `void removePlayerFromWhitelist(com.mojang.authlib.GameProfile profile)`
+- `void saveAllPlayerData()`
+- `void sendChatMsg(ITextComponent component)`
+- `void sendChatMsgImpl(ITextComponent component, boolean isSystem)`
+- `void sendMessageToAllTeamMembers(EntityPlayer player, ITextComponent message)`
+- `void sendMessageToTeamOrAllPlayers(EntityPlayer player, ITextComponent message)`
+- `void sendPacketToAllPlayers(Packet<?> packetIn)`
+- `void sendPacketToAllPlayersInDimension(Packet<?> packetIn, int dimension)`
+- `protected void sendScoreboard(ServerScoreboard scoreboardIn, EntityPlayerMP playerIn)`
+- `void sendToAllNearExcept(EntityPlayer except, double x, double y, double z, double radius, int dimension, Packet<?> packetIn)`
+- `void serverUpdateMountedMovingPlayer(EntityPlayerMP playerIn)`
+- `void setCommandsAllowedForAll(boolean p_72387_1_)`
+- `void setGameType(GameType gameModeIn)`
+- `void setPlayerManager(WorldServer [] worldServers)`
+- `void setViewDistance(int distance)`
+- `void setWhiteListEnabled(boolean whitelistEnabled)`
+- `void syncPlayerInventory(EntityPlayerMP playerIn)`
+- `void transferEntityToWorld(Entity entityIn, int lastDimension, WorldServer oldWorldIn, WorldServer toWorldIn)`
+- `void transferEntityToWorld(Entity entityIn, int lastDimension, WorldServer oldWorldIn, WorldServer toWorldIn, Teleporter teleporter)`
+- `void transferPlayerToDimension(EntityPlayerMP player, int dimensionIn, Teleporter teleporter)`
+- `void updatePermissionLevel(EntityPlayerMP player)`
+- `void updateTimeAndWeatherForPlayer(EntityPlayerMP playerIn, WorldServer worldIn)`
+- `protected void writePlayerData(EntityPlayerMP playerIn)`
+
+## Fields
+
+- `static java.io.File FILE_IPBANS`
+- `static java.io.File FILE_OPS`
+- `static java.io.File FILE_PLAYERBANS`
+- `static java.io.File FILE_WHITELIST`
+- `protected int maxPlayers`

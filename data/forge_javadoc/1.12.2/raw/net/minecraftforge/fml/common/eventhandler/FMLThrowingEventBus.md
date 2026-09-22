@@ -1,13 +1,17 @@
 ---
 title: "FMLThrowingEventBus"
-description: "Event bus that allows exceptions thrown by the exception handler to propagate. TODO remove this in 1.13 and stop using the guava event bus"
+description: "public class FMLThrowingEventBus extends EventBus"
 package: "net/minecraftforge/fml/common/eventhandler"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/common/eventhandler/FMLThrowingEventBus.html"
 sourceType: javadoc
 ---
 
 # FMLThrowingEventBus
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.EventBus → net.minecraftforge.fml.common.eventhandler.FMLThrowingEventBus
 
 ## Class signature
 
@@ -17,8 +21,4 @@ public class FMLThrowingEventBus extends EventBus
 
 ## Constructors
 
-- `public FMLThrowingEventBus(SubscriberExceptionHandler exceptionHandler)`
-
-## Description
-
-Event bus that allows exceptions thrown by the exception handler to propagate. TODO remove this in 1.13 and stop using the guava event bus
+- `FMLThrowingEventBus(SubscriberExceptionHandler exceptionHandler)`

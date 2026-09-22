@@ -1,5 +1,7 @@
 # CommandEffect
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.CommandEffect
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class CommandEffect extends CommandBase
 
 ## Constructors
 
-- `public CommandEffect()`
+- `CommandEffect()`
 
 ## Methods
 
-- `public java.lang.String getCommandName()`
-- `public int getRequiredPermissionLevel()`
-- `public java.lang.String getCommandUsage( ICommandSender p_71518_1_)`
-- `public void processCommand( ICommandSender p_71515_1_, java.lang.String[] p_71515_2_)`
-- `public java.util.List addTabCompletionOptions( ICommandSender p_71516_1_, java.lang.String[] p_71516_2_)`
+- `java.util.List addTabCompletionOptions(ICommandSender p_71516_1_, java.lang.String[] p_71516_2_)`
 - `protected java.lang.String[] getAllUsernames()`
-- `public boolean isUsernameIndex(java.lang.String[] p_82358_1_, int p_82358_2_)`
+- `java.lang.String getCommandName()`
+- `java.lang.String getCommandUsage(ICommandSender p_71518_1_)`
+- `int getRequiredPermissionLevel()`
+- `boolean isUsernameIndex(java.lang.String[] p_82358_1_, int p_82358_2_)`
+- `void processCommand(ICommandSender p_71515_1_, java.lang.String[] p_71515_2_)`

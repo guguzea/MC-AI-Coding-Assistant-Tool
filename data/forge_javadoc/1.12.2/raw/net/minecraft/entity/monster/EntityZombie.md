@@ -3,11 +3,15 @@ title: "EntityZombie"
 description: "public class EntityZombie extends EntityMob"
 package: "net/minecraft/entity/monster"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/monster/EntityZombie.html"
 sourceType: javadoc
 ---
 
 # EntityZombie
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityZombie
 
 ## Class signature
 
@@ -17,44 +21,48 @@ public class EntityZombie extends EntityMob
 
 ## Constructors
 
-- `public EntityZombie( World worldIn)`
+- `EntityZombie(World worldIn)`
 
 ## Methods
 
-- `protected void initEntityAI()`
 - `protected void applyEntityAI()`
 - `protected void applyEntityAttributes()`
+- `boolean attackEntityAsMob(Entity entityIn)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `protected boolean canEquipItem(ItemStack stack)`
 - `protected void entityInit()`
-- `public void setArmsRaised(boolean armsRaised)`
-- `public boolean isArmsRaised()`
-- `public boolean isBreakDoorsTaskSet()`
-- `public void setBreakDoorsAItask(boolean enabled)`
-- `public boolean isChild()`
-- `protected int getExperiencePoints( EntityPlayer player)`
-- `public void setChild(boolean childZombie)`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public void onLivingUpdate()`
-- `protected boolean shouldBurnInDay()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public boolean attackEntityAsMob( Entity entityIn)`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
+- `EnumCreatureAttribute getCreatureAttribute()`
 - `protected SoundEvent getDeathSound()`
-- `protected SoundEvent getStepSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `public EnumCreatureAttribute getCreatureAttribute()`
+- `protected int getExperiencePoints(EntityPlayer player)`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
 - `protected ResourceLocation getLootTable()`
-- `protected void setEquipmentBasedOnDifficulty( DifficultyInstance difficulty)`
-- `public static void registerFixesZombie( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void onKillEntity( EntityLivingBase entityLivingIn)`
-- `public float getEyeHeight()`
-- `protected boolean canEquipItem( ItemStack stack)`
-- `public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, IEntityLivingData livingdata)`
-- `public void setChildSize(boolean isChild)`
-- `protected final void setSize(float width, float height)`
-- `protected final void multiplySize(float size)`
-- `public double getYOffset()`
-- `public void onDeath( DamageSource cause)`
 - `protected ItemStack getSkullDrop()`
+- `protected SoundEvent getStepSound()`
+- `double getYOffset()`
+- `protected void initEntityAI()`
+- `boolean isArmsRaised()`
+- `boolean isBreakDoorsTaskSet()`
+- `boolean isChild()`
+- `protected void multiplySize(float size)`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onDeath(DamageSource cause)`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onKillEntity(EntityLivingBase entityLivingIn)`
+- `void onLivingUpdate()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesZombie(DataFixer fixer)`
+- `void setArmsRaised(boolean armsRaised)`
+- `void setBreakDoorsAItask(boolean enabled)`
+- `void setChild(boolean childZombie)`
+- `void setChildSize(boolean isChild)`
+- `protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty)`
+- `protected void setSize(float width, float height)`
+- `protected boolean shouldBurnInDay()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `protected static IAttribute SPAWN_REINFORCEMENTS_CHANCE`

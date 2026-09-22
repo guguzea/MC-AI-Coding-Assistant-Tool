@@ -1,13 +1,17 @@
 ---
 title: "BlockBasePressurePlate"
-description: "Can this block provide power."
+description: "public abstract class BlockBasePressurePlate extends Block"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockBasePressurePlate.html"
 sourceType: javadoc
 ---
 
 # BlockBasePressurePlate
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockBasePressurePlate
 
 ## Class signature
 
@@ -15,39 +19,35 @@ sourceType: javadoc
 public abstract class BlockBasePressurePlate extends Block
 ```
 
-## Constructors
-
-- `protected BlockBasePressurePlate( Material materialIn)`
-- `protected BlockBasePressurePlate( Material p_i46401_1_, MapColor p_i46401_2_)`
-
 ## Methods
 
-- `public void setBlockBoundsBasedOnState( IBlockAccess worldIn, BlockPos pos)`
-- `protected void setBlockBoundsBasedOnState0( IBlockState state)`
-- `public int tickRate( World worldIn)`
-- `public AxisAlignedBB getCollisionBoundingBox( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isOpaqueCube()`
-- `public boolean isFullCube()`
-- `public boolean isPassable( IBlockAccess worldIn, BlockPos pos)`
-- `public boolean func_181623_g()`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public void randomTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random random)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public void onEntityCollidedWithBlock( World worldIn, BlockPos pos, IBlockState state, Entity entityIn)`
-- `protected void updateState( World worldIn, BlockPos pos, IBlockState state, int oldRedstoneStrength)`
-- `protected AxisAlignedBB getSensitiveAABB( BlockPos pos)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `protected void updateNeighbors( World worldIn, BlockPos pos)`
-- `public int getWeakPower( IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
-- `public int getStrongPower( IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
-- `public boolean canProvidePower()`
-- `public void setBlockBoundsForItemRender()`
-- `public int getMobilityFlag()`
-- `protected abstract int computeRedstoneStrength( World worldIn, BlockPos pos)`
-- `protected abstract int getRedstoneStrength( IBlockState state)`
-- `protected abstract IBlockState setRedstoneStrength( IBlockState state, int strength)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `boolean canProvidePower()` — Can this block provide power.
+- `protected abstract int computeRedstoneStrength(World worldIn, BlockPos pos)`
+- `boolean func_181623_g()`
+- `AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)`
+- `int getMobilityFlag()`
+- `protected abstract int getRedstoneStrength(IBlockState state)`
+- `protected AxisAlignedBB getSensitiveAABB(BlockPos pos)` — Returns the cubic AABB inset by 1/8 on all sides
+- `int getStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
+- `int getWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)`
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `boolean isPassable(IBlockAccess worldIn, BlockPos pos)`
+- `void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)` — Called When an Entity Collided with the Block
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `void randomTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random random)` — Called randomly when setTickRandomly is set to true (used by e.g. crops to grow, etc.)
+- `void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)`
+- `protected void setBlockBoundsBasedOnState0(IBlockState state)`
+- `void setBlockBoundsForItemRender()` — Sets the block's bounds for rendering it as an item
+- `protected abstract IBlockState setRedstoneStrength(IBlockState state, int strength)`
+- `int tickRate(World worldIn)` — How many world ticks before ticking
+- `protected void updateNeighbors(World worldIn, BlockPos pos)` — Notify block and block below of changes
+- `protected void updateState(World worldIn, BlockPos pos, IBlockState state, int oldRedstoneStrength)` — Updates the pressure plate when stepped on
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-Can this block provide power.
+- `protected BlockBasePressurePlate`
+- `protected BlockBasePressurePlate`

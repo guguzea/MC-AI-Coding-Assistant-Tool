@@ -1,5 +1,7 @@
 # EntityTameable
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityTameable
+
 ## Class signature
 
 ```java
@@ -8,30 +10,30 @@ public abstract class EntityTameable extends EntityAnimal implements IEntityOwna
 
 ## Constructors
 
-- `public EntityTameable( World worldIn)`
+- `EntityTameable(World worldIn)`
 
 ## Methods
 
 - `protected void entityInit()`
-- `public void writeEntityToNBT( NBTTagCompound tagCompound)`
-- `public void readEntityFromNBT( NBTTagCompound tagCompund)`
-- `protected void playTameEffect(boolean play)`
-- `public void handleStatusUpdate(byte id)`
-- `public boolean isTamed()`
-- `public void setTamed(boolean tamed)`
+- `EntityAISit getAISit()` — Returns the AITask responsible of the sit logic
+- `EntityLivingBase getOwner()`
+- `java.lang.String getOwnerId()`
+- `Team getTeam()`
+- `void handleStatusUpdate(byte id)`
+- `boolean isOnSameTeam(EntityLivingBase otherEntity)`
+- `boolean isOwner(EntityLivingBase entityIn)`
+- `boolean isSitting()`
+- `boolean isTamed()`
+- `void onDeath(DamageSource cause)` — Called when the mob's health reaches 0.
+- `protected void playTameEffect(boolean play)` — Play the taming effect, will either be hearts or smoke depending on status
+- `void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
+- `void setOwnerId(java.lang.String ownerUuid)`
+- `void setSitting(boolean sitting)`
+- `void setTamed(boolean tamed)`
 - `protected void setupTamedAI()`
-- `public boolean isSitting()`
-- `public void setSitting(boolean sitting)`
-- `public java.lang.String getOwnerId()`
-- `public void setOwnerId(java.lang.String ownerUuid)`
-- `public EntityLivingBase getOwner()`
-- `public boolean isOwner( EntityLivingBase entityIn)`
-- `public EntityAISit getAISit()`
-- `public boolean shouldAttackEntity( EntityLivingBase p_142018_1_, EntityLivingBase p_142018_2_)`
-- `public Team getTeam()`
-- `public boolean isOnSameTeam( EntityLivingBase otherEntity)`
-- `public void onDeath( DamageSource cause)`
+- `boolean shouldAttackEntity(EntityLivingBase p_142018_1_, EntityLivingBase p_142018_2_)`
+- `void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
 
-## Description
+## Fields
 
-Returns the AITask responsible of the sit logic
+- `protected EntityAISit aiSit`

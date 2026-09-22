@@ -1,13 +1,17 @@
 ---
 title: "PotionBrewEvent"
-description: "PotionBrewEvent.Post is fired when a potion is brewed in the brewing stand."
+description: "public class PotionBrewEvent extends Event"
 package: "net/minecraftforge/event/brewing"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/brewing/PotionBrewEvent.html"
 sourceType: javadoc
 ---
 
 # PotionBrewEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.brewing.PotionBrewEvent
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class PotionBrewEvent extends Event
 
 ## Constructors
 
-- `protected PotionBrewEvent( NonNullList < ItemStack > stacks)`
+- `PotionBrewEvent(NonNullList<ItemStack> stacks)`
 
 ## Methods
 
-- `@Nonnull public ItemStack getItem(int index)`
-- `public void setItem(int index, @Nonnull ItemStack stack)`
-- `public int getLength()`
-
-## Description
-
-PotionBrewEvent.Post is fired when a potion is brewed in the brewing stand.
+- `ItemStack getItem(int index)`
+- `int getLength()`
+- `void setItem(int index, ItemStack stack)`

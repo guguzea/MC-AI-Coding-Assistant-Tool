@@ -1,31 +1,35 @@
 ---
 title: "ArmorStandRenderer"
-description: "A constant instance of the armor stand texture, wrapped inside a ResourceLocation wrapper."
+description: "public class ArmorStandRenderer extends RendererLivingEntity<EntityArmorStand>"
 package: "net/minecraft/client/renderer/entity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/renderer/entity/ArmorStandRenderer.html"
 sourceType: javadoc
 ---
 
 # ArmorStandRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RendererLivingEntity<EntityArmorStand> → net.minecraft.client.renderer.entity.ArmorStandRenderer
+
 ## Class signature
 
 ```java
-public class ArmorStandRenderer extends RendererLivingEntity < EntityArmorStand >
+public class ArmorStandRenderer extends RendererLivingEntity<EntityArmorStand>
 ```
 
 ## Constructors
 
-- `public ArmorStandRenderer( RenderManager p_i46195_1_)`
+- `ArmorStandRenderer(RenderManager p_i46195_1_)`
 
 ## Methods
 
-- `protected ResourceLocation getEntityTexture( EntityArmorStand entity)`
-- `public ModelArmorStand getMainModel()`
-- `protected void rotateCorpse( EntityArmorStand bat, float p_77043_2_, float p_77043_3_, float partialTicks)`
-- `protected boolean canRenderName( EntityArmorStand entity)`
+- `protected boolean canRenderName(EntityArmorStand entity)`
+- `protected ResourceLocation getEntityTexture(EntityArmorStand entity)` — Returns the location of an entity's texture.
+- `ModelArmorStand getMainModel()`
+- `protected void rotateCorpse(EntityArmorStand bat, float p_77043_2_, float p_77043_3_, float partialTicks)`
 
-## Description
+## Fields
 
-A constant instance of the armor stand texture, wrapped inside a ResourceLocation wrapper.
+- `static ResourceLocation TEXTURE_ARMOR_STAND` — A constant instance of the armor stand texture, wrapped inside a ResourceLocation wrapper.

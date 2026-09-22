@@ -1,15 +1,17 @@
 # RenderAreaEffectCloud
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<EntityAreaEffectCloud> → net.minecraft.client.renderer.entity.RenderAreaEffectCloud
+
 ## Class signature
 
 ```java
-public class RenderAreaEffectCloud extends Render < EntityAreaEffectCloud >
+public class RenderAreaEffectCloud extends Render<EntityAreaEffectCloud>
 ```
-
-## Constructors
-
-- `public RenderAreaEffectCloud( RenderManager manager)`
 
 ## Methods
 
-- `protected ResourceLocation getEntityTexture( EntityAreaEffectCloud entity)`
+- `protected ResourceLocation getEntityTexture(EntityAreaEffectCloud entity)`
+
+## Fields
+
+- `RenderAreaEffectCloud`

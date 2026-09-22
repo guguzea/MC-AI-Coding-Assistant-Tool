@@ -1,13 +1,17 @@
 ---
 title: "ItemFluidContainer"
-description: "A simple fluid container, to replace the functionality of the old FluidContainerRegistry and IFluidContainerItem. This fluid container may be set so that is can only completely filled or empty. (binar"
+description: "public class ItemFluidContainer extends Item"
 package: "net/minecraftforge/fluids/capability"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fluids/capability/ItemFluidContainer.html"
 sourceType: javadoc
 ---
 
 # ItemFluidContainer
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraftforge.fluids.capability.ItemFluidContainer
 
 ## Class signature
 
@@ -17,12 +21,12 @@ public class ItemFluidContainer extends Item
 
 ## Constructors
 
-- `public ItemFluidContainer(int capacity)`
+- `ItemFluidContainer(int capacity)`
 
 ## Methods
 
-- `public ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, @Nullable NBTTagCompound nbt)`
+- `ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)` — Called from ItemStack.setItem, will hold extra data for the life of this ItemStack.
 
-## Description
+## Fields
 
-A simple fluid container, to replace the functionality of the old FluidContainerRegistry and IFluidContainerItem. This fluid container may be set so that is can only completely filled or empty. (binar
+- `protected int capacity`

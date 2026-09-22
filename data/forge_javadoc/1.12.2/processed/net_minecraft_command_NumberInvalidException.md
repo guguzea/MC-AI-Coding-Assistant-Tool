@@ -1,5 +1,7 @@
 # NumberInvalidException
 
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → net.minecraft.command.CommandException → net.minecraft.command.NumberInvalidException
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class NumberInvalidException extends CommandException
 
 ## Constructors
 
-- `public NumberInvalidException()`
-- `public NumberInvalidException(java.lang.String message, java.lang.Object... replacements)`
+- `NumberInvalidException()`
+- `NumberInvalidException(java.lang.String message, java.lang.Object... replacements)`
 
 ## Methods
 
-- `public java.lang.Throwable fillInStackTrace()`
+- `java.lang.Throwable fillInStackTrace()`

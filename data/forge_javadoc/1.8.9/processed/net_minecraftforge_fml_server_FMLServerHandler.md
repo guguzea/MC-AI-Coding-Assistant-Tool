@@ -1,5 +1,7 @@
 # FMLServerHandler
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.server.FMLServerHandler
+
 ## Class signature
 
 ```java
@@ -8,29 +10,25 @@ public class FMLServerHandler extends java.lang.Object implements IFMLSidedHandl
 
 ## Methods
 
-- `public void beginServerLoading( MinecraftServer minecraftServer)`
-- `public void finishServerLoading()`
-- `public void haltGame(java.lang.String message, java.lang.Throwable exception)`
-- `public java.io.File getSavesDirectory()`
-- `public MinecraftServer getServer()`
-- `public static FMLServerHandler instance()`
-- `public java.util.List<java.lang.String> getAdditionalBrandingInformation()`
-- `public Side getSide()`
-- `public void showGuiScreen(java.lang.Object clientGuiElement)`
-- `public void queryUser( StartupQuery query) throws java.lang.InterruptedException`
-- `public boolean shouldServerShouldBeKilledQuietly()`
-- `public void addModAsResource( ModContainer container)`
-- `public java.lang.String getCurrentLanguage()`
-- `public void serverStopped()`
-- `public NetworkManager getClientToServerNetworkManager()`
-- `public INetHandler getClientPlayHandler()`
-- `public void fireNetRegistrationEvent( EventBus bus, NetworkManager manager, java.util.Set<java.lang.String> channelSet, java.lang.String channel, Side side)`
-- `public boolean shouldAllowPlayerLogins()`
-- `public void allowLogins()`
-- `public IThreadListener getWorldThread( INetHandler net)`
-- `public void processWindowMessages()`
-- `public java.lang.String stripSpecialChars(java.lang.String message)`
-
-## Description
-
-Handles primary communication from hooked code into the system The FML entry point is beginServerLoading(MinecraftServer) called from DedicatedServer Obfuscated code should focus on this class and oth
+- `void addModAsResource(ModContainer container)`
+- `void allowLogins()`
+- `void beginServerLoading(MinecraftServer minecraftServer)` — Called to start the whole game off from MinecraftServer.startServer()
+- `void finishServerLoading()` — Called a bit later on during server initialization to finish loading mods
+- `void fireNetRegistrationEvent(EventBus bus, NetworkManager manager, java.util.Set<java.lang.String> channelSet, java.lang.String channel, Side side)`
+- `java.util.List<java.lang.String> getAdditionalBrandingInformation()`
+- `INetHandler getClientPlayHandler()`
+- `NetworkManager getClientToServerNetworkManager()`
+- `java.lang.String getCurrentLanguage()`
+- `java.io.File getSavesDirectory()`
+- `MinecraftServer getServer()` — Get the server instance
+- `Side getSide()`
+- `IThreadListener getWorldThread(INetHandler net)`
+- `void haltGame(java.lang.String message, java.lang.Throwable exception)`
+- `static FMLServerHandler instance()`
+- `void processWindowMessages()`
+- `void queryUser(StartupQuery query)`
+- `void serverStopped()`
+- `boolean shouldAllowPlayerLogins()`
+- `boolean shouldServerShouldBeKilledQuietly()`
+- `void showGuiScreen(java.lang.Object clientGuiElement)`
+- `java.lang.String stripSpecialChars(java.lang.String message)`

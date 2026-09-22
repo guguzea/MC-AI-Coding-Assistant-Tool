@@ -1,37 +1,39 @@
 # EntityMinecartHopper
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityMinecart → net.minecraft.entity.item.EntityMinecartContainer → net.minecraft.entity.item.EntityMinecartHopper
+
 ## Class signature
 
 ```java
 public class EntityMinecartHopper extends EntityMinecartContainer implements IHopper
 ```
 
-## Constructors
-
-- `public EntityMinecartHopper( World worldIn)`
-- `public EntityMinecartHopper( World worldIn, double x, double y, double z)`
-
 ## Methods
 
-- `public EntityMinecart.Type getType()`
-- `public IBlockState getDefaultDisplayTile()`
-- `public int getDefaultDisplayTileOffset()`
-- `public int getSizeInventory()`
-- `public boolean processInitialInteract( EntityPlayer player, EnumHand hand)`
-- `public void onActivatorRailPass(int x, int y, int z, boolean receivingPower)`
-- `public boolean getBlocked()`
-- `public void setBlocked(boolean p_96110_1_)`
-- `public World getWorld()`
-- `public double getXPos()`
-- `public double getYPos()`
-- `public double getZPos()`
-- `public void onUpdate()`
-- `public boolean captureDroppedItems()`
-- `public void killMinecart( DamageSource source)`
-- `public static void registerFixesMinecartHopper( DataFixer fixer)`
-- `protected void writeEntityToNBT( NBTTagCompound compound)`
-- `protected void readEntityFromNBT( NBTTagCompound compound)`
-- `public void setTransferTicker(int p_98042_1_)`
-- `public boolean canTransfer()`
-- `public java.lang.String getGuiID()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `boolean canTransfer()`
+- `boolean captureDroppedItems()`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `boolean getBlocked()`
+- `IBlockState getDefaultDisplayTile()`
+- `int getDefaultDisplayTileOffset()`
+- `java.lang.String getGuiID()`
+- `int getSizeInventory()`
+- `EntityMinecart.Type getType()`
+- `World getWorld()`
+- `double getXPos()`
+- `double getYPos()`
+- `double getZPos()`
+- `void killMinecart(DamageSource source)`
+- `void onActivatorRailPass(int x, int y, int z, boolean receivingPower)`
+- `void onUpdate()`
+- `boolean processInitialInteract(EntityPlayer player, EnumHand hand)`
+- `protected void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesMinecartHopper(DataFixer fixer)`
+- `void setBlocked(boolean p_96110_1_)`
+- `void setTransferTicker(int p_98042_1_)`
+- `protected void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityMinecartHopper`
+- `EntityMinecartHopper`

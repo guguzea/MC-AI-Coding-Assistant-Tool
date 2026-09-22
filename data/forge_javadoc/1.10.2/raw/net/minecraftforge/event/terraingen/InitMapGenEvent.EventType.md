@@ -1,19 +1,25 @@
 ---
 title: "InitMapGenEvent.EventType"
-description: "Use CUSTOM to filter custom event types"
+description: "public static enum InitMapGenEvent.EventType extends java.lang.Enum<InitMapGenEvent.EventType>"
 package: "net/minecraftforge/event/terraingen"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/terraingen/InitMapGenEvent.EventType.html"
 sourceType: javadoc
 ---
 
 # InitMapGenEvent.EventType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<InitMapGenEvent.EventType> → net.minecraftforge.event.terraingen.InitMapGenEvent.EventType
+
+## Class signature
+
+```java
+public static enum InitMapGenEvent.EventType extends java.lang.Enum<InitMapGenEvent.EventType>
+```
+
 ## Methods
 
-- `public static InitMapGenEvent.EventType [] values()`
-- `public static InitMapGenEvent.EventType valueOf(java.lang.String name)`
-
-## Description
-
-Use CUSTOM to filter custom event types
+- `static InitMapGenEvent.EventType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static InitMapGenEvent.EventType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

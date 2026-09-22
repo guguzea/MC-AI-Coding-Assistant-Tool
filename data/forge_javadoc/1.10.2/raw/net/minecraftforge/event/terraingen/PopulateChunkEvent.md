@@ -1,13 +1,17 @@
 ---
 title: "PopulateChunkEvent"
-description: "PopulateChunkEvent is fired when an event involving chunk terrain feature population occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. "
+description: "public class PopulateChunkEvent extends ChunkGeneratorEvent"
 package: "net/minecraftforge/event/terraingen"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/terraingen/PopulateChunkEvent.html"
 sourceType: javadoc
 ---
 
 # PopulateChunkEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.ChunkGeneratorEvent → net.minecraftforge.event.terraingen.PopulateChunkEvent
 
 ## Class signature
 
@@ -17,16 +21,12 @@ public class PopulateChunkEvent extends ChunkGeneratorEvent
 
 ## Constructors
 
-- `public PopulateChunkEvent( IChunkGenerator gen, World world, java.util.Random rand, int chunkX, int chunkZ, boolean hasVillageGenerated)`
+- `PopulateChunkEvent(IChunkGenerator gen, World world, java.util.Random rand, int chunkX, int chunkZ, boolean hasVillageGenerated)`
 
 ## Methods
 
-- `public World getWorld()`
-- `public java.util.Random getRand()`
-- `public int getChunkX()`
-- `public int getChunkZ()`
-- `public boolean isHasVillageGenerated()`
-
-## Description
-
-PopulateChunkEvent is fired when an event involving chunk terrain feature population occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. 
+- `int getChunkX()`
+- `int getChunkZ()`
+- `java.util.Random getRand()`
+- `World getWorld()`
+- `boolean isHasVillageGenerated()`

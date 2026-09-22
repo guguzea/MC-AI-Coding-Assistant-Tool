@@ -1,29 +1,27 @@
 # GuiRepair
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.inventory.GuiContainer → net.minecraft.client.gui.GuiRepair
+
 ## Class signature
 
 ```java
 public class GuiRepair extends GuiContainer implements ICrafting
 ```
 
-## Constructors
-
-- `public GuiRepair( InventoryPlayer inventoryIn, World worldIn)`
-
 ## Methods
 
-- `public void initGui()`
-- `public void onGuiClosed()`
-- `protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)`
-- `protected void keyTyped(char typedChar, int keyCode) throws java.io.IOException`
-- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)`
-- `public void updateCraftingInventory( Container containerToSend, java.util.List< ItemStack > itemsList)`
-- `public void sendSlotContents( Container containerToSend, int slotInd, ItemStack stack)`
-- `public void sendProgressBarUpdate( Container containerIn, int varToUpdate, int newValue)`
-- `public void sendAllWindowProperties( Container p_175173_1_, IInventory p_175173_2_)`
+- `protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)` — Args : renderPartialTicks, mouseX, mouseY
+- `protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)` — Draw the foreground layer for the GuiContainer (everything in front of the items).
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)` — Draws the screen and all the components in it.
+- `void initGui()` — Adds the buttons (and other controls) to the screen in question.
+- `protected void keyTyped(char typedChar, int keyCode)` — Fired when a key is typed (except F11 which toggles full screen).
+- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton)` — Called when the mouse is clicked.
+- `void onGuiClosed()` — Called when the screen is unloaded.
+- `void sendAllWindowProperties(Container p_175173_1_, IInventory p_175173_2_)`
+- `void sendProgressBarUpdate(Container containerIn, int varToUpdate, int newValue)` — Sends two ints to the client-side Container.
+- `void sendSlotContents(Container containerToSend, int slotInd, ItemStack stack)` — Sends the contents of an inventory slot to the client-side Container.
+- `void updateCraftingInventory(Container containerToSend, java.util.List<ItemStack> itemsList)` — update the crafting window inventory with the items in the list
 
-## Description
+## Fields
 
-Args : renderPartialTicks, mouseX, mouseY
+- `GuiRepair`

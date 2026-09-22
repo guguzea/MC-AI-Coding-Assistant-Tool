@@ -1,46 +1,48 @@
 # TileEntityShulkerBox
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityLockable → net.minecraft.tileentity.TileEntityLockableLoot → net.minecraft.tileentity.TileEntityShulkerBox
+
 ## Class signature
 
 ```java
-public class TileEntityShulkerBox extends TileEntityLockableLoot implements ITickable , ISidedInventory
+public class TileEntityShulkerBox extends TileEntityLockableLoot implements ITickable, ISidedInventory
 ```
-
-## Constructors
-
-- `public TileEntityShulkerBox()`
-- `public TileEntityShulkerBox(@Nullable EnumDyeColor colorIn)`
 
 ## Methods
 
-- `public void update()`
+- `boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)`
+- `boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)`
+- `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `TileEntityShulkerBox.AnimationStatus getAnimationStatus()`
+- `AxisAlignedBB getBoundingBox(EnumFacing p_190587_1_)`
+- `AxisAlignedBB getBoundingBox(IBlockState p_190584_1_)`
+- `EnumDyeColor getColor()`
+- `java.lang.String getGuiID()`
+- `int getInventoryStackLimit()`
+- `protected NonNullList<ItemStack> getItems()`
+- `java.lang.String getName()`
+- `float getProgress(float p_190585_1_)`
+- `int getSizeInventory()`
+- `int[] getSlotsForFace(EnumFacing side)`
+- `SPacketUpdateTileEntity getUpdatePacket()`
+- `boolean isCleared()`
+- `boolean isDestroyedByCreativePlayer()`
+- `boolean isEmpty()`
+- `void loadFromNbt(NBTTagCompound compound)`
+- `void openInventory(EntityPlayer player)`
+- `void readFromNBT(NBTTagCompound compound)`
+- `boolean receiveClientEvent(int id, int type)`
+- `static void registerFixesShulkerBox(DataFixer p_190593_0_)`
+- `NBTTagCompound saveToNbt(NBTTagCompound compound)`
+- `void setDestroyedByCreativePlayer(boolean p_190579_1_)`
+- `boolean shouldDrop()`
+- `void update()`
 - `protected void updateAnimation()`
-- `public TileEntityShulkerBox.AnimationStatus getAnimationStatus()`
-- `public AxisAlignedBB getBoundingBox( IBlockState p_190584_1_)`
-- `public AxisAlignedBB getBoundingBox( EnumFacing p_190587_1_)`
-- `public int getSizeInventory()`
-- `public int getInventoryStackLimit()`
-- `public boolean receiveClientEvent(int id, int type)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `public java.lang.String getGuiID()`
-- `public java.lang.String getName()`
-- `public static void registerFixesShulkerBox( DataFixer p_190593_0_)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public void loadFromNbt( NBTTagCompound compound)`
-- `public NBTTagCompound saveToNbt( NBTTagCompound compound)`
-- `protected NonNullList < ItemStack > getItems()`
-- `public boolean isEmpty()`
-- `public int[] getSlotsForFace( EnumFacing side)`
-- `public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)`
-- `public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)`
-- `public void clear()`
-- `public boolean isCleared()`
-- `public float getProgress(float p_190585_1_)`
-- `public EnumDyeColor getColor()`
-- `@Nullable public SPacketUpdateTileEntity getUpdatePacket()`
-- `public boolean isDestroyedByCreativePlayer()`
-- `public void setDestroyedByCreativePlayer(boolean p_190579_1_)`
-- `public boolean shouldDrop()`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `TileEntityShulkerBox`
+- `TileEntityShulkerBox`

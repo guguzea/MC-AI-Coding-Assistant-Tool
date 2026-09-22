@@ -1,58 +1,60 @@
 # DerivedWorldInfo
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.WorldInfo → net.minecraft.world.storage.DerivedWorldInfo
+
 ## Class signature
 
 ```java
 public class DerivedWorldInfo extends WorldInfo
 ```
 
-## Constructors
-
-- `public DerivedWorldInfo( WorldInfo worldInfoIn)`
-
 ## Methods
 
-- `public NBTTagCompound cloneNBTCompound(@Nullable NBTTagCompound nbt)`
-- `public long getSeed()`
-- `public int getSpawnX()`
-- `public int getSpawnY()`
-- `public int getSpawnZ()`
-- `public long getWorldTotalTime()`
-- `public long getWorldTime()`
-- `public long getSizeOnDisk()`
-- `public NBTTagCompound getPlayerNBTTagCompound()`
-- `public java.lang.String getWorldName()`
-- `public int getSaveVersion()`
-- `public long getLastTimePlayed()`
-- `public boolean isThundering()`
-- `public int getThunderTime()`
-- `public boolean isRaining()`
-- `public int getRainTime()`
-- `public WorldSettings.GameType getGameType()`
-- `public void setSpawnX(int x)`
-- `public void setSpawnY(int y)`
-- `public void setWorldTotalTime(long time)`
-- `public void setSpawnZ(int z)`
-- `public void setWorldTime(long time)`
-- `public void setSpawn( BlockPos spawnPoint)`
-- `public void setWorldName(java.lang.String worldName)`
-- `public void setSaveVersion(int version)`
-- `public void setThundering(boolean thunderingIn)`
-- `public void setThunderTime(int time)`
-- `public void setRaining(boolean isRaining)`
-- `public void setRainTime(int time)`
-- `public boolean isMapFeaturesEnabled()`
-- `public boolean isHardcoreModeEnabled()`
-- `public WorldType getTerrainType()`
-- `public void setTerrainType( WorldType type)`
-- `public boolean areCommandsAllowed()`
-- `public void setAllowCommands(boolean allow)`
-- `public boolean isInitialized()`
-- `public void setServerInitialized(boolean initializedIn)`
-- `public GameRules getGameRulesInstance()`
-- `public EnumDifficulty getDifficulty()`
-- `public void setDifficulty( EnumDifficulty newDifficulty)`
-- `public boolean isDifficultyLocked()`
-- `public void setDifficultyLocked(boolean locked)`
-- `public void setDimensionData( DimensionType dimensionIn, NBTTagCompound compound)`
-- `public NBTTagCompound getDimensionData( DimensionType dimensionIn)`
+- `boolean areCommandsAllowed()`
+- `NBTTagCompound cloneNBTCompound(NBTTagCompound nbt)`
+- `EnumDifficulty getDifficulty()`
+- `NBTTagCompound getDimensionData(DimensionType dimensionIn)`
+- `GameRules getGameRulesInstance()`
+- `WorldSettings.GameType getGameType()`
+- `long getLastTimePlayed()`
+- `NBTTagCompound getPlayerNBTTagCompound()`
+- `int getRainTime()`
+- `int getSaveVersion()`
+- `long getSeed()`
+- `long getSizeOnDisk()`
+- `int getSpawnX()`
+- `int getSpawnY()`
+- `int getSpawnZ()`
+- `WorldType getTerrainType()`
+- `int getThunderTime()`
+- `java.lang.String getWorldName()`
+- `long getWorldTime()`
+- `long getWorldTotalTime()`
+- `boolean isDifficultyLocked()`
+- `boolean isHardcoreModeEnabled()`
+- `boolean isInitialized()`
+- `boolean isMapFeaturesEnabled()`
+- `boolean isRaining()`
+- `boolean isThundering()`
+- `void setAllowCommands(boolean allow)`
+- `void setDifficulty(EnumDifficulty newDifficulty)`
+- `void setDifficultyLocked(boolean locked)`
+- `void setDimensionData(DimensionType dimensionIn, NBTTagCompound compound)`
+- `void setRaining(boolean isRaining)`
+- `void setRainTime(int time)`
+- `void setSaveVersion(int version)`
+- `void setServerInitialized(boolean initializedIn)`
+- `void setSpawn(BlockPos spawnPoint)`
+- `void setSpawnX(int x)`
+- `void setSpawnY(int y)`
+- `void setSpawnZ(int z)`
+- `void setTerrainType(WorldType type)`
+- `void setThundering(boolean thunderingIn)`
+- `void setThunderTime(int time)`
+- `void setWorldName(java.lang.String worldName)`
+- `void setWorldTime(long time)`
+- `void setWorldTotalTime(long time)`
+
+## Fields
+
+- `DerivedWorldInfo`

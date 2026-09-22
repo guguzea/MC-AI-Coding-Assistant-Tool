@@ -8,5 +8,5 @@ public @interface SubscribeEvent
 
 ## Elements
 
-- `public abstract EventPriority priority`
-- `public abstract boolean receiveCanceled`
+- `EventPriority priority`
+- `boolean receiveCanceled`

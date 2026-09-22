@@ -1,9 +1,17 @@
 # EntityVillager.PriceInfo
 
+**Inheritance:** java.lang.Object → net.minecraft.util.Tuple<java.lang.Integer, java.lang.Integer> → net.minecraft.entity.passive.EntityVillager.PriceInfo
+
+## Class signature
+
+```java
+public static class EntityVillager.PriceInfo extends Tuple<java.lang.Integer, java.lang.Integer>
+```
+
 ## Constructors
 
-- `public PriceInfo(int p_i45810_1_, int p_i45810_2_)`
+- `PriceInfo(int p_i45810_1_, int p_i45810_2_)`
 
 ## Methods
 
-- `public int getPrice(java.util.Random rand)`
+- `int getPrice(java.util.Random rand)`

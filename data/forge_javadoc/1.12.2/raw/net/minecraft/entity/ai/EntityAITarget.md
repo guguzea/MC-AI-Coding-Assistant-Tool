@@ -3,11 +3,15 @@ title: "EntityAITarget"
 description: "public abstract class EntityAITarget extends EntityAIBase"
 package: "net/minecraft/entity/ai"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/ai/EntityAITarget.html"
 sourceType: javadoc
 ---
 
 # EntityAITarget
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAITarget
 
 ## Class signature
 
@@ -17,15 +21,22 @@ public abstract class EntityAITarget extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAITarget( EntityCreature creature, boolean checkSight)`
-- `public EntityAITarget( EntityCreature creature, boolean checkSight, boolean onlyNearby)`
+- `EntityAITarget(EntityCreature creature, boolean checkSight)`
+- `EntityAITarget(EntityCreature creature, boolean checkSight, boolean onlyNearby)`
 
 ## Methods
 
-- `public boolean shouldContinueExecuting()`
 - `protected double getTargetDistance()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public static boolean isSuitableTarget( EntityLiving attacker, EntityLivingBase target, boolean includeInvincibles, boolean checkSight)`
-- `protected boolean isSuitableTarget( EntityLivingBase target, boolean includeInvincibles)`
-- `public EntityAITarget setUnseenMemoryTicks(int p_190882_1_)`
+- `protected boolean isSuitableTarget(EntityLivingBase target, boolean includeInvincibles)`
+- `static boolean isSuitableTarget(EntityLiving attacker, EntityLivingBase target, boolean includeInvincibles, boolean checkSight)`
+- `void resetTask()`
+- `EntityAITarget setUnseenMemoryTicks(int p_190882_1_)`
+- `boolean shouldContinueExecuting()`
+- `void startExecuting()`
+
+## Fields
+
+- `protected boolean shouldCheckSight`
+- `protected EntityLivingBase target`
+- `protected EntityCreature taskOwner`
+- `protected int unseenMemoryTicks`

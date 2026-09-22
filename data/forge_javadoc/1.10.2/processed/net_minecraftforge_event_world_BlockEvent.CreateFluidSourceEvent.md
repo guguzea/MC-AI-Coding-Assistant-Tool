@@ -1,9 +1,13 @@
 # BlockEvent.CreateFluidSourceEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.BlockEvent.CreateFluidSourceEvent
+
+## Class signature
+
+```java
+public static class BlockEvent.CreateFluidSourceEvent extends BlockEvent
+```
+
 ## Constructors
 
-- `public CreateFluidSourceEvent( World world, BlockPos pos, IBlockState state)`
-
-## Description
-
-Fired to check whether a non-source block can turn into a source block. A result of ALLOW causes a source block to be created even if the liquid usually doesn't do that (like lava), and a result of DE
+- `CreateFluidSourceEvent(World world, BlockPos pos, IBlockState state)`

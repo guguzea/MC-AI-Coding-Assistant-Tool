@@ -3,11 +3,15 @@ title: "EnchantmentProtection"
 description: "public class EnchantmentProtection extends Enchantment"
 package: "net/minecraft/enchantment"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/enchantment/EnchantmentProtection.html"
 sourceType: javadoc
 ---
 
 # EnchantmentProtection
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Enchantment> → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentProtection
 
 ## Class signature
 
@@ -17,15 +21,19 @@ public class EnchantmentProtection extends Enchantment
 
 ## Constructors
 
-- `public EnchantmentProtection( Enchantment.Rarity rarityIn, EnchantmentProtection.Type protectionTypeIn, EntityEquipmentSlot ... slots)`
+- `EnchantmentProtection(Enchantment.Rarity rarityIn, EnchantmentProtection.Type protectionTypeIn, EntityEquipmentSlot ... slots)`
 
 ## Methods
 
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int getMaxLevel()`
-- `public int calcModifierDamage(int level, DamageSource source)`
-- `public java.lang.String getName()`
-- `public boolean canApplyTogether( Enchantment ench)`
-- `public static int getFireTimeForEntity( EntityLivingBase p_92093_0_, int p_92093_1_)`
-- `public static double getBlastDamageReduction( EntityLivingBase entityLivingBaseIn, double damage)`
+- `int calcModifierDamage(int level, DamageSource source)`
+- `boolean canApplyTogether(Enchantment ench)`
+- `static double getBlastDamageReduction(EntityLivingBase entityLivingBaseIn, double damage)`
+- `static int getFireTimeForEntity(EntityLivingBase p_92093_0_, int p_92093_1_)`
+- `int getMaxEnchantability(int enchantmentLevel)`
+- `int getMaxLevel()`
+- `int getMinEnchantability(int enchantmentLevel)`
+- `java.lang.String getName()`
+
+## Fields
+
+- `EnchantmentProtection.Type protectionType`

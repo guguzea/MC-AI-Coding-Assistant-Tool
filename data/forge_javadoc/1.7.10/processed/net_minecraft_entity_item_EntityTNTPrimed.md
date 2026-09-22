@@ -1,5 +1,7 @@
 # EntityTNTPrimed
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityTNTPrimed
+
 ## Class signature
 
 ```java
@@ -8,16 +10,20 @@ public class EntityTNTPrimed extends Entity
 
 ## Constructors
 
-- `public EntityTNTPrimed( World p_i1729_1_)`
-- `public EntityTNTPrimed( World p_i1730_1_, double p_i1730_2_, double p_i1730_4_, double p_i1730_6_, EntityLivingBase p_i1730_8_)`
+- `EntityTNTPrimed(World p_i1729_1_)`
+- `EntityTNTPrimed(World p_i1730_1_, double p_i1730_2_, double p_i1730_4_, double p_i1730_6_, EntityLivingBase p_i1730_8_)`
 
 ## Methods
 
-- `protected void entityInit()`
+- `boolean canBeCollidedWith()`
 - `protected boolean canTriggerWalking()`
-- `public boolean canBeCollidedWith()`
-- `public void onUpdate()`
-- `protected void writeEntityToNBT( NBTTagCompound p_70014_1_)`
-- `protected void readEntityFromNBT( NBTTagCompound p_70037_1_)`
-- `public float getShadowSize()`
-- `public EntityLivingBase getTntPlacedBy()`
+- `protected void entityInit()`
+- `float getShadowSize()`
+- `EntityLivingBase getTntPlacedBy()`
+- `void onUpdate()`
+- `protected void readEntityFromNBT(NBTTagCompound p_70037_1_)`
+- `protected void writeEntityToNBT(NBTTagCompound p_70014_1_)`
+
+## Fields
+
+- `int fuse`

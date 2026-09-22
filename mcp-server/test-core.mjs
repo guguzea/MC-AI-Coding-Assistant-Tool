@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync, utimesSync, readdirSync, statSync, cpSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { dirname, join, relative, sep } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 
 import { listVersions, searchForgeDocs, searchDocs, getDocFull, getDocSummary, getDocRelated, getForgeDocSummary, getForgeDocFull } from "./dist/docs-platform/forge/index.js";
@@ -35,6 +35,30 @@ import { getVersionInfo } from "./dist/version/index.js";
 import { resolvePackFormat } from "./dist/localize/pack-format.js";
 import { mapShortCommand } from "./dist/cli-parse.js";
 import { copyTree } from "../scripts/_lib/copy-tree.mjs";
+import {
+  SCRIPT_WRITE_GUARD_REL,
+  SCRIPT_WRITE_GUARD_SCAN_DIRS,
+  SCRIPT_WRITE_GUARD_SCAN_EXTS,
+  SCRIPT_WRITE_GUARD_ALWAYS_DIRS,
+  SCRIPT_WRITE_GUARD_FILES,
+  SCRIPT_WRITE_GUARD_NON_WRITERS,
+  SCRIPT_WRITE_GUARD_DEBT,
+  SCRIPT_WRITE_GUARD_SCAN_ERRORS,
+  FS_MUTATION_PRIMITIVES,
+  FS_ASYNC_MUTATION_PRIMITIVES,
+  fsMutationPrimitiveRe,
+  fsPromiseQualifiedRe,
+  fsCallbackRe,
+  promiseImportedPrimitives,
+  lineHasAsyncWritePrimitive,
+  scriptWritesFiles,
+  scriptGuardExempt,
+  scriptRequiresGuard,
+  diffScriptWriteGuard,
+  listScriptModuleFiles,
+  listWriteGuardScope,
+  checkGuardScopeCoverage,
+} from "./scripts/_lib/script-write-guard-check.mjs";
 import { isQslSpecificQuery, filterFabricFallbackHits } from "./dist/docs-platform/quilt-fallback-filter.js";
 import {
   generateAddonManifest,
@@ -3632,9 +3656,20 @@ async function testReviewFixes() {
   assert.ok(Array.isArray(qRelated), JSON.stringify(qRelated).slice(0, 400));
   // W1-1b（2026-09-19）：原 `qRelated.length >= 0` 恒真 ⇒ 空数组也绿。qsl-qfapi 的关联
   // 必须真召回 QSL 条目（实测恒为 qsl-verified / qsl-readme 形态），钉结构与非空。
+  //
+  // 2026-09-21 更正：原式用 `every(r => /qsl/)`，**超出本断言的原始意图**（原意是「必须真召回
+  // QSL 条目」，不是「只准有 QSL 条目」）。get_doc_related 的算法是**通用 tag 交集** ——
+  // qsl-qfapi 的 tags = [qsl, qfapi, registry]，与 wiki-first-item/wiki-first-block 共享 `registry`
+  // （overlap=1）⇒ 它们合法入选。旧式在 quilt 语料只有 4 页时碰巧成立；本轮语料补齐 wiki-* 页后
+  // 才暴露（不是算法退化）。改 `some` 精确表达原意，并**补一条排序钉**（净增强，非放宽）。
   assert.ok(
-    qRelated.length >= 1 && qRelated.every((r) => /qsl/.test(String(r.id)) && r.label),
-    `qsl-qfapi 关联必须含 QSL 条目 —— ${JSON.stringify(qRelated).slice(0, 300)}`,
+    qRelated.length >= 1 && qRelated.some((r) => /qsl/.test(String(r.id)) && r.label),
+    `qsl-qfapi 关联必须真召回 QSL 条目 —— ${JSON.stringify(qRelated).slice(0, 300)}`,
+  );
+  const qslHits = qRelated.filter((r) => /qsl/.test(String(r.id)));
+  assert.ok(
+    qslHits.length >= 1 && qRelated.slice(0, qslHits.length).every((r) => /qsl/.test(String(r.id))),
+    `QSL 条目必须按 overlap 降序排在前面（overlap 2/1 > 仅 registry 的 1）—— ${JSON.stringify(qRelated.map((r) => r.id))}`,
   );
 
   const qRelatedFb = parseToolText(
@@ -7140,7 +7175,7 @@ async function testDocsToolTablesMatchRegistry() {
 
   const poisoned = [
     ["README 少一行工具", { ...base, readme: readme.replace(/^\|[ \t]*`check_dependencies`[ \t]*\|.*\n/m, "") }, /缺 `check_dependencies`/],
-    ["README 总数标错", { ...base, readme: readme.replace("## MCP Server 工具（81 个）", "## MCP Server 工具（80 个）") }, /标题声明 80/],
+    ["README 总数标错", { ...base, readme: readme.replace(`## MCP Server 工具（${registered.length} 个）`, `## MCP Server 工具（${registered.length - 1} 个）`) }, new RegExp(`标题声明 ${registered.length - 1}`)],
     ["README 分节计数标错", { ...base, readme: readme.replace("### 10. 代码生成模板（8）", "### 10. 代码生成模板（7）") }, /§10 声明 7 个/],
     ["README 出现未注册名", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（4）", "### 11. 日志与依赖诊断（4）\n\n| 工具 | 作用 |\n|------|------|\n| `not_a_real_tool` | x |") }, /未注册的工具名 `not_a_real_tool`/],
     ["README 跨节重复", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（4）", "### 11. 日志与依赖诊断（4）\n\n| 工具 | 作用 |\n|------|------|\n| `validate_at` | x |") }, /同时出现在 §/],
@@ -7327,368 +7362,101 @@ function testPublishChecklistFromCommunityDoc() {
 }
 
 /**
- * S20：会改仓库文件的维护脚本，写盘必须全部经 scripts/_lib/write-guard.mjs（默认 dry-run，--write 才落盘）。
- * 覆盖范围 = `scripts/` 与 `mcp-server/scripts/` 下全部 .mjs / .js（递归；旧版只扫 _oneoff/_lib + 2 个点名文件，真写盘脚本全在门外）。
- * 例外只有两张在册清单：已核实不写仓库正文的 NON_WRITERS，与本轮不可改的 DEBT；
- * 每条都必须仍存在且其依据正则仍成立，依据一断即门禁失败 —— 例外不许静默扩张。
- * 纯函数：输入 [{ rel, text }]，输出 { problems, stats }；不读不写磁盘。
+ * S20（链位收口 2026-09-21）：判据已抽到 `mcp-server/scripts/_lib/script-write-guard-check.mjs`。
+ * 本文件只 import 复用（判据唯一）；真跑与 selftest 现挂在 **test-scripts.mjs 的第 8 步链**上
+ * （`scripts/assert-script-write-guard.mjs`）—— 根 AGENTS.md:387 规定改了 scripts/** 后必跑那条链，
+ * 原先 S20 只挂在本文件的 npm test 链上，改 scripts 的人照规矩跑也永远碰不到它。
  */
-const SCRIPT_WRITE_GUARD_REL = "scripts/_lib/write-guard.mjs";
-/** 递归扫描根：这两棵子树下全部 .mjs / .js（S4 扩面——mcp-server/scripts 是真·语料生产者，旧扫描看不见）。 */
-const SCRIPT_WRITE_GUARD_SCAN_DIRS = ["scripts", "mcp-server/scripts"];
-const SCRIPT_WRITE_GUARD_SCAN_EXTS = [".mjs", ".js"];
-/** 目录前缀即要求 guard：这些脚本的存在意义就是改仓库文件，哪怕此刻还没落笔。 */
-const SCRIPT_WRITE_GUARD_ALWAYS_DIRS = ["scripts/_oneoff"];
-/** 已改道 write-guard 的顶层仓库写盘脚本：改名/删除必须显式改本清单，否则静默脱离扫描。 */
-const SCRIPT_WRITE_GUARD_FILES = [
-  "scripts/index-qsl-verified.mjs",
-  "scripts/fetch-neoforge-primers.mjs",
-  // S17：这三个以前挂在 DEBT（默认就写 / 裸 join(repo, rel)），现已全量走 emit。
-  "mcp-server/scripts/plan4-write-fabric-hollow.mjs",
-  "mcp-server/scripts/plan4-write-packs.mjs",
-  "mcp-server/scripts/repair-fabric-version-headers.mjs",
-  // S17 第二轮：rift 抓取器与 community 索引器已从「默认就写」改成 wantWrite 语义。
-  "mcp-server/scripts/fetch-rift-wiki.js",
-  "mcp-server/scripts/build-community-index.mjs",
-];
-/** 已核实不写仓库正文：只写 $MC_SKILL_CACHE / .gitignore 的 temp/ / 由调用方给的 dest。值为依据正则。 */
-const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
-  ["scripts/fetch-loader-api-jars.mjs", /join\(CACHE/],
-  ["scripts/batch-decompile.mjs", /join\(REPO_ROOT, "temp"/],
-  ["scripts/_lib/fetch-with-ua.mjs", /export async function downloadWithFallback/],
-  // 递归复制原语：目标由调用方给（同步卷上不能用 fs.cpSync 的 recursive 形态，
-  // 见 scripts/_lib/copy-tree.mjs 头注释）；写仓库的调用点各自带 wantWrite 闸门。
-  ["scripts/_lib/copy-tree.mjs", /export function copyTree\(/],
-  // ── S4 扩面：mcp-server/scripts/**（逐条对活文本复验过依据正则）──────────
-  ["mcp-server/scripts/assert-powershell.mjs", /mkdtempSync\(join\(tmpdir\(\), "mcskill-ps-"/], // 全部落笔在 OS tmpdir 的 workDir；仓库根只读（MC_SKILL_PS_TEST_ROOT 可换根）
-  ["mcp-server/scripts/assert-parser-availability.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "mcskill-g2-"/], // 夹具 jar 只落 OS tmpdir；rmSync 收的就是那个目录，仓库源码全程只读
-  // 2026-09-19 N3 裁定「补投毒」：--selftest 的 8 例夹具（tiny.gz / upstream *.bak / provenance / 假基线）
-  // 全部落 OS tmpdir 下一个一次目录，finally 里 rmSync 收掉；门模式与 --measure-zero-member 全程不写盘。
-  // 依据正则咬住那个 mkdtemp 前缀 —— 夹具落点一旦改到仓库内，本豁免即失效（重签或改道 write-guard）。
-  ["mcp-server/scripts/assert-yarn-named-integrity.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "mc-yarn-gate-selftest-"/],
-  ["mcp-server/scripts/assert-cli-quick.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "cli-quick-"/], // R3（NP-10 防回归）：新增夹具（薄壳拷贝 / mdk 树 / 锁根 / 数据根）全部落 OS tmpdir，仓库只读
-  ["mcp-server/scripts/assert-sync-normalizers.mjs", /mkdtempSync\(join\(tmpdir\(\), "mcskill-norm-"/], // 同上：workDir 在 tmpdir，PS_FILE/JS_FILE 只作输入
-  ["mcp-server/scripts/release-smoke.mjs", /mkdtempSync\(join\(tmpdir\(\), "mc-skill-release-smoke-"/], // 装配 staging 在 tmpdir，仓库 dist/package.json 只读
-  ["mcp-server/scripts/_lib/build-yarn-mappings.test.mjs", /mkdtempSync\(path\.join\(tmpdir\(\), "yarnpacks-"/], // 测试根全在 tmpdir
-  ["mcp-server/scripts/_lib/build-yarn-sqlite.test.mjs", /fs\.mkdtempSync\(path\.join\(os\.tmpdir\(\), "yarn-sqlite-"/], // 同上
-  ["mcp-server/scripts/_lib/import-legacy.test.mjs", /fs\.mkdtempSync\(path\.join\(os\.tmpdir\(\), "tsrg-"/], // 同上
-  ["mcp-server/scripts/_lib/pipeline-helpers.test.mjs", /mkdtempSync\(join\(tmpdir\(\), "ph-test-"/], // 同上
-  ["mcp-server/scripts/_lib/thin-docs-wiki.test.mjs", /mkdtempSync\(join\(tmpdir\(\), "thin-wiki-"/], // 同上
-  ["mcp-server/scripts/_lib/repair-yarn-named.test.mjs", /mkdtempSync\(path\.join\(tmpdir\(\), "yarncache/], // N-11.2 单测：三个 cacheDir 夹具根全在 OS tmpdir（yarncache*/bad*/fb*），仓库只读
-  ["mcp-server/scripts/audit-all-tools.mjs", /"_audit-findings\.json"/], // 唯一产物 mcp-server/_audit-findings.json 已 gitignore
-  ["mcp-server/scripts/sweep-similar-traps.mjs", /"_sweep-findings\.json"/], // 产物 gitignore；它代跑的写盘工具一律传 dryRun:true
-  ["mcp-server/scripts/snapshot-sha256.mjs", /const OUT_DIR = join\(REPO, "agent-tools", "audit-snapshots"/], // 落 gitignore 的 agent-tools/；「豁免定义允许 gitignore 输出目录而非仅 temp」这一口径已登记在 S4 销账台账
-  ["mcp-server/scripts/audit-data-consistency.mjs", /openSync\(abs, "r"/], // 假阳性：唯一原语命中是 mode "r" 的只读探头
-  ["mcp-server/scripts/_lib/pipeline-helpers.mjs", /export async function downloadFileAtomic/], // 纯库，destPath 由调用方给；.tmp 只在 destPath 同目录
-  ["mcp-server/scripts/_lib/thin-docs-wiki.mjs", /export function writeWikiProcessed\(processedDir, filename, markdown/], // indexPath/processedDir 都是函数参数
-  ["mcp-server/scripts/_lib/build-yarn-mappings.mjs", /fs\.writeFileSync\(out, renderYarnMappingJson/], // out = CLI 位置参数（build <tiny.gz> <outJson>）
-  ["mcp-server/scripts/_lib/repair-yarn-named.mjs", /process\.env\.TEMP \?\? "\/tmp", "yarn-v2-cache"/], // N-11.2 纯库：唯一 fs 落笔是 fetchV2Tiny 的 OS tmpdir jar 缓存；对仓库的写盘全在 CLI 侧（build-yarn-mappings repairNamedCli）走 write-guard
-  ["mcp-server/scripts/_debug_article.mjs", /_debug_raw\.html/], // 只写 scripts/_debug*（gitignore）；该文件本身未入库
-  ["mcp-server/scripts/_test_fetch.mjs", /_test_curl_output\.txt/], // 只写 scripts/_test_*（gitignore）；该文件本身未入库，url 由 argv 给
-  // ── B1 转换器（2026-09-15 用户裁定登记豁免，不 adopt）─────────────────────
-  // 缺省只写 gitignore 的 temp/verified-api-from-summaries.jsonl，不碰跟踪文件；
-  // --out 由调用方给（同 batch-decompile 的 destPath 先例）。未来若改成写跟踪文件 ⇒ 必须改道 emit 并撤本条。
-  ["scripts/emit-verified-api-from-summaries.mjs", /out: "temp\/verified-api-from-summaries\.jsonl"/],
-]);
-/**
- * 会写仓库但本轮不收口的债务（并发代理 owns / 自带显式 --write 闸门未改道 / 新文件只靠 --force）。
- * 值 = 依据正则：闸门或契约一消失门禁即失败，逼重新签字；脚本收口后删掉本条即回到默认要求。
- */
-const SCRIPT_WRITE_GUARD_DEBT = new Map([
-  ["scripts/decompile-loader-apis.mjs", /"--write"/],
-  ["scripts/build-api-summaries.mjs", /--write/],
-  ["scripts/merge-verified-api.mjs", /--write/],
-  ["scripts/pin-mdk-checksums.mjs", /--apply/],
-  ["scripts/build-lib-manifest.mjs", /wantWrite\(\)/],
-  ["scripts/scaffold-version.mjs", /--force/],
-  // ── S4 扩面 ①：闸门方向反了（默认就写，除非 --dry-run）——与 write-guard 的 wantWrite(argv) 相反 ──
-  ["mcp-server/scripts/fetch-bedrock-docs.js", /const dry = process\.argv\.includes\("--dry-run"/],
-  ["mcp-server/scripts/fetch-fabric-docs.js", /const DRY_RUN = CLI\.flags\.has\("dry-run"/],
-  ["mcp-server/scripts/fetch-fabric-wiki.js", /const DRY_RUN = process\.argv\.includes\("--dry-run"/],
-  ["mcp-server/scripts/fetch-forge-docs.js", /const dryRun = parsedArgs\.flags/],
-  ["mcp-server/scripts/fetch-forge-javadoc.js", /const dryRun = args\.includes\("--dry-run"/],
-  ["mcp-server/scripts/fetch-liteloader-wiki.js", /unlinkSync\(join\(dir, name\)\)/], // 写盘已走 emit；只剩这一处仓库删除口，守卫真源无仓库删除出口
-  ["mcp-server/scripts/fetch-neoforge-docs.js", /const dryRun = args\.includes\("--dry-run"/],
-  ["mcp-server/scripts/fetch-neoforge-primers.js", /const dryRun = args\.includes\("--dry-run"/], // 仓库根孪生 scripts/fetch-neoforge-primers.mjs 已改道，本 .js 是未转换的副本
-  ["mcp-server/scripts/fetch-quilt-docs.js", /const dry = argv\.includes\("--dry-run"/],
-  ["mcp-server/scripts/forge-javadoc-indexer.js", /const dryRun = args\.includes\("--dry-run"/],
-  ["mcp-server/scripts/probe-forge-versions.js", /const OUT_FILE = join\(OUT_DIR, "forge-versions-manifest\.json"/],
-  ["mcp-server/scripts/probe-neoforge-versions.js", /const OUT_FILE = join\(OUT_DIR, "neoforge-versions-manifest\.json"/],
-  ["mcp-server/scripts/repair-quilt-indexes.js", /const dry = argv\.includes\("--dry-run"/],
-  ["mcp-server/scripts/update-architectury-examples.js", /const DRY_RUN = process\.argv\.includes\("--dry-run"/],
-  // ── S4 扩面 ②：只有 --force / 范围选择器，不是写盘闸门（缺索引时默认照写）────────
-  ["mcp-server/scripts/_lib/build-semantic-index.mjs", /a === "--force"/],
-  ["mcp-server/scripts/fetch-vanilla-registries.mjs", /if \(a === "--force"\) force = true/],
-  ["mcp-server/scripts/process-neoforge-docs.js", /const force = args\.includes\("--force"/],
-  // ── S4 扩面 ③：完全无闸门（F96/F139/F140 的实身位）。依据 = 仓库出口常量：
-  //     出口一改（改道 cache / write-guard）或文件一删，本豁免即失效，逼重新签字。
-  ["mcp-server/scripts/_debug_fetch_full.mjs", /OUT_DIR = join\(__dirname, "\.\.", "\.\.", "data"/], // 未入库探针脚本，建议删除而非收口
-  ["mcp-server/scripts/_debug_final.mjs", /OUT_DIR = join\(__dirname, "\.\.", "\.\.", "data"/], // 同上
-  ["mcp-server/scripts/_repair-broken-italic.mjs", /writeFileSync\(p, next, "utf8"/], // 未入库，就地改写 data/**/*.md
-  ["mcp-server/scripts/_lib/build-yarn-sqlite.mjs", /const reportPath = path\.join\(__dirname, "mapping-sqlite-build-report\.json"/], // outPath=data/**/yarn-mappings.sqlite + 报告落在 scripts/ 且已入库
-  ["mcp-server/scripts/_lib/ensure-mojang-mappings.mjs", /const dest = join\(versionDir, "client\.txt"/],
-  ["mcp-server/scripts/build-library-catalog-from-authored.mjs", /const OUT_FILE = join\(__dirname, "\.\.", "src", "diagnostics", "library-catalog\.ts"/], // 覆盖的是 TS 源码而非 data/；S5 重生成 catalog 走的就是它
-  ["mcp-server/scripts/fetch-forge-mappings.js", /const versionDir = join\(OUT_ROOT,/],
-  ["mcp-server/scripts/forge-srg-extractor.js", /const EXTRACTED = join\(DATA_ROOT, "extracted"/],
-  ["mcp-server/scripts/generate-porting-breakdown.js", /const outDir = join\(DATA_DIR, "forge-porting", "breaking-changes"/],
-  ["mcp-server/scripts/link-forge-1.20.4-from-1.20.1.js", /const destForgeDocs = join\(DATA_DIR,/], // F139：无闸门整棵 1.20.1 语料拷成 1.20.4 再就地改版本号
-  ["mcp-server/scripts/mcp-csv-extractor.js", /function writeOutputs\(outDir, outputs/],
-  ["mcp-server/scripts/parchment-extractor.js", /const OUT_DIR = join\(__dirname, "\.\.", "\.\.", "data",/],
-  // 重签（NP-6，2026-09-17）：数据根改走 scripts/_lib/data-root.js（--data-root > MC_SKILL_DATA > <repo>/data）
-  // ⇒ 旧依据 `join(MC_SKILL_ROOT, "data",` 已不成立，锚点改钉「由解析器决定根」这一事实本身。
-  ["mcp-server/scripts/process-fabric-docs.js", /const DATA_DIR = join\(resolveDataRoot\(\)/],
-  ["mcp-server/scripts/process-fabric-wiki.js", /const DATA_DIR = join\(MC_SKILL_ROOT, "data",/],
-  ["mcp-server/scripts/process-forge-docs.js", /const DATA_DIR = join\(__dirname, "\.\.", "\.\.", "data"/],
-  ["mcp-server/scripts/tsrg-extractor.js", /const EXTRACTED = join\(__dirname, "\.\.", "\.\.", "data",/],
-  ["mcp-server/scripts/fetch-embedding-model.mjs", /const cacheDir = join\(dataRoot, "_models"/],
-]);
-const FS_MUTATION_PRIMITIVES = [
-  "writeFileSync",
-  "appendFileSync",
-  "copyFileSync",
-  // 2026-09-15 加固（write-guard 全扫批次）：两词补入后对 159 个脚本零新违例（预扫实证）——
-  // cpSync 真调用仅 release-smoke（写 tmpdir，NW 豁免成立）；writeSync 真调用仅
-  // repair-quilt-indexes（该文件已被 openSync 命中 + DEBT 登记）。补入是为了让「用这两个
-  // 原语写仓库」的未来脚本也被抓住，而不是只依赖 openSync 的连带命中。
-  "cpSync",
-  "writeSync",
-  "mkdirSync",
-  "rmSync",
-  "unlinkSync",
-  "renameSync",
-  "createWriteStream",
-  "openSync",
-  "truncateSync",
-];
-
-function fsMutationPrimitiveRe(fn) {
-  return new RegExp(`\\b(?:fs\\.)?${fn}\\s*\\(`);
-}
 
 /**
- * C-3（sweep81）：异步 / promise 化 / 回调式写盘原语。
- * 旧表只认 `*Sync` ⇒ 实测 11/11 种异步写入形态**完全不可见**（`await fs.promises.writeFile(p,t)`、
- * `import { writeFile } from "node:fs/promises"`、回调式 `fs.writeFile(p,t,cb)`、
- * `await fs.promises.rm(p,{recursive:true})` …）。只收**高置信**形态，避免把同名本地 helper
- * 误判成写盘（sweep80 活体扫描里 12 处异步形态全是同名的本地函数）。
+ * emitAtomic（2026-09-21 必修 2 + 必修 3 第一步）：write-guard 的**同步原子 + 同步退避**落盘出口。
+ * 必须用子进程真跑：`WRITE` 是 write-guard 的模块级 `wantWrite(process.argv)` 常量，同进程改不了。
+ * 四例 —— 「首次失败→退避后成功」与「三次全败」必须**成对**，否则退避只在成功路径上被测过：
+ *   ① plain 无 --write ⇒ 只 DRYRUN、不落盘
+ *   ② plain 带 --write ⇒ 真落盘、内容逐字相等、不留 .tmp
+ *   ③ flaky 带 --write ⇒ 首写抛 -4094、退避后重试成功（退避被摘掉 ⇒ 文件不存在 ⇒ 红）
+ *   ④ 全败  带 --write ⇒ 退出码非 0，且不留 .tmp 残骸、不留半成品（抛前不清 tmp ⇒ 红）
  */
-const FS_ASYNC_MUTATION_PRIMITIVES = [
-  "writeFile",
-  "appendFile",
-  "copyFile",
-  "cp",
-  "rm",
-  "unlink",
-  "rename",
-  "mkdir",
-  "truncate",
-  "open",
-  "createWriteStream",
-];
-
-/** `fs.promises.writeFile(` / `fsp.rm(` / `fsPromises.mkdir(` —— 限定名，无需 import 推断。 */
-function fsPromiseQualifiedRe(fn) {
-  return new RegExp(`\\b(?:fs\\.promises|fsp|fsPromises)\\.${fn}\\s*\\(`);
-}
-
-/** 回调式 `fs.writeFile(` / `fs.rm(` —— 旧表只认 `*Sync`，这一族同样不可见。 */
-function fsCallbackRe(fn) {
-  return new RegExp(`\\bfs\\.${fn}\\s*\\(`);
-}
-
-/** 从 `"node:fs/promises"`（或 `"fs/promises"`）具名 import 进来的写盘原语名。 */
-function promiseImportedPrimitives(text) {
-  const out = new Set();
-  for (const m of text.matchAll(/import\s*\{([^}]*)\}\s*from\s*["'](?:node:)?fs\/promises["']/g)) {
-    for (const raw of m[1].split(",")) {
-      const name = raw.trim().split(/\s+as\s+/)[0].trim();
-      if (FS_ASYNC_MUTATION_PRIMITIVES.includes(name)) out.add(name);
-    }
-  }
-  return out;
-}
-
-/** 单行是否命中「异步写盘」：限定名 / 回调式 / 该文件从 fs/promises 具名导入的原语。 */
-function lineHasAsyncWritePrimitive(line, fn, importedPromiseNames) {
-  if (fsPromiseQualifiedRe(fn).test(line) || fsCallbackRe(fn).test(line)) return true;
-  if (!importedPromiseNames.has(fn)) return false;
-  return new RegExp(`\\b${fn}\\s*\\(`).test(line);
-}
-
-/** 文本里是否出现任何 fs 写盘原语（= 该脚本「能写文件」）。 */
-function scriptWritesFiles(text) {
-  if (FS_MUTATION_PRIMITIVES.some((fn) => fsMutationPrimitiveRe(fn).test(text))) return true;
-  if (FS_ASYNC_MUTATION_PRIMITIVES.some((fn) => fsPromiseQualifiedRe(fn).test(text))) return true;
-  if (FS_ASYNC_MUTATION_PRIMITIVES.some((fn) => fsCallbackRe(fn).test(text))) return true;
-  const imported = promiseImportedPrimitives(text);
-  for (const fn of imported) if (new RegExp(`\\b${fn}\\s*\\(`).test(text)) return true;
-  return false;
-}
-
-/** 在册豁免：NON_WRITERS / DEBT 两张清单之一（依据正则在 testScriptWriteGuardFunnel 里逐条复核）。 */
-function scriptGuardExempt(rel) {
-  return SCRIPT_WRITE_GUARD_NON_WRITERS.has(rel) || SCRIPT_WRITE_GUARD_DEBT.has(rel);
-}
-
-/**
- * 是否要求 write-guard：_oneoff 目录无条件；其余看内容 —— 会写文件，或已经在用 guard 的 API
- * （后者重要：把 import 摘掉但 emit() 调用点还在，必须当场被抓，否则闸门可以悄悄摘）。
- */
-function scriptRequiresGuard(rel, text) {
-  if (rel === SCRIPT_WRITE_GUARD_REL || scriptGuardExempt(rel)) return false;
-  if (SCRIPT_WRITE_GUARD_ALWAYS_DIRS.some((dir) => rel.startsWith(`${dir}/`))) return true;
-  return scriptWritesFiles(text) || /\b(?:emit|emitCopy|wantWrite|logDryRunBanner)\s*\(/.test(text);
-}
-
-function diffScriptWriteGuard(files) {
-  const problems = [];
-  let guardAdopted = 0;
-  let primitiveHits = 0;
-  let outsideGuardHits = 0;
-  let exemptPrimitiveHits = 0;
-  let emitCallSites = 0;
-  for (const file of files) {
-    const isGuard = file.rel === SCRIPT_WRITE_GUARD_REL;
-    const exempt = scriptGuardExempt(file.rel);
-    const importedPromiseNames = promiseImportedPrimitives(file.text); // C-3
-    const importsGuard = /(?:^|\n)\s*(?:import|export)[^;\n]*from\s+["'][^"']*write-guard\.mjs["']/.test(file.text);
-    if (importsGuard) guardAdopted++;
-    if (!isGuard && scriptRequiresGuard(file.rel, file.text) && !importsGuard) {
-      problems.push(`${file.rel}:1 未 import write-guard，会写仓库文件的脚本必须默认 dry-run`);
-    }
-    const exemptBasis = SCRIPT_WRITE_GUARD_NON_WRITERS.get(file.rel) ?? SCRIPT_WRITE_GUARD_DEBT.get(file.rel);
-    if (exemptBasis && !exemptBasis.test(file.text)) {
-      problems.push(
-        `${file.rel}:1 在册豁免依据 ${String(exemptBasis)} 已不成立（不再「只写 cache / 自带闸门」），要么改道 write-guard，要么重签清单`,
-      );
-    }
-    file.text.split(/\r?\n/).forEach((line, idx) => {
-      if (/\b(?:emit|emitCopy)\s*\(/.test(line) && !/\bimport\b/.test(line) && !/\bfunction\s+(?:emit|emitCopy)\b/.test(line)) {
-        emitCallSites++;
-      }
-      for (const fn of FS_MUTATION_PRIMITIVES) {
-        if (!fsMutationPrimitiveRe(fn).test(line)) continue;
-        primitiveHits++;
-        if (isGuard) continue;
-        if (exempt) {
-          exemptPrimitiveHits++;
-          continue;
-        }
-        outsideGuardHits++;
-        problems.push(`${file.rel}:${idx + 1} 直接调用 ${fn}()，写盘必须走 write-guard 的 emit / emitCopy`);
-      }
-      // C-3：旧表只认 `*Sync` ⇒ 异步 / promise 化 / 回调式写入者此前完全不在扫描面（实测 11/11 不可见）。
-      // 注意豁免口径的收窄：两张在册清单只为旧表的 `*Sync` 原语签过字，
-      // 「某文件是 NON_WRITER」不等于「它可以用 fs.promises 写盘」⇒ 豁免文件里出现即算问题。
-      for (const fn of FS_ASYNC_MUTATION_PRIMITIVES) {
-        if (!lineHasAsyncWritePrimitive(line, fn, importedPromiseNames)) continue;
-        primitiveHits++;
-        if (isGuard) continue;
-        if (exempt) {
-          exemptPrimitiveHits++;
-          problems.push(
-            `${file.rel}:${idx + 1} 在册豁免文件出现异步/回调式写盘原语 ${fn}( —— 豁免只覆盖旧表 *Sync 原语，请改道 write-guard 或重签豁免`,
-          );
-          continue;
-        }
-        outsideGuardHits++;
-        problems.push(
-          `${file.rel}:${idx + 1} 异步/回调式写盘原语 ${fn}( 未经 write-guard（C-3：旧表只认 *Sync，这类写入者此前完全不可见）`,
-        );
-      }
+async function testEmitAtomic() {
+  const dir = mkdtempSync(join(tmpdir(), "mc-wg-atomic-"));
+  const outDir = join(dir, "out");
+  const target = join(outDir, "page.md");
+  const runner = join(dir, "run.mjs");
+  const guardUrl = pathToFileURL(join(REPO_ROOT, "scripts", "_lib", "write-guard.mjs")).href;
+  const run = (mode, extraArgs = []) =>
+    spawnSync(process.execPath, [runner, ...extraArgs], {
+      encoding: "utf8",
+      env: { ...process.env, WG_MODE: mode },
     });
-    if (isGuard) {
-      if (!file.text.includes('"--write"')) {
-        problems.push(`${SCRIPT_WRITE_GUARD_REL}:1 缺 "--write" 判定，emit 不再受 dryRun 保护`);
-      }
-      if (!file.text.includes("DRYRUN")) {
-        problems.push(`${SCRIPT_WRITE_GUARD_REL}:1 缺 DRYRUN 输出，dry-run 无从取证`);
-      }
-      if (!/function assertScratch\(/.test(file.text) || !/不许落在仓库内/.test(file.text)) {
-        problems.push(
-          `${SCRIPT_WRITE_GUARD_REL}:1 缺 scratch 仓库路径检查（assertScratch 或其 throw），scratch* 就成了绕过 --write 写仓库的后门`,
-        );
-      }
-    }
-  }
-  return {
-    problems,
-    stats: {
-      scanned: files.length,
-      guardAdopted,
-      primitiveHits,
-      outsideGuardHits,
-      exemptPrimitiveHits,
-      offenders: new Set(problems.map((p) => p.split(":")[0])).size,
-      emitCallSites,
-    },
-  };
-}
+  const leftovers = () => (existsSync(outDir) ? readdirSync(outDir).filter((f) => f.endsWith(".tmp")) : []);
+  try {
+    writeFileSync(
+      runner,
+      [
+        'import { writeFileSync } from "node:fs";',
+        `import { emitAtomic } from ${JSON.stringify(guardUrl)};`,
+        'const mode = process.env.WG_MODE ?? "plain";',
+        `const target = ${JSON.stringify(target)};`,
+        "const delays = [1, 1, 1]; // 自证用 1ms：退避语义靠「调用次数/成败序列」判，不靠真实时长",
+        'if (mode === "flaky") {',
+        "  let n = 0;",
+        "  const w = (f, t) => { n += 1; if (n === 1) throw Object.assign(new Error('UNKNOWN -4094'), { code: 'UNKNOWN' }); return writeFileSync(f, t, 'utf8'); };",
+        '  emitAtomic(target, "payload", { write: w, delays });',
+        '} else if (mode === "allfail") {',
+        "  const w = () => { throw Object.assign(new Error('UNKNOWN -4094'), { code: 'UNKNOWN' }); };",
+        '  emitAtomic(target, "payload", { write: w, delays });',
+        "} else {",
+        '  emitAtomic(target, "hello-atomic", { delays });',
+        "}",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
 
-/** 扫描根缺失记录：缺失即清单失效，由 testScriptWriteGuardFunnel 断言为空。 */
-const SCRIPT_WRITE_GUARD_SCAN_ERRORS = [];
+    // ① 无 --write ⇒ DRYRUN 且不落盘
+    const dry = run("plain");
+    assert.match(`${dry.stdout}${dry.stderr}`, /DRYRUN/, `无 --write 时 emitAtomic 应只 DRYRUN，实得：${dry.stdout}`);
+    assert.ok(!existsSync(target), "emitAtomic 在 dry-run 下不得落盘");
 
-/** 递归列扫描根下全部 .mjs / .js；跳过 node_modules 与点开头目录。 */
-function listScriptModuleFiles(dir, acc = []) {
-  const abs = join(REPO_ROOT, dir);
-  if (!existsSync(abs)) {
-    SCRIPT_WRITE_GUARD_SCAN_ERRORS.push(`扫描根 ${dir} 不存在（改目录要显式改 SCRIPT_WRITE_GUARD_SCAN_DIRS）`);
-    return acc;
-  }
-  for (const e of readdirSync(abs, { withFileTypes: true })) {
-    if (e.name === "node_modules" || e.name.startsWith(".")) continue;
-    const childRel = `${dir}/${e.name}`;
-    if (e.isDirectory()) listScriptModuleFiles(childRel, acc);
-    else if (e.isFile() && SCRIPT_WRITE_GUARD_SCAN_EXTS.some((ext) => e.name.endsWith(ext))) acc.push(childRel);
-  }
-  return acc;
-}
+    // ② 带 --write ⇒ 落盘
+    const wrote = run("plain", ["--write"]);
+    assert.equal(wrote.status, 0, `emitAtomic 应成功：${wrote.stderr}`);
+    assert.match(wrote.stdout, /WROTE/, `带 --write 时 emitAtomic 应落盘，实得：${wrote.stdout}`);
+    assert.equal(readFileSync(target, "utf8"), "hello-atomic", "emitAtomic 写出的内容不符");
+    assert.deepEqual(leftovers(), [], `原子换入后不得留 .tmp 残骸：${leftovers().join(", ")}`);
 
-function listWriteGuardScope() {
-  return SCRIPT_WRITE_GUARD_SCAN_DIRS.flatMap((dir) => listScriptModuleFiles(dir))
-    .sort()
-    .map((rel) => ({ rel, text: readFileSync(join(REPO_ROOT, rel), "utf8") }));
+    // ③ 首次失败 → 退避重试成功
+    rmSync(outDir, { recursive: true, force: true });
+    const flaky = run("flaky", ["--write"]);
+    assert.equal(flaky.status, 0, `退避重试后应成功：${flaky.stderr}`);
+    assert.equal(readFileSync(target, "utf8"), "payload", "退避重试后内容不符");
+    assert.deepEqual(leftovers(), [], `退避重试成功后不得留 .tmp：${leftovers().join(", ")}`);
+
+    // ④ 三次全败 ⇒ 抛出且不留残骸/半成品
+    rmSync(outDir, { recursive: true, force: true });
+    const allfail = run("allfail", ["--write"]);
+    assert.notEqual(allfail.status, 0, "三次全败必须让退出码非 0");
+    assert.ok(!existsSync(target), "全败时不得留下半成品目标文件");
+    assert.deepEqual(leftovers(), [], `全败后不得留 .tmp 残骸：${leftovers().join(", ")}`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 }
 
 async function testScriptWriteGuardFunnel() {
   const files = listWriteGuardScope();
   const base = { files };
-  assert.ok(
-    files.some((f) => f.rel === SCRIPT_WRITE_GUARD_REL),
-    "门禁扫描范围必须含 write-guard.mjs 本身（否则唯一出口失控也查不出来）",
-  );
-  assert.ok(
-    files.some((f) => f.rel.startsWith("scripts/_oneoff/")),
-    "门禁扫描范围必须含 scripts/_oneoff/ 脚本",
-  );
-  for (const rel of SCRIPT_WRITE_GUARD_FILES) {
-    assert.ok(
-      files.some((f) => f.rel === rel),
-      `门禁扫描范围必须含点名的写仓库 data/ 脚本 ${rel}（改名或删文件要显式改本清单）`,
-    );
-  }
+  // 扫描面 / 清单覆盖自证：判据抽成纯函数 `checkGuardScopeCoverage`，与第 8 步链的
+  // assert-script-write-guard.mjs 共用同一份（原先是本文件内联的一串 assert.ok）。
+  // 关键的反向腿在这：豁免条目**必须命中一个被枚举到的文件** —— 本门扫描面走盘（含未跟踪与
+  // gitignore 文件），缺了这条，文件一删锚就静默失效、没人报僵尸项。
+  assert.deepEqual(checkGuardScopeCoverage(files), [], "扫描面 / 清单覆盖自证失败");
   const scanSurface = SCRIPT_WRITE_GUARD_SCAN_DIRS.map((d) => `${d}/**{${SCRIPT_WRITE_GUARD_SCAN_EXTS.join(",")}}`).join(" + ");
   assert.deepEqual(
     SCRIPT_WRITE_GUARD_SCAN_ERRORS,
     [],
     `扫描根缺失即清单全体失效：\n${SCRIPT_WRITE_GUARD_SCAN_ERRORS.join("\n")}`,
   );
-  for (const dir of SCRIPT_WRITE_GUARD_SCAN_DIRS) {
-    assert.ok(
-      files.some((f) => f.rel.startsWith(`${dir}/`)),
-      `扫描根 ${dir} 一个文件都没列到（扩面被回退 / 目录改名），本门禁已不再覆盖它`,
-    );
-  }
-  for (const rel of [...SCRIPT_WRITE_GUARD_NON_WRITERS.keys(), ...SCRIPT_WRITE_GUARD_DEBT.keys()]) {
-    assert.ok(
-      files.some((f) => f.rel === rel),
-      `豁免清单条目 ${rel} 已不在 ${scanSurface} 扫描范围内（改名或删除要显式改清单）`,
-    );
-    assert.ok(
-      !(SCRIPT_WRITE_GUARD_NON_WRITERS.has(rel) && SCRIPT_WRITE_GUARD_DEBT.has(rel)),
-      `${rel} 不得同时挂在 NON_WRITERS 与 DEBT 两张清单`,
-    );
-  }
   // R1/R2/R3 回归：这四个脚本以前无条件写仓库 mcp-server/data/，现在必须已改道 write-guard。
   // fetch-loader-api-sources 是 P0-6 第 4 处：以前挂在 DEBT 清单上，门禁从不逐行看它，
   // 把 mkdirSync(OUT) 挪回无条件区照样绿（实测）。移出债务清单后这里才真的咬得住。
@@ -8137,6 +7905,7 @@ await testDocsToolTablesMatchRegistry();
 testPublishChecklistFromCommunityDoc();
 testBedrockMisdetectionFixed();
 await testScriptWriteGuardFunnel();
+await testEmitAtomic();
 testResidueDirsReport();
 testCommunityIndexSync();
 // ── S13（F2 / F3 / F110）：版本清单数值序 + VERSION_NOT_FOUND 四平台同键 ──────

@@ -1,13 +1,17 @@
 ---
 title: "EntityFishWakeFX"
-description: "Called to update the entity's position/logic."
+description: "public class EntityFishWakeFX extends EntityFX"
 package: "net/minecraft/client/particle"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/particle/EntityFishWakeFX.html"
 sourceType: javadoc
 ---
 
 # EntityFishWakeFX
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.client.particle.EntityFX → net.minecraft.client.particle.EntityFishWakeFX
 
 ## Class signature
 
@@ -15,14 +19,10 @@ sourceType: javadoc
 public class EntityFishWakeFX extends EntityFX
 ```
 
-## Constructors
-
-- `protected EntityFishWakeFX( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double p_i45073_8_, double p_i45073_10_, double p_i45073_12_)`
-
 ## Methods
 
-- `public void onUpdate()`
+- `void onUpdate()` — Called to update the entity's position/logic.
 
-## Description
+## Fields
 
-Called to update the entity's position/logic.
+- `protected EntityFishWakeFX`

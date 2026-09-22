@@ -1,5 +1,7 @@
 # MessageContext
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.network.simpleimpl.MessageContext
+
 ## Class signature
 
 ```java
@@ -8,9 +10,10 @@ public class MessageContext extends java.lang.Object
 
 ## Methods
 
-- `public NetHandlerPlayServer getServerHandler()`
-- `public NetHandlerPlayClient getClientHandler()`
+- `NetHandlerPlayClient getClientHandler()`
+- `NetHandlerPlayServer getServerHandler()`
 
-## Description
+## Fields
 
-Context for the IMessageHandler
+- `INetHandler netHandler` — The INetHandler for this message.
+- `Side side` — The Side this message has been received on

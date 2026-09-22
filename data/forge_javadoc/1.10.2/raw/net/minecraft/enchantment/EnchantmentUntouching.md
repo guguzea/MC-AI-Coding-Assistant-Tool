@@ -3,11 +3,15 @@ title: "EnchantmentUntouching"
 description: "public class EnchantmentUntouching extends Enchantment"
 package: "net/minecraft/enchantment"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/enchantment/EnchantmentUntouching.html"
 sourceType: javadoc
 ---
 
 # EnchantmentUntouching
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Enchantment> → net.minecraft.enchantment.Enchantment → net.minecraft.enchantment.EnchantmentUntouching
 
 ## Class signature
 
@@ -15,13 +19,13 @@ sourceType: javadoc
 public class EnchantmentUntouching extends Enchantment
 ```
 
-## Constructors
-
-- `protected EnchantmentUntouching( Enchantment.Rarity rarityIn, EntityEquipmentSlot ... slots)`
-
 ## Methods
 
-- `public int getMinEnchantability(int enchantmentLevel)`
-- `public int getMaxEnchantability(int enchantmentLevel)`
-- `public int getMaxLevel()`
-- `public boolean canApplyTogether( Enchantment ench)`
+- `boolean canApplyTogether(Enchantment ench)`
+- `int getMaxEnchantability(int enchantmentLevel)`
+- `int getMaxLevel()`
+- `int getMinEnchantability(int enchantmentLevel)`
+
+## Fields
+
+- `protected EnchantmentUntouching`

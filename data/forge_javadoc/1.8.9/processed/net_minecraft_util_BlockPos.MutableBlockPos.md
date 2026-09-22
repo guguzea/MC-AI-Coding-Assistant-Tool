@@ -1,18 +1,22 @@
 # BlockPos.MutableBlockPos
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.util.Vec3i → net.minecraft.util.BlockPos → net.minecraft.util.BlockPos.MutableBlockPos
 
-- `public MutableBlockPos()`
-- `public MutableBlockPos(int x_, int y_, int z_)`
+## Class signature
+
+```java
+public static final class BlockPos.MutableBlockPos extends BlockPos
+```
 
 ## Methods
 
-- `public int getX()`
-- `public int getY()`
-- `public int getZ()`
-- `public BlockPos.MutableBlockPos set(int xIn, int yIn, int zIn)`
-- `public BlockPos getImmutable()`
+- `BlockPos getImmutable()` — Returns a version of this BlockPos that is guaranteed to be Immutable.
+- `int getX()` — Get the X coordinate
+- `int getY()` — Get the Y coordinate
+- `int getZ()` — Get the Z coordinate
+- `BlockPos.MutableBlockPos set(int xIn, int yIn, int zIn)` — Set the values
 
-## Description
+## Fields
 
-Returns a version of this BlockPos that is guaranteed to be Immutable.
+- `MutableBlockPos`
+- `MutableBlockPos`

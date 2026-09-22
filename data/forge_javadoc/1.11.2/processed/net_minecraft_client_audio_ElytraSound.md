@@ -1,15 +1,17 @@
 # ElytraSound
 
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.PositionedSound → net.minecraft.client.audio.MovingSound → net.minecraft.client.audio.ElytraSound
+
 ## Class signature
 
 ```java
 public class ElytraSound extends MovingSound
 ```
 
-## Constructors
-
-- `public ElytraSound( EntityPlayerSP p_i47113_1_)`
-
 ## Methods
 
-- `public void update()`
+- `void update()`
+
+## Fields
+
+- `ElytraSound`

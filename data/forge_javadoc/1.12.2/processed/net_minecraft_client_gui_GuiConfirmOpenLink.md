@@ -1,19 +1,21 @@
 # GuiConfirmOpenLink
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiYesNo → net.minecraft.client.gui.GuiConfirmOpenLink
+
 ## Class signature
 
 ```java
 public class GuiConfirmOpenLink extends GuiYesNo
 ```
 
-## Constructors
-
-- `public GuiConfirmOpenLink( GuiYesNoCallback parentScreenIn, java.lang.String linkTextIn, int parentButtonClickedIdIn, boolean trusted)`
-
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void copyLinkToClipboard()`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `public void disableSecurityWarning()`
+- `protected void actionPerformed(GuiButton button)`
+- `void copyLinkToClipboard()`
+- `void disableSecurityWarning()`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void initGui()`
+
+## Fields
+
+- `GuiConfirmOpenLink`

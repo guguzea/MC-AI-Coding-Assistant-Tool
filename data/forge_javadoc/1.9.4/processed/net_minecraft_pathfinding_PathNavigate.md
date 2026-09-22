@@ -1,5 +1,7 @@
 # PathNavigate
 
+**Inheritance:** java.lang.Object → net.minecraft.pathfinding.PathNavigate
+
 ## Class signature
 
 ```java
@@ -8,31 +10,39 @@ public abstract class PathNavigate extends java.lang.Object
 
 ## Constructors
 
-- `public PathNavigate( EntityLiving entitylivingIn, World worldIn)`
+- `PathNavigate(EntityLiving entitylivingIn, World worldIn)`
 
 ## Methods
 
-- `protected abstract PathFinder getPathFinder()`
-- `public void setSpeed(double speedIn)`
-- `public float getPathSearchRange()`
-- `public boolean canUpdatePathOnTimeout()`
-- `public void updatePath()`
-- `@Nullable public final Path getPathToXYZ(double x, double y, double z)`
-- `@Nullable public Path getPathToPos( BlockPos pos)`
-- `@Nullable public Path getPathToEntityLiving( Entity entityIn)`
-- `public boolean tryMoveToXYZ(double x, double y, double z, double speedIn)`
-- `public boolean tryMoveToEntityLiving( Entity entityIn, double speedIn)`
-- `public boolean setPath(@Nullable Path pathentityIn, double speedIn)`
-- `@Nullable public Path getPath()`
-- `public void onUpdateNavigation()`
-- `protected void pathFollow()`
-- `protected void checkForStuck( Vec3d positionVec3)`
-- `public boolean noPath()`
-- `public void clearPathEntity()`
-- `protected abstract Vec3d getEntityPosition()`
+- `boolean canEntityStandOnPos(BlockPos pos)`
 - `protected abstract boolean canNavigate()`
+- `boolean canUpdatePathOnTimeout()`
+- `protected void checkForStuck(Vec3d positionVec3)`
+- `void clearPathEntity()`
+- `protected abstract Vec3d getEntityPosition()`
+- `NodeProcessor getNodeProcessor()`
+- `Path getPath()`
+- `protected abstract PathFinder getPathFinder()`
+- `float getPathSearchRange()`
+- `Path getPathToEntityLiving(Entity entityIn)`
+- `Path getPathToPos(BlockPos pos)`
+- `Path getPathToXYZ(double x, double y, double z)`
+- `protected abstract boolean isDirectPathBetweenPoints(Vec3d posVec31, Vec3d posVec32, int sizeX, int sizeY, int sizeZ)`
 - `protected boolean isInLiquid()`
+- `boolean noPath()`
+- `void onUpdateNavigation()`
+- `protected void pathFollow()`
 - `protected void removeSunnyPath()`
-- `protected abstract boolean isDirectPathBetweenPoints( Vec3d posVec31, Vec3d posVec32, int sizeX, int sizeY, int sizeZ)`
-- `public boolean canEntityStandOnPos( BlockPos pos)`
-- `public NodeProcessor getNodeProcessor()`
+- `boolean setPath(Path pathentityIn, double speedIn)`
+- `void setSpeed(double speedIn)`
+- `boolean tryMoveToEntityLiving(Entity entityIn, double speedIn)`
+- `boolean tryMoveToXYZ(double x, double y, double z, double speedIn)`
+- `void updatePath()`
+
+## Fields
+
+- `protected Path currentPath`
+- `protected NodeProcessor nodeProcessor`
+- `protected double speed`
+- `protected EntityLiving theEntity`
+- `protected World worldObj`

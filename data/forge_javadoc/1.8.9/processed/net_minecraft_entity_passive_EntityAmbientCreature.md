@@ -1,20 +1,18 @@
 # EntityAmbientCreature
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.passive.EntityAmbientCreature
+
 ## Class signature
 
 ```java
 public abstract class EntityAmbientCreature extends EntityLiving implements IAnimals
 ```
 
-## Constructors
-
-- `public EntityAmbientCreature( World worldIn)`
-
 ## Methods
 
-- `public boolean allowLeashing()`
-- `protected boolean interact( EntityPlayer player)`
+- `boolean allowLeashing()`
+- `protected boolean interact(EntityPlayer player)` — Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
 
-## Description
+## Fields
 
-Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+- `EntityAmbientCreature`

@@ -1,5 +1,7 @@
 # VboChunkFactory
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.chunk.VboChunkFactory
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class VboChunkFactory extends java.lang.Object implements IRenderChunkFac
 
 ## Constructors
 
-- `public VboChunkFactory()`
+- `VboChunkFactory()`
 
 ## Methods
 
-- `public RenderChunk makeRenderChunk( World worldIn, RenderGlobal globalRenderer, BlockPos pos, int index)`
+- `RenderChunk makeRenderChunk(World worldIn, RenderGlobal globalRenderer, BlockPos pos, int index)`

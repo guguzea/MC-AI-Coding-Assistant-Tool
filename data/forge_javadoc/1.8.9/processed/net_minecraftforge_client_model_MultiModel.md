@@ -1,5 +1,7 @@
 # MultiModel
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.MultiModel
+
 ## Class signature
 
 ```java
@@ -8,16 +10,23 @@ public class MultiModel extends java.lang.Object implements IModel
 
 ## Constructors
 
-- `public MultiModel( ResourceLocation location, IModel base, IModelState baseState, <any> parts)`
-- `public MultiModel( IModel base, IModelState baseState, <any> parts)`
-- `public MultiModel( IModel base, IModelState baseState, java.util.Map<java.lang.String,<any>> parts)`
-- `public MultiModel( ResourceLocation location, IModel base, IModelState baseState, java.util.Map<java.lang.String,<any>> parts)`
+- `MultiModel(IModel base, IModelState baseState, <any> parts)`
+- `MultiModel(IModel base, IModelState baseState, java.util.Map<java.lang.String, <any>> parts)`
+- `MultiModel(ResourceLocation location, IModel base, IModelState baseState, <any> parts)`
+- `MultiModel(ResourceLocation location, IModel base, IModelState baseState, java.util.Map<java.lang.String, <any>> parts)`
 
 ## Methods
 
-- `public java.util.Collection< ResourceLocation > getDependencies()`
-- `public java.util.Collection< ResourceLocation > getTextures()`
-- `public IFlexibleBakedModel bake( IModelState state, VertexFormat format, <any> bakedTextureGetter)`
-- `public IModel getBaseModel()`
-- `public java.util.Map<java.lang.String,<any>> getParts()`
-- `public IModelState getDefaultState()`
+- `IFlexibleBakedModel bake(IModelState state, VertexFormat format, <any> bakedTextureGetter)`
+- `IModel getBaseModel()`
+- `IModelState getDefaultState()`
+- `java.util.Collection<ResourceLocation> getDependencies()`
+- `java.util.Map<java.lang.String, <any>> getParts()`
+- `java.util.Collection<ResourceLocation> getTextures()`
+
+## Fields
+
+- `protected IModel base`
+- `protected IModelState baseState`
+- `protected ResourceLocation location`
+- `protected java.util.Map<java.lang.String, <any>> parts`

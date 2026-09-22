@@ -1,13 +1,17 @@
 ---
 title: "CrashReport"
-description: "Gets the stack trace of the Throwable that caused this crash report, or if that fails, the cause .toString()."
+description: "public class CrashReport extends java.lang.Object"
 package: "net/minecraft/crash"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/crash/CrashReport.html"
 sourceType: javadoc
 ---
 
 # CrashReport
+
+**Inheritance:** java.lang.Object → net.minecraft.crash.CrashReport
 
 ## Class signature
 
@@ -17,22 +21,18 @@ public class CrashReport extends java.lang.Object
 
 ## Constructors
 
-- `public CrashReport(java.lang.String descriptionIn, java.lang.Throwable causeThrowable)`
+- `CrashReport(java.lang.String descriptionIn, java.lang.Throwable causeThrowable)`
 
 ## Methods
 
-- `public java.lang.String getDescription()`
-- `public java.lang.Throwable getCrashCause()`
-- `public void getSectionsInStringBuilder(java.lang.StringBuilder builder)`
-- `public java.lang.String getCauseStackTraceOrString()`
-- `public java.lang.String getCompleteReport()`
-- `public java.io.File getFile()`
-- `public boolean saveToFile(java.io.File toFile)`
-- `public CrashReportCategory getCategory()`
-- `public CrashReportCategory makeCategory(java.lang.String name)`
-- `public CrashReportCategory makeCategoryDepth(java.lang.String categoryName, int stacktraceLength)`
-- `public static CrashReport makeCrashReport(java.lang.Throwable causeIn, java.lang.String descriptionIn)`
-
-## Description
-
-Gets the stack trace of the Throwable that caused this crash report, or if that fails, the cause .toString().
+- `CrashReportCategory getCategory()`
+- `java.lang.String getCauseStackTraceOrString()` — Gets the stack trace of the Throwable that caused this crash report, or if that fails, the cause .toString().
+- `java.lang.String getCompleteReport()` — Gets the complete report with headers, stack trace, and different sections as a string.
+- `java.lang.Throwable getCrashCause()` — Returns the Throwable object that is the cause for the crash and Crash Report.
+- `java.lang.String getDescription()` — Returns the description of the Crash Report.
+- `java.io.File getFile()` — Gets the file this crash report is saved into.
+- `void getSectionsInStringBuilder(java.lang.StringBuilder builder)` — Gets the various sections of the crash report into the given StringBuilder
+- `CrashReportCategory makeCategory(java.lang.String name)` — Creates a CrashReportCategory
+- `CrashReportCategory makeCategoryDepth(java.lang.String categoryName, int stacktraceLength)` — Creates a CrashReportCategory for the given stack trace depth
+- `static CrashReport makeCrashReport(java.lang.Throwable causeIn, java.lang.String descriptionIn)` — Creates a crash report for the exception
+- `boolean saveToFile(java.io.File toFile)` — Saves this CrashReport to the given file and returns a value indicating whether we were successful at doing so.

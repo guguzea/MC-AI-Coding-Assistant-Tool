@@ -1,19 +1,25 @@
 ---
 title: "BossInfo.Overlay"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum BossInfo.Overlay extends java.lang.Enum<BossInfo.Overlay>"
 package: "net/minecraft/world"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/BossInfo.Overlay.html"
 sourceType: javadoc
 ---
 
 # BossInfo.Overlay
 
+**Inheritance:** java.lang.Object → java.lang.Enum<BossInfo.Overlay> → net.minecraft.world.BossInfo.Overlay
+
+## Class signature
+
+```java
+public static enum BossInfo.Overlay extends java.lang.Enum<BossInfo.Overlay>
+```
+
 ## Methods
 
-- `public static BossInfo.Overlay [] values()`
-- `public static BossInfo.Overlay valueOf(java.lang.String name)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static BossInfo.Overlay valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static BossInfo.Overlay [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

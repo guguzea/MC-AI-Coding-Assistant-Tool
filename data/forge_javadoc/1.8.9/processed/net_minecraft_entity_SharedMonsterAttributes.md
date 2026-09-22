@@ -1,5 +1,7 @@
 # SharedMonsterAttributes
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.SharedMonsterAttributes
+
 ## Class signature
 
 ```java
@@ -8,14 +10,18 @@ public class SharedMonsterAttributes extends java.lang.Object
 
 ## Constructors
 
-- `public SharedMonsterAttributes()`
+- `SharedMonsterAttributes()`
 
 ## Methods
 
-- `public static NBTTagList writeBaseAttributeMapToNBT( BaseAttributeMap p_111257_0_)`
-- `public static void func_151475_a( BaseAttributeMap p_151475_0_, NBTTagList p_151475_1_)`
-- `public static AttributeModifier readAttributeModifierFromNBT( NBTTagCompound p_111259_0_)`
+- `static void func_151475_a(BaseAttributeMap p_151475_0_, NBTTagList p_151475_1_)`
+- `static AttributeModifier readAttributeModifierFromNBT(NBTTagCompound p_111259_0_)` — Creates an AttributeModifier from an NBTTagCompound
+- `static NBTTagList writeBaseAttributeMapToNBT(BaseAttributeMap p_111257_0_)` — Creates an NBTTagList from a BaseAttributeMap, including all its AttributeInstances
 
-## Description
+## Fields
 
-Creates an AttributeModifier from an NBTTagCompound
+- `static IAttribute attackDamage`
+- `static IAttribute followRange`
+- `static IAttribute knockbackResistance`
+- `static IAttribute maxHealth`
+- `static IAttribute movementSpeed`

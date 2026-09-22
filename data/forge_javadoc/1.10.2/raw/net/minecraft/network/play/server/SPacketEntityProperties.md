@@ -1,29 +1,33 @@
 ---
 title: "SPacketEntityProperties"
-description: "public class SPacketEntityProperties extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketEntityProperties extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/network/play/server/SPacketEntityProperties.html"
 sourceType: javadoc
 ---
 
 # SPacketEntityProperties
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketEntityProperties
+
 ## Class signature
 
 ```java
-public class SPacketEntityProperties extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketEntityProperties extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketEntityProperties()`
-- `public SPacketEntityProperties(int entityIdIn, java.util.Collection< IAttributeInstance > instances)`
+- `SPacketEntityProperties()`
+- `SPacketEntityProperties(int entityIdIn, java.util.Collection<IAttributeInstance> instances)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public int getEntityId()`
-- `public java.util.List< SPacketEntityProperties.Snapshot > getSnapshots()`
+- `int getEntityId()`
+- `java.util.List<SPacketEntityProperties.Snapshot> getSnapshots()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

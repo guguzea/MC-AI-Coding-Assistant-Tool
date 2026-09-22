@@ -1,15 +1,17 @@
 # AdvancementToast
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.toasts.AdvancementToast
+
 ## Class signature
 
 ```java
 public class AdvancementToast extends java.lang.Object implements IToast
 ```
 
-## Constructors
-
-- `public AdvancementToast( Advancement advancementIn)`
-
 ## Methods
 
-- `public IToast.Visibility draw( GuiToast toastGui, long delta)`
+- `IToast.Visibility draw(GuiToast toastGui, long delta)`
+
+## Fields
+
+- `AdvancementToast`

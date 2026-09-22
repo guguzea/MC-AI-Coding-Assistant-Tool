@@ -3,11 +3,15 @@ title: "MouseFilter"
 description: "public class MouseFilter extends java.lang.Object"
 package: "net/minecraft/util"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/util/MouseFilter.html"
 sourceType: javadoc
 ---
 
 # MouseFilter
+
+**Inheritance:** java.lang.Object → net.minecraft.util.MouseFilter
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class MouseFilter extends java.lang.Object
 
 ## Constructors
 
-- `public MouseFilter()`
+- `MouseFilter()`
 
 ## Methods
 
-- `public float smooth(float p_76333_1_, float p_76333_2_)`
-- `public void reset()`
+- `void reset()`
+- `float smooth(float p_76333_1_, float p_76333_2_)`

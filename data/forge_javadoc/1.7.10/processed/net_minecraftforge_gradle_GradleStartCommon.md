@@ -1,5 +1,7 @@
 # GradleStartCommon
 
+**Inheritance:** java.lang.Object → net.minecraftforge.gradle.GradleStartCommon
+
 ## Class signature
 
 ```java
@@ -8,14 +10,19 @@ public abstract class GradleStartCommon extends java.lang.Object
 
 ## Constructors
 
-- `public GradleStartCommon()`
+- `GradleStartCommon()`
 
 ## Methods
 
-- `protected abstract void setDefaultArguments(java.util.Map<java.lang.String,java.lang.String> argMap)`
-- `protected abstract void preLaunch(java.util.Map<java.lang.String,java.lang.String> argMap, java.util.List<java.lang.String> extras)`
 - `protected abstract java.lang.String getBounceClass()`
+- `protected static java.lang.Class getFmlClass(java.lang.String classname)`
+- `static java.lang.Class getFmlClass(java.lang.String classname, java.lang.ClassLoader loader)`
 - `protected abstract java.lang.String getTweakClass()`
-- `protected void launch(java.lang.String[] args) throws java.lang.Throwable`
-- `protected static java.lang.Class getFmlClass(java.lang.String classname) throws java.lang.ClassNotFoundException`
-- `public static java.lang.Class getFmlClass(java.lang.String classname, java.lang.ClassLoader loader) throws java.lang.ClassNotFoundException`
+- `protected void launch(java.lang.String[] args)`
+- `protected abstract void preLaunch(java.util.Map<java.lang.String, java.lang.String> argMap, java.util.List<java.lang.String> extras)`
+- `protected abstract void setDefaultArguments(java.util.Map<java.lang.String, java.lang.String> argMap)`
+
+## Fields
+
+- `static java.util.Map<java.lang.String, java.io.File> coreMap`
+- `protected static Logger LOGGER`

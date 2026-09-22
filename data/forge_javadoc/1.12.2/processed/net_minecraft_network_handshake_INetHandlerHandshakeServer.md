@@ -8,4 +8,4 @@ public interface INetHandlerHandshakeServer extends INetHandler
 
 ## Methods
 
-- `void processHandshake( C00Handshake packetIn)`
+- `void processHandshake(C00Handshake packetIn)`

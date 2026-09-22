@@ -1,21 +1,31 @@
 ---
 title: "Properties.PropertyAdapter"
-description: ""
+description: "public static class Properties.PropertyAdapter<V extends java.lang.Comparable<V>> extends java.lang.Object implements IUnlistedProperty<V>"
 package: "net/minecraftforge/common/property"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/common/property/Properties.PropertyAdapter.html"
 sourceType: javadoc
 ---
 
 # Properties.PropertyAdapter
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.property.Properties.PropertyAdapter<V>
+
+## Class signature
+
+```java
+public static class Properties.PropertyAdapter<V extends java.lang.Comparable<V>> extends java.lang.Object implements IUnlistedProperty<V>
+```
+
 ## Constructors
 
-- `public PropertyAdapter( IProperty < V > parent)`
+- `PropertyAdapter(IProperty<V> parent)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public boolean isValid( V value)`
-- `public java.lang.Class< V > getType()`
-- `public java.lang.String valueToString( V value)`
+- `java.lang.String getName()`
+- `java.lang.Class<V> getType()`
+- `boolean isValid(V value)`
+- `java.lang.String valueToString(V value)`

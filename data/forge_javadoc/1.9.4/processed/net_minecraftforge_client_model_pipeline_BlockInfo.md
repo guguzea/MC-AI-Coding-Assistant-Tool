@@ -1,5 +1,7 @@
 # BlockInfo
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.pipeline.BlockInfo
+
 ## Class signature
 
 ```java
@@ -8,26 +10,26 @@ public class BlockInfo extends java.lang.Object
 
 ## Constructors
 
-- `public BlockInfo( BlockColors colors)`
+- `BlockInfo(BlockColors colors)`
 
 ## Methods
 
-- `public int getColorMultiplier(int tint)`
-- `public void updateShift()`
-- `public void updateShift(boolean ignoreY)`
-- `public void setWorld( IBlockAccess world)`
-- `public void setState( IBlockState state)`
-- `public void setBlockPos( BlockPos blockPos)`
-- `public void updateLightMatrix()`
-- `public IBlockAccess getWorld()`
-- `public IBlockState getState()`
-- `public BlockPos getBlockPos()`
-- `public boolean[][][] getTranslucent()`
-- `public float[][][][] getSkyLight()`
-- `public float[][][][] getBlockLight()`
-- `public float[][][] getAo()`
-- `public float getShx()`
-- `public float getShy()`
-- `public float getShz()`
-- `public int getCachedTint()`
-- `public int getCachedMultiplier()`
+- `float[][][] getAo()`
+- `float[][][][] getBlockLight()`
+- `BlockPos getBlockPos()`
+- `int getCachedMultiplier()`
+- `int getCachedTint()`
+- `int getColorMultiplier(int tint)`
+- `float getShx()`
+- `float getShy()`
+- `float getShz()`
+- `float[][][][] getSkyLight()`
+- `IBlockState getState()`
+- `boolean[][][] getTranslucent()`
+- `IBlockAccess getWorld()`
+- `void setBlockPos(BlockPos blockPos)`
+- `void setState(IBlockState state)`
+- `void setWorld(IBlockAccess world)`
+- `void updateLightMatrix()`
+- `void updateShift()`
+- `void updateShift(boolean ignoreY)`

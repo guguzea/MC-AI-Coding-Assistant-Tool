@@ -1,5 +1,7 @@
 # CapabilityAnimation
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.model.animation.CapabilityAnimation
+
 ## Class signature
 
 ```java
@@ -8,8 +10,12 @@ public class CapabilityAnimation extends java.lang.Object
 
 ## Constructors
 
-- `public CapabilityAnimation()`
+- `CapabilityAnimation()`
 
 ## Methods
 
-- `public static void register()`
+- `static void register()`
+
+## Fields
+
+- `static Capability<IAnimationStateMachine> ANIMATION_CAPABILITY`

@@ -1,9 +1,13 @@
 # PlayerUseItemEvent.Tick
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerUseItemEvent → net.minecraftforge.event.entity.player.PlayerUseItemEvent.Tick
 
-- `public Tick( EntityPlayer player, ItemStack item, int duration)`
+## Class signature
 
-## Description
+```java
+public static class PlayerUseItemEvent.Tick extends PlayerUseItemEvent
+```
 
-Fired every tick that a player is 'using' an item, see PlayerUseItemEvent.Start for info. Cancel the event, or set the duration or <= 0 to cause the player to stop using the item.
+## Fields
+
+- `Tick`

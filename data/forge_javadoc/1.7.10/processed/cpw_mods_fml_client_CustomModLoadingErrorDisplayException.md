@@ -1,5 +1,7 @@
 # CustomModLoadingErrorDisplayException
 
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.lang.RuntimeException → cpw.mods.fml.common.EnhancedRuntimeException → cpw.mods.fml.client.CustomModLoadingErrorDisplayException
+
 ## Class signature
 
 ```java
@@ -8,15 +10,11 @@ public abstract class CustomModLoadingErrorDisplayException extends EnhancedRunt
 
 ## Constructors
 
-- `public CustomModLoadingErrorDisplayException()`
-- `public CustomModLoadingErrorDisplayException(java.lang.String message, java.lang.Throwable cause)`
+- `CustomModLoadingErrorDisplayException()`
+- `CustomModLoadingErrorDisplayException(java.lang.String message, java.lang.Throwable cause)`
 
 ## Methods
 
-- `public abstract void initGui( GuiErrorScreen errorScreen, FontRenderer fontRenderer)`
-- `public abstract void drawScreen( GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime)`
-- `public void printStackTrace( EnhancedRuntimeException.WrappedPrintStream s)`
-
-## Description
-
-If a mod throws this exception during loading, it will be called back to render the error screen through the methods below. This error will not be cleared, and will not allow the game to carry on, but
+- `abstract void drawScreen(GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime)` — Draw your error to the screen.
+- `abstract void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer)` — Called after the GUI is inited by the parent code.
+- `void printStackTrace(EnhancedRuntimeException.WrappedPrintStream s)`

@@ -3,6 +3,8 @@ title: "IPhase"
 description: "public interface IPhase"
 package: "net/minecraft/entity/boss/dragon/phase"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/boss/dragon/phase/IPhase.html"
 sourceType: javadoc
 ---
@@ -17,14 +19,14 @@ public interface IPhase
 
 ## Methods
 
-- `boolean getIsStationary()`
 - `void doClientRenderEffects()`
 - `void doLocalUpdate()`
-- `void onCrystalDestroyed( EntityEnderCrystal crystal, BlockPos pos, DamageSource dmgSrc, EntityPlayer plyr)`
-- `void initPhase()`
-- `void removeAreaEffect()`
+- `float getAdjustedDamage(MultiPartEntityPart pt, DamageSource src, float damage)`
+- `boolean getIsStationary()`
 - `float getMaxRiseOrFall()`
-- `float getYawFactor()`
-- `PhaseList <? extends IPhase > getType()`
 - `Vec3d getTargetLocation()`
-- `float getAdjustedDamage( MultiPartEntityPart pt, DamageSource src, float damage)`
+- `PhaseList<? extends IPhase> getType()`
+- `float getYawFactor()`
+- `void initPhase()`
+- `void onCrystalDestroyed(EntityEnderCrystal crystal, BlockPos pos, DamageSource dmgSrc, EntityPlayer plyr)`
+- `void removeAreaEffect()`

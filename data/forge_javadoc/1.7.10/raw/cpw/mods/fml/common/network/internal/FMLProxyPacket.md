@@ -3,11 +3,15 @@ title: "FMLProxyPacket"
 description: "public class FMLProxyPacket extends Packet"
 package: "cpw/mods/fml/common/network/internal"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/network/internal/FMLProxyPacket.html"
 sourceType: javadoc
 ---
 
 # FMLProxyPacket
+
+**Inheritance:** java.lang.Object → net.minecraft.network.Packet → cpw.mods.fml.common.network.internal.FMLProxyPacket
 
 ## Class signature
 
@@ -17,22 +21,22 @@ public class FMLProxyPacket extends Packet
 
 ## Constructors
 
-- `public FMLProxyPacket( S3FPacketCustomPayload original)`
-- `public FMLProxyPacket( C17PacketCustomPayload original)`
-- `public FMLProxyPacket(ByteBuf payload, java.lang.String channel)`
+- `FMLProxyPacket(ByteBuf payload, java.lang.String channel)`
+- `FMLProxyPacket(C17PacketCustomPayload original)`
+- `FMLProxyPacket(S3FPacketCustomPayload original)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer packetbuffer) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer packetbuffer) throws java.io.IOException`
-- `public void processPacket( INetHandler inethandler)`
-- `public java.lang.String channel()`
-- `public ByteBuf payload()`
-- `public INetHandler handler()`
-- `public Packet toC17Packet()`
-- `public Packet toS3FPacket()`
-- `public void setTarget( Side target)`
-- `public void setDispatcher( NetworkDispatcher networkDispatcher)`
-- `public NetworkManager getOrigin()`
-- `public NetworkDispatcher getDispatcher()`
-- `public Side getTarget()`
+- `java.lang.String channel()`
+- `NetworkDispatcher getDispatcher()`
+- `NetworkManager getOrigin()`
+- `Side getTarget()`
+- `INetHandler handler()`
+- `ByteBuf payload()`
+- `void processPacket(INetHandler inethandler)`
+- `void readPacketData(PacketBuffer packetbuffer)`
+- `void setDispatcher(NetworkDispatcher networkDispatcher)`
+- `void setTarget(Side target)`
+- `Packet toC17Packet()`
+- `Packet toS3FPacket()`
+- `void writePacketData(PacketBuffer packetbuffer)`

@@ -1,18 +1,20 @@
 # BiomeTaiga
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Biome> → net.minecraft.world.biome.Biome → net.minecraft.world.biome.BiomeTaiga
+
 ## Class signature
 
 ```java
 public class BiomeTaiga extends Biome
 ```
 
-## Constructors
-
-- `public BiomeTaiga( BiomeTaiga.Type typeIn, Biome.BiomeProperties properties)`
-
 ## Methods
 
-- `public WorldGenAbstractTree genBigTreeChance(java.util.Random rand)`
-- `public WorldGenerator getRandomWorldGenForGrass(java.util.Random rand)`
-- `public void decorate( World worldIn, java.util.Random rand, BlockPos pos)`
-- `public void genTerrainBlocks( World worldIn, java.util.Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal)`
+- `void decorate(World worldIn, java.util.Random rand, BlockPos pos)`
+- `WorldGenAbstractTree genBigTreeChance(java.util.Random rand)`
+- `void genTerrainBlocks(World worldIn, java.util.Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal)`
+- `WorldGenerator getRandomWorldGenForGrass(java.util.Random rand)`
+
+## Fields
+
+- `BiomeTaiga`

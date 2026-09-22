@@ -3,11 +3,15 @@ title: "TileEntityEndPortal"
 description: "public class TileEntityEndPortal extends TileEntity"
 package: "net/minecraft/tileentity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/tileentity/TileEntityEndPortal.html"
 sourceType: javadoc
 ---
 
 # TileEntityEndPortal
+
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityEndPortal
 
 ## Class signature
 
@@ -15,6 +19,6 @@ sourceType: javadoc
 public class TileEntityEndPortal extends TileEntity
 ```
 
-## Constructors
+## Fields
 
-- `public TileEntityEndPortal()`
+- `TileEntityEndPortal`

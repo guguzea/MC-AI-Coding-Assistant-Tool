@@ -1,16 +1,18 @@
 # ItemExpBottle
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemExpBottle
+
 ## Class signature
 
 ```java
 public class ItemExpBottle extends Item
 ```
 
-## Constructors
-
-- `public ItemExpBottle()`
-
 ## Methods
 
-- `public boolean hasEffect( ItemStack stack)`
-- `public ActionResult < ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+- `boolean hasEffect(ItemStack stack)`
+- `ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+
+## Fields
+
+- `ItemExpBottle`

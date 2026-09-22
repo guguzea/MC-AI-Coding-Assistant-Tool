@@ -1,13 +1,17 @@
 ---
 title: "TileEntityFlowerPot"
-description: "Allows for a specialized description packet to be created."
+description: "public class TileEntityFlowerPot extends TileEntity"
 package: "net/minecraft/tileentity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/tileentity/TileEntityFlowerPot.html"
 sourceType: javadoc
 ---
 
 # TileEntityFlowerPot
+
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityFlowerPot
 
 ## Class signature
 
@@ -15,20 +19,16 @@ sourceType: javadoc
 public class TileEntityFlowerPot extends TileEntity
 ```
 
-## Constructors
-
-- `public TileEntityFlowerPot()`
-- `public TileEntityFlowerPot( Item potItem, int potData)`
-
 ## Methods
 
-- `public void writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public Packet getDescriptionPacket()`
-- `public void setFlowerPotData( Item potItem, int potData)`
-- `public Item getFlowerPotItem()`
-- `public int getFlowerPotData()`
+- `Packet getDescriptionPacket()` — Allows for a specialized description packet to be created.
+- `int getFlowerPotData()`
+- `Item getFlowerPotItem()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setFlowerPotData(Item potItem, int potData)`
+- `void writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Allows for a specialized description packet to be created.
+- `TileEntityFlowerPot`
+- `TileEntityFlowerPot`

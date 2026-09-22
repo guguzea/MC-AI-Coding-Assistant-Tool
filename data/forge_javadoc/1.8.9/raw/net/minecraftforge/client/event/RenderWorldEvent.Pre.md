@@ -1,18 +1,24 @@
 ---
 title: "RenderWorldEvent.Pre"
-description: "Fired when 16x16x16 chunk area is being redrawn. Fired after GL state is setup, before tessellator is started."
+description: "public static class RenderWorldEvent.Pre extends RenderWorldEvent"
 package: "net/minecraftforge/client/event"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/client/event/RenderWorldEvent.Pre.html"
 sourceType: javadoc
 ---
 
 # RenderWorldEvent.Pre
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderWorldEvent → net.minecraftforge.client.event.RenderWorldEvent.Pre
 
-- `public Pre( WorldRenderer renderer, ChunkCache chunkCache, int pass)`
+## Class signature
 
-## Description
+```java
+public static class RenderWorldEvent.Pre extends RenderWorldEvent
+```
 
-Fired when 16x16x16 chunk area is being redrawn. Fired after GL state is setup, before tessellator is started.
+## Fields
+
+- `Pre`

@@ -3,11 +3,15 @@ title: "MapGenScatteredFeature"
 description: "public class MapGenScatteredFeature extends MapGenStructure"
 package: "net/minecraft/world/gen/structure"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/gen/structure/MapGenScatteredFeature.html"
 sourceType: javadoc
 ---
 
 # MapGenScatteredFeature
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.MapGenBase → net.minecraft.world.gen.structure.MapGenStructure → net.minecraft.world.gen.structure.MapGenScatteredFeature
 
 ## Class signature
 
@@ -15,16 +19,16 @@ sourceType: javadoc
 public class MapGenScatteredFeature extends MapGenStructure
 ```
 
-## Constructors
-
-- `public MapGenScatteredFeature()`
-- `public MapGenScatteredFeature(java.util.Map<java.lang.String,java.lang.String> p_i2061_1_)`
-
 ## Methods
 
-- `public java.lang.String getStructureName()`
 - `protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)`
-- `public BlockPos getNearestStructurePos( World worldIn, BlockPos pos, boolean findUnexplored)`
+- `java.util.List<Biome.SpawnListEntry> getMonsters()`
+- `BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean findUnexplored)`
+- `java.lang.String getStructureName()`
 - `protected StructureStart getStructureStart(int chunkX, int chunkZ)`
-- `public boolean isSwampHut( BlockPos pos)`
-- `public java.util.List< Biome.SpawnListEntry > getMonsters()`
+- `boolean isSwampHut(BlockPos pos)`
+
+## Fields
+
+- `MapGenScatteredFeature`
+- `MapGenScatteredFeature`

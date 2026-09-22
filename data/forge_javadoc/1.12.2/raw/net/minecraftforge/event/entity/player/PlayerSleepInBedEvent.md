@@ -1,13 +1,17 @@
 ---
 title: "PlayerSleepInBedEvent"
-description: "PlayerSleepInBedEvent is fired when a player sleeps in a bed. This event is fired whenever a player sleeps in a bed in EntityPlayer.trySleep(BlockPos) . result contains whether the player is able to s"
+description: "public class PlayerSleepInBedEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/player/PlayerSleepInBedEvent.html"
 sourceType: javadoc
 ---
 
 # PlayerSleepInBedEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerSleepInBedEvent
 
 ## Class signature
 
@@ -17,14 +21,10 @@ public class PlayerSleepInBedEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerSleepInBedEvent( EntityPlayer player, BlockPos pos)`
+- `PlayerSleepInBedEvent(EntityPlayer player, BlockPos pos)`
 
 ## Methods
 
-- `public EntityPlayer.SleepResult getResultStatus()`
-- `public void setResult( EntityPlayer.SleepResult result)`
-- `public BlockPos getPos()`
-
-## Description
-
-PlayerSleepInBedEvent is fired when a player sleeps in a bed. This event is fired whenever a player sleeps in a bed in EntityPlayer.trySleep(BlockPos) . result contains whether the player is able to s
+- `BlockPos getPos()`
+- `EntityPlayer.SleepResult getResultStatus()`
+- `void setResult(EntityPlayer.SleepResult result)`

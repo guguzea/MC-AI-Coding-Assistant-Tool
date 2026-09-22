@@ -1,13 +1,17 @@
 ---
 title: "FMLServerAboutToStartEvent"
-description: "Called before the server begins loading anything. Called after FMLPostInitializationEvent on the dedicated server, and after the player has hit \"Play Selected World\" in the client. Called before FML"
+description: "public class FMLServerAboutToStartEvent extends FMLStateEvent"
 package: "net/minecraftforge/fml/common/event"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/event/FMLServerAboutToStartEvent.html"
 sourceType: javadoc
 ---
 
 # FMLServerAboutToStartEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLStateEvent → net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent
 
 ## Class signature
 
@@ -17,13 +21,9 @@ public class FMLServerAboutToStartEvent extends FMLStateEvent
 
 ## Constructors
 
-- `public FMLServerAboutToStartEvent(java.lang.Object... data)`
+- `FMLServerAboutToStartEvent(java.lang.Object... data)`
 
 ## Methods
 
-- `public LoaderState.ModState getModState()`
-- `public MinecraftServer getServer()`
-
-## Description
-
-Called before the server begins loading anything. Called after FMLPostInitializationEvent on the dedicated server, and after the player has hit "Play Selected World" in the client. Called before FMLSe
+- `LoaderState.ModState getModState()` — The current state of the mod
+- `MinecraftServer getServer()`

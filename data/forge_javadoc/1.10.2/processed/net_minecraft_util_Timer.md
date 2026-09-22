@@ -1,5 +1,7 @@
 # Timer
 
+**Inheritance:** java.lang.Object → net.minecraft.util.Timer
+
 ## Class signature
 
 ```java
@@ -8,8 +10,15 @@ public class Timer extends java.lang.Object
 
 ## Constructors
 
-- `public Timer(float tps)`
+- `Timer(float tps)`
 
 ## Methods
 
-- `public void updateTimer()`
+- `void updateTimer()`
+
+## Fields
+
+- `float elapsedPartialTicks`
+- `int elapsedTicks`
+- `float renderPartialTicks`
+- `float timerSpeed`

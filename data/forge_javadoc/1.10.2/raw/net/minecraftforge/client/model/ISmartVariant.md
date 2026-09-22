@@ -3,6 +3,8 @@ title: "ISmartVariant"
 description: "public interface ISmartVariant"
 package: "net/minecraftforge/client/model"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/client/model/ISmartVariant.html"
 sourceType: javadoc
 ---
@@ -17,4 +19,4 @@ public interface ISmartVariant
 
 ## Methods
 
-- `IModel process( IModel base)`
+- `IModel process(IModel base)`

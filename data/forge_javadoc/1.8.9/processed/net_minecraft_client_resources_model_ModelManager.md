@@ -1,5 +1,7 @@
 # ModelManager
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.model.ModelManager
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class ModelManager extends java.lang.Object implements IResourceManagerRe
 
 ## Constructors
 
-- `public ModelManager( TextureMap textures)`
+- `ModelManager(TextureMap textures)`
 
 ## Methods
 
-- `public void onResourceManagerReload( IResourceManager resourceManager)`
-- `public IBakedModel getModel( ModelResourceLocation modelLocation)`
-- `public IBakedModel getMissingModel()`
-- `public TextureMap getTextureMap()`
-- `public BlockModelShapes getBlockModelShapes()`
+- `BlockModelShapes getBlockModelShapes()`
+- `IBakedModel getMissingModel()`
+- `IBakedModel getModel(ModelResourceLocation modelLocation)`
+- `TextureMap getTextureMap()`
+- `void onResourceManagerReload(IResourceManager resourceManager)`

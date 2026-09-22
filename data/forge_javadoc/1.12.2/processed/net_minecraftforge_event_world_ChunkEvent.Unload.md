@@ -1,9 +1,13 @@
 # ChunkEvent.Unload
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.ChunkEvent → net.minecraftforge.event.world.ChunkEvent.Unload
+
+## Class signature
+
+```java
+public static class ChunkEvent.Unload extends ChunkEvent
+```
+
 ## Constructors
 
-- `public Unload( Chunk chunk)`
-
-## Description
-
-ChunkEvent.Unload is fired when vanilla Minecraft attempts to unload a Chunk from the world. This event is fired during chunk unloading in Chunk.onChunkUnload(). This event is not Cancelable . This ev
+- `Unload(Chunk chunk)`

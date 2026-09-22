@@ -1,5 +1,7 @@
 # OreDictionary
 
+**Inheritance:** java.lang.Object → net.minecraftforge.oredict.OreDictionary
+
 ## Class signature
 
 ```java
@@ -8,24 +10,25 @@ public class OreDictionary extends java.lang.Object
 
 ## Constructors
 
-- `public OreDictionary()`
+- `OreDictionary()`
 
 ## Methods
 
-- `public static int getOreID(java.lang.String name)`
-- `public static java.lang.String getOreName(int id)`
-- `public static int[] getOreIDs( ItemStack stack)`
-- `public static java.util.List< ItemStack > getOres(java.lang.String name)`
-- `public static java.util.List< ItemStack > getOres(java.lang.String name, boolean alwaysCreateEntry)`
-- `public static boolean doesOreNameExist(java.lang.String name)`
-- `public static java.lang.String[] getOreNames()`
-- `public static boolean containsMatch(boolean strict, java.util.List< ItemStack > inputs, ItemStack ... targets)`
-- `public static boolean itemMatches( ItemStack target, ItemStack input, boolean strict)`
-- `public static void registerOre(java.lang.String name, Item ore)`
-- `public static void registerOre(java.lang.String name, Block ore)`
-- `public static void registerOre(java.lang.String name, ItemStack ore)`
-- `public static void rebakeMap()`
+- `static boolean containsMatch(boolean strict, java.util.List<ItemStack> inputs, ItemStack ... targets)`
+- `static boolean doesOreNameExist(java.lang.String name)` — Returns whether or not an oreName exists in the dictionary.
+- `static int getOreID(java.lang.String name)` — Gets the integer ID for the specified ore name.
+- `static int[] getOreIDs(ItemStack stack)` — Gets all the integer ID for the ores that the specified item stack is registered to.
+- `static java.lang.String getOreName(int id)` — Reverse of getOreID, will not create new entries.
+- `static java.lang.String[] getOreNames()` — Retrieves a list of all unique ore names that are already registered.
+- `static java.util.List<ItemStack> getOres(java.lang.String name)` — Retrieves the ArrayList of items that are registered to this ore type.
+- `static java.util.List<ItemStack> getOres(java.lang.String name, boolean alwaysCreateEntry)` — Retrieves the List of items that are registered to this ore type at this instant.
+- `static boolean itemMatches(ItemStack target, ItemStack input, boolean strict)`
+- `static void rebakeMap()`
+- `static void registerOre(java.lang.String name, Block ore)`
+- `static void registerOre(java.lang.String name, Item ore)`
+- `static void registerOre(java.lang.String name, ItemStack ore)`
 
-## Description
+## Fields
 
-Minecraft changed from -1 to Short.MAX_VALUE in 1.5 release for the "block wildcard".
+- `static com.google.common.collect.ImmutableList<ItemStack> EMPTY_LIST`
+- `static int WILDCARD_VALUE` — Minecraft changed from -1 to Short.MAX_VALUE in 1.5 release for the "block wildcard".

@@ -1,26 +1,30 @@
 # LayerArmorBase
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.layers.LayerArmorBase<T>
+
 ## Class signature
 
 ```java
-public abstract class LayerArmorBase<T extends ModelBase > extends java.lang.Object implements LayerRenderer < EntityLivingBase >
+public abstract class LayerArmorBase<T extends ModelBase> extends java.lang.Object implements LayerRenderer<EntityLivingBase>
 ```
 
 ## Constructors
 
-- `public LayerArmorBase( RendererLivingEntity <?> rendererIn)`
+- `LayerArmorBase(RendererLivingEntity<?> rendererIn)`
 
 ## Methods
 
-- `public void doRenderLayer( EntityLivingBase entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)`
-- `public boolean shouldCombineTextures()`
-- `public ItemStack getCurrentArmor( EntityLivingBase entitylivingbaseIn, int armorSlot)`
-- `public T func_177175_a(int p_177175_1_)`
+- `void doRenderLayer(EntityLivingBase entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)`
+- `T func_177175_a(int p_177175_1_)`
+- `protected abstract void func_177179_a(T p_177179_1_, int p_177179_2_)`
+- `protected T getArmorModelHook(EntityLivingBase entity, ItemStack itemStack, int slot, T model)` — Hook to allow item-sensitive armor model. for LayerBipedArmor.
+- `ResourceLocation getArmorResource(Entity entity, ItemStack stack, int slot, java.lang.String type)` — More generic ForgeHook version of the above function, it allows for Items to have more control over what texture they provide.
+- `ItemStack getCurrentArmor(EntityLivingBase entitylivingbaseIn, int armorSlot)`
 - `protected abstract void initArmor()`
-- `protected abstract void func_177179_a( T p_177179_1_, int p_177179_2_)`
-- `protected T getArmorModelHook( EntityLivingBase entity, ItemStack itemStack, int slot, T model)`
-- `public ResourceLocation getArmorResource( Entity entity, ItemStack stack, int slot, java.lang.String type)`
+- `boolean shouldCombineTextures()`
 
-## Description
+## Fields
 
-Hook to allow item-sensitive armor model. for LayerBipedArmor.
+- `protected static ResourceLocation ENCHANTED_ITEM_GLINT_RES`
+- `protected T field_177186_d`
+- `protected T field_177189_c`

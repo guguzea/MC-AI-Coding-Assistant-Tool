@@ -1,19 +1,29 @@
 ---
 title: "SetCount.Serializer"
-description: ""
+description: "public static class SetCount.Serializer extends LootFunction.Serializer<SetCount>"
 package: "net/minecraft/world/storage/loot/functions"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/storage/loot/functions/SetCount.Serializer.html"
 sourceType: javadoc
 ---
 
 # SetCount.Serializer
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction.Serializer<SetCount> → net.minecraft.world.storage.loot.functions.SetCount.Serializer
+
+## Class signature
+
+```java
+public static class SetCount.Serializer extends LootFunction.Serializer<SetCount>
+```
+
 ## Constructors
 
-- `protected Serializer()`
+- `Serializer()`
 
 ## Methods
 
-- `public void serialize(JsonObject object, SetCount functionClazz, JsonSerializationContext serializationContext)`
-- `public SetCount deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootCondition [] conditionsIn)`
+- `SetCount deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootCondition [] conditionsIn)`
+- `void serialize(JsonObject object, SetCount functionClazz, JsonSerializationContext serializationContext)`

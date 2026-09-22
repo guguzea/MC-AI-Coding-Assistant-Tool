@@ -1,5 +1,7 @@
 # EntityTravelToDimensionEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.EntityTravelToDimensionEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class EntityTravelToDimensionEvent extends EntityEvent
 
 ## Constructors
 
-- `public EntityTravelToDimensionEvent( Entity entity, int dimension)`
+- `EntityTravelToDimensionEvent(Entity entity, int dimension)`
 
-## Description
+## Fields
 
-EntityTravelToDimensionEvent is fired before an Entity travels to a dimension. dimension contains the id of the dimension the entity is traveling to. This event is Cancelable . If this event is cancel
+- `int dimension`

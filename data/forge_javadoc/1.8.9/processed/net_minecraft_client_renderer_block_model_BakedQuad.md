@@ -1,5 +1,7 @@
 # BakedQuad
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.BakedQuad
+
 ## Class signature
 
 ```java
@@ -8,16 +10,18 @@ public class BakedQuad extends java.lang.Object implements IVertexProducer
 
 ## Constructors
 
-- `public BakedQuad(int[] vertexDataIn, int tintIndexIn, EnumFacing faceIn)`
+- `BakedQuad(int[] vertexDataIn, int tintIndexIn, EnumFacing faceIn)`
 
 ## Methods
 
-- `public void pipe( IVertexConsumer consumer)`
-- `public int[] getVertexData()`
-- `public boolean hasTintIndex()`
-- `public int getTintIndex()`
-- `public EnumFacing getFace()`
+- `EnumFacing getFace()`
+- `int getTintIndex()`
+- `int[] getVertexData()`
+- `boolean hasTintIndex()`
+- `void pipe(IVertexConsumer consumer)` — Joined 4 vertex records, each has 7 fields (x, y, z, shadeColor, u, v, ), see FaceBakery.storeVertexData()
 
-## Description
+## Fields
 
-Joined 4 vertex records, each has 7 fields (x, y, z, shadeColor, u, v, ), see FaceBakery.storeVertexData()
+- `protected EnumFacing face`
+- `protected int tintIndex`
+- `protected int[] vertexData`

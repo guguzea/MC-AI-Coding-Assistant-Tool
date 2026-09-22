@@ -1,13 +1,17 @@
 ---
 title: "PlayerMainInvWrapper"
-description: "Exposes the player inventory WITHOUT the armor inventory as IItemHandler. Also takes core of inserting/extracting having the same logic as picking up items."
+description: "public class PlayerMainInvWrapper extends InvWrapper"
 package: "net/minecraftforge/items/wrapper"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/items/wrapper/PlayerMainInvWrapper.html"
 sourceType: javadoc
 ---
 
 # PlayerMainInvWrapper
+
+**Inheritance:** java.lang.Object → net.minecraftforge.items.wrapper.InvWrapper → net.minecraftforge.items.wrapper.PlayerMainInvWrapper
 
 ## Class signature
 
@@ -17,16 +21,16 @@ public class PlayerMainInvWrapper extends InvWrapper
 
 ## Constructors
 
-- `public PlayerMainInvWrapper( InventoryPlayer inv)`
+- `PlayerMainInvWrapper(InventoryPlayer inv)`
 
 ## Methods
 
-- `public int getSlots()`
-- `public void setStackInSlot(int slot, ItemStack stack)`
-- `public ItemStack getStackInSlot(int slot)`
-- `public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)`
-- `public ItemStack extractItem(int slot, int amount, boolean simulate)`
+- `ItemStack extractItem(int slot, int amount, boolean simulate)` — Extracts an ItemStack from the given slot.
+- `int getSlots()` — Returns the number of slots available
+- `ItemStack getStackInSlot(int slot)` — Returns the ItemStack in a given slot.
+- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)` — Inserts an ItemStack into the given slot and return the remainder.
+- `void setStackInSlot(int slot, ItemStack stack)` — Overrides the stack in the given slot.
 
-## Description
+## Fields
 
-Exposes the player inventory WITHOUT the armor inventory as IItemHandler. Also takes core of inserting/extracting having the same logic as picking up items.
+- `InventoryPlayer inventoryPlayer`

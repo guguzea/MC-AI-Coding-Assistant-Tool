@@ -1,5 +1,7 @@
 # BlockPressurePlate
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockBasePressurePlate → net.minecraft.block.BlockPressurePlate
+
 ## Class signature
 
 ```java
@@ -8,17 +10,17 @@ public class BlockPressurePlate extends BlockBasePressurePlate
 
 ## Constructors
 
-- `protected BlockPressurePlate( Material materialIn, BlockPressurePlate.Sensitivity sensitivityIn)`
+- `BlockPressurePlate(Material materialIn, BlockPressurePlate.Sensitivity sensitivityIn)`
 
 ## Methods
 
-- `protected int getRedstoneStrength( IBlockState state)`
-- `protected IBlockState setRedstoneStrength( IBlockState state, int strength)`
-- `protected int computeRedstoneStrength( World worldIn, BlockPos pos)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `protected int computeRedstoneStrength(World worldIn, BlockPos pos)`
 - `protected BlockState createBlockState()`
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `protected int getRedstoneStrength(IBlockState state)`
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `protected IBlockState setRedstoneStrength(IBlockState state, int strength)`
 
-## Description
+## Fields
 
-Convert the BlockState into the correct metadata value
+- `static PropertyBool POWERED`

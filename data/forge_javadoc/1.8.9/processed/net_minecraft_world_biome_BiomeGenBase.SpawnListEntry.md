@@ -1,9 +1,23 @@
 # BiomeGenBase.SpawnListEntry
 
+**Inheritance:** java.lang.Object → net.minecraft.util.WeightedRandom.Item → net.minecraft.world.biome.BiomeGenBase.SpawnListEntry
+
+## Class signature
+
+```java
+public static class BiomeGenBase.SpawnListEntry extends WeightedRandom.Item
+```
+
 ## Constructors
 
-- `public SpawnListEntry(java.lang.Class<? extends EntityLiving > entityclassIn, int weight, int groupCountMin, int groupCountMax)`
+- `SpawnListEntry(java.lang.Class<? extends EntityLiving> entityclassIn, int weight, int groupCountMin, int groupCountMax)`
 
 ## Methods
 
-- `public java.lang.String toString()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `java.lang.Class<? extends EntityLiving> entityClass`
+- `int maxGroupCount`
+- `int minGroupCount`

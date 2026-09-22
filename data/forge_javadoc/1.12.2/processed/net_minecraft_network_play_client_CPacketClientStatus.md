@@ -1,19 +1,21 @@
 # CPacketClientStatus
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketClientStatus
+
 ## Class signature
 
 ```java
-public class CPacketClientStatus extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketClientStatus extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketClientStatus()`
-- `public CPacketClientStatus( CPacketClientStatus.State p_i46886_1_)`
+- `CPacketClientStatus()`
+- `CPacketClientStatus(CPacketClientStatus.State p_i46886_1_)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public CPacketClientStatus.State getStatus()`
+- `CPacketClientStatus.State getStatus()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

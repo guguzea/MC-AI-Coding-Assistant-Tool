@@ -1,18 +1,24 @@
 ---
 title: "ChunkWatchEvent.UnWatch"
-description: "ChunkWatchEvent.UnWatch is fired when an EntityPlayer stops watching a chunk. This event is fired when a chunk is removed from the watched chunks of an EntityPlayer in PlayerInstance#removePlayer(Enti"
+description: "public static class ChunkWatchEvent.UnWatch extends ChunkWatchEvent"
 package: "net/minecraftforge/event/world"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/world/ChunkWatchEvent.UnWatch.html"
 sourceType: javadoc
 ---
 
 # ChunkWatchEvent.UnWatch
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.ChunkWatchEvent → net.minecraftforge.event.world.ChunkWatchEvent.UnWatch
 
-- `public UnWatch( ChunkCoordIntPair chunkLocation, EntityPlayerMP player)`
+## Class signature
 
-## Description
+```java
+public static class ChunkWatchEvent.UnWatch extends ChunkWatchEvent
+```
 
-ChunkWatchEvent.UnWatch is fired when an EntityPlayer stops watching a chunk. This event is fired when a chunk is removed from the watched chunks of an EntityPlayer in PlayerInstance#removePlayer(Enti
+## Fields
+
+- `UnWatch`

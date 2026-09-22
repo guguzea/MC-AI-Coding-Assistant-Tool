@@ -1,11 +1,19 @@
 # SPacketEntity.S17PacketEntityLookMove
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketEntity → net.minecraft.network.play.server.SPacketEntity.S17PacketEntityLookMove
 
-- `public S17PacketEntityLookMove()`
-- `public S17PacketEntityLookMove(int entityIdIn, long xIn, long yIn, long zIn, byte yawIn, byte pitchIn, boolean onGroundIn)`
+## Class signature
+
+```java
+public static class SPacketEntity.S17PacketEntityLookMove extends SPacketEntity
+```
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`
+
+## Fields
+
+- `S17PacketEntityLookMove`
+- `S17PacketEntityLookMove`

@@ -1,9 +1,13 @@
 # ForgeGuiFactory.ForgeConfigGui
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraftforge.fml.client.config.GuiConfig → net.minecraftforge.client.gui.ForgeGuiFactory.ForgeConfigGui
 
-- `public ForgeConfigGui( GuiScreen parentScreen)`
+## Class signature
 
-## Description
+```java
+public static class ForgeGuiFactory.ForgeConfigGui extends GuiConfig
+```
 
-This custom list entry provides a button that will open to a screen that will allow a user to define a new mod override.
+## Fields
+
+- `ForgeConfigGui`

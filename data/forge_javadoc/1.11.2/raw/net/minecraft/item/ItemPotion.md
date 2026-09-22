@@ -3,11 +3,15 @@ title: "ItemPotion"
 description: "public class ItemPotion extends Item"
 package: "net/minecraft/item"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/item/ItemPotion.html"
 sourceType: javadoc
 ---
 
 # ItemPotion
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemPotion
 
 ## Class signature
 
@@ -15,18 +19,18 @@ sourceType: javadoc
 public class ItemPotion extends Item
 ```
 
-## Constructors
-
-- `public ItemPotion()`
-
 ## Methods
 
-- `public ItemStack getDefaultInstance()`
-- `public ItemStack onItemUseFinish( ItemStack stack, World worldIn, EntityLivingBase entityLiving)`
-- `public int getMaxItemUseDuration( ItemStack stack)`
-- `public EnumAction getItemUseAction( ItemStack stack)`
-- `public ActionResult < ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn)`
-- `public java.lang.String getItemStackDisplayName( ItemStack stack)`
-- `public void addInformation( ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
-- `public boolean hasEffect( ItemStack stack)`
-- `public void getSubItems( Item itemIn, CreativeTabs tab, NonNullList < ItemStack > subItems)`
+- `void addInformation(ItemStack stack, EntityPlayer playerIn, java.util.List<java.lang.String> tooltip, boolean advanced)`
+- `ItemStack getDefaultInstance()`
+- `java.lang.String getItemStackDisplayName(ItemStack stack)`
+- `EnumAction getItemUseAction(ItemStack stack)`
+- `int getMaxItemUseDuration(ItemStack stack)`
+- `void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)`
+- `boolean hasEffect(ItemStack stack)`
+- `ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+- `ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)`
+
+## Fields
+
+- `ItemPotion`

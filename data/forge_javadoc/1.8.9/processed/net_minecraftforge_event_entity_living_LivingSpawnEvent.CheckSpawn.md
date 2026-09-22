@@ -1,9 +1,13 @@
 # LivingSpawnEvent.CheckSpawn
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingSpawnEvent → net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn
 
-- `public CheckSpawn( EntityLiving entity, World world, float x, float y, float z)`
+## Class signature
 
-## Description
+```java
+public static class LivingSpawnEvent.CheckSpawn extends LivingSpawnEvent
+```
 
-Fires before mob spawn events. Result is significant: DEFAULT: use vanilla spawn rules ALLOW: allow the spawn DENY: deny the spawn
+## Fields
+
+- `CheckSpawn`

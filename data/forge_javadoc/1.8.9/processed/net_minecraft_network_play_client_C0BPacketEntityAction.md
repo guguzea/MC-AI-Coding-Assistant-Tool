@@ -1,25 +1,23 @@
 # C0BPacketEntityAction
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.C0BPacketEntityAction
+
 ## Class signature
 
 ```java
-public class C0BPacketEntityAction extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class C0BPacketEntityAction extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public C0BPacketEntityAction()`
-- `public C0BPacketEntityAction( Entity entity, C0BPacketEntityAction.Action action)`
-- `public C0BPacketEntityAction( Entity entity, C0BPacketEntityAction.Action action, int auxData)`
+- `C0BPacketEntityAction()`
+- `C0BPacketEntityAction(Entity entity, C0BPacketEntityAction.Action action)`
+- `C0BPacketEntityAction(Entity entity, C0BPacketEntityAction.Action action, int auxData)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public C0BPacketEntityAction.Action getAction()`
-- `public int getAuxData()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `C0BPacketEntityAction.Action getAction()`
+- `int getAuxData()`
+- `void processPacket(INetHandlerPlayServer handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

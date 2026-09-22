@@ -1,13 +1,17 @@
 ---
 title: "BonemealEvent"
-description: "This event is called when a player attempts to use Bonemeal on a block. It can be canceled to completely prevent any further processing. You can also set the result to ALLOW to mark the event as proce"
+description: "public class BonemealEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/entity/player/BonemealEvent.html"
 sourceType: javadoc
 ---
 
 # BonemealEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.BonemealEvent
 
 ## Class signature
 
@@ -17,16 +21,12 @@ public class BonemealEvent extends PlayerEvent
 
 ## Constructors
 
-- `public BonemealEvent( EntityPlayer player, World world, BlockPos pos, IBlockState block, EnumHand hand, ItemStack stack)`
+- `BonemealEvent(EntityPlayer player, World world, BlockPos pos, IBlockState block, EnumHand hand, ItemStack stack)`
 
 ## Methods
 
-- `public World getWorld()`
-- `public BlockPos getPos()`
-- `public IBlockState getBlock()`
-- `public EnumHand getHand()`
-- `public ItemStack getStack()`
-
-## Description
-
-This event is called when a player attempts to use Bonemeal on a block. It can be canceled to completely prevent any further processing. You can also set the result to ALLOW to mark the event as proce
+- `IBlockState getBlock()`
+- `EnumHand getHand()`
+- `BlockPos getPos()`
+- `ItemStack getStack()`
+- `World getWorld()`

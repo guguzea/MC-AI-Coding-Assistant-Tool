@@ -3,11 +3,15 @@ title: "ModAnnotationVisitor"
 description: "public class ModAnnotationVisitor extends org.objectweb.asm.AnnotationVisitor"
 package: "net/minecraftforge/fml/common/discovery/asm"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/discovery/asm/ModAnnotationVisitor.html"
 sourceType: javadoc
 ---
 
 # ModAnnotationVisitor
+
+**Inheritance:** java.lang.Object → org.objectweb.asm.AnnotationVisitor → net.minecraftforge.fml.common.discovery.asm.ModAnnotationVisitor
 
 ## Class signature
 
@@ -15,16 +19,16 @@ sourceType: javadoc
 public class ModAnnotationVisitor extends org.objectweb.asm.AnnotationVisitor
 ```
 
-## Constructors
-
-- `public ModAnnotationVisitor( ASMModParser discoverer)`
-- `public ModAnnotationVisitor( ASMModParser discoverer, java.lang.String name)`
-- `public ModAnnotationVisitor( ASMModParser discoverer, boolean isSubAnnotation)`
-
 ## Methods
 
-- `public void visit(java.lang.String key, java.lang.Object value)`
-- `public void visitEnum(java.lang.String name, java.lang.String desc, java.lang.String value)`
-- `public org.objectweb.asm.AnnotationVisitor visitArray(java.lang.String name)`
-- `public org.objectweb.asm.AnnotationVisitor visitAnnotation(java.lang.String name, java.lang.String desc)`
-- `public void visitEnd()`
+- `void visit(java.lang.String key, java.lang.Object value)`
+- `org.objectweb.asm.AnnotationVisitor visitAnnotation(java.lang.String name, java.lang.String desc)`
+- `org.objectweb.asm.AnnotationVisitor visitArray(java.lang.String name)`
+- `void visitEnd()`
+- `void visitEnum(java.lang.String name, java.lang.String desc, java.lang.String value)`
+
+## Fields
+
+- `ModAnnotationVisitor`
+- `ModAnnotationVisitor`
+- `ModAnnotationVisitor`

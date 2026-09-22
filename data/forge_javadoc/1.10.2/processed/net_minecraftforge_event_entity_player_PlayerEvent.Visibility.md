@@ -1,14 +1,18 @@
 # PlayerEvent.Visibility
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.Visibility
+
+## Class signature
+
+```java
+public static class PlayerEvent.Visibility extends PlayerEvent
+```
+
 ## Constructors
 
-- `public Visibility( EntityPlayer player)`
+- `Visibility(EntityPlayer player)`
 
 ## Methods
 
-- `public void modifyVisibility(double mod)`
-- `public double getVisibilityModifier()`
-
-## Description
-
-Fired when the world checks if a player is near enough to be attacked by an entity. The resulting visibility modifier is multiplied by the one calculated by Minecraft (based on sneaking and more) and
+- `double getVisibilityModifier()`
+- `void modifyVisibility(double mod)`

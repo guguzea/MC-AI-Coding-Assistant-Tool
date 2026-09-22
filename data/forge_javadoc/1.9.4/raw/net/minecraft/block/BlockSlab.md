@@ -1,13 +1,17 @@
 ---
 title: "BlockSlab"
-description: "Check if the face of a block should block rendering."
+description: "public abstract class BlockSlab extends Block"
 package: "net/minecraft/block"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/BlockSlab.html"
 sourceType: javadoc
 ---
 
 # BlockSlab
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockSlab
 
 ## Class signature
 
@@ -17,25 +21,27 @@ public abstract class BlockSlab extends Block
 
 ## Constructors
 
-- `public BlockSlab( Material materialIn)`
+- `BlockSlab(Material materialIn)`
 
 ## Methods
 
 - `protected boolean canSilkHarvest()`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public boolean isFullyOpaque( IBlockState state)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean doesSideBlockRendering( IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face)`
-- `public IBlockState onBlockPlaced( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public int quantityDropped(java.util.Random random)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean shouldSideBeRendered( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `protected static boolean isHalfSlab( IBlockState state)`
-- `public abstract java.lang.String getUnlocalizedName(int meta)`
-- `public abstract boolean isDouble()`
-- `public abstract IProperty <?> getVariantProperty()`
-- `public abstract java.lang.Comparable<?> getTypeForItem( ItemStack stack)`
+- `boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face)` — Check if the face of a block should block rendering.
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `abstract java.lang.Comparable<?> getTypeForItem(ItemStack stack)`
+- `abstract java.lang.String getUnlocalizedName(int meta)`
+- `abstract IProperty<?> getVariantProperty()`
+- `abstract boolean isDouble()`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isFullyOpaque(IBlockState state)`
+- `protected static boolean isHalfSlab(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `int quantityDropped(java.util.Random random)`
+- `boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
 
-## Description
+## Fields
 
-Check if the face of a block should block rendering.
+- `protected static AxisAlignedBB AABB_BOTTOM_HALF`
+- `protected static AxisAlignedBB AABB_TOP_HALF`
+- `static PropertyEnum<BlockSlab.EnumBlockHalf> HALF`

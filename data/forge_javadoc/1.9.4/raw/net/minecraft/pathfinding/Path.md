@@ -3,11 +3,15 @@ title: "Path"
 description: "public class Path extends java.lang.Object"
 package: "net/minecraft/pathfinding"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/pathfinding/Path.html"
 sourceType: javadoc
 ---
 
 # Path
+
+**Inheritance:** java.lang.Object → net.minecraft.pathfinding.Path
 
 ## Class signature
 
@@ -17,22 +21,22 @@ public class Path extends java.lang.Object
 
 ## Constructors
 
-- `public Path( PathPoint [] pathpoints)`
+- `Path(PathPoint [] pathpoints)`
 
 ## Methods
 
-- `public void incrementPathIndex()`
-- `public boolean isFinished()`
-- `public PathPoint getFinalPathPoint()`
-- `public PathPoint getPathPointFromIndex(int index)`
-- `public void setPoint(int index, PathPoint point)`
-- `public int getCurrentPathLength()`
-- `public void setCurrentPathLength(int length)`
-- `public int getCurrentPathIndex()`
-- `public void setCurrentPathIndex(int currentPathIndexIn)`
-- `public Vec3d getVectorFromIndex( Entity entityIn, int index)`
-- `public Vec3d getPosition( Entity entityIn)`
-- `public Vec3d getCurrentPos()`
-- `public boolean isSamePath( Path pathentityIn)`
-- `public boolean isDestinationSame( Vec3d vec)`
-- `public static Path read( PacketBuffer buf)`
+- `int getCurrentPathIndex()`
+- `int getCurrentPathLength()`
+- `Vec3d getCurrentPos()`
+- `PathPoint getFinalPathPoint()`
+- `PathPoint getPathPointFromIndex(int index)`
+- `Vec3d getPosition(Entity entityIn)`
+- `Vec3d getVectorFromIndex(Entity entityIn, int index)`
+- `void incrementPathIndex()`
+- `boolean isDestinationSame(Vec3d vec)`
+- `boolean isFinished()`
+- `boolean isSamePath(Path pathentityIn)`
+- `static Path read(PacketBuffer buf)`
+- `void setCurrentPathIndex(int currentPathIndexIn)`
+- `void setCurrentPathLength(int length)`
+- `void setPoint(int index, PathPoint point)`

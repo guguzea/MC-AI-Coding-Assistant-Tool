@@ -1,9 +1,13 @@
 # FMLNetworkEvent.ServerDisconnectionFromClientEvent
 
-## Constructors
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.eventhandler.Event → cpw.mods.fml.common.network.FMLNetworkEvent<INetHandlerPlayServer> → cpw.mods.fml.common.network.FMLNetworkEvent.ServerDisconnectionFromClientEvent
 
-- `public ServerDisconnectionFromClientEvent( NetworkManager manager)`
+## Class signature
 
-## Description
+```java
+public static class FMLNetworkEvent.ServerDisconnectionFromClientEvent extends FMLNetworkEvent<INetHandlerPlayServer>
+```
 
-Fired at the server when a client disconnects.
+## Fields
+
+- `ServerDisconnectionFromClientEvent`

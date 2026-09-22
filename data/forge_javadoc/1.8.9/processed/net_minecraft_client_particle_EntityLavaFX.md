@@ -1,22 +1,20 @@
 # EntityLavaFX
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.client.particle.EntityFX → net.minecraft.client.particle.EntityLavaFX
+
 ## Class signature
 
 ```java
 public class EntityLavaFX extends EntityFX
 ```
 
-## Constructors
-
-- `protected EntityLavaFX( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn)`
-
 ## Methods
 
-- `public int getBrightnessForRender(float partialTicks)`
-- `public float getBrightness(float partialTicks)`
-- `public void renderParticle( WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)`
-- `public void onUpdate()`
+- `float getBrightness(float partialTicks)` — Gets how bright this entity is.
+- `int getBrightnessForRender(float partialTicks)`
+- `void onUpdate()` — Called to update the entity's position/logic.
+- `void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)` — Renders the particle
 
-## Description
+## Fields
 
-Gets how bright this entity is.
+- `protected EntityLavaFX`

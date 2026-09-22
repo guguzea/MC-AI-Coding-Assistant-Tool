@@ -1,69 +1,77 @@
 ---
 title: "TileEntity"
-description: "Sometimes default render bounding box: infinite in scope."
+description: "public abstract class TileEntity extends java.lang.Object implements ICapabilitySerializable<NBTTagCompound>"
 package: "net/minecraft/tileentity"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/tileentity/TileEntity.html"
 sourceType: javadoc
 ---
 
 # TileEntity
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity
+
 ## Class signature
 
 ```java
-public abstract class TileEntity extends java.lang.Object implements ICapabilitySerializable < NBTTagCompound >
+public abstract class TileEntity extends java.lang.Object implements ICapabilitySerializable<NBTTagCompound>
 ```
 
 ## Constructors
 
-- `public TileEntity()`
+- `TileEntity()`
 
 ## Methods
 
-- `public static void addMapping(java.lang.Class<? extends TileEntity > cl, java.lang.String id)`
-- `public World getWorld()`
-- `public void setWorldObj( World worldIn)`
-- `public boolean hasWorldObj()`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public static TileEntity create( World worldIn, NBTTagCompound compound)`
-- `protected void setWorldCreate( World worldIn)`
-- `public int getBlockMetadata()`
-- `public void markDirty()`
-- `public double getDistanceSq(double x, double y, double z)`
-- `public double getMaxRenderDistanceSquared()`
-- `public BlockPos getPos()`
-- `public Block getBlockType()`
-- `@Nullable public SPacketUpdateTileEntity getUpdatePacket()`
-- `public NBTTagCompound getUpdateTag()`
-- `public boolean isInvalid()`
-- `public void invalidate()`
-- `public void validate()`
-- `public boolean receiveClientEvent(int id, int type)`
-- `public void updateContainingBlockInfo()`
-- `public void addInfoToCrashReport( CrashReportCategory reportCategory)`
-- `public void setPos( BlockPos posIn)`
-- `public boolean onlyOpsCanSetNbt()`
-- `@Nullable public ITextComponent getDisplayName()`
-- `public void rotate( Rotation p_189667_1_)`
-- `public void mirror( Mirror p_189668_1_)`
-- `public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity pkt)`
-- `public void handleUpdateTag( NBTTagCompound tag)`
-- `public void onChunkUnload()`
-- `public boolean shouldRefresh( World world, BlockPos pos, IBlockState oldState, IBlockState newSate)`
-- `public boolean shouldRenderInPass(int pass)`
-- `public AxisAlignedBB getRenderBoundingBox()`
-- `public boolean canRenderBreaking()`
-- `public NBTTagCompound getTileData()`
-- `public boolean restrictNBTCopy()`
-- `public void onLoad()`
-- `public boolean hasFastRenderer()`
-- `public boolean hasCapability( Capability <?> capability, EnumFacing facing)`
-- `public <T> T getCapability( Capability <T> capability, EnumFacing facing)`
-- `public void deserializeNBT( NBTTagCompound nbt)`
-- `public NBTTagCompound serializeNBT()`
+- `void addInfoToCrashReport(CrashReportCategory reportCategory)`
+- `static void addMapping(java.lang.Class<? extends TileEntity> cl, java.lang.String id)`
+- `boolean canRenderBreaking()` — Checks if this tile entity knows how to render its 'breaking' overlay effect.
+- `static TileEntity create(World worldIn, NBTTagCompound compound)`
+- `void deserializeNBT(NBTTagCompound nbt)`
+- `int getBlockMetadata()`
+- `Block getBlockType()`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `ITextComponent getDisplayName()`
+- `double getDistanceSq(double x, double y, double z)`
+- `double getMaxRenderDistanceSquared()`
+- `BlockPos getPos()`
+- `AxisAlignedBB getRenderBoundingBox()` — Return an AxisAlignedBB that controls the visible scope of a TileEntitySpecialRenderer associated with this TileEntity Defaults to the collision bounding box Block#getCollisionBoundingBoxFromPool(World, int, int, int) associated with the block at this location.
+- `NBTTagCompound getTileData()` — Gets a NBTTagCompound that can be used to store custom data for this tile entity.
+- `SPacketUpdateTileEntity getUpdatePacket()`
+- `NBTTagCompound getUpdateTag()`
+- `World getWorld()`
+- `void handleUpdateTag(NBTTagCompound tag)` — Called when the chunk's TE update tag, gotten from getUpdateTag() , is received on the client.
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.
+- `boolean hasFastRenderer()` — If the TileEntitySpecialRenderer associated with this TileEntity can be batched in with another renderers, and won't access the GL state.
+- `boolean hasWorldObj()`
+- `void invalidate()`
+- `boolean isInvalid()`
+- `void markDirty()`
+- `void mirror(Mirror p_189668_1_)`
+- `void onChunkUnload()` — Called when the chunk this TileEntity is on is Unloaded.
+- `void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)` — Called when you receive a TileEntityData packet for the location this TileEntity is currently in.
+- `void onLoad()` — Called from the Chunk when this is first added to the world.
+- `boolean onlyOpsCanSetNbt()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `boolean receiveClientEvent(int id, int type)`
+- `boolean restrictNBTCopy()` — Determines if the player can overwrite the NBT data of this tile entity while they place it using a ItemStack.
+- `void rotate(Rotation p_189667_1_)`
+- `NBTTagCompound serializeNBT()`
+- `void setPos(BlockPos posIn)`
+- `protected void setWorldCreate(World worldIn)`
+- `void setWorldObj(World worldIn)`
+- `boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)` — Called from Chunk.setBlockIDWithMetadata and Chunk.fillChunk, determines if this tile entity should be re-created when the ID, or Metadata changes.
+- `boolean shouldRenderInPass(int pass)`
+- `void updateContainingBlockInfo()`
+- `void validate()`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Sometimes default render bounding box: infinite in scope.
+- `protected Block blockType`
+- `static AxisAlignedBB INFINITE_EXTENT_AABB` — Sometimes default render bounding box: infinite in scope.
+- `protected BlockPos pos`
+- `protected boolean tileEntityInvalid`
+- `protected World worldObj`

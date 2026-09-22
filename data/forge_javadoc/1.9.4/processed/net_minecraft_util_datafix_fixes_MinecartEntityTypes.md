@@ -1,5 +1,7 @@
 # MinecartEntityTypes
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.MinecartEntityTypes
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class MinecartEntityTypes extends java.lang.Object implements IFixableDat
 
 ## Constructors
 
-- `public MinecartEntityTypes()`
+- `MinecartEntityTypes()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

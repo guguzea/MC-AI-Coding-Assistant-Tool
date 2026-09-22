@@ -1,5 +1,7 @@
 # ActiveRenderInfo
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.ActiveRenderInfo
+
 ## Class signature
 
 ```java
@@ -8,15 +10,15 @@ public class ActiveRenderInfo extends java.lang.Object
 
 ## Constructors
 
-- `public ActiveRenderInfo()`
+- `ActiveRenderInfo()`
 
 ## Methods
 
-- `public static void updateRenderInfo( EntityPlayer entityplayerIn, boolean p_74583_1_)`
-- `public static Vec3d projectViewFromEntity( Entity entityIn, double p_178806_1_)`
-- `public static IBlockState getBlockStateAtEntityViewpoint( World worldIn, Entity entityIn, float p_186703_2_)`
-- `public static float getRotationX()`
-- `public static float getRotationXZ()`
-- `public static float getRotationZ()`
-- `public static float getRotationYZ()`
-- `public static float getRotationXY()`
+- `static IBlockState getBlockStateAtEntityViewpoint(World worldIn, Entity entityIn, float p_186703_2_)`
+- `static float getRotationX()`
+- `static float getRotationXY()`
+- `static float getRotationXZ()`
+- `static float getRotationYZ()`
+- `static float getRotationZ()`
+- `static Vec3d projectViewFromEntity(Entity entityIn, double p_178806_1_)`
+- `static void updateRenderInfo(EntityPlayer entityplayerIn, boolean p_74583_1_)`

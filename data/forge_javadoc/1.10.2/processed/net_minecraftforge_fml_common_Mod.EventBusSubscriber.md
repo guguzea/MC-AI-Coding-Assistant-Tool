@@ -1,5 +1,11 @@
 # Mod.EventBusSubscriber
 
-## Description
+## Class signature
 
-A class which will be subscribed to net.minecraftforge.common.MinecraftForge.EVENT_BUS at mod construction time.
+```java
+public static @interface Mod.EventBusSubscriber
+```
+
+## Elements
+
+- `Side [] value`

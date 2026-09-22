@@ -3,11 +3,15 @@ title: "EntitySilverfish"
 description: "public class EntitySilverfish extends EntityMob"
 package: "net/minecraft/entity/monster"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/monster/EntitySilverfish.html"
 sourceType: javadoc
 ---
 
 # EntitySilverfish
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntitySilverfish
 
 ## Class signature
 
@@ -15,25 +19,25 @@ sourceType: javadoc
 public class EntitySilverfish extends EntityMob
 ```
 
-## Constructors
-
-- `public EntitySilverfish( World worldIn)`
-
 ## Methods
 
-- `protected void initEntityAI()`
-- `public double getYOffset()`
-- `public float getEyeHeight()`
 - `protected void applyEntityAttributes()`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
 - `protected boolean canTriggerWalking()`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
+- `float getBlockPathWeight(BlockPos pos)`
+- `boolean getCanSpawnHere()`
+- `EnumCreatureAttribute getCreatureAttribute()`
 - `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public void onUpdate()`
-- `public float getBlockPathWeight( BlockPos pos)`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `double getYOffset()`
+- `protected void initEntityAI()`
 - `protected boolean isValidLightLevel()`
-- `public boolean getCanSpawnHere()`
-- `public EnumCreatureAttribute getCreatureAttribute()`
+- `void onUpdate()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+
+## Fields
+
+- `EntitySilverfish`

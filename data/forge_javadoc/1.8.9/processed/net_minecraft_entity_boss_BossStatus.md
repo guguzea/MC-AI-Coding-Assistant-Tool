@@ -1,5 +1,7 @@
 # BossStatus
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.BossStatus
+
 ## Class signature
 
 ```java
@@ -8,8 +10,15 @@ public final class BossStatus extends java.lang.Object
 
 ## Constructors
 
-- `public BossStatus()`
+- `BossStatus()`
 
 ## Methods
 
-- `public static void setBossStatus( IBossDisplayData displayData, boolean hasColorModifierIn)`
+- `static void setBossStatus(IBossDisplayData displayData, boolean hasColorModifierIn)`
+
+## Fields
+
+- `static java.lang.String bossName`
+- `static boolean hasColorModifier`
+- `static float healthScale`
+- `static int statusBarTime`

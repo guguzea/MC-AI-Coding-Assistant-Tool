@@ -1,16 +1,22 @@
 # SoundEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<SoundEvent> → net.minecraft.util.SoundEvent
+
 ## Class signature
 
 ```java
-public class SoundEvent extends IForgeRegistryEntry.Impl < SoundEvent >
+public class SoundEvent extends IForgeRegistryEntry.Impl<SoundEvent>
 ```
 
 ## Constructors
 
-- `public SoundEvent( ResourceLocation soundNameIn)`
+- `SoundEvent(ResourceLocation soundNameIn)`
 
 ## Methods
 
-- `public ResourceLocation getSoundName()`
-- `public static void registerSounds()`
+- `ResourceLocation getSoundName()`
+- `static void registerSounds()`
+
+## Fields
+
+- `static RegistryNamespaced<ResourceLocation, SoundEvent> REGISTRY`

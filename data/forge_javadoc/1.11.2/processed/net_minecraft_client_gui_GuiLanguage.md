@@ -1,5 +1,7 @@
 # GuiLanguage
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiLanguage
+
 ## Class signature
 
 ```java
@@ -8,11 +10,15 @@ public class GuiLanguage extends GuiScreen
 
 ## Constructors
 
-- `public GuiLanguage( GuiScreen screen, GameSettings gameSettingsObj, LanguageManager manager)`
+- `GuiLanguage(GuiScreen screen, GameSettings gameSettingsObj, LanguageManager manager)`
 
 ## Methods
 
-- `public void initGui()`
-- `public void handleMouseInput() throws java.io.IOException`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected void actionPerformed(GuiButton button)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void handleMouseInput()`
+- `void initGui()`
+
+## Fields
+
+- `protected GuiScreen parentScreen`

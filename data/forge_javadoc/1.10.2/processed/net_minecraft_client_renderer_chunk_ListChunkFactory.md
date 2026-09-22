@@ -1,5 +1,7 @@
 # ListChunkFactory
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.chunk.ListChunkFactory
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class ListChunkFactory extends java.lang.Object implements IRenderChunkFa
 
 ## Constructors
 
-- `public ListChunkFactory()`
+- `ListChunkFactory()`
 
 ## Methods
 
-- `public RenderChunk create( World worldIn, RenderGlobal p_189565_2_, int p_189565_3_)`
+- `RenderChunk create(World worldIn, RenderGlobal p_189565_2_, int p_189565_3_)`

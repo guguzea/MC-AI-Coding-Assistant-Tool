@@ -3,11 +3,15 @@ title: "MusicTicker"
 description: "public class MusicTicker extends java.lang.Object implements ITickable"
 package: "net/minecraft/client/audio"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/audio/MusicTicker.html"
 sourceType: javadoc
 ---
 
 # MusicTicker
+
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.MusicTicker
 
 ## Class signature
 
@@ -17,10 +21,10 @@ public class MusicTicker extends java.lang.Object implements ITickable
 
 ## Constructors
 
-- `public MusicTicker( Minecraft mcIn)`
+- `MusicTicker(Minecraft mcIn)`
 
 ## Methods
 
-- `public void update()`
-- `public void playMusic( MusicTicker.MusicType requestedMusicType)`
-- `public void stopMusic()`
+- `void playMusic(MusicTicker.MusicType requestedMusicType)`
+- `void stopMusic()`
+- `void update()`

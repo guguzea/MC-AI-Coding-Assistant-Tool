@@ -1,15 +1,23 @@
 ---
 title: "B3DModel.IKind"
-description: ""
+description: "public static interface B3DModel.IKind<K extends B3DModel.IKind<K>>"
 package: "net/minecraftforge/client/model/b3d"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/client/model/b3d/B3DModel.IKind.html"
 sourceType: javadoc
 ---
 
 # B3DModel.IKind
 
+## Class signature
+
+```java
+public static interface B3DModel.IKind<K extends B3DModel.IKind<K>>
+```
+
 ## Methods
 
-- `void setParent( B3DModel.Node < K > parent)`
-- `B3DModel.Node < K > getParent()`
+- `B3DModel.Node<K> getParent()`
+- `void setParent(B3DModel.Node<K> parent)`

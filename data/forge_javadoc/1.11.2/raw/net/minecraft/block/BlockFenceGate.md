@@ -1,13 +1,17 @@
 ---
 title: "BlockFenceGate"
-description: "Determines if another block can connect to this block"
+description: "public class BlockFenceGate extends BlockHorizontal"
 package: "net/minecraft/block"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/BlockFenceGate.html"
 sourceType: javadoc
 ---
 
 # BlockFenceGate
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockHorizontal → net.minecraft.block.BlockFenceGate
 
 ## Class signature
 
@@ -17,28 +21,36 @@ public class BlockFenceGate extends BlockHorizontal
 
 ## Constructors
 
-- `public BlockFenceGate( BlockPlanks.EnumType p_i46394_1_)`
+- `BlockFenceGate(BlockPlanks.EnumType p_i46394_1_)`
 
 ## Methods
 
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `@Nullable public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean isPassable( IBlockAccess worldIn, BlockPos pos)`
-- `public IBlockState getStateForPlacement( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
-- `public boolean shouldSideBeRendered( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canBeConnectedTo(IBlockAccess world, BlockPos pos, EnumFacing facing)` — Determines if another block can connect to this block
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
 - `protected BlockStateContainer createBlockState()`
-- `public boolean canBeConnectedTo( IBlockAccess world, BlockPos pos, EnumFacing facing)`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)`
+- `IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `IBlockState getStateFromMeta(int meta)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `boolean isPassable(IBlockAccess worldIn, BlockPos pos)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)`
+- `boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
 
-## Description
+## Fields
 
-Determines if another block can connect to this block
+- `protected static AxisAlignedBB AABB_CLOSED_SELECTED_XAXIS`
+- `protected static AxisAlignedBB AABB_CLOSED_SELECTED_ZAXIS`
+- `protected static AxisAlignedBB AABB_COLLIDE_XAXIS`
+- `protected static AxisAlignedBB AABB_COLLIDE_XAXIS_INWALL`
+- `protected static AxisAlignedBB AABB_COLLIDE_ZAXIS`
+- `protected static AxisAlignedBB AABB_COLLIDE_ZAXIS_INWALL`
+- `static PropertyBool IN_WALL`
+- `static PropertyBool OPEN`
+- `static PropertyBool POWERED`

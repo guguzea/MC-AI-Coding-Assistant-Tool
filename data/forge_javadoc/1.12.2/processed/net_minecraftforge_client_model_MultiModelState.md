@@ -1,5 +1,7 @@
 # MultiModelState
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.MultiModelState
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public final class MultiModelState extends java.lang.Object implements IModelSta
 
 ## Constructors
 
-- `public MultiModelState(<any> states)`
+- `MultiModelState(<any> states)`
 
 ## Methods
 
-- `public static IModelState getPartState( IModelState state, IModel model, int index)`
-- `public java.util.Optional< TRSRTransformation > apply(java.util.Optional<? extends IModelPart > part)`
+- `java.util.Optional<TRSRTransformation> apply(java.util.Optional<? extends IModelPart> part)`
+- `static IModelState getPartState(IModelState state, IModel model, int index)`

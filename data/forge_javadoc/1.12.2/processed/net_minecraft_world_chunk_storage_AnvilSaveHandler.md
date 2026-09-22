@@ -1,17 +1,19 @@
 # AnvilSaveHandler
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.SaveHandler → net.minecraft.world.chunk.storage.AnvilSaveHandler
+
 ## Class signature
 
 ```java
 public class AnvilSaveHandler extends SaveHandler
 ```
 
-## Constructors
-
-- `public AnvilSaveHandler(java.io.File p_i46650_1_, java.lang.String saveDirectoryName, boolean p_i46650_3_, DataFixer dataFixerIn)`
-
 ## Methods
 
-- `public IChunkLoader getChunkLoader( WorldProvider provider)`
-- `public void saveWorldInfoWithPlayer( WorldInfo worldInformation, NBTTagCompound tagCompound)`
-- `public void flush()`
+- `void flush()`
+- `IChunkLoader getChunkLoader(WorldProvider provider)`
+- `void saveWorldInfoWithPlayer(WorldInfo worldInformation, NBTTagCompound tagCompound)`
+
+## Fields
+
+- `AnvilSaveHandler`

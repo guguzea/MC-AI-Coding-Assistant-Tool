@@ -1,20 +1,22 @@
 # CPacketUpdateSign
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.CPacketUpdateSign
+
 ## Class signature
 
 ```java
-public class CPacketUpdateSign extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class CPacketUpdateSign extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public CPacketUpdateSign()`
-- `public CPacketUpdateSign( BlockPos posIn, ITextComponent [] linesIn)`
+- `CPacketUpdateSign()`
+- `CPacketUpdateSign(BlockPos posIn, ITextComponent [] linesIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public BlockPos getPosition()`
-- `public java.lang.String[] getLines()`
+- `java.lang.String[] getLines()`
+- `BlockPos getPosition()`
+- `void processPacket(INetHandlerPlayServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

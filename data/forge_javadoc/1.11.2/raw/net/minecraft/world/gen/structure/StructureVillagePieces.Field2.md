@@ -1,22 +1,32 @@
 ---
 title: "StructureVillagePieces.Field2"
-description: ""
+description: "public static class StructureVillagePieces.Field2 extends StructureVillagePieces.Village"
 package: "net/minecraft/world/gen/structure"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/gen/structure/StructureVillagePieces.Field2.html"
 sourceType: javadoc
 ---
 
 # StructureVillagePieces.Field2
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureVillagePieces.Village → net.minecraft.world.gen.structure.StructureVillagePieces.Field2
 
-- `public Field2()`
-- `public Field2( StructureVillagePieces.Start start, int p_i45569_2_, java.util.Random rand, StructureBoundingBox p_i45569_4_, EnumFacing facing)`
+## Class signature
+
+```java
+public static class StructureVillagePieces.Field2 extends StructureVillagePieces.Village
+```
 
 ## Methods
 
-- `protected void writeStructureToNBT( NBTTagCompound tagCompound)`
-- `protected void readStructureFromNBT( NBTTagCompound tagCompound, TemplateManager p_143011_2_)`
-- `public static StructureVillagePieces.Field2 createPiece( StructureVillagePieces.Start start, java.util.List< StructureComponent > p_175852_1_, java.util.Random rand, int p_175852_3_, int p_175852_4_, int p_175852_5_, EnumFacing facing, int p_175852_7_)`
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `static StructureVillagePieces.Field2 createPiece(StructureVillagePieces.Start start, java.util.List<StructureComponent> p_175852_1_, java.util.Random rand, int p_175852_3_, int p_175852_4_, int p_175852_5_, EnumFacing facing, int p_175852_7_)`
+- `protected void readStructureFromNBT(NBTTagCompound tagCompound, TemplateManager p_143011_2_)`
+- `protected void writeStructureToNBT(NBTTagCompound tagCompound)`
+
+## Fields
+
+- `Field2`
+- `Field2`

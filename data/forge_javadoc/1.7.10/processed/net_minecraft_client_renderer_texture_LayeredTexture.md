@@ -1,5 +1,7 @@
 # LayeredTexture
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.texture.AbstractTexture → net.minecraft.client.renderer.texture.LayeredTexture
+
 ## Class signature
 
 ```java
@@ -8,8 +10,12 @@ public class LayeredTexture extends AbstractTexture
 
 ## Constructors
 
-- `public LayeredTexture(java.lang.String... p_i1274_1_)`
+- `LayeredTexture(java.lang.String... p_i1274_1_)`
 
 ## Methods
 
-- `public void loadTexture( IResourceManager p_110551_1_) throws java.io.IOException`
+- `void loadTexture(IResourceManager p_110551_1_)`
+
+## Fields
+
+- `java.util.List layeredTextureNames`

@@ -1,0 +1,1550 @@
+{
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.26.40?view=minecraft-bedrock-stable": {
+    "documentId": "e53bbc61-acbb-7140-f61b-75be55b92443",
+    "updatedAt": "2026-08-05T22:09:00Z",
+    "commit": "294affe2e9befc5992b71654f1aa068ce0954a72",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/294affe2e9befc5992b71654f1aa068ce0954a72/creator/Documents/Update1.26.40.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.26.30?view=minecraft-bedrock-stable": {
+    "documentId": "39e0dfc3-dbea-d162-b59f-06f18610100f",
+    "updatedAt": "2026-06-16T17:10:00Z",
+    "commit": "f485796b292936a4ce6bb85884dcd84813b11f75",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f485796b292936a4ce6bb85884dcd84813b11f75/creator/Documents/Update1.26.30.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.26.10?view=minecraft-bedrock-stable": {
+    "documentId": "7e47b03f-299d-dd75-8838-2b25068717fc",
+    "updatedAt": "2026-06-16T17:10:00Z",
+    "commit": "f485796b292936a4ce6bb85884dcd84813b11f75",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f485796b292936a4ce6bb85884dcd84813b11f75/creator/Documents/Update1.26.10.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.26.20?view=minecraft-bedrock-stable": {
+    "documentId": "aac99097-5cc7-9fc9-a635-f447691c14f5",
+    "updatedAt": "2026-06-16T17:10:00Z",
+    "commit": "f485796b292936a4ce6bb85884dcd84813b11f75",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f485796b292936a4ce6bb85884dcd84813b11f75/creator/Documents/Update1.26.20.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.120?view=minecraft-bedrock-stable": {
+    "documentId": "6cbdad87-6ec0-8292-ebf1-cabf35915bb6",
+    "updatedAt": "2025-10-28T16:57:00Z",
+    "commit": "833d3c6f7da4962a62d22c36357f5be779c079ab",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/833d3c6f7da4962a62d22c36357f5be779c079ab/creator/Documents/Update1.21.120.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.130?view=minecraft-bedrock-stable": {
+    "documentId": "d9c00ef3-9c90-4296-a899-f077b22c09b1",
+    "updatedAt": "2026-06-16T17:10:00Z",
+    "commit": "f485796b292936a4ce6bb85884dcd84813b11f75",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f485796b292936a4ce6bb85884dcd84813b11f75/creator/Documents/Update1.21.130.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.26.0?view=minecraft-bedrock-stable": {
+    "documentId": "56695f1d-668e-46df-ffc6-923884471499",
+    "updatedAt": "2026-06-16T17:10:00Z",
+    "commit": "f485796b292936a4ce6bb85884dcd84813b11f75",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f485796b292936a4ce6bb85884dcd84813b11f75/creator/Documents/Update1.26.0.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.100?view=minecraft-bedrock-stable": {
+    "documentId": "ecb6a6ce-1b03-420a-bf9e-e185939bb2b5",
+    "updatedAt": "2025-08-07T04:02:00Z",
+    "commit": "f8141b659a65f8bf09ff78b32b3f95a49bc8424e",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f8141b659a65f8bf09ff78b32b3f95a49bc8424e/creator/Documents/Update1.21.100.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.90?view=minecraft-bedrock-stable": {
+    "documentId": "342538a2-8e51-937c-2560-79fa271af623",
+    "updatedAt": "2025-08-12T18:58:00Z",
+    "commit": "d90b4ae298a549492a7c4be498062038047c7e2e",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d90b4ae298a549492a7c4be498062038047c7e2e/creator/Documents/Update1.21.90.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.110?view=minecraft-bedrock-stable": {
+    "documentId": "78f26191-c897-afc9-7d3f-3cf1033d2e1e",
+    "updatedAt": "2025-09-30T16:27:00Z",
+    "commit": "e398b9413146789db8ffce9666bf5642fd27d5a2",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/e398b9413146789db8ffce9666bf5642fd27d5a2/creator/Documents/Update1.21.110.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.80?view=minecraft-bedrock-stable": {
+    "documentId": "5c382d2f-53c7-ee1e-c578-5e87ee836c16",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.21.80.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.70?view=minecraft-bedrock-stable": {
+    "documentId": "5ff034fc-0246-26fe-ed7f-db5c6701a633",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.21.70.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.50?view=minecraft-bedrock-stable": {
+    "documentId": "43a7fb04-9b60-5ee5-ce88-7771bebcd351",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.21.50.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.40?view=minecraft-bedrock-stable": {
+    "documentId": "5095c693-a856-8456-d837-9186a9a38407",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.21.40.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.30?view=minecraft-bedrock-stable": {
+    "documentId": "93033257-2230-2bae-dcab-40b5d11079fa",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.21.30.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.60?view=minecraft-bedrock-stable": {
+    "documentId": "caa0e15c-69e6-36f2-0836-dcf7605aaaae",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.21.60.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21.20?view=minecraft-bedrock-stable": {
+    "documentId": "80e0d3cb-d5b1-96f2-827d-1d0b9866abf2",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.21.20.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.21?view=minecraft-bedrock-stable": {
+    "documentId": "b27155a7-4a2b-a22a-533e-7dafd53710b5",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.21.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.20.80?view=minecraft-bedrock-stable": {
+    "documentId": "e4c7c9de-8b1c-2791-15e7-505472028db9",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.20.80.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.20.70?view=minecraft-bedrock-stable": {
+    "documentId": "db9c1bd7-0f98-0fb7-10db-c4eddff1b336",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.20.70.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.20.60?view=minecraft-bedrock-stable": {
+    "documentId": "4b9814e8-9f60-eafc-2527-4a0605cdac73",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.20.60.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.20.50?view=minecraft-bedrock-stable": {
+    "documentId": "7488fe4f-d6ac-a815-d1eb-262d09ebcbcc",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.20.50.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.20.30?view=minecraft-bedrock-stable": {
+    "documentId": "01bdc608-ff8d-f6c8-f699-00186e810dc2",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.20.30.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.20.40?view=minecraft-bedrock-stable": {
+    "documentId": "f6e2c6f1-31c9-2f04-4467-9820bdf54b75",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.20.40.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.20?view=minecraft-bedrock-stable": {
+    "documentId": "be0af04e-cd1f-bf70-f929-88902c7fd785",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.20.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.20.10?view=minecraft-bedrock-stable": {
+    "documentId": "46de166e-1728-285f-89d4-31cef84c62b1",
+    "updatedAt": "2026-02-12T01:55:00Z",
+    "commit": "55f699c5b092dc4c3e9ce1d365a4bd2a5f1e6d39",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/55f699c5b092dc4c3e9ce1d365a4bd2a5f1e6d39/creator/Documents/Update1.20.10.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.19.80?view=minecraft-bedrock-stable": {
+    "documentId": "3f2c96c2-d6e8-8277-2358-a1d1a1fc27d7",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.19.80.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.19.70?view=minecraft-bedrock-stable": {
+    "documentId": "b6e88f91-d7c3-a5be-c5a3-7e39522fad14",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.19.70.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.19.60?view=minecraft-bedrock-stable": {
+    "documentId": "8365e46c-0e94-a585-e2f0-58d828db77e0",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.19.60.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.19.50?view=minecraft-bedrock-stable": {
+    "documentId": "75ba0617-d9f0-0100-29a2-1e5fba3319db",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.19.50.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/update1.19.40?view=minecraft-bedrock-stable": {
+    "documentId": "a4866cb1-9ad6-7987-bc3b-912d58d80b4d",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Update1.19.40.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/cavesandcliffsentities?view=minecraft-bedrock-stable": {
+    "documentId": "b0521fc3-51c1-8d23-afc6-dd9b95d9cf9a",
+    "updatedAt": "2023-09-19T16:56:00Z",
+    "commit": "44c9b89690a2b20533f0cbed306eb4ec7ad59175",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/44c9b89690a2b20533f0cbed306eb4ec7ad59175/creator/Documents/CavesAndCliffsEntities.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/minecraftlive2022creatorrecap?view=minecraft-bedrock-stable": {
+    "documentId": "74073b3e-768b-84f6-e882-41a184dec90d",
+    "updatedAt": "2023-09-19T16:56:00Z",
+    "commit": "44c9b89690a2b20533f0cbed306eb4ec7ad59175",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/44c9b89690a2b20533f0cbed306eb4ec7ad59175/creator/Documents/MinecraftLive2022CreatorRecap.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/worldheightchange?view=minecraft-bedrock-stable": {
+    "documentId": "c580f040-3bea-d14d-301f-bb46dc87f29e",
+    "updatedAt": "2024-12-03T17:02:00Z",
+    "commit": "fb812fb9c87b24cf68c081daa92e0984ed14c2c6",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/fb812fb9c87b24cf68c081daa92e0984ed14c2c6/creator/Documents/WorldHeightChange.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/behaviorpack?view=minecraft-bedrock-stable": {
+    "documentId": "ab3ad989-cd74-1b9a-d07c-500fc80fdaf7",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/BehaviorPack.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/learningjourneyguide?view=minecraft-bedrock-stable": {
+    "documentId": "d0f949bc-434b-1426-ca7c-763b338cbeea",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/LearningJourneyGuide.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/gettingstarted?view=minecraft-bedrock-stable": {
+    "documentId": "63ee92b3-df1e-3f02-7b62-e13798b131a8",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/GettingStarted.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/overwritingpaintings?view=minecraft-bedrock-stable": {
+    "documentId": "1f9e09fb-c6cd-6e14-7e51-2a1ca3fd3006",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/OverwritingPaintings.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/resourcepack?view=minecraft-bedrock-stable": {
+    "documentId": "37ca30c2-bbe8-119e-3d74-05d344211a06",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/ResourcePack.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/addcustomdieblock?view=minecraft-bedrock-stable": {
+    "documentId": "63bccc5e-a22b-a564-c0af-bcc0d4ebbe2a",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/AddCustomDieBlock.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/advancedcustomblocks?view=minecraft-bedrock-stable": {
+    "documentId": "a69abde4-29ff-b418-da93-d3f9a3674c26",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/AdvancedCustomBlocks.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/variationsblocktexture?view=minecraft-bedrock-stable": {
+    "documentId": "5e0aedc9-9cb0-d478-9ca0-55331e809648",
+    "updatedAt": "2025-08-19T22:35:00Z",
+    "commit": "aee2864f5c74c5a31d6d82e2df6af103d67f75ce",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/aee2864f5c74c5a31d6d82e2df6af103d67f75ce/creator/Documents/VariationsBlockTexture.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/createanimatedblocktexture?view=minecraft-bedrock-stable": {
+    "documentId": "b2d60b8c-f116-1f97-2d46-9d2c5a7cf4c3",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/CreateAnimatedBlockTexture.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/makerseriesmakingthegoblinchef?view=minecraft-bedrock-stable": {
+    "documentId": "ce4ad0b0-399d-b1c6-5bca-365c30962b49",
+    "updatedAt": "2026-02-25T22:02:00Z",
+    "commit": "fcca859d39f822dc71e8c16268653fe21c27eb2b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/fcca859d39f822dc71e8c16268653fe21c27eb2b/creator/Documents/MakerSeriesMakingTheGoblinChef.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/introductiontoaddentity?view=minecraft-bedrock-stable": {
+    "documentId": "ded1495c-5233-8717-83d5-5e3092513c5e",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/IntroductionToAddEntity.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/addcustomitems?view=minecraft-bedrock-stable": {
+    "documentId": "7c809f82-b787-8972-d749-38b426999f59",
+    "updatedAt": "2026-03-31T19:16:00Z",
+    "commit": "d782d7057bbf43cbfa1bcfe465b1536f016d96d4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d782d7057bbf43cbfa1bcfe465b1536f016d96d4/creator/Documents/AddCustomItems.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/addcustomsounds?view=minecraft-bedrock-stable": {
+    "documentId": "9155d8ab-6cd9-c2b6-055f-de0502ef591a",
+    "updatedAt": "2026-04-08T16:55:00Z",
+    "commit": "d6c3b9b415f828815c158742201565d3c82ea781",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d6c3b9b415f828815c158742201565d3c82ea781/creator/Documents/AddCustomSounds.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/skinpack?view=minecraft-bedrock-stable": {
+    "documentId": "f2d2d30b-e141-2df7-3f19-4f06bc3e116f",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/SkinPack.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/overwritingassets?view=minecraft-bedrock-stable": {
+    "documentId": "b38db2ce-f246-1113-2ff1-a73ab2f2cd5a",
+    "updatedAt": "2025-08-07T04:02:00Z",
+    "commit": "f8141b659a65f8bf09ff78b32b3f95a49bc8424e",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f8141b659a65f8bf09ff78b32b3f95a49bc8424e/creator/Documents/OverwritingAssets.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/structures/structureblockscommandtutorial?view=minecraft-bedrock-stable": {
+    "documentId": "46fa1459-15ca-7c9c-c218-dc43070a0ef6",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/Structures/StructureBlocksCommandTutorial.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/introductiontogamerules?view=minecraft-bedrock-stable": {
+    "documentId": "19d91812-7e51-6019-6c5d-253550494c05",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/IntroductionToGamerules.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/survivalspawncreation?view=minecraft-bedrock-stable": {
+    "documentId": "fac49a34-4319-3f2b-87f9-44dbe47a77c5",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/SurvivalSpawnCreation.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/createloottable?view=minecraft-bedrock-stable": {
+    "documentId": "0d3ffbae-7c32-c99e-c31e-a87ce424a5c0",
+    "updatedAt": "2026-02-25T22:02:00Z",
+    "commit": "fcca859d39f822dc71e8c16268653fe21c27eb2b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/fcca859d39f822dc71e8c16268653fe21c27eb2b/creator/Documents/CreateLootTable.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/createaninworldgame?view=minecraft-bedrock-stable": {
+    "documentId": "cf7660a7-e7f1-f1e8-6cbf-2c5ae54c00e0",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/CreateAnInWorldGame.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/managing-villages?view=minecraft-bedrock-stable": {
+    "documentId": "6affefbe-64c3-e018-e9d4-3582e606c263",
+    "updatedAt": "2026-04-21T18:49:00Z",
+    "commit": "cc19b3882ff86f83d9df530ffc712396b2d39592",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cc19b3882ff86f83d9df530ffc712396b2d39592/creator/Documents/managing-villages.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/blockbench?view=minecraft-bedrock-stable": {
+    "documentId": "166f00f0-026d-050d-78e6-439843c7a9ad",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/Blockbench.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/mctoolsoverview?view=minecraft-bedrock-stable": {
+    "documentId": "948a1c8a-91f0-7791-06eb-1020a2f0729b",
+    "updatedAt": "2026-05-05T16:53:00Z",
+    "commit": "d0e70512495fdf5fb8c2a700629fa56ff1aa00e0",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d0e70512495fdf5fb8c2a700629fa56ff1aa00e0/creator/Documents/MCToolsOverview.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/npcdialogue?view=minecraft-bedrock-stable": {
+    "documentId": "db96f8d1-4b84-da2b-68cd-3f0ef7a6f269",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/NPCDialogue.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editoroverview?view=minecraft-bedrock-stable": {
+    "documentId": "d854eaf1-8d0e-ef2e-f495-c153f2f4a1c6",
+    "updatedAt": "2026-05-26T23:27:00Z",
+    "commit": "9504021905f530d060a6227a81ec629c5c62e07b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9504021905f530d060a6227a81ec629c5c62e07b/creator/Documents/BedrockEditor/EditorOverview.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/world-generation?view=minecraft-bedrock-stable": {
+    "documentId": "44688ae0-d168-760e-2709-a55cf04c8eb8",
+    "updatedAt": "2025-11-11T19:57:00Z",
+    "commit": "54145319effd13f11844d4760e65e1825c46091a",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/54145319effd13f11844d4760e65e1825c46091a/creator/Documents/world-generation.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/comprehensivepackcontents?view=minecraft-bedrock-stable": {
+    "documentId": "42a17cd9-10b1-e59c-5a04-a79342465860",
+    "updatedAt": "2025-08-19T22:35:00Z",
+    "commit": "aee2864f5c74c5a31d6d82e2df6af103d67f75ce",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/aee2864f5c74c5a31d6d82e2df6af103d67f75ce/creator/Documents/ComprehensivePackContents.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/commonlyusedtools?view=minecraft-bedrock-stable": {
+    "documentId": "63121451-d0ef-ce48-826e-48c761f85bc8",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/CommonlyUsedTools.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/packagingaskinpack?view=minecraft-bedrock-stable": {
+    "documentId": "d2ad0506-2b3b-50e8-ef48-00b019a92013",
+    "updatedAt": "2023-12-14T18:24:00Z",
+    "commit": "da4ae83cdf16f8ae1e79d850c47d61080206ac4f",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/da4ae83cdf16f8ae1e79d850c47d61080206ac4f/creator/Documents/PackagingASkinPack.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/experimentalfeaturestoggle?view=minecraft-bedrock-stable": {
+    "documentId": "db3382dc-7239-15f1-619c-d5be66b5813b",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/ExperimentalFeaturesToggle.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/createaworldtemplate?view=minecraft-bedrock-stable": {
+    "documentId": "8e2b9146-cd4c-00e9-a6c6-3411ca9027ad",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/CreateAWorldTemplate.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/buildingsubpacks?view=minecraft-bedrock-stable": {
+    "documentId": "fa03926e-a244-2e7e-7d46-b1018196aef2",
+    "updatedAt": "2025-10-15T00:56:00Z",
+    "commit": "7b9caf5eec293d6d4253a41cfdc3691669548387",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/7b9caf5eec293d6d4253a41cfdc3691669548387/creator/Documents/BuildingSubpacks.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/convertingtexturepacks?view=minecraft-bedrock-stable": {
+    "documentId": "06734f1c-1303-fdb2-115e-8c3b07bbcf7a",
+    "updatedAt": "2023-12-14T18:24:00Z",
+    "commit": "da4ae83cdf16f8ae1e79d850c47d61080206ac4f",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/da4ae83cdf16f8ae1e79d850c47d61080206ac4f/creator/Documents/ConvertingTexturePacks.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/texturebudgets?view=minecraft-bedrock-stable": {
+    "documentId": "46f3d728-d2f2-baad-6d8a-8502bc2257f0",
+    "updatedAt": "2025-10-15T00:56:00Z",
+    "commit": "7b9caf5eec293d6d4253a41cfdc3691669548387",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/7b9caf5eec293d6d4253a41cfdc3691669548387/creator/Documents/TextureBudgets.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/preparingrawtextforlocalization?view=minecraft-bedrock-stable": {
+    "documentId": "e3dbe616-1da8-41cb-1136-73d1152d6c50",
+    "updatedAt": "2023-12-05T19:00:00Z",
+    "commit": "997e2d106fa30c4b00d8d7c0ecac6570285162f2",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/997e2d106fa30c4b00d8d7c0ecac6570285162f2/creator/Documents/PreparingRawTextForLocalization.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/simulationrenderdistanceguide?view=minecraft-bedrock-stable": {
+    "documentId": "d6a93959-2892-99b7-fa44-6ecd646afe0f",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/SimulationRenderDistanceGuide.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/addons/custompacksettings?view=minecraft-bedrock-stable": {
+    "documentId": "7d50ff4e-3090-57c3-4346-72d91b4c2c80",
+    "updatedAt": "2026-04-21T18:49:00Z",
+    "commit": "cc19b3882ff86f83d9df530ffc712396b2d39592",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cc19b3882ff86f83d9df530ffc712396b2d39592/creator/Documents/AddOns/CustomPackSettings.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/designinggameplayforvariousdevices?view=minecraft-bedrock-stable": {
+    "documentId": "325403a0-c9b9-571b-4c15-8febdfa01e99",
+    "updatedAt": "2024-01-18T19:37:00Z",
+    "commit": "177d2c0ab9c48a962e50272a117d9ee9ec69fe15",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/177d2c0ab9c48a962e50272a117d9ee9ec69fe15/creator/Documents/DesigningGameplayForVariousDevices.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/editingnbtsafely?view=minecraft-bedrock-stable": {
+    "documentId": "11fa780b-5fc4-2d7d-8d87-bc2b109f35f4",
+    "updatedAt": "2023-09-19T16:56:00Z",
+    "commit": "44c9b89690a2b20533f0cbed306eb4ec7ad59175",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/44c9b89690a2b20533f0cbed306eb4ec7ad59175/creator/Documents/EditingNBTSafely.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/basegameversioning?view=minecraft-bedrock-stable": {
+    "documentId": "2ddd347f-fae6-fa4f-5147-8ab3cf536550",
+    "updatedAt": "2026-01-08T18:24:00Z",
+    "commit": "1e246c4bd0e68f0e5df88a0b33b253d59ef9a35c",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/1e246c4bd0e68f0e5df88a0b33b253d59ef9a35c/creator/Documents/BaseGameVersioning.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/actorstorage?view=minecraft-bedrock-stable": {
+    "documentId": "0c9e79d2-9446-5809-9f14-da61ccad3b38",
+    "updatedAt": "2023-09-07T19:07:00Z",
+    "commit": "31b0234d0eff732291fce5178326ba9e447bd065",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/31b0234d0eff732291fce5178326ba9e447bd065/creator/Documents/ActorStorage.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/game-dev?view=minecraft-bedrock-stable": {
+    "documentId": "0cbdbdc7-6343-e338-6e03-09ed981099cf",
+    "updatedAt": "2026-06-16T17:10:00Z",
+    "commit": "f485796b292936a4ce6bb85884dcd84813b11f75",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f485796b292936a4ce6bb85884dcd84813b11f75/creator/Documents/game-dev/index.yml"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/commandsintroduction?view=minecraft-bedrock-stable": {
+    "documentId": "308afc9e-0653-f1eb-6637-968d0d58b6a0",
+    "updatedAt": "2025-05-06T16:52:00Z",
+    "commit": "8a750e34260fbc86c450d40017e8092b41df7f76",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/8a750e34260fbc86c450d40017e8092b41df7f76/creator/Documents/CommandsIntroduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/introduction?view=minecraft-bedrock-stable": {
+    "documentId": "c609ef36-a69a-e1eb-3fb0-15efd05ab9de",
+    "updatedAt": "2025-08-28T13:30:00Z",
+    "commit": "e3e18ef515e17693e5d8de1334b9b4422426e86c",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/e3e18ef515e17693e5d8de1334b9b4422426e86c/creator/Documents/molang/introduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/targetselectors?view=minecraft-bedrock-stable": {
+    "documentId": "a290500f-5fcf-dcc2-1156-c969ea391cf0",
+    "updatedAt": "2023-09-20T20:05:00Z",
+    "commit": "38e07ca1ab7c1bf19a8fb78baeb4a78505beb9e0",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/38e07ca1ab7c1bf19a8fb78baeb4a78505beb9e0/creator/Documents/TargetSelectors.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/redstoneguide?view=minecraft-bedrock-stable": {
+    "documentId": "e527e5a1-6738-9706-852a-acf24cb1ae0b",
+    "updatedAt": "2024-03-28T20:02:00Z",
+    "commit": "94aa9f7378e7bfc41ebc1d7aec9c59376b89eec7",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/94aa9f7378e7bfc41ebc1d7aec9c59376b89eec7/creator/Documents/RedstoneGuide.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/commandspopularcommands?view=minecraft-bedrock-stable": {
+    "documentId": "1e155a62-a6aa-25ba-97ca-8aece7c4f4bf",
+    "updatedAt": "2026-06-16T17:10:00Z",
+    "commit": "f485796b292936a4ce6bb85884dcd84813b11f75",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f485796b292936a4ce6bb85884dcd84813b11f75/creator/Documents/CommandsPopularCommands.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/functionsintroduction?view=minecraft-bedrock-stable": {
+    "documentId": "5e92495d-9e35-ffae-5270-3c27ab34f037",
+    "updatedAt": "2023-09-19T16:56:00Z",
+    "commit": "44c9b89690a2b20533f0cbed306eb4ec7ad59175",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/44c9b89690a2b20533f0cbed306eb4ec7ad59175/creator/Documents/FunctionsIntroduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/tickjsonintroduction?view=minecraft-bedrock-stable": {
+    "documentId": "62204fac-bcc2-6182-ba21-cc9f6ae7667f",
+    "updatedAt": "2023-09-19T16:56:00Z",
+    "commit": "44c9b89690a2b20533f0cbed306eb4ec7ad59175",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/44c9b89690a2b20533f0cbed306eb4ec7ad59175/creator/Documents/TickJsonIntroduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/commandsdamageintroduction?view=minecraft-bedrock-stable": {
+    "documentId": "f6caae33-8e2e-776b-47da-b01c58255799",
+    "updatedAt": "2024-03-12T17:00:00Z",
+    "commit": "5429ec80d3c3c52e797e0af528fbe481cee7e743",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/5429ec80d3c3c52e797e0af528fbe481cee7e743/creator/Documents/CommandsDamageIntroduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/introduction?view=minecraft-bedrock-stable": {
+    "documentId": "262036b7-addf-4f9e-f0b1-b612ac0c70fe",
+    "updatedAt": "2026-05-12T18:31:00Z",
+    "commit": "d075ab58fdfe8f725712fd8990417c4a86ab3744",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d075ab58fdfe8f725712fd8990417c4a86ab3744/creator/Documents/scripting/introduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/tickingareacommand?view=minecraft-bedrock-stable": {
+    "documentId": "59f6714a-0371-26cb-2c40-fcbe797a56cc",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/TickingAreaCommand.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/developer-tools?view=minecraft-bedrock-stable": {
+    "documentId": "bfd2312a-5887-1d17-309b-5db70c26f95c",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/scripting/developer-tools.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/custom-components?view=minecraft-bedrock-stable": {
+    "documentId": "9940445c-1cd2-605c-5d91-c2408f011c1c",
+    "updatedAt": "2025-10-22T19:28:00Z",
+    "commit": "a4221560c544bb2372c27a6e56fbcd3a9b23d7fb",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a4221560c544bb2372c27a6e56fbcd3a9b23d7fb/creator/Documents/scripting/custom-components.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/components-tutorial?view=minecraft-bedrock-stable": {
+    "documentId": "d644c3b3-6a7e-f03e-eb1a-2bc7ab82127e",
+    "updatedAt": "2025-07-17T14:58:00Z",
+    "commit": "90d01a7843ad3cd8f83abe9e12f0830c11e1c9e9",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/90d01a7843ad3cd8f83abe9e12f0830c11e1c9e9/creator/Documents/scripting/components-tutorial.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/next-steps?view=minecraft-bedrock-stable": {
+    "documentId": "ee160652-68d9-ad49-ee21-61ae5687a761",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/scripting/next-steps.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/custom-commands?view=minecraft-bedrock-stable": {
+    "documentId": "11e6b5f4-846f-5281-5320-e63111070c57",
+    "updatedAt": "2025-11-04T19:28:00Z",
+    "commit": "6e20208fad34700ab9433bb8dbdd803a097e1777",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/6e20208fad34700ab9433bb8dbdd803a097e1777/creator/Documents/scripting/custom-commands.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/custom-dimension-api-tutorial?view=minecraft-bedrock-stable": {
+    "documentId": "0d3b519c-5bcd-27cc-f9b8-0615d017f6cf",
+    "updatedAt": "2026-04-21T18:49:00Z",
+    "commit": "cc19b3882ff86f83d9df530ffc712396b2d39592",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cc19b3882ff86f83d9df530ffc712396b2d39592/creator/Documents/scripting/custom-dimension-api-tutorial.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/events?view=minecraft-bedrock-stable": {
+    "documentId": "8721abb8-6593-6901-6c16-2e82a369b15c",
+    "updatedAt": "2026-06-22T21:02:00Z",
+    "commit": "4e187cad470a5454ff3ebd2ecc48eb32ee85a2f1",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/4e187cad470a5454ff3ebd2ecc48eb32ee85a2f1/creator/Documents/scripting/events.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/multiplayer-scripts?view=minecraft-bedrock-stable": {
+    "documentId": "426cd893-dd7a-b0ee-cf1a-59ac960f18f8",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/scripting/multiplayer-scripts.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/system-run-guide?view=minecraft-bedrock-stable": {
+    "documentId": "3daaf50a-3cea-03f0-7ee3-ba272da43507",
+    "updatedAt": "2025-07-17T14:58:00Z",
+    "commit": "90d01a7843ad3cd8f83abe9e12f0830c11e1c9e9",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/90d01a7843ad3cd8f83abe9e12f0830c11e1c9e9/creator/Documents/scripting/system-run-guide.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/world-apis?view=minecraft-bedrock-stable": {
+    "documentId": "83e20c8e-536d-77c7-8c1d-b8cf2ed146b2",
+    "updatedAt": "2026-06-22T21:02:00Z",
+    "commit": "4e187cad470a5454ff3ebd2ecc48eb32ee85a2f1",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/4e187cad470a5454ff3ebd2ecc48eb32ee85a2f1/creator/Documents/scripting/world-apis.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/error-handling?view=minecraft-bedrock-stable": {
+    "documentId": "c86e818d-e643-664f-f2cb-9eb3fd9c1f9f",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/scripting/error-handling.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/debugging-scripts?view=minecraft-bedrock-stable": {
+    "documentId": "94b3c90d-1ec6-6d64-3bc9-ad9591a1417f",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/scripting/debugging-scripts.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/versioning?view=minecraft-bedrock-stable": {
+    "documentId": "6dffa8e2-e2ac-d6dc-d574-447bc6482bee",
+    "updatedAt": "2025-07-17T14:58:00Z",
+    "commit": "90d01a7843ad3cd8f83abe9e12f0830c11e1c9e9",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/90d01a7843ad3cd8f83abe9e12f0830c11e1c9e9/creator/Documents/scripting/versioning.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/v2-overview?view=minecraft-bedrock-stable": {
+    "documentId": "1bfbf995-6b96-4fad-8622-9cb8a0357288",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/Documents/scripting/v2-overview.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/execution-privilege?view=minecraft-bedrock-stable": {
+    "documentId": "b9ae2bb4-184f-e76c-e39c-a65e004b2b33",
+    "updatedAt": "2026-01-08T18:24:00Z",
+    "commit": "1e246c4bd0e68f0e5df88a0b33b253d59ef9a35c",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/1e246c4bd0e68f0e5df88a0b33b253d59ef9a35c/creator/Documents/scripting/execution-privilege.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/libraries?view=minecraft-bedrock-stable": {
+    "documentId": "832b1c1b-efe6-7861-9759-317b759e73ad",
+    "updatedAt": "2026-01-08T18:24:00Z",
+    "commit": "1e246c4bd0e68f0e5df88a0b33b253d59ef9a35c",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/1e246c4bd0e68f0e5df88a0b33b253d59ef9a35c/creator/Documents/scripting/libraries.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scoreboardintroduction?view=minecraft-bedrock-stable": {
+    "documentId": "de6353b4-829d-f7f6-7937-aa6fb020def8",
+    "updatedAt": "2026-03-31T19:16:00Z",
+    "commit": "d782d7057bbf43cbfa1bcfe465b1536f016d96d4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d782d7057bbf43cbfa1bcfe465b1536f016d96d4/creator/Documents/ScoreboardIntroduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scoreboardoperationstutorial?view=minecraft-bedrock-stable": {
+    "documentId": "bccef818-da59-8a51-31e9-aa76ced2ce40",
+    "updatedAt": "2026-03-31T19:16:00Z",
+    "commit": "d782d7057bbf43cbfa1bcfe465b1536f016d96d4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d782d7057bbf43cbfa1bcfe465b1536f016d96d4/creator/Documents/ScoreboardOperationsTutorial.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/introductiontosound?view=minecraft-bedrock-stable": {
+    "documentId": "1cb51574-63b3-6f99-bc17-d3b917011917",
+    "updatedAt": "2023-09-19T16:56:00Z",
+    "commit": "44c9b89690a2b20533f0cbed306eb4ec7ad59175",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/44c9b89690a2b20533f0cbed306eb4ec7ad59175/creator/Documents/IntroductionToSound.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/intro-to-ddui?view=minecraft-bedrock-stable": {
+    "documentId": "67069b74-b4d4-5f76-ca2c-5b42d3ac7441",
+    "updatedAt": "2026-05-05T16:53:00Z",
+    "commit": "d0e70512495fdf5fb8c2a700629fa56ff1aa00e0",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d0e70512495fdf5fb8c2a700629fa56ff1aa00e0/creator/Documents/scripting/intro-to-ddui.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/structures/introductiontostructureblocks?view=minecraft-bedrock-stable": {
+    "documentId": "1a166c2f-1360-cc18-111e-d21d68f40038",
+    "updatedAt": "2025-03-11T23:10:00Z",
+    "commit": "fbce9430a25c3b4a060900b9eb945ee91b85312b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/fbce9430a25c3b4a060900b9eb945ee91b85312b/creator/Documents/Structures/IntroductionToStructureBlocks.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/parkourworldguide?view=minecraft-bedrock-stable": {
+    "documentId": "4d06351c-75cc-a9ff-44b9-af4f86a19ed2",
+    "updatedAt": "2023-12-05T19:00:00Z",
+    "commit": "997e2d106fa30c4b00d8d7c0ecac6570285162f2",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/997e2d106fa30c4b00d8d7c0ecac6570285162f2/creator/Documents/ParkourWorldGuide.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/parkourintro?view=minecraft-bedrock-stable": {
+    "documentId": "d932c9b7-c76e-266c-3685-88d2f714d555",
+    "updatedAt": "2023-09-20T20:05:00Z",
+    "commit": "38e07ca1ab7c1bf19a8fb78baeb4a78505beb9e0",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/38e07ca1ab7c1bf19a8fb78baeb4a78505beb9e0/creator/Documents/ParkourIntro.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/parkourworldwalkthrough?view=minecraft-bedrock-stable": {
+    "documentId": "805f516e-c609-6285-fcd7-f4cd1386c4bb",
+    "updatedAt": "2024-12-19T19:55:00Z",
+    "commit": "bc19f1f61fdd7d54b4daa0cc98a602f36b8cce42",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bc19f1f61fdd7d54b4daa0cc98a602f36b8cce42/creator/Documents/ParkourWorldWalkthrough.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/featurestutorial_1?view=minecraft-bedrock-stable": {
+    "documentId": "42512c6d-7c31-7bd8-d66d-90ffa870f8ee",
+    "updatedAt": "2026-03-24T17:29:00Z",
+    "commit": "0d1cceb5ca771b745b92fbb4ddff5637859fe29a",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0d1cceb5ca771b745b92fbb4ddff5637859fe29a/creator/Documents/FeaturesTutorial_1.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/featurestutorial_2?view=minecraft-bedrock-stable": {
+    "documentId": "4999f01b-95f5-b6f1-ec56-6f0063d14fdf",
+    "updatedAt": "2026-03-24T17:29:00Z",
+    "commit": "0d1cceb5ca771b745b92fbb4ddff5637859fe29a",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0d1cceb5ca771b745b92fbb4ddff5637859fe29a/creator/Documents/FeaturesTutorial_2.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/structures/introductiontojigsawstructures?view=minecraft-bedrock-stable": {
+    "documentId": "0bd33530-6ca0-553a-97a9-cbb30e778f0d",
+    "updatedAt": "2025-10-30T00:18:00Z",
+    "commit": "857bf088cc950e51b36557ae2cc640aef2ab0947",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/857bf088cc950e51b36557ae2cc640aef2ab0947/creator/Documents/Structures/IntroductionToJigsawStructures.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/structures/jigsawtutorial?view=minecraft-bedrock-stable": {
+    "documentId": "f46e9ad6-e417-466b-487a-236e67ee9a23",
+    "updatedAt": "2026-06-11T18:26:00Z",
+    "commit": "9668f7f5f2fa7c32675e5334d018eaffc0139e75",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9668f7f5f2fa7c32675e5334d018eaffc0139e75/creator/Documents/Structures/JigsawTutorial.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/featurestaxonomy?view=minecraft-bedrock-stable": {
+    "documentId": "b0bca4da-7cd4-06d6-0647-77550bbe67a0",
+    "updatedAt": "2025-03-05T23:49:00Z",
+    "commit": "f0a662adfde79d8668099ea388781825cffb31ab",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f0a662adfde79d8668099ea388781825cffb31ab/creator/Documents/FeaturesTaxonomy.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/structures/terrainmatchingtips?view=minecraft-bedrock-stable": {
+    "documentId": "2cef51b3-8951-82c4-ff17-ec4aad1dc7b6",
+    "updatedAt": "2025-10-15T00:56:00Z",
+    "commit": "7b9caf5eec293d6d4253a41cfdc3691669548387",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/7b9caf5eec293d6d4253a41cfdc3691669548387/creator/Documents/Structures/TerrainMatchingTips.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/biomes/biomeoverview?view=minecraft-bedrock-stable": {
+    "documentId": "f4b0c38c-10d8-6447-a516-2321dc977ffc",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/Biomes/BiomeOverview.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/biomes/custompartialbiomereplacement?view=minecraft-bedrock-stable": {
+    "documentId": "5c446d70-1b02-3601-ef73-f2a086ee8af5",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Biomes/CustomPartialBiomeReplacement.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/datadrivenoverworldheight?view=minecraft-bedrock-stable": {
+    "documentId": "9f283b3a-351e-6c23-0d6c-a0e9ad4779d1",
+    "updatedAt": "2023-09-19T16:56:00Z",
+    "commit": "44c9b89690a2b20533f0cbed306eb4ec7ad59175",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/44c9b89690a2b20533f0cbed306eb4ec7ad59175/creator/Documents/DataDrivenOverworldHeight.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/controlschemes?view=minecraft-bedrock-stable": {
+    "documentId": "4cb291b6-cae6-298f-b000-ad0535e92928",
+    "updatedAt": "2025-05-27T19:06:00Z",
+    "commit": "c51af75c4ce443e487c895adfd350e3d66954408",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/c51af75c4ce443e487c895adfd350e3d66954408/creator/Documents/ControlSchemes.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/camerasystem?view=minecraft-bedrock-stable": {
+    "documentId": "367a5372-536e-298e-5e96-bdd57a4bf289",
+    "updatedAt": "2024-08-15T22:44:00Z",
+    "commit": "2958508decc5b1de5277d3aca95d8e8c7c1b81c5",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/2958508decc5b1de5277d3aca95d8e8c7c1b81c5/creator/Documents/CameraSystem/index.yml"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/camerasystem/cameracommandintroduction?view=minecraft-bedrock-stable": {
+    "documentId": "d58e5752-e586-a938-437d-9199e9109ce4",
+    "updatedAt": "2025-03-05T23:49:00Z",
+    "commit": "f0a662adfde79d8668099ea388781825cffb31ab",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f0a662adfde79d8668099ea388781825cffb31ab/creator/Documents/CameraSystem/CameraCommandIntroduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/foginresourcepacks?view=minecraft-bedrock-stable": {
+    "documentId": "94a2106d-0720-0e40-ee8c-ce0997cfb86a",
+    "updatedAt": "2025-06-10T19:50:00Z",
+    "commit": "bc3d924c835420ce4f2740f2a3c415ef58813a61",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bc3d924c835420ce4f2740f2a3c415ef58813a61/creator/Documents/FogInResourcePacks.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/camerasystem/camerapresetthirdperson?view=minecraft-bedrock-stable": {
+    "documentId": "d5965bb7-1e94-af20-5645-99291158660f",
+    "updatedAt": "2024-09-25T17:08:00Z",
+    "commit": "7077343c285ff8687b0130e0c496fcbe22d7aae9",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/7077343c285ff8687b0130e0c496fcbe22d7aae9/creator/Documents/CameraSystem/CameraPresetThirdPerson.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/camerasystem/introtoaimassist?view=minecraft-bedrock-stable": {
+    "documentId": "3085d2a2-e070-0dec-53f5-4c78101b1b48",
+    "updatedAt": "2025-03-05T23:49:00Z",
+    "commit": "f0a662adfde79d8668099ea388781825cffb31ab",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f0a662adfde79d8668099ea388781825cffb31ab/creator/Documents/CameraSystem/IntroToAimAssist.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/camerasystem/camerapresetfree?view=minecraft-bedrock-stable": {
+    "documentId": "d98c1be6-017c-2bd5-694f-6fcbbf188f17",
+    "updatedAt": "2026-02-03T18:43:00Z",
+    "commit": "62f88e955e9227be8d106beb59590a79b182ff97",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/62f88e955e9227be8d106beb59590a79b182ff97/creator/Documents/CameraSystem/CameraPresetFree.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/camerasystem/freecamerascriptapitutorial?view=minecraft-bedrock-stable": {
+    "documentId": "f0054a07-5d3e-3925-d578-7265f62721a6",
+    "updatedAt": "2026-05-12T18:31:00Z",
+    "commit": "d075ab58fdfe8f725712fd8990417c4a86ab3744",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d075ab58fdfe8f725712fd8990417c4a86ab3744/creator/Documents/CameraSystem/FreeCameraScriptAPITutorial.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/entitybehaviorintroduction?view=minecraft-bedrock-stable": {
+    "documentId": "4a6ceb93-44e6-516d-1a1a-ca150749cf51",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/EntityBehaviorIntroduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/camerasystem/aimassistpresets?view=minecraft-bedrock-stable": {
+    "documentId": "3784e70f-ede0-4f67-4576-d166e4883063",
+    "updatedAt": "2026-04-21T18:49:00Z",
+    "commit": "cc19b3882ff86f83d9df530ffc712396b2d39592",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cc19b3882ff86f83d9df530ffc712396b2d39592/creator/Documents/CameraSystem/AimAssistPresets.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/introductiontoentityproperties?view=minecraft-bedrock-stable": {
+    "documentId": "a9c1fc93-520d-49ef-34e0-0b560863a3c9",
+    "updatedAt": "2023-09-19T16:56:00Z",
+    "commit": "44c9b89690a2b20533f0cbed306eb4ec7ad59175",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/44c9b89690a2b20533f0cbed306eb4ec7ad59175/creator/Documents/IntroductionToEntityProperties.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/entityevents?view=minecraft-bedrock-stable": {
+    "documentId": "714edba8-4758-840c-d84d-9ca7a09b7c87",
+    "updatedAt": "2024-02-15T17:49:00Z",
+    "commit": "646293a6e57519baa21236e023a445b16ec5a222",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/646293a6e57519baa21236e023a445b16ec5a222/creator/Documents/EntityEvents.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/entitycomponentsguide?view=minecraft-bedrock-stable": {
+    "documentId": "5931773d-d829-0e71-b99b-96b4109b919b",
+    "updatedAt": "2025-12-03T19:45:00Z",
+    "commit": "4c83972bfaaffbb8154c972424641a157a6789f9",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/4c83972bfaaffbb8154c972424641a157a6789f9/creator/Documents/EntityComponentsGuide.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/entitybehaviorcomponents?view=minecraft-bedrock-stable": {
+    "documentId": "98eb1a0c-8143-1ea5-e981-e592835583b2",
+    "updatedAt": "2025-01-08T20:09:00Z",
+    "commit": "143331dd51bf749dfcf1623d8c94bffab0ceb47e",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/143331dd51bf749dfcf1623d8c94bffab0ceb47e/creator/Documents/EntityBehaviorComponents.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/animationsandcontrollers?view=minecraft-bedrock-stable": {
+    "documentId": "b33c567f-1499-8136-9d3a-0988c79f690d",
+    "updatedAt": "2026-04-08T16:55:00Z",
+    "commit": "d6c3b9b415f828815c158742201565d3c82ea781",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d6c3b9b415f828815c158742201565d3c82ea781/creator/Documents/animationsandcontrollers.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/behaviorrendercontrollers?view=minecraft-bedrock-stable": {
+    "documentId": "ba29cb8a-9a35-fed3-0a0c-3b17a1d0fb6b",
+    "updatedAt": "2026-01-08T18:24:00Z",
+    "commit": "b027dd2f1349b3eaf590945e58db5a6b7eca1c8b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b027dd2f1349b3eaf590945e58db5a6b7eca1c8b/creator/Documents/behaviorrendercontrollers.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/entity-versioning?view=minecraft-bedrock-stable": {
+    "documentId": "9c5afa8f-eed1-34c3-a2b7-0a4543f281fd",
+    "updatedAt": "2026-06-11T18:26:00Z",
+    "commit": "9668f7f5f2fa7c32675e5334d018eaffc0139e75",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9668f7f5f2fa7c32675e5334d018eaffc0139e75/creator/Documents/entity-versioning.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/entitymodelingandanimation?view=minecraft-bedrock-stable": {
+    "documentId": "249e76d5-1b78-7a9f-85ff-ebb04366d0ed",
+    "updatedAt": "2025-08-19T22:35:00Z",
+    "commit": "aee2864f5c74c5a31d6d82e2df6af103d67f75ce",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/aee2864f5c74c5a31d6d82e2df6af103d67f75ce/creator/Documents/EntityModelingAndAnimation.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/animations/animationsoverview?view=minecraft-bedrock-stable": {
+    "documentId": "06d86850-90fc-5031-5dc3-cb6c381b6fc6",
+    "updatedAt": "2026-06-22T21:02:00Z",
+    "commit": "9e5761ea679a519a61eadd9eda547a6cbe954d8c",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9e5761ea679a519a61eadd9eda547a6cbe954d8c/creator/Documents/Animations/AnimationsOverview.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/introductiontoanimationcontrollers?view=minecraft-bedrock-stable": {
+    "documentId": "78ef58ab-3771-d8f0-63df-ddd42dc9d713",
+    "updatedAt": "2025-09-03T20:33:00Z",
+    "commit": "2659147b948cb07bcf3bc611e960d0d5408ab1e7",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/2659147b948cb07bcf3bc611e960d0d5408ab1e7/creator/Documents/IntroductionToAnimationControllers.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/animations/animationcontroller?view=minecraft-bedrock-stable": {
+    "documentId": "0c8c8888-cf2f-284d-356d-7d53e6c202e7",
+    "updatedAt": "2026-06-22T21:02:00Z",
+    "commit": "9e5761ea679a519a61eadd9eda547a6cbe954d8c",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9e5761ea679a519a61eadd9eda547a6cbe954d8c/creator/Documents/Animations/AnimationController.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/animationsvscontrollers?view=minecraft-bedrock-stable": {
+    "documentId": "7de2179e-8aff-bfdc-e9f5-240617f44ff6",
+    "updatedAt": "2025-09-03T20:33:00Z",
+    "commit": "2659147b948cb07bcf3bc611e960d0d5408ab1e7",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/2659147b948cb07bcf3bc611e960d0d5408ab1e7/creator/Documents/AnimationsVsControllers.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/animations/animationrendercontroller?view=minecraft-bedrock-stable": {
+    "documentId": "4601b26a-b7c0-f59e-ccbd-2f156a715cd8",
+    "updatedAt": "2025-02-21T18:37:00Z",
+    "commit": "9324abaa0f87b518a44c6fb63bfd3980deb51425",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9324abaa0f87b518a44c6fb63bfd3980deb51425/creator/Documents/Animations/AnimationRenderController.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/createnpcs?view=minecraft-bedrock-stable": {
+    "documentId": "3041744b-d76b-9b86-7f68-925a69e0ede9",
+    "updatedAt": "2023-12-14T18:24:00Z",
+    "commit": "da4ae83cdf16f8ae1e79d850c47d61080206ac4f",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/da4ae83cdf16f8ae1e79d850c47d61080206ac4f/creator/Documents/CreateNPCs.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/animations/animationupgrade?view=minecraft-bedrock-stable": {
+    "documentId": "1bfdd8b8-80e4-eb27-5b4e-59f431e97210",
+    "updatedAt": "2025-02-21T18:37:00Z",
+    "commit": "9324abaa0f87b518a44c6fb63bfd3980deb51425",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9324abaa0f87b518a44c6fb63bfd3980deb51425/creator/Documents/Animations/AnimationUpgrade.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/introductiontoloottables?view=minecraft-bedrock-stable": {
+    "documentId": "dd485b26-f072-c98a-9e59-e5b12a3ce3ea",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/IntroductionToLootTables.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/npcdialoguedesigner?view=minecraft-bedrock-stable": {
+    "documentId": "be1ff5b6-adb1-8b10-d3bd-e48611b81259",
+    "updatedAt": "2024-05-01T20:13:00Z",
+    "commit": "c00b6b56e4a203ea6a3f495ba61ba9fabf6c9ca5",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/c00b6b56e4a203ea6a3f495ba61ba9fabf6c9ca5/creator/Documents/NPCDialogueDesigner.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/lootoverloads?view=minecraft-bedrock-stable": {
+    "documentId": "e5876e8b-ed68-4708-5221-984937a53b5c",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/LootOverloads.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/lootandtradetablefunctions?view=minecraft-bedrock-stable": {
+    "documentId": "014c7765-6d2e-34ec-1cf1-81cc763368f7",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/LootAndTradeTableFunctions.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/createtradetable?view=minecraft-bedrock-stable": {
+    "documentId": "8ea564e0-778f-46fd-a1fb-82a1b5efedb9",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/CreateTradeTable.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/loottableconditions?view=minecraft-bedrock-stable": {
+    "documentId": "ebd1d3a0-9e89-209a-6bd4-1266fb9d2ad0",
+    "updatedAt": "2025-04-30T00:32:00Z",
+    "commit": "f32bd4d1baf45cc5a3480e78d7c329bfc2eeb497",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f32bd4d1baf45cc5a3480e78d7c329bfc2eeb497/creator/Documents/LootTableConditions.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/material-files?view=minecraft-bedrock-stable": {
+    "documentId": "fb61dfa7-ded7-9bd6-f9d8-267ea707fbdd",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/material-files.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/particleeffects?view=minecraft-bedrock-stable": {
+    "documentId": "e2b70733-e6b8-a41b-e173-2a36b2766b34",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/ParticleEffects.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals?view=minecraft-bedrock-stable": {
+    "documentId": "8566203c-0adf-6c03-50e6-776b8ca5dc03",
+    "updatedAt": "2025-06-10T19:50:00Z",
+    "commit": "bc3d924c835420ce4f2740f2a3c415ef58813a61",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bc3d924c835420ce4f2740f2a3c415ef58813a61/creator/Documents/VibrantVisuals/index.yml"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/vvresourcepacks?view=minecraft-bedrock-stable": {
+    "documentId": "4f3f92de-c26e-a888-2501-3ad2565183d0",
+    "updatedAt": "2026-04-21T18:49:00Z",
+    "commit": "cc19b3882ff86f83d9df530ffc712396b2d39592",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cc19b3882ff86f83d9df530ffc712396b2d39592/creator/Documents/VibrantVisuals/VVResourcePacks.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/introvibrantvisuals?view=minecraft-bedrock-stable": {
+    "documentId": "daf851b3-d6fa-9590-ad40-d1d4840a24f1",
+    "updatedAt": "2025-06-10T19:50:00Z",
+    "commit": "bc3d924c835420ce4f2740f2a3c415ef58813a61",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bc3d924c835420ce4f2740f2a3c415ef58813a61/creator/Documents/VibrantVisuals/IntroVibrantVisuals.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/pbroverview?view=minecraft-bedrock-stable": {
+    "documentId": "33ec4376-3e98-e280-b22c-ac8de08209fa",
+    "updatedAt": "2025-12-03T19:45:00Z",
+    "commit": "4c83972bfaaffbb8154c972424641a157a6789f9",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/4c83972bfaaffbb8154c972424641a157a6789f9/creator/Documents/VibrantVisuals/PBROverview.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/useblockbenchtocreatemodelswithtextures?view=minecraft-bedrock-stable": {
+    "documentId": "7b32467c-4d31-69d6-a8ce-c6c95a9a3914",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/VibrantVisuals/UseBlockbenchToCreateModelsWithTextures.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/atmosphericscustomization?view=minecraft-bedrock-stable": {
+    "documentId": "e5713b68-685e-f4cf-a869-f634cdedf01a",
+    "updatedAt": "2025-06-10T19:50:00Z",
+    "commit": "bc3d924c835420ce4f2740f2a3c415ef58813a61",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bc3d924c835420ce4f2740f2a3c415ef58813a61/creator/Documents/VibrantVisuals/AtmosphericsCustomization.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/colorgradingtonemappingcustomization?view=minecraft-bedrock-stable": {
+    "documentId": "7312cb90-6966-8e5c-b40f-4bbd77f9fccf",
+    "updatedAt": "2025-10-01T18:44:00Z",
+    "commit": "d6c70355aca7362004a8e4de01bcb748d80fcc37",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d6c70355aca7362004a8e4de01bcb748d80fcc37/creator/Documents/VibrantVisuals/ColorGradingToneMappingCustomization.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/volumetricfoglightshaftscustomization?view=minecraft-bedrock-stable": {
+    "documentId": "c62371ad-6653-e568-5483-17f4b5c8bacb",
+    "updatedAt": "2025-06-10T19:50:00Z",
+    "commit": "bc3d924c835420ce4f2740f2a3c415ef58813a61",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bc3d924c835420ce4f2740f2a3c415ef58813a61/creator/Documents/VibrantVisuals/VolumetricFogLightShaftsCustomization.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/cubemapcustomization?view=minecraft-bedrock-stable": {
+    "documentId": "920f52a7-d1c4-f864-6694-2868afd27fe8",
+    "updatedAt": "2025-10-15T00:56:00Z",
+    "commit": "7b9caf5eec293d6d4253a41cfdc3691669548387",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/7b9caf5eec293d6d4253a41cfdc3691669548387/creator/Documents/VibrantVisuals/CubemapCustomization.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/subsurfacescatteringcustomization?view=minecraft-bedrock-stable": {
+    "documentId": "54f6f331-7b42-b72e-18af-ddff4b53d3f4",
+    "updatedAt": "2025-06-10T19:50:00Z",
+    "commit": "bc3d924c835420ce4f2740f2a3c415ef58813a61",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bc3d924c835420ce4f2740f2a3c415ef58813a61/creator/Documents/VibrantVisuals/SubSurfaceScatteringCustomization.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/lightingcustomization?view=minecraft-bedrock-stable": {
+    "documentId": "faaa34a7-f152-f656-1e84-7900d52a4fc9",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/VibrantVisuals/LightingCustomization.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/shadowscustomization?view=minecraft-bedrock-stable": {
+    "documentId": "da673ff9-0924-9aa5-957f-1c898ef252c2",
+    "updatedAt": "2025-06-10T19:50:00Z",
+    "commit": "bc3d924c835420ce4f2740f2a3c415ef58813a61",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bc3d924c835420ce4f2740f2a3c415ef58813a61/creator/Documents/VibrantVisuals/ShadowsCustomization.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/watercustomization?view=minecraft-bedrock-stable": {
+    "documentId": "b26c7882-c2cd-3f23-d5e5-6ca49f4d4cb5",
+    "updatedAt": "2025-12-04T19:22:00Z",
+    "commit": "6485e0ec7e0c3336f15e2aa15a34831bb31bad7b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/6485e0ec7e0c3336f15e2aa15a34831bb31bad7b/creator/Documents/VibrantVisuals/WaterCustomization.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/keyframejsonsyntax?view=minecraft-bedrock-stable": {
+    "documentId": "d7eb0af6-a467-6aa1-e18f-3fa5319dfc8d",
+    "updatedAt": "2025-06-10T19:50:00Z",
+    "commit": "bc3d924c835420ce4f2740f2a3c415ef58813a61",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bc3d924c835420ce4f2740f2a3c415ef58813a61/creator/Documents/VibrantVisuals/KeyFrameJSONSyntax.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/vibrantvisuals/biomecustomization?view=minecraft-bedrock-stable": {
+    "documentId": "aea588b3-d0f0-da2d-4e07-f4fe57dd4666",
+    "updatedAt": "2025-10-15T00:56:00Z",
+    "commit": "7b9caf5eec293d6d4253a41cfdc3691669548387",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/7b9caf5eec293d6d4253a41cfdc3691669548387/creator/Documents/VibrantVisuals/BiomeCustomization.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/rtxgettingstarted?view=minecraft-bedrock-stable": {
+    "documentId": "04985c5f-08cd-eb21-b2b5-0452473d8f36",
+    "updatedAt": "2025-06-10T19:50:00Z",
+    "commit": "bc3d924c835420ce4f2740f2a3c415ef58813a61",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bc3d924c835420ce4f2740f2a3c415ef58813a61/creator/Documents/RTXGettingStarted.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/recipeintroduction?view=minecraft-bedrock-stable": {
+    "documentId": "e8dc6ed7-8218-b366-aaad-720e7f8b75b3",
+    "updatedAt": "2025-06-25T17:30:00Z",
+    "commit": "a0dd9ed14bbf93c1d770683809d503696d136387",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a0dd9ed14bbf93c1d770683809d503696d136387/creator/Documents/RecipeIntroduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/rtxpbrintro?view=minecraft-bedrock-stable": {
+    "documentId": "33ec4376-3e98-e280-b22c-ac8de08209fa",
+    "updatedAt": "2025-12-03T19:45:00Z",
+    "commit": "4c83972bfaaffbb8154c972424641a157a6789f9",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/4c83972bfaaffbb8154c972424641a157a6789f9/creator/Documents/VibrantVisuals/PBROverview.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/create-custom-potions?view=minecraft-bedrock-stable": {
+    "documentId": "b77a37a5-217e-6daa-d077-4fd2c5b6af1c",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/create-custom-potions.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/craftingitemcatalogdocumentation?view=minecraft-bedrock-stable": {
+    "documentId": "98484089-b472-458a-1697-1793ea948ccd",
+    "updatedAt": "2025-02-12T22:12:00Z",
+    "commit": "4251babfd4b781038b132ec9f368d582336fba29",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/4251babfd4b781038b132ec9f368d582336fba29/creator/Documents/CraftingItemCatalogDocumentation.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/attachables?view=minecraft-bedrock-stable": {
+    "documentId": "4c77d618-0700-2194-9c55-f84dd32085ba",
+    "updatedAt": "2026-03-31T19:16:00Z",
+    "commit": "d782d7057bbf43cbfa1bcfe465b1536f016d96d4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d782d7057bbf43cbfa1bcfe465b1536f016d96d4/creator/Documents/attachables.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/custom_projectiles?view=minecraft-bedrock-stable": {
+    "documentId": "52145a71-af02-2099-b8e2-1021b2cd566c",
+    "updatedAt": "2026-03-31T19:16:00Z",
+    "commit": "d782d7057bbf43cbfa1bcfe465b1536f016d96d4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d782d7057bbf43cbfa1bcfe465b1536f016d96d4/creator/Documents/custom_projectiles.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/introtoenchantments?view=minecraft-bedrock-stable": {
+    "documentId": "56572e7a-1585-33ff-ec02-5f8c9a2eb4f6",
+    "updatedAt": "2025-01-30T18:25:00Z",
+    "commit": "15faf689b52832724454fefcc28769bd49ba1268",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/15faf689b52832724454fefcc28769bd49ba1268/creator/Documents/IntroToEnchantments.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/structures/morefunwithstructureblocks?view=minecraft-bedrock-stable": {
+    "documentId": "402a7fdd-7323-f270-3f32-2af8ceb04c0a",
+    "updatedAt": "2026-07-22T16:27:00Z",
+    "commit": "bd6187e85a8adcf0cba801c7069950838b80928a",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bd6187e85a8adcf0cba801c7069950838b80928a/creator/Documents/Structures/MoreFunWithStructureBlocks.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/commandblocks?view=minecraft-bedrock-stable": {
+    "documentId": "8ed671f3-fe39-198e-118b-e5a507a48760",
+    "updatedAt": "2025-05-06T16:52:00Z",
+    "commit": "8a750e34260fbc86c450d40017e8092b41df7f76",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/8a750e34260fbc86c450d40017e8092b41df7f76/creator/Documents/CommandBlocks.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/intro-block-traits?view=minecraft-bedrock-stable": {
+    "documentId": "fac3c471-5955-6dc4-f763-7228289602ae",
+    "updatedAt": "2026-06-11T18:26:00Z",
+    "commit": "9668f7f5f2fa7c32675e5334d018eaffc0139e75",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9668f7f5f2fa7c32675e5334d018eaffc0139e75/creator/Documents/intro-block-traits.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/commandblocksnowballfight?view=minecraft-bedrock-stable": {
+    "documentId": "00e5c798-0720-9f1e-a75f-76d87b3f9307",
+    "updatedAt": "2025-03-05T23:49:00Z",
+    "commit": "f0a662adfde79d8668099ea388781825cffb31ab",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/f0a662adfde79d8668099ea388781825cffb31ab/creator/Documents/CommandBlockSnowballFight.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/multi-blocks?view=minecraft-bedrock-stable": {
+    "documentId": "aca8d436-9da6-2374-3eb5-b327c20af420",
+    "updatedAt": "2026-08-04T15:05:00Z",
+    "commit": "ae5b6350966f5252bd6b0b774ca6d436aae6bcd0",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/ae5b6350966f5252bd6b0b774ca6d436aae6bcd0/creator/Documents/multi-blocks.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/customblockrenderlighting?view=minecraft-bedrock-stable": {
+    "documentId": "b1f0d665-1df0-d8d3-c6f3-a8a829db7862",
+    "updatedAt": "2024-10-31T20:06:00Z",
+    "commit": "bae90e6017510bea043520674b4eafb94e9c5a3e",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bae90e6017510bea043520674b4eafb94e9c5a3e/creator/Documents/CustomBlockRenderLighting.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/customblockrenderdistance?view=minecraft-bedrock-stable": {
+    "documentId": "e7ad5a4a-c221-d419-70b2-22937d57e3ec",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/CustomBlockRenderDistance.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/customblockoversized?view=minecraft-bedrock-stable": {
+    "documentId": "735e3e50-fa47-9df5-a5bd-79be5c4f3618",
+    "updatedAt": "2026-02-03T18:43:00Z",
+    "commit": "62f88e955e9227be8d106beb59590a79b182ff97",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/62f88e955e9227be8d106beb59590a79b182ff97/creator/Documents/CustomBlockOversized.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/copycoordinates?view=minecraft-bedrock-stable": {
+    "documentId": "113e4ca3-15f3-4677-ea8c-95d69b92c382",
+    "updatedAt": "2023-09-19T16:56:00Z",
+    "commit": "44c9b89690a2b20533f0cbed306eb4ec7ad59175",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/44c9b89690a2b20533f0cbed306eb4ec7ad59175/creator/Documents/CopyCoordinates.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/contenterrorlog?view=minecraft-bedrock-stable": {
+    "documentId": "05710c2c-85f2-f8d1-1d96-2f91762ac20f",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/ContentErrorLog.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/voxelshapes?view=minecraft-bedrock-stable": {
+    "documentId": "aaa20727-7e6a-7098-774c-14ee2d45f50a",
+    "updatedAt": "2026-05-05T16:53:00Z",
+    "commit": "d0e70512495fdf5fb8c2a700629fa56ff1aa00e0",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/d0e70512495fdf5fb8c2a700629fa56ff1aa00e0/creator/Documents/VoxelShapes.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorinstallation?view=minecraft-bedrock-stable": {
+    "documentId": "bb86e488-61fc-5f9a-2b5d-ed1899552ab6",
+    "updatedAt": "2025-10-22T19:28:00Z",
+    "commit": "a4221560c544bb2372c27a6e56fbcd3a9b23d7fb",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a4221560c544bb2372c27a6e56fbcd3a9b23d7fb/creator/Documents/BedrockEditor/EditorInstallation.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/gametestbuildyourfirstgametest?view=minecraft-bedrock-stable": {
+    "documentId": "54e64e75-0ce4-9d26-da13-072bf3d2d46d",
+    "updatedAt": "2024-06-19T17:21:00Z",
+    "commit": "1860c55af6010bc2f5ec2b6f5fb883242d0cb31e",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/1860c55af6010bc2f5ec2b6f5fb883242d0cb31e/creator/Documents/GameTestBuildYourFirstGameTest.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/gametestgettingstarted?view=minecraft-bedrock-stable": {
+    "documentId": "5fe79828-ffca-0863-8ee1-7befe637d2b5",
+    "updatedAt": "2024-06-19T17:21:00Z",
+    "commit": "1860c55af6010bc2f5ec2b6f5fb883242d0cb31e",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/1860c55af6010bc2f5ec2b6f5fb883242d0cb31e/creator/Documents/GameTestGettingStarted.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editoractionbar?view=minecraft-bedrock-stable": {
+    "documentId": "04d1a185-1b62-1d68-7f90-ad26ced0a94d",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/BedrockEditor/EditorActionBar.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor?view=minecraft-bedrock-stable": {
+    "documentId": "efb347d2-f799-eaec-c9fe-5c11d5676717",
+    "updatedAt": "2026-05-26T23:27:00Z",
+    "commit": "9504021905f530d060a6227a81ec629c5c62e07b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9504021905f530d060a6227a81ec629c5c62e07b/creator/Documents/BedrockEditor/index.yml"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editortutorial?view=minecraft-bedrock-stable": {
+    "documentId": "b1b7833e-84b6-ad9e-0e95-637dc1c45122",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/BedrockEditor/EditorTutorial.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorkeyboardinputs?view=minecraft-bedrock-stable": {
+    "documentId": "99510214-dbbf-5337-033a-e8c18d39ede8",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/BedrockEditor/EditorKeyboardInputs.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorpastepreview?view=minecraft-bedrock-stable": {
+    "documentId": "5884cc33-6e57-acce-ea5c-72a5cdb17b82",
+    "updatedAt": "2025-10-22T19:28:00Z",
+    "commit": "a4221560c544bb2372c27a6e56fbcd3a9b23d7fb",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a4221560c544bb2372c27a6e56fbcd3a9b23d7fb/creator/Documents/BedrockEditor/EditorPastePreview.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editortoolmode?view=minecraft-bedrock-stable": {
+    "documentId": "0ef12957-56b6-974f-f2e2-947309ba4bae",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/BedrockEditor/EditorToolMode.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorvibrantvisuals?view=minecraft-bedrock-stable": {
+    "documentId": "8a1a65b6-e710-f095-dac4-0bb95a65c408",
+    "updatedAt": "2026-05-26T23:27:00Z",
+    "commit": "9504021905f530d060a6227a81ec629c5c62e07b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9504021905f530d060a6227a81ec629c5c62e07b/creator/Documents/BedrockEditor/EditorVibrantVisuals.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorworkflow?view=minecraft-bedrock-stable": {
+    "documentId": "ea3776dc-0ea8-72bd-13b7-fbf48fdc4a86",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/BedrockEditor/EditorWorkflow.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorselectiontool?view=minecraft-bedrock-stable": {
+    "documentId": "51c756aa-5a93-c6db-3eaa-5182b2842c8f",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorSelectionTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorworldoptions?view=minecraft-bedrock-stable": {
+    "documentId": "a0461bef-389a-6523-0de5-dcb5ce7cec99",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/BedrockEditor/EditorWorldOptions.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorlinetool?view=minecraft-bedrock-stable": {
+    "documentId": "2521f265-5131-8576-12c8-5bac6007c8fb",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorLineTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorpenciltool?view=minecraft-bedrock-stable": {
+    "documentId": "0a908f9f-039f-071d-2a90-3453f68abe00",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorPencilTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorrulertool?view=minecraft-bedrock-stable": {
+    "documentId": "88317926-7f65-6e6e-1a3f-8594c5e56d81",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorRulerTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorbrushtool?view=minecraft-bedrock-stable": {
+    "documentId": "01313184-e99c-09dc-4452-be25e35bbb83",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorBrushTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorfilltool?view=minecraft-bedrock-stable": {
+    "documentId": "cc6790c6-4250-ee07-5f68-5bf76fa8db0a",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorFillTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorterraintool?view=minecraft-bedrock-stable": {
+    "documentId": "c804f686-b651-73c6-95d3-91f85c416425",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorTerrainTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorextrudetool?view=minecraft-bedrock-stable": {
+    "documentId": "37f09cc2-5b6d-bde3-efcf-7b0c663e2b73",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorExtrudeTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorrepeatertool?view=minecraft-bedrock-stable": {
+    "documentId": "9b9022da-4c8a-a71a-47eb-5fc651743ff3",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorRepeaterTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorsummontool?view=minecraft-bedrock-stable": {
+    "documentId": "46eee781-7365-9c0b-a8cf-62443e78412b",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorSummonTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorflood?view=minecraft-bedrock-stable": {
+    "documentId": "805afec8-1743-e162-bad0-1b3b8a8568dd",
+    "updatedAt": "2026-05-26T23:27:00Z",
+    "commit": "9504021905f530d060a6227a81ec629c5c62e07b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9504021905f530d060a6227a81ec629c5c62e07b/creator/Documents/BedrockEditor/EditorFlood.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorfarmtool?view=minecraft-bedrock-stable": {
+    "documentId": "6640f07f-f7a1-dc4d-fd51-2ed8d0f8d2f2",
+    "updatedAt": "2026-05-26T23:27:00Z",
+    "commit": "9504021905f530d060a6227a81ec629c5c62e07b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9504021905f530d060a6227a81ec629c5c62e07b/creator/Documents/BedrockEditor/EditorFarmTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorchunkmanagement?view=minecraft-bedrock-stable": {
+    "documentId": "bde6bd5c-98c3-857f-8d11-db077ccbfb4e",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorChunkManagement.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorcameratool?view=minecraft-bedrock-stable": {
+    "documentId": "ca4bd49c-2896-93eb-0af8-40ea4cb44f44",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorCameraTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorscaletool?view=minecraft-bedrock-stable": {
+    "documentId": "dce5e613-e420-a492-bc66-abc643b772a6",
+    "updatedAt": "2026-03-05T23:20:00Z",
+    "commit": "cb8c176a1e5fe0112e097f5b3c2ef367436b0420",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cb8c176a1e5fe0112e097f5b3c2ef367436b0420/creator/Documents/BedrockEditor/EditorScaleTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorjigsaws?view=minecraft-bedrock-stable": {
+    "documentId": "d64b9b9b-8482-2c04-ce5c-da252892624a",
+    "updatedAt": "2026-05-26T23:27:00Z",
+    "commit": "9504021905f530d060a6227a81ec629c5c62e07b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9504021905f530d060a6227a81ec629c5c62e07b/creator/Documents/BedrockEditor/EditorJigsaws.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorcustommeshtool?view=minecraft-bedrock-stable": {
+    "documentId": "00b0d64e-c79a-e019-d2bc-ab00e33d29b6",
+    "updatedAt": "2026-05-26T23:27:00Z",
+    "commit": "9504021905f530d060a6227a81ec629c5c62e07b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9504021905f530d060a6227a81ec629c5c62e07b/creator/Documents/BedrockEditor/EditorCustomMeshTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorfillbiomestool?view=minecraft-bedrock-stable": {
+    "documentId": "295880ad-0ae9-2a33-3cd1-19427155ac23",
+    "updatedAt": "2026-05-26T23:27:00Z",
+    "commit": "9504021905f530d060a6227a81ec629c5c62e07b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9504021905f530d060a6227a81ec629c5c62e07b/creator/Documents/BedrockEditor/EditorFillBiomesTool.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorblockinspector?view=minecraft-bedrock-stable": {
+    "documentId": "946fc568-cd1a-7929-9556-19d357079fbc",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/BedrockEditor/EditorBlockInspector.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorentityinspector?view=minecraft-bedrock-stable": {
+    "documentId": "fab44e3b-372c-9d24-3727-1783f4e62e83",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/BedrockEditor/EditorEntityInspector.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorstructures?view=minecraft-bedrock-stable": {
+    "documentId": "99ce49d9-ea0d-79c8-390a-c96bf3d19d8b",
+    "updatedAt": "2026-05-26T23:27:00Z",
+    "commit": "9504021905f530d060a6227a81ec629c5c62e07b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9504021905f530d060a6227a81ec629c5c62e07b/creator/Documents/BedrockEditor/EditorStructures.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorworkbench?view=minecraft-bedrock-stable": {
+    "documentId": "79f87ca8-e96b-bfd0-b488-f7f8be8a441b",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/BedrockEditor/EditorWorkbench.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorcustomdimensions?view=minecraft-bedrock-stable": {
+    "documentId": "c5a98636-ea56-afb4-fd10-d7ff362bd600",
+    "updatedAt": "2026-05-26T23:27:00Z",
+    "commit": "9504021905f530d060a6227a81ec629c5c62e07b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/9504021905f530d060a6227a81ec629c5c62e07b/creator/Documents/BedrockEditor/EditorCustomDimensions.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorextensionsintroduction?view=minecraft-bedrock-stable": {
+    "documentId": "8f1ca83c-4422-12e1-c834-7816c3dc24a3",
+    "updatedAt": "2025-09-23T18:48:00Z",
+    "commit": "3dd40fd180aca77ee274da91b26f33062bee289d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/3dd40fd180aca77ee274da91b26f33062bee289d/creator/Documents/BedrockEditor/EditorExtensionsIntroduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/minecraftentitywizard?view=minecraft-bedrock-stable": {
+    "documentId": "79c7652f-5c4e-768c-ca52-1ac2ff1790f5",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/MinecraftEntityWizard.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/snowstormoverview?view=minecraft-bedrock-stable": {
+    "documentId": "dac353b9-8973-59b4-f5e8-a47d4ad0fee7",
+    "updatedAt": "2024-06-26T19:43:00Z",
+    "commit": "a9bb91bb383dafe1747314416080d0ec0be5a188",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a9bb91bb383dafe1747314416080d0ec0be5a188/creator/Documents/SnowstormOverview.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/minecraftitemwizard?view=minecraft-bedrock-stable": {
+    "documentId": "c1b292f8-c0c9-78dd-e17f-18121f727501",
+    "updatedAt": "2025-05-06T16:52:00Z",
+    "commit": "8a750e34260fbc86c450d40017e8092b41df7f76",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/8a750e34260fbc86c450d40017e8092b41df7f76/creator/Documents/MinecraftItemWizard.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/chunkeradvancedmode?view=minecraft-bedrock-stable": {
+    "documentId": "c78a5c36-9425-6386-2041-69bf2b3fd18b",
+    "updatedAt": "2025-04-17T00:08:00Z",
+    "commit": "376d9cc99958b5da1d53e0b81365e52910f5f922",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/376d9cc99958b5da1d53e0b81365e52910f5f922/creator/Documents/ChunkerAdvancedMode.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/chunkeroverview?view=minecraft-bedrock-stable": {
+    "documentId": "9f2fb27f-0ce1-9541-e617-7fe8148f8297",
+    "updatedAt": "2025-04-17T00:08:00Z",
+    "commit": "376d9cc99958b5da1d53e0b81365e52910f5f922",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/376d9cc99958b5da1d53e0b81365e52910f5f922/creator/Documents/ChunkerOverview.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/chunkerworldsettings?view=minecraft-bedrock-stable": {
+    "documentId": "fa4a7939-f373-fb31-26a6-91e945ce1a6a",
+    "updatedAt": "2025-04-17T00:08:00Z",
+    "commit": "376d9cc99958b5da1d53e0b81365e52910f5f922",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/376d9cc99958b5da1d53e0b81365e52910f5f922/creator/Documents/ChunkerWorldSettings.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/minecraftblockwizard?view=minecraft-bedrock-stable": {
+    "documentId": "0674a6cd-2b82-f002-6ffc-a88feeaa8552",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/MinecraftBlockWizard.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/chunkerthenether?view=minecraft-bedrock-stable": {
+    "documentId": "c2e4afd0-2e7e-d74b-1fb4-08c367a79217",
+    "updatedAt": "2025-04-17T00:08:00Z",
+    "commit": "376d9cc99958b5da1d53e0b81365e52910f5f922",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/376d9cc99958b5da1d53e0b81365e52910f5f922/creator/Documents/ChunkerTheNether.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockserver/getting-started?view=minecraft-bedrock-stable": {
+    "documentId": "611f75f3-b6b6-db8c-d8ae-f3c36d22d0b9",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/BedrockServer/getting-started.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockserver/server-properties?view=minecraft-bedrock-stable": {
+    "documentId": "ae6f84fe-9235-9bc0-573a-dd7fbce79045",
+    "updatedAt": "2025-06-25T17:30:00Z",
+    "commit": "a0dd9ed14bbf93c1d770683809d503696d136387",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a0dd9ed14bbf93c1d770683809d503696d136387/creator/Documents/BedrockServer/server-properties.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockserver/pack-optimization?view=minecraft-bedrock-stable": {
+    "documentId": "68699406-de5f-46a5-de01-aede90100ec6",
+    "updatedAt": "2026-08-03T19:24:00Z",
+    "commit": "58810fa0038b5c38e7095c7b0e1a8b4dec976023",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/58810fa0038b5c38e7095c7b0e1a8b4dec976023/creator/Documents/BedrockServer/pack-optimization.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/practical-molang?view=minecraft-bedrock-stable": {
+    "documentId": "7946b4f0-5d3e-1ee9-4009-d2d7849052c7",
+    "updatedAt": "2025-08-28T13:30:00Z",
+    "commit": "e3e18ef515e17693e5d8de1334b9b4422426e86c",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/e3e18ef515e17693e5d8de1334b9b4422426e86c/creator/Documents/molang/practical-molang.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockserver/scripting?view=minecraft-bedrock-stable": {
+    "documentId": "191ae866-8ac9-26e1-fe9a-3b90ba173cfc",
+    "updatedAt": "2025-07-17T14:58:00Z",
+    "commit": "90d01a7843ad3cd8f83abe9e12f0830c11e1c9e9",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/90d01a7843ad3cd8f83abe9e12f0830c11e1c9e9/creator/Documents/BedrockServer/scripting.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/differencesbetweenbedrockandjava?view=minecraft-bedrock-stable": {
+    "documentId": "8293cbae-4896-4d03-9764-09e23027db99",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/DifferencesBetweenBedrockAndJava.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/moreinfosources?view=minecraft-bedrock-stable": {
+    "documentId": "b6a61a2a-9763-4128-2293-af572a80a782",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/MoreInfoSources.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/minecraftfileextensions?view=minecraft-bedrock-stable": {
+    "documentId": "769ea11e-b897-5399-8335-14937a03249c",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/MinecraftFileExtensions.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/syntax-guide?view=minecraft-bedrock-stable": {
+    "documentId": "1a1c4ece-b3e3-12fa-2e61-5946dbccba70",
+    "updatedAt": "2025-09-03T20:33:00Z",
+    "commit": "2659147b948cb07bcf3bc611e960d0d5408ab1e7",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/2659147b948cb07bcf3bc611e960d0d5408ab1e7/creator/Documents/molang/syntax-guide.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/practices/latestplatformversion?view=minecraft-bedrock-stable": {
+    "documentId": "67ea14d3-dfc2-60b4-3f6b-9f19a592dfcf",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/Practices/LatestPlatformVersion.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/troubleshootingaddons?view=minecraft-bedrock-stable": {
+    "documentId": "6731fefd-c8d1-6910-802d-3cb06a147b85",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/TroubleshootingAddons.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/practices/guidelinesforbuildingcooperativeaddons?view=minecraft-bedrock-stable": {
+    "documentId": "e3ac084b-2978-69e8-c6df-a25304d4348c",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Practices/GuidelinesForBuildingCooperativeAddons.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/practices/improvingperformanceandresourceusage?view=minecraft-bedrock-stable": {
+    "documentId": "cf574974-011a-3460-3bf5-32c9869a1543",
+    "updatedAt": "2025-07-22T19:45:00Z",
+    "commit": "a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a1e9eda2c2cd27c56c5bec834d37e6fd75c2f15b/creator/Documents/Practices/ImprovingPerformanceAndResourceUsage.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/tipsforusingthissite?view=minecraft-bedrock-stable": {
+    "documentId": "24d4905a-c2c9-eecf-67a5-de3d86c78ad0",
+    "updatedAt": "2024-07-10T17:26:00Z",
+    "commit": "a538308341e557d954199682548f7ee8b7d62535",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a538308341e557d954199682548f7ee8b7d62535/creator/Documents/TipsForUsingThisSite.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/addonsreference/packmanifest?view=minecraft-bedrock-stable": {
+    "documentId": "dd81f1e7-f5d4-f41e-91a7-4f269b8feea2",
+    "updatedAt": "2026-04-21T18:49:00Z",
+    "commit": "cc19b3882ff86f83d9df530ffc712396b2d39592",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/cc19b3882ff86f83d9df530ffc712396b2d39592/creator/Reference/Content/AddonsReference/PackManifest.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/contributorguide?view=minecraft-bedrock-stable": {
+    "documentId": "6f3ed6d4-decb-73b4-38f6-c16f4a599071",
+    "updatedAt": "2025-05-06T16:52:00Z",
+    "commit": "8a750e34260fbc86c450d40017e8092b41df7f76",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/8a750e34260fbc86c450d40017e8092b41df7f76/creator/Documents/ContributorGuide.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/styleguide?view=minecraft-bedrock-stable": {
+    "documentId": "b32beb49-9bd9-c379-4bf7-afa475be3779",
+    "updatedAt": "2023-09-19T16:56:00Z",
+    "commit": "44c9b89690a2b20533f0cbed306eb4ec7ad59175",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/44c9b89690a2b20533f0cbed306eb4ec7ad59175/creator/Documents/StyleGuide.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/entityreference/examples/componentlist?view=minecraft-bedrock-stable": {
+    "documentId": "296ef259-dfc5-929a-ed02-3c115f3e861a",
+    "updatedAt": "2026-08-25T16:03:00Z",
+    "commit": "fea2a3d83c3ba1761a8f755d091c3747877256a8",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/fea2a3d83c3ba1761a8f755d091c3747877256a8/creator/Reference/Content/EntityReference/Examples/ComponentList.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/minecraft-server?view=minecraft-bedrock-stable": {
+    "documentId": "7efaca22-7ee0-4ef8-1754-8dedc3169f7d",
+    "updatedAt": "2026-09-16T16:14:00Z",
+    "commit": "6a6390ab15d243ef05e56c07074239722248b981",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/6a6390ab15d243ef05e56c07074239722248b981/creator/ScriptAPI/minecraft/server/minecraft-server.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/customblock?view=minecraft-bedrock-stable": {
+    "documentId": "63bccc5e-a22b-a564-c0af-bcc0d4ebbe2a",
+    "updatedAt": "2026-01-28T23:26:00Z",
+    "commit": "0a6a624a963ac6b57d09bd11f925fa12100fffc4",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/0a6a624a963ac6b57d09bd11f925fa12100fffc4/creator/Documents/AddCustomDieBlock.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/blockreference/examples/blockcomponents/blockcomponentslist?view=minecraft-bedrock-stable": {
+    "documentId": "1fc33d99-62f2-dee9-c865-3517fa9d4589",
+    "updatedAt": "2026-08-25T16:03:00Z",
+    "commit": "fea2a3d83c3ba1761a8f755d091c3747877256a8",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/fea2a3d83c3ba1761a8f755d091c3747877256a8/creator/Reference/Content/BlockReference/Examples/BlockComponents/BlockComponentsList.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/itemreference/examples/itemcomponentlist?view=minecraft-bedrock-stable": {
+    "documentId": "e43e50ff-ba33-036b-f395-e01f225d5e3e",
+    "updatedAt": "2026-05-20T00:07:00Z",
+    "commit": "bb4fdc051f51f42a60328bd9e01c905b9289354d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bb4fdc051f51f42a60328bd9e01c905b9289354d/creator/Reference/Content/ItemReference/Examples/ItemComponentList.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/featuresreference/examples/featuresintroduction?view=minecraft-bedrock-stable": {
+    "documentId": "19f40537-18f5-fa55-1bbf-8a58d69c41a6",
+    "updatedAt": "2026-07-29T21:28:00Z",
+    "commit": "e1b93f156ff1fd42621e130f91e7362270a477a9",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/e1b93f156ff1fd42621e130f91e7362270a477a9/creator/Reference/Content/FeaturesReference/Examples/FeaturesIntroduction.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/worldafterevents?view=minecraft-bedrock-stable": {
+    "documentId": "f0d4c879-595b-236b-47fb-02385c770991",
+    "updatedAt": "2026-09-16T16:14:00Z",
+    "commit": "6a6390ab15d243ef05e56c07074239722248b981",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/6a6390ab15d243ef05e56c07074239722248b981/creator/ScriptAPI/minecraft/server/WorldAfterEvents.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/biomesreference/examples/componentlist?view=minecraft-bedrock-stable": {
+    "documentId": "260a6578-36ca-1c42-dde5-cfdd95ef752e",
+    "updatedAt": "2026-05-20T00:07:00Z",
+    "commit": "bb4fdc051f51f42a60328bd9e01c905b9289354d",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bb4fdc051f51f42a60328bd9e01c905b9289354d/creator/Reference/Content/BiomesReference/Examples/ComponentList.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/systemafterevents?view=minecraft-bedrock-stable": {
+    "documentId": "45de6339-9fa3-6828-2291-201b42b43cdf",
+    "updatedAt": "2025-07-31T23:03:00Z",
+    "commit": "b5a6f09a9f73fe3df6c01044f788174d31791465",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/b5a6f09a9f73fe3df6c01044f788174d31791465/creator/ScriptAPI/minecraft/server/SystemAfterEvents.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/minecraft-server-ui?view=minecraft-bedrock-stable": {
+    "documentId": "0d089746-9c4b-101f-71f4-34140c0a6b05",
+    "updatedAt": "2026-09-16T16:14:00Z",
+    "commit": "6a6390ab15d243ef05e56c07074239722248b981",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/6a6390ab15d243ef05e56c07074239722248b981/creator/ScriptAPI/minecraft/server-ui/minecraft-server-ui.md"
+  },
+  "https://learn.microsoft.com/en-us/minecraft/creator/documents/rtxpbrtutorial?view=minecraft-bedrock-stable": {
+    "documentId": "9949239b-db87-e3e4-ee23-f590c8163cde",
+    "updatedAt": "2025-06-10T19:50:00Z",
+    "commit": "bc3d924c835420ce4f2740f2a3c415ef58813a61",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/bc3d924c835420ce4f2740f2a3c415ef58813a61/creator/Documents/RTXPBRTutorial.md"
+  }
+}

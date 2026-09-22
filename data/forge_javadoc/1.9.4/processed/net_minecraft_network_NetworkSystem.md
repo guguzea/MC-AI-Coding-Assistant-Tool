@@ -1,5 +1,7 @@
 # NetworkSystem
 
+**Inheritance:** java.lang.Object → net.minecraft.network.NetworkSystem
+
 ## Class signature
 
 ```java
@@ -8,12 +10,19 @@ public class NetworkSystem extends java.lang.Object
 
 ## Constructors
 
-- `public NetworkSystem( MinecraftServer server)`
+- `NetworkSystem(MinecraftServer server)`
 
 ## Methods
 
-- `public void addLanEndpoint(java.net.InetAddress address, int port) throws java.io.IOException`
-- `public java.net.SocketAddress addLocalEndpoint()`
-- `public void terminateEndpoints()`
-- `public void networkTick()`
-- `public MinecraftServer getServer()`
+- `void addLanEndpoint(java.net.InetAddress address, int port)`
+- `java.net.SocketAddress addLocalEndpoint()`
+- `MinecraftServer getServer()`
+- `void networkTick()`
+- `void terminateEndpoints()`
+
+## Fields
+
+- `boolean isAlive`
+- `static LazyLoadBase<io.netty.channel.epoll.EpollEventLoopGroup> SERVER_EPOLL_EVENTLOOP`
+- `static LazyLoadBase<io.netty.channel.local.LocalEventLoopGroup> SERVER_LOCAL_EVENTLOOP`
+- `static LazyLoadBase<io.netty.channel.nio.NioEventLoopGroup> SERVER_NIO_EVENTLOOP`

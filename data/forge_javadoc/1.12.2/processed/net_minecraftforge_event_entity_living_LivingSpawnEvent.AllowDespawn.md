@@ -1,9 +1,13 @@
 # LivingSpawnEvent.AllowDespawn
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingSpawnEvent → net.minecraftforge.event.entity.living.LivingSpawnEvent.AllowDespawn
+
+## Class signature
+
+```java
+public static class LivingSpawnEvent.AllowDespawn extends LivingSpawnEvent
+```
+
 ## Constructors
 
-- `public AllowDespawn( EntityLiving entity)`
-
-## Description
-
-Fired each tick for despawnable mobs to allow control over despawning. Result#DEFAULT will pass the mob on to vanilla despawn mechanics. Result#ALLOW will force the mob to despawn. Result#DENY will fo
+- `AllowDespawn(EntityLiving entity)`

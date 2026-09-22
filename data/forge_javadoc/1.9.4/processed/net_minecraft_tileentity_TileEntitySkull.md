@@ -1,29 +1,31 @@
 # TileEntitySkull
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntitySkull
+
 ## Class signature
 
 ```java
 public class TileEntitySkull extends TileEntity implements ITickable
 ```
 
-## Constructors
-
-- `public TileEntitySkull()`
-
 ## Methods
 
-- `public static void setProfileCache( PlayerProfileCache profileCacheIn)`
-- `public static void setSessionService(com.mojang.authlib.minecraft.MinecraftSessionService sessionServiceIn)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public void update()`
-- `public float getAnimationProgress(float p_184295_1_)`
-- `@Nullable public com.mojang.authlib.GameProfile getPlayerProfile()`
-- `@Nullable public SPacketUpdateTileEntity getUpdatePacket()`
-- `public NBTTagCompound getUpdateTag()`
-- `public void setType(int type)`
-- `public void setPlayerProfile(@Nullable com.mojang.authlib.GameProfile playerProfile)`
-- `public static com.mojang.authlib.GameProfile updateGameprofile(com.mojang.authlib.GameProfile input)`
-- `public int getSkullType()`
-- `public int getSkullRotation()`
-- `public void setSkullRotation(int rotation)`
+- `float getAnimationProgress(float p_184295_1_)`
+- `com.mojang.authlib.GameProfile getPlayerProfile()`
+- `int getSkullRotation()`
+- `int getSkullType()`
+- `SPacketUpdateTileEntity getUpdatePacket()`
+- `NBTTagCompound getUpdateTag()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setPlayerProfile(com.mojang.authlib.GameProfile playerProfile)`
+- `static void setProfileCache(PlayerProfileCache profileCacheIn)`
+- `static void setSessionService(com.mojang.authlib.minecraft.MinecraftSessionService sessionServiceIn)`
+- `void setSkullRotation(int rotation)`
+- `void setType(int type)`
+- `void update()`
+- `static com.mojang.authlib.GameProfile updateGameprofile(com.mojang.authlib.GameProfile input)`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `TileEntitySkull`

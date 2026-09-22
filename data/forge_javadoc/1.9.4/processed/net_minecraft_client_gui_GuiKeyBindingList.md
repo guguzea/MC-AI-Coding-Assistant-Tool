@@ -1,18 +1,20 @@
 # GuiKeyBindingList
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.GuiSlot → net.minecraft.client.gui.GuiListExtended → net.minecraft.client.gui.GuiKeyBindingList
+
 ## Class signature
 
 ```java
 public class GuiKeyBindingList extends GuiListExtended
 ```
 
-## Constructors
-
-- `public GuiKeyBindingList( GuiControls controls, Minecraft mcIn)`
-
 ## Methods
 
-- `protected int getSize()`
-- `public GuiListExtended.IGuiListEntry getListEntry(int index)`
+- `GuiListExtended.IGuiListEntry getListEntry(int index)`
+- `int getListWidth()`
 - `protected int getScrollBarX()`
-- `public int getListWidth()`
+- `protected int getSize()`
+
+## Fields
+
+- `GuiKeyBindingList`

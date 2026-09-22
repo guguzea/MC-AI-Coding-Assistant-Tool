@@ -1,9 +1,11 @@
 # IForgeRegistry.DummyFactory
 
+## Class signature
+
+```java
+public static interface IForgeRegistry.DummyFactory<V extends IForgeRegistryEntry<V>>
+```
+
 ## Methods
 
-- `V createDummy( ResourceLocation key)`
-
-## Description
-
-Factory for creating dummy entries, allowing worlds to be loaded and keep the missing block references.
+- `V createDummy(ResourceLocation key)`

@@ -1,9 +1,13 @@
 # GuiScreenEvent.MouseInputEvent.Post
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiScreenEvent → net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent → net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent.Post
+
+## Class signature
+
+```java
+public static class GuiScreenEvent.MouseInputEvent.Post extends GuiScreenEvent.MouseInputEvent
+```
+
 ## Constructors
 
-- `public Post( GuiScreen gui)`
-
-## Description
-
-This event fires after GuiScreen.handleMouseInput() provided that the active screen has not been changed as a result of GuiScreen.handleMouseInput() .
+- `Post(GuiScreen gui)`

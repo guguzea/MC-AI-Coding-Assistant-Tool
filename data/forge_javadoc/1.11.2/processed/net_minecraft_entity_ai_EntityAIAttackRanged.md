@@ -1,5 +1,7 @@
 # EntityAIAttackRanged
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIAttackRanged
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class EntityAIAttackRanged extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIAttackRanged( IRangedAttackMob attacker, double movespeed, int maxAttackTime, float maxAttackDistanceIn)`
-- `public EntityAIAttackRanged( IRangedAttackMob attacker, double movespeed, int p_i1650_4_, int maxAttackTime, float maxAttackDistanceIn)`
+- `EntityAIAttackRanged(IRangedAttackMob attacker, double movespeed, int maxAttackTime, float maxAttackDistanceIn)`
+- `EntityAIAttackRanged(IRangedAttackMob attacker, double movespeed, int p_i1650_4_, int maxAttackTime, float maxAttackDistanceIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void updateTask()`

@@ -3,16 +3,16 @@
 ## Class signature
 
 ```java
-public interface IRecipe extends IForgeRegistryEntry < IRecipe >
+public interface IRecipe extends IForgeRegistryEntry<IRecipe>
 ```
 
 ## Methods
 
-- `boolean matches( InventoryCrafting inv, World worldIn)`
-- `ItemStack getCraftingResult( InventoryCrafting inv)`
 - `boolean canFit(int width, int height)`
-- `ItemStack getRecipeOutput()`
-- `default NonNullList < ItemStack > getRemainingItems( InventoryCrafting inv)`
-- `default NonNullList < Ingredient > getIngredients()`
-- `default boolean isDynamic()`
+- `ItemStack getCraftingResult(InventoryCrafting inv)`
 - `default java.lang.String getGroup()`
+- `default NonNullList<Ingredient> getIngredients()`
+- `ItemStack getRecipeOutput()`
+- `default NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)`
+- `default boolean isDynamic()`
+- `boolean matches(InventoryCrafting inv, World worldIn)`

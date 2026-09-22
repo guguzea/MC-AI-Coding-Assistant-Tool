@@ -1,16 +1,20 @@
 # Clips.SlerpClip
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.model.animation.Clips.SlerpClip
+
+## Class signature
+
+```java
+public static final class Clips.SlerpClip extends java.lang.Object implements IClip
+```
+
 ## Constructors
 
-- `public SlerpClip( IClip from, IClip to, ITimeValue input, ITimeValue progress)`
+- `SlerpClip(IClip from, IClip to, ITimeValue input, ITimeValue progress)`
 
 ## Methods
 
-- `public IJointClip apply( IJoint joint)`
-- `public java.lang.Iterable< Event > pastEvents(float lastPollTime, float time)`
-- `public int hashCode()`
-- `public boolean equals(java.lang.Object obj)`
-
-## Description
-
-Spherical linear blend between 2 clips.
+- `IJointClip apply(IJoint joint)`
+- `boolean equals(java.lang.Object obj)`
+- `int hashCode()`
+- `java.lang.Iterable<Event> pastEvents(float lastPollTime, float time)`

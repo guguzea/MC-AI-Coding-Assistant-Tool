@@ -30,7 +30,7 @@ import {
   unlinkSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 import {
@@ -55,7 +55,7 @@ const SOURCES = {
   fabric: ["fabric-docs", "fabric-wiki"],
   neoforge: ["neoforge-docs"],
   quilt: ["quilt-docs"],
-  bedrock: ["bedrock-docs"],
+  bedrock: ["bedrock-docs", "bedrock-scriptapi"],
   liteloader: ["liteloader-docs"],
   rift: ["rift-docs"],
   modloader: ["modloader-docs"],
@@ -253,6 +253,29 @@ const fsReaddirSync = readdirSync;
 const fsStatSync = statSync;
 const fsUnlinkSync = unlinkSync;
 
+/**
+ * manifest 写盘：先 tmp 再 rename，退避三次；仍失败就抛（调用方置非零退出码）。
+ * 为什么不是"warn 一下继续"：2026-09-22 实测一次成功的重建里，OneDrive 卷一次 UNKNOWN 抖动
+ * 让 manifest 没更新 ⇒ 库文件 sha256 与台账脱钩（G4 判红），而 summary 照样报"完成"。
+ * 直接覆盖失败还会留半截 JSON —— 那比"没更新"更糟（61 条台账一起读不出来），所以走 rename。
+ */
+async function writeManifestWithRetry(manifestPath, obj, delays = [200, 600, 1500]) {
+  const tmp = `${manifestPath}.tmp-${process.pid}`;
+  for (let i = 0; ; i++) {
+    try {
+      writeFileSync(tmp, JSON.stringify(obj, null, 2), "utf8");
+      renameSync(tmp, manifestPath);
+      return;
+    } catch (e) {
+      try {
+        if (existsSync(tmp)) fsUnlinkSync(tmp);
+      } catch { /* 清不掉就交给 sweepStaleTmp 下一轮收 */ }
+      if (i >= delays.length) throw e;
+      await new Promise((r) => setTimeout(r, delays[i]));
+    }
+  }
+}
+
 function parseArgs(argv) {
   const args = { all: false, embed: true, force: false };
   for (const a of argv) {
@@ -321,17 +344,49 @@ function discoverDocs(dataRoot, target) {
     if (stem && !l0ById.has(stem)) l0ById.set(stem, e);
   }
 
-  const files = readdirSync(processedDir).filter((f) => f.endsWith(".md")).sort();
+  /**
+   * processed 目录**递归**收集 .md（相对路径按 posix 分隔）。
+   *
+   * 为什么不能只扫顶层：基岩语料自 2026-09-21 起按 toc 子树落盘（`bedrock-docs/stable` 的
+   * `processed/documents/**` 238 页 + 顶层 20 篇精选）；同日拆分后 scriptapi 逐声明页
+   * （`processed/scriptapi/**` 624 页）另立 `bedrock-scriptapi/stable` 树、同样带子目录层级。
+   * 旧实现 `readdirSync(processedDir)` 非递归 ⇒ 构建器报「20 docs / 308 chunks」并且退出码 0，把 44 倍覆盖缺口藏在一次"成功"里。
+   * 实测其余 59 棵树 flat==deep，所以本改动只影响基岩树的数字，不改别家行为。
+   */
+  const files = [];
+  const walk = (dir) => {
+    for (const e of fsReaddirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (e.name.endsWith(".md")) files.push(relative(processedDir, p).split(sep).join("/"));
+    }
+  };
+  walk(processedDir);
+  files.sort();
   const docs = [];
   const skipped = [];
-  for (const f of files) {
-    const stem = f.slice(0, -3);
-    const entry = l0ById.get(stem);
+  const idHits = new Map(); // 命中方式 → 计数，用于「深层页是不是被末段兜底顶替」留痕
+  for (const rel of files) {
+    const relNoExt = rel.replace(/\.md$/, "");
+    const stem = relNoExt.includes("/") ? relNoExt.split("/").pop() : relNoExt;
+    const by = [
+      [`${target.version}/${relNoExt}`, "version/rel"],
+      [relNoExt, "rel"],
+      [relNoExt.replace(/\//g, "_"), "rel-underscore"],
+      [stem, "stem"],
+    ];
+    let entry = null;
+    let how = "miss";
+    for (const [key, label] of by) {
+      if (l0ById.has(key)) { entry = l0ById.get(key); how = label; break; }
+    }
     if (!entry) {
-      skipped.push(f);
+      skipped.push(`${rel}（index-l0 无对应 id）`);
       continue;
     }
+    idHits.set(how, (idHits.get(how) ?? 0) + 1);
     docs.push({
+      rel,
       stem,
       id: String(entry.id),
       label: String(entry.label ?? entry.id ?? stem),
@@ -341,6 +396,7 @@ function discoverDocs(dataRoot, target) {
       sectionCount: Number(entry.sectionCount ?? 0),
     });
   }
+  const hitNote = [...idHits.entries()].map(([k, v]) => `${k}=${v}`).join(" ");
 
   // 按 doc_id 去重：同一 id 只保留首个，重复项计入 skipped（可见留痕）。
   // 避免因 UNIQUE 冲突导致整版索引失败；宁可少索引一个文件并留痕，也不静默丢整版。
@@ -355,7 +411,7 @@ function discoverDocs(dataRoot, target) {
     dedupedDocs.push(d);
   }
 
-  return { processedDir, docs: dedupedDocs, skipped, l0Count: l0.length, versionDir };
+  return { processedDir, docs: dedupedDocs, skipped, l0Count: l0.length, versionDir, hitNote };
 }
 
 export const dropLedger = { docs: 0, chunks: 0, chars: 0, keptShortest: 0, rows: [] };
@@ -363,7 +419,7 @@ export const dropLedger = { docs: 0, chunks: 0, chars: 0, keptShortest: 0, rows:
 function collectChunks(processedDir, docs) {
   const rows = [];
   for (const d of docs) {
-    const md = readFileSync(join(processedDir, `${d.stem}.md`), "utf8");
+    const md = readFileSync(join(processedDir, d.rel ?? `${d.stem}.md`), "utf8");
     const chunks = chunkMarkdown(md);
     // F99：短块不再退出索引，只退出向量层。旧实现把 <200 字过滤放在入库**之前**，
     // chunks_fts 于是也看不见它 —— 实测 forge_1.20.1 有 132 个标识符只出现在被削掉的短块里
@@ -514,11 +570,12 @@ async function buildIndex(dbPath, docs, chunks, embedder, extraMeta = {}) {
  *  - source_fingerprint 与当前语料实算一致：`"0"` 是 truthy，所以旧实现等于没比。
  *    语料改过而不重建，就会一直吐旧文本（S7 修完 fabric-wiki 中介名后正是这种状态）。
  */
-function indexLooksComplete(dbPath, requireEmbed = false, expectedFingerprint = null) {
+function indexLooksComplete(dbPath, requireEmbed = false, expectedFingerprint = null, expectedDocs = null) {
   if (!existsSync(dbPath)) return false;
   try {
     const db = new DatabaseSync(dbPath, { readOnly: true });
     const read = (key) => db.prepare("SELECT value FROM meta WHERE key = ?").get(key)?.value;
+    const docsInDb = Number(read("docs") ?? 0);
     const chunks = Number(read("chunks") ?? 0);
     const emb = Number(read("embedded") ?? 0);
     const fp = read("source_fingerprint");
@@ -526,6 +583,9 @@ function indexLooksComplete(dbPath, requireEmbed = false, expectedFingerprint = 
     if (!(chunks > 0)) return false;
     if (requireEmbed && !(emb > 0)) return false;
     if (expectedFingerprint !== null && String(fp ?? "") !== String(expectedFingerprint)) return false;
+    // 「语料指纹没变」≠「这份 db 覆盖了当前语料」：实测同指纹下 db 只收了 20 页而树里 882 页
+    // （页发现非递归那版构建器留下的欠账）。只比 chunks>0 会把欠账报成「已完成、跳过」。
+    if (expectedDocs !== null && docsInDb !== expectedDocs) return false;
     return true;
   } catch {
     return false;
@@ -594,7 +654,7 @@ async function main() {
       }
       const dbPath = semanticDbPath(dataRoot, t.platform, t.version, t.source);
       const fingerprint = computeSourceFingerprint(discovered.versionDir);
-      if (!args.force && indexLooksComplete(dbPath, Boolean(embedder), fingerprint)) {
+      if (!args.force && indexLooksComplete(dbPath, Boolean(embedder), fingerprint, discovered.docs.length)) {
         console.log(`[skip ${i}/${targets.length}] ${label}（已有完整索引；--force 可重建）`);
         summary.skipped++;
         continue;
@@ -602,7 +662,10 @@ async function main() {
       if (!args.force && existsSync(dbPath)) {
         console.log(`[stale ${i}/${targets.length}] ${label}：语料指纹已变（旧索引会被重建覆盖）`);
       }
-      console.log(`[build ${i}/${targets.length}] ${label}（${discovered.docs.length} docs）…`);
+      // 覆盖率必须显式说出来：旧版只报「20 docs」，与同树 l0 的 882 条差 44 倍也没人对比。
+      console.log(
+        `[build ${i}/${targets.length}] ${label}（${discovered.docs.length}/${discovered.l0Count} 页入库；id 命中方式 ${discovered.hitNote || "无"}）…`,
+      );
       if (discovered.skipped.length) {
         summary.orphanPages += discovered.skipped.length;
         const shown = discovered.skipped.slice(0, 10);
@@ -697,7 +760,6 @@ async function main() {
         sha256: createHash("sha256").update(readFileSync(dbPath)).digest("hex"),
       });
     }
-    const { writeFileSync } = await import("node:fs");
     let prev = { entries: [] };
     if (existsSync(manifestPath)) {
       try {
@@ -728,14 +790,14 @@ async function main() {
     // A1 自检：manifest 里不允许出现绝对路径（win32 盘符 / posix 根）。
     const absLeak = merged.filter((e) => /^([A-Za-z]:[\\/]|\/)/.test(String(e.path ?? "")));
     if (absLeak.length) console.warn(`[warn] semantic-index-manifest.json 仍有绝对路径 ${absLeak.length} 条：` + absLeak.slice(0, 3).map((e) => `${e.platform}/${e.version}/${e.source}`).join(", "));
-    writeFileSync(
-      manifestPath,
-      JSON.stringify({ built_at: new Date().toISOString(), embedMode: mergedMode, entries: merged }, null, 2),
-      "utf8",
-    );
+    await writeManifestWithRetry(manifestPath, { built_at: new Date().toISOString(), embedMode: mergedMode, entries: merged });
     console.log(`[manifest] ${manifestPath} (${merged.length} entries, merged)`);
   } catch (e) {
-    console.warn(`[warn] 写 semantic-index-manifest.json 失败: ${e.message}`);
+    // 这里**必须**非零退出：manifest 没跟着写 ⇒ 库的 sha256 与台账脱钩，G4 判红，
+    // 而读日志的人会以为"构建完成"（2026-09-22 实测：OneDrive 卷一次 UNKNOWN 抖动就把
+    // 一次成功重建的 sha 留在旧值上，warn 完照样 summary 收工）。
+    console.error(`❌ 写 semantic-index-manifest.json 失败: ${e?.message ?? e}`);
+    process.exitCode = 1;
   }
 
   console.log(

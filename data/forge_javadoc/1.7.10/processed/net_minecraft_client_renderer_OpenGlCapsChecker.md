@@ -1,5 +1,7 @@
 # OpenGlCapsChecker
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.OpenGlCapsChecker
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class OpenGlCapsChecker extends java.lang.Object
 
 ## Constructors
 
-- `public OpenGlCapsChecker()`
+- `OpenGlCapsChecker()`
 
 ## Methods
 
-- `public static boolean checkARBOcclusion()`
+- `static boolean checkARBOcclusion()`

@@ -10,7 +10,3 @@ public interface IRarity
 
 - `TextFormatting getColor()`
 - `java.lang.String getName()`
-
-## Description
-
-Interface generalisation of EnumRarity .

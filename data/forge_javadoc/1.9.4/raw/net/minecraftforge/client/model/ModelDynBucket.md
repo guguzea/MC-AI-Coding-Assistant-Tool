@@ -1,34 +1,39 @@
 ---
 title: "ModelDynBucket"
-description: "Sets the liquid in the model."
+description: "public final class ModelDynBucket extends java.lang.Object implements IModel, IModelCustomData, IRetexturableModel"
 package: "net/minecraftforge/client/model"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/client/model/ModelDynBucket.html"
 sourceType: javadoc
 ---
 
 # ModelDynBucket
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.ModelDynBucket
+
 ## Class signature
 
 ```java
-public final class ModelDynBucket extends java.lang.Object implements IModel , IModelCustomData , IRetexturableModel
+public final class ModelDynBucket extends java.lang.Object implements IModel, IModelCustomData, IRetexturableModel
 ```
 
 ## Constructors
 
-- `public ModelDynBucket()`
-- `public ModelDynBucket( ResourceLocation baseLocation, ResourceLocation liquidLocation, ResourceLocation coverLocation, Fluid fluid, boolean flipGas)`
+- `ModelDynBucket()`
+- `ModelDynBucket(ResourceLocation baseLocation, ResourceLocation liquidLocation, ResourceLocation coverLocation, Fluid fluid, boolean flipGas)`
 
 ## Methods
 
-- `public java.util.Collection< ResourceLocation > getDependencies()`
-- `public java.util.Collection< ResourceLocation > getTextures()`
-- `public IBakedModel bake( IModelState state, VertexFormat format, com.google.common.base.Function< ResourceLocation , TextureAtlasSprite > bakedTextureGetter)`
-- `public IModelState getDefaultState()`
-- `public ModelDynBucket process(com.google.common.collect.ImmutableMap<java.lang.String,java.lang.String> customData)`
-- `public ModelDynBucket retexture(com.google.common.collect.ImmutableMap<java.lang.String,java.lang.String> textures)`
+- `IBakedModel bake(IModelState state, VertexFormat format, com.google.common.base.Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)`
+- `IModelState getDefaultState()`
+- `java.util.Collection<ResourceLocation> getDependencies()`
+- `java.util.Collection<ResourceLocation> getTextures()`
+- `ModelDynBucket process(com.google.common.collect.ImmutableMap<java.lang.String, java.lang.String> customData)` — Sets the liquid in the model.
+- `ModelDynBucket retexture(com.google.common.collect.ImmutableMap<java.lang.String, java.lang.String> textures)` — Allows to use different textures for the model.
 
-## Description
+## Fields
 
-Sets the liquid in the model.
+- `static ModelResourceLocation LOCATION`
+- `static IModel MODEL`

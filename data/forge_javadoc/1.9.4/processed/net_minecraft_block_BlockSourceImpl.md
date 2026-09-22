@@ -1,5 +1,7 @@
 # BlockSourceImpl
 
+**Inheritance:** java.lang.Object → net.minecraft.block.BlockSourceImpl
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class BlockSourceImpl extends java.lang.Object implements IBlockSource
 
 ## Constructors
 
-- `public BlockSourceImpl( World worldIn, BlockPos posIn)`
+- `BlockSourceImpl(World worldIn, BlockPos posIn)`
 
 ## Methods
 
-- `public World getWorld()`
-- `public double getX()`
-- `public double getY()`
-- `public double getZ()`
-- `public BlockPos getBlockPos()`
-- `public int getBlockMetadata()`
-- `public <T extends TileEntity > T getBlockTileEntity()`
+- `int getBlockMetadata()`
+- `BlockPos getBlockPos()`
+- `<T extends TileEntity> T getBlockTileEntity()`
+- `World getWorld()`
+- `double getX()`
+- `double getY()`
+- `double getZ()`

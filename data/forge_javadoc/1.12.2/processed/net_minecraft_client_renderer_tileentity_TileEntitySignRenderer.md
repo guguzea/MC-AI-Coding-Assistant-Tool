@@ -1,15 +1,17 @@
 # TileEntitySignRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer<TileEntitySign> → net.minecraft.client.renderer.tileentity.TileEntitySignRenderer
+
 ## Class signature
 
 ```java
-public class TileEntitySignRenderer extends TileEntitySpecialRenderer < TileEntitySign >
+public class TileEntitySignRenderer extends TileEntitySpecialRenderer<TileEntitySign>
 ```
-
-## Constructors
-
-- `public TileEntitySignRenderer()`
 
 ## Methods
 
-- `public void render( TileEntitySign te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)`
+- `void render(TileEntitySign te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)`
+
+## Fields
+
+- `TileEntitySignRenderer`

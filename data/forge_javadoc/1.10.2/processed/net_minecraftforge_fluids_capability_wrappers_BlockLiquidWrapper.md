@@ -1,5 +1,7 @@
 # BlockLiquidWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.capability.wrappers.BlockLiquidWrapper
+
 ## Class signature
 
 ```java
@@ -8,15 +10,17 @@ public class BlockLiquidWrapper extends java.lang.Object implements IFluidHandle
 
 ## Constructors
 
-- `public BlockLiquidWrapper( BlockLiquid blockLiquid, World world, BlockPos blockPos)`
+- `BlockLiquidWrapper(BlockLiquid blockLiquid, World world, BlockPos blockPos)`
 
 ## Methods
 
-- `public IFluidTankProperties [] getTankProperties()`
-- `public int fill( FluidStack resource, boolean doFill)`
-- `@Nullable public FluidStack drain( FluidStack resource, boolean doDrain)`
-- `@Nullable public FluidStack drain(int maxDrain, boolean doDrain)`
+- `FluidStack drain(FluidStack resource, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `FluidStack drain(int maxDrain, boolean doDrain)` — Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
+- `int fill(FluidStack resource, boolean doFill)` — Fills fluid into internal tanks, distribution is left entirely to the IFluidHandler.
+- `IFluidTankProperties [] getTankProperties()` — Returns an array of objects which represent the internal tanks.
 
-## Description
+## Fields
 
-Wrapper to handle vanilla Water or Lava as an IFluidHandler. Methods are modeled after ItemBucket.onItemRightClick(ItemStack, World, EntityPlayer, EnumHand)
+- `protected BlockLiquid blockLiquid`
+- `protected BlockPos blockPos`
+- `protected World world`

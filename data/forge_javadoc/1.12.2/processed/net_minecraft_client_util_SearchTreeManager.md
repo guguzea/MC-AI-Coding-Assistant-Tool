@@ -1,5 +1,7 @@
 # SearchTreeManager
 
+**Inheritance:** java.lang.Object → net.minecraft.client.util.SearchTreeManager
+
 ## Class signature
 
 ```java
@@ -8,10 +10,15 @@ public class SearchTreeManager extends java.lang.Object implements IResourceMana
 
 ## Constructors
 
-- `public SearchTreeManager()`
+- `SearchTreeManager()`
 
 ## Methods
 
-- `public void onResourceManagerReload( IResourceManager resourceManager)`
-- `public <T> void register( SearchTreeManager.Key <T> key, SearchTree <T> searchTreeIn)`
-- `public <T> ISearchTree <T> get( SearchTreeManager.Key <T> key)`
+- `<T> ISearchTree<T> get(SearchTreeManager.Key<T> key)`
+- `void onResourceManagerReload(IResourceManager resourceManager)`
+- `<T> void register(SearchTreeManager.Key<T> key, SearchTree<T> searchTreeIn)`
+
+## Fields
+
+- `static SearchTreeManager.Key<ItemStack> ITEMS`
+- `static SearchTreeManager.Key<RecipeList> RECIPES`

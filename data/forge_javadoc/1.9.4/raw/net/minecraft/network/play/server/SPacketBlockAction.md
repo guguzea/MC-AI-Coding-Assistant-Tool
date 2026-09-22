@@ -1,31 +1,35 @@
 ---
 title: "SPacketBlockAction"
-description: "public class SPacketBlockAction extends java.lang.Object implements Packet < INetHandlerPlayClient >"
+description: "public class SPacketBlockAction extends java.lang.Object implements Packet<INetHandlerPlayClient>"
 package: "net/minecraft/network/play/server"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/play/server/SPacketBlockAction.html"
 sourceType: javadoc
 ---
 
 # SPacketBlockAction
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketBlockAction
+
 ## Class signature
 
 ```java
-public class SPacketBlockAction extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketBlockAction extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketBlockAction()`
-- `public SPacketBlockAction( BlockPos pos, Block blockIn, int instrumentIn, int pitchIn)`
+- `SPacketBlockAction()`
+- `SPacketBlockAction(BlockPos pos, Block blockIn, int instrumentIn, int pitchIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public BlockPos getBlockPosition()`
-- `public int getData1()`
-- `public int getData2()`
-- `public Block getBlockType()`
+- `BlockPos getBlockPosition()`
+- `Block getBlockType()`
+- `int getData1()`
+- `int getData2()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

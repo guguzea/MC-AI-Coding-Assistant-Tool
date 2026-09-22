@@ -1,5 +1,7 @@
 # RenderTooltipEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderTooltipEvent
+
 ## Class signature
 
 ```java
@@ -8,16 +10,20 @@ public abstract class RenderTooltipEvent extends Event
 
 ## Constructors
 
-- `public RenderTooltipEvent(@Nullable ItemStack stack, @Nonnull java.util.List<java.lang.String> lines, int x, int y, @Nonnull FontRenderer fr)`
+- `RenderTooltipEvent(ItemStack stack, java.util.List<java.lang.String> lines, int x, int y, FontRenderer fr)`
 
 ## Methods
 
-- `@Nullable public ItemStack getStack()`
-- `@Nonnull public java.util.List<java.lang.String> getLines()`
-- `public int getX()`
-- `public int getY()`
-- `@Nonnull public FontRenderer getFontRenderer()`
+- `FontRenderer getFontRenderer()`
+- `java.util.List<java.lang.String> getLines()` — The lines to be drawn.
+- `ItemStack getStack()`
+- `int getX()`
+- `int getY()`
 
-## Description
+## Fields
 
-A set of events which are fired at various points during tooltip rendering. Can be used to change the rendering parameters, draw something extra, etc. Do not use this event directly, use one of the su
+- `protected FontRenderer fr`
+- `protected java.util.List<java.lang.String> lines`
+- `protected ItemStack stack`
+- `protected int x`
+- `protected int y`

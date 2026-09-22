@@ -1,5 +1,7 @@
 # WorldGenLakes
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenLakes
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class WorldGenLakes extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenLakes( Block blockIn)`
+- `WorldGenLakes(Block blockIn)`
 
 ## Methods
 
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`

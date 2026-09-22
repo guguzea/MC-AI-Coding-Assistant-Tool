@@ -1,13 +1,17 @@
 ---
 title: "BlockFlowerPot"
-description: "Returns a new instance of a block's tile entity class."
+description: "public class BlockFlowerPot extends BlockContainer"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockFlowerPot.html"
 sourceType: javadoc
 ---
 
 # BlockFlowerPot
+
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockContainer → net.minecraft.block.BlockFlowerPot
 
 ## Class signature
 
@@ -17,34 +21,35 @@ public class BlockFlowerPot extends BlockContainer
 
 ## Constructors
 
-- `public BlockFlowerPot()`
+- `BlockFlowerPot()`
 
 ## Methods
 
-- `public java.lang.String getLocalizedName()`
-- `public void setBlockBoundsForItemRender()`
-- `public boolean isOpaqueCube()`
-- `public int getRenderType()`
-- `public boolean isFullCube()`
-- `public int colorMultiplier( IBlockAccess worldIn, BlockPos pos, int renderPass)`
-- `public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)`
-- `public Item getItem( World worldIn, BlockPos pos)`
-- `public int getDamageValue( World worldIn, BlockPos pos)`
-- `public boolean isFlowerPot()`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public void onBlockHarvested( World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public TileEntity createNewTileEntity( World worldIn, int meta)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)`
 - `protected BlockState createBlockState()`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public EnumWorldBlockLayer getBlockLayer()`
-- `public java.util.List< ItemStack > getDrops( IBlockAccess world, BlockPos pos, IBlockState state, int fortune)`
-- `public boolean removedByPlayer( World world, BlockPos pos, EntityPlayer player, boolean willHarvest)`
-- `public void harvestBlock( World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)`
+- `TileEntity createNewTileEntity(World worldIn, int meta)` — Returns a new instance of a block's tile entity class.
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)` — Get the actual Block state of this Block at the given position.
+- `EnumWorldBlockLayer getBlockLayer()`
+- `int getDamageValue(World worldIn, BlockPos pos)`
+- `java.util.List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)` — This returns a complete list of items dropped from this block.
+- `Item getItem(World worldIn, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)` — Get the Item that this Block should drop when harvested.
+- `java.lang.String getLocalizedName()` — Gets the localized name of this block.
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `int getRenderType()` — The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
+- `void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)`
+- `boolean isFlowerPot()` — Returns true only if block is flowerPot
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)`
+- `void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)` — Called when a player removes a block.
+- `void setBlockBoundsForItemRender()` — Sets the block's bounds for rendering it as an item
 
-## Description
+## Fields
 
-Returns a new instance of a block's tile entity class.
+- `static PropertyEnum<BlockFlowerPot.EnumFlowerType> CONTENTS`
+- `static PropertyInteger LEGACY_DATA`

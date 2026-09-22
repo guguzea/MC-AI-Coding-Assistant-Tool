@@ -8,8 +8,8 @@ public interface IAttribute
 
 ## Methods
 
-- `java.lang.String getAttributeUnlocalizedName()`
 - `double clampValue(double value)`
+- `java.lang.String getAttributeUnlocalizedName()`
 - `double getDefaultValue()`
+- `IAttribute getParent()`
 - `boolean getShouldWatch()`
-- `@Nullable IAttribute getParent()`

@@ -1,5 +1,13 @@
 # UnpackedBakedQuad.Colored
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.BakedQuad → net.minecraftforge.client.model.pipeline.UnpackedBakedQuad → net.minecraftforge.client.model.pipeline.UnpackedBakedQuad.Colored
 
-- `public Colored(float[][][] unpackedData, int tint, EnumFacing orientation, VertexFormat format)`
+## Class signature
+
+```java
+public static class UnpackedBakedQuad.Colored extends UnpackedBakedQuad implements IColoredBakedQuad
+```
+
+## Fields
+
+- `Colored`

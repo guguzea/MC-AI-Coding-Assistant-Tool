@@ -1,18 +1,22 @@
 ---
 title: "IForgeRegistry.ClearCallback"
-description: "Callback fired when the registry is cleared. This is done before a registry is reloaded from client or server."
+description: "public static interface IForgeRegistry.ClearCallback<V extends IForgeRegistryEntry<V>>"
 package: "net/minecraftforge/registries"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/registries/IForgeRegistry.ClearCallback.html"
 sourceType: javadoc
 ---
 
 # IForgeRegistry.ClearCallback
 
+## Class signature
+
+```java
+public static interface IForgeRegistry.ClearCallback<V extends IForgeRegistryEntry<V>>
+```
+
 ## Methods
 
-- `void onClear( IForgeRegistryInternal < V > owner, RegistryManager stage)`
-
-## Description
-
-Callback fired when the registry is cleared. This is done before a registry is reloaded from client or server.
+- `void onClear(IForgeRegistryInternal<V> owner, RegistryManager stage)`

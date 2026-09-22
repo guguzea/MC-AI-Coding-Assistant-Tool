@@ -1,5 +1,7 @@
 # ModelBanner
 
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelBanner
+
 ## Class signature
 
 ```java
@@ -8,12 +10,14 @@ public class ModelBanner extends ModelBase
 
 ## Constructors
 
-- `public ModelBanner()`
+- `ModelBanner()`
 
 ## Methods
 
-- `public void renderBanner()`
+- `void renderBanner()` — Renders the banner model in.
 
-## Description
+## Fields
 
-Renders the banner model in.
+- `ModelRenderer bannerSlate`
+- `ModelRenderer bannerStand`
+- `ModelRenderer bannerTop`

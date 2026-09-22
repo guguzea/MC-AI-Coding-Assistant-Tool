@@ -3,11 +3,15 @@ title: "ModelPlayer"
 description: "public class ModelPlayer extends ModelBiped"
 package: "net/minecraft/client/model"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/model/ModelPlayer.html"
 sourceType: javadoc
 ---
 
 # ModelPlayer
+
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelBiped → net.minecraft.client.model.ModelPlayer
 
 ## Class signature
 
@@ -17,13 +21,21 @@ public class ModelPlayer extends ModelBiped
 
 ## Constructors
 
-- `public ModelPlayer(float modelSize, boolean smallArmsIn)`
+- `ModelPlayer(float modelSize, boolean smallArmsIn)`
 
 ## Methods
 
-- `public void render( Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
-- `public void renderDeadmau5Head(float scale)`
-- `public void renderCape(float scale)`
-- `public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
-- `public void setInvisible(boolean invisible)`
-- `public void postRenderArm(float scale, EnumHandSide side)`
+- `void postRenderArm(float scale, EnumHandSide side)`
+- `void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)`
+- `void renderCape(float scale)`
+- `void renderDeadmau5Head(float scale)`
+- `void setInvisible(boolean invisible)`
+- `void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)`
+
+## Fields
+
+- `ModelRenderer bipedBodyWear`
+- `ModelRenderer bipedLeftArmwear`
+- `ModelRenderer bipedLeftLegwear`
+- `ModelRenderer bipedRightArmwear`
+- `ModelRenderer bipedRightLegwear`

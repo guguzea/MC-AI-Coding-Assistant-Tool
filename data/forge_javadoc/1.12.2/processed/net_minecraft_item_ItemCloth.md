@@ -1,16 +1,18 @@
 # ItemCloth
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemBlock → net.minecraft.item.ItemCloth
+
 ## Class signature
 
 ```java
 public class ItemCloth extends ItemBlock
 ```
 
-## Constructors
-
-- `public ItemCloth( Block block)`
-
 ## Methods
 
-- `public int getMetadata(int damage)`
-- `public java.lang.String getUnlocalizedName( ItemStack stack)`
+- `int getMetadata(int damage)`
+- `java.lang.String getUnlocalizedName(ItemStack stack)`
+
+## Fields
+
+- `ItemCloth`

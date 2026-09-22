@@ -1,5 +1,7 @@
 # LocalBlockIntercommunication
 
+**Inheritance:** java.lang.Object → net.minecraft.client.player.inventory.LocalBlockIntercommunication
+
 ## Class signature
 
 ```java
@@ -8,16 +10,12 @@ public class LocalBlockIntercommunication extends java.lang.Object implements II
 
 ## Constructors
 
-- `public LocalBlockIntercommunication(java.lang.String guiIdIn, IChatComponent displayNameIn)`
+- `LocalBlockIntercommunication(java.lang.String guiIdIn, IChatComponent displayNameIn)`
 
 ## Methods
 
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public java.lang.String getGuiID()`
-- `public IChatComponent getDisplayName()`
-
-## Description
-
-Get the formatted ChatComponent that will be used for the sender's username in chat
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `IChatComponent getDisplayName()` — Get the formatted ChatComponent that will be used for the sender's username in chat
+- `java.lang.String getGuiID()`
+- `java.lang.String getName()` — Get the name of this object.
+- `boolean hasCustomName()` — Returns true if this thing is named

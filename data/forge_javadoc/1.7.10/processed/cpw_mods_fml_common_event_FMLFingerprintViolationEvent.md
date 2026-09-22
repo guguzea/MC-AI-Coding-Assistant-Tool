@@ -1,5 +1,7 @@
 # FMLFingerprintViolationEvent
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.event.FMLEvent → cpw.mods.fml.common.event.FMLFingerprintViolationEvent
+
 ## Class signature
 
 ```java
@@ -8,4 +10,11 @@ public class FMLFingerprintViolationEvent extends FMLEvent
 
 ## Constructors
 
-- `public FMLFingerprintViolationEvent(boolean isDirectory, java.io.File source, <any> fingerprints, java.lang.String expectedFingerprint)`
+- `FMLFingerprintViolationEvent(boolean isDirectory, java.io.File source, <any> fingerprints, java.lang.String expectedFingerprint)`
+
+## Fields
+
+- `java.lang.String expectedFingerprint`
+- `java.util.Set<java.lang.String> fingerprints`
+- `boolean isDirectory`
+- `java.io.File source`

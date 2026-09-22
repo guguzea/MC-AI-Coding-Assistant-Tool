@@ -3,11 +3,15 @@ title: "InventoryCraftResult"
 description: "public class InventoryCraftResult extends java.lang.Object implements IInventory"
 package: "net/minecraft/inventory"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/inventory/InventoryCraftResult.html"
 sourceType: javadoc
 ---
 
 # InventoryCraftResult
+
+**Inheritance:** java.lang.Object → net.minecraft.inventory.InventoryCraftResult
 
 ## Class signature
 
@@ -17,26 +21,26 @@ public class InventoryCraftResult extends java.lang.Object implements IInventory
 
 ## Constructors
 
-- `public InventoryCraftResult()`
+- `InventoryCraftResult()`
 
 ## Methods
 
-- `public int getSizeInventory()`
-- `public boolean isEmpty()`
-- `public ItemStack getStackInSlot(int index)`
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public ITextComponent getDisplayName()`
-- `public ItemStack decrStackSize(int index, int count)`
-- `public ItemStack removeStackFromSlot(int index)`
-- `public void setInventorySlotContents(int index, ItemStack stack)`
-- `public int getInventoryStackLimit()`
-- `public void markDirty()`
-- `public boolean isUsableByPlayer( EntityPlayer player)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public boolean isItemValidForSlot(int index, ItemStack stack)`
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public int getFieldCount()`
-- `public void clear()`
+- `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `ItemStack decrStackSize(int index, int count)`
+- `ITextComponent getDisplayName()`
+- `int getField(int id)`
+- `int getFieldCount()`
+- `int getInventoryStackLimit()`
+- `java.lang.String getName()`
+- `int getSizeInventory()`
+- `ItemStack getStackInSlot(int index)`
+- `boolean hasCustomName()`
+- `boolean isEmpty()`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isUsableByPlayer(EntityPlayer player)`
+- `void markDirty()`
+- `void openInventory(EntityPlayer player)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`

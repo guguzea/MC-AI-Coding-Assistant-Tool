@@ -1,12 +1,20 @@
 # MapGenVillage.Start
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureStart → net.minecraft.world.gen.structure.MapGenVillage.Start
 
-- `public Start()`
-- `public Start( World worldIn, java.util.Random rand, int x, int z, int size)`
+## Class signature
+
+```java
+public static class MapGenVillage.Start extends StructureStart
+```
 
 ## Methods
 
-- `public boolean isSizeableStructure()`
-- `public void writeToNBT( NBTTagCompound tagCompound)`
-- `public void readFromNBT( NBTTagCompound tagCompound)`
+- `boolean isSizeableStructure()`
+- `void readFromNBT(NBTTagCompound tagCompound)`
+- `void writeToNBT(NBTTagCompound tagCompound)`
+
+## Fields
+
+- `Start`
+- `Start`

@@ -1,20 +1,18 @@
 # TileEntityDropper
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityLockable → net.minecraft.tileentity.TileEntityDispenser → net.minecraft.tileentity.TileEntityDropper
+
 ## Class signature
 
 ```java
 public class TileEntityDropper extends TileEntityDispenser
 ```
 
-## Constructors
-
-- `public TileEntityDropper()`
-
 ## Methods
 
-- `public java.lang.String getName()`
-- `public java.lang.String getGuiID()`
+- `java.lang.String getGuiID()`
+- `java.lang.String getName()` — Get the name of this object.
 
-## Description
+## Fields
 
-Get the name of this object.
+- `TileEntityDropper`

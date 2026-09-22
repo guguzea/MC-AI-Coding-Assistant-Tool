@@ -1,24 +1,26 @@
 # SPacketUpdateScore
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketUpdateScore
+
 ## Class signature
 
 ```java
-public class SPacketUpdateScore extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketUpdateScore extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketUpdateScore()`
-- `public SPacketUpdateScore( Score scoreIn)`
-- `public SPacketUpdateScore(java.lang.String nameIn)`
-- `public SPacketUpdateScore(java.lang.String nameIn, ScoreObjective objectiveIn)`
+- `SPacketUpdateScore()`
+- `SPacketUpdateScore(Score scoreIn)`
+- `SPacketUpdateScore(java.lang.String nameIn)`
+- `SPacketUpdateScore(java.lang.String nameIn, ScoreObjective objectiveIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public java.lang.String getPlayerName()`
-- `public java.lang.String getObjectiveName()`
-- `public int getScoreValue()`
-- `public SPacketUpdateScore.Action getScoreAction()`
+- `java.lang.String getObjectiveName()`
+- `java.lang.String getPlayerName()`
+- `SPacketUpdateScore.Action getScoreAction()`
+- `int getScoreValue()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

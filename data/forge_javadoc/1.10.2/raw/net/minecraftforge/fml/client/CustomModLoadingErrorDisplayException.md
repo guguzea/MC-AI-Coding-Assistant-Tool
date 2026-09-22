@@ -1,13 +1,17 @@
 ---
 title: "CustomModLoadingErrorDisplayException"
-description: "If a mod throws this exception during loading, it will be called back to render the error screen through the methods below. This error will not be cleared, and will not allow the game to carry on, but"
+description: "public abstract class CustomModLoadingErrorDisplayException extends EnhancedRuntimeException implements IFMLHandledException"
 package: "net/minecraftforge/fml/client"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/client/CustomModLoadingErrorDisplayException.html"
 sourceType: javadoc
 ---
 
 # CustomModLoadingErrorDisplayException
+
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → java.lang.RuntimeException → net.minecraftforge.fml.common.EnhancedRuntimeException → net.minecraftforge.fml.client.CustomModLoadingErrorDisplayException
 
 ## Class signature
 
@@ -17,15 +21,11 @@ public abstract class CustomModLoadingErrorDisplayException extends EnhancedRunt
 
 ## Constructors
 
-- `public CustomModLoadingErrorDisplayException()`
-- `public CustomModLoadingErrorDisplayException(java.lang.String message, java.lang.Throwable cause)`
+- `CustomModLoadingErrorDisplayException()`
+- `CustomModLoadingErrorDisplayException(java.lang.String message, java.lang.Throwable cause)`
 
 ## Methods
 
-- `public abstract void initGui( GuiErrorScreen errorScreen, FontRenderer fontRenderer)`
-- `public abstract void drawScreen( GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime)`
-- `public void printStackTrace( EnhancedRuntimeException.WrappedPrintStream s)`
-
-## Description
-
-If a mod throws this exception during loading, it will be called back to render the error screen through the methods below. This error will not be cleared, and will not allow the game to carry on, but
+- `abstract void drawScreen(GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime)` — Draw your error to the screen.
+- `abstract void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer)` — Called after the GUI is initialized by the parent code.
+- `void printStackTrace(EnhancedRuntimeException.WrappedPrintStream s)`

@@ -1,5 +1,11 @@
 # Mod.Instance
 
-## Description
+## Class signature
 
-Populate the annotated field with the mod instance based on the specified ModId. This can be used to retrieve instances of other mods.
+```java
+public static @interface Mod.Instance
+```
+
+## Elements
+
+- `java.lang.String value` — The mod object to inject into this field

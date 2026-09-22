@@ -1,5 +1,7 @@
 # BlockPistonStructureHelper
 
+**Inheritance:** java.lang.Object → net.minecraft.block.state.BlockPistonStructureHelper
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class BlockPistonStructureHelper extends java.lang.Object
 
 ## Constructors
 
-- `public BlockPistonStructureHelper( World worldIn, BlockPos posIn, EnumFacing pistonFacing, boolean extending)`
+- `BlockPistonStructureHelper(World worldIn, BlockPos posIn, EnumFacing pistonFacing, boolean extending)`
 
 ## Methods
 
-- `public boolean canMove()`
-- `public java.util.List< BlockPos > getBlocksToMove()`
-- `public java.util.List< BlockPos > getBlocksToDestroy()`
+- `boolean canMove()`
+- `java.util.List<BlockPos> getBlocksToDestroy()`
+- `java.util.List<BlockPos> getBlocksToMove()`

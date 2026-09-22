@@ -1,22 +1,32 @@
 ---
 title: "WoodlandMansionPieces.MansionTemplate"
-description: ""
+description: "public static class WoodlandMansionPieces.MansionTemplate extends StructureComponentTemplate"
 package: "net/minecraft/world/gen/structure"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/gen/structure/WoodlandMansionPieces.MansionTemplate.html"
 sourceType: javadoc
 ---
 
 # WoodlandMansionPieces.MansionTemplate
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureComponentTemplate → net.minecraft.world.gen.structure.WoodlandMansionPieces.MansionTemplate
 
-- `public MansionTemplate()`
-- `public MansionTemplate( TemplateManager p_i47355_1_, java.lang.String p_i47355_2_, BlockPos p_i47355_3_, Rotation p_i47355_4_)`
-- `public MansionTemplate( TemplateManager p_i47356_1_, java.lang.String p_i47356_2_, BlockPos p_i47356_3_, Rotation p_i47356_4_, Mirror p_i47356_5_)`
+## Class signature
+
+```java
+public static class WoodlandMansionPieces.MansionTemplate extends StructureComponentTemplate
+```
 
 ## Methods
 
-- `protected void writeStructureToNBT( NBTTagCompound tagCompound)`
-- `protected void readStructureFromNBT( NBTTagCompound tagCompound, TemplateManager p_143011_2_)`
 - `protected void handleDataMarker(java.lang.String p_186175_1_, BlockPos p_186175_2_, World p_186175_3_, java.util.Random p_186175_4_, StructureBoundingBox p_186175_5_)`
+- `protected void readStructureFromNBT(NBTTagCompound tagCompound, TemplateManager p_143011_2_)`
+- `protected void writeStructureToNBT(NBTTagCompound tagCompound)`
+
+## Fields
+
+- `MansionTemplate`
+- `MansionTemplate`
+- `MansionTemplate`

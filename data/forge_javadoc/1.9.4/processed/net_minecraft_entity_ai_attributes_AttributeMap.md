@@ -1,5 +1,7 @@
 # AttributeMap
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.attributes.AbstractAttributeMap → net.minecraft.entity.ai.attributes.AttributeMap
+
 ## Class signature
 
 ```java
@@ -8,14 +10,18 @@ public class AttributeMap extends AbstractAttributeMap
 
 ## Constructors
 
-- `public AttributeMap()`
+- `AttributeMap()`
 
 ## Methods
 
-- `public ModifiableAttributeInstance getAttributeInstance( IAttribute attribute)`
-- `public ModifiableAttributeInstance getAttributeInstanceByName(java.lang.String attributeName)`
-- `public IAttributeInstance registerAttribute( IAttribute attribute)`
-- `protected IAttributeInstance createInstance( IAttribute attribute)`
-- `public void onAttributeModified( IAttributeInstance instance)`
-- `public java.util.Set< IAttributeInstance > getAttributeInstanceSet()`
-- `public java.util.Collection< IAttributeInstance > getWatchedAttributes()`
+- `protected IAttributeInstance createInstance(IAttribute attribute)`
+- `ModifiableAttributeInstance getAttributeInstance(IAttribute attribute)`
+- `ModifiableAttributeInstance getAttributeInstanceByName(java.lang.String attributeName)`
+- `java.util.Set<IAttributeInstance> getAttributeInstanceSet()`
+- `java.util.Collection<IAttributeInstance> getWatchedAttributes()`
+- `void onAttributeModified(IAttributeInstance instance)`
+- `IAttributeInstance registerAttribute(IAttribute attribute)`
+
+## Fields
+
+- `protected java.util.Map<java.lang.String, IAttributeInstance> descriptionToAttributeInstanceMap`

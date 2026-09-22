@@ -1,5 +1,7 @@
 # InitMapGenEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.InitMapGenEvent
+
 ## Class signature
 
 ```java
@@ -8,11 +10,7 @@ public class InitMapGenEvent extends Event
 
 ## Methods
 
-- `public InitMapGenEvent.EventType getType()`
-- `public MapGenBase getOriginalGen()`
-- `public MapGenBase getNewGen()`
-- `public void setNewGen( MapGenBase newGen)`
-
-## Description
-
-Use CUSTOM to filter custom event types
+- `MapGenBase getNewGen()`
+- `MapGenBase getOriginalGen()`
+- `InitMapGenEvent.EventType getType()`
+- `void setNewGen(MapGenBase newGen)`

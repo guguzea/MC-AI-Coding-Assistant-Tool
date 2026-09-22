@@ -1,18 +1,22 @@
 # BlockStateLoader.SubModel
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.BlockStateLoader.SubModel
+
+## Class signature
+
+```java
+public static class BlockStateLoader.SubModel extends java.lang.Object
+```
+
 ## Constructors
 
-- `public SubModel( IModelState state, boolean uvLock, boolean smooth, boolean gui3d, <any> textures, ResourceLocation model, <any> customData)`
+- `@Deprecated SubModel(IModelState state, boolean uvLock, <any> textures, ResourceLocation model, <any> customData)`
+- `SubModel(IModelState state, boolean uvLock, boolean smooth, boolean gui3d, <any> textures, ResourceLocation model, <any> customData)`
 
 ## Methods
 
-- `@Deprecated public SubModel( IModelState state, boolean uvLock, <any> textures, ResourceLocation model, <any> customData)`
-- `public IModelState getState()`
-- `public boolean isUVLock()`
-- `public <any> getTextures()`
-- `public ResourceLocation getModelLocation()`
-- `public <any> getCustomData()`
-
-## Description
-
-Deprecated.
+- `<any> getCustomData()`
+- `ResourceLocation getModelLocation()`
+- `IModelState getState()`
+- `<any> getTextures()`
+- `boolean isUVLock()`

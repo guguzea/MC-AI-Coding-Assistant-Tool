@@ -3,11 +3,15 @@ title: "NBTTagIntArray"
 description: "public class NBTTagIntArray extends NBTBase"
 package: "net/minecraft/nbt"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/nbt/NBTTagIntArray.html"
 sourceType: javadoc
 ---
 
 # NBTTagIntArray
+
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase → net.minecraft.nbt.NBTTagIntArray
 
 ## Class signature
 
@@ -15,15 +19,15 @@ sourceType: javadoc
 public class NBTTagIntArray extends NBTBase
 ```
 
-## Constructors
-
-- `public NBTTagIntArray(int[] p_i45132_1_)`
-
 ## Methods
 
-- `public byte getId()`
-- `public java.lang.String toString()`
-- `public NBTBase copy()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public int[] getIntArray()`
+- `NBTBase copy()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `byte getId()`
+- `int[] getIntArray()`
+- `int hashCode()`
+- `java.lang.String toString()`
+
+## Fields
+
+- `NBTTagIntArray`

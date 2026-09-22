@@ -1,24 +1,30 @@
 ---
 title: "BlockStateContainer.Builder"
-description: "Forge added class to make building things easier. Will return an instance of BlockStateContainer appropriate for the list of properties passed in. Example usage: protected BlockStateContainer createBl"
+description: "public static class BlockStateContainer.Builder extends java.lang.Object"
 package: "net/minecraft/block/state"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/state/BlockStateContainer.Builder.html"
 sourceType: javadoc
 ---
 
 # BlockStateContainer.Builder
 
+**Inheritance:** java.lang.Object → net.minecraft.block.state.BlockStateContainer.Builder
+
+## Class signature
+
+```java
+public static class BlockStateContainer.Builder extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Builder( Block block)`
+- `Builder(Block block)`
 
 ## Methods
 
-- `public BlockStateContainer.Builder add( IProperty <?>... props)`
-- `public BlockStateContainer.Builder add( IUnlistedProperty <?>... props)`
-- `public BlockStateContainer build()`
-
-## Description
-
-Forge added class to make building things easier. Will return an instance of BlockStateContainer appropriate for the list of properties passed in. Example usage: protected BlockStateContainer createBl
+- `BlockStateContainer.Builder add(IProperty<?>... props)`
+- `BlockStateContainer.Builder add(IUnlistedProperty<?>... props)`
+- `BlockStateContainer build()`

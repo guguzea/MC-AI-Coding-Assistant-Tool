@@ -113,7 +113,7 @@ const HINTS: Record<DocPlatform, string> = {
   modloader:
     "ModLoader 以仓库内安全 API 表为准（modloader/1.6.4/knowledge/common/safe-api.md），不把 found:false 当成类不存在。",
   bedrock:
-    "基岩文档请用 search_bedrock_docs。数据位于 data/bedrock_*/bedrock-docs/；并查看 data/bedrock-docs-status.json 的滞后标记。",
+    "基岩文档请用 search_bedrock_docs。数据有两棵语料树：data/bedrock_*/bedrock-docs/（Microsoft Learn 文档页）与 data/bedrock_*/bedrock-scriptapi/（@minecraft/server 逐声明页）；并查看 data/bedrock-docs-status.json 的滞后标记。",
 };
 
 export function platformDataMissingPayload(platform: DocPlatform) {
@@ -209,7 +209,7 @@ export function hasPlatformDocData(
       liteloader: ["liteloader-docs"],
       rift: ["rift-docs"],
       modloader: ["modloader-docs"],
-      bedrock: ["bedrock-docs"],
+      bedrock: ["bedrock-docs", "bedrock-scriptapi"],
     };
     const sources = ownGet(extraSources, platform) ?? [ownGet(PLATFORM_DOC_SUBDIR, platform) ?? `${platform}-docs`];
     return hasPrefixedIndex(dataDir, platform, sources);
@@ -226,10 +226,16 @@ export function listKnownDocPlatforms(): readonly string[] {
 
 const VERSION_LIKE = /^\d+(\.\d+)*$/;
 
-/** 该平台文档子目录（fabric 另有 wiki 语料）。 */
+/**
+ * 该平台文档子目录（fabric 另有 wiki 语料；基岩另有 Script API 逐声明语料，2026-09-21 拆树）。
+ * 只列第一棵会让「docs 树被删、scriptapi 树还在」的半成品安装报成「本档无数据」，
+ * 而 search_bedrock_docs 那侧其实还能搜到页。
+ */
 function docSourcesOf(platform: DocPlatform): string[] {
   const base = ownGet(PLATFORM_DOC_SUBDIR, platform) ?? `${platform}-docs`;
-  return platform === "fabric" ? [base, "fabric-wiki"] : [base];
+  if (platform === "fabric") return [base, "fabric-wiki"];
+  if (platform === "bedrock") return [base, "bedrock-scriptapi"];
+  return [base];
 }
 
 function l0Candidates(dataDir: string, platform: DocPlatform, version: string): string[] {

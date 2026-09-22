@@ -1,20 +1,18 @@
 # PotionHealth
 
+**Inheritance:** java.lang.Object → net.minecraft.potion.Potion → net.minecraft.potion.PotionHealth
+
 ## Class signature
 
 ```java
 public class PotionHealth extends Potion
 ```
 
-## Constructors
-
-- `public PotionHealth(int potionID, ResourceLocation location, boolean badEffect, int potionColor)`
-
 ## Methods
 
-- `public boolean isInstant()`
-- `public boolean isReady(int p_76397_1_, int p_76397_2_)`
+- `boolean isInstant()` — Returns true if the potion has an instant effect instead of a continuous one (eg Harming)
+- `boolean isReady(int p_76397_1_, int p_76397_2_)` — checks if Potion effect is ready to be applied this tick.
 
-## Description
+## Fields
 
-Returns true if the potion has an instant effect instead of a continuous one (eg Harming)
+- `PotionHealth`

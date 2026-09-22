@@ -1,13 +1,17 @@
 # BlockEvent.NeighborNotifyEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.BlockEvent.NeighborNotifyEvent
+
+## Class signature
+
+```java
+public static class BlockEvent.NeighborNotifyEvent extends BlockEvent
+```
+
 ## Constructors
 
-- `public NeighborNotifyEvent( World world, BlockPos pos, IBlockState state, java.util.EnumSet< EnumFacing > notifiedSides)`
+- `NeighborNotifyEvent(World world, BlockPos pos, IBlockState state, java.util.EnumSet<EnumFacing> notifiedSides)`
 
 ## Methods
 
-- `public java.util.EnumSet< EnumFacing > getNotifiedSides()`
-
-## Description
-
-Fired when a physics update occurs on a block. This event acts as a way for mods to detect physics updates, in the same way a BUD switch does. This event is only called on the server.
+- `java.util.EnumSet<EnumFacing> getNotifiedSides()` — Gets a list of directions from the base block that updates will occur upon.

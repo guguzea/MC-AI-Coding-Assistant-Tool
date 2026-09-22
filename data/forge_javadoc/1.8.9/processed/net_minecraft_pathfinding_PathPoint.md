@@ -1,5 +1,7 @@
 # PathPoint
 
+**Inheritance:** java.lang.Object → net.minecraft.pathfinding.PathPoint
+
 ## Class signature
 
 ```java
@@ -8,18 +10,21 @@ public class PathPoint extends java.lang.Object
 
 ## Constructors
 
-- `public PathPoint(int x, int y, int z)`
+- `PathPoint(int x, int y, int z)`
 
 ## Methods
 
-- `public static int makeHash(int x, int y, int z)`
-- `public float distanceTo( PathPoint pathpointIn)`
-- `public float distanceToSquared( PathPoint pathpointIn)`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public boolean isAssigned()`
-- `public java.lang.String toString()`
+- `float distanceTo(PathPoint pathpointIn)` — Returns the linear distance to another path point
+- `float distanceToSquared(PathPoint pathpointIn)` — Returns the squared distance to another path point
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `int hashCode()`
+- `boolean isAssigned()` — Returns true if this point has already been assigned to a path
+- `static int makeHash(int x, int y, int z)`
+- `java.lang.String toString()`
 
-## Description
+## Fields
 
-True if the pathfinder has already visited this point
+- `boolean visited` — True if the pathfinder has already visited this point
+- `int xCoord` — The x coordinate of this point
+- `int yCoord` — The y coordinate of this point
+- `int zCoord` — The z coordinate of this point

@@ -1,5 +1,7 @@
 # ServerStatusResponse
 
+**Inheritance:** java.lang.Object → net.minecraft.network.ServerStatusResponse
+
 ## Class signature
 
 ```java
@@ -8,21 +10,17 @@ public class ServerStatusResponse extends java.lang.Object
 
 ## Constructors
 
-- `public ServerStatusResponse()`
+- `ServerStatusResponse()`
 
 ## Methods
 
-- `public IChatComponent getServerDescription()`
-- `public void setServerDescription( IChatComponent motd)`
-- `public ServerStatusResponse.PlayerCountData getPlayerCountData()`
-- `public void setPlayerCountData( ServerStatusResponse.PlayerCountData countData)`
-- `public ServerStatusResponse.MinecraftProtocolVersionIdentifier getProtocolVersionInfo()`
-- `public void setProtocolVersionInfo( ServerStatusResponse.MinecraftProtocolVersionIdentifier protocolVersionData)`
-- `public void setFavicon(java.lang.String faviconBlob)`
-- `public java.lang.String getFavicon()`
-- `public java.lang.String getJson()`
-- `public void invalidateJson()`
-
-## Description
-
-Returns this object as a Json string.
+- `java.lang.String getFavicon()`
+- `java.lang.String getJson()` — Returns this object as a Json string.
+- `ServerStatusResponse.PlayerCountData getPlayerCountData()`
+- `ServerStatusResponse.MinecraftProtocolVersionIdentifier getProtocolVersionInfo()`
+- `IChatComponent getServerDescription()`
+- `void invalidateJson()` — Invalidates the cached json, causing the next call to getJson to rebuild it.
+- `void setFavicon(java.lang.String faviconBlob)`
+- `void setPlayerCountData(ServerStatusResponse.PlayerCountData countData)`
+- `void setProtocolVersionInfo(ServerStatusResponse.MinecraftProtocolVersionIdentifier protocolVersionData)`
+- `void setServerDescription(IChatComponent motd)`

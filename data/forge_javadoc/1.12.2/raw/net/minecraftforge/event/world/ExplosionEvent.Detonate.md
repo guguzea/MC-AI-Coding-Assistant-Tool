@@ -1,23 +1,29 @@
 ---
 title: "ExplosionEvent.Detonate"
-description: "ExplosionEvent.Detonate is fired once the explosion has a list of affected blocks and entities. These lists can be modified to change the outcome. This event is not Cancelable . This event does not us"
+description: "public static class ExplosionEvent.Detonate extends ExplosionEvent"
 package: "net/minecraftforge/event/world"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/event/world/ExplosionEvent.Detonate.html"
 sourceType: javadoc
 ---
 
 # ExplosionEvent.Detonate
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.ExplosionEvent → net.minecraftforge.event.world.ExplosionEvent.Detonate
+
+## Class signature
+
+```java
+public static class ExplosionEvent.Detonate extends ExplosionEvent
+```
+
 ## Constructors
 
-- `public Detonate( World world, Explosion explosion, java.util.List< Entity > entityList)`
+- `Detonate(World world, Explosion explosion, java.util.List<Entity> entityList)`
 
 ## Methods
 
-- `public java.util.List< BlockPos > getAffectedBlocks()`
-- `public java.util.List< Entity > getAffectedEntities()`
-
-## Description
-
-ExplosionEvent.Detonate is fired once the explosion has a list of affected blocks and entities. These lists can be modified to change the outcome. This event is not Cancelable . This event does not us
+- `java.util.List<BlockPos> getAffectedBlocks()` — return the list of blocks affected by the explosion.
+- `java.util.List<Entity> getAffectedEntities()` — return the list of entities affected by the explosion.

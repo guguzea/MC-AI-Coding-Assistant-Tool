@@ -1,15 +1,17 @@
 # EntityAmbientCreature
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.passive.EntityAmbientCreature
+
 ## Class signature
 
 ```java
 public abstract class EntityAmbientCreature extends EntityLiving implements IAnimals
 ```
 
-## Constructors
-
-- `public EntityAmbientCreature( World worldIn)`
-
 ## Methods
 
-- `public boolean canBeLeashedTo( EntityPlayer player)`
+- `boolean canBeLeashedTo(EntityPlayer player)`
+
+## Fields
+
+- `EntityAmbientCreature`

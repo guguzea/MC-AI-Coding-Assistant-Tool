@@ -1,5 +1,7 @@
 # CommandMessage
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.server.CommandMessage
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class CommandMessage extends CommandBase
 
 ## Constructors
 
-- `public CommandMessage()`
+- `CommandMessage()`
 
 ## Methods
 
-- `public java.util.List<java.lang.String> getAliases()`
-- `public java.lang.String getName()`
-- `public int getRequiredPermissionLevel()`
-- `public java.lang.String getUsage( ICommandSender sender)`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `public java.util.List<java.lang.String> getTabCompletions( MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos targetPos)`
-- `public boolean isUsernameIndex(java.lang.String[] args, int index)`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.util.List<java.lang.String> getAliases()`
+- `java.lang.String getName()`
+- `int getRequiredPermissionLevel()`
+- `java.util.List<java.lang.String> getTabCompletions(MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos targetPos)`
+- `java.lang.String getUsage(ICommandSender sender)`
+- `boolean isUsernameIndex(java.lang.String[] args, int index)`

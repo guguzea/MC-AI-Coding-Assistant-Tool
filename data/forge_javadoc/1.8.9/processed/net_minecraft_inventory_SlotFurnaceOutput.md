@@ -1,23 +1,21 @@
 # SlotFurnaceOutput
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Slot → net.minecraft.inventory.SlotFurnaceOutput
+
 ## Class signature
 
 ```java
 public class SlotFurnaceOutput extends Slot
 ```
 
-## Constructors
-
-- `public SlotFurnaceOutput( EntityPlayer player, IInventory inventoryIn, int slotIndex, int xPosition, int yPosition)`
-
 ## Methods
 
-- `public boolean isItemValid( ItemStack stack)`
-- `public ItemStack decrStackSize(int amount)`
-- `public void onPickupFromSlot( EntityPlayer playerIn, ItemStack stack)`
-- `protected void onCrafting( ItemStack stack, int amount)`
-- `protected void onCrafting( ItemStack stack)`
+- `ItemStack decrStackSize(int amount)` — Decrease the size of the stack in slot (first int arg) by the amount of the second int arg.
+- `boolean isItemValid(ItemStack stack)` — Check if the stack is a valid item for this slot.
+- `protected void onCrafting(ItemStack stack)` — the itemStack passed in is the output - ie, iron ingots, and pickaxes, not ore and wood.
+- `protected void onCrafting(ItemStack stack, int amount)` — the itemStack passed in is the output - ie, iron ingots, and pickaxes, not ore and wood.
+- `void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack)`
 
-## Description
+## Fields
 
-Decrease the size of the stack in slot (first int arg) by the amount of the second int arg.
+- `SlotFurnaceOutput`

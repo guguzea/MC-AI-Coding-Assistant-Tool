@@ -1,16 +1,18 @@
 # MinecraftDummyContainer
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.DummyModContainer → cpw.mods.fml.common.MinecraftDummyContainer
+
 ## Class signature
 
 ```java
 public class MinecraftDummyContainer extends DummyModContainer
 ```
 
-## Constructors
-
-- `public MinecraftDummyContainer(java.lang.String actualMCVersion)`
-
 ## Methods
 
-- `public VersionRange getStaticVersionRange()`
-- `public java.security.cert.Certificate getSigningCertificate()`
+- `java.security.cert.Certificate getSigningCertificate()`
+- `VersionRange getStaticVersionRange()`
+
+## Fields
+
+- `MinecraftDummyContainer`

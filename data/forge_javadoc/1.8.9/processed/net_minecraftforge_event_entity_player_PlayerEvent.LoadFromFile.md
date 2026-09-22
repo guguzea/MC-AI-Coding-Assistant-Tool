@@ -1,13 +1,22 @@
 # PlayerEvent.LoadFromFile
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.LoadFromFile
+
+## Class signature
+
+```java
+public static class PlayerEvent.LoadFromFile extends PlayerEvent
+```
+
 ## Constructors
 
-- `public LoadFromFile( EntityPlayer player, java.io.File originDirectory, java.lang.String playerUUID)`
+- `LoadFromFile(EntityPlayer player, java.io.File originDirectory, java.lang.String playerUUID)`
 
 ## Methods
 
-- `public java.io.File getPlayerFile(java.lang.String suffix)`
+- `java.io.File getPlayerFile(java.lang.String suffix)` — Construct and return a recommended file for the supplied suffix
 
-## Description
+## Fields
 
-The player is being loaded from the world save. Note that the player won't have been added to the world yet. Intended to allow mods to load an additional file from the players directory containing add
+- `java.io.File playerDirectory` — The directory where player data is being stored.
+- `java.lang.String playerUUID` — The UUID is the standard for player related file storage.

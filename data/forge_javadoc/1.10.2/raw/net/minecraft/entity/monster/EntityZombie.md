@@ -1,13 +1,17 @@
 ---
 title: "EntityZombie"
-description: "Deprecated."
+description: "public class EntityZombie extends EntityMob"
 package: "net/minecraft/entity/monster"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/entity/monster/EntityZombie.html"
 sourceType: javadoc
 ---
 
 # EntityZombie
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityZombie
 
 ## Class signature
 
@@ -17,59 +21,59 @@ public class EntityZombie extends EntityMob
 
 ## Constructors
 
-- `public EntityZombie( World worldIn)`
+- `EntityZombie(World worldIn)`
 
 ## Methods
 
-- `protected void initEntityAI()`
 - `protected void applyEntityAI()`
 - `protected void applyEntityAttributes()`
-- `protected void entityInit()`
-- `public void setArmsRaised(boolean armsRaised)`
-- `public boolean isArmsRaised()`
-- `public boolean isBreakDoorsTaskSet()`
-- `public void setBreakDoorsAItask(boolean enabled)`
-- `public boolean isChild()`
-- `protected int getExperiencePoints( EntityPlayer player)`
-- `public void setChild(boolean childZombie)`
-- `@Deprecated @Nullable public ZombieType getZombieType()`
-- `public boolean isVillager()`
-- `@Nullable public VillagerRegistry.VillagerProfession getVillagerTypeForge()`
-- `@Deprecated public void setZombieType( ZombieType type)`
-- `public void setVillagerType(@Nullable VillagerRegistry.VillagerProfession type)`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public void onLivingUpdate()`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public void onUpdate()`
-- `public boolean attackEntityAsMob( Entity entityIn)`
-- `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
-- `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `public EnumCreatureAttribute getCreatureAttribute()`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `protected void setEquipmentBasedOnDifficulty( DifficultyInstance difficulty)`
-- `public static void registerFixesZombie( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void onKillEntity( EntityLivingBase entityLivingIn)`
-- `public float getEyeHeight()`
-- `protected boolean canEquipItem( ItemStack stack)`
-- `@Nullable public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand, @Nullable ItemStack stack)`
-- `protected void startConversion(int ticks)`
-- `public void handleStatusUpdate(byte id)`
+- `boolean attackEntityAsMob(Entity entityIn)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
 - `protected boolean canDespawn()`
-- `public boolean isConverting()`
+- `protected boolean canEquipItem(ItemStack stack)`
 - `protected void convertToVillager()`
+- `protected void entityInit()`
+- `protected SoundEvent getAmbientSound()`
 - `protected int getConversionTimeBoost()`
-- `public void setChildSize(boolean isChild)`
-- `protected final void setSize(float width, float height)`
-- `protected final void multiplySize(float size)`
-- `public double getYOffset()`
-- `public void onDeath( DamageSource cause)`
-- `public java.lang.String getName()`
+- `EnumCreatureAttribute getCreatureAttribute()`
+- `protected SoundEvent getDeathSound()`
+- `protected int getExperiencePoints(EntityPlayer player)`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `java.lang.String getName()`
+- `VillagerRegistry.VillagerProfession getVillagerTypeForge()`
+- `double getYOffset()`
+- `@Deprecated ZombieType getZombieType()`
+- `void handleStatusUpdate(byte id)`
+- `protected void initEntityAI()`
+- `boolean isArmsRaised()`
+- `boolean isBreakDoorsTaskSet()`
+- `boolean isChild()`
+- `boolean isConverting()`
+- `boolean isVillager()`
+- `protected void multiplySize(float size)`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onDeath(DamageSource cause)`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onKillEntity(EntityLivingBase entityLivingIn)`
+- `void onLivingUpdate()`
+- `void onUpdate()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesZombie(DataFixer fixer)`
+- `void setArmsRaised(boolean armsRaised)`
+- `void setBreakDoorsAItask(boolean enabled)`
+- `void setChild(boolean childZombie)`
+- `void setChildSize(boolean isChild)`
+- `protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty)`
+- `protected void setSize(float width, float height)`
+- `void setVillagerType(VillagerRegistry.VillagerProfession type)`
+- `@Deprecated void setZombieType(ZombieType type)`
+- `protected void startConversion(int ticks)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Deprecated.
+- `protected static IAttribute SPAWN_REINFORCEMENTS_CHANCE`

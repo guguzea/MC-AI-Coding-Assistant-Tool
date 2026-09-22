@@ -8,4 +8,4 @@ public interface IInventoryChangedListener
 
 ## Methods
 
-- `void onInventoryChanged( IInventory invBasic)`
+- `void onInventoryChanged(IInventory invBasic)`

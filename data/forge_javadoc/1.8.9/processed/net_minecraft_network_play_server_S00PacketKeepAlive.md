@@ -1,23 +1,21 @@
 # S00PacketKeepAlive
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S00PacketKeepAlive
+
 ## Class signature
 
 ```java
-public class S00PacketKeepAlive extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class S00PacketKeepAlive extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public S00PacketKeepAlive()`
-- `public S00PacketKeepAlive(int idIn)`
+- `S00PacketKeepAlive()`
+- `S00PacketKeepAlive(int idIn)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public int func_149134_c()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `int func_149134_c()`
+- `void processPacket(INetHandlerPlayClient handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

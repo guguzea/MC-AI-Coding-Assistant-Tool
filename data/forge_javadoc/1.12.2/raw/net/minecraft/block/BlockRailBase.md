@@ -1,13 +1,17 @@
 ---
 title: "BlockRailBase"
-description: "Returns true if the rail can make up and down slopes."
+description: "public abstract class BlockRailBase extends Block"
 package: "net/minecraft/block"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/block/BlockRailBase.html"
 sourceType: javadoc
 ---
 
 # BlockRailBase
+
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockRailBase
 
 ## Class signature
 
@@ -17,33 +21,35 @@ public abstract class BlockRailBase extends Block
 
 ## Constructors
 
-- `protected BlockRailBase(boolean isPowered)`
+- `BlockRailBase(boolean isPowered)`
 
 ## Methods
 
-- `public static boolean isRailBlock( World worldIn, BlockPos pos)`
-- `public static boolean isRailBlock( IBlockState state)`
-- `public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public BlockFaceShape getBlockFaceShape( IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public void onBlockAdded( World worldIn, BlockPos pos, IBlockState state)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
-- `protected void updateState( IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
-- `protected IBlockState updateDir( World worldIn, BlockPos pos, IBlockState state, boolean initialPlacement)`
-- `public EnumPushReaction getMobilityFlag( IBlockState state)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public abstract IProperty < BlockRailBase.EnumRailDirection > getShapeProperty()`
-- `public boolean isFlexibleRail( IBlockAccess world, BlockPos pos)`
-- `public boolean canMakeSlopes( IBlockAccess world, BlockPos pos)`
-- `public BlockRailBase.EnumRailDirection getRailDirection( IBlockAccess world, BlockPos pos, IBlockState state, EntityMinecart cart)`
-- `public float getRailMaxSpeed( World world, EntityMinecart cart, BlockPos pos)`
-- `public void onMinecartPass( World world, EntityMinecart cart, BlockPos pos)`
-- `public boolean rotateBlock( World world, BlockPos pos, EnumFacing axis)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canMakeSlopes(IBlockAccess world, BlockPos pos)` — Returns true if the rail can make up and down slopes.
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
+- `EnumPushReaction getMobilityFlag(IBlockState state)`
+- `BlockRailBase.EnumRailDirection getRailDirection(IBlockAccess world, BlockPos pos, IBlockState state, EntityMinecart cart)` — Return the rail's direction.
+- `float getRailMaxSpeed(World world, EntityMinecart cart, BlockPos pos)` — Returns the max speed of the rail at the specified position.
+- `abstract IProperty<BlockRailBase.EnumRailDirection> getShapeProperty()`
+- `boolean isFlexibleRail(IBlockAccess world, BlockPos pos)` — Return true if the rail can make corners.
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `static boolean isRailBlock(IBlockState state)`
+- `static boolean isRailBlock(World worldIn, BlockPos pos)`
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)`
+- `void onMinecartPass(World world, EntityMinecart cart, BlockPos pos)` — This function is called by any minecart that passes over this rail.
+- `boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)` — Rotate the block.
+- `protected IBlockState updateDir(World worldIn, BlockPos pos, IBlockState state, boolean initialPlacement)`
+- `protected void updateState(IBlockState state, World worldIn, BlockPos pos, Block blockIn)`
 
-## Description
+## Fields
 
-Returns true if the rail can make up and down slopes.
+- `protected static AxisAlignedBB ASCENDING_AABB`
+- `protected static AxisAlignedBB FLAT_AABB`
+- `protected boolean isPowered`

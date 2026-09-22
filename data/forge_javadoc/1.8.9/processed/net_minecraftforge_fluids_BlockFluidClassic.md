@@ -1,5 +1,7 @@
 # BlockFluidClassic
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraftforge.fluids.BlockFluidBase → net.minecraftforge.fluids.BlockFluidClassic
+
 ## Class signature
 
 ```java
@@ -8,27 +10,29 @@ public class BlockFluidClassic extends BlockFluidBase
 
 ## Constructors
 
-- `public BlockFluidClassic( Fluid fluid, Material material)`
+- `BlockFluidClassic(Fluid fluid, Material material)`
 
 ## Methods
 
-- `public BlockFluidClassic setFluidStack( FluidStack stack)`
-- `public BlockFluidClassic setFluidStackAmount(int amount)`
-- `public int getQuantaValue( IBlockAccess world, BlockPos pos)`
-- `public boolean canCollideCheck( IBlockState state, boolean fullHit)`
-- `public int getMaxRenderHeightMeta()`
-- `public int getLightValue( IBlockAccess world, BlockPos pos)`
-- `public void updateTick( World world, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public boolean isFlowingVertically( IBlockAccess world, BlockPos pos)`
-- `public boolean isSourceBlock( IBlockAccess world, BlockPos pos)`
-- `protected boolean[] getOptimalFlowDirections( World world, BlockPos pos)`
-- `protected int calculateFlowCost( World world, BlockPos pos, int recurseDepth, int side)`
-- `protected void flowIntoBlock( World world, BlockPos pos, int meta)`
-- `protected boolean canFlowInto( IBlockAccess world, BlockPos pos)`
-- `protected int getLargerQuanta( IBlockAccess world, BlockPos pos, int compare)`
-- `public FluidStack drain( World world, BlockPos pos, boolean doDrain)`
-- `public boolean canDrain( World world, BlockPos pos)`
+- `protected int calculateFlowCost(World world, BlockPos pos, int recurseDepth, int side)`
+- `boolean canCollideCheck(IBlockState state, boolean fullHit)`
+- `boolean canDrain(World world, BlockPos pos)` — Check to see if a block can be drained.
+- `protected boolean canFlowInto(IBlockAccess world, BlockPos pos)`
+- `FluidStack drain(World world, BlockPos pos, boolean doDrain)` — Attempt to drain the block.
+- `protected void flowIntoBlock(World world, BlockPos pos, int meta)`
+- `protected int getLargerQuanta(IBlockAccess world, BlockPos pos, int compare)`
+- `int getLightValue(IBlockAccess world, BlockPos pos)` — Get a light value for the block at the specified coordinates, normal ranges are between 0 and 15
+- `int getMaxRenderHeightMeta()`
+- `protected boolean[] getOptimalFlowDirections(World world, BlockPos pos)`
+- `int getQuantaValue(IBlockAccess world, BlockPos pos)`
+- `boolean isFlowingVertically(IBlockAccess world, BlockPos pos)`
+- `boolean isSourceBlock(IBlockAccess world, BlockPos pos)`
+- `BlockFluidClassic setFluidStack(FluidStack stack)`
+- `BlockFluidClassic setFluidStackAmount(int amount)`
+- `void updateTick(World world, BlockPos pos, IBlockState state, java.util.Random rand)`
 
-## Description
+## Fields
 
-This is a fluid block implementation which emulates vanilla Minecraft fluid behavior. It is highly recommended that you use/extend this class for "classic" fluid blocks.
+- `protected int[] flowCost`
+- `protected boolean[] isOptimalFlowDirection`
+- `protected FluidStack stack`

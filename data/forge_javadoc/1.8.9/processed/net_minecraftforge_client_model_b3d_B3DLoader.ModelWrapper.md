@@ -1,24 +1,28 @@
 # B3DLoader.ModelWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.b3d.B3DLoader.ModelWrapper
+
+## Class signature
+
+```java
+public static class B3DLoader.ModelWrapper extends java.lang.Object implements IRetexturableModel<B3DLoader.ModelWrapper>, IModelCustomData<B3DLoader.ModelWrapper>, IModelSimpleProperties<B3DLoader.ModelWrapper>, IAnimatedModel
+```
+
 ## Constructors
 
-- `public ModelWrapper( ResourceLocation modelLocation, B3DModel model, <any> meshes, boolean smooth, boolean gui3d, int defaultKey)`
-- `public ModelWrapper( ResourceLocation modelLocation, B3DModel model, <any> meshes, boolean smooth, boolean gui3d, int defaultKey, <any> textures)`
+- `ModelWrapper(ResourceLocation modelLocation, B3DModel model, <any> meshes, boolean smooth, boolean gui3d, int defaultKey)`
+- `ModelWrapper(ResourceLocation modelLocation, B3DModel model, <any> meshes, boolean smooth, boolean gui3d, int defaultKey, <any> textures)`
+- `@Deprecated ModelWrapper(ResourceLocation modelLocation, B3DModel model, <any> meshes, int defaultKey)`
+- `@Deprecated ModelWrapper(ResourceLocation modelLocation, B3DModel model, <any> meshes, int defaultKey, <any> textures)`
 
 ## Methods
 
-- `@Deprecated public ModelWrapper( ResourceLocation modelLocation, B3DModel model, <any> meshes, int defaultKey)`
-- `@Deprecated public ModelWrapper( ResourceLocation modelLocation, B3DModel model, <any> meshes, int defaultKey, <any> textures)`
-- `public java.util.Collection< ResourceLocation > getDependencies()`
-- `public java.util.Collection< ResourceLocation > getTextures()`
-- `public IFlexibleBakedModel bake( IModelState state, VertexFormat format, <any> bakedTextureGetter)`
-- `public IModel retexture(<any> textures)`
-- `public IModel process(<any> data)`
-- `public <any> getClip(java.lang.String name)`
-- `public IModelState getDefaultState()`
-- `public B3DLoader.ModelWrapper smoothLighting(boolean value)`
-- `public B3DLoader.ModelWrapper gui3d(boolean value)`
-
-## Description
-
-Deprecated.
+- `IFlexibleBakedModel bake(IModelState state, VertexFormat format, <any> bakedTextureGetter)`
+- `<any> getClip(java.lang.String name)`
+- `IModelState getDefaultState()`
+- `java.util.Collection<ResourceLocation> getDependencies()`
+- `java.util.Collection<ResourceLocation> getTextures()`
+- `B3DLoader.ModelWrapper gui3d(boolean value)`
+- `IModel process(<any> data)` — Allows the model to process custom data from the variant definition.
+- `IModel retexture(<any> textures)` — Applies new textures to the model.
+- `B3DLoader.ModelWrapper smoothLighting(boolean value)`

@@ -1,31 +1,31 @@
 ---
 title: "AttachCapabilitiesEvent"
-description: "Fired whenever an object with Capabilities support {currently TileEntity/Item/Entity) is created. Allowing for the attachment of arbitrary capability providers. Please note that as this is fired for A"
+description: "public class AttachCapabilitiesEvent<T> extends GenericEvent<T>"
 package: "net/minecraftforge/event"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/AttachCapabilitiesEvent.html"
 sourceType: javadoc
 ---
 
 # AttachCapabilitiesEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.eventhandler.GenericEvent<T> → net.minecraftforge.event.AttachCapabilitiesEvent<T>
+
 ## Class signature
 
 ```java
-public class AttachCapabilitiesEvent<T> extends GenericEvent <T>
+public class AttachCapabilitiesEvent<T> extends GenericEvent<T>
 ```
 
 ## Constructors
 
-- `public AttachCapabilitiesEvent(java.lang.Class< T > type, T obj)`
+- `AttachCapabilitiesEvent(java.lang.Class<T> type, T obj)`
+- `@Deprecated AttachCapabilitiesEvent(T obj)`
 
 ## Methods
 
-- `@Deprecated public AttachCapabilitiesEvent( T obj)`
-- `public T getObject()`
-- `public void addCapability( ResourceLocation key, ICapabilityProvider cap)`
-- `public java.util.Map< ResourceLocation , ICapabilityProvider > getCapabilities()`
-
-## Description
-
-Fired whenever an object with Capabilities support {currently TileEntity/Item/Entity) is created. Allowing for the attachment of arbitrary capability providers. Please note that as this is fired for A
+- `void addCapability(ResourceLocation key, ICapabilityProvider cap)` — Adds a capability to be attached to this object.
+- `java.util.Map<ResourceLocation, ICapabilityProvider> getCapabilities()` — A unmodifiable view of the capabilities that will be attached to this object.
+- `T getObject()` — Retrieves the object that is being created, Not much state is set.

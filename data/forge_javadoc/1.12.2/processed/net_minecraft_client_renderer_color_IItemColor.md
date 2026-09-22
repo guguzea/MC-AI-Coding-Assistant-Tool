@@ -8,4 +8,4 @@ public interface IItemColor
 
 ## Methods
 
-- `int colorMultiplier( ItemStack stack, int tintIndex)`
+- `int colorMultiplier(ItemStack stack, int tintIndex)`

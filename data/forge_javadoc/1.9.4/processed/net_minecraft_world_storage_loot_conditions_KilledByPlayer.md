@@ -1,5 +1,7 @@
 # KilledByPlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.conditions.KilledByPlayer
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class KilledByPlayer extends java.lang.Object implements LootCondition
 
 ## Constructors
 
-- `public KilledByPlayer(boolean inverseIn)`
+- `KilledByPlayer(boolean inverseIn)`
 
 ## Methods
 
-- `public boolean testCondition(java.util.Random rand, LootContext context)`
+- `boolean testCondition(java.util.Random rand, LootContext context)`

@@ -1,19 +1,23 @@
 # ModelBlockDefinition.Variant
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.ModelBlockDefinition.Variant
+
+## Class signature
+
+```java
+public static class ModelBlockDefinition.Variant extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Variant( ResourceLocation modelLocationIn, ModelRotation modelRotationIn, boolean uvLockIn, int weightIn)`
+- `Variant(ResourceLocation modelLocationIn, ModelRotation modelRotationIn, boolean uvLockIn, int weightIn)`
 
 ## Methods
 
-- `public ResourceLocation getModelLocation()`
-- `@Deprecated public ModelRotation getRotation()`
-- `public IModelState getState()`
-- `public boolean isUvLocked()`
-- `public int getWeight()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-
-## Description
-
-Deprecated.
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `ResourceLocation getModelLocation()`
+- `@Deprecated ModelRotation getRotation()`
+- `IModelState getState()`
+- `int getWeight()`
+- `int hashCode()`
+- `boolean isUvLocked()`

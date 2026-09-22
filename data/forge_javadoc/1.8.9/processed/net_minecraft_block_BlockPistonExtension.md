@@ -1,5 +1,7 @@
 # BlockPistonExtension
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockPistonExtension
+
 ## Class signature
 
 ```java
@@ -8,28 +10,30 @@ public class BlockPistonExtension extends Block
 
 ## Constructors
 
-- `public BlockPistonExtension()`
+- `BlockPistonExtension()`
 
 ## Methods
 
-- `public void onBlockHarvested( World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
-- `public void breakBlock( World worldIn, BlockPos pos, IBlockState state)`
-- `public boolean isOpaqueCube()`
-- `public boolean isFullCube()`
-- `public boolean canPlaceBlockAt( World worldIn, BlockPos pos)`
-- `public boolean canPlaceBlockOnSide( World worldIn, BlockPos pos, EnumFacing side)`
-- `public int quantityDropped(java.util.Random random)`
-- `public void addCollisionBoxesToList( World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, java.util.List< AxisAlignedBB > list, Entity collidingEntity)`
-- `public void setBlockBoundsBasedOnState( IBlockAccess worldIn, BlockPos pos)`
-- `public void applyHeadBounds( IBlockState state)`
-- `public void onNeighborBlockChange( World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)`
-- `public boolean shouldSideBeRendered( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
-- `public static EnumFacing getFacing(int meta)`
-- `public Item getItem( World worldIn, BlockPos pos)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public int getMetaFromState( IBlockState state)`
+- `void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, java.util.List<AxisAlignedBB> list, Entity collidingEntity)` — Add all collision boxes of this Block to the list that intersect with the given mask.
+- `void applyHeadBounds(IBlockState state)`
+- `void breakBlock(World worldIn, BlockPos pos, IBlockState state)`
+- `boolean canPlaceBlockAt(World worldIn, BlockPos pos)`
+- `boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)` — Check whether this Block can be placed on the given side
 - `protected BlockState createBlockState()`
+- `static EnumFacing getFacing(int meta)`
+- `Item getItem(World worldIn, BlockPos pos)`
+- `int getMetaFromState(IBlockState state)` — Convert the BlockState into the correct metadata value
+- `IBlockState getStateFromMeta(int meta)` — Convert the given metadata into a BlockState for this Block
+- `boolean isFullCube()`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)`
+- `void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)` — Called when a neighboring block changes.
+- `int quantityDropped(java.util.Random random)` — Returns the quantity of items to drop on block destruction.
+- `void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)`
+- `boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
 
-## Description
+## Fields
 
-Add all collision boxes of this Block to the list that intersect with the given mask.
+- `static PropertyDirection FACING`
+- `static PropertyBool SHORT`
+- `static PropertyEnum<BlockPistonExtension.EnumPistonType> TYPE`

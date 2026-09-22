@@ -1,5 +1,7 @@
 # EntityChicken
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityChicken
+
 ## Class signature
 
 ```java
@@ -8,30 +10,36 @@ public class EntityChicken extends EntityAnimal
 
 ## Constructors
 
-- `public EntityChicken( World worldIn)`
+- `EntityChicken(World worldIn)`
 
 ## Methods
 
-- `public float getEyeHeight()`
 - `protected void applyEntityAttributes()`
-- `public void onLivingUpdate()`
-- `public void fall(float distance, float damageMultiplier)`
-- `protected java.lang.String getLivingSound()`
-- `protected java.lang.String getHurtSound()`
-- `protected java.lang.String getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
+- `protected boolean canDespawn()` — Determines if an entity can be despawned, used on idle far away entities
+- `EntityChicken createChild(EntityAgeable ageable)`
+- `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)` — Drop 0-2 items of this living's type
+- `void fall(float distance, float damageMultiplier)`
+- `protected java.lang.String getDeathSound()` — Returns the sound this mob makes on death.
 - `protected Item getDropItem()`
-- `protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)`
-- `public EntityChicken createChild( EntityAgeable ageable)`
-- `public boolean isBreedingItem( ItemStack stack)`
-- `public void readEntityFromNBT( NBTTagCompound tagCompund)`
-- `protected int getExperiencePoints( EntityPlayer player)`
-- `public void writeEntityToNBT( NBTTagCompound tagCompound)`
-- `protected boolean canDespawn()`
-- `public void updateRiderPosition()`
-- `public boolean isChickenJockey()`
-- `public void setChickenJockey(boolean jockey)`
+- `protected int getExperiencePoints(EntityPlayer player)` — Get the experience points the entity currently has.
+- `float getEyeHeight()`
+- `protected java.lang.String getHurtSound()` — Returns the sound this mob makes when it is hurt.
+- `protected java.lang.String getLivingSound()` — Returns the sound this mob makes while it's alive.
+- `boolean isBreedingItem(ItemStack stack)` — Checks if the parameter is an item which this animal can be fed to breed it (wheat, carrots or seeds depending on the animal type)
+- `boolean isChickenJockey()` — Determines if this chicken is a jokey with a zombie riding it.
+- `void onLivingUpdate()` — Called frequently so the entity can update its state every tick as required.
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
+- `void setChickenJockey(boolean jockey)` — Sets whether this chicken is a jockey or not.
+- `void updateRiderPosition()`
+- `void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
 
-## Description
+## Fields
 
-The time until the next egg is spawned.
+- `boolean chickenJockey`
+- `float destPos`
+- `float field_70884_g`
+- `float field_70888_h`
+- `int timeUntilNextEgg` — The time until the next egg is spawned.
+- `float wingRotation`
+- `float wingRotDelta`

@@ -1,13 +1,17 @@
 ---
 title: "ChunkCache"
-description: "FORGE: isSideSolid, pulled up from World"
+description: "public class ChunkCache extends java.lang.Object implements IBlockAccess"
 package: "net/minecraft/world"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/world/ChunkCache.html"
 sourceType: javadoc
 ---
 
 # ChunkCache
+
+**Inheritance:** java.lang.Object → net.minecraft.world.ChunkCache
 
 ## Class signature
 
@@ -17,21 +21,25 @@ public class ChunkCache extends java.lang.Object implements IBlockAccess
 
 ## Constructors
 
-- `public ChunkCache( World worldIn, BlockPos posFromIn, BlockPos posToIn, int subIn)`
+- `ChunkCache(World worldIn, BlockPos posFromIn, BlockPos posToIn, int subIn)`
 
 ## Methods
 
-- `public boolean extendedLevelsInChunkCache()`
-- `@Nullable public TileEntity getTileEntity( BlockPos pos)`
-- `public int getCombinedLight( BlockPos pos, int lightValue)`
-- `public IBlockState getBlockState( BlockPos pos)`
-- `public Biome getBiomeGenForCoords( BlockPos pos)`
-- `public boolean isAirBlock( BlockPos pos)`
-- `public int getLightFor( EnumSkyBlock p_175628_1_, BlockPos pos)`
-- `public int getStrongPower( BlockPos pos, EnumFacing direction)`
-- `public WorldType getWorldType()`
-- `public boolean isSideSolid( BlockPos pos, EnumFacing side, boolean _default)`
+- `boolean extendedLevelsInChunkCache()`
+- `Biome getBiomeGenForCoords(BlockPos pos)`
+- `IBlockState getBlockState(BlockPos pos)`
+- `int getCombinedLight(BlockPos pos, int lightValue)`
+- `int getLightFor(EnumSkyBlock p_175628_1_, BlockPos pos)`
+- `int getStrongPower(BlockPos pos, EnumFacing direction)`
+- `TileEntity getTileEntity(BlockPos pos)`
+- `WorldType getWorldType()`
+- `boolean isAirBlock(BlockPos pos)`
+- `boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default)` — FORGE: isSideSolid, pulled up from World
 
-## Description
+## Fields
 
-FORGE: isSideSolid, pulled up from World
+- `protected Chunk [][] chunkArray`
+- `protected int chunkX`
+- `protected int chunkZ`
+- `protected boolean hasExtendedLevels`
+- `protected World worldObj`

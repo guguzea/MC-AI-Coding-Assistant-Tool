@@ -1,10 +1,18 @@
 # EntityHasProperty.Serializer
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.conditions.LootCondition.Serializer<EntityHasProperty> → net.minecraft.world.storage.loot.conditions.EntityHasProperty.Serializer
+
+## Class signature
+
+```java
+public static class EntityHasProperty.Serializer extends LootCondition.Serializer<EntityHasProperty>
+```
+
 ## Constructors
 
-- `protected Serializer()`
+- `Serializer()`
 
 ## Methods
 
-- `public void serialize(JsonObject json, EntityHasProperty value, JsonSerializationContext context)`
-- `public EntityHasProperty deserialize(JsonObject json, JsonDeserializationContext context)`
+- `EntityHasProperty deserialize(JsonObject json, JsonDeserializationContext context)`
+- `void serialize(JsonObject json, EntityHasProperty value, JsonSerializationContext context)`

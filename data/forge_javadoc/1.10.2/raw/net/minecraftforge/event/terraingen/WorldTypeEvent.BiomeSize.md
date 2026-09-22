@@ -1,24 +1,30 @@
 ---
 title: "WorldTypeEvent.BiomeSize"
-description: "BiomeSize is fired when vanilla Minecraft attempts to generate biomes. This event is fired during biome generation in GenLayer.initializeAllBiomeGenerators(long, WorldType, String) . originalSize the "
+description: "public static class WorldTypeEvent.BiomeSize extends WorldTypeEvent"
 package: "net/minecraftforge/event/terraingen"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/event/terraingen/WorldTypeEvent.BiomeSize.html"
 sourceType: javadoc
 ---
 
 # WorldTypeEvent.BiomeSize
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.WorldTypeEvent → net.minecraftforge.event.terraingen.WorldTypeEvent.BiomeSize
+
+## Class signature
+
+```java
+public static class WorldTypeEvent.BiomeSize extends WorldTypeEvent
+```
+
 ## Constructors
 
-- `public BiomeSize( WorldType worldType, int original)`
+- `BiomeSize(WorldType worldType, int original)`
 
 ## Methods
 
-- `public int getOriginalSize()`
-- `public int getNewSize()`
-- `public void setNewSize(int newSize)`
-
-## Description
-
-BiomeSize is fired when vanilla Minecraft attempts to generate biomes. This event is fired during biome generation in GenLayer.initializeAllBiomeGenerators(long, WorldType, String) . originalSize the 
+- `int getNewSize()`
+- `int getOriginalSize()`
+- `void setNewSize(int newSize)`

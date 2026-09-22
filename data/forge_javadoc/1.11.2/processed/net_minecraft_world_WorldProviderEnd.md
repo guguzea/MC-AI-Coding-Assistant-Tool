@@ -1,31 +1,33 @@
 # WorldProviderEnd
 
+**Inheritance:** java.lang.Object → net.minecraft.world.WorldProvider → net.minecraft.world.WorldProviderEnd
+
 ## Class signature
 
 ```java
 public class WorldProviderEnd extends WorldProvider
 ```
 
-## Constructors
-
-- `public WorldProviderEnd()`
-
 ## Methods
 
-- `public void init()`
-- `public IChunkGenerator createChunkGenerator()`
-- `public float calculateCelestialAngle(long worldTime, float partialTicks)`
-- `@Nullable public float[] calcSunriseSunsetColors(float celestialAngle, float partialTicks)`
-- `public Vec3d getFogColor(float p_76562_1_, float p_76562_2_)`
-- `public boolean isSkyColored()`
-- `public boolean canRespawnHere()`
-- `public boolean isSurfaceWorld()`
-- `public float getCloudHeight()`
-- `public boolean canCoordinateBeSpawn(int x, int z)`
-- `public BlockPos getSpawnCoordinate()`
-- `public int getAverageGroundLevel()`
-- `public boolean doesXZShowFog(int x, int z)`
-- `public DimensionType getDimensionType()`
-- `public void onWorldSave()`
-- `public void onWorldUpdateEntities()`
-- `@Nullable public DragonFightManager getDragonFightManager()`
+- `float[] calcSunriseSunsetColors(float celestialAngle, float partialTicks)`
+- `float calculateCelestialAngle(long worldTime, float partialTicks)`
+- `boolean canCoordinateBeSpawn(int x, int z)`
+- `boolean canRespawnHere()`
+- `IChunkGenerator createChunkGenerator()`
+- `boolean doesXZShowFog(int x, int z)`
+- `int getAverageGroundLevel()`
+- `float getCloudHeight()`
+- `DimensionType getDimensionType()`
+- `DragonFightManager getDragonFightManager()`
+- `Vec3d getFogColor(float p_76562_1_, float p_76562_2_)`
+- `BlockPos getSpawnCoordinate()`
+- `void init()`
+- `boolean isSkyColored()`
+- `boolean isSurfaceWorld()`
+- `void onWorldSave()`
+- `void onWorldUpdateEntities()`
+
+## Fields
+
+- `WorldProviderEnd`

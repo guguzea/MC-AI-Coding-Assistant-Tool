@@ -1,22 +1,20 @@
 # C19PacketResourcePackStatus
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.C19PacketResourcePackStatus
+
 ## Class signature
 
 ```java
-public class C19PacketResourcePackStatus extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class C19PacketResourcePackStatus extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public C19PacketResourcePackStatus()`
-- `public C19PacketResourcePackStatus(java.lang.String hashIn, C19PacketResourcePackStatus.Action statusIn)`
+- `C19PacketResourcePackStatus()`
+- `C19PacketResourcePackStatus(java.lang.String hashIn, C19PacketResourcePackStatus.Action statusIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `void processPacket(INetHandlerPlayServer handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

@@ -1,25 +1,31 @@
 ---
 title: "ForgeGuiFactory.ForgeConfigGui.ModOverridesEntry"
-description: "This custom list entry provides the Mod Overrides entry on the Forge Chunk Loading config screen. It extends the base Category entry class and defines the IConfigElement objects that will be used to b"
+description: "public static class ForgeGuiFactory.ForgeConfigGui.ModOverridesEntry extends GuiConfigEntries.CategoryEntry"
 package: "net/minecraftforge/client/gui"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/client/gui/ForgeGuiFactory.ForgeConfigGui.ModOverridesEntry.html"
 sourceType: javadoc
 ---
 
 # ForgeGuiFactory.ForgeConfigGui.ModOverridesEntry
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.config.GuiConfigEntries.ListEntryBase → net.minecraftforge.fml.client.config.GuiConfigEntries.CategoryEntry → net.minecraftforge.client.gui.ForgeGuiFactory.ForgeConfigGui.ModOverridesEntry
 
-- `public ModOverridesEntry( GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)`
+## Class signature
+
+```java
+public static class ForgeGuiFactory.ForgeConfigGui.ModOverridesEntry extends GuiConfigEntries.CategoryEntry
+```
 
 ## Methods
 
-- `protected GuiScreen buildChildScreen()`
-- `public boolean enabled()`
-- `public boolean isChanged()`
-- `public void undoChanges()`
+- `protected GuiScreen buildChildScreen()` — This method is called in the constructor and is used to set the childScreen field.
+- `boolean enabled()` — By overriding the enabled() method and checking the value of the "enabled" entry this entry is enabled/disabled based on the value of the other entry.
+- `boolean isChanged()` — Check to see if the child screen's entry list has changed.
+- `void undoChanges()` — Since adding a new entry to the child screen is what constitutes a change here, reset the child screen listEntries to the saved list.
 
-## Description
+## Fields
 
-This custom list entry provides the Mod Overrides entry on the Forge Chunk Loading config screen. It extends the base Category entry class and defines the IConfigElement objects that will be used to b
+- `ModOverridesEntry`

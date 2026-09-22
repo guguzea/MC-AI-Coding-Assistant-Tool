@@ -1,13 +1,17 @@
 ---
 title: "DecorateBiomeEvent"
-description: "DecorateBiomeEvent is fired when a BiomeDecorator is created. This event is fired whenever a BiomeDecorator is created in DeferredBiomeDecorator#fireCreateEventAndReplace(BiomeGenBase). world contains"
+description: "public class DecorateBiomeEvent extends Event"
 package: "net/minecraftforge/event/terraingen"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/terraingen/DecorateBiomeEvent.html"
 sourceType: javadoc
 ---
 
 # DecorateBiomeEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.DecorateBiomeEvent
 
 ## Class signature
 
@@ -17,8 +21,10 @@ public class DecorateBiomeEvent extends Event
 
 ## Constructors
 
-- `public DecorateBiomeEvent( World world, java.util.Random rand, BlockPos pos)`
+- `DecorateBiomeEvent(World world, java.util.Random rand, BlockPos pos)`
 
-## Description
+## Fields
 
-DecorateBiomeEvent is fired when a BiomeDecorator is created. This event is fired whenever a BiomeDecorator is created in DeferredBiomeDecorator#fireCreateEventAndReplace(BiomeGenBase). world contains
+- `BlockPos pos`
+- `java.util.Random rand`
+- `World world`

@@ -1,5 +1,7 @@
 # CookedFishIDTypo
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.CookedFishIDTypo
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class CookedFishIDTypo extends java.lang.Object implements IFixableData
 
 ## Constructors
 
-- `public CookedFishIDTypo()`
+- `CookedFishIDTypo()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

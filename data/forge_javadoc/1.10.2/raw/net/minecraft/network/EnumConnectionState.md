@@ -1,31 +1,31 @@
 ---
 title: "EnumConnectionState"
-description: "Returns the enum constant of this type with the specified name."
+description: "public enum EnumConnectionState extends java.lang.Enum<EnumConnectionState>"
 package: "net/minecraft/network"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/network/EnumConnectionState.html"
 sourceType: javadoc
 ---
 
 # EnumConnectionState
 
+**Inheritance:** java.lang.Object → java.lang.Enum<EnumConnectionState> → net.minecraft.network.EnumConnectionState
+
 ## Class signature
 
 ```java
-public enum EnumConnectionState extends java.lang.Enum< EnumConnectionState >
+public enum EnumConnectionState extends java.lang.Enum<EnumConnectionState>
 ```
 
 ## Methods
 
-- `public static EnumConnectionState [] values()`
-- `public static EnumConnectionState valueOf(java.lang.String name)`
-- `protected EnumConnectionState registerPacket( EnumPacketDirection direction, java.lang.Class<? extends Packet <?>> packetClass)`
-- `public java.lang.Integer getPacketId( EnumPacketDirection direction, Packet <?> packetIn)`
-- `@Nullable public Packet <?> getPacket( EnumPacketDirection direction, int packetId) throws java.lang.InstantiationException, java.lang.IllegalAccessException`
-- `public int getId()`
-- `public static EnumConnectionState getById(int stateId)`
-- `public static EnumConnectionState getFromPacket( Packet <?> packetIn)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static EnumConnectionState getById(int stateId)`
+- `static EnumConnectionState getFromPacket(Packet<?> packetIn)`
+- `int getId()`
+- `Packet<?> getPacket(EnumPacketDirection direction, int packetId)`
+- `java.lang.Integer getPacketId(EnumPacketDirection direction, Packet<?> packetIn)`
+- `protected EnumConnectionState registerPacket(EnumPacketDirection direction, java.lang.Class<? extends Packet<?>> packetClass)`
+- `static EnumConnectionState valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static EnumConnectionState [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

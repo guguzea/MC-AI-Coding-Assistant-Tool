@@ -1,13 +1,17 @@
 ---
 title: "FMLInitializationEvent"
-description: "Called after FMLPreInitializationEvent and before FMLPostInitializationEvent during mod startup. This is the second of three commonly called events during mod initialization. Recommended activities: R"
+description: "public class FMLInitializationEvent extends FMLStateEvent"
 package: "net/minecraftforge/fml/common/event"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/fml/common/event/FMLInitializationEvent.html"
 sourceType: javadoc
 ---
 
 # FMLInitializationEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.event.FMLEvent → net.minecraftforge.fml.common.event.FMLStateEvent → net.minecraftforge.fml.common.event.FMLInitializationEvent
 
 ## Class signature
 
@@ -17,12 +21,8 @@ public class FMLInitializationEvent extends FMLStateEvent
 
 ## Constructors
 
-- `public FMLInitializationEvent(java.lang.Object... data)`
+- `FMLInitializationEvent(java.lang.Object... data)`
 
 ## Methods
 
-- `public LoaderState.ModState getModState()`
-
-## Description
-
-Called after FMLPreInitializationEvent and before FMLPostInitializationEvent during mod startup. This is the second of three commonly called events during mod initialization. Recommended activities: R
+- `LoaderState.ModState getModState()` — The current state of the mod

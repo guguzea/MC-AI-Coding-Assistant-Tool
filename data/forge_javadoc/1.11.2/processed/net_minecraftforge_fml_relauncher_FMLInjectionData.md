@@ -1,5 +1,7 @@
 # FMLInjectionData
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.relauncher.FMLInjectionData
+
 ## Class signature
 
 ```java
@@ -8,8 +10,12 @@ public class FMLInjectionData extends java.lang.Object
 
 ## Constructors
 
-- `public FMLInjectionData()`
+- `FMLInjectionData()`
 
 ## Methods
 
-- `public static java.lang.Object[] data()`
+- `static java.lang.Object[] data()`
+
+## Fields
+
+- `static java.util.List<java.lang.String> containers`

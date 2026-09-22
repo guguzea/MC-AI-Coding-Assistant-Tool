@@ -1,18 +1,29 @@
 ---
 title: "IModGuiFactory.RuntimeOptionCategoryElement"
-description: "Represents an option category and entry in the runtime gui options list."
+description: "public static class IModGuiFactory.RuntimeOptionCategoryElement extends java.lang.Object"
 package: "net/minecraftforge/fml/client"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/client/IModGuiFactory.RuntimeOptionCategoryElement.html"
 sourceType: javadoc
 ---
 
 # IModGuiFactory.RuntimeOptionCategoryElement
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.IModGuiFactory.RuntimeOptionCategoryElement
+
+## Class signature
+
+```java
+public static class IModGuiFactory.RuntimeOptionCategoryElement extends java.lang.Object
+```
+
 ## Constructors
 
-- `public RuntimeOptionCategoryElement(java.lang.String parent, java.lang.String child)`
+- `RuntimeOptionCategoryElement(java.lang.String parent, java.lang.String child)`
 
-## Description
+## Fields
 
-Represents an option category and entry in the runtime gui options list.
+- `java.lang.String child`
+- `java.lang.String parent`

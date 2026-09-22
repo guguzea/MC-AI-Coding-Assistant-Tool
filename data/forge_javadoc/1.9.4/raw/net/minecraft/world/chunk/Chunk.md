@@ -1,13 +1,17 @@
 ---
 title: "Chunk"
-description: "Removes the tile entity at the specified position, only if it's marked as invalid."
+description: "public class Chunk extends java.lang.Object"
 package: "net/minecraft/world/chunk"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/world/chunk/Chunk.html"
 sourceType: javadoc
 ---
 
 # Chunk
+
+**Inheritance:** java.lang.Object → net.minecraft.world.chunk.Chunk
 
 ## Class signature
 
@@ -17,76 +21,79 @@ public class Chunk extends java.lang.Object
 
 ## Constructors
 
-- `public Chunk( World worldIn, int x, int z)`
-- `public Chunk( World worldIn, ChunkPrimer primer, int x, int z)`
+- `Chunk(World worldIn, ChunkPrimer primer, int x, int z)`
+- `Chunk(World worldIn, int x, int z)`
 
 ## Methods
 
-- `public boolean isAtLocation(int x, int z)`
-- `public int getHeight( BlockPos pos)`
-- `public int getHeightValue(int x, int z)`
-- `public int getTopFilledSegment()`
-- `public ExtendedBlockStorage [] getBlockStorageArray()`
+- `void addEntity(Entity entityIn)`
+- `void addTileEntity(BlockPos pos, TileEntity tileEntityIn)`
+- `void addTileEntity(TileEntity tileEntityIn)`
+- `boolean canSeeSky(BlockPos pos)`
+- `void checkLight()`
+- `void enqueueRelightChecks()`
+- `void fillChunk(PacketBuffer buf, int p_186033_2_, boolean p_186033_3_)`
 - `protected void generateHeightMap()`
-- `public void generateSkylightMap()`
-- `public int getBlockLightOpacity( BlockPos pos)`
-- `public IBlockState getBlockState( BlockPos pos)`
-- `public IBlockState getBlockState(int x, int y, int z)`
-- `@Nullable public IBlockState setBlockState( BlockPos pos, IBlockState state)`
-- `public int getLightFor( EnumSkyBlock p_177413_1_, BlockPos pos)`
-- `public void setLightFor( EnumSkyBlock p_177431_1_, BlockPos pos, int value)`
-- `public int getLightSubtracted( BlockPos pos, int amount)`
-- `public void addEntity( Entity entityIn)`
-- `public void removeEntity( Entity entityIn)`
-- `public void removeEntityAtIndex( Entity entityIn, int index)`
-- `public boolean canSeeSky( BlockPos pos)`
-- `@Nullable public TileEntity getTileEntity( BlockPos pos, Chunk.EnumCreateEntityType p_177424_2_)`
-- `public void addTileEntity( TileEntity tileEntityIn)`
-- `public void addTileEntity( BlockPos pos, TileEntity tileEntityIn)`
-- `public void removeTileEntity( BlockPos pos)`
-- `public void onChunkLoad()`
-- `public void onChunkUnload()`
-- `public void setChunkModified()`
-- `public void getEntitiesWithinAABBForEntity(@Nullable Entity entityIn, AxisAlignedBB aabb, java.util.List< Entity > listToFill, com.google.common.base.Predicate<? super Entity > p_177414_4_)`
-- `public <T extends Entity > void getEntitiesOfTypeWithinAAAB(java.lang.Class<? extends T> entityClass, AxisAlignedBB aabb, java.util.List<T> listToFill, com.google.common.base.Predicate<? super T> p_177430_4_)`
-- `public boolean needsSaving(boolean p_76601_1_)`
-- `public java.util.Random getRandomWithSeed(long seed)`
-- `public boolean isEmpty()`
-- `public void populateChunk( IChunkProvider chunkProvider, IChunkGenerator chunkGenrator)`
-- `protected void populateChunk( IChunkGenerator generator)`
-- `public BlockPos getPrecipitationHeight( BlockPos pos)`
-- `public void onTick(boolean p_150804_1_)`
-- `public boolean isPopulated()`
-- `public boolean isChunkTicked()`
-- `public ChunkPos getChunkCoordIntPair()`
-- `public boolean getAreLevelsEmpty(int startY, int endY)`
-- `public void setStorageArrays( ExtendedBlockStorage [] newStorageArrays)`
-- `public void fillChunk( PacketBuffer buf, int p_186033_2_, boolean p_186033_3_)`
-- `public Biome getBiome( BlockPos pos, BiomeProvider provider)`
-- `public byte[] getBiomeArray()`
-- `public void setBiomeArray(byte[] biomeArray)`
-- `public void resetRelightChecks()`
-- `public void enqueueRelightChecks()`
-- `public void checkLight()`
-- `public boolean isLoaded()`
-- `public void setChunkLoaded(boolean loaded)`
-- `public World getWorld()`
-- `public int[] getHeightMap()`
-- `public void setHeightMap(int[] newHeightMap)`
-- `public java.util.Map< BlockPos , TileEntity > getTileEntityMap()`
-- `public ClassInheritanceMultiMap < Entity >[] getEntityLists()`
-- `public boolean isTerrainPopulated()`
-- `public void setTerrainPopulated(boolean terrainPopulated)`
-- `public boolean isLightPopulated()`
-- `public void setLightPopulated(boolean lightPopulated)`
-- `public void setModified(boolean modified)`
-- `public void setHasEntities(boolean hasEntitiesIn)`
-- `public void setLastSaveTime(long saveTime)`
-- `public int getLowestHeight()`
-- `public long getInhabitedTime()`
-- `public void setInhabitedTime(long newInhabitedTime)`
-- `public void removeInvalidTileEntity( BlockPos pos)`
+- `void generateSkylightMap()`
+- `boolean getAreLevelsEmpty(int startY, int endY)`
+- `Biome getBiome(BlockPos pos, BiomeProvider provider)`
+- `byte[] getBiomeArray()`
+- `int getBlockLightOpacity(BlockPos pos)`
+- `IBlockState getBlockState(BlockPos pos)`
+- `IBlockState getBlockState(int x, int y, int z)`
+- `ExtendedBlockStorage [] getBlockStorageArray()`
+- `ChunkPos getChunkCoordIntPair()`
+- `<T extends Entity> void getEntitiesOfTypeWithinAAAB(java.lang.Class<? extends T> entityClass, AxisAlignedBB aabb, java.util.List<T> listToFill, com.google.common.base.Predicate<? super T> p_177430_4_)`
+- `void getEntitiesWithinAABBForEntity(Entity entityIn, AxisAlignedBB aabb, java.util.List<Entity> listToFill, com.google.common.base.Predicate<? super Entity> p_177414_4_)`
+- `ClassInheritanceMultiMap<Entity>[] getEntityLists()`
+- `int getHeight(BlockPos pos)`
+- `int[] getHeightMap()`
+- `int getHeightValue(int x, int z)`
+- `long getInhabitedTime()`
+- `int getLightFor(EnumSkyBlock p_177413_1_, BlockPos pos)`
+- `int getLightSubtracted(BlockPos pos, int amount)`
+- `int getLowestHeight()`
+- `BlockPos getPrecipitationHeight(BlockPos pos)`
+- `java.util.Random getRandomWithSeed(long seed)`
+- `TileEntity getTileEntity(BlockPos pos, Chunk.EnumCreateEntityType p_177424_2_)`
+- `java.util.Map<BlockPos, TileEntity> getTileEntityMap()`
+- `int getTopFilledSegment()`
+- `World getWorld()`
+- `boolean isAtLocation(int x, int z)`
+- `boolean isChunkTicked()`
+- `boolean isEmpty()`
+- `boolean isLightPopulated()`
+- `boolean isLoaded()`
+- `boolean isPopulated()`
+- `boolean isTerrainPopulated()`
+- `boolean needsSaving(boolean p_76601_1_)`
+- `void onChunkLoad()`
+- `void onChunkUnload()`
+- `void onTick(boolean p_150804_1_)`
+- `protected void populateChunk(IChunkGenerator generator)`
+- `void populateChunk(IChunkProvider chunkProvider, IChunkGenerator chunkGenrator)`
+- `void removeEntity(Entity entityIn)`
+- `void removeEntityAtIndex(Entity entityIn, int index)`
+- `void removeInvalidTileEntity(BlockPos pos)` — Removes the tile entity at the specified position, only if it's marked as invalid.
+- `void removeTileEntity(BlockPos pos)`
+- `void resetRelightChecks()`
+- `void setBiomeArray(byte[] biomeArray)`
+- `IBlockState setBlockState(BlockPos pos, IBlockState state)`
+- `void setChunkLoaded(boolean loaded)`
+- `void setChunkModified()`
+- `void setHasEntities(boolean hasEntitiesIn)`
+- `void setHeightMap(int[] newHeightMap)`
+- `void setInhabitedTime(long newInhabitedTime)`
+- `void setLastSaveTime(long saveTime)`
+- `void setLightFor(EnumSkyBlock p_177431_1_, BlockPos pos, int value)`
+- `void setLightPopulated(boolean lightPopulated)`
+- `void setModified(boolean modified)`
+- `void setStorageArrays(ExtendedBlockStorage [] newStorageArrays)`
+- `void setTerrainPopulated(boolean terrainPopulated)`
 
-## Description
+## Fields
 
-Removes the tile entity at the specified position, only if it's marked as invalid.
+- `static ExtendedBlockStorage NULL_BLOCK_STORAGE`
+- `boolean unloaded`
+- `int xPosition`
+- `int zPosition`

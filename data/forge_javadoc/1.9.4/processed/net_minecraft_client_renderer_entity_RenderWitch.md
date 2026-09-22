@@ -1,18 +1,20 @@
 # RenderWitch
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RenderLivingBase<T> → net.minecraft.client.renderer.entity.RenderLiving<EntityWitch> → net.minecraft.client.renderer.entity.RenderWitch
+
 ## Class signature
 
 ```java
-public class RenderWitch extends RenderLiving < EntityWitch >
+public class RenderWitch extends RenderLiving<EntityWitch>
 ```
-
-## Constructors
-
-- `public RenderWitch( RenderManager renderManagerIn)`
 
 ## Methods
 
-- `public void doRender( EntityWitch entity, double x, double y, double z, float entityYaw, float partialTicks)`
-- `protected ResourceLocation getEntityTexture( EntityWitch entity)`
-- `public void transformHeldFull3DItemLayer()`
-- `protected void preRenderCallback( EntityWitch entitylivingbaseIn, float partialTickTime)`
+- `void doRender(EntityWitch entity, double x, double y, double z, float entityYaw, float partialTicks)`
+- `protected ResourceLocation getEntityTexture(EntityWitch entity)`
+- `protected void preRenderCallback(EntityWitch entitylivingbaseIn, float partialTickTime)`
+- `void transformHeldFull3DItemLayer()`
+
+## Fields
+
+- `RenderWitch`

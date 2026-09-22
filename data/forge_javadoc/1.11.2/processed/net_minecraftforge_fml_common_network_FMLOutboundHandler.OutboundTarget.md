@@ -1,12 +1,20 @@
 # FMLOutboundHandler.OutboundTarget
 
+**Inheritance:** java.lang.Object → java.lang.Enum<FMLOutboundHandler.OutboundTarget> → net.minecraftforge.fml.common.network.FMLOutboundHandler.OutboundTarget
+
+## Class signature
+
+```java
+public static enum FMLOutboundHandler.OutboundTarget extends java.lang.Enum<FMLOutboundHandler.OutboundTarget>
+```
+
 ## Methods
 
-- `public static FMLOutboundHandler.OutboundTarget [] values()`
-- `public static FMLOutboundHandler.OutboundTarget valueOf(java.lang.String name)`
-- `public abstract void validateArgs(java.lang.Object args)`
-- `@Nullable public abstract java.util.List< NetworkDispatcher > selectNetworks(java.lang.Object args, io.netty.channel.ChannelHandlerContext context, FMLProxyPacket packet)`
+- `abstract java.util.List<NetworkDispatcher> selectNetworks(java.lang.Object args, io.netty.channel.ChannelHandlerContext context, FMLProxyPacket packet)`
+- `abstract void validateArgs(java.lang.Object args)`
+- `static FMLOutboundHandler.OutboundTarget valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static FMLOutboundHandler.OutboundTarget [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.
 
-## Description
+## Fields
 
-The packet is dispatched to all players connected to the server.
+- `com.google.common.collect.ImmutableSet<Side> allowed`

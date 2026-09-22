@@ -1,5 +1,7 @@
 # ShaderLinkHelper
 
+**Inheritance:** java.lang.Object → net.minecraft.client.shader.ShaderLinkHelper
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class ShaderLinkHelper extends java.lang.Object
 
 ## Constructors
 
-- `public ShaderLinkHelper()`
+- `ShaderLinkHelper()`
 
 ## Methods
 
-- `public static void setNewStaticShaderLinkHelper()`
-- `public static ShaderLinkHelper getStaticShaderLinkHelper()`
-- `public void deleteShader( ShaderManager manager)`
-- `public int createProgram() throws JsonException`
-- `public void linkProgram( ShaderManager manager) throws java.io.IOException`
+- `int createProgram()`
+- `void deleteShader(ShaderManager manager)`
+- `static ShaderLinkHelper getStaticShaderLinkHelper()`
+- `void linkProgram(ShaderManager manager)`
+- `static void setNewStaticShaderLinkHelper()`

@@ -1,29 +1,31 @@
 # SPacketTeams
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketTeams
+
 ## Class signature
 
 ```java
-public class SPacketTeams extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketTeams extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketTeams()`
-- `public SPacketTeams( ScorePlayerTeam teamIn, int actionIn)`
-- `public SPacketTeams( ScorePlayerTeam teamIn, java.util.Collection<java.lang.String> playersIn, int actionIn)`
+- `SPacketTeams()`
+- `SPacketTeams(ScorePlayerTeam teamIn, java.util.Collection<java.lang.String> playersIn, int actionIn)`
+- `SPacketTeams(ScorePlayerTeam teamIn, int actionIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public java.lang.String getName()`
-- `public java.lang.String getDisplayName()`
-- `public java.lang.String getPrefix()`
-- `public java.lang.String getSuffix()`
-- `public java.util.Collection<java.lang.String> getPlayers()`
-- `public int getAction()`
-- `public int getFriendlyFlags()`
-- `public int getColor()`
-- `public java.lang.String getNameTagVisibility()`
-- `public java.lang.String getCollisionRule()`
+- `int getAction()`
+- `java.lang.String getCollisionRule()`
+- `int getColor()`
+- `java.lang.String getDisplayName()`
+- `int getFriendlyFlags()`
+- `java.lang.String getName()`
+- `java.lang.String getNameTagVisibility()`
+- `java.util.Collection<java.lang.String> getPlayers()`
+- `java.lang.String getPrefix()`
+- `java.lang.String getSuffix()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

@@ -1,5 +1,7 @@
 # RegistryManager
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.RegistryManager
+
 ## Class signature
 
 ```java
@@ -8,15 +10,21 @@ public class RegistryManager extends java.lang.Object
 
 ## Constructors
 
-- `public RegistryManager(java.lang.String name)`
+- `RegistryManager(java.lang.String name)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public <V extends IForgeRegistryEntry <V>> java.lang.Class<V> getSuperType( ResourceLocation key)`
-- `public <V extends IForgeRegistryEntry <V>> ForgeRegistry <V> getRegistry( ResourceLocation key)`
-- `public <V extends IForgeRegistryEntry <V>> IForgeRegistry <V> getRegistry(java.lang.Class<V> cls)`
-- `public <V extends IForgeRegistryEntry <V>> ResourceLocation getName( IForgeRegistry <V> reg)`
-- `public <V extends IForgeRegistryEntry <V>> ForgeRegistry <V> getRegistry( ResourceLocation key, RegistryManager other)`
-- `public java.util.Map< ResourceLocation , ForgeRegistry.Snapshot > takeSnapshot(boolean savingToDisc)`
-- `public void clean()`
+- `void clean()`
+- `java.lang.String getName()`
+- `<V extends IForgeRegistryEntry<V>> ResourceLocation getName(IForgeRegistry<V> reg)`
+- `<V extends IForgeRegistryEntry<V>> IForgeRegistry<V> getRegistry(java.lang.Class<V> cls)`
+- `<V extends IForgeRegistryEntry<V>> ForgeRegistry<V> getRegistry(ResourceLocation key)`
+- `<V extends IForgeRegistryEntry<V>> ForgeRegistry<V> getRegistry(ResourceLocation key, RegistryManager other)`
+- `<V extends IForgeRegistryEntry<V>> java.lang.Class<V> getSuperType(ResourceLocation key)`
+- `java.util.Map<ResourceLocation, ForgeRegistry.Snapshot> takeSnapshot(boolean savingToDisc)`
+
+## Fields
+
+- `static RegistryManager ACTIVE`
+- `static RegistryManager FROZEN`
+- `static RegistryManager VANILLA`

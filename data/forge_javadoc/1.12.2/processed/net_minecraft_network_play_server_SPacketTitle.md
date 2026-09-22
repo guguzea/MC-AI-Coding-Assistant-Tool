@@ -1,25 +1,27 @@
 # SPacketTitle
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketTitle
+
 ## Class signature
 
 ```java
-public class SPacketTitle extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketTitle extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketTitle()`
-- `public SPacketTitle( SPacketTitle.Type typeIn, ITextComponent messageIn)`
-- `public SPacketTitle(int fadeInTimeIn, int displayTimeIn, int fadeOutTimeIn)`
-- `public SPacketTitle( SPacketTitle.Type typeIn, ITextComponent messageIn, int fadeInTimeIn, int displayTimeIn, int fadeOutTimeIn)`
+- `SPacketTitle()`
+- `SPacketTitle(int fadeInTimeIn, int displayTimeIn, int fadeOutTimeIn)`
+- `SPacketTitle(SPacketTitle.Type typeIn, ITextComponent messageIn)`
+- `SPacketTitle(SPacketTitle.Type typeIn, ITextComponent messageIn, int fadeInTimeIn, int displayTimeIn, int fadeOutTimeIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public SPacketTitle.Type getType()`
-- `public ITextComponent getMessage()`
-- `public int getFadeInTime()`
-- `public int getDisplayTime()`
-- `public int getFadeOutTime()`
+- `int getDisplayTime()`
+- `int getFadeInTime()`
+- `int getFadeOutTime()`
+- `ITextComponent getMessage()`
+- `SPacketTitle.Type getType()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

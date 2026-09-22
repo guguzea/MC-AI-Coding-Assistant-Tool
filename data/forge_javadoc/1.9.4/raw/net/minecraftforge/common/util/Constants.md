@@ -1,13 +1,17 @@
 ---
 title: "Constants"
-description: "A class containing constants for magic numbers used in the minecraft codebase. Everything here should be checked each update, and have a comment relating to where to check it."
+description: "public class Constants extends java.lang.Object"
 package: "net/minecraftforge/common/util"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/common/util/Constants.html"
 sourceType: javadoc
 ---
 
 # Constants
+
+**Inheritance:** java.lang.Object → net.minecraftforge.common.util.Constants
 
 ## Class signature
 
@@ -17,8 +21,4 @@ public class Constants extends java.lang.Object
 
 ## Constructors
 
-- `public Constants()`
-
-## Description
-
-A class containing constants for magic numbers used in the minecraft codebase. Everything here should be checked each update, and have a comment relating to where to check it.
+- `Constants()`

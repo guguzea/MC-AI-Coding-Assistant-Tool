@@ -3,11 +3,15 @@ title: "GuiOptionsRowList"
 description: "public class GuiOptionsRowList extends GuiListExtended"
 package: "net/minecraft/client/gui"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/gui/GuiOptionsRowList.html"
 sourceType: javadoc
 ---
 
 # GuiOptionsRowList
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.GuiSlot → net.minecraft.client.gui.GuiListExtended → net.minecraft.client.gui.GuiOptionsRowList
 
 ## Class signature
 
@@ -15,13 +19,13 @@ sourceType: javadoc
 public class GuiOptionsRowList extends GuiListExtended
 ```
 
-## Constructors
-
-- `public GuiOptionsRowList( Minecraft mcIn, int p_i45015_2_, int p_i45015_3_, int p_i45015_4_, int p_i45015_5_, int p_i45015_6_, GameSettings.Options ... p_i45015_7_)`
-
 ## Methods
 
-- `public GuiOptionsRowList.Row getListEntry(int index)`
-- `protected int getSize()`
-- `public int getListWidth()`
+- `GuiOptionsRowList.Row getListEntry(int index)`
+- `int getListWidth()`
 - `protected int getScrollBarX()`
+- `protected int getSize()`
+
+## Fields
+
+- `GuiOptionsRowList`

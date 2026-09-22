@@ -1,5 +1,7 @@
 # WorldGenTaiga2
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenAbstractTree → net.minecraft.world.gen.feature.WorldGenTaiga2
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class WorldGenTaiga2 extends WorldGenAbstractTree
 
 ## Constructors
 
-- `public WorldGenTaiga2(boolean p_i2025_1_)`
+- `WorldGenTaiga2(boolean p_i2025_1_)`
 
 ## Methods
 
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`

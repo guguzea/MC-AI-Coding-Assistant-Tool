@@ -1,5 +1,7 @@
 # BlockPane
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockPane
+
 ## Class signature
 
 ```java
@@ -8,27 +10,31 @@ public class BlockPane extends Block
 
 ## Constructors
 
-- `protected BlockPane( Material materialIn, boolean canDrop)`
+- `BlockPane(Material materialIn, boolean canDrop)`
 
 ## Methods
 
-- `public void addCollisionBoxToList( IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List< AxisAlignedBB > collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_)`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public final boolean canPaneConnectToBlock( Block blockIn)`
-- `public boolean shouldSideBeRendered( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean p_185477_7_)`
+- `boolean canBeConnectedTo(IBlockAccess world, BlockPos pos, EnumFacing facing)` — Determines if another block can connect to this block
+- `boolean canPaneConnectTo(IBlockAccess world, BlockPos pos, EnumFacing dir)`
+- `boolean canPaneConnectToBlock(Block blockIn)`
 - `protected boolean canSilkHarvest()`
-- `public BlockRenderLayer getBlockLayer()`
-- `public int getMetaFromState( IBlockState state)`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
 - `protected BlockStateContainer createBlockState()`
-- `public boolean canBeConnectedTo( IBlockAccess world, BlockPos pos, EnumFacing facing)`
-- `public boolean canPaneConnectTo( IBlockAccess world, BlockPos pos, EnumFacing dir)`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getMetaFromState(IBlockState state)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+- `boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
 
-## Description
+## Fields
 
-Determines if another block can connect to this block
+- `protected static AxisAlignedBB [] AABB_BY_INDEX`
+- `static PropertyBool EAST`
+- `static PropertyBool NORTH`
+- `static PropertyBool SOUTH`
+- `static PropertyBool WEST`

@@ -1,29 +1,29 @@
 ---
 title: "RenderPainting"
-description: "Actually renders the given argument."
+description: "public class RenderPainting extends Render<EntityPainting>"
 package: "net/minecraft/client/renderer/entity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/client/renderer/entity/RenderPainting.html"
 sourceType: javadoc
 ---
 
 # RenderPainting
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<EntityPainting> → net.minecraft.client.renderer.entity.RenderPainting
+
 ## Class signature
 
 ```java
-public class RenderPainting extends Render < EntityPainting >
+public class RenderPainting extends Render<EntityPainting>
 ```
-
-## Constructors
-
-- `public RenderPainting( RenderManager renderManagerIn)`
 
 ## Methods
 
-- `public void doRender( EntityPainting entity, double x, double y, double z, float entityYaw, float partialTicks)`
-- `protected ResourceLocation getEntityTexture( EntityPainting entity)`
+- `void doRender(EntityPainting entity, double x, double y, double z, float entityYaw, float partialTicks)` — Actually renders the given argument.
+- `protected ResourceLocation getEntityTexture(EntityPainting entity)` — Returns the location of an entity's texture.
 
-## Description
+## Fields
 
-Actually renders the given argument.
+- `RenderPainting`

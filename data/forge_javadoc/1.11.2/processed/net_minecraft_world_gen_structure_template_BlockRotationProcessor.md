@@ -1,5 +1,7 @@
 # BlockRotationProcessor
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.template.BlockRotationProcessor
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class BlockRotationProcessor extends java.lang.Object implements ITemplat
 
 ## Constructors
 
-- `public BlockRotationProcessor( BlockPos pos, PlacementSettings settings)`
+- `BlockRotationProcessor(BlockPos pos, PlacementSettings settings)`
 
 ## Methods
 
-- `@Nullable public Template.BlockInfo processBlock( World worldIn, BlockPos pos, Template.BlockInfo blockInfoIn)`
+- `Template.BlockInfo processBlock(World worldIn, BlockPos pos, Template.BlockInfo blockInfoIn)`

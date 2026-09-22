@@ -1,25 +1,25 @@
 ---
 title: "DefaultPermissionLevel"
-description: "Level Player OP ALL true true OP false true NONE false false"
+description: "public enum DefaultPermissionLevel extends java.lang.Enum<DefaultPermissionLevel>"
 package: "net/minecraftforge/server/permission"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/server/permission/DefaultPermissionLevel.html"
 sourceType: javadoc
 ---
 
 # DefaultPermissionLevel
 
+**Inheritance:** java.lang.Object → java.lang.Enum<DefaultPermissionLevel> → net.minecraftforge.server.permission.DefaultPermissionLevel
+
 ## Class signature
 
 ```java
-public enum DefaultPermissionLevel extends java.lang.Enum< DefaultPermissionLevel >
+public enum DefaultPermissionLevel extends java.lang.Enum<DefaultPermissionLevel>
 ```
 
 ## Methods
 
-- `public static DefaultPermissionLevel [] values()`
-- `public static DefaultPermissionLevel valueOf(java.lang.String name)`
-
-## Description
-
-Level Player OP ALL true true OP false true NONE false false
+- `static DefaultPermissionLevel valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static DefaultPermissionLevel [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

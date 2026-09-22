@@ -1,5 +1,7 @@
 # LivingEquipmentChangeEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent
+
 ## Class signature
 
 ```java
@@ -8,14 +10,10 @@ public class LivingEquipmentChangeEvent extends LivingEvent
 
 ## Constructors
 
-- `public LivingEquipmentChangeEvent( EntityLivingBase entity, EntityEquipmentSlot slot, ItemStack from, ItemStack to)`
+- `LivingEquipmentChangeEvent(EntityLivingBase entity, EntityEquipmentSlot slot, ItemStack from, ItemStack to)`
 
 ## Methods
 
-- `public EntityEquipmentSlot getSlot()`
-- `public ItemStack getFrom()`
-- `public ItemStack getTo()`
-
-## Description
-
-LivingEquipmentChangeEvent is fired when the Equipment of a Entity changes. This event is fired whenever changes in Equipment are detected in EntityLivingBase.onUpdate() . This also includes entities
+- `ItemStack getFrom()`
+- `EntityEquipmentSlot getSlot()`
+- `ItemStack getTo()`

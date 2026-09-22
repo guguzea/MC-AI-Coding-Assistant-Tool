@@ -1,27 +1,40 @@
 # SPacketEntity
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketEntity
+
 ## Class signature
 
 ```java
-public class SPacketEntity extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketEntity extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketEntity()`
-- `public SPacketEntity(int entityIdIn)`
+- `SPacketEntity()`
+- `SPacketEntity(int entityIdIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public java.lang.String toString()`
-- `public Entity getEntity( World worldIn)`
-- `public int getX()`
-- `public int getY()`
-- `public int getZ()`
-- `public byte getYaw()`
-- `public byte getPitch()`
-- `public boolean isRotating()`
-- `public boolean getOnGround()`
+- `Entity getEntity(World worldIn)`
+- `boolean getOnGround()`
+- `byte getPitch()`
+- `int getX()`
+- `int getY()`
+- `byte getYaw()`
+- `int getZ()`
+- `boolean isRotating()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `java.lang.String toString()`
+- `void writePacketData(PacketBuffer buf)`
+
+## Fields
+
+- `protected int entityId`
+- `protected boolean onGround`
+- `protected byte pitch`
+- `protected int posX`
+- `protected int posY`
+- `protected int posZ`
+- `protected boolean rotating`
+- `protected byte yaw`

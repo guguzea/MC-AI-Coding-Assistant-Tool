@@ -1,13 +1,17 @@
 ---
 title: "ArrowLooseEvent"
-description: "ArrowLooseEvent is fired when a player stops using a bow. This event is fired whenever a player stops using a bow in ItemBow#onPlayerStoppedUsing(ItemStack, World, EntityPlayer, int). bow contains the"
+description: "public class ArrowLooseEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/event/entity/player/ArrowLooseEvent.html"
 sourceType: javadoc
 ---
 
 # ArrowLooseEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.ArrowLooseEvent
 
 ## Class signature
 
@@ -17,16 +21,12 @@ public class ArrowLooseEvent extends PlayerEvent
 
 ## Constructors
 
-- `public ArrowLooseEvent( EntityPlayer player, ItemStack bow, World world, int charge, boolean hasAmmo)`
+- `ArrowLooseEvent(EntityPlayer player, ItemStack bow, World world, int charge, boolean hasAmmo)`
 
 ## Methods
 
-- `public ItemStack getBow()`
-- `public World getWorld()`
-- `public boolean hasAmmo()`
-- `public int getCharge()`
-- `public void setCharge(int charge)`
-
-## Description
-
-ArrowLooseEvent is fired when a player stops using a bow. This event is fired whenever a player stops using a bow in ItemBow#onPlayerStoppedUsing(ItemStack, World, EntityPlayer, int). bow contains the
+- `ItemStack getBow()`
+- `int getCharge()`
+- `World getWorld()`
+- `boolean hasAmmo()`
+- `void setCharge(int charge)`

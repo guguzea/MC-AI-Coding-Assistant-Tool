@@ -1,5 +1,7 @@
 # EntityAITempt
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAITempt
+
 ## Class signature
 
 ```java
@@ -8,15 +10,15 @@ public class EntityAITempt extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAITempt( EntityCreature temptedEntityIn, double speedIn, Item temptItemIn, boolean scaredByPlayerMovementIn)`
-- `public EntityAITempt( EntityCreature temptedEntityIn, double speedIn, boolean scaredByPlayerMovementIn, java.util.Set< Item > temptItemIn)`
+- `EntityAITempt(EntityCreature temptedEntityIn, double speedIn, boolean scaredByPlayerMovementIn, java.util.Set<Item> temptItemIn)`
+- `EntityAITempt(EntityCreature temptedEntityIn, double speedIn, Item temptItemIn, boolean scaredByPlayerMovementIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `protected boolean isTempting(@Nullable ItemStack stack)`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
-- `public boolean isRunning()`
+- `boolean continueExecuting()`
+- `boolean isRunning()`
+- `protected boolean isTempting(ItemStack stack)`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

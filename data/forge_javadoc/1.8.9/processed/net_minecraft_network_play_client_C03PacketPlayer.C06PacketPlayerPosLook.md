@@ -1,15 +1,19 @@
 # C03PacketPlayer.C06PacketPlayerPosLook
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.C03PacketPlayer → net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook
 
-- `public C06PacketPlayerPosLook()`
-- `public C06PacketPlayerPosLook(double playerX, double playerY, double playerZ, float playerYaw, float playerPitch, boolean playerIsOnGround)`
+## Class signature
+
+```java
+public static class C03PacketPlayer.C06PacketPlayerPosLook extends C03PacketPlayer
+```
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.
 
-## Description
+## Fields
 
-Reads the raw packet data from the data stream.
+- `C06PacketPlayerPosLook`
+- `C06PacketPlayerPosLook`

@@ -1,13 +1,17 @@
 ---
 title: "TracingPrintStream"
-description: "PrintStream which redirects it's output to a given logger."
+description: "public class TracingPrintStream extends java.io.PrintStream"
 package: "net/minecraftforge/fml/common"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/TracingPrintStream.html"
 sourceType: javadoc
 ---
 
 # TracingPrintStream
+
+**Inheritance:** java.lang.Object → java.io.OutputStream → java.io.FilterOutputStream → java.io.PrintStream → net.minecraftforge.fml.common.TracingPrintStream
 
 ## Class signature
 
@@ -15,15 +19,11 @@ sourceType: javadoc
 public class TracingPrintStream extends java.io.PrintStream
 ```
 
-## Constructors
-
-- `public TracingPrintStream(org.apache.logging.log4j.Logger logger, java.io.PrintStream original)`
-
 ## Methods
 
-- `public void println(java.lang.Object o)`
-- `public void println(java.lang.String s)`
+- `void println(java.lang.Object o)`
+- `void println(java.lang.String s)`
 
-## Description
+## Fields
 
-PrintStream which redirects it's output to a given logger.
+- `TracingPrintStream`

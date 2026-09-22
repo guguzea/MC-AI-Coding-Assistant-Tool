@@ -1,5 +1,7 @@
 # PopulateChunkEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.ChunkProviderEvent → net.minecraftforge.event.terraingen.PopulateChunkEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,12 @@ public class PopulateChunkEvent extends ChunkProviderEvent
 
 ## Constructors
 
-- `public PopulateChunkEvent( IChunkProvider chunkProvider, World world, java.util.Random rand, int chunkX, int chunkZ, boolean hasVillageGenerated)`
+- `PopulateChunkEvent(IChunkProvider chunkProvider, World world, java.util.Random rand, int chunkX, int chunkZ, boolean hasVillageGenerated)`
 
-## Description
+## Fields
 
-PopulateChunkEvent is fired when an event involving chunk terrain feature population occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class.
+- `int chunkX`
+- `int chunkZ`
+- `boolean hasVillageGenerated`
+- `java.util.Random rand`
+- `World world`

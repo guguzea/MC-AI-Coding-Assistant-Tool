@@ -1,33 +1,31 @@
 # WorldProviderEnd
 
+**Inheritance:** java.lang.Object → net.minecraft.world.WorldProvider → net.minecraft.world.WorldProviderEnd
+
 ## Class signature
 
 ```java
 public class WorldProviderEnd extends WorldProvider
 ```
 
-## Constructors
-
-- `public WorldProviderEnd()`
-
 ## Methods
 
-- `public void registerWorldChunkManager()`
-- `public IChunkProvider createChunkGenerator()`
-- `public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_)`
-- `public float[] calcSunriseSunsetColors(float celestialAngle, float partialTicks)`
-- `public Vec3 getFogColor(float p_76562_1_, float p_76562_2_)`
-- `public boolean isSkyColored()`
-- `public boolean canRespawnHere()`
-- `public boolean isSurfaceWorld()`
-- `public float getCloudHeight()`
-- `public boolean canCoordinateBeSpawn(int x, int z)`
-- `public BlockPos getSpawnCoordinate()`
-- `public int getAverageGroundLevel()`
-- `public boolean doesXZShowFog(int x, int z)`
-- `public java.lang.String getDimensionName()`
-- `public java.lang.String getInternalNameSuffix()`
+- `float[] calcSunriseSunsetColors(float celestialAngle, float partialTicks)` — Returns array with sunrise/sunset colors
+- `float calculateCelestialAngle(long p_76563_1_, float p_76563_3_)` — Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
+- `boolean canCoordinateBeSpawn(int x, int z)` — Will check if the x, z position specified is alright to be set as the map spawn point
+- `boolean canRespawnHere()` — True if the player can respawn in this dimension (true = overworld, false = nether).
+- `IChunkProvider createChunkGenerator()` — Returns a new chunk provider which generates chunks for this world
+- `boolean doesXZShowFog(int x, int z)` — Returns true if the given X,Z coordinate should show environmental fog.
+- `int getAverageGroundLevel()`
+- `float getCloudHeight()` — the y level at which clouds are rendered.
+- `java.lang.String getDimensionName()` — Returns the dimension's name, e.g.
+- `Vec3 getFogColor(float p_76562_1_, float p_76562_2_)` — Return Vec3D with biome specific fog color
+- `java.lang.String getInternalNameSuffix()`
+- `BlockPos getSpawnCoordinate()`
+- `boolean isSkyColored()`
+- `boolean isSurfaceWorld()` — Returns 'true' if in the "main surface world", but 'false' if in the Nether or End dimensions.
+- `void registerWorldChunkManager()` — creates a new world chunk manager for WorldProvider
 
-## Description
+## Fields
 
-Returns array with sunrise/sunset colors
+- `WorldProviderEnd`

@@ -1,5 +1,7 @@
 # ArmorStandSilent
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.ArmorStandSilent
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class ArmorStandSilent extends java.lang.Object implements IFixableData
 
 ## Constructors
 
-- `public ArmorStandSilent()`
+- `ArmorStandSilent()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

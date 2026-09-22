@@ -1,12 +1,20 @@
 # ASMTransformerWrapper.TransformerWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.asm.ASMTransformerWrapper.TransformerWrapper
+
+## Class signature
+
+```java
+public abstract static class ASMTransformerWrapper.TransformerWrapper extends java.lang.Object
+```
+
 ## Constructors
 
-- `public TransformerWrapper()`
+- `TransformerWrapper()`
 
 ## Methods
 
-- `public byte[] transform(java.lang.String name, java.lang.String transformedName, byte[] basicClass)`
-- `public java.lang.String toString()`
-- `protected abstract java.lang.String getParentClass()`
 - `protected abstract java.lang.String getCoreMod()`
+- `protected abstract java.lang.String getParentClass()`
+- `java.lang.String toString()`
+- `byte[] transform(java.lang.String name, java.lang.String transformedName, byte[] basicClass)`

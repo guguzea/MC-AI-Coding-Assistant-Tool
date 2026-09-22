@@ -8,4 +8,4 @@ public interface IModelState
 
 ## Methods
 
-- `java.util.Optional< TRSRTransformation > apply(java.util.Optional<? extends IModelPart > part)`
+- `java.util.Optional<TRSRTransformation> apply(java.util.Optional<? extends IModelPart> part)`

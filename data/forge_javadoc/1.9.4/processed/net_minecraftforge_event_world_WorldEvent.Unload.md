@@ -1,9 +1,13 @@
 # WorldEvent.Unload
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.WorldEvent.Unload
+
+## Class signature
+
+```java
+public static class WorldEvent.Unload extends WorldEvent
+```
+
 ## Constructors
 
-- `public Unload( World world)`
-
-## Description
-
-WorldEvent.Unload is fired when Minecraft unloads a world. This event is fired when a world is unloaded in Minecraft#loadWorld(WorldClient, String), MinecraftServer#deleteWorldAndStopServer(), Minecra
+- `Unload(World world)`

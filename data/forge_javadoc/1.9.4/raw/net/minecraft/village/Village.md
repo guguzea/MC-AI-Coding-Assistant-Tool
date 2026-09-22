@@ -3,11 +3,15 @@ title: "Village"
 description: "public class Village extends java.lang.Object"
 package: "net/minecraft/village"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/village/Village.html"
 sourceType: javadoc
 ---
 
 # Village
+
+**Inheritance:** java.lang.Object → net.minecraft.village.Village
 
 ## Class signature
 
@@ -17,33 +21,33 @@ public class Village extends java.lang.Object
 
 ## Constructors
 
-- `public Village()`
-- `public Village( World worldIn)`
+- `Village()`
+- `Village(World worldIn)`
 
 ## Methods
 
-- `public void setWorld( World worldIn)`
-- `public void tick(int tickCounterIn)`
-- `public BlockPos getCenter()`
-- `public int getVillageRadius()`
-- `public int getNumVillageDoors()`
-- `public int getTicksSinceLastDoorAdding()`
-- `public int getNumVillagers()`
-- `public boolean isBlockPosWithinSqVillageRadius( BlockPos pos)`
-- `public java.util.List< VillageDoorInfo > getVillageDoorInfoList()`
-- `public VillageDoorInfo getNearestDoor( BlockPos pos)`
-- `public VillageDoorInfo getDoorInfo( BlockPos pos)`
-- `public VillageDoorInfo getExistedDoor( BlockPos doorBlock)`
-- `public void addVillageDoorInfo( VillageDoorInfo doorInfo)`
-- `public boolean isAnnihilated()`
-- `public void addOrRenewAgressor( EntityLivingBase entitylivingbaseIn)`
-- `public EntityLivingBase findNearestVillageAggressor( EntityLivingBase entitylivingbaseIn)`
-- `public EntityPlayer getNearestTargetPlayer( EntityLivingBase villageDefender)`
-- `public int getPlayerReputation(java.lang.String playerName)`
-- `public int modifyPlayerReputation(java.lang.String playerName, int reputation)`
-- `public boolean isPlayerReputationTooLow(java.lang.String playerName)`
-- `public void readVillageDataFromNBT( NBTTagCompound compound)`
-- `public void writeVillageDataToNBT( NBTTagCompound compound)`
-- `public void endMatingSeason()`
-- `public boolean isMatingSeason()`
-- `public void setDefaultPlayerReputation(int defaultReputation)`
+- `void addOrRenewAgressor(EntityLivingBase entitylivingbaseIn)`
+- `void addVillageDoorInfo(VillageDoorInfo doorInfo)`
+- `void endMatingSeason()`
+- `EntityLivingBase findNearestVillageAggressor(EntityLivingBase entitylivingbaseIn)`
+- `BlockPos getCenter()`
+- `VillageDoorInfo getDoorInfo(BlockPos pos)`
+- `VillageDoorInfo getExistedDoor(BlockPos doorBlock)`
+- `VillageDoorInfo getNearestDoor(BlockPos pos)`
+- `EntityPlayer getNearestTargetPlayer(EntityLivingBase villageDefender)`
+- `int getNumVillageDoors()`
+- `int getNumVillagers()`
+- `int getPlayerReputation(java.lang.String playerName)`
+- `int getTicksSinceLastDoorAdding()`
+- `java.util.List<VillageDoorInfo> getVillageDoorInfoList()`
+- `int getVillageRadius()`
+- `boolean isAnnihilated()`
+- `boolean isBlockPosWithinSqVillageRadius(BlockPos pos)`
+- `boolean isMatingSeason()`
+- `boolean isPlayerReputationTooLow(java.lang.String playerName)`
+- `int modifyPlayerReputation(java.lang.String playerName, int reputation)`
+- `void readVillageDataFromNBT(NBTTagCompound compound)`
+- `void setDefaultPlayerReputation(int defaultReputation)`
+- `void setWorld(World worldIn)`
+- `void tick(int tickCounterIn)`
+- `void writeVillageDataToNBT(NBTTagCompound compound)`

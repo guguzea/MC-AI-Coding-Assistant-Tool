@@ -1,10 +1,18 @@
 # MetadataCollection.ArtifactVersionAdapter
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.MetadataCollection.ArtifactVersionAdapter
+
+## Class signature
+
+```java
+public static class MetadataCollection.ArtifactVersionAdapter extends<any>
+```
+
 ## Constructors
 
-- `public ArtifactVersionAdapter()`
+- `ArtifactVersionAdapter()`
 
 ## Methods
 
-- `public void write(JsonWriter out, ArtifactVersion value) throws java.io.IOException`
-- `public ArtifactVersion read(JsonReader in) throws java.io.IOException`
+- `ArtifactVersion read(JsonReader in)`
+- `void write(JsonWriter out, ArtifactVersion value)`

@@ -1,9 +1,13 @@
 # LivingSpawnEvent.SpecialSpawn
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingSpawnEvent → net.minecraftforge.event.entity.living.LivingSpawnEvent.SpecialSpawn
 
-- `public SpecialSpawn( EntityLiving entity, World world, float x, float y, float z)`
+## Class signature
 
-## Description
+```java
+public static class LivingSpawnEvent.SpecialSpawn extends LivingSpawnEvent
+```
 
-SpecialSpawn is fired when an Entity is to be spawned from a mob spawner. This event is fired whenever an Entity is spawned in a mob spawner in SpawnerAnimals#findChunksForSpawning(WorldServer, boolea
+## Fields
+
+- `SpecialSpawn`

@@ -1,5 +1,7 @@
 # InventoryBasic
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.InventoryBasic
+
 ## Class signature
 
 ```java
@@ -8,31 +10,31 @@ public class InventoryBasic extends java.lang.Object implements IInventory
 
 ## Constructors
 
-- `public InventoryBasic(java.lang.String title, boolean customName, int slotCount)`
-- `public InventoryBasic( ITextComponent title, int slotCount)`
+- `InventoryBasic(ITextComponent title, int slotCount)`
+- `InventoryBasic(java.lang.String title, boolean customName, int slotCount)`
 
 ## Methods
 
-- `public void addInventoryChangeListener( IInventoryChangedListener listener)`
-- `public void removeInventoryChangeListener( IInventoryChangedListener listener)`
-- `public ItemStack getStackInSlot(int index)`
-- `public ItemStack decrStackSize(int index, int count)`
-- `public ItemStack addItem( ItemStack stack)`
-- `public ItemStack removeStackFromSlot(int index)`
-- `public void setInventorySlotContents(int index, ItemStack stack)`
-- `public int getSizeInventory()`
-- `public boolean isEmpty()`
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public void setCustomName(java.lang.String inventoryTitleIn)`
-- `public ITextComponent getDisplayName()`
-- `public int getInventoryStackLimit()`
-- `public void markDirty()`
-- `public boolean isUsableByPlayer( EntityPlayer player)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public boolean isItemValidForSlot(int index, ItemStack stack)`
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public int getFieldCount()`
-- `public void clear()`
+- `void addInventoryChangeListener(IInventoryChangedListener listener)`
+- `ItemStack addItem(ItemStack stack)`
+- `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `ItemStack decrStackSize(int index, int count)`
+- `ITextComponent getDisplayName()`
+- `int getField(int id)`
+- `int getFieldCount()`
+- `int getInventoryStackLimit()`
+- `java.lang.String getName()`
+- `int getSizeInventory()`
+- `ItemStack getStackInSlot(int index)`
+- `boolean hasCustomName()`
+- `boolean isEmpty()`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isUsableByPlayer(EntityPlayer player)`
+- `void markDirty()`
+- `void openInventory(EntityPlayer player)`
+- `void removeInventoryChangeListener(IInventoryChangedListener listener)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void setCustomName(java.lang.String inventoryTitleIn)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`

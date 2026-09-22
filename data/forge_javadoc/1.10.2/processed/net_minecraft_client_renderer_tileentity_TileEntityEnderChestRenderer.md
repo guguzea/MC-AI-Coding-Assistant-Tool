@@ -1,15 +1,17 @@
 # TileEntityEnderChestRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer<TileEntityEnderChest> → net.minecraft.client.renderer.tileentity.TileEntityEnderChestRenderer
+
 ## Class signature
 
 ```java
-public class TileEntityEnderChestRenderer extends TileEntitySpecialRenderer < TileEntityEnderChest >
+public class TileEntityEnderChestRenderer extends TileEntitySpecialRenderer<TileEntityEnderChest>
 ```
-
-## Constructors
-
-- `public TileEntityEnderChestRenderer()`
 
 ## Methods
 
-- `public void renderTileEntityAt( TileEntityEnderChest te, double x, double y, double z, float partialTicks, int destroyStage)`
+- `void renderTileEntityAt(TileEntityEnderChest te, double x, double y, double z, float partialTicks, int destroyStage)`
+
+## Fields
+
+- `TileEntityEnderChestRenderer`

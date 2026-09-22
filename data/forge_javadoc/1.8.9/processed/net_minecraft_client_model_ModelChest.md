@@ -1,5 +1,7 @@
 # ModelChest
 
+**Inheritance:** java.lang.Object → net.minecraft.client.model.ModelBase → net.minecraft.client.model.ModelChest
+
 ## Class signature
 
 ```java
@@ -8,12 +10,14 @@ public class ModelChest extends ModelBase
 
 ## Constructors
 
-- `public ModelChest()`
+- `ModelChest()`
 
 ## Methods
 
-- `public void renderAll()`
+- `void renderAll()` — This method renders out all parts of the chest model.
 
-## Description
+## Fields
 
-The model of the bottom of the chest.
+- `ModelRenderer chestBelow` — The model of the bottom of the chest.
+- `ModelRenderer chestKnob` — The chest's knob in the chest model.
+- `ModelRenderer chestLid` — The chest lid in the chest's model.

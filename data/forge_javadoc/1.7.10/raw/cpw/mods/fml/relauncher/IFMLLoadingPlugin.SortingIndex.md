@@ -1,14 +1,22 @@
 ---
 title: "IFMLLoadingPlugin.SortingIndex"
-description: "A simple sorting index, interleaved with other tweakers from other sources, as well as FML"
+description: "public static @interface IFMLLoadingPlugin.SortingIndex"
 package: "cpw/mods/fml/relauncher"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/relauncher/IFMLLoadingPlugin.SortingIndex.html"
 sourceType: javadoc
 ---
 
 # IFMLLoadingPlugin.SortingIndex
 
-## Description
+## Class signature
 
-A simple sorting index, interleaved with other tweakers from other sources, as well as FML
+```java
+public static @interface IFMLLoadingPlugin.SortingIndex
+```
+
+## Elements
+
+- `int value`

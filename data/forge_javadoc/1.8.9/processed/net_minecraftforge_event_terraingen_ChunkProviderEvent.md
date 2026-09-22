@@ -1,5 +1,7 @@
 # ChunkProviderEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.ChunkProviderEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class ChunkProviderEvent extends Event
 
 ## Constructors
 
-- `public ChunkProviderEvent( IChunkProvider chunkProvider)`
+- `ChunkProviderEvent(IChunkProvider chunkProvider)`
 
-## Description
+## Fields
 
-This event is fired before a chunks terrain noise field is initialized.
+- `IChunkProvider chunkProvider`

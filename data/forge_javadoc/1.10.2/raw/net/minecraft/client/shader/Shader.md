@@ -3,11 +3,15 @@ title: "Shader"
 description: "public class Shader extends java.lang.Object"
 package: "net/minecraft/client/shader"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/shader/Shader.html"
 sourceType: javadoc
 ---
 
 # Shader
+
+**Inheritance:** java.lang.Object → net.minecraft.client.shader.Shader
 
 ## Class signature
 
@@ -17,12 +21,17 @@ public class Shader extends java.lang.Object
 
 ## Constructors
 
-- `public Shader( IResourceManager resourceManager, java.lang.String programName, Framebuffer framebufferInIn, Framebuffer framebufferOutIn) throws JsonException , java.io.IOException`
+- `Shader(IResourceManager resourceManager, java.lang.String programName, Framebuffer framebufferInIn, Framebuffer framebufferOutIn)`
 
 ## Methods
 
-- `public void deleteShader()`
-- `public void addAuxFramebuffer(java.lang.String auxName, java.lang.Object auxFramebufferIn, int width, int height)`
-- `public void setProjectionMatrix(org.lwjgl.util.vector.Matrix4f projectionMatrixIn)`
-- `public void loadShader(float p_148042_1_)`
-- `public ShaderManager getShaderManager()`
+- `void addAuxFramebuffer(java.lang.String auxName, java.lang.Object auxFramebufferIn, int width, int height)`
+- `void deleteShader()`
+- `ShaderManager getShaderManager()`
+- `void loadShader(float p_148042_1_)`
+- `void setProjectionMatrix(org.lwjgl.util.vector.Matrix4f projectionMatrixIn)`
+
+## Fields
+
+- `Framebuffer framebufferIn`
+- `Framebuffer framebufferOut`

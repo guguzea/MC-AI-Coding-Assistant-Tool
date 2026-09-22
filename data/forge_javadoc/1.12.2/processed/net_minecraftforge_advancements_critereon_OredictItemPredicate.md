@@ -1,20 +1,18 @@
 # OredictItemPredicate
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.ItemPredicate → net.minecraftforge.advancements.critereon.OredictItemPredicate
+
 ## Class signature
 
 ```java
 public class OredictItemPredicate extends ItemPredicate
 ```
 
-## Constructors
-
-- `public OredictItemPredicate(java.lang.String ore)`
-- `public OredictItemPredicate(JsonObject jsonObject)`
-
 ## Methods
 
-- `public boolean test( ItemStack stack)`
+- `boolean test(ItemStack stack)`
 
-## Description
+## Fields
 
-An ItemPredicate that matches oredicts.
+- `OredictItemPredicate`
+- `OredictItemPredicate`

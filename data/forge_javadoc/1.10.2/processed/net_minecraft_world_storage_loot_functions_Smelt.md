@@ -1,5 +1,7 @@
 # Smelt
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction → net.minecraft.world.storage.loot.functions.Smelt
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class Smelt extends LootFunction
 
 ## Constructors
 
-- `public Smelt( LootCondition [] conditionsIn)`
+- `Smelt(LootCondition [] conditionsIn)`
 
 ## Methods
 
-- `public ItemStack apply( ItemStack stack, java.util.Random rand, LootContext context)`
+- `ItemStack apply(ItemStack stack, java.util.Random rand, LootContext context)`

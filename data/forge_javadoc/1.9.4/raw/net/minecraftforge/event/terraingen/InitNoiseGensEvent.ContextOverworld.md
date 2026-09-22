@@ -1,22 +1,32 @@
 ---
 title: "InitNoiseGensEvent.ContextOverworld"
-description: ""
+description: "public static class InitNoiseGensEvent.ContextOverworld extends InitNoiseGensEvent.Context"
 package: "net/minecraftforge/event/terraingen"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/event/terraingen/InitNoiseGensEvent.ContextOverworld.html"
 sourceType: javadoc
 ---
 
 # InitNoiseGensEvent.ContextOverworld
 
+**Inheritance:** java.lang.Object → net.minecraftforge.event.terraingen.InitNoiseGensEvent.Context → net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextOverworld
+
+## Class signature
+
+```java
+public static class InitNoiseGensEvent.ContextOverworld extends InitNoiseGensEvent.Context
+```
+
 ## Constructors
 
-- `public ContextOverworld( NoiseGeneratorOctaves lperlin1, NoiseGeneratorOctaves lperlin2, NoiseGeneratorOctaves perlin, NoiseGeneratorPerlin height, NoiseGeneratorOctaves scale, NoiseGeneratorOctaves depth, NoiseGeneratorOctaves forest)`
+- `ContextOverworld(NoiseGeneratorOctaves lperlin1, NoiseGeneratorOctaves lperlin2, NoiseGeneratorOctaves perlin, NoiseGeneratorPerlin height, NoiseGeneratorOctaves scale, NoiseGeneratorOctaves depth, NoiseGeneratorOctaves forest)`
 
 ## Methods
 
-- `public InitNoiseGensEvent.ContextOverworld clone()`
-- `public NoiseGeneratorPerlin getHeight()`
-- `public NoiseGeneratorOctaves getForest()`
-- `public void getHeight( NoiseGeneratorPerlin value)`
-- `public void getForest( NoiseGeneratorOctaves value)`
+- `InitNoiseGensEvent.ContextOverworld clone()`
+- `NoiseGeneratorOctaves getForest()`
+- `void getForest(NoiseGeneratorOctaves value)`
+- `NoiseGeneratorPerlin getHeight()`
+- `void getHeight(NoiseGeneratorPerlin value)`

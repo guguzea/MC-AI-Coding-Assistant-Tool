@@ -3,11 +3,15 @@ title: "NBTBase"
 description: "public abstract class NBTBase extends java.lang.Object"
 package: "net/minecraft/nbt"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/nbt/NBTBase.html"
 sourceType: javadoc
 ---
 
 # NBTBase
+
+**Inheritance:** java.lang.Object → net.minecraft.nbt.NBTBase
 
 ## Class signature
 
@@ -17,15 +21,19 @@ public abstract class NBTBase extends java.lang.Object
 
 ## Constructors
 
-- `public NBTBase()`
+- `NBTBase()`
 
 ## Methods
 
-- `public abstract java.lang.String toString()`
-- `public abstract byte getId()`
+- `abstract NBTBase copy()`
 - `protected static NBTBase createNewByType(byte id)`
-- `public abstract NBTBase copy()`
-- `public boolean hasNoTags()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `abstract byte getId()`
 - `protected java.lang.String getString()`
+- `int hashCode()`
+- `boolean hasNoTags()`
+- `abstract java.lang.String toString()`
+
+## Fields
+
+- `static java.lang.String[] NBT_TYPES`

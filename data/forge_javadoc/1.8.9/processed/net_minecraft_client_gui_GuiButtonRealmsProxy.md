@@ -1,32 +1,30 @@
 # GuiButtonRealmsProxy
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiButton → net.minecraft.client.gui.GuiButtonRealmsProxy
+
 ## Class signature
 
 ```java
 public class GuiButtonRealmsProxy extends GuiButton
 ```
 
-## Constructors
-
-- `public GuiButtonRealmsProxy( RealmsButton realmsButtonIn, int buttonId, int x, int y, java.lang.String text)`
-- `public GuiButtonRealmsProxy( RealmsButton realmsButtonIn, int buttonId, int x, int y, java.lang.String text, int widthIn, int heightIn)`
-
 ## Methods
 
-- `public int getId()`
-- `public boolean getEnabled()`
-- `public void setEnabled(boolean isEnabled)`
-- `public void setText(java.lang.String text)`
-- `public int getButtonWidth()`
-- `public int getPositionY()`
-- `public boolean mousePressed( Minecraft mc, int mouseX, int mouseY)`
-- `public void mouseReleased(int mouseX, int mouseY)`
-- `public void mouseDragged( Minecraft mc, int mouseX, int mouseY)`
-- `public RealmsButton getRealmsButton()`
-- `public int getHoverState(boolean mouseOver)`
-- `public int func_154312_c(boolean p_154312_1_)`
-- `public int getHeight()`
+- `int func_154312_c(boolean p_154312_1_)`
+- `int getButtonWidth()`
+- `boolean getEnabled()`
+- `int getHeight()`
+- `int getHoverState(boolean mouseOver)` — Returns 0 if the button is disabled, 1 if the mouse is NOT hovering over this button and 2 if it IS hovering over this button.
+- `int getId()`
+- `int getPositionY()`
+- `RealmsButton getRealmsButton()`
+- `void mouseDragged(Minecraft mc, int mouseX, int mouseY)` — Fired when the mouse button is dragged.
+- `boolean mousePressed(Minecraft mc, int mouseX, int mouseY)` — Returns true if the mouse has been pressed on this control.
+- `void mouseReleased(int mouseX, int mouseY)` — Fired when the mouse button is released.
+- `void setEnabled(boolean isEnabled)`
+- `void setText(java.lang.String text)`
 
-## Description
+## Fields
 
-Returns 0 if the button is disabled, 1 if the mouse is NOT hovering over this button and 2 if it IS hovering over this button.
+- `GuiButtonRealmsProxy`
+- `GuiButtonRealmsProxy`

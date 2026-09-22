@@ -1,20 +1,18 @@
 # ItemPickaxe
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemTool → net.minecraft.item.ItemPickaxe
+
 ## Class signature
 
 ```java
 public class ItemPickaxe extends ItemTool
 ```
 
-## Constructors
-
-- `protected ItemPickaxe( Item.ToolMaterial material)`
-
 ## Methods
 
-- `public boolean canHarvestBlock( Block blockIn)`
-- `public float getStrVsBlock( ItemStack stack, Block block)`
+- `boolean canHarvestBlock(Block blockIn)` — Check whether this Item can harvest the given Block
+- `float getStrVsBlock(ItemStack stack, Block block)`
 
-## Description
+## Fields
 
-Check whether this Item can harvest the given Block
+- `protected ItemPickaxe`

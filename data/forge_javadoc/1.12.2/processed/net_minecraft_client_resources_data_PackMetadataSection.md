@@ -1,5 +1,7 @@
 # PackMetadataSection
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.data.PackMetadataSection
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class PackMetadataSection extends java.lang.Object implements IMetadataSe
 
 ## Constructors
 
-- `public PackMetadataSection( ITextComponent packDescriptionIn, int packFormatIn)`
+- `PackMetadataSection(ITextComponent packDescriptionIn, int packFormatIn)`
 
 ## Methods
 
-- `public ITextComponent getPackDescription()`
-- `public int getPackFormat()`
+- `ITextComponent getPackDescription()`
+- `int getPackFormat()`

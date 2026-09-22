@@ -3,11 +3,15 @@ title: "PlayerOffhandInvWrapper"
 description: "public class PlayerOffhandInvWrapper extends RangedWrapper"
 package: "net/minecraftforge/items/wrapper"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/items/wrapper/PlayerOffhandInvWrapper.html"
 sourceType: javadoc
 ---
 
 # PlayerOffhandInvWrapper
+
+**Inheritance:** java.lang.Object → net.minecraftforge.items.wrapper.RangedWrapper → net.minecraftforge.items.wrapper.PlayerOffhandInvWrapper
 
 ## Class signature
 
@@ -17,4 +21,4 @@ public class PlayerOffhandInvWrapper extends RangedWrapper
 
 ## Constructors
 
-- `public PlayerOffhandInvWrapper( InventoryPlayer inv)`
+- `PlayerOffhandInvWrapper(InventoryPlayer inv)`

@@ -1,5 +1,7 @@
 # Util
 
+**Inheritance:** java.lang.Object → net.minecraft.util.Util
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class Util extends java.lang.Object
 
 ## Constructors
 
-- `public Util()`
+- `Util()`
 
 ## Methods
 
-- `public static Util.EnumOS getOSType()`
-- `public static <V> V runTask(java.util.concurrent.FutureTask<V> task, Logger logger)`
+- `static Util.EnumOS getOSType()`
+- `static<V> V runTask(java.util.concurrent.FutureTask<V> task, Logger logger)`

@@ -1,26 +1,32 @@
 ---
 title: "BlockAnvil.Anvil"
-description: "Get the formatted ChatComponent that will be used for the sender's username in chat"
+description: "public static class BlockAnvil.Anvil extends java.lang.Object implements IInteractionObject"
 package: "net/minecraft/block"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/block/BlockAnvil.Anvil.html"
 sourceType: javadoc
 ---
 
 # BlockAnvil.Anvil
 
+**Inheritance:** java.lang.Object → net.minecraft.block.BlockAnvil.Anvil
+
+## Class signature
+
+```java
+public static class BlockAnvil.Anvil extends java.lang.Object implements IInteractionObject
+```
+
 ## Constructors
 
-- `public Anvil( World worldIn, BlockPos pos)`
+- `Anvil(World worldIn, BlockPos pos)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public IChatComponent getDisplayName()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `public java.lang.String getGuiID()`
-
-## Description
-
-Get the formatted ChatComponent that will be used for the sender's username in chat
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `IChatComponent getDisplayName()` — Get the formatted ChatComponent that will be used for the sender's username in chat
+- `java.lang.String getGuiID()`
+- `java.lang.String getName()` — Get the name of this object.
+- `boolean hasCustomName()` — Returns true if this thing is named

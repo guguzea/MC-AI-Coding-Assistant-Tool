@@ -3,11 +3,15 @@ title: "GuiNotification"
 description: "public class GuiNotification extends GuiScreen"
 package: "net/minecraftforge/fml/client"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/fml/client/GuiNotification.html"
 sourceType: javadoc
 ---
 
 # GuiNotification
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraftforge.fml.client.GuiNotification
 
 ## Class signature
 
@@ -17,10 +21,14 @@ public class GuiNotification extends GuiScreen
 
 ## Constructors
 
-- `public GuiNotification( StartupQuery query)`
+- `GuiNotification(StartupQuery query)`
 
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button)`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `protected void actionPerformed(GuiButton button)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void initGui()`
+
+## Fields
+
+- `protected StartupQuery query`

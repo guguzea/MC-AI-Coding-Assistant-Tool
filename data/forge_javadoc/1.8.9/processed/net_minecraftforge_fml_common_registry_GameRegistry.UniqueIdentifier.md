@@ -1,16 +1,25 @@
 # GameRegistry.UniqueIdentifier
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.GameRegistry.UniqueIdentifier
+
+## Class signature
+
+```java
+public static final class GameRegistry.UniqueIdentifier extends java.lang.Object
+```
+
 ## Constructors
 
-- `public UniqueIdentifier(java.lang.String string)`
-- `public UniqueIdentifier(java.lang.Object obj)`
+- `@Deprecated UniqueIdentifier(java.lang.Object obj)`
+- `@Deprecated UniqueIdentifier(java.lang.String string)`
 
 ## Methods
 
-- `public boolean equals(java.lang.Object obj)`
-- `public int hashCode()`
-- `public java.lang.String toString()`
+- `@Deprecated boolean equals(java.lang.Object obj)`
+- `@Deprecated int hashCode()`
+- `@Deprecated java.lang.String toString()`
 
-## Description
+## Fields
 
-Deprecated.
+- `java.lang.String modId`
+- `java.lang.String name`

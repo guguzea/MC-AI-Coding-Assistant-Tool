@@ -1,5 +1,7 @@
 # WorldGenBush
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenBush
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class WorldGenBush extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenBush( BlockBush blockIn)`
+- `WorldGenBush(BlockBush blockIn)`
 
 ## Methods
 
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`

@@ -1,15 +1,17 @@
 # RenderLlama
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RenderLivingBase<T> → net.minecraft.client.renderer.entity.RenderLiving<EntityLlama> → net.minecraft.client.renderer.entity.RenderLlama
+
 ## Class signature
 
 ```java
-public class RenderLlama extends RenderLiving < EntityLlama >
+public class RenderLlama extends RenderLiving<EntityLlama>
 ```
-
-## Constructors
-
-- `public RenderLlama( RenderManager p_i47203_1_)`
 
 ## Methods
 
-- `protected ResourceLocation getEntityTexture( EntityLlama entity)`
+- `protected ResourceLocation getEntityTexture(EntityLlama entity)`
+
+## Fields
+
+- `RenderLlama`

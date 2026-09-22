@@ -1,12 +1,16 @@
 # BlockStairs.EnumShape
 
+**Inheritance:** java.lang.Object → java.lang.Enum<BlockStairs.EnumShape> → net.minecraft.block.BlockStairs.EnumShape
+
+## Class signature
+
+```java
+public static enum BlockStairs.EnumShape extends java.lang.Enum<BlockStairs.EnumShape> implements IStringSerializable
+```
+
 ## Methods
 
-- `public static BlockStairs.EnumShape [] values()`
-- `public static BlockStairs.EnumShape valueOf(java.lang.String name)`
-- `public java.lang.String toString()`
-- `public java.lang.String getName()`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `java.lang.String getName()`
+- `java.lang.String toString()`
+- `static BlockStairs.EnumShape valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static BlockStairs.EnumShape [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

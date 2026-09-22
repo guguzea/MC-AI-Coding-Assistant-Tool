@@ -1,19 +1,21 @@
 # OreIngredient
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.Ingredient → net.minecraftforge.oredict.OreIngredient
+
 ## Class signature
 
 ```java
 public class OreIngredient extends Ingredient
 ```
 
-## Constructors
-
-- `public OreIngredient(java.lang.String ore)`
-
 ## Methods
 
-- `public ItemStack [] getMatchingStacks()`
-- `public IntList getValidItemStacksPacked()`
-- `public boolean apply( ItemStack input)`
+- `boolean apply(ItemStack input)`
+- `ItemStack [] getMatchingStacks()`
+- `IntList getValidItemStacksPacked()`
 - `protected void invalidate()`
-- `public boolean isSimple()`
+- `boolean isSimple()`
+
+## Fields
+
+- `OreIngredient`

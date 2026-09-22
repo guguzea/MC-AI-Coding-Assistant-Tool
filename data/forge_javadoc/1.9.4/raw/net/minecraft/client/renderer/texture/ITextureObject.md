@@ -3,6 +3,8 @@ title: "ITextureObject"
 description: "public interface ITextureObject"
 package: "net/minecraft/client/renderer/texture"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/renderer/texture/ITextureObject.html"
 sourceType: javadoc
 ---
@@ -17,7 +19,7 @@ public interface ITextureObject
 
 ## Methods
 
-- `void setBlurMipmap(boolean blurIn, boolean mipmapIn)`
-- `void restoreLastBlurMipmap()`
-- `void loadTexture( IResourceManager resourceManager) throws java.io.IOException`
 - `int getGlTextureId()`
+- `void loadTexture(IResourceManager resourceManager)`
+- `void restoreLastBlurMipmap()`
+- `void setBlurMipmap(boolean blurIn, boolean mipmapIn)`

@@ -8,7 +8,7 @@ public interface DataSerializer<T>
 
 ## Methods
 
-- `void write( PacketBuffer buf, T value)`
-- `T read( PacketBuffer buf) throws java.io.IOException`
-- `DataParameter < T > createKey(int id)`
-- `T copyValue( T value)`
+- `T copyValue(T value)`
+- `DataParameter<T> createKey(int id)`
+- `T read(PacketBuffer buf)`
+- `void write(PacketBuffer buf, T value)`

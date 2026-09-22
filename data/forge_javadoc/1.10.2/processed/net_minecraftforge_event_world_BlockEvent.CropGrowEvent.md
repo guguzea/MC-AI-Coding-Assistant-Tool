@@ -1,9 +1,13 @@
 # BlockEvent.CropGrowEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.BlockEvent.CropGrowEvent
+
+## Class signature
+
+```java
+public static class BlockEvent.CropGrowEvent extends BlockEvent
+```
+
 ## Constructors
 
-- `public CropGrowEvent( World world, BlockPos pos, IBlockState state)`
-
-## Description
-
-Fired when a crop block grows. See subevents.
+- `CropGrowEvent(World world, BlockPos pos, IBlockState state)`

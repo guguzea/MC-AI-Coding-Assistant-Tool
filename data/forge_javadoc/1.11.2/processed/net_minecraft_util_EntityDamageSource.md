@@ -1,5 +1,7 @@
 # EntityDamageSource
 
+**Inheritance:** java.lang.Object → net.minecraft.util.DamageSource → net.minecraft.util.EntityDamageSource
+
 ## Class signature
 
 ```java
@@ -8,13 +10,17 @@ public class EntityDamageSource extends DamageSource
 
 ## Constructors
 
-- `public EntityDamageSource(java.lang.String damageTypeIn, @Nullable Entity damageSourceEntityIn)`
+- `EntityDamageSource(java.lang.String damageTypeIn, Entity damageSourceEntityIn)`
 
 ## Methods
 
-- `public EntityDamageSource setIsThornsDamage()`
-- `public boolean getIsThornsDamage()`
-- `@Nullable public Entity getEntity()`
-- `public ITextComponent getDeathMessage( EntityLivingBase entityLivingBaseIn)`
-- `public boolean isDifficultyScaled()`
-- `@Nullable public Vec3d getDamageLocation()`
+- `Vec3d getDamageLocation()`
+- `ITextComponent getDeathMessage(EntityLivingBase entityLivingBaseIn)`
+- `Entity getEntity()`
+- `boolean getIsThornsDamage()`
+- `boolean isDifficultyScaled()`
+- `EntityDamageSource setIsThornsDamage()`
+
+## Fields
+
+- `protected Entity damageSourceEntity`

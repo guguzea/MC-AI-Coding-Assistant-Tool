@@ -1,23 +1,25 @@
 # EntityEvokerFangs
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityEvokerFangs
+
 ## Class signature
 
 ```java
 public class EntityEvokerFangs extends Entity
 ```
 
-## Constructors
-
-- `public EntityEvokerFangs( World worldIn)`
-- `public EntityEvokerFangs( World worldIn, double x, double y, double z, float p_i47276_8_, int p_i47276_9_, EntityLivingBase casterIn)`
-
 ## Methods
 
 - `protected void entityInit()`
-- `public void setCaster( EntityLivingBase p_190549_1_)`
-- `public EntityLivingBase getCaster()`
-- `protected void readEntityFromNBT( NBTTagCompound compound)`
-- `protected void writeEntityToNBT( NBTTagCompound compound)`
-- `public void onUpdate()`
-- `public void handleStatusUpdate(byte id)`
-- `public float getAnimationProgress(float partialTicks)`
+- `float getAnimationProgress(float partialTicks)`
+- `EntityLivingBase getCaster()`
+- `void handleStatusUpdate(byte id)`
+- `void onUpdate()`
+- `protected void readEntityFromNBT(NBTTagCompound compound)`
+- `void setCaster(EntityLivingBase p_190549_1_)`
+- `protected void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityEvokerFangs`
+- `EntityEvokerFangs`

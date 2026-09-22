@@ -1,18 +1,20 @@
 # BlockGlass
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockBreakable → net.minecraft.block.BlockGlass
+
 ## Class signature
 
 ```java
 public class BlockGlass extends BlockBreakable
 ```
 
-## Constructors
-
-- `public BlockGlass( Material materialIn, boolean ignoreSimilarity)`
-
 ## Methods
 
-- `public int quantityDropped(java.util.Random random)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public boolean isFullCube( IBlockState state)`
 - `protected boolean canSilkHarvest()`
+- `BlockRenderLayer getBlockLayer()`
+- `boolean isFullCube(IBlockState state)`
+- `int quantityDropped(java.util.Random random)`
+
+## Fields
+
+- `BlockGlass`

@@ -1,17 +1,19 @@
 # EntityEgg
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityThrowable → net.minecraft.entity.projectile.EntityEgg
+
 ## Class signature
 
 ```java
 public class EntityEgg extends EntityThrowable
 ```
 
-## Constructors
-
-- `public EntityEgg( World worldIn)`
-- `public EntityEgg( World worldIn, EntityLivingBase throwerIn)`
-- `public EntityEgg( World worldIn, double x, double y, double z)`
-
 ## Methods
 
-- `protected void onImpact( RayTraceResult result)`
+- `protected void onImpact(RayTraceResult result)`
+
+## Fields
+
+- `EntityEgg`
+- `EntityEgg`
+- `EntityEgg`

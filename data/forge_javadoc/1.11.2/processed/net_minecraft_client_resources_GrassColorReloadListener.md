@@ -1,5 +1,7 @@
 # GrassColorReloadListener
 
+**Inheritance:** java.lang.Object → net.minecraft.client.resources.GrassColorReloadListener
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class GrassColorReloadListener extends java.lang.Object implements IResou
 
 ## Constructors
 
-- `public GrassColorReloadListener()`
+- `GrassColorReloadListener()`
 
 ## Methods
 
-- `public void onResourceManagerReload( IResourceManager resourceManager)`
+- `void onResourceManagerReload(IResourceManager resourceManager)`

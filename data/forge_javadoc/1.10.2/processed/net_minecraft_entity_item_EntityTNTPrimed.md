@@ -1,27 +1,29 @@
 # EntityTNTPrimed
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityTNTPrimed
+
 ## Class signature
 
 ```java
 public class EntityTNTPrimed extends Entity
 ```
 
-## Constructors
-
-- `public EntityTNTPrimed( World worldIn)`
-- `public EntityTNTPrimed( World worldIn, double x, double y, double z, EntityLivingBase igniter)`
-
 ## Methods
 
-- `protected void entityInit()`
+- `boolean canBeCollidedWith()`
 - `protected boolean canTriggerWalking()`
-- `public boolean canBeCollidedWith()`
-- `public void onUpdate()`
-- `protected void writeEntityToNBT( NBTTagCompound compound)`
-- `protected void readEntityFromNBT( NBTTagCompound compound)`
-- `public EntityLivingBase getTntPlacedBy()`
-- `public float getEyeHeight()`
-- `public void setFuse(int fuseIn)`
-- `public void notifyDataManagerChange( DataParameter <?> key)`
-- `public int getFuseDataManager()`
-- `public int getFuse()`
+- `protected void entityInit()`
+- `float getEyeHeight()`
+- `int getFuse()`
+- `int getFuseDataManager()`
+- `EntityLivingBase getTntPlacedBy()`
+- `void notifyDataManagerChange(DataParameter<?> key)`
+- `void onUpdate()`
+- `protected void readEntityFromNBT(NBTTagCompound compound)`
+- `void setFuse(int fuseIn)`
+- `protected void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityTNTPrimed`
+- `EntityTNTPrimed`

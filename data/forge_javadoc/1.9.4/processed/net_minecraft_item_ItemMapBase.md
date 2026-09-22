@@ -1,16 +1,18 @@
 # ItemMapBase
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemMapBase
+
 ## Class signature
 
 ```java
 public class ItemMapBase extends Item
 ```
 
-## Constructors
-
-- `public ItemMapBase()`
-
 ## Methods
 
-- `public boolean isMap()`
-- `@Nullable public Packet <?> createMapDataPacket( ItemStack stack, World worldIn, EntityPlayer player)`
+- `Packet<?> createMapDataPacket(ItemStack stack, World worldIn, EntityPlayer player)`
+- `boolean isMap()`
+
+## Fields
+
+- `ItemMapBase`

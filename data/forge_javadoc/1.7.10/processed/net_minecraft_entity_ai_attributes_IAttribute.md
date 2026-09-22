@@ -8,7 +8,7 @@ public interface IAttribute
 
 ## Methods
 
-- `java.lang.String getAttributeUnlocalizedName()`
 - `double clampValue(double p_111109_1_)`
+- `java.lang.String getAttributeUnlocalizedName()`
 - `double getDefaultValue()`
 - `boolean getShouldWatch()`

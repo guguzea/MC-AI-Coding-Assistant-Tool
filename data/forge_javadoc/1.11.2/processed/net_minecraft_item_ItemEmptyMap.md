@@ -1,15 +1,17 @@
 # ItemEmptyMap
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemMapBase → net.minecraft.item.ItemEmptyMap
+
 ## Class signature
 
 ```java
 public class ItemEmptyMap extends ItemMapBase
 ```
 
-## Constructors
-
-- `protected ItemEmptyMap()`
-
 ## Methods
 
-- `public ActionResult < ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+- `ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+
+## Fields
+
+- `protected ItemEmptyMap`

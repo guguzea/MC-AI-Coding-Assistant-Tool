@@ -1,19 +1,21 @@
 # EntityAIBreakDoor
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIDoorInteract → net.minecraft.entity.ai.EntityAIBreakDoor
+
 ## Class signature
 
 ```java
 public class EntityAIBreakDoor extends EntityAIDoorInteract
 ```
 
-## Constructors
-
-- `public EntityAIBreakDoor( EntityLiving entityIn)`
-
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
-- `public boolean continueExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`
+
+## Fields
+
+- `EntityAIBreakDoor`

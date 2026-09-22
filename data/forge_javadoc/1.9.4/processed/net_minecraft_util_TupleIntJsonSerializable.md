@@ -1,5 +1,7 @@
 # TupleIntJsonSerializable
 
+**Inheritance:** java.lang.Object → net.minecraft.util.TupleIntJsonSerializable
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class TupleIntJsonSerializable extends java.lang.Object
 
 ## Constructors
 
-- `public TupleIntJsonSerializable()`
+- `TupleIntJsonSerializable()`
 
 ## Methods
 
-- `public int getIntegerValue()`
-- `public void setIntegerValue(int integerValueIn)`
-- `public <T extends IJsonSerializable > T getJsonSerializableValue()`
-- `public void setJsonSerializableValue( IJsonSerializable jsonSerializableValueIn)`
+- `int getIntegerValue()`
+- `<T extends IJsonSerializable> T getJsonSerializableValue()`
+- `void setIntegerValue(int integerValueIn)`
+- `void setJsonSerializableValue(IJsonSerializable jsonSerializableValueIn)`

@@ -1,5 +1,7 @@
 # CombatTracker
 
+**Inheritance:** java.lang.Object → net.minecraft.util.CombatTracker
+
 ## Class signature
 
 ```java
@@ -8,14 +10,14 @@ public class CombatTracker extends java.lang.Object
 
 ## Constructors
 
-- `public CombatTracker( EntityLivingBase fighterIn)`
+- `CombatTracker(EntityLivingBase fighterIn)`
 
 ## Methods
 
-- `public void calculateFallSuffix()`
-- `public void trackDamage( DamageSource damageSrc, float healthIn, float damageAmount)`
-- `public ITextComponent getDeathMessage()`
-- `public EntityLivingBase getBestAttacker()`
-- `public int getCombatDuration()`
-- `public void reset()`
-- `public EntityLivingBase getFighter()`
+- `void calculateFallSuffix()`
+- `EntityLivingBase getBestAttacker()`
+- `int getCombatDuration()`
+- `ITextComponent getDeathMessage()`
+- `EntityLivingBase getFighter()`
+- `void reset()`
+- `void trackDamage(DamageSource damageSrc, float healthIn, float damageAmount)`

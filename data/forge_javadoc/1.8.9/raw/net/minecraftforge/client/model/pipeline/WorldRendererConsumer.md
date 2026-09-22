@@ -1,13 +1,17 @@
 ---
 title: "WorldRendererConsumer"
-description: "Assumes VertexFormatElement is present in the WorlRenderer's vertex format."
+description: "public class WorldRendererConsumer extends java.lang.Object implements IVertexConsumer"
 package: "net/minecraftforge/client/model/pipeline"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/client/model/pipeline/WorldRendererConsumer.html"
 sourceType: javadoc
 ---
 
 # WorldRendererConsumer
+
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.pipeline.WorldRendererConsumer
 
 ## Class signature
 
@@ -17,17 +21,13 @@ public class WorldRendererConsumer extends java.lang.Object implements IVertexCo
 
 ## Constructors
 
-- `public WorldRendererConsumer( WorldRenderer renderer)`
+- `WorldRendererConsumer(WorldRenderer renderer)`
 
 ## Methods
 
-- `public VertexFormat getVertexFormat()`
-- `public void put(int e, float... data)`
-- `public void setOffset( BlockPos offset)`
-- `public void setQuadTint(int tint)`
-- `public void setQuadOrientation( EnumFacing orientation)`
-- `public void setQuadColored()`
-
-## Description
-
-Assumes VertexFormatElement is present in the WorlRenderer's vertex format.
+- `VertexFormat getVertexFormat()`
+- `void put(int e, float... data)`
+- `void setOffset(BlockPos offset)`
+- `void setQuadColored()`
+- `void setQuadOrientation(EnumFacing orientation)`
+- `void setQuadTint(int tint)`

@@ -1,5 +1,7 @@
 # CraftingHelper.FactoryLoader
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.crafting.CraftingHelper.FactoryLoader<T>
+
 ## Class signature
 
 ```java

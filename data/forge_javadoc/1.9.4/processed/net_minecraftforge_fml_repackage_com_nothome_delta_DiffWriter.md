@@ -8,11 +8,7 @@ public interface DiffWriter extends java.io.Closeable
 
 ## Methods
 
-- `void addCopy(long offset, int length) throws java.io.IOException`
-- `void addData(byte b) throws java.io.IOException`
-- `void flush() throws java.io.IOException`
-- `void close() throws java.io.IOException`
-
-## Description
-
-Interface for DIFF writers.
+- `void addCopy(long offset, int length)` — Add a GDIFF copy instruction.
+- `void addData(byte b)` — Add a GDIFF data instruction.
+- `void close()` — Closes this stream.
+- `void flush()` — Flushes to output, e.g. any data added.

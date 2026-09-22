@@ -1,16 +1,18 @@
 # OpenGuiHandler
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.network.internal.OpenGuiHandler
+
 ## Class signature
 
 ```java
-public class OpenGuiHandler extends <any>
+public class OpenGuiHandler extends<any>
 ```
 
 ## Constructors
 
-- `public OpenGuiHandler()`
+- `OpenGuiHandler()`
 
 ## Methods
 
-- `protected void channelRead0(ChannelHandlerContext ctx, FMLMessage.OpenGui msg) throws java.lang.Exception`
-- `public void exceptionCaught(ChannelHandlerContext ctx, java.lang.Throwable cause) throws java.lang.Exception`
+- `protected void channelRead0(ChannelHandlerContext ctx, FMLMessage.OpenGui msg)`
+- `void exceptionCaught(ChannelHandlerContext ctx, java.lang.Throwable cause)`

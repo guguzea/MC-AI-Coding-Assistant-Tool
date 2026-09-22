@@ -1,18 +1,24 @@
 ---
 title: "DecorateBiomeEvent.Pre"
-description: "This event is fired before a chunk is decorated with a biome feature."
+description: "public static class DecorateBiomeEvent.Pre extends DecorateBiomeEvent"
 package: "net/minecraftforge/event/terraingen"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/terraingen/DecorateBiomeEvent.Pre.html"
 sourceType: javadoc
 ---
 
 # DecorateBiomeEvent.Pre
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.DecorateBiomeEvent → net.minecraftforge.event.terraingen.DecorateBiomeEvent.Pre
 
-- `public Pre( World world, java.util.Random rand, BlockPos pos)`
+## Class signature
 
-## Description
+```java
+public static class DecorateBiomeEvent.Pre extends DecorateBiomeEvent
+```
 
-This event is fired before a chunk is decorated with a biome feature.
+## Fields
+
+- `Pre`

@@ -1,37 +1,46 @@
 ---
 title: "UserList"
-description: "public class UserList<K,V extends UserListEntry <K>> extends java.lang.Object"
+description: "public class UserList<K, V extends UserListEntry<K>> extends java.lang.Object"
 package: "net/minecraft/server/management"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/server/management/UserList.html"
 sourceType: javadoc
 ---
 
 # UserList
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.UserList<K, V>
+
 ## Class signature
 
 ```java
-public class UserList<K,V extends UserListEntry <K>> extends java.lang.Object
+public class UserList<K, V extends UserListEntry<K>> extends java.lang.Object
 ```
 
 ## Constructors
 
-- `public UserList(java.io.File saveFile)`
+- `UserList(java.io.File saveFile)`
 
 ## Methods
 
-- `public boolean isLanServer()`
-- `public void setLanServer(boolean state)`
-- `public void addEntry( V entry)`
-- `public V getEntry( K obj)`
-- `public void removeEntry( K entry)`
-- `public java.io.File getSaveFile()`
-- `public java.lang.String[] getKeys()`
-- `protected java.lang.String getObjectKey( K obj)`
-- `protected boolean hasEntry( K entry)`
-- `protected UserListEntry < K > createEntry(com.google.gson.JsonObject entryData)`
-- `protected java.util.Map<java.lang.String, V > getValues()`
-- `public void writeChanges() throws java.io.IOException`
-- `public boolean isEmpty()`
-- `public void readSavedFile() throws java.io.IOException, java.io.FileNotFoundException`
+- `void addEntry(V entry)`
+- `protected UserListEntry<K> createEntry(com.google.gson.JsonObject entryData)`
+- `V getEntry(K obj)`
+- `java.lang.String[] getKeys()`
+- `protected java.lang.String getObjectKey(K obj)`
+- `java.io.File getSaveFile()`
+- `protected java.util.Map<java.lang.String, V> getValues()`
+- `protected boolean hasEntry(K entry)`
+- `boolean isEmpty()`
+- `boolean isLanServer()`
+- `void readSavedFile()`
+- `void removeEntry(K entry)`
+- `void setLanServer(boolean state)`
+- `void writeChanges()`
+
+## Fields
+
+- `protected com.google.gson.Gson gson`
+- `protected static org.apache.logging.log4j.Logger LOGGER`

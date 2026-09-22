@@ -3,11 +3,15 @@ title: "LayeredTexture"
 description: "public class LayeredTexture extends AbstractTexture"
 package: "net/minecraft/client/renderer/texture"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/renderer/texture/LayeredTexture.html"
 sourceType: javadoc
 ---
 
 # LayeredTexture
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.texture.AbstractTexture → net.minecraft.client.renderer.texture.LayeredTexture
 
 ## Class signature
 
@@ -17,8 +21,12 @@ public class LayeredTexture extends AbstractTexture
 
 ## Constructors
 
-- `public LayeredTexture(java.lang.String... textureNames)`
+- `LayeredTexture(java.lang.String... textureNames)`
 
 ## Methods
 
-- `public void loadTexture( IResourceManager resourceManager) throws java.io.IOException`
+- `void loadTexture(IResourceManager resourceManager)`
+
+## Fields
+
+- `java.util.List<java.lang.String> layeredTextureNames`

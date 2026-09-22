@@ -3,11 +3,15 @@ title: "WorldGenMelon"
 description: "public class WorldGenMelon extends WorldGenerator"
 package: "net/minecraft/world/gen/feature"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/gen/feature/WorldGenMelon.html"
 sourceType: javadoc
 ---
 
 # WorldGenMelon
+
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.feature.WorldGenerator → net.minecraft.world.gen.feature.WorldGenMelon
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class WorldGenMelon extends WorldGenerator
 
 ## Constructors
 
-- `public WorldGenMelon()`
+- `WorldGenMelon()`
 
 ## Methods
 
-- `public boolean generate( World worldIn, java.util.Random rand, BlockPos position)`
+- `boolean generate(World worldIn, java.util.Random rand, BlockPos position)`

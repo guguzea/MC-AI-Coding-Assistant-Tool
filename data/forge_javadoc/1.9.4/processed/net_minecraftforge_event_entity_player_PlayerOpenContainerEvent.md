@@ -1,5 +1,7 @@
 # PlayerOpenContainerEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerOpenContainerEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class PlayerOpenContainerEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerOpenContainerEvent( EntityPlayer player, Container openContainer)`
+- `PlayerOpenContainerEvent(EntityPlayer player, Container openContainer)`
 
 ## Methods
 
-- `public boolean isCanInteractWith()`
-
-## Description
-
-This event is fired when a player attempts to view a container during player tick. setResult ALLOW to allow the container to stay open setResult DENY to force close the container (denying access) DEFA
+- `boolean isCanInteractWith()`

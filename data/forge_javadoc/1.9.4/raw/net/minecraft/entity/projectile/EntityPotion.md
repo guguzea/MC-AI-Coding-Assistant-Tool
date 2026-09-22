@@ -3,11 +3,15 @@ title: "EntityPotion"
 description: "public class EntityPotion extends EntityThrowable"
 package: "net/minecraft/entity/projectile"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/entity/projectile/EntityPotion.html"
 sourceType: javadoc
 ---
 
 # EntityPotion
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityThrowable → net.minecraft.entity.projectile.EntityPotion
 
 ## Class signature
 
@@ -15,18 +19,18 @@ sourceType: javadoc
 public class EntityPotion extends EntityThrowable
 ```
 
-## Constructors
-
-- `public EntityPotion( World worldIn)`
-- `public EntityPotion( World worldIn, EntityLivingBase throwerIn, ItemStack potionDamageIn)`
-- `public EntityPotion( World worldIn, double x, double y, double z, @Nullable ItemStack potionDamageIn)`
-
 ## Methods
 
 - `protected void entityInit()`
-- `public ItemStack getPotion()`
-- `public void setItem(@Nullable ItemStack stack)`
 - `protected float getGravityVelocity()`
-- `protected void onImpact( RayTraceResult result)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
+- `ItemStack getPotion()`
+- `protected void onImpact(RayTraceResult result)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `void setItem(ItemStack stack)`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `EntityPotion`
+- `EntityPotion`
+- `EntityPotion`

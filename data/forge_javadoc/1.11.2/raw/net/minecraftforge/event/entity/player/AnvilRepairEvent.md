@@ -1,13 +1,17 @@
 ---
 title: "AnvilRepairEvent"
-description: "Fired when the player removes a \"repaired\" item from the Anvil's Output slot. breakChance specifies as a percentage the chance that the anvil will be \"damaged\" when used. ItemStacks are the inputs"
+description: "public class AnvilRepairEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/entity/player/AnvilRepairEvent.html"
 sourceType: javadoc
 ---
 
 # AnvilRepairEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.AnvilRepairEvent
 
 ## Class signature
 
@@ -17,19 +21,15 @@ public class AnvilRepairEvent extends PlayerEvent
 
 ## Constructors
 
-- `public AnvilRepairEvent( EntityPlayer player, @Nonnull ItemStack left, @Nonnull ItemStack right, @Nonnull ItemStack output)`
+- `AnvilRepairEvent(EntityPlayer player, ItemStack left, ItemStack right, ItemStack output)`
 
 ## Methods
 
-- `@Deprecated @Nonnull public ItemStack getLeft()`
-- `@Deprecated @Nonnull public ItemStack getRight()`
-- `@Deprecated @Nonnull public ItemStack getOutput()`
-- `@Nonnull public ItemStack getItemResult()`
-- `@Nonnull public ItemStack getItemInput()`
-- `@Nonnull public ItemStack getIngredientInput()`
-- `public float getBreakChance()`
-- `public void setBreakChance(float breakChance)`
-
-## Description
-
-Fired when the player removes a "repaired" item from the Anvil's Output slot. breakChance specifies as a percentage the chance that the anvil will be "damaged" when used. ItemStacks are the inputs/out
+- `float getBreakChance()`
+- `ItemStack getIngredientInput()` — Get the second item input into the anvil
+- `ItemStack getItemInput()` — Get the first item input into the anvil
+- `ItemStack getItemResult()` — Get the output result from the anvil
+- `@Deprecated ItemStack getLeft()`
+- `@Deprecated ItemStack getOutput()`
+- `@Deprecated ItemStack getRight()`
+- `void setBreakChance(float breakChance)`

@@ -1,10 +1,18 @@
 # PotionHelper.ItemPredicateInstance
 
+**Inheritance:** java.lang.Object → net.minecraft.potion.PotionHelper.ItemPredicateInstance
+
+## Class signature
+
+```java
+public static class PotionHelper.ItemPredicateInstance extends java.lang.Object implements com.google.common.base.Predicate<ItemStack>
+```
+
 ## Constructors
 
-- `public ItemPredicateInstance( Item itemIn)`
-- `public ItemPredicateInstance( Item itemIn, int metaIn)`
+- `ItemPredicateInstance(Item itemIn)`
+- `ItemPredicateInstance(Item itemIn, int metaIn)`
 
 ## Methods
 
-- `public boolean apply(@Nullable ItemStack p_apply_1_)`
+- `boolean apply(ItemStack p_apply_1_)`

@@ -1,10 +1,14 @@
 # TickEvent.Type
 
+**Inheritance:** java.lang.Object → java.lang.Enum<TickEvent.Type> → net.minecraftforge.fml.common.gameevent.TickEvent.Type
+
+## Class signature
+
+```java
+public static enum TickEvent.Type extends java.lang.Enum<TickEvent.Type>
+```
+
 ## Methods
 
-- `public static TickEvent.Type [] values()`
-- `public static TickEvent.Type valueOf(java.lang.String name)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static TickEvent.Type valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static TickEvent.Type [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

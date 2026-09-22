@@ -1,5 +1,12 @@
 # Mod.CustomProperty
 
-## Description
+## Class signature
 
-A custom key => value property pair for use with Mod.customProperties()
+```java
+public static @interface Mod.CustomProperty
+```
+
+## Elements
+
+- `java.lang.String k` — A key.
+- `java.lang.String v` — A value.

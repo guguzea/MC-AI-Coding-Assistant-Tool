@@ -1,5 +1,7 @@
 # CommandSetDimension
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraftforge.server.command.CommandSetDimension
+
 ## Class signature
 
 ```java
@@ -8,13 +10,13 @@ public class CommandSetDimension extends CommandBase
 
 ## Constructors
 
-- `public CommandSetDimension()`
+- `CommandSetDimension()`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public java.util.List<java.lang.String> getAliases()`
-- `public java.lang.String getUsage( ICommandSender sender)`
-- `public java.util.List<java.lang.String> getTabCompletions( MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos targetPos)`
-- `public int getRequiredPermissionLevel()`
-- `public void execute( MinecraftServer server, ICommandSender sender, java.lang.String[] args) throws CommandException`
+- `void execute(MinecraftServer server, ICommandSender sender, java.lang.String[] args)`
+- `java.util.List<java.lang.String> getAliases()`
+- `java.lang.String getName()`
+- `int getRequiredPermissionLevel()`
+- `java.util.List<java.lang.String> getTabCompletions(MinecraftServer server, ICommandSender sender, java.lang.String[] args, BlockPos targetPos)`
+- `java.lang.String getUsage(ICommandSender sender)`

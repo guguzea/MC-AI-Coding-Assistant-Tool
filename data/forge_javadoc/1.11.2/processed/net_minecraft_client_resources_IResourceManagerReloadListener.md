@@ -8,4 +8,4 @@ public interface IResourceManagerReloadListener
 
 ## Methods
 
-- `void onResourceManagerReload( IResourceManager resourceManager)`
+- `void onResourceManagerReload(IResourceManager resourceManager)`

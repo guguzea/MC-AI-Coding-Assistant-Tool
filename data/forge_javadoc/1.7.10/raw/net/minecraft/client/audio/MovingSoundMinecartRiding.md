@@ -3,11 +3,15 @@ title: "MovingSoundMinecartRiding"
 description: "public class MovingSoundMinecartRiding extends MovingSound"
 package: "net/minecraft/client/audio"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/client/audio/MovingSoundMinecartRiding.html"
 sourceType: javadoc
 ---
 
 # MovingSoundMinecartRiding
+
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.PositionedSound → net.minecraft.client.audio.MovingSound → net.minecraft.client.audio.MovingSoundMinecartRiding
 
 ## Class signature
 
@@ -15,10 +19,10 @@ sourceType: javadoc
 public class MovingSoundMinecartRiding extends MovingSound
 ```
 
-## Constructors
-
-- `public MovingSoundMinecartRiding( EntityPlayer p_i45106_1_, EntityMinecart p_i45106_2_)`
-
 ## Methods
 
-- `public void update()`
+- `void update()`
+
+## Fields
+
+- `MovingSoundMinecartRiding`

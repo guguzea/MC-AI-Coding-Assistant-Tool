@@ -8,8 +8,8 @@ public interface IBlockStatePalette
 
 ## Methods
 
-- `int idFor( IBlockState state)`
-- `@Nullable IBlockState getBlockState(int indexKey)`
-- `void read( PacketBuffer buf)`
-- `void write( PacketBuffer buf)`
+- `IBlockState getBlockState(int indexKey)`
 - `int getSerializedState()`
+- `int idFor(IBlockState state)`
+- `void read(PacketBuffer buf)`
+- `void write(PacketBuffer buf)`

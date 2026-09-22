@@ -1,5 +1,7 @@
 # ScorePlayerTeam
 
+**Inheritance:** java.lang.Object → net.minecraft.scoreboard.Team → net.minecraft.scoreboard.ScorePlayerTeam
+
 ## Class signature
 
 ```java
@@ -8,23 +10,23 @@ public class ScorePlayerTeam extends Team
 
 ## Constructors
 
-- `public ScorePlayerTeam( Scoreboard p_i2308_1_, java.lang.String p_i2308_2_)`
+- `ScorePlayerTeam(Scoreboard p_i2308_1_, java.lang.String p_i2308_2_)`
 
 ## Methods
 
-- `public java.lang.String getRegisteredName()`
-- `public java.lang.String func_96669_c()`
-- `public void setTeamName(java.lang.String p_96664_1_)`
-- `public java.util.Collection getMembershipCollection()`
-- `public java.lang.String getColorPrefix()`
-- `public void setNamePrefix(java.lang.String p_96666_1_)`
-- `public java.lang.String getColorSuffix()`
-- `public void setNameSuffix(java.lang.String p_96662_1_)`
-- `public java.lang.String formatString(java.lang.String p_142053_1_)`
-- `public static java.lang.String formatPlayerName( Team p_96667_0_, java.lang.String p_96667_1_)`
-- `public boolean getAllowFriendlyFire()`
-- `public void setAllowFriendlyFire(boolean p_96660_1_)`
-- `public boolean func_98297_h()`
-- `public void setSeeFriendlyInvisiblesEnabled(boolean p_98300_1_)`
-- `public int func_98299_i()`
-- `public void func_98298_a(int p_98298_1_)`
+- `static java.lang.String formatPlayerName(Team p_96667_0_, java.lang.String p_96667_1_)`
+- `java.lang.String formatString(java.lang.String p_142053_1_)`
+- `java.lang.String func_96669_c()`
+- `boolean func_98297_h()`
+- `void func_98298_a(int p_98298_1_)`
+- `int func_98299_i()`
+- `boolean getAllowFriendlyFire()`
+- `java.lang.String getColorPrefix()`
+- `java.lang.String getColorSuffix()`
+- `java.util.Collection getMembershipCollection()`
+- `java.lang.String getRegisteredName()`
+- `void setAllowFriendlyFire(boolean p_96660_1_)`
+- `void setNamePrefix(java.lang.String p_96666_1_)`
+- `void setNameSuffix(java.lang.String p_96662_1_)`
+- `void setSeeFriendlyInvisiblesEnabled(boolean p_98300_1_)`
+- `void setTeamName(java.lang.String p_96664_1_)`

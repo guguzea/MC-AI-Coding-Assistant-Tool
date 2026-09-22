@@ -3,11 +3,15 @@ title: "StateMapperBase"
 description: "public abstract class StateMapperBase extends java.lang.Object implements IStateMapper"
 package: "net/minecraft/client/renderer/block/statemap"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/renderer/block/statemap/StateMapperBase.html"
 sourceType: javadoc
 ---
 
 # StateMapperBase
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.statemap.StateMapperBase
 
 ## Class signature
 
@@ -17,10 +21,14 @@ public abstract class StateMapperBase extends java.lang.Object implements IState
 
 ## Constructors
 
-- `public StateMapperBase()`
+- `StateMapperBase()`
 
 ## Methods
 
-- `public java.lang.String getPropertyString(java.util.Map< IProperty <?>,java.lang.Comparable<?>> values)`
-- `public java.util.Map< IBlockState , ModelResourceLocation > putStateModelLocations( Block blockIn)`
-- `protected abstract ModelResourceLocation getModelResourceLocation( IBlockState state)`
+- `protected abstract ModelResourceLocation getModelResourceLocation(IBlockState state)`
+- `java.lang.String getPropertyString(java.util.Map<IProperty<?>, java.lang.Comparable<?>> values)`
+- `java.util.Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)`
+
+## Fields
+
+- `protected java.util.Map<IBlockState, ModelResourceLocation> mapStateModelLocations`

@@ -1,9 +1,13 @@
 # BiomeEvent.GetFoliageColor
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.BiomeEvent → net.minecraftforge.event.terraingen.BiomeEvent.BiomeColor → net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor
+
+## Class signature
+
+```java
+public static class BiomeEvent.GetFoliageColor extends BiomeEvent.BiomeColor
+```
+
 ## Constructors
 
-- `public GetFoliageColor( Biome biome, int original)`
-
-## Description
-
-This event is fired when a biome is queried for its grass color.
+- `GetFoliageColor(Biome biome, int original)`

@@ -8,4 +8,4 @@ public interface ISmartItemModel extends IBakedModel
 
 ## Methods
 
-- `IBakedModel handleItemState( ItemStack stack)`
+- `IBakedModel handleItemState(ItemStack stack)`

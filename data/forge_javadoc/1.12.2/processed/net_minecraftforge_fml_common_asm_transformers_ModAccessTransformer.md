@@ -1,5 +1,7 @@
 # ModAccessTransformer
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.asm.transformers.AccessTransformer → net.minecraftforge.fml.common.asm.transformers.ModAccessTransformer
+
 ## Class signature
 
 ```java
@@ -8,8 +10,12 @@ public class ModAccessTransformer extends AccessTransformer
 
 ## Constructors
 
-- `public ModAccessTransformer() throws java.lang.Exception`
+- `ModAccessTransformer()`
 
 ## Methods
 
-- `public static void addJar(java.util.jar.JarFile jar, java.lang.String atList) throws java.io.IOException`
+- `static void addJar(java.util.jar.JarFile jar, java.lang.String atList)`
+
+## Fields
+
+- `static java.util.jar.Attributes.Name FMLAT`

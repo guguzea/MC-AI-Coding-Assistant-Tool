@@ -1,18 +1,28 @@
 ---
 title: "PopulateChunkEvent.Populate"
-description: "PopulateChunkEvent.Populate is fired when a chunk is populated with a terrain feature. This event is fired during terrain feature generation in ChunkProviderEnd#populate(IChunkProvider, int, int), Chu"
+description: "public static class PopulateChunkEvent.Populate extends PopulateChunkEvent"
 package: "net/minecraftforge/event/terraingen"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/terraingen/PopulateChunkEvent.Populate.html"
 sourceType: javadoc
 ---
 
 # PopulateChunkEvent.Populate
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.ChunkProviderEvent → net.minecraftforge.event.terraingen.PopulateChunkEvent → net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate
+
+## Class signature
+
+```java
+public static class PopulateChunkEvent.Populate extends PopulateChunkEvent
+```
+
 ## Constructors
 
-- `public Populate( IChunkProvider chunkProvider, World world, java.util.Random rand, int chunkX, int chunkZ, boolean hasVillageGenerated, PopulateChunkEvent.Populate.EventType type)`
+- `Populate(IChunkProvider chunkProvider, World world, java.util.Random rand, int chunkX, int chunkZ, boolean hasVillageGenerated, PopulateChunkEvent.Populate.EventType type)`
 
-## Description
+## Fields
 
-PopulateChunkEvent.Populate is fired when a chunk is populated with a terrain feature. This event is fired during terrain feature generation in ChunkProviderEnd#populate(IChunkProvider, int, int), Chu
+- `PopulateChunkEvent.Populate.EventType type`

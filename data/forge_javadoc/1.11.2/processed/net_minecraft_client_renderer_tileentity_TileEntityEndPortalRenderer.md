@@ -1,17 +1,19 @@
 # TileEntityEndPortalRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer<TileEntityEndPortal> → net.minecraft.client.renderer.tileentity.TileEntityEndPortalRenderer
+
 ## Class signature
 
 ```java
-public class TileEntityEndPortalRenderer extends TileEntitySpecialRenderer < TileEntityEndPortal >
+public class TileEntityEndPortalRenderer extends TileEntitySpecialRenderer<TileEntityEndPortal>
 ```
-
-## Constructors
-
-- `public TileEntityEndPortalRenderer()`
 
 ## Methods
 
-- `public void renderTileEntityAt( TileEntityEndPortal te, double x, double y, double z, float partialTicks, int destroyStage)`
-- `protected int getPasses(double p_191286_1_)`
 - `protected float getOffset()`
+- `protected int getPasses(double p_191286_1_)`
+- `void renderTileEntityAt(TileEntityEndPortal te, double x, double y, double z, float partialTicks, int destroyStage)`
+
+## Fields
+
+- `TileEntityEndPortalRenderer`

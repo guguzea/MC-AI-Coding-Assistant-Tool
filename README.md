@@ -62,7 +62,7 @@ MC_skill/
 │   ├── batch-decompile.mjs      # 分批反编译（源码 → $MC_SKILL_CACHE，不入库）
 │   └── merge-verified-api.mjs   # 回填 catalog verifiedApi
 │
-├── mcp-server/                  # 本地 stdio MCP Server（81 个工具）
+├── mcp-server/                  # 本地 stdio MCP Server（82 个工具）
 │   ├── src/                     # 工具实现（api / docs / diagnostics / wave…）
 │   ├── scripts/                 # 文档抓取、语义索引、数据审计；含 build-library-catalog-from-authored.mjs
 │   └── data/                    # 随仓分发的 MCP 侧数据（非 MC_SKILL_DATA）
@@ -200,7 +200,7 @@ MC_skill/
 **配置本地 MCP Server：**
 
 > 将 [AUTO_SETUP.md](./AUTO_SETUP.md) 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
-> 要求 **Node.js >= 22.5**（**22.5–22.12 与 23.0–23.3 必须加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 / 23.4 起才默认开启；MCP/CLI 入口会在**任何 sqlite 使用之前**检测该窗口，命中即打印醒目指引并以非零码退出）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，81 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
+> 要求 **Node.js >= 22.5**（**22.5–22.12 与 23.0–23.3 必须加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 / 23.4 起才默认开启；MCP/CLI 入口会在**任何 sqlite 使用之前**检测该窗口，命中即打印醒目指引并以非零码退出）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，82 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
 
 ## 社区知识与库模组
 
@@ -250,9 +250,9 @@ MC_skill/
 
 ## MCP 工具使用注意
 
-本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**81** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 与 23.0–23.3 需在 NODE_OPTIONS 或启动参数加 `--experimental-sqlite`，22.13+ / 23.4+ 无需**）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
+本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**82** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 与 23.0–23.3 需在 NODE_OPTIONS 或启动参数加 `--experimental-sqlite`，22.13+ / 23.4+ 无需**）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
-**测试**：`cd mcp-server && npm test`（构建 + 全部单测：核心 / 脚本 / 数据审计 / Wave BCD / localize / update / CLI / 反编译 / 深 mixin / MCP 协议）。CI 语义：`MC_SKILL_SKIP_DOWNLOAD=1` 时下载类工具诚实失败。CLI 另有两档独立门：`npm run test:cli:quick`（`scripts/assert-cli-quick.mjs`，快档，已进默认门链）与 `npm run test:cli:full`（`scripts/assert-cli-full.mjs`，81 工具全量档：入口契约探针 + 真实调用 + 逐条豁免原因，**不默认跑**）。
+**测试**：`cd mcp-server && npm test`（构建 + 全部单测：核心 / 脚本 / 数据审计 / Wave BCD / localize / update / CLI / 反编译 / 深 mixin / MCP 协议）。CI 语义：`MC_SKILL_SKIP_DOWNLOAD=1` 时下载类工具诚实失败。CLI 另有两档独立门：`npm run test:cli:quick`（`scripts/assert-cli-quick.mjs`，快档，已进默认门链）与 `npm run test:cli:full`（`scripts/assert-cli-full.mjs`，全量档（权威名单跑时现取）：入口契约探针 + 真实调用 + 逐条豁免原因，**不默认跑**）。
 
 ### 两个一等公民入口：MCP 与 CLI（2026-09-17 提级）
 
@@ -604,7 +604,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2–1.20.4 与 Fabric 主档均含 `mc-events`（2026-08 D-1 补齐，经 `FABRIC_SKILL_DONORS` 回填的薄档带 DONOR_SKILL 横幅）。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
-## MCP Server 工具（81 个）
+## MCP Server 工具（82 个）
 
 服务名：`MC-AI-Coding-Assistant-Tool`。安装与配置见 [AUTO_SETUP.md](./AUTO_SETUP.md)、[mcp-server/README.md](./mcp-server/README.md)。
 
@@ -729,7 +729,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 
 | 工具 | 作用 |
 |------|------|
-| `search_bedrock_docs` | 检索 Microsoft Learn 基岩文档（带滞后 `docsStatus`）。 |
+| `search_bedrock_docs` | 检索 Microsoft Learn 基岩文档（带滞后 `docsStatus`）。可按调用放宽 `limit`（默认口径不变；只加宽窗口，不改排序与 release-notes 降权，池大小与放宽后的差额会在 `demotion` / `warning` 里说破）。 |
 | `get_bedrock_doc_summary` | 基岩页 L1 摘要。 |
 | `get_bedrock_doc_full` | 基岩页全文。 |
 | `get_bedrock_doc_related` | 基岩相关页。 |
@@ -800,7 +800,7 @@ authored/lib-*.md frontmatter（+ library-integration / library-integration-jei-
 
 
 
-### 8. 移植与数据诊断（3）
+### 8. 移植、数据诊断与上游可用性（4）
 
 
 | 工具                     | 作用                                                                                                                                                                                          |
@@ -808,6 +808,7 @@ authored/lib-*.md frontmatter（+ library-integration / library-integration-jei-
 | `diagnose_data_paths`  | 诊断数据目录配置（高级排障用）。诊断 `MC_SKILL_DATA` / `MC_SKILL_COMMUNITY` 解析结果，以及 forge/fabric/neoforge/quilt/liteloader/rift/modloader/bedrock/community 是 `found` / `empty` / `not_found`。排障首选。                                                                   |
 | `analyze_porting_path` | 扫描项目，识别平台/版本/Mappings/Architectury，输出风险、`routeSteps`、参考链接与建议的 `query_api` 调用。**`targetPlatform` 必填**（禁止静默默认 forge→neoforge，缺失 → `INVALID_INPUT`）。`routeSteps` 是给人读的 `string[]`；机器可读交接在 `nextSteps[]`（`tool` + 可直接调用的 `args`）。LiteLoader / Rift / ModLoader / 基岩 → `UNSUPPORTED_PORT`。                                                                                                               |
 | `port_project`         | 执行移植步骤：`init_architectury` / `extract_common` / `apply_version_migration`。默认 **dryRun**；真正写入需 `dryRun=false` + `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + 路径在 `MC_SKILL_PROJECT_ROOT` 内。 |
+| `query_upstream_releases` | 查**上游发布源**「某个加载器/映射/模组的版本到底存在吗、最新出到第几 build」。`source` 七选一：`forge` / `neoforge`（maven-metadata.xml，全量可查）、`fabric-loader` / `fabric-yarn` / `quilt-loader` / `parchment`（端点按 MC 版本分列，**必须带 `minecraftVersion`**；parchment 的 artifact 名是 `parchment-<mc>`、版本串本身是日期如 `2023.09.03`）、`modrinth`（`slug`，任意第三方模组/库）。**与 `list_*_versions` 的区别**：那些列的是本仓库已入库的文档档位，不在清单 ≠ 上游没有。三态必读：`ok:false` ⇒ 没查到（网络/HTTP/解析），**不得**据此断言上游没有；`ok:true` + `available:false` ⇒ 上游确实没有。`matchRule` 回显版本归属规则（如 neoforge：MC 1.21.1 → 前缀 `21.1.`）。`releases` 按版本降序截断到 `limit`（默认 12），总数看 `total`；正式版排在同号 nightly 之前。**需联网**；Node TLS 失败自动回退 `curl.exe --ssl-no-revoke`，不改系统证书库；入口与重定向落点都过主机白名单（parchment 的托管后端 `ldtteam.jfrog.io` 已显式登记），落点不在白名单 ⇒ 报 `URL_REJECTED` 且不读正文。仓库首个带 `outputSchema` + `structuredContent` 的工具。 |
 
 
 
@@ -973,7 +974,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mcskill://workflow/mc-new-block` 等 | 与 Prompt 同名的工作流正文（以 `get_workflow_template` 列表为准） |
 
 
-### 独立 CLI（`node mcp-server/dist/cli.js`，81 工具全可用）
+### 独立 CLI（`node mcp-server/dist/cli.js`，82 工具全可用）
 
 flags-only（`--key value` / `--key=value` / 裸 `--flag`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误。全局 flag（不进工具 schema）：`--help`/`-h`、`--version`/`-V`（放在工具名之前、或整条命令没写工具名时打印 CLI 版本；`--version` 跟在工具名后面时是工具字段，而 `-V` 在那个位置会被当未知参数 exit 2）、`--json`（不改变工具输出，仅为兼容保留；只在交互式终端下影响 `--help` 的呈现）、`--compact`、`--fail-on-error`、`--quiet`（静音进度行与心跳，错误 / 警告 / 迁移提示照旧）、`--timeout <ms>`（到点 exit 1 + `errorKind:"timeout"`，退出码仍不越 0/1/2）、`--project <dir>`、`--file field=path`、`--raw [field]`（该字段完全按字面传，裸写则全局关闭 `@` 展开）、`--output-format json`（表达格式意图的规范入口，当前唯一合法值，其它值 exit 2）、`--stdin-json`（从 stdin 一次读入整个参数对象当基座，命令行同名字段恒胜；TTY 下、以及与 `@-` / `=-` / `--file f=-` 同现时一律 exit 2）；所有 string 字段支持文件输入——`--crashReport @./latest.txt` 读文件、`--crashReport=-` / `@-` 读 stdin（全进程一次）、`--file crashReport=./latest.txt` 等价写法，单文件与 `--stdin-json` 载荷共用约 8MB 上限。**加 `--fail-on-error` 时，`found:false` 与 `errors[]` 非空也升为退出码 1**。`--fail-on-error=false` **关闭**该行为（不要把写出 `=false` 当成开启）。布尔 flag 只接受 `true/false/1/0/yes/no/on/off`；`--flag=junk` 拒绝。完整语义见 [mcp-server/README.md](./mcp-server/README.md) §独立 CLI：
 
@@ -984,7 +985,7 @@ node mcp-server/dist/cli.js status --version 1.20.1            # 服务器状态
 node mcp-server/dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1
 node mcp-server/dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F'
 node mcp-server/dist/cli.js update --action check
-node mcp-server/dist/cli.js list-tools                          # 全部 81 个工具的 schema
+node mcp-server/dist/cli.js list-tools                          # 全部 82 个工具的 schema
 ```
 
 **通用 dispatch（v0.2+）**：除上述命令外，**任意 MCP 工具名可直接调用**（handler 自动收集，缺参时返回 zod 校验提示）：

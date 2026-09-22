@@ -1,5 +1,7 @@
 # OreGenEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.OreGenEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,10 @@ public class OreGenEvent extends Event
 
 ## Constructors
 
-- `public OreGenEvent( World world, java.util.Random rand, BlockPos pos)`
+- `OreGenEvent(World world, java.util.Random rand, BlockPos pos)`
 
-## Description
+## Fields
 
-OreGenEvent is fired when an event involving ore generation occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. world contains the world
+- `BlockPos pos`
+- `java.util.Random rand`
+- `World world`

@@ -1,5 +1,7 @@
 # GuiOpenEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.GuiOpenEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class GuiOpenEvent extends Event
 
 ## Constructors
 
-- `public GuiOpenEvent( GuiScreen gui)`
+- `GuiOpenEvent(GuiScreen gui)`
 
-## Description
+## Fields
 
-This event is called before any Gui will open. If you don't want this to happen, cancel the event. If you want to override this Gui, simply set the gui variable to your own Gui.
+- `GuiScreen gui`

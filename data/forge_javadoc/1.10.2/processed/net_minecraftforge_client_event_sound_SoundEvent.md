@@ -1,5 +1,7 @@
 # SoundEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.sound.SoundEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class SoundEvent extends Event
 
 ## Constructors
 
-- `public SoundEvent( SoundManager manager)`
+- `SoundEvent(SoundManager manager)`
 
 ## Methods
 
-- `public SoundManager getManager()`
+- `SoundManager getManager()`

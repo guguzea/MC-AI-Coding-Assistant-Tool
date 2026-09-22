@@ -1,13 +1,17 @@
 # BlockEvent.CropGrowEvent.Post
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.BlockEvent.CropGrowEvent → net.minecraftforge.event.world.BlockEvent.CropGrowEvent.Post
+
+## Class signature
+
+```java
+public static class BlockEvent.CropGrowEvent.Post extends BlockEvent.CropGrowEvent
+```
+
 ## Constructors
 
-- `public Post( World world, BlockPos pos, IBlockState original, IBlockState state)`
+- `Post(World world, BlockPos pos, IBlockState original, IBlockState state)`
 
 ## Methods
 
-- `public IBlockState getOriginalState()`
-
-## Description
-
-Fired when "growing age" blocks (for example cacti, chorus plants, or crops in vanilla) have successfully grown. The block's original state is available, in addition to its new state. This event is no
+- `IBlockState getOriginalState()`

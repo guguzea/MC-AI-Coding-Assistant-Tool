@@ -1,18 +1,40 @@
 ---
 title: "Constants.NBT"
-description: "NBT Tag type IDS, used when storing the nbt to disc, Should align with NBTBase.getId, table used in NBTBase.func_150283_g Main use is checking tag type in NBTTagCompound.func_150297_b(String, int)"
+description: "public static class Constants.NBT extends java.lang.Object"
 package: "net/minecraftforge/common/util"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/common/util/Constants.NBT.html"
 sourceType: javadoc
 ---
 
 # Constants.NBT
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.util.Constants.NBT
+
+## Class signature
+
+```java
+public static class Constants.NBT extends java.lang.Object
+```
+
 ## Constructors
 
-- `public NBT()`
+- `NBT()`
 
-## Description
+## Fields
 
-NBT Tag type IDS, used when storing the nbt to disc, Should align with NBTBase.getId, table used in NBTBase.func_150283_g Main use is checking tag type in NBTTagCompound.func_150297_b(String, int)
+- `static int TAG_ANY_NUMERIC`
+- `static int TAG_BYTE`
+- `static int TAG_BYTE_ARRAY`
+- `static int TAG_COMPOUND`
+- `static int TAG_DOUBLE`
+- `static int TAG_END`
+- `static int TAG_FLOAT`
+- `static int TAG_INT`
+- `static int TAG_INT_ARRAY`
+- `static int TAG_LIST`
+- `static int TAG_LONG`
+- `static int TAG_SHORT`
+- `static int TAG_STRING`

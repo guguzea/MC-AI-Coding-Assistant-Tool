@@ -1,25 +1,29 @@
 ---
 title: "Tuple"
-description: "public class Tuple<A,B> extends java.lang.Object"
+description: "public class Tuple<A, B> extends java.lang.Object"
 package: "net/minecraft/util"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/util/Tuple.html"
 sourceType: javadoc
 ---
 
 # Tuple
 
+**Inheritance:** java.lang.Object → net.minecraft.util.Tuple<A, B>
+
 ## Class signature
 
 ```java
-public class Tuple<A,B> extends java.lang.Object
+public class Tuple<A, B> extends java.lang.Object
 ```
 
 ## Constructors
 
-- `public Tuple( A aIn, B bIn)`
+- `Tuple(A aIn, B bIn)`
 
 ## Methods
 
-- `public A getFirst()`
-- `public B getSecond()`
+- `A getFirst()`
+- `B getSecond()`

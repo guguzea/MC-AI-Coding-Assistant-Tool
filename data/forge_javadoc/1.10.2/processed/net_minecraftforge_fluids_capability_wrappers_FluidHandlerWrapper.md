@@ -1,16 +1,25 @@
 # FluidHandlerWrapper
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fluids.capability.wrappers.FluidHandlerWrapper
+
+## Class signature
+
+```java
+public class FluidHandlerWrapper extends java.lang.Object implements IFluidHandler
+```
+
 ## Constructors
 
-- `public FluidHandlerWrapper( IFluidHandler handler, EnumFacing side)`
+- `@Deprecated FluidHandlerWrapper(IFluidHandler handler, EnumFacing side)`
 
 ## Methods
 
-- `public IFluidTankProperties [] getTankProperties()`
-- `public int fill( FluidStack resource, boolean doFill)`
-- `public FluidStack drain( FluidStack resource, boolean doDrain)`
-- `public FluidStack drain(int maxDrain, boolean doDrain)`
+- `@Deprecated FluidStack drain(FluidStack resource, boolean doDrain)`
+- `@Deprecated FluidStack drain(int maxDrain, boolean doDrain)`
+- `@Deprecated int fill(FluidStack resource, boolean doFill)`
+- `@Deprecated IFluidTankProperties [] getTankProperties()`
 
-## Description
+## Fields
 
-Deprecated. will be removed along with IFluidHandler
+- `protected IFluidHandler handler`
+- `protected EnumFacing side`

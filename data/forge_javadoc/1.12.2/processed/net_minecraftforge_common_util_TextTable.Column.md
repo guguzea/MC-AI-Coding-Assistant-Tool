@@ -1,15 +1,23 @@
 # TextTable.Column
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.util.TextTable.Column
+
+## Class signature
+
+```java
+public static class TextTable.Column extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Column(java.lang.String header)`
-- `public Column(java.lang.String header, TextTable.Alignment alignment)`
+- `Column(java.lang.String header)`
+- `Column(java.lang.String header, TextTable.Alignment alignment)`
 
 ## Methods
 
-- `public java.lang.String formatHeader(java.lang.String padding)`
-- `public java.lang.String format(java.lang.String value, java.lang.String padding)`
-- `public java.lang.String getSeparator(char character)`
-- `public void fit(java.lang.String value)`
-- `public void resetWidth()`
-- `public int getWidth()`
+- `void fit(java.lang.String value)`
+- `java.lang.String format(java.lang.String value, java.lang.String padding)`
+- `java.lang.String formatHeader(java.lang.String padding)`
+- `java.lang.String getSeparator(char character)`
+- `int getWidth()`
+- `void resetWidth()`

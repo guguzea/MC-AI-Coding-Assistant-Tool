@@ -1,9 +1,15 @@
 # AdvancementList.Listener
 
+## Class signature
+
+```java
+public static interface AdvancementList.Listener
+```
+
 ## Methods
 
-- `void rootAdvancementAdded( Advancement advancementIn)`
-- `void rootAdvancementRemoved( Advancement advancementIn)`
-- `void nonRootAdvancementAdded( Advancement advancementIn)`
-- `void nonRootAdvancementRemoved( Advancement advancementIn)`
 - `void advancementsCleared()`
+- `void nonRootAdvancementAdded(Advancement advancementIn)`
+- `void nonRootAdvancementRemoved(Advancement advancementIn)`
+- `void rootAdvancementAdded(Advancement advancementIn)`
+- `void rootAdvancementRemoved(Advancement advancementIn)`

@@ -1865,16 +1865,28 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   expect("yarnMissingIndex", /却缺索引 idx_fields_official/, "schema v3 缺 official 索引 ⇒ convert_mapping 反查只能吐 intermediary");
   expect("yarnAbsSource", /yarn meta 含本机绝对路径/, "tracked 二进制被钉上本机盘符 ⇒ 换机器/换卷就分裂，且 diff 噪声永久化");
   expect("yarnNoSourceSha", /缺 sourceSha256/, "来源折成相对路径后没哈希 ⇒ 「这个库出自哪一份字节」不可核对");
-  expect("ledgerDrift", /manifest 条目数: 台账 60 ≠ 实扫 1/, "台账层没咬住假根 ⇒ 数字对账形同虚设");
+  // 生产侧台账条目数**从 G4 源码里读**（G4 无 main guard，import 即执行门本体 ⇒ 禁止 import，只能按文本取）。
+  // 这里原先写死 `台账 60`：⑤ 拆树把 entries 重签成 61，本锚点立刻以「匹配不上」的形式红，
+  // 且红得像是门坏了。硬钉的分母一浮动，锚点就得跟着浮动 —— 否则每次重签都要顺手改 harness，
+  // 而"顺手改 harness"正是本仓禁止的那种变绿路径。
+  const G4_SRC = readFileSync(fileURLToPath(new URL("./scripts/assert-index-consistency.mjs", import.meta.url)), "utf8");
+  const G4_ENTRIES = Number(/entries:\s*(\d+),\s*chunks:/.exec(G4_SRC)?.[1]);
+  assert.ok(
+    Number.isInteger(G4_ENTRIES) && G4_ENTRIES > 0,
+    `从 G4 源码读不到 LEDGER_SUM.entries（实得 ${G4_SRC.match(/entries:[^\n]*/)?.[0] ?? "无"}）⇒ 锚点不许退化成恒匹配`,
+  );
+  expect("ledgerDrift", new RegExp(`manifest 条目数: 台账 ${G4_ENTRIES} ≠ 实扫 1`), "台账层没咬住假根 ⇒ 数字对账形同虚设");
   assert.equal(runs.realRoot.status, 0, `G4 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
   assert.match(
     runs.realRoot.stdout,
-    /60 库 · Σchunks \d+ · Σembedded \d+ · sha256 全对账 · 孤儿 chunk 0[\s\S]*台账层已跑/,
+    new RegExp(`${G4_ENTRIES} 库 · Σchunks \\d+ · Σembedded \\d+ · sha256 全对账 · 孤儿 chunk 0[\\s\\S]*台账层已跑`),
     `真根少跑了层：\n${runs.realRoot.stdout}`,
   );
+  // 本行**不再重述**库数/chunks/embedded（那些数每重签一次就烂一次，且烂成"看起来像门说的"）：
+  // 直接把门自己那一行原样念出来，口径唯一。
   console.log(
-    "  §S4 G4 索引自洽门: 干净假根=0 / 真根=0（60 库 · Σchunks 36651 · Σembedded 27620 · sha256 全对 · 2 纯FTS + 7 空库 + 5 计数虚报全在台账）；" +
-      "投毒 16 记全红并点名：库缺失·未登记·计数漂移·sha 过期·fts 不同源·向量层缺口·向量层不可证明·孤儿 chunk·空库·残留·路径错档·yarn 计数·缺索引·二进制钉本机路径·来源哈希缺失·台账层",
+    `  §S4 G4 索引自洽门: 干净假根=0 / 真根=0 —— 门自报「${runs.realRoot.stdout.trim().split("\n")[0]}」；` +
+      `判据层从门源码取台账 entries=${G4_ENTRIES}；投毒 16 记全红并点名：库缺失·未登记·计数漂移·sha 过期·fts 不同源·向量层缺口·向量层不可证明·孤儿 chunk·空库·残留·路径错档·yarn 计数·缺索引·二进制钉本机路径·来源哈希缺失·台账层`,
   );
 }
 
@@ -2021,6 +2033,25 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     // 2026-09-21 缺页普查（F1）：forge 语料的期望页面清单必须来自上游 search_index，缺页即红；
     // 空清单 / 残表 / 导航来源 / 白名单外孤儿页都不得空转放行。
     "./scripts/assert-upstream-chapters.mjs",
+    // 2026-09-21 链位收口：S20（scripts 写盘必须走 write-guard）终于挂上第 8 步链 ——
+    // 此前只内联在 test-core.mjs 的 npm test 链上，改 scripts 的人按 AGENTS.md:387 跑本链也碰不到它，
+    // 于是 assert-skill-yarn-attest / assert-skill-mappings-key 等门静默带着裸写盘进了库。
+    "./scripts/assert-script-write-guard.mjs",
+    // 2026-09-21 链位收口：恒真形状闸（R-4，防「测试自退化」）同病同修 —— 它此前也只在 npm test 链上。
+    "./scripts/assert-test-harness.mjs",
+    // 2026-09-22 ②：forge_javadoc 出处可核 + 单档 build 唯一 + 落盘形状 == URL 包 + 文件名 == URL 类名。
+    // 真跑腿按门内 DEFAULT_CEILING 的「存量脏页只许减不许增」口径放行（错档/锚点垃圾页待用户确认删除）；
+    // 判据腿在下方 selftest 数组里，两条都挂默认链 ⇒ 既核数据也核判据死活。
+    "./scripts/assert-javadoc-build-provenance.mjs",
+    // 2026-09-22 裁定④：基岩「版本更新说明」体裁 —— 真跑核在盘 index-l0 与生产者判据逐条相等，
+    // 并核 dist 里确实带着降权（改了 src 不 build ⇒ 运行时没降权，这条会红）。
+    "./scripts/assert-bedrock-genre-demote.mjs",
+    // 2026-09-22 裁定④（members 接线）：scriptapi 的成员条数必须挂在独立计数源上 ——
+    // typed.decls ⇄ index-l0 ⇄ 页面三方计数、逐页四口径、每页 sha 对账、来源留痕。
+    "./scripts/assert-bedrock-scriptapi-members.mjs",
+    // 2026-09-22 裁定③「提交 + 做个门看住它」：forge_javadoc 的孤儿对账/删除留痕记录必须自洽、
+    // 未过期、点名的页双边确实不在盘上（报告会被下次抓取覆盖 ⇒ 删除本身另存 _orphan-pruned.json）。
+    "./scripts/assert-javadoc-orphan-record.mjs",
   ]) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE], {
@@ -2056,6 +2087,20 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     "./scripts/assert-verbatim-support.mjs",
     // 2026-09-21 F1：上游清单判据的自证（缺页 / 缺首页 / 空清单 / 残表 / 导航来源必须红）。
     "./scripts/assert-upstream-chapters.mjs",
+    // 2026-09-21 链位收口：S20 判据的自证（裸写盘 / 未 import guard / 异步写盘 / 豁免依据失效必须当场红）。
+    "./scripts/assert-script-write-guard.mjs",
+    // 2026-09-22 ②：出处/形状判据的自证（缺 source / 锚点垃圾 / 错档 / 混 build / raw 下非 .md 残留 /
+    // 整版无正文率超阈 / 天花板参数失效 / 碰撞后缀被误判 ⇒ 各例都必须当场红，且红在该当的原因上）。
+    "./scripts/assert-javadoc-build-provenance.mjs",
+    // 2026-09-22 裁定④：基岩「版本更新说明」= 打标签 + 检索降权（不删页、不拉黑）。真跑腿核
+    // 三方 tag 拼写一致（生产者 / src / dist）+ 在盘索引与生产者判据逐条相等 + 降权只重排不过滤。
+    "./scripts/assert-bedrock-genre-demote.mjs",
+    // 2026-09-22 裁定④（members 接线）：判据⑦的稳定计数源对账 —— 计数掉一条 / label 连不上 /
+    // 成员小节被截断或降级 / 源文件留痕缺失，各必须当场红（17 例夹具 + 干净正对照）。
+    "./scripts/assert-bedrock-scriptapi-members.mjs",
+    // 2026-09-22 裁定③：孤儿记录判据的自证（版本错档 / 记录过期 / 点名的页还在盘上 /
+    // 单边删只剩镜像 / 留痕缺时间戳 / 既没对账也没失败记账，各必须当场红）。
+    "./scripts/assert-javadoc-orphan-record.mjs",
   ]) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE, "--selftest"], {
@@ -2150,7 +2195,8 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
  * 历史包袱是盘上 1,490 个带空格括号后缀的 .md（旧自动改名产物，删除归数据拥有者）。
  */
 {
-  const { planClassWrites } = await import("./scripts/fetch-forge-javadoc.js");
+  const jd = await import("./scripts/fetch-forge-javadoc.js");
+  const { planClassWrites } = jd;
   const fails = [];
   const push = (name, fn) => {
     try {
@@ -2196,17 +2242,118 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     const lower = r.writes.map((w) => w.fileName.toLowerCase());
     assert.equal(new Set(lower).size, 2, "仍会在不敏感卷上合并：" + r.writes.map((w) => w.fileName).join(","));
   });
-  push('抓取器被 import 时不启动联网爬取', () => {
-    // 三个抓取器都在顶层读 argv 并带副作用（爬网 / mkdir / process.exit）。
+  push('抓取器被 import 时不启动联网爬取 / 索引器被 import 时不重建索引', () => {
+    // 这些脚本都在顶层读 argv 且带副作用（爬网 / mkdir / 写 index-l0-2 / process.exit）。
     // 本文件就 import 其中一个 ⇒ 没有直跑守卫时，npm test 等于真爬外网并写 data/。
-    for (const f of ["fetch-forge-javadoc.js", "fetch-fabric-wiki.js", "fetch-liteloader-wiki.js"]) {
+    // 清单口径（不是"随便挑四个"）：`scripts/**` 下**顶层带副作用的生产者脚本**逐个登记。
+    // 前三个是本文件直接 import 的（没守卫 ⇒ npm test 真爬外网）；forge-javadoc-indexer.js 目前没人 import，
+    // 但它一被 import 就会在测试进程里重写六档 index-l0/1/2.json（覆盖刚落盘、尚未过一致性判据的产物），
+    // 2026-09-22 补抓那轮顺着流水线核到时它正是"裸顶层跑完"的形态 ⇒ 补了守卫并要求在此挂住。
+    for (const f of ["fetch-forge-javadoc.js", "fetch-fabric-wiki.js", "fetch-liteloader-wiki.js", "forge-javadoc-indexer.js"]) {
       const src = readFileSync(jpath(dirname(fileURLToPath(import.meta.url)), "scripts", f), "utf8");
-      assert.match(src, /const invokedDirectly =/, `${f} 直跑守卫被摘掉 ⇒ import 它就等于 npm test 真爬外网/写 data/`);
+      assert.match(src, /const invokedDirectly =/, `${f} 直跑守卫被摘掉 ⇒ import 它就等于 npm test 真爬外网/写真 data/`);
       assert.ok(!/^main\(\)/m.test(src), `${f} 又出现裸的顶层 main() 调用 ⇒ 守卫形同虚设`);
+      assert.ok(!/^runAll\(\)/m.test(src), `${f} 又出现裸的顶层 runAll() 调用 ⇒ 守卫形同虚设`);
     }
   });
+  push("孤儿真删必须留下可核对的凭据（_orphan-pruned.json 的形状）", () => {
+    const { orphanPrunedRecord, PRODUCER_REV: rev } = jd;
+    const rec = orphanPrunedRecord("1.12.2", ["net/A.md", "net/B.md"]);
+    assert.equal(rec.version, "1.12.2", `留痕的档位字段错：${rec.version}`);
+    assert.equal(rec.producerRev, rev, "留痕没带当前生产者修订 ⇒ 判据门「记录过期」那条腿会空转");
+    assert.equal(rec.count, rec.files.length, `count 与 files 自相矛盾：${rec.count} vs ${rec.files.length}`);
+    assert.ok(!Number.isNaN(Date.parse(rec.prunedAt)), `prunedAt 不是可解析时间：${JSON.stringify(rec.prunedAt)}`);
+    assert.deepEqual(rec.files, ["net/A.md", "net/B.md"], "点名内容被改动 ⇒ 删除记录不再等于执行计划");
+    assert.equal(orphanPrunedRecord("1.7.10", []).count, 0, "空清单的 count 必须是 0（缺字段 = 门的自洽判据判不出）");
+  });
+  push("旧式 javadoc 表格必须解析得出成员（2026-09-22 事故回归）", () => {
+    const { parseClassPage, htmlToMarkdown } = jd;
+    // 形状取自实抓：skmedix ForgeJavaDocs（jdk8 javadoc）—— 成员在 `table.memberSummary` 的
+    // colFirst（修饰符与类型）+ colLast（`<code><span class="memberNameLink">名</span>(参数)</code>`），
+    // 类声明在 `<hr><br><pre>public class …`。旧实现只匹配新式 `<pre class="memberSignatures">`，
+    // 对这份 HTML 解析出 0 成员，于是整批 `--force` 把 1.8 万页正文刷成空壳（已回滚）。
+    const old = [
+      '<div class="description"><ul class="blockList"><li class="blockList">',
+      '<dl><dt>All Implemented Interfaces:</dt><dd><a href="../Foo.html">Bar</a>&lt;<a href="../X.html">X</a>&gt;</dd></dl>',
+      '<hr><br><pre>public class <span class="typeNameLabel">Block</span> extends <a href="../I.html">Impl</a>&lt;<a href="../X.html">X</a>&gt;</pre>',
+      '<div class="block">Some prose.</div></li></ul></div>',
+      '<ul class="inheritance"><li>java.lang.Object</li><li><ul class="inheritance"><li><a href="../I.html">Impl</a></li><li><ul class="inheritance"><li>net.minecraft.Block</li></ul></li></ul></li></ul>',
+      '<h3>Constructor Summary</h3><table class="memberSummary"><tr><th class="colOne">Constructor</th></tr>',
+      '<tr><td class="colOne"><code><span class="memberNameLink"><a href="#">Block</a></span>(<a href="#">Material</a>&nbsp;m)</code>&nbsp;</td></tr></table>',
+      '<h3>Field Summary</h3><table class="memberSummary"><tr><th class="colFirst">Type</th><th>Field</th></tr>',
+      '<tr><td class="colFirst"><code>static <a href="#">Map</a>&lt;<a href="#">String</a>&gt;</code></td><td class="colLast"><code><span class="memberNameLink">LOOKUP</span></code></td></tr></table>',
+      '<h3>Method Summary</h3><table class="memberSummary"><tr><th class="colFirst">Modifier and Type</th><th>Method</th></tr>',
+      '<tr><td class="colFirst"><code>protected static void</code></td><td class="colLast"><code><span class="memberNameLink"><a href="#">add</a></span>(<a href="#">List</a>&lt;<a href="#">BB</a>&gt;&nbsp;boxes)</code><br><div class="block">Adds.</div></td></tr>',
+      '<tr><td class="colFirst"><code>void</code></td><td class="colLast"><code><span class="memberNameLink"><a href="#">gone</a></span>()</code><br><div class="block"><span class="deprecatedLabel">Deprecated.</span></div></td></tr>',
+      '</table>',
+    ].join("\n");
+    const p = parseClassPage(old);
+    assert.equal(p.classSig, "public class Block extends Impl<X>", `类声明解析不符：${p.classSig}`);
+    assert.equal(p.constructors.length, 1, `构造子没解析出来：${JSON.stringify(p.constructors)}`);
+    assert.equal(p.fields.length, 1, `字段没解析出来：${JSON.stringify(p.fields)}`);
+    assert.equal(p.fields[0].type, "static Map<String>", `字段类型折叠不符：${p.fields[0].type}`);
+    assert.equal(p.methods.length, 2, `方法数不符：${JSON.stringify(p.methods.map((m) => m.sig))}`);
+    assert.equal(p.methods[0].sig, "protected static void add(List<BB> boxes)", `签名形状不符：${p.methods[0].sig}`);
+    assert.equal(p.methods[1].sig, "@Deprecated void gone()", `废弃标记没落进签名：${p.methods[1].sig}`);
+    assert.equal(p.methods[1].desc, "", "「Deprecated.」不该再复读进描述位");
+    assert.equal(p.inheritance, "java.lang.Object → Impl → net.minecraft.Block", `继承链不符：${p.inheritance}`);
+    // 反证（2026-09-22 全量比对抓到的真实回归）：继承链的 `</ul>` 后面紧挨着 `<li class="blockList">`
+    // （类注释 / 类声明 / Summary 表）。旧实现"从外层切 6000 字收不含嵌套 ul 的 li"会把这些
+    // 兄弟 li 一并并进 Inheritance —— 实测 14704/16423 页中招，个别页连类声明都被吞掉（丢 ```java 块）。
+    const noisyChain = '<ul class="inheritance"><li>java.lang.Object</li><li><ul class="inheritance">'
+      + '<li><a href="../I.html">Impl</a></li><li><ul class="inheritance"><li>net.minecraft.Block</li></ul></li></ul></li></ul>'
+      + '<li class="blockList"><dl><dt>All Implemented Interfaces:</dt><dd>IFoo, IBar</dd></dl></li>'
+      + '<li class="blockList"><h3>Constructor Summary</h3></li>'
+      + '<hr><br><pre>@Deprecated\npublic class <span class="typeNameLabel">Block</span> extends <a href="../I.html">Impl</a></pre>';
+    const pn = parseClassPage(noisyChain);
+    assert.equal(pn.inheritance, "java.lang.Object → Impl → net.minecraft.Block",
+      `继承链越界：把 Summary / All Implemented Interfaces 并进来了 ⇒ ${pn.inheritance.slice(0, 120)}`);
+    assert.equal(pn.classSig, "public class Block extends Impl",
+      `类声明被吞 ⇒ classSig=${JSON.stringify(pn.classSig)}（@Deprecated 前导行必须被跳过，不是被吃掉）`);
+    const md = htmlToMarkdown("Block", "net/minecraft", p, "1.12.2", "https://x/Block.html", "14.23.5.2859");
+    for (const h of ["## Class signature", "## Constructors", "## Methods", "## Fields"]) {
+      assert.ok(md.includes(h), `渲染缺分节 ${h}`);
+    }
+    // 反证 A：新式（jdk 9+）页面在这份解析器下抽出 0 成员 —— 页面级判据**抓不到**它
+    // （classSig 抽得出、memberNameLink 不存在），所以批量级判据必须是独立的一条腿。
+    const modern = '<pre class="classSignatures">public class Foo extends Bar</pre><pre class="methodSignature">void a()</pre>';
+    const pm = parseClassPage(modern);
+    assert.equal(pm.constructors.length + pm.methods.length + pm.fields.length + pm.nested.length, 0,
+      "新式页面竟然解析出成员 ⇒ 两条判据的前提都没了");
+    assert.equal(pm.memberNameLinks, 0, "新式页面里不该有旧式 memberNameLink");
+    assert.ok(!jd.isUnreadableParse(pm), "页面级判据按「0 成员 && 0 类声明」写 ⇒ 新式页正好两腿都不成立，事故会静默写盘");
+    assert.ok(jd.ZERO_MEMBER_RATIO_MAX > 0 && jd.ZERO_MEMBER_RATIO_MAX < 0.1,
+      `批量级红线 ${jd.ZERO_MEMBER_RATIO_MAX} 离真·空类率（盘上实测 ≈1.5%）没余量，或松到抓不住 98% 那次的事故`);
+    // 反证 B：类声明抽得出、HTML 却声称有成员（memberNameLink）而抽出 0 个 ⇒ 页面级判据必须成立。
+    // 夹具特意带上 classSig，否则抓它的会是「连类声明都没有」那条腿，memberNameLink 这条腿等于没测。
+    const poisoned = '<hr><br><pre>public class <span class="typeNameLabel">Foo</span></pre>'
+      + '<h3>Method Summary</h3><table class="memberSummary"><tr><th class="colFirst">Type</th></tr>'
+      + '<tr><td class="colFirst"><code>void</code></td><td class="colLast"><code><span class="memberNameLink"></span></code></td></tr></table>';
+    const pp = parseClassPage(poisoned);
+    assert.ok(pp.classSig, "夹具失效：这页应该能抽出类声明，不然测的是另一条腿");
+    assert.equal(pp.methods.length, 0, "夹具失效：这行本该抽不出方法名");
+    assert.equal(pp.memberNameLinks, 1, "memberNameLink 计数没跟上 ⇒ 「HTML 声称有成员」这条腿是空的");
+    assert.ok(jd.isUnreadableParse(pp), "表格声称有成员却抽出 0 个 ⇒ 正是 2026-09-22 的形状，必须判为读不懂");
+    // 真·空类（marker interface）两腿都不成立 ⇒ 放行，否则整批重抓会把 ~1.5% 合法空页记成拒绝覆盖。
+    assert.ok(!jd.isUnreadableParse(parseClassPage('<hr><br><pre>public interface <span class="typeNameLabel">IMarker</span> extends <a href="#">IForgeEventType</a></pre>')),
+      "无成员、无 memberNameLink 的接口被误判为读不懂 ⇒ --force 会把合法空页全挡掉");
+    // 注解页（@interface）：成员在「Required/Optional Element Summary」表里，且类声明**前面还有注解行**
+    // （`@Retention(…) @Target(…) public @interface API`）。两个形状都真踩过：Element 表不认 ⇒ 六档共 30 篇
+    // 注解页被自己的守卫挡下；压空格把 `PACKAGE) public` 的边界吃掉 ⇒ 类声明也丢。
+    const anno = '<pre>@Retention(value=RUNTIME)\n @Target(value=PACKAGE)\npublic @interface <span class="memberNameLabel">API</span></pre>'
+      + '<h3>Required Element Summary</h3><table class="memberSummary"><tr><th class="colFirst">Modifier and Type</th></tr>'
+      + '<tr><td class="colFirst"><code>java.lang.String</code></td><td class="colLast"><code><span class="memberNameLink"><a href="#">owner</a></span></code></td></tr></table>';
+    const pa = parseClassPage(anno);
+    assert.equal(pa.classSig, "public @interface API", `注解页类声明不符：${pa.classSig}`);
+    assert.equal((pa.elements ?? []).length, 1, `注解元素没解析出来：${JSON.stringify(pa.elements)}`);
+    assert.ok(!jd.isUnreadableParse(pa), "注解页被判成「读不懂」⇒ 守卫会把好正文挡住，整批重抓漏 30 篇");
+    assert.ok(htmlToMarkdown("API", "cpw/mods/fml/common", pa, "1.7.10", "https://x/API.html", "10.13.4.1614").includes("## Elements"),
+      "渲染缺 ## Elements 分节 ⇒ 与 HEAD 语料的注解页体裁不一致");
+    assert.equal(parseClassPage("<pre>@Override\npublic void interfaceMethod()</pre>").classSig, "",
+      "成员详情的 <pre>（带 @Override / 方法名含 interface）被当成类声明");
+  });
   assert.equal(fails.length, 0, "planClassWrites 回归：\n" + fails.join("\n"));
-  console.log("  S9 javadoc 冲突计划: 4 组负例全过（同 URL 去重 / 异 URL 确定后缀 / 大小写共存 / import 不触发爬取）");
+  console.log("  S9 javadoc 冲突计划 + 解析器: 5 组负例全过（同 URL 去重 / 异 URL 确定后缀 / 大小写共存 / import 不触发爬取 / 旧式表格 + 注解元素 + 判据⑥两条腿）");
 }
 // ── #17 yarn 名存在性门（assert-skill-yarn-attest）：挂载 + 证明它真会红 ──────
 // 2026-09-20 用户裁定把 yarn-mappings.sqlite 升格为「类名存在性」合法来源并配门。
@@ -2241,5 +2388,202 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   assert.notEqual(empty.status, 0, "零输入被当通过 ⇒ 清空清单就能让门静默失效");
 
   console.log("  #17 yarn 名存在性门: 自检 / 真清单绿 / 坏清单红 / 空清单红 四项挂载生效");
+}
+// ── #18 query_upstream_releases（A2 · P0-1 上游可用性 + P0-2 分层输出）──────────
+// 判据分三条腿：① 纯函数（白名单 / slug 形状 / 版本归属规则 / 降序）离线可投毒；
+// ② CLI 拒绝路径不联网也必须拒绝（MISSING_VERSION / MISSING_SLUG，rc=1 + 信封 success:false）；
+// ③ 「上游没有」与「没查到」不得塌成同一个值 —— 那是本工具存在的理由，也是最容易被改回去的地方。
+{
+  const up = await import("./dist/upstream/releases.js");
+  const {
+    assertAllowedUpstreamUrl, isSafeSlug, parseMavenVersions, parseMetaJson,
+    mcMatchRule, compareVersionDesc, UPSTREAM_ENDPOINTS, UPSTREAM_SOURCES, queryUpstreamReleases,
+  } = up;
+  const fails = [];
+  const t = async (name, fn) => { try { await fn(); } catch (e) { fails.push(`${name}: ${e.message}`); } };
+
+  await t("主机白名单：只收 https 与自家 7 个 host", () => {
+    for (const s of UPSTREAM_SOURCES) if (s !== "modrinth") assertAllowedUpstreamUrl(UPSTREAM_ENDPOINTS[s].build("1.20.1", undefined));
+    assert.throws(() => assertAllowedUpstreamUrl("http://maven.minecraftforge.net/x"), /https/);
+    assert.throws(() => assertAllowedUpstreamUrl("https://evil.example.com/x"), /白名单/);
+    assert.throws(() => assertAllowedUpstreamUrl("https://maven.minecraftforge.net.evil.com/x"), /白名单/);
+    // 重定向落点：parchment 的托管后端已登记；其余主机（含内网回环）一律拒绝，且不因「入口在白名单」而放行
+    assertAllowedUpstreamUrl("https://ldtteam.jfrog.io/artifactory/parchmentmc-public/x", true);
+    assert.throws(() => assertAllowedUpstreamUrl("https://ldtteam.jfrog.io/x"), /白名单/, "落点白名单不得反向放宽入口白名单");
+    assert.throws(() => assertAllowedUpstreamUrl("https://169.254.169.254/latest/meta-data/", true), /白名单/);
+    assert.throws(() => assertAllowedUpstreamUrl("https://127.0.0.1:8787/x", true), /白名单/);
+  });
+
+  await t("slug 形状校验挡在拼 URL 之前（SSRF / 路径穿越）", () => {
+    assert.equal(isSafeSlug("fabric-api"), true);
+    for (const bad of ["../etc", "a/b", "A-Api", "", "-lead", "x?".concat("y"), "z#frag", "a".repeat(65)]) {
+      assert.equal(isSafeSlug(bad), false, `应拒绝 ${JSON.stringify(bad)}`);
+    }
+  });
+
+  await t("maven-metadata 解析不吃嵌套标签", () => {
+    const xml = `<metadata><groupId>n</groupId><artifactId>forge</artifactId>
+<versioning><latest>1.20.1-47.4.23</latest><release>1.20.1-47.4.23</release>
+<versions><version>1.20.1-47.4.22</version><version>1.20.1-47.4.23</version></versions>
+<lastUpdated>20260919195254</lastUpdated></versioning></metadata>`;
+    const rows = parseMavenVersions(xml);
+    assert.deepEqual(rows.map((r) => r.version), ["1.20.1-47.4.22", "1.20.1-47.4.23"]);
+    assert.equal(rows[0].lastUpdated, "20260919195254");
+    assert.deepEqual(parseMavenVersions("<html>502 Bad Gateway</html>").length, 0, "HTML 壳必须解析成 0 条，交给上层报 UPSTREAM_PARSE");
+  });
+
+  await t("meta/modrinth 三种形状各自归一", () => {
+    const loader = parseMetaJson("fabric-loader", [{ loader: { version: "0.15.11", maven: "net.fabricmc:fabric-loader:0.15.11", stable: true }, intermappings: {} }, { junk: 1 }]);
+    assert.deepEqual(loader, [{ version: "0.15.11", maven: "net.fabricmc:fabric-loader:0.15.11", stable: true }]);
+    const yarn = parseMetaJson("fabric-yarn", [{ version: "1.21.4+build.8", maven: "net.fabricmc:yarn:1.21.4+build.8", stable: false }]);
+    assert.equal(yarn[0].stable, false);
+    const mr = parseMetaJson("modrinth", [{ id: "v1", version_number: "0.98.0", game_versions: ["1.20", "1.20.1"], loaders: ["fabric"], filename: "x.jar" }]);
+    assert.deepEqual(mr[0].gameVersions, ["1.20", "1.20.1"]);
+    assert.equal(parseMetaJson("modrinth", []).length, 0);
+  });
+
+  // 反证腿：MC 1.21.1 的 NeoForge 编号是 21.1.x（实测 maven 上 244 条，scaffold 钉 21.1.248）。
+  // 旧实现按 `${mc}-` 前缀过滤 ⇒ 244 条全被滤掉 ⇒ available:false，把「上游有 244 个 build」报成
+  // 「上游没有 1.21.1」。下面第一句就是在钉「朴素规则确实错」，第二句钉新规则对。
+  await t("版本归属规则：neoforge 去掉前导 1.，且不得反向放宽", () => {
+    const naive = (v, mc) => v.startsWith(`${mc}-`) || v === mc;
+    assert.equal(naive("21.1.248", "1.21.1"), false, "对照失效：朴素规则若不再误判，本反证就该换成别的缺陷锚点");
+    assert.equal(mcMatchRule("neoforge", "1.21.1").test({ version: "21.1.248" }), true);
+    assert.equal(mcMatchRule("neoforge", "1.21.1").test({ version: "21.4.100" }), false, "跨 minor 不得放行");
+    assert.equal(mcMatchRule("neoforge", "26.1").test({ version: "26.1.0" }), true, "MC 26.x 无前导 1. 也要能推前缀");
+    assert.equal(mcMatchRule("neoforge", "26.1").test({ version: "26.3.0-beta" }), false);
+    assert.equal(mcMatchRule("forge", "1.20.1").test({ version: "1.20.1-47.4.23" }), true);
+    // parchment 与 forge 不是一套编号：版本串是日期（2023.09.03 / …-nightly-SNAPSHOT），
+    // MC 版本在 artifact 名里 ⇒ 与 forge 共用 "${mc}-" 前缀会把整表滤空（实测 parchment-data 路径还是 404）。
+    assert.equal(mcMatchRule("parchment", "1.20.1").test({ version: "2023.09.03" }), true);
+    assert.equal(UPSTREAM_ENDPOINTS.parchment.needsMc, true, "parchment 不带 MC 就拼不出 artifact 名");
+    assert.match(UPSTREAM_ENDPOINTS.parchment.build("1.20.1", undefined), /\/parchment-1\.20\.1\/maven-metadata\.xml$/);
+    assert.equal(mcMatchRule("modrinth", "1.20.1").test({ version: "0.98.0", gameVersions: ["1.20.1"] }), true);
+    assert.equal(mcMatchRule("modrinth", "1.20.1").test({ version: "0.98.0", gameVersions: ["1.21"] }), false);
+    assert.equal(mcMatchRule("fabric-yarn", "1.21.4").test({ version: "1.14.4+build.3" }), true, "meta 端点已按 MC 分列 ⇒ 整表都属于它");
+  });
+
+  await t("降序按数值段比，不是字典序也不是上游原地顺序", () => {
+    const vs = ["21.1.9", "21.1.249", "21.1.251", "21.1.100"].sort(compareVersionDesc);
+    assert.deepEqual(vs, ["21.1.251", "21.1.249", "21.1.100", "21.1.9"]);
+    assert.ok(compareVersionDesc("1.21.4+build.8", "1.21.4+build.10") > 0, "build.10 应大于 build.8");
+    // 正式版要压过同号的 nightly / beta，否则 latest 会报成一个预发布（parchment 每条都有 nightly 兄弟）。
+    // 比较器是 Array.sort 语义：**负数 = 前者排前面**（与上一行 build.8/build.10 同口径）。
+    assert.ok(compareVersionDesc("2023.09.03", "2023.09.03-nightly-SNAPSHOT") < 0, "正式版应排在 nightly 前");
+    assert.deepEqual(["2023.09.03-nightly-SNAPSHOT", "2023.09.03"].sort(compareVersionDesc), ["2023.09.03", "2023.09.03-nightly-SNAPSHOT"]);
+    assert.equal(compareVersionDesc("1.20.1", "1.20.1"), 0);
+  });
+
+  // ② 拒绝路径离线可验：这三条都不该碰网络。
+  await t("入参不合法时不发请求，且三态不塌", async () => {
+    const noVer = await queryUpstreamReleases({ source: "fabric-loader" });
+    assert.equal(noVer.ok, false);
+    assert.equal(noVer.error?.code, "MISSING_VERSION");
+    const badSlug = await queryUpstreamReleases({ source: "modrinth", slug: "../etc" });
+    assert.equal(badSlug.error?.code, "MISSING_SLUG");
+    const unknown = await queryUpstreamReleases({ source: "sponge" });
+    assert.equal(unknown.error?.code, "UNKNOWN_SOURCE");
+    // parchment 的 artifact 名里就带 MC 版本 ⇒ 少版本是「拼不出 URL」，不是「上游没有」
+    const noVerParchment = await queryUpstreamReleases({ source: "parchment" });
+    assert.equal(noVerParchment.error?.code, "MISSING_VERSION");
+    for (const r of [noVer, badSlug, unknown, noVerParchment]) {
+      assert.equal(r.ok, false, "拒绝路径必须 ok:false（否则 CLI 退出码会说没问题）");
+      assert.equal(r.releases.length, 0);
+    }
+  });
+
+  const CLI = jpath(import.meta.dirname, "dist", "cli.js");
+  const cli = (args) => spawnSync(process.execPath, [CLI, ...args], { encoding: "utf8", windowsHide: true, timeout: 60_000 });
+  await t("CLI 拒绝路径：rc=1 + 信封 success:false + 错误码原样", () => {
+    const r = cli(["query_upstream_releases", "--source=fabric-loader"]);
+    assert.notEqual(r.status, 0, "缺 minecraftVersion 却 rc=0 ⇒ 退出码在撒谎");
+    const env = JSON.parse(r.stdout);
+    assert.equal(env.success, false);
+    assert.equal(env.result.error.code, "MISSING_VERSION");
+  });
+
+  await t("注册面：outputSchema 与 structuredContent 同层，indexToolSchemas 有镜像", async () => {
+    const reg = await import("./dist/tool-registry.js");
+    const entry = reg.indexToolSchemas.find((e) => e.name === "query_upstream_releases");
+    assert.ok(entry, "indexToolSchemas 缺镜像 ⇒ CLI list-tools 少一个工具");
+    assert.ok(reg.queryUpstreamReleasesOutputSchema, "outputSchema 常量被摘掉 ⇒ structuredContent 不再被校验");
+    assert.deepEqual(Object.keys(reg.queryUpstreamReleasesSchema.shape).sort(), ["limit", "minecraftVersion", "slug", "source"]);
+    assert.equal("project" in reg.queryUpstreamReleasesSchema.shape, false, "--project 是 CLI 保留别名，参数名不得回退成 project");
+  });
+
+  if (fails.length) assert.fail(`#18 上游可用性判据：\n  - ${fails.join("\n  - ")}`);
+  console.log("  #18 query_upstream_releases: 白名单/slug/解析/版本归属/降序/拒绝路径/注册面 7 组判据 + neoforge 前缀反证钉住");
+}
+// ── #19 基岩 scriptapi 的「大小写碰撞 → 静默覆盖」防腿（A3 收口）───────────────
+// 实测缺陷：@minecraft/server 的 d.ts 里 `System`(class) 与 `system`(const) 成对存在，
+// 按 name+".md" 直写在 NTFS 上后者覆盖前者 ⇒ 盘上 622 个正文、索引 624 条，且丢的是两页 class。
+// 这里把「防覆盖计划」和「索引剪枝」两件事各钉一组，全部离线（临时目录），不联网、不动 data/。
+{
+  const fails = [];
+  const t = async (name, fn) => { try { await fn(); } catch (e) { fails.push(`${name}: ${e.message}`); } };
+  const api = await import("./scripts/fetch-bedrock-script-api.mjs");
+  const corpus = await import("./scripts/_lib/bedrock-corpus.mjs");
+
+  await t("planScriptApiWrites：碰撞者拿后缀，两条都保住", () => {
+    const { writes, conflicts } = api.planScriptApiWrites([
+      { name: "System", kind: "class" }, { name: "system", kind: "const" },
+      { name: "World", kind: "class" }, { name: "world", kind: "const" },
+      { name: "Block", kind: "class" },
+    ]);
+    assert.equal(writes.length, 5, "一条都不许丢");
+    assert.equal(conflicts.length, 2, JSON.stringify(conflicts));
+    const lower = writes.map((w) => w.fileName.toLowerCase());
+    assert.equal(new Set(lower).size, 5, "大小写不敏感卷上仍会互相覆盖：" + lower.join(","));
+    assert.equal(writes[0].fileName, "System.md", "首条不得被改名（否则每次跑批都在换 id）");
+    assert.match(writes[1].fileName, /^system~[0-9a-f]{6}\.md$/);
+  });
+
+  // 反证腿：碰撞处理若被改回「后来者直接覆盖」，这里必须红 —— 所以判据写成性质（一条都不丢 +
+  // 大小写不敏感互不相同），而不是「某种输入会抛」（抛是函数自身的不变量自证，正常输入到不了）。
+  await t("planScriptApiWrites：任意大小写变体与重复声明都不得丢页", () => {
+    const adversarial = [
+      { name: "Foo", kind: "const" }, { name: "foo", kind: "const" }, { name: "FOO", kind: "const" },
+      { name: "Foo", kind: "const" }, { name: "Bar", kind: "class" }, { name: "bar", kind: "interface" },
+      { name: "bar", kind: "interface" }, { name: "baz", kind: "enum" },
+    ];
+    const { writes } = api.planScriptApiWrites(adversarial);
+    assert.equal(writes.length, adversarial.length, "一条都不许被静默折叠");
+    assert.equal(new Set(writes.map((w) => w.fileName.toLowerCase())).size, adversarial.length,
+      "大小写不敏感地仍互相覆盖：" + writes.map((w) => w.fileName).join(","));
+  });
+
+  await t("planScriptApiWrites 对真实语料可跑（后缀确定性）", () => {
+    // 2026-09-21 拆树：scriptapi 语料（含 typed JSON）从 bedrock-docs 挪到独立树 bedrock-scriptapi。
+    // 判据本身不变（真实 624 声明可跑 + 碰撞对恰 2 组 + 后缀确定性），只跟着数据改读取路径。
+    const typed = JSON.parse(readFileSync(jpath(import.meta.dirname, "..", "data", "bedrock_stable", "bedrock-scriptapi", "stable", "scriptapi-typed.json"), "utf8"));
+    const { writes, conflicts } = api.planScriptApiWrites(typed.decls);
+    assert.equal(writes.length, typed.decls.length);
+    assert.equal(conflicts.length, 2, `真实 d.ts 的碰撞对实测 2 组，实得 ${conflicts.length}`);
+    assert.equal(new Set(writes.map((w) => w.fileName.toLowerCase())).size, writes.length);
+  });
+
+  await t("pruneIndexToDisk：只剪本命名空间里正文真不存在的条目", () => {
+    const dir = jpath(GATE_SCRATCH, "prune-case");
+    rmSync(dir, { recursive: true, force: true });
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(jpath(dir, "System.md"), "class page", "utf8");
+    const entries = [
+      { id: "stable/scriptapi/System" },   // 正文在（大小写一致）⇒ 留
+      { id: "stable/scriptapi/system" },   // 盘上真名是 System.md ⇒ NTFS 会误指到 class 页 ⇒ 剪
+      { id: "stable/molang-syntax" },      // 别的命名空间 ⇒ 原样透传，本函数无权剪
+    ];
+    const { kept, pruned } = corpus.pruneIndexToDisk(entries, "stable/scriptapi/", dir);
+    assert.deepEqual(pruned.map((p) => p.id), ["stable/scriptapi/system"], JSON.stringify(pruned));
+    assert.deepEqual(kept.map((e) => e.id), ["stable/scriptapi/System", "stable/molang-syntax"]);
+  });
+
+  await t("pruneIndexToDisk：目录空/不存在时不得清空索引", () => {
+    const r = corpus.pruneIndexToDisk([{ id: "stable/scriptapi/A" }], "stable/scriptapi/", jpath(GATE_SCRATCH, "no-such-dir"));
+    assert.equal(r.pruned.length, 0, "目录取不到就剪 ⇒ 一次读盘失败能清空整片索引");
+    assert.equal(r.kept.length, 1);
+  });
+
+  if (fails.length) assert.fail(`#19 基岩 scriptapi 防覆盖判据：\n  - ${fails.join("\n  - ")}`);
+  console.log("  #19 scriptapi 大小写碰撞 / 索引剪枝: 5 组判据（含真实 624 声明的可跑性与后缀确定性）");
 }
 console.log("script helper regression tests passed");

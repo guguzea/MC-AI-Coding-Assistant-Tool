@@ -1,26 +1,28 @@
 # EntityCow
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.EntityCow
+
 ## Class signature
 
 ```java
 public class EntityCow extends EntityAnimal
 ```
 
-## Constructors
-
-- `public EntityCow( World worldIn)`
-
 ## Methods
 
-- `public static void registerFixesCow( DataFixer fixer)`
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
+- `EntityCow createChild(EntityAgeable ageable)`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
 - `protected SoundEvent getDeathSound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `protected float getSoundVolume()`
+- `float getEyeHeight()`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
 - `protected ResourceLocation getLootTable()`
-- `public boolean processInteract( EntityPlayer player, EnumHand hand)`
-- `public EntityCow createChild( EntityAgeable ageable)`
-- `public float getEyeHeight()`
+- `protected float getSoundVolume()`
+- `protected void initEntityAI()`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `boolean processInteract(EntityPlayer player, EnumHand hand)`
+- `static void registerFixesCow(DataFixer fixer)`
+
+## Fields
+
+- `EntityCow`

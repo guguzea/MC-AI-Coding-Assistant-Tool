@@ -1,11 +1,19 @@
 # StructureVillagePieces.Well
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureVillagePieces.Village → net.minecraft.world.gen.structure.StructureVillagePieces.Well
 
-- `public Well()`
-- `public Well( StructureVillagePieces.Start start, int type, java.util.Random rand, int x, int z)`
+## Class signature
+
+```java
+public static class StructureVillagePieces.Well extends StructureVillagePieces.Village
+```
 
 ## Methods
 
-- `public void buildComponent( StructureComponent componentIn, java.util.List< StructureComponent > listIn, java.util.Random rand)`
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `void buildComponent(StructureComponent componentIn, java.util.List<StructureComponent> listIn, java.util.Random rand)`
+
+## Fields
+
+- `Well`
+- `Well`

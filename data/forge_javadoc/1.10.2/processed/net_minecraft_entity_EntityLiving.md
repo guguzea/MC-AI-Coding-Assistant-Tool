@@ -1,5 +1,7 @@
 # EntityLiving
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving
+
 ## Class signature
 
 ```java
@@ -8,92 +10,104 @@ public abstract class EntityLiving extends EntityLivingBase
 
 ## Constructors
 
-- `public EntityLiving( World worldIn)`
+- `EntityLiving(World worldIn)`
 
 ## Methods
 
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
-- `protected PathNavigate getNewNavigator( World worldIn)`
-- `public float getPathPriority( PathNodeType nodeType)`
-- `public void setPathPriority( PathNodeType nodeType, float priority)`
-- `protected EntityBodyHelper createBodyHelper()`
-- `public EntityLookHelper getLookHelper()`
-- `public EntityMoveHelper getMoveHelper()`
-- `public EntityJumpHelper getJumpHelper()`
-- `public PathNavigate getNavigator()`
-- `public EntitySenses getEntitySenses()`
-- `@Nullable public EntityLivingBase getAttackTarget()`
-- `public void setAttackTarget(@Nullable EntityLivingBase entitylivingbaseIn)`
-- `public boolean canAttackClass(java.lang.Class<? extends EntityLivingBase > cls)`
-- `public void eatGrassBonus()`
-- `protected void entityInit()`
-- `public int getTalkInterval()`
-- `public void playLivingSound()`
-- `public void onEntityUpdate()`
-- `protected void playHurtSound( DamageSource source)`
-- `protected int getExperiencePoints( EntityPlayer player)`
-- `public void spawnExplosionParticle()`
-- `public void handleStatusUpdate(byte id)`
-- `public void onUpdate()`
-- `protected float updateDistance(float p_110146_1_, float p_110146_2_)`
-- `@Nullable protected SoundEvent getAmbientSound()`
-- `@Nullable protected Item getDropItem()`
-- `protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)`
-- `public static void registerFixesMob( DataFixer fixer, java.lang.String name)`
-- `public static void registerFixesMob( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source)`
-- `public void setMoveForward(float amount)`
-- `public void setMoveStrafing(float amount)`
-- `public void setAIMoveSpeed(float speedIn)`
-- `public void onLivingUpdate()`
-- `protected void updateEquipmentIfNeeded( EntityItem itemEntity)`
-- `protected boolean canEquipItem( ItemStack stack)`
+- `boolean canAttackClass(java.lang.Class<? extends EntityLivingBase> cls)`
+- `boolean canBeLeashedTo(EntityPlayer player)`
+- `boolean canBeSteered()`
 - `protected boolean canDespawn()`
+- `protected boolean canEquipItem(ItemStack stack)`
+- `boolean canPickUpLoot()`
+- `void clearLeashed(boolean sendPacket, boolean dropLead)`
+- `protected EntityBodyHelper createBodyHelper()`
 - `protected void despawnEntity()`
-- `protected final void updateEntityActionState()`
-- `protected void updateAITasks()`
-- `public int getVerticalFaceSpeed()`
-- `public int getHorizontalFaceSpeed()`
-- `public void faceEntity( Entity entityIn, float maxYawIncrease, float maxPitchIncrease)`
-- `public boolean getCanSpawnHere()`
-- `public boolean isNotColliding()`
-- `public float getRenderSizeModifier()`
-- `public int getMaxSpawnedInChunk()`
-- `public int getMaxFallHeight()`
-- `public java.lang.Iterable< ItemStack > getHeldEquipment()`
-- `public java.lang.Iterable< ItemStack > getArmorInventoryList()`
-- `@Nullable public ItemStack getItemStackFromSlot( EntityEquipmentSlot slotIn)`
-- `public void setItemStackToSlot( EntityEquipmentSlot slotIn, @Nullable ItemStack stack)`
 - `protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier)`
-- `protected void setEquipmentBasedOnDifficulty( DifficultyInstance difficulty)`
-- `public static EntityEquipmentSlot getSlotForItemStack( ItemStack stack)`
-- `public static Item getArmorByChance( EntityEquipmentSlot slotIn, int chance)`
-- `protected void setEnchantmentBasedOnDifficulty( DifficultyInstance difficulty)`
-- `@Nullable public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)`
-- `public boolean canBeSteered()`
-- `public void enablePersistence()`
-- `public void setDropChance( EntityEquipmentSlot slotIn, float chance)`
-- `public boolean canPickUpLoot()`
-- `public void setCanPickUpLoot(boolean canPickup)`
-- `public boolean isNoDespawnRequired()`
-- `public final boolean processInitialInteract( EntityPlayer player, @Nullable ItemStack stack, EnumHand hand)`
-- `protected boolean processInteract( EntityPlayer player, EnumHand hand, @Nullable ItemStack stack)`
+- `protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)`
+- `protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source)`
+- `void eatGrassBonus()`
+- `void enablePersistence()`
+- `protected void entityInit()`
+- `void faceEntity(Entity entityIn, float maxYawIncrease, float maxPitchIncrease)`
+- `protected SoundEvent getAmbientSound()`
+- `static Item getArmorByChance(EntityEquipmentSlot slotIn, int chance)`
+- `java.lang.Iterable<ItemStack> getArmorInventoryList()`
+- `EntityLivingBase getAttackTarget()`
+- `boolean getCanSpawnHere()`
+- `protected Item getDropItem()`
+- `EntitySenses getEntitySenses()`
+- `protected int getExperiencePoints(EntityPlayer player)`
+- `java.lang.Iterable<ItemStack> getHeldEquipment()`
+- `int getHorizontalFaceSpeed()`
+- `ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)`
+- `EntityJumpHelper getJumpHelper()`
+- `boolean getLeashed()`
+- `Entity getLeashedToEntity()`
+- `EntityLookHelper getLookHelper()`
+- `protected ResourceLocation getLootTable()`
+- `int getMaxFallHeight()`
+- `int getMaxSpawnedInChunk()`
+- `EntityMoveHelper getMoveHelper()`
+- `PathNavigate getNavigator()`
+- `protected PathNavigate getNewNavigator(World worldIn)`
+- `float getPathPriority(PathNodeType nodeType)`
+- `EnumHandSide getPrimaryHand()`
+- `float getRenderSizeModifier()`
+- `static EntityEquipmentSlot getSlotForItemStack(ItemStack stack)`
+- `int getTalkInterval()`
+- `int getVerticalFaceSpeed()`
+- `void handleStatusUpdate(byte id)`
+- `protected void initEntityAI()`
+- `boolean isAIDisabled()`
+- `static boolean isItemStackInSlot(EntityEquipmentSlot slotIn, ItemStack stack)`
+- `boolean isLeftHanded()`
+- `boolean isNoDespawnRequired()`
+- `boolean isNotColliding()`
+- `boolean isServerWorld()`
+- `void onEntityUpdate()`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onLivingUpdate()`
+- `void onUpdate()`
+- `protected void playHurtSound(DamageSource source)`
+- `void playLivingSound()`
+- `boolean processInitialInteract(EntityPlayer player, ItemStack stack, EnumHand hand)`
+- `protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesMob(DataFixer fixer)`
+- `static void registerFixesMob(DataFixer fixer, java.lang.String name)`
+- `boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
+- `void setAIMoveSpeed(float speedIn)`
+- `void setAttackTarget(EntityLivingBase entitylivingbaseIn)`
+- `void setCanPickUpLoot(boolean canPickup)`
+- `void setDropChance(EntityEquipmentSlot slotIn, float chance)`
+- `protected void setEnchantmentBasedOnDifficulty(DifficultyInstance difficulty)`
+- `protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty)`
+- `void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)`
+- `void setLeashedToEntity(Entity entityIn, boolean sendAttachNotification)`
+- `void setLeftHanded(boolean disable)`
+- `void setMoveForward(float amount)`
+- `void setMoveStrafing(float amount)`
+- `void setNoAI(boolean disable)`
+- `void setPathPriority(PathNodeType nodeType, float priority)`
+- `void spawnExplosionParticle()`
+- `boolean startRiding(Entity entityIn, boolean force)`
+- `protected void updateAITasks()`
+- `protected float updateDistance(float p_110146_1_, float p_110146_2_)`
+- `protected void updateEntityActionState()`
+- `protected void updateEquipmentIfNeeded(EntityItem itemEntity)`
 - `protected void updateLeashedState()`
-- `public void clearLeashed(boolean sendPacket, boolean dropLead)`
-- `public boolean canBeLeashedTo( EntityPlayer player)`
-- `public boolean getLeashed()`
-- `public Entity getLeashedToEntity()`
-- `public void setLeashedToEntity( Entity entityIn, boolean sendAttachNotification)`
-- `public boolean startRiding( Entity entityIn, boolean force)`
-- `public boolean replaceItemInInventory(int inventorySlot, @Nullable ItemStack itemStackIn)`
-- `public static boolean isItemStackInSlot( EntityEquipmentSlot slotIn, ItemStack stack)`
-- `public boolean isServerWorld()`
-- `public void setNoAI(boolean disable)`
-- `public void setLeftHanded(boolean disable)`
-- `public boolean isAIDisabled()`
-- `public boolean isLeftHanded()`
-- `public EnumHandSide getPrimaryHand()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `protected int experienceValue`
+- `protected float[] inventoryArmorDropChances`
+- `protected float[] inventoryHandsDropChances`
+- `protected EntityJumpHelper jumpHelper`
+- `int livingSoundTime`
+- `protected EntityMoveHelper moveHelper`
+- `protected PathNavigate navigator`
+- `EntityAITasks targetTasks`
+- `EntityAITasks tasks`

@@ -1,5 +1,7 @@
 # MouseEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.MouseEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,15 @@ public class MouseEvent extends Event
 
 ## Constructors
 
-- `public MouseEvent()`
+- `MouseEvent()`
 
-## Description
+## Fields
 
-Author: MachineMuse (Claire Semple) Created: 2:46 PM, 9/4/13
+- `int button`
+- `boolean buttonstate`
+- `int dwheel`
+- `int dx`
+- `int dy`
+- `long nanoseconds`
+- `int x`
+- `int y`

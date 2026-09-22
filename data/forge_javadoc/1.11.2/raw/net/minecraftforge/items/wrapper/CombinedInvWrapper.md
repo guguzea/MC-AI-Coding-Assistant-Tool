@@ -1,13 +1,17 @@
 ---
 title: "CombinedInvWrapper"
-description: "Extracts an ItemStack from the given slot."
+description: "public class CombinedInvWrapper extends java.lang.Object implements IItemHandlerModifiable"
 package: "net/minecraftforge/items/wrapper"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/items/wrapper/CombinedInvWrapper.html"
 sourceType: javadoc
 ---
 
 # CombinedInvWrapper
+
+**Inheritance:** java.lang.Object → net.minecraftforge.items.wrapper.CombinedInvWrapper
 
 ## Class signature
 
@@ -17,20 +21,22 @@ public class CombinedInvWrapper extends java.lang.Object implements IItemHandler
 
 ## Constructors
 
-- `public CombinedInvWrapper( IItemHandlerModifiable ... itemHandler)`
+- `CombinedInvWrapper(IItemHandlerModifiable ... itemHandler)`
 
 ## Methods
 
-- `protected int getIndexForSlot(int slot)`
+- `ItemStack extractItem(int slot, int amount, boolean simulate)` — Extracts an ItemStack from the given slot.
 - `protected IItemHandlerModifiable getHandlerFromIndex(int index)`
+- `protected int getIndexForSlot(int slot)`
 - `protected int getSlotFromIndex(int slot, int index)`
-- `public void setStackInSlot(int slot, @Nonnull ItemStack stack)`
-- `public int getSlots()`
-- `@Nonnull public ItemStack getStackInSlot(int slot)`
-- `@Nonnull public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)`
-- `@Nonnull public ItemStack extractItem(int slot, int amount, boolean simulate)`
-- `public int getSlotLimit(int slot)`
+- `int getSlotLimit(int slot)` — Retrieves the maximum stack size allowed to exist in the given slot.
+- `int getSlots()` — Returns the number of slots available
+- `ItemStack getStackInSlot(int slot)` — Returns the ItemStack in a given slot.
+- `ItemStack insertItem(int slot, ItemStack stack, boolean simulate)` — Inserts an ItemStack into the given slot and return the remainder.
+- `void setStackInSlot(int slot, ItemStack stack)` — Overrides the stack in the given slot.
 
-## Description
+## Fields
 
-Extracts an ItemStack from the given slot.
+- `protected int[] baseIndex`
+- `protected IItemHandlerModifiable [] itemHandler`
+- `protected int slotCount`

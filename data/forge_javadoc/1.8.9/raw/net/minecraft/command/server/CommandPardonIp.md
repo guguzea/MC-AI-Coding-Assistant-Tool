@@ -1,13 +1,17 @@
 ---
 title: "CommandPardonIp"
-description: "Returns true if the given command sender is allowed to use this command."
+description: "public class CommandPardonIp extends CommandBase"
 package: "net/minecraft/command/server"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/command/server/CommandPardonIp.html"
 sourceType: javadoc
 ---
 
 # CommandPardonIp
+
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraft.command.server.CommandPardonIp
 
 ## Class signature
 
@@ -17,17 +21,13 @@ public class CommandPardonIp extends CommandBase
 
 ## Constructors
 
-- `public CommandPardonIp()`
+- `CommandPardonIp()`
 
 ## Methods
 
-- `public java.lang.String getCommandName()`
-- `public int getRequiredPermissionLevel()`
-- `public boolean canCommandSenderUseCommand( ICommandSender sender)`
-- `public java.lang.String getCommandUsage( ICommandSender sender)`
-- `public void processCommand( ICommandSender sender, java.lang.String[] args) throws CommandException`
-- `public java.util.List<java.lang.String> addTabCompletionOptions( ICommandSender sender, java.lang.String[] args, BlockPos pos)`
-
-## Description
-
-Returns true if the given command sender is allowed to use this command.
+- `java.util.List<java.lang.String> addTabCompletionOptions(ICommandSender sender, java.lang.String[] args, BlockPos pos)`
+- `boolean canCommandSenderUseCommand(ICommandSender sender)` — Returns true if the given command sender is allowed to use this command.
+- `java.lang.String getCommandName()` — Gets the name of the command
+- `java.lang.String getCommandUsage(ICommandSender sender)` — Gets the usage string for the command.
+- `int getRequiredPermissionLevel()` — Return the required permission level for this command.
+- `void processCommand(ICommandSender sender, java.lang.String[] args)` — Callback when the command is invoked

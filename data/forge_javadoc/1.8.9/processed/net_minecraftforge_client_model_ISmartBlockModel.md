@@ -8,4 +8,4 @@ public interface ISmartBlockModel extends IBakedModel
 
 ## Methods
 
-- `IBakedModel handleBlockState( IBlockState state)`
+- `IBakedModel handleBlockState(IBlockState state)`

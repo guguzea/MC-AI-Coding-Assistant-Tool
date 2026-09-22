@@ -1,5 +1,7 @@
 # FactoryBlockPattern
 
+**Inheritance:** java.lang.Object → net.minecraft.block.state.pattern.FactoryBlockPattern
+
 ## Class signature
 
 ```java
@@ -8,7 +10,7 @@ public class FactoryBlockPattern extends java.lang.Object
 
 ## Methods
 
-- `public FactoryBlockPattern aisle(java.lang.String... aisle)`
-- `public static FactoryBlockPattern start()`
-- `public FactoryBlockPattern where(char symbol, <any> blockMatcher)`
-- `public BlockPattern build()`
+- `FactoryBlockPattern aisle(java.lang.String... aisle)`
+- `BlockPattern build()`
+- `static FactoryBlockPattern start()`
+- `FactoryBlockPattern where(char symbol, <any> blockMatcher)`

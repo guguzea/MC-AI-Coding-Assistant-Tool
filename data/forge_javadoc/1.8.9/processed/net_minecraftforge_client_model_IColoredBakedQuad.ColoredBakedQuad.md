@@ -1,5 +1,13 @@
 # IColoredBakedQuad.ColoredBakedQuad
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.BakedQuad → net.minecraftforge.client.model.IColoredBakedQuad.ColoredBakedQuad
 
-- `public ColoredBakedQuad(int[] data, int tintIndex, EnumFacing side)`
+## Class signature
+
+```java
+public static class IColoredBakedQuad.ColoredBakedQuad extends BakedQuad implements IColoredBakedQuad
+```
+
+## Fields
+
+- `ColoredBakedQuad`

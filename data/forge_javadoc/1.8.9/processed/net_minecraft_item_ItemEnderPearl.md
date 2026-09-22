@@ -1,19 +1,17 @@
 # ItemEnderPearl
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemEnderPearl
+
 ## Class signature
 
 ```java
 public class ItemEnderPearl extends Item
 ```
 
-## Constructors
-
-- `public ItemEnderPearl()`
-
 ## Methods
 
-- `public ItemStack onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)`
+- `ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)` — Called whenever this item is equipped and the right mouse button is pressed.
 
-## Description
+## Fields
 
-Called whenever this item is equipped and the right mouse button is pressed.
+- `ItemEnderPearl`

@@ -8,9 +8,5 @@ public interface IRenderContextHandler
 
 ## Methods
 
-- `void beforeRenderContext()`
-- `void afterRenderContext()`
-
-## Description
-
-Run after the specified rendering context.
+- `void afterRenderContext()` — Run after the specified rendering context.
+- `void beforeRenderContext()` — Run before the specified rendering context.

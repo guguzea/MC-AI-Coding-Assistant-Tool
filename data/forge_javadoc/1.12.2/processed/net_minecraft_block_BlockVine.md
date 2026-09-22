@@ -1,5 +1,7 @@
 # BlockVine
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockVine
+
 ## Class signature
 
 ```java
@@ -8,38 +10,48 @@ public class BlockVine extends Block implements IShearable
 
 ## Constructors
 
-- `public BlockVine()`
+- `BlockVine()`
 
 ## Methods
 
-- `public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public boolean isReplaceable( IBlockAccess worldIn, BlockPos pos)`
-- `public boolean canPlaceBlockOnSide( World worldIn, BlockPos pos, EnumFacing side)`
-- `public boolean canAttachTo( World p_193395_1_, BlockPos p_193395_2_, EnumFacing p_193395_3_)`
-- `protected static boolean isExceptBlockForAttaching( Block p_193397_0_)`
-- `public void neighborChanged( IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
-- `public void updateTick( World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
-- `public IBlockState getStateForPlacement( World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
-- `public Item getItemDropped( IBlockState state, java.util.Random rand, int fortune)`
-- `public int quantityDropped(java.util.Random random)`
-- `public void harvestBlock( World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)`
-- `public IBlockState getStateFromMeta(int meta)`
-- `public BlockRenderLayer getBlockLayer()`
-- `public int getMetaFromState( IBlockState state)`
+- `boolean canAttachTo(World p_193395_1_, BlockPos p_193395_2_, EnumFacing p_193395_3_)`
+- `boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)`
 - `protected BlockStateContainer createBlockState()`
-- `public IBlockState withRotation( IBlockState state, Rotation rot)`
-- `public IBlockState withMirror( IBlockState state, Mirror mirrorIn)`
-- `public static PropertyBool getPropertyFor( EnumFacing side)`
-- `public static int getNumGrownFaces( IBlockState state)`
-- `public boolean isLadder( IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity)`
-- `public boolean isShearable( ItemStack item, IBlockAccess world, BlockPos pos)`
-- `public java.util.List< ItemStack > onSheared( ItemStack item, IBlockAccess world, BlockPos pos, int fortune)`
-- `public BlockFaceShape getBlockFaceShape( IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)`
+- `IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)`
+- `BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)` — FORGE END
+- `BlockRenderLayer getBlockLayer()`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
+- `Item getItemDropped(IBlockState state, java.util.Random rand, int fortune)`
+- `int getMetaFromState(IBlockState state)`
+- `static int getNumGrownFaces(IBlockState state)`
+- `static PropertyBool getPropertyFor(EnumFacing side)`
+- `IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)`
+- `IBlockState getStateFromMeta(int meta)`
+- `void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)`
+- `protected static boolean isExceptBlockForAttaching(Block p_193397_0_)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isLadder(IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity)` — FORGE START
+- `boolean isOpaqueCube(IBlockState state)`
+- `boolean isReplaceable(IBlockAccess worldIn, BlockPos pos)`
+- `boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)` — Checks if the object is currently shearable Example: Sheep return false when they have no wool
+- `void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `java.util.List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)` — Performs the shear function on this object.
+- `int quantityDropped(java.util.Random random)`
+- `void updateTick(World worldIn, BlockPos pos, IBlockState state, java.util.Random rand)`
+- `IBlockState withMirror(IBlockState state, Mirror mirrorIn)`
+- `IBlockState withRotation(IBlockState state, Rotation rot)`
 
-## Description
+## Fields
 
-FORGE END
+- `static PropertyBool [] ALL_FACES`
+- `static PropertyBool EAST`
+- `protected static AxisAlignedBB EAST_AABB`
+- `static PropertyBool NORTH`
+- `protected static AxisAlignedBB NORTH_AABB`
+- `static PropertyBool SOUTH`
+- `protected static AxisAlignedBB SOUTH_AABB`
+- `static PropertyBool UP`
+- `protected static AxisAlignedBB UP_AABB`
+- `static PropertyBool WEST`
+- `protected static AxisAlignedBB WEST_AABB`

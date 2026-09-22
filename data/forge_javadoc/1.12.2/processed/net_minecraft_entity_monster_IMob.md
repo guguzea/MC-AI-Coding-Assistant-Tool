@@ -5,3 +5,8 @@
 ```java
 public interface IMob extends IAnimals
 ```
+
+## Fields
+
+- `static<any> MOB_SELECTOR`
+- `static<any> VISIBLE_MOB_SELECTOR`

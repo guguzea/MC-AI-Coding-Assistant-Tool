@@ -1,16 +1,18 @@
 # ItemWritableBook
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemWritableBook
+
 ## Class signature
 
 ```java
 public class ItemWritableBook extends Item
 ```
 
-## Constructors
-
-- `public ItemWritableBook()`
-
 ## Methods
 
-- `public ActionResult < ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn)`
-- `public static boolean isNBTValid( NBTTagCompound nbt)`
+- `static boolean isNBTValid(NBTTagCompound nbt)`
+- `ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)`
+
+## Fields
+
+- `ItemWritableBook`

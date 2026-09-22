@@ -1,5 +1,7 @@
 # EntityAIRestrictOpenDoor
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIRestrictOpenDoor
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class EntityAIRestrictOpenDoor extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIRestrictOpenDoor( EntityCreature creatureIn)`
+- `EntityAIRestrictOpenDoor(EntityCreature creatureIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public boolean continueExecuting()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

@@ -1,5 +1,7 @@
 # GameData
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.GameData
+
 ## Class signature
 
 ```java
@@ -8,18 +10,19 @@ public class GameData extends java.lang.Object
 
 ## Constructors
 
-- `public GameData()`
+- `GameData()`
 
 ## Methods
 
-- `public static FMLControlledNamespacedRegistry < Block > getBlockRegistry()`
-- `public static FMLControlledNamespacedRegistry < Item > getItemRegistry()`
-- `public static FMLControlledNamespacedRegistry < Potion > getPotionRegistry()`
+- `static java.util.Map<Block, Item> getBlockItemMap()`
+- `static FMLControlledNamespacedRegistry<Block> getBlockRegistry()` — Get the currently active block registry.
+- `static net.minecraftforge.fml.common.registry.GameData.ClearableObjectIntIdentityMap<IBlockState> getBlockStateIDMap()`
+- `static FMLControlledNamespacedRegistry<Item> getItemRegistry()` — Get the currently active item registry.
 - `protected static GameData getMain()`
-- `public static java.util.Map< Block , Item > getBlockItemMap()`
-- `public static net.minecraftforge.fml.common.registry.GameData.ClearableObjectIntIdentityMap< IBlockState > getBlockStateIDMap()`
-- `public <T> RegistryDelegate <T> makeDelegate(T obj, java.lang.Class<T> rootClass)`
+- `static FMLControlledNamespacedRegistry<Potion> getPotionRegistry()` — Get the currently active potion registry.
+- `<T> RegistryDelegate<T> makeDelegate(T obj, java.lang.Class<T> rootClass)`
 
-## Description
+## Fields
 
-Get the currently active block registry.
+- `static int MAX_POTION_ID`
+- `static int MIN_POTION_ID`

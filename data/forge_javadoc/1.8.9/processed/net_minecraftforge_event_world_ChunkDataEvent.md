@@ -1,19 +1,17 @@
 # ChunkDataEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent → net.minecraftforge.event.world.ChunkEvent → net.minecraftforge.event.world.ChunkDataEvent
+
 ## Class signature
 
 ```java
 public class ChunkDataEvent extends ChunkEvent
 ```
 
-## Constructors
-
-- `public ChunkDataEvent( Chunk chunk, NBTTagCompound data)`
-
 ## Methods
 
-- `public NBTTagCompound getData()`
+- `NBTTagCompound getData()`
 
-## Description
+## Fields
 
-ChunkDataEvent is fired when an event involving chunk data occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. data contains the NBTTagCo
+- `ChunkDataEvent`

@@ -1,21 +1,31 @@
 ---
 title: "LanServerDetector.LanServerList"
-description: ""
+description: "public static class LanServerDetector.LanServerList extends java.lang.Object"
 package: "net/minecraft/client/network"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/network/LanServerDetector.LanServerList.html"
 sourceType: javadoc
 ---
 
 # LanServerDetector.LanServerList
 
+**Inheritance:** java.lang.Object → net.minecraft.client.network.LanServerDetector.LanServerList
+
+## Class signature
+
+```java
+public static class LanServerDetector.LanServerList extends java.lang.Object
+```
+
 ## Constructors
 
-- `public LanServerList()`
+- `LanServerList()`
 
 ## Methods
 
-- `public boolean getWasUpdated()`
-- `public void setWasNotUpdated()`
-- `public java.util.List< LanServerInfo > getLanServers()`
-- `public void addServer(java.lang.String pingResponse, java.net.InetAddress ipAddress)`
+- `void addServer(java.lang.String pingResponse, java.net.InetAddress ipAddress)`
+- `java.util.List<LanServerInfo> getLanServers()`
+- `boolean getWasUpdated()`
+- `void setWasNotUpdated()`

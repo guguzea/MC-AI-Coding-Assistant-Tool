@@ -1,7 +1,15 @@
 # MapGenScatteredFeature.Start
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureStart → net.minecraft.world.gen.structure.MapGenScatteredFeature.Start
 
-- `public Start()`
-- `public Start( World worldIn, java.util.Random random, int chunkX, int chunkZ)`
-- `public Start( World worldIn, java.util.Random random, int chunkX, int chunkZ, Biome biomeIn)`
+## Class signature
+
+```java
+public static class MapGenScatteredFeature.Start extends StructureStart
+```
+
+## Fields
+
+- `Start`
+- `Start`
+- `Start`

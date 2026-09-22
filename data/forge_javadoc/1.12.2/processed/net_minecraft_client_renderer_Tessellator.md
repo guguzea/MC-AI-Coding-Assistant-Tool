@@ -1,5 +1,7 @@
 # Tessellator
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.Tessellator
+
 ## Class signature
 
 ```java
@@ -8,10 +10,10 @@ public class Tessellator extends java.lang.Object
 
 ## Constructors
 
-- `public Tessellator(int bufferSize)`
+- `Tessellator(int bufferSize)`
 
 ## Methods
 
-- `public static Tessellator getInstance()`
-- `public void draw()`
-- `public BufferBuilder getBuffer()`
+- `void draw()`
+- `BufferBuilder getBuffer()`
+- `static Tessellator getInstance()`

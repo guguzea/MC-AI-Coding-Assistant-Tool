@@ -1,5 +1,7 @@
 # GuiScreenOptionsSounds
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiScreenOptionsSounds
+
 ## Class signature
 
 ```java
@@ -8,15 +10,15 @@ public class GuiScreenOptionsSounds extends GuiScreen
 
 ## Constructors
 
-- `public GuiScreenOptionsSounds( GuiScreen p_i45025_1_, GameSettings p_i45025_2_)`
+- `GuiScreenOptionsSounds(GuiScreen p_i45025_1_, GameSettings p_i45025_2_)`
 
 ## Methods
 
-- `public void initGui()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `protected java.lang.String getSoundVolume( SoundCategory p_146504_1_)`
+- `protected void actionPerformed(GuiButton button)` — Called by the controls from the buttonList when activated.
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)` — Draws the screen and all the components in it.
+- `protected java.lang.String getSoundVolume(SoundCategory p_146504_1_)`
+- `void initGui()` — Adds the buttons (and other controls) to the screen in question.
 
-## Description
+## Fields
 
-Called by the controls from the buttonList when activated.
+- `protected java.lang.String field_146507_a`

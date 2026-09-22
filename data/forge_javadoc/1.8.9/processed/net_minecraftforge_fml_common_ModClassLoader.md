@@ -1,5 +1,7 @@
 # ModClassLoader
 
+**Inheritance:** java.lang.Object → java.lang.ClassLoader → java.security.SecureClassLoader → java.net.URLClassLoader → net.minecraftforge.fml.common.ModClassLoader
+
 ## Class signature
 
 ```java
@@ -8,19 +10,15 @@ public class ModClassLoader extends java.net.URLClassLoader
 
 ## Constructors
 
-- `public ModClassLoader(java.lang.ClassLoader parent)`
+- `ModClassLoader(java.lang.ClassLoader parent)`
 
 ## Methods
 
-- `public void addFile(java.io.File modFile) throws java.net.MalformedURLException`
-- `public java.lang.Class<?> loadClass(java.lang.String name) throws java.lang.ClassNotFoundException`
-- `public java.io.File[] getParentSources()`
-- `public java.util.List<java.lang.String> getDefaultLibraries()`
-- `public boolean isDefaultLibrary(java.io.File file)`
-- `public void clearNegativeCacheFor(java.util.Set<java.lang.String> classList)`
-- `public ModAPITransformer addModAPITransformer( ASMDataTable dataTable)`
-- `public boolean containsSource(java.io.File source)`
-
-## Description
-
-A simple delegating class loader used to load mods into the system
+- `void addFile(java.io.File modFile)`
+- `ModAPITransformer addModAPITransformer(ASMDataTable dataTable)`
+- `void clearNegativeCacheFor(java.util.Set<java.lang.String> classList)`
+- `boolean containsSource(java.io.File source)`
+- `java.util.List<java.lang.String> getDefaultLibraries()`
+- `java.io.File[] getParentSources()`
+- `boolean isDefaultLibrary(java.io.File file)`
+- `java.lang.Class<?> loadClass(java.lang.String name)`

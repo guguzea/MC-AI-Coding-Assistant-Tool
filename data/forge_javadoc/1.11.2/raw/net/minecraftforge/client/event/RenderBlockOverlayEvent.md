@@ -1,13 +1,17 @@
 ---
 title: "RenderBlockOverlayEvent"
-description: "Called when a block's texture is going to be overlaid on the player's HUD. Cancel this event to prevent the overlay."
+description: "public class RenderBlockOverlayEvent extends Event"
 package: "net/minecraftforge/client/event"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/client/event/RenderBlockOverlayEvent.html"
 sourceType: javadoc
 ---
 
 # RenderBlockOverlayEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderBlockOverlayEvent
 
 ## Class signature
 
@@ -17,17 +21,13 @@ public class RenderBlockOverlayEvent extends Event
 
 ## Constructors
 
-- `public RenderBlockOverlayEvent( EntityPlayer player, float renderPartialTicks, RenderBlockOverlayEvent.OverlayType type, IBlockState block, BlockPos blockPos)`
+- `@Deprecated RenderBlockOverlayEvent(EntityPlayer player, float renderPartialTicks, RenderBlockOverlayEvent.OverlayType type, Block block, int x, int y, int z)`
+- `RenderBlockOverlayEvent(EntityPlayer player, float renderPartialTicks, RenderBlockOverlayEvent.OverlayType type, IBlockState block, BlockPos blockPos)`
 
 ## Methods
 
-- `@Deprecated public RenderBlockOverlayEvent( EntityPlayer player, float renderPartialTicks, RenderBlockOverlayEvent.OverlayType type, Block block, int x, int y, int z)`
-- `public EntityPlayer getPlayer()`
-- `public float getRenderPartialTicks()`
-- `public RenderBlockOverlayEvent.OverlayType getOverlayType()`
-- `public IBlockState getBlockForOverlay()`
-- `public BlockPos getBlockPos()`
-
-## Description
-
-Called when a block's texture is going to be overlaid on the player's HUD. Cancel this event to prevent the overlay.
+- `IBlockState getBlockForOverlay()` — If the overlay type is BLOCK, then this is the block which the overlay is getting it's icon from
+- `BlockPos getBlockPos()`
+- `RenderBlockOverlayEvent.OverlayType getOverlayType()` — The type of overlay to occur
+- `EntityPlayer getPlayer()` — The player which the overlay will apply to
+- `float getRenderPartialTicks()`

@@ -1,19 +1,29 @@
 ---
 title: "SetDamage.Serializer"
-description: ""
+description: "public static class SetDamage.Serializer extends LootFunction.Serializer<SetDamage>"
 package: "net/minecraft/world/storage/loot/functions"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/world/storage/loot/functions/SetDamage.Serializer.html"
 sourceType: javadoc
 ---
 
 # SetDamage.Serializer
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction.Serializer<SetDamage> → net.minecraft.world.storage.loot.functions.SetDamage.Serializer
+
+## Class signature
+
+```java
+public static class SetDamage.Serializer extends LootFunction.Serializer<SetDamage>
+```
+
 ## Constructors
 
-- `protected Serializer()`
+- `Serializer()`
 
 ## Methods
 
-- `public void serialize(com.google.gson.JsonObject object, SetDamage functionClazz, com.google.gson.JsonSerializationContext serializationContext)`
-- `public SetDamage deserialize(com.google.gson.JsonObject object, com.google.gson.JsonDeserializationContext deserializationContext, LootCondition [] conditionsIn)`
+- `SetDamage deserialize(com.google.gson.JsonObject object, com.google.gson.JsonDeserializationContext deserializationContext, LootCondition [] conditionsIn)`
+- `void serialize(com.google.gson.JsonObject object, SetDamage functionClazz, com.google.gson.JsonSerializationContext serializationContext)`

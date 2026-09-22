@@ -1,9 +1,13 @@
 # LivingEvent.LivingUpdateEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent
+
+## Class signature
+
+```java
+public static class LivingEvent.LivingUpdateEvent extends LivingEvent
+```
+
 ## Constructors
 
-- `public LivingUpdateEvent( EntityLivingBase e)`
-
-## Description
-
-LivingUpdateEvent is fired when an Entity is updated. This event is fired whenever an Entity is updated in EntityLivingBase.onUpdate() . This event is fired via the ForgeHooks.onLivingUpdate(EntityLiv
+- `LivingUpdateEvent(EntityLivingBase e)`

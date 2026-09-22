@@ -1,10 +1,18 @@
 # StructureOceanMonumentPieces.MonumentBuilding
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureComponent → net.minecraft.world.gen.structure.StructureOceanMonumentPieces.Piece → net.minecraft.world.gen.structure.StructureOceanMonumentPieces.MonumentBuilding
 
-- `public MonumentBuilding()`
-- `public MonumentBuilding(java.util.Random p_i45599_1_, int p_i45599_2_, int p_i45599_3_, EnumFacing p_i45599_4_)`
+## Class signature
+
+```java
+public static class StructureOceanMonumentPieces.MonumentBuilding extends StructureOceanMonumentPieces.Piece
+```
 
 ## Methods
 
-- `public boolean addComponentParts( World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+- `boolean addComponentParts(World worldIn, java.util.Random randomIn, StructureBoundingBox structureBoundingBoxIn)`
+
+## Fields
+
+- `MonumentBuilding`
+- `MonumentBuilding`

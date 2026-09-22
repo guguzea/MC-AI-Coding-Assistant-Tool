@@ -1,10 +1,18 @@
 # OreDictionary.OreRegisterEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.oredict.OreDictionary.OreRegisterEvent
+
+## Class signature
+
+```java
+public static class OreDictionary.OreRegisterEvent extends Event
+```
+
 ## Constructors
 
-- `public OreRegisterEvent(java.lang.String name, ItemStack ore)`
+- `OreRegisterEvent(java.lang.String name, ItemStack ore)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public ItemStack getOre()`
+- `java.lang.String getName()`
+- `ItemStack getOre()`

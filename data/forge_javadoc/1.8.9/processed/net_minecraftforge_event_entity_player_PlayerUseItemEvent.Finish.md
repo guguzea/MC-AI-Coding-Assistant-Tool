@@ -1,9 +1,17 @@
 # PlayerUseItemEvent.Finish
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerUseItemEvent → net.minecraftforge.event.entity.player.PlayerUseItemEvent.Finish
+
+## Class signature
+
+```java
+public static class PlayerUseItemEvent.Finish extends PlayerUseItemEvent
+```
+
 ## Constructors
 
-- `public Finish( EntityPlayer player, ItemStack item, int duration, ItemStack result)`
+- `Finish(EntityPlayer player, ItemStack item, int duration, ItemStack result)`
 
-## Description
+## Fields
 
-Fired after an item has fully finished being used. The item has been notified that it was used, and the item/result stacks reflect after that state. This means that when this is fired for a Potion, th
+- `ItemStack result`

@@ -3,11 +3,15 @@ title: "ContextKey"
 description: "public final class ContextKey<T> extends java.lang.Object"
 package: "net/minecraftforge/server/permission/context"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/server/permission/context/ContextKey.html"
 sourceType: javadoc
 ---
 
 # ContextKey
+
+**Inheritance:** java.lang.Object → net.minecraftforge.server.permission.context.ContextKey<T>
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public final class ContextKey<T> extends java.lang.Object
 
 ## Methods
 
-- `public static <E> ContextKey <E> create(java.lang.String id, java.lang.Class<E> c)`
-- `public java.lang.String toString()`
-- `public int hashCode()`
-- `public boolean equals(java.lang.Object o)`
-- `public java.lang.Class< T > getTypeClass()`
+- `static<E> ContextKey<E> create(java.lang.String id, java.lang.Class<E> c)`
+- `boolean equals(java.lang.Object o)`
+- `java.lang.Class<T> getTypeClass()`
+- `int hashCode()`
+- `java.lang.String toString()`

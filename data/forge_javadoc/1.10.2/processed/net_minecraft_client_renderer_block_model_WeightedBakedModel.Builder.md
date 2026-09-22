@@ -1,11 +1,19 @@
 # WeightedBakedModel.Builder
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.block.model.WeightedBakedModel.Builder
+
+## Class signature
+
+```java
+public static class WeightedBakedModel.Builder extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Builder()`
+- `Builder()`
 
 ## Methods
 
-- `public WeightedBakedModel.Builder add( IBakedModel model, int weight)`
-- `public WeightedBakedModel build()`
-- `public IBakedModel first()`
+- `WeightedBakedModel.Builder add(IBakedModel model, int weight)`
+- `WeightedBakedModel build()`
+- `IBakedModel first()`

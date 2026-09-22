@@ -1,5 +1,7 @@
 # NodeProcessor
 
+**Inheritance:** java.lang.Object → net.minecraft.pathfinding.NodeProcessor
+
 ## Class signature
 
 ```java
@@ -8,21 +10,33 @@ public abstract class NodeProcessor extends java.lang.Object
 
 ## Constructors
 
-- `public NodeProcessor()`
+- `NodeProcessor()`
 
 ## Methods
 
-- `public void initProcessor( IBlockAccess sourceIn, EntityLiving mob)`
-- `public void postProcess()`
+- `abstract int findPathOptions(PathPoint [] pathOptions, PathPoint currentPoint, PathPoint targetPoint, float maxDistance)`
+- `boolean getCanBreakDoors()`
+- `boolean getCanEnterDoors()`
+- `boolean getCanSwim()`
+- `abstract PathNodeType getPathNodeType(IBlockAccess blockaccessIn, int x, int y, int z)`
+- `abstract PathNodeType getPathNodeType(IBlockAccess blockaccessIn, int x, int y, int z, EntityLiving entitylivingIn, int xSize, int ySize, int zSize, boolean canBreakDoorsIn, boolean canEnterDoorsIn)`
+- `abstract PathPoint getPathPointToCoords(double x, double y, double z)`
+- `abstract PathPoint getStart()`
+- `void initProcessor(IBlockAccess sourceIn, EntityLiving mob)`
 - `protected PathPoint openPoint(int x, int y, int z)`
-- `public abstract PathPoint getStart()`
-- `public abstract PathPoint getPathPointToCoords(double x, double y, double z)`
-- `public abstract int findPathOptions( PathPoint [] pathOptions, PathPoint currentPoint, PathPoint targetPoint, float maxDistance)`
-- `public abstract PathNodeType getPathNodeType( IBlockAccess blockaccessIn, int x, int y, int z, EntityLiving entitylivingIn, int xSize, int ySize, int zSize, boolean canBreakDoorsIn, boolean canEnterDoorsIn)`
-- `public abstract PathNodeType getPathNodeType( IBlockAccess blockaccessIn, int x, int y, int z)`
-- `public void setCanEnterDoors(boolean canEnterDoorsIn)`
-- `public void setCanBreakDoors(boolean canBreakDoorsIn)`
-- `public void setCanSwim(boolean canSwimIn)`
-- `public boolean getCanEnterDoors()`
-- `public boolean getCanBreakDoors()`
-- `public boolean getCanSwim()`
+- `void postProcess()`
+- `void setCanBreakDoors(boolean canBreakDoorsIn)`
+- `void setCanEnterDoors(boolean canEnterDoorsIn)`
+- `void setCanSwim(boolean canSwimIn)`
+
+## Fields
+
+- `protected IBlockAccess blockaccess`
+- `protected boolean canBreakDoors`
+- `protected boolean canEnterDoors`
+- `protected boolean canSwim`
+- `protected EntityLiving entity`
+- `protected int entitySizeX`
+- `protected int entitySizeY`
+- `protected int entitySizeZ`
+- `protected IntHashMap<PathPoint> pointMap`

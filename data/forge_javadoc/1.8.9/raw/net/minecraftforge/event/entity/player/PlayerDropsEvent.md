@@ -1,13 +1,17 @@
 ---
 title: "PlayerDropsEvent"
-description: "Child class of LivingDropEvent that is fired specifically when a player dies. Canceling the event will prevent ALL drops from entering the world."
+description: "public class PlayerDropsEvent extends LivingDropsEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/player/PlayerDropsEvent.html"
 sourceType: javadoc
 ---
 
 # PlayerDropsEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.living.LivingDropsEvent → net.minecraftforge.event.entity.player.PlayerDropsEvent
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class PlayerDropsEvent extends LivingDropsEvent
 
 ## Constructors
 
-- `public PlayerDropsEvent( EntityPlayer entity, DamageSource source, java.util.List< EntityItem > drops, boolean recentlyHit)`
+- `PlayerDropsEvent(EntityPlayer entity, DamageSource source, java.util.List<EntityItem> drops, boolean recentlyHit)`
 
-## Description
+## Fields
 
-Child class of LivingDropEvent that is fired specifically when a player dies. Canceling the event will prevent ALL drops from entering the world.
+- `EntityPlayer entityPlayer`

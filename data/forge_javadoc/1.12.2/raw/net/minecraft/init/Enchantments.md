@@ -3,11 +3,15 @@ title: "Enchantments"
 description: "public class Enchantments extends java.lang.Object"
 package: "net/minecraft/init"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/init/Enchantments.html"
 sourceType: javadoc
 ---
 
 # Enchantments
+
+**Inheritance:** java.lang.Object → net.minecraft.init.Enchantments
 
 ## Class signature
 
@@ -17,4 +21,37 @@ public class Enchantments extends java.lang.Object
 
 ## Constructors
 
-- `public Enchantments()`
+- `Enchantments()`
+
+## Fields
+
+- `static Enchantment AQUA_AFFINITY`
+- `static Enchantment BANE_OF_ARTHROPODS`
+- `static Enchantment BINDING_CURSE`
+- `static Enchantment BLAST_PROTECTION`
+- `static Enchantment DEPTH_STRIDER`
+- `static Enchantment EFFICIENCY`
+- `static Enchantment FEATHER_FALLING`
+- `static Enchantment FIRE_ASPECT`
+- `static Enchantment FIRE_PROTECTION`
+- `static Enchantment FLAME`
+- `static Enchantment FORTUNE`
+- `static Enchantment FROST_WALKER`
+- `static Enchantment INFINITY`
+- `static Enchantment KNOCKBACK`
+- `static Enchantment LOOTING`
+- `static Enchantment LUCK_OF_THE_SEA`
+- `static Enchantment LURE`
+- `static Enchantment MENDING`
+- `static Enchantment POWER`
+- `static Enchantment PROJECTILE_PROTECTION`
+- `static Enchantment PROTECTION`
+- `static Enchantment PUNCH`
+- `static Enchantment RESPIRATION`
+- `static Enchantment SHARPNESS`
+- `static Enchantment SILK_TOUCH`
+- `static Enchantment SMITE`
+- `static Enchantment SWEEPING`
+- `static Enchantment THORNS`
+- `static Enchantment UNBREAKING`
+- `static Enchantment VANISHING_CURSE`

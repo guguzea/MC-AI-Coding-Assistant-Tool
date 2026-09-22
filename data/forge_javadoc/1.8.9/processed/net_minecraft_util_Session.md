@@ -1,5 +1,7 @@
 # Session
 
+**Inheritance:** java.lang.Object → net.minecraft.util.Session
+
 ## Class signature
 
 ```java
@@ -8,19 +10,15 @@ public class Session extends java.lang.Object
 
 ## Constructors
 
-- `public Session(java.lang.String usernameIn, java.lang.String playerIDIn, java.lang.String tokenIn, java.lang.String sessionTypeIn)`
+- `Session(java.lang.String usernameIn, java.lang.String playerIDIn, java.lang.String tokenIn, java.lang.String sessionTypeIn)`
 
 ## Methods
 
-- `public java.lang.String getSessionID()`
-- `public java.lang.String getPlayerID()`
-- `public java.lang.String getUsername()`
-- `public java.lang.String getToken()`
-- `public GameProfile getProfile()`
-- `public Session.Type getSessionType()`
-- `public void setProperties(com.mojang.authlib.properties.PropertyMap properties)`
-- `public boolean hasCachedProperties()`
-
-## Description
-
-Returns either 'legacy' or 'mojang' whether the account is migrated or not
+- `java.lang.String getPlayerID()`
+- `GameProfile getProfile()`
+- `java.lang.String getSessionID()`
+- `Session.Type getSessionType()` — Returns either 'legacy' or 'mojang' whether the account is migrated or not
+- `java.lang.String getToken()`
+- `java.lang.String getUsername()`
+- `boolean hasCachedProperties()`
+- `void setProperties(com.mojang.authlib.properties.PropertyMap properties)`

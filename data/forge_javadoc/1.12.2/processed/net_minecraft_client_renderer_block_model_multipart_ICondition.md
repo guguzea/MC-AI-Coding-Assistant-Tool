@@ -8,4 +8,9 @@ public interface ICondition
 
 ## Methods
 
-- `<any> getPredicate( BlockStateContainer blockState)`
+- `<any> getPredicate(BlockStateContainer blockState)`
+
+## Fields
+
+- `static ICondition FALSE`
+- `static ICondition TRUE`

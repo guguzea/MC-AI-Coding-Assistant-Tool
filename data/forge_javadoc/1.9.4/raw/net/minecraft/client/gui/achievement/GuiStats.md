@@ -3,11 +3,15 @@ title: "GuiStats"
 description: "public class GuiStats extends GuiScreen implements IProgressMeter"
 package: "net/minecraft/client/gui/achievement"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/gui/achievement/GuiStats.html"
 sourceType: javadoc
 ---
 
 # GuiStats
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.achievement.GuiStats
 
 ## Class signature
 
@@ -17,15 +21,20 @@ public class GuiStats extends GuiScreen implements IProgressMeter
 
 ## Constructors
 
-- `public GuiStats( GuiScreen p_i1071_1_, StatisticsManager p_i1071_2_)`
+- `GuiStats(GuiScreen p_i1071_1_, StatisticsManager p_i1071_2_)`
 
 ## Methods
 
-- `public void initGui()`
-- `public void handleMouseInput() throws java.io.IOException`
-- `public void initLists()`
-- `public void createButtons()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `public void doneLoading()`
-- `public boolean doesGuiPauseGame()`
+- `protected void actionPerformed(GuiButton button)`
+- `void createButtons()`
+- `boolean doesGuiPauseGame()`
+- `void doneLoading()`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void handleMouseInput()`
+- `void initGui()`
+- `void initLists()`
+
+## Fields
+
+- `protected GuiScreen parentScreen`
+- `protected java.lang.String screenTitle`

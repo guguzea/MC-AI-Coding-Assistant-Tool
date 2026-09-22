@@ -1,13 +1,17 @@
 ---
 title: "EntityMinecartHopper"
-description: "Returns whether the hopper cart can currently transfer an item."
+description: "public class EntityMinecartHopper extends EntityMinecartContainer implements IHopper"
 package: "net/minecraft/entity/item"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/entity/item/EntityMinecartHopper.html"
 sourceType: javadoc
 ---
 
 # EntityMinecartHopper
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.item.EntityMinecart → net.minecraft.entity.item.EntityMinecartContainer → net.minecraft.entity.item.EntityMinecartHopper
 
 ## Class signature
 
@@ -15,35 +19,31 @@ sourceType: javadoc
 public class EntityMinecartHopper extends EntityMinecartContainer implements IHopper
 ```
 
-## Constructors
-
-- `public EntityMinecartHopper( World worldIn)`
-- `public EntityMinecartHopper( World worldIn, double p_i1721_2_, double p_i1721_4_, double p_i1721_6_)`
-
 ## Methods
 
-- `public EntityMinecart.EnumMinecartType getMinecartType()`
-- `public IBlockState getDefaultDisplayTile()`
-- `public int getDefaultDisplayTileOffset()`
-- `public int getSizeInventory()`
-- `public boolean interactFirst( EntityPlayer playerIn)`
-- `public void onActivatorRailPass(int x, int y, int z, boolean receivingPower)`
-- `public boolean getBlocked()`
-- `public void setBlocked(boolean p_96110_1_)`
-- `public World getWorld()`
-- `public double getXPos()`
-- `public double getYPos()`
-- `public double getZPos()`
-- `public void onUpdate()`
-- `public boolean func_96112_aD()`
-- `public void killMinecart( DamageSource p_94095_1_)`
-- `protected void writeEntityToNBT( NBTTagCompound tagCompound)`
-- `protected void readEntityFromNBT( NBTTagCompound tagCompund)`
-- `public void setTransferTicker(int p_98042_1_)`
-- `public boolean canTransfer()`
-- `public java.lang.String getGuiID()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `boolean canTransfer()` — Returns whether the hopper cart can currently transfer an item.
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `boolean func_96112_aD()`
+- `boolean getBlocked()` — Get whether this hopper minecart is being blocked by an activator rail.
+- `IBlockState getDefaultDisplayTile()`
+- `int getDefaultDisplayTileOffset()`
+- `java.lang.String getGuiID()`
+- `EntityMinecart.EnumMinecartType getMinecartType()`
+- `int getSizeInventory()` — Returns the number of slots in the inventory.
+- `World getWorld()` — Returns the worldObj for this tileEntity.
+- `double getXPos()` — Gets the world X position for this hopper entity.
+- `double getYPos()` — Gets the world Y position for this hopper entity.
+- `double getZPos()` — Gets the world Z position for this hopper entity.
+- `boolean interactFirst(EntityPlayer playerIn)` — First layer of player interaction
+- `void killMinecart(DamageSource p_94095_1_)`
+- `void onActivatorRailPass(int x, int y, int z, boolean receivingPower)` — Called every tick the minecart is on an activator rail.
+- `void onUpdate()` — Called to update the entity's position/logic.
+- `protected void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
+- `void setBlocked(boolean p_96110_1_)` — Set whether this hopper minecart is being blocked by an activator rail.
+- `void setTransferTicker(int p_98042_1_)` — Sets the transfer ticker, used to determine the delay between transfers.
+- `protected void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
 
-## Description
+## Fields
 
-Returns whether the hopper cart can currently transfer an item.
+- `EntityMinecartHopper`
+- `EntityMinecartHopper`

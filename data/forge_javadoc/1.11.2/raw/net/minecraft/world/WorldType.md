@@ -1,13 +1,17 @@
 ---
 title: "WorldType"
-description: "Creates a new world type, the ID is hidden and should not be referenced by modders."
+description: "public class WorldType extends java.lang.Object"
 package: "net/minecraft/world"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/WorldType.html"
 sourceType: javadoc
 ---
 
 # WorldType
+
+**Inheritance:** java.lang.Object → net.minecraft.world.WorldType
 
 ## Class signature
 
@@ -17,33 +21,40 @@ public class WorldType extends java.lang.Object
 
 ## Constructors
 
-- `public WorldType(java.lang.String name)`
+- `WorldType(java.lang.String name)`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public java.lang.String getTranslateName()`
-- `public java.lang.String getTranslatedInfo()`
-- `public int getGeneratorVersion()`
-- `public WorldType getWorldTypeForGeneratorVersion(int version)`
-- `public boolean canBeCreated()`
-- `public boolean isVersioned()`
-- `public static WorldType parseWorldType(java.lang.String type)`
-- `public int getWorldTypeID()`
-- `public boolean showWorldInfoNotice()`
-- `public BiomeProvider getBiomeProvider( World world)`
-- `public IChunkGenerator getChunkGenerator( World world, java.lang.String generatorOptions)`
-- `public int getMinimumSpawnHeight( World world)`
-- `public double getHorizon( World world)`
-- `public double voidFadeMagnitude()`
-- `public boolean handleSlimeSpawnReduction(java.util.Random random, World world)`
-- `public void onGUICreateWorldPress()`
-- `public int getSpawnFuzz( WorldServer world, MinecraftServer server)`
-- `public void onCustomizeButton( Minecraft mc, GuiCreateWorld guiCreateWorld)`
-- `public boolean isCustomizable()`
-- `public float getCloudHeight()`
-- `public GenLayer getBiomeLayer(long worldSeed, GenLayer parentLayer, ChunkProviderSettings chunkProviderSettings)`
+- `boolean canBeCreated()`
+- `GenLayer getBiomeLayer(long worldSeed, GenLayer parentLayer, ChunkProviderSettings chunkProviderSettings)` — Creates the GenLayerBiome used for generating the world with the specified ChunkProviderSettings JSON String *IF AND ONLY IF* this WorldType == WorldType.CUSTOMIZED.
+- `BiomeProvider getBiomeProvider(World world)`
+- `IChunkGenerator getChunkGenerator(World world, java.lang.String generatorOptions)`
+- `float getCloudHeight()` — Get the height to render the clouds for this world type
+- `int getGeneratorVersion()`
+- `double getHorizon(World world)`
+- `int getMinimumSpawnHeight(World world)`
+- `java.lang.String getName()`
+- `int getSpawnFuzz(WorldServer world, MinecraftServer server)` — Gets the spawn fuzz for players who join the world.
+- `java.lang.String getTranslatedInfo()`
+- `java.lang.String getTranslateName()`
+- `WorldType getWorldTypeForGeneratorVersion(int version)`
+- `int getWorldTypeID()`
+- `boolean handleSlimeSpawnReduction(java.util.Random random, World world)`
+- `boolean isCustomizable()` — Should world creation GUI show 'Customize' button for this world type?
+- `boolean isVersioned()`
+- `void onCustomizeButton(Minecraft mc, GuiCreateWorld guiCreateWorld)` — Called when the 'Customize' button is pressed on world creation GUI
+- `void onGUICreateWorldPress()` — Called when 'Create New World' button is pressed before starting game
+- `static WorldType parseWorldType(java.lang.String type)`
+- `boolean showWorldInfoNotice()`
+- `double voidFadeMagnitude()`
 
-## Description
+## Fields
 
-Creates a new world type, the ID is hidden and should not be referenced by modders.
+- `static WorldType AMPLIFIED`
+- `static WorldType CUSTOMIZED`
+- `static WorldType DEBUG_WORLD`
+- `static WorldType DEFAULT`
+- `static WorldType DEFAULT_1_1`
+- `static WorldType FLAT`
+- `static WorldType LARGE_BIOMES`
+- `static WorldType [] WORLD_TYPES`

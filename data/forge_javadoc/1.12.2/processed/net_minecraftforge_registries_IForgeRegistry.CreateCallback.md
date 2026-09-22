@@ -1,9 +1,11 @@
 # IForgeRegistry.CreateCallback
 
+## Class signature
+
+```java
+public static interface IForgeRegistry.CreateCallback<V extends IForgeRegistryEntry<V>>
+```
+
 ## Methods
 
-- `void onCreate( IForgeRegistryInternal < V > owner, RegistryManager stage)`
-
-## Description
-
-Callback fired when a registry instance is created. Populate slave maps here.
+- `void onCreate(IForgeRegistryInternal<V> owner, RegistryManager stage)`

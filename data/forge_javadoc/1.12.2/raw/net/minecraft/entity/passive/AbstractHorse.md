@@ -1,116 +1,128 @@
 ---
 title: "AbstractHorse"
-description: "Retrieves the handler for the capability requested on the specific side."
+description: "public abstract class AbstractHorse extends EntityAnimal implements IInventoryChangedListener, IJumpingMount"
 package: "net/minecraft/entity/passive"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/passive/AbstractHorse.html"
 sourceType: javadoc
 ---
 
 # AbstractHorse
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.EntityAgeable → net.minecraft.entity.passive.EntityAnimal → net.minecraft.entity.passive.AbstractHorse
+
 ## Class signature
 
 ```java
-public abstract class AbstractHorse extends EntityAnimal implements IInventoryChangedListener , IJumpingMount
+public abstract class AbstractHorse extends EntityAnimal implements IInventoryChangedListener, IJumpingMount
 ```
 
 ## Constructors
 
-- `public AbstractHorse( World worldIn)`
+- `AbstractHorse(World worldIn)`
 
 ## Methods
 
-- `protected void initEntityAI()`
-- `protected void entityInit()`
-- `protected boolean getHorseWatchableBoolean(int p_110233_1_)`
-- `protected void setHorseWatchableBoolean(int p_110208_1_, boolean p_110208_2_)`
-- `public boolean isTame()`
-- `public java.util.UUID getOwnerUniqueId()`
-- `public void setOwnerUniqueId(java.util.UUID uniqueId)`
-- `public float getHorseSize()`
-- `public void setScaleForAge(boolean child)`
-- `public boolean isHorseJumping()`
-- `public void setHorseTamed(boolean tamed)`
-- `public void setHorseJumping(boolean jumping)`
-- `public boolean canBeLeashedTo( EntityPlayer player)`
-- `protected void onLeashDistance(float p_142017_1_)`
-- `public boolean isEatingHaystack()`
-- `public boolean isRearing()`
-- `public boolean isBreeding()`
-- `public void setBreeding(boolean breeding)`
-- `public void setHorseSaddled(boolean saddled)`
-- `public int getTemper()`
-- `public void setTemper(int temperIn)`
-- `public int increaseTemper(int p_110198_1_)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public boolean canBePushed()`
-- `public void fall(float distance, float damageMultiplier)`
-- `protected int getInventorySize()`
-- `protected void initHorseChest()`
-- `protected void updateHorseSlots()`
-- `public void onInventoryChanged( IInventory invBasic)`
-- `protected AbstractHorse getClosestHorse( Entity entityIn, double distance)`
-- `public double getHorseJumpStrength()`
-- `protected SoundEvent getDeathSound()`
-- `protected SoundEvent getHurtSound( DamageSource damageSourceIn)`
-- `protected SoundEvent getAmbientSound()`
-- `public boolean canBeSaddled()`
-- `public boolean isHorseSaddled()`
-- `protected SoundEvent getAngrySound()`
-- `protected void playStepSound( BlockPos pos, Block blockIn)`
-- `protected void playGallopSound( SoundType p_190680_1_)`
 - `protected void applyEntityAttributes()`
-- `public int getMaxSpawnedInChunk()`
-- `public int getMaxTemper()`
-- `protected float getSoundVolume()`
-- `public int getTalkInterval()`
-- `public void openGUI( EntityPlayer playerEntity)`
-- `protected boolean handleEating( EntityPlayer player, ItemStack stack)`
-- `protected void mountTo( EntityPlayer player)`
-- `protected boolean isMovementBlocked()`
-- `public boolean isBreedingItem( ItemStack stack)`
-- `public void onDeath( DamageSource cause)`
-- `public void onLivingUpdate()`
-- `protected void followMother()`
-- `public boolean canEatGrass()`
-- `public void onUpdate()`
-- `public void setEatingHaystack(boolean p_110227_1_)`
-- `public void setRearing(boolean rearing)`
-- `public void makeMad()`
-- `public boolean setTamedBy( EntityPlayer player)`
-- `public void travel(float strafe, float vertical, float forward)`
-- `public static void registerFixesAbstractHorse( DataFixer fixer, java.lang.Class<?> entityClass)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean canMateWith( EntityAnimal otherAnimal)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeLeashedTo(EntityPlayer player)`
+- `boolean canBePushed()`
+- `boolean canBeSaddled()`
+- `boolean canBeSteered()`
+- `boolean canEatGrass()`
+- `boolean canJump()`
 - `protected boolean canMate()`
-- `public EntityAgeable createChild( EntityAgeable ageable)`
-- `protected void setOffspringAttributes( EntityAgeable p_190681_1_, AbstractHorse p_190681_2_)`
-- `public boolean canBeSteered()`
-- `public float getGrassEatingAmount(float p_110258_1_)`
-- `public float getRearingAmount(float p_110223_1_)`
-- `public float getMouthOpennessAngle(float p_110201_1_)`
-- `public void setJumpPower(int jumpPowerIn)`
-- `public boolean canJump()`
-- `public void handleStartJump(int p_184775_1_)`
-- `public void handleStopJump()`
-- `protected void spawnHorseParticles(boolean p_110216_1_)`
-- `public void handleStatusUpdate(byte id)`
-- `public void updatePassenger( Entity passenger)`
-- `protected float getModifiedMaxHealth()`
+- `boolean canMateWith(EntityAnimal otherAnimal)`
+- `EntityAgeable createChild(EntityAgeable ageable)`
+- `protected void entityInit()`
+- `void fall(float distance, float damageMultiplier)`
+- `protected void followMother()`
+- `protected SoundEvent getAmbientSound()`
+- `protected SoundEvent getAngrySound()`
+- `<T> T getCapability(Capability<T> capability, EnumFacing facing)` — Retrieves the handler for the capability requested on the specific side.
+- `protected AbstractHorse getClosestHorse(Entity entityIn, double distance)`
+- `Entity getControllingPassenger()`
+- `protected SoundEvent getDeathSound()`
+- `float getEyeHeight()`
+- `float getGrassEatingAmount(float p_110258_1_)`
+- `double getHorseJumpStrength()`
+- `float getHorseSize()`
+- `protected boolean getHorseWatchableBoolean(int p_110233_1_)`
+- `protected SoundEvent getHurtSound(DamageSource damageSourceIn)`
+- `protected int getInventorySize()`
+- `int getMaxSpawnedInChunk()`
+- `int getMaxTemper()`
 - `protected double getModifiedJumpStrength()`
+- `protected float getModifiedMaxHealth()`
 - `protected double getModifiedMovementSpeed()`
-- `public boolean isOnLadder()`
-- `public float getEyeHeight()`
-- `public boolean wearsArmor()`
-- `public boolean isArmor( ItemStack stack)`
-- `public boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
-- `public Entity getControllingPassenger()`
-- `public IEntityLivingData onInitialSpawn( DifficultyInstance difficulty, IEntityLivingData livingdata)`
-- `public <T> T getCapability( Capability <T> capability, EnumFacing facing)`
-- `public boolean hasCapability( Capability <?> capability, EnumFacing facing)`
+- `float getMouthOpennessAngle(float p_110201_1_)`
+- `java.util.UUID getOwnerUniqueId()`
+- `float getRearingAmount(float p_110223_1_)`
+- `protected float getSoundVolume()`
+- `int getTalkInterval()`
+- `int getTemper()`
+- `protected boolean handleEating(EntityPlayer player, ItemStack stack)`
+- `void handleStartJump(int p_184775_1_)`
+- `void handleStatusUpdate(byte id)`
+- `void handleStopJump()`
+- `boolean hasCapability(Capability<?> capability, EnumFacing facing)` — Determines if this object has support for the capability in question on the specific side.
+- `int increaseTemper(int p_110198_1_)`
+- `protected void initEntityAI()`
+- `protected void initHorseChest()`
+- `boolean isArmor(ItemStack stack)`
+- `boolean isBreeding()`
+- `boolean isBreedingItem(ItemStack stack)`
+- `boolean isEatingHaystack()`
+- `boolean isHorseJumping()`
+- `boolean isHorseSaddled()`
+- `protected boolean isMovementBlocked()`
+- `boolean isOnLadder()`
+- `boolean isRearing()`
+- `boolean isTame()`
+- `void makeMad()`
+- `protected void mountTo(EntityPlayer player)`
+- `void onDeath(DamageSource cause)`
+- `IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)`
+- `void onInventoryChanged(IInventory invBasic)`
+- `protected void onLeashDistance(float p_142017_1_)`
+- `void onLivingUpdate()`
+- `void onUpdate()`
+- `void openGUI(EntityPlayer playerEntity)`
+- `protected void playGallopSound(SoundType p_190680_1_)`
+- `protected void playStepSound(BlockPos pos, Block blockIn)`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesAbstractHorse(DataFixer fixer, java.lang.Class<?> entityClass)`
+- `boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
+- `void setBreeding(boolean breeding)`
+- `void setEatingHaystack(boolean p_110227_1_)`
+- `void setHorseJumping(boolean jumping)`
+- `void setHorseSaddled(boolean saddled)`
+- `void setHorseTamed(boolean tamed)`
+- `protected void setHorseWatchableBoolean(int p_110208_1_, boolean p_110208_2_)`
+- `void setJumpPower(int jumpPowerIn)`
+- `protected void setOffspringAttributes(EntityAgeable p_190681_1_, AbstractHorse p_190681_2_)`
+- `void setOwnerUniqueId(java.util.UUID uniqueId)`
+- `void setRearing(boolean rearing)`
+- `void setScaleForAge(boolean child)`
+- `boolean setTamedBy(EntityPlayer player)`
+- `void setTemper(int temperIn)`
+- `protected void spawnHorseParticles(boolean p_110216_1_)`
+- `void travel(float strafe, float vertical, float forward)`
+- `protected void updateHorseSlots()`
+- `void updatePassenger(Entity passenger)`
+- `boolean wearsArmor()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
 
-## Description
+## Fields
 
-Retrieves the handler for the capability requested on the specific side.
+- `protected boolean canGallop`
+- `protected int gallopTime`
+- `protected ContainerHorseChest horseChest`
+- `protected boolean horseJumping`
+- `protected static IAttribute JUMP_STRENGTH`
+- `protected float jumpPower`
+- `int sprintCounter`
+- `int tailCounter`
+- `protected int temper`

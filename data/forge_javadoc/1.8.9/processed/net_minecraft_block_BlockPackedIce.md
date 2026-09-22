@@ -1,19 +1,17 @@
 # BlockPackedIce
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockPackedIce
+
 ## Class signature
 
 ```java
 public class BlockPackedIce extends Block
 ```
 
-## Constructors
-
-- `public BlockPackedIce()`
-
 ## Methods
 
-- `public int quantityDropped(java.util.Random random)`
+- `int quantityDropped(java.util.Random random)` — Returns the quantity of items to drop on block destruction.
 
-## Description
+## Fields
 
-Returns the quantity of items to drop on block destruction.
+- `BlockPackedIce`

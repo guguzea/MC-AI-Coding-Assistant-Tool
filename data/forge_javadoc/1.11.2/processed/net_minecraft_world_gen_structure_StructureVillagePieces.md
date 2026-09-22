@@ -1,5 +1,7 @@
 # StructureVillagePieces
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureVillagePieces
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class StructureVillagePieces extends java.lang.Object
 
 ## Constructors
 
-- `public StructureVillagePieces()`
+- `StructureVillagePieces()`
 
 ## Methods
 
-- `public static void registerVillagePieces()`
-- `public static java.util.List< StructureVillagePieces.PieceWeight > getStructureVillageWeightedPieceList(java.util.Random random, int size)`
+- `static java.util.List<StructureVillagePieces.PieceWeight> getStructureVillageWeightedPieceList(java.util.Random random, int size)`
+- `static void registerVillagePieces()`

@@ -1,13 +1,17 @@
 ---
 title: "NpcMerchant"
-description: "Get the formatted ChatComponent that will be used for the sender's username in chat"
+description: "public class NpcMerchant extends java.lang.Object implements IMerchant"
 package: "net/minecraft/entity"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/entity/NpcMerchant.html"
 sourceType: javadoc
 ---
 
 # NpcMerchant
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.NpcMerchant
 
 ## Class signature
 
@@ -17,18 +21,14 @@ public class NpcMerchant extends java.lang.Object implements IMerchant
 
 ## Constructors
 
-- `public NpcMerchant( EntityPlayer p_i45817_1_, IChatComponent p_i45817_2_)`
+- `NpcMerchant(EntityPlayer p_i45817_1_, IChatComponent p_i45817_2_)`
 
 ## Methods
 
-- `public EntityPlayer getCustomer()`
-- `public void setCustomer( EntityPlayer p_70932_1_)`
-- `public MerchantRecipeList getRecipes( EntityPlayer p_70934_1_)`
-- `public void setRecipes( MerchantRecipeList recipeList)`
-- `public void useRecipe( MerchantRecipe recipe)`
-- `public void verifySellingItem( ItemStack stack)`
-- `public IChatComponent getDisplayName()`
-
-## Description
-
-Get the formatted ChatComponent that will be used for the sender's username in chat
+- `EntityPlayer getCustomer()`
+- `IChatComponent getDisplayName()` — Get the formatted ChatComponent that will be used for the sender's username in chat
+- `MerchantRecipeList getRecipes(EntityPlayer p_70934_1_)`
+- `void setCustomer(EntityPlayer p_70932_1_)`
+- `void setRecipes(MerchantRecipeList recipeList)`
+- `void useRecipe(MerchantRecipe recipe)`
+- `void verifySellingItem(ItemStack stack)` — Notifies the merchant of a possible merchantrecipe being fulfilled or not.

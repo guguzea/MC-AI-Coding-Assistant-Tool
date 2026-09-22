@@ -1,9 +1,17 @@
 # PositionTrigger.Instance
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.critereon.AbstractCriterionInstance → net.minecraft.advancements.critereon.PositionTrigger.Instance
+
+## Class signature
+
+```java
+public static class PositionTrigger.Instance extends AbstractCriterionInstance
+```
+
 ## Constructors
 
-- `public Instance( ResourceLocation criterionIn, LocationPredicate location)`
+- `Instance(ResourceLocation criterionIn, LocationPredicate location)`
 
 ## Methods
 
-- `public boolean test( WorldServer world, double x, double y, double z)`
+- `boolean test(WorldServer world, double x, double y, double z)`

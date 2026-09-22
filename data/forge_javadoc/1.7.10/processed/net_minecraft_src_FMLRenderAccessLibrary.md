@@ -1,5 +1,7 @@
 # FMLRenderAccessLibrary
 
+**Inheritance:** java.lang.Object → net.minecraft.src.FMLRenderAccessLibrary
+
 ## Class signature
 
 ```java
@@ -8,17 +10,13 @@ public class FMLRenderAccessLibrary extends java.lang.Object
 
 ## Constructors
 
-- `public FMLRenderAccessLibrary()`
+- `FMLRenderAccessLibrary()`
 
 ## Methods
 
-- `public static Logger getLogger()`
-- `public static void log(Level level, java.lang.String message)`
-- `public static void log(Level level, java.lang.String message, java.lang.Throwable throwable)`
-- `public static boolean renderWorldBlock( RenderBlocks renderer, IBlockAccess world, int x, int y, int z, Block block, int modelId)`
-- `public static void renderInventoryBlock( RenderBlocks renderer, Block block, int metadata, int modelID)`
-- `public static boolean renderItemAsFull3DBlock(int modelId)`
-
-## Description
-
-A static hook library for optifine and other basemod editing code to access FML functions
+- `static Logger getLogger()`
+- `static void log(Level level, java.lang.String message)`
+- `static void log(Level level, java.lang.String message, java.lang.Throwable throwable)`
+- `static void renderInventoryBlock(RenderBlocks renderer, Block block, int metadata, int modelID)`
+- `static boolean renderItemAsFull3DBlock(int modelId)`
+- `static boolean renderWorldBlock(RenderBlocks renderer, IBlockAccess world, int x, int y, int z, Block block, int modelId)`

@@ -1,9 +1,18 @@
 # PlayerEvent.HarvestCheck
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerEvent.HarvestCheck
+
+## Class signature
+
+```java
+public static class PlayerEvent.HarvestCheck extends PlayerEvent
+```
+
 ## Constructors
 
-- `public HarvestCheck( EntityPlayer player, Block block, boolean success)`
+- `HarvestCheck(EntityPlayer player, Block block, boolean success)`
 
-## Description
+## Fields
 
-HarvestCheck is fired when a player attempts to harvest a block. This event is fired whenever a player attempts to harvest a block in EntityPlayer#canHarvestBlock(Block). This event is fired via the F
+- `Block block`
+- `boolean success`

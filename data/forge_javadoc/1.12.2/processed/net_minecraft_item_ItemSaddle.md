@@ -1,15 +1,17 @@
 # ItemSaddle
 
+**Inheritance:** java.lang.Object → net.minecraftforge.registries.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemSaddle
+
 ## Class signature
 
 ```java
 public class ItemSaddle extends Item
 ```
 
-## Constructors
-
-- `public ItemSaddle()`
-
 ## Methods
 
-- `public boolean itemInteractionForEntity( ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand)`
+- `boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand)`
+
+## Fields
+
+- `ItemSaddle`

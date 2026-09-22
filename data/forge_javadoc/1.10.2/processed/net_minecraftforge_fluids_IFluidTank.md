@@ -8,13 +8,9 @@ public interface IFluidTank
 
 ## Methods
 
-- `@Nullable FluidStack getFluid()`
-- `int getFluidAmount()`
+- `FluidStack drain(int maxDrain, boolean doDrain)`
+- `int fill(FluidStack resource, boolean doFill)`
 - `int getCapacity()`
-- `FluidTankInfo getInfo()`
-- `int fill( FluidStack resource, boolean doFill)`
-- `@Nullable FluidStack drain(int maxDrain, boolean doDrain)`
-
-## Description
-
-A tank is the unit of interaction with Fluid inventories. A reference implementation can be found at FluidTank .
+- `FluidStack getFluid()`
+- `int getFluidAmount()`
+- `FluidTankInfo getInfo()` — Returns a wrapper object FluidTankInfo containing the capacity of the tank and the FluidStack it holds.

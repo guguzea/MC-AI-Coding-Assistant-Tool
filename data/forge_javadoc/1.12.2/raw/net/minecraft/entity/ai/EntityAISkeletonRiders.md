@@ -3,11 +3,15 @@ title: "EntityAISkeletonRiders"
 description: "public class EntityAISkeletonRiders extends EntityAIBase"
 package: "net/minecraft/entity/ai"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/ai/EntityAISkeletonRiders.html"
 sourceType: javadoc
 ---
 
 # EntityAISkeletonRiders
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAISkeletonRiders
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class EntityAISkeletonRiders extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAISkeletonRiders( EntitySkeletonHorse horseIn)`
+- `EntityAISkeletonRiders(EntitySkeletonHorse horseIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void updateTask()`
+- `boolean shouldExecute()`
+- `void updateTask()`

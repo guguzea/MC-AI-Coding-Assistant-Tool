@@ -3,11 +3,15 @@ title: "DamageSource"
 description: "public class DamageSource extends java.lang.Object"
 package: "net/minecraft/util"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/util/DamageSource.html"
 sourceType: javadoc
 ---
 
 # DamageSource
+
+**Inheritance:** java.lang.Object → net.minecraft.util.DamageSource
 
 ## Class signature
 
@@ -17,40 +21,64 @@ public class DamageSource extends java.lang.Object
 
 ## Constructors
 
-- `public DamageSource(java.lang.String damageTypeIn)`
+- `DamageSource(java.lang.String damageTypeIn)`
 
 ## Methods
 
-- `public static DamageSource causeMobDamage( EntityLivingBase mob)`
-- `public static DamageSource causeIndirectDamage( Entity source, EntityLivingBase indirectEntityIn)`
-- `public static DamageSource causePlayerDamage( EntityPlayer player)`
-- `public static DamageSource causeArrowDamage( EntityArrow arrow, Entity indirectEntityIn)`
-- `public static DamageSource causeFireballDamage( EntityFireball fireball, Entity indirectEntityIn)`
-- `public static DamageSource causeThrownDamage( Entity source, Entity indirectEntityIn)`
-- `public static DamageSource causeIndirectMagicDamage( Entity source, Entity indirectEntityIn)`
-- `public static DamageSource causeThornsDamage( Entity source)`
-- `public static DamageSource causeExplosionDamage( Explosion explosionIn)`
-- `public static DamageSource causeExplosionDamage( EntityLivingBase entityLivingBaseIn)`
-- `public boolean isProjectile()`
-- `public DamageSource setProjectile()`
-- `public boolean isExplosion()`
-- `public DamageSource setExplosion()`
-- `public boolean isUnblockable()`
-- `public float getHungerDamage()`
-- `public boolean canHarmInCreative()`
-- `public boolean isDamageAbsolute()`
-- `public Entity getImmediateSource()`
-- `public Entity getTrueSource()`
-- `public DamageSource setDamageBypassesArmor()`
-- `public DamageSource setDamageAllowedInCreativeMode()`
-- `public DamageSource setDamageIsAbsolute()`
-- `public DamageSource setFireDamage()`
-- `public ITextComponent getDeathMessage( EntityLivingBase entityLivingBaseIn)`
-- `public boolean isFireDamage()`
-- `public java.lang.String getDamageType()`
-- `public DamageSource setDifficultyScaled()`
-- `public boolean isDifficultyScaled()`
-- `public boolean isMagicDamage()`
-- `public DamageSource setMagicDamage()`
-- `public boolean isCreativePlayer()`
-- `public Vec3d getDamageLocation()`
+- `boolean canHarmInCreative()`
+- `static DamageSource causeArrowDamage(EntityArrow arrow, Entity indirectEntityIn)`
+- `static DamageSource causeExplosionDamage(EntityLivingBase entityLivingBaseIn)`
+- `static DamageSource causeExplosionDamage(Explosion explosionIn)`
+- `static DamageSource causeFireballDamage(EntityFireball fireball, Entity indirectEntityIn)`
+- `static DamageSource causeIndirectDamage(Entity source, EntityLivingBase indirectEntityIn)`
+- `static DamageSource causeIndirectMagicDamage(Entity source, Entity indirectEntityIn)`
+- `static DamageSource causeMobDamage(EntityLivingBase mob)`
+- `static DamageSource causePlayerDamage(EntityPlayer player)`
+- `static DamageSource causeThornsDamage(Entity source)`
+- `static DamageSource causeThrownDamage(Entity source, Entity indirectEntityIn)`
+- `Vec3d getDamageLocation()`
+- `java.lang.String getDamageType()`
+- `ITextComponent getDeathMessage(EntityLivingBase entityLivingBaseIn)`
+- `float getHungerDamage()`
+- `Entity getImmediateSource()`
+- `Entity getTrueSource()`
+- `boolean isCreativePlayer()`
+- `boolean isDamageAbsolute()`
+- `boolean isDifficultyScaled()`
+- `boolean isExplosion()`
+- `boolean isFireDamage()`
+- `boolean isMagicDamage()`
+- `boolean isProjectile()`
+- `boolean isUnblockable()`
+- `DamageSource setDamageAllowedInCreativeMode()`
+- `DamageSource setDamageBypassesArmor()`
+- `DamageSource setDamageIsAbsolute()`
+- `DamageSource setDifficultyScaled()`
+- `DamageSource setExplosion()`
+- `DamageSource setFireDamage()`
+- `DamageSource setMagicDamage()`
+- `DamageSource setProjectile()`
+
+## Fields
+
+- `static DamageSource ANVIL`
+- `static DamageSource CACTUS`
+- `static DamageSource CRAMMING`
+- `java.lang.String damageType`
+- `static DamageSource DRAGON_BREATH`
+- `static DamageSource DROWN`
+- `static DamageSource FALL`
+- `static DamageSource FALLING_BLOCK`
+- `static DamageSource FIREWORKS`
+- `static DamageSource FLY_INTO_WALL`
+- `static DamageSource GENERIC`
+- `static DamageSource HOT_FLOOR`
+- `static DamageSource IN_FIRE`
+- `static DamageSource IN_WALL`
+- `static DamageSource LAVA`
+- `static DamageSource LIGHTNING_BOLT`
+- `static DamageSource MAGIC`
+- `static DamageSource ON_FIRE`
+- `static DamageSource OUT_OF_WORLD`
+- `static DamageSource STARVE`
+- `static DamageSource WITHER`

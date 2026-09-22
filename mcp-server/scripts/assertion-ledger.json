@@ -1268,6 +1268,74 @@
         "assert-test-harness.mjs"
       ],
       "closedAt": "2026-09-21"
+    },
+    {
+      "id": "chain-position-s20-r4-on-step8",
+      "claim": "**S20**（`scripts/**` 写盘必须走 write-guard）与 **R-4**（测试恒真形状闸，防「测试自退化」）必须挂在根 AGENTS.md 指定的**第 8 步链**（`cd mcp-server && node test-scripts.mjs`）上，而不是只挂 `npm test` 链。",
+      "author": "2026-09-21 辅助 agent 链位发现 + 本波必修 1",
+      "evidence": "复现：`assert-test-harness` 在 `mcp-server/package.json` 的 test 链出现 1 次、在 `test-scripts.mjs` 出现 **0** 次；`testScriptWriteGuardFunnel()` 只在 `test-core.mjs` 被调用（test-scripts 对 test-core **0 引用**）。而根 AGENTS.md:387 明写「改了 `mcp-server/scripts/**` 或 `scripts/**` 后，收口**必须**跑第 8 步（`node test-scripts.mjs`）—— `npm test` 里抽跑几道门**不能**代替它」⇒ 两道闸都挂在改 scripts 的人按规矩**不会跑**的那条链上（这是 `assert-skill-yarn-attest` / `assert-skill-mappings-key` 带裸写盘静默入库的机制原因，不是「缺闸」）。修法：S20 判据抽到 `scripts/_lib/script-write-guard-check.mjs`（test-core 与本门**共用同一份**，判据唯一、零放宽），新增第 8 步链入口门 `scripts/assert-script-write-guard.mjs`（真跑 + 8 例投毒 selftest + 1 例只读正对照）；它与 `assert-test-harness.mjs` 一并挂进 test-scripts 的真跑块，`assert-script-write-guard` 另挂 selftest 块，package.json 亦收录。首次上链即暴露 6 处从未有人处理的盘面（这正是链位缺陷的实证）：① assert-skill-yarn-attest / ② assert-skill-mappings-key / ③ assert-upstream-chapters —— 三个 selftest 门的夹具全落 OS tmpdir，与既有 assert-powershell / assert-cli-quick 同范式，补登记 NON_WRITERS（依据一律锚定其 mkdtemp 前缀）；④ fetch-forge-docs.js —— 抓取器重构后旧依据 `const dryRun = parsedArgs.flags` 已不成立，DEBT 重签为 `dryRun = parsedArgs.flags[\"dry-run\"]`；⑤ fetch-bedrock-script-api.mjs —— 落 gitignore 的 `mcp-server/scripts/_temp/`（.gitignore:37），按 snapshot-sha256 同类口径补登记；⑥ bedrock-corpus.mjs —— **在制品**，落笔是仓库 `data/bedrock_stable/**`，本应改道 emit，但它的 writeWithRetry 带 OneDrive -4094 退避 + tmp/rename（比 emit 的裸同步写更强）⇒ 只登记过渡 DEBT，待给 emit 补同步原子出口后再改道（已列本轮必修 2/3）。验证：`assert-script-write-guard` 真跑 ok（扫描 191 文件 / 0 违规 / 写盘原语 327 全在 write-guard 内或在册豁免）；`--selftest` 8 例投毒全红、只读正对照绿；test-core 侧同一判据 ok（`范围外 0`、投毒 16 类全命中）；`assert-test-harness` 真跑 ok（R-4 扫 34 个含断言的测试文件、0 命中）。",
+      "evidenceRefs": [
+        "mcp-server/scripts/_lib/script-write-guard-check.mjs",
+        "mcp-server/scripts/assert-script-write-guard.mjs",
+        "mcp-server/test-scripts.mjs",
+        "mcp-server/test-core.mjs",
+        "AGENTS.md"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-script-write-guard.mjs",
+        "assert-test-harness.mjs"
+      ],
+      "closedAt": "2026-09-21"
+    },
+    {
+      "id": "write-guard-emit-atomic-sync",
+      "claim": "`scripts/_lib/write-guard.mjs` 必须提供**同步原子 + 同步退避**的落盘出口（`emitAtomic`：写 `.<名字>.<pid>.tmp` → `rename` 换入；失败按 200/600/1500ms **同步**退避后重试，三次仍败才抛且抛前清 tmp）。因为：① `emit` 的裸 `writeFileSync` 在同步卷（本仓在 OneDrive）上写半截会留下**看起来有内容的残页**；② `-4094/UNKNOWN` 是偶发抖动，一次失败不等于写不进去。",
+      "author": "2026-09-21 辅助 agent 反转意见（「真正缺退避的是 write-guard 自己」）+ 本波必修 2/必修 3 第一步",
+      "evidence": "**前提被推翻（如实记录）**：我原先在 `write-guard.mjs` 与台账里写的收口理由是「退避需要 setTimeout（异步），会把 32 个同步调用点全变成 await」——辅助 agent 指出**同步退避不需要 async**。亲验（`temp/_probe_syncsleep.mjs`）：`Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms)` 在 **Node 主线程**可用（被禁的只有浏览器主线程）——三次退避 200+600+1500 实测 **2325ms**（期望≈2300）、等待后主线程定时器正常、同步重试环可用、回读内容正确。⇒ 该理由作废，退避**原地加进同步出口**，32 个调用点一个都不用改。**范围**：仍不引入异步出口（`emitWithRetry` 一类）—— 现在没有这个需求，同步出口已覆盖 OneDrive 抖动。**验证（四例，子进程真跑；`WRITE` 是模块级 `wantWrite(process.argv)` 常量，同进程改不动）**：`mcp-server/test-core.mjs` 的 `testEmitAtomic()` —— ① 无 `--write` ⇒ 只 `DRYRUN` 且不落盘；② 带 `--write` ⇒ 真落盘、内容逐字相等、无 `.tmp`；③ **首写抛 -4094、退避后重试成功**（退避被摘掉 ⇒ 文件不存在 ⇒ 红）；④ **三次全败** ⇒ 退出码非 0、无 `.tmp` 残骸、无半成品。③④ 必须成对，否则退避只在成功路径上被测过（辅助 agent 的判据要求）。test-core 实跑全过。**零生产调用点这件事已记录**：`grep emitAtomic` 实测仅 定义 1 + test-core 5 + 门的正则 4 + 台账 2 —— 必修 3 的 bedrock-corpus 改道是它第一次被真实消费（辅助 agent 的「别让新出口以未使用状态过夜」）。",
+      "evidenceRefs": [
+        "scripts/_lib/write-guard.mjs",
+        "mcp-server/test-core.mjs",
+        "mcp-server/scripts/_lib/script-write-guard-check.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-script-write-guard.mjs"
+      ],
+      "closedAt": "2026-09-21"
+    },
+    {
+      "id": "guard-scope-coverage-anti-zombie",
+      "claim": "S20 的豁免清单（NON_WRITERS / DEBT）与点名清单（FILES）必须有一条**反向腿**：每条条目都要命中一个**被枚举到的**文件，否则当场红 —— 否则条目一删，锚就静默失效，没人报僵尸项（「DEBT 只能进不能出」）。",
+      "author": "2026-09-21 辅助 agent 发现（「DEBT 表只能进不能出」）+ 本波收口",
+      "evidence": "为什么这条腿非有不可：本门的扫描面是**走盘**枚举的（`listScriptModuleFiles`，含**未跟踪**与 **gitignore** 文件）⇒ 豁免只在「文件被枚举到」时才逐条复核；文件一删，`files.some(...)` 静默变 false，旧实现只在 test-core 的内联断言里咬着，一旦那段被删就无人报。修法（形状级，不逐条删文件）：把内联断言抽成纯函数 `checkGuardScopeCoverage(files)`（`_lib/script-write-guard-check.mjs`），test-core 的 S20 漏斗与第 8 步链的 `assert-script-write-guard.mjs` **共用同一份**；并给门加一例投毒自证（喂一个只含无关文件的 scope ⇒ 必须报「清单条目 … 已不在扫描范围内」+「必须含 write-guard.mjs 本身」）。现状实测：NON_WRITERS 33 + DEBT 41 + FILES 7 条 **全部命中真实文件（僵尸 0 条）**；但有 3 条 DEBT 挂在**未跟踪**探针上（`_debug_article` / `_debug_fetch_full` / `_debug_final`）—— 未跟踪文件被删时同样会触发本腿（红），这正是要的行为。验证：门 `--selftest` 输出「8 例投毒 + 1 例正对照 + 1 例扫描面自证」全过；真跑 `ok（范围外违规 0；清单：非写盘 33 + 待收口债务 41 + 点名已改道 7 —— 条数以清单为准，不在文案里重述扫描计数）`；test-core 侧共用同一函数后仍绿。",
+      "evidenceRefs": [
+        "mcp-server/scripts/_lib/script-write-guard-check.mjs",
+        "mcp-server/scripts/assert-script-write-guard.mjs",
+        "mcp-server/test-core.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-script-write-guard.mjs"
+      ],
+      "closedAt": "2026-09-21"
+    },
+    {
+      "id": "bedrock-corpus-keeps-own-retry-writer",
+      "claim": "`mcp-server/scripts/_lib/bedrock-corpus.mjs` 的 `writeWithRetry` **不**改道到 write-guard 的 `emitAtomic`；本库保持纯库（写盘路径由调用方给），S20 侧长期登记，收口点在调用方抓取器。",
+      "author": "2026-09-22 用户问「落地后要不要做」+ 本波复核（三条亲验）",
+      "evidence": "三项实测扭转了原结论（原先列为「必修 3 第二步：等落地后改道」）：① **改道动力已消失** —— 它原来的缺陷是「rename 被 -4094 抖动挡下时，兜底直写留下带整页正文的 `*.tmp-<pid>`」（旁证：并行新门 `assert-javadoc-build-provenance.mjs:138-140` 专门为这类非 .md 残留单列了判据，称「实测 bedrock 树一轮留了 3 份整页正文副本」）；现在它自己清（`bedrock-corpus.mjs:84` 的 `rmSync(tmp, { force: true })`），且盘上 `data/bedrock_stable/**` 实测 `.tmp` 残留 **0**。② **两种写盘语义分工不同，不该强行统一** —— `emitAtomic` 是「原子性优先」：rename 失败 ⇒ 清 tmp 后抛，宁可不写也不留半成品；`writeWithRetry` 是「可用性优先」：rename 失败 ⇒ **直写兜底**先把正文写上，再清 tmp。语料抓取「一页很贵」，可用性优先才正确；改道到 `emitAtomic` 反而会**删掉这条兜底**（能力倒退，与上一轮「按字面改道 emit = 降级」同形）。③ **收口点在调用方，且是批次性改造** —— `fetch-bedrock-docs.js:264` / `fetch-bedrock-script-api.mjs:284` 仍是**反方向闸门**（`--dry-run` 才停、默认就写），而 `emitAtomic` 受 `--write` 管 ⇒ 改道必然改变抓取器的默认行为，需先把 DEBT 里十来个 .js 抓取器的闸门方向统一，属另一批次（且 `fetch-bedrock-docs.js` 此刻仍被并行会话持有 M）。口径同构先例：`_lib/thin-docs-wiki.mjs` / `_lib/build-yarn-mappings.mjs` / `_lib/pipeline-helpers.mjs` 也都是「纯库、路径由调用方给」登记 NON_WRITERS/DEBT 的形态。验证：S20 真跑 ok（范围外违规 0；清单：非写盘 33 + 债务 41 + 点名已改道 7）；DEBT 依据正则锚定 `writeWithRetry(filePath, text, delays` ⇒ 该能力被删或改名即失效，逼重签。",
+      "evidenceRefs": [
+        "mcp-server/scripts/_lib/bedrock-corpus.mjs",
+        "mcp-server/scripts/_lib/script-write-guard-check.mjs",
+        "mcp-server/scripts/fetch-bedrock-script-api.mjs",
+        "mcp-server/scripts/fetch-bedrock-docs.js"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-script-write-guard.mjs"
+      ],
+      "closedAt": "2026-09-22"
     }
   ]
 }

@@ -1,24 +1,22 @@
 # C10PacketCreativeInventoryAction
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.C10PacketCreativeInventoryAction
+
 ## Class signature
 
 ```java
-public class C10PacketCreativeInventoryAction extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class C10PacketCreativeInventoryAction extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public C10PacketCreativeInventoryAction()`
-- `public C10PacketCreativeInventoryAction(int slotIdIn, ItemStack stackIn)`
+- `C10PacketCreativeInventoryAction()`
+- `C10PacketCreativeInventoryAction(int slotIdIn, ItemStack stackIn)`
 
 ## Methods
 
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public int getSlotId()`
-- `public ItemStack getStack()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `int getSlotId()`
+- `ItemStack getStack()`
+- `void processPacket(INetHandlerPlayServer handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

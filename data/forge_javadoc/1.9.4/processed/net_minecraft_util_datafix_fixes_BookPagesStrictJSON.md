@@ -1,5 +1,7 @@
 # BookPagesStrictJSON
 
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.BookPagesStrictJSON
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class BookPagesStrictJSON extends java.lang.Object implements IFixableDat
 
 ## Constructors
 
-- `public BookPagesStrictJSON()`
+- `BookPagesStrictJSON()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

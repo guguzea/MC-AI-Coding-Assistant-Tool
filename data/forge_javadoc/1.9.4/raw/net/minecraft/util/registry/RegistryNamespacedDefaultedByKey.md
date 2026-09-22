@@ -1,34 +1,38 @@
 ---
 title: "RegistryNamespacedDefaultedByKey"
-description: "public class RegistryNamespacedDefaultedByKey<K,V> extends RegistryNamespaced <K,V>"
+description: "public class RegistryNamespacedDefaultedByKey<K, V> extends RegistryNamespaced<K, V>"
 package: "net/minecraft/util/registry"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/util/registry/RegistryNamespacedDefaultedByKey.html"
 sourceType: javadoc
 ---
 
 # RegistryNamespacedDefaultedByKey
 
+**Inheritance:** java.lang.Object → net.minecraft.util.registry.RegistrySimple<K, V> → net.minecraft.util.registry.RegistryNamespaced<K, V> → net.minecraft.util.registry.RegistryNamespacedDefaultedByKey<K, V>
+
 ## Class signature
 
 ```java
-public class RegistryNamespacedDefaultedByKey<K,V> extends RegistryNamespaced <K,V>
+public class RegistryNamespacedDefaultedByKey<K, V> extends RegistryNamespaced<K, V>
 ```
-
-## Constructors
-
-- `public RegistryNamespacedDefaultedByKey( K defaultValueKeyIn)`
 
 ## Methods
 
-- `public void register(int id, K key, V value)`
-- `public void validateKey()`
-- `public int getIDForObject( V value)`
-- `@Nonnull public K getNameForObject( V value)`
-- `@Nonnull public V getObject(@Nullable K name)`
-- `@Nonnull public V getObjectById(int id)`
-- `@Nonnull public V getRandomObject(java.util.Random random)`
-- `public int getIDForObjectBypass( V bypass)`
-- `public K getNameForObjectBypass( V value)`
-- `public V getObjectBypass( K name)`
-- `public V getObjectByIdBypass(int id)`
+- `int getIDForObject(V value)`
+- `int getIDForObjectBypass(V bypass)`
+- `K getNameForObject(V value)`
+- `K getNameForObjectBypass(V value)`
+- `V getObject(K name)`
+- `V getObjectById(int id)`
+- `V getObjectByIdBypass(int id)`
+- `V getObjectBypass(K name)`
+- `V getRandomObject(java.util.Random random)`
+- `void register(int id, K key, V value)`
+- `void validateKey()`
+
+## Fields
+
+- `RegistryNamespacedDefaultedByKey`

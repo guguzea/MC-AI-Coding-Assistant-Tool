@@ -1,32 +1,30 @@
 # SaveHandler
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.SaveHandler
+
 ## Class signature
 
 ```java
-public class SaveHandler extends java.lang.Object implements ISaveHandler , IPlayerFileData
+public class SaveHandler extends java.lang.Object implements ISaveHandler, IPlayerFileData
 ```
 
 ## Constructors
 
-- `public SaveHandler(java.io.File savesDirectory, java.lang.String directoryName, boolean playersDirectoryIn)`
+- `SaveHandler(java.io.File savesDirectory, java.lang.String directoryName, boolean playersDirectoryIn)`
 
 ## Methods
 
-- `public java.io.File getWorldDirectory()`
-- `public void checkSessionLock() throws MinecraftException`
-- `public IChunkLoader getChunkLoader( WorldProvider provider)`
-- `public WorldInfo loadWorldInfo()`
-- `public void saveWorldInfoWithPlayer( WorldInfo worldInformation, NBTTagCompound tagCompound)`
-- `public void saveWorldInfo( WorldInfo worldInformation)`
-- `public void writePlayerData( EntityPlayer player)`
-- `public NBTTagCompound readPlayerData( EntityPlayer player)`
-- `public IPlayerFileData getPlayerNBTManager()`
-- `public java.lang.String[] getAvailablePlayerDat()`
-- `public void flush()`
-- `public java.io.File getMapFileFromName(java.lang.String mapName)`
-- `public java.lang.String getWorldDirectoryName()`
-- `public NBTTagCompound getPlayerNBT( EntityPlayerMP player)`
-
-## Description
-
-Checks the session lock to prevent save collisions
+- `void checkSessionLock()` — Checks the session lock to prevent save collisions
+- `void flush()` — Called to flush all changes to disk, waiting for them to complete.
+- `java.lang.String[] getAvailablePlayerDat()` — Returns an array of usernames for which player.dat exists for.
+- `IChunkLoader getChunkLoader(WorldProvider provider)` — initializes and returns the chunk loader for the specified world provider
+- `java.io.File getMapFileFromName(java.lang.String mapName)` — Gets the file location of the given map
+- `NBTTagCompound getPlayerNBT(EntityPlayerMP player)`
+- `IPlayerFileData getPlayerNBTManager()`
+- `java.io.File getWorldDirectory()` — Gets the File object corresponding to the base directory of this world.
+- `java.lang.String getWorldDirectoryName()` — Returns the name of the directory where world information is saved.
+- `WorldInfo loadWorldInfo()` — Loads and returns the world info
+- `NBTTagCompound readPlayerData(EntityPlayer player)` — Reads the player data from disk into the specified PlayerEntityMP.
+- `void saveWorldInfo(WorldInfo worldInformation)` — used to update level.dat from old format to MCRegion format
+- `void saveWorldInfoWithPlayer(WorldInfo worldInformation, NBTTagCompound tagCompound)` — Saves the given World Info with the given NBTTagCompound as the Player.
+- `void writePlayerData(EntityPlayer player)` — Writes the player data to disk from the specified PlayerEntityMP.

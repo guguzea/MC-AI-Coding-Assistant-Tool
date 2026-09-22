@@ -1,20 +1,30 @@
 ---
 title: "InitNoiseGensEvent.ContextEnd"
-description: ""
+description: "public static class InitNoiseGensEvent.ContextEnd extends InitNoiseGensEvent.Context"
 package: "net/minecraftforge/event/terraingen"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/event/terraingen/InitNoiseGensEvent.ContextEnd.html"
 sourceType: javadoc
 ---
 
 # InitNoiseGensEvent.ContextEnd
 
+**Inheritance:** java.lang.Object → net.minecraftforge.event.terraingen.InitNoiseGensEvent.Context → net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextEnd
+
+## Class signature
+
+```java
+public static class InitNoiseGensEvent.ContextEnd extends InitNoiseGensEvent.Context
+```
+
 ## Constructors
 
-- `public ContextEnd( NoiseGeneratorOctaves lperlin1, NoiseGeneratorOctaves lperlin2, NoiseGeneratorOctaves perlin, NoiseGeneratorOctaves scale, NoiseGeneratorOctaves depth, NoiseGeneratorSimplex island)`
+- `ContextEnd(NoiseGeneratorOctaves lperlin1, NoiseGeneratorOctaves lperlin2, NoiseGeneratorOctaves perlin, NoiseGeneratorOctaves scale, NoiseGeneratorOctaves depth, NoiseGeneratorSimplex island)`
 
 ## Methods
 
-- `public InitNoiseGensEvent.ContextEnd clone()`
-- `public NoiseGeneratorSimplex getIsland()`
-- `public void getIsland( NoiseGeneratorSimplex value)`
+- `InitNoiseGensEvent.ContextEnd clone()`
+- `NoiseGeneratorSimplex getIsland()`
+- `void getIsland(NoiseGeneratorSimplex value)`

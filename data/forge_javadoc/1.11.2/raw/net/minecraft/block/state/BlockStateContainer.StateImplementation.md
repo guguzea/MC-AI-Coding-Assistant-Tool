@@ -1,69 +1,83 @@
 ---
 title: "BlockStateContainer.StateImplementation"
-description: ""
+description: "public static class BlockStateContainer.StateImplementation extends BlockStateBase"
 package: "net/minecraft/block/state"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/block/state/BlockStateContainer.StateImplementation.html"
 sourceType: javadoc
 ---
 
 # BlockStateContainer.StateImplementation
 
+**Inheritance:** java.lang.Object → net.minecraft.block.state.BlockStateBase → net.minecraft.block.state.BlockStateContainer.StateImplementation
+
+## Class signature
+
+```java
+public static class BlockStateContainer.StateImplementation extends BlockStateBase
+```
+
 ## Constructors
 
-- `protected StateImplementation( Block blockIn, com.google.common.collect.ImmutableMap< IProperty <?>,java.lang.Comparable<?>> propertiesIn)`
-- `protected StateImplementation( Block blockIn, com.google.common.collect.ImmutableMap< IProperty <?>,java.lang.Comparable<?>> propertiesIn, com.google.common.collect.ImmutableTable< IProperty <?>,java.lang.Comparable<?>, IBlockState > propertyValueTable)`
+- `StateImplementation(Block blockIn, com.google.common.collect.ImmutableMap<IProperty<?>, java.lang.Comparable<?>> propertiesIn)`
+- `StateImplementation(Block blockIn, com.google.common.collect.ImmutableMap<IProperty<?>, java.lang.Comparable<?>> propertiesIn, com.google.common.collect.ImmutableTable<IProperty<?>, java.lang.Comparable<?>, IBlockState> propertyValueTable)`
 
 ## Methods
 
-- `public java.util.Collection< IProperty <?>> getPropertyKeys()`
-- `public <T extends java.lang.Comparable<T>> T getValue( IProperty <T> property)`
-- `public <T extends java.lang.Comparable<T>,V extends T> IBlockState withProperty( IProperty <T> property, V value)`
-- `public com.google.common.collect.ImmutableMap< IProperty <?>,java.lang.Comparable<?>> getProperties()`
-- `public Block getBlock()`
-- `public boolean equals(java.lang.Object p_equals_1_)`
-- `public int hashCode()`
-- `public void buildPropertyValueTable(java.util.Map<java.util.Map< IProperty <?>,java.lang.Comparable<?>>, BlockStateContainer.StateImplementation > map)`
-- `public Material getMaterial()`
-- `public boolean isFullBlock()`
-- `public boolean canEntitySpawn( Entity entityIn)`
-- `public int getLightOpacity()`
-- `public int getLightValue()`
-- `public boolean isTranslucent()`
-- `public boolean useNeighborBrightness()`
-- `public MapColor getMapColor()`
-- `public IBlockState withRotation( Rotation rot)`
-- `public IBlockState withMirror( Mirror mirrorIn)`
-- `public boolean isFullCube()`
-- `public boolean hasCustomBreakingProgress()`
-- `public EnumBlockRenderType getRenderType()`
-- `public int getPackedLightmapCoords( IBlockAccess source, BlockPos pos)`
-- `public float getAmbientOcclusionLightValue()`
-- `public boolean isBlockNormalCube()`
-- `public boolean isNormalCube()`
-- `public boolean canProvidePower()`
-- `public int getWeakPower( IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `public boolean hasComparatorInputOverride()`
-- `public int getComparatorInputOverride( World worldIn, BlockPos pos)`
-- `public float getBlockHardness( World worldIn, BlockPos pos)`
-- `public float getPlayerRelativeBlockHardness( EntityPlayer player, World worldIn, BlockPos pos)`
-- `public int getStrongPower( IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
-- `public EnumPushReaction getMobilityFlag()`
-- `public IBlockState getActualState( IBlockAccess blockAccess, BlockPos pos)`
-- `public AxisAlignedBB getSelectedBoundingBox( World worldIn, BlockPos pos)`
-- `public boolean shouldSideBeRendered( IBlockAccess blockAccess, BlockPos pos, EnumFacing facing)`
-- `public boolean isOpaqueCube()`
-- `@Nullable public AxisAlignedBB getCollisionBoundingBox( IBlockAccess worldIn, BlockPos pos)`
-- `public void addCollisionBoxToList( World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List< AxisAlignedBB > collidingBoxes, @Nullable Entity entityIn, boolean p_185908_6_)`
-- `public AxisAlignedBB getBoundingBox( IBlockAccess blockAccess, BlockPos pos)`
-- `public RayTraceResult collisionRayTrace( World worldIn, BlockPos pos, Vec3d start, Vec3d end)`
-- `public boolean isFullyOpaque()`
-- `public Vec3d getOffset( IBlockAccess access, BlockPos pos)`
-- `public boolean onBlockEventReceived( World worldIn, BlockPos pos, int id, int param)`
-- `public void neighborChanged( World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
-- `public boolean causesSuffocation()`
-- `public com.google.common.collect.ImmutableTable< IProperty <?>,java.lang.Comparable<?>, IBlockState > getPropertyValueTable()`
-- `public int getLightOpacity( IBlockAccess world, BlockPos pos)`
-- `public int getLightValue( IBlockAccess world, BlockPos pos)`
-- `public boolean isSideSolid( IBlockAccess world, BlockPos pos, EnumFacing side)`
-- `public boolean doesSideBlockRendering( IBlockAccess world, BlockPos pos, EnumFacing side)`
+- `void addCollisionBoxToList(World worldIn, BlockPos pos, AxisAlignedBB entityBox, java.util.List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean p_185908_6_)`
+- `void buildPropertyValueTable(java.util.Map<java.util.Map<IProperty<?>, java.lang.Comparable<?>>, BlockStateContainer.StateImplementation> map)`
+- `boolean canEntitySpawn(Entity entityIn)`
+- `boolean canProvidePower()`
+- `boolean causesSuffocation()`
+- `RayTraceResult collisionRayTrace(World worldIn, BlockPos pos, Vec3d start, Vec3d end)`
+- `boolean doesSideBlockRendering(IBlockAccess world, BlockPos pos, EnumFacing side)`
+- `boolean equals(java.lang.Object p_equals_1_)`
+- `IBlockState getActualState(IBlockAccess blockAccess, BlockPos pos)`
+- `float getAmbientOcclusionLightValue()`
+- `Block getBlock()`
+- `float getBlockHardness(World worldIn, BlockPos pos)`
+- `AxisAlignedBB getBoundingBox(IBlockAccess blockAccess, BlockPos pos)`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockAccess worldIn, BlockPos pos)`
+- `int getComparatorInputOverride(World worldIn, BlockPos pos)`
+- `int getLightOpacity()`
+- `int getLightOpacity(IBlockAccess world, BlockPos pos)`
+- `int getLightValue()`
+- `int getLightValue(IBlockAccess world, BlockPos pos)`
+- `MapColor getMapColor()`
+- `Material getMaterial()`
+- `EnumPushReaction getMobilityFlag()`
+- `Vec3d getOffset(IBlockAccess access, BlockPos pos)`
+- `int getPackedLightmapCoords(IBlockAccess source, BlockPos pos)`
+- `float getPlayerRelativeBlockHardness(EntityPlayer player, World worldIn, BlockPos pos)`
+- `com.google.common.collect.ImmutableMap<IProperty<?>, java.lang.Comparable<?>> getProperties()`
+- `java.util.Collection<IProperty<?>> getPropertyKeys()`
+- `com.google.common.collect.ImmutableTable<IProperty<?>, java.lang.Comparable<?>, IBlockState> getPropertyValueTable()`
+- `EnumBlockRenderType getRenderType()`
+- `AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)`
+- `int getStrongPower(IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `<T extends java.lang.Comparable<T>> T getValue(IProperty<T> property)`
+- `int getWeakPower(IBlockAccess blockAccess, BlockPos pos, EnumFacing side)`
+- `boolean hasComparatorInputOverride()`
+- `boolean hasCustomBreakingProgress()`
+- `int hashCode()`
+- `boolean isBlockNormalCube()`
+- `boolean isFullBlock()`
+- `boolean isFullCube()`
+- `boolean isFullyOpaque()`
+- `boolean isNormalCube()`
+- `boolean isOpaqueCube()`
+- `boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)`
+- `boolean isTranslucent()`
+- `void neighborChanged(World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)`
+- `boolean onBlockEventReceived(World worldIn, BlockPos pos, int id, int param)`
+- `boolean shouldSideBeRendered(IBlockAccess blockAccess, BlockPos pos, EnumFacing facing)`
+- `boolean useNeighborBrightness()`
+- `IBlockState withMirror(Mirror mirrorIn)`
+- `<T extends java.lang.Comparable<T>, V extends T> IBlockState withProperty(IProperty<T> property, V value)`
+- `IBlockState withRotation(Rotation rot)`
+
+## Fields
+
+- `protected com.google.common.collect.ImmutableTable<IProperty<?>, java.lang.Comparable<?>, IBlockState> propertyValueTable`

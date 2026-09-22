@@ -1,32 +1,32 @@
 ---
 title: "BannerPattern"
-description: "Returns the enum constant of this type with the specified name."
+description: "public enum BannerPattern extends java.lang.Enum<BannerPattern>"
 package: "net/minecraft/tileentity"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/tileentity/BannerPattern.html"
 sourceType: javadoc
 ---
 
 # BannerPattern
 
+**Inheritance:** java.lang.Object → java.lang.Enum<BannerPattern> → net.minecraft.tileentity.BannerPattern
+
 ## Class signature
 
 ```java
-public enum BannerPattern extends java.lang.Enum< BannerPattern >
+public enum BannerPattern extends java.lang.Enum<BannerPattern>
 ```
 
 ## Methods
 
-- `public static BannerPattern [] values()`
-- `public static BannerPattern valueOf(java.lang.String name)`
-- `public java.lang.String getFileName()`
-- `public java.lang.String getHashname()`
-- `public java.lang.String[] getPatterns()`
-- `public boolean hasPattern()`
-- `public boolean hasPatternItem()`
-- `public ItemStack getPatternItem()`
-- `@Nullable public static BannerPattern byHash(java.lang.String hash)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static BannerPattern byHash(java.lang.String hash)`
+- `java.lang.String getFileName()`
+- `java.lang.String getHashname()`
+- `ItemStack getPatternItem()`
+- `java.lang.String[] getPatterns()`
+- `boolean hasPattern()`
+- `boolean hasPatternItem()`
+- `static BannerPattern valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static BannerPattern [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

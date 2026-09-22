@@ -1,5 +1,7 @@
 # PreYggdrasilConverter
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.PreYggdrasilConverter
+
 ## Class signature
 
 ```java
@@ -8,14 +10,21 @@ public class PreYggdrasilConverter extends java.lang.Object
 
 ## Constructors
 
-- `public PreYggdrasilConverter()`
+- `PreYggdrasilConverter()`
 
 ## Methods
 
-- `public static java.lang.String convertMobOwnerIfNeeded( MinecraftServer server, java.lang.String username)`
-- `public static boolean convertUserBanlist( MinecraftServer server) throws java.io.IOException`
-- `public static boolean convertIpBanlist( MinecraftServer server) throws java.io.IOException`
-- `public static boolean convertOplist( MinecraftServer server) throws java.io.IOException`
-- `public static boolean convertWhitelist( MinecraftServer server) throws java.io.IOException`
-- `public static boolean convertSaveFiles( DedicatedServer server, PropertyManager p_152723_1_)`
-- `public static boolean tryConvert( PropertyManager properties)`
+- `static boolean convertIpBanlist(MinecraftServer server)`
+- `static java.lang.String convertMobOwnerIfNeeded(MinecraftServer server, java.lang.String username)`
+- `static boolean convertOplist(MinecraftServer server)`
+- `static boolean convertSaveFiles(DedicatedServer server, PropertyManager p_152723_1_)`
+- `static boolean convertUserBanlist(MinecraftServer server)`
+- `static boolean convertWhitelist(MinecraftServer server)`
+- `static boolean tryConvert(PropertyManager properties)`
+
+## Fields
+
+- `static java.io.File OLD_IPBAN_FILE`
+- `static java.io.File OLD_OPS_FILE`
+- `static java.io.File OLD_PLAYERBAN_FILE`
+- `static java.io.File OLD_WHITELIST_FILE`

@@ -3,11 +3,15 @@ title: "SetDamage"
 description: "public class SetDamage extends LootFunction"
 package: "net/minecraft/world/storage/loot/functions"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/storage/loot/functions/SetDamage.html"
 sourceType: javadoc
 ---
 
 # SetDamage
+
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.functions.LootFunction → net.minecraft.world.storage.loot.functions.SetDamage
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class SetDamage extends LootFunction
 
 ## Constructors
 
-- `public SetDamage( LootCondition [] conditionsIn, RandomValueRange damageRangeIn)`
+- `SetDamage(LootCondition [] conditionsIn, RandomValueRange damageRangeIn)`
 
 ## Methods
 
-- `public ItemStack apply( ItemStack stack, java.util.Random rand, LootContext context)`
+- `ItemStack apply(ItemStack stack, java.util.Random rand, LootContext context)`

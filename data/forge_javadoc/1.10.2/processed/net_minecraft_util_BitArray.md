@@ -1,5 +1,7 @@
 # BitArray
 
+**Inheritance:** java.lang.Object → net.minecraft.util.BitArray
+
 ## Class signature
 
 ```java
@@ -8,11 +10,11 @@ public class BitArray extends java.lang.Object
 
 ## Constructors
 
-- `public BitArray(int bitsPerEntryIn, int arraySizeIn)`
+- `BitArray(int bitsPerEntryIn, int arraySizeIn)`
 
 ## Methods
 
-- `public void setAt(int index, int value)`
-- `public int getAt(int index)`
-- `public long[] getBackingLongArray()`
-- `public int size()`
+- `int getAt(int index)`
+- `long[] getBackingLongArray()`
+- `void setAt(int index, int value)`
+- `int size()`

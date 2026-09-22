@@ -1,22 +1,24 @@
 # BlockStructureVoid
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Block> → net.minecraft.block.Block → net.minecraft.block.BlockStructureVoid
+
 ## Class signature
 
 ```java
 public class BlockStructureVoid extends Block
 ```
 
-## Constructors
-
-- `protected BlockStructureVoid()`
-
 ## Methods
 
-- `public EnumBlockRenderType getRenderType( IBlockState state)`
-- `@Nullable public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
-- `public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos)`
-- `public boolean isOpaqueCube( IBlockState state)`
-- `public boolean isFullCube( IBlockState state)`
-- `public float getAmbientOcclusionLightValue( IBlockState state)`
-- `public void dropBlockAsItemWithChance( World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
-- `public EnumPushReaction getMobilityFlag( IBlockState state)`
+- `void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)`
+- `float getAmbientOcclusionLightValue(IBlockState state)`
+- `AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)`
+- `AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)`
+- `EnumPushReaction getMobilityFlag(IBlockState state)`
+- `EnumBlockRenderType getRenderType(IBlockState state)`
+- `boolean isFullCube(IBlockState state)`
+- `boolean isOpaqueCube(IBlockState state)`
+
+## Fields
+
+- `protected BlockStructureVoid`

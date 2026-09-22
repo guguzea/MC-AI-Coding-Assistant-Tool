@@ -1,10 +1,14 @@
 # Event.Result
 
+**Inheritance:** java.lang.Object → java.lang.Enum<Event.Result> → net.minecraftforge.fml.common.eventhandler.Event.Result
+
+## Class signature
+
+```java
+public static enum Event.Result extends java.lang.Enum<Event.Result>
+```
+
 ## Methods
 
-- `public static Event.Result [] values()`
-- `public static Event.Result valueOf(java.lang.String name)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static Event.Result valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static Event.Result [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

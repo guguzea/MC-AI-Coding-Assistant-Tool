@@ -1,20 +1,22 @@
 # SPacketEntityStatus
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.SPacketEntityStatus
+
 ## Class signature
 
 ```java
-public class SPacketEntityStatus extends java.lang.Object implements Packet < INetHandlerPlayClient >
+public class SPacketEntityStatus extends java.lang.Object implements Packet<INetHandlerPlayClient>
 ```
 
 ## Constructors
 
-- `public SPacketEntityStatus()`
-- `public SPacketEntityStatus( Entity entityIn, byte opcodeIn)`
+- `SPacketEntityStatus()`
+- `SPacketEntityStatus(Entity entityIn, byte opcodeIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayClient handler)`
-- `public Entity getEntity( World worldIn)`
-- `public byte getOpCode()`
+- `Entity getEntity(World worldIn)`
+- `byte getOpCode()`
+- `void processPacket(INetHandlerPlayClient handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

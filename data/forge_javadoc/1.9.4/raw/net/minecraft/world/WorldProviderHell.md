@@ -3,11 +3,15 @@ title: "WorldProviderHell"
 description: "public class WorldProviderHell extends WorldProvider"
 package: "net/minecraft/world"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/world/WorldProviderHell.html"
 sourceType: javadoc
 ---
 
 # WorldProviderHell
+
+**Inheritance:** java.lang.Object → net.minecraft.world.WorldProvider → net.minecraft.world.WorldProviderHell
 
 ## Class signature
 
@@ -15,20 +19,20 @@ sourceType: javadoc
 public class WorldProviderHell extends WorldProvider
 ```
 
-## Constructors
-
-- `public WorldProviderHell()`
-
 ## Methods
 
-- `public void createBiomeProvider()`
-- `public Vec3d getFogColor(float p_76562_1_, float p_76562_2_)`
+- `float calculateCelestialAngle(long worldTime, float partialTicks)`
+- `boolean canCoordinateBeSpawn(int x, int z)`
+- `boolean canRespawnHere()`
+- `void createBiomeProvider()`
+- `IChunkGenerator createChunkGenerator()`
+- `WorldBorder createWorldBorder()`
+- `boolean doesXZShowFog(int x, int z)`
 - `protected void generateLightBrightnessTable()`
-- `public IChunkGenerator createChunkGenerator()`
-- `public boolean isSurfaceWorld()`
-- `public boolean canCoordinateBeSpawn(int x, int z)`
-- `public float calculateCelestialAngle(long worldTime, float partialTicks)`
-- `public boolean canRespawnHere()`
-- `public boolean doesXZShowFog(int x, int z)`
-- `public WorldBorder createWorldBorder()`
-- `public DimensionType getDimensionType()`
+- `DimensionType getDimensionType()`
+- `Vec3d getFogColor(float p_76562_1_, float p_76562_2_)`
+- `boolean isSurfaceWorld()`
+
+## Fields
+
+- `WorldProviderHell`

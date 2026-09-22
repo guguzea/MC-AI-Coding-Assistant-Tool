@@ -1,5 +1,18 @@
 # GameConfiguration.GameInformation
 
+**Inheritance:** java.lang.Object → net.minecraft.client.main.GameConfiguration.GameInformation
+
+## Class signature
+
+```java
+public static class GameConfiguration.GameInformation extends java.lang.Object
+```
+
 ## Constructors
 
-- `public GameInformation(boolean isDemoIn, java.lang.String versionIn)`
+- `GameInformation(boolean isDemoIn, java.lang.String versionIn)`
+
+## Fields
+
+- `boolean isDemo`
+- `java.lang.String version`

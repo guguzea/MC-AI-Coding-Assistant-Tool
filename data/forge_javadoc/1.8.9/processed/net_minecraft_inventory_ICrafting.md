@@ -8,11 +8,7 @@ public interface ICrafting
 
 ## Methods
 
-- `void updateCraftingInventory( Container containerToSend, java.util.List< ItemStack > itemsList)`
-- `void sendSlotContents( Container containerToSend, int slotInd, ItemStack stack)`
-- `void sendProgressBarUpdate( Container containerIn, int varToUpdate, int newValue)`
-- `void sendAllWindowProperties( Container p_175173_1_, IInventory p_175173_2_)`
-
-## Description
-
-Sends two ints to the client-side Container.
+- `void sendAllWindowProperties(Container p_175173_1_, IInventory p_175173_2_)`
+- `void sendProgressBarUpdate(Container containerIn, int varToUpdate, int newValue)` — Sends two ints to the client-side Container.
+- `void sendSlotContents(Container containerToSend, int slotInd, ItemStack stack)` — Sends the contents of an inventory slot to the client-side Container.
+- `void updateCraftingInventory(Container containerToSend, java.util.List<ItemStack> itemsList)` — update the crafting window inventory with the items in the list

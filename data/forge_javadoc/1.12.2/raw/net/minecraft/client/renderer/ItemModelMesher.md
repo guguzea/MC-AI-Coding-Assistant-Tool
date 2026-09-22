@@ -3,11 +3,15 @@ title: "ItemModelMesher"
 description: "public class ItemModelMesher extends java.lang.Object"
 package: "net/minecraft/client/renderer"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/client/renderer/ItemModelMesher.html"
 sourceType: javadoc
 ---
 
 # ItemModelMesher
+
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.ItemModelMesher
 
 ## Class signature
 
@@ -17,16 +21,20 @@ public class ItemModelMesher extends java.lang.Object
 
 ## Constructors
 
-- `public ItemModelMesher( ModelManager modelManager)`
+- `ItemModelMesher(ModelManager modelManager)`
 
 ## Methods
 
-- `public TextureAtlasSprite getParticleIcon( Item item)`
-- `public TextureAtlasSprite getParticleIcon( Item item, int meta)`
-- `public IBakedModel getItemModel( ItemStack stack)`
-- `protected int getMetadata( ItemStack stack)`
-- `protected IBakedModel getItemModel( Item item, int meta)`
-- `public void register( Item item, int meta, ModelResourceLocation location)`
-- `public void register( Item item, ItemMeshDefinition definition)`
-- `public ModelManager getModelManager()`
-- `public void rebuildCache()`
+- `protected IBakedModel getItemModel(Item item, int meta)`
+- `IBakedModel getItemModel(ItemStack stack)`
+- `protected int getMetadata(ItemStack stack)`
+- `ModelManager getModelManager()`
+- `TextureAtlasSprite getParticleIcon(Item item)`
+- `TextureAtlasSprite getParticleIcon(Item item, int meta)`
+- `void rebuildCache()`
+- `void register(Item item, int meta, ModelResourceLocation location)`
+- `void register(Item item, ItemMeshDefinition definition)`
+
+## Fields
+
+- `protected java.util.Map<Item, ItemMeshDefinition> shapers`

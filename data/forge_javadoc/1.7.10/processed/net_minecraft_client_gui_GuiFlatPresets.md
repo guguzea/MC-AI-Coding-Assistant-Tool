@@ -1,22 +1,24 @@
 # GuiFlatPresets
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiFlatPresets
+
 ## Class signature
 
 ```java
 public class GuiFlatPresets extends GuiScreen
 ```
 
-## Constructors
-
-- `public GuiFlatPresets( GuiCreateFlatWorld p_i1049_1_)`
-
 ## Methods
 
-- `public void initGui()`
-- `public void onGuiClosed()`
-- `protected void mouseClicked(int p_73864_1_, int p_73864_2_, int p_73864_3_)`
+- `protected void actionPerformed(GuiButton p_146284_1_)`
+- `void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)`
+- `void func_146426_g()`
+- `void initGui()`
 - `protected void keyTyped(char p_73869_1_, int p_73869_2_)`
-- `protected void actionPerformed( GuiButton p_146284_1_)`
-- `public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)`
-- `public void updateScreen()`
-- `public void func_146426_g()`
+- `protected void mouseClicked(int p_73864_1_, int p_73864_2_, int p_73864_3_)`
+- `void onGuiClosed()`
+- `void updateScreen()`
+
+## Fields
+
+- `GuiFlatPresets`

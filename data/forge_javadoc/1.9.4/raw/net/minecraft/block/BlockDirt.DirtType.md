@@ -1,25 +1,31 @@
 ---
 title: "BlockDirt.DirtType"
-description: "Returns the enum constant of this type with the specified name."
+description: "public static enum BlockDirt.DirtType extends java.lang.Enum<BlockDirt.DirtType> implements IStringSerializable"
 package: "net/minecraft/block"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/block/BlockDirt.DirtType.html"
 sourceType: javadoc
 ---
 
 # BlockDirt.DirtType
 
+**Inheritance:** java.lang.Object → java.lang.Enum<BlockDirt.DirtType> → net.minecraft.block.BlockDirt.DirtType
+
+## Class signature
+
+```java
+public static enum BlockDirt.DirtType extends java.lang.Enum<BlockDirt.DirtType> implements IStringSerializable
+```
+
 ## Methods
 
-- `public static BlockDirt.DirtType [] values()`
-- `public static BlockDirt.DirtType valueOf(java.lang.String name)`
-- `public int getMetadata()`
-- `public java.lang.String getUnlocalizedName()`
-- `public MapColor getColor()`
-- `public java.lang.String toString()`
-- `public static BlockDirt.DirtType byMetadata(int metadata)`
-- `public java.lang.String getName()`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `static BlockDirt.DirtType byMetadata(int metadata)`
+- `MapColor getColor()`
+- `int getMetadata()`
+- `java.lang.String getName()`
+- `java.lang.String getUnlocalizedName()`
+- `java.lang.String toString()`
+- `static BlockDirt.DirtType valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static BlockDirt.DirtType [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

@@ -1,27 +1,25 @@
 # SlotItemHandler
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Slot → net.minecraftforge.items.SlotItemHandler
+
 ## Class signature
 
 ```java
 public class SlotItemHandler extends Slot
 ```
 
-## Constructors
-
-- `public SlotItemHandler( IItemHandler itemHandler, int index, int xPosition, int yPosition)`
-
 ## Methods
 
-- `public boolean isItemValid( ItemStack stack)`
-- `public ItemStack getStack()`
-- `public void putStack( ItemStack stack)`
-- `public void onSlotChange( ItemStack p_75220_1_, ItemStack p_75220_2_)`
-- `public int getItemStackLimit( ItemStack stack)`
-- `public boolean canTakeStack( EntityPlayer playerIn)`
-- `public ItemStack decrStackSize(int amount)`
-- `public IItemHandler getItemHandler()`
-- `public boolean isSameInventory( Slot other)`
+- `boolean canTakeStack(EntityPlayer playerIn)`
+- `ItemStack decrStackSize(int amount)`
+- `IItemHandler getItemHandler()`
+- `int getItemStackLimit(ItemStack stack)`
+- `ItemStack getStack()`
+- `boolean isItemValid(ItemStack stack)`
+- `boolean isSameInventory(Slot other)` — Checks if the other slot is in the same inventory, by comparing the inventory reference.
+- `void onSlotChange(ItemStack p_75220_1_, ItemStack p_75220_2_)`
+- `void putStack(ItemStack stack)`
 
-## Description
+## Fields
 
-Checks if the other slot is in the same inventory, by comparing the inventory reference.
+- `SlotItemHandler`

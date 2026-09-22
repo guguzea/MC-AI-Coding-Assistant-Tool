@@ -1,15 +1,17 @@
 # BiomeVoid
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Biome> → net.minecraft.world.biome.Biome → net.minecraft.world.biome.BiomeVoid
+
 ## Class signature
 
 ```java
 public class BiomeVoid extends Biome
 ```
 
-## Constructors
-
-- `public BiomeVoid( Biome.BiomeProperties properties)`
-
 ## Methods
 
-- `public boolean ignorePlayerSpawnSuitability()`
+- `boolean ignorePlayerSpawnSuitability()`
+
+## Fields
+
+- `BiomeVoid`

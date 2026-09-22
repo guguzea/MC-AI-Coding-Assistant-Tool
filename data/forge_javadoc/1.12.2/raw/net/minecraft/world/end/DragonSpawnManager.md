@@ -1,26 +1,26 @@
 ---
 title: "DragonSpawnManager"
-description: "Returns the enum constant of this type with the specified name."
+description: "public enum DragonSpawnManager extends java.lang.Enum<DragonSpawnManager>"
 package: "net/minecraft/world/end"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/end/DragonSpawnManager.html"
 sourceType: javadoc
 ---
 
 # DragonSpawnManager
 
+**Inheritance:** java.lang.Object → java.lang.Enum<DragonSpawnManager> → net.minecraft.world.end.DragonSpawnManager
+
 ## Class signature
 
 ```java
-public enum DragonSpawnManager extends java.lang.Enum< DragonSpawnManager >
+public enum DragonSpawnManager extends java.lang.Enum<DragonSpawnManager>
 ```
 
 ## Methods
 
-- `public static DragonSpawnManager [] values()`
-- `public static DragonSpawnManager valueOf(java.lang.String name)`
-- `public abstract void process( WorldServer worldIn, DragonFightManager manager, java.util.List< EntityEnderCrystal > crystals, int ticks, BlockPos pos)`
-
-## Description
-
-Returns the enum constant of this type with the specified name.
+- `abstract void process(WorldServer worldIn, DragonFightManager manager, java.util.List<EntityEnderCrystal> crystals, int ticks, BlockPos pos)`
+- `static DragonSpawnManager valueOf(java.lang.String name)` — Returns the enum constant of this type with the specified name.
+- `static DragonSpawnManager [] values()` — Returns an array containing the constants of this enum type, in the order they are declared.

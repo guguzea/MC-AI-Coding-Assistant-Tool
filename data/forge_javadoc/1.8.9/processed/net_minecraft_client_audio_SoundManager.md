@@ -1,5 +1,7 @@
 # SoundManager
 
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.SoundManager
+
 ## Class signature
 
 ```java
@@ -8,23 +10,23 @@ public class SoundManager extends java.lang.Object
 
 ## Constructors
 
-- `public SoundManager( SoundHandler p_i45119_1_, GameSettings p_i45119_2_)`
+- `SoundManager(SoundHandler p_i45119_1_, GameSettings p_i45119_2_)`
 
 ## Methods
 
-- `public void reloadSoundSystem()`
-- `public void setSoundCategoryVolume( SoundCategory category, float volume)`
-- `public void unloadSoundSystem()`
-- `public void stopAllSounds()`
-- `public void updateAllSounds()`
-- `public boolean isSoundPlaying( ISound sound)`
-- `public void stopSound( ISound sound)`
-- `public void playSound( ISound sound)`
-- `public void pauseAllSounds()`
-- `public void resumeAllSounds()`
-- `public void playDelayedSound( ISound sound, int delay)`
-- `public void setListener( EntityPlayer player, float p_148615_2_)`
+- `boolean isSoundPlaying(ISound sound)` — Returns true if the sound is playing or still within time
+- `void pauseAllSounds()` — Pauses all currently playing sounds
+- `void playDelayedSound(ISound sound, int delay)` — Adds a sound to play in n tick
+- `void playSound(ISound sound)`
+- `void reloadSoundSystem()`
+- `void resumeAllSounds()` — Resumes playing all currently playing sounds (after pauseAllSounds)
+- `void setListener(EntityPlayer player, float p_148615_2_)` — Sets the listener of sounds
+- `void setSoundCategoryVolume(SoundCategory category, float volume)` — Adjusts volume for currently playing sounds in this category
+- `void stopAllSounds()` — Stops all currently playing sounds
+- `void stopSound(ISound sound)`
+- `void unloadSoundSystem()` — Cleans up the Sound System
+- `void updateAllSounds()`
 
-## Description
+## Fields
 
-A reference to the sound handler.
+- `SoundHandler sndHandler` — A reference to the sound handler.

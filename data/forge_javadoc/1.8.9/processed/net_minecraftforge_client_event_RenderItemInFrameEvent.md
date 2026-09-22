@@ -1,5 +1,7 @@
 # RenderItemInFrameEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderItemInFrameEvent
+
 ## Class signature
 
 ```java
@@ -8,8 +10,10 @@ public class RenderItemInFrameEvent extends Event
 
 ## Constructors
 
-- `public RenderItemInFrameEvent( EntityItemFrame itemFrame, RenderItemFrame renderItemFrame)`
+- `RenderItemInFrameEvent(EntityItemFrame itemFrame, RenderItemFrame renderItemFrame)`
 
-## Description
+## Fields
 
-This event is called when an item is rendered in an item frame. You can set canceled to do no further vanilla processing.
+- `EntityItemFrame entityItemFrame`
+- `ItemStack item`
+- `RenderItemFrame renderer`

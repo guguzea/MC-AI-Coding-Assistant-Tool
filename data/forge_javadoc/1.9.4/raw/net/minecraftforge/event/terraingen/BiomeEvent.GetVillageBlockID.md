@@ -1,24 +1,30 @@
 ---
 title: "BiomeEvent.GetVillageBlockID"
-description: "This event is fired when the village generator attempts to choose a block ID based on the village's biome. You can cancel the event to override default values"
+description: "public static class BiomeEvent.GetVillageBlockID extends BiomeEvent"
 package: "net/minecraftforge/event/terraingen"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraftforge/event/terraingen/BiomeEvent.GetVillageBlockID.html"
 sourceType: javadoc
 ---
 
 # BiomeEvent.GetVillageBlockID
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.terraingen.BiomeEvent → net.minecraftforge.event.terraingen.BiomeEvent.GetVillageBlockID
+
+## Class signature
+
+```java
+public static class BiomeEvent.GetVillageBlockID extends BiomeEvent
+```
+
 ## Constructors
 
-- `public GetVillageBlockID( Biome biome, IBlockState original)`
+- `GetVillageBlockID(Biome biome, IBlockState original)`
 
 ## Methods
 
-- `public IBlockState getOriginal()`
-- `public IBlockState getReplacement()`
-- `public void setReplacement( IBlockState replacement)`
-
-## Description
-
-This event is fired when the village generator attempts to choose a block ID based on the village's biome. You can cancel the event to override default values
+- `IBlockState getOriginal()`
+- `IBlockState getReplacement()`
+- `void setReplacement(IBlockState replacement)`

@@ -1,17 +1,19 @@
 # PhaseSittingScanning
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.boss.dragon.phase.PhaseBase → net.minecraft.entity.boss.dragon.phase.PhaseSittingBase → net.minecraft.entity.boss.dragon.phase.PhaseSittingScanning
+
 ## Class signature
 
 ```java
 public class PhaseSittingScanning extends PhaseSittingBase
 ```
 
-## Constructors
-
-- `public PhaseSittingScanning( EntityDragon dragonIn)`
-
 ## Methods
 
-- `public void doLocalUpdate()`
-- `public void initPhase()`
-- `public PhaseList < PhaseSittingScanning > getPhaseList()`
+- `void doLocalUpdate()`
+- `PhaseList<PhaseSittingScanning> getPhaseList()`
+- `void initPhase()`
+
+## Fields
+
+- `PhaseSittingScanning`

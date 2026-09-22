@@ -1,19 +1,21 @@
 # CPacketPing
 
+**Inheritance:** java.lang.Object → net.minecraft.network.status.client.CPacketPing
+
 ## Class signature
 
 ```java
-public class CPacketPing extends java.lang.Object implements Packet < INetHandlerStatusServer >
+public class CPacketPing extends java.lang.Object implements Packet<INetHandlerStatusServer>
 ```
 
 ## Constructors
 
-- `public CPacketPing()`
-- `public CPacketPing(long clientTimeIn)`
+- `CPacketPing()`
+- `CPacketPing(long clientTimeIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerStatusServer handler)`
-- `public long getClientTime()`
+- `long getClientTime()`
+- `void processPacket(INetHandlerStatusServer handler)`
+- `void readPacketData(PacketBuffer buf)`
+- `void writePacketData(PacketBuffer buf)`

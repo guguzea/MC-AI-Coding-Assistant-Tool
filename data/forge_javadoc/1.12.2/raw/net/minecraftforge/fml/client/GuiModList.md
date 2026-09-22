@@ -3,11 +3,15 @@ title: "GuiModList"
 description: "public class GuiModList extends GuiScreen"
 package: "net/minecraftforge/fml/client"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraftforge/fml/client/GuiModList.html"
 sourceType: javadoc
 ---
 
 # GuiModList
+
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraftforge.fml.client.GuiModList
 
 ## Class signature
 
@@ -15,19 +19,19 @@ sourceType: javadoc
 public class GuiModList extends GuiScreen
 ```
 
-## Constructors
-
-- `public GuiModList( GuiScreen mainMenu)`
-
 ## Methods
 
-- `public void initGui()`
-- `protected void mouseClicked(int x, int y, int button) throws java.io.IOException`
-- `protected void keyTyped(char c, int keyCode) throws java.io.IOException`
-- `public void updateScreen()`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public int drawLine(java.lang.String line, int offset, int shifty)`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `public void handleMouseInput() throws java.io.IOException`
-- `public void selectModIndex(int index)`
-- `public boolean modIndexSelected(int index)`
+- `protected void actionPerformed(GuiButton button)`
+- `int drawLine(java.lang.String line, int offset, int shifty)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void handleMouseInput()`
+- `void initGui()`
+- `protected void keyTyped(char c, int keyCode)`
+- `boolean modIndexSelected(int index)`
+- `protected void mouseClicked(int x, int y, int button)`
+- `void selectModIndex(int index)`
+- `void updateScreen()`
+
+## Fields
+
+- `GuiModList`

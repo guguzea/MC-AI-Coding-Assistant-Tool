@@ -8,12 +8,12 @@ public interface IAttributeInstance
 
 ## Methods
 
-- `IAttribute getAttribute()`
-- `double getBaseValue()`
-- `void setBaseValue(double p_111128_1_)`
+- `void applyModifier(AttributeModifier p_111121_1_)`
 - `java.util.Collection func_111122_c()`
-- `AttributeModifier getModifier(java.util.UUID p_111127_1_)`
-- `void applyModifier( AttributeModifier p_111121_1_)`
-- `void removeModifier( AttributeModifier p_111124_1_)`
-- `void removeAllModifiers()`
+- `IAttribute getAttribute()`
 - `double getAttributeValue()`
+- `double getBaseValue()`
+- `AttributeModifier getModifier(java.util.UUID p_111127_1_)`
+- `void removeAllModifiers()`
+- `void removeModifier(AttributeModifier p_111124_1_)`
+- `void setBaseValue(double p_111128_1_)`

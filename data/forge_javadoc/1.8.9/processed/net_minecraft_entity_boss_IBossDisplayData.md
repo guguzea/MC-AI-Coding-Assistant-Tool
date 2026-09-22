@@ -8,10 +8,6 @@ public interface IBossDisplayData
 
 ## Methods
 
-- `float getMaxHealth()`
+- `IChatComponent getDisplayName()` — Get the formatted ChatComponent that will be used for the sender's username in chat
 - `float getHealth()`
-- `IChatComponent getDisplayName()`
-
-## Description
-
-Get the formatted ChatComponent that will be used for the sender's username in chat
+- `float getMaxHealth()`

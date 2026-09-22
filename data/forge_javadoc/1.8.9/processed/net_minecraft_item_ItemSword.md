@@ -1,31 +1,29 @@
 # ItemSword
 
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraft.item.ItemSword
+
 ## Class signature
 
 ```java
 public class ItemSword extends Item
 ```
 
-## Constructors
-
-- `public ItemSword( Item.ToolMaterial material)`
-
 ## Methods
 
-- `public float getDamageVsEntity()`
-- `public float getStrVsBlock( ItemStack stack, Block block)`
-- `public boolean hitEntity( ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)`
-- `public boolean onBlockDestroyed( ItemStack stack, World worldIn, Block blockIn, BlockPos pos, EntityLivingBase playerIn)`
-- `public boolean isFull3D()`
-- `public EnumAction getItemUseAction( ItemStack stack)`
-- `public int getMaxItemUseDuration( ItemStack stack)`
-- `public ItemStack onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)`
-- `public boolean canHarvestBlock( Block blockIn)`
-- `public int getItemEnchantability()`
-- `public java.lang.String getToolMaterialName()`
-- `public boolean getIsRepairable( ItemStack toRepair, ItemStack repair)`
-- `public <any> getItemAttributeModifiers()`
+- `boolean canHarvestBlock(Block blockIn)` — Check whether this Item can harvest the given Block
+- `float getDamageVsEntity()` — Returns the amount of damage this item will deal.
+- `boolean getIsRepairable(ItemStack toRepair, ItemStack repair)` — Return whether this item is repairable in an anvil.
+- `<any> getItemAttributeModifiers()`
+- `int getItemEnchantability()` — Return the enchantability factor of the item, most of the time is based on material.
+- `EnumAction getItemUseAction(ItemStack stack)` — returns the action that specifies what animation to play when the items is being used
+- `int getMaxItemUseDuration(ItemStack stack)` — How long it takes to use or consume an item
+- `float getStrVsBlock(ItemStack stack, Block block)`
+- `java.lang.String getToolMaterialName()` — Return the name for this tool's material.
+- `boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)` — Current implementations of this method in child classes do not use the entry argument beside ev.
+- `boolean isFull3D()` — Returns True is the item is renderer in full 3D when hold.
+- `boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos, EntityLivingBase playerIn)` — Called when a Block is destroyed using this Item.
+- `ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)` — Called whenever this item is equipped and the right mouse button is pressed.
 
-## Description
+## Fields
 
-Check whether this Item can harvest the given Block
+- `ItemSword`

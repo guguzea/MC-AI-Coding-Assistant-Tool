@@ -1,19 +1,36 @@
 ---
 title: "StructureVillagePieces.PieceWeight"
-description: ""
+description: "public static class StructureVillagePieces.PieceWeight extends java.lang.Object"
 package: "net/minecraft/world/gen/structure"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/world/gen/structure/StructureVillagePieces.PieceWeight.html"
 sourceType: javadoc
 ---
 
 # StructureVillagePieces.PieceWeight
 
+**Inheritance:** java.lang.Object → net.minecraft.world.gen.structure.StructureVillagePieces.PieceWeight
+
+## Class signature
+
+```java
+public static class StructureVillagePieces.PieceWeight extends java.lang.Object
+```
+
 ## Constructors
 
-- `public PieceWeight(java.lang.Class<? extends StructureVillagePieces.Village > p_i2098_1_, int p_i2098_2_, int p_i2098_3_)`
+- `PieceWeight(java.lang.Class<? extends StructureVillagePieces.Village> p_i2098_1_, int p_i2098_2_, int p_i2098_3_)`
 
 ## Methods
 
-- `public boolean canSpawnMoreVillagePiecesOfType(int componentType)`
-- `public boolean canSpawnMoreVillagePieces()`
+- `boolean canSpawnMoreVillagePieces()`
+- `boolean canSpawnMoreVillagePiecesOfType(int componentType)`
+
+## Fields
+
+- `java.lang.Class<? extends StructureVillagePieces.Village> villagePieceClass`
+- `int villagePiecesLimit`
+- `int villagePiecesSpawned`
+- `int villagePieceWeight`

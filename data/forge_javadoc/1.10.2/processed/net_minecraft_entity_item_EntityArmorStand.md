@@ -1,5 +1,7 @@
 # EntityArmorStand
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.item.EntityArmorStand
+
 ## Class signature
 
 ```java
@@ -8,58 +10,69 @@ public class EntityArmorStand extends EntityLivingBase
 
 ## Constructors
 
-- `public EntityArmorStand( World worldIn)`
-- `public EntityArmorStand( World worldIn, double posX, double posY, double posZ)`
+- `EntityArmorStand(World worldIn)`
+- `EntityArmorStand(World worldIn, double posX, double posY, double posZ)`
 
 ## Methods
 
-- `public boolean isServerWorld()`
-- `protected void entityInit()`
-- `public java.lang.Iterable< ItemStack > getHeldEquipment()`
-- `public java.lang.Iterable< ItemStack > getArmorInventoryList()`
-- `@Nullable public ItemStack getItemStackFromSlot( EntityEquipmentSlot slotIn)`
-- `public void setItemStackToSlot( EntityEquipmentSlot slotIn, @Nullable ItemStack stack)`
-- `public boolean replaceItemInInventory(int inventorySlot, @Nullable ItemStack itemStackIn)`
-- `public static void registerFixesArmorStand( DataFixer fixer)`
-- `public void writeEntityToNBT( NBTTagCompound compound)`
-- `public void readEntityFromNBT( NBTTagCompound compound)`
-- `public boolean canBePushed()`
-- `protected void collideWithEntity( Entity entityIn)`
+- `EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, ItemStack stack, EnumHand hand)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canBeCollidedWith()`
+- `boolean canBeHitWithPotion()`
+- `boolean canBePushed()`
+- `protected void collideWithEntity(Entity entityIn)`
 - `protected void collideWithNearbyEntities()`
-- `public EnumActionResult applyPlayerInteraction( EntityPlayer player, Vec3d vec, @Nullable ItemStack stack, EnumHand hand)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public void handleStatusUpdate(byte id)`
-- `public boolean isInRangeToRenderDist(double distance)`
-- `protected float updateDistance(float p_110146_1_, float p_110146_2_)`
-- `public float getEyeHeight()`
-- `public double getYOffset()`
-- `public void moveEntityWithHeading(float strafe, float forward)`
-- `public void onUpdate()`
-- `protected void updatePotionMetadata()`
-- `public void setInvisible(boolean invisible)`
-- `public boolean isChild()`
-- `public void onKillCommand()`
-- `public boolean isImmuneToExplosions()`
-- `public boolean isSmall()`
-- `public boolean getShowArms()`
-- `public boolean hasNoBasePlate()`
-- `public boolean hasMarker()`
-- `public void setHeadRotation( Rotations vec)`
-- `public void setBodyRotation( Rotations vec)`
-- `public void setLeftArmRotation( Rotations vec)`
-- `public void setRightArmRotation( Rotations vec)`
-- `public void setLeftLegRotation( Rotations vec)`
-- `public void setRightLegRotation( Rotations vec)`
-- `public Rotations getHeadRotation()`
-- `public Rotations getBodyRotation()`
-- `public Rotations getLeftArmRotation()`
-- `public Rotations getRightArmRotation()`
-- `public Rotations getLeftLegRotation()`
-- `public Rotations getRightLegRotation()`
-- `public boolean canBeCollidedWith()`
-- `public EnumHandSide getPrimaryHand()`
+- `protected void entityInit()`
+- `java.lang.Iterable<ItemStack> getArmorInventoryList()`
+- `Rotations getBodyRotation()`
+- `protected SoundEvent getDeathSound()`
+- `float getEyeHeight()`
 - `protected SoundEvent getFallSound(int heightIn)`
-- `@Nullable protected SoundEvent getHurtSound()`
-- `@Nullable protected SoundEvent getDeathSound()`
-- `public void onStruckByLightning( EntityLightningBolt lightningBolt)`
-- `public boolean canBeHitWithPotion()`
+- `Rotations getHeadRotation()`
+- `java.lang.Iterable<ItemStack> getHeldEquipment()`
+- `protected SoundEvent getHurtSound()`
+- `ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)`
+- `Rotations getLeftArmRotation()`
+- `Rotations getLeftLegRotation()`
+- `EnumHandSide getPrimaryHand()`
+- `Rotations getRightArmRotation()`
+- `Rotations getRightLegRotation()`
+- `boolean getShowArms()`
+- `double getYOffset()`
+- `void handleStatusUpdate(byte id)`
+- `boolean hasMarker()`
+- `boolean hasNoBasePlate()`
+- `boolean isChild()`
+- `boolean isImmuneToExplosions()`
+- `boolean isInRangeToRenderDist(double distance)`
+- `boolean isServerWorld()`
+- `boolean isSmall()`
+- `void moveEntityWithHeading(float strafe, float forward)`
+- `void onKillCommand()`
+- `void onStruckByLightning(EntityLightningBolt lightningBolt)`
+- `void onUpdate()`
+- `void readEntityFromNBT(NBTTagCompound compound)`
+- `static void registerFixesArmorStand(DataFixer fixer)`
+- `boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)`
+- `void setBodyRotation(Rotations vec)`
+- `void setHeadRotation(Rotations vec)`
+- `void setInvisible(boolean invisible)`
+- `void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)`
+- `void setLeftArmRotation(Rotations vec)`
+- `void setLeftLegRotation(Rotations vec)`
+- `void setRightArmRotation(Rotations vec)`
+- `void setRightLegRotation(Rotations vec)`
+- `protected float updateDistance(float p_110146_1_, float p_110146_2_)`
+- `protected void updatePotionMetadata()`
+- `void writeEntityToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `static DataParameter<Rotations> BODY_ROTATION`
+- `static DataParameter<Rotations> HEAD_ROTATION`
+- `static DataParameter<Rotations> LEFT_ARM_ROTATION`
+- `static DataParameter<Rotations> LEFT_LEG_ROTATION`
+- `long punchCooldown`
+- `static DataParameter<Rotations> RIGHT_ARM_ROTATION`
+- `static DataParameter<Rotations> RIGHT_LEG_ROTATION`
+- `static DataParameter<java.lang.Byte> STATUS`

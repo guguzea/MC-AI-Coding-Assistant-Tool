@@ -1,5 +1,7 @@
 # WorldSavedDataCallableSave
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.WorldSavedDataCallableSave
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class WorldSavedDataCallableSave extends java.lang.Object implements java
 
 ## Constructors
 
-- `public WorldSavedDataCallableSave( WorldSavedData dataIn)`
+- `WorldSavedDataCallableSave(WorldSavedData dataIn)`
 
 ## Methods
 
-- `public void run()`
+- `void run()`

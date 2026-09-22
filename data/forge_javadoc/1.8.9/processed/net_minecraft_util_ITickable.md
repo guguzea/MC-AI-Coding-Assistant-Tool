@@ -8,8 +8,4 @@ public interface ITickable
 
 ## Methods
 
-- `void update()`
-
-## Description
-
-Like the old updateEntity(), except more generic.
+- `void update()` — Like the old updateEntity(), except more generic.

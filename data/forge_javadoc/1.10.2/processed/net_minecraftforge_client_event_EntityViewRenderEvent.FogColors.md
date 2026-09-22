@@ -1,18 +1,22 @@
 # EntityViewRenderEvent.FogColors
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.EntityViewRenderEvent → net.minecraftforge.client.event.EntityViewRenderEvent.FogColors
+
+## Class signature
+
+```java
+public static class EntityViewRenderEvent.FogColors extends EntityViewRenderEvent
+```
+
 ## Constructors
 
-- `public FogColors( EntityRenderer renderer, Entity entity, IBlockState state, double renderPartialTicks, float red, float green, float blue)`
+- `FogColors(EntityRenderer renderer, Entity entity, IBlockState state, double renderPartialTicks, float red, float green, float blue)`
 
 ## Methods
 
-- `public float getRed()`
-- `public void setRed(float red)`
-- `public float getGreen()`
-- `public void setGreen(float green)`
-- `public float getBlue()`
-- `public void setBlue(float blue)`
-
-## Description
-
-Event that allows any feature to customize the color of fog the player sees. NOTE: Any change made to one of the color variables will affect the result seen in-game.
+- `float getBlue()`
+- `float getGreen()`
+- `float getRed()`
+- `void setBlue(float blue)`
+- `void setGreen(float green)`
+- `void setRed(float red)`

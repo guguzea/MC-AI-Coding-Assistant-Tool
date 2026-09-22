@@ -3,11 +3,15 @@ title: "InventoryMerchant"
 description: "public class InventoryMerchant extends java.lang.Object implements IInventory"
 package: "net/minecraft/inventory"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/inventory/InventoryMerchant.html"
 sourceType: javadoc
 ---
 
 # InventoryMerchant
+
+**Inheritance:** java.lang.Object → net.minecraft.inventory.InventoryMerchant
 
 ## Class signature
 
@@ -17,28 +21,28 @@ public class InventoryMerchant extends java.lang.Object implements IInventory
 
 ## Constructors
 
-- `public InventoryMerchant( EntityPlayer thePlayerIn, IMerchant theMerchantIn)`
+- `InventoryMerchant(EntityPlayer thePlayerIn, IMerchant theMerchantIn)`
 
 ## Methods
 
-- `public int getSizeInventory()`
-- `@Nullable public ItemStack getStackInSlot(int index)`
-- `@Nullable public ItemStack decrStackSize(int index, int count)`
-- `@Nullable public ItemStack removeStackFromSlot(int index)`
-- `public void setInventorySlotContents(int index, @Nullable ItemStack stack)`
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public ITextComponent getDisplayName()`
-- `public int getInventoryStackLimit()`
-- `public boolean isUseableByPlayer( EntityPlayer player)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public boolean isItemValidForSlot(int index, ItemStack stack)`
-- `public void markDirty()`
-- `public void resetRecipeAndSlots()`
-- `public MerchantRecipe getCurrentRecipe()`
-- `public void setCurrentRecipeIndex(int currentRecipeIndexIn)`
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public int getFieldCount()`
-- `public void clear()`
+- `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `ItemStack decrStackSize(int index, int count)`
+- `MerchantRecipe getCurrentRecipe()`
+- `ITextComponent getDisplayName()`
+- `int getField(int id)`
+- `int getFieldCount()`
+- `int getInventoryStackLimit()`
+- `java.lang.String getName()`
+- `int getSizeInventory()`
+- `ItemStack getStackInSlot(int index)`
+- `boolean hasCustomName()`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isUseableByPlayer(EntityPlayer player)`
+- `void markDirty()`
+- `void openInventory(EntityPlayer player)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void resetRecipeAndSlots()`
+- `void setCurrentRecipeIndex(int currentRecipeIndexIn)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`

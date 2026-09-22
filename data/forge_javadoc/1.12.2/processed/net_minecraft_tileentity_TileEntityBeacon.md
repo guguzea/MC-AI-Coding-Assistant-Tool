@@ -1,48 +1,54 @@
 # TileEntityBeacon
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityLockable → net.minecraft.tileentity.TileEntityBeacon
+
 ## Class signature
 
 ```java
-public class TileEntityBeacon extends TileEntityLockable implements ITickable , ISidedInventory
+public class TileEntityBeacon extends TileEntityLockable implements ITickable, ISidedInventory
 ```
 
 ## Constructors
 
-- `public TileEntityBeacon()`
+- `TileEntityBeacon()`
 
 ## Methods
 
-- `public void update()`
-- `public void updateBeacon()`
-- `public java.util.List< TileEntityBeacon.BeamSegment > getBeamSegments()`
-- `public float shouldBeamRender()`
-- `public int getLevels()`
-- `public SPacketUpdateTileEntity getUpdatePacket()`
-- `public NBTTagCompound getUpdateTag()`
-- `public double getMaxRenderDistanceSquared()`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public int getSizeInventory()`
-- `public boolean isEmpty()`
-- `public ItemStack getStackInSlot(int index)`
-- `public ItemStack decrStackSize(int index, int count)`
-- `public ItemStack removeStackFromSlot(int index)`
-- `public void setInventorySlotContents(int index, ItemStack stack)`
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public void setName(java.lang.String name)`
-- `public int getInventoryStackLimit()`
-- `public boolean isUsableByPlayer( EntityPlayer player)`
-- `public void openInventory( EntityPlayer player)`
-- `public void closeInventory( EntityPlayer player)`
-- `public boolean isItemValidForSlot(int index, ItemStack stack)`
-- `public java.lang.String getGuiID()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `public int getField(int id)`
-- `public void setField(int id, int value)`
-- `public int getFieldCount()`
-- `public void clear()`
-- `public boolean receiveClientEvent(int id, int type)`
-- `public int[] getSlotsForFace( EnumFacing side)`
-- `public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)`
-- `public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)`
+- `boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)`
+- `boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)`
+- `void clear()`
+- `void closeInventory(EntityPlayer player)`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `ItemStack decrStackSize(int index, int count)`
+- `java.util.List<TileEntityBeacon.BeamSegment> getBeamSegments()`
+- `int getField(int id)`
+- `int getFieldCount()`
+- `java.lang.String getGuiID()`
+- `int getInventoryStackLimit()`
+- `int getLevels()`
+- `double getMaxRenderDistanceSquared()`
+- `java.lang.String getName()`
+- `int getSizeInventory()`
+- `int[] getSlotsForFace(EnumFacing side)`
+- `ItemStack getStackInSlot(int index)`
+- `SPacketUpdateTileEntity getUpdatePacket()`
+- `NBTTagCompound getUpdateTag()`
+- `boolean hasCustomName()`
+- `boolean isEmpty()`
+- `boolean isItemValidForSlot(int index, ItemStack stack)`
+- `boolean isUsableByPlayer(EntityPlayer player)`
+- `void openInventory(EntityPlayer player)`
+- `void readFromNBT(NBTTagCompound compound)`
+- `boolean receiveClientEvent(int id, int type)`
+- `ItemStack removeStackFromSlot(int index)`
+- `void setField(int id, int value)`
+- `void setInventorySlotContents(int index, ItemStack stack)`
+- `void setName(java.lang.String name)`
+- `float shouldBeamRender()`
+- `void update()`
+- `void updateBeacon()`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `static Potion [][] EFFECTS_LIST`

@@ -1,23 +1,21 @@
 # RenderEntityItem
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<EntityItem> → net.minecraft.client.renderer.entity.RenderEntityItem
+
 ## Class signature
 
 ```java
-public class RenderEntityItem extends Render < EntityItem >
+public class RenderEntityItem extends Render<EntityItem>
 ```
-
-## Constructors
-
-- `public RenderEntityItem( RenderManager renderManagerIn, RenderItem p_i46167_2_)`
 
 ## Methods
 
-- `protected int func_177078_a( ItemStack stack)`
-- `public void doRender( EntityItem entity, double x, double y, double z, float entityYaw, float partialTicks)`
-- `protected ResourceLocation getEntityTexture( EntityItem entity)`
-- `public boolean shouldSpreadItems()`
-- `public boolean shouldBob()`
+- `void doRender(EntityItem entity, double x, double y, double z, float entityYaw, float partialTicks)` — Actually renders the given argument.
+- `protected int func_177078_a(ItemStack stack)`
+- `protected ResourceLocation getEntityTexture(EntityItem entity)` — Returns the location of an entity's texture.
+- `boolean shouldBob()` — Items should have a bob effect
+- `boolean shouldSpreadItems()` — Items should spread out when rendered in 3d?
 
-## Description
+## Fields
 
-Actually renders the given argument.
+- `RenderEntityItem`

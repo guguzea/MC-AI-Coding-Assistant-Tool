@@ -1,10 +1,18 @@
 # FunctionManager.QueuedCommand
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.FunctionManager.QueuedCommand
+
+## Class signature
+
+```java
+public static class FunctionManager.QueuedCommand extends java.lang.Object
+```
+
 ## Constructors
 
-- `public QueuedCommand( FunctionManager functionManagerIn, ICommandSender senderIn, FunctionObject.Entry entryIn)`
+- `QueuedCommand(FunctionManager functionManagerIn, ICommandSender senderIn, FunctionObject.Entry entryIn)`
 
 ## Methods
 
-- `public void execute(java.util.ArrayDeque< FunctionManager.QueuedCommand > commandQueue, int maxCommandChainLength)`
-- `public java.lang.String toString()`
+- `void execute(java.util.ArrayDeque<FunctionManager.QueuedCommand> commandQueue, int maxCommandChainLength)`
+- `java.lang.String toString()`

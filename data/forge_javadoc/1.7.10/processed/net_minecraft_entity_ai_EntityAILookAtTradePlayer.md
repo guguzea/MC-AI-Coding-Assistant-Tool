@@ -1,15 +1,17 @@
 # EntityAILookAtTradePlayer
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIWatchClosest → net.minecraft.entity.ai.EntityAILookAtTradePlayer
+
 ## Class signature
 
 ```java
 public class EntityAILookAtTradePlayer extends EntityAIWatchClosest
 ```
 
-## Constructors
-
-- `public EntityAILookAtTradePlayer( EntityVillager p_i1633_1_)`
-
 ## Methods
 
-- `public boolean shouldExecute()`
+- `boolean shouldExecute()`
+
+## Fields
+
+- `EntityAILookAtTradePlayer`

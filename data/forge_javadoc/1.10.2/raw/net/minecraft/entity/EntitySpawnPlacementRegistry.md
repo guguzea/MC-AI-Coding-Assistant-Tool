@@ -3,11 +3,15 @@ title: "EntitySpawnPlacementRegistry"
 description: "public class EntitySpawnPlacementRegistry extends java.lang.Object"
 package: "net/minecraft/entity"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/entity/EntitySpawnPlacementRegistry.html"
 sourceType: javadoc
 ---
 
 # EntitySpawnPlacementRegistry
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.EntitySpawnPlacementRegistry
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class EntitySpawnPlacementRegistry extends java.lang.Object
 
 ## Constructors
 
-- `public EntitySpawnPlacementRegistry()`
+- `EntitySpawnPlacementRegistry()`
 
 ## Methods
 
-- `public static EntityLiving.SpawnPlacementType getPlacementForEntity(java.lang.Class<?> entityClass)`
-- `public static void setPlacementType(java.lang.Class<? extends Entity > entityClass, EntityLiving.SpawnPlacementType placementType)`
+- `static EntityLiving.SpawnPlacementType getPlacementForEntity(java.lang.Class<?> entityClass)`
+- `static void setPlacementType(java.lang.Class<? extends Entity> entityClass, EntityLiving.SpawnPlacementType placementType)`

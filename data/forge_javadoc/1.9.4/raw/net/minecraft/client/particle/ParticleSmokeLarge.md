@@ -3,11 +3,15 @@ title: "ParticleSmokeLarge"
 description: "public class ParticleSmokeLarge extends ParticleSmokeNormal"
 package: "net/minecraft/client/particle"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/particle/ParticleSmokeLarge.html"
 sourceType: javadoc
 ---
 
 # ParticleSmokeLarge
+
+**Inheritance:** java.lang.Object → net.minecraft.client.particle.Particle → net.minecraft.client.particle.ParticleSmokeNormal → net.minecraft.client.particle.ParticleSmokeLarge
 
 ## Class signature
 
@@ -15,6 +19,6 @@ sourceType: javadoc
 public class ParticleSmokeLarge extends ParticleSmokeNormal
 ```
 
-## Constructors
+## Fields
 
-- `protected ParticleSmokeLarge( World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double p_i1201_8_, double p_i1201_10_, double p_i1201_12_)`
+- `protected ParticleSmokeLarge`

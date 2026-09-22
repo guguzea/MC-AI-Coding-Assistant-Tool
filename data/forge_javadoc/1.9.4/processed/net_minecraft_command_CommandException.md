@@ -1,5 +1,7 @@
 # CommandException
 
+**Inheritance:** java.lang.Object → java.lang.Throwable → java.lang.Exception → net.minecraft.command.CommandException
+
 ## Class signature
 
 ```java
@@ -8,8 +10,8 @@ public class CommandException extends java.lang.Exception
 
 ## Constructors
 
-- `public CommandException(java.lang.String message, java.lang.Object... objects)`
+- `CommandException(java.lang.String message, java.lang.Object... objects)`
 
 ## Methods
 
-- `public java.lang.Object[] getErrorObjects()`
+- `java.lang.Object[] getErrorObjects()`

@@ -1,5 +1,7 @@
 # SoundList
 
+**Inheritance:** java.lang.Object → net.minecraft.client.audio.SoundList
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class SoundList extends java.lang.Object
 
 ## Constructors
 
-- `public SoundList()`
+- `SoundList()`
 
 ## Methods
 
-- `public java.util.List< SoundList.SoundEntry > getSoundList()`
-- `public boolean canReplaceExisting()`
-- `public void setReplaceExisting(boolean p_148572_1_)`
-- `public SoundCategory getSoundCategory()`
-- `public void setSoundCategory( SoundCategory soundCat)`
+- `boolean canReplaceExisting()`
+- `SoundCategory getSoundCategory()`
+- `java.util.List<SoundList.SoundEntry> getSoundList()`
+- `void setReplaceExisting(boolean p_148572_1_)`
+- `void setSoundCategory(SoundCategory soundCat)`

@@ -1,25 +1,35 @@
 ---
 title: "GuiEditArrayEntries.BooleanEntry"
-description: "Returns true if the mouse has been pressed on this control."
+description: "public static class GuiEditArrayEntries.BooleanEntry extends GuiEditArrayEntries.BaseEntry"
 package: "net/minecraftforge/fml/client/config"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fml/client/config/GuiEditArrayEntries.BooleanEntry.html"
 sourceType: javadoc
 ---
 
 # GuiEditArrayEntries.BooleanEntry
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.client.config.GuiEditArrayEntries.BaseEntry → net.minecraftforge.fml.client.config.GuiEditArrayEntries.BooleanEntry
+
+## Class signature
+
+```java
+public static class GuiEditArrayEntries.BooleanEntry extends GuiEditArrayEntries.BaseEntry
+```
+
 ## Constructors
 
-- `public BooleanEntry( GuiEditArray owningScreen, GuiEditArrayEntries owningEntryList, IConfigElement configElement, boolean value)`
+- `BooleanEntry(GuiEditArray owningScreen, GuiEditArrayEntries owningEntryList, IConfigElement configElement, boolean value)`
 
 ## Methods
 
-- `public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected)`
-- `public boolean mousePressed(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)`
-- `public void mouseReleased(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)`
-- `public java.lang.Object getValue()`
+- `void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected)`
+- `java.lang.Object getValue()`
+- `boolean mousePressed(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)` — Returns true if the mouse has been pressed on this control.
+- `void mouseReleased(int index, int x, int y, int mouseEvent, int relativeX, int relativeY)` — Fired when the mouse button is released.
 
-## Description
+## Fields
 
-Returns true if the mouse has been pressed on this control.
+- `protected GuiButtonExt btnValue`

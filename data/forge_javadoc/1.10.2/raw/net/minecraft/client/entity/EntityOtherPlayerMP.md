@@ -3,11 +3,15 @@ title: "EntityOtherPlayerMP"
 description: "public class EntityOtherPlayerMP extends AbstractClientPlayer"
 package: "net/minecraft/client/entity"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/client/entity/EntityOtherPlayerMP.html"
 sourceType: javadoc
 ---
 
 # EntityOtherPlayerMP
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.player.EntityPlayer → net.minecraft.client.entity.AbstractClientPlayer → net.minecraft.client.entity.EntityOtherPlayerMP
 
 ## Class signature
 
@@ -15,17 +19,17 @@ sourceType: javadoc
 public class EntityOtherPlayerMP extends AbstractClientPlayer
 ```
 
-## Constructors
-
-- `public EntityOtherPlayerMP( World worldIn, com.mojang.authlib.GameProfile gameProfileIn)`
-
 ## Methods
 
-- `public boolean isInRangeToRenderDist(double distance)`
-- `public boolean attackEntityFrom( DamageSource source, float amount)`
-- `public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
-- `public void onUpdate()`
-- `public void onLivingUpdate()`
-- `public void addChatMessage( ITextComponent component)`
-- `public boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)`
-- `public BlockPos getPosition()`
+- `void addChatMessage(ITextComponent component)`
+- `boolean attackEntityFrom(DamageSource source, float amount)`
+- `boolean canCommandSenderUseCommand(int permLevel, java.lang.String commandName)`
+- `BlockPos getPosition()`
+- `boolean isInRangeToRenderDist(double distance)`
+- `void onLivingUpdate()`
+- `void onUpdate()`
+- `void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)`
+
+## Fields
+
+- `EntityOtherPlayerMP`

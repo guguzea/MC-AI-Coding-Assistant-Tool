@@ -1,32 +1,49 @@
 ---
 title: "TileEntityEnchantmentTable"
-description: "public class TileEntityEnchantmentTable extends TileEntity implements ITickable , IInteractionObject"
+description: "public class TileEntityEnchantmentTable extends TileEntity implements ITickable, IInteractionObject"
 package: "net/minecraft/tileentity"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/tileentity/TileEntityEnchantmentTable.html"
 sourceType: javadoc
 ---
 
 # TileEntityEnchantmentTable
 
+**Inheritance:** java.lang.Object → net.minecraft.tileentity.TileEntity → net.minecraft.tileentity.TileEntityEnchantmentTable
+
 ## Class signature
 
 ```java
-public class TileEntityEnchantmentTable extends TileEntity implements ITickable , IInteractionObject
+public class TileEntityEnchantmentTable extends TileEntity implements ITickable, IInteractionObject
 ```
 
 ## Constructors
 
-- `public TileEntityEnchantmentTable()`
+- `TileEntityEnchantmentTable()`
 
 ## Methods
 
-- `public NBTTagCompound writeToNBT( NBTTagCompound compound)`
-- `public void readFromNBT( NBTTagCompound compound)`
-- `public void update()`
-- `public java.lang.String getName()`
-- `public boolean hasCustomName()`
-- `public void setCustomName(java.lang.String customNameIn)`
-- `public ITextComponent getDisplayName()`
-- `public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn)`
-- `public java.lang.String getGuiID()`
+- `Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)`
+- `ITextComponent getDisplayName()`
+- `java.lang.String getGuiID()`
+- `java.lang.String getName()`
+- `boolean hasCustomName()`
+- `void readFromNBT(NBTTagCompound compound)`
+- `void setCustomName(java.lang.String customNameIn)`
+- `void update()`
+- `NBTTagCompound writeToNBT(NBTTagCompound compound)`
+
+## Fields
+
+- `float bookRotation`
+- `float bookRotationPrev`
+- `float bookSpread`
+- `float bookSpreadPrev`
+- `float flipA`
+- `float flipT`
+- `float pageFlip`
+- `float pageFlipPrev`
+- `int tickCount`
+- `float tRot`

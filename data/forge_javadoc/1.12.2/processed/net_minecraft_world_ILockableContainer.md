@@ -3,11 +3,11 @@
 ## Class signature
 
 ```java
-public interface ILockableContainer extends IInventory , IInteractionObject
+public interface ILockableContainer extends IInventory, IInteractionObject
 ```
 
 ## Methods
 
-- `boolean isLocked()`
-- `void setLockCode( LockCode code)`
 - `LockCode getLockCode()`
+- `boolean isLocked()`
+- `void setLockCode(LockCode code)`

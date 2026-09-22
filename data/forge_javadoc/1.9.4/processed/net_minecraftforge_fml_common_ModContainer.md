@@ -8,36 +8,36 @@ public interface ModContainer
 
 ## Methods
 
-- `java.lang.String getModId()`
-- `java.lang.String getName()`
-- `java.lang.String getVersion()`
-- `java.io.File getSource()`
-- `ModMetadata getMetadata()`
-- `void bindMetadata( MetadataCollection mc)`
-- `void setEnabledState(boolean enabled)`
-- `java.util.Set< ArtifactVersion > getRequirements()`
-- `java.util.List< ArtifactVersion > getDependencies()`
-- `java.util.List< ArtifactVersion > getDependants()`
-- `java.lang.String getSortingRules()`
-- `boolean registerBus(com.google.common.eventbus.EventBus bus, LoadController controller)`
-- `boolean matches(java.lang.Object mod)`
-- `java.lang.Object getMod()`
-- `ArtifactVersion getProcessedVersion()`
-- `boolean isImmutable()`
-- `java.lang.String getDisplayVersion()`
 - `VersionRange acceptableMinecraftVersionRange()`
-- `java.security.cert.Certificate getSigningCertificate()`
-- `java.util.Map<java.lang.String,java.lang.String> getCustomModProperties()`
-- `java.lang.Class<?> getCustomResourcePackClass()`
-- `java.util.Map<java.lang.String,java.lang.String> getSharedModDescriptor()`
+- `void bindMetadata(MetadataCollection mc)` — Attach this mod to it's metadata from the supplied metadata collection
 - `ModContainer.Disableable canBeDisabled()`
-- `java.lang.String getGuiClassName()`
-- `java.util.List<java.lang.String> getOwnedPackages()`
-- `boolean shouldLoadInEnvironment()`
-- `java.net.URL getUpdateUrl()`
-- `void setClassVersion(int classVersion)`
 - `int getClassVersion()`
+- `java.util.Map<java.lang.String, java.lang.String> getCustomModProperties()`
+- `java.lang.Class<?> getCustomResourcePackClass()`
+- `java.util.List<ArtifactVersion> getDependants()` — A list of modids that should be loaded after this one.
+- `java.util.List<ArtifactVersion> getDependencies()` — A list of modids that should be loaded prior to this one.
+- `java.lang.String getDisplayVersion()`
+- `java.lang.String getGuiClassName()`
+- `ModMetadata getMetadata()` — The metadata for this mod
+- `java.lang.Object getMod()` — Get the actual mod object
+- `java.lang.String getModId()` — The globally unique modid for this mod
+- `java.lang.String getName()` — A human readable name
+- `java.util.List<java.lang.String> getOwnedPackages()`
+- `ArtifactVersion getProcessedVersion()`
+- `java.util.Set<ArtifactVersion> getRequirements()` — A list of the modids that this mod requires loaded prior to loading
+- `java.util.Map<java.lang.String, java.lang.String> getSharedModDescriptor()`
+- `java.security.cert.Certificate getSigningCertificate()`
+- `java.lang.String getSortingRules()` — A representative string encapsulating the sorting preferences for this mod
+- `java.io.File getSource()` — The location on the file system which this mod came from
+- `java.net.URL getUpdateUrl()`
+- `java.lang.String getVersion()` — A human readable version identifier
+- `boolean isImmutable()`
+- `boolean matches(java.lang.Object mod)` — Does this mod match the supplied mod
+- `boolean registerBus(com.google.common.eventbus.EventBus bus, LoadController controller)` — Register the event bus for the mod and the controller for error handling Returns if this bus was successfully registered - disabled mods and other mods that don't need real events should return false and avoid further processing
+- `void setClassVersion(int classVersion)`
+- `void setEnabledState(boolean enabled)` — Set the enabled/disabled state of this mod
+- `boolean shouldLoadInEnvironment()`
 
-## Description
+## Fields
 
-The container that wraps around mods in the system. The philosophy is that individual mod implementation technologies should not impact the actual loading and management of mod code. This interface pr
+- `static java.util.Map<java.lang.String, java.lang.String> EMPTY_PROPERTIES`

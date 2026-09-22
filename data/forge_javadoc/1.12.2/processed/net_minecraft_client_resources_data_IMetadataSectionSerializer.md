@@ -3,7 +3,7 @@
 ## Class signature
 
 ```java
-public interface IMetadataSectionSerializer<T extends IMetadataSection >
+public interface IMetadataSectionSerializer<T extends IMetadataSection>
 ```
 
 ## Methods

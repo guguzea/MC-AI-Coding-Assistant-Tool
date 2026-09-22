@@ -1,9 +1,19 @@
 # Constants.AiMutexBits
 
+**Inheritance:** java.lang.Object → net.minecraftforge.common.util.Constants.AiMutexBits
+
+## Class signature
+
+```java
+public static class Constants.AiMutexBits extends java.lang.Object
+```
+
 ## Constructors
 
-- `public AiMutexBits()`
+- `AiMutexBits()`
 
-## Description
+## Fields
 
-The mutex bits used for AI tasks EntityAIBase.setMutexBits(int) Bits can be combined with bitwise OR
+- `static int JUMP`
+- `static int LOOK`
+- `static int MOVE`

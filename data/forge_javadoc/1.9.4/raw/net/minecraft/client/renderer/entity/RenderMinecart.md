@@ -1,26 +1,34 @@
 ---
 title: "RenderMinecart"
-description: "public class RenderMinecart<T extends EntityMinecart > extends Render <T>"
+description: "public class RenderMinecart<T extends EntityMinecart> extends Render<T>"
 package: "net/minecraft/client/renderer/entity"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/renderer/entity/RenderMinecart.html"
 sourceType: javadoc
 ---
 
 # RenderMinecart
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.entity.Render<T> → net.minecraft.client.renderer.entity.RenderMinecart<T>
+
 ## Class signature
 
 ```java
-public class RenderMinecart<T extends EntityMinecart > extends Render <T>
+public class RenderMinecart<T extends EntityMinecart> extends Render<T>
 ```
 
 ## Constructors
 
-- `public RenderMinecart( RenderManager renderManagerIn)`
+- `RenderMinecart(RenderManager renderManagerIn)`
 
 ## Methods
 
-- `public void doRender( T entity, double x, double y, double z, float entityYaw, float partialTicks)`
-- `protected ResourceLocation getEntityTexture( T entity)`
-- `protected void renderCartContents( T p_188319_1_, float p_188319_2_, IBlockState p_188319_3_)`
+- `void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks)`
+- `protected ResourceLocation getEntityTexture(T entity)`
+- `protected void renderCartContents(T p_188319_1_, float p_188319_2_, IBlockState p_188319_3_)`
+
+## Fields
+
+- `protected ModelBase modelMinecart`

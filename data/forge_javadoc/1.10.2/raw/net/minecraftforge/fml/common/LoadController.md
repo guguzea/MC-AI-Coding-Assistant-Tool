@@ -3,11 +3,15 @@ title: "LoadController"
 description: "public class LoadController extends java.lang.Object"
 package: "net/minecraftforge/fml/common"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/LoadController.html"
 sourceType: javadoc
 ---
 
 # LoadController
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.LoadController
 
 ## Class signature
 
@@ -17,20 +21,20 @@ public class LoadController extends java.lang.Object
 
 ## Constructors
 
-- `public LoadController( Loader loader)`
+- `LoadController(Loader loader)`
 
 ## Methods
 
-- `public void buildModList( FMLLoadEvent event)`
-- `public void distributeStateMessage( LoaderState state, java.lang.Object... eventData)`
-- `public void transition( LoaderState desiredState, boolean forceState)`
-- `public ModContainer activeContainer()`
-- `public void propogateStateMessage( FMLEvent stateEvent)`
-- `public com.google.common.collect.ImmutableBiMap< ModContainer ,java.lang.Object> buildModObjectList()`
-- `public void errorOccurred( ModContainer modContainer, java.lang.Throwable exception)`
-- `public void printModStates(java.lang.StringBuilder ret)`
-- `public java.util.List< ModContainer > getActiveModList()`
-- `public LoaderState.ModState getModState( ModContainer selectedMod)`
-- `public void distributeStateMessage(java.lang.Class<?> customEvent)`
-- `public com.google.common.collect.BiMap< ModContainer ,java.lang.Object> getModObjectList()`
-- `public boolean isInState( LoaderState state)`
+- `ModContainer activeContainer()`
+- `void buildModList(FMLLoadEvent event)`
+- `com.google.common.collect.ImmutableBiMap<ModContainer, java.lang.Object> buildModObjectList()`
+- `void distributeStateMessage(java.lang.Class<?> customEvent)`
+- `void distributeStateMessage(LoaderState state, java.lang.Object... eventData)`
+- `void errorOccurred(ModContainer modContainer, java.lang.Throwable exception)`
+- `java.util.List<ModContainer> getActiveModList()`
+- `com.google.common.collect.BiMap<ModContainer, java.lang.Object> getModObjectList()`
+- `LoaderState.ModState getModState(ModContainer selectedMod)`
+- `boolean isInState(LoaderState state)`
+- `void printModStates(java.lang.StringBuilder ret)`
+- `void propogateStateMessage(FMLEvent stateEvent)`
+- `void transition(LoaderState desiredState, boolean forceState)`

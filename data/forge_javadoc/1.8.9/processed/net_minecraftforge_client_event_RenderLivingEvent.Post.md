@@ -1,5 +1,13 @@
 # RenderLivingEvent.Post
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.client.event.RenderLivingEvent<T> → net.minecraftforge.client.event.RenderLivingEvent.Post<T>
 
-- `public Post( EntityLivingBase entity, RendererLivingEntity < T > renderer, double x, double y, double z)`
+## Class signature
+
+```java
+public static class RenderLivingEvent.Post<T extends EntityLivingBase> extends RenderLivingEvent<T>
+```
+
+## Fields
+
+- `Post`

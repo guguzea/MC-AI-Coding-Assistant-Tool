@@ -1,13 +1,17 @@
 ---
 title: "UniversalBucket"
-description: "A universal bucket that can hold any liquid"
+description: "public class UniversalBucket extends Item implements IFluidContainerItem"
 package: "net/minecraftforge/fluids"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/fluids/UniversalBucket.html"
 sourceType: javadoc
 ---
 
 # UniversalBucket
+
+**Inheritance:** java.lang.Object → net.minecraft.item.Item → net.minecraftforge.fluids.UniversalBucket
 
 ## Class signature
 
@@ -17,22 +21,24 @@ public class UniversalBucket extends Item implements IFluidContainerItem
 
 ## Constructors
 
-- `public UniversalBucket()`
-- `public UniversalBucket(int capacity, ItemStack empty, boolean nbtSensitive)`
+- `UniversalBucket()`
+- `UniversalBucket(int capacity, ItemStack empty, boolean nbtSensitive)`
 
 ## Methods
 
-- `public void getSubItems( Item itemIn, CreativeTabs tab, java.util.List< ItemStack > subItems)`
-- `public java.lang.String getItemStackDisplayName( ItemStack stack)`
-- `public ItemStack onItemRightClick( ItemStack itemstack, World world, EntityPlayer player)`
-- `public boolean tryPlaceFluid( Block block, World worldIn, BlockPos pos)`
-- `public void onFillBucket( FillBucketEvent event)`
-- `public static ItemStack getFilledBucket( UniversalBucket item, Fluid fluid)`
-- `public FluidStack getFluid( ItemStack container)`
-- `public int getCapacity( ItemStack container)`
-- `public int fill( ItemStack container, FluidStack resource, boolean doFill)`
-- `public FluidStack drain( ItemStack container, int maxDrain, boolean doDrain)`
+- `FluidStack drain(ItemStack container, int maxDrain, boolean doDrain)`
+- `int fill(ItemStack container, FluidStack resource, boolean doFill)`
+- `int getCapacity(ItemStack container)`
+- `static ItemStack getFilledBucket(UniversalBucket item, Fluid fluid)`
+- `FluidStack getFluid(ItemStack container)`
+- `java.lang.String getItemStackDisplayName(ItemStack stack)`
+- `void getSubItems(Item itemIn, CreativeTabs tab, java.util.List<ItemStack> subItems)` — returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
+- `void onFillBucket(FillBucketEvent event)`
+- `ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)` — Called whenever this item is equipped and the right mouse button is pressed.
+- `boolean tryPlaceFluid(Block block, World worldIn, BlockPos pos)`
 
-## Description
+## Fields
 
-A universal bucket that can hold any liquid
+- `int capacity`
+- `ItemStack empty`
+- `boolean nbtSensitive`

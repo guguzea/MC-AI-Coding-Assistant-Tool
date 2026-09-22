@@ -1,5 +1,7 @@
 # AdvancementManager
 
+**Inheritance:** java.lang.Object → net.minecraft.advancements.AdvancementManager
+
 ## Class signature
 
 ```java
@@ -8,11 +10,15 @@ public class AdvancementManager extends java.lang.Object
 
 ## Constructors
 
-- `public AdvancementManager(java.io.File advancementsDirIn)`
+- `AdvancementManager(java.io.File advancementsDirIn)`
 
 ## Methods
 
-- `public void reload()`
-- `public boolean hasErrored()`
-- `public Advancement getAdvancement( ResourceLocation id)`
-- `public java.lang.Iterable< Advancement > getAdvancements()`
+- `Advancement getAdvancement(ResourceLocation id)`
+- `java.lang.Iterable<Advancement> getAdvancements()`
+- `boolean hasErrored()`
+- `void reload()`
+
+## Fields
+
+- `static Gson GSON`

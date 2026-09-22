@@ -1,5 +1,7 @@
 # BlockLeavesBase
 
+**Inheritance:** java.lang.Object → net.minecraft.block.Block → net.minecraft.block.BlockLeavesBase
+
 ## Class signature
 
 ```java
@@ -8,13 +10,13 @@ public class BlockLeavesBase extends Block
 
 ## Constructors
 
-- `protected BlockLeavesBase( Material materialIn, boolean fancyGraphics)`
+- `BlockLeavesBase(Material materialIn, boolean fancyGraphics)`
 
 ## Methods
 
-- `public boolean isOpaqueCube()`
-- `public boolean shouldSideBeRendered( IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
+- `boolean isOpaqueCube()` — Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)`
 
-## Description
+## Fields
 
-Used to determine ambient occlusion and culling when rebuilding chunks for render
+- `protected boolean fancyGraphics`

@@ -1,5 +1,7 @@
 # GuiScreenCustomizePresets
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiScreen → net.minecraft.client.gui.GuiScreenCustomizePresets
+
 ## Class signature
 
 ```java
@@ -8,16 +10,20 @@ public class GuiScreenCustomizePresets extends GuiScreen
 
 ## Constructors
 
-- `public GuiScreenCustomizePresets( GuiCustomizeWorldScreen parentIn)`
+- `GuiScreenCustomizePresets(GuiCustomizeWorldScreen parentIn)`
 
 ## Methods
 
-- `public void initGui()`
-- `public void handleMouseInput() throws java.io.IOException`
-- `public void onGuiClosed()`
-- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws java.io.IOException`
-- `protected void keyTyped(char typedChar, int keyCode) throws java.io.IOException`
-- `protected void actionPerformed( GuiButton button) throws java.io.IOException`
-- `public void drawScreen(int mouseX, int mouseY, float partialTicks)`
-- `public void updateScreen()`
-- `public void updateButtonValidity()`
+- `protected void actionPerformed(GuiButton button)`
+- `void drawScreen(int mouseX, int mouseY, float partialTicks)`
+- `void handleMouseInput()`
+- `void initGui()`
+- `protected void keyTyped(char typedChar, int keyCode)`
+- `protected void mouseClicked(int mouseX, int mouseY, int mouseButton)`
+- `void onGuiClosed()`
+- `void updateButtonValidity()`
+- `void updateScreen()`
+
+## Fields
+
+- `protected java.lang.String title`

@@ -3,7 +3,7 @@
 ## Class signature
 
 ```java
-public interface ITickableSound extends ISound , IUpdatePlayerListBox
+public interface ITickableSound extends ISound, IUpdatePlayerListBox
 ```
 
 ## Methods

@@ -3,11 +3,15 @@ title: "CreativeTabs"
 description: "public abstract class CreativeTabs extends java.lang.Object"
 package: "net/minecraft/creativetab"
 version: "1.7.10"
+forgeBuild: "10.13.4.1614"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/creativetab/CreativeTabs.html"
 sourceType: javadoc
 ---
 
 # CreativeTabs
+
+**Inheritance:** java.lang.Object → net.minecraft.creativetab.CreativeTabs
 
 ## Class signature
 
@@ -17,26 +21,42 @@ public abstract class CreativeTabs extends java.lang.Object
 
 ## Constructors
 
-- `public CreativeTabs(int p_i1853_1_, java.lang.String p_i1853_2_)`
+- `CreativeTabs(int p_i1853_1_, java.lang.String p_i1853_2_)`
 
 ## Methods
 
-- `public int getTabIndex()`
-- `public CreativeTabs setBackgroundImageName(java.lang.String p_78025_1_)`
-- `public java.lang.String getTabLabel()`
-- `public java.lang.String getTranslatedTabLabel()`
-- `public ItemStack getIconItemStack()`
-- `public abstract Item getTabIconItem()`
-- `public int func_151243_f()`
-- `public java.lang.String getBackgroundImageName()`
-- `public boolean drawInForegroundOfTab()`
-- `public CreativeTabs setNoTitle()`
-- `public boolean shouldHidePlayerInventory()`
-- `public CreativeTabs setNoScrollbar()`
-- `public int getTabColumn()`
-- `public boolean isTabInFirstRow()`
-- `public EnumEnchantmentType [] func_111225_m()`
-- `public CreativeTabs func_111229_a( EnumEnchantmentType ... p_111229_1_)`
-- `public boolean func_111226_a( EnumEnchantmentType p_111226_1_)`
-- `public void displayAllReleventItems(java.util.List p_78018_1_)`
-- `public void addEnchantmentBooksToList(java.util.List p_92116_1_, EnumEnchantmentType ... p_92116_2_)`
+- `void addEnchantmentBooksToList(java.util.List p_92116_1_, EnumEnchantmentType ... p_92116_2_)`
+- `void displayAllReleventItems(java.util.List p_78018_1_)`
+- `boolean drawInForegroundOfTab()`
+- `EnumEnchantmentType [] func_111225_m()`
+- `boolean func_111226_a(EnumEnchantmentType p_111226_1_)`
+- `CreativeTabs func_111229_a(EnumEnchantmentType ... p_111229_1_)`
+- `int func_151243_f()`
+- `java.lang.String getBackgroundImageName()`
+- `ItemStack getIconItemStack()`
+- `int getTabColumn()`
+- `abstract Item getTabIconItem()`
+- `int getTabIndex()`
+- `java.lang.String getTabLabel()`
+- `java.lang.String getTranslatedTabLabel()`
+- `boolean isTabInFirstRow()`
+- `CreativeTabs setBackgroundImageName(java.lang.String p_78025_1_)`
+- `CreativeTabs setNoScrollbar()`
+- `CreativeTabs setNoTitle()`
+- `boolean shouldHidePlayerInventory()`
+
+## Fields
+
+- `static CreativeTabs [] creativeTabArray`
+- `static CreativeTabs tabAllSearch`
+- `static CreativeTabs tabBlock`
+- `static CreativeTabs tabBrewing`
+- `static CreativeTabs tabCombat`
+- `static CreativeTabs tabDecorations`
+- `static CreativeTabs tabFood`
+- `static CreativeTabs tabInventory`
+- `static CreativeTabs tabMaterials`
+- `static CreativeTabs tabMisc`
+- `static CreativeTabs tabRedstone`
+- `static CreativeTabs tabTools`
+- `static CreativeTabs tabTransport`

@@ -1,5 +1,7 @@
 # EntityAIEatGrass
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAIEatGrass
+
 ## Class signature
 
 ```java
@@ -8,13 +10,13 @@ public class EntityAIEatGrass extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAIEatGrass( EntityLiving grassEaterEntityIn)`
+- `EntityAIEatGrass(EntityLiving grassEaterEntityIn)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void startExecuting()`
-- `public void resetTask()`
-- `public boolean continueExecuting()`
-- `public int getEatingGrassTimer()`
-- `public void updateTask()`
+- `boolean continueExecuting()`
+- `int getEatingGrassTimer()`
+- `void resetTask()`
+- `boolean shouldExecute()`
+- `void startExecuting()`
+- `void updateTask()`

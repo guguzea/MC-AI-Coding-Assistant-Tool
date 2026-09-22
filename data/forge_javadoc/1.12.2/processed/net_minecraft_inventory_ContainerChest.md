@@ -1,18 +1,20 @@
 # ContainerChest
 
+**Inheritance:** java.lang.Object → net.minecraft.inventory.Container → net.minecraft.inventory.ContainerChest
+
 ## Class signature
 
 ```java
 public class ContainerChest extends Container
 ```
 
-## Constructors
-
-- `public ContainerChest( IInventory playerInventory, IInventory chestInventory, EntityPlayer player)`
-
 ## Methods
 
-- `public boolean canInteractWith( EntityPlayer playerIn)`
-- `public ItemStack transferStackInSlot( EntityPlayer playerIn, int index)`
-- `public void onContainerClosed( EntityPlayer playerIn)`
-- `public IInventory getLowerChestInventory()`
+- `boolean canInteractWith(EntityPlayer playerIn)`
+- `IInventory getLowerChestInventory()`
+- `void onContainerClosed(EntityPlayer playerIn)`
+- `ItemStack transferStackInSlot(EntityPlayer playerIn, int index)`
+
+## Fields
+
+- `ContainerChest`

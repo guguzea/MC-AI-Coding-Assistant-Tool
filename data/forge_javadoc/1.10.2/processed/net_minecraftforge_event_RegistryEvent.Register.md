@@ -1,14 +1,18 @@
 # RegistryEvent.Register
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.fml.common.eventhandler.GenericEvent<T> → net.minecraftforge.event.RegistryEvent<T> → net.minecraftforge.event.RegistryEvent.Register<T>
+
+## Class signature
+
+```java
+public static class RegistryEvent.Register<T extends IForgeRegistryEntry<T>> extends RegistryEvent<T>
+```
+
 ## Constructors
 
-- `public Register( ResourceLocation location, IForgeRegistry < T > registry)`
+- `Register(ResourceLocation location, IForgeRegistry<T> registry)`
 
 ## Methods
 
-- `public IForgeRegistry < T > getRegistry()`
-- `public ResourceLocation getLocation()`
-
-## Description
-
-Register your objects for the appropriate registry type when you receive this event. event.getRegistry().register(...) The registries will be visited in alphabetic order of their name, except blocks a
+- `ResourceLocation getLocation()`
+- `IForgeRegistry<T> getRegistry()`

@@ -1,5 +1,7 @@
 # ForgeCommand
 
+**Inheritance:** java.lang.Object → net.minecraft.command.CommandBase → net.minecraftforge.server.command.CommandTreeBase → net.minecraftforge.server.command.ForgeCommand
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class ForgeCommand extends CommandTreeBase
 
 ## Constructors
 
-- `public ForgeCommand()`
+- `ForgeCommand()`
 
 ## Methods
 
-- `public java.lang.String getName()`
-- `public void addSubcommand( ICommand command)`
-- `public int getRequiredPermissionLevel()`
-- `public boolean checkPermission( MinecraftServer server, ICommandSender sender)`
-- `public java.lang.String getUsage( ICommandSender icommandsender)`
+- `void addSubcommand(ICommand command)`
+- `boolean checkPermission(MinecraftServer server, ICommandSender sender)`
+- `java.lang.String getName()`
+- `int getRequiredPermissionLevel()`
+- `java.lang.String getUsage(ICommandSender icommandsender)`

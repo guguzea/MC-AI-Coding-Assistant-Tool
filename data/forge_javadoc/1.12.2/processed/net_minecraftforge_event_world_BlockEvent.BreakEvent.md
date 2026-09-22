@@ -1,15 +1,19 @@
 # BlockEvent.BreakEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.BlockEvent → net.minecraftforge.event.world.BlockEvent.BreakEvent
+
+## Class signature
+
+```java
+public static class BlockEvent.BreakEvent extends BlockEvent
+```
+
 ## Constructors
 
-- `public BreakEvent( World world, BlockPos pos, IBlockState state, EntityPlayer player)`
+- `BreakEvent(World world, BlockPos pos, IBlockState state, EntityPlayer player)`
 
 ## Methods
 
-- `public EntityPlayer getPlayer()`
-- `public int getExpToDrop()`
-- `public void setExpToDrop(int exp)`
-
-## Description
-
-Event that is fired when an Block is about to be broken by a player Canceling this event will prevent the Block from being broken.
+- `int getExpToDrop()` — Get the experience dropped by the block after the event has processed
+- `EntityPlayer getPlayer()`
+- `void setExpToDrop(int exp)` — Set the amount of experience dropped by the block after the event has processed

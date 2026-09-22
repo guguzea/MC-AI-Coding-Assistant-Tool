@@ -3,11 +3,15 @@ title: "ItemElytra"
 description: "public class ItemElytra extends Item"
 package: "net/minecraft/item"
 version: "1.9.4"
+forgeBuild: "12.17.0.2051"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/item/ItemElytra.html"
 sourceType: javadoc
 ---
 
 # ItemElytra
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.registry.IForgeRegistryEntry.Impl<Item> → net.minecraft.item.Item → net.minecraft.item.ItemElytra
 
 ## Class signature
 
@@ -15,12 +19,12 @@ sourceType: javadoc
 public class ItemElytra extends Item
 ```
 
-## Constructors
-
-- `public ItemElytra()`
-
 ## Methods
 
-- `public static boolean isBroken( ItemStack stack)`
-- `public boolean getIsRepairable( ItemStack toRepair, ItemStack repair)`
-- `public ActionResult < ItemStack > onItemRightClick( ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)`
+- `boolean getIsRepairable(ItemStack toRepair, ItemStack repair)`
+- `static boolean isBroken(ItemStack stack)`
+- `ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)`
+
+## Fields
+
+- `ItemElytra`

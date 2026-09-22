@@ -1,13 +1,17 @@
 ---
 title: "PlayerOpenContainerEvent"
-description: "This event is fired when a player attempts to view a container during player tick."
+description: "public class PlayerOpenContainerEvent extends PlayerEvent"
 package: "net/minecraftforge/event/entity/player"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraftforge/event/entity/player/PlayerOpenContainerEvent.html"
 sourceType: javadoc
 ---
 
 # PlayerOpenContainerEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.PlayerOpenContainerEvent
 
 ## Class signature
 
@@ -17,8 +21,8 @@ public class PlayerOpenContainerEvent extends PlayerEvent
 
 ## Constructors
 
-- `public PlayerOpenContainerEvent( EntityPlayer player, Container openContainer)`
+- `PlayerOpenContainerEvent(EntityPlayer player, Container openContainer)`
 
-## Description
+## Fields
 
-This event is fired when a player attempts to view a container during player tick.
+- `boolean canInteractWith`

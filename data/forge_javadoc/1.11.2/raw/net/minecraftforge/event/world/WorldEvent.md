@@ -1,13 +1,17 @@
 ---
 title: "WorldEvent"
-description: "WorldEvent is fired when an event involving the world occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. world contains the World this e"
+description: "public class WorldEvent extends Event"
 package: "net/minecraftforge/event/world"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraftforge/event/world/WorldEvent.html"
 sourceType: javadoc
 ---
 
 # WorldEvent
+
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.world.WorldEvent
 
 ## Class signature
 
@@ -17,12 +21,8 @@ public class WorldEvent extends Event
 
 ## Constructors
 
-- `public WorldEvent( World world)`
+- `WorldEvent(World world)`
 
 ## Methods
 
-- `public World getWorld()`
-
-## Description
-
-WorldEvent is fired when an event involving the world occurs. If a method utilizes this Event as its parameter, the method will receive every child event of this class. world contains the World this e
+- `World getWorld()`

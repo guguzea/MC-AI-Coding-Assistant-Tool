@@ -1,13 +1,27 @@
 # OBJModel.TextureCoordinate
 
+**Inheritance:** java.lang.Object → net.minecraftforge.client.model.obj.OBJModel.TextureCoordinate
+
+## Class signature
+
+```java
+public static class OBJModel.TextureCoordinate extends java.lang.Object
+```
+
 ## Constructors
 
-- `public TextureCoordinate()`
-- `public TextureCoordinate(float[] data)`
-- `public TextureCoordinate(Vector3f data)`
-- `public TextureCoordinate(float u, float v, float w)`
+- `TextureCoordinate()`
+- `TextureCoordinate(float[] data)`
+- `TextureCoordinate(float u, float v, float w)`
+- `TextureCoordinate(Vector3f data)`
 
 ## Methods
 
-- `public Vector3f getData()`
-- `public static OBJModel.TextureCoordinate [] getDefaultUVs()`
+- `Vector3f getData()`
+- `static OBJModel.TextureCoordinate [] getDefaultUVs()`
+
+## Fields
+
+- `float u`
+- `float v`
+- `float w`

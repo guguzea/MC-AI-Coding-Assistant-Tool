@@ -1,5 +1,7 @@
 # Profiler
 
+**Inheritance:** java.lang.Object → net.minecraft.profiler.Profiler
+
 ## Class signature
 
 ```java
@@ -8,17 +10,17 @@ public class Profiler extends java.lang.Object
 
 ## Constructors
 
-- `public Profiler()`
+- `Profiler()`
 
 ## Methods
 
-- `public void clearProfiling()`
-- `public void startSection(java.lang.String name)`
-- `public void endSection()`
-- `public java.util.List< Profiler.Result > getProfilingData(java.lang.String p_76321_1_)`
-- `public void endStartSection(java.lang.String name)`
-- `public java.lang.String getNameOfLastSection()`
+- `void clearProfiling()` — Clear profiling.
+- `void endSection()` — End section
+- `void endStartSection(java.lang.String name)` — End current section and start a new section
+- `java.lang.String getNameOfLastSection()`
+- `java.util.List<Profiler.Result> getProfilingData(java.lang.String p_76321_1_)`
+- `void startSection(java.lang.String name)` — Start section
 
-## Description
+## Fields
 
-Flag profiling enabled
+- `boolean profilingEnabled` — Flag profiling enabled

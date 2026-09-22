@@ -1,5 +1,7 @@
 # RecipeBookCloning
 
+**Inheritance:** java.lang.Object → net.minecraft.item.crafting.RecipeBookCloning
+
 ## Class signature
 
 ```java
@@ -8,12 +10,12 @@ public class RecipeBookCloning extends java.lang.Object implements IRecipe
 
 ## Constructors
 
-- `public RecipeBookCloning()`
+- `RecipeBookCloning()`
 
 ## Methods
 
-- `public boolean matches( InventoryCrafting inv, World worldIn)`
-- `@Nullable public ItemStack getCraftingResult( InventoryCrafting inv)`
-- `public int getRecipeSize()`
-- `@Nullable public ItemStack getRecipeOutput()`
-- `public ItemStack [] getRemainingItems( InventoryCrafting inv)`
+- `ItemStack getCraftingResult(InventoryCrafting inv)`
+- `ItemStack getRecipeOutput()`
+- `int getRecipeSize()`
+- `ItemStack [] getRemainingItems(InventoryCrafting inv)`
+- `boolean matches(InventoryCrafting inv, World worldIn)`

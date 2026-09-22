@@ -1,21 +1,19 @@
 # SoundRegistry
 
+**Inheritance:** java.lang.Object → net.minecraft.util.RegistrySimple<ResourceLocation, SoundEventAccessorComposite> → net.minecraft.client.audio.SoundRegistry
+
 ## Class signature
 
 ```java
-public class SoundRegistry extends RegistrySimple < ResourceLocation , SoundEventAccessorComposite >
+public class SoundRegistry extends RegistrySimple<ResourceLocation, SoundEventAccessorComposite>
 ```
-
-## Constructors
-
-- `public SoundRegistry()`
 
 ## Methods
 
-- `protected java.util.Map< ResourceLocation , SoundEventAccessorComposite > createUnderlyingMap()`
-- `public void registerSound( SoundEventAccessorComposite p_148762_1_)`
-- `public void clearMap()`
+- `void clearMap()` — Reset the underlying sound map (Called on resource manager reload)
+- `protected java.util.Map<ResourceLocation, SoundEventAccessorComposite> createUnderlyingMap()`
+- `void registerSound(SoundEventAccessorComposite p_148762_1_)`
 
-## Description
+## Fields
 
-Reset the underlying sound map (Called on resource manager reload)
+- `SoundRegistry`

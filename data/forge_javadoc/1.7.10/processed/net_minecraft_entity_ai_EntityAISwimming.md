@@ -1,5 +1,7 @@
 # EntityAISwimming
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.ai.EntityAIBase → net.minecraft.entity.ai.EntityAISwimming
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class EntityAISwimming extends EntityAIBase
 
 ## Constructors
 
-- `public EntityAISwimming( EntityLiving p_i1624_1_)`
+- `EntityAISwimming(EntityLiving p_i1624_1_)`
 
 ## Methods
 
-- `public boolean shouldExecute()`
-- `public void updateTask()`
+- `boolean shouldExecute()`
+- `void updateTask()`

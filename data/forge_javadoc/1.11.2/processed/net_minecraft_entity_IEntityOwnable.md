@@ -8,5 +8,5 @@ public interface IEntityOwnable
 
 ## Methods
 
-- `@Nullable java.util.UUID getOwnerId()`
-- `@Nullable Entity getOwner()`
+- `Entity getOwner()`
+- `java.util.UUID getOwnerId()`

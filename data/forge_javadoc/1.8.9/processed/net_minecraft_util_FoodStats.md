@@ -1,5 +1,7 @@
 # FoodStats
 
+**Inheritance:** java.lang.Object → net.minecraft.util.FoodStats
+
 ## Class signature
 
 ```java
@@ -8,23 +10,19 @@ public class FoodStats extends java.lang.Object
 
 ## Constructors
 
-- `public FoodStats()`
+- `FoodStats()`
 
 ## Methods
 
-- `public void addStats(int foodLevelIn, float foodSaturationModifier)`
-- `public void addStats( ItemFood foodItem, ItemStack p_151686_2_)`
-- `public void onUpdate( EntityPlayer player)`
-- `public void readNBT( NBTTagCompound p_75112_1_)`
-- `public void writeNBT( NBTTagCompound p_75117_1_)`
-- `public int getFoodLevel()`
-- `public int getPrevFoodLevel()`
-- `public boolean needFood()`
-- `public void addExhaustion(float p_75113_1_)`
-- `public float getSaturationLevel()`
-- `public void setFoodLevel(int foodLevelIn)`
-- `public void setFoodSaturationLevel(float foodSaturationLevelIn)`
-
-## Description
-
-adds input to foodExhaustionLevel to a max of 40
+- `void addExhaustion(float p_75113_1_)` — adds input to foodExhaustionLevel to a max of 40
+- `void addStats(int foodLevelIn, float foodSaturationModifier)` — Add food stats.
+- `void addStats(ItemFood foodItem, ItemStack p_151686_2_)`
+- `int getFoodLevel()` — Get the player's food level.
+- `int getPrevFoodLevel()`
+- `float getSaturationLevel()` — Get the player's food saturation level.
+- `boolean needFood()` — Get whether the player must eat food.
+- `void onUpdate(EntityPlayer player)` — Handles the food game logic.
+- `void readNBT(NBTTagCompound p_75112_1_)` — Reads the food data for the player.
+- `void setFoodLevel(int foodLevelIn)`
+- `void setFoodSaturationLevel(float foodSaturationLevelIn)`
+- `void writeNBT(NBTTagCompound p_75117_1_)` — Writes the food data for the player.

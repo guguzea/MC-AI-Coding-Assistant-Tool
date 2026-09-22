@@ -3,11 +3,15 @@ title: "ArmorStandSilent"
 description: "public class ArmorStandSilent extends java.lang.Object implements IFixableData"
 package: "net/minecraft/util/datafix/fixes"
 version: "1.10.2"
+forgeBuild: "12.18.3.2185"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/util/datafix/fixes/ArmorStandSilent.html"
 sourceType: javadoc
 ---
 
 # ArmorStandSilent
+
+**Inheritance:** java.lang.Object → net.minecraft.util.datafix.fixes.ArmorStandSilent
 
 ## Class signature
 
@@ -17,9 +21,9 @@ public class ArmorStandSilent extends java.lang.Object implements IFixableData
 
 ## Constructors
 
-- `public ArmorStandSilent()`
+- `ArmorStandSilent()`
 
 ## Methods
 
-- `public int getFixVersion()`
-- `public NBTTagCompound fixTagCompound( NBTTagCompound compound)`
+- `NBTTagCompound fixTagCompound(NBTTagCompound compound)`
+- `int getFixVersion()`

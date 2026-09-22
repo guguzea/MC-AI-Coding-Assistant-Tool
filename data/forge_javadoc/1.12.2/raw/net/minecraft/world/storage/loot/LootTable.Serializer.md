@@ -1,19 +1,29 @@
 ---
 title: "LootTable.Serializer"
-description: ""
+description: "public static class LootTable.Serializer extends java.lang.Object"
 package: "net/minecraft/world/storage/loot"
 version: "1.12.2"
+forgeBuild: "14.23.5.2859"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/world/storage/loot/LootTable.Serializer.html"
 sourceType: javadoc
 ---
 
 # LootTable.Serializer
 
+**Inheritance:** java.lang.Object → net.minecraft.world.storage.loot.LootTable.Serializer
+
+## Class signature
+
+```java
+public static class LootTable.Serializer extends java.lang.Object
+```
+
 ## Constructors
 
-- `public Serializer()`
+- `Serializer()`
 
 ## Methods
 
-- `public LootTable deserialize(JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException`
-- `public JsonElement serialize( LootTable p_serialize_1_, java.lang.reflect.Type p_serialize_2_, JsonSerializationContext p_serialize_3_)`
+- `LootTable deserialize(JsonElement p_deserialize_1_, java.lang.reflect.Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_)`
+- `JsonElement serialize(LootTable p_serialize_1_, java.lang.reflect.Type p_serialize_2_, JsonSerializationContext p_serialize_3_)`

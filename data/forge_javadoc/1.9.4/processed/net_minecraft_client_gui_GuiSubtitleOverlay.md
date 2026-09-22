@@ -1,16 +1,18 @@
 # GuiSubtitleOverlay
 
+**Inheritance:** java.lang.Object → net.minecraft.client.gui.Gui → net.minecraft.client.gui.GuiSubtitleOverlay
+
 ## Class signature
 
 ```java
 public class GuiSubtitleOverlay extends Gui implements ISoundEventListener
 ```
 
-## Constructors
-
-- `public GuiSubtitleOverlay( Minecraft clientIn)`
-
 ## Methods
 
-- `public void renderSubtitles( ScaledResolution resolution)`
-- `public void soundPlay( ISound soundIn, SoundEventAccessor accessor)`
+- `void renderSubtitles(ScaledResolution resolution)`
+- `void soundPlay(ISound soundIn, SoundEventAccessor accessor)`
+
+## Fields
+
+- `GuiSubtitleOverlay`

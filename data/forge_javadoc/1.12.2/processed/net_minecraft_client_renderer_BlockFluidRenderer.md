@@ -1,5 +1,7 @@
 # BlockFluidRenderer
 
+**Inheritance:** java.lang.Object → net.minecraft.client.renderer.BlockFluidRenderer
+
 ## Class signature
 
 ```java
@@ -8,9 +10,9 @@ public class BlockFluidRenderer extends java.lang.Object
 
 ## Constructors
 
-- `public BlockFluidRenderer( BlockColors blockColorsIn)`
+- `BlockFluidRenderer(BlockColors blockColorsIn)`
 
 ## Methods
 
 - `protected void initAtlasSprites()`
-- `public boolean renderFluid( IBlockAccess blockAccess, IBlockState blockStateIn, BlockPos blockPosIn, BufferBuilder bufferBuilderIn)`
+- `boolean renderFluid(IBlockAccess blockAccess, IBlockState blockStateIn, BlockPos blockPosIn, BufferBuilder bufferBuilderIn)`

@@ -1,24 +1,30 @@
 ---
 title: "S14PacketEntity.S17PacketEntityLookMove"
-description: "Reads the raw packet data from the data stream."
+description: "public static class S14PacketEntity.S17PacketEntityLookMove extends S14PacketEntity"
 package: "net/minecraft/network/play/server"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/network/play/server/S14PacketEntity.S17PacketEntityLookMove.html"
 sourceType: javadoc
 ---
 
 # S14PacketEntity.S17PacketEntityLookMove
 
-## Constructors
+**Inheritance:** java.lang.Object → net.minecraft.network.play.server.S14PacketEntity → net.minecraft.network.play.server.S14PacketEntity.S17PacketEntityLookMove
 
-- `public S17PacketEntityLookMove()`
-- `public S17PacketEntityLookMove(int p_i45973_1_, byte p_i45973_2_, byte p_i45973_3_, byte p_i45973_4_, byte p_i45973_5_, byte p_i45973_6_, boolean p_i45973_7_)`
+## Class signature
+
+```java
+public static class S14PacketEntity.S17PacketEntityLookMove extends S14PacketEntity
+```
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.
 
-## Description
+## Fields
 
-Reads the raw packet data from the data stream.
+- `S17PacketEntityLookMove`
+- `S17PacketEntityLookMove`

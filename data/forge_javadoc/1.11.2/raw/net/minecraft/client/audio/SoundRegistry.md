@@ -1,26 +1,30 @@
 ---
 title: "SoundRegistry"
-description: "public class SoundRegistry extends RegistrySimple < ResourceLocation , SoundEventAccessor >"
+description: "public class SoundRegistry extends RegistrySimple<ResourceLocation, SoundEventAccessor>"
 package: "net/minecraft/client/audio"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/client/audio/SoundRegistry.html"
 sourceType: javadoc
 ---
 
 # SoundRegistry
 
+**Inheritance:** java.lang.Object → net.minecraft.util.registry.RegistrySimple<ResourceLocation, SoundEventAccessor> → net.minecraft.client.audio.SoundRegistry
+
 ## Class signature
 
 ```java
-public class SoundRegistry extends RegistrySimple < ResourceLocation , SoundEventAccessor >
+public class SoundRegistry extends RegistrySimple<ResourceLocation, SoundEventAccessor>
 ```
-
-## Constructors
-
-- `public SoundRegistry()`
 
 ## Methods
 
-- `protected java.util.Map< ResourceLocation , SoundEventAccessor > createUnderlyingMap()`
-- `public void add( SoundEventAccessor accessor)`
-- `public void clearMap()`
+- `void add(SoundEventAccessor accessor)`
+- `void clearMap()`
+- `protected java.util.Map<ResourceLocation, SoundEventAccessor> createUnderlyingMap()`
+
+## Fields
+
+- `SoundRegistry`

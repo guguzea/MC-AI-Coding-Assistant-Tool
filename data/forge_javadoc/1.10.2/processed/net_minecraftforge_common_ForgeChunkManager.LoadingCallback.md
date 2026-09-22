@@ -1,9 +1,11 @@
 # ForgeChunkManager.LoadingCallback
 
+## Class signature
+
+```java
+public static interface ForgeChunkManager.LoadingCallback
+```
+
 ## Methods
 
-- `void ticketsLoaded(java.util.List< ForgeChunkManager.Ticket > tickets, World world)`
-
-## Description
-
-All mods requiring chunkloading need to implement this to handle the re-registration of chunk tickets at world loading time
+- `void ticketsLoaded(java.util.List<ForgeChunkManager.Ticket> tickets, World world)` — Called back when tickets are loaded from the world to allow the mod to re-register the chunks associated with those tickets.

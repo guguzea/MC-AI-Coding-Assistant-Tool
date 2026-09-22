@@ -1,5 +1,7 @@
 # MemoryModList
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.relauncher.libraries.ModList → net.minecraftforge.fml.relauncher.libraries.MemoryModList
+
 ## Class signature
 
 ```java
@@ -8,5 +10,5 @@ public class MemoryModList extends ModList
 
 ## Methods
 
-- `public void save() throws java.io.IOException`
-- `public java.lang.String getName()`
+- `java.lang.String getName()`
+- `void save()`

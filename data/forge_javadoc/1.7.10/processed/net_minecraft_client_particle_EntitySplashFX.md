@@ -1,11 +1,13 @@
 # EntitySplashFX
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.client.particle.EntityFX → net.minecraft.client.particle.EntityRainFX → net.minecraft.client.particle.EntitySplashFX
+
 ## Class signature
 
 ```java
 public class EntitySplashFX extends EntityRainFX
 ```
 
-## Constructors
+## Fields
 
-- `public EntitySplashFX( World p_i1230_1_, double p_i1230_2_, double p_i1230_4_, double p_i1230_6_, double p_i1230_8_, double p_i1230_10_, double p_i1230_12_)`
+- `EntitySplashFX`

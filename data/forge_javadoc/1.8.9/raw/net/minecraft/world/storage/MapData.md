@@ -1,13 +1,17 @@
 ---
 title: "MapData"
-description: "colours"
+description: "public class MapData extends WorldSavedData"
 package: "net/minecraft/world/storage"
 version: "1.8.9"
+forgeBuild: "11.15.1.2318"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.8.9-11.15.1.2318/net/minecraft/world/storage/MapData.html"
 sourceType: javadoc
 ---
 
 # MapData
+
+**Inheritance:** java.lang.Object → net.minecraft.world.WorldSavedData → net.minecraft.world.storage.MapData
 
 ## Class signature
 
@@ -17,18 +21,24 @@ public class MapData extends WorldSavedData
 
 ## Constructors
 
-- `public MapData(java.lang.String mapname)`
+- `MapData(java.lang.String mapname)`
 
 ## Methods
 
-- `public void calculateMapCenter(double x, double z, int mapScale)`
-- `public void readFromNBT( NBTTagCompound nbt)`
-- `public void writeToNBT( NBTTagCompound nbt)`
-- `public void updateVisiblePlayers( EntityPlayer player, ItemStack mapStack)`
-- `public Packet getMapPacket( ItemStack mapStack, World worldIn, EntityPlayer player)`
-- `public void updateMapData(int x, int y)`
-- `public MapData.MapInfo getMapInfo( EntityPlayer player)`
+- `void calculateMapCenter(double x, double z, int mapScale)`
+- `MapData.MapInfo getMapInfo(EntityPlayer player)`
+- `Packet getMapPacket(ItemStack mapStack, World worldIn, EntityPlayer player)`
+- `void readFromNBT(NBTTagCompound nbt)` — reads in data from the NBTTagCompound into this MapDataBase
+- `void updateMapData(int x, int y)`
+- `void updateVisiblePlayers(EntityPlayer player, ItemStack mapStack)` — Adds the player passed to the list of visible players and checks to see which players are visible
+- `void writeToNBT(NBTTagCompound nbt)` — write data to NBTTagCompound from this MapDataBase, similar to Entities and TileEntities
 
-## Description
+## Fields
 
-colours
+- `byte[] colors` — colours
+- `int dimension`
+- `java.util.Map<java.lang.String, Vec4b> mapDecorations`
+- `java.util.List<MapData.MapInfo> playersArrayList`
+- `byte scale`
+- `int xCenter`
+- `int zCenter`

@@ -1,30 +1,28 @@
 # EntityPotion
 
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.projectile.EntityThrowable → net.minecraft.entity.projectile.EntityPotion
+
 ## Class signature
 
 ```java
 public class EntityPotion extends EntityThrowable
 ```
 
-## Constructors
-
-- `public EntityPotion( World worldIn)`
-- `public EntityPotion( World worldIn, EntityLivingBase throwerIn, int meta)`
-- `public EntityPotion( World worldIn, EntityLivingBase throwerIn, ItemStack potionDamageIn)`
-- `public EntityPotion( World worldIn, double x, double y, double z, int p_i1791_8_)`
-- `public EntityPotion( World worldIn, double x, double y, double z, ItemStack potionDamageIn)`
-
 ## Methods
 
-- `protected float getGravityVelocity()`
-- `protected float getVelocity()`
+- `protected float getGravityVelocity()` — Gets the amount of gravity to apply to the thrown entity with each tick.
 - `protected float getInaccuracy()`
-- `public void setPotionDamage(int potionId)`
-- `public int getPotionDamage()`
-- `protected void onImpact( MovingObjectPosition p_70184_1_)`
-- `public void readEntityFromNBT( NBTTagCompound tagCompund)`
-- `public void writeEntityToNBT( NBTTagCompound tagCompound)`
+- `int getPotionDamage()` — Returns the damage value of the thrown potion that this EntityPotion represents.
+- `protected float getVelocity()`
+- `protected void onImpact(MovingObjectPosition p_70184_1_)` — Called when this EntityThrowable hits a block or entity.
+- `void readEntityFromNBT(NBTTagCompound tagCompund)` — (abstract) Protected helper method to read subclass entity data from NBT.
+- `void setPotionDamage(int potionId)` — Sets the PotionEffect by the given id of the potion effect.
+- `void writeEntityToNBT(NBTTagCompound tagCompound)` — (abstract) Protected helper method to write subclass entity data to NBT.
 
-## Description
+## Fields
 
-Gets the amount of gravity to apply to the thrown entity with each tick.
+- `EntityPotion`
+- `EntityPotion`
+- `EntityPotion`
+- `EntityPotion`
+- `EntityPotion`

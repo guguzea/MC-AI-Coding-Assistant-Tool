@@ -1,0 +1,91 @@
+> 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/bedrockeditor/editorsummontool?view=minecraft-bedrock-stable
+> 抓取时间：2026-09-21T11:50:27.021Z
+> 警告：此文档可能滞后于当前正式版
+
+# Summon Tool
+
+Place entities into your world quickly. Some entities have random visual or variant traits (for example, horses or sheep) — each placement can spawn a random variant. While entities are paused, you can adjust their facing direction using rotation controls.
+
+## Settings
+
+- Entity Type : Choose the type of entity to place from the drop-down.
+
+- Entity Offset (0–8 per axis): Shifts the placement position relative to the cursor in X, Y, and Z.
+
+- Grid Alignment (1–8 per axis): Snaps entity placement to a grid with the specified spacing in each axis.
+
+- Rotation (-360 to 360): Sets the entity's facing direction in degrees. You can also use the Shift+Mouse Wheel to rotate in 10° increments.
+
+## Using the summon tool
+
+- Select Summon by clicking the button in the toolbar on the left side of the Editor. Tip Pressing Ctrl+Shift+S switches to Summon.
+
+- Select an Entity Type.
+
+- Click where you want to place the entity. If the entity is something with random variations like a horse or sheep, you'll get a random entity on each click.
+
+- With entities paused, you can use rotation controls to set which direction a selected entity is facing. Unpausing resumes normal behavior.
+
+## Keyboard shortcuts
+
+The following are the default key bindings for the Summon Tool.
+
+ Name
+ Shortcut
+ Exclusive
+
+ Summon Tool
+ Ctrl+Shift+S
+ -
+
+ Clear Selection
+ Ctrl+D
+ -
+
+ Delete Entity
+ Delete
+ On
+
+ Rotate Entity (10° steps)
+ Shift+Mouse Wheel
+ On
+
+ Move Selected Back
+ Down Arrow
+ On
+
+ Move Selected Down
+ PgDn
+ On
+
+ Move Selected Forward
+ Up Arrow
+ On
+
+ Move Selected Left
+ Left Arrow
+ On
+
+ Move Selected Right
+ Right Arrow
+ On
+
+ Move Selected Up
+ PgUp
+ On
+
+## Feedback
+
+ Was this page helpful?
+
+ Yes
+
+ No
+
+ No
+
+ Need help with this topic?
+
+ Want to try using Ask Learn to clarify or guide you through this topic?
+
+ Suggest a fix?

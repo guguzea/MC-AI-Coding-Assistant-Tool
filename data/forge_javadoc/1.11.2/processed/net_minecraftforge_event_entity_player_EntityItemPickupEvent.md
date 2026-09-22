@@ -1,5 +1,7 @@
 # EntityItemPickupEvent
 
+**Inheritance:** java.lang.Object → net.minecraftforge.fml.common.eventhandler.Event → net.minecraftforge.event.entity.EntityEvent → net.minecraftforge.event.entity.living.LivingEvent → net.minecraftforge.event.entity.player.PlayerEvent → net.minecraftforge.event.entity.player.EntityItemPickupEvent
+
 ## Class signature
 
 ```java
@@ -8,12 +10,8 @@ public class EntityItemPickupEvent extends PlayerEvent
 
 ## Constructors
 
-- `public EntityItemPickupEvent( EntityPlayer player, EntityItem item)`
+- `EntityItemPickupEvent(EntityPlayer player, EntityItem item)`
 
 ## Methods
 
-- `public EntityItem getItem()`
-
-## Description
-
-This event is called when a player collides with a EntityItem on the ground. The event can be canceled, and no further processing will be done. You can set the result of this event to ALLOW which will
+- `EntityItem getItem()`

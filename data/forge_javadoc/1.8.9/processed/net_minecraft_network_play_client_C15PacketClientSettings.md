@@ -1,26 +1,24 @@
 # C15PacketClientSettings
 
+**Inheritance:** java.lang.Object → net.minecraft.network.play.client.C15PacketClientSettings
+
 ## Class signature
 
 ```java
-public class C15PacketClientSettings extends java.lang.Object implements Packet < INetHandlerPlayServer >
+public class C15PacketClientSettings extends java.lang.Object implements Packet<INetHandlerPlayServer>
 ```
 
 ## Constructors
 
-- `public C15PacketClientSettings()`
-- `public C15PacketClientSettings(java.lang.String langIn, int viewIn, EntityPlayer.EnumChatVisibility chatVisibilityIn, boolean enableColorsIn, int modelPartFlagsIn)`
+- `C15PacketClientSettings()`
+- `C15PacketClientSettings(java.lang.String langIn, int viewIn, EntityPlayer.EnumChatVisibility chatVisibilityIn, boolean enableColorsIn, int modelPartFlagsIn)`
 
 ## Methods
 
-- `public void readPacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void writePacketData( PacketBuffer buf) throws java.io.IOException`
-- `public void processPacket( INetHandlerPlayServer handler)`
-- `public java.lang.String getLang()`
-- `public EntityPlayer.EnumChatVisibility getChatVisibility()`
-- `public boolean isColorsEnabled()`
-- `public int getModelPartFlags()`
-
-## Description
-
-Passes this Packet on to the NetHandler for processing.
+- `EntityPlayer.EnumChatVisibility getChatVisibility()`
+- `java.lang.String getLang()`
+- `int getModelPartFlags()`
+- `boolean isColorsEnabled()`
+- `void processPacket(INetHandlerPlayServer handler)` — Passes this Packet on to the NetHandler for processing.
+- `void readPacketData(PacketBuffer buf)` — Reads the raw packet data from the data stream.
+- `void writePacketData(PacketBuffer buf)` — Writes the raw packet data to the data stream.

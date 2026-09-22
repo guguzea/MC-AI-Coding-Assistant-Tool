@@ -1,21 +1,19 @@
 # FMLRuntimeCodec
 
+**Inheritance:** java.lang.Object → cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec<FMLMessage> → cpw.mods.fml.common.network.internal.FMLRuntimeCodec
+
 ## Class signature
 
 ```java
-public class FMLRuntimeCodec extends FMLIndexedMessageToMessageCodec < FMLMessage >
+public class FMLRuntimeCodec extends FMLIndexedMessageToMessageCodec<FMLMessage>
 ```
-
-## Constructors
-
-- `public FMLRuntimeCodec()`
 
 ## Methods
 
-- `public void encodeInto(ChannelHandlerContext ctx, FMLMessage msg, ByteBuf target) throws java.lang.Exception`
-- `public void decodeInto(ChannelHandlerContext ctx, ByteBuf source, FMLMessage msg)`
-- `protected void testMessageValidity( FMLProxyPacket msg)`
+- `void decodeInto(ChannelHandlerContext ctx, ByteBuf source, FMLMessage msg)`
+- `void encodeInto(ChannelHandlerContext ctx, FMLMessage msg, ByteBuf target)`
+- `protected void testMessageValidity(FMLProxyPacket msg)` — Called to verify the message received.
 
-## Description
+## Fields
 
-Called to verify the message received.
+- `FMLRuntimeCodec`

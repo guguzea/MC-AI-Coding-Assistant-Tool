@@ -3,11 +3,15 @@ title: "EntityBlaze"
 description: "public class EntityBlaze extends EntityMob"
 package: "net/minecraft/entity/monster"
 version: "1.11.2"
+forgeBuild: "13.20.0.2228"
+fetchedWith: "c4-2026-09-22"
 source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.11.2-13.20.0.2228/net/minecraft/entity/monster/EntityBlaze.html"
 sourceType: javadoc
 ---
 
 # EntityBlaze
+
+**Inheritance:** java.lang.Object → net.minecraft.entity.Entity → net.minecraft.entity.EntityLivingBase → net.minecraft.entity.EntityLiving → net.minecraft.entity.EntityCreature → net.minecraft.entity.monster.EntityMob → net.minecraft.entity.monster.EntityBlaze
 
 ## Class signature
 
@@ -15,26 +19,26 @@ sourceType: javadoc
 public class EntityBlaze extends EntityMob
 ```
 
-## Constructors
-
-- `public EntityBlaze( World worldIn)`
-
 ## Methods
 
-- `public static void registerFixesBlaze( DataFixer fixer)`
-- `protected void initEntityAI()`
 - `protected void applyEntityAttributes()`
 - `protected void entityInit()`
+- `void fall(float distance, float damageMultiplier)`
 - `protected SoundEvent getAmbientSound()`
-- `protected SoundEvent getHurtSound()`
+- `float getBrightness(float partialTicks)`
+- `int getBrightnessForRender(float partialTicks)`
 - `protected SoundEvent getDeathSound()`
-- `public int getBrightnessForRender(float partialTicks)`
-- `public float getBrightness(float partialTicks)`
-- `public void onLivingUpdate()`
-- `protected void updateAITasks()`
-- `public void fall(float distance, float damageMultiplier)`
-- `public boolean isBurning()`
-- `@Nullable protected ResourceLocation getLootTable()`
-- `public boolean isCharged()`
-- `public void setOnFire(boolean onFire)`
+- `protected SoundEvent getHurtSound()`
+- `protected ResourceLocation getLootTable()`
+- `protected void initEntityAI()`
+- `boolean isBurning()`
+- `boolean isCharged()`
 - `protected boolean isValidLightLevel()`
+- `void onLivingUpdate()`
+- `static void registerFixesBlaze(DataFixer fixer)`
+- `void setOnFire(boolean onFire)`
+- `protected void updateAITasks()`
+
+## Fields
+
+- `EntityBlaze`

@@ -1,18 +1,20 @@
 # IntegratedPlayerList
 
+**Inheritance:** java.lang.Object → net.minecraft.server.management.PlayerList → net.minecraft.server.integrated.IntegratedPlayerList
+
 ## Class signature
 
 ```java
 public class IntegratedPlayerList extends PlayerList
 ```
 
-## Constructors
-
-- `public IntegratedPlayerList( IntegratedServer server)`
-
 ## Methods
 
-- `protected void writePlayerData( EntityPlayerMP playerIn)`
-- `public java.lang.String allowUserToConnect(java.net.SocketAddress address, GameProfile profile)`
-- `public IntegratedServer getServerInstance()`
-- `public NBTTagCompound getHostPlayerData()`
+- `java.lang.String allowUserToConnect(java.net.SocketAddress address, GameProfile profile)`
+- `NBTTagCompound getHostPlayerData()`
+- `IntegratedServer getServerInstance()`
+- `protected void writePlayerData(EntityPlayerMP playerIn)`
+
+## Fields
+
+- `IntegratedPlayerList`

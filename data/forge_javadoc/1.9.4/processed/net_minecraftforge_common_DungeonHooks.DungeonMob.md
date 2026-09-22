@@ -1,9 +1,21 @@
 # DungeonHooks.DungeonMob
 
+**Inheritance:** java.lang.Object → net.minecraft.util.WeightedRandom.Item → net.minecraftforge.common.DungeonHooks.DungeonMob
+
+## Class signature
+
+```java
+public static class DungeonHooks.DungeonMob extends WeightedRandom.Item
+```
+
 ## Constructors
 
-- `public DungeonMob(int weight, java.lang.String type)`
+- `DungeonMob(int weight, java.lang.String type)`
 
 ## Methods
 
-- `public boolean equals(java.lang.Object target)`
+- `boolean equals(java.lang.Object target)`
+
+## Fields
+
+- `java.lang.String type`
