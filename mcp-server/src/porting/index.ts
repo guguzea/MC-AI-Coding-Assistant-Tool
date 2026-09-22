@@ -110,10 +110,14 @@ export function javaForMcVersion(ver: string): number | undefined {
   const minor = vi.minor;
   const patch = vi.patch ?? 0;
   if (!vi.valid && major === 0 && minor === 0) return undefined;
-  // 26.x / 27.x / 1.21.11+
+  // 26.x / 27.x
   if (major >= 26) return 25;
   if (major === 1) {
-    if (minor > 21 || (minor === 21 && patch >= 11)) return 25;
+    if (minor > 21) return 25;
+    // 1.21.x **全家** = 21（含 1.21.11）。2026-09-22 裁定纠正：原式 `(minor === 21 && patch >= 11) ⇒ 25`
+    // 是照版本号「1.21.11 已在 26.x 前夜」推测的，**无 scaffold 依据**；实测 neoforge/1.21.11 与
+    // fabric/1.21.11 的 scaffold 都钉 `JavaLanguageVersion.of(21)`（26.1 才升 25），KB 与
+    // neoforge-versions-manifest 亦均为 21（五证见台账 java-kb-vs-runtime-1211）。
     if (minor === 21) return 21;
     if (minor === 20 && patch >= 5) return 21;
     if (minor >= 18 && minor <= 20) return 17;

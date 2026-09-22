@@ -1336,6 +1336,58 @@
         "assert-script-write-guard.mjs"
       ],
       "closedAt": "2026-09-22"
+    },
+    {
+      "id": "java-kb-vs-manifest-declared",
+      "claim": "`data/porting/knowledge-base/versions.json` 的 `java` 与 `data/forge-versions-manifest.json` 的 `javaVersion` 是**两个不同语义的字段**（前者=本仓建议的 Java 目标，后者=上游/官方声明），1.7.10–1.10.2 四档两边数值**刻意不同**（8 vs 7），不得据一方改另一方。",
+      "author": "2026-09-21 辅助 agent 分诊建议（「先分诊：是真分叉还是一侧写错」）+ 2026-09-22 本波亲验与落笔",
+      "evidence": "**先更正我上一轮的错误结论**：我曾判此条「不可复现」，根因是我的扫描 SKIP 集排除了 `data/`（辅助 agent 报的「KB java=8」我压根没扫到）。真身是 `versions.json.versions[<ver>].java`。**分诊（实测，2026-09-22）**：`versions.json` 的 `java` 与运行时 `javaForMcVersion()`（`mcp-server/src/porting/index.ts:107-124`）**逐档对齐** —— 32 档中 32 档逐字吻合（1.21.11 的例外已于 2026-09-22 裁定并纠正，见 `java-kb-vs-runtime-1211`）⇒ 证明 `java` 的语义确是「本仓建议」。**两侧差值范围**：`manifest` 与 KB 数值不同的**只有 1.7.10 / 1.8.9 / 1.9.4 / 1.10.2 四档**（KB=8 / manifest=7），与辅助 agent 的判定完全吻合；manifest 自身的阶梯（7/7/7/7/8/8…/16/17）自洽，代表上游 Java 7 时代的官方声明。⇒ 属「真分叉 → 拆面命名」而非「一侧写错」，故**不改任何数值**。**落笔**：把该口径**并入既有 `meta.fieldSemantics`**（仓内本来就有这个机制；我曾一度新开 `javaField` 键，与它重复，已撤并），逐字声明两者语义边界与四档刻意差异。另注：该文件已有 G6 门（test-core）强制「KB 与 `javaForMcVersion` 不一致必须登记进 `meta.fieldConflicts`」——即「分面冲突」在仓内早有在册机制，不是新发明。验证：`node -e require(versions.json)` 通过（versions 键数仍 32；java 类 fieldConflicts 由 6 条降至 5 条，撤掉的正是 1.21.11 那条）。",
+      "evidenceRefs": [
+        "data/porting/knowledge-base/versions.json",
+        "data/forge-versions-manifest.json",
+        "mcp-server/src/porting/index.ts"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-script-write-guard.mjs"
+      ],
+      "closedAt": "2026-09-22"
+    },
+    {
+      "id": "fabric-2612-doc-not-found-unreachable-branch",
+      "claim": "`fabric/26.1.2` 的技能不得写「search_fabric_docs 遇 DOC_NOT_FOUND 就停」—— 该档有正式文档树，实测**从不**返回 DOC_NOT_FOUND，该分支不可达且措辞会诱导 agent 一遇空就弃检索。",
+      "author": "2026-09-22 本波亲验（DOC_NOT_FOUND 全盘复查的副产品）",
+      "evidence": "实测：`node dist/cli.js search_fabric_docs --query registry --version 26.1.2` ⇒ `ok:true, wikiFallback:false, total:10`（**本档正文**，非回退）。而同批实测 1.20.4 / 1.21.1 亦 `ok:true, total:10`；唯一真正无 develop 树而走 wiki 回退的是 `fabric/1.20.1`（`wikiFallback:true`）。原文本（8 处，7 宿主 + `.zcode`）：`→ search_fabric_docs version=26.1.2；DOC_NOT_FOUND 就停`。改后：`→ search_fabric_docs version=26.1.2（**实测 ok:true + 本档正文，total=10**，2026-09-22 实测；本档**从不**返回 DOC_NOT_FOUND）⇒ 按返回正文下结论，别按「空」弃检索`（与 2026-09-21 在 `fabric/1.20.1` 做的同类改写同风格）。验证：改源稿 `.cursor/skills/mc-advancement/SKILL.md` + `sync-skills.ps1 -TargetDir fabric/26.1.2` 重投影 8 宿主；旧文本残留 **0**、新文本 **8**（8 宿主各 1）；`assert-skill-mirrors` ok（AGENTS 漂移 0 档）。",
+      "evidenceRefs": [
+        "fabric/26.1.2/.cursor/skills/mc-advancement/SKILL.md",
+        "fabric/26.1.2/.claude/commands/advancement.md",
+        "mcp-server/scripts/assert-skill-mirrors.mjs"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-skill-mirrors.mjs"
+      ],
+      "closedAt": "2026-09-22"
+    },
+    {
+      "id": "java-kb-vs-runtime-1211",
+      "claim": "**1.21.11 的 Java = 21**（不是 25）。`javaForMcVersion()` 原式 `(minor === 21 && patch >= 11) ⇒ 25` 是错的一侧，已纠正；KB 与 `neoforge-versions-manifest` 的 21 是对的。",
+      "author": "2026-09-22 用户追问「1.21.11 确定是用的 java25?」+ 本波取证与修复",
+      "evidence": "**裁定依据（五证，全部实测 2026-09-22）**：① `neoforge/1.21.11/scaffold/build.gradle:39` = `JavaLanguageVersion.of(21)`；② `fabric/1.21.11/scaffold/build.gradle:47/53` = `release = 21` / `sourceCompatibility = JavaVersion.VERSION_21`；③ `data/porting/knowledge-base/versions.json` 该档 `java = 21`；④ `data/neoforge-versions-manifest.json` 该档 `javaVersion = 21`；⑤ `mcp-server/src/gradle/index.ts:423-424` 的 gradle 门对整个 **1.21.x 家族**一律推 21。**分界线对照**：`neoforge/26.1/scaffold:20` 与 `fabric/26.1.2/scaffold:12` 才是 `of(25)`；外部对照吻合（1.21.11 发布于 2025-12-09，Java 25 随 26.1 那代进 MC 工具链）。**唯一异类是运行时**：`src/porting/index.ts:116` 的 `(minor === 21 && patch >= 11) ⇒ 25`，而 `test-core.mjs:4270` 的 `assert.equal(javaForMcVersion(\"1.21.11\"), 25)` 只是**跟随该实现**写的、非独立证据（原 `fieldConflicts` 的 note 也自陈「source=25 正是 REPORT.md §5(c) 列为『不可证』的那一条」）。**修复**：① `javaForMcVersion` 删除 patch 分支（现为 `minor > 21 ⇒ 25` / `minor === 21 ⇒ 21`，并留注释说明原式无 scaffold 依据）；② `test-core.mjs:4270` 断言 25 → 21（附五证注释）；③ 撤掉 `versions.json.meta.fieldConflicts` 里那条 `1.21.11 / src:javaForMcVersion / divergent` 登记（改后 KB 与代码一致，留着会被 G6 判「登记过期」）；④ 把 java 字段口径并入既有 `meta.fieldSemantics`（原先我曾新开 `javaField` 键，与仓内既有机制重复，已撤并）。**验证**：`npm run build` 干净；`versions.json` JSON 合法（java 冲突由 6 条降至 5 条，`1.21.11` 已撤）；test-core 的 G6（`KB java` 与 `javaForMcVersion` 不一致必须登记）与 `javaForMcVersion` 钉值断言均绿。",
+      "evidenceRefs": [
+        "mcp-server/src/porting/index.ts",
+        "mcp-server/test-core.mjs",
+        "data/porting/knowledge-base/versions.json",
+        "data/neoforge-versions-manifest.json",
+        "neoforge/1.21.11/scaffold/build.gradle",
+        "fabric/1.21.11/scaffold/build.gradle",
+        "mcp-server/src/gradle/index.ts"
+      ],
+      "status": "closed",
+      "gates": [
+        "test-core.mjs"
+      ],
+      "closedAt": "2026-09-22"
     }
   ]
 }

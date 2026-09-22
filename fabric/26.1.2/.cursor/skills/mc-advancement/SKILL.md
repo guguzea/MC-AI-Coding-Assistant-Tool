@@ -30,7 +30,7 @@ IF DataGen 进度
 IF 只改 JSON
   → 数据包
 IF 要逐步教程全文
-  → search_fabric_docs version=26.1.2；DOC_NOT_FOUND 就停
+  → search_fabric_docs version=26.1.2（**实测 `ok:true` + 本档正文，total=10**，2026-09-22 实测；本档**从不**返回 DOC_NOT_FOUND）⇒ 按返回正文下结论，别按「空」弃检索
 ```
 
 ## 常见错误

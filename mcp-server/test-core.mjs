@@ -4267,7 +4267,11 @@ async function testPrototypeOwnKeys() {
 function testPlan1Fixes() {
   assert.equal(javaForMcVersion("26.1"), 25);
   assert.equal(javaForMcVersion("27.0"), 25);
-  assert.equal(javaForMcVersion("1.21.11"), 25);
+  // 2026-09-22 纠正：1.21.11 = **21**（原先钉 25 是跟随旧实现写的，不是独立证据）。
+  // 依据：neoforge/1.21.11 与 fabric/1.21.11 的 scaffold 均 JavaLanguageVersion.of(21)，
+  // 而 neoforge/26.1 与 fabric/26.1.2 才是 of(25)；KB 与 neoforge-versions-manifest 亦 21；
+  // gradle 门(:423) 对整个 1.21.x 家族都推 21。五证见台账 java-kb-vs-runtime-1211。
+  assert.equal(javaForMcVersion("1.21.11"), 21);
   assert.equal(javaForMcVersion("1.21.1"), 21);
   assert.equal(javaForMcVersion("1.21"), 21);
   assert.equal(javaForMcVersion("1.20.5"), 21);

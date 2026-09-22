@@ -117,15 +117,6 @@
         "note": "compatibilityLevel 是 loom 编译目标，不是 MC 运行 Java；KB 与 manifest 都取 21。"
       },
       {
-        "key": "1.21.11",
-        "field": "java",
-        "kb": 21,
-        "source": 25,
-        "sourceFile": "src:javaForMcVersion",
-        "kind": "divergent",
-        "note": "代码 javaForMcVersion 对 1.21.11 返回 25，而 manifest + 两棵规则档都是 21。KB 有键后 target.java 走 KB=21；代码侧待单独修（连带 test-core 里 javaForMcVersion 的钉值）。 ⚠️ 哪边对**未决**：source=25 正是 REPORT.md §5(c) 列为「不可证」的「26.x 上游 Java 25」那一条 —— 登记 divergent 表示「已知分歧、非已决」，不是把未决当已决；定论前不得据此改成 25。"
-      },
-      {
         "key": "1.7.10",
         "field": "java",
         "kb": 8,
@@ -162,7 +153,7 @@
         "note": "KB 取**运行时 Java**（porting 场景关心「用户工程要装哪个 JDK」⇒ 权威面 = KB）；manifest 的 javaVersion 是上游探针抽取的声明值（口径见 data/forge-versions-manifest.json 的 docSource/探针脚本），两面语义不同：这是**运行 Java vs 声明/编译目标**之别，不是同面值分歧。未统一。"
       }
     ],
-    "fieldSemantics": "`versions[k].forge` = **上游文档页 frontmatter 声明的 Forge 版本**（manifest 忠实抄录同一来源，故两处对账一致）；`versions[k].scaffoldForge` = 本仓 `<platform>/<ver>/scaffold/gradle.properties` 里 `forge_version` 的钉值（本包工程实际依赖）；`versions[k].mdkForge` = 官方 MDK / mdk-checksums 侧钉值。三者量的是**三件事**，不得折叠成一个数。同族：1.12.2 的 manifest=14.23.5.2858 亦为上游 frontmatter 值（KB 记 2859 末版 ⇒ 已按 divergent 在册）。"
+    "fieldSemantics": "`versions[k].forge` = **上游文档页 frontmatter 声明的 Forge 版本**（manifest 忠实抄录同一来源，故两处对账一致）；`versions[k].scaffoldForge` = 本仓 `<platform>/<ver>/scaffold/gradle.properties` 里 `forge_version` 的钉值（本包工程实际依赖）；`versions[k].mdkForge` = 官方 MDK / mdk-checksums 侧钉值。三者量的是**三件事**，不得折叠成一个数。同族：1.12.2 的 manifest=14.23.5.2858 亦为上游 frontmatter 值（KB 记 2859 末版 ⇒ 已按 divergent 在册）。同族：`versions[k].java` = **本仓建议的「用户工程该装哪个 JDK」**（porting 场景的权威面 = KB，与运行时 `javaForMcVersion()` 同口径）；而 `data/forge-versions-manifest.json` 的 `javaVersion` 是**上游探针抽的声明值** —— 两者语义不同，1.7.10–1.10.2 四档数值刻意不同（本仓 8 vs 上游 7），不得据一方改另一方（已按 divergent 在册）。1.21.11 曾因 `javaForMcVersion` 单侧写 25 而在册登记 divergent，2026-09-22 依 scaffold 实证（neoforge/fabric 的 1.21.11 均 `JavaLanguageVersion.of(21)`，26.1 才 25）裁定为 **21**，代码侧已纠、登记已撤。"
   },
   "versions": {
     "1.7.10": {
